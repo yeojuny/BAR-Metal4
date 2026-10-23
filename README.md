@@ -7,10 +7,18 @@ This public repository starts with a **2026-10-23 pre-performance baseline**: cu
 ## Get the source with Homebrew
 
 ```sh
-brew tap yeojuny/bar-metal4
-brew install bar-metal4-source
+brew install yeojuny/bar-metal4/bar-metal4-source
 bar-metal4-source
 ```
+
+Homebrew requires trust for third-party packages. Installing by the full name above trusts this formula only. If you previously tapped the repository and received an untrusted-formula error, use:
+
+```sh
+brew trust --formula yeojuny/bar-metal4/bar-metal4-source
+brew install yeojuny/bar-metal4/bar-metal4-source
+```
+
+See [Homebrew Tap Trust](https://github.com/Homebrew/brew/blob/main/docs/Tap-Trust.md).
 
 This installs the contributor source kit and prints its location. **It does not install a playable BAR.app.** A native Metal 4 app cask is pending a portable, redistributable app with matching complete source. The existing `bar-apple-silicon` cask is a different port and is not this renderer.
 
