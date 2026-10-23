@@ -1,0 +1,17 @@
+{
+  "appVersion": "2026.10.23.1",
+  "engineBaseline": "cumulative25 plus paired naval AI26; pre-performance",
+  "engineSHA256": "4024cdbde86ec97cdb39341718b41187c1ac125ab6fb2c358144e09a9b11bb92",
+  "appAsarSHA256": "e72080bef183cf12eacf3c8d9c2b004b97ee21c74e8adde9efb5b7396132d18a",
+  "nativeAdaptersVerified": 92,
+  "MachOSlicesInspected": 38,
+  "externalAbsoluteLibraryDependencies": 0,
+  "deepStrictSignatureCheck": "PASS_AD_HOC_NOT_NOTARIZED",
+  "freshStateLobbyStartup": "PASS",
+  "local26GameDetected": true,
+  "testMapDetected": true,
+  "matchStarted": false,
+  "fullParity": false,
+  "productionAccepted": false,
+  "independentMacGameplay": "PENDING_USER_VALIDATION"
+}
