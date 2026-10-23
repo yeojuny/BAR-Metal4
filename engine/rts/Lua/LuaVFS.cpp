@@ -327,6 +327,8 @@ int LoadNativeWidgetText(lua_State* L, bool synced, const std::string& filename,
     if (selected == nullptr)
         return 0;
 
+    int callerLineDefined = 0;
+    int callerLastLineDefined = 0;
     if (library) {
         // Original PiP entries require the same library in their own environment
         // (pipNumber 0/2). Keep the Include load/setfenv/pcall/return path intact.
@@ -336,11 +338,14 @@ int LoadNativeWidgetText(lua_State* L, bool synced, const std::string& filename,
         lua_Debug caller{};
         if (!lua_getstack(L, 1, &caller) || !lua_getinfo(L, "S", &caller) || !caller.source)
             return 0;
+        callerLineDefined = caller.linedefined;
+        callerLastLineDefined = caller.lastlinedefined;
         std::string_view source(caller.source);
         if (source.starts_with('@'))
             source.remove_prefix(1);
         if (StringToLower(std::string(source)) != "luaui/barwidgets.lua"
-            || caller.linedefined != 1238 || caller.lastlinedefined != 1412)
+            || !((callerLineDefined == 1238 && callerLastLineDefined == 1412)
+                 || (callerLineDefined == 1269 && callerLastLineDefined == 1443)))
             return 0;
     }
 
@@ -354,7 +359,12 @@ int LoadNativeWidgetText(lua_State* L, bool synced, const std::string& filename,
         sha512::hex_digest hex{};
         sha512::calc_digest({original.data(), original.data() + original.size()}, raw);
         sha512::dump_digest(raw, hex);
-        if (std::string_view(hex.data()) != NativeWidgetAdapters::handlerSHA512)
+        const auto handlerIdentity = std::string_view(hex.data());
+        const bool reviewed31657 = handlerIdentity == NativeWidgetAdapters::handlerSHA512
+            && (library || (callerLineDefined == 1238 && callerLastLineDefined == 1412));
+        const bool reviewed31691 = handlerIdentity == "738dd12f4df4d17fcb9c2079e0a071121896fbc975d9f9e5c5435721950a7e6436ee26ac88850fe8b9793663f585502eb0620c7610f43d7a26ba57fa6e5067cb"
+            && (library || (callerLineDefined == 1269 && callerLastLineDefined == 1443));
+        if (!reviewed31657 && !reviewed31691)
             throw std::runtime_error("Native widget routing requires review: original handler identity changed");
 
         if (LoadFileWithModes(selected->stagedPath, data, SPRING_VFS_RAW) != 1)

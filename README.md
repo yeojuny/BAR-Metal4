@@ -2,7 +2,7 @@
 
 An independent, AI-assisted Apple Silicon port experiment for Beyond All Reason / RecoilEngine. This is not an official BAR release and is not ready for production or multiplayer compatibility claims.
 
-This public repository starts with a **2026-10-19 source snapshot**. Later performance experiments are described separately; they are not silently included in this source tree. No private backup history or conversation records are published.
+This public repository starts with a **2026-10-23 pre-performance baseline**: cumulative engine fixes through selection-state fix 25, plus paired naval AI/content changes from package 26. The subsequent native-performance campaign is excluded. See [the exact boundary](docs/BASELINE.json). No private backup history or conversation records are published.
 
 ## Get the source with Homebrew
 

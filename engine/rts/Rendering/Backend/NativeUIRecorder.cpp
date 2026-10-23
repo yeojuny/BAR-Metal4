@@ -9,6 +9,11 @@
 #include "NativeHealthBarsData.h"
 #include "NativePanelShaderData.h"
 #include "NativeUIRecorder.h"
+#include "NativeLegacyWaterTextureEnvironment.h"
+#include "NativeLegacyWaterTexGen.h"
+#include "NativeLegacyWaterLighting.h"
+#include "NativeLegacyWaterProgramState.h"
+#include "NativeLegacyWaterTextureMatrices.h"
 #include "NativeDecalCaptureProgram.h"
 #include "NativeSplatPainterProgram.h"
 #include "NativeDiffusePainterProgram.h"
@@ -25,6 +30,7 @@
 #include "NativeTextureContext.h"
 #include "NativeInheritedClipPlane.h"
 #include "NativeWorldDrawGeometry.h"
+#include "NativeSourceProgramBinding.h"
 #include "NativeWorldDrawSequence.h"
 
 #include <algorithm>
@@ -43,6 +49,16 @@ struct NativeUICommandList {
 static void Require(bool value, const char* reason)
 {
 	if (!value) throw std::runtime_error(reason);
+}
+
+static std::optional<unsigned> SourceTextureMatrixUnit()
+{
+	auto& context=OriginalNativeTextureContext();
+	return context.Initialized()?context.History().ActiveUnit():std::nullopt;
+}
+static void ResetSourceTextureMatrix()
+{
+	OriginalNativeLegacyWaterTextureMatrices().Load(SourceTextureMatrixUnit(),NativeLegacyWaterTextureMatrices::Identity);
 }
 
 static const NativeUITextureBinding* TextureObject(const NativeUITextureBinding* binding)
@@ -180,6 +196,9 @@ struct NativeUIRecorder::Impl {
 			ScreenSampler textureParameters1;
 			ScreenClearValues clear;
 			bool textureHistoryPushed=false;
+			std::optional<NativeLegacyWaterTextureEnvironment::Values> textureEnvironment;
+			std::optional<NativeLegacyWaterTexGen::Values> textureGeneration;
+			std::optional<NativeLegacyWaterLighting::Value> lighting;
 			bool textureObserved=false,textureObserved1=false;
 			uint64_t modelClipContext=0;
 			std::array<bool,3> modelClipEnable{};
@@ -221,7 +240,9 @@ struct NativeUIRecorder::Impl {
 	WorldClearHandler worldClearHandler;
 	ShadowVertexSource shadowVertexSource;
 	NativeUITextureObserver* textureObserver=nullptr;
-	std::vector<bool> originalTextureScopes;
+	bool settingUpWorldMatrices=false; // Transport entry is not source ResetWorldMatrices.
+	struct OriginalTextureScope {bool texturePushed=false;std::optional<std::pair<uint64_t,bool>> fogEnable;std::optional<NativeLegacyWaterLighting::Value> lighting;std::optional<NativeLegacyWaterTexGen::Values> textureGeneration;};
+	std::vector<OriginalTextureScope> originalTextureScopes;
 	struct Target {
 		State before;
 		ScreenClearValues beforeClear;
@@ -390,7 +411,29 @@ struct NativeUIRecorder::Impl {
 		// Non-fill polygon faces were already culled before coverage expansion.
 		// Filled source polygons retain their native GPU cull state.
 		if(command.primitive!=NativeDrawPrimitive::Triangles || command.world.frontPolygonMode!=NativePolygonMode::Fill || command.world.backPolygonMode!=NativePolygonMode::Fill)surface.cull=ScreenCull::None;
-		if(!mesh.indices.empty())Output().AppendTriangles(vertices,uv,mesh.indices,surface);
+		surface.pointDisk.reset();
+		if(mesh.pointDisks.empty()) {
+			if(!mesh.indices.empty())Output().AppendTriangles(vertices,uv,mesh.indices,surface);
+		} else {
+			Require(mesh.pointDisks.size()==mesh.vertices.size(),"Native screen point metadata extent differs");
+			// Keep primitive order, including mixed polygon-mode geometry. A
+			// draw carries one physical point region; equal adjacent regions can batch.
+			for(size_t first=0;first<mesh.indices.size();) {
+				const auto disk=mesh.pointDisks[mesh.indices[first]];
+				size_t last=first;
+				while(last<mesh.indices.size() && mesh.pointDisks[mesh.indices[last]]==disk) {
+					Require(mesh.pointDisks[mesh.indices[last+1]]==disk && mesh.pointDisks[mesh.indices[last+2]]==disk,"Native point triangle mixes coverage regions");
+					last+=3;
+				}
+				surface.pointDisk=disk[3]!=0?std::optional(disk):std::nullopt;
+				const auto indices=std::span(mesh.indices).subspan(first,last-first);
+				const auto [low,high]=std::minmax_element(indices.begin(),indices.end());
+				std::vector<uint32_t> local;local.reserve(indices.size());
+				for(auto index:indices)local.push_back(index-*low);
+				Output().AppendTriangles(std::span(vertices).subspan(*low,*high-*low+1),std::span(uv).subspan(*low,*high-*low+1),local,surface);
+				first=last;
+			}
+		}
 	}
 	void StartPrimitive(NativeDrawPrimitive mode,const std::string& origin,bool legacy)
 	{
@@ -416,6 +459,8 @@ struct NativeUIRecorder::Impl {
 		if (!primitive && legacy) {InvalidLegacyOperation();return;}
 		Require(primitive,"Native UI End without Begin");
 		if (CanDraw()) {
+			if(primitiveMode==NativeDrawPrimitive::Points || state.world.frontPolygonMode==NativePolygonMode::Point || state.world.backPolygonMode==NativePolygonMode::Point)
+				Require(OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound,"Generic point draw has an active shader; its original point-size/vertex-output contract is unsupported");
 			if(worldStage){
 				auto world=state.world;
 				world.inheritedClipPlane=NativeInheritedWaterClipPlane(worldStageId,state.matrices[1].back(),worldZeroToOne);
@@ -502,18 +547,36 @@ struct NativeUIRecorder::Impl {
 		if(unit==0){state.textureBinding.reset();state.draw.draw.minimapBackground.reset();state.draw.draw.material=state.textureEnabled?ScreenMaterial::RGBA:ScreenMaterial::Solid;}
 		else state.textureBinding1.reset();
 	}
+	void ResetTextureGeneration() {
+		if(!compiling.empty())return;
+		const auto active=OriginalNativeTextureContext().History().ActiveUnit();
+		auto& texgen=OriginalNativeLegacyWaterTexGen();
+		if(!active){texgen.Invalidate();throw std::logic_error("Texgen reset lacks active source unit");}
+		texgen.Reset(*active);
+	}
+	void ResetTextureEnvironment() {
+		if(!compiling.empty())return;
+		OriginalNativeLegacyWaterLighting().Observe(false);
+		auto& environment=OriginalNativeLegacyWaterTextureEnvironment();
+		const auto active=OriginalNativeTextureContext().History().ActiveUnit();
+		if(!active){environment.InvalidateAll();throw std::logic_error("Original texture environment active unit is unobserved");}
+		environment.ResetModulate(*active);
+	}
 	void ResetDrawingAttributes()
 	{
 		OutsidePrimitive();
+		if(compiling.empty())OriginalNativeLegacyWaterLighting().Observe(false);
 		// LuaOpenGL::ResetGLState does not reset current normal/UV, bound
 		// texture objects, scissor rectangles, or either kind of stack.
 		state.draw.color={1,1,1,1};
 		state.draw.draw.blend={};
+		state.world.invertColorUnorm8=false;
 		state.draw.draw.alphaTest={false,ScreenAlphaCompare::Greater,0.5f};
 		state.textureEnabled=false;state.scissorEnabled=false;
 		// Original ResetGLState leaves SAMPLE_ALPHA_TO_COVERAGE unchanged.
 		state.world.frontPolygonMode=state.world.backPolygonMode=NativePolygonMode::Fill;
 		state.world.lineStipple=false;state.world.lineWidth=1;state.world.pointSize=1;
+		ResetNativePointParameters(state.world.point);
 		{
 			auto& s=state.world;
 			s.depthTest=false;s.depthCompare=ScreenAlphaCompare::LessEqual;s.depthWrite=false;s.depthClamp=false;
@@ -521,7 +584,7 @@ struct NativeUIRecorder::Impl {
 			s.stencilTest=false;s.frontStencil.writeMask=s.backStencil.writeMask=~0u;
 			s.colorWrite={true,true,true,true};s.combinedColorWrite={true,true,true,true};s.lineStipple=false;s.lineWidth=1;s.pointSize=1;
 		}
-		if(textureObserver&&compiling.empty()){textureObserver->Reset2D();SyncObservedTexture(0);SyncObservedTexture(1);}
+		if(textureObserver&&compiling.empty()){textureObserver->Reset2D();ResetTextureEnvironment();ResetTextureGeneration();SyncObservedTexture(0);SyncObservedTexture(1);}
 	}
 	void ResetMiniMap(bool resetAttributes)
 	{
@@ -532,6 +595,7 @@ struct NativeUIRecorder::Impl {
 		state.matrices[0].back()=ScaleMatrix(1.0f/float(callbackWidth),1.0f/float(callbackHeight),1);
 		state.matrices[1].back()=OrthoMatrix(0,1,0,1,0,-1);
 		state.matrices[2].back()=IdentityMatrix();
+		if(compiling.empty())ResetSourceTextureMatrix();
 		state.mode=NativeUIMatrixMode::ModelView;
 	}
 	std::array<float,4> Project(float x, float y, float z, float w) const
@@ -737,14 +801,16 @@ void NativeUIRecorder::BeginScreenStage()
 	if (impl->screen) { ResetScreenStage(); return; }
 	impl->stageBefore = impl->state; impl->ResetScreen(); impl->screen = true;
 }
-void NativeUIRecorder::ResetScreenStage() { Require(impl->screen, "Native UI screen reset outside stage"); impl->ResetScreen(); }
+void NativeUIRecorder::ResetScreenStage() { Require(impl->screen, "Native UI screen reset outside stage"); impl->ResetScreen(); ResetSourceTextureMatrix(); }
 void NativeUIRecorder::EndScreenStage() noexcept
 {
 	if (!impl->screen) return;
+	ResetSourceTextureMatrix(); // Original RevertScreenMatrices, not saved native State.
 	impl->output.Abort(); impl->ResetPrimitive();
 	if (impl->stageBefore) impl->state = std::move(*impl->stageBefore);
 	impl->stageBefore.reset(); impl->screen = false;
 }
+bool NativeUIRecorder::WorldProjectionZeroToOne() const { Require(impl->worldStage,"Glass requires the actual world projection stage"); return impl->worldZeroToOne; }
 void NativeUIRecorder::BeginWorldStage(NativeWorldDrawStage stage,NativeUIMatrix view,NativeUIMatrix projection,NativeUIMatrix billboard,bool safeMode,bool zeroToOneDepth)
 {
 	impl->OutsidePrimitive();
@@ -754,13 +820,16 @@ void NativeUIRecorder::BeginWorldStage(NativeWorldDrawStage stage,NativeUIMatrix
 	impl->worldStageId=stage;impl->worldView=view;impl->worldProjection=projection;impl->worldBillboard=billboard;impl->worldSafe=safeMode;impl->worldZeroToOne=zeroToOneDepth;
 	if(safeMode)PushAttrib(Blend|Alpha|Enable|Depth|Polygon|Line|Point|ColorMask|Viewport);
 	impl->worldStage=true;
-	ResetWorldStage();
+	impl->settingUpWorldMatrices=true;
+	try{ResetWorldStage();}catch(...){impl->settingUpWorldMatrices=false;throw;}
+	impl->settingUpWorldMatrices=false;
 	if(impl->textureObserver){impl->SyncObservedTexture(0);impl->SyncObservedTexture(1);}
 }
 void NativeUIRecorder::ResetWorldStage()
 {
 	Require(impl->worldStage,"Native world reset outside stage");impl->OutsidePrimitive();
 	impl->state.matrices[0].back()=impl->worldView;impl->state.matrices[1].back()=impl->worldProjection;impl->state.matrices[2].back()=IdentityMatrix();
+	if(!impl->settingUpWorldMatrices)ResetSourceTextureMatrix();
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 	if(impl->worldSafe) {
 		impl->ResetDrawingAttributes();
@@ -777,6 +846,7 @@ void NativeUIRecorder::EndWorldStage()
 	AbortPrimitive();
 	if(impl->worldSafe) {
 		impl->state.matrices[0].back()=impl->worldView;impl->state.matrices[1].back()=impl->worldProjection;impl->state.matrices[2].back()=IdentityMatrix();
+	ResetSourceTextureMatrix();
 		impl->state.mode=NativeUIMatrixMode::ModelView;
 		PopAttrib();
 	}
@@ -806,6 +876,7 @@ void NativeUIRecorder::UpdateWorldState(std::function<void(NativeWorldDrawState&
 		if(legacyPrimitiveRules && i.primitive){i.InvalidLegacyOperation();return;}
 		i.OutsidePrimitive();Require(!requireWorld || i.worldStage || !i.compiling.empty(),"Native world state outside world/list stage");
 		auto next=i.state.world;operation(next);
+		ValidateNativePointState(next.point);
 		Require(std::isfinite(next.lineWidth)&&next.lineWidth>0&&std::isfinite(next.pointSize)&&next.pointSize>0,"Native world raster size invalid");
 		Require(std::isfinite(next.offsetFactor)&&std::isfinite(next.offsetUnits),"Native world offset non-finite");
 		i.state.world=next;
@@ -817,6 +888,7 @@ void NativeUIRecorder::BeginMiniMapStage(bool safeMode)
 	Require(impl->frame && !impl->targets.empty() && impl->compiling.empty(),"Native minimap callback requires its actual target");
 	Require(impl->miniMapStages.size()<64,"Native minimap callback nesting exceeds bound");
 	impl->miniMapStages.push_back({impl->state,safeMode,impl->width,impl->height});
+	OriginalNativeLegacyWaterTextureMatrices().Push(SourceTextureMatrixUnit());
 	try {
 		for (auto& stack:impl->state.matrices) {
 			Require(stack.size()<256,"Native minimap matrix stack overflow");
@@ -827,6 +899,7 @@ void NativeUIRecorder::BeginMiniMapStage(bool safeMode)
 		if (safeMode) PushAttrib(NativeUIAttribute::Blend|Alpha|Enable|Polygon|Line|Point|Viewport);
 		impl->ResetMiniMap(safeMode);
 	} catch (...) {
+		OriginalNativeLegacyWaterTextureMatrices().Invalidate();
 		impl->state=std::move(impl->miniMapStages.back().before);
 		impl->miniMapStages.pop_back();
 		throw;
@@ -839,6 +912,7 @@ void NativeUIRecorder::ResetMiniMapStage()
 }
 void NativeUIRecorder::EndMiniMapStage(bool safeMode,bool returnToScreen)
 {
+	try {
 	Require(!impl->miniMapStages.empty() && impl->compiling.empty(),"Native minimap callback end without begin");
 	const auto& stage=impl->miniMapStages.back();
 	Require(stage.safeMode==safeMode,"Native minimap callback changed safety mode");
@@ -848,9 +922,12 @@ void NativeUIRecorder::EndMiniMapStage(bool safeMode,bool returnToScreen)
 	Require(impl->state.attributes.size()==stage.before.attributes.size()+unsigned(safeMode),"Native minimap callback has unbalanced attributes");
 	if (safeMode) PopAttrib();
 	else if (returnToScreen) impl->ResetDrawingAttributes();
+	if(returnToScreen)ResetSourceTextureMatrix(); // Original ResetScreenMatrices precedes texture pop.
+	OriginalNativeLegacyWaterTextureMatrices().Pop(SourceTextureMatrixUnit());
 	impl->state.matrices=stage.before.matrices;
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 	impl->miniMapStages.pop_back();
+	}catch(...){OriginalNativeLegacyWaterTextureMatrices().Invalidate();throw;}
 }
 void NativeUIRecorder::RunPiPMiniMapCallback(const std::function<void()>& callback)
 {
@@ -901,6 +978,7 @@ void NativeUIRecorder::ResetDrawingMatrices()
 		i.state.matrices[0].back()=modelView;
 		i.state.matrices[1].back()=projection;
 		i.state.matrices[2].back()=IdentityMatrix();
+		if(i.compiling.empty())ResetSourceTextureMatrix();
 		i.state.mode=NativeUIMatrixMode::ModelView;
 	});
 }
@@ -924,6 +1002,7 @@ void NativeUIRecorder::BeginGenesisStage(bool safeMode)
 	impl->genesisSafe=safeMode;impl->genesis=true;impl->genesisSource=true;
 	if(safeMode)impl->ResetDrawingAttributes();
 	for(auto& stack:impl->state.matrices)stack.back()=IdentityMatrix();
+	ResetSourceTextureMatrix();
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 }
 void NativeUIRecorder::ResetGenesisStage()
@@ -931,6 +1010,7 @@ void NativeUIRecorder::ResetGenesisStage()
 	Require(impl->genesis && impl->genesisSource,"Native Genesis reset outside its source stage");impl->OutsidePrimitive();
 	if(!impl->genesisSafe)return;
 	for(auto& stack:impl->state.matrices)stack.back()=IdentityMatrix();
+	ResetSourceTextureMatrix();
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 	impl->ResetDrawingAttributes();
 }
@@ -943,6 +1023,7 @@ void NativeUIRecorder::EndGenesisStage()
 		// Original DisableDrawGenesis resets the top matrices to identity;
 		// it does not restore the matrices that preceded EnableDrawGenesis.
 		for(auto& stack:impl->state.matrices)stack.back()=IdentityMatrix();
+	ResetSourceTextureMatrix();
 		impl->state.mode=NativeUIMatrixMode::ModelView;
 		PopAttrib();
 	}
@@ -1125,6 +1206,56 @@ void NativeUIRecorder::SetTextureObserver(NativeUITextureObserver* observer)
  Require(!impl->primitive&&impl->compiling.empty()&&impl->state.attributes.empty()&&impl->originalTextureScopes.empty(),"Cannot change shared texture observer inside an original state/list scope");impl->textureObserver=observer;
 }
 NativeUITextureObserver* NativeUIRecorder::TextureObserver()const{return impl->textureObserver;}
+void NativeUIRecorder::LuaTextureGeneration(unsigned coordinate,bool enabled,std::optional<unsigned> explicitUnit)
+{
+	Require(!explicitUnit||*explicitUnit<32,"Texgen unit outside original engine range");
+	impl->Emit([coordinate,enabled,explicitUnit](Impl& i){
+		i.OutsidePrimitive();if(!i.compiling.empty())return;
+		Require(i.textureObserver!=nullptr,"Texgen requires actual shared texture context");
+		auto& texgen=OriginalNativeLegacyWaterTexGen();
+		if(explicitUnit)i.textureObserver->ActiveTexture(*explicitUnit);
+		const auto active=OriginalNativeTextureContext().History().ActiveUnit();
+		if(!active){texgen.Invalidate();throw std::logic_error("Texgen lacks active source unit");}
+		texgen.Enable(*active,coordinate,enabled);
+		if(explicitUnit)i.textureObserver->ActiveTexture(0);
+	});
+}
+void NativeUIRecorder::ResetOriginalTextureGeneration()
+{
+	impl->Emit([](Impl& i){i.OutsidePrimitive();i.ResetTextureGeneration();});
+}
+void NativeUIRecorder::LuaFogEnabled(bool enabled)
+{
+	impl->Emit([enabled](Impl& i){
+		i.OutsidePrimitive();
+		if(!i.compiling.empty())return;
+		auto& context=OriginalNativeModelContext();
+		Require(context.clips.observed,"Original Lua fog writer lacks its actual context");
+		context.fogEnabled=enabled;
+	});
+}
+void NativeUIRecorder::LuaTextureEnvironment(unsigned target,unsigned pname,std::array<float,4> values,std::optional<unsigned> explicitUnit)
+{
+	Require(!explicitUnit || *explicitUnit<32,"TexEnv unit outside original engine range");
+	impl->Emit([target,pname,values,explicitUnit](Impl& i){
+		i.OutsidePrimitive();if(!i.compiling.empty())return;
+		Require(i.textureObserver!=nullptr,"TexEnv requires actual shared texture context");
+		auto& environment=OriginalNativeLegacyWaterTextureEnvironment();
+		if(explicitUnit)i.textureObserver->ActiveTexture(*explicitUnit);
+		const auto actual=OriginalNativeTextureContext().History().ActiveUnit();
+		if(!actual){environment.InvalidateAll();throw std::logic_error("TexEnv source active unit is unobserved");}
+		environment.Observe(*actual,target,pname,values[0]);
+		if(explicitUnit)i.textureObserver->ActiveTexture(0); // Original MultiTexEnv restores0, not the previous unit.
+	});
+}
+void NativeUIRecorder::ObserveOriginalLighting(bool enabled)
+{
+	impl->Emit([enabled](Impl& i){i.OutsidePrimitive();if(i.compiling.empty())OriginalNativeLegacyWaterLighting().Observe(enabled);});
+}
+void NativeUIRecorder::ResetOriginalTextureEnvironment()
+{
+	impl->Emit([](Impl& i){i.OutsidePrimitive();i.ResetTextureEnvironment();});
+}
 void NativeUIRecorder::LuaActiveTexture(unsigned actual)
 {
 	Require(actual<32&&impl->textureObserver,"ActiveTexture requires the actual shared original texture context");
@@ -1175,24 +1306,33 @@ void NativeUIRecorder::SyncObservedTextureBinding(unsigned actual)
 void NativeUIRecorder::BeginOriginalTextureScope(bool safeMode,bool screenCallin)
 {
  impl->OutsidePrimitive();Require(impl->compiling.empty(),"Original call-in texture scope inside display-list compile");
- impl->originalTextureScopes.push_back(false);
+ Impl::OriginalTextureScope scope;
+ if(safeMode){const auto& model=OriginalNativeModelContext();if(model.clips.observed)scope.fogEnable={{model.clips.contextGeneration,model.fogEnabled}};scope.lighting=OriginalNativeLegacyWaterLighting().Snapshot();scope.textureGeneration=OriginalNativeLegacyWaterTexGen().Save();}
+ impl->originalTextureScopes.push_back(scope);
  if(!impl->textureObserver)return;
  if(safeMode){
   try{impl->textureObserver->Push(false,true);}catch(...){impl->originalTextureScopes.pop_back();throw;}
-  impl->originalTextureScopes.back()=true;impl->textureObserver->Reset2D();
+  impl->originalTextureScopes.back().texturePushed=true;impl->textureObserver->Reset2D();impl->ResetTextureEnvironment();impl->ResetTextureGeneration();
  }
- if(screenCallin)impl->textureObserver->Reset2D(); // Screen calls ResetGLState again after Setup.
+ if(screenCallin){impl->textureObserver->Reset2D();impl->ResetTextureEnvironment();impl->ResetTextureGeneration();} // Screen calls ResetGLState again after Setup.
  impl->SyncObservedTexture(0);impl->SyncObservedTexture(1);
 }
 void NativeUIRecorder::ResetOriginalTextureState()
 {
- impl->Emit([](Impl&i){i.OutsidePrimitive();if(!i.textureObserver||!i.compiling.empty())return;i.textureObserver->Reset2D();i.SyncObservedTexture(0);i.SyncObservedTexture(1);});
+ impl->Emit([](Impl&i){i.OutsidePrimitive();if(!i.textureObserver||!i.compiling.empty())return;i.textureObserver->Reset2D();i.ResetTextureEnvironment();i.ResetTextureGeneration();i.SyncObservedTexture(0);i.SyncObservedTexture(1);});
 }
 void NativeUIRecorder::EndOriginalTextureScope()
 {
  impl->OutsidePrimitive();Require(!impl->originalTextureScopes.empty(),"Original call-in texture scope underflow");
- const bool pushed=impl->originalTextureScopes.back();
- if(pushed)impl->textureObserver->Pop();
+ const auto scope=impl->originalTextureScopes.back();
+ // The real call-in scope saves GL_ENABLE_BIT; fog is not reset by ResetGLState.
+ // Restore this independent enable even if the texture-history pop rejects.
+ if(scope.fogEnable){auto& model=OriginalNativeModelContext();Require(model.clips.observed&&model.clips.contextGeneration==scope.fogEnable->first,"Original fog scope crossed context lifetime");model.fogEnabled=scope.fogEnable->second;}
+ try{
+  if(scope.texturePushed)impl->textureObserver->Pop();
+  if(scope.lighting)OriginalNativeLegacyWaterLighting().Restore(*scope.lighting);
+  if(scope.textureGeneration)OriginalNativeLegacyWaterTexGen().Restore(*scope.textureGeneration);
+ }catch(...){OriginalNativeLegacyWaterLighting().Invalidate();OriginalNativeLegacyWaterTexGen().Invalidate();throw;}
  impl->originalTextureScopes.pop_back();
  if(!impl->textureObserver)return;
  impl->SyncObservedTexture(0);impl->SyncObservedTexture(1);
@@ -1594,31 +1734,66 @@ void NativeUIRecorder::SetOriginalClearDepth(double depth)
  impl->Emit([depth](Impl& i){i.OutsidePrimitive();i.clear.depth=depth;});
 }
 NativeUIMatrixMode NativeUIRecorder::CurrentMatrixMode() const{return impl->state.mode;}
-void NativeUIRecorder::MatrixMode(NativeUIMatrixMode mode) { impl->Emit([mode](Impl& i) { i.OutsidePrimitive(); i.state.mode = mode; }); }
+void NativeUIRecorder::MatrixMode(NativeUIMatrixMode mode) { impl->Emit([mode](Impl& i) { i.OutsidePrimitive(); Require(unsigned(mode)<=unsigned(NativeUIMatrixMode::Program0),"Native UI unknown matrix mode"); i.state.mode = mode; }); }
 void NativeUIRecorder::LoadMatrix(NativeUIMatrix value)
 {
-	for (const auto x: value) Require(std::isfinite(x), "Native UI non-finite matrix");
-	impl->Emit([value](Impl& i) { i.OutsidePrimitive(); i.state.matrices[unsigned(i.state.mode)].back() = value; });
+	for (const auto x: value) if (!std::isfinite(x)) {
+		if (!impl->compiling.empty() || impl->state.mode==NativeUIMatrixMode::Program0) OriginalNativeLegacyWaterProgramState().Invalidate();
+		if (!impl->compiling.empty() || impl->state.mode==NativeUIMatrixMode::Texture) OriginalNativeLegacyWaterTextureMatrices().Invalidate();
+		throw std::runtime_error("Native UI non-finite matrix");
+	}
+	impl->Emit([value](Impl& i) { i.OutsidePrimitive();
+		if(i.state.mode==NativeUIMatrixMode::Program0){if(i.compiling.empty())OriginalNativeLegacyWaterProgramState().ProgramMatrix0Load(value);return;}
+		if(i.state.mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Load(SourceTextureMatrixUnit(),value);
+		i.state.matrices[unsigned(i.state.mode)].back() = value; });
 }
 void NativeUIRecorder::MultMatrix(NativeUIMatrix value)
 {
-	for (const auto x: value) Require(std::isfinite(x), "Native UI non-finite matrix");
-	impl->Emit([value](Impl& i) { i.OutsidePrimitive(); auto& m = i.state.matrices[unsigned(i.state.mode)].back(); m = Multiply(m,value); });
+	for (const auto x: value) if (!std::isfinite(x)) {
+		if (!impl->compiling.empty() || impl->state.mode==NativeUIMatrixMode::Program0) OriginalNativeLegacyWaterProgramState().Invalidate();
+		if (!impl->compiling.empty() || impl->state.mode==NativeUIMatrixMode::Texture) OriginalNativeLegacyWaterTextureMatrices().Invalidate();
+		throw std::runtime_error("Native UI non-finite matrix");
+	}
+	impl->Emit([value](Impl& i) { i.OutsidePrimitive();
+		if(i.state.mode==NativeUIMatrixMode::Program0){if(i.compiling.empty()){auto& p=OriginalNativeLegacyWaterProgramState();p.ProgramMatrix0Load(Multiply(p.ProgramMatrix0Top(),value));}return;}
+		if(i.state.mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Multiply(SourceTextureMatrixUnit(),value);
+		auto& m = i.state.matrices[unsigned(i.state.mode)].back(); m = Multiply(m,value); });
 }
-NativeUIMatrix NativeUIRecorder::GetMatrix(NativeUIMatrixMode mode) const { return impl->state.matrices[unsigned(mode)].back(); }
+NativeUIMatrix NativeUIRecorder::GetMatrix(NativeUIMatrixMode mode) const { if(mode==NativeUIMatrixMode::Program0)return OriginalNativeLegacyWaterProgramState().ProgramMatrix0Top();return impl->state.matrices[unsigned(mode)].back(); }
 void NativeUIRecorder::PushMatrix()
 {
-	impl->Emit([](Impl& i) { i.OutsidePrimitive(); auto& v = i.state.matrices[unsigned(i.state.mode)]; Require(v.size() < 256,"Native UI matrix overflow"); v.push_back(v.back()); });
+	impl->Emit([](Impl& i) { i.OutsidePrimitive();
+		if(i.state.mode==NativeUIMatrixMode::Program0){if(i.compiling.empty())OriginalNativeLegacyWaterProgramState().ProgramMatrix0Push();return;}
+		if(i.state.mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Push(SourceTextureMatrixUnit());
+		auto& v = i.state.matrices[unsigned(i.state.mode)];
+		if(v.size()>=256&&i.state.mode==NativeUIMatrixMode::Texture)OriginalNativeLegacyWaterTextureMatrices().Invalidate();
+		Require(v.size() < 256,"Native UI matrix overflow"); v.push_back(v.back()); });
 }
 void NativeUIRecorder::PopMatrix()
 {
 	impl->Emit([](Impl& i) {
-		i.OutsidePrimitive(); auto& v = i.state.matrices[unsigned(i.state.mode)];
+		i.OutsidePrimitive();
+		if(i.state.mode==NativeUIMatrixMode::Program0){if(i.compiling.empty())OriginalNativeLegacyWaterProgramState().ProgramMatrix0Pop();return;}
+		if(i.state.mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Pop(SourceTextureMatrixUnit());
+		auto& v = i.state.matrices[unsigned(i.state.mode)];
 		// GL_COMPILE records relative stack effects. A list may pop a matrix
 		// pushed by its caller or by an earlier list (the original TopBar wind
 		// lists do exactly this). Validate against the real stack at replay.
 		if (v.size()==1 && !i.compiling.empty()) return;
+		if(v.size()<=1&&i.state.mode==NativeUIMatrixMode::Texture)OriginalNativeLegacyWaterTextureMatrices().Invalidate();
 		Require(v.size()>1,"Native UI matrix underflow"); v.pop_back();
+	});
+}
+void NativeUIRecorder::CleanupOriginalMatrixStack(NativeUIMatrixMode mode,int count)
+{
+	Require(mode==NativeUIMatrixMode::ModelView||mode==NativeUIMatrixMode::Projection||mode==NativeUIMatrixMode::Texture,"Original cleanup received invalid tracked matrix mode");
+	impl->Emit([mode,count](Impl& i){
+		i.OutsidePrimitive();i.state.mode=mode;
+		for(int n=0;n<count;++n){
+			if(mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Pop(SourceTextureMatrixUnit());
+			auto& stack=i.state.matrices[unsigned(mode)];
+			if(stack.size()>1)stack.pop_back(); // Original GL_STACK_UNDERFLOW leaves the base unchanged.
+		}
 	});
 }
 void NativeUIRecorder::PushAttrib(unsigned mask)
@@ -1637,6 +1812,9 @@ void NativeUIRecorder::PushAttrib(unsigned mask)
 		if((mask & Texture) && saved.textureBinding1){const auto* object=TextureObject(saved.textureBinding1.get());saved.textureObject1=saved.textureBinding1;while(saved.textureObject1.get()!=object)saved.textureObject1=saved.textureObject1->source;saved.textureParameters1=object->sampler;}
 		saved.clear=i.clear;
 		saved.textureObserved=i.state.textureObserved;saved.textureObserved1=i.state.textureObserved1;
+		if((mask&(Texture|Enable))&&i.compiling.empty())saved.textureGeneration=OriginalNativeLegacyWaterTexGen().Save();
+		if((mask&Enable)&&i.compiling.empty())saved.lighting=OriginalNativeLegacyWaterLighting().Snapshot();
+		if((mask&Texture)&&i.compiling.empty())saved.textureEnvironment=OriginalNativeLegacyWaterTextureEnvironment().SaveTextureAttribute();
 		if(i.textureObserver&&i.compiling.empty()&&(mask&(Texture|Enable))){i.textureObserver->Push(mask&Texture,mask&(Texture|Enable));saved.textureHistoryPushed=true;}
 		if((mask&Enable)&&i.compiling.empty()){
    const auto& clips=OriginalNativeModelContext().clips;
@@ -1651,7 +1829,15 @@ void NativeUIRecorder::PopAttrib()
 		i.OutsidePrimitive(); Require(!i.state.attributes.empty(),"Native UI attribute underflow");
 		const auto attribute=i.state.attributes.back();
 		const auto& saved=attribute.draw; const auto mask=attribute.mask;
-		if(attribute.textureHistoryPushed){Require(i.textureObserver!=nullptr,"Shared texture observer removed inside attribute scope");i.textureObserver->Pop();}
+		try {
+			if(attribute.textureHistoryPushed){Require(i.textureObserver!=nullptr,"Shared texture observer removed inside attribute scope");i.textureObserver->Pop();}
+			if(i.compiling.empty()&&attribute.lighting)OriginalNativeLegacyWaterLighting().Restore(*attribute.lighting);
+			if(i.compiling.empty()&&attribute.textureEnvironment)OriginalNativeLegacyWaterTextureEnvironment().RestoreTextureAttribute(*attribute.textureEnvironment);
+			if(i.compiling.empty()&&attribute.textureGeneration)OriginalNativeLegacyWaterTexGen().Restore(*attribute.textureGeneration);
+		} catch (...) {
+			if(i.compiling.empty()){OriginalNativeLegacyWaterTextureEnvironment().InvalidateAll();OriginalNativeLegacyWaterTexGen().Invalidate();OriginalNativeLegacyWaterLighting().Invalidate();}
+			throw;
+		}
 		if (mask & Texture) {i.RestoreTextureParameters(attribute.textureObject,attribute.textureParameters);i.RestoreTextureParameters(attribute.textureObject1,attribute.textureParameters1);}
 		i.state.attributes.pop_back(); auto& s = i.state.draw;
 		if (mask & Current) { s.color = saved.color; s.texCoord = saved.texCoord; i.state.normal=attribute.normal; }
@@ -1664,9 +1850,17 @@ void NativeUIRecorder::PopAttrib()
 		if(mask & Polygon) {i.state.world.cull=attribute.world.cull;i.state.world.cullEnabled=attribute.world.cullEnabled;i.state.world.polygonOffset=attribute.world.polygonOffset;i.state.world.offsetFactor=attribute.world.offsetFactor;i.state.world.offsetUnits=attribute.world.offsetUnits;i.state.world.frontPolygonMode=attribute.world.frontPolygonMode;i.state.world.backPolygonMode=attribute.world.backPolygonMode;}
 		if(mask & Stencil) {i.clear.stencil=attribute.clear.stencil;i.state.world.stencilTest=attribute.world.stencilTest;i.state.world.frontStencil=attribute.world.frontStencil;i.state.world.backStencil=attribute.world.backStencil;}
 		if(mask & Line) {i.state.world.lineWidth=attribute.world.lineWidth;i.state.world.lineStipple=attribute.world.lineStipple;i.state.world.stippleFactor=attribute.world.stippleFactor;i.state.world.stipplePattern=attribute.world.stipplePattern;}
-		if(mask & Point)i.state.world.pointSize=attribute.world.pointSize;
+		if(mask & Point){
+			i.state.world.pointSize=attribute.world.pointSize;
+			const bool multisample=i.state.world.point.multisample;
+			i.state.world.point=attribute.world.point;
+			i.state.world.point.multisample=multisample; // MULTISAMPLE_BIT owns this enable.
+		}
+		if(mask & Enable){i.state.world.point.sprite=attribute.world.point.sprite;i.state.world.point.smooth=attribute.world.point.smooth;}
+		if(mask & (Enable|Multisample))i.state.world.point.multisample=attribute.world.point.multisample;
 		if(mask & ColorMask){i.state.world.colorWrite=attribute.world.colorWrite;i.state.world.combinedColorWrite=attribute.world.combinedColorWrite;}
 		if(mask & (Enable | Multisample))i.state.world.alphaToCoverage=attribute.world.alphaToCoverage;
+		if(mask & (Blend | Enable))i.state.world.invertColorUnorm8=attribute.world.invertColorUnorm8;
 		if (mask & Enable) {
    if(attribute.modelClipContext){
     auto& clips=OriginalNativeModelContext().clips;

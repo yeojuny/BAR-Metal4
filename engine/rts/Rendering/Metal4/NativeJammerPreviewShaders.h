@@ -22,6 +22,12 @@ constant bool PreviewStorage [[function_constant(7)]];
 
 // The caller supplies the ACTUAL LuaShader-expanded defines before this source.
 // No fallback style/configuration or model-depth setting is invented here.
+#ifndef FADE_START
+#error Actual original Jammer define FADE_START is required
+#endif
+#ifndef FADE_END
+#error Actual original Jammer define FADE_END is required
+#endif
 #ifndef MODEL_DEPTH_TEST
 #error Actual original Jammer define MODEL_DEPTH_TEST is required
 #endif
@@ -139,6 +145,7 @@ struct PreviewUniforms {
  uint4 imageOptions; // x: flipV bits; y: original zero-to-one clip control; z: alpha compare|enabled<<8; w: reference float bits
  float4 previewParams,jammerFlags,emitterAllied;
  float jammerCircles[192];
+ float4 distanceFade;
 };
 struct PreviewVarying {
  float4 position [[position]];
@@ -323,7 +330,7 @@ fragment float4 OriginalPreviewSmoothFragment(
  return fragColor;
 }
 
-// Original LuaUI/Shaders/sensor_ranges_jammer_preview.frag.glsl SHA512 b10db7ac9db0b8a58ade0bc399a361842d050e0ce2ecd780c4ad7b3e53003f0f7c6bbc26459e155cbf117dc31a59923ea9163b1ed89a6026762846a1e3a408b0
+// Original LuaUI/Shaders/sensor_ranges_jammer_preview.frag.glsl SHA512 139511404290d023408fdaeb1db9060c8fd746b348d04760b01c98bea57fabb5c731b6c2a8bd18fc9ea28d010150bcabad98d6948079cb136894c0c1379d7bc0
 
 // Jammer preview, projected onto the terrain: drawn over the screen area of the coverage, each pixel rebuilds its
 // world position from the map g-buffer depth and takes the coverage of its radar cell, outlined along the border
@@ -352,6 +359,7 @@ constant float JammerSheet_sheetOutlineAlpha = float(SHEET_OUTLINE_ALPHA);
 constant float JammerSheet_outlineGapAlpha = float(OUTLINE_GAP_ALPHA);
 constant float JammerSheet_outlineWidth = float(OUTLINE_WIDTH); // pixels at 1080p, scaled with the vertical resolution
 constant float JammerSheet_outlineWorldWidth = float(OUTLINE_WORLD_WIDTH); // elmos
+constant float JammerSheet_fadeStart = float(FADE_START);
 constant float JammerSheet_outlineThinStart = float(OUTLINE_THIN_START); // elmos from the camera
 constant float JammerSheet_outlineThinScale = float(OUTLINE_THIN_SCALE);
 constant float JammerSheet_outlineMinWidth = float(OUTLINE_MIN_WIDTH); // screen pixels
@@ -496,6 +504,7 @@ fragment float4 OriginalPreviewJammerSheetFragment(
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
  float4 fragColor;
  const float2 sourceFragment=in.position.xy*u.fragmentTransform.xy+u.fragmentTransform.zw;
+const float JammerSheet_fadeEnd = max(float(FADE_END), JammerSheet_fadeStart + 1.0);
 const float JammerSheet_outlineThinEnd = max(float(OUTLINE_THIN_END), JammerSheet_outlineThinStart + 1.0);
 const float JammerSheet_offMapOutlineFade = max(float(OFFMAP_OUTLINE_FADE), 1.0); // elmos past the map's edge
 
@@ -526,7 +535,12 @@ const float JammerSheet_offMapOutlineFade = max(float(OFFMAP_OUTLINE_FADE), 1.0)
 	float2 w = worldPos.xz;
 	float px = max(pixelCells.x, pixelCells.y) * JammerSheet_cellSize; // elmos per pixel
 	// the outline's width factor: 1 up close, OUTLINE_THIN_SCALE from OUTLINE_THIN_END elmos from the camera on
-	float thin = mix(1.0, JammerSheet_outlineThinScale, smoothstep(JammerSheet_outlineThinStart, JammerSheet_outlineThinEnd, distance(camPos, worldPos)));
+	float camDist = distance(camPos, worldPos);
+	float distanceFade = 1.0 - u.distanceFade.x * smoothstep(JammerSheet_fadeStart, JammerSheet_fadeEnd, camDist);
+	if (distanceFade <= 0.0) {
+		discard_fragment(); // official shader discards fully distance-faded coverage
+	}
+	float thin = mix(1.0, JammerSheet_outlineThinScale, smoothstep(JammerSheet_outlineThinStart, JammerSheet_outlineThinEnd, camDist));
 	// past the map's edge there is no fill, and the outline fades out over OFFMAP_OUTLINE_FADE elmos
 	float offMapDist = distance(w, clamp(w, float2(0.0), engineParams[3].xy)); // engineParams[3].xy: the map in elmos
 	float mapFill = clamp(1.0 - offMapDist / px, 0.0, 1.0);
@@ -642,7 +656,7 @@ const float JammerSheet_offMapOutlineFade = max(float(OFFMAP_OUTLINE_FADE), 1.0)
 	float3 fillColor = mix(JammerSheet_alliedColor, JammerSheet_sheetColor, weight * (1.0 - inactive * allied));
 	float fillAlpha = JammerSheet_sheetAlpha * fillFade * (1.0 - lineAlpha);
 	float alpha = lineAlpha + fillAlpha;
-	fragColor = float4((JammerSheet_outlineColor * lineAlpha + fillColor * fillAlpha) / max(alpha, 1e-4), alpha);
+	fragColor = float4((JammerSheet_outlineColor * lineAlpha + fillColor * fillAlpha) / max(alpha, 1e-4), alpha * distanceFade);
 
  if(!PreviewAlphaPass(fragColor.a,u))discard_fragment();
  return fragColor;

@@ -1,4 +1,5 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#include "Rendering/Backend/NativeLegacyWaterLighting.h"
 #include "Rendering/Backend/NativeTerrainShadingState.h"
 #include "Rendering/Backend/NativeCUSMaterialControl.h"
 #include "LuaNativeCUSMaterial.h"
@@ -10,6 +11,7 @@
 #include "LuaNativeUnitStencil.h"
 #include "LuaNativeUIDrawState.h"
 #include "LuaInclude.h"
+#include "LuaContextData.h"
 #include "LuaOpenGL.h"
 #include "LuaHandle.h"
 #include "LuaDisplayLists.h"
@@ -571,7 +573,11 @@ int DispatchImpl(lua_State* L, std::string_view op)
 		Require(args>=1 && lua_isfunction(L,1),"CreateList expects a callback");
 		const bool previous=LuaOpenGL::IsDrawingEnabled(L);
 		r.BeginList(); LuaOpenGL::SetDrawingEnabled(L,true);
+		auto& tracker=GetLuaContextData(L)->glMatrixTracker;
+		SMatrixStateData previousMatrix=tracker.PushMatrixState(true);
 		const int error=lua_pcall(L,args-1,0,0);
+		const SMatrixStateData compiledMatrix=tracker.GetMatrixState();
+		tracker.PopMatrixState(previousMatrix,false); // Original nested CreateList also restores false.
 		LuaOpenGL::SetDrawingEnabled(L,previous);
 		if (error) {
 			r.AbortList();
@@ -583,7 +589,7 @@ int DispatchImpl(lua_State* L, std::string_view op)
 		}
 		try {
 			auto list=r.EndList(); auto& lists=CLuaHandle::GetActiveDisplayLists(L);
-			lua_pushnumber(L,lists.NewNativeList(std::move(list))); return 1;
+			lua_pushnumber(L,lists.NewNativeList(std::move(list),compiledMatrix)); return 1;
 		} catch (...) { r.AbortList(); throw; }
 	}
 	if (op=="DeleteList") {
@@ -720,8 +726,16 @@ int DispatchImpl(lua_State* L, std::string_view op)
 		r.ClearAttachments(mask,color,depth,stencil);return 0;
 	}
 	if (op=="CallList") {
-		auto list=CLuaHandle::GetActiveDisplayLists(L).GetNativeList(luaL_checkint(L,1));
-		if (list) r.CallList(std::move(list)); return 0;
+		const unsigned index=luaL_checkint(L,1);
+		auto& lists=CLuaHandle::GetActiveDisplayLists(L);
+		auto list=lists.GetNativeList(index);
+		if(list){
+			auto matrix=lists.GetMatrixState(index);
+			const int error=GetLuaContextData(L)->glMatrixTracker.ApplyMatrixState(matrix);
+			Require(error==0,error>0?"Matrix stack overflow in gl.CallList":"Matrix stack underflow in gl.CallList");
+			r.CallList(std::move(list));
+		}
+		return 0;
 	}
 	if (op=="Shape") {
 		Require(lua_istable(L,2),"expected Shape(type, elements[])");
@@ -828,6 +842,7 @@ int DispatchImpl(lua_State* L, std::string_view op)
 		if (mask==GL_ALL_ATTRIB_BITS) native=NativeUIAttribute::All;
 		else {
 			constexpr unsigned supported=GL_CURRENT_BIT|GL_COLOR_BUFFER_BIT|GL_SCISSOR_BIT|GL_TEXTURE_BIT|GL_ENABLE_BIT|GL_DEPTH_BUFFER_BIT|GL_POLYGON_BIT|GL_STENCIL_BUFFER_BIT|GL_LINE_BIT|GL_POINT_BIT|GL_VIEWPORT_BIT|GL_MULTISAMPLE_BIT;
+			if(mask & ~supported)OriginalNativeLegacyWaterLighting().Invalidate();
 			Require((mask & ~supported)==0,"attribute mask includes unsupported state");
 			if(mask&GL_CURRENT_BIT) native|=Current;
 			if(mask&GL_COLOR_BUFFER_BIT) native|=NativeUIAttribute::Blend|Alpha;
@@ -898,6 +913,24 @@ int DispatchImpl(lua_State* L, std::string_view op)
 		}
 		return 0;
 	}
+	if(op=="PointSprite") {
+		Require(lua_isboolean(L,1),"PointSprite expects an enable boolean");
+		// Coordinate replacement is per active texture unit, and the original
+		// third argument uses a nonstandard TexEnv origin operation. Neither
+		// contract is silently invented by this fixed-function subset.
+		Require(!(args>=2 && lua_isboolean(L,2) && lua_toboolean(L,2)),"Generic point sprite coordinate replacement is unsupported; requires its original texture-unit contract");
+		Require(!(args>=3 && lua_isboolean(L,3)),"Generic PointSprite origin argument requires its original TexEnv contract");
+		const bool enabled=lua_toboolean(L,1);
+		r.UpdateWorldState([enabled](NativeWorldDrawState& state){state.point.sprite=enabled;},false,true);return 0;
+	}
+	if(op=="PointParameter") {
+		std::array<float,3> attenuation{};for(unsigned n=0;n<3;++n)attenuation[n]=luaL_checknumber(L,int(n+1));
+		std::array<std::optional<float>,3> limits{};for(unsigned n=0;n<3;++n)if(args>=int(n+4))limits[n]=luaL_checknumber(L,int(n+4));
+		r.UpdateWorldState([attenuation,limits](NativeWorldDrawState& state){
+			state.point.attenuation=attenuation;
+			if(limits[0])state.point.sizeMin=*limits[0];if(limits[1])state.point.sizeMax=*limits[1];if(limits[2])state.point.fadeThreshold=*limits[2];
+		},false,true);return 0;
+	}
 	if(op=="LineWidth" || op=="PointSize") {
 		const float value=luaL_checknumber(L,1);Require(std::isfinite(value)&&value>0,"raster size must be finite and positive");
 		r.UpdateWorldState([value,line=op=="LineWidth"](NativeWorldDrawState& state){if(line)state.lineWidth=value;else state.pointSize=value;},false,true);return 0;
@@ -921,7 +954,11 @@ int DispatchImpl(lua_State* L, std::string_view op)
 		else if(op=="StencilFunc"){const int compare=luaL_checkint(L,1),reference=luaL_checkint(L,2);Require(compare>=GL_NEVER&&compare<=GL_ALWAYS,"invalid stencil compare");const auto mask=std::uint32_t(luaL_checknumber(L,3));r.UpdateWorldState([compare,reference,mask](NativeWorldDrawState& state){for(auto* face:{&state.frontStencil,&state.backStencil}){face->compare=ScreenAlphaCompare(compare-GL_NEVER);face->reference=reference;face->readMask=mask;}},false,true);}
 		else {const auto parse=[&](int index){switch(luaL_checkint(L,index)){case GL_KEEP:return NativeWorldStencilOp::Keep;case GL_ZERO:return NativeWorldStencilOp::Zero;case GL_REPLACE:return NativeWorldStencilOp::Replace;case GL_INCR:return NativeWorldStencilOp::IncrementClamp;case GL_DECR:return NativeWorldStencilOp::DecrementClamp;case GL_INVERT:return NativeWorldStencilOp::Invert;case GL_INCR_WRAP:return NativeWorldStencilOp::IncrementWrap;case GL_DECR_WRAP:return NativeWorldStencilOp::DecrementWrap;default:throw std::runtime_error("invalid stencil operation");}};const auto fail=parse(1),depthFail=parse(2),pass=parse(3);r.UpdateWorldState([fail,depthFail,pass](NativeWorldDrawState& state){for(auto* face:{&state.frontStencil,&state.backStencil}){face->fail=fail;face->depthFail=depthFail;face->pass=pass;}},false,true);}return 0;
 	}
-	if (op=="Lighting") { Require(lua_isboolean(L,1) && !lua_toboolean(L,1),"screen pipeline cannot enable lighting"); return 0; }
+	if (op=="Lighting") {
+		Require(lua_isboolean(L,1),"screen lighting enable must be boolean");
+		if(lua_toboolean(L,1)){OriginalNativeLegacyWaterLighting().Invalidate();throw std::runtime_error("screen pipeline cannot enable lighting");}
+		r.ObserveOriginalLighting(false);return 0;
+	}
 	if (op=="ResetState") { r.ResetDrawingState(); return 0; }
 	if (op=="ResetMatrices") { Require(args==0,"ResetMatrices takes no arguments"); r.ResetDrawingMatrices(); return 0; }
 	throw std::runtime_error("operation is not implemented by the original Ready UI slice");
@@ -957,7 +994,7 @@ void LuaNativeUI::Install(lua_State* L)
 	for (const char* name: {"CreateList","CallList","DeleteList","BeginEnd","Vertex","Color","Normal","TexCoord","MultiTexCoord","Rect","TexRect","Texture","TextureInfo",
 		"Translate","Scale","Rotate","MatrixMode","LoadIdentity","LoadMatrix","MultMatrix","Ortho","PushMatrix","PopMatrix","PushAttrib","PopAttrib",
 		"Blending","BlendFunc","BlendFuncSeparate","BlendEquation","BlendEquationSeparate","Scissor","AlphaTest","AlphaToCoverage","DepthTest","Lighting","Culling","ResetState","ResetMatrices",
-		"Billboard","PolygonMode","LineStipple","LineWidth","PointSize","PolygonOffset","StencilTest","StencilMask","StencilFunc","StencilOp",
+		"Billboard","PolygonMode","LineStipple","LineWidth","PointSize","PointSprite","PointParameter","PolygonOffset","StencilTest","StencilMask","StencilFunc","StencilOp",
 		"Shape","CreateFBO","IsValidFBO","DeleteFBO","ActiveFBO","CreateTexture","DeleteTexture","ChangeTextureParams","RenderToTexture","NativeEditorRenderToTexture","SaveImage","Clear","CopyToTexture","ActiveTexture","Viewport","ColorMask","DepthMask","PushPopMatrix","NativeMapEdgeSubmit","NativeMapEdgeSubmitDeferred","NativeTerrainShadingAvailable","NativeCUSMaterialAvailable","LoadOriginalPanelSource","LoadOriginalRendererSource"}) {
 		lua_pushstring(L,name); lua_pushcclosure(L,Dispatch,1); lua_setfield(L,-2,name);
 	}

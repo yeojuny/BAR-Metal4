@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "ScreenDrawList.h"
+#include "NativePointState.h"
 #include <array>
 #include <cstddef>
 #include <cstdint>
@@ -16,6 +17,7 @@ struct NativeTerraformOverlayInput;
 struct NativeLOSViewInput;
 struct NativeWaterOverlayInput;
 struct NativeUnitEffectInput;
+struct NativeUnitGlassInput;
 struct NativeReclaimFieldInput;
 struct NativeDistortionCommand;
 struct NativeObjectSpotlightInput;
@@ -57,9 +59,13 @@ struct NativeWorldDrawState {
 	// Original inherited engine plane2/3, expressed in homogeneous GL clip coordinates.
 	std::optional<std::array<float,4>> inheritedClipPlane;
 	float lineWidth = 1, pointSize = 1;
+	NativePointState point;
 	bool lineStipple = false;
 	std::uint16_t stipplePattern = 0xffff;
 	std::uint16_t stippleFactor = 1;
+	// Paired engine rectangle fill only. Backend must validate linear 8-bit
+	// UNORM, solid-white color, coverage and stencil before blend lowering.
+	bool invertColorUnorm8 = false;
 	bool operator==(const NativeWorldDrawState&) const = default;
 };
 
@@ -93,6 +99,7 @@ struct NativeWorldDrawCommand {
  std::shared_ptr<const NativeLOSViewInput> losView;
  std::shared_ptr<const NativeWaterOverlayInput> waterOverlay;
  std::shared_ptr<const NativeUnitEffectInput> unitEffect;
+ std::shared_ptr<const NativeUnitGlassInput> unitGlass;
 	std::shared_ptr<const NativeDistortionCommand> distortion; // Original private clear/volume/screen-copy/combine source operation.
 	std::shared_ptr<const NativeObjectSpotlightInput> objectSpotlight;
 	std::shared_ptr<const NativeGrassInput> grass;

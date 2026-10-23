@@ -1,20 +1,21 @@
-# Status — October 23, 2026
+# Status — October 23, 2026, before performance optimization
 
-## Published source
+## Published baseline
 
-The source is the October 19 export, including engine-owned SDL window integration and native Metal 4 renderer work. It is a useful inspection/contribution baseline, not a representation that the latest local performance candidates are present.
+This release supersedes the initial October 19 source publication. The engine is reconstructed from the verified cumulative base manifest (9,980 files before publication exclusions) plus seven pinned source overrides confirmed by HQ before the native-performance campaign. It includes the later log-driven/correctness fixes:
 
-## Subsequent development evidence
+- Native nano-spray graphical default.
+- Missile/model follow-up and draw-counter work.
+- Bounded model tracing used in diagnosis.
+- Restoration of the original selection Draw state epilogue.
+- Paired naval AI26 native MilitaryManager change and five game configuration overlays.
 
-The development team reports native application packaging and bounded single-player runs. Nine campaign items have source/CPU/build validation: non-skin geometry validation, immutable page publication, pipeline variants, clear programs, sweep work, depth/stencil keys, height views, shadow geometry validation, and owned-row submission matching. Eight resource-management subsets were also implemented. These results belong to later development snapshots and are not validation of this public source export.
+The renderer base also contains the earlier raster/point/CUS integration. `BASELINE.json` records input manifest hashes and the exact boundary. No source from the subsequent native-performance campaign is included: no CUS/pipeline/resource-pool/residency/terrain-view optimization patches are imported.
 
-GPU overlap, aggregate runtime hit rates/resource occupancy, physical texture pooling, Blueprint lookup, replay concurrency, Lua maintenance, Rapid lookup and AI authoring remain open campaign areas. Later candidate comparisons continue. A shadow-upload-buffer reuse comparison was rejected for insufficient benefit; this is not proof of an overall performance win.
+## Scope and remaining gaps
 
-## Unmet acceptance
+The source baseline corresponds to the pre-performance engine binary reference recorded in `BASELINE.json`; no new build was performed to claim byte-identical binary reproduction. Lobby source remains the prior October 19 export, not a recovered complete current app source tree. The five naval game overlays require the existing local21 content baseline; they are not a complete game package.
 
-- Clean-machine end-to-end build and packaging of this public export.
-- Self-contained native Metal 4 app distribution with matching source and licensing closure.
-- Full visual parity, multiplayer synchronization compatibility and production acceptance.
-- Repeatable same-camera, same-content, same-settings physical FPS comparison against a reference.
+The original package26 receipt records successful coupled packaging and signature checks, but manual coupled AI/gameplay acceptance, full visual parity and production acceptance were still pending. Selection-state restoration has bounded runtime evidence; that does not establish full rendering parity.
 
-CPU tests, diagnostic loop rates, bounded gameplay logs and subjective impressions measure different things. Nested GPU/CPU timings must not be added together as independent frame costs. No percentage performance claim is made here.
+Still needed: clean-machine end-to-end build, full runtime/content/source closure, redistributable portable app, matched physical-FPS measurements, visual acceptance and multiplayer synchronization validation. The Homebrew formula installs this contributor source kit only. A playable app cask remains pending.

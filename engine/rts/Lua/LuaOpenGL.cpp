@@ -31,6 +31,10 @@
 #include <charconv>
 #include <limits>
 #include "LuaNativeUI.h"
+#include "Rendering/Backend/NativeLegacyWaterProgramState.h"
+#include "Rendering/Backend/NativeLegacyWaterTextureMatrices.h"
+#include "Rendering/Backend/NativeLegacyWaterLighting.h"
+#include "Rendering/Backend/NativeTextureContext.h"
 #include "LuaNativeNano.h"
 #include "LuaNativeProjectileEffects.h"
 #include "LuaNativeEnergyExplosion.h"
@@ -65,6 +69,7 @@
 #include "LuaNativeGameDecal.h"
 #include "LuaNativeShield.h"
 #include "LuaNativePBRSource.h"
+#include "LuaNativeUnitGlass.h"
 #include "LuaNativeCUSSource.h"
 #include "LuaNativeBlueprint.h"
 #include "LuaNativeBlockout.h"
@@ -585,6 +590,7 @@ bool LuaOpenGL::PushEntries(lua_State* L)
 	LuaNativeGameDecal::PushEntries(L);
 	LuaNativeShield::PushEntries(L);
 	LuaNativePBRSource::PushEntries(L);
+	LuaNativeUnitGlass::PushEntries(L);
 	LuaNativeCUSSource::PushEntries(L);
 	LuaNativeBlueprint::PushEntries(L);
 	LuaNativeBlockout::PushEntries(L);
@@ -618,6 +624,9 @@ void LuaOpenGL::ResetGLState()
 	glDisable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.5f);
 
+	#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::ui::GetRecorder().ObserveOriginalLighting(false);
+#endif
 	glDisable(GL_LIGHTING);
 
 	glShadeModel(GL_SMOOTH);
@@ -645,6 +654,10 @@ void LuaOpenGL::ResetGLState()
 	glDisable(GL_TEXTURE_GEN_T);
 	glDisable(GL_TEXTURE_GEN_R);
 	glDisable(GL_TEXTURE_GEN_Q);
+	#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::ui::GetRecorder().ResetOriginalTextureEnvironment();
+	rendering::ui::GetRecorder().ResetOriginalTextureGeneration();
+#endif
 	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -1920,6 +1933,24 @@ int LuaOpenGL::GetTextHeight(lua_State* L)
 
 /******************************************************************************/
 
+#ifdef RECOIL_METAL4_LIVE_SCENE
+// Unit glass uses the actual unit and piece matrix operations between native
+// PushMatrix/PopMatrix calls. Do not send those operations to the absent GL
+// context, or reconstruct a pose later from a different simulation frame.
+static int NativeUnitMultMatrix(lua_State* L, const CMatrix44f& matrix)
+{
+	char message[1024] = {};
+	try {
+		rendering::ui::GetRecorder().MultMatrix(std::to_array(matrix.m));
+		return 0;
+	} catch (const std::exception& error) {
+		std::snprintf(message, sizeof(message), "Native unit matrix: %s", error.what());
+	}
+	// Lua longjmp must not cross a live C++ exception object.
+	return luaL_error(L, "%s", message);
+}
+#endif
+
 static void GLObjectPiece(lua_State* L, const CSolidObject* obj)
 {
 	if (obj == nullptr)
@@ -2179,8 +2210,12 @@ int LuaOpenGL::UnitMultMatrix(lua_State* L)
 	if (unit == nullptr)
 		return 0;
 
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	return NativeUnitMultMatrix(L, unit->GetTransformMatrix());
+#else
 	glMultMatrixf(unit->GetTransformMatrix());
 	return 0;
+#endif
 }
 
 /***
@@ -2190,7 +2225,22 @@ int LuaOpenGL::UnitMultMatrix(lua_State* L)
  */ 
 int LuaOpenGL::UnitPiece(lua_State* L)
 {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	const CUnit* unit = ParseUnit(L, __func__, 1);
+	if (unit == nullptr) return 0;
+	const LocalModelPiece* piece = ParseObjectConstLocalModelPiece(L, unit, 2);
+	if (piece == nullptr) return 0;
+	char message[1024] = {};
+	try {
+		if (LuaNativeUnitGlass::DrawPiece(*unit, *piece)) return 0;
+	} catch (const std::exception& error) {
+		std::snprintf(message, sizeof(message), "Native unit glass: %s", error.what());
+	}
+	if (message[0]) return luaL_error(L, "%s", message);
+	GLObjectPiece(L, unit);
+#else
 	GLObjectPiece(L, ParseUnit(L, __func__, 1));
+#endif
 	return 0;
 }
 
@@ -2210,8 +2260,18 @@ int LuaOpenGL::UnitPieceMultMatrix(lua_State* L)
 {
 	CheckDrawingEnabled(L, __func__);
 	CondWarnDeprecatedGL(L, __func__);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	const CUnit* unit = ParseUnit(L, __func__, 1);
+	if (unit == nullptr)
+		return 0;
+	const LocalModelPiece* piece = ParseObjectConstLocalModelPiece(L, unit, 2);
+	if (piece == nullptr)
+		return 0;
+	return NativeUnitMultMatrix(L, piece->GetModelSpaceMatrix());
+#else
 	GLObjectPieceMultMatrix(L, ParseUnit(L, __func__, 1));
 	return 0;
+#endif
 }
 
 
@@ -2339,6 +2399,14 @@ int LuaOpenGL::FeatureMultMatrix(lua_State* L)
 {
 	CheckDrawingEnabled(L, __func__);
 	CondWarnDeprecatedGL(L, __func__);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (rendering::ui::GetRecorder().IsCompiling() || rendering::ui::GetRecorder().CurrentMatrixMode()==rendering::ui::NativeUIMatrixMode::Texture)
+		rendering::OriginalNativeLegacyWaterTextureMatrices().Invalidate();
+	if (rendering::ui::GetRecorder().IsCompiling() || rendering::ui::GetRecorder().CurrentMatrixMode()==rendering::ui::NativeUIMatrixMode::Program0) {
+		rendering::OriginalNativeLegacyWaterProgramState().Invalidate();
+		return luaL_error(L, "Original Program0 matrix writer requires its native source implementation");
+	}
+#endif
 
 	const CFeature* feature = ParseFeature(L, __func__, 1);
 
@@ -2378,6 +2446,14 @@ int LuaOpenGL::FeaturePieceMultMatrix(lua_State* L)
 {
 	CheckDrawingEnabled(L, __func__);
 	CondWarnDeprecatedGL(L, __func__);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (rendering::ui::GetRecorder().IsCompiling() || rendering::ui::GetRecorder().CurrentMatrixMode()==rendering::ui::NativeUIMatrixMode::Texture)
+		rendering::OriginalNativeLegacyWaterTextureMatrices().Invalidate();
+	if (rendering::ui::GetRecorder().IsCompiling() || rendering::ui::GetRecorder().CurrentMatrixMode()==rendering::ui::NativeUIMatrixMode::Program0) {
+		rendering::OriginalNativeLegacyWaterProgramState().Invalidate();
+		return luaL_error(L, "Original Program0 matrix writer requires its native source implementation");
+	}
+#endif
 	GLObjectPieceMultMatrix(L, ParseFeature(L, __func__, 1));
 	return 0;
 }
@@ -3922,6 +3998,11 @@ int LuaOpenGL::Fog(lua_State* L)
 	CheckDrawingEnabled(L, __func__);
 	CondWarnDeprecatedGL(L, __func__);
 
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::ui::GetRecorder().LuaFogEnabled(luaL_checkboolean(L, 1));
+	return 0;
+#endif
+
 	if (luaL_checkboolean(L, 1)) {
 		glEnable(GL_FOG);
 	} else {
@@ -5139,6 +5220,10 @@ int LuaOpenGL::TexEnv(lua_State* L)
 	const int args = lua_gettop(L); // number of arguments
 	if (args == 3) {
 		const GLfloat value = (GLfloat)luaL_checknumber(L, 3);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureEnvironment(target,pname,{value,0,0,0});
+		return 0;
+#endif
 		glTexEnvf(target, pname, value);
 	}
 	else if (args == 6) {
@@ -5147,6 +5232,10 @@ int LuaOpenGL::TexEnv(lua_State* L)
 		array[1] = luaL_optnumber(L, 4, 0.0f);
 		array[2] = luaL_optnumber(L, 5, 0.0f);
 		array[3] = luaL_optnumber(L, 6, 0.0f);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureEnvironment(target,pname,{array[0],array[1],array[2],array[3]});
+		return 0;
+#endif
 		glTexEnvfv(target, pname, array);
 	}
 	else {
@@ -5190,6 +5279,10 @@ int LuaOpenGL::MultiTexEnv(lua_State* L)
 	const int args = lua_gettop(L); // number of arguments
 	if (args == 4) {
 		const GLfloat value = (GLfloat)luaL_checknumber(L, 4);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureEnvironment(target,pname,{value,0,0,0},unsigned(texNum));
+		return 0;
+#endif
 		glActiveTexture(GL_TEXTURE0 + texNum);
 		glTexEnvf(target, pname, value);
 		glActiveTexture(GL_TEXTURE0);
@@ -5200,6 +5293,10 @@ int LuaOpenGL::MultiTexEnv(lua_State* L)
 		array[1] = luaL_optnumber(L, 5, 0.0f);
 		array[2] = luaL_optnumber(L, 6, 0.0f);
 		array[3] = luaL_optnumber(L, 7, 0.0f);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureEnvironment(target,pname,{array[0],array[1],array[2],array[3]},unsigned(texNum));
+		return 0;
+#endif
 		glActiveTexture(GL_TEXTURE0 + texNum);
 		glTexEnvfv(target, pname, array);
 		glActiveTexture(GL_TEXTURE0);
@@ -5254,6 +5351,9 @@ int LuaOpenGL::TexGen(lua_State* L)
 	const int args = lua_gettop(L); // number of arguments
 	if ((args == 2) && lua_isboolean(L, 2)) {
 		const bool state = lua_toboolean(L, 2);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureGeneration(target,state);return 0;
+#endif
 		SetTexGenState(target, state);
 		return 0;
 	}
@@ -5262,6 +5362,9 @@ int LuaOpenGL::TexGen(lua_State* L)
 
 	if (args == 3) {
 		const GLfloat value = (GLfloat)luaL_checknumber(L, 3);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureGeneration(target,true);return 0;
+#endif
 		glTexGenf(target, pname, value);
 		SetTexGenState(target, true);
 	}
@@ -5271,6 +5374,9 @@ int LuaOpenGL::TexGen(lua_State* L)
 		array[1] = luaL_optnumber(L, 4, 0.0f);
 		array[2] = luaL_optnumber(L, 5, 0.0f);
 		array[3] = luaL_optnumber(L, 6, 0.0f);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureGeneration(target,true);return 0;
+#endif
 		glTexGenfv(target, pname, array);
 		SetTexGenState(target, true);
 	}
@@ -5320,6 +5426,10 @@ int LuaOpenGL::MultiTexGen(lua_State* L)
 	const int args = lua_gettop(L); // number of arguments
 	if ((args == 3) && lua_isboolean(L, 3)) {
 		const bool state = lua_toboolean(L, 3);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureGeneration(target,state,unsigned(texNum));
+		return 0;
+#endif
 		glActiveTexture(GL_TEXTURE0 + texNum);
 		SetTexGenState(target, state);
 		glActiveTexture(GL_TEXTURE0);
@@ -5330,6 +5440,10 @@ int LuaOpenGL::MultiTexGen(lua_State* L)
 
 	if (args == 4) {
 		const GLfloat value = (GLfloat)luaL_checknumber(L, 4);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureGeneration(target,true,unsigned(texNum));
+		return 0;
+#endif
 		glActiveTexture(GL_TEXTURE0 + texNum);
 		glTexGenf(target, pname, value);
 		SetTexGenState(target, true);
@@ -5341,6 +5455,10 @@ int LuaOpenGL::MultiTexGen(lua_State* L)
 		array[1] = luaL_optnumber(L, 5, 0.0f);
 		array[2] = luaL_optnumber(L, 6, 0.0f);
 		array[3] = luaL_optnumber(L, 7, 0.0f);
+		#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().LuaTextureGeneration(target,true,unsigned(texNum));
+		return 0;
+#endif
 		glActiveTexture(GL_TEXTURE0 + texNum);
 		glTexGenfv(target, pname, array);
 		SetTexGenState(target, true);
@@ -5862,6 +5980,14 @@ int LuaOpenGL::Frustum(lua_State* L)
 {
 	CheckDrawingEnabled(L, __func__);
 	CondWarnDeprecatedGL(L, __func__);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (rendering::ui::GetRecorder().IsCompiling() || rendering::ui::GetRecorder().CurrentMatrixMode()==rendering::ui::NativeUIMatrixMode::Texture)
+		rendering::OriginalNativeLegacyWaterTextureMatrices().Invalidate();
+	if (rendering::ui::GetRecorder().IsCompiling() || rendering::ui::GetRecorder().CurrentMatrixMode()==rendering::ui::NativeUIMatrixMode::Program0) {
+		rendering::OriginalNativeLegacyWaterProgramState().Invalidate();
+		return luaL_error(L, "Original Program0 matrix writer requires its native source implementation");
+	}
+#endif
 	const float left   = luaL_checknumber(L, 1);
 	const float right  = luaL_checknumber(L, 2);
 	const float bottom = luaL_checknumber(L, 3);
@@ -6356,6 +6482,16 @@ int LuaOpenGL::GetMatrixData(lua_State* L)
 			}
 		}
 		GLfloat matrix[16];
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		if(type==GL_TEXTURE){
+			auto& context=rendering::OriginalNativeTextureContext();
+			const auto unit=context.Initialized()?context.History().ActiveUnit():std::nullopt;
+			if(!unit)return luaL_error(L,"Original texture matrix query lacks active source unit");
+			const auto value=rendering::OriginalNativeLegacyWaterTextureMatrices().Snapshot(*unit);
+			if(!value.observed)return luaL_error(L,"Original texture matrix query has incomplete source lineage");
+			std::copy(value.matrix.begin(),value.matrix.end(),matrix);
+		}else
+#endif
 		glGetFloatv(pname, matrix);
 
 		if (lua_isnumber(L, 2)) {
@@ -6542,7 +6678,13 @@ int LuaOpenGL::GetFixedState(lua_State* L)
 		case hashString("lighting"): {
 			CondWarnDeprecatedGL(L, __func__);
 
+			#ifdef RECOIL_METAL4_LIVE_SCENE
+			const auto lighting=rendering::OriginalNativeLegacyWaterLighting().Snapshot();
+			if(!lighting.observed)return luaL_error(L,"Source lighting state is unobserved");
+			lua_pushboolean(L,lighting.enabled);
+#else
 			lua_pushboolean(L, glIsEnabled(GL_LIGHTING));
+#endif
 
 			return 1;
 		} break;

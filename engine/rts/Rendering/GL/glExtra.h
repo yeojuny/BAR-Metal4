@@ -40,6 +40,8 @@ template<typename TQuad, typename TColor, typename TRenderBuffer> void gleDrawQu
 }
 
 namespace GL {
+	// CPU topology shared by GL upload and native debug-sphere capture.
+	void BuildWireSphereGeometry(uint32_t numRows, uint32_t numCols, std::vector<float3>& verts, std::vector<uint32_t>& indcs);
 	class Shapes {
 	public:
 		void Init();

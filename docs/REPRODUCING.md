@@ -14,6 +14,10 @@ print("Published source hashes match")
 PYCODE
 ```
 
+## Baseline
+
+Use `docs/BASELINE.json`: cumulative25 engine plus paired naval AI26 changes, with the native-performance campaign excluded. Lobby and game-content closure limitations are listed in `STATUS.md`.
+
 ## Engine build recipe (not clean-machine validated)
 
 Use an Apple Silicon Mac with a Metal 4-capable macOS and matching Xcode SDK. The code uses C++23 and Objective-C++. Read `engine/README.markdown` and the CMake configuration for dependency requirements. Native integration explicitly requires SDL3, FreeType, Fontconfig and DevIL; other engine dependencies remain applicable.

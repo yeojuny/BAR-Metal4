@@ -1,0 +1,46 @@
+{
+  "baseline": "cumulative25 / naval-ai26",
+  "confirmedUTC": "2026-10-23T08:35:01.066868+00:00",
+  "upstreamEngineCommit": "01efdf43121dfd40d105649ef7eb89a8804662d9",
+  "baseManifestSHA256": "f955b53d6806074b77376f24414631413e3846e1007bdd548db9116bc050172c",
+  "boundaryRecordSHA256": "96eef61371def864ee2349ae7e1d281bc23592f0d65cb982fd6631995f7af8a3",
+  "engineBinaryReferenceSHA256": "4024cdbde86ec97cdb39341718b41187c1ac125ab6fb2c358144e09a9b11bb92",
+  "binaryDistributed": false,
+  "sourceLayers": [
+    {
+      "name": "nano-native-default22-hq01",
+      "manifestSHA256": "052844c917c977be57e9b16f3f87e0c6cf9b48244c2d46aa6b2c20c52b8985c5",
+      "paths": [
+        "rts/System/Config/ConfigSource.cpp"
+      ]
+    },
+    {
+      "name": "missile-model-followup23-astra",
+      "manifestSHA256": "06e9d1a2fbe3fcce8493e6f94b4c40872ddc9e5af70c8558eb8c23a9f415ef45",
+      "paths": [
+        "rts/Rendering/Metal4/Metal4WorldRenderer.h",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp"
+      ]
+    },
+    {
+      "name": "model-trace24-astra",
+      "manifestSHA256": "656fd052510af0f31c29c89e902adb5809620cfbbebe99653eef2f66e1392e66",
+      "paths": [
+        "rts/Rendering/Metal4/Metal4CUSSource.mm",
+        "rts/Rendering/Metal4/Metal4ModelTrace.inc",
+        "rts/Rendering/Metal4/Metal4ModelTraceBudget.h"
+      ]
+    },
+    {
+      "name": "selection-state-fix25-astra",
+      "manifestSHA256": "0af7db0bf54122553c9c7bebbb9e89414b65ef13dcb783c4b3f8af257b6c4634",
+      "paths": [
+        "rts/Game/SelectedUnitsHandler.cpp"
+      ]
+    }
+  ],
+  "pairedAIManifestSHA256": "8683a69a1a2f0c9ce82696512ea4023e4afcb5052419f3401bf6fe0470faf881",
+  "performanceOptimizationsIncluded": false,
+  "gameOverlayBase": "local21; five naval changes only, not complete game content",
+  "lobbySource": "previously exported 2026-10-19 lobby; full current app source closure not claimed"
+}

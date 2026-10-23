@@ -408,6 +408,28 @@ kernel void WaterSceneColorCopy(texture2d<float,access::read> source [[texture(0
  if(any(pixel>=uint2(destination.get_width(),destination.get_height())))return;
  destination.write(source.read(pixel+origin),pixel);
 }
+// The donor glCopyTexSubImage2D is 1:1. For an independent native raster,
+// preserve its logical consumer with nearest logical pixel-center adaptation.
+// CPU-generated integer coordinates avoid fractional viewport/scissor drift.
+uint2 LogicalSceneCopyPixel(uint2 pixel,constant uint* coordinates) {
+ return uint2(coordinates[1+pixel.x],coordinates[1+coordinates[0]+pixel.y]);
+}
+kernel void LogicalSceneColorCopy(texture2d<float,access::read> source [[texture(0)]],
+ texture2d<float,access::write> destination [[texture(1)]],constant uint* coordinates [[buffer(0)]],
+ uint2 pixel [[thread_position_in_grid]]) {
+ if(any(pixel>=uint2(destination.get_width(),destination.get_height())))return;
+ destination.write(source.read(LogicalSceneCopyPixel(pixel,coordinates)),pixel);
+}
+struct LogicalSceneDepthCopyVertexOutput {float4 position [[position]];};
+vertex LogicalSceneDepthCopyVertexOutput LogicalSceneDepthCopyVertex(uint vid [[vertex_id]]) {
+ const float2 positions[3]={float2(-1,-1),float2(3,-1),float2(-1,3)};
+ return {float4(positions[vid],0,1)};
+}
+struct LogicalSceneDepthCopyOutput {float depth [[depth(any)]];};
+fragment LogicalSceneDepthCopyOutput LogicalSceneDepthCopyFragment(float4 position [[position]],
+ depth2d<float> source [[texture(0)]],constant uint* coordinates [[buffer(0)]]) {
+ return {source.read(LogicalSceneCopyPixel(uint2(position.xy),coordinates))};
+}
 float3 HeightVertex(int2 point,device const float* heights,uint2 dimensions) {
  point=clamp(point,int2(0),int2(dimensions));
  float h=all(point<int2(dimensions))?heights[uint(point.y)*dimensions.x+uint(point.x)]:0;

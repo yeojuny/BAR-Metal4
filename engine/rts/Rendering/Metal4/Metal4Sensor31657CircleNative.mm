@@ -11,8 +11,9 @@ struct alignas(16) CircleUniform {
 	std::array<float,16> cameraViewProjection{},cameraViewInverse{},cameraViewProjectionInverse{};
 	std::array<float,4> timeInfo{},viewGeometry{},mapSize{},rangeColor{},viewport{},fragmentToLogical{},values{},parameters{};
 	std::array<uint32_t,4> options{},counts{};
+	std::array<float,4> distanceFade{};
 };
-static_assert(sizeof(CircleUniform)==352);
+static_assert(sizeof(CircleUniform)==368);
 id<MTLBuffer> UploadCircle(RuntimeLease& lease,const void* bytes,size_t size)
 {
 	Require(bytes&&size&&size<=lease.Device().maxBufferLength,"Current original sensor buffer exceeds actual device bounds");
@@ -150,6 +151,7 @@ std::unique_ptr<PreparedSensor31657CircleDraw> Sensor31657CircleGPU::Prepare(Run
 	const auto& viewport=out.raster.viewport;
 	uniform.viewport={float(viewport.originX),float(viewport.originY),float(viewport.width),float(viewport.height)};
 	uniform.fragmentToLogical={float(logicalWidth)/renderWidth,float(logicalHeight),float(logicalHeight)/renderHeight,0};
+	uniform.distanceFade={defines.fadeStart,defines.fadeEnd,draw.program.fadeStrength,0};
 	uniform.values={defines.viewWidth,defines.viewHeight,defines.stippleRate,defines.maxHeight.value_or(0)};
 	uniform.parameters={draw.raster.lineWidth,draw.surface.alphaTest.reference,float(defines.circleSegments),0};
 	uniform.options={uint32_t(!(source.renderCaps&1)),uint32_t(out.height.flipV),uint32_t(defines.visibilityCulling),

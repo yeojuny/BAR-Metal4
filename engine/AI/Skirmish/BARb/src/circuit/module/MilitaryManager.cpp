@@ -396,39 +396,72 @@ void CMilitaryManager::ReadConfig()
 		defenderDefs.reserve(defs.size());
 		for (const Json::Value& def : defs) {
 			CCircuitDef* cdef = circuit->GetCircuitDef(def.asCString());
+			// Numeric defence indices address the config array, including missing units.
+			defenderDefs.push_back(cdef);
 			if (cdef == nullptr) {
 				circuit->LOG("CONFIG %s: has unknown UnitDef '%s'", cfgName.c_str(), def.asCString());
 			} else {
 				cdef->AddAttribute(ATTR_TYPE(FENCE));
-				defenderDefs.push_back(cdef);
 			}
 		}
+		auto getDefender = [&](const Json::Value& idx, const char* list) -> CCircuitDef* {
+			if (!idx.isUInt()) {
+				circuit->LOG("CONFIG %s: %s %s defender index must be a non-negative integer",
+					cfgName.c_str(), kv.first.c_str(), list);
+				return nullptr;
+			}
+			const unsigned index = idx.asUInt();
+			if (index >= defenderDefs.size()) {
+				circuit->LOG("CONFIG %s: %s %s defender index %u is out of range (%u entries)",
+					cfgName.c_str(), kv.first.c_str(), list, index, static_cast<unsigned>(defenderDefs.size()));
+				return nullptr;
+			}
+			return defenderDefs[index];
+		};
 		const Json::Value& land = porc["land"];
 		sideInfo.landDefenders.reserve(land.size());
 		for (const Json::Value& idx : land) {
-			unsigned index = idx.asUInt();
-			if (index < defenderDefs.size()) {
-				sideInfo.landDefenders.push_back(defenderDefs[index]);
+			CCircuitDef* cdef = getDefender(idx, "land");
+			if (cdef != nullptr) {
+				sideInfo.landDefenders.push_back(cdef);
 			}
 		}
-		const Json::Value& watr = porc["water"];
+		// A per-side array overrides only that side; omitted sides retain shared water.
+		const Json::Value& sideWaters = porc["water_by_side"];
+		const Json::Value* sideWater = nullptr;
+		if (sideWaters.isObject()) {
+			const Json::Value& value = sideWaters[kv.first];
+			if (value.isArray()) {
+				sideWater = &value;
+			} else if (!value.isNull()) {
+				circuit->LOG("CONFIG %s: %s water_by_side must be an array; using shared water sequence",
+					cfgName.c_str(), kv.first.c_str());
+			}
+		} else if (!sideWaters.isNull()) {
+			circuit->LOG("CONFIG %s: water_by_side must be an object; using shared water sequence", cfgName.c_str());
+		}
+		const Json::Value& watr = (sideWater != nullptr) ? *sideWater : porc["water"];
 		sideInfo.waterDefenders.reserve(watr.size());
 		for (const Json::Value& idx : watr) {
-			unsigned index = idx.asUInt();
-			if (index < defenderDefs.size()) {
-				sideInfo.waterDefenders.push_back(defenderDefs[index]);
+			CCircuitDef* cdef = getDefender(idx, "water");
+			if (cdef != nullptr) {
+				sideInfo.waterDefenders.push_back(cdef);
 			}
 		}
 
 		const Json::Value& base = porc["base"];
 		sideInfo.baseDefence.reserve(base.size());
 		for (const Json::Value& pair : base) {
-			unsigned index = pair.get((unsigned)0, -1).asUInt();
-			if (index >= defenderDefs.size()) {
+			if (!pair.isArray()) {
+				circuit->LOG("CONFIG %s: %s base defender entry must be an array", cfgName.c_str(), kv.first.c_str());
+				continue;
+			}
+			CCircuitDef* cdef = getDefender(pair.get((unsigned)0, Json::Value()), "base");
+			if (cdef == nullptr) {
 				continue;
 			}
 			int frame = pair.get((unsigned)1, 0).asInt() * FRAMES_PER_SEC;
-			sideInfo.baseDefence.emplace_back(defenderDefs[index], frame);
+			sideInfo.baseDefence.emplace_back(cdef, frame);
 		}
 		auto compare = [](const std::pair<CCircuitDef*, int>& d1, const std::pair<CCircuitDef*, int>& d2) {
 			return d1.second > d2.second;

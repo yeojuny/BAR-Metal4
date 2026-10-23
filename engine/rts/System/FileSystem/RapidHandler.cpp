@@ -6,6 +6,7 @@
 #include <limits>
 #include <string>
 #include <string_view>
+#include <unordered_set>
 #include <vector>
 
 #include "DataDirsAccess.h"
@@ -108,15 +109,36 @@ static std::vector<std::string> ParseRapidTagResolutionOrder() {
 	return order;
 }
 
+static std::vector<std::string> FindRapidIndexes(bool keepLastOccurrence)
+{
+	auto files = dataDirsAccess.FindFiles("rapid", "versions.gz", FileQueryFlags::RECURSE);
+	for (std::string& file: files)
+		file = dataDirsAccess.LocateFile(file);
+
+	// FindFiles returns relative paths from every data directory. LocateFile
+	// can resolve several of them to the same higher-priority physical index.
+	// Keep the original tie order: tag resolution uses the last occurrence,
+	// while reverse package lookup uses the first occurrence.
+	if (keepLastOccurrence)
+		std::reverse(files.begin(), files.end());
+	std::unordered_set<std::string> seen;
+	files.erase(std::remove_if(files.begin(), files.end(), [&](const std::string& file) {
+		return !seen.insert(file).second;
+	}), files.end());
+	if (keepLastOccurrence)
+		std::reverse(files.begin(), files.end());
+	return files;
+}
+
 std::string GetRapidPackageFromTag(const std::string& tag)
 {
 	const auto order = ParseRapidTagResolutionOrder();
 	std::string package = tag;
 	std::size_t rank = std::numeric_limits<std::size_t>::max();
-	for (const std::string& file: dataDirsAccess.FindFiles("rapid", "versions.gz", FileQueryFlags::RECURSE)) {
+	for (const std::string& file: FindRapidIndexes(true)) {
 		RapidEntry re;
-		if (GetRapidEntry(dataDirsAccess.LocateFile(file), &re, [&](const RapidEntry& re) { return re.GetTag() == tag; })) {
-			// The `file` path looks like `rapid/[domain]/[repo]/versions.gz`
+		if (GetRapidEntry(file, &re, [&](const RapidEntry& re) { return re.GetTag() == tag; })) {
+			// The resolved path ends in `rapid/[domain]/[repo]/versions.gz`
 			// e.g: `rapid/repos.springrts.com/byar-chobby/versions.gz` as created
 			// by pr-downloader. We extract the domain part from it.
 			const auto rapidDomain = std::filesystem::path{file}.parent_path().parent_path().filename().string();
@@ -138,9 +160,9 @@ std::string GetRapidPackageFromTag(const std::string& tag)
 
 std::string GetRapidTagFromPackage(const std::string& pkg)
 {
-	for (const std::string& file: dataDirsAccess.FindFiles("rapid", "versions.gz", FileQueryFlags::RECURSE)) {
+	for (const std::string& file: FindRapidIndexes(false)) {
 		RapidEntry re;
-		if (GetRapidEntry(dataDirsAccess.LocateFile(file), &re, [&](const RapidEntry& re) { return re.GetPackageHash() == pkg; }))
+		if (GetRapidEntry(file, &re, [&](const RapidEntry& re) { return re.GetPackageHash() == pkg; }))
 			return re.GetTag();
 	}
 	return "rapid_tag_unknown";

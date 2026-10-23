@@ -1,11 +1,13 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WorldOverlayRenderer.h"
 #include "NativeSampleShadingShaders.h"
+#include "NativePointCoverageShaders.h"
 #include "NativeWaterOverlayShaders.h"
 #include "Rendering/Backend/NativeWaterOverlayProgram.h"
 #include "Rendering/Backend/NativeSplatPainterProgram.h"
 #include <tuple>
 #include "Metal4UnitEffects.h"
+#include "Metal4UnitGlass.h"
 #include "Rendering/Backend/NativeEasyFacingProgram.h"
 #include "Rendering/Backend/NativeSquadHullProgram.h"
 #include "Rendering/Backend/NativeTerraformOverlayProgram.h"
@@ -19,7 +21,7 @@
 #include <map>
 namespace rendering::metal4 {
 namespace {
-const char* SOURCE=RECOIL_NATIVE_SAMPLE_SHADING_MSL R"MSL(
+const char* SOURCE=RECOIL_NATIVE_SAMPLE_SHADING_MSL RECOIL_NATIVE_POINT_COVERAGE_MSL R"MSL(
 #include <metal_stdlib>
 using namespace metal;
 #if MAP_MRT_BROADCAST
@@ -45,10 +47,30 @@ MRTOutput Broadcast(float4 c){MRTOutput out;out.c0=out.c1=out.c2=out.c3=out.c4=c
 #define OUTPUT_VALUE(c) c
 #endif
 struct V {packed_float4 clip,color;packed_float4 uv;};
-struct U {float4 scale;uint4 options;float4 parameters;float4 scale1;uint4 options1;float4 parameters1;float4 arrowShape,arrowDetail,arrowFill,arrowOutline;float4 hullColor,hullStripe,hullCentroid,hullAnimation;float4x4 overlayViewProjInv;float4 overlayPlacement,overlayFit,overlayMapSize;float4 losImage,losRaster;};
-struct Out {float4 position [[position]];float4 color [[RECOIL_SAMPLE_PERSPECTIVE]];float4 uv [[RECOIL_SAMPLE_PERSPECTIVE]];};
-vertex Out WorldOverlayVertex(uint id [[vertex_id]],device const V* vertices [[buffer(0)]]) {
- const V v=vertices[id];Out o;o.position=float4(v.clip);o.position.z=(o.position.z+o.position.w)*.5f;o.color=float4(v.color);o.uv=float4(v.uv);return o;
+struct U {float4 scale;uint4 options;float4 parameters;float4 scale1;uint4 options1;float4 parameters1;float4 arrowShape,arrowDetail,arrowFill,arrowOutline;float4 hullColor,hullStripe,hullCentroid,hullAnimation;float4x4 overlayViewProjInv;float4 overlayPlacement,overlayFit,overlayMapSize;float4 losImage,losRaster;uint4 pointRaster;};
+struct Out {float4 position [[position]];float4 color [[RECOIL_SAMPLE_PERSPECTIVE]];float4 uv [[RECOIL_SAMPLE_PERSPECTIVE]];float4 pointDisk [[flat]];};
+vertex Out WorldOverlayVertex(uint id [[vertex_id]],device const V* vertices [[buffer(0)]],constant U& u [[buffer(1)]],device const packed_float4* pointDisks [[buffer(2)]]) {
+ const V v=vertices[id];Out o;o.position=float4(v.clip);o.position.z=(o.position.z+o.position.w)*.5f;o.color=float4(v.color);o.uv=float4(v.uv);o.pointDisk=u.pointRaster.x?float4(pointDisks[id]):float4(0.0f);return o;
+}
+struct PointOutput {
+ float4 c0 [[color(0)]];
+#if MAP_MRT_BROADCAST
+ float4 c1 [[color(1)]];float4 c2 [[color(2)]];float4 c3 [[color(3)]];float4 c4 [[color(4)]];
+#if MAP_MRT_COMBINED
+ float4 c5 [[color(5)]];
+#endif
+#endif
+ uint sampleMask [[sample_mask]];
+};
+PointOutput PointResult(float4 color,uint mask) {
+ PointOutput out;out.c0=color;out.sampleMask=mask;
+#if MAP_MRT_BROADCAST
+ out.c1=out.c2=out.c3=out.c4=color;
+#if MAP_MRT_COMBINED
+ out.c5=color;
+#endif
+#endif
+ return out;
 }
 bool Alpha(float a,float r,uint c){switch(c){case 0:return false;case 1:return a<r;case 2:return a==r;case 3:return a<=r;case 4:return a>r;case 5:return a!=r;case 6:return a>=r;case 7:return true;}return false;}
 float4 SampleOriginalUI(texture2d<float> image,sampler s,float2 uv) { return image.sample(s,uv); }
@@ -65,7 +87,8 @@ fragment OUTPUT_TYPE WorldSplatOverlayFragment(Out in [[stage_in]],constant U& u
  const float4 result=float4(c,clamp(sp.r+sp.g+sp.b+sp.a,0.f,1.f)*.55f);
  if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return OUTPUT_VALUE(result);
 }
-fragment OUTPUT_TYPE WorldOverlayFragment(Out in [[stage_in]],constant U& u [[buffer(1)]],texture2d<float> image [[texture(0)]],sampler source [[sampler(0)]],texture2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+fragment PointOutput WorldOverlayFragment(Out in [[stage_in]],constant U& u [[buffer(1)]],texture2d<float> image [[texture(0)]],sampler source [[sampler(0)]],texture2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(in.position.xy,in.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
  float4 result=in.color;
  if(u.options.x && (u.options.x==2 || u.parameters.w==0)){float2 uv=in.uv.xy*u.scale.xy;if(u.options.y)uv.y=1-uv.y;float4 texel;
@@ -73,9 +96,10 @@ fragment OUTPUT_TYPE WorldOverlayFragment(Out in [[stage_in]],constant U& u [[bu
   if(u.options.x==2)result.a*=texel.r;else result*=texel;}
  if(u.options1.x && u.options.x!=2 && u.parameters1.w==0){float2 uv=in.uv.zw*u.scale1.xy;if(u.options1.y)uv.y=1-uv.y;float4 texel;
   if(u.parameters1.w)texel=float4(0,0,0,1);else if(u.parameters1.y||u.parameters1.z){const float2 dx=dfdx(uv),dy=dfdy(uv);if(u.parameters1.y)uv.x=clamp(uv.x,0.f,1.f);if(u.parameters1.z)uv.y=clamp(uv.y,0.f,1.f);texel=SampleOriginalUI(image1,source1,uv,gradient2d(dx,dy));}else texel=SampleOriginalUI(image1,source1,uv);result*=texel;}
- if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return OUTPUT_VALUE(result);
+ if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return PointResult(result,pointMask);
 }
-fragment OUTPUT_TYPE WorldOverlayFragment1(Out in [[stage_in]],constant U& u [[buffer(1)]],depth2d<float> image [[texture(0)]],sampler source [[sampler(0)]],texture2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+fragment PointOutput WorldOverlayFragment1(Out in [[stage_in]],constant U& u [[buffer(1)]],depth2d<float> image [[texture(0)]],sampler source [[sampler(0)]],texture2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(in.position.xy,in.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
  float4 result=in.color;
  if(u.options.x && (u.options.x==2 || u.parameters.w==0)){float2 uv=in.uv.xy*u.scale.xy;if(u.options.y)uv.y=1-uv.y;float4 texel;
@@ -83,9 +107,10 @@ fragment OUTPUT_TYPE WorldOverlayFragment1(Out in [[stage_in]],constant U& u [[b
   if(u.options.x==2)result.a*=texel.r;else result*=texel;}
  if(u.options1.x && u.options.x!=2 && u.parameters1.w==0){float2 uv=in.uv.zw*u.scale1.xy;if(u.options1.y)uv.y=1-uv.y;float4 texel;
   if(u.parameters1.w)texel=float4(0,0,0,1);else if(u.parameters1.y||u.parameters1.z){const float2 dx=dfdx(uv),dy=dfdy(uv);if(u.parameters1.y)uv.x=clamp(uv.x,0.f,1.f);if(u.parameters1.z)uv.y=clamp(uv.y,0.f,1.f);texel=SampleOriginalUI(image1,source1,uv,gradient2d(dx,dy));}else texel=SampleOriginalUI(image1,source1,uv);result*=texel;}
- if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return OUTPUT_VALUE(result);
+ if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return PointResult(result,pointMask);
 }
-fragment OUTPUT_TYPE WorldOverlayFragment2(Out in [[stage_in]],constant U& u [[buffer(1)]],texture2d<float> image [[texture(0)]],sampler source [[sampler(0)]],depth2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+fragment PointOutput WorldOverlayFragment2(Out in [[stage_in]],constant U& u [[buffer(1)]],texture2d<float> image [[texture(0)]],sampler source [[sampler(0)]],depth2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(in.position.xy,in.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
  float4 result=in.color;
  if(u.options.x && (u.options.x==2 || u.parameters.w==0)){float2 uv=in.uv.xy*u.scale.xy;if(u.options.y)uv.y=1-uv.y;float4 texel;
@@ -93,9 +118,10 @@ fragment OUTPUT_TYPE WorldOverlayFragment2(Out in [[stage_in]],constant U& u [[b
   if(u.options.x==2)result.a*=texel.r;else result*=texel;}
  if(u.options1.x && u.options.x!=2 && u.parameters1.w==0){float2 uv=in.uv.zw*u.scale1.xy;if(u.options1.y)uv.y=1-uv.y;float4 texel;
   if(u.parameters1.w)texel=float4(0,0,0,1);else if(u.parameters1.y||u.parameters1.z){const float2 dx=dfdx(uv),dy=dfdy(uv);if(u.parameters1.y)uv.x=clamp(uv.x,0.f,1.f);if(u.parameters1.z)uv.y=clamp(uv.y,0.f,1.f);texel=SampleOriginalUI(image1,source1,uv,gradient2d(dx,dy));}else texel=SampleOriginalUI(image1,source1,uv);result*=texel;}
- if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return OUTPUT_VALUE(result);
+ if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return PointResult(result,pointMask);
 }
-fragment OUTPUT_TYPE WorldOverlayFragment3(Out in [[stage_in]],constant U& u [[buffer(1)]],depth2d<float> image [[texture(0)]],sampler source [[sampler(0)]],depth2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+fragment PointOutput WorldOverlayFragment3(Out in [[stage_in]],constant U& u [[buffer(1)]],depth2d<float> image [[texture(0)]],sampler source [[sampler(0)]],depth2d<float> image1 [[texture(1)]],sampler source1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(in.position.xy,in.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
  float4 result=in.color;
  if(u.options.x && (u.options.x==2 || u.parameters.w==0)){float2 uv=in.uv.xy*u.scale.xy;if(u.options.y)uv.y=1-uv.y;float4 texel;
@@ -103,7 +129,7 @@ fragment OUTPUT_TYPE WorldOverlayFragment3(Out in [[stage_in]],constant U& u [[b
   if(u.options.x==2)result.a*=texel.r;else result*=texel;}
  if(u.options1.x && u.options.x!=2 && u.parameters1.w==0){float2 uv=in.uv.zw*u.scale1.xy;if(u.options1.y)uv.y=1-uv.y;float4 texel;
   if(u.parameters1.w)texel=float4(0,0,0,1);else if(u.parameters1.y||u.parameters1.z){const float2 dx=dfdx(uv),dy=dfdy(uv);if(u.parameters1.y)uv.x=clamp(uv.x,0.f,1.f);if(u.parameters1.z)uv.y=clamp(uv.y,0.f,1.f);texel=SampleOriginalUI(image1,source1,uv,gradient2d(dx,dy));}else texel=SampleOriginalUI(image1,source1,uv);result*=texel;}
- if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return OUTPUT_VALUE(result);
+ if(u.options.z&&!Alpha(result.a,u.parameters.x,u.options.w))discard_fragment();return PointResult(result,pointMask);
 }
 constant float2 A = float2(0.0, -32.0);
 constant float2 B = float2(0.0, 32.0);
@@ -222,8 +248,9 @@ fragment OUTPUT_TYPE WorldEasyFacingFragment(Out in [[stage_in]],constant U& u [
 }
 
 )MSL" RECOIL_NATIVE_WATER_OVERLAY_MSL;
-struct Uniform{std::array<float,4> scale;std::array<uint32_t,4> options;std::array<float,4> parameters;std::array<float,4> scale1;std::array<uint32_t,4> options1;std::array<float,4> parameters1;std::array<float,4> arrowShape,arrowDetail,arrowFill,arrowOutline;std::array<float,4> hullColor,hullStripe,hullCentroid,hullAnimation;std::array<float,16> overlayViewProjInv;std::array<float,4> overlayPlacement,overlayFit,overlayMapSize;std::array<float,4> losImage,losRaster;};
-static_assert(sizeof(Uniform)==368);
+struct Uniform{std::array<float,4> scale;std::array<uint32_t,4> options;std::array<float,4> parameters;std::array<float,4> scale1;std::array<uint32_t,4> options1;std::array<float,4> parameters1;std::array<float,4> arrowShape,arrowDetail,arrowFill,arrowOutline;std::array<float,4> hullColor,hullStripe,hullCentroid,hullAnimation;std::array<float,16> overlayViewProjInv;std::array<float,4> overlayPlacement,overlayFit,overlayMapSize;std::array<float,4> losImage,losRaster;std::array<uint32_t,4> pointRaster{};};
+static_assert(sizeof(Uniform)==384);
+static_assert(offsetof(Uniform,pointRaster)==368);
 struct WaterUniform {
  std::array<float,16> viewProj,viewProjInv,shadowView;
  std::array<float,4> camera,mapSize,time,sun,view,parameters;
@@ -260,6 +287,7 @@ struct PreparedWorldOverlayFrame::Impl {
 	struct Draw {
 		uint64_t sequence=0;NativeWorldDrawStage stage=NativeWorldDrawStage::World;
   std::shared_ptr<PreparedUnitEffect> unitEffect;
+  std::shared_ptr<PreparedUnitGlass> unitGlass;
 		__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;
 		__strong id<MTL4ArgumentTable> arguments=nil;__strong id<MTLBuffer> indices=nil;
 		NativeWorldDrawState state;MTLViewport viewport{};MTLScissorRect scissor{};uint32_t count=0;
@@ -271,14 +299,14 @@ struct PreparedWorldOverlayFrame::Impl {
 };
 PreparedWorldOverlayFrame::PreparedWorldOverlayFrame():impl(std::make_unique<Impl>()){}
 PreparedWorldOverlayFrame::~PreparedWorldOverlayFrame()=default;
-void PreparedWorldOverlayFrame::EncodeDependencies(id<MTL4CommandBuffer> command)const{for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.encodeDependencies)image.encodeDependencies(command);}
-void PreparedWorldOverlayFrame::DidComplete()const{for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.didComplete)image.didComplete();}
+void PreparedWorldOverlayFrame::EncodeDependencies(id<MTL4CommandBuffer> command)const{for(const auto& d:impl->draws)if(d.unitGlass)d.unitGlass->EncodeDependencies(command);for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.encodeDependencies)image.encodeDependencies(command);}
+void PreparedWorldOverlayFrame::DidComplete()const{for(const auto& d:impl->draws)if(d.unitGlass)d.unitGlass->DidComplete();for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.didComplete)image.didComplete();}
 size_t PreparedWorldOverlayFrame::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedWorldOverlayFrame::SequenceAt(size_t i)const{return impl->draws.at(i).sequence;}
 NativeWorldDrawStage PreparedWorldOverlayFrame::StageAt(size_t i)const{return impl->draws.at(i).stage;}
 void PreparedWorldOverlayFrame::EncodeDraw(size_t i,id<MTL4RenderCommandEncoder> encoder)const
 {
-	const auto& d=impl->draws.at(i);if(d.unitEffect){d.unitEffect->Encode(encoder);return;}if(!d.count)return;
+	const auto& d=impl->draws.at(i);if(d.unitGlass){d.unitGlass->Encode(encoder);return;}if(d.unitEffect){d.unitEffect->Encode(encoder);return;}if(!d.count)return;
 	for(const auto& image:d.externalImages)image.requireReadable();
  for(const auto& image:d.typedImages)image.requireReadable();
 	[encoder setRenderPipelineState:d.pipeline];[encoder setDepthStencilState:d.depth];
@@ -296,6 +324,7 @@ struct WorldOverlayGPU::Impl {
  std::shared_ptr<const SquadHullCompiledOwner> squadHullCompiled,terraformOverlayCompiled,losViewCompiled,splatOverlayCompiled;
  std::array<std::shared_ptr<const SquadHullCompiledOwner>,2> waterOverlayCompiled;
  UnitEffectsGPU unitEffects;
+ UnitGlassGPU unitGlass;
 	std::array<__strong id<MTLLibrary>,3> libraries{};
 	std::map<std::tuple<uint64_t,bool,unsigned,bool,unsigned,unsigned>,id<MTLRenderPipelineState>> pipelines;
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const ScreenBlendState& blend,const std::array<bool,4>& mask,MTLPixelFormat format,bool validation,double& shaderMs,unsigned sampledDepthMask,bool mapMRTBroadcast,bool alphaToCoverage,unsigned samples,bool combined=false,unsigned combinedMask=15)
@@ -322,6 +351,7 @@ void WorldOverlayGPU::InitializeReclaimLines(RuntimeLease& lease,MTLPixelFormat 
 {
  ScreenBlendState b;b.enabled=true;b.sourceColor=b.sourceAlpha=ScreenBlendFactor::SourceAlpha;b.destinationColor=b.destinationAlpha=ScreenBlendFactor::OneMinusSourceAlpha;
  impl->unitEffects.Initialize(lease,color,validation,shaderMs,samples);
+ impl->unitGlass.Initialize(lease,color,validation,shaderMs,samples);
  impl->Pipeline(lease,b,{true,true,true,true},color,validation,shaderMs,0,false,false,samples);
  impl->Pipeline(lease,b,{true,true,true,true},color,validation,shaderMs,4,false,false,samples);SetNativeEasyFacingConsumer(std::make_shared<const unsigned char>(1));
  auto hull=std::make_shared<SquadHullCompiledOwner>();hull->pipeline=impl->Pipeline(lease,b,{true,true,true,true},color,validation,shaderMs,5,false,false,samples);hull->library=impl->libraries[0];
@@ -337,17 +367,38 @@ void WorldOverlayGPU::InitializeReclaimLines(RuntimeLease& lease,MTLPixelFormat 
   Require(w->pipeline!=nil&&w->library!=nil,"Water Overlay actual surface/fog program unavailable");impl->waterOverlayCompiled[n]=w;SetNativeWaterOverlayConsumer(n,std::move(w));
  }
 }
-void WorldOverlayGPU::ClearResources(){impl->unitEffects.ClearResources();} // Immutable images belong to the shared ScreenGPU; compiled programs remain valid.
+void WorldOverlayGPU::ClearResources(){impl->unitGlass.ClearResources();impl->unitEffects.ClearResources();} // Immutable images belong to the shared ScreenGPU; compiled programs remain valid.
 std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawFrame& frame,
 	ScreenGPU& images,const PreparedScreenFrame* targetProducers,const WorldCamera& camera,uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,
-	MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool validation,double& shaderMs,bool mapMRTBroadcast,unsigned samples,bool mapCombinedColor)
+	MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool validation,double& shaderMs,bool mapMRTBroadcast,unsigned samples,bool mapCombinedColor,const CUSSourceImageProvider& glassImages)
 {
 	Require(!mapMRTBroadcast||(colorFormat==MTLPixelFormatRGBA8Unorm&&stencilFormat==MTLPixelFormatInvalid),"Map generic broadcast requires its actual five-color/no-stencil target");
  Require(depthFormat==MTLPixelFormatDepth32Float||depthFormat==MTLPixelFormatDepth32Float_Stencil8,"Native world overlay requires actual scene depth");
+// Preflight the entire marked frame before allocations or any early-out.
+	// Source-white complement blending is algebraically byte inversion on
+	// linear UNORM8 only. Exact hardware bytes require the dedicated GPU gate.
+	for (const auto& source : frame.draws) if (source.world.invertColorUnorm8) {
+		Require(colorFormat == MTLPixelFormatBGRA8Unorm || colorFormat == MTLPixelFormatRGBA8Unorm,
+			"Rectangle inversion requires a linear eight-bit UNORM target");
+		Require(!mapMRTBroadcast && !mapCombinedColor && source.stage == NativeWorldDrawStage::World,
+			"Rectangle inversion requires the main world color attachment");
+		Require(stencilFormat == MTLPixelFormatStencil8 || stencilFormat == MTLPixelFormatDepth32Float_Stencil8,
+			"Rectangle inversion requires its actual paired stencil attachment");
+		Require(source.world.stencilTest && !source.world.alphaToCoverage && !source.surface.alphaTest.enabled,
+			"Rectangle inversion requires stencil and unmodified fragment coverage");
+		Require(source.surface.material == ScreenMaterial::Solid && !source.surface.secondary.texture && !source.surface.splatPainter &&
+			!source.originalShadowInput && !source.easyFacing && !source.squadHull && !source.terraformOverlay && !source.losView &&
+			!source.waterOverlay && !source.unitEffect && !source.distortion && !source.objectSpotlight && !source.grass &&
+			!source.resourceSpots && !source.sensorLOS && !source.reclaimField,
+			"Rectangle inversion requires the solid common world program");
+		for (const auto& vertex : source.vertices)
+			Require(vertex.color == ScreenColor{1,1,1,1}, "Rectangle inversion requires exact opaque white source vertices");
+	}
 	auto result=std::make_unique<PreparedWorldOverlayFrame>();
 	uint64_t lastSequence=0;
 	for(const auto& source:frame.draws) {
 		ValidateNativeWorldDrawCommand(source);Require(source.sequence>lastSequence,"Native world draw ordinal must retain actual call order");lastSequence=source.sequence;
+  if(source.unitGlass){Require(!mapMRTBroadcast,"Glass cannot execute in terrain MRT");PreparedWorldOverlayFrame::Impl::Draw draw;draw.sequence=source.sequence;draw.stage=source.stage;draw.unitGlass=impl->unitGlass.Prepare(lease,source,glassImages,camera,width,height,logicalWidth,logicalHeight,colorFormat,depthFormat,stencilFormat,validation,shaderMs,samples);result->impl->draws.push_back(std::move(draw));continue;}
   if(source.unitEffect){Require(!mapMRTBroadcast,"Airjets cannot execute in a terrain MRT callback");PreparedWorldOverlayFrame::Impl::Draw draw;draw.sequence=source.sequence;draw.stage=source.stage;draw.unitEffect=impl->unitEffects.Prepare(lease,source,images,targetProducers,camera,width,height,logicalWidth,logicalHeight,colorFormat,depthFormat,stencilFormat,validation,shaderMs,samples);result->impl->draws.push_back(std::move(draw));continue;}
 		if(source.distortion)continue; // Paired command-level original Distortion consumer.
 		if(source.objectSpotlight)continue; // Dedicated original instanced-cylinder vertex/fragment consumer.
@@ -372,17 +423,29 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
 			const auto left=std::max(draw.scissor.x,x0),top=std::max(draw.scissor.y,y0),right=std::min(draw.scissor.x+draw.scissor.width,x1),bottom=std::min(draw.scissor.y+draw.scissor.height,y1);if(right<=left||bottom<=top)continue;draw.scissor={left,top,right-left,bottom-top};}
 		const auto depthImage=[](const auto& image){return image&&!image->incomplete&&(image->format==ScreenTextureFormat::Depth32Float||image->format==ScreenTextureFormat::Depth24Unorm||image->format==ScreenTextureFormat::Depth16Unorm);};
 		const unsigned sampledDepthMask=source.surface.splatPainter?10:source.waterOverlay?(source.waterOverlay->fog?9:8):source.losView?7:source.terraformOverlay?6:source.squadHull?5:source.easyFacing?4:unsigned(source.surface.material!=ScreenMaterial::Solid&&depthImage(source.surface.texture))|(unsigned(source.surface.material!=ScreenMaterial::FontCoverage&&depthImage(source.surface.secondary.texture))<<1);
+		Require(mesh.pointDisks.empty() || sampledDepthMask<=3,"Point disk coverage requires the generic fixed-function world consumer");
 		unsigned combinedMask=0;for(unsigned i=0;i<4;++i)if(s.combinedColorWrite[i])combinedMask|=1u<<i;
 		Require(!mapCombinedColor||mapMRTBroadcast,"Optional combined color requires actual Map MRT broadcast");
-		draw.pipeline=impl->Pipeline(lease,source.surface.blend,s.colorWrite,colorFormat,validation,shaderMs,sampledDepthMask,mapMRTBroadcast,s.alphaToCoverage,samples,mapCombinedColor,combinedMask);
+		auto blend = source.surface.blend;
+		if (s.invertColorUnorm8) {
+			blend.enabled = true;
+			blend.colorEquation = blend.alphaEquation = ScreenBlendEquation::Add;
+			blend.sourceColor = ScreenBlendFactor::OneMinusDestinationColor;
+			blend.sourceAlpha = ScreenBlendFactor::OneMinusDestinationAlpha;
+			blend.destinationColor = blend.destinationAlpha = ScreenBlendFactor::Zero;
+		}
+		draw.pipeline=impl->Pipeline(lease,blend,s.colorWrite,colorFormat,validation,shaderMs,sampledDepthMask,mapMRTBroadcast,s.alphaToCoverage,samples,mapCombinedColor,combinedMask);
 		const auto retainExternal=[&](PreparedScreenExternalImage image){draw.externalImages.push_back(std::move(image));};
 		auto depth=[MTLDepthStencilDescriptor new];depth.depthCompareFunction=s.depthTest?Compare(s.depthCompare):MTLCompareFunctionAlways;depth.depthWriteEnabled=s.depthTest&&s.depthWrite;
 		if(stencilEnabled)for(bool front:{true,false}){const auto& original=front?s.frontStencil:s.backStencil;auto face=[MTLStencilDescriptor new];face.stencilCompareFunction=Compare(original.compare);face.stencilFailureOperation=Operation(original.fail);face.depthFailureOperation=Operation(original.depthFail);face.depthStencilPassOperation=Operation(original.pass);face.readMask=original.readMask;face.writeMask=original.writeMask;if(front)depth.frontFaceStencil=face;else depth.backFaceStencil=face;}
 		draw.depth=[lease.Device() newDepthStencilStateWithDescriptor:depth];Require(draw.depth!=nil,"Cannot create native original depth/stencil state");lease.Retain(draw.depth);
 		auto vertices=Buffer(lease,mesh.vertices.data(),mesh.vertices.size()*sizeof(NativeWorldDrawVertex));draw.indices=Buffer(lease,mesh.indices.data(),mesh.indices.size()*sizeof(uint32_t));draw.count=uint32_t(mesh.indices.size());
+		Require(mesh.pointDisks.empty() || mesh.pointDisks.size()==mesh.vertices.size(),"World point metadata extent differs");
+		auto pointDisks=mesh.pointDisks.empty()?vertices:Buffer(lease,mesh.pointDisks.data(),mesh.pointDisks.size()*sizeof(std::array<float,4>));
 		const auto consumer=NativePostprocessConsumer{source.stage==NativeWorldDrawStage::PreDecals?NativePostprocessStage::PreDecals:(source.stage==NativeWorldDrawStage::PreUnit?NativePostprocessStage::PreUnit:NativePostprocessStage::World),source.sequence,0};
 		const auto& surface=source.surface;auto sampled=images.PrepareImage(lease,surface.material==ScreenMaterial::Solid?nullptr:surface.texture,surface.sampler,targetProducers,consumer,retainExternal);
 		Uniform uniform{{1,1,0,0},{uint32_t(surface.material),uint32_t(surface.texture&&surface.texture->flipV),uint32_t(surface.alphaTest.enabled),uint32_t(surface.alphaTest.compare)},{surface.alphaTest.reference,float(surface.sampler.wrapS==ScreenWrap::LegacyClamp),float(surface.sampler.wrapT==ScreenWrap::LegacyClamp),float(surface.texture&&surface.texture->incomplete)}};
+		uniform.pointRaster[0]=!mesh.pointDisks.empty();
 		if(surface.texture&&!surface.texture->incomplete&&surface.uvMode==ScreenUVMode::Texel){uniform.scale[0]=1.f/surface.texture->width;uniform.scale[1]=1.f/surface.texture->height;}
 		const auto& second=surface.secondary;const bool hasSecondary=second.texture&&surface.material!=ScreenMaterial::FontCoverage;
 		auto sampled1=images.PrepareImage(lease,hasSecondary?second.texture:nullptr,second.sampler,targetProducers,consumer,retainExternal);
@@ -422,8 +485,8 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
     waterImages[4+n]={t.texture,t.sampler};draw.typedImages.push_back(std::move(t));
    }
   }
-  auto uniforms=source.waterOverlay?Buffer(lease,&water,sizeof(water)):Buffer(lease,&uniform,sizeof(uniform));auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.maxTextureBindCount=source.waterOverlay?6:3;descriptor.maxSamplerStateBindCount=source.waterOverlay?6:3;descriptor.initializeBindings=YES;NSError* error=nil;
-		draw.arguments=[lease.Device() newArgumentTableWithDescriptor:descriptor error:&error];Require(draw.arguments!=nil,"Cannot create original world argument table: "+Error(error));[draw.arguments setAddress:vertices.gpuAddress atIndex:0];[draw.arguments setAddress:uniforms.gpuAddress atIndex:1];[draw.arguments setTexture:sampled.texture.gpuResourceID atIndex:0];[draw.arguments setSamplerState:sampled.sampler.gpuResourceID atIndex:0];[draw.arguments setTexture:sampled1.texture.gpuResourceID atIndex:1];[draw.arguments setSamplerState:sampled1.sampler.gpuResourceID atIndex:1];if(source.losView){[draw.arguments setTexture:losImage.texture.gpuResourceID atIndex:2];[draw.arguments setSamplerState:losImage.sampler.gpuResourceID atIndex:2];}if(source.waterOverlay)for(unsigned n=0;n<(source.waterOverlay->fog?3u:6u);++n){[draw.arguments setTexture:waterImages[n].texture.gpuResourceID atIndex:n];[draw.arguments setSamplerState:waterImages[n].sampler.gpuResourceID atIndex:n];}lease.Retain(draw.arguments);result->impl->draws.push_back(std::move(draw));
+  auto uniforms=source.waterOverlay?Buffer(lease,&water,sizeof(water)):Buffer(lease,&uniform,sizeof(uniform));auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=3;descriptor.maxTextureBindCount=source.waterOverlay?6:3;descriptor.maxSamplerStateBindCount=source.waterOverlay?6:3;descriptor.initializeBindings=YES;NSError* error=nil;
+		draw.arguments=[lease.Device() newArgumentTableWithDescriptor:descriptor error:&error];Require(draw.arguments!=nil,"Cannot create original world argument table: "+Error(error));[draw.arguments setAddress:vertices.gpuAddress atIndex:0];[draw.arguments setAddress:uniforms.gpuAddress atIndex:1];[draw.arguments setAddress:pointDisks.gpuAddress atIndex:2];[draw.arguments setTexture:sampled.texture.gpuResourceID atIndex:0];[draw.arguments setSamplerState:sampled.sampler.gpuResourceID atIndex:0];[draw.arguments setTexture:sampled1.texture.gpuResourceID atIndex:1];[draw.arguments setSamplerState:sampled1.sampler.gpuResourceID atIndex:1];if(source.losView){[draw.arguments setTexture:losImage.texture.gpuResourceID atIndex:2];[draw.arguments setSamplerState:losImage.sampler.gpuResourceID atIndex:2];}if(source.waterOverlay)for(unsigned n=0;n<(source.waterOverlay->fog?3u:6u);++n){[draw.arguments setTexture:waterImages[n].texture.gpuResourceID atIndex:n];[draw.arguments setSamplerState:waterImages[n].sampler.gpuResourceID atIndex:n];}lease.Retain(draw.arguments);result->impl->draws.push_back(std::move(draw));
 	}
 	return result;
 }

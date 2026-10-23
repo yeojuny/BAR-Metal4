@@ -76,7 +76,7 @@ void IWater::SetWater(int rendererMode)
 	// Native support is paired to the real world consumer, never GL extension
 	// flags. Re-evaluate after scene initialization or resource teardown.
 	const std::array<bool, NUM_WATER_RENDERERS> allowedModes = {
-		true, false, false, false, rendering::scene::CanInitializeWater(),
+		true, rendering::scene::CanInitializeLegacyWater(), rendering::scene::CanInitializeDynamicWater(), rendering::scene::CanInitializeLegacyRefractiveWater(), rendering::scene::CanInitializeWater(),
 	};
 #else
 	static std::array<bool, NUM_WATER_RENDERERS> allowedModes = {
@@ -93,6 +93,8 @@ void IWater::SetWater(int rendererMode)
 	// request must instead retain its quality intent if its consumer is absent.
 	const int requestedRenderer = rendererMode >= 0 ? rendererMode
 		: (water == nullptr ? configHandler->GetInt("Water") : -1);
+	const bool legacyFallbackRequest = requestedRenderer >= WATER_RENDERER_REFLECTIVE
+		&& requestedRenderer <= WATER_RENDERER_REFL_REFR;
 	if (requestedRenderer == WATER_RENDERER_BUMPMAPPED && !allowedModes[WATER_RENDERER_BUMPMAPPED])
 		throw content_error("Requested High water requires the complete native Water4 scene consumer");
 #endif
@@ -138,13 +140,25 @@ void IWater::SetWater(int rendererMode)
 #endif
 			break;
 		case WATER_RENDERER_REFLECTIVE:
+#ifdef RECOIL_METAL4_LIVE_SCENE
+			water = std::make_unique<CNativeReflectiveWater>();
+#else
 			water = std::make_unique<CAdvWater>();
+#endif
 			break;
 		case WATER_RENDERER_DYNAMIC:
+#ifdef RECOIL_METAL4_LIVE_SCENE
+			water = std::make_unique<CNativeDynamicWater>();
+#else
 			water = std::make_unique<CDynWater>();
+#endif
 			break;
 		case WATER_RENDERER_REFL_REFR:
+#ifdef RECOIL_METAL4_LIVE_SCENE
+			water = std::make_unique<CNativeRefractiveWater>();
+#else
 			water = std::make_unique<CRefractWater>();
+#endif
 			break;
 		case WATER_RENDERER_BUMPMAPPED:
 #ifdef RECOIL_METAL4_LIVE_SCENE
@@ -165,9 +179,11 @@ void IWater::SetWater(int rendererMode)
 			water->FreeResources(); //destructor is not called for an object throwing exception in a constructor
 		water = nullptr;
 #ifdef RECOIL_METAL4_LIVE_SCENE
-		// Preserve the selected original quality. A failed High producer must
-		// never silently become a missing legacy surface or a Low substitute.
-		throw;
+		// A legacy request follows the original recoverable-content fallback,
+		// even when the availability scan selected High. Explicit High keeps
+		// the existing native quality-intent error contract.
+		if (!legacyFallbackRequest)
+			throw;
 #endif
 	}
 
@@ -177,7 +193,13 @@ void IWater::SetWater(int rendererMode)
 
 	if (water == nullptr) {
 #ifdef RECOIL_METAL4_LIVE_SCENE
-		throw content_error("Native water selection did not create its original surface producer");
+		if (!legacyFallbackRequest)
+			throw content_error("Native water selection did not create its original surface producer");
+		// Native Basic has a separate resource-init boundary, unlike the
+		// original constructor fallback. Publish it only after successful init.
+		auto fallback = std::make_unique<CNativeBasicWater>();
+		fallback->InitResources();
+		water = std::move(fallback);
 #else
 		water = std::make_unique<CBasicWater>();
 #endif

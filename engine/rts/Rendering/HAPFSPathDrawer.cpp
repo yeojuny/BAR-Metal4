@@ -1,5 +1,9 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeLegacyWaterLighting.h"
+#include "Rendering/Backend/NativeTextureContext.h"
+#endif
 #include "Game/GameHelper.h"
 #include "Game/GlobalUnsynced.h"
 #include "Game/UI/GuiHandler.h"
@@ -294,6 +298,9 @@ void HAPFSPathDrawer::UpdateExtraTexture(int extraTex, int starty, int endy, int
 void HAPFSPathDrawer::Draw() const {
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_LIGHTING);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if(rendering::OriginalNativeTextureContext().Initialized())rendering::OriginalNativeLegacyWaterLighting().Observe(false);
+#endif
 	glLineWidth(3);
 
 	for (const auto& p: pm->GetPathMap()) {

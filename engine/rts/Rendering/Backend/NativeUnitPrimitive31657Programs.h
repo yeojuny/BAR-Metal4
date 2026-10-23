@@ -8,9 +8,10 @@
 
 namespace rendering::unitPrimitive31657Program {
 // Selected game31657/2f0a840 source identities. This profile covers only the
-// building AO, feature AO, TeamPlatter and original UnitTracker producers, excluding selected units/SSAO.
+// building AO, feature AO, TeamPlatter and original UnitTracker producers, including the exact selected-units producer; SSAO is separate.
 struct SourceIdentity { std::string_view path; std::uint64_t hash; bool lua; };
-inline constexpr std::array<SourceIdentity,13> Sources{{
+inline constexpr std::array<SourceIdentity,14> Sources{{
+	{"LuaUI/Widgets/gui_selectedunits_gl4.lua",17182888598436896268ULL,true}, // SHA256 bce780e5aeb73b826f138323d05e846da45dd542d037ef280dfe43dd9d96cf79
 	{"LuaUI/Widgets/gui_enemy_spotter.lua",13958551530279508913ULL,true}, // SHA256 a2be861d65be89d2c85041f2435da2b008fb46784633846e55136959cdc64d19
 	{"LuaUI/Widgets/api_unit_tracker_gl4.lua",10173124021414281512ULL,true}, // SHA256 6d8b974b43ea8bd6fd8b868019dc68aa9078d3754d5464c1c0eddea555096e52
 	{"LuaUI/Widgets/gui_ground_ao_plates_gl4.lua",16221502360500712451ULL,true}, // SHA256 290fdead016db18324a4d9d7d2c09104207bed84e6d097e4bcdb9eedbd613989
@@ -63,6 +64,27 @@ inline constexpr auto EnemySpotterNumbers=[] {
 		result[next++]=definition;
 	}
 	return result;
+}();
+
+// Exact 31657 selection shader: no texture/quads; runtime opacity and team mix.
+inline constexpr auto SelectedNumbers=[] {
+ auto result=TeamNumbers;
+ for(auto& d:result){
+  if(d.name=="ANIMATION")d.value=1.f;
+  if(d.name=="HEIGHTOFFSET")d.value=4.f;
+  if(d.name=="INITIALSIZE")d.value=.75f;
+ }
+ return result;
+}();
+inline constexpr auto SelectedUnfinishedNumbers=[] {
+ auto result=SelectedNumbers;
+ for(auto& d:result)if(d.name=="INITIALSIZE")d.value=.9999f;
+ return result;
+}();
+inline constexpr auto SelectedTexts=[] {
+ auto result=unitPrimitiveProgram::TeamTexts;
+ for(auto& d:result)if(d.name=="POST_SHADING")d.value="fragColor.rgba = vec4(mix(g_color.rgb + addRadius, vec3(1.0), 1.0 - teamcolorization), transparency + addRadius);";
+ return result;
 }();
 
 }

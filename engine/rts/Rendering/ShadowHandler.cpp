@@ -1,4 +1,8 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeLegacyWaterLighting.h"
+#include "Rendering/Backend/NativeTextureContext.h"
+#endif
 #include <cfloat>
 
 #include "ShadowHandler.h"
@@ -704,6 +708,7 @@ void CShadowHandler::CreateShadows()
 {
 #ifdef RECOIL_METAL4_LIVE_SCENE
 	if (nativeTextureOwner) {
+		rendering::OriginalNativeLegacyWaterLighting().Observe(false);
 		SetShadowCamera(CCameraHandler::GetCamera(CCamera::CAMTYPE_SHADOW));
 		CCamera* previous = CCameraHandler::GetSetActiveCamera(CCamera::CAMTYPE_SHADOW);
 		try {
@@ -724,6 +729,9 @@ void CShadowHandler::CreateShadows()
 
 	glDisable(GL_BLEND);
 	glDisable(GL_LIGHTING);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if(rendering::OriginalNativeTextureContext().Initialized())rendering::OriginalNativeLegacyWaterLighting().Observe(false);
+#endif
 	glDisable(GL_ALPHA_TEST);
 	glDisable(GL_TEXTURE_2D);
 

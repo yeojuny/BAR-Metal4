@@ -52,7 +52,7 @@ public:
 	void EndNativeCacheDraw() noexcept;
 	rendering::NativeMiniMapState GetNativeState() const;
 	std::vector<rendering::NativeMiniMapIcon> GetNativeIcons() const;
-	std::vector<rendering::NativeMiniMapLine> GetNativeRangeLines() const;
+	std::vector<rendering::NativeMiniMapLine> GetNativeRangeLines(bool selectedSensorsOnly = false) const;
 	std::vector<rendering::NativeMiniMapLine> GetNativeDynamicLines();
 	void GetNativeProjectiles(std::vector<rendering::NativeMiniMapLine>& lines, std::vector<rendering::NativeMiniMapPoint>& points) const;
 #endif

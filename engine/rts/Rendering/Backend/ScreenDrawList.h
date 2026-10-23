@@ -217,6 +217,10 @@ struct ScreenDrawState {
  std::shared_ptr<const NativeSplatPainterInput> splatPainter;
  std::shared_ptr<const NativeDecalCaptureInput> decalCapture;
  std::shared_ptr<const NativeDeferredVisualizerInput> deferredVisualizer;
+	// Internal raster metadata; center/radius are physical Metal pixels. The
+	// absolute fourth component matches the attachment sample count; its
+	// sign selects a disk (>0) or square (<0).
+	std::optional<std::array<float,4>> pointDisk;
 	bool alphaToCoverage = false;
 	ScreenBlendState blend;
 	std::array<bool,4> colorWrite{true,true,true,true};

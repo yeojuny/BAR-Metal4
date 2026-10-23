@@ -3,6 +3,7 @@
 #include "LuaHandle.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "LuaNativePBRSource.h"
+#include "LuaNativeUnitGlass.h"
 #endif
 #include "lua_privileges.h"
 
@@ -227,6 +228,7 @@ void CLuaHandle::KillLua(bool inFreeHandler)
 	// Original LuaTextures resource ownership ends with this Lua state.
 #ifdef RECOIL_METAL4_LIVE_SCENE
 	LuaNativePBRSource::ReleaseLuaState(L);
+	LuaNativeUnitGlass::ReleaseLuaState(L);
 #endif
 	LUA_ERASE_CONTEXT(&D, LUAHANDLE_CONTEXTS[D.synced]);
 	LUA_CLOSE(&L);

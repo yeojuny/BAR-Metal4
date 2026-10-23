@@ -19,6 +19,8 @@ struct NativeWaterSceneView {
 	NativeWaterScenePass pass = NativeWaterScenePass::Reflection;
 	std::array<float,4> terrainClipPlane{}, modelClipPlane{};
 	bool drawGround = false, drawSky = true, drawFog = true;
+	bool legacyReflective = false;
+ bool dynamicWater=false; // CAdvWater planes/clear differ from BumpWater.
 	std::shared_ptr<const NativeWaterLuaFrame> preParticlesLua, worldLua;
 	// Original ground producer completes before model source capture, in the
 	// same unsafe stage. These distinct owners are consumed once before models.

@@ -19280,6 +19280,38 @@ inline constexpr NativeCUSGeneratedDefault CUS_15_defaults[]={{"drawPass",5124,1
 {"brdfLUT",35678,1,true,{0.0f,0.0f,0.0f,0.0f}},
 {"gamma",5126,1,false,{1.0f,0.0f,0.0f,0.0f}},
 {"brightnessFactor",5126,1,false,{1.5f,0.0f,0.0f,0.0f}}};
+// Reviewed official31691 fragment semantics, derived from the byte-pinned
+// 31657 translation. Official GLSL changes only JAMMED_FILL .09->.08,
+// JAMMED_RIM .25->.22 and JAMMED_EDGE .33->.3. 0.30 is the same float literal.
+// Each exact source site is compile-time checked; no runtime source editing.
+// Vertex code, shadow code, all bindings/defaults/ABI and every old consumer remain.
+template<size_t N>
+consteval std::array<char,N> CUS31691JammedFragment(const char (&original)[N],
+ size_t fillSite,size_t edgeSite) {
+ constexpr std::string_view fill="jammedness * min(0.09 + 0.25 * jammedRim, 1.0)";
+ constexpr std::string_view edge="jammedness * 0.33 * jammedEdge";
+ if(std::string_view(original,N-1).substr(fillSite,fill.size())!=fill ||
+    std::string_view(original,N-1).substr(edgeSite,edge.size())!=edge)
+  throw "CUS31691 jammed translation source sites differ";
+ std::array<char,N> result{};
+ for(size_t i=0;i<N;++i)result[i]=original[i];
+ result[fillSite+20]='8'; // 0.09 -> 0.08
+ result[fillSite+27]='2'; // 0.25 -> 0.22
+ result[edgeSite+16]='0'; // 0.33 -> 0.30
+ return result;
+}
+inline constexpr auto CUS31691_0_fragment_source=CUS31691JammedFragment(CUS_0_fragment_source,35001,35166);
+inline constexpr auto CUS31691_2_fragment_source=CUS31691JammedFragment(CUS_2_fragment_source,31310,31475);
+inline constexpr auto CUS31691_3_fragment_source=CUS31691JammedFragment(CUS_3_fragment_source,35001,35166);
+inline constexpr auto CUS31691_4_fragment_source=CUS31691JammedFragment(CUS_4_fragment_source,35001,35166);
+inline constexpr auto CUS31691_6_fragment_source=CUS31691JammedFragment(CUS_6_fragment_source,31310,31475);
+inline constexpr auto CUS31691_7_fragment_source=CUS31691JammedFragment(CUS_7_fragment_source,35001,35166);
+inline constexpr auto CUS31691_8_fragment_source=CUS31691JammedFragment(CUS_8_fragment_source,28262,28427);
+inline constexpr auto CUS31691_10_fragment_source=CUS31691JammedFragment(CUS_10_fragment_source,25760,25925);
+inline constexpr auto CUS31691_11_fragment_source=CUS31691JammedFragment(CUS_11_fragment_source,28262,28427);
+inline constexpr auto CUS31691_12_fragment_source=CUS31691JammedFragment(CUS_12_fragment_source,29302,29467);
+inline constexpr auto CUS31691_14_fragment_source=CUS31691JammedFragment(CUS_14_fragment_source,26798,26963);
+inline constexpr auto CUS31691_15_fragment_source=CUS31691JammedFragment(CUS_15_fragment_source,29302,29467);
 inline constexpr NativeCUSGeneratedProgram NativeCUSGeneratedPrograms[]={{"unit",1,"89db431382839823bd2bdb256d548503127591d5d76aa098b1d1f3bb23ca1985c2ca3fddd4c9c53050b91d739614dea200017d8c62dd160cb5c0faed29dbe62d","f2ba63e42481b52a8010c278a3cd225a9d9af94fca53c03d55d42974019e89194b14a8c507ab1f6cbfae74d9728516632447368ec7750797c75464915c475b43",
 {CUS_0_vertex_source,CUS_0_vertex_fields,84,0},{CUS_0_fragment_source,CUS_0_fragment_fields,276,1791},CUS_0_defaults},
 {"unit",16,"aeed23dc459bb6bf7a3273bd9d348af2139c86d0f81786ac0889dcb6a0c41a89b6d5e4df20a4b7ce759eb1943483dd7e81ce762b1973c72d01d744eb8423103f","2f33f7b6ecc61793133daaec19c13f128c410c1a0481e97a1dc911db332911610de054c10c96d74b5e1b1fb6a97ac542105e9842a93edf5bb3e76b8a4ce22513",
@@ -19323,6 +19355,47 @@ inline constexpr NativeCUSGeneratedProgram NativeCUSGeneratedPrograms[]={{"unit"
  {"feature",16,"287e845f47aae4dbc462705a18f61840a46f794f5d49c4ec6abecd1a67f1547ad48875d74f33eb456ff74a8a795f4daee1bc13a30412ce139dcb54e6b3a16e44","d3255355b5cc2b05c1455d232e77adfcbc41574cfc166a24bc3d62b829db74dd19eec70c03fead50ddc8726f0c90ee0923471d80568ffdc027ccbdf1cd8db3c3",
  {CUS_9_vertex_source,CUS_9_vertex_fields,84,0},{CUS_9_fragment_source,CUS_9_fragment_fields,276,0},CUS_9_defaults},
  {"tree",16,"15cbb20bd798e04fd921ec193db29d398ba7ed4ebfda95ad43bc8d77431170f9e24c97b86eebb768ed793c9832772ec10b95b8f52370843a6e88dd93c283e596","197b9d684b2020d8efc3091b2ebe89b28715aa6ac58f73f1b75bc0a503e3a4592a7040d164b91691ef207f23a3fa96751cf2ba04070e0e3a4b2d7780912f9c37",
+ {CUS_13_vertex_source,CUS_13_vertex_fields,84,0},{CUS_13_fragment_source,CUS_13_fragment_fields,276,2},CUS_13_defaults},
+ // Exact official31691 stage pairs, including the actual native0/0 shadow variants.
+ {"unit",1,"89db431382839823bd2bdb256d548503127591d5d76aa098b1d1f3bb23ca1985c2ca3fddd4c9c53050b91d739614dea200017d8c62dd160cb5c0faed29dbe62d","50dd39947d751289c4beb4f740995737a3128cf555aa207d15f4780732a8a46d556b1325bf3fe3eadfd8296e80ae393dbd0ee152110a3bc884a0381eeea75f11",
+{CUS_0_vertex_source,CUS_0_vertex_fields,84,0},{CUS31691_0_fragment_source.data(),CUS_0_fragment_fields,276,1791},CUS_0_defaults},
+ {"unit",16,"aeed23dc459bb6bf7a3273bd9d348af2139c86d0f81786ac0889dcb6a0c41a89b6d5e4df20a4b7ce759eb1943483dd7e81ce762b1973c72d01d744eb8423103f","06085256a73cf94b6621c00aca924f334fb11b0c973d8212ed203c2750b2082bbc7505b0c0061fee321a57172bb0eb25785b65d27c71d0c5f372bdff76fb6568",
+{CUS_1_vertex_source,CUS_1_vertex_fields,84,0},{CUS_1_fragment_source,CUS_1_fragment_fields,276,0},CUS_1_defaults},
+ {"unit",0,"acb86b46f884bf5433b8b0fd391fbdcea376e66e257236bb6869e7b96514f9d8bdfe613c2f84c9c224ce224bafe90c12e3c27a8722af42031930bd9c9e5198d7","44819aba82f26277d1c611ab3bd21324635d2da40ec40eed33abfca3fed1b5604d495eb56194862f3445b0a61484428af78daf123a07bbe4e3da85a87b888109",
+{CUS_2_vertex_source,CUS_2_vertex_fields,84,0},{CUS31691_2_fragment_source.data(),CUS_2_fragment_fields,276,1639},CUS_2_defaults},
+ {"unit",5,"9367cbc33730e7c90f155532ac2c07f759ece8cc172bdaaef0a75850eb65733f0e45b425fc38ccd9541d866d4522b44c4f7f6c6665b92ea61ac2f191d78e47db","5dda80edc5b61a379556a770e3df64f2e48d0bca91bf45ff1f6f0e142aab010961626a3855b38dee5aaa6ec205ca6b642909e989a0c527e50ff868c75297b3cd",
+{CUS_3_vertex_source,CUS_3_vertex_fields,84,0},{CUS31691_3_fragment_source.data(),CUS_3_fragment_fields,276,1791},CUS_3_defaults},
+ {"unitskinning",1,"0491345aeed16a10efef1df8d69c8d5cd399e14aea873c3360b25b84936e63d2c8fdbb14fbe4c6fdb9140cf09d068b39674c9b8b1545cee115750ab3b04902cd","dd576a989618b1a5dafcb1a7f90860ae0c5e24c79d1675170756bf6b84253a3fa478a7b7d4b7d32d467543a650c52720b6dd94a5f6f57da5fbe5b1f0bfa4685d",
+{CUS_4_vertex_source,CUS_4_vertex_fields,84,0},{CUS31691_4_fragment_source.data(),CUS_4_fragment_fields,276,1791},CUS_4_defaults},
+ {"unitskinning",16,"bfb33857ea755b2620eb000b07e856a1cdc2dc35be053e4f4d4cfd695e523dbd01b8591200e95620256e0beed045a77168e98e649bc516675f87a12b02b3f2a0","2430f89acdf3b4ec6b86b631051b6102153fd6e92d4def1f12b9bbf4399f3bcbfa8b220a9ca0c097001b76bf8d9de1406116ea768228c3bfa68241615642d6d2",
+{CUS_5_vertex_source,CUS_5_vertex_fields,84,0},{CUS_5_fragment_source,CUS_5_fragment_fields,276,0},CUS_5_defaults},
+ {"unitskinning",0,"8ad2b46d6b304d40df361f745309213a3ee11f170c295241a763163d5047c9345f203dc587be712cfb520838227b3e8d96650fb2593dbe47917288f96715dce3","1880cb607d6314bf7d31c3942bec2608c086d66b5ef2b4d66c6d0b63650165477dc32ecf4ce691665f30ad053ef6947c45c46a9c12070e0ab992353bd7e354cc",
+{CUS_6_vertex_source,CUS_6_vertex_fields,84,0},{CUS31691_6_fragment_source.data(),CUS_6_fragment_fields,276,1639},CUS_6_defaults},
+ {"unitskinning",5,"9b6aa2b472827e7bf8db844ffe9d5e855d20cc94facf7ebe3bab4001c773ff90e535ccd506a50f91a9a66dd6170c2387c5176cbeb1c7454e97ad825e1eb833c4","6c275372548aba192e72d63702d8c2f5fa97cce3d22c5e1c0637d232c133382d1c9607980143eafd03398e8a48c71f02910c33927fed45d404636a8eb7718357",
+{CUS_7_vertex_source,CUS_7_vertex_fields,84,0},{CUS31691_7_fragment_source.data(),CUS_7_fragment_fields,276,1791},CUS_7_defaults},
+ {"feature",1,"ed68cc135c7a536f8d4c0e884e3e6962859c63e87b56dc87a562bd2c0046c38c3ce237fb81d5c7ae4163f15871b9151d2caa0f36d602f2f65e0bd9285ec5ee64","d6d5e969aec4cb055556eb3e373f2e96aed9404ac67da75ce594b27c3a9d68fb52748ea42c96960b6204fbfa87b5f8dbe3329d7f50970a936c3ca05080ac084d",
+{CUS_8_vertex_source,CUS_8_vertex_fields,84,0},{CUS31691_8_fragment_source.data(),CUS_8_fragment_fields,276,967},CUS_8_defaults},
+ {"feature",16,"0510767521e0bdd9bb5d15bde70370736bb33d8ea6e53915a460aa4b95705dd12e9897e2fcf9e3cc151e9f39ecee644c6c3dbe9811c49812f44e8bba0f9b995c","e721b3b6f67f3fbd2134753297ef7c25cee29950e2dabf03857e6a8176be83ed013afc43e3fff94ac80d710bfde41658cbbd99f1d5faed45e698cabef7ccc9cf",
+{CUS_9_vertex_source,CUS_9_vertex_fields,84,0},{CUS_9_fragment_source,CUS_9_fragment_fields,276,0},CUS_9_defaults},
+ {"feature",0,"f3e14e597737943db1e4942db4b397db551d8173d6b663de735ff28a778f17db5edcf4790ca747240229ff1094a6ec274f99cfbcc326edc821a2e20218ded8f0","d3fdabb59b1d052af78cf1d13714413a0d70edb06992523cb52d57225f63fd38bb523acc7688600484e9c00f93a6c47d8b9e9300fde25d26a8f33da9e38f2a03",
+{CUS_10_vertex_source,CUS_10_vertex_fields,84,0},{CUS31691_10_fragment_source.data(),CUS_10_fragment_fields,276,839},CUS_10_defaults},
+ {"feature",5,"b035c5140c4dfa1261a6df88490ddbe27ab75704c574beacf4a5d651496c01b8057e769049cc0a968ad64e2617da730b8b93cd10bab1f2b179f089388c15b4b3","9192b4337dae9e2f74d52ed24e163d2f2fa408f14f19a2999d41651e63709f6911e730cfafadf56f5d062c08c67655dc930ae7b731eb56e9517ecb6315d716c6",
+{CUS_11_vertex_source,CUS_11_vertex_fields,84,0},{CUS31691_11_fragment_source.data(),CUS_11_fragment_fields,276,967},CUS_11_defaults},
+ {"tree",1,"ad789ac6877ca54c3d7cba74a05ff18384e34c1dcbda7c2df60f9f8071cf399e51bf3ae8c810730f4ee1c4196759f6d451358be8571e003416fa216c92ff06df","534a27984939328d8fb8ea95a96fc868e3112fdec4c9b7b3ba7249b15320382a0c90de368da026aed4818e90790f3fd4e2c4975ed8ce931208a276f1d510f372",
+{CUS_12_vertex_source,CUS_12_vertex_fields,84,0},{CUS31691_12_fragment_source.data(),CUS_12_fragment_fields,276,967},CUS_12_defaults},
+ {"tree",16,"63b15e596432fcd667f456ca3dbd02ba6f8719043edbac377921acd15a15db6bff0351fc45b432c026f94cc6565caa20c9931ce59aa9fecfcdeb428b10e2f405","64429b8331c5e64030337e2226314e8170811a7a963c7abdcf3ce5ce71b1cab59ce3abfbe6ab1347420bc5fe4154d669619223ccc084af49da7c88330ccacc07",
+{CUS_13_vertex_source,CUS_13_vertex_fields,84,0},{CUS_13_fragment_source,CUS_13_fragment_fields,276,2},CUS_13_defaults},
+ {"tree",0,"f30ceb6ac492e4953f2baa256afd64227e92c729660452d5ad024a020b279ea23252d58e4d4deb69649c5eca92565f9cda3026dc4044b2fd5b35af542a97d598","cf5e9bdfd5994fc221ce5bee438c74e8c4563b4e08737693001b69db3da5902137e30e14f9b044487b3f586f95431d32f7155a15f90525c7b15549eff6b6b610",
+{CUS_14_vertex_source,CUS_14_vertex_fields,84,0},{CUS31691_14_fragment_source.data(),CUS_14_fragment_fields,276,839},CUS_14_defaults},
+ {"tree",5,"4e98cf73c989c6ab51270007e08200e8e87e84c5f2102fd206bff369fcec2e305a6c371534ceb1cc18fbf759ee2cd90d538c8682b1f57ae0d7db0430e68f725a","5f953747101455498a60610f6e9e3110c8cad921005dad4ecf958564103a5c70c8868ad9cad5f0d796899d506c0db8e4f1b37e800f876d5833fbef212b8572fd",
+{CUS_15_vertex_source,CUS_15_vertex_fields,84,0},{CUS31691_15_fragment_source.data(),CUS_15_fragment_fields,276,967},CUS_15_defaults},
+ {"unit",16,"7f63d4c63ddef5a767261c505c48fe8007d178a669984e71290bf6f86042c0dbf94a880ea3fac8385586335157dcaee866ed57151511562f884473bf4a9f2e6b","da99c96503b390452d490ffc2f24defa06d2b3542f30c66e7ff682785de0e1bf06e11dac9a620efc274f7e3531d038f3ff8c1352a8e75ee7a0b37b8dabd47b1f",
+ {CUS_1_vertex_source,CUS_1_vertex_fields,84,0},{CUS_1_fragment_source,CUS_1_fragment_fields,276,0},CUS_1_defaults},
+ {"unitskinning",16,"0729254573e68a63616c851ab267fef9af8a6ed1462fe4640d6a6770be79b65ed449cdeee659c360daf5dbff270fbf7520c0fe3ff3a832ee98e1c314411f2d9d","bfac2ab92d94c710c82975a3fee32ef5dd3cdfef8e2281f73a4888726cf11cf72652ef95d1742a0e1fac57bd5403516f720d7a2666c708a02001f4171b263601",
+ {CUS_5_vertex_source,CUS_5_vertex_fields,84,0},{CUS_5_fragment_source,CUS_5_fragment_fields,276,0},CUS_5_defaults},
+ {"feature",16,"287e845f47aae4dbc462705a18f61840a46f794f5d49c4ec6abecd1a67f1547ad48875d74f33eb456ff74a8a795f4daee1bc13a30412ce139dcb54e6b3a16e44","b953585b4f673e30d040640a6936318d842df70989eb5e43db83bc8c9cf6a3280835c13988966986ad8c1ea0feadcdf3d7541b9075596a531a53aacebb506cdb",
+ {CUS_9_vertex_source,CUS_9_vertex_fields,84,0},{CUS_9_fragment_source,CUS_9_fragment_fields,276,0},CUS_9_defaults},
+ {"tree",16,"15cbb20bd798e04fd921ec193db29d398ba7ed4ebfda95ad43bc8d77431170f9e24c97b86eebb768ed793c9832772ec10b95b8f52370843a6e88dd93c283e596","447777176ae758e39f4d17901f887fa1a6f9febb3a89b01002a9345ae78b449329861002673f6e93fcc5775700cc4d5eefcdec09df2c861565ce470bee870c03",
  {CUS_13_vertex_source,CUS_13_vertex_fields,84,0},{CUS_13_fragment_source,CUS_13_fragment_fields,276,2},CUS_13_defaults},
 };
 } // namespace rendering::metal4

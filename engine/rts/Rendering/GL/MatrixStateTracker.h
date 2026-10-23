@@ -129,7 +129,15 @@ public:
 			matrixData.texture != 0;
 	}
 
-	void HandleMatrixStateError(int error, const char* errsrc) {
+	void HandleMatrixStateError(int error,const char* errsrc) {
+		HandleMatrixStateError(error,errsrc,[](unsigned mode,int depth){
+			glMatrixMode(mode);
+			for(int p=0;p<depth;++p)glPopMatrix();
+		});
+	}
+
+	template<class Repair>
+	void HandleMatrixStateError(int error, const char* errsrc,Repair&& repair) {
 		unsigned int mode = GetMode();
 
 		// dont complain about stack/mode issues if some other error occurred
@@ -144,10 +152,7 @@ public:
 			if (error == 0){ \
 				LOG_L(L_ERROR, "%s: OpenGL stack check error, matrix mode = %s, depth = %d, please make sure to pop all matrices before end", errsrc, #glMode, matrixData.modeName); \
 			} \
-			glMatrixMode(glMode); \
-			for (int p = 0; p < matrixData.modeName; ++p) { \
-				glPopMatrix(); \
-			} \
+			repair(glMode,matrixData.modeName); \
 			matrixData.modeName = 0;\
 		}
 
@@ -157,7 +162,7 @@ public:
 
 #undef CHECK_MODE
 
-		glMatrixMode(GL_MODELVIEW);
+		repair(GL_MODELVIEW,0);
 	}
 };
 

@@ -16,6 +16,8 @@
 #include "Lua/LuaVBOImpl.h"
 #include "lib/sol2/sol.hpp"
 #include "Game/UI/MiniMap.h"
+#include "Map/ReadMap.h"
+#include "Rendering/Backend/NativeSelectedSensorRanges.h"
 #include "Rendering/Backend/NativeMiniMapCapture.h"
 #include "Rendering/Backend/NativeUIRecorder.h"
 #include "Rendering/Backend/WorldFrameData.h"
@@ -526,6 +528,29 @@ sol::table CreateContext(lua_State* L)
 		Check(raw.value_or(true) && !screen.value_or(false) && opaque.value_or(true),"PiP FeatureShape invocation differs from exact original raw draw");
 		const auto model=context->FeatureModel(defID);if(!model)return;
 		GetRecorder().RecordOperation([model](NativeUIRecorder& replay){if(replay.IsCompiling())return;for(const auto& piece:model->pieces){if(piece.indices.empty())continue;replay.PushMatrix();replay.MultMatrix(piece.bindPose);replay.Begin(ScreenPrimitive::Triangles,"original PiP raw FeatureShape bind pose");for(auto index:piece.indices){Check(index<piece.vertices.size(),"Original feature piece index exceeds geometry");const auto& v=piece.vertices[index];replay.Normal(v.normal[0],v.normal[1],v.normal[2]);replay.TexCoord(v.uv[0][0],v.uv[0][1]);replay.MultiTexCoord(1,v.uv[1][0],v.uv[1][1]);replay.Vertex(v.position[0],v.position[1],v.position[2]);}replay.End();replay.PopMatrix();}});
+	});
+	// Private PiP-only bridge: range geometry, never engine minimap terrain.
+	BindFunction(result,"DrawSelectedSensorRanges",[](float width,float height,unsigned rotation) {
+		if (!minimap) return;
+		const auto mapWidth=float(mapDims.mapx*SQUARE_SIZE),mapHeight=float(mapDims.mapy*SQUARE_SIZE);
+		// Validate even an empty selection, before recording any state.
+		SelectedSensorMiniMapPoint({0,0},mapWidth,mapHeight,width,height,rotation);
+		std::vector<ScreenLine> lines;
+		for (const auto& source:minimap->GetNativeRangeLines(true)) {
+			const auto a=SelectedSensorMiniMapPoint(source.start,mapWidth,mapHeight,width,height,rotation);
+			const auto b=SelectedSensorMiniMapPoint(source.end,mapWidth,mapHeight,width,height,rotation);
+			lines.push_back({{a[0],a[1],0,source.color},{b[0],b[1],0,source.color},source.width});
+		}
+		auto& recorder=GetRecorder();
+		recorder.RunPiPMiniMapCallback([&] {
+			recorder.PushAttrib(Current|Texture|rendering::ui::Blend|Alpha);
+			try {
+				recorder.SetTextureEnabled(false);
+				recorder.SetBlend({});recorder.SetAlphaTest({});
+				recorder.DrawLines(std::move(lines));
+			} catch (...) {recorder.PopAttrib();throw;}
+			recorder.PopAttrib();
+		});
 	});
 	BindFunction(result,"RunMiniMapCallback",[](sol::protected_function callback,sol::variadic_args args) {
 		GetRecorder().RunPiPMiniMapCallback([&] {

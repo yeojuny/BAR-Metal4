@@ -76,4 +76,15 @@ void CNativeBumpWater::Draw()
 {
 	throw content_error("Native Water4 must be drawn by the ordered native world stage");
 }
+void CNativeReflectiveWater::InitResources(bool loadShader){(void)loadShader;rendering::scene::InitializeLegacyWater();}
+void CNativeReflectiveWater::FreeResources(){if(rendering::scene::IsInitialized())rendering::scene::ResetLegacyWater();}
+void CNativeReflectiveWater::Draw(){throw content_error("Native Water1 must use its ordered world stage");}
+void CNativeRefractiveWater::InitResources(bool loadShader){(void)loadShader;rendering::scene::InitializeLegacyRefractiveWater();}
+void CNativeRefractiveWater::FreeResources(){if(rendering::scene::IsInitialized())rendering::scene::ResetLegacyWater();}
+void CNativeRefractiveWater::Draw(){throw content_error("Native refractive water must use its ordered world stage");}
+void CNativeDynamicWater::InitResources(bool loadShader){(void)loadShader;rendering::scene::InitializeDynamicWater();}
+void CNativeDynamicWater::FreeResources(){if(rendering::scene::IsInitialized())rendering::scene::ResetDynamicWater();}
+void CNativeDynamicWater::Update(){rendering::scene::UpdateDynamicWater();}
+void CNativeDynamicWater::AddExplosion(const float3& pos,float strength,float size){rendering::scene::AddDynamicWaterExplosion(pos,strength,size);}
+void CNativeDynamicWater::Draw(){throw content_error("Native dynamic water requires its ordered world stage");}
 #endif

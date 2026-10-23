@@ -7,6 +7,7 @@
 #include "NativeWaterOverlayProgram.h"
 #include "NativeSplatPainterProgram.h"
 #include "NativeUnitEffectsData.h"
+#include "NativeUnitGlassData.h"
 #include "NativeWorldDrawSequence.h"
 #include "NativeGenericShadowData.h"
 #include "NativeReclaimFieldData.h"
@@ -28,6 +29,7 @@ bool Finite(float value){return std::isfinite(value);}
 }
 void ValidateNativeWorldDrawCommand(const NativeWorldDrawCommand& c)
 {
+ if(c.unitGlass){ValidateNativeUnitGlass(*c.unitGlass);Require(c.stage==NativeWorldDrawStage::World&&c.primitive==NativeDrawPrimitive::Triangles&&c.sourcePrimitive==NativeDrawPrimitive::Triangles&&!c.waterOverlay&&!c.losView&&!c.terraformOverlay&&!c.squadHull&&!c.originalShadowInput&&!c.easyFacing&&!c.unitEffect&&!c.distortion&&!c.objectSpotlight&&!c.grass&&!c.resourceSpots&&!c.sensorLOS&&!c.reclaimField&&!c.surface.splatPainter,"Glass command has mixed source owner or wrong stage");}
  if(c.surface.splatPainter){
   const auto& input=*c.surface.splatPainter;ValidateNativeSplatPainter(input);
   Require(input.program==NativeSplatPainterProgram::Overlay&&c.stage==NativeWorldDrawStage::World&&
@@ -90,7 +92,7 @@ void ValidateNativeWorldDrawCommand(const NativeWorldDrawCommand& c)
  }
  if(c.reclaimField&&c.reclaimField->edges)Require(c.vertices.size()==c.reclaimField->count&&c.indices.size()==c.reclaimField->count,"Reclaim outline lost its actual original vertex interval");
  const bool reclaimFill=c.reclaimField&&!c.reclaimField->edges;
- if(reclaimFill||c.objectSpotlight||c.grass||c.resourceSpots||c.sensorLOS||c.unitEffect)Require(c.vertices.empty()&&c.indices.empty(),"Typed original-buffer draw cannot carry replacement geometry");
+ if(reclaimFill||c.objectSpotlight||c.grass||c.resourceSpots||c.sensorLOS||c.unitEffect||c.unitGlass)Require(c.vertices.empty()&&c.indices.empty(),"Typed original-buffer draw cannot carry replacement geometry");
  else {
 	Require(!c.vertices.empty() && c.vertices.size()<=4*1024*1024 && !c.indices.empty() && c.indices.size()%group==0,"Native world geometry extent invalid");
 	for(const auto& v:c.vertices) {
@@ -100,6 +102,7 @@ void ValidateNativeWorldDrawCommand(const NativeWorldDrawCommand& c)
 	}
 	for(auto i:c.indices)Require(i<c.vertices.size(),"Native world index out of range");
  }
+	ValidateNativePointState(c.world.point);
 	Require(Finite(c.world.lineWidth)&&c.world.lineWidth>0&&Finite(c.world.pointSize)&&c.world.pointSize>0,"Native world raster size invalid");
 	Require(Finite(c.world.offsetFactor)&&Finite(c.world.offsetUnits),"Native world polygon offset invalid");
 	Require(c.world.frontPolygonMode<=NativePolygonMode::Fill && c.world.backPolygonMode<=NativePolygonMode::Fill,"Native polygon mode invalid");
@@ -288,6 +291,10 @@ void NativeWorldDrawRecorder::RecordEasyFacing(NativeWorldDrawStage stage,std::s
 }
 
 namespace rendering {
+void NativeWorldDrawRecorder::RecordUnitGlass(std::shared_ptr<const NativeUnitGlassInput> input,const ScreenDrawState& surface,const NativeWorldDrawState& world)
+{
+ Require(frame&&input&&frame->draws.size()<65536,"Glass outside original common world frame");NativeWorldDrawCommand c;c.stage=NativeWorldDrawStage::World;c.primitive=c.sourcePrimitive=NativeDrawPrimitive::Triangles;c.surface=surface;c.surface.material=ScreenMaterial::Solid;c.surface.texture.reset();c.surface.secondary={};c.world=world;c.unitGlass=std::move(input);ValidateNativeWorldDrawCommand(c);c.sequence=NextNativeWorldDrawSequence();frame->draws.push_back(std::move(c));
+}
 void NativeWorldDrawRecorder::RecordUnitEffect(NativeWorldDrawStage stage,const ScreenDrawState& surface,const NativeWorldDrawState& world,std::shared_ptr<const NativeUnitEffectInput> input){
  Require(frame&&input&&frame->draws.size()<65536,"Airjets outside original common world frame");NativeWorldDrawCommand c;c.stage=stage;c.primitive=c.sourcePrimitive=NativeDrawPrimitive::Triangles;c.surface=surface;c.surface.material=ScreenMaterial::Solid;c.surface.texture.reset();c.surface.secondary={};c.world=world;c.unitEffect=std::move(input);ValidateNativeWorldDrawCommand(c);c.sequence=NextNativeWorldDrawSequence();frame->draws.push_back(std::move(c));
 }

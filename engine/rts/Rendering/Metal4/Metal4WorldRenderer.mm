@@ -14,6 +14,7 @@
 #include "Metal4RuntimeNative.h"
 #include "Metal4WindowSurfaceNative.h"
 #include "Metal4WorldViewport.h"
+#include "Metal4LogicalCopyMapping.h"
 #include "Metal4ScreenNative.h"
 #include "Metal4MapEdgeRenderer.h"
 #include "Metal4WorldShaderSource.h"
@@ -74,6 +75,9 @@
 #include "Rendering/Backend/NativeModelLightData.h"
 #include "Metal4BumpWater.h"
 #include "Metal4BasicWater.h"
+#include "Metal4LegacyWater.h"
+#include "Metal4DynamicWater.h"
+#include "Metal4LegacyWaterBump.h"
 #include "Metal4GroundDecal.h"
 #include "Metal4GameDecal.h"
 #include "Metal4UnitPrimitive.h"
@@ -337,6 +341,9 @@ struct Metal4WorldRenderer::Impl {
 	metal4::PlacementGPU placementGPU;
 	metal4::BumpWaterGPU waterGPU;
 	metal4::BasicWaterGPU basicWaterGPU;
+ metal4::LegacyWaterGPU legacyWaterGPU;
+ metal4::DynamicWaterGPU dynamicWaterGPU;
+ metal4::LegacyWaterBumpGPU legacyWaterBumpGPU;
 	GroundDecalGPU groundDecalGPU;
 	GameDecalGPU gameDecalGPU;
 	UnitPrimitiveGPU unitPrimitiveGPU;
@@ -344,6 +351,7 @@ struct Metal4WorldRenderer::Impl {
 	__strong id<MTLTexture> waterReflection=nil,waterReflectionDepth=nil;
 	__strong id<MTLTexture> waterRefraction=nil,waterRefractionDepth=nil;
 	__strong id<MTLTexture> preWaterColor=nil,preWaterDepth=nil;
+	__strong id<MTLTexture> logicalTerrainDepth=nil;
 	std::array<id<MTLRenderPipelineState>,2> placementSamplePipelines{};
 	metal4::PostprocessGPU postprocessGPU;
 	metal4::VolumetricCloudsGPU volumetricCloudsGPU;
@@ -495,6 +503,7 @@ struct Metal4WorldRenderer::Impl {
 	{
 		Require(submission&&binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&(binding.object->backing||binding.object->image),
 			"Original model image lacks its retained source object/content/submission");
+		if(std::dynamic_pointer_cast<const NativeLegacyRefractionBacking>(binding.object->backing))return legacyWaterGPU.ResolveCopy(lease,binding,submission);
 		if(auto mask=std::dynamic_pointer_cast<const NativeUnitStencilBacking>(binding.object->backing))
 			return unitStencilGPU.Resolve(lease,mask->version,submission);
 		// S3O publishes both retained pixels and a typed backing. Let that
@@ -818,6 +827,7 @@ struct Metal4WorldRenderer::Impl {
 		waterEnginePipeline=pipeline(@"UnitVertexMain",@"EngineModelFragmentMain",false,false,MTLPixelFormatRGBA8Unorm);
 		shadowModelPipeline = pipeline(@"ShadowModelVertex", @"ShadowModelFragment", false, true);
 		shadowTerrainPipeline = pipeline(@"ShadowTerrainVertex", @"ShadowTerrainFragment", false, true);
+		logicalDepthCopyPipeline = pipeline(@"LogicalSceneDepthCopyVertex", @"LogicalSceneDepthCopyFragment", false, true);
 		MTL4ComputePipelineDescriptor* compute = [MTL4ComputePipelineDescriptor new];
 		MTL4LibraryFunctionDescriptor* function = [MTL4LibraryFunctionDescriptor new]; function.library = library; function.name = @"WorldTerrainNormals";
 		compute.computeFunctionDescriptor = function;
@@ -830,6 +840,9 @@ struct Metal4WorldRenderer::Impl {
 		compute.computeFunctionDescriptor=function;
 		waterColorCopyPipeline=[lease.Compiler() newComputePipelineStateWithDescriptor:compute compilerTaskOptions:nil error:&error];
 		Require(waterColorCopyPipeline!=nil,"Cannot compile original water scene color copy: "+Error(error));
+		function.name=@"LogicalSceneColorCopy";compute.computeFunctionDescriptor=function;
+		logicalColorCopyPipeline=[lease.Compiler() newComputePipelineStateWithDescriptor:compute compilerTaskOptions:nil error:&error];
+		Require(logicalColorCopyPipeline!=nil,"Cannot compile logical scene color copy: "+Error(error));
 		pipelineFormat = format; pipelineValidation = validation; pipelineSampleShading = lease.SampleShadingEnabled(mainSampling.samples);
 		elapsed = Milliseconds(start);
 	}
@@ -849,7 +862,8 @@ struct Metal4WorldRenderer::Impl {
 	__strong id<MTLLibrary> library = nil;
 
 	__strong id<MTLRenderPipelineState> unitPipeline = nil, engineModelPipeline = nil, engineStandardShadowPipeline = nil, alphaPipeline = nil, shadowModelPipeline = nil, shadowTerrainPipeline = nil;
-	__strong id<MTLComputePipelineState> normalPipeline = nil,waterColorCopyPipeline=nil;
+	__strong id<MTLComputePipelineState> normalPipeline = nil,waterColorCopyPipeline=nil,logicalColorCopyPipeline=nil;
+	__strong id<MTLRenderPipelineState> logicalDepthCopyPipeline=nil;
 	__strong id<MTLRenderPipelineState> waterUnitPipeline=nil,waterEnginePipeline=nil;
 	std::array<id<MTLRenderPipelineState>,2> engineStandardPipelines{},engineStandardAlphaPipelines{};
 	std::array<id<MTLRenderPipelineState>,2> waterStandardPipelines{},waterStandardAlphaPipelines{};
@@ -964,7 +978,7 @@ void Metal4WorldRenderer::ClearWaterResources()
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
  RuntimeCleanupLease lease;
  impl->waterGPU.ClearResources();
- impl->waterReflection=nil;impl->waterReflectionDepth=nil;
+ impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
  impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
  impl->preWaterColor=nil;impl->preWaterDepth=nil;
 }
@@ -980,6 +994,17 @@ void Metal4WorldRenderer::ClearBasicWaterResources()
  RuntimeCleanupLease lease;impl->basicWaterGPU.ClearResources();
 }
 
+void Metal4WorldRenderer::ClearDynamicWaterResources(){
+ MainThread();Require(impl!=nullptr,"World renderer was moved from");RuntimeCleanupLease lease;impl->dynamicWaterGPU.ClearResources();
+ impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
+}
+void Metal4WorldRenderer::ClearLegacyWaterResources()
+{
+ MainThread();Require(impl!=nullptr,"World renderer was moved from");
+ RuntimeCleanupLease lease;impl->legacyWaterBumpGPU.ClearResources();
+ impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
+}
+
 bool Metal4WorldRenderer::CanInitializeWater() const
 {
  // Structural availability only: the constructor compiled the actual scene
@@ -988,7 +1013,7 @@ bool Metal4WorldRenderer::CanInitializeWater() const
  return impl && SharedRuntime().Capabilities().directMetal4 &&
   impl->library && impl->waterUnitPipeline &&
   impl->waterEnginePipeline && impl->waterStandardPipelines[0] && impl->waterStandardPipelines[1] &&
-  impl->waterStandardAlphaPipelines[0] && impl->waterStandardAlphaPipelines[1] && impl->waterColorCopyPipeline;
+  impl->waterStandardAlphaPipelines[0] && impl->waterStandardAlphaPipelines[1] && impl->waterColorCopyPipeline && impl->logicalColorCopyPipeline && impl->logicalDepthCopyPipeline;
 }
 
 std::shared_ptr<const void> Metal4WorldRenderer::Sensor31657CircleConsumerLifetime() const
@@ -1021,7 +1046,8 @@ void Metal4WorldRenderer::ClearStaticResources()
 	impl->sensor31657CircleGPU.ClearResources();
 	impl->sensorPreviewGPU.ClearResources();impl->sensorRadarGPU.ClearResources();
 	impl->basicWaterGPU.ClearResources();
-	impl->waterReflection=nil;impl->waterReflectionDepth=nil;
+	impl->legacyWaterBumpGPU.ClearResources();impl->dynamicWaterGPU.ClearResources();
+	impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
 	impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
 	impl->preWaterColor=nil;impl->preWaterDepth=nil;
 	impl->map = {}; impl->models.clear(); impl->textures.clear(); impl->heights = nil;
@@ -2018,12 +2044,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		terrainUniform.options = simd_make_uint4(frame.viewCamera.clipDepth == ClipDepthConvention::MinusOneToOne ? 1 : 0, 0, 0, 0);
 		terrainUniform.parameters = simd_make_float4(frame.terrain.squareSize, 0, 0, 0);
 		std::vector<WorldUniform> uniforms{terrainUniform};
-  Require(!(frame.bumpWater && frame.basicWater),"Original water modes must be mutually exclusive");
-  const bool bumpWaterActive=bool(frame.bumpWater),basicWaterActive=bool(frame.basicWater);
-  const bool waterActive=(bumpWaterActive || basicWaterActive) && frame.waterScene;
-  if(bumpWaterActive || basicWaterActive)Require(waterActive,"Water frame lacks its actual original scene stages");
+  Require(unsigned(bool(frame.bumpWater))+unsigned(bool(frame.basicWater))+unsigned(bool(frame.legacyWater))+unsigned(bool(frame.dynamicWater))<=1,"Original water modes must be mutually exclusive");
+  const bool bumpWaterActive=bool(frame.bumpWater),basicWaterActive=bool(frame.basicWater),legacyWaterActive=bool(frame.legacyWater),dynamicWaterActive=bool(frame.dynamicWater);
+  const bool waterActive=(bumpWaterActive || basicWaterActive || legacyWaterActive || dynamicWaterActive) && frame.waterScene;
+  if(bumpWaterActive || basicWaterActive || legacyWaterActive || dynamicWaterActive)Require(waterActive,"Water frame lacks its actual original scene stages");
   if(waterActive)ValidateNativeWaterSceneFrame(*frame.waterScene,frame.sourceDrawFrame,
-   bumpWaterActive && frame.bumpWater->settings.reflection>0,bumpWaterActive && frame.bumpWater->settings.refraction>1);
+   (dynamicWaterActive || legacyWaterActive || (bumpWaterActive && frame.bumpWater->settings.reflection>0)),dynamicWaterActive || (bumpWaterActive && frame.bumpWater->settings.refraction>1));
 		const bool shadowEnabled = frame.shadow && frame.lighting.requested.shadows > 0;
 		WorldUniform shadowTerrainUniform = terrainUniform;
 		if (shadowEnabled) {
@@ -2210,12 +2236,38 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		auto mainAttachments=impl->mainStorage.Prepare(lease,result.surface.renderWidth,result.surface.renderHeight,layer.pixelFormat,mainSamples);
 		impl->mainSampling.allocationGeneration=mainAttachments->Generation();
 		impl->depth=mainAttachments->Depth();impl->stencil=mainAttachments->Stencil();
-		// A real cropped terrain-only depth copy. If logical and raster extents
-		// differ, original logical-size depth resampling remains an explicit gap.
+		// Preserve the cropped per-sample and decal images. Soft particles get a
+		// separate logical-size single-depth image at this same terrain-only event.
 		const auto& crop = mappedViewport->scissor;
 		const bool needsSampleDepth=frame.groundDecals&&frame.groundDecals->highQuality;
 		auto terrainSnapshot=MainTerrainDepthSnapshot::Prepare(lease,mainAttachments,crop,needsSampleDepth,true,impl->terrainDepthSamples,impl->terrainDepth);
 		impl->terrainDepthSamples=terrainSnapshot->SamplesImage();impl->terrainDepth=terrainSnapshot->SingleImage();
+		const bool needsLogicalParticleDepth=frame.particleFrame&&frame.particleFrame->softenRequested&&!frame.particleFrame->ranges.empty();
+		std::optional<LogicalCopyMapping> logicalCopyMapping;
+		id<MTLBuffer> logicalCopyCoordinates=nil,terrainCopyCoordinates=nil,waterCopyOrigin=nil;
+		id<MTLTexture> particleTerrainDepth=impl->terrainDepth;
+		if(bumpWaterActive||(legacyWaterActive&&frame.legacyWater->refraction)||needsLogicalParticleDepth){
+			logicalCopyMapping=MakeLogicalCopyMapping(frame.viewCamera.viewport,logicalWidth,logicalHeight,
+				result.surface.renderWidth,result.surface.renderHeight,crop,frame.sourceDrawFrame,mainAttachments->Generation(),mainSamples);
+			const auto& coordinates=logicalCopyMapping->coordinates;
+			if(!logicalCopyMapping->unitScale){
+				logicalCopyCoordinates=Buffer(lease.Device(),coordinates.data(),coordinates.size()*sizeof(uint32_t),@"Same-frame logical copy pixel-center mapping");
+				lease.AddAllocation(logicalCopyCoordinates);
+			}else if(bumpWaterActive||(legacyWaterActive&&frame.legacyWater->refraction)){
+				const simd_uint2 origin{uint32_t(crop[0]),uint32_t(crop[1])};
+				waterCopyOrigin=Buffer(lease.Device(),&origin,sizeof(origin),@"Original pre-water copy viewport origin");lease.AddAllocation(waterCopyOrigin);
+			}
+			if(needsLogicalParticleDepth&&!logicalCopyMapping->unitScale){
+				allocateTarget(impl->logicalTerrainDepth,MTLPixelFormatDepth32Float,logicalCopyMapping->width,logicalCopyMapping->height,
+					MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
+				particleTerrainDepth=impl->logicalTerrainDepth;
+				auto relative=coordinates;
+				for(uint32_t x=0;x<logicalCopyMapping->width;++x)relative[1+x]-=crop[0];
+				for(uint32_t y=0;y<logicalCopyMapping->height;++y)relative[1+logicalCopyMapping->width+y]-=crop[1];
+				terrainCopyCoordinates=Buffer(lease.Device(),relative.data(),relative.size()*sizeof(uint32_t),@"Terrain snapshot logical mapping relative to retained crop");
+				lease.AddAllocation(terrainCopyCoordinates);
+			}
+		}
 		std::vector<PreparedScreenExternalImage> terrainImages;
 		const auto retainTerrainImage=[&](PreparedScreenExternalImage image){terrainImages.push_back(std::move(image));};
 		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
@@ -2331,7 +2383,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		for(const auto& owner:terrainMaterial.splatNormals)if(owner)sources.insert(owner->sourcePath);
 		result.materialSources.assign(sources.begin(),sources.end()); result.materialDependenciesPending.assign(pending.begin(),pending.end());
 		impl->Pipelines(lease, layer.pixelFormat, options.shaderValidation, result.shaderCompileMs);
-		for (id object : {id(impl->unitPipeline),id(impl->engineModelPipeline),id(impl->engineStandardShadowPipeline),id(impl->alphaPipeline),id(impl->shadowModelPipeline),id(impl->shadowTerrainPipeline),id(impl->normalPipeline),id(impl->waterUnitPipeline),id(impl->waterEnginePipeline),id(impl->waterColorCopyPipeline),id(impl->library)}) lease.Retain(object);
+		for (id object : {id(impl->unitPipeline),id(impl->engineModelPipeline),id(impl->engineStandardShadowPipeline),id(impl->alphaPipeline),id(impl->shadowModelPipeline),id(impl->shadowTerrainPipeline),id(impl->normalPipeline),id(impl->waterUnitPipeline),id(impl->waterEnginePipeline),id(impl->waterColorCopyPipeline),id(impl->logicalColorCopyPipeline),id(impl->logicalDepthCopyPipeline),id(impl->library)}) lease.Retain(object);
 		for (unsigned presence = 0; presence < 2; ++presence)
 			for (id object : {id(impl->placementSamplePipelines[presence]),id(impl->engineStandardPipelines[presence]),id(impl->engineStandardAlphaPipelines[presence]),id(impl->waterStandardPipelines[presence]),id(impl->waterStandardAlphaPipelines[presence])}) lease.Retain(object);
 		const MapEdgeImageProvider mapEdgeImages = [&](RuntimeLease& imageLease,const std::shared_ptr<const WorldTexture>& owner) {
@@ -2353,6 +2405,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		MTLDepthStencilDescriptor* depthDescriptor = [MTLDepthStencilDescriptor new]; depthDescriptor.depthCompareFunction = MTLCompareFunctionLessEqual; depthDescriptor.depthWriteEnabled = YES;
 		id<MTLDepthStencilState> depthState = [lease.Device() newDepthStencilStateWithDescriptor:depthDescriptor];
 		Require(depthState != nil, "Cannot create experimental world depth state"); lease.Retain(depthState);
+		id<MTLDepthStencilState> logicalCopyDepthState=nil;
+		if(logicalCopyMapping&&!logicalCopyMapping->unitScale){
+			auto descriptor=[MTLDepthStencilDescriptor new];descriptor.depthCompareFunction=MTLCompareFunctionAlways;descriptor.depthWriteEnabled=YES;
+			logicalCopyDepthState=[lease.Device() newDepthStencilStateWithDescriptor:descriptor];
+			Require(logicalCopyDepthState!=nil,"Cannot create logical depth copy write state");lease.Retain(logicalCopyDepthState);
+		}
 		NSError* error = nil;
 		MTL4ArgumentTableDescriptor* argumentDescriptor = [MTL4ArgumentTableDescriptor new];
 		argumentDescriptor.maxBufferBindCount = 6; argumentDescriptor.maxTextureBindCount = 17; argumentDescriptor.maxSamplerStateBindCount = 9; argumentDescriptor.initializeBindings = YES;
@@ -2474,19 +2532,30 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   }
   if(bumpWaterActive){
    const auto& water=*frame.bumpWater;
-   Require(water.screenTextureWidth==crop[2] && water.screenTextureHeight==crop[3] &&
-    water.camera.viewport[2]==int(crop[2]) && water.camera.viewport[3]==int(crop[3]),
-    "Original water copy allocation requires its original resize reload and matching explicit render/view extent");
+   Require(logicalCopyMapping&&water.camera.viewport==frame.viewCamera.viewport&&
+    water.logicalWidth==logicalWidth&&water.logicalHeight==logicalHeight&&
+    water.screenTextureWidth==logicalCopyMapping->width&&water.screenTextureHeight==logicalCopyMapping->height&&
+    water.material&&water.material->shaderViewport==water.camera.viewport,
+    "Original water copy allocation/camera requires its same-frame logical resize reload");
    allocateTarget(impl->preWaterColor,MTLPixelFormatRGBA8Unorm,water.screenTextureWidth,water.screenTextureHeight,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite);
-   allocateTarget(impl->preWaterDepth,MTLPixelFormatDepth32Float,water.screenTextureWidth,water.screenTextureHeight,MTLTextureUsageShaderRead);
+   allocateTarget(impl->preWaterDepth,MTLPixelFormatDepth32Float,water.screenTextureWidth,water.screenTextureHeight,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
+  }
+  if(legacyWaterActive&&frame.legacyWater->refraction){
+   const auto& ref=*frame.legacyWater->refraction;
+   Require(logicalCopyMapping&&logicalCopyMapping->unitScale,"Refractive fragment window mapping currently requires actual 1:1 render extent");
+   Require(ref.copyViewport==frame.viewCamera.viewport,"Refractive copy viewport differs from actual main source viewport");
+   Require(int64_t(crop[0])==ref.copyViewport[0]&&int64_t(result.surface.renderHeight)-crop[1]-crop[3]==ref.copyViewport[1],"Refractive physical window origin differs from original fragment.position");
+   // Refractive copy owns a retained image per source content version, not Water4 scratch storage.
+  }
+  if(bumpWaterActive || legacyWaterActive || dynamicWaterActive){
    for(size_t i=0;i<waterViews.size();++i){
     auto& target=waterViews[i];target.source=(i==0?frame.waterScene->refraction:frame.waterScene->reflection).get();
     if(!target.source)continue;
     const bool reflected=i==1;
     auto& color=reflected?impl->waterReflection:impl->waterRefraction;
     auto& depth=reflected?impl->waterReflectionDepth:impl->waterRefractionDepth;
-    uint32_t width=reflected?water.settings.reflectionSize:water.screenTextureWidth;
-    uint32_t height=reflected?water.settings.reflectionSize:water.screenTextureHeight;
+    uint32_t width=dynamicWaterActive?(reflected?512:frame.dynamicWater->material->refractionExtent):legacyWaterActive?512:(reflected?frame.bumpWater->settings.reflectionSize:frame.bumpWater->screenTextureWidth);
+    uint32_t height=dynamicWaterActive?width:legacyWaterActive?512:(reflected?frame.bumpWater->settings.reflectionSize:frame.bumpWater->screenTextureHeight);
     allocateTarget(color,MTLPixelFormatRGBA8Unorm,width,height,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
     allocateTarget(depth,MTLPixelFormatDepth32Float,width,height,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
     // Original BumpWater FBOs own color and depth only.
@@ -2508,10 +2577,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    }
   }
 		if(frame.particleFrame){
-			Require(!frame.particleFrame->softenRequested || (uint32_t(frame.viewCamera.viewport[2])==crop[2]&&uint32_t(frame.viewCamera.viewport[3])==crop[3]),"Original soft-particle logical depth resampling producer is required for independent render extent");
+			Require(!needsLogicalParticleDepth || logicalCopyMapping->unitScale || mainGround.source->groundInvoked,"Rescaled soft particles require this frame's actual terrain-only logical depth producer");
 			const auto disabledClip0=[](const std::shared_ptr<const NativeWaterLuaFrame>& bundle){return bundle&&bundle->ssao&&!bundle->ssao->draws.empty()&&(bundle->ssao->exitClipDisableMask&1u);};
    uint32_t clipDisabled=0;if(disabledClip0(frame.alphaAllLua))clipDisabled|=1u<<unsigned(NativeWorldParticleStage::AlphaAll);if(disabledClip0(frame.waterScene?frame.waterScene->aboveWaterLua:nullptr))clipDisabled|=1u<<unsigned(NativeWorldParticleStage::AlphaAboveWater);
-   particles=impl->particlesGPU.Prepare(lease,sourceSubmission,*frame.particleFrame,frame.viewCamera,layer.pixelFormat,MTLPixelFormatDepth32Float,impl->terrainDepth,options.shaderValidation,result.shaderCompileMs,clipDisabled,mainSamples);
+   particles=impl->particlesGPU.Prepare(lease,sourceSubmission,*frame.particleFrame,frame.viewCamera,layer.pixelFormat,MTLPixelFormatDepth32Float,particleTerrainDepth,options.shaderValidation,result.shaderCompileMs,clipDisabled,mainSamples);
 			result.engineNanoInstances=uint32_t(frame.particleFrame->engineNano.size());
 		}
 		if(frame.luaNanoFrame){
@@ -2805,7 +2874,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    for(const auto& draw:frame.luaWorldDrawFrame->draws)if(draw.stage==NativeWorldDrawStage::PreDecals || draw.stage==NativeWorldDrawStage::PreUnit || draw.stage==NativeWorldDrawStage::World || draw.stage==NativeWorldDrawStage::AlphaBelowWater || draw.stage==NativeWorldDrawStage::AlphaAboveWater || draw.stage==NativeWorldDrawStage::WaterPost || draw.stage==NativeWorldDrawStage::AlphaAll)mainDraws.draws.push_back(draw);
    overlays = impl->overlayGPU.Prepare(lease, mainDraws, impl->screenGPU, screen.get(), frame.viewCamera,
 				result.surface.renderWidth, result.surface.renderHeight, logicalWidth, logicalHeight,
-				layer.pixelFormat, MTLPixelFormatDepth32Float, MTLPixelFormatStencil8, options.shaderValidation, result.shaderCompileMs,false,mainSamples);
+				layer.pixelFormat, MTLPixelFormatDepth32Float, MTLPixelFormatStencil8, options.shaderValidation, result.shaderCompileMs,false,mainSamples,false,
+    [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned){return impl->OriginalModelImage(l,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);});
 		}
 		if(frame.luaWorldDrawFrame && waterActive)for(auto& view:waterViews)if(view.source){
    NativeWorldDrawFrame draws;draws.serial=frame.luaWorldDrawFrame->serial;
@@ -3590,8 +3660,22 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		}
 		std::unique_ptr<PreparedBumpWater> waterSurface;
   std::unique_ptr<PreparedBasicWater> basicSurface;
+  std::unique_ptr<PreparedLegacyWaterBump> legacyBump;
+  std::unique_ptr<PreparedDynamicWater> dynamicSurface;
+  if(dynamicWaterActive){
+   DynamicWaterSceneImages images{impl->waterReflection,impl->waterRefraction,true,true};
+   auto resolve=[&](const NativeCUSTextureBinding& binding){return impl->OriginalModelImage(lease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);};
+   dynamicSurface=impl->dynamicWaterGPU.Prepare(lease,frame.dynamicWater,images,resolve,layer.pixelFormat,mainSamples,options.shaderValidation,result.shaderCompileMs);
+  }
+  std::unique_ptr<PreparedLegacyWater> legacySurface;
+  if(legacyWaterActive){
+   Require(frame.legacyWater->sourceDrawFrame==frame.sourceDrawFrame,"Water1 frame differs from actual world draw");
+   legacyBump=impl->legacyWaterBumpGPU.Prepare(lease,frame.legacyWater->bump,options.shaderValidation,result.shaderCompileMs);
+   CUSSourceImage shading;
+   if(frame.legacyWater->refraction)shading=impl->OriginalModelImage(lease,frame.legacyWater->refraction->shading,sourceSubmission,options.shaderValidation,result.shaderCompileMs);
+   legacySurface=impl->legacyWaterGPU.Prepare(lease,frame.legacyWater,impl->waterReflection,legacyBump->Texture(),legacyBump->FlipV(),layer.pixelFormat,mainSamples,options.shaderValidation,result.shaderCompileMs,std::move(shading),result.surface.renderHeight,sourceSubmission);
+  }
   if(basicWaterActive)basicSurface=impl->basicWaterGPU.Prepare(lease,frame.basicWater,layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples);
-  id<MTLBuffer> waterCopyOrigin=nil;
   if(bumpWaterActive){
    const auto& water=*frame.bumpWater;
    BumpWaterSceneImages images;images.sourceDrawFrame=frame.sourceDrawFrame;
@@ -3612,8 +3696,6 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    }
    waterSurface=impl->waterGPU.Prepare(lease,frame.bumpWater,images,layer.pixelFormat,MTLPixelFormatDepth32Float,
     MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples);
-   const simd_uint2 origin{uint32_t(crop[0]),uint32_t(crop[1])};
-   waterCopyOrigin=Buffer(lease.Device(),&origin,sizeof(origin),@"Original pre-water copy viewport origin");lease.AddAllocation(waterCopyOrigin);
   }
   std::unique_ptr<PreparedGroundDecal> groundDecals;
   if(frame.groundDecals){
@@ -3682,6 +3764,32 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   originalSubmission.began=true;impl->submittedOpaqueSource=frame.opaqueModelFrame;impl->activeSourceSubmission=sourceSubmission;
   if(screen && options.screenUI)ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,sourceSubmission,options.screenUI->postprocess);
   if(options.submissionBegan)options.submissionBegan(sourceSubmission,options.screenUI?options.screenUI->postprocess.get():nullptr);
+  const auto requireLogicalCopySource=[&]{
+   Require(logicalCopyMapping.has_value(),"Logical copy lost its prepared source mapping");
+   logicalCopyMapping->RequireSource(frame.sourceDrawFrame,mainAttachments->Generation(),
+    uint32_t(mainAttachments->Depth().width),uint32_t(mainAttachments->Depth().height),mainAttachments->Samples());
+  };
+  const auto encodeLogicalDepth=[&](id<MTLTexture> source,id<MTLTexture> destination,id<MTLBuffer> coordinates){
+   requireLogicalCopySource();
+   Require(source&&destination&&source!=destination&&coordinates&&logicalCopyDepthState&&
+    source.sampleCount==1&&destination.sampleCount==1&&source.pixelFormat==MTLPixelFormatDepth32Float&&
+    destination.pixelFormat==MTLPixelFormatDepth32Float&&destination.width==logicalCopyMapping->width&&
+    destination.height==logicalCopyMapping->height,"Logical depth copy lost its single-sample owned source/output");
+   auto copyPass=[MTL4RenderPassDescriptor new];copyPass.renderTargetWidth=destination.width;copyPass.renderTargetHeight=destination.height;
+   copyPass.defaultRasterSampleCount=1;copyPass.depthAttachment.texture=destination;
+   copyPass.depthAttachment.loadAction=MTLLoadActionDontCare;copyPass.depthAttachment.storeAction=MTLStoreActionStore;
+   auto copy=[command renderCommandEncoderWithDescriptor:copyPass];Require(copy!=nil,"Cannot encode logical depth copy");
+   [copy barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+   [copy setRenderPipelineState:impl->logicalDepthCopyPipeline];[copy setDepthStencilState:logicalCopyDepthState];
+   [copy setViewport:MTLViewport{0,0,double(destination.width),double(destination.height),0,1}];
+   [copy setScissorRect:MTLScissorRect{0,0,destination.width,destination.height}];[copy setCullMode:MTLCullModeNone];
+   [copy setDepthClipMode:MTLDepthClipModeClip];[copy setTriangleFillMode:MTLTriangleFillModeFill];
+   [arguments setAddress:coordinates.gpuAddress atIndex:0];[arguments setTexture:source.gpuResourceID atIndex:0];
+   [copy setArgumentTable:arguments atStages:MTLRenderStageFragment];[copy drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
+   [copy barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+   [copy endEncoding];
+  };
+
 
 		impl->EncodePendingTextureMipmaps(command,sourceSubmission);
 		for(const auto& packet:sensorPreview)packet->EncodeDependencies(command);
@@ -3825,9 +3933,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		result.renderEncoderClass = NSStringFromClass([encoder class]).UTF8String;
 		const auto& viewport = mappedViewport->viewport;
 		const auto& scissor = mappedViewport->scissor;
-		auto setupViewport = [&] {
+		const auto restoreWorldRaster = [&] {
 			[encoder setViewport:MTLViewport{viewport[0],viewport[1],viewport[2],viewport[3],0,1}];
 			[encoder setScissorRect:MTLScissorRect{scissor[0],scissor[1],scissor[2],scissor[3]}];
+		};
+		auto setupViewport = [&] {
+			restoreWorldRaster();
 			[encoder setCullMode:MTLCullModeNone];[encoder setDepthClipMode:MTLDepthClipModeClip];[encoder setDepthStencilState:depthState];
 			[encoder setDepthBias:0 slopeScale:0 clamp:0];[encoder setStencilFrontReferenceValue:0 backReferenceValue:0];
 			[encoder setTriangleFillMode:MTLTriangleFillModeFill];
@@ -3847,7 +3958,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    result.terrainDraws=uint32_t(mainGround.terrain->EncodedDrawCount());
   }
 		[encoder endEncoding];
-  if(mainGround.source->groundInvoked)terrainSnapshot->Encode(command);
+  if(mainGround.source->groundInvoked){
+   terrainSnapshot->Encode(command);
+   // Resample the immutable terrain-only snapshot now, never a later main
+   // depth resolve after units, below-water objects, or water have written.
+   if(terrainCopyCoordinates)encodeLogicalDepth(terrainSnapshot->SingleImage(),particleTerrainDepth,terrainCopyCoordinates);
+  }
 		pass.colorAttachments[0].loadAction=MTLLoadActionLoad;pass.depthAttachment.loadAction=MTLLoadActionLoad;pass.stencilAttachment.loadAction=MTLLoadActionLoad;
 		encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot restore original world attachments after terrain-depth producer");setupViewport();
 		auto encodeLuaDraws = [&](const std::vector<LuaDraw>& draws, bool preUnit, bool preDecals=false) {
@@ -4019,13 +4135,16 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 				models->EncodeForwardPhase(phase,command,selectedEncoder,selectedPass);
 			}
 		};
-  if(waterSurface || basicSurface){
+  if(waterSurface || basicSurface || legacySurface || dynamicSurface){
 			encodeAlphaModels(alphaModels[0],encoder,pass);
    drawPieces(true,belowWaterScene);
    belowWaterLua.Encode(encoder);
    if(particles){particles->Encode(NativeWorldParticleStage::AlphaBelowWater,encoder);particles->Encode(NativeWorldParticleStage::NanoBelowWater,encoder);}
-   if(waterSurface){
+   if(waterSurface || legacySurface || dynamicSurface){
    [encoder endEncoding];
+   if(dynamicSurface){dynamicSurface->EncodeUpdates(command);dynamicSurface->EncodeDerived(command);}
+   if(legacySurface)legacySurface->EncodeDependencies(command);
+   if(legacyBump)legacyBump->Encode(command);
    // Source UpdateWater: underwater refraction scene precedes reflection.
    for(auto& view:waterViews)if(view.source){
     const auto& source=*view.source;
@@ -4114,33 +4233,50 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
     [waterEncoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
     [waterEncoder endEncoding];
    }
+   if(legacySurface&&frame.legacyWater->refraction){
+    requireLogicalCopySource();mainAttachments->EncodeResolve(command,MainReadImages::Color);
+    legacySurface->EncodeCopy(command,mainAttachments->ReadColor(),waterCopyOrigin);
+   }
+   if(waterSurface){
+   requireLogicalCopySource();
    const unsigned reads=(frame.bumpWater->settings.refraction==1?1u:0u)|(frame.bumpWater->settings.depthCopy?2u:0u);
    if(reads)mainAttachments->EncodeResolve(command,static_cast<MainReadImages>(reads));
    auto copy=[command computeCommandEncoder];Require(copy!=nil,"Cannot encode original full pre-water copies");
    [copy barrierAfterQueueStages:MTLStageFragment beforeStages:MTLStageBlit|MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];
    if(frame.bumpWater->settings.refraction==1){
-    [arguments setAddress:waterCopyOrigin.gpuAddress atIndex:0];[arguments setTexture:mainAttachments->ReadColor().gpuResourceID atIndex:0];
-    [arguments setTexture:impl->preWaterColor.gpuResourceID atIndex:1];[copy setComputePipelineState:impl->waterColorCopyPipeline];[copy setArgumentTable:arguments];
+    [arguments setAddress:(logicalCopyMapping->unitScale?waterCopyOrigin:logicalCopyCoordinates).gpuAddress atIndex:0];[arguments setTexture:mainAttachments->ReadColor().gpuResourceID atIndex:0];
+    [arguments setTexture:impl->preWaterColor.gpuResourceID atIndex:1];[copy setComputePipelineState:logicalCopyMapping->unitScale?impl->waterColorCopyPipeline:impl->logicalColorCopyPipeline];[copy setArgumentTable:arguments];
     [copy dispatchThreads:MTLSizeMake(impl->preWaterColor.width,impl->preWaterColor.height,1) threadsPerThreadgroup:MTLSizeMake(8,8,1)];
    }
-   if(frame.bumpWater->settings.depthCopy)[copy copyFromTexture:mainAttachments->ReadDepth() sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(crop[0],crop[1],0)
+   if(frame.bumpWater->settings.depthCopy&&logicalCopyMapping->unitScale)[copy copyFromTexture:mainAttachments->ReadDepth() sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(crop[0],crop[1],0)
     sourceSize:MTLSizeMake(crop[2],crop[3],1) toTexture:impl->preWaterDepth destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];
    [copy barrierAfterStages:MTLStageBlit|MTLStageDispatch beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];
+   if(frame.bumpWater->settings.depthCopy&&!logicalCopyMapping->unitScale)
+    encodeLogicalDepth(mainAttachments->ReadDepth(),impl->preWaterDepth,logicalCopyCoordinates);
+   }
    encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot resume actual loaded main world for water");
    }
    setupViewport();
    if(waterSurface)waterSurface->Encode(encoder);
+   else if(legacySurface)legacySurface->Encode(encoder);
+   else if(dynamicSurface)dynamicSurface->EncodeSurface(encoder);
    else {basicSurface->Encode(encoder);++result.basicWaterDraws;}
    ++result.waterDraws;
    waterPostLua.Encode(encoder);
 			encodeAlphaModels(alphaModels[1],encoder,pass);
    drawPieces(true,aboveWaterScene);
    aboveWaterLua.Encode(command,encoder,pass);
+   // GL retains the world raster across SSAO FBO switches. A resumed
+   // Metal encoder does not inherit it; restore before engine particles.
+   restoreWorldRaster();
    if(particles){particles->Encode(NativeWorldParticleStage::AlphaAboveWater,encoder,ssaoAboveDepth);particles->Encode(NativeWorldParticleStage::NanoAboveWater,encoder,ssaoAboveDepth);}
   }else{
 			encodeAlphaModels(alphaModels[2],encoder,pass);
    drawPieces(true);
    alphaAllLua.Encode(command,encoder,pass);
+   // GL retains the world raster across SSAO FBO switches. A resumed
+   // Metal encoder does not inherit it; restore before engine particles.
+   restoreWorldRaster();
    if(particles){
     if(frame.particleFrame->visibleWater){
      particles->Encode(NativeWorldParticleStage::AlphaBelowWater,encoder);particles->Encode(NativeWorldParticleStage::NanoBelowWater,encoder);
@@ -4239,6 +4375,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    retire([&]{view.preParticlesLua.Complete();});retire([&]{view.worldLua.Complete();});
   }
   retire([&]{belowWaterLua.Complete();});retire([&]{aboveWaterLua.Complete();});retire([&]{alphaAllLua.Complete();});retire([&]{waterPostLua.Complete();});
+  if(dynamicSurface)retire([&]{const auto receipt=dynamicSurface->DidComplete();result.dynamicWaterGeneration=receipt.generation;result.dynamicWaterSequence=receipt.sequence;result.dynamicWaterSourceDrawFrame=receipt.sourceDrawFrame;});
+  if(legacySurface)retire([&]{legacySurface->DidComplete();});
   if(standardShade)retire([&]{standardShade->DidComplete();});
   for(const auto& packet:sensorPreview)retire([&]{packet->DidComplete();});
   if(screen)retire([&]{screen->DidComplete();result.luaPiPDraws=screen->PiPDrawsCompleted();result.luaStartBoxMiniMapDraws=screen->StartBoxDrawsCompleted();});

@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ScreenNative.h"
 #include "NativeSampleShadingShaders.h"
+#include "NativePointCoverageShaders.h"
 #include "Rendering/Backend/NativeTargetPriorityProgram.h"
 #include "Rendering/Backend/NativeDeferredVisualizerProgram.h"
 #include "Rendering/Backend/NativeDecalCaptureProgram.h"
@@ -61,11 +62,11 @@ struct HealthBarsUniform {
  std::array<std::uint32_t,4> options,sampling;
 };
 static_assert(sizeof(HealthBarsUniform)==208);
-const char* SHADER = RECOIL_NATIVE_SAMPLE_SHADING_MSL R"MSL(
+const char* SHADER = RECOIL_NATIVE_SAMPLE_SHADING_MSL RECOIL_NATIVE_POINT_COVERAGE_MSL R"MSL(
 #include <metal_stdlib>
 using namespace metal;
 struct ScreenVertexData { packed_float3 position; packed_float4 color; };
-struct ScreenUniform { float4 dimensions; uint4 options; float4 parameters; float4 dimensions1; uint4 options1; float4 parameters1; float4x4 captureViewProjection; float4 captureOriginExtent; float4 captureMapFeather; };
+struct ScreenUniform { float4 dimensions; uint4 options; float4 parameters; float4 dimensions1; uint4 options1; float4 parameters1; float4x4 captureViewProjection; float4 captureOriginExtent; float4 captureMapFeather; float4 pointDisk; };
 struct ScreenVarying { float4 position [[position]]; float4 color [[RECOIL_SAMPLE_PERSPECTIVE]]; float2 uv [[RECOIL_SAMPLE_PERSPECTIVE]]; float2 uv1 [[RECOIL_SAMPLE_PERSPECTIVE]]; };
 vertex ScreenVarying ScreenVertexMain(uint vertexId [[vertex_id]], device const ScreenVertexData* vertices [[buffer(0)]],
 	device const packed_float4* coords [[buffer(1)]], constant ScreenUniform& u [[buffer(2)]]) {
@@ -88,6 +89,8 @@ vertex ScreenVarying ScreenVertexMain(uint vertexId [[vertex_id]], device const 
 	}
 	output.color = float4(item.color); output.uv = float4(coords[vertexId]).xy;output.uv1=float4(coords[vertexId]).zw; return output;
 }
+struct ScreenPointOutput { float4 color [[color(0)]]; uint sampleMask [[sample_mask]]; };
+ScreenPointOutput ScreenPointResult(float4 color,uint mask) { ScreenPointOutput out;out.color=color;out.sampleMask=mask;return out; }
 bool AlphaPass(float alpha, float reference, uint comparison) {
 	switch (comparison) {
 		case 0: return false; case 1: return alpha < reference; case 2: return alpha == reference;
@@ -155,8 +158,9 @@ depth2d<float> image12 [[texture(12)]],sampler sampler12 [[sampler(12)]] RECOIL_
  if(u.options.z&&!AlphaPass(o.a,u.parameters.x,u.options.w))discard_fragment();return o;
 }
 
-fragment float4 ScreenFragmentMain(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
+fragment ScreenPointOutput ScreenFragmentMain(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
 	texture2d<float> image [[texture(0)]], sampler imageSampler [[sampler(0)]],texture2d<float> image1 [[texture(1)]],sampler imageSampler1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(input.position.xy,u.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
 	float4 output = input.color;
 	if(u.options.x==4)output.a*=1.0f-smoothstep(.5f,1.0f,abs(input.uv.x));
@@ -210,10 +214,11 @@ fragment float4 ScreenFragmentMain(ScreenVarying input [[stage_in]], constant Sc
 		output*=texel;
 	}
 	if (u.options.z && !AlphaPass(output.a,u.parameters.x,u.options.w)) discard_fragment();
-	return output;
+	return ScreenPointResult(output,pointMask);
 }
-fragment float4 ScreenFragmentMain1(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
+fragment ScreenPointOutput ScreenFragmentMain1(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
 	depth2d<float> image [[texture(0)]], sampler imageSampler [[sampler(0)]],texture2d<float> image1 [[texture(1)]],sampler imageSampler1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(input.position.xy,u.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
 	float4 output = input.color;
 	if(u.options.x==4)output.a*=1.0f-smoothstep(.5f,1.0f,abs(input.uv.x));
@@ -267,10 +272,11 @@ fragment float4 ScreenFragmentMain1(ScreenVarying input [[stage_in]], constant S
 		output*=texel;
 	}
 	if (u.options.z && !AlphaPass(output.a,u.parameters.x,u.options.w)) discard_fragment();
-	return output;
+	return ScreenPointResult(output,pointMask);
 }
-fragment float4 ScreenFragmentMain2(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
+fragment ScreenPointOutput ScreenFragmentMain2(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
 	texture2d<float> image [[texture(0)]], sampler imageSampler [[sampler(0)]],depth2d<float> image1 [[texture(1)]],sampler imageSampler1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(input.position.xy,u.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
 	float4 output = input.color;
 	if(u.options.x==4)output.a*=1.0f-smoothstep(.5f,1.0f,abs(input.uv.x));
@@ -324,10 +330,11 @@ fragment float4 ScreenFragmentMain2(ScreenVarying input [[stage_in]], constant S
 		output*=texel;
 	}
 	if (u.options.z && !AlphaPass(output.a,u.parameters.x,u.options.w)) discard_fragment();
-	return output;
+	return ScreenPointResult(output,pointMask);
 }
-fragment float4 ScreenFragmentMain3(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
+fragment ScreenPointOutput ScreenFragmentMain3(ScreenVarying input [[stage_in]], constant ScreenUniform& u [[buffer(2)]],
 	depth2d<float> image [[texture(0)]], sampler imageSampler [[sampler(0)]],depth2d<float> image1 [[texture(1)]],sampler imageSampler1 [[sampler(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+	const uint pointMask=RecoilPointSampleMask(input.position.xy,u.pointDisk);
 	RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
 	float4 output = input.color;
 	if(u.options.x==4)output.a*=1.0f-smoothstep(.5f,1.0f,abs(input.uv.x));
@@ -381,11 +388,12 @@ fragment float4 ScreenFragmentMain3(ScreenVarying input [[stage_in]], constant S
 		output*=texel;
 	}
 	if (u.options.z && !AlphaPass(output.a,u.parameters.x,u.options.w)) discard_fragment();
-	return output;
+	return ScreenPointResult(output,pointMask);
 }
 )MSL";
-struct Uniform { std::array<float,4> dimensions; std::array<uint32_t,4> options; std::array<float,4> parameters;std::array<float,4> dimensions1;std::array<uint32_t,4> options1;std::array<float,4> parameters1; NativeDecalCaptureUniforms capture; };
-static_assert(sizeof(Uniform)==192 && sizeof(Uniform)<=256);
+struct Uniform { std::array<float,4> dimensions; std::array<uint32_t,4> options; std::array<float,4> parameters;std::array<float,4> dimensions1;std::array<uint32_t,4> options1;std::array<float,4> parameters1; NativeDecalCaptureUniforms capture; std::array<float,4> pointDisk{}; };
+static_assert(sizeof(Uniform)==208 && sizeof(Uniform)<=256);
+static_assert(offsetof(Uniform,pointDisk)==192);
 static_assert(offsetof(Uniform,capture)==96);
 MTLBlendFactor Factor(ScreenBlendFactor value)
 {
@@ -1385,7 +1393,13 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 	// A PiP-only list has its own original vertex/uniform storage. Never upload
 	// unused fixed-function placeholders merely because its marker has no indices.
 	std::vector<uint8_t> bytes(fixedGeometry?list.Commands().size()*256:0,0);
-	for(size_t i=firstOriginalCommand;i<list.Commands().size();++i){if(list.Commands()[i].pip || list.Commands()[i].startBox || list.Commands()[i].weaponRange || list.Commands()[i].buildSquare || !list.Commands()[i].indexCount)continue;const auto& s=list.Commands()[i].state;Require(s.material<=ScreenMaterial::TerraformCapture&&s.uvMode<=ScreenUVMode::Texel&&s.alphaTest.compare<=ScreenAlphaCompare::Always&&std::isfinite(s.alphaTest.reference),"Unsupported native UI material/alpha state");Require(s.material==ScreenMaterial::Solid||s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher||s.material==ScreenMaterial::DeferredVisualizer||s.material==ScreenMaterial::SpectatorHUD||s.material==ScreenMaterial::MiniMapBackground||s.texture!=nullptr,"Missing original UI texture");Uniform u{{1.0f/float(frame.coordinateWidth),1.0f/float(frame.coordinateHeight),1,1},{uint32_t(s.material),uint32_t(s.material==ScreenMaterial::MiniMapBackground?s.minimapBackground&&s.minimapBackground->base&&s.minimapBackground->base->flipV:s.texture&&s.texture->flipV),uint32_t(s.alphaTest.enabled),uint32_t(s.alphaTest.compare)},{s.alphaTest.reference,float(s.sampler.wrapS==ScreenWrap::LegacyClamp),float(s.sampler.wrapT==ScreenWrap::LegacyClamp),float(s.texture&&s.texture->incomplete)}};if(s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher){u.dimensions[0]=s.targetPriorityViewGeometry[0];u.dimensions[1]=s.targetPriorityViewGeometry[1];if(s.material==ScreenMaterial::FrameGrapher)u.dimensions1=s.frameGrapherParameters;};if(s.texture&&!s.texture->incomplete&&s.uvMode==ScreenUVMode::Texel){Require(s.texture->width&&s.texture->height,"Empty texel-coordinate atlas");u.dimensions[2]=1.0f/float(s.texture->width);u.dimensions[3]=1.0f/float(s.texture->height);}if(s.secondary.texture && s.material!=ScreenMaterial::FontCoverage && s.material!=ScreenMaterial::MiniMapBackground){const auto& second=s.secondary;ValidateScreenSampler(second.sampler);Require(second.uvMode<=ScreenUVMode::Texel,"Unsupported secondary texture coordinate mode");u.dimensions1={1,1,0,0};u.options1={1,uint32_t(second.texture->flipV),0,0};u.parameters1={0,float(second.sampler.wrapS==ScreenWrap::LegacyClamp),float(second.sampler.wrapT==ScreenWrap::LegacyClamp),float(second.texture->incomplete)};if(second.uvMode==ScreenUVMode::Texel&&!second.texture->incomplete){Require(second.texture->width&&second.texture->height,"Empty secondary texel-coordinate image");u.dimensions1[0]=1.f/second.texture->width;u.dimensions1[1]=1.f/second.texture->height;}}if(s.material==ScreenMaterial::DecalCapture){Require(s.decalCapture!=nullptr,"Decal Capture immutable uniforms missing");ValidateNativeDecalCapture(*s.decalCapture);u.capture=s.decalCapture->uniforms;}std::memcpy(bytes.data()+i*256,&u,sizeof(u));}
+	for(size_t i=firstOriginalCommand;i<list.Commands().size();++i){if(list.Commands()[i].pip || list.Commands()[i].startBox || list.Commands()[i].weaponRange || list.Commands()[i].buildSquare || !list.Commands()[i].indexCount)continue;const auto& s=list.Commands()[i].state;Require(s.material<=ScreenMaterial::TerraformCapture&&s.uvMode<=ScreenUVMode::Texel&&s.alphaTest.compare<=ScreenAlphaCompare::Always&&std::isfinite(s.alphaTest.reference),"Unsupported native UI material/alpha state");Require(s.material==ScreenMaterial::Solid||s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher||s.material==ScreenMaterial::DeferredVisualizer||s.material==ScreenMaterial::SpectatorHUD||s.material==ScreenMaterial::MiniMapBackground||s.texture!=nullptr,"Missing original UI texture");Uniform u{{1.0f/float(frame.coordinateWidth),1.0f/float(frame.coordinateHeight),1,1},{uint32_t(s.material),uint32_t(s.material==ScreenMaterial::MiniMapBackground?s.minimapBackground&&s.minimapBackground->base&&s.minimapBackground->base->flipV:s.texture&&s.texture->flipV),uint32_t(s.alphaTest.enabled),uint32_t(s.alphaTest.compare)},{s.alphaTest.reference,float(s.sampler.wrapS==ScreenWrap::LegacyClamp),float(s.sampler.wrapT==ScreenWrap::LegacyClamp),float(s.texture&&s.texture->incomplete)}};if(s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher){u.dimensions[0]=s.targetPriorityViewGeometry[0];u.dimensions[1]=s.targetPriorityViewGeometry[1];if(s.material==ScreenMaterial::FrameGrapher)u.dimensions1=s.frameGrapherParameters;};if(s.texture&&!s.texture->incomplete&&s.uvMode==ScreenUVMode::Texel){Require(s.texture->width&&s.texture->height,"Empty texel-coordinate atlas");u.dimensions[2]=1.0f/float(s.texture->width);u.dimensions[3]=1.0f/float(s.texture->height);}if(s.secondary.texture && s.material!=ScreenMaterial::FontCoverage && s.material!=ScreenMaterial::MiniMapBackground){const auto& second=s.secondary;ValidateScreenSampler(second.sampler);Require(second.uvMode<=ScreenUVMode::Texel,"Unsupported secondary texture coordinate mode");u.dimensions1={1,1,0,0};u.options1={1,uint32_t(second.texture->flipV),0,0};u.parameters1={0,float(second.sampler.wrapS==ScreenWrap::LegacyClamp),float(second.sampler.wrapT==ScreenWrap::LegacyClamp),float(second.texture->incomplete)};if(second.uvMode==ScreenUVMode::Texel&&!second.texture->incomplete){Require(second.texture->width&&second.texture->height,"Empty secondary texel-coordinate image");u.dimensions1[0]=1.f/second.texture->width;u.dimensions1[1]=1.f/second.texture->height;}}if(s.material==ScreenMaterial::DecalCapture){Require(s.decalCapture!=nullptr,"Decal Capture immutable uniforms missing");ValidateNativeDecalCapture(*s.decalCapture);u.capture=s.decalCapture->uniforms;}if(s.pointDisk){
+			const auto& disk=*s.pointDisk;
+			Require((disk[3]<0 || samples>1) && std::abs(disk[3])==float(samples) && disk[2]>=.5f && disk[2]<=32,"Screen point disk differs from its actual attachment/size contract");
+			for(float value:disk)Require(std::isfinite(value),"Non-finite screen point disk");
+			Require(s.material<=ScreenMaterial::FontCoverage && !s.attachmentClear,"Point disk requires the generic screen consumer");
+			u.pointDisk=disk;
+		}std::memcpy(bytes.data()+i*256,&u,sizeof(u));}
 	id<MTLBuffer> uniforms=fixedGeometry?Buffer(lease,bytes.data(),bytes.size()):nil;NSError* error=nil;
 	// Only earlier ordered targets are available to a typed shader, exactly as
 	// for fixed-function draws. This proxy owns no executable producers.

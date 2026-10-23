@@ -31,7 +31,7 @@ void ValidateJammerDefines(NativeSensorPreviewProgramSource& source,const std::m
   {"RADAR_CELL_SIZE",32},{"ALLIED_ALPHA",.85f},{"SHEET_ALPHA",.17f},{"SHEET_OUTLINE_ALPHA",.8f},
   {"OUTLINE_GAP_ALPHA",.3f},{"OUTLINE_WIDTH",1.2f},{"OUTLINE_WORLD_WIDTH",.89f},
   {"OUTLINE_THIN_START",3000},{"OUTLINE_THIN_END",8000},{"OUTLINE_THIN_SCALE",.6f},
-  {"OUTLINE_MIN_WIDTH",1},{"OFFMAP_OUTLINE_FADE",50},{"OUTLINE_DASHES",4},
+  {"OUTLINE_MIN_WIDTH",1},{"FADE_START",4000},{"FADE_END",8000},{"OFFMAP_OUTLINE_FADE",50},{"OUTLINE_DASHES",4},
   {"MINIMAP_ALPHA",.33f},{"MINIMAP_OUTLINE_ALPHA",.4f},{"MINIMAP_ALLIED_OUTLINE_ALPHA",.25f},
   {"MINIMAP_OUTLINE_WIDTH",2},{"INACTIVE_ALPHA",.5f},{"INACTIVE_OUTLINE_ALPHA",.4f},
   {"MIN_COVERAGE",.04f},{"SPAWN_SPEED",18},{"MAX_ALLIED_CIRCLES",64},
@@ -73,7 +73,7 @@ void ValidateDefines(NativeSensorPreviewProgramSource& source)
  }
  const auto model=values.find("MODEL_DEPTH_TEST");Check(model!=values.end(),"31657 Preview actual model-depth branch missing");const float flag=Number(model->second);Check(flag==0||flag==1,"31657 Preview model-depth branch invalid");source.modelDepthTest=flag==1;
 }
-constexpr std::array<std::string_view,34> names{"passRect","mipParams","losParams","coverageAbsolute","alliedCirclePass","alliedCircle","smoothParams","radarcenter_range","lookupParams","animParams","circleParams","discParams","inactiveParams","mapParams","heightmapTex","mipHeightTex","alliedWinnerTex","prevTex","targetTex","mapDepths","modelDepths","coverageTex","radarInfoTex","alliedRunnerUpTex","previewParams","previewInactive","stippleOffset","circleMode","emitterXZ","alliedParams","alliedCircles","alliedCircleCount","alliedTex","alliedSdfTex"};
+constexpr std::array<std::string_view,35> names{"passRect","mipParams","losParams","coverageAbsolute","alliedCirclePass","alliedCircle","smoothParams","radarcenter_range","lookupParams","animParams","circleParams","discParams","inactiveParams","mapParams","heightmapTex","mipHeightTex","alliedWinnerTex","prevTex","targetTex","mapDepths","modelDepths","coverageTex","radarInfoTex","alliedRunnerUpTex","previewParams","previewInactive","stippleOffset","circleMode","emitterXZ","alliedParams","alliedCircles","alliedCircleCount","alliedTex","alliedSdfTex","fadeStrength"};
 int Sampler(NativeSensorPreviewProgramKind kind,int location)
 {
  using K=NativeSensorPreviewProgramKind;switch(kind){
@@ -133,13 +133,14 @@ std::vector<std::string_view> NativeSensorPreviewProgramState::ActiveUniforms()c
  case K::Sheet:{std::vector<std::string_view> out{names[0],names[7],names[8],names[9],names[10],names[19],names[21],names[22],names[16],names[23],names[18]};if(state.source->modelDepthTest)out.push_back(names[20]);return out;}
  case K::Minimap:return {names[11],names[12],names[13],names[21],names[22],names[18]};
  case K::JammerDisc:return {names[0],names[11]};
- case K::JammerSheet:{std::vector<std::string_view> out{names[0],names[10],names[24],names[25],names[26],names[27],names[28],names[29],names[30],names[31],names[19],names[21],names[32],names[18],names[33]};if(state.source->modelDepthTest)out.push_back(names[20]);return out;}
+ case K::JammerSheet:{std::vector<std::string_view> out{names[0],names[10],names[24],names[25],names[26],names[27],names[28],names[29],names[30],names[31],names[19],names[21],names[32],names[18],names[33],names[34]};if(state.source->modelDepthTest)out.push_back(names[20]);return out;}
  }return {};
 }
 int NativeSensorPreviewProgramState::Location(std::string_view name)const{if(name=="alliedCircles[0]")name="alliedCircles";const auto active=ActiveUniforms();if(std::find(active.begin(),active.end(),name)==active.end())return -1;return int(std::find(names.begin(),names.end(),name)-names.begin());}
 bool NativeSensorPreviewProgramState::Floats(int location,std::span<const float> v)
 {
  if(location==-1)return true;if(location<0||location>=int(names.size())||Location(names[location])==-1)return false;
+ if(location==34){if(v.size()!=1||!std::isfinite(v[0]))return false;state.uniforms.distanceFade[0]=v[0];return true;}
  if(location==30){if(v.size()>192||v.size()%3)return false;for(float x:v)if(!std::isfinite(x))return false;std::copy(v.begin(),v.end(),state.uniforms.jammerCircles.begin());state.jammerCircleValues=std::uint32_t(v.size());return true;}
  if(location==25||location==26||location==27||location==31){if(v.size()!=1||!std::isfinite(v[0]))return false;const unsigned slot=location==31?3:unsigned(location-25);if(location==31&&(v[0]<0||v[0]>64||std::floor(v[0])!=v[0]||v[0]*3>state.jammerCircleValues))return false;state.uniforms.jammerFlags[slot]=v[0];return true;}
  if(location==28||location==29){if(v.size()!=2)return false;std::copy(v.begin(),v.end(),state.uniforms.emitterAllied.begin()+(location==28?0:2));return true;}

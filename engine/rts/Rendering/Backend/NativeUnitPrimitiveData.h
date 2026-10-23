@@ -50,6 +50,8 @@ struct NativeUnitPrimitiveDraw {
 	float lineOpacity=0;
 	std::uint32_t maxVertices=64;
 	bool screenEffects=false;
+	// Exact 31657 selected programs are untextured with mutable uniforms.
+	bool selected31657=false;
 	// Original uploader publications, never live CPU model storage. Source
 	// indices in instanceData remain addresses in these immutable SSBOs.
 	std::shared_ptr<const NativeCUSPublishedBuffer> transforms,modelUniforms;

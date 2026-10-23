@@ -5,6 +5,10 @@ namespace rendering {
 struct NativeWorldRasterMesh {
 	std::vector<NativeWorldDrawVertex> vertices;
 	std::vector<std::uint32_t> indices;
+	// Optional physical point center.xy, radius and signed sample count.
+	// Positive count: disk; negative: square; zero: unmasked fill/line span.
+	// Empty for geometry that needs no explicit point coverage.
+	std::vector<std::array<float,4>> pointDisks;
 	bool fullViewport = false; // Expanded MSAA coverage is in full attachment clip coordinates.
 };
 // Raster width is explicit framebuffer pixels. Camera/SDL logical coordinates

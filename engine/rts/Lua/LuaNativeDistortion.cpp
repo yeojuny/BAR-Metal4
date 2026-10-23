@@ -325,13 +325,19 @@ sol::table CreateContext(lua_State* state)
 	});
 	Bind(table, "GetUniformLocation", [state, context](unsigned handle, const std::string& name) {
 		const auto location = context->GetLocation(handle, name);
-		return location ? sol::make_object(state, location) : sol::make_object(state, sol::lua_nil);
+		return sol::make_object(state, location ? int(location) : -1);
 	});
 	Bind(table, "Uniform", [context](unsigned handle, const std::string& name, const std::string& kind, sol::variadic_args input) {
 		context->Uniform(handle, name, kind, input);
 	});
-	Bind(table, "UniformLocation", [context](unsigned handle, unsigned location, const std::string& kind, sol::variadic_args input) {
-		Check(location && location <= context->locations.size() && context->locations[location - 1].program == context->Get(handle),
+	Bind(table, "UniformLocation", [context](unsigned handle, int location, const std::string& kind, sol::variadic_args input) {
+		const auto program = context->Get(handle);
+		if (location == -1) { // OpenGL ignores inactive writes, but still requires a current program.
+			Check(context->Active() == program && OriginalNativeSourceProgramBinding().IsDistortion(program),
+				"Distortion uniform does not own the actual current source program");
+			return;
+		}
+		Check(location > 0 && size_t(location) <= context->locations.size() && context->locations[location - 1].program == program,
 			"Distortion private reflected location belongs to another compiled source program");
 		context->Uniform(handle, context->locations[location - 1].description.name, kind, input);
 	});

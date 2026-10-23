@@ -54,6 +54,8 @@ struct NativeSensorPreviewFrame;
 struct NativeMapTextureFrame;
 struct NativeBumpWaterFrame;
 struct NativeBasicWaterFrame;
+struct NativeLegacyWaterFrame;
+struct NativeDynamicWaterFrame;
 struct NativeWaterSceneFrame;
 struct NativeWaterLuaFrame;
 struct NativeShadowColorFrame;
@@ -311,6 +313,8 @@ struct WorldFrame {
 	std::shared_ptr<const NativeMapTextureFrame> mapTextures;
 	std::shared_ptr<const NativeBumpWaterFrame> bumpWater;
 	std::shared_ptr<const NativeBasicWaterFrame> basicWater;
+	std::shared_ptr<const NativeLegacyWaterFrame> legacyWater;
+ std::shared_ptr<const NativeDynamicWaterFrame> dynamicWater;
 	std::shared_ptr<const NativeWaterSceneFrame> waterScene;
 	std::shared_ptr<const NativeWaterLuaFrame> alphaAllLua; // Original no-water PreParticles(true,true,false,false).
 	std::shared_ptr<const NativeMetalInfoFrame> metalInfoFrame;

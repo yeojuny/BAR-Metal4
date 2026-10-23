@@ -64,7 +64,7 @@ void PreparedUnitPrimitive::EncodeDraw(std::size_t index,id<MTL4RenderCommandEnc
 }
 struct UnitPrimitiveGPU::Impl {
 	__strong id<MTLLibrary> library=nil;
-	using Key=std::tuple<unsigned,MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,unsigned,bool,std::uint64_t,bool>;
+	using Key=std::tuple<unsigned,MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,unsigned,bool,std::uint64_t,bool,bool>;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
 	struct CachedBuffer{std::weak_ptr<const NativeBufferSnapshot> owner;__strong id<MTLBuffer> buffer=nil;};
 	std::unordered_map<const NativeBufferSnapshot*,CachedBuffer> buffers;
@@ -76,9 +76,9 @@ struct UnitPrimitiveGPU::Impl {
 		else lease.AddAllocation(entry.buffer);
 		return entry.buffer;
 	}
-	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,NativeUnitPrimitiveKind program,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,const ScreenBlendState& blend,const std::array<bool,4>& mask,double& ms,bool coverage=false)
+	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,NativeUnitPrimitiveKind program,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,const ScreenBlendState& blend,const std::array<bool,4>& mask,double& ms,bool coverage=false,bool selected31657=false)
 	{
-		const Key key{unsigned(program),color,depth,stencil,lease.SampleShadingKey(samples),validation,PipelineBits(blend,mask),coverage};if(auto it=pipelines.find(key);it!=pipelines.end())return it->second;
+		const Key key{unsigned(program),color,depth,stencil,lease.SampleShadingKey(samples),validation,PipelineBits(blend,mask),coverage,selected31657};if(auto it=pipelines.find(key);it!=pipelines.end())return it->second;
 		const auto start=Clock::now();NSError* error=nil;
 		if(!library){
 			auto d=[MTL4LibraryDescriptor new];d.name=@"Original DrawPrimitiveAtUnit paired program family";d.source=String(NativeUnitPrimitiveShaderSource);
@@ -86,7 +86,7 @@ struct UnitPrimitiveGPU::Impl {
 			library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile original unit primitive program family: "+Error(error));
 		}
 		auto d=[MTL4RenderPipelineDescriptor new];auto vertex=[MTL4LibraryFunctionDescriptor new],fragment=[MTL4LibraryFunctionDescriptor new];vertex.library=fragment.library=library;
-		vertex.name=@"UnitPrimitiveVertex";fragment.name=(program==NativeUnitPrimitiveKind::UnitTrackerDebug || program==NativeUnitPrimitiveKind::EnemySpotter)?@"UnitPrimitiveTrackerFragment":program==NativeUnitPrimitiveKind::ResurrectionHalo?@"UnitPrimitiveHaloFragment":IsNativeUnitIcon(program)?@"UnitPrimitiveIconFragment":program==NativeUnitPrimitiveKind::AllySelected?@"UnitPrimitiveAllyFragment":IsNativeSelectedUnits(program)?@"UnitPrimitiveSelectedFragment":program==NativeUnitPrimitiveKind::TeamPlatter?@"UnitPrimitiveTeamFragment":@"UnitPrimitiveAtlasFragment";
+		vertex.name=@"UnitPrimitiveVertex";fragment.name=selected31657?@"UnitPrimitiveSelected31657Fragment":(program==NativeUnitPrimitiveKind::UnitTrackerDebug || program==NativeUnitPrimitiveKind::EnemySpotter)?@"UnitPrimitiveTrackerFragment":program==NativeUnitPrimitiveKind::ResurrectionHalo?@"UnitPrimitiveHaloFragment":IsNativeUnitIcon(program)?@"UnitPrimitiveIconFragment":program==NativeUnitPrimitiveKind::AllySelected?@"UnitPrimitiveAllyFragment":IsNativeSelectedUnits(program)?@"UnitPrimitiveSelectedFragment":program==NativeUnitPrimitiveKind::TeamPlatter?@"UnitPrimitiveTeamFragment":@"UnitPrimitiveAtlasFragment";
 		d.vertexFunctionDescriptor=vertex;d.fragmentFunctionDescriptor=fragment;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;d.rasterSampleCount=samples;d.alphaToCoverageState=coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;
 		auto a=d.colorAttachments[0];a.pixelFormat=color;a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;
 		a.sourceRGBBlendFactor=effectstate::Factor(blend.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(blend.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(blend.destinationAlpha);
@@ -136,7 +136,7 @@ std::unique_ptr<PreparedUnitPrimitive> UnitPrimitiveGPU::Prepare(RuntimeLease& l
 		[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:objects.gpuAddress atIndex:1];[arguments setAddress:constants.gpuAddress atIndex:2];
 		std::vector<PreparedScreenExternalImage> external;
 		if(draw.atlas){auto image=sharedImages.PrepareImage(lease,draw.atlas,draw.sampler,producers,consumer,[&](PreparedScreenExternalImage image){external.push_back(std::move(image));});[arguments setTexture:image.texture.gpuResourceID atIndex:0];[arguments setSamplerState:image.sampler.gpuResourceID atIndex:0];}
-		auto pipeline=impl->Pipeline(lease,draw.kind,color,depth,stencil,samples,validation,draw.surface.blend,draw.world.colorWrite,milliseconds,draw.world.alphaToCoverage);lease.Retain(pipeline);
+		auto pipeline=impl->Pipeline(lease,draw.kind,color,depth,stencil,samples,validation,draw.surface.blend,draw.world.colorWrite,milliseconds,draw.world.alphaToCoverage,draw.selected31657);lease.Retain(pipeline);
 		PreparedUnitPrimitive::Impl::Draw packet;packet.sequence=draw.sequence;packet.pipeline=pipeline;packet.depth=effectstate::Depth(lease,draw.world,stencil);packet.arguments=arguments;
 		packet.vertexCount=IsNativeUnitIcon(draw.kind)?6:draw.kind==NativeUnitPrimitiveKind::TeamPlatter || IsNativeSelectedUnits(draw.kind) || draw.kind==NativeUnitPrimitiveKind::AllySelected || draw.kind==NativeUnitPrimitiveKind::UnitTrackerDebug?186:6;packet.instances=draw.count;packet.raster=*raster;packet.state=draw.world;packet.externalImages=std::move(external);result->impl->draws.push_back(std::move(packet));
 	}

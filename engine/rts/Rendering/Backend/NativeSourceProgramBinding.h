@@ -13,7 +13,7 @@ struct NativeTerrainProgramPublication;
 // not a capability/readiness flag and never compiles or substitutes a shader.
 class NativeSourceProgramBinding {
 public:
- enum class Kind { Unbound, EngineModel, CUS, UnsupportedGL, Terrain, UnsupportedTerrain, DeferredLights, UnitStencil, Outline, Distortion };
+ enum class Kind { Unbound, EngineModel, CUS, UnsupportedGL, Terrain, UnsupportedTerrain, DeferredLights, UnitStencil, Outline, Distortion, UnitGlass };
  struct Selection {
   Kind kind=Kind::Unbound;
   std::shared_ptr<const void> owner;
@@ -26,6 +26,7 @@ public:
  void BindDistortion(std::shared_ptr<const void> actualProgram){Bind(Kind::Distortion,std::move(actualProgram));}
  void BindDeferredLights(std::shared_ptr<const void> actualProgram){Bind(Kind::DeferredLights,std::move(actualProgram));}
  void BindUnitStencil(std::shared_ptr<const void> actualProgram){Bind(Kind::UnitStencil,std::move(actualProgram));}
+ void BindUnitGlass(std::shared_ptr<const void> actualProgram){Bind(Kind::UnitGlass,std::move(actualProgram));}
  void BindOutline(std::shared_ptr<const void> actualProgram){Bind(Kind::Outline,std::move(actualProgram));}
  void BindTerrain(std::shared_ptr<const NativeTerrainProgramConsumer> actualProgram){
   if(!actualProgram)throw std::logic_error("Original terrain source binding has no actual compiled terrain owner");

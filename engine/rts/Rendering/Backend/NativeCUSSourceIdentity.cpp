@@ -18,7 +18,7 @@ NativeCUSProgramIdentity ValidateNativeCUSProgramSource(NativeCUSProgramSource& 
  if(source.vertexSHA512!=Digest(source.definitions+source.vertex)||source.fragmentSHA512!=Digest(source.definitions+source.fragment))
   throw std::runtime_error("CUS actual source program hashes differ from submitted bytes");
  const auto identity=FindNativeCUSProgramIdentity(source.vertexSHA512,source.fragmentSHA512);
- if(!identity)throw std::runtime_error("CUS actual original program/variant differs from the supported selected31657 assembly");
+ if(!identity)throw std::runtime_error("CUS actual original program/variant differs from the supported reviewed31657/31691 assemblies");
  // selected31657 no longer injects unused map-specific waterBlend definitions
  // into CUS. Retain the inactive old native uniform padding ABI, never accept
  // an arbitrary water literal or expose a fabricated active source uniform.

@@ -53,6 +53,7 @@ void ValidateNativeUnitPrimitiveDraw(const NativeUnitPrimitiveDraw& draw)
 	const auto stage=draw.kind==NativeUnitPrimitiveKind::SelectedUnfinished || draw.kind==NativeUnitPrimitiveKind::SelectedWater || draw.kind==NativeUnitPrimitiveKind::ResurrectionHalo?NativeWorldDrawStage::World:NativeWorldDrawStage::PreUnit;
 	Check(icon || (draw.kind==NativeUnitPrimitiveKind::AllySelected ? (draw.stage==NativeWorldDrawStage::PreUnit || draw.stage==NativeWorldDrawStage::World) : draw.stage==stage),"Original unit primitive draw stage differs from its actual program");
 	if(draw.kind==NativeUnitPrimitiveKind::AllySelected)Check(draw.disableQuads && (draw.maxVertices==8 || draw.maxVertices==64) && std::isfinite(draw.lineOpacity),"Original ally selected compile definitions differ");
+	Check(!draw.selected31657 || (selected && draw.disableQuads && draw.maxVertices==64 && !draw.atlas),"Original 31657 selected variant differs");
 	if(selected)Check(std::isfinite(draw.whiteMix) && draw.initialSize==(draw.kind==NativeUnitPrimitiveKind::SelectedUnfinished?.9999f:.75f),"Original selected unit compile definitions differ");
 	Check(draw.vertices && draw.vertices->object && draw.vertices->revision,"Original unit primitive immutable vertex buffer missing");const auto& layout=draw.vertices->layout;
 	Check(layout.kind==NativeBufferKind::Vertex && layout.stride==72 && layout.attributes.size()==6 && draw.vertices->bytes.size()==CheckedNativeBufferByteSize(layout) && draw.first<=layout.elements && draw.count<=layout.elements-draw.first,"Original unit primitive 72-byte stream/range differs");
@@ -83,6 +84,8 @@ void ValidateNativeUnitPrimitiveDraw(const NativeUnitPrimitiveDraw& draw)
 		const auto& image=draw.atlas;
 		Check(draw.maxVertices==4 && !draw.disableQuads,"Original unit icon quad variant differs");
 		Check(image && unitIconsProgram::ImageMatches(draw.kind,image->sourceName) && !image->incomplete && image->format==ScreenTextureFormat::RGBA8Unorm && image->width && image->height && !image->renderTarget && !image->postprocessVersion,"Original unit icon actual image missing");ValidateScreenSampler(draw.sampler);
+	}else if(selected && draw.selected31657){
+		Check(!draw.atlas,"Original 31657 selected units must not acquire an invented texture");
 	}else if(selected){
 		const auto& image=draw.atlas;
 		Check(image && image->sourceName==unitPrimitiveProgram::SelectedTexture && !image->incomplete && image->format==ScreenTextureFormat::RGBA8Unorm && image->width && image->height && !image->renderTarget && !image->postprocessVersion,"Original selected unit source image missing");ValidateScreenSampler(draw.sampler);

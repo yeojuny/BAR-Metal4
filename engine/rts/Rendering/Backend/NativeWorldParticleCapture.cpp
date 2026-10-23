@@ -1,4 +1,5 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#include "NativeOriginalModelContext.h"
 #include "NativeWorldParticleCapture.h"
 #include "NativeWorldParticleGeometry.h"
 #include "NativeLuaNanoRecorder.h"
@@ -117,6 +118,9 @@ std::shared_ptr<const NativeWorldParticleFrame> NativeWorldParticleCapture::Capt
 		Append(*frame,impl->geometry,range);
 	}
 
+	// Actual CProjectileDrawer::DrawOpaque entry, including both water passes.
+	// Use the real writer so mode, range, color and enable share its camera lineage.
+	sky->SetupFog();
 	// Preserve the original model-type/texture bins and their object order.
 	for (unsigned type=MODELTYPE_3DO;type<MODELTYPE_CNT;++type) {
 		const auto& renderer=projectileDrawer->modelRenderers[type];
@@ -153,6 +157,8 @@ std::shared_ptr<const NativeWorldParticleFrame> NativeWorldParticleCapture::Capt
 			} catch (const content_error& error) {frame->unsupported.emplace_back(error.what());}
 		}
 	}
+	// DrawOpaque has a persistent GL_FOG disable before the alpha stage.
+	OriginalNativeModelContext().fogEnabled=false;
 	// Original sorted then unsorted class geometry. The water halves share
 	// exact same immutable range, as the original reuse-water path does.
 	const auto mask=pass==NativeWaterScenePass::Reflection?DrawFlags::SO_REFLEC_FLAG:pass==NativeWaterScenePass::Refraction?DrawFlags::SO_REFRAC_FLAG:DrawFlags::SO_ALPHAF_FLAG;

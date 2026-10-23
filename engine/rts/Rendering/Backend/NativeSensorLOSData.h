@@ -11,12 +11,13 @@ namespace rendering {
 struct NativeSensorLOSDefines {
  std::string originalText,originalEngineDefinitions;
  float viewWidth=0,viewHeight=0;
+ float fadeStart=0,fadeEnd=0;
  bool stencilPass=false;
 };
 struct NativeSensorLOSProgramSnapshot {
  std::shared_ptr<const NativeSensorLOSDefines> defines;
  std::array<float,4> rangeColor{};
- float teamColorMix=1,lineWidthPx=1;
+ float teamColorMix=1,lineWidthPx=1,fadeStrength=1;
  int32_t heightUnit=0,stencilUnit=0;
 };
 class NativeSensorLOSProgramState {

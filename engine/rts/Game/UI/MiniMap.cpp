@@ -9,6 +9,7 @@
 #include "CommandColors.h"
 #include "GuiHandler.h"
 #include "MiniMap.h"
+#include "Rendering/Backend/NativeSelectedSensorRanges.h"
 #include "MouseHandler.h"
 #include "TooltipConsole.h"
 #include "Game/Camera.h"
@@ -2192,7 +2193,7 @@ void CMiniMap::GetNativeProjectiles(std::vector<rendering::NativeMiniMapLine>& l
 		points.push_back({{vertex.pos.x,vertex.pos.z},color(vertex.c),1.0f});
 }
 
-std::vector<rendering::NativeMiniMapLine> CMiniMap::GetNativeRangeLines() const
+std::vector<rendering::NativeMiniMapLine> CMiniMap::GetNativeRangeLines(bool selectedSensorsOnly) const
 {
 	std::vector<rendering::NativeMiniMapLine> lines;
 	const auto circle = [&](const float3& pos, SColor color, float radius) {
@@ -2212,6 +2213,15 @@ std::vector<rendering::NativeMiniMapLine> CMiniMap::GetNativeRangeLines() const
 	};
 	for (const int id: selectedUnitsHandler.selectedUnits) {
 		const CUnit* unit = unitHandler.GetUnit(id);
+		if (unit == nullptr) continue;
+		if (selectedSensorsOnly) {
+			const auto radii = rendering::SelectedSensorRadii({true, !unit->isDead,
+				unit->allyteam == gu->myAllyTeam, gu->spectatingFullView, gu->spectatingFullView || unit->IsInLosForAllyTeam(gu->myAllyTeam),
+				unit->beingBuilt, unit->activated, float(unit->radarRadius), float(unit->sonarRadius)});
+			if (radii[0] > 0) circle(unit->pos, rendering::SelectedSensorColor(cmdColors.rangeRadar).data(), radii[0]);
+			if (radii[1] > 0) circle(unit->pos, rendering::SelectedSensorColor(cmdColors.rangeSonar).data(), radii[1]);
+			continue;
+		}
 		if (unit->radarRadius && !unit->beingBuilt && unit->activated)
 			circle(unit->pos, cmdColors.rangeRadar, static_cast<float>(unit->radarRadius));
 		if (unit->sonarRadius && !unit->beingBuilt && unit->activated)

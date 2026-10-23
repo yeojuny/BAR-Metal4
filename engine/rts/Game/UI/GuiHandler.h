@@ -33,14 +33,15 @@ public:
 
 	void Draw();
 	void DrawMapStuff(bool onMiniMap);
-	void DrawNativeBuildPlacement();
-	void DrawNativeAreaCommands();
+	void DrawNativeMapRanges();
+	void DrawNativeCommandPreviews();
 	struct NativeAreaCommandPreview {
 		float3 center;
 		float radius;
 		std::array<float, 4> color;
 	};
 	std::optional<NativeAreaCommandPreview> GetNativeAreaCommandPreview() const;
+	void DrawMapRanges(bool onMiniMap, bool minimapCoors, const float3& tracePos, const float3& traceDir, bool nativeRanges);
 	void DrawBuildingPlacement(bool onMiniMap, const float3& tracePos, const float3& traceDir, float maxTraceDist, const CUnit* pointeeUnit);
 	void DrawCentroidCursor();
 
@@ -161,6 +162,9 @@ private:
 	void DrawMiniMapMarker(const float3& cameraPos);
 	void DrawFormationFrontOrder(int button, float maxSize, float sizeDiv, bool onMiniMap, const float3& cameraPos, const float3& mouseDir);
 	int GetMapCommandIndex(int& button) const;
+	int GetActiveMapCommandIndex(int& button) const;
+	bool GetMapPreviewTrace(float3& tracePos, float3& traceDir) const;
+	void DrawMapCommandPreview(int button, const SCommandDescription& cmdDesc, bool onMiniMap, const float3& tracePos, const float3& traceDir);
 	std::optional<NativeAreaCommandPreview> GetAreaCommandPreview(int button, const SCommandDescription& cmdDesc, const float3& tracePos, const float3& traceDir) const;
 	void DrawAreaCommand(int button, const SCommandDescription& cmdDesc, bool onMiniMap, const float3& tracePos, const float3& traceDir);
 	void DrawArea(float3 pos, float radius, const float* color);

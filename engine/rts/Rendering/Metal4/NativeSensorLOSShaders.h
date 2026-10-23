@@ -13,6 +13,7 @@ struct SensorLOSUniform {
 	float4x4 cameraViewProjection,cameraViewInverse,cameraViewProjectionInverse;
 	float4 timeInfo,viewGeometry,mapSize,rangeColor,viewport,fragmentToLogical,values,parameters;
 	uint4 options,counts;
+	float4 distanceFade;
 };
 struct SensorLOSInstance { float4 radiusParams; uint4 instData; };
 struct SensorLOSValue { float4 clip,data;float halfWidth; };
@@ -55,7 +56,8 @@ inline SensorLOSValue SensorLOSOriginalVertex(float4 point,SensorLOSInstance ins
  const float thin=mix(1.f,.4f,smoothstep(3000.f,8000.f,camDist));
  const float halfWidth=.5f*max(u.values.w*thin,min(u.values.w,.7f));
  const float2 edge=min(world.xz,u.mapSize.xy-world.xz);
- const float inside=1.f-clamp(min(edge.x,edge.y)*-.02f,0.f,1.f);
+ float inside=1.f-clamp(min(edge.x,edge.y)*-.02f,0.f,1.f);
+ inside*=1.f-u.distanceFade.z*smoothstep(u.distanceFade.x,max(u.distanceFade.y,u.distanceFade.x+1.f),camDist);
  return {clip,float4(0,radius*point.z*5.2345f,ground,inside),halfWidth};
 }
 inline bool SensorLOSClipLine(thread float4& a,thread float4& b,thread float& enter,thread float& leave) {

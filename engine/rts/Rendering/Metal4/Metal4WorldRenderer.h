@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Metal4WindowSurface.h"
+#include "../Backend/NativeMissileThrusterData.h"
 #include "Rendering/Backend/NativeMainSamplingData.h"
 #include "../Backend/RenderTypes.h"
 #include "../Backend/WorldFrameData.h"
@@ -84,6 +85,7 @@ struct Metal4WorldPresentationResult {
 	Metal4PresentationStatus status = Metal4PresentationStatus::DrawableUnavailable;
 	bool presented = false;
 	bool sourceFrameCompleted = false;
+ uint64_t dynamicWaterGeneration=0,dynamicWaterSequence=0,dynamicWaterSourceDrawFrame=0;
 	bool screenTargetsCompleted = false;
 	std::uint64_t completedPostprocessSerial = 0;
 	std::uint64_t sourceDrawFrame = 0;
@@ -136,7 +138,7 @@ struct Metal4WorldPresentationResult {
 	uint32_t luaSnowDraws = 0;
 	uint32_t luaCommandsDraws = 0;
 	uint32_t luaShieldDraws=0, mapGBufferDepthPasses=0, modelGBufferDepthPasses=0, modelGBufferDepthPieces=0;
-	std::array<uint32_t, 4> luaMissileThrusterProgramDraws{};
+	std::array<uint32_t, static_cast<std::size_t>(NativeMissileThrusterProgram::Glow31657) + 1> luaMissileThrusterProgramDraws{};
 	uint32_t buildingGridDraws=0,buildingSampleDraws=0,buildingSamplePieces=0;
 	uint32_t luaBlueprintDraws = 0, luaBlueprintModels = 0, luaBlueprintOutlines = 0, luaBlueprintStencilClears = 0;
 	std::vector<std::string> materialSources; // Actual selected original definitions/resources.
@@ -202,6 +204,8 @@ public:
 	void AbortScreenContinuation() noexcept;
 	void ClearWaterResources();
 	void ClearBasicWaterResources();
+	void ClearLegacyWaterResources();
+ void ClearDynamicWaterResources();
 	bool CanInitializeWater() const;
 	// Local PSOs only; never call Session source.Ready from a provider.ready callback.
 	bool DeferredPostprocessConsumersInitialized() const noexcept;

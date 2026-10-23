@@ -26,12 +26,14 @@ void ValidateNativeWaterSceneView(const NativeWaterSceneView& view, uint64_t exp
 	}
 	const auto& frame = view.frame;
 	Check(frame.sourceDrawFrame == expectedDrawFrame, "Water scene belongs to a different source draw");
-	Check(!frame.waterScene && !frame.bumpWater && !frame.basicWater, "Recursive water capture is not an original reflection input");
+	Check(!frame.waterScene && !frame.bumpWater && !frame.basicWater && !frame.legacyWater && !frame.dynamicWater, "Recursive water capture is not an original reflection input");
 	Check(frame.terrain.heights && frame.terrain.tiles && frame.terrain.material && frame.environmentFrame,
 		"Water scene lacks actual terrain/environment owners");
-	Check(view.terrainClipPlane == NativeWaterTerrainClipPlane(view.pass) && view.modelClipPlane == NativeWaterModelClipPlane(view.pass),
+	Check(view.terrainClipPlane == (view.legacyReflective ? std::array<float,4>{0,1,0,0} : NativeWaterTerrainClipPlane(view.pass)) && view.modelClipPlane == NativeWaterModelClipPlane(view.pass),
 		"Water reflection/refraction clipping differs from original source");
-	Check(view.drawFog == (view.pass == NativeWaterScenePass::Reflection), "Water refraction must preserve original disabled fog");
+	Check(!view.legacyReflective || (view.pass==NativeWaterScenePass::Reflection && view.drawGround && view.frame.viewCamera.viewport[2]==512 && view.frame.viewCamera.viewport[3]==512), "Legacy water reflection source contract differs");
+	Check(!view.dynamicWater || (view.drawGround && !view.legacyReflective && (frame.viewCamera.viewport[2]==512 || (view.pass==NativeWaterScenePass::Refraction && frame.viewCamera.viewport[2]==1024)) && frame.viewCamera.viewport[2]==frame.viewCamera.viewport[3]), "Dynamic scene original extent differs");
+	Check(view.dynamicWater || view.drawFog == (view.pass == NativeWaterScenePass::Reflection), "Water refraction must preserve original disabled fog");
 	Check(frame.viewCamera.clipDepth != ClipDepthConvention::Unsupported && frame.viewCamera.viewport[2] > 0 && frame.viewCamera.viewport[3] > 0,
 		"Water scene requires its actual camera and viewport");
 	for (const auto& matrix : {frame.viewCamera.view, frame.viewCamera.projection})

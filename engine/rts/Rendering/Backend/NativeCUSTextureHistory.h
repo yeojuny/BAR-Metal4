@@ -11,7 +11,18 @@
 #include <vector>
 namespace rendering {
 struct WorldTexture;
-enum class NativeCUSTextureTarget : uint8_t { Image2D, Image3D, Cube, Image2DMultisample, Image2DArray, Count };
+enum class NativeCUSTextureTarget : uint8_t { Image2D, Image3D, Cube, Image2DMultisample, Image2DArray, Rectangle, Count };
+// Actual target-specific object creation defaults. ARB_texture_rectangle
+// section 3.8.10 and table 6.16 specify LINEAR and CLAMP_TO_EDGE for S/T/R.
+// Existing target values and their defaults remain unchanged.
+inline NativeTextureSampling InitialNativeTextureSampling(NativeCUSTextureTarget target) {
+ NativeTextureSampling sampling;
+ if(target==NativeCUSTextureTarget::Rectangle){
+  sampling.minFilter=0x2601;
+  sampling.wrapS=sampling.wrapT=sampling.wrapR=0x812F;
+ }
+ return sampling;
+}
 enum class NativeCUSBindingKnowledge : uint8_t { Unobserved, DefaultObject, BoundObject };
 enum class NativeTextureStorageKnowledge : uint8_t { Unobserved, Empty, AllocatedUndefined, Published };
 struct NativeTextureAllocation {

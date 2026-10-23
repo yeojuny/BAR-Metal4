@@ -19,10 +19,12 @@ struct NativeSensor31657CircleDefines {
  bool visibilityCulling = false;
  std::optional<float> maxHeight;
  float stippleRate = 1;
+ float fadeStart = 0, fadeEnd = 0;
 };
 struct NativeSensor31657CircleProgramSnapshot {
  std::shared_ptr<const NativeSensor31657CircleDefines> defines;
  std::array<float,4> rangeColor{};
+ float fadeStrength = 1; // original GLSL initializer
  float teamColorMix = 1; // original default; selected widgets set zero
  std::int32_t heightUnit = 0, circleCount = 0;
 };

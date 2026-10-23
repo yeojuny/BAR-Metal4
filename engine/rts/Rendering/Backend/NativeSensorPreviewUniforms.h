@@ -13,10 +13,12 @@ struct alignas(16) NativeSensorPreviewUniformBlock {
  // Jammer-only tail; the existing Radar fields and their offsets stay intact.
  std::array<float,4> previewParams,jammerFlags,emitterAllied;
  std::array<float,192> jammerCircles;
+ std::array<float,4> distanceFade; // x: actual jammer sheet fadeStrength, GL default zero
 };
-static_assert(sizeof(NativeSensorPreviewUniformBlock)==1056);
+static_assert(sizeof(NativeSensorPreviewUniformBlock)==1072);
 static_assert(offsetof(NativeSensorPreviewUniformBlock,fragmentTransform)==208);
 static_assert(offsetof(NativeSensorPreviewUniformBlock,imageOptions)==224);
 static_assert(offsetof(NativeSensorPreviewUniformBlock,previewParams)==240);
 static_assert(offsetof(NativeSensorPreviewUniformBlock,jammerCircles)==288);
+static_assert(offsetof(NativeSensorPreviewUniformBlock,distanceFade)==1056);
 } // namespace rendering

@@ -1675,8 +1675,8 @@ bool CGame::Draw() {
 					throw;
 				}
 			}
-			guihandler->DrawNativeBuildPlacement();
-			guihandler->DrawNativeAreaCommands();
+			guihandler->DrawNativeCommandPreviews();
+			guihandler->DrawNativeMapRanges();
 			placementFrame=LuaNativePlacement::EndWorldFrame();
 			luaNanoFrame = LuaNativeNano::EndWorldFrame();
 			luaProjectileEffectsFrame = LuaNativeProjectileEffects::EndWorldFrame();
@@ -1694,6 +1694,8 @@ bool CGame::Draw() {
 			luaBlueprintFrame = LuaNativeBlueprint::EndWorldFrame();
 			rendering::scene::CompleteStartBoxWorld(LuaNativeStartBox::EndWorldFrame());
 			rendering::scene::CompleteWeaponRangeWorld(LuaNativeWeaponRange::EndWorldFrame());
+			// CWorldDrawer::Draw disables fog after its final world overlay, before screen stages.
+			nativeUI.LuaFogEnabled(false);
 			if (CUnitDrawer::UseScreenIcons()) {
 				// Original SCREEN order precedes DrawScreenEffects. The common
 				// collector owns visibility, selection, ghost dimming and UI hiding.

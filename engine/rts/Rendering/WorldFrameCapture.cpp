@@ -115,56 +115,6 @@ std::string ResolveTexturePath(const std::string& reference)
 	throw content_error("Missing original model texture: " + reference);
 }
 
-std::optional<std::string> ResolveKnownFeatureNormalResource(const std::string& requested, const std::string& featureName, bool resourceAlreadyVerified = false)
-{
-	// Intended-resource repair for four verified map-feature sources. This is
-	// not generic extension guessing or emulation of an incomplete GL binding.
-	// A real requested PNG always wins, including an explicit user override.
-	if (CFileHandler::FileExists(requested, SPRING_VFS_RAW_FIRST)) return {};
-	struct Rule {
-		const char *requested, *resolved, *producer, *prefix;
-		uint32_t count, resourceSize;
-		const char *sourceSHA512, *resourceSHA512;
-	};
-	constexpr Rule rules[] = {
-		{"unittextures/oak_holly_a_normal.png", "unittextures/oak_holly_a_normal.dds", "features/oaktree_a.lua", "oak_holly_a", 3, 174904,
-		 "4269b9c33b0a8215ffd3b93c5dff176f3387c34b33173b3b51a794d26bc8b34c0186dd8970510a42e62b97452cf1cec8899498161a467a8595b317aed6da4a87",
-		 "8a487886575b1d2e0d563bd0ae02862c2525a3241b89dc1b71b0358751dd2724a30b1b04f20a12b8e1a10fbd5351e0cacee230bbe710e768145021880cd924aa"},
-		{"unittextures/oak_holly_b_normal.png", "unittextures/oak_holly_b_normal.dds", "features/oaktree_b.lua", "oak_holly_b", 3, 174904,
-		 "92b5cb8181afde862c4c16df944368c137ad8f037457c4b0adeeafbbf53ea7b884c7f6439804deb3ad3df55c2070a32ab6be8a8b3bd44c844fe3e87d2060709a",
-		 "7ce2e0a12b4455a21881cf16e85ac9af8ba1d1301b47808a53358fecefedf065c363659b336b5c91f5f9b02f82224d1cde9093b858dbc266bb233e7f5d9d96c9"},
-		{"unittextures/oak_holly_c_normal.png", "unittextures/oak_holly_c_normal.dds", "features/oaktree_c.lua", "oak_holly_c", 6, 174904,
-		 "ed96fb22fa025e9fd3c82e7f93b7ae93d7b4367f68fb292d23d33715088e7e2901477351b4d6a5310bad62f1d4ea3f461b77f6a90dffb8aed11d493c47995584",
-		 "8f9c5d52828a651fd3ba357602b3779e7d89f9c39d06c6265a1636f0a491c8690f8e445d9fa4fffc37cfca89e609fffb5676256edce9733347201cd48b786766"},
-		{"unittextures/kapok_normal.png", "unittextures/kapok_normal.dds", "features/kapoktree.lua", "kapok", 4, 43832,
-		 "f53b26145d8c204c6b1c9bda498f73b0d7bb12fc129ee0a24458f48928aac5594da042d0384566af42110dfb8d3acea5814e1c0732562f9b0404419d72516333",
-		 "1e2dd97e84d45e5db70a0938ff3bbc3182d03b0619b6c47ab7b5e2309410600a677bfcbe503c4fbf5c5c0ddb09d5ec438e17efe370642f0c00a759591ee63e3a"},
-	};
-	for (const auto& rule : rules) {
-		if (requested != rule.requested) continue;
-		const std::string_view prefix(rule.prefix);
-		if (!featureName.starts_with(prefix) || featureName.size() != prefix.size() + 1 ||
-			featureName.back() < '1' || featureName.back() > static_cast<char>('0' + rule.count))
-			throw content_error("Unverified feature normal repair producer: " + featureName + " requested=" + requested);
-		if (resourceAlreadyVerified) return std::string(rule.resolved);
-		auto verify = [](const char* path, const char* expected, size_t exactSize, bool dds) {
-			CFileHandler file(path, SPRING_VFS_RAW_FIRST); std::string bytes;
-			if (file.FileSize() < 1 || static_cast<size_t>(file.FileSize()) > (dds ? 384u * 1024u * 1024u : 8192u) ||
-				(exactSize != 0 && static_cast<size_t>(file.FileSize()) != exactSize) || !file.LoadStringData(bytes))
-				throw content_error("Missing or invalid verified feature normal repair resource: " + std::string(path));
-			sha512::raw_digest digest;
-			sha512::calc_digest(reinterpret_cast<const uint8_t*>(bytes.data()), bytes.size(), digest.data());
-			if (sha512::dump_digest(digest) != expected)
-				throw content_error("Feature normal repair requires exact source/resource SHA512: " + std::string(path));
-			if (dds) ValidateNativeWorldDDS({reinterpret_cast<const uint8_t*>(bytes.data()), bytes.size()});
-		};
-		verify(rule.producer, rule.sourceSHA512, 0, false);
-		verify(rule.resolved, rule.resourceSHA512, rule.resourceSize, true);
-		return std::string(rule.resolved);
-	}
-	return {}; // Unrecognized resources retain the explicit missing-path error.
-}
-
 WorldTextureMip CaptureRGBAImagePayload(const CBitmap& image, const std::string& path)
 {
 	if (image.Empty() || image.compressed || image.channels != 4 || image.dataType != 0x1401 || image.xsize <= 0 || image.ysize <= 0)
@@ -373,26 +323,50 @@ std::shared_ptr<const NativeWorldSkyResource> LoadOriginalSkyResource()
 	if(FileSystem::GetExtensionLowerCase(out->sourcePath)!="dds") {
 		out->kind=NativeSkyKind::Equirectangular;out->equirectangular=LoadTextureBytes(out->sourcePath);return out;
 	}
-	ValidateNativeSkyDDS({reinterpret_cast<const uint8_t*>(source.data()),source.size()});
+	const auto layout=ValidateNativeSkyDDS({reinterpret_cast<const uint8_t*>(source.data()),source.size()});
 	nv_dds::CDDSImage image;
 	if(!image.load(out->sourcePath,true)||image.get_type()!=nv_dds::TextureCubemap)throw content_error("Original sky DDS cube load failed: "+out->sourcePath);
-	size_t block=16;
+	size_t block=16;unsigned channels=0;
 	switch(image.get_format()) { case 0x83f0:case 0x83f1:out->format=WorldTextureFormat::BC1RGBA;block=8;break;
 		case 0x83f2:out->format=WorldTextureFormat::BC2RGBA;break;case 0x83f3:out->format=WorldTextureFormat::BC3RGBA;break;
 		case 0x8dbb:out->format=WorldTextureFormat::BC4Unorm;block=8;break;
 		case 0x8dbd:out->format=WorldTextureFormat::BC5Unorm;break;
 		case 0x8e8c:out->format=WorldTextureFormat::BC7RGBA;break;
 		case 0x8e8d:out->format=WorldTextureFormat::BC7RGBASRGB;break;
+		case 0x80e0:channels=3;out->format=WorldTextureFormat::RGBA8Unorm;break; // GL_BGR
+		case 0x80e1:channels=4;out->format=WorldTextureFormat::RGBA8Unorm;break; // GL_BGRA storage for validated BGRX
 		default:throw content_error("Unsupported original sky cube format: "+out->sourcePath); }
+	if(channels!=layout.rawChannels||image.get_width()!=layout.size||image.get_num_mipmaps()!=layout.levels-1)
+		throw content_error("Original sky DDS decoded layout differs from validated header");
 	out->kind=NativeSkyKind::CubeMap;
 	out->mipmappedSampling=image.get_num_mipmaps()!=1;
 	out->generateMipmaps=image.get_num_mipmaps()==0;
+	size_t retainedBytes=0;
 	for(uint32_t face=0;face<6;++face) {
 		const auto& input=image.get_cubemap_face(face);
+		if(input.get_num_mipmaps()!=layout.levels-1)throw content_error("Original sky DDS faces have unequal mip counts");
+		uint32_t expectedSize=layout.size;
 		auto append=[&](const nv_dds::CSurface& surface) {
-			const uint32_t w=surface.get_width(),h=surface.get_height();const size_t row=size_t((w+3)/4)*block;
-			if(!w||w!=h||surface.get_size()!=row*((h+3)/4))throw content_error("Original sky DDS face mip extent mismatch");
-			const uint8_t* data=surface;WorldTextureMip mip{w,h,row,{}};mip.bytes.assign(data,data+surface.get_size());out->cubeFaces[face].push_back(std::move(mip));
+			const uint32_t w=surface.get_width(),h=surface.get_height();
+			const size_t row=channels?size_t(w)*channels:size_t((w+3)/4)*block;
+			const size_t bytes=row*(channels?h:(h+3)/4);
+			if(w!=expectedSize||w!=h||surface.get_depth()!=1||surface.get_size()!=bytes)
+				throw content_error("Original sky DDS face mip extent mismatch");
+			const size_t retained=channels?size_t(w)*h*4:bytes;
+			if(retained>384u*1024u*1024u-retainedBytes)throw content_error("Original sky DDS retained storage exceeds limit");
+			retainedBytes+=retained;
+			const uint8_t* data=surface;WorldTextureMip mip{w,h,row,{}};
+			if(channels){
+				mip.bytesPerRow=size_t(w)*4;mip.bytes.resize(retained);
+				for(size_t i=0;i<size_t(w)*h;++i){
+					const auto* q=data+i*channels;auto* p=mip.bytes.data()+i*4;
+					p[0]=q[2];p[1]=q[1];p[2]=q[0];p[3]=255;
+				}
+				// Both admitted raw headers declare no alpha. The X byte in
+				// BGRX32 is unused, even though nv_dds labels its storage BGRA.
+			}else mip.bytes.assign(data,data+bytes);
+			out->cubeFaces[face].push_back(std::move(mip));
+			expectedSize=std::max(1u,expectedSize/2);
 		};
 		append(input);for(uint32_t mip=0;mip<input.get_num_mipmaps();++mip)append(input.get_mipmap(mip));
 	}
@@ -459,7 +433,6 @@ struct WorldFrameCapture::State {
 	std::unordered_map<std::string, std::shared_ptr<const WorldTexture>> textures;
 	std::unordered_map<const SolidObjectDef*, std::shared_ptr<const WorldModelMaterial>> materials;
 	std::unordered_set<std::string> knownTrees;
-	std::unordered_map<std::string, std::string> verifiedNormalRepairs;
 	bool materialSourcesVerified = false;
 	uint64_t materialRevision = 0;
 	bool cusEnabled = true;
@@ -557,8 +530,11 @@ struct WorldFrameCapture::State {
 		out->metalness = .1f; out->roughness = .8f; out->emissiveness = .2f;
 		out->brightness = feature ? 1.3f : 1.5f;
 		std::string normalPath;
-		if (auto it = def.customParams.find("normaltex"); it != def.customParams.end()) normalPath = it->second;
-		else if (feature) {
+		// Match selected CUS GetNormal: a missing custom path is not selected.
+		// Existence is not decode validity; present corrupt images still fail loading.
+		if (auto it = def.customParams.find("normaltex"); it != def.customParams.end() &&
+			CFileHandler::FileExists(it->second, SPRING_VFS_RAW_FIRST)) normalPath = it->second;
+		if (normalPath.empty() && feature) {
 			const auto& tex1 = model.textureReferences[0];
 			if (tex1 == "Arm_wreck_color.dds") normalPath = "unittextures/Arm_wreck_color_normal.dds";
 			else if (tex1 == "cor_color_wreck.dds") normalPath = "unittextures/cor_color_wreck_normal.dds";
@@ -571,16 +547,7 @@ struct WorldFrameCapture::State {
 		}
 		if (normalPath.empty()) normalPath = "unittextures/blank_normal.dds"; // Exact original GetNormal fallback, not invented pixels.
 		out->requestedNormalPath = normalPath;
-		if (feature) {
-			const auto cached = verifiedNormalRepairs.find(normalPath);
-			const auto repaired = ResolveKnownFeatureNormalResource(normalPath, def.name, cached != verifiedNormalRepairs.end());
-			if (repaired) {
-				out->normalResolutionDiagnostic = "Verified original map-feature normal extension repair: requested=" + normalPath + " resolved=" + *repaired + "; exact producer/resource SHA512 matched; original files unchanged";
-				normalPath = *repaired;
-			}
-		}
 		out->normal = Texture(normalPath);
-		if (!out->normalResolutionDiagnostic.empty()) verifiedNormalRepairs.emplace(out->requestedNormalPath, normalPath);
 		materials.emplace(&def, out);
 		return out;
 	}
@@ -640,8 +607,10 @@ struct WorldFrameCapture::State {
 						value.boneWeights[i] = vertex.boneWeights[i];
 					}
 					output.vertices.push_back(value);
-					if (value.boneIds[0] != model->pieces.size() || value.boneWeights[0] != 255 ||
-						value.boneWeights[1] || value.boneWeights[2] || value.boneWeights[3])
+					// Emitter-only pieces retain unassigned bones and CPU/pose slots,
+					// but the original HasGeometryData boundary omits their GPU vertices.
+					if (piece->HasGeometryData() && (value.boneIds[0] != model->pieces.size() || value.boneWeights[0] != 255 ||
+						value.boneWeights[1] || value.boneWeights[2] || value.boneWeights[3]))
 						rigidPerPiece = false;
 				}
 				output.indices = piece->GetIndicesVec();

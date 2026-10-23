@@ -53,6 +53,7 @@ std::shared_ptr<const NativeCUSTextureObject> NativeTextureRegistry::Create(
 	object->name = name;
 	object->version = 1;
 	object->target = target;
+	object->sampling = InitialNativeTextureSampling(target);
 	object->source = std::move(source);
 	object->storage = NativeTextureStorageKnowledge::Empty;
 	objects.emplace(name, ObjectEntry{object,{},0});

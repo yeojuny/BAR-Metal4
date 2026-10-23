@@ -14,6 +14,7 @@ struct Sensor31657Uniform {
 	float4x4 cameraViewProjection,cameraViewInverse,cameraViewProjectionInverse;
 	float4 timeInfo,viewGeometry,mapSize,rangeColor,viewport,fragmentToLogical,values,parameters;
 	uint4 options,counts;
+	float4 distanceFade;
 };
 struct Sensor31657Instance { float4 radiusParams; uint4 instData; };
 struct Sensor31657Value { float4 clip,data; };
@@ -47,7 +48,9 @@ inline Sensor31657Value Sensor31657OriginalVertex(float4 point,Sensor31657Instan
 	const float4 depth=u.cameraViewProjection*float4(world.xyz+toCamera*16.0f,1.0f);
 	clip.z=depth.z/depth.w*clip.w;
 	const float2 edge=min(world.xz,u.mapSize.xy-world.xz);
-	const float inside=1.0f-clamp(min(edge.x,edge.y)*-0.02f,0.0f,1.0f);
+	float inside=1.0f-clamp(min(edge.x,edge.y)*-0.02f,0.0f,1.0f);
+	const float camDist=distance(u.cameraViewInverse[3].xyz,world.xyz);
+	inside*=1.0f-u.distanceFade.z*smoothstep(u.distanceFade.x,max(u.distanceFade.y,u.distanceFade.x+1.0f),camDist);
 	return {clip,float4(0,radius*point.z*5.2345f,ground,inside)};
 }
 inline bool Sensor31657ClipLine(thread float4& a,thread float4& b,thread float& enter,thread float& leave) {

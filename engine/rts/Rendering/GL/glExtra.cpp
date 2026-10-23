@@ -324,6 +324,19 @@ void GL::Shapes::DrawSolidSphere(uint32_t numRows, uint32_t numCols, const CMatr
 
 void GL::Shapes::DrawWireSphere(uint32_t numRows, uint32_t numCols, const CMatrix44f& m, const float* color)
 {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (LuaNativePlacement::CapturingEngine()) {
+		std::vector<float3> verts;
+		std::vector<uint32_t> indcs;
+		BuildWireSphereGeometry(numRows, numCols, verts, indcs);
+		std::vector<float3> lines; lines.reserve(indcs.size());
+		for (const auto i: indcs)
+			lines.push_back(m * verts[i]);
+		LuaNativePlacement::RecordEngineLines(lines, {color[0], color[1], color[2], color[3]});
+		return;
+	}
+#endif
+
 #ifndef HEADLESS
 	auto shToken = FillShaderUniforms(m, color);
 	DrawWireSphere(numRows, numCols);
@@ -544,10 +557,10 @@ auto GL::Shapes::CreateSolidSphere(uint32_t numRows, uint32_t numCols) -> declty
 	).first;
 }
 
-auto GL::Shapes::CreateWireSphere(uint32_t numRows, uint32_t numCols) -> decltype(wireSpheresMap)::iterator
+void GL::BuildWireSphereGeometry(uint32_t numRows, uint32_t numCols, std::vector<float3>& verts, std::vector<uint32_t>& indcs)
 {
-	std::vector<float3  > verts; verts.resize((numRows + 1)* numCols);
-	std::vector<uint32_t> indcs; indcs.reserve((numCols + 1) * 6 * 2 + (numRows - 2) * numCols * 8);
+	verts.resize((numRows + 1)* numCols);
+	indcs.clear(); indcs.reserve((numCols + 1) * 6 * 2 + (numRows - 2) * numCols * 8);
 
 	for (uint32_t row = 0; row <= numRows; row++) {
 		for (uint32_t col = 0; col < numCols; col++) {
@@ -613,6 +626,14 @@ auto GL::Shapes::CreateWireSphere(uint32_t numRows, uint32_t numCols) -> decltyp
 			indcs.push_back(i0);
 		}
 	}
+
+}
+
+auto GL::Shapes::CreateWireSphere(uint32_t numRows, uint32_t numCols) -> decltype(wireSpheresMap)::iterator
+{
+	std::vector<float3> verts;
+	std::vector<uint32_t> indcs;
+	BuildWireSphereGeometry(numRows, numCols, verts, indcs);
 
 	return wireSpheresMap.emplace(
 		std::make_tuple(numRows, numCols),

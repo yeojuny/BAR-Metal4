@@ -18,6 +18,7 @@ void NativeCUSTextureHistory::Advance(){
 void NativeCUSTextureHistory::ResetForNewContext(){
  if(context==std::numeric_limits<uint64_t>::max())throw std::overflow_error("CUS texture context generation overflow");
  Advance();++context;state={};stack.clear();activeUnit=0;defaultStorageKnownEmpty.fill(true);defaultSampling={};
+ for(size_t target=0;target<defaultSampling.size();++target)defaultSampling[target]=InitialNativeTextureSampling(NativeCUSTextureTarget(target));
  for(auto&unit:state)for(auto&binding:unit){binding.knowledge=NativeCUSBindingKnowledge::DefaultObject;binding.enableObserved=true;binding.defaultStorageKnownEmpty=true;}
 }
 void NativeCUSTextureHistory::CloseContext()noexcept{

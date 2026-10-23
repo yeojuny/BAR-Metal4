@@ -186,5 +186,11 @@ fragment float4 UnitPrimitiveSelectedFragment(PrimitiveOut input [[stage_in]],co
  float4 color=float4(mix(input.color.rgb*texcolor.rgb+u.parameters.x,float3(1.0),u.selected.y),texcolor.a*u.parameters.z+u.parameters.x);
  if(!PrimitiveAlpha(color.a,u))discard_fragment();return color;
 }
+// Exact current POST_SHADING with USETEXTURE=0; no image/sampler binding.
+fragment float4 UnitPrimitiveSelected31657Fragment(PrimitiveOut input [[stage_in]],constant PrimitiveUniform& u [[buffer(2)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
+ RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
+ float4 color=float4(mix(input.color.rgb+u.parameters.x,float3(1.0),u.selected.y),u.parameters.z+u.parameters.x);
+ if(!PrimitiveAlpha(color.a,u))discard_fragment();return color;
+}
 )DPATMSL";
 }

@@ -273,7 +273,7 @@ HeadlessConfigSource::HeadlessConfigSource()
 		// and safe mode keep their original source priority. Real native
 		// consumers still decide which rendering modes are available.
 		const auto& key = metadata->GetKey();
-		if (key == "UseSDLAudio" || key == "MaxSounds" || key == "Water" ||
+		if (key == "TeamNanoSpray" || key == "UseSDLAudio" || key == "MaxSounds" || key == "Water" ||
 			key == "BumpWaterTexSizeReflection" || key == "BumpWaterReflection" ||
 			key == "BumpWaterRefraction" || key == "BumpWaterUseDepthTexture" || key == "BumpWaterShoreWaves")
 			continue;

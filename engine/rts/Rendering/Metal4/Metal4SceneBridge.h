@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cstdint>
+#include "System/float3.h"
 #include <memory>
 #include <functional>
 #include <vector>
@@ -109,6 +110,16 @@ void UpdateWater();
 void ResetWater();
 bool WaterInitialized();
 void InitializeBasicWater();
+bool CanInitializeLegacyWater();
+bool CanInitializeDynamicWater();
+void InitializeDynamicWater();
+void ResetDynamicWater();
+void UpdateDynamicWater();
+void AddDynamicWaterExplosion(const float3&,float strength,float size);
+bool CanInitializeLegacyRefractiveWater();
+void InitializeLegacyRefractiveWater();
+void InitializeLegacyWater();
+void ResetLegacyWater();
 void ResetBasicWater();
 bool BasicWaterInitialized();
 void AbortPreparedWorld();

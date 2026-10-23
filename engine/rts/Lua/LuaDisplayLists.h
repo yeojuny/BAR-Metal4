@@ -78,7 +78,7 @@ class CLuaDisplayLists {
 		}
 
 #ifdef RECOIL_METAL4_LIVE_SCENE
-		unsigned int NewNativeList(std::shared_ptr<const rendering::ui::NativeUICommandList> list)
+		unsigned int NewNativeList(std::shared_ptr<const rendering::ui::NativeUICommandList> list,const SMatrixStateData& matrix)
 		{
 			if (!list) return 0;
 			rendering::ui::NativeDisplayListOwner owner(std::move(list));
@@ -86,6 +86,7 @@ class CLuaDisplayLists {
 			if (unused.empty()) { index = active.size(); active.emplace_back(0); }
 			else { index = unused.back(); unused.pop_back(); }
 			active[index].native = std::move(owner);
+			active[index].matData = matrix;
 			return index;
 		}
 		std::shared_ptr<const rendering::ui::NativeUICommandList> GetNativeList(unsigned int index) const

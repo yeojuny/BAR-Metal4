@@ -129,6 +129,7 @@ struct PreviewUniforms {
  uint4 imageOptions; // x: flipV bits; y: original zero-to-one clip control; z: alpha compare|enabled<<8; w: reference float bits
  float4 previewParams,jammerFlags,emitterAllied;
  float jammerCircles[192];
+ float4 distanceFade;
 };
 struct PreviewVarying {
  float4 position [[position]];

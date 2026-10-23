@@ -9,6 +9,9 @@
 #include <unordered_map>
 
 #include "Lua/LuaHandle.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeUIRecorder.h"
+#endif
 
 struct lua_State;
 
@@ -364,10 +367,19 @@ inline void LuaOpenGL::InitMatrixState(lua_State* L, const char* fn) {
 #if !defined(NDEBUG) && !defined(HEADLESS)
 	if (IsDrawingEnabled(L)) {
 		GLint curmode; // the matrix mode should be set to GL_MODELVIEW before calling any lua code
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		const auto actual=rendering::ui::GetRecorder().CurrentMatrixMode();
+		curmode=actual==rendering::ui::NativeUIMatrixMode::ModelView?GL_MODELVIEW:actual==rendering::ui::NativeUIMatrixMode::Projection?GL_PROJECTION:actual==rendering::ui::NativeUIMatrixMode::Texture?GL_TEXTURE:0x88C0;
+#else
 		glGetIntegerv(GL_MATRIX_MODE, &curmode);
+#endif
 		if (curmode != GL_MODELVIEW)
 			LOG_L(L_ERROR, "%s: Current matrix mode is not GL_MODELVIEW", fn);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::ui::GetRecorder().MatrixMode(rendering::ui::NativeUIMatrixMode::ModelView);
+#else
 		glMatrixMode(GL_MODELVIEW);
+#endif
 	}
 #endif
 }
@@ -375,7 +387,14 @@ inline void LuaOpenGL::InitMatrixState(lua_State* L, const char* fn) {
 inline void LuaOpenGL::CheckMatrixState(lua_State* L, const char* fn, int error) {
 	if (!GetLuaContextData(L)->glMatrixTracker.HasMatrixStateError())
 		return;
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	GetLuaContextData(L)->glMatrixTracker.HandleMatrixStateError(error,fn,[](unsigned mode,int count){
+		const auto native=mode==GL_TEXTURE?rendering::ui::NativeUIMatrixMode::Texture:mode==GL_PROJECTION?rendering::ui::NativeUIMatrixMode::Projection:rendering::ui::NativeUIMatrixMode::ModelView;
+		rendering::ui::GetRecorder().CleanupOriginalMatrixStack(native,count);
+	});
+#else
 	GetLuaContextData(L)->glMatrixTracker.HandleMatrixStateError(error, fn);
+#endif
 }
 
 #endif /* LUA_UNITDEFS_H */

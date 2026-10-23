@@ -93,6 +93,7 @@ static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const
 	for(double value:viewport)Require(std::isfinite(value),"Native world viewport non-finite");
 	if(d.world.inheritedClipPlane)for(float value:*d.world.inheritedClipPlane)Require(std::isfinite(value),"Native inherited clip plane non-finite");
 	if(d.primitive==NativeDrawPrimitive::Triangles) {
+		Require(!d.world.point.sprite || (d.world.frontPolygonMode!=NativePolygonMode::Point && d.world.backPolygonMode!=NativePolygonMode::Point),"Polygon-mode sprites require their separate clipped-boundary contract");
 		if(d.world.frontPolygonMode==NativePolygonMode::Fill && d.world.backPolygonMode==NativePolygonMode::Fill) {
 			if(!d.world.inheritedClipPlane)return {d.vertices,d.indices};
 			NativeWorldRasterMesh result;
@@ -148,6 +149,7 @@ static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const
 			auto command=MakeNativeWorldDrawCommand(d.stage,primitive,boundary,d.surface,state);
 			auto mesh=BuildGeometry(command,viewport,width,height,mode==NativePolygonMode::Line,samples);
 			const auto base=uint32_t(result.vertices.size());result.vertices.insert(result.vertices.end(),mesh.vertices.begin(),mesh.vertices.end());
+			if(!mesh.pointDisks.empty()){result.pointDisks.resize(base);result.pointDisks.insert(result.pointDisks.end(),mesh.pointDisks.begin(),mesh.pointDisks.end());}
 			for(size_t i=0;i<mesh.indices.size();i+=3) {
 				result.indices.push_back(base+mesh.indices[i]);
 				// Pixel quads retain the original polygon face for two-sided stencil.
@@ -164,11 +166,42 @@ static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const
 			case NativeDrawPrimitive::TriangleFan:for(uint32_t i=1;i+1<n;++i)polygon({0,i,i+1});break;
 			default:throw std::runtime_error("Native polygon source topology invalid");
 		}
+		if(!result.pointDisks.empty())result.pointDisks.resize(result.vertices.size());
 		return result;
 	}
 	NativeWorldRasterMesh result;
 	const auto screen=[&](const NativeWorldDrawVertex& v){return ScreenVertex{float(viewport[0]+(v.position[0]/v.position[3]+1)*viewport[2]*.5),float(double(height)-viewport[1]-viewport[3]+(v.position[1]/v.position[3]+1)*viewport[3]*.5),v.position[2]/v.position[3],v.color};};
 	const auto emit=[&](float x,float y,float z,ScreenColor color,ScreenTexCoord uv){result.vertices.push_back({{float((x-viewport[0])*2/viewport[2]-1),float((y-(double(height)-viewport[1]-viewport[3]))*2/viewport[3]-1),z,1},color,uv});};
+	if(d.primitive==NativeDrawPrimitive::Points){
+		RequireNativeFixedPointContract(d.world.point,samples);
+		// Coordinate replacement/origin can be inherited from another family.
+		// It is immaterial with both texture units disabled; otherwise reject
+		// until the shared texture-unit point-state lineage is implemented.
+		Require(!d.world.point.sprite || (d.surface.material==ScreenMaterial::Solid && !d.surface.secondary.texture),"Generic textured point sprites require observed per-unit coordinate replacement/origin");
+	}
+	if(d.primitive==NativeDrawPrimitive::Points && (samples>1 || d.world.point.sprite)) {
+		// Compatibility multisample plain points use a disk; sprites use an
+		// unsnapped square. Conservatively pad the bounding triangles by one
+		// physical pixel so triangle edge setup cannot remove a point sample.
+		// The consumer applies the original radius with an explicit sample mask.
+		// Exact hardware boundary parity remains a separate acceptance gate.
+		Require(d.world.pointSize>=1 && d.world.pointSize<=64,"Native multisample point size outside supported range");
+		const float half=d.world.pointSize*.5f, bound=half+1.0f;
+		for(auto index:d.indices) {
+			const auto& v=d.vertices[index];const auto& p=v.position;
+			// Clip the original center before expanding its raster footprint.
+			if(p[3]<=0||std::abs(p[0])>p[3]||std::abs(p[1])>p[3]||(!d.world.depthClamp&&std::abs(p[2])>p[3]))continue;
+			if(d.world.inheritedClipPlane && PlaneDistance(v,*d.world.inheritedClipPlane)<0)continue;
+			const auto at=screen(v);const auto first=uint32_t(result.vertices.size());
+			for(auto offset:std::array<ScreenTexCoord,4>{{{-bound,-bound},{bound,-bound},{bound,bound},{-bound,bound}}})emit(at.x+offset[0],at.y+offset[1],at.z,v.color,v.uv);
+			for(uint32_t i:{0u,1u,2u,0u,2u,3u})result.indices.push_back(first+i);
+			// The signed count preserves the existing float4 consumer layout:
+			// disk > 0, square < 0, ordinary triangle == 0.
+			for(unsigned corner=0;corner<4;++corner)result.pointDisks.push_back({at.x,float(height)-at.y,half,d.world.point.sprite?-float(samples):float(samples)});
+			Require(result.vertices.size()<=4*1024*1024,"Native multisample point output exceeds geometry bounds");
+		}
+		return result;
+	}
 	if(d.primitive==NativeDrawPrimitive::Points) {
 		const int size=std::max(1,int(std::floor(d.world.pointSize+.5f)));Require(size<=64,"Native world aliased point size exceeds validated bounds");
 		for(auto index:d.indices) {
@@ -231,7 +264,9 @@ static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const
 NativeWorldRasterMesh BuildNativeWorldDrawGeometry(const NativeWorldDrawCommand& d,const std::array<double,4>& viewport,uint32_t width,uint32_t height,unsigned samples)
 {
 	auto mesh=BuildGeometry(d,viewport,width,height,false,samples);
-	if(samples>1&&(d.primitive==NativeDrawPrimitive::Lines||(d.primitive==NativeDrawPrimitive::Triangles&&(d.world.frontPolygonMode!=NativePolygonMode::Fill||d.world.backPolygonMode!=NativePolygonMode::Fill)))){
+	if(d.primitive==NativeDrawPrimitive::Points || (samples>1&&(d.primitive==NativeDrawPrimitive::Lines||(d.primitive==NativeDrawPrimitive::Triangles&&(d.world.frontPolygonMode!=NativePolygonMode::Fill||d.world.backPolygonMode!=NativePolygonMode::Fill))))){
+		// Direct points need this at every sample count, including aliased
+		// snapped squares. Keep the existing line/polygon-mode coverage paths.
 		// Clip the source primitive first, then expand its raster footprint.
 		// A viewport is not a scissor: the wide rectangle may extend past it.
 		// Draw the expanded mesh in full attachment space so the GPU does not

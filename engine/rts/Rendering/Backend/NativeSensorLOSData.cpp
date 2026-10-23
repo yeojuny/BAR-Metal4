@@ -41,13 +41,15 @@ NativeSensorLOSDefines Defines(const Substitutions& source)
   Check(parsed.ec==std::errc{}&&parsed.ptr==value.data()+value.size()&&std::isfinite(number),"31657 LOS define is not finite numeric Lua output");
   Check(values.emplace(name,number).second,"31657 LOS define repeated");
  }
- for(auto name:{"VSX","VSY","RESOLUTION","PADDING","USE_TEAMCOLOR","VISIBILITYCULLING","LINE_THIN_START","LINE_THIN_END","LINE_THIN_SCALE","LINE_MIN_WIDTH"})Check(values.contains(name),"31657 LOS required define missing");
+ for(auto name:{"VSX","VSY","RESOLUTION","PADDING","USE_TEAMCOLOR","VISIBILITYCULLING","LINE_THIN_START","LINE_THIN_END","LINE_THIN_SCALE","LINE_MIN_WIDTH","FADE_START","FADE_END"})Check(values.contains(name),"31657 LOS required define missing");
  out.stencilPass=values.contains("STENCILPASS");
- Check(values.size()==(out.stencilPass?11:10)&&(!out.stencilPass||values.at("STENCILPASS")==1)&&values.at("RESOLUTION")==4&&values.at("PADDING")==1&&values.at("USE_TEAMCOLOR")==1&&values.at("VISIBILITYCULLING")==1&&values.at("LINE_THIN_START")==3000&&values.at("LINE_THIN_END")==8000&&values.at("LINE_THIN_SCALE")==.4f&&values.at("LINE_MIN_WIDTH")==.7f,"31657 LOS selected R8/thinning family differs");
+ Check(values.size()==(out.stencilPass?13:12)&&(!out.stencilPass||values.at("STENCILPASS")==1)&&values.at("RESOLUTION")==4&&values.at("PADDING")==1&&values.at("USE_TEAMCOLOR")==1&&values.at("VISIBILITYCULLING")==1&&values.at("LINE_THIN_START")==3000&&values.at("LINE_THIN_END")==8000&&values.at("LINE_THIN_SCALE")==.4f&&values.at("LINE_MIN_WIDTH")==.7f,"31657 LOS selected R8/thinning family differs");
+ out.fadeStart=values.at("FADE_START");out.fadeEnd=values.at("FADE_END");
+ Check(out.fadeStart==4000&&out.fadeEnd==8000,"Official LOS distance fade defines differ");
  out.viewWidth=values.at("VSX");out.viewHeight=values.at("VSY");
  Check(out.viewWidth>=1&&out.viewHeight>=1&&out.viewWidth<=32768&&out.viewHeight<=32768,"31657 LOS view dimensions invalid");return out;
 }
-constexpr std::array<std::string_view,5> names{"heightmapTex","losStencilTexture","rangeColor","teamColorMix","lineWidthPx"};
+constexpr std::array<std::string_view,6> names{"heightmapTex","losStencilTexture","rangeColor","teamColorMix","lineWidthPx","fadeStrength"};
 std::shared_ptr<const void> consumerLifetime;
 void Snapshot(const NativeBufferSnapshotRef& b)
 {
@@ -84,6 +86,7 @@ int NativeSensorLOSProgramState::Location(std::string_view name)const{
 }
 bool NativeSensorLOSProgramState::Floats(int location,std::span<const float> values){
  if(location==-1)return true;for(float v:values)if(!std::isfinite(v))return false;
+ if(location==5&&values.size()==1){state.fadeStrength=values[0];return true;}
  if(location==2&&values.size()==4){std::copy(values.begin(),values.end(),state.rangeColor.begin());return true;}
  if(values.size()==1&&(location==3||location==4)){(location==3?state.teamColorMix:state.lineWidthPx)=values[0];return true;}return false;
 }

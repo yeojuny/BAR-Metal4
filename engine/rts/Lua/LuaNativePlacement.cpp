@@ -136,12 +136,39 @@ void BeginWorldFrame(){Check(!frame,"Nested placement frame");frame=std::make_sh
 std::shared_ptr<const rendering::NativePlacementFrame> EndWorldFrame(){Check(frame&&!engineCapture,"Placement frame/scope unbalanced");frame->buildSquares=LuaNativeBuildSquare::EndWorldFrame();return std::exchange(frame,{});}
 void AbortWorldFrame()noexcept{LuaNativeBuildSquare::AbortWorldFrame();frame.reset();engineCapture=false;}
 void Reset(){AbortWorldFrame();heightSnapshot.reset();}
-EngineScope::EngineScope(float lineWidth,unsigned source,unsigned destination,NativeWorldDrawStage stage){Check(stage==NativeWorldDrawStage::World||stage==NativeWorldDrawStage::PreUnit,"Original placement engine stage differs");engineStage=stage;engineColor={1,1,1,1};Check(frame&&!engineCapture&&Available(),"Original placement capture unavailable or nested");engineState={};engineSurface={};engineState.depthTest=true;engineState.depthWrite=false;engineState.lineWidth=lineWidth;EngineBlend(source,destination);engineCapture=true;}
+EngineScope::EngineScope(float lineWidth,unsigned source,unsigned destination,NativeWorldDrawStage stage,bool requirePlacementResources){
+	Check(stage==NativeWorldDrawStage::World||stage==NativeWorldDrawStage::PreUnit,"Original placement engine stage differs");
+	// Line-only engine ranges use RecordEngine, which needs the open frame and
+	// world recorder, but neither the building-grid provider nor model provider.
+	// Validate before touching an existing scope's state (including failed nesting).
+	Check(frame&&!engineCapture&&(!requirePlacementResources||Available()),"Original placement capture unavailable or nested");
+	engineStage=stage;engineColor={1,1,1,1};engineState={};engineSurface={};
+	engineState.depthTest=true;engineState.depthWrite=false;engineState.lineWidth=lineWidth;
+	EngineBlend(source,destination);engineCapture=true;
+}
 EngineScope::~EngineScope(){engineCapture=false;}
 bool CapturingEngine()noexcept{return engineCapture;}
 void EngineDepthTest(bool value){if(engineCapture)engineState.depthTest=value;}
 void EngineBlend(unsigned source,unsigned destination){engineSurface.blend.sourceColor=engineSurface.blend.sourceAlpha=Blend(source);engineSurface.blend.destinationColor=engineSurface.blend.destinationAlpha=Blend(destination);}
 void RecordEngineLineLoop(std::span<const float3> points,const SColor& color){const float4 c=color;std::vector<rendering::NativePlacementVertex> v;for(const auto& p:points)v.push_back({{p.x,p.y,p.z},{c.x,c.y,c.z,c.w}});RecordEngine(v,rendering::NativeDrawPrimitive::LineLoop);}
+void RecordEngineLines(std::span<const float3> points,rendering::ScreenColor color)
+{
+	std::vector<NativePlacementVertex> vertices; vertices.reserve(points.size());
+	for (const auto& p: points) vertices.push_back({{p.x,p.y,p.z},color});
+	RecordEngine(vertices,NativeDrawPrimitive::Lines);
+}
+void RecordEngineCulledTriangles(std::span<const float3> points,rendering::ScreenColor color,bool cullFront)
+{
+	std::vector<NativePlacementVertex> vertices; vertices.reserve(points.size());
+	for (const auto& p: points) vertices.push_back({{p.x,p.y,p.z},color});
+	// Keep per-draw culling local, including a failed projection or recorder call.
+	const auto previous = engineState;
+	engineState.cullEnabled = true;
+	engineState.cull = cullFront ? NativeWorldCull::Front : NativeWorldCull::Back;
+	try { RecordEngine(vertices,NativeDrawPrimitive::Triangles); }
+	catch (...) { engineState = previous; throw; }
+	engineState = previous;
+}
 void RecordBuildSquare(const BuildInfo& bi,float h,bool canBuild,std::span<const uint8_t> status){
 	EngineDepthTest(false);EngineBlend(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);auto v=rendering::NativeBuildSquareVertices({bi.pos.x,bi.pos.y,bi.pos.z},bi.GetXSize(),bi.GetZSize(),h,canBuild,status,CGameHelper::BUILDSQUARE_OPEN,CGameHelper::BUILDSQUARE_OCCUPIED,CGameHelper::BUILDSQUARE_RECLAIMABLE);RecordEngine(v,rendering::NativeDrawPrimitive::Lines);EngineDepthTest(true);
 }
@@ -184,8 +211,10 @@ bool PushEntries(lua_State* L){
 namespace LuaNativePlacement {
 void SetModelProvider(ModelProvider){}void BeginWorldFrame(){}std::shared_ptr<const rendering::NativePlacementFrame> EndWorldFrame(){return {};}
 void AbortWorldFrame()noexcept{}void Reset(){}bool PushEntries(lua_State*){return true;}
-EngineScope::EngineScope(float,unsigned,unsigned,rendering::NativeWorldDrawStage){}EngineScope::~EngineScope(){}bool CapturingEngine()noexcept{return false;}
+EngineScope::EngineScope(float,unsigned,unsigned,rendering::NativeWorldDrawStage,bool){}EngineScope::~EngineScope(){}bool CapturingEngine()noexcept{return false;}
 void EngineDepthTest(bool){}void EngineBlend(unsigned,unsigned){}void RecordEngineLineLoop(std::span<const float3>,const SColor&){}
+void RecordEngineLines(std::span<const float3>,rendering::ScreenColor){}
+void RecordEngineCulledTriangles(std::span<const float3>,rendering::ScreenColor,bool){}
 void RecordBuildSquare(const BuildInfo&,float,bool,std::span<const uint8_t>){}void EngineColor(rendering::ScreenColor){}
 void RecordQueuedBuildSites(std::span<const float>,std::span<const float>,std::span<const float>,std::span<const float>){}
 void RecordBuildingSample(const BuildInfo&,int){}

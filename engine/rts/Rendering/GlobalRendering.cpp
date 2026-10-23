@@ -607,6 +607,10 @@ bool CGlobalRendering::CreateWindowAndContext(const char* title)
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 #endif
 		throw unsupported_error(std::string("Cannot initialize native SDL video: ") + SDL_GetError());
+	// Publish the original Platform.availableVideoModes before Lua builds its
+	// display/settings lists. Enumeration needs SDL video, not an OpenGL context.
+	if (!CheckAvailableVideoModes())
+		throw unsupported_error("Cannot enumerate native display modes with at least 24-bit desktop color");
 	sdlWindow = CreateSDLWindow(title);
 	if (configHandler->GetInt("MinimizeOnFocusLoss") == 0)
 		SDL_SetHint(SDL_HINT_VIDEO_MINIMIZE_ON_FOCUS_LOSS, "0");

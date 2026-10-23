@@ -33,10 +33,10 @@ template<typename T,typename F>void Bind(T& t,const char* name,F f){t.set_functi
 uint64_t NativeSensorLOSSourceHash(std::string_view s){uint64_t h=14695981039346656037ULL;for(unsigned char c:s)h=(h^c)*1099511628211ULL;return h;}
 struct ArchiveSource {std::string_view path;uint64_t hash;};
 const ArchiveSource ArchiveSources[]={
- {"LuaUI/Widgets/gui_sensor_ranges_los.lua",9051263116866540010ULL},
+ {"LuaUI/Widgets/gui_sensor_ranges_los.lua",1301176431917208088ULL},
  {"modules/graphics/luashader.lua",15173167305575988042ULL},
  {"modules/graphics/instancevbotable.lua",10155353677033079655ULL},
- {"LuaUI/Shaders/sensor_ranges_los.vert.glsl",12801218352011633310ULL},
+ {"LuaUI/Shaders/sensor_ranges_los.vert.glsl",4476039510287419255ULL},
  {"LuaUI/Shaders/sensor_ranges_los.frag.glsl",6432919883938138873ULL},
  };
 struct Program;struct Buffer;
@@ -93,7 +93,7 @@ sol::table CreateContext(lua_State* L){
  Bind(table,"DeleteShader",[c](std::shared_ptr<Program> p){if(!p)return false;p->deleted=true;if(c->active==p)c->active.reset();return true;});
  Bind(table,"GetShaderLog",[](){return std::string{};});
  Bind(table,"GetUniformLocation",[](std::shared_ptr<Program> p,const std::string& name){Check(p&&!p->deleted,"31657 resource spots uniform program deleted");return p->state.Location(name);});
- Bind(table,"GetActiveUniforms",[L](std::shared_ptr<Program> p){Check(p&&!p->deleted,"31657 resource spots reflection program deleted");sol::state_view lua(L);auto result=lua.create_table();unsigned i=0;for(auto name:p->state.ActiveUniforms()){auto row=lua.create_table();row["name"]=std::string(name);row["size"]=1;row["type"]=name=="rangeColor"?GL_FLOAT_VEC4:(name=="teamColorMix"||name=="lineWidthPx")?GL_FLOAT:GL_SAMPLER_2D;result[++i]=row;}return result;});
+ Bind(table,"GetActiveUniforms",[L](std::shared_ptr<Program> p){Check(p&&!p->deleted,"31657 resource spots reflection program deleted");sol::state_view lua(L);auto result=lua.create_table();unsigned i=0;for(auto name:p->state.ActiveUniforms()){auto row=lua.create_table();row["name"]=std::string(name);row["size"]=1;row["type"]=name=="rangeColor"?GL_FLOAT_VEC4:(name=="teamColorMix"||name=="lineWidthPx"||name=="fadeStrength")?GL_FLOAT:GL_SAMPLER_2D;result[++i]=row;}return result;});
  Bind(table,"Uniform",[c](int location,sol::variadic_args args){auto p=Active(c);if(location==-1)return;std::vector<float> v;for(auto item:args)v.push_back(item.as<float>());if(!p->state.Floats(location,v)&&!c->error)c->error=GL_INVALID_OPERATION;});
  Bind(table,"UniformInt",[c](int location,sol::variadic_args args){auto p=Active(c);if(location==-1)return;std::vector<int32_t> v;for(auto item:args)v.push_back(item.as<int32_t>());if(!p->state.Integers(location,v)&&!c->error)c->error=GL_INVALID_OPERATION;});
  Bind(table,"GetError",[c](){return std::exchange(c->error,0);});

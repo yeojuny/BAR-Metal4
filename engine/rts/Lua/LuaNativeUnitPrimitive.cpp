@@ -95,17 +95,19 @@ struct VertexArray {
 		auto program=context->active.lock();Check(program && !program->deleted,"Original unit primitive active program missing");
 		auto& common=ui::GetRecorder();const auto stage=common.CurrentWorldStage();
 		const bool selected=IsNativeSelectedUnits(program->kind),icon=IsNativeUnitIcon(program->kind);
+		const bool selected31657=selected && context->source31657;
+		const bool sharedGround=selected31657 && program->kind==NativeUnitPrimitiveKind::SelectedGround;
 		const auto requiredStage=program->kind==NativeUnitPrimitiveKind::SelectedUnfinished || program->kind==NativeUnitPrimitiveKind::SelectedWater || context->halo?NativeWorldDrawStage::World:NativeWorldDrawStage::PreUnit;
-		Check(icon ? (common.IsScreenStage() && !stage && !common.HasActiveTarget() && !common.IsCompiling()) : (stage && (context->ally?(*stage==NativeWorldDrawStage::PreUnit || *stage==NativeWorldDrawStage::World):*stage==requiredStage) && !common.HasActiveTarget()),"Original unit primitive draw must retain its actual source stage");
+		Check(icon ? (common.IsScreenStage() && !stage && !common.HasActiveTarget() && !common.IsCompiling()) : (stage && ((context->ally || sharedGround)?(*stage==NativeWorldDrawStage::PreUnit || *stage==NativeWorldDrawStage::World):*stage==requiredStage) && !common.HasActiveTarget()),"Original unit primitive draw must retain its actual source stage");
 		if(selected || context->ally || icon || context->halo || context->tracker || context->enemy)Check(SelectedReady(),"Original selected unit draw lost its actual program/image/stencil services");
 		Check(primitive==GL_POINTS && !instances && !base && count.value_or(0)>=0 && first.value_or(0)>=0,"Original unit primitive GS point-stream invocation differs");
-		NativeUnitPrimitiveDraw draw;draw.screenEffects=icon;draw.stage=stage.value_or(NativeWorldDrawStage::World);draw.kind=program->kind;draw.addRadius=program->addRadius;draw.iconDistance=program->iconDistance;draw.opacity=program->opacity;draw.initialSize=program->initialSize;draw.whiteMix=program->whiteMix;draw.disableQuads=program->disableQuads;draw.lineOpacity=program->lineOpacity;draw.maxVertices=program->maxVertices;
+		NativeUnitPrimitiveDraw draw;draw.screenEffects=icon;draw.stage=stage.value_or(NativeWorldDrawStage::World);draw.kind=(sharedGround && *stage==NativeWorldDrawStage::World)?NativeUnitPrimitiveKind::SelectedWater:program->kind;draw.selected31657=selected31657;draw.addRadius=program->addRadius;draw.iconDistance=program->iconDistance;draw.opacity=program->opacity;draw.initialSize=program->initialSize;draw.whiteMix=program->whiteMix;draw.disableQuads=program->disableQuads;draw.lineOpacity=program->lineOpacity;draw.maxVertices=program->maxVertices;
 		draw.vertices=vertices->value->CaptureNativeSnapshot();draw.first=first.value_or(0);draw.count=count.value_or(draw.vertices->layout.elements);
 		draw.transforms=OriginalCUSModelPublication().Transforms();draw.modelUniforms=OriginalCUSModelPublication().ModelUniforms();
 		if(icon || context->halo || context->tracker || context->enemy){
 			auto& shared=OriginalNativeTextureContext();auto* observer=common.TextureObserver();Check(observer==&shared.UI(),"Original icon shared image observer missing");
 			const auto sampled=observer->BoundImage(0);draw.atlas=sampled.image;draw.sampler=sampled.sampler;
-		}else if(draw.kind!=NativeUnitPrimitiveKind::TeamPlatter && !context->ally){const auto index=draw.kind==NativeUnitPrimitiveKind::FeatureAO?1:0;
+		}else if(draw.kind!=NativeUnitPrimitiveKind::TeamPlatter && !context->ally && !selected31657){const auto index=draw.kind==NativeUnitPrimitiveKind::FeatureAO?1:0;
 			Check(context->texture && context->textureName==(selected?unitPrimitiveProgram::SelectedTexture:unitPrimitiveProgram::AtlasNames[index]),"Original unit primitive source image binding differs");const auto resolved=context->texture->Resolve();draw.atlas=resolved.image;draw.sampler=resolved.sampler;}
 		draw.surface=common.CurrentState().draw;draw.world=common.CurrentWorldState();
 		if(icon){auto frame=std::make_shared<NativeUnitPrimitiveFrame>();frame->uniforms={globalRendering->drawFrame,OriginalCUSUniformCapture().Current()};frame->draws.push_back(std::move(draw));common.AppendUnitIcons(std::move(frame));}
@@ -158,7 +160,7 @@ sol::table CreateContext(lua_State* L,bool selected=false,bool source31657=false
 	auto createProgram=[context](const std::string& name,const std::string& vertex,const std::string& geometry,const std::string& fragment,const std::string& engine,const std::string& quaternion,const std::string& definitions,const sol::table& floats,const sol::table& samplers){
 		using namespace unitPrimitiveProgram;auto found=std::find(Names.begin(),Names.end(),name);Check(context->enemy?name=="enemyspotterShader GL4":context->tracker?name=="unitTrackerShader GL4":context->halo?name=="ResurrectionHalosShader GL4":context->icon==6?name=="Rank IconsShader GL4":context->icon>=0?name==unitIconsProgram::Names.at(context->icon):(context->ally?name==allySelectedProgram::Name:found!=Names.end()),"Unknown original unit primitive program");
 		if(context->source31657){
-			Check(context->enemy || context->tracker || context->halo || context->icon>=0 || context->ally || found-Names.begin()<3,"The 31657 profile only owns building AO, feature AO and TeamPlatter");
+			Check(context->enemy || context->tracker || context->halo || context->icon>=0 || context->ally || context->selected || found-Names.begin()<3,"The 31657 profile does not own this program");
 			Check(NativeUnitPrimitiveSourceHash(vertex)==unitPrimitive31657Program::VertexHash && NativeUnitPrimitiveSourceHash(geometry)==unitPrimitive31657Program::GeometryHash && NativeUnitPrimitiveSourceHash(fragment)==unitPrimitive31657Program::FragmentHash && NativeUnitPrimitiveSourceHash(quaternion)==unitPrimitive31657Program::QuaternionHash,"Original 31657 unit primitive shader/quaternion source identity differs");
 			// Same UBO layout; the new original helper no longer appends
 			// the unused map-specific waterBlend definitions to this string.
@@ -200,6 +202,18 @@ sol::table CreateContext(lua_State* L,bool selected=false,bool source31657=false
 			program->opacity=context->source31657?ValidateDefines(defines,unitPrimitive31657Program::TeamNumbers,TeamTexts,true):ValidateDefines(defines,TeamNumbers,TeamTexts,true);
 			break;
 		case NativeUnitPrimitiveKind::SelectedGround:case NativeUnitPrimitiveKind::SelectedUnfinished:case NativeUnitPrimitiveKind::SelectedWater:{
+			if(context->source31657){
+				Check(program->kind!=NativeUnitPrimitiveKind::SelectedWater,"Original 31657 water shares the ground program");
+				const bool unfinished=program->kind==NativeUnitPrimitiveKind::SelectedUnfinished;
+				program->opacity=ValidateDefines(defines,unfinished?unitPrimitive31657Program::SelectedUnfinishedNumbers:unitPrimitive31657Program::SelectedNumbers,unitPrimitive31657Program::SelectedTexts,true,true);
+				// ValidateDefines parsed this mutable finite number; retain its initial
+				// uniform default until the original widget supplies SetUniform.
+				const auto& mixText=defines.at("TEAMCOLORIZATION");float teamMix=0;
+				const auto parsed=std::from_chars(mixText.data(),mixText.data()+mixText.size(),teamMix);
+				Check(parsed.ec==std::errc{} && parsed.ptr==mixText.data()+mixText.size() && std::isfinite(teamMix),"Original selected teamcolorization malformed");
+				program->whiteMix=1.f-teamMix;program->disableQuads=true;
+				program->initialSize=unfinished?.9999f:.75f;break;
+			}
 			auto texts=TeamTexts;program->whiteMix=SelectedWhiteMix(defines);
 			// The precise POST_SHADING prefix/suffix and only its numeric slot
 			// were checked above; all other original macros remain exact.
@@ -260,10 +274,11 @@ bool PushEntries(lua_State* L)
 	Bind(b,"Delete",[](Buffer& b){b.value->Delete();});Bind(b,"GetBufferSize",[](Buffer& b){return b.value->GetBufferSize();});Bind(b,"GetID",[](Buffer& b){return b.Identity();});Bind(b,"GetLabel",[](Buffer& b){return b.label;});
 	auto p=family.new_usertype<Program>("Program",sol::no_constructor);Bind(p,"Activate",[](Program& p){p.Activate();});Bind(p,"Deactivate",[](Program& p){p.Deactivate();});Bind(p,"Delete",[](Program& p){p.Delete();});Bind(p,"Finalize",[](Program& p){p.Delete();});
 	Bind(p,"SetUniform",[](Program& p,const std::string& name,sol::variadic_args args){
-		const bool transparency=p.context->source31657 && (p.kind==NativeUnitPrimitiveKind::TeamPlatter || p.kind==NativeUnitPrimitiveKind::EnemySpotter) && name=="transparency";
-		Check(!p.deleted && (name=="addRadius" || name=="iconDistance" || transparency) && args.size()==1,"Original unit primitive scalar uniform differs");
+		const bool transparency=p.context->source31657 && (p.kind==NativeUnitPrimitiveKind::TeamPlatter || p.kind==NativeUnitPrimitiveKind::EnemySpotter || p.context->selected) && name=="transparency";
+		const bool teamcolorization=p.context->source31657 && p.context->selected && name=="teamcolorization";
+		Check(!p.deleted && (name=="addRadius" || name=="iconDistance" || transparency || teamcolorization) && args.size()==1,"Original unit primitive scalar uniform differs");
 		const float value=args[0].as<float>();Check(std::isfinite(value),"Original unit primitive scalar is nonfinite");
-		if(name=="addRadius")p.addRadius=value;else if(name=="iconDistance")p.iconDistance=value;else p.opacity=value;
+		if(name=="addRadius")p.addRadius=value;else if(name=="iconDistance")p.iconDistance=value;else if(teamcolorization)p.whiteMix=1.f-value;else p.opacity=value;
 	});
 	auto a=family.new_usertype<VertexArray>("VertexArray",sol::no_constructor);Bind(a,"AttachVertexBuffer",[](VertexArray& a,std::shared_ptr<Buffer> b){Check(!a.deleted && b,"Original unit primitive vertex attachment missing");a.vertices=std::move(b);});Bind(a,"Delete",[](VertexArray& a){a.deleted=true;a.vertices.reset();a.unusedIndex.reset();a.unusedInstance.reset();});
 	Bind(a,"AttachIndexBuffer",[](VertexArray& a,std::shared_ptr<Buffer> b){a.AttachUnused(std::move(b),true);});
@@ -276,8 +291,8 @@ bool PushEntries(lua_State* L)
 	});
 	Bind(family,"PrepareSource",[](std::string source){using namespace unitPrimitiveProgram;constexpr std::array hashes{SelectedWidgetHash,BuildingWidgetHash,FeatureWidgetHash,TeamWidgetHash,UnitTrackerWidgetHash,PrimitiveHelperHash,InstanceHelperHash,ShaderHelperHash,UnitAtlasHash,FeatureAtlasHash};const auto hash=NativeUnitPrimitiveSourceHash(source);Check(std::find(hashes.begin(),hashes.end(),hash)!=hashes.end(),"Original unit primitive archive identity differs");LuaUtils::TracyRemoveAlsoExtras(source.data());return source;});
 	Bind(family,"RankHaloAvailable",&SelectedReady);Bind(family,"CreateRankHaloContext31657",[L](int profile){Check(profile==0 || profile==1,"Unknown original rank/halo family");return CreateContext(L,false,true,false,profile==0?6:-1,profile==1);});
-	Bind(family,"LoadRankHaloArchiveSource31657",[L](const std::string& path){Check(!CLuaHandle::GetHandleSynced(L),"Original rank/halo source is unsynced-only");const auto& sources=rankHaloProgram::Sources;const auto found=std::find_if(sources.begin(),sources.end(),[&](const auto& e){return e.path==path;});Check(found!=sources.end(),"Unknown original rank/halo archive source");CFileHandler file(path,SPRING_VFS_ZIP);std::string text;Check(file.FileExists() && file.LoadStringData(text) && NativeUnitPrimitiveSourceHash(text)==found->hash,"Original rank/halo archive identity differs");return text;});
-	Bind(family,"PrepareRankHaloSource31657",[](std::string text){const auto& sources=rankHaloProgram::Sources;const auto hash=NativeUnitPrimitiveSourceHash(text);Check(std::find_if(sources.begin(),sources.end(),[&](const auto& e){return e.lua && e.hash==hash;})!=sources.end(),"Original rank/halo Lua identity differs");LuaUtils::TracyRemoveAlsoExtras(text.data());return text;});
+	Bind(family,"LoadRankHaloArchiveSource31657",[L](const std::string& path){Check(!CLuaHandle::GetHandleSynced(L),"Original rank/halo source is unsynced-only");const auto& sources=rankHaloProgram::Sources;const auto found=std::find_if(sources.begin(),sources.end(),[&](const auto& e){return e.path==path;});Check(found!=sources.end(),"Unknown original rank/halo archive source");CFileHandler file(path,SPRING_VFS_ZIP);std::string text;Check(file.FileExists() && file.LoadStringData(text) && (NativeUnitPrimitiveSourceHash(text)==found->hash || (path=="LuaUI/Widgets/gui_rank_icons_gl4.lua" && NativeUnitPrimitiveSourceHash(text)==14890535110948021454ULL)),"Original rank/halo archive identity differs");return text;});
+	Bind(family,"PrepareRankHaloSource31657",[](std::string text){const auto& sources=rankHaloProgram::Sources;const auto hash=NativeUnitPrimitiveSourceHash(text);Check(std::find_if(sources.begin(),sources.end(),[&](const auto& e){return e.lua && e.hash==hash;})!=sources.end() || hash==14890535110948021454ULL,"Original rank/halo Lua identity differs");LuaUtils::TracyRemoveAlsoExtras(text.data());return text;});
 	Bind(family,"IconsAvailable",&SelectedReady);Bind(family,"CreateIconContext31657",[L](int icon){Check(icon>=0 && icon<6,"Unknown original icon family");return CreateContext(L,false,true,false,icon);});
 	Bind(family,"LoadIconArchiveSource31657",[L](const std::string& path){
 		Check(!CLuaHandle::GetHandleSynced(L),"Original unit icon source is unsynced-only");const auto& sources=unitIconsProgram::Sources;
@@ -294,6 +309,7 @@ bool PushEntries(lua_State* L)
 	Bind(family,"PrepareAllySource31657",[](std::string source){const auto hash=NativeUnitPrimitiveSourceHash(source);const auto& sources=allySelectedProgram::Sources;Check(std::find_if(sources.begin(),sources.end(),[hash](const auto& e){return e.lua && e.hash==hash;})!=sources.end(),"Original ally selected Lua identity differs");LuaUtils::TracyRemoveAlsoExtras(source.data());return source;});
 	Bind(family,"CreateEnemyContext31657",[L](){return CreateContext(L,false,true,false,-1,false,false,true);});
 	Bind(family,"CreateTrackerContext31657",[L](){return CreateContext(L,false,true,false,-1,false,true);});
+	Bind(family,"CreateSelectedContext31657",[L](){return CreateContext(L,true,true);});
 	Bind(family,"CreateContext31657",[L](){return CreateContext(L,false,true);});
 	Bind(family,"LoadArchiveSource31657",[L](const std::string& path){
 		Check(!CLuaHandle::GetHandleSynced(L),"Original unit primitive source is unsynced-only");

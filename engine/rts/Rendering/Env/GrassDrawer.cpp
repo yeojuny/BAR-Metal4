@@ -3,6 +3,9 @@
 #include <cmath>
 
 #include "GrassDrawer.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeOriginalModelContext.h"
+#endif
 #include "Game/Camera.h"
 #include "Game/CameraHandler.h"
 #include "Map/Ground.h"
@@ -1042,6 +1045,11 @@ void CGrassDrawer::CreateFarTex()
 	glPushMatrix();
 
 	glDisable(GL_FOG);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	// Only this actual successful FBO path writes fog; allocation alone does not.
+	if (rendering::OriginalNativeModelContext().clips.observed)
+		rendering::OriginalNativeModelContext().fogEnabled=false;
+#endif
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA_TEST);
 	GrassOwnedTexture(this, false, grassBladeTex);

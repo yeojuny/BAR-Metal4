@@ -50,6 +50,9 @@ uniform vec4 rangeColor;
 #if defined(LINE_THIN_END) && !defined(STENCILPASS)
 	uniform float lineWidthPx = 1.0; // the line width set with glLineWidth
 #endif
+#if defined(FADE_END) && !defined(STENCILPASS)
+	uniform float fadeStrength = 1.0; // 0 turns the camera distance fade off
+#endif
 
 uniform sampler2D heightmapTex;
 
@@ -148,11 +151,13 @@ void main() {
 		#if defined(STIPPLE_RATE) || defined(LINE_THIN_END)
 			v_lineClipXYW = gl_Position.xyw;
 		#endif
+		#if defined(LINE_THIN_END) || defined(FADE_END)
+			float camDist = distance(cameraViewInv[3].xyz, circleVertexWorldPos.xyz);
+		#endif
 		#ifdef LINE_THIN_END
 			// LINE_THIN_SCALE of the width from LINE_THIN_END elmos from the camera on, easing in from LINE_THIN_START,
 			// though not below LINE_MIN_WIDTH pixels unless it was thinner to begin with
 			float thinStart = float(LINE_THIN_START);
-			float camDist = distance(cameraViewInv[3].xyz, circleVertexWorldPos.xyz);
 			float thin = mix(1.0, float(LINE_THIN_SCALE), smoothstep(thinStart, max(float(LINE_THIN_END), thinStart + 1.0), camDist));
 			v_lineHalfWidth = 0.5 * max(lineWidthPx * thin, min(lineWidthPx, float(LINE_MIN_WIDTH)));
 		#endif
@@ -162,6 +167,11 @@ void main() {
 		vec2 mymin = min(circleVertexWorldPos.xz,mapSize.xy - circleVertexWorldPos.xz);
 		float inboundsness = min(mymin.x, mymin.y); // how distant the vertex is from the map edge
 		inboundsness = 1.0 - clamp(inboundsness*(-0.02),0.0,1.0); // clamp to [0,1] range, and invert it so that the closer to the edge, the lower the value
+		#ifdef FADE_END
+			// fades out with the distance from the camera: full up to FADE_START elmos, gone from FADE_END elmos on
+			float fadeStart = float(FADE_START);
+			inboundsness *= 1.0 - fadeStrength * smoothstep(fadeStart, max(float(FADE_END), fadeStart + 1.0), camDist);
+		#endif
 		v_blendedcolor.rgb = rangeColor.rgb;
 		#ifdef USE_TEAMCOLOR
 			uint teamIndex = (instData.z & 0x000000FFu); //leftmost ubyte is teamIndex
@@ -559,11 +569,11 @@ vec3 rgb2hsv(vec3 c){
 )SOURCE";
 struct ArchiveSource {std::string_view path,sha512;std::uint64_t hash;};
 inline constexpr std::array<ArchiveSource,7> ArchiveSources{{
- {"LuaUI/Widgets/gui_sensor_ranges_radar.lua","28eb94f8160e60603d655fd26441124473aefee249298f8544a8aa4aa9b7d81d318d8f31ea5dae25299579579b18bf439fe0c29b7bf5edbb39af07f657f0ad6a",5183466503525461133ull},
- {"LuaUI/Widgets/gui_sensor_ranges_sonar.lua","d057d07c821ce6a09c18eb1bf0554e536043e617d94194535468e8636badb02f9286ca39211aa4acfd0333459eecee898f46dd31f072968fa4ac406d2063a66a",18212413414181706717ull},
+ {"LuaUI/Widgets/gui_sensor_ranges_radar.lua","836580c5caae759259cee26801bb3edda12972cdda02421860ac3885a5994ebb65fc1377a928e13ed1071c475637c0904d1d27e7a3797ce4d83b3650096ebf15",1094311236915347917ull},
+ {"LuaUI/Widgets/gui_sensor_ranges_sonar.lua","24bd83c0871e8f6f4f1f6b48b72b15ae975a49d72d7b9eb2f6c799f6ef86e035051ba3b49afedf6ea59aa5f2d69d826868c254bcf51d436826fe21f30d99b5b9",17830908082733396231ull},
  {"modules/graphics/luashader.lua","81858ab150aceb7d84f324708f3b3c4a5c8101df03c2a3a0597cc64413fea8ff7db558b711b18e930aa577bf7b0c6b96bfde83c342ca94508f72021742372436",15173167305575988042ull},
  {"modules/graphics/instancevbotable.lua","bf128f904541628d4f89c1699c94461f604dcbbc9fa48164bc4ac6febdeba29c4c92786e9d1d0c054e3fd8fc55104766e0b0d0e70f2a6fbd3bd3149b0ea39256",10155353677033079655ull},
- {"LuaUI/Shaders/sensor_ranges_los.vert.glsl","17a061cd48e9988e8518312e881816c0f7550b4a90163c5e7fe8ea1aec4b4958f5e5f5f53dd15bd023f19d1a7738302ddd8c662f8f162d0e12097a14336b565a",12801218352011633310ull},
+ {"LuaUI/Shaders/sensor_ranges_los.vert.glsl","852f483d68b58ec5cbdb5fc3ace922bf86b19617924a70f1a3855101e18543d935c6620ba748c94b4433880c6f1710627d60988ac5d99d3901a35674e5fe62c4",4476039510287419255ull},
  {"LuaUI/Shaders/sensor_ranges_los.frag.glsl","1d785d45aa8d6d491075e01ef6d80dc22a1a170fde60b0047477bd0c93fda281de28a9f85dc73d46d74257fba71f4e84c48ff0e35d569cabc931a59aecf82540",6432919883938138873ull},
  {"gamedata/modrules.lua","ed3ea9e3030e1d4eb79aa5ab4cf49a0283858f454b4c83fb108ce676a21290bb71ba5604193d9d2c6494bd58443ca44f7a2b954bda9ec39c5697bc18c1786aa5",11047447410957178612ull},
 }};

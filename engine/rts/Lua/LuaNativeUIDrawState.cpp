@@ -1,9 +1,13 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "LuaNativeUIDrawState.h"
 #include "LuaInclude.h"
+#include "LuaContextData.h"
 #include "Rendering/GL/myGL.h"
 #include "Rendering/Backend/NativeUIRecorder.h"
+#include "Rendering/Backend/NativeLegacyWaterProgramState.h"
+#include "Rendering/Backend/NativeLegacyWaterTextureMatrices.h"
 #include <cmath>
+#include <algorithm>
 #include <limits>
 #include <stdexcept>
 #include <string>
@@ -30,7 +34,9 @@ int PushPopMatrix(lua_State* L,NativeUIRecorder& recorder)
 		if(value==GL_MODELVIEW)modes.push_back(NativeUIMatrixMode::ModelView);
 		else if(value==GL_PROJECTION)modes.push_back(NativeUIMatrixMode::Projection);
 		else if(value==GL_TEXTURE)modes.push_back(NativeUIMatrixMode::Texture);
-		else throw std::runtime_error("Incorrect matrix mode in gl.PushPopMatrix()");
+		// Original PushPopMatrix accepts this numeric mode although MatrixMode does not.
+		else if(value==0x88C0)modes.push_back(NativeUIMatrixMode::Program0);
+		else { if(recorder.IsCompiling()||recorder.CurrentMatrixMode()==NativeUIMatrixMode::Texture||std::find(modes.begin(),modes.end(),NativeUIMatrixMode::Texture)!=modes.end())OriginalNativeLegacyWaterTextureMatrices().Invalidate(); if(recorder.IsCompiling()||recorder.CurrentMatrixMode()==NativeUIMatrixMode::Program0||std::find(modes.begin(),modes.end(),NativeUIMatrixMode::Program0)!=modes.end())OriginalNativeLegacyWaterProgramState().Invalidate();throw std::runtime_error("Incorrect matrix mode in gl.PushPopMatrix()"); }
 	}
 	Require(lua_isfunction(L,callback),"Incorrect arguments to gl.PushPopMatrix()");
 	if(modes.empty())recorder.PushMatrix();
@@ -101,16 +107,23 @@ NativeUIMatrix ReadMatrix(lua_State* L)
 std::optional<int> LuaNativeUIDrawState::Dispatch(lua_State* L,NativeUIRecorder& r,std::string_view op)
 {
  const int args=lua_gettop(L);
+	if ((op=="LoadMatrix"||op=="MultMatrix") && lua_type(L,1)==LUA_TSTRING && (r.IsCompiling()||r.CurrentMatrixMode()==NativeUIMatrixMode::Texture))OriginalNativeLegacyWaterTextureMatrices().Invalidate();
+	if ((op=="LoadMatrix"||op=="MultMatrix") && lua_type(L,1)==LUA_TSTRING && (r.IsCompiling()||r.CurrentMatrixMode()==NativeUIMatrixMode::Program0)) {OriginalNativeLegacyWaterProgramState().Invalidate();throw std::runtime_error("Original named Program0 matrix requires native lookup");}
 	if (op=="Translate" || op=="Scale") { auto v=Values(L,1,3,op=="Scale"?std::array<float,4>{1,1,1,1}:std::array<float,4>{0,0,0,1}); r.MultMatrix(op=="Scale"?ScaleMatrix(v[0],v[1],v[2]):TranslationMatrix(v[0],v[1],v[2])); return 0; }
-	if (op=="Rotate") { r.MultMatrix(RotationMatrix(luaL_checknumber(L,1),luaL_checknumber(L,2),luaL_checknumber(L,3),luaL_checknumber(L,4))); return 0; }
-	if (op=="MatrixMode") { r.MatrixMode(MatrixMode(luaL_checkint(L,1))); return 0; }
+	if (op=="Rotate") {
+		const float degrees=luaL_checknumber(L,1),x=luaL_checknumber(L,2),y=luaL_checknumber(L,3),z=luaL_checknumber(L,4);
+		try { r.MultMatrix(RotationMatrix(degrees,x,y,z)); }
+		catch (...) {if(r.IsCompiling()||r.CurrentMatrixMode()==NativeUIMatrixMode::Texture)OriginalNativeLegacyWaterTextureMatrices().Invalidate();if(r.IsCompiling()||r.CurrentMatrixMode()==NativeUIMatrixMode::Program0)OriginalNativeLegacyWaterProgramState().Invalidate();throw;}
+		return 0;
+	}
+	if (op=="MatrixMode") { const int mode=luaL_checkint(L,1);Require(GetLuaContextData(L)->glMatrixTracker.SetMatrixMode(mode),"Incorrect value to gl.MatrixMode");r.MatrixMode(MatrixMode(mode));return 0; }
 	if (op=="LoadIdentity") { r.LoadMatrix(IdentityMatrix()); return 0; }
 	if (op=="LoadMatrix") { r.LoadMatrix(ReadMatrix(L)); return 0; }
 	if (op=="MultMatrix") { r.MultMatrix(ReadMatrix(L)); return 0; }
 	if (op=="Ortho") { r.MultMatrix(OrthoMatrix(luaL_checknumber(L,1),luaL_checknumber(L,2),luaL_checknumber(L,3),luaL_checknumber(L,4),luaL_checknumber(L,5),luaL_checknumber(L,6))); return 0; }
 	if (op=="PushPopMatrix") return PushPopMatrix(L,r);
-	if (op=="PushMatrix") { r.PushMatrix(); return 0; }
-	if (op=="PopMatrix") { r.PopMatrix(); return 0; }
+	if (op=="PushMatrix") { Require(args==0,"gl.PushMatrix takes no arguments");Require(GetLuaContextData(L)->glMatrixTracker.PushMatrix(),"Matrix stack overflow");r.PushMatrix();return 0; }
+	if (op=="PopMatrix") { Require(args==0,"gl.PopMatrix takes no arguments");Require(GetLuaContextData(L)->glMatrixTracker.PopMatrix(),"Matrix stack underflow");r.PopMatrix();return 0; }
 	if (op=="Blending" || op=="BlendFunc" || op=="BlendFuncSeparate") {
 		if (op=="Blending" && args==1 && lua_isboolean(L,1)) {
 			const bool enabled=lua_toboolean(L,1);r.UpdateBlend([enabled](ScreenBlendState& state){state.enabled=enabled;});

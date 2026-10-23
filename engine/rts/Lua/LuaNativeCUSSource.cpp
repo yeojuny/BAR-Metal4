@@ -63,8 +63,11 @@ struct Context {
 		for(const auto& d:p->consumer->uniforms)if(d.name==name){locations.push_back({p,d});return locations.size();}
 		return 0; // An actually inactive original uniform, as reported by the source-paired pipeline.
 	}
-	void UniformValue(unsigned location,sol::variadic_args values,bool integer){
-		Check(location&&location<=locations.size(),"Unknown original CUS native uniform location");auto& l=locations[location-1];
+	void UniformValue(int location,sol::variadic_args values,bool integer){
+		if(location==-1){ // OpenGL ignores inactive writes, but still requires a current program.
+			Check(bool(Active()),"CUS inactive uniform write has no actual current source program");return;
+		}
+		Check(location>0&&size_t(location)<=locations.size(),"Unknown original CUS native uniform location");auto& l=locations[location-1];
 		const auto active=Active();
 		Check(active&&active==l.program&&!active->deleted&&l.description.integer==integer,"CUS uniform belongs to another active program or scalar type");
 		Check(OriginalNativeSourceProgramBinding().IsCUS(active),"CUS uniform does not belong to the actual current source program");
@@ -94,6 +97,7 @@ struct VertexArray {
 	std::shared_ptr<Buffer> vertices,indices,instances;
 	std::vector<NativeCUSSubmittedObject> objects;
 	std::vector<std::shared_ptr<const NativeCUSModelSubmission>> submissions;
+	std::vector<std::string> uniformBins;
 	bool deleted=false;
 	void AttachVertexBuffer(std::shared_ptr<Buffer> b){Check(!deleted&&b&&!b->deleted&&b->modelView&&b->target==GL_ARRAY_BUFFER,"CUS original model vertex attachment differs");vertices=std::move(b);}
 	void AttachIndexBuffer(std::shared_ptr<Buffer> b){Check(!deleted&&b&&!b->deleted&&b->modelView&&b->target==GL_ELEMENT_ARRAY_BUFFER,"CUS original model index attachment differs");indices=std::move(b);}
@@ -101,24 +105,30 @@ struct VertexArray {
 	void AddOne(int id,NativeCUSObjectKind kind){
 		Check(!deleted&&Available(),"CUS original submission has no live provider");NativeCUSSubmittedObject o{kind,id};
 		auto model=services.captureSubmission(o);Check(model&&model->object.kind==o.kind&&model->object.id==o.id,"CUS original AddToSubmission model owner differs");
+		// Original VAO commands outlive live-object lookup until the producer
+		// removes them. Retain bin identity at the same AddToSubmission boundary:
+		// shadow drawing can precede DrawWorldPreUnit's destroyed-object cleanup.
+		Check(context->definitionAndBin.valid(),"CUS original bin/definition resolver unavailable");
+		auto metadata=context->definitionAndBin(unsigned(o.kind),o.id);
+		if(!metadata.valid()){sol::error error=metadata;throw std::runtime_error(error.what());}
+		auto bin=metadata.get<std::string>();
 		submissions.push_back(std::move(model));
-		try{objects.push_back(o);}catch(...){submissions.pop_back();throw;}
+		try{uniformBins.push_back(std::move(bin));}catch(...){submissions.pop_back();throw;}
+		try{objects.push_back(o);}catch(...){uniformBins.pop_back();submissions.pop_back();throw;}
 	}
 	void Add(sol::object ids,NativeCUSObjectKind kind){if(ids.is<int>()){AddOne(ids.as<int>(),kind);return;}auto values=ids.as<sol::table>();for(size_t i=1;i<=values.size();++i)AddOne(values.get<int>(i),kind);}
 	void AddUnits(sol::object ids){Add(ids,NativeCUSObjectKind::Unit);}
 	void AddFeatures(sol::object ids){Add(ids,NativeCUSObjectKind::Feature);}
 	void AddUnitDefs(sol::object ids){Add(ids,NativeCUSObjectKind::UnitDefinition);}
-	void ClearSubmission(){Check(!deleted,"CUS source VAO deleted");objects.clear();submissions.clear();}
-	void RemoveFromSubmission(int index){Check(!deleted&&index>=0&&size_t(index)<objects.size(),"CUS source removal index differs");objects[index]=objects.back();objects.pop_back();submissions[index]=submissions.back();submissions.pop_back();}
-	void Delete(){deleted=true;objects.clear();submissions.clear();vertices.reset();indices.reset();instances.reset();}
+	void ClearSubmission(){Check(!deleted,"CUS source VAO deleted");objects.clear();submissions.clear();uniformBins.clear();}
+	void RemoveFromSubmission(int index){Check(!deleted&&index>=0&&size_t(index)<objects.size(),"CUS source removal index differs");uniformBins[index].swap(uniformBins.back());uniformBins.pop_back();objects[index]=objects.back();objects.pop_back();submissions[index]=submissions.back();submissions.pop_back();}
+	void Delete(){deleted=true;objects.clear();submissions.clear();uniformBins.clear();vertices.reset();indices.reset();instances.reset();}
 	void Submit(){
 		const auto actualProgram=context->Active();
 		Check(Available()&&frame&&!deleted&&vertices&&indices&&instances&&!objects.empty()&&actualProgram&&!actualProgram->deleted,"CUS source draw lacks an actual active frame/program/model submission");
 		Check(OriginalNativeSourceProgramBinding().IsCUS(actualProgram),"CUS draw does not own the actual current source program");
-		Check(context->definitionAndBin.valid(),"CUS original bin/definition resolver unavailable");
-		auto metadata=context->definitionAndBin(unsigned(objects[0].kind),objects[0].id);
-		if(!metadata.valid()){sol::error error=metadata;throw std::runtime_error(error.what());}
-		const auto bin=metadata.get<std::string>();
+		Check(uniformBins.size()==objects.size()&&submissions.size()==objects.size(),"CUS retained submission metadata differs");
+		const auto& bin=uniformBins.front();
 		auto draw=services.inheritedRaster();draw.program=actualProgram->consumer;
 		draw.floatUniforms=actualProgram->floats;draw.intUniforms=actualProgram->ints;
 		draw.instances=instances->value->CaptureNativeSnapshot();draw.objects=objects;draw.submissions=submissions;
@@ -162,7 +172,7 @@ sol::table CreateContext(lua_State* L){
 	});
 	BindFunction(t,"GetShaderLog",[](){return std::string{};});
 	BindFunction(t,"GetActiveUniforms",[L,c](unsigned handle){sol::state_view lua(L);auto out=lua.create_table();unsigned index=1;for(const auto& u:c->Get(handle)->consumer->uniforms){auto v=lua.create_table();v["name"]=u.name;v["type"]=u.glType;v["size"]=u.size;out[index++]=v;}return out;});
-	BindFunction(t,"GetUniformLocation",[L,c](unsigned handle,const std::string& name){unsigned location=c->Location(handle,name);return location?sol::make_object(L,location):sol::make_object(L,sol::lua_nil);});
+	BindFunction(t,"GetUniformLocation",[L,c](unsigned handle,const std::string& name){unsigned location=c->Location(handle,name);return sol::make_object(L,location?int(location):-1);});
 	BindFunction(t,"UseShader",[c](unsigned handle){
 		auto next=handle?c->Get(handle):nullptr;
 		if(next)OriginalNativeSourceProgramBinding().BindCUS(next);else OriginalNativeSourceProgramBinding().Unbind();
@@ -171,8 +181,8 @@ sol::table CreateContext(lua_State* L){
 		if(OriginalNativeSourceProgramBinding().IsCUS(p))OriginalNativeSourceProgramBinding().Unbind();
 		p->deleted=true;
 	});
-	BindFunction(t,"Uniform",[c](unsigned location,sol::variadic_args values){c->UniformValue(location,values,false);});
-	BindFunction(t,"UniformInt",[c](unsigned location,sol::variadic_args values){c->UniformValue(location,values,true);});
+	BindFunction(t,"Uniform",[c](int location,sol::variadic_args values){c->UniformValue(location,values,false);});
+	BindFunction(t,"UniformInt",[c](int location,sol::variadic_args values){c->UniformValue(location,values,true);});
 	BindFunction(t,"Texture",[L](sol::object first,sol::optional<sol::object> second){
 		unsigned unit=0;auto value=first;if(second){auto n=first.as<float>();Check(std::isfinite(n)&&n==std::trunc(n)&&n>=0&&n<NativeCUSTextureHistory::Units,"CUS texture unit differs");unit=unsigned(n);value=*second;}
 		const auto inherited=TextureHistory().ActiveUnit();Check(bool(inherited),"CUS original texture event has no observed active unit");

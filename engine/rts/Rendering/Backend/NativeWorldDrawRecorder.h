@@ -32,6 +32,7 @@ public:
   std::optional<ScreenScissor> scissor);
  void RecordDistortion(std::shared_ptr<const NativeDistortionCommand>);
  void RecordObjectSpotlight(std::shared_ptr<const NativeObjectSpotlightInput>,const ScreenDrawState&,const NativeWorldDrawState&);
+ void RecordUnitGlass(std::shared_ptr<const NativeUnitGlassInput>,const ScreenDrawState&,const NativeWorldDrawState&);
  void RecordUnitEffect(NativeWorldDrawStage,const ScreenDrawState&,const NativeWorldDrawState&,std::shared_ptr<const NativeUnitEffectInput>);
  void RecordWaterOverlay(std::span<const NativeWorldDrawVertex>,const ScreenDrawState&,const NativeWorldDrawState&,std::shared_ptr<const NativeWaterOverlayInput>);
  void RecordLOSView(std::span<const NativeWorldDrawVertex>,const ScreenDrawState&,const NativeWorldDrawState&,std::shared_ptr<const NativeLOSViewInput>);

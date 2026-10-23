@@ -9,6 +9,12 @@
 #include <map>
 #include <set>
 #include <unordered_map>
+#include "System/Log/ILog.h"
+#include "Metal4ModelTraceBudget.h"
+#include <chrono>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
 
 namespace rendering::metal4 {
 namespace {
@@ -57,6 +63,7 @@ const NativeTextureSampling& Sampling(const NativeCUSTextureBinding& b)
  if(b.knowledge==NativeCUSBindingKnowledge::DefaultObject)return b.defaultSampling;
  Require(bool(b.object),"CUS bound sampler lacks its original immutable image owner");return b.object->sampling;
 }
+#include "Metal4ModelTrace.inc"
 }
 
 struct PreparedCUSSource::Impl {
@@ -146,17 +153,19 @@ struct CUSSourceGPU::Impl {
  template<class T,class F>id<MTLBuffer> Cached(RuntimeLease& lease,std::shared_ptr<const T> owner,size_t bytes,F fill)
  {
   Require(bool(owner),"CUS cached buffer has no actual immutable owner");auto& item=buffers[owner.get()];
-  if(item.owner.expired()){auto buffer=Allocate(lease,bytes);fill(static_cast<uint8_t*>(buffer.contents));item={owner,buffer};}
-  else{Require(item.value.length==bytes,"CUS immutable buffer changed extent");lease.AddAllocation(item.value);}
+  if(item.owner.expired()){if(ModelTrace().window){++ModelTrace().allocations;ModelTrace().allocationBytes+=bytes;}auto buffer=Allocate(lease,bytes);fill(static_cast<uint8_t*>(buffer.contents));item={owner,buffer};}
+  else{if(ModelTrace().window)++ModelTrace().cacheHits;Require(item.value.length==bytes,"CUS immutable buffer changed extent");lease.AddAllocation(item.value);}
   return item.value;
  }
  id<MTLBuffer> Published(RuntimeLease& lease,std::shared_ptr<const NativeCUSPublishedBuffer> source)
  {
   return Cached(lease,source,source->capacityElements*source->stride,[&](uint8_t* dst){
+   if(ModelTrace().window)++ModelTrace().publishedUploads;
    for(const auto& range:NativeCUSObservedRanges(*source))for(size_t offset=range.offset;offset<range.offset+range.size;){
     const size_t page=offset/NativeCUSPublishedPage::Bytes,local=offset%NativeCUSPublishedPage::Bytes;
     const size_t bytes=std::min(range.offset+range.size-offset,NativeCUSPublishedPage::Bytes-local);
     std::memcpy(dst+offset,source->pages.at(page)->bytes.data()+local,bytes);offset+=bytes;
+    if(ModelTrace().window)ModelTrace().publishedBytes+=bytes;
    }
   });
  }
@@ -200,6 +209,11 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
  const CUSSourceTarget& target,const TextureProvider& images,bool validation,double& ms)
 {
  if(!source||source->draws.empty())return {};
+ auto& trace=ModelTrace();trace.window=TraceFrame(*source);
+ struct TraceEnd {~TraceEnd(){ModelTrace().window=false;}} traceEnd;
+ const bool sampled=trace.window;const auto prepareStart=sampled?TraceClock::now():TraceClock::time_point{};
+ double validationUS=0,publicationUS=0,diagnosticUS=0;
+ trace.allocations=trace.allocationBytes=trace.cacheHits=trace.publishedUploads=trace.publishedBytes=0;
  Require(bool(images)&&target.width&&target.height&&target.logicalWidth&&target.logicalHeight,"CUS original target/resource provider is incomplete");
  std::erase_if(impl->buffers,[](const auto& x){return x.second.owner.expired();});std::erase_if(impl->geometry,[](const auto& x){return x.second.owner.expired();});
  auto out=std::unique_ptr<PreparedCUSSource>(new PreparedCUSSource);out->impl->owner=source;
@@ -209,7 +223,9 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   if(HasNoNativeCUSAttachmentEffects(d))continue; // Same source proof used by the deferred writer; the source record remains retained.
   Require(state.frontPolygonMode==state.backPolygonMode&&state.frontPolygonMode!=NativePolygonMode::Point,"CUS original polygon raster requires a matching native consumer");
   Require(!state.inheritedClipPlane,"CUS shader uses its own original clipDistance0; a generic inherited plane cannot substitute for it");
-  (void)ValidateNativeCUSRenderReads(d);
+  const auto validationStart=sampled?TraceClock::now():TraceClock::time_point{};
+  const auto reads=ValidateNativeCUSRenderReads(d);
+  if(sampled)validationUS+=TraceUS(validationStart);
   auto it=impl->programs.find(d.program->pipelineLifetime.get());Require(it!=impl->programs.end(),"CUS draw program belongs to another native compiler owner");auto program=it->second.lock();Require(bool(program),"CUS native program lifetime expired");
   if(d.surface.viewport&&(!d.surface.viewport->width||!d.surface.viewport->height))continue; // Actual observed zero viewport has no raster samples.
   WorldCamera camera=target.camera;if(d.surface.viewport){const auto& v=*d.surface.viewport;camera.viewport={v.x,v.y,int32_t(v.width),int32_t(v.height)};}
@@ -222,8 +238,11 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   auto matrices=impl->Cached(lease,u.matrices,u.matrices->bytes.size(),[&](uint8_t* dst){std::memcpy(dst,u.matrices->bytes.data(),u.matrices->bytes.size());});
   auto params=impl->Cached(lease,u.params,u.params->bytes.size(),[&](uint8_t* dst){std::memcpy(dst,u.params->bytes.data(),NativeCUSParamsPrefixBytes);for(size_t row=0;row<NativeCUSTeamRows;++row)if(u.params->writtenTeamRows[row])std::memcpy(dst+NativeCUSParamsPrefixBytes+row*16,u.params->bytes.data()+NativeCUSParamsPrefixBytes+row*16,16);});
   auto instances=impl->Cached(lease,d.instances,d.instances->bytes.size(),[&](uint8_t* dst){std::memcpy(dst,d.instances->bytes.data(),d.instances->bytes.size());});
+  const auto publicationStart=sampled?TraceClock::now():TraceClock::time_point{};
   auto transforms=impl->Published(lease,d.modelInputs->transforms),models=impl->Published(lease,d.modelInputs->modelUniforms);
+  if(sampled)publicationUS+=TraceUS(publicationStart);
   [draw.table setAddress:instances.gpuAddress atIndex:1];[draw.table setAddress:matrices.gpuAddress atIndex:2];[draw.table setAddress:params.gpuAddress atIndex:3];[draw.table setAddress:transforms.gpuAddress atIndex:4];[draw.table setAddress:models.gpuAddress atIndex:5];
+  std::array<TraceImage,12> traceImages{};
   NativeCUSSampleTransport transport;uint32_t caps;std::memcpy(&caps,u.params->bytes.data()+12,4);transport.clipFlags=uint32_t(!(caps&1u))|uint32_t(target.invertClipY)<<1|uint32_t(d.clipDistance0)<<2;
   static constexpr const char* samplerNames[]={"texture1","texture2","normalTex","texture1w","texture2w","normalTexw","shadowTex","reflectTex","losMapTex","brdfLUT","noisetex3dcube","envLUT"};
   for(unsigned slot=0;slot<12;++slot){
@@ -243,14 +262,17 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
    if(image.flipV){Require(expected==MTLTextureType2D,"CUS cube/volume requires its original orientation producer");transport.flipMask|=1u<<slot;}
    if(image.depthImage)transport.depthMask|=1u<<slot;
    if(image.clampDepthCompare){Require(image.depthImage,"Fixed-depth compare semantics require the actual depth image");transport.clampDepthCompareMask|=1u<<slot;}
+   if(sampled)traceImages[slot]={image.texture.gpuResourceID._impl,image.sampler.gpuResourceID._impl,unsigned(image.texture.pixelFormat),unsigned(image.texture.width),unsigned(image.texture.height),unsigned(image.texture.mipmapLevelCount)};
    lease.AddAllocation(image.texture);lease.Retain(image.sampler);[draw.table setTexture:image.texture.gpuResourceID atIndex:slot];[draw.table setSamplerState:image.sampler.gpuResourceID atIndex:slot];draw.images.push_back(std::move(image));
   }
   const auto vertex=PackNativeCUSProgramUniforms(program->generated->vertex,d,*program->source,transport),fragment=PackNativeCUSProgramUniforms(program->generated->fragment,d,*program->source,transport);
   auto vb=Upload(lease,vertex.data(),vertex.size()),fb=Upload(lease,fragment.data(),fragment.size());[draw.table setAddress:vb.gpuAddress atIndex:6];[draw.table setAddress:fb.gpuAddress atIndex:7];
   draw.pipeline=impl->Pipeline(lease,*program,target,blend,state.colorWrite,validation,ms,state.alphaToCoverage);draw.depth=effectstate::Depth(lease,state,target.stencil);lease.Retain(draw.pipeline);lease.Retain(program->libraries->vertex);lease.Retain(program->libraries->fragment);
   for(size_t object=0;object<d.submissions.size();++object){auto& model=impl->Model(lease,d.submissions[object]->geometry);Require(model.count==d.submissions[object]->originalIndexCount,"CUS GPU model index count differs from original submission");draw.objects.push_back({model.vertices,model.indices,model.count,uint32_t(object)});}
+  if(sampled){const auto begin=TraceClock::now();TraceDraw(*source,d,target,state,transport,traceImages,reads,instances,transforms,models,vertex,fragment);diagnosticUS+=TraceUS(begin);}
   out->impl->draws.push_back(std::move(draw));
  }
+ if(sampled)TraceRecord("perf f=%llu sample=%zu maxSeconds=300 sourceDraws=%zu prepared=%zu prepareCPUus=%.3f validateCPUus=%.3f publishedCPUus=%.3f traceCPUus=%.3f immutableCacheAllocs=%llu immutableCacheBytes=%llu cacheHits=%llu publishedUploads=%llu publishedCopyBytes=%llu",(unsigned long long)source->sourceDrawFrame,trace.budget.samples,source->draws.size(),out->impl->draws.size(),TraceUS(prepareStart)-diagnosticUS,validationUS,publicationUS,diagnosticUS,(unsigned long long)trace.allocations,(unsigned long long)trace.allocationBytes,(unsigned long long)trace.cacheHits,(unsigned long long)trace.publishedUploads,(unsigned long long)trace.publishedBytes);
  return out;
 }
 } // namespace rendering::metal4

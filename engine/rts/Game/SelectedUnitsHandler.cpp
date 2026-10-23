@@ -3,6 +3,7 @@
 #include "SelectedUnitsHandler.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Lua/LuaNativePlacement.h"
+#include "Rendering/Backend/NativeUIRecorder.h"
 #endif
 #include "SelectedUnitsAI.h"
 #include "Camera.h"
@@ -749,6 +750,21 @@ void CSelectedUnitsHandler::DrawNativeQueuedBuildSites()
 		rendering::NativeWorldDrawStage::PreUnit);
 	LuaNativePlacement::EngineDepthTest(false);
 	DrawQueuedBuildSites();
+
+	// CSelectedUnitsHandler::Draw leaves these states for DrawWorldPreUnit
+	// and the opaque model passes, even with no selected units or queued sites.
+	// The private placement scope records geometry only; it cannot perform
+	// the original Draw epilogue's writes to the shared renderer state.
+	auto& recorder = rendering::ui::GetRecorder();
+	recorder.UpdateWorldState([](auto& state) {
+		state.lineWidth = 1.0f;
+		state.frontPolygonMode = state.backPolygonMode = rendering::NativePolygonMode::Fill;
+		state.depthTest = true;
+		state.depthWrite = true;
+	}, false);
+	recorder.UpdateBlend([](auto& blend) { blend.enabled = false; });
+	// Requested unit zero retains the active unit, like glEnable(TEXTURE_2D).
+	recorder.LuaTextureEnabled(true, 0);
 #endif
 }
 

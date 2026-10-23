@@ -10,6 +10,7 @@
 #include "NativeUITextureObserver.h"
 #include <functional>
 #include <memory>
+#include <optional>
 #include <string>
 
 namespace rendering { struct WorldModel; struct NativeMiniMapIcon; struct NativeWorldUnitIcon; }
@@ -18,7 +19,7 @@ namespace rendering::ui {
 
 struct NativeUICommandList;
 using NativeUIMatrix = std::array<float, 16>; // column-major, post-multiplied
-enum class NativeUIMatrixMode { ModelView, Projection, Texture };
+enum class NativeUIMatrixMode { ModelView, Projection, Texture, Program0 };
 enum NativeUIAttribute : unsigned { Current = 1, Blend = 2, Scissor = 4, Texture = 8, Alpha = 16, Enable = 32,
 	Depth = 64, Polygon = 128, Stencil = 256, Line = 512, Point = 1024, ColorMask = 2048, Viewport = 4096, Multisample = 8192, All = 16383 };
 struct NativeUIFrameRasterMapping {
@@ -107,6 +108,7 @@ public:
 	void ResetWorldStage();
 	void EndWorldStage();
 	bool IsWorldStage() const noexcept;
+	bool WorldProjectionZeroToOne() const;
 	bool IsScreenStage() const noexcept;
 	// Actual DrawGenesis call-in, excluding transport-only resource stages.
 	bool IsGenesisStage() const noexcept;
@@ -180,6 +182,12 @@ public:
 	NativeUITextureObserver* TextureObserver() const;
 	void LuaTextureEnabled(bool enabled,unsigned requestedUnit);
 	void LuaActiveTexture(unsigned actualUnit);
+	void LuaFogEnabled(bool enabled);
+	void LuaTextureEnvironment(unsigned target,unsigned pname,std::array<float,4> values,std::optional<unsigned> explicitUnit={});
+	void ResetOriginalTextureEnvironment();
+	void LuaTextureGeneration(unsigned coordinate,bool enabled,std::optional<unsigned> explicitUnit={});
+	void ResetOriginalTextureGeneration();
+	void ObserveOriginalLighting(bool enabled);
 	void LuaTextureImage(std::shared_ptr<const ScreenTexture>,ScreenSampler,unsigned requestedUnit);
 	void LuaTextureResource(std::shared_ptr<NativeUITextureBinding>,unsigned requestedUnit);
 	void LuaTextureNoBind(unsigned requestedUnit,bool parsed);
@@ -243,6 +251,8 @@ public:
 	NativeUIMatrix GetMatrix(NativeUIMatrixMode mode) const;
 	void PushMatrix();
 	void PopMatrix();
+	// Actual Lua call-in tracker cleanup: GL pop underflow is a no-op, not Lua rejection.
+	void CleanupOriginalMatrixStack(NativeUIMatrixMode mode,int count);
 	void PushAttrib(unsigned mask);
 	void PopAttrib();
 	void AppendWaterOverlay(std::span<const std::array<float,2>>,std::shared_ptr<const NativeWaterOverlayInput>);

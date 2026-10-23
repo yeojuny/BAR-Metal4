@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 
 #include "GuiHandler.h"
+#include "Rendering/Backend/NativeSelectedSensorRanges.h"
 #include "Lua/LuaNativePlacement.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Rendering/Backend/NativeUIRecorder.h"
@@ -3433,7 +3434,15 @@ static inline void DrawSensorRange(int radius, const float* color, const float3&
 }
 
 
-static void DrawUnitDefRanges(const CUnit* unit, const UnitDef* unitdef, const float3 pos)
+static std::array<float,2> SelectedSensorRadii(const CUnit* unit)
+{
+ if (unit == nullptr) return {};
+ return rendering::SelectedSensorRadii({selectedUnitsHandler.IsUnitSelected(unit), !unit->isDead,
+  unit->allyteam == gu->myAllyTeam, gu->spectatingFullView, gu->spectatingFullView || unit->IsInLosForAllyTeam(gu->myAllyTeam),
+  unit->beingBuilt, unit->activated, float(unit->radarRadius), float(unit->sonarRadius)});
+}
+
+static void DrawUnitDefRanges(const CUnit* unit, const UnitDef* unitdef, const float3 pos, bool drawSelectedSensors = true)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
 	// draw build range for immobile builders
@@ -3450,8 +3459,10 @@ static void DrawUnitDefRanges(const CUnit* unit, const UnitDef* unitdef, const f
 	// draw sensor and jammer ranges
 	if (unitdef->onoffable || unitdef->activateWhenBuilt) {
 		if (unit != nullptr && unitdef == unit->unitDef) { // test if it's a decoy
-			DrawSensorRange(unit->radarRadius   , cmdColors.rangeRadar,       pos);
-			DrawSensorRange(unit->sonarRadius   , cmdColors.rangeSonar,       pos);
+			if (drawSelectedSensors) {
+				DrawSensorRange(unit->radarRadius, cmdColors.rangeRadar, pos);
+				DrawSensorRange(unit->sonarRadius, cmdColors.rangeSonar, pos);
+			}
 			DrawSensorRange(unit->seismicRadius , cmdColors.rangeSeismic,     pos);
 			DrawSensorRange(unit->jammerRadius  , cmdColors.rangeJammer,      pos);
 			DrawSensorRange(unit->sonarJamRadius, cmdColors.rangeSonarJammer, pos);
@@ -3478,6 +3489,19 @@ static void DrawUnitDefRanges(const CUnit* unit, const UnitDef* unitdef, const f
 
 
 
+static std::vector<float3> GetWeaponConeFan()
+{
+	std::vector<float3> vertices;
+	vertices.reserve(66);
+	vertices.push_back({0.0f, 0.0f, 0.0f});
+	const int divs = 64;
+	for (int i = 0; i <= divs; i++) {
+		const float rad = math::TWOPI * (float)i / (float)divs;
+		vertices.push_back({1.0f, std::sin(rad), std::cos(rad)});
+	}
+	return vertices;
+}
+
 static inline GLuint GetConeList()
 {
 	RECOIL_DETAILED_TRACY_ZONE;
@@ -3489,12 +3513,8 @@ static inline GLuint GetConeList()
 	list = glGenLists(1);
 	glNewList(list, GL_COMPILE); {
 		glBegin(GL_TRIANGLE_FAN);
-		const int divs = 64;
-		glVertex3f(0.0f, 0.0f, 0.0f);
-		for (int i = 0; i <= divs; i++) {
-			const float rad = math::TWOPI * (float)i / (float)divs;
-			glVertex3f(1.0f, std::sin(rad), std::cos(rad));
-		}
+		for (const auto& vertex: GetWeaponConeFan())
+			glVertex3f(vertex.x, vertex.y, vertex.z);
 		glEnd();
 	}
 	glEndList();
@@ -3505,6 +3525,26 @@ static inline GLuint GetConeList()
 static void DrawWeaponCone(const float3& pos, float len, float hrads, float heading, float pitch)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (LuaNativePlacement::CapturingEngine()) {
+		CMatrix44f transform;
+		transform.Translate(pos);
+		// CMatrix44f rotations have the opposite sign to legacy glRotatef.
+		transform.RotateY(-heading);
+		transform.RotateZ(-pitch);
+		transform.Scale({len * std::cos(hrads), len * std::sin(hrads), len * std::sin(hrads)});
+		const auto fan = GetWeaponConeFan();
+		std::vector<float3> triangles; triangles.reserve(64 * 3);
+		for (size_t i = 1; i + 1 < fan.size(); ++i) {
+			triangles.push_back(transform * fan[0]);
+			triangles.push_back(transform * fan[i]);
+			triangles.push_back(transform * fan[i + 1]);
+		}
+		LuaNativePlacement::RecordEngineCulledTriangles(triangles, {1.0f, 0.0f, 0.0f, 0.25f}, true);
+		LuaNativePlacement::RecordEngineCulledTriangles(triangles, {0.0f, 1.0f, 0.0f, 0.25f}, false);
+		return;
+	}
+#endif
 	glPushMatrix();
 
 	const float xlen = len * std::cos(hrads);
@@ -3555,7 +3595,10 @@ static inline void DrawWeaponArc(const CUnit* unit)
 static void PlacementDepthTest(bool enabled)
 {
 	#ifdef RECOIL_METAL4_LIVE_SCENE
-	LuaNativePlacement::EngineDepthTest(enabled);
+	if (LuaNativePlacement::CapturingEngine()) {
+		LuaNativePlacement::EngineDepthTest(enabled);
+		return;
+	}
 	#endif
 	if (enabled) glEnable(GL_DEPTH_TEST); else glDisable(GL_DEPTH_TEST);
 }
@@ -3682,27 +3725,151 @@ void CGuiHandler::DrawBuildingPlacement(bool onMiniMap, const float3& tracePos, 
 
 }
 
-void CGuiHandler::DrawNativeBuildPlacement()
+// The shared range producer preserves hover -> building -> selected order and
+// pointee identity. Only the surrounding consumer state differs.
+void CGuiHandler::DrawMapRanges(bool onMiniMap, bool minimapCoors,
+	const float3& tracePos, const float3& traceDir, bool nativeRanges)
+{
+	// Selected native sensors are drawn once by the dedicated pass below.
+
+	// draw the ranges for the unit that is being pointed at
+	const CUnit* pointeeUnit = nullptr;
+
+	const float maxTraceDist = camera->GetFarPlaneDist() * 1.4f;
+
+	if (GetQueueKeystate()) {
+		const CUnit* unit = nullptr;
+		const CFeature* feature = nullptr;
+
+		if (minimapCoors) {
+			unit = minimap->GetSelectUnit(tracePos);
+		} else {
+			// ignore the returned distance, we don't care about it here
+			TraceRay::GuiTraceRay(tracePos, traceDir, maxTraceDist, nullptr, unit, feature, false);
+		}
+
+		if (unit != nullptr && (gu->spectatingFullView || unit->IsInLosForAllyTeam(gu->myAllyTeam))) {
+			pointeeUnit = unit;
+
+			const UnitDef* unitdef = unit->unitDef;
+			const bool enemyUnit = ((unit->allyteam != gu->myAllyTeam) && !gu->spectatingFullView);
+
+			if (enemyUnit && unitdef->decoyDef != nullptr)
+				unitdef = unitdef->decoyDef;
+
+			// Avoid double-bright radar/sonar rings for a selected hovered unit.
+			// Other hover ranges (jammer, seismic, etc.) retain their original behavior.
+			const auto selectedSensors = SelectedSensorRadii(unit);
+			const bool selectedSensorPass = nativeRanges && !game->hideInterface &&
+				(selectedSensors[0] > 0 || selectedSensors[1] > 0);
+			DrawUnitDefRanges(unit, unitdef, unit->pos, !selectedSensorPass);
+
+			// draw (primary) weapon range
+			if (!unit->weapons.empty()) {
+				PlacementDepthTest(false);
+				glBallisticCircle(unit->weapons[0], { cmdColors.rangeAttack }, 40, unit->pos, {unit->maxRange, 0.0f, mapInfo->map.gravity});
+				PlacementDepthTest(true);
+			}
+			// draw decloak distance
+			if (pointeeUnit->decloakDistance > 0.0f) {
+				if (pointeeUnit->unitDef->decloakSpherical && globalRendering->drawDebug) {
+					CMatrix44f mat;
+					mat.Translate(unit->midPos);
+					mat.RotateX(90.0f * math::DEG_TO_RAD);
+					mat.Scale(OnesVector * pointeeUnit->decloakDistance);
+
+					GL::shapes.DrawWireSphere(16, 16, mat, cmdColors.rangeDecloak);
+				} else { // cylindrical
+					glSurfaceCircle(unit->pos, unit->decloakDistance, { cmdColors.rangeDecloak }, 40);
+				}
+			}
+
+			// draw interceptor range
+			if (unitdef->maxCoverage > 0.0f) {
+				const CWeapon* w = enemyUnit? unit->stockpileWeapon: nullptr; // will be checked if any missiles are ready
+
+				// if this isn't the interceptor, then don't use it
+				if (w != nullptr && !w->weaponDef->interceptor)
+					w = nullptr;
+
+				// shows as on if enemy, a non-stockpiled weapon, or if the stockpile has a missile
+				const SColor rangeInterceptorColor = (!enemyUnit || (w == nullptr) || w->numStockpiled) ?
+					SColor{ cmdColors.rangeInterceptorOn  }:
+					SColor{ cmdColors.rangeInterceptorOff };
+
+				glSurfaceCircle(unit->pos, unitdef->maxCoverage, rangeInterceptorColor, 40);
+			}
+		}
+	}
+
+	DrawBuildingPlacement(onMiniMap, tracePos, traceDir, maxTraceDist, pointeeUnit);
+
+	{
+		// draw range circles (for immobile units) if attack orders are imminent
+		const int defcmd = GetDefaultCommand(mouse->lastx, mouse->lasty, tracePos, traceDir);
+
+		const bool  playerAttackCmd = (size_t(inCommand) < commands.size() && commands[inCommand].id == CMD_ATTACK);
+		const bool defaultAttackCmd = (inCommand == -1 && defcmd > 0 && commands[defcmd].id == CMD_ATTACK);
+		// Native capture preserves the same debug and cheat eligibility.
+		const bool   drawWeaponArcs = (!onMiniMap && gs->cheatEnabled && globalRendering->drawDebug);
+
+		if (playerAttackCmd || defaultAttackCmd) {
+			for (const int unitID: selectedUnitsHandler.selectedUnits) {
+				const CUnit* unit = unitHandler.GetUnit(unitID);
+
+				// handled above
+				if (unit == pointeeUnit)
+					continue;
+
+				if (unit->maxRange <= 0.0f)
+					continue;
+				if (unit->weapons.empty())
+					continue;
+				// only consider (armed) static structures for the minimap
+				if (onMiniMap && !unit->unitDef->IsImmobileUnit())
+					continue;
+
+				if (!gu->spectatingFullView && !unit->IsInLosForAllyTeam(gu->myAllyTeam))
+					continue;
+
+				PlacementDepthTest(false);
+				glBallisticCircle(unit->weapons[0], { cmdColors.rangeAttack }, 40, unit->pos, { unit->maxRange, 0.0f, mapInfo->map.gravity });
+				PlacementDepthTest(true);
+
+				if (!drawWeaponArcs)
+					continue;
+
+				DrawWeaponArc(unit);
+			}
+		}
+	}
+
+}
+
+void CGuiHandler::DrawNativeMapRanges()
 {
 #ifdef RECOIL_METAL4_LIVE_SCENE
-	if (size_t(inCommand) >= commands.size() || commands[inCommand].type != CMDTYPE_ICON_BUILDING)
+	const bool building = (size_t(inCommand) < commands.size() && commands[inCommand].type == CMDTYPE_ICON_BUILDING);
+	if (!building && !GetQueueKeystate() && selectedUnitsHandler.selectedUnits.empty())
 		return;
-	// Same picking/proxy contract as DrawMapStuff; this entry draws only the
-	// original building block while unrelated legacy UI families remain separate.
 	const bool minimapInput = (activeReceiver != this && !mouse->offscreen && GetReceiverAt(mouse->lastx, mouse->lasty) == minimap);
 	const bool minimapCoors = (minimap->ProxyMode() || (!game->hideInterface && minimapInput));
 	const float3 tracePos = minimapCoors ? minimap->GetMapPosition(mouse->lastx, mouse->lasty) : camera->GetPos();
 	const float3 traceDir = minimapCoors ? -UpVector : mouse->dir;
-	const float maxTraceDist = camera->GetFarPlaneDist() * 1.4f;
-	const CUnit* pointeeUnit = nullptr;
-	if (GetQueueKeystate()) {
-		const CFeature* feature = nullptr;
-		if (minimapCoors) pointeeUnit = minimap->GetSelectUnit(tracePos);
-		else TraceRay::GuiTraceRay(tracePos, traceDir, maxTraceDist, nullptr, pointeeUnit, feature, false);
-		if (pointeeUnit && !(gu->spectatingFullView || pointeeUnit->IsInLosForAllyTeam(gu->myAllyTeam))) pointeeUnit = nullptr;
+	// Line-only capture needs an open world frame, not the building-grid/model provider.
+	LuaNativePlacement::EngineScope capture(cmdColors.SelectedLineWidth(), cmdColors.SelectedBlendSrc(), cmdColors.SelectedBlendDst(),
+		rendering::NativeWorldDrawStage::World, building);
+	DrawMapRanges(false, minimapCoors, tracePos, traceDir, true);
+	// Requested individual selection rings supplement (not replace) allied
+	// union coverage. No queue key or attack/build command is required.
+	if (!game->hideInterface) {
+		for (const int id: selectedUnitsHandler.selectedUnits) {
+			const CUnit* unit = unitHandler.GetUnit(id);
+			const auto radii = SelectedSensorRadii(unit);
+			if (radii[0] > 0) DrawSensorRange(int(radii[0]), rendering::SelectedSensorColor(cmdColors.rangeRadar).data(), unit->pos);
+			if (radii[1] > 0) DrawSensorRange(int(radii[1]), rendering::SelectedSensorColor(cmdColors.rangeSonar).data(), unit->pos);
+		}
 	}
-	LuaNativePlacement::EngineScope capture(cmdColors.SelectedLineWidth(), cmdColors.SelectedBlendSrc(), cmdColors.SelectedBlendDst());
-	DrawBuildingPlacement(false, tracePos, traceDir, maxTraceDist, pointeeUnit);
 #endif
 }
 
@@ -3804,43 +3971,60 @@ void CGuiHandler::DrawAreaCommand(int button, const SCommandDescription& cmdDesc
 	}
 }
 
-std::optional<CGuiHandler::NativeAreaCommandPreview> CGuiHandler::GetNativeAreaCommandPreview() const
+int CGuiHandler::GetActiveMapCommandIndex(int& button) const
 {
 	if (!activeMousePress)
-		return std::nullopt;
-	int button = SDL_BUTTON_LEFT;
+		return -1;
 	const int cmdIndex = GetMapCommandIndex(button);
 	if (!mouse->buttons[button].pressed || size_t(cmdIndex) >= commands.size())
+		return -1;
+	return cmdIndex;
+}
+
+bool CGuiHandler::GetMapPreviewTrace(float3& tracePos, float3& traceDir) const
+{
+	const bool minimapInput = (activeReceiver != this && !mouse->offscreen && GetReceiverAt(mouse->lastx, mouse->lasty) == minimap);
+	const bool minimapCoors = (minimap->ProxyMode() || (!game->hideInterface && minimapInput));
+	tracePos = minimapCoors ? minimap->GetMapPosition(mouse->lastx, mouse->lasty) : camera->GetPos();
+	traceDir = minimapCoors ? -UpVector : mouse->dir;
+	return minimapCoors;
+}
+
+std::optional<CGuiHandler::NativeAreaCommandPreview> CGuiHandler::GetNativeAreaCommandPreview() const
+{
+	int button = SDL_BUTTON_LEFT;
+	const int cmdIndex = GetActiveMapCommandIndex(button);
+	if (cmdIndex < 0)
 		return std::nullopt;
 	const SCommandDescription& cmdDesc = commands[cmdIndex];
-	if (cmdDesc.id != CMD_RECLAIM && cmdDesc.id != CMD_REPAIR &&
-	    cmdDesc.id != CMD_RESURRECT && cmdDesc.id != CMD_CAPTURE)
-		return std::nullopt;
 	if (cmdDesc.type != CMDTYPE_ICON_UNIT_OR_AREA &&
 	    cmdDesc.type != CMDTYPE_ICON_UNIT_FEATURE_OR_AREA && cmdDesc.type != CMDTYPE_ICON_AREA)
 		return std::nullopt;
-	if (mouse->buttons[button].movement <= mouse->dragCircleCommandThreshold)
-		return std::nullopt;
-
-	// Use the original DrawMapStuff picking/proxy contract for both consumers.
-	const bool minimapInput = (activeReceiver != this && !mouse->offscreen && GetReceiverAt(mouse->lastx, mouse->lasty) == minimap);
-	const bool minimapCoors = (minimap->ProxyMode() || (!game->hideInterface && minimapInput));
-	const float3 tracePos = minimapCoors ? minimap->GetMapPosition(mouse->lastx, mouse->lasty) : camera->GetPos();
-	const float3 traceDir = minimapCoors ? -UpVector : mouse->dir;
+	float3 tracePos, traceDir;
+	GetMapPreviewTrace(tracePos, traceDir);
 	return GetAreaCommandPreview(button, cmdDesc, tracePos, traceDir);
 }
 
-void CGuiHandler::DrawNativeAreaCommands()
+void CGuiHandler::DrawNativeCommandPreviews()
 {
 #ifdef RECOIL_METAL4_LIVE_SCENE
-	const auto preview = GetNativeAreaCommandPreview();
-	if (!preview)
+	int button = SDL_BUTTON_LEFT;
+	const int cmdIndex = GetActiveMapCommandIndex(button);
+	if (cmdIndex < 0)
 		return;
+	const SCommandDescription& cmdDesc = commands[cmdIndex];
+	// Rectangle previews use the paired linear-UNORM inversion contract.
+	if (cmdDesc.type != CMDTYPE_ICON_FRONT && cmdDesc.type != CMDTYPE_ICON_UNIT_OR_AREA &&
+	    cmdDesc.type != CMDTYPE_ICON_UNIT_FEATURE_OR_AREA && cmdDesc.type != CMDTYPE_ICON_AREA &&
+	    cmdDesc.type != CMDTYPE_ICON_UNIT_OR_RECTANGLE)
+		return;
+	float3 tracePos, traceDir;
+	GetMapPreviewTrace(tracePos, traceDir);
 	const auto control = std::to_array(camera->GetClipControlMatrix().m);
 	auto zero = rendering::ui::IdentityMatrix();
 	zero[10] = zero[14] = 0.5f;
 	if (control != rendering::ui::IdentityMatrix() && control != zero)
-		throw std::runtime_error("Native area preview camera clip-depth convention unsupported");
+		throw std::runtime_error("Native command preview camera clip-depth convention unsupported");
 
 	auto& recorder = rendering::ui::GetRecorder();
 	// Include stencil/current/texture state, which BeginWorldStage's common
@@ -3858,7 +4042,7 @@ void CGuiHandler::DrawNativeAreaCommands()
 			state.depthTest = true;
 			state.depthWrite = false;
 		});
-		DrawArea(preview->center, preview->radius, preview->color.data());
+		DrawMapCommandPreview(button, cmdDesc, false, tracePos, traceDir);
 		recorder.EndWorldStage();
 		recorder.PopAttrib();
 	} catch (...) {
@@ -3868,6 +4052,64 @@ void CGuiHandler::DrawNativeAreaCommands()
 		throw;
 	}
 #endif
+}
+
+void CGuiHandler::DrawMapCommandPreview(int button, const SCommandDescription& cmdDesc,
+	bool onMiniMap, const float3& tracePos, const float3& traceDir)
+{
+	switch (cmdDesc.type) {
+		case CMDTYPE_ICON_FRONT: {
+			if (mouse->buttons[button].movement > mouse->dragFrontCommandThreshold) {
+				float maxSize = 1000000.0f;
+				float sizeDiv = 0.0f;
+
+				if (cmdDesc.params.size() > 0)
+					maxSize = atof(cmdDesc.params[0].c_str());
+				if (cmdDesc.params.size() > 1)
+					sizeDiv = atof(cmdDesc.params[1].c_str());
+
+				DrawFormationFrontOrder(button, maxSize, sizeDiv, onMiniMap, tracePos, traceDir);
+			}
+		} break;
+
+		case CMDTYPE_ICON_UNIT_OR_AREA:
+		case CMDTYPE_ICON_UNIT_FEATURE_OR_AREA:
+		case CMDTYPE_ICON_AREA: {
+			DrawAreaCommand(button, cmdDesc, onMiniMap, tracePos, traceDir);
+		} break;
+
+		case CMDTYPE_ICON_UNIT_OR_RECTANGLE: {
+			// draw rectangular area-command
+			if (mouse->buttons[button].movement > mouse->dragBoxCommandThreshold) {
+				const float3 camTracePos = mouse->buttons[button].camPos;
+				const float3 camTraceDir = mouse->buttons[button].dir;
+
+				const float traceDist = camera->GetFarPlaneDist() * 1.4f;
+				const float innerDist = CGround::LineGroundCol(camTracePos, camTracePos + camTraceDir * traceDist, false);
+				      float outerDist = -1.0f;
+
+				if (innerDist < 0.0f)
+					break;
+				if ((outerDist = CGround::LineGroundCol(tracePos, tracePos + traceDir * traceDist, false)) < 0.0f)
+					outerDist = CGround::LinePlaneCol(tracePos, traceDir, traceDist, camTracePos.y + camTraceDir.y * innerDist);
+
+				const float3 innerPos = camTracePos + camTraceDir * innerDist;
+				const float3 outerPos = tracePos + traceDir * outerDist;
+
+				if (!onMiniMap) {
+					DrawSelectBox(innerPos, outerPos, tracePos);
+				} else {
+					glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
+					glBegin(GL_QUADS);
+					glVertex3f(innerPos.x, 0.0f, innerPos.z);
+					glVertex3f(outerPos.x, 0.0f, innerPos.z);
+					glVertex3f(outerPos.x, 0.0f, outerPos.z);
+					glVertex3f(innerPos.x, 0.0f, outerPos.z);
+					glEnd();
+				}
+			}
+		} break;
+	}
 }
 
 void CGuiHandler::DrawMapStuff(bool onMiniMap)
@@ -3885,87 +4127,16 @@ void CGuiHandler::DrawMapStuff(bool onMiniMap)
 	float3 tracePos;
 	float3 traceDir;
 
-	// setup for minimap proxying
-	const bool minimapInput = (activeReceiver != this && !mouse->offscreen && GetReceiverAt(mouse->lastx, mouse->lasty) == minimap);
-	const bool minimapCoors = (minimap->ProxyMode() || (!game->hideInterface && minimapInput));
-
-	if (minimapCoors) {
-		// if drawing on the minimap, start at the world-coordinate
-		// position mapped to by mouse->last{x,y} and trace straight
-		// down
-		tracePos = minimap->GetMapPosition(mouse->lastx, mouse->lasty);
-		traceDir = -UpVector;
-
-		if (miniMapMarker && minimap->FullProxy() && !onMiniMap && !minimap->GetMinimized()) {
-			DrawMiniMapMarker(tracePos);
-		}
-	} else {
-		tracePos = camera->GetPos();
-		traceDir = mouse->dir;
-	}
+	// Shared picking contract; the marker remains a legacy-only decoration.
+	const bool minimapCoors = GetMapPreviewTrace(tracePos, traceDir);
+	if (minimapCoors && miniMapMarker && minimap->FullProxy() && !onMiniMap && !minimap->GetMinimized())
+		DrawMiniMapMarker(tracePos);
 
 
-	if (activeMousePress) {
-		int button = SDL_BUTTON_LEFT;
-		const int cmdIndex = GetMapCommandIndex(button);
-
-		if (mouse->buttons[button].pressed && (cmdIndex >= 0) && ((size_t)cmdIndex < commands.size())) {
-			const SCommandDescription& cmdDesc = commands[cmdIndex];
-			switch (cmdDesc.type) {
-				case CMDTYPE_ICON_FRONT: {
-					if (mouse->buttons[button].movement > mouse->dragFrontCommandThreshold) {
-						float maxSize = 1000000.0f;
-						float sizeDiv = 0.0f;
-
-						if (cmdDesc.params.size() > 0)
-							maxSize = atof(cmdDesc.params[0].c_str());
-						if (cmdDesc.params.size() > 1)
-							sizeDiv = atof(cmdDesc.params[1].c_str());
-
-						DrawFormationFrontOrder(button, maxSize, sizeDiv, onMiniMap, tracePos, traceDir);
-					}
-				} break;
-
-				case CMDTYPE_ICON_UNIT_OR_AREA:
-				case CMDTYPE_ICON_UNIT_FEATURE_OR_AREA:
-				case CMDTYPE_ICON_AREA: {
-					DrawAreaCommand(button, cmdDesc, onMiniMap, tracePos, traceDir);
-				} break;
-
-				case CMDTYPE_ICON_UNIT_OR_RECTANGLE: {
-					// draw rectangular area-command
-					if (mouse->buttons[button].movement > mouse->dragBoxCommandThreshold) {
-						const float3 camTracePos = mouse->buttons[button].camPos;
-						const float3 camTraceDir = mouse->buttons[button].dir;
-
-						const float traceDist = camera->GetFarPlaneDist() * 1.4f;
-						const float innerDist = CGround::LineGroundCol(camTracePos, camTracePos + camTraceDir * traceDist, false);
-						      float outerDist = -1.0f;
-
-						if (innerDist < 0.0f)
-							break;
-						if ((outerDist = CGround::LineGroundCol(tracePos, tracePos + traceDir * traceDist, false)) < 0.0f)
-							outerDist = CGround::LinePlaneCol(tracePos, traceDir, traceDist, camTracePos.y + camTraceDir.y * innerDist);
-
-						const float3 innerPos = camTracePos + camTraceDir * innerDist;
-						const float3 outerPos = tracePos + traceDir * outerDist;
-
-						if (!onMiniMap) {
-							DrawSelectBox(innerPos, outerPos, tracePos);
-						} else {
-							glColor4f(1.0f, 0.0f, 0.0f, 0.5f);
-							glBegin(GL_QUADS);
-							glVertex3f(innerPos.x, 0.0f, innerPos.z);
-							glVertex3f(outerPos.x, 0.0f, innerPos.z);
-							glVertex3f(outerPos.x, 0.0f, outerPos.z);
-							glVertex3f(innerPos.x, 0.0f, outerPos.z);
-							glEnd();
-						}
-					}
-				} break;
-			}
-		}
-	}
+	int button = SDL_BUTTON_LEFT;
+	const int cmdIndex = GetActiveMapCommandIndex(button);
+	if (cmdIndex >= 0)
+		DrawMapCommandPreview(button, commands[cmdIndex], onMiniMap, tracePos, traceDir);
 
 	if (!onMiniMap) {
 		glBlendFunc((GLenum) cmdColors.SelectedBlendSrc(), (GLenum) cmdColors.SelectedBlendDst());
@@ -3974,113 +4145,7 @@ void CGuiHandler::DrawMapStuff(bool onMiniMap)
 		glLineWidth(1.49f);
 	}
 
-	// draw the ranges for the unit that is being pointed at
-	const CUnit* pointeeUnit = nullptr;
-	const UnitDef* buildeeDef = nullptr;
-
-	const float maxTraceDist = camera->GetFarPlaneDist() * 1.4f;
-	      float rayTraceDist = -1.0f;
-
-	if (GetQueueKeystate()) {
-		const CUnit* unit = nullptr;
-		const CFeature* feature = nullptr;
-
-		if (minimapCoors) {
-			unit = minimap->GetSelectUnit(tracePos);
-		} else {
-			// ignore the returned distance, we don't care about it here
-			TraceRay::GuiTraceRay(tracePos, traceDir, maxTraceDist, nullptr, unit, feature, false);
-		}
-
-		if (unit != nullptr && (gu->spectatingFullView || unit->IsInLosForAllyTeam(gu->myAllyTeam))) {
-			pointeeUnit = unit;
-
-			const UnitDef* unitdef = unit->unitDef;
-			const bool enemyUnit = ((unit->allyteam != gu->myAllyTeam) && !gu->spectatingFullView);
-
-			if (enemyUnit && unitdef->decoyDef != nullptr)
-				unitdef = unitdef->decoyDef;
-
-			DrawUnitDefRanges(unit, unitdef, unit->pos);
-
-			// draw (primary) weapon range
-			if (!unit->weapons.empty()) {
-				glDisable(GL_DEPTH_TEST);
-				glBallisticCircle(unit->weapons[0], { cmdColors.rangeAttack }, 40, unit->pos, {unit->maxRange, 0.0f, mapInfo->map.gravity});
-				glEnable(GL_DEPTH_TEST);
-			}
-			// draw decloak distance
-			if (pointeeUnit->decloakDistance > 0.0f) {
-				if (pointeeUnit->unitDef->decloakSpherical && globalRendering->drawDebug) {
-					CMatrix44f mat;
-					mat.Translate(unit->midPos);
-					mat.RotateX(90.0f * math::DEG_TO_RAD);
-					mat.Scale(OnesVector * pointeeUnit->decloakDistance);
-
-					GL::shapes.DrawWireSphere(16, 16, mat, cmdColors.rangeDecloak);
-				} else { // cylindrical
-					glSurfaceCircle(unit->pos, unit->decloakDistance, { cmdColors.rangeDecloak }, 40);
-				}
-			}
-
-			// draw interceptor range
-			if (unitdef->maxCoverage > 0.0f) {
-				const CWeapon* w = enemyUnit? unit->stockpileWeapon: nullptr; // will be checked if any missiles are ready
-
-				// if this isn't the interceptor, then don't use it
-				if (w != nullptr && !w->weaponDef->interceptor)
-					w = nullptr;
-
-				// shows as on if enemy, a non-stockpiled weapon, or if the stockpile has a missile
-				const SColor rangeInterceptorColor = (!enemyUnit || (w == nullptr) || w->numStockpiled) ?
-					SColor{ cmdColors.rangeInterceptorOn  }:
-					SColor{ cmdColors.rangeInterceptorOff };
-
-				glSurfaceCircle(unit->pos, unitdef->maxCoverage, rangeInterceptorColor, 40);
-			}
-		}
-	}
-
-	DrawBuildingPlacement(onMiniMap, tracePos, traceDir, maxTraceDist, pointeeUnit);
-
-	{
-		// draw range circles (for immobile units) if attack orders are imminent
-		const int defcmd = GetDefaultCommand(mouse->lastx, mouse->lasty, tracePos, traceDir);
-
-		const bool  playerAttackCmd = (size_t(inCommand) < commands.size() && commands[inCommand].id == CMD_ATTACK);
-		const bool defaultAttackCmd = (inCommand == -1 && defcmd > 0 && commands[defcmd].id == CMD_ATTACK);
-		const bool   drawWeaponArcs = (!onMiniMap && gs->cheatEnabled && globalRendering->drawDebug);
-
-		if (playerAttackCmd || defaultAttackCmd) {
-			for (const int unitID: selectedUnitsHandler.selectedUnits) {
-				const CUnit* unit = unitHandler.GetUnit(unitID);
-
-				// handled above
-				if (unit == pointeeUnit)
-					continue;
-
-				if (unit->maxRange <= 0.0f)
-					continue;
-				if (unit->weapons.empty())
-					continue;
-				// only consider (armed) static structures for the minimap
-				if (onMiniMap && !unit->unitDef->IsImmobileUnit())
-					continue;
-
-				if (!gu->spectatingFullView && !unit->IsInLosForAllyTeam(gu->myAllyTeam))
-					continue;
-
-				glDisable(GL_DEPTH_TEST);
-				glBallisticCircle(unit->weapons[0], { cmdColors.rangeAttack }, 40, unit->pos, { unit->maxRange, 0.0f, mapInfo->map.gravity });
-				glEnable(GL_DEPTH_TEST);
-
-				if (!drawWeaponArcs)
-					continue;
-
-				DrawWeaponArc(unit);
-			}
-		}
-	}
+	DrawMapRanges(onMiniMap, minimapCoors, tracePos, traceDir, false);
 
 	glLineWidth(1.0f);
 
@@ -4221,6 +4286,8 @@ void CGuiHandler::DrawArea(float3 pos, float radius, const float* color)
 #ifdef RECOIL_METAL4_LIVE_SCENE
 	auto& recorder = rendering::ui::GetRecorder();
 	if (recorder.IsWorldStage()) {
+		recorder.LuaFogEnabled(false); // Actual source GL_FOG disable, not a scope restore.
+
 		recorder.SetBlend({});
 		recorder.Color({color[0], color[1], color[2], 0.25f});
 		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.depthTest = false; });
@@ -4228,6 +4295,7 @@ void CGuiHandler::DrawArea(float3 pos, float radius, const float* color)
 		EmitAreaFanVertices(pos, radius, [&](const float3& p) { recorder.Vertex(p.x, p.y, p.z); });
 		recorder.End();
 		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.depthTest = true; });
+		recorder.LuaFogEnabled(true); // Source tail enables unconditionally.
 		return;
 	}
 #endif
@@ -4246,6 +4314,38 @@ void CGuiHandler::DrawArea(float3 pos, float radius, const float* color)
 	glEnable(GL_FOG);
 }
 
+
+template<typename Emit>
+static void EmitFrontArrowVertices(const float3& pos1, const float3& side, const float3& forward, Emit emit)
+{
+	emit(pos1 + side * 25.0f);
+	emit(pos1 - side * 25.0f);
+	emit(pos1 - side * 25.0f + forward * 50.0f);
+	emit(pos1 + side * 25.0f + forward * 50.0f);
+	emit(pos1 + side * 40.0f + forward * 50.0f);
+	emit(pos1 - side * 40.0f + forward * 50.0f);
+	emit(pos1 + forward * 100.0f);
+	emit(pos1 + forward * 100.0f);
+}
+
+template<typename Emit>
+static void EmitFrontStripVertices(float3 pos1, const float3& pos2, Emit emit)
+{
+	pos1 += (pos1 - pos2);
+	const float frontLen = (pos1 - pos2).Length2D();
+	const int maxSteps = 256;
+	const int steps = std::min(maxSteps, std::max(1, int(frontLen / 16.0f)));
+	const float3 delta = (pos2 - pos1) / (float)steps;
+	for (int i = 0; i <= steps; i++) {
+		float3 p;
+		const float d = (float)i;
+		p.x = pos1.x + (d * delta.x);
+		p.z = pos1.z + (d * delta.z);
+		p.y = CGround::GetHeightAboveWater(p.x, p.z, false);
+		p.y -= 100.f; emit(p);
+		p.y += 200.f; emit(p);
+	}
+}
 
 void CGuiHandler::DrawFormationFrontOrder(
 	int button,
@@ -4281,6 +4381,39 @@ void CGuiHandler::DrawFormationFrontOrder(
 		pos2.y = CGround::GetHeightAboveWater(pos2.x, pos2.z, false);
 	}
 
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	auto& recorder = rendering::ui::GetRecorder();
+	if (recorder.IsWorldStage()) {
+		recorder.Color({0.5f, 1.0f, 0.5f, 0.5f});
+		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.depthTest = false; });
+		recorder.Begin(rendering::ScreenPrimitive::Quads, "CGuiHandler::FrontArrow");
+		EmitFrontArrowVertices(pos1, side, forward, [&](const float3& p) { recorder.Vertex(p.x, p.y, p.z); });
+		recorder.End();
+		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.depthTest = true; });
+		if (!onMinimap) recorder.LuaFogEnabled(false);
+		recorder.Begin(rendering::ScreenPrimitive::Quads, "CGuiHandler::FrontStrip");
+		// GL_QUAD_STRIP quad order is v[2i], v[2i+1], v[2i+3], v[2i+2].
+		// Feed the common quad triangulator, retaining that winding and diagonal.
+		std::array<float3, 4> pair;
+		int vertex = 0;
+		EmitFrontStripVertices(pos1, pos2, [&](const float3& p) {
+			pair[vertex % 4] = p;
+			if (vertex >= 3 && (vertex % 2) == 1) {
+				const int previous = ((vertex - 3) % 4);
+				const int current = ((vertex - 1) % 4);
+				for (const int index: {previous, previous + 1, current + 1, current}) {
+					const float3& v = pair[index];
+					recorder.Vertex(v.x, v.y, v.z);
+				}
+			}
+			++vertex;
+		});
+		recorder.End();
+		if (!onMinimap) recorder.LuaFogEnabled(true); // Source minimap branch never touches fog.
+		return;
+	}
+#endif
+
 	glColor4f(0.5f, 1.0f, 0.5f, 0.5f);
 
 	if (onMinimap) {
@@ -4301,40 +4434,16 @@ void CGuiHandler::DrawFormationFrontOrder(
 		// direction arrow
 		glDisable(GL_DEPTH_TEST);
 		glBegin(GL_QUADS);
-			glVertexf3(pos1 + side * 25.0f                   );
-			glVertexf3(pos1 - side * 25.0f                   );
-			glVertexf3(pos1 - side * 25.0f + forward *  50.0f);
-			glVertexf3(pos1 + side * 25.0f + forward *  50.0f);
-
-			glVertexf3(pos1 + side * 40.0f + forward *  50.0f);
-			glVertexf3(pos1 - side * 40.0f + forward *  50.0f);
-			glVertexf3(pos1 +                forward * 100.0f);
-			glVertexf3(pos1 +                forward * 100.0f);
+			EmitFrontArrowVertices(pos1, side, forward, [](const float3& p) { glVertexf3(p); });
 		glEnd();
 		glEnable(GL_DEPTH_TEST);
 	}
-
-	pos1 += (pos1 - pos2);
-
-	const float frontLen = (pos1 - pos2).Length2D();
-
-	const int maxSteps = 256;
-	const int steps = std::min(maxSteps, std::max(1, int(frontLen / 16.0f)));
 
 	{
 		// vertical quad
 		glDisable(GL_FOG);
 		glBegin(GL_QUAD_STRIP);
-		const float3 delta = (pos2 - pos1) / (float)steps;
-		for (int i = 0; i <= steps; i++) {
-			float3 p;
-			const float d = (float)i;
-			p.x = pos1.x + (d * delta.x);
-			p.z = pos1.z + (d * delta.z);
-			p.y = CGround::GetHeightAboveWater(p.x, p.z, false);
-			p.y -= 100.f; glVertexf3(p);
-			p.y += 200.f; glVertexf3(p);
-		}
+		EmitFrontStripVertices(pos1, pos2, [](const float3& p) { glVertexf3(p); });
 		glEnd();
 		glEnable(GL_FOG);
 	}
@@ -4350,39 +4459,49 @@ struct BoxData {
 };
 
 
+// The original two cap quads followed by the original ten-vertex side strip.
+// Both backends consume these same positions; the native strip conversion
+// retains GL_QUAD_STRIP's (previous top, previous bottom, next bottom, next top).
+static std::array<float3, 18> BoxShapeVertices(const BoxData& box)
+{
+	const auto& a = box.mins;
+	const auto& b = box.maxs;
+	return {{
+		{a.x,b.y,a.z}, {a.x,b.y,b.z}, {b.x,b.y,b.z}, {b.x,b.y,a.z},
+		{a.x,a.y,a.z}, {b.x,a.y,a.z}, {b.x,a.y,b.z}, {a.x,a.y,b.z},
+		{a.x,b.y,a.z}, {a.x,a.y,a.z}, {a.x,b.y,b.z}, {a.x,a.y,b.z},
+		{b.x,b.y,b.z}, {b.x,a.y,b.z}, {b.x,b.y,a.z}, {b.x,a.y,a.z},
+		{a.x,b.y,a.z}, {a.x,a.y,a.z}
+	}};
+}
+
 static void DrawBoxShape(const void* data)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
-	const BoxData* boxData = static_cast<const BoxData*>(data);
-	const float3& mins = boxData->mins;
-	const float3& maxs = boxData->maxs;
+	const auto vertices = BoxShapeVertices(*static_cast<const BoxData*>(data));
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	auto& recorder = rendering::ui::GetRecorder();
+	if (recorder.IsWorldStage()) {
+		recorder.Begin(rendering::ScreenPrimitive::Quads, "CGuiHandler::DrawSelectBox volume");
+		const auto emit = [&](unsigned i) {
+			const auto& v = vertices[i];
+			recorder.Vertex(v.x, v.y, v.z);
+		};
+		for (unsigned i = 0; i < 8; ++i) emit(i);
+		for (unsigned i = 8; i < 16; i += 2) {
+			emit(i); emit(i + 1); emit(i + 3); emit(i + 2);
+		}
+		recorder.End();
+		return;
+	}
+#endif
 	glBegin(GL_QUADS);
-		// the top
-		glVertex3f(mins.x, maxs.y, mins.z);
-		glVertex3f(mins.x, maxs.y, maxs.z);
-		glVertex3f(maxs.x, maxs.y, maxs.z);
-		glVertex3f(maxs.x, maxs.y, mins.z);
-		// the bottom
-		glVertex3f(mins.x, mins.y, mins.z);
-		glVertex3f(maxs.x, mins.y, mins.z);
-		glVertex3f(maxs.x, mins.y, maxs.z);
-		glVertex3f(mins.x, mins.y, maxs.z);
+	for (unsigned i = 0; i < 8; ++i) glVertexf3(vertices[i]);
 	glEnd();
 	glBegin(GL_QUAD_STRIP);
-		// the sides
-		glVertex3f(mins.x, maxs.y, mins.z);
-		glVertex3f(mins.x, mins.y, mins.z);
-		glVertex3f(mins.x, maxs.y, maxs.z);
-		glVertex3f(mins.x, mins.y, maxs.z);
-		glVertex3f(maxs.x, maxs.y, maxs.z);
-		glVertex3f(maxs.x, mins.y, maxs.z);
-		glVertex3f(maxs.x, maxs.y, mins.z);
-		glVertex3f(maxs.x, mins.y, mins.z);
-		glVertex3f(mins.x, maxs.y, mins.z);
-		glVertex3f(mins.x, mins.y, mins.z);
+	for (unsigned i = 8; i < vertices.size(); ++i) glVertexf3(vertices[i]);
 	glEnd();
 }
-
 
 static void DrawCornerPosts(const float3& pos0, const float3& pos1)
 {
@@ -4392,6 +4511,24 @@ static void DrawCornerPosts(const float3& pos0, const float3& pos1)
 	const float3 corner1(pos1.x, CGround::GetHeightAboveWater(pos1.x, pos1.z, false), pos1.z);
 	const float3 corner2(pos0.x, CGround::GetHeightAboveWater(pos0.x, pos1.z, false), pos1.z);
 	const float3 corner3(pos1.x, CGround::GetHeightAboveWater(pos1.x, pos0.z, false), pos0.z);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	auto& recorder = rendering::ui::GetRecorder();
+	if (recorder.IsWorldStage()) {
+		recorder.SetBlend({});
+		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.lineWidth = 2.0f; });
+		recorder.BeginLegacyPrimitive(rendering::NativeDrawPrimitive::Lines, "CGuiHandler::DrawSelectBox corners");
+		const auto emit = [&](const float3& p) {
+			recorder.Vertex(p.x, p.y, p.z);
+			recorder.Vertex(p.x, p.y + lineVector.y, p.z);
+		};
+		recorder.Color({1.0f, 1.0f, 0.0f, 0.9f}); emit(corner0);
+		recorder.Color({0.0f, 1.0f, 0.0f, 0.9f}); emit(corner1);
+		recorder.Color({0.0f, 0.0f, 1.0f, 0.9f}); emit(corner2); emit(corner3);
+		recorder.End();
+		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.lineWidth = 1.0f; });
+		return;
+	}
+#endif
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glLineWidth(2.0f);
@@ -4415,6 +4552,55 @@ static void StencilDrawSelectBox(const float3& pos0, const float3& pos1,
 	BoxData boxData;
 	boxData.mins = float3(std::min(pos0.x, pos1.x), readMap->GetCurrMinHeight() -   250.0f, std::min(pos0.z, pos1.z));
 	boxData.maxs = float3(std::max(pos0.x, pos1.x), readMap->GetCurrMaxHeight() + 10000.0f, std::max(pos0.z, pos1.z));
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	auto& recorder = rendering::ui::GetRecorder();
+	if (recorder.IsWorldStage()) {
+		recorder.LuaFogEnabled(false); // Actual source GL_FOG disable, not a scope restore.
+
+		// Preserve glDrawVolume's paired depth-fail count/clear passes. The
+		// explicit inversion marker is lowered only on a checked linear RGBA8
+		// target; it is not a general GL logic-op or sRGB/HDR implementation.
+		rendering::ScreenBlendState blend;
+		blend.destinationColor = blend.destinationAlpha = rendering::ScreenBlendFactor::One;
+		recorder.SetBlend(blend);
+		recorder.Color(invColorSelect ? rendering::ScreenColor{1,1,1,1} : rendering::ScreenColor{1,0,0,0.25f});
+		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) {
+			state.invertColorUnorm8 = false;
+			state.depthWrite = false;
+			state.cullEnabled = false;
+			state.depthTest = true;
+			state.depthClamp = true;
+			state.colorWrite = {false,false,false,false}; state.combinedColorWrite = state.colorWrite;
+			state.stencilTest = true;
+			state.frontStencil = {};
+			state.frontStencil.readMask = state.frontStencil.writeMask = 0x1;
+			state.frontStencil.depthFail = rendering::NativeWorldStencilOp::IncrementClamp;
+			state.backStencil = state.frontStencil;
+		});
+		DrawBoxShape(&boxData);
+		recorder.UpdateWorldState([&](rendering::NativeWorldDrawState& state) {
+			state.invertColorUnorm8 = invColorSelect;
+			state.depthTest = false;
+			state.frontStencil.compare = rendering::ScreenAlphaCompare::NotEqual;
+			state.frontStencil.fail = state.frontStencil.depthFail = state.frontStencil.pass = rendering::NativeWorldStencilOp::Zero;
+			state.backStencil = state.frontStencil;
+			state.colorWrite = {true,true,true,true}; state.combinedColorWrite = state.colorWrite;
+			state.cullEnabled = true;
+			state.cull = rendering::NativeWorldCull::Front;
+		});
+		DrawBoxShape(&boxData);
+		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) {
+			state.invertColorUnorm8 = false;
+			state.depthClamp = false;
+			state.stencilTest = false;
+			state.cullEnabled = false;
+			state.depthTest = true;
+		});
+		DrawCornerPosts(pos0, pos1);
+		recorder.LuaFogEnabled(true); // Source tail enables unconditionally.
+		return;
+	}
+#endif
 
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_FOG);
@@ -4607,6 +4793,8 @@ void CGuiHandler::DrawSelectCircle(const float3& pos, float radius,
 #ifdef RECOIL_METAL4_LIVE_SCENE
 	auto& recorder = rendering::ui::GetRecorder();
 	if (recorder.IsWorldStage()) {
+		recorder.LuaFogEnabled(false); // Actual source GL_FOG disable, not a scope restore.
+
 		// Original glDrawVolume: depth-fail parity in stencil bit 0, followed
 		// by additive back-face color and clear-as-we-go stencil operations.
 		rendering::ScreenBlendState blend;
@@ -4653,6 +4841,7 @@ void CGuiHandler::DrawSelectCircle(const float3& pos, float radius,
 		recorder.Vertex(base.x, base.y + 128.0f, base.z);
 		recorder.End();
 		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.lineWidth = 1.0f; });
+		recorder.LuaFogEnabled(true); // Source tail enables unconditionally.
 		return;
 	}
 #endif

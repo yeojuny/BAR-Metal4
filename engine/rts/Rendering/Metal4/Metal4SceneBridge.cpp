@@ -1,4 +1,9 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#include "Rendering/Backend/NativeLegacyWaterProgramState.h"
+#include "Rendering/Backend/NativeLegacyWaterTextureMatrices.h"
+#include "Rendering/Backend/NativeLegacyWaterTextureEnvironment.h"
+#include "Rendering/Backend/NativeLegacyWaterTexGen.h"
+#include "Rendering/Backend/NativeLegacyWaterLighting.h"
 #include "Rendering/Backend/NativeTerraformCaptureProgram.h"
 #include "Lua/LuaNativeStartBox.h"
 #include "Lua/LuaNativeWeaponRange.h"
@@ -10,6 +15,8 @@
 #include "Rendering/Backend/NativeMapTexturePublication.h"
 #include "Rendering/Backend/NativeDeferredPostprocessSource.h"
 #include "Metal4SceneBridge.h"
+#include "Rendering/Backend/NativeLegacyWaterData.h"
+#include "Rendering/Backend/NativeDynamicWaterCapture.h"
 #include "Rendering/Backend/NativeImageReadback.h"
 #include "Rendering/Backend/NativePostprocessRecorder.h"
 #include "Lua/LuaNativePostprocess.h"
@@ -136,6 +143,11 @@ struct Session {
 		nativeContextOwned=true;
 		try {
 		OriginalNativeModelContext().Initialize(context.Registry().ContextGeneration());
+  OriginalNativeLegacyWaterProgramState().InitializeContext(context.Registry().ContextGeneration());
+	OriginalNativeLegacyWaterTextureMatrices().InitializeContext(context.Registry().ContextGeneration());
+	OriginalNativeLegacyWaterTextureEnvironment().InitializeContext(context.Registry().ContextGeneration());
+	OriginalNativeLegacyWaterTexGen().InitializeContext(context.Registry().ContextGeneration());
+	OriginalNativeLegacyWaterLighting().InitializeContext(context.Registry().ContextGeneration());
 		NativeTerrainProgramServices terrainPrograms;
 		terrainPrograms.contextGeneration=[]{return OriginalNativeTextureContext().Registry().ContextGeneration();};
 		terrainPrograms.compile=[this](const NativeTerrainProgramRequest& request){return renderer->CompileOriginalTerrainProgram(request);};
@@ -238,7 +250,11 @@ struct Session {
 		if(terrainImageSourceAttached){OriginalNativeTerrainImagePublication().Detach();terrainImageSourceAttached=false;}
 		if(pbrTextureSourceAttached){renderer->ConnectPBRSourceContext(false);pbrTextureSourceAttached=false;}
 		if(mapTextureSourceAttached){OriginalNativeMapTextures().Detach();mapTextureSourceAttached=false;}
-		if(nativeContextOwned){auto& context=OriginalNativeTextureContext();context.DetachUI();context.Destroy();OriginalNativeModelContext().Reset();nativeContextOwned=false;}
+		if(nativeContextOwned){auto& context=OriginalNativeTextureContext();context.DetachUI();context.Destroy();OriginalNativeModelContext().Reset();OriginalNativeLegacyWaterProgramState().DestroyContext();
+	OriginalNativeLegacyWaterTextureMatrices().DestroyContext();
+	OriginalNativeLegacyWaterTextureEnvironment().DestroyContext();
+	OriginalNativeLegacyWaterTexGen().DestroyContext();
+	OriginalNativeLegacyWaterLighting().DestroyContext();nativeContextOwned=false;}
 	}
 	bool nativeContextOwned=false,mapTextureSourceAttached=false,pbrTextureSourceAttached=false,s3oTextureSourceAttached=false,namedVolumeSourceAttached=false,terrainImageSourceAttached=false,terrainProgramSourceAttached=false;
 	std::shared_ptr<const NativeCUSTextureObject> ResolveBorrowedTerrainImage(const void* owner,NativeTerrainImageRole role,uint32_t provenance)
@@ -372,6 +388,8 @@ struct Session {
 	std::unique_ptr<Metal4ScreenPresenter> loadingScreen;
 	WorldFrameCapture capture;
 	NativeBumpWaterCapture waterCapture;
+ NativeLegacyWaterCapture legacyWaterCapture;
+ NativeDynamicWaterCapture dynamicWaterCapture;
 	NativeBasicWaterCapture basicWaterCapture;
 	std::optional<WorldFrame> preparedFrame;
 	std::optional<uint64_t> preparedDecalDraw;
@@ -748,6 +766,36 @@ void ResetBasicWater()
  if(session->renderer)session->renderer->ClearBasicWaterResources();
 }
 bool BasicWaterInitialized() {return session && session->basicWaterCapture.Initialized();}
+bool CanInitializeDynamicWater(){return false;}
+void InitializeDynamicWater(){
+ if(!CanInitializeDynamicWater()||!session||!session->renderer)throw std::runtime_error("Dynamic original source profile/native acceptance is incomplete");
+ RequireRetiredGPUWork();session->dynamicWaterCapture.Initialize(DynamicWaterSourceProfile{});
+}
+void ResetDynamicWater(){if(!session)return;RequireRetiredGPUWork();session->dynamicWaterCapture.Reset();if(session->renderer)session->renderer->ClearDynamicWaterResources();}
+void UpdateDynamicWater(){if(!session||!session->dynamicWaterCapture.Initialized())throw std::logic_error("Dynamic Update without its source lifetime");session->dynamicWaterCapture.Update();}
+void AddDynamicWaterExplosion(const float3& pos,float strength,float size){if(!session||!session->dynamicWaterCapture.Initialized())throw std::logic_error("Dynamic explosion without source lifetime");session->dynamicWaterCapture.AddExplosion(pos,strength,size);}
+bool CanInitializeLegacyWater()
+{
+ // One admission gate: enable only after source-state ownership and native
+ // compilation/device parity gates in INTEGRATION-MANIFEST.json are met.
+ return false;
+}
+void InitializeLegacyWater()
+{
+ if(!CanInitializeLegacyWater()||!session||!session->renderer)throw std::runtime_error("Native Water1 source/native acceptance gate is not complete");
+ // No public availability until native compiler/device acceptance is complete.
+ RequireRetiredGPUWork();session->legacyWaterCapture.Initialize();
+}
+bool CanInitializeLegacyRefractiveWater(){return false;}
+void InitializeLegacyRefractiveWater(){
+ // No original capability observation exists yet. Never let headless GLAD choose this branch.
+ constexpr auto observedTarget=LegacyRefractionTarget::Unobserved;
+ if(!CanInitializeLegacyRefractiveWater()||observedTarget==LegacyRefractionTarget::Unobserved||!session||!session->renderer)
+  throw std::runtime_error("Refractive source capability/native acceptance remains unobserved");
+ RequireRetiredGPUWork();session->legacyWaterCapture.Initialize(observedTarget);
+}
+void ResetLegacyWater(){if(!session)return;RequireRetiredGPUWork();session->legacyWaterCapture.Reset();if(session->renderer)session->renderer->ClearLegacyWaterResources();}
+
 
 
 namespace {
@@ -794,11 +842,12 @@ public:
  }
 };
 
+std::optional<std::array<int32_t,4>> dynamicWaterViewport;
 WorldCamera CurrentWaterSourceCamera()
 {
  if(!camera)throw std::logic_error("Original water source has no actual active camera");
  WorldCamera actual;actual.view=std::to_array(camera->GetViewMatrix().m);actual.projection=std::to_array(camera->GetProjectionMatrix().m);
- actual.position={camera->GetPos().x,camera->GetPos().y,camera->GetPos().z};std::copy_n(camera->viewport,4,actual.viewport.begin());
+ actual.position={camera->GetPos().x,camera->GetPos().y,camera->GetPos().z};std::copy_n(camera->viewport,4,actual.viewport.begin());if(dynamicWaterViewport)actual.viewport=*dynamicWaterViewport;
  const auto control=std::to_array(camera->GetClipControlMatrix().m);auto zero=ui::IdentityMatrix();zero[10]=zero[14]=.5f;
  if(control==ui::IdentityMatrix())actual.clipDepth=ClipDepthConvention::MinusOneToOne;
  else if(control==zero)actual.clipDepth=ClipDepthConvention::ZeroToOne;
@@ -881,13 +930,17 @@ std::shared_ptr<const NativeWaterLuaFrame> CaptureWaterPost()
 }
 
 std::shared_ptr<const NativeWaterSceneView> CaptureWaterView(NativeWaterScenePass pass,
- const NativeBumpWaterFrame& water)
+ const NativeBumpWaterFrame* water,uint64_t sourceDrawFrame,bool legacyReflective=false,uint32_t dynamicExtent=0,std::array<float,9>* sourceBasis=nullptr)
 {
- WaterViewScope scope(pass,water.settings.reflectionSize);
+ WaterViewScope scope(pass,legacyReflective?512:(dynamicExtent?512:water->settings.reflectionSize));
+ struct ViewportRestore{std::optional<std::array<int32_t,4>> prior=dynamicWaterViewport;~ViewportRestore(){dynamicWaterViewport=prior;}} viewportRestore;
+ if(dynamicExtent&&pass==NativeWaterScenePass::Refraction)dynamicWaterViewport=std::array<int32_t,4>{0,0,int32_t(dynamicExtent),int32_t(dynamicExtent)};
+ if(sourceBasis)*sourceBasis={camera->GetRight().x,camera->GetRight().y,camera->GetRight().z,camera->GetUp().x,camera->GetUp().y,camera->GetUp().z,camera->GetDir().x,camera->GetDir().y,camera->GetDir().z};
  auto output=std::make_shared<NativeWaterSceneView>();
- output->pass=pass;output->drawGround=pass==NativeWaterScenePass::Refraction || water.settings.reflection>1;
- output->drawFog=pass==NativeWaterScenePass::Reflection;
- output->modelClipPlane=NativeWaterModelClipPlane(pass);output->terrainClipPlane=NativeWaterTerrainClipPlane(pass);
+ output->legacyReflective=legacyReflective;output->dynamicWater=dynamicExtent!=0;
+ output->pass=pass;output->drawGround=dynamicExtent || legacyReflective || pass==NativeWaterScenePass::Refraction || water->settings.reflection>1;
+ output->drawFog=dynamicExtent?OriginalNativeModelContext().fogEnabled:pass==NativeWaterScenePass::Reflection;
+ output->modelClipPlane=NativeWaterModelClipPlane(pass);output->terrainClipPlane=legacyReflective?std::array<float,4>{0,1,0,0}:NativeWaterTerrainClipPlane(pass);
  const auto actual=CurrentWaterSourceCamera();auto& recorder=ui::GetRecorder();
  const bool reflection=pass==NativeWaterScenePass::Reflection;
  recorder.BeginWorldStage(reflection?NativeWorldDrawStage::WaterReflection:NativeWorldDrawStage::WaterRefraction,
@@ -897,11 +950,11 @@ std::shared_ptr<const NativeWaterSceneView> CaptureWaterView(NativeWaterScenePas
  try{
   // CBumpWater clears before IWater draws either view. Preserve its real
   // color writer, clear depth, write masks and scissor in the common stream.
-  const auto& fog=ISky::GetSky()->fogColor;recorder.SetOriginalClearColor({fog.x,fog.y,fog.z,0});
+  const auto& fog=ISky::GetSky()->fogColor;recorder.SetOriginalClearColor({fog.x,fog.y,fog.z,(legacyReflective||dynamicExtent)?1.f:0.f});
   output->initialClearSequence=GetWorldDrawRecorder().RecordClear(reflection?NativeWorldDrawStage::WaterReflection:NativeWorldDrawStage::WaterRefraction,
    static_cast<ScreenAttachmentMask>(ScreenAttachmentColor|ScreenAttachmentDepth),recorder.CurrentClearValues(),
    recorder.CurrentWorldState(),recorder.CurrentState().draw.scissor);
-  if(!output->drawFog)OriginalNativeModelContext().fogEnabled=false;
+  if(!dynamicExtent&&!output->drawFog)OriginalNativeModelContext().fogEnabled=false;
   // glClipPlane stores inverse-transpose(MV)*plane at its actual write.
   // Refraction writes before sky; reflection writes after sky. A Lua/sky
   // matrix change must therefore be visible at the same original boundary.
@@ -937,6 +990,7 @@ std::shared_ptr<const NativeWaterSceneView> CaptureWaterView(NativeWaterScenePas
   recorder.EndWorldStage();
  }catch(...){recorder.EndWorldStage();throw;}
  output->frame=session->capture.Capture(pass);
+ if(dynamicExtent&&pass==NativeWaterScenePass::Refraction)output->frame.viewCamera.viewport={0,0,int32_t(dynamicExtent),int32_t(dynamicExtent)};
  output->frame.opaqueModelFrame=std::move(actualModels);
  // Captured legacy refraction lighting retains the original temporary tint.
  // The consumer separately keeps pre-world GL4 UBO lighting/player eye.
@@ -947,7 +1001,7 @@ std::shared_ptr<const NativeWaterSceneView> CaptureWaterView(NativeWaterScenePas
  output->preParticlesBoundary=NextNativeWorldDrawSequence();
  output->worldLua=CaptureNativeWaterLuaFrame([&]{if(reflected)eventHandler.DrawWorldReflection();else eventHandler.DrawWorldRefraction();});
  OriginalNativeModelContext().clips.SetEnabled(2,false);
- ValidateNativeWaterSceneView(*output,water.sourceDrawFrame);
+ ValidateNativeWaterSceneView(*output,sourceDrawFrame);
  return output;
 }
 }
@@ -1093,31 +1147,87 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  frame.luaUnitPrimitiveFrame=std::move(luaUnitPrimitiveFrame);session->preparedDecalDraw.reset();
  // Preserve CWorldDrawer's eligibility; forceRendering belongs to the inner
  // water renderer and cannot bypass the outer voidWater/drawWater boundary.
- if((session->waterCapture.Initialized() || session->basicWaterCapture.Initialized()) && globalRendering->drawWater && readMap->HasVisibleWater()){
+ if((session->waterCapture.Initialized() || session->basicWaterCapture.Initialized() || session->legacyWaterCapture.Initialized() || session->dynamicWaterCapture.Initialized()) && globalRendering->drawWater && readMap->HasVisibleWater()){
   auto* water=IWater::GetWater().get();
   if(!water)throw std::logic_error("Water CPU producer outlived its original IWater instance");
-  if(session->waterCapture.Initialized() && session->basicWaterCapture.Initialized())throw std::logic_error("Two original water renderers active in one IWater lifetime");
+  if(unsigned(session->waterCapture.Initialized())+unsigned(session->basicWaterCapture.Initialized())+unsigned(session->legacyWaterCapture.Initialized())+unsigned(session->dynamicWaterCapture.Initialized())>1)throw std::logic_error("Two original water renderers active in one IWater lifetime");
   if(session->waterCapture.Initialized())frame.bumpWater=session->waterCapture.Capture(frame,bool(frame.shadow)&&frame.lighting.requested.shadows>0,
    infoTextureHandler && infoTextureHandler->IsEnabled(),water->WireFrameModeRef());
-  else frame.basicWater=session->basicWaterCapture.Capture(frame,water->WireFrameModeRef());
+  else if(session->basicWaterCapture.Initialized())frame.basicWater=session->basicWaterCapture.Capture(frame,water->WireFrameModeRef());
   auto scenes=std::make_shared<NativeWaterSceneFrame>();scenes->sourceDrawFrame=frame.sourceDrawFrame;
 		frame.alphaModelFrames[0]=CaptureOriginalAlphaModels(NativeWorldDrawStage::AlphaBelowWater);
   scenes->belowWaterLua=CaptureWaterPreParticles(NativeWorldDrawStage::AlphaBelowWater,false,true,false,false);
+  if(session->legacyWaterCapture.Initialized())frame.legacyWater=session->legacyWaterCapture.Capture(frame,water->WireFrameModeRef());
+  std::array<float,9> dynamicReflectionBasis{},dynamicRefractionBasis{};
+  if(session->dynamicWaterCapture.Initialized())frame.dynamicWater=session->dynamicWaterCapture.CaptureDerived(frame.sourceDrawFrame);
   {
    WaterUpdateFogScope originalWaterFog;
+   if(frame.dynamicWater){
+    auto& recorder=ui::GetRecorder();recorder.PushAttrib(ui::NativeUIAttribute::Enable|ui::NativeUIAttribute::Depth);
+    try{
+     recorder.UpdateWorldState([](NativeWorldDrawState& w){w.depthTest=true;w.depthWrite=true;},false);
+     recorder.UpdateBlend([](ScreenBlendState& b){b.enabled=false;});
+     auto alpha=recorder.CurrentState().draw.alphaTest;alpha.enabled=false;recorder.SetAlphaTest(alpha);
+     scenes->refraction=CaptureWaterView(NativeWaterScenePass::Refraction,nullptr,frame.sourceDrawFrame,false,frame.dynamicWater->material->refractionExtent,&dynamicRefractionBasis);
+     scenes->reflection=CaptureWaterView(NativeWaterScenePass::Reflection,nullptr,frame.sourceDrawFrame,false,512,&dynamicReflectionBasis);
+     recorder.PopAttrib();
+    }catch(...){recorder.PopAttrib();throw;}
+   }
    if(frame.bumpWater && frame.bumpWater->settings.refraction>1){
-    scenes->refraction=CaptureWaterView(NativeWaterScenePass::Refraction,*frame.bumpWater);
+    scenes->refraction=CaptureWaterView(NativeWaterScenePass::Refraction,frame.bumpWater.get(),frame.sourceDrawFrame);
     // CBumpWater::DrawRefraction explicitly re-enables fog after the
     // complete original view, before the next reflection begins.
     OriginalNativeModelContext().fogEnabled=true;
    }
-   if(frame.bumpWater && frame.bumpWater->settings.reflection>0)scenes->reflection=CaptureWaterView(NativeWaterScenePass::Reflection,*frame.bumpWater);
+   if(frame.legacyWater){
+    auto& recorder=ui::GetRecorder();
+    recorder.PushAttrib(ui::NativeUIAttribute::Blend|ui::NativeUIAttribute::Alpha|ui::NativeUIAttribute::ColorMask);
+    try{
+     recorder.UpdateBlend([](ScreenBlendState& b){b.enabled=true;b.sourceColor=b.destinationColor=b.sourceAlpha=b.destinationAlpha=ScreenBlendFactor::One;});
+     recorder.Color({1,1,1,1}); // CAdvWater bump tail's actual current-color writer.
+     scenes->reflection=CaptureWaterView(NativeWaterScenePass::Reflection,nullptr,frame.sourceDrawFrame,true);
+     recorder.PopAttrib();
+    }catch(...){recorder.PopAttrib();throw;}
+    // CAdvWater restores color-buffer attribs, then writes the main blend factors.
+    recorder.UpdateBlend([](ScreenBlendState& b){b.sourceColor=b.sourceAlpha=ScreenBlendFactor::SourceAlpha;b.destinationColor=b.destinationAlpha=ScreenBlendFactor::OneMinusSourceAlpha;});
+   }
+   if(frame.bumpWater && frame.bumpWater->settings.reflection>0)scenes->reflection=CaptureWaterView(NativeWaterScenePass::Reflection,frame.bumpWater.get(),frame.sourceDrawFrame);
    ui::GetRecorder().SetViewport({globalRendering->viewPosX,globalRendering->viewPosY,uint32_t(globalRendering->viewSizeX),uint32_t(globalRendering->viewSizeY)});
+  }
+  if(frame.legacyWater){
+   frame.legacyWater=session->legacyWaterCapture.FinalizeSurface(frame.legacyWater,CurrentWaterSourceCamera(),water->WireFrameModeRef());
+   // Original Draw disables alpha test and depth writes, then restores depth writes.
+   // WaterPost observes the completed Water1 state, not the reflection scope.
+   auto& recorder=ui::GetRecorder();
+   // CAdvWater::Draw tail precedes the derived CRefractWater::Draw tail.
+   auto& texgen=OriginalNativeLegacyWaterTexGen();
+   texgen.Enable(1,0x2000,false);texgen.Enable(1,0x2001,false);
+   if(frame.legacyWater->refraction){
+    // SetupWaterDepthTex binds the actual source to3. Draw tail disables2D,
+    // retains that binding; Copy already bound the exact target-aware source name to2.
+    auto& history=OriginalNativeTextureContext().History();
+    history.ActiveTexture(3);history.Bind(3,frame.legacyWater->refraction->shading.object);
+    history.Enable(3,NativeCUSTextureTarget::Image2D,true);
+    history.Enable(3,NativeCUSTextureTarget::Image2D,false);
+    texgen.Enable(3,0x2000,false);texgen.Enable(3,0x2001,false);
+    session->legacyWaterCapture.RefractionDrawTail();recorder.SyncObservedTextureBinding(2);recorder.SyncObservedTextureBinding(3);
+   }
+   if(!frame.legacyWater->refraction)OriginalNativeTextureContext().History().ActiveTexture(0);
+   // Draw(false) disables blending only for surface raster, then enables it.
+   recorder.UpdateBlend([](ScreenBlendState& b){b.enabled=true;});
+   auto alpha=recorder.CurrentState().draw.alphaTest;alpha.enabled=false;recorder.SetAlphaTest(alpha);
+   recorder.UpdateWorldState([](NativeWorldDrawState& w){w.depthWrite=true;w.frontPolygonMode=w.backPolygonMode=NativePolygonMode::Fill;},false);
+  }
+  if(frame.dynamicWater){
+   frame.dynamicWater=session->dynamicWaterCapture.FinalizeSurface(frame.dynamicWater,CurrentWaterSourceCamera(),dynamicReflectionBasis,dynamicRefractionBasis,water->WireFrameModeRef());
+   // Dynamic Draw saves ENABLE bits; blend/alpha/fog enable return unchanged.
+   ui::GetRecorder().Color({1,1,1,.5f});
+   ui::GetRecorder().UpdateWorldState([](NativeWorldDrawState& w){w.frontPolygonMode=w.backPolygonMode=NativePolygonMode::Fill;},false);
   }
   scenes->waterPostLua=CaptureWaterPost();
 		frame.alphaModelFrames[1]=CaptureOriginalAlphaModels(NativeWorldDrawStage::AlphaAboveWater);
   scenes->aboveWaterLua=CaptureWaterPreParticles(NativeWorldDrawStage::AlphaAboveWater,true,false,false,false);
-  ValidateNativeWaterSceneFrame(*scenes,frame.sourceDrawFrame,frame.bumpWater && frame.bumpWater->settings.reflection>0,frame.bumpWater && frame.bumpWater->settings.refraction>1);
+  ValidateNativeWaterSceneFrame(*scenes,frame.sourceDrawFrame,(frame.dynamicWater || frame.legacyWater || (frame.bumpWater && frame.bumpWater->settings.reflection>0)),frame.dynamicWater || (frame.bumpWater && frame.bumpWater->settings.refraction>1));
   frame.waterScene=std::move(scenes);
  }else{
   // Original ProjectileDrawer::DrawAlpha invokes this callback once even
@@ -1129,6 +1239,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 
 void AbortPreparedWorld()
 {
+	if(session)session->legacyWaterCapture.AbortUncompletedRefraction();
 	if(session && session->renderer)session->renderer->AbortScreenContinuation();
 	LuaNativeBlockout::AbortWorldFrame();
 	LuaNativeGameDecal::AbortWorldFrame();
@@ -1209,6 +1320,7 @@ std::vector<std::uint8_t> ReadCurrentImage(const ui::NativeUIReadbackPrefix& pre
 		session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();
 	};
 	auto result=session->renderer->Draw(frame,options);
+ if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
 	if(!result.sourceFrameCompleted || result.sourceDrawFrame!=frame.sourceDrawFrame ||
 		result.completedPostprocessSerial!=screen.postprocess->serial)
 		throw std::runtime_error("SaveImage did not retire its actual current source frame");
@@ -1241,6 +1353,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		return {};
 	// Consume even if the window became hidden or its drawable is unavailable.
 	// A later presentation must use its own engine/Lua world callback ordering.
+	struct LegacyCopyExit {~LegacyCopyExit(){session->legacyWaterCapture.AbortUncompletedRefraction();}} legacyCopyExit;
 	auto prepared = std::move(session->preparedFrame);
 	session->preparedFrame.reset();
 	session->surface.Refresh();
@@ -1269,7 +1382,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	if(session->renderer->HasScreenContinuation())
 		sourcePlan=presentWorld && session->surface.Snapshot().CanPresent()?NativeSourceSubmission::PresentWorld:NativeSourceSubmission::OffscreenSource;
 	if(sourcePlan==NativeSourceSubmission::IndependentTargets && prepared &&
-		(prepared->originalShadow || (prepared->mainGround&&prepared->mainGround->ground&&prepared->mainGround->ground->mapMRT) || (prepared->opaqueModelFrame&&prepared->opaqueModelFrame->HasWriters()) || (prepared->shieldDepthFrame && prepared->shieldDepthFrame->HasWriters()) || session->renderer->HasPendingEnvironmentSource() || HasNativeDeferredPostprocessWrites(*prepared,luaBloomFrame)))
+		((prepared->legacyWater&&prepared->legacyWater->refraction) || prepared->originalShadow || (prepared->mainGround&&prepared->mainGround->ground&&prepared->mainGround->ground->mapMRT) || (prepared->opaqueModelFrame&&prepared->opaqueModelFrame->HasWriters()) || (prepared->shieldDepthFrame && prepared->shieldDepthFrame->HasWriters()) || session->renderer->HasPendingEnvironmentSource() || HasNativeDeferredPostprocessWrites(*prepared,luaBloomFrame)))
 		sourcePlan=NativeSourceSubmission::OffscreenSource;
 	if (sourcePlan==NativeSourceSubmission::IndependentTargets){
 		session->renderer->AbortShieldPublications(prepared?prepared->opaqueModelFrame:nullptr,session->actualShadowSourcePending,prepared?prepared->mainGround:session->mainGroundPending);session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();return submitTargets();
@@ -1313,6 +1426,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	options.sourceLogicalExtent=session->lastLogicalExtent;
 	if(session->renderer->HasScreenContinuation())SetReadbackSubmissionReceipts(options);
 	const auto result = session->renderer->Draw(frame, options);
+ if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  if(result.sourceFrameCompleted){session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();}
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);
  if(result.completedWaterUpdates[0])session->waterCapture.DidComplete(result.completedWaterUpdates[0],result.completedWaterUpdates[1],result.completedWaterUpdates[2]);
@@ -1495,10 +1609,11 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	}
 	if (!session->reportedFirstMissileThruster && result.luaMissileThrusterDraws > 0) {
 		session->reportedFirstMissileThruster = true;
-		LOG("[Metal4Scene] First completed original MissileThruster at simulation frame %llu: draws=%u, submitted instances=%u, programs=%u/%u/%u/%u (four passes counted separately); full visual parity pending",
+		LOG("[Metal4Scene] First completed original MissileThruster at simulation frame %llu: draws=%u, submitted instances=%u, programs=%u/%u/%u/%u/%u/%u/%u (legacy and31657 variants counted separately); full visual parity pending",
 			static_cast<unsigned long long>(frame.simulationFrame), result.luaMissileThrusterDraws, result.luaMissileThrusterSubmittedInstances,
 			result.luaMissileThrusterProgramDraws[0], result.luaMissileThrusterProgramDraws[1],
-			result.luaMissileThrusterProgramDraws[2], result.luaMissileThrusterProgramDraws[3]);
+			result.luaMissileThrusterProgramDraws[2], result.luaMissileThrusterProgramDraws[3],
+			result.luaMissileThrusterProgramDraws[4], result.luaMissileThrusterProgramDraws[5], result.luaMissileThrusterProgramDraws[6]);
 	}
 	if (!session->reportedFirstDeferredLights && result.luaDeferredLightDraws > 0) {
 		session->reportedFirstDeferredLights = true;
@@ -1545,7 +1660,7 @@ void ResetWorld()
 	session->preparedGroundDecals.reset();session->preparedGameDecals.reset();session->preparedDecalDraw.reset();
  session->mainGroundPending.reset();session->reflectionGroundPending.reset();session->mainInitialClear.reset();
 	session->waterCapture.Reset();
-	session->basicWaterCapture.Reset();
+	session->basicWaterCapture.Reset();session->legacyWaterCapture.Reset();
 	session->capture.Reset();
 	ResetNativeCUSMaterialState();
 	LuaNativeNano::Reset();

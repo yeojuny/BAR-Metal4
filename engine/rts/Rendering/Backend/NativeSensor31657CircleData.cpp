@@ -39,16 +39,18 @@ NativeSensor31657CircleDefines Defines(const Substitutions& source)
   Check(parsed.ec==std::errc{}&&parsed.ptr==value.data()+value.size()&&std::isfinite(number),"31657 circle define is not finite numeric Lua output");
   Check(values.emplace(name,number).second,"31657 circle define repeated");
  }
- for(auto name:{"VSX","VSY","PADDING","EXACT_CIRCLES","CIRCLE_SEGMENTS","CIRCLE_SSBO_BINDING","STIPPLE_RATE"})
+ for(auto name:{"VSX","VSY","PADDING","EXACT_CIRCLES","CIRCLE_SEGMENTS","CIRCLE_SSBO_BINDING","STIPPLE_RATE","FADE_START","FADE_END"})
   Check(values.contains(name),"31657 circle required define missing");
  const bool sonar=values.at("CIRCLE_SEGMENTS")==61;
- Check(values.size()==(sonar?9:7)&&values.at("PADDING")==1&&values.at("EXACT_CIRCLES")==1&&values.at("CIRCLE_SSBO_BINDING")==5&&values.at("STIPPLE_RATE")==1,"31657 selected circle family differs");
+ Check(values.size()==(sonar?11:9)&&values.at("PADDING")==1&&values.at("EXACT_CIRCLES")==1&&values.at("CIRCLE_SSBO_BINDING")==5&&values.at("STIPPLE_RATE")==1,"31657 selected circle family differs");
  if(sonar){Check(values.contains("VISIBILITYCULLING")&&values.at("VISIBILITYCULLING")==1&&values.contains("MAX_HEIGHT")&&values.at("MAX_HEIGHT")==0,"31657 sonar defines differ");out.kind=NativeSensor31657CircleKind::Sonar;out.visibilityCulling=true;out.maxHeight=0;}
  else Check(values.at("CIRCLE_SEGMENTS")==125,"31657 radar polygon segment count differs");
+ out.fadeStart=values.at("FADE_START");out.fadeEnd=values.at("FADE_END");
+ Check(out.fadeStart==(sonar?4000:6000)&&out.fadeEnd==(sonar?8000:11000),"Official sensor circle distance fade defines differ");
  out.circleSegments=static_cast<uint32_t>(values.at("CIRCLE_SEGMENTS"));out.viewWidth=values.at("VSX");out.viewHeight=values.at("VSY");
  Check(out.viewWidth>=1&&out.viewHeight>=1&&out.viewWidth<=32768&&out.viewHeight<=32768,"31657 circle view dimensions invalid");return out;
 }
-constexpr std::array<std::string_view,4> names{"heightmapTex","rangeColor","circleCount","teamColorMix"};
+constexpr std::array<std::string_view,5> names{"heightmapTex","rangeColor","circleCount","teamColorMix","fadeStrength"};
 void Snapshot(const NativeBufferSnapshotRef& b)
 {
  Check(b&&b->object&&b->revision&&b->bytes.size()==CheckedNativeBufferByteSize(b->layout),"31657 circle buffer owner/layout missing");
@@ -95,7 +97,7 @@ std::vector<std::string_view> NativeSensor31657CircleProgramState::ActiveUniform
 {
  // USE_TEAMCOLOR is not selected by either source widget, so GLSL optimizes
  // teamColorMix out. Preserve its -1 location and normal no-op updates.
- return {names[0],names[1],names[2]};
+ return {names[0],names[1],names[2],names[4]};
 }
 int NativeSensor31657CircleProgramState::Location(std::string_view name)const
 {
@@ -104,7 +106,9 @@ int NativeSensor31657CircleProgramState::Location(std::string_view name)const
 }
 bool NativeSensor31657CircleProgramState::Floats(int location,std::span<const float> values)
 {
- if(location==-1)return true;if(location!=1||values.size()!=4)return false;
+ if(location==-1)return true;
+ if(location==4&&values.size()==1&&std::isfinite(values[0])){state.fadeStrength=values[0];return true;}
+ if(location!=1||values.size()!=4)return false;
  std::copy(values.begin(),values.end(),state.rangeColor.begin());return true;
 }
 bool NativeSensor31657CircleProgramState::Integers(int location,std::span<const int32_t> values)
