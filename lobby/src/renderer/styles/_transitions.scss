@@ -1,0 +1,65 @@
+/*
+ * SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+ *
+ * SPDX-License-Identifier: MIT
+ */
+
+.fade-enter-active:not(.popper) {
+    transition: 150ms ease-in-out;
+}
+.fade-leave-active:not(.popper) {
+    transition: 150ms ease-in-out;
+}
+.fade-enter-from:not(.popper),
+.fade-leave-to:not(.popper) {
+    opacity: 0;
+}
+
+.intro-enter-active {
+    transition: opacity 0.5s ease;
+}
+.intro-leave-active {
+    transition: opacity 1s ease;
+}
+.intro-enter-from,
+.intro-leave-to {
+    opacity: 0;
+    pointer-events: none;
+}
+
+$dirs: (
+    "left": translateX(-15px),
+    "right": translateX(15px),
+    "up": translateY(15px),
+    "down": translateY(-15px),
+);
+
+@each $name, $transform in $dirs {
+    .slide-#{$name}-enter-active {
+        transition: 150ms ease-in-out;
+    }
+    .slide-#{$name}-leave-active {
+        transition: 150ms ease-in-out;
+    }
+    .slide-#{$name}-enter-from,
+    .slide-#{$name}-leave-to {
+        transform: $transform;
+        opacity: 0;
+    }
+}
+
+.list-move,
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.5s;
+}
+.list-enter-from {
+    opacity: 0;
+    transform: translate(0, 30px);
+}
+.list-leave-to {
+    opacity: 0;
+    height: 0 !important;
+    margin-bottom: 0px !important;
+    border: none !important;
+}

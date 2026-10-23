@@ -1,0 +1,50 @@
+<!--
+SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+
+SPDX-License-Identifier: MIT
+-->
+
+<template>
+    <div>
+        <div class="dev-title">
+            {{ title }}
+        </div>
+        <div v-if="entry?.published" class="dev-date">
+            {{ formatDistanceToNow(entry.published, { addSuffix: true }) }}
+        </div>
+        <div class="dev-desc">{{ description }}</div>
+    </div>
+</template>
+<script lang="ts" setup>
+import { NewsFeedData } from "@main/services/news.service";
+import { formatDistanceToNow } from "date-fns";
+import { computed } from "vue";
+
+const { entry } = defineProps<{ entry: NewsFeedData | undefined }>();
+
+const title = computed(() => entry?.title?.replace(" ⇀ Microblog ★ Beyond All Reason RTS", ""));
+const description = computed(() => entry?.description?.split("|")[1]?.trim());
+</script>
+<style lang="css" scoped>
+.dev-title {
+    font-size: 1.2em;
+    font-weight: semibold;
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
+}
+
+.dev-date {
+    font-size: 0.8em;
+    margin-bottom: 5px;
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.dev-desc {
+    color: rgba(255, 255, 255, 0.8);
+    filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
+    font-size: 1em;
+    margin-bottom: 15px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+</style>

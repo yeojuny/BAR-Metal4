@@ -1,0 +1,243 @@
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+import { execFile, spawn } from "child_process";
+import fs from "fs";
+import os from "os";
+import path from "path";
+
+import { DownloadInfo } from "./downloads";
+import { AbstractContentAPI } from "./abstract-content";
+import { engineProvider } from "./engine/engine-provider";
+import { logger } from "@main/utils/logger";
+import { BUNDLED_ASSETS_PATH, getAssetsPath, getCaCertPath, getPackagePath } from "@main/config/app";
+import { resolvePrDownloaderPath } from "@main/config/native-engine-runner";
+import { waitForContentWriterClose, withContentWrite } from "./content-write-coordinator";
+import { configService } from "@main/services/config.service";
+import { holdChecksums } from "@main/utils/checksums";
+
+const log = logger("pr-downloader.ts");
+
+export type PrdDownloadType = "game" | "map";
+
+export type PrdProgressMessage = {
+    downloadType: PrdDownloadType;
+    content: string;
+    currentBytes: number;
+    totalBytes: number;
+    parsedPercent: number;
+};
+
+export type RapidVersion = {
+    tag: string;
+    md5: string;
+    version: string;
+};
+
+// pr-downloader ships inside the engine, so any installed engine can drive downloads. Preferring the
+// default and then newest-first keeps content downloadable after a default version bump, when the new
+// default is not installed yet, and skips engines whose install did not produce a binary.
+export function findPrdBinary() {
+    const defaultEngine = engineProvider.getDefaultEngine();
+    const candidates = [...(defaultEngine?.installed ? [defaultEngine] : []), ...engineProvider.getInstalledVersionsNewestFirst()];
+
+    for (const engine of candidates) {
+        try {
+            const binaryPath = resolvePrDownloaderPath({ engineVersion: engine.id, assetsPath: getAssetsPath(), bundledAssetsPath: BUNDLED_ASSETS_PATH, platform: process.platform });
+            if (fs.existsSync(binaryPath)) {
+                return binaryPath;
+            }
+        } catch (error) {
+            // The native resolver reports a missing Mac payload by throwing.
+            // It must still allow the upstream newest-installed fallback.
+            log.warn(`Could not resolve pr-downloader for engine ${engine.id}: ${error}`);
+        }
+        log.warn(`Engine ${engine.id} has no pr-downloader, trying the next one`);
+    }
+
+    return undefined;
+}
+
+/**
+ * https://github.com/beyond-all-reason/pr-downloader
+ * https://springrts.com/wiki/Pr-downloader
+ * https://springrts.com/wiki/Rapid
+ */
+export abstract class PrDownloaderAPI<ID, T> extends AbstractContentAPI<ID, T> {
+    protected getPrdBinaryPath() {
+        const binaryPath = findPrdBinary();
+        if (!binaryPath) {
+            throw new Error("No installed engine ships a pr-downloader binary.");
+        }
+
+        return binaryPath;
+    }
+
+    // One invocation per set of assets rather than one each: pr-downloader rewrites rapid's repo index
+    // every time it runs, so concurrent invocations fight over it, and it downloads the assets it was
+    // given in parallel anyway. Progress then covers the whole set, not any one asset in it.
+    protected downloadContent(type: "game" | "map", names: string[]) {
+        return withContentWrite(getAssetsPath(), (assetsPath) => new Promise<DownloadInfo>((resolve, reject) => {
+            try {
+                const name = names.join(", ");
+                log.debug(`Downloading ${name}...`);
+
+                const prBinaryPath = this.getPrdBinaryPath();
+                const downloadArg = type === "game" ? "--download-game" : "--download-map";
+                const caCertPath = getCaCertPath();
+                const downloadArgs = names.flatMap((asset) => [downloadArg, asset]);
+                const prdProcess = spawn(`${prBinaryPath}`, ["--filesystem-writepath", assetsPath, ...downloadArgs], {
+                    env: {
+                        ...process.env,
+                        PRD_RAPID_USE_STREAMER: configService.getConfig().prdRapidUseStreamer,
+                        PRD_RAPID_REPO_MASTER: configService.getConfig().prdRapidRepoMaster,
+                        PRD_HTTP_SEARCH_URL: configService.getConfig().prdHttpSearchUrl,
+                        ...(caCertPath && !process.env.PRD_SSL_CERT_FILE && { PRD_SSL_CERT_FILE: caCertPath }),
+                    },
+                });
+                const closed = waitForContentWriterClose(prdProcess);
+                const downloadInfo: DownloadInfo = {
+                    type,
+                    id: name,
+                    name,
+                    currentBytes: 0,
+                    totalBytes: 0,
+                    progress: 0,
+                };
+                prdProcess.stdout?.on("data", (stdout: Buffer) => {
+                    const messages = stdout.toString().trim().split(os.EOL).filter(Boolean);
+                    for (const message of messages) {
+                        log.debug(message);
+                        if (message.startsWith("[Progress]")) {
+                            const progressData = this.parseProgressMessage(message);
+                            const progress: PrdProgressMessage = {
+                                downloadType: type,
+                                content: name,
+                                ...progressData,
+                            };
+                            if (progress.totalBytes > 1) {
+                                if (downloadInfo.totalBytes === 0) {
+                                    downloadInfo.totalBytes = progress.totalBytes;
+                                    downloadInfo.currentBytes = progress.currentBytes;
+                                    downloadInfo.progress = progress.parsedPercent;
+                                    this.currentDownloads.push(downloadInfo);
+                                    this.downloadStarted(downloadInfo);
+                                } else {
+                                    downloadInfo.currentBytes = progress.currentBytes;
+                                    downloadInfo.totalBytes = progress.totalBytes;
+                                    downloadInfo.progress = progress.parsedPercent;
+                                    this.downloadProgress(downloadInfo);
+                                }
+                            }
+                        } else if (message.includes("download_name():[Download] ") && downloadInfo) {
+                            downloadInfo.name = message.split("download_name():[Download] ")[1];
+                        }
+                    }
+                });
+
+                prdProcess.stderr?.on("data", (data: Buffer) => {
+                    const output = data.toString();
+                    log.error(output);
+                    if (output.includes("will retry")) {
+                        this.downloadRetrying(downloadInfo);
+                    }
+                });
+
+                closed.then(({ code, signal }) => {
+                    if (code !== 0) {
+                        this.downloadFailed(downloadInfo);
+                        reject(new Error(`pr-downloader exited with code ${code}, signal ${signal}`));
+                    } else {
+                        resolve(downloadInfo);
+                    }
+                }, (err: Error) => {
+                    log.error(err);
+                    this.downloadFailed(downloadInfo);
+                    reject(err);
+                }).catch(reject);
+            } catch (err) {
+                log.error(err);
+                reject(err);
+            }
+        }));
+    }
+
+    // --uninstall is newer than several engine releases and the binary travels with the engine rather
+    // than with this app, so ask the resolved binary instead of guessing from a version number.
+    private static readonly uninstallSupport = new Map<string, Promise<boolean>>();
+
+    private static supportsUninstall(binaryPath: string) {
+        let probe = PrDownloaderAPI.uninstallSupport.get(binaryPath);
+
+        if (!probe) {
+            probe = withContentWrite(getAssetsPath(), () => new Promise<boolean>((resolve) => {
+                const child = execFile(binaryPath, ["--help"], (err, stdout) => { supported = !err && stdout.includes("--uninstall"); });
+                let supported = false;
+                waitForContentWriterClose(child).then(() => resolve(supported), () => resolve(false));
+            }));
+            PrDownloaderAPI.uninstallSupport.set(binaryPath, probe);
+        }
+
+        return probe;
+    }
+
+    // Resolution happens against the local install, so an md5 is the only name that cannot come back
+    // ambiguous or go missing once a rapid tag stops being published.
+    protected async uninstallContent(packageMd5: string) {
+        const binaryPath = this.getPrdBinaryPath();
+
+        if (!(await PrDownloaderAPI.supportsUninstall(binaryPath))) {
+            log.warn(`${binaryPath} does not support --uninstall, removing the sdp and leaving its pool files behind`);
+            await holdChecksums(() => withContentWrite(getAssetsPath(), () => fs.promises.rm(path.join(getPackagePath(), `${packageMd5}.sdp`))));
+
+            return;
+        }
+
+        // Checksums read the pool files and the sdp this is about to take away.
+        return holdChecksums(() => this.runUninstall(binaryPath, packageMd5));
+    }
+
+    private runUninstall(binaryPath: string, packageMd5: string) {
+        return withContentWrite(getAssetsPath(), (assetsPath) => new Promise<void>((resolve, reject) => {
+            try {
+                log.debug(`Uninstalling ${packageMd5}...`);
+
+                const prdProcess = spawn(binaryPath, ["--filesystem-writepath", assetsPath, "--uninstall", packageMd5]);
+                const closed = waitForContentWriterClose(prdProcess);
+                const errors: string[] = [];
+
+                prdProcess.stdout?.on("data", (stdout: Buffer) => {
+                    log.debug(stdout.toString().trim());
+                });
+
+                prdProcess.stderr?.on("data", (stderr: Buffer) => {
+                    const output = stderr.toString().trim();
+                    log.error(output);
+                    errors.push(output);
+                });
+
+                closed.then(({ code, signal }) => {
+                    if (code !== 0) {
+                        reject(new Error(`pr-downloader exited with code ${code}, signal ${signal}: ${errors.join(" ")}`));
+                    } else {
+                        resolve();
+                    }
+                }, reject).catch(reject);
+            } catch (err) {
+                log.error(err);
+                reject(err);
+            }
+        }));
+    }
+
+    protected parseProgressMessage(message: string): Omit<PrdProgressMessage, "downloadType" | "content"> {
+        const parts = message.split(" ");
+        const bytes = parts[parts.length - 1].split("/");
+        const currentBytes = parseInt(bytes[0]);
+        const totalBytes = parseInt(bytes[1]);
+        //The message contains a percentage, but due to the message.split() it is safer to calculate it ourselves since we have the bytes
+        const parsedPercent = currentBytes / totalBytes || 0;
+        return { currentBytes, totalBytes, parsedPercent };
+    }
+}

@@ -1,0 +1,232 @@
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+import { reactive } from "vue";
+import type { MapData, MapDownloadData } from "@main/content/maps/map-data";
+import { db } from "@renderer/store/db";
+import { EntityTable } from "dexie";
+import { notificationsApi } from "@renderer/api/notifications";
+import { onContentSettled } from "@renderer/store/contents.store";
+
+const MAP_IMAGE_FETCH_CONCURRENCY = 6;
+const PRELOAD_MAP_IMAGE_LIMIT = 32;
+
+export const mapsStore: {
+    isInitialized: boolean;
+    availableMapNames: Set<string>;
+} = reactive({
+    isInitialized: false,
+    availableMapNames: new Set(),
+});
+
+export async function getRandomMap() {
+    const mapCount = await db.maps.count();
+    if (mapCount === 0) throw new Error("No maps available");
+    const randomIndex = Math.floor(Math.random() * mapCount);
+    const map = await db.maps.offset(randomIndex).first();
+    return map;
+}
+
+export async function initMapsStore() {
+    return init();
+}
+
+async function init() {
+    if (mapsStore.isInitialized) {
+        console.warn("Maps store is already initialized. Skipping initialization.");
+        return;
+    }
+    window.maps.onMapAdded((springName: string) => {
+        console.debug("Received map added event", springName);
+        mapsStore.availableMapNames.add(springName);
+        db.maps.where("springName").equals(springName).modify({ isInstalled: true });
+        db.nonLiveMaps.where("springName").equals(springName).modify({ isInstalled: true });
+    });
+    window.maps.onMapDeleted((springName: string) => {
+        console.debug("Received map deleted event", springName);
+        mapsStore.availableMapNames.delete(springName);
+        db.maps.where("springName").equals(springName).modify({ isInstalled: false });
+        db.nonLiveMaps.where("springName").equals(springName).modify({ isInstalled: false });
+    });
+    // Chokidar takes 1-2 seconds longer than this to notice the file, so both paths are wired up and
+    // whichever arrives first wins.
+    onContentSettled((refs) => {
+        for (const ref of refs) {
+            if (ref.type !== "map") {
+                continue;
+            }
+
+            if (ref.present) {
+                mapsStore.availableMapNames.add(ref.id);
+            } else {
+                mapsStore.availableMapNames.delete(ref.id);
+            }
+        }
+    });
+    const liveMaps = await db.maps.toArray();
+    const nonLiveMaps = await db.nonLiveMaps.toArray();
+
+    for (const map of liveMaps) {
+        if (map.isInstalled) mapsStore.availableMapNames.add(map.springName);
+    }
+
+    for (const map of nonLiveMaps) {
+        if (map.isInstalled) mapsStore.availableMapNames.add(map.springName);
+    }
+
+    try {
+        await refreshMapsStore();
+    } catch (error) {
+        console.warn("Failed to reconcile map install state from disk", error);
+    }
+
+    mapsStore.isInitialized = true;
+}
+
+export async function refreshMapsStore() {
+    const installedOnDisk = new Set(await window.maps.getInstalledMapNames());
+    mapsStore.availableMapNames = installedOnDisk;
+    await db.maps.toCollection().modify((map) => {
+        map.isInstalled = installedOnDisk.has(map.springName);
+    });
+    await db.nonLiveMaps.toCollection().modify((map) => {
+        map.isInstalled = installedOnDisk.has(map.springName);
+    });
+}
+
+export async function syncMapsMetadata() {
+    const [liveMaps, nonLiveMaps] = await window.maps.fetchAllMaps();
+
+    await Promise.allSettled(
+        liveMaps
+            .map((map) => {
+                db.maps.get(map.springName).then((existingMap) => {
+                    if (!existingMap) {
+                        return db.maps.put(map) as Promise<unknown>;
+                    } else {
+                        //TODO this has a limitation. if a field change from defined to undefined it will not be updated.
+                        return db.maps.update(map.springName, { ...map, isDownloading: false }) as Promise<unknown>;
+                    }
+                });
+                if (map.isInstalled) {
+                    mapsStore.availableMapNames.add(map.springName);
+                }
+            })
+            .concat(
+                nonLiveMaps.map((map) => {
+                    db.nonLiveMaps.get(map.springName).then((existingMap) => {
+                        if (!existingMap) {
+                            return db.nonLiveMaps.put(map) as Promise<unknown>;
+                        } else {
+                            return db.nonLiveMaps.update(map.springName, { ...map, isDownloading: false }) as Promise<unknown>;
+                        }
+                    });
+                    if (map.isInstalled) {
+                        mapsStore.availableMapNames.add(map.springName);
+                    }
+                })
+            )
+    );
+
+    const nonLiveMapSet = new Set(nonLiveMaps.map((map) => map.springName));
+    (await db.nonLiveMaps.toArray())
+        .filter((map) => !nonLiveMapSet.has(map.springName))
+        .forEach((map) => {
+            db.nonLiveMaps.update(map.springName, { ...map, isInstalled: false });
+        });
+}
+
+//TODO We need to support updating map images when reference in map metadata changes.
+export async function fetchMissingMapImages() {
+    const maps = await db.maps.toArray();
+    const missingImages = maps.filter((map) => !map.imagesBlob?.preview);
+
+    const installedMaps = missingImages.filter((map) => map.isInstalled);
+    const priorityMaps = uniqueMaps(installedMaps.concat(missingImages)).slice(0, PRELOAD_MAP_IMAGE_LIMIT);
+    const priorityMapNames = new Set(priorityMaps.map((map) => map.springName));
+    const backgroundMaps = missingImages.filter((map) => !priorityMapNames.has(map.springName));
+
+    const priorityResults = await fetchMapImagesLimited(priorityMaps);
+
+    if (backgroundMaps.length > 0) {
+        fetchMapImagesLimited(backgroundMaps).catch((error) => console.error("Failed to fetch background map images", error));
+    }
+
+    return priorityResults;
+}
+
+function uniqueMaps(maps: MapData[]) {
+    const seen = new Set<string>();
+    return maps.filter((map) => {
+        if (seen.has(map.springName)) return false;
+        seen.add(map.springName);
+        return true;
+    });
+}
+
+async function fetchMapImagesLimited(maps: MapData[]) {
+    const results: PromiseSettledResult<void>[] = [];
+    let nextIndex = 0;
+    const workerCount = Math.min(MAP_IMAGE_FETCH_CONCURRENCY, maps.length);
+
+    async function worker() {
+        while (nextIndex < maps.length) {
+            const currentIndex = nextIndex++;
+            try {
+                results[currentIndex] = { status: "fulfilled", value: await fetchMapImages(maps[currentIndex]) };
+            } catch (reason) {
+                results[currentIndex] = { status: "rejected", reason };
+            }
+        }
+    }
+
+    await Promise.all(Array.from({ length: workerCount }, worker));
+    return results;
+}
+
+async function fetchMapImages(map: MapData) {
+    if (map.imagesBlob?.preview) return;
+    if (!map.images?.preview) {
+        console.error("No preview image source for map", map.springName);
+        return;
+    }
+    const arrayBuffer = await window.maps.fetchMapImages(map.images.preview);
+    if (!arrayBuffer) {
+        console.error("Failed to fetch map images", map.springName);
+        return;
+    }
+    await db.maps.update(map.springName, { imagesBlob: { preview: new Blob([arrayBuffer], { type: "image/webp" }) } });
+    console.debug("Updated map images ", map.springName);
+}
+
+//TODO: the MapsAPI already includes a multiple-map version request we can use to extend this
+export async function downloadMap(springName: string) {
+    let dbDelegate: EntityTable<MapData, "springName"> | EntityTable<MapDownloadData, "springName"> = db.maps;
+
+    const mapIsLive = await db.maps.get(springName);
+
+    if (!mapIsLive) {
+        dbDelegate = db.nonLiveMaps;
+        const isInNonLiveDB = await db.nonLiveMaps.get(springName);
+        if (!isInNonLiveDB) {
+            db.nonLiveMaps.put({
+                springName: springName,
+                isDownloading: false,
+                isInstalled: false,
+            } satisfies MapDownloadData);
+        }
+    }
+
+    dbDelegate.update(springName, { isDownloading: true });
+    await window.maps
+        .downloadMap(springName)
+        .then(() => {
+            dbDelegate.update(springName, { isInstalled: true, isDownloading: false });
+        })
+        .catch((error) => {
+            console.error("Failed to download map:", springName, error);
+            notificationsApi.alert({ text: "Map download failed.", severity: "error" });
+            dbDelegate.update(springName, { isDownloading: false });
+        });
+}

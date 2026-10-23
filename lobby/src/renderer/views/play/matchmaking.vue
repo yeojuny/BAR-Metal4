@@ -1,0 +1,414 @@
+<!--
+SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+
+SPDX-License-Identifier: MIT
+-->
+
+<route lang="json5">
+{ meta: { title: "Matchmaking", order: 3, devOnly: false, onlineOnly: true, transition: { name: "slide-left" } } }
+</route>
+
+<template>
+    <div>
+        <div class="ranked-container">
+            <div class="view-title">
+                <h1>{{ t("lobby.multiplayer.ranked.title") }}</h1>
+                <p>{{ t("lobby.multiplayer.ranked.description") }}</p>
+            </div>
+            <div class="my-rank">
+                <div></div>
+            </div>
+            <div class="mode-select">
+                <div v-if="matchmakingStore.isLoadingQueues" class="loading-queues">
+                    {{ t("lobby.multiplayer.ranked.loadingQueues") }}
+                </div>
+                <div v-else-if="matchmakingStore.queueError" class="queue-error">
+                    {{ t("lobby.multiplayer.ranked.queueError") }}: {{ matchmakingStore.queueError }}
+                </div>
+                <Button
+                    v-else
+                    v-for="queue in availableQueueIds"
+                    :key="queue"
+                    class="mode-column classic"
+                    :class="{
+                        selected: matchmakingStore.selectedQueue === queue,
+                    }"
+                    @click="queueSelected(queue)"
+                    :disabled="matchmakingStore.status !== MatchmakingStatus.Idle"
+                    ><span>{{ getPlaylistName(queue) }}</span>
+                    <div class="info bl" v-if="matchmakingStore.selectedQueue === queue" @click.stop="onInfoClick">
+                        <Icon :icon="informationIcon"></Icon>
+                    </div>
+                    <div
+                        class="info br"
+                        v-if="getTeamSize(queue) < getPartySize()"
+                        v-tooltip.bottom="{ value: t('lobby.multiplayer.ranked.buttons.partyTooLargeTooltip') }"
+                    >
+                        <Icon :icon="stopAlertOutlineIcon"></Icon>
+                    </div>
+                </Button>
+            </div>
+            <div class="button-container">
+                <div v-if="downloadsAreRequiredForSelected" class="download-button-container">
+                    <DownloadContentButton
+                        :maps="downloadsRequired.maps"
+                        :engines="downloadsRequired.engines"
+                        :games="downloadsRequired.games"
+                        @downloads-complete="handleDownloadsComplete"
+                        @downloads-started="handleDownloadsStarted"
+                        :class="'large'"
+                        >This string should never be visible.</DownloadContentButton
+                    >
+                </div>
+                <button v-else-if="partyTooLarge" class="quick-play-button invalid" disabled>
+                    {{ t("lobby.multiplayer.ranked.buttons.partyTooLarge") }}
+                </button>
+                <button
+                    v-else-if="matchmakingStore.status === MatchmakingStatus.Idle"
+                    class="quick-play-button"
+                    :class="{
+                        disabled: !matchmakingStore.selectedQueue,
+                    }"
+                    @click="matchmaking.sendQueueRequest"
+                >
+                    {{ t("lobby.multiplayer.ranked.buttons.searchGame") }}
+                </button>
+                <button
+                    v-else-if="matchmakingStore.status === MatchmakingStatus.JoinRequested"
+                    class="quick-play-button searching"
+                    disabled
+                >
+                    {{ t("lobby.multiplayer.ranked.buttons.joinRequested") }}
+                </button>
+                <button v-else-if="matchmakingStore.status === MatchmakingStatus.Searching" class="quick-play-button searching" disabled>
+                    {{ t("lobby.multiplayer.ranked.buttons.searchingForOpponent") }}
+                </button>
+                <button
+                    v-else-if="matchmakingStore.status === MatchmakingStatus.MatchFound"
+                    class="quick-play-button"
+                    @click="matchmaking.sendReadyRequest"
+                >
+                    {{ t("lobby.multiplayer.ranked.buttons.matchFound", { seconds: matchmakingStore.readySecondsRemaining }) }}
+                </button>
+                <button v-else-if="matchmakingStore.status === MatchmakingStatus.MatchAccepted" class="quick-play-button" disabled>
+                    {{ t("lobby.multiplayer.ranked.buttons.accepted", { players: matchmakingStore.playersReady ?? 0 }) }}
+                </button>
+                <button
+                    class="cancel-button"
+                    :disabled="matchmakingStore.status === MatchmakingStatus.Idle"
+                    :class="{
+                        disabled: matchmakingStore.status === MatchmakingStatus.Idle,
+                    }"
+                    @click="matchmaking.sendCancelRequest"
+                >
+                    {{ t("lobby.multiplayer.ranked.buttons.cancel") }}
+                </button>
+                <p class="txt-error" v-if="matchmakingStore.errorMessage">{{ matchmakingStore.errorMessage }}</p>
+            </div>
+        </div>
+        <QueueDownloadsModal
+            v-model="isQueueDownloadsModalOpen"
+            :title="t('lobby.multiplayer.ranked.modalTitle')"
+            :queue="matchmakingStore.selectedQueue"
+            @close-modal="isQueueDownloadsModalOpen = false"
+        />
+    </div>
+</template>
+
+<script lang="ts" setup>
+import { getPartySize, usePartySizeMatchmaking } from "@renderer/composables/usePartySizeMatchmaking";
+import { matchmaking, MatchmakingStatus, matchmakingStore, getPlaylistName } from "@renderer/store/matchmaking.store";
+import Button from "primevue/button";
+import { useTypedI18n } from "@renderer/i18n";
+import { computed, onActivated, ref } from "vue";
+import DownloadContentButton from "@renderer/components/controls/DownloadContentButton.vue";
+import QueueDownloadsModal from "@renderer/components/misc/QueueDownloadsModal.vue";
+import informationIcon from "@iconify-icons/mdi/information";
+import stopAlertOutlineIcon from "@iconify-icons/mdi/stop-alert-outline";
+import { Icon } from "@iconify/vue";
+
+const { t } = useTypedI18n();
+
+const isQueueDownloadsModalOpen = ref(false);
+
+const availableQueueIds = computed(() => {
+    return matchmakingStore.playlists.sort((a, b) => a.teamSize * a.numOfTeams - b.teamSize * b.numOfTeams).map((playlist) => playlist.id);
+});
+
+const downloadsRequired = computed(() => {
+    return matchmakingStore.downloadsRequired[matchmakingStore.selectedQueue];
+});
+
+const downloadsAreRequiredForSelected = computed(() => {
+    // 0 returns falsy, anything else returns truthy, so this works to determine if there are any downloads required.
+    const required = downloadsRequired.value;
+    if (!required) return false;
+
+    return required.maps.length + required.engines.length + required.games.length;
+});
+
+const downloading = ref(false);
+
+function queueSelected(queue: string) {
+    // Switching the active queue during a download cannot be allowed because it messes with state.
+    if (downloading.value) {
+        return;
+    } else matchmakingStore.selectedQueue = queue;
+}
+
+function handleDownloadsStarted() {
+    downloading.value = true;
+}
+// After downloads are done, we need to refresh the required list.
+function handleDownloadsComplete() {
+    matchmaking.triggerAssetsRefresh();
+    downloading.value = false;
+}
+
+onActivated(() => {
+    matchmaking.sendListRequest();
+});
+
+function onInfoClick() {
+    if (!downloading.value) isQueueDownloadsModalOpen.value = true;
+}
+const { partyTooLarge } = usePartySizeMatchmaking();
+
+function getTeamSize(queue: string) {
+    const playlist = matchmakingStore.playlists.find((p) => p.id === queue);
+    return playlist ? playlist.teamSize : 0;
+}
+</script>
+
+<style lang="scss" scoped>
+.ranked-container {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    gap: 20px;
+    height: 100%;
+    width: 100%;
+    max-width: 1000px;
+    overflow: visible;
+}
+
+.join-queue {
+    margin: 0 auto;
+    display: block;
+    margin-top: 20px;
+}
+
+.mode-select {
+    display: flex;
+    height: 100%;
+    overflow: visible;
+    gap: 50px;
+}
+
+.loading-queues,
+.queue-error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 200px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.queue-error {
+    color: #ff6b6b;
+}
+
+.mode-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    filter: brightness(0.7) saturate(0.1);
+    padding-top: 30px;
+    span {
+        font-size: 2rem;
+        text-transform: uppercase;
+        font-weight: bold;
+        filter: drop-shadow(3px 3px 5px rgba(0, 0, 0, 0.8));
+    }
+    &.classic {
+        background-image: url("/src/renderer/assets/images/backgrounds/5.jpg");
+    }
+    &.raptors {
+        background-image: url("/src/renderer/assets/images/modes/raptors.jpg");
+    }
+    &.scavengers {
+        background-image: url("/src/renderer/assets/images/modes/scavengers.webp");
+    }
+    &.ffa {
+        background-image: url("/src/renderer/assets/images/modes/ffa.jpg");
+    }
+}
+
+.mode-column:last-child {
+    border-right: none;
+}
+
+/* On hover/active */
+.mode-column:hover {
+    z-index: 1;
+    filter: brightness(1);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+}
+
+.mode-column.selected {
+    flex: 1.5;
+    z-index: 1;
+    filter: brightness(1);
+    transform: scale(1.05);
+    box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.5);
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    flex-grow: 1;
+}
+
+.quick-play-button {
+    align-self: center;
+    width: 500px;
+    text-transform: uppercase;
+    font-family: Rajdhani;
+    font-weight: bold;
+    font-size: 2rem;
+    padding: 20px 40px;
+    color: #fff;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    border: none;
+    border-radius: 2px;
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.quick-play-button.invalid {
+    background: linear-gradient(0deg, #1e2c23, #304135);
+}
+
+.searching {
+    animation: pulse 3s infinite ease-in-out;
+}
+
+.quick-play-button:hover {
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+}
+
+.quick-play-button::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    transition: transform 0.4s ease;
+}
+
+.quick-play-button:hover::before {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+}
+
+.cancel-button {
+    align-self: center;
+    width: 200px;
+    text-transform: uppercase;
+    font-family: Rajdhani;
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 20px 40px;
+    color: #fff;
+    // background: linear-gradient(90deg, #c52222, #a31616);
+    border: none;
+    border-radius: 2px;
+    // box-shadow: 0 0 15px rgba(197, 34, 34, 0.4);
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.cancel-button:hover {
+    // box-shadow: 0 0 25px rgba(197, 34, 34, 0.6);
+    color: #eee;
+    // transform: scale(0.99);
+    text-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+}
+
+.cancel-button::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(105, 105, 105, 0.2);
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    transition: transform 0.4s ease;
+}
+
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.1;
+}
+
+.download-button-container {
+    align-self: center;
+    width: 500px;
+    //padding: 20px 40px;
+    text-align: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.info {
+    position: absolute;
+    font-size: 24px;
+    font-weight: 600;
+    padding: 2px 5px;
+    transition: 0.2s opacity;
+    opacity: 0.6;
+    &.bl {
+        bottom: 10px;
+        left: 10px;
+    }
+    &.br {
+        bottom: 10px;
+        right: 10px;
+        flex-wrap: wrap-reverse;
+        justify-content: flex-end;
+        max-width: 55%;
+    }
+}
+.info:hover {
+    font-size: 32px;
+    opacity: 1;
+}
+</style>

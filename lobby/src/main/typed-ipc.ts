@@ -1,0 +1,180 @@
+import type { ChobbySessionState } from "@shared/chobby-state";
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+import type { AuthState } from "@main/services/auth.service";
+import type { StoredIdentity } from "@main/model/user";
+import type { BattleWithMetadata } from "@main/game/battle/battle-types";
+import type { BattleStartRequestData } from "tachyon-protocol/types";
+import type { ContentRef } from "@main/content/content-ref";
+import type { ContentPresence, ContentState } from "@main/content/content-state";
+import type { DownloadInfo } from "@main/content/downloads";
+import type { EngineVersion } from "@main/content/engine/engine-version";
+import type { GameVersion } from "@main/content/game/game-version";
+import type { Info } from "@main/services/info.service";
+import type { IpcMain, IpcMainEvent, IpcMainInvokeEvent, IpcRenderer, IpcRendererEvent, WebContents } from "electron";
+import type { logLevels } from "@main/services/log.service";
+import type { MapData, MapDownloadData } from "@main/content/maps/map-data";
+import type { MultiplayerLaunchSettings } from "@main/game/game";
+import type { NewsFeedData } from "@main/services/news.service";
+import type { OnlineReplayDetails, OnlineReplayOverview } from "@main/replays/online-replays";
+import type { Replay } from "@main/replays/replay";
+import type { Scenario } from "@main/content/game/scenario";
+import type { Settings } from "@main/services/settings.service";
+import type { CustomLobbiesPreferences } from "@main/services/custom-lobbies.service";
+import type { TachyonEvent, TachyonResponse } from "tachyon-protocol";
+import { ipcRenderer as electronIpcRenderer, ipcMain as electronIpcMain } from "electron";
+import { Config } from "@main/services/config.service";
+
+// Errors thrown in main arrive in the renderer stripped of everything but a message, so failures a
+// caller needs to act on have to travel as data instead. Mirrors the shape tachyon-protocol uses for
+// its own responses, which can't be reused here because it's keyed on tachyon command ids.
+// `reason` is a stable code to branch on or translate; `details` carries any raw text behind it.
+export type IpcResult<T = void> = { status: "success"; data: T } | { status: "failed"; reason: string; details?: string };
+
+export type IPCEvents = {
+    "content:changed": (state: ContentState[]) => void;
+    "content:poolPrefetch": (downloadInfo: DownloadInfo | null) => void;
+    "content:settled": (refs: ContentPresence[]) => void;
+    "downloads:update:progress": (downloadInfo: DownloadInfo | null) => void;
+    "chobby:stateChanged": (state: ChobbySessionState) => void;
+    "game:closed": () => void;
+    "game:launched": () => void;
+    "maps:mapAdded": (filename: string) => void;
+    "maps:mapDeleted": (filename: string) => void;
+    "mainWindow:scaleRangeChanged": (range: { min: number; max: number; os: number }) => void;
+    "mainWindow:windowStateChanged": (state: { maximized: boolean; size: { width: number; height: number } | null }) => void;
+    "mainWindow:uiScaleNudged": (scale: number | null) => void;
+    "navigation:navigateTo": (target: string) => void;
+    "notifications:showAlert": (alertConfig: { text: string; severity?: "info" | "warning" | "error"; timeoutMs?: number }) => void;
+    "paths:copyProgress": (progress: { copied: number; total: number }) => void;
+    "replays:replayCached": (replay: Replay) => Replay;
+    "replays:replayCachingStarted": (filename: string) => void;
+    "replays:replayDeleted": (filename: string) => void;
+    "replays:highlightOpened": (fileNames: string[]) => void;
+    "tachyon:battleStart": (data: BattleStartRequestData) => void;
+    "tachyon:connected": () => void;
+    "tachyon:disconnected": () => void;
+    "tachyon:event": (event: TachyonEvent) => void;
+    "auth:changed": (state: AuthState) => void;
+};
+
+export type IPCCommands = {
+    "auth:hasCredentials": () => boolean;
+    "auth:identity": () => StoredIdentity | undefined;
+    "auth:login": (interactive?: boolean) => void;
+    "auth:logout": () => void;
+    "auth:state": () => AuthState;
+    "autoUpdater:checkForUpdates": () => boolean;
+    "autoUpdater:downloadUpdate": () => void;
+    "autoUpdater:installUpdates": () => void;
+    "autoUpdater:quitAndInstall": () => void;
+    "content:ensure": (refs: ContentRef[]) => void;
+    "content:missing": (refs: ContentRef[]) => ContentRef[];
+    "content:preloadPool": () => void;
+    "content:remove": (refs: ContentRef[]) => void;
+    "content:state": () => ContentState[];
+    "engine:downloadEngine": (version?: string) => string | void;
+    "engine:isVersionInstalled": (id: string) => boolean;
+    "engine:listAvailableVersions": () => EngineVersion[];
+    "engine:uninstallVersion": (version: EngineVersion) => void;
+    "chobby:state": () => ChobbySessionState;
+    "chobby:launch": () => IpcResult;
+    "game:downloadGame": (version: string) => void;
+    "game:getInstalledVersions": () => GameVersion[];
+    "game:getLatestTestVersion": () => GameVersion | undefined;
+    "game:getScenarios": (version: string) => Scenario[];
+    "game:isVersionInstalled": (version: string) => boolean;
+    "game:launchBattle": (battle: BattleWithMetadata) => Promise<void>;
+    "game:launchMultiplayer": (settings: MultiplayerLaunchSettings) => void;
+    "game:launchReplay": (replay: Replay) => Promise<void>;
+    "game:launchScript": (script: string, gameVersion: string, engineVersion: string) => void;
+    "game:uninstallVersion": (version: string) => void;
+    "info:get": () => Info;
+    "log:log": (fileName: string, level: logLevels, msg: string) => void;
+    "log:pack": () => string;
+    "log:purge": () => string[];
+    "log:upload": () => string;
+    "mainWindow:flashFrame": (flag: boolean) => void;
+    "mainWindow:setFullscreen": (flag: boolean) => void;
+    "mainWindow:setMaximized": (flag: boolean) => void;
+    "mainWindow:setSize": (width: number, height: number) => void;
+    "mainWindow:setUiScale": (scale: number | null) => void;
+    "mainWindow:getScaleRange": () => { min: number; max: number; os: number };
+    "mainWindow:getDisplays": () => Array<{ index: number; scaleFactor: number; workArea: { width: number; height: number }; size: { width: number; height: number } }>;
+    "mainWindow:setDisplay": (index: number) => void;
+    "mainWindow:minimize": () => void;
+    "mainWindow:isFullscreen": () => boolean;
+    "maps:downloadMap": (springName: string) => void;
+    "maps:downloadMaps": (springNames: string[]) => void;
+    "maps:getInstalledMapNames": () => string[];
+    "maps:isVersionInstalled": (springName: string) => boolean;
+    "maps:online:fetchAllMaps": () => [MapData[], MapDownloadData[]];
+    "maps:online:fetchMapImages": (imageSource: string) => ArrayBuffer | undefined;
+    "misc:getDevlogRssFeed": (numberOfNews: number) => NewsFeedData | null | undefined;
+    "misc:getNewsRssFeed": (numberOfNews: number) => NewsFeedData | null | undefined;
+    "paths:selectFolder": () => string | null;
+    "paths:selectImages": () => string[];
+    "paths:moveAndChangePath": (newPath: string) => void;
+    "paths:copyAndChangePath": (newPath: string) => void;
+    "paths:changePath": (newPath: string) => void;
+    "paths:getCurrentAssetsPath": () => string;
+    "renderer:ready": () => void;
+    "replays:delete": (fileName: string) => void;
+    "replays:getOnline": (replayId: string) => IpcResult<OnlineReplayDetails>;
+    "replays:searchOnlineByPlayer": (username: string, limit: number) => IpcResult<OnlineReplayOverview[]>;
+    "replays:sync": (replays: string[]) => void;
+    "settings:get": () => Settings;
+    "settings:toggleFullscreen": () => void;
+    "settings:update": (settings: Partial<Settings>) => Partial<Settings>;
+    "customLobbies:get": () => CustomLobbiesPreferences;
+    "customLobbies:update": (data: Partial<CustomLobbiesPreferences>) => Partial<CustomLobbiesPreferences>;
+    "config:get": () => Config;
+    "config:fetch": () => void;
+    "shell:openConfigFile": () => IpcResult;
+    "shell:openStateDir": () => IpcResult;
+    "shell:openAssetsDir": () => IpcResult;
+    "shell:openInBrowser": (url: string) => IpcResult;
+    "shell:openReplaysDir": () => IpcResult;
+    "shell:openSettingsFile": () => IpcResult;
+    "shell:openStartScript": () => IpcResult;
+    "shell:showReplayInFolder": (fileName: string) => IpcResult;
+    "tachyon:connect": () => void;
+    "tachyon:disconnect": () => void;
+    "tachyon:dropConnection": () => void;
+    "tachyon:isConnected": () => boolean;
+    "tachyon:sendEvent": (event: TachyonEvent) => void;
+    "tachyon:request": (...args: unknown[]) => Promise<TachyonResponse>;
+    "tachyon:requestStructured": (...args: unknown[]) => Promise<TachyonResponse>;
+};
+
+type Awaitable<T> = T | Promise<T>;
+type FnMapping = {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: (...args: any) => any;
+};
+
+export interface TypedIpcMain<IpcEvents extends FnMapping, IpcCommands extends FnMapping> extends IpcMain {
+    on<K extends keyof IpcEvents>(channel: K, listener: (event: IpcMainEvent, ...args: Parameters<IpcEvents[K]>) => void): this;
+    handle<K extends keyof IpcCommands>(channel: K, listener: (event: IpcMainInvokeEvent, ...args: Parameters<IpcCommands[K]>) => Awaitable<ReturnType<IpcCommands[K]>>): void;
+}
+
+export interface TypedIpcRenderer<IpcEvents extends FnMapping, IpcCommands extends FnMapping> extends IpcRenderer {
+    on<K extends keyof IpcEvents>(channel: K, listener: (event: IpcRendererEvent, ...args: Parameters<IpcEvents[K]>) => void): this;
+    send<K extends keyof IpcEvents>(channel: K, ...args: Parameters<IpcEvents[K]>): void;
+    invoke<K extends keyof IpcCommands>(channel: K, ...args: Parameters<IpcCommands[K]>): Promise<ReturnType<IpcCommands[K]>>;
+}
+
+export interface TypedWebContents<IpcEvents extends FnMapping, IpcCommands extends FnMapping> extends WebContents {
+    send<K extends keyof IpcEvents>(channel: K, ...args: Parameters<IpcEvents[K]>): void;
+    ipc: TypedIpcMain<IpcEvents, IpcCommands>;
+}
+
+export type BarIpcMain = TypedIpcMain<IPCEvents, IPCCommands>;
+export type BarIpcRenderer = TypedIpcRenderer<IPCEvents, IPCCommands>;
+export type BarIpcWebContents = TypedWebContents<IPCEvents, IPCCommands>;
+
+export const ipcRenderer = electronIpcRenderer as BarIpcRenderer;
+export const ipcMain = electronIpcMain as BarIpcMain;
+export const typedWebContents = (webContents: WebContents) => webContents as BarIpcWebContents;

@@ -1,0 +1,39 @@
+<!--
+SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+
+SPDX-License-Identifier: MIT
+-->
+
+<template>
+    <form ref="form" @submit.prevent="submit" @keydown.enter="submit">
+        <div class="flex-col gap-md">
+            <slot />
+            <div class="flex-row gap-md flex-space-between">
+                <Button class="flex-grow red" @click="cancel">{{ t("lobby.components.prompts.cancel") }}</Button>
+                <Button class="flex-grow green" type="submit">{{ t("lobby.components.prompts.ok") }}</Button>
+            </div>
+        </div>
+    </form>
+</template>
+
+<script lang="ts" setup>
+import { ref } from "vue";
+import { useTypedI18n } from "@renderer/i18n";
+import Button from "@renderer/components/controls/Button.vue";
+import { usePrompt } from "@renderer/composables/usePrompt";
+
+const { t } = useTypedI18n();
+
+const form = ref<HTMLFormElement>();
+const { promptRef } = usePrompt();
+
+function cancel() {
+    promptRef.value?.close();
+}
+
+function submit() {
+    promptRef.value?.submit();
+}
+</script>
+
+<style lang="scss" scoped></style>

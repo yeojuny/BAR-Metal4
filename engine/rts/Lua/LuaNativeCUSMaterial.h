@@ -1,0 +1,7 @@
+/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#pragma once
+struct lua_State;
+namespace LuaNativeCUSMaterial {
+// gl table at stack top; dedicated unsynced family, never generic GLSL/GL4.
+bool PushActionEntries(lua_State* L);
+}

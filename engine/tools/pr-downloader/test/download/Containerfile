@@ -1,0 +1,10 @@
+FROM docker.io/library/nginx:latest
+
+RUN apt-get update \
+ && apt-get install -y iproute2 fcgiwrap libzip4 liblua5.1-0 \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+COPY 99-start-fcgiwrap.sh /docker-entrypoint.d/
+COPY nginx-selfsigned.crt /etc/ssl/private/
+COPY nginx-selfsigned.key /etc/ssl/private/
+COPY default.conf /etc/nginx/conf.d/default.conf

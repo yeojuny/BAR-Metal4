@@ -1,0 +1,109 @@
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+// model for https://maps-metadata.beyondallreason.dev/latest/lobby_maps.validated.json
+
+export interface MapMetadata {
+    author: string;
+    certified: boolean;
+    description?: string;
+    displayName: string;
+    filename: string;
+    images: {
+        preview: string;
+    };
+    mapHeight: number;
+    mapLists: string[];
+    mapWidth: number;
+    playerCountMax: number;
+    playerCountMin: number;
+    springName: string;
+    startboxesSet: Startbox[];
+    startPos?: {
+        positions: Record<string, { x: number; y: number }>;
+        team?: Team[];
+    };
+    tags: GameType[];
+    terrain: Terrain[];
+    tidalStrength?: number;
+    windMax: number;
+    windMin: number;
+}
+
+export interface StartBoxPoly {
+    x: number;
+    y: number;
+    /**
+     * Optional Catmull-Rom spline strength in [0, 1]. Present only on
+     * 3+ point polygon startboxes (never on 2-point legacy rectangles).
+     *   0 (or omitted) = sharp polygon corner
+     *   1             = full smooth curve
+     * Per-edge tension is the average of the two endpoint anchor strengths.
+     * Mirrors the schema in beyond-all-reason/maps-metadata#615.
+     */
+    strength?: number;
+}
+
+export interface Startbox {
+    maxPlayersPerStartbox: number;
+    startboxes: { poly: StartBoxPoly[] }[];
+}
+
+export interface Team {
+    playersPerTeam: number;
+    sides: {
+        starts: {
+            role?: string;
+            spawnPoint: string;
+        }[];
+    }[];
+    teamCount: number;
+}
+
+export type Terrain =
+    | "acidic"
+    | "alien"
+    | "ice"
+    | "lava"
+    | "space"
+    | "asteroid"
+    | "desert"
+    | "forests"
+    | "grassy"
+    | "industrial"
+    | "jungle"
+    | "metal"
+    | "ruins"
+    | "swamp"
+    | "tropical"
+    | "wasteland"
+    | "shallows"
+    | "sea"
+    | "island"
+    | "water"
+    | "chokepoints"
+    | "asymmetrical"
+    | "flat"
+    | "hills";
+
+export type GameType =
+    | "1v1"
+    | "1v1v1"
+    | "2v2"
+    | "2v2v2"
+    | "2v2v2v2"
+    | "3v3"
+    | "3v3v3v3"
+    | "4v4"
+    | "4v4v4"
+    | "4v4v4v4"
+    | "5v5"
+    | "6v6"
+    | "6v6v6v6"
+    | "7v7"
+    | "7v7v7v7"
+    | "8v8"
+    | "8v8v8v8"
+    | "ffa"
+    | "pve";

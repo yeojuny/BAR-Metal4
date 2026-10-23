@@ -1,0 +1,461 @@
+/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+
+#ifndef SOLID_OBJECT_H
+#define SOLID_OBJECT_H
+
+#include <bit>
+
+#include "WorldObject.h"
+#include "Lua/LuaRulesParams.h"
+#include "Rendering/Models/LocalModel.hpp"
+#include "Sim/Misc/CollisionVolume.h"
+#include "System/Matrix44f.h"
+#include "System/type2.h"
+#include "System/Ecs/EcsMain.h"
+#include "System/Misc/BitwiseEnum.h"
+#include "System/Sync/SyncedFloat3.h"
+#include "System/Sync/SyncedPrimitive.h"
+
+struct MoveDef;
+struct LocalModelPiece;
+struct SolidObjectDef;
+struct LuaObjectMaterialData;
+
+class DamageArray;
+class CUnit;
+
+enum TerrainChangeTypes {
+	TERRAINCHANGE_DAMAGE_RECALCULATION = 0, // update after regular explosion or terraform event
+	TERRAINCHANGE_SQUARE_TYPEMAP_INDEX = 1, // update after typemap-index of a square changed (Lua)
+	TERRAINCHANGE_TYPEMAP_SPEED_VALUES = 2, // update after speed-values of a terrain-type changed (Lua)
+	TERRAINCHANGE_OBJECT_INSERTED      = 3,
+	TERRAINCHANGE_OBJECT_INSERTED_YM   = 4,
+	TERRAINCHANGE_OBJECT_DELETED       = 5,
+};
+
+enum YardmapStates {
+	YARDMAP_OPEN         = 0,    // always free      (    walkable      buildable)
+	YARDMAP_STACKABLE    = 1,    // can be built on top of YARDMAP_BLOCKED
+	YARDMAP_GEOSTACKABLE = 2,    // can be built on top of YARDMAP_BLOCKED and needs GEO
+	YARDMAP_YARD         = 4,    // walkable when yard is open
+	YARDMAP_YARDINV      = 8,    // walkable when yard is closed
+	YARDMAP_UNBUILDABLE  = 16,   // open for walk    (    walkable, not buildable)
+	YARDMAP_BUILDONLY	 = 32,	 // open for build   (not walkable,     buildable)	
+	YARDMAP_EXITONLY     = 64,   // closed for walk into, closed for build
+	YARDMAP_BLOCKED      = 0xFF & ~(YARDMAP_YARDINV|YARDMAP_EXITONLY|YARDMAP_UNBUILDABLE), // always block     (not walkable, not buildable)
+
+	// helpers
+	YARDMAP_YARDBLOCKED  = (YARDMAP_YARD|YARDMAP_EXITONLY|YARDMAP_UNBUILDABLE),
+	YARDMAP_YARDFREE     = ~(YARDMAP_YARD|YARDMAP_EXITONLY|YARDMAP_UNBUILDABLE),
+	YARDMAP_GEO          = YARDMAP_BLOCKED,
+};
+typedef Bitwise::BitwiseEnum<YardmapStates> YardMapStatus;
+
+
+
+class CSolidObject: public CWorldObject {
+public:
+	CR_DECLARE_DERIVED(CSolidObject)
+
+
+	virtual const SolidObjectDef* GetDef() const { return nullptr; };
+
+	enum PhysicalState {
+		// NOTE:
+		//   {ONGROUND,*WATER} and INAIR are mutually exclusive
+		//   {UNDERGROUND,UNDERWATER} are not (and are the only
+		//   bits to take radius into account)
+		// TODO:
+		//   should isDead be on this list for spatial queries?
+		PSTATE_BIT_ONGROUND    = (1 << 0),
+		PSTATE_BIT_INWATER     = (1 << 1),
+		PSTATE_BIT_UNDERWATER  = (1 << 2),
+		PSTATE_BIT_UNDERGROUND = (1 << 3),
+		PSTATE_BIT_INAIR       = (1 << 4),
+		PSTATE_BIT_INVOID      = (1 << 5),
+
+		// special bits for impulse-affected objects that do
+		// not get set automatically by UpdatePhysicalState;
+		// also used by aircraft to control block / unblock
+		// behavior
+		// NOTE: FLYING DOES NOT ALWAYS IMPLY INAIR!
+		PSTATE_BIT_MOVING   = (1 <<  6),
+		PSTATE_BIT_FLYING   = (1 <<  7),
+		PSTATE_BIT_FALLING  = (1 <<  8),
+		PSTATE_BIT_SKIDDING = (1 <<  9),
+		PSTATE_BIT_CRASHING = (1 << 10),
+		PSTATE_BIT_BLOCKING = (1 << 11),
+	};
+	enum CollidableState {
+		CSTATE_BIT_SOLIDOBJECTS = (1 << 0), // can be set while (physicalState & PSTATE_BIT_BLOCKING) == 0!
+		CSTATE_BIT_PROJECTILES  = (1 << 1),
+		CSTATE_BIT_QUADMAPRAYS  = (1 << 2),
+	};
+	enum DamageType {
+		DAMAGE_EXPLOSION_WEAPON    = 0, // weapon-projectile that triggered GameHelper::Explosion (weaponDefID >= 0)
+		DAMAGE_EXPLOSION_DEBRIS    = 1, // piece-projectile that triggered GameHelper::Explosion (weaponDefID < 0)
+		DAMAGE_COLLISION_GROUND    = 2, // ground collision
+		DAMAGE_COLLISION_OBJECT    = 3, // object collision
+		DAMAGE_EXTSOURCE_FIRE      = 4,
+		DAMAGE_EXTSOURCE_WATER     = 5, // lava/acid/etc
+		DAMAGE_EXTSOURCE_KILLED    = 6,
+		DAMAGE_EXTSOURCE_CRUSHED   = 7,
+		DAMAGE_AIRCRAFT_CRASHED    = 8,
+		DAMAGE_NEGATIVE_HEALTH     = 9,
+		DAMAGE_SELFD_EXPIRED       = 10,
+		DAMAGE_KILLED_CHEAT        = 11,
+		DAMAGE_RECLAIMED           = 12,
+		DAMAGE_KILLED_OOB          = 13,
+		DAMAGE_TRANSPORT_KILLED    = 14,
+		DAMAGE_FACTORY_KILLED      = 15,
+		DAMAGE_FACTORY_CANCEL      = 16,
+		DAMAGE_UNIT_SCRIPT         = 17,
+		DAMAGE_KAMIKAZE_ACTIVATED  = 18,
+		DAMAGE_CONSTRUCTION_DECAY  = 19,
+		DAMAGE_TURNED_INTO_FEATURE = 20,
+
+		// Keep killed by Lua as last index here. This will be exposed as
+		// lowest index for games. As we keep killed by Lua as lowest index,
+		// games can introduce their own damage types by doing code like
+		//
+		//      envTypes.CullingStrike      = envTypes.KilledByLua - 1
+		//      envTypes.SummonTimerExpired = envTypes.KilledByLua - 2
+		//
+		DAMAGE_KILLED_LUA = 21
+	};
+
+	CSolidObject();
+	virtual ~CSolidObject() {}
+
+	void PostLoad();
+
+	virtual bool AddBuildPower(CUnit* builder, float amount) { return false; }
+	virtual void DoDamage(const DamageArray& damages, const float3& impulse, CUnit* attacker, int weaponDefID, int projectileID) {}
+
+	virtual void ApplyImpulse(const float3& impulse) { SetVelocityAndSpeed(speed + impulse); }
+
+	virtual void Kill(CUnit* killer, const float3& impulse, bool crushed);
+	virtual int GetBlockingMapID() const { return -1; }
+
+	virtual const YardMapStatus* GetBlockMap() const { return nullptr; }
+
+	virtual void ForcedMove(const float3& newPos) = 0;
+	virtual void ForcedSpin(const float3& newDir);
+	virtual void ForcedSpin(const float3& newFrontDir, const float3& newRightDir);
+
+	virtual void UpdatePhysicalState(float eps);
+
+	void Move(const float3& v, bool relative);
+
+	// this should be called whenever the direction
+	// vectors are changed (ie. after a rotation) in
+	// eg. movetype code
+	void UpdateMidAndAimPos() {
+		midPos = GetMidPos();
+		aimPos = GetAimPos();
+	}
+	void SetMidAndAimPos(const float3& mp, const float3& ap, bool relative) {
+		SetMidPos(mp, relative);
+		SetAimPos(ap, relative);
+	}
+
+
+	void SetDirVectorsEuler(const float3& angles);
+	void SetDirVectors(const CMatrix44f& matrix) {
+		rightdir.x = -matrix[0]; updir.x = matrix[4]; frontdir.x = matrix[ 8];
+		rightdir.y = -matrix[1]; updir.y = matrix[5]; frontdir.y = matrix[ 9];
+		rightdir.z = -matrix[2]; updir.z = matrix[6]; frontdir.z = matrix[10];
+	}
+
+	void AddHeading(short deltaHeading, bool useGroundNormal, bool useObjectNormal, float dirSmoothing) { SetHeading(heading + deltaHeading, useGroundNormal, useObjectNormal, dirSmoothing); }
+	void SetHeading(short worldHeading, bool useGroundNormal, bool useObjectNormal, float dirSmoothing) {
+		heading = worldHeading;
+
+		UpdateDirVectors(useGroundNormal, useObjectNormal, dirSmoothing);
+		UpdateMidAndAimPos();
+	}
+
+	// update object's <heading> from current frontdir
+	// should always be called after a SetDirVectors()
+	void SetHeadingFromDirection();
+	// update object's <buildFacing> from current heading
+	void SetFacingFromHeading();
+	// update object's local coor-sys from current <heading>
+	// (unlike ForcedSpin which updates from given <updir>)
+	// NOTE: movetypes call this directly
+	void UpdateDirVectors(bool useGroundNormal, bool useObjectNormal, float dirSmoothing);
+	void UpdateDirVectors(const float3& uDir);
+
+	void CondUpdatePrevTransform();
+	void UpdatePrevFrameTransform();
+
+	CMatrix44f ComposeMatrix(const float3& p) const { return (CMatrix44f(p, -rightdir, updir, frontdir)); }
+	virtual CMatrix44f GetTransformMatrix(bool synced = false, bool fullread = false) const = 0;
+
+	const CollisionVolume* GetCollisionVolume(const LocalModelPiece* lmp) const;
+
+	const LuaObjectMaterialData* GetLuaMaterialData() const;
+	      LuaObjectMaterialData* GetLuaMaterialData();
+
+	const LocalModelPiece* GetLastHitPiece(int frame, int synced = true) const {
+		if (frame == pieceHitFrames[synced])
+			return hitModelPieces[synced];
+
+		return nullptr;
+	}
+
+	void SetLastHitPiece(const LocalModelPiece* piece, int frame, int synced = true) {
+		hitModelPieces[synced] = piece;
+		pieceHitFrames[synced] = frame;
+	}
+
+
+	/**
+	 * adds this object to the GroundBlockingMap if and only
+	 * if HasCollidableStateBit(CSTATE_BIT_SOLIDOBJECTS), else
+	 * does nothing
+	 */
+	void Block();
+	/**
+	 * Removes this object from the GroundBlockingMap if it
+	 * is currently marked on it, does nothing otherwise.
+	 */
+	void UnBlock();
+
+	void SetMapPos(const int2 mp) {
+		mapPos = mp;
+		groundBlockPos = pos;
+	}
+
+
+	// these transform a point or vector to object-space
+	float3 GetObjectSpaceVec(const float3& v) const { return (      (frontdir * v.z) + (rightdir * v.x) + (updir * v.y)); }
+	float3 GetObjectSpacePos(const float3& p) const { return (pos + (frontdir * p.z) + (rightdir * p.x) + (updir * p.y)); }
+
+	// note: requires drawPos to have been set first
+	float3 GetObjectSpaceDrawPos(const float3& p) const { return (drawPos + GetObjectSpaceVec(p)); }
+
+	// unsynced mid-{position,vector}s
+	float3 GetMdlDrawMidPos() const;
+	float3 GetObjDrawMidPos() const;
+
+
+	int2 GetMapPos() const { return (GetMapPos(pos)); }
+	int2 GetMapPos(const float3& position) const { return GetMapPosStatic(pos, xsize, zsize); }
+	static int2 GetMapPosStatic(const float3& position, int xsize, int zsize);
+
+	float2 GetFootPrint(float scale) const { return {xsize * scale, zsize * scale}; }
+
+	float3 GetDragAccelerationVec(float atmosphericDensity, float waterDensity, float dragCoeff, float frictionCoeff) const;
+	float3 GetWantedUpDir(bool useGroundNormal, bool useObjectNormal, float dirSmoothing) const;
+
+	float GetDrawRadius() const override;
+	float CalcFootPrintMinExteriorRadius(float scale = 1.0f) const;
+	float CalcFootPrintMaxInteriorRadius(float scale = 1.0f) const;
+	float CalcFootPrintAxisStretchFactor() const;
+
+	YardMapStatus GetGroundBlockingMaskAtPos(float3 gpos) const;
+
+	bool FootPrintOnGround() const;
+	bool BlockMapPosChanged() const { return (groundBlockPos != pos); }
+
+	bool IsOnGround   () const { return (HasPhysicalStateBit(PSTATE_BIT_ONGROUND   )); }
+	bool IsInAir      () const { return (HasPhysicalStateBit(PSTATE_BIT_INAIR      )); }
+	bool IsInWater    () const { return (HasPhysicalStateBit(PSTATE_BIT_INWATER    )); }
+	bool IsUnderWater () const { return (HasPhysicalStateBit(PSTATE_BIT_UNDERWATER )); }
+	bool IsUnderGround() const { return (HasPhysicalStateBit(PSTATE_BIT_UNDERGROUND)); }
+	bool IsInVoid     () const { return (HasPhysicalStateBit(PSTATE_BIT_INVOID     )); }
+
+	bool IsMoving  () const { return (HasPhysicalStateBit(PSTATE_BIT_MOVING  )); }
+	bool IsFlying  () const { return (HasPhysicalStateBit(PSTATE_BIT_FLYING  )); }
+	bool IsFalling () const { return (HasPhysicalStateBit(PSTATE_BIT_FALLING )); }
+	bool IsSkidding() const { return (HasPhysicalStateBit(PSTATE_BIT_SKIDDING)); }
+	bool IsCrashing() const { return (HasPhysicalStateBit(PSTATE_BIT_CRASHING)); }
+	bool IsBlocking() const { return (HasPhysicalStateBit(PSTATE_BIT_BLOCKING)); }
+
+	bool    HasPhysicalStateBit(unsigned int bit) const { return ((physicalState & bit) != 0); }
+	void    SetPhysicalStateBit(unsigned int bit) { unsigned int ps = physicalState; ps |= ( bit); physicalState = static_cast<PhysicalState>(ps); }
+	void  ClearPhysicalStateBit(unsigned int bit) { unsigned int ps = physicalState; ps &= (~bit); physicalState = static_cast<PhysicalState>(ps); }
+	void   PushPhysicalStateBit(unsigned int bit) { UpdatePhysicalStateBit(1u << (31u - std::countr_zero(bit)), HasPhysicalStateBit(bit)); }
+	void    PopPhysicalStateBit(unsigned int bit) { UpdatePhysicalStateBit(bit, HasPhysicalStateBit(1u << (31u - std::countr_zero(bit)))); }
+	bool UpdatePhysicalStateBit(unsigned int bit, bool set) {
+		if (set) {
+			SetPhysicalStateBit(bit);
+		} else {
+			ClearPhysicalStateBit(bit);
+		}
+		return (HasPhysicalStateBit(bit));
+	}
+
+	bool    HasCollidableStateBit(unsigned int bit) const { return ((collidableState & bit) != 0); }
+	void    SetCollidableStateBit(unsigned int bit) { unsigned int cs = collidableState; cs |= ( bit); collidableState = static_cast<CollidableState>(cs); }
+	void  ClearCollidableStateBit(unsigned int bit) { unsigned int cs = collidableState; cs &= (~bit); collidableState = static_cast<CollidableState>(cs); }
+	void   PushCollidableStateBit(unsigned int bit) { UpdateCollidableStateBit(1u << (31u - std::countr_zero(bit)), HasCollidableStateBit(bit)); }
+	void    PopCollidableStateBit(unsigned int bit) { UpdateCollidableStateBit(bit, HasCollidableStateBit(1u << (31u - std::countr_zero(bit)))); }
+	bool UpdateCollidableStateBit(unsigned int bit, bool set) {
+		if (set) {
+			SetCollidableStateBit(bit);
+		} else {
+			ClearCollidableStateBit(bit);
+		}
+		return (HasCollidableStateBit(bit));
+	}
+
+	bool SetVoidState();
+	bool ClearVoidState();
+	void UpdateVoidState(bool set);
+
+	virtual void SetMass(float newMass);
+
+private:
+	void SetMidPos(const float3& mp, bool relative) {
+		if (relative) {
+			relMidPos = mp; midPos = GetMidPos();
+		} else {
+			midPos = mp; relMidPos = midPos - pos;
+		}
+	}
+	void SetAimPos(const float3& ap, bool relative) {
+		if (relative) {
+			relAimPos = ap; aimPos = GetAimPos();
+		} else {
+			aimPos = ap; relAimPos = aimPos - pos;
+		}
+	}
+
+	float3 GetMidPos() const { return (GetObjectSpacePos(relMidPos)); }
+	float3 GetAimPos() const { return (GetObjectSpacePos(relAimPos)); }
+
+public:
+	float health = 0.0f;
+	float maxHealth = 1.0f;
+
+	entt::entity entityReference = entt::null;
+
+	///< the physical mass of this object (can be changed by SetMass)
+	float mass = DEFAULT_MASS;
+	///< how much MoveDef::crushStrength is required to crush this object (run-time constant)
+	float crushResistance = 0.0f;
+
+	///< whether this object can potentially be crushed during a collision with another object
+	bool crushable = false;
+	///< whether this object can be moved or not (except perhaps along y-axis, to make it stay on ground)
+	bool immobile = false;
+	bool yardOpen = false;
+
+	///< if false, object can be pushed during enemy collisions even when modrules forbid it
+	bool blockEnemyPushing = true;
+	///< if true, map height cannot change under this object (through explosions, etc.)
+	bool blockHeightChanges = false;
+
+	///< if true, object will not be drawn at all (neither as model nor as icon/fartex)
+	bool noDraw = false;
+	///< if true, LuaRules::Draw{Unit, Feature} will be called for this object (UNSYNCED)
+	bool luaDraw = false;
+	///< if true, unit/feature can not be selected/mouse-picked by a player (UNSYNCED)
+	bool noSelect = false;
+	///< if true, unsynced matrices (transformation + pieceSpaceMat/modelSpaceMat) will be updated unconditionally
+	bool alwaysUpdateMat = false;
+
+	///< specifies which draw passes will be drawn by the engine
+	uint8_t engineDrawMask = uint8_t(-1);
+
+	///< x-size of this object, according to its footprint (note: rotated depending on buildFacing)
+	int xsize = 1;
+	///< z-size of this object, according to its footprint (note: rotated depending on buildFacing)
+	int zsize = 1;
+
+	///< unrotated x-/z-size of this object, according to its footprint
+	int2 footprint = {1, 1};
+
+	///< contains the same information as frontdir, but in a short signed integer
+	SyncedSshort heading = 0;
+	///< orientation of footprint, 4 different states
+	SyncedSshort buildFacing = 0;
+
+
+	///< objects start out non-blocking but fully collidable
+	///< SolidObjectDef::collidable controls only the SO-bit
+	///<
+	///< bitmask indicating current state of this object within the game world
+	PhysicalState physicalState = PhysicalState(PSTATE_BIT_ONGROUND);
+	///< bitmask indicating which types of objects this object can collide with
+	CollidableState collidableState = CollidableState(CSTATE_BIT_SOLIDOBJECTS | CSTATE_BIT_PROJECTILES | CSTATE_BIT_QUADMAPRAYS);
+
+
+	///< team that "owns" this object
+	int team = 0;
+	///< allyteam that this->team is part of
+	int allyteam = 0;
+
+	///< Palette index for color lookup in the teamColor UBO (0..254 = team color, 256..2047 = custom).
+	///< Custom values are permanent until explicitly reset via Lua, and are NOT affected by team changes.
+	uint16_t paletteIndex = 0;
+
+	// useful to track the objects that just got created
+	int creationFrame = -1;
+
+	///< [i] := frame on which hitModelPieces[i] was last hit
+	int pieceHitFrames[2] = {-1, -1};
+
+	///< mobility information about this object (if NULL, object is either static or aircraft)
+	MoveDef* moveDef = nullptr;
+
+	LocalModel localModel;
+	CollisionVolume collisionVolume;
+	CollisionVolume selectionVolume;
+
+	///< pieces that were last hit by a {[0] := unsynced, [1] := synced} projectile
+	const LocalModelPiece* hitModelPieces[2];
+
+	///< object-local {z,x,y}-axes (in WS)
+	SyncedFloat3 frontdir =  FwdVector;
+	SyncedFloat3 rightdir = -RgtVector;
+	SyncedFloat3    updir =   UpVector;
+
+	///< local-space vector from pos to midPos (read from model, used to initialize midPos)
+	SyncedFloat3 relMidPos;
+	///< local-space vector from pos to aimPos (read from model, used to initialize aimPos)
+	SyncedFloat3 relAimPos;
+	///< mid-position of model in WS, used as center of mass (etc)
+	SyncedFloat3 midPos;
+	///< aim-position of model in WS, used by weapons
+	SyncedFloat3 aimPos;
+
+	///< current position on GroundBlockingObjectMap
+	int2 mapPos;
+	float3 groundBlockPos;
+
+	float3 dragScales = OnesVector;
+
+	///< pos + speed * timeOffset (unsynced)
+	float3 drawPos;
+	///< drawPos + relMidPos (unsynced)
+	float3 drawMidPos;
+
+	bool objectUsable = true;
+
+	/**
+	 * @brief mod controlled parameters
+	 * This is a set of parameters that is initialized
+	 * in CreateUnitRulesParams() and may change during the game.
+	 * Each parameter is uniquely identified only by its id
+	 * (which is the index in the vector).
+	 * Parameters may or may not have a name.
+	 */
+	LuaRulesParams::Params  modParams;
+
+public:
+	static constexpr float DEFAULT_MASS = 1e5f;
+	static constexpr float MINIMUM_MASS = 1e0f; // 1.0f
+	static constexpr float MAXIMUM_MASS = 1e6f;
+
+	static int deletingRefID;
+
+	static void SetDeletingRefID(int id) { deletingRefID = id; }
+	// returns the object (command reference) id of the object currently being deleted,
+	// for units this equals unit->id, and for features feature->id + unitHandler.MaxUnits()
+	static int GetDeletingRefID() { return deletingRefID; }
+};
+
+#endif // SOLID_OBJECT_H

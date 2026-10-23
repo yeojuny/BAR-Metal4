@@ -1,0 +1,67 @@
+<!--
+SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+
+SPDX-License-Identifier: MIT
+-->
+
+<route lang="json5">
+{ meta: { title: "Maps", order: 1, transition: { name: "slide-left" }, offline: true } }
+</route>
+
+<template>
+    <div class="maps-container">
+        <div class="view-title">
+            <h1>{{ t("lobby.library.maps.title") }}</h1>
+        </div>
+        <div class="layout">
+            <Panel class="map-filters">
+                <MapFiltersComponent v-model:filters="filters" />
+            </Panel>
+            <Panel class="flex-grow">
+                <div class="flex-col fullheight">
+                    <MapListComponent :filters="filters" @map-selected="onMapSelected" />
+                </div>
+            </Panel>
+        </div>
+    </div>
+</template>
+
+<script lang="ts" setup>
+import { ref } from "vue";
+import { MapData } from "@main/content/maps/map-data";
+import Panel from "@renderer/components/common/Panel.vue";
+import MapFiltersComponent from "@renderer/components/maps/MapFiltersComponent.vue";
+import MapListComponent from "@renderer/components/maps/MapListComponent.vue";
+import { createMapFilterState } from "@renderer/components/maps/filters/map-filter-state";
+import { useRouter } from "vue-router";
+import { useTypedI18n } from "@renderer/i18n";
+const { t } = useTypedI18n();
+
+const router = useRouter();
+
+const filters = ref(createMapFilterState());
+
+async function onMapSelected(map: MapData) {
+    await router.push(`/library/maps/${map.springName}`);
+}
+</script>
+
+<style lang="scss" scoped>
+.maps-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    height: 100%;
+}
+
+.map-filters {
+    height: 100%;
+    width: 300px;
+}
+</style>

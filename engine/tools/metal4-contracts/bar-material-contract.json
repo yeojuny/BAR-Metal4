@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "status": "tested-scalar-subset-and-runtime-msl-compilation; native-lighting-family-and-visual-parity-pending",
+  "validation": {
+    "cpu_checks_passed": 49,
+    "runtime_msl_include_compilation": "PASS via HQ direct Metal4 probe; source construction and successful library/pipeline execution verified",
+    "msl_sha256": "fada89577b37895a595b1a808d90d0c54125d1be058c7704384bd1db5a7fc088",
+    "gpu_scalar_equivalence": "pending fixed-value shader readback fixtures",
+    "full_bar_pbr_parity": "pending"
+  },
+  "source_inventory": "lua-graphics-inventory.json",
+  "source_pins": {
+    "bar": "069f57319503b635698ebb855f11255443e4018b",
+    "recoil": "de69361239d8c8b1012dba3f5aa3122954ea4da3"
+  },
+  "evidence": {
+    "material": "bar:modelmaterials_gl4/templates/cus_gl4.frag.glsl",
+    "vertex": "bar:modelmaterials_gl4/templates/cus_gl4.vert.glsl",
+    "defaults": "bar:modelmaterials_gl4/templates/defaultMaterialTemplate.lua",
+    "specialization": "bar:modelmaterials_gl4/001_units_s3o_assimp.lua",
+    "provisioning": "bar:luarules/gadgets/cus_gl4.lua",
+    "commander": "bar:units/armcom.lua",
+    "model_vertex": "recoil:rts/Rendering/Models/VertexData.hpp",
+    "model_attributes": "recoil:rts/Lua/LuaVBOImpl.cpp",
+    "instance": "recoil:rts/Rendering/GL/myGL.h",
+    "dds_orientation": "recoil:rts/Rendering/Textures/Bitmap.cpp",
+    "s3o_coordinates": "recoil:rts/Rendering/Models/S3OParser.cpp"
+  },
+  "base_texture_driven_material": {
+    "precondition": "Finite normalized texture samples; nonnegative color domain and positive modelGamma for pow. No health/normal-AA/define override included.",
+    "texture1_rgb": "base color before modelGamma power conversion",
+    "texture1_a": "team-color mix factor; albedo = pow(mix(tex1.rgb, team.rgb, tex1.a), modelGamma)",
+    "texture2_r": "emissiveness = clamp(selfIllumination * tex2.r, 0, 1)",
+    "texture2_g": "metalness = clamp(tex2.g, 0, 1)",
+    "texture2_b": "roughness = clamp(tex2.b, 0.04, 1), after optional original material modifications",
+    "texture2_a": "continuous forward output alpha; deferred alphaBin = tex2.a < 0.5 ? 0 : 1",
+    "alpha_discard": "Only HASALPHASHADOWS specializations discard when tex2.a < 0.5 in forward/deferred/shadow",
+    "modelGamma": {"default": 1.0, "conversion": "BAR power law; not IEC sRGB hardware sampling"},
+    "min_roughness": 0.04,
+    "dielectric_f0": 0.04,
+    "epsilon": 0.0001,
+    "f0": "mix(vec3(0.04), albedo, metalness)",
+    "f90": "clamp(max(f0.r, f0.g, f0.b) * 50, 0, 1)",
+    "fresnel": "f0 + (f90-f0) * pow(clamp(1-VdotH, 0, 1), 5)",
+    "visibility": "GGXV=NdotL*(NdotV*(1-roughness2)+roughness2); GGXL=NdotV*(NdotL*(1-roughness2)+roughness2); result=(GGXV+GGXL)>0 ? 0.5/(GGXV+GGXL) : 0",
+    "visibility_numeric_adaptation": "Explicit zero-denominator branch avoids evaluating 0.5/0 in GLSL mix(0, 0.5/GGX, float(GGX>0)); shader fixture must compare intended zero result",
+    "distribution": "f=(NdotH*roughness4-NdotH)*NdotH+1; roughness4/(f*f), with PI canceled as in BAR",
+    "tonemap": "pow((x*(A*x+B))/(x*(C*x+D)+E), 1/modelGamma); gamma=1 returns rational result; no extra clamp"
+  },
+  "default_pbr_parameters": [
+    {"index": 0, "name": "tonemapA", "default": 4.75},
+    {"index": 1, "name": "tonemapB", "default": 0.75},
+    {"index": 2, "name": "tonemapC", "default": 3.5},
+    {"index": 3, "name": "tonemapD", "default": 0.85},
+    {"index": 4, "name": "tonemapE", "default": 1.0},
+    {"index": 5, "name": "envAmbient", "default": 0.125},
+    {"index": 6, "name": "unitSunMult", "default": 1.0},
+    {"index": 7, "name": "unitExposureMult", "default": 1.0}
+  ],
+  "texture_sampler_slots_from_template": {
+    "0": "texture1",
+    "1": "texture2",
+    "2": "normalTex",
+    "3": "texture1w",
+    "4": "texture2w",
+    "5": "normalTexw",
+    "6": "shadowTex",
+    "7": "reflectTex",
+    "8": "losMapTex",
+    "9": "brdfLUT",
+    "10": "noisetex3dcube",
+    "11": "envLUT"
+  },
+  "texture_binding_status": "Sampler declarations only. Resolve actual runtime resource assignments and defines per material; default texUnits contains stale/incomplete assignments and is not sufficient evidence of active IBL resources.",
+  "explicit_upload_vertex": {
+    "size_bytes": 76,
+    "attributes": [
+      {"location": 0, "semantic": "position", "offset": 0, "type": "float32x3"},
+      {"location": 1, "semantic": "normal", "offset": 12, "type": "float32x3"},
+      {"location": 2, "semantic": "tangent", "offset": 24, "type": "float32x3"},
+      {"location": 3, "semantic": "bitangent", "offset": 36, "type": "float32x3"},
+      {"location": 4, "semantic": "uv0.xy, uv1.zw", "offset": 48, "type": "float32x4"},
+      {"location": 5, "semantic": "boneIdsLow, boneWeights, boneIdsHigh", "offset": 64, "type": "uint32x3; integer input, not normalized"}
+    ],
+    "memory_rule": "Convert to explicit upload fields; C++ ModelVertex static assertions do not prove SVertexData or MSL float3 ABI equality",
+    "bone_id": "byte(idsLow,lane) | (byte(idsHigh,lane)<<8); invalid=65535",
+    "bone_weight": "byte(weights,lane)/255; do not renormalize quantized weights without matching original shader variant"
+  },
+  "instance_words": {
+    "word0": "transform/matrix offset",
+    "word1": "model uniform offset",
+    "word2": "auxInfo in low 16 bits, piece count in high 16 bits; Recoil palette field is low 11 bits",
+    "word3": "bind-pose transform/matrix offset",
+    "bar_team_lookup": "Pinned BAR vertex shader reads word2 & 255",
+    "unresolved_difference": "Pinned BAR matrix/skinning branch reads byte 3 for piece count; Recoil schema supplies high 16 bits. Palette/legacy team and transform variants must remain explicit and need engine/content fixtures before general instancing acceptance."
+  },
+  "coordinates": {
+    "s3o": "Preserve xpos/ypos/zpos, normals and texu/texv exactly as the official parser; no import axis swap",
+    "uv": "cus_gl4 vertex shader passes uv.xy to material sampling; texture upload must match the original DDS flip policy",
+    "dds": "Bitmap.cpp flipDDS = filename does not contain unitpics; model DDS is vertically flipped by its loader path. Preserve equivalent texel-to-UV mapping including mips.",
+    "tangent_basis": "fragment normal and tangent normalized; bitangent=normalize(cross(normal,tangent)); do not substitute authored B or flip handedness without source-equivalent variant",
+    "projection": "Retain engine camera/reflection/shadow matrices; backend depth-range/viewport/winding adaptation is separate from imported mesh coordinates and depends on original clip-control convention"
+  },
+  "pending_full_material_behavior": [
+    "Actual armcom normal map (unittextures/Arm_normal.dds), tangents, vertex AO and skinning/piece transforms",
+    "Damage/wreck textures, health displacement/texturing, flashlight/selfIllumination updates and material define overrides",
+    "Shadow PCF/density, sun diffuse/specular/ambient, BRDF LUT energy compensation, reflection cube and environment sampling",
+    "Runtime resource binding, LOS/fog, exposure, reflection/refraction and construction/cloak/highlight/jamming variants",
+    "Forward/deferred/shadow/reflection outputs, bloom attachments and settings-dependent behavior",
+    "GPU numeric fixtures and pinned Linux visual comparison"
+  ]
+}

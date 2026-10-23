@@ -1,0 +1,66 @@
+import type { ChobbyApi } from "./preload";
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+import type {
+    AuthApi,
+    AutoUpdaterApi,
+    BarNavigationApi,
+    ContentApi,
+    EngineApi,
+    GameApi,
+    InfoApi,
+    LogApi,
+    MainWindowApi,
+    MapsApi,
+    MiscApi,
+    ReplaysApi,
+    SettingsApi,
+    CustomLobbiesApi,
+    ConfigApi,
+    ShellApi,
+    TachyonApi,
+    PathsApi,
+} from "@preload/preload";
+import type { TransitionProps } from "vue";
+
+declare global {
+    interface Window {
+        chobby: ChobbyApi;
+        info: InfoApi;
+        shell: ShellApi;
+        mainWindow: MainWindowApi;
+        replays: ReplaysApi;
+        auth: AuthApi;
+        settings: SettingsApi;
+        customLobbies: CustomLobbiesApi;
+        config: ConfigApi;
+        content: ContentApi;
+        engine: EngineApi;
+        game: GameApi;
+        maps: MapsApi;
+        misc: MiscApi;
+        tachyon: TachyonApi;
+        log: LogApi;
+        autoUpdater: AutoUpdaterApi;
+        barNavigation: BarNavigationApi;
+        notifications: NotificationsApi;
+        paths: PathsApi;
+    }
+}
+
+declare module "vue-router" {
+    interface RouteMeta {
+        title?: string;
+        order?: number;
+        onlineOnly?: boolean;
+        hide?: boolean;
+        empty?: boolean;
+        blurBg?: boolean;
+        transition?: TransitionProps;
+        overflowY?: "scroll" | "hidden";
+        devOnly?: boolean;
+        redirect?: string;
+    }
+}

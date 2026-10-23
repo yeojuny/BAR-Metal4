@@ -1,0 +1,35 @@
+{
+    "extends": "./tsconfig.shared.json",
+    "include": [
+        "electron.vite.config.*",
+        "electron-builder.config.*",
+        "src/main/**/*",
+        "src/preload/**/*",
+        "src/shared/**/*",
+        "vendor/**/*",
+        "tests/**/main/**/*.ts",
+        "tests/**/shared/**/*.ts",
+        "tests/**/tools/**/*.ts",
+        "tests/setup.main.mts",
+        "vitest.config.mts",
+        "tools/*.ts"
+    ],
+    "compilerOptions": {
+        "composite": true,
+        "types": ["node"],
+        "baseUrl": ".",
+        "paths": {
+            "@main/*": ["src/main/*"],
+            "@preload/*": ["src/preload/*"],
+            "@renderer/*": ["src/renderer/*"],
+            "@shared/*": ["src/shared/*"],
+            "$/*": ["vendor/*", "tools/*"]
+        },
+        "strict": true,
+        "strictNullChecks": true,
+        // TODO: Enable these for better typechecking
+        "noImplicitReturns": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false
+    }
+}

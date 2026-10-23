@@ -1,0 +1,278 @@
+<!--
+SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+
+SPDX-License-Identifier: MIT
+-->
+
+<template>
+    <div v-if="settingsStore.isInitialized" id="wrapper" class="wrapper fullsize">
+        <transition mode="in-out" name="intro">
+            <IntroVideo v-if="!settingsStore.skipIntro && videoVisible" @complete="onIntroEnd" />
+        </transition>
+        <Suspense>
+            <DebugSidebar v-if="settingsStore.devMode" />
+        </Suspense>
+        <StickyBattle v-if="state === 'default'" />
+        <ActiveLobbyPreview v-if="state === 'default'" />
+        <Background :blur="blurBg" />
+        <Notifications v-if="state === 'default'" />
+        <ReconnectingOverlay v-if="state === 'default'" />
+        <PromptContainer v-if="state === 'default'" />
+        <NavBar :class="{ hidden: empty || state === 'initial-setup' }" />
+        <div class="lobby-version">
+            {{ infosStore.lobby.version }}
+        </div>
+        <div v-if="showPartyPopout" class="floating-wrapper">
+            <div class="party-notification">
+                <Button class="slim green" @click="openPartyView">
+                    <Icon :icon="getPartyIcon()" />
+                    <span class="margin-sm">{{ partyText }}</span>
+                </Button>
+            </div>
+        </div>
+
+        <div v-if="empty" class="splash-options">
+            <div class="option" @click="settingsOpen = true">
+                <Icon :icon="cog" height="21" />
+            </div>
+            <div class="option" @click="exitOpen = true">
+                <Icon :icon="closeThick" height="21" />
+            </div>
+        </div>
+        <Transition mode="out-in" name="fade">
+            <InitialSetup v-if="state === 'initial-setup'" @complete="onInitialSetupDone" />
+            <div class="view-container" :class="{ 'translated-right': battleStore.isLobbyOpened }" v-else>
+                <RouterView v-slot="{ Component, route }">
+                    <template v-if="Component">
+                        <Transition v-bind="route.meta.transition" mode="out-in">
+                            <KeepAlive>
+                                <Suspense timeout="0">
+                                    <component :is="Component" />
+                                    <template #fallback>
+                                        <Loader />
+                                    </template>
+                                </Suspense>
+                            </KeepAlive>
+                        </Transition>
+                    </template>
+                </RouterView>
+            </div>
+        </Transition>
+        <Settings v-model="settingsOpen" />
+        <ServerSettings v-model="serverSettingsOpen" />
+        <FullscreenGameModeSelector v-if="state === 'default'" :visible="battleStore.isSelectingGameMode" />
+        <LogInConfirmationModal v-model="logInConfirmationIsOpen" :intendedRoute="logInConfirmationIntendedRoute" />
+        <BattleResultsModal />
+        <ReportUserModal />
+        <RejoinBattleModal v-model="tachyonStore.rejoinModalOpen" />
+    </div>
+    <Error />
+</template>
+
+<script lang="ts" setup>
+import { Icon } from "@iconify/vue";
+import closeThick from "@iconify-icons/mdi/close-thick";
+import cog from "@iconify-icons/mdi/cog";
+import { provide, Ref, toRef, toValue } from "vue";
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+
+import StickyBattle from "@renderer/components/battle/StickyBattle.vue";
+import ActiveLobbyPreview from "@renderer/components/battle/ActiveLobbyPreview.vue";
+import Loader from "@renderer/components/common/Loader.vue";
+import Background from "@renderer/components/misc/Background.vue";
+import DebugSidebar from "@renderer/components/misc/DebugSidebar.vue";
+import Error from "@renderer/components/misc/Error.vue";
+import IntroVideo from "@renderer/components/misc/IntroVideo.vue";
+import InitialSetup from "@renderer/components/misc/InitialSetup.vue";
+import NavBar from "@renderer/components/navbar/NavBar.vue";
+import Settings from "@renderer/components/navbar/Settings.vue";
+import ServerSettings from "@renderer/components/navbar/ServerSettings.vue";
+import Notifications from "@renderer/components/notifications/Notifications.vue";
+import ReconnectingOverlay from "@renderer/components/misc/ReconnectingOverlay.vue";
+import PromptContainer from "@renderer/components/prompts/PromptContainer.vue";
+import LogInConfirmationModal from "@renderer/components/misc/LogInConfirmationModal.vue";
+import ReportUserModal from "@renderer/components/user/ReportUserModal.vue";
+import RejoinBattleModal from "@renderer/components/battle/RejoinBattleModal.vue";
+import BattleResultsModal from "@renderer/components/battle/results/BattleResultsModal.vue";
+
+import { playRandomMusic } from "@renderer/utils/play-random-music";
+import { settingsStore } from "./store/settings.store";
+import { infosStore } from "@renderer/store/infos.store";
+import { battleStore } from "@renderer/store/battle.store";
+import FullscreenGameModeSelector from "@renderer/components/battle/FullscreenGameModeSelector.vue";
+import { useGlobalKeybindings } from "@renderer/composables/useGlobalKeybindings";
+import { me } from "@renderer/store/me.store";
+import { useLogInConfirmation } from "@renderer/composables/useLogInConfirmation";
+import { partyStore, PlayersPartyState } from "@renderer/store/party.store";
+import accountGroup from "@iconify-icons/mdi/account-group";
+import bellAlert from "@iconify-icons/mdi/bell-alert";
+import Button from "@renderer/components/controls/Button.vue";
+import { chatStore } from "@renderer/store/chat.store";
+import { useTypedI18n } from "@renderer/i18n";
+import { tachyonStore } from "@renderer/store/tachyon.store";
+
+const router = useRouter();
+const videoVisible = toRef(!toValue(settingsStore.skipIntro));
+
+const state: Ref<"initial-setup" | "default"> = ref("initial-setup");
+const empty = ref(router.currentRoute.value?.meta?.empty ?? false);
+const blurBg = ref(router.currentRoute.value?.meta?.blurBg ?? false);
+
+const settingsOpen = ref(false);
+const serverSettingsOpen = ref(false);
+const exitOpen = ref(false);
+const { t } = useTypedI18n();
+const { isOpen: logInConfirmationIsOpen, intendedRoute: logInConfirmationIntendedRoute } = useLogInConfirmation();
+
+provide("settingsOpen", settingsOpen);
+provide("serverSettingsOpen", serverSettingsOpen);
+provide("exitOpen", exitOpen);
+
+useGlobalKeybindings({ exitOpen });
+
+const toggleMessages: Ref<((open?: boolean, userId?: number) => void) | undefined> = ref();
+provide("toggleMessages", toggleMessages);
+
+const toggleFriends: Ref<((open?: boolean) => void) | undefined> = ref();
+provide("toggleFriends", toggleFriends);
+
+const toggleDownloads: Ref<((open?: boolean) => void) | undefined> = ref();
+provide("toggleDownloads", toggleDownloads);
+
+playRandomMusic();
+
+window.barNavigation.onNavigateTo((target: string) => {
+    router.push(target);
+});
+
+function openPartyView() {
+    router.push("/profile/party");
+}
+
+const partyText = computed(() => {
+    if (partyStore.state === PlayersPartyState.InvitedOnly || partyStore.state === PlayersPartyState.JoinedAndInvited) {
+        return t("lobby.navbar.partyPopout.invited");
+    } else {
+        return t("lobby.navbar.partyPopout.party");
+    }
+});
+
+const simpleRouterMemory = new Map<string, string>();
+router.beforeEach(async (to) => {
+    if (!to.meta?.redirect) return;
+
+    const section = to.fullPath.split("/")[1];
+    const rememberedPath = simpleRouterMemory.get(section);
+    const defaultRedirect = to.meta.redirect;
+
+    if (!rememberedPath) {
+        return { path: router.resolve(defaultRedirect).fullPath };
+    }
+
+    const isAuthed = Boolean(toValue(me.isAuthenticated));
+    if (!isAuthed) {
+        const resolved = router.resolve(rememberedPath);
+        const requiresAuth = router.getRoutes().find((r) => r.name === resolved.name)?.meta?.onlineOnly;
+
+        if (requiresAuth) {
+            return { path: router.resolve(defaultRedirect).fullPath };
+        }
+    }
+
+    return { path: rememberedPath };
+});
+
+router.afterEach(async (to) => {
+    simpleRouterMemory.set(to.fullPath.split("/")[1], to.fullPath);
+    empty.value = to?.meta?.empty ?? false;
+    blurBg.value = to?.meta?.blurBg ?? false;
+});
+
+function onIntroEnd() {
+    videoVisible.value = false;
+}
+
+function onInitialSetupDone() {
+    state.value = "default";
+    console.debug("Initial setup done");
+}
+
+function unseenPartyMessages() {
+    if (!partyStore.activeParty) return false;
+    const messages = chatStore.partyChats.get(partyStore.activeParty);
+    if (!messages || messages.length <= 0) return false;
+    return !messages.at(-1)?.seen;
+}
+function getPartyIcon() {
+    if (unseenPartyMessages()) return bellAlert;
+    for (const party of partyStore.parties.values()) {
+        if (!party.seen) return bellAlert;
+    }
+    return accountGroup;
+}
+const showPartyPopout = computed(() => {
+    return (
+        partyStore.state !== PlayersPartyState.None &&
+        router.currentRoute.value.name !== "/profile/party" &&
+        !tachyonStore.reconnectInterval
+    );
+});
+</script>
+
+<style lang="scss" scoped>
+.view-container {
+    flex: auto;
+    // Keeps views at window height so they scroll instead of growing past it.
+    min-height: 0;
+    // Views layer their own hover and selected states with small z-indexes, and
+    // without a stacking context of their own those compete with the navbar and
+    // the reconnecting overlay out here rather than staying inside the view.
+    isolation: isolate;
+    transition: transform 0.4s ease-out;
+    &.translated-right {
+        transform: translateX(10%);
+    }
+}
+
+.wrapper {
+    overflow: hidden;
+}
+
+.lobby-version {
+    position: absolute;
+    left: 3px;
+    bottom: 1px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.splash-options {
+    position: fixed;
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    right: 0;
+    top: 0;
+    padding: 10px;
+    z-index: 5;
+    .option {
+        opacity: 0.8;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+.floating-wrapper {
+    position: relative;
+    z-index: 1;
+}
+
+.party-notification {
+    position: absolute;
+    right: 0;
+    display: flex;
+    flex-direction: row;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+</style>

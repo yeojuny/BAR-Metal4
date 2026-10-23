@@ -1,0 +1,158 @@
+/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+
+
+#include "ISky.h"
+#include "NullSky.h"
+#include "SkyBox.h"
+#include "ModernSky.h"
+#include "Game/Camera.h"
+#include "Game/TraceRay.h"
+#include "Map/MapInfo.h"
+#include "Rendering/GlobalRendering.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeOriginalModelContext.h"
+#endif
+#include "Rendering/Env/DebugCubeMapTexture.h"
+#include "Rendering/GL/myGL.h"
+#include "System/Config/ConfigHandler.h"
+#include "System/Exceptions.h"
+#include "System/SafeUtil.h"
+#include "System/Log/ILog.h"
+
+#include "System/Misc/TracyDefs.h"
+
+CONFIG(bool, AdvSky).deprecated(true);
+
+ISky::ISky()
+	: skyColor(mapInfo->atmosphere.skyColor)
+	, sunColor(mapInfo->atmosphere.sunColor)
+	, cloudColor(mapInfo->atmosphere.cloudColor)
+	, fogColor(mapInfo->atmosphere.fogColor)
+	, skyAxisAngle(mapInfo->atmosphere.skyAxisAngle)
+	, fogStart(mapInfo->atmosphere.fogStart)
+	, fogEnd(mapInfo->atmosphere.fogEnd)
+	, cloudDensity(mapInfo->atmosphere.cloudDensity)
+	, skyLight(nullptr)
+	, wireFrameMode(false)
+	, updated(true)
+{
+	skyLight = new ISkyLight();
+}
+
+ISky::~ISky()
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	spring::SafeDelete(skyLight);
+}
+
+std::unique_ptr<ISky> ISky::sky = nullptr;
+
+
+
+void ISky::SetupFog() {
+	RECOIL_DETAILED_TRACY_ZONE;
+
+	const float start = camera->GetFarPlaneDist() * fogStart;
+	const float end = camera->GetFarPlaneDist() * fogEnd;
+
+	if (globalRendering->drawFog) {
+		glEnable(GL_FOG);
+	} else {
+		glDisable(GL_FOG);
+	}
+
+	glFogfv(GL_FOG_COLOR, fogColor);
+	glFogi(GL_FOG_MODE,   GL_LINEAR);
+	glFogf(GL_FOG_START,  start);
+	glFogf(GL_FOG_END,    end);
+	glFogf(GL_FOG_DENSITY, 1.0f);
+
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	// Publish these original fixed-function writes before the model Enable
+	// consumer reads them; loading-time fog cannot stand in for a later frame.
+	rendering::OriginalNativeModelContext().ObserveFog(
+		static_cast<uint64_t>(globalRendering->drawFrame),
+		{fogColor.x, fogColor.y, fogColor.z, fogColor.w}, start, end, globalRendering->drawFog);
+#endif
+}
+
+void ISky::SetSky()
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	sky = nullptr; //break before make
+
+	try {
+		if (globalRendering->drawDebugCubeMap) {
+			if (const auto resource = debugCubeMapTexture.GetNativeResource()) {
+				sky = std::make_unique<CSkyBox>(resource);
+			} else {
+				int2 dims = debugCubeMapTexture.GetDimensions();
+				sky = std::make_unique<CSkyBox>(debugCubeMapTexture.GetId(), dims.x, dims.y);
+			}
+		}
+		else if (!mapInfo->atmosphere.skyBox.empty()) {
+			sky = std::make_unique<CSkyBox>("maps/" + mapInfo->atmosphere.skyBox);
+		}
+		else {
+			sky = std::make_unique<CModernSky>();
+		}
+	} catch (const content_error& ex) {
+		LOG_L(L_ERROR, "[ISky::%s] error: %s (falling back to NullSky)", __func__, ex.what());
+		sky = std::make_unique<CNullSky>();
+	}
+
+	if (!sky->IsValid()) {
+		LOG_L(L_ERROR, "[ISky::%s] error creating %s (falling back to NullSky)", __func__, sky->GetName().c_str());
+		sky = std::make_unique<CNullSky>();
+	}
+}
+
+void ISky::SetSkyLuaTexture(const MapTextureData& td)
+{
+	if (sky == nullptr)
+		return;
+
+	/* TODO: consider if perhaps there should be some way to set the
+	 * sky to one of the other classes (CModernSky, etc) via Lua. */
+
+	if (td.id != 0u && dynamic_cast<CSkyBox*>(sky.get()) == nullptr) {
+		auto luaSky = std::make_unique<CSkyBox>(td.id, td.size.x, td.size.y);
+
+		if (luaSky->IsValid()) {
+			sky = std::move(luaSky);
+			return;
+		}
+
+		LOG_L(L_WARNING, "[ISky::%s] failed to create SkyBox from Lua texture (%u), keeping current sky", __func__, td.id);
+		return;
+	}
+
+	/* FIXME: td.id == 0 reaches here. Untested in recent times */
+	sky->SetLuaTexture(td);
+}
+
+void ISky::SetSkyAxisAngle(const float4& skyAxisAngleRaw)
+{
+	auto axis = float3{ skyAxisAngleRaw.x, skyAxisAngleRaw.y, skyAxisAngleRaw.z };
+	const float axisNorm = axis.Length();
+	if (axisNorm < float3::nrm_eps())
+		axis = FwdVector;
+	else
+		axis /= axisNorm;
+
+	skyAxisAngle = float4{ axis, ClampRad(skyAxisAngleRaw.w) };
+}
+
+bool ISky::SunVisible(const float3 pos) const {
+	RECOIL_DETAILED_TRACY_ZONE;
+	const CUnit* hitUnit = nullptr;
+	const CFeature* hitFeature = nullptr;
+
+	// cast a ray *toward* the sun from <pos>
+	// sun is visible if no terrain blocks it
+	const float3& sunDir = skyLight->GetLightDir();
+	const float sunDist = TraceRay::GuiTraceRay(pos, sunDir, camera->GetFarPlaneDist(), nullptr, hitUnit, hitFeature, false, true, false);
+
+	return (sunDist < 0.0f || sunDist >= camera->GetFarPlaneDist());
+}
+

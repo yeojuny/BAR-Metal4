@@ -1,0 +1,32 @@
+{
+    "extends": "./tsconfig.shared.json",
+    "include": [
+        "src/main/",
+        "src/renderer/env.d.ts",
+        "src/renderer/typed-router.d.ts",
+        "src/renderer/**/*",
+        "src/renderer/**/*.vue",
+        "src/preload/*.d.ts",
+        "src/shared/**/*",
+        "tests/**/renderer/**/*.ts",
+        "tests/setup.renderer.mts"
+    ],
+    "compilerOptions": {
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "composite": true,
+        "baseUrl": ".",
+        "paths": {
+            "@main/*": ["src/main/*"], // TODO: Remove direct references to main
+            "@preload/*": ["src/preload/*"],
+            "@renderer/*": ["src/renderer/*"],
+            "@shared/*": ["src/shared/*"],
+            "$/*": ["vendor/*"]
+        },
+        "strict": true,
+        "strictNullChecks": true,
+        // TODO: Enable these for better typechecking
+        "noImplicitReturns": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false
+    }
+}

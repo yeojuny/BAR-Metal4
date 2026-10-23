@@ -1,0 +1,102 @@
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+import type { Static, TObject } from "@sinclair/typebox";
+import type { ValidateFunction } from "ajv";
+import Ajv from "ajv";
+import fs from "fs";
+import path from "path";
+import { logger } from "@main/utils/logger";
+
+const log = logger("file-store.ts");
+
+export class FileStore<T extends TObject> {
+    public readonly model: Static<T> = {};
+    public readonly filePath: string;
+
+    protected readonly schema: T;
+    protected readonly ajv: Ajv;
+    protected readonly validator: ValidateFunction<Static<T>>;
+
+    private writeQueue: Promise<void> = Promise.resolve();
+
+    constructor(filePath: string, schema: T, defaultModel?: Static<T>) {
+        this.filePath = filePath;
+        this.schema = schema;
+        this.ajv = new Ajv({ coerceTypes: true, useDefaults: true });
+        this.validator = this.ajv.compile(this.schema);
+        if (defaultModel) {
+            this.model = defaultModel;
+        }
+    }
+
+    public async init() {
+        const dir = path.parse(this.filePath).dir;
+        await fs.promises.mkdir(dir, { recursive: true });
+        if (fs.existsSync(this.filePath)) {
+            await this.read();
+        } else {
+            this.validator(this.model);
+            await this.write();
+        }
+        return this;
+    }
+
+    // could throw if the data is invalid
+    public async update(data: Partial<T>) {
+        // not great since we're modifying the model before validation
+        Object.assign(this.model, data);
+        const isValid = this.validator(this.model);
+        if (isValid) {
+            await this.write();
+        } else {
+            log.error(`Error validating file: ${this.filePath}`, this.validator.errors);
+        }
+        return this.model;
+    }
+
+    // Files are only ever written by the client, so an invalid one is rejected outright rather than salvaged.
+    // It is kept alongside as .invalid so the cause can be investigated, and the defaults are used instead.
+    protected async read() {
+        try {
+            const modelStr = await fs.promises.readFile(this.filePath, { encoding: "utf-8" });
+            const model = JSON.parse(modelStr);
+            if (this.validator(model)) {
+                Object.assign(this.model, model);
+                return;
+            }
+            log.error(`Error validating file: ${this.filePath}`, this.validator.errors);
+        } catch (e) {
+            log.error(`Error reading file: ${this.filePath}`, e);
+        }
+        await this.resetToDefaults();
+    }
+
+    private async resetToDefaults() {
+        const backupPath = `${this.filePath}.invalid`;
+        try {
+            await fs.promises.rename(this.filePath, backupPath);
+            log.warn(`Moved invalid file to ${backupPath}, using defaults instead`);
+        } catch (e) {
+            log.error(`Error backing up invalid file: ${this.filePath}`, e);
+        }
+        this.validator(this.model);
+        await this.write();
+    }
+
+    // Writes are chained and go through a temp file, so overlapping saves can't
+    // interleave and a crash mid-write can't truncate the existing file.
+    protected async write() {
+        const write = this.writeQueue.catch(() => {}).then(() => this.writeModel());
+        this.writeQueue = write.catch(() => {});
+
+        return write;
+    }
+
+    private async writeModel() {
+        const tempPath = `${this.filePath}.tmp`;
+        await fs.promises.writeFile(tempPath, JSON.stringify(this.model, null, 4));
+        await fs.promises.rename(tempPath, this.filePath);
+    }
+}

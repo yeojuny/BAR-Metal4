@@ -1,0 +1,4 @@
+ {"ALLIED_COLOR",{0.35f,0.62f,0.50f}},
+ {"SHEET_COLOR",{0.22f,0.85f,0.50f}},
+ {"SHEET_PULSE_COLOR",{0.55f,1.00f,0.7f}},
+ {"OUTLINE_COLOR",{0.45f,1.00f,0.57f}},

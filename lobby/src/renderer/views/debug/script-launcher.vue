@@ -1,0 +1,47 @@
+<!--
+SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+
+SPDX-License-Identifier: MIT
+-->
+
+<route lang="json5">
+{ meta: { title: "Script Launcher", order: 5 } }
+</route>
+
+<template>
+    <div class="flex-col gap-md fullheight">
+        <Textarea class="fullheight" v-model="script" spellcheck="false" />
+        <Button class="green" @click="launch">Launch</Button>
+    </div>
+</template>
+
+<script lang="ts" setup>
+import { ref } from "vue";
+import { configStore } from "@renderer/store/config.store";
+import Button from "@renderer/components/controls/Button.vue";
+import Textarea from "@renderer/components/controls/Textarea.vue";
+
+const script = ref(`[game] {
+    [ais] {
+    }
+    [allyteam0] {
+        numallies=0;
+    }
+    [team0] {
+        teamleader=0;
+        allyteam=0;
+    }
+    [player0] {
+        team=0;
+        name=player;
+    }
+    mapname=${configStore.defaultMaps[0]};
+    myplayername=player;
+    ishost=1;
+    gametype=${configStore.latestGameVersion};
+}`);
+
+async function launch() {
+    window.game.launchScript(script.value, configStore.latestGameVersion, configStore.defaultEngineVersion);
+}
+</script>

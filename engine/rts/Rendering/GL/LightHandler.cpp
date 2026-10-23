@@ -1,0 +1,268 @@
+/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+
+#include "myGL.h"
+#include "LightHandler.h"
+#include "Game/GlobalUnsynced.h"
+#include "Rendering/Shaders/Shader.h"
+#include "Sim/Misc/GlobalSynced.h"
+#include "Sim/Misc/LosHandler.h"
+#include "Sim/Projectiles/Projectile.h"
+
+#include "System/Misc/TracyDefs.h"
+
+//automatically initialized to zeros
+static constexpr float4 ZeroVector4;
+
+
+void GL::LightHandler::UploadVector(unsigned int id, unsigned int name, const float* value)
+{
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+	auto& light=nativeUniforms.at(id-GL_LIGHT0-baseLight);
+	switch (name) {
+		case GL_POSITION: rendering::SetNativeModelLightPosition(light,value); break;
+		case GL_SPOT_DIRECTION: rendering::SetNativeModelLightDirection(light,value); break;
+		case GL_AMBIENT: std::copy_n(value,4,light.ambient.begin()); break;
+		case GL_DIFFUSE: std::copy_n(value,4,light.diffuse.begin()); break;
+		case GL_SPECULAR: std::copy_n(value,4,light.specular.begin()); break;
+		default: break;
+	}
+#else
+	glLightfv(id,name,value);
+#endif
+}
+void GL::LightHandler::UploadScalar(unsigned int id, unsigned int name, float value)
+{
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+	auto& light=nativeUniforms.at(id-GL_LIGHT0-baseLight);
+	switch (name) {
+		case GL_SPOT_CUTOFF: rendering::SetNativeModelLightCutoff(light,value); break;
+		case GL_CONSTANT_ATTENUATION: if(value>=0)light.attenuation[0]=value; break;
+		case GL_LINEAR_ATTENUATION: if(value>=0)light.attenuation[1]=value; break;
+		case GL_QUADRATIC_ATTENUATION: if(value>=0)light.attenuation[2]=value; break;
+		default: break;
+	}
+#else
+	glLightf(id,name,value);
+#endif
+}
+
+void GL::LightHandler::Init(unsigned int cfgBaseLight, unsigned int cfgMaxLights) {
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+	// The genuine native consumer uses an explicit storage buffer. A headless
+	// GL_MAX_LIGHTS query is not a device capability and must not size its pool.
+	baseLight = cfgBaseLight;
+	maxLights = cfgMaxLights;
+	nativeUniforms.assign(maxLights, {});
+#else
+	glGetIntegerv(GL_MAX_LIGHTS, reinterpret_cast<int*>(&maxLights));
+
+	baseLight = cfgBaseLight;
+	maxLights -= baseLight;
+	maxLights = std::min(maxLights, cfgMaxLights);
+#endif
+
+	lights.resize(maxLights);
+
+	for (unsigned int i = 0; i < maxLights; i++) {
+		const unsigned int lightID = GL_LIGHT0 + baseLight + i;
+
+		glEnable(lightID);
+		UploadVector(lightID, GL_POSITION, &ZeroVector4.x);
+		UploadVector(lightID, GL_AMBIENT,  &ZeroVector4.x);
+		UploadVector(lightID, GL_DIFFUSE,  &ZeroVector4.x);
+		UploadVector(lightID, GL_SPECULAR, &ZeroVector4.x);
+		UploadVector(lightID, GL_SPOT_DIRECTION, &ZeroVector4.x);
+		UploadScalar(lightID, GL_SPOT_CUTOFF, 180.0f);
+		UploadScalar(lightID, GL_CONSTANT_ATTENUATION,  1.0f);
+		UploadScalar(lightID, GL_LINEAR_ATTENUATION,    0.0f);
+		UploadScalar(lightID, GL_QUADRATIC_ATTENUATION, 0.0f);
+		glDisable(lightID);
+
+		lights[i].SetID(lightID);
+	}
+}
+
+
+unsigned int GL::LightHandler::AddLight(const GL::Light& light) {
+	RECOIL_DETAILED_TRACY_ZONE;
+	if (light.GetTTL() == 0 || light.GetRadius() <= 0.0f)
+		return -1u;
+	if ((light.GetIntensityWeight()).SqLength() <= 0.01f)
+		return -1u;
+
+	const auto it = std::find_if(lights.begin(), lights.end(), [&](const GL::Light& lgt) { return (lgt.GetTTL() == 0); });
+
+	if (it == lights.end()) {
+		// all are claimed; find the lowest-priority light we can evict
+		unsigned int minPriorityValue = light.GetPriority();
+		unsigned int minPriorityIndex = -1u;
+
+		for (unsigned int n = 0; n < lights.size(); n++) {
+			const GL::Light& lgt = lights[n];
+
+			if (lgt.GetPriority() < minPriorityValue) {
+				minPriorityValue = lgt.GetPriority();
+				minPriorityIndex = n;
+			}
+		}
+
+		if (minPriorityIndex != -1u)
+			return (SetLight(minPriorityIndex, light));
+
+		// no available light to replace
+		return -1u;
+	}
+
+	return (SetLight(it - lights.begin(), light));
+}
+
+unsigned int GL::LightHandler::SetLight(unsigned int lgtIndex, const GL::Light& light) {
+	RECOIL_DETAILED_TRACY_ZONE;
+	const unsigned int lightID = lights[lgtIndex].GetID();
+
+	// clear any previous dependence this light might have
+	lights[lgtIndex].ClearDeathDependencies();
+
+	lights[lgtIndex] = light;
+	lights[lgtIndex].SetID(lightID);
+	lights[lgtIndex].SetUID(lightHandle++);
+	lights[lgtIndex].SetRelativeTime(0);
+	lights[lgtIndex].SetAbsoluteTime(gs->frameNum);
+
+	return (lights[lgtIndex].GetUID());
+}
+
+GL::Light* GL::LightHandler::GetLight(unsigned int lgtHandle) {
+	RECOIL_DETAILED_TRACY_ZONE;
+	const auto it = std::find_if(lights.begin(), lights.end(), [&](const GL::Light& lgt) { return (lgt.GetUID() == lgtHandle); });
+
+	if (it != lights.end())
+		return &(*it);
+
+	return nullptr;
+}
+
+
+void GL::LightHandler::Update(Shader::IProgramObject* shader) {
+	RECOIL_DETAILED_TRACY_ZONE;
+	if (lights.size() != numLights) {
+		numLights = lights.size();
+
+		// update the active light-count (note: unused, number of lights
+		// to iterate over needs to be known at shader compilation-time)
+		// shader->SetUniform1i(uniformIndex, numLights);
+	}
+
+	if (numLights == 0)
+		return;
+
+	// float3 sumWeight;
+	float3 maxWeight = OnesVector * 0.01f;
+
+	for (const GL::Light& light: lights) {
+		if (light.GetTTL() == 0)
+			continue;
+
+		// sumWeight += light.GetIntensityWeight();
+		maxWeight = float3::max(maxWeight, light.GetIntensityWeight());
+	}
+
+	for (GL::Light& light: lights) {
+		const unsigned int lightID = light.GetID();
+
+		// dead light, ignore (but kill its contribution)
+		if (light.GetTTL() == 0) {
+			glEnable(lightID);
+			UploadVector(lightID, GL_AMBIENT,  &ZeroVector4.x);
+			UploadVector(lightID, GL_DIFFUSE,  &ZeroVector4.x);
+			UploadVector(lightID, GL_SPECULAR, &ZeroVector4.x);
+			glDisable(lightID);
+			continue;
+		}
+
+		if (light.GetAbsoluteTime() != gs->frameNum) {
+			light.SetRelativeTime(light.GetRelativeTime() + 1);
+			light.SetAbsoluteTime(gs->frameNum);
+			light.DecayColors();
+			light.ClampColors();
+		}
+
+		// rescale by max (not sum!), otherwise 1) the intensity would
+		// change if any light is added or removed when all have equal
+		// weight and 2) a non-uniform set would cause a reduction for
+		// all
+		const float3 weight              = light.GetIntensityWeight() / maxWeight;
+		const float4 weightedAmbientCol  = light.GetAmbientColor()  * weight.x;
+		const float4 weightedDiffuseCol  = light.GetDiffuseColor()  * weight.y;
+		const float4 weightedSpecularCol = light.GetSpecularColor() * weight.z;
+
+		float4 lightPos = light.GetPosition();
+		float4 lightDir = light.GetDirection(); // w=0, make sure to pick mat::oper*(float4)
+
+		if (light.GetTrackObject() != nullptr) {
+			switch (light.GetTrackType()) {
+				case GL::Light::TRACK_TYPE_UNIT: {
+					const CSolidObject* so = static_cast<const CSolidObject*>(light.GetTrackObject());
+
+					if (light.LocalSpace()) {
+						lightPos = so->GetObjectSpaceDrawPos(lightPos);
+						lightDir = so->GetObjectSpaceVec(lightDir);
+					} else {
+						lightPos = so->drawPos;
+						lightDir = so->frontdir;
+					}
+				} break;
+				case GL::Light::TRACK_TYPE_PROJ: {
+					const CProjectile* po = static_cast<const CProjectile*>(light.GetTrackObject());
+
+					if (light.LocalSpace()) {
+						const CMatrix44f m = po->GetTransformMatrix(false);
+
+						lightPos = m * lightPos;
+						lightDir = m * lightDir;
+					} else {
+						lightPos = po->drawPos;
+						lightDir = po->dir;
+					}
+				} break;
+				default: {} break;
+			}
+		}
+
+		if (light.GetRelativeTime() > light.GetTTL()) {
+			// mark light as dead
+			light.SetTTL(0);
+			continue;
+		}
+
+		// communicate properties via the FFP to save uniforms
+		// note: we want MV to be identity here
+		glEnable(lightID);
+		UploadVector(lightID, GL_POSITION, &lightPos.x);
+
+		if (gu->spectatingFullView || light.IgnoreLOS() || losHandler->InLos(lightPos, gu->myAllyTeam)) {
+			// light is visible
+			UploadVector(lightID, GL_AMBIENT,  &weightedAmbientCol.x);
+			UploadVector(lightID, GL_DIFFUSE,  &weightedDiffuseCol.x);
+			UploadVector(lightID, GL_SPECULAR, &weightedSpecularCol.x);
+		} else {
+			// zero contribution from this light if not in LOS
+			// (whether or not camera can see it is irrelevant
+			// since the light always takes up a slot anyway)
+			UploadVector(lightID, GL_AMBIENT,  &ZeroVector4.x);
+			UploadVector(lightID, GL_DIFFUSE,  &ZeroVector4.x);
+			UploadVector(lightID, GL_SPECULAR, &ZeroVector4.x);
+		}
+
+		UploadVector(lightID, GL_SPOT_DIRECTION, &lightDir.x);
+		UploadScalar(lightID, GL_SPOT_CUTOFF, light.GetFOV());
+		UploadScalar(lightID, GL_CONSTANT_ATTENUATION, light.GetRadius()); //!
+		#if (OGL_SPEC_ATTENUATION == 1)
+		UploadScalar(lightID, GL_CONSTANT_ATTENUATION,  light.GetAttenuation().x);
+		UploadScalar(lightID, GL_LINEAR_ATTENUATION,    light.GetAttenuation().y);
+		UploadScalar(lightID, GL_QUADRATIC_ATTENUATION, light.GetAttenuation().z);
+		#endif
+		glDisable(lightID);
+	}
+}
+

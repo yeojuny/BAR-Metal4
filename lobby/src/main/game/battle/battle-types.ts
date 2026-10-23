@@ -1,0 +1,172 @@
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+import { MapData } from "@main/content/maps/map-data";
+import { StartBoxPoly } from "@main/content/maps/map-metadata";
+import { User } from "@main/model/user";
+import { RAPTORS_AI, SCAVENGERS_AI } from "@shared/battle-types";
+import { StartBox } from "tachyon-protocol/types";
+
+export interface Battle {
+    title: string;
+    isOnline: boolean;
+    battleOptions: BattleOptions;
+    me?: Player;
+    teams: Array<Team>;
+    spectators: Player[];
+    started: boolean;
+}
+
+export interface BattleWithMetadata extends Battle {
+    startTime?: Date;
+    participants: Array<Player | Bot>;
+    bots: Bot[];
+    players: Player[];
+}
+
+export enum GameModeID {
+    CLASSIC = "CLASSIC",
+    SKIRMISH = "SKIRMISH",
+    RAPTORS = "RAPTORS",
+    SCAVENGERS = "SCAVENGERS",
+    FFA = "FFA",
+}
+
+export type GameModeWithOptions = {
+    id: GameModeID;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    options: Record<string, any>;
+};
+
+export enum StartBoxOrientation {
+    EastVsWest = "EastVsWest",
+    NorthVsSouth = "NorthVsSouth",
+    NortheastVsSouthwest = "NortheastVsSouthwest",
+    NorthwestVsSoutheast = "NorthwestVsSoutheast",
+}
+
+export type BattleOptions = {
+    engineVersion?: string;
+    gameVersion?: string;
+    gameMode: GameModeWithOptions;
+    map?: MapData;
+    mapOptions: {
+        startPosType: StartPosType;
+        startBoxesIndex?: number;
+        customStartBoxes?: StartBox[];
+        customStartBoxShapes?: StartBoxPoly[][];
+        customStartBoxPreset?: StartBoxOrientation;
+        fixedPositionsIndex?: number;
+    };
+    restrictions: Restriction[];
+};
+
+export type SpadsBattleOptions = {
+    id: number;
+    isHost: boolean;
+    passworded: boolean;
+    password: string | null;
+    scriptPassword: string | null;
+    founderId: number;
+    ip: string | null;
+    port: number | null;
+    locked: boolean;
+    maxPlayers: number;
+    preset: string;
+    joinQueueUserIds: number[];
+    autoBalance: string;
+    teamSize: number;
+    nbTeams: number;
+    balanceMode: string;
+};
+
+export enum StartPosType {
+    /** automatic spawning using default map start positions, in fixed order */
+    Fixed = 0,
+    /** automatic spawning using default map start positions, in random order */
+    Random = 1,
+    /** manual spawning based on positions chosen by players in start boxes */
+    Boxes = 2,
+}
+
+export enum Faction {
+    Armada = "Armada",
+    Cortex = "Cortex",
+    Random = "Random",
+    Legion = "Legion",
+    Raptors = "Raptors",
+    Scavengers = "Scavengers",
+}
+
+export enum TeamPreset {
+    Standard,
+    FFA,
+    TeamFFA,
+    Custom,
+}
+
+export type Restriction = {
+    unitDefId: string;
+    limit: number;
+};
+
+export type Player = {
+    id: string;
+    name: string;
+    user: User;
+    contentSyncState: {
+        engine: number;
+        game: number;
+        map: number;
+    };
+    inGame: boolean;
+
+    faction?: Faction;
+    startPos?: { x: number; z: number };
+    handicap?: number;
+    advantage?: number;
+    incomeMultiplier?: number;
+    color?: string;
+};
+
+export type Bot = {
+    id: string;
+    host: string;
+    aiShortName: string;
+    name: string;
+    aiOptions: Record<string, unknown>;
+
+    faction?: Faction;
+    startPos?: { x: number; z: number };
+    handicap?: number;
+    advantage?: number;
+    incomeMultiplier?: number;
+    color?: string;
+};
+
+export type Team = {
+    participants: Array<Player | Bot>;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isBot(bot: any): bot is Bot {
+    return "aiShortName" in bot;
+}
+
+export function isRaptor(bot: Bot): boolean {
+    return bot.aiShortName === RAPTORS_AI;
+}
+
+export function isScavenger(bot: Bot): boolean {
+    return bot.aiShortName === SCAVENGERS_AI;
+}
+
+export function isScavengerOrRaptor(p: Bot | Player): boolean {
+    return isBot(p) && (isScavenger(p) || isRaptor(p));
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isPlayer(player: any): player is Player {
+    return "user" in player;
+}

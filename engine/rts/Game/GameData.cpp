@@ -1,0 +1,98 @@
+/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+
+#include <cassert>
+#include <limits>
+
+#include "GameData.h"
+
+#include "Net/Protocol/BaseNetProtocol.h"
+#include "System/Net/PackPacket.h"
+#include "System/Net/UnpackPacket.h"
+#include "System/StringUtil.h"
+
+#include "System/Misc/TracyDefs.h"
+
+using namespace netcode;
+
+GameData::GameData()
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	std::memset(mapChecksum, 0, sizeof(mapChecksum));
+	std::memset(modChecksum, 0, sizeof(modChecksum));
+}
+GameData::GameData(const std::string& setup): setupText(setup)
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	std::memset(mapChecksum, 0, sizeof(mapChecksum));
+	std::memset(modChecksum, 0, sizeof(modChecksum));
+}
+
+GameData::GameData(std::shared_ptr<const RawPacket> pckt)
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	assert(pckt->data[0] == NETMSG_GAMEDATA);
+
+	const uint32_t headerSize = sizeof(uint8_t) + sizeof(uint16_t);
+
+	UnpackPacket packet(pckt, headerSize);
+
+	std::uint16_t compressedSize;
+
+	packet >> compressedSize; compressed.resize(compressedSize);
+	packet >> compressed;
+
+	const std::vector<std::uint8_t> buffer{zlib::inflate(compressed)};
+
+	if (buffer.empty())
+		throw netcode::UnpackPacketException("Error decompressing GameData");
+
+	// avoid reinterpret_cast; buffer is not null-terminated
+	setupText = {buffer.begin(), buffer.end()};
+
+	for (auto& checksum: mapChecksum) { packet >> checksum; }
+	for (auto& checksum: modChecksum) { packet >> checksum; }
+
+	packet >> randomSeed;
+}
+
+size_t GameData::GetPackedSize() const
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	if (compressed.empty())
+		compressed = zlib::deflate(reinterpret_cast<const std::uint8_t*>(setupText.data()), setupText.size());
+
+	assert(!compressed.empty());
+
+	const uint32_t payloadSize = sizeof(uint16_t) + compressed.size() + sizeof(mapChecksum) + sizeof(modChecksum) + sizeof(randomSeed);
+	const uint32_t headerSize = sizeof(uint8_t) + sizeof(uint16_t);
+
+	return headerSize + payloadSize;
+}
+
+const netcode::RawPacket* GameData::Pack() const
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	const size_t packetSize = GetPackedSize();
+
+	if (packetSize > MAX_PACKED_SIZE)
+		return nullptr;
+
+	PackPacket* buffer = new PackPacket(packetSize, NETMSG_GAMEDATA);
+	*buffer << static_cast<uint16_t>(packetSize);
+	*buffer << std::uint16_t(compressed.size());
+	*buffer << compressed;
+
+	for (auto& checksum: mapChecksum) { *buffer << checksum; }
+	for (auto& checksum: modChecksum) { *buffer << checksum; }
+
+	*buffer << randomSeed;
+	return buffer;
+}
+
+void GameData::SetSetupText(const std::string& newSetup)
+{
+	RECOIL_DETAILED_TRACY_ZONE;
+	setupText = newSetup;
+	compressed.clear();
+}
+

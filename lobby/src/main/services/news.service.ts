@@ -1,0 +1,98 @@
+// SPDX-FileCopyrightText: 2025 The BAR Lobby Authors
+//
+// SPDX-License-Identifier: MIT
+
+import { extract, FeedData, FeedEntry } from "@extractus/feed-extractor";
+import { FetchDevlogRssFeed, FetchNewsRssFeed } from "@main/services/type";
+import { logger } from "@main/utils/logger";
+import { ipcMain } from "@main/typed-ipc";
+import { configService } from "@main/services/config.service";
+
+export interface NewsFeedData extends FeedData {
+    entries?: Array<NewsFeedEntry>;
+}
+
+export interface NewsFeedEntry extends FeedEntry {
+    thumbnail?: string;
+    thumbnailUrl?: string;
+}
+
+const log = logger("news.service.ts");
+
+export async function fetchImageToBase64(url: string) {
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch image: ${response.statusText}`);
+        }
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const base64Image = buffer.toString("base64");
+        const contentType = response.headers.get("content-type");
+        return `data:${contentType};base64,${base64Image}`;
+    } catch (error) {
+        log.error("Error fetching image:", error);
+    }
+}
+
+let newsFeed: NewsFeedData | null = null;
+const fetchNewsRssFeed: FetchNewsRssFeed = async (numberOfNews) => {
+    try {
+        if (newsFeed) {
+            return newsFeed;
+        }
+        newsFeed = await extract(
+            configService.getConfig().newsRssUrl,
+            {
+                getExtraEntryFields: (entry) => {
+                    const thumbnail = entry["media:thumbnail"];
+                    const thumbnailUrl = thumbnail ? thumbnail["@_url"] : null;
+                    if (thumbnailUrl) {
+                        return {
+                            thumbnailUrl,
+                        };
+                    }
+
+                    return {};
+                },
+            },
+            {}
+        );
+        newsFeed.entries = await Promise.all(
+            (newsFeed.entries || [])
+                .sort((a, b) => new Date(b.published || "").getTime() - new Date(a.published || "").getTime())
+                .slice(0, numberOfNews)
+                .map(async (entry) => {
+                    if (entry.thumbnailUrl) {
+                        entry.thumbnail = await fetchImageToBase64(entry.thumbnailUrl);
+                    }
+                    return entry;
+                })
+        );
+        return newsFeed;
+    } catch (error) {
+        log.error("Error fetching news feed:", error);
+    }
+};
+
+let devlogFeed: NewsFeedData | null = null;
+const fetchDevlogRssFeed: FetchDevlogRssFeed = async () => {
+    try {
+        if (devlogFeed) {
+            return devlogFeed;
+        }
+        devlogFeed = (await extract(configService.getConfig().devlogRssUrl, {}, {})) as NewsFeedData;
+        return devlogFeed;
+    } catch (error) {
+        log.error("Error fetching devlog feed:", error);
+    }
+};
+
+function registerIpcHandlers() {
+    ipcMain.handle("misc:getNewsRssFeed", (_event, numberOfNews: number) => fetchNewsRssFeed(numberOfNews));
+    ipcMain.handle("misc:getDevlogRssFeed", () => fetchDevlogRssFeed());
+}
+
+export const miscService = {
+    registerIpcHandlers,
+};

@@ -1,0 +1,57 @@
+[submodule "tools/unitsync/python"]
+	path = tools/unitsync/python
+	url = https://github.com/spring/pyunitsync.git
+[submodule "tools/pr-downloader"]
+	path = tools/pr-downloader
+	url = https://github.com/beyond-all-reason/pr-downloader
+[submodule "AI/Skirmish/BARb"]
+	path = AI/Skirmish/BARb
+	url = https://github.com/rlcevg/CircuitAI.git
+	branch = barbarian
+[submodule "AI/Skirmish/CircuitAI"]
+	path = AI/Skirmish/CircuitAI
+	url = https://github.com/rlcevg/CircuitAI.git
+	branch = zk
+[submodule "rts/lib/tracy"]
+	path = rts/lib/tracy
+	url = https://github.com/wolfpld/tracy.git
+[submodule "rts/lib/gflags"]
+	path = rts/lib/gflags
+	url = https://github.com/gflags/gflags
+[submodule "rts/lib/entt"]
+	path = rts/lib/entt
+	url = https://github.com/skypjack/entt
+[submodule "rts/lib/cereal"]
+	path = rts/lib/cereal
+	url = https://github.com/USCiLab/cereal.git
+[submodule "rts/lib/RmlUi"]
+	path = rts/lib/RmlUi
+	url = https://github.com/mikke89/RmlUi.git
+[submodule "rts/lib/lunasvg"]
+	path = rts/lib/lunasvg
+	url = https://github.com/sammycage/lunasvg.git
+[submodule "rts/lib/fastgltf"]
+	path = rts/lib/fastgltf
+	url = https://github.com/spnda/fastgltf
+[submodule "rts/lib/simdjson"]
+	path = rts/lib/simdjson
+	url = https://github.com/simdjson/simdjson
+[submodule "rts/lib/nowide"]
+	path = rts/lib/nowide
+	url = https://github.com/boostorg/nowide
+	branch = standalone
+[submodule "rts/lib/fmt"]
+	path = rts/lib/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "rts/lib/mimalloc"]
+	path = rts/lib/mimalloc
+	url = https://github.com/microsoft/mimalloc
+[submodule "rts/lib/sse2neon"]
+	path = rts/lib/sse2neon
+	url = https://github.com/DLTcollab/sse2neon.git
+[submodule "rts/lib/streflop"]
+	path = rts/lib/streflop
+	url = https://github.com/RecoilEngine/streflop.git
+[submodule "rts/lib/monocypher"]
+	path = rts/lib/monocypher
+	url = https://github.com/LoupVaillant/Monocypher.git
