@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eu
+resources="$(CDPATH= cd -- "$(dirname -- "$0")/../Resources" && pwd)"
+state="${BAR_METAL4_STATE_DIRECTORY:-$HOME/Library/Application Support/BAR-Metal4}"
+export BAR_STATE_PATH="$state"
+export BAR_ASSETS_PATH="$state/assets"
+export BAR_METAL4_EXPERIMENTAL_SINGLEPLAYER=1
+export MTL_DEBUG_LAYER=0
+export MTL_SHADER_VALIDATION=0
+export MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING=0
+export BAR_NATIVE_MODEL_TRACE=0
+export BAR_NATIVE_SUBMISSION_TRACE=0
+export BAR_NATIVE_FRAME_TRACE=0
+mkdir -p "$BAR_ASSETS_PATH/maps" "$state/data"
+content="${BAR_METAL4_CONTENT_DIRECTORY:-/opt/homebrew/opt/bar-metal4-content/share/bar-metal4-content}"
+if [ ! -f "$content/packages/7a0e6ff2ee6f899654edd8cc997b5386.sdp" ]; then
+  /usr/bin/osascript -e 'display alert "BAR Metal4 game data is missing" message "Install with Homebrew: brew install --cask yeojuny/bar-metal4/bar-metal4"' >/dev/null 2>&1 || true
+  exit 1
+fi
+if [ ! -f "$BAR_ASSETS_PATH/.content-2026.10.23-ready" ]; then
+  /usr/bin/ditto "$content" "$BAR_ASSETS_PATH"
+  : > "$BAR_ASSETS_PATH/.content-2026.10.23-ready"
+fi
+cd "$resources/BAR.app/Contents/MacOS"
+exec ./BAR --config "$resources/lobby-config.json" "$@"

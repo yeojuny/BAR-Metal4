@@ -18,4 +18,4 @@ The source baseline corresponds to the pre-performance engine binary reference r
 
 The original package26 receipt records successful coupled packaging and signature checks, but manual coupled AI/gameplay acceptance, full visual parity and production acceptance were still pending. Selection-state restoration has bounded runtime evidence; that does not establish full rendering parity.
 
-Still needed: clean-machine end-to-end build, full runtime/content/source closure, redistributable portable app, matched physical-FPS measurements, visual acceptance and multiplayer synchronization validation. The Homebrew formula installs this contributor source kit only. A playable app cask remains pending.
+Still needed: clean-machine end-to-end build, full runtime/content/source closure, redistributable portable app, matched physical-FPS measurements, visual acceptance and multiplayer synchronization validation. The source formula remains a contributor kit. The separate experimental app cask now provides the pre-performance app and content; local fresh-state lobby startup passed, while independent Mac gameplay remains pending.
