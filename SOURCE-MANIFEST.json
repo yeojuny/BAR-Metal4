@@ -51160,19 +51160,9 @@
       "sha256": "c1d36e7696a44723cf91cfce26ac764b8e2004fb1cc454279f5537d40450ee0a"
     },
     {
-      "path": "lobby/src/renderer/assets/audio/music/Matteo_Dell_Acqua-From_the_Ashes.ogg?url",
-      "bytes": 41,
-      "sha256": "0a1255a620e01ed60029c167143c2b0b82031b1f14dad2909453411121ef6115"
-    },
-    {
       "path": "lobby/src/renderer/assets/audio/music/Matteo_Dell_Acqua-Game_of_Chicken.ogg.license",
       "bytes": 176,
       "sha256": "e074e312c9241841aa1f43297161a6243311fe70d59e6f84783702f9362b5d34"
-    },
-    {
-      "path": "lobby/src/renderer/assets/audio/music/Matteo_Dell_Acqua-Game_of_Chicken.ogg?url",
-      "bytes": 41,
-      "sha256": "425b9963d8b5ea59a4226fe4554589968ac88b685398cc80e72d5ce6b4b2221a"
     },
     {
       "path": "lobby/src/renderer/assets/audio/music/Matteo_Dell_Acqua-fooBAR_Menu_Ver.ogg.license",
@@ -51180,19 +51170,9 @@
       "sha256": "e074e312c9241841aa1f43297161a6243311fe70d59e6f84783702f9362b5d34"
     },
     {
-      "path": "lobby/src/renderer/assets/audio/music/Matteo_Dell_Acqua-fooBAR_Menu_Ver.ogg?url",
-      "bytes": 41,
-      "sha256": "9d6e1f332ac43ceed577bf67764d58e26d3b2999c881d6c101bd2699cf889980"
-    },
-    {
       "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Confined_Chaos.ogg.license",
       "bytes": 114,
       "sha256": "e2dde2dbbdeb4dc078ab56aacf78260d33cb8addaea940c4c495293d1b9f7085"
-    },
-    {
-      "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Confined_Chaos.ogg?url",
-      "bytes": 41,
-      "sha256": "3c279b143789cb9a046392895a78e745eb26ef0a38aa5bea2c1b04d0bd97a3ca"
     },
     {
       "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Divergents.ogg.license",
@@ -51200,19 +51180,9 @@
       "sha256": "e2dde2dbbdeb4dc078ab56aacf78260d33cb8addaea940c4c495293d1b9f7085"
     },
     {
-      "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Divergents.ogg?url",
-      "bytes": 41,
-      "sha256": "e4a4ef9071f3c62948f0c57bd3562d87de14f1d495353e2f95578438f939acb8"
-    },
-    {
       "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Friend_Or_Foe.ogg.license",
       "bytes": 114,
       "sha256": "e2dde2dbbdeb4dc078ab56aacf78260d33cb8addaea940c4c495293d1b9f7085"
-    },
-    {
-      "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Friend_Or_Foe.ogg?url",
-      "bytes": 41,
-      "sha256": "c0e93e604dffa878d7497b6c48cad21305dbc3a333a31b7c4ccabde217d5eb22"
     },
     {
       "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-New_Order.ogg.license",
@@ -51220,19 +51190,9 @@
       "sha256": "e2dde2dbbdeb4dc078ab56aacf78260d33cb8addaea940c4c495293d1b9f7085"
     },
     {
-      "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-New_Order.ogg?url",
-      "bytes": 41,
-      "sha256": "de64b55a93500f2019bfb40519341f6a0b8a27d035afceb743b198bc822d3a17"
-    },
-    {
       "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Sanctum.ogg.license",
       "bytes": 114,
       "sha256": "e2dde2dbbdeb4dc078ab56aacf78260d33cb8addaea940c4c495293d1b9f7085"
-    },
-    {
-      "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-Sanctum.ogg?url",
-      "bytes": 41,
-      "sha256": "ab2da957dcc861a07f7fe1454d6ef6840e22267066a812df79f9240c4698b4e4"
     },
     {
       "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-The_Architect.ogg.license",
@@ -51240,144 +51200,14 @@
       "sha256": "e2dde2dbbdeb4dc078ab56aacf78260d33cb8addaea940c4c495293d1b9f7085"
     },
     {
-      "path": "lobby/src/renderer/assets/audio/music/Ryan_Krause-The_Architect.ogg?url",
-      "bytes": 41,
-      "sha256": "0e7c77f0f52735631fcc32ec7182cf2b3c246f4dee40f2039c849d699f94d89f"
-    },
-    {
       "path": "lobby/src/renderer/assets/audio/sfx/button-hover.mp3.license",
       "bytes": 145,
       "sha256": "3b1a1bdaefefba190ae0c830fdf9c4d71f599494b620227c1ba90e45d8552cae"
     },
     {
-      "path": "lobby/src/renderer/assets/audio/sfx/button-hover.mp3?url",
-      "bytes": 1736,
-      "sha256": "d1d65b1a0418ab0faf682b32606ce025282f07747e1b2feafe8f2de87872a35f"
-    },
-    {
       "path": "lobby/src/renderer/assets/audio/sfx/ring.mp3.license",
       "bytes": 163,
       "sha256": "f2ec0c7219b05a13ad9e1e163d50a7545d2a0fc61222061d43e2fc8c28c8d852"
-    },
-    {
-      "path": "lobby/src/renderer/assets/audio/sfx/ring.mp3?url",
-      "bytes": 41,
-      "sha256": "29318921c2bbf97e0c686bc473f6778fe06ffba405e64c161c7b97c4764512e8"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-100-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "3abbddf361ea61ca3b60e5b87f0fa6ce63ff3ca54accc2080a857ede2da71faa"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-100-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "dee3e32a68b31ed14cf992d4af39e1c80652e06049e6af65e342a94df66b857d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-200-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "6fd2ba6e78a60b9ae5b851e6953bb604f2f93fc3325362469ce8247f04b3973c"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-200-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "36ad81b6ad48accadc2c2021cd9ad80f22d7d65eb47b42cb2cc8b0f619370852"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-300-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "44c962160efd4ef94729a88181297d6a909b488d8051cce3fd677b82dd319942"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-300-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "77183819958e27cbeb5a3cb40715e9b5a5a6f3bdb6f0f4474652a7699deb9873"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-400-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "30a703518d62d8ec517cb4e9f581caa4bd9189cd813fa5e28905000be8cdd726"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-400-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "41c49cbc688de7826c6b507c38f6d2189ec625cb76630513326e161e47d8db13"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-500-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "c0ab5e0069e27fade9e1e7ea6d636916b7e9df5a7466fe192640e3c8f3dd3c63"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-500-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "602c32f57541ce90bc0c543affc24a17fb361384d64261b8a4bf4e5c7cb0d848"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-600-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "96e7a88991e7538bcf5f678251a0e4451b7b625343549a3a8325579361f523e2"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-600-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "f46c1904125633eb3f5bbeb9364e5f216f04d0ecd5838fcd368beab553185afb"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-700-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "a5283bb785d7eb96b8b3151d46c4a3e3aa828e7c483a54ac7c40953038e1d1bd"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-700-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "b129cd2d500170c14c94ead2e5ba73296e102daade0e2d8600ed0bf8fbcac5d9"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-800-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "d912f5ac60942d40868f10eafd7405bacb247012d7c0a9030dc71330a2a92fa6"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-800-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "a20abc888a30c584debbe371838326a902f3a7df35a39497c3efa95a36343d9e"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-900-italic.ttf?url",
-      "bytes": 41,
-      "sha256": "43124a89d93767119bbb9d1ab85416a318088fc4793a2db19fa3edc3e728d956"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Poppins-900-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "b4f89dc426a12ddaad37797859a716feaa150ce2461b140c133a7e082d7a7e32"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Rajdhani-300-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "697230a621efd3805688ff34a8ef163d9c50a5bd502910a5f2eb65cf0bd83935"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Rajdhani-400-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "547186faa0441eb7a1e2f60a2327495811da41a30696825f7b103628ea2fc0b3"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Rajdhani-500-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "1239aafe24fe23aa0ae37c649f05f29598d04554201836bdbb07176e4a5c3323"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Rajdhani-600-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "39c2d78cc1136db4d88c9af28bdc74717a1baa48ee99ca5863d15fea80562d4f"
-    },
-    {
-      "path": "lobby/src/renderer/assets/fonts/Rajdhani-700-normal.ttf?url",
-      "bytes": 41,
-      "sha256": "62ab1d197474af3d92a886297068d1f8b336596865168f05ea2c933b4dc20b73"
     },
     {
       "path": "lobby/src/renderer/assets/images/BARLogoFull.png",
@@ -51395,19 +51225,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/backgrounds/3.png?url",
-      "bytes": 41,
-      "sha256": "5c8e20600d5b11dd47c3f48362c0456b3e310d054b529329546632d6231a6a28"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/backgrounds/5.jpg.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/backgrounds/5.jpg?url",
-      "bytes": 41,
-      "sha256": "e35ec3cf1188cbdde2a1a0b4c90a47d3f3da3082619fdbb7c1efaf3033a65751"
     },
     {
       "path": "lobby/src/renderer/assets/images/backgrounds/BAR3-5K_Loadingscreen_1.jpg.license",
@@ -51415,19 +51235,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/backgrounds/BAR3-5K_Loadingscreen_1.jpg?url",
-      "bytes": 41,
-      "sha256": "c5981e3fc85a531174f8bc1017e050598bef3a60454b4ba81af577081b2ed880"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/backgrounds/BAR3-5K_Loadingscreen_2.jpg.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/backgrounds/BAR3-5K_Loadingscreen_2.jpg?url",
-      "bytes": 41,
-      "sha256": "701539a88e9f0ede48c79a89e768ca5f082127a723793d60a917af6b34435de2"
     },
     {
       "path": "lobby/src/renderer/assets/images/backgrounds/BAR4K_Loadingscreen_1.jpg.license",
@@ -51435,29 +51245,14 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/backgrounds/BAR4K_Loadingscreen_1.jpg?url",
-      "bytes": 41,
-      "sha256": "c0ac2e4a1ed13e8a3e556055fc1bb5c20dc88cfc387cefde64d7c576e22c1c54"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/backgrounds/BAR4K_Loadingscreen_5.jpg.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/backgrounds/BAR4K_Loadingscreen_5.jpg?url",
-      "bytes": 41,
-      "sha256": "7b11b0c321d091bd0caa1057d48f322023c4012ac61e4192b1f98edb501d83fa"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/backgrounds/BAR4K_Loadingscreen_9.jpg.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/backgrounds/BAR4K_Loadingscreen_9.jpg?url",
-      "bytes": 41,
-      "sha256": "3b3843e80a3eae50f17d8fbdc776d3d8bb4e5a7a1c17c617ff4d5b5e2ac56604"
     },
     {
       "path": "lobby/src/renderer/assets/images/cursor_default.png.license",
@@ -51473,11 +51268,6 @@
       "path": "lobby/src/renderer/assets/images/default-minimap.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/default-minimap.png?url",
-      "bytes": 41,
-      "sha256": "0ea1ad45aa6f5dcf324c10235561b6378368c65bae8667f45b00552e4af1a6a0"
     },
     {
       "path": "lobby/src/renderer/assets/images/factions/armada_faction.png",
@@ -51570,29 +51360,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_acidic.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_acidic.png?url",
-      "bytes": 4087,
-      "sha256": "c7f8bd558a9658a8ee75484fd08db112e9611c50a1843945f6588dc384357f8e"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_alien.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_alien.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_alien.png?url",
-      "bytes": 4215,
-      "sha256": "a165866df3ce8220d774221b376c40350d9ec059138ebbe3458489da5d01c188"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_asteroid.png.license",
@@ -51600,29 +51370,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_asteroid.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_asteroid.png?url",
-      "bytes": 4587,
-      "sha256": "bd5ff81272e74e852b5c48919f46ceaee16e66987573d271bbf05ee50ae60bd0"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_asymmetrical.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_asymmetrical.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_asymmetrical.png?url",
-      "bytes": 3707,
-      "sha256": "9a19698a5fc65ccd0495ad41a71982012a5e2811c9e5b04fb4fe6a37424c9f03"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_chokepoints.png.license",
@@ -51630,29 +51380,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_chokepoints.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_chokepoints.png?url",
-      "bytes": 2783,
-      "sha256": "df501fadbd646a0a0a13be4727b3dea0c3be98fb8561642344f87e247b3339b5"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_desert.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_desert.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_desert.png?url",
-      "bytes": 3459,
-      "sha256": "e3eef42889cf2870f10c1c8f74fd061aa6e5ef7bcbe77cfc6aeec7740fcf42c6"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_flat.png.license",
@@ -51660,29 +51390,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_flat.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_flat.png?url",
-      "bytes": 2047,
-      "sha256": "db216151e238ed81a9a6e516e2a8f8ea4fbd432489cfbc1213c426d81a79e567"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_forests.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_forests.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_forests.png?url",
-      "bytes": 3515,
-      "sha256": "8974eab8becea686de2fef4b15c44c0b5b9bfa1f579a3ef59911c62721f206b5"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_grassy.png.license",
@@ -51690,29 +51400,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_grassy.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_grassy.png?url",
-      "bytes": 3755,
-      "sha256": "2687fea43ccc0c4d5483e784cb5a8689c8d634a2f341d486f02018ee339f0f1b"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_hills.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_hills.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_hills.png?url",
-      "bytes": 3307,
-      "sha256": "b2a4b00e5a1e7cea328948cc265311bc39363417c5de1263b5fcb14f7ecb9f37"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_ice.png.license",
@@ -51720,29 +51410,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_ice.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_ice.png?url",
-      "bytes": 3191,
-      "sha256": "f103cbc8a8dd4ffc736e93072337e1504da8240cbf3f5a7785c77977b345a53f"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_industrial.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_industrial.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_industrial.png?url",
-      "bytes": 2771,
-      "sha256": "957fe9770021bea83897d631c85c380fa3ff4612b6a3662f557a66ed1ac88c00"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_island.png.license",
@@ -51750,29 +51420,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_island.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_island.png?url",
-      "bytes": 3491,
-      "sha256": "da0008e46dfe35f13d21e99952f2dbb3c2fba845b947f6a9a7b8adfd278a0346"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_jungle.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_jungle.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_jungle.png?url",
-      "bytes": 3135,
-      "sha256": "2527a1a401b5846202e09a75e7ab01aabc6bacc8eca14402902bdcb0434785c0"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_lava.png.license",
@@ -51780,29 +51430,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_lava.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_lava.png?url",
-      "bytes": 4291,
-      "sha256": "b7887200b1b78d87d06a5dfee03c304366545b9118d6f80f73a2b639d097cbe8"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_metal.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_metal.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_metal.png?url",
-      "bytes": 1659,
-      "sha256": "26a7955ee512c1ab3b2fe171a1aff88d140bb99ecf490ef473f6eff70731af5b"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_ruins.png.license",
@@ -51810,29 +51440,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_ruins.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_ruins.png?url",
-      "bytes": 2107,
-      "sha256": "2a6f1531029da5f3cabf15ce09725aa173a880f25eb02c780f0fd1b492ac20cd"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_sea.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_sea.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_sea.png?url",
-      "bytes": 3967,
-      "sha256": "6a72c48fbe2722d4ff9442da3abfb1d15ae9e2a2ddd77ebdd5943a6651606091"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_shallows.png.license",
@@ -51840,29 +51450,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_shallows.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_shallows.png?url",
-      "bytes": 3143,
-      "sha256": "df900d9b83cd1e222c5027fe11120850e5eb0a6f70a67419e8388dcbd4b59ac7"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_space.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_space.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_space.png?url",
-      "bytes": 4007,
-      "sha256": "14d45092a841709d01d00a22ec9990385a1a41aa3a25fca5338d11f96f4805ec"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_swamp.png.license",
@@ -51870,29 +51460,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_swamp.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_swamp.png?url",
-      "bytes": 2711,
-      "sha256": "c7749fbe5fb05af6a1cbd7281a65c97dfd13a5ad4746db892f79536e5a79ceb6"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_tropical.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_tropical.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_tropical.png?url",
-      "bytes": 4047,
-      "sha256": "fa270d3ca8180d257949b32969156ef6e143eed951aef94bd70779b232f3160e"
     },
     {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_wasteland.png.license",
@@ -51900,29 +51470,9 @@
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
     },
     {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_wasteland.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_wasteland.png?url",
-      "bytes": 3291,
-      "sha256": "e412d8ad9deea806cf3cdbdebb2c4fd91ce1cba2ebccc6d5063ea9c6514b446a"
-    },
-    {
       "path": "lobby/src/renderer/assets/images/icons/terrains/map_water.png.license",
       "bytes": 71,
       "sha256": "b8610c1f588a81fe84b5db638d33de7904252cd87e4ddc64d4667d4a3f219556"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_water.png.license?url",
-      "bytes": 150,
-      "sha256": "3b1c897303a410e0c73a47b9bd7f2708df721fb2e93f90f9e37e7489e9e5b33d"
-    },
-    {
-      "path": "lobby/src/renderer/assets/images/icons/terrains/map_water.png?url",
-      "bytes": 2583,
-      "sha256": "ad1dcab2a28ede86aaf5264545b0549be6c1c2e6fa911f629eb1544f183333fb"
     },
     {
       "path": "lobby/src/renderer/assets/images/logo.svg",
@@ -52030,19 +51580,9 @@
       "sha256": "0d32bdf814d860275f40e4e17c1fa449d3c631202d3a3d1806685f63b342fb6f"
     },
     {
-      "path": "lobby/src/renderer/assets/videos/intros/placeholder_intro.mp4?url",
-      "bytes": 41,
-      "sha256": "a7e942672e961a1c292d9d41562b7e48083a7339834f8b4d35a73ff22319b541"
-    },
-    {
       "path": "lobby/src/renderer/assets/videos/misc/active_battle.mkv.license",
       "bytes": 85,
       "sha256": "05ac681d1d3964b83f1e74982a8d4c2c203ef2f86151a985967357670cc6e965"
-    },
-    {
-      "path": "lobby/src/renderer/assets/videos/misc/active_battle.mkv?url",
-      "bytes": 41,
-      "sha256": "01831d7d8e270d3d3097320145b7848996309c7e569fa0e3eb818582f09b1b47"
     },
     {
       "path": "lobby/src/renderer/audio/audio.ts",
