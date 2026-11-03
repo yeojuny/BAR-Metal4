@@ -10,6 +10,11 @@
 
 #include <tuple>
 #include <bit>
+#include <chrono>
+#include <atomic>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "Game/Camera.h"
 #include "Game/CameraHandler.h"
@@ -83,6 +88,25 @@ static inline uint64_t ParticleSortKey(const CProjectile* p, uint32_t camType, b
 // particles (exactly coincident ones) keep their fill order, which is frame
 // coherent. The previous comparison sort tiebroke them by pointer address.
 
+// Optional bounded native-fill evidence. Disabled unless an isolated test
+// supplies a path; records actual worker participation and ordered merge bytes.
+struct NativeParticleFillProbe {
+ using Clock=std::chrono::steady_clock;
+ struct Sink {
+  FILE* file=nullptr;unsigned seen=0,rows=0;
+  Sink(){const char* p=std::getenv("BAR_NATIVE_PARTICLE_FILL_PROBE_FILE");if(p&&*p){file=std::fopen(p,"w");if(file)std::fputs("frame,threaded,particles,threads,workerMask,chunks,unsafe,vertices,indices,fillNs,mergeNs,verifiedMerges\n",file);}}
+  ~Sink(){if(file)std::fclose(file);}
+ };
+ static Sink& Output(){static Sink sink;return sink;}
+ bool active=false,threaded=false;size_t count=0,chunks=0,unsafe=0,baseVertices=0,baseIndices=0,verified=0;uint64_t mergeNs=0,checkNs=0;
+ std::atomic<uint64_t> mask{0};Clock::time_point started;
+ NativeParticleFillProbe(bool native,size_t n,bool mt,size_t v,size_t i):threaded(mt),count(n),baseVertices(v),baseIndices(i){
+  auto& sink=Output();active=native&&n>=192&&sink.file&&sink.rows<2048&&((sink.seen++%8)==0);if(active)started=Clock::now();
+ }
+ void Worker(){if(!active)return;const auto id=ThreadPool::GetThreadNum();if(id>=0&&id<64)mask.fetch_or(uint64_t(1)<<id,std::memory_order_relaxed);}
+ void Finish(size_t v,size_t i){if(!active)return;auto& sink=Output();auto elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now()-started).count();std::fprintf(sink.file,"%d,%d,%zu,%d,%llu,%zu,%zu,%zu,%zu,%llu,%llu,%zu\n",gs->frameNum,int(threaded),count,ThreadPool::GetNumThreads(),(unsigned long long)mask.load(),chunks,unsafe,v-baseVertices,i-baseIndices,(unsigned long long)(elapsed-checkNs),(unsigned long long)mergeNs,verified);++sink.rows;}
+};
+
 // with fewer particles per chunk the for_mt dispatch overhead exceeds the
 // quad-generation work being distributed
 static constexpr size_t MT_FILL_MIN_CHUNK_SIZE = 96;
@@ -94,9 +118,13 @@ static constexpr size_t MT_FILL_MIN_CHUNK_SIZE = 96;
 // Particles with mtDrawSafe == false (immediate GL calls, Lua callins) split
 // the list into segments and are drawn serially, in their exact position.
 template<typename GetParticle>
-static void FillParticleGeometry(std::vector<TypedRenderBuffer<VA_TYPE_PROJ>>& scratchBufs, size_t count, bool threaded, GetParticle&& getParticle)
+static void FillParticleGeometry(std::vector<TypedRenderBuffer<VA_TYPE_PROJ>>& scratchBufs, size_t count, bool threaded, GetParticle&& getParticle, TypedRenderBuffer<VA_TYPE_PROJ>* destination = nullptr)
 {
-	auto& rb = CExpGenSpawnable::GetPrimaryRenderBuffer();
+	auto& rb = destination ? *destination : CExpGenSpawnable::GetPrimaryRenderBuffer();
+	// The main thread may also execute a pool chunk. Restore its outer native
+	// destination after each chunk before serial boundaries and ordered merge.
+	CExpGenSpawnable::ScopedGeomFillTarget target(&rb);
+ NativeParticleFillProbe probe(destination!=nullptr,count,threaded,rb.GetElems().size(),rb.GetIndcs().size());
 
 	size_t segStart = 0;
 	for (size_t i = 0; i <= count; ++i) {
@@ -113,6 +141,7 @@ static void FillParticleGeometry(std::vector<TypedRenderBuffer<VA_TYPE_PROJ>>& s
 		const size_t numChunks = threaded ? std::min<size_t>(ThreadPool::GetNumThreads() * 4, segLen / MT_FILL_MIN_CHUNK_SIZE) : 1;
 
 		if (numChunks < 2) {
+   if(segLen)probe.Worker();
 			for (size_t j = segStart; j < i; ++j)
 				getParticle(j)->Draw();
 		} else {
@@ -123,22 +152,25 @@ static void FillParticleGeometry(std::vector<TypedRenderBuffer<VA_TYPE_PROJ>>& s
 			const size_t chunkSize = (segLen + numChunks - 1) / numChunks;
 			const size_t segEnd = i;
 
-			for_mt(0, static_cast<int>(numChunks), [&scratchBufs, &getParticle, segStart, segEnd, chunkSize](int ci) {
+			if(probe.active)probe.chunks+=numChunks;
+   for_mt(0, static_cast<int>(numChunks), [&scratchBufs, &getParticle, &probe, segStart, segEnd, chunkSize](int ci) {
+    probe.Worker();
 				ZoneScopedN("ProjectileDrawer::DrawAlpha(MTChunk)");
 				auto& scratch = scratchBufs[ci];
 				scratch.Clear();
 
-				CExpGenSpawnable::SetGeomFillTarget(&scratch);
+				CExpGenSpawnable::ScopedGeomFillTarget target(&scratch);
 				const size_t jb = segStart + ci * chunkSize;
 				const size_t je = std::min(jb + chunkSize, segEnd);
 				for (size_t j = jb; j < je; ++j)
 					getParticle(j)->Draw();
-				CExpGenSpawnable::SetGeomFillTarget(nullptr);
 			});
 
 			{
 				// merge in chunk order to preserve the back-to-front particle order
 				ZoneScopedN("ProjectileDrawer::DrawAlpha(MTMerge)");
+    auto mergeStart=probe.active?NativeParticleFillProbe::Clock::now():NativeParticleFillProbe::Clock::time_point{};
+    const auto checksBefore=probe.checkNs;
 				for (size_t ci = 0; ci < numChunks; ++ci) {
 					auto& scratch = scratchBufs[ci];
 					const auto& verts = scratch.GetElems();
@@ -148,19 +180,30 @@ static void FillParticleGeometry(std::vector<TypedRenderBuffer<VA_TYPE_PROJ>>& s
 						continue;
 
 					const auto vertBias = static_cast<int32_t>(rb.GetBaseVertex());
+     const auto indexBefore=probe.active?rb.GetIndcs().size():0;
 					rb.AddVertices(verts.begin(), verts.end());
 					rb.AddIndices(indcs.begin(), indcs.end(), vertBias);
+     if(probe.active){
+      const auto begin=NativeParticleFillProbe::Clock::now();
+      if(std::memcmp(rb.GetElems().data()+vertBias,verts.data(),verts.size()*sizeof(VA_TYPE_PROJ)))throw std::runtime_error("Native particle ordered vertex merge differs");
+      for(size_t k=0;k<indcs.size();++k)if(rb.GetIndcs()[indexBefore+k]!=indcs[k]+vertBias)throw std::runtime_error("Native particle ordered index merge differs");
+      ++probe.verified;probe.checkNs+=std::chrono::duration_cast<std::chrono::nanoseconds>(NativeParticleFillProbe::Clock::now()-begin).count();
+     }
 				}
+    if(probe.active)probe.mergeNs+=std::chrono::duration_cast<std::chrono::nanoseconds>(NativeParticleFillProbe::Clock::now()-mergeStart).count()-(probe.checkNs-checksBefore);
 			}
 		}
 
 		// the boundary particle itself is not MT-safe; draw it serially in its
 		// exact sorted position
-		if (boundaryProj != nullptr)
+		if (boundaryProj != nullptr){
+   if(probe.active)++probe.unsafe;probe.Worker();
 			boundaryProj->Draw();
+  }
 
 		segStart = i + 1;
 	}
+ probe.Finish(rb.GetElems().size(),rb.GetIndcs().size());
 }
 
 CProjectileDrawer* projectileDrawer = nullptr;
@@ -899,39 +942,37 @@ void CProjectileDrawer::FillNativeAlphaGeometry(TypedRenderBuffer<VA_TYPE_PROJ>&
 	for (CProjectile* p : renderProjectiles) {
 		if (!ShouldDrawProjectile(p, passMask))
 			continue;
+		// Classify separate immediate geometry on the main thread; workers never
+		// mutate the shared diagnostic list. Remaining particle order is unchanged.
+		if (dynamic_cast<CTracerProjectile*>(p) != nullptr) {
+			unsupported.emplace_back("Original tracer GL_LINES geometry requires native line consumer");
+			continue;
+		}
 		if (drawSorted && p->drawSorted)
 			sortedParticles.emplace_back(SortableParticle{ParticleSortKey(p, sortCamType, wantDrawOrder), p});
 		else
 			unsortedParticles.emplace_back(p);
 	}
 	RadixSortByKey(sortedParticles, sortScratch, [](const SortableParticle& sp) noexcept { return sp.sortKey; });
-	CExpGenSpawnable::ScopedGeomFillTarget target(&destination);
-	const auto draw = [&unsupported](CProjectile* p) {
-		// Tracer uses its own VA_TYPE_TC immediate GL_LINES buffer. Do not
-		// silently collect an empty replacement for that distinct draw path.
-		if (dynamic_cast<CTracerProjectile*>(p) != nullptr) {
-			unsupported.emplace_back("Original tracer GL_LINES geometry requires native line consumer");
-			return;
-		}
-		p->Draw();
-	};
-	for (const SortableParticle& particle : sortedParticles) draw(particle.proj);
-	for (CProjectile* particle : unsortedParticles) draw(particle);
+	const bool threadedFill = configHandler->GetBool("ProjectileDrawThreadedFill") && ThreadPool::HasThreads();
+	FillParticleGeometry(mtFillBuffers, sortedParticles.size(), threadedFill, [this](size_t j) { return sortedParticles[j].proj; }, &destination);
+	FillParticleGeometry(mtFillBuffers, unsortedParticles.size(), threadedFill, [this](size_t j) { return unsortedParticles[j]; }, &destination);
 }
 
 void CProjectileDrawer::FillNativeShadowGeometry(TypedRenderBuffer<VA_TYPE_PROJ>& destination, std::vector<std::string>& unsupported)
 {
-	// Same source order/filter as DrawShadowTransparent; unlike the main
-	// alpha collector, this pass must not sort or reuse main-view billboards.
-	CExpGenSpawnable::ScopedGeomFillTarget target(&destination);
+	// Same source order/filter and threaded helper as DrawShadowTransparent.
+	unsortedParticles.clear();
 	for (CProjectile* projectile : renderProjectiles) {
 		if (!ShouldDrawProjectile(projectile, DrawFlags::SO_SHTRAN_FLAG)) continue;
 		if (dynamic_cast<CTracerProjectile*>(projectile)!=nullptr) {
 			unsupported.emplace_back("Original transparent-shadow tracer has a separate GL_LINES producer");
 			continue;
 		}
-		projectile->Draw();
+		unsortedParticles.emplace_back(projectile);
 	}
+	const bool threadedFill = configHandler->GetBool("ProjectileDrawThreadedFill") && ThreadPool::HasThreads();
+	FillParticleGeometry(mtFillBuffers, unsortedParticles.size(), threadedFill, [this](size_t j) { return unsortedParticles[j]; }, &destination);
 }
 
 void CProjectileDrawer::DrawAlpha(bool drawAboveWater, bool drawBelowWater, bool drawReflection, bool drawRefraction)

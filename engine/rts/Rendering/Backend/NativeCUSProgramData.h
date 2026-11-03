@@ -31,6 +31,11 @@ struct NativeCUSSampleTransport {
  std::array<uint32_t,12> sampleCodes{};
  uint32_t clampDepthCompareMask=0; // Existing NativeCUSImageMasks.w transport.
 };
+// Match the original 16-byte block padding without uint32 addition overflow.
+inline std::size_t NativeCUSProgramUniformBytes(const NativeCUSGeneratedStage& stage)
+{return (std::size_t(stage.uniformBytes)+15u)&~std::size_t(15u);}
+void PackNativeCUSProgramUniformsInto(const NativeCUSGeneratedStage&,
+ const NativeCUSSourceDraw&,const NativeCUSProgramSource&,const NativeCUSSampleTransport&,std::span<uint8_t>);
 uint32_t NativeCUSSampleCode(const NativeTextureSampling&);
 std::vector<uint8_t> PackNativeCUSProgramUniforms(const NativeCUSGeneratedStage&,
  const NativeCUSSourceDraw&,const NativeCUSProgramSource&,const NativeCUSSampleTransport&);

@@ -1,7 +1,14 @@
+#include "Rendering/Backend/NativePreparationTrace.h"
+#include "Metal4RetiredArguments.h"
+#include "Rendering/Backend/NativeExactWorldLine.h"
+#include "NativeExactWorldLineShaders.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WorldOverlayRenderer.h"
+#include "System/Log/ILog.h"
 #include "NativeSampleShadingShaders.h"
 #include "NativePointCoverageShaders.h"
+#include "NativeWorldFontShaders.h"
+#include "Rendering/Backend/NativeWorldFillGeometry.h"
 #include "NativeWaterOverlayShaders.h"
 #include "Rendering/Backend/NativeWaterOverlayProgram.h"
 #include "Rendering/Backend/NativeSplatPainterProgram.h"
@@ -19,8 +26,48 @@
 #include <algorithm>
 #include <cstring>
 #include <map>
+#include <atomic>
+#include <cstdlib>
+#include <cstdio>
+#include "Metal4SharedUploadPool.h"
+#include "Metal4SourceLines133.h"
+@interface M4WorldFontUploadLifetime : NSObject {
+@public
+ std::shared_ptr<rendering::metal4::ScreenUploadStorage> storage;
+ std::vector<std::shared_ptr<rendering::metal4::ScreenUploadStorage>> lineStorage;
+ std::vector<std::shared_ptr<rendering::metal4::PreparedSourceLines133>> sourceLines;
+}
+@end
+@implementation M4WorldFontUploadLifetime
+@end
 namespace rendering::metal4 {
 namespace {
+// Optional bounded counters, written once at normal process exit. No GPU
+// reads, screenshots, per-frame I/O or default-on measurement overhead.
+struct WorldFontProbe {
+ const char* path;
+ explicit WorldFontProbe(const char* environment):path(std::getenv(environment)){}
+ std::atomic<uint64_t> batches{0},draws{0},vertices{0},bytes{0},allocations{0},uvDraws{0};
+ bool Enabled()const{return path&&*path;}
+ ~WorldFontProbe(){if(!Enabled())return;if(auto f=std::fopen(path,"w")){std::fprintf(f,"batches,draws,vertices,bytes,newAllocations,affineUVDraws\n%llu,%llu,%llu,%llu,%llu,%llu\n",(unsigned long long)batches.load(),(unsigned long long)draws.load(),(unsigned long long)vertices.load(),(unsigned long long)bytes.load(),(unsigned long long)allocations.load(),(unsigned long long)uvDraws.load());std::fclose(f);}}
+};
+WorldFontProbe& FontProbe(){static WorldFontProbe probe("BAR_NATIVE_WORLD_FONT_PROBE_FILE");return probe;}
+struct ExactLineProbe {
+ const char* path=std::getenv("BAR_NATIVE_WORLD_LINE_PROBE_FILE");std::atomic<uint64_t> draws{0},vertices{0},bytes{0},allocations{0},hits{0};
+ bool Enabled()const{return path&&*path;}
+ ~ExactLineProbe(){if(!Enabled())return;if(auto f=std::fopen(path,"w")){std::fprintf(f,"gpuDraws,gpuVertices,sharedPacketBytes,newBuffers,completedCacheHits\n%llu,%llu,%llu,%llu,%llu\n",(unsigned long long)draws.load(),(unsigned long long)vertices.load(),(unsigned long long)bytes.load(),(unsigned long long)allocations.load(),(unsigned long long)hits.load());std::fclose(f);}}
+};
+ExactLineProbe& LineProbe(){static ExactLineProbe probe;return probe;}
+struct StageLineProbe124 {
+ const char* path=std::getenv("BAR_NATIVE_STAGE_LINE_PROBE_FILE");
+ struct Row {std::atomic<uint64_t> draws{0},vertices{0},reclaim{0};};
+ std::array<Row,size_t(NativeWorldDrawStage::TerrainReflection)+1> rows;
+ bool Enabled()const{return path&&*path;}
+ ~StageLineProbe124(){if(!Enabled())return;if(auto f=std::fopen(path,"w")){std::fprintf(f,"stage,gpuDraws,gpuVertices,reclaimDraws\n");for(size_t i=0;i<rows.size();++i)if(rows[i].draws.load())std::fprintf(f,"%zu,%llu,%llu,%llu\n",i,(unsigned long long)rows[i].draws.load(),(unsigned long long)rows[i].vertices.load(),(unsigned long long)rows[i].reclaim.load());std::fclose(f);}}
+};
+StageLineProbe124& StageProbe124(){static StageLineProbe124 probe;return probe;}
+
+WorldFontProbe& FillProbe(){static WorldFontProbe probe("BAR_NATIVE_WORLD_FILL_PROBE_FILE");return probe;}
 const char* SOURCE=RECOIL_NATIVE_SAMPLE_SHADING_MSL RECOIL_NATIVE_POINT_COVERAGE_MSL R"MSL(
 #include <metal_stdlib>
 using namespace metal;
@@ -46,11 +93,12 @@ MRTOutput Broadcast(float4 c){MRTOutput out;out.c0=out.c1=out.c2=out.c3=out.c4=c
 #define OUTPUT_TYPE float4
 #define OUTPUT_VALUE(c) c
 #endif
+)MSL" RECOIL_WORLD_FONT_MSL R"MSL(
 struct V {packed_float4 clip,color;packed_float4 uv;};
 struct U {float4 scale;uint4 options;float4 parameters;float4 scale1;uint4 options1;float4 parameters1;float4 arrowShape,arrowDetail,arrowFill,arrowOutline;float4 hullColor,hullStripe,hullCentroid,hullAnimation;float4x4 overlayViewProjInv;float4 overlayPlacement,overlayFit,overlayMapSize;float4 losImage,losRaster;uint4 pointRaster;};
 struct Out {float4 position [[position]];float4 color [[RECOIL_SAMPLE_PERSPECTIVE]];float4 uv [[RECOIL_SAMPLE_PERSPECTIVE]];float4 pointDisk [[flat]];};
 vertex Out WorldOverlayVertex(uint id [[vertex_id]],device const V* vertices [[buffer(0)]],constant U& u [[buffer(1)]],device const packed_float4* pointDisks [[buffer(2)]]) {
- const V v=vertices[id];Out o;o.position=float4(v.clip);o.position.z=(o.position.z+o.position.w)*.5f;o.color=float4(v.color);o.uv=float4(v.uv);o.pointDisk=u.pointRaster.x?float4(pointDisks[id]):float4(0.0f);return o;
+ const V v=vertices[id];Out o;o.position=float4(v.clip);if(u.pointRaster.y)o.position=WorldFontPosition(reinterpret_cast<device const packed_float4*>(vertices),o.position);else o.position.z=(o.position.z+o.position.w)*.5f;o.color=float4(v.color);o.uv=float4(v.uv);if(u.pointRaster.z)o.uv=WorldTextureCoordinate(reinterpret_cast<device const packed_float4*>(vertices),o.uv);o.pointDisk=u.pointRaster.x?float4(pointDisks[id]):float4(0.0f);return o;
 }
 struct PointOutput {
  float4 c0 [[color(0)]];
@@ -278,63 +326,110 @@ MTLStencilOperation Operation(NativeWorldStencilOp value)
 	switch(value){case NativeWorldStencilOp::Keep:return MTLStencilOperationKeep;case NativeWorldStencilOp::Zero:return MTLStencilOperationZero;case NativeWorldStencilOp::Replace:return MTLStencilOperationReplace;case NativeWorldStencilOp::IncrementClamp:return MTLStencilOperationIncrementClamp;case NativeWorldStencilOp::DecrementClamp:return MTLStencilOperationDecrementClamp;case NativeWorldStencilOp::Invert:return MTLStencilOperationInvert;case NativeWorldStencilOp::IncrementWrap:return MTLStencilOperationIncrementWrap;case NativeWorldStencilOp::DecrementWrap:return MTLStencilOperationDecrementWrap;}
 	throw std::runtime_error("Native world stencil operation unsupported");
 }
+ #include "Metal4WorldGeometryView.inc"
+#include "Metal4WorldGeometryProbe174.inc"
 id<MTLBuffer> Buffer(RuntimeLease& lease,const void* bytes,size_t size)
 {
+ PreparationTraceScope bufferProbe91(32);CountPreparationTrace(12,1);CountPreparationTrace(13,size);
 	Require(size&&size<=lease.Device().maxBufferLength,"Native world overlay buffer extent invalid");auto value=[lease.Device() newBufferWithBytes:bytes length:size options:MTLResourceStorageModeShared];Require(value!=nil,"Native world overlay allocation failed");lease.AddAllocation(value);return value;
 }
 }
+struct ExactLineJob {
+ __strong id<MTLComputePipelineState> pipeline=nil;
+ __strong id<MTL4ArgumentTable> arguments=nil;
+ std::shared_ptr<std::atomic<bool>> completed;
+ uint32_t quads=0;
+ bool encoded=false;
+};
 struct PreparedWorldOverlayFrame::Impl {
+ RetiredArgumentOwners argumentOwners;
+ __strong M4WorldFontUploadLifetime* fontUploadLifetime=nil;
 	struct Draw {
 		uint64_t sequence=0;NativeWorldDrawStage stage=NativeWorldDrawStage::World;
-  std::shared_ptr<PreparedUnitEffect> unitEffect;
+  std::shared_ptr<ExactLineJob> line;
+  std::shared_ptr<PreparedSourceLines133> sourceLines;
+		std::shared_ptr<PreparedUnitEffect> unitEffect;
   std::shared_ptr<PreparedUnitGlass> unitGlass;
 		__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;
 		__strong id<MTL4ArgumentTable> arguments=nil;__strong id<MTLBuffer> indices=nil;
 		NativeWorldDrawState state;MTLViewport viewport{};MTLScissorRect scissor{};uint32_t count=0;
-		bool polygon=false;
+		bool polygon=false;size_t indexOffset=0,indexLength=0;
 		std::vector<PreparedScreenExternalImage> externalImages;
  std::vector<PreparedPiPSourceImage> typedImages;
 	};
 	std::vector<Draw> draws;
+ bool hasLineJobs=false;
 };
 PreparedWorldOverlayFrame::PreparedWorldOverlayFrame():impl(std::make_unique<Impl>()){}
 PreparedWorldOverlayFrame::~PreparedWorldOverlayFrame()=default;
-void PreparedWorldOverlayFrame::EncodeDependencies(id<MTL4CommandBuffer> command)const{for(const auto& d:impl->draws)if(d.unitGlass)d.unitGlass->EncodeDependencies(command);for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.encodeDependencies)image.encodeDependencies(command);}
-void PreparedWorldOverlayFrame::DidComplete()const{for(const auto& d:impl->draws)if(d.unitGlass)d.unitGlass->DidComplete();for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.didComplete)image.didComplete();}
+void PreparedWorldOverlayFrame::EncodeLineDependencies(id<MTL4CommandBuffer> command)const{
+ for(const auto& d:impl->draws)if(d.sourceLines)d.sourceLines->EncodeDependencies(command);
+ if(!impl->hasLineJobs)return;
+ id<MTL4ComputeCommandEncoder> lines=nil;
+ for(const auto& d:impl->draws)if(d.line){auto& job=*d.line;Require(!job.encoded,"Exact world lines were encoded twice");if(!lines){lines=[command computeCommandEncoder];Require(lines,"Cannot encode exact world lines");}[lines setComputePipelineState:job.pipeline];[lines setArgumentTable:job.arguments];[lines dispatchThreads:MTLSizeMake(job.quads,1,1) threadsPerThreadgroup:MTLSizeMake(64,1,1)];job.encoded=true;}
+ if(lines){[lines barrierAfterStages:MTLStageDispatch beforeQueueStages:MTLStageVertex visibilityOptions:MTL4VisibilityOptionDevice];[lines endEncoding];}
+}
+void PreparedWorldOverlayFrame::EncodeDependencies(id<MTL4CommandBuffer> command)const{
+ EncodeLineDependencies(command);
+for(const auto& d:impl->draws)if(d.unitGlass)d.unitGlass->EncodeDependencies(command);for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.encodeDependencies)image.encodeDependencies(command);}
+void PreparedWorldOverlayFrame::CompleteLineDependencies()const{if(!impl->hasLineJobs)return;for(const auto& d:impl->draws)if(d.line){Require(d.line->encoded,"Unencoded exact lines cannot enter immutable cache");d.line->completed->store(true,std::memory_order_release);}
+}
+void PreparedWorldOverlayFrame::DidComplete()const{
+ CompleteLineDependencies();
+for(const auto& d:impl->draws)if(d.unitGlass)d.unitGlass->DidComplete();for(const auto& d:impl->draws)for(const auto& image:d.typedImages)if(image.didComplete)image.didComplete();}
 size_t PreparedWorldOverlayFrame::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedWorldOverlayFrame::SequenceAt(size_t i)const{return impl->draws.at(i).sequence;}
 NativeWorldDrawStage PreparedWorldOverlayFrame::StageAt(size_t i)const{return impl->draws.at(i).stage;}
 void PreparedWorldOverlayFrame::EncodeDraw(size_t i,id<MTL4RenderCommandEncoder> encoder)const
 {
 	const auto& d=impl->draws.at(i);if(d.unitGlass){d.unitGlass->Encode(encoder);return;}if(d.unitEffect){d.unitEffect->Encode(encoder);return;}if(!d.count)return;
+ if(d.sourceLines)d.sourceLines->RequireReady();
+	if(d.line)Require(d.line->encoded,"Exact world line producer must precede its draw");
 	for(const auto& image:d.externalImages)image.requireReadable();
  for(const auto& image:d.typedImages)image.requireReadable();
 	[encoder setRenderPipelineState:d.pipeline];[encoder setDepthStencilState:d.depth];
-	[encoder setViewport:d.viewport];[encoder setScissorRect:d.scissor];[encoder setDepthClipMode:d.state.depthClamp?MTLDepthClipModeClamp:MTLDepthClipModeClip];
+	[encoder setViewport:d.viewport];[encoder setScissorRect:d.scissor];[encoder setDepthClipMode:(d.sourceLines||d.state.depthClamp)?MTLDepthClipModeClamp:MTLDepthClipModeClip];
 	[encoder setFrontFacingWinding:MTLWindingCounterClockwise];
 	[encoder setCullMode:d.polygon&&d.state.cullEnabled?(d.state.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack):MTLCullModeNone];
 	[encoder setDepthBias:d.polygon&&d.state.polygonOffset?d.state.offsetUnits:0 slopeScale:d.polygon&&d.state.polygonOffset?d.state.offsetFactor:0 clamp:0];
-	[encoder setStencilFrontReferenceValue:uint32_t(std::clamp(d.state.frontStencil.reference,0,255)) backReferenceValue:uint32_t(std::clamp(d.state.backStencil.reference,0,255))];
+	[encoder setStencilFrontReferenceValue:uint32_t(std::clamp(d.state.frontStencil.reference,0,255)) backReferenceValue:uint32_t(std::clamp(d.sourceLines?d.state.frontStencil.reference:d.state.backStencil.reference,0,255))];
 	[encoder setArgumentTable:d.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-	[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:d.count indexType:MTLIndexTypeUInt32 indexBuffer:d.indices.gpuAddress indexBufferLength:d.indices.length];
+ if(d.sourceLines)[encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4 instanceCount:d.count];
+ else [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:d.count indexType:MTLIndexTypeUInt32 indexBuffer:d.indices.gpuAddress+d.indexOffset indexBufferLength:d.indexLength?d.indexLength:d.indices.length];
 	[encoder setDepthBias:0 slopeScale:0 clamp:0];
 }
 struct SquadHullCompiledOwner {__strong id<MTLLibrary> library=nil;__strong id<MTLRenderPipelineState> pipeline=nil;};
+#include "Metal4WorldLineGeometryCache.inc"
 struct WorldOverlayGPU::Impl {
+ SourceLinesGPU133 sourceLines;
+ RetiredArguments argumentPool;
+ WorldLineGeometryCache lineGeometry;
+ __strong id<MTLLibrary> lineLibrary=nil;
+ __strong id<MTLComputePipelineState> linePipeline=nil;
+ bool lineValidation=false;
+ void CompileLines(RuntimeLease& lease,bool validation,double& shaderMs){
+  if(linePipeline&&lineValidation==validation)return;
+  const auto start=Clock::now();NSError* error=nil;auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+  auto library=lease.NewLibraryWithSource(String(ExactWorldLineShader),options,&error);Require(library,"Cannot compile exact world line arithmetic: "+Error(error));
+  auto function=[MTL4LibraryFunctionDescriptor new];function.library=library;function.name=@"ExactWorldLineGeometry";auto descriptor=[MTL4ComputePipelineDescriptor new];descriptor.computeFunctionDescriptor=function;descriptor.options=[MTL4PipelineOptions new];descriptor.options.shaderValidation=ShaderValidationMode(validation);
+  auto pipeline=[lease.Compiler() newComputePipelineStateWithDescriptor:descriptor compilerTaskOptions:nil error:&error];Require(pipeline,"Cannot compile exact world line geometry: "+Error(error));lineLibrary=library;linePipeline=pipeline;lineValidation=validation;shaderMs+=Milliseconds(start);
+ }
+
+ ScreenUploadPool fontUploadPool;
  std::shared_ptr<const SquadHullCompiledOwner> squadHullCompiled,terraformOverlayCompiled,losViewCompiled,splatOverlayCompiled;
  std::array<std::shared_ptr<const SquadHullCompiledOwner>,2> waterOverlayCompiled;
  UnitEffectsGPU unitEffects;
  UnitGlassGPU unitGlass;
-	std::array<__strong id<MTLLibrary>,3> libraries{};
+	std::array<__strong id<MTLLibrary>,3> libraries{},fontLibraries{};
 	std::map<std::tuple<uint64_t,bool,unsigned,bool,unsigned,unsigned>,id<MTLRenderPipelineState>> pipelines;
-	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const ScreenBlendState& blend,const std::array<bool,4>& mask,MTLPixelFormat format,bool validation,double& shaderMs,unsigned sampledDepthMask,bool mapMRTBroadcast,bool alphaToCoverage,unsigned samples,bool combined=false,unsigned combinedMask=15)
+	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const ScreenBlendState& blend,const std::array<bool,4>& mask,MTLPixelFormat format,bool validation,double& shaderMs,unsigned sampledDepthMask,bool mapMRTBroadcast,bool alphaToCoverage,unsigned samples,bool combined=false,unsigned combinedMask=15,bool gpuFont=false)
 	{
-		const uint64_t key=uint64_t(format)<<32|uint64_t(validation)<<31|uint64_t(blend.enabled)|uint64_t(blend.sourceColor)<<1|uint64_t(blend.destinationColor)<<5|uint64_t(blend.sourceAlpha)<<9|uint64_t(blend.destinationAlpha)<<13|uint64_t(mask[0])<<17|uint64_t(mask[1])<<18|uint64_t(mask[2])<<19|uint64_t(mask[3])<<20|uint64_t(blend.colorEquation)<<21|uint64_t(blend.alphaEquation)<<24|uint64_t(mapMRTBroadcast)<<30;
+		const uint64_t key=uint64_t(gpuFont)<<29|uint64_t(format)<<32|uint64_t(validation)<<31|uint64_t(blend.enabled)|uint64_t(blend.sourceColor)<<1|uint64_t(blend.destinationColor)<<5|uint64_t(blend.sourceAlpha)<<9|uint64_t(blend.destinationAlpha)<<13|uint64_t(mask[0])<<17|uint64_t(mask[1])<<18|uint64_t(mask[2])<<19|uint64_t(mask[3])<<20|uint64_t(blend.colorEquation)<<21|uint64_t(blend.alphaEquation)<<24|uint64_t(mapMRTBroadcast)<<30;
 		const auto pipelineKey=std::make_tuple(key,alphaToCoverage,lease.SampleShadingKey(samples),combined,combinedMask,sampledDepthMask);
 		if(auto found=pipelines.find(pipelineKey);found!=pipelines.end())return found->second;
 		const auto start=Clock::now();NSError* error=nil;
-		auto& library=libraries[combined?2:mapMRTBroadcast?1:0];
-  if(library==nil){auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String(SOURCE);auto compile=[MTLCompileOptions new];compile.preprocessorMacros=@{@"MAP_MRT_BROADCAST":@(mapMRTBroadcast),@"MAP_MRT_COMBINED":@(combined)};descriptor.options=compile;descriptor.name=@"Original common Lua world primitives";library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile native world overlay shader: "+Error(error));}
+		auto& library=(gpuFont?fontLibraries:libraries)[combined?2:mapMRTBroadcast?1:0];
+  if(library==nil){auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String(SOURCE);auto compile=[MTLCompileOptions new];if(gpuFont){compile.mathMode=MTLMathModeSafe;compile.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;}compile.preprocessorMacros=@{@"MAP_MRT_BROADCAST":@(mapMRTBroadcast),@"MAP_MRT_COMBINED":@(combined)};descriptor.options=compile;descriptor.name=@"Original common Lua world primitives";library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile native world overlay shader: "+Error(error));}
 		auto d=[MTL4RenderPipelineDescriptor new];auto vs=[MTL4LibraryFunctionDescriptor new];vs.library=library;vs.name=sampledDepthMask==8?@"WaterSurfaceVertex":sampledDepthMask==9?@"WaterFogVertex":@"WorldOverlayVertex";d.vertexFunctionDescriptor=vs;auto fs=[MTL4LibraryFunctionDescriptor new];fs.library=library;fs.name=sampledDepthMask==10?@"WorldSplatOverlayFragment":sampledDepthMask==8?@"WaterSurfaceFragment":sampledDepthMask==9?@"WaterFogFragment":sampledDepthMask==7?@"WorldLOSViewFragment":sampledDepthMask==6?@"WorldTerraformOverlayFragment":sampledDepthMask==5?@"WorldSquadHullFragment":sampledDepthMask==4?@"WorldEasyFacingFragment":String(std::string("WorldOverlayFragment")+(sampledDepthMask?std::to_string(sampledDepthMask):""));d.fragmentFunctionDescriptor=fs;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
 		d.rasterSampleCount=samples;
 		d.alphaToCoverageState=alphaToCoverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;
@@ -367,17 +462,21 @@ void WorldOverlayGPU::InitializeReclaimLines(RuntimeLease& lease,MTLPixelFormat 
   Require(w->pipeline!=nil&&w->library!=nil,"Water Overlay actual surface/fog program unavailable");impl->waterOverlayCompiled[n]=w;SetNativeWaterOverlayConsumer(n,std::move(w));
  }
 }
-void WorldOverlayGPU::ClearResources(){impl->unitGlass.ClearResources();impl->unitEffects.ClearResources();} // Immutable images belong to the shared ScreenGPU; compiled programs remain valid.
-std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawFrame& frame,
+void WorldOverlayGPU::ClearResources(){impl->sourceLines.Clear();impl->argumentPool.Clear();impl->unitGlass.ClearResources();impl->unitEffects.ClearResources();} // Immutable images belong to the shared ScreenGPU; compiled programs remain valid.
+std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& frame,
 	ScreenGPU& images,const PreparedScreenFrame* targetProducers,const WorldCamera& camera,uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,
 	MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool validation,double& shaderMs,bool mapMRTBroadcast,unsigned samples,bool mapCombinedColor,const CUSSourceImageProvider& glassImages)
 {
+ frame.RequireOverlay();
+ std::unique_ptr<WorldGeometryProbe174> observed174;
+ if(worldPlan167::Observe174(frame.SourceDrawFrame()))observed174=std::make_unique<WorldGeometryProbe174>();
+ PreparationTraceScope overlayProbe91(26);
 	Require(!mapMRTBroadcast||(colorFormat==MTLPixelFormatRGBA8Unorm&&stencilFormat==MTLPixelFormatInvalid),"Map generic broadcast requires its actual five-color/no-stencil target");
  Require(depthFormat==MTLPixelFormatDepth32Float||depthFormat==MTLPixelFormatDepth32Float_Stencil8,"Native world overlay requires actual scene depth");
 // Preflight the entire marked frame before allocations or any early-out.
 	// Source-white complement blending is algebraically byte inversion on
 	// linear UNORM8 only. Exact hardware bytes require the dedicated GPU gate.
-	for (const auto& source : frame.draws) if (source.world.invertColorUnorm8) {
+	for (const auto& source : frame) if (source.world.invertColorUnorm8) {
 		Require(colorFormat == MTLPixelFormatBGRA8Unorm || colorFormat == MTLPixelFormatRGBA8Unorm,
 			"Rectangle inversion requires a linear eight-bit UNORM target");
 		Require(!mapMRTBroadcast && !mapCombinedColor && source.stage == NativeWorldDrawStage::World,
@@ -394,20 +493,78 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
 		for (const auto& vertex : source.vertices)
 			Require(vertex.color == ScreenColor{1,1,1,1}, "Rectangle inversion requires exact opaque white source vertices");
 	}
-	auto result=std::make_unique<PreparedWorldOverlayFrame>();
-	uint64_t lastSequence=0;
-	for(const auto& source:frame.draws) {
-		ValidateNativeWorldDrawCommand(source);Require(source.sequence>lastSequence,"Native world draw ordinal must retain actual call order");lastSequence=source.sequence;
+ impl->sourceLines.BeginBatch(lease);
+	impl->argumentPool.BeginBatch(lease);auto result=std::make_unique<PreparedWorldOverlayFrame>();
+ // Font matrices, vertices, indices and uniforms share one CPU-visible GPU
+ // allocation per Prepare. No GPU copy or extra submission is introduced.
+ // Both the prepared frame and completion/poison graph own the reuse token.
+ impl->fontUploadPool.BeginBatch(lease.Device());size_t fontBytes=0;
+ const size_t fontMaximum=lease.Device().maxBufferLength;
+ const auto aligned=[](size_t n){return (n+255)&~size_t(255);};
+ bool packFonts=true;
+ for(const auto& source:frame)if(IsWorldMatrixGPU(source.sourcePrimitive)){
+  for(size_t length:{source.vertices.size()*sizeof(NativeWorldDrawVertex),source.indices.size()*sizeof(uint32_t),sizeof(Uniform)}){
+   if(length>fontMaximum||fontBytes>fontMaximum-std::min(fontMaximum,size_t(255))||aligned(fontBytes)>fontMaximum-length){packFonts=false;break;}
+   fontBytes=aligned(fontBytes)+length;
+  }
+  if(!packFonts)break;
+ }
+ id<MTLBuffer> fontBuffer=nil;size_t fontCursor=0;
+ if(packFonts&&fontBytes){
+  result->impl->fontUploadLifetime=[M4WorldFontUploadLifetime new];lease.Retain(result->impl->fontUploadLifetime);
+  auto& slot=result->impl->fontUploadLifetime->storage;const auto cachedBefore=impl->fontUploadPool.CachedCount();slot=impl->fontUploadPool.Acquire(lease.Device(),fontBytes);
+  fontBuffer=slot?slot->buffer:[lease.Device() newBufferWithLength:fontBytes options:MTLResourceStorageModeShared];
+  if(observed174&&fontBuffer){observed174->matrixBufferRequest=fontBytes;if(!slot||impl->fontUploadPool.CachedCount()>cachedBefore)observed174->matrixNewBufferBytes=fontBuffer.length;}
+  if(fontBuffer&&FontProbe().Enabled()){FontProbe().batches.fetch_add(1,std::memory_order_relaxed);FontProbe().bytes.fetch_add(fontBytes,std::memory_order_relaxed);if(!slot||impl->fontUploadPool.CachedCount()>cachedBefore)FontProbe().allocations.fetch_add(1,std::memory_order_relaxed);}
+  if(fontBuffer){Require(fontBuffer.contents,"World font shared buffer has no CPU address");lease.AddAllocation(fontBuffer);CountPreparationTrace(12,1);CountPreparationTrace(13,fontBytes);}
+ }
+ const auto packFont=[&](const void* data,size_t length){
+  fontCursor=aligned(fontCursor);Require(fontBuffer&&length&&fontCursor<=fontBytes&&length<=fontBytes-fontCursor,"World font shared upload bounds differ");
+  const auto offset=fontCursor;std::memcpy(static_cast<uint8_t*>(fontBuffer.contents)+offset,data,length);fontCursor+=length;return offset;
+ };
+ WorldBorrowMetrics168 borrowWork168;
+	uint64_t lastSequence=0;std::size_t sourceOrdinal92=0;
+	for(const auto& source:frame) {
+  const auto lineOrdinal92=sourceOrdinal92++;
+  auto* row174=observed174?&observed174->Select(source):nullptr;
+  const auto validationStart174=row174?WorldGeometryProbe174::Clock::now():WorldGeometryProbe174::Clock::time_point{};
+		const ScopedWorldBorrow168 validatedBorrow168(source,borrowWork168);Require(source.sequence>lastSequence,"Native world draw ordinal must retain actual call order");lastSequence=source.sequence;
+  if(row174)row174->validationNS+=WorldGeometryProbe174::Since(validationStart174);
   if(source.unitGlass){Require(!mapMRTBroadcast,"Glass cannot execute in terrain MRT");PreparedWorldOverlayFrame::Impl::Draw draw;draw.sequence=source.sequence;draw.stage=source.stage;draw.unitGlass=impl->unitGlass.Prepare(lease,source,glassImages,camera,width,height,logicalWidth,logicalHeight,colorFormat,depthFormat,stencilFormat,validation,shaderMs,samples);result->impl->draws.push_back(std::move(draw));continue;}
   if(source.unitEffect){Require(!mapMRTBroadcast,"Airjets cannot execute in a terrain MRT callback");PreparedWorldOverlayFrame::Impl::Draw draw;draw.sequence=source.sequence;draw.stage=source.stage;draw.unitEffect=impl->unitEffects.Prepare(lease,source,images,targetProducers,camera,width,height,logicalWidth,logicalHeight,colorFormat,depthFormat,stencilFormat,validation,shaderMs,samples);result->impl->draws.push_back(std::move(draw));continue;}
 		if(source.distortion)continue; // Paired command-level original Distortion consumer.
 		if(source.objectSpotlight)continue; // Dedicated original instanced-cylinder vertex/fragment consumer.
 		if(source.grass||source.resourceSpots||source.sensorLOS)continue; // Actual indexed Grass buffers belong to their paired GPU consumer.
-		if(source.reclaimField&&!source.reclaimField->edges)continue; // Consumed by the paired original-buffer fill stage.
+		if(source.reclaimField)continue; // Paired original-buffer consumer owns fill and outline, including fallback/order.
 		auto rectangle=camera.viewport;if(source.surface.viewport){const auto& v=*source.surface.viewport;Require(v.width<=INT32_MAX && v.height<=INT32_MAX,"Original world viewport exceeds GLsizei");rectangle={v.x,v.y,std::int32_t(v.width),std::int32_t(v.height)};}
 		if(rectangle[2]==0 || rectangle[3]==0)continue;
 		auto mapped=MapWorldViewport(rectangle,logicalWidth,logicalHeight,width,height);if(!mapped)continue;
-		auto mesh=BuildNativeWorldDrawGeometry(source,mapped->viewport,width,height,samples);if(mesh.indices.empty())continue;
+  const unsigned geometryCategory91=source.primitive==NativeDrawPrimitive::Lines?29:source.primitive==NativeDrawPrimitive::Points?30:
+   (source.world.frontPolygonMode!=NativePolygonMode::Fill||source.world.backPolygonMode!=NativePolygonMode::Fill)?31:source.world.inheritedClipPlane?28:27;
+  const auto geometryStart91=StartPreparationScope();
+  const auto meshStart174=row174?WorldGeometryProbe174::Clock::now():WorldGeometryProbe174::Clock::time_point{};
+  const auto cachedLines=source.sourceLines?nullptr:impl->lineGeometry.Find(lease,source,lineOrdinal92,mapped->viewport,width,height,samples);
+  if(cachedLines&&cachedLines->completed&&LineProbe().Enabled())LineProbe().hits.fetch_add(1,std::memory_order_relaxed);
+  std::optional<exactWorldLine::Packet> linePacket;
+  if(!source.sourceLines&&!cachedLines)linePacket=exactWorldLine::TryBuild(source,mapped->viewport,width,height,samples);
+  NativeWorldRasterMesh mesh;
+  if(source.sourceLines)mesh.fullViewport=true;
+  else if(linePacket)mesh.fullViewport=samples>1;
+  const bool borrowed=!source.sourceLines&&!linePacket&&!cachedLines&&validatedBorrow168.Borrow(mapped->viewport,width,height,samples);
+  if(!source.sourceLines&&!cachedLines&&!borrowed&&!linePacket)mesh=BuildNativeWorldDrawGeometry(source,mapped->viewport,width,height,samples);
+  const auto& meshVertices=borrowed?source.vertices:mesh.vertices;
+  const auto& meshIndices=borrowed?source.indices:mesh.indices;
+  if(row174){
+   row174->meshNS+=WorldGeometryProbe174::Since(meshStart174);
+   if(source.sourceLines)++row174->sourceLines;else if(cachedLines)++row174->hit;else if(linePacket)++row174->exact;
+   else if(borrowed)++row174->borrow;else ++row174->rebuild;
+   row174->meshV+=cachedLines?cachedLines->vertices.length/sizeof(NativeWorldDrawVertex):linePacket?size_t(linePacket->quads)*4:meshVertices.size();
+   row174->meshI+=cachedLines?cachedLines->count:linePacket?size_t(linePacket->quads)*6:meshIndices.size();
+  }
+  EndPreparationScope(geometryCategory91,geometryStart91);CountPreparationTrace(14+geometryCategory91-27,1);
+  CountPreparationTrace(19+geometryCategory91-27,source.vertices.size()*sizeof(NativeWorldDrawVertex)+source.indices.size()*sizeof(uint32_t));
+  CountPreparationTrace(24+geometryCategory91-27,(cachedLines?cachedLines->vertices.length+cachedLines->indices.length:linePacket?uint64_t(linePacket->quads)*(4*sizeof(NativeWorldDrawVertex)+6*sizeof(uint32_t)):meshVertices.size()*sizeof(NativeWorldDrawVertex)+meshIndices.size()*sizeof(uint32_t)));
+  if(!source.sourceLines && !cachedLines && !linePacket && meshIndices.empty())continue;
 		const auto& s=source.world;
 		if(s.cullEnabled&&s.cull==NativeWorldCull::FrontAndBack&&source.primitive==NativeDrawPrimitive::Triangles)continue;
 		const bool stencilEnabled=s.stencilTest&&stencilFormat!=MTLPixelFormatInvalid;
@@ -434,22 +591,65 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
 			blend.sourceAlpha = ScreenBlendFactor::OneMinusDestinationAlpha;
 			blend.destinationColor = blend.destinationAlpha = ScreenBlendFactor::Zero;
 		}
-		draw.pipeline=impl->Pipeline(lease,blend,s.colorWrite,colorFormat,validation,shaderMs,sampledDepthMask,mapMRTBroadcast,s.alphaToCoverage,samples,mapCombinedColor,combinedMask);
+		draw.pipeline=source.sourceLines?impl->sourceLines.Pipeline(lease,blend,s.colorWrite,colorFormat,samples,s.alphaToCoverage,sampledDepthMask,validation,shaderMs,mapMRTBroadcast,mapCombinedColor,combinedMask):impl->Pipeline(lease,blend,s.colorWrite,colorFormat,validation,shaderMs,sampledDepthMask,mapMRTBroadcast,s.alphaToCoverage,samples,mapCombinedColor,combinedMask,IsWorldMatrixGPU(source.sourcePrimitive));
 		const auto retainExternal=[&](PreparedScreenExternalImage image){draw.externalImages.push_back(std::move(image));};
+		const auto depthStart91=StartPreparationScope();
 		auto depth=[MTLDepthStencilDescriptor new];depth.depthCompareFunction=s.depthTest?Compare(s.depthCompare):MTLCompareFunctionAlways;depth.depthWriteEnabled=s.depthTest&&s.depthWrite;
-		if(stencilEnabled)for(bool front:{true,false}){const auto& original=front?s.frontStencil:s.backStencil;auto face=[MTLStencilDescriptor new];face.stencilCompareFunction=Compare(original.compare);face.stencilFailureOperation=Operation(original.fail);face.depthFailureOperation=Operation(original.depthFail);face.depthStencilPassOperation=Operation(original.pass);face.readMask=original.readMask;face.writeMask=original.writeMask;if(front)depth.frontFaceStencil=face;else depth.backFaceStencil=face;}
-		draw.depth=[lease.Device() newDepthStencilStateWithDescriptor:depth];Require(draw.depth!=nil,"Cannot create native original depth/stencil state");lease.Retain(draw.depth);
-		auto vertices=Buffer(lease,mesh.vertices.data(),mesh.vertices.size()*sizeof(NativeWorldDrawVertex));draw.indices=Buffer(lease,mesh.indices.data(),mesh.indices.size()*sizeof(uint32_t));draw.count=uint32_t(mesh.indices.size());
+		if(stencilEnabled)for(bool front:{true,false}){const auto& original=(front||source.sourceLines)?s.frontStencil:s.backStencil;auto face=[MTLStencilDescriptor new];face.stencilCompareFunction=Compare(original.compare);face.stencilFailureOperation=Operation(original.fail);face.depthFailureOperation=Operation(original.depthFail);face.depthStencilPassOperation=Operation(original.pass);face.readMask=original.readMask;face.writeMask=original.writeMask;if(front)depth.frontFaceStencil=face;else depth.backFaceStencil=face;}
+		draw.depth=lease.CachedDepthState(depth);Require(draw.depth!=nil,"Cannot create native original depth/stencil state");EndPreparationScope(33,depthStart91);CountPreparationTrace(29,1);
+  const bool packedFont=fontBuffer&&IsWorldMatrixGPU(source.sourcePrimitive);
+  id<MTLBuffer> vertices=nil;uint64_t vertexAddress=0;
+  if(source.sourceLines){/* Original raw inputs are packed after image resolution below. */}
+  else if(linePacket){
+   const auto& packet=*linePacket;impl->CompileLines(lease,validation,shaderMs);lease.Retain(impl->lineLibrary);lease.Retain(impl->linePipeline);
+   const size_t spanOffset=aligned(packet.segments.size()*sizeof(exactWorldLine::Line120Segment));
+   const size_t paramsOffset=aligned(spanOffset+packet.spans.size()*sizeof(exactWorldLine::Line120Span));const size_t packetBytes=paramsOffset+sizeof(uint32_t);
+   if(!result->impl->fontUploadLifetime){result->impl->fontUploadLifetime=[M4WorldFontUploadLifetime new];lease.Retain(result->impl->fontUploadLifetime);}
+   const auto cachedUploadCount=impl->fontUploadPool.CachedCount();auto packetSlot=impl->fontUploadPool.Acquire(lease.Device(),packetBytes);
+   auto upload=packetSlot?packetSlot->buffer:[lease.Device() newBufferWithLength:packetBytes options:MTLResourceStorageModeShared];Require(upload&&upload.contents,"Cannot allocate exact world line packet");
+   if(packetSlot)result->impl->fontUploadLifetime->lineStorage.push_back(packetSlot);
+   std::memcpy(upload.contents,packet.segments.data(),packet.segments.size()*sizeof(exactWorldLine::Line120Segment));std::memcpy(static_cast<uint8_t*>(upload.contents)+spanOffset,packet.spans.data(),packet.spans.size()*sizeof(exactWorldLine::Line120Span));const uint32_t spanCount=uint32_t(packet.spans.size());std::memcpy(static_cast<uint8_t*>(upload.contents)+paramsOffset,&spanCount,sizeof(spanCount));lease.AddAllocation(upload);
+   const size_t vertexBytes=size_t(packet.quads)*4*sizeof(NativeWorldDrawVertex),indexBytes=size_t(packet.quads)*6*sizeof(uint32_t);
+   vertices=[lease.Device() newBufferWithLength:vertexBytes options:MTLResourceStorageModePrivate];draw.indices=[lease.Device() newBufferWithLength:indexBytes options:MTLResourceStorageModePrivate];Require(vertices&&draw.indices,"Cannot allocate exact world line GPU geometry");lease.AddAllocation(vertices);lease.AddAllocation(draw.indices);vertexAddress=vertices.gpuAddress;draw.count=packet.quads*6;
+   if(row174){row174->packet+=packet.segments.size()*sizeof(exactWorldLine::Line120Segment)+packet.spans.size()*sizeof(exactWorldLine::Line120Span)+sizeof(spanCount);row174->privateMesh+=vertexBytes+indexBytes;row174->privateAllocs+=2;}
+   result->impl->hasLineJobs=true;
+   draw.line=std::make_shared<ExactLineJob>();draw.line->pipeline=impl->linePipeline;draw.line->quads=packet.quads;draw.line->completed=std::make_shared<std::atomic<bool>>(false);
+   auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=5;descriptor.initializeBindings=YES;NSError* error=nil;draw.line->arguments=impl->argumentPool.Acquire(lease,descriptor,result->impl->argumentOwners,&error);Require(draw.line->arguments,"Cannot allocate exact world line arguments: "+Error(error));lease.Retain(draw.line->arguments);
+   [draw.line->arguments setAddress:upload.gpuAddress atIndex:0];[draw.line->arguments setAddress:upload.gpuAddress+spanOffset atIndex:1];[draw.line->arguments setAddress:vertices.gpuAddress atIndex:2];[draw.line->arguments setAddress:upload.gpuAddress+paramsOffset atIndex:3];[draw.line->arguments setAddress:draw.indices.gpuAddress atIndex:4];
+   impl->lineGeometry.StoreGenerated(lease,source,lineOrdinal92,mapped->viewport,width,height,samples,draw.count,vertices,draw.indices,draw.line->completed);
+   if(StageProbe124().Enabled()){auto& row=StageProbe124().rows.at(size_t(source.stage));row.draws.fetch_add(1,std::memory_order_relaxed);row.vertices.fetch_add(uint64_t(packet.quads)*4,std::memory_order_relaxed);if(source.reclaimField)row.reclaim.fetch_add(1,std::memory_order_relaxed);}
+   if(LineProbe().Enabled()){LineProbe().draws.fetch_add(1,std::memory_order_relaxed);LineProbe().vertices.fetch_add(uint64_t(packet.quads)*4,std::memory_order_relaxed);LineProbe().bytes.fetch_add(packetBytes,std::memory_order_relaxed);LineProbe().allocations.fetch_add(2+unsigned(!packetSlot||impl->fontUploadPool.CachedCount()>cachedUploadCount),std::memory_order_relaxed);}
+  }else if(packedFont){
+   auto& probe=source.sourcePrimitive==NativeDrawPrimitive::GPUFillTriangles?FillProbe():FontProbe();
+   if(probe.Enabled()){probe.draws.fetch_add(1,std::memory_order_relaxed);probe.vertices.fetch_add(meshVertices.size()-WorldMatrixHeaderVertices(source),std::memory_order_relaxed);if(WorldFillTextureGPU(source))probe.uvDraws.fetch_add(1,std::memory_order_relaxed);}
+   vertices=fontBuffer;vertexAddress=fontBuffer.gpuAddress+packFont(meshVertices.data(),meshVertices.size()*sizeof(NativeWorldDrawVertex));
+   draw.indices=fontBuffer;draw.indexOffset=packFont(meshIndices.data(),meshIndices.size()*sizeof(uint32_t));draw.indexLength=meshIndices.size()*sizeof(uint32_t);draw.count=uint32_t(meshIndices.size());
+   if(row174){++row174->sharedPacked;row174->uploadV+=meshVertices.size()*sizeof(NativeWorldDrawVertex);row174->uploadI+=draw.indexLength;}
+  }else{
+   vertices=cachedLines?cachedLines->vertices:Buffer(lease,meshVertices.data(),meshVertices.size()*sizeof(NativeWorldDrawVertex));vertexAddress=vertices.gpuAddress;
+   draw.indices=cachedLines?cachedLines->indices:Buffer(lease,meshIndices.data(),meshIndices.size()*sizeof(uint32_t));
+   draw.count=cachedLines?cachedLines->count:uint32_t(meshIndices.size());
+   if(row174&&!cachedLines){row174->directAllocs+=2;row174->uploadV+=meshVertices.size()*sizeof(NativeWorldDrawVertex);row174->uploadI+=meshIndices.size()*sizeof(uint32_t);}
+   if(cachedLines){lease.AddAllocation(vertices);lease.AddAllocation(draw.indices);}
+   else if(!borrowed)impl->lineGeometry.Store(lease,source,lineOrdinal92,mapped->viewport,width,height,samples,mesh,vertices,draw.indices);
+  }
 		Require(mesh.pointDisks.empty() || mesh.pointDisks.size()==mesh.vertices.size(),"World point metadata extent differs");
 		auto pointDisks=mesh.pointDisks.empty()?vertices:Buffer(lease,mesh.pointDisks.data(),mesh.pointDisks.size()*sizeof(std::array<float,4>));
+		if(row174&&!mesh.pointDisks.empty()){row174->disks+=mesh.pointDisks.size()*sizeof(std::array<float,4>);++row174->directAllocs;}
 		const auto consumer=NativePostprocessConsumer{source.stage==NativeWorldDrawStage::PreDecals?NativePostprocessStage::PreDecals:(source.stage==NativeWorldDrawStage::PreUnit?NativePostprocessStage::PreUnit:NativePostprocessStage::World),source.sequence,0};
 		const auto& surface=source.surface;auto sampled=images.PrepareImage(lease,surface.material==ScreenMaterial::Solid?nullptr:surface.texture,surface.sampler,targetProducers,consumer,retainExternal);
 		Uniform uniform{{1,1,0,0},{uint32_t(surface.material),uint32_t(surface.texture&&surface.texture->flipV),uint32_t(surface.alphaTest.enabled),uint32_t(surface.alphaTest.compare)},{surface.alphaTest.reference,float(surface.sampler.wrapS==ScreenWrap::LegacyClamp),float(surface.sampler.wrapT==ScreenWrap::LegacyClamp),float(surface.texture&&surface.texture->incomplete)}};
-		uniform.pointRaster[0]=!mesh.pointDisks.empty();
+		uniform.pointRaster[0]=!mesh.pointDisks.empty();uniform.pointRaster[1]=IsWorldMatrixGPU(source.sourcePrimitive);uniform.pointRaster[2]=WorldFillTextureGPU(source);
 		if(surface.texture&&!surface.texture->incomplete&&surface.uvMode==ScreenUVMode::Texel){uniform.scale[0]=1.f/surface.texture->width;uniform.scale[1]=1.f/surface.texture->height;}
 		const auto& second=surface.secondary;const bool hasSecondary=second.texture&&surface.material!=ScreenMaterial::FontCoverage;
 		auto sampled1=images.PrepareImage(lease,hasSecondary?second.texture:nullptr,second.sampler,targetProducers,consumer,retainExternal);
 		if(hasSecondary){uniform.scale1={1,1,0,0};uniform.options1={1,uint32_t(second.texture->flipV),0,0};uniform.parameters1={0,float(second.sampler.wrapS==ScreenWrap::LegacyClamp),float(second.sampler.wrapT==ScreenWrap::LegacyClamp),float(second.texture->incomplete)};if(second.uvMode==ScreenUVMode::Texel&&!second.texture->incomplete){Require(second.texture->width&&second.texture->height,"Empty secondary texel-coordinate image");uniform.scale1[0]=1.f/second.texture->width;uniform.scale1[1]=1.f/second.texture->height;}}
+  if(source.sourceLines){
+   draw.sourceLines=impl->sourceLines.Prepare(lease,source.sourceLines,mapped->viewport,width,height,samples,surface,sampled.texture,sampled.sampler,sampled1.texture,sampled1.sampler,validation,shaderMs);draw.arguments=draw.sourceLines->arguments;draw.count=source.sourceLines->segments.size();
+   if(row174){const auto& in=*source.sourceLines;row174->packet+=in.vertices.size()*sizeof(NativeWorldDrawVertex)+in.segments.size()*sizeof(NativeSourceLineSegment133)+in.transforms.size()*sizeof(NativeSourceLineTransform133)+sizeof(SourceLineRaster133)+sizeof(SourceLineSurface133);}
+   if(!result->impl->fontUploadLifetime){result->impl->fontUploadLifetime=[M4WorldFontUploadLifetime new];lease.Retain(result->impl->fontUploadLifetime);}
+   result->impl->fontUploadLifetime->sourceLines.push_back(draw.sourceLines);result->impl->draws.push_back(std::move(draw));continue;
+  }
 		PreparedScreenImage losImage;
 		if(source.losView){const auto& los=*source.losView;
 			std::memcpy(uniform.overlayViewProjInv.data(),los.engine->matrices->bytes.data()+offsetof(UniformMatricesBuffer,cameraViewProjInv),64);
@@ -485,9 +685,25 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
     waterImages[4+n]={t.texture,t.sampler};draw.typedImages.push_back(std::move(t));
    }
   }
-  auto uniforms=source.waterOverlay?Buffer(lease,&water,sizeof(water)):Buffer(lease,&uniform,sizeof(uniform));auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=3;descriptor.maxTextureBindCount=source.waterOverlay?6:3;descriptor.maxSamplerStateBindCount=source.waterOverlay?6:3;descriptor.initializeBindings=YES;NSError* error=nil;
-		draw.arguments=[lease.Device() newArgumentTableWithDescriptor:descriptor error:&error];Require(draw.arguments!=nil,"Cannot create original world argument table: "+Error(error));[draw.arguments setAddress:vertices.gpuAddress atIndex:0];[draw.arguments setAddress:uniforms.gpuAddress atIndex:1];[draw.arguments setAddress:pointDisks.gpuAddress atIndex:2];[draw.arguments setTexture:sampled.texture.gpuResourceID atIndex:0];[draw.arguments setSamplerState:sampled.sampler.gpuResourceID atIndex:0];[draw.arguments setTexture:sampled1.texture.gpuResourceID atIndex:1];[draw.arguments setSamplerState:sampled1.sampler.gpuResourceID atIndex:1];if(source.losView){[draw.arguments setTexture:losImage.texture.gpuResourceID atIndex:2];[draw.arguments setSamplerState:losImage.sampler.gpuResourceID atIndex:2];}if(source.waterOverlay)for(unsigned n=0;n<(source.waterOverlay->fog?3u:6u);++n){[draw.arguments setTexture:waterImages[n].texture.gpuResourceID atIndex:n];[draw.arguments setSamplerState:waterImages[n].sampler.gpuResourceID atIndex:n];}lease.Retain(draw.arguments);result->impl->draws.push_back(std::move(draw));
+  id<MTLBuffer> uniforms=nil;uint64_t uniformAddress=0;
+  if(packedFont){uniforms=fontBuffer;uniformAddress=fontBuffer.gpuAddress+packFont(&uniform,sizeof(uniform));}
+  else{uniforms=source.waterOverlay?Buffer(lease,&water,sizeof(water)):Buffer(lease,&uniform,sizeof(uniform));uniformAddress=uniforms.gpuAddress;}
+  if(row174){row174->uniforms+=(!packedFont&&source.waterOverlay)?sizeof(water):sizeof(uniform);row174->directAllocs+=!packedFont;}
+  const auto argumentsStart91=StartPreparationScope();auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=3;descriptor.maxTextureBindCount=source.waterOverlay?6:3;descriptor.maxSamplerStateBindCount=source.waterOverlay?6:3;descriptor.initializeBindings=YES;NSError* error=nil;
+		draw.arguments=impl->argumentPool.Acquire(lease,descriptor,result->impl->argumentOwners,&error);Require(draw.arguments!=nil,"Cannot create original world argument table: "+Error(error));[draw.arguments setAddress:vertexAddress atIndex:0];[draw.arguments setAddress:uniformAddress atIndex:1];[draw.arguments setAddress:pointDisks.gpuAddress atIndex:2];[draw.arguments setTexture:sampled.texture.gpuResourceID atIndex:0];[draw.arguments setSamplerState:sampled.sampler.gpuResourceID atIndex:0];[draw.arguments setTexture:sampled1.texture.gpuResourceID atIndex:1];[draw.arguments setSamplerState:sampled1.sampler.gpuResourceID atIndex:1];if(source.losView){[draw.arguments setTexture:losImage.texture.gpuResourceID atIndex:2];[draw.arguments setSamplerState:losImage.sampler.gpuResourceID atIndex:2];}if(source.waterOverlay)for(unsigned n=0;n<(source.waterOverlay->fog?3u:6u);++n){[draw.arguments setTexture:waterImages[n].texture.gpuResourceID atIndex:n];[draw.arguments setSamplerState:waterImages[n].sampler.gpuResourceID atIndex:n];}lease.Retain(draw.arguments);EndPreparationScope(34,argumentsStart91);CountPreparationTrace(30,1);result->impl->draws.push_back(std::move(draw));
 	}
+ #if defined(RECOIL_METAL4_LIVE_SCENE)
+ if(observed174)observed174->Report(frame,samples);
+ static bool worldBorrowReceipt168=false;
+ if(!worldBorrowReceipt168&&frame.SourceDrawFrame()>=300&&borrowWork168.reusedFullValidations){
+  worldBorrowReceipt168=true;const auto& m=borrowWork168;
+  LOG("[NativeWorldBorrow168] source_frame=%llu serial=%llu selected_commands=%llu first_validations=%llu borrow_candidates=%llu eliminated_full_validations=%llu typed_revalidations=%llu source_vertex_elements=%llu source_index_elements=%llu source_payload_extent_bytes=%llu scope_bytes=%llu metrics_bytes=%llu owner_gate_calls=%llu scope_heap_allocations=0 preparation_only=1 cross_frame_reuse=0 target_checks_retained=1 timing=0",
+   (unsigned long long)frame.SourceDrawFrame(),(unsigned long long)frame.Serial(),(unsigned long long)frame.size(),
+   (unsigned long long)m.firstValidations,(unsigned long long)m.borrowCandidates,(unsigned long long)m.reusedFullValidations,
+   (unsigned long long)m.typedRevalidations,(unsigned long long)m.vertexElementsCovered,(unsigned long long)m.indexElementsCovered,
+   (unsigned long long)m.payloadBytesCovered,(unsigned long long)sizeof(ScopedWorldBorrow168),(unsigned long long)sizeof(WorldBorrowMetrics168),(unsigned long long)m.borrowCandidates);
+ }
+ #endif
 	return result;
 }
 }

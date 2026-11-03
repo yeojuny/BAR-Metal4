@@ -25,6 +25,7 @@ struct NativeSensorLOSDraw;
 struct NativeUnitPrimitiveFrame;
 struct NativeHealthBarsDraw;
 struct NativePanelShaderDraw;
+struct NativeScreenGeometry;
 struct NativePostprocessFrame;
 struct NativePostprocessVersion;
 struct NativeCUSTextureObject;
@@ -266,6 +267,7 @@ struct ScreenDrawCommand {
 	std::shared_ptr<const NativeBuildSquareDraw> buildSquare;
 	std::shared_ptr<const NativeHealthBarsDraw> healthBars;
 	std::shared_ptr<const NativePanelShaderDraw> panelShader;
+ std::shared_ptr<const NativeScreenGeometry> geometry;
 };
 
 std::array<std::shared_ptr<const ScreenTexture>,13> ScreenCommandImages(const ScreenDrawCommand& command);
@@ -297,6 +299,9 @@ public:
 	void BeginQuads();
 	void Vertex(float x, float y, float z = 0.0f);
 	void End();
+	// Raw filled fixed-function UI positions; uses the original GPU matrix work.
+	// No new members: frame/list ABI and existing direct pixel callers are unchanged.
+	void EndTransformed(const NativeScreenGeometry& transform);
 	// Discard unfinished geometry; color mutations remain visible as in the
 	// source helper. Caller error policy decides whether the whole pass fails.
 	void Abort() noexcept;
@@ -306,6 +311,10 @@ public:
 	// recorder state. UV stream is parallel to the preserved 28-byte ABI.
 	void AppendTriangles(std::span<const ScreenVertex> sourceVertices, std::span<const ScreenTexCoord> sourceUVs,
 		std::span<const std::uint32_t> sourceIndices, const ScreenDrawState& state);
+ // Closed engine icon batches use the same frame upload and ScreenUI matrix
+ // packet. Returns false without mutation when the original CPU path is needed.
+ bool TryAppendTransformedTriangles(std::span<const ScreenVertex>, std::span<const ScreenTexCoord>,
+  std::span<const uint32_t>, const ScreenDrawState&, const NativeScreenGeometry&);
 	// Ordered color-attachment replacement, independent of transform, texture,
 	// current color, blend and alpha test. The full attachment basis is explicit;
 	// an optional bottom-left scissor restricts the clear, as original gl.Clear.
@@ -318,6 +327,7 @@ public:
  void AppendSensorPreview(std::shared_ptr<const NativeSensorPreviewDraw> draw);
 	void AppendHealthBars(std::shared_ptr<const NativeHealthBarsDraw> draw);
 	void AppendPanelShader(std::shared_ptr<const NativePanelShaderDraw> draw);
+ void AppendGeometry(std::shared_ptr<const NativeScreenGeometry>,const ScreenDrawState&);
 	void ClearColorAttachment(ScreenColor color, std::uint32_t width, std::uint32_t height,
 		std::optional<ScreenScissor> scissor = std::nullopt,
 		std::array<bool,4> colorWrite = {true,true,true,true});

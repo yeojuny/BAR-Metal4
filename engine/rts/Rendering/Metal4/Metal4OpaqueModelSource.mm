@@ -38,9 +38,11 @@ struct PreparedOpaqueModelSource::Impl {
 		std::vector<OrderedDraw> order;
 		std::optional<OpaqueModelForwardCallbacks> callbacks;
 		bool forwardDependencies=false;
+		bool alphaInspection166=false;
 	};
 	std::shared_ptr<const NativeOpaqueModelFrame> source;
 	std::vector<Phase> phases;
+	uint64_t submission=0;
 	size_t nextPhase=0;
 	bool completed=false;
 	Phase& Current(size_t index,bool deferred)
@@ -56,6 +58,18 @@ size_t PreparedOpaqueModelSource::PhaseCount()const{return impl->phases.size();}
 uint64_t PreparedOpaqueModelSource::SequenceAt(size_t n)const{return impl->source->passes.at(n).sequence;}
 uint64_t PreparedOpaqueModelSource::PostDeferredSequenceAt(size_t n)const{return impl->source->passes.at(n).postDeferredSequence;}
 bool PreparedOpaqueModelSource::IsDeferredPhase(size_t n)const{return impl->source->passes.at(n).deferred;}
+
+ModelPhaseExecution165 PreparedOpaqueModelSource::InspectPhaseExecution165(size_t n,
+	const NativeOpaqueModelFrame* invocation,uint64_t frame,uint64_t submission)const
+{
+	Require(invocation&&invocation==impl->source.get()&&frame==invocation->sourceDrawFrame&&
+		submission&&submission==impl->submission,
+		"Model execution inspection differs from its actual invocation/frame/submission");
+	const auto& phase=impl->Current(n,IsDeferredPhase(n));
+	// Indexed emptiness cannot close typed alpha callback/command contracts.
+	if(impl->source->alphaStage||!phase.mrt)return {};
+	return phase.mrt->InspectExecution165(frame,submission);
+}
 
 void PreparedOpaqueModelSource::EncodeMRTPhase(size_t n,id<MTL4CommandBuffer> command)
 {
@@ -76,6 +90,80 @@ void PreparedOpaqueModelSource::AttachForwardCallbacks(size_t n,OpaqueModelForwa
 	for(const auto& command:callbacks.commands)Require(command.second&&source.sequence<command.first&&command.first<end,
 		"Original alpha callback command escaped its actual unit/feature source phase");
 	phase.callbacks=std::move(callbacks);phase.order=MergeForward(*phase.engine,phase.lua.get(),&*phase.callbacks);
+	// Late binding sees every typed, generic and ordered callback. Unknown
+	// owners do not allocate an otherwise unused sampled-resource table.
+	if(ModelPass166Enabled()&&phase.callbacks->inspectExecution166&&phase.callbacks->draws.empty()&&phase.callbacks->commands.empty()&&
+		phase.callbacks->inspectExecution166(impl->source.get(),n,impl->source->sourceDrawFrame,impl->submission).HasOnlyCPULifecycle()){
+		phase.engine->PreparePassInspection160();if(phase.lua)phase.lua->PreparePassInspection160();
+		phase.alphaInspection166=true;
+	}
+}
+void PreparedOpaqueModelSource::PreparePassInspection160()
+{
+ Require(!impl->completed&&!impl->nextPhase,"Model pass inspection began after encoding");
+ // Every alpha source carries typed callbacks; keep the conservative path
+ // without allocating an inspection table that this candidate cannot use.
+ if(impl->source->alphaStage)return;
+ for(auto& phase:impl->phases)if(phase.engine){
+  phase.engine->PreparePassInspection160();if(phase.lua)phase.lua->PreparePassInspection160();
+ }
+}
+ModelPassDependencyReport160 PreparedOpaqueModelSource::TryKeepForwardPass160(size_t n,MTL4RenderPassDescriptor* pass)
+{
+ auto& phase=impl->Current(n,false);
+ Require(ModelPass160Enabled()&&pass&&phase.engine&&!phase.forwardDependencies,"Model pass continuation lacks its original dependency phase");
+ ModelPassDependencyReport160 report;
+ // Callback presence is not evidence that it emits commands, or that it is
+ // empty. Until its producers declare a contract, retain the original boundary.
+ if(impl->source->alphaStage||phase.callbacks){report.Add({SourceDependencyWork160::Unknown,false});return report;}
+ // A removed encoder boundary must not suppress an attachment clear, discard,
+ // or resolve. These callers use a single-color loaded forward descriptor.
+ const auto preserved=[](MTLRenderPassAttachmentDescriptor* attachment){return !attachment.texture||
+  (attachment.loadAction==MTLLoadActionLoad&&attachment.storeAction==MTLStoreActionStore&&!attachment.resolveTexture);};
+ if(!pass.renderTargetWidth||!pass.renderTargetHeight||!pass.colorAttachments[0].texture||
+  !preserved(pass.colorAttachments[0])||!preserved(pass.depthAttachment)||!preserved(pass.stencilAttachment)){
+  report.Add({SourceDependencyWork160::Unknown,false});return report;
+ }
+ report.Merge(phase.engine->InspectDependencies160(pass));
+ if(phase.lua)report.Merge(phase.lua->InspectDependencies160(pass));
+ if(!report.noCommands)return report;
+ // All checks precede the first CPU state transition. No callback is tried in
+ // the open encoder; original requireReadable and DidComplete remain intact.
+ phase.engine->AcceptDependenciesWithoutCommands160();
+ if(phase.lua)phase.lua->AcceptDependenciesWithoutCommands160();
+ phase.forwardDependencies=true;
+ return report;
+}
+AlphaKeepReport166 PreparedOpaqueModelSource::TryKeepAlphaPass166(size_t n,id<MTL4CommandBuffer> command,
+	MTL4RenderPassDescriptor* pass,const NativeOpaqueModelFrame* invocation,uint64_t frame,uint64_t submission)
+{
+	Require(invocation&&invocation==impl->source.get()&&frame==invocation->sourceDrawFrame&&
+		submission&&submission==impl->submission,"Alpha continuation differs from its actual invocation/frame/submission");
+	auto& phase=impl->Current(n,false);
+	Require(ModelPass166Enabled()&&command&&pass&&phase.engine&&impl->source->alphaStage&&!phase.forwardDependencies,
+		"Alpha continuation lacks its original typed dependency phase");
+	AlphaKeepReport166 result;
+	if(!phase.callbacks||!phase.callbacks->inspectExecution166)return result;
+	const auto effect=phase.callbacks->inspectExecution166(invocation,n,frame,submission);
+	if(!phase.callbacks->commands.empty()||effect.body==AlphaCallbackBody166::OrderedCommands){result.reason=AlphaKeepReason166::OrderedCommands;return result;}
+	if(!phase.callbacks->draws.empty()||!effect.HasOnlyCPULifecycle()||!phase.alphaInspection166)return result;
+	const auto preserved=[](MTLRenderPassAttachmentDescriptor* attachment){return !attachment.texture||
+		(attachment.loadAction==MTLLoadActionLoad&&attachment.storeAction==MTLStoreActionStore&&!attachment.resolveTexture);};
+	result.reason=AlphaKeepReason166::Dependencies;
+	if(!pass.renderTargetWidth||!pass.renderTargetHeight||!pass.colorAttachments[0].texture||
+		!preserved(pass.colorAttachments[0])||!preserved(pass.depthAttachment)||!preserved(pass.stencilAttachment)){
+		result.dependencies.Add({SourceDependencyWork160::Unknown,false});return result;
+	}
+	result.dependencies.Merge(phase.engine->InspectDependencies160(pass));
+	if(phase.lua)result.dependencies.Merge(phase.lua->InspectDependencies160(pass));
+	if(!result.dependencies.noCommands)return result;
+	// Every pure check precedes the first transition. Preserve the original
+	// engine -> CUS -> actual typed callback order and once-only CPU effects.
+	phase.engine->AcceptDependenciesWithoutCommands160();
+	if(phase.lua)phase.lua->AcceptDependenciesWithoutCommands160();
+	phase.callbacks->dependencies(command);
+	phase.forwardDependencies=true;result.reason=AlphaKeepReason166::Kept;
+	return result;
 }
 void PreparedOpaqueModelSource::EncodeForwardDependencies(size_t n,id<MTL4CommandBuffer> command)
 {
@@ -185,7 +273,7 @@ std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease
 		previousRank=rank;first=false;
 	}
 	auto out=std::unique_ptr<PreparedOpaqueModelSource>(new PreparedOpaqueModelSource);
-	auto& p=*out->impl;p.source=std::move(source);p.phases.resize(p.source->passes.size());
+	auto& p=*out->impl;p.source=std::move(source);p.submission=submission;p.phases.resize(p.source->passes.size());
 	// Resource fulfillment order is independent of source encode order. Every
 	// selected MRT version must exist before screen/Shield/SSAO/Bloom Prepare.
 	for(size_t n=0;n<p.phases.size();++n)if(p.source->passes[n].deferred)
@@ -197,6 +285,7 @@ std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease
 		phase.lua=cus.Prepare(lease,actual.lua,forwardTarget,images,validation,ms);
 		phase.order=MergeForward(*phase.engine,phase.lua.get());
 	}
+	if(ModelPass160Enabled())out->PreparePassInspection160();
 	return out;
 }
 } // namespace rendering::metal4

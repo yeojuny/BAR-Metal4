@@ -8,8 +8,8 @@
 #include "Metal4WeaponRangeNative.h"
 #include "Metal4SensorPreviewNative.h"
 #include "Metal4SensorLOSNative.h"
-#include "../Backend/ScreenDrawList.h"
-#include "../Backend/NativePostprocessData.h"
+#include "Rendering/Backend/ScreenDrawList.h"
+#include "Rendering/Backend/NativePostprocessData.h"
 #include <functional>
 #include <memory>
 
@@ -139,6 +139,7 @@ public:
 	id<MTLSamplerState> PrepareSampler(RuntimeLease&,const ScreenSampler&);
 	// Real same-owner allocation only; no contents/readability or submission.
 	id<MTLTexture> PrepareAttachmentAllocation(RuntimeLease&,const std::shared_ptr<const ScreenTexture>&);
+ id<MTLTexture> ReserveAttachmentAllocationForCapture(const std::shared_ptr<const ScreenTexture>&);
 	// No image may be sampled before this plan's dependencies on the SAME
 	// submission. Call after all Prepare/PrepareImage operations, before Begin.
 	std::unique_ptr<PreparedScreenMipmaps> PrepareMipmaps(RuntimeLease& lease);

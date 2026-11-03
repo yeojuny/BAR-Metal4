@@ -1,9 +1,12 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineModelDeferred.h"
+#include "Metal4ModelUpload146.h"
+#include "Metal4RetiredArguments.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
 #include "Rendering/Backend/NativeLegacyMaterialData.h"
 #include "Metal4CUSSource.h"
 #include "Metal4NativeEffectState.h"
+#include "Metal4ModelSetterProbe176.h"
 #include "NativeEngineDeferredShaders.h"
 #include "NativeEngineTextureABI.h"
 #include "Metal4EngineModelState.h"
@@ -24,6 +27,8 @@ MTLBlendOperation Equation(ScreenBlendEquation x){switch(x){case ScreenBlendEqua
 const NativeTextureSampling& Sampling(const NativeCUSTextureBinding& b){Require(b.knowledge!=NativeCUSBindingKnowledge::Unobserved,"Original engine MRT texture history is unobserved");if(b.knowledge==NativeCUSBindingKnowledge::DefaultObject)return b.defaultSampling;Require(bool(b.object),"Original engine MRT binding lacks actual object");return b.object->sampling;}
 }
 struct PreparedEngineModelDeferred::Impl {
+ std::unique_ptr<model176::Probe> setterProbe176;
+ ModelUploadOwners146 uniformOwners;RetiredArgumentOwners argumentOwners;
  struct Piece {EngineDeferredPieceBuffers geometry;__strong id<MTL4ArgumentTable> table=nil;};
  struct Draw {NativeWorldDrawState state;__strong id<MTLDepthStencilState> sourceDepth=nil;uint64_t sequence=0;std::optional<effectstate::Raster> raster;std::vector<Piece> pieces;std::array<CUSSourceImage,2> images;__strong id<MTLRenderPipelineState> pipeline=nil;bool wire=false,cull=true;float bias=0,slope=0;};
  std::shared_ptr<const NativeEngineModelPhase> source;
@@ -34,14 +39,18 @@ struct PreparedEngineModelDeferred::Impl {
  const Draw& At(size_t index)const{Require(index<before.size()+after.size(),"Engine MRT draw index exceeds actual source");return index<before.size()?before[index]:after[index-before.size()];}
  void EncodeDraw(id<MTL4RenderCommandEncoder> e,const Draw& draw) {
   Require(e&&dependencies&&!completed,"Engine MRT source lacks real dependencies");
-  if(!draw.raster||(draw.state.cullEnabled&&draw.state.cull==NativeWorldCull::FrontAndBack))return; // Actual captured zero viewport/scissor produces no samples.
+  if(!draw.raster||(draw.state.cullEnabled&&draw.state.cull==NativeWorldCull::FrontAndBack)){if(setterProbe176)++setterProbe176->skipped;return;} // Actual captured zero viewport/scissor produces no samples.
   effectstate::RasterState(e,draw.state,*draw.raster);
-  [e setDepthStencilState:draw.sourceDepth];[e setCullMode:MTLCullModeBack];[e setFrontFacingWinding:MTLWindingCounterClockwise];[e setDepthClipMode:MTLDepthClipModeClip];
+  [e setDepthStencilState:draw.sourceDepth];[e setCullMode:MTLCullModeBack];
+  // RasterState emitted CCW and selected clip/clamp. Keep the forced clip
+  // visible to the readability callbacks, even when the source requested clamp.
+  if(draw.state.depthClamp)[e setDepthClipMode:MTLDepthClipModeClip];
    for(const auto& image:draw.images)if(image.requireReadable)image.requireReadable();
    [e setCullMode:!draw.state.cullEnabled||draw.state.cull==NativeWorldCull::None?MTLCullModeNone:draw.state.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack];[e setRenderPipelineState:draw.pipeline];[e setTriangleFillMode:draw.wire?MTLTriangleFillModeLines:MTLTriangleFillModeFill];[e setDepthBias:draw.bias slopeScale:draw.slope clamp:0];
    for(const auto& piece:draw.pieces){[e setArgumentTable:piece.table atStages:MTLRenderStageVertex|MTLRenderStageFragment];[e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:piece.geometry.indexCount indexType:MTLIndexTypeUInt32 indexBuffer:piece.geometry.indices.gpuAddress indexBufferLength:piece.geometry.indices.length];}
+  if(setterProbe176)setterProbe176->Draw(model176::Winding|model176::Clip,draw.state.depthClamp?model176::Clip:0u,draw.pieces.size());
  }
- void Encode(id<MTL4RenderCommandEncoder> e,const std::vector<Draw>& draws){Require(e&&dependencies&&!completed,"Engine MRT source lacks real dependencies");if(draws.empty()){[e setDepthStencilState:depth];[e setCullMode:MTLCullModeBack];[e setFrontFacingWinding:MTLWindingCounterClockwise];[e setDepthClipMode:MTLDepthClipModeClip];}for(const auto& draw:draws)EncodeDraw(e,draw);}
+ void Encode(id<MTL4RenderCommandEncoder> e,const std::vector<Draw>& draws){Require(e&&dependencies&&!completed,"Engine MRT source lacks real dependencies");if(draws.empty()){if(setterProbe176)++setterProbe176->emptyLists;[e setDepthStencilState:depth];[e setCullMode:MTLCullModeBack];[e setFrontFacingWinding:MTLWindingCounterClockwise];[e setDepthClipMode:MTLDepthClipModeClip];}for(const auto& draw:draws)EncodeDraw(e,draw);}
 };
 PreparedEngineModelDeferred::PreparedEngineModelDeferred():impl(std::make_unique<Impl>()){}
 PreparedEngineModelDeferred::~PreparedEngineModelDeferred()=default;
@@ -52,8 +61,9 @@ size_t PreparedEngineModelDeferred::DrawCount()const{return impl->before.size()+
 uint64_t PreparedEngineModelDeferred::SequenceAt(size_t index)const{return impl->At(index).sequence;}
 void PreparedEngineModelDeferred::EncodeOrderedDraw(size_t index,id<MTL4RenderCommandEncoder> e){Require(!impl->beforeEncoded&&!impl->afterEncoded&&index==impl->orderedEncoded,"Engine MRT ordered draw is repeated, skipped or mixed with grouped lists");const auto& draw=impl->At(index);Require(draw.sequence,"Engine MRT ordered draw lacks its real source sequence");impl->ordered=true;impl->EncodeDraw(e,draw);++impl->orderedEncoded;}
 void PreparedEngineModelDeferred::FinishOrderedDraws(){Require(impl->dependencies&&!impl->beforeEncoded&&!impl->afterEncoded&&!impl->completed&&impl->orderedEncoded==DrawCount(),"Engine MRT ordered source list did not finish exactly once");impl->ordered=true;impl->beforeEncoded=impl->afterEncoded=true;}
-void PreparedEngineModelDeferred::DidComplete(){Require(impl->beforeEncoded&&impl->afterEncoded&&!impl->completed,"Engine MRT retirement occurred before actual source pass");std::set<const void*> seen;for(const auto* list:{&impl->before,&impl->after})for(const auto& draw:*list)for(const auto& image:draw.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;}
+void PreparedEngineModelDeferred::DidComplete(){Require(impl->beforeEncoded&&impl->afterEncoded&&!impl->completed,"Engine MRT retirement occurred before actual source pass");std::set<const void*> seen;for(const auto* list:{&impl->before,&impl->after})for(const auto& draw:*list)for(const auto& image:draw.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;if(impl->setterProbe176)impl->setterProbe176->Report();}
 struct EngineModelDeferredGPU::Impl {
+ ModelUploadPool146 uniformPool;RetiredArguments argumentPool;bool reported146=false;
  struct Original {bool modern=false,shadows=false;CUSSourceTarget target;__strong id<MTLRenderPipelineState> pipeline=nil;};
  std::map<const void*,std::shared_ptr<const Original>> originalPrograms;
  void RequireOriginal(const NativeEngineModelDraw& draw,const CUSSourceTarget& target)const{
@@ -94,7 +104,8 @@ std::shared_ptr<PreparedEngineModelDeferred> EngineModelDeferredGPU::Prepare(Run
  Require(source->legacyExecution&&source->legacyExecution->Matches(*source,true),"Original legacy Lua material bin still requires its actual native shader/state consumer");
  Require(source->viewCamera.clipDepth!=ClipDepthConvention::Unsupported,"Engine MRT original clip-depth convention is unobserved");
  Require(actualTarget.width&&actualTarget.height&&actualTarget.logicalWidth&&actualTarget.logicalHeight&&actualTarget.samples==1&&actualTarget.depth==MTLPixelFormatDepth32Float&&actualTarget.stencil==MTLPixelFormatInvalid&&std::all_of(actualTarget.colors.begin(),actualTarget.colors.end(),[](auto f){return f==MTLPixelFormatRGBA8Unorm;}),"Engine MRT requires its actual single-sample five-color/D32F target");
- auto out=std::shared_ptr<PreparedEngineModelDeferred>(new PreparedEngineModelDeferred);auto& p=*out->impl;p.source=std::move(source);
+ auto out=std::shared_ptr<PreparedEngineModelDeferred>(new PreparedEngineModelDeferred);auto& p=*out->impl;p.source=std::move(source);p.setterProbe176=model176::Probe::Create(p.source->sourceDrawFrame,"engine_deferred");
+ impl->uniformPool.BeginBatch(lease);impl->argumentPool.BeginBatch(lease);ModelUploadArena146 uniformArena(impl->uniformPool,p.uniformOwners);
  if(!impl->depth){auto d=[MTLDepthStencilDescriptor new];d.depthCompareFunction=MTLCompareFunctionLessEqual;d.depthWriteEnabled=YES;impl->depth=[lease.Device()newDepthStencilStateWithDescriptor:d];Require(impl->depth,"Cannot create actual engine MRT depth state");}p.depth=impl->depth;lease.Retain(p.depth);
  std::map<const WorldModel*,std::vector<EngineDeferredPieceBuffers>> sharedGeometry;
  auto prepareList=[&](const auto& list,auto& target){for(const auto& sourceDraw:list){
@@ -117,14 +128,14 @@ std::shared_ptr<PreparedEngineModelDeferred> EngineModelDeferredGPU::Prepare(Run
   auto [it,inserted]=sharedGeometry.try_emplace(object.model.get());if(inserted)it->second=geometry(lease,object.model);Require(it->second.size()==object.pieces.size(),"Engine MRT shared model piece slots differ");
   for(size_t i=0;i<object.pieces.size();++i){const auto& mesh=it->second[i];if((!modern&&!object.pieces[i].visible)||!mesh.indexCount)continue;Require(mesh.vertices&&mesh.indices&&mesh.indices.length>=size_t(mesh.indexCount)*4,"Engine MRT shared geometry is incomplete");lease.AddAllocation(mesh.vertices);lease.AddAllocation(mesh.indices);
    Uniform u=common;engineoriginal::PieceUniform(u,sourceDraw,i);
-   auto buffer=[lease.Device()newBufferWithBytes:&u length:sizeof(u) options:MTLResourceStorageModeShared];Require(buffer,"Cannot allocate actual engine MRT uniforms");lease.AddAllocation(buffer);
+   auto buffer=uniformArena.Copy(lease,&u,sizeof(u));
    auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.maxTextureBindCount=4;descriptor.maxSamplerStateBindCount=2;descriptor.initializeBindings=YES;
-   auto table=[lease.Device()newArgumentTableWithDescriptor:descriptor error:nil];Require(table,"Cannot allocate actual engine MRT arguments");lease.Retain(table);[table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:buffer.gpuAddress atIndex:1];
+   auto table=impl->argumentPool.Acquire(lease,descriptor,p.argumentOwners,nullptr);Require(table,"Cannot allocate actual engine MRT arguments");[table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:buffer.Address() atIndex:1];
    for(unsigned slot=0;slot<2;++slot){const auto& image=draw.images[slot];if(!image.texture)continue;[table setTexture:image.texture.gpuResourceID atIndex:image.depthImage?slot+2:slot];[table setSamplerState:image.sampler.gpuResourceID atIndex:slot];}
    draw.pieces.push_back({mesh,table});
   }
   target.push_back(std::move(draw));
  }};
- prepareList(p.source->beforeLua,p.before);prepareList(p.source->afterLua,p.after);return out;
+ prepareList(p.source->beforeLua,p.before);prepareList(p.source->afterLua,p.after);uniformArena.Report("EngineDeferred",p.source->sourceDrawFrame,impl->reported146);return out;
 }
 } // namespace rendering::metal4

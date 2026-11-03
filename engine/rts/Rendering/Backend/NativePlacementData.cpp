@@ -75,7 +75,7 @@ void ValidateNativeBuildingGridProgram(std::string_view vertex,std::string_view 
 float NativeBuildingGridAlpha(std::array<float,3> world,std::array<float,3> mouse,std::array<float,3> eye,float a){
 	return (Smooth(480.f/(Distance(world,mouse)/2.5f)-2.5f)-Smooth(1-3000.f/Distance(eye,mouse))*1.75f)*a;
 }
-NativeWorldRasterMesh BuildNativeBuildingGrid(const NativeBuildingGridDraw& d,const std::array<double,4>& viewport,uint32_t width,uint32_t height,unsigned targetSamples){
+NativeWorldDrawCommand BuildNativeBuildingGridCommand(const NativeBuildingGridDraw& d){
 	ValidateNativeBuildingGrid(d);if(d.vertexCount==0)return {};
 	std::vector<NativeWorldDrawVertex> vertices;vertices.reserve(d.vertexCount);
 	for(size_t i=d.firstVertex;i<size_t(d.firstVertex)+d.vertexCount;++i){
@@ -100,7 +100,11 @@ NativeWorldRasterMesh BuildNativeBuildingGrid(const NativeBuildingGridDraw& d,co
 		if(d.view.clipDepth==ClipDepthConvention::ZeroToOne)out.position[2]=2*out.position[2]-out.position[3];vertices.push_back(out);
 	}
 	auto surface=d.surface;surface.material=ScreenMaterial::Solid;surface.texture.reset();surface.secondary={};
-	return BuildNativeWorldDrawGeometry(MakeNativeWorldDrawCommand(d.stage,NativeDrawPrimitive::Lines,vertices,surface,d.world),viewport,width,height,targetSamples);
+	return MakeNativeWorldDrawCommand(d.stage,NativeDrawPrimitive::Lines,vertices,surface,d.world);
+}
+NativeWorldRasterMesh BuildNativeBuildingGrid(const NativeBuildingGridDraw& d,const std::array<double,4>& viewport,uint32_t width,uint32_t height,unsigned targetSamples){
+ auto command=BuildNativeBuildingGridCommand(d);if(command.indices.empty())return {};
+ return BuildNativeWorldDrawGeometry(command,viewport,width,height,targetSamples);
 }
 std::vector<NativePlacementVertex> NativeBuildSquareVertices(std::array<float,3> pos,int nx,int nz,float h,bool canBuild,std::span<const uint8_t> status,uint8_t open,uint8_t occupied,uint8_t reclaimable){
 	Check(nx>0&&nz>0&&size_t(nx)*nz==status.size(),"Original build footprint/status array mismatch");Finite(pos);Check(std::isfinite(h),"Original build height invalid");

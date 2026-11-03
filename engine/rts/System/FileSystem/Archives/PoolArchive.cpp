@@ -48,7 +48,7 @@ static bool gz_really_read(gzFile file, voidp buf, uint32_t len)
 }
 
 CPoolArchive::CPoolArchive(const std::string& name)
-	: CBufferedArchive(name)
+	: CBufferedArchive(name, true, 256u * 1024u * 1024u)
 {
 	{
 		auto isOnSpinningDisk = FileSystem::IsPathOnSpinningDisk(CPoolArchive::GetPoolRootDirectory(archiveFile));

@@ -64,6 +64,10 @@ std::unique_ptr<PreparedCUSDeferred> PrepareOpaqueModelMRTPhase(RuntimeLease& le
 	};
 	other.didEncodeSourceDraws=[actualEngine]{actualEngine->FinishOrderedDraws();};
 	other.didComplete=[actualEngine]{actualEngine->DidComplete();};
+	// Empty prepared engine lists own no image callbacks: dependencies and
+	// retirement iterate those lists, while FinishOrderedDraws only records
+	// their actual source event. A zero-raster draw still counts and is rejected.
+	other.emptySourceCallbacksHaveNoCommands=actualEngine->DrawCount()==0;
 	// Prepare fulfills all five immutable colors and the SAME actual D32F
 	// backing before downstream consumer Prepare. No source is yet encoded.
 	return PrepareCUSDeferred(lease,cus,pass.mrt,images,std::move(other),submission,validation,milliseconds);

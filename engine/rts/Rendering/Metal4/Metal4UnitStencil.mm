@@ -1,3 +1,6 @@
+#include "Metal4PublishedRequestCache.h"
+#include "Metal4TransientUpload177.h"
+#include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4UnitStencil.h"
 #include "NativeUnitStencilShaders.h"
@@ -41,6 +44,7 @@ id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const Linked& linked,con
 bool Readable(const Image& image,uint64_t submission){const auto& p=*image.producer;return(p.allocationOnly&&p.allocationVerified)||p.completed||(submission&&p.encoded&&p.submissionIdentity==submission);}
 }
 struct PreparedUnitStencil::Impl {
+ __strong M4TransientUploadLifetime177* uploads177=nil;
 	struct Command {
 		bool clear=false,skip=false;
 		__strong id<MTLRenderPipelineState> pipeline=nil;
@@ -92,6 +96,7 @@ void PreparedUnitStencil::DidComplete()const{
 	for(const auto& pass:impl->passes)pass.output->producer->completed=true;impl->source->completed=true;impl->completed=true;
 }
 struct UnitStencilGPU::Impl {
+ TransientUploadPool177 uploads177{"unit_stencil"};
 	std::map<std::pair<uint64_t,uint64_t>,std::shared_ptr<Image>> images;
 	std::map<const void*,std::weak_ptr<const Linked>> programs;
 	std::shared_ptr<Linked> clearProgram;
@@ -107,7 +112,7 @@ struct UnitStencilGPU::Impl {
 	}
 };
 UnitStencilGPU::UnitStencilGPU():impl(std::make_unique<Impl>()){}UnitStencilGPU::~UnitStencilGPU()=default;
-void UnitStencilGPU::ClearResources(){impl->images.clear();impl->programs.clear();impl->clearProgram.reset();}
+void UnitStencilGPU::ClearResources(){impl->uploads177.Clear();impl->images.clear();impl->programs.clear();impl->clearProgram.reset();}
 std::shared_ptr<const NativeUnitStencilProgramConsumer> UnitStencilGPU::LinkOriginalProgram(RuntimeLease& lease,const NativeUnitStencilProgramSource& source,bool validation,double& ms){
 	ValidateNativeUnitStencilProgram(source);const auto start=Clock::now();auto linked=std::make_shared<Linked>();auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original31657 Unit Stencil GS-equivalent threefaces";descriptor.source=String(unitStencil::SHADER);
 	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;NSError* error=nil;
@@ -123,6 +128,12 @@ CUSSourceImage UnitStencilGPU::Resolve(RuntimeLease& lease,std::shared_ptr<const
 std::unique_ptr<PreparedUnitStencil> UnitStencilGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeUnitStencilFrame> source,bool validation,double& ms,uint64_t submission){
 	Require(source&&submission,"Unit Stencil actual Genesis frame/submission missing");std::erase_if(impl->images,[](const auto& i){return i.second->owner.expired();});std::erase_if(impl->programs,[](const auto& i){return i.second.expired();});
 	auto result=std::unique_ptr<PreparedUnitStencil>(new PreparedUnitStencil());result->impl->source=std::move(source);
+ impl->uploads177.BeginBatch(lease.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(lease,impl->uploads177,result->impl->uploads177,bytes,length,
+   [&]{return Upload(lease,bytes,length);});
+ };
+
 	for(const auto& sourcePass:result->impl->source->passes){
 		Require(sourcePass.output&&sourcePass.previous&&!sourcePass.commands.empty()&&sourcePass.commands.front().clear&&impl->clearProgram,
 			"Unit Stencil actual requested pass lacks clear/original linked producer");
@@ -144,22 +155,19 @@ std::unique_ptr<PreparedUnitStencil> UnitStencilGPU::Prepare(RuntimeLease& lease
 			auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=4;descriptor.initializeBindings=YES;NSError* error=nil;
 			next.arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(next.arguments!=nil,"Cannot allocate Unit Stencil genuine source arguments: "+Error(error));lease.Retain(next.arguments);
 			if(command.clear){
-				auto clear=Upload(lease,command.clearColor.data(),16);[next.arguments setAddress:clear.gpuAddress atIndex:3];
+				auto clear=upload177(command.clearColor.data(),16);[next.arguments setAddress:clear.gpuAddress atIndex:3];
 				next.instances=1;next.pipeline=Pipeline(lease,*impl->clearProgram,surface,next.world,true,validation,ms);
 			}else{
 				Require(command.draw.has_value(),"Unit Stencil pass command lacks its original captured draw");const auto& draw=*command.draw;ValidateNativeUnitStencilDraw(draw);
 				auto linked=impl->programs.find(draw.program->pipelineLifetime.get());Require(linked!=impl->programs.end(),"Unit Stencil source program belongs to another native lifetime");auto program=linked->second.lock();Require(bool(program),"Unit Stencil actual compiled owner expired");
 				Require(next.world.frontPolygonMode==next.world.backPolygonMode&&next.world.frontPolygonMode!=NativePolygonMode::Point,"Unit Stencil exact original polygon mode lacks point-mode expansion");
-				auto records=Upload(lease,draw.records->bytes.data(),draw.records->bytes.size());auto matrices=Upload(lease,draw.engineUniforms->matrices->bytes.data(),draw.engineUniforms->matrices->bytes.size());
-				const auto& published=*draw.modelUniforms;Require(published.capacityElements<=SIZE_MAX/published.stride,"Unit Stencil original model uniform capacity overflow");
+				auto records=upload177(draw.records->bytes.data(),draw.records->bytes.size());auto matrices=upload177(draw.engineUniforms->matrices->bytes.data(),draw.engineUniforms->matrices->bytes.size());
+				PublicationProbe publicationProbe(lease,draw.modelUniforms,4);const auto& published=*draw.modelUniforms;Require(published.capacityElements<=SIZE_MAX/published.stride,"Unit Stencil original model uniform capacity overflow");
 				const size_t bytes=published.capacityElements*published.stride;Require(bytes&&bytes<=lease.Device().maxBufferLength,"Unit Stencil original model uniform buffer exceeds device extent");
-				auto objects=[lease.Device()newBufferWithLength:bytes options:MTLResourceStorageModeShared];Require(objects!=nil,"Cannot allocate Unit Stencil original published object uniforms");lease.AddAllocation(objects);
-				for(const auto& range:NativeCUSObservedRanges(published))for(size_t offset=range.offset;offset<range.offset+range.size;){
-					const size_t page=offset/NativeCUSPublishedPage::Bytes,local=offset%NativeCUSPublishedPage::Bytes,n=std::min(range.offset+range.size-offset,NativeCUSPublishedPage::Bytes-local);
-					std::memcpy(static_cast<uint8_t*>(objects.contents)+offset,published.pages.at(page)->bytes.data()+local,n);offset+=n;
-				}
+				auto objects=SharePublishedRequest(lease,draw.modelUniforms,publicationProbe);
+				publicationProbe.Finish(objects);
 				Uniforms u;u.addRadius=draw.addRadius;u.stencilColor=draw.stencilColor;u.firstRecord=draw.first;uint32_t caps=0;std::memcpy(&caps,draw.engineUniforms->params->bytes.data()+12,4);u.clipZeroToOne=caps&1u;
-				u.alpha={float(surface.alphaTest.enabled),surface.alphaTest.reference,float(surface.alphaTest.compare),0};auto uniforms=Upload(lease,&u,sizeof(u));
+				u.alpha={float(surface.alphaTest.enabled),surface.alphaTest.reference,float(surface.alphaTest.compare),0};auto uniforms=upload177(&u,sizeof(u));
 				[next.arguments setAddress:records.gpuAddress atIndex:0];[next.arguments setAddress:matrices.gpuAddress atIndex:1];[next.arguments setAddress:objects.gpuAddress atIndex:2];[next.arguments setAddress:uniforms.gpuAddress atIndex:3];
 				next.instances=draw.count;next.pipeline=Pipeline(lease,*program,surface,next.world,false,validation,ms);lease.Retain(program->library);
 			}

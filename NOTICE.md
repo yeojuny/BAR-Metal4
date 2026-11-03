@@ -7,3 +7,7 @@ The lobby derives from [bar-lobby](https://github.com/beyond-all-reason/bar-lobb
 This repository preserves source attribution but uses a new public Git history. It is an export, not a complete upstream history or an official upstream fork. The engine baseline is the October 23 cumulative25 source reconstruction, with paired naval AI26 changes, pinned in `docs/BASELINE.json`. Lobby source remains the earlier October 19 export; a complete current app build is not claimed. Personal local path prefixes have been replaced where present; local IDE private settings, agent instructions and inherited CI workflows are excluded. No game packages, maps, SDKs, private backups, raw conversations or personal runtime state are included.
 
 Development and these publication documents used OpenAI Codex extensively. Human authorization is not equivalent to human verification of every change. Experimental status and validation gaps are disclosed. New documentation in the repository root and `docs/` is available under CC0-1.0; this does not relicense any upstream code or assets.
+
+## November 2026 release
+
+v1.11.0 publishes frozen candidate204 engine changes, available source-map originals from its packaged lobby, the distribution bootstrap/defaults, and the immutable local26 Rapid identity. The earlier October baseline description above is historical. Private backup histories and conversations remain private.

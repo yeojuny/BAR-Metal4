@@ -15,9 +15,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2026.10.23</string>
+	<string>1.11.0</string>
 	<key>CFBundleVersion</key>
-	<string>2026.10.23</string>
+	<string>11100</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.strategy-games</string>
 	<key>LSMinimumSystemVersion</key>

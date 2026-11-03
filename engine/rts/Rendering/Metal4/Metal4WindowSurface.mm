@@ -1,5 +1,9 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WindowSurfaceNative.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "System/Config/ConfigHandler.h"
+#include "System/Log/ILog.h"
+#endif
 
 #import <AppKit/AppKit.h>
 #include <SDL3/SDL.h>
@@ -102,9 +106,26 @@ struct Metal4WindowSurface::Impl {
 		Require(SDL_GetWindowFromID(state.Snapshot().windowID) == window, "Engine destroyed SDL_Window before Metal surface detachment");
 	}
 
+	void ApplyDisplaySync()
+	{
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		if (!configHandler) return;
+		const int requested = configHandler->GetInt("VSync");
+		if (requested == displaySyncRequest) return;
+		// Preserve the existing synchronized behavior for nonzero modes;
+		// honor the explicit off setting on this actual native layer.
+		const bool enabled = requested != 0;
+		layer.displaySyncEnabled = enabled;
+		Require(bool(layer.displaySyncEnabled) == enabled, "Metal layer did not accept the requested display synchronization");
+		displaySyncRequest = requested;
+		LOG("[NativeDisplaySync] requested=%d enabled=%d", requested, int(layer.displaySyncEnabled));
+#endif
+	}
+
 	bool Refresh()
 	{
 		RequireLive();
+		ApplyDisplaySync();
 		int logicalWidth = 0, logicalHeight = 0;
 		Require(SDL_GetWindowSize(window, &logicalWidth, &logicalHeight), "Cannot query engine SDL3 logical window size: " + std::string(SDL_GetError()));
 		Require(logicalWidth >= 0 && logicalHeight >= 0, "SDL logical window dimensions are invalid");
@@ -139,6 +160,7 @@ struct Metal4WindowSurface::Impl {
 	__strong CAMetalLayer* layer = nil;
 	__strong id<MTLDevice> device = nil;
 	Metal4SurfaceState state;
+	int displaySyncRequest = std::numeric_limits<int>::min();
 };
 
 Metal4WindowSurface::Metal4WindowSurface(SDL_Window* window, const Metal4SurfaceConfig& config)

@@ -1,7 +1,15 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ScreenNative.h"
+#include "System/Log/ILog.h"
+#include "Rendering/Backend/NativeDepthStencilKey.h"
+#include "Rendering/Backend/NativeUploadLayout.h"
+#include "Rendering/Backend/NativeScreenPreparation151.h"
+#include "Rendering/Backend/NativeScreenPreparation152.h"
+#include "Rendering/Backend/NativeRetiredResourcePool.h"
 #include "NativeSampleShadingShaders.h"
 #include "NativePointCoverageShaders.h"
+#include "NativeScreenFilledShaders184.h"
+#include "Rendering/Backend/NativeScreenFilled184.h"
 #include "Rendering/Backend/NativeTargetPriorityProgram.h"
 #include "Rendering/Backend/NativeDeferredVisualizerProgram.h"
 #include "Rendering/Backend/NativeDecalCaptureProgram.h"
@@ -11,6 +19,13 @@
 #include "NativeDiffusePainterShaders.h"
 #include "Rendering/Backend/NativeTerraformCaptureProgram.h"
 #include "NativeTerraformCaptureShaders.h"
+#include "NativeScreenGeometryShaders.h"
+#include "NativeExactWorldLineShaders.h"
+#include "NativeExactPixelLineShaders.h"
+#include "NativeProfilerSourceShaders132.h"
+#include "NativeSourceLineRasterShaders130.h"
+#include "Metal4ImmutableSnapshotBuffers.h"
+#include "Metal4ScreenModelBuffers.h"
 #include "Metal4UnitPrimitive.h"
 #include "Metal4WorldBCDecode.h"
 #include "Metal4WorldViewport.h"
@@ -25,8 +40,80 @@
 #include <cmath>
 #include <cstring>
 #include <unordered_map>
+#include <map>
 #include <bit>
+#include <atomic>
+#include <cstdio>
+#include <cstdlib>
 #include <limits>
+
+#include "Metal4SharedUploadPool.h"
+#include "Metal4SourceLines133.h"
+namespace rendering::metal4 {
+
+#include "Metal4ProfilerSource132.inc"
+
+
+
+struct ScreenArgumentStorage {
+	__strong id<MTL4ArgumentTable> table = nil;
+};
+using ScreenArgumentLayout = std::array<NSUInteger,3>;
+class ScreenArgumentPool {
+public:
+	void BeginBatch(id<MTLDevice> device) {
+		if (device != owner) {
+			pool.Clear();
+			owner = device;
+		}
+		pool.BeginBatch();
+	}
+	std::shared_ptr<ScreenArgumentStorage> Acquire(id<MTLDevice> device,
+		const ScreenArgumentLayout& layout, const char* failure) {
+		Require(device == owner, "Screen argument pool has no matching device batch");
+		return pool.Acquire(layout, [&] {
+			auto descriptor = [MTL4ArgumentTableDescriptor new];
+			descriptor.maxBufferBindCount = layout[0];
+			descriptor.maxTextureBindCount = layout[1];
+			descriptor.maxSamplerStateBindCount = layout[2];
+			descriptor.initializeBindings = YES;
+			NSError* error = nil;
+			auto table = [device newArgumentTableWithDescriptor:descriptor error:&error];
+			if (table == nil) Require(false, std::string(failure) + Error(error));
+			return ScreenArgumentStorage{table};
+		}, [&](ScreenArgumentStorage& slot) {
+			// Match initializeBindings=YES, including every unused slot. Never
+			// mutate bindings while a prepared frame or completion graph owns it.
+			for (NSUInteger i = 0; i < layout[0]; ++i) [slot.table setAddress:0 atIndex:i];
+			for (NSUInteger i = 0; i < layout[1]; ++i) [slot.table setTexture:MTLResourceID{0} atIndex:i];
+			for (NSUInteger i = 0; i < layout[2]; ++i) [slot.table setSamplerState:MTLResourceID{0} atIndex:i];
+		});
+	}
+	std::size_t CachedCount() const { return pool.CachedCount(); }
+private:
+	__strong id<MTLDevice> owner = nil;
+	rendering::NativeRetiredResourcePool<ScreenArgumentLayout,ScreenArgumentStorage,1024> pool;
+};
+
+} // namespace rendering::metal4
+
+@interface M4ScreenUploadLifetime : NSObject {
+@public
+ std::shared_ptr<rendering::metal4::ScreenUploadStorage> storage;
+}
+@end
+@implementation M4ScreenUploadLifetime
+@end
+
+@interface M4ScreenArgumentLifetime : NSObject {
+@public
+	std::vector<std::shared_ptr<rendering::metal4::ScreenArgumentStorage>> slots;
+	std::vector<std::shared_ptr<rendering::metal4::ScreenUploadStorage>> uniformSlots;
+ std::vector<std::shared_ptr<rendering::metal4::PreparedSourceLines133>> sourceLines;
+}
+@end
+@implementation M4ScreenArgumentLifetime
+@end
 
 // Keep the readback/source owner alive even if encoding throws after Begin
 // and the common runtime retains this uncertain submission until teardown.
@@ -56,6 +143,22 @@ MTLPixelFormat ColorTargetFormat(ScreenTextureFormat format)
 	}
 }
 std::uint32_t AttachmentPixelBytes(ScreenTextureFormat format){return format==ScreenTextureFormat::Depth16Unorm?2:ScreenRenderTargetPixelBytes(format);}
+id<MTLTexture> AllocateScreenInitialStorage(id<MTLDevice> device,const std::shared_ptr<const ScreenTexture>& source)
+{
+			Require(source->renderTarget->resourceId && source->width && source->height && source->width<=16384 && source->height<=16384 &&
+				source->width==source->renderTarget->width && source->height==source->renderTarget->height &&
+				AttachmentPixelBytes(source->format)!=0 && source->flipV && source->bytes.empty() &&
+				!source->bytesPerRow && source->mips.empty() && size_t(source->width)*source->height*AttachmentPixelBytes(source->format)<=256*1024*1024,
+				"Native UI allocation-only generation0 requires an original bounded color target");
+			MTLTextureDescriptor* d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:ColorTargetFormat(source->format)
+				width:source->width height:source->height mipmapped:NO];
+			d.storageMode=MTLStorageModePrivate;
+			d.usage=MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
+			id<MTLTexture> image=[device newTextureWithDescriptor:d];
+			Require(image!=nil,"Cannot allocate original native UI generation0 storage");
+			image.label=String(source->sourceName+" allocation generation0 (undefined initial pixels)");
+ return image;
+}
 struct HealthBarsUniform {
  std::array<float,16> viewProjection,viewInverse;
  std::array<float,4> time,parameters,shape;
@@ -395,6 +498,36 @@ struct Uniform { std::array<float,4> dimensions; std::array<uint32_t,4> options;
 static_assert(sizeof(Uniform)==208 && sizeof(Uniform)<=256);
 static_assert(offsetof(Uniform,pointDisk)==192);
 static_assert(offsetof(Uniform,capture)==96);
+// Screen geometry parameter layout is shared with NativeScreenGeometryShaders.
+struct GeometryUniform{std::array<float,16> modelView,projection;std::array<std::array<float,4>,3> cofactors;std::array<float,4> normal;std::array<uint32_t,4> options;};
+static_assert(sizeof(GeometryUniform)==208);
+// Exit-only opt-in receipt: proves that raw affine UV packets reached the GPU
+// preparation path. Disabled by default; no per-vertex instrumentation.
+struct AffineUVProbe {
+ const char* path=std::getenv("BAR_NATIVE_AFFINE_UV_PROBE_FILE");std::atomic<uint64_t> draws{0},indices{0};
+ ~AffineUVProbe(){if(path&&*path)if(auto f=std::fopen(path,"w")){std::fprintf(f,"draws,indices\n%llu,%llu\n",(unsigned long long)draws.load(),(unsigned long long)indices.load());std::fclose(f);}}
+ void Record(const NativeScreenGeometry& g){if(path&&*path&&g.affineTexture){draws.fetch_add(1,std::memory_order_relaxed);indices.fetch_add(g.count,std::memory_order_relaxed);}}
+};
+GeometryUniform MakeGeometryUniform(const NativeScreenGeometry& g){
+ static AffineUVProbe probe;probe.Record(g);
+ auto cofactors=g.cofactors;
+ if(g.affineTexture){cofactors[0]=g.textureRows[0];cofactors[1]=g.textureRows[1];}
+ return {g.modelView,g.projection,cofactors,{g.determinant,float(g.coordinateExtent[0]),float(g.coordinateExtent[1]),0},{uint32_t(g.kind),uint32_t(g.affineTexture),0,0}};
+}
+std::vector<uint32_t> AppendScreenTransformUniforms(std::span<const ScreenDrawCommand> commands,size_t first,std::vector<uint8_t>& bytes){
+ Require(first<=commands.size()&&commands.size()<=UINT32_MAX/512,"Screen font parameter range overflow");
+ const auto font=[](const ScreenDrawCommand& c){return c.geometry&&c.geometry->count&&screenGeometry::UsesPackedScreenUniforms170(*c.geometry);};
+ const size_t count=std::count_if(commands.begin()+first,commands.end(),font);
+ if(!count)return {};
+ Require(!bytes.empty() && bytes.size()%256==0,"Screen transform parameters lost the aligned uniform prefix");
+ std::vector<uint32_t> offsets(commands.size());
+ NativeScreenUniforms151<sizeof(GeometryUniform)> transforms151;
+ for(size_t n=first;n<commands.size();++n)if(font(commands[n])){
+  const auto value=MakeGeometryUniform(*commands[n].geometry);
+  offsets[n]=transforms151.Append(std::bit_cast<decltype(transforms151)::Key>(value),bytes);
+ }
+ return offsets;
+}
 MTLBlendFactor Factor(ScreenBlendFactor value)
 {
 	switch(value) {
@@ -459,6 +592,54 @@ id<MTLBuffer> Buffer(RuntimeLease& lease, const void* bytes, size_t length)
 	id<MTLBuffer> result=[lease.Device() newBufferWithBytes:bytes length:length options:MTLResourceStorageModeShared];
 	Require(result!=nil,"Cannot allocate native UI buffer");lease.AddAllocation(result);return result;
 }
+id<MTLBuffer> UploadScreenParameters(RuntimeLease& lease,ScreenUploadPool& pool,
+ M4ScreenArgumentLifetime* lifetime,const void* data,size_t length)
+{
+ Require(length && length<=lease.Device().maxBufferLength,"Native UI buffer exceeds device bounds");
+ Require(lifetime!=nil,"Native UI parameters require their prepared argument lifetime");
+ auto slot=pool.Acquire(lease.Device(),length);
+ if(!slot)return Buffer(lease,data,length);
+ auto buffer=slot->buffer;
+ Require(buffer.contents!=nullptr,"Native UI shared upload has no CPU address");
+ std::memcpy(buffer.contents,data,length);
+ // The existing argument holder is owned by both the prepared draw list and
+ // the runtime completion/poison graph before any parameter bytes are used.
+ lifetime->uniformSlots.push_back(std::move(slot));
+ lease.AddAllocation(buffer);
+ return buffer;
+}
+
+struct ScreenBufferSlice {
+ __strong id<MTLBuffer> buffer=nil;
+ size_t offset=0,length=0;
+ uint64_t Address() const {return buffer.gpuAddress+offset;}
+};
+template<std::size_t Count>
+std::array<ScreenBufferSlice,Count> UploadScreenBuffers(RuntimeLease& lease,ScreenUploadPool& pool,
+ M4ScreenUploadLifetime* lifetime,const std::array<const void*,Count>& sources,const std::array<size_t,Count>& lengths)
+{
+ const auto maximum=lease.Device().maxBufferLength;
+ for(const auto length:lengths)Require(length && length<=maximum,"Native UI buffer exceeds device bounds");
+ Require(lifetime!=nil && !lifetime->storage,"Native UI upload requires its unused prepared lifetime");
+ std::array<ScreenBufferSlice,Count> result;
+ const auto layout=PlanNativeUploadLayout(lengths,maximum);
+ if(layout)lifetime->storage=pool.Acquire(lease.Device(),layout->length);
+ // The holder is retained by the prepared frame and the existing runtime
+ // completion/poison graph. No buffer is writable while either still owns it.
+ id<MTLBuffer> packed=lifetime->storage?lifetime->storage->buffer:
+  (layout?[lease.Device() newBufferWithLength:layout->length options:MTLResourceStorageModeShared]:nil);
+ if(packed) {
+  Require(packed.contents!=nullptr,"Native UI shared upload has no CPU address");
+  for(size_t n=0;n<result.size();++n) {
+   std::memcpy(static_cast<uint8_t*>(packed.contents)+layout->offsets[n],sources[n],lengths[n]);
+   result[n]={packed,layout->offsets[n],lengths[n]};
+  }
+  lease.AddAllocation(packed);
+ } else {
+  for(size_t n=0;n<result.size();++n)result[n]={Buffer(lease,sources[n],lengths[n]),0,lengths[n]};
+ }
+ return result;
+}
 std::optional<MTLScissorRect> Scissor(const std::optional<ScreenScissor>& source, const std::array<double,4>& viewport,
 	uint32_t basisWidth,uint32_t basisHeight,uint32_t width,uint32_t height)
 {
@@ -477,6 +658,13 @@ std::optional<MTLScissorRect> Scissor(const std::optional<ScreenScissor>& source
 }
 } // namespace
 namespace {
+// A complete Prepare keeps its source frame/RTT owners alive through every
+// PrepareList. Standalone list entry points still sweep independently.
+struct TextureSweepScope {
+	bool& active;bool prior;
+	explicit TextureSweepScope(bool& value):active(value),prior(value){active=true;}
+	~TextureSweepScope(){active=prior;}
+};
 struct ScreenMipState { bool initialized=false, queued=false; };
 struct ScreenMipGeneration {
 	std::shared_ptr<const ScreenTexture> owner;
@@ -510,6 +698,16 @@ void PreparedScreenMipmaps::DidComplete() const
 	Require(impl->encoded,"Original named-image mip plan has no encoded GPU producer");
 	for(const auto& image:impl->images) image.state->initialized=true;
 }
+struct ExactScreenLineProbe {
+ explicit ExactScreenLineProbe(const char* key="BAR_NATIVE_SCREEN_LINE_PROBE_FILE"):path(std::getenv(key)){}
+ const char* path;uint64_t draws=0,vertices=0,bytes=0,aliased=0,multisample=0;
+ ~ExactScreenLineProbe(){if(path&&*path)if(auto f=std::fopen(path,"w")){std::fprintf(f,"gpuDraws,gpuVertices,sharedPacketBytes,aliasedDraws,multisampleDraws\n%llu,%llu,%llu,%llu,%llu\n",(unsigned long long)draws,(unsigned long long)vertices,(unsigned long long)bytes,(unsigned long long)aliased,(unsigned long long)multisample);std::fclose(f);}}
+ void Record(uint32_t count,size_t packetBytes,bool msaa){if(path&&*path){++draws;vertices+=uint64_t(count/6)*4;bytes+=packetBytes;msaa?++multisample:++aliased;}}
+};
+struct ExactScreenLineJob {
+ __strong id<MTLComputePipelineState> pipeline=nil;__strong id<MTL4ArgumentTable> arguments=nil;
+ uint32_t quads=0;mutable bool encoded=false;
+};
 struct PreparedScreenFrame::Impl {
 	struct Draw {
 		__strong id<MTLRenderPipelineState> pipeline=nil; __strong id<MTLDepthStencilState> depth=nil;
@@ -530,8 +728,18 @@ struct PreparedScreenFrame::Impl {
 		bool healthBars=false;std::uint32_t healthBarsInstances=0;
 		std::unique_ptr<PreparedPanelShaderDraw> panelShader;
 		std::shared_ptr<const NativePanelShaderDraw> panelShaderOwner;
+  std::shared_ptr<ExactScreenLineJob> exactLine;
+  std::shared_ptr<PreparedSourceLines133> sourceLines;
+  bool geometry=false,sourceLine=false;uint32_t geometryInstances=1;__strong id<MTLBuffer> geometryIndices=nil;size_t geometryIndexOffset170=0;
 	};
-	__strong id<MTLBuffer> indices=nil;
+	// Both the prepared frame and RuntimeLease completion graph retain this
+	// token. It outlives draws during destruction and blocks every pool write.
+	__strong M4ScreenArgumentLifetime* argumentLifetime=nil;
+	__strong M4ScreenUploadLifetime* uploadLifetime=nil;
+	// Per-draw healthbar storage shares the same completion-safe pool. This
+	// array outlives draws and is created only when healthbar uploads exist.
+	__strong NSMutableArray<M4ScreenUploadLifetime*>* healthBarsUploadLifetimes=nil;
+	ScreenBufferSlice indices;
 	MTLViewport viewport{};
 	std::vector<Draw> draws;
 	uint32_t uploads=0,sourceCommandCount=0;
@@ -584,6 +792,13 @@ uint32_t PreparedScreenFrame::StartBoxDrawsCompleted()const
 }
 void PreparedScreenFrame::EncodeNonTargetDependencies(id<MTL4CommandBuffer> command) const
 {
+ for(const auto& d:impl->draws)if(d.sourceLines)d.sourceLines->EncodeDependencies(command);
+ id<MTL4ComputeCommandEncoder> lines=nil;
+ for(const auto& draw:impl->draws)if(draw.exactLine&&!draw.exactLine->encoded){auto& job=*draw.exactLine;
+  if(!lines){lines=[command computeCommandEncoder];Require(lines,"Cannot encode exact screen lines");}
+  [lines setComputePipelineState:job.pipeline];[lines setArgumentTable:job.arguments];[lines dispatchThreads:MTLSizeMake(job.quads,1,1) threadsPerThreadgroup:MTLSizeMake(64,1,1)];job.encoded=true;
+ }
+ if(lines){[lines barrierAfterStages:MTLStageDispatch beforeQueueStages:MTLStageVertex visibilityOptions:MTL4VisibilityOptionDevice];[lines endEncoding];}
 	for(const auto& map:impl->minimaps)map->EncodeDependencies(command);
 	for(const auto& draw:impl->draws)if(draw.pip)draw.pip->EncodeDependencies(command);
 	for(const auto& draw:impl->draws)if(draw.sensorPreview)draw.sensorPreview->EncodeDependencies(command);
@@ -654,6 +869,7 @@ void PreparedScreenFrame::EncodeDeferredTarget(id<MTL4CommandBuffer> command,std
 }
 void PreparedScreenFrame::DidComplete() const
 {
+ for(const auto& draw:impl->draws)if(draw.exactLine)Require(draw.exactLine->encoded,"Exact screen lines missing their producer");
 	for (const auto& map: impl->minimaps) map->DidComplete();
 	for (const auto& draw:impl->draws)if(draw.pip){draw.pip->DidComplete();draw.pipCompleted=draw.pipEncoded;}
 	for (const auto& draw:impl->draws)if(draw.sensorPreview)draw.sensorPreview->DidComplete();
@@ -720,11 +936,19 @@ void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::
 		[encoder setStencilFrontReferenceValue:draw.frontReference backReferenceValue:draw.backReference];
 		[encoder setViewport:draw.viewport];[encoder setScissorRect:draw.scissor];
 		if(draw.panelShader){draw.panelShader->Encode(encoder);continue;}
+  [encoder setDepthClipMode:draw.sourceLines?MTLDepthClipModeClamp:MTLDepthClipModeClip];
+  if(draw.sourceLines)draw.sourceLines->RequireReady();
+  if(draw.exactLine)Require(draw.exactLine->encoded,"Exact screen line draw precedes its producer");
 		[encoder setRenderPipelineState:draw.pipeline];
 		[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
 		if(draw.healthBars){[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.healthBarsInstances];continue;}
+  if(draw.geometry){
+   if(draw.geometryIndices)[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:draw.geometryIndices.gpuAddress+draw.geometryIndexOffset170 indexBufferLength:draw.geometryIndices.length-draw.geometryIndexOffset170 instanceCount:draw.geometryInstances];
+   else [encoder drawPrimitives:draw.sourceLine?MTLPrimitiveTypeTriangleStrip:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.geometryInstances];
+   continue;
+  }
 		const size_t offset=size_t(draw.first)*sizeof(uint32_t);
-		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:impl->indices.gpuAddress+offset indexBufferLength:impl->indices.length-offset];
+		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:impl->indices.Address()+offset indexBufferLength:impl->indices.length-offset];
 	}
 }
 struct TerraformCompiledOwner {__strong id<MTLLibrary> library=nil;std::array<__strong id<MTLRenderPipelineState>,3> pipelines{};};
@@ -732,12 +956,36 @@ struct DiffuseCompiledOwner {__strong id<MTLLibrary> library=nil;std::array<__st
 struct SplatCompiledOwner {__strong id<MTLLibrary> library=nil;std::array<__strong id<MTLRenderPipelineState>,2> pipelines{};};
 struct VisualizerCompiledOwner {__strong id<MTLLibrary> library=nil;__strong id<MTLRenderPipelineState> pipeline=nil;};
 struct ScreenGPU::Impl {
+ bool reportedPreparation152=false;bool reportedRetainedFont170=false;bool reportedFilled185=false;
+ SourceLinesGPU133 sourceLines;
+ __strong id<MTLLibrary> lineLibrary=nil;
+ __strong id<MTLComputePipelineState> linePipeline=nil,pixelLinePipeline=nil;
+ bool lineValidation=false;
+ void CompileLines(RuntimeLease& lease,bool validation,double& shaderMs,bool pixel){
+  if(lineLibrary&&lineValidation==validation&&(pixel?pixelLinePipeline:linePipeline))return;
+  const auto start=Clock::now();NSError* error=nil;
+  if(!lineLibrary||lineValidation!=validation){
+   auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+   auto library=lease.NewLibraryWithSource(String(std::string(ExactWorldLineShader)+ExactPixelLineShader),options,&error);Require(library,"Cannot compile exact line arithmetic: "+Error(error));
+   lineLibrary=library;linePipeline=nil;pixelLinePipeline=nil;lineValidation=validation;
+  }
+  auto function=[MTL4LibraryFunctionDescriptor new];function.library=lineLibrary;function.name=pixel?@"ExactPixelLineGeometry":@"ExactWorldLineGeometry";auto descriptor=[MTL4ComputePipelineDescriptor new];descriptor.computeFunctionDescriptor=function;descriptor.options=[MTL4PipelineOptions new];descriptor.options.shaderValidation=ShaderValidationMode(validation);
+  auto pipeline=[lease.Compiler() newComputePipelineStateWithDescriptor:descriptor compilerTaskOptions:nil error:&error];Require(pipeline,"Cannot compile exact line geometry: "+Error(error));if(pixel)pixelLinePipeline=pipeline;else linePipeline=pipeline;shaderMs+=Milliseconds(start);
+ }
+
+
+
+	ScreenArgumentPool argumentPool;
+	ScreenUploadPool uploadPool;
+ ImmutableSnapshotBuffers geometryBuffers;ScreenModelBuffers modelBuffers;
+	bool textureSweepActive=false;
  std::shared_ptr<const VisualizerCompiledOwner> visualizerCompiled,decalCaptureCompiled;
  std::shared_ptr<const SplatCompiledOwner> splatCompiled;
  std::shared_ptr<const DiffuseCompiledOwner> diffuseCompiled;
  std::shared_ptr<const TerraformCompiledOwner> terraformCompiled;
 	bool targetPriorityCompiled=false;
 	__strong id<MTLLibrary> diagnosticLibrary=nil;
+ __strong id<MTLLibrary> geometryLibrary=nil;
 	__strong id<MTLRenderPipelineState> diagnosticProgram=nil;
 	~Impl(){if(targetPriorityCompiled)--targetPriorityProgram::compiledConsumers;}
 	MiniMapGPU minimaps;
@@ -785,15 +1033,15 @@ struct ScreenGPU::Impl {
 		texture.mipState->queued=true;
 	}
 	__strong NSMutableDictionary<NSNumber*,id<MTLSamplerState>>* samplers=[NSMutableDictionary dictionary];
-	__strong NSMutableDictionary<NSNumber*,id<MTLRenderPipelineState>>* pipelines=[NSMutableDictionary dictionary];
+	std::map<std::array<uint64_t,6>,id<MTLRenderPipelineState>> pipelines;
 	__strong id<MTLLibrary> library=nil;
-	MTLPixelFormat format=MTLPixelFormatInvalid,depthFormat=MTLPixelFormatInvalid,stencilFormat=MTLPixelFormatInvalid;bool validation=false;
 	struct DepthState {ScreenDepthStencilState source;MTLPixelFormat depthFormat,stencilFormat;__strong id<MTLDepthStencilState> value=nil;};
 	std::vector<DepthState> depthStates;
 	id<MTLDepthStencilState> DepthStencil(RuntimeLease& lease,const ScreenDepthStencilState& source,MTLPixelFormat actualDepth,MTLPixelFormat actualStencil) {
 		Require(actualDepth==MTLPixelFormatInvalid || actualDepth==MTLPixelFormatDepth16Unorm || actualDepth==MTLPixelFormatDepth32Float,"Native screen requires an actual supported depth attachment format");
 		Require(actualStencil==MTLPixelFormatInvalid || actualStencil==MTLPixelFormatStencil8,"Native screen requires an actual supported stencil attachment format");
-		for(const auto& state:depthStates)if(state.source==source && state.depthFormat==actualDepth && state.stencilFormat==actualStencil){lease.Retain(state.value);return state.value;}
+		const auto key=NativeEffectiveDepthStencilKey(source,actualDepth!=MTLPixelFormatInvalid,actualStencil!=MTLPixelFormatInvalid);
+		for(const auto& state:depthStates)if(state.source==key && state.depthFormat==actualDepth && state.stencilFormat==actualStencil){lease.Retain(state.value);return state.value;}
 		auto descriptor=[MTLDepthStencilDescriptor new];
 		// GL tests and writes have no effect when the framebuffer has no buffer.
 		descriptor.depthCompareFunction=actualDepth!=MTLPixelFormatInvalid && source.depthTest?Compare(source.depthCompare):MTLCompareFunctionAlways;
@@ -805,7 +1053,7 @@ struct ScreenGPU::Impl {
 			face.readMask=original.readMask;face.writeMask=original.writeMask;if(front)descriptor.frontFaceStencil=face;else descriptor.backFaceStencil=face;
 		}
 		auto value=[lease.Device() newDepthStencilStateWithDescriptor:descriptor];Require(value!=nil,"Cannot create original screen depth/stencil state");
-		depthStates.push_back({source,actualDepth,actualStencil,value});lease.Retain(value);return value;
+		depthStates.push_back({key,actualDepth,actualStencil,value});lease.Retain(value);return value;
 	}
 	__strong id<MTLTexture> white=nil;
 	id<MTLTexture> Image(RuntimeLease& lease,const std::shared_ptr<const ScreenTexture>& source,uint32_t& uploads,
@@ -849,16 +1097,19 @@ struct ScreenGPU::Impl {
 			retainExternal(std::move(resolved));lease.AddAllocation(image);return image;
 		}
 		const auto found=textures.find(source.get());if(found!=textures.end()&&!found->second.owner.expired()){
+   // Pin N's immutable submitted RTT without publishing completion. N retires
+   // before Begin for this request; current-frame producer ordering stays exact.
+   const bool previousSubmission=lease.PreparingWhilePending()&&found->second.encodedVersion&&*found->second.encodedVersion;
 			Require(!source->renderTarget || found->second.allocationOnly || (found->second.initialized && *found->second.initialized) ||
-				std::find(available.begin(),available.end(),source.get())!=available.end(),"Native UI RTT version has no retired or earlier ordered producer");
+				previousSubmission || std::find(available.begin(),available.end(),source.get())!=available.end(),"Native UI RTT version has no retired or earlier ordered producer");
 			const auto& entry=found->second;
 			if(source->renderTarget && source->generation){
-				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !(entry.initialized && *entry.initialized))
+				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized))
 					Require(consumer && consumer->stage==NativePostprocessStage::Screen &&
 						(consumer->screenCommandOffset>entry.sourceOffset ||
 						(consumer->screenCommandOffset==entry.sourceOffset && (!consumer->commandSequence || consumer->commandSequence>entry.sourceSequence))),
 						"Copied/sampled RTT version precedes its actual screen producer insertion");
-				if(entry.sourceStage!=NativePostprocessStage::Screen && !(entry.initialized && *entry.initialized)){
+				if(entry.sourceStage!=NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized)){
 					Require(consumer && (consumer->stage>entry.sourceStage ||
 						(consumer->stage==entry.sourceStage && consumer->sequence>entry.sourceSequence)),
 						"Actual world sampler precedes its pending PreUnit RTT producer");
@@ -870,18 +1121,7 @@ struct ScreenGPU::Impl {
 			QueueMipmaps(source,found->second);lease.AddAllocation(found->second.image);return found->second.image;
 		}
 		if (source->renderTarget && source->generation==0) {
-			Require(source->renderTarget->resourceId && source->width && source->height && source->width<=16384 && source->height<=16384 &&
-				source->width==source->renderTarget->width && source->height==source->renderTarget->height &&
-				AttachmentPixelBytes(source->format)!=0 && source->flipV && source->bytes.empty() &&
-				!source->bytesPerRow && source->mips.empty() && size_t(source->width)*source->height*AttachmentPixelBytes(source->format)<=256*1024*1024,
-				"Native UI allocation-only generation0 requires an original bounded color target");
-			MTLTextureDescriptor* d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:ColorTargetFormat(source->format)
-				width:source->width height:source->height mipmapped:NO];
-			d.storageMode=MTLStorageModePrivate;
-			d.usage=MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
-			id<MTLTexture> image=[lease.Device() newTextureWithDescriptor:d];
-			Require(image!=nil,"Cannot allocate original native UI generation0 storage");
-			image.label=String(source->sourceName+" allocation generation0 (undefined initial pixels)");
+			auto image=AllocateScreenInitialStorage(lease.Device(),source);
 			// Match glTexImage2D(..., nullptr): no invented CPU payload or clear.
 			textures[source.get()]={source,image,{},true};
 			lease.AddAllocation(image);return image;
@@ -993,19 +1233,57 @@ struct ScreenGPU::Impl {
 		ValidateScreenSampler(value);const uint32_t key=uint32_t(value.filter)|(uint32_t(value.wrapS)<<2)|(uint32_t(value.wrapT)<<4)|(uint32_t(value.mipFilter)<<6)|(uint32_t(value.magnificationFilter.value_or(value.filter))<<8)|(value.anisotropy<<10)|(uint32_t(value.whiteBorder)<<15);
 		id<MTLSamplerState> result=samplers[@(key)];if(result==nil){MTLSamplerDescriptor* d=[MTLSamplerDescriptor new];d.minFilter=value.filter==ScreenFilter::Linear?MTLSamplerMinMagFilterLinear:MTLSamplerMinMagFilterNearest;d.magFilter=value.magnificationFilter.value_or(value.filter)==ScreenFilter::Linear?MTLSamplerMinMagFilterLinear:MTLSamplerMinMagFilterNearest;d.mipFilter=value.mipFilter==ScreenMipFilter::Linear?MTLSamplerMipFilterLinear:(value.mipFilter==ScreenMipFilter::Nearest?MTLSamplerMipFilterNearest:MTLSamplerMipFilterNotMipmapped);d.sAddressMode=Wrap(value.wrapS,value.filter);d.tAddressMode=Wrap(value.wrapT,value.filter);d.borderColor=value.whiteBorder?MTLSamplerBorderColorOpaqueWhite:MTLSamplerBorderColorTransparentBlack;d.maxAnisotropy=value.anisotropy;d.supportArgumentBuffers=YES;result=[lease.Device() newSamplerStateWithDescriptor:d];Require(result!=nil,"Cannot create original UI sampler");samplers[@(key)]=result;}lease.Retain(result);return result;
 	}
-	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const ScreenBlendState& blend,const std::array<bool,4>& mask,MTLPixelFormat target,bool validate,double& milliseconds,bool minimap,MTLPixelFormat actualDepth,MTLPixelFormat actualStencil,unsigned sampledDepthMask,bool healthBars,std::uint32_t samples,bool alphaToCoverage,bool visualizer=false,unsigned splatProgram=0,unsigned diffuseProgram=0,unsigned terraformProgram=0) {
+	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const ScreenBlendState& blend,const std::array<bool,4>& mask,MTLPixelFormat target,bool validate,double& milliseconds,bool minimap,MTLPixelFormat actualDepth,MTLPixelFormat actualStencil,unsigned sampledDepthMask,bool healthBars,std::uint32_t samples,bool alphaToCoverage,bool visualizer=false,unsigned splatProgram=0,unsigned diffuseProgram=0,unsigned terraformProgram=0,bool geometry=false,bool filled185=false) {
 		const auto start=Clock::now();NSError* error=nil;
-		if(library==nil){MTL4LibraryDescriptor* d=[MTL4LibraryDescriptor new];d.source=String(std::string(SHADER)+HealthBarsShaderSource+MiniMapScreenShaderSource()+NativeSplatPainterShaderSource+NativeDiffusePainterShaderSource+NativeTerraformCaptureShaderSource);d.name=@"Original native UI texture and font coverage";library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile native UI shader: "+Error(error));}
+		if(library==nil){MTL4LibraryDescriptor* d=[MTL4LibraryDescriptor new];d.source=String(std::string(SHADER)+NativeScreenFilledShader184+HealthBarsShaderSource+MiniMapScreenShaderSource()+NativeSplatPainterShaderSource+NativeDiffusePainterShaderSource+NativeTerraformCaptureShaderSource);d.name=@"Original native UI texture and font coverage";library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile native UI shader: "+Error(error));}
+  if(geometry&&geometryLibrary==nil){
+   auto d=[MTL4LibraryDescriptor new];d.source=String(std::string(SHADER)+NativeScreenGeometryShaderSource);d.name=@"Original instanced screen and static model vertex transforms";
+   auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;d.options=options;
+   geometryLibrary=lease.NewLibrary(d,&error);Require(geometryLibrary!=nil,"Cannot compile original typed screen vertex shader: "+Error(error));
+  }
 		// Metal4 depth/stencil formats belong to actual pass attachments, not its pipeline descriptor.
-		if(format!=target||validation!=validate||depthFormat!=actualDepth||stencilFormat!=actualStencil){[pipelines removeAllObjects];format=target;validation=validate;depthFormat=actualDepth;stencilFormat=actualStencil;}
+		// Attachment formats do not specialize this descriptor. Reuse its PSO across
+		// equivalent passes; actual attachment checks/bindings remain in Prepare/Encode.
+		// Keep validation, device and every descriptor-affecting dimension distinct.
 		Require(splatProgram<=3&&(!splatProgram||(!minimap&&!visualizer&&!healthBars&&!sampledDepthMask)),"Splat Painter pipeline family differs");
 		Require(diffuseProgram<=4&&(!diffuseProgram||(!splatProgram&&!minimap&&!visualizer&&!healthBars&&!sampledDepthMask)),"Diffuse Painter pipeline family differs");
 		Require(terraformProgram<=3&&(!terraformProgram||(!diffuseProgram&&!splatProgram&&!minimap&&!visualizer&&!healthBars&&!sampledDepthMask)),"Terraform Capture pipeline family differs");
-		const uint64_t key=(uint64_t(terraformProgram)<<45)|(uint64_t(diffuseProgram)<<42)|(uint64_t(splatProgram)<<40)|(uint64_t(samples)<<32)|(uint64_t(lease.SampleShadingEnabled(samples))<<39)|(uint64_t(alphaToCoverage)<<38)|BlendKey(blend)|(uint32_t(mask[0])<<23)|(uint32_t(mask[1])<<24)|(uint32_t(mask[2])<<25)|(uint32_t(mask[3])<<26)|(uint32_t(minimap)<<27)|(uint32_t(sampledDepthMask)<<28)|(uint32_t(healthBars)<<30)|(uint64_t(visualizer)<<31);id<MTLRenderPipelineState> result=pipelines[@(key)];
-		if(result==nil){MTL4RenderPipelineDescriptor* d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;d.alphaToCoverageState=alphaToCoverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;MTL4LibraryFunctionDescriptor* vs=[MTL4LibraryFunctionDescriptor new];vs.library=library;vs.name=healthBars?@"HealthBarsVertexMain":@"ScreenVertexMain";d.vertexFunctionDescriptor=vs;MTL4LibraryFunctionDescriptor* fs=[MTL4LibraryFunctionDescriptor new];fs.library=library;fs.name=terraformProgram==1?@"TerraformCaptureReprojectFragment":terraformProgram==2?@"TerraformCaptureSpriteFragment":terraformProgram==3?@"TerraformCaptureModelFragment":diffuseProgram==1?@"DiffuseCompositeFragment":diffuseProgram==2?@"DiffuseStampFragment":diffuseProgram==3?@"DiffuseChannelFragment":diffuseProgram==4?@"DiffuseCopyFragment":splatProgram==1?@"SplatPaintFragment":splatProgram==2?@"SplatCopyFragment":splatProgram==3?@"SplatOverlayFragment":visualizer?@"DeferredVisualizerFragment":healthBars?@"HealthBarsFragmentMain":minimap?@"MiniMapScreenFragment":String(std::string("ScreenFragmentMain")+(sampledDepthMask?std::to_string(sampledDepthMask):""));d.fragmentFunctionDescriptor=fs;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;MTL4PipelineOptions* o=[MTL4PipelineOptions new];o.shaderValidation=ShaderValidationMode(validate);d.options=o;auto* a=d.colorAttachments[0];a.pixelFormat=target;a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=Factor(blend.sourceColor);a.destinationRGBBlendFactor=Factor(blend.destinationColor);a.sourceAlphaBlendFactor=Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=Factor(blend.destinationAlpha);a.rgbBlendOperation=Equation(blend.colorEquation);a.alphaBlendOperation=Equation(blend.alphaEquation);a.writeMask=MTLColorWriteMask((mask[0]?MTLColorWriteMaskRed:0)|(mask[1]?MTLColorWriteMaskGreen:0)|(mask[2]?MTLColorWriteMaskBlue:0)|(mask[3]?MTLColorWriteMaskAlpha:0));result=lease.NewRenderPipeline(d,&error);Require(result!=nil,"Cannot create native UI blend pipeline: "+Error(error));pipelines[@(key)]=result;milliseconds+=Milliseconds(start);}
-		if(!terraformProgram&&!diffuseProgram&&!splatProgram&&!visualizer&&!minimap&&!healthBars&&!sampledDepthMask&&!targetPriorityCompiled){diagnosticLibrary=library;diagnosticProgram=result;++targetPriorityProgram::compiledConsumers;targetPriorityCompiled=true;}
-		lease.Retain(library);lease.Retain(result);return result;
+		const uint64_t key=(uint64_t(geometry)<<48)|(uint64_t(terraformProgram)<<45)|(uint64_t(diffuseProgram)<<42)|(uint64_t(splatProgram)<<40)|(uint64_t(samples)<<32)|(uint64_t(lease.SampleShadingEnabled(samples))<<39)|(uint64_t(alphaToCoverage)<<38)|BlendKey(blend)|(uint32_t(mask[0])<<23)|(uint32_t(mask[1])<<24)|(uint32_t(mask[2])<<25)|(uint32_t(mask[3])<<26)|(uint32_t(minimap)<<27)|(uint32_t(sampledDepthMask)<<28)|(uint32_t(healthBars)<<30)|(uint64_t(visualizer)<<31);
+		Require(!filled185||(samples==1&&!lease.SampleShadingEnabled(samples)&&!alphaToCoverage&&!sampledDepthMask&&!minimap&&!healthBars&&!visualizer&&!splatProgram&&!diffuseProgram&&!terraformProgram),"Shared filled UI lost its proven pipeline domain");
+		const std::array<uint64_t,6> cacheKey{key,uint64_t(target),uint64_t(filled185),0,uint64_t(validate),uint64_t(reinterpret_cast<uintptr_t>((__bridge void*)lease.Device()))};
+		const auto found=pipelines.find(cacheKey);id<MTLRenderPipelineState> result=found==pipelines.end()?nil:found->second;
+		if(result==nil){MTL4RenderPipelineDescriptor* d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;d.alphaToCoverageState=alphaToCoverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;MTL4LibraryFunctionDescriptor* vs=[MTL4LibraryFunctionDescriptor new];vs.library=geometry?geometryLibrary:library;vs.name=geometry?@"ScreenGeometryVertexMain":healthBars?@"HealthBarsVertexMain":@"ScreenVertexMain";d.vertexFunctionDescriptor=vs;MTL4LibraryFunctionDescriptor* fs=[MTL4LibraryFunctionDescriptor new];fs.library=library;fs.name=terraformProgram==1?@"TerraformCaptureReprojectFragment":terraformProgram==2?@"TerraformCaptureSpriteFragment":terraformProgram==3?@"TerraformCaptureModelFragment":diffuseProgram==1?@"DiffuseCompositeFragment":diffuseProgram==2?@"DiffuseStampFragment":diffuseProgram==3?@"DiffuseChannelFragment":diffuseProgram==4?@"DiffuseCopyFragment":splatProgram==1?@"SplatPaintFragment":splatProgram==2?@"SplatCopyFragment":splatProgram==3?@"SplatOverlayFragment":visualizer?@"DeferredVisualizerFragment":healthBars?@"HealthBarsFragmentMain":minimap?@"MiniMapScreenFragment":String(std::string("ScreenFragmentMain")+(sampledDepthMask?std::to_string(sampledDepthMask):""));if(filled185)fs.name=@"ScreenFilledFragment184";
+   d.fragmentFunctionDescriptor=fs;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;MTL4PipelineOptions* o=[MTL4PipelineOptions new];o.shaderValidation=ShaderValidationMode(validate);d.options=o;auto* a=d.colorAttachments[0];a.pixelFormat=target;a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=Factor(blend.sourceColor);a.destinationRGBBlendFactor=Factor(blend.destinationColor);a.sourceAlphaBlendFactor=Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=Factor(blend.destinationAlpha);a.rgbBlendOperation=Equation(blend.colorEquation);a.alphaBlendOperation=Equation(blend.alphaEquation);a.writeMask=MTLColorWriteMask((mask[0]?MTLColorWriteMaskRed:0)|(mask[1]?MTLColorWriteMaskGreen:0)|(mask[2]?MTLColorWriteMaskBlue:0)|(mask[3]?MTLColorWriteMaskAlpha:0));result=lease.NewRenderPipeline(d,&error);Require(result!=nil,"Cannot create native UI blend pipeline: "+Error(error));// Prepared draws and RuntimeLease retain any evicted pipeline through completion.
+			if(pipelines.size()>=1024)pipelines.erase(pipelines.begin());
+			pipelines.emplace(cacheKey,result);milliseconds+=Milliseconds(start);}
+		if(!filled185&&!terraformProgram&&!diffuseProgram&&!splatProgram&&!visualizer&&!minimap&&!healthBars&&!sampledDepthMask&&!targetPriorityCompiled){diagnosticLibrary=library;diagnosticProgram=result;++targetPriorityProgram::compiledConsumers;targetPriorityCompiled=true;}
+		lease.Retain(library);if(geometry)lease.Retain(geometryLibrary);lease.Retain(result);return result;
 	}
+ // Append the specialized owner so existing hot field offsets stay stable.
+ ProfilerSourceCache132 profilerSources;
+ __strong id<MTLLibrary> profilerLibrary=nil;
+ std::map<std::array<uint64_t,6>,__strong id<MTLRenderPipelineState>> profilerPipelines;
+ id<MTLRenderPipelineState> ProfilerPipeline(RuntimeLease& lease,const ScreenDrawState& state,MTLPixelFormat format,unsigned samples,bool validation,double& shaderMs){
+  const auto start=Clock::now();NSError* error=nil;
+  if(!profilerLibrary){
+   auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String(std::string(ProfilerSourceShader132)+SourceLineRasterShader130+ProfilerSourceFragment132);descriptor.name=@"Original Profiler Histogram source GPU132";
+   auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
+   profilerLibrary=lease.NewLibrary(descriptor,&error);Require(profilerLibrary,"Cannot compile original Profiler GPU expressions: "+Error(error));
+  }
+  const auto& blend=state.blend;const auto& mask=state.colorWrite;
+  const uint64_t bits=BlendKey(blend)|(uint64_t(mask[0])<<23)|(uint64_t(mask[1])<<24)|(uint64_t(mask[2])<<25)|(uint64_t(mask[3])<<26);
+  const std::array<uint64_t,6> key{bits,uint64_t(format),samples,uint64_t(state.alphaToCoverage),uint64_t(validation)|(uint64_t(lease.SampleShadingEnabled(samples))<<1),uint64_t(reinterpret_cast<uintptr_t>((__bridge void*)lease.Device()))};
+  auto found=profilerPipelines.find(key);id<MTLRenderPipelineState> pipeline=found==profilerPipelines.end()?nil:found->second;
+  if(!pipeline){
+   auto descriptor=[MTL4RenderPipelineDescriptor new];descriptor.rasterSampleCount=samples;descriptor.alphaToCoverageState=state.alphaToCoverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;descriptor.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
+   auto vs=[MTL4LibraryFunctionDescriptor new];vs.library=profilerLibrary;vs.name=@"ProfilerSourceVertex132";descriptor.vertexFunctionDescriptor=vs;
+   auto fs=[MTL4LibraryFunctionDescriptor new];fs.library=profilerLibrary;fs.name=@"ProfilerSourceFragment132";descriptor.fragmentFunctionDescriptor=fs;
+   auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);descriptor.options=options;
+   auto a=descriptor.colorAttachments[0];a.pixelFormat=format;a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=Factor(blend.sourceColor);a.destinationRGBBlendFactor=Factor(blend.destinationColor);a.sourceAlphaBlendFactor=Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=Factor(blend.destinationAlpha);a.rgbBlendOperation=Equation(blend.colorEquation);a.alphaBlendOperation=Equation(blend.alphaEquation);a.writeMask=MTLColorWriteMask((mask[0]?MTLColorWriteMaskRed:0)|(mask[1]?MTLColorWriteMaskGreen:0)|(mask[2]?MTLColorWriteMaskBlue:0)|(mask[3]?MTLColorWriteMaskAlpha:0));
+   pipeline=lease.NewRenderPipeline(descriptor,&error);Require(pipeline,"Cannot create original Profiler GPU pipeline: "+Error(error));if(profilerPipelines.size()>=256)profilerPipelines.erase(profilerPipelines.begin());profilerPipelines.emplace(key,pipeline);shaderMs+=Milliseconds(start);
+  }
+  lease.Retain(profilerLibrary);lease.Retain(pipeline);return pipeline;
+ }
 };
 ScreenGPU::ScreenGPU():impl(std::make_unique<Impl>()){AcquireNativeHealthBarsConsumer();}
 ScreenGPU::~ScreenGPU(){ReleaseNativeHealthBarsConsumer();}
@@ -1069,6 +1347,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 	uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat format,bool validation,double& shaderMs,
 	MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,std::uint32_t samples,std::uint32_t firstOriginalCommand)
 {
+	TextureSweepScope sweepScope(impl->textureSweepActive);
 	impl->pip.BeginFrame();
 	const auto order = OrderScreenRenderTargetPasses(frame);
 	for (auto i=impl->textures.begin(); i!=impl->textures.end();)
@@ -1319,6 +1598,24 @@ id<MTLTexture> ScreenGPU::PrepareAttachmentAllocation(RuntimeLease& lease,const 
   "Coverage FBO allocation requires original R8/D16 allocation identities");
  uint32_t uploads=0;return impl->Image(lease,source,uploads,{});
 }
+id<MTLTexture> ScreenGPU::ReserveAttachmentAllocationForCapture(const std::shared_ptr<const ScreenTexture>& source)
+{
+ Require([NSThread isMainThread],"Coverage capture reservation requires the engine main thread");
+ Require(source && source->renderTarget && !source->generation && !source->incomplete &&
+  !source->sourceTexture && !source->postprocessVersion &&
+  (source->format==ScreenTextureFormat::R8Unorm || source->format==ScreenTextureFormat::Depth16Unorm),
+  "Coverage FBO allocation requires original R8/D16 allocation identities");
+ ValidateScreenTextureMipGeneration(*source);
+ const auto& runtime=SharedRuntime();const auto caps=runtime.Capabilities();
+ Require(caps.directMetal4 && caps.unifiedMemory && runtime.Device()!=nil,"Coverage capture has no supported native device");
+ const auto found=impl->textures.find(source.get());
+ if(found!=impl->textures.end() && !found->second.owner.expired()) {
+  Require(found->second.allocationOnly && found->second.image.device==runtime.Device(),"Coverage allocation cache lost its original identity");
+  return found->second.image; // No contents, mipmap state or receipt changes.
+ }
+ auto image=AllocateScreenInitialStorage(runtime.Device(),source);
+ impl->textures[source.get()]={source,image,{},true};return image;
+}
 PreparedScreenImage ScreenGPU::PrepareImage(RuntimeLease& lease,const std::shared_ptr<const ScreenTexture>& source,
 	const ScreenSampler& sampler,const PreparedScreenFrame* producers,std::optional<NativePostprocessConsumer> consumer,
 	std::function<void(PreparedScreenExternalImage)> retainExternal,id<MTLSamplerState> actualSampler)
@@ -1373,8 +1670,15 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 	Require(width&&height&&logicalWidth&&logicalHeight,"Native UI requires actual window and target extents");
 	Require(samples && [lease.Device() supportsTextureSampleCount:samples],"Native UI requires its actual supported output sample count");
 	const auto& list=*frame.drawList;Require(list.Vertices().size()==list.TexCoords().size()&&list.Vertices().size()<=2'000'000&&list.Indices().size()<=12'000'000&&list.Commands().size()<=100'000,"Native UI geometry/UV extent invalid");
-	for(const auto& v:list.Vertices()){Require(std::isfinite(v.x)&&std::isfinite(v.y)&&std::isfinite(v.z),"Native UI requires finite logical pixels and orthographic GL clip depth");for(float c:v.color)Require(std::isfinite(c),"Nonfinite UI color");}
-	for(const auto& uv:list.TexCoords())for(float v:uv)Require(std::isfinite(v),"Nonfinite UI UV");for(uint32_t i:list.Indices())Require(i<list.Vertices().size(),"UI index exceeds source vertices");
+ size_t combinedVertices170=list.Vertices().size(),combinedIndices170=list.Indices().size();
+ for(const auto& c:list.Commands())if(c.geometry&&c.geometry->retainedFont){
+  screenGeometry::Validate(*c.geometry);
+  AddRetainedFontExtent170(c.geometry->retainedFont->Vertices().size(),c.geometry->retainedFont->Indices().size(),combinedVertices170,combinedIndices170);
+ }
+	// AppendTriangles validates each vertex and UV before copying it into the private list streams.
+	// Indices refer to a separate vector, so check them against the final vertex count.
+	for(uint32_t i:list.Indices())Require(i<list.Vertices().size(),"UI index exceeds source vertices");
+	if(!impl->textureSweepActive)
 	for(auto i=impl->textures.begin();i!=impl->textures.end();)if(i->second.owner.expired())i=impl->textures.erase(i);else ++i;
 	auto prepared=std::make_unique<PreparedScreenFrame>();prepared->impl->sourceCommandCount=std::uint32_t(list.Commands().size());std::array<double,4> viewport{0,0,double(width),double(height)};bool visibleViewport=true;
 	if(frame.logicalViewport){const auto& v=*frame.logicalViewport;Require(v.width<=16384&&v.height<=16384,"UI viewport outside numeric bounds");auto mapped=(v.width && v.height)?MapWorldViewport({v.x,v.y,int32_t(v.width),int32_t(v.height)},logicalWidth,logicalHeight,width,height):std::nullopt;if(mapped)viewport=mapped->viewport;else visibleViewport=false;}
@@ -1384,23 +1688,76 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 		"Screen preparation suffix is outside its original root command stream");
 	if(firstOriginalCommand==list.Commands().size())return prepared;
 	const bool fixedGeometry=std::any_of(list.Commands().begin()+firstOriginalCommand,list.Commands().end(),[](const auto& command){return !command.pip && command.indexCount!=0;});
-	id<MTLBuffer> vertices=nil,uvs=nil;
-	if(fixedGeometry) {
-		vertices=Buffer(lease,list.Vertices().data(),list.Vertices().size_bytes());
-		uvs=Buffer(lease,list.TexCoords().data(),list.TexCoords().size_bytes());
-		prepared->impl->indices=Buffer(lease,list.Indices().data(),list.Indices().size_bytes());
-	}
+ const bool observe170=rootScreen&&!impl->reportedRetainedFont170&&frame.postprocess&&frame.postprocess->sourceDrawFrame>=600;
+ struct FontStats170 {uint64_t listDraws=0,listBytes=0,draws=0,hits=0,hitBytes=0,misses=0,uploadBytes=0,missAllocated=0,uncached=0,tableHits=0,tableMisses=0,uniformBytes=0;};
+ FontStats170 font170;
+ if(observe170)for(const auto& c:list.Commands())if(c.geometry&&c.geometry->retainedFont){++font170.listDraws;font170.listBytes+=c.geometry->retainedFont->PayloadBytes();}
+
+	ScreenBufferSlice vertices,uvs,uniforms;
 	// A PiP-only list has its own original vertex/uniform storage. Never upload
 	// unused fixed-function placeholders merely because its marker has no indices.
-	std::vector<uint8_t> bytes(fixedGeometry?list.Commands().size()*256:0,0);
-	for(size_t i=firstOriginalCommand;i<list.Commands().size();++i){if(list.Commands()[i].pip || list.Commands()[i].startBox || list.Commands()[i].weaponRange || list.Commands()[i].buildSquare || !list.Commands()[i].indexCount)continue;const auto& s=list.Commands()[i].state;Require(s.material<=ScreenMaterial::TerraformCapture&&s.uvMode<=ScreenUVMode::Texel&&s.alphaTest.compare<=ScreenAlphaCompare::Always&&std::isfinite(s.alphaTest.reference),"Unsupported native UI material/alpha state");Require(s.material==ScreenMaterial::Solid||s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher||s.material==ScreenMaterial::DeferredVisualizer||s.material==ScreenMaterial::SpectatorHUD||s.material==ScreenMaterial::MiniMapBackground||s.texture!=nullptr,"Missing original UI texture");Uniform u{{1.0f/float(frame.coordinateWidth),1.0f/float(frame.coordinateHeight),1,1},{uint32_t(s.material),uint32_t(s.material==ScreenMaterial::MiniMapBackground?s.minimapBackground&&s.minimapBackground->base&&s.minimapBackground->base->flipV:s.texture&&s.texture->flipV),uint32_t(s.alphaTest.enabled),uint32_t(s.alphaTest.compare)},{s.alphaTest.reference,float(s.sampler.wrapS==ScreenWrap::LegacyClamp),float(s.sampler.wrapT==ScreenWrap::LegacyClamp),float(s.texture&&s.texture->incomplete)}};if(s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher){u.dimensions[0]=s.targetPriorityViewGeometry[0];u.dimensions[1]=s.targetPriorityViewGeometry[1];if(s.material==ScreenMaterial::FrameGrapher)u.dimensions1=s.frameGrapherParameters;};if(s.texture&&!s.texture->incomplete&&s.uvMode==ScreenUVMode::Texel){Require(s.texture->width&&s.texture->height,"Empty texel-coordinate atlas");u.dimensions[2]=1.0f/float(s.texture->width);u.dimensions[3]=1.0f/float(s.texture->height);}if(s.secondary.texture && s.material!=ScreenMaterial::FontCoverage && s.material!=ScreenMaterial::MiniMapBackground){const auto& second=s.secondary;ValidateScreenSampler(second.sampler);Require(second.uvMode<=ScreenUVMode::Texel,"Unsupported secondary texture coordinate mode");u.dimensions1={1,1,0,0};u.options1={1,uint32_t(second.texture->flipV),0,0};u.parameters1={0,float(second.sampler.wrapS==ScreenWrap::LegacyClamp),float(second.sampler.wrapT==ScreenWrap::LegacyClamp),float(second.texture->incomplete)};if(second.uvMode==ScreenUVMode::Texel&&!second.texture->incomplete){Require(second.texture->width&&second.texture->height,"Empty secondary texel-coordinate image");u.dimensions1[0]=1.f/second.texture->width;u.dimensions1[1]=1.f/second.texture->height;}}if(s.material==ScreenMaterial::DecalCapture){Require(s.decalCapture!=nullptr,"Decal Capture immutable uniforms missing");ValidateNativeDecalCapture(*s.decalCapture);u.capture=s.decalCapture->uniforms;}if(s.pointDisk){
+	std::vector<uint8_t> bytes;
+ std::vector<uint32_t> uniformOffsets151(list.Commands().size());
+	const auto makeUniform=[&](const ScreenDrawState& s){Require(s.material<=ScreenMaterial::TerraformCapture&&s.uvMode<=ScreenUVMode::Texel&&s.alphaTest.compare<=ScreenAlphaCompare::Always&&std::isfinite(s.alphaTest.reference),"Unsupported native UI material/alpha state");Require(s.material==ScreenMaterial::Solid||s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher||s.material==ScreenMaterial::DeferredVisualizer||s.material==ScreenMaterial::SpectatorHUD||s.material==ScreenMaterial::MiniMapBackground||s.texture!=nullptr,"Missing original UI texture");Uniform u{{1.0f/float(frame.coordinateWidth),1.0f/float(frame.coordinateHeight),1,1},{uint32_t(s.material),uint32_t(s.material==ScreenMaterial::MiniMapBackground?s.minimapBackground&&s.minimapBackground->base&&s.minimapBackground->base->flipV:s.texture&&s.texture->flipV),uint32_t(s.alphaTest.enabled),uint32_t(s.alphaTest.compare)},{s.alphaTest.reference,float(s.sampler.wrapS==ScreenWrap::LegacyClamp),float(s.sampler.wrapT==ScreenWrap::LegacyClamp),float(s.texture&&s.texture->incomplete)}};if(s.material==ScreenMaterial::TargetPriorityStroke||s.material==ScreenMaterial::FrameGrapher){u.dimensions[0]=s.targetPriorityViewGeometry[0];u.dimensions[1]=s.targetPriorityViewGeometry[1];if(s.material==ScreenMaterial::FrameGrapher)u.dimensions1=s.frameGrapherParameters;};if(s.texture&&!s.texture->incomplete&&s.uvMode==ScreenUVMode::Texel){Require(s.texture->width&&s.texture->height,"Empty texel-coordinate atlas");u.dimensions[2]=1.0f/float(s.texture->width);u.dimensions[3]=1.0f/float(s.texture->height);}if(s.secondary.texture && s.material!=ScreenMaterial::FontCoverage && s.material!=ScreenMaterial::MiniMapBackground){const auto& second=s.secondary;ValidateScreenSampler(second.sampler);Require(second.uvMode<=ScreenUVMode::Texel,"Unsupported secondary texture coordinate mode");u.dimensions1={1,1,0,0};u.options1={1,uint32_t(second.texture->flipV),0,0};u.parameters1={0,float(second.sampler.wrapS==ScreenWrap::LegacyClamp),float(second.sampler.wrapT==ScreenWrap::LegacyClamp),float(second.texture->incomplete)};if(second.uvMode==ScreenUVMode::Texel&&!second.texture->incomplete){Require(second.texture->width&&second.texture->height,"Empty secondary texel-coordinate image");u.dimensions1[0]=1.f/second.texture->width;u.dimensions1[1]=1.f/second.texture->height;}}if(s.material==ScreenMaterial::DecalCapture){Require(s.decalCapture!=nullptr,"Decal Capture immutable uniforms missing");ValidateNativeDecalCapture(*s.decalCapture);u.capture=s.decalCapture->uniforms;}if(s.pointDisk){
 			const auto& disk=*s.pointDisk;
 			Require((disk[3]<0 || samples>1) && std::abs(disk[3])==float(samples) && disk[2]>=.5f && disk[2]<=32,"Screen point disk differs from its actual attachment/size contract");
 			for(float value:disk)Require(std::isfinite(value),"Non-finite screen point disk");
 			Require(s.material<=ScreenMaterial::FontCoverage && !s.attachmentClear,"Point disk requires the generic screen consumer");
 			u.pointDisk=disk;
-		}std::memcpy(bytes.data()+i*256,&u,sizeof(u));}
-	id<MTLBuffer> uniforms=fixedGeometry?Buffer(lease,bytes.data(),bytes.size()):nil;NSError* error=nil;
+		}return u;};
+ // Uniform lookup keys are scratch data. Release them before transform
+ // packing and image/table preparation; only the immutable bytes/offsets remain.
+ {
+  NativeScreenUniforms151<sizeof(Uniform)> uniformPlan151;
+  for(size_t i=firstOriginalCommand;i<list.Commands().size();++i){
+   const auto& command=list.Commands()[i];if(!command.indexCount&&!(command.geometry&&command.geometry->retainedFont&&command.geometry->count))continue;
+   const auto u=makeUniform(command.state);
+   uniformOffsets151[i]=uniformPlan151.Append(std::bit_cast<decltype(uniformPlan151)::Key>(u),bytes);
+  }
+ }
+	const auto transformUniformOffsets=AppendScreenTransformUniforms(list.Commands(),firstOriginalCommand,bytes);
+	impl->uploadPool.BeginBatch(lease.Device());
+	if(fixedGeometry) {
+		prepared->impl->uploadLifetime=[M4ScreenUploadLifetime new];
+		lease.Retain(prepared->impl->uploadLifetime);
+		auto upload=UploadScreenBuffers<4>(lease,impl->uploadPool,prepared->impl->uploadLifetime,
+			{list.Vertices().data(),list.TexCoords().data(),list.Indices().data(),bytes.data()},
+			{list.Vertices().size_bytes(),list.TexCoords().size_bytes(),list.Indices().size_bytes(),bytes.size()});
+		vertices=upload[0];uvs=upload[1];prepared->impl->indices=upload[2];uniforms=upload[3];
+	}else if(!bytes.empty()){
+  prepared->impl->uploadLifetime=[M4ScreenUploadLifetime new];lease.Retain(prepared->impl->uploadLifetime);
+  uniforms=UploadScreenBuffers<1>(lease,impl->uploadPool,prepared->impl->uploadLifetime,{bytes.data()},{bytes.size()})[0];
+ }
+ if(observe170)font170.uniformBytes=bytes.size();
+ impl->sourceLines.BeginBatch(lease);
+	impl->argumentPool.BeginBatch(lease.Device());
+ impl->geometryBuffers.BeginBatch(lease);impl->modelBuffers.BeginBatch(lease);
+	const auto newArguments=[&](const ScreenArgumentLayout& layout,const char* failure) {
+		if (!prepared->impl->argumentLifetime) {
+			prepared->impl->argumentLifetime=[M4ScreenArgumentLifetime new];
+			lease.Retain(prepared->impl->argumentLifetime);
+		}
+		auto owner=impl->argumentPool.Acquire(lease.Device(),layout,failure);
+		auto table=owner->table;
+		prepared->impl->argumentLifetime->slots.push_back(std::move(owner));
+		return table;
+	};
+ // These indices exist only for this PrepareList. The original argument
+ // lifetime owns every acquired pool token until the prepared/completion
+ // owners retire. A shared table is fully initialized once and never rewritten.
+ NativeScreenBindings151<> bindingPlan151;
+ std::vector<ScreenArgumentStorage> bindingTables151;
+ // Each texture unit remembers only its latest validated immutable result.
+ // The original miss path retains resources in this lease; ordered images
+ // always resolve per consumer. No cache survives this PrepareList.
+ std::array<NativeScreenImagePreparation152<id<MTLTexture>>,2> imagePreparation152;
+ std::array<NativeScreenSamplerPreparation152<id<MTLSamplerState>>,2> samplerPreparation152;
+ // One root-list receipt after gameplay starts, matching the existing SSAO
+ // activation gate. No repeated trace or counters survive this preparation.
+ const bool observePreparation152=rootScreen && !impl->reportedPreparation152 &&
+  frame.postprocess && frame.postprocess->sourceDrawFrame>=600;
+ std::uint32_t imageRequests152=0,imageResolutions152=0,samplerRequests152=0,samplerResolutions152=0;
+ std::uint32_t orderedImageRequests152=0,orderedImageResolutions152=0;
 	// Only earlier ordered targets are available to a typed shader, exactly as
 	// for fixed-function draws. This proxy owns no executable producers.
 	std::unique_ptr<PreparedScreenFrame> pipProducers;
@@ -1412,7 +1769,10 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 			pipProducers->impl->producedImages.push_back(std::move(owner));
 		}
 	}
-	for(size_t i=firstOriginalCommand;i<list.Commands().size();++i) {
+ const bool observeFilled185=rootScreen&&!impl->reportedFilled185&&frame.postprocess&&frame.postprocess->sourceDrawFrame>=600;
+ std::array<uint32_t,3> filledCounts185{};
+ bool profilerBatchStarted=false;
+ for(size_t i=firstOriginalCommand;i<list.Commands().size();++i) {
 		const auto& command=list.Commands()[i];const auto& state=command.state;
 		Require(command.indexCount%3==0&&command.firstIndex<=list.Indices().size()&&command.indexCount<=list.Indices().size()-command.firstIndex,"Invalid original UI draw range");
 		// Viewport is original per-draw window state; changing it never moves the
@@ -1448,21 +1808,26 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 			// camera projection, strip topology and glyph decisions run on GPU.
 			auto points=impl->HealthBarsPoints(lease,source.vertices);
 			const auto modelRows=ReadNativeHealthBarsModelRows(source);
-			auto models=Buffer(lease,modelRows.data(),modelRows.size()*sizeof(NativeHealthBarsModelRow));
 			const auto engine=ReadNativeUnitPrimitiveUniforms(source.uniforms);
 			HealthBarsUniform u{engine.viewProjection,engine.viewInverse,engine.time,
 				{source.iconDistance,source.cameraDistanceMult,source.cameraDistanceMultGlyph,source.skipGlyphsNumbers},
 				{source.config.height,source.config.corner,source.config.smallCorner,float(source.config.debugShow)},
 				{std::uint32_t(engine.clipDepth==ClipDepthConvention::MinusOneToOne),source.first,0,0},
 				{std::uint32_t(source.atlas->flipV),std::uint32_t(source.sampler.wrapS==ScreenWrap::LegacyClamp),std::uint32_t(source.sampler.wrapT==ScreenWrap::LegacyClamp),0}};
-			auto parameters=Buffer(lease,&u,sizeof(u));
+			if(!prepared->impl->healthBarsUploadLifetimes)
+				prepared->impl->healthBarsUploadLifetimes=[NSMutableArray new];
+			auto uploadLifetime=[M4ScreenUploadLifetime new];
+			[prepared->impl->healthBarsUploadLifetimes addObject:uploadLifetime];
+			lease.Retain(uploadLifetime);
+			const auto uploads=UploadScreenBuffers<2>(lease,impl->uploadPool,uploadLifetime,
+				{modelRows.data(),&u},{modelRows.size()*sizeof(NativeHealthBarsModelRow),sizeof(u)});
+			const auto& models=uploads[0];const auto& parameters=uploads[1];
 			std::vector<PreparedScreenExternalImage> external;
 			const auto retainExternal=[&](PreparedScreenExternalImage image){external.push_back(std::move(image));};
 			auto image=impl->Image(lease,source.atlas,prepared->impl->uploads,availableTargets,consumer,retainExternal);
 			auto sampler=impl->Sampler(lease,source.sampler);
-			MTL4ArgumentTableDescriptor* d=[MTL4ArgumentTableDescriptor new];d.maxBufferBindCount=3;d.maxTextureBindCount=1;d.maxSamplerStateBindCount=1;d.initializeBindings=YES;
-			id<MTL4ArgumentTable> args=[lease.Device() newArgumentTableWithDescriptor:d error:&error];Require(args!=nil,"Cannot allocate original Healthbars arguments: "+Error(error));
-			[args setAddress:points.gpuAddress atIndex:0];[args setAddress:models.gpuAddress atIndex:1];[args setAddress:parameters.gpuAddress atIndex:2];
+			auto args=newArguments({3,1,1},"Cannot allocate original Healthbars arguments: ");
+			[args setAddress:points.gpuAddress atIndex:0];[args setAddress:models.Address() atIndex:1];[args setAddress:parameters.Address() atIndex:2];
 			[args setTexture:image.gpuResourceID atIndex:0];[args setSamplerState:sampler.gpuResourceID atIndex:0];lease.Retain(args);
 			PreparedScreenFrame::Impl::Draw draw;
 			draw.pipeline=impl->Pipeline(lease,state.blend,state.colorWrite,format,validation,shaderMs,false,depthFormat,stencilFormat,0,true,samples,state.alphaToCoverage);
@@ -1558,7 +1923,23 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 			if(!packet->Empty()) {PreparedScreenFrame::Impl::Draw draw;draw.originalCommand=std::uint32_t(i);draw.pip=std::move(packet);draw.pipOwner=command.pip;prepared->impl->draws.push_back(std::move(draw));}
 			continue;
 		}
-		if(!command.indexCount || (!state.attachmentClear && state.cull==ScreenCull::FrontAndBack))continue;
+		if((!command.indexCount&&!command.geometry) || (!state.attachmentClear && state.cull==ScreenCull::FrontAndBack))continue;
+  const bool frameGeometry=command.geometry&&screenGeometry::UsesFrameVertices(*command.geometry);
+  const bool retainedFont170=command.geometry&&bool(command.geometry->retainedFont);
+  const bool packedGeometry170=frameGeometry||retainedFont170;
+  if(command.geometry){Require((frameGeometry?command.indexCount==command.geometry->count:command.indexCount==0)&&!state.attachmentClear,"Typed screen geometry competes with ordinary geometry/clear");screenGeometry::Validate(*command.geometry);}
+  if(command.geometry&&command.geometry->kind==NativeScreenGeometryKind::ProfilerHistogram){
+   const auto& input=*command.geometry->profilerHistogram;
+   if(!profilerBatchStarted){impl->profilerSources.BeginBatch(lease);profilerBatchStarted=true;}
+   auto source=impl->profilerSources.Read(lease,input);auto args=newArguments({2,0,0},"Cannot allocate original Profiler argument table: ");
+   const auto uniform=ProfilerUniform132(input,state.alphaTest,drawViewport,width,height,samples);
+   auto parameters=UploadScreenParameters(lease,impl->uploadPool,prepared->impl->argumentLifetime,&uniform,sizeof(uniform));
+   [args setAddress:source.gpuAddress atIndex:0];[args setAddress:parameters.gpuAddress atIndex:1];lease.Retain(args);
+   auto depthState=state.depthStencil;depthState.backStencil=depthState.frontStencil;
+   PreparedScreenFrame::Impl::Draw draw;draw.originalCommand=uint32_t(i);draw.pipeline=impl->ProfilerPipeline(lease,state,format,samples,validation,shaderMs);draw.depth=impl->DepthStencil(lease,depthState,depthFormat,stencilFormat);draw.arguments=args;
+   draw.viewport={0,0,double(width),double(height),0,1};draw.scissor=*scissor;draw.frontReference=draw.backReference=uint32_t(std::clamp(depthState.frontStencil.reference,0,255));draw.cull=ScreenCull::None;
+   draw.geometry=true;draw.sourceLine=true;draw.count=4;draw.geometryInstances=input.count-1;prepared->impl->draws.push_back(std::move(draw));profilerSource132::Counters().GPU(input.count-1,samples);continue;
+  }
 		const bool map=state.material==ScreenMaterial::MiniMapBackground;
   const bool visualizer=state.material==ScreenMaterial::DeferredVisualizer;
   const bool splat=state.material==ScreenMaterial::SplatPainter;
@@ -1570,7 +1951,11 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
   if(visualizer){Require(state.deferredVisualizer!=nullptr,"Deferred visualizer captured inputs missing");ValidateNativeDeferredVisualizer(*state.deferredVisualizer);}
 		const auto depthImage=[](const auto& image){return image&&!image->incomplete&&(image->format==ScreenTextureFormat::Depth32Float||image->format==ScreenTextureFormat::Depth24Unorm||image->format==ScreenTextureFormat::Depth16Unorm);};
 		const unsigned sampledDepthMask=map?0u:unsigned(state.material!=ScreenMaterial::Solid&&depthImage(state.texture))|(unsigned(state.material!=ScreenMaterial::FontCoverage&&depthImage(state.secondary.texture))<<1);
-		auto pipeline=impl->Pipeline(lease,state.blend,state.colorWrite,format,validation,shaderMs,map,depthFormat,stencilFormat,sampledDepthMask,false,samples,!state.attachmentClear && state.alphaToCoverage,visualizer,splat?unsigned(state.splatPainter->program)+1:0,diffuse?unsigned(state.diffusePainter->program)+1:0,terraform?unsigned(state.terraformCapture->program)+1:0);
+  const bool commonLines=command.geometry&&command.geometry->kind==NativeScreenGeometryKind::CommonSourceLines;
+  static_assert(unsigned(ScreenMaterial::Solid)==0&&unsigned(ScreenMaterial::RGBA)==1&&unsigned(ScreenMaterial::FontCoverage)==2);
+  const bool filled185=NativeScreenFilled184({unsigned(state.material),samples,sampledDepthMask,rootScreen,state.attachmentClear,bool(state.pointDisk),state.alphaToCoverage,bool(state.secondary.texture),!command.geometry||screenGeometry::UsesFrameVertices(command.geometry->kind),lease.SampleShadingEnabled(samples)});
+  if(observeFilled185&&filled185)++filledCounts185[unsigned(state.material)];
+  auto pipeline=commonLines?impl->sourceLines.Pipeline(lease,state.blend,state.colorWrite,format,samples,state.alphaToCoverage,sampledDepthMask,validation,shaderMs):impl->Pipeline(lease,state.blend,state.colorWrite,format,validation,shaderMs,map,depthFormat,stencilFormat,sampledDepthMask,false,samples,!state.attachmentClear && state.alphaToCoverage,visualizer,splat?unsigned(state.splatPainter->program)+1:0,diffuse?unsigned(state.diffusePainter->program)+1:0,terraform?unsigned(state.terraformCapture->program)+1:0,bool(command.geometry),filled185);
 		std::vector<PreparedScreenExternalImage> external;
 		const auto retainExternal=[&](PreparedScreenExternalImage image){external.push_back(std::move(image));};
 		auto depth=impl->DepthStencil(lease,state.depthStencil,depthFormat,stencilFormat);
@@ -1580,42 +1965,165 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 			background=impl->minimaps.Prepare(lease,state.minimapBackground,validation,shaderMs);
 			prepared->impl->minimaps.push_back(background);
 		}
-		auto image=impl->Image(lease,map?state.minimapBackground->base:((state.material==ScreenMaterial::Solid||state.material==ScreenMaterial::TargetPriorityStroke||state.material==ScreenMaterial::FrameGrapher||state.material==ScreenMaterial::SpectatorHUD||visualizer)?nullptr:state.texture),prepared->impl->uploads,availableTargets,consumer,retainExternal);
-		auto sampler=impl->Sampler(lease,state.sampler);
+  const bool reusePreparation152=(!command.geometry||packedGeometry170)&&!state.attachmentClear&&
+   (state.material==ScreenMaterial::Solid||state.material==ScreenMaterial::RGBA||state.material==ScreenMaterial::FontCoverage);
+  const auto prepareImage152=[&](unsigned unit,const std::shared_ptr<const ScreenTexture>& source){
+   const bool ordered152=observePreparation152 && !NativeScreenImagePreparation152<id<MTLTexture>>::Eligible(source);
+   if(observePreparation152){++imageRequests152;orderedImageRequests152+=ordered152;}
+   const auto resolve=[&]{if(observePreparation152){++imageResolutions152;orderedImageResolutions152+=ordered152;}return impl->Image(lease,source,prepared->impl->uploads,availableTargets,consumer,retainExternal);};
+   return reusePreparation152?imagePreparation152[unit].Prepare(source,resolve):resolve();
+  };
+  const auto prepareSampler152=[&](unsigned unit,const ScreenSampler& source){
+   if(observePreparation152)++samplerRequests152;
+   const auto resolve=[&]{if(observePreparation152)++samplerResolutions152;return impl->Sampler(lease,source);};
+   return reusePreparation152?samplerPreparation152[unit].Prepare(source,resolve):resolve();
+  };
+		auto image=prepareImage152(0,map?state.minimapBackground->base:((state.material==ScreenMaterial::Solid||state.material==ScreenMaterial::TargetPriorityStroke||state.material==ScreenMaterial::FrameGrapher||state.material==ScreenMaterial::SpectatorHUD||visualizer)?nullptr:state.texture));
+		auto sampler=prepareSampler152(0,state.sampler);
 		const bool secondary=!map&&state.material!=ScreenMaterial::FontCoverage&&state.secondary.texture!=nullptr;
-		auto image1=map?nil:impl->Image(lease,secondary?state.secondary.texture:nullptr,prepared->impl->uploads,availableTargets,consumer,retainExternal);
-		auto sampler1=map?nil:impl->Sampler(lease,state.secondary.sampler);
-		MTL4ArgumentTableDescriptor* d=[MTL4ArgumentTableDescriptor new];d.maxBufferBindCount=(map||visualizer||splat||diffuse||terraform)?4:3;d.maxTextureBindCount=visualizer?13:diffuse?4:(map?3:2);d.maxSamplerStateBindCount=visualizer?13:diffuse?4:(map?1:2);d.initializeBindings=YES;
-		id<MTL4ArgumentTable> args=[lease.Device() newArgumentTableWithDescriptor:d error:&error];Require(args!=nil,"Cannot allocate native UI argument table: "+Error(error));
-		[args setAddress:vertices.gpuAddress atIndex:0];[args setAddress:uvs.gpuAddress atIndex:1];[args setAddress:uniforms.gpuAddress+i*256 atIndex:2];
+		auto image1=map?nil:prepareImage152(1,secondary?state.secondary.texture:nullptr);
+		auto sampler1=map?nil:prepareSampler152(1,state.secondary.sampler);
+  if(commonLines){
+   const auto& g=*command.geometry;
+   auto lines=impl->sourceLines.Prepare(lease,g.sourceLines,drawViewport,width,height,samples,state,image,sampler,image1,sampler1,validation,shaderMs);
+   if(!prepared->impl->argumentLifetime){prepared->impl->argumentLifetime=[M4ScreenArgumentLifetime new];lease.Retain(prepared->impl->argumentLifetime);}
+   prepared->impl->argumentLifetime->sourceLines.push_back(lines);
+   PreparedScreenFrame::Impl::Draw draw;draw.originalCommand=uint32_t(i);draw.pipeline=pipeline;draw.depth=depth;draw.arguments=lines->arguments;draw.sourceLines=std::move(lines);draw.externalImages=std::move(external);
+   draw.viewport={0,0,double(width),double(height),0,1};draw.scissor=*scissor;draw.frontReference=draw.backReference=uint32_t(std::clamp(state.depthStencil.frontStencil.reference,0,255));draw.cull=ScreenCull::None;draw.geometry=true;draw.sourceLine=true;draw.count=4;draw.geometryInstances=g.instanceCount;prepared->impl->draws.push_back(std::move(draw));continue;
+  }
+  id<MTL4ArgumentTable> args=nil;
+  id<MTLBuffer> geometryIndices=nil;std::shared_ptr<ExactScreenLineJob> exactLine;
+  size_t geometryIndexOffset170=0;
+  uint64_t vertexAddress170=vertices.Address(),uvAddress170=uvs.Address();
+  if(retainedFont170){
+   const auto& source=command.geometry->retainedFont;
+   const auto read=impl->geometryBuffers.ReadStreams170(lease,source);
+   vertexAddress170=read.buffer.gpuAddress+read.layout.offsets[0];uvAddress170=read.buffer.gpuAddress+read.layout.offsets[1];
+   geometryIndices=read.buffer;geometryIndexOffset170=read.layout.offsets[2];
+   if(observe170){++font170.draws;if(read.hit){++font170.hits;font170.hitBytes+=source->PayloadBytes();}else {++font170.misses;font170.uploadBytes+=source->PayloadBytes();font170.missAllocated+=std::max(size_t(read.buffer.length),size_t(read.buffer.allocatedSize));}font170.uncached+=!read.cached;}
+  }
+  // Every ordered image above retains its exact per-consumer producer receipt.
+  // Only validated immutable CPU image preparation and final bindings can be
+  // shared, never consumer-specific readability or per-draw raster/depth state.
+  const bool shareBindings151=(!command.geometry||packedGeometry170)&&!map&&!visualizer&&!splat&&!diffuse&&!terraform;
+  if(shareBindings151){
+   Require((command.indexCount||retainedFont170) && uniformOffsets151[i]<uniforms.length,"Screen shared arguments lack their original uniform slice");
+   uint64_t transformAddress=0;
+   if(packedGeometry170){
+    Require(transformUniformOffsets.size()==list.Commands().size()&&transformUniformOffsets[i],"Screen transform slice missing");
+    transformAddress=uniforms.Address()+transformUniformOffsets[i];
+   }
+   const NativeScreenBindingKey151 key{vertexAddress170,uvAddress170,uniforms.Address()+uniformOffsets151[i],transformAddress,
+    image.gpuResourceID._impl,image1.gpuResourceID._impl,sampler.gpuResourceID._impl,sampler1.gpuResourceID._impl};
+   if(const auto found=bindingPlan151.Find(key)){
+    args=bindingTables151[*found].table;if(observe170&&retainedFont170)++font170.tableHits;
+   }else{
+    if(observe170&&retainedFont170)++font170.tableMisses;
+    args=newArguments({packedGeometry170?5u:3u,2u,2u},"Cannot allocate native UI argument table: ");
+    [args setAddress:key[0] atIndex:0];[args setAddress:key[1] atIndex:1];[args setAddress:key[2] atIndex:2];
+    if(packedGeometry170)[args setAddress:key[3] atIndex:4];
+    [args setTexture:image.gpuResourceID atIndex:0];[args setTexture:image1.gpuResourceID atIndex:1];
+    [args setSamplerState:sampler.gpuResourceID atIndex:0];[args setSamplerState:sampler1.gpuResourceID atIndex:1];
+    if(bindingPlan151.Remember(key,bindingTables151.size()))bindingTables151.push_back({args});
+   }
+  }else{
+   args=newArguments({command.geometry?5u:(map||visualizer||splat||diffuse||terraform)?4u:3u,
+    visualizer?13u:diffuse?4u:(map?3u:2u),visualizer?13u:diffuse?4u:(map?1u:2u)},
+    "Cannot allocate native UI argument table: ");
+  if(command.geometry){
+   const auto& g=*command.geometry;id<MTLBuffer> gv=nil,gi=nil;
+   if(g.kind==NativeScreenGeometryKind::ScreenLines||g.kind==NativeScreenGeometryKind::ScreenPixelLines){
+    const bool pixel=g.kind==NativeScreenGeometryKind::ScreenPixelLines;impl->CompileLines(lease,validation,shaderMs,pixel);auto pipeline=pixel?impl->pixelLinePipeline:impl->linePipeline;lease.Retain(impl->lineLibrary);lease.Retain(pipeline);
+    const auto align=[](size_t n){return (n+255)&~size_t(255);};
+    const size_t spanOffset=align(g.vertices->bytes.size()),parameterOffset=align(spanOffset+g.instances->bytes.size()),packetBytes=parameterOffset+sizeof(uint32_t);
+    auto packetSlot=impl->uploadPool.Acquire(lease.Device(),packetBytes);
+    auto packetUpload=packetSlot?packetSlot->buffer:[lease.Device() newBufferWithLength:packetBytes options:MTLResourceStorageModeShared];
+    Require(packetUpload&&packetUpload.contents,"Cannot allocate exact screen line shared packet");
+    if(packetSlot)prepared->impl->argumentLifetime->uniformSlots.push_back(std::move(packetSlot));
+    const uint32_t spanCount=uint32_t(g.instances->layout.elements);
+    std::memcpy(packetUpload.contents,g.vertices->bytes.data(),g.vertices->bytes.size());std::memcpy(static_cast<uint8_t*>(packetUpload.contents)+spanOffset,g.instances->bytes.data(),g.instances->bytes.size());std::memcpy(static_cast<uint8_t*>(packetUpload.contents)+parameterOffset,&spanCount,sizeof(spanCount));lease.AddAllocation(packetUpload);
+    gv=[lease.Device() newBufferWithLength:size_t(g.count/6)*4*sizeof(NativeWorldDrawVertex) options:MTLResourceStorageModePrivate];
+    geometryIndices=[lease.Device() newBufferWithLength:size_t(g.count)*sizeof(uint32_t) options:MTLResourceStorageModePrivate];
+    Require(gv&&geometryIndices,"Cannot allocate exact screen line geometry");lease.AddAllocation(gv);lease.AddAllocation(geometryIndices);gi=gv;
+    static ExactScreenLineProbe probe;static ExactScreenLineProbe pixelProbe{"BAR_NATIVE_PIXEL_LINE_PROBE_FILE"};auto& activeProbe=pixel?pixelProbe:probe;if(activeProbe.path&&*activeProbe.path)activeProbe.Record(g.count,packetBytes,exactScreenLine::Read<exactWorldLine::Line120Segment>(g.vertices,0).flags&1);
+    exactLine=std::make_shared<ExactScreenLineJob>();exactLine->pipeline=pipeline;exactLine->quads=g.count/6;
+    exactLine->arguments=newArguments({5,0,0},"Cannot allocate exact screen line arguments: ");lease.Retain(exactLine->arguments);
+    [exactLine->arguments setAddress:packetUpload.gpuAddress atIndex:0];[exactLine->arguments setAddress:packetUpload.gpuAddress+spanOffset atIndex:1];[exactLine->arguments setAddress:gv.gpuAddress atIndex:2];[exactLine->arguments setAddress:packetUpload.gpuAddress+parameterOffset atIndex:3];[exactLine->arguments setAddress:geometryIndices.gpuAddress atIndex:4];
+   }
+   else if(frameGeometry){/* Uses the existing frame vertex/UV/index uploads below. */}
+   else if(g.kind==NativeScreenGeometryKind::TerraformModel){const auto pair=impl->modelBuffers.Read(lease,g.model,g.piece);gv=pair.vertices;gi=gv;geometryIndices=pair.indices;}
+   else{
+    gv=impl->geometryBuffers.Read(lease,g.vertices,g.vertices->bytes.size());
+    gi=impl->geometryBuffers.Read(lease,g.instances,size_t(g.instanceCount)*g.instances->layout.stride);
+    if(g.indices)geometryIndices=impl->geometryBuffers.Read(lease,g.indices,size_t(g.count)*4);
+   }
+   id<MTLBuffer> ub=nil;uint64_t geometryAddress=0;
+   if(frameGeometry){
+    Require(transformUniformOffsets.size()==list.Commands().size()&&transformUniformOffsets[i],"Screen font matrix slice missing");
+    geometryAddress=uniforms.Address()+transformUniformOffsets[i];
+   }else{
+    const auto uniform=makeUniform(state);ub=UploadScreenParameters(lease,impl->uploadPool,prepared->impl->argumentLifetime,&uniform,sizeof(uniform));
+    const auto value=MakeGeometryUniform(g);auto gb=UploadScreenParameters(lease,impl->uploadPool,prepared->impl->argumentLifetime,&value,sizeof(value));geometryAddress=gb.gpuAddress;
+   }
+   [args setAddress:frameGeometry?vertices.Address():gv.gpuAddress atIndex:0];
+   [args setAddress:frameGeometry?uvs.Address():gi.gpuAddress atIndex:1];
+   [args setAddress:frameGeometry?uniforms.Address()+uniformOffsets151[i]:ub.gpuAddress atIndex:2];[args setAddress:geometryAddress atIndex:4];
+  }else{[args setAddress:vertices.Address() atIndex:0];[args setAddress:uvs.Address() atIndex:1];[args setAddress:uniforms.Address()+uniformOffsets151[i] atIndex:2];}
 		[args setTexture:image.gpuResourceID atIndex:0];[args setSamplerState:sampler.gpuResourceID atIndex:0];
 		if(!map){[args setTexture:image1.gpuResourceID atIndex:1];[args setSamplerState:sampler1.gpuResourceID atIndex:1];}
   if(visualizer){
    std::array<std::array<uint32_t,4>,13> flags{};
    for(unsigned slot=0;slot<13;++slot){const auto& source=state.deferredVisualizer->images[slot];auto texture=impl->Image(lease,source.texture,prepared->impl->uploads,availableTargets,consumer,retainExternal);auto s=impl->Sampler(lease,source.sampler);[args setTexture:texture.gpuResourceID atIndex:slot];[args setSamplerState:s.gpuResourceID atIndex:slot];flags[slot]={uint32_t(source.texture->flipV),uint32_t(source.sampler.wrapS==ScreenWrap::LegacyClamp),uint32_t(source.sampler.wrapT==ScreenWrap::LegacyClamp),0};}
-   auto parameters=Buffer(lease,flags.data(),sizeof(flags));[args setAddress:parameters.gpuAddress atIndex:3];
+   auto parameters=UploadScreenParameters(lease,impl->uploadPool,prepared->impl->argumentLifetime,flags.data(),sizeof(flags));[args setAddress:parameters.gpuAddress atIndex:3];
   }
   if(terraform){
    NativeTerraformCaptureParameters values;values.uniforms=state.terraformCapture->uniforms;
    for(unsigned slot=0;slot<(state.terraformCapture->program==NativeTerraformCaptureProgram::Reproject?2u:1u);++slot){const auto& source=state.terraformCapture->images[slot];auto texture=impl->Image(lease,source.texture,prepared->impl->uploads,availableTargets,consumer,retainExternal);auto sampling=impl->Sampler(lease,source.sampler);
     [args setTexture:texture.gpuResourceID atIndex:slot];[args setSamplerState:sampling.gpuResourceID atIndex:slot];values.sampling[slot]={uint32_t(source.texture->flipV),uint32_t(source.sampler.wrapS==ScreenWrap::LegacyClamp),uint32_t(source.sampler.wrapT==ScreenWrap::LegacyClamp),0};}
-   auto parameters=Buffer(lease,&values,sizeof(values));[args setAddress:parameters.gpuAddress atIndex:3];
+   auto parameters=UploadScreenParameters(lease,impl->uploadPool,prepared->impl->argumentLifetime,&values,sizeof(values));[args setAddress:parameters.gpuAddress atIndex:3];
   }
   if(diffuse){
    NativeDiffusePainterParameters values;values.uniforms=state.diffusePainter->uniforms;
    const unsigned count=state.diffusePainter->program==NativeDiffusePainterProgram::Copy?1:4;
    for(unsigned slot=0;slot<count;++slot){const auto& source=state.diffusePainter->images[slot];auto texture=impl->Image(lease,source.texture,prepared->impl->uploads,availableTargets,consumer,retainExternal);auto sampling=impl->Sampler(lease,source.sampler);
     [args setTexture:texture.gpuResourceID atIndex:slot];[args setSamplerState:sampling.gpuResourceID atIndex:slot];values.sampling[slot]={uint32_t(source.texture->flipV),uint32_t(source.sampler.wrapS==ScreenWrap::LegacyClamp),uint32_t(source.sampler.wrapT==ScreenWrap::LegacyClamp),uint32_t(source.texture->incomplete)};}
-   auto parameters=Buffer(lease,&values,sizeof(values));[args setAddress:parameters.gpuAddress atIndex:3];
+   auto parameters=UploadScreenParameters(lease,impl->uploadPool,prepared->impl->argumentLifetime,&values,sizeof(values));[args setAddress:parameters.gpuAddress atIndex:3];
   }
-		if(splat){auto parameters=Buffer(lease,&state.splatPainter->uniforms,sizeof(NativeSplatPainterUniforms));[args setAddress:parameters.gpuAddress atIndex:3];}
+		if(splat){auto parameters=UploadScreenParameters(lease,impl->uploadPool,prepared->impl->argumentLifetime,&state.splatPainter->uniforms,sizeof(NativeSplatPainterUniforms));[args setAddress:parameters.gpuAddress atIndex:3];}
 		if(background) {[args setAddress:background->Uniforms().gpuAddress atIndex:3];[args setTexture:background->Shading().gpuResourceID atIndex:1];[args setTexture:background->Info().gpuResourceID atIndex:2];}
+  } // Typed consumers above keep their original independently writable tables.
 		lease.Retain(args);prepared->impl->draws.push_back({pipeline,depth,args,MTLViewport{drawViewport[0],drawViewport[1],drawViewport[2],drawViewport[3],0,1},*scissor,
 			uint32_t(std::clamp(state.depthStencil.frontStencil.reference,0,255)),uint32_t(std::clamp(state.depthStencil.backStencil.reference,0,255)),
-			command.firstIndex,command.indexCount,std::uint32_t(i)});
+			command.firstIndex,command.geometry?command.geometry->count:command.indexCount,std::uint32_t(i)});
+  if(command.geometry&&!frameGeometry){auto& draw=prepared->impl->draws.back();draw.exactLine=std::move(exactLine);draw.geometry=true;draw.geometryInstances=command.geometry->instanceCount;draw.geometryIndices=geometryIndices;draw.geometryIndexOffset170=geometryIndexOffset170;}
 		prepared->impl->draws.back().externalImages=std::move(external);
 		prepared->impl->draws.back().cull=state.attachmentClear?ScreenCull::None:state.cull;
 	}
+ if(observeFilled185){
+  impl->reportedFilled185=true;
+  const auto eligible=filledCounts185[0]+filledCounts185[1]+filledCounts185[2];
+  Require(eligible<=prepared->impl->draws.size(),"Filled UI activation exceeds actual prepared commands");
+  LOG("[NativeFilled185] source_frame=%llu samples=%u root_commands=%zu prepared_commands=%zu solid=%u rgba=%u font=%u fallback_prepared=%zu variant_limit=1 material_alpha_uniform=1 no_point_mask_output=1 triangle_order_unchanged=1 shaders_math_unchanged=1 gpu_gain=unknown",
+   (unsigned long long)frame.postprocess->sourceDrawFrame,samples,list.Commands().size(),prepared->impl->draws.size(),filledCounts185[0],filledCounts185[1],filledCounts185[2],prepared->impl->draws.size()-eligible);
+ }
+ if(observe170){
+  impl->reportedRetainedFont170=true;
+  LOG("[NativeFont170] enabled=%u frame=%llu root_commands=%u first_command=%u list_retained_draws=%llu list_payload_not_packed=%llu prepared_retained_draws=%llu cache_hits=%llu hit_payload_upload_bytes_omitted=%llu cache_misses=%llu miss_payload_upload_bytes=%llu miss_allocated_bytes_sum=%llu uncached_reads=%llu cache_total_entries=%llu cache_total_allocated_bytes=%llu retained_table_hits=%llu retained_table_acquires=%llu packed_uniform_bytes=%llu frame_payload_upload_bytes=%llu source_owner_bytes=%llu preparation_only=1 timing=0",
+   unsigned(RetainedFont170Enabled()),(unsigned long long)frame.postprocess->sourceDrawFrame,unsigned(list.Commands().size()),firstOriginalCommand,
+   (unsigned long long)font170.listDraws,(unsigned long long)font170.listBytes,(unsigned long long)font170.draws,
+   (unsigned long long)font170.hits,(unsigned long long)font170.hitBytes,(unsigned long long)font170.misses,(unsigned long long)font170.uploadBytes,(unsigned long long)font170.missAllocated,(unsigned long long)font170.uncached,
+   (unsigned long long)impl->geometryBuffers.Count(),(unsigned long long)impl->geometryBuffers.Bytes(),
+   (unsigned long long)font170.tableHits,(unsigned long long)font170.tableMisses,(unsigned long long)font170.uniformBytes,
+   (unsigned long long)(fixedGeometry?list.Vertices().size_bytes()+list.TexCoords().size_bytes()+list.Indices().size_bytes():0),(unsigned long long)sizeof(NativeRetainedFont170));
+  LOG("[NativeGeometry173] frame=%llu fixed_vertices=%zu fixed_uvs=%zu fixed_indices=%zu",
+   (unsigned long long)frame.postprocess->sourceDrawFrame,list.Vertices().size(),list.TexCoords().size(),list.Indices().size());
+ }
+ if(observePreparation152 && imageRequests152){
+  impl->reportedPreparation152=true;
+  LOG("[NativeScreen152] frame=%llu root_commands=%u first_command=%u image_requests=%u image_resolutions=%u sampler_requests=%u sampler_resolutions=%u ordered_image_requests=%u ordered_image_resolutions=%u",
+   (unsigned long long)frame.postprocess->sourceDrawFrame,unsigned(list.Commands().size()),firstOriginalCommand,
+   imageRequests152,imageResolutions152,samplerRequests152,samplerResolutions152,orderedImageRequests152,orderedImageResolutions152);
+ }
 	return prepared;
 }
 } // namespace rendering::metal4

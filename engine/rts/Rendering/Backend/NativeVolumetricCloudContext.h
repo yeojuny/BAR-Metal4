@@ -26,10 +26,12 @@ public:
 	void Append(NativeVolumetricCloudDraw draw);
 	void AbortFrame() noexcept;
 	void RetireCompletedFrame(std::uint64_t sourceDrawFrame);
+ void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
 	void Reset() noexcept;
 private:
 	std::shared_ptr<NativeVolumetricCloudFrame> recording;
 	std::shared_ptr<const NativeVolumetricCloudFrame> pending;
+ std::shared_ptr<const NativeVolumetricCloudFrame> submittedFrame;
 };
 class NativeVolumetricCloudContext {
 public:

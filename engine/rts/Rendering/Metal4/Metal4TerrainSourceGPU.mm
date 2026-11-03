@@ -1,5 +1,8 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4TerrainSourceGPU.h"
+#include "Metal4TerrainGeometryCache.inc"
+#include "Rendering/Backend/NativePreparationTrace.h"
+#include "Metal4TerrainUniformBatch.inc"
 #include "NativeSMFCompositeOriginalSource.h"
 #include "Metal4NativeEffectState.h"
 #include "NativeSMFTerrainOriginalSource.h"
@@ -15,6 +18,8 @@
 #include <sstream>
 #include <stdexcept>
 #include <string_view>
+#include <tuple>
+#include <utility>
 
 namespace rendering::metal4 {
 namespace {
@@ -169,7 +174,7 @@ Profile OriginalProfile(const NativeTerrainProgramRequest& request)
 	Require(p.fragment.size()<=16,"Actual SMF fragment sampler ABI exceeds Metal's per-stage sampler limit");
 	return p;
 }
-std::string ShaderSource(const Profile& profile,uint32_t imageDepthMask)
+std::string ShaderSource(const Profile& profile,uint32_t imageDepthMask,bool alphaTest193)
 {
 	std::ostringstream source;
 	// Bit zero is the vertex height image; subsequent bits belong to the
@@ -179,6 +184,7 @@ std::string ShaderSource(const Profile& profile,uint32_t imageDepthMask)
 		if(profile.fragment[slot].kind==ImageKind::Color2D)allowedDepthMask|=uint32_t(1)<<(slot+1);
 	Require((imageDepthMask&~allowedDepthMask)==0,"Original terrain image types exceed its sampler ABI");
 	source<<"#define NATIVE_SMF_HEIGHT_DEPTH "<<(imageDepthMask&1u)<<'\n';
+	source<<"#define NATIVE_SMF_ALPHA_TEST193 "<<unsigned(alphaTest193)<<'\n';
 	if(profile.border)source<<"#define NATIVE_SMF_BORDER 1\n";
 	if(profile.composite)source<<"#define NATIVE_SMF_COMPOSITE 1\n";
 	for(const auto& [name,value]:profile.defines)source<<"#define "<<name<<' '<<value<<'\n';
@@ -218,31 +224,60 @@ bool RequireTarget(const CUSSourceTarget& target)
 		"Original terrain target stencil has no supported paired consumer");
 	return false;
 }
+auto TerrainPipelineKey(MTLMathMode mathMode,const CUSSourceTarget& target,unsigned sampleShading,
+	const ScreenDrawState& surface,uint32_t imageDepthMask,bool validation,const std::array<bool,4>& combinedMask)
+{
+	const auto& blend=surface.blend;
+	return std::tuple{mathMode,target.colors,target.combinedColor,target.depth,target.stencil,sampleShading,
+		validation,imageDepthMask,blend.enabled,blend.sourceColor,blend.destinationColor,blend.sourceAlpha,
+		blend.destinationAlpha,blend.colorEquation,blend.alphaEquation,surface.colorWrite,surface.alphaToCoverage,
+		surface.alphaTest.enabled,combinedMask};
+}
+using TerrainPipelineKeyType=decltype(TerrainPipelineKey(MTLMathModeSafe,std::declval<const CUSSourceTarget&>(),0,
+	std::declval<const ScreenDrawState&>(),0,false,std::declval<const std::array<bool,4>&>()));
+
 class OriginalProgram final:public NativeTerrainProgramConsumer {
 public:
 	const NativeTerrainProgramIdentity identity;
 	const Profile profile;
+	// Exact192 forward profiles, reconstructed from the selected original map,
+	// shader flag producer and cached MVK stages. Do not generalize a cached
+	// math policy to another feature combination or an unobserved family.
+	static MTLMathMode MathMode195(const Profile& p) {
+		if(p.border||p.deferred||p.composite||p.combined)return MTLMathModeSafe;
+		Definitions expected={{"SMF_TEXSQUARE_SIZE","1024.000000"},{"SMF_INTENSITY_MULT","0.823486"},
+			{"SMF_ADV_SHADING",""},{"SMF_SPECULAR_LIGHTING",""},{"SMF_DETAIL_TEXTURE_SPLATTING",""},
+			{"SMF_DETAIL_NORMAL_TEXTURE_SPLATTING",""},{"SMF_DETAIL_NORMAL_DIFFUSE_ALPHA",""},
+			{"SMF_WATER_ABSORPTION",""},{"SMF_BLEND_NORMALS",""},{"HAVE_SHADOWS",""}};
+		if(p.Has("HAVE_INFOTEX"))expected.emplace("HAVE_INFOTEX","");
+		return p.defines==expected?MTLMathModeRelaxed:MTLMathModeSafe;
+	}
+	const MTLMathMode mathMode195;
 	const uint64_t generation;
 	const std::shared_ptr<const int> factory;
 	__strong id<MTLLibrary> library=nil;
-	mutable std::map<uint32_t,id<MTLLibrary>> imageLibraries;
-	mutable std::map<std::string,id<MTLRenderPipelineState>> pipelines;
+	mutable std::map<std::tuple<uint32_t,bool,MTLMathMode>,id<MTLLibrary>> imageLibraries;
+	mutable std::map<TerrainPipelineKeyType,id<MTLRenderPipelineState>> pipelines;
 	OriginalProgram(NativeTerrainProgramIdentity id,Profile p,uint64_t g,std::shared_ptr<const int> f):
-		identity(std::move(id)),profile(std::move(p)),generation(g),factory(std::move(f)){}
+		identity(std::move(id)),profile(std::move(p)),mathMode195(MathMode195(profile)),generation(g),factory(std::move(f)){}
 	uint64_t ContextGeneration()const noexcept override{return identity.contextGeneration;}
 	uint64_t LibraryGeneration()const noexcept override{return library&&!pipelines.empty()?generation:0;}
 	bool Matches(const NativeTerrainProgramIdentity& requested)const noexcept override{return identity==requested;}
 	bool Supports(const NativeTerrainProgramIdentity& requested)const noexcept override {
 		return Matches(requested)&&library&&generation&&!pipelines.empty();
 	}
-	id<MTLLibrary> LibraryForImages(RuntimeLease& lease,uint32_t imageDepthMask,double& milliseconds)const {
-		if(imageDepthMask==0)return library;
-		if(auto found=imageLibraries.find(imageDepthMask);found!=imageLibraries.end())return found->second;
+	id<MTLLibrary> LibraryForImages(RuntimeLease& lease,uint32_t imageDepthMask,bool alphaTest193,double& milliseconds)const {
+		// A disabled legacy alpha test has no discard in the original GL state.
+		// Keep the enabled source intact and key both library and PSO by the
+		// actual captured draw state, including non-default image types.
+		if(imageDepthMask==0&&!alphaTest193)return library;
+		const auto key=std::make_tuple(imageDepthMask,alphaTest193,mathMode195);
+		if(auto found=imageLibraries.find(key);found!=imageLibraries.end())return found->second;
 		const auto start=Clock::now();NSError* error=nil;
-		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
-		auto selected=lease.NewLibraryWithSource(String(ShaderSource(profile,imageDepthMask)),options,&error);
+		auto options=[MTLCompileOptions new];options.mathMode=mathMode195;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+		auto selected=lease.NewLibraryWithSource(String(ShaderSource(profile,imageDepthMask,alphaTest193)),options,&error);
 		Require(selected!=nil,"Cannot compile original SMF terrain image-type library: "+Error(error));
-		imageLibraries.emplace(imageDepthMask,selected);milliseconds+=Milliseconds(start);return selected;
+		imageLibraries.emplace(key,selected);milliseconds+=Milliseconds(start);return selected;
 	}
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const CUSSourceTarget& target,
 		const ScreenDrawState& surface,uint32_t imageDepthMask,bool validation,double& milliseconds,
@@ -250,15 +285,9 @@ public:
 		Require(RequireTarget(target)==profile.MRT()&&(!profile.combined||target.combinedColor==MTLPixelFormatRGBA8Unorm),"Original terrain program output family differs from the actual render target");
 		Require([lease.Device() supportsTextureSampleCount:target.samples],"Original terrain target count is unsupported by its actual device");
 		Require(library!=nil&&library.device==lease.Device(),"Original terrain PSO requested before its genuine same-device library");
-		auto selectedLibrary=LibraryForImages(lease,imageDepthMask,milliseconds);
+		auto selectedLibrary=LibraryForImages(lease,imageDepthMask,surface.alphaTest.enabled,milliseconds);
 		const auto& blend=surface.blend;
-		std::ostringstream keyStream;
-		for(auto format:target.colors)keyStream<<format<<':';
-		keyStream<<target.combinedColor<<':'<<target.depth<<':'<<target.stencil<<':'<<lease.SampleShadingKey(target.samples)<<':'<<validation<<':'<<imageDepthMask
-			<<':'<<blend.enabled<<':'<<unsigned(blend.sourceColor)<<':'<<unsigned(blend.destinationColor)
-			<<':'<<unsigned(blend.sourceAlpha)<<':'<<unsigned(blend.destinationAlpha)<<':'<<unsigned(blend.colorEquation)<<':'<<unsigned(blend.alphaEquation);
-		for(bool write:surface.colorWrite)keyStream<<':'<<write;
-		keyStream<<':'<<surface.alphaToCoverage;for(bool write:combinedMask)keyStream<<':'<<write;const auto key=keyStream.str();
+		const auto key=TerrainPipelineKey(mathMode195,target,lease.SampleShadingKey(target.samples),surface,imageDepthMask,validation,combinedMask);
 		if(auto found=pipelines.find(key);found!=pipelines.end()){lease.Retain(selectedLibrary);lease.Retain(found->second);return found->second;}
 		const auto start=Clock::now();NSError* error=nil;
 		auto descriptor=[MTL4RenderPipelineDescriptor new];
@@ -302,20 +331,26 @@ struct alignas(16) Uniform {
 };
 static_assert(sizeof(ImageUniform)==48&&alignof(Uniform)==16);
 static_assert(offsetof(Uniform,heightImage)==608&&offsetof(Uniform,images)==656&&sizeof(Uniform)==1424);
+// Uniform and sampler checks run for every terrain draw. Build the named
+// diagnostic only when the original check fails.
+void RequireNamedTerrainInput(bool condition,const char* message,const char* name)
+{
+	if(!condition)Require(false,std::string(message)+name);
+}
 const NativeTerrainUniformValue& Value(const NativeTerrainUniformSnapshot& uniforms,const char* name,unsigned rows,unsigned columns=1)
 {
 	const auto it=uniforms.values.find(name);
-	Require(it!=uniforms.values.end(),std::string("Actual original terrain uniform is unobserved: ")+name);
+	RequireNamedTerrainInput(it!=uniforms.values.end(),"Actual original terrain uniform is unobserved: ",name);
 	const auto& value=it->second;
-	Require(value.rows==rows&&value.columns==columns&&value.count==1,
-		std::string("Actual original terrain uniform shape differs: ")+name);
+	RequireNamedTerrainInput(value.rows==rows&&value.columns==columns&&value.count==1,
+		"Actual original terrain uniform shape differs: ",name);
 	return value;
 }
 simd_float4 Float(const NativeTerrainUniformSnapshot& uniforms,const char* name,unsigned components)
 {
 	const auto& value=Value(uniforms,name,components);
 	const auto* bytes=std::get_if<std::vector<float>>(&value.values);
-	Require(bytes&&bytes->size()==components&&!value.transpose,std::string("Actual original terrain float uniform type differs: ")+name);
+	RequireNamedTerrainInput(bytes&&bytes->size()==components&&!value.transpose,"Actual original terrain float uniform type differs: ",name);
 	simd_float4 result{};
 	for(unsigned i=0;i<components;++i){Require(std::isfinite((*bytes)[i]),"Original terrain float uniform is nonfinite");result[i]=(*bytes)[i];}
 	return result;
@@ -324,7 +359,7 @@ simd_int4 Int(const NativeTerrainUniformSnapshot& uniforms,const char* name,unsi
 {
 	const auto& value=Value(uniforms,name,components);
 	const auto* bytes=std::get_if<std::vector<int32_t>>(&value.values);
-	Require(bytes&&bytes->size()==components&&!value.transpose,std::string("Actual original terrain integer uniform type differs: ")+name);
+	RequireNamedTerrainInput(bytes&&bytes->size()==components&&!value.transpose,"Actual original terrain integer uniform type differs: ",name);
 	simd_int4 result{};for(unsigned i=0;i<components;++i)result[i]=(*bytes)[i];return result;
 }
 simd_float4x4 Matrix(const float* source,bool transpose=false)
@@ -559,6 +594,7 @@ void PreparedTerrainSource::DidComplete()
 	impl->completed=true;
 }
 struct TerrainSourceGPU::Impl {
+ TerrainGeometryCache geometryCache;
 	std::shared_ptr<const int> factory=std::make_shared<const int>(0);
 	uint64_t nextGeneration=0;
 	std::vector<std::pair<NativeTextureSampling,id<MTLSamplerState>>> samplers;
@@ -581,8 +617,8 @@ NativeTerrainProgramLink TerrainSourceGPU::CompileOriginalProgram(RuntimeLease& 
 	Require(impl->nextGeneration!=std::numeric_limits<uint64_t>::max(),"Original terrain library generation overflow");
 	auto original=std::make_shared<OriginalProgram>(request.identity,std::move(profile),++impl->nextGeneration,impl->factory);
 	const auto start=Clock::now();NSError* error=nil;
-	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
-	original->library=lease.NewLibraryWithSource(String(ShaderSource(original->profile,0)),options,&error);
+	auto options=[MTLCompileOptions new];options.mathMode=original->mathMode195;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+	original->library=lease.NewLibraryWithSource(String(ShaderSource(original->profile,0,false)),options,&error);
 	Require(original->library!=nil,"Cannot compile actual original SMF terrain library: "+Error(error));
 	milliseconds+=Milliseconds(start);
 	ScreenDrawState initial;initial.blend.enabled=false;
@@ -611,9 +647,11 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		(target.camera.clipDepth==ClipDepthConvention::MinusOneToOne||target.camera.clipDepth==ClipDepthConvention::ZeroToOne),
 		"Original terrain target viewport or actual clip convention is unobserved");
 	auto prepared=std::shared_ptr<PreparedTerrainSource>(new PreparedTerrainSource);auto& out=*prepared->impl;out.source=std::move(source);
+	const auto uniformCount=std::count_if(out.source->squares.begin(),out.source->squares.end(),[&](const auto& draw){return draw.deferred==deferred;});
+	TerrainUniformBatch uniformBatch(lease,uniformCount,sizeof(Uniform));
 	uint64_t previous=0;
 	for(size_t index=0;index<out.source->squares.size();++index) {
-		const auto& draw=out.source->squares[index];const auto& mesh=draw.geometry;
+		const auto& draw=out.source->squares[index];const auto& mesh=draw.Geometry();
 		Require(out.source->drawEntered&&!(draw.border&&draw.deferred)&&
 			(draw.deferred?out.source->deferredEntered:draw.border?out.source->borderEntered:draw.composite?out.source->compositeEntered:out.source->forwardEntered)&&
 			draw.sequence>previous&&out.source->source.Contains(draw.sequence),
@@ -631,9 +669,8 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		Require(mesh.indexed||mesh.indices.empty(),"Original non-indexed terrain submission carries replacement indices");
 		Require(draw.border?mesh.colors.size()==mesh.positions.size():mesh.colors.empty(),
 			"Original terrain border color attribute differs from the submitted position stream");
-		for(const auto& position:mesh.positions)for(float component:position)
-			Require(std::isfinite(component),"Original terrain submitted a nonfinite local vertex position");
-		for(uint32_t element:mesh.indices)Require(element<mesh.positions.size(),"Original terrain index exceeds its retained source vertices");
+		// Exact byte comparison against the validated immutable cache entry
+		// reuses geometry validation; misses validate inside Acquire before upload.
 		Require(draw.mesh==NativeTerrainMeshSource::Basic||draw.mesh==NativeTerrainMeshSource::ROAM||(draw.mesh==NativeTerrainMeshSource::Composite&&draw.composite),"Original terrain mesh provenance is unsupported");
 		ValidateNativeTerrainProgram(draw.program.identity,draw.program.consumer,out.source->contextGeneration);
 		ValidateNativeTerrainImages(draw.images,out.source->contextGeneration,out.source->sourceDrawFrame);
@@ -659,7 +696,7 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		std::map<unsigned,ImageKind> activeUnitTypes;
 		auto resolve=[&](const char* name,ImageKind kind,ImageUniform& parameters,bool vertex){
 			const int32_t unit=Int(uniformSource,name,1).x;
-			Require(unit>=0&&uint32_t(unit)<NativeCUSTextureHistory::Units,std::string("Original terrain sampler unit is outside observed source history: ")+name);
+			RequireNamedTerrainInput(unit>=0&&uint32_t(unit)<NativeCUSTextureHistory::Units,"Original terrain sampler unit is outside observed source history: ",name);
 			const auto [unitType,inserted]=activeUnitTypes.try_emplace(unsigned(unit),kind);
 			Require(inserted||unitType->second==kind,"Original terrain active samplers of different GL types alias one source unit");
 			const auto sourceTarget=kind==ImageKind::Cube?NativeCUSTextureTarget::Cube:NativeCUSTextureTarget::Image2D;
@@ -667,13 +704,13 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 			const auto& sampling=binding.object->sampling;
 			auto sampler=impl->Sampler(lease,sampling,kind==ImageKind::Shadow);
 			auto image=provider(lease,binding,unsigned(unit),sampler);
-			Require(image.texture&&image.sampler==sampler&&image.owner,
-				std::string("Original terrain source image lost its exact sampler or retained owner: ")+name);
+			RequireNamedTerrainInput(image.texture&&image.sampler==sampler&&image.owner,
+				"Original terrain source image lost its exact sampler or retained owner: ",name);
 			// Common image providers may establish synchronous upload completion
 			// while resolving an owner. Planned producers carry requireReadable;
 			// that optional callback is enforced immediately before actual draws.
-			Require(image.texture.textureType==(kind==ImageKind::Cube?MTLTextureTypeCube:MTLTextureType2D),
-				std::string("Original terrain source image has the wrong physical texture type: ")+name);
+			RequireNamedTerrainInput(image.texture.textureType==(kind==ImageKind::Cube?MTLTextureTypeCube:MTLTextureType2D),
+				"Original terrain source image has the wrong physical texture type: ",name);
 			if(kind==ImageKind::Cube)Require(!image.depthImage&&!image.flipV,"Original terrain reflection cube requires its actual color-cube coordinate convention");
 			if(kind==ImageKind::Shadow)Require(image.depthImage&&sampling.swizzle==std::array<unsigned,4>{0x1903,0x1904,0x1905,0x1906},
 				"Original terrain shadow comparison has unsupported depth storage/swizzle");
@@ -691,30 +728,31 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 			if(original->profile.fragment[slot].kind==ImageKind::Color2D&&ready.images[slot+fragmentOffset].depthImage)
 				imageDepthMask|=uint32_t(1)<<(slot+1);
 		ready.pipeline=original->Pipeline(lease,target,draw.surface,imageDepthMask,validation,milliseconds,draw.world.combinedColorWrite);
-		ready.uniforms=[lease.Device()newBufferWithBytes:&uniforms length:sizeof(uniforms) options:MTLResourceStorageModeShared];
-		Require(ready.uniforms!=nil,"Cannot retain actual original terrain uniforms");lease.AddAllocation(ready.uniforms);
+		const auto uniformSlice=uniformBatch.Upload(&uniforms,sizeof(uniforms));
+		ready.uniforms=uniformSlice.buffer;
 		auto fd=[MTL4ArgumentTableDescriptor new];fd.maxBufferBindCount=2;fd.maxTextureBindCount=original->profile.fragment.size()*2;
 		fd.maxSamplerStateBindCount=original->profile.fragment.size();fd.initializeBindings=YES;
 		ready.fragment=[lease.Device()newArgumentTableWithDescriptor:fd error:nil];Require(ready.fragment!=nil,"Cannot create compact original terrain fragment argument table");
-		lease.Retain(ready.fragment);[ready.fragment setAddress:ready.uniforms.gpuAddress atIndex:1];
+		lease.Retain(ready.fragment);[ready.fragment setAddress:ready.uniforms.gpuAddress+uniformSlice.offset atIndex:1];
 		for(size_t slot=0;slot<original->profile.fragment.size();++slot){const auto& image=ready.images[slot+fragmentOffset];const auto kind=original->profile.fragment[slot].kind;
 			const auto textureSlot=slot*2+(kind==ImageKind::Color2D&&image.depthImage?1:0);
 			[ready.fragment setTexture:image.texture.gpuResourceID atIndex:textureSlot];[ready.fragment setSamplerState:image.sampler.gpuResourceID atIndex:slot];}
 		static_assert(sizeof(std::array<float,3>)==12&&sizeof(std::array<uint8_t,4>)==4);
 		ready.indexed=mesh.indexed;ready.count=uint32_t(count);
-		ready.positions=[lease.Device()newBufferWithBytes:mesh.positions.data() length:mesh.positions.size()*sizeof(mesh.positions.front()) options:MTLResourceStorageModeShared];
+		const auto geometry=impl->geometryCache.Acquire(lease,{draw.squareX,draw.squareZ,unsigned(draw.mesh),draw.border},mesh,draw.meshSnapshot);
+		ready.positions=geometry.positions;
 		Require(ready.positions!=nil,"Cannot retain original terrain position stream");lease.AddAllocation(ready.positions);
 		if(draw.border){
-			ready.colors=[lease.Device()newBufferWithBytes:mesh.colors.data() length:mesh.colors.size()*sizeof(mesh.colors.front()) options:MTLResourceStorageModeShared];
+			ready.colors=geometry.colors;
 			Require(ready.colors!=nil,"Cannot retain original border normalized UByte color stream");lease.AddAllocation(ready.colors);
 		}
 		if(mesh.indexed){
-			ready.indices=[lease.Device()newBufferWithBytes:mesh.indices.data() length:mesh.indices.size()*sizeof(uint32_t) options:MTLResourceStorageModeShared];
+			ready.indices=geometry.indices;
 			Require(ready.indices!=nil,"Cannot retain original terrain index order");lease.AddAllocation(ready.indices);
 		}
 		auto vd=[MTL4ArgumentTableDescriptor new];vd.maxBufferBindCount=draw.border?3:2;vd.maxTextureBindCount=fragmentOffset?2:0;vd.maxSamplerStateBindCount=fragmentOffset?1:0;vd.initializeBindings=YES;
 		ready.vertex=[lease.Device()newArgumentTableWithDescriptor:vd error:nil];Require(ready.vertex!=nil,"Cannot create original terrain vertex argument table");lease.Retain(ready.vertex);
-		[ready.vertex setAddress:ready.positions.gpuAddress atIndex:0];[ready.vertex setAddress:ready.uniforms.gpuAddress atIndex:1];
+		[ready.vertex setAddress:ready.positions.gpuAddress atIndex:0];[ready.vertex setAddress:ready.uniforms.gpuAddress+uniformSlice.offset atIndex:1];
 		if(draw.border)[ready.vertex setAddress:ready.colors.gpuAddress atIndex:2];
 		if(fragmentOffset){const auto& height=ready.images.front();[ready.vertex setTexture:height.texture.gpuResourceID atIndex:height.depthImage?1:0];[ready.vertex setSamplerState:height.sampler.gpuResourceID atIndex:0];}
 		out.draws.push_back(std::move(ready));

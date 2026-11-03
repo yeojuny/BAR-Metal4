@@ -7,6 +7,7 @@
 #include "Rendering/Backend/NativeFrameGrapherProgram.h"
 #include "Rendering/Backend/NativeCUSUniformCapture.h"
 #include "Rendering/Backend/NativeUIRecorder.h"
+#include "Rendering/Backend/NativeScreenGeometry.h"
 #include "Rendering/UniformConstants.h"
 #include "Rendering/GlobalRendering.h"
 #include <cstring>
@@ -29,10 +30,18 @@ inline sol::table Create(lua_State* L)
 {
 	Require(!CLuaHandle::GetHandleSynced(L)&&targetPriorityProgram::Available(),"FrameGrapher needs its actual compiled screen consumer");
 	sol::state_view lua(L);auto context=lua.create_table();auto owner=std::make_shared<Owner>();
-	auto type=context.new_usertype<Buffer>("FrameGrapherBuffer",sol::no_constructor);
+	// sol2 re-registration clears the shared metatables of live buffers.
+ // Bind the owner-independent methods once per Lua state; context owners stay separate.
+ auto registry=lua.registry();
+ if(!registry["NativeFrameGrapherBufferRegistered"].get_or(false)) {
+ auto type=context.new_usertype<Buffer>("FrameGrapherBuffer",sol::no_constructor);
 	Bind(type,"Define",[](Buffer& b,int count,sol::optional<sol::object> layout){Require(!b.deleted,"FrameGrapher buffer deleted");b.value->Define(count,layout);});
 	Bind(type,"Upload",[](Buffer& b,const sol::stack_table& values,sol::optional<int> attribute,sol::optional<int> offset,sol::optional<int> first,sol::optional<int> last){Require(!b.deleted,"FrameGrapher buffer deleted");return b.value->Upload(values,attribute,offset,first,last);});
 	Bind(type,"Delete",[](Buffer& b){b.value->Delete();b.deleted=true;});context.set("FrameGrapherBuffer",sol::lua_nil);
+	Bind(type,"GetID",[](Buffer& b){Require(!b.deleted,"FrameGrapher buffer deleted");auto id=std::to_string(b.value->CaptureNativeSnapshot()->object);b.owner->buffers[id]=b.shared_from_this();return id;});
+ registry.set("NativeFrameGrapherBufferRegistered",true);
+ }
+
 	Bind(context,"GetVBO",[L,owner](GLenum target,bool frequent){Require(target==GL_ARRAY_BUFFER,"FrameGrapher original buffer target/usage differs");auto b=std::make_shared<Buffer>();b->owner=owner;b->value=std::make_shared<LuaVBOImpl>(target,frequent);CLuaHandle::GetActiveVBOs(L).luaVBOs.emplace_back(b->value);return b;});
 	Bind(context,"ValidateProgram",[owner](const sol::table& params,const std::string& name,const std::string& engine){
 		Require(targetPriorityProgram::Available()&&name.empty(),"Unknown original frame-grapher program");
@@ -48,7 +57,7 @@ inline sol::table Create(lua_State* L)
 	Bind(context,"Activate",[owner](){Require(owner->validated&&targetPriorityProgram::Available(),"FrameGrapher compiled program missing");owner->active=true;});
 	Bind(context,"Deactivate",[owner](){owner->active=false;});
 	Bind(context,"Finalize",[owner](){owner->active=owner->validated=false;});
-	Bind(type,"GetID",[](Buffer& b){Require(!b.deleted,"FrameGrapher buffer deleted");auto id=std::to_string(b.value->CaptureNativeSnapshot()->object);b.owner->buffers[id]=b.shared_from_this();return id;});
+
 	Bind(context,"ObjectLabel",[owner](GLenum kind,const std::string& id,const std::string& label){Require(kind==0x82E0,"FrameGrapher label must name a buffer");auto it=owner->buffers.find(id);Require(it!=owner->buffers.end(),"Unknown FrameGrapher buffer label");auto b=it->second.lock();Require(b&&!b->deleted,"Deleted FrameGrapher buffer label");b->label=label;});
 	Bind(context,"SetUniform",[owner](const std::string& name,sol::variadic_args values){Require(owner->active&&owner->validated&&name=="shaderparams"&&values.size()==4,"FrameGrapher active uniform differs");for(unsigned i=0;i<4;++i){const float value=values[i].as<float>();Require(std::isfinite(value),"FrameGrapher nonfinite parameter");owner->parameters[i]=value;}});
 	Bind(context,"Draw",[owner](std::shared_ptr<Buffer> vertex,std::shared_ptr<Buffer> instance,GLenum primitive,int count,int first,int instances,int base){
@@ -61,9 +70,9 @@ inline sol::table Create(lua_State* L)
 		const auto engine=OriginalCUSUniformCapture().Current();Require(engine&&globalRendering,"FrameGrapher actual engine UBO missing");ValidateNativeCUSUniformPublication(*engine);
 		Require(engine->params->sourceDrawFrame<=uint64_t(globalRendering->drawFrame),"FrameGrapher engine UBO from a future frame");
 		std::array<float,2> view{};static_assert(offsetof(UniformParamsBuffer,viewGeometry)==32);std::memcpy(view.data(),engine->params->bytes.data()+offsetof(UniformParamsBuffer,viewGeometry),sizeof(view));
-		std::vector<ScreenVertex> vertices;vertices.reserve(size_t(instances)*6);
-		for(int i=0;i<instances;++i){std::array<float,4> event;std::memcpy(event.data(),events->bytes.data()+size_t(i)*16,sizeof(event));for(unsigned j=0;j<6;++j){std::array<float,4> xyuv;std::memcpy(xyuv.data(),coords->bytes.data()+j*16,sizeof(xyuv));vertices.push_back({xyuv[0],xyuv[1],0,event});}}
-		ui::GetRecorder().AppendFrameGrapherTriangles(std::move(vertices),view,owner->parameters);
+		auto packet=std::make_shared<NativeScreenGeometry>();packet->kind=NativeScreenGeometryKind::FrameGrapher;
+  packet->vertices=coords;packet->instances=events;packet->count=6;packet->instanceCount=uint32_t(instances);
+  ui::GetRecorder().AppendFrameGrapherGeometry(std::move(packet),view,owner->parameters);
 	});
 	return context;
 }

@@ -734,7 +734,7 @@ struct PipLineStage { float4 position [[position]];
 
 		
 
-		vertex PipLineStage pipLineVertex(uint vertexID [[vertex_id]], uint instanceID [[instance_id]], device const PipImmediateVertex* immediate [[buffer(0)]], device const float* vertices [[buffer(1)]], device const float4* instances [[buffer(2)]], constant PipUniformBlock& uniforms [[buffer(3)]]) {
+		inline PipLineStage PipOriginalLineVertex130(uint vertexID,device const float* vertices,constant PipUniformBlock& uniforms) {
 	PipLineStage output{};
 	const float2 wtp_scale = uniforms.values[0].xy;
 	const float2 wtp_offset = uniforms.values[1].xy;
@@ -761,6 +761,7 @@ struct PipLineStage { float4 position [[position]];
 	output.position.z = (output.position.z + output.position.w) * 0.5f;
 	return output;
 }
+vertex PipLineStage pipLineVertex(uint vertexID [[vertex_id]], uint instanceID [[instance_id]], device const PipImmediateVertex* immediate [[buffer(0)]], device const float* vertices [[buffer(1)]], device const float4* instances [[buffer(2)]], constant PipUniformBlock& uniforms [[buffer(3)]]) { return PipOriginalLineVertex130(vertexID,vertices,uniforms); }
 
 		
 		

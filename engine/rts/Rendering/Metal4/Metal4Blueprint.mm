@@ -2,6 +2,12 @@
 #include "Metal4Blueprint.h"
 #include "Metal4WorldBCDecode.h"
 #include "NativeBlueprintShaders.h"
+#include "Rendering/Metal4/NativeBlueprintOutlineShaders129.h"
+#include "Rendering/Metal4/Metal4MiniMapNative.h"
+#include "Rendering/Backend/NativeBlueprintOutlineGPU129.h"
+#include <atomic>
+#include <cstdio>
+#include <cstdlib>
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
 #include "Rendering/Backend/NativeWorldDrawGeometry.h"
 #include "Rendering/Backend/NativeWorldDrawRecorder.h"
@@ -14,6 +20,12 @@
 #include <tuple>
 namespace rendering::metal4 {
 namespace {
+struct BlueprintProbe129 {
+ const char* path=std::getenv("BAR_NATIVE_BLUEPRINT_OUTLINE_PROBE_FILE");std::atomic<uint64_t> gpu{0},cpu{0},instances{0},bytes{0};
+ bool Enabled()const{return path&&*path;}
+ ~BlueprintProbe129(){if(Enabled())if(auto f=std::fopen(path,"w")){std::fprintf(f,"gpuDraws,cpuDraws,instances,inputBytes\n%llu,%llu,%llu,%llu\n",(unsigned long long)gpu.load(),(unsigned long long)cpu.load(),(unsigned long long)instances.load(),(unsigned long long)bytes.load());std::fclose(f);}}
+};
+BlueprintProbe129& OutlineProbe129(){static BlueprintProbe129 p;return p;}
 struct ModelVertex {std::array<float,3> position;std::array<float,2> uv;uint32_t bone;};
 static_assert(sizeof(ModelVertex)==24);
 struct ModelUniform {simd_float4x4 viewProjection;simd_float4 positionRotation,parameters,team,cameraIcon,time;simd_uint4 options;simd_float4 alpha,pitchRoll,tint;};
@@ -34,6 +46,7 @@ MTLSamplerAddressMode Address(unsigned value) {
 id<MTLBuffer> Buffer(RuntimeLease& lease,const void* data,size_t size) {
 	Require(size&&size<=lease.Device().maxBufferLength,"Original Blueprint GPU buffer extent invalid");auto result=[lease.Device()newBufferWithBytes:data length:size options:MTLResourceStorageModeShared];Require(result!=nil,"Cannot allocate original Blueprint GPU buffer");lease.AddAllocation(result);return result;
 }
+#include "Rendering/Metal4/Metal4BlueprintOutline129.inc"
 MTLBlendOperation Equation(ScreenBlendEquation value) {
 	switch(value){case ScreenBlendEquation::Add:return MTLBlendOperationAdd;case ScreenBlendEquation::Subtract:return MTLBlendOperationSubtract;case ScreenBlendEquation::ReverseSubtract:return MTLBlendOperationReverseSubtract;case ScreenBlendEquation::Minimum:return MTLBlendOperationMin;case ScreenBlendEquation::Maximum:return MTLBlendOperationMax;}throw std::runtime_error("Unknown original Blueprint blend equation");
 }
@@ -120,6 +133,7 @@ void PreparedBlueprintFrame::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> en
 		if(draw.model)[encoder setCullMode:MTLCullModeBack];
 		[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
 		if(draw.clear)[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
+		else if(!draw.indices)[encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4 instanceCount:draw.count];
 		else [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:draw.indices.gpuAddress indexBufferLength:draw.indices.length];
 	}
 }
@@ -131,6 +145,7 @@ struct BlueprintGPU::Impl {
 	std::array<__strong id<MTLSamplerState>,2> samplers{};
 	std::vector<SourceSampler> sourceSamplers;
 	MTLPixelFormat format=MTLPixelFormatInvalid;bool validation=false;
+ __strong id<MTLLibrary> outlineLibrary=nil;
 	id<MTLSamplerState> Sampler(RuntimeLease& lease,const NativeCUSTextureObject& object) {
 		const auto& p=object.sampling;
 		Require(p.compareMode==0&&p.baseLevel==0&&p.maxLevel>=int(object.allocation.levels)-1&&p.lodBias==0,
@@ -160,7 +175,7 @@ struct BlueprintGPU::Impl {
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,unsigned kind,const ScreenBlendState& blend,const std::array<bool,4>& mask,double& ms,unsigned samples,bool coverage) {
 		const uint64_t state=uint64_t(blend.enabled)|uint64_t(blend.sourceColor)<<1|uint64_t(blend.destinationColor)<<5|uint64_t(blend.sourceAlpha)<<9|uint64_t(blend.destinationAlpha)<<13|uint64_t(mask[0])<<17|uint64_t(mask[1])<<18|uint64_t(mask[2])<<19|uint64_t(mask[3])<<20|uint64_t(blend.colorEquation)<<21|uint64_t(blend.alphaEquation)<<24;
 		const auto key=std::tuple{kind,state,lease.SampleShadingKey(samples),coverage};if(auto found=pipelines.find(key);found!=pipelines.end())return found->second;
-		const auto start=Clock::now();constexpr const char* names[]{"BlueprintModel","BlueprintRaster","BlueprintStencilClear","BlueprintFeature"};auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;d.alphaToCoverageState=coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;auto v=[MTL4LibraryFunctionDescriptor new];v.library=library;v.name=String(std::string(names[kind])+"Vertex");auto f=[MTL4LibraryFunctionDescriptor new];f.library=library;f.name=String(std::string(names[kind])+"Fragment");d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
+		const auto start=Clock::now();constexpr const char* names[]{"BlueprintModel","BlueprintRaster","BlueprintStencilClear","BlueprintFeature"};auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;d.alphaToCoverageState=coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;auto v=[MTL4LibraryFunctionDescriptor new];v.library=kind==4?outlineLibrary:library;v.name=kind==4?(samples>1?@"BlueprintSourceVertexMSAA129":@"BlueprintSourceVertex129"):String(std::string(names[kind])+"Vertex");auto f=[MTL4LibraryFunctionDescriptor new];f.library=kind==4&&samples==1?outlineLibrary:library;f.name=kind==4?(samples>1?@"BlueprintRasterFragment":@"BlueprintSourceFragment129"):String(std::string(names[kind])+"Fragment");d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
 		auto a=d.colorAttachments[0];a.pixelFormat=format;a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;
 		a.sourceRGBBlendFactor=effectstate::Factor(blend.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(blend.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(blend.destinationAlpha);a.rgbBlendOperation=Equation(blend.colorEquation);a.alphaBlendOperation=Equation(blend.alphaEquation);
 		a.writeMask=MTLColorWriteMask((mask[0]?MTLColorWriteMaskRed:0)|(mask[1]?MTLColorWriteMaskGreen:0)|(mask[2]?MTLColorWriteMaskBlue:0)|(mask[3]?MTLColorWriteMaskAlpha:0));auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);d.options=options;
@@ -177,12 +192,12 @@ void BlueprintGPU::Initialize(RuntimeLease& lease,MTLPixelFormat colorFormat,boo
 	if(impl->library!=nil&&impl->format==colorFormat&&impl->validation==validation)return;
 	SetNativeBlueprintConsumerAvailable(false);const auto start=Clock::now();auto d=[MTL4LibraryDescriptor new];d.source=String(NativeBlueprintShaderSource);d.name=@"Original exact30770 Blueprint models, outlines and stencil clear";auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;d.options=options;NSError* error=nil;
 	auto library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile original Blueprint Metal library: "+Error(error));
-	impl->library=library;impl->format=colorFormat;impl->validation=validation;impl->pipelines.clear();milliseconds+=Milliseconds(start);
+	impl->library=library;impl->outlineLibrary=nil;impl->format=colorFormat;impl->validation=validation;impl->pipelines.clear();milliseconds+=Milliseconds(start);
 	ScreenBlendState source;impl->Pipeline(lease,0,source,{true,true,true,true},milliseconds,samples,false);impl->Pipeline(lease,1,source,{true,true,true,true},milliseconds,samples,false);impl->Pipeline(lease,3,source,{true,true,true,true},milliseconds,samples,false);source.enabled=false;impl->Pipeline(lease,2,source,{false,false,false,false},milliseconds,samples,false);
 	for(unsigned mip=0;mip<2;++mip){auto sampler=[MTLSamplerDescriptor new];sampler.minFilter=sampler.magFilter=MTLSamplerMinMagFilterLinear;sampler.mipFilter=mip?MTLSamplerMipFilterLinear:MTLSamplerMipFilterNotMipmapped;sampler.sAddressMode=sampler.tAddressMode=MTLSamplerAddressModeRepeat;sampler.supportArgumentBuffers=YES;impl->samplers[mip]=[lease.Device()newSamplerStateWithDescriptor:sampler];Require(impl->samplers[mip]!=nil,"Cannot allocate original Blueprint material sampler");}
 	SetNativeBlueprintConsumerAvailable(true);
 }
-std::unique_ptr<PreparedBlueprintFrame> BlueprintGPU::Prepare(RuntimeLease& lease,const NativeBlueprintFrame& frame,const WorldCamera& viewCamera,uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool validation,double& milliseconds,unsigned samples) {
+std::unique_ptr<PreparedBlueprintFrame> BlueprintGPU::Prepare(RuntimeLease& lease,const NativeBlueprintFrame& frame,const WorldCamera& viewCamera,uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool validation,double& milliseconds,unsigned samples,MiniMapGPU& heightProvider,const std::shared_ptr<const WorldTerrainHeights>& actualHeights) {
 	Require(depthFormat==MTLPixelFormatDepth32Float||depthFormat==MTLPixelFormatDepth32Float_Stencil8,"Original Blueprint needs actual shared world depth");Require(stencilFormat==MTLPixelFormatStencil8||stencilFormat==MTLPixelFormatDepth32Float_Stencil8,"Original Blueprint needs actual shared stencil attachment");
 	for(const auto& draw:frame.outlines)ValidateNativeBlueprintOutline(draw);for(const auto& draw:frame.models)ValidateNativeBlueprintModel(draw);for(const auto& clear:frame.clears)ValidateNativeWorldStencilClear(clear);
 	Initialize(lease,colorFormat,validation,milliseconds,samples);lease.Retain(impl->library);for(auto sampler:impl->samplers)lease.Retain(sampler);
@@ -214,8 +229,25 @@ std::unique_ptr<PreparedBlueprintFrame> BlueprintGPU::Prepare(RuntimeLease& leas
 		}
 		if(!packet.draws.empty())result->impl->packets.push_back(std::move(packet));
 	}
+ std::shared_ptr<const PreparedMiniMapHeight> outlineHeights;
 	for(const auto& source:frame.outlines) {
-		auto raster=effectstate::Viewport(viewCamera,width,height,logicalWidth,logicalHeight,source.surface.scissor);if(!raster)continue;auto mesh=Outline(source,*raster,width,height,samples);if(mesh.indices.empty())continue;if(mesh.fullViewport)raster->viewport={0,0,double(width),double(height),0,1};
+		auto raster=effectstate::Viewport(viewCamera,width,height,logicalWidth,logicalHeight,source.surface.scissor);if(!raster)continue;
+  const std::array<double,4> viewport{raster->viewport.originX,raster->viewport.originY,raster->viewport.width,raster->viewport.height};
+  if(source.instanceCount&&source.heights==actualHeights&&!outlineHeights)outlineHeights=heightProvider.PrepareHeight(lease,actualHeights);
+  const bool heightMatches=outlineHeights&&outlineHeights->source==source.heights&&outlineHeights->texture.device==lease.Device()&&outlineHeights->texture.pixelFormat==MTLPixelFormatR32Float&&outlineHeights->texture.width==source.heights->width&&outlineHeights->texture.height==source.heights->height;
+  auto input=heightMatches?blueprintOutline129::Admit(source,viewport,width,height,samples):std::optional<blueprintOutline129::Uniform>{};
+  if(input){
+   if(!impl->outlineLibrary){const auto start=Clock::now();auto d=[MTL4LibraryDescriptor new];d.source=String(std::string(NativeBlueprintShaderSource)+BlueprintOutlineShader129);d.name=@"Original Blueprint GPU outline129";auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;d.options=options;NSError* error=nil;impl->outlineLibrary=lease.NewLibrary(d,&error);Require(impl->outlineLibrary,"Cannot compile original GPU Blueprint outline: "+Error(error));milliseconds+=Milliseconds(start);}
+   lease.Retain(impl->outlineLibrary);
+   auto packetInput=PrepareBlueprintOutlineInputs129(lease,source,*input);auto inputs=packetInput.buffer;
+   auto args=impl->Arguments(lease,3,1,0);
+   [args setAddress:inputs.gpuAddress+BlueprintOutlineInputs129::InstancesOffset atIndex:0];[args setAddress:inputs.gpuAddress+BlueprintOutlineInputs129::AlphaOffset atIndex:1];[args setAddress:inputs.gpuAddress atIndex:2];[args setTexture:outlineHeights->texture.gpuResourceID atIndex:0];
+   auto pipeline=impl->Pipeline(lease,4,source.surface.blend,source.world.colorWrite,milliseconds,samples,source.world.alphaToCoverage);lease.Retain(pipeline);auto state=source.world;state.cullEnabled=false;state.polygonOffset=false;raster->viewport={0,0,double(width),double(height),0,1};
+   PreparedBlueprintFrame::Impl::Draw draw{pipeline,effectstate::Depth(lease,state,stencilFormat),args,nil,state,*raster,NSUInteger(source.instanceCount)*4,false,false};PreparedBlueprintFrame::Impl::Packet packet{source.sequence,source.stage,{std::move(draw)}};result->impl->packets.push_back(std::move(packet));
+   if(OutlineProbe129().Enabled()){OutlineProbe129().gpu.fetch_add(1,std::memory_order_relaxed);OutlineProbe129().instances.fetch_add(source.instanceCount,std::memory_order_relaxed);OutlineProbe129().bytes.fetch_add(size_t(source.instanceCount)*36+BlueprintOutlineInputs129::InstancesOffset,std::memory_order_relaxed);}continue;
+  }
+  if(OutlineProbe129().Enabled())OutlineProbe129().cpu.fetch_add(1,std::memory_order_relaxed);
+  auto mesh=Outline(source,*raster,width,height,samples);if(mesh.indices.empty())continue;if(mesh.fullViewport)raster->viewport={0,0,double(width),double(height),0,1};
 		auto vertices=Buffer(lease,mesh.vertices.data(),mesh.vertices.size()*sizeof(NativeWorldDrawVertex));auto indices=Buffer(lease,mesh.indices.data(),mesh.indices.size()*sizeof(uint32_t));
 		RasterUniform uniform{simd_make_uint4(source.surface.alphaTest.enabled,unsigned(source.surface.alphaTest.compare),0,0),simd_make_float4(source.surface.alphaTest.reference,0,0,0)};auto uniforms=Buffer(lease,&uniform,sizeof(uniform));auto args=impl->Arguments(lease,2,0,0);[args setAddress:vertices.gpuAddress atIndex:0];[args setAddress:uniforms.gpuAddress atIndex:1];auto pipeline=impl->Pipeline(lease,1,source.surface.blend,source.world.colorWrite,milliseconds,samples,source.world.alphaToCoverage);lease.Retain(pipeline);
 		auto state=source.world;state.cullEnabled=false;state.polygonOffset=false;

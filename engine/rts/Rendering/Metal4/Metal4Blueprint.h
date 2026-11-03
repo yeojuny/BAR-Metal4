@@ -3,6 +3,7 @@
 #include "Rendering/Metal4/Metal4RuntimeNative.h"
 #include "Rendering/Backend/NativeBlueprintData.h"
 namespace rendering::metal4 {
+class MiniMapGPU;
 class BlueprintGPU;
 class PreparedBlueprintFrame {
 public:
@@ -24,7 +25,7 @@ public:
 	std::unique_ptr<PreparedBlueprintFrame> Prepare(RuntimeLease&,const NativeBlueprintFrame&,const WorldCamera&,
 		std::uint32_t width,std::uint32_t height,std::uint32_t logicalWidth,std::uint32_t logicalHeight,
 		MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,
-		bool shaderValidation,double& shaderMilliseconds,unsigned samples=1);
+		bool shaderValidation,double& shaderMilliseconds,unsigned samples,MiniMapGPU& heightProvider,const std::shared_ptr<const WorldTerrainHeights>& actualHeights);
 	void ClearResources();
 private:
 	struct Impl;std::unique_ptr<Impl> impl;

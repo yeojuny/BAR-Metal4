@@ -12,7 +12,7 @@ void PBRSourceService::Initialize(NativeTextureContext& owner,Parser parser,std:
 	LuaNativePBRSource::Services services;
 	services.ready=[this]{return Ready();};
 	services.compile=[this](const NativePBRProgramSource& source){RuntimeLease lease;return gpu.Compile(lease,source,validation,compileMilliseconds);};
-	services.allocate=[this](const NativePBRAllocation& allocation){RuntimeLease lease;return gpu.Allocate(lease,allocation);};
+	services.allocate=[](const NativePBRAllocation& allocation){return ReserveNativePBRImageForCapture(allocation);};
 	services.parseTexture=std::move(parser);services.sourceDrawFrame=std::move(drawFrame);
 	services.enqueue=[this](std::shared_ptr<const NativePBRImage> image){Require(Ready()&&image&&image->program,"Original PBR enqueue has no source owner");pending.push_back(std::move(image));};
 	services.syncObservedBinding=[](unsigned unit){ui::GetRecorder().SyncObservedTextureBinding(unit);};

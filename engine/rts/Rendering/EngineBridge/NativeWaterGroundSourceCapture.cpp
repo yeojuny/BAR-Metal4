@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeWaterGroundSourceCapture.h"
+#include "NativeTerrainPositionCopy.inc"
 #include <stdexcept>
 #include <cmath>
 #include <cstring>
@@ -208,7 +209,7 @@ void NativeWaterGroundSourceCapture::SubmitMapEdge(mapedge::DrawPacket draw)
 
 void NativeWaterGroundSourceCapture::SubmitSquare(NativeTerrainMeshSource mesh,const void* positions,size_t vertexCount,size_t vertexStride,
 	std::span<const uint32_t> indices,bool indexed,NativeTerrainProgramSnapshot program,
-	const void* colors,size_t colorStride,bool border)
+	const void* colors,size_t colorStride,bool border,std::shared_ptr<const NativeTerrainMeshSnapshot> snapshot)
 {
 	RequireActive();
 	const bool composite=mesh==NativeTerrainMeshSource::Composite;
@@ -237,12 +238,13 @@ void NativeWaterGroundSourceCapture::SubmitSquare(NativeTerrainMeshSource mesh,c
 		throw std::runtime_error("Original terrain draw lacks its actual shared fog/clip source");
 	NativeTerrainSquareDraw draw;
 	draw.squareX=square->first;draw.squareZ=square->second;draw.mesh=mesh;draw.originalIndexCount=indices.size();draw.border=border;draw.deferred=inDeferred;draw.composite=composite;
-	draw.geometry.indexed=indexed;draw.geometry.positions.resize(vertexCount);
-	const auto* positionBytes=static_cast<const std::byte*>(positions);
-	for(size_t n=0;n<vertexCount;++n) {
-		std::memcpy(draw.geometry.positions[n].data(),positionBytes+n*vertexStride,sizeof(draw.geometry.positions[n]));
-		for(float value:draw.geometry.positions[n])if(!std::isfinite(value))throw std::runtime_error("Original terrain vertex is nonfinite");
-	}
+ if(snapshot){
+  if(mesh!=NativeTerrainMeshSource::ROAM||!indexed||border||colors||!snapshot->MatchesSource(positions,vertexCount,vertexStride,indices))
+   throw std::runtime_error("Original terrain snapshot lost its actual ROAM source version");
+  draw.meshSnapshot=std::move(snapshot);
+ }else{
+	draw.geometry.indexed=indexed;
+	draw.geometry.positions=CopyValidatedTerrainPositions(positions,vertexCount,vertexStride);
 	for(uint32_t index:indices)if(index>=vertexCount)throw std::runtime_error("Original terrain index exceeds its actual source vertices");
 	draw.geometry.indices.assign(indices.begin(),indices.end());
 	if(colors) {
@@ -250,6 +252,7 @@ void NativeWaterGroundSourceCapture::SubmitSquare(NativeTerrainMeshSource mesh,c
 		draw.geometry.colors.resize(vertexCount);const auto* colorBytes=static_cast<const std::byte*>(colors);
 		for(size_t n=0;n<vertexCount;++n)std::memcpy(draw.geometry.colors[n].data(),colorBytes+n*colorStride,4);
 	}
+ }
 	draw.program=std::move(program);draw.images=CaptureNativeTerrainImages(registry,history,frame->sourceDrawFrame);
 	draw.world=recorder.CurrentWorldState();draw.surface=recorder.CurrentState().draw;
 	draw.modelView=recorder.GetMatrix(ui::NativeUIMatrixMode::ModelView);

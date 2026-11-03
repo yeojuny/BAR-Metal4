@@ -19,10 +19,20 @@ CR_REG_METADATA(CMetalMap,(
 	CR_IGNORED(texturePalette),
 	CR_MEMBER(distributionMap),
 	CR_MEMBER(extractionMap)
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	, CR_POSTLOAD(PostLoad)
+#endif
 ))
 
 
 CMetalMap metalMap;
+
+void CMetalMap::PostLoad()
+{
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::InvalidateNativeMetalDensity();
+#endif
+}
 
 
 #ifndef NO_METALMAP
@@ -49,6 +59,9 @@ void CMetalMap::Init(const unsigned char* map, int _sizeX, int _sizeZ, float _me
 		texturePalette[a * 3 + 1] = std::min(255, a * 2      );
 		texturePalette[a * 3 + 2] = std::max(  0, a * 2 - 255);
 	}
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::InvalidateNativeMetalDensity();
+#endif
 }
 
 
@@ -90,6 +103,9 @@ void CMetalMap::SetMetalAmount(int x, int z, float m)
 	z = std::clamp(z, 0, sizeZ - 1);
 
 	distributionMap[(z * sizeX) + x] = (metalScale == 0.0f) ? 0 : std::clamp((int)(m / metalScale), 0, 255);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::InvalidateNativeMetalDensity();
+#endif
 
 	eventHandler.MetalMapChanged(x, z);
 }

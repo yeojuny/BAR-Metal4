@@ -68,7 +68,8 @@ public:
 	// Discards only unsubmitted/retired image plans; keeps the persistent cache.
 	void PrepareAtlasImages(uint64_t actualSubmission);
 	void EncodeAtlasImages(id<MTL4CommandBuffer>,uint64_t actualSubmission);
-	void CompleteAtlasImages(uint64_t actualSubmission); // same successful common wait
+	void CompleteAtlasImages(uint64_t actualSubmission);
+ std::function<void()> TakeAtlasCompletion(uint64_t submission); // same successful common wait
 	void ClearResources(); // Only after the same runtime's previous retirement.
 private:
 	struct Impl;std::unique_ptr<Impl> impl;

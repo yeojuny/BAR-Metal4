@@ -9,19 +9,36 @@ import { isMainThread, parentPort } from "worker_threads";
 import { REPLAY_FILE_CHANGED, replayFileGeneration, replayParseError, serializeReplayError } from "@main/replays/replay-parse-contract";
 import type { ReplayParseRequest, ReplayParseResponse } from "@main/replays/replay-parse-contract";
 
+class ReplayDemoParser extends DemoParser {
+    protected override parseHeader() {
+        const { buffer, offset } = this.bufferStream;
+        const prefix = buffer.subarray(offset, offset + 24);
+        // Header extensions belong to version 5; a different major version
+        // cannot be decoded by assuming the version-5 layout in parser 5.15.1.
+        if (prefix.length === 24 && prefix.subarray(0, 16).equals(Buffer.from("spring demofile\0"))) {
+            const version = prefix.readInt32LE(16);
+            if (version !== 5) {
+                throw replayParseError(`Unsupported replay format version: ${version}`, "REPLAY_UNSUPPORTED_FORMAT");
+            }
+        }
+        return super.parseHeader();
+    }
+}
+
 if (isMainThread) {
     throw new Error("This script should be run in worker thread.");
 } else {
     async function parseReplay(replayPath: string): Promise<Replay> {
-        const demoParser = new DemoParser();
+        const demoParser = new ReplayDemoParser();
         const replayData = await demoParser.parseDemo(replayPath);
-        const numOfPlayers = replayData.info.players.length + replayData.info.ais.length;
+        const contenders = [...replayData.info.players, ...replayData.info.ais];
+        const activeAllyTeams = new Set(contenders.map((contender) => contender.allyTeamId));
         let preset: "duel" | "team" | "ffa" | "teamffa" = "duel";
-        if (replayData.info.allyTeams.length > 2 && replayData.info.players.some((player) => player.playerId !== player.allyTeamId)) {
-            preset = "teamffa";
-        } else if (replayData.info.allyTeams.length > 2) {
-            preset = "ffa";
-        } else if (numOfPlayers > 2) {
+        // Player IDs need not match alliance IDs, and AI players count too.
+        // Empty alliance declarations do not turn a duel into an FFA.
+        if (activeAllyTeams.size > 2) {
+            preset = contenders.length > activeAllyTeams.size ? "teamffa" : "ffa";
+        } else if (contenders.length > 2) {
             preset = "team";
         }
         return {
@@ -39,7 +56,7 @@ if (isMainThread) {
             preset: preset,
             winningTeamId: replayData.info.meta.winningAllyTeamIds[0],
             teams: replayData.info.allyTeams,
-            contenders: [...replayData.info.players, ...replayData.info.ais],
+            contenders,
             spectators: replayData.info.spectators,
             script: replayData.script,
             battleSettings: replayData.info.hostSettings,

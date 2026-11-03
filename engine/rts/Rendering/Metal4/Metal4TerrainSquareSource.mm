@@ -11,10 +11,30 @@ struct SquareImageOwner {
 	std::shared_ptr<const WorldTerrainTiles> tiles;
 	__strong id<MTLTexture> array=nil,view=nil;
 };
+id<MTLTexture> CachedTerrainSquareView(TerrainSquareViewCache& cache,id<MTLTexture> array,
+	id<MTLDevice> device,NSUInteger mip,NSUInteger count,NSUInteger layer)
+{
+	const std::array<NSUInteger,3> key{layer,mip,count};
+	const auto found=cache.find(key);
+	id<MTLTexture> view=found!=cache.end()?found->second:
+		[array newTextureViewWithPixelFormat:MTLPixelFormatBC1_RGBA textureType:MTLTextureType2D
+			levels:NSMakeRange(mip,count) slices:NSMakeRange(layer,1)];
+	Require(view!=nil,"Cannot create the original terrain square's same-storage layer/mip view");
+	const auto extent=NATIVE_SMF_SQUARE_TEXELS>>mip;
+	Require(view.parentTexture==array&&view.parentRelativeLevel==mip&&view.parentRelativeSlice==layer&&
+		view.device==device&&view.textureType==MTLTextureType2D&&view.pixelFormat==MTLPixelFormatBC1_RGBA&&
+		view.width==extent&&view.height==extent&&view.depth==1&&view.arrayLength==1&&view.sampleCount==1&&view.mipmapLevelCount==count,
+		"Original terrain square view differs from its actual source layer/mip allocation");
+	if(found==cache.end()){
+		if(cache.size()>=256)cache.erase(cache.begin());
+		cache.emplace(key,view);
+	}
+	return view;
+}
 } // namespace
 
 CUSSourceImage ResolveNativeTerrainSquareImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,
-	std::shared_ptr<const WorldTerrainTiles> cachedOwner,id<MTLTexture> array,uint32_t first,id<MTLSamplerState> sampler)
+	std::shared_ptr<const WorldTerrainTiles> cachedOwner,id<MTLTexture> array,uint32_t first,id<MTLSamplerState> sampler,TerrainSquareViewCache& views)
 {
 	Require(binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&cachedOwner&&array!=nil&&sampler!=nil,
 		"Original terrain square requires its actual bound object, committed cache batch and source sampler");
@@ -46,13 +66,7 @@ CUSSourceImage ResolveNativeTerrainSquareImage(RuntimeLease& lease,const NativeC
 	// Same format, without a swizzle or channel reinterpretation. Select source
 	// mip k as view level0, exactly like streamed LoadSquareTexture(k)->TexImage0.
 	// MTLTextureUsagePixelFormatView is not needed for this unchanged format.
-	id<MTLTexture> view=[array newTextureViewWithPixelFormat:MTLPixelFormatBC1_RGBA textureType:MTLTextureType2D
-		levels:NSMakeRange(mip,count) slices:NSMakeRange(layer,1)];
-	Require(view!=nil,"Cannot create the original terrain square's same-storage layer/mip view");
-	Require(view.parentTexture==array&&view.parentRelativeLevel==mip&&view.parentRelativeSlice==layer&&
-		view.device==lease.Device()&&view.textureType==MTLTextureType2D&&view.pixelFormat==MTLPixelFormatBC1_RGBA&&
-		view.width==extent&&view.height==extent&&view.depth==1&&view.arrayLength==1&&view.sampleCount==1&&view.mipmapLevelCount==count,
-		"Original terrain square view differs from its actual source layer/mip allocation");
+	id<MTLTexture> view=CachedTerrainSquareView(views,array,lease.Device(),mip,count,layer);
 	lease.AddAllocation(array);lease.AddAllocation(view);lease.Retain(sampler);
 	auto owner=std::make_shared<SquareImageOwner>();owner->object=object;owner->tiles=std::move(cachedOwner);owner->array=array;owner->view=view;
 	CUSSourceImage out;out.texture=view;out.sampler=sampler;out.owner=std::move(owner);

@@ -1,5 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineShadow.h"
+#include "Metal4RetiredArguments.h"
+#include "Rendering/Backend/NativePreparationTrace.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
 #include "Metal4EngineModelState.h"
 #include "Metal4NativeEffectState.h"
@@ -16,6 +18,9 @@
 #include <cmath>
 #include <tuple>
 #include <string>
+#include <chrono>
+#include <cstdlib>
+#include "Metal4TerrainUniformBatch.inc"
 namespace rendering::metal4 {
 namespace {
 using engineoriginal::Uniform;using engineoriginal::Matrix;using engineoriginal::Vec;
@@ -37,16 +42,73 @@ id<MTLBuffer> Buffer(id<MTLDevice> device, const void* bytes, size_t length, NSS
 	result.label = label;
 	return result;
 }
+// BEGIN retired shadow uploads (extracted verbatim by the CPU regression).
+struct ShadowUploadStorage {
+ __strong id<MTLBuffer> buffer=nil;
+};
+using ShadowUploadOwners=std::vector<std::shared_ptr<ShadowUploadStorage>>;
+class ShadowUploadPool {
+public:
+ static constexpr size_t ByteLimit=16u*1024u*1024u;
+ static constexpr size_t EntryLimit=512;
+ void BeginBatch(id<MTLDevice> device) {
+  if(owner!=device){Clear();owner=device;}
+  for(auto& [length,bucket]:buckets)bucket.next=0;
+ }
+ std::shared_ptr<ShadowUploadStorage> Acquire(id<MTLDevice> device,const void* data,size_t length,NSString* label) {
+  Require(device==owner,"Shadow upload pool has no matching device batch");
+  Require(length>0&&length<=device.maxBufferLength,"World GPU buffer length exceeds device bounds");
+  // Only the pool may own a retired slot. PreparedEngine/GenericShadow keep
+  // the same tokens in the existing original-source completion/poison graph.
+  // Never infer retirement from frame numbers or a raw Metal retain count.
+  if(auto found=buckets.find(length);found!=buckets.end()){
+   auto& bucket=found->second;
+   while(bucket.next<bucket.slots.size()){
+    auto& slot=bucket.slots[bucket.next++];
+    if(slot.use_count()!=1||!data)continue;
+    auto address=slot->buffer.contents;if(address==nullptr)continue;
+    CountPreparationTrace(0,1);CountPreparationTrace(1,length);
+    std::memcpy(address,data,length);slot->buffer.label=label;return slot;
+   }
+  }
+  // Preserve the original allocation/error path and all draws at the limit.
+  CountPreparationTrace(2,1);CountPreparationTrace(3,length);
+  auto buffer=Buffer(device,data,length,label);
+  auto slot=std::make_shared<ShadowUploadStorage>(ShadowUploadStorage{buffer});
+  const auto footprint=std::max(size_t(buffer.length),size_t(buffer.allocatedSize));
+  if(data&&buffer.contents!=nullptr&&entries<EntryLimit&&footprint<=ByteLimit-bytes){
+   auto& bucket=buckets[length];bucket.slots.push_back(slot);bucket.next=bucket.slots.size();
+   bytes+=footprint;++entries;
+  }
+  return slot;
+ }
+ void Clear() noexcept {buckets.clear();bytes=0;entries=0;owner=nil;}
+ size_t CachedBytes() const{return bytes;}
+ size_t CachedCount() const{return entries;}
+ size_t BucketCount() const{return buckets.size();}
+private:
+ struct Bucket{ShadowUploadOwners slots;size_t next=0;};
+ std::map<size_t,Bucket> buckets;
+ __strong id<MTLDevice> owner=nil;
+ size_t bytes=0,entries=0;
+};
+id<MTLBuffer> ShadowUpload(ShadowUploadPool& pool,ShadowUploadOwners& owners,
+ id<MTLDevice> device,const void* data,size_t length,NSString* label)
+{
+ auto slot=pool.Acquire(device,data,length,label);auto buffer=slot->buffer;
+ owners.push_back(std::move(slot));return buffer;
+}
+// END retired shadow uploads.
 struct GenericShadowUniform {
 	simd_float4x4 modelView,projection;
 	simd_float4 clips[3];
 	simd_uint4 flags;
 };
 static_assert(sizeof(GenericShadowUniform)==192&&offsetof(GenericShadowUniform,clips)==128&&offsetof(GenericShadowUniform,flags)==176);
-id<MTLBuffer> GenericBuffer(RuntimeLease& lease,const void* data,size_t count,size_t stride,NSString* label)
+id<MTLBuffer> GenericBuffer(ShadowUploadPool& pool,ShadowUploadOwners& owners,RuntimeLease& lease,const void* data,size_t count,size_t stride,NSString* label)
 {
 	Require(data&&count&&stride&&count<=lease.Device().maxBufferLength/stride,"Original generic shadow buffer exceeds the actual device bounds");
-	auto result=Buffer(lease.Device(),data,count*stride,label);lease.AddAllocation(result);return result;
+	auto result=ShadowUpload(pool,owners,lease.Device(),data,count*stride,label);lease.AddAllocation(result);return result;
 }
 void Target(const CUSSourceTarget& target){
  Require((target.depth==MTLPixelFormatDepth16Unorm||target.depth==MTLPixelFormatDepth32Float)&&target.stencil==MTLPixelFormatInvalid&&target.samples==1,
@@ -56,8 +118,11 @@ void Target(const CUSSourceTarget& target){
 }
 bool Empty(const NativeCUSTextureBinding& b){return ui::NativeUITextureHistory::SamplingIncomplete(b);}
 const NativeTextureSampling& Sampling(const NativeCUSTextureBinding& b){Require(b.knowledge!=NativeCUSBindingKnowledge::Unobserved,"Original shadow alpha sampler is unobserved");if(b.knowledge==NativeCUSBindingKnowledge::DefaultObject)return b.defaultSampling;Require(bool(b.object),"Original shadow alpha sampler lost its actual object");return b.object->sampling;}
-void Rigid(const NativeEngineShadowDraw& draw){
+void Rigid(const NativeEngineShadowDraw& draw,std::set<const WorldModel*>& validated){
  Require(draw.object&&draw.object->model&&draw.object->modelType==1&&draw.object->pieces.size()==draw.object->model->pieces.size(),"Original shadow model format/pose has no actual shared rigid consumer");
+ // The retained source frame owns every immutable model for this Prepare.
+ // Format/pose is per draw; only successful geometry checks may be reused.
+ if(validated.contains(draw.object->model.get()))return;
 	for (size_t p = 0; p < draw.object->model->pieces.size(); ++p) {
 		const auto& piece = draw.object->model->pieces[p];
 		// Match original HasGeometryData/PostProcessGeometry and the shared
@@ -76,6 +141,7 @@ void Rigid(const NativeEngineShadowDraw& draw){
 				std::to_string(v.boneWeights[2]) + "," + std::to_string(v.boneWeights[3]));
 		}
 	}
+ validated.insert(draw.object->model.get());
 }
 Uniform Snapshot(const NativeEngineShadowFrame& frame,const NativeEngineShadowDraw& draw,const CUSSourceTarget& target){
  Uniform u{};u.world=Matrix(draw.modelView);u.viewProjection=Matrix(draw.projection);u.alphaControl=Vec(draw.alphaControl);
@@ -92,6 +158,8 @@ Uniform Snapshot(const NativeEngineShadowFrame& frame,const NativeEngineShadowDr
 }
 }
 struct PreparedEngineShadow::Impl {
+ RetiredArgumentOwners argumentOwners;
+ ShadowUploadOwners uploadOwners;
  struct Piece{EngineDeferredPieceBuffers geometry;__strong id<MTL4ArgumentTable> arguments=nil;uint32_t firstIndex=0;bool indexed=true;};
  struct Draw{uint64_t sequence=0;NativeWorldDrawState state;std::optional<effectstate::Raster> raster;std::vector<Piece> pieces;CUSSourceImage image;float shadowPolygonOffsetUnitsScale=1.f;__strong id<MTLDepthStencilState> depth=nil;__strong id<MTLRenderPipelineState> pipeline=nil;};
  std::shared_ptr<const NativeEngineShadowFrame> source;std::vector<Draw> draws;
@@ -123,6 +191,8 @@ void PreparedEngineShadow::EncodeDraw(size_t i,id<MTL4RenderCommandEncoder> enco
 void PreparedEngineShadow::Finish(){Require(impl->dependencies&&!impl->finished&&impl->next==DrawCount(),"Original shadow model source did not finish exactly once");impl->finished=true;}
 void PreparedEngineShadow::DidComplete(){Require(impl->finished&&!impl->completed,"Original shadow model retirement preceded its real execution");std::set<const void*> seen;for(const auto& draw:impl->draws)if(draw.image.owner&&seen.insert(draw.image.owner.get()).second&&draw.image.didComplete)draw.image.didComplete();impl->completed=true;}
 struct PreparedGenericShadow::Impl {
+ RetiredArgumentOwners argumentOwners;
+ ShadowUploadOwners uploadOwners;
 	struct Draw {
 		uint64_t sequence=0;NSUInteger indexCount=0;
 		NativeWorldDrawState state;std::optional<effectstate::Raster> raster;
@@ -175,7 +245,15 @@ void PreparedGenericShadow::DidComplete()
 {
 	Require(impl->finished&&!impl->completed,"Original generic shadow retirement preceded actual execution or repeated");impl->completed=true;
 }
+
+#include "Metal4ShadowTerrainGeometryCache.inc"
+#include "Metal4ShadowTerrainPreparation.inc"
+
 struct EngineShadowGPU::Impl {
+ RetiredArguments argumentPool;
+ ShadowUploadPool uploadPool;
+ ShadowTerrainGeometryCache terrainGeometry;
+ std::weak_ptr<const ShadowTerrainPreparation> terrainPreparation;
  struct Original{bool modern=false,validation=false;NativeEngineShadowProfile profile=NativeEngineShadowProfile::LegacyModel;CUSSourceTarget target;__strong id<MTLRenderPipelineState> pipeline=nil;};
  std::map<const void*,std::shared_ptr<const Original>> programs;__strong id<MTLLibrary> library=nil;
  std::map<uint32_t,id<MTLLibrary>> imageLibraries;
@@ -251,9 +329,9 @@ std::shared_ptr<const void> EngineShadowGPU::CompileOriginalProgram(RuntimeLease
 }
 std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeEngineShadowFrame> source,const CUSSourceTarget& target,const EngineDeferredGeometryProvider& geometry,const CUSSourceImageProvider& images,bool validation,double& ms){
  Target(target);Require(source&&geometry&&images&&source->camera.clipDepth!=ClipDepthConvention::Unsupported&&target.width&&target.height&&target.logicalWidth&&target.logicalHeight,"Original shadow source/shared target/resources are unconnected");
- auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->source=std::move(source);std::map<const WorldModel*,std::vector<EngineDeferredPieceBuffers>> meshes;
+ impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->source=std::move(source);std::map<const WorldModel*,std::vector<EngineDeferredPieceBuffers>> meshes;std::set<const WorldModel*> validated;
  for(const auto& d:result->impl->source->draws){
-  if(d.pieceGeometry)Require(result->impl->source->projectile&&!d.modern&&!d.object&&d.profile==NativeEngineShadowProfile::Projectile,"Original projectile piece was relabeled as another model source");else Rigid(d);
+  if(d.pieceGeometry)Require(result->impl->source->projectile&&!d.modern&&!d.object&&d.profile==NativeEngineShadowProfile::Projectile,"Original projectile piece was relabeled as another model source");else Rigid(d,validated);
   Require(d.world.frontPolygonMode==d.world.backPolygonMode&&d.world.frontPolygonMode!=NativePolygonMode::Point&&(!d.world.lineStipple||d.world.frontPolygonMode==NativePolygonMode::Fill)&&(d.world.lineWidth==1||d.world.frontPolygonMode==NativePolygonMode::Fill)&&!d.world.inheritedClipPlane,"Original shadow source raster/additional legacy clipping requires its exact unsupported consumer");
   for(const auto& m:{d.modelView,d.projection})for(float x:m)Require(std::isfinite(x),"Original shadow matrix is not finite");
   for(const auto& plane:d.clipPlanes)for(float x:plane)Require(std::isfinite(x),"Original shadow clip equation is not finite");
@@ -285,9 +363,9 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::Prepare(RuntimeLease& lea
    }
    Require(cached.buffers.vertices.device==lease.Device()&&cached.buffers.indices.device==lease.Device(),"Original projectile geometry belongs to another actual device");
    auto mesh=cached.buffers;mesh.indexCount=d.indexCount;
-   auto bytes=Buffer(lease.Device(),&common,sizeof(common),@"Original projectile shadow draw uniforms");lease.AddAllocation(bytes);lease.AddAllocation(mesh.vertices);lease.AddAllocation(mesh.indices);
+   auto bytes=ShadowUpload(impl->uploadPool,result->impl->uploadOwners,lease.Device(),&common,sizeof(common),@"Original projectile shadow draw uniforms");lease.AddAllocation(bytes);lease.AddAllocation(mesh.vertices);lease.AddAllocation(mesh.indices);
    auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.initializeBindings=YES;NSError* error=nil;
-   auto table=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(table,"Cannot create original projectile shadow argument table: "+Error(error));lease.Retain(table);
+   auto table=impl->argumentPool.Acquire(lease,descriptor,result->impl->argumentOwners,&error);Require(table,"Cannot create original projectile shadow argument table: "+Error(error));lease.Retain(table);
    [table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:bytes.gpuAddress atIndex:1];draw.pieces.push_back({mesh,table,d.firstIndex});result->impl->draws.push_back(std::move(draw));continue;
   }
   if(d.modern){const auto& sampling=Sampling(d.alphaTexture);common.swizzle0=Vec(sampling.swizzle);common.samplerParameters.x=sampling.lodBias;common.image0.z=sampling.depthMode;
@@ -297,11 +375,20 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::Prepare(RuntimeLease& lea
   auto [entry,created]=meshes.try_emplace(d.object->model.get());if(created)entry->second=geometry(lease,d.object->model);Require(entry->second.size()==d.object->model->pieces.size(),"Original shadow shared geometry piece count differs");
   for(size_t p=0;p<entry->second.size();++p){if(!d.modern&&!d.object->pieces[p].visible)continue;const auto& mesh=entry->second[p];if(!mesh.indexCount)continue;Require(mesh.vertices&&mesh.indices,"Original shadow shared geometry backing missing");auto uniform=common;
    if(d.modern){const auto index=size_t(d.pose.instance[0])+2*(1+p);engineoriginal::Transform(*d.pose.transforms,index,uniform.piece0q,uniform.piece0t);engineoriginal::Transform(*d.pose.transforms,index+1,uniform.piece1q,uniform.piece1t);}else uniform.piece=Matrix(d.object->pieces[p].modelSpace);
-   auto bytes=Buffer(lease.Device(),&uniform,sizeof(uniform),@"Original immutable ShadowGen uniforms");lease.AddAllocation(bytes);lease.AddAllocation(mesh.vertices);lease.AddAllocation(mesh.indices);
-   auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.maxTextureBindCount=2;descriptor.maxSamplerStateBindCount=1;descriptor.initializeBindings=YES;NSError* error=nil;auto table=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(table,"Cannot create original shadow argument table: "+Error(error));lease.Retain(table);[table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:bytes.gpuAddress atIndex:1];
+   auto bytes=ShadowUpload(impl->uploadPool,result->impl->uploadOwners,lease.Device(),&uniform,sizeof(uniform),@"Original immutable ShadowGen uniforms");lease.AddAllocation(bytes);lease.AddAllocation(mesh.vertices);lease.AddAllocation(mesh.indices);
+   auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.maxTextureBindCount=2;descriptor.maxSamplerStateBindCount=1;descriptor.initializeBindings=YES;NSError* error=nil;auto table=impl->argumentPool.Acquire(lease,descriptor,result->impl->argumentOwners,&error);Require(table,"Cannot create original shadow argument table: "+Error(error));lease.Retain(table);[table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:bytes.gpuAddress atIndex:1];
    if(draw.image.texture){[table setTexture:draw.image.texture.gpuResourceID atIndex:draw.image.depthImage?1:0];[table setSamplerState:draw.image.sampler.gpuResourceID atIndex:0];}draw.pieces.push_back({mesh,table});
   }result->impl->draws.push_back(std::move(draw));
  }return result;
+}
+std::shared_ptr<const void> EngineShadowGPU::PrepareTerrainGeometry(std::shared_ptr<const NativeTerrainShadowFrame> source)
+{
+ // EngineShadowGPU has the existing serialized main-thread owner. GPU
+ // callbacks do not mutate this cache; old submissions own their buffers.
+ auto& runtime=SharedRuntime();
+ static const bool measure=[] {const char* p=std::getenv("BAR_NATIVE_RESOURCE_PROBE_FILE");return p&&p[0]=='/';}();
+ auto prepared=ShadowTerrainPreparation::Prepare(impl->terrainGeometry,&runtime,runtime.Device(),std::move(source),measure);
+ impl->terrainPreparation=prepared;return prepared;
 }
 std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLease& lease,
  std::shared_ptr<const NativeTerrainShadowFrame> source,const CUSSourceTarget& target,const CUSSourceImageProvider& images)
@@ -311,9 +398,17 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
   source->camera.clipDepth!=ClipDepthConvention::Unsupported&&target.width&&target.height&&target.logicalWidth&&target.logicalHeight,
   "Original MAP shadow has no actual source/context/target/image service");
  Require(source->drawEntered||source->draws.empty(),"Original MAP shadow early return emitted geometry");
- auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->terrainSource=std::move(source);
- uint64_t previous=0;
+ impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->terrainSource=std::move(source);
+ TerrainUniformBatch terrainUniforms(lease,result->impl->terrainSource->draws.size(),sizeof(TerrainShadowUniform),32);
+ const auto early=impl->terrainPreparation.lock();
+ const bool useEarly=early&&early->Matches(lease.ContextIdentity(),lease.Device(),result->impl->terrainSource);
+ if(useEarly) {
+  CountPreparationTrace(7,early->statistics.hits);CountPreparationTrace(8,early->statistics.misses);
+  CountPreparationTrace(39,early->geometry.size());CountPreparationTrace(40,early->nanoseconds);CountPreparationTrace(41,early->sourceBytes);
+ }
+ uint64_t previous=0;std::size_t geometryOrdinal=0;
  for(const auto& d:result->impl->terrainSource->draws){
+  auto prepDrawStart=StartPreparationScope();CountPreparationTrace(4,1);CountPreparationTrace(5,d.Positions().size()*sizeof(d.Positions()[0])+d.Indices().size()*sizeof(uint32_t));
   const auto program=impl->programs.find(d.compiledOriginal.get());
   Require(program!=impl->programs.end()&&program->second->profile==NativeEngineShadowProfile::Terrain&&
    program->second->target.colors==target.colors&&program->second->target.depth==target.depth&&
@@ -321,11 +416,13 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
    program->second->pipeline.device==lease.Device(),
    "Original MAP shadow lost its actual compiled program/target owner");
   Require(d.sequence>previous,"Original MAP shadow submissions are repeated or reordered");previous=d.sequence;
-  const size_t count=d.indexed?d.indices.size():d.vertices.size();
-  Require(count&&count%3==0&&count<=UINT32_MAX&&!d.vertices.empty()&&(d.indexed||d.indices.empty()),
+  const size_t count=d.indexed?d.Indices().size():d.Positions().size();
+  Require(count&&count%3==0&&count<=UINT32_MAX&&!d.Positions().empty()&&(d.indexed||d.Indices().empty()),
    "Original MAP shadow has a different triangle invocation");
-  for(uint32_t index:d.indices)Require(index<d.vertices.size(),"Original MAP shadow retained index exceeds its source vertices");
-  for(const auto& vertex:d.vertices)for(float value:vertex)Require(std::isfinite(value),"Original MAP shadow position is nonfinite");
+  const auto ordinal=geometryOrdinal++;
+  const auto geometry=useEarly?early->geometry[ordinal]:impl->terrainGeometry.Acquire(lease,result->impl->terrainSource->contextGeneration,
+   {d.texSquare[0],d.texSquare[1],d.indexed,ordinal},d);
+  EndPreparationScope(16,prepDrawStart);prepDrawStart=StartPreparationScope();
   Require(d.world.frontPolygonMode==d.world.backPolygonMode&&d.world.frontPolygonMode!=NativePolygonMode::Point&&
    !d.world.depthClamp&&!d.world.lineStipple&&d.world.lineWidth==1&&!d.world.inheritedClipPlane&&d.surface.viewport,
    "Original MAP shadow raster state has no matching consumer");
@@ -356,6 +453,7 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
   Require(viewport.width<=INT32_MAX&&viewport.height<=INT32_MAX,"Original MAP shadow viewport exceeds GLsizei");
   camera.viewport={viewport.x,viewport.y,int32_t(viewport.width),int32_t(viewport.height)};
   if(viewport.width&&viewport.height)draw.raster=effectstate::Viewport(camera,target.width,target.height,target.logicalWidth,target.logicalHeight,d.surface.scissor);
+  EndPreparationScope(17,prepDrawStart);prepDrawStart=StartPreparationScope();
   draw.image=images(lease,d.heightTexture,1);
   Require(draw.image.texture&&draw.image.sampler&&draw.image.owner&&draw.image.requireReadable&&
    draw.image.texture.device==lease.Device()&&draw.image.sampler.device==lease.Device()&&draw.image.texture.sampleCount==1&&
@@ -366,14 +464,17 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
   uniform.parameters={float(d.texSquare[0]),float(d.texSquare[1]),d.borderMinHeight,0};
   for(size_t plane=0;plane<3;++plane)uniform.clips[plane]=d.clipEnabled[plane]?Vec(d.clipPlanes[plane]):simd_float4{0,0,0,1};
   uniform.flags={uint32_t(result->impl->terrainSource->camera.clipDepth==ClipDepthConvention::MinusOneToOne),uint32_t(target.invertClipY),uint32_t(draw.image.flipV),channel};
-  EngineDeferredPieceBuffers mesh;mesh.vertices=GenericBuffer(lease,d.vertices.data(),d.vertices.size(),sizeof(d.vertices[0]),@"Original MAP shadow vertices");
-  if(d.indexed)mesh.indices=GenericBuffer(lease,d.indices.data(),d.indices.size(),sizeof(uint32_t),@"Original MAP shadow indices");
-  mesh.indexCount=uint32_t(count);auto bytes=GenericBuffer(lease,&uniform,1,sizeof(uniform),@"Original immutable MAP ShadowGen uniforms");
+  EndPreparationScope(18,prepDrawStart);prepDrawStart=StartPreparationScope();
+  EngineDeferredPieceBuffers mesh;mesh.vertices=geometry.vertices;mesh.indices=geometry.indices;
+  lease.AddAllocation(mesh.vertices);if(mesh.indices)lease.AddAllocation(mesh.indices);
+  mesh.indexCount=uint32_t(count);const auto uniforms=terrainUniforms.Upload(&uniform,sizeof(uniform));
+  EndPreparationScope(19,prepDrawStart);prepDrawStart=StartPreparationScope();
   auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.maxTextureBindCount=1;descriptor.maxSamplerStateBindCount=1;descriptor.initializeBindings=YES;NSError* error=nil;
-  auto table=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(table,"Cannot create original MAP shadow arguments: "+Error(error));lease.Retain(table);
-  [table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:bytes.gpuAddress atIndex:1];
+  auto table=impl->argumentPool.Acquire(lease,descriptor,result->impl->argumentOwners,&error);Require(table,"Cannot create original MAP shadow arguments: "+Error(error));lease.Retain(table);
+  [table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:uniforms.buffer.gpuAddress+uniforms.offset atIndex:1];
   [table setTexture:draw.image.texture.gpuResourceID atIndex:0];[table setSamplerState:draw.image.sampler.gpuResourceID atIndex:0];
   draw.pieces.push_back({mesh,table,0,d.indexed});result->impl->draws.push_back(std::move(draw));
+  EndPreparationScope(20,prepDrawStart);
  }
  return result;
 }
@@ -383,7 +484,7 @@ std::shared_ptr<PreparedGenericShadow> EngineShadowGPU::PrepareGeneric(RuntimeLe
 	if(std::none_of(source->draws.begin(),source->draws.end(),[](const auto& draw){return draw.stage==NativeWorldDrawStage::ShadowOpaque;}))return {};
 	Target(target);Require(target.width&&target.height&&target.logicalWidth&&target.logicalHeight,"Original generic shadow target lost its actual extent");
 	Require(std::isfinite(target.shadowPolygonOffsetUnitsScale)&&target.shadowPolygonOffsetUnitsScale>0,"Original generic shadow bias lost its actual destination scale");
-	auto result=std::shared_ptr<PreparedGenericShadow>(new PreparedGenericShadow);result->impl->source=std::move(source);uint64_t previous=0;
+	impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedGenericShadow>(new PreparedGenericShadow);result->impl->source=std::move(source);uint64_t previous=0;
 	for(const auto& command:result->impl->source->draws){
 		if(command.stage!=NativeWorldDrawStage::ShadowOpaque)continue;
 		ValidateNativeWorldDrawCommand(command);
@@ -411,11 +512,11 @@ std::shared_ptr<PreparedGenericShadow> EngineShadowGPU::PrepareGeneric(RuntimeLe
 		for(unsigned plane=0;plane<input.clipPlanes.size();++plane){uniform.clips[plane]=Vec(input.clipPlanes[plane]);if(input.clipEnabled[plane])uniform.flags.y|=1u<<plane;}
 		draw.pipeline=impl->GenericPipeline(lease,target,validation,milliseconds);lease.Retain(draw.pipeline);lease.Retain(impl->library);
 		draw.depth=effectstate::Depth(lease,command.world,target.stencil);
-		draw.vertices=GenericBuffer(lease,input.vertices.data(),input.vertices.size(),sizeof(NativeGenericShadowVertex),@"Original generic shadow raw vertices");
-		draw.indices=GenericBuffer(lease,command.indices.data(),command.indices.size(),sizeof(uint32_t),@"Original generic shadow canonical indices");
-		draw.uniforms=GenericBuffer(lease,&uniform,1,sizeof(uniform),@"Original generic shadow source uniforms");draw.indexCount=command.indices.size();
+		draw.vertices=GenericBuffer(impl->uploadPool,result->impl->uploadOwners,lease,input.vertices.data(),input.vertices.size(),sizeof(NativeGenericShadowVertex),@"Original generic shadow raw vertices");
+		draw.indices=GenericBuffer(impl->uploadPool,result->impl->uploadOwners,lease,command.indices.data(),command.indices.size(),sizeof(uint32_t),@"Original generic shadow canonical indices");
+		draw.uniforms=GenericBuffer(impl->uploadPool,result->impl->uploadOwners,lease,&uniform,1,sizeof(uniform),@"Original generic shadow source uniforms");draw.indexCount=command.indices.size();
 		auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.initializeBindings=YES;NSError* error=nil;
-		draw.arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(draw.arguments!=nil,"Cannot create original generic shadow argument table: "+Error(error));lease.Retain(draw.arguments);
+		draw.arguments=impl->argumentPool.Acquire(lease,descriptor,result->impl->argumentOwners,&error);Require(draw.arguments!=nil,"Cannot create original generic shadow argument table: "+Error(error));lease.Retain(draw.arguments);
 		[draw.arguments setAddress:draw.vertices.gpuAddress atIndex:0];[draw.arguments setAddress:draw.uniforms.gpuAddress atIndex:1];
 		result->impl->draws.push_back(std::move(draw));
 	}

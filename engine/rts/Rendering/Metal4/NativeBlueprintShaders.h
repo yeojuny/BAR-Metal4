@@ -179,7 +179,7 @@ vertex float4 BlueprintStencilClearVertex(uint vertexID [[vertex_id]])
 	constexpr float2 positions[3] = {float2(-1.f,-1.f),float2(3.f,-1.f),float2(-1.f,3.f)};
 	return float4(positions[vertexID],0.f,1.f);
 }
-fragment float4 BlueprintStencilClearFragment( RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) { return float4(0.f); }
+fragment float4 BlueprintStencilClearFragment(float4 position [[position]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) { return float4(0.f); }
 )MSL";
 
 } // namespace rendering::metal4

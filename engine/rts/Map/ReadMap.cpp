@@ -8,6 +8,9 @@
 #include "ReadMap.h"
 #include "MapDamage.h"
 #include "MapInfo.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeMapTexturePublication.h"
+#endif
 #include "MetalMap.h"
 #include "Rendering/Env/MapRendering.h"
 #include "SMF/SMFReadMap.h"
@@ -914,6 +917,9 @@ void CReadMap::CopySyncedToUnsynced()
 	CopySyncedToUnsyncedImpl(*heightMapSyncedPtr, *heightMapUnsyncedPtr);
 	CopySyncedToUnsyncedImpl(faceNormalsSynced, faceNormalsUnsynced);
 	CopySyncedToUnsyncedImpl(centerNormalsSynced, centerNormalsUnsynced);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::OriginalNativeMapTextures().InvalidateCPUHeightSnapshot(this);
+#endif
 	eventHandler.UnsyncedHeightMapUpdate(SRectangle{ 0, 0, mapDims.mapx, mapDims.mapy });
 }
 

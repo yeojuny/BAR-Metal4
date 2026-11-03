@@ -2,6 +2,7 @@
 #pragma once
 #include "NativeGenericShadowData.h"
 #include "NativeDisplayListReference.h"
+#include "NativeBufferData.h"
 
 #include "ScreenDrawList.h"
 #include "NativeScreenLine.h"
@@ -87,6 +88,8 @@ public:
 	// Keep published producer generations until their GPU work completes,
 	// including target-only submissions while the window cannot present.
 	void RetireCompletedFrame(bool sourceFrameCompleted = true);
+ void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
+ void RetireSubmittedFrame(std::uint64_t sourceDrawFrame);
 	void SetSourceDependencyQuery(std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> query);
 	void CommitTargetBinding(std::shared_ptr<NativeUITextureBinding> binding,
 		std::shared_ptr<const ScreenTexture> previous,std::shared_ptr<const ScreenTexture> published);
@@ -259,13 +262,13 @@ public:
 	void AppendLOSView(std::span<const std::array<float,4>>,std::shared_ptr<const NativeLOSViewInput>);
 	void AppendTerraformOverlay(std::span<const std::array<float,4>>,std::shared_ptr<const NativeTerraformOverlayInput>);
 	void AppendSquadHull(std::span<const std::array<float,3>>,NativeDrawPrimitive,std::shared_ptr<const NativeSquadHullInput>);
-	void AppendProfilerHistogram(std::vector<std::array<float,2>>,std::array<float,2> originalViewGeometry,std::array<float,4> boundingBox,ScreenColor color);
+ void AppendProfilerHistogram(NativeBufferSnapshotRef,uint32_t first,uint32_t count,std::array<float,2> originalViewGeometry,std::array<float,4> boundingBox,ScreenColor color,bool zeroToOne);
 	void AppendTerraformCapture(std::shared_ptr<const NativeTerraformCaptureInput>,std::vector<ScreenVertex>,std::vector<ScreenTexCoord>,std::shared_ptr<const WorldModel> model={});
 	void AppendDiffusePainter(std::shared_ptr<const NativeDiffusePainterInput>,std::vector<ScreenVertex>,std::vector<ScreenTexCoord>);
 	void AppendSplatPainter(std::shared_ptr<const NativeSplatPainterInput>,std::vector<ScreenVertex>,std::vector<ScreenTexCoord>);
 	void AppendDecalCapture(std::shared_ptr<const NativeDecalCaptureInput>,std::vector<ScreenVertex>,std::vector<ScreenTexCoord>);
-	void AppendSpectatorHUDTriangles(std::vector<ScreenVertex>,std::vector<ScreenTexCoord>);
-	void AppendFrameGrapherTriangles(std::vector<ScreenVertex>,std::array<float,2> originalViewGeometry,std::array<float,4> shaderParameters);
+	void AppendSpectatorHUDGeometry(std::shared_ptr<const NativeScreenGeometry>);
+	void AppendFrameGrapherGeometry(std::shared_ptr<const NativeScreenGeometry>,std::array<float,2> originalViewGeometry,std::array<float,4> shaderParameters);
 	void AppendDeferredVisualizer(std::shared_ptr<const NativeDeferredVisualizerInput>);
 	void AppendTargetPriorityTriangles(std::vector<ScreenVertex>,std::vector<ScreenTexCoord>,std::array<float,2> originalViewGeometry);
 	void AppendFontTriangles(std::vector<ScreenVertex> vertices, std::vector<ScreenTexCoord> uv,

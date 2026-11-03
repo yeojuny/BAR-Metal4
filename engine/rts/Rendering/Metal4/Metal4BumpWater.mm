@@ -57,7 +57,12 @@ MTL4RenderPassDescriptor* Pass(id<MTLTexture> texture,MTLLoadAction load) {
 	auto p=[MTL4RenderPassDescriptor new];p.colorAttachments[0].texture=texture;p.colorAttachments[0].loadAction=load;p.colorAttachments[0].storeAction=MTLStoreActionStore;
 	p.colorAttachments[0].clearColor=MTLClearColorMake(0,0,0,1);p.renderTargetWidth=texture.width;p.renderTargetHeight=texture.height;return p;
 }
+struct WaterSubmissionState {
+ BumpWaterCompletion completion;
+ bool coastInitialized=false,encoded=false,completed=false;
+};
 struct Generation {
+ std::weak_ptr<WaterSubmissionState> pending;
 	uint64_t generationId=0,normalSequence=0,coastSequence=0;bool coastInitialized=false;
 	std::shared_ptr<const NativeBumpWaterMaterial> material;
 	std::shared_ptr<const std::vector<WorldVector3>> vertices;
@@ -85,6 +90,7 @@ struct PreparedBumpWater::Impl {
 	__strong id<MTLDepthStencilState> updateDepth=nil,surfaceDepth=nil;
 	__strong id<MTLTexture> normal=nil,coast=nil;
 	BumpWaterCompletion completion;bool clearCoast=false,dependenciesEncoded=false,surfaceEncoded=false;
+ std::shared_ptr<WaterSubmissionState> submission=std::make_shared<WaterSubmissionState>();
 };
 PreparedBumpWater::PreparedBumpWater(std::unique_ptr<Impl> value):impl(std::move(value)) {}
 PreparedBumpWater::~PreparedBumpWater()=default;
@@ -132,12 +138,16 @@ void PreparedBumpWater::Encode(id<MTL4RenderCommandEncoder> encoder) {
 	[encoder setDepthBias:2 slopeScale:0 clamp:0];[encoder setArgumentTable:impl->surfaceArguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
 	[encoder drawPrimitives:impl->frame->radial?MTLPrimitiveTypeTriangleStrip:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->frame->vertices->size()];
 	impl->surfaceEncoded=true;
+ impl->submission->completion=impl->completion;impl->submission->coastInitialized=impl->coast!=nil;
+ impl->submission->encoded=true;impl->generation->pending=impl->submission;
 }
 BumpWaterCompletion PreparedBumpWater::DidComplete() {
 	Require(impl->dependenciesEncoded&&impl->surfaceEncoded,"Original water cannot retire unencoded dependencies/surface");
+	Require(impl->submission->encoded,"Water completion lost its encoded owner");
+ if(impl->submission->completed)return impl->completion;
 	for(auto& completed:impl->mipCompletions)*completed=true;
 	impl->generation->normalSequence=impl->completion.normalSequence;impl->generation->coastSequence=impl->completion.coastSequence;
-	if(impl->coast)impl->generation->coastInitialized=true;return impl->completion;
+	if(impl->coast)impl->generation->coastInitialized=true;impl->submission->completed=true;return impl->completion;
 }
 struct BumpWaterGPU::Impl {
 	struct Pipelines {__strong id<MTLRenderPipelineState> surface=nil,normal=nil,coast=nil,atlas=nil,coastMip=nil;};
@@ -154,6 +164,7 @@ struct BumpWaterGPU::Impl {
 	id<MTLTexture> BitmapFor(RuntimeLease& lease,std::shared_ptr<const WorldTexture> owner,bool needMips,PreparedBumpWater::Impl& prepared) {
 		Require(owner&&!owner->mips.empty(),"Missing actual original water bitmap");auto it=bitmaps.find(owner.get());
 		if(it!=bitmaps.end()&&it->second.owner.lock()!=owner){bitmaps.erase(it);it=bitmaps.end();}
+		if(it!=bitmaps.end()&&needMips&&!*it->second.mipReady&&lease.PreparingWhilePending())lease.RetirePreviousSubmission();
 		if(it==bitmaps.end()){
 			const auto& base=owner->mips.front();const uint32_t levels=owner->generateMipmaps?Levels(base.width,base.height):uint32_t(owner->mips.size());
 			const auto decoded=DecodeWorldBCBaseForMipmaps(*owner,lease.Capabilities().maxTextureDimension2D);
@@ -203,8 +214,19 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 		impl->generation=std::move(next);
 	}
 	auto& generation=*impl->generation;Require(generation.material==f.material,"Water material changed without resource generation");prepared->generation=impl->generation;
-	prepared->completion={f.generation,generation.normalSequence,generation.coastSequence};prepared->coast=generation.coast;
-	prepared->clearCoast=generation.coast&&!generation.coastInitialized;
+ auto base=BumpWaterCompletion{f.generation,generation.normalSequence,generation.coastSequence};
+ bool coastInitialized=generation.coastInitialized;
+ if(auto prior=generation.pending.lock();prior&&!prior->completed){
+  Require(prior->encoded&&prior->completion.generation==f.generation,"Water predecessor lost its original encoded generation");
+  if(lease.OrderAfterPreviousSubmission(prior.get(),[prior]{Require(prior->completed,"Water predecessor did not actually complete before successor submission");})){
+   base=prior->completion;coastInitialized=prior->coastInitialized;
+  }else{
+   lease.RetirePreviousSubmission();Require(prior->completed,"Water preparation cannot overwrite an unretired predecessor");
+   base={f.generation,generation.normalSequence,generation.coastSequence};coastInitialized=generation.coastInitialized;
+  }
+ }
+ prepared->completion=base;prepared->coast=generation.coast;
+ prepared->clearCoast=generation.coast&&!coastInitialized;
 	if(generation.normal)lease.AddAllocation(generation.normal);if(generation.coast)lease.AddAllocation(generation.coast);
 	for(auto i=impl->bitmaps.begin();i!=impl->bitmaps.end();)if(i->second.owner.expired())i=impl->bitmaps.erase(i);else ++i;
 	auto bitmap=[&](const std::shared_ptr<const WorldTexture>& value,uint32_t unit,bool mip=true){textures[unit]=impl->BitmapFor(lease,value,mip,*prepared);if(value->flipV)flips|=1u<<unit;};
@@ -250,7 +272,7 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 	prepared->surfaceArguments=table;
 	auto nearestRepeat=impl->SamplerFor(lease,F::MTLSamplerMinMagFilterNearest,F::MTLSamplerMinMagFilterNearest,M::MTLSamplerMipFilterNotMipmapped,W::MTLSamplerAddressModeRepeat);
 	auto nearestClamp=impl->SamplerFor(lease,F::MTLSamplerMinMagFilterNearest,F::MTLSamplerMinMagFilterNearest,M::MTLSamplerMipFilterNotMipmapped,W::MTLSamplerAddressModeClampToEdge);
-	const bool needsCoastMips=prepared->clearCoast||std::any_of(f.coastUpdates.begin(),f.coastUpdates.end(),[&](const auto& u){return u->sequence>generation.coastSequence;});
+	const bool needsCoastMips=prepared->clearCoast||std::any_of(f.coastUpdates.begin(),f.coastUpdates.end(),[&](const auto& u){return u->sequence>base.coastSequence;});
 	if(generation.coast&&needsCoastMips){auto filter=impl->SamplerFor(lease,F::MTLSamplerMinMagFilterLinear,F::MTLSamplerMinMagFilterLinear,M::MTLSamplerMipFilterNearest,W::MTLSamplerAddressModeClampToEdge);
 		for(uint32_t level=1;level<generation.coast.mipmapLevelCount;++level){auto pass=Pass(generation.coast,MTLLoadActionDontCare);pass.colorAttachments[0].level=level;
 			pass.renderTargetWidth=std::max(1u,f.mapSquaresX>>level);pass.renderTargetHeight=std::max(1u,f.mapSquaresZ>>level);const uint32_t sourceLevel=level-1;
@@ -258,7 +280,7 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 			[arguments setTexture:generation.coast.gpuResourceID atIndex:0];[arguments setSamplerState:filter.gpuResourceID atIndex:0];prepared->coastMips.push_back({pass,arguments,pipelines.coastMip});}
 	}
 	for(const auto& update:f.normalUpdates){
-		if(update.sequence<=generation.normalSequence)continue;Require(generation.normal!=nil,"Original normal update without persistent destination");
+		if(update.sequence<=base.normalSequence)continue;Require(generation.normal!=nil,"Original normal update without persistent destination");
 		if(prepared->completion.normalSequence==0)Require(update.initialize,"First original dynamic-normal update must initialize");
 		auto vertices=MakeNativeBumpWaterNormalVertices(m.numTiles,update);auto v=Buffer(lease,vertices.data(),vertices.size()*sizeof(vertices[0]),"Original normal tile geometry");auto args=Arguments(lease,2,1,1);
 		[args setAddress:v.gpuAddress atIndex:0];[args setTexture:impl->BitmapFor(lease,m.normal,false,*prepared).gpuResourceID atIndex:0];[args setSamplerState:nearestRepeat.gpuResourceID atIndex:0];
@@ -269,7 +291,7 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 	Require(!generation.normal||prepared->completion.normalSequence,"Original dynamic normals have not initialized");
 	for(const auto& owner:f.coastUpdates){
 		const auto& update=*owner;
-		if(update.sequence<=generation.coastSequence)continue;
+		if(update.sequence<=base.coastSequence)continue;
 		auto atlas=Texture(lease,MTLPixelFormatRGBA8Unorm,update.atlasWidth,update.atlasHeight,1,MTLStorageModeShared,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget,"Original packed water coast-update atlas");
 		[atlas replaceRegion:MTLRegionMake2D(0,0,update.atlasWidth,update.atlasHeight) mipmapLevel:0 withBytes:update.rgba.data() bytesPerRow:update.atlasWidth*4];lease.AddAllocation(atlas);
 		for(uint32_t radius=0;radius<=10;++radius){auto vertices=MakeNativeBumpWaterCoastVertices(update,radius);if(vertices.empty())continue;

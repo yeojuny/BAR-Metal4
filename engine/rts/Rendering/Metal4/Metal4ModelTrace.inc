@@ -48,7 +48,7 @@ void TraceDraw(const NativeCUSSourceFrame& frame, const NativeCUSSourceDraw& d,
 	const CUSSourceTarget& target, const NativeWorldDrawState& state,
 	const NativeCUSSampleTransport& transport, const std::array<TraceImage, 12>& images,
 	const NativeCUSRenderReadSet& reads, id<MTLBuffer> instances, id<MTLBuffer> transforms,
-	id<MTLBuffer> models, const std::vector<uint8_t>& vertex, const std::vector<uint8_t>& fragment) {
+	id<MTLBuffer> models, std::span<const uint8_t> vertex, std::span<const uint8_t> fragment) {
 	auto& t = ModelTrace();
 	if (!t.window || std::none_of(d.submissions.begin(), d.submissions.end(), [](const auto& s) { return TraceFocus(*s); }) || !t.budget.TakeDraw()) return;
 	const auto f = static_cast<unsigned long long>(frame.sourceDrawFrame), seq = static_cast<unsigned long long>(d.sequence);

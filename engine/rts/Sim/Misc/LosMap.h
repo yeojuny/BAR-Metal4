@@ -8,6 +8,9 @@
 #include <vector>
 #include "System/type2.h"
 #include "System/SpringMath.h"
+#if defined(RECOIL_METAL4_LIVE_SCENE) || defined(BAR_NATIVE_COVERAGE_REVISION)
+#include "Rendering/Backend/NativeCoverageRevision.h"
+#endif
 
 
 struct SLosInstance;
@@ -24,6 +27,9 @@ public:
 
 		losmap.clear();
 		losmap.resize(size.x * size.y, 0);
+#if defined(RECOIL_METAL4_LIVE_SCENE) || defined(BAR_NATIVE_COVERAGE_REVISION)
+		rendering::InvalidateNativeCoverage(this);
+#endif
 
 		ctrHeightMap = ctrHeightMap_;
 		mipHeightMap = mipHeightMap_;

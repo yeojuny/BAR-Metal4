@@ -18,6 +18,9 @@ private:
 class EngineShadowGPU {
 public:
  EngineShadowGPU();~EngineShadowGPU();
+ // CPU-only immutable geometry preparation; no runtime lease, GPU commands,
+ // residency change or completion publication. Keep the owner through Draw.
+ std::shared_ptr<const void> PrepareTerrainGeometry(std::shared_ptr<const NativeTerrainShadowFrame>);
  std::shared_ptr<const void> CompileOriginalProgram(RuntimeLease&,bool modern,const CUSSourceTarget&,bool,double&);
  std::shared_ptr<const void> CompileOriginalProgram(RuntimeLease&,NativeEngineShadowProfile,const CUSSourceTarget&,bool,double&);
  std::shared_ptr<PreparedEngineShadow> Prepare(RuntimeLease&,std::shared_ptr<const NativeEngineShadowFrame>,const CUSSourceTarget&,

@@ -2,6 +2,7 @@
 #pragma once
 #include "Metal4OpaqueModelMRT.h"
 #include "Metal4EngineModelForward.h"
+#include "Metal4AlphaPass166Policy.h"
 #include <functional>
 #include <utility>
 #include <vector>
@@ -15,10 +16,13 @@ struct OpaqueModelForwardCallbacks {
 	std::shared_ptr<const void> lifetime;
 	std::function<void(id<MTL4CommandBuffer>)> dependencies;
 	std::function<void()> didComplete;
+	// Bound actual typed owner; an absent query is deliberately Unknown.
+	std::function<AlphaCallbackExecution166(const NativeOpaqueModelFrame*,size_t,uint64_t,uint64_t)> inspectExecution166;
 };
 // One prepared owner for the original opaque pass vector. It never acquires a
 // device, lease, submission or scene attachment of its own. The common caller
-// closes/resumes its actual scene encoder at each recorded source boundary.
+// preserves every recorded source boundary; a proven CPU-only phase may keep
+// its actual loaded scene encoder while still executing that phase once.
 class PreparedOpaqueModelSource {
 public:
 	~PreparedOpaqueModelSource();
@@ -26,16 +30,27 @@ public:
 	uint64_t SequenceAt(size_t) const;
 	uint64_t PostDeferredSequenceAt(size_t) const;
 	bool IsDeferredPhase(size_t) const;
+	// Pure inspection of the exact next phase in this invocation. Alpha and
+	// forward bodies remain Unknown; no lifecycle or source ordinal is consumed.
+	ModelPhaseExecution165 InspectPhaseExecution165(size_t,const NativeOpaqueModelFrame* invocation,
+		uint64_t actualDrawFrame,uint64_t actualSubmission)const;
 	void EncodeMRTPhase(size_t,id<MTL4CommandBuffer>);
 	// End the scene encoder before dependencies; resume the same scene targets
 	// with Load before EncodeForwardPhase. No source callback is replayed.
 	void AttachForwardCallbacks(size_t,OpaqueModelForwardCallbacks);
 	void EncodeForwardDependencies(size_t,id<MTL4CommandBuffer>);
+ // No GPU commands. A successful result consumes only this phase's CPU
+ // dependency states; otherwise the existing EncodeForwardDependencies path
+ // remains untouched. All alpha callbacks are conservatively Unknown.
+	ModelPassDependencyReport160 TryKeepForwardPass160(size_t,MTL4RenderPassDescriptor*);
+	AlphaKeepReport166 TryKeepAlphaPass166(size_t,id<MTL4CommandBuffer>,MTL4RenderPassDescriptor*,
+		const NativeOpaqueModelFrame* invocation,uint64_t actualDrawFrame,uint64_t actualSubmission);
 	void EncodeForwardPhase(size_t,id<MTL4RenderCommandEncoder>);
 	void EncodeForwardPhase(size_t,id<MTL4CommandBuffer>,id<MTL4RenderCommandEncoder> __strong&,MTL4RenderPassDescriptor* loadedScene);
 	void DidComplete(); // Only after the existing common successful retirement.
 private:
 	PreparedOpaqueModelSource();
+	void PreparePassInspection160();
 	struct Impl;std::unique_ptr<Impl> impl;
 	friend std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease&,
 		CUSSourceGPU&,EngineModelDeferredGPU&,EngineModelForwardGPU&,

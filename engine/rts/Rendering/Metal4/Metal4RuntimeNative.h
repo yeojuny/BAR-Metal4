@@ -10,6 +10,9 @@
 #include <chrono>
 #include <mutex>
 #include <map>
+#include <memory>
+#include <functional>
+#include <stdexcept>
 
 namespace rendering::metal4 {
 
@@ -66,10 +69,19 @@ NSString* String(const std::string& value);
 std::string Error(NSError* error);
 void Require(bool condition, const std::string& message);
 // Literal diagnostics must not allocate a temporary string on successful checks.
-void Require(bool condition, const char* message);
+// Preserve every condition and failure; expose the successful branch to callers.
+inline void Require(bool condition, const char* message)
+{
+	if (!condition) throw std::runtime_error(message);
+}
 
 class RuntimeLease;
 class RuntimeCleanupLease;
+struct RuntimeFrameSlot;
+struct RuntimeFrameResources;
+struct PostprocessTextureStorage181;
+struct RuntimePendingSubmission;
+struct PublishedRequestState;
 
 // One actual native context for both asset and screen passes. All requests hold
 // a serialized lease; the monotonically increasing shared event spans requests.
@@ -77,6 +89,7 @@ class RuntimeCleanupLease;
 class Runtime {
 public:
 	Runtime();
+	~Runtime();
 	DeviceCapabilities Capabilities() const { return capabilities; }
 	id<MTLDevice> Device() const { return device; }
 	bool CanSafelyDetach();
@@ -90,14 +103,16 @@ private:
 	DeviceCapabilities capabilities;
 	__strong id<MTLDevice> device = nil;
 	__strong id<MTL4CommandQueue> queue = nil;
-	__strong id<MTL4CommandAllocator> allocator = nil;
-	__strong id<MTL4CommandBuffer> command = nil;
+	// Primary owns at most one spare recording slot. GPU pending depth stays one.
+	std::shared_ptr<RuntimeFrameSlot> frameSlot;
 	__strong id<MTLSharedEvent> completionEvent = nil;
 	__strong id<MTL4Compiler> compiler = nil;
-	__strong id<MTLResidencySet> residency = nil;
 	std::mutex requestMutex;
 	uint64_t nextEventValue = 0;
-	__strong NSMutableArray* failedRetention = nil;
+	std::shared_ptr<RuntimeFrameResources> failedFrame;
+	std::shared_ptr<RuntimePendingSubmission> pendingSubmission;
+	void DrainPendingLocked();
+	void DrainPendingLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner);
 	bool poisoned = false;
 	bool unsafePendingWork = false;
 	friend class RuntimeLease;
@@ -121,12 +136,23 @@ private:
 class RuntimeLease {
 public:
 	explicit RuntimeLease(Runtime& runtime = SharedRuntime());
+ // Owned preparation/recording may precede retirement on an independent slot.
+ // Every submit still requires the preceding event AND feedback to retire.
+ explicit RuntimeLease(std::function<void()> previousRetired, Runtime& runtime = SharedRuntime());
+ void RetirePreviousSubmission();
+ bool PreparingWhilePending() const;
+ // Admit only a pinned, already encoded predecessor. The supplied check must
+ // establish its actual completion before this lease can submit GPU work.
+ bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check);
 	~RuntimeLease();
 	RuntimeLease(const RuntimeLease&) = delete;
 	RuntimeLease& operator=(const RuntimeLease&) = delete;
 	id<MTLDevice> Device() const { return runtime.device; }
 	id<MTL4Compiler> Compiler() const { return runtime.compiler; }
 	DeviceCapabilities Capabilities() const { return runtime.capabilities; }
+	const Runtime* ContextIdentity() const noexcept { return &runtime; }
+	// Cache and independent write-exclusion pins belong to this frame owner.
+	PublishedRequestState& Publications();
 	// Per-submission original shading rate. Output count still belongs to each
 	// concrete target: named MRT/RTT/shadow targets never inherit main MSAA.
 	void SetMinSampleShadingRate(float rate);
@@ -143,7 +169,15 @@ public:
 	std::string CommandBufferClass() const;
 	void AddAllocation(id<MTLAllocation> allocation);
 	void Retain(id object);
+	// Family-local reuse token with bounded request deduplication, retained
+	// through every feedback/poison owner. True when an ownership pin is appended.
+	bool RetainPostprocessTexture181(const std::shared_ptr<PostprocessTextureStorage181>&);
+	// Returns an immutable cached state and retains it in this request.
+	id<MTLDepthStencilState> CachedDepthState(MTLDepthStencilDescriptor*);
 	void CommitResources();
+	// Residency has one CPU owner; only independent command encoding may overlap.
+	void CommitResourcesWhileEncoding();
+	void FinishResourceCommit();
 	// Actual recording/completion failure: retain this request and prohibit reuse.
 	void PoisonAfterBegin() noexcept;
 	uint64_t ResidentBytes() const;
@@ -153,16 +187,18 @@ public:
 	// Its render texture must already be registered before Begin. The drawable
 	// itself is retained through feedback, including a late completion on error.
 	FrameMetrics SubmitAndWait(Clock::time_point preparationStart, uint64_t frameIndex, id<MTLDrawable> drawable = nil);
+	// Bounded CPU-update overlap. The next native lease/cleanup drains it.
+	void SubmitAndDefer(Clock::time_point, uint64_t, id<MTLDrawable>, std::function<void(const FrameMetrics&)>);
 	std::vector<uint8_t> Readback(id<MTLTexture> texture, uint32_t width, uint32_t height, double& milliseconds);
 private:
 	Runtime& runtime;
 	std::unique_lock<std::mutex> lock;
-	__strong NSMutableArray* retained = nil;
+	std::shared_ptr<RuntimeFrameResources> frame;
 	float minSampleShadingRate=0.0f;
+	void StageResources(bool overlapEncoding);
+	void RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmission>* completedOwner);
 	id<MTLLibrary> SampleLibrary(id<MTLLibrary>);
 	MTL4FunctionDescriptor* SampleFunction(MTL4FunctionDescriptor*);
-	bool recording = false;
-	bool pending = false;
 };
 
 class CaptureScope {

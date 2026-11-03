@@ -30,10 +30,15 @@ inline sol::table Create(lua_State* L)
 {
 	Require(!CLuaHandle::GetHandleSynced(L)&&targetPriorityProgram::Available(),"ProfilerHistograms needs its actual compiled screen consumer");
 	sol::state_view lua(L);auto context=lua.create_table();auto owner=std::make_shared<Owner>();
+ // Keep owner-independent methods alive across context creation and GC.
+ auto registry=lua.registry();
+ if(!registry["NativeProfilerHistogramBufferRegistered"].get_or(false)) {
 	auto type=context.new_usertype<Buffer>("ProfilerHistogramBuffer",sol::no_constructor);
 	Bind(type,"Define",[](Buffer& b,int count,sol::optional<sol::object> layout){Require(!b.deleted,"ProfilerHistograms buffer deleted");b.value->Define(count,layout);});
 	Bind(type,"Upload",[](Buffer& b,const sol::stack_table& values,sol::optional<int> attribute,sol::optional<int> offset,sol::optional<int> first,sol::optional<int> last){Require(!b.deleted,"ProfilerHistograms buffer deleted");return b.value->Upload(values,attribute,offset,first,last);});
 	Bind(type,"Delete",[](Buffer& b){b.value->Delete();b.deleted=true;});context.set("ProfilerHistogramBuffer",sol::lua_nil);
+ registry.set("NativeProfilerHistogramBufferRegistered",true);
+ }
 	Bind(context,"GetVBO",[L,owner](GLenum target,bool frequent){Require(target==GL_ARRAY_BUFFER&&frequent,"ProfilerHistograms original buffer target/usage differs");auto b=std::make_shared<Buffer>();b->owner=owner;b->value=std::make_shared<LuaVBOImpl>(target,frequent);CLuaHandle::GetActiveVBOs(L).luaVBOs.emplace_back(b->value);return b;});
 	Bind(context,"ValidateProgram",[owner](const sol::table& params,const std::string& name,const std::string& engine){
 		Require(targetPriorityProgram::Available()&&name.empty(),"Unknown original histogram program");
@@ -63,8 +68,9 @@ inline sol::table Create(lua_State* L)
 		const auto engine=OriginalCUSUniformCapture().Current();Require(engine&&globalRendering,"ProfilerHistograms actual engine UBO missing");ValidateNativeCUSUniformPublication(*engine);
 		Require(engine->params->sourceDrawFrame<=uint64_t(globalRendering->drawFrame),"ProfilerHistograms engine UBO from a future frame");
 		std::array<float,2> view{};static_assert(offsetof(UniformParamsBuffer,viewGeometry)==32);std::memcpy(view.data(),engine->params->bytes.data()+offsetof(UniformParamsBuffer,viewGeometry),sizeof(view));
-		std::vector<std::array<float,2>> coords(count);for(size_t i=0;i<count;++i)std::memcpy(coords[i].data(),data->bytes.data()+(size_t(first)+i)*8,8);
-		ui::GetRecorder().AppendProfilerHistogram(std::move(coords),view,owner->box,owner->color);
+        Require(count<=4u*1024u*1024u,"ProfilerHistograms source range exceeds native bound");
+        uint32_t caps=0;static_assert(offsetof(UniformParamsBuffer,renderCaps)==12);std::memcpy(&caps,engine->params->bytes.data()+offsetof(UniformParamsBuffer,renderCaps),sizeof(caps));
+        ui::GetRecorder().AppendProfilerHistogram(data,uint32_t(first),uint32_t(count),view,owner->box,owner->color,(caps&1)!=0);
 	});
 	return context;
 }

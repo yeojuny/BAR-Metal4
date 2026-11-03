@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include "Rendering/Backend/NativeWorldDrawPlan167.h"
 #include "Metal4NativeEffectState.h"
 #include "Metal4SourceImage.h"
 #include "Rendering/Backend/NativeResourceSpotsData.h"
@@ -20,7 +21,7 @@ public:
 	ResourceSpotsGPU();~ResourceSpotsGPU();
 	void Initialize(RuntimeLease&,MTLPixelFormat color,bool validation,double& milliseconds,unsigned samples=1);
 	void ClearResources();
-	std::shared_ptr<PreparedResourceSpots> Prepare(RuntimeLease&,std::shared_ptr<const NativeWorldDrawFrame>,uint64_t sourceDrawFrame,
+	std::shared_ptr<PreparedResourceSpots> Prepare(RuntimeLease&,const NativeWorldDrawSelection167&,uint64_t sourceDrawFrame,
 		const WorldCamera&,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,
 		const ResourceSpotsImageProvider&,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& milliseconds,unsigned samples=1);
 private:

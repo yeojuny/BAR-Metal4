@@ -5,6 +5,9 @@
 
 #include <array>
 #include <vector>
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeMetalDensityRevision.h"
+#endif
 
 #include "System/creg/creg_cond.h"
 #include "Sim/Misc/GlobalConstants.h"
@@ -20,9 +23,13 @@ class CMetalMap
 public:
 	/** Receiving a map over all metal, and creating a map over extraction. */
 	void Init(const unsigned char* map, int sizeX, int sizeZ, float metalScale);
+	void PostLoad();
 	void Kill() {
 		distributionMap.clear();
 		extractionMap.clear();
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		rendering::InvalidateNativeMetalDensity();
+#endif
 	}
 
 	/** Returns the amount of metal over an area. */

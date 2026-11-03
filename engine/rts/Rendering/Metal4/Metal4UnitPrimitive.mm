@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4UnitPrimitive.h"
+#include "Metal4TransientUpload177.h"
 #include "NativeUnitPrimitiveShaders.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
 #import <simd/simd.h>
@@ -36,6 +37,7 @@ std::uint64_t PipelineBits(const ScreenBlendState& blend,const std::array<bool,4
 }
 }
 struct PreparedUnitPrimitive::Impl {
+ __strong M4TransientUploadLifetime177* uploads177=nil;
 	struct Draw {
 		std::uint64_t sequence=0;
 		__strong id<MTLRenderPipelineState> pipeline=nil;
@@ -63,6 +65,7 @@ void PreparedUnitPrimitive::EncodeDraw(std::size_t index,id<MTL4RenderCommandEnc
 	[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.vertexCount instanceCount:draw.instances];
 }
 struct UnitPrimitiveGPU::Impl {
+ TransientUploadPool177 uploads177{"unit_primitive"};
 	__strong id<MTLLibrary> library=nil;
 	using Key=std::tuple<unsigned,MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,unsigned,bool,std::uint64_t,bool,bool>;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
@@ -99,7 +102,7 @@ struct UnitPrimitiveGPU::Impl {
 };
 UnitPrimitiveGPU::UnitPrimitiveGPU():impl(std::make_unique<Impl>()){}
 UnitPrimitiveGPU::~UnitPrimitiveGPU()=default;
-void UnitPrimitiveGPU::ClearResources(){impl->buffers.clear();}
+void UnitPrimitiveGPU::ClearResources(){impl->uploads177.Clear();impl->buffers.clear();}
 void UnitPrimitiveGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,double& milliseconds)
 {
 	ScreenBlendState blend;
@@ -116,6 +119,12 @@ std::unique_ptr<PreparedUnitPrimitive> UnitPrimitiveGPU::Prepare(RuntimeLease& l
 	Initialize(lease,color,depth,stencil,samples,validation,milliseconds);lease.Retain(impl->library);
 	std::erase_if(impl->buffers,[](const auto& entry){return entry.second.owner.expired();});
 	auto result=std::unique_ptr<PreparedUnitPrimitive>(new PreparedUnitPrimitive);result->impl->owner=frame;
+ impl->uploads177.BeginBatch(lease.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(lease,impl->uploads177,result->impl->uploads177,bytes,length,
+   [&]{return Upload(lease,bytes,length);});
+ };
+
 	for(const auto& draw:frame->draws){
 		ValidateNativeUnitPrimitiveDraw(draw);if(!draw.count || (draw.world.cullEnabled && draw.world.cull==NativeWorldCull::FrontAndBack))continue;
 		Require(draw.world.frontPolygonMode==NativePolygonMode::Fill && draw.world.backPolygonMode==NativePolygonMode::Fill,"Original unit primitive non-fill raster consumer is unavailable");
@@ -124,14 +133,14 @@ std::unique_ptr<PreparedUnitPrimitive> UnitPrimitiveGPU::Prepare(RuntimeLease& l
 		auto scissor=draw.surface.scissor;if(scissor && !scissor->windowCoordinates){scissor->x+=originalCamera.viewport[0];scissor->y+=originalCamera.viewport[1];scissor->windowCoordinates=true;}
 		auto raster=effectstate::Viewport(camera,width,height,logicalWidth,logicalHeight,scissor);if(!raster)continue;
 		auto vertices=impl->Buffer(lease,draw.vertices,std::size_t(draw.first+draw.count)*72);
-		const auto objectValues=ReadNativeUnitPrimitiveObjects(draw,frame->uniforms);auto objects=Upload(lease,objectValues.data(),objectValues.size()*sizeof(NativeUnitPrimitiveObject));
+		const auto objectValues=ReadNativeUnitPrimitiveObjects(draw,frame->uniforms);auto objects=upload177(objectValues.data(),objectValues.size()*sizeof(NativeUnitPrimitiveObject));
 		Uniform u{};std::memcpy(&u.viewProjection,uniforms.viewProjection.data(),64);std::memcpy(&u.viewInverse,uniforms.viewInverse.data(),64);std::memcpy(&u.time,uniforms.time.data(),16);
 		u.parameters=simd_make_float4(draw.addRadius,draw.iconDistance,draw.opacity,draw.surface.alphaTest.reference);
 		u.options=simd_make_uint4(unsigned(draw.kind),uniforms.clipDepth==ClipDepthConvention::MinusOneToOne,draw.first,draw.atlas?draw.atlas->flipV:false);
 		u.alpha=simd_make_uint4(draw.surface.alphaTest.enabled,unsigned(draw.surface.alphaTest.compare),draw.disableQuads,0);
 		u.ally=simd_make_float4(draw.lineOpacity,draw.maxVertices,0,0);
 		u.selected=simd_make_float4(draw.initialSize,draw.whiteMix,0,0);
-		auto constants=Upload(lease,&u,sizeof(u));auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=3;descriptor.maxTextureBindCount=1;descriptor.maxSamplerStateBindCount=1;descriptor.initializeBindings=YES;
+		auto constants=upload177(&u,sizeof(u));auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=3;descriptor.maxTextureBindCount=1;descriptor.maxSamplerStateBindCount=1;descriptor.initializeBindings=YES;
 		NSError* error=nil;auto arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(arguments!=nil,"Cannot allocate original unit primitive argument table: "+Error(error));lease.Retain(arguments);
 		[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:objects.gpuAddress atIndex:1];[arguments setAddress:constants.gpuAddress atIndex:2];
 		std::vector<PreparedScreenExternalImage> external;

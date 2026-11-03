@@ -7,12 +7,16 @@ namespace rendering::metal4 {
 // environment face pass. An allocation is not a rendered/cleared cube.
 std::shared_ptr<const NativeCubeTextureResource> AllocateNativeCubeTexture(
  RuntimeLease&,NativeCubeTextureKind,uint32_t size,uint32_t levels);
+// CPU source reservation only. Contents/uploads and residency remain behind
+// the actual submission lease; no submitted source's pool pin may be reused.
+std::shared_ptr<const NativeCubeTextureResource> ReserveNativeCubeTextureForCapture(NativeCubeTextureKind,uint32_t size,uint32_t levels);
 id<MTLTexture> NativeCubeTexture(const NativeCubeTextureBacking&);
 id<MTLTexture> NativeCubeDepth(const NativeCubeTextureBacking&);
 class PreparedCubeTexture {
 public:
  ~PreparedCubeTexture();
  void EncodeDependencies(id<MTL4CommandBuffer>);
+ SourceDependencyResult160 InspectDependencies160()const;
  // Called only after the actual sky/terrain face encoder has ended.
  void FinishReflection(id<MTL4CommandBuffer>);
  void DidComplete();

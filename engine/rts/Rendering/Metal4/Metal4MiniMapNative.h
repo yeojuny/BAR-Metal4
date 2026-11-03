@@ -2,6 +2,7 @@
 #pragma once
 #include "Metal4RuntimeNative.h"
 #include "Rendering/Backend/NativeMiniMapData.h"
+#include "Rendering/Backend/NativeMiniMapImageDemand.h"
 #include <array>
 #include <cstdint>
 #include <memory>
@@ -54,6 +55,11 @@ public:
 		id<MTLTexture> destination,std::uint32_t squaresX,std::uint32_t squaresZ,
 		bool clear,bool validation,double& shaderMs);
 	std::shared_ptr<PreparedMiniMap> Prepare(RuntimeLease&,std::shared_ptr<const NativeMiniMapBackground>,bool validation,double& shaderMs,bool individualImagesOnly=false);
+	// PiP-only dependency closure. A supplied LOS texture must come from an
+	// earlier retained plan for this exact immutable source in the same frame.
+	std::shared_ptr<PreparedMiniMap> PrepareIndividualImages(RuntimeLease&,
+		std::shared_ptr<const NativeMiniMapBackground>,NativeMiniMapImageMask requested,
+		bool validation,double& shaderMs,id<MTLTexture> preparedGroundLOS=nil);
 private:
 	struct Impl;std::unique_ptr<Impl> impl;
 };

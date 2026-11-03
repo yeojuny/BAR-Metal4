@@ -3,6 +3,7 @@
 #include "NativeCUSSourceData.h"
 #include <array>
 #include <vector>
+#include <unordered_map>
 
 namespace rendering {
 // Original SVertexData's three packed u32 bone attributes. Native storage
@@ -27,6 +28,20 @@ NativeCUSRenderGeometry BuildNativeCUSRenderGeometry(std::shared_ptr<const World
 // Validate all actual indexed vertices' addressable original storage before
 // issuing a draw. Unobserved bytes are not replaced with identity/zero rows.
 NativeCUSRenderReadSet ValidateNativeCUSRenderReads(const NativeCUSSourceDraw&);
+// WorldFrameCapture publishes a deep-copied, immutable WorldModel. Cache only
+// geometry-derived low-byte first-bone addresses, never per-draw read validity.
+// Pointer and shared ownership must both match; expired owners are not retained.
+class NativeCUSGeometryReadCache {
+public:
+	const std::vector<uint32_t>& FirstBones(const std::shared_ptr<const WorldModel>&);
+	void Prune();
+	void Clear() { entries.clear(); }
+	size_t Size() const { return entries.size(); }
+private:
+	struct Entry { std::weak_ptr<const WorldModel> owner; std::vector<uint32_t> firstBones; };
+	std::unordered_map<const WorldModel*, Entry> entries;
+};
+NativeCUSRenderReadSet ValidateNativeCUSRenderReads(const NativeCUSSourceDraw&, NativeCUSGeometryReadCache&);
 // Coalesced observed ranges only. A native allocation may leave every other
 // byte undefined because no accepted draw is allowed to read those bytes.
 std::vector<NativeCUSPublishedRange> NativeCUSObservedRanges(const NativeCUSPublishedBuffer&);

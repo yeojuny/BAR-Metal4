@@ -87,9 +87,9 @@ export class GameProvider extends PrDownloaderAPI<string, GameVersion> {
     }
 
     protected async refreshRapidLookupTablesFromRemote() {
-        // Chobby follows official BAR content even when Lobby has a custom config.
-        const host = "repos-cdn.beyondallreason.dev";
-        const game = "byar";
+        // This lookup feeds Lobby's offline selector. Use the same configured
+        // Rapid source as its downloader and local index, not a second channel.
+        const { rapidHost: host, rapidGame: game } = configService.getConfig();
         try {
             const response = await axios({ url: `https://${host}/${game}/versions.gz`, method: "get", responseType: "arraybuffer" });
             const versionsGz = Buffer.from(response.data);
@@ -97,13 +97,13 @@ export class GameProvider extends PrDownloaderAPI<string, GameVersion> {
             this.indexRapidVersions(versions.toString().trim());
             await publishContentMetadata(getAssetsPath(), path.join(getRapidIndexPath(), host, game, "versions.gz"), versionsGz);
         } catch (err) {
-            log.warn(`Couldn't refresh official rapid lookup tables from remote: ${err}`);
+            log.warn(`Couldn't refresh configured rapid lookup tables from remote: ${err}`);
         }
     }
 
     public async getLatestTestVersion(): Promise<GameVersion | undefined> {
         await this.refreshRapidLookupTablesFromRemote();
-        const packageMd5 = this.gameVersionPackageLookup["byar:test"];
+        const packageMd5 = this.gameVersionPackageLookup[configService.getConfig().latestGameVersion];
         const gameVersion = packageMd5 && this.packageGameVersionLookup[packageMd5];
         return packageMd5 && gameVersion ? this.availableVersions.get(gameVersion) ?? { gameVersion, packageMd5, luaOptionSections: [], ais: [] } : undefined;
     }

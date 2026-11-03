@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativePiPData.h"
+#include "NativeMiniMapImageDemand.h"
 #include "NativePiPPrograms.h"
 #include "NativeMiniMapData.h"
 #include "NativeScreenLine.h"
@@ -126,13 +127,25 @@ void ValidateNativePiPDraw(const NativePiPDraw& draw)
 			continue;
 		}
 		if (source.engineImage != NativePiPEngineImage::None) {
-			Require(!source.image && source.engineSource && source.engineSource->base && source.engineSource->heights,
+			Require(!source.image && source.engineSource,
 				"PiP engine image lacks its actual terrain source or has competing CPU storage");
 			Require(draw.program.uniforms.flipV[uniform.slot] == 0, "Original PiP engine map images use increasing map-Z rows");
-			if (source.engineImage == NativePiPEngineImage::GroundLOS || source.engineImage == NativePiPEngineImage::Radar) {
+			const auto needed=NativeMiniMapImageClosure(NativePiPImageDemand(source.engineImage));
+			Require(needed!=0, "PiP engine image role is unknown");
+			if(needed & MiniMapImage::Height) {
+				const auto& heights=source.engineSource->heights;
+				Require(heights && source.engineSource->squaresX && source.engineSource->squaresZ &&
+					heights->width==source.engineSource->squaresX+1 && heights->height==source.engineSource->squaresZ+1 &&
+					heights->corners.size()==std::size_t(heights->width)*heights->height, "PiP engine image lacks original corner heights");
+			}
+			if (needed & MiniMapImage::GroundLOS) {
 				const auto& info = source.engineSource->info;
-				Require(info && info->mode == NativeMiniMapInfoMode::Los && info->groundLos && info->radar && info->jammer,
+				const auto coverage=[](const auto& data){return data && data->width && data->height && data->counts.size()==std::size_t(data->width)*data->height;};
+				Require(info && info->mode == NativeMiniMapInfoMode::Los && coverage(info->groundLos),
 					"PiP LOS/radar image lacks the original viewer coverage");
+				if(needed & MiniMapImage::Radar) Require(coverage(info->radar) && coverage(info->jammer) &&
+					info->radar->width==info->jammer->width && info->radar->height==info->jammer->height,
+					"PiP radar image lacks the original radar/jammer coverage");
 			}
 			ValidateScreenSampler(source.sampler);
 			continue;

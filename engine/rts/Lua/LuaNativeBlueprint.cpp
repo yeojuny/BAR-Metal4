@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "LuaNativeBlueprint.h"
+#include "Rendering/Backend/NativeTerrainHeightSnapshot.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Rendering/EngineBridge/NativeOriginalShadowCapture.h"
 #include "Rendering/EngineBridge/NativeWaterGroundSourceCapture.h"
@@ -66,10 +67,7 @@ NativeWorldDrawStage Stage() {auto stage=ui::GetRecorder().CurrentWorldStage();C
 std::shared_ptr<const WorldTerrainHeights> Heights() {
 	Check(readMap && mapDims.mapxp1>=3 && mapDims.mapyp1>=3,"Original Blueprint heightmap unavailable");
 	const auto* values=readMap->GetCornerHeightMapUnsynced();Check(values!=nullptr,"Original Blueprint unsynced corner heights missing");
-	const size_t count=size_t(mapDims.mapxp1)*mapDims.mapyp1;
-	if(!heightSnapshot || heightSnapshot->width!=unsigned(mapDims.mapxp1) || heightSnapshot->height!=unsigned(mapDims.mapyp1) || std::memcmp(heightSnapshot->corners.data(),values,count*sizeof(float))) {
-		auto snapshot=std::make_shared<WorldTerrainHeights>();snapshot->width=mapDims.mapxp1;snapshot->height=mapDims.mapyp1;snapshot->corners.assign(values,values+count);heightSnapshot=std::move(snapshot);
-	}
+	heightSnapshot=CaptureNativeTerrainHeightSnapshot(readMap,values,mapDims.mapxp1,mapDims.mapyp1);
 	return heightSnapshot;
 }
 struct Program;struct Buffer;

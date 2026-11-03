@@ -180,6 +180,9 @@ sol::table CreateContext(lua_State* L){
 	BindFunction(t,"DeleteShader",[c](unsigned handle){auto p=c->Get(handle);
 		if(OriginalNativeSourceProgramBinding().IsCUS(p))OriginalNativeSourceProgramBinding().Unbind();
 		p->deleted=true;
+		p->consumer.reset();
+		p->floats.clear();
+		p->ints.clear();
 	});
 	BindFunction(t,"Uniform",[c](int location,sol::variadic_args values){c->UniformValue(location,values,false);});
 	BindFunction(t,"UniformInt",[c](int location,sol::variadic_args values){c->UniformValue(location,values,true);});

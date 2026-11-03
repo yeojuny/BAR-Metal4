@@ -51,6 +51,8 @@ void ValidateNativeBuildingSample(const NativeBuildingSample&);
 void ValidateNativeBuildingGridProgram(std::string_view vertex,std::string_view fragment,
 	std::string_view engine,std::string_view defines,bool game31657=false,
 	std::array<float,2> mapWorldSize={});
+// Original VS endpoint evaluation, shared by CPU fallback and exact GPU raster.
+NativeWorldDrawCommand BuildNativeBuildingGridCommand(const NativeBuildingGridDraw&);
 NativeWorldRasterMesh BuildNativeBuildingGrid(const NativeBuildingGridDraw&,
 	const std::array<double,4>& viewport,uint32_t width,uint32_t height,unsigned targetSamples=1);
 float NativeBuildingGridAlpha(std::array<float,3> world,std::array<float,3> mouse,

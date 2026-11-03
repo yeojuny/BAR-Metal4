@@ -10,6 +10,7 @@
 #include <vector>
 
 namespace rendering {
+struct NativeSourceLineInput133;
 struct NativeGenericShadowInput;
 struct NativeEasyFacingInput;
 struct NativeSquadHullInput;
@@ -29,6 +30,11 @@ struct NativeSensorLOSDraw;
 // the screen renderer's accepted primitives or its orthographic contract.
 enum class NativeDrawPrimitive : std::uint8_t {
 	Triangles, TriangleStrip, TriangleFan, Quads, Lines, LineStrip, LineLoop, Points, Polygon,
+ // Typed GPU font packet: three matrix-header slots followed by raw vertices.
+ // Existing enum values, command layout and all ordinary clip vertices stay unchanged.
+ GPUFontTriangles,
+ // Generic fixed-function filled geometry; same immutable matrix layout.
+ GPUFillTriangles,
 };
 enum class NativeWorldDrawStage : std::uint8_t {
 	PreUnit, World, WaterReflection, WaterRefraction, WaterPost, AlphaBelowWater, AlphaAboveWater, AlphaAll, ShadowTransparent, PreDecals, ShadowOpaque,
@@ -105,6 +111,7 @@ struct NativeWorldDrawCommand {
 	std::shared_ptr<const NativeGrassInput> grass;
  std::shared_ptr<const NativeResourceSpotsInput> resourceSpots;
  std::shared_ptr<const NativeSensorLOSDraw> sensorLOS;
+ std::shared_ptr<const NativeSourceLineInput133> sourceLines;
 	std::shared_ptr<const NativeReclaimFieldInput> reclaimField; // Actual family input retained by the common source lifetime.
 };
 // Scalar source event only. glClear ignores viewport, blend, depth/stencil

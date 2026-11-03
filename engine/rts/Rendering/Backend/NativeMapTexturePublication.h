@@ -3,6 +3,7 @@
 #include "NativeTextureRegistry.h"
 #include <array>
 #include <memory>
+#include <optional>
 namespace rendering {
 struct WorldTerrainHeights;
 enum class NativeMapTextureRole : uint8_t { Normals, Height };
@@ -32,6 +33,9 @@ public:
 	void Detach();
 	void Create(const void* originalOwner,NativeMapTextureRole,uint32_t width,uint32_t height);
 	void HeightUploaded(const void* originalOwner);
+	// CPU-only copies bypass HeightUploaded but still change native consumers.
+	void InvalidateCPUHeightSnapshot(const void* originalOwner);
+	std::optional<std::array<uint64_t,4>> HeightSnapshotVersion(const void* originalOwner)const;
 	void NormalsRendered(const void* originalOwner);
 	void NormalOverride(const void* originalOwner,bool actualLuaOverride);
 	void Destroy(const void* originalOwner);

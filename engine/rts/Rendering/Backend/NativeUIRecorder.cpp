@@ -1,3 +1,7 @@
+#include "NativeFontRecycle169.h"
+#include "System/Log/ILog.h"
+#include "NativeIndexedWorldGeometry.h"
+#include "NativeWorldFillGeometry.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeDeferredVisualizerProgram.h"
 #include "NativeStartBoxData.h"
@@ -18,6 +22,9 @@
 #include "NativeSplatPainterProgram.h"
 #include "NativeDiffusePainterProgram.h"
 #include "NativeTerraformCaptureProgram.h"
+#include "NativeScreenGeometry.h"
+#include "NativeExactScreenLines.h"
+#include "NativeExactPixelLines.h"
 #include "NativeEasyFacingProgram.h"
 #include "NativeSquadHullProgram.h"
 #include "NativeTerraformOverlayProgram.h"
@@ -35,6 +42,8 @@
 
 #include <algorithm>
 #include <atomic>
+#include <cstdio>
+#include <cstdlib>
 #include <cmath>
 #include <functional>
 #include <stdexcept>
@@ -178,6 +187,8 @@ struct NativeUIRecorder::Impl {
 		bool scissorEnabled = false;
 		NativeUIMatrixMode mode = NativeUIMatrixMode::ModelView;
 		std::array<std::vector<NativeUIMatrix>,3> matrices{{{IdentityMatrix()}, {IdentityMatrix()}, {IdentityMatrix()}}};
+  // Part of saved/restored State: classify only when the texture stack changes.
+  bool textureMatrixIdentity=true;
 		struct Attribute {
 			unsigned mask;
 			ScreenDrawListState draw;
@@ -221,6 +232,8 @@ struct NativeUIRecorder::Impl {
 	std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> sourceDependency;
 	struct TargetChange {std::shared_ptr<NativeUITextureBinding> binding;std::shared_ptr<const ScreenTexture> previous,published;bool sourceDependent;NativeUITexturePublication texturePublication;std::uint64_t actualSubmission=0;};
 	std::vector<TargetChange> targetChanges;
+ struct SubmittedFrame {std::uint64_t sourceDrawFrame;std::vector<ScreenRenderTargetPass> passes;std::vector<TargetChange> changes;};
+ std::optional<SubmittedFrame> submittedFrame;
 	bool DependsOnSource(const std::shared_ptr<const ScreenTexture>& image) const {
 		if(!image)return false;
 		if(image->sourceTexture)return image->sourceDependent;
@@ -359,7 +372,11 @@ struct NativeUIRecorder::Impl {
 	std::vector<NativeWorldDrawVertex> worldVertices;
 	std::vector<NativeGenericShadowVertex> rawShadowVertices;
 	bool HasRawShadowSource()const{return worldStage&&worldStageId==NativeWorldDrawStage::ShadowOpaque&&bool(shadowVertexSource);}
-	bool screenRaster=false;
+	bool screenRaster=false,screenGPUTransform=false,worldGPUTransform=false,sourceGPUline=false;
+ NativeSourceLineTransform133 sourceLineTransform;
+ NativeWorldFontHeader worldGPUHeader{};int worldMinimumExponent=-126;
+
+	NativeScreenGeometry screenTransform;
 	ScreenDrawState worldSurface;
 	std::string primitiveOrigin;
 	bool legacyPrimitive=false,legacyInvalidOperation=false;
@@ -396,13 +413,18 @@ struct NativeUIRecorder::Impl {
 	std::vector<ScreenDrawList*> pipMiniMapOutputs;
 
 	bool CanDraw() const { return frame && !typedTargetDepth && (screen || worldStage || !targets.empty()) && (!genesis || !targets.empty()) && compiling.empty(); }
-	void ResetPrimitive() noexcept {primitive=false;primitiveOrigin.clear();legacyPrimitive=false;legacyTailCount=0;worldVertices.clear();rawShadowVertices.clear();screenRaster=false;}
+	void ResetPrimitive() noexcept {primitive=false;primitiveOrigin.clear();legacyPrimitive=false;legacyTailCount=0;worldVertices.clear();rawShadowVertices.clear();screenRaster=false;screenGPUTransform=false;worldGPUTransform=false;sourceGPUline=false;}
 	void InvalidLegacyOperation() {legacyInvalidOperation=true;++legacyInvalidOperationCount;}
 	void AppendScreenRaster(const NativeWorldDrawCommand& command)
 	{
 		if(command.indices.empty())return;
 		const auto mapping=CurrentRasterMapping();const auto viewport=PhysicalViewport();
 		if(viewport[2]==0 || viewport[3]==0)return;
+  if(auto packet=TryExactScreenLines(command,viewport,mapping.renderWidth,mapping.renderHeight,mapping.samples,width,height)){
+   auto surface=command.surface;
+   if(mapping.samples>1)surface.viewport=ScreenViewport{0,0,mapping.windowLogicalWidth,mapping.windowLogicalHeight};
+   surface.cull=ScreenCull::None;surface.pointDisk.reset();Output().AppendGeometry(std::move(packet),surface);return;
+  }
 		auto mesh=BuildNativeWorldDrawGeometry(command,viewport,mapping.renderWidth,mapping.renderHeight,mapping.samples);
 		std::vector<ScreenVertex> vertices;std::vector<ScreenTexCoord> uv;vertices.reserve(mesh.vertices.size());uv.reserve(mesh.vertices.size());
 		for(const auto& v:mesh.vertices){const auto& p=v.position;Require(p[3]==1,"Native screen raster requires its orthographic basis");vertices.push_back({(p[0]+1)*float(width)*.5f,(p[1]+1)*float(height)*.5f,p[2],v.color});uv.push_back(v.uv);}
@@ -435,6 +457,17 @@ struct NativeUIRecorder::Impl {
 			}
 		}
 	}
+ NativeSourceLineTransform133 CaptureSourceLineTransform(bool texture=true)const{
+  NativeSourceLineTransform133 t{state.matrices[0].back(),state.matrices[1].back(),state.matrices[2].back(),{},{uint32_t(worldStage&&worldZeroToOne),uint32_t(state.world.depthClamp),0,uint32_t(texture&&!state.textureMatrixIdentity)}};
+  if(worldStage){auto plane=NativeInheritedWaterClipPlane(worldStageId,t.projection,worldZeroToOne);if(plane){t.clipPlane=*plane;t.flags[2]=1;}}
+  sourceLine133::ValidateTransform(t);return t;
+ }
+ void AppendSourceLines(std::shared_ptr<const NativeSourceLineInput133> input,ScreenDrawState surface){
+  if(input->segments.empty())return;
+  auto g=std::make_shared<NativeScreenGeometry>();g->kind=NativeScreenGeometryKind::CommonSourceLines;g->sourceLines=std::move(input);g->count=4;g->instanceCount=g->sourceLines->segments.size();g->coordinateExtent={width,height};
+  // Lines use front stencil state and never acquire polygon face culling.
+  surface.cull=ScreenCull::None;surface.depthStencil.backStencil=surface.depthStencil.frontStencil;surface.pointDisk.reset();Output().AppendGeometry(std::move(g),surface);
+ }
 	void StartPrimitive(NativeDrawPrimitive mode,const std::string& origin,bool legacy)
 	{
 		if (primitive) {
@@ -449,8 +482,36 @@ struct NativeUIRecorder::Impl {
 		// cannot leave the recorder with a half-open batch after rejection.
 		if (CanDraw()) {
 			screenRaster=!worldStage && (unsigned(mode)>unsigned(NativeDrawPrimitive::Quads) || state.world.frontPolygonMode!=NativePolygonMode::Fill || state.world.backPolygonMode!=NativePolygonMode::Fill);
-			if(worldStage || screenRaster) {if(worldStage)Require(GetWorldDrawRecorder().IsActive(),"Native world frame not begun by host");worldSurface=(HasRawShadowSource()?DrawState():ResolveDrawState()).draw;worldVertices.clear();rawShadowVertices.clear();}
-			else {Output().RestoreState(ResolveDrawState());Output().Begin(ScreenPrimitive(mode));}
+			if(worldStage || screenRaster) {if(worldStage)Require(GetWorldDrawRecorder().IsActive(),"Native world frame not begun by host");worldSurface=(HasRawShadowSource()?DrawState():ResolveDrawState()).draw;worldVertices.clear();rawShadowVertices.clear();
+    worldGPUTransform=false;screenTransform.affineTexture=false;sourceGPUline=false;
+    if((mode==NativeDrawPrimitive::Lines||mode==NativeDrawPrimitive::LineStrip||mode==NativeDrawPrimitive::LineLoop)&&!HasRawShadowSource()&&OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound&&sourceLine133::Material(worldSurface)&&state.world.lineWidth<=64){
+     const auto& texture=state.matrices[2].back();
+     if(state.textureMatrixIdentity||(texture[3]==0&&texture[7]==0&&texture[15]==1)){sourceLineTransform=CaptureSourceLineTransform();sourceGPUline=true;}
+    }
+    if(worldStage&&WorldFillMode(mode)&&(worldStageId==NativeWorldDrawStage::World||worldStageId==NativeWorldDrawStage::PreUnit)){
+     // These two source stages have no inherited water plane. Reject other
+     // stages before any inverse-projection work or source-owner snapshot.
+     auto world=state.world;world.inheritedClipPlane.reset();
+     if(WorldFillGPUState(worldStageId,worldSurface,world)&&OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound){
+      worldGPUHeader={state.matrices[0].back(),state.matrices[1].back(),{float(worldZeroToOne),0,0,0}};
+      worldGPUTransform=WorldFontMatricesSafe(worldGPUHeader);
+      if(worldGPUTransform){
+        worldMinimumExponent=WorldFontMinimumInputExponent(worldGPUHeader);
+        if(!state.textureMatrixIdentity)screenGeometry::CaptureAffineTexture(screenTransform,state.matrices[2].back());
+        worldGPUHeader.options[1]=screenTransform.affineTexture?1.f:0.f;
+        worldVertices.resize(screenTransform.affineTexture?4:3);
+       }
+     }
+    }
+   }
+			else {
+    const auto surface=ResolveDrawState();Output().RestoreState(surface);Output().Begin(ScreenPrimitive(mode));
+    screenTransform={};screenTransform.kind=NativeScreenGeometryKind::ScreenUI;screenTransform.instanceCount=1;
+    screenTransform.modelView=state.matrices[0].back();screenTransform.projection=state.matrices[1].back();screenTransform.coordinateExtent={width,height};
+    const auto material=surface.draw.material;
+    screenGPUTransform=(material==ScreenMaterial::Solid||material==ScreenMaterial::RGBA||material==ScreenMaterial::FontCoverage)&&screenGeometry::FontProjectionSafe(screenTransform);
+    if(screenGPUTransform&&!state.textureMatrixIdentity)screenGeometry::CaptureAffineTexture(screenTransform,state.matrices[2].back());
+   }
 		}
 		primitive=true;primitiveOrigin=origin;legacyPrimitive=legacy;primitiveMode=mode;legacyTailCount=0;
 	}
@@ -461,35 +522,67 @@ struct NativeUIRecorder::Impl {
 		if (CanDraw()) {
 			if(primitiveMode==NativeDrawPrimitive::Points || state.world.frontPolygonMode==NativePolygonMode::Point || state.world.backPolygonMode==NativePolygonMode::Point)
 				Require(OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound,"Generic point draw has an active shader; its original point-size/vertex-output contract is unsupported");
-			if(worldStage){
-				auto world=state.world;
+   if(sourceGPUline){
+    auto input=std::make_shared<NativeSourceLineInput133>();input->sourceKind=worldStage?0:1;input->vertices=std::move(worldVertices);input->transforms.push_back(sourceLineTransform);sourceLine133::Topology(*input,primitiveMode,state.world);
+    if(!input->segments.empty()){
+     if(worldStage){NativeWorldDrawCommand c;c.stage=worldStageId;c.primitive=NativeDrawPrimitive::Lines;c.sourcePrimitive=primitiveMode;c.sourceLines=std::move(input);c.surface=worldSurface;c.world=state.world;c.world.inheritedClipPlane.reset();GetWorldDrawRecorder().RecordSourceLines(std::move(c));}
+     else AppendSourceLines(std::move(input),worldSurface);
+    }
+   }else if(worldStage){
+    auto world=state.world;
 				world.inheritedClipPlane=NativeInheritedWaterClipPlane(worldStageId,state.matrices[1].back(),worldZeroToOne);
 				std::function<std::shared_ptr<const NativeGenericShadowInput>()> snapshot;
 				if(HasRawShadowSource())snapshot=[this]{return shadowVertexSource(rawShadowVertices,state.matrices[0].back(),state.matrices[1].back(),worldZeroToOne);};
-				GetWorldDrawRecorder().Record(worldStageId,primitiveMode,worldVertices,worldSurface,world,snapshot);
+				if(worldGPUTransform)GetWorldDrawRecorder().RecordGPUFill(MakeWorldFillGPUCommand(worldStageId,primitiveMode,std::move(worldVertices),worldSurface,world,worldGPUHeader,screenTransform.affineTexture?&screenTransform.textureRows:nullptr));
+    else GetWorldDrawRecorder().Record(worldStageId,primitiveMode,worldVertices,worldSurface,world,snapshot);
 			}
 			else if(screenRaster) {
 				auto command=MakeNativeWorldDrawCommand(NativeWorldDrawStage::World,primitiveMode,worldVertices,worldSurface,state.world);
 				AppendScreenRaster(command);
-			} else Output().End();
+			} else if(screenGPUTransform)Output().EndTransformed(screenTransform);
+   else Output().End();
 		}
 		ResetPrimitive();
 	}
 	void RecordVertex(float x,float y,float z,float w)
 	{
 		Require(primitive,"Native UI vertex outside primitive");
-		if (!CanDraw()) return;
-		// The selected original shader owns texture-coordinate transforms; its
+  if (!CanDraw()) return;
+  if(sourceGPUline){
+   Require(worldVertices.size()<4u*1024u*1024u,"Common source line vertex limit");
+   const NativeWorldDrawVertex v{{x,y,z,w},state.draw.color,state.draw.texCoord};for(const auto* a:{&v.position,&v.color,&v.uv})for(float x:*a)Require(std::isfinite(x),"Common source line attribute nonfinite");worldVertices.push_back(v);return;
+  }
+  // The selected original shader owns texture-coordinate transforms; its
 		// raw input cannot use the fixed-function texture-matrix result.
-		const auto uv=HasRawShadowSource()?state.draw.texCoord:ProjectUV(state.draw.texCoord);
+		// A rare unsafe UV abandons this primitive's GPU packet using the exact
+  // original ordered transforms. No second array or GPU synchronization.
+  if(worldGPUTransform&&screenTransform.affineTexture&&!screenGeometry::AffineTextureUVSafe(std::span(&state.draw.texCoord,1))){
+   WorldFillCPUFallback(worldVertices,worldGPUHeader,&screenTransform.textureRows);worldGPUTransform=false;screenTransform.affineTexture=false;
+  }
+  const bool worldGPUUV=worldGPUTransform&&screenTransform.affineTexture;
+  const bool gpuUV=(screenGPUTransform||worldGPUTransform)&&screenTransform.affineTexture;
+  if(gpuUV)Require(std::isfinite(state.draw.texCoord[0])&&std::isfinite(state.draw.texCoord[1]),"Native UI invalid texture coordinate");
+  auto uv=(HasRawShadowSource()||gpuUV)?state.draw.texCoord:ProjectUV(state.draw.texCoord);
 		if(worldStage) {
+   if(worldGPUTransform){
+    const std::array<float,4> raw{x,y,z,w};
+    if(worldVertices.size()<4u*1024u*1024u&&WorldFontPositionSafe(raw,worldMinimumExponent)){
+     worldVertices.push_back({raw,state.draw.color,uv});return;
+    }
+    WorldFillCPUFallback(worldVertices,worldGPUHeader,worldGPUUV?&screenTransform.textureRows:nullptr);worldGPUTransform=false;
+    if(worldGPUUV){screenTransform.affineTexture=false;uv=ProjectUV(state.draw.texCoord);}
+   }
 			auto clip=Transform(state.matrices[1].back(),Transform(state.matrices[0].back(),{x,y,z,w}));
 			if(worldZeroToOne)clip[2]=2*clip[2]-clip[3];
 			for(float value:clip)Require(std::isfinite(value),"Native world non-finite clip vertex");
 			if(HasRawShadowSource())rawShadowVertices.push_back({{x,y,z,w},{state.normal[0],state.normal[1],state.normal[2],0},state.draw.color,state.draw.texCoord});
 			worldVertices.push_back({clip,state.draw.color,uv});return;
 		}
-		const auto p=Project(x,y,z,w);
+  if(screenGPUTransform){
+   Require(std::isfinite(x)&&std::isfinite(y)&&std::isfinite(z),"Native UI non-finite projected vertex");
+   Require(w==1,"Native UI screen slice does not support perspective/homogeneous geometry (projected w must equal 1)");
+  }
+		const auto p=screenGPUTransform?std::array<float,4>{x,y,z,w}:Project(x,y,z,w);
 		if(screenRaster){worldVertices.push_back({{p[0]*2/float(width)-1,p[1]*2/float(height)-1,p[2],1},state.draw.color,uv});return;}
 		const auto emit=[&](const ScreenVertex& vertex,ScreenTexCoord coordinate) {
 			Output().Color(vertex.color);Output().TexCoord(coordinate[0],coordinate[1]);Output().MultiTexCoord(1,coordinate[2],coordinate[3]);Output().Vertex(vertex.x,vertex.y,vertex.z);
@@ -504,7 +597,9 @@ struct NativeUIRecorder::Impl {
 		} else emit(vertex,uv);
 	}
 	void OutsidePrimitive() const { Require(!primitive, "Native UI state change within primitive"); }
-	void Emit(std::function<void(Impl&)> command)
+	// Immediate commands keep their concrete callable; only retained lists need type erasure.
+	template<class Command>
+	void Emit(Command command)
 	{
 		if (!compiling.empty()) compiling.back().list->commands.push_back(command);
 		try { command(*this); }
@@ -594,7 +689,7 @@ struct NativeUIRecorder::Impl {
 		const auto callbackHeight=miniMapStages.empty()?height:miniMapStages.back().height;
 		state.matrices[0].back()=ScaleMatrix(1.0f/float(callbackWidth),1.0f/float(callbackHeight),1);
 		state.matrices[1].back()=OrthoMatrix(0,1,0,1,0,-1);
-		state.matrices[2].back()=IdentityMatrix();
+		state.matrices[2].back()=IdentityMatrix();state.textureMatrixIdentity=true;
 		if(compiling.empty())ResetSourceTextureMatrix();
 		state.mode=NativeUIMatrixMode::ModelView;
 	}
@@ -611,6 +706,12 @@ struct NativeUIRecorder::Impl {
 	}
 	ScreenTexCoord ProjectUV(const ScreenTexCoord& coordinate) const
 	{
+  if(state.textureMatrixIdentity){
+   Require(std::isfinite(coordinate[0])&&std::isfinite(coordinate[1]),"Native UI invalid texture coordinate");
+   // The original sum starts at +0. Preserve its signed-zero result as well
+   // as the untouched secondary coordinates, without four matrix rows/divides.
+   return {coordinate[0]+0.0f,coordinate[1]+0.0f,coordinate[2],coordinate[3]};
+  }
 		const auto p = Transform(state.matrices[2].back(), {coordinate[0],coordinate[1],0,1});
 		Require(std::isfinite(p[0]) && std::isfinite(p[1]) && std::isfinite(p[3]) && p[3] != 0, "Native UI invalid texture coordinate");
 		Require(!worldStage || p[3]==1,"Native world projective texture coordinates require their original q interpolation");
@@ -668,6 +769,43 @@ void NativeUIRecorder::RetireCompletedFrame(bool sourceFrameCompleted)
 	if(sourceFrameCompleted){impl->passes.clear();impl->targetChanges.clear();}
 	else {std::erase_if(impl->passes,[](const auto& pass){return !pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen;});std::erase_if(impl->targetChanges,[](const auto& change){return !change.sourceDependent;});}
 }
+// One mandatory startup receipt, after a CPU source frame has successfully
+// submitted (not GPU completion). Counters are cumulative since cache creation, not
+// sampled frame timing, allocation savings, or a memory-footprint claim.
+static void LogFontRecycle169(std::uint64_t sourceDrawFrame)
+{
+ static bool reported=false;
+ if(reported || sourceDrawFrame<300)return;
+ reported=true;
+ const auto& owner=fontRecycle169::Owner();
+ const auto sample=owner?owner->Read():fontRecycle169::Snapshot{};
+ const auto value=[&](fontRecycle169::Counter key){return static_cast<unsigned long long>(sample.counts[key]);};
+ LOG("[NativeFontRecycle169] source_frame=%llu cumulative_startup=1 pool_control_blocks=%u pool_bytes=%zu source_holder_bytes=%zu slot_limit=%zu capacity_limit=%zu block_limit=%zu acquire_calls=%llu reuse_hits=%llu reused_capacity_bytes=%llu return_calls=%llu stored=%llu empty_drops=%llu oversize_drops=%llu full_drops=%llu byte_drops=%llu try_lock_attempts=%llu busy_skips=%llu lock_errors=%llu owner_lookups=%llu source_owners=%llu deep_copies=%llu producer_batches=%llu quads_with_growth_v=%llu quads_with_growth_uv=%llu quads_with_growth_i=%llu holding_snapshot_locked=%u held_slots=%zu held_capacity_bytes=%zu capacity_high_water=%zu timing=0 gpu_storage=0",
+  static_cast<unsigned long long>(sourceDrawFrame),unsigned(bool(owner)),sizeof(fontRecycle169::Pool),sizeof(fontRecycle169::Source),
+  fontRecycle169::Pool::SlotLimit,fontRecycle169::Pool::ByteLimit,fontRecycle169::Pool::BlockLimit,
+  value(fontRecycle169::Acquires),value(fontRecycle169::Hits),value(fontRecycle169::ReusedCapacity),value(fontRecycle169::Returns),value(fontRecycle169::Stored),
+  value(fontRecycle169::EmptyDrops),value(fontRecycle169::OversizeDrops),value(fontRecycle169::FullDrops),value(fontRecycle169::ByteDrops),
+  value(fontRecycle169::LockAttempts),value(fontRecycle169::BusyDrops),value(fontRecycle169::LockErrors),value(fontRecycle169::OwnerLookups),value(fontRecycle169::SourceOwners),value(fontRecycle169::DeepCopies),
+  value(fontRecycle169::ProducerBatches),value(fontRecycle169::GrowthV),value(fontRecycle169::GrowthUV),value(fontRecycle169::GrowthI),
+  unsigned(sample.locked),sample.heldSlots,sample.heldBytes,sample.highWater);
+}
+
+void NativeUIRecorder::HoldSubmittedFrame(std::uint64_t sourceDrawFrame)
+{
+ Require(sourceDrawFrame && !impl->frame && !impl->submittedFrame && impl->targets.empty() && impl->compiling.empty(),
+  "Native UI submitted frame ownership is repeated or still recording");
+ // Called only after successful final submission. Move, never copy or retire,
+ // the old publications so BeginFrame/abort can affect only the next frame.
+ impl->submittedFrame.emplace(Impl::SubmittedFrame{sourceDrawFrame,std::move(impl->passes),std::move(impl->targetChanges)});
+ impl->passes.clear();impl->targetChanges.clear();
+ LogFontRecycle169(sourceDrawFrame);
+}
+void NativeUIRecorder::RetireSubmittedFrame(std::uint64_t sourceDrawFrame)
+{
+ Require(impl->submittedFrame && impl->submittedFrame->sourceDrawFrame==sourceDrawFrame,
+  "Native UI completion does not identify its submitted frame");
+ impl->submittedFrame.reset(); // Never clear the current frame's transactions.
+}
 void NativeUIRecorder::SetSourceDependencyQuery(std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> query){impl->sourceDependency=std::move(query);}
 void NativeUIRecorder::CommitTargetBinding(std::shared_ptr<NativeUITextureBinding> binding,std::shared_ptr<const ScreenTexture> previous,std::shared_ptr<const ScreenTexture> published)
 {
@@ -711,14 +849,34 @@ void NativeUIRecorder::RecordTargetSubmission(std::span<const ScreenRenderTarget
 	std::shared_ptr<const NativePostprocessFrame> actualSourceFrame) noexcept
 {
  if(!actualSubmission)std::terminate(); // Actual common submission identities are nonzero.
- for(const auto& pass:passes)for(auto& owned:impl->passes)if(owned.destination==pass.destination){
-  if(owned.actualSubmission && owned.actualSubmission!=actualSubmission)std::terminate();
-  owned.actualSubmission=actualSubmission;
+ // Every match in this call writes the same identity. Visit each owned row
+ // once and stop after its first match, including all rows that alias it.
+ // This runs after Begin: keep it allocation-free and noexcept.
+ for(auto& owned:impl->passes) {
+  if(owned.actualSubmission==actualSubmission)continue;
+  for(const auto& pass:passes)if(owned.destination==pass.destination) {
+   if(owned.actualSubmission)std::terminate();
+   owned.actualSubmission=actualSubmission;
+   break;
+  }
  }
- for(const auto& pass:passes)for(auto& change:impl->targetChanges)
-  if(change.published==pass.destination || change.published==pass.depthDestination)change.actualSubmission=actualSubmission;
-	if(actualSourceFrame)for(const auto& operation:actualSourceFrame->operations)for(const auto& output:operation.outputs)
-		for(auto& change:impl->targetChanges)if(change.published->postprocessVersion==output)change.actualSubmission=actualSubmission;
+ for(auto& change:impl->targetChanges) {
+  if(change.actualSubmission==actualSubmission)continue;
+  for(const auto& pass:passes)
+   if(change.published==pass.destination || change.published==pass.depthDestination) {
+    change.actualSubmission=actualSubmission;
+    break;
+   }
+  if(change.actualSubmission==actualSubmission || !actualSourceFrame)continue;
+  for(const auto& operation:actualSourceFrame->operations) {
+   if(std::any_of(operation.outputs.begin(),operation.outputs.end(),[&](const auto& output) {
+    return change.published->postprocessVersion==output;
+   })) {
+    change.actualSubmission=actualSubmission;
+    break;
+   }
+  }
+ }
 }
 void NativeUIRecorder::RetireTargetSubmission(std::uint64_t actualSubmission)
 {
@@ -828,7 +986,7 @@ void NativeUIRecorder::BeginWorldStage(NativeWorldDrawStage stage,NativeUIMatrix
 void NativeUIRecorder::ResetWorldStage()
 {
 	Require(impl->worldStage,"Native world reset outside stage");impl->OutsidePrimitive();
-	impl->state.matrices[0].back()=impl->worldView;impl->state.matrices[1].back()=impl->worldProjection;impl->state.matrices[2].back()=IdentityMatrix();
+	impl->state.matrices[0].back()=impl->worldView;impl->state.matrices[1].back()=impl->worldProjection;impl->state.matrices[2].back()=IdentityMatrix();impl->state.textureMatrixIdentity=true;
 	if(!impl->settingUpWorldMatrices)ResetSourceTextureMatrix();
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 	if(impl->worldSafe) {
@@ -845,7 +1003,7 @@ void NativeUIRecorder::EndWorldStage()
 	if(!impl->worldStage)return;
 	AbortPrimitive();
 	if(impl->worldSafe) {
-		impl->state.matrices[0].back()=impl->worldView;impl->state.matrices[1].back()=impl->worldProjection;impl->state.matrices[2].back()=IdentityMatrix();
+		impl->state.matrices[0].back()=impl->worldView;impl->state.matrices[1].back()=impl->worldProjection;impl->state.matrices[2].back()=IdentityMatrix();impl->state.textureMatrixIdentity=true;
 	ResetSourceTextureMatrix();
 		impl->state.mode=NativeUIMatrixMode::ModelView;
 		PopAttrib();
@@ -925,6 +1083,7 @@ void NativeUIRecorder::EndMiniMapStage(bool safeMode,bool returnToScreen)
 	if(returnToScreen)ResetSourceTextureMatrix(); // Original ResetScreenMatrices precedes texture pop.
 	OriginalNativeLegacyWaterTextureMatrices().Pop(SourceTextureMatrixUnit());
 	impl->state.matrices=stage.before.matrices;
+ impl->state.textureMatrixIdentity=stage.before.textureMatrixIdentity;
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 	impl->miniMapStages.pop_back();
 	}catch(...){OriginalNativeLegacyWaterTextureMatrices().Invalidate();throw;}
@@ -977,7 +1136,7 @@ void NativeUIRecorder::ResetDrawingMatrices()
 		i.OutsidePrimitive();
 		i.state.matrices[0].back()=modelView;
 		i.state.matrices[1].back()=projection;
-		i.state.matrices[2].back()=IdentityMatrix();
+		i.state.matrices[2].back()=IdentityMatrix();i.state.textureMatrixIdentity=true;
 		if(i.compiling.empty())ResetSourceTextureMatrix();
 		i.state.mode=NativeUIMatrixMode::ModelView;
 	});
@@ -1002,6 +1161,7 @@ void NativeUIRecorder::BeginGenesisStage(bool safeMode)
 	impl->genesisSafe=safeMode;impl->genesis=true;impl->genesisSource=true;
 	if(safeMode)impl->ResetDrawingAttributes();
 	for(auto& stack:impl->state.matrices)stack.back()=IdentityMatrix();
+ impl->state.textureMatrixIdentity=true;
 	ResetSourceTextureMatrix();
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 }
@@ -1010,6 +1170,7 @@ void NativeUIRecorder::ResetGenesisStage()
 	Require(impl->genesis && impl->genesisSource,"Native Genesis reset outside its source stage");impl->OutsidePrimitive();
 	if(!impl->genesisSafe)return;
 	for(auto& stack:impl->state.matrices)stack.back()=IdentityMatrix();
+ impl->state.textureMatrixIdentity=true;
 	ResetSourceTextureMatrix();
 	impl->state.mode=NativeUIMatrixMode::ModelView;
 	impl->ResetDrawingAttributes();
@@ -1023,6 +1184,7 @@ void NativeUIRecorder::EndGenesisStage()
 		// Original DisableDrawGenesis resets the top matrices to identity;
 		// it does not restore the matrices that preceded EnableDrawGenesis.
 		for(auto& stack:impl->state.matrices)stack.back()=IdentityMatrix();
+ impl->state.textureMatrixIdentity=true;
 	ResetSourceTextureMatrix();
 		impl->state.mode=NativeUIMatrixMode::ModelView;
 		PopAttrib();
@@ -1368,6 +1530,12 @@ void NativeUIRecorder::DrawLines(std::vector<ScreenLine> lines)
 	impl->Emit([lines=std::move(lines)](Impl& i) {
 		i.OutsidePrimitive();Require(i.CanDraw() || !i.compiling.empty(),"Native line geometry outside a converted stage");if(!i.CanDraw())return;
 		const auto mapping=i.CurrentRasterMapping();const auto vp=i.CurrentViewport();if(!vp.width || !vp.height)return;
+  if(!lines.empty()&&std::all_of(lines.begin(),lines.end(),[](const auto& l){return !l.polygonEdge&&std::isfinite(l.width)&&l.width>0&&l.width<=64;})){
+   auto input=std::make_shared<NativeSourceLineInput133>();input->sourceKind=2;auto t=i.CaptureSourceLineTransform(false);input->transforms.push_back(t);
+   for(const auto& line:lines){uint32_t n=input->vertices.size();for(const auto* v:{&line.start,&line.end})input->vertices.push_back({{v->x,v->y,v->z,1},v->color,{}});sourceLine133::AddSegment(*input,n,n+1,0,n==0||line.resetStipple,line.width,line.stippled,line.pattern,line.factor);}
+   auto surface=i.DrawState().draw;surface.texture.reset();surface.minimapBackground.reset();surface.material=ScreenMaterial::Solid;surface.secondary={};i.AppendSourceLines(std::move(input),surface);return;
+  }
+
 		const double sx=double(mapping.renderWidth)/mapping.windowLogicalWidth,sy=double(mapping.renderHeight)/mapping.windowLogicalHeight;
 		std::vector<ScreenLine> projected;
 		for(auto line:lines) {
@@ -1379,6 +1547,9 @@ void NativeUIRecorder::DrawLines(std::vector<ScreenLine> lines)
 			line.start=at(enter);line.end=at(leave);projected.push_back(line);
 		}
 		auto state=i.DrawState().draw;state.texture.reset();state.minimapBackground.reset();state.material=ScreenMaterial::Solid;state.secondary={};
+  if(auto packet=TryExactPixelLines(projected,mapping.renderWidth,mapping.renderHeight,mapping.samples,i.width,i.height)){
+   state.viewport=ScreenViewport{0,0,mapping.windowLogicalWidth,mapping.windowLogicalHeight};state.cull=ScreenCull::None;i.Output().AppendGeometry(std::move(packet),state);return;
+  }
 		auto rasterState=state;rasterState.scissor.reset();ScreenDrawList geometry;
 		AppendNativeScreenLines(geometry,projected,rasterState,mapping.renderWidth,mapping.renderHeight,mapping.samples);
 		i.AppendPhysicalPixels(geometry,state);
@@ -1703,7 +1874,7 @@ void NativeUIRecorder::ClearAttachments(unsigned mask, std::optional<ScreenColor
 	std::optional<float> depth, std::optional<std::int32_t> stencil)
 {
 	Require(!(mask & ~ScreenAttachmentAll),"Native UI unsupported attachment clear mask");
-	if(color)for(auto& channel:*color){Require(std::isfinite(channel),"Native UI non-finite clear color");channel=std::clamp(channel,0.0f,1.0f);}
+	if(color)for(const auto channel:*color)Require(std::isfinite(channel),"Native UI non-finite clear color");
 	if(depth){Require(std::isfinite(*depth),"Native UI non-finite clear depth");*depth=std::clamp(*depth,0.0f,1.0f);}
 	if(!impl->compiling.empty() && impl->primitive){impl->InvalidLegacyOperation();return;}
 	impl->Emit([mask,color,depth,stencil](Impl& i) {
@@ -1725,7 +1896,7 @@ void NativeUIRecorder::ClearAttachments(unsigned mask, std::optional<ScreenColor
 }
 void NativeUIRecorder::SetOriginalClearColor(ScreenColor color)
 {
- for(auto& value:color){Require(std::isfinite(value),"Original clear color is nonfinite");value=std::clamp(value,0.f,1.f);}
+ for(const auto value:color)Require(std::isfinite(value),"Original clear color is nonfinite");
  impl->Emit([color](Impl& i){i.OutsidePrimitive();i.clear.color=color;});
 }
 void NativeUIRecorder::SetOriginalClearDepth(double depth)
@@ -1745,7 +1916,8 @@ void NativeUIRecorder::LoadMatrix(NativeUIMatrix value)
 	impl->Emit([value](Impl& i) { i.OutsidePrimitive();
 		if(i.state.mode==NativeUIMatrixMode::Program0){if(i.compiling.empty())OriginalNativeLegacyWaterProgramState().ProgramMatrix0Load(value);return;}
 		if(i.state.mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Load(SourceTextureMatrixUnit(),value);
-		i.state.matrices[unsigned(i.state.mode)].back() = value; });
+		i.state.matrices[unsigned(i.state.mode)].back() = value;
+  if(i.state.mode==NativeUIMatrixMode::Texture)i.state.textureMatrixIdentity=value==IdentityMatrix(); });
 }
 void NativeUIRecorder::MultMatrix(NativeUIMatrix value)
 {
@@ -1757,7 +1929,8 @@ void NativeUIRecorder::MultMatrix(NativeUIMatrix value)
 	impl->Emit([value](Impl& i) { i.OutsidePrimitive();
 		if(i.state.mode==NativeUIMatrixMode::Program0){if(i.compiling.empty()){auto& p=OriginalNativeLegacyWaterProgramState();p.ProgramMatrix0Load(Multiply(p.ProgramMatrix0Top(),value));}return;}
 		if(i.state.mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Multiply(SourceTextureMatrixUnit(),value);
-		auto& m = i.state.matrices[unsigned(i.state.mode)].back(); m = Multiply(m,value); });
+		auto& m = i.state.matrices[unsigned(i.state.mode)].back(); m = Multiply(m,value);
+  if(i.state.mode==NativeUIMatrixMode::Texture)i.state.textureMatrixIdentity=m==IdentityMatrix(); });
 }
 NativeUIMatrix NativeUIRecorder::GetMatrix(NativeUIMatrixMode mode) const { if(mode==NativeUIMatrixMode::Program0)return OriginalNativeLegacyWaterProgramState().ProgramMatrix0Top();return impl->state.matrices[unsigned(mode)].back(); }
 void NativeUIRecorder::PushMatrix()
@@ -1782,6 +1955,7 @@ void NativeUIRecorder::PopMatrix()
 		if (v.size()==1 && !i.compiling.empty()) return;
 		if(v.size()<=1&&i.state.mode==NativeUIMatrixMode::Texture)OriginalNativeLegacyWaterTextureMatrices().Invalidate();
 		Require(v.size()>1,"Native UI matrix underflow"); v.pop_back();
+  if(i.state.mode==NativeUIMatrixMode::Texture)i.state.textureMatrixIdentity=v.back()==IdentityMatrix();
 	});
 }
 void NativeUIRecorder::CleanupOriginalMatrixStack(NativeUIMatrixMode mode,int count)
@@ -1793,6 +1967,7 @@ void NativeUIRecorder::CleanupOriginalMatrixStack(NativeUIMatrixMode mode,int co
 			if(mode==NativeUIMatrixMode::Texture&&i.compiling.empty())OriginalNativeLegacyWaterTextureMatrices().Pop(SourceTextureMatrixUnit());
 			auto& stack=i.state.matrices[unsigned(mode)];
 			if(stack.size()>1)stack.pop_back(); // Original GL_STACK_UNDERFLOW leaves the base unchanged.
+   if(mode==NativeUIMatrixMode::Texture)i.state.textureMatrixIdentity=stack.back()==IdentityMatrix();
 		}
 	});
 }
@@ -1885,6 +2060,49 @@ void NativeUIRecorder::AppendScreenUnitIcons(std::vector<NativeMiniMapIcon> icon
 	AppendEngineIcons(std::move(icons), secondAtlas, true);
 }
 
+// Optional activation receipt; no counters/allocations when unset.
+static void RecordEngineIconGPU(unsigned family,size_t icons){
+ struct Probe{
+  const char* path=std::getenv("BAR_NATIVE_ENGINE_ICON_PROBE");
+  std::array<std::atomic<uint64_t>,3> groups{},counts{};
+  ~Probe(){if(path&&*path)if(auto f=std::fopen(path,"w")){
+   std::fprintf(f,"screenGroups,screenIcons,minimapGroups,minimapIcons,worldGroups,worldIcons\n");
+   for(unsigned k=0;k<3;++k)std::fprintf(f,"%llu,%llu%s",(unsigned long long)groups[k].load(),(unsigned long long)counts[k].load(),k==2?"\n":",");
+   std::fclose(f);
+  }}
+ };
+ static Probe p;if(!p.path||!*p.path)return;
+ p.groups[family].fetch_add(1,std::memory_order_relaxed);p.counts[family].fetch_add(icons,std::memory_order_relaxed);
+}
+
+// Engine icon shaders leave UV unchanged and transform positions on the GPU.
+// Batch only adjacent identical immutable atlases, retaining original order,
+// quad diagonal and state. Exceptional precision/raster cases use the old path.
+template<class Icon>
+static std::optional<NativeWorldDrawCommand> MakeEngineIconGPUCommand(std::span<const Icon> icons,
+ const std::array<uint32_t,6>& order,NativeWorldDrawStage stage,const ScreenDrawState& surface,
+ const NativeWorldDrawState& world,const NativeWorldFontHeader& header)
+{
+ if(!WorldFillGPUState(stage,surface,world)||!WorldFontMatricesSafe(header))return {};
+ const int minimum=WorldFontMinimumInputExponent(header);
+ NativeWorldDrawCommand c;c.stage=stage;c.primitive=NativeDrawPrimitive::Triangles;
+ c.sourcePrimitive=NativeDrawPrimitive::GPUFillTriangles;c.surface=surface;c.world=world;
+ c.vertices.reserve(3+icons.size()*4);c.vertices.resize(3);c.indices.reserve(icons.size()*6);
+ std::memcpy(c.vertices.data(),&header,sizeof(header));
+ for(const auto& icon:icons){
+  const uint32_t base=uint32_t(c.vertices.size());
+  const ScreenColor color{icon.color[0]/255.f,icon.color[1]/255.f,icon.color[2]/255.f,icon.color[3]/255.f};
+  for(unsigned n=0;n<4;++n){
+   const auto& p=icon.positions[n];std::array<float,4> raw{p[0],p[1],0,1};
+   if constexpr(std::tuple_size_v<std::remove_cvref_t<decltype(p)>> == 3)raw[2]=p[2];
+   if(!WorldFontPositionSafe(raw,minimum))return {};
+   c.vertices.push_back({raw,color,{icon.uv[n][0],icon.uv[n][1],0,0}});
+  }
+  for(uint32_t index:order)c.indices.push_back(base+index);
+ }
+ ValidateWorldFillGPUHeader(c);return c;
+}
+
 void NativeUIRecorder::AppendWorldUnitIcons(std::vector<NativeWorldUnitIcon> icons, bool secondAtlas, bool alphaToCoverage)
 {
 	Require(impl->worldStage && impl->worldStageId == NativeWorldDrawStage::World,
@@ -1904,8 +2122,17 @@ void NativeUIRecorder::AppendWorldUnitIcons(std::vector<NativeWorldUnitIcon> ico
 		auto world=i.state.world;
 		world.depthTest=false;
 		world.alphaToCoverage=alphaToCoverage;
-		constexpr std::array<unsigned,6> indices{3,0,1,3,1,2};
-		for (const auto& icon:icons) {
+		constexpr std::array<uint32_t,6> indices{3,0,1,3,1,2};
+  const NativeWorldFontHeader header{i.state.matrices[0].back(),i.state.matrices[1].back(),{float(i.worldZeroToOne),0,0,0}};
+  for(size_t first=0;first<icons.size();){
+   size_t last=first+1;while(last<icons.size()&&last-first<4096&&icons[last].atlas==icons[first].atlas)++last;
+   const auto group=std::span<const NativeWorldUnitIcon>(icons).subspan(first,last-first);
+   Require(bool(group.front().atlas),"Native world unit icon has no real atlas image");
+   i.CheckSample(group.front().atlas);surface.texture=group.front().atlas;
+   if(auto command=MakeEngineIconGPUCommand(group,indices,i.worldStageId,surface,world,header)){
+    GetWorldDrawRecorder().RecordGPUFill(std::move(*command));RecordEngineIconGPU(2,group.size());first=last;continue;
+   }
+   for (const auto& icon:group) {
 			Require(bool(icon.atlas),"Native world unit icon has no real atlas image");
 			i.CheckSample(icon.atlas); surface.texture=icon.atlas;
 			const ScreenColor color{icon.color[0]/255.0f,icon.color[1]/255.0f,icon.color[2]/255.0f,icon.color[3]/255.0f};
@@ -1918,7 +2145,9 @@ void NativeUIRecorder::AppendWorldUnitIcons(std::vector<NativeWorldUnitIcon> ico
 				geometry[n]={clip,color,{icon.uv[index][0],icon.uv[index][1],0,0}};
 			}
 			GetWorldDrawRecorder().Record(i.worldStageId,NativeDrawPrimitive::Triangles,geometry,surface,world);
-		}
+   }
+   first=last;
+  }
 		// Original trailing atlas unbinds affect subsequent samplers, while the
 		// recorded commands retain the exact immutable source atlas versions.
 		if (i.textureObserver) {
@@ -1956,7 +2185,31 @@ void NativeUIRecorder::AppendEngineIcons(std::vector<NativeMiniMapIcon> icons, b
 		// leaving the already integrated minimap transport unchanged.
 		const std::array<std::uint32_t,6> indices=screenIcons ?
 			std::array<std::uint32_t,6>{3,0,1,3,1,2} : std::array<std::uint32_t,6>{0,1,2,0,2,3};
-		for (const auto& icon:icons) {
+  const bool raster=i.worldStage || i.state.world.frontPolygonMode!=NativePolygonMode::Fill || i.state.world.backPolygonMode!=NativePolygonMode::Fill;
+  const NativeWorldFontHeader header{i.state.matrices[0].back(),i.state.matrices[1].back(),{float(i.worldZeroToOne),0,0,0}};
+  NativeScreenGeometry transform;transform.kind=NativeScreenGeometryKind::ScreenUI;transform.instanceCount=1;
+  transform.modelView=header.modelView;transform.projection=header.projection;transform.coordinateExtent={i.width,i.height};
+  for(size_t first=0;first<icons.size();){
+   size_t last=first+1;while(last<icons.size()&&last-first<4096&&icons[last].atlas==icons[first].atlas)++last;
+   const auto group=std::span<const NativeMiniMapIcon>(icons).subspan(first,last-first);
+   Require(bool(group.front().atlas),"Native minimap icon has no real atlas image");
+   i.CheckSample(group.front().atlas);surface.texture=group.front().atlas;
+   if(i.worldStage){
+    if(auto command=MakeEngineIconGPUCommand(group,indices,i.worldStageId,surface,i.state.world,header)){
+     GetWorldDrawRecorder().RecordGPUFill(std::move(*command));RecordEngineIconGPU(screenIcons?0:1,group.size());first=last;continue;
+    }
+   }else if(!raster){
+    std::vector<ScreenVertex> raw;std::vector<ScreenTexCoord> tex;std::vector<uint32_t> index;
+    raw.reserve(group.size()*4);tex.reserve(group.size()*4);index.reserve(group.size()*6);
+    for(const auto& icon:group){
+     const ScreenColor color{icon.color[0]/255.f,icon.color[1]/255.f,icon.color[2]/255.f,icon.color[3]/255.f};
+     const uint32_t base=uint32_t(raw.size());
+     for(unsigned n=0;n<4;++n){raw.push_back({icon.positions[n][0],icon.positions[n][1],0,color});tex.push_back({icon.uv[n][0],icon.uv[n][1],0,0});}
+     for(auto n:indices)index.push_back(base+n);
+    }
+    if(i.Output().TryAppendTransformedTriangles(raw,tex,index,surface,transform)){RecordEngineIconGPU(screenIcons?0:1,group.size());first=last;continue;}
+   }
+   for (const auto& icon:group) {
 			Require(bool(icon.atlas),"Native minimap icon has no real atlas image");
 			i.CheckSample(icon.atlas); surface.texture=icon.atlas;
 			const ScreenColor color{icon.color[0]/255.0f,icon.color[1]/255.0f,icon.color[2]/255.0f,icon.color[3]/255.0f};
@@ -1981,7 +2234,9 @@ void NativeUIRecorder::AppendEngineIcons(std::vector<NativeMiniMapIcon> icons, b
 				if (i.worldStage) GetWorldDrawRecorder().Record(i.worldStageId,NativeDrawPrimitive::Triangles,geometry,surface,i.state.world);
 				else i.AppendScreenRaster(MakeNativeWorldDrawCommand(NativeWorldDrawStage::World,NativeDrawPrimitive::Triangles,geometry,surface,i.state.world));
 			} else i.Output().AppendTriangles(vertices,uv,indices,surface);
-		}
+   }
+   first=last;
+  }
 		// The closed engine draw retains its real atlas directly. Its original
 		// trailing raw unbinds still affect later Lua samplers; they do not disable
 		// texturing or restore the previously bound image. No reset workaround.
@@ -2015,43 +2270,52 @@ void NativeUIRecorder::AppendDeferredVisualizer(std::shared_ptr<const NativeDefe
 
 void NativeUIRecorder::AppendTargetPriorityTriangles(std::vector<ScreenVertex> vertices,std::vector<ScreenTexCoord> uv,std::array<float,2> view)
 {
-	impl->Emit([vertices=std::move(vertices),uv=std::move(uv),view](Impl& i){
+	impl->Emit([vertices=std::move(vertices),uv=std::move(uv),view](Impl& i) mutable {
 		i.OutsidePrimitive();Require(i.screen&&!i.worldStage&&i.targets.empty()&&!i.typedTargetDepth&&i.compiling.empty(),"TargetPriorityLines requires original root screen invocation");
 		Require(vertices.size()==uv.size()&&vertices.size()%3==0&&std::isfinite(view[0])&&std::isfinite(view[1])&&view[0]>0&&view[1]>0,"TargetPriorityLines geometry/view extent differs");
 		Require(i.state.world.frontPolygonMode==NativePolygonMode::Fill&&i.state.world.backPolygonMode==NativePolygonMode::Fill&&!i.state.world.inheritedClipPlane,"TargetPriorityLines special polygon/clip state requires general raster implementation");
 		auto state=i.DrawState().draw;state.material=ScreenMaterial::TargetPriorityStroke;state.targetPriorityViewGeometry=view;state.texture.reset();state.secondary={};state.minimapBackground.reset();state.sampler={};state.uvMode=ScreenUVMode::Normalized;
 		// Original shader ignores fixed-function matrices and uses the current
 		// engine UBO viewGeometry. Retain actual viewport/scissor/state separately.
-		auto projected=vertices;std::vector<uint32_t> indices;indices.reserve(vertices.size());
+		auto projected=std::move(vertices);std::vector<uint32_t> indices;indices.reserve(projected.size());
 		for(size_t index=0;index<projected.size();++index){auto& vertex=projected[index];vertex.z=0;indices.push_back(uint32_t(index));}
 		i.Output().AppendTriangles(projected,uv,indices,state);
 	});
 }
 
-void NativeUIRecorder::AppendProfilerHistogram(std::vector<std::array<float,2>> coords,std::array<float,2> view,std::array<float,4> box,ScreenColor color)
+void NativeUIRecorder::AppendProfilerHistogram(NativeBufferSnapshotRef source,uint32_t first,uint32_t count,std::array<float,2> view,std::array<float,4> box,ScreenColor color,bool zeroToOne)
 {
-	impl->Emit([coords=std::move(coords),view,box,color](Impl& i){
-		i.OutsidePrimitive();Require(i.CanDraw()&&i.screen&&!i.worldStage&&i.targets.empty()&&!i.typedTargetDepth&&i.compiling.empty(),"ProfilerHistograms requires original root screen invocation");
-		Require(std::isfinite(view[0])&&std::isfinite(view[1])&&view[0]>0&&view[1]>0,"ProfilerHistograms actual view extent invalid");
-		for(float value:box)Require(std::isfinite(value),"ProfilerHistograms bounding box nonfinite");
-		for(float value:color)Require(std::isfinite(value),"ProfilerHistograms uniform color nonfinite");
-		Require(!i.state.world.inheritedClipPlane,"ProfilerHistograms shader clip output requires its original contract");
-		auto surface=i.DrawState().draw;surface.material=ScreenMaterial::Solid;surface.texture.reset();surface.secondary={};surface.minimapBackground.reset();surface.sampler={};surface.uvMode=ScreenUVMode::Normalized;
-		std::vector<NativeWorldDrawVertex> vertices;vertices.reserve(coords.size());
-		for(const auto& coord:coords){
-			Require(std::isfinite(coord[0])&&std::isfinite(coord[1]),"ProfilerHistograms coordinate nonfinite");
-			// The exact original VS is affine with w=1 and a uniform FS color.
-			// Evaluate its clip coordinates before the common native line rasterizer.
-			// In particular the original subtracts .5, NOT the usual 2*x-1.
-			const float x=(coord[0]*(box[2]-box[0])+box[0])/view[0]-.5f;
-			const float y=(coord[1]*(box[3]-box[1])+box[1])/view[1]-.5f;
-			vertices.push_back({{x,y,.5f,1},color,{}});
-		}
-		// Original LINE_STRIP, current physical viewport, line width/stipple,
-		// clipping, endpoint coverage and fixed depth/blend/mask state survive.
-		// Fixed-function matrices and gl.Color are not inputs of this shader.
-		i.AppendScreenRaster(MakeNativeWorldDrawCommand(NativeWorldDrawStage::World,NativeDrawPrimitive::LineStrip,vertices,surface,i.state.world));
-	});
+ impl->Emit([source=std::move(source),first,count,view,box,color,zeroToOne](Impl& i){
+  i.OutsidePrimitive();Require(i.CanDraw()&&i.screen&&!i.worldStage&&i.targets.empty()&&!i.typedTargetDepth&&i.compiling.empty(),"ProfilerHistograms requires original root screen invocation");
+  Require(!i.state.world.inheritedClipPlane,"ProfilerHistograms shader clip output requires its original contract");
+  const auto mapping=i.CurrentRasterMapping();
+  auto input=std::make_shared<NativeProfilerHistogramInput132>();input->vertices=source;input->first=first;input->count=count;input->view=view;input->box=box;input->color=color;input->lineWidth=i.state.world.lineWidth;input->samples=mapping.samples;input->zeroToOne=zeroToOne;
+  profilerSource132::Validate(*input);if(count<2)return;
+  auto surface=i.DrawState().draw;surface.material=ScreenMaterial::Solid;surface.texture.reset();surface.secondary={};surface.minimapBackground.reset();surface.sampler={};surface.uvMode=ScreenUVMode::Normalized;
+  const auto viewport=i.PhysicalViewport();
+  bool gpu=(mapping.samples==1||mapping.samples==4)&&mapping.renderWidth<=16384&&mapping.renderHeight<=16384&&input->lineWidth<=64&&(!i.state.world.lineStipple||i.state.world.stipplePattern==0xffff);
+  for(double x:viewport)gpu&=std::isfinite(x)&&std::abs(x)<=32768;
+  if(gpu){
+   // Retain original float2 source and shader uniforms. No CPU vertex shader,
+   // clip planner, pixel span stream or transformed vertex array is produced.
+   auto geometry=std::make_shared<NativeScreenGeometry>();geometry->kind=NativeScreenGeometryKind::ProfilerHistogram;
+   geometry->profilerHistogram=std::move(input);geometry->count=4;geometry->instanceCount=count-1;
+   surface.viewport=i.CurrentViewport();surface.cull=ScreenCull::None;surface.pointDisk.reset();surface.depthStencil.backStencil=surface.depthStencil.frontStencil;
+   i.Output().AppendGeometry(std::move(geometry),surface);return;
+  }
+  profilerSource132::Counters().CPU();
+  std::vector<NativeWorldDrawVertex> vertices;vertices.reserve(count);
+  for(uint32_t n=0;n<count;++n){
+   std::array<float,2> coord;std::memcpy(coord.data(),source->bytes.data()+(size_t(first)+n)*8,8);
+   Require(std::isfinite(coord[0])&&std::isfinite(coord[1]),"ProfilerHistograms coordinate nonfinite");
+   const float x=(coord[0]*(box[2]-box[0])+box[0])/view[0]-.5f;
+   const float y=(coord[1]*(box[3]-box[1])+box[1])/view[1]-.5f;
+   // Common fallback consumes canonical [-w,w] depth. The actual engine
+   // clip-control state determines the original shader's constant depth.
+   vertices.push_back({{x,y,zeroToOne?0.f:.5f,1},color,{}});
+  }
+  i.AppendScreenRaster(MakeNativeWorldDrawCommand(NativeWorldDrawStage::World,NativeDrawPrimitive::LineStrip,vertices,surface,i.state.world));
+ });
 }
 
 void NativeUIRecorder::AppendTerraformCapture(std::shared_ptr<const NativeTerraformCaptureInput> input,
@@ -2069,25 +2333,17 @@ void NativeUIRecorder::AppendTerraformCapture(std::shared_ptr<const NativeTerraf
   std::vector<ScreenVertex> vertices;std::vector<ScreenTexCoord> uv;std::vector<std::uint32_t> indices;
   if(input->program==NativeTerraformCaptureProgram::Model){
    Require(model&&positions.empty()&&coords.empty(),"Terraform Capture needs actual static-definition geometry");
-   // Engine preorder and bposeTransform are exactly DrawStatic, without live animation.
-   for(const auto& piece:model->pieces){
-    if(piece.indices.empty())continue;
-    Require(piece.indices.size()%3==0&&piece.vertices.size()<=UINT32_MAX-vertices.size(),"Terraform Capture model triangle stream exceeds index range");
-    const auto mv=Multiply(i.state.matrices[0].back(),piece.bindPose);
-    const auto cross=[](std::array<float,3> a,std::array<float,3> b){return std::array<float,3>{a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]};};
-    const std::array<float,3> a{mv[0],mv[1],mv[2]},b{mv[4],mv[5],mv[6]},c{mv[8],mv[9],mv[10]};
-    const auto co0=cross(b,c),co1=cross(c,a),co2=cross(a,b);const float det=a[0]*co0[0]+a[1]*co0[1]+a[2]*co0[2];
-    Require(std::isfinite(det)&&det!=0,"Terraform Capture singular modelview normal matrix");
-    const auto base=std::uint32_t(vertices.size());
-    for(const auto& v:piece.vertices){
-     const auto clip=Transform(i.state.matrices[1].back(),Transform(mv,{v.position[0],v.position[1],v.position[2],1}));
-     ScreenColor normal{0,0,0,1};for(unsigned r=0;r<3;++r)normal[r]=(co0[r]*v.normal[0]+co1[r]*v.normal[1]+co2[r]*v.normal[2])/det;
-     for(float value:clip)Require(std::isfinite(value),"Terraform Capture nonfinite model clip coordinate");
-     for(float value:normal)Require(std::isfinite(value),"Terraform Capture nonfinite eye-space normal");
-     vertices.push_back({clip[0],clip[1],clip[2],normal});uv.push_back({v.uv[0][0],v.uv[0][1],clip[3],0});
-    }
-    for(auto index:piece.indices){Require(index<piece.vertices.size(),"Terraform Capture actual model index exceeds piece");indices.push_back(base+index);}
+   // Preserve DrawStatic preorder; retain source geometry and per-piece
+   // matrices. The actual vertex shader transforms positions and normals.
+   for(uint32_t piece=0;piece<model->pieces.size();++piece){
+    const auto& source=model->pieces[piece];if(source.indices.empty())continue;
+    Require(source.indices.size()<=UINT32_MAX,"Terraform model index count exceeds uint32");
+    auto packet=std::make_shared<NativeScreenGeometry>();packet->kind=NativeScreenGeometryKind::TerraformModel;
+    packet->model=model;packet->piece=piece;packet->count=uint32_t(source.indices.size());packet->instanceCount=1;
+    packet->modelView=Multiply(i.state.matrices[0].back(),source.bindPose);packet->projection=i.state.matrices[1].back();
+    screenGeometry::NormalMatrix(*packet);i.Output().AppendGeometry(std::move(packet),state);
    }
+   return;
   }else{
    Require(!model&&positions.size()==4&&coords.size()==4,"Terraform Capture original raw clip quad missing");
    // VERT_SRC writes gl_Vertex directly: caller matrices must not be applied.
@@ -2168,42 +2424,35 @@ void NativeUIRecorder::AppendDecalCapture(std::shared_ptr<const NativeDecalCaptu
  });
 }
 
-void NativeUIRecorder::AppendSpectatorHUDTriangles(std::vector<ScreenVertex> vertices,std::vector<ScreenTexCoord> clipW)
+void NativeUIRecorder::AppendSpectatorHUDGeometry(std::shared_ptr<const NativeScreenGeometry> geometry)
 {
- impl->Emit([vertices=std::move(vertices),clipW=std::move(clipW)](Impl& i){
+ impl->Emit([geometry=std::move(geometry)](Impl& i){
   i.OutsidePrimitive();Require(i.CanDraw()&&i.screen&&!i.worldStage&&i.targets.empty()&&!i.typedTargetDepth&&i.compiling.empty(),"Spectator HUD requires original root screen draw");
-  Require(vertices.size()==clipW.size()&&vertices.size()%3==0,"Spectator HUD original indexed triangle extent differs");
+  Require(geometry&&geometry->kind==NativeScreenGeometryKind::SpectatorHUD,"Spectator HUD geometry kind differs");
   Require(i.state.world.frontPolygonMode==NativePolygonMode::Fill&&i.state.world.backPolygonMode==NativePolygonMode::Fill&&!i.state.world.inheritedClipPlane,"Spectator HUD special raster state requires general implementation");
   auto state=i.DrawState().draw;state.material=ScreenMaterial::SpectatorHUD;state.texture.reset();state.secondary={};state.minimapBackground.reset();state.deferredVisualizer.reset();state.sampler={};state.uvMode=ScreenUVMode::Normalized;
-  // Exact affine VS: all four components of pos + posBias. The fourth
-  // component travels in unused UV storage, not an implicit w=1 shortcut.
-  // Original shader does not read fixed-function matrices or gl.Color.
-  std::vector<uint32_t> indices;indices.reserve(vertices.size());
-  for(size_t n=0;n<vertices.size();++n)indices.push_back(uint32_t(n));
-  i.Output().AppendTriangles(vertices,clipW,indices,state);
+  i.Output().AppendGeometry(geometry,state);
  });
 }
 
-void NativeUIRecorder::AppendFrameGrapherTriangles(std::vector<ScreenVertex> vertices,std::array<float,2> view,std::array<float,4> parameters)
+void NativeUIRecorder::AppendFrameGrapherGeometry(std::shared_ptr<const NativeScreenGeometry> geometry,std::array<float,2> view,std::array<float,4> parameters)
 {
-	impl->Emit([vertices=std::move(vertices),view,parameters](Impl& i){
+	impl->Emit([geometry=std::move(geometry),view,parameters](Impl& i){
 		i.OutsidePrimitive();Require(i.screen&&!i.worldStage&&i.targets.empty()&&!i.typedTargetDepth&&i.compiling.empty(),"FrameGrapher requires original root screen invocation");
-		Require(vertices.size()%3==0&&std::isfinite(view[0])&&std::isfinite(view[1])&&view[0]>0&&view[1]>0,"FrameGrapher geometry/view extent differs");
+		Require(geometry&&geometry->kind==NativeScreenGeometryKind::FrameGrapher&&std::isfinite(view[0])&&std::isfinite(view[1])&&view[0]>0&&view[1]>0,"FrameGrapher geometry/view extent differs");
 		Require(i.state.world.frontPolygonMode==NativePolygonMode::Fill&&i.state.world.backPolygonMode==NativePolygonMode::Fill&&!i.state.world.inheritedClipPlane,"FrameGrapher special polygon/clip state requires general raster implementation");
 		auto state=i.DrawState().draw;state.material=ScreenMaterial::FrameGrapher;state.targetPriorityViewGeometry=view;state.frameGrapherParameters=parameters;state.texture.reset();state.secondary={};state.minimapBackground.reset();state.sampler={};state.uvMode=ScreenUVMode::Normalized;
 		// Original shader ignores fixed-function matrices and uses the current
 		// engine UBO viewGeometry. Retain actual viewport/scissor/state separately.
 		for(float value:parameters)Require(std::isfinite(value),"FrameGrapher parameters must be finite");
-		std::vector<ScreenTexCoord> uv(vertices.size());auto projected=vertices;std::vector<uint32_t> indices;indices.reserve(vertices.size());
-		for(size_t index=0;index<projected.size();++index){auto& vertex=projected[index];vertex.z=0;indices.push_back(uint32_t(index));}
-		i.Output().AppendTriangles(projected,uv,indices,state);
+		i.Output().AppendGeometry(geometry,state);
 	});
 }
 
 void NativeUIRecorder::AppendFontTriangles(std::vector<ScreenVertex> vertices, std::vector<ScreenTexCoord> uv,
 	std::vector<std::uint32_t> indices, std::shared_ptr<const ScreenTexture> atlas, bool callerBlending)
 {
-	impl->Emit([vertices=std::move(vertices),uv=std::move(uv),indices=std::move(indices),atlas=std::move(atlas),callerBlending](Impl& i) {
+ const auto emit=[atlas=std::move(atlas),callerBlending](Impl& i,auto& vertices,auto& uv,auto& indices,const NativeRetainedFont170::Ref& retained) {
 		i.OutsidePrimitive(); Require(atlas != nullptr,"Native UI missing real glyph atlas");
 		Require(i.CanDraw() || !i.compiling.empty(),"Native UI font draw outside screen/list stage");
 		if (!i.CanDraw()) return;
@@ -2214,31 +2463,61 @@ void NativeUIRecorder::AppendFontTriangles(std::vector<ScreenVertex> vertices, s
 		if (!callerBlending) {const auto colorEquation=state.blend.colorEquation,alphaEquation=state.blend.alphaEquation;state.blend={};state.blend.colorEquation=colorEquation;state.blend.alphaEquation=alphaEquation;}
 		state.blend.enabled = true;
 		if(i.worldStage) {
-			std::vector<NativeWorldDrawVertex> geometry;geometry.reserve(indices.size());
-			Require(vertices.size()==uv.size(),"Native world font UV stream mismatch");
-			for(auto index:indices) {
-				Require(index<vertices.size(),"Native world font index out of range");const auto& v=vertices[index];
-				auto clip=Transform(i.state.matrices[1].back(),Transform(i.state.matrices[0].back(),{v.x,v.y,v.z,1}));
-				if(i.worldZeroToOne)clip[2]=2*clip[2]-clip[3];
-				geometry.push_back({clip,v.color,uv[index]});
-			}
-			auto world=i.state.world;
-			// Original CglShaderFontRenderer::PushGLState disables depth testing
-			// independently of the surrounding world widget and preserves it on Pop.
-			world.depthTest=false;
-			GetWorldDrawRecorder().Record(i.worldStageId,NativeDrawPrimitive::Triangles,geometry,state,world);
+   auto world=i.state.world;world.depthTest=false; // Original font PushGLState.
+   const NativeWorldFontHeader header{i.state.matrices[0].back(),i.state.matrices[1].back(),{float(i.worldZeroToOne),0,0,0}};
+   const bool gpuState=WorldFontGPUState(i.worldStageId,state,world)&&WorldFontMatricesSafe(header);
+   const int minimumInputExponent=gpuState?WorldFontMinimumInputExponent(header):-126;
+   bool bounded=true;
+   auto geometry=TransformNativeIndexedWorldGeometry(vertices,uv,indices,[&](const ScreenVertex& v,const ScreenTexCoord& coordinate){
+    NativeWorldDrawVertex raw{{v.x,v.y,v.z,1},v.color,coordinate};if(gpuState)bounded=WorldFontPositionSafe(raw.position,minimumInputExponent)&&bounded;return raw;
+   },gpuState?3:0);
+   if(gpuState&&bounded&&geometry.vertices.size()<=4u*1024u*1024u){
+    GetWorldDrawRecorder().RecordGPUFont(MakeWorldFontGPUCommand(i.worldStageId,std::move(geometry),state,world,header));
+   }else{
+    // Exceptional fallback retains the original transform and CPU raster path.
+    if(gpuState){geometry.vertices.erase(geometry.vertices.begin(),geometry.vertices.begin()+3);for(auto& index:geometry.indices)index-=3;}
+    for(auto& v:geometry.vertices){v.position=Transform(header.projection,Transform(header.modelView,v.position));if(i.worldZeroToOne)v.position[2]=2*v.position[2]-v.position[3];}
+    GetWorldDrawRecorder().RecordIndexedTriangles(i.worldStageId,std::move(geometry.vertices),std::move(geometry.indices),state,world);
+   }
 		} else {
-			auto projected=vertices;
+   // Preserve the original orthographic screen contract. Exceptional matrices,
+   // magnitudes and non-fill raster modes still use the existing exact path.
+   auto packet=std::make_shared<NativeScreenGeometry>();packet->kind=NativeScreenGeometryKind::ScreenFont;
+   packet->modelView=i.state.matrices[0].back();packet->projection=i.state.matrices[1].back();
+   packet->coordinateExtent={i.width,i.height};packet->instanceCount=1;
+   if(i.state.world.frontPolygonMode==NativePolygonMode::Fill&&i.state.world.backPolygonMode==NativePolygonMode::Fill&&
+      (retained?(retained->CaptureBounds(packet->fontBounds)&&screenGeometry::FontProjectionSafe(*packet)):screenGeometry::CaptureFontBounds(*packet,vertices))){
+    Require(indices.size()<=UINT32_MAX,"Screen font triangle count exceeds uint32");packet->count=uint32_t(indices.size());
+    if(retained)packet->retainedFont=retained;
+    else {auto input=std::make_shared<NativeScreenFontInput>();input->vertices=vertices;input->uv=uv;input->indices=indices;packet->fontInput=std::move(input);}
+    i.Output().AppendGeometry(std::move(packet),state);return;
+   }
+			auto projected=(i.compiling.empty()&&!i.replayDepth)?std::move(vertices):vertices;
 			for(auto& v:projected){const auto p=i.Project(v.x,v.y,v.z,1);v.x=p[0];v.y=p[1];v.z=p[2];}
 			if(i.state.world.frontPolygonMode==NativePolygonMode::Fill&&i.state.world.backPolygonMode==NativePolygonMode::Fill)i.Output().AppendTriangles(projected,uv,indices,state);
 			else {
 				std::vector<NativeWorldDrawVertex> geometry;geometry.reserve(indices.size());
-				Require(vertices.size()==uv.size(),"Native font UV stream mismatch");
+				Require(projected.size()==uv.size(),"Native font UV stream mismatch");
 				for(auto index:indices){Require(index<projected.size(),"Native font index out of range");const auto& v=projected[index];geometry.push_back({{v.x*2/float(i.width)-1,v.y*2/float(i.height)-1,v.z,1},v.color,uv[index]});}
 				i.AppendScreenRaster(MakeNativeWorldDrawCommand(NativeWorldDrawStage::World,NativeDrawPrimitive::Triangles,geometry,state,i.state.world));
 			}
 		}
-	});
+ };
+ if(!impl->compiling.empty()&&RetainedFont170Enabled()&&RetainedFontCapacity170(vertices,uv,indices)) {
+  auto source=std::make_shared<const NativeRetainedFont170>(std::move(vertices),std::move(uv),std::move(indices));
+  impl->Emit([emit,source=std::move(source)](Impl& i){emit(i,source->Vertices(),source->UV(),source->Indices(),source);});
+ }else if(!impl->compiling.empty()&&RetainedFont170Enabled()&&RetainedFontOversized171(vertices,uv,indices)){
+  //169/170 already copied Source once into std::function here. Put that same
+  // size-only copy in the shared owner; callable copies must not copy it again.
+  // Keep producer alive through Emit so success/rollback return its capacity.
+  const fontRecycle169::Source producer(std::move(vertices),std::move(uv),std::move(indices));
+  auto source=std::make_shared<const NativeRetainedFont170>(producer);
+  impl->Emit([emit,source=std::move(source)](Impl& i){emit(i,source->Vertices(),source->UV(),source->Indices(),source);});
+ }else{
+  impl->Emit([emit,source=fontRecycle169::Source(std::move(vertices),std::move(uv),std::move(indices))](Impl& i)mutable{
+   emit(i,source.streams.vertices,source.streams.uv,source.streams.indices,{});
+  });
+ }
 }
 
 } // namespace rendering::ui

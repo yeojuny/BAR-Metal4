@@ -325,6 +325,10 @@ CGame::CGame(const std::string& mapFileName, const std::string& modFileName, ILo
 CGame::~CGame()
 {
 #ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::scene::FinishPendingFrame();
+#endif
+
+#ifdef RECOIL_METAL4_LIVE_SCENE
 	LuaNativeUI::ResetMiniMap();
 #endif
 #ifdef RECOIL_METAL4_LIVE_SCENE
@@ -1004,6 +1008,10 @@ void CGame::PostLoad()
 
 void CGame::KillLua(bool dtor)
 {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::scene::FinishPendingFrame();
+#endif
+
 	RECOIL_DETAILED_TRACY_ZONE;
 	// belongs here; destructs LuaIntro (which might access sound, etc)
 	// if LoadingMT=1, a reload-request might be seen by SpringApp::Run

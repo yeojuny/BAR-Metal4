@@ -21,6 +21,11 @@ public:
 	void AbortFrame() noexcept;
 	void Reset() noexcept;
 	bool IsActive() const noexcept {return bool(frame);}
+	void RecordGPUFont(NativeWorldDrawCommand command);
+ void RecordGPUFill(NativeWorldDrawCommand command);
+ void RecordSourceLines(NativeWorldDrawCommand command);
+	void RecordIndexedTriangles(NativeWorldDrawStage stage,std::vector<NativeWorldDrawVertex> vertices,
+		std::vector<uint32_t> indices,const ScreenDrawState& surface,const NativeWorldDrawState& world);
 	void Record(NativeWorldDrawStage stage, NativeDrawPrimitive primitive,
 		std::span<const NativeWorldDrawVertex> vertices,
 		const ScreenDrawState& surface, const NativeWorldDrawState& world,

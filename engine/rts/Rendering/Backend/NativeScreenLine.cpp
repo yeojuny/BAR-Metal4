@@ -83,13 +83,25 @@ void AppendNativeScreenLines(ScreenDrawList& list,std::span<const ScreenLine> li
 		const double majorA=xMajor?ax:ay,majorB=xMajor?bx:by;
 		const int begin=std::max(0,int(std::floor(std::min(majorA,majorB)))-1);
 		const int end=std::min(int(xMajor?width:height)-1,int(std::ceil(std::max(majorA,majorB)))+1);
-		std::vector<int> unitMajors;
-		for(int step=0;step<=end-begin;++step) {
-			const int major=majorB>=majorA?begin+step:end-step;
+		// For a snapped, nondegenerate segment, diamond coverage is contiguous
+		// along its major axis. Only the two endpoint columns can be partial.
+		// Keep the exact double/perturbation test at both ends; never substitute
+		// float for it. Interior columns need no repeated diamond intersections.
+		const auto coveredMajor=[&](int major){
 			const double tAt=(major+.5-majorA)/(majorB-majorA);
 			const int center=int(std::floor((xMajor?ay:ax)+tAt*(xMajor?rasterDy:rasterDx)));
 			for(int minor=center-1;minor<=center+1;++minor)
-				if(Diamond(ax,ay,bx,by,xMajor?major:minor,xMajor?minor:major)){unitMajors.push_back(major);break;}
+				if(Diamond(ax,ay,bx,by,xMajor?major:minor,xMajor?minor:major))return true;
+			return false;
+		};
+		int firstCovered=begin,lastCovered=end;
+		while(firstCovered<=lastCovered&&!coveredMajor(firstCovered))++firstCovered;
+		while(lastCovered>firstCovered&&!coveredMajor(lastCovered))--lastCovered;
+		std::vector<int> unitMajors;
+		if(firstCovered<=lastCovered){
+			unitMajors.reserve(size_t(lastCovered-firstCovered)+1);
+			for(int step=0;step<=lastCovered-firstCovered;++step)
+				unitMajors.push_back(majorB>=majorA?firstCovered+step:lastCovered-step);
 		}
 		if(unitMajors.empty())continue;
 		const int direction=majorB>=majorA?1:-1;

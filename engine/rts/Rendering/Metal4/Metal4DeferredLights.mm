@@ -1,3 +1,5 @@
+#include "Metal4PublishedRequestCache.h"
+#include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4DeferredLights.h"
 #include "Metal4DeferredColorNative.h"
@@ -208,18 +210,14 @@ struct DeferredLightsGPU::Impl {
 	}
 	id<MTLBuffer> Published(RuntimeLease& lease, const std::shared_ptr<const NativeCUSPublishedBuffer>& source)
 	{
+  PublicationProbe publicationProbe(lease,source,1);
 		Require(source && source->capacityElements && source->stride &&
 			source->capacityElements <= std::numeric_limits<size_t>::max() / source->stride,
 			"Original deferred-light published buffer extent differs");
-		return Cached(lease, source, source->capacityElements * source->stride, [&](uint8_t* bytes) {
-			for (const auto& range: NativeCUSObservedRanges(*source)) for (size_t offset = range.offset; offset < range.offset + range.size;) {
-				const size_t page = offset / NativeCUSPublishedPage::Bytes, local = offset % NativeCUSPublishedPage::Bytes;
-				const size_t count = std::min(range.offset + range.size - offset, NativeCUSPublishedPage::Bytes - local);
-				std::memcpy(bytes + offset, source->pages.at(page)->bytes.data() + local, count);
-				offset += count;
-			}
-		});
-	}
+		auto shared=SharePublishedRequest(lease,source,publicationProbe);
+  publicationProbe.Finish(shared);
+  return shared;
+}
 	id<MTLBuffer> Mesh(RuntimeLease& lease, const NativeBufferSnapshotRef& source)
 	{
 		const auto field = std::find_if(source->layout.attributes.begin(), source->layout.attributes.end(), [](const auto& attribute) { return attribute.id == 0; });

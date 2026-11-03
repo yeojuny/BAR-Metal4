@@ -9,6 +9,11 @@ namespace rendering::metal4::smforiginal {
 inline constexpr const char* SHADERS = RECOIL_NATIVE_SAMPLE_SHADING_MSL R"SMFMSL(
 #include <metal_stdlib>
 using namespace metal;
+// Compile out only a disabled captured legacy alpha test. Enabled variants
+// retain the original dynamic predicate; intrinsic composite discard is kept.
+#ifndef NATIVE_SMF_ALPHA_TEST193
+#define NATIVE_SMF_ALPHA_TEST193 1
+#endif
 struct SMFImage {
 	uint4 flags; // depth, flipV, legacy depth mode, fixed-depth compare clamp
 	uint4 swizzle;
@@ -99,7 +104,9 @@ fragment SMFCompositeOutput NativeSMFTerrainFragment(SMFFragmentInput in [[stage
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
 	float depth=SMF_SAMPLE(depthTex,in.diffuseUV).r;float4 color=SMF_SAMPLE(colorTex,in.diffuseUV);
 	if(depth>=1.0f||color.a==0.0f)discard_fragment();
+#if NATIVE_SMF_ALPHA_TEST193
 	if(u.flags.z&&!SMFAlphaCompare(color.a,u.alpha.x,u.flags.w))discard_fragment();
+#endif
 	return {color,depth};
 }
 #else
@@ -178,7 +185,9 @@ fragment float4 NativeSMFTerrainFragment(SMFFragmentInput in [[stage_in]],consta
 	float4 diffuse=SMF_SAMPLE(diffuseTex,diffuseUV)*float4(110.0f/255.0f,110.0f/255.0f,110.0f/255.0f,0.4f);
 	float4 details=SMF_SAMPLE(detailsTex,in.detailUV)*2.0f-1.0f;
 	float4 color=(diffuse+details)*in.vertexColor;
+#if NATIVE_SMF_ALPHA_TEST193
 	if(u.flags.z&&!SMFAlphaCompare(color.a,u.alpha.x,u.flags.w))discard_fragment();
+#endif
 	return color;
 }
 #else
@@ -322,7 +331,9 @@ fragment SMF_OUTPUT NativeSMFTerrainFragment(SMFFragmentInput in [[stage_in]],co
 	out.misc=float4(0);
 	// Legacy alpha testing consumes output zero, whose original deferred alpha
 	// is 1. Void-{ground,water} shading alpha belongs to forward/combined only.
+#if NATIVE_SMF_ALPHA_TEST193
 	if(u.flags.z&&!SMFAlphaCompare(out.normal.a,u.alpha.x,u.flags.w))discard_fragment();
+#endif
 	return out;
 #else
 #ifdef SMF_SKY_REFLECTIONS
@@ -394,7 +405,9 @@ fragment SMF_OUTPUT NativeSMFTerrainFragment(SMFFragmentInput in [[stage_in]],co
 	fragColor.rgb+=specular.rgb*pow(cosSpecular,exponent)*shadowCoeff;
 #endif
 	fragColor.rgb=mix(u.fogColor.rgb,fragColor.rgb,in.fogFactor);
+#if NATIVE_SMF_ALPHA_TEST193
 	if(u.flags.z&&!SMFAlphaCompare(fragColor.a,u.alpha.x,u.flags.w))discard_fragment();
+#endif
 #ifdef SMF_COMBINED_PASS
 	SMFDeferredOutput out;out.normal=float4((normal+float3(1.0f))*0.5f,fragColor.a);
 	out.diffuse=diffuseCol+detailCol;out.specular=specular;

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeOriginalShadowCapture.h"
+#include "NativeShadowPositionCopy.inc"
 #include "Rendering/Units/UnitDrawer.h"
 #include "Rendering/Features/FeatureDrawer.h"
 #include "Rendering/Env/GrassDrawer.h"
@@ -147,7 +148,7 @@ void NativeOriginalShadowCapture::SelectTerrainSquare(int x,int z)
  terrainSquare=std::array<int32_t,2>{x,z};
 }
 void NativeOriginalShadowCapture::SubmitTerrain(const void* positions,size_t count,size_t stride,
- std::span<const uint32_t> indices,bool indexed)
+ std::span<const uint32_t> indices,bool indexed,std::shared_ptr<const NativeTerrainMeshSnapshot> snapshot)
 {
  Check(terrainSource==this&&terrainFrame&&terrainProgram&&terrainSquare&&
   recorder.CurrentWorldStage()==NativeWorldDrawStage::ShadowOpaque&&!recorder.HasActiveTarget(),"Original MAP shadow submission lost its source/program/target");
@@ -159,10 +160,15 @@ void NativeOriginalShadowCapture::SubmitTerrain(const void* positions,size_t cou
  Check(clips.observed&&clips.contextGeneration==terrainFrame->contextGeneration&&
   textures.Registry().ContextGeneration()==terrainFrame->contextGeneration,"Original MAP shadow lost its actual immutable context/clip state");
  NativeTerrainShadowDraw draw;draw.compiledOriginal=program->compiledOriginal;draw.indexed=indexed;
- draw.vertices.resize(count);const auto* bytes=static_cast<const std::byte*>(positions);
- for(size_t n=0;n<count;++n)std::memcpy(draw.vertices[n].data(),bytes+n*stride,sizeof(draw.vertices[n]));
- for(uint32_t index:indices)Check(index<count,"Original MAP shadow index exceeds its actual source vertices");
- draw.indices.assign(indices.begin(),indices.end());draw.mapSize=terrainMapSize;draw.texSquare=*terrainSquare;draw.borderMinHeight=terrainBorderMinHeight;
+ if(snapshot){
+  Check(indexed&&snapshot->MatchesSource(positions,count,stride,indices),"Original MAP shadow snapshot lost its ROAM source version");
+  draw.meshSnapshot=std::move(snapshot);
+ }else{
+  draw.vertices=CopyShadowPositions(positions,count,stride);
+  for(uint32_t index:indices)Check(index<count,"Original MAP shadow index exceeds its actual source vertices");
+  draw.indices.assign(indices.begin(),indices.end());
+ }
+ draw.mapSize=terrainMapSize;draw.texSquare=*terrainSquare;draw.borderMinHeight=terrainBorderMinHeight;
  draw.modelView=recorder.GetMatrix(ui::NativeUIMatrixMode::ModelView);draw.projection=recorder.GetMatrix(ui::NativeUIMatrixMode::Projection);
  draw.clipEnabled=clips.enabled;draw.clipPlanes=clips.eyeEquations;
  draw.world=recorder.CurrentWorldState();draw.surface=recorder.CurrentState().draw;
@@ -180,6 +186,10 @@ void NativeOriginalShadowCapture::ResetOriginalShadowMatrices(){
 }
 void NativeOriginalShadowCapture::EnableLuaWorldShadow(bool safe){
  Check(frame&&shadowHandler.InShadowPass(),"Original Lua shadow Enable is outside its actual source");
+ // A nonempty DrawWorldShadow dispatch reaches this point before its first
+ // client, even if the client reads state without recording a GPU command.
+ // Keep that observable boundary in the common shadow event order.
+ (void)NextNativeWorldDrawSequence();
  if(safe){recorder.PushAttrib(ui::Blend|ui::Alpha|ui::Enable|ui::Depth|ui::Polygon|ui::Line|ui::Point|ui::ColorMask|ui::Viewport);recorder.ResetDrawingState();OriginalNativeSourceProgramBinding().Unbind();}
  recorder.UpdateWorldState([](auto& s){s.colorWrite={false,false,false,false};s.combinedColorWrite=s.colorWrite;s.offsetFactor=s.offsetUnits=1;s.polygonOffset=true;},false);programs.Enable(false);
 }

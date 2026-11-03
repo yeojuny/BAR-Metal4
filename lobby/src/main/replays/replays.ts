@@ -34,26 +34,19 @@ export class ReplaysAPI {
     }
 
     protected startWatchingReplayFolder() {
-        //using chokidar to watch for changes in the replay folder
+        const cacheChangedReplay = (filepath: string) => {
+            if (!isReplayFile(filepath) || this.filesBeingCopied.has(path.basename(filepath))) {
+                return;
+            }
+            void this.cacheReplay(filepath);
+        };
         chokidar
             .watch(REPLAYS_PATH, {
-                ignoreInitial: true, //ignore the initial scan
-                awaitWriteFinish: true, //wait for the file to be fully written before emitting the event
+                ignoreInitial: true,
+                awaitWriteFinish: true,
             })
-            .on("add", (filepath) => {
-                if (!isReplayFile(filepath)) {
-                    return;
-                }
-
-                const fileName = path.basename(filepath);
-
-                // Skip if this file is being copied by copyParseReplay
-                if (this.filesBeingCopied.has(fileName)) {
-                    return;
-                }
-
-                this.cacheReplay(filepath);
-            })
+            .on("add", cacheChangedReplay)
+            .on("change", cacheChangedReplay)
             .on("unlink", (filepath) => {
                 if (!isReplayFile(filepath)) {
                     return;
@@ -63,28 +56,22 @@ export class ReplaysAPI {
     }
 
     public async copyParseReplay(filePath: string) {
-        let replayPath = filePath;
-        if (!replayPath.startsWith(REPLAYS_PATH)) {
-            replayPath = path.join(REPLAYS_PATH, path.basename(replayPath));
-
-            // Mark this file as being copied to prevent duplicate processing
-            const fileName = path.basename(replayPath);
-            this.filesBeingCopied.add(fileName);
-
-            try {
-                await fs.promises.copyFile(filePath, replayPath);
-                const replay = await asyncParseReplay(replayPath);
-
-                this.onReplayCached.dispatch(replay);
-                await this.fetchReplayMap(replay);
-            } finally {
-                // Always remove from the set, even if there's an error
-                this.filesBeingCopied.delete(fileName);
-            }
-        } else {
-            // File is already in the replays folder, just parse it
+        const sourcePath = path.resolve(filePath);
+        const replayDirectory = path.resolve(REPLAYS_PATH);
+        const relativePath = path.relative(replayDirectory, sourcePath);
+        // Only a direct member is represented by scanFolderForReplays and the
+        // renderer's fileName key. Prefix siblings and nested imports are copied.
+        const isManagedReplay = relativePath !== "" && relativePath === path.basename(relativePath);
+        const replayPath = isManagedReplay ? sourcePath : path.join(replayDirectory, path.basename(sourcePath));
+        const fileName = path.basename(replayPath);
+        if (!isManagedReplay) this.filesBeingCopied.add(fileName);
+        try {
+            if (!isManagedReplay) await fs.promises.copyFile(sourcePath, replayPath);
             const replay = await asyncParseReplay(replayPath);
+            this.onReplayCached.dispatch(replay);
             await this.fetchReplayMap(replay);
+        } finally {
+            if (!isManagedReplay) this.filesBeingCopied.delete(fileName);
         }
     }
 

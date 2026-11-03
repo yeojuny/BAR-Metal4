@@ -1,5 +1,11 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4SSAO.h"
+#include "Metal4TransientUpload177.h"
+#include "Rendering/Backend/NativeSSAOOverwrite149.h"
+#include "Rendering/Backend/NativeSSAOClear150.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "System/Log/ILog.h"
+#endif
 #include "NativeSSAOShaders.h"
 #include "Metal4DeferredColorNative.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
@@ -9,10 +15,11 @@
 #include <iomanip>
 #include <map>
 #include <set>
+#include "Metal4SSAOStoragePool.inc"
 namespace rendering::metal4 {
 namespace {
 struct Uniform {simd_float4x4 view,projection,inverseProjection,fuseInverseProjection;simd_float4 kernel[64],weights[12],offsets[12],directionStrength,alphaConfig;simd_uint4 flip,swizzle[8],depthMode[2];simd_float4 framebuffer;};static_assert(sizeof(Uniform)==1888);
-struct ImageState final:NativeSSAOImageResource {std::weak_ptr<const NativeSSAOImageVersion>owner;__strong id<MTLTexture>texture=nil;__strong id<MTLSamplerState>sampler=nil;std::shared_ptr<NativeSSAOProducerState>producer;NativeDeferredPostprocessEpoch sourceModelEpoch;};
+struct ImageState final:NativeSSAOImageResource {std::shared_ptr<SSAOStorage> storage;std::weak_ptr<const NativeSSAOImageVersion>owner;__strong id<MTLTexture>texture=nil;__strong id<MTLSamplerState>sampler=nil;std::shared_ptr<NativeSSAOProducerState>producer;NativeDeferredPostprocessEpoch sourceModelEpoch;};
 using ImageKey=std::pair<uint64_t,uint64_t>;
 // Validate the captured original backing as well as the resolved DTO: texture
 // names and a matching producer pointer alone do not identify an MRT attachment.
@@ -52,7 +59,8 @@ uint64_t BlendKey(const ScreenBlendState&b,const std::array<bool,4>&m){return ui
 MTLBlendOperation Equation(ScreenBlendEquation e){switch(e){case ScreenBlendEquation::Add:return MTLBlendOperationAdd;case ScreenBlendEquation::Subtract:return MTLBlendOperationSubtract;case ScreenBlendEquation::ReverseSubtract:return MTLBlendOperationReverseSubtract;case ScreenBlendEquation::Minimum:return MTLBlendOperationMin;case ScreenBlendEquation::Maximum:return MTLBlendOperationMax;}throw std::runtime_error("Unknown SSAO blend equation");}
 }
 struct PreparedSSAO::Impl {
- struct Draw {uint64_t sequence;__strong id<MTL4ArgumentTable>arguments;__strong id<MTLRenderPipelineState>pipeline;__strong id<MTLDepthStencilState>depth;__strong id<MTLTexture>color,z,stencil;std::shared_ptr<ImageState>output,previous;std::vector<ResolvedSSAOImage>inputs;std::vector<std::shared_ptr<ImageState>>localInputs;NativeWorldDrawState world;effectstate::Raster raster;uint64_t submission=0;mutable bool encoded=false;bool noop=false,clear=false;__strong id<MTLBuffer>indices=nil;NSUInteger instanceCount=0;std::array<float,4>clearColor{};};
+ __strong M4TransientUploadLifetime177* uploads177=nil;
+ struct Draw {uint64_t sequence;__strong id<MTL4ArgumentTable>arguments;__strong id<MTLRenderPipelineState>pipeline;__strong id<MTLDepthStencilState>depth;__strong id<MTLTexture>color,z,stencil;std::shared_ptr<ImageState>output,previous;std::vector<ResolvedSSAOImage>inputs;std::vector<std::shared_ptr<ImageState>>localInputs;NativeWorldDrawState world;effectstate::Raster raster;uint64_t submission=0;mutable bool encoded=false;bool noop=false,clear=false,loadClear150=false;std::shared_ptr<NativeSSAOProducerState> initialClearProducer150;__strong id<MTLBuffer>indices=nil;NSUInteger instanceCount=0;std::array<float,4>clearColor{};};
  std::vector<Draw>draws;std::shared_ptr<const NativeSSAOFrame>owner;
 };
 PreparedSSAO::PreparedSSAO():impl(std::make_unique<Impl>()){}PreparedSSAO::~PreparedSSAO()=default;size_t PreparedSSAO::DrawCount()const{return impl->draws.size();}uint64_t PreparedSSAO::SequenceAt(size_t i)const{return impl->draws.at(i).sequence;}
@@ -63,12 +71,13 @@ void PreparedSSAO::EncodeDraw(size_t index,id<MTL4CommandBuffer>command)const{
   if(d.output&&d.previous){auto copy=[command computeCommandEncoder];Require(copy!=nil,"Cannot retain original SSAO no-coverage image contents");[copy barrierAfterQueueStages:MTLStageFragment beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[copy copyFromTexture:d.previous->texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:MTLSizeMake(d.color.width,d.color.height,1) toTexture:d.color destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];}
   d.encoded=true;if(d.output){d.output->producer->submissionIdentity=d.submission;d.output->producer->encoded=true;}return;
  }
+ if(d.initialClearProducer150){const auto& producer=*d.initialClearProducer150;Require(producer.completed||(producer.encoded&&producer.submissionIdentity==d.submission),"SSAO clear seed precedes its original producer encoding/retirement");}
  for(auto&i:d.inputs)i.requireReadable();for(auto&i:d.localInputs)Require(i->producer->completed||(i->producer->encoded&&i->producer->submissionIdentity==d.submission),"SSAO samples unencoded original FBO generation");
  if(d.output&&d.previous){Require(d.previous->producer->completed||(d.previous->producer->encoded&&d.previous->producer->submissionIdentity==d.submission),"SSAO partial update previous contents are not produced");auto copy=[command computeCommandEncoder];Require(copy!=nil,"Cannot preserve actual SSAO partial image contents");[copy barrierAfterQueueStages:MTLStageFragment beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[copy copyFromTexture:d.previous->texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:MTLSizeMake(d.color.width,d.color.height,1) toTexture:d.color destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];}
- auto p=[MTL4RenderPassDescriptor new];p.defaultRasterSampleCount=d.color.sampleCount;p.renderTargetWidth=d.color.width;p.renderTargetHeight=d.color.height;p.colorAttachments[0].texture=d.color;p.colorAttachments[0].loadAction=d.output?(d.previous?MTLLoadActionLoad:MTLLoadActionDontCare):MTLLoadActionLoad;p.colorAttachments[0].storeAction=MTLStoreActionStore;
+ auto p=[MTL4RenderPassDescriptor new];p.defaultRasterSampleCount=d.color.sampleCount;p.renderTargetWidth=d.color.width;p.renderTargetHeight=d.color.height;p.colorAttachments[0].texture=d.color;p.colorAttachments[0].loadAction=d.loadClear150?MTLLoadActionClear:d.output?(d.previous?MTLLoadActionLoad:MTLLoadActionDontCare):MTLLoadActionLoad;if(d.loadClear150)p.colorAttachments[0].clearColor=MTLClearColorMake(d.clearColor[0],d.clearColor[1],d.clearColor[2],d.clearColor[3]);p.colorAttachments[0].storeAction=MTLStoreActionStore;
  if(d.z){p.depthAttachment.texture=d.z;p.depthAttachment.loadAction=MTLLoadActionLoad;p.depthAttachment.storeAction=MTLStoreActionStore;}
  if(d.stencil){p.stencilAttachment.texture=d.stencil;p.stencilAttachment.loadAction=MTLLoadActionLoad;p.stencilAttachment.storeAction=MTLStoreActionStore;}
- auto e=[command renderCommandEncoderWithDescriptor:p];Require(e!=nil,"Cannot encode actual SSAO render operation");[e barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];effectstate::RasterState(e,d.world,d.raster);[e setCullMode:d.world.cullEnabled?(d.world.cull==NativeWorldCull::Front?MTLCullModeFront:d.world.cull==NativeWorldCull::Back?MTLCullModeBack:MTLCullModeNone):MTLCullModeNone];[e setRenderPipelineState:d.pipeline];[e setDepthStencilState:d.depth];[e setArgumentTable:d.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];if(d.indices){[e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:6 indexType:MTLIndexTypeUInt32 indexBuffer:d.indices.gpuAddress indexBufferLength:d.indices.length instanceCount:d.instanceCount];}else{[e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];}[e barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[e endEncoding];d.encoded=true;if(d.output){d.output->producer->submissionIdentity=d.submission;d.output->producer->encoded=true;}
+ auto e=[command renderCommandEncoderWithDescriptor:p];Require(e!=nil,"Cannot encode actual SSAO render operation");[e barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];if(!(d.clear&&d.loadClear150)){effectstate::RasterState(e,d.world,d.raster);[e setCullMode:d.world.cullEnabled?(d.world.cull==NativeWorldCull::Front?MTLCullModeFront:d.world.cull==NativeWorldCull::Back?MTLCullModeBack:MTLCullModeNone):MTLCullModeNone];[e setRenderPipelineState:d.pipeline];[e setDepthStencilState:d.depth];[e setArgumentTable:d.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];if(d.indices){[e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:6 indexType:MTLIndexTypeUInt32 indexBuffer:d.indices.gpuAddress indexBufferLength:d.indices.length instanceCount:d.instanceCount];}else{[e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];}}[e barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[e endEncoding];d.encoded=true;if(d.output){d.output->producer->submissionIdentity=d.submission;d.output->producer->encoded=true;}
 }
 void PreparedSSAO::DidComplete()const{
  // Validate the whole frame before publishing any retirement. A late missing
@@ -78,11 +87,13 @@ void PreparedSSAO::DidComplete()const{
  impl->owner->completed=true;
 }
 struct SSAOGPU::Impl {
- bool initialized=false;
+ TransientUploadPool177 uploads177{"ssao"};
+ bool initialized=false,reported149=false,reported150=false;
  std::map<ImageKey,std::shared_ptr<ImageState>>images;
+ SSAOStoragePool storagePool;
  struct ProgramKey {std::string definitions;unsigned program;MTLPixelFormat color,depth,stencil;uint64_t blend;bool clear,validation;unsigned samples;bool coverage;auto operator<=>(const ProgramKey&)const=default;};
  std::map<std::string,id<MTLLibrary>>libraries;std::map<ProgramKey,id<MTLRenderPipelineState>>pipelines;
- std::shared_ptr<ImageState>Image(RuntimeLease&l,std::shared_ptr<const NativeSSAOImageVersion>v){Require(v&&v->image&&v->generation,"Missing actual SSAO image version");if(v->Resource()){auto image=std::dynamic_pointer_cast<const ImageState>(v->Resource());Require(image&&image->texture.device==l.Device()&&image->owner.lock()==v,"Original SSAO image resource belongs to another device/version");return std::const_pointer_cast<ImageState>(image);}ImageKey k{v->image->identity,v->generation};if(auto i=images.find(k);i!=images.end()){Require(i->second->owner.lock()==v,"SSAO image identity/generation reused by unrelated owner");return i->second;}auto r=std::make_shared<ImageState>();r->owner=v;r->producer=v->producer;auto&im=*v->image;Require(im.width&&im.height&&im.width<=l.Capabilities().maxTextureDimension2D&&im.height<=l.Capabilities().maxTextureDimension2D,"SSAO original FBO exceeds actual device limits");auto d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:im.format==NativeSSAOFormat::RGBA8?MTLPixelFormatRGBA8Unorm:MTLPixelFormatRGBA16Float width:im.width height:im.height mipmapped:NO];d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;r->texture=[l.Device()newTextureWithDescriptor:d];Require(r->texture!=nil,"Cannot allocate actual SSAO FBO texture");auto s=[MTLSamplerDescriptor new];s.supportArgumentBuffers=YES;s.minFilter=im.sampling.minFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.magFilter=im.sampling.magFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.mipFilter=MTLSamplerMipFilterNotMipmapped;s.sAddressMode=s.tAddressMode=MTLSamplerAddressModeClampToEdge;r->sampler=[l.Device()newSamplerStateWithDescriptor:s];Require(r->sampler!=nil,"Cannot allocate actual SSAO sampler");v->Fulfill(r);images.emplace(k,r);return r;}
+ std::shared_ptr<ImageState>Image(RuntimeLease&l,std::shared_ptr<const NativeSSAOImageVersion>v){Require(v&&v->image&&v->generation,"Missing actual SSAO image version");if(v->Resource()){auto image=std::dynamic_pointer_cast<const ImageState>(v->Resource());Require(image&&image->texture.device==l.Device()&&image->owner.lock()==v,"Original SSAO image resource belongs to another device/version");RetainSSAOStorage(l,image->storage);return std::const_pointer_cast<ImageState>(image);}ImageKey k{v->image->identity,v->generation};if(auto i=images.find(k);i!=images.end()){Require(i->second->owner.lock()==v,"SSAO image identity/generation reused by unrelated owner");RetainSSAOStorage(l,i->second->storage);return i->second;}auto r=std::make_shared<ImageState>();r->owner=v;r->producer=v->producer;auto&im=*v->image;Require(im.width&&im.height&&im.width<=l.Capabilities().maxTextureDimension2D&&im.height<=l.Capabilities().maxTextureDimension2D,"SSAO original FBO exceeds actual device limits");r->storage=AcquireSSAOStorage(storagePool,l,im.width,im.height,im.format==NativeSSAOFormat::RGBA8?MTLPixelFormatRGBA8Unorm:MTLPixelFormatRGBA16Float);r->texture=r->storage->texture;Require(r->texture!=nil,"Cannot allocate actual SSAO FBO texture");auto s=[MTLSamplerDescriptor new];s.supportArgumentBuffers=YES;s.minFilter=im.sampling.minFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.magFilter=im.sampling.magFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.mipFilter=MTLSamplerMipFilterNotMipmapped;s.sAddressMode=s.tAddressMode=MTLSamplerAddressModeClampToEdge;r->sampler=[l.Device()newSamplerStateWithDescriptor:s];Require(r->sampler!=nil,"Cannot allocate actual SSAO sampler");v->Fulfill(r);images.emplace(k,r);return r;}
  id<MTLRenderPipelineState>Pipeline(RuntimeLease&l,const NativeSSAODraw&draw,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool modelColor,bool mapColor,bool normalColor,bool validation,double&ms,unsigned samples){auto d=draw.defines.empty()?DefaultDefines():draw.defines;std::string defs=Defines(d,modelColor,mapColor,normalColor);ProgramKey key{defs,unsigned(draw.program),color,depth,stencil,BlendKey(draw.surface.blend,draw.world.colorWrite),draw.clear,validation,l.SampleShadingKey(samples),!draw.clear&&draw.world.alphaToCoverage};if(auto p=pipelines.find(key);p!=pipelines.end())return p->second;auto start=Clock::now();NSError*error=nil;id<MTLLibrary>library=nil;if(auto i=libraries.find(defs);i!=libraries.end())library=i->second;else{auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Fixed31657 complete SSAO program family";descriptor.source=String(defs+ssao::SHADER+"\nfragment float4 SSAOClear(constant SSAOUniform& u [[buffer(0)]]){return u.directionStrength;}\n");auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;library=l.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile exact original SSAO shaders: "+Error(error));libraries.emplace(defs,library);}
  auto p=[MTL4RenderPipelineDescriptor new];p.rasterSampleCount=samples;p.alphaToCoverageState=key.coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=library;v.name=@"SSAOVertex";f.name=draw.clear?@"SSAOClear":String(Entry(draw.program));p.vertexFunctionDescriptor=v;p.fragmentFunctionDescriptor=f;p.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;auto a=p.colorAttachments[0];a.pixelFormat=color;auto b=draw.surface.blend;if(draw.clear)b.enabled=false;a.blendingState=b.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=effectstate::Factor(b.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(b.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(b.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(b.destinationAlpha);a.rgbBlendOperation=Equation(b.colorEquation);a.alphaBlendOperation=Equation(b.alphaEquation);auto m=draw.world.colorWrite;a.writeMask=MTLColorWriteMask((m[0]?MTLColorWriteMaskRed:0)|(m[1]?MTLColorWriteMaskGreen:0)|(m[2]?MTLColorWriteMaskBlue:0)|(m[3]?MTLColorWriteMaskAlpha:0));auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);p.options=options;auto pipeline=l.NewRenderPipeline(p,&error);Require(pipeline!=nil,"Cannot compile exact SSAO actual attachment pipeline: "+Error(error));pipelines.emplace(key,pipeline);ms+=Milliseconds(start);return pipeline;}
 };
@@ -98,13 +109,19 @@ void SSAOGPU::Initialize(RuntimeLease&l,MTLPixelFormat color,MTLPixelFormat dept
  impl->Pipeline(l,d,MTLPixelFormatRGBA8Unorm,MTLPixelFormatInvalid,MTLPixelFormatInvalid,false,false,true,validation,ms,1);impl->initialized=true;
 }
 bool SSAOGPU::Initialized()const noexcept{return impl->initialized;}
-void SSAOGPU::ClearResources(){impl->images.clear();}
+void SSAOGPU::ClearResources(){impl->uploads177.Clear();impl->images.clear();impl->storagePool.Clear();}
 ResolvedSSAOImage SSAOGPU::Resolve(RuntimeLease&l,std::shared_ptr<const NativeSSAOImageVersion>v,uint64_t submission){auto im=impl->Image(l,std::move(v));l.AddAllocation(im->texture);l.Retain(im->sampler);return {im->texture,im->sampler,im,[im,submission]{Require(im->producer->completed||(submission&&im->producer->encoded&&im->producer->submissionIdentity==submission),"SSAO immutable output is not readable before its real producer");},true,im->sourceModelEpoch};}
 std::unique_ptr<PreparedSSAO>SSAOGPU::Prepare(RuntimeLease&l,std::shared_ptr<const NativeSSAOFrame>frame,const WorldCamera&camera,uint32_t logicalWidth,uint32_t logicalHeight,id<MTLTexture>sceneColor,id<MTLTexture>sceneDepth,id<MTLTexture>sceneStencil,const SSAOImageResolver&resolver,bool validation,double&ms,uint64_t submission){
  for(auto i=impl->images.begin();i!=impl->images.end();)if(i->second.use_count()==1&&i->second->owner.expired())i=impl->images.erase(i);else++i;
- if(!frame||frame->draws.empty())return{};Require(submission!=0,"SSAO requires the common actual submission identity");Require(sceneColor!=nil,"SSAO final composite needs actual scene color");Require(frame->publication&&frame->publication->matrices,"SSAO requires original uploaded camera UBO");auto result=std::make_unique<PreparedSSAO>();result->impl->owner=frame;uint64_t prior=0;
+ if(!frame||frame->draws.empty())return{};Require(submission!=0,"SSAO requires the common actual submission identity");Require(sceneColor!=nil,"SSAO final composite needs actual scene color");Require(frame->publication&&frame->publication->matrices,"SSAO requires original uploaded camera UBO");auto result=std::make_unique<PreparedSSAO>();result->impl->owner=frame;
+ impl->uploads177.BeginBatch(l.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(l,impl->uploads177,result->impl->uploads177,bytes,length,
+   [&]{return Upload(l,bytes,length);});
+ };
+uint64_t prior=0;unsigned omittedCopies149=0;uint64_t omittedBytes149=0;NativeSSAOClearPlan150 clearPlan150;unsigned attachmentClears150=0,seededDraws150=0;uint64_t omittedBytes150=0;
  for(auto&draw:frame->draws){ValidateNativeSSAODraw(draw);Require(draw.sequence>prior,"SSAO source operations out of order");prior=draw.sequence;PreparedSSAO::Impl::Draw d{};d.sequence=draw.sequence;d.submission=submission;d.world=draw.world;Require(d.world.frontPolygonMode==NativePolygonMode::Fill&&d.world.backPolygonMode==NativePolygonMode::Fill,"Original SSAO non-fill raster consumer is not yet connected");d.clear=draw.clear;d.clearColor=draw.clearColor;d.color=sceneColor;d.z=sceneDepth;d.stencil=sceneStencil;
-  if(draw.output){d.output=impl->Image(l,draw.output);d.color=d.output->texture;d.z=d.stencil=nil;d.world.depthTest=d.world.depthWrite=d.world.stencilTest=false;if(draw.previous)d.previous=impl->Image(l,draw.previous);}
+  if(draw.output){d.output=impl->Image(l,draw.output);d.color=d.output->texture;d.z=d.stencil=nil;d.world.depthTest=d.world.depthWrite=d.world.stencilTest=false;}
   // These inputs are original immutable named images. Only the final output
   // uses the main sample count; do not resolve or replace named map/model depth.
   Require(d.color.sampleCount && [l.Device() supportsTextureSampleCount:d.color.sampleCount],"SSAO output sample count is unsupported");
@@ -117,6 +134,19 @@ std::unique_ptr<PreparedSSAO>SSAOGPU::Prepare(RuntimeLease&l,std::shared_ptr<con
   auto scissor=draw.surface.scissor;if(scissor&&!scissor->windowCoordinates){scissor->x+=camera.viewport[0];scissor->y+=camera.viewport[1];scissor->windowCoordinates=true;}
   if(draw.clear)original.viewport={0,0,int32_t(d.color.width),int32_t(d.color.height)};
   auto raster=effectstate::Viewport(original,uint32_t(d.color.width),uint32_t(d.color.height),draw.output?uint32_t(d.color.width):logicalWidth,draw.output?uint32_t(d.color.height):logicalHeight,scissor);d.noop=!raster||(!draw.clear&&d.world.cullEnabled&&d.world.cull==NativeWorldCull::FrontAndBack);if(raster)d.raster=*raster;
+  // Classify before resolving/registering an immutable prior version. Only
+  // a complete non-discarding overwrite makes every old destination texel dead.
+  const bool overwrite149=!d.noop&&NativeSSAOOverwrite149(draw,
+   {d.raster.viewport.originX,d.raster.viewport.originY,d.raster.viewport.width,d.raster.viewport.height},
+   {d.raster.scissor.x,d.raster.scissor.y,d.raster.scissor.width,d.raster.scissor.height});
+  const bool attachmentClear150=clearPlan150.Remember(draw,overwrite149);
+  if(draw.output&&draw.previous){
+   if(overwrite149){++omittedCopies149;omittedBytes149+=uint64_t(d.color.width)*d.color.height*(d.color.pixelFormat==MTLPixelFormatRGBA8Unorm?4:8);}
+   else if(const auto known=clearPlan150.Previous(draw);!d.noop&&known){
+    d.loadClear150=true;d.clearColor=*known;d.initialClearProducer150=draw.previous->producer;
+    ++seededDraws150;omittedBytes150+=uint64_t(d.color.width)*d.color.height*(d.color.pixelFormat==MTLPixelFormatRGBA8Unorm?4:8);
+   }else d.previous=impl->Image(l,draw.previous);
+  }
   // A no-coverage Fuse copies the existing fused storage, so its model-depth
   // provenance follows that retained storage rather than the unsampled input.
   if(d.noop&&d.output&&d.previous)d.output->sourceModelEpoch=d.previous->sourceModelEpoch;
@@ -125,6 +155,9 @@ std::unique_ptr<PreparedSSAO>SSAOGPU::Prepare(RuntimeLease&l,std::shared_ptr<con
   // Storage follows the immutable version; never replace an image already
   // retained by a later generic UI argument table.
   if(draw.output&&draw.clear){d.raster.viewport={0,0,double(d.color.width),double(d.color.height),0,1};d.world.depthTest=d.world.depthWrite=d.world.stencilTest=d.world.cullEnabled=false;}
+  // Preserve this clear's own immutable output and sequence for any reader.
+  // The hardware attachment clear needs no shader,uniform,quad or arguments.
+  if(attachmentClear150){d.loadClear150=true;++attachmentClears150;l.AddAllocation(d.color);result->impl->draws.push_back(std::move(d));continue;}
   Uniform u{};auto&bytes=frame->publication->matrices->bytes;std::memcpy(&u.view,bytes.data()+3*64,64);std::memcpy(&u.projection,bytes.data()+4*64,64);std::memcpy(&u.inverseProjection,bytes.data()+8*64,64);std::memcpy(&u.fuseInverseProjection,draw.uniforms.inverseProjection.data(),64);for(unsigned i=0;i<64;++i)u.kernel[i]=simd_make_float4(draw.uniforms.samplingKernel[i][0],draw.uniforms.samplingKernel[i][1],draw.uniforms.samplingKernel[i][2],0);for(unsigned i=0;i<12;++i){u.weights[i].x=draw.uniforms.weights[i];u.offsets[i].x=draw.uniforms.offsets[i];}u.directionStrength=draw.clear?simd_make_float4(draw.clearColor[0],draw.clearColor[1],draw.clearColor[2],draw.clearColor[3]):simd_make_float4(draw.uniforms.direction[0],draw.uniforms.direction[1],draw.uniforms.strength,0);
   // Convert Metal attachment coordinates back to the captured source window
   // coordinates for gl_FragCoord and exact texelFetch; private targets are 1:1.
@@ -140,14 +173,27 @@ std::unique_ptr<PreparedSSAO>SSAOGPU::Prepare(RuntimeLease&l,std::shared_ptr<con
    if(draw.program==NativeSSAOProgram::Fuse){Require(bool(modelEpoch.actualProducer),"Original SSAO fuse lacks actual model-depth provenance");if(d.output)d.output->sourceModelEpoch=modelEpoch;}
    if(draw.program==NativeSSAOProgram::Sample){const std::array<NativeDeferredPostprocessEpoch,2> epochs{normalEpoch,modelEpoch};ValidateNativeDeferredModelEpochs(epochs);}
   }
-  auto vertices=draw.clear?MakeNativeSSAOTexRect(-1,-1,1,1,0,0,1,1):draw.vertices;auto vb=Upload(l,vertices.data(),sizeof(vertices)),ub=Upload(l,&u,sizeof(u));[d.arguments setAddress:ub.gpuAddress atIndex:0];[d.arguments setAddress:vb.gpuAddress atIndex:1];
+  auto vertices=draw.clear?MakeNativeSSAOTexRect(-1,-1,1,1,0,0,1,1):draw.vertices;auto vb=upload177(vertices.data(),sizeof(vertices)),ub=upload177(&u,sizeof(u));[d.arguments setAddress:ub.gpuAddress atIndex:0];[d.arguments setAddress:vb.gpuAddress atIndex:1];
   if(draw.tiles){
    const auto&tiles=*draw.tiles;
    d.indices=Upload(l,tiles.indices.data(),sizeof(tiles.indices));d.instanceCount=tiles.instances.size();
-   auto instances=Upload(l,tiles.instances.data(),tiles.instances.size()*sizeof(tiles.instances.front()));
+   auto instances=upload177(tiles.instances.data(),tiles.instances.size()*sizeof(tiles.instances.front()));
    [d.arguments setAddress:instances.gpuAddress atIndex:2];
   }
   d.pipeline=impl->Pipeline(l,draw,d.color.pixelFormat,d.z?d.z.pixelFormat:MTLPixelFormatInvalid,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid,modelColor,mapColor,normalColor,validation,ms,unsigned(d.color.sampleCount));d.depth=effectstate::Depth(l,d.world,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid);l.Retain(d.arguments);l.Retain(d.pipeline);l.AddAllocation(d.color);if(d.z)l.AddAllocation(d.z);if(d.stencil)l.AddAllocation(d.stencil);if(d.previous)l.AddAllocation(d.previous->texture);result->impl->draws.push_back(std::move(d));
- }return result;
+ }
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ if(!impl->reported150&&frame->sourceDrawFrame>=600&&attachmentClears150){
+  impl->reported150=true;
+  LOG("[NativeSSAO150] frame=%llu draws=%llu attachment_clears=%u omitted_clear_draws=%u seeded_draws=%u omitted_copies=%u omitted_logical_source_bytes=%llu omitted_argument_tables=%u omitted_upload_buffers=%u omitted_upload_bytes=%llu",
+   (unsigned long long)frame->sourceDrawFrame,(unsigned long long)frame->draws.size(),attachmentClears150,attachmentClears150,seededDraws150,seededDraws150,(unsigned long long)omittedBytes150,attachmentClears150,attachmentClears150*2,(unsigned long long)(attachmentClears150*(sizeof(Uniform)+sizeof(std::array<std::array<float,4>,6>))));
+ }
+ if(!impl->reported149&&frame->sourceDrawFrame>=60&&omittedCopies149){
+  impl->reported149=true;
+  LOG("[NativeSSAO149] frame=%llu draws=%llu omitted_copies=%u omitted_logical_source_bytes=%llu omitted_prior_resolves=%u",
+   (unsigned long long)frame->sourceDrawFrame,(unsigned long long)frame->draws.size(),omittedCopies149,(unsigned long long)omittedBytes149,omittedCopies149);
+ }
+#endif
+ return result;
 }
 }

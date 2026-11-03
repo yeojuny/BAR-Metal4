@@ -1,3 +1,4 @@
+#include <cstdlib>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4StartBoxNative.h"
 #include "Rendering/Backend/NativeUIRecorder.h"
@@ -9,9 +10,13 @@
 #include "Rendering/Backend/NativeMapTexturePublication.h"
 #include "Rendering/Backend/NativeDeferredPostprocessSource.h"
 #include "Metal4WorldRenderer.h"
+#include "Rendering/Backend/NativePreparationTrace.h"
+#include "Rendering/Backend/NativeCUSCPUReadScope.h"
 #include "Metal4MainSampling.h"
 #include "Metal4WorldBCDecode.h"
 #include "Metal4RuntimeNative.h"
+#include "Rendering/Backend/NativeSubmissionTrace.h"
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include "Metal4WindowSurfaceNative.h"
 #include "Metal4WorldViewport.h"
 #include "Metal4LogicalCopyMapping.h"
@@ -24,6 +29,7 @@
 #include "Metal4OpaqueModelSource.h"
 #include "Metal4ShadowTextureNative.h"
 #include "Metal4OriginalShadowSource.h"
+#include "Metal4InitialShadowClear.h"
 #include "Rendering/Backend/NativeOriginalShadowParticlesProgramSource.h"
 #include "Rendering/Backend/NativeEngineShadowProgramSource.h"
 #include "Metal4NamedVolumeNative.h"
@@ -87,6 +93,12 @@
 #include "Metal4TerrainSourceGPU.h"
 #include "Metal4TerrainSquareSource.h"
 #include "Metal4TerrainGroundClear.h"
+#include "Rendering/Backend/NativeInitialClearLoad.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "System/Log/ILog.h"
+#include "Metal4MRTObservation174.h"
+#endif
+#include "Metal4WorldEncodingProbe176.h"
 #include "Rendering/EngineBridge/NativeTerrainImagePublication.h"
 #include "Rendering/Backend/NativeTerrainInfoData.h"
 #include "Metal4FireSmokeNative.h"
@@ -290,6 +302,8 @@ struct Metal4WorldRenderer::Impl {
 	metal4::MiniMapGPU sensorRadarGPU;
 	struct MapImage final:NativeMapTextureResource {
 		__strong id<MTLTexture> texture=nil;mutable bool completed=false;
+		// One RRRR view for this actual immutable height upload, never by name/frame.
+		mutable __strong id<MTLTexture> heightRRRR=nil,heightRRRRSource=nil;
 		std::shared_ptr<const metal4::PreparedMiniMapHeight> heightOwner;
 		bool Completed()const noexcept override{return completed;}
 	};
@@ -350,6 +364,10 @@ struct Metal4WorldRenderer::Impl {
 	metal4::FireSmokeGPU waterFireSmokeGPU;
 	__strong id<MTLTexture> waterReflection=nil,waterReflectionDepth=nil;
 	__strong id<MTLTexture> waterRefraction=nil,waterRefractionDepth=nil;
+ std::array<bool,2> reportedPlanar173{};
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ std::atomic<uint64_t> mrt174CompletedFrames{0};
+#endif
 	__strong id<MTLTexture> preWaterColor=nil,preWaterDepth=nil;
 	__strong id<MTLTexture> logicalTerrainDepth=nil;
 	std::array<id<MTLRenderPipelineState>,2> placementSamplePipelines{};
@@ -367,10 +385,11 @@ struct Metal4WorldRenderer::Impl {
 	std::shared_ptr<const NativeWorldEnvironmentFrame> environmentInputs;
 	std::shared_ptr<metal4::PreparedMetalInfo> reflectionMetalInfo;
 	std::shared_ptr<metal4::PreparedWorldInfo> reflectionWorldInfo;
+ bool reflectionShaderValidation=false;
 	std::unique_ptr<MiniMapGPU> standardTerrainGPU = std::make_unique<MiniMapGPU>();
 	__strong id<MTLSamplerState> standardShadeSampler = nil;
 	uint32_t standardShadeAnisotropy = 0;
-	struct TileBatch { __strong id<MTLTexture> texture = nil; __strong id<MTLBuffer> instances = nil; uint32_t count = 0; };
+	struct TileBatch { __strong id<MTLTexture> texture = nil; __strong id<MTLBuffer> instances = nil; uint32_t count = 0; TerrainSquareViewCache squareViews; };
 	struct TileRange {uint32_t batch=0,first=0,count=0;};
 	struct MapCache {
 		std::shared_ptr<const WorldTerrainTiles> owner;
@@ -381,6 +400,7 @@ struct Metal4WorldRenderer::Impl {
 	};
 	struct PieceCache { __strong id<MTLBuffer> vertices = nil; __strong id<MTLBuffer> indices = nil; uint32_t count = 0; };
 	struct ModelCache { std::shared_ptr<const WorldModel> owner; std::vector<PieceCache> pieces; };
+	// Readiness covers all uploaded/generated levels and their one-time GPU optimization.
 	struct TextureUploadState { bool ready = false; uint64_t encodedSubmission = 0; };
 	struct TextureCache {
 		std::shared_ptr<const WorldTexture> owner;
@@ -438,9 +458,11 @@ struct Metal4WorldRenderer::Impl {
 		if (it == textures.end()) {
 			Require(textures.size() < 512, "World texture cache diagnostic limit exceeded");
 			TextureCache cache; cache.owner = owner; cache.texture = UploadTexture(lease.Device(), *owner, lease.Capabilities().maxTextureDimension2D);
-			// Base/embedded levels were actually uploaded by replaceRegion above.
-			// Generated levels become readable only after their shared producer.
-			cache.status->ready = !owner->generateMipmaps || cache.texture.mipmapLevelCount == 1;
+			// Base/embedded levels were uploaded by replaceRegion above. Every
+			// immutable image, including fully supplied mips, now joins the shared
+			// first-use producer. Its receipt covers mip generation when required
+			// and optimization of the same storage before later GPU consumers.
+			cache.status->ready = false;
 			cache.sampled = cache.texture;
 			if (owner->originalInternalFormat == 0x83F0) {
 				// Original RGB BC1 samples alpha1 from the same underlying storage,
@@ -452,6 +474,8 @@ struct Metal4WorldRenderer::Impl {
 			}
 			it = textures.emplace(owner.get(), std::move(cache)).first;
 		}
+		if(!it->second.status->ready&&it->second.status->encodedSubmission&&lease.PreparingWhilePending())
+   lease.RetirePreviousSubmission(); // First-use texture producer still owns its receipt.
 		lease.AddAllocation(it->second.texture);
 		if (it->second.sampled != it->second.texture) lease.AddAllocation(it->second.sampled);
 		if (!it->second.status->ready && std::find(pendingMipTextures.begin(),pendingMipTextures.end(),&it->second)==pendingMipTextures.end()) pendingMipTextures.push_back(&it->second);
@@ -462,16 +486,33 @@ struct Metal4WorldRenderer::Impl {
 	{
 		Require(command != nil && submission != 0, "Original texture mip producer needs its actual shared submission");
 		for (const auto* cached: pendingMipTextures) {
+   if(cached->status->ready)continue; // N retired after N+1 prepared this list.
 			Require(!cached->status->ready && (!cached->status->encodedSubmission || cached->status->encodedSubmission == submission),
 				"Original texture mips retain an unretired different submission");
-			auto mip = [command computeCommandEncoder]; Require(mip != nil, "Cannot encode original world texture mip generation");
-			[mip generateMipmapsForTexture:cached->texture];
+			auto mip = [command computeCommandEncoder]; Require(mip != nil, "Cannot encode original world texture first-use producer");
+			if(cached->owner->generateMipmaps && cached->texture.mipmapLevelCount > 1){
+				[mip generateMipmapsForTexture:cached->texture];
+				// Both commands execute in the Blit stage. Preserve every generated
+				// texel before optimizing the same immutable storage for GPU reads.
+				[mip barrierAfterEncoderStages:MTLStageBlit beforeEncoderStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+			}
+			[mip optimizeContentsForGPUAccess:cached->texture];
 			[mip barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
 			[mip endEncoding];
 			cached->status->encodedSubmission = submission;
 		}
 	}
 
+ std::function<void()> TakeTextureMipCompletion(uint64_t submission)
+ {
+  std::vector<std::shared_ptr<TextureUploadState>> states;
+  for(const auto* cached:pendingMipTextures)if(!cached->status->ready)states.push_back(cached->status);
+  pendingMipTextures.clear();
+  return [states=std::move(states),submission]{
+   for(const auto& state:states)Require(submission&&state->encodedSubmission==submission,"Texture mip completion lost its submitting owner");
+   for(const auto& state:states)state->ready=true;
+  };
+ }
 	void CompletePendingTextureMipmaps(uint64_t submission)
 	{
 		for (const auto* cached: pendingMipTextures)
@@ -618,7 +659,7 @@ struct Metal4WorldRenderer::Impl {
 			Require(map.owner&&square->tiles==map.owner,"Original terrain square lost its actual committed map cache");
 			const uint64_t index=uint64_t(square->squareZ)*(map.owner->gridWidth/NATIVE_SMF_TILES_PER_SQUARE)+square->squareX;
 			const auto batch=size_t(index/2048);Require(batch<map.batches.size(),"Original terrain square has no uploaded map batch");
-			return ResolveNativeTerrainSquareImage(lease,binding,map.owner,map.batches[batch].texture,uint32_t(batch*2048),actualSampler);
+			return ResolveNativeTerrainSquareImage(lease,binding,map.owner,map.batches[batch].texture,uint32_t(batch*2048),actualSampler,map.batches[batch].squareViews);
 		}
 		if(std::dynamic_pointer_cast<const NativeTerrainInfoBacking>(binding.object->backing))
 			return ResolveNativeTerrainInfoImage(lease,binding,submission,actualSampler,validation,shaderMs);
@@ -689,7 +730,7 @@ struct Metal4WorldRenderer::Impl {
 		const size_t heightBytes = inputHeights.corners.size() * sizeof(float);
 		const bool updateHeights = heightOwner != terrain.heights || heights == nil || heights.length != heightBytes;
 		if (updateHeights) {
-			for (float value: inputHeights.corners) Require(std::isfinite(value), "Non-finite actual terrain height");
+			for(float value:inputHeights.corners)Require(std::isfinite(value),"Non-finite actual terrain height");
 		}
 		if (map.owner != owner) {
 			ValidateNativeSMFTiles(*owner);
@@ -890,6 +931,7 @@ bool Metal4RendererCanSafelyDetachSurface()
 
 Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int requestedSamples): impl(std::make_unique<Impl>(surface))
 {
+	@autoreleasepool {
 	RuntimeLease lease;
 	CAMetalLayer* layer = Metal4WindowSurfaceNativeAccess::Layer(surface);
 	Require(layer != nil && layer.device == lease.Device(), "Native family initialization requires the renderer's actual attached device");
@@ -966,12 +1008,13 @@ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int reques
 	SetNativeGroundDecalConsumerAvailable(true);
 	SetNativeGameDecalConsumerAvailable(true);
 	SetNativeUnitPrimitiveConsumerAvailable(true);
+	}
 }
 NativeMainSampling Metal4WorldRenderer::ActualMainSampling() const { return impl->mainSampling; }
 
-Metal4WorldRenderer::~Metal4WorldRenderer() = default;
+Metal4WorldRenderer::~Metal4WorldRenderer() { if(impl && !SharedRuntime().CanSafelyDetach())std::terminate(); }
 Metal4WorldRenderer::Metal4WorldRenderer(Metal4WorldRenderer&&) noexcept = default;
-Metal4WorldRenderer& Metal4WorldRenderer::operator=(Metal4WorldRenderer&&) noexcept = default;
+Metal4WorldRenderer& Metal4WorldRenderer::operator=(Metal4WorldRenderer&& other) noexcept { if(this!=&other){if(impl&&!SharedRuntime().CanSafelyDetach())std::terminate();impl=std::move(other.impl);}return *this; }
 
 void Metal4WorldRenderer::ClearWaterResources()
 {
@@ -1091,21 +1134,10 @@ void Metal4WorldRenderer::ClearStaticResources()
 void Metal4WorldRenderer::CaptureEnvironmentInputs(std::shared_ptr<const NativeWorldEnvironmentFrame> frame, bool shaderValidation)
 {
 	MainThread(); Require(impl != nullptr && frame != nullptr, "Original environment stage is missing");
-	std::shared_ptr<PreparedMetalInfo> metalInfo;
-	std::shared_ptr<PreparedWorldInfo> worldInfo;
-	const bool los=frame->worldInfoFrame && frame->worldInfoFrame->mode==NativeWorldInfoMode::Los;
-	if (frame->metalInfoFrame || los) {
-		RuntimeLease lease;
-		double compileMs = 0;
-		if(frame->metalInfoFrame){
-			metalInfo = SharedMetalInfoGPU().Prepare(lease, frame->metalInfoFrame, shaderValidation, compileMs);
-			Require(!metalInfo->HasUpdates(), "Original reflection must pin a completed metal producer");
-		}
-		if(los)worldInfo=SharedWorldInfoGPU().Prepare(lease,frame->worldInfoFrame,shaderValidation,compileMs);
-	}
-	impl->environmentInputs = std::move(frame);
-	impl->reflectionMetalInfo = std::move(metalInfo);
-	impl->reflectionWorldInfo = std::move(worldInfo);
+ // Capture owns immutable source metadata only. GPU preparation happens
+ // after the prior submission retires in Draw, never during N+1 collection.
+ impl->environmentInputs=std::move(frame);impl->reflectionShaderValidation=shaderValidation;
+ impl->reflectionMetalInfo.reset();impl->reflectionWorldInfo.reset();
 }
 
 bool Metal4WorldRenderer::SubmitScreenTargets(const ScreenFrameView& frame, bool shaderValidation)
@@ -1409,8 +1441,7 @@ std::shared_ptr<const void> Metal4WorldRenderer::AllocateCoverageTarget(const st
 {
  MainThread();Require(impl && color && depth && color->format==ScreenTextureFormat::R8Unorm && depth->format==ScreenTextureFormat::Depth16Unorm &&
   color->width==depth->width && color->height==depth->height,"Coverage FBO allocation metadata differs from original R8+D16");
- RuntimeLease lease;
- auto c=impl->screenGPU.PrepareAttachmentAllocation(lease,color),d=impl->screenGPU.PrepareAttachmentAllocation(lease,depth);
+ auto c=impl->screenGPU.ReserveAttachmentAllocationForCapture(color),d=impl->screenGPU.ReserveAttachmentAllocationForCapture(depth);
  Require(c && d && c.pixelFormat==MTLPixelFormatR8Unorm && d.pixelFormat==MTLPixelFormatDepth16Unorm &&
   c.width==d.width && c.height==d.height && c.sampleCount==1 && d.sampleCount==1 &&
   (c.usage&MTLTextureUsageRenderTarget) && (d.usage&MTLTextureUsageRenderTarget),"Coverage FBO has no actual native attachment pair");
@@ -1420,8 +1451,8 @@ std::shared_ptr<const void> Metal4WorldRenderer::AllocateCoverageTarget(const st
 }
 std::shared_ptr<const NativeBlockoutTarget> Metal4WorldRenderer::AllocateBlockoutTarget(uint32_t width,uint32_t height)
 {
- MainThread();Require(bool(impl),"Blockout FBO has no actual renderer owner");RuntimeLease lease;
- return impl->blockoutGPU.AllocateTarget(lease,width,height);
+ MainThread();Require(bool(impl),"Blockout FBO has no actual renderer owner");
+ return ReserveNativeBlockoutTargetForCapture(width,height);
 }
 
 void Metal4WorldRenderer::ConnectPBRSourceContext(bool connected)
@@ -1430,7 +1461,7 @@ void Metal4WorldRenderer::ConnectPBRSourceContext(bool connected)
 	if(!connected){impl->pbrSource.Shutdown();OriginalNativeCubeTextures().Detach();return;}
 	NativeCubeTextureServices cubeServices;
 	cubeServices.sourceDrawFrame=[]{return uint64_t(globalRendering->drawFrame);};
-	cubeServices.allocate=[](NativeCubeTextureKind kind,uint32_t size,uint32_t levels){RuntimeLease lease;return AllocateNativeCubeTexture(lease,kind,size,levels);};
+	cubeServices.allocate=[](NativeCubeTextureKind kind,uint32_t size,uint32_t levels){return ReserveNativeCubeTextureForCapture(kind,size,levels);};
 	OriginalNativeCubeTextures().Attach(context.Registry(),context.History(),std::move(cubeServices));
 	try {
 		impl->pbrSource.Initialize(context,[](lua_State*,const std::string& name)->NativeTextureLookup {
@@ -1608,9 +1639,13 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 				Require(channels==std::array<unsigned,4>{0x1903,0x1903,0x1903,0x1903}&&(image.usage&MTLTextureUsagePixelFormatView),
 					"Original UI height requires its actual RRRR channel view");
 				lease.AddAllocation(image);
-				image=[image newTextureViewWithPixelFormat:MTLPixelFormatR32Float textureType:MTLTextureType2D levels:NSMakeRange(0,1) slices:NSMakeRange(0,1)
-					swizzle:MTLTextureSwizzleChannelsMake(MTLTextureSwizzleRed,MTLTextureSwizzleRed,MTLTextureSwizzleRed,MTLTextureSwizzleRed)];
-				Require(image!=nil,"Cannot create original UI height RRRR view");
+				if(resource->heightRRRR==nil || resource->heightRRRRSource!=image || resource->heightRRRR.device!=lease.Device()) {
+					auto view=[image newTextureViewWithPixelFormat:MTLPixelFormatR32Float textureType:MTLTextureType2D levels:NSMakeRange(0,1) slices:NSMakeRange(0,1)
+						swizzle:MTLTextureSwizzleChannelsMake(MTLTextureSwizzleRed,MTLTextureSwizzleRed,MTLTextureSwizzleRed,MTLTextureSwizzleRed)];
+					Require(view!=nil,"Cannot create original UI height RRRR view");
+					resource->heightRRRRSource=image;resource->heightRRRR=view;
+				}
+				image=resource->heightRRRR;
 			}
 			return {image,object,[resource]{Require(resource->Completed(),"Original UI height sampled before its retained upload completed");}};
 		}
@@ -1684,13 +1719,13 @@ void Metal4WorldRenderer::SetOriginalShadowCapture(std::function<void(std::share
  // Allocation is needed before ShadowHandler::Init and Lua program creation.
  // This structural callback must not recursively depend on final CUS readiness.
  services.ready=[this]{return impl!=nullptr;};
- services.allocate=[](const NativeShadowTextureRequest& request){RuntimeLease lease;return AllocateNativeShadowTexture(lease,request);};
+ services.allocate=[](const NativeShadowTextureRequest& request){return ReserveNativeShadowTextureForCapture(request);};
  services.checkFramebuffer=[](const NativeShadowTextureBacking& depth,const NativeShadowTextureBacking& color,bool){return CheckNativeShadowFramebuffer(depth,color);};
  services.sourceDrawFrame=[]{return uint64_t(globalRendering->drawFrame);};
  // Physical native floating-point depth has 32 bits. Original InitFBO keeps
  // its min(bits,24) request; the shadow owner separately reports D32Float
  // storage and preserves fixed-request compare and shadow raster semantics.
- services.depthBufferBits=[]{RuntimeLease lease;Require(lease.Device()!=nil,"Original native shadow capability has no actual device");return 32;};
+ services.depthBufferBits=[]{const auto& runtime=SharedRuntime();Require(runtime.Capabilities().directMetal4 && runtime.Capabilities().unifiedMemory && runtime.Device()!=nil,"Original native shadow capability has no actual device");return 32;};
  services.capture=std::move(capture);source.Attach(context.Registry(),context.History(),std::move(services));
 }
 void Metal4WorldRenderer::ConstructOriginalShadowPrograms(NativeEngineShadowProgramSource& source,const WorldCamera& drawing)
@@ -1934,7 +1969,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
    impl->surface->Refresh();const auto current=impl->surface->Snapshot();
    if(current.CanPresent() && current.renderWidth==main->Color().width && current.renderHeight==main->Color().height){
     auto layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
-    drawable=[layer nextDrawable];
+    {NativeSubmissionTraceDrawableScope trace(&lease);
+     drawable=[layer nextDrawable];}
     if(drawable){
      main->PrepareFinalDestination(lease,drawable.texture);lease.Retain(drawable);
      if(globalRendering->fullScreen && !globalRendering->dualScreenMode){
@@ -1993,8 +2029,19 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
  }
 }
 
-Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame, const Metal4WorldRenderOptions& options)
+std::shared_ptr<const void> Metal4WorldRenderer::PrepareIndependentResources(const WorldFrame& frame)
 {
+ MainThread();Require(impl!=nullptr,"World renderer was moved from");
+ if(impl->screenContinuation||!frame.originalShadow||!frame.originalShadow->terrain)return {};
+ return impl->originalShadowGPU.PrepareTerrainGeometry(frame.originalShadow->terrain);
+}
+Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame, const Metal4WorldRenderOptions& options)
+{return DrawPrepared(frame,options,{});}
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPreparingWhilePending(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
+{return DrawPrepared(frame,options,std::move(previousRetired));}
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
+{
+ NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
 		if(impl->screenContinuation)return ContinueScreen(frame,options);
@@ -2027,11 +2074,35 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		MatrixFinite(frame.viewCamera.view); MatrixFinite(frame.viewCamera.projection);
 		for (float value: frame.viewCamera.position) Require(std::isfinite(value), "Non-finite actual camera position");
 		Require(frame.units.size() <= 100'000, "World unit count exceeds diagnostic bounds");
-		RuntimeLease lease;
+		cpuPhase.Mark(0);
+		PreparationTraceFrame preparationDetail(frame.simulationFrame);
+  CountPreparationTrace(35,NativeCUSCPUReadScope::ActiveCount());
+  CountPreparationTrace(38,NativeCUSCPUReadScope::ActivePreparationNanoseconds());
+		std::optional<NativeCPUPhaseScope> prepPhase;prepPhase.emplace(4,frame.simulationFrame);
+  RuntimeLease lease(std::move(previousRetired));
+  // Sweep once even when main/water effect frames are absent or empty.
+  impl->projectileEffectsGPU.PruneExpiredImages();
+  impl->lightningGPU.PruneExpiredImages();
+  // These existing stores upload in place. Keep their original last-reader
+  // boundary on deformation/map changes; unchanged immutable inputs overlap.
+  if(impl->heightOwner!=frame.terrain.heights || impl->map.owner!=frame.terrain.tiles)
+   lease.RetirePreviousSubmission();
 		lease.SetMinSampleShadingRate(frame.minSampleShadingRate);
+  if(impl->environmentInputs){
+   const auto& input=impl->environmentInputs;double compileMs=0;
+   if(input->metalInfoFrame){
+    impl->reflectionMetalInfo=SharedMetalInfoGPU().Prepare(lease,input->metalInfoFrame,impl->reflectionShaderValidation,compileMs);
+    Require(!impl->reflectionMetalInfo->HasUpdates(),"Original reflection must pin a completed metal producer");
+   }
+   if(input->worldInfoFrame && input->worldInfoFrame->mode==NativeWorldInfoMode::Los)
+    impl->reflectionWorldInfo=SharedWorldInfoGPU().Prepare(lease,input->worldInfoFrame,impl->reflectionShaderValidation,compileMs);
+  }
+
 		Require(frame.mainSampling.samples==impl->mainSampling.samples && frame.mainSampling.effective==impl->mainSampling.effective,"Captured main sampling differs from the allocated renderer context");
+		prepPhase->Mark(0);
 		if(options.screenUI && options.screenUI->postprocess)
 			impl->postprocessGPU.PrepareFrameImages(lease,options.screenUI->postprocess,frame.sourceDrawFrame);
+		prepPhase->Mark(1);
 		CAMetalLayer* layer = Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 		Require(layer != nil && layer.device == lease.Device(), "World layer/device ownership mismatch");
 		const auto resourceStart = Clock::now();
@@ -2232,6 +2303,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			}
 			lease.AddAllocation(target);
 		};
+		prepPhase->Mark(2);
 		const auto mainSamples=impl->mainSampling.samples;
 		auto mainAttachments=impl->mainStorage.Prepare(lease,result.surface.renderWidth,result.surface.renderHeight,layer.pixelFormat,mainSamples);
 		impl->mainSampling.allocationGeneration=mainAttachments->Generation();
@@ -2278,6 +2350,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		}
 		impl->pbrSubmission=sourceSubmission;
 		impl->particlesGPU.PrepareAtlasImages(sourceSubmission);
+		prepPhase->Mark(3);
   std::shared_ptr<PreparedOriginalShadowSource> originalShadow;
   std::array<std::shared_ptr<const NativeShadowTextureBacking>,2> initialShadow;
   id<MTLTexture> sampledShadowColor=nil;
@@ -2317,6 +2390,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    (shadowColor&&shadowColor->SourceDrawFrame()==frame.sourceDrawFrame)),
    "Original model shading requires its actual same-draw named shadow source");
   const unsigned shadowColorPresence = sampledShadowColor != nil;
+		prepPhase->Mark(4);
   std::shared_ptr<PreparedWorldInfo> worldInfo;
   if(frame.worldInfoFrame)worldInfo=SharedWorldInfoGPU().Prepare(lease,frame.worldInfoFrame,options.shaderValidation,result.shaderCompileMs);
   Require(frame.environmentFrame!=nullptr,"Original pre-unit environment frame is missing");
@@ -2336,6 +2410,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		// SceneBridge reports warm-up/readiness transitions separately from missing consumers.
 		if(environmentFrame.sky->kind!=NativeSkyKind::OriginalNull)sources.insert(environmentFrame.sky->sourcePath);
 		sources.insert("LuaRules/Gadgets/Include/GenBrdfLut.lua#512-RG16F-G_OPTION1-1024samples");
+		prepPhase->Mark(5);
 		SceneUniform scene{};scene.modelClipPlane=scene.terrainClipPlane={0,0,0,1};
 		const auto& lighting = frame.lighting;
 		scene.sun = Vec(lighting.sunDirection); scene.cameraPosition = Vec(frame.viewCamera.position);
@@ -2377,6 +2452,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		for (const auto* vector : {&scene.sun,&scene.cameraPosition,&scene.groundAmbient,&scene.groundDiffuse,&scene.groundSpecular,&scene.modelAmbient,&scene.modelDiffuse,&scene.modelSpecular,&scene.fogColor,&scene.fogParameters,&scene.waterBase,&scene.waterMinimum,&scene.waterAbsorb,&scene.parameters,&scene.splatScales,&scene.splatMultipliers,&scene.mapDimensions})
 			for (size_t i=0;i<4;++i) Require(std::isfinite((*vector)[i]),"Non-finite actual scene material/lighting input");
 		Require(simd_length(scene.sun.xyz)>0 && scene.fogParameters.w>0,"Original sun/fog input unavailable");
+		prepPhase->Mark(6);
 		id<MTLBuffer> sceneBuffer = Buffer(lease.Device(),&scene,sizeof(scene),@"Original sun/fog/water/material/shadow state"); lease.AddAllocation(sceneBuffer);
 		id<MTLTexture> brdf = impl->Texture(lease,frame.featureBRDF);
 		for(const auto& owner:{terrainMaterial.detail,terrainMaterial.specular,terrainMaterial.blendNormals,terrainMaterial.emission,terrainMaterial.splatDetail,terrainMaterial.splatDistribution})if(owner)sources.insert(owner->sourcePath);
@@ -2400,6 +2476,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 				"Map-edge original mip producer has not executed before its consumer");};
 			return image;
 		};
+		prepPhase->Mark(7);
 		auto mapEdge=impl->mapEdgeGPU.Prepare(lease,frame,layer.pixelFormat,options.shaderValidation,result.shaderCompileMs,mapEdgeImages,mainSamples);
 		if(mapEdge)result.mapEdgeInstances=mapEdge->MirrorInstances();
 		MTLDepthStencilDescriptor* depthDescriptor = [MTLDepthStencilDescriptor new]; depthDescriptor.depthCompareFunction = MTLCompareFunctionLessEqual; depthDescriptor.depthWriteEnabled = YES;
@@ -2437,9 +2514,27 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    std::unique_ptr<PreparedSSAO> ssao;
    std::vector<std::pair<uint64_t,std::function<void(id<MTL4RenderCommandEncoder>)>>> draws;
    std::vector<std::pair<uint64_t,std::function<void(id<MTL4CommandBuffer>)>>> commands;
+   std::shared_ptr<const NativeOpaqueModelFrame> alphaInvocation166;
+   size_t alphaPhase166=0;
+   uint64_t alphaSubmission166=0;
+   mutable bool alphaDependencies166=false,alphaRetired166=false;
+   AlphaCallbackExecution166 InspectExecution166(const NativeOpaqueModelFrame* invocation,size_t phase,
+    uint64_t frame,uint64_t submission)const {
+    Require(alphaInvocation166&&invocation==alphaInvocation166.get()&&phase==alphaPhase166&&
+     phase<invocation->passes.size()&&invocation->alphaStage&&invocation->passes[phase].luaEffects&&
+     frame==invocation->sourceDrawFrame&&submission&&submission==alphaSubmission166&&
+     !alphaDependencies166&&!alphaRetired166,"Alpha typed inspection lost its actual invocation/phase/frame/submission or lifecycle");
+    // SSAO noop can still copy/read/publish. Generic functions and every
+    // existing typed family retain Unknown even with no indexed draws.
+    if(ssao||!commands.empty())return {SourceDependencyWork160::Unknown,AlphaCallbackBody166::OrderedCommands,false,false};
+    if(nano||projectile||energy||lightning||fireSmoke||!draws.empty())return {};
+    return {SourceDependencyWork160::NoCommands,AlphaCallbackBody166::CPULifecycleOnly,true,true};
+   }
    void Dependencies(id<MTL4CommandBuffer> command)const {
+    if(alphaInvocation166)Require(command&&!alphaDependencies166&&!alphaRetired166,"Alpha typed dependencies repeated or retired");
     if(nano)nano->EncodeDependencies(command);if(projectile)projectile->EncodeDependencies(command);
     if(energy)energy->EncodeDependencies(command);if(lightning)lightning->EncodeDependencies(command);
+    if(alphaInvocation166)alphaDependencies166=true;
    }
    void Encode(id<MTL4RenderCommandEncoder> encoder)const {Require(commands.empty()&&!ssao,"Original command-level callback requires the common command-buffer scheduler");for(const auto& draw:draws)draw.second(encoder);}
    // Merge command-level postprocessing with ordinary draws by the original
@@ -2464,7 +2559,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
     }
     if(encoder==nil){encoder=[command renderCommandEncoderWithDescriptor:loadedScene];Require(encoder!=nil,"Cannot resume original scene after its actual callback commands");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
    }
-   void Complete()const {if(ssao)ssao->DidComplete();if(nano)nano->DidComplete();if(projectile)projectile->DidComplete();if(lightning)lightning->DidComplete();}
+   void Complete()const {
+    if(alphaInvocation166){Require(alphaDependencies166&&!alphaRetired166,"Alpha typed completion before dependencies or repeated");alphaRetired166=true;}
+    if(ssao)ssao->DidComplete();if(nano)nano->DidComplete();if(projectile)projectile->DidComplete();if(lightning)lightning->DidComplete();
+   }
   };
   struct TerrainSceneGPU {
    std::shared_ptr<const NativeTerrainSceneSourceFrame> source;
@@ -2522,7 +2620,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   };
   std::array<WaterViewGPU,2> waterViews;
   WaterLuaGPU belowWaterLua,aboveWaterLua,alphaAllLua,waterPostLua,shadowLua;
-  std::unique_ptr<PreparedWorldOverlayFrame> shadowLuaOverlays;
+  std::shared_ptr<PreparedWorldOverlayFrame> shadowLuaOverlays;
+  // Fixed owner slots: map MRT, transparent shadow, planar refraction/reflection,
+  // main ground, IBL ground. Only immutable line packets run early; sampled-image
+  // and other effect dependencies keep their existing original scheduling.
+  std::array<std::shared_ptr<PreparedWorldOverlayFrame>,6> separateLineOwners;
   id<MTLBuffer> belowWaterScene=nil,aboveWaterScene=nil;
   if(waterActive){
    SceneUniform below=scene;below.modelClipPlane={0,-1,0,0};
@@ -2695,6 +2797,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
     Require(routed,"Common attachment clear has no selected original target/source span consumer");
    }
   }
+		prepPhase->Mark(8);preparationDetail.Mark(0);
   if(frame.originalShadow){
    // Opaque ShadowGen has no color output in the supported default path.
    // RGB8 is physically padded; arbitrary Lua color/blend output needs its
@@ -2719,6 +2822,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    if(frame.luaWorldDrawFrame)for(const auto& draw:frame.luaWorldDrawFrame->draws)Require(draw.stage!=NativeWorldDrawStage::ShadowOpaque,
     "Common shadow geometry lost its original named source frame");
   }
+		prepPhase->Mark(9);preparationDetail.Mark(1);
   struct ShadowEvent {uint64_t sequence;size_t index;bool clear;};
   std::vector<ShadowEvent> shadowEvents;
   if(originalShadow){
@@ -2731,8 +2835,15 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    Require(!shadowEvents.empty()&&shadowEvents.front().clear&&(shadowClears[shadowEvents.front().index].mask&ScreenAttachmentDepth),
     "Original shadow destination has no initial actual depth clear before its draws");
   }
+		prepPhase->Mark(10);
   // Prepare the actual map MRT before model/screen/SSAO consumers inspect its
   // published versions. This reuses the existing common MRT target owner.
+  // One invocation-local source index; no validation receipt or cross-frame cache.
+  static const bool worldPlanDiagnostic167=[] {const char* value=std::getenv("BAR_NATIVE_WORLD_PLAN167_DIAGNOSTIC");return value&&std::string(value)=="1";}();
+  static unsigned worldPlanDiagnosticSamples167=0;
+  const bool timeWorldPlan167=worldPlanDiagnostic167&&worldPlanDiagnosticSamples167<32&&frame.sourceDrawFrame%16==0;
+  if(timeWorldPlan167)++worldPlanDiagnosticSamples167;
+  NativeWorldDrawPlan167 preparedWorld167(frame.luaWorldDrawFrame,frame.sourceDrawFrame,timeWorldPlan167);
   if(const auto& original=mainGround.source->ground;original&&original->mapMRT){
    Require(original->deferred.has_value(),"Original map MRT has no completed source span");
    const auto& phase=original->mapMRT;const auto& span=*original->deferred;
@@ -2762,11 +2873,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
      return impl->OriginalTerrainImage(l,b,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
     },options.shaderValidation,result.shaderCompileMs);
    owners->clears=PrepareTerrainGroundClears(lease,mainGround.mapClearSource,target,options.shaderValidation,result.shaderCompileMs);
-   NativeWorldDrawFrame generic;if(frame.luaWorldDrawFrame){generic.serial=frame.luaWorldDrawFrame->serial;
-    for(const auto& draw:frame.luaWorldDrawFrame->draws)if(draw.stage==NativeWorldDrawStage::Ground&&span.Contains(draw.sequence))generic.draws.push_back(draw);}
+   const auto generic=preparedWorld167.StageWhere(NativeWorldDrawStage::Ground,[&](const auto& draw){return span.Contains(draw.sequence);});
    owners->generic=impl->overlayGPU.Prepare(lease,generic,impl->screenGPU,nullptr,phase->camera,
     target.width,target.height,target.logicalWidth,target.logicalHeight,target.colors[0],target.depth,target.stencil,
     options.shaderValidation,result.shaderCompileMs,true,target.samples,target.combinedColor!=MTLPixelFormatInvalid);
+   separateLineOwners[0]=owners->generic;
    const auto add=[&](const auto& family){if(family)for(size_t n=0;n<family->DrawCount();++n)
     owners->ordered.emplace_back(family->SequenceAt(n),[family,n](id<MTL4RenderCommandEncoder> e){family->EncodeDraw(n,e);});};
    add(owners->terrain);add(owners->clears);add(owners->generic);
@@ -2792,12 +2903,17 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    for(const auto& event:owners->ordered)other.drawSequences.push_back(event.first);
    other.dependencies=[owners](id<MTL4CommandBuffer> c){owners->terrain->EncodeDependencies(c);for(const auto& edge:owners->mapEdges)edge->EncodeDependencies(c);};
    other.drawAt=[owners](size_t n,id<MTL4RenderCommandEncoder> e){owners->ordered.at(n).second(e);};
+   other.initialAttachmentClear182=[owners,sourceFrame=frame.sourceDrawFrame,simulationFrame=frame.simulationFrame](MTL4RenderPassDescriptor* pass){
+    return owners->clears->TryInitialAttachmentClear182(pass,sourceFrame,simulationFrame);
+   };
    other.didEncodeSourceDraws=[owners]{owners->terrain->FinishOrderedDraws();for(const auto& edge:owners->mapEdges)edge->FinishDeferredDraw();};
    other.didComplete=[owners]{owners->terrain->DidComplete();for(const auto& edge:owners->mapEdges)edge->DidComplete();};
    mainGround.mapMRT=PrepareCUSDeferred(lease,impl->cusSourceGPU,phase,sourceImages,std::move(other),
-    sourceSubmission,options.shaderValidation,result.shaderCompileMs);
+    sourceSubmission,options.shaderValidation,result.shaderCompileMs,&mainGround.mapClearSource.front());
   }
 
+		prepPhase->Mark(11);prepPhase.reset();
+		cpuPhase.Mark(1);preparationDetail.Mark(2);
 		std::shared_ptr<PreparedOpaqueModelSource> opaqueModels;
 		std::array<std::shared_ptr<PreparedOpaqueModelSource>,3> alphaModels;
 		std::array<std::vector<std::shared_ptr<WaterLuaGPU>>,3> alphaCallbacks;
@@ -2860,6 +2976,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			view.alphaModels=PrepareOpaqueModelSource(lease,impl->cusSourceGPU,impl->originalDeferredGPU,impl->originalForwardGPU,
 				alpha,actualTarget,sourceGeometry,sourceImages,frame.sourceDrawFrame,sourceSubmission,options.shaderValidation,result.shaderCompileMs);
   }
+		cpuPhase.Mark(2);preparationDetail.Mark(3);
 		std::shared_ptr<metal4::PreparedScreenFrame> screen;
 		if (options.screenUI != nullptr) {
 			screen = impl->screenGPU.Prepare(lease, *options.screenUI, result.surface.renderWidth, result.surface.renderHeight,
@@ -2868,23 +2985,23 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			result.screenDraws = screen->DrawCount();
 			result.screenTextureUploads = screen->TextureUploads();
 		}
+		cpuPhase.Mark(3);preparationDetail.Mark(4);
 		std::shared_ptr<PreparedWorldOverlayFrame> overlays;
 		if (frame.luaWorldDrawFrame) {
-			NativeWorldDrawFrame mainDraws;mainDraws.serial=frame.luaWorldDrawFrame->serial;
-   for(const auto& draw:frame.luaWorldDrawFrame->draws)if(draw.stage==NativeWorldDrawStage::PreDecals || draw.stage==NativeWorldDrawStage::PreUnit || draw.stage==NativeWorldDrawStage::World || draw.stage==NativeWorldDrawStage::AlphaBelowWater || draw.stage==NativeWorldDrawStage::AlphaAboveWater || draw.stage==NativeWorldDrawStage::WaterPost || draw.stage==NativeWorldDrawStage::AlphaAll)mainDraws.draws.push_back(draw);
+   const auto mainDraws=preparedWorld167.Main();
    overlays = impl->overlayGPU.Prepare(lease, mainDraws, impl->screenGPU, screen.get(), frame.viewCamera,
 				result.surface.renderWidth, result.surface.renderHeight, logicalWidth, logicalHeight,
 				layer.pixelFormat, MTLPixelFormatDepth32Float, MTLPixelFormatStencil8, options.shaderValidation, result.shaderCompileMs,false,mainSamples,false,
     [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned){return impl->OriginalModelImage(l,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);});
 		}
 		if(frame.luaWorldDrawFrame && waterActive)for(auto& view:waterViews)if(view.source){
-   NativeWorldDrawFrame draws;draws.serial=frame.luaWorldDrawFrame->serial;
    const auto stage=view.source->pass==NativeWaterScenePass::Reflection?NativeWorldDrawStage::WaterReflection:NativeWorldDrawStage::WaterRefraction;
-   for(const auto& draw:frame.luaWorldDrawFrame->draws)if(draw.stage==stage)draws.draws.push_back(draw);
+   const auto draws=preparedWorld167.Stage(stage);
    const auto width=uint32_t(view.color.width),height=uint32_t(view.color.height);
    view.overlays=impl->overlayGPU.Prepare(lease,draws,impl->screenGPU,screen.get(),view.source->frame.viewCamera,
     width,height,width,height,MTLPixelFormatRGBA8Unorm,MTLPixelFormatDepth32Float,MTLPixelFormatInvalid,
     options.shaderValidation,result.shaderCompileMs);
+   separateLineOwners[stage==NativeWorldDrawStage::WaterRefraction?2:3]=view.overlays;
   }
   const auto prepareWaterLua=[&](WaterLuaGPU& output,const std::shared_ptr<const NativeWaterLuaFrame>& input,
    const WorldCamera& camera,uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat format,MTLPixelFormat stencilFormat=MTLPixelFormatStencil8,unsigned outputSamples=1){
@@ -2909,9 +3026,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			std::vector<std::shared_ptr<WaterLuaGPU>>& callbacks,const WorldCamera& camera,
 			uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat format,MTLPixelFormat stencil,unsigned outputSamples){
 			if(!source)return;
-			for(const auto& phase:source->passes){
+			for(size_t phaseIndex=0;phaseIndex<source->passes.size();++phaseIndex){
+				const auto& phase=source->passes[phaseIndex];
 				Require(phase.luaEffects!=nullptr,"Original alpha callbacks lost their same-invocation typed frame");
-				auto output=std::make_shared<WaterLuaGPU>();prepareWaterLua(*output,phase.luaEffects,camera,width,height,logicalWidth,logicalHeight,format,stencil,outputSamples);callbacks.push_back(std::move(output));
+				auto output=std::make_shared<WaterLuaGPU>();output->alphaInvocation166=source;output->alphaPhase166=phaseIndex;output->alphaSubmission166=sourceSubmission;
+				prepareWaterLua(*output,phase.luaEffects,camera,width,height,logicalWidth,logicalHeight,format,stencil,outputSamples);callbacks.push_back(std::move(output));
 			}
 		};
 		for(size_t slot=0;slot<alphaModels.size();++slot)if(alphaModels[slot])
@@ -2939,6 +3058,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
      [retained](PreparedScreenExternalImage image){retained->push_back(std::move(image));});
     return{image.texture,image.sampler,descriptor,[retained]{for(const auto& image:*retained)if(image.requireReadable)image.requireReadable();},descriptor->flipV,std::move(deferredEpoch)};
    };
+		preparationDetail.Mark(5);
 		std::shared_ptr<PreparedDeferredLights> deferredLights;
 		if(frame.luaDeferredLightFrame&&!frame.luaDeferredLightFrame->draws.empty()){
 			Require(frame.luaDeferredLightFrame->sourceDrawFrame==frame.sourceDrawFrame&&frame.shieldDepthFrame,
@@ -2982,16 +3102,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
     "Original main/IBL ground lost its same-draw actual initial clear");
    Require(source.groundInvoked==bool(source.ground),"Original ground call predicate and actual source disagree");
    ground.initialClear=PrepareTerrainGroundClears(lease,ground.initialClearSource,target,options.shaderValidation,result.shaderCompileMs);
-   NativeWorldDrawFrame generic;if(frame.luaWorldDrawFrame){
-    generic.serial=frame.luaWorldDrawFrame->serial;
-    for(const auto& draw:frame.luaWorldDrawFrame->draws)if(draw.stage==source.stage){
-     Require(source.ground&&source.ground->source.Contains(draw.sequence),"Original terrain generic draw has no actual ground invocation span");
-     if(!source.ground->deferred||!source.ground->deferred->Contains(draw.sequence))generic.draws.push_back(draw);
-    }
-   }
+   const auto generic=preparedWorld167.StageWhere(source.stage,[&](const auto& draw){
+    Require(source.ground&&source.ground->source.Contains(draw.sequence),"Original terrain generic draw has no actual ground invocation span");
+    return !source.ground->deferred||!source.ground->deferred->Contains(draw.sequence);
+   });
    ground.overlays=impl->overlayGPU.Prepare(lease,generic,impl->screenGPU,screen.get(),source.viewCamera,
     target.width,target.height,target.logicalWidth,target.logicalHeight,target.colors[0],target.depth,target.stencil,
     options.shaderValidation,result.shaderCompileMs,false,target.samples);
+   separateLineOwners[source.stage==NativeWorldDrawStage::Ground?4:5]=ground.overlays;
    if(const auto& actual=source.ground){
     Require(source.cus&&source.lua&&actual->sourceDrawFrame==frame.sourceDrawFrame&&actual->stage==source.stage&&
      actual->contextGeneration==OriginalNativeTextureContext().Registry().ContextGeneration(),
@@ -3030,11 +3148,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    prepareWaterLua(shadowLua,source.luaEffects,shadowCamera,source.size,source.size,source.size,source.size,
     shadowColor->Color().pixelFormat,MTLPixelFormatInvalid);
    if(frame.luaWorldDrawFrame){
-    NativeWorldDrawFrame draws;draws.serial=frame.luaWorldDrawFrame->serial;
-    for(const auto& draw:frame.luaWorldDrawFrame->draws)if(draw.stage==NativeWorldDrawStage::ShadowTransparent)draws.draws.push_back(draw);
+    const auto draws=preparedWorld167.Stage(NativeWorldDrawStage::ShadowTransparent);
     shadowLuaOverlays=impl->overlayGPU.Prepare(lease,draws,impl->screenGPU,screen.get(),shadowCamera,
      source.size,source.size,source.size,source.size,shadowColor->Color().pixelFormat,MTLPixelFormatDepth32Float,
      MTLPixelFormatInvalid,options.shaderValidation,result.shaderCompileMs);
+    separateLineOwners[1]=shadowLuaOverlays;
     auto* family=shadowLuaOverlays.get();
     for(size_t i=0;i<family->DrawCount();++i)shadowLua.draws.emplace_back(family->SequenceAt(i),
      [family,i](id<MTL4RenderCommandEncoder> encoder){family->EncodeDraw(i,encoder);});
@@ -3120,6 +3238,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			}
    std::sort(alphaAllLua.draws.begin(),alphaAllLua.draws.end(),[](const auto&a,const auto&b){return a.first<b.first;});
   }
+  preparationDetail.Mark(6);
   std::unique_ptr<PreparedProjectileEffects> projectileEffects;
 		if (frame.luaProjectileEffectsFrame) {
 			projectileEffects = impl->projectileEffectsGPU.Prepare(lease, *frame.luaProjectileEffectsFrame, frame.viewCamera,
@@ -3249,11 +3368,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 				result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
 				layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,mainSamples,options.shaderValidation,result.shaderCompileMs);
 		}
+		preparationDetail.Mark(7);
 		std::unique_ptr<PreparedBlueprintFrame> blueprint;
 		if (frame.luaBlueprintFrame) {
 			blueprint = impl->blueprintGPU.Prepare(lease,*frame.luaBlueprintFrame,frame.viewCamera,
 				result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
-				layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples);
+				layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples,*impl->standardTerrainGPU,impl->heightOwner);
 			for (const auto& draw: frame.luaBlueprintFrame->models) result.luaBlueprintModels += draw.submissions.size();
 			for (const auto& draw: frame.luaBlueprintFrame->outlines) result.luaBlueprintOutlines += draw.instanceCount;
 			result.luaBlueprintStencilClears = frame.luaBlueprintFrame->clears.size();
@@ -3293,9 +3413,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		// Families share the real original call ordinal. Keep PreUnit separate
 		// from later World, then merge within each stage before any GPU work.
 		std::unique_ptr<PreparedPlacementGrid> placementGrid;
+        PlacementGridHeight128 placementHeights;
+        if(frame.placementFrame&&!frame.placementFrame->grids.empty()){auto h=impl->standardTerrainGPU->PrepareHeight(lease,impl->heightOwner);placementHeights={h->source,h->texture};}
 		if(frame.placementFrame)placementGrid=impl->placementGPU.Prepare(lease,*frame.placementFrame,frame.viewCamera,
 			result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
-			layer.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);
+			layer.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples,placementHeights);
 		std::vector<std::pair<const NativeBuildSquareDraw*,std::unique_ptr<PreparedBuildSquareDraw>>> buildSquares;
 		if(frame.placementFrame){
 			for(const auto& draw:frame.placementFrame->buildSquares){
@@ -3355,19 +3477,19 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			}
 		}
 
-  auto objectSpotlights=impl->objectSpotlightGPU.Prepare(lease,frame.luaWorldDrawFrame,frame.sourceDrawFrame,frame.viewCamera,
+  auto objectSpotlights=impl->objectSpotlightGPU.Prepare(lease,preparedWorld167.Family(NativeWorldFamily167::ObjectSpotlight),frame.sourceDrawFrame,frame.viewCamera,
    result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,layer.pixelFormat,
    impl->depth.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);
-  auto reclaimFields=impl->reclaimFieldGPU.Prepare(lease,frame.luaWorldDrawFrame,frame.sourceDrawFrame,frame.viewCamera,
+  auto reclaimFields=impl->reclaimFieldGPU.Prepare(lease,preparedWorld167.Family(NativeWorldFamily167::ReclaimField),frame.sourceDrawFrame,frame.viewCamera,
    result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,layer.pixelFormat,
    impl->depth.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);
 
-  auto grass=impl->grassGPU.Prepare(lease,frame.luaWorldDrawFrame,frame.sourceDrawFrame,frame.viewCamera,
+  auto grass=impl->grassGPU.Prepare(lease,preparedWorld167.Family(NativeWorldFamily167::Grass),frame.sourceDrawFrame,frame.viewCamera,
    result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
    [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned slot){return impl->OriginalModelImage(l,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);},
    layer.pixelFormat,impl->depth.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);
 
-  auto resourceSpots=impl->resourceSpotsGPU.Prepare(lease,frame.luaWorldDrawFrame,frame.sourceDrawFrame,frame.viewCamera,
+  auto resourceSpots=impl->resourceSpotsGPU.Prepare(lease,preparedWorld167.Family(NativeWorldFamily167::ResourceSpots),frame.sourceDrawFrame,frame.viewCamera,
    result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
    [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,NativeWorldDrawStage stage,uint64_t sequence){
     // Keep the real DrawGenesis atlas producer and its read receipt. A plain
@@ -3381,7 +3503,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 
   std::vector<std::shared_ptr<PreparedSensorLOSDraw>> sensorLOS;
   std::vector<uint64_t> sensorLOSSequences;
-  if(frame.luaWorldDrawFrame)for(const auto& command:frame.luaWorldDrawFrame->draws)if(command.sensorLOS){
+  for(const auto& command:preparedWorld167.Family(NativeWorldFamily167::SensorLOS)){
    ValidateNativeWorldDrawCommand(command);const auto& draw=*command.sensorLOS;
    Require(draw.sourceDrawFrame==frame.sourceDrawFrame,"LOS outline belongs to another actual source frame");
    auto resolver=[&](RuntimeLease& l,const NativeCUSTextureBinding& b,std::optional<NativePostprocessConsumer> consumer){return impl->screenGPU.ResolveStartBoxImage(l,b,screen.get(),consumer);};
@@ -3500,16 +3622,31 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			}
 			laterWorldDraws=std::move(remaining);
 		}
+  #if defined(RECOIL_METAL4_LIVE_SCENE)
+  static bool worldPlanReceipt167=false;
+  if(timeWorldPlan167||(!worldPlanReceipt167&&frame.sourceDrawFrame>=300)){
+   const auto m=preparedWorld167.Metrics();worldPlanReceipt167=true;
+   LOG("[NativeWorldPlan167] source_frame=%llu serial=%llu input_draws=%llu plan_visits=%llu selected_visits=%llu entry_checks=%llu added_entry_family_predicates=%llu added_plan_family_predicates=%llu old_family_visits=%llu old_selection_visits=%llu copied_commands_avoided=%llu command_value_bytes_avoided=%llu vertex_copy_bytes_avoided=%llu index_copy_bytes_avoided=%llu plan_owner_allocations=%llu plan_vector_growths=%llu plan_requested_bytes=%llu plan_capacity_bytes=%llu selection_owner_allocations=%llu selection_vector_growths=%llu selection_requested_bytes=%llu preparation_only=1 validation_calls_avoided=0 allocator_overhead_included=0 timing=%u plan_us=%.3f selection_us=%.3f diagnostic=%u",
+    (unsigned long long)frame.sourceDrawFrame,(unsigned long long)preparedWorld167.Serial(),(unsigned long long)m.inputDraws,(unsigned long long)m.indexBuildVisits,(unsigned long long)m.selectionIndexVisits,(unsigned long long)m.entryChecks,(unsigned long long)(5*m.entryChecks),(unsigned long long)(5*m.indexBuildVisits),(unsigned long long)m.legacyFamilyScanVisits,(unsigned long long)m.legacySelectionScanVisits,(unsigned long long)m.copiedCommandsAvoided,(unsigned long long)m.copiedCommandBytesAvoided,(unsigned long long)m.copiedVertexBytesAvoided,(unsigned long long)m.copiedIndexBytesAvoided,(unsigned long long)m.planOwnerAllocations,(unsigned long long)m.planVectorGrowths,(unsigned long long)m.planRequestedBytes,(unsigned long long)m.planCapacityBytes,(unsigned long long)m.selectionOwnerAllocations,(unsigned long long)m.selectionVectorGrowths,(unsigned long long)m.selectionRequestedBytes,unsigned(m.timingCollected),m.planMicroseconds,m.selectionMicroseconds,unsigned(worldPlanDiagnostic167));
+  }
+  #endif
+		cpuPhase.Mark(4);preparationDetail.Mark(8);
 		result.cpuResourceUpdateMs = Milliseconds(resourceStart) - result.shaderCompileMs;
 		const auto acquireStart = Clock::now();
 		id<CAMetalDrawable> drawable=nil;id<MTLTexture> sceneColor=nil;
 		if(!offscreenSource){
-			drawable=[layer nextDrawable];
+			{NativeSubmissionTraceDrawableScope trace(&lease);
+			 drawable=[layer nextDrawable];}
 			if(drawable==nil){result.status=Metal4PresentationStatus::DrawableUnavailable;if(!requiresSource)return result;offscreenSource=true;}
 			else{sceneColor=drawable.texture;Require(sceneColor.width==result.surface.renderWidth && sceneColor.height==result.surface.renderHeight,"Native drawable differs from requested render pixels");}
 		}
 		result.cpuDrawableAcquireMs=Milliseconds(acquireStart);
-		if(offscreenSource){
+		cpuPhase.Mark(5);preparationDetail.Mark(9);
+		// Isolate drawable writes from intermediate world/postprocess passes.
+		// The original serialized RuntimeLease still retires storage before reuse.
+		static const bool finalColorStageRequested=[] {const char* p=std::getenv("BAR_NATIVE_FINAL_COLOR_STAGE");return p&&p[0]=='1'&&p[1]==0;}();
+		const bool finalColorStage=finalColorStageRequested&&!offscreenSource&&drawable&&mainSamples==1;
+		if(offscreenSource||finalColorStage){
 			if(!impl->offscreenSourceColor || impl->offscreenSourceColor.width!=result.surface.renderWidth || impl->offscreenSourceColor.height!=result.surface.renderHeight || impl->offscreenSourceColor.pixelFormat!=layer.pixelFormat){
 				auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:layer.pixelFormat width:result.surface.renderWidth height:result.surface.renderHeight mipmapped:NO];descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;
 				auto image=[lease.Device()newTextureWithDescriptor:descriptor];Require(image!=nil,"Cannot allocate actual offscreen source-frame color");impl->offscreenSourceColor=image;
@@ -3517,6 +3654,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			sceneColor=impl->offscreenSourceColor;
 		}
 		mainAttachments->BindDestination(lease,sceneColor);
+		if(finalColorStage)mainAttachments->PrepareFinalDestination(lease,drawable.texture);
+		static bool reportedFinalColorStage=false;
+		if(!reportedFinalColorStage&&!offscreenSource){LOG("[NativeFinalColorStage] active=%d samples=%u present_order_original=1 width=%u height=%u",int(finalColorStage),mainSamples,result.surface.renderWidth,result.surface.renderHeight);reportedFinalColorStage=true;}
+
 		sceneColor=mainAttachments->Color();
 		std::shared_ptr<PreparedScreenFrame> presentationMargins;
 		if(!offscreenSource && drawable && globalRendering->fullScreen && !globalRendering->dualScreenMode) {
@@ -3541,9 +3682,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		const auto attachAlphaCallbacks=[&](const std::shared_ptr<PreparedOpaqueModelSource>& models,const std::vector<std::shared_ptr<WaterLuaGPU>>& callbacks){
 			if(!models)return;Require(models->PhaseCount()==callbacks.size(),"Original alpha callback phase count differs from its actual model frame");
 			for(size_t phase=0;phase<callbacks.size();++phase){const auto& owner=callbacks[phase];
-				OpaqueModelForwardCallbacks selected;selected.lifetime=owner;selected.draws=owner->draws;
+				OpaqueModelForwardCallbacks selected;selected.lifetime=owner;selected.draws=owner->draws;selected.commands=owner->commands;
 				if(owner->ssao)for(size_t draw=0;draw<owner->ssao->DrawCount();++draw)selected.commands.emplace_back(owner->ssao->SequenceAt(draw),[owner,draw](id<MTL4CommandBuffer> c){owner->ssao->EncodeDraw(draw,c);});
 				selected.dependencies=[owner](id<MTL4CommandBuffer> c){owner->Dependencies(c);};selected.didComplete=[owner]{owner->Complete();};
+				selected.inspectExecution166=[owner](const NativeOpaqueModelFrame* invocation,size_t phase,uint64_t frame,uint64_t submission){return owner->InspectExecution166(invocation,phase,frame,submission);};
 				models->AttachForwardCallbacks(phase,std::move(selected));
 			}
 		};
@@ -3588,6 +3730,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			postprocess=impl->postprocessGPU.Prepare(lease,options.screenUI->postprocess,sceneColor,impl->depth,*screen,options.shaderValidation,result.shaderCompileMs,impl->stencil,mainAttachments);
 		}
 		std::shared_ptr<Impl::ScreenContinuation> continuation;
+		cpuPhase.Mark(6);
 		std::shared_ptr<PreparedScreenReadback> readback;
 		std::shared_ptr<bool> mainReadReady;
 		if(options.readback){
@@ -3665,6 +3808,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   if(dynamicWaterActive){
    DynamicWaterSceneImages images{impl->waterReflection,impl->waterRefraction,true,true};
    auto resolve=[&](const NativeCUSTextureBinding& binding){return impl->OriginalModelImage(lease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);};
+   lease.RetirePreviousSubmission();
    dynamicSurface=impl->dynamicWaterGPU.Prepare(lease,frame.dynamicWater,images,resolve,layer.pixelFormat,mainSamples,options.shaderValidation,result.shaderCompileMs);
   }
   std::unique_ptr<PreparedLegacyWater> legacySurface;
@@ -3673,6 +3817,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    legacyBump=impl->legacyWaterBumpGPU.Prepare(lease,frame.legacyWater->bump,options.shaderValidation,result.shaderCompileMs);
    CUSSourceImage shading;
    if(frame.legacyWater->refraction)shading=impl->OriginalModelImage(lease,frame.legacyWater->refraction->shading,sourceSubmission,options.shaderValidation,result.shaderCompileMs);
+   lease.RetirePreviousSubmission();
    legacySurface=impl->legacyWaterGPU.Prepare(lease,frame.legacyWater,impl->waterReflection,legacyBump->Texture(),legacyBump->FlipV(),layer.pixelFormat,mainSamples,options.shaderValidation,result.shaderCompileMs,std::move(shading),result.surface.renderHeight,sourceSubmission);
   }
   if(basicWaterActive)basicSurface=impl->basicWaterGPU.Prepare(lease,frame.basicWater,layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples);
@@ -3694,6 +3839,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
     Require(worldInfo && frame.worldInfoFrame && worldInfo->MatchesFrame(*frame.worldInfoFrame),"Water4 needs its actual requested original info image version");
     images.info={worldInfo->Info(),false};
    }
+   // BumpWater pins its recurrence predecessor and verifies real retirement at submit.
    waterSurface=impl->waterGPU.Prepare(lease,frame.bumpWater,images,layer.pixelFormat,MTLPixelFormatDepth32Float,
     MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples);
   }
@@ -3716,6 +3862,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   }
   // World overlays and screen/RTT preparation share this named-image
 		// cache. Collect only after every family has prepared its images.
+		cpuPhase.Mark(7);
 		auto namedImageMipmaps=impl->screenGPU.PrepareMipmaps(lease);
 		auto originalLifetime=[M4OriginalSourceLifetime new];
   originalLifetime->opaque=opaqueModels;originalLifetime->source=frame.opaqueModelFrame;originalLifetime->genesis=frame.genesisCUSFrame;
@@ -3723,6 +3870,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   originalLifetime->waterSources=frame.waterScene;
   originalLifetime->shadow=originalShadow;originalLifetime->shadowSource=frame.originalShadow;
   originalLifetime->waterGround.push_back(overlays);
+  for(const auto& lines:separateLineOwners)if(lines)originalLifetime->waterGround.push_back(lines);
   originalLifetime->initialShadow=initialShadow;originalLifetime->commonCommands=frame.luaWorldDrawFrame;originalLifetime->reclaimFields=reclaimFields;originalLifetime->objectSpotlights=objectSpotlights;
   originalLifetime->grass=grass;originalLifetime->resourceSpots=resourceSpots;originalLifetime->sensorLOS=sensorLOS;
   originalLifetime->mainAttachments=mainAttachments;originalLifetime->terrainSnapshot=terrainSnapshot;
@@ -3751,8 +3899,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   if(postprocess)originalLifetime->waterGround.push_back(postprocess);
   if(continuation)originalLifetime->waterGround.push_back(continuation);
   lease.Retain(originalLifetime);
-		lease.AddAllocation(sceneColor); if(drawable)lease.Retain(drawable); lease.CommitResources();
-		result.residentBytes = lease.ResidentBytes(); result.residencyAllocationCount = lease.AllocationCount();
+		lease.AddAllocation(sceneColor); if(drawable)lease.Retain(drawable); cpuPhase.Mark(8); preparationDetail.Mark(10); lease.CommitResourcesWhileEncoding();
+		cpuPhase.Mark(9);preparationDetail.Mark(11);
+		WorldEncodingProbe176 encodingProbe(frame.sourceDrawFrame,!offscreenSource && !continuation && frame.simulationFrame>0);
+		using Family176 = WorldEncodingProbe176::Family;
 		result.queueClass = lease.QueueClass(); result.commandBufferClass = lease.CommandBufferClass();
 		MTL4RenderPassDescriptor* pass=mainAttachments->LoadedPass();
 		const auto prepStart = Clock::now();
@@ -3796,6 +3946,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		for(const auto& image:originalLifetime->terrainImages)image.requireReadable();
 		impl->particlesGPU.EncodeAtlasImages(command,sourceSubmission);
 		namedImageMipmaps->EncodeDependencies(command);
+		encodingProbe.Select(Family176::Effects);
 		if(groundDecals)groundDecals->EncodeDependencies(command);
 		if(clouds)clouds->EncodeDependencies(command);
 		if(blockout)blockout->EncodeDependencies(command);
@@ -3809,9 +3960,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		if(distortions)distortions->EncodeDependencies(command);
 		if (blueprint) blueprint->EncodeDependencies(command);
   if(overlays)overlays->EncodeDependencies(command);
+  if(placementGrid)placementGrid->EncodeDependencies(command);
+  for(const auto& lines:separateLineOwners)if(lines)lines->EncodeLineDependencies(command);
+		encodingProbe.Select(Family176::Other);
 		if(pbrBRDF)pbrBRDF->Encode(command,sourceSubmission);
   // GenerateIBL's actual named shadow producer precedes reflection and later
   // source consumers in this SAME command. No extra lease/submit/wait.
+  encodingProbe.Select(Family176::Shadow);
   for(const auto& backing:initialShadow)if(backing&&!backing->completed.load())
    EncodeNativeShadowInitialClear(backing,command,sourceSubmission);
   if(originalShadow){
@@ -3823,33 +3978,51 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
     [shadowEncoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
     [shadowEncoder endEncoding];shadowEncoder=nil;
    };
-   const auto openShadow=[&](const NativeWorldAttachmentClear* clear){
+   const auto openShadow=[&](const NativeWorldAttachmentClear* depthClear,const NativeWorldAttachmentClear* colorClear){
     auto pass=[MTL4RenderPassDescriptor new];
-    const bool clearDepth=clear&&(clear->mask&ScreenAttachmentDepth);
-    const bool clearColor=clear&&(clear->mask&ScreenAttachmentColor);
+    const bool clearDepth=depthClear&&(depthClear->mask&ScreenAttachmentDepth);
+    const bool clearColor=colorClear&&(colorClear->mask&ScreenAttachmentColor);
     pass.depthAttachment.texture=originalShadow->Depth();
     pass.depthAttachment.loadAction=clearDepth?MTLLoadActionClear:(depthInitialized?MTLLoadActionLoad:MTLLoadActionDontCare);
     pass.depthAttachment.storeAction=MTLStoreActionStore;
-    if(clearDepth)pass.depthAttachment.clearDepth=clear->values.depth;
+    if(clearDepth)pass.depthAttachment.clearDepth=depthClear->values.depth;
     pass.colorAttachments[0].texture=originalShadow->Color();
     pass.colorAttachments[0].loadAction=clearColor?MTLLoadActionClear:(colorInitialized?MTLLoadActionLoad:MTLLoadActionDontCare);
     pass.colorAttachments[0].storeAction=MTLStoreActionStore;
-    if(clearColor){const auto& c=clear->values.color;pass.colorAttachments[0].clearColor=MTLClearColorMake(c[0],c[1],c[2],c[3]);}
+    if(clearColor){const auto& c=colorClear->values.color;pass.colorAttachments[0].clearColor=MTLClearColorMake(c[0],c[1],c[2],c[3]);}
     pass.renderTargetWidth=originalShadow->Target().width;pass.renderTargetHeight=originalShadow->Target().height;
     shadowEncoder=[command renderCommandEncoderWithDescriptor:pass];Require(shadowEncoder!=nil,"Cannot encode actual ordered native shadow attachments");
     depthInitialized|=clearDepth;colorInitialized|=clearColor;
    };
-   for(const auto& event:shadowEvents){
-    if(event.clear){closeShadow();openShadow(&shadowClears[event.index]);}
+   std::span<const ShadowEvent> remaining(shadowEvents);
+   const auto& shadowTarget=originalShadow->Target();
+   // PrepareOriginalShadowSource has already verified the queue, fresh named
+   // versions, actual attachment sizes, formats and single-sample pairing.
+   const bool combineInitialShadowClears=
+    !offscreenSource&&!continuation&&frame.originalShadow->textures->redrawColor&&!colorInitialized&&
+    shadowTarget.samples==1&&shadowTarget.depth==MTLPixelFormatDepth32Float&&shadowTarget.colors[0]==MTLPixelFormatRGBA8Unorm&&
+    remaining.size()>=2&&remaining[0].clear&&remaining[1].clear&&
+    CanCombineInitialShadowClears(shadowClears[remaining[0].index],frame.originalShadow->colorClearSequence,
+                                shadowClears[remaining[1].index]);
+   if(combineInitialShadowClears){
+    openShadow(&shadowClears[remaining[0].index],&shadowClears[remaining[1].index]);
+    remaining=remaining.subspan(2);
+   }
+   for(const auto& event:remaining){
+    if(event.clear){
+     const auto* clear=&shadowClears[event.index];
+     closeShadow();openShadow(clear,clear);
+    }
     else{
      Require(depthInitialized,"Original shadow draw preceded its actual full depth initialization");
-     if(!shadowEncoder)openShadow(nullptr);
+     if(!shadowEncoder)openShadow(nullptr,nullptr);
      originalShadow->EncodeDraw(event.index,shadowEncoder);++result.shadowModelDraws;
     }
    }
    Require(shadowEncoder&&depthInitialized,"Original shadow source lost its final encoder/actual clear");
    originalShadow->EndEncoding(command,shadowEncoder);shadowEncoder=nil;
   }
+		encodingProbe.Select(Family176::Other);
 		if(impl->reflectionWorldInfo)impl->reflectionWorldInfo->EncodeDependencies(command);
 		environment->EncodeDependencies(command);
 		if (standardShade) standardShade->EncodeDependencies(command);
@@ -3862,11 +4035,16 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		}
 		*impl->normalsEncoded=true;
 		if (screen != nullptr) screen->EncodeDependencies(command);
+		encodingProbe.Select(Family176::Effects);
 		if (particles) particles->EncodeDependencies(command);
+  encodingProbe.Select(Family176::Other);
   if(waterSurface)waterSurface->EncodeDependencies(command);
   if(basicSurface)basicSurface->EncodeDependencies(command);
+  encodingProbe.Select(Family176::Shadow);
   if(shadowColor){shadowColor->EncodeDependencies(command);shadowLua.Dependencies(command);}
+  encodingProbe.Select(Family176::Other);
   if(worldInfo)worldInfo->EncodeDependencies(command);
+  encodingProbe.Select(Family176::Effects);
   if(grass)grass->EncodeDependencies(command);
   if(resourceSpots)resourceSpots->EncodeDependencies(command);
   for(auto& view:waterViews)if(view.source){if(view.particles)view.particles->EncodeDependencies(command);view.preParticlesLua.Dependencies(command);view.worldLua.Dependencies(command);}
@@ -3874,7 +4052,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		if (luaNano) luaNano->EncodeDependencies(command);
 		if (projectileEffects) projectileEffects->EncodeDependencies(command);
 
+		encodingProbe.Select(Family176::Other);
 		[arguments setAddress:sceneBuffer.gpuAddress atIndex:3];
+		encodingProbe.Select(Family176::Shadow);
 		if(!originalShadow&&!initialShadow[0]){
 		// Exact original shadow camera, with independent resource success. Native
 		// shadow generation does not set GL ShadowsLoaded or advertise GL4.
@@ -3911,7 +4091,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   if(shadowColor)shadowColor->Encode(command,[&](id<MTL4RenderCommandEncoder> encoder){shadowLua.Encode(encoder);});
 		}
 
-		id<MTL4RenderCommandEncoder> reflectionEncoder=[command renderCommandEncoderWithDescriptor:environment->ReflectionPass()];Require(reflectionEncoder!=nil,"Cannot encode original environment reflection face");
+		encodingProbe.Select(Family176::Other);
+		reflectionGround.initialClear->TryInitialAttachmentClear182(reflectionPass,frame.sourceDrawFrame,frame.simulationFrame);
+		id<MTL4RenderCommandEncoder> reflectionEncoder=[command renderCommandEncoderWithDescriptor:reflectionPass];Require(reflectionEncoder!=nil,"Cannot encode original environment reflection face");
+  reflectionPass.colorAttachments[0].loadAction=MTLLoadActionLoad;
+  reflectionPass.depthAttachment.loadAction=MTLLoadActionLoad;
 		[reflectionEncoder setViewport:MTLViewport{0,0,double(environmentFrame.reflectionSize),double(environmentFrame.reflectionSize),0,1}];
 		[reflectionEncoder setScissorRect:MTLScissorRect{0,0,environmentFrame.reflectionSize,environmentFrame.reflectionSize}];
   reflectionGround.initialClear->EncodeDraw(0,reflectionEncoder);
@@ -3928,8 +4112,26 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   }
 		[reflectionEncoder endEncoding];environment->FinishReflection(command);
 		if(pbrEnvironment)pbrEnvironment->Encode(command,sourceSubmission);
+  // The source clear was already prepared/validated. Discard only attachments
+  // it fully overwrites; its original draw and ordinal remain unchanged.
+  const unsigned initialDiscard=NativeInitialClearDiscardMask(mainGround.initialClearSource.front(),
+   mainGround.target.logicalWidth,mainGround.target.logicalHeight);
+  if(initialDiscard&ScreenAttachmentColor)pass.colorAttachments[0].loadAction=MTLLoadActionDontCare;
+  if(initialDiscard&ScreenAttachmentDepth)pass.depthAttachment.loadAction=MTLLoadActionDontCare;
+  if(initialDiscard&ScreenAttachmentStencil)pass.stencilAttachment.loadAction=MTLLoadActionDontCare;
+  mainGround.initialClear->TryInitialAttachmentClear182(pass,frame.sourceDrawFrame,frame.simulationFrame);
 		id<MTL4RenderCommandEncoder> encoder = [command renderCommandEncoderWithDescriptor:pass];
+  // Metal consumes the descriptor when creating the encoder. Every later
+  // reuse must preserve this frame's preceding writes, including MRT resumes.
+  pass.colorAttachments[0].loadAction=MTLLoadActionLoad;
+  pass.depthAttachment.loadAction=MTLLoadActionLoad;
+  pass.stencilAttachment.loadAction=MTLLoadActionLoad;
 		Require(encoder != nil, "Cannot create direct Metal4 world encoder");
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  static bool reportedInitialLoad=false;
+  if(!reportedInitialLoad){LOG("[NativeTBDR] initial_load_discard_mask=%u sourceDrawFrame=%llu",initialDiscard,
+   static_cast<unsigned long long>(frame.sourceDrawFrame));reportedInitialLoad=true;}
+#endif
 		result.renderEncoderClass = NSStringFromClass([encoder class]).UTF8String;
 		const auto& viewport = mappedViewport->viewport;
 		const auto& scissor = mappedViewport->scissor;
@@ -3937,22 +4139,134 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			[encoder setViewport:MTLViewport{viewport[0],viewport[1],viewport[2],viewport[3],0,1}];
 			[encoder setScissorRect:MTLScissorRect{scissor[0],scissor[1],scissor[2],scissor[3]}];
 		};
-		auto setupViewport = [&] {
+		auto setupWorldState = [&](MTLCullMode cull,id<MTLDepthStencilState> depth,id<MTLBuffer> scene) {
 			restoreWorldRaster();
-			[encoder setCullMode:MTLCullModeNone];[encoder setDepthClipMode:MTLDepthClipModeClip];[encoder setDepthStencilState:depthState];
+			[encoder setCullMode:cull];[encoder setDepthClipMode:MTLDepthClipModeClip];[encoder setDepthStencilState:depth];
 			[encoder setDepthBias:0 slopeScale:0 clamp:0];[encoder setStencilFrontReferenceValue:0 backReferenceValue:0];
 			[encoder setTriangleFillMode:MTLTriangleFillModeFill];
-			[arguments setAddress:sceneBuffer.gpuAddress atIndex:3];
+			[arguments setAddress:scene.gpuAddress atIndex:3];
 		};
+  auto setupViewport = [&] { setupWorldState(MTLCullModeNone,depthState,sceneBuffer); };
+  ModelPassCounters160 passCounters160;
+  if(frame.opaqueModelFrame)for(const auto& phase:frame.opaqueModelFrame->passes)if(phase.deferred&&phase.mrt){
+   ++passCounters160.modelMRTPhases;if(!phase.mrt->clearBefore)++passCounters160.modelMRTLoadPhases;
+  }
+  const bool pass160Enabled=ModelPass160Enabled();
+  // Submission-local strong identity: an ended encoder cannot be destroyed
+  // and have its address recycled while its consumer coverage is remembered.
+  id<MTL4RenderCommandEncoder> __strong coveredConsumerEncoder196=nil;
+  MTLStages coveredConsumerQueueStages196=0;
+  const auto preserveModelPassState160=[&](
+   id<MTL4RenderCommandEncoder> selectedEncoder,MTL4RenderPassDescriptor* selectedPass,
+   MTLStages priorProducerStages,MTLStages priorQueueStages,bool reuseConsumer196){
+   // Keep every producer: intervening draws may publish new writes to later
+   // encoders. Keep the intra-encoder barrier below for current-pass hazards.
+   [selectedEncoder barrierAfterStages:priorProducerStages beforeQueueStages:priorQueueStages visibilityOptions:MTL4VisibilityOptionDevice];
+   if(!reuseConsumer196){coveredConsumerEncoder196=nil;coveredConsumerQueueStages196=0;}
+   else if(coveredConsumerEncoder196!=selectedEncoder){
+    coveredConsumerEncoder196=selectedEncoder;coveredConsumerQueueStages196=0;
+   }
+   // This consumer only waits for encoders preceding selectedEncoder. The
+   // first consumer already covers all subsequent Vertex/Fragment work in
+   // this SAME encoder. Destination stages and Device visibility stay fixed.
+   if(!reuseConsumer196||(coveredConsumerQueueStages196&priorQueueStages)!=priorQueueStages){
+    [selectedEncoder barrierAfterQueueStages:priorQueueStages beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+    if(reuseConsumer196)coveredConsumerQueueStages196|=priorQueueStages;
+   }
+   [selectedEncoder barrierAfterEncoderStages:MTLStageVertex|MTLStageFragment beforeEncoderStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+   // The removed new encoder formerly reset these dynamic states. Keep that
+   // local reset, including empty/culled phases; the next real draw binds its
+   // own pipeline, depth state and argument table as in the original path.
+   [selectedEncoder setViewport:MTLViewport{0,0,double(selectedPass.renderTargetWidth),double(selectedPass.renderTargetHeight),0,1}];
+   [selectedEncoder setScissorRect:MTLScissorRect{0,0,selectedPass.renderTargetWidth,selectedPass.renderTargetHeight}];
+   [selectedEncoder setVertexAmplificationCount:1 viewMappings:nullptr];
+   [selectedEncoder setVisibilityResultMode:MTLVisibilityResultModeDisabled offset:0];
+   // No native path enables depth bounds. Do not call the unsupported Apple10
+   // depth-bounds setter on Apple9 merely to restate its disabled default.
+   [selectedEncoder setFrontFacingWinding:MTLWindingClockwise];
+   [selectedEncoder setCullMode:MTLCullModeNone];
+   [selectedEncoder setDepthClipMode:MTLDepthClipModeClip];
+   [selectedEncoder setDepthBias:0 slopeScale:0 clamp:0];
+   [selectedEncoder setStencilFrontReferenceValue:0 backReferenceValue:0];
+   [selectedEncoder setBlendColorRed:0 green:0 blue:0 alpha:0];
+   [selectedEncoder setTriangleFillMode:MTLTriangleFillModeFill];
+   [selectedEncoder setDepthStencilState:nil];
+   [selectedEncoder setArgumentTable:nil atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+  };
+  const auto keepForwardModelPass160=[&](const std::shared_ptr<PreparedOpaqueModelSource>& models,size_t phase,
+   id<MTL4RenderCommandEncoder> selectedEncoder,MTL4RenderPassDescriptor* selectedPass,
+   MTLStages priorProducerStages,MTLStages priorQueueStages){
+   if(!pass160Enabled||!selectedEncoder)return false;
+   const auto report=models->TryKeepForwardPass160(phase,selectedPass);
+   passCounters160.Observe(report);
+   if(!report.noCommands)return false;
+   preserveModelPassState160(selectedEncoder,selectedPass,priorProducerStages,priorQueueStages,true);
+   return true;
+  };
+  ModelPassCounters165 passCounters165;
+  const bool pass165Enabled=ModelPass165Enabled();
+  const auto loadedMainPass165=[&]{
+   // Every main opaque entry/resume above uses this same descriptor. Check
+   // its actual backing identities and subresources, not matching dimensions
+   // alone. Water/alpha/MSAA and PostDeferred callbacks are outside this gate.
+   if(!pass||mainAttachments->Samples()!=1||pass.defaultRasterSampleCount!=1||
+    !pass.renderTargetWidth||!pass.renderTargetHeight)return false;
+   const auto preserved=[&](MTLRenderPassAttachmentDescriptor* attachment,id<MTLTexture> expected){
+    return expected&&attachment.texture==expected&&expected.sampleCount==1&&
+     expected.textureType==MTLTextureType2D&&expected.storageMode!=MTLStorageModeMemoryless&&
+     expected.width==pass.renderTargetWidth&&expected.height==pass.renderTargetHeight&&
+     !attachment.level&&!attachment.slice&&!attachment.depthPlane&&
+     attachment.loadAction==MTLLoadActionLoad&&attachment.storeAction==MTLStoreActionStore&&!attachment.resolveTexture;
+   };
+   if(!preserved(pass.colorAttachments[0],mainAttachments->Color())||
+    !preserved(pass.depthAttachment,mainAttachments->Depth())||
+    !preserved(pass.stencilAttachment,mainAttachments->Stencil()))return false;
+   for(unsigned n=1;n<8;++n)if(pass.colorAttachments[n].texture||pass.colorAttachments[n].resolveTexture)return false;
+   return true;
+  };
+  const auto keepMRTBoundary165=[&](size_t phase){
+   if(!pass165Enabled){++passCounters165.disabled;return false;}
+   if(!encoder){++passCounters165.noEncoder;return false;}
+   if(!opaquePostDeferredDraws[phase].empty()){++passCounters165.postDeferred;return false;}
+   if(!loadedMainPass165()){++passCounters165.attachment;return false;}
+   ++passCounters165.queries;
+   const auto effect=opaqueModels->InspectPhaseExecution165(phase,frame.opaqueModelFrame.get(),frame.sourceDrawFrame,sourceSubmission);
+   if(!effect.HasOnlyCPULifecycle()){++passCounters165.unknown;return false;}
+   return true;
+  };
 		setupViewport();
   mainGround.initialClear->EncodeDraw(0,encoder);
   if(mainGround.terrain){
-   [encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
-   [encoder endEncoding];encoder=nil;
-   if(!mainGround.mapMRT){mainGround.terrain->EncodeDependencies(command);if(mainGround.cus)mainGround.cus->EncodeDependencies(command);
-    mainGround.ordered->Dependencies(command);}
-   encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder,"Cannot resume main target for original ground source");
-   [encoder barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+   // A leading MRT/postprocess command closes the current encoder itself.
+   // With no ground dependencies here, closing/reopening before that command
+   // creates an empty Load/Store pass. Keep the clear encoder until its actual
+   // consumer boundary. If an ordinary draw comes first, preserve the old
+   // fresh-encoder state and all dependency/barrier behavior.
+   const auto& ordered=*mainGround.ordered;
+   constexpr uint64_t absent=std::numeric_limits<uint64_t>::max();
+   const uint64_t firstDraw=ordered.draws.empty()?absent:ordered.draws.front().first;
+   const uint64_t firstCommand=ordered.commands.empty()?absent:ordered.commands.front().first;
+   const uint64_t firstEffect=ordered.ssao&&ordered.ssao->DrawCount()?ordered.ssao->SequenceAt(0):absent;
+   const bool skipEmptyPass=mainGround.mapMRT&&std::min(firstCommand,firstEffect)<firstDraw;
+   if(!skipEmptyPass){
+    [encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+    [encoder endEncoding];encoder=nil;
+    if(!mainGround.mapMRT){mainGround.terrain->EncodeDependencies(command);if(mainGround.cus)mainGround.cus->EncodeDependencies(command);
+     mainGround.ordered->Dependencies(command);}
+    encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder,"Cannot resume main target for original ground source");
+    [encoder barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+   }
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   // One receipt per process, outside the positive-gameplay measurement in the
+   // usual route. No per-frame timers or extra GPU synchronization.
+   static bool reportedEmptyPass=false;
+   if(skipEmptyPass&&!reportedEmptyPass){
+    LOG("[NativeTBDR] eliminated_empty_main_pass=1 sourceDrawFrame=%llu firstDraw=%llu firstCommand=%llu firstEffect=%llu",
+     static_cast<unsigned long long>(frame.sourceDrawFrame),static_cast<unsigned long long>(firstDraw),
+     static_cast<unsigned long long>(firstCommand),static_cast<unsigned long long>(firstEffect));
+    reportedEmptyPass=true;
+   }
+#endif
    mainGround.ordered->Encode(command,encoder,pass);mainGround.terrain->FinishOrderedDraws();
    if(mainGround.mapMRT)++result.mapGBufferDepthPasses;
    result.terrainDraws=uint32_t(mainGround.terrain->EncodedDrawCount());
@@ -3967,6 +4281,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		pass.colorAttachments[0].loadAction=MTLLoadActionLoad;pass.depthAttachment.loadAction=MTLLoadActionLoad;pass.stencilAttachment.loadAction=MTLLoadActionLoad;
 		encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot restore original world attachments after terrain-depth producer");setupViewport();
 		auto encodeLuaDraws = [&](const std::vector<LuaDraw>& draws, bool preUnit, bool preDecals=false) {
+			WorldEncodingProbe176::Scope effectScope(encodingProbe,Family176::Effects);
 			for (const auto& draw: draws) {
     const bool commandLevel=(draw.kind==LuaDrawKind::Blockout&&blockout->IsDepthPass(draw.index))||draw.kind==LuaDrawKind::ScreenTarget||draw.kind==LuaDrawKind::Bloom||draw.kind==LuaDrawKind::Distortion||draw.kind==LuaDrawKind::SourceCopy||draw.kind==LuaDrawKind::VolumetricCloud||draw.kind==LuaDrawKind::SensorPreviewTarget;
     if(!commandLevel&&encoder==nil){encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot resume actual scene for ordered Lua draw");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
@@ -4075,22 +4390,27 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			}
    if(encoder==nil){encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot resume original world after ordered effect chain");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
 		};
+		encodingProbe.Select(Family176::Effects);
 		encodeLuaDraws(preDecalDraws,false,true);
 		if(groundDecals){setupViewport();groundDecals->Encode(encoder);}
 		setupViewport();
 		if(particles)particles->Encode(NativeWorldParticleStage::GroundFlashes,encoder);
+		encodingProbe.Select(Family176::Other);
 		setupViewport();environment->EncodeSky(encoder,false);if(environmentFrame.drawSky&&environmentFrame.sky->kind!=NativeSkyKind::OriginalNull)++result.skyDraws;
 
 		encodeLuaDraws(preUnitDraws,true);
+		encodingProbe.Select(Family176::Model);
 		if(modelGBuffer&&modelGBuffer->RequiresEncode()){
 			[encoder endEncoding];modelGBuffer->Encode(command);result.modelGBufferDepthPasses=uint32_t(std::count_if(frame.shieldDepthFrame->modelPlan.phases.begin(),frame.shieldDepthFrame->modelPlan.phases.end(),[](const auto& phase){return phase.clearBefore;}));result.modelGBufferDepthPieces=uint32_t(modelGBuffer->PieceCount());
 			encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot restore world attachments after original model GBuffer depth");setupViewport();
 		}
 
 		auto drawPieces = [&](bool alpha,id<MTLBuffer> selectedScene=nil) {
-			setupViewport();[encoder setFrontFacingWinding:MTLWindingCounterClockwise];[encoder setCullMode:MTLCullModeBack];[encoder setDepthStencilState:alpha?alphaDepthState:depthState];
+			WorldEncodingProbe176::Scope modelScope(encodingProbe,Family176::Model);
+			encodingProbe.LegacyModelSetup(selectedScene!=nil);
+			setupWorldState(MTLCullModeBack,alpha?alphaDepthState:depthState,selectedScene?selectedScene:sceneBuffer);
+			[encoder setFrontFacingWinding:MTLWindingCounterClockwise];
 			[encoder setRenderPipelineState:alpha?impl->alphaPipeline:impl->unitPipeline];
-			if(selectedScene)[arguments setAddress:selectedScene.gpuAddress atIndex:3];
 			[arguments setTexture:impl->shadowDepth.gpuResourceID atIndex:7];[arguments setTexture:sampledShadowColor ? sampledShadowColor.gpuResourceID : MTLResourceID{0} atIndex:16];
 			[arguments setTexture:environment->Reflection().gpuResourceID atIndex:14];[arguments setTexture:environment->Specular().gpuResourceID atIndex:15];
 			for(const auto& piece:pieces)if(piece.visible&&piece.alpha==alpha&&piece.view==NativeWaterScenePass::Main&&
@@ -4106,13 +4426,31 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 				else if(piece.projectile) ++result.projectilePiecesDrawn; else ++result.piecesDrawn;
 			}
 		};
+		bool previousMRTKept165=false;
 		if(opaqueModels)for(size_t n=0;n<opaqueModels->PhaseCount();++n){
-			if(encoder){[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;}
-			if(opaqueModels->IsDeferredPhase(n))opaqueModels->EncodeMRTPhase(n,command);
-			else{
-				opaqueModels->EncodeForwardDependencies(n,command);
-				encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder,"Cannot resume actual original forward scene attachments");
-				[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+			if(opaqueModels->IsDeferredPhase(n)){
+				const bool keep=keepMRTBoundary165(n);
+				if(!keep&&encoder){[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;}
+				// Always execute the actual phase once. In the proven readonly case
+				// this retains prior-readability checks, empty consumer transitions,
+				// the distinct producer publication and the source ordinal advance.
+				opaqueModels->EncodeMRTPhase(n,command);
+				if(keep){
+					preserveModelPassState160(encoder,pass,MTLStageVertex|MTLStageFragment,MTLStageFragment|MTLStageBlit,false);
+					++passCounters165.kept;
+				}
+				previousMRTKept165=keep;
+			}else{
+				if(previousMRTKept165&&pass160Enabled&&encoder)++passCounters165.followingQueries160;
+				const bool keep=keepForwardModelPass160(opaqueModels,n,encoder,pass,MTLStageVertex|MTLStageFragment,MTLStageFragment|MTLStageBlit);
+				if(previousMRTKept165){if(keep)++passCounters165.followingKept160;else ++passCounters165.followingBoundary160;}
+				previousMRTKept165=false;
+				if(!keep){
+					if(encoder){[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;}
+					opaqueModels->EncodeForwardDependencies(n,command);
+					encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder,"Cannot resume actual original forward scene attachments");
+					[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+				}
 				opaqueModels->EncodeForwardPhase(n,encoder);
 			}
 			if(!opaquePostDeferredDraws[n].empty()){
@@ -4122,24 +4460,64 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 		}
 		if(!encoder){encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder,"Cannot resume actual scene after original opaque source");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
 		drawPieces(false);
+		encodingProbe.Select(Family176::Effects);
 		if(particles)particles->Encode(NativeWorldParticleStage::OpaqueProjectiles,encoder);
+  AlphaPassCounters166 passCounters166;
+  const bool pass166Enabled=ModelPass166Enabled();
+  const auto loadedAlphaPass166=[](MTL4RenderPassDescriptor* selectedPass,
+   id<MTLTexture> color,id<MTLTexture> depth,id<MTLTexture> stencil){
+   if(!selectedPass||selectedPass.defaultRasterSampleCount!=1||!selectedPass.renderTargetWidth||!selectedPass.renderTargetHeight)return false;
+   const auto preserved=[&](MTLRenderPassAttachmentDescriptor* attachment,id<MTLTexture> expected){
+    if(!expected)return !attachment.texture&&!attachment.resolveTexture;
+    return attachment.texture==expected&&expected.sampleCount==1&&expected.textureType==MTLTextureType2D&&
+     expected.storageMode!=MTLStorageModeMemoryless&&expected.width==selectedPass.renderTargetWidth&&expected.height==selectedPass.renderTargetHeight&&
+     !attachment.level&&!attachment.slice&&!attachment.depthPlane&&attachment.loadAction==MTLLoadActionLoad&&
+     attachment.storeAction==MTLStoreActionStore&&!attachment.resolveTexture;
+   };
+   if(!color||!depth||!preserved(selectedPass.colorAttachments[0],color)||
+    !preserved(selectedPass.depthAttachment,depth)||!preserved(selectedPass.stencilAttachment,stencil))return false;
+   for(unsigned n=1;n<8;++n)if(selectedPass.colorAttachments[n].texture||selectedPass.colorAttachments[n].resolveTexture)return false;
+   return true;
+  };
+  const auto keepAlphaModelPass166=[&](const std::shared_ptr<PreparedOpaqueModelSource>& models,size_t phase,
+   id<MTL4RenderCommandEncoder> selectedEncoder,MTL4RenderPassDescriptor* selectedPass,
+   const NativeOpaqueModelFrame* invocation,id<MTLTexture> color,id<MTLTexture> depth,id<MTLTexture> stencil){
+   ++passCounters166.attempts;
+   if(!pass166Enabled){++passCounters166.disabled;return false;}
+   if(!selectedEncoder){++passCounters166.noEncoder;return false;}
+   // The caller passes its CURRENT encoder variable and the descriptor used
+   // for every entry/resume on that variable, with the actual target owners.
+   if(!loadedAlphaPass166(selectedPass,color,depth,stencil)){++passCounters166.attachment;return false;}
+   ++passCounters166.queries;
+   const auto report=models->TryKeepAlphaPass166(phase,command,selectedPass,invocation,frame.sourceDrawFrame,sourceSubmission);
+   passCounters166.Observe(report,invocation->drawReflection||invocation->drawRefraction);
+   if(report.reason!=AlphaKeepReason166::Kept)return false;
+   preserveModelPassState160(selectedEncoder,selectedPass,MTLStageVertex|MTLStageFragment,MTLStageVertex|MTLStageFragment|MTLStageBlit,true);
+   return true;
+  };
 		const auto encodeAlphaModels=[&](const std::shared_ptr<PreparedOpaqueModelSource>& models,
-			id<MTL4RenderCommandEncoder> __strong& selectedEncoder,MTL4RenderPassDescriptor* selectedPass){
+			id<MTL4RenderCommandEncoder> __strong& selectedEncoder,MTL4RenderPassDescriptor* selectedPass,
+			const NativeOpaqueModelFrame* invocation,id<MTLTexture> color,id<MTLTexture> depth,id<MTLTexture> stencil){
 			if(!models)return;
+			WorldEncodingProbe176::Scope modelScope(encodingProbe,Family176::Model);
 			for(size_t phase=0;phase<models->PhaseCount();++phase){
 				Require(!models->IsDeferredPhase(phase),"Original alpha model source cannot target a deferred MRT");
-				[selectedEncoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[selectedEncoder endEncoding];selectedEncoder=nil;
-				models->EncodeForwardDependencies(phase,command);
-				selectedEncoder=[command renderCommandEncoderWithDescriptor:selectedPass];Require(selectedEncoder,"Cannot resume actual alpha model color/depth attachments");
-				[selectedEncoder barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+				if(!keepAlphaModelPass166(models,phase,selectedEncoder,selectedPass,invocation,color,depth,stencil)&&
+					!keepForwardModelPass160(models,phase,selectedEncoder,selectedPass,MTLStageVertex|MTLStageFragment,MTLStageVertex|MTLStageFragment|MTLStageBlit)){
+					[selectedEncoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[selectedEncoder endEncoding];selectedEncoder=nil;
+					models->EncodeForwardDependencies(phase,command);
+					selectedEncoder=[command renderCommandEncoderWithDescriptor:selectedPass];Require(selectedEncoder,"Cannot resume actual alpha model color/depth attachments");
+					[selectedEncoder barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+				}
 				models->EncodeForwardPhase(phase,command,selectedEncoder,selectedPass);
 			}
 		};
   if(waterSurface || basicSurface || legacySurface || dynamicSurface){
-			encodeAlphaModels(alphaModels[0],encoder,pass);
+			encodeAlphaModels(alphaModels[0],encoder,pass,frame.alphaModelFrames[0].get(),mainAttachments->Color(),mainAttachments->Depth(),mainAttachments->Stencil());
    drawPieces(true,belowWaterScene);
    belowWaterLua.Encode(encoder);
    if(particles){particles->Encode(NativeWorldParticleStage::AlphaBelowWater,encoder);particles->Encode(NativeWorldParticleStage::NanoBelowWater,encoder);}
+   encodingProbe.Select(Family176::Other);
    if(waterSurface || legacySurface || dynamicSurface){
    [encoder endEncoding];
    if(dynamicSurface){dynamicSurface->EncodeUpdates(command);dynamicSurface->EncodeDerived(command);}
@@ -4149,12 +4527,20 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    for(auto& view:waterViews)if(view.source){
     const auto& source=*view.source;
     auto waterPass=[MTL4RenderPassDescriptor new];
+    waterPass.defaultRasterSampleCount=view.color.sampleCount;
     waterPass.colorAttachments[0].texture=view.color;waterPass.colorAttachments[0].loadAction=MTLLoadActionLoad;
     waterPass.colorAttachments[0].storeAction=MTLStoreActionStore;
     waterPass.depthAttachment.texture=view.depth;waterPass.depthAttachment.loadAction=MTLLoadActionLoad;
     waterPass.depthAttachment.storeAction=MTLStoreActionStore;
     waterPass.renderTargetWidth=view.color.width;waterPass.renderTargetHeight=view.color.height;
+    const unsigned planarDiscard173=NativeInitialClearDiscardMask(view.initialClearSource.front(),
+     uint32_t(view.color.width),uint32_t(view.color.height))&unsigned(ScreenAttachmentColor|ScreenAttachmentDepth);
+    if(planarDiscard173&ScreenAttachmentColor)waterPass.colorAttachments[0].loadAction=MTLLoadActionDontCare;
+    if(planarDiscard173&ScreenAttachmentDepth)waterPass.depthAttachment.loadAction=MTLLoadActionDontCare;
+    view.initialClear->TryInitialAttachmentClear182(waterPass,frame.sourceDrawFrame,frame.simulationFrame);
     auto waterEncoder=[command renderCommandEncoderWithDescriptor:waterPass];Require(waterEncoder!=nil,"Cannot encode actual planar water scene");
+    waterPass.colorAttachments[0].loadAction=MTLLoadActionLoad;
+    waterPass.depthAttachment.loadAction=MTLLoadActionLoad;
     auto setup=[&]{
      [waterEncoder setViewport:MTLViewport{0,0,double(view.color.width),double(view.color.height),0,1}];
      [waterEncoder setScissorRect:MTLScissorRect{0,0,view.color.width,view.color.height}];
@@ -4164,6 +4550,18 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
      [arguments setAddress:view.scene.gpuAddress atIndex:3];
     };
     view.initialClear->EncodeDraw(0,waterEncoder);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+    const unsigned planarSlot173=source.pass==NativeWaterScenePass::Reflection?1u:0u;
+    if(!impl->reportedPlanar173[planarSlot173]){
+     const unsigned omitted173=unsigned(bool(planarDiscard173&ScreenAttachmentColor))+unsigned(bool(planarDiscard173&ScreenAttachmentDepth));
+     LOG("[NativePlanar173] source_frame=%llu view=%u width=%llu height=%llu samples=%llu discard_mask=%u omitted_initial_load_attachments=%u logical_source_bytes=%llu encoded=1 timing=0",
+      static_cast<unsigned long long>(frame.sourceDrawFrame),planarSlot173,
+      static_cast<unsigned long long>(view.color.width),static_cast<unsigned long long>(view.color.height),
+      static_cast<unsigned long long>(view.color.sampleCount),planarDiscard173,omitted173,
+      static_cast<unsigned long long>(uint64_t(view.color.width)*view.color.height*4u*omitted173));
+     impl->reportedPlanar173[planarSlot173]=true;
+    }
+#endif
     setup();if(source.drawSky)environment->EncodeWaterSky(waterEncoder,view.sky);
     if(source.groundSource){
      // Sky has completed. Prepare source image producers outside the render
@@ -4185,27 +4583,34 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
      result.waterSceneTerrainDraws+=view.groundTerrain->EncodedDrawCount();
     }
     // The source frame owns the exact engine -> whole CUS -> legacy order
-    // for units and features. Dependencies run outside the render encoder,
-    // then every phase resumes these SAME actual water attachments with Load.
+    // for units and features. Real/unknown dependencies run outside the render
+    // encoder; proved no-command phases may keep these SAME water attachments.
+    encodingProbe.Select(Family176::Model);
     if(view.opaqueModels&&view.opaqueModels->PhaseCount()){
-     [waterEncoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
-     [waterEncoder endEncoding];waterEncoder=nil;
      waterPass.colorAttachments[0].loadAction=MTLLoadActionLoad;
      waterPass.depthAttachment.loadAction=MTLLoadActionLoad;
      for(size_t n=0;n<view.opaqueModels->PhaseCount();++n){
       Require(!view.opaqueModels->IsDeferredPhase(n),"Planar water source tried to encode a main MRT phase");
-      view.opaqueModels->EncodeForwardDependencies(n,command);
-      waterEncoder=[command renderCommandEncoderWithDescriptor:waterPass];Require(waterEncoder,"Cannot resume actual water targets for original opaque source");
-      [waterEncoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+      if(!keepForwardModelPass160(view.opaqueModels,n,waterEncoder,waterPass,MTLStageFragment,MTLStageFragment|MTLStageBlit)){
+       if(waterEncoder){[waterEncoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[waterEncoder endEncoding];waterEncoder=nil;}
+       view.opaqueModels->EncodeForwardDependencies(n,command);
+       waterEncoder=[command renderCommandEncoderWithDescriptor:waterPass];Require(waterEncoder,"Cannot resume actual water targets for original opaque source");
+       [waterEncoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+      }
       view.opaqueModels->EncodeForwardPhase(n,waterEncoder);
-      [waterEncoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
-      [waterEncoder endEncoding];waterEncoder=nil;
+      // Keep only the inter-model boundary eligible for inspection. The final
+      // exit to legacy pieces/particles retains its original fresh encoder.
+      if(!pass160Enabled||n+1==view.opaqueModels->PhaseCount()){
+       [waterEncoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+       [waterEncoder endEncoding];waterEncoder=nil;
+      }
      }
      waterEncoder=[command renderCommandEncoderWithDescriptor:waterPass];Require(waterEncoder,"Cannot resume original water projectiles and alpha after opaque source");
      [waterEncoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
     }
     for(bool alpha:{false,true}){
-					if(alpha)encodeAlphaModels(view.alphaModels,waterEncoder,waterPass);
+					encodingProbe.Select(Family176::Model);
+					if(alpha)encodeAlphaModels(view.alphaModels,waterEncoder,waterPass,view.source->frame.alphaModelFrames[0].get(),view.color,view.depth,nil);
      setup();[waterEncoder setFrontFacingWinding:MTLWindingCounterClockwise];[waterEncoder setCullMode:MTLCullModeBack];
      [waterEncoder setDepthStencilState:alpha?alphaDepthState:depthState];
      [arguments setTexture:impl->shadowDepth.gpuResourceID atIndex:7];[arguments setTexture:sampledShadowColor ? sampledShadowColor.gpuResourceID : MTLResourceID{0} atIndex:16];
@@ -4221,6 +4626,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
       [waterEncoder setArgumentTable:arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
       [waterEncoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:piece.geometry->count indexType:MTLIndexTypeUInt32 indexBuffer:piece.geometry->indices.gpuAddress indexBufferLength:piece.geometry->indices.length];++result.waterSceneModelDraws;
      }
+     encodingProbe.Select(Family176::Effects);
      if(!alpha && view.particles)view.particles->Encode(NativeWorldParticleStage::OpaqueProjectiles,waterEncoder);
     }
     view.preParticlesLua.Encode(waterEncoder);
@@ -4230,6 +4636,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
      view.particles->Encode(reflected?NativeWorldParticleStage::NanoAboveWater:NativeWorldParticleStage::NanoBelowWater,waterEncoder);
     }
     view.worldLua.Encode(waterEncoder);
+    encodingProbe.Select(Family176::Other);
     [waterEncoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
     [waterEncoder endEncoding];
    }
@@ -4262,8 +4669,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    else if(dynamicSurface)dynamicSurface->EncodeSurface(encoder);
    else {basicSurface->Encode(encoder);++result.basicWaterDraws;}
    ++result.waterDraws;
+   encodingProbe.Select(Family176::Effects);
    waterPostLua.Encode(encoder);
-			encodeAlphaModels(alphaModels[1],encoder,pass);
+			encodeAlphaModels(alphaModels[1],encoder,pass,frame.alphaModelFrames[1].get(),mainAttachments->Color(),mainAttachments->Depth(),mainAttachments->Stencil());
    drawPieces(true,aboveWaterScene);
    aboveWaterLua.Encode(command,encoder,pass);
    // GL retains the world raster across SSAO FBO switches. A resumed
@@ -4271,7 +4679,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
    restoreWorldRaster();
    if(particles){particles->Encode(NativeWorldParticleStage::AlphaAboveWater,encoder,ssaoAboveDepth);particles->Encode(NativeWorldParticleStage::NanoAboveWater,encoder,ssaoAboveDepth);}
   }else{
-			encodeAlphaModels(alphaModels[2],encoder,pass);
+			encodeAlphaModels(alphaModels[2],encoder,pass,frame.alphaModelFrames[2].get(),mainAttachments->Color(),mainAttachments->Depth(),mainAttachments->Stencil());
    drawPieces(true);
    alphaAllLua.Encode(command,encoder,pass);
    // GL retains the world raster across SSAO FBO switches. A resumed
@@ -4285,6 +4693,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
     }else{particles->Encode(NativeWorldParticleStage::AlphaAll,encoder,ssaoAllDepth);particles->Encode(NativeWorldParticleStage::NanoAll,encoder,ssaoAllDepth);}
    }
   }
+  encodingProbe.Select(Family176::Other);
   if(particles)for(auto stage:{NativeWorldParticleStage::GroundFlashes,NativeWorldParticleStage::OpaqueProjectiles,NativeWorldParticleStage::AlphaAll,NativeWorldParticleStage::AlphaBelowWater,NativeWorldParticleStage::AlphaAboveWater,NativeWorldParticleStage::NanoAll,NativeWorldParticleStage::NanoBelowWater,NativeWorldParticleStage::NanoAboveWater})result.particleDraws+=particles->DrawCount(stage);
 
 		encodeLuaDraws(laterWorldDraws,false);
@@ -4335,7 +4744,85 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 			if(!options.readback->readColor)mainAttachments->EncodeResolve(command,MainReadImages::Color);
 			*mainReadReady=true;readback->Encode(command);
 		}else mainAttachments->EncodePresentationResolve(command);
-		result.metrics = lease.SubmitAndWait(prepStart, options.readback?impl->screenTargetSubmission++:impl->presentationFrame++, drawable);
+		encodingProbe.Finish(frame.sourceDrawFrame,frame.simulationFrame);
+		cpuPhase.Mark(10);preparationDetail.Mark(36);
+		lease.FinishResourceCommit();
+		result.residentBytes = lease.ResidentBytes(); result.residencyAllocationCount = lease.AllocationCount();
+		cpuPhase.Counts(result.residentBytes,result.residencyAllocationCount);
+  const bool defer=bool(options.deferredCompleted)&&!offscreenSource&&!options.readback&&!continuation&&drawable!=nil&&frame.simulationFrame>0&&screen&&screen->AllTargetsEncoded();
+  // Own every completion input. No references to this Draw stack survive the
+  // deferred return. Source packets remain pinned by the runtime graph too.
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  std::array<uint64_t,3> mrt174Expected{};
+  const bool mrt174Eligible=MRT174Enabled()&&MRT174Window(frame.sourceDrawFrame)&&frame.simulationFrame>0&&
+   !offscreenSource&&!options.readback&&!continuation&&drawable!=nil;
+  if(mrt174Eligible){
+   for(const auto& ground:groundScenes)if(ground.mapMRT)++mrt174Expected[0];
+   if(frame.opaqueModelFrame)for(const auto& phase:frame.opaqueModelFrame->passes)if(phase.mrt){
+    const auto& source=*phase.mrt;
+    if(source.role==NativeGeometryTextureRole::Map)++mrt174Expected[0];
+    else if(source.role==NativeGeometryTextureRole::Models)++mrt174Expected[source.feature?2:1];
+   }
+  }
+#endif
+  auto complete=[owner=impl.get(), result, sourceSubmission, offscreenSource, passCounters160, passCounters165, passCounters166,
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   mrt174Eligible,mrt174Expected,mrt174Simulation=frame.simulationFrame,
+#endif
+   completeTextureMips=impl->TakeTextureMipCompletion(sourceSubmission),
+   completeAtlasMips=impl->particlesGPU.TakeAtlasCompletion(sourceSubmission),
+   hasDrawable=drawable!=nil, sourceDrawFrame=frame.sourceDrawFrame,
+   completedShield=frame.shieldDepthFrame,reflectionWorldInfo=impl->reflectionWorldInfo,
+   postprocessSerial=options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0,
+   submissionCompleted=options.submissionCompleted,isReadback=bool(options.readback),readback,
+   originalShadow=std::move(originalShadow),
+   initialShadow=std::move(initialShadow),
+   opaqueModels=std::move(opaqueModels),
+   alphaModels=std::move(alphaModels),
+   environment=std::move(environment),
+   pbrBRDF=std::move(pbrBRDF),
+   pbrEnvironment=std::move(pbrEnvironment),
+   modelGBuffer=std::move(modelGBuffer),
+   shadowColor=std::move(shadowColor),
+   shadowLua=std::move(shadowLua),
+   worldInfo=std::move(worldInfo),
+   waterSurface=std::move(waterSurface),
+   basicSurface=std::move(basicSurface),
+   groundDecals=std::move(groundDecals),
+   groundScenes=std::move(groundScenes),
+   waterViews=std::move(waterViews),
+   belowWaterLua=std::move(belowWaterLua),
+   aboveWaterLua=std::move(aboveWaterLua),
+   alphaAllLua=std::move(alphaAllLua),
+   waterPostLua=std::move(waterPostLua),
+   dynamicSurface=std::move(dynamicSurface),
+   legacySurface=std::move(legacySurface),
+   standardShade=std::move(standardShade),
+   sensorPreview=std::move(sensorPreview),
+   screen=std::move(screen),
+   postprocess=std::move(postprocess),
+   bloom=std::move(bloom),
+   placementGrid=std::move(placementGrid),
+   reclaimFields=std::move(reclaimFields),
+   objectSpotlights=std::move(objectSpotlights),
+   grass=std::move(grass),
+   resourceSpots=std::move(resourceSpots),
+   clouds=std::move(clouds),
+   particles=std::move(particles),
+   luaNano=std::move(luaNano),
+   projectileEffects=std::move(projectileEffects),
+   lightning=std::move(lightning),
+   deferredLights=std::move(deferredLights),
+   outline=std::move(outline),
+   unitStencil=std::move(unitStencil),
+   distortions=std::move(distortions),
+   blueprint=std::move(blueprint),
+   overlays=std::move(overlays),
+   separateLineOwners=std::move(separateLineOwners),
+   blockout=std::move(blockout),
+   namedImageMipmaps=std::move(namedImageMipmaps),
+   normalBacking=std::move(normalBacking)](const FrameMetrics& metrics) mutable {
+   result.metrics=metrics;
   std::vector<std::exception_ptr> retirementFailures;
   const auto retire=[&](const auto& completion){try{completion();}catch(...){retirementFailures.push_back(std::current_exception());}};
   // Named producer completion is published immediately after the SAME wait,
@@ -4343,15 +4830,15 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   if(originalShadow)retire([&]{originalShadow->DidComplete();});
   for(const auto& backing:initialShadow)if(backing&&backing->encodedSubmission.load()==sourceSubmission&&!backing->completed.load())
    retire([&]{CompleteNativeShadowTexture(*backing);});
-  retire([&]{impl->CompletePendingTextureMipmaps(sourceSubmission);});
-  retire([&]{impl->particlesGPU.CompleteAtlasImages(sourceSubmission);});
+  retire([&]{completeTextureMips();});
+  retire([&]{completeAtlasMips();});
   if(opaqueModels)retire([&]{opaqueModels->DidComplete();});
 		for(auto& alpha:alphaModels)if(alpha)retire([&]{alpha->DidComplete();});
   retire([&]{environment->DidComplete();});
-  if(impl->reflectionWorldInfo)retire([&]{impl->reflectionWorldInfo->DidComplete();});
+  if(reflectionWorldInfo)retire([&]{reflectionWorldInfo->DidComplete();});
   if(pbrBRDF)retire([&]{pbrBRDF->DidComplete(sourceSubmission);});
   if(pbrEnvironment)retire([&]{pbrEnvironment->DidComplete(sourceSubmission);});
-  retire([&]{impl->pbrSource.PruneCompleted();});
+  retire([&]{owner->pbrSource.PruneCompleted();});
   if(modelGBuffer)retire([&]{modelGBuffer->DidComplete();});
   if(shadowColor)retire([&]{shadowColor->DidComplete();});
   if(shadowColor)retire([&]{shadowLua.Complete();});
@@ -4382,6 +4869,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   if(screen)retire([&]{screen->DidComplete();result.luaPiPDraws=screen->PiPDrawsCompleted();result.luaStartBoxMiniMapDraws=screen->StartBoxDrawsCompleted();});
   if(postprocess)retire([&]{postprocess->DidComplete();});
   if(bloom)retire([&]{bloom->DidComplete();});
+  if(placementGrid)retire([&]{placementGrid->DidComplete();});
   if(reclaimFields)retire([&]{reclaimFields->DidComplete();});
   if(objectSpotlights)retire([&]{objectSpotlights->DidComplete();});
   if(grass)retire([&]{grass->DidComplete();});
@@ -4397,25 +4885,94 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
   if(distortions)retire([&]{distortions->DidComplete();});
   if(blueprint)retire([&]{blueprint->DidComplete();});
   if(overlays)retire([&]{overlays->DidComplete();});
+  for(const auto& lines:separateLineOwners)if(lines)retire([&]{lines->CompleteLineDependencies();});
   if(blockout)retire([&]{blockout->DidComplete();});
   retire([&]{namedImageMipmaps->DidComplete();});
-  retire([&]{impl->normalsReady=true;std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource())->completed=true;});
+  retire([&]{owner->normalsReady=true;std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource())->completed=true;});
   if(readback)retire([&]{readback->DidComplete();});
-  if(options.submissionCompleted)retire([&]{options.submissionCompleted(sourceSubmission);});
-  if(options.readback)retire([&]{ui::GetRecorder().RetireTargetSubmission(sourceSubmission);});
+  if(submissionCompleted)retire([&]{submissionCompleted(sourceSubmission);});
+  if(isReadback)retire([&]{ui::GetRecorder().RetireTargetSubmission(sourceSubmission);});
   if(!retirementFailures.empty()){
    if(retirementFailures.size()==1)std::rethrow_exception(retirementFailures.front());
    std::string message="Actual shared source retirement reported multiple failures:";
    for(const auto& failure:retirementFailures)try{std::rethrow_exception(failure);}catch(const std::exception& error){message+="\n";message+=error.what();}catch(...){message+="\nUnknown original retirement failure";}
    throw std::runtime_error(message);
   }
-  impl->shieldPending.reset();impl->submittedOpaqueSource.reset();impl->activeSourceSubmission=0;originalSubmission.retired=true;
+  if(owner->shieldPending==completedShield)owner->shieldPending.reset();
+  if(owner->activeSourceSubmission==sourceSubmission){owner->submittedOpaqueSource.reset();owner->activeSourceSubmission=0;}
 		result.capabilities.gpuTimestamps = result.metrics->gpuExecutionMs.has_value();
-		result.presented=!offscreenSource && drawable!=nil;
-		result.sourceFrameCompleted=true;result.sourceDrawFrame=frame.sourceDrawFrame;
-		result.completedPostprocessSerial=options.screenUI && options.screenUI->postprocess?options.screenUI->postprocess->serial:0;
+		result.presented=!offscreenSource && hasDrawable;
+		result.sourceFrameCompleted=true;result.sourceDrawFrame=sourceDrawFrame;
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  if(mrt174Eligible){
+   const uint64_t bit=uint64_t(1)<<(sourceDrawFrame-2048);
+   const bool duplicate=(owner->mrt174CompletedFrames.fetch_or(bit,std::memory_order_relaxed)&bit)!=0;
+   if(duplicate&&MRT174IssueAllowed())LOG("[NativeMRT174Issue] kind=duplicate_completed_frame source_frame=%llu",static_cast<unsigned long long>(sourceDrawFrame));
+   if(!duplicate){
+    const bool commandTime=result.metrics&&result.metrics->gpuExecutionMs.has_value()&&std::isfinite(*result.metrics->gpuExecutionMs)&&*result.metrics->gpuExecutionMs>0;
+    LOG("[NativeMRT174Frame] source_frame=%llu submission=%llu simulation_frame=%lld renderer=%p expected_map=%llu expected_unit=%llu expected_feature=%llu gpu_command_known=%u gpu_command_ms=%.6f retired=1 ordinary=1 positive=1",
+     static_cast<unsigned long long>(sourceDrawFrame),static_cast<unsigned long long>(sourceSubmission),static_cast<long long>(mrt174Simulation),static_cast<void*>(owner),
+     static_cast<unsigned long long>(mrt174Expected[0]),static_cast<unsigned long long>(mrt174Expected[1]),static_cast<unsigned long long>(mrt174Expected[2]),
+     unsigned(commandTime),commandTime?*result.metrics->gpuExecutionMs:-1.0);
+   }
+  }
+#endif
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  static bool reportedPass160=false;
+  static bool reportedPass165=false;
+  static bool reportedPass166=false;
+  if(!reportedPass166&&sourceDrawFrame>=300){
+   LOG("[NativePass166] enabled=%u source_frame=%llu submission=%llu attempts=%llu effect_queries=%llu main_kept=%llu planar_kept=%llu kept_nonempty=%llu kept_empty=%llu disabled=%llu no_encoder=%llu attachment_fallback=%llu callback_unknown=%llu ordered_commands=%llu dependency_unknown=%llu dependency_commands=%llu cube_query=%llu retired=1",
+    unsigned(ModelPass166Enabled()),static_cast<unsigned long long>(sourceDrawFrame),static_cast<unsigned long long>(sourceSubmission),
+    static_cast<unsigned long long>(passCounters166.attempts),static_cast<unsigned long long>(passCounters166.queries),
+    static_cast<unsigned long long>(passCounters166.mainKept),static_cast<unsigned long long>(passCounters166.planarKept),
+    static_cast<unsigned long long>(passCounters166.keptNonempty),static_cast<unsigned long long>(passCounters166.keptEmpty),
+    static_cast<unsigned long long>(passCounters166.disabled),static_cast<unsigned long long>(passCounters166.noEncoder),
+    static_cast<unsigned long long>(passCounters166.attachment),static_cast<unsigned long long>(passCounters166.callbackUnknown),
+    static_cast<unsigned long long>(passCounters166.orderedCommands),static_cast<unsigned long long>(passCounters166.dependencyUnknown),
+    static_cast<unsigned long long>(passCounters166.dependencyCommands),static_cast<unsigned long long>(passCounters166.cubeQueries));
+   reportedPass166=true;
+  }
+  if(!reportedPass165&&sourceDrawFrame>=300){
+   LOG("[NativePass165] enabled=%u source_frame=%llu submission=%llu effect_queries=%llu main_mrt_boundary_kept=%llu disabled=%llu no_encoder=%llu post_deferred=%llu attachment_fallback=%llu unknown=%llu following_query160=%llu following_kept160=%llu following_boundary160=%llu retired=1",
+    unsigned(ModelPass165Enabled()),static_cast<unsigned long long>(sourceDrawFrame),static_cast<unsigned long long>(sourceSubmission),
+    static_cast<unsigned long long>(passCounters165.queries),static_cast<unsigned long long>(passCounters165.kept),
+    static_cast<unsigned long long>(passCounters165.disabled),static_cast<unsigned long long>(passCounters165.noEncoder),
+    static_cast<unsigned long long>(passCounters165.postDeferred),static_cast<unsigned long long>(passCounters165.attachment),
+    static_cast<unsigned long long>(passCounters165.unknown),static_cast<unsigned long long>(passCounters165.followingQueries160),
+    static_cast<unsigned long long>(passCounters165.followingKept160),static_cast<unsigned long long>(passCounters165.followingBoundary160));
+   reportedPass165=true;
+  }
+  if(!reportedPass160&&sourceDrawFrame>=300){
+   LOG("[NativePass160] enabled=%u kept_pass=%llu kept_nonempty=%llu kept_empty=%llu cube_query=%llu unknown_boundary=%llu model_mrt_phases=%llu model_mrt_load_phases=%llu",
+    unsigned(ModelPass160Enabled()),static_cast<unsigned long long>(passCounters160.kept),
+    static_cast<unsigned long long>(passCounters160.keptNonempty),static_cast<unsigned long long>(passCounters160.keptEmpty),
+    static_cast<unsigned long long>(passCounters160.cubeQueries),static_cast<unsigned long long>(passCounters160.unknownBoundaries),
+    static_cast<unsigned long long>(passCounters160.modelMRTPhases),static_cast<unsigned long long>(passCounters160.modelMRTLoadPhases));
+   reportedPass160=true;
+  }
+#endif
+		result.completedPostprocessSerial=postprocessSerial;
 		result.screenTargetsCompleted=screen && screen->AllTargetsEncoded();
 		if(offscreenSource)result.status=Metal4PresentationStatus::OffscreenSourceCompleted;
+   return std::move(result);
+  };
+  if(defer){
+   auto owned=std::make_shared<decltype(complete)>(std::move(complete));
+   preparationDetail.Mark(37);
+   lease.SubmitAndDefer(prepStart,impl->presentationFrame++,drawable,
+    [owned,notify=options.deferredCompleted](const FrameMetrics& metrics){notify((*owned)(metrics));});
+   preparationDetail.Mark(38);
+   originalSubmission.retired=true; // Ownership transferred, NOT GPU-completed.
+   // Capture transaction slots are reusable; GPU owners remain in the ticket.
+   impl->shieldPending.reset();impl->submittedOpaqueSource.reset();impl->activeSourceSubmission=0;
+   result.presented=true;result.sourceFrameCompleted=false;result.screenTargetsCompleted=false;
+   result.sourceDrawFrame=frame.sourceDrawFrame;result.metrics.reset();
+   return result;
+  }
+  const auto metrics=lease.SubmitAndWait(prepStart,options.readback?impl->screenTargetSubmission++:impl->presentationFrame++,drawable);
+  cpuPhase.Mark(11);
+  result=complete(metrics);originalSubmission.retired=true;
 		if(continuation){
 			try {
 				continuation->cutoff=continuation->worldCutoff=options.readback->cutoff;

@@ -45,8 +45,15 @@ std::shared_ptr<const NativePostprocessFrame> NativePostprocessRecorder::Snapsho
 	return prefix;
 }
 void NativePostprocessRecorder::AbortFrame() noexcept { Rollback(); recording.reset(); pending.reset(); active = false; }
+void NativePostprocessRecorder::HoldSubmittedFrame(std::uint64_t serial)
+{
+ Check(!active && pending && pending->serial==serial && !submittedFrame,"Postprocess submitted frame ownership differs");
+ submittedFrame.emplace(SubmittedFrame{std::move(pending),std::move(changes)});changes.clear();
+}
 void NativePostprocessRecorder::RetireCompletedFrame(std::uint64_t serial)
 {
+ if(submittedFrame && submittedFrame->frame->serial==serial){submittedFrame.reset();return;}
+
 	Check(!active && pending && pending->serial == serial, "Postprocess completion does not match pending actual frame");
 	changes.clear(); pending.reset();
 }
@@ -75,7 +82,9 @@ void NativePostprocessRecorder::RetireSubmission(std::uint64_t actualSubmission)
 void NativePostprocessRecorder::Reset() noexcept { AbortFrame(); }
 bool NativePostprocessRecorder::OwnsPendingVersion(const std::shared_ptr<const NativePostprocessVersion>& version) const noexcept
 {
-	for(const auto& change:changes)if(change.published==version)return true;return false;
+ for(const auto& change:changes)if(change.published==version)return true;
+ if(submittedFrame)for(const auto& change:submittedFrame->changes)if(change.published==version)return true;
+ return false;
 }
 void NativePostprocessRecorder::Commit(NativePostprocessOperation operation, std::span<const std::shared_ptr<NativePostprocessBinding>> outputs,
 	std::function<void(std::shared_ptr<const NativePostprocessVersion>)> commitScreen)

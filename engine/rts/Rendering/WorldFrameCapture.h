@@ -35,8 +35,11 @@ public:
 	// Actual SMF writer shares the existing height and texture source cache.
 	std::shared_ptr<const NativeMiniMapBackground> CaptureTerrainShadingSource(
 		const CSMFReadMap& actualSourceMap,std::uint64_t actualWriteRevision);
+	// Retain the already captured original color graph before choosing legacy
+	// consumers. Its alpha graph is attached at the unchanged later boundary.
 	WorldFrame Capture(NativeWaterScenePass pass = NativeWaterScenePass::Main,
-		std::shared_ptr<const NativeOriginalShadowFrame> originalShadow = {});
+		std::shared_ptr<const NativeOriginalShadowFrame> originalShadow = {},
+		std::shared_ptr<const NativeOpaqueModelFrame> originalModels = {});
 	std::shared_ptr<const WorldTexture> CaptureTexture(const std::string& path);
 	// Original source loader shares this cache. Missing/failed source decode
 	// returns null; strict bounds/layout/unsupported-format errors still throw.

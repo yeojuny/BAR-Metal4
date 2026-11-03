@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <limits>
 #include <sstream>
+#include <cstdlib>
 
 #include "lib/sol2/sol.hpp"
 #include <fmt/format.h>
@@ -1225,7 +1226,7 @@ size_t LuaVBOImpl::UploadImpl(const std::vector<TIn>& dataVec, uint32_t elemOffs
 		vbo->Unbind();
 #ifdef RECOIL_METAL4_LIVE_SCENE
 		if (nativeSnapshotSource.IsDefined())
-			nativeSnapshotSource.InvalidateContents();
+			nativeSnapshotSource.InvalidateRange(bufferOffsetInBytes, bytesWritten);
 #endif
 
 		//LOG("buffDataWithOffset = %p, bufferOffsetInBytes = %u, mappedBufferSizeInBytes = %d, bytesWritten = %d", (void*)buffDataWithOffset, bufferOffsetInBytes, mappedBufferSizeInBytes, bytesWritten);
@@ -1516,11 +1517,11 @@ int LuaVBOImpl::BindBufferRangeImpl(GLuint bindingIndex,  const sol::optional<in
 	switch (target) {
 	case GL_UNIFORM_BUFFER: {
 		if (bindingIndex < uboMinIndex || bindingIndex >= globalRendering->glslMaxUniformBufferBindings)
-			LuaUtils::SolLuaError("[LuaVBOImpl::%s] Invalid (Un)binding index [%u]. Index must be within [%u : %d)", __func__, uboMinIndex, globalRendering->glslMaxUniformBufferBindings);
+			LuaUtils::SolLuaError("[LuaVBOImpl::%s] Invalid (Un)binding index [%u]. Index must be within [%u : %d)", __func__, bindingIndex, uboMinIndex, globalRendering->glslMaxUniformBufferBindings);
 	} break;
 	case GL_SHADER_STORAGE_BUFFER: {
 		if (bindingIndex < ssboMinIndex || bindingIndex >= globalRendering->glslMaxStorageBufferBindings)
-			LuaUtils::SolLuaError("[LuaVBOImpl::%s] Invalid (Un)binding index [%u]. Index must be within [%u : %d)", __func__, ssboMinIndex, globalRendering->glslMaxStorageBufferBindings);
+			LuaUtils::SolLuaError("[LuaVBOImpl::%s] Invalid (Un)binding index [%u]. Index must be within [%u : %d)", __func__, bindingIndex, ssboMinIndex, globalRendering->glslMaxStorageBufferBindings);
 	} break;
 	default:
 		LuaUtils::SolLuaError("[LuaVBOImpl::%s] (Un)binding target can only be equal to [%u] or [%u]", __func__, GL_UNIFORM_BUFFER, GL_SHADER_STORAGE_BUFFER);
@@ -1735,7 +1736,13 @@ rendering::NativeBufferSnapshotRef LuaVBOImpl::CaptureNativeSnapshot() const
 {
 	if (!vboOwner || vbo == nullptr || bufferData == nullptr || !nativeSnapshotSource.IsDefined())
 		throw std::runtime_error("Lua VBO native capture requires an owned CPU buffer; engine GPU-only ModelsVBO is unavailable");
-	return nativeSnapshotSource.Capture({static_cast<const uint8_t*>(bufferData), bufferSizeInBytes});
+	static const bool trace = [] { const char* v = std::getenv("BAR_NATIVE_VBO_COPY_TRACE"); return v && std::strcmp(v, "1") == 0; }();
+	static rendering::NativeSnapshotCopyStats stats;
+	static uint64_t calls = 0, reports = 0;
+	auto snapshot = nativeSnapshotSource.Capture({static_cast<const uint8_t*>(bufferData), bufferSizeInBytes}, trace ? &stats : nullptr);
+	if (trace && ++calls % 256 == 0 && reports++ < 128)
+		LOG("[NativeVBOCopy] captures=%llu full=%llu partial=%llu cached=%llu copied_bytes=%llu baseline_copy_bytes=%llu", (unsigned long long)calls, (unsigned long long)stats.full, (unsigned long long)stats.partial, (unsigned long long)stats.cached, (unsigned long long)stats.copiedBytes, (unsigned long long)stats.baselineBytes);
+	return snapshot;
 }
 
 rendering::NativeBufferRange LuaVBOImpl::CaptureNativeRange(uint32_t binding, size_t first, size_t count,
@@ -1754,7 +1761,7 @@ void LuaVBOImpl::AllocGLBuffer(size_t byteSize)
 	auto nativeLayout = MakeNativeLayout();
 	if (rendering::CheckedNativeBufferByteSize(nativeLayout) != byteSize)
 		throw std::invalid_argument("Lua VBO native definition byte capacity differs from allocation");
-	rendering::NativeBufferSnapshotSource nextNativeSource;
+	rendering::NativeDirtyBufferSnapshotSource nextNativeSource;
 	nextNativeSource.Define(nativeLayout);
 #endif
 	if (defTarget == GL_UNIFORM_BUFFER && bufferSizeInBytes > UBO_SAFE_SIZE_BYTES) {

@@ -121,6 +121,8 @@ std::unique_ptr<PreparedWorldEnvironment> WorldEnvironmentGPU::Prepare(RuntimeLe
 {
 	Require(input.sky&&(input.specular||input.sourceSpecular),"Original environment capture requires real sky/specular resource owners");
 	const bool originalSource = bool(input.sourceCubeUpdate);
+ if(!originalSource || !impl->reflectionReady || impl->skyOwner!=input.sky)
+  lease.RetirePreviousSubmission();
 	Require(!originalSource || (input.sourceReflection && input.sourceSpecular && sourceSubmission), "Original named environment requires source objects and actual submission identity");
 	Require(input.unitBRDFSize==512&&input.unitBRDFGOption==1,"Unsupported original unit BRDF producer definition");
 	Require(input.unsupported.empty(),input.unsupported.empty()?"":"Unsupported original environment mode: "+input.unsupported.front());

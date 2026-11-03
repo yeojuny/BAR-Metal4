@@ -142,6 +142,7 @@ void Patch::Init(CSMFGroundDrawer* _drawer, int patchX, int patchZ)
 	indxVBO   = { GL_ELEMENT_ARRAY_BUFFER, false, false };
 	borderVBO = { GL_ARRAY_BUFFER        , false, false };
 
+	nativeGeometry.Invalidate();
 	vertices.resize((PATCH_SIZE + 1) * (PATCH_SIZE + 1));
 
 	// initialize vertices
@@ -489,6 +490,7 @@ void Patch::RecursRender(const TriTreeNode* tri, const int2 left, const int2 rig
 void Patch::GenerateIndices()
 {
 	RECOIL_DETAILED_TRACY_ZONE;
+	nativeGeometry.Invalidate();
 	indices.clear();
 	RecursRender(&baseLeft,  int2(         0, PATCH_SIZE), int2(PATCH_SIZE,          0), int2(         0,          0));
 	RecursRender(&baseRight, int2(PATCH_SIZE,          0), int2(         0, PATCH_SIZE), int2(PATCH_SIZE, PATCH_SIZE));
@@ -659,13 +661,15 @@ void Patch::Draw() const
 		return;
 #ifdef RECOIL_METAL4_LIVE_SCENE
 	if (auto* source=rendering::CurrentNativeTerrainShadowCapture()) {
-		source->SubmitTerrain(vertices.data(),vertices.size(),sizeof(float3),indices,true);
+		source->SubmitTerrain(vertices.data(),vertices.size(),sizeof(float3),indices,true,
+   nativeGeometry.Capture(vertices.data(),vertices.size(),sizeof(float3),indices));
 		return;
 	}
 #endif
 	if (auto* source=rendering::CurrentNativeWaterGroundSourceCapture()) {
 		source->SubmitSquare(rendering::NativeTerrainMeshSource::ROAM,vertices.data(),vertices.size(),sizeof(float3),
-			indices,true,rendering::CaptureCurrentNativeTerrainProgram());
+			indices,true,rendering::CaptureCurrentNativeTerrainProgram(),nullptr,0,false,
+   nativeGeometry.Capture(vertices.data(),vertices.size(),sizeof(float3),indices));
 		return;
 	}
 

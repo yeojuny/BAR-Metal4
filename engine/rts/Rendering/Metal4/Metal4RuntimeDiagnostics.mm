@@ -1,12 +1,13 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4RuntimeNative.h"
+#include "Metal4FrameResources.h"
 #include <filesystem>
 
 // Explicit development target only; never part of the normal application.
 namespace rendering::metal4 {
 std::vector<uint8_t> RuntimeLease::Readback(id<MTLTexture> texture, uint32_t width, uint32_t height, double& milliseconds)
 {
-	Require(!recording && !pending && !runtime.poisoned, "Metal4 readback requires successful completed GPU work");
+	Require(!frame->recording && !frame->pending && !runtime.poisoned, "Metal4 readback requires successful completed GPU work");
 	Require(texture != nil && texture.width == width && texture.height == height, "Metal4 readback dimensions differ from target");
 	const auto start = Clock::now();
 	std::vector<uint8_t> rgba(size_t(width) * height * 4);

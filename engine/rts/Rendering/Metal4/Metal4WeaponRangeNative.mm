@@ -1,14 +1,41 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WeaponRangeNative.h"
+#include "Metal4TransientUpload177.h"
 #include "NativeWeaponRangeShaders.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
 #include <map>
 #include <tuple>
 #include <unordered_map>
 #include <cmath>
+#include <vector>
 
 namespace rendering::metal4 {
 namespace {
+// RANGE199_ALGORITHM_BEGIN
+constexpr uint32_t MaxRangeLineVertices = 1024;
+
+bool CanIndexRangeLine(bool composite, NativeDrawPrimitive primitive, uint32_t vertices, unsigned samples)
+{
+    return !composite && primitive == NativeDrawPrimitive::LineLoop && samples == 1 &&
+           (vertices == 128 || vertices == MaxRangeLineVertices);
+}
+
+std::vector<uint16_t> MakeRangeLineIndices(uint32_t vertices)
+{
+    Require(vertices >= 3 && vertices <= MaxRangeLineVertices, "Invalid range line index extent");
+    std::vector<uint16_t> indices;
+    indices.reserve(6 * vertices);
+    for (uint32_t segment = 0; segment < vertices; ++segment) {
+        // The original line vertex shader maps IDs 0/3 and 2/4 to the same corners.
+        // Reuse those IDs without changing either triangle or its provoking vertex value.
+        const auto base = uint16_t(6 * segment);
+        indices.insert(indices.end(), {base, uint16_t(base+1), uint16_t(base+2),
+                                       base, uint16_t(base+2), uint16_t(base+5)});
+    }
+    return indices;
+}
+// RANGE199_ALGORITHM_END
+
 id<MTLBuffer> Upload(RuntimeLease& lease,const void* source,size_t size)
 {
 	Require(source && size && size<=lease.Device().maxBufferLength,"Original weapon range buffer exceeds device capacity");
@@ -27,6 +54,7 @@ uint64_t PipelineBits(const ScreenBlendState& b,const std::array<bool,4>& m)
 }
 }
 struct PreparedWeaponRangeDraw::Impl {
+ __strong M4TransientUploadLifetime177* uploads177=nil;
 	__strong id<MTLRenderPipelineState> pipeline=nil;
 	__strong id<MTLDepthStencilState> depth=nil;
 	__strong id<MTL4ArgumentTable> arguments=nil;
@@ -35,6 +63,7 @@ struct PreparedWeaponRangeDraw::Impl {
 	NativeWorldDrawState rasterState;
 	effectstate::Raster raster;
 	uint32_t count=0,instances=0;
+    __strong id<MTLBuffer> lineIndices=nil;
 };
 PreparedWeaponRangeDraw::PreparedWeaponRangeDraw():impl(std::make_unique<Impl>()){}
 PreparedWeaponRangeDraw::~PreparedWeaponRangeDraw()=default;
@@ -49,12 +78,37 @@ void PreparedWeaponRangeDraw::Encode(id<MTL4RenderCommandEncoder> encoder)const
 	[encoder setCullMode:cull==NativeWorldCull::Front?MTLCullModeFront:cull==NativeWorldCull::Back?MTLCullModeBack:MTLCullModeNone];
 	[encoder setDepthStencilState:impl->depth];[encoder setRenderPipelineState:impl->pipeline];
 	[encoder setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-	[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->count instanceCount:impl->instances];
+    // RANGE199_DRAW_BEGIN
+    if (impl->lineIndices) {
+        [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->count indexType:MTLIndexTypeUInt16
+                           indexBuffer:impl->lineIndices.gpuAddress indexBufferLength:impl->lineIndices.length
+                         instanceCount:impl->instances];
+    } else {
+        [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->count instanceCount:impl->instances];
+    }
+    // RANGE199_DRAW_END
 }
 struct WeaponRangeGPU::Impl {
+ TransientUploadPool177 uploads177{"weapon_range"};
 	using PipelineKey=std::tuple<unsigned,MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,unsigned,bool,uint64_t,bool>;
 	__strong id<MTLLibrary> library=nil;
 	std::map<PipelineKey,id<MTLRenderPipelineState>> pipelines;
+    // RANGE199_CACHE_BEGIN
+    const Runtime* lineIndexContext=nullptr;
+    __strong id<MTLBuffer> lineIndexBuffer=nil;
+
+    id<MTLBuffer> LineIndices(RuntimeLease& lease)
+    {
+        if (lineIndexContext!=lease.ContextIdentity() || !lineIndexBuffer || lineIndexBuffer.device!=lease.Device()) {
+            const auto indices=MakeRangeLineIndices(MaxRangeLineVertices);
+            lineIndexBuffer=[lease.Device() newBufferWithBytes:indices.data() length:indices.size()*sizeof(uint16_t)
+                                                      options:MTLResourceStorageModeShared];
+            lineIndexContext=lease.ContextIdentity();
+        }
+        if (lineIndexBuffer) lease.AddAllocation(lineIndexBuffer);
+        return lineIndexBuffer;
+    }
+    // RANGE199_CACHE_END
 	struct CachedBuffer {std::weak_ptr<const NativeBufferSnapshot> original;__strong id<MTLBuffer> buffer=nil;};
 	std::unordered_map<const NativeBufferSnapshot*,CachedBuffer> buffers;
 	id<MTLBuffer> Buffer(RuntimeLease& lease,const NativeBufferSnapshotRef& source)
@@ -93,7 +147,7 @@ struct WeaponRangeGPU::Impl {
 };
 WeaponRangeGPU::WeaponRangeGPU():impl(std::make_unique<Impl>()){}
 WeaponRangeGPU::~WeaponRangeGPU()=default;
-void WeaponRangeGPU::ClearResources(){impl->buffers.clear();}
+void WeaponRangeGPU::ClearResources(){impl->uploads177.Clear();impl->buffers.clear();impl->lineIndexBuffer=nil;impl->lineIndexContext=nullptr;}
 std::unique_ptr<PreparedWeaponRangeDraw> WeaponRangeGPU::Prepare(RuntimeLease& lease,const NativeWeaponRangeDraw& draw,
 	const StartBoxImageResolver& resolver,MTLViewport viewport,MTLScissorRect scissor,std::array<std::uint32_t,2> targetExtent,
 	MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,double& milliseconds,
@@ -101,6 +155,12 @@ std::unique_ptr<PreparedWeaponRangeDraw> WeaponRangeGPU::Prepare(RuntimeLease& l
 {
 	ValidateNativeWeaponRangeDraw(draw);
 	auto result=std::unique_ptr<PreparedWeaponRangeDraw>(new PreparedWeaponRangeDraw);
+ impl->uploads177.BeginBatch(lease.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(lease,impl->uploads177,result->impl->uploads177,bytes,length,
+   [&]{return Upload(lease,bytes,length);});
+ };
+
 	const bool line=draw.primitive==NativeDrawPrimitive::LineLoop;
 	if(!draw.instanceCount || !scissor.width || !scissor.height || (!line && draw.raster.cullEnabled && draw.raster.cull==NativeWorldCull::FrontAndBack))return result;
 	// The native aliased-line transport uses bounded signed fixed-point terms.
@@ -149,19 +209,23 @@ std::unique_ptr<PreparedWeaponRangeDraw> WeaponRangeGPU::Prepare(RuntimeLease& l
  u.outputViewport={0,0,float(targetExtent[0]),float(targetExtent[1])};
  u.renderOptions={unsigned(line),unsigned(draw.surface.alphaTest.compare)|(unsigned(draw.surface.alphaTest.enabled)<<8),0,0};
  if(out.coverageMask.texture)Require(u.viewGeometry[0]>0 && u.viewGeometry[1]>0 && out.coverageMask.texture.width==u.viewGeometry[0] && out.coverageMask.texture.height==u.viewGeometry[1],"Original31657 mask extent differs from source world view");
- auto vertices=impl->Buffer(lease,draw.vertices),uniforms=Upload(lease,&u,sizeof(u));
+ auto vertices=impl->Buffer(lease,draw.vertices),uniforms=upload177(&u,sizeof(u));
  auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=4;descriptor.maxTextureBindCount=2;descriptor.maxSamplerStateBindCount=1;descriptor.initializeBindings=YES;
  NSError* error=nil;out.arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(out.arguments!=nil,"Cannot allocate original31657 range arguments: "+Error(error));lease.Retain(out.arguments);
  [out.arguments setAddress:vertices.gpuAddress+size_t(draw.firstVertex)*16 atIndex:0];[out.arguments setAddress:uniforms.gpuAddress atIndex:3];
  if(!composite){
   auto instances=impl->Buffer(lease,draw.instances);auto positions=ReadNativeWeaponRangeModelPositions(draw);
   // Static source does not read model rows. This remains an unused ABI binding only.
-  std::array<float,4> unused{};auto models=positions.empty()?Upload(lease,unused.data(),sizeof(unused)):Upload(lease,positions.data(),positions.size()*sizeof(positions.front()));
+  std::array<float,4> unused{};auto models=positions.empty()?upload177(unused.data(),sizeof(unused)):upload177(positions.data(),positions.size()*sizeof(positions.front()));
   [out.arguments setAddress:instances.gpuAddress+size_t(draw.firstInstance)*96 atIndex:1];[out.arguments setAddress:models.gpuAddress atIndex:2];
   lease.AddAllocation(out.height.texture);lease.Retain(out.height.sampler);
   [out.arguments setTexture:out.height.texture.gpuResourceID atIndex:0];[out.arguments setSamplerState:out.height.sampler.gpuResourceID atIndex:0];
  }
  if(out.coverageMask.texture){lease.AddAllocation(out.coverageMask.texture);[out.arguments setTexture:out.coverageMask.texture.gpuResourceID atIndex:1];}
+    // The same buffer prefix works for both admitted circle sizes. Its GPU lease
+    // owns submitted storage even after the private cache has been cleared.
+    if (CanIndexRangeLine(composite,draw.primitive,draw.vertexCount,samples))
+        out.lineIndices=impl->LineIndices(lease);
 	out.pipeline=impl->Pipeline(lease,draw,color,depth,stencil,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.rasterState,stencil);
 	out.count=composite?draw.vertexCount:line?draw.vertexCount*6:(draw.vertexCount-2)*3;out.instances=draw.instanceCount;return result;
 }

@@ -27,7 +27,8 @@ public:
  void DisableTerrainProgram();
  void SelectTerrainSquare(int x,int z);
  void SubmitTerrain(const void* positions,size_t vertexCount,size_t stride,
-  std::span<const uint32_t> indices,bool indexed);
+  std::span<const uint32_t> indices,bool indexed,
+  std::shared_ptr<const NativeTerrainMeshSnapshot> snapshot={});
  // Exact LuaOpenGL Enable/Disable/ResetDrawWorldShadow program writer seams.
  void EnableLuaWorldShadow(bool safeMode);void DisableLuaWorldShadow(bool safeMode);void ResetLuaWorldShadow(bool safeMode);
 private:

@@ -39,7 +39,7 @@ inline id<MTLDepthStencilState> Depth(RuntimeLease& lease,const NativeWorldDrawS
  if(stencilEnabled)Require(stencilFormat==MTLPixelFormatStencil8||stencilFormat==MTLPixelFormatDepth32Float_Stencil8,"Original effect stencil needs a real paired attachment");
  auto descriptor=[MTLDepthStencilDescriptor new];descriptor.depthCompareFunction=state.depthTest?Compare(state.depthCompare):MTLCompareFunctionAlways;descriptor.depthWriteEnabled=state.depthTest&&state.depthWrite;
  if(stencilEnabled)for(bool front:{true,false}){const auto& source=front?state.frontStencil:state.backStencil;auto face=[MTLStencilDescriptor new];face.stencilCompareFunction=Compare(source.compare);face.stencilFailureOperation=Operation(source.fail);face.depthFailureOperation=Operation(source.depthFail);face.depthStencilPassOperation=Operation(source.pass);face.readMask=source.readMask;face.writeMask=source.writeMask;if(front)descriptor.frontFaceStencil=face;else descriptor.backFaceStencil=face;}
- auto result=[lease.Device()newDepthStencilStateWithDescriptor:descriptor];Require(result!=nil,"Cannot initialize original effect depth/stencil");lease.Retain(result);return result;
+ auto result=lease.CachedDepthState(descriptor);Require(result!=nil,"Cannot initialize original effect depth/stencil");return result;
 }
 inline void RasterState(id<MTL4RenderCommandEncoder> encoder,const NativeWorldDrawState& state,const Raster& raster)
 {

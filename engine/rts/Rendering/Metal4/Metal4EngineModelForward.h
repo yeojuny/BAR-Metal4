@@ -10,6 +10,10 @@ public:
  void EncodeOrderedDraw(size_t,id<MTL4RenderCommandEncoder>);
  void FinishOrderedDraws();void DidComplete();
 private:
+ friend class PreparedOpaqueModelSource;
+ void PreparePassInspection160();
+ ModelPassDependencyReport160 InspectDependencies160(MTL4RenderPassDescriptor*)const;
+ void AcceptDependenciesWithoutCommands160();
  struct Impl;std::unique_ptr<Impl> impl;PreparedEngineModelForward();friend class EngineModelForwardGPU;
 };
 class EngineModelForwardGPU {

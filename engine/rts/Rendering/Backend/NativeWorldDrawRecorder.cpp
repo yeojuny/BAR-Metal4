@@ -1,5 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeWorldDrawRecorder.h"
+#include "NativeSourceLineData133.h"
+#include "NativeWorldFillGeometry.h"
 #include "NativeEasyFacingProgram.h"
 #include "NativeSquadHullProgram.h"
 #include "NativeTerraformOverlayProgram.h"
@@ -16,6 +18,13 @@
 #include "NativeGrassData.h"
 #include "NativeResourceSpotsData.h"
 #include "NativeSensorLOSData.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/GlobalRendering.h"
+#include "System/Log/ILog.h"
+#endif
+#include <chrono>
+#include <cstdlib>
+#include <string_view>
 #include <cmath>
 #include <algorithm>
 #include <limits>
@@ -26,9 +35,39 @@ namespace rendering {
 namespace {
 void Require(bool value,const char* message) {if(!value)throw std::runtime_error(message);}
 bool Finite(float value){return std::isfinite(value);}
+
+// Capture-thread only. Join these records to preparation/completion by draw frame and serial.
+struct WorldProducerObservation174 {
+    std::uint64_t drawFrame = 0, serial = 0;
+    std::uint64_t builds = 0, vertexBytes = 0, indexBytes = 0, copyNs = 0, indexNs = 0;
+    std::uint64_t directCalls = 0, directVertexBytes = 0, directIndexBytes = 0;
+    std::uint64_t indexedMoves = 0, movedVertexBytes = 0, movedIndexBytes = 0;
+};
+thread_local WorldProducerObservation174 producer174;
+bool ObserveWorldProducer174() {
+#ifndef RECOIL_METAL4_LIVE_SCENE
+    return false;
+#else
+    static const bool enabled = [] {
+        const char* flag = std::getenv("BAR_NATIVE_GEOMETRY_MRT174");
+        return flag && std::string_view(flag) == "1";
+    }();
+    return enabled;
+#endif
+}
+using ProducerClock174 = std::chrono::steady_clock;
+
 }
 void ValidateNativeWorldDrawCommand(const NativeWorldDrawCommand& c)
 {
+ ValidateWorldFontGPUHeader(c);ValidateWorldFillGPUHeader(c);
+ const bool gpuFont=IsWorldMatrixGPU(c.sourcePrimitive);
+ if(c.sourceLines){
+  sourceLine133::Validate(*c.sourceLines);
+  Require(c.primitive==NativeDrawPrimitive::Lines&&(c.sourcePrimitive==NativeDrawPrimitive::Lines||c.sourcePrimitive==NativeDrawPrimitive::LineStrip||c.sourcePrimitive==NativeDrawPrimitive::LineLoop)&&sourceLine133::Material(c.surface)&&
+   !c.originalShadowInput&&!c.easyFacing&&!c.squadHull&&!c.terraformOverlay&&!c.losView&&!c.waterOverlay&&!c.unitEffect&&!c.unitGlass&&!c.distortion&&!c.objectSpotlight&&!c.grass&&!c.resourceSpots&&!c.sensorLOS&&!c.reclaimField&&!c.surface.splatPainter,
+   "Common source lines have competing shader/geometry ownership");
+ }
  if(c.unitGlass){ValidateNativeUnitGlass(*c.unitGlass);Require(c.stage==NativeWorldDrawStage::World&&c.primitive==NativeDrawPrimitive::Triangles&&c.sourcePrimitive==NativeDrawPrimitive::Triangles&&!c.waterOverlay&&!c.losView&&!c.terraformOverlay&&!c.squadHull&&!c.originalShadowInput&&!c.easyFacing&&!c.unitEffect&&!c.distortion&&!c.objectSpotlight&&!c.grass&&!c.resourceSpots&&!c.sensorLOS&&!c.reclaimField&&!c.surface.splatPainter,"Glass command has mixed source owner or wrong stage");}
  if(c.surface.splatPainter){
   const auto& input=*c.surface.splatPainter;ValidateNativeSplatPainter(input);
@@ -90,17 +129,30 @@ void ValidateNativeWorldDrawCommand(const NativeWorldDrawCommand& c)
   ValidateNativeReclaimFieldInput(*c.reclaimField);
   Require(c.stage==NativeWorldDrawStage::PreUnit&&!c.originalShadowInput&&c.primitive==c.sourcePrimitive&&c.sourcePrimitive==(c.reclaimField->edges?NativeDrawPrimitive::Lines:NativeDrawPrimitive::Triangles),"Reclaim field source command stage/topology differs");
  }
- if(c.reclaimField&&c.reclaimField->edges)Require(c.vertices.size()==c.reclaimField->count&&c.indices.size()==c.reclaimField->count,"Reclaim outline lost its actual original vertex interval");
- const bool reclaimFill=c.reclaimField&&!c.reclaimField->edges;
- if(reclaimFill||c.objectSpotlight||c.grass||c.resourceSpots||c.sensorLOS||c.unitEffect||c.unitGlass)Require(c.vertices.empty()&&c.indices.empty(),"Typed original-buffer draw cannot carry replacement geometry");
+ const bool reclaimOriginal=bool(c.reclaimField);
+ if(c.sourceLines||reclaimOriginal||c.objectSpotlight||c.grass||c.resourceSpots||c.sensorLOS||c.unitEffect||c.unitGlass)Require(c.vertices.empty()&&c.indices.empty(),"Typed original-buffer draw cannot carry replacement geometry");
  else {
 	Require(!c.vertices.empty() && c.vertices.size()<=4*1024*1024 && !c.indices.empty() && c.indices.size()%group==0,"Native world geometry extent invalid");
-	for(const auto& v:c.vertices) {
-		for(float x:v.position)Require(Finite(x),"Native world clip vertex non-finite");
-		for(float x:v.color)Require(Finite(x),"Native world color non-finite");
-		for(float x:v.uv)Require(Finite(x),"Native world UV non-finite");
-	}
-	for(auto i:c.indices)Require(i<c.vertices.size(),"Native world index out of range");
+ if(gpuFont){
+  // Header matrices/options are already checked above. Validate only raw
+  // attributes here, with the finite bound replacing a duplicate finite test.
+  const int minimum=WorldFontMinimumInputExponent(WorldFontHeader(c));
+  const bool gpuUV=WorldFillTextureGPU(c);const size_t headerVertices=WorldMatrixHeaderVertices(c);
+  for(size_t n=headerVertices;n<c.vertices.size();++n){const auto& v=c.vertices[n];
+   Require(WorldFontPositionSafe(v.position,minimum)&&(c.sourcePrimitive==NativeDrawPrimitive::GPUFillTriangles||v.position[3]==1),"World GPU font raw position invalid");
+   for(float x:v.color)Require(Finite(x),"Native world color non-finite");
+   if(gpuUV)Require(screenGeometry::AffineTextureUVSafe(std::span(&v.uv,1)),"World GPU UV outside safe envelope");
+   for(unsigned k=gpuUV?2:0;k<4;++k)Require(Finite(v.uv[k]),"Native world UV non-finite");
+  }
+  for(auto i:c.indices)Require(i>=headerVertices&&i<c.vertices.size(),"World GPU font index outside raw input");
+ }else{
+  for(const auto& v:c.vertices){
+   for(float x:v.position)Require(Finite(x),"Native world clip vertex non-finite");
+   for(float x:v.color)Require(Finite(x),"Native world color non-finite");
+   for(float x:v.uv)Require(Finite(x),"Native world UV non-finite");
+  }
+  for(auto i:c.indices)Require(i<c.vertices.size(),"Native world index out of range");
+ }
  }
 	ValidateNativePointState(c.world.point);
 	Require(Finite(c.world.lineWidth)&&c.world.lineWidth>0&&Finite(c.world.pointSize)&&c.world.pointSize>0,"Native world raster size invalid");
@@ -122,11 +174,33 @@ void NativeWorldDrawRecorder::BeginFrame()
 	Require(!frame,"Native world frame already active");
 	Require(serial<std::numeric_limits<std::uint64_t>::max(),"Native world serial exhausted");
 	auto next=std::make_shared<NativeWorldDrawFrame>();next->serial=++serial;frame=std::move(next);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+    if (ObserveWorldProducer174() && this == &GetWorldDrawRecorder() && globalRendering) {
+        producer174 = {};
+        const auto current = globalRendering->drawFrame;
+        if (current >= 2048 && current < 2112) {
+            producer174.drawFrame = current;
+            producer174.serial = frame->serial;
+        }
+    }
+#endif
 }
 std::shared_ptr<const NativeWorldDrawFrame> NativeWorldDrawRecorder::EndFrame()
 {
 	Require(bool(frame),"Native world End without frame");
-	return std::exchange(frame,{});
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (ObserveWorldProducer174() && producer174.drawFrame && frame->serial == producer174.serial && this == &GetWorldDrawRecorder()) {
+        const auto& p = producer174;
+        LOG("[NativeWorldProducer174] frame=%llu serial=%llu recorded_commands=%llu make_calls=%llu copied_vertex_bytes=%llu generated_index_bytes=%llu copy_ns=%llu index_ns=%llu direct_record_calls=%llu direct_vertex_bytes=%llu direct_index_bytes=%llu indexed_moves=%llu moved_vertex_bytes=%llu moved_index_bytes=%llu",
+            (unsigned long long)p.drawFrame,(unsigned long long)p.serial,(unsigned long long)frame->draws.size(),
+            (unsigned long long)p.builds,(unsigned long long)p.vertexBytes,(unsigned long long)p.indexBytes,
+            (unsigned long long)p.copyNs,(unsigned long long)p.indexNs,(unsigned long long)p.directCalls,
+            (unsigned long long)p.directVertexBytes,(unsigned long long)p.directIndexBytes,(unsigned long long)p.indexedMoves,
+            (unsigned long long)p.movedVertexBytes,(unsigned long long)p.movedIndexBytes);
+        producer174 = {};
+    }
+#endif
+    return std::exchange(frame,{});
 }
 std::shared_ptr<const NativeWorldDrawFrame> NativeWorldDrawRecorder::SnapshotPrefix(std::uint64_t cutoff) const
 {
@@ -136,7 +210,10 @@ std::shared_ptr<const NativeWorldDrawFrame> NativeWorldDrawRecorder::SnapshotPre
 	std::erase_if(prefix->clears,[&](const auto& clear){return clear.sequence>=cutoff;});
 	return prefix;
 }
-void NativeWorldDrawRecorder::AbortFrame() noexcept {frame.reset();}
+void NativeWorldDrawRecorder::AbortFrame() noexcept {
+    if (ObserveWorldProducer174() && producer174.drawFrame && this == &GetWorldDrawRecorder()) producer174 = {};
+    frame.reset();
+}
 void NativeWorldDrawRecorder::Reset() noexcept {AbortFrame();}
 NativeWorldDrawCommand MakeNativeWorldDrawCommand(NativeWorldDrawStage stage,NativeDrawPrimitive mode,
 	std::span<const NativeWorldDrawVertex> vertices,const ScreenDrawState& surface,const NativeWorldDrawState& world,
@@ -144,7 +221,10 @@ NativeWorldDrawCommand MakeNativeWorldDrawCommand(NativeWorldDrawStage stage,Nat
 {
 	Require(vertices.size()<=4*1024*1024,"Native world bounded geometry capacity exceeded");
 	NativeWorldDrawCommand c;c.stage=stage;c.sourcePrimitive=mode;c.surface=surface;c.world=world;
-	c.vertices.assign(vertices.begin(),vertices.end());
+	const bool observe174 = ObserveWorldProducer174() && producer174.drawFrame != 0;
+    const auto copyStart174 = observe174 ? ProducerClock174::now() : ProducerClock174::time_point{};
+    c.vertices.assign(vertices.begin(),vertices.end());
+    const auto indexStart174 = observe174 ? ProducerClock174::now() : ProducerClock174::time_point{};
 	const auto append=[&](std::initializer_list<std::uint32_t> values){c.indices.insert(c.indices.end(),values);};
 	const auto n=std::uint32_t(vertices.size());
 	switch(mode) {
@@ -169,7 +249,15 @@ NativeWorldDrawCommand MakeNativeWorldDrawCommand(NativeWorldDrawStage stage,Nat
 			c.primitive=NativeDrawPrimitive::Points;for(std::uint32_t i=0;i<n;++i)append({i});break;
 		default:throw std::runtime_error("Native world primitive unsupported");
 	}
-	// As GL does, incomplete final primitive groups generate no fragments.
+	if (observe174) {
+        const auto end = ProducerClock174::now();
+        ++producer174.builds;
+        producer174.vertexBytes += vertices.size_bytes();
+        producer174.indexBytes += c.indices.size() * sizeof(std::uint32_t);
+        producer174.copyNs += std::chrono::duration_cast<std::chrono::nanoseconds>(indexStart174 - copyStart174).count();
+        producer174.indexNs += std::chrono::duration_cast<std::chrono::nanoseconds>(end - indexStart174).count();
+    }
+    // As GL does, incomplete final primitive groups generate no fragments.
 	if(!c.indices.empty()){
 		if(snapshotShadowInput){c.originalShadowInput=snapshotShadowInput();Require(bool(c.originalShadowInput),"Native generic shadow source returned no actual input");}
 		ValidateNativeWorldDrawCommand(c);
@@ -183,9 +271,31 @@ void NativeWorldDrawRecorder::Record(NativeWorldDrawStage stage,NativeDrawPrimit
 	Require(bool(frame),"Native world geometry outside frame");
 	Require(frame->draws.size()<65536,"Native world bounded geometry capacity exceeded");
 	auto c=MakeNativeWorldDrawCommand(stage,mode,vertices,surface,world,snapshotShadowInput);
+    if (ObserveWorldProducer174() && producer174.drawFrame && this == &GetWorldDrawRecorder()) {
+        ++producer174.directCalls;
+        producer174.directVertexBytes += vertices.size_bytes();
+        producer174.directIndexBytes += c.indices.size() * sizeof(std::uint32_t);
+    }
 	if(c.indices.empty())return;
 	c.sequence=NextNativeWorldDrawSequence();
 	frame->draws.push_back(std::move(c));
+}
+void NativeWorldDrawRecorder::RecordIndexedTriangles(NativeWorldDrawStage stage,std::vector<NativeWorldDrawVertex> vertices,
+ std::vector<uint32_t> indices,const ScreenDrawState& surface,const NativeWorldDrawState& world)
+{
+ Require(bool(frame),"Native world geometry outside frame");
+ Require(frame->draws.size()<65536,"Native world bounded geometry capacity exceeded");
+ Require(vertices.size()<=4u*1024u*1024u&&indices.size()<=4u*1024u*1024u,"Native world bounded geometry capacity exceeded");
+ if(indices.empty())return;
+ NativeWorldDrawCommand command;command.stage=stage;
+ command.primitive=command.sourcePrimitive=NativeDrawPrimitive::Triangles;
+ if (ObserveWorldProducer174() && producer174.drawFrame && this == &GetWorldDrawRecorder()) {
+     ++producer174.indexedMoves;
+     producer174.movedVertexBytes += vertices.size() * sizeof(NativeWorldDrawVertex);
+     producer174.movedIndexBytes += indices.size() * sizeof(std::uint32_t);
+ }
+ command.vertices=std::move(vertices);command.indices=std::move(indices);command.surface=surface;command.world=world;
+ ValidateNativeWorldDrawCommand(command);command.sequence=NextNativeWorldDrawSequence();frame->draws.push_back(std::move(command));
 }
 std::uint64_t NativeWorldDrawRecorder::RecordClear(NativeWorldDrawStage stage,ScreenAttachmentMask mask,
  const ScreenClearValues& values,const NativeWorldDrawState& world,std::optional<ScreenScissor> scissor)
@@ -199,7 +309,7 @@ std::uint64_t NativeWorldDrawRecorder::RecordClear(NativeWorldDrawStage stage,Sc
  Require(!(bits&~unsigned((water||stage==NativeWorldDrawStage::Ground)?ScreenAttachmentAll:ScreenAttachmentColor|ScreenAttachmentDepth)),
   "Native world attachment clear mask has no actual selected target attachment");
  Require(frame->clears.size()<65536,"Native world bounded attachment clear capacity exceeded");
- for(float value:values.color)Require(Finite(value)&&value>=0&&value<=1,"Native world clear color is not the actual clamped source value");
+ for(float value:values.color)Require(Finite(value),"Native world clear color is nonfinite");
  Require(Finite(values.depth)&&values.depth>=0&&values.depth<=1,"Native world clear depth is not the actual clamped source value");
  NativeWorldAttachmentClear clear;clear.stage=stage;clear.mask=mask;clear.values=values;
  clear.colorWrite=world.colorWrite;clear.combinedColorWrite=world.combinedColorWrite;clear.depthWrite=world.depthWrite;clear.frontStencilWriteMask=world.frontStencil.writeMask;clear.scissor=scissor;
@@ -246,8 +356,7 @@ void NativeWorldDrawRecorder::RecordReclaimField(std::shared_ptr<const NativeRec
  auto effective=surface;effective.material=ScreenMaterial::Solid;effective.texture.reset();effective.secondary.texture.reset();
  effective.sampler={};effective.secondary.sampler={}; // Original family has no sampled inputs.
  NativeWorldDrawCommand c;
- if(input->edges){const auto vertices=EvaluateNativeReclaimFieldOutline(*input);c=MakeNativeWorldDrawCommand(NativeWorldDrawStage::PreUnit,NativeDrawPrimitive::Lines,vertices,effective,world);}
- else {c.stage=NativeWorldDrawStage::PreUnit;c.primitive=c.sourcePrimitive=NativeDrawPrimitive::Triangles;c.surface=effective;c.world=world;}
+ c.stage=NativeWorldDrawStage::PreUnit;c.primitive=c.sourcePrimitive=input->edges?NativeDrawPrimitive::Lines:NativeDrawPrimitive::Triangles;c.surface=effective;c.world=world;
  c.reclaimField=std::move(input);c.sequence=NextNativeWorldDrawSequence();ValidateNativeWorldDrawCommand(c);frame->draws.push_back(std::move(c));
 }
 void NativeWorldDrawRecorder::RecordObjectSpotlight(std::shared_ptr<const NativeObjectSpotlightInput> input,const ScreenDrawState& surface,const NativeWorldDrawState& world)
@@ -297,5 +406,27 @@ void NativeWorldDrawRecorder::RecordUnitGlass(std::shared_ptr<const NativeUnitGl
 }
 void NativeWorldDrawRecorder::RecordUnitEffect(NativeWorldDrawStage stage,const ScreenDrawState& surface,const NativeWorldDrawState& world,std::shared_ptr<const NativeUnitEffectInput> input){
  Require(frame&&input&&frame->draws.size()<65536,"Airjets outside original common world frame");NativeWorldDrawCommand c;c.stage=stage;c.primitive=c.sourcePrimitive=NativeDrawPrimitive::Triangles;c.surface=surface;c.surface.material=ScreenMaterial::Solid;c.surface.texture.reset();c.surface.secondary={};c.world=world;c.unitEffect=std::move(input);ValidateNativeWorldDrawCommand(c);c.sequence=NextNativeWorldDrawSequence();frame->draws.push_back(std::move(c));
+}
+}
+
+namespace rendering {
+void NativeWorldDrawRecorder::RecordGPUFont(NativeWorldDrawCommand command){
+ Require(frame&&frame->draws.size()<65536,"World GPU font outside bounded frame");
+ Require(command.sourcePrimitive==NativeDrawPrimitive::GPUFontTriangles,"World GPU font source tag missing");
+ if(command.indices.empty())return;
+ ValidateNativeWorldDrawCommand(command);command.sequence=NextNativeWorldDrawSequence();frame->draws.push_back(std::move(command));
+}
+}
+
+namespace rendering {
+void NativeWorldDrawRecorder::RecordSourceLines(NativeWorldDrawCommand command){
+ Require(frame&&command.sourceLines&&frame->draws.size()<65536,"Common lines outside original world frame");
+ ValidateNativeWorldDrawCommand(command);command.sequence=NextNativeWorldDrawSequence();frame->draws.push_back(std::move(command));
+}
+void NativeWorldDrawRecorder::RecordGPUFill(NativeWorldDrawCommand command){
+ Require(frame&&frame->draws.size()<65536,"World GPU fill outside bounded frame");
+ Require(command.sourcePrimitive==NativeDrawPrimitive::GPUFillTriangles,"World GPU fill source tag missing");
+ if(command.indices.empty())return;
+ ValidateNativeWorldDrawCommand(command);command.sequence=NextNativeWorldDrawSequence();frame->draws.push_back(std::move(command));
 }
 }

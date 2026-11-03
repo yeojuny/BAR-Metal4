@@ -3,6 +3,7 @@
 #include "Metal4SourceImage.h"
 #include "Rendering/Backend/NativePBRSourceData.h"
 namespace rendering::metal4 {
+std::shared_ptr<NativePBRImage> ReserveNativePBRImageForCapture(const NativePBRAllocation&);
 class PreparedPBRSource {
 public:
 	~PreparedPBRSource();

@@ -1,10 +1,55 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ShadowTextureNative.h"
 #include <cmath>
+#include <vector>
+
+// Keep the C++ physical owner in the lease's existing completion/poison graph.
+@interface M4ShadowStorageLifetime : NSObject {
+@public
+	std::shared_ptr<const void> owner;
+}
+@end
+@implementation M4ShadowStorageLifetime
+@end
 
 namespace rendering::metal4 {
 namespace {
 struct Resource final:NativeShadowTextureResource {__strong id<MTLTexture> texture=nil;NativeShadowTextureRequest request;};
+struct ShadowStoragePool {
+	struct Slot {const Runtime* context=nullptr;std::shared_ptr<const Resource> owner;uint64_t bytes=0;};
+	std::mutex mutex;
+	std::vector<Slot> slots;
+	uint64_t bytes=0;
+	static constexpr uint64_t MaxBytes=uint64_t{256}<<20;
+	static constexpr size_t MaxSlots=8;
+};
+ShadowStoragePool& ShadowPool(){static ShadowStoragePool pool;return pool;}
+std::shared_ptr<const Resource> AcquireShadowStorage(const Runtime& runtime,const NativeShadowTextureRequest& request,MTLTextureDescriptor* descriptor)
+{
+	auto& pool=ShadowPool();std::lock_guard<std::mutex> lock(pool.mutex);
+	const auto* context=&runtime;
+	for(const auto& slot:pool.slots){
+		const auto& prior=slot.owner->request;
+		// The pool must be the ONLY C++ owner: no old logical backing, prepared
+		// frame, source history or completion/poison graph may still refer to it.
+		if(slot.owner.use_count()==1&&slot.context==context&&slot.owner->texture.device==runtime.Device()&&
+			prior.kind==request.kind&&prior.size==request.size&&prior.originalFormat==request.originalFormat&&prior.colored==request.colored)
+			return slot.owner;
+	}
+	auto resource=std::make_shared<Resource>();resource->request=request;resource->texture=[runtime.Device()newTextureWithDescriptor:descriptor];
+	Require(resource->texture!=nil,"Cannot allocate actual original named shadow storage");
+	const uint64_t bytes=resource->texture.allocatedSize;
+	if(bytes<=ShadowStoragePool::MaxBytes){
+		for(auto it=pool.slots.begin();it!=pool.slots.end()&&
+			(pool.slots.size()>=ShadowStoragePool::MaxSlots||pool.bytes>ShadowStoragePool::MaxBytes-bytes);){
+			if(it->owner.use_count()==1){pool.bytes-=it->bytes;it=pool.slots.erase(it);}else ++it;
+		}
+		if(pool.slots.size()<ShadowStoragePool::MaxSlots&&pool.bytes<=ShadowStoragePool::MaxBytes-bytes){
+			pool.slots.push_back({context,resource,bytes});pool.bytes+=bytes;
+		}
+	}
+	return resource;
+}
 MTLSamplerAddressMode Address(unsigned v)
 {
 	switch(v){case 0x2901:return MTLSamplerAddressModeRepeat;case 0x812F:return MTLSamplerAddressModeClampToEdge;
@@ -15,9 +60,9 @@ bool Readable(const NativeShadowTextureBacking& backing,uint64_t submission)
 	return backing.completed.load()||(submission&&backing.encodedSubmission.load()==submission);
 }
 }
-std::shared_ptr<const NativeShadowTextureResource> AllocateNativeShadowTexture(RuntimeLease& lease,const NativeShadowTextureRequest& request)
+static std::shared_ptr<const Resource> AllocateShadowStorage(const Runtime& runtime,const NativeShadowTextureRequest& request)
 {
-	Require(request.size&&request.size<=lease.Capabilities().maxTextureDimension2D,"Original shadow size exceeds actual native allocation bounds");
+	Require(request.size&&request.size<=runtime.Capabilities().maxTextureDimension2D,"Original shadow size exceeds actual native allocation bounds");
 	MTLPixelFormat format;
 	if(request.kind==NativeShadowTextureKind::Depth){
 		Require(request.originalFormat==0x81A5||request.originalFormat==0x81A6||request.originalFormat==0x8CAC,
@@ -32,8 +77,28 @@ std::shared_ptr<const NativeShadowTextureResource> AllocateNativeShadowTexture(R
 	}
 	auto d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:format width:request.size height:request.size mipmapped:NO];
 	d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget|MTLTextureUsagePixelFormatView;
-	auto resource=std::make_shared<Resource>();resource->request=request;resource->texture=[lease.Device()newTextureWithDescriptor:d];
-	Require(resource->texture!=nil,"Cannot allocate actual original named shadow storage");lease.AddAllocation(resource->texture);return resource;
+	auto resource=AcquireShadowStorage(runtime,request,d);
+	Require(resource->texture!=nil,"Cannot allocate actual original named shadow storage");
+	return resource;
+}
+std::shared_ptr<const NativeShadowTextureResource> AllocateNativeShadowTexture(RuntimeLease& lease,const NativeShadowTextureRequest& request)
+{
+ auto resource=AllocateShadowStorage(*lease.ContextIdentity(),request);
+ auto lifetime=[M4ShadowStorageLifetime new];lifetime->owner=resource;lease.Retain(lifetime);
+ lease.AddAllocation(resource->texture);return resource;
+}
+std::shared_ptr<const NativeShadowTextureResource> ReserveNativeShadowTextureForCapture(const NativeShadowTextureRequest& request)
+{
+ Require([NSThread isMainThread],"Original shadow capture reservation requires the engine main thread");
+ const auto& runtime=SharedRuntime();const auto capabilities=runtime.Capabilities();
+ Require(capabilities.directMetal4 && capabilities.unifiedMemory && runtime.Device()!=nil,
+  "Original shadow capture has no supported actual native device");
+ // No command allocator, residency set, argument table, texture contents or
+ // completion state is touched here. Pool-only use_count==1 excludes every
+ // captured, submitted and quarantined source owner. Otherwise use new storage.
+ // The actual producer/consumer registers residency and retains its source graph
+ // under RuntimeLease before any GPU write; a poisoned runtime still rejects it.
+ return AllocateShadowStorage(runtime,request);
 }
 id<MTLTexture> NativeShadowTextureImage(const NativeShadowTextureBacking& backing)
 {

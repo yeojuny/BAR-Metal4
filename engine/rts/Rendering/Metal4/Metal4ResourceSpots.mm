@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ResourceSpots.h"
+#include "Metal4TransientUpload177.h"
 #include "NativeResourceSpotsShaders.h"
 #include <simd/simd.h>
 #include <cstring>
@@ -19,6 +20,7 @@ MTLBlendOperation Equation(ScreenBlendEquation x){switch(x){case ScreenBlendEqua
 uint64_t Bits(const ScreenBlendState& b,const std::array<bool,4>& m){return uint64_t(b.enabled)|uint64_t(b.sourceColor)<<1|uint64_t(b.destinationColor)<<5|uint64_t(b.sourceAlpha)<<9|uint64_t(b.destinationAlpha)<<13|uint64_t(m[0])<<17|uint64_t(m[1])<<18|uint64_t(m[2])<<19|uint64_t(m[3])<<20|uint64_t(b.colorEquation)<<21|uint64_t(b.alphaEquation)<<24;}
 }
 struct PreparedResourceSpots::Impl {
+ __strong M4TransientUploadLifetime177* uploads177=nil;
 	struct Draw {
 		uint64_t sequence=0;NativeWorldDrawStage stage=NativeWorldDrawStage::World;std::shared_ptr<const NativeResourceSpotsInput> source;NativeWorldDrawState state;effectstate::Raster raster;
 		__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;
@@ -51,6 +53,7 @@ void PreparedResourceSpots::DidComplete(){
 	std::set<const void*> seen;for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;
 }
 struct ResourceSpotsGPU::Impl {
+ TransientUploadPool177 uploads177{"resource_spots"};
 	struct Cached {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> buffer=nil;};
 	std::map<const NativeBufferSnapshot*,Cached> buffers;
 	std::map<unsigned,id<MTLLibrary>> libraries;
@@ -73,12 +76,18 @@ ResourceSpotsGPU::~ResourceSpotsGPU(){SetNativeResourceSpotsConsumerLifetime({})
 void ResourceSpotsGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,bool validation,double& ms,unsigned samples){
 	ScreenBlendState blend;for(unsigned variant=0;variant<2;++variant)impl->Pipeline(lease,color,variant,validation,blend,{true,true,true,true},ms,samples,false);SetNativeResourceSpotsConsumerLifetime(impl);
 }
-void ResourceSpotsGPU::ClearResources(){impl->buffers.clear();}
-std::shared_ptr<PreparedResourceSpots> ResourceSpotsGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeWorldDrawFrame> frame,uint64_t sourceDrawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,const ResourceSpotsImageProvider& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
-	if(!frame||std::none_of(frame->draws.begin(),frame->draws.end(),[](const auto& c){return bool(c.resourceSpots);}))return {};
+void ResourceSpotsGPU::ClearResources(){impl->uploads177.Clear();impl->buffers.clear();}
+std::shared_ptr<PreparedResourceSpots> ResourceSpotsGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& selected,uint64_t sourceDrawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,const ResourceSpotsImageProvider& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
+	selected.RequireFamily(NativeWorldFamily167::ResourceSpots,sourceDrawFrame);if(selected.empty())return {};
 	Require(images&&(depth==MTLPixelFormatDepth32Float||depth==MTLPixelFormatDepth32Float_Stencil8),"Original ResourceSpots has no shared scene/image consumer");std::erase_if(impl->buffers,[](const auto& b){return b.second.source.expired();});
 	auto out=std::shared_ptr<PreparedResourceSpots>(new PreparedResourceSpots);
-	for(const auto& c:frame->draws){if(!c.resourceSpots)continue;ValidateNativeWorldDrawCommand(c);const auto& s=*c.resourceSpots;
+ impl->uploads177.BeginBatch(lease.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(lease,impl->uploads177,out->impl->uploads177,bytes,length,
+   [&]{return Upload(lease,bytes,length);});
+ };
+
+	for(const auto& c:selected){ValidateNativeWorldDrawCommand(c);const auto& s=*c.resourceSpots;
 		Require(s.sourceDrawFrame==sourceDrawFrame,"Original ResourceSpots indexed draw belongs to another source frame/stage");
 		Require(!c.world.inheritedClipPlane&&c.world.frontPolygonMode==NativePolygonMode::Fill&&c.world.backPolygonMode==NativePolygonMode::Fill,"Original ResourceSpots inherited polygon/clip state requires its actual shader profile");
 		PreparedResourceSpots::Impl::Draw d;d.sequence=c.sequence;d.stage=c.stage;d.source=c.resourceSpots;d.state=c.world;auto camera=view;if(c.surface.viewport){const auto& v=*c.surface.viewport;camera.viewport={v.x,v.y,int32_t(v.width),int32_t(v.height)};}
@@ -100,7 +109,7 @@ std::shared_ptr<PreparedResourceSpots> ResourceSpotsGPU::Prepare(RuntimeLease& l
    u.imageLod[slot]=simd_make_float4(mips?sampling.minLod:0.f,mips?sampling.maxLod:0.f,sampling.lodBias,0);
    [d.arguments setTexture:image.texture.gpuResourceID atIndex:slot];[d.arguments setSamplerState:image.sampler.gpuResourceID atIndex:slot];lease.AddAllocation(image.texture);lease.Retain(image.sampler);d.images.push_back(std::move(image));
   }
-		auto constants=Upload(lease,&u,sizeof(u));[d.arguments setAddress:constants.gpuAddress atIndex:2];
+		auto constants=upload177(&u,sizeof(u));[d.arguments setAddress:constants.gpuAddress atIndex:2];
 		const unsigned variant=unsigned(s.kind==NativeResourceSpotKind::Metal);d.pipeline=impl->Pipeline(lease,color,variant,validation,c.surface.blend,c.world.colorWrite,ms,samples,c.world.alphaToCoverage);d.depth=effectstate::Depth(lease,c.world,stencil);lease.Retain(d.pipeline);lease.Retain(impl->libraries.at(variant));out->impl->draws.push_back(std::move(d));
 	}return out;
 }

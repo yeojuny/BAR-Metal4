@@ -78,7 +78,12 @@ inline void Shape(const std::shared_ptr<Owner>& owner,int id,int,bool raw,bool s
 inline sol::table Create(lua_State* L){
  Require(!CLuaHandle::GetHandleSynced(L),"Terraform Capture must be unsynced");
  sol::state_view lua(L);auto context=lua.create_table();auto owner=std::make_shared<Owner>();
- context.new_usertype<Program>("TerraformCaptureProgram",sol::no_constructor);context.set("TerraformCaptureProgram",sol::lua_nil);
+ // Preserve live opaque programs when another editor context is opened.
+ auto registry=lua.registry();
+ if(!registry["NativeTerraformCaptureProgramRegistered"].get_or(false)) {
+  context.new_usertype<Program>("TerraformCaptureProgram",sol::no_constructor);context.set("TerraformCaptureProgram",sol::lua_nil);
+  registry.set("NativeTerraformCaptureProgramRegistered",true);
+ }
  Bind(context,"CreateShader",[owner](const sol::table& source){
   unsigned count=0;for(const auto& entry:source){const auto key=entry.first.as<std::string>();Require(key=="vertex"||key=="fragment"||key=="uniformInt"||key=="uniformFloat","Terraform Capture unknown shader field");++count;}Require(count==4,"Terraform Capture original program field missing");
   const auto hash=targetPriorityProgram::Hash(source["fragment"].get<std::string>());const auto found=std::find(NativeTerraformCaptureFragmentHashes.begin(),NativeTerraformCaptureFragmentHashes.end(),hash);

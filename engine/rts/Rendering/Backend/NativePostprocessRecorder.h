@@ -2,6 +2,7 @@
 #pragma once
 #include "NativePostprocessData.h"
 #include <functional>
+#include <optional>
 
 namespace rendering {
 // Main-thread recording only. Version cells are transactionally rolled back if
@@ -23,6 +24,7 @@ public:
 	std::shared_ptr<const NativePostprocessFrame> SnapshotPrefix(std::uint64_t cutoff) const;
 	void AbortFrame() noexcept;
 	void RetireCompletedFrame(std::uint64_t serial);
+ void HoldSubmittedFrame(std::uint64_t serial);
 	// Frame transaction only: mark exactly the selected output publications
 	// after real Begin, then retire them after their actual batch completes.
 	void RecordSubmission(const NativePostprocessFrame&,std::uint64_t actualSubmission) noexcept;
@@ -64,6 +66,8 @@ private:
 	std::shared_ptr<NativePostprocessFrame> recording;
 	std::shared_ptr<const NativePostprocessFrame> pending;
 	std::vector<Change> changes;
+ struct SubmittedFrame {std::shared_ptr<const NativePostprocessFrame> frame;std::vector<Change> changes;};
+ std::optional<SubmittedFrame> submittedFrame;
  PublicationObserver publicationObserver;
 };
 } // namespace rendering

@@ -1,9 +1,12 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineModelForward.h"
+#include "Metal4ModelUpload146.h"
+#include "Metal4RetiredArguments.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
 #include "Rendering/Backend/NativeLegacyMaterialData.h"
 #include "Metal4CUSSource.h"
 #include "Metal4NativeEffectState.h"
+#include "Metal4ModelSetterProbe176.h"
 #include "Metal4EngineModelState.h"
 #include "NativeEngineDeferredShaders.h"
 #include "NativeEngineTextureABI.h"
@@ -21,6 +24,8 @@ const NativeTextureSampling& Sampling(const NativeCUSTextureBinding& b){Require(
 MTLBlendOperation Equation(ScreenBlendEquation x){switch(x){case ScreenBlendEquation::Add:return MTLBlendOperationAdd;case ScreenBlendEquation::Subtract:return MTLBlendOperationSubtract;case ScreenBlendEquation::ReverseSubtract:return MTLBlendOperationReverseSubtract;case ScreenBlendEquation::Minimum:return MTLBlendOperationMin;case ScreenBlendEquation::Maximum:return MTLBlendOperationMax;}throw std::runtime_error("Original forward blend equation unsupported");}
 }
 struct PreparedEngineModelForward::Impl {
+ std::unique_ptr<model176::Probe> setterProbe176;
+ ModelUploadOwners146 uniformOwners;RetiredArgumentOwners argumentOwners;
  struct Piece{EngineDeferredPieceBuffers geometry;__strong id<MTL4ArgumentTable> table=nil;};
  struct Draw{
   uint64_t sequence=0;std::optional<effectstate::Raster> raster;NativeWorldDrawState state;
@@ -28,12 +33,40 @@ struct PreparedEngineModelForward::Impl {
   __strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;
  };
  std::shared_ptr<const NativeEngineModelPhase> source;std::vector<Draw> draws;
+ std::vector<const CUSSourceImage*> inspection160;std::vector<id<MTLTexture>> sampledRoots160;
+ uint64_t indexedDraws160=0;bool inspectionReady160=false;
  bool dependencies=false,finished=false,completed=false;size_t encoded=0;
 };
 PreparedEngineModelForward::PreparedEngineModelForward():impl(std::make_unique<Impl>()){}
 PreparedEngineModelForward::~PreparedEngineModelForward()=default;
 size_t PreparedEngineModelForward::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedEngineModelForward::SequenceAt(size_t i)const{Require(i<DrawCount(),"Original forward draw index exceeds source");return impl->draws[i].sequence;}
+void PreparedEngineModelForward::PreparePassInspection160(){
+ Require(!impl->inspectionReady160&&!impl->dependencies&&!impl->completed,"Engine forward pass inspection prepared after use or twice");
+ std::set<const void*> seen,roots;
+ for(const auto& draw:impl->draws){
+  if(draw.raster&&(!draw.state.cullEnabled||draw.state.cull!=NativeWorldCull::FrontAndBack))impl->indexedDraws160+=draw.pieces.size();
+  for(const auto& image:draw.images)if(image.owner){
+   if(seen.insert(image.owner.get()).second&&image.encodeDependencies)impl->inspection160.push_back(&image);
+   const auto root=SourceTextureRoot160(image.texture);
+   if(root&&roots.insert((__bridge const void*)root).second)impl->sampledRoots160.push_back(root);
+  }
+ }
+ impl->inspectionReady160=true;
+}
+ModelPassDependencyReport160 PreparedEngineModelForward::InspectDependencies160(MTL4RenderPassDescriptor* pass)const{
+ Require(pass&&impl->inspectionReady160&&!impl->dependencies&&!impl->completed,"Engine forward pass query is outside its prepared dependency phase");
+ ModelPassDependencyReport160 report;report.indexedDraws=impl->indexedDraws160;
+ const auto color=SourceTextureRoot160(pass.colorAttachments[0].texture);
+ const auto depth=SourceTextureRoot160(pass.depthAttachment.texture),stencil=SourceTextureRoot160(pass.stencilAttachment.texture);
+ for(const auto root:impl->sampledRoots160)if(root==color||root==depth||root==stencil)report.Add({SourceDependencyWork160::Unknown,false});
+ for(const auto* image:impl->inspection160)report.Add(InspectSourceDependency160(*image));
+ return report;
+}
+void PreparedEngineModelForward::AcceptDependenciesWithoutCommands160(){
+ Require(impl->inspectionReady160&&!impl->dependencies&&!impl->completed,"Engine forward no-command dependency phase repeated or retired");
+ impl->dependencies=true;
+}
 void PreparedEngineModelForward::EncodeDependencies(id<MTL4CommandBuffer> command){
  Require(command&&!impl->dependencies&&!impl->completed,"Original forward dependencies missing or repeated");std::set<const void*> seen;
  for(const auto& d:impl->draws)for(const auto& image:d.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.encodeDependencies)image.encodeDependencies(command);impl->dependencies=true;
@@ -43,16 +76,20 @@ void PreparedEngineModelForward::EncodeOrderedDraw(size_t i,id<MTL4RenderCommand
  const auto& d=impl->draws[i];
  if(d.raster&&(!d.state.cullEnabled||d.state.cull!=NativeWorldCull::FrontAndBack)){
   effectstate::RasterState(encoder,d.state,*d.raster);[encoder setDepthStencilState:d.depth];[encoder setRenderPipelineState:d.pipeline];
-  [encoder setCullMode:!d.state.cullEnabled||d.state.cull==NativeWorldCull::None?MTLCullModeNone:d.state.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack];
-  [encoder setTriangleFillMode:d.state.frontPolygonMode==NativePolygonMode::Line?MTLTriangleFillModeLines:MTLTriangleFillModeFill];
+  const bool cull=d.state.cullEnabled && d.state.cull!=NativeWorldCull::None;
+  const bool wire=d.state.frontPolygonMode==NativePolygonMode::Line;
+  if(cull)[encoder setCullMode:d.state.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack];
+  if(wire)[encoder setTriangleFillMode:MTLTriangleFillModeLines];
   for(const auto& image:d.images)if(image.requireReadable)image.requireReadable();
   for(const auto& piece:d.pieces){[encoder setArgumentTable:piece.table atStages:MTLRenderStageVertex|MTLRenderStageFragment];[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:piece.geometry.indexCount indexType:MTLIndexTypeUInt32 indexBuffer:piece.geometry.indices.gpuAddress indexBufferLength:piece.geometry.indices.length];}
- }
+  if(impl->setterProbe176)impl->setterProbe176->Draw(model176::Cull|model176::Fill,(cull?model176::Cull:0u)|(wire?model176::Fill:0u),d.pieces.size());
+ }else if(impl->setterProbe176){++impl->setterProbe176->skipped;}
  ++impl->encoded;
 }
 void PreparedEngineModelForward::FinishOrderedDraws(){Require(impl->dependencies&&!impl->finished&&!impl->completed&&impl->encoded==DrawCount(),"Original forward source list did not finish once");impl->finished=true;}
-void PreparedEngineModelForward::DidComplete(){Require(impl->finished&&!impl->completed,"Original forward retirement preceded its real submission");std::set<const void*> seen;for(const auto& d:impl->draws)for(const auto& image:d.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;}
+void PreparedEngineModelForward::DidComplete(){Require(impl->finished&&!impl->completed,"Original forward retirement preceded its real submission");std::set<const void*> seen;for(const auto& d:impl->draws)for(const auto& image:d.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;if(impl->setterProbe176)impl->setterProbe176->Report();}
 struct EngineModelForwardGPU::Impl {
+ ModelUploadPool146 uniformPool;RetiredArguments argumentPool;bool reported146=false;
  struct Original {
   bool modern=false,shadows=false;
   std::map<uint32_t,id<MTLLibrary>> libraries;
@@ -100,7 +137,8 @@ std::shared_ptr<PreparedEngineModelForward> EngineModelForwardGPU::Prepare(Runti
  Require(source->viewCamera.clipDepth!=ClipDepthConvention::Unsupported,"Original forward clip convention is unobserved");
  Require(target.width&&target.height&&target.logicalWidth&&target.logicalHeight&&(target.samples>=1&&target.samples<=32&&[lease.Device() supportsTextureSampleCount:target.samples])&&target.colors[0]!=MTLPixelFormatInvalid&&target.depth==MTLPixelFormatDepth32Float,"Original forward requires its real one-color/D32F target");
  Require(std::all_of(target.colors.begin()+1,target.colors.end(),[](auto f){return f==MTLPixelFormatInvalid;}),"Original forward target accidentally aliases MRT attachments");
- auto out=std::shared_ptr<PreparedEngineModelForward>(new PreparedEngineModelForward);auto& p=*out->impl;p.source=std::move(source);
+ auto out=std::shared_ptr<PreparedEngineModelForward>(new PreparedEngineModelForward);auto& p=*out->impl;p.source=std::move(source);p.setterProbe176=model176::Probe::Create(p.source->sourceDrawFrame,"engine_forward");
+ impl->uniformPool.BeginBatch(lease);impl->argumentPool.BeginBatch(lease);ModelUploadArena146 uniformArena(impl->uniformPool,p.uniformOwners);
  std::map<const WorldModel*,std::vector<EngineDeferredPieceBuffers>> sharedGeometry;
  std::map<const NativeModelLightFrame*,id<MTLBuffer>> sharedLights;__strong id<MTLBuffer> modernLights=nil;
  for(const auto* list:{&p.source->beforeLua,&p.source->afterLua})for(const auto& sd:*list){
@@ -145,14 +183,15 @@ std::shared_ptr<PreparedEngineModelForward> EngineModelForwardGPU::Prepare(Runti
   auto [it,inserted]=sharedGeometry.try_emplace(object.model.get());if(inserted)it->second=geometry(lease,object.model);Require(it->second.size()==object.pieces.size(),"Original forward shared piece slots differ");
   for(size_t piece=0;piece<object.pieces.size();++piece){const auto& mesh=it->second[piece];if((!modern&&!object.pieces[piece].visible)||!mesh.indexCount)continue;
    Require(mesh.vertices&&mesh.indices&&mesh.indices.length>=size_t(mesh.indexCount)*4,"Original forward shared geometry is incomplete");lease.AddAllocation(mesh.vertices);lease.AddAllocation(mesh.indices);
-   Uniform u=common;engineoriginal::PieceUniform(u,sd,piece);auto uniforms=[lease.Device()newBufferWithBytes:&u length:sizeof(u) options:MTLResourceStorageModeShared];Require(uniforms,"Cannot retain actual original forward uniforms");lease.AddAllocation(uniforms);
+   Uniform u=common;engineoriginal::PieceUniform(u,sd,piece);auto uniforms=uniformArena.Copy(lease,&u,sizeof(u));
    auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=3;descriptor.maxTextureBindCount=9;descriptor.maxSamplerStateBindCount=6;descriptor.initializeBindings=YES;
-   auto table=[lease.Device()newArgumentTableWithDescriptor:descriptor error:nil];Require(table,"Cannot allocate original forward argument table");lease.Retain(table);[table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:uniforms.gpuAddress atIndex:1];[table setAddress:lights.gpuAddress atIndex:2];
+   auto table=impl->argumentPool.Acquire(lease,descriptor,p.argumentOwners,nullptr);Require(table,"Cannot allocate original forward argument table");[table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:uniforms.Address() atIndex:1];[table setAddress:lights.gpuAddress atIndex:2];
    for(unsigned slot=0;slot<6;++slot){const auto& image=draw.images[slot];if(!image.texture)continue;unsigned texture=slot<2?(image.depthImage?slot+2:slot):slot==2?4:slot==3?(image.depthImage?6:5):slot+3;[table setTexture:image.texture.gpuResourceID atIndex:texture];[table setSamplerState:image.sampler.gpuResourceID atIndex:slot];}
    draw.pieces.push_back({mesh,table});
   }
   p.draws.push_back(std::move(draw));
  }
+ uniformArena.Report("EngineForward",p.source->sourceDrawFrame,impl->reported146);
  return out;
 }
 } // namespace rendering::metal4

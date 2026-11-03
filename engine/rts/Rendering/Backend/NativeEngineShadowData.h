@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include "NativeTerrainMeshSnapshot.h"
 #include "NativeEngineModelData.h"
 namespace rendering {
 enum class NativeEngineShadowProfile : uint8_t { LegacyModel, ModernModel, Projectile, Terrain };
@@ -50,6 +51,9 @@ struct NativeTerrainShadowDraw {
  std::shared_ptr<const void> compiledOriginal;
  std::vector<std::array<float,3>> vertices;
  std::vector<uint32_t> indices;
+ std::shared_ptr<const NativeTerrainMeshSnapshot> meshSnapshot;
+ const auto& Positions()const noexcept{return meshSnapshot?meshSnapshot->Geometry().positions:vertices;}
+ const auto& Indices()const noexcept{return meshSnapshot?meshSnapshot->Geometry().indices:indices;}
  bool indexed=true;
  WorldMatrix modelView{},projection{};
  std::array<float,4> mapSize{};

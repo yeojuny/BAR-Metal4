@@ -1,5 +1,9 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4PostprocessNative.h"
+#include "Metal4PostprocessTexturePool181.h"
+#include "Rendering/Backend/NativeRetiredResourcePool.h"
+#include "Rendering/Backend/NativePostprocessOverwrite157.h"
+#include "System/Log/ILog.h"
 #include "NativeSampleShadingShaders.h"
 #include "Metal4DOFShaderSource.h"
 #include "Metal4CASShaderSource.h"
@@ -11,12 +15,122 @@
 #include "Metal4WorldViewport.h"
 #include "Metal4MainAttachments.h"
 #include <tuple>
+#include <bit>
 #include <map>
 #include <algorithm>
 #include <cstring>
 #include <set>
 #include <stdexcept>
 #include <simd/simd.h>
+
+namespace rendering::metal4 {
+struct PostprocessUniformStorage {
+	__strong id<MTLBuffer> buffer=nil;
+};
+class PostprocessUniformPool {
+public:
+	static constexpr size_t ByteLimit=1024u*1024u;
+	static constexpr size_t EntryLimit=128;
+	void BeginBatch(id<MTLDevice> device) {
+		if(owner!=device) { Clear(); owner=device; }
+		for(auto& bucket:buckets)bucket.next=0;
+	}
+	std::shared_ptr<PostprocessUniformStorage> Acquire(id<MTLDevice> device,const void* data,size_t length) {
+		Require(device==owner,"Postprocess uniform pool has no matching device batch");
+		Require(length==112 || length==160 || length==288,"Postprocess uniform size differs from its three original layouts");
+		auto& bucket=buckets[length==112?0:length==160?1:2];
+		// Only a pool-owned slot is retired. Every prepared operation and its
+		// completion/poison graph retain the same immutable shared owner.
+		while(bucket.next<bucket.slots.size()) {
+			auto& slot=bucket.slots[bucket.next++];
+			if(slot.use_count()!=1)continue;
+			auto address=slot->buffer.contents;
+			if(address==nullptr)continue;
+			std::memcpy(address,data,length);
+			return slot;
+		}
+		// Keep the exact original fresh allocation and failure behavior when
+		// owners are live or cache limits are reached; never restrict a draw.
+		auto buffer=[device newBufferWithBytes:data length:length options:MTLResourceStorageModeShared];
+		Require(buffer!=nil,"Cannot allocate actual DOF uniforms/quad");
+		auto slot=std::make_shared<PostprocessUniformStorage>(PostprocessUniformStorage{buffer});
+		const auto footprint=std::max(size_t(buffer.length),size_t(buffer.allocatedSize));
+		if(buffer.contents!=nullptr && entries<EntryLimit && footprint<=ByteLimit-bytes) {
+			bucket.slots.push_back(slot);bucket.next=bucket.slots.size();
+			bytes+=footprint;++entries;
+		}
+		return slot;
+	}
+	void Clear() noexcept {
+		for(auto& bucket:buckets) { bucket.slots.clear(); bucket.next=0; }
+		bytes=0;entries=0;owner=nil;
+	}
+	size_t CachedBytes() const {return bytes;}
+	size_t CachedCount() const {return entries;}
+private:
+	struct Bucket {std::vector<std::shared_ptr<PostprocessUniformStorage>> slots;size_t next=0;};
+	// Three exact uniform sizes keep both resource bytes and lookup storage
+	// bounded. No weak tokens can acquire ownership after the retirement test.
+	std::array<Bucket,3> buckets;
+	__strong id<MTLDevice> owner=nil;
+	size_t bytes=0,entries=0;
+};
+} // namespace rendering::metal4
+
+namespace rendering::metal4 {
+struct PostprocessArgumentStorage {
+	__strong id<MTL4ArgumentTable> table = nil;
+};
+using PostprocessArgumentLayout = std::array<NSUInteger,3>;
+class PostprocessArgumentPool {
+public:
+	void BeginBatch(id<MTLDevice> device) {
+		if (device != owner) {
+			pool.Clear();
+			owner = device;
+		}
+		pool.BeginBatch();
+	}
+	std::shared_ptr<PostprocessArgumentStorage> Acquire(id<MTLDevice> device,
+		const PostprocessArgumentLayout& layout, const char* failure) {
+		Require(device == owner, "Postprocess argument pool has no matching device batch");
+		Require(layout==PostprocessArgumentLayout{2,1,1} || layout==PostprocessArgumentLayout{2,6,6},
+			"Postprocess argument layout differs from its two actual descriptors");
+		return pool.Acquire(layout, [&] {
+			auto descriptor = [MTL4ArgumentTableDescriptor new];
+			descriptor.maxBufferBindCount = layout[0];
+			descriptor.maxTextureBindCount = layout[1];
+			descriptor.maxSamplerStateBindCount = layout[2];
+			descriptor.initializeBindings = YES;
+			NSError* error = nil;
+			auto table = [device newArgumentTableWithDescriptor:descriptor error:&error];
+			if (table == nil) Require(false, std::string(failure) + Error(error));
+			return PostprocessArgumentStorage{table};
+		}, [&](PostprocessArgumentStorage& slot) {
+			// Match initializeBindings=YES, including every unused slot. Never
+			// mutate bindings while a prepared frame or completion graph owns it.
+			for (NSUInteger i = 0; i < layout[0]; ++i) [slot.table setAddress:0 atIndex:i];
+			for (NSUInteger i = 0; i < layout[1]; ++i) [slot.table setTexture:MTLResourceID{0} atIndex:i];
+			for (NSUInteger i = 0; i < layout[2]; ++i) [slot.table setSamplerState:MTLResourceID{0} atIndex:i];
+		});
+	}
+	void Clear() noexcept { pool.Clear(); owner=nil; }
+	std::size_t CachedCount() const { return pool.CachedCount(); }
+private:
+	__strong id<MTLDevice> owner = nil;
+	rendering::NativeRetiredResourcePool<PostprocessArgumentLayout,PostprocessArgumentStorage,256> pool;
+};
+
+} // namespace rendering::metal4
+
+@interface M4PostprocessArgumentLifetime : NSObject {
+@public
+	std::vector<std::shared_ptr<rendering::metal4::PostprocessArgumentStorage>> slots;
+	std::vector<std::shared_ptr<rendering::metal4::PostprocessUniformStorage>> uniformSlots;
+}
+@end
+@implementation M4PostprocessArgumentLifetime
+@end
 
 namespace rendering::metal4 {
 namespace {
@@ -106,6 +220,9 @@ struct PreparedPostprocessFrame::Impl {
 		std::vector<PreparedScreenExternalImage> priorScreen;
 	};
 	std::shared_ptr<const NativePostprocessFrame> owner;
+	// The same immutable holder belongs to prepared operations and the runtime
+	// completion/poison graph; it outlives all operation argument references.
+	__strong M4PostprocessArgumentLifetime* argumentLifetime=nil;
 	std::vector<Operation> operations;
 	std::map<const NativePostprocessVersion*,id<MTLTexture>> producedImages;
 	std::vector<std::shared_ptr<bool>> completed;
@@ -188,7 +305,47 @@ void PreparedPostprocessFrame::DidComplete() const {
 	for(const auto& completed:impl->completed)*completed=true;
 }
 struct PostprocessGPU::Impl {
-	struct Image { std::weak_ptr<const NativePostprocessVersion> owner;__strong id<MTLTexture> image=nil;std::shared_ptr<bool> completed=std::make_shared<bool>(false);std::shared_ptr<bool> encoded=std::make_shared<bool>(false); };
+	bool reported157=false;
+	std::unique_ptr<PostprocessTexturePool181> texturePool181=std::make_unique<PostprocessTexturePool181>();
+	std::uint64_t freshIneligible181=0;
+	std::uint64_t ownerRequests181=0,ownerRegistrations181=0;
+	void PinTexture181(RuntimeLease& lease,const std::shared_ptr<PostprocessTextureStorage181>& storage) {
+		++ownerRequests181;
+		if(lease.RetainPostprocessTexture181(storage)) ++ownerRegistrations181;
+	}
+	~Impl() {
+		if(texturePool181 && (texturePool181->requests || freshIneligible181)) {
+			const auto& p=*texturePool181;
+			LOG("[NativePostprocessTexture181] revision=2 eligible_versions=%llu reused=%llu created=%llu uncached=%llu fresh_ineligible_versions=%llu owner_requests=%llu owner_registrations=%llu holder_allocations=0 peak_cached_entries=%zu peak_cached_bytes=%zu byte_limit=%zu entry_limit=%zu scope=owner_lifetime",
+				(unsigned long long)p.requests,(unsigned long long)p.reused,(unsigned long long)p.created,
+				(unsigned long long)p.uncached,(unsigned long long)freshIneligible181,
+				(unsigned long long)ownerRequests181,(unsigned long long)ownerRegistrations181,p.peakEntries,p.peakBytes,
+				PostprocessTexturePool181::ByteLimit,PostprocessTexturePool181::EntryLimit);
+		}
+	}
+	PostprocessArgumentPool argumentPool;
+	PostprocessUniformPool uniformPool;
+	id<MTLBuffer> UniformBuffer(RuntimeLease& lease,M4PostprocessArgumentLifetime* lifetime,const void* data,size_t length) {
+		auto slot=uniformPool.Acquire(lease.Device(),data,length);
+		auto buffer=slot->buffer;
+		lifetime->uniformSlots.push_back(std::move(slot));
+		lease.AddAllocation(buffer);
+		return buffer;
+	}
+	std::map<std::array<uint32_t,8>,id<MTLBuffer>> immutableQuads;
+	id<MTLBuffer> QuadBuffer(RuntimeLease& lease,const NativePostprocessQuad& quad) {
+		static_assert(sizeof(NativePostprocessQuad)==sizeof(std::array<uint32_t,8>));
+		const auto key=std::bit_cast<std::array<uint32_t,8>>(quad);
+		const auto found=immutableQuads.find(key);
+		if(found!=immutableQuads.end() && found->second.device==lease.Device()) {
+			lease.AddAllocation(found->second);return found->second;
+		}
+		auto value=Buffer(lease,&quad,sizeof(quad));
+		// Storage is never overwritten. The current lease retains evictees.
+		if(immutableQuads.size()>=64)immutableQuads.erase(immutableQuads.begin());
+		immutableQuads.insert_or_assign(key,value);return value;
+	}
+	struct Image { std::weak_ptr<const NativePostprocessVersion> owner;__strong id<MTLTexture> image=nil;std::shared_ptr<PostprocessTextureStorage181> storage181;std::shared_ptr<bool> completed=std::make_shared<bool>(false);std::shared_ptr<bool> encoded=std::make_shared<bool>(false); };
 	std::map<const NativePostprocessVersion*,Image> images;
  // Allocation-only dimension queries belong to this SAME GPU resource owner.
  // They have no contents-version status and cannot satisfy Retired/ImageFor.
@@ -283,7 +440,21 @@ struct PostprocessGPU::Impl {
 	{
 		auto i=images.find(&version);return i!=images.end()&&!i->second.owner.expired()&&*i->second.completed;
 	}
-	id<MTLTexture> ImageFor(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version,bool output,std::vector<std::shared_ptr<bool>>& completed)
+ // CPU preparation may pin an already encoded immutable input from N.
+ // This is NOT retirement/readability publication: N's real event+feedback
+ // still precede N+1 GPU submission, and original per-version read checks stay.
+ // CPU encoding may refer to the pinned image; it never publishes completion.
+ bool PreparationInput(const NativePostprocessVersion& version,const RuntimeLease& lease) const
+ {
+  if(Retired(version))return true;
+  auto i=images.find(&version);
+  return lease.PreparingWhilePending()&&i!=images.end()&&i->second.owner.lock().get()==&version&&*i->second.encoded;
+ }
+ struct PreparationContext {Impl* cache;RuntimeLease* lease;};
+ static bool PreparationInputCallback(const NativePostprocessVersion& v,void* raw){
+  const auto& state=*static_cast<PreparationContext*>(raw);return state.cache->PreparationInput(v,*state.lease);
+ }
+	id<MTLTexture> ImageFor(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version,bool output,std::vector<std::shared_ptr<bool>>& completed,bool reusableCopy181=false)
 	{
 		Require(version&&version->image,"Missing actual postprocess image version");
 		if(HasNativePostprocessCPUContents(*version)){
@@ -297,14 +468,24 @@ struct PostprocessGPU::Impl {
 		auto found=images.find(version.get());
 		if(found!=images.end()){
 			Require(found->second.owner.lock()==version,"Postprocess image address lifetime changed");
+			Require(found->second.image.device==lease.Device(),"Postprocess image version belongs to another Metal device");
 			Require(!output||!*found->second.completed,"Already-completed postprocess packet cannot be resubmitted");
+			if(found->second.storage181)PinTexture181(lease,found->second.storage181);
 			lease.AddAllocation(found->second.image);if(output)completed.push_back(found->second.completed);return found->second.image;
 		}
 		Require(output,"Missing producer for unretired postprocess image");const auto& image=*version->image;
 		Require(image.width<=lease.Capabilities().maxTextureDimension2D&&image.height<=lease.Capabilities().maxTextureDimension2D,"Original DOF attachment exceeds actual device extent");
-		auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:Format(image.format) width:image.width height:image.height mipmapped:NO];descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
-		auto native=[lease.Device()newTextureWithDescriptor:descriptor];Require(native!=nil,"Cannot allocate original DOF immutable attachment");native.label=String("Original DOF image "+std::to_string(image.object)+" generation "+std::to_string(version->generation));
-		Image entry;entry.owner=version;entry.image=native;auto flag=entry.completed;images.emplace(version.get(),std::move(entry));lease.AddAllocation(native);completed.push_back(std::move(flag));return native;
+		const auto create=[&]{
+			auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:Format(image.format) width:image.width height:image.height mipmapped:NO];descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
+			auto native=[lease.Device()newTextureWithDescriptor:descriptor];Require(native!=nil,"Cannot allocate original DOF immutable attachment");return native;
+		};
+		Image entry;entry.owner=version;
+		if(reusableCopy181) {
+			entry.storage181=texturePool181->Acquire(lease.Device(),{Format(image.format),image.width,image.height},version,create);
+			entry.image=entry.storage181->texture;PinTexture181(lease,entry.storage181);
+		} else {entry.image=create();++freshIneligible181;}
+		auto native=entry.image;native.label=String("Original DOF image "+std::to_string(image.object)+" generation "+std::to_string(version->generation));
+		auto flag=entry.completed;images.emplace(version.get(),std::move(entry));lease.AddAllocation(native);completed.push_back(std::move(flag));return native;
 	}
 	id<MTLSamplerState> Sampler(RuntimeLease& lease,NativePostprocessSampler value)
 	{
@@ -324,9 +505,9 @@ void PostprocessGPU::Initialize(RuntimeLease& lease,MTLPixelFormat format,bool v
 	auto candidate=std::make_unique<Impl>();candidate->Compile(lease,format,validation,compileMs);
 	// Changing validation/paired PSOs must not erase retired immutable image
 	// generations that are still referenced by a later partial update.
-	candidate->images=std::move(impl->images);candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true);
+	candidate->images=std::move(impl->images);candidate->texturePool181=std::move(impl->texturePool181);candidate->freshIneligible181=impl->freshIneligible181;candidate->ownerRequests181=impl->ownerRequests181;candidate->ownerRegistrations181=impl->ownerRegistrations181;candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true);
 }
-void PostprocessGPU::ClearResources(){impl->declaredFrame.reset();impl->images.clear();impl->allocations.clear();}
+void PostprocessGPU::ClearResources(){impl->immutableQuads.clear();impl->argumentPool.Clear();impl->uniformPool.Clear();impl->declaredFrame.reset();impl->images.clear();impl->texturePool181->Clear();impl->allocations.clear();}
 void PostprocessGPU::SetCPUImageProvider(CPUImageProvider provider){impl->cpuImages=std::move(provider);}
 void PostprocessGPU::PrepareFrameImages(RuntimeLease& lease,std::shared_ptr<const NativePostprocessFrame> frame,std::uint64_t sourceDrawFrame)
 {
@@ -336,11 +517,16 @@ void PostprocessGPU::PrepareFrameImages(RuntimeLease& lease,std::shared_ptr<cons
 	// before either ordered validation or the first immutable-image allocation.
 	for(auto i=impl->images.begin();i!=impl->images.end();)if(i->second.owner.expired())i=impl->images.erase(i);else ++i;
  impl->PruneAllocations();
-	ValidateNativePostprocessFrame(*frame,[](const NativePostprocessVersion& v,void* state){return static_cast<Impl*>(state)->Retired(v);},impl.get());
+	Impl::PreparationContext context{impl.get(),&lease};
+ ValidateNativePostprocessFrame(*frame,Impl::PreparationInputCallback,&context);
 	std::vector<std::shared_ptr<bool>> ignored;
 	for(const auto& ref:OrderNativePostprocessCommands(*frame)){
 		const auto& outputs=ref.external?frame->externalOutputs[ref.index].outputs:frame->operations[ref.index].outputs;
-		for(const auto& output:outputs)impl->ImageFor(lease,output,true,ignored);
+		// Only this existing fixed-copy proof guarantees every pixel is written
+		// before the version's first read. DOF discard, external and partial writes
+		// retain their original fresh storage; no clear or copy is added/removed.
+		const bool reusableCopy181=!ref.external && NativePostprocessOverwrite157(frame->operations[ref.index],frame->logicalWidth,frame->logicalHeight);
+		for(const auto& output:outputs)impl->ImageFor(lease,output,true,ignored,reusableCopy181);
 	}
 	impl->declaredFrame=std::move(frame);
 }
@@ -351,7 +537,7 @@ id<MTLTexture> PostprocessGPU::ResolveAllocation(RuntimeLease& lease,std::shared
 id<MTLTexture> PostprocessGPU::ResolveImage(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version,std::optional<NativePostprocessConsumer> consumer)
 {
 	Require(version!=nullptr,"Missing shared native image version");
-	if(!HasNativePostprocessCPUContents(*version)&&!impl->Retired(*version)){
+	if(!HasNativePostprocessCPUContents(*version)&&!impl->PreparationInput(*version,lease)){
 		Require(impl->declaredFrame!=nullptr,"Shared native image has no actual source frame");
 		ValidateNativePostprocessConsumer(*impl->declaredFrame,*version,consumer,[](const NativePostprocessVersion& v,void* state){return static_cast<Impl*>(state)->Retired(v);},impl.get());
 	}
@@ -389,17 +575,26 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			"Root screen attachment extent/sample count differs from actual scene color");
 	if(actualStencil)Require(actualStencil.pixelFormat==MTLPixelFormatStencil8,"Unsupported actual root stencil attachment format");
 	auto prepared=std::make_unique<PreparedPostprocessFrame>();prepared->impl->main=main;prepared->impl->owner=frame;prepared->impl->screenColor=color;prepared->impl->screenDepth=depth;prepared->impl->screenStencil=actualStencil;prepared->impl->screenCommands=commandCount;lease.AddAllocation(color);lease.AddAllocation(depth);if(actualStencil)lease.AddAllocation(actualStencil);
+	impl->argumentPool.BeginBatch(lease.Device());
+	impl->uniformPool.BeginBatch(lease.Device());
+	size_t omittedCopies157=0,retainedCopies157=0;uint64_t omittedBytes157=0;
 	for(std::size_t operationIndex=0;operationIndex<frame->operations.size();++operationIndex){
 		const auto& operation=frame->operations[operationIndex];
+		const bool overwrite157=NativePostprocessOverwrite157(operation,frame->logicalWidth,frame->logicalHeight);
 		Require(operation.screenCommandOffset<=commandCount,"DOF insertion exceeds original screen stream");PreparedPostprocessFrame::Impl::Operation out;out.offset=operation.screenCommandOffset;out.screenOutput=operation.screenOutput;out.stage=operation.stage;out.sourceIndex=operationIndex;
 		out.pass=[MTL4RenderPassDescriptor new];unsigned width=unsigned(color.width),height=unsigned(color.height);
 		std::vector<id<MTLTexture>> outputs;
 		for(std::size_t i=0;i<operation.outputs.size();++i){auto image=impl->ImageFor(lease,operation.outputs[i],true,prepared->impl->completed);outputs.push_back(image);prepared->impl->producedImages.emplace(operation.outputs[i].get(),image);out.outputEncoded.push_back(impl->images.at(operation.outputs[i].get()).encoded);width=unsigned(image.width);height=unsigned(image.height);
-			if(operation.previous[i]){auto previous=impl->ImageFor(lease,operation.previous[i],false,prepared->impl->completed);out.previous.emplace_back(previous,image);}
-			if(operation.kind==NativePostprocessOperationKind::CopyDepth){out.pass.depthAttachment.texture=image;out.pass.depthAttachment.loadAction=operation.previous[i]?MTLLoadActionLoad:MTLLoadActionDontCare;out.pass.depthAttachment.storeAction=MTLStoreActionStore;}
-			else{out.pass.colorAttachments[i].texture=image;out.pass.colorAttachments[i].loadAction=(operation.previous[i]||operation.priorScreen)?MTLLoadActionLoad:MTLLoadActionDontCare;out.pass.colorAttachments[i].storeAction=MTLStoreActionStore;}
+			// Source history remains owned and validated. Only the old-pixel GPU
+			// dependency is absent when this fixed copy overwrites every pixel.
+			const bool preserve=!overwrite157&&(operation.previous[i]||operation.priorScreen);
+			if(operation.previous[i]&&!overwrite157){auto previous=impl->ImageFor(lease,operation.previous[i],false,prepared->impl->completed);out.previous.emplace_back(previous,image);}
+			if(overwrite157&&(operation.previous[i]||operation.priorScreen)){++omittedCopies157;omittedBytes157+=uint64_t(width)*height*4;}
+			if(preserve)++retainedCopies157;
+			if(operation.kind==NativePostprocessOperationKind::CopyDepth){out.pass.depthAttachment.texture=image;out.pass.depthAttachment.loadAction=preserve?MTLLoadActionLoad:MTLLoadActionDontCare;out.pass.depthAttachment.storeAction=MTLStoreActionStore;}
+			else{out.pass.colorAttachments[i].texture=image;out.pass.colorAttachments[i].loadAction=preserve?MTLLoadActionLoad:MTLLoadActionDontCare;out.pass.colorAttachments[i].storeAction=MTLStoreActionStore;}
 		}
-		if(operation.priorScreen) {
+		if(operation.priorScreen&&!overwrite157) {
 			auto prior=originalScreen.ResolvePreviousImage(lease,operation.priorScreen,
 				NativePostprocessConsumer{operation.stage,operation.sequence,operation.screenCommandOffset,operation.commandSequence});
 			Require(outputs.size()==1 && prior.texture.width==outputs[0].width && prior.texture.height==outputs[0].height &&
@@ -415,8 +610,16 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 		  if(!mapped)out.noDraw=true;else{const auto& vp=mapped->viewport;const auto& sc=mapped->scissor;out.viewport={vp[0],vp[1],vp[2],vp[3],0,1};out.scissor={sc[0],sc[1],sc[2],sc[3]};}
 		 }
 		}
-		MTL4ArgumentTableDescriptor* d=[MTL4ArgumentTableDescriptor new];d.maxBufferBindCount=2;d.maxTextureBindCount=operation.kind==NativePostprocessOperationKind::DOF?6:1;d.maxSamplerStateBindCount=d.maxTextureBindCount;d.initializeBindings=YES;NSError* error=nil;
-		auto args=[lease.Device()newArgumentTableWithDescriptor:d error:&error];Require(args!=nil,"Cannot allocate original DOF binding table: "+Error(error));lease.Retain(args);out.arguments=args;
+		if(!prepared->impl->argumentLifetime) {
+			prepared->impl->argumentLifetime=[M4PostprocessArgumentLifetime new];
+			lease.Retain(prepared->impl->argumentLifetime);
+		}
+		const NSUInteger textureSlots=operation.kind==NativePostprocessOperationKind::DOF?6:1;
+		auto argumentOwner=impl->argumentPool.Acquire(lease.Device(),{2,textureSlots,textureSlots},
+			"Cannot allocate original DOF binding table: ");
+		auto args=argumentOwner->table;
+		prepared->impl->argumentLifetime->slots.push_back(std::move(argumentOwner));
+		lease.Retain(args);out.arguments=args;
 		NativePostprocessQuad quad=operation.quad;
 		if(operation.kind==NativePostprocessOperationKind::Sepia){
 			const auto& u=operation.sepia;out.casRaster=u.raster;Require(bool(out.casRaster),"Sepia raster missing");
@@ -433,7 +636,7 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			gpu.viewPos=simd_make_int4(u.viewPos[0],u.viewPos[1],0,0);gpu.alpha=simd_make_uint4(surface.alphaTest.enabled,unsigned(surface.alphaTest.compare),0,0);
 			ValidateNativeCUSUniformPublication(*u.engine);std::uint32_t caps=0;std::memcpy(&caps,u.engine->params->bytes.data()+12,4);
 			gpu.parameters=simd_make_float4(u.gamma,surface.alphaTest.reference,(caps&1u)?0.f:.5f,0);
-			auto uniform=Buffer(lease,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
+			auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
 			const auto& version=operation.inputs[0];auto image=impl->ImageFor(lease,version,false,prepared->impl->completed);
 			const auto& entry=impl->images.at(version.get());out.reads.emplace_back(entry.completed,entry.encoded);[args setTexture:image.gpuResourceID atIndex:0];
 			out.pipeline=impl->Pipeline(lease,SEPIA_PIPELINE,0,color.pixelFormat,out.casRaster.get(),std::uint32_t(color.sampleCount));out.vertexCount=3;
@@ -460,7 +663,7 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
    std::uint32_t caps=0;std::memcpy(&caps,u.engine->params->bytes.data()+12,4);
    gpu.alpha=simd_make_uint4(surface.alphaTest.enabled,unsigned(surface.alphaTest.compare),0,0);
    gpu.raster=simd_make_float4(surface.alphaTest.reference,(caps&1u)?0.f:.5f,0,0);
-   auto uniform=Buffer(lease,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
+   auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
    const auto& version=operation.inputs[0];auto image=impl->ImageFor(lease,version,false,prepared->impl->completed);
    Require(image.width==std::uint32_t(u.viewRect[2]+1) && image.height==std::uint32_t(u.viewRect[3]+1) && image.pixelFormat==MTLPixelFormatRGBA8Unorm,"CAS actual screen-copy image differs");
    const auto& entry=impl->images.at(version.get());out.reads.emplace_back(entry.completed,entry.encoded);
@@ -476,7 +679,7 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			if(operation.kind==NativePostprocessOperationKind::CopyDepth){out.depthState=impl->copyDepth;lease.Retain(out.depthState);}
 		}else{
 			const auto& u=operation.uniforms;GPUUniforms gpu{};std::memcpy(&gpu.projection,u.projection.data(),sizeof(gpu.projection));gpu.eye={u.eyePosition[0],u.eyePosition[1],u.eyePosition[2],0};gpu.resolutionDistance={u.resolution[0],u.resolution[1],u.distanceLimits[0],u.distanceLimits[1]};gpu.mouseFocus={u.mouseDepthCoordinate[0],u.mouseDepthCoordinate[1],u.manualFocusDepth,u.fStop};gpu.autoParams={u.autofocusFudgeFactor,u.autofocusPower,u.autofocusFocalLength,float(u.zeroToOneDepth)};gpu.settings={u.autofocus,u.mousefocus,u.quality,u.pass};gpu.target={float(height),0,0,0};
-			auto uniform=Buffer(lease,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
+			auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
 			const unsigned required=RequiredInputs(u);
 			Require(u.quality==1||(u.pass==5&&u.quality==0),"Original31657 non-composition DOF program has HIGH_QUALITY1");
 			Require(operation.screenOutput==(u.pass==5)&&operation.outputs.size()==(operation.screenOutput?0:Outputs(u)),"Original31657 DOF pass/FBO output contract differs");
@@ -494,11 +697,17 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			}
 			out.pipeline=impl->Pipeline(lease,u.pass,u.quality,operation.screenOutput?color.pixelFormat:Format(operation.outputs[0]->image->format),nullptr,operation.screenOutput?std::uint32_t(color.sampleCount):1u);
 		}
-		auto vertex=Buffer(lease,&quad,sizeof(quad));[args setAddress:vertex.gpuAddress atIndex:0];prepared->impl->operations.push_back(std::move(out));
+		auto vertex=impl->QuadBuffer(lease,quad);[args setAddress:vertex.gpuAddress atIndex:0];prepared->impl->operations.push_back(std::move(out));
 	}
 	for(const auto& producer:frame->externalOutputs)for(const auto& output:producer.outputs){
 		auto image=impl->ImageFor(lease,output,true,prepared->impl->completed);auto& entry=impl->images.at(output.get());
 		prepared->impl->producedImages.emplace(output.get(),image);prepared->impl->externalEncoded.emplace(output.get(),entry.encoded);
+	}
+	if(!impl->reported157&&frame->sourceDrawFrame>=512&&omittedCopies157){
+		LOG("[NativePostprocess157] frame=%llu operations=%zu omitted_prior_copies=%zu omitted_logical_source_bytes=%llu omitted_prior_resolves=%zu retained_prior_copies=%zu framebuffer_snapshots_unchanged=1 shaders_unchanged=1 source_order_unchanged=1",
+		 static_cast<unsigned long long>(frame->sourceDrawFrame),frame->operations.size(),omittedCopies157,
+		 static_cast<unsigned long long>(omittedBytes157),omittedCopies157,retainedCopies157);
+		impl->reported157=true;
 	}
 	return prepared;
 }

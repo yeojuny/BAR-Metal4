@@ -28,6 +28,8 @@ public:
 		std::uint32_t width,std::uint32_t height,std::uint32_t logicalWidth,std::uint32_t logicalHeight,
 		MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,
 		bool shaderValidation,double& shaderMilliseconds,unsigned samples=1);
+	// Call at the serialized DrawPrepared lease boundary, even with no effect draws.
+	void PruneExpiredImages();
 	void ClearResources(); // Drop map images only after real shared retirement.
 private:
 	struct Impl;std::unique_ptr<Impl> impl;

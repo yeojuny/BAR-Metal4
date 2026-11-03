@@ -20,6 +20,11 @@ public:
 	PreparedTerrainGroundClear& operator=(const PreparedTerrainGroundClear&)=delete;
 	size_t DrawCount() const;
 	uint64_t SequenceAt(size_t index) const;
+	// Call only for index zero at this target's FIRST source event, before
+	// creating its encoder. EncodeDraw still consumes that exact ordinal and
+	// restores the original clear state, but omits its triangle on success.
+	// False leaves the descriptor and existing raster path unchanged.
+	bool TryInitialAttachmentClear182(MTL4RenderPassDescriptor*,uint64_t sourceDrawFrame,int64_t simulationFrame);
 	void EncodeDraw(size_t index,id<MTL4RenderCommandEncoder> encoder);
 private:
 	struct Impl;

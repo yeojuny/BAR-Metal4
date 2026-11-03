@@ -33,18 +33,33 @@ PBRSourceGPU::~PBRSourceGPU()=default;
 PreparedPBRSource::PreparedPBRSource():impl(std::make_unique<Impl>()){}
 PreparedPBRSource::~PreparedPBRSource()=default;
 std::shared_ptr<const NativePBRProgram> PBRSourceGPU::Compile(RuntimeLease& lease,const NativePBRProgramSource& source,bool validation,double& compileMs){auto p=std::make_shared<NativePBRProgram>(ValidateNativePBRProgram(source));impl->Compile(lease,validation,compileMs);p->pipelineOwner=p->kind==NativePBRKind::BRDF?impl->brdf:impl->environment;return p;}
-std::shared_ptr<NativePBRImage> PBRSourceGPU::Allocate(RuntimeLease& lease,const NativePBRAllocation& allocation)
+static std::shared_ptr<ImageStorage> AllocatePBRStorage(id<MTLDevice> device,const NativePBRAllocation& allocation)
 {
 	ValidateNativePBRAllocation(allocation);auto result=std::make_shared<ImageStorage>();result->allocation=allocation;result->storageGeneration=nextStorage.fetch_add(1);result->contentVersion=1;
 	const auto format=allocation.originalFormat==0x822F?MTLPixelFormatRG16Float:MTLPixelFormatRGBA16Float;
 	auto* td=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:format width:allocation.width height:allocation.height mipmapped:NO];td.storageMode=MTLStorageModePrivate;td.usage=MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite|MTLTextureUsageRenderTarget;
-	result->texture=[lease.Device() newTextureWithDescriptor:td];Require(result->texture,"Cannot allocate original PBR target");lease.AddAllocation(result->texture);return result;
+	result->texture=[device newTextureWithDescriptor:td];Require(result->texture,"Cannot allocate original PBR target");return result;
+}
+std::shared_ptr<NativePBRImage> PBRSourceGPU::Allocate(RuntimeLease& lease,const NativePBRAllocation& allocation)
+{
+ auto result=AllocatePBRStorage(lease.Device(),allocation);lease.AddAllocation(result->texture);return result;
+}
+std::shared_ptr<NativePBRImage> ReserveNativePBRImageForCapture(const NativePBRAllocation& allocation)
+{
+ Require([NSThread isMainThread],"Original PBR capture reservation requires the engine main thread");
+ const auto& runtime=SharedRuntime();const auto caps=runtime.Capabilities();
+ Require(caps.directMetal4 && caps.unifiedMemory && runtime.Device()!=nil,"Original PBR capture has no supported native device");
+ // Fresh private storage only. Original pending/encoded/completed states and
+ // actual GPU preparation/residency remain unchanged.
+ return AllocatePBRStorage(runtime.Device(),allocation);
 }
 std::unique_ptr<PreparedPBRSource> PBRSourceGPU::Prepare(RuntimeLease& lease,std::span<const std::shared_ptr<const NativePBRImage>> images,const CUSSourceImageProvider& provider)
 {
 	auto output=std::unique_ptr<PreparedPBRSource>(new PreparedPBRSource);std::set<const NativePBRImage*> seen;
 	for(auto& image:images){Require(image&&image->content==NativeTextureContent::ProducerVersion&&image->program&&image->program->pipelineOwner,"Original PBR pending command is incomplete");if(image->completed.load()||!seen.insert(image.get()).second)continue;
-		Require(!image->encodedSubmission.load(),"Original PBR command already belongs to an unretired submission");PreparedPBRSource::Impl::Draw draw;draw.image=Storage(image);draw.pipeline=std::static_pointer_cast<const Pipeline>(image->program->pipelineOwner);
+		if(image->encodedSubmission.load()&&lease.PreparingWhilePending())lease.RetirePreviousSubmission();
+  if(image->completed.load())continue;
+  Require(!image->encodedSubmission.load(),"Original PBR command already belongs to an unretired submission");PreparedPBRSource::Impl::Draw draw;draw.image=Storage(image);draw.pipeline=std::static_pointer_cast<const Pipeline>(image->program->pipelineOwner);
 		lease.AddAllocation(draw.image->texture);lease.Retain(draw.pipeline->library);lease.Retain(draw.pipeline->state);
 		auto* ad=[MTL4ArgumentTableDescriptor new];ad.maxTextureBindCount=2;ad.maxSamplerStateBindCount=1;ad.maxBufferBindCount=1;ad.initializeBindings=YES;NSError* error=nil;draw.arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(draw.arguments,"Cannot allocate original PBR argument table: "+Error(error));lease.Retain(draw.arguments);
 		if(image->program->kind==NativePBRKind::BRDF){[draw.arguments setTexture:draw.image->texture.gpuResourceID atIndex:0];}

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include "Rendering/Backend/NativeWorldDrawPlan167.h"
 #include "Metal4RuntimeNative.h"
 #include "Metal4ScreenNative.h"
 #include "Metal4SourceImage.h"
@@ -18,6 +19,9 @@ public:
 	// stage and actual shared depth/stencil render pass. No separate present.
 	void EncodeDraw(std::size_t index,id<MTL4RenderCommandEncoder> encoder) const;
  void EncodeDependencies(id<MTL4CommandBuffer>)const;
+ // Lines only: independent of sampled-image producers and original draw order.
+ void EncodeLineDependencies(id<MTL4CommandBuffer>)const;
+ void CompleteLineDependencies()const;
  void DidComplete()const;
 private:
 	struct Impl;std::unique_ptr<Impl> impl;friend class WorldOverlayGPU;
@@ -25,7 +29,7 @@ private:
 class WorldOverlayGPU {
 public:
 	WorldOverlayGPU();~WorldOverlayGPU();
-	std::unique_ptr<PreparedWorldOverlayFrame> Prepare(RuntimeLease& lease,const NativeWorldDrawFrame& frame,
+	std::unique_ptr<PreparedWorldOverlayFrame> Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& frame,
 		ScreenGPU& images,const PreparedScreenFrame* targetProducers,const WorldCamera& camera,
 		std::uint32_t width,std::uint32_t height,std::uint32_t logicalWidth,std::uint32_t logicalHeight,
 		MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,

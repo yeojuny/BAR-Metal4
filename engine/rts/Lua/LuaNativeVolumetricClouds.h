@@ -8,6 +8,7 @@ std::shared_ptr<const rendering::NativeVolumetricCloudFrame> EndFrame();
 std::shared_ptr<const rendering::NativeVolumetricCloudFrame> SnapshotPrefix(std::uint64_t cutoff);
 void AbortFrame() noexcept;
 void RetireCompletedFrame(std::uint64_t actualSourceDrawFrame);
+void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
 void Reset() noexcept;
 bool PushEntries(lua_State* L);
 }

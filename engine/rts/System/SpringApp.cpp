@@ -29,6 +29,9 @@
 
 #include "Rendering/GL/myGL.h"
 #include "System/SpringApp.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
+#endif
 #ifndef HEADLESS
 #include "aGui/Gui.h"
 #endif
@@ -911,12 +914,18 @@ void SpringApp::Reload(const std::string script)
  */
 bool SpringApp::Update()
 {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ rendering::metal4::NativeCPUPhaseScope cpuPhase(2,gs->frameNum);
+#endif
 	bool retc = true;
 	bool swap = true;
 
 	configHandler->Update();
 	globalRendering->UpdateWindow();
 	globalRendering->UpdateTimer();
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ cpuPhase.Mark(0);
+#endif
 
 	#if 0
 	if (activeController == nullptr)
@@ -928,13 +937,25 @@ bool SpringApp::Update()
 	#else
 	// sic; Update can set the controller to null
 	retc = (        activeController == nullptr || activeController->Update());
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ cpuPhase.Mark(1);
+#endif
 
 	auto lock = CLoadLock::GetUniqueLock();
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ cpuPhase.Mark(2);
+#endif
 	swap = (retc && activeController != nullptr && activeController->Draw());
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ cpuPhase.Mark(3);
+#endif
 	#endif
 
 	// always swap by default, not doing so can upset some drivers
 	globalRendering->SwapBuffers(swap, false);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ cpuPhase.Mark(4);cpuPhase.Counts(swap,globalRendering->active);
+#endif
 	return retc;
 }
 
@@ -970,18 +991,28 @@ int SpringApp::Run()
 			spring::exitCode = spring::EXIT_CODE_NOINIT;
 
 		while (!gu->globalQuit) {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ rendering::metal4::NativeCPUPhaseScope cpuLoop(1,gs->frameNum);
+#endif
 			Watchdog::ClearTimer(WDT_MAIN);
 			input.PushEvents();
 
 			// move to clear global data if a save is queued
 			ILoadSaveHandler::CreateSave(std::move(globalSaveFileData));
 
+
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ cpuLoop.Mark(0);
+#endif
 			if (gu->globalReload) {
 				// copy; reloadScript is cleared by ResetState
 				Reload(gameSetup->reloadScript);
 			} else {
 				gu->globalQuit = (!Update() || gu->globalQuit);
 			}
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ cpuLoop.Mark(1);
+#endif
 		}
 	} CATCH_SPRING_ERRORS
 

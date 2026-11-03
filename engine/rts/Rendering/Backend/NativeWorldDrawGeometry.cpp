@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeWorldDrawGeometry.h"
+#include "NativeWorldFillGeometry.h"
 #include "NativeWorldDrawRecorder.h"
 #include "NativeScreenLine.h"
 #include "NativeMultisampleLine.h"
@@ -263,6 +264,7 @@ static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const
 }
 NativeWorldRasterMesh BuildNativeWorldDrawGeometry(const NativeWorldDrawCommand& d,const std::array<double,4>& viewport,uint32_t width,uint32_t height,unsigned samples)
 {
+ Require(!IsWorldMatrixGPU(d.sourcePrimitive),"Typed GPU font cannot enter CPU clip/raster conversion");
 	auto mesh=BuildGeometry(d,viewport,width,height,false,samples);
 	if(d.primitive==NativeDrawPrimitive::Points || (samples>1&&(d.primitive==NativeDrawPrimitive::Lines||(d.primitive==NativeDrawPrimitive::Triangles&&(d.world.frontPolygonMode!=NativePolygonMode::Fill||d.world.backPolygonMode!=NativePolygonMode::Fill))))){
 		// Direct points need this at every sample count, including aliased

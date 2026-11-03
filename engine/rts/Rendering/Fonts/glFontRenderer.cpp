@@ -10,6 +10,7 @@
 
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Rendering/Backend/NativeUIRecorder.h"
+#include "Rendering/Backend/NativeFontRecycle169.h"
 #include <limits>
 #include <stdexcept>
 
@@ -47,6 +48,7 @@ public:
 		for (auto& batch: batches) {
 			if (batch.indices.empty())
 				continue;
+			rendering::fontRecycle169::ProducerGrowth(batch.growth169);
 			recorder.AppendFontTriangles(std::move(batch.vertices), std::move(batch.uv),
 				std::move(batch.indices), atlas, userDefinedBlending);
 		}
@@ -96,10 +98,8 @@ public:
 		stats[4] = pending[0].vertices.size(); stats[5] = pending[0].indices.size();
 	}
 private:
-	struct Batch {
-		std::vector<rendering::ScreenVertex> vertices;
-		std::vector<rendering::ScreenTexCoord> uv;
-		std::vector<uint32_t> indices;
+	struct Batch: rendering::fontRecycle169::Streams {
+		std::array<uint64_t,3> growth169{};
 	};
 	std::array<Batch, 2> pending;
 	std::shared_ptr<const rendering::ScreenTexture> atlas;
@@ -110,7 +110,9 @@ private:
 		auto& batch = pending[which];
 		if (batch.vertices.size() > std::numeric_limits<uint32_t>::max() - 4)
 			throw std::length_error("Native font vertex index overflow");
+		if (batch.Vacant()) rendering::fontRecycle169::Acquire(batch);
 		const uint32_t base = static_cast<uint32_t>(batch.vertices.size());
+		const auto vertexCapacity169=batch.vertices.capacity(),uvCapacity169=batch.uv.capacity(),indexCapacity169=batch.indices.capacity();
 		for (const auto* vertex: {&tl, &tr, &br, &bl}) {
 			batch.vertices.push_back({vertex->pos.x, vertex->pos.y, vertex->pos.z,
 				{vertex->c.r / 255.0f, vertex->c.g / 255.0f, vertex->c.b / 255.0f, vertex->c.a / 255.0f}});
@@ -118,6 +120,10 @@ private:
 		}
 		for (const uint32_t offset: {3u, 0u, 1u, 3u, 1u, 2u})
 			batch.indices.push_back(base + offset);
+		// Completed quads whose stream capacity grew, not allocation counts.
+		batch.growth169[0]+=batch.vertices.capacity()!=vertexCapacity169;
+		batch.growth169[1]+=batch.uv.capacity()!=uvCapacity169;
+		batch.growth169[2]+=batch.indices.capacity()!=indexCapacity169;
 	}
 };
 #endif

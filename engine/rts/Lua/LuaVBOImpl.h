@@ -13,7 +13,7 @@
 #include "Rendering/GL/myGL.h"
 #include "Rendering/Models/3DModelVAO.hpp"
 #ifdef RECOIL_METAL4_LIVE_SCENE
-#include "Rendering/Backend/NativeBufferData.h"
+#include "Rendering/Backend/NativeDirtyBufferSnapshot.h"
 #endif
 
 class VBO;
@@ -163,7 +163,7 @@ private:
 
 	void* bufferData;
 #ifdef RECOIL_METAL4_LIVE_SCENE
-	rendering::NativeBufferSnapshotSource nativeSnapshotSource;
+	rendering::NativeDirtyBufferSnapshotSource nativeSnapshotSource;
 	rendering::NativeBufferLayout MakeNativeLayout() const;
 #endif
 

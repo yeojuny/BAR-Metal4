@@ -21,6 +21,9 @@
 #include "Rendering/Backend/NativePostprocessRecorder.h"
 #include "Lua/LuaNativePostprocess.h"
 #include "Rendering/EngineBridge/NativeCUSSourceCapture.h"
+#include "Rendering/Backend/NativeCUSCPUReadScope.h"
+#include <chrono>
+#include <cstdlib>
 #include "Rendering/EngineBridge/NativeOpaqueModelCapture.h"
 #include "Rendering/EngineBridge/NativeLegacyMaterialSource.h"
 #include "Rendering/EngineBridge/NativeEngineModelProgramCapture.h"
@@ -128,6 +131,7 @@ namespace rendering::scene {
 namespace {
 
 struct Session {
+ std::optional<Metal4WorldPresentationResult> deferredFrame;
 	explicit Session(SDL_Window* window, uint32_t width, uint32_t height)
 		: requestedMSAA(globalRendering->msaaLevel)
 		, surface(AttachMetal4RendererSurface(window, MakeConfig(width, height)))
@@ -437,15 +441,30 @@ struct Session {
 
 std::unique_ptr<Session> session;
 
+void ApplyDeferredFrameReceipts()
+{
+ if(!session || !session->deferredFrame)return;
+ auto result=std::move(*session->deferredFrame);session->deferredFrame.reset();
+ if(!result.sourceFrameCompleted)throw std::logic_error("Deferred scene receipt is not GPU-completed");
+ if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
+ // Source ownership was transferred at submission; do not clear N+1 capture.
+ if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);
+ if(result.completedWaterUpdates[0])session->waterCapture.DidComplete(result.completedWaterUpdates[0],result.completedWaterUpdates[1],result.completedWaterUpdates[2]);
+ ui::GetRecorder().RetireSubmittedFrame(result.sourceDrawFrame);
+ LuaNativePostprocess::RetireCompletedFrame(result.completedPostprocessSerial);
+ LuaNativeVolumetricClouds::RetireCompletedFrame(result.sourceDrawFrame);
+}
 void RequireRetiredGPUWork()
 {
-	if (!session || !session->renderer || Metal4RendererCanSafelyDetachSurface())
-		return;
-	LOG_L(L_ERROR, "[Metal4Scene] GPU submission has not retired; refusing unsafe renderer/window teardown. Process restart is required");
-	std::terminate();
+ if(!session || !session->renderer)return;
+ if(Metal4RendererCanSafelyDetachSurface()){ApplyDeferredFrameReceipts();return;}
+ LOG_L(L_ERROR,"[Metal4Scene] GPU submission has not retired; refusing unsafe renderer/window teardown. Process restart is required");
+ std::terminate();
 }
 
 } // namespace
+
+void FinishPendingFrame() { RequireRetiredGPUWork(); }
 
 void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
 {
@@ -636,6 +655,9 @@ void HandleEvent(const SDL_Event& event)
 
 ui::NativeUIFrameRasterMapping GetUIFrameRasterMapping(const ScreenViewport& defaultViewport)
 {
+ static const bool captureOverlap=[] {const char* value=std::getenv("BAR_NATIVE_CAPTURE_OVERLAP");return !value||std::string_view(value)=="1";}();
+ if(!captureOverlap || (session && session->dynamicWaterCapture.Initialized()))RequireRetiredGPUWork();
+ else ApplyDeferredFrameReceipts(); // Apply only if an earlier safe boundary already drained N.
 	if (!session || !session->lastLogicalExtent[0] || !session->lastLogicalExtent[1])
 		throw std::runtime_error("Native UI raster mapping requires an observed window surface");
 	const auto observed = session->surface.Snapshot();
@@ -989,9 +1011,8 @@ std::shared_ptr<const NativeWaterSceneView> CaptureWaterView(NativeWaterScenePas
   actualModels=CaptureWaterOpaqueModels(pass,CurrentWaterSourceCamera());
   recorder.EndWorldStage();
  }catch(...){recorder.EndWorldStage();throw;}
- output->frame=session->capture.Capture(pass);
+  output->frame=session->capture.Capture(pass,{},actualModels);
  if(dynamicExtent&&pass==NativeWaterScenePass::Refraction)output->frame.viewCamera.viewport={0,0,int32_t(dynamicExtent),int32_t(dynamicExtent)};
- output->frame.opaqueModelFrame=std::move(actualModels);
  // Captured legacy refraction lighting retains the original temporary tint.
  // The consumer separately keeps pre-world GL4 UBO lighting/player eye.
  const bool reflected=pass==NativeWaterScenePass::Reflection;
@@ -1115,7 +1136,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 	// Game already applies the original inactive-window 30-second throttle.
 	// Its periodic cleanup must still run the engine particle Draw producers
 	// before Lua DrawWorld, even when no GPU drawable can be presented.
-	session->preparedFrame = session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending);
+	session->preparedFrame = session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels);
  auto& frame=*session->preparedFrame;
  frame.mainSampling=session->renderer->ActualMainSampling();
  frame.minSampleShadingRate=globalRendering->minSampleShadingRate;
@@ -1123,7 +1144,6 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  if(!session->mainGroundPending||session->mainGroundPending->sourceDrawFrame!=frame.sourceDrawFrame)
   throw std::logic_error("Original main ground boundary was not captured before this world draw");
  frame.mainGround=session->mainGroundPending; // Retain for the existing pre-Begin abort path too.
-	frame.opaqueModelFrame=std::move(actualOpaqueModels);
  frame.genesisCUSFrame=std::exchange(session->genesisSourcePending,{});
 	if (frame.opaqueModelFrame) {
 		// Source capture already owns every model color/depth publication.
@@ -1351,7 +1371,34 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 {
 	if (!session)
 		return {};
+ // The next captured CPU packet already owns immutable CUS inputs. Validate
+ // those reads while N may still execute, before the actual retirement below.
+ // The receipt contains no GPU resource and lives through the downstream Draw.
+ NativeCUSCPUReadScope cpuReadScope;
+ static const bool measureCPU=[] {const char* p=std::getenv("BAR_NATIVE_RESOURCE_PROBE_FILE");return p&&p[0]=='/';}();
+ const auto cpuBegin=measureCPU?std::chrono::steady_clock::now():std::chrono::steady_clock::time_point{};
+ if(presentWorld&&session->preparedFrame){
+  const auto& captured=*session->preparedFrame;
+  const auto primeModels=[&](const std::shared_ptr<const NativeOpaqueModelFrame>& models){
+   if(!models)return;for(const auto& pass:models->passes){cpuReadScope.Prime(pass.lua);if(pass.mrt)cpuReadScope.Prime(pass.mrt->lua);}
+  };
+  primeModels(captured.opaqueModelFrame);for(const auto& models:captured.alphaModelFrames)primeModels(models);
+  if(captured.originalShadow)cpuReadScope.Prime(captured.originalShadow->cus);
+ }
+ if(measureCPU)cpuReadScope.SetPreparationNanoseconds(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-cpuBegin).count());
+ // This owner pins N+1's exact source and immutable shared geometry across
+ // retirement of N. No command, residency, producer image or published
+ // completion is touched until the existing retirement boundary below.
+ static const bool prepareOverlap=[] {const char* value=std::getenv("BAR_NATIVE_PREPARE_OVERLAP");return !value||std::string_view(value)=="1";}();
+ const auto independentResources=(prepareOverlap&&presentWorld&&session->preparedFrame&&session->renderer)?
+  session->renderer->PrepareIndependentResources(*session->preparedFrame):std::shared_ptr<const void>{};
 	// Consume even if the window became hidden or its drawable is unavailable.
+ // CPU capture is complete. Retire N before touching shared GPU preparation
+ // caches/targets for N+1. Completion identifies only N's producer records.
+ static const bool prepare137=[] {const char* value=std::getenv("BAR_NATIVE_PREPARE137");return !value||std::string_view(value)=="1";}();
+ const bool overlapPreparation=prepare137&&presentWorld&&session->preparedFrame&&session->renderer&&
+  !session->renderer->HasScreenContinuation()&&session->surface.Snapshot().CanPresent();
+ if(!overlapPreparation)RequireRetiredGPUWork();
 	// A later presentation must use its own engine/Lua world callback ordering.
 	struct LegacyCopyExit {~LegacyCopyExit(){session->legacyWaterCapture.AbortUncompletedRefraction();}} legacyCopyExit;
 	auto prepared = std::move(session->preparedFrame);
@@ -1385,6 +1432,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		((prepared->legacyWater&&prepared->legacyWater->refraction) || prepared->originalShadow || (prepared->mainGround&&prepared->mainGround->ground&&prepared->mainGround->ground->mapMRT) || (prepared->opaqueModelFrame&&prepared->opaqueModelFrame->HasWriters()) || (prepared->shieldDepthFrame && prepared->shieldDepthFrame->HasWriters()) || session->renderer->HasPendingEnvironmentSource() || HasNativeDeferredPostprocessWrites(*prepared,luaBloomFrame)))
 		sourcePlan=NativeSourceSubmission::OffscreenSource;
 	if (sourcePlan==NativeSourceSubmission::IndependentTargets){
+  if(overlapPreparation)RequireRetiredGPUWork();
 		session->renderer->AbortShieldPublications(prepared?prepared->opaqueModelFrame:nullptr,session->actualShadowSourcePending,prepared?prepared->mainGround:session->mainGroundPending);session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();return submitTargets();
 	}
 
@@ -1424,8 +1472,30 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	options.screenUI = screenUI;
 	options.presentWorld=sourcePlan==NativeSourceSubmission::PresentWorld;
 	options.sourceLogicalExtent=session->lastLogicalExtent;
-	if(session->renderer->HasScreenContinuation())SetReadbackSubmissionReceipts(options);
-	const auto result = session->renderer->Draw(frame, options);
+ if(session->renderer->HasScreenContinuation())SetReadbackSubmissionReceipts(options);
+ static const bool overlap=[] {const char* value=std::getenv("BAR_NATIVE_FRAME_OVERLAP");return !value||std::string_view(value)=="1";}();
+ if(overlap&&options.presentWorld&&frame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
+  const auto expectedDraw=frame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
+  options.deferredCompleted=[owner=session.get(),expectedDraw,expectedPost](const Metal4WorldPresentationResult& completed) {
+   if(session.get()!=owner || owner->deferredFrame || !completed.sourceFrameCompleted || completed.sourceDrawFrame!=expectedDraw || completed.completedPostprocessSerial!=expectedPost)
+    throw std::logic_error("Deferred completion differs from its owned original source frame");
+   owner->deferredFrame=completed;
+  };
+ }
+ const auto result = overlapPreparation?
+  session->renderer->DrawPreparingWhilePending(frame,options,[owner=session.get()]{
+   if(session.get()!=owner)throw std::logic_error("Preparation retirement lost its scene owner");
+   ApplyDeferredFrameReceipts();
+  }):session->renderer->Draw(frame,options);
+ // A hidden/unavailable surface may return before opening a runtime lease.
+ if(!result.presented&&overlapPreparation)RequireRetiredGPUWork();
+ if(options.deferredCompleted && result.presented && !result.sourceFrameCompleted) {
+  ui::GetRecorder().HoldSubmittedFrame(frame.sourceDrawFrame);
+  LuaNativePostprocess::GetRecorder().HoldSubmittedFrame(screenUI->postprocess->serial);
+  LuaNativeVolumetricClouds::HoldSubmittedFrame(frame.sourceDrawFrame);
+  // The runtime ticket owns the immutable frame graph until true completion.
+  session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();
+ }
  if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  if(result.sourceFrameCompleted){session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();}
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);

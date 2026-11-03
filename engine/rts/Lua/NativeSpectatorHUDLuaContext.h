@@ -6,6 +6,7 @@
 #include "lib/sol2/sol.hpp"
 #include "Rendering/Backend/NativeSpectatorHUDProgram.h"
 #include "Rendering/Backend/NativeUIRecorder.h"
+#include "Rendering/Backend/NativeScreenGeometry.h"
 #include <cstring>
 #include <stdexcept>
 #include <limits>
@@ -23,10 +24,17 @@ inline sol::table Create(lua_State* L)
 {
  Require(!CLuaHandle::GetHandleSynced(L)&&targetPriorityProgram::Available(),"Spectator HUD requires its actual compiled screen program");
  sol::state_view lua(L);auto context=lua.create_table();auto owner=std::make_shared<Owner>();
+ // sol2 re-registration clears the shared metatables of live buffers.
+ // Bind the owner-independent methods once per Lua state; context owners stay separate.
+ auto registry=lua.registry();
+ if(!registry["NativeSpectatorHUDBufferRegistered"].get_or(false)) {
  auto type=context.new_usertype<Buffer>("SpectatorHUDBuffer",sol::no_constructor);
  Bind(type,"Define",[](Buffer& b,int count,sol::optional<sol::object> layout){Require(!b.deleted,"Spectator HUD buffer deleted");b.value->Define(count,layout);});
  Bind(type,"Upload",[](Buffer& b,const sol::stack_table& values,sol::optional<int> attribute,sol::optional<int> offset,sol::optional<int> first,sol::optional<int> last){Require(!b.deleted,"Spectator HUD buffer deleted");return b.value->Upload(values,attribute,offset,first,last);});
  Bind(type,"Delete",[](Buffer& b){b.value->Delete();b.deleted=true;});context.set("SpectatorHUDBuffer",sol::lua_nil);
+ registry.set("NativeSpectatorHUDBufferRegistered",true);
+ }
+
  Bind(context,"GetVBO",[L,owner](GLenum target,bool frequent){Require(target==GL_ARRAY_BUFFER||target==GL_ELEMENT_ARRAY_BUFFER,"Spectator HUD original buffer target differs");auto b=std::make_shared<Buffer>();b->owner=owner;b->value=std::make_shared<LuaVBOImpl>(target,frequent);CLuaHandle::GetActiveVBOs(L).luaVBOs.emplace_back(b->value);return b;});
  Bind(context,"ValidateProgram",[owner](const sol::table& params,const std::string& name,const std::string& engine){
   Require(targetPriorityProgram::Available()&&name=="spectator_hud","Unknown original Spectator HUD program");
@@ -52,16 +60,11 @@ inline sol::table Create(lua_State* L)
   const auto& layout=indices->layout;Require(layout.kind==NativeBufferKind::Index&&layout.stride==4&&layout.attributes.size()==1&&layout.attributes[0].scalarType==NativeScalarType::UInt32,"Spectator HUD original uint index stream differs");
   Require(size_t(count)<=layout.elements&&size_t(instances)<=knobs->layout.elements,"Spectator HUD original range exceeds buffer");
   Require(!instances||size_t(count)<=std::numeric_limits<uint32_t>::max()/size_t(instances),"Spectator HUD triangle count overflow");
-  std::vector<ScreenVertex> vertices;std::vector<ScreenTexCoord> clipW;const size_t total=size_t(count)*size_t(instances);vertices.reserve(total);clipW.reserve(total);
-  for(int n=0;n<instances;++n){std::array<float,4> bias{},color{};std::memcpy(bias.data(),knobs->bytes.data()+size_t(n)*32,16);std::memcpy(color.data(),knobs->bytes.data()+size_t(n)*32+16,16);
-   for(int j=0;j<count;++j){uint32_t id;std::memcpy(&id,indices->bytes.data()+size_t(j)*4,4);Require(id<positions->layout.elements,"Spectator HUD index outside original vertex stream");
-    std::array<float,4> pos;std::memcpy(pos.data(),positions->bytes.data()+size_t(id)*16,16);for(unsigned k=0;k<4;++k)pos[k]+=bias[k];
-    vertices.push_back({pos[0],pos[1],pos[2],color});clipW.push_back({pos[3],0,0,0});
-   }
-  }
-  // Freeze the exact range now: later partial uploads, soft reset or Delete
-  // cannot change either the outline draw or the following inner draw.
-  ui::GetRecorder().AppendSpectatorHUDTriangles(std::move(vertices),std::move(clipW));
+  auto packet=std::make_shared<NativeScreenGeometry>();packet->kind=NativeScreenGeometryKind::SpectatorHUD;
+  packet->vertices=positions;packet->instances=knobs;packet->indices=indices;packet->count=uint32_t(count);packet->instanceCount=uint32_t(instances);
+  // Retain exact immutable versions; subsequent uploads/reset/Delete cannot
+  // alter either the outline or the following inner draw.
+  ui::GetRecorder().AppendSpectatorHUDGeometry(std::move(packet));
  });
  return context;
 }

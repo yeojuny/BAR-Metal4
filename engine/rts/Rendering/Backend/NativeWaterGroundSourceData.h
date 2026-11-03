@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "NativeTerrainSourceData.h"
+#include "NativeTerrainMeshSnapshot.h"
 #include "NativeWorldDrawData.h"
 #include "WorldFrameData.h"
 #include <array>
@@ -43,12 +44,7 @@ struct NativeGroundSourceSpan {
 // Copied at the existing Basic/ROAM actual submit, like the MAP shadow
 // producer. This is the original selected mesh, not a generated SMT tile grid.
 // Local coordinates and exact triangle order survive to the same frame/lease.
-struct NativeTerrainMeshGeometry {
-	bool indexed=true;
-	std::vector<std::array<float,3>> positions;
-	std::vector<std::array<uint8_t,4>> colors; // Original normalized UByte border attribute; empty for forward.
-	std::vector<uint32_t> indices;
-};
+// Geometry storage is shared with the original ROAM shadow producer.
 
 struct NativeTerrainSquareDraw {
 	uint64_t sequence=0;
@@ -56,7 +52,9 @@ struct NativeTerrainSquareDraw {
 	NativeTerrainMeshSource mesh=NativeTerrainMeshSource::Basic;
 	uint64_t originalIndexCount=0; // Provenance of the actual nonempty submission.
 	bool border=false,deferred=false,composite=false;
-	NativeTerrainMeshGeometry geometry;
+	NativeTerrainMeshGeometry geometry; // Basic, border and composite fallback.
+ std::shared_ptr<const NativeTerrainMeshSnapshot> meshSnapshot;
+ const NativeTerrainMeshGeometry& Geometry()const noexcept{return meshSnapshot?meshSnapshot->Geometry():geometry;}
 	NativeTerrainProgramSnapshot program;
 	NativeTerrainImageSnapshot images;
 	NativeWorldDrawState world;

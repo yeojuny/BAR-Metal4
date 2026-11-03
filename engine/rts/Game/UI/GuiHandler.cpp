@@ -3425,11 +3425,11 @@ void CGuiHandler::DrawOptionLEDs(const IconInfo& icon)
 /******************************************************************************/
 /******************************************************************************/
 
-static inline void DrawSensorRange(int radius, const float* color, const float3& pos)
+static inline void DrawSensorRange(int radius, const float* color, const float3& pos, uint32_t segments = 40)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
 	if (radius > 0) {
-		glSurfaceCircle(pos, (float)radius, { color }, 40);
+		glSurfaceCircle(pos, (float)radius, { color }, segments);
 	}
 }
 
@@ -3866,8 +3866,8 @@ void CGuiHandler::DrawNativeMapRanges()
 		for (const int id: selectedUnitsHandler.selectedUnits) {
 			const CUnit* unit = unitHandler.GetUnit(id);
 			const auto radii = SelectedSensorRadii(unit);
-			if (radii[0] > 0) DrawSensorRange(int(radii[0]), rendering::SelectedSensorColor(cmdColors.rangeRadar).data(), unit->pos);
-			if (radii[1] > 0) DrawSensorRange(int(radii[1]), rendering::SelectedSensorColor(cmdColors.rangeSonar).data(), unit->pos);
+			if (radii[0] > 0) DrawSensorRange(int(radii[0]), rendering::SelectedSensorColor(cmdColors.rangeRadar).data(), unit->pos, 128);
+			if (radii[1] > 0) DrawSensorRange(int(radii[1]), rendering::SelectedSensorColor(cmdColors.rangeSonar).data(), unit->pos, 128);
 		}
 	}
 #endif

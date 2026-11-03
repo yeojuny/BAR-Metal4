@@ -1,11 +1,25 @@
+#include "Metal4PublishedRequestCache.h"
+#include "Metal4RetiredArguments.h"
+#include "Metal4ModelUpload146.h"
+#include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4CUSSource.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
 #include "NativeCUSGeneratedPrograms.h"
 #include "Metal4NativeEffectState.h"
+#include "Metal4ModelSetterProbe176.h"
 #include "Rendering/Backend/NativeCUSSourceIdentity.h"
 #include "Rendering/Backend/NativeCUSRenderInputs.h"
+#include "Rendering/Backend/NativeCUSCPUReadScope.h"
+#include "Rendering/Backend/NativeCUSDrawRuns147.h"
+#include "Rendering/Backend/NativePreparedGeometry154.h"
+#include "Metal4ModelGeometry155.h"
+#include "Metal4ModelMaterial156.h"
+#include "Metal4CUSIdentityChannels194.h"
+#include "Rendering/Backend/NativePreparationTrace.h"
+#include "Rendering/Backend/NativeCUSPublishedReuse.h"
 #include <cstring>
+#include <bit>
 #include <map>
 #include <set>
 #include <unordered_map>
@@ -29,7 +43,7 @@ id<MTLBuffer> Allocate(RuntimeLease& lease,size_t bytes)
  Require(bytes&&bytes<=lease.Device().maxBufferLength,"CUS original buffer exceeds actual native device capacity");
  auto b=[lease.Device()newBufferWithLength:bytes options:MTLResourceStorageModeShared];Require(b!=nil,"Cannot allocate CUS original buffer");lease.AddAllocation(b);return b;
 }
-id<MTLBuffer> Upload(RuntimeLease& lease,const void* data,size_t bytes){auto b=Allocate(lease,bytes);std::memcpy(b.contents,data,bytes);return b;}
+#include "Metal4CUSUniformUpload.inc"
 ScreenAlphaCompare Compare(unsigned x){Require(x>=0x0200&&x<=0x0207,"CUS original depth compare differs");return ScreenAlphaCompare(x-0x0200);}
 NativeWorldDrawState WorldState(const NativeCUSSourceDraw& d)
 {
@@ -67,20 +81,58 @@ const NativeTextureSampling& Sampling(const NativeCUSTextureBinding& b)
 }
 
 struct PreparedCUSSource::Impl {
- struct Object {__strong id<MTLBuffer> vertices=nil,indices=nil;uint32_t count=0,instance=0;};
+ RetiredArgumentOwners argumentOwners;
+ ModelUploadOwners146 uniformOwners;
+ using Geometry=ModelGeometrySlice155;
+ struct Object {uint32_t geometry=0,instance=0,instances=1;};
  struct Draw {
   uint64_t sequence=0;__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;__strong id<MTL4ArgumentTable> table=nil;
   NativeWorldDrawState state;effectstate::Raster raster;std::vector<Object> objects;
+  __strong id<MTLBuffer> material156=nil;
   std::vector<CUSSourceImage> images;
   float shadowPolygonOffsetUnitsScale=1.f;
   bool encoded=false;
  };
- std::shared_ptr<const NativeCUSSourceFrame> owner;std::vector<Draw> draws;bool dependenciesEncoded=false,completed=false;
+ std::vector<const CUSSourceImage*> inspection160;std::vector<id<MTLTexture>> sampledRoots160;
+ uint64_t indexedDraws160=0;bool inspectionReady160=false;
+ std::unique_ptr<model176::Probe> setterProbe176;
+ std::shared_ptr<const NativeCUSSourceFrame> owner;std::vector<Geometry> geometry;std::vector<Draw> draws;bool dependenciesEncoded=false,completed=false;
 };
 PreparedCUSSource::PreparedCUSSource():impl(std::make_unique<Impl>()){}
 PreparedCUSSource::~PreparedCUSSource()=default;
 size_t PreparedCUSSource::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedCUSSource::SequenceAt(size_t n)const{return impl->draws.at(n).sequence;}
+void PreparedCUSSource::PreparePassInspection160()
+{
+ Require(!impl->inspectionReady160&&!impl->dependenciesEncoded&&!impl->completed,"CUS pass inspection prepared after use or twice");
+ std::set<const void*> seen,roots;
+ for(const auto& draw:impl->draws){
+  impl->indexedDraws160+=draw.objects.size();
+  for(const auto& image:draw.images){
+   if(seen.insert(image.owner.get()).second&&image.encodeDependencies)impl->inspection160.push_back(&image);
+   const auto root=SourceTextureRoot160(image.texture);
+   if(root&&roots.insert((__bridge const void*)root).second)impl->sampledRoots160.push_back(root);
+  }
+ }
+ impl->inspectionReady160=true;
+}
+ModelPassDependencyReport160 PreparedCUSSource::InspectDependencies160(MTL4RenderPassDescriptor* pass)const
+{
+ Require(pass&&impl->inspectionReady160&&!impl->dependenciesEncoded&&!impl->completed,"CUS pass query is outside its prepared dependency phase");
+ ModelPassDependencyReport160 report;report.indexedDraws=impl->indexedDraws160;
+ const auto color=SourceTextureRoot160(pass.colorAttachments[0].texture);
+ const auto depth=SourceTextureRoot160(pass.depthAttachment.texture),stencil=SourceTextureRoot160(pass.stencilAttachment.texture);
+ for(const auto root:impl->sampledRoots160)if(root==color||root==depth||root==stencil)report.Add({SourceDependencyWork160::Unknown,false});
+ for(const auto* image:impl->inspection160)report.Add(InspectSourceDependency160(*image));
+ return report;
+}
+void PreparedCUSSource::AcceptDependenciesWithoutCommands160()
+{
+ Require(impl->inspectionReady160&&!impl->dependenciesEncoded&&!impl->completed,"CUS no-command dependency phase repeated or retired");
+ // Only PreparedOpaqueModelSource calls this, immediately after every child
+ // inspection succeeds. Do not invoke a producer callback or mark completion.
+ impl->dependenciesEncoded=true;
+}
 void PreparedCUSSource::EncodeDependencies(id<MTL4CommandBuffer> command)
 {
  Require(command!=nil&&!impl->dependenciesEncoded,"CUS source dependencies repeated or missing command");
@@ -94,14 +146,25 @@ void PreparedCUSSource::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder
  Require(!d.encoded,"CUS source draw was already encoded");
  for(const auto& image:d.images)if(image.requireReadable)image.requireReadable();
  effectstate::RasterState(encoder,d.state,d.raster);
- if(d.state.polygonOffset)[encoder setDepthBias:d.state.offsetUnits*d.shadowPolygonOffsetUnitsScale slopeScale:d.state.offsetFactor clamp:0];
- [encoder setCullMode:!d.state.cullEnabled?MTLCullModeNone:d.state.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack];
- [encoder setTriangleFillMode:d.state.frontPolygonMode==NativePolygonMode::Line?MTLTriangleFillModeLines:MTLTriangleFillModeFill];
+ // RasterState set the unscaled bias, no culling and fill on this encoder.
+ const float resolvedBias=d.state.polygonOffset?d.state.offsetUnits*d.shadowPolygonOffsetUnitsScale:0.f;
+ const bool scaledBias=d.state.polygonOffset && std::bit_cast<uint32_t>(resolvedBias)!=std::bit_cast<uint32_t>(d.state.offsetUnits);
+ const bool wire=d.state.frontPolygonMode==NativePolygonMode::Line;
+ if(scaledBias)[encoder setDepthBias:resolvedBias slopeScale:d.state.offsetFactor clamp:0];
+ if(d.state.cullEnabled)[encoder setCullMode:d.state.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack];
+ if(wire)[encoder setTriangleFillMode:MTLTriangleFillModeLines];
  [encoder setRenderPipelineState:d.pipeline];[encoder setDepthStencilState:d.depth];
+ MTLGPUAddress boundGeometry155=0;
  for(const auto& object:d.objects){
-  [d.table setAddress:object.vertices.gpuAddress atIndex:0];[encoder setArgumentTable:d.table atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-  [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:object.count indexType:MTLIndexTypeUInt32 indexBuffer:object.indices.gpuAddress indexBufferLength:object.indices.length instanceCount:1 baseVertex:0 baseInstance:object.instance];
+  const auto& model=impl->geometry[object.geometry];
+  if(boundGeometry155!=model.vertexAddress){
+   [d.table setAddress:model.vertexAddress atIndex:0];[encoder setArgumentTable:d.table atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+   boundGeometry155=model.vertexAddress;
+  }
+  [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:model.count indexType:MTLIndexTypeUInt32 indexBuffer:model.indexAddress indexBufferLength:model.indexLength instanceCount:object.instances baseVertex:model.baseVertex baseInstance:object.instance];
  }
+ if(impl->setterProbe176)impl->setterProbe176->Draw(model176::Cull|model176::Fill|(d.state.polygonOffset?model176::Bias:0u),
+  (d.state.cullEnabled?model176::Cull:0u)|(wire?model176::Fill:0u)|(scaledBias?model176::Bias:0u),d.objects.size());
  d.encoded=true;
 }
 void PreparedCUSSource::DidComplete()
@@ -109,32 +172,51 @@ void PreparedCUSSource::DidComplete()
  Require(!impl->completed&&impl->dependenciesEncoded&&std::all_of(impl->draws.begin(),impl->draws.end(),[](const auto& d){return d.encoded;}),"CUS source cannot complete an unencoded/repeated submission");
  std::set<const void*> seen;
  for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;
+ if(impl->setterProbe176)impl->setterProbe176->Report();
 }
 
 struct CUSSourceGPU::Impl {
+ RetiredArguments argumentPool;
+ ModelUploadPool146 uniformPool;bool reported146=false,reported147=false;
+ uint64_t preparation154=0;
+ bool reported155=false;
+ ModelMaterials156 materials156;bool reportedMaterial156=false;
+ NativeCUSGeometryReadCache geometryReads;
  std::map<const NativeCUSGeneratedProgram*,std::shared_ptr<const Libraries>> libraries;
+ std::map<const NativeCUSGeneratedProgram*,id<MTLLibrary>> identityFragments194;
  std::map<std::vector<uint64_t>,id<MTLRenderPipelineState>> pipelines;
  std::unordered_map<const void*,std::weak_ptr<const Program>> programs;
  struct Buffer {std::weak_ptr<const void> owner;__strong id<MTLBuffer> value=nil;};
- struct Geometry {std::weak_ptr<const WorldModel> owner;__strong id<MTLBuffer> vertices=nil,indices=nil;uint32_t count=0;};
+ struct Geometry {std::weak_ptr<const WorldModel> owner;ModelGeometrySlice155 gpu;size_t logicalBytes=0;NativePreparedGeometry154 prepared;};
  std::unordered_map<const void*,Buffer> buffers;std::unordered_map<const WorldModel*,Geometry> geometry;
  std::shared_ptr<const Libraries> Library(RuntimeLease& lease,const NativeCUSGeneratedProgram& p,double& ms)
  {
   if(auto it=libraries.find(&p);it!=libraries.end())return it->second;
   auto out=std::make_shared<Libraries>();const auto start=Clock::now();
   for(bool vertex:{true,false}){
-   auto d=[MTL4LibraryDescriptor new];d.name=String(std::string("Original CUS ")+p.family+" pass"+std::to_string(p.originalPass));d.source=String(vertex?p.vertex.metalSource:p.fragment.metalSource);
+   auto d=[MTL4LibraryDescriptor new];d.name=String(std::string("Original CUS ")+p.family+" pass"+std::to_string(p.originalPass));d.source=String(vertex?std::string(p.vertex.metalSource):ModelMaterialFragment156(p.fragment.metalSource,p.fragment.textureMask));
    auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;d.options=options;
    NSError* error=nil;auto library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile full original CUS native stage: "+Error(error));
    if(vertex)out->vertex=library;else out->fragment=library;
   }
   ms+=Milliseconds(start);libraries.emplace(&p,out);return out;
  }
- id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const Program& p,const CUSSourceTarget& target,const ScreenBlendState& blend,const std::array<bool,4>& mask,bool validation,double& ms,bool coverage=false)
+ id<MTLLibrary> IdentityFragment194(RuntimeLease& lease,const NativeCUSGeneratedProgram& p,double& ms)
  {
-  auto key=PipelineKey(p.generated,target,blend,mask,validation);key.push_back(coverage);key.push_back(target.combinedColor);key.push_back(lease.SampleShadingEnabled(target.samples));if(auto it=pipelines.find(key);it!=pipelines.end())return it->second;
+  if(auto it=identityFragments194.find(&p);it!=identityFragments194.end())return it->second;
+  const auto start=Clock::now();auto d=[MTL4LibraryDescriptor new];
+  d.name=String(std::string("Original CUS identity channels194 ")+p.family+" pass"+std::to_string(p.originalPass));
+  d.source=String(NativeCUSIdentityFragment194(ModelMaterialFragment156(p.fragment.metalSource,p.fragment.textureMask),p.fragment.textureMask));
+  auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;d.options=options;
+  NSError* error=nil;auto library=lease.NewLibrary(d,&error);Require(library,"Cannot compile exact CUS identity channels194: "+Error(error));
+  identityFragments194.emplace(&p,library);ms+=Milliseconds(start);return library;
+ }
+ id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const Program& p,const CUSSourceTarget& target,const ScreenBlendState& blend,const std::array<bool,4>& mask,bool validation,double& ms,bool coverage=false,bool identityChannels194=false)
+ {
+  auto key=PipelineKey(p.generated,target,blend,mask,validation);key.push_back(coverage);key.push_back(target.combinedColor);key.push_back(lease.SampleShadingEnabled(target.samples));key.push_back(identityChannels194);if(auto it=pipelines.find(key);it!=pipelines.end()){if(identityChannels194)lease.Retain(identityFragments194.at(p.generated));return it->second;}
+  auto fragmentLibrary=identityChannels194?IdentityFragment194(lease,*p.generated,ms):p.libraries->fragment;
   const auto start=Clock::now();auto d=[MTL4RenderPipelineDescriptor new];auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];
-  v.library=p.libraries->vertex;v.name=@"NativeCUSVertex";f.library=p.libraries->fragment;f.name=@"NativeCUSFragment";
+  v.library=p.libraries->vertex;v.name=@"NativeCUSVertex";f.library=fragmentLibrary;f.name=@"NativeCUSFragment";lease.Retain(f.library);
   d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.rasterSampleCount=target.samples;d.alphaToCoverageState=coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
   auto layout=[MTLVertexDescriptor vertexDescriptor];
   for(unsigned n=0;n<4;++n){layout.attributes[n].format=MTLVertexFormatFloat3;layout.attributes[n].offset=n*12;layout.attributes[n].bufferIndex=0;}
@@ -159,28 +241,33 @@ struct CUSSourceGPU::Impl {
  }
  id<MTLBuffer> Published(RuntimeLease& lease,std::shared_ptr<const NativeCUSPublishedBuffer> source)
  {
-  return Cached(lease,source,source->capacityElements*source->stride,[&](uint8_t* dst){
-   if(ModelTrace().window)++ModelTrace().publishedUploads;
-   for(const auto& range:NativeCUSObservedRanges(*source))for(size_t offset=range.offset;offset<range.offset+range.size;){
-    const size_t page=offset/NativeCUSPublishedPage::Bytes,local=offset%NativeCUSPublishedPage::Bytes;
-    const size_t bytes=std::min(range.offset+range.size-offset,NativeCUSPublishedPage::Bytes-local);
-    std::memcpy(dst+offset,source->pages.at(page)->bytes.data()+local,bytes);offset+=bytes;
-    if(ModelTrace().window)ModelTrace().publishedBytes+=bytes;
-   }
-  });
- }
- Geometry& Model(RuntimeLease& lease,std::shared_ptr<const WorldModel> source)
+  PublicationProbe publicationProbe(lease,source,0);
+  Require(bool(source),"CUS published buffer has no immutable owner");
+  Require(source->kind==NativeCUSPublishedKind::Transforms||source->kind==NativeCUSPublishedKind::ModelUniforms,"CUS published buffer kind differs");
+  PublishedUploadStats stats;
+  auto shared=SharePublishedRequest(lease,source,publicationProbe,ModelTrace().window?&stats:nullptr);
+  if(ModelTrace().window){auto& t=ModelTrace();t.allocations+=stats.allocations;t.allocationBytes+=stats.allocatedBytes;t.publishedUploads+=stats.uploads;t.publishedBytes+=stats.copiedBytes;t.cacheHits+=stats.hits;}
+  publicationProbe.Finish(shared);
+  return shared;
+}
+ template<class Table>
+ uint32_t Model(RuntimeLease& lease,const std::shared_ptr<const WorldModel>& source,uint64_t generation,Table& prepared,ModelGeometryBatch155& batch)
  {
-  auto& item=geometry[source.get()];if(item.owner.expired()){
-   auto data=BuildNativeCUSRenderGeometry(source);Require(!data.vertices.empty()&&!data.indices.empty(),"CUS submitted original model has no indexed geometry");
-   auto vertices=Upload(lease,data.vertices.data(),data.vertices.size()*sizeof(NativeCUSRenderVertex));auto indices=Upload(lease,data.indices.data(),data.indices.size()*4);
-   item={source,vertices,indices,uint32_t(data.indices.size())};
-  }else{lease.AddAllocation(item.vertices);lease.AddAllocation(item.indices);}return item;
+  auto& item=geometry[source.get()];
+  return item.prepared.Resolve(generation,prepared,[&]{
+   if(item.owner.expired()){
+    auto data=BuildNativeCUSRenderGeometry(source);Require(!data.vertices.empty()&&!data.indices.empty(),"CUS submitted original model has no indexed geometry");
+    ModelGeometrySlice155 pending;pending.count=uint32_t(data.indices.size());
+    item.logicalBytes=data.vertices.size()*sizeof(NativeCUSRenderVertex)+data.indices.size()*4;
+    batch.Add(uint32_t(prepared.size()),std::move(data));return pending;
+   }
+   lease.AddAllocation(item.gpu.storage);return item.gpu;
+  });
  }
 };
 CUSSourceGPU::CUSSourceGPU():impl(std::make_unique<Impl>()){}
 CUSSourceGPU::~CUSSourceGPU()=default;
-void CUSSourceGPU::ClearResources(){impl->buffers.clear();impl->geometry.clear();std::erase_if(impl->programs,[](const auto& x){return x.second.expired();});}
+void CUSSourceGPU::ClearResources(){impl->materials156.Clear();impl->argumentPool.Clear();impl->geometryReads.Clear();impl->buffers.clear();impl->geometry.clear();std::erase_if(impl->programs,[](const auto& x){return x.second.expired();});}
 std::shared_ptr<const NativeCUSProgramConsumer> CUSSourceGPU::LinkOriginalStages(RuntimeLease& lease,const NativeCUSProgramSource& input,double& ms)
 {
  auto source=std::make_shared<NativeCUSProgramSource>(input);const auto identity=ValidateNativeCUSProgramSource(*source);
@@ -208,7 +295,7 @@ std::shared_ptr<const NativeCUSProgramConsumer> CUSSourceGPU::CompileProgram(Run
 std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeCUSSourceFrame> source,
  const CUSSourceTarget& target,const TextureProvider& images,bool validation,double& ms)
 {
- if(!source||source->draws.empty())return {};
+ if(!source||source->draws.empty())return {};impl->argumentPool.BeginBatch(lease);impl->materials156.BeginBatch(lease);
  auto& trace=ModelTrace();trace.window=TraceFrame(*source);
  struct TraceEnd {~TraceEnd(){ModelTrace().window=false;}} traceEnd;
  const bool sampled=trace.window;const auto prepareStart=sampled?TraceClock::now():TraceClock::time_point{};
@@ -216,7 +303,18 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
  trace.allocations=trace.allocationBytes=trace.cacheHits=trace.publishedUploads=trace.publishedBytes=0;
  Require(bool(images)&&target.width&&target.height&&target.logicalWidth&&target.logicalHeight,"CUS original target/resource provider is incomplete");
  std::erase_if(impl->buffers,[](const auto& x){return x.second.owner.expired();});std::erase_if(impl->geometry,[](const auto& x){return x.second.owner.expired();});
+ impl->geometryReads.Prune();
  auto out=std::unique_ptr<PreparedCUSSource>(new PreparedCUSSource);out->impl->owner=source;
+ out->impl->setterProbe176=model176::Probe::Create(source->sourceDrawFrame,target.shadowPolygonOffsetUnitsScale==2.f?"cus_shadow_scale2":"cus");
+ const auto preparation154=NextNativePreparation154(impl->preparation154);
+ ModelGeometryBatch155 geometryBatch155(lease.Device().maxBufferLength,[&](size_t bytes){return Allocate(lease,bytes);},
+  [&](const auto& owner,uint32_t index,const ModelGeometrySlice155& slice){
+   auto& cached=impl->geometry.at(owner.get());cached.owner=owner;cached.gpu=slice;
+   out->impl->geometry.at(index)=slice;
+  });
+  impl->uniformPool.BeginBatch(lease);ModelUploadArena146 uniformArena(impl->uniformPool,out->impl->uniformOwners);
+ uint64_t originalObjects147=0,preparedRuns147=0;
+ size_t priorResourceSetters156=0,materialBindings156=0;
  for(const auto& d:source->draws){
   ValidateNativeCUSSourceDraw(d);auto state=WorldState(d);const auto blend=BlendState(d);
   if(state.cullEnabled&&state.cull==NativeWorldCull::FrontAndBack)continue;
@@ -224,7 +322,11 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   Require(state.frontPolygonMode==state.backPolygonMode&&state.frontPolygonMode!=NativePolygonMode::Point,"CUS original polygon raster requires a matching native consumer");
   Require(!state.inheritedClipPlane,"CUS shader uses its own original clipDistance0; a generic inherited plane cannot substitute for it");
   const auto validationStart=sampled?TraceClock::now():TraceClock::time_point{};
-  const auto reads=ValidateNativeCUSRenderReads(d);
+  NativeCUSRenderReadSet fallbackReads;
+  const auto* preparedReads=NativeCUSCPUReadScope::Find(d);
+  if(!preparedReads)fallbackReads=ValidateNativeCUSRenderReads(d,impl->geometryReads);
+  const auto& reads=preparedReads?*preparedReads:fallbackReads;
+  CountPreparationTrace(preparedReads?36:37,1);
   if(sampled)validationUS+=TraceUS(validationStart);
   auto it=impl->programs.find(d.program->pipelineLifetime.get());Require(it!=impl->programs.end(),"CUS draw program belongs to another native compiler owner");auto program=it->second.lock();Require(bool(program),"CUS native program lifetime expired");
   if(d.surface.viewport&&(!d.surface.viewport->width||!d.surface.viewport->height))continue; // Actual observed zero viewport has no raster samples.
@@ -232,8 +334,8 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   auto raster=effectstate::Viewport(camera,target.width,target.height,target.logicalWidth,target.logicalHeight,d.surface.scissor);if(!raster)continue;
   PreparedCUSSource::Impl::Draw draw;draw.sequence=d.sequence;draw.state=state;draw.raster=*raster;
   draw.shadowPolygonOffsetUnitsScale=target.shadowPolygonOffsetUnitsScale;
-  auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=8;descriptor.maxTextureBindCount=12;descriptor.maxSamplerStateBindCount=12;descriptor.initializeBindings=YES;
-  NSError* error=nil;draw.table=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(draw.table!=nil,"Cannot allocate CUS original argument table: "+Error(error));lease.Retain(draw.table);
+  auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=9;descriptor.maxTextureBindCount=0;descriptor.maxSamplerStateBindCount=0;descriptor.initializeBindings=YES;
+  NSError* error=nil;draw.table=impl->argumentPool.Acquire(lease,descriptor,out->impl->argumentOwners,&error);if(draw.table==nil)Require(false,"Cannot allocate CUS original argument table: "+Error(error));lease.Retain(draw.table);
   const auto& u=*d.engineUniforms;
   auto matrices=impl->Cached(lease,u.matrices,u.matrices->bytes.size(),[&](uint8_t* dst){std::memcpy(dst,u.matrices->bytes.data(),u.matrices->bytes.size());});
   auto params=impl->Cached(lease,u.params,u.params->bytes.size(),[&](uint8_t* dst){std::memcpy(dst,u.params->bytes.data(),NativeCUSParamsPrefixBytes);for(size_t row=0;row<NativeCUSTeamRows;++row)if(u.params->writtenTeamRows[row])std::memcpy(dst+NativeCUSParamsPrefixBytes+row*16,u.params->bytes.data()+NativeCUSParamsPrefixBytes+row*16,16);});
@@ -243,6 +345,7 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   if(sampled)publicationUS+=TraceUS(publicationStart);
   [draw.table setAddress:instances.gpuAddress atIndex:1];[draw.table setAddress:matrices.gpuAddress atIndex:2];[draw.table setAddress:params.gpuAddress atIndex:3];[draw.table setAddress:transforms.gpuAddress atIndex:4];[draw.table setAddress:models.gpuAddress atIndex:5];
   std::array<TraceImage,12> traceImages{};
+  std::array<id<MTLTexture>,12> materialTextures156{};std::array<id<MTLSamplerState>,12> materialSamplers156{};
   NativeCUSSampleTransport transport;uint32_t caps;std::memcpy(&caps,u.params->bytes.data()+12,4);transport.clipFlags=uint32_t(!(caps&1u))|uint32_t(target.invertClipY)<<1|uint32_t(d.clipDistance0)<<2;
   static constexpr const char* samplerNames[]={"texture1","texture2","normalTex","texture1w","texture2w","normalTexw","shadowTex","reflectTex","losMapTex","brdfLUT","noisetex3dcube","envLUT"};
   for(unsigned slot=0;slot<12;++slot){
@@ -263,16 +366,46 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
    if(image.depthImage)transport.depthMask|=1u<<slot;
    if(image.clampDepthCompare){Require(image.depthImage,"Fixed-depth compare semantics require the actual depth image");transport.clampDepthCompareMask|=1u<<slot;}
    if(sampled)traceImages[slot]={image.texture.gpuResourceID._impl,image.sampler.gpuResourceID._impl,unsigned(image.texture.pixelFormat),unsigned(image.texture.width),unsigned(image.texture.height),unsigned(image.texture.mipmapLevelCount)};
-   lease.AddAllocation(image.texture);lease.Retain(image.sampler);[draw.table setTexture:image.texture.gpuResourceID atIndex:slot];[draw.table setSamplerState:image.sampler.gpuResourceID atIndex:slot];draw.images.push_back(std::move(image));
+   lease.AddAllocation(image.texture);lease.Retain(image.sampler);materialTextures156[slot]=image.texture;materialSamplers156[slot]=image.sampler;priorResourceSetters156+=2;draw.images.push_back(std::move(image));
   }
-  const auto vertex=PackNativeCUSProgramUniforms(program->generated->vertex,d,*program->source,transport),fragment=PackNativeCUSProgramUniforms(program->generated->fragment,d,*program->source,transport);
-  auto vb=Upload(lease,vertex.data(),vertex.size()),fb=Upload(lease,fragment.data(),fragment.size());[draw.table setAddress:vb.gpuAddress atIndex:6];[draw.table setAddress:fb.gpuAddress atIndex:7];
-  draw.pipeline=impl->Pipeline(lease,*program,target,blend,state.colorWrite,validation,ms,state.alphaToCoverage);draw.depth=effectstate::Depth(lease,state,target.stencil);lease.Retain(draw.pipeline);lease.Retain(program->libraries->vertex);lease.Retain(program->libraries->fragment);
-  for(size_t object=0;object<d.submissions.size();++object){auto& model=impl->Model(lease,d.submissions[object]->geometry);Require(model.count==d.submissions[object]->originalIndexCount,"CUS GPU model index count differs from original submission");draw.objects.push_back({model.vertices,model.indices,model.count,uint32_t(object)});}
+  if(program->generated->fragment.textureMask){draw.material156=impl->materials156.Get(lease,materialTextures156,materialSamplers156);[draw.table setAddress:draw.material156.gpuAddress atIndex:8];++materialBindings156;}
+  const auto uniforms=UploadCUSUniforms(lease,uniformArena,*program->generated,d,*program->source,transport);
+  const auto vertex=uniforms.vertex.Bytes(),fragment=uniforms.fragment.Bytes();
+  [draw.table setAddress:uniforms.vertex.Address() atIndex:6];[draw.table setAddress:uniforms.fragment.Address() atIndex:7];
+  // The same resolved transport is uploaded above. Every selected color
+  // slot must be identity/non-depth for the entire fragment-library variant.
+  const bool identityChannels194=NativeCUSIdentityChannels194(program->generated->fragment.textureMask,transport);
+  draw.pipeline=impl->Pipeline(lease,*program,target,blend,state.colorWrite,validation,ms,state.alphaToCoverage,identityChannels194);draw.depth=effectstate::Depth(lease,state,target.stencil);lease.Retain(draw.pipeline);lease.Retain(program->libraries->vertex);lease.Retain(program->libraries->fragment);
+  ForEachNativeCUSDrawRun147(d.submissions,[&](uint32_t first,uint32_t count,const NativeCUSModelSubmission& submission){
+   const auto index=impl->Model(lease,submission.geometry,preparation154,out->impl->geometry,geometryBatch155);
+   const auto& model=out->impl->geometry[index];
+   Require(model.count==submission.originalIndexCount,"CUS GPU model index count differs from original submission");
+   draw.objects.push_back({index,first,count});
+  });
+  originalObjects147+=d.submissions.size();preparedRuns147+=draw.objects.size();
   if(sampled){const auto begin=TraceClock::now();TraceDraw(*source,d,target,state,transport,traceImages,reads,instances,transforms,models,vertex,fragment);diagnosticUS+=TraceUS(begin);}
   out->impl->draws.push_back(std::move(draw));
  }
+ geometryBatch155.Flush();
+ if(!impl->reportedMaterial156&&source->sourceDrawFrame>=512&&preparedRuns147){
+  const auto& material=impl->materials156.Stats();
+  LOG("[NativeModel156Material] prior_resource_setters=%zu material_address_bindings=%zu cache_hits=%zu new_buffers=%zu encoded_resource_slots=%zu encoded_bytes=%zu cache_entries=%zu cache_bytes=%zu cache_allocated_bytes=%zu direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1",priorResourceSetters156,materialBindings156,material.hits,material.created,material.created*24,material.encodedBytes,impl->materials156.Entries(),impl->materials156.Bytes(),impl->materials156.AllocatedBytes());
+  impl->reportedMaterial156=true;
+ }
  if(sampled)TraceRecord("perf f=%llu sample=%zu maxSeconds=300 sourceDraws=%zu prepared=%zu prepareCPUus=%.3f validateCPUus=%.3f publishedCPUus=%.3f traceCPUus=%.3f immutableCacheAllocs=%llu immutableCacheBytes=%llu cacheHits=%llu publishedUploads=%llu publishedCopyBytes=%llu",(unsigned long long)source->sourceDrawFrame,trace.budget.samples,source->draws.size(),out->impl->draws.size(),TraceUS(prepareStart)-diagnosticUS,validationUS,publicationUS,diagnosticUS,(unsigned long long)trace.allocations,(unsigned long long)trace.allocationBytes,(unsigned long long)trace.cacheHits,(unsigned long long)trace.publishedUploads,(unsigned long long)trace.publishedBytes);
+ if(!impl->reported155&&source->sourceDrawFrame>=512&&preparedRuns147){
+  size_t binds=0,logical=0,stored=0,allocated=0;std::set<MTLGPUAddress> pages,cachePages;
+  for(const auto& draw:out->impl->draws){MTLGPUAddress previous=0;for(const auto& object:draw.objects){const auto address=out->impl->geometry[object.geometry].vertexAddress;if(previous!=address){++binds;previous=address;}pages.insert(address);}}
+  for(const auto& [key,item]:impl->geometry){logical+=item.logicalBytes;if(cachePages.insert(item.gpu.vertexAddress).second){stored+=item.gpu.storage.length;allocated+=item.gpu.storage.allocatedSize;}}
+  LOG("[NativeModel155] prepared_runs=%llu unique_geometry=%zu prepared_pages=%zu vertex_bindings=%zu omitted_bindings=%llu cache_models=%zu cache_pages=%zu cache_live_bytes=%zu cache_storage_bytes=%zu cache_allocated_bytes=%zu new_models=%zu new_pages=%zu uploaded_bytes=%zu geometry_size=%zu cache_entry_size=%zu immutable_pages=1 source_order_unchanged=1",
+   (unsigned long long)preparedRuns147,out->impl->geometry.size(),pages.size(),binds,(unsigned long long)(preparedRuns147-binds),impl->geometry.size(),cachePages.size(),logical,stored,allocated,geometryBatch155.uploadedModels,geometryBatch155.uploadedPages,geometryBatch155.uploadedBytes,sizeof(ModelGeometrySlice155),sizeof(Impl::Geometry));
+  impl->reported155=true;
+ }
+ uniformArena.Report("CUS",source->sourceDrawFrame,impl->reported146);
+ if(!impl->reported147&&source->sourceDrawFrame>=512&&originalObjects147){
+  LOG("[NativeModel147] source_draws=%zu original_objects=%llu prepared_runs=%llu omitted_model_lookups=%llu omitted_geometry_registration_calls=%llu instance_order_retained=1",out->impl->draws.size(),(unsigned long long)originalObjects147,(unsigned long long)preparedRuns147,(unsigned long long)(originalObjects147-preparedRuns147),(unsigned long long)(2*(originalObjects147-preparedRuns147)));
+  impl->reported147=true;
+ }
  return out;
 }
 } // namespace rendering::metal4

@@ -21,6 +21,12 @@ struct InfoResource final:NativeTerrainInfoResource {
 
 	void Register(RuntimeLease& lease,uint64_t submission) const
 	{
+  if(!completed&&encodingSubmission&&encodingSubmission!=submission&&lease.PreparingWhilePending()){
+   Require(dependenciesEncoded,"Previous info plan has an incomplete encode attempt");
+   // Pin the already submitted immutable image. Do not overwrite N's receipt
+   // identity; N must actually retire before N+1 GPU submission.
+   plan->RegisterResources(lease);return;
+  }
 		Require(completed||!encodingSubmission||encodingSubmission==submission,
 			"Original terrain info plan was encoded by another uncompleted submission");
 		Require(!encodingSubmission||dependenciesEncoded,
@@ -64,7 +70,31 @@ struct ImageOwner {
 	std::shared_ptr<const NativeCUSTextureObject> object;
 	std::shared_ptr<const NativeTerrainInfoBacking> backing;
 	std::shared_ptr<const InfoResource> resource;
+ // Exact immutable callback identities, retained by the existing image owner.
+ uint64_t submission=0,priorSubmission=0;
 };
+SourceDependencyResult160 InspectTerrainInfoDependencies161(const ImageOwner& owner)
+{
+ const auto& resource=*owner.resource;
+ if(owner.priorSubmission){
+  // The original ordered callback only validates readability. Registration of
+  // its predecessor edge and the real completion receipt remain unchanged.
+  Require(resource.completed||
+   (resource.encodingSubmission==owner.priorSubmission&&resource.dependenciesEncoded),
+   "Borrowed terrain info lost its successfully encoded producer");
+  return {SourceDependencyWork160::NoCommands,false};
+ }
+ // Mirror only the original Encode's early returns. Even an already completed
+ // inner WorldInfo plan cannot replace the wrapper's first CPU transitions.
+ if(resource.completed)return {SourceDependencyWork160::NoCommands,false};
+ Require(resource.registeredSubmission==owner.submission,"Original terrain info callback belongs to a cancelled preparation");
+ if(resource.encodingSubmission){
+  Require(resource.encodingSubmission==owner.submission&&resource.dependenciesEncoded,
+   "Original terrain info producer cannot replay an incomplete encode attempt");
+  return {SourceDependencyWork160::NoCommands,false};
+ }
+ return {SourceDependencyWork160::CommandsRequired,false};
+}
 void CheckTexture(RuntimeLease& lease,const PreparedWorldInfo& plan,const NativeWorldInfoFrame& frame,
 	const NativeTextureAllocation& allocation,id<MTLSamplerState> sampler)
 {
@@ -123,9 +153,28 @@ CUSSourceImage ResolveNativeTerrainInfoImage(RuntimeLease& lease,const NativeCUS
 	lease.Retain(sampler);
 	backing->resource=resource;
 
-	auto owner=std::make_shared<ImageOwner>();owner->object=object;owner->backing=backing;owner->resource=resource;
+	auto owner=std::make_shared<ImageOwner>();owner->object=object;owner->backing=backing;owner->resource=resource;owner->submission=submission;
 	CUSSourceImage out;out.texture=resource->plan->Info();out.sampler=sampler;out.owner=owner;
 	out.flipV=false;out.depthImage=false;out.clampDepthCompare=false; // Original map-Z RGB10_A2 output.
+ out.dependencyQuery160={owner.get(),[](const void* context){
+  return InspectTerrainInfoDependencies161(*static_cast<const ImageOwner*>(context));
+ }};
+ const auto priorSubmission=resource->encodingSubmission;
+ const bool orderedPrior=!resource->completed&&priorSubmission&&priorSubmission!=submission&&
+  lease.OrderAfterPreviousSubmission(resource.get(),[owner,priorSubmission]{
+   Require(owner->resource->completed&&owner->resource->encodingSubmission==priorSubmission,
+    "Borrowed terrain info did not complete its original submitting owner");
+  });
+ if(orderedPrior){
+  owner->priorSubmission=priorSubmission;
+  auto readable=[owner,priorSubmission]{Require(owner->resource->completed||
+   (owner->resource->encodingSubmission==priorSubmission&&owner->resource->dependenciesEncoded),
+   "Borrowed terrain info lost its successfully encoded producer");};
+  out.encodeDependencies=[readable](id<MTL4CommandBuffer> command){Require(command!=nil,"Missing ordered terrain command buffer");readable();};
+  out.requireReadable=readable;
+  out.didComplete=[owner]{Require(owner->resource->completed,"Borrowed terrain info cannot publish another submission's completion");};
+  return out;
+ }
 	out.encodeDependencies=[owner,submission](id<MTL4CommandBuffer> command){owner->resource->Encode(command,submission);};
 	out.requireReadable=[owner,submission]{owner->resource->Readable(submission);};
 	out.didComplete=[owner,submission]{owner->resource->Complete(submission);};

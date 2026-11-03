@@ -9,6 +9,8 @@
 #include "NativePanelShaderData.h"
 #include "NativeUITextureHistory.h"
 #include "ScreenDrawList.h"
+#include "NativeScreenGeometry.h"
+#include "NativeWorldFontGeometry.h"
 #include "NativeDeferredVisualizerProgram.h"
 #include "NativeDecalCaptureProgram.h"
 #include "NativeSplatPainterProgram.h"
@@ -19,12 +21,29 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <new>
 #include <stdexcept>
 #include <unordered_map>
 #include <functional>
 
 namespace rendering {
 namespace {
+// Preserve reserve-before-mutation for paired streams and draw batches, while
+// keeping amortized growth for newly created or growing CPU lists. Warm lists
+// retain their capacity. No extra elements are uploaded or exposed to a draw.
+template<class T>
+void ReserveScreenAppend(std::vector<T>& values,size_t extra)
+{
+ const size_t maximum=values.max_size();
+ if(extra>maximum-values.size())throw std::length_error("ScreenDrawList CPU capacity overflow");
+ const size_t needed=values.size()+extra,capacity=values.capacity();
+ if(needed<=capacity)return;
+ const size_t grown=capacity+std::min(capacity,maximum-capacity);
+ const size_t target=std::max(needed,grown);
+ // Under memory pressure retain the original exact-size allocation option.
+ if(target==needed){values.reserve(needed);return;}
+ try{values.reserve(target);}catch(const std::bad_alloc&){values.reserve(needed);}
+}
 void ValidState(const ScreenDrawState& state, bool shaderOwnsImages = false)
 {
 	const auto& ds=state.depthStencil;
@@ -173,7 +192,7 @@ void ScreenDrawList::Vertex(float x, float y, float z)
 {
 	if (!recording) throw std::logic_error("ScreenDrawList Vertex outside Begin");
 	const ScreenVertex value{x,y,z,currentColor}; FiniteVertex(value);
-	pendingVertices.reserve(pendingVertices.size()+1); pendingTexCoords.reserve(pendingTexCoords.size()+1);
+	ReserveScreenAppend(pendingVertices,1); ReserveScreenAppend(pendingTexCoords,1);
 	pendingVertices.push_back(value); pendingTexCoords.push_back(currentTexCoord);
 }
 void ScreenDrawList::End()
@@ -200,6 +219,58 @@ void ScreenDrawList::End()
 	catch (...) { recording = true; throw; }
 	Abort();
 }
+void ScreenDrawList::EndTransformed(const NativeScreenGeometry& transform)
+{
+ if(!recording)throw std::logic_error("ScreenDrawList transformed End outside Begin");
+ if(transform.kind!=NativeScreenGeometryKind::ScreenUI||transform.instanceCount!=1||transform.fontInput||transform.retainedFont||
+    (batchState.material!=ScreenMaterial::Solid&&batchState.material!=ScreenMaterial::RGBA&&batchState.material!=ScreenMaterial::FontCoverage))
+  throw std::invalid_argument("Screen UI transform requires its ordinary filled material/input");
+ auto value=transform;
+ const bool safe=screenGeometry::CaptureFontBounds(value,pendingVertices);
+ if(value.affineTexture&&(!safe||!screenGeometry::AffineTextureUVSafe(pendingTexCoords))){
+  // Finite but extreme raw UVs keep the prior arithmetic and validation. A
+  // position fallback must also resolve UVs before dropping the GPU packet.
+  for(auto& uv:pendingTexCoords)uv=screenGeometry::TransformAffineTexture(value,uv);
+  value.affineTexture=false;
+ }
+ // Conservative overflow bounds may reject a mathematically valid input.
+ // Preserve the exact prior CPU projection and rejection behavior in that case.
+ if(!safe)for(auto& vertex:pendingVertices){
+  const auto p=screenGeometry::Transform(value.projection,screenGeometry::Transform(value.modelView,{vertex.x,vertex.y,vertex.z,1}));
+  for(float x:p)if(!std::isfinite(x))throw std::runtime_error("Native UI non-finite projected vertex");
+  if(p[3]!=1)throw std::runtime_error("Native UI screen slice requires projected w equal1");
+  vertex.x=(p[0]+1)*float(value.coordinateExtent[0])*.5f;
+  vertex.y=(p[1]+1)*float(value.coordinateExtent[1])*.5f;vertex.z=p[2];
+ }
+ // Allocate before End commits: failure must never leave raw positions in an
+ // ordinary pixel command. Empty or incomplete strips retain End's semantics.
+ auto packet=safe?std::make_shared<NativeScreenGeometry>(value):nullptr;
+ const auto before=commands.size();End();
+ if(packet&&commands.size()!=before){packet->count=commands.back().indexCount;commands.back().geometry=std::move(packet);}
+}
+bool ScreenDrawList::TryAppendTransformedTriangles(std::span<const ScreenVertex> vertices,
+ std::span<const ScreenTexCoord> uv,std::span<const uint32_t> indices,
+ const ScreenDrawState& state,const NativeScreenGeometry& transform)
+{
+ if(recording)throw std::logic_error("Screen transformed append during Begin");
+ if(transform.kind!=NativeScreenGeometryKind::ScreenUI||transform.instanceCount!=1||
+    transform.fontInput||transform.retainedFont||transform.affineTexture||state.material!=ScreenMaterial::RGBA)
+  throw std::invalid_argument("Engine icon matrix packet has competing input/material");
+ auto value=transform;
+ if(!screenGeometry::CaptureFontBounds(value,vertices))return false;
+ const NativeWorldFontHeader header{value.modelView,value.projection,{}};
+ if(!WorldFontMatricesSafe(header))return false;
+ const int minimum=WorldFontMinimumInputExponent(header);
+ for(const auto& v:vertices)if(!WorldFontPositionSafe({v.x,v.y,v.z,1},minimum))return false;
+ if(indices.size()>UINT32_MAX)throw std::length_error("Screen icon index extent exceeds uint32");
+ value.count=uint32_t(indices.size());
+ // Allocate before committing raw vertices. Matrix ownership stays with the
+ // command through its existing completion-owned frame upload.
+ auto packet=std::make_shared<NativeScreenGeometry>(std::move(value));
+ AppendTriangles(vertices,uv,indices,state);
+ if(!indices.empty())commands.back().geometry=std::move(packet);
+ return true;
+}
 void ScreenDrawList::AppendTriangles(std::span<const ScreenVertex> sourceVertices, std::span<const ScreenTexCoord> sourceUVs,
 	std::span<const uint32_t> sourceIndices, const ScreenDrawState& state)
 {
@@ -215,8 +286,8 @@ void ScreenDrawList::AppendTriangles(std::span<const ScreenVertex> sourceVertice
 	if (sourceVertices.size() > maximum || vertices.size() > maximum-sourceVertices.size() ||
 		sourceIndices.size() > maximum || indices.size() > maximum-sourceIndices.size())
 		throw std::length_error("ScreenDrawList exceeds uint32 index range");
-	vertices.reserve(vertices.size()+sourceVertices.size()); texCoords.reserve(texCoords.size()+sourceUVs.size());
-	indices.reserve(indices.size()+sourceIndices.size()); commands.reserve(commands.size()+1);
+	ReserveScreenAppend(vertices,sourceVertices.size()); ReserveScreenAppend(texCoords,sourceUVs.size());
+	ReserveScreenAppend(indices,sourceIndices.size()); ReserveScreenAppend(commands,1);
 	const uint32_t base = static_cast<uint32_t>(vertices.size()), first = static_cast<uint32_t>(indices.size());
 	vertices.insert(vertices.end(), sourceVertices.begin(), sourceVertices.end()); texCoords.insert(texCoords.end(), sourceUVs.begin(), sourceUVs.end());
 	for (uint32_t index: sourceIndices) indices.push_back(base+index);
@@ -374,7 +445,7 @@ void ScreenDrawList::ClearAttachments(unsigned mask, const ScreenClearValues& va
 		face->reference=std::uint32_t(values.stencil)&255u;
 		face->writeMask=stencilWriteMask;
 	}
-	auto color=values.color; for (auto& channel:color) channel=std::clamp(channel,0.0f,1.0f);
+	const auto color=values.color;
 	const float z=2*std::clamp(values.depth,0.0f,1.0f)-1;
 	const std::array<ScreenVertex,4> quad{{{0,0,z,color},{float(width),0,z,color},
 		{float(width),float(height),z,color},{0,float(height),z,color}}};
@@ -497,3 +568,38 @@ std::vector<size_t> OrderScreenRenderTargetPasses(const ScreenFrameView& frame)
 	return result;
 }
 } // namespace rendering
+
+namespace rendering {
+void ScreenDrawList::AppendGeometry(std::shared_ptr<const NativeScreenGeometry> geometry,const ScreenDrawState& state){
+ if(recording)throw std::logic_error("Typed screen geometry during Begin");
+ ValidState(state);if(!geometry)throw std::invalid_argument("Typed screen geometry missing");
+ if(geometry->retainedFont)geometry->retainedFont->ValidateScreen();
+ screenGeometry::Validate(*geometry);
+ const auto kind=geometry->kind;
+ if(kind==NativeScreenGeometryKind::ScreenUI)throw std::invalid_argument("Immediate screen UI must finish through EndTransformed");
+ if(kind==NativeScreenGeometryKind::ScreenFont){
+  if(state.material!=ScreenMaterial::FontCoverage&&state.material!=ScreenMaterial::RGBA)throw std::invalid_argument("Screen font material differs");
+  if(geometry->retainedFont){
+   if(!geometry->count)return;
+   ScreenDrawCommand command{0,0,state};command.geometry=std::move(geometry);commands.push_back(std::move(command));return;
+  }
+  if(!geometry->fontInput||geometry->count!=geometry->fontInput->indices.size())throw std::invalid_argument("Screen font input extent differs");
+  auto expected=*geometry;
+  if(!screenGeometry::CaptureFontBounds(expected,geometry->fontInput->vertices)||expected.fontBounds!=geometry->fontBounds)throw std::invalid_argument("Screen font source bounds differ");
+  // Raw vertices join the existing frame upload and retain original index order.
+  // Only immutable matrices/bounds survive in the command, not a duplicate mesh.
+  auto matrices=std::make_shared<NativeScreenGeometry>(*geometry);matrices->fontInput.reset();
+  AppendTriangles(geometry->fontInput->vertices,geometry->fontInput->uv,geometry->fontInput->indices,state);
+  if(geometry->count)commands.back().geometry=std::move(matrices);
+  return;
+ }
+ if((kind==NativeScreenGeometryKind::SpectatorHUD&&state.material!=ScreenMaterial::SpectatorHUD)||
+    (kind==NativeScreenGeometryKind::FrameGrapher&&state.material!=ScreenMaterial::FrameGrapher)||
+    (kind==NativeScreenGeometryKind::TerraformModel&&state.material!=ScreenMaterial::TerraformCapture)||
+    (kind==NativeScreenGeometryKind::ProfilerHistogram&&state.material!=ScreenMaterial::Solid)||
+    ((kind==NativeScreenGeometryKind::ScreenLines||kind==NativeScreenGeometryKind::ScreenPixelLines)&&state.material!=ScreenMaterial::Solid))throw std::invalid_argument("Typed screen geometry material differs");
+ if(kind==NativeScreenGeometryKind::CommonSourceLines&&!sourceLine133::Material(state))throw std::invalid_argument("Common source line material differs");
+ if(!geometry->count||!geometry->instanceCount)return;
+ ScreenDrawCommand command{uint32_t(indices.size()),0,state};command.geometry=std::move(geometry);commands.push_back(std::move(command));
+}
+}

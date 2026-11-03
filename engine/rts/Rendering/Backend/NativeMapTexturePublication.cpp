@@ -1,10 +1,21 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeMapTexturePublication.h"
 #include "WorldFrameData.h"
+#include "NativeTerrainHeightSnapshot.h"
 #include <limits>
 #include <stdexcept>
 namespace rendering {
 namespace {void Require(bool value,const char* why){if(!value)throw std::logic_error(why);}constexpr auto target=NativeCUSTextureTarget::Image2D;}
+namespace {
+	NativeTerrainHeightSnapshotCache heightSnapshots;
+	uint64_t cpuHeightCopyRevision=0;
+}
+std::shared_ptr<const WorldTerrainHeights> CaptureNativeTerrainHeightSnapshot(
+	const CReadMap* original,const float* values,uint32_t width,uint32_t height)
+{
+	return heightSnapshots.Capture(original,values,width,height,
+		OriginalNativeMapTextures().HeightSnapshotVersion(original));
+}
 void NativeMapTextureBacking::Fulfill(std::shared_ptr<const NativeMapTextureResource> actual)const
 {
 	Require(actual && !resource,"Original map texture backing must receive its actual GPU resource once");resource=std::move(actual);
@@ -16,6 +27,7 @@ void NativeMapTexturePublication::Attach(NativeTextureRegistry& r,NativeCUSTextu
 void NativeMapTexturePublication::Detach()
 {
 	Require(!owner && !names[0] && !names[1],"Original map texture context cannot detach before map destruction");registry=nullptr;history=nullptr;context=0;
+	heightSnapshots.Reset();
 }
 void NativeMapTexturePublication::Check(const void* original)const
 {
@@ -42,6 +54,21 @@ void NativeMapTexturePublication::HeightUploaded(const void* original)
 	Check(original);Require(names[1] && revisions[1]!=std::numeric_limits<uint64_t>::max(),"Original height upload lifetime/revision differs");
 	const auto unit=history->ActiveUnit();Require(bool(unit),"Original height upload lacks current unit");registry->Bind(*unit,names[1],target);++revisions[1];registry->Bind(*unit,0,target);
 }
+void NativeMapTexturePublication::InvalidateCPUHeightSnapshot(const void* original)
+{
+	// Before attachment/allocation the snapshot has no authoritative version
+	// and uses the original full comparison instead.
+	if (!registry || owner!=original || !names[1]) return;
+	Check(original);
+	Require(cpuHeightCopyRevision!=std::numeric_limits<uint64_t>::max(),"Original CPU height copy revision exhausted");
+	++cpuHeightCopyRevision;
+}
+std::optional<std::array<uint64_t,4>> NativeMapTexturePublication::HeightSnapshotVersion(const void* original)const
+{
+	if (!registry || owner!=original || !names[1] || !revisions[1]) return {};
+	Check(original);
+	return std::array<uint64_t,4>{context,names[1],revisions[1],cpuHeightCopyRevision};
+}
 void NativeMapTexturePublication::NormalsRendered(const void* original)
 {
 	Check(original);Require(names[0] && names[1] && revisions[0]!=std::numeric_limits<uint64_t>::max(),"Original normal writer lifetime/revision differs");
@@ -56,6 +83,7 @@ void NativeMapTexturePublication::NormalOverride(const void* original,bool actua
 void NativeMapTexturePublication::Destroy(const void* original)
 {
 	Check(original);for(auto name:names)if(name)registry->Delete(name);names={};revisions={};owner=nullptr;normalOverride=false;
+	heightSnapshots.Reset();
 }
 NativeTextureLookup NativeMapTexturePublication::Lookup(std::string_view name)const
 {

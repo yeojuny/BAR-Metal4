@@ -313,6 +313,9 @@ sol::table CreateContext(lua_State* state)
 		auto program = context->Get(handle);
 		if (OriginalNativeSourceProgramBinding().IsDistortion(program)) OriginalNativeSourceProgramBinding().Unbind();
 		program->deleted = true;
+		program->consumer.reset();
+		program->floats.clear();
+		program->ints.clear();
 	});
 	Bind(table, "GetProgramLog", [context](unsigned handle) { return context->Get(handle)->consumer->log; });
 	Bind(table, "GetActiveUniforms", [state, context](unsigned handle) {

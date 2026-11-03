@@ -44,7 +44,8 @@ public:
 	// The caller suppresses only that GL submit while this capture is active.
 	void SubmitSquare(NativeTerrainMeshSource,const void* actualPositions,size_t vertexCount,size_t vertexStride,
 		std::span<const uint32_t> actualIndices,bool indexed,NativeTerrainProgramSnapshot actualCurrentProgram,
-		const void* actualColors=nullptr,size_t colorStride=0,bool border=false);
+		const void* actualColors=nullptr,size_t colorStride=0,bool border=false,
+  std::shared_ptr<const NativeTerrainMeshSnapshot> snapshot={});
 
 private:
 	void RequireActive() const;

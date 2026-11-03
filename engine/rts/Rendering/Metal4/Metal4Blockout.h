@@ -27,6 +27,7 @@ private:
 	PreparedBlockoutFrame();
 	struct Impl;std::unique_ptr<Impl> impl;friend class BlockoutGPU;
 };
+std::shared_ptr<const NativeBlockoutTarget> ReserveNativeBlockoutTargetForCapture(uint32_t,uint32_t);
 class BlockoutGPU{
 public:
 	BlockoutGPU();~BlockoutGPU();

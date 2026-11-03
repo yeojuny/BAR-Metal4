@@ -2,11 +2,11 @@
 #pragma once
 
 #include "Metal4WindowSurface.h"
-#include "../Backend/NativeMissileThrusterData.h"
+#include "Rendering/Backend/NativeMissileThrusterData.h"
 #include "Rendering/Backend/NativeMainSamplingData.h"
-#include "../Backend/RenderTypes.h"
-#include "../Backend/WorldFrameData.h"
-#include "../Backend/ScreenDrawList.h"
+#include "Rendering/Backend/RenderTypes.h"
+#include "Rendering/Backend/WorldFrameData.h"
+#include "Rendering/Backend/ScreenDrawList.h"
 #include <memory>
 #include <functional>
 
@@ -69,6 +69,8 @@ struct Metal4WorldRenderOptions {
 	std::function<void(std::uint64_t,const NativePostprocessFrame*)> submissionBegan;
 	std::function<void(std::uint64_t)> submissionCompleted;
 	std::function<void(const Metal4WorldPresentationResult&)> sourceCompleted;
+	// Normal presentation only: publish a receipt after actual GPU retirement.
+	std::function<void(const Metal4WorldPresentationResult&)> deferredCompleted;
 	bool presentWorld = true; // False only for real copy-dependent source work, never an extra present.
 	// Last actually observed logical window extent, used only for captured
 	// offscreen source work if SDL reports zero while minimizing.
@@ -179,6 +181,12 @@ public:
 	// Logical camera viewport and requested render pixels remain independent:
 	// camera's actual subview maps proportionally to the explicit target.
 	Metal4WorldPresentationResult Draw(const WorldFrame& frame, const Metal4WorldRenderOptions& options = {});
+ // Prepare independent immutable shared-buffer inputs while the preceding
+ // GPU frame runs. The returned owner must outlive this frame's Draw call.
+ std::shared_ptr<const void> PrepareIndependentResources(const WorldFrame& frame);
+ // Callback consumes N's receipts only after its real completion. This entry
+ // retains one GPU submission and does not alter shader/pass ordering.
+ Metal4WorldPresentationResult DrawPreparingWhilePending(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
 	// Pin completed producer images at the original pre-unit IBL stage. Later
 	// Lua mode switches must not retroactively change an earlier reflection.
 	void CaptureEnvironmentInputs(std::shared_ptr<const NativeWorldEnvironmentFrame> frame, bool shaderValidation = Metal4WorldRenderOptions::DefaultShaderValidation);
@@ -248,6 +256,7 @@ public:
 
 
 private:
+ Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
 	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&);
 	struct Impl;
 	std::unique_ptr<Impl> impl;

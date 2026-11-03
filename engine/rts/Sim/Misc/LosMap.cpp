@@ -412,6 +412,9 @@ void CLosTableHelper::Debug(const LosTable& losRays, const std::vector<int2>& po
 void CLosMap::AddCircle(SLosInstance* instance, int amount)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
+#if defined(RECOIL_METAL4_LIVE_SCENE) || defined(BAR_NATIVE_COVERAGE_REVISION)
+	rendering::InvalidateNativeCoverage(this);
+#endif
 	MidpointCircleAlgoPerLine(instance->radius, [&](int width, int y) {
 		const unsigned y_ = instance->basePos.y + y;
 
@@ -434,6 +437,10 @@ void CLosMap::AddRaycast(SLosInstance* instance, int amount)
 
 	if (losSquares.empty() || losSquares[0].length == SLosInstance::EMPTY_RLE.length)
 		return;
+
+#if defined(RECOIL_METAL4_LIVE_SCENE) || defined(BAR_NATIVE_COVERAGE_REVISION)
+	rendering::InvalidateNativeCoverage(this);
+#endif
 
 	// inform ReadMap when squares enter LoS
 	const bool visibleInstanceSquares = (instance->allyteam >= 0 && (instance->allyteam == gu->myAllyTeam || gu->spectatingFullView));

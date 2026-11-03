@@ -14,6 +14,7 @@
 
 #include <array>
 #include <vector>
+#include "Rendering/Backend/NativeTerrainMeshSnapshot.h"
 
 
 class CSMFGroundDrawer;
@@ -201,6 +202,7 @@ private:
 
 	std::array<float, 1 << VARIANCE_DEPTH> varianceTrees[2];
 
+	mutable rendering::NativeROAMGeometryOwner nativeGeometry;
 	std::vector<float3> vertices;
 	std::vector<uint32_t> indices;
 	std::vector<VA_TYPE_C> borderVertices;

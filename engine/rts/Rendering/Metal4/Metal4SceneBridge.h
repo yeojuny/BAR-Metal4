@@ -60,6 +60,9 @@ void HandleEvent(const SDL_Event& event);
 // Actual window and chosen render pixels; backing scale never enters this map.
 // Hidden/zero-size windows retain their last observed logical extent for RTTs.
 ui::NativeUIFrameRasterMapping GetUIFrameRasterMapping(const ScreenViewport& defaultViewport);
+// Complete a queued presentation before recorder reuse or scene teardown.
+void FinishPendingFrame();
+
 struct DrawResult {
 	bool presented = false;
 	bool screenTargetsCompleted = false;

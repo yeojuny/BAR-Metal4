@@ -27,6 +27,8 @@ public:
 		const NativeProjectileEffectFrame& frame,const WorldCamera& viewCamera,
 		MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,
 		bool shaderValidation,double& shaderMilliseconds,unsigned samples=1);
+	// Call at the serialized DrawPrepared lease boundary, even with no effect draws.
+	void PruneExpiredImages();
 	void ClearResources(); // Drop map images only after real shared retirement.
 private:
 	struct Impl;std::unique_ptr<Impl> impl;

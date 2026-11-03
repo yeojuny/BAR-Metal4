@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeCUSProgramData.h"
+#include <algorithm>
 #include <cmath>
 #include <cstring>
 #include <stdexcept>
@@ -19,32 +20,40 @@ uint32_t NativeCUSSampleCode(const NativeTextureSampling& s)
 std::vector<uint8_t> PackNativeCUSProgramUniforms(const NativeCUSGeneratedStage& stage,
  const NativeCUSSourceDraw& draw,const NativeCUSProgramSource& source,const NativeCUSSampleTransport& transport)
 {
- std::vector<uint8_t> bytes((stage.uniformBytes+15u)&~15u);
+ std::vector<uint8_t> bytes(NativeCUSProgramUniformBytes(stage));
+ PackNativeCUSProgramUniformsInto(stage,draw,source,transport,bytes);
+ return bytes;
+}
+void PackNativeCUSProgramUniformsInto(const NativeCUSGeneratedStage& stage,
+ const NativeCUSSourceDraw& draw,const NativeCUSProgramSource& source,const NativeCUSSampleTransport& transport,std::span<uint8_t> bytes)
+{
+ Check(bytes.size()==NativeCUSProgramUniformBytes(stage),"CUS uniform destination differs from its original padded block");
+ std::fill(bytes.begin(),bytes.end(),uint8_t(0));
  for(const auto& f:stage.fields){
   if(!f.active)continue;
   const std::string_view name=f.name;
-  std::vector<float> supplied;
-  if(name=="NativeCUSImageMasks")supplied={float(transport.emptyMask),float(transport.flipMask),float(transport.depthMask),float(transport.clampDepthCompareMask)};
-  else if(name=="NativeCUSSampleCodes")for(auto code:transport.sampleCodes)supplied.push_back(float(code));
-  else if(name=="NativeCUSClipFlags")supplied={float(transport.clipFlags)};
+  std::array<float,12> converted;
+  std::span<const float> supplied;
+  if(name=="NativeCUSImageMasks"){converted={float(transport.emptyMask),float(transport.flipMask),float(transport.depthMask),float(transport.clampDepthCompareMask)};supplied={converted.data(),4};}
+  else if(name=="NativeCUSSampleCodes"){for(size_t i=0;i<converted.size();++i)converted[i]=float(transport.sampleCodes[i]);supplied=converted;}
+  else if(name=="NativeCUSClipFlags"){converted[0]=float(transport.clipFlags);supplied={converted.data(),1};}
   else if(name.starts_with("NativeCUSWater")){
    Check(name.size()==15 && name.back()>='0' && name.back()<='2',"CUS original map uniform identity differs");
-   const auto& c=source.waterColors[name.back()-'0'];supplied.assign(c.begin(),c.end());
+   supplied=source.waterColors[name.back()-'0'];
   }else{
    const auto& values=f.scalar==NativeCUSUniformScalar::Float?draw.floatUniforms:draw.intUniforms;
    const auto it=values.find(std::string(name));Check(it!=values.end(),"CUS active uniform lacks its original link/default/write value");supplied=it->second;
   }
-  Check(supplied.size()==f.components*f.count,"CUS original active uniform component count differs");
+  Check(supplied.size()==size_t(f.components)*f.count,"CUS original active uniform component count differs");
   for(unsigned element=0;element<f.count;++element)for(unsigned component=0;component<f.components;++component){
    const size_t offset=f.offset+size_t(element)*f.stride+component*4;
    Check(offset+4<=bytes.size(),"CUS reflected uniform offset exceeds native block");
-   const float value=supplied[element*f.components+component];Check(std::isfinite(value),"CUS reflected uniform contains non-finite bytes");
+   const float value=supplied[size_t(element)*f.components+component];Check(std::isfinite(value),"CUS reflected uniform contains non-finite bytes");
    if(f.scalar==NativeCUSUniformScalar::Float)std::memcpy(bytes.data()+offset,&value,4);
    else if(f.scalar==NativeCUSUniformScalar::Int){Check(value>=-2147483648.0 && double(value)<=2147483647.0 && std::trunc(value)==value,"CUS signed original uniform is outside its ABI");const auto i=int32_t(value);std::memcpy(bytes.data()+offset,&i,4);}
    else{Check(value>=0 && double(value)<=4294967295.0 && std::trunc(value)==value,"CUS unsigned transport value is outside its ABI");const auto i=uint32_t(value);std::memcpy(bytes.data()+offset,&i,4);}
   }
  }
- return bytes;
 }
 void PopulateNativeCUSProgramUniformMetadata(const NativeCUSGeneratedProgram& program,NativeCUSProgramConsumer& out)
 {

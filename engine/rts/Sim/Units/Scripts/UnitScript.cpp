@@ -2,6 +2,7 @@
 
 /* heavily based on CobInstance.cpp */
 #include "UnitScript.h"
+#include "ShieldPowerToCob.h"
 
 #include "CobDefines.h"
 #include "CobFile.h"
@@ -1229,7 +1230,7 @@ int CUnitScript::GetUnitVal(int val, int p1, int p2, int p3, int p4)
 		if (shield == nullptr)
 			return -1;
 
-		return int(static_cast<const CPlasmaRepulser*>(shield)->GetCurPower() * float(COBSCALE));
+		return ShieldPowerToCobInt(static_cast<const CPlasmaRepulser*>(shield)->GetCurPower(), float(COBSCALE));
 	} break;
 
 	case STEALTH: {

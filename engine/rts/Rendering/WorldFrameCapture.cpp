@@ -11,6 +11,9 @@
 #include "Rendering/EngineBridge/NativeS3OModelTextureCapture.h"
 #include "Backend/NativeMetalInfoCapture.h"
 #include "Backend/NativeEngineModelData.h"
+#include "Backend/NativeLegacyModelCapture.h"
+#include "Backend/NativeTerrainHeightSnapshot.h"
+#include "EngineBridge/NativeOpaqueModelCapture.h"
 #include "Backend/NativeCUSUniformCapture.h"
 #include "Rendering/Common/ModelDrawerState.hpp"
 #include "Backend/NativeCUSMaterialControl.h"
@@ -690,18 +693,7 @@ struct WorldFrameCapture::State {
 		const float* values = actualSourceMap->GetCornerHeightMapUnsynced();
 		if (values == nullptr || count > std::numeric_limits<size_t>::max() / sizeof(float))
 			throw content_error("Missing original unsynced terrain heights");
-		if (terrainHeights == nullptr || terrainHeights->width != width || terrainHeights->height != height ||
-			std::memcmp(values, terrainHeights->corners.data(), count * sizeof(float)) != 0) {
-			auto heights = std::make_shared<WorldTerrainHeights>();
-			heights->width = width;
-			heights->height = height;
-			heights->corners.assign(values, values + count);
-			for (float value : heights->corners) {
-				if (!std::isfinite(value))
-					throw content_error("Non-finite original terrain height");
-			}
-			terrainHeights = std::move(heights);
-		}
+		terrainHeights=CaptureNativeTerrainHeightSnapshot(actualSourceMap,values,width,height);
 	}
 
 	WorldTerrain Terrain()
@@ -873,7 +865,8 @@ std::shared_ptr<const NativeWorldEnvironmentFrame> WorldFrameCapture::PrepareEnv
 }
 
 WorldFrame WorldFrameCapture::Capture(NativeWaterScenePass pass,
- std::shared_ptr<const NativeOriginalShadowFrame> originalShadow)
+	std::shared_ptr<const NativeOriginalShadowFrame> originalShadow,
+	std::shared_ptr<const NativeOpaqueModelFrame> originalModels)
 {
 	if (readMap == nullptr || gameSetup == nullptr || mapInfo == nullptr || gs == nullptr || gu == nullptr ||
 		globalRendering == nullptr || mapDims.mapx <= 0 || mapDims.mapy <= 0)
@@ -902,6 +895,12 @@ WorldFrame WorldFrameCapture::Capture(NativeWaterScenePass pass,
 	}
 	result.simulationFrame = frame;
 	result.sourceDrawFrame = globalRendering->drawFrame;
+	if (originalModels && (originalModels->sourceDrawFrame != result.sourceDrawFrame ||
+		originalModels->alphaStage ||
+		originalModels->drawReflection != (pass == NativeWaterScenePass::Reflection) ||
+		originalModels->drawRefraction != (pass == NativeWaterScenePass::Refraction)))
+		throw content_error("Original model capture belongs to another draw or view");
+	result.opaqueModelFrame = std::move(originalModels);
 	result.interpolationOffset = globalRendering->timeOffset;
 	result.viewCamera.view = CopyMatrix(activeCamera->GetViewMatrix());
 	result.viewCamera.projection = CopyMatrix(activeCamera->GetProjectionMatrix());
@@ -942,63 +941,72 @@ WorldFrame WorldFrameCapture::Capture(NativeWaterScenePass pass,
 	// separate consumers. A family-wide unsupported list cannot describe them.
 	// Current-pose legacy model limitations are reported only if that consumer
 	// actually encodes a piece; the original source route has its own transforms.
-	for (const CUnit* unit : unitHandler.GetActiveUnits()) {
-		if (unit->isDead || unit->model == nullptr || unit->noDraw)
-			continue;
-		if (!gu->spectatingFullView && !unit->IsInLosForAllyTeam(gu->myAllyTeam))
-			continue; // Never expose a radar-only or hidden full model.
-		if (unit->model->type != MODELTYPE_S3O) {
-			result.unsupported.push_back("Model format: " + unit->model->name);
-			continue;
+	// Original source capture already owns the current model poses, materials,
+	// and visibility decisions. Do not build another list that the renderer
+	// would suppress at draw time. Keep the complete legacy list when color or
+	// standalone main-view shadows still consume it; particles stay independent.
+	const bool legacyModels = NeedsLegacyWorldModelCapture(bool(result.opaqueModelFrame),
+		bool(result.originalShadow), result.shadow && result.lighting.requested.shadows > 0,
+		pass != NativeWaterScenePass::Main);
+	if (legacyModels) {
+		for (const CUnit* unit : unitHandler.GetActiveUnits()) {
+			if (unit->isDead || unit->model == nullptr || unit->noDraw)
+				continue;
+			if (!gu->spectatingFullView && !unit->IsInLosForAllyTeam(gu->myAllyTeam))
+				continue; // Never expose a radar-only or hidden full model.
+			if (unit->model->type != MODELTYPE_S3O) {
+				result.unsupported.push_back("Model format: " + unit->model->name);
+				continue;
+			}
+			WorldUnit instance;
+			instance.unitId = unit->id;
+			instance.teamId = unit->team;
+			instance.selected = unit->isSelected;
+			const auto passes = ClassifyNativeWaterModelPasses(unit->drawFlag,unit->engineDrawMask,pass);
+			instance.opaque = passes.opaque;
+			instance.alpha = passes.alpha;
+			instance.drawAlpha = passes.alpha ? IModelDrawerState::alphaValues.x : 1;
+			instance.castsShadow = unit->HasDrawFlag(DrawFlags::SO_SHOPAQ_FLAG);
+			instance.world = CopyMatrix(unit->GetTransformMatrix(false));
+			instance.model = state->Model(unit->model);
+			instance.modelTextures=CaptureNativeS3OModelTextures(unit->model);
+			const CTeam* team = teamHandler.Team(unit->team);
+			std::copy_n(team->color, instance.teamColor.size(), instance.teamColor.begin());
+			instance.pieces = CapturePieces(unit->localModel, *instance.model);
+			// Exact30770 CUS bins are 1 (forward), 5 (reflection), 16 (shadow);
+			// alpha and refraction retain the original engine-standard shader.
+			instance.material = instance.alpha || pass == NativeWaterScenePass::Refraction ?
+				state->OriginalNonCUSMaterial() : state->Material(*unit->unitDef, *instance.model, false);
+			instance.healthFraction = std::clamp(unit->health / std::max(.01f, unit->maxHealth), 0.f, 1.f);
+			result.units.push_back(std::move(instance));
 		}
-		WorldUnit instance;
-		instance.unitId = unit->id;
-		instance.teamId = unit->team;
-		instance.selected = unit->isSelected;
-		const auto passes = ClassifyNativeWaterModelPasses(unit->drawFlag,unit->engineDrawMask,pass);
-		instance.opaque = passes.opaque;
-		instance.alpha = passes.alpha;
-		instance.drawAlpha = passes.alpha ? IModelDrawerState::alphaValues.x : 1;
-		instance.castsShadow = unit->HasDrawFlag(DrawFlags::SO_SHOPAQ_FLAG);
-		instance.world = CopyMatrix(unit->GetTransformMatrix(false));
-		instance.model = state->Model(unit->model);
-		instance.modelTextures=CaptureNativeS3OModelTextures(unit->model);
-		const CTeam* team = teamHandler.Team(unit->team);
-		std::copy_n(team->color, instance.teamColor.size(), instance.teamColor.begin());
-		instance.pieces = CapturePieces(unit->localModel, *instance.model);
-		// Exact30770 CUS bins are 1 (forward), 5 (reflection), 16 (shadow);
-		// alpha and refraction retain the original engine-standard shader.
-		instance.material = instance.alpha || pass == NativeWaterScenePass::Refraction ?
-			state->OriginalNonCUSMaterial() : state->Material(*unit->unitDef, *instance.model, false);
-		instance.healthFraction = std::clamp(unit->health / std::max(.01f, unit->maxHealth), 0.f, 1.f);
-		result.units.push_back(std::move(instance));
-	}
-	for (const CFeature* feature : CFeatureDrawer::GetUnsortedFeatures()) {
-		if (!feature || !feature->model || !feature->def || feature->def->drawType != DRAWTYPE_MODEL) continue;
-		// Consume the original draw policy output, without invoking ShouldDraw*
-		// (those helpers append to Lua material queues as a side effect).
-		const bool shadow = feature->HasDrawFlag(DrawFlags::SO_SHOPAQ_FLAG) || feature->HasDrawFlag(DrawFlags::SO_SHTRAN_FLAG);
-		const auto waterPasses = ClassifyNativeWaterModelPasses(feature->drawFlag,feature->engineDrawMask,pass);
-		if ((!waterPasses.opaque && !waterPasses.alpha && !(pass == NativeWaterScenePass::Main && shadow)) || feature->noDraw || feature->IsInVoid() || feature->drawAlpha <= 0) continue;
-		if (!gu->spectatingFullView && !feature->IsInLosForAllyTeam(gu->myAllyTeam)) continue;
-		if (feature->luaDraw) { result.unsupported.push_back("Lua-owned feature drawing: " + feature->def->name); continue; }
-		if (feature->model->type != MODELTYPE_S3O) { result.unsupported.push_back("Feature model format: " + feature->model->name); continue; }
-		WorldFeature instance;
-		instance.featureId = feature->id; instance.definitionId = feature->def->id; instance.teamId = feature->team;
-		instance.model = state->Model(feature->model);instance.modelTextures=CaptureNativeS3OModelTextures(feature->model); instance.world = CopyMatrix(feature->GetTransformMatrixRef(false));
-		instance.material = waterPasses.alpha || pass == NativeWaterScenePass::Refraction ?
-			state->OriginalNonCUSMaterial() : state->Material(*feature->def, *instance.model, true);
-		instance.pieces = CapturePieces(feature->localModel, *instance.model);
-		const CTeam* team = teamHandler.IsValidTeam(feature->team) ? teamHandler.Team(feature->team) : nullptr;
-		if (team) std::copy_n(team->color, instance.teamColor.size(), instance.teamColor.begin());
-		else instance.teamColor = {255,255,255,255};
-		instance.drawAlpha = feature->drawAlpha;
-		instance.healthFraction = std::clamp(feature->health / std::max(.01f, feature->maxHealth), 0.f, 1.f);
-		static_assert(DrawFlags::SO_OPAQUE_FLAG==1 && DrawFlags::SO_ALPHAF_FLAG==2 && DrawFlags::SO_SHOPAQ_FLAG==16);
-		const auto passes = ClassifyNativeFeaturePasses(feature->drawFlag,feature->engineDrawMask);
-		instance.opaque = waterPasses.opaque; instance.fading = waterPasses.alpha; instance.castsShadow = pass == NativeWaterScenePass::Main && passes.shadow;
-		instance.inWater = feature->IsInWater();
-		if (instance.opaque || instance.fading || instance.castsShadow) result.features.push_back(std::move(instance));
+		for (const CFeature* feature : CFeatureDrawer::GetUnsortedFeatures()) {
+			if (!feature || !feature->model || !feature->def || feature->def->drawType != DRAWTYPE_MODEL) continue;
+			// Consume the original draw policy output, without invoking ShouldDraw*
+			// (those helpers append to Lua material queues as a side effect).
+			const bool shadow = feature->HasDrawFlag(DrawFlags::SO_SHOPAQ_FLAG) || feature->HasDrawFlag(DrawFlags::SO_SHTRAN_FLAG);
+			const auto waterPasses = ClassifyNativeWaterModelPasses(feature->drawFlag,feature->engineDrawMask,pass);
+			if ((!waterPasses.opaque && !waterPasses.alpha && !(pass == NativeWaterScenePass::Main && shadow)) || feature->noDraw || feature->IsInVoid() || feature->drawAlpha <= 0) continue;
+			if (!gu->spectatingFullView && !feature->IsInLosForAllyTeam(gu->myAllyTeam)) continue;
+			if (feature->luaDraw) { result.unsupported.push_back("Lua-owned feature drawing: " + feature->def->name); continue; }
+			if (feature->model->type != MODELTYPE_S3O) { result.unsupported.push_back("Feature model format: " + feature->model->name); continue; }
+			WorldFeature instance;
+			instance.featureId = feature->id; instance.definitionId = feature->def->id; instance.teamId = feature->team;
+			instance.model = state->Model(feature->model);instance.modelTextures=CaptureNativeS3OModelTextures(feature->model); instance.world = CopyMatrix(feature->GetTransformMatrixRef(false));
+			instance.material = waterPasses.alpha || pass == NativeWaterScenePass::Refraction ?
+				state->OriginalNonCUSMaterial() : state->Material(*feature->def, *instance.model, true);
+			instance.pieces = CapturePieces(feature->localModel, *instance.model);
+			const CTeam* team = teamHandler.IsValidTeam(feature->team) ? teamHandler.Team(feature->team) : nullptr;
+			if (team) std::copy_n(team->color, instance.teamColor.size(), instance.teamColor.begin());
+			else instance.teamColor = {255,255,255,255};
+			instance.drawAlpha = feature->drawAlpha;
+			instance.healthFraction = std::clamp(feature->health / std::max(.01f, feature->maxHealth), 0.f, 1.f);
+			static_assert(DrawFlags::SO_OPAQUE_FLAG==1 && DrawFlags::SO_ALPHAF_FLAG==2 && DrawFlags::SO_SHOPAQ_FLAG==16);
+			const auto passes = ClassifyNativeFeaturePasses(feature->drawFlag,feature->engineDrawMask);
+			instance.opaque = waterPasses.opaque; instance.fading = waterPasses.alpha; instance.castsShadow = pass == NativeWaterScenePass::Main && passes.shadow;
+			instance.inWater = feature->IsInWater();
+			if (instance.opaque || instance.fading || instance.castsShadow) result.features.push_back(std::move(instance));
+		}
 	}
 	result.particleFrame = state->particleCapture.Capture(*activeCamera, [this](const S3DModel* model) { return CaptureModel(model); }, pass);
 	return result;

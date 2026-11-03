@@ -193,14 +193,25 @@ void BlockoutGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,bool valid
 	for(bool hasNormal:{false,true}){impl->Pipeline(lease,false,hasNormal,color,blend,mask,ms,samples,false);impl->Pipeline(lease,true,hasNormal,MTLPixelFormatR8Unorm,blend,mask,ms,1,false);}
 	SetNativeBlockoutConsumerAvailable(true);
 }
-std::shared_ptr<const NativeBlockoutTarget> BlockoutGPU::AllocateTarget(RuntimeLease& lease,uint32_t w,uint32_t h){
-	Require(IsNativeBlockoutConsumerAvailable()&&w&&h&&w<=lease.Capabilities().maxTextureDimension2D&&h<=lease.Capabilities().maxTextureDimension2D,"Original Blockout FBO extent exceeds actual device");
+static std::shared_ptr<const NativeBlockoutTarget> AllocateBlockoutStorage(const Runtime& runtime,uint32_t w,uint32_t h){
+	Require(IsNativeBlockoutConsumerAvailable()&&w&&h&&w<=runtime.Capabilities().maxTextureDimension2D&&h<=runtime.Capabilities().maxTextureDimension2D,"Original Blockout FBO extent exceeds actual device");
 	auto storage=std::make_shared<TargetStorage>();
 	auto color=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatR8Unorm width:w height:h mipmapped:NO];color.storageMode=MTLStorageModePrivate;color.usage=MTLTextureUsageRenderTarget;
 	auto depth=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatDepth32Float width:w height:h mipmapped:NO];depth.storageMode=MTLStorageModePrivate;depth.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;
-	storage->color=[lease.Device()newTextureWithDescriptor:color];storage->depthProbe=[lease.Device()newTextureWithDescriptor:depth];
+	storage->color=[runtime.Device()newTextureWithDescriptor:color];storage->depthProbe=[runtime.Device()newTextureWithDescriptor:depth];
 	if(!storage->color||!storage->depthProbe)return {};
 	return std::make_shared<NativeBlockoutTarget>(NativeBlockoutTarget{w,h,std::move(storage)});
+}
+std::shared_ptr<const NativeBlockoutTarget> BlockoutGPU::AllocateTarget(RuntimeLease& lease,uint32_t w,uint32_t h)
+{
+ return AllocateBlockoutStorage(*lease.ContextIdentity(),w,h);
+}
+std::shared_ptr<const NativeBlockoutTarget> ReserveNativeBlockoutTargetForCapture(uint32_t w,uint32_t h)
+{
+ Require([NSThread isMainThread],"Original Blockout capture reservation requires the engine main thread");
+ const auto& runtime=SharedRuntime();const auto caps=runtime.Capabilities();
+ Require(caps.directMetal4 && caps.unifiedMemory && runtime.Device()!=nil,"Original Blockout capture has no supported native device");
+ return AllocateBlockoutStorage(runtime,w,h);
 }
 std::unique_ptr<PreparedBlockoutFrame> BlockoutGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeBlockoutFrame> frame,std::span<const BlockoutDepthImage> depthImages,const WorldCamera& camera,uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat color,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
 	Require(frame&&impl->normals,"Blockout source frame/normal-image owner absent");Initialize(lease,color,validation,ms,samples);

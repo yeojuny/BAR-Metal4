@@ -1,12 +1,12 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4CUSDeferred.h"
+#include "Rendering/Backend/NativeMRTClearLoad145.h"
+#include "System/Log/ILog.h"
+#include "Metal4DeferredStoragePool.inc"
+#include "Metal4MRTObservation174.h"
 
 namespace rendering::metal4 {
 namespace {
-struct Storage {
-	std::array<id<MTLTexture>,5> colors{};
-	__strong id<MTLTexture> depth=nil,combinedColor=nil;
-};
 void Readable(const ShieldDepthImage& image,uint64_t submission)
 {
 	Require(image.producer&&IsNativeShieldDepthReadable(image.producer->encoded,image.producer->completed,
@@ -26,16 +26,118 @@ struct PreparedCUSDeferred::Impl {
 	struct SourceDraw {bool engine;size_t index;};
 	std::vector<SourceDraw> sourceOrder;
 	uint64_t submission=0;
-	bool encoded=false,completed=false;
+ unsigned discardPrior145=0;
+ std::unique_ptr<MRT174Observation> observation174;
+	bool encoded=false,completed=false,retainsReadOnlyContents=false;
 };
+
+namespace {
+template<class A,class B>
+bool SameMRTSharedOwner(const A& a,const B& b)
+{
+	return a&&b&&a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);
+}
+template<class Prepared>
+bool CanRetainReadOnlyMRT(const Prepared& p)
+{
+	if(p.source->role!=NativeGeometryTextureRole::Models||!p.source->feature||
+		p.source->clearBefore||p.source->clearOnly||p.source->combinedColor.Changed()||p.discardPrior145||
+		!p.other.sourceOrder||!p.other.emptySourceCallbacksHaveNoCommands||
+		p.other.beforeLua||p.other.afterLua||!p.other.drawSequences.empty()||!p.sourceOrder.empty()||
+		(p.lua&&p.lua->DrawCount()!=0))return false;
+	const auto& prior=p.priorDepth;const auto& m=p.source->depth.backing->Metadata();
+	if(!prior.texture||!prior.storageOwner||!prior.producer||
+		prior.role!=ShieldDepthRole::ModelsOnly||prior.sourceDrawFrame!=p.source->sourceDrawFrame||
+		prior.producerIdentity!=prior.producer->identity||prior.producer->role!=ShieldDepthRole::ModelsOnly||
+		prior.producer->sourceDrawFrame!=p.source->sourceDrawFrame||prior.producer->submissionIdentity!=p.submission||
+		!prior.producer->allocationVerified||prior.producer->operation==ShieldDepthOperation::AllocationOnly||
+		prior.view!=m.view||prior.projection!=m.projection||prior.viewport!=m.viewport)return false;
+	for(unsigned n=0;n<5;++n){
+		const auto& color=p.priorColors[n];const auto& view=color.metadata.view;
+		if(!color.texture||!SameMRTSharedOwner(color.storageOwner,prior.storageOwner)||
+			!SameMRTSharedOwner(color.producer,prior.producer)||
+			color.metadata.role!=NativeGeometryTextureRole::Models||color.metadata.attachment!=n||
+			view.width!=m.width||view.height!=m.height||view.view!=m.view||
+			view.projection!=m.projection||view.viewport!=m.viewport)return false;
+	}
+	return true;
+}
+template<class Prepared>
+void BindReadOnlyMRTContents(Prepared& p)
+{
+	// Storage is immutable in this phase. Logical F remains a distinct producer
+	// and metadata version; U is neither overwritten nor marked complete here.
+	for(unsigned n=0;n<5;++n){
+		p.colors[n]=p.priorColors[n];p.colors[n].producer=p.producer;
+		p.colors[n].metadata=p.source->colors[n].backing->Metadata();
+	}
+	const auto& m=p.source->depth.backing->Metadata();
+	p.depth=p.priorDepth;p.depth.producer=p.producer;
+	p.depth.sourceDrawFrame=p.source->sourceDrawFrame;p.depth.producerIdentity=p.producer->identity;
+	p.depth.view=m.view;p.depth.projection=m.projection;p.depth.viewport=m.viewport;
+	p.producer->allocationVerified=true;
+}
+void RetainReadOnlyMRTStorage(RuntimeLease& lease,const std::shared_ptr<const void>& owner)
+{
+	// Retaining textures alone does not pin the pool's Storage use_count.
+	// Use its existing opaque owner wrapper; no unproved cast back to Storage.
+	auto lifetime=[M4DeferredStorageLifetime new];lifetime->owner=owner;lease.Retain(lifetime);
+}
+template<class Prepared>
+void RequirePriorMRTContents(const Prepared& p)
+{
+	for(const auto& image:p.priorColors)if(image.texture)Require(IsDeferredColorReadable(image,p.submission),"Original MRT phase attempted to load unencoded prior color");
+	if(p.priorCombinedColor.texture)Require(IsDeferredColorReadable(p.priorCombinedColor,p.submission),"Combined color prior contents are not readable in this submission");
+	if(p.priorDepth.texture)Readable(p.priorDepth,p.submission);
+}
+template<class Prepared,class Command>
+void EncodeReadOnlyMRT(Prepared& p,Command command)
+{
+	Require(command&&!p.encoded&&!p.completed&&p.retainsReadOnlyContents&&p.sourceOrder.empty(),
+		"Read-only MRT phase is missing, writing, repeated or retired");
+	RequirePriorMRTContents(p);
+	// The caller proved its empty lifecycle has no commands. A prepared CUS
+	// draw owns all its images, so DrawCount zero also means no image callbacks.
+	if(p.other.dependencies)p.other.dependencies(command);
+	if(p.lua)p.lua->EncodeDependencies(command);
+	p.other.didEncodeSourceDraws();
+	p.encoded=true;p.producer->encoded=true;
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	static bool reported164=false;
+	if(!reported164){
+		const auto& m=p.source->depth.backing->Metadata();
+		LOG("[NativeMRT164] source_frame=%llu submission=%llu width=%u height=%u omitted_copies=6 logical_source_bytes=%llu distinct_producer=%u engine_draws=%llu lua_draws=%llu prepared_events=%llu borrowed_owner=%u encoded=1",
+			static_cast<unsigned long long>(p.source->sourceDrawFrame),static_cast<unsigned long long>(p.submission),m.width,m.height,
+			static_cast<unsigned long long>(uint64_t(24)*m.width*m.height),
+			unsigned(p.producer->identity!=p.priorDepth.producerIdentity&&!SameMRTSharedOwner(p.producer,p.priorDepth.producer)),
+			static_cast<unsigned long long>(p.other.drawSequences.size()),static_cast<unsigned long long>(p.lua?p.lua->DrawCount():0),
+			static_cast<unsigned long long>(p.sourceOrder.size()),unsigned(SameMRTSharedOwner(p.depth.storageOwner,p.priorDepth.storageOwner)));
+		reported164=true;
+	}
+#endif
+}
+}
 PreparedCUSDeferred::PreparedCUSDeferred():impl(std::make_unique<Impl>()){}
 PreparedCUSDeferred::~PreparedCUSDeferred()=default;
 const std::array<DeferredColorImage,5>& PreparedCUSDeferred::Colors()const{return impl->colors;}
 const ShieldDepthImage& PreparedCUSDeferred::Depth()const{return impl->depth;}
+ModelPhaseExecution165 PreparedCUSDeferred::InspectExecution165(uint64_t frame,uint64_t submission)const
+{
+	const auto& p=*impl;
+	Require(p.source&&frame==p.source->sourceDrawFrame&&submission&&submission==p.submission&&
+		p.producer&&p.producer->sourceDrawFrame==frame&&p.producer->submissionIdentity==submission&&
+		!p.encoded&&!p.completed&&!p.producer->encoded&&!p.producer->completed,
+		"MRT execution inspection differs from its prepared frame/submission/lifecycle");
+	// The authoritative decision was made after preparing actual engine/CUS
+	// consumers and source order. Do not infer it again from draw counts here.
+	if(p.retainsReadOnlyContents)return {SourceDependencyWork160::NoCommands,ModelPhaseBody165::CPULifecycleOnly};
+	return {};
+}
 
 std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSSourceGPU& programs,
 	std::shared_ptr<const NativeCUSDeferredPhase> source,const CUSSourceGPU::TextureProvider& images,
-	CUSDeferredOtherDraws other,uint64_t submission,bool validation,double& milliseconds)
+	CUSDeferredOtherDraws other,uint64_t submission,bool validation,double& milliseconds,
+ const NativeWorldAttachmentClear* initialClear)
 {
 	Require(source&&submission&&other.observed,"Original model MRT requires actual selected non-CUS source ownership");
 	Require((!other.beforeLua&&!other.afterLua)||bool(other.lifetime),"Original engine MRT callbacks lack their retained geometry owner");
@@ -47,31 +149,26 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
 	Require(m.width&&m.height&&m.width<=lease.Capabilities().maxTextureDimension2D&&m.height<=lease.Capabilities().maxTextureDimension2D,
 		"Original model MRT extent exceeds its actual native storage limit");
 	auto out=std::unique_ptr<PreparedCUSDeferred>(new PreparedCUSDeferred);auto& p=*out->impl;
-	p.source=std::move(source);p.other=std::move(other);p.submission=submission;p.storage=std::make_shared<Storage>();
+	p.source=std::move(source);p.other=std::move(other);p.submission=submission;
+	Require(!p.other.initialAttachmentClear182||initialClear,
+		"MRT attachment clear callback has no proved first original clear");
+ // The caller owns the actual clear and proves it is its first source event.
+ // Read prior storage only for attachments whose pixels the clear preserves.
+ if(initialClear){
+  Require(p.source->role==NativeGeometryTextureRole::Map && !p.source->clearBefore &&
+   initialClear->stage==NativeWorldDrawStage::Ground && initialClear->sequence && p.other.sourceOrder &&
+   !p.other.drawSequences.empty() && p.other.drawSequences.front()==initialClear->sequence,
+   "MRT discard requires the actual first ordered Map clear");
+  for(const auto& draw:p.source->lua->draws)Require(initialClear->sequence<draw.sequence,
+   "MRT discard clear must precede every source Lua draw");
+  p.discardPrior145=NativeMRTClearDiscard145(*initialClear,m.width,m.height,p.source->combinedColor.Changed());
+ }
 	p.producer=CreateShieldDepthProducer(p.source->role==NativeGeometryTextureRole::Map?ShieldDepthRole::TerrainOnly:ShieldDepthRole::ModelsOnly,p.source->sourceDrawFrame);
 	p.producer->submissionIdentity=submission;
  if(p.source->clearOnly)p.producer->operation=ShieldDepthOperation::ClearOne;
-	for(unsigned attachment=0;attachment<5;++attachment){
-		auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRGBA8Unorm width:m.width height:m.height mipmapped:NO];
-		descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;
-		auto texture=[lease.Device()newTextureWithDescriptor:descriptor];Require(texture,"Cannot allocate original five-MRT color output");
-		p.storage->colors[attachment]=texture;lease.AddAllocation(texture);
-		p.colors[attachment]={texture,p.storage,p.producer,p.source->colors[attachment].backing->Metadata()};
-	}
-	if(p.source->combinedColor.Changed()){
-		auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRGBA8Unorm width:m.width height:m.height mipmapped:NO];
-		descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;
-		auto texture=[lease.Device()newTextureWithDescriptor:descriptor];Require(texture,"Cannot allocate original combined ground color output");
-		p.storage->combinedColor=texture;lease.AddAllocation(texture);
-		p.combinedColor={texture,p.storage,p.producer,p.source->combinedColor.backing->Metadata()};
-	}
-	auto depthDescriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatDepth32Float width:m.width height:m.height mipmapped:NO];
-	depthDescriptor.storageMode=MTLStorageModePrivate;depthDescriptor.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;
-	p.storage->depth=[lease.Device()newTextureWithDescriptor:depthDescriptor];Require(p.storage->depth,"Cannot allocate same-pass original model MRT depth");lease.AddAllocation(p.storage->depth);
-	p.producer->allocationVerified=true;
-	p.depth={p.storage->depth,p.source->role==NativeGeometryTextureRole::Map?ShieldDepthRole::TerrainOnly:ShieldDepthRole::ModelsOnly,p.source->sourceDrawFrame,p.producer->identity,m.view,m.projection,m.viewport,p.storage,p.producer};
 	if(!p.source->clearBefore){
 		for(unsigned n=0;n<5;++n){
+   if(p.discardPrior145&(1u<<n))continue;
 			const auto previous=p.source->colors[n].previous;
 			auto backing=previous?std::dynamic_pointer_cast<const NativeDeferredColorBacking>(previous->backing):nullptr;
 			Require(bool(backing),"Original load-phase MRT color has no actual previous image");
@@ -79,20 +176,22 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
 			Require(texture&&texture.width==m.width&&texture.height==m.height&&texture.pixelFormat==MTLPixelFormatRGBA8Unorm,
 				"Original MRT prior color storage differs");lease.AddAllocation(texture);
 		}
-		if(p.source->combinedColor.Changed()){
+		if(p.source->combinedColor.Changed() && !(p.discardPrior145&32u)){
 			const auto previous=p.source->combinedColor.previous;auto backing=previous?std::dynamic_pointer_cast<const NativeDeferredColorBacking>(previous->backing):nullptr;
 			Require(bool(backing),"Original combined color lacks its real prior allocation/content");p.priorCombinedColor=GetDeferredColorBackingImage(*backing);
 			auto texture=p.priorCombinedColor.texture;Require(texture&&texture.width==m.width&&texture.height==m.height&&texture.pixelFormat==MTLPixelFormatRGBA8Unorm,"Combined color prior storage differs");lease.AddAllocation(texture);
 		}
+  if(!(p.discardPrior145&64u)){
 		const auto previous=p.source->depth.previous;
 		auto backing=previous?std::dynamic_pointer_cast<const NativeShieldDepthBacking>(previous->backing):nullptr;
 		Require(bool(backing),"Original load-phase MRT depth has no actual previous image");
 		p.priorDepth=GetShieldDepthBackingImage(*backing);
 		Require(p.priorDepth.texture&&p.priorDepth.texture.width==m.width&&p.priorDepth.texture.height==m.height&&p.priorDepth.texture.pixelFormat==MTLPixelFormatDepth32Float,
 			"Original MRT prior depth storage differs");lease.AddAllocation(p.priorDepth.texture);
+  }
 	}
 	CUSSourceTarget target;target.colors.fill(MTLPixelFormatRGBA8Unorm);target.depth=MTLPixelFormatDepth32Float;
-	if(p.combinedColor.texture)target.combinedColor=MTLPixelFormatRGBA8Unorm;
+	if(p.source->combinedColor.Changed())target.combinedColor=MTLPixelFormatRGBA8Unorm;
 	target.width=target.logicalWidth=m.width;target.height=target.logicalHeight=m.height;target.camera=p.source->camera;
 	// GeometryBuffer::LoadViewport uses its actual full named allocation extent.
 	target.camera.viewport={0,0,int32_t(m.width),int32_t(m.height)};
@@ -110,8 +209,40 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
 			if(engineSequence<luaSequence)p.sourceOrder.push_back({true,engine++});else p.sourceOrder.push_back({false,lua++});
 		}
 	}
+ if(p.discardPrior145)Require(!p.sourceOrder.empty()&&p.sourceOrder.front().engine&&p.sourceOrder.front().index==0,
+  "MRT discard lost its original first clear in the merged source order");
+	// Decide only after both actual consumers and their source order exist.
+	// Prepared empty engine/CUS consumers have no image dependencies. A writing
+	// phase still obtains its own storage and preserves the original COW path.
+	p.retainsReadOnlyContents=CanRetainReadOnlyMRT(p);
+	if(p.retainsReadOnlyContents){
+		BindReadOnlyMRTContents(p);
+		RetainReadOnlyMRTStorage(lease,p.depth.storageOwner);
+	}else{
+		p.storage=AcquireDeferredStorage(lease,m.width,m.height,p.source->combinedColor.Changed());
+		for(unsigned attachment=0;attachment<5;++attachment){
+			auto texture=p.storage->colors[attachment];lease.AddAllocation(texture);
+			p.colors[attachment]={texture,p.storage,p.producer,p.source->colors[attachment].backing->Metadata()};
+		}
+		if(p.source->combinedColor.Changed()){
+			auto texture=p.storage->combinedColor;lease.AddAllocation(texture);
+			p.combinedColor={texture,p.storage,p.producer,p.source->combinedColor.backing->Metadata()};
+		}
+		lease.AddAllocation(p.storage->depth);
+		p.producer->allocationVerified=true;
+		p.depth={p.storage->depth,p.source->role==NativeGeometryTextureRole::Map?ShieldDepthRole::TerrainOnly:ShieldDepthRole::ModelsOnly,p.source->sourceDrawFrame,p.producer->identity,m.view,m.projection,m.viewport,p.storage,p.producer};
+	}
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ static bool reported145=false;
+ if(p.discardPrior145&&!reported145){
+  unsigned skipped=0;for(unsigned bit=0;bit<7;++bit)skipped+=bool(p.discardPrior145&(1u<<bit));
+  LOG("[NativeMRT145] discard_mask=%u omitted_copies=%u source_bytes=%llu width=%u height=%u original_clear_retained=1",
+   p.discardPrior145,skipped,static_cast<unsigned long long>(uint64_t(skipped)*m.width*m.height*4),m.width,m.height);
+  reported145=true;
+ }
+#endif
 	// Publish actual storage only after every stage resource prepared. These
-	// tokens still report encoded=false until their actual five-output pass.
+	// tokens still report encoded=false until their actual ordered phase.
 	for(unsigned n=0;n<5;++n)FulfillDeferredColorBacking(*p.source->colors[n].backing,p.colors[n]);
 	if(p.combinedColor.texture)FulfillDeferredColorBacking(*p.source->combinedColor.backing,p.combinedColor);
 	FulfillShieldDepthBacking(*p.source->depth.backing,p.depth);
@@ -121,24 +252,41 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
 void PreparedCUSDeferred::Encode(id<MTL4CommandBuffer> command)
 {
 	auto& p=*impl;Require(command&&!p.encoded&&!p.completed,"Original model MRT phase is missing or encoded twice");
-	if(!p.source->clearBefore){
-		for(const auto& image:p.priorColors)Require(IsDeferredColorReadable(image,p.submission),"Original MRT phase attempted to load unencoded prior color");
-		if(p.priorCombinedColor.texture)Require(IsDeferredColorReadable(p.priorCombinedColor,p.submission),"Combined color prior contents are not readable in this submission");
-		Readable(p.priorDepth,p.submission);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ if(MRT174Enabled()&&MRT174Window(p.source->sourceDrawFrame)){
+  const unsigned row=MRT174RowQuota().fetch_add(1,std::memory_order_relaxed);
+  if(row<512){
+   p.observation174=std::make_unique<MRT174Observation>();
+   if(p.source->sourceDrawFrame==2048)LOG("[NativeMRT174Begin] source_frame=%llu submission=%llu",static_cast<unsigned long long>(p.source->sourceDrawFrame),static_cast<unsigned long long>(p.submission));
+  }
+  else if(row==512)LOG("[NativeMRT174Issue] kind=phase_row_cap limit=512");
+ }
+#endif
+	if(p.retainsReadOnlyContents){EncodeReadOnlyMRT(p,command);return;}
+	if(!p.source->clearBefore && (p.priorColors[0].texture||p.priorCombinedColor.texture||p.priorDepth.texture)){
+		RequirePriorMRTContents(p);
 		auto copy=[command computeCommandEncoder];Require(copy,"Cannot encode original model MRT prior-content load");
+  if(p.observation174)p.observation174->copyEncoder=true;
+  const auto issued174=[&](unsigned slot,id<MTLTexture> source,const MTLSize& size){
+   if(p.observation174){const auto format=source.pixelFormat;
+    p.observation174->Issued(slot,size.width,size.height,size.depth,
+     format==MTLPixelFormatRGBA8Unorm||format==MTLPixelFormatDepth32Float?4u:0u);}
+  };
 		[copy barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
 		const auto extent=MTLSizeMake(p.depth.texture.width,p.depth.texture.height,1);
-		for(unsigned n=0;n<5;++n)[copy copyFromTexture:p.priorColors[n].texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:extent toTexture:p.colors[n].texture destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];
-		if(p.priorCombinedColor.texture)[copy copyFromTexture:p.priorCombinedColor.texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:extent toTexture:p.combinedColor.texture destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];
-		[copy copyFromTexture:p.priorDepth.texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:extent toTexture:p.depth.texture destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];
+		for(unsigned n=0;n<5;++n)if(p.priorColors[n].texture){[copy copyFromTexture:p.priorColors[n].texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:extent toTexture:p.colors[n].texture destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];issued174(n,p.priorColors[n].texture,extent);}
+		if(p.priorCombinedColor.texture){[copy copyFromTexture:p.priorCombinedColor.texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:extent toTexture:p.combinedColor.texture destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];issued174(5,p.priorCombinedColor.texture,extent);}
+		if(p.priorDepth.texture){[copy copyFromTexture:p.priorDepth.texture sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:extent toTexture:p.depth.texture destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];issued174(6,p.priorDepth.texture,extent);}
 		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];
 	}
 	if(p.other.dependencies)p.other.dependencies(command);
 	if(p.lua)p.lua->EncodeDependencies(command);
-	auto pass=[MTL4RenderPassDescriptor new];pass.renderTargetWidth=p.depth.texture.width;pass.renderTargetHeight=p.depth.texture.height;
-	for(unsigned n=0;n<5;++n){auto color=pass.colorAttachments[n];color.texture=p.colors[n].texture;color.loadAction=p.source->clearBefore?MTLLoadActionClear:MTLLoadActionLoad;color.storeAction=MTLStoreActionStore;color.clearColor=MTLClearColorMake(0,0,0,0);}
-	if(p.combinedColor.texture){auto color=pass.colorAttachments[5];color.texture=p.combinedColor.texture;color.loadAction=p.source->clearBefore?MTLLoadActionClear:MTLLoadActionLoad;color.storeAction=MTLStoreActionStore;color.clearColor=MTLClearColorMake(0,0,0,0);}
-	pass.depthAttachment.texture=p.depth.texture;pass.depthAttachment.loadAction=p.source->clearBefore?MTLLoadActionClear:MTLLoadActionLoad;pass.depthAttachment.storeAction=MTLStoreActionStore;pass.depthAttachment.clearDepth=1;
+	auto pass=[MTL4RenderPassDescriptor new];pass.defaultRasterSampleCount=1;
+	pass.renderTargetWidth=p.depth.texture.width;pass.renderTargetHeight=p.depth.texture.height;
+	for(unsigned n=0;n<5;++n){auto color=pass.colorAttachments[n];color.texture=p.colors[n].texture;color.loadAction=p.source->clearBefore?MTLLoadActionClear:(p.discardPrior145&(1u<<n))?MTLLoadActionDontCare:MTLLoadActionLoad;color.storeAction=MTLStoreActionStore;color.clearColor=MTLClearColorMake(0,0,0,0);}
+	if(p.combinedColor.texture){auto color=pass.colorAttachments[5];color.texture=p.combinedColor.texture;color.loadAction=p.source->clearBefore?MTLLoadActionClear:(p.discardPrior145&32u)?MTLLoadActionDontCare:MTLLoadActionLoad;color.storeAction=MTLStoreActionStore;color.clearColor=MTLClearColorMake(0,0,0,0);}
+	pass.depthAttachment.texture=p.depth.texture;pass.depthAttachment.loadAction=p.source->clearBefore?MTLLoadActionClear:(p.discardPrior145&64u)?MTLLoadActionDontCare:MTLLoadActionLoad;pass.depthAttachment.storeAction=MTLStoreActionStore;pass.depthAttachment.clearDepth=1;
+	if(p.other.initialAttachmentClear182)p.other.initialAttachmentClear182(pass);
 	auto encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder,"Cannot encode original five-MRT model phase");
 	try{
 	[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
@@ -163,5 +311,23 @@ void PreparedCUSDeferred::DidComplete()
 	// that fact even if a later child retirement callback reports an error.
 	p.completed=true;p.producer->completed=true;
 	if(p.lua)p.lua->DidComplete();if(p.other.didComplete)p.other.didComplete();
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ if(p.observation174){const auto& o=*p.observation174;const auto& m=p.source->depth.backing->Metadata();
+  const unsigned domain=p.source->role==NativeGeometryTextureRole::Map?0u:p.source->role==NativeGeometryTextureRole::Models?(p.source->feature?2u:1u):3u;
+  LOG("[NativeMRT174] source_frame=%llu submission=%llu domain=%u width=%u height=%u readonly=%u clear_before=%u clear_only=%u discard_mask=%u copy_path_eligible=%u copy_encoder=%u calls=%llu logical_source_bytes=%llu copy_width=%llu copy_height=%llu copy_depth=%llu c0_calls=%llu c0_bytes=%llu c1_calls=%llu c1_bytes=%llu c2_calls=%llu c2_bytes=%llu c3_calls=%llu c3_bytes=%llu c4_calls=%llu c4_bytes=%llu combined_calls=%llu combined_bytes=%llu depth_calls=%llu depth_bytes=%llu unknown_format=%llu invalid_extent=%llu overflow=%llu timestamp_samples=0 gpu_time=unknown retired=1",
+   static_cast<unsigned long long>(p.source->sourceDrawFrame),static_cast<unsigned long long>(p.submission),domain,m.width,m.height,
+   unsigned(p.retainsReadOnlyContents),unsigned(p.source->clearBefore),unsigned(p.source->clearOnly),p.discardPrior145,unsigned(!p.retainsReadOnlyContents&&!p.source->clearBefore&&(p.priorColors[0].texture||p.priorCombinedColor.texture||p.priorDepth.texture)),unsigned(o.copyEncoder),
+   static_cast<unsigned long long>(o.Calls()),static_cast<unsigned long long>(o.Bytes()),
+   static_cast<unsigned long long>(o.width),static_cast<unsigned long long>(o.height),static_cast<unsigned long long>(o.depth),
+   static_cast<unsigned long long>(o.calls[0]),static_cast<unsigned long long>(o.bytes[0]),
+   static_cast<unsigned long long>(o.calls[1]),static_cast<unsigned long long>(o.bytes[1]),
+   static_cast<unsigned long long>(o.calls[2]),static_cast<unsigned long long>(o.bytes[2]),
+   static_cast<unsigned long long>(o.calls[3]),static_cast<unsigned long long>(o.bytes[3]),
+   static_cast<unsigned long long>(o.calls[4]),static_cast<unsigned long long>(o.bytes[4]),
+   static_cast<unsigned long long>(o.calls[5]),static_cast<unsigned long long>(o.bytes[5]),
+   static_cast<unsigned long long>(o.calls[6]),static_cast<unsigned long long>(o.bytes[6]),
+   static_cast<unsigned long long>(o.unknownFormat),static_cast<unsigned long long>(o.invalidExtent),static_cast<unsigned long long>(o.overflow));
+ }
+#endif
 }
 } // namespace rendering::metal4

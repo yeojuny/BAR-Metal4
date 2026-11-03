@@ -127,13 +127,13 @@ struct Context: std::enable_shared_from_this<Context> {
 		++invalidUniformOperations;
 	}
 
-	NativePiPSampledImage Sample(const Binding& bound, std::shared_ptr<const NativeMiniMapBackground>& engineFrame,unsigned actualUnit)
+	NativePiPSampledImage Sample(const Binding& bound, std::shared_ptr<const NativeMiniMapBackground>& engineFrame,unsigned actualUnit,NativeMiniMapImageMask requested)
 	{
 		NativePiPSampledImage result;
 		if (bound.engine != NativePiPEngineImage::None) {
 			Check(minimap != nullptr, "PiP engine image requires the real minimap/viewer state");
 			result.engineImage = bound.engine;
-			if (!engineFrame) engineFrame = mapCapture.CapturePiP(minimap->GetNativeState());
+			if(!engineFrame) engineFrame=mapCapture.CapturePiP(minimap->GetNativeState(),requested);
 			result.engineSource = engineFrame;
 			result.sampler = bound.sampler;
 		} else if(bound.sourceDrawImage) {
@@ -154,11 +154,15 @@ struct Context: std::enable_shared_from_this<Context> {
 		Check(program && !program->deleted, "Original PiP draw has no live private program");
 		NativePiPDraw draw; draw.program = program->state.Capture();
 		std::shared_ptr<const NativeMiniMapBackground> engineFrame;
+		const auto requested=NativePiPImageDemand(draw.program,[&](int unit,unsigned) {
+			Check(unit>=0 && std::size_t(unit)<bindings.size(), "Original PiP sampler unit exceeds bindings");
+			return bindings[unit].engine;
+		});
 		for (const auto& uniform: GetNativePiPProgramSpec(draw.program.program).uniforms) {
 			if (!uniform.sampler || !uniform.active) continue;
 			const int unit = draw.program.samplerUnits[uniform.slot];
 			Check(unit >= 0 && std::size_t(unit) < bindings.size(), "Original PiP sampler unit exceeds bindings");
-			auto sampled = Sample(bindings[unit],engineFrame,unsigned(unit));
+			auto sampled = Sample(bindings[unit],engineFrame,unsigned(unit),requested);
 			draw.program.uniforms.flipV[uniform.slot] = sampled.image && sampled.image->flipV;
 			if (sampled.incomplete) draw.program.uniforms.flipV[3] |= 1u << uniform.slot;
 			draw.sampledImages[uniform.slot] = std::move(sampled);
@@ -290,7 +294,7 @@ struct Context: std::enable_shared_from_this<Context> {
 			result.resource = std::make_shared<NativeUITextureBinding>();
 			if (name == "$minimap") {
 				Check(minimap != nullptr, "PiP minimap image requires the actual map state");
-				result.resource->current = mapCapture.CapturePiP(minimap->GetNativeState())->base;
+				result.resource->current = mapCapture.CapturePiP(minimap->GetNativeState(),0)->base;
 				result.resource->sampler.wrapS = result.resource->sampler.wrapT = ScreenWrap::Repeat;
 			} else result.resource->current = icon::iconHandler.GetNativeAtlasTexture(0);
 			Check(bool(result.resource->current), "PiP engine icon/map image is unavailable");

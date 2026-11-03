@@ -1,5 +1,10 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4MiniMapNative.h"
+#include "Metal4TransientUpload177.h"
+#include "Metal4CoverageCache178.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "System/Log/ILog.h"
+#endif
 #include "Metal4MetalInfo.h"
 #include "Metal4WorldInfo.h"
 #include <algorithm>
@@ -8,6 +13,15 @@
 #include <simd/simd.h>
 
 namespace rendering::metal4 {
+CoverageCache178::~CoverageCache178()
+{
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ if(requests)LOG("[NativeCoverageCache178] requests=%llu hits=%llu created=%llu uncached=%llu evictions=%llu avoided_upload_bytes=%llu peak_entries=%zu peak_bytes=%zu scope=owner_lifetime",
+  (unsigned long long)requests,(unsigned long long)hits,(unsigned long long)created,
+  (unsigned long long)uncached,(unsigned long long)evictions,
+  (unsigned long long)avoidedUploadBytes,peakCount,peakBytes);
+#endif
+}
 namespace {
 const char* SHADERS=R"MSL(
 #include <metal_stdlib>
@@ -136,6 +150,7 @@ fragment float4 MiniMapScreenFragment(ScreenVarying input [[stage_in]],constant 
 }
 )MSL";}
 struct PreparedMiniMap::Impl {
+ __strong M4TransientUploadLifetime177* uploads177=nil;
 	struct Compute {__strong id<MTLComputePipelineState> pipeline=nil;__strong id<MTL4ArgumentTable> args=nil;__strong id<MTLTexture> output=nil;bool mips=false;uint32_t width=0,height=0;};
 	std::vector<Compute> before;
 	__strong NSMutableArray* infoAllocations=nil;
@@ -183,12 +198,15 @@ void PreparedMiniMap::EncodeDependencies(id<MTL4CommandBuffer> command)const {
 	}
 }
 void PreparedMiniMap::RegisterInfoResources(RuntimeLease& lease)const {
+ if(impl->uploads177)lease.Retain(impl->uploads177);
 	for(id allocation in impl->infoAllocations)lease.AddAllocation((id<MTLAllocation>)allocation);
 	for(const auto& work:impl->before){lease.Retain(work.pipeline);lease.Retain(work.args);}
 	if(impl->infoPipeline!=nil)lease.Retain(impl->infoPipeline);if(impl->infoArgs!=nil)lease.Retain(impl->infoArgs);
 }
 void PreparedMiniMap::DidComplete()const {if(impl->globalInfo)impl->globalInfo->DidComplete();if(impl->metal)impl->metal->DidComplete();for(const auto& ready:impl->initialized)*ready=true;}
 struct MiniMapGPU::Impl {
+ CoverageCache178 coverage178;
+ TransientUploadPool177 uploads177{"minimap"};
 	__strong id<MTLLibrary> library=nil;bool validation=false;
 	__strong id<MTLComputePipelineState> shadePipeline=nil,coveragePipeline=nil,radarPipeline=nil;
 	__strong id<MTLRenderPipelineState> infoPipeline=nil,gameInfoPipeline=nil;
@@ -231,7 +249,7 @@ void MiniMapGPU::Initialize(RuntimeLease& lease,bool validation,double& shaderMs
 	initialized->Pipelines(lease,validation,shaderMs);
 	impl=std::move(initialized);
 }
-void MiniMapGPU::ClearResources() {
+void MiniMapGPU::ClearResources() {impl->uploads177.Clear();
 	auto cleared=std::make_unique<Impl>();
 	cleared->library=impl->library;cleared->validation=impl->validation;
 	cleared->shadePipeline=impl->shadePipeline;cleared->coveragePipeline=impl->coveragePipeline;
@@ -263,6 +281,12 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::Prepare(RuntimeLease& lease,std::sh
 	Require(std::isfinite(source->lighting.waterLevel),"Nonfinite minimap water plane");
 	impl->Pipelines(lease,validation,shaderMs);lease.Retain(impl->library);lease.Retain(impl->shadePipeline);lease.Retain(impl->coveragePipeline);lease.Retain(impl->radarPipeline);lease.Retain(impl->infoPipeline);
 	auto result=std::shared_ptr<PreparedMiniMap>(new PreparedMiniMap());
+ impl->uploads177.BeginBatch(lease.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(lease,impl->uploads177,result->impl->uploads177,bytes,length,
+   [&]{return Upload(lease,bytes,length);});
+ };
+
 	const auto& heights=*source->heights;
 	const bool heightChanged=impl->heightOwner!=source->heights;
 	(void)PrepareHeight(lease,source->heights);
@@ -270,7 +294,7 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::Prepare(RuntimeLease& lease,std::sh
 		impl->shade=Texture(lease,MTLPixelFormatRGBA8Unorm,heights.width,heights.height,false,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);
 		const auto& l=source->lighting;
 		ShadeUniform uniform{Vec(l.groundAmbient),Vec(l.groundDiffuse),Vec(l.lightDirection),Vec(l.waterBase),Vec(l.waterAbsorb),Vec(l.waterMinimum),{l.waterLevel,0,0,0},{0,0,heights.width,heights.height}};
-		const auto buffer=Upload(lease,&uniform,sizeof(uniform));auto args=Arguments(lease,1,2);
+		const auto buffer=upload177(&uniform,sizeof(uniform));auto args=Arguments(lease,1,2);
 		[args setAddress:buffer.gpuAddress atIndex:0];[args setTexture:impl->height.gpuResourceID atIndex:0];[args setTexture:impl->shade.gpuResourceID atIndex:1];
 		result->impl->before.push_back({impl->shadePipeline,args,impl->shade,false});
 		impl->heightOwner=source->heights;impl->lighting=l;impl->shadeReady=std::make_shared<bool>(false);result->impl->initialized.push_back(impl->shadeReady);
@@ -288,10 +312,15 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::Prepare(RuntimeLease& lease,std::sh
 		Require(info.mode==NativeMiniMapInfoMode::Los,"Native minimap requested info producer is not implemented");
 		const auto coverage=[&](const std::shared_ptr<const NativeMiniMapCoverage>& data){
 			Require(data && data->width && data->height && data->counts.size()==size_t(data->width)*data->height,"Original native minimap coverage bounds mismatch");
-			auto raw=Texture(lease,MTLPixelFormatR16Uint,data->width,data->height,false,MTLTextureUsageShaderRead,MTLStorageModeShared);
-			[raw replaceRegion:MTLRegionMake2D(0,0,data->width,data->height) mipmapLevel:0 withBytes:data->counts.data() bytesPerRow:size_t(data->width)*2];return raw;
+			const auto create=[&]{
+				auto raw=Texture(lease,MTLPixelFormatR16Uint,data->width,data->height,false,MTLTextureUsageShaderRead,MTLStorageModeShared);
+				[raw replaceRegion:MTLRegionMake2D(0,0,data->width,data->height) mipmapLevel:0 withBytes:data->counts.data() bytesPerRow:size_t(data->width)*2];return raw;
+			};
+			// PiP179 shares revision-tracked immutable producer snapshots. Keep
+			// per-use options and every computed output/dispatch below unchanged.
+			return individualImagesOnly?impl->coverage178.Get(lease,data,create):create();
 		};
-		std::array<uint32_t,4> options{uint32_t(info.globalLos),0,0,0};auto optionBuffer=Upload(lease,options.data(),sizeof(options));
+		std::array<uint32_t,4> options{uint32_t(info.globalLos),0,0,0};auto optionBuffer=upload177(options.data(),sizeof(options));
 		const auto visibility=[&](const auto& data) {
 			auto raw=coverage(data);auto output=Texture(lease,MTLPixelFormatR8Unorm,data->width,data->height,true,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);
 			auto args=Arguments(lease,1,2);[args setAddress:optionBuffer.gpuAddress atIndex:0];[args setTexture:raw.gpuResourceID atIndex:0];[args setTexture:output.gpuResourceID atIndex:1];
@@ -312,7 +341,7 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::Prepare(RuntimeLease& lease,std::sh
 		lease.AddAllocation(impl->info);result->impl->info=impl->info;
 		if(impl->lastInfo.lock()!=source->info || reset) {
 			InfoUniform u{Vec(info.alwaysColor),Vec(info.losColor),Vec(info.radarColor),Vec(info.jammerColor),Vec(info.radarColor2),{info.time,float(info.highQuality),0,0}};
-			auto buffer=Upload(lease,&u,sizeof(u));auto table=Arguments(lease,1,3);[table setAddress:buffer.gpuAddress atIndex:0];[table setTexture:los.gpuResourceID atIndex:0];[table setTexture:air.gpuResourceID atIndex:1];[table setTexture:radarOutput.gpuResourceID atIndex:2];
+			auto buffer=upload177(&u,sizeof(u));auto table=Arguments(lease,1,3);[table setAddress:buffer.gpuAddress atIndex:0];[table setTexture:los.gpuResourceID atIndex:0];[table setTexture:air.gpuResourceID atIndex:1];[table setTexture:radarOutput.gpuResourceID atIndex:2];
 			result->impl->infoArgs=table;result->impl->infoPipeline=impl->infoPipeline;
 			auto pass=[MTL4RenderPassDescriptor new];pass.colorAttachments[0].texture=impl->info;pass.colorAttachments[0].loadAction=reset?MTLLoadActionClear:MTLLoadActionLoad;
 			pass.colorAttachments[0].clearColor=MTLClearColorMake(.5,.5,.5,1);pass.colorAttachments[0].storeAction=MTLStoreActionStore;
@@ -322,7 +351,70 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::Prepare(RuntimeLease& lease,std::sh
 		}
 	} else {impl->info=nil;impl->infoReady.reset();impl->lastInfo.reset();}
 	const simd_float4 dimensions{float(source->squaresX)/source->paddedSquaresX,float(source->squaresZ)/source->paddedSquaresZ,float(source->info!=nullptr),0};
-	result->impl->uniforms=Upload(lease,&dimensions,sizeof(dimensions));return result;
+	result->impl->uniforms=upload177(&dimensions,sizeof(dimensions));return result;
+}
+std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareIndividualImages(RuntimeLease& lease,
+	std::shared_ptr<const NativeMiniMapBackground> source,NativeMiniMapImageMask requested,
+	bool validation,double& shaderMs,id<MTLTexture> preparedGroundLOS)
+{
+	Require(source && requested && !(requested & ~MiniMapImage::All),"PiP image preparation has no valid source/demand");
+	const auto needed=NativeMiniMapImageClosure(requested);
+	auto result=std::shared_ptr<PreparedMiniMap>(new PreparedMiniMap());
+	bool beganUploads=false;
+	if(needed & MiniMapImage::Height) {
+		Require(source->heights && source->squaresX && source->squaresZ &&
+			source->heights->width==source->squaresX+1 && source->heights->height==source->squaresZ+1,
+			"PiP image preparation lacks original corner geometry");
+		if(needed & MiniMapImage::Shading) {
+			if(impl->heightOwner!=source->heights || impl->lighting!=source->lighting || !impl->shadeReady || !*impl->shadeReady) {
+				const auto& heights=*source->heights;
+				auto shade=Texture(lease,MTLPixelFormatRGBA8Unorm,heights.width,heights.height,false,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);
+				result=PrepareShadingImage(lease,source,shade,{0,0,int32_t(heights.width),int32_t(heights.height)},validation,shaderMs);
+				beganUploads=true;
+				impl->shade=shade;impl->heightOwner=source->heights;impl->lighting=source->lighting;
+				impl->shadeReady=std::make_shared<bool>(false);result->impl->initialized.push_back(impl->shadeReady);
+			} else {
+				result->impl->height=PrepareHeight(lease,source->heights)->texture;
+				lease.AddAllocation(impl->shade);result->impl->shade=impl->shade;
+			}
+		} else result->impl->height=PrepareHeight(lease,source->heights)->texture;
+	}
+	if(!(needed & MiniMapImage::GroundLOS)) return result;
+	Require(source->info && source->info->mode==NativeMiniMapInfoMode::Los,"PiP image preparation lacks original viewer coverage");
+	const auto& info=*source->info;
+	const auto valid=[](const auto& data){return data && data->width && data->height && data->counts.size()==size_t(data->width)*data->height;};
+	Require(valid(info.groundLos),"PiP ground LOS extent differs from its actual source");
+	impl->Pipelines(lease,validation,shaderMs);lease.Retain(impl->library);lease.Retain(impl->coveragePipeline);lease.Retain(impl->radarPipeline);
+	if(!beganUploads) impl->uploads177.BeginBatch(lease.Device());
+	const std::array<uint32_t,4> options{uint32_t(info.globalLos),0,0,0};
+	auto optionBuffer=UploadTransient177(lease,impl->uploads177,result->impl->uploads177,options.data(),sizeof(options),
+		[&]{return Upload(lease,options.data(),sizeof(options));});
+	const auto coverage=[&](const std::shared_ptr<const NativeMiniMapCoverage>& data) {
+		Require(valid(data),"PiP raw coverage extent differs from its actual source");
+		return impl->coverage178.Get(lease,data,[&]{
+			auto raw=Texture(lease,MTLPixelFormatR16Uint,data->width,data->height,false,MTLTextureUsageShaderRead,MTLStorageModeShared);
+			[raw replaceRegion:MTLRegionMake2D(0,0,data->width,data->height) mipmapLevel:0 withBytes:data->counts.data() bytesPerRow:size_t(data->width)*2];return raw;
+		});
+	};
+	id<MTLTexture> los=preparedGroundLOS;
+	if(los) {
+		Require(los.device==lease.Device() && los.textureType==MTLTextureType2D && los.pixelFormat==MTLPixelFormatR8Unorm &&
+			los.width==info.groundLos->width && los.height==info.groundLos->height,"PiP preceding LOS allocation differs from this source");
+		lease.AddAllocation(los);
+	} else {
+		auto raw=coverage(info.groundLos);los=Texture(lease,MTLPixelFormatR8Unorm,info.groundLos->width,info.groundLos->height,true,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);
+		auto args=Arguments(lease,1,2);[args setAddress:optionBuffer.gpuAddress atIndex:0];[args setTexture:raw.gpuResourceID atIndex:0];[args setTexture:los.gpuResourceID atIndex:1];
+		result->impl->before.push_back({impl->coveragePipeline,args,los,true});
+	}
+	result->impl->groundLos=los;
+	if(needed & MiniMapImage::Radar) {
+		auto radar=coverage(info.radar),jammer=coverage(info.jammer);
+		Require(info.radar->width==info.jammer->width && info.radar->height==info.jammer->height,"Original radar/jammer extents differ");
+		auto output=Texture(lease,MTLPixelFormatRG8Unorm,info.radar->width,info.radar->height,true,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);
+		auto args=Arguments(lease,1,4);[args setAddress:optionBuffer.gpuAddress atIndex:0];[args setTexture:radar.gpuResourceID atIndex:0];[args setTexture:jammer.gpuResourceID atIndex:1];[args setTexture:los.gpuResourceID atIndex:2];[args setTexture:output.gpuResourceID atIndex:3];
+		result->impl->before.push_back({impl->radarPipeline,args,output,true});result->impl->radar=output;
+	}
+	return result;
 }
 std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareShadingImage(RuntimeLease& lease,
 	std::shared_ptr<const NativeMiniMapBackground> source,id<MTLTexture> destination,
@@ -345,6 +437,12 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareShadingImage(RuntimeLease& l
 	impl->Pipelines(lease,validation,shaderMs);lease.Retain(impl->library);lease.Retain(impl->shadePipeline);
 	const auto height=PrepareHeight(lease,source->heights);
 	auto result=std::shared_ptr<PreparedMiniMap>(new PreparedMiniMap());
+ impl->uploads177.BeginBatch(lease.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(lease,impl->uploads177,result->impl->uploads177,bytes,length,
+   [&]{return Upload(lease,bytes,length);});
+ };
+
 	result->impl->height=height->texture;result->impl->shade=destination;
 	// Reuse the existing deferred-plan resource registration on later leases;
 	// this plan has no independent shading cache or base/info producer.
@@ -355,7 +453,7 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareShadingImage(RuntimeLease& l
 		const auto& l=source->lighting;
 		ShadeUniform uniform{Vec(l.groundAmbient),Vec(l.groundDiffuse),Vec(l.lightDirection),Vec(l.waterBase),Vec(l.waterAbsorb),Vec(l.waterMinimum),
 			{l.waterLevel,0,0,0},{uint32_t(rect[0]),uint32_t(rect[1]),uint32_t(rect[2]),uint32_t(rect[3])}};
-		const auto buffer=Upload(lease,&uniform,sizeof(uniform));
+		const auto buffer=upload177(&uniform,sizeof(uniform));
 		[result->impl->infoAllocations addObject:buffer];
 		auto args=Arguments(lease,1,2);[args setAddress:buffer.gpuAddress atIndex:0];
 		[args setTexture:height->texture.gpuResourceID atIndex:0];[args setTexture:destination.gpuResourceID atIndex:1];
@@ -370,7 +468,13 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareInfoImage(RuntimeLease& leas
 {
 	Require(target!=nil&&target.pixelFormat==MTLPixelFormatRGB10A2Unorm&&squaresX&&squaresZ&&target.width>=squaresX&&target.height>=squaresZ,"Original global info requires actual padded RGB10A2 storage");
 	impl->Pipelines(lease,validation,shaderMs);lease.Retain(impl->library);lease.Retain(impl->coveragePipeline);lease.Retain(impl->radarPipeline);lease.Retain(impl->gameInfoPipeline);lease.AddAllocation(target);
-	auto result=std::shared_ptr<PreparedMiniMap>(new PreparedMiniMap);result->impl->info=target;result->impl->infoAllocations=[NSMutableArray array];[result->impl->infoAllocations addObject:target];
+	auto result=std::shared_ptr<PreparedMiniMap>(new PreparedMiniMap);
+ impl->uploads177.BeginBatch(lease.Device());
+ auto upload177=[&](const void* bytes,size_t length){
+  return UploadTransient177(lease,impl->uploads177,result->impl->uploads177,bytes,length,
+   [&]{return Upload(lease,bytes,length);});
+ };
+result->impl->info=target;result->impl->infoAllocations=[NSMutableArray array];[result->impl->infoAllocations addObject:target];
 	const auto keep=[&](id<MTLAllocation> allocation){[result->impl->infoAllocations addObject:allocation];};
 	auto pass=[MTL4RenderPassDescriptor new];pass.colorAttachments[0].texture=target;pass.colorAttachments[0].loadAction=clear?MTLLoadActionClear:MTLLoadActionLoad;
 	pass.colorAttachments[0].storeAction=MTLStoreActionStore;pass.colorAttachments[0].clearColor=MTLClearColorMake(.5,.5,.5,1);pass.renderTargetWidth=target.width;pass.renderTargetHeight=target.height;
@@ -379,11 +483,13 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareInfoImage(RuntimeLease& leas
 	Require(source->mode==NativeMiniMapInfoMode::Los,"Original global info source requires the actual LOS shader");const auto& info=*source;
 	const auto coverage=[&](const std::shared_ptr<const NativeMiniMapCoverage>& data){
 		Require(data&&data->width&&data->height&&data->counts.size()==size_t(data->width)*data->height,"Original global info coverage bounds mismatch");
+		auto raw=impl->coverage178.Get(lease,data,[&]{
 		auto raw=Texture(lease,MTLPixelFormatR16Uint,data->width,data->height,false,MTLTextureUsageShaderRead,MTLStorageModeShared);
-		[raw replaceRegion:MTLRegionMake2D(0,0,data->width,data->height) mipmapLevel:0 withBytes:data->counts.data() bytesPerRow:size_t(data->width)*2];keep(raw);return raw;
+		[raw replaceRegion:MTLRegionMake2D(0,0,data->width,data->height) mipmapLevel:0 withBytes:data->counts.data() bytesPerRow:size_t(data->width)*2];return raw;
+		});keep(raw);return raw;
 	};
-	std::array<uint32_t,4> options{uint32_t(info.globalLos),0,0,0};auto optionBuffer=Upload(lease,options.data(),sizeof(options));keep(optionBuffer);
-	const auto visibility=[&](const auto& data,bool global){auto raw=coverage(data);auto output=Texture(lease,MTLPixelFormatR8Unorm,data->width,data->height,true,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);auto a=Arguments(lease,1,2);auto opts=optionBuffer;if(global!=info.globalLos){std::array<uint32_t,4> alternate{uint32_t(global),0,0,0};opts=Upload(lease,alternate.data(),sizeof(alternate));keep(opts);}[a setAddress:opts.gpuAddress atIndex:0];[a setTexture:raw.gpuResourceID atIndex:0];[a setTexture:output.gpuResourceID atIndex:1];keep(output);result->impl->before.push_back({impl->coveragePipeline,a,output,true});return output;};
+	std::array<uint32_t,4> options{uint32_t(info.globalLos),0,0,0};auto optionBuffer=upload177(options.data(),sizeof(options));keep(optionBuffer);
+	const auto visibility=[&](const auto& data,bool global){auto raw=coverage(data);auto output=Texture(lease,MTLPixelFormatR8Unorm,data->width,data->height,true,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);auto a=Arguments(lease,1,2);auto opts=optionBuffer;if(global!=info.globalLos){std::array<uint32_t,4> alternate{uint32_t(global),0,0,0};opts=upload177(alternate.data(),sizeof(alternate));keep(opts);}[a setAddress:opts.gpuAddress atIndex:0];[a setTexture:raw.gpuResourceID atIndex:0];[a setTexture:output.gpuResourceID atIndex:1];keep(output);result->impl->before.push_back({impl->coveragePipeline,a,output,true});return output;};
 	auto los=visibility(info.groundLos,info.globalLos),air=visibility(info.airLos,info.globalLos);
 	auto radarLos=radarGround==info.groundLos&&radarGroundGlobal==info.globalLos?los:visibility(radarGround,radarGroundGlobal);
 	auto radar=coverage(info.radar),jammer=coverage(info.jammer);
@@ -391,7 +497,7 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareInfoImage(RuntimeLease& leas
 	auto radarOutput=Texture(lease,MTLPixelFormatRG8Unorm,info.radar->width,info.radar->height,true,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite,MTLStorageModePrivate);
 	keep(radarOutput);auto a=Arguments(lease,1,4);[a setAddress:optionBuffer.gpuAddress atIndex:0];[a setTexture:radar.gpuResourceID atIndex:0];[a setTexture:jammer.gpuResourceID atIndex:1];[a setTexture:radarLos.gpuResourceID atIndex:2];[a setTexture:radarOutput.gpuResourceID atIndex:3];result->impl->before.push_back({impl->radarPipeline,a,radarOutput,true});
 	InfoUniform u{Vec(info.alwaysColor),Vec(info.losColor),Vec(info.radarColor),Vec(info.jammerColor),Vec(info.radarColor2),{info.time,float(info.highQuality),0,0}};
-	auto uniform=Upload(lease,&u,sizeof(u));keep(uniform);auto table=Arguments(lease,1,3);[table setAddress:uniform.gpuAddress atIndex:0];[table setTexture:los.gpuResourceID atIndex:0];[table setTexture:air.gpuResourceID atIndex:1];[table setTexture:radarOutput.gpuResourceID atIndex:2];
+	auto uniform=upload177(&u,sizeof(u));keep(uniform);auto table=Arguments(lease,1,3);[table setAddress:uniform.gpuAddress atIndex:0];[table setTexture:los.gpuResourceID atIndex:0];[table setTexture:air.gpuResourceID atIndex:1];[table setTexture:radarOutput.gpuResourceID atIndex:2];
 	result->impl->infoArgs=table;result->impl->infoPipeline=impl->gameInfoPipeline;result->impl->groundLos=los;result->impl->radar=radarOutput;return result;
 }
 

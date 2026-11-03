@@ -46,12 +46,23 @@ export function deserializeReplayError(error: ReplayParseFailure): Error {
 }
 
 export function replayFailureCategory(error: unknown): string {
-    const { code } = serializeReplayError(error);
+    const { code, name, message } = serializeReplayError(error);
     if (code === REPLAY_FILE_CHANGED) return "file_changed";
     if (code === "REPLAY_WORKER_FAILED" || code === "REPLAY_WORKER_EXITED") return "worker_failed";
     if (code === "REPLAY_WORKER_SEND_FAILED") return "worker_send_failed";
     if (code === "REPLAY_INVALID_GAME_ID") return "invalid_game_id";
+    if (code === "REPLAY_UNSUPPORTED_FORMAT") return "parser_incompatible";
     if (code?.startsWith("Z_")) return "compressed_data_error";
+    // Parser 5.15.1 uses node-gzip 1.1.2, which rewraps zlib failures with
+    // new Error(error) and drops their code. Recognize only these verified
+    // wrapper messages; preserve the original error and do not invent a code.
+    if (
+        code === undefined &&
+        name === "Error" &&
+        ["Error: unexpected end of file", "Error: incorrect header check", "Error: incorrect data check", "Error: incorrect length check"].includes(message)
+    ) {
+        return "compressed_data_error";
+    }
     if (code === "ENOENT") return "file_missing";
     if (code === "EACCES" || code === "EPERM") return "file_access";
     return "parse_failed";

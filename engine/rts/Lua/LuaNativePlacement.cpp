@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "LuaNativePlacement.h"
+#include "Rendering/Backend/NativeTerrainHeightSnapshot.h"
 #include "LuaNativeBuildSquare.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Rendering/Backend/NativeModelLightCapture.h"
@@ -64,8 +65,8 @@ NativeBlueprintView View(){
 	if(actual==control)v.clipDepth=ClipDepthConvention::MinusOneToOne;control[10]=control[14]=.5f;if(actual==control)v.clipDepth=ClipDepthConvention::ZeroToOne;return v;
 }
 std::shared_ptr<const WorldTerrainHeights> Heights(){
-	Check(readMap&&mapDims.mapxp1>=3&&mapDims.mapyp1>=3,"Original Building Grid heightmap missing");auto* values=readMap->GetCornerHeightMapUnsynced();size_t count=size_t(mapDims.mapxp1)*mapDims.mapyp1;
-	if(!heightSnapshot||heightSnapshot->width!=unsigned(mapDims.mapxp1)||heightSnapshot->height!=unsigned(mapDims.mapyp1)||std::memcmp(heightSnapshot->corners.data(),values,count*sizeof(float))){auto h=std::make_shared<WorldTerrainHeights>();h->width=mapDims.mapxp1;h->height=mapDims.mapyp1;h->corners.assign(values,values+count);heightSnapshot=std::move(h);}return heightSnapshot;
+	Check(readMap&&mapDims.mapxp1>=3&&mapDims.mapyp1>=3,"Original Building Grid heightmap missing");auto* values=readMap->GetCornerHeightMapUnsynced();
+	heightSnapshot=CaptureNativeTerrainHeightSnapshot(readMap,values,mapDims.mapxp1,mapDims.mapyp1);return heightSnapshot;
 }
 ScreenBlendFactor Blend(unsigned value){switch(value){case GL_ZERO:return ScreenBlendFactor::Zero;case GL_ONE:return ScreenBlendFactor::One;case GL_SRC_ALPHA:return ScreenBlendFactor::SourceAlpha;case GL_ONE_MINUS_SRC_ALPHA:return ScreenBlendFactor::OneMinusSourceAlpha;case GL_DST_ALPHA:return ScreenBlendFactor::DestinationAlpha;case GL_ONE_MINUS_DST_ALPHA:return ScreenBlendFactor::OneMinusDestinationAlpha;case GL_SRC_COLOR:return ScreenBlendFactor::SourceColor;case GL_ONE_MINUS_SRC_COLOR:return ScreenBlendFactor::OneMinusSourceColor;case GL_DST_COLOR:return ScreenBlendFactor::DestinationColor;case GL_ONE_MINUS_DST_COLOR:return ScreenBlendFactor::OneMinusDestinationColor;default:throw std::runtime_error("Unknown original placement blend factor");}}
 void RecordEngine(std::span<const NativePlacementVertex> source,NativeDrawPrimitive primitive){

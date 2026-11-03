@@ -3,10 +3,11 @@
 #ifndef _BUFFERED_ARCHIVE_H
 #define _BUFFERED_ARCHIVE_H
 
-#include <tuple>
+#include "BufferedArchiveCache.h"
 
 #include "IArchive.h"
 #include "System/Threading/SpringThreading.h"
+
 
 /**
  * Provides a helper implementation for archive types that can only uncompress
@@ -15,7 +16,7 @@
 class CBufferedArchive : public IArchive
 {
 public:
-	CBufferedArchive(const std::string& name, bool cached = true): IArchive(name) {
+	CBufferedArchive(const std::string& name, bool cached = true, std::size_t cacheLimit = BufferedArchiveCache::Unlimited): IArchive(name), fileCache(cacheLimit) {
 		noCache = !cached;
 	}
 
@@ -28,10 +29,9 @@ public:
 protected:
 	virtual int GetFileImpl(uint32_t fid, std::vector<std::uint8_t>& buffer) = 0;
 
-	// indexed by file-id
-	std::vector<std::tuple<uint32_t, bool, std::vector<uint8_t>>> fileCache = {};
+	// Stable file IDs; immutable retained content, bounded independently of readers.
+	BufferedArchiveCache fileCache;
 private:
-	spring::spinlock mutex;
 	bool noCache = false;
 };
 

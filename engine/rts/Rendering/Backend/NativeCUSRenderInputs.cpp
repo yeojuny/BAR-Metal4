@@ -10,6 +10,12 @@ namespace rendering {
 namespace {
 void Check(bool v,const char* message){if(!v)throw std::runtime_error(message);}
 uint32_t Add(uint32_t a,uint64_t b){Check(b<=UINT32_MAX-a,"CUS original transform address overflows");return a+uint32_t(b);}
+// These reads validate addressability only. The publication's existing check
+// covers capacity, page ownership, element stride and the per-row observed bit.
+bool IsPublishedRow(const std::shared_ptr<const NativeCUSPublishedBuffer>& source, uint32_t row, size_t readSize)
+{
+ return source && source->stride == readSize && NativeCUSPublishedElementObserved(*source, row);
+}
 void Unique(std::vector<uint32_t>& rows){std::sort(rows.begin(),rows.end());rows.erase(std::unique(rows.begin(),rows.end()),rows.end());}
 }
 NativeCUSRenderGeometry BuildNativeCUSRenderGeometry(std::shared_ptr<const WorldModel> model)
@@ -36,21 +42,56 @@ NativeCUSRenderGeometry BuildNativeCUSRenderGeometry(std::shared_ptr<const World
  return out;
 }
 
-NativeCUSRenderReadSet ValidateNativeCUSRenderReads(const NativeCUSSourceDraw& draw)
+const std::vector<uint32_t>& NativeCUSGeometryReadCache::FirstBones(const std::shared_ptr<const WorldModel>& model)
+{
+	Check(bool(model), "CUS native geometry has no actual original model");
+	auto found = entries.find(model.get());
+	if (found != entries.end() && !found->second.owner.expired() &&
+		!found->second.owner.owner_before(model) && !model.owner_before(found->second.owner))
+		return found->second.firstBones;
+	Entry next; next.owner = model;
+	std::array<bool, 256> seen{};
+	for (const auto& piece: model->pieces) for (uint32_t index: piece.indices) {
+		Check(index < piece.vertices.size(), "CUS actual submitted index is outside original geometry");
+		const uint32_t first = piece.vertices[index].boneIds[0] & 255u;
+		if (!seen[first]) { seen[first] = true; next.firstBones.push_back(first); }
+	}
+	return entries.insert_or_assign(model.get(), std::move(next)).first->second.firstBones;
+}
+void NativeCUSGeometryReadCache::Prune()
+{
+	std::erase_if(entries, [](const auto& item) { return item.second.owner.expired(); });
+}
+
+static NativeCUSRenderReadSet ValidateRenderReads(const NativeCUSSourceDraw& draw, NativeCUSGeometryReadCache* cache)
 {
  ValidateNativeCUSSourceDraw(draw);
  const auto& inputs=*draw.modelInputs;NativeCUSRenderReadSet out;
  Check(draw.program->family=="unit"||draw.program->family=="unitskinning"||draw.program->family=="feature"||draw.program->family=="tree","Unknown original CUS model family");
  const bool skin=draw.program->family=="unitskinning";
  float interpolation;std::memcpy(&interpolation,draw.engineUniforms->params->bytes.data()+28,4);
+ interpolation=std::clamp(interpolation,0.0f,1.0f); // Match the original shader's Lerp.
  for(size_t object=0;object<inputs.submissions.size();++object){
   const auto instance=ReadNativeCUSInstance(inputs,object);out.modelUniforms.push_back(instance[1]);
-  (void)ReadNativeCUSModelUniform(inputs,object);
+  if (!IsPublishedRow(inputs.modelUniforms, instance[1], 128))
+   (void)ReadNativeCUSModelUniform(inputs,object); // Original ABI/missing-row error at this object.
   // selected31657 uses literal zero for the no-team sentinel, without reading
   // the engine's unwritten palette slot. Preserve every other actual read.
   const uint32_t team=instance[2]&255u;
-  if(team!=255u){out.teamColors.push_back(team);(void)ReadNativeCUSTeamColor(*draw.engineUniforms,team);}
+  if(team!=255u){
+   out.teamColors.push_back(team);
+   // ValidateNativeCUSSourceDraw already checked this immutable uniform publication.
+   if (team >= NativeCUSTeamRows || !draw.engineUniforms->params->writtenTeamRows.test(team))
+    (void)ReadNativeCUSTeamColor(*draw.engineUniforms,team);
+  }
   out.transforms.push_back(instance[0]);out.transforms.push_back(Add(instance[0],1));
+  if (cache && !skin) {
+   for (uint32_t first: cache->FirstBones(inputs.submissions[object]->geometry)) {
+    const uint32_t offset = Add(instance[0], 2ull * (1 + first));
+    out.transforms.push_back(offset); out.transforms.push_back(Add(offset, 1));
+   }
+   continue;
+  }
   for(const auto& piece:inputs.submissions[object]->geometry->pieces)for(uint32_t index:piece.indices){
    Check(index<piece.vertices.size(),"CUS actual submitted index is outside original geometry");const auto& vertex=piece.vertices[index];
    // The selected original's first bone deliberately reads ONLY its low byte.
@@ -69,8 +110,20 @@ NativeCUSRenderReadSet ValidateNativeCUSRenderReads(const NativeCUSSourceDraw& d
   }
  }
  Unique(out.transforms);Unique(out.modelUniforms);Unique(out.teamColors);
- for(auto row:out.transforms)(void)ReadNativeCUSTransform(inputs,row);
+ for(auto row:out.transforms){
+  if (!IsPublishedRow(inputs.transforms, row, 32))
+   (void)ReadNativeCUSTransform(inputs,row); // Preserve the original rejection and order.
+ }
  return out;
+}
+
+NativeCUSRenderReadSet ValidateNativeCUSRenderReads(const NativeCUSSourceDraw& draw)
+{
+ return ValidateRenderReads(draw, nullptr);
+}
+NativeCUSRenderReadSet ValidateNativeCUSRenderReads(const NativeCUSSourceDraw& draw, NativeCUSGeometryReadCache& cache)
+{
+ return ValidateRenderReads(draw, &cache);
 }
 
 std::vector<NativeCUSPublishedRange> NativeCUSObservedRanges(const NativeCUSPublishedBuffer& source)

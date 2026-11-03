@@ -74,11 +74,11 @@ void GrassGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,bool validati
 	ScreenBlendState blend;for(unsigned variant=0;variant<4;++variant)impl->Pipeline(lease,color,variant,validation,blend,{true,true,true,true},ms,samples,false);SetNativeGrassConsumerAvailable(true);
 }
 void GrassGPU::ClearResources(){impl->buffers.clear();}
-std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeWorldDrawFrame> frame,uint64_t sourceDrawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,const CUSSourceImageProvider& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
-	if(!frame||std::none_of(frame->draws.begin(),frame->draws.end(),[](const auto& c){return bool(c.grass);}))return {};
+std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& selected,uint64_t sourceDrawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,const CUSSourceImageProvider& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
+	selected.RequireFamily(NativeWorldFamily167::Grass,sourceDrawFrame);if(selected.empty())return {};
 	Require(images&&(depth==MTLPixelFormatDepth32Float||depth==MTLPixelFormatDepth32Float_Stencil8),"Original Grass has no shared scene/image consumer");std::erase_if(impl->buffers,[](const auto& b){return b.second.source.expired();});
 	auto out=std::shared_ptr<PreparedGrass>(new PreparedGrass);
-	for(const auto& c:frame->draws){if(!c.grass)continue;ValidateNativeWorldDrawCommand(c);const auto& s=*c.grass;
+	for(const auto& c:selected){ValidateNativeWorldDrawCommand(c);const auto& s=*c.grass;
 		Require(c.stage==NativeWorldDrawStage::PreUnit&&s.sourceDrawFrame==sourceDrawFrame,"Original Grass cull run belongs to another source frame/stage");
 		Require(!c.world.inheritedClipPlane&&c.world.frontPolygonMode==NativePolygonMode::Fill&&c.world.backPolygonMode==NativePolygonMode::Fill,"Original Grass inherited polygon/clip state requires its actual shader profile");
 		PreparedGrass::Impl::Draw d;d.sequence=c.sequence;d.source=c.grass;d.state=c.world;auto camera=view;if(c.surface.viewport){const auto& v=*c.surface.viewport;camera.viewport={v.x,v.y,int32_t(v.width),int32_t(v.height)};}

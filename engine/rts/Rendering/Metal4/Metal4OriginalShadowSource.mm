@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4OriginalShadowSource.h"
+#include "Rendering/Backend/NativePreparationTrace.h"
 #include <algorithm>
 #include <exception>
 namespace rendering::metal4 {
@@ -95,16 +96,20 @@ std::unique_ptr<PreparedOriginalShadowSource> PrepareOriginalShadowSource(Runtim
  for(const auto& draw:out.source->cus->draws)Require(draw.program&&(draw.program->originalPass==16||HasNoNativeCUSAttachmentEffects(draw)),"Original shadow source contains drawable CUS output from another original pass");
  // The actual shared factory returns null for a genuinely empty captured
  // CUS scope. Retain that original CPU scope; no dummy prepared/ready owner.
+ auto prepSubStart=StartPreparationScope();
  out.cus=cus.Prepare(lease,out.source->cus,out.target,images,validation,milliseconds);
  Require(out.cus||out.source->cus->draws.empty(),"Nonempty original CUS shadow lost its actual prepared owner");
  if(out.cus)for(size_t i=0;i<out.cus->DrawCount();++i)out.draws.push_back({out.cus->SequenceAt(i),i,-1});
+ EndPreparationScope(12,prepSubStart);prepSubStart=StartPreparationScope();
  for(unsigned f=0;f<2;++f)if(out.source->models[f]){Require(out.source->models[f]->sourceDrawFrame==frame&&out.source->models[f]->feature==bool(f),"Original default shadow frame changed source/object class");out.models[f]=engine.Prepare(lease,out.source->models[f],out.target,geometry,images,validation,milliseconds);for(size_t i=0;i<out.models[f]->DrawCount();++i)out.draws.push_back({out.models[f]->SequenceAt(i),i,int(f)});}
  if(out.source->projectiles){Require(out.source->projectiles->sourceDrawFrame==frame&&out.source->projectiles->projectile,"Original projectile shadow frame changed its source/family");out.models[2]=engine.Prepare(lease,out.source->projectiles,out.target,geometry,images,validation,milliseconds);for(size_t i=0;i<out.models[2]->DrawCount();++i)out.draws.push_back({out.models[2]->SequenceAt(i),i,2});}
+ EndPreparationScope(13,prepSubStart);prepSubStart=StartPreparationScope();
  if(out.source->terrain){
   Require(out.source->terrain->sourceDrawFrame==frame&&out.source->terrain->contextGeneration==textures.depth.current->contextGeneration,"Original MAP shadow frame changed its actual source/context");
   out.terrain=engine.PrepareTerrain(lease,out.source->terrain,out.target,images);
   for(size_t i=0;i<out.terrain->DrawCount();++i)out.draws.push_back({out.terrain->SequenceAt(i),i,5});
  }
+ EndPreparationScope(14,prepSubStart);prepSubStart=StartPreparationScope();
  if(out.source->transparent){
   Require(out.source->transparent->sourceDrawFrame==frame,"Original transparent particles changed their actual source frame");
   out.particles=particles.PrepareOriginalShadowParticles(lease,out.source->transparent,out.target,images,validation,milliseconds);
@@ -118,6 +123,7 @@ std::unique_ptr<PreparedOriginalShadowSource> PrepareOriginalShadowSource(Runtim
   Require((out.generic?out.generic->DrawCount():0)==size_t(genericCount),"Original common shadow commands lack their actual prepared consumer");
   if(out.generic)for(size_t i=0;i<out.generic->DrawCount();++i)out.draws.push_back({out.generic->SequenceAt(i),i,4});
  }
+ EndPreparationScope(15,prepSubStart);
  std::sort(out.draws.begin(),out.draws.end(),[](const auto& a,const auto& b){return a.sequence<b.sequence;});
  uint64_t previous=out.source->beginSequence;for(const auto& draw:out.draws){Require(draw.sequence>previous&&draw.sequence<out.source->endSequence,"Original shadow source order is duplicated/outside retained source boundary");previous=draw.sequence;}
  return result;

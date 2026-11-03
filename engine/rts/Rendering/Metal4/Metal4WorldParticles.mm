@@ -1,5 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WorldParticles.h"
+#include "Metal4RetiredArguments.h"
+#include "Metal4ImmutableSnapshotBuffers.h"
 #include "NativeSampleShadingShaders.h"
 #include <tuple>
 #include <map>
@@ -15,9 +17,28 @@
 #include <cstring>
 #include <string>
 #include <unordered_map>
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "System/Log/ILog.h"
+#include <atomic>
+#include <cstdlib>
+#endif
 
 namespace rendering::metal4 {
 namespace {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+// One independent structural receipt, not the world's source-frame window.
+// No heap or GPU work. A missing receipt leaves runtime use unobserved.
+void ReportParticleReset176(uint64_t submission,NativeWorldParticleStage stage,bool indexed,
+ NSUInteger geometryCount,NSUInteger instances)
+{
+ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_WORLD_ENCODING176");return value&&value[0]=='1'&&value[1]=='\0';}();
+ static std::atomic<bool> reported{false};
+ if(!enabled||!geometryCount||!instances||reported.exchange(true,std::memory_order_relaxed))return;
+ LOG("[NativeParticleSetter176] submission=%llu stage=%u indexed=%u geometry_count=%llu instances=%llu ground_atlas=0 depth_bias_setters_parent=2 depth_bias_setters_issued=1 depth_bias_setters_omitted=1 exit_bias_zero=1 scope=one_nonempty_draw source_window=independent gpu_retired=unknown",
+  static_cast<unsigned long long>(submission),unsigned(stage),unsigned(indexed),
+  static_cast<unsigned long long>(geometryCount),static_cast<unsigned long long>(instances));
+}
+#endif
 // Same-revision ProjFXVertProg/ProjFXFragProg expressions and VA_TYPE_PROJ
 // fields. Atlas rows/UV/page/animation remain the original CPU output.
 const char* SHADER=RECOIL_NATIVE_SAMPLE_SHADING_MSL R"MSL(
@@ -148,6 +169,7 @@ std::shared_ptr<Atlas> Upload(RuntimeLease& lease,std::shared_ptr<const NativeWo
 }
 }
 struct PreparedWorldParticles::Impl {
+ RetiredArgumentOwners argumentOwners;
 	struct Draw {
 		NativeWorldParticleRange range;
 		__strong id<MTLRenderPipelineState> pipeline=nil;
@@ -199,10 +221,16 @@ void PreparedWorldParticles::EncodeDraw(std::size_t index,id<MTL4RenderCommandEn
 		if(draw.indices!=nil){const NSUInteger offset=NSUInteger(draw.range.firstIndex)*draw.indexStride;
 			[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.range.indexCount indexType:draw.indexType indexBuffer:draw.indices.gpuAddress+offset indexBufferLength:draw.indices.length-offset instanceCount:draw.instanceCount];}
 		else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.vertexCount instanceCount:draw.instanceCount];
-	// Original ground-flash polygon offset is disabled before subsequent stages.
-	[encoder setDepthBias:0 slopeScale:0 clamp:0];
+	// Ground flashes must restore zero bias. Other draws already set zero above;
+	// no intervening command changes it, including an empty geometry invocation.
+	if(draw.range.groundAtlas)[encoder setDepthBias:0 slopeScale:0 clamp:0];
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ else ReportParticleReset176(impl->submission,draw.range.stage,draw.indices!=nil,
+  draw.indices!=nil?draw.range.indexCount:draw.vertexCount,draw.instanceCount);
+#endif
 }
 struct PreparedShadowColor::Impl {
+ RetiredArgumentOwners argumentOwners;
 	std::shared_ptr<const NativeShadowColorFrame> source;
 	std::shared_ptr<ShadowColorCache> cache;
 	std::shared_ptr<ShadowColorImage> image;
@@ -254,6 +282,8 @@ void PreparedShadowColor::DidComplete()const
 	impl->cache->completed=impl->image;
 }
 struct WorldParticlesGPU::Impl {
+ RetiredArguments argumentPool;
+ ImmutableSnapshotBuffers snapshotBuffers;
 	std::unordered_map<const NativeWorldParticleAtlas*,std::shared_ptr<Atlas>> atlases;
 	std::vector<std::shared_ptr<Atlas>> sourceAtlases;
 	uint64_t sourceSubmission=0;
@@ -265,6 +295,7 @@ struct WorldParticlesGPU::Impl {
 		const auto found=atlases.find(owner.get());
 		auto cached=found==atlases.end()?Upload(lease,owner):found->second;
 		if(found==atlases.end())atlases.emplace(owner.get(),cached);
+		if(!cached->initialized&&cached->encodedSubmission&&lease.PreparingWhilePending())lease.RetirePreviousSubmission();
 		Require(cached->texture.device==lease.Device(),"Original atlas cache belongs to another actual device");
 		lease.AddAllocation(cached->texture);if(cached->image2D)lease.AddAllocation(cached->image2D);return cached;
 	}
@@ -296,7 +327,7 @@ void WorldParticlesGPU::ClearResources()
 	// Preserve the actual initialized family across scene reload; the next
 	// original gadget Initialize must observe its already connected consumer.
 	for(const auto& [source,atlas]:impl->atlases)Require(!atlas->encodedSubmission||atlas->initialized,"Original atlas resources still have unretired work");
-	impl->atlases.clear();impl->sourceAtlases.clear();impl->sourceSubmission=0;impl->shadowColor=std::make_shared<ShadowColorCache>();impl->normalInfo=nil;impl->normalInfoInitialized.reset();
+	impl->snapshotBuffers.Clear();impl->argumentPool.Clear();impl->atlases.clear();impl->sourceAtlases.clear();impl->sourceSubmission=0;impl->shadowColor=std::make_shared<ShadowColorCache>();impl->normalInfo=nil;impl->normalInfoInitialized.reset();
 	impl->infoGPU=std::make_unique<MiniMapGPU>();
 	impl->lastInfoNormal=true;
 }
@@ -412,7 +443,7 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::PrepareLuaNano(Runtim
 	MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,
 	bool validation,double& shaderMilliseconds,unsigned outputSamples)
 {
-	if(frame.draws.empty())return {};
+	if(frame.draws.empty())return {};impl->snapshotBuffers.BeginBatch(lease);impl->argumentPool.BeginBatch(lease);
 	Require(depthFormat==MTLPixelFormatDepth32Float||depthFormat==MTLPixelFormatDepth32Float_Stencil8,"Original Lua nano requires the real scene depth attachment");
 	Require(stencilFormat==MTLPixelFormatInvalid||stencilFormat==MTLPixelFormatStencil8||stencilFormat==MTLPixelFormatDepth32Float_Stencil8,"Original Lua nano stencil target format is unsupported");
 	const bool hasStencil=stencilFormat!=MTLPixelFormatInvalid;
@@ -447,13 +478,13 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::PrepareLuaNano(Runtim
 	Require(info!=nil,"Original Lua nano has no original $info texture");lease.AddAllocation(info);
 	for(const auto& draw:frame.draws) {
 		if(draw.instanceCount==0)continue;
-		auto mesh=Buffer(lease,draw.vertexSlots->bytes.data(),draw.vertexSlots->bytes.size());auto instances=Buffer(lease,draw.instances->bytes.data(),draw.instances->bytes.size());auto indices=Buffer(lease,draw.indices->bytes.data(),draw.indices->bytes.size());
+		auto mesh=impl->snapshotBuffers.Read(lease,draw.vertexSlots,draw.vertexSlots->bytes.size());auto instances=impl->snapshotBuffers.Read(lease,draw.instances,draw.instances->bytes.size());auto indices=impl->snapshotBuffers.Read(lease,draw.indices,draw.indices->bytes.size());
 		LuaNanoUniform u{};u.cameraViewProjection=Matrix(frame.cameraViewProjection);u.cameraViewInverse=Matrix(frame.cameraViewInverse);
 		u.mapSize=simd_make_float4(frame.mapSquares[0]*8.f,frame.mapSquares[1]*8.f,frame.mapSquares[2]*8.f,frame.mapSquares[3]*8.f);u.timeInfo=simd_make_float4(animationFrame,0,0,0);
 		for(size_t n=0;n<nano::PARAMETER_NAMES.size();++n){const auto it=draw.uniforms.find(std::string(nano::PARAMETER_NAMES[n]));if(it!=draw.uniforms.end())u.parameters[n]=it->second;}
 		u.options=simd_make_uint4(viewCamera.clipDepth==ClipDepthConvention::MinusOneToOne?1:0,draw.shape,draw.rejectFutureSpawns?1u:0u,0);
 		auto uniform=Buffer(lease,&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=3;ad.maxTextureBindCount=1;ad.initializeBindings=YES;NSError* error=nil;
-		auto arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(arguments!=nil,"Cannot allocate original Lua nano arguments: "+Error(error));lease.Retain(arguments);
+		auto arguments=impl->argumentPool.Acquire(lease,ad,result->impl->argumentOwners,&error);Require(arguments!=nil,"Cannot allocate original Lua nano arguments: "+Error(error));lease.Retain(arguments);
 		[arguments setAddress:mesh.gpuAddress atIndex:0];[arguments setAddress:instances.gpuAddress atIndex:1];[arguments setAddress:uniform.gpuAddress atIndex:2];[arguments setTexture:info.gpuResourceID atIndex:0];
 		// Preserve both original passes; absent stencil makes either test pass.
 		auto depth=hasStencil?(draw.ghostStencilPass?impl->luaGhostDepth:impl->luaDepth):
@@ -520,7 +551,7 @@ std::unique_ptr<PreparedShadowColor> WorldParticlesGPU::PrepareShadowColor(Runti
 	auto vertices=Buffer(lease,source->vertices.data(),source->vertices.size()*sizeof(NativeWorldParticleVertex));result->impl->indices=Buffer(lease,source->indices.data(),source->indices.size()*sizeof(uint32_t));
 	ShadowColorUniform uniform{Matrix(source->view),Matrix(source->projection),simd_make_uint4(source->zeroToOneDepth,source->colored,0,0)};auto buffer=Buffer(lease,&uniform,sizeof(uniform));
 	auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=2;ad.maxTextureBindCount=1;ad.initializeBindings=YES;NSError* error=nil;
-	auto args=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(args!=nil,"Cannot allocate original shadow color arguments: "+Error(error));lease.Retain(args);
+	impl->argumentPool.BeginBatch(lease);auto args=impl->argumentPool.Acquire(lease,ad,result->impl->argumentOwners,&error);Require(args!=nil,"Cannot allocate original shadow color arguments: "+Error(error));lease.Retain(args);
 	[args setAddress:vertices.gpuAddress atIndex:0];[args setAddress:buffer.gpuAddress atIndex:1];[args setTexture:result->impl->atlas->texture.gpuResourceID atIndex:0];result->impl->arguments=args;
 	auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=MTLCompareFunctionLessEqual;dd.depthWriteEnabled=NO;
 	result->impl->depthState=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(result->impl->depthState!=nil,"Cannot allocate original transparent-shadow depth read-only state");lease.Retain(result->impl->depthState);
@@ -557,6 +588,12 @@ void WorldParticlesGPU::EncodeAtlasImages(id<MTL4CommandBuffer> command,uint64_t
 {
 	if(impl->sourceAtlases.empty())return;
 	Require(impl->sourceSubmission==submission,"Original atlas image producer has another common submission");EncodeAtlasMipmaps(impl->sourceAtlases,command,submission);
+}
+std::function<void()> WorldParticlesGPU::TakeAtlasCompletion(uint64_t submission)
+{
+ Require(impl->sourceSubmission==submission,"Atlas completion lost its submitting owner");
+ auto atlases=std::move(impl->sourceAtlases);impl->sourceAtlases.clear();impl->sourceSubmission=0;
+ return [atlases=std::move(atlases),submission]{CompleteAtlasMipmaps(atlases,submission);};
 }
 void WorldParticlesGPU::CompleteAtlasImages(uint64_t submission)
 {

@@ -840,6 +840,12 @@ void CGlobalRendering::PostInit() {
 void CGlobalRendering::SwapBuffers(bool allowSwapBuffers, bool clearErrors)
 {
 #ifdef RECOIL_METAL4_LIVE_SCENE
+	// Native capture owns copies of the submitted geometry. Retire the original
+	// per-frame CPU buffers at the same boundary as the GL path; otherwise the
+	// shadow-particle capture copies all earlier frames along with this one.
+	// Keep the original read-only-buffer and allow/force-swap behavior.
+	if (allowSwapBuffers || forceSwapBuffers)
+		RenderBuffer::SwapRenderBuffers();
 	// DrawWorld owns the real Metal presentation. This hook retains engine
 	// timing even when hidden/minimized and never swaps a nonexistent GL context.
 	const spring_time now = spring_now();

@@ -125,11 +125,11 @@ void ObjectSpotlightGPU::Initialize(RuntimeLease& l,MTLPixelFormat f,bool valida
 	impl->Pipeline(l,f,blend,{true,true,true,true},validation,ms,false,samples,false);impl->Pipeline(l,f,blend,{true,true,true,true},validation,ms,true,samples,false);impl->compiledFamily=std::make_shared<int>(0);SetNativeObjectSpotlightConsumer(impl->compiledFamily);
 }
 void ObjectSpotlightGPU::ClearResources(){impl->buffers.clear();}
-std::shared_ptr<PreparedObjectSpotlight> ObjectSpotlightGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeWorldDrawFrame> frame,uint64_t drawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
-	if(!frame||std::none_of(frame->draws.begin(),frame->draws.end(),[](const auto& c){return bool(c.objectSpotlight);}))return {};std::erase_if(impl->buffers,[](const auto& b){return b.second.source.expired();});
+std::shared_ptr<PreparedObjectSpotlight> ObjectSpotlightGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& selected,uint64_t drawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
+	selected.RequireFamily(NativeWorldFamily167::ObjectSpotlight,drawFrame);if(selected.empty())return {};std::erase_if(impl->buffers,[](const auto& b){return b.second.source.expired();});
 	Require(depth==MTLPixelFormatDepth32Float||depth==MTLPixelFormatDepth32Float_Stencil8,"Object Spotlight requires the actual common world target");
 	auto out=std::shared_ptr<PreparedObjectSpotlight>(new PreparedObjectSpotlight);
-	for(const auto& c:frame->draws){if(!c.objectSpotlight)continue;ValidateNativeWorldDrawCommand(c);const auto& d=*c.objectSpotlight;
+	for(const auto& c:selected){ValidateNativeWorldDrawCommand(c);const auto& d=*c.objectSpotlight;
 		Require(d.sourceDrawFrame==drawFrame&&c.stage==NativeWorldDrawStage::World,"Object Spotlight belongs to another actual source frame/stage");
 		PreparedObjectSpotlight::Impl::Draw ready;ready.sequence=c.sequence;ready.source=c.objectSpotlight;ready.state=c.world;
   Require(d.compiledFamily==impl->compiledFamily,"Object Spotlight source uses another compiled consumer generation");

@@ -233,8 +233,15 @@ void S3DModelVAO::UploadVBOs()
 	if (safeToDeleteVectors && !vertData.empty()) {
 		// all models have been uploaded in the calls above
 		// safe to clear CPU copy of the data
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		// The existing safe-to-delete gate follows completed model preload and
+		// publication. Release the unused capacity, not only the element count.
+		decltype(vertData){}.swap(vertData);
+		decltype(indxData){}.swap(indxData);
+#else
 		vertData.clear();
 		indxData.clear();
+#endif
 		vertUploadIndex = 0;
 		indxUploadIndex = 0;
 	}

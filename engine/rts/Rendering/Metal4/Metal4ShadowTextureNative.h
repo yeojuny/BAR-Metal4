@@ -14,6 +14,10 @@ struct NativeShadowDepthStorage {
 };
 NativeShadowDepthStorage QueryNativeShadowDepthStorage(const NativeShadowTextureBacking&);
 std::shared_ptr<const NativeShadowTextureResource> AllocateNativeShadowTexture(RuntimeLease&,const NativeShadowTextureRequest&);
+// Reserve an exclusively owned destination during CPU source capture. This
+// allocates/reuses storage only; actual residency, writes and completion remain
+// behind the common RuntimeLease gate. The returned C++ owner is the pool pin.
+std::shared_ptr<const NativeShadowTextureResource> ReserveNativeShadowTextureForCapture(const NativeShadowTextureRequest&);
 id<MTLTexture> NativeShadowTextureImage(const NativeShadowTextureBacking&);
 bool CheckNativeShadowFramebuffer(const NativeShadowTextureBacking&,const NativeShadowTextureBacking&);
 // Common producer invokes these at the actual original shadow passes and
