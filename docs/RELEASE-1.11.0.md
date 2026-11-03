@@ -1,3 +1,5 @@
+> Superseded by [v1.11.1](RELEASE-1.11.1.md). v1.11.0 has a game-startup packaging defect (exit code 21); upgrade to v1.11.1.
+
 # BAR Metal4 v1.11.0
 
 Apple Silicon Mac; macOS 27 or later. Experimental single-player release based on the tested 204 combination (202+203 on 201). Candidate 205 was stopped and is not included.
@@ -6,6 +8,7 @@ Apple Silicon Mac; macOS 27 or later. Experimental single-player release based o
 
 ```sh
 brew tap yeojuny/bar-metal4
+brew trust --tap yeojuny/bar-metal4
 brew install --cask yeojuny/bar-metal4/bar-metal4
 open "/Applications/BAR Metal4.app"
 ```

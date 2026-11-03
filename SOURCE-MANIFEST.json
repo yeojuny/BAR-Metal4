@@ -1,7 +1,6 @@
 {
-  "version": "1.11.0",
+  "version": "1.11.1",
   "candidate": 204,
-  "baseline": "October public export + frozen 204 effective mappings",
   "performanceOptimizationsIncluded": true,
   "files": [
     {
@@ -53472,17 +53471,12 @@
     {
       "path": "distribution/Info.plist",
       "bytes": 863,
-      "sha256": "6c9d7eb122305b77f9fa78f53d3e6305fb4de75cea47418877697c2086f68545"
+      "sha256": "67535b8cd5c137cadbe1f8960739c1cb56354b1d65e0289853a69d8065e2b6ca"
     },
     {
       "path": "distribution/lobby-config.json",
       "bytes": 2673,
       "sha256": "060fad3795fcff93b3b7c0653dbde2acaec4f73e080db036e28fbdb4ec945d0e"
-    },
-    {
-      "path": "distribution/pinned-content/packages/7a0e6ff2ee6f899654edd8cc997b5386.sdp",
-      "bytes": 541708,
-      "sha256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51"
     },
     {
       "path": "distribution/pinned-content/rapid/repos-cdn.beyondallreason.dev/byar/versions.gz",
@@ -53511,8 +53505,13 @@
     },
     {
       "path": "docs/RELEASE-1.11.0.md",
-      "bytes": 3007,
-      "sha256": "8934a3830c153ed655d2d5b9061a471ddde11b4a1c91492f0b40f9c2ad915095"
+      "bytes": 3170,
+      "sha256": "b5c6da01fc59a83ed197248b710b9de965eb4bdbc7d632ccb5332458de0ba2aa"
+    },
+    {
+      "path": "docs/RELEASE-1.11.1.md",
+      "bytes": 2122,
+      "sha256": "498e20d7a943d1ee66ce990d007882b47a3a1ba5ac69b0c92a12c0027228c7b4"
     },
     {
       "path": "docs/REPRODUCING.md",
