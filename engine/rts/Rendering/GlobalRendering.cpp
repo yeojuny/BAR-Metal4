@@ -12,6 +12,8 @@
 #endif
 
 #include "GlobalRendering.h"
+#include <atomic>
+#include <array>
 #include "GlobalRenderingInfo.h"
 #include "Rendering/VerticalSync.h"
 #include "Rendering/GL/StreamBuffer.h"
@@ -44,6 +46,7 @@
 #include "Game/Game.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Rendering/Metal4/Metal4SceneBridge.h"
+#include "Rendering/Metal4/Metal4DisplayGeometry.h"
 #include "Rendering/Metal4/Metal4AssetRenderer.h"
 #include "System/Platform/Mac/MacSDL3WindowGeometry.h"
 #ifndef HEADLESS
@@ -119,6 +122,12 @@ CONFIG(int, XResolution).defaultValue(0).headlessValue(headlessResolutionX).mini
 CONFIG(int, YResolution).defaultValue(0).headlessValue(headlessResolutionY).minimumValue(0).description("Sets the height of the game screen. If set to 0 Spring will autodetect the current resolution of your desktop.");
 CONFIG(int, XResolutionWindowed).defaultValue(0).headlessValue(headlessResolutionX).minimumValue(0).description("See XResolution, just for windowed.");
 CONFIG(int, YResolutionWindowed).defaultValue(0).headlessValue(headlessResolutionY).minimumValue(0).description("See YResolution, just for windowed.");
+#ifdef RECOIL_METAL4_LIVE_SCENE
+namespace { std::atomic_bool nativeRenderExtentPending{false}; }
+CONFIG(int, NativeFullscreenRenderWidth).defaultValue(0).minimumValue(0).maximumValue(4096).description("Fullscreen render pixels; zero follows the logical window. Does not alter display, camera or mouse geometry.");
+CONFIG(int, NativeFullscreenRenderHeight).defaultValue(0).minimumValue(0).maximumValue(4096).description("Fullscreen render pixels; zero follows the logical window.");
+CONFIG(bool, NativeResolutionOverlay).defaultValue(false).description("Show actual render pixels, logical window and safe viewport for display testing.");
+#endif
 CONFIG(int, WindowPosX).defaultValue(0 ).description("Sets the horizontal position of the game window, if Fullscreen is 0. When WindowBorderless is set, this should usually be 0.");
 CONFIG(int, WindowPosY).defaultValue(32).description("Sets the vertical position of the game window, if Fullscreen is 0. When WindowBorderless is set, this should usually be 0.");
 
@@ -404,6 +413,10 @@ CGlobalRendering::CGlobalRendering()
 		"YResolution",
 		"XResolutionWindowed",
 		"YResolutionWindowed",
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		"NativeFullscreenRenderWidth",
+		"NativeFullscreenRenderHeight",
+#endif
 		"WindowPosX",
 		"WindowPosY",
 		"MinSampleShadingRate"
@@ -1503,6 +1516,14 @@ void CGlobalRendering::SetWindowAttributes(SDL_Window* window)
 void CGlobalRendering::ConfigNotify(const std::string& key, const std::string& value)
 {
 	LOG("[GR::%s][1] key=%s val=%s", __func__, key.c_str(), value.c_str());
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (key == "NativeFullscreenRenderWidth" || key == "NativeFullscreenRenderHeight") {
+		// Pixel extent changes must not reapply Cocoa window geometry or send a
+		// logical ViewResize to the original camera, minimap and effect widgets.
+		nativeRenderExtentPending.store(true, std::memory_order_relaxed);
+		return;
+	}
+#endif
 
 	if (key == "MinSampleShadingRate") {
 		auto newMSSR = configHandler->GetFloat("MinSampleShadingRate");
@@ -1539,15 +1560,36 @@ void CGlobalRendering::UpdateWindow()
 	if (gmeChgFrame == drawFrame)
 		game->ResizeEvent();
 
-	if (winChgFrame != drawFrame)
+	if (winChgFrame != drawFrame) {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		if (nativeRenderExtentPending.exchange(false, std::memory_order_relaxed) && sdlWindow &&
+			(SDL_GetWindowFlags(sdlWindow) & SDL_WINDOW_MINIMIZED) == 0) {
+			const auto render = rendering::scene::SelectNativeRenderExtent(uint32_t(winSizeX), uint32_t(winSizeY),
+				fullScreen, borderless, configHandler->GetInt("NativeFullscreenRenderWidth"),
+				configHandler->GetInt("NativeFullscreenRenderHeight"));
+			rendering::scene::SetRenderSize(render.width, render.height);
+		}
+#endif
 		return;
+	}
 
 	if (sdlWindow == nullptr)
 		return;
 
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	const std::array<int, 7> oldGeometry{winSizeX, winSizeY, viewSizeX, viewSizeY, viewPosX, viewPosY, viewWindowOffsetY};
+#endif
 	SetWindowAttributes(sdlWindow);
 #ifdef RECOIL_METAL4_LIVE_SCENE
 	UpdateNativeWindowGeometry();
+	nativeRenderExtentPending.store(false, std::memory_order_relaxed);
+	const std::array<int, 7> newGeometry{winSizeX, winSizeY, viewSizeX, viewSizeY, viewPosX, viewPosY, viewWindowOffsetY};
+	if (game != nullptr && oldGeometry != newGeometry) {
+		// Config-driven SDL changes take effect before the next event poll.
+		// Reload original water and Lua copy/FBO owners before this frame draws.
+		game->ResizeEvent();
+	}
+
 #else
 	MakeCurrentContext(false);
 #endif
@@ -2050,10 +2092,13 @@ void CGlobalRendering::UpdateNativeWindowGeometry()
 	UpdateViewPortGeometry();
 	UpdatePixelGeometry();
 	UpdateScreenMatrices();
+	const auto render = rendering::scene::SelectNativeRenderExtent(uint32_t(winSizeX), uint32_t(winSizeY),
+		fullScreen, borderless, configHandler->GetInt("NativeFullscreenRenderWidth"),
+		configHandler->GetInt("NativeFullscreenRenderHeight"));
 	if ((SDL_GetWindowFlags(sdlWindow) & SDL_WINDOW_MINIMIZED) == 0)
-		rendering::scene::SetRenderSize(uint32_t(winSizeX), uint32_t(winSizeY));
-	LOG("[GR::%s] SDL logical window %dx%d, safe view %dx%d at %d,%d, mouseTopOffset=%d; native render follows logical content 1:1",
-		__func__, winSizeX, winSizeY, viewSizeX, viewSizeY, viewPosX, viewPosY, viewWindowOffsetY);
+		rendering::scene::SetRenderSize(render.width, render.height);
+	LOG("[GR::%s] SDL logical window %dx%d, safe view %dx%d at %d,%d, mouseTopOffset=%d; native render %ux%u",
+		__func__, winSizeX, winSizeY, viewSizeX, viewSizeY, viewPosX, viewPosY, viewWindowOffsetY, render.width, render.height);
 }
 #endif
 

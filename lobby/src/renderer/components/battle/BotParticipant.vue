@@ -16,7 +16,7 @@ SPDX-License-Identifier: MIT
             <FactionSelect v-if="canChooseFaction" :modelValue="bot.faction" :allowGamePicker="false" @update:modelValue="setFaction" />
         </TeamParticipant>
         <LuaOptionsModal
-            :id="`configure-bot-${bot.name}`"
+            :id="`configure-bot-${bot.id}`"
             :title="t('lobby.components.battle.botParticipant.configureBot')"
             v-model="botOptionsOpen"
             :options="bot.aiOptions"
@@ -94,7 +94,7 @@ function duplicateBot() {
 async function configureBot() {
     botOptions.value =
         [...(enginesStore.selectedEngineVersion?.ais || []), ...(gameStore.selectedGameVersion?.ais || [])].find(
-            (ai) => ai.name === props.bot.name
+            (ai) => ai.shortName === props.bot.aiShortName
         )?.options || [];
     botOptionsOpen.value = true;
 }

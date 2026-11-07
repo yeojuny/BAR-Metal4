@@ -16,8 +16,14 @@ static constexpr int MAX_STANDARD_INTERVAL = +6;
 static CVerticalSync instance;
 
 
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+static constexpr int DEFAULT_VSYNC = 0;
+CONFIG(int, VSyncGame).defaultValue(0).description("Preferred game display synchronization mode; 0 off, positive standard, negative adaptive.");
+#else
+static constexpr int DEFAULT_VSYNC = -1;
+#endif
 CONFIG(int, VSync).
-	defaultValue(-1).
+	defaultValue(DEFAULT_VSYNC).
 	minimumValue(MAX_ADAPTIVE_INTERVAL).
 	maximumValue(MAX_STANDARD_INTERVAL).
 	description(
@@ -32,6 +38,15 @@ CVerticalSync* CVerticalSync::GetInstance()
 
 void CVerticalSync::WrapNotifyOnChange()
 {
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+	// Before SDL/window creation: discard transient idle VSync, preserving the
+	// user's preferred game mode/fraction. No notification or persistence here.
+	const long long requested = static_cast<long long>(configHandler->GetInt("VSyncGame")) *
+		configHandler->GetIntSafe("VSyncFraction", 1);
+	const int initialInterval = static_cast<int>(std::clamp(requested,
+		static_cast<long long>(MAX_ADAPTIVE_INTERVAL), static_cast<long long>(MAX_STANDARD_INTERVAL)));
+	configHandler->Set("VSync", initialInterval, true, false);
+#endif
 	configHandler->NotifyOnChange(this, {"VSync"});
 }
 

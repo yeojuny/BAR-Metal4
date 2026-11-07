@@ -7,6 +7,9 @@
 #include <SDL_keycode.h>
 
 #include "PreGame.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "NativeRoute208Seed.h"
+#endif
 
 #include "ClientData.h"
 #include "ClientSetup.h"
@@ -288,6 +291,18 @@ void CPreGame::StartServer(const std::string& setupscript)
 	} else {
 		startGameData->SetRandomSeed(startGameSetup->fixedRNGSeed);
 	}
+
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	// Diagnostic208 only: reproduce a recorded initial allocation seed.
+	// The original RNG call above and the later network-start seed stay intact.
+	if (const auto seed208 = NativeRoute208InitialSeed(std::getenv("BAR_NATIVE_ROUTE208_SEED"))) {
+		if (startGameSetup->fixedRNGSeed != 0)
+			throw content_error("Route208 initial-seed witness requires the original unfixed startscript");
+		const auto original208 = startGameData->GetRandomSeed();
+		startGameData->SetRandomSeed(*seed208);
+		LOG("[Route208Seed] original_initial=%u selected_initial=%u later_seed_unchanged=1 renderer_unchanged=1", unsigned(original208), unsigned(*seed208));
+	}
+#endif
 
 	if (startGameSetup->mapName.empty())
 		throw content_error("No map selected in startscript");

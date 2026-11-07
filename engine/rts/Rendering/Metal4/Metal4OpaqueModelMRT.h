@@ -14,5 +14,5 @@ std::unique_ptr<PreparedCUSDeferred> PrepareOpaqueModelMRTPhase(RuntimeLease&,
 	CUSSourceGPU&,EngineModelDeferredGPU&,const NativeOpaqueModelPass&,
 	const EngineDeferredGeometryProvider&,const CUSSourceGPU::TextureProvider&,
 	uint64_t actualDrawFrame,uint64_t actualSubmission,bool shaderValidation,
-	double& shaderMilliseconds);
+	double& shaderMilliseconds,MRTWriteReuse209* writeReuse209=nullptr);
 } // namespace rendering::metal4

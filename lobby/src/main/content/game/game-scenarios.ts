@@ -45,7 +45,7 @@ export async function getScenarios(packageMd5: string): Promise<Scenario[]> {
                 }
                 scenario.summary = scenario.summary.replace(/\[|\]/g, "");
                 scenario.briefing = scenario.briefing.replace(/\[|\]/g, "");
-                scenario.allowedsides = Array.isArray(scenario.allowedsides) && scenario.allowedsides[0] !== "" ? scenario.allowedsides : ["Armada", "Cortext", "Random"];
+                scenario.allowedsides = Array.isArray(scenario.allowedsides) && scenario.allowedsides[0] !== "" ? scenario.allowedsides : ["Armada", "Cortex", "Random"];
                 scenario.startscript = scenario.startscript.slice(1, -1);
                 scenarios.push(scenario);
             } catch (err) {

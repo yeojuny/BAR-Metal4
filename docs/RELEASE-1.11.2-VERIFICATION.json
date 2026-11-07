@@ -1,0 +1,52 @@
+{
+  "status": "PASS_FINAL_ARCHIVE_FRESH_LAUNCH_AND_RELAUNCH",
+  "archiveSHA256": "a3696fed2b20bc5dfa2bf77f9980dcfdd47da0f06028581d92ec14da3b53bdef",
+  "sourceArchiveSHA256": "ce120e9d9ba4805298e125db31a8701c0d8c94e203e7e3f1a7f4f107738fcc74",
+  "engineSHA256": "2e85cbe7ccb1609c81d7d868fbefd3e12de0daa8d28ba56d45509120b82fc24c",
+  "lobbyASARSHA256": "a2d9f08845067b7753eb3be52d79a707dd2fd05d59a022c29a963cab53d3f317",
+  "runtimeEvidenceSHA256": "0be475d2e2570f23ca0298f4a4eca53f126f344d2eddfc1414fa769bd8e64a42",
+  "visibleBots": [
+    "BARbarIAn",
+    "Test AI using the new C interface",
+    "SimpleAI",
+    "SimpleDefenderAI",
+    "SimpleConstructorAI"
+  ],
+  "barbarianProfiles": [
+    "Testing AI"
+  ],
+  "scenario": "A Safe Haven",
+  "scope": "Two actual packaged launches on one Apple Silicon Mac. Clean user state and same-state relaunch.",
+  "healthBarScale": 2,
+  "healthBarHeight": 2,
+  "vsyncMode": "off",
+  "runs": [
+    {
+      "mode": "defaults-first",
+      "display": "applied",
+      "simulationFrame": 300,
+      "actualDisplaySync": [
+        [
+          "0",
+          "0"
+        ]
+      ],
+      "normalExit": 0
+    },
+    {
+      "mode": "defaults-relaunch",
+      "display": "persisted",
+      "simulationFrame": 300,
+      "actualDisplaySync": [
+        [
+          "0",
+          "0"
+        ]
+      ],
+      "normalExit": 0
+    }
+  ],
+  "contentDeltaInstalledAndReused": true,
+  "cleanRebuildTested": false,
+  "otherMacTested": false
+}

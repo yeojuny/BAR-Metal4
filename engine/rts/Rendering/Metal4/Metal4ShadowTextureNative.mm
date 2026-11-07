@@ -77,6 +77,10 @@ static std::shared_ptr<const Resource> AllocateShadowStorage(const Runtime& runt
 	}
 	auto d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:format width:request.size height:request.size mipmapped:NO];
 	d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget|MTLTextureUsagePixelFormatView;
+	// The validated RGB8/R8 color roots only have same-format RGB1/RRR1 views.
+	// Keep the existing view usage for every depth request.
+	if(request.kind==NativeShadowTextureKind::Color)
+		d.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
 	auto resource=AcquireShadowStorage(runtime,request,d);
 	Require(resource->texture!=nil,"Cannot allocate actual original named shadow storage");
 	return resource;

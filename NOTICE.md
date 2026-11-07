@@ -11,3 +11,7 @@ Development and these publication documents used OpenAI Codex extensively. Human
 ## November 2026 release
 
 v1.11.0 publishes frozen candidate204 engine changes, available source-map originals from its packaged lobby, the distribution bootstrap/defaults, and the immutable local26 Rapid identity. The earlier October baseline description above is historical. Private backup histories and conversations remain private.
+
+## v1.11.2
+
+The release uses the Native 220 lineage with verified display and startup defaults, and BARbarIAn from its pinned upstream commit. The engine, lobby, game overlay and dependency licenses remain with their original sources. See `UPSTREAM-CONTRIBUTIONS.json` for contributor credit and `RELEASE-SOURCE-PINS.json` for the exact build and package identities. The earlier October and v1.11.0 source descriptions above refer to their original releases.

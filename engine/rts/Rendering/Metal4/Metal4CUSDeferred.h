@@ -7,6 +7,7 @@
 #include <vector>
 
 namespace rendering::metal4 {
+class MRTWriteReuse209;
 
 // Engine-selected non-CUS objects and legacy Lua material bins retain their
 // original locations on either side of DrawOpaque*Lua. The source-stage
@@ -48,7 +49,7 @@ private:
 	PreparedCUSDeferred();struct Impl;std::unique_ptr<Impl> impl;
 	friend std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease&,CUSSourceGPU&,
 		std::shared_ptr<const NativeCUSDeferredPhase>,const CUSSourceGPU::TextureProvider&,
-		CUSDeferredOtherDraws,uint64_t,bool,double&,const NativeWorldAttachmentClear*);
+		CUSDeferredOtherDraws,uint64_t,bool,double&,const NativeWorldAttachmentClear*,MRTWriteReuse209*);
 };
 
 // Provides five real RGBA8 targets plus the SAME D32F target for all source
@@ -58,5 +59,5 @@ private:
 std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease&,CUSSourceGPU&,
 	std::shared_ptr<const NativeCUSDeferredPhase>,const CUSSourceGPU::TextureProvider&,
 	CUSDeferredOtherDraws,uint64_t actualSubmission,bool validation,double& compileMilliseconds,
- const NativeWorldAttachmentClear* initialClear=nullptr);
+ const NativeWorldAttachmentClear* initialClear=nullptr,MRTWriteReuse209* writeReuse209=nullptr);
 } // namespace rendering::metal4

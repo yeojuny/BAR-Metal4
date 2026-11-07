@@ -26,6 +26,7 @@ function registerIpcHandlers(webContents: BarIpcWebContents) {
 
     // Game
     ipcMain.handle("game:launchMultiplayer", (_, settings: MultiplayerLaunchSettings) => gameAPI.launchMultiplayer(settings));
+    ipcMain.handle("game:launchScenario", (_, script: string, gameVersion: string, engineVersion: string) => gameAPI.launchScenario({ script, gameVersion, engineVersion }));
     ipcMain.handle("game:launchScript", (_, scriptString: string, gameVersionString: string, engineVersionString: string) =>
         gameAPI.launchScript({ script: scriptString, engineVersion: engineVersionString, gameVersion: gameVersionString })
     );

@@ -12,6 +12,7 @@
 #include "LuaNativeUI.h"
 #include "LuaNativeCUSTextures.h"
 #include "Rendering/Backend/NativeTextureContext.h"
+#include "Rendering/Metal4/Metal4DisplayGeometry.h"
 #include <limits>
 #include <stdexcept>
 #endif
@@ -133,6 +134,25 @@ bool LuaUnsyncedRead::PushEntries(lua_State* L)
 
 	REGISTER_LUA_CFUNC(GetNumDisplays);
 	REGISTER_LUA_CFUNC(GetViewGeometry);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	lua_pushliteral(L, "GetNativeDisplayGeometry");
+	lua_pushcfunction(L, [](lua_State* state) -> int {
+		const auto geometry = rendering::scene::GetNativeDisplayGeometry();
+		if (!geometry.available) return 0;
+		lua_createtable(state, 0, 14);
+		const auto number = [state](const char* key, int value) {
+			lua_pushinteger(state, value); lua_setfield(state, -2, key);
+		};
+		number("windowWidth", geometry.logicalWidth); number("windowHeight", geometry.logicalHeight);
+		number("renderWidth", geometry.renderWidth); number("renderHeight", geometry.renderHeight);
+		number("backingWidth", geometry.backingWidth); number("backingHeight", geometry.backingHeight);
+		number("viewWidth", globalRendering->viewSizeX); number("viewHeight", globalRendering->viewSizeY);
+		number("viewX", globalRendering->viewPosX); number("viewY", globalRendering->viewPosY);
+		number("mouseTopOffset", globalRendering->viewWindowOffsetY);
+		return 1;
+	});
+	lua_rawset(L, -3);
+#endif
 	REGISTER_LUA_CFUNC(GetDualViewGeometry);
 	REGISTER_LUA_CFUNC(GetWindowGeometry);
 	REGISTER_LUA_CFUNC(GetWindowDisplayMode);

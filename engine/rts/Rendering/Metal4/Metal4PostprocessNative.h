@@ -56,10 +56,15 @@ public:
 		std::optional<NativePostprocessConsumer> consumer = std::nullopt);
 	// Encode-time proof for a captured immutable version; ordering validation alone does not mean its producer ran.
 	void RequireReadable(const std::shared_ptr<const NativePostprocessVersion>& version) const;
+	// Opt in only for the audited WorldRenderer root providers: render shaders
+	// read separate resources (including view backings), write only attachments,
+	// and never sample the live main C/D/S. Custom providers keep the default.
+	// originalScreen and its retained resources must outlive Encode; permission
+	// applies only to that exact prepared screen, not another equal-sized stream.
 	std::unique_ptr<PreparedPostprocessFrame> Prepare(RuntimeLease& lease,
 		std::shared_ptr<const NativePostprocessFrame> frame, id<MTLTexture> actualColor, id<MTLTexture> actualDepth,
 		const PreparedScreenFrame& originalScreen, bool validation, double& compileMs, id<MTLTexture> actualStencil = nil,
-		std::shared_ptr<const MainFrameAttachments> main = {});
+		std::shared_ptr<const MainFrameAttachments> main = {}, bool independentRootShaderResources = false);
 private:
 	struct Impl;
 	std::unique_ptr<Impl> impl;

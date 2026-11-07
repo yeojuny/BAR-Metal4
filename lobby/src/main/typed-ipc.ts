@@ -89,6 +89,7 @@ export type IPCCommands = {
     "game:launchBattle": (battle: BattleWithMetadata) => Promise<void>;
     "game:launchMultiplayer": (settings: MultiplayerLaunchSettings) => void;
     "game:launchReplay": (replay: Replay) => Promise<void>;
+    "game:launchScenario": (script: string, gameVersion: string, engineVersion: string) => void;
     "game:launchScript": (script: string, gameVersion: string, engineVersion: string) => void;
     "game:uninstallVersion": (version: string) => void;
     "info:get": () => Info;

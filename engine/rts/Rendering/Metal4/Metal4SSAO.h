@@ -27,6 +27,29 @@ public:
  // Original callback stage, after source color/depth stores. This encodes one
  // actual original FBO operation, never a command submission or host wait.
  void EncodeDraw(size_t,id<MTL4CommandBuffer>)const;
+ // Inspection has no producer/readability side effects. The scheduler must
+ // also prove the exact callback frame and following ordinary scene suffix.
+ enum class SSAOSceneRejection218 : unsigned {
+  Eligible=0, NoDescriptor, NoOwner, Index, NotFinal, SourceCount,
+  SourceFrame, SourceSequence, AlreadyEncoded, NoRaster, Clear, LoadClear,
+  ClearProducer, PreparedOutput, PreparedPrevious, SourceOutput,
+  SourcePrevious, Program, SourceDefines, Geometry, Bindings,
+  NonlocalInput, ExternalInput, InputCount, LocalReadCount, LocalVersion,
+  LocalStorage, DepthSource, MaskSource, MaskOwner, MissingInput,
+  InputView, InputBuffer, InputHeap, InputStorage, InputSharedStorage, InputType,
+  InputSamples, InputDevice, MissingColor, MissingDepth, MissingStencil,
+  AttachmentAlias, AttachmentView, AttachmentBuffer, AttachmentHeap, AttachmentStorage,
+  AttachmentType, AttachmentSamples, AttachmentExtent, AttachmentDevice,
+  PassSamples, PassExtent, PassArray, PassImageblock, PassThreadgroup,
+  PassTile, PassRasterRate, PassVisibility, PassColorMapping,
+  PassSamplePositions, ColorDescriptor, DepthDescriptor, StencilDescriptor,
+  ExtraColor
+ };
+ SSAOSceneRejection218 InspectSceneDraw218(size_t,MTL4RenderPassDescriptor* __unsafe_unretained)const;
+ bool CanEncodeSceneDraw218(size_t,MTL4RenderPassDescriptor* __unsafe_unretained)const;
+ // Borrow only: no encoder open/end, submission, wait or resource retirement.
+ // On failure the scheduler closes its encoder once and never replays the draw.
+ void EncodeSceneDraw218(size_t,id<MTL4RenderCommandEncoder> __unsafe_unretained)const;
  void DidComplete()const;
 private:struct Impl;std::unique_ptr<Impl>impl;friend class SSAOGPU;
 };

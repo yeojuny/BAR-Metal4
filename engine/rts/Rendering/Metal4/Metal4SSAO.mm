@@ -3,6 +3,7 @@
 #include "Metal4TransientUpload177.h"
 #include "Rendering/Backend/NativeSSAOOverwrite149.h"
 #include "Rendering/Backend/NativeSSAOClear150.h"
+#include "Rendering/Backend/NativeUnitStencilData.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "System/Log/ILog.h"
 #endif
@@ -78,6 +79,139 @@ void PreparedSSAO::EncodeDraw(size_t index,id<MTL4CommandBuffer>command)const{
  if(d.z){p.depthAttachment.texture=d.z;p.depthAttachment.loadAction=MTLLoadActionLoad;p.depthAttachment.storeAction=MTLStoreActionStore;}
  if(d.stencil){p.stencilAttachment.texture=d.stencil;p.stencilAttachment.loadAction=MTLLoadActionLoad;p.stencilAttachment.storeAction=MTLStoreActionStore;}
  auto e=[command renderCommandEncoderWithDescriptor:p];Require(e!=nil,"Cannot encode actual SSAO render operation");[e barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];if(!(d.clear&&d.loadClear150)){effectstate::RasterState(e,d.world,d.raster);[e setCullMode:d.world.cullEnabled?(d.world.cull==NativeWorldCull::Front?MTLCullModeFront:d.world.cull==NativeWorldCull::Back?MTLCullModeBack:MTLCullModeNone):MTLCullModeNone];[e setRenderPipelineState:d.pipeline];[e setDepthStencilState:d.depth];[e setArgumentTable:d.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];if(d.indices){[e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:6 indexType:MTLIndexTypeUInt32 indexBuffer:d.indices.gpuAddress indexBufferLength:d.indices.length instanceCount:d.instanceCount];}else{[e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];}}[e barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[e endEncoding];d.encoded=true;if(d.output){d.output->producer->submissionIdentity=d.submission;d.output->producer->encoded=true;}
+}
+PreparedSSAO::SSAOSceneRejection218 PreparedSSAO::InspectSceneDraw218(size_t index,MTL4RenderPassDescriptor* __unsafe_unretained p)const{
+ using Reason=SSAOSceneRejection218;
+ if(!p)return Reason::NoDescriptor;
+ if(!impl->owner)return Reason::NoOwner;
+ if(index>=impl->draws.size())return Reason::Index;
+ if(index+1!=impl->draws.size())return Reason::NotFinal;
+ if(impl->owner->draws.size()!=impl->draws.size())return Reason::SourceCount;
+ if(!impl->owner->sourceDrawFrame||impl->owner->completed)return Reason::SourceFrame;
+ const auto& d=impl->draws[index];const auto& source=impl->owner->draws[index];
+ if(!source.sequence||source.sequence!=d.sequence)return Reason::SourceSequence;
+ if(d.encoded)return Reason::AlreadyEncoded;
+ if(d.noop)return Reason::NoRaster;
+ if(d.clear||source.clear)return Reason::Clear;
+ if(d.loadClear150)return Reason::LoadClear;
+ if(d.initialClearProducer150)return Reason::ClearProducer;
+ if(d.output)return Reason::PreparedOutput;
+ if(d.previous)return Reason::PreparedPrevious;
+ if(source.output)return Reason::SourceOutput;
+ if(source.previous)return Reason::SourcePrevious;
+ if(source.program!=NativeSSAOProgram::BlurComposite)return Reason::Program;
+ const auto stencilDefine=source.defines.find("USE_STENCIL");
+ const auto compositeDefine=source.defines.find("BLUR_COMPOSITE");
+ const auto downsampleDefine=source.defines.find("DOWNSAMPLE");
+ if(stencilDefine==source.defines.end()||compositeDefine==source.defines.end()||
+  downsampleDefine==source.defines.end()||compositeDefine->second!=1||
+  downsampleDefine->second!=1||(stencilDefine->second!=0&&stencilDefine->second!=1))return Reason::SourceDefines;
+ const bool tiled=source.defines.contains("TILE_CULL");
+ if(tiled!=bool(source.tiles))return Reason::Geometry;
+ if(source.tiles){
+  if(!d.indices||!d.instanceCount||d.instanceCount!=source.tiles->instances.size()||
+   d.indices.length<sizeof(source.tiles->indices))return Reason::Geometry;
+ }else if(d.indices||d.instanceCount)return Reason::Geometry;
+ if(!d.pipeline||!d.arguments)return Reason::Bindings;
+ if(!source.inputs[0].local)return Reason::NonlocalInput;
+ if(source.inputs[0].actual.object)return Reason::ExternalInput;
+ // For this one original program InputUnits is exactly 0,1,4 and optional 7.
+ // Prepare already validated the source defines and resolved that exact order.
+ const bool mask=tiled||stencilDefine->second==1;
+ if(d.inputs.size()!=(mask?4u:3u))return Reason::InputCount;
+ if(d.localInputs.size()!=1)return Reason::LocalReadCount;
+ const auto& version=source.inputs[0].local;const auto& local=d.localInputs[0];
+ if(!local||!version->image||!version->generation||!version->producer||
+  version->sourceDrawFrame!=impl->owner->sourceDrawFrame||!version->producerSequence||
+  version->producerSequence>=source.sequence||local->owner.lock()!=version||
+  version->Resource()!=local||local->producer!=version->producer||
+  d.inputs[0].owner!=local)return Reason::LocalVersion;
+ if(!local->storage||local->storage->texture!=local->texture||
+  local->texture!=d.inputs[0].texture)return Reason::LocalStorage;
+ for(unsigned unit:{1u,4u}){
+  const auto& input=source.inputs[unit];
+  if(input.local||input.actual.knowledge!=NativeCUSBindingKnowledge::BoundObject||!input.actual.object)return Reason::DepthSource;
+  const auto backing=std::dynamic_pointer_cast<const NativeShieldDepthBacking>(input.actual.object->backing);
+  if(!backing||backing->Kind()!=(unit==1?NativeTextureBackingKind::ModelDepth:NativeTextureBackingKind::MapDepth))return Reason::DepthSource;
+ }
+ if(mask){
+  const auto& input=source.inputs[7];
+  if(input.local||input.actual.knowledge!=NativeCUSBindingKnowledge::BoundObject||!input.actual.object)return Reason::MaskSource;
+  const auto backing=std::dynamic_pointer_cast<const NativeUnitStencilBacking>(input.actual.object->backing);
+  if(!backing||!backing->version||!backing->version->image||!backing->version->producer)return Reason::MaskSource;
+  if(!backing->version->Resource()||d.inputs[3].owner!=backing->version->Resource()||
+   d.inputs[3].texture.pixelFormat!=MTLPixelFormatR8Unorm)return Reason::MaskOwner;
+ }
+ if(!d.color)return Reason::MissingColor;
+ if(!d.z)return Reason::MissingDepth;
+ if(!d.stencil)return Reason::MissingStencil;
+ for(const auto& input:d.inputs){
+  id<MTLTexture> __unsafe_unretained texture=input.texture;
+  if(!texture||!input.owner||!input.requireReadable)return Reason::MissingInput;
+  if(texture.parentTexture)return Reason::InputView;
+  if(texture.buffer)return Reason::InputBuffer;
+  if(texture.heap)return Reason::InputHeap;
+  if(texture.storageMode!=MTLStorageModePrivate)return Reason::InputStorage;
+  if(texture.iosurface||texture.shareable)return Reason::InputSharedStorage;
+  if(texture.textureType!=MTLTextureType2D)return Reason::InputType;
+  if(texture.sampleCount!=1)return Reason::InputSamples;
+  if(texture.device!=d.color.device)return Reason::InputDevice;
+  if(texture==d.color||texture==d.z||texture==d.stencil)return Reason::AttachmentAlias;
+ }
+ const auto independent=[&](id<MTLTexture> __unsafe_unretained texture){
+  if(texture.parentTexture)return Reason::AttachmentView;
+  if(texture.buffer)return Reason::AttachmentBuffer;
+  if(texture.heap)return Reason::AttachmentHeap;
+  if(texture.storageMode==MTLStorageModeMemoryless)return Reason::AttachmentStorage;
+  if(texture.textureType!=MTLTextureType2D)return Reason::AttachmentType;
+  if(texture.sampleCount!=1)return Reason::AttachmentSamples;
+  if(!texture.width||!texture.height||texture.width!=d.color.width||texture.height!=d.color.height)return Reason::AttachmentExtent;
+  if(texture.device!=d.color.device)return Reason::AttachmentDevice;
+  return Reason::Eligible;
+ };
+ if(const auto reason=independent(d.color);reason!=Reason::Eligible)return reason;
+ if(const auto reason=independent(d.z);reason!=Reason::Eligible)return reason;
+ if(const auto reason=independent(d.stencil);reason!=Reason::Eligible)return reason;
+ if(p.defaultRasterSampleCount!=1)return Reason::PassSamples;
+ if(p.renderTargetWidth!=d.color.width||p.renderTargetHeight!=d.color.height)return Reason::PassExtent;
+ if(p.renderTargetArrayLength>1)return Reason::PassArray;
+ if(p.imageblockSampleLength)return Reason::PassImageblock;
+ if(p.threadgroupMemoryLength)return Reason::PassThreadgroup;
+ if(p.tileWidth||p.tileHeight)return Reason::PassTile;
+ if(p.rasterizationRateMap)return Reason::PassRasterRate;
+ if(p.visibilityResultBuffer||p.visibilityResultType!=MTLVisibilityResultTypeReset)return Reason::PassVisibility;
+ if(p.supportColorAttachmentMapping)return Reason::PassColorMapping;
+ if([p getSamplePositions:nullptr count:0])return Reason::PassSamplePositions;
+ const auto matches=[](MTLRenderPassAttachmentDescriptor* __unsafe_unretained a,id<MTLTexture> __unsafe_unretained texture){
+  return a.texture==texture&&!a.resolveTexture&&a.level==0&&a.slice==0&&a.depthPlane==0&&
+   a.loadAction==MTLLoadActionLoad&&a.storeAction==MTLStoreActionStore;
+ };
+ if(!matches(p.colorAttachments[0],d.color))return Reason::ColorDescriptor;
+ if(!matches(p.depthAttachment,d.z))return Reason::DepthDescriptor;
+ if(!matches(p.stencilAttachment,d.stencil))return Reason::StencilDescriptor;
+ for(NSUInteger i=1;i<8;++i)if(p.colorAttachments[i].texture||p.colorAttachments[i].resolveTexture)return Reason::ExtraColor;
+ return Reason::Eligible;
+}
+bool PreparedSSAO::CanEncodeSceneDraw218(size_t index,MTL4RenderPassDescriptor* __unsafe_unretained p)const{
+ return InspectSceneDraw218(index,p)==SSAOSceneRejection218::Eligible;
+}
+void PreparedSSAO::EncodeSceneDraw218(size_t index,id<MTL4RenderCommandEncoder> __unsafe_unretained e)const{
+ const auto& d=impl->draws.at(index);
+ Require(e!=nil&&!d.encoded&&!d.noop&&!d.clear&&!d.loadClear150&&!d.output&&!d.previous,
+  "Borrowed SSAO operation lost its inspected main draw or was encoded twice");
+ // Preserve EncodeDraw's checks, state, draw and both queue dependencies.
+ // This encoder starts at the original SSAO boundary; suffix safety is separate.
+ if(d.initialClearProducer150){const auto& producer=*d.initialClearProducer150;Require(producer.completed||(producer.encoded&&producer.submissionIdentity==d.submission),"SSAO clear seed precedes its original producer encoding/retirement");}
+ for(auto&i:d.inputs)i.requireReadable();for(auto&i:d.localInputs)Require(i->producer->completed||(i->producer->encoded&&i->producer->submissionIdentity==d.submission),"SSAO samples unencoded original FBO generation");
+ [e barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+ effectstate::RasterState(e,d.world,d.raster);
+ [e setCullMode:d.world.cullEnabled?(d.world.cull==NativeWorldCull::Front?MTLCullModeFront:d.world.cull==NativeWorldCull::Back?MTLCullModeBack:MTLCullModeNone):MTLCullModeNone];
+ [e setRenderPipelineState:d.pipeline];[e setDepthStencilState:d.depth];
+ [e setArgumentTable:d.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+ if(d.indices){[e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:6 indexType:MTLIndexTypeUInt32 indexBuffer:d.indices.gpuAddress indexBufferLength:d.indices.length instanceCount:d.instanceCount];}
+ else{[e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];}
+ [e barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+ d.encoded=true;
 }
 void PreparedSSAO::DidComplete()const{
  // Validate the whole frame before publishing any retirement. A late missing

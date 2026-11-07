@@ -10,6 +10,7 @@ import { assertNativeSyncVersion } from "./native-version";
 import type { ChildProcess } from "child_process";
 import { spawn } from "child_process";
 import * as fs from "fs";
+import { ScriptParser } from "sdfz-demo-parser/dist/script-parser";
 import { Signal } from "$/jaz-ts-utils/signal";
 import * as path from "path";
 
@@ -96,6 +97,25 @@ export class GameAPI {
             launchArg: scriptPath,
             script,
         });
+    }
+
+    public async launchScenario({ engineVersion, gameVersion, script }: ScriptLaunchSettings): Promise<void> {
+        // OnlyLocal disables listening sockets; it does not turn a client script
+        // into a local host. Keep the explicit scenario route local before using
+        // the existing opt-in offline-scene authorization.
+        const { hostSettings } = new ScriptParser({}).parseScript(Buffer.from(script));
+        // The original scenario015 deliberately leaves HostIP empty. As a host
+        // under OnlyLocal it uses the engine's in-process connection.
+        const isLoopback = (host: string) => ["127.0.0.1", "::1", "localhost"].includes(host.toLowerCase());
+        if (hostSettings.ishost !== "1" || (hostSettings.hostip && !isLoopback(hostSettings.hostip))) {
+            throw new Error("Scenarios require a local host startscript (IsHost=1 and empty or loopback HostIP).");
+        }
+        if (hostSettings.autohostip && !isLoopback(hostSettings.autohostip)) {
+            throw new Error("Scenarios cannot use an external autohost.");
+        }
+        if (hostSettings.gametype !== gameVersion) throw new Error("Scenario script game version does not match the selected installed version.");
+        if (!hostSettings.mapname) throw new Error("Could not parse map name from scenario script");
+        await this.launchPrepared({ engineVersion, gameVersion, mapSpringName: hostSettings.mapname, launchArg: path.join(WRITE_DATA_PATH, this.startScriptName), script }, true);
     }
 
     public async launchMultiplayer({ engineVersion, gameVersion, springString }: MultiplayerLaunchSettings) {

@@ -10,19 +10,20 @@ struct Entry {
 };
 inline constexpr char handlerSHA512[] = "fd298d1cef4ee2996877bf45fc9f19715cbd77eca8e8dbf4fe5c73643f9dd6e8ff3a0eaaf2a6d21da4349125432b0b0c46245c4648185ce097f4a7aaa0e2ee19";
 inline constexpr Entry entries[] = {
+    {"luaui/widgets/cmd_resolution_switcher.lua", "LuaUI/NativeWidgets/cmd_resolution_switcher.lua", "24d3959edce42e20b1495e0e497bb046790884eddbe4e6d8f8cdd7d4dcc9391d96362528dce44857d853cea0ca28a00c12f7a83bc4fd6d2b01410b3797f01609"},
     {"luaui/widgets/gui_selectedunits_gl4.lua", "LuaUI/NativeWidgets/gui_selectedunits_gl4.lua", "0e0f75630651f5b8590a75cb5c2bcfd2357a5c797114adf6a900b7b1eed98f1792d75a9deeed2f18199866a35e49d2ff3901fa309b83c6af365dd01ce673722a"},
     {"luaui/widgets/gui_buildsquare_gl4.lua", "LuaUI/NativeWidgets/gui_buildsquare_gl4.lua", "8c149d4435a9fe25df148a3e831d1a8734fa0b33b4d56f0656f6f78d4e3edd1deb7450058e3f4ae2d1f653bdf2f97a7bd0b27c43c035a63fdcd09b25c1fb0706"},
     {"luaui/widgets/gfx_outline_shader_gl4.lua", "LuaUI/NativeWidgets/gfx_outline_shader_gl4.lua", "5da471bfc96dbe8372f19a3f8401144753f21749b0c591ee62eb8546d5646ebb4fc86ec7a5e08a86ab96a83af45ed3b585a0eea4b62848edff6c0cccae501031"},
     {"luaui/widgets/gfx_unit_stencil_gl4.lua", "LuaUI/NativeWidgets/gfx_unit_stencil_gl4.lua", "baf51119f4fe0c3768eac417f4583730503a7029cace398502de96537f8d7f4d84843a69ac1a7de11ed7374e2ae6a3d3ab4ef89ed3d482b83560c61960551951"},
     {"luaui/widgets/gfx_distortion_gl4.lua", "LuaUI/NativeWidgets/gfx_distortion_gl4.lua", "04a02ce3e7650f20f059717785891f20f38cd2d77443ca6bbeffc0790a30e42fca2e8c70da71047084bcd34bc5a49e3d960cf340a3f1a1dbcffd6cdcab497de6"},
     {"luaui/widgets/api_object_spotlight.lua", "LuaUI/NativeWidgets/api_object_spotlight.lua", "b0c3edfb78fe4fa2072a00c398846559025c52d1bbad4787c64e02f25b474ef9449f926c47d5ae5576055d75664d93c2d367f331619dff9e00cef38756d3aa57"},
-    {"luaui/widgets/gui_healthbars_gl4.lua", "LuaUI/NativeWidgets/gui_healthbars_gl4.lua", "ff3d7f2ed0cc3a1f919fe9bc1204b27b1598f5248fe2e20e72924987135a040d5f3b2af268cbf06a93e88e401a2ba733d500b0a2050bf29b3a3668923c554635"},
+    {"luaui/widgets/gui_healthbars_gl4.lua", "LuaUI/NativeWidgets/gui_healthbars_gl4.lua", "ba1bf6e7138db7b05c6deb3791bca185170ae774f5c96d2a6844421e76f378b7b4a280412bb4afb227e0c8ffe466b03ebbfdb36520d867dde746a46c01342411"},
     {"luaui/widgets/map_grass_gl4.lua", "LuaUI/NativeWidgets/map_grass_gl4.lua", "5f846ecff055a068057c0ae26a034fda56f85892c24ded8d91b48c28be39150b119104bf0d51a9b1b18d42e098ea21dbe3e8d8a705d5ce3fcdca69d4362924f3"},
     {"luaui/widgets/gfx_snow.lua", "LuaUI/NativeWidgets/gfx_snow.lua", "b8fdb63bbb0c555e3d5b2c1567feb124d20c3a4e5c68905d3d28aed79f48fac8b8abafdffbb7ce58384f284c193d54e507922935b06c003d85681618f46938ee"},
     {"luaui/widgets/gfx_guishader.lua", "LuaUI/NativeWidgets/gfx_guishader.lua", "9243d80f279a8b81c73ab2e69e315f555b39bcfc6a83e1387d42d176517928bc800c3ce2c0490eefb3bd564a45a83b29cd2a8cbd0c12044d43c451abab6af34b"},
     {"luaui/widgets/gui_pausescreen.lua", "LuaUI/NativeWidgets/gui_pausescreen.lua", "68f3565c57897e71f61b68439f41d1fd71b594eaf01cbf016fa6695a8c7ce044f26c5b79251cc9dbd6c46c25ef9147b6faff29a5d2900e1329a5f5809d5f3ab1"},
     {"luaui/widgets/gfx_deferred_rendering_gl4.lua", "LuaUI/NativeWidgets/gfx_deferred_rendering_gl4.lua", "95eb5c87efbecb39f2192330715bb6f0f664efc18c61adae4b57644903746c7ad43ccf8fb603167ea10b5f6e859d359897f2ccffc36f5e1b9af0e2affbe156dd"},
-    {"luaui/widgets/gui_options.lua", "LuaUI/NativeWidgets/gui_options.lua", "07d0891c9e475a4c8375768f3661e69da6c6faac646af6044980c90975412abadd18e16018c85a40e9efe09f0d2004f3e4bd90d4cb0bbb480779fe5d1f7b4fba"},
+    {"luaui/widgets/gui_options.lua", "LuaUI/NativeWidgets/gui_options.lua", "72e14440878e4d8782dc69d4a3c5ad12ee264f9beb5da6949d99a0987ae5773b95d4caa609f3f0946164f9248fe9643a02a307222cbc20335d139d2b705ddbf7"},
     {"luaui/widgets/gui_gridmenu.lua", "LuaUI/NativeWidgets/gui_gridmenu.lua", "2adfb52eea62907ac08d12aa3931b3c1137cd0a3a4a64e977f61574c0a1e6a9428ae34e7e0fa4a69c05b28bf6f7ebee1ac88315e72bbfbd911faa6014a0264c4"},
     {"luaui/widgets/gui_info.lua", "LuaUI/NativeWidgets/gui_info.lua", "4feecff3684531f7111f4a4af5e42ba8828b037b99242a22807e0f385de33c4a4e47bf9f21c04f1ea7377667cdb8b62186e1fb4c9d46323a59af4daec348396f"},
     {"luaui/widgets/map_startbox.lua", "LuaUI/NativeWidgets/map_startbox.lua", "1e67d792b9a9d8cd4acfe1282d03603b54336535bdd4330be5e0097b5764225c99167280241087c50c1838dfb448b73a97c42e38486a5fb438ab40012ab116d4"},

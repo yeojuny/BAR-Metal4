@@ -2187,6 +2187,7 @@
             "scenarios": {
                 "title": "Scenarios",
                 "description": "Test your skills in this set of challenging yet rewarding missions.",
+                "empty": "No scenarios are available for the selected game version.",
                 "victoryCondition": "Victory condition",
                 "loseCondition": "Lose condition",
                 "faction": "Faction",

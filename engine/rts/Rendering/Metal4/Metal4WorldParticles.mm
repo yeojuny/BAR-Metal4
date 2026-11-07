@@ -167,6 +167,13 @@ std::shared_ptr<Atlas> Upload(RuntimeLease& lease,std::shared_ptr<const NativeWo
 	if(result->owner->pages.size()==1){result->image2D=[texture newTextureViewWithPixelFormat:texture.pixelFormat textureType:MTLTextureType2D levels:NSMakeRange(0,texture.mipmapLevelCount) slices:NSMakeRange(0,1)];Require(result->image2D!=nil,"Cannot expose the original single-page atlas as its actual2D view");}
 	return result;
 }
+// A drawable attachment may be IOSurface-backed. Sampled inputs below must
+// additionally be standalone, so a different wrapper cannot alias its storage.
+bool ParticleRoot218(id<MTLTexture> __unsafe_unretained texture)
+{
+	return texture!=nil&&texture.parentTexture==nil&&texture.buffer==nil&&texture.heap==nil
+		&&(texture.storageMode==MTLStorageModePrivate||texture.storageMode==MTLStorageModeShared);
+}
 }
 struct PreparedWorldParticles::Impl {
  RetiredArgumentOwners argumentOwners;
@@ -184,6 +191,14 @@ struct PreparedWorldParticles::Impl {
 	std::vector<Draw> draws;
 	std::vector<std::shared_ptr<Atlas>> pendingMipmaps;
 	uint64_t submission=0;
+	struct Follow218 {
+		bool engine=false,firstAlphaSeen=false,firstAlphaNonempty=false,inputsKnown=true;
+		uint64_t frame=0;
+		MTLPixelFormat color=MTLPixelFormatInvalid,depth=MTLPixelFormatInvalid;
+		unsigned samples=0;
+		// RuntimeLease and the original atlas cache retain these actual bindings.
+		__unsafe_unretained id<MTLTexture> atlas=nil,terrainDepth=nil;
+	} follow218;
 	std::shared_ptr<PreparedMiniMap> infoProducer;
 	__strong MTL4RenderPassDescriptor* clearInfo=nil;
 	__strong id<MTLTexture> normalInfo=nil;
@@ -205,6 +220,18 @@ void PreparedWorldParticles::DidComplete() const {CompleteAtlasMipmaps(impl->pen
 uint32_t PreparedWorldParticles::DrawCount(NativeWorldParticleStage stage) const {return std::count_if(impl->draws.begin(),impl->draws.end(),[stage](const auto& draw){return draw.range.stage==stage;});}
 std::size_t PreparedWorldParticles::DrawCount() const {return impl->draws.size();}
 std::uint64_t PreparedWorldParticles::SequenceAt(std::size_t index) const {return impl->draws.at(index).sequence;}
+bool PreparedWorldParticles::CanFollowSSAO218(MTL4RenderPassDescriptor* __unsafe_unretained scene,uint64_t frame,uint64_t submission) const
+{
+	const auto& proof=impl->follow218;
+	if(!proof.engine||!proof.firstAlphaSeen||!proof.firstAlphaNonempty||!proof.inputsKnown||proof.frame!=frame||impl->submission!=submission||!submission||scene==nil)return false;
+	id<MTLTexture> __unsafe_unretained color=scene.colorAttachments[0].texture;
+	id<MTLTexture> __unsafe_unretained depth=scene.depthAttachment.texture;
+	id<MTLTexture> __unsafe_unretained stencil=scene.stencilAttachment.texture;
+	if(!ParticleRoot218(color)||!ParticleRoot218(depth)||(stencil!=nil&&!ParticleRoot218(stencil)))return false;
+	if(color.pixelFormat!=proof.color||depth.pixelFormat!=proof.depth||color.sampleCount!=proof.samples||depth.sampleCount!=proof.samples||(stencil!=nil&&stencil.sampleCount!=proof.samples))return false;
+	const auto independent=[&](id<MTLTexture> __unsafe_unretained input){return ParticleRoot218(input)&&input.iosurface==nullptr&&!input.shareable&&input!=color&&input!=depth&&input!=stencil&&input.device==color.device&&input.sampleCount==1;};
+	return independent(proof.atlas)&&(proof.terrainDepth==nil||independent(proof.terrainDepth));
+}
 void PreparedWorldParticles::Encode(NativeWorldParticleStage stage,id<MTL4RenderCommandEncoder> encoder,id<MTLDepthStencilState> inheritedAlphaDepth) const
 {
 	for(std::size_t n=0;n<impl->draws.size();++n)if(impl->draws[n].range.stage==stage)EncodeDraw(n,encoder,inheritedAlphaDepth);
@@ -392,6 +419,9 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 	}
 	lease.Retain(particleProgram.library);lease.Retain(particleProgram.alpha);lease.Retain(particleProgram.groundPipeline);
 	auto result=std::unique_ptr<PreparedWorldParticles>(new PreparedWorldParticles);result->impl->submission=submission;
+	auto& follow218=result->impl->follow218;
+	follow218.engine=frame.visibleWater&&!frame.drawReflection&&!frame.drawRefraction;
+	follow218.frame=frame.drawFrame;follow218.color=colorFormat;follow218.depth=depthFormat;follow218.samples=outputSamples;follow218.terrainDepth=terrainDepth;
 	const auto atlas=[&](bool ground) {auto cached=impl->GetAtlas(lease,ground?frame.groundAtlas:frame.atlas);
 		if(!cached->initialized&&std::find(result->impl->pendingMipmaps.begin(),result->impl->pendingMipmaps.end(),cached)==result->impl->pendingMipmaps.end())result->impl->pendingMipmaps.push_back(cached);return cached;};
 	id<MTLBuffer> vertices=frame.ranges.empty()?nil:Buffer(lease,frame.vertices.data(),frame.vertices.size()*sizeof(NativeWorldParticleVertex));
@@ -410,6 +440,12 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 		auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=range.depthTest?MTLCompareFunctionLessEqual:MTLCompareFunctionAlways;dd.depthWriteEnabled=range.depthWrite;
 		auto depth=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(depth!=nil,"Cannot allocate original particle depth state");lease.Retain(depth);
 		result->impl->draws.push_back({range,range.groundAtlas?particleProgram.groundPipeline:particleProgram.alpha,depth,arguments,indices});
+		if(range.stage==NativeWorldParticleStage::AlphaAboveWater){
+			if(!follow218.firstAlphaSeen){const auto& prepared=result->impl->draws.back();follow218.firstAlphaSeen=true;follow218.firstAlphaNonempty=prepared.indices!=nil&&prepared.range.indexCount>0&&prepared.instanceCount>0;follow218.atlas=image->texture;}
+			else if(follow218.atlas!=image->texture)follow218.inputsKnown=false;
+		}
+		// NanoAboveWater must come from the texture-free engine template below.
+		if(range.stage==NativeWorldParticleStage::NanoAboveWater)follow218.inputsKnown=false;
 	}
 	if(!frame.engineNano.empty()) {
 		Require(frame.engineNanoTemplate.size()==42,"Original engine nano requires its actual 42-vertex template");

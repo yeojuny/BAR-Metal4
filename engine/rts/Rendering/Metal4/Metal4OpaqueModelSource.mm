@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4OpaqueModelSource.h"
+#include "Metal4MRTWriteReuse209.h"
 #include <algorithm>
 #include <exception>
 #include <stdexcept>
@@ -239,7 +240,7 @@ std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease
 	CUSSourceGPU& cus,EngineModelDeferredGPU& deferred,EngineModelForwardGPU& forward,
 	std::shared_ptr<const NativeOpaqueModelFrame> source,const CUSSourceTarget& forwardTarget,
 	const EngineDeferredGeometryProvider& geometry,const CUSSourceImageProvider& images,
-	uint64_t frame,uint64_t submission,bool validation,double& ms)
+	uint64_t frame,uint64_t submission,bool validation,double& ms,const NativeTextureRegistry* sealedMainRegistry209)
 {
 	Require(source&&source->sourceDrawFrame==frame&&source->endSequence&&submission&&geometry&&images,
 		"Original opaque source differs from its actual common frame/submission/providers");
@@ -274,10 +275,13 @@ std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease
 	}
 	auto out=std::unique_ptr<PreparedOpaqueModelSource>(new PreparedOpaqueModelSource);
 	auto& p=*out->impl;p.source=std::move(source);p.submission=submission;p.phases.resize(p.source->passes.size());
+	// Only the sealed main caller can issue this permission. Inspect the fresh
+	// U publications BEFORE either MRT is fulfilled or any GPU image derived.
+	auto reuse209=MRTWriteReuse209::Try(*p.source,frame,submission,sealedMainRegistry209);
 	// Resource fulfillment order is independent of source encode order. Every
 	// selected MRT version must exist before screen/Shield/SSAO/Bloom Prepare.
 	for(size_t n=0;n<p.phases.size();++n)if(p.source->passes[n].deferred)
-		p.phases[n].mrt=PrepareOpaqueModelMRTPhase(lease,cus,deferred,p.source->passes[n],geometry,images,frame,submission,validation,ms);
+		p.phases[n].mrt=PrepareOpaqueModelMRTPhase(lease,cus,deferred,p.source->passes[n],geometry,images,frame,submission,validation,ms,n==2&&reuse209?&*reuse209:nullptr);
 	for(size_t n=0;n<p.phases.size();++n)if(!p.source->passes[n].deferred){
 		auto& phase=p.phases[n];const auto& actual=p.source->passes[n];
 		phase.engine=forward.Prepare(lease,actual.engine,forwardTarget,geometry,images,validation,ms);

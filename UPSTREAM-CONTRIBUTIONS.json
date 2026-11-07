@@ -1,0 +1,51 @@
+{
+  "policy": "Credit actual additional work. Verbatim extraction of existing yeojuny code remains credited to yeojuny; independently authored or further corrected/redesigned portions by tomjn require his contribution credit. Preserve original authorship/provenance; do not invent emails.",
+  "contributions": [
+    {
+      "id": "tomjn-recoil-3695-binding-index-178",
+      "contributor": "tomjn",
+      "pullRequest": "https://github.com/beyond-all-reason/RecoilEngine/pull/3695",
+      "commit": "29b950671fd883d2e01bc2cf1f6f6d0b7168280a",
+      "commitURL": "https://github.com/tomjn/RecoilEngine/commit/29b950671fd883d2e01bc2cf1f6f6d0b7168280a",
+      "appliedCandidate": "178",
+      "files": [
+        "rts/Lua/LuaVBOImpl.cpp"
+      ],
+      "scope": "Add missing bindingIndex argument to the uniform/storage buffer invalid-index error messages. Only this two-call refinement imported; remaining existing native guards preserved.",
+      "provenance": "Original pinned Recoil01efdf4 lines1406/1410 and archivedMVK lines1500/1504 already omit this argument. This is an inherited bug, not a regression introduced by178 or177.",
+      "requiredPublicCredit": "LuaVBO invalid-index diagnostic correction adapted from tomjn/RecoilEngine PR3695, commit29b950671fd883d2e01bc2cf1f6f6d0b7168280a."
+    },
+    {
+      "id": "benbreen-yeojuny-sync-worker-qos-220-followup",
+      "contributor": "benbreen",
+      "localAdaptationAuthor": "yeojuny",
+      "commit": "a49a8ecc5265c4dd3f8d0016d90b32e81e22c73b",
+      "commitURL": "https://github.com/benbreen/RecoilEngine-AppleSilicon/blob/a49a8ecc5265c4dd3f8d0016d90b32e81e22c73b/rts/System/Threading/ThreadPool.cpp#L291-L332",
+      "discussion": "https://github.com/beyond-all-reason/RecoilEngine/issues/936#issuecomment-6237716130",
+      "appliedCandidate": "draw-stages01/build-recovery01",
+      "status": "PRIVATE_BUILD_ONLY_NOT_ADOPTED",
+      "files": [
+        "rts/System/Threading/ThreadPool.cpp"
+      ],
+      "scope": "Sync pool worker-entry USER_INITIATED hint. yeojuny adapted benbreen\u2019s worker-entry idea for Small and preserved already-high QoS. Native candidate adds explicit opt-in, startup latching and bounded requested-class read-back.",
+      "requiredPublicCredit": "macOS synchronous worker QoS is adapted from benbreen\u2019s Apple Silicon Recoil work via yeojuny\u2019s protected Small r57 adaptation."
+    },
+    {
+      "id": "tomjn-recoil-3035-darwin-affinity-qos",
+      "contributor": "Tom J Nowell (tomjn)",
+      "pullRequest": "https://github.com/beyond-all-reason/RecoilEngine/pull/3035",
+      "commit": "ac1ea23627134db536a869735a3f653b163f5617",
+      "originalCommit": "ad16282806fef5db90792680afa797aa88774b64",
+      "commitURL": "https://github.com/tomjn/RecoilEngine/commit/ac1ea23627134db536a869735a3f653b163f5617",
+      "upstreamReview": "https://github.com/beyond-all-reason/RecoilEngine/pull/3035#pullrequestreview-4535898855",
+      "appliedCandidate": "macos-topology-upstream01",
+      "files": [
+        "rts/System/Platform/Threading.cpp"
+      ],
+      "scope": "Bring in the macOS finite-mask SetAffinity USER_INTERACTIVE request and pthread/qos.h include. Keep zero/run-anywhere no-op semantics. The local Darwin save/restore guard already implements the upstream behavior. Restore the pure220 worker-entry object to avoid applying two QoS policies.",
+      "requiredPublicCredit": "macOS thread-affinity QoS handling adapted from Tom J Nowell (tomjn), RecoilEngine PR #3035, including the run-anywhere mask refinement.",
+      "sourceSHA256": "91c337af69a88c348fe578282f5bbcafefeb4c3cc65f9fad5985a5e6728e3218",
+      "reviewStatus": "PR open, aggregate APPROVED, sprunk reviewed ad162828; later run-anywhere guard from PR head ac1ea236. Explicit user authorization to adopt."
+    }
+  ]
+}

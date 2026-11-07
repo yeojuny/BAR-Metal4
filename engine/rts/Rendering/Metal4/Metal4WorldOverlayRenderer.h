@@ -15,6 +15,8 @@ public:
 	std::size_t DrawCount() const;
 	std::uint64_t SequenceAt(std::size_t index) const;
 	NativeWorldDrawStage StageAt(std::size_t index) const;
+	// Pure proof for this exact prepared ordinal and original source sequence.
+	bool CanFollowSSAO218(std::size_t index,std::uint64_t sequence,MTL4RenderPassDescriptor* __unsafe_unretained scene) const;
 	// Caller merges this ordinal with original Nano/effect draws in the same
 	// stage and actual shared depth/stencil render pass. No separate present.
 	void EncodeDraw(std::size_t index,id<MTL4RenderCommandEncoder> encoder) const;

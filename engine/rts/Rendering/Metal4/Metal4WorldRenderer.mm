@@ -1,3 +1,4 @@
+#include "Metal4CubeCopy206.h"
 #include <cstdlib>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4StartBoxNative.h"
@@ -249,7 +250,31 @@ const WorldTexture& PublishedWorldTexture(const NativeCUSTextureObject& object)
 	return image;
 }
 
-id<MTLTexture> UploadTexture(id<MTLDevice> device, const WorldTexture& data, uint32_t maxDimension)
+// Only the retained S3O publication proves a long-lived immutable model asset.
+// Unknown/plain images keep their original storage, even if they share a path.
+bool PrivateModelTexture(const NativeCUSTextureObject* object, const std::shared_ptr<const WorldTexture>& owner)
+{
+	if (!object || !owner || owner->mips.empty()) return false;
+	const auto* model = dynamic_cast<const NativeModelTextureBacking*>(object->backing.get());
+	uint32_t levels = uint32_t(owner->mips.size());
+	if (owner->generateMipmaps) {
+		levels = 1;
+		for (auto side = std::max(owner->mips.front().width, owner->mips.front().height); side > 1; side >>= 1) ++levels;
+	}
+	return model && model->pixels == owner && object->image == owner &&
+		object->contextGeneration && object->identity &&
+		object->target == NativeCUSTextureTarget::Image2D && object->storage == NativeTextureStorageKnowledge::Published &&
+		model->content == NativeTextureContent::ProducerVersion && model->storageGeneration == object->identity &&
+		object->allocation.width == owner->mips.front().width && object->allocation.height == owner->mips.front().height &&
+		object->allocation.levels == levels && object->allocation.originalInternalFormat == owner->originalInternalFormat &&
+		object->allocation.depth == 1 && object->allocation.samples == 1;
+}
+
+struct UploadedTexture {
+	__strong id<MTLTexture> texture = nil, uploadSource = nil;
+};
+
+UploadedTexture UploadTexture(id<MTLDevice> device, const WorldTexture& data, uint32_t maxDimension, bool privateModel)
 {
 	Require(!data.mips.empty() && data.mips.size() <= 16, "World texture mip count outside bounds");
 	uint32_t width = data.mips[0].width, height = data.mips[0].height;
@@ -277,7 +302,19 @@ id<MTLTexture> UploadTexture(id<MTLDevice> device, const WorldTexture& data, uin
 		[texture replaceRegion:MTLRegionMake2D(0, 0, width, height) mipmapLevel:level withBytes:mip.bytes.data() bytesPerRow:mip.bytesPerRow];
 		width = std::max(1u, width / 2); height = std::max(1u, height / 2);
 	}
-	return texture;
+	UploadedTexture uploaded; uploaded.texture = texture;
+	if (privateModel) {
+		// Preserve the exact format, extent, mip allocation and view usage.
+		// The CPU upload remains the fallback if Private allocation fails.
+		descriptor.storageMode = MTLStorageModePrivate;
+		id<MTLTexture> destination = [device newTextureWithDescriptor:descriptor];
+		if (destination != nil) {
+			destination.label = texture.label;
+			uploaded.texture = destination;
+			uploaded.uploadSource = texture;
+		}
+	}
+	return uploaded;
 }
 
 Metal4PresentationStatus SurfaceStatus(const Metal4SurfaceSnapshot& state)
@@ -401,7 +438,11 @@ struct Metal4WorldRenderer::Impl {
 	struct PieceCache { __strong id<MTLBuffer> vertices = nil; __strong id<MTLBuffer> indices = nil; uint32_t count = 0; };
 	struct ModelCache { std::shared_ptr<const WorldModel> owner; std::vector<PieceCache> pieces; };
 	// Readiness covers all uploaded/generated levels and their one-time GPU optimization.
-	struct TextureUploadState { bool ready = false; uint64_t encodedSubmission = 0; };
+	struct TextureUploadState {
+		bool ready = false;
+		uint64_t encodedSubmission = 0;
+		__strong id<MTLTexture> uploadSource = nil;
+	};
 	struct TextureCache {
 		std::shared_ptr<const WorldTexture> owner;
 		__strong id<MTLTexture> texture = nil, sampled = nil;
@@ -451,17 +492,28 @@ struct Metal4WorldRenderer::Impl {
 		SetNativeUnitPrimitiveConsumerAvailable(false);
 	}
 
-	id<MTLTexture> Texture(RuntimeLease& lease, const std::shared_ptr<const WorldTexture>& owner)
+	void RetainTextureAllocations(RuntimeLease& lease, const TextureCache& cached)
+	{
+		lease.AddAllocation(cached.texture);
+		if (cached.sampled != cached.texture) lease.AddAllocation(cached.sampled);
+		if (cached.status->uploadSource != nil) lease.AddAllocation(cached.status->uploadSource);
+	}
+
+	id<MTLTexture> Texture(RuntimeLease& lease, const std::shared_ptr<const WorldTexture>& owner,
+		const NativeCUSTextureObject* modelSource = nullptr)
 	{
 		Require(owner != nullptr, "World unit is missing an original texture resource");
 		auto it = textures.find(owner.get());
 		if (it == textures.end()) {
 			Require(textures.size() < 512, "World texture cache diagnostic limit exceeded");
-			TextureCache cache; cache.owner = owner; cache.texture = UploadTexture(lease.Device(), *owner, lease.Capabilities().maxTextureDimension2D);
-			// Base/embedded levels were uploaded by replaceRegion above. Every
-			// immutable image, including fully supplied mips, now joins the shared
-			// first-use producer. Its receipt covers mip generation when required
-			// and optimization of the same storage before later GPU consumers.
+			TextureCache cache; cache.owner = owner;
+			const auto uploaded = UploadTexture(lease.Device(), *owner, lease.Capabilities().maxTextureDimension2D,
+				PrivateModelTexture(modelSource, owner));
+			cache.texture = uploaded.texture;
+			cache.status->uploadSource = uploaded.uploadSource;
+			// Cache hits never change storage. The existing first-use receipt
+			// covers any staged copy, generated mips and GPU optimization before
+			// publishing this same immutable destination to later consumers.
 			cache.status->ready = false;
 			cache.sampled = cache.texture;
 			if (owner->originalInternalFormat == 0x83F0) {
@@ -476,8 +528,7 @@ struct Metal4WorldRenderer::Impl {
 		}
 		if(!it->second.status->ready&&it->second.status->encodedSubmission&&lease.PreparingWhilePending())
    lease.RetirePreviousSubmission(); // First-use texture producer still owns its receipt.
-		lease.AddAllocation(it->second.texture);
-		if (it->second.sampled != it->second.texture) lease.AddAllocation(it->second.sampled);
+		RetainTextureAllocations(lease, it->second);
 		if (!it->second.status->ready && std::find(pendingMipTextures.begin(),pendingMipTextures.end(),&it->second)==pendingMipTextures.end()) pendingMipTextures.push_back(&it->second);
 		return it->second.sampled;
 	}
@@ -490,6 +541,13 @@ struct Metal4WorldRenderer::Impl {
 			Require(!cached->status->ready && (!cached->status->encodedSubmission || cached->status->encodedSubmission == submission),
 				"Original texture mips retain an unretired different submission");
 			auto mip = [command computeCommandEncoder]; Require(mip != nil, "Cannot encode original world texture first-use producer");
+			if (cached->status->uploadSource != nil) {
+				// Copy only supplied levels; generated levels are still undefined.
+				[mip copyFromTexture:cached->status->uploadSource sourceSlice:0 sourceLevel:0
+					toTexture:cached->texture destinationSlice:0 destinationLevel:0
+					sliceCount:1 levelCount:cached->owner->mips.size()];
+				[mip barrierAfterEncoderStages:MTLStageBlit beforeEncoderStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+			}
 			if(cached->owner->generateMipmaps && cached->texture.mipmapLevelCount > 1){
 				[mip generateMipmapsForTexture:cached->texture];
 				// Both commands execute in the Blit stage. Preserve every generated
@@ -510,14 +568,14 @@ struct Metal4WorldRenderer::Impl {
   pendingMipTextures.clear();
   return [states=std::move(states),submission]{
    for(const auto& state:states)Require(submission&&state->encodedSubmission==submission,"Texture mip completion lost its submitting owner");
-   for(const auto& state:states)state->ready=true;
+   for(const auto& state:states){state->ready=true;state->uploadSource=nil;}
   };
  }
 	void CompletePendingTextureMipmaps(uint64_t submission)
 	{
 		for (const auto* cached: pendingMipTextures)
 			Require(submission && cached->status->encodedSubmission == submission, "Cannot complete original texture mips before their actual producer retires");
-		for (const auto* cached: pendingMipTextures) cached->status->ready = true;
+		for (const auto* cached: pendingMipTextures) { cached->status->ready = true; cached->status->uploadSource = nil; }
 		pendingMipTextures.clear();
 	}
 
@@ -575,7 +633,7 @@ struct Metal4WorldRenderer::Impl {
 			"Original model image target has no actual paired source consumer");
 		if(auto model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing)){
 			Require(model->pixels!=nullptr,"Original model image has no actual retained upload bytes");
-			CUSSourceImage image;image.texture=Texture(lease,model->pixels);
+			CUSSourceImage image;image.texture=Texture(lease,model->pixels,binding.object.get());
 			image.sampler=screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 			image.owner=binding.object;image.flipV=model->pixels->flipV;
 			const auto status=textures.at(model->pixels.get()).status;
@@ -691,7 +749,7 @@ struct Metal4WorldRenderer::Impl {
 		std::shared_ptr<const WorldTexture> pixels=binding.object->image;
 		if(auto model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing))pixels=model->pixels;
 		if(pixels){
-			Texture(lease,pixels);const auto& cached=textures.at(pixels.get());
+			Texture(lease,pixels,binding.object.get());const auto& cached=textures.at(pixels.get());
 			CUSSourceImage image;image.texture=cached.sampled;image.sampler=actualSampler;image.owner=binding.object;image.flipV=pixels->flipV;
 			const auto status=cached.status;
 			image.requireReadable=[status,submission]{Require(status->ready||status->encodedSubmission==submission,
@@ -1285,6 +1343,9 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 		}
 		if (prepared || unitStencil || pbrBRDF || (worldInfo && worldInfo->HasUpdates())) {
 			auto targetLifetime=[M4OriginalSourceLifetime new];targetLifetime->screen=prepared;targetLifetime->unitStencil=unitStencil;lease.Retain(targetLifetime);
+			// Maintenance can inherit a pending image from an interrupted prepare.
+			// Register its destination/view/staging with this actual submission.
+			for (const auto* cached: impl->pendingMipTextures) impl->RetainTextureAllocations(lease, *cached);
 			lease.CommitResources();
 			auto command = lease.Begin("Original info, PBR and UI maintenance without window presentation");
 			if(prepared)ui::GetRecorder().RecordTargetSubmission(targets.targetPasses,sourceSubmission);
@@ -1662,7 +1723,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			return {image.texture,image.owner,image.requireReadable};
 		}
 		if (auto model = std::dynamic_pointer_cast<const NativeModelTextureBacking>(object->backing)) {
-			auto image = owner->Texture(lease,model->pixels);
+			auto image = owner->Texture(lease,model->pixels,object.get());
 			const auto status = owner->textures.at(model->pixels.get()).status;
 			const auto submission = owner->pbrSubmission;
 			return {image,model,[status,submission] {
@@ -1950,9 +2011,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
    main->Depth().pixelFormat,main->Stencil().pixelFormat,main->Samples(),first);
   Require(screen->WorldTargets().empty(),"Screen suffix contains an unexecuted world target producer");
   std::shared_ptr<PreparedPostprocessFrame> effects;
+  // The same fixed ScreenGPU providers as the main route read separate
+  // allocations/views and write only attachments. Preserve this contract
+  // when adding providers; unknown shader access must disable the opt-in.
   if(post && (!post->operations.empty() || !screen->DeferredTargets().empty()))
    effects=impl->postprocessGPU.Prepare(lease,post,main->Color(),main->Depth(),*screen,
-    options.shaderValidation,result.shaderCompileMs,main->Stencil(),main);
+    options.shaderValidation,result.shaderCompileMs,main->Stencil(),main,true);
   Require(effects || screen->DeferredTargets().empty(),"Screen suffix target lacks its actual postprocess insertion owner");
   auto mainReadReady=std::make_shared<bool>(false);
   std::shared_ptr<PreparedScreenReadback> readback;
@@ -2192,7 +2256,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 				if (!poses[i].visible || model.pieces[i].count == 0) continue;
 				MatrixFinite(poses[i].modelSpace);
 				if (color == nil) {
-					color = impl->Texture(lease,images[0]);other=impl->Texture(lease,images[1]);
+					color = impl->Texture(lease,images[0],sourceTextures ? sourceTextures->objects[0].get() : nullptr);
+					other = impl->Texture(lease,images[1],sourceTextures ? sourceTextures->objects[1].get() : nullptr);
      for(unsigned slot=0;slot<2;++slot)imageStatus[slot]=impl->textures.at(images[slot].get()).status;
 					if (material->normal) normal = impl->Texture(lease, material->normal);
 					sources.insert(images[0]->sourcePath);sources.insert(images[1]->sourcePath);
@@ -2540,7 +2605,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    // Merge command-level postprocessing with ordinary draws by the original
    // shared ordinal. All resumed passes Load/Store the SAME scene attachments.
    void Encode(id<MTL4CommandBuffer> command,id<MTL4RenderCommandEncoder> __strong& encoder,
-    MTL4RenderPassDescriptor* loadedScene)const {
+    MTL4RenderPassDescriptor* loadedScene,bool* borrowedScene218=nullptr)const {
     size_t regular=0,effect=0,phase=0;
     constexpr uint64_t absent=std::numeric_limits<uint64_t>::max();
     while(regular<draws.size()||(ssao&&effect<ssao->DrawCount())||phase<commands.size()){
@@ -2551,7 +2616,19 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
      const bool commandLevel=std::min(s,c)<r;
      if(commandLevel){
       if(encoder){[encoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;}
-      if(c<s)commands[phase++].second(command);else ssao->EncodeDraw(effect++,command);
+      if(c<s)commands[phase++].second(command);
+      else if(borrowedScene218&&effect+1==ssao->DrawCount()&&regular==draws.size()&&phase==commands.size()&&
+       ssao->CanEncodeSceneDraw218(effect,loadedScene)){
+       // Only the main above-water caller supplies this entitlement, after
+       // proving its immediate engine particle and the entire ordinary suffix.
+       // The scheduler opens/owns the pass; SSAO borrows its first draw only.
+       encoder=[command renderCommandEncoderWithDescriptor:loadedScene];Require(encoder!=nil,"Cannot open scheduler-owned SSAO scene pass");
+       *borrowedScene218=true;
+       ssao->EncodeSceneDraw218(effect++,encoder);
+       // Preserve the original terminal resume's earlier-producer wait,
+       // including Dispatch. Same-pass safety is supplied by the caller proof.
+       [encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+      }else ssao->EncodeDraw(effect++,command);
      }else{
       if(encoder==nil){encoder=[command renderCommandEncoderWithDescriptor:loadedScene];Require(encoder!=nil,"Cannot resume original callback target after command-level phase");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
       draws[regular++].second(encoder);
@@ -2924,9 +3001,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			actualTarget.logicalWidth=logicalWidth;actualTarget.logicalHeight=logicalHeight;actualTarget.camera=frame.viewCamera;
 			// All six images of EVERY original deferred phase are fulfilled before
 			// the screen/Shield/SSAO/Bloom resolver can inspect their snapshots.
+   // NativeCUSCPUReadScope counts cached CPU geometry validation entries,
+   // not texture readers or nested capture. MRT ownership is checked by209.
 			opaqueModels=PrepareOpaqueModelSource(lease,impl->cusSourceGPU,impl->originalDeferredGPU,impl->originalForwardGPU,
 				frame.opaqueModelFrame,actualTarget,sourceGeometry,sourceImages,frame.sourceDrawFrame,sourceSubmission,
-				options.shaderValidation,result.shaderCompileMs);
+				options.shaderValidation,result.shaderCompileMs,
+    !offscreenSource&&!options.readback&&options.presentWorld?
+     &OriginalNativeTextureContext().Registry():nullptr);
 		}
 		for(size_t slot=0;slot<frame.alphaModelFrames.size();++slot){
 			const auto& source=frame.alphaModelFrames[slot];
@@ -3502,13 +3583,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    },layer.pixelFormat,impl->depth.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);
 
   std::vector<std::shared_ptr<PreparedSensorLOSDraw>> sensorLOS;
-  std::vector<uint64_t> sensorLOSSequences;
+  std::vector<const NativeSensorLOSDraw*> sensorLOSSources;
   for(const auto& command:preparedWorld167.Family(NativeWorldFamily167::SensorLOS)){
    ValidateNativeWorldDrawCommand(command);const auto& draw=*command.sensorLOS;
    Require(draw.sourceDrawFrame==frame.sourceDrawFrame,"LOS outline belongs to another actual source frame");
    auto resolver=[&](RuntimeLease& l,const NativeCUSTextureBinding& b,std::optional<NativePostprocessConsumer> consumer){return impl->screenGPU.ResolveStartBoxImage(l,b,screen.get(),consumer);};
    auto prepared=impl->sensorLOSGPU.Prepare(lease,draw,resolver,frame.viewCamera,result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,layer.pixelFormat,impl->depth.pixelFormat,impl->stencil.pixelFormat,mainSamples,options.shaderValidation,result.shaderCompileMs,NativePostprocessConsumer{NativePostprocessStage::World,draw.sequence,0});
-   sensorLOSSequences.push_back(draw.sequence);sensorLOS.emplace_back(std::move(prepared));
+   sensorLOSSources.push_back(&draw);sensorLOS.emplace_back(std::move(prepared));
   }
 
 		enum class LuaDrawKind { BuildSquare, Outline, Blockout, DeferredLights, Bloom, ScreenTarget, SensorPreviewTarget, SensorPreviewFinal, Sensor31657Circle, WeaponRange, Commands, StartBox, GameDecal, UnitPrimitive, MapEdge, Overlay, Nano, ProjectileEffect, EnergyExplosion, Lightning, FireSmoke, MissileThruster, FireGL4, Flamethrower, NapalmPreview, Shield, Blueprint, PlacementGrid, PlacementSample, SourceCopy, VolumetricCloud, ReclaimField, Grass, ResourceSpots, SensorLOS, ObjectSpotlight, Snow, Distortion };
@@ -3539,7 +3620,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		if(objectSpotlights)for(size_t i=0;i<objectSpotlights->DrawCount();++i)laterWorldDraws.push_back({objectSpotlights->SequenceAt(i),LuaDrawKind::ObjectSpotlight,i});
 		if(grass)for(size_t i=0;i<grass->DrawCount();++i)preUnitDraws.push_back({grass->SequenceAt(i),LuaDrawKind::Grass,i});
   if(resourceSpots)for(size_t i=0;i<resourceSpots->DrawCount();++i)(resourceSpots->StageAt(i)==NativeWorldDrawStage::PreUnit?preUnitDraws:laterWorldDraws).push_back({resourceSpots->SequenceAt(i),LuaDrawKind::ResourceSpots,i});
-  for(size_t i=0;i<sensorLOS.size();++i)laterWorldDraws.push_back({sensorLOSSequences[i],LuaDrawKind::SensorLOS,i});
+  for(size_t i=0;i<sensorLOS.size();++i)laterWorldDraws.push_back({sensorLOSSources[i]->sequence,LuaDrawKind::SensorLOS,i});
 		if(unitPrimitives)for(size_t i=0;i<unitPrimitives->DrawCount();++i){
    const auto sequence=unitPrimitives->SequenceAt(i);const auto stage=unitPrimitiveSources.at(sequence)->stage;
    auto& draws=stage==NativeWorldDrawStage::PreUnit?preUnitDraws:laterWorldDraws;
@@ -3727,7 +3808,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		std::shared_ptr<PreparedPostprocessFrame> postprocess;
 		if(options.screenUI && options.screenUI->postprocess && (!options.screenUI->postprocess->operations.empty() || !options.screenUI->postprocess->externalOutputs.empty() || !screen->DeferredTargets().empty())) {
 			Require(screen!=nullptr && !sceneColor.framebufferOnly,"Original postprocess requires real readable screen/color contents");
-			postprocess=impl->postprocessGPU.Prepare(lease,options.screenUI->postprocess,sceneColor,impl->depth,*screen,options.shaderValidation,result.shaderCompileMs,impl->stencil,mainAttachments);
+			// Fixed ScreenGPU providers have read-only shader resources separate
+			// from the live main attachments, including all texture-view backings.
+			// Re-audit this opt-in when adding providers or shader write access.
+			postprocess=impl->postprocessGPU.Prepare(lease,options.screenUI->postprocess,sceneColor,impl->depth,*screen,options.shaderValidation,result.shaderCompileMs,impl->stencil,mainAttachments,true);
 		}
 		std::shared_ptr<Impl::ScreenContinuation> continuation;
 		cpuPhase.Mark(6);
@@ -3898,6 +3982,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   }
   if(postprocess)originalLifetime->waterGround.push_back(postprocess);
   if(continuation)originalLifetime->waterGround.push_back(continuation);
+  // Original ordinal/frame/face routing and clear preparation were validated
+  // above. Authorize only this main submission's exact first reflection clear.
+  // The same clear still executes at its original position below (load or draw).
+  if(!offscreenSource&&!continuation&&reflectionGround.initialClearSource.size()==1&&
+   reflectionGround.initialClearSource.front().sequence==reflectionGround.source->initialClearSequence)
+   AuthorizeCubeFaceOverwrite206(*environmentFrame.sourceCubeUpdate->backing,reflectionPass,
+    reflectionGround.initialClearSource.front(),frame.sourceDrawFrame,sourceSubmission);
   lease.Retain(originalLifetime);
 		lease.AddAllocation(sceneColor); if(drawable)lease.Retain(drawable); cpuPhase.Mark(8); preparationDetail.Mark(10); lease.CommitResourcesWhileEncoding();
 		cpuPhase.Mark(9);preparationDetail.Mark(11);
@@ -4127,6 +4218,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   pass.depthAttachment.loadAction=MTLLoadActionLoad;
   pass.stencilAttachment.loadAction=MTLLoadActionLoad;
 		Require(encoder != nil, "Cannot create direct Metal4 world encoder");
+  // The new borrowed pass remains scheduler-owned through its original close,
+  // including errors after encodeLuaDraws returns and before final publication.
+  // Both217 Bloom and218 SSAO use this same scheduler ownership/error guard.
+  struct BorrowedSceneFailure217 {
+   id<MTL4RenderCommandEncoder> __strong& live;bool borrowed=false;
+   ~BorrowedSceneFailure217(){if(borrowed&&live){[live endEncoding];live=nil;}}
+  } borrowedScene217{encoder};
 #ifdef RECOIL_METAL4_LIVE_SCENE
   static bool reportedInitialLoad=false;
   if(!reportedInitialLoad){LOG("[NativeTBDR] initial_load_discard_mask=%u sourceDrawFrame=%llu",initialDiscard,
@@ -4282,6 +4380,51 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot restore original world attachments after terrain-depth producer");setupViewport();
 		auto encodeLuaDraws = [&](const std::vector<LuaDraw>& draws, bool preUnit, bool preDecals=false) {
 			WorldEncodingProbe176::Scope effectScope(encodingProbe,Family176::Effects);
+   // Only the fixed main-world providers are admitted. Prepared packet indices
+   // and source ordinals are distinct; use the retained source map where needed.
+   const auto sceneConsumer217=[&](const LuaDraw& next){
+    if(next.kind==LuaDrawKind::SensorLOS){
+     if(next.index>=sensorLOS.size()||next.index>=sensorLOSSources.size()||!sensorLOS[next.index]||sensorLOS[next.index]->Empty())return false;
+     const auto* source=sensorLOSSources[next.index];
+     if(!source||source->sequence!=next.sequence||source->sourceDrawFrame!=frame.sourceDrawFrame||!source->program.defines||source->program.defines->stencilPass)return false;
+     const auto* height=source->heightImage.object?dynamic_cast<const NativeMapTextureBacking*>(source->heightImage.object->backing.get()):nullptr;
+     if(!height||height->role!=NativeMapTextureRole::Height)return false;
+     const auto* backing=source->stencilImage.object?dynamic_cast<const ui::NativeScreenTextureBacking*>(source->stencilImage.object->backing.get()):nullptr;
+     const auto& image=source->stencilDependency;
+     return backing&&backing->image==image&&image&&image->renderTarget&&image->generation&&
+      image->format==ScreenTextureFormat::R8Unorm&&!image->sourceTexture&&!image->postprocessVersion&&!image->incomplete&&!image->levelDefinitions;
+    }
+    if(next.kind==LuaDrawKind::UnitPrimitive){
+     if(!unitPrimitives||next.index>=unitPrimitives->DrawCount()||unitPrimitives->SequenceAt(next.index)!=next.sequence)return false;
+     const auto& source=*unitPrimitiveSources.at(next.sequence);
+     return !source.atlas&&(source.kind==NativeUnitPrimitiveKind::TeamPlatter||source.kind==NativeUnitPrimitiveKind::AllySelected||
+      (source.selected31657&&IsNativeSelectedUnits(source.kind)));
+    }
+    if(next.kind==LuaDrawKind::WeaponRange){
+     if(next.index>=weaponRanges.size()||weaponRanges[next.index].second->Empty())return false;
+     const auto& source=*weaponRanges[next.index].first;
+     if(source.sequence!=next.sequence||!source.program.defines)return false;
+     if(!source.program.defines->composite){
+      const auto* height=source.height.object?dynamic_cast<const NativeMapTextureBacking*>(source.height.object->backing.get()):nullptr;
+      if(!height||height->role!=NativeMapTextureRole::Height)return false;
+     }
+     if(source.program.defines->composite||source.program.maskClip>0.5f){
+      const auto* backing=source.coverageMask.object?dynamic_cast<const ui::NativeScreenTextureBacking*>(source.coverageMask.object->backing.get()):nullptr;
+      const auto& image=source.coverageDependencyImage;
+      if(!backing||backing->image!=image||!image||!image->renderTarget||!image->generation||
+       image->format!=ScreenTextureFormat::R8Unorm||image->sourceTexture||image->postprocessVersion||image->incomplete||image->levelDefinitions)return false;
+     }
+     return true;
+    }
+    return false;
+   };
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+   static const bool probe217=[](){const char* value=std::getenv("BAR_NATIVE_BLOOM217_PROBE");return value&&std::strcmp(value,"1")==0;}();
+   static std::atomic<unsigned> probeFrames217{0};
+   const bool probeWindow217=probe217&&frame.sourceDrawFrame>=2048&&frame.simulationFrame>=450&& &draws==&laterWorldDraws;
+   bool probeThis217=false;
+   uint64_t probeNext217=0;id<MTL4RenderCommandEncoder> __unsafe_unretained probeEncoder217=nil;
+#endif
 			for (const auto& draw: draws) {
     const bool commandLevel=(draw.kind==LuaDrawKind::Blockout&&blockout->IsDepthPass(draw.index))||draw.kind==LuaDrawKind::ScreenTarget||draw.kind==LuaDrawKind::Bloom||draw.kind==LuaDrawKind::Distortion||draw.kind==LuaDrawKind::SourceCopy||draw.kind==LuaDrawKind::VolumetricCloud||draw.kind==LuaDrawKind::SensorPreviewTarget;
     if(!commandLevel&&encoder==nil){encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot resume actual scene for ordered Lua draw");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
@@ -4325,7 +4468,47 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
      case LuaDrawKind::Bloom:
       Require(bloom!=nullptr,"Original Bloom command has no prepared producer");
       if(encoder){[encoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;}
-      bloom->EncodeDraw(draw.index,command);break;
+      {
+       const auto ordinal=size_t(&draw-draws.data());
+       const LuaDraw* next=ordinal+1<draws.size()?&draws[ordinal+1]:nullptr;
+       const bool admitted=!offscreenSource&&!continuation&&postprocess&& &draws==&laterWorldDraws&&next&&
+        sceneConsumer217(*next)&&bloom->CanEncodeSceneDraw(draw.index,pass);
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+       if(probeWindow217&&draw.index+1==bloom->DrawCount()&&probeFrames217.load(std::memory_order_relaxed)<4&&
+          probeFrames217.fetch_add(1,std::memory_order_relaxed)<4){
+        probeThis217=true;
+        // Diagnose the effect independently: the ordinary admission conjunction
+        // may reject the successor before ever evaluating Bloom's own gate.
+        const unsigned effectRejection217=unsigned(bloom->InspectSceneDraw(draw.index,pass));
+        const bool scopeEligible217=!offscreenSource&&!continuation&&postprocess&& &draws==&laterWorldDraws;
+        const bool consumerEligible217=next&&sceneConsumer217(*next);
+        const auto* bloomSource217=frame.luaBloomFrame&&draw.index<frame.luaBloomFrame->draws.size()?&frame.luaBloomFrame->draws[draw.index]:nullptr;
+        const unsigned nextNonempty217=next&&next->kind==LuaDrawKind::SensorLOS&&next->index<sensorLOS.size()&&sensorLOS[next->index]?unsigned(!sensorLOS[next->index]->Empty()):2u;
+        LOG("[NativeBloom217Inspect] source_frame=%llu sim=%llu bloom_sequence=%llu bloom_index=%llu next_sequence=%llu next_kind=%u next_index=%llu admitted=%u scope_eligible=%u consumer_eligible=%u effect_rejection=%u bloom_program=%u next_nonempty=%u",
+         (unsigned long long)frame.sourceDrawFrame,(unsigned long long)frame.simulationFrame,(unsigned long long)draw.sequence,
+         (unsigned long long)draw.index,(unsigned long long)(next?next->sequence:0),next?unsigned(next->kind):~0u,
+         (unsigned long long)(next?next->index:0),unsigned(admitted),unsigned(scopeEligible217),unsigned(consumerEligible217),
+         effectRejection217,bloomSource217?unsigned(bloomSource217->program):~0u,nextNonempty217);
+       }
+#endif
+       if(admitted){
+        encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot open scheduler-owned Bloom scene pass");
+        borrowedScene217.borrowed=true;
+        bloom->EncodeSceneDraw(draw.index,encoder);
+        // Preserve the original successor's wait for earlier encoders. This
+        // does not synchronize Bloom within this pass; admission proves that edge.
+        [encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+        // Bloom changed winding; the original resumed encoder began Clockwise.
+        // Existing setupViewport and the admitted packet restore all other state.
+        [encoder setFrontFacingWinding:MTLWindingClockwise];
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+        if(probeThis217){probeNext217=next->sequence;probeEncoder217=encoder;
+         LOG("[NativeBloom217Borrow] source_frame=%llu bloom_sequence=%llu next_sequence=%llu encoder=%p encoded=1",
+          (unsigned long long)frame.sourceDrawFrame,(unsigned long long)draw.sequence,(unsigned long long)next->sequence,(__bridge void*)encoder);}
+#endif
+       }else bloom->EncodeDraw(draw.index,command);
+      }
+      break;
 					case LuaDrawKind::GameDecal: {
 						gameDecals->EncodeDraw(draw.index,encoder);const auto& source=*gameDecalSources.at(draw.sequence);
 						++result.luaGameDecalDraws;result.luaGameDecalInstances+=source.program==NativeGameDecalProgram::Geometry?source.count:source.instanceCount;break;
@@ -4387,6 +4570,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 						// Consecutive command-level operations share stored scene contents; resume only for the next actual scene draw.
 						break;
 				}
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+    if(probeThis217&&probeNext217==draw.sequence){
+     LOG("[NativeBloom217Successor] source_frame=%llu sequence=%llu kind=%u index=%llu encoder=%p same_encoder=%u emitted=1",
+      (unsigned long long)frame.sourceDrawFrame,(unsigned long long)draw.sequence,unsigned(draw.kind),(unsigned long long)draw.index,
+      (__bridge void*)encoder,unsigned(encoder==probeEncoder217));probeNext217=0;
+    }
+#endif
+    if(commandLevel&&encoder==nil)borrowedScene217.borrowed=false;
 			}
    if(encoder==nil){encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot resume original world after ordered effect chain");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
 		};
@@ -4673,11 +4864,62 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    waterPostLua.Encode(encoder);
 			encodeAlphaModels(alphaModels[1],encoder,pass,frame.alphaModelFrames[1].get(),mainAttachments->Color(),mainAttachments->Depth(),mainAttachments->Stencil());
    drawPieces(true,aboveWaterScene);
-   aboveWaterLua.Encode(command,encoder,pass);
+   // The observed218 route has a terminal main SSAO operation, then original
+   // AlphaAboveWater/NanoAboveWater particles and two ordinary overlays before
+   // the first Bloom command closes the pass. Inspect these exact entries;
+   // never skip an unknown event or extend borrowing to other callback routes.
+   const auto* ssaoSource218=frame.waterScene&&frame.waterScene->aboveWaterLua?
+    frame.waterScene->aboveWaterLua->ssao.get():nullptr;
+   const bool scope218=!offscreenSource&&!options.readback&&!continuation&&!borrowedScene217.borrowed&&mainSamples==1&&postprocess&&
+    ssaoSource218&&ssaoSource218->sourceDrawFrame==frame.sourceDrawFrame&&aboveWaterLua.ssao&&
+    !ssaoSource218->draws.empty()&&aboveWaterLua.ssao->DrawCount()==ssaoSource218->draws.size()&&
+    aboveWaterLua.draws.empty()&&aboveWaterLua.commands.empty()&&
+    frame.shieldDepthFrame&&frame.shieldDepthFrame->submissionIdentity==sourceSubmission;
+   const size_t lastSSAO218=scope218?aboveWaterLua.ssao->DrawCount()-1:0;
+   const bool particles218=scope218&&particles&&particles->CanFollowSSAO218(pass,frame.sourceDrawFrame,sourceSubmission);
+   const bool suffix218=scope218&&overlays&&laterWorldDraws.size()>=3&&
+    laterWorldDraws[0].kind==LuaDrawKind::Overlay&&laterWorldDraws[1].kind==LuaDrawKind::Overlay&&
+    laterWorldDraws[2].kind==LuaDrawKind::Bloom&&bloom&&laterWorldDraws[2].index<bloom->DrawCount()&&
+    bloom->SequenceAt(laterWorldDraws[2].index)==laterWorldDraws[2].sequence&&
+    ssaoSource218->draws.back().sequence==aboveWaterLua.ssao->SequenceAt(lastSSAO218)&&
+    aboveWaterLua.ssao->SequenceAt(lastSSAO218)<laterWorldDraws[0].sequence&&
+    laterWorldDraws[0].sequence<laterWorldDraws[1].sequence&&laterWorldDraws[1].sequence<laterWorldDraws[2].sequence&&
+    overlays->CanFollowSSAO218(laterWorldDraws[0].index,laterWorldDraws[0].sequence,pass)&&
+    overlays->CanFollowSSAO218(laterWorldDraws[1].index,laterWorldDraws[1].sequence,pass);
+   const bool allowSSAO218=scope218&&particles218&&suffix218;
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+   static const bool probe218=[](){const char* value=std::getenv("BAR_NATIVE_SSAO218_PROBE");return value&&std::strcmp(value,"1")==0;}();
+   static std::atomic<unsigned> probeFrames218{0};
+   const bool report218=probe218&&frame.sourceDrawFrame>=2048&&frame.simulationFrame>=450&&
+    probeFrames218.load(std::memory_order_relaxed)<4&&probeFrames218.fetch_add(1,std::memory_order_relaxed)<4;
+   if(report218)LOG("[NativeSSAO218Inspect] source_frame=%llu sim=%llu scope=%u particles=%u suffix=%u effect_rejection=%u last_index=%llu sequence=%llu program=%u",
+    (unsigned long long)frame.sourceDrawFrame,(unsigned long long)frame.simulationFrame,unsigned(scope218),unsigned(particles218),unsigned(suffix218),
+    scope218?unsigned(aboveWaterLua.ssao->InspectSceneDraw218(lastSSAO218,pass)):~0u,(unsigned long long)lastSSAO218,
+    (unsigned long long)(scope218?aboveWaterLua.ssao->SequenceAt(lastSSAO218):0),scope218?unsigned(ssaoSource218->draws.back().program):~0u);
+#endif
+   aboveWaterLua.Encode(command,encoder,pass,allowSSAO218?&borrowedScene217.borrowed:nullptr);
+   const bool borrowedSSAO218=allowSSAO218&&borrowedScene217.borrowed;
+   if(borrowedSSAO218){
+    // The positive first engine particle binds pipeline/depth/table/cull/clip/
+    // bias itself. Restore the other states changed by SSAO to fresh defaults.
+    [encoder setFrontFacingWinding:MTLWindingClockwise];
+    [encoder setStencilFrontReferenceValue:0 backReferenceValue:0];
+    [encoder setTriangleFillMode:MTLTriangleFillModeFill];
+   }
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+   id<MTL4RenderCommandEncoder> __unsafe_unretained successorEncoder218=encoder;
+   if(report218)LOG("[NativeSSAO218Borrow] source_frame=%llu admitted=%u encoder=%p removed_boundaries=%u",
+    (unsigned long long)frame.sourceDrawFrame,unsigned(borrowedSSAO218),(__bridge void*)encoder,unsigned(borrowedSSAO218));
+#endif
    // GL retains the world raster across SSAO FBO switches. A resumed
    // Metal encoder does not inherit it; restore before engine particles.
    restoreWorldRaster();
    if(particles){particles->Encode(NativeWorldParticleStage::AlphaAboveWater,encoder,ssaoAboveDepth);particles->Encode(NativeWorldParticleStage::NanoAboveWater,encoder,ssaoAboveDepth);}
+#if defined(RECOIL_METAL4_LIVE_SCENE)
+   if(report218)LOG("[NativeSSAO218Successor] source_frame=%llu stage=%u admitted=%u same_encoder=%u positive_first_draw=%u",
+    (unsigned long long)frame.sourceDrawFrame,unsigned(NativeWorldParticleStage::AlphaAboveWater),unsigned(borrowedSSAO218),
+    unsigned(encoder==successorEncoder218),unsigned(particles218));
+#endif
   }else{
 			encodeAlphaModels(alphaModels[2],encoder,pass,frame.alphaModelFrames[2].get(),mainAttachments->Color(),mainAttachments->Depth(),mainAttachments->Stencil());
    drawPieces(true);
@@ -4731,6 +4973,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			screen->Encode(encoder);
 		}
 		[encoder endEncoding];
+		borrowedScene217.borrowed=false;
 		if(postprocess) postprocess->Encode(command,*screen);
 		if(presentationMargins) {
 			// Match the donor's final default-framebuffer scissor clear. All

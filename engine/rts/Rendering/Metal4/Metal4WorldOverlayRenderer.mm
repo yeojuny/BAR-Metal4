@@ -354,11 +354,16 @@ struct PreparedWorldOverlayFrame::Impl {
 		__strong id<MTL4ArgumentTable> arguments=nil;__strong id<MTLBuffer> indices=nil;
 		NativeWorldDrawState state;MTLViewport viewport{};MTLScissorRect scissor{};uint32_t count=0;
 		bool polygon=false;size_t indexOffset=0,indexLength=0;
+		bool fixedReadOnly218=false;
+		// The existing image cache and RuntimeLease retain these actual bindings.
+		__unsafe_unretained id<MTLTexture> sampled0218=nil,sampled1218=nil;
 		std::vector<PreparedScreenExternalImage> externalImages;
  std::vector<PreparedPiPSourceImage> typedImages;
 	};
 	std::vector<Draw> draws;
  bool hasLineJobs=false;
+	MTLPixelFormat color218=MTLPixelFormatInvalid,depth218=MTLPixelFormatInvalid,stencil218=MTLPixelFormatInvalid;
+	unsigned samples218=0;
 };
 PreparedWorldOverlayFrame::PreparedWorldOverlayFrame():impl(std::make_unique<Impl>()){}
 PreparedWorldOverlayFrame::~PreparedWorldOverlayFrame()=default;
@@ -380,6 +385,21 @@ for(const auto& d:impl->draws)if(d.unitGlass)d.unitGlass->DidComplete();for(cons
 size_t PreparedWorldOverlayFrame::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedWorldOverlayFrame::SequenceAt(size_t i)const{return impl->draws.at(i).sequence;}
 NativeWorldDrawStage PreparedWorldOverlayFrame::StageAt(size_t i)const{return impl->draws.at(i).stage;}
+bool PreparedWorldOverlayFrame::CanFollowSSAO218(size_t index,uint64_t sequence,MTL4RenderPassDescriptor* __unsafe_unretained scene)const
+{
+	if(index>=impl->draws.size()||scene==nil)return false;
+	const auto& draw=impl->draws[index];
+	if(draw.sequence!=sequence||draw.stage!=NativeWorldDrawStage::World||!draw.fixedReadOnly218||draw.unitGlass||draw.unitEffect||!draw.externalImages.empty()||!draw.typedImages.empty())return false;
+	const auto root=[](id<MTLTexture> __unsafe_unretained texture){return texture!=nil&&texture.parentTexture==nil&&texture.buffer==nil&&texture.heap==nil&&(texture.storageMode==MTLStorageModePrivate||texture.storageMode==MTLStorageModeShared);};
+	id<MTLTexture> __unsafe_unretained color=scene.colorAttachments[0].texture;
+	id<MTLTexture> __unsafe_unretained depth=scene.depthAttachment.texture;
+	id<MTLTexture> __unsafe_unretained stencil=scene.stencilAttachment.texture;
+	if(!root(color)||!root(depth)||(stencil!=nil&&!root(stencil)))return false;
+	if(color.pixelFormat!=impl->color218||depth.pixelFormat!=impl->depth218||color.sampleCount!=impl->samples218||depth.sampleCount!=impl->samples218)return false;
+	if(impl->stencil218==MTLPixelFormatInvalid?stencil!=nil:(stencil==nil||stencil.pixelFormat!=impl->stencil218||stencil.sampleCount!=impl->samples218))return false;
+	const auto independent=[&](id<MTLTexture> __unsafe_unretained input){return root(input)&&input.iosurface==nullptr&&!input.shareable&&input!=color&&input!=depth&&input!=stencil&&input.device==color.device&&input.textureType==MTLTextureType2D&&input.sampleCount==1;};
+	return independent(draw.sampled0218)&&independent(draw.sampled1218);
+}
 void PreparedWorldOverlayFrame::EncodeDraw(size_t i,id<MTL4RenderCommandEncoder> encoder)const
 {
 	const auto& d=impl->draws.at(i);if(d.unitGlass){d.unitGlass->Encode(encoder);return;}if(d.unitEffect){d.unitEffect->Encode(encoder);return;}if(!d.count)return;
@@ -495,6 +515,7 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
 	}
  impl->sourceLines.BeginBatch(lease);
 	impl->argumentPool.BeginBatch(lease);auto result=std::make_unique<PreparedWorldOverlayFrame>();
+	result->impl->color218=colorFormat;result->impl->depth218=depthFormat;result->impl->stencil218=stencilFormat;result->impl->samples218=samples;
  // Font matrices, vertices, indices and uniforms share one CPU-visible GPU
  // allocation per Prepare. No GPU copy or extra submission is introduced.
  // Both the prepared frame and completion/poison graph own the reuse token.
@@ -643,6 +664,11 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
 		if(surface.texture&&!surface.texture->incomplete&&surface.uvMode==ScreenUVMode::Texel){uniform.scale[0]=1.f/surface.texture->width;uniform.scale[1]=1.f/surface.texture->height;}
 		const auto& second=surface.secondary;const bool hasSecondary=second.texture&&surface.material!=ScreenMaterial::FontCoverage;
 		auto sampled1=images.PrepareImage(lease,hasSecondary?second.texture:nullptr,second.sampler,targetProducers,consumer,retainExternal);
+		// Masks 0..3 are the actual fixed generic/SourceLines shaders: const
+		// geometry/uniform inputs and only the two sampled image bindings.
+		// External providers and all special shader families remain ineligible.
+		draw.fixedReadOnly218=sampledDepthMask<=3&&!mapMRTBroadcast&&!mapCombinedColor&&draw.externalImages.empty();
+		draw.sampled0218=sampled.texture;draw.sampled1218=sampled1.texture;
 		if(hasSecondary){uniform.scale1={1,1,0,0};uniform.options1={1,uint32_t(second.texture->flipV),0,0};uniform.parameters1={0,float(second.sampler.wrapS==ScreenWrap::LegacyClamp),float(second.sampler.wrapT==ScreenWrap::LegacyClamp),float(second.texture->incomplete)};if(second.uvMode==ScreenUVMode::Texel&&!second.texture->incomplete){Require(second.texture->width&&second.texture->height,"Empty secondary texel-coordinate image");uniform.scale1[0]=1.f/second.texture->width;uniform.scale1[1]=1.f/second.texture->height;}}
   if(source.sourceLines){
    draw.sourceLines=impl->sourceLines.Prepare(lease,source.sourceLines,mapped->viewport,width,height,samples,surface,sampled.texture,sampled.sampler,sampled1.texture,sampled1.sampler,validation,shaderMs);draw.arguments=draw.sourceLines->arguments;draw.count=source.sourceLines->segments.size();

@@ -226,6 +226,7 @@ describe("Preload API Context Bridge", () => {
         mockWindow.game.uninstallVersion("v1");
         mockWindow.game.launchMultiplayer({});
         mockWindow.game.launchScript("script", "gameV", "engineV");
+        mockWindow.game.launchScenario("scenario", "installedGame", "engineV");
 
         expect(mockIpcRenderer.invoke).toHaveBeenCalledWith("game:downloadGame", "v1");
         expect(mockIpcRenderer.invoke).toHaveBeenCalledWith("game:getScenarios", "v1");
@@ -234,6 +235,7 @@ describe("Preload API Context Bridge", () => {
         expect(mockIpcRenderer.invoke).toHaveBeenCalledWith("game:uninstallVersion", "v1");
         expect(mockIpcRenderer.invoke).toHaveBeenCalledWith("game:launchMultiplayer", {});
         expect(mockIpcRenderer.invoke).toHaveBeenCalledWith("game:launchScript", "script", "gameV", "engineV");
+        expect(mockIpcRenderer.invoke).toHaveBeenCalledWith("game:launchScenario", "scenario", "installedGame", "engineV");
     });
 
     it("should expose maps API", async () => {

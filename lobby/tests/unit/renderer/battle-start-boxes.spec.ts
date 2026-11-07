@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 import { MapData } from "@main/content/maps/map-data";
-import { StartPosType } from "@main/game/battle/battle-types";
+import { Bot, StartPosType } from "@main/game/battle/battle-types";
 import { getCurrentArrangement, getCurrentStartBoxes, withStartboxOverride } from "@renderer/utils/battle-map-options";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -145,5 +145,20 @@ describe("getCurrentStartBoxes", () => {
             { left: 0, top: 0, right: 0.2, bottom: 1 },
             { left: 0.8, top: 0, right: 1, bottom: 1 },
         ]);
+    });
+});
+
+
+describe("bot options", () => {
+    it("updates the actual team participant by id, preserving other bots", () => {
+        const bot: Bot = { id: "42", host: "1", name: "Renamed BARbarIAn", aiShortName: "BARb", aiOptions: {} };
+        const other: Bot = { ...bot, id: "43", aiOptions: { difficulty: "hard" } };
+        battleStore.teams = [{ participants: [other] }, { participants: [bot] }];
+        const values = { difficulty: "easy" };
+        battleActions.updateBotOptions({ ...bot }, values);
+        expect(battleStore.teams[1].participants[0]).toMatchObject({ aiOptions: { difficulty: "easy" } });
+        expect(other.aiOptions).toEqual({ difficulty: "hard" });
+        values.difficulty = "normal";
+        expect(bot.aiOptions).toEqual({ difficulty: "easy" });
     });
 });

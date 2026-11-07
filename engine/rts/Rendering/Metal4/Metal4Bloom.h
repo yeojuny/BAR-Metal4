@@ -27,6 +27,27 @@ public:
  // Original callback stage, after source color/depth stores. This encodes one
  // actual original FBO operation, never a command submission or host wait.
  void EncodeDraw(size_t,id<MTL4CommandBuffer>)const;
+  // The scheduler inspects the exact prepared operation/target and independently
+  // admits its next consumer before opening an encoder. Inspection has no effects.
+  bool CanEncodeSceneDraw(size_t,MTL4RenderPassDescriptor* __unsafe_unretained)const;
+  // The boolean gate and bounded preparation diagnostics share one inspection.
+  // Values describe the first unmet condition; Eligible does not encode a draw.
+  enum class SceneDrawRejection : unsigned {
+   Eligible=0, NoDescriptor, NoOwner, Index, NotFinal, SourceCount,
+   AlreadyEncoded, NoRaster, Clear, PreparedOutput, PreparedPrevious,
+   SourceOutput, SourcePrevious, Program, NonlocalInput, ExternalInput,
+   InputCount, LocalReadCount, LocalVersion, MissingInput, InputView,
+   InputBuffer, InputHeap, InputStorage, MissingColor, MissingDepth,
+   MissingStencil, AttachmentAlias, AttachmentView, AttachmentBuffer,
+   AttachmentType, AttachmentSamples, AttachmentExtent, PassSamples,
+   PassExtent, PassArray, PassImageblock, PassThreadgroup, PassTile,
+   PassRasterRate, PassVisibility, PassColorMapping, PassSamplePositions,
+   ColorDescriptor, DepthDescriptor, StencilDescriptor, ExtraColor
+  };
+  SceneDrawRejection InspectSceneDraw(size_t,MTL4RenderPassDescriptor* __unsafe_unretained)const;
+  // Borrow only: never opens/ends/submits the scheduler-owned encoder or retires
+  // resources. Errors propagate; the scheduler closes once and never replays.
+  void EncodeSceneDraw(size_t,id<MTL4RenderCommandEncoder> __unsafe_unretained)const;
  void DidComplete()const;
 private:struct Impl;std::unique_ptr<Impl>impl;friend class BloomGPU;
 };

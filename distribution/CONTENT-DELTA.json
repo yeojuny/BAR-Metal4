@@ -1,0 +1,25 @@
+{
+  "status": "STAGED_DELTA_REQUIRES_EXACT_APP_INSTALLATION_TEST",
+  "gameVersion": "Beyond All Reason test-31691-a617033-native220-defaults01",
+  "gamePackageId": "ea937c1fffe64761825a9d87af5c91f2",
+  "sdpSHA256": "d3b229ba8b86462dcbbcf9d9c9f4b7a328189a7c4994ee661c99a86cb1f13466",
+  "rapidIndexSHA256": "1066274c9ac2afcec7bf38f3e7174394cc6e6aec1743e743a2a280f94f6b22f9",
+  "uniquePoolObjects": 17942,
+  "poolObjectsReusedFromPinnedBase": 17930,
+  "newPoolObjectsVerifiedAgainstSDP": 12,
+  "deltaAssets": {
+    "packages/ea937c1fffe64761825a9d87af5c91f2.sdp": "d3b229ba8b86462dcbbcf9d9c9f4b7a328189a7c4994ee661c99a86cb1f13466",
+    "pool/09/6026c809dad512fc210020200dbc90.gz": "7eb537af93e9ef01f8ced5004ed6b0e8e9c5df2a338b4edd24e87be842f7e526",
+    "pool/2d/bd1412710a0fe48853e7dad3b250ab.gz": "307a2de2feb103b1b84be178020ead63eb7890ef49e810e24aa7129cfd759b45",
+    "pool/35/ea4028211f99b060bef7d85aa0ee0c.gz": "ac3c2e0fcbc11dc2d4a7b657af3aacf75f953886b7e58ff84feacb27f6fe5c03",
+    "pool/5e/5447d7e102e4bc340a55f7d1f9e8a0.gz": "e8e360267b78629e388e8310db1c349c5d37f6f2c6f7065dbfb4c5a04eb3745b",
+    "pool/6a/861ac1067dd21f990ac457b7205719.gz": "228eb2e67c2d6887b6f40819e26b22d181ea74df075d2052a782b3ba82d1a2a9",
+    "pool/7d/c2180ac54860f98686e573524436e3.gz": "a9cfb47de78fba3bcdbce785bd989edfa005715afa1e76ce377d543bf202dcbd",
+    "pool/8a/ae3d69ed2fe59f83fae61f64601ad8.gz": "68745bf22546319a464916e75d6881350876bfa7e487c5ec46ae2d3122872bee",
+    "pool/91/0426425a924e51de011113fceab919.gz": "965f56991955b48f9600f230b56f8f4f7e92795eeabca6d9c2608fc36baa3270",
+    "pool/99/6b75c836120b82a844af36df960d62.gz": "ce5fc4b883c78d6b2f5694488ee219a4b146c62898ee9e11e9139614b44cf125",
+    "pool/9c/5bc83e2d66f7dfeb743ab469a3a75a.gz": "3ee11f71efb63928e74aadf1058ae64f2ec98d950fbe01a74be2aa5c2f2b1966",
+    "pool/a7/4cddba907db4ba90126f6d5a92ec23.gz": "ab199aab29b3b2235a75beeab33a6b56608716644ffc8eccbf12174dbce1dc11",
+    "pool/e2/7d926f8bd70dc76611951fa73c8e97.gz": "808b6ff791947bdca15e340dd0c8383a989df6b9f1ebd39ba2c77f733bc36447"
+  }
+}

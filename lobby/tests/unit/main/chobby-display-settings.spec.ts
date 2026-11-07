@@ -72,10 +72,41 @@ describe("Chobby display intent", () => {
 });
 
 describe("BAR startup defaults owner", () => {
-    it("restores Darwin fullscreen before spawn without replacing the user's sizes", () => {
+    it("requests original Ultra application only for an empty native configuration", () => {
+        const fresh = new Map<string, string>();
+        mergeSpringDefaults(fresh, {}, "darwin");
+        expect(fresh.get("NativeInitialGraphicsPreset")).toBe("ultra");
+        fresh.delete("NativeInitialGraphicsPreset"); // In-game owner consumes it after applying Ultra.
+        mergeSpringDefaults(fresh, {}, "darwin");
+        expect(fresh.has("NativeInitialGraphicsPreset")).toBe(false);
+
+        const custom = new Map([["Custom", "keep"]]);
+        mergeSpringDefaults(custom, {}, "darwin");
+        expect(custom.has("NativeInitialGraphicsPreset")).toBe(false);
+        const nonNative = new Map<string, string>();
+        mergeSpringDefaults(nonNative, {}, "linux");
+        expect(nonNative.has("NativeInitialGraphicsPreset")).toBe(false);
+    });
+
+    it("initializes uncapped, MSAA-off Darwin defaults despite stale remote settings", () => {
+        const settings = new Map<string, string>();
+        const stale = { MSAA: 1, MSAALevel: 4, VSync: 1, VSyncGame: 1, VSyncGameFraction: 2, Fullscreen: 0 };
+        expect(mergeSpringDefaults(settings, stale, "darwin")).toBe(true);
+        expect(Object.fromEntries(settings)).toMatchObject({ MSAA: "0", MSAALevel: "-1", VSync: "0", VSyncGame: "0", VSyncGameFraction: "1", Fullscreen: "1" });
+        expect(mergeSpringDefaults(settings, stale, "darwin")).toBe(false);
+    });
+
+    it("keeps explicit user MSAA and VSync choices even when they are heavier", () => {
+        const chosen = { MSAA: "1", MSAALevel: "8", VSync: "1", VSyncGame: "1", VSyncGameFraction: "2", Fullscreen: "0" };
+        const settings = new Map(Object.entries(chosen));
+        mergeSpringDefaults(settings, {}, "darwin");
+        expect(Object.fromEntries(settings)).toMatchObject(chosen);
+    });
+
+    it("preserves Darwin window mode and saved sizes across startup", () => {
         const settings = new Map([["Fullscreen", "0"], ["XResolution", "1440"], ["YResolution", "900"], ["Custom", "keep"]]);
         expect(mergeSpringDefaults(settings, { Fullscreen: 0 }, "darwin")).toBe(true);
-        expect(settings.get("Fullscreen")).toBe("1");
+        expect(settings.get("Fullscreen")).toBe("0");
         expect(settings.get("XResolution")).toBe("1440");
         expect(settings.get("YResolution")).toBe("900");
         expect(settings.get("Custom")).toBe("keep");

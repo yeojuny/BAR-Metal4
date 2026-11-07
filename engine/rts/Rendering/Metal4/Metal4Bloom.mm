@@ -128,6 +128,89 @@ void PreparedBloom::EncodeDraw(size_t index,id<MTL4CommandBuffer>command)const{
  if(d.stencil){p.stencilAttachment.texture=d.stencil;p.stencilAttachment.loadAction=MTLLoadActionLoad;p.stencilAttachment.storeAction=MTLStoreActionStore;}
  auto e=[command renderCommandEncoderWithDescriptor:p];Require(e!=nil,"Cannot encode actual Bloom render operation");[e barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];effectstate::RasterState(e,d.world,d.raster);[e setCullMode:d.world.cullEnabled?(d.world.cull==NativeWorldCull::Front?MTLCullModeFront:d.world.cull==NativeWorldCull::Back?MTLCullModeBack:MTLCullModeNone):MTLCullModeNone];[e setRenderPipelineState:d.pipeline];[e setDepthStencilState:d.depth];[e setArgumentTable:d.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];[e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];[e barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[e endEncoding];d.encoded=true;if(d.output){d.output->producer->submissionIdentity=d.submission;d.output->producer->encoded=true;}
 }
+bool PreparedBloom::CanEncodeSceneDraw(size_t index,MTL4RenderPassDescriptor* __unsafe_unretained p)const{
+ return InspectSceneDraw(index,p)==SceneDrawRejection::Eligible;
+}
+PreparedBloom::SceneDrawRejection PreparedBloom::InspectSceneDraw(size_t index,MTL4RenderPassDescriptor* __unsafe_unretained p)const{
+ using Reason=SceneDrawRejection;
+ if(!p)return Reason::NoDescriptor;
+ if(!impl->owner)return Reason::NoOwner;
+ if(index>=impl->draws.size())return Reason::Index;
+ if(index+1!=impl->draws.size())return Reason::NotFinal;
+ if(impl->owner->draws.size()!=impl->draws.size())return Reason::SourceCount;
+ const auto& d=impl->draws[index];const auto& source=impl->owner->draws[index];
+ if(d.encoded)return Reason::AlreadyEncoded;
+ if(d.noop)return Reason::NoRaster;
+ if(d.clear)return Reason::Clear;
+ if(d.output)return Reason::PreparedOutput;
+ if(d.previous)return Reason::PreparedPrevious;
+ if(source.output)return Reason::SourceOutput;
+ if(source.previous)return Reason::SourcePrevious;
+ if(source.program!=NativeBloomProgram::Combine)return Reason::Program;
+ if(!source.inputs[0].local)return Reason::NonlocalInput;
+ if(source.inputs[0].actual.object)return Reason::ExternalInput;
+ if(d.inputs.size()!=1)return Reason::InputCount;
+ if(d.localInputs.size()!=1)return Reason::LocalReadCount;
+ if(d.localInputs[0].version!=source.inputs[0].local)return Reason::LocalVersion;
+ id<MTLTexture> __unsafe_unretained input=d.inputs[0].texture;
+ // The local provider allocates independent private roots, never views/heaps.
+ // Check those actual roots too; a generic/custom main target cannot alias one.
+ if(!input)return Reason::MissingInput;
+ if(input.parentTexture)return Reason::InputView;
+ if(input.buffer)return Reason::InputBuffer;
+ if(input.heap)return Reason::InputHeap;
+ if(input.storageMode!=MTLStorageModePrivate)return Reason::InputStorage;
+ if(!d.color)return Reason::MissingColor;
+ if(!d.z)return Reason::MissingDepth;
+ if(!d.stencil)return Reason::MissingStencil;
+ const auto independent=[&](id<MTLTexture> __unsafe_unretained texture){
+  if(texture==input)return Reason::AttachmentAlias;
+  if(texture.parentTexture)return Reason::AttachmentView;
+  if(texture.buffer)return Reason::AttachmentBuffer;
+  if(texture.textureType!=MTLTextureType2D)return Reason::AttachmentType;
+  if(texture.sampleCount!=1)return Reason::AttachmentSamples;
+  if(texture.width!=d.color.width||texture.height!=d.color.height)return Reason::AttachmentExtent;
+  return Reason::Eligible;
+ };
+ if(const auto reason=independent(d.color);reason!=Reason::Eligible)return reason;
+ if(const auto reason=independent(d.z);reason!=Reason::Eligible)return reason;
+ if(const auto reason=independent(d.stencil);reason!=Reason::Eligible)return reason;
+ if(p.defaultRasterSampleCount!=1)return Reason::PassSamples;
+ if(p.renderTargetWidth!=d.color.width||p.renderTargetHeight!=d.color.height)return Reason::PassExtent;
+ if(p.renderTargetArrayLength>1)return Reason::PassArray;
+ if(p.imageblockSampleLength)return Reason::PassImageblock;
+ if(p.threadgroupMemoryLength)return Reason::PassThreadgroup;
+ if(p.tileWidth||p.tileHeight)return Reason::PassTile;
+ if(p.rasterizationRateMap)return Reason::PassRasterRate;
+ if(p.visibilityResultBuffer)return Reason::PassVisibility;
+ if(p.supportColorAttachmentMapping)return Reason::PassColorMapping;
+ if([p getSamplePositions:nullptr count:0])return Reason::PassSamplePositions;
+ const auto matches=[](MTLRenderPassAttachmentDescriptor* __unsafe_unretained a,id<MTLTexture> __unsafe_unretained texture){
+  return a.texture==texture&&!a.resolveTexture&&a.level==0&&a.slice==0&&a.depthPlane==0&&
+   a.loadAction==MTLLoadActionLoad&&a.storeAction==MTLStoreActionStore;
+ };
+ if(!matches(p.colorAttachments[0],d.color))return Reason::ColorDescriptor;
+ if(!matches(p.depthAttachment,d.z))return Reason::DepthDescriptor;
+ if(!matches(p.stencilAttachment,d.stencil))return Reason::StencilDescriptor;
+ for(NSUInteger i=1;i<8;++i)if(p.colorAttachments[i].texture||p.colorAttachments[i].resolveTexture)return Reason::ExtraColor;
+ return Reason::Eligible;
+}
+void PreparedBloom::EncodeSceneDraw(size_t index,id<MTL4RenderCommandEncoder> __unsafe_unretained e)const{
+ const auto& d=impl->draws.at(index);
+ Require(e!=nil&&!d.encoded&&!d.noop&&!d.clear&&!d.output&&!d.previous,
+  "Borrowed Bloom operation lost its inspected main draw or was encoded twice");
+ // Same input checks, raster, bindings, draw and queue dependencies as EncodeDraw.
+ // Queue barriers concern other encoders; same-pass safety belongs to admission.
+ for(auto& i:d.inputs)i.requireReadable();for(const auto& read:d.localInputs)read.RequireReadable();
+ [e barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+ effectstate::RasterState(e,d.world,d.raster);
+ [e setCullMode:d.world.cullEnabled?(d.world.cull==NativeWorldCull::Front?MTLCullModeFront:d.world.cull==NativeWorldCull::Back?MTLCullModeBack:MTLCullModeNone):MTLCullModeNone];
+ [e setRenderPipelineState:d.pipeline];[e setDepthStencilState:d.depth];
+ [e setArgumentTable:d.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+ [e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];
+ [e barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+ d.encoded=true;
+}
 void PreparedBloom::DidComplete()const{
  // Validate the whole frame before publishing any retirement. A late missing
  // operation must not leave earlier outputs marked completed during rollback.

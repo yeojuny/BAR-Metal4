@@ -9,6 +9,7 @@
 #include "Metal4NativeEffectState.h"
 #include "Metal4ModelSetterProbe176.h"
 #include "Rendering/Backend/NativeCUSSourceIdentity.h"
+#include "Rendering/Backend/NativeS3OTextureSource.h"
 #include "Rendering/Backend/NativeCUSRenderInputs.h"
 #include "Rendering/Backend/NativeCUSCPUReadScope.h"
 #include "Rendering/Backend/NativeCUSDrawRuns147.h"
@@ -76,6 +77,27 @@ const NativeTextureSampling& Sampling(const NativeCUSTextureBinding& b)
  Require(b.knowledge!=NativeCUSBindingKnowledge::Unobserved,"CUS original sampler binding was never observed");
  if(b.knowledge==NativeCUSBindingKnowledge::DefaultObject)return b.defaultSampling;
  Require(bool(b.object),"CUS bound sampler lacks its original immutable image owner");return b.object->sampling;
+}
+// Only World::OriginalModelImage's retained S3O branch supplies this owner
+// with DescribeSampler -> ScreenGPU::Sampler. Other providers remain generic.
+bool CanonicalModelSampler219(const NativeCUSTextureBinding& binding,const CUSSourceImage& image)
+{
+ if(binding.knowledge!=NativeCUSBindingKnowledge::BoundObject||!binding.object||
+    image.owner.get()!=binding.object.get()||image.depthImage||image.clampDepthCompare||
+    image.texture.textureType!=MTLTextureType2D)return false;
+ const auto& object=*binding.object;
+ const auto* model=dynamic_cast<const NativeModelTextureBacking*>(object.backing.get());
+ if(!model||!model->pixels||model->pixels!=object.image||
+    !object.contextGeneration||!object.identity||object.target!=NativeCUSTextureTarget::Image2D||
+    object.storage!=NativeTextureStorageKnowledge::Published||
+    model->content!=NativeTextureContent::ProducerVersion||model->storageGeneration!=object.identity)return false;
+ const auto& state=object.sampling;
+ // The current Screen descriptor leaves R/compare/LOD/reduction at their
+ // defaults. Source wrapR/compareFunction do not change that 2D descriptor.
+ return state.minFilter==0x2703&&state.magFilter==0x2601&&
+  state.wrapS==0x2901&&state.wrapT==0x2901&&state.anisotropy==1.0f&&
+  state.compareMode==0&&state.baseLevel==0&&state.lodBias==0.0f&&
+  state.borderColor==std::array<float,4>{0,0,0,0};
 }
 #include "Metal4ModelTrace.inc"
 }
@@ -211,13 +233,23 @@ struct CUSSourceGPU::Impl {
   NSError* error=nil;auto library=lease.NewLibrary(d,&error);Require(library,"Cannot compile exact CUS identity channels194: "+Error(error));
   identityFragments194.emplace(&p,library);ms+=Milliseconds(start);return library;
  }
- id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const Program& p,const CUSSourceTarget& target,const ScreenBlendState& blend,const std::array<bool,4>& mask,bool validation,double& ms,bool coverage=false,bool identityChannels194=false)
+ id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const Program& p,const CUSSourceTarget& target,const ScreenBlendState& blend,const std::array<bool,4>& mask,bool validation,double& ms,bool coverage=false,bool identityChannels194=false,ModelSamplerPolicy219 samplerPolicy=ModelSamplerPolicy219::Generic)
  {
-  auto key=PipelineKey(p.generated,target,blend,mask,validation);key.push_back(coverage);key.push_back(target.combinedColor);key.push_back(lease.SampleShadingEnabled(target.samples));key.push_back(identityChannels194);if(auto it=pipelines.find(key);it!=pipelines.end()){if(identityChannels194)lease.Retain(identityFragments194.at(p.generated));return it->second;}
+  auto key=PipelineKey(p.generated,target,blend,mask,validation);key.push_back(coverage);key.push_back(target.combinedColor);key.push_back(lease.SampleShadingEnabled(target.samples));key.push_back(identityChannels194);key.push_back(uint64_t(samplerPolicy));if(auto it=pipelines.find(key);it!=pipelines.end()){if(identityChannels194)lease.Retain(identityFragments194.at(p.generated));return it->second;}
   auto fragmentLibrary=identityChannels194?IdentityFragment194(lease,*p.generated,ms):p.libraries->fragment;
   const auto start=Clock::now();auto d=[MTL4RenderPipelineDescriptor new];auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];
   v.library=p.libraries->vertex;v.name=@"NativeCUSVertex";f.library=fragmentLibrary;f.name=@"NativeCUSFragment";lease.Retain(f.library);
   d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.rasterSampleCount=target.samples;d.alphaToCoverageState=coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
+  if(ModelSamplerPair219(p.generated->fragment.textureMask)){
+   // Both generic and canonical PSOs use the same already-linked library.
+   // Set false explicitly too: an unspecialized function is reflection-only.
+   const bool canonical=samplerPolicy==ModelSamplerPolicy219::CanonicalPair;
+   auto values=[MTLFunctionConstantValues new];
+   [values setConstantValue:&canonical type:MTLDataTypeBool atIndex:ModelSamplerConstant219];
+   auto specialized=[MTL4SpecializedFunctionDescriptor new];
+   specialized.functionDescriptor=f;specialized.constantValues=values;
+   d.fragmentFunctionDescriptor=specialized;
+  }
   auto layout=[MTLVertexDescriptor vertexDescriptor];
   for(unsigned n=0;n<4;++n){layout.attributes[n].format=MTLVertexFormatFloat3;layout.attributes[n].offset=n*12;layout.attributes[n].bufferIndex=0;}
   layout.attributes[4].format=MTLVertexFormatFloat4;layout.attributes[4].offset=48;layout.attributes[4].bufferIndex=0;
@@ -348,11 +380,13 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   std::array<id<MTLTexture>,12> materialTextures156{};std::array<id<MTLSamplerState>,12> materialSamplers156{};
   NativeCUSSampleTransport transport;uint32_t caps;std::memcpy(&caps,u.params->bytes.data()+12,4);transport.clipFlags=uint32_t(!(caps&1u))|uint32_t(target.invertClipY)<<1|uint32_t(d.clipDistance0)<<2;
   static constexpr const char* samplerNames[]={"texture1","texture2","normalTex","texture1w","texture2w","normalTexw","shadowTex","reflectTex","losMapTex","brdfLUT","noisetex3dcube","envLUT"};
+  bool canonicalPair219=ModelSamplerPair219(program->generated->fragment.textureMask);
   for(unsigned slot=0;slot<12;++slot){
    if(!(program->generated->fragment.textureMask&(1u<<slot)))continue;
    const auto& binding=d.textures->samplers[slot];transport.sampleCodes[slot]=NativeCUSSampleCode(Sampling(binding));
    const auto uniform=d.intUniforms.find(samplerNames[slot]);Require(uniform!=d.intUniforms.end()&&uniform->second.size()==1&&uniform->second[0]==slot,"CUS original sampler unit changed outside selected source contract");
    if(Empty(binding)){
+    if(slot<2)canonicalPair219=false;
     if(slot==6){
      const auto bits=d.intUniforms.find("bitOptions");
      Require(bits!=d.intUniforms.end()&&bits->second.size()==1&&!(uint32_t(bits->second[0])&1u),"CUS enabled original shadow branch lacks its actual depth image");
@@ -362,6 +396,7 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
    }
    auto image=images(lease,binding,slot);Require(image.texture!=nil&&image.sampler!=nil&&image.owner&&image.requireReadable,"CUS actual image has no paired resource/sampler/producer lifetime");
    const auto expected=slot==7?MTLTextureTypeCube:slot==10?MTLTextureType3D:MTLTextureType2D;Require(image.texture.textureType==expected,"CUS original texture target differs from its actual image");
+   if(slot<2)canonicalPair219=canonicalPair219&&CanonicalModelSampler219(binding,image);
    if(image.flipV){Require(expected==MTLTextureType2D,"CUS cube/volume requires its original orientation producer");transport.flipMask|=1u<<slot;}
    if(image.depthImage)transport.depthMask|=1u<<slot;
    if(image.clampDepthCompare){Require(image.depthImage,"Fixed-depth compare semantics require the actual depth image");transport.clampDepthCompareMask|=1u<<slot;}
@@ -375,7 +410,8 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   // The same resolved transport is uploaded above. Every selected color
   // slot must be identity/non-depth for the entire fragment-library variant.
   const bool identityChannels194=NativeCUSIdentityChannels194(program->generated->fragment.textureMask,transport);
-  draw.pipeline=impl->Pipeline(lease,*program,target,blend,state.colorWrite,validation,ms,state.alphaToCoverage,identityChannels194);draw.depth=effectstate::Depth(lease,state,target.stencil);lease.Retain(draw.pipeline);lease.Retain(program->libraries->vertex);lease.Retain(program->libraries->fragment);
+  const auto samplerPolicy219=canonicalPair219?ModelSamplerPolicy219::CanonicalPair:ModelSamplerPolicy219::Generic;
+  draw.pipeline=impl->Pipeline(lease,*program,target,blend,state.colorWrite,validation,ms,state.alphaToCoverage,identityChannels194,samplerPolicy219);draw.depth=effectstate::Depth(lease,state,target.stencil);lease.Retain(draw.pipeline);lease.Retain(program->libraries->vertex);lease.Retain(program->libraries->fragment);
   ForEachNativeCUSDrawRun147(d.submissions,[&](uint32_t first,uint32_t count,const NativeCUSModelSubmission& submission){
    const auto index=impl->Model(lease,submission.geometry,preparation154,out->impl->geometry,geometryBatch155);
    const auto& model=out->impl->geometry[index];

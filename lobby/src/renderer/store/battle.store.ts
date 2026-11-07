@@ -174,13 +174,13 @@ function duplicateBot(bot: Bot, teamId: string) {
 
 function updateBotOptions(bot: Bot, options: Record<string, unknown>) {
     const foundBot = battleStore.teams
-        .flat()
-        .filter((p) => isBot(p))
+        .flatMap((team) => team.participants)
+        .filter(isBot)
         .find((p) => p.id === bot.id);
     if (!foundBot) {
         throw Error(`Failed to find bot ${bot.name} (${bot.id})`);
     }
-    bot.aiOptions = options;
+    foundBot.aiOptions = { ...options };
 }
 
 function updateParticipantFaction(participant: Player | Bot, faction?: Faction) {

@@ -56,7 +56,7 @@ private:
 		CUSSourceGPU&,EngineModelDeferredGPU&,EngineModelForwardGPU&,
 		std::shared_ptr<const NativeOpaqueModelFrame>,const CUSSourceTarget&,
 		const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,
-		uint64_t,uint64_t,bool,double&);
+		uint64_t,uint64_t,bool,double&,const NativeTextureRegistry*);
 };
 
 // Prepare all actual MRT phases first, so every consumer sees its six fulfilled
@@ -65,5 +65,6 @@ std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease
 	CUSSourceGPU&,EngineModelDeferredGPU&,EngineModelForwardGPU&,
 	std::shared_ptr<const NativeOpaqueModelFrame>,const CUSSourceTarget& actualForwardTarget,
 	const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,
-	uint64_t actualDrawFrame,uint64_t actualSubmission,bool validation,double& milliseconds);
+	uint64_t actualDrawFrame,uint64_t actualSubmission,bool validation,double& milliseconds,
+ const NativeTextureRegistry* sealedMainRegistry209=nullptr);
 } // namespace rendering::metal4

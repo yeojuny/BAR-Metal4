@@ -6,7 +6,7 @@ namespace rendering::metal4 {
 std::unique_ptr<PreparedCUSDeferred> PrepareOpaqueModelMRTPhase(RuntimeLease& lease,
 	CUSSourceGPU& cus,EngineModelDeferredGPU& engine,const NativeOpaqueModelPass& pass,
 	const EngineDeferredGeometryProvider& geometry,const CUSSourceGPU::TextureProvider& images,
-	uint64_t frame,uint64_t submission,bool validation,double& milliseconds)
+	uint64_t frame,uint64_t submission,bool validation,double& milliseconds,MRTWriteReuse209* writeReuse209)
 {
 	Require(pass.sequence&&pass.deferred&&pass.engine&&pass.lua&&pass.mrt&&submission&&geometry&&images,
 		"Actual opaque MRT preparation requires its selected deferred source entry and real providers");
@@ -70,6 +70,6 @@ std::unique_ptr<PreparedCUSDeferred> PrepareOpaqueModelMRTPhase(RuntimeLease& le
 	other.emptySourceCallbacksHaveNoCommands=actualEngine->DrawCount()==0;
 	// Prepare fulfills all five immutable colors and the SAME actual D32F
 	// backing before downstream consumer Prepare. No source is yet encoded.
-	return PrepareCUSDeferred(lease,cus,pass.mrt,images,std::move(other),submission,validation,milliseconds);
+	return PrepareCUSDeferred(lease,cus,pass.mrt,images,std::move(other),submission,validation,milliseconds,nullptr,writeReuse209);
 }
 } // namespace rendering::metal4

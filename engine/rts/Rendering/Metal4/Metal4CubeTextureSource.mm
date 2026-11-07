@@ -1,5 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4CubeTextureSource.h"
+#include "Metal4CubeCopy206.h"
+#include "Rendering/Backend/NativeInitialClearLoad.h"
 #include <algorithm>
 #include "Metal4CubeStoragePool.inc"
 namespace rendering::metal4 {
@@ -7,6 +9,8 @@ namespace {
 struct Resource final:NativeCubeTextureResource {
  std::shared_ptr<CubeStorage> storage;
  mutable bool cpuUploaded=false;
+ // A per-version proof stamp; previous versions and pool ownership are unchanged.
+ mutable std::atomic<uint64_t> overwriteSubmission206{0};
 };
 std::shared_ptr<const Resource> Storage(const NativeCubeTextureBacking& image){auto r=std::dynamic_pointer_cast<const Resource>(image.resource);Require(r&&r->storage&&r->storage->texture,"Original cube lacks its actual native allocation");return r;}
 // An ordered predecessor is this immutable version's exact successful producer,
@@ -85,6 +89,30 @@ std::shared_ptr<const NativeCubeTextureResource> ReserveNativeCubeTextureForCapt
 }
 id<MTLTexture> NativeCubeTexture(const NativeCubeTextureBacking& image){return Storage(image)->storage->texture;}
 id<MTLTexture> NativeCubeDepth(const NativeCubeTextureBacking& image){return Storage(image)->storage->depth;}
+void AuthorizeCubeFaceOverwrite206(const NativeCubeTextureBacking& image,
+ MTL4RenderPassDescriptor* pass,const NativeWorldAttachmentClear& clear,
+ uint64_t sourceFrame,uint64_t submission)
+{
+ // Fail closed. Preparation has already validated the actual original clear.
+ // Generic cube consumers never authorize a discard, and an already encoded
+ // dependency keeps its original copy plan.
+ if(!submission||!sourceFrame||image.sourceDrawFrame!=sourceFrame||
+  image.kind!=NativeCubeTextureKind::Reflection||image.content!=NativeTextureContent::ProducerVersion||
+  !image.requiresFaceDraw||image.initialMipmaps||image.sourceFace>=6||!image.prior||
+  image.completed.load(std::memory_order_acquire)||image.dependenciesSubmission.load(std::memory_order_acquire)||
+  image.encodedSubmission.load(std::memory_order_acquire)||!pass||
+  clear.stage!=NativeWorldDrawStage::TerrainReflection||!clear.sequence||
+  !(NativeInitialClearDiscardMask(clear,image.size,image.size)&ScreenAttachmentColor))return;
+ auto resource=Storage(image);auto attachment=pass.colorAttachments[0];auto texture=resource->storage->texture;
+ if(!texture||texture!=attachment.texture||texture==Storage(*image.prior)->storage->texture||
+  texture.textureType!=MTLTextureTypeCube||texture.pixelFormat!=MTLPixelFormatRGBA8Unorm||
+  texture.width!=image.size||texture.height!=image.size||texture.mipmapLevelCount!=image.levels||
+  texture.sampleCount!=1||
+  pass.renderTargetWidth!=image.size||pass.renderTargetHeight!=image.size||
+  attachment.slice!=image.sourceFace||attachment.level||attachment.depthPlane||attachment.resolveTexture||
+  attachment.loadAction!=MTLLoadActionLoad||attachment.storeAction!=MTLStoreActionStore)return;
+ resource->overwriteSubmission206.store(submission,std::memory_order_release);
+}
 struct PreparedCubeTexture::Impl {
  std::shared_ptr<const NativeCubeTextureBacking> image;
  std::shared_ptr<const Resource> storage;
@@ -123,7 +151,11 @@ void PreparedCubeTexture::EncodeDependencies(id<MTL4CommandBuffer> command){
  Readable(*impl->prior->impl->image,impl->submission,impl->prior->impl->predecessor);
  auto encoder=[command computeCommandEncoder];Require(encoder,"Cannot encode original cube storage copy");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
  auto source=impl->prior->impl->storage->storage->texture;auto target=impl->storage->storage->texture;Require(source.width==target.width&&source.mipmapLevelCount==target.mipmapLevelCount,"Original cube retained storage extent differs");
- for(NSUInteger face=0;face<6;++face)for(NSUInteger mip=0;mip<target.mipmapLevelCount;++mip){auto size=std::max(NSUInteger(1),target.width>>mip);[encoder copyFromTexture:source sourceSlice:face sourceLevel:mip sourceOrigin:MTLOriginMake(0,0,0) sourceSize:MTLSizeMake(size,size,1) toTexture:target destinationSlice:face destinationLevel:mip destinationOrigin:MTLOriginMake(0,0,0)];}
+ // The new face is cleared before any legal read of this producer version.
+ // On regeneration frames FinishReflection overwrites every lower mip before
+ // encodedSubmission is published. Other faces/base levels keep their copies.
+ const bool overwrite206=impl->storage->overwriteSubmission206.load(std::memory_order_acquire)==impl->submission;
+ for(NSUInteger face=0;face<6;++face)for(NSUInteger mip=0;mip<target.mipmapLevelCount;++mip){if(!PreserveCubeSubresource206(unsigned(face),unsigned(mip),image.sourceFace,overwrite206,image.regenerateMipmaps))continue;auto size=std::max(NSUInteger(1),target.width>>mip);[encoder copyFromTexture:source sourceSlice:face sourceLevel:mip sourceOrigin:MTLOriginMake(0,0,0) sourceSize:MTLSizeMake(size,size,1) toTexture:target destinationSlice:face destinationLevel:mip destinationOrigin:MTLOriginMake(0,0,0)];}
  if(image.initialMipmaps||(!image.requiresFaceDraw&&image.regenerateMipmaps))[encoder generateMipmapsForTexture:target];[encoder barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment|MTLStageVertex|MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];image.dependenciesSubmission.store(impl->submission,std::memory_order_release);
  if(!image.requiresFaceDraw)image.encodedSubmission.store(impl->submission,std::memory_order_release);
 }

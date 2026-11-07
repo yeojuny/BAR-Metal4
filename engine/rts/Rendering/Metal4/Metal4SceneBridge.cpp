@@ -15,6 +15,9 @@
 #include "Rendering/Backend/NativeMapTexturePublication.h"
 #include "Rendering/Backend/NativeDeferredPostprocessSource.h"
 #include "Metal4SceneBridge.h"
+#include "Metal4DisplayGeometry.h"
+#include "System/Config/ConfigHandler.h"
+#include "System/Platform/Threading.h"
 #include "Rendering/Backend/NativeLegacyWaterData.h"
 #include "Rendering/Backend/NativeDynamicWaterCapture.h"
 #include "Rendering/Backend/NativeImageReadback.h"
@@ -470,6 +473,13 @@ void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
 {
 	if (session)
 		throw std::runtime_error("The experimental Metal4 scene is already attached");
+	if (configHandler) {
+		const auto render = SelectNativeRenderExtent(renderWidth, renderHeight,
+			configHandler->GetBool("Fullscreen"), configHandler->GetBool("WindowBorderless"),
+			configHandler->GetInt("NativeFullscreenRenderWidth"), configHandler->GetInt("NativeFullscreenRenderHeight"));
+		renderWidth = render.width;
+		renderHeight = render.height;
+	}
 	// Publish only after successful construction, so failed initialization leaves
 	// Shutdown and the caller's window teardown safe and idempotent.
 	auto next = std::make_unique<Session>(window, renderWidth, renderHeight);
@@ -509,7 +519,7 @@ void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
 		return session->capture.CaptureModel(model);
 	});
 	LOG_L(L_WARNING, "[Metal4Scene] Experimental live scene: native world presentation and real SDL input; original graphics coverage and full gameplay acceptance remain incomplete");
-	LOG("[Metal4Scene] Logical render extent %ux%u; engine window policy owns resizing, Retina backing scale is not applied", renderWidth, renderHeight);
+	LOG("[Metal4Scene] Render extent %ux%u; original logical window/input geometry retained, Retina backing scale is not applied", renderWidth, renderHeight);
 }
 
 void InitializeOriginalShadowPrograms()
@@ -641,8 +651,17 @@ void SetRenderSize(uint32_t renderWidth, uint32_t renderHeight)
 	if (before.renderWidth == renderWidth && before.renderHeight == renderHeight) return;
 	RequireRetiredGPUWork();
 	session->surface.SetRenderSize(renderWidth, renderHeight);
-	LOG("[Metal4Scene] Logical render resize %ux%u -> %ux%u; previous GPU work retired",
+	LOG("[Metal4Scene] Render resize %ux%u -> %ux%u; previous GPU work retired",
 		before.renderWidth, before.renderHeight, renderWidth, renderHeight);
+}
+
+NativeDisplayGeometry GetNativeDisplayGeometry()
+{
+	if (!session || !Threading::IsMainThread()) return {};
+	const auto observed = session->surface.Snapshot();
+	if (!observed.attached) return {};
+	return {true, observed.logicalWidth, observed.logicalHeight, observed.renderWidth, observed.renderHeight,
+		observed.presentationBackingWidth, observed.presentationBackingHeight};
 }
 
 void HandleEvent(const SDL_Event& event)

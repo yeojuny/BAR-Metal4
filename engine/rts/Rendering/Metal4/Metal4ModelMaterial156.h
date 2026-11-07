@@ -2,17 +2,25 @@
 #pragma once
 #import <Metal/Metal.h>
 #include <array>
+#include <cstdint>
 #include <map>
 #include <regex>
 #include <string>
 #include <stdexcept>
 
 namespace rendering::metal4 {
+// A single bounded policy for the original model color/material pair.
+// The library contains both paths; only the existing PSO is specialized.
+enum class ModelSamplerPolicy219 : uint8_t { Generic, CanonicalPair };
+inline constexpr NSUInteger ModelSamplerConstant219 = 219;
+inline constexpr bool ModelSamplerPair219(uint32_t mask) { return (mask & 3u) == 3u; }
+
 inline constexpr std::array<const char*,12> ModelMaterialNames156={"texture1","texture2","normalTex","texture1w","texture2w","normalTexw","shadowTex","reflectTex","losMapTex","brdfLUT","noisetex3dcube","envLUT"};
 inline const char* ModelMaterialType156(size_t slot){return slot==7?"texturecube<float>":slot==10?"texture3d<float>":"texture2d<float>";}
 
-// Only the entry-point resource transport changes. The original function body,
-// uniforms, texture types, sample operations and source stage identity remain.
+// Preserve the original function body, uniforms, texture types, sample calls
+// and stage identity. The two canonical samplers are selected only by a PSO
+// function constant after the actual retained sampler state is proven equal.
 inline std::string ModelMaterialFragment156(const char* source,uint32_t mask) {
  std::string original(source);
  if(!mask)return original;
@@ -23,20 +31,29 @@ inline std::string ModelMaterialFragment156(const char* source,uint32_t mask) {
  const std::string signature=original.substr(entry,body-entry);
  const std::regex resource(R"(, (texture2d<float>|texturecube<float>|texture3d<float>|sampler) (\w+) \[\[(texture|sampler)\((\d+)\)\]\])");
  uint32_t textures=0,samplers=0;std::string locals;
+ if(ModelSamplerPair219(mask))locals+=R"SAMPLER219(
+    constexpr sampler NativeCUSLinearRepeat219(coord::normalized, min_filter::linear, mag_filter::linear,
+        mip_filter::linear, s_address::repeat, t_address::repeat, r_address::clamp_to_edge, max_anisotropy(1));
+)SAMPLER219";
  for(auto it=std::sregex_iterator(signature.begin(),signature.end(),resource);it!=std::sregex_iterator();++it){
   const auto& m=*it;const auto slot=std::stoul(m[4]);const bool sampler=m[3]=="sampler";
   if(slot>=12||!(mask&(1u<<slot))||m[1]!=(sampler?"sampler":ModelMaterialType156(slot))||
      m[2]!=std::string(ModelMaterialNames156[slot])+(sampler?"Smplr":""))
    throw std::runtime_error("CUS156 material resource identity differs");
   auto& seen=sampler?samplers:textures;if(seen&(1u<<slot))throw std::runtime_error("Repeated CUS156 material slot");seen|=1u<<slot;
-  locals+="\n    auto "+m[2].str()+" = resources156."+(sampler?"s":"t")+std::to_string(slot)+";";
+  const auto resourceName=std::string("resources156.")+(sampler?"s":"t")+std::to_string(slot);
+  const auto value=sampler&&slot<2&&ModelSamplerPair219(mask)
+   ?"(NativeCUSCanonicalSampler219 ? NativeCUSLinearRepeat219 : "+resourceName+")":resourceName;
+  locals+="\n    auto "+m[2].str()+" = "+value+";";
  }
  if(textures!=mask||samplers!=mask)throw std::runtime_error("CUS156 material mask differs from entry point");
  auto converted=std::regex_replace(signature,resource,"");
  const auto arguments=converted.find(" RECOIL_SAMPLE_ID_ARGUMENT");
  if(arguments==std::string::npos)throw std::runtime_error("CUS156 sample arguments changed");
  converted.insert(arguments,", constant NativeCUSMaterial156& resources156 [[buffer(8)]]");
- std::string declaration="\nstruct NativeCUSMaterial156 {\n";
+ std::string declaration;
+ if(ModelSamplerPair219(mask))declaration+="\nconstant bool NativeCUSCanonicalSampler219 [[function_constant("+std::to_string(ModelSamplerConstant219)+")]];\n";
+ declaration+="\nstruct NativeCUSMaterial156 {\n";
  for(size_t i=0;i<12;++i)declaration+="    "+std::string(ModelMaterialType156(i))+" t"+std::to_string(i)+" [[id("+std::to_string(i)+")]];\n";
  for(size_t i=0;i<12;++i)declaration+="    sampler s"+std::to_string(i)+" [[id("+std::to_string(i+12)+")]];\n";
  declaration+="};\n";

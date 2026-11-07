@@ -37,6 +37,8 @@ public:
 	uint32_t DrawCount(NativeWorldParticleStage stage) const;
 	std::size_t DrawCount() const;
 	std::uint64_t SequenceAt(std::size_t index) const;
+	// Pure proof for the scheduler's AlphaAboveWater -> NanoAboveWater suffix.
+	bool CanFollowSSAO218(MTL4RenderPassDescriptor* __unsafe_unretained scene,std::uint64_t frame,std::uint64_t submission) const;
 	void EncodeDraw(std::size_t index,id<MTL4RenderCommandEncoder> encoder,id<MTLDepthStencilState> inheritedAlphaDepth=nil) const;
 private:
 	PreparedWorldParticles();

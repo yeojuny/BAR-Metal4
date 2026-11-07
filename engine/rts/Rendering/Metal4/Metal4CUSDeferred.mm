@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4CUSDeferred.h"
+#include "Metal4MRTWriteReuse209.h"
 #include "Rendering/Backend/NativeMRTClearLoad145.h"
 #include "System/Log/ILog.h"
 #include "Metal4DeferredStoragePool.inc"
@@ -29,6 +30,7 @@ struct PreparedCUSDeferred::Impl {
  unsigned discardPrior145=0;
  std::unique_ptr<MRT174Observation> observation174;
 	bool encoded=false,completed=false,retainsReadOnlyContents=false;
+ bool reusesWritingStorage209=false;
 };
 
 namespace {
@@ -63,10 +65,37 @@ bool CanRetainReadOnlyMRT(const Prepared& p)
 	return true;
 }
 template<class Prepared>
-void BindReadOnlyMRTContents(Prepared& p)
+bool CanReuseWritingMRT209(const Prepared& p,const MRTWriteReuse209& permission)
 {
-	// Storage is immutable in this phase. Logical F remains a distinct producer
-	// and metadata version; U is neither overwritten nor marked complete here.
+ const auto* unit=permission.Unit();
+ if(!unit||!unit->depth.backing||!p.source->feature||p.source->role!=NativeGeometryTextureRole::Models||
+  p.source->clearBefore||p.source->clearOnly||p.source->combinedColor.Changed()||p.discardPrior145||
+  !p.other.sourceOrder||p.other.emptySourceCallbacksHaveNoCommands||p.other.drawSequences.empty()||
+  p.sourceOrder.empty()||p.other.beforeLua||p.other.afterLua||p.other.initialAttachmentClear182||
+  !p.source->depth.previous||!SameMRTSharedOwner(p.source->depth.previous->backing,unit->depth.backing))return false;
+ const auto& prior=p.priorDepth;const auto& m=p.source->depth.backing->Metadata();
+ if(!prior.texture||!prior.storageOwner||!prior.producer||prior.role!=ShieldDepthRole::ModelsOnly||
+  prior.sourceDrawFrame!=p.source->sourceDrawFrame||prior.producerIdentity!=prior.producer->identity||
+  prior.producer->role!=ShieldDepthRole::ModelsOnly||prior.producer->sourceDrawFrame!=p.source->sourceDrawFrame||
+  prior.producer->submissionIdentity!=p.submission||!prior.producer->allocationVerified||
+  prior.producer->operation==ShieldDepthOperation::AllocationOnly||prior.producer->encoded||prior.producer->completed||
+  prior.view!=m.view||prior.projection!=m.projection||prior.viewport!=m.viewport)return false;
+ for(unsigned n=0;n<5;++n){
+  const auto& color=p.priorColors[n];const auto& view=color.metadata.view;
+  if(!p.source->colors[n].previous||!SameMRTSharedOwner(p.source->colors[n].previous->backing,unit->colors[n].backing)||
+   !color.texture||!SameMRTSharedOwner(color.storageOwner,prior.storageOwner)||
+   !SameMRTSharedOwner(color.producer,prior.producer)||color.metadata.role!=NativeGeometryTextureRole::Models||
+   color.metadata.attachment!=n||view.width!=m.width||view.height!=m.height||view.view!=m.view||
+   view.projection!=m.projection||view.viewport!=m.viewport)return false;
+ }
+ return true;
+}
+template<class Prepared>
+void BindPriorMRTContents(Prepared& p)
+{
+	// Physical storage is borrowed only under the caller's readonly164 or
+	// sealed zero-reader209 proof. Logical F keeps its distinct producer and
+	// metadata; no U lifecycle state is advanced by this binding operation.
 	for(unsigned n=0;n<5;++n){
 		p.colors[n]=p.priorColors[n];p.colors[n].producer=p.producer;
 		p.colors[n].metadata=p.source->colors[n].backing->Metadata();
@@ -77,7 +106,7 @@ void BindReadOnlyMRTContents(Prepared& p)
 	p.depth.view=m.view;p.depth.projection=m.projection;p.depth.viewport=m.viewport;
 	p.producer->allocationVerified=true;
 }
-void RetainReadOnlyMRTStorage(RuntimeLease& lease,const std::shared_ptr<const void>& owner)
+void RetainBorrowedMRTStorage(RuntimeLease& lease,const std::shared_ptr<const void>& owner)
 {
 	// Retaining textures alone does not pin the pool's Storage use_count.
 	// Use its existing opaque owner wrapper; no unproved cast back to Storage.
@@ -137,7 +166,7 @@ ModelPhaseExecution165 PreparedCUSDeferred::InspectExecution165(uint64_t frame,u
 std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSSourceGPU& programs,
 	std::shared_ptr<const NativeCUSDeferredPhase> source,const CUSSourceGPU::TextureProvider& images,
 	CUSDeferredOtherDraws other,uint64_t submission,bool validation,double& milliseconds,
- const NativeWorldAttachmentClear* initialClear)
+ const NativeWorldAttachmentClear* initialClear,MRTWriteReuse209* writeReuse209)
 {
 	Require(source&&submission&&other.observed,"Original model MRT requires actual selected non-CUS source ownership");
 	Require((!other.beforeLua&&!other.afterLua)||bool(other.lifetime),"Original engine MRT callbacks lack their retained geometry owner");
@@ -213,11 +242,13 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
   "MRT discard lost its original first clear in the merged source order");
 	// Decide only after both actual consumers and their source order exist.
 	// Prepared empty engine/CUS consumers have no image dependencies. A writing
-	// phase still obtains its own storage and preserves the original COW path.
+	// phase preserves COW unless the sealed zero-reader permission also holds.
 	p.retainsReadOnlyContents=CanRetainReadOnlyMRT(p);
-	if(p.retainsReadOnlyContents){
-		BindReadOnlyMRTContents(p);
-		RetainReadOnlyMRTStorage(lease,p.depth.storageOwner);
+	p.reusesWritingStorage209=!p.retainsReadOnlyContents&&writeReuse209&&
+  CanReuseWritingMRT209(p,*writeReuse209)&&writeReuse209->Consume(*p.source,submission);
+	if(p.retainsReadOnlyContents||p.reusesWritingStorage209){
+		BindPriorMRTContents(p);
+		RetainBorrowedMRTStorage(lease,p.depth.storageOwner);
 	}else{
 		p.storage=AcquireDeferredStorage(lease,m.width,m.height,p.source->combinedColor.Changed());
 		for(unsigned attachment=0;attachment<5;++attachment){
@@ -263,7 +294,10 @@ void PreparedCUSDeferred::Encode(id<MTL4CommandBuffer> command)
  }
 #endif
 	if(p.retainsReadOnlyContents){EncodeReadOnlyMRT(p,command);return;}
-	if(!p.source->clearBefore && (p.priorColors[0].texture||p.priorCombinedColor.texture||p.priorDepth.texture)){
+	// A writing alias still waits for the real preceding U producer. Only
+	// preservation copies disappear; its full MRT encoder and draws remain.
+	if(p.reusesWritingStorage209)RequirePriorMRTContents(p);
+	if(!p.reusesWritingStorage209&&!p.source->clearBefore && (p.priorColors[0].texture||p.priorCombinedColor.texture||p.priorDepth.texture)){
 		RequirePriorMRTContents(p);
 		auto copy=[command computeCommandEncoder];Require(copy,"Cannot encode original model MRT prior-content load");
   if(p.observation174)p.observation174->copyEncoder=true;

@@ -23,13 +23,14 @@ SPDX-License-Identifier: MIT
                                 v-for="scenario in scenarios"
                                 :key="scenario.title"
                                 :scenario="scenario"
-                                :class="{ selected: selectedScenario.scenarioid === scenario.scenarioid }"
+                                :class="{ selected: selectedScenario?.scenarioid === scenario.scenarioid }"
                                 @click="selectedScenario = scenario"
                             />
                         </TransitionGroup>
+                        <p v-if="!loading && scenarios.length === 0">{{ t("lobby.singleplayer.scenarios.empty") }}</p>
                     </div>
                 </div>
-                <div class="scenario-preview flex-col gap-md">
+                <div v-if="selectedScenario" class="scenario-preview flex-col gap-md">
                     <h4>{{ selectedScenario.title }}</h4>
                     <div class="scroll-container flex-grow">
                         <Markdown :source="selectedScenario.summary" />
@@ -59,7 +60,7 @@ SPDX-License-Identifier: MIT
                         :games="gameVersion ? [gameVersion] : []"
                         :engines="enginesStore.selectedEngineVersion ? [enginesStore.selectedEngineVersion.id] : []"
                         class="fullwidth green"
-                        :disabled="gameStore.status !== GameStatus.CLOSED"
+                        :disabled="loading || !selectedDifficulty || gameStore.status !== GameStatus.CLOSED"
                         @click="launch"
                         >{{ t("lobby.singleplayer.scenarios.launch") }}</DownloadContentButton
                     >
@@ -85,17 +86,17 @@ import { useDexieLiveQueryWithDeps } from "@renderer/composables/useDexieLiveQue
 import Markdown from "@renderer/components/misc/Markdown.vue";
 import DownloadContentButton from "@renderer/components/controls/DownloadContentButton.vue";
 import { GameStatus, gameStore } from "@renderer/store/game.store";
-import { configStore } from "@renderer/store/config.store";
+import { notificationsApi } from "@renderer/api/notifications";
 import { useTypedI18n } from "@renderer/i18n";
 
 const { t } = useTypedI18n();
 
 import { enginesStore } from "@renderer/store/engine.store";
 
-const gameVersion = gameStore?.selectedGameVersion?.gameVersion;
-const loadedScenarios = gameVersion ? await window.game.getScenarios(gameVersion) : [];
-const scenarios = ref<Scenario[]>(loadedScenarios);
-const selectedScenario = ref<Scenario>(scenarios.value[0]);
+const gameVersion = computed(() => gameStore.selectedGameVersion?.gameVersion);
+const scenarios = ref<Scenario[]>([]);
+const selectedScenario = ref<Scenario>();
+const loading = ref(false);
 
 const map = useDexieLiveQueryWithDeps([selectedScenario], async () => {
     let selected = selectedScenario.value;
@@ -116,57 +117,78 @@ const map = useDexieLiveQueryWithDeps([selectedScenario], async () => {
     return map;
 });
 
-const difficulties = computed(() => selectedScenario.value.difficulties);
-const selectedDifficulty = ref(difficulties.value.find((dif) => dif.name === selectedScenario.value.defaultdifficulty));
-
-const factions = computed(() => selectedScenario.value.allowedsides);
-const selectedFaction = ref(factions.value[0]);
+const difficulties = computed(() => selectedScenario.value?.difficulties ?? []);
+const selectedDifficulty = ref<Scenario["difficulties"][number]>();
+const factions = computed(() => selectedScenario.value?.allowedsides ?? []);
+const selectedFaction = ref("Armada");
 
 watch(
-    () => gameStore.selectedGameVersion?.gameVersion,
-    async (selectedVersion) => {
-        const loadedScenarios = selectedVersion ? await window.game.getScenarios(selectedVersion) : [];
-        scenarios.value = loadedScenarios;
-        selectedScenario.value = scenarios.value[0];
-    }
+    gameVersion,
+    async (selectedVersion, _oldVersion, onCleanup) => {
+        let cancelled = false;
+        onCleanup(() => { cancelled = true; });
+        loading.value = true;
+        scenarios.value = [];
+        selectedScenario.value = undefined;
+        try {
+            const loadedScenarios = selectedVersion ? await window.game.getScenarios(selectedVersion) : [];
+            if (cancelled) return;
+            scenarios.value = loadedScenarios;
+            selectedScenario.value = loadedScenarios[0];
+        } catch (error) {
+            if (!cancelled) notificationsApi.alert({ text: error instanceof Error ? error.message : "Could not load scenarios", severity: "error" });
+        } finally {
+            if (!cancelled) loading.value = false;
+        }
+    },
+    { immediate: true }
 );
 
 watch(selectedScenario, (newScenario) => {
-    selectedDifficulty.value = difficulties.value.find((dif) => dif.name === newScenario.defaultdifficulty);
+    selectedDifficulty.value = difficulties.value.find((dif) => dif.name === newScenario?.defaultdifficulty) ?? difficulties.value[0];
     selectedFaction.value = factions.value[0] ?? "Armada";
 });
 
 async function launch() {
+    const scenario = selectedScenario.value;
+    const version = gameVersion.value;
+    const engine = enginesStore.selectedEngineVersion;
+    if (loading.value || !scenario || !version || !engine || !selectedDifficulty.value || gameStore.status !== GameStatus.CLOSED) return;
+
     const scenarioOptions = {
-        ...selectedScenario.value.scenariooptions,
-        version: selectedScenario.value.version,
+        ...scenario.scenariooptions,
+        version: scenario.version,
         difficulty: selectedDifficulty.value,
     };
     const scenarioOptionsStr = btoa(JSON.stringify(scenarioOptions));
 
     let restrictionsStr = "";
     let restrictionCount = 0;
-    for (const [unitId, limit] of Object.entries(selectedScenario.value.unitlimits)) {
+    for (const [unitId, limit] of Object.entries(scenario.unitlimits)) {
         restrictionsStr += `unit${restrictionCount}=${unitId};\nlimit${restrictionCount}=${limit};\n`;
         restrictionCount++;
     }
 
-    const script = selectedScenario.value.startscript
+    const script = scenario.startscript
         .replaceAll("__SCENARIOOPTIONS__", scenarioOptionsStr)
         //TODO replace with online name when implemented
         .replaceAll("__PLAYERNAME__", "Player")
-        .replaceAll("__BARVERSION__", configStore.latestGameVersion)
-        .replaceAll("__MAPNAME__", selectedScenario.value.mapfilename)
+        .replaceAll("__BARVERSION__", version)
+        .replaceAll("__MAPNAME__", scenario.mapfilename)
         .replaceAll("__PLAYERSIDE__", selectedFaction.value)
         .replaceAll("__ENEMYHANDICAP__", selectedDifficulty.value?.enemyhandicap?.toString() ?? "0")
         .replaceAll("__PLAYERHANDICAP__", selectedDifficulty.value?.playerhandicap?.toString() ?? "0")
         .replaceAll("__RESTRICTEDUNITS__", restrictionsStr)
         .replaceAll("__NUMRESTRICTIONS__", restrictionCount.toString());
 
-    if (!enginesStore.selectedEngineVersion) {
-        throw new Error("No engine version selected");
+    try {
+        gameStore.status = GameStatus.LOADING;
+        await window.game.launchScenario(script, version, engine.id);
+        gameStore.status = GameStatus.RUNNING;
+    } catch (error) {
+        gameStore.status = GameStatus.CLOSED;
+        notificationsApi.alert({ text: error instanceof Error ? error.message : "Scenario launch failed", severity: "error" });
     }
-    await window.game.launchScript(script, configStore.latestGameVersion, enginesStore.selectedEngineVersion.id);
 }
 </script>
 

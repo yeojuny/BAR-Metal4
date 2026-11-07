@@ -230,6 +230,11 @@ struct PreparedPostprocessFrame::Impl {
 	__strong id<MTLTexture> screenColor=nil, screenDepth=nil, screenStencil=nil;
 	std::uint32_t screenCommands=0;
 	std::shared_ptr<const MainFrameAttachments> main;
+	// Borrowed identity, never a new owner. Set only for the caller's audited
+	// providers and the validated single-sample main attachment construction.
+	const PreparedScreenFrame* casTailScreen=nullptr;
+	bool EncodeOperation(id<MTL4CommandBuffer> command,std::size_t operationIndex,
+		const PreparedScreenFrame* finalScreenTail=nullptr) const;
 };
 PreparedPostprocessFrame::PreparedPostprocessFrame():impl(std::make_unique<Impl>()){}
 PreparedPostprocessFrame::~PreparedPostprocessFrame()=default;
@@ -260,20 +265,38 @@ void PreparedPostprocessFrame::Encode(id<MTL4CommandBuffer> command,const Prepar
 	}
 	for(const auto& target:screen.DeferredTargets())events.push_back({target.offset,target.sequence,true,target.index});
 	std::stable_sort(events.begin(),events.end(),[](const auto& a,const auto& b){return a.offset!=b.offset?a.offset<b.offset:a.sequence<b.sequence;});
-	for(const auto& event:events){encodeScreen(event.offset);if(event.target)screen.EncodeDeferredTarget(command,event.index);else EncodeOperation(command,event.index);}
+	for(const auto& event:events){
+		encodeScreen(event.offset);
+		if(event.target)screen.EncodeDeferredTarget(command,event.index);
+		else if(impl->EncodeOperation(command,event.index,&event==&events.back()?&screen:nullptr))
+			first=impl->screenCommands;
+	}
 	encodeScreen(impl->screenCommands);
 }
 void PreparedPostprocessFrame::EncodeOperation(id<MTL4CommandBuffer> command,std::size_t operationIndex) const
 {
-	auto found=std::find_if(impl->operations.begin(),impl->operations.end(),[&](const auto& op){return op.sourceIndex==operationIndex;});
-	Require(command!=nil && found!=impl->operations.end(),"Missing actual source-copy/effect operation");const auto& op=*found;
+	impl->EncodeOperation(command,operationIndex);
+}
+bool PreparedPostprocessFrame::Impl::EncodeOperation(id<MTL4CommandBuffer> command,std::size_t operationIndex,
+	const PreparedScreenFrame* finalScreenTail) const
+{
+	auto found=std::find_if(operations.begin(),operations.end(),[&](const auto& op){return op.sourceIndex==operationIndex;});
+	Require(command!=nil && found!=operations.end(),"Missing actual source-copy/effect operation");const auto& op=*found;
 	Require(!*op.encoded,"Source-copy/effect operation encoded more than once");
 	for(const auto& read:op.reads)Require(*read.first||*read.second,"Original DOF read/copy precedes actual producer encode or retirement");
 	for(const auto& image:op.priorScreen)image.requireReadable();
 	// Source snapshots are refreshed at this operation, after preceding root/world writes.
-	if(op.resolveMain)impl->main->EncodeResolve(command,static_cast<MainReadImages>(op.resolveMain));
+	if(op.resolveMain)main->EncodeResolve(command,static_cast<MainReadImages>(op.resolveMain));
 	for(const auto& pair:op.previous)CopyPrevious(command,pair.first,pair.second);
-	if(op.noDraw){*op.encoded=true;for(const auto& flag:op.outputEncoded)*flag=true;return;}
+	if(op.noDraw){*op.encoded=true;for(const auto& flag:op.outputEncoded)*flag=true;return false;}
+	// Only the final sorted event can offer a tail. CAS and encodeScreen use
+	// the same private main C/D/S Load/Store construction and default pass
+	// properties; re-audit this contract if either constructor changes. The
+	// provider permission is tied to this exact screen, not just its count.
+	const bool appendTail=finalScreenTail && finalScreenTail==casTailScreen &&
+		op.stage==NativePostprocessStage::Screen && op.screenOutput && op.offset<screenCommands &&
+		owner->operations[op.sourceIndex].kind==NativePostprocessOperationKind::CAS &&
+		op.outputEncoded.empty() && op.previous.empty() && op.priorScreen.empty() && op.resolveMain==0;
 	auto encoder=[command renderCommandEncoderWithDescriptor:op.pass];Require(encoder!=nil,"Cannot allocate original effect/copy MRT encoder");
 	[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
 	[encoder setRenderPipelineState:op.pipeline];[encoder setViewport:op.viewport];[encoder setScissorRect:op.scissor];
@@ -286,8 +309,20 @@ void PreparedPostprocessFrame::EncodeOperation(id<MTL4CommandBuffer> command,std
  }
 
 	[encoder setArgumentTable:op.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:op.vertexCount];
+	if(appendTail){
+		// CAS has no output versions. Preserve its logical encoded state even
+		// if a later UI readability check fails; completion remains unchanged.
+		*op.encoded=true;
+		// This still waits on earlier encoders, including their vertex work.
+		// Separate read-only inputs leave only ordinary ordered attachment
+		// access between CAS and UI, not a new shader-memory dependency.
+		[encoder barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+		try{finalScreenTail->EncodeRange(encoder,op.offset,screenCommands);}
+		catch(...){[encoder endEncoding];throw;}
+	}
 	[encoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];
-	*op.encoded=true;for(const auto& flag:op.outputEncoded)*flag=true;
+	if(!appendTail){*op.encoded=true;for(const auto& flag:op.outputEncoded)*flag=true;}
+	return appendTail;
 }
 void PreparedPostprocessFrame::MarkExternalEncoded(const std::shared_ptr<const NativePostprocessVersion>& version) const
 {
@@ -552,7 +587,7 @@ void PostprocessGPU::RequireReadable(const std::shared_ptr<const NativePostproce
 		(*found->second.completed||*found->second.encoded),"Original postprocess image read precedes its actual producer encoding/retirement");
 }
 std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativePostprocessFrame> frame,
-	id<MTLTexture> color,id<MTLTexture> depth,const PreparedScreenFrame& originalScreen,bool validation,double& compileMs,id<MTLTexture> actualStencil,std::shared_ptr<const MainFrameAttachments> main)
+	id<MTLTexture> color,id<MTLTexture> depth,const PreparedScreenFrame& originalScreen,bool validation,double& compileMs,id<MTLTexture> actualStencil,std::shared_ptr<const MainFrameAttachments> main,bool independentRootShaderResources)
 {
 	Require(frame&&color&&depth,"DOF requires its actual world color/depth");
 	if(main)Require(main->Color()==color && main->Depth()==depth && main->Stencil()==actualStencil &&
@@ -575,6 +610,11 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			"Root screen attachment extent/sample count differs from actual scene color");
 	if(actualStencil)Require(actualStencil.pixelFormat==MTLPixelFormatStencil8,"Unsupported actual root stencil attachment format");
 	auto prepared=std::make_unique<PreparedPostprocessFrame>();prepared->impl->main=main;prepared->impl->owner=frame;prepared->impl->screenColor=color;prepared->impl->screenDepth=depth;prepared->impl->screenStencil=actualStencil;prepared->impl->screenCommands=commandCount;lease.AddAllocation(color);lease.AddAllocation(depth);if(actualStencil)lease.AddAllocation(actualStencil);
+	// The validated main owner fixes exact C/D/S identities and their private
+	// descriptor construction. Multisample and generic/custom-provider paths
+	// keep their existing separate encoders. This adds no resource traversal.
+	if(independentRootShaderResources && main && main->Samples()==1)
+		prepared->impl->casTailScreen=&originalScreen;
 	impl->argumentPool.BeginBatch(lease.Device());
 	impl->uniformPool.BeginBatch(lease.Device());
 	size_t omittedCopies157=0,retainedCopies157=0;uint64_t omittedBytes157=0;

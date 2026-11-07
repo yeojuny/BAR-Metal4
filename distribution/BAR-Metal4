@@ -52,5 +52,6 @@ if [ ! -f "$BAR_ASSETS_PATH/.content-2026.10.23-ready" ] || [ ! -f "$BAR_ASSETS_
   /usr/bin/ditto "$content" "$BAR_ASSETS_PATH"
   : > "$BAR_ASSETS_PATH/.content-2026.10.23-ready"
 fi
+/bin/sh "$resources/install-release-content-delta.sh" "$resources/pinned-content-delta" "$BAR_ASSETS_PATH"
 cd "$resources/BAR.app/Contents/MacOS"
 exec ./BAR --config "$resources/lobby-config.json" "$@"
