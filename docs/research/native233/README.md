@@ -1,5 +1,7 @@
 # Native Metal 4 development after v1.11.2
 
+[Independent diagnostic packet](diagnostic/README.md) · [Review prompt](diagnostic/REVIEW-PROMPT.md)
+
 ## Fullscreen and lobby handoff
 
 The engine reports foreground readiness once its game window is visible, key, and active. The lobby hides on that signal, before the first presented simulation frame, and restores on exit. Reopening the lobby during a running game no longer steals foreground focus. The engine hides the macOS menu bar and Dock in fullscreen and restores the previous presentation settings when it leaves fullscreen.

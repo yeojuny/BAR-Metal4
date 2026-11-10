@@ -1,0 +1,122 @@
+[
+  {
+    "run": "A1",
+    "FPS": 165.94170747387471,
+    "draws": 6638,
+    "seconds": 40.001998901,
+    "frameStats": {
+      "samples": 6637,
+      "coveredSeconds": 39.994,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 113.94557823129253,
+      "maximumMs": 13.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "rawSHA256": "898787d9ef4e14ef228782934e1a7769df91088ce9991a582a2952a828361b73",
+      "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+      "observerOverhead": "Identical observer in both arms; not independently quantified"
+    },
+    "warmupObservedSeconds": 9.936695999999998,
+    "measurementForegroundSamples": 158
+  },
+  {
+    "run": "B1",
+    "FPS": 167.35825740880156,
+    "draws": 6695,
+    "seconds": 40.004001617,
+    "frameStats": {
+      "samples": 6694,
+      "coveredSeconds": 39.997,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 113.36717428087987,
+      "maximumMs": 13.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "rawSHA256": "112a1b4abb9e02995f3af621481e8c06d05124f5d8ca2108614a24d37a2e5a4b",
+      "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+      "observerOverhead": "Identical observer in both arms; not independently quantified"
+    },
+    "warmupObservedSeconds": 9.956755000000001,
+    "measurementForegroundSamples": 158
+  },
+  {
+    "run": "B2",
+    "FPS": 166.94165750384684,
+    "draws": 6678,
+    "seconds": 40.001998901,
+    "frameStats": {
+      "samples": 6677,
+      "coveredSeconds": 39.995,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 111.11111111111111,
+      "maximumMs": 14.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "rawSHA256": "724dc4e04ff1948fd5f0b755c24e7a9b1f0f13ee26891a1d48de0c0c209f7ce8",
+      "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+      "observerOverhead": "Identical observer in both arms; not independently quantified"
+    },
+    "warmupObservedSeconds": 9.930955,
+    "measurementForegroundSamples": 158
+  },
+  {
+    "run": "A2",
+    "FPS": 166.22915344734105,
+    "draws": 6649,
+    "seconds": 39.999000549,
+    "frameStats": {
+      "samples": 6648,
+      "coveredSeconds": 39.991,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 111.85308848080135,
+      "maximumMs": 13.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "rawSHA256": "1bfe5cced8f17d8e95b34e5690847c77d1ff0ebfef82a012c09b647a156da2ae",
+      "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+      "observerOverhead": "Identical observer in both arms; not independently quantified"
+    },
+    "warmupObservedSeconds": 9.950966000000001,
+    "measurementForegroundSamples": 158
+  },
+  {
+    "run": "A3",
+    "FPS": 165.675,
+    "draws": 6627,
+    "seconds": 40.0,
+    "frameStats": {
+      "samples": 6626,
+      "coveredSeconds": 39.993,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 109.8360655737705,
+      "maximumMs": 13.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "rawSHA256": "ffaac085fc0c22e38b8795a2660ec9227f15ec8a381cf47af3c125bcbc539cf3",
+      "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+      "observerOverhead": "Identical observer in both arms; not independently quantified"
+    },
+    "warmupObservedSeconds": 9.964262000000002,
+    "measurementForegroundSamples": 154
+  },
+  {
+    "run": "B3",
+    "FPS": 166.80416781480815,
+    "draws": 6672,
+    "seconds": 39.999000549,
+    "frameStats": {
+      "samples": 6671,
+      "coveredSeconds": 39.993,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 112.22780569514238,
+      "maximumMs": 14.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "rawSHA256": "a1b26cb1ab15e54aed5adcbfbe92e2d6a65c5008e63babb01e3381f028277cf6",
+      "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+      "observerOverhead": "Identical observer in both arms; not independently quantified"
+    },
+    "warmupObservedSeconds": 9.967941,
+    "measurementForegroundSamples": 155
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "scope": "Exact guarded quotient algorithm only; original raster geometry and fragments otherwise unchanged",
+  "arms": {
+    "A": "accepted f8 and ten working flags",
+    "B": "same baseline plus BAR_NATIVE_RANGE_DIVISION233=1"
+  },
+  "render": [
+    1512,
+    950
+  ],
+  "AA": 0,
+  "VSync": 0,
+  "VSyncGame": 0,
+  "warmupSimulationSeconds": 10,
+  "measurement": [
+    300,
+    1500
+  ],
+  "acceptedWallSeconds": [
+    39.9,
+    40.1
+  ],
+  "priorSamplesPooled": false,
+  "audioGate": "AUDIO_GATE_SKIPPED_BY_USER",
+  "order": "AB/BA/AB",
+  "diagnosticsDuringTiming": false,
+  "commonFlags": {
+    "BAR_NATIVE_CPU_READ_PACKET220": "2",
+    "BAR_NATIVE_RESIDENCY_RELEASE220": "1",
+    "BAR_NATIVE_TERRAIN_UNIFORM_RELEASE220": "1",
+    "BAR_NATIVE_SCREEN_TABLE_H5": "1",
+    "BAR_NATIVE_WORLD_PARTICLE_UPLOAD220": "1",
+    "BAR_NATIVE_COMBINED_OVERLAP220": "1",
+    "BAR_NATIVE_FORWARD_BOUNDARY220": "1",
+    "BAR_NATIVE_RESIDENCY_DIFF220": "1",
+    "BAR_NATIVE_TERRAIN_PROGRAM_VALIDATION220": "1",
+    "BAR_NATIVE_TERRAIN_DEFINITION232": "1"
+  }
+}
