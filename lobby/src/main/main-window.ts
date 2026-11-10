@@ -244,15 +244,28 @@ export function createWindow() {
     /////////////////////////////////////////////
     // Subscribe to game events
     /////////////////////////////////////////////
-    gameAPI.onGameLaunched.add(() => {
+    const nativeForegroundBinding = gameAPI.onNativeGameForeground.add(() => {
+        if (mainWindow.isDestroyed()) return;
+        log.info("Native game gained the foreground - hiding main window");
+        mainWindow.hide();
+    });
+
+    const gameLaunchedBinding = gameAPI.onGameLaunched.add(() => {
+        if (gameAPI.isExperimentalSceneRunning() || mainWindow.isDestroyed()) return;
         log.info("Game launched - hiding main window");
         mainWindow.hide();
     });
 
-    gameAPI.onGameClosed.add(() => {
+    const gameClosedBinding = gameAPI.onGameClosed.add(() => {
+        if (mainWindow.isDestroyed()) return;
         log.info("Game closed - showing main window");
         mainWindow.show();
         mainWindow.focus();
+    });
+    mainWindow.once("closed", () => {
+        nativeForegroundBinding.destroy();
+        gameLaunchedBinding.destroy();
+        gameClosedBinding.destroy();
     });
 
     // Purge old log files

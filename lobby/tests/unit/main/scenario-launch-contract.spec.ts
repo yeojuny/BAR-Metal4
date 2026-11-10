@@ -26,10 +26,6 @@ vi.mock("@main/game/native-runtime", () => ({ requireNativeVersion: vi.fn(), nat
 vi.mock("@main/game/native-version", () => ({ assertNativeSyncVersion: vi.fn().mockResolvedValue(undefined) }));
 vi.mock("@main/game/native-launch-display", () => ({ getNativeLaunchDisplayEnv: () => ({}) }));
 vi.mock("child_process", () => ({ spawn: vi.fn() }));
-vi.mock("@main/game/experimental-scene", async (importOriginal) => {
-    const actual = await importOriginal<typeof import("@main/game/experimental-scene")>();
-    return { ...actual, waitForExperimentalScene: vi.fn(async (_child, ready: () => void) => ready()) };
-});
 
 import { spawn } from "child_process";
 import { GameAPI } from "@main/game/game";
@@ -39,7 +35,10 @@ import { applyDefaultSpringsettings } from "@main/game/springsettings";
 const engineVersion = "native-installed-engine";
 const gameVersion = "Beyond All Reason test-31691-a617033-local26";
 const script = `[Game]\n{\n IsHost = 1;\n HostIP = 127.0.0.1;\n HostPort = 0;\n GameType = ${gameVersion};\n MapName = Pinewood_Derby_V1;\n}\n`;
-let child: EventEmitter & { pid: number; stdout: PassThrough; stderr: PassThrough };
+const foreground = "[NativeWindowPresentation] foreground=1";
+const frame = "[Metal4Scene] First presented simulation frame 0: map\n";
+const createChild = () => Object.assign(new EventEmitter(), { pid: 123, stdout: new PassThrough(), stderr: new PassThrough() });
+let child: ReturnType<typeof createChild>;
 
 beforeEach(() => {
     vi.clearAllMocks();
@@ -49,8 +48,11 @@ beforeEach(() => {
         dataDirectory: "/unused/native/data",
         manifest: { engine: { id: engineVersion, capabilities: { gameplay: false, luaMenu: false }, experimentalOfflineScene: true } },
     } as NativeRuntime;
-    child = Object.assign(new EventEmitter(), { pid: 123, stdout: new PassThrough(), stderr: new PassThrough() });
-    vi.mocked(spawn).mockReturnValue(child as unknown as ReturnType<typeof spawn>);
+    child = createChild();
+    vi.mocked(spawn).mockImplementation(() => {
+        queueMicrotask(() => child.stdout.write(frame));
+        return child as unknown as ReturnType<typeof spawn>;
+    });
     vi.spyOn(fs.promises, "writeFile").mockResolvedValue(undefined);
     vi.spyOn(fs.promises, "mkdir").mockResolvedValue(undefined);
 });
@@ -65,6 +67,84 @@ function settings(value = script) {
 }
 
 describe("explicit offline scenario launch contract", () => {
+    it("dispatches foreground only once before first-frame readiness and restores on close", async () => {
+        const api = new GameAPI();
+        const events: string[] = [];
+        api.onNativeGameForeground.add(() => events.push("foreground"));
+        api.onGameLaunched.add(() => events.push("ready"));
+        api.onGameClosed.add(() => events.push("closed"));
+        vi.mocked(spawn).mockReturnValue(child as unknown as ReturnType<typeof spawn>);
+
+        const launch = api.launchScenario(settings());
+        await vi.waitFor(() => expect(spawn).toHaveBeenCalledOnce());
+        child.stderr.write(foreground + "\n");
+        child.stdout.write(`log: ${foreground}\n[NativeWindowPresentation] foreground=10\n`);
+        child.stdout.write("x".repeat(20000) + foreground);
+        child.stdout.write("\n[NativeWindowPresentation] fore");
+        expect(events).toEqual([]);
+        child.stdout.write("ground=1\r\n" + foreground + "\n");
+        expect(events).toEqual(["foreground"]);
+        child.stdout.write(frame);
+        await launch;
+        child.emit("close", 0);
+        expect(events).toEqual(["foreground", "ready", "closed"]);
+    });
+
+    it("accepts foreground after the first frame without using the frame as a foreground signal", async () => {
+        const api = new GameAPI();
+        const onForeground = vi.fn();
+        api.onNativeGameForeground.add(onForeground);
+        await api.launchScenario(settings());
+        expect(onForeground).not.toHaveBeenCalled();
+        child.stdout.write(foreground + "\n");
+        expect(onForeground).toHaveBeenCalledOnce();
+    });
+
+    it.each([false, true])("closes and rejects startup when the engine exits early (foreground=%s)", async (enteredForeground) => {
+        const api = new GameAPI();
+        const onClosed = vi.fn();
+        const onReady = vi.fn();
+        const onForeground = vi.fn();
+        api.onGameClosed.add(onClosed);
+        api.onGameLaunched.add(onReady);
+        api.onNativeGameForeground.add(onForeground);
+        vi.mocked(spawn).mockReturnValue(child as unknown as ReturnType<typeof spawn>);
+
+        const rejected = expect(api.launchScenario(settings())).rejects.toThrow("code 21");
+        await vi.waitFor(() => expect(spawn).toHaveBeenCalledOnce());
+        if (enteredForeground) child.stdout.write(foreground + "\n");
+        child.emit("close", 21, null);
+        await rejected;
+        child.stdout.write(foreground + "\n" + frame);
+        expect(onReady).not.toHaveBeenCalled();
+        expect(onForeground).toHaveBeenCalledTimes(Number(enteredForeground));
+        expect(onClosed).toHaveBeenCalledExactlyOnceWith(21);
+        expect(api.isExperimentalSceneRunning()).toBe(false);
+    });
+
+    it("cancels launch and ignores pending foreground output during shutdown", async () => {
+        const api = new GameAPI();
+        const onForeground = vi.fn();
+        const onClosed = vi.fn();
+        api.onNativeGameForeground.add(onForeground);
+        api.onGameClosed.add(onClosed);
+        const kill = vi.fn();
+        Object.assign(child, { kill });
+        vi.mocked(spawn).mockReturnValue(child as unknown as ReturnType<typeof spawn>);
+
+        const rejected = expect(api.launchScenario(settings())).rejects.toThrow("startup was cancelled");
+        await vi.waitFor(() => expect(spawn).toHaveBeenCalledOnce());
+        const stopping = api.stopExperimentalScene();
+        child.stdout.write(foreground + "\n" + frame);
+        expect(onForeground).not.toHaveBeenCalled();
+        expect(kill).toHaveBeenCalledWith("SIGTERM");
+        expect(api.isExperimentalSceneRunning()).toBe(true);
+        child.emit("close", null, "SIGTERM");
+        await Promise.all([stopping, rejected]);
+        expect(onClosed).toHaveBeenCalledOnce();
+        expect(api.isExperimentalSceneRunning()).toBe(false);
+    });
+
     it("uses the existing opt-in offline path without claiming gameplay readiness", async () => {
         const api = new GameAPI();
         await api.launchScenario(settings());
@@ -121,6 +201,7 @@ describe("explicit offline scenario launch contract", () => {
         const files = fs.readdirSync(root).filter((name) => /^scenario.*\.lua$/.test(name));
         expect(files).toHaveLength(24);
         for (const file of files) {
+            child = createChild();
             const scenario = parseLuaTable(fs.readFileSync(path.join(root, file)));
             const scenarioScript = scenario.startscript
                 .slice(1, -1)
@@ -135,8 +216,6 @@ describe("explicit offline scenario launch contract", () => {
                 throw new Error(`${file}: ${String(error)}`);
             });
             child.emit("close", 0);
-            child.stdout.removeAllListeners();
-            child.stderr.removeAllListeners();
         }
         expect(spawn).toHaveBeenCalledTimes(24);
     });

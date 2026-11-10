@@ -1,0 +1,54 @@
+{
+  "status": "PASS_PAIRED_LOBBY_ENGINE_LOCAL_START_EXIT_RELAUNCH_AND_EARLY_FAILURE",
+  "verifiedUTC": "2026-11-07T23:02:46.785090+00:00",
+  "menuEvidence": "WindowServer layer samples on the main display",
+  "runs": [
+    {
+      "case": "defaults-first",
+      "status": "PASS_LAUNCH_PRESENTATION_AND_CLEAN_EXIT",
+      "observedFullscreen": 268,
+      "observedFullscreenWithoutLobby": 268,
+      "menuLayerWindowsOnScreenWhileGame": 0,
+      "observedLobbyRestored": 4,
+      "simulationFrame": 300,
+      "order": [
+        "engine-foreground",
+        "hide-lobby",
+        "first-frame",
+        "restore-lobby"
+      ]
+    },
+    {
+      "case": "defaults-relaunch",
+      "status": "PASS_LAUNCH_PRESENTATION_AND_CLEAN_EXIT",
+      "observedFullscreen": 107,
+      "observedFullscreenWithoutLobby": 107,
+      "menuLayerWindowsOnScreenWhileGame": 0,
+      "observedLobbyRestored": 3,
+      "simulationFrame": 300,
+      "order": [
+        "engine-foreground",
+        "hide-lobby",
+        "first-frame",
+        "restore-lobby"
+      ]
+    },
+    {
+      "case": "intentional-early-exit",
+      "status": "PASS_OWNED_EARLY_EXIT_AND_LOBBY_RESTORE",
+      "observedFullscreen": 1,
+      "observedFullscreenWithoutLobby": 1,
+      "menuLayerWindowsOnScreenWhileGame": 0,
+      "observedLobbyRestored": 3,
+      "simulationFrame": null,
+      "order": [
+        "engine-foreground",
+        "hide-lobby",
+        "restore-lobby"
+      ]
+    }
+  ],
+  "sampleIntervalSeconds": 0.2,
+  "contentDeltaInstalledAndReused": true,
+  "cleanThenSameStateRelaunch": true
+}

@@ -17,6 +17,7 @@ export function authorizeExperimentalOfflineScene(runtime: NativeRuntime, offlin
 // Metal4SceneBridge.cpp logs this only after the first DrawWorld submission
 // retired and presented. Early Game::Load messages do not establish readiness.
 const SCENE_PRESENTED = /\[Metal4Scene\] First presented simulation frame \d+:/;
+const WINDOW_FOREGROUND = "[NativeWindowPresentation] foreground=1";
 export const SCENE_STARTUP_TIMEOUT_MS = 90000;
 interface ChildStopState {
     closed: boolean;
@@ -79,9 +80,14 @@ export function stopExperimentalSceneProcess(child: ChildProcess, graceMs = 5000
     return owned.attempt;
 }
 
-export function waitForExperimentalScene(child: ChildProcess, onReady: () => void, timeoutMs = SCENE_STARTUP_TIMEOUT_MS): Promise<void> {
+export function waitForExperimentalScene(
+    child: ChildProcess,
+    onReady: () => void,
+    { onForeground, timeoutMs = SCENE_STARTUP_TIMEOUT_MS }: { onForeground?: () => void; timeoutMs?: number } = {}
+): Promise<void> {
     return new Promise((resolve, reject) => {
         let settled = false;
+        let foregroundSeen = false;
         let pendingLine = "";
         let unregisterStartupCancellation = () => {};
         const timer = setTimeout(() => {
@@ -91,12 +97,38 @@ export function waitForExperimentalScene(child: ChildProcess, onReady: () => voi
         timer.unref();
 
         const fail = (error: Error) => {
+            child.stdout?.off("data", observe);
             if (settled) return;
             settled = true;
             clearTimeout(timer);
             unregisterStartupCancellation();
             reject(error);
         };
+
+        function observe(chunk: Buffer) {
+            // Require a complete line and never interpret the tail of an oversized
+            // line as a standalone foreground marker.
+            const lines = (pendingLine + chunk.toString()).split(/\r?\n/);
+            const tail = lines.pop()!;
+            pendingLine = tail.length > 16384 ? "\0" + tail.slice(-16384) : tail;
+            for (const line of lines) {
+                if (onForeground && !foregroundSeen && line === WINDOW_FOREGROUND && child.exitCode == null && child.signalCode == null && !stoppingChildren.has(child)) {
+                    foregroundSeen = true;
+                    onForeground();
+                }
+                if (!settled && SCENE_PRESENTED.test(line)) {
+                    settled = true;
+                    clearTimeout(timer);
+                    unregisterStartupCancellation();
+                    onReady();
+                    resolve();
+                }
+                if (settled && (foregroundSeen || !onForeground)) {
+                    child.stdout?.off("data", observe);
+                    break;
+                }
+            }
+        }
 
         child.once("error", fail);
         child.once("close", (code, signal) => {
@@ -109,20 +141,6 @@ export function waitForExperimentalScene(child: ChildProcess, onReady: () => voi
             child.kill("SIGTERM");
             return;
         }
-        child.stdout.on("data", (chunk: Buffer) => {
-            if (settled) return;
-            // A readiness line may cross pipe chunks. Keep memory bounded even
-            // for malformed output and wait for a complete line before accepting it.
-            pendingLine += chunk.toString();
-            const lines = pendingLine.split(/\r?\n/);
-            pendingLine = lines.pop()!.slice(-16384);
-            if (lines.some((line) => SCENE_PRESENTED.test(line))) {
-                settled = true;
-                clearTimeout(timer);
-                unregisterStartupCancellation();
-                onReady();
-                resolve();
-            }
-        });
+        child.stdout.on("data", observe);
     });
 }

@@ -6,6 +6,7 @@
 #include <SDL3/SDL.h>
 #include <algorithm>
 #include <charconv>
+#include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <exception>
@@ -39,6 +40,80 @@ bool ScreenMatchesBounds(NSScreen* screen, const SDL_Rect& bounds)
 int ScaleInset(int inset, int extent, int originalExtent)
 {
 	return int((int64_t(inset) * extent + originalExtent / 2) / originalExtent);
+}
+
+constexpr char windowPresentationProperty[] = "recoil.macos.window-presentation";
+
+class WindowPresentation {
+public:
+	explicit WindowPresentation(NSWindow* window): window(window)
+	{
+		auto* center = NSNotificationCenter.defaultCenter;
+		keyObserver = [center addObserverForName:NSWindowDidBecomeKeyNotification object:window queue:nil
+			usingBlock:^(NSNotification*) { ForegroundChanged(); }];
+		activeObserver = [center addObserverForName:NSApplicationDidBecomeActiveNotification object:NSApp queue:nil
+			usingBlock:^(NSNotification*) { ForegroundChanged(); }];
+	}
+
+	~WindowPresentation()
+	{
+		auto* center = NSNotificationCenter.defaultCenter;
+		[center removeObserver:keyObserver];
+		[center removeObserver:activeObserver];
+		if (fullscreen)
+			NSApp.presentationOptions = previous;
+	}
+
+	void SetFullscreen(bool enabled, NSApplicationPresentationOptions beforeTransition)
+	{
+		if (enabled == fullscreen)
+			return;
+		fullscreen = enabled;
+		if (fullscreen) {
+			previous = beforeTransition;
+			HideSystemChrome();
+		} else {
+			NSApp.presentationOptions = previous;
+		}
+	}
+
+	void ForegroundChanged()
+	{
+		NSWindow* current = window;
+		if (!NSApp.active || !current.visible || !current.keyWindow)
+			return;
+		if (fullscreen)
+			HideSystemChrome();
+		if (!announced) {
+			announced = true;
+			std::fputs("[NativeWindowPresentation] foreground=1\n", stdout);
+			std::fflush(stdout);
+		}
+	}
+
+private:
+	void HideSystemChrome()
+	{
+		// AppKit applies these options while the game is active.
+		const auto autoHide = NSApplicationPresentationAutoHideDock | NSApplicationPresentationAutoHideMenuBar |
+			NSApplicationPresentationAutoHideToolbar;
+		const auto options = (NSApp.presentationOptions & ~autoHide) |
+			NSApplicationPresentationHideDock | NSApplicationPresentationHideMenuBar;
+		if (NSApp.presentationOptions != options)
+			NSApp.presentationOptions = options;
+	}
+
+	__weak NSWindow* window;
+	id keyObserver;
+	id activeObserver;
+	NSApplicationPresentationOptions previous = NSApplicationPresentationDefault;
+	bool fullscreen = false;
+	bool announced = false;
+};
+
+void SDLCALL DestroyWindowPresentation(void*, void* value)
+{
+	delete static_cast<WindowPresentation*>(value);
 }
 
 } // namespace
@@ -188,6 +263,8 @@ std::array<int, 4> WindowBorders(SDL_Window* window)
 static void ApplyWindowGeometryImpl(SDL_Window* window, bool fullscreen, bool borderless,
 	int x, int y, int width, int height, int minimumWidth, int minimumHeight)
 {
+	const bool wasFullscreen = (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN) != 0;
+	const auto previousPresentation = NSApp.presentationOptions;
 	const auto display = QueryDisplayGeometry(window);
 	SDL_DisplayMode mode{};
 	if (fullscreen) {
@@ -199,7 +276,7 @@ static void ApplyWindowGeometryImpl(SDL_Window* window, bool fullscreen, bool bo
 	// requested windowed frame against the original all-display desktop union.
 	// Complete departure before changing the windowed frame/style. Otherwise
 	// Cocoa's asynchronous transition can overwrite the requested small size.
-	if (!fullscreen && (SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN)) {
+	if (!fullscreen && wasFullscreen) {
 		Require(SDL_SetWindowFullscreen(window, false) && SDL_SyncWindow(window), "Cannot leave native fullscreen");
 	}
 	Require(SDL_RestoreWindow(window), "Cannot restore native window");
@@ -215,6 +292,21 @@ static void ApplyWindowGeometryImpl(SDL_Window* window, bool fullscreen, bool bo
 	Require(SDL_SetWindowSize(window, width, height) && SDL_SetWindowPosition(window, x, y), "Cannot set native logical window geometry");
 	Require(SDL_SetWindowFullscreenMode(window, fullscreen ? &mode : nullptr), "Cannot set native fullscreen display mode");
 	Require(SDL_SetWindowFullscreen(window, fullscreen) && SDL_SyncWindow(window), "Cannot complete native fullscreen state");
+	const auto properties = SDL_GetWindowProperties(window);
+	auto* presentation = static_cast<WindowPresentation*>(SDL_GetPointerProperty(properties, windowPresentationProperty, nullptr));
+	const bool firstPresentation = presentation == nullptr;
+	if (firstPresentation) {
+		auto* native = (__bridge NSWindow*)SDL_GetPointerProperty(properties, SDL_PROP_WINDOW_COCOA_WINDOW_POINTER, nullptr);
+		Require(native != nil, "Cannot query the native game window");
+		presentation = new WindowPresentation(native);
+		// The SDL property owns this state, including cleanup on a failed set.
+		Require(SDL_SetPointerPropertyWithCleanup(properties, windowPresentationProperty,
+			presentation, DestroyWindowPresentation, nullptr), "Cannot track the native game window");
+	}
+	presentation->SetFullscreen(fullscreen, previousPresentation);
+	if (firstPresentation || (fullscreen && !wasFullscreen))
+		SDL_RaiseWindow(window);
+	presentation->ForegroundChanged();
 }
 
 void ApplyWindowGeometry(SDL_Window* window, bool fullscreen, bool borderless,
