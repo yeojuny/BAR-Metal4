@@ -1,0 +1,10 @@
+{
+  "status": "PARTIAL_FIVE_CAPTURES_OBSERVER_LOADED_BUT_ACTIVATION_UNOBSERVED",
+  "conclusion": "Both planned games and five-presentation capture requests completed normally. Native actual trace contains five CAS draws and unique original setLabel event prefixes; its first CAS input-to-snapshot-writer-to-main attachment is linked. MVK observer mapped and LOAD/manager-hook installation receipts exist, but actual capture-open/close, candidate/resource and presentation receipts are absent; trace searches found no expected observer/GPU-frame markers. The new MVK resource bridge is therefore unverified and the primary MVK CAS input->writer question remains unresolved.",
+  "limits": [
+    "Actual workload/capture observer activation must be separated from dylib mapped/constructor/hook-install success.",
+    "No frame matching or live CPU callback can substitute for actual GPU CAS texture identity/writer history.",
+    "No performance/FPS/timing savings inference from these capture runs or debugger replay.",
+    "All five candidates, unmatched/rejected metadata pairs, original source/driver products, historical failures and prior partials remain preserved."
+  ]
+}

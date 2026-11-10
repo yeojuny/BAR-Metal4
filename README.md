@@ -14,3 +14,7 @@ open "/Applications/BAR Metal4.app"
 Already installed? Run `brew update` and `brew upgrade --cask yeojuny/bar-metal4/bar-metal4`.
 
 [Release and downloads](https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.2) · [Installation and verification](docs/RELEASE-1.11.2.md) · [Licenses and provenance](NOTICE.md)
+
+## Performance research
+
+[MVK3 vs Native Metal 4 220: bottlenecks, waits, and measurement data](docs/research/mvk3-native220/README.md)

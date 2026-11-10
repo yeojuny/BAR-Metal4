@@ -1,0 +1,26 @@
+{
+  "status": "NORMAL_PURE220_FRAME_TRACE_ROI_COVERED",
+  "dominantROIPhaseMediansUs": {
+    "kind3_p10": 625.1665,
+    "kind3_p1": 599.5835,
+    "kind3_p4": 478.3125,
+    "kind3_tail": 406.188,
+    "kind3_p5_drawable": 11.0625
+  },
+  "phaseInterpretation": {
+    "kind3": "Normal deferred DrawPrepared path: phases11 means p0..p10 valid plus tail_us, p11=-1. Never require12.",
+    "p1": "Initial resource preparation; contains nested kind4 total. Do not add them.",
+    "p4": "Remaining resource-family preparation before drawable acquire.",
+    "p5": "Drawable acquisition interval including nextDrawable; reported separately.",
+    "p9": "CommitResourcesWhileEncoding call interval.",
+    "p10": "World/pass/postprocess/UI GPU command encoding until existing Mark10.",
+    "tail": "After Mark10: FinishResourceCommit, resident-count/closure setup, SubmitAndDefer and ownership transfer/return. Not exclusive submit time or GPU completion wait.",
+    "kind4": "Nested initial preparation detail; p8/p9/p11 largest observed medians; source owner interprets exact existing boundaries."
+  },
+  "limits": [
+    "CPU scope intervals are nested; no sums across scopes or medians as a frame-total reconstruction.",
+    "Main loop kind1 is sampled1/16; actual emitted rows/coverage retained without extrapolating unsampled owners.",
+    "CPU timer and submission scopes do not establish exclusive GPU or driver cost.",
+    "Normal process/scene checks are preserved; no whole-game or pixel equivalence claim."
+  ]
+}
