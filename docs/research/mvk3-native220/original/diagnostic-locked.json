@@ -1,0 +1,125 @@
+{
+  "status": "DIAGNOSTIC_REPRESENTATIVENESS_FAILED_NO_PURE_ATTRIBUTION",
+  "order": [
+    "ST1_MVK3_OFF",
+    "ST1_220_OFF",
+    "ST1_220_ON",
+    "ST1_MVK3_ON"
+  ],
+  "retries": 0,
+  "excludedBins": 0,
+  "excludedRuns": 0,
+  "rawFramesExcluded": 0,
+  "OFF_ON": {
+    "mvk3": {
+      "OFF_FPS": 61.74228056641031,
+      "ON_FPS": 62.02519172204174,
+      "ONMinusOFF_FPSPercent": 0.45821299931920745,
+      "ONMinusOFFWallMsPerDraw": -0.07387530559721966,
+      "interpretation": "Single OFF/ON pair under locked active-widget conditions; descriptive only, not an instrument overhead estimate or pure-throughput attribution."
+    },
+    "native": {
+      "OFF_FPS": 119.7,
+      "ON_FPS": 119.61495506310219,
+      "ONMinusOFF_FPSPercent": -0.07104840175256033,
+      "ONMinusOFFWallMsPerDraw": 0.005939759097437047,
+      "interpretation": "Single OFF/ON pair under locked active-widget conditions; descriptive only, not an instrument overhead estimate or pure-throughput attribution."
+    }
+  },
+  "sourceComparisonSHA256": "c01b5be563615a33e3f19cee8b1dc1de1ec8426e8edcd1cd50bd33d98919216a",
+  "runs": [
+    {
+      "run": "ST1_MVK3_OFF",
+      "backend": "mvk3",
+      "collectorOn": false,
+      "FPS": 61.74228056641031,
+      "draws": 2470,
+      "seconds": 40.005001068,
+      "frameStats": {
+        "samples": 2469,
+        "coveredSeconds": 39.979000775999786,
+        "p99Ms": 28.000001,
+        "slow1PercentFPS": 34.67406413691881,
+        "maximumMs": 29.999999,
+        "over16_667ms": 1163,
+        "over33_333ms": 0,
+        "rawSHA256": "a0a83446d65c8dcfa1798fc2081027eeea35a16073c170bbeb8443a6fa8023ee",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 40.005001068,
+        "omittedBoundaryPartialSeconds": 0.026000292000212255
+      },
+      "frameCSV": "frames/diagnostic-locked/ST1_MVK3_OFF.csv"
+    },
+    {
+      "run": "ST1_220_OFF",
+      "backend": "native",
+      "collectorOn": false,
+      "FPS": 119.7,
+      "draws": 4788,
+      "seconds": 40.0,
+      "frameStats": {
+        "samples": 4787,
+        "coveredSeconds": 39.990000000000606,
+        "p99Ms": 11.0,
+        "slow1PercentFPS": 87.11433756805803,
+        "maximumMs": 13.0,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "rawSHA256": "52c34718d9c9515f059e9960ec7fa66e502dfd3f9964cc24404097d62acfd0b1",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 40.0,
+        "omittedBoundaryPartialSeconds": 0.00999999999939405
+      },
+      "frameCSV": "frames/diagnostic-locked/ST1_220_OFF.csv"
+    },
+    {
+      "run": "ST1_220_ON",
+      "backend": "native",
+      "collectorOn": true,
+      "FPS": 119.61495506310219,
+      "draws": 4784,
+      "seconds": 39.994998932,
+      "frameStats": {
+        "samples": 4783,
+        "coveredSeconds": 39.98600000000059,
+        "p99Ms": 11.0,
+        "slow1PercentFPS": 85.10638297872336,
+        "maximumMs": 14.0,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "rawSHA256": "59750e93b47a8a76e639821e30227624d0cf07d2752ad25a5f0eb39657271212",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 39.994998932,
+        "omittedBoundaryPartialSeconds": 0.008998931999414594
+      },
+      "frameCSV": "frames/diagnostic-locked/ST1_220_ON.csv"
+    },
+    {
+      "run": "ST1_MVK3_ON",
+      "backend": "mvk3",
+      "collectorOn": true,
+      "FPS": 62.02519172204174,
+      "draws": 2482,
+      "seconds": 40.01599884,
+      "frameStats": {
+        "samples": 2481,
+        "coveredSeconds": 39.99100078499989,
+        "p99Ms": 28.000001,
+        "slow1PercentFPS": 34.67406404073554,
+        "maximumMs": 30.999999,
+        "over16_667ms": 1176,
+        "over33_333ms": 0,
+        "rawSHA256": "ed76227a008491218c1efcd71a8a1365a73fba6bfdc490d762ec7367a424d72e",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 40.01599884,
+        "omittedBoundaryPartialSeconds": 0.024998055000111208
+      },
+      "frameCSV": "frames/diagnostic-locked/ST1_MVK3_ON.csv"
+    }
+  ],
+  "scope": "Four locked runs, actual BC213 limiter widget order 16. Retained separately as failed throughput controls."
+}

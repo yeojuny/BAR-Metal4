@@ -1,0 +1,90 @@
+{
+  "scope": "Review-only source measurements. Each CSV has its own sample population and clock origin.",
+  "files": [
+    {
+      "input": "prepare-boundary234-runtime01/RUNTIME-PAIRS.csv",
+      "inputSHA256": "03ed1881c4a665dac204aae466625dea545edf94b29794fa06632f540e78d073",
+      "file": "234-runtime-pairs.csv",
+      "rows": 3485,
+      "transform": "numeric rows",
+      "sha256": "9feb9b487536ee88aa416c5b7f2a3ebad0973806708de914f42166d7ee8692b3",
+      "bytes": 460823
+    },
+    {
+      "input": "frame-loop238-runtime01/JOINED-LOOPS.csv",
+      "inputSHA256": "fd554ac4311c29bbf93d9b0369b820cd29ba17cef3434b676c98772c8d8c59bf",
+      "file": "238-joined-loops.csv",
+      "rows": 1735,
+      "transform": "numeric rows, time shifted by a constant; zero preserved",
+      "sha256": "25669b5ffbfb212b50a07920940ae7e73f7ae2bf8c417905b28557e4039128e8",
+      "bytes": 194455
+    },
+    {
+      "input": "lua-list239-runtime01/FRAMES.csv",
+      "inputSHA256": "2dfc2a1f595e3e94da8568caad2012808e098e4094a9efedfb0439f461e97abe",
+      "file": "239-list-frames.csv",
+      "rows": 111,
+      "transform": "numeric rows",
+      "sha256": "4c36e7db53ef51e2fd4f7e22aff3c4db245c5da8c9a87d30439ff83c2902ef01",
+      "bytes": 10361
+    },
+    {
+      "input": "vbo-copy240-runtime01/FRAMES.csv",
+      "inputSHA256": "cf55b58bff2ca1fcce4166cab88af2354de987a664a570c6be2ecd7a4a87337f",
+      "file": "240-copy-frames.csv",
+      "rows": 1695,
+      "transform": "numeric rows, time shifted by a constant; zero preserved",
+      "sha256": "7f674b0afdfa180e6abdbcb71b219d87020ec93e6673e05c4d4ab86b0851587c",
+      "bytes": 153058
+    },
+    {
+      "input": "vbo-live241-runtime01/FRAME-BACKING.csv",
+      "inputSHA256": "2423b22283f67232d93005340f2ee14a0083413736fe0dc6263f6d574d260cb0",
+      "file": "241-backing-frames.csv",
+      "rows": 8070,
+      "transform": "numeric rows, time shifted by a constant; zero preserved",
+      "sha256": "4de407911562e28eb381334c7616bb6565b9ea33ea5576851443aea2eb4dbc0b",
+      "bytes": 460906
+    },
+    {
+      "input": "range-division233-runtime01/clean/RUNS.json",
+      "inputSHA256": "0f0298acdc969f7cb7e4890f9dec5a0ca6ea1556e0591a3c6e64c785f0172bc6",
+      "file": "233-clean-runs.json",
+      "transform": "field allowlist",
+      "sha256": "af718cd694f0ef20582b254bcbe4d29c7511eaba6fcc095d0b50b1b8fc7649c4",
+      "bytes": 4225
+    },
+    {
+      "input": "range-division233-runtime01/CONDITIONS.json",
+      "inputSHA256": "3576d6e64c13ce73dff21a9c79479fa58af64bd2f926c4b0be48c736050e8a83",
+      "file": "233-conditions.json",
+      "transform": "field allowlist",
+      "sha256": "b1d8cb114f0f3ae19ae67a9ba2df0e085f8fddbcd9c998ab99b320e85373cb5a",
+      "bytes": 1051
+    },
+    {
+      "input": "frame-loop238-runtime01/ANALYSIS.json",
+      "inputSHA256": "d68a924c73343dcc26e79ea67f407dd230a7f8e8dd8c68378d5953dbcfc448cc",
+      "file": "238-analysis.json",
+      "transform": "field allowlist",
+      "sha256": "337b9c32b07f14afccd78f82143023461ae32cb5388e5feed7b207b17168c815",
+      "bytes": 12877
+    },
+    {
+      "input": "vbo-live241-runtime01/BACKING-ANALYSIS.json",
+      "inputSHA256": "dbe16955d7114a82215a6266cfe7261f40b222495b123bec3fe383b6b9b8a71b",
+      "file": "241-backing-summary.json",
+      "transform": "field allowlist",
+      "sha256": "a323aa7bc65ac1324647d052afc9d309a1164bc28c8c2db0a985e707cef08c0a",
+      "bytes": 14262
+    },
+    {
+      "input": "vbo-live241-runtime01/PIP-OVERLAP-AUDIT.json",
+      "inputSHA256": "15f9207a73e0219303dd6b4721840210a6b54dffd69eed1b770bba155bd54b34",
+      "file": "242-pip-counterfactual.json",
+      "transform": "field allowlist",
+      "sha256": "d874d96b1c1012381ef0e69126cbf49319df313273e3cf6a381834d52df36f1f",
+      "bytes": 954
+    }
+  ]
+}

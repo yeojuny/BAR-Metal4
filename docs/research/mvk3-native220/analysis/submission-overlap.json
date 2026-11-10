@@ -1,0 +1,107 @@
+{
+  "method": "Sort positive-duration work intervals by GPU start; merge overlaps and touches. Between successive spans split the gap at the first positive command host commit begin clipped to the gap. The frame denominator is the existing interpolated draw count. No external CPU-GPU or timer-query clocks mixed.",
+  "results": {
+    "mvk3": {
+      "sourceSHA256": "a26439060919695726ce559e223f8c707426257cab331d9b169a0b7edc536ab9",
+      "positiveDurationInteriorCommands": 21596,
+      "hostSubmitThreadCount": 1,
+      "overlapOrTouch": 2509,
+      "positiveGaps": 19086,
+      "gap": {
+        "n": 19086,
+        "meanMs": 0.579929,
+        "medianMs": 0.402958,
+        "p90Ms": 1.357083,
+        "positive": 19086
+      },
+      "submitBeginMinusPriorUnionEndOnGaps": {
+        "n": 19086,
+        "meanMs": -0.088649,
+        "medianMs": 0.199687,
+        "p90Ms": 1.147437,
+        "positive": 11248
+      },
+      "submitEndMinusPriorUnionEndOnGaps": {
+        "n": 19086,
+        "meanMs": -0.083833,
+        "medianMs": 0.205896,
+        "p90Ms": 1.155521,
+        "positive": 11327
+      },
+      "priorUnionEndToNextSubmitStartMsPerDraw": 0.9230767698371267,
+      "fromSubmissionOrPriorEndToNextGPUStartMsPerDraw": 0.31494236635704254,
+      "internalGapMsPerDraw": 1.2380191361941693,
+      "commandGPUStartMinusSubmitEnd": {
+        "n": 21596,
+        "meanMs": 0.850142,
+        "medianMs": 0.093854,
+        "p90Ms": 3.545687,
+        "positive": 21579
+      },
+      "drawDenominator": 8940.508146834674
+    },
+    "native": {
+      "sourceSHA256": "88fb94eb5b01ca9d9c405dc7dd66774641f0a32ef571d1f9a5aa64820e07cf40",
+      "positiveDurationInteriorCommands": 6356,
+      "hostSubmitThreadCount": 1,
+      "overlapOrTouch": 0,
+      "positiveGaps": 6355,
+      "gap": {
+        "n": 6355,
+        "meanMs": 1.131728,
+        "medianMs": 0.858875,
+        "p90Ms": 2.3085,
+        "positive": 6355
+      },
+      "submitBeginMinusPriorUnionEndOnGaps": {
+        "n": 6355,
+        "meanMs": 0.947543,
+        "medianMs": 0.743583,
+        "p90Ms": 1.828192,
+        "positive": 6355
+      },
+      "submitEndMinusPriorUnionEndOnGaps": {
+        "n": 6355,
+        "meanMs": 0.950282,
+        "medianMs": 0.745958,
+        "p90Ms": 1.830525,
+        "positive": 6355
+      },
+      "priorUnionEndToNextSubmitStartMsPerDraw": 0.9474206736420575,
+      "fromSubmissionOrPriorEndToNextGPUStartMsPerDraw": 0.18416089297363333,
+      "internalGapMsPerDraw": 1.1315815666156908,
+      "commandGPUStartMinusSubmitEnd": {
+        "n": 6356,
+        "meanMs": 0.181496,
+        "medianMs": 0.106146,
+        "p90Ms": 0.478188,
+        "positive": 6356
+      },
+      "drawDenominator": 6355.820618358924,
+      "nextHostSubmitScopeStartMinusPreviousGPUEnd": {
+        "n": 6355,
+        "meanMs": 0.837568,
+        "medianMs": 0.687583,
+        "p90Ms": 1.765941,
+        "positive": 5796
+      },
+      "scopeStartToCommitBegin": {
+        "n": 6355,
+        "meanMs": 0.109975,
+        "medianMs": 0.057584,
+        "p90Ms": 0.171841,
+        "positive": 6355
+      },
+      "nextCommitStartMinusPreviousGPUEnd": {
+        "n": 6355,
+        "meanMs": 0.947543,
+        "medianMs": 0.743583,
+        "p90Ms": 1.828192,
+        "positive": 6355
+      }
+    }
+  },
+  "limits": [
+    "Native deferred main queue and MVK work buffers have different coverage. Omits zero-width, other untraced and presentation work. Gaps are recorded-stream gaps, not physical device idle. Does not measure prep of frame N+1 concurrent with frame N or prove an optimization benefit."
+  ]
+}

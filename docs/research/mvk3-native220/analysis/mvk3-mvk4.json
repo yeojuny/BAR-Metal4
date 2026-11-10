@@ -1,0 +1,29 @@
+{
+  "status": "COMPLETE_FOUR_ARM_DIAGNOSTIC_NATIVE_TRANSFER_REQUIRES_COMMON_SCOPE",
+  "FPSRatioMVK3overMVK4": 2.277559920577404,
+  "summary": {
+    "MVK3": {
+      "FPS": 226.01935261830016,
+      "meanDrawScreenIntervalMs": 4.424399895033735,
+      "p99Ms": 7.0,
+      "engineProfilerDrawMsPerDraw": 1.6624165153018473,
+      "engineProfilerUnsyncedLuaMsPerDraw": 1.3370309886040261,
+      "simProfilerTotalMsAcrossTwoRuns": 2235.580200195
+    },
+    "MVK4": {
+      "FPS": 99.2375,
+      "meanDrawScreenIntervalMs": 10.07683587353571,
+      "p99Ms": 14.0,
+      "engineProfilerDrawMsPerDraw": 1.7664381460394256,
+      "engineProfilerUnsyncedLuaMsPerDraw": 1.497932292814712,
+      "simProfilerTotalMsAcrossTwoRuns": 2122.061767578
+    }
+  },
+  "interpretation": "Whole-frame gap is5.652436ms but named Draw-profiler scope differs by only about0.104ms. This prioritizes inspecting work outside that scope, including submit/wait/present; no causal CPU-versus-GPU attribution. Named profiler scopes may overlap and are not asserted to be pure thread CPU. Similar Sim work over equal wall time must not be interpreted as more simulation just because per-draw quotient increases when FPS falls.",
+  "limits": [
+    "One controlled scene; same d715engine and same loaded libraries across both backends; per-backend cache scope differs.",
+    "No exclusive GPU durations or exact cause yet.",
+    "Native Metal4 implementation differs from MoltenVK Metal4; do not generalize backend result to API capability.",
+    "Original raw/outliers/receipts preserved; no reruns or exclusions in this analysis."
+  ]
+}

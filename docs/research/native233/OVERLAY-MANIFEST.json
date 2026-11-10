@@ -1,0 +1,1746 @@
+{
+  "status": "LOCAL_BENCHMARK_SOURCE_OVERLAY",
+  "baseline": "v1.11.2",
+  "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990",
+  "ownerOverlaySHA256": "7ad328c5610c235344235f83de7b27536c83c348496f5e4535453d47e5c4f45b",
+  "engineSHA256": "3a0b5b4cfcd78240117664ce76a5f5ee5b01b4c0d2c03b23a32e1c8b41585ff6",
+  "scope": "Compiler source overlay only. The original local link inputs and toolchain are not reproduced by this overlay.",
+  "entries": [
+    {
+      "target": "engine/rts/System/Config/ConfigSource.cpp",
+      "sha256": "9bb2ffdd8c34161ccd56130dc92c8ac6dfc1c229e3b5b22221ee88ba0b72ef87",
+      "bytes": 8038,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.h",
+      "sha256": "de6f5b4cea2a7c531736ef3c2e1c20f6ff706b470f1c2396ddb1db4a5f79b9b7",
+      "bytes": 15222,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "sha256": "a6c5517f26d7077473013a04f9f059c2fd87c0e382c21bf41c835bec76edcfc9",
+      "bytes": 127396,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CUSSource.mm",
+      "sha256": "cc0341fa42cb57c4ee5edd20039cbb9552da3547e34d1cddf6f93e62d2348d80",
+      "bytes": 39496,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4CUSSource.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ModelTrace.inc",
+      "sha256": "91a69401de62b199afbcc52a8d001d8e960437eb1d440ed76b6a00df62c1bf4a",
+      "bytes": 10055,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ModelTraceBudget.h",
+      "sha256": "f852d058301b850251e62a5917762388a07d1c50f3730001d199f79a5b833647",
+      "bytes": 1212,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Game/SelectedUnitsHandler.cpp",
+      "sha256": "c69093cdc692ac32f285344ab4f24c39b29cf70a03b9da31c4d06b16ef4e1747",
+      "bytes": 32926,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Game/NativeRoute208Seed.h",
+      "sha256": "b839a416d78fb413994ef28fe5f51f467787a6681ec03910a2aec4a5f73bd4e1",
+      "bytes": 885,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Game/PreGame.cpp",
+      "sha256": "0e8cdd75f0c360532c6fa735b92daf19fc4cf11f7f00a98759b1dff081d819f2",
+      "bytes": 24385,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Game/Game.cpp",
+      "sha256": "f53b5abc866bf9cd234d18f97c130d9f00565fd84ecf010c63ae3aa5fbf459d0",
+      "bytes": 85934,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Game/UI/GuiHandler.cpp",
+      "sha256": "47aabbaa12ba90f5b7e36d0ad8bc7f269f67fed82a7679121588110c1c2f391f",
+      "bytes": 144807,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativeCUSSource.cpp",
+      "sha256": "7f934b6b49ce9c98b460f8670a205237f167de271e49b89b567f068967195c06",
+      "bytes": 22457,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaVBOImpl.h",
+      "sha256": "b1c6f493dc43257e731a45cc8449b1443bb8fa93137a5098a22ceaa3b8d8e568",
+      "bytes": 8321,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaVBOImpl.cpp",
+      "sha256": "9177aff76fe2d3af73003b9e172951a8c0ec4ec4ddd576c8ce71e7242f702dc8",
+      "bytes": 63170,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/NativeFrameGrapherLuaContext.h",
+      "sha256": "be5079027f862c32f41121e8e196811dd49a8f9c59902f4db4a67b2f8ae44290",
+      "bytes": 8349,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/NativeProfilerHistogramLuaContext.h",
+      "sha256": "0ba41301cacfc5c1bd5c72407a6c07e236807294e329185a5e7630a954e910d2",
+      "bytes": 8117,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativePlacement.cpp",
+      "sha256": "5ad9cd8d882400f401585a3bf0dfc8dd5b2df271ec7c3d8b6a65de0c7c758683",
+      "bytes": 22640,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/NativeWidgetAdapters.h",
+      "sha256": "f83f2412f44e63c935ea9e87130930dd8be13e57b5962fcc71a06eac49daa0ed",
+      "bytes": 18373,
+      "file": "overlay/engine/rts/Lua/NativeWidgetAdapters.h"
+    },
+    {
+      "target": "engine/rts/Lua/LuaUnsyncedRead.cpp",
+      "sha256": "4a380bf5d611256911c394d932af6f276d8a8b06c80e2901f2917a18a517a04c",
+      "bytes": 141275,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativeDeferredLights.cpp",
+      "sha256": "fc9b9b0dbd3a2bf8441b8958eebbf534d39f2e69ba317bd4716a475feb20d340",
+      "bytes": 26307,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativeVolumetricClouds.cpp",
+      "sha256": "709afa0b1e798a443d2d15505366c85de0e1d9899cfc72acfcf97d6a2fd6eb32",
+      "bytes": 5735,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/NativeSpectatorHUDLuaContext.h",
+      "sha256": "175c9e81b44a3439396655bb2f5fa77a9b70dd81c89b3a3d08312de822bbe4be",
+      "bytes": 6650,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativePiP.cpp",
+      "sha256": "2e10f2bad54c1130c6e951f7ccda8458d5040b11b00069aa02cf06da5726a960",
+      "bytes": 36623,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativeDistortion.cpp",
+      "sha256": "3d103b1d45b20c9e9977dcfa7d604369c03fab55dc474c34d479929c2aa7d006",
+      "bytes": 33618,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativeVolumetricClouds.h",
+      "sha256": "6af5ff8a92516fa0bc7f8cfaf19bcdde06a276e280b8792c312fdbfd6411b718",
+      "bytes": 638,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/LuaNativeBlueprint.cpp",
+      "sha256": "83b3e7855175b451b2b9c198418a60573e78908e25d4a9a55131c6befc059e39",
+      "bytes": 29019,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Lua/NativeTerraformCaptureLuaContext.h",
+      "sha256": "5031bad2f1d1734673cb370783abcf0ac2c7e4b945aada056e2846430c309ae5",
+      "bytes": 11551,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/System/SpringApp.cpp",
+      "sha256": "ed2732ffaf5e18ab44567e2933f17393b92a335eeac2b8a2c784b0c0a453a853",
+      "bytes": 49449,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/System/FileSystem/Archives/PoolArchive.cpp",
+      "sha256": "2a817f6ecea83d36ce1bea2382fac07adc467738a022cb812bd4464ce3fff266",
+      "bytes": 7512,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/System/FileSystem/Archives/BufferedArchive.h",
+      "sha256": "48feee990286605f1bb3214e185730b453d4714a14ad50d5d6f519e1bceacd10",
+      "bytes": 1041,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/System/FileSystem/Archives/BufferedArchiveCache.h",
+      "sha256": "b7ca14fac3f310ebd8c038bc14389dd7bc14526f48130f8d9d060f0817227c51",
+      "bytes": 2934,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/System/FileSystem/Archives/BufferedArchive.cpp",
+      "sha256": "f476ef12da9459e563efeba9d6a9b32eeac6cd0b4fc52f1e7cb01d5bc7d55e2c",
+      "bytes": 1946,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Map/MetalMap.cpp",
+      "sha256": "29589117826449dae58f24029a083ac6aba12dc464420b3d04b3492f41b3bcb2",
+      "bytes": 3660,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Map/ReadMap.cpp",
+      "sha256": "589cbcff43c90f57b441442ca6c49de7af6662973b654e679156084b92f07b7f",
+      "bytes": 29091,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Map/MetalMap.h",
+      "sha256": "e961591a88c976e808d3dcf1749ae10beffd81adf6f3250bdbad9c9c122264ff",
+      "bytes": 2407,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Map/SMF/ROAM/Patch.cpp",
+      "sha256": "123effe27681e6d1e18a5786078aa3119b6890128e5a137a119716faeb2382ac",
+      "bytes": 25785,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Map/SMF/ROAM/Patch.h",
+      "sha256": "ac0a6ab6bdf0da2af3884d1a123e494030fb3e06149e708051fb77401508eea5",
+      "bytes": 6663,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/WorldFrameCapture.h",
+      "sha256": "2f1facf89484a942381e628803b52ef7de466f242f53ff019a5a7ee362a0dc92",
+      "bytes": 3221,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/WorldFrameCapture.cpp",
+      "sha256": "ed20a11ad5881a7818f872cb15bdd80b4abfc1c9d3699f78ecf71cd88bbf7952",
+      "bytes": 62310,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/GlobalRendering.cpp",
+      "sha256": "94b262a3529be94610756c856dd192aa80e789e477c4baad605ab800b65b97a1",
+      "bytes": 90649,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/EngineBridge/NativeWaterGroundSourceCapture.h",
+      "sha256": "f8d6ee370607c2fc520873c56b09b5835f1008e8166d9c2ef1f79cae300bb3fe",
+      "bytes": 3139,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/EngineBridge/NativeShadowPositionCopy.inc",
+      "sha256": "bd7bcbac9dfb94435d75d79bc6b14a0d467f8816574fb913517248f7178cc8e9",
+      "bytes": 674,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/EngineBridge/NativeOriginalShadowCapture.h",
+      "sha256": "b032c5f7e6a84558e7fb2fc15e6413cacb720d6123b86f6c292e3e80c64bfd85",
+      "bytes": 2873,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/EngineBridge/NativeTerrainPositionCopy.inc",
+      "sha256": "ab63b322213492a2d0fa694f91c17d0d685d1586cec2a6391f66083ec2604b8a",
+      "bytes": 1859,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/EngineBridge/NativeOriginalShadowCapture.cpp",
+      "sha256": "6b8b80bd50ab58db1344c96e850365ac0888f187cb83dd3f8635cefed9ec84c1",
+      "bytes": 15598,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/EngineBridge/NativeWaterGroundSourceCapture.cpp",
+      "sha256": "8687fa13c159c8a68f64eb1daf4630fdca5791896f86af1c951688afe227949a",
+      "bytes": 16498,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePreparedGeometry154.h",
+      "sha256": "34a1cc16a83ab2767f4466128b3e0ea346cc8060b7db617c93a0f94935b4053c",
+      "bytes": 1361,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeFontRecycle169.h",
+      "sha256": "35e5f1fd76cd7b3056d46b82fc4468ed962bf93e92ffb238affc81d401675ab5",
+      "bytes": 5747,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeProfilerHistogramData132.h",
+      "sha256": "d4503b20cc0ccdf0b1a5115be882659f125fdbef02844c6e6cfb4369c713bc3d",
+      "bytes": 3249,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePlacementData.cpp",
+      "sha256": "e663565019aff63006fa306db6756c6ff65e3c3a044f5f2662f2e980c84671e4",
+      "bytes": 12329,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeSSAOClear150.h",
+      "sha256": "cff66ba10d1a603f1e666f215a692150b93985378430a29798c7b98cbcf6ce1b",
+      "bytes": 1380,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeScreenFilled184.h",
+      "sha256": "711b019a4eaa874b531b2aaa2b6fadad3238e192f39bc017b3912aaf9f410ff3",
+      "bytes": 908,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/ScreenDrawList.cpp",
+      "sha256": "bab36585cdc3413f93057afb9abbd234319312a6611ab6805cb0c07d207f6df7",
+      "bytes": 42221,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePostprocessRecorder.cpp",
+      "sha256": "39c244ccc6006b757ec84c07156a8ce8fcd93c9b6f629ae35fccec74ed693b14",
+      "bytes": 12645,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldDrawRecorder.cpp",
+      "sha256": "145446d38eadaa856712b90b65549f99366d3e5f4f6e40608557134d45580631",
+      "bytes": 34985,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeScreenLine.cpp",
+      "sha256": "5b98df825305f30ca5a4ab1f92791bd2a3f7714ee144629fffa32f110c86b8ac",
+      "bytes": 8966,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePiPSourceLines130.h",
+      "sha256": "7b2dbf385e8738ce3502144a86d28eae4882b4219c48a4e8c98d9213d8971514",
+      "bytes": 1539,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldDrawRecorder.h",
+      "sha256": "e4b958eb713d587f05decc197eb5efd1f6104dd92d637bf7bb01a25421db91cf",
+      "bytes": 4183,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeScreenPreparation151.h",
+      "sha256": "4c0429c86aa7aef29823e4af82a5a2f2c1434479dbeb9409c403ca202bfe3a0f",
+      "bytes": 2555,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePublishedBufferPool.h",
+      "sha256": "a3960042e94ae2a912fe4631930b1a8137464079b82f9b5cabbe84248a481428",
+      "bytes": 4333,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMiniMapCapture.cpp",
+      "sha256": "6b0f6c7b2b3264578e6b319600368d99867170eae0c84044ece88aaa9be55a30",
+      "bytes": 7535,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeEngineShadowData.h",
+      "sha256": "92c4ee45466a15b1d240b9fc40aa9c5be6610b05cbafc20093d6f62cf04d5d91",
+      "bytes": 3005,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCoverageSnapshotReuse.h",
+      "sha256": "75448bff9c577d8977b7dc64567a224942c090776175bd92651531141e5093ee",
+      "bytes": 2557,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSProgramData.cpp",
+      "sha256": "0dcb54a2bf15db13001cf1d4fd59ba87914c007d0163c9484f34775c1fc0a827",
+      "bytes": 4201,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeSubmissionTrace.h",
+      "sha256": "ff66362cd17e2ac0012fc6e3cc5f8b51b0cf62811cf5cd80f52fcb95924f9eb5",
+      "bytes": 4426,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSPublishedReuse.h",
+      "sha256": "e061f25a714f57588000dad6255fcd18e88d5e03faad8021e51ef9cb076c1ee8",
+      "bytes": 969,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSProgramData.h",
+      "sha256": "83db7f06ed4d09918cdd700b17e24a8a21842d4937ed34a263a56f806c3f281a",
+      "bytes": 2025,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeDepthStencilKey.h",
+      "sha256": "da60f510673a9e69fe8b20eecd8557af73c781e3085769079760acd9d60b1999",
+      "bytes": 925,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeTerrainMeshSnapshot.h",
+      "sha256": "49b75e528bbcc2be07f1e2c8d6b052a4ddc45b9f06d182f0848891da6d48cf36",
+      "bytes": 3246,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeVolumetricCloudContext.h",
+      "sha256": "fc0a9497a600326fb436c2bf2cceb9dbc317fa14353976a2b1beb8ed75b9b420",
+      "bytes": 3473,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeInitialClearLoad.h",
+      "sha256": "08005c19327838c56db1939abb2d110b1069d40c4c09e4c4788fd5d4707c3ed8",
+      "bytes": 1232,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCoverageRevision.h",
+      "sha256": "568ea559cfa5da892a03129f5e22b0f3ed14c3fda3ab7a5ece19473a0b7de6c7",
+      "bytes": 318,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldInfoCapture.cpp",
+      "sha256": "0b1e78510ab2bcb9b19d17392f9589be09b1a3271c2cebdd71e88626069f4fac",
+      "bytes": 5413,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePreparationTrace.h",
+      "sha256": "728ba75d549f0fc966bfb3dc149273f44aaf79ce66d95430be3bc284b25ce811",
+      "bytes": 1128,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePiPData.cpp",
+      "sha256": "e4cadf5c32fd8522fe8a2eabbad84edb727153e3d2343c1de2d33cf689a6d8dc",
+      "bytes": 13576,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePlacementData.h",
+      "sha256": "c41f211fa398068e76ec68fe23015fb19c88a83bec19adf376e882633e13d157",
+      "bytes": 3213,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePostprocessOverwrite157.h",
+      "sha256": "fa5d858f4a94f17d61c066bfe9d728ab0cc81c5f014694cbcae917af9f53c7b7",
+      "bytes": 1576,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSCPUReadScope.h",
+      "sha256": "0e63aa75ee73185196af5e70f64351a701d180c37b261d18a52a703fc3e0505e",
+      "bytes": 5895,
+      "file": "overlay/engine/rts/Rendering/Backend/NativeCUSCPUReadScope.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeExactScreenLines.h",
+      "sha256": "e750573ef9c2e9a208d68246f9355a65230b1b0ad2b4e93f117ced7ef7dad0a3",
+      "bytes": 1190,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeDirtyBufferSnapshot.h",
+      "sha256": "d1fd4df96c83a077cf38770c2b7349e0356cafd2f0a0c0206aafc94703d0d099",
+      "bytes": 3546,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeScreenPreparation152.h",
+      "sha256": "4555cc1307d34ac9cd10af4fd28d1cb007480c8989f8a06173f395fda3069a62",
+      "bytes": 2259,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeBlueprintOutlineGPU129.h",
+      "sha256": "1cfe8d3ae529a3d02e37754c137c7f4d72859322e2a8ce9a2694a5e7077fbb2d",
+      "bytes": 2190,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMRTClearLoad145.h",
+      "sha256": "13a693e00cd58b6e0d1653109f4c3002bdddd5b67d60f21ab33b22a78978e3a2",
+      "bytes": 908,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePlacementGridGPU.h",
+      "sha256": "cf60ebf01a25dcfe82e2d0939469d02c5caa03f524c41b9bc5f40d5dd30fa128",
+      "bytes": 2688,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeRetiredResourcePool.h",
+      "sha256": "9987cffcfca17517e665fc21fda26fe4735d253c1066b3f5df44cb3dcd1bd266",
+      "bytes": 1714,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeRetainedFont170.h",
+      "sha256": "af50456e8054323fda87ca3604cbeb9bfdc36201facda67d22abfd7f630bd46a",
+      "bytes": 5963,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeInfoSnapshotReuse.h",
+      "sha256": "a4ace60ef970a53d1648dee507f561bdef1ffa3ab22baf6f9ae457dca59a8f50",
+      "bytes": 1932,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeUploadLayout.h",
+      "sha256": "162effa5d9a26f43461dbcbc87fc71c614bfdc9654f635ca10fe80b7260b3665",
+      "bytes": 1155,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeUIRecorder.cpp",
+      "sha256": "615a623a425851396711e8afafeeb05e57608c1d68e18887c78a47d0a84c062d",
+      "bytes": 170645,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeIndexedWorldGeometry.h",
+      "sha256": "aac9f45239887d1aef0e036d9b1726d6ef34e03376ac493b2aaea3720ccc7fbb",
+      "bytes": 1803,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePublishedRequestCache.h",
+      "sha256": "715908e8c394d3560ebac8d7a9a7c89954012588c39604d35826539e5b998da4",
+      "bytes": 1189,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeImmutableBufferIdentity170.h",
+      "sha256": "f67372034a101335cf7ccf153c3b84398453ef82b7fec315a703800e3e8b2020",
+      "bytes": 854,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeTerrainHeightSnapshot.h",
+      "sha256": "92eced6ee011fb25081df70f190f2c855f66adbe840723319ec475286e3cd972",
+      "bytes": 2512,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeReclaimSourceLines131.h",
+      "sha256": "047241c81a98a33872026c2037bc0a2565a569addc67afd8ef0246a1784b2230",
+      "bytes": 2592,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeInitialAttachmentClear182.h",
+      "sha256": "f3d1f3235ee060d736d60db7d7fcdcd6d41d58fe365f2013604e32d91ae55df2",
+      "bytes": 2516,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMapTexturePublication.cpp",
+      "sha256": "8146d48ab3f1f3b6dc9fe72ebdf00cd0f198c58f4b47c17eaf399f98cf75911d",
+      "bytes": 7084,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeExactPiPLines.h",
+      "sha256": "7eb146ee813eaa21cf76449eff973216ad65e7ff5f34f6107dc9a1019b193b5a",
+      "bytes": 3263,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMiniMapCapture.h",
+      "sha256": "a922dedea6d05d52b02bca25291975022a2f501a49f948a0aab049051bcfa96a",
+      "bytes": 1130,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeScreenGeometry.h",
+      "sha256": "44863754274ddbd6f04d3ecce8feb97be95406fdf500b3a114353a50f00b00dc",
+      "bytes": 13134,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/ScreenDrawList.h",
+      "sha256": "72723b73bf44c9a149582e34072cfa6eb62973805b98a1b9e5813c470996fed3",
+      "bytes": 20793,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMapTexturePublication.h",
+      "sha256": "2912c52fb003a17a1d0a73903eca3d5f1bea01566f57150e74b747b4fe374eff",
+      "bytes": 2459,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSDrawRuns147.h",
+      "sha256": "8e88928084b9425068a07b3155066cd5088251801375a2f4dcb06a92619dd391",
+      "bytes": 1286,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMetalInfoCapture.cpp",
+      "sha256": "3970c1ad60c333871546ae4f3fd062342510f7e041f24753e92f617e335eeef5",
+      "bytes": 5956,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldDrawData.h",
+      "sha256": "0e89953b9a2fe01583fb59d83da3c8b503da67c1ca327061ce126f759d924a0d",
+      "bytes": 6562,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeSSAOOverwrite149.h",
+      "sha256": "030010666fa71e73979198366317583801d47f526515bb534851670f75df9096",
+      "bytes": 2193,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeExactPixelLines.h",
+      "sha256": "caa6c2489ac7d59573de86e7a7fcd93d4234f1c67f033850a4d50c2c25a62d34",
+      "bytes": 6723,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSRenderInputs.h",
+      "sha256": "0988b7d1ae32c02ca45e7154f9a6200624472f1c609e99d12aec6d9d6c9e08c3",
+      "bytes": 2272,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldFillGeometry.h",
+      "sha256": "b9e507ca41475d7d7327d987c3624566bf46afcf7ddeb64648cda2d05854c96e",
+      "bytes": 6314,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMiniMapImageDemand.h",
+      "sha256": "c2ee88341f99f0cfe42272a6cf2e65fec6c635d4635ca6f039f8baa66fe047b2",
+      "bytes": 1689,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldDrawPlan167.h",
+      "sha256": "9ceddbfa726f82387e6fc3fecca8bea875529d7d41e7bc6816b2445e09e1282d",
+      "bytes": 13976,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldFontGeometry.h",
+      "sha256": "c540fccec9097ed3086aa3660e549adad83d25f306e6973290d62a07cf3b74a7",
+      "bytes": 6348,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldInfoCapture.h",
+      "sha256": "654ab8892ba07d6f1e6f8feb27d4b3baa0adaac4418780f29d1926f087d80a18",
+      "bytes": 866,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeVolumetricCloudContext.cpp",
+      "sha256": "dd05523141d328d8dab5085e2a4dfed83b4371ff39bb1a83efc8317798497837",
+      "bytes": 9551,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeUIRecorder.h",
+      "sha256": "e01a8b94e0dd2d72ba1370d2fa1af47b5f60a4bd96f21ee16aaf824c222765bf",
+      "bytes": 18314,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeMetalDensityRevision.h",
+      "sha256": "964bd9c25ae9fc6ee636cb27b8b414e08e71ca91c6324a18249dbefc0dfb6e78",
+      "bytes": 311,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativePostprocessRecorder.h",
+      "sha256": "2445e9dd8c84231f60de447db050c0626862a9980a7ad7260f72112ad8172a4b",
+      "bytes": 4567,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCPUPhaseTrace.h",
+      "sha256": "81216467a0968fde899b03389377bc9d676713465e4fde530735edf58d4268a0",
+      "bytes": 2718,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeSourceLineData133.h",
+      "sha256": "d41d7fc93bea83e74d5cf0717a762d547004b58b88a42717c04dd220a11037fe",
+      "bytes": 4769,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWorldDrawGeometry.cpp",
+      "sha256": "63b6dcb70dbe047d4332befec428682ab93b8f3cad84f0bb84ccc4d717818f2a",
+      "bytes": 18996,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSRenderInputs.cpp",
+      "sha256": "be57547c578a49e3dd0aba083644507b70b56362874b1624f3958b2d6e74d8ab",
+      "bytes": 7570,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeLegacyModelCapture.h",
+      "sha256": "a02129d00864bf6a5feb744bc6cb48537e5398a2ed4a014b0aafac9e6f22bf4d",
+      "bytes": 592,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeWaterGroundSourceData.h",
+      "sha256": "8ee414f4202c40bae4a1f4fdb11378c926e7252886cbe23845d3d4a5f9501c11",
+      "bytes": 4804,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeExactScreenLinePacket.h",
+      "sha256": "a59fe55ad72c02cf58f1ede34698ebd27c9aa511396e6c099dade24809de90b6",
+      "bytes": 2574,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeExactWorldLine.h",
+      "sha256": "d75a65934ca8aa7a2b00aa53a1fb4a90b9515c20295c54ef85d86dd7283164bb",
+      "bytes": 11415,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Models/3DModelVAO.cpp",
+      "sha256": "28c9070deb53698203dd2541b2c04c5887dfb273b74ed4f80e92f977faee3344",
+      "bytes": 18316,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Env/Particles/ProjectileDrawer.cpp",
+      "sha256": "b2a0f04462298806bdf069e2dcbf597684a3896bbf30254d263535025edfa7a0",
+      "bytes": 57948,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ModelMaterial156.h",
+      "sha256": "ab6cf14a3cce654e75a6918161ecabbbde0dbfb13da7fa81d6d74b8938036b0f",
+      "bytes": 7201,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainSquareSource.mm",
+      "sha256": "4fce72ef6f8e54f61d42a3e622a3e3884d79b5764f66f58cc3995e418a0c16ef",
+      "bytes": 5183,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainGroundClear.mm",
+      "sha256": "1f6e0cfb8796991c656f211880762441cf201e1041226471ab0e7be0744048c2",
+      "bytes": 20136,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainSampling211.h",
+      "sha256": "ea81d3462d9e780d0d3b369bf2413c5a39d012cb571d93222e4fc14a9ca2bebd",
+      "bytes": 4071,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4MiniMapNative.h",
+      "sha256": "046359b9694954482d2addc3df5d25a6b1f3ae76a0ee1d27c0f41263d2a7a112",
+      "bytes": 3319,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PBRSource.h",
+      "sha256": "68892aca97eecf1fe297cf59eea1ca9dd1f39af1d7baf7c3025103f97c33ae1b",
+      "bytes": 1323,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "sha256": "ab69faa15d5bf4a4f8de456eac7de943da0ec47dbb3a61565da9e541a345c519",
+      "bytes": 60675,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4InitialShadowClear.h",
+      "sha256": "49babd98199b92fbeb795af42dfa6ac25a197ddaaa745b9df6e71d1af5b21d55",
+      "bytes": 1021,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ModelSetterProbe176.h",
+      "sha256": "109008d60dea01cd18c696e7947daf81a533cac9b592e0b0560b3a7d7d7749ec",
+      "bytes": 2000,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4RuntimeDiagnostics.mm",
+      "sha256": "892dcc2dd8a80d253afdc683183eaaa3d44840a6326854c5897431095ae6e542",
+      "bytes": 2007,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Distortion.mm",
+      "sha256": "c501cdedca362ada2db739d6f2f7fdb67c0943b2d070a83e9d39298c77540fa6",
+      "bytes": 32557,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4EngineModelForward.h",
+      "sha256": "68f650122b54f70ce5d9ce0fdef1ae9ac69f558e5d5f0cb646cb41038995a429",
+      "bytes": 1521,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldEncodingProbe176.h",
+      "sha256": "3b1f6d1f7d3b3bfaf2f69bc339d0a7e5bed4f8ed7ecc8a236018425ef45339fc",
+      "bytes": 2372,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4DisplayGeometry.h",
+      "sha256": "f63c9202ae9def339fe867d98bed43ef930c64bad9932060fc485a30476b8fb6",
+      "bytes": 1078,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4BumpWater.mm",
+      "sha256": "876d5fd85cd628791b9a78b19a020544f6593a716e4ee4a4abc50c8bc1d48c6f",
+      "bytes": 31452,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Pass160Policy.h",
+      "sha256": "428c19e2c0b77d55d669f1b6dcebd8f5c4c63d51e692656f7e787d4f02ba4fa0",
+      "bytes": 2047,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4Pass160Policy.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ModelUpload146.h",
+      "sha256": "797a08b2eb3981aa2178ec93a47701d4834d86e6d81b8b299afc861e43784c09",
+      "bytes": 4226,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Placement.h",
+      "sha256": "80915c82477123e876ccf4b57360d823d2d29eaa646d878051de89954f4cb073",
+      "bytes": 1233,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4FrameOverlapProbe.inc",
+      "sha256": "f92d02b647e58c1a3c6d040be2fdadbc311dbe2bc4d074e486e54900d092b677",
+      "bytes": 2074,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeScreenGeometryShaders.h",
+      "sha256": "974646e53d32150acd7535eaa6c63b0d67ba533eaa46c582c6321388b9603350",
+      "bytes": 4658,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SourceLines133.h",
+      "sha256": "0894997f7c803caa7228aa1bdde51ff7c75a7f3dee85e5b6322749b2d372a25f",
+      "bytes": 16059,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4DeferredResidencyOwners.inc",
+      "sha256": "083f1a57694d427509fe5fbd46b28f497978e4109841ea7071bdf009a65f4b70",
+      "bytes": 6577,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4DeferredResidencyOwners.inc"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PlacementLines125.inc",
+      "sha256": "3d7f928fe5e05ba6c8eb7807dc4b44735a3579fd1fae8d92fb7edaffe533f615",
+      "bytes": 5156,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4MRTWriteReuse209.h",
+      "sha256": "84d3542b50f48ccdc0c7c5e142cd4b153e19d9f2fe71c4a390051297e7681085",
+      "bytes": 7965,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4MemoryLedger.inc",
+      "sha256": "da4193b17bf689d9229c655503fe3cbde94ca5b33fbb71bd6ba6824b5dc4bacb",
+      "bytes": 7205,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Grass.h",
+      "sha256": "33cc1889827660ecae127296a6e5487a49022ef8143e473aae01962978e9f1ec",
+      "bytes": 1238,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SSAOStoragePool.inc",
+      "sha256": "3b4a9eaf612bd4f61a614371a0f66bc49b98ea3715721615a9e2dbceadb7489a",
+      "bytes": 2801,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ProjectileEffects.h",
+      "sha256": "82142ad76d74c614da1e812d24e8cd9753d5e4904db6e9010a2bb932e3469bfa",
+      "bytes": 1554,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CubeTextureSource.h",
+      "sha256": "50cbdc9c12efb746cb328c192c3b1122db6c9bebcdd737f5d1abf843ee56970a",
+      "bytes": 1975,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldOverlayRenderer.mm",
+      "sha256": "afda4d710909e61fe756bf05c3892f987546ea579fc0b2951d17dcabbcd0b53c",
+      "bytes": 76112,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4UnitStencil.mm",
+      "sha256": "911fa940ebb7f60bd126e8adef9997a5bf7ca60ad94e2d6af805331ab459a837",
+      "bytes": 17808,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4RetiredArguments.h",
+      "sha256": "d4ae4fa398dbc87a1578dfa4660d4e284d005ee5422d560cff6f7ba34583aaa1",
+      "bytes": 2270,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ScreenModelBuffers.h",
+      "sha256": "b6d2ceb6aa869564ed61f1bb9cd584a2a444dc6b8e5599f8807633baf2b2cac2",
+      "bytes": 2732,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Placement.mm",
+      "sha256": "cdb037799aff59477923648d9af2758cf3d2903368cd2ae5d0605fd5340b270c",
+      "bytes": 11042,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainUniformBatch.inc",
+      "sha256": "25a1a5addeba25f3cdb5ff4351a7411f640b8a70c1803fa508859ec0d03231a0",
+      "bytes": 2370,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SSAO.mm",
+      "sha256": "7aa66afb612f8b1f0504c9e91db63eecbc453026c8a323491d2feec1f097c075",
+      "bytes": 42992,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SourceImage.h",
+      "sha256": "5da4d74d748d6539bc786d860e54e21b93d75d85f714da176c058132c1d5fd77",
+      "bytes": 1915,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeExactPiPLineShaders.h",
+      "sha256": "c44cade5d4779eb5ce095f8e4a1d13e0559b34892ad58ffa0d4d55ef3a70a093",
+      "bytes": 2233,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm",
+      "sha256": "b968cfb362dd7f76c32e89c78904b365ff5b2d00dbe4c42211aa629b8d8e6671",
+      "bytes": 59533,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainInfoSource.mm",
+      "sha256": "137309b7cd8f68d7065c44977d803fa8975b6af912d9980cf24363b95ebbb121",
+      "bytes": 10854,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4AlphaPass166Policy.h",
+      "sha256": "50300986894c8b3c808a91b3fed431f34c1544c6bc532e19afef0342fdd16355",
+      "bytes": 2178,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4AlphaPass166Policy.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ObjectSpotlight.mm",
+      "sha256": "b43fbc626c1abc9c798d14f38643f733c501fb2a624d56fa04e18fcfd0b4b19a",
+      "bytes": 16963,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SceneBridge.h",
+      "sha256": "b0158dd73f8aca749cb0ddcf5f080ad6258ebd2bf92d86efc6da636278587bce",
+      "bytes": 9186,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4LightningEffects.h",
+      "sha256": "9e65feb22dbd8dd983464341e8260bc369df6f8baefc5941f81f999d648c4e2c",
+      "bytes": 1688,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ResidencyCommit.h",
+      "sha256": "73bdc5682c2f3f5e335f377b050ce72dc1e49030e6dc8a3139b3ab5f3367e376",
+      "bytes": 4339,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4ResidencyCommit.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ShadowTextureNative.mm",
+      "sha256": "50366a8f81599a6a014faba06cbeb70529c6e02658a6a630b39f4fe5d41dbb40",
+      "bytes": 13312,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PlacementGrid128.inc",
+      "sha256": "bb36755e119360fca023fb9c2444758d97550d223cefa3cd361e30d2099ff692",
+      "bytes": 4521,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PreparationTrace.inc",
+      "sha256": "29644c7ef1aa0863744963dca8153456c11553f634eacf08b9058aae7abb6c11",
+      "bytes": 3773,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeWorldFontShaders.h",
+      "sha256": "8a4ca04234556257c0b1f9c13422f00ee90be1def1ac241c4530218e28c64e0a",
+      "bytes": 943,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeSourceLineMath133.h",
+      "sha256": "eb8122d221d900116d55dd990bd33de15290315bdec4ba7916abbdda688b6772",
+      "bytes": 3262,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "6cf3545750d60ce88936492cf4ed3dc517e7f6394b011e6c42e470a0963c747b",
+      "bytes": 410408,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeReclaimShaders131.h",
+      "sha256": "05e1ba58395451c77d1baea1c1b0a3649a81e8855372e472d9c187f2799f2bb0",
+      "bytes": 2368,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4OpaqueModelMRT.h",
+      "sha256": "295cb984ef781cc03f0bb33753d8cad5977ee3a110c61c66c28a63924350b585",
+      "bytes": 1031,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeProfilerSourceShaders132.h",
+      "sha256": "b5d98fbf587018e6b0b66b423fb37cd0f33c59a303328799161868ec42b59387",
+      "bytes": 3481,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldParticles.h",
+      "sha256": "4aa5b84860422715568b110a5e686b93a7980068e91faec50994d375c6f48b54",
+      "bytes": 4502,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "sha256": "40e853852df80d80b0720332c3d10f4e609f5236c1e35a4440e38a1c0f826dda",
+      "bytes": 55550,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ObjectSpotlight.h",
+      "sha256": "39d17e25a5e5c2ccc1f68474bb56b467bf759eb8815b41936b4cb90c2515887c",
+      "bytes": 1347,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ScreenScissor.h",
+      "sha256": "70bc8602e9c4e86fe5dbf9a8ae1cc43b5fabe2e2424f9b12e52ae2b0b68f5d6c",
+      "bytes": 1316,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Bloom.h",
+      "sha256": "53f6ec8175a5efc2b01c639d3a18e891c10f534036e72900a4273b49b67a2893",
+      "bytes": 3923,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeScreenFilledShaders184.h",
+      "sha256": "9e825ff738d226215a034ade649c3a15c1a65b17ced50542bf62aec25fe6c4d6",
+      "bytes": 1685,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ReclaimSourceInputs131.inc",
+      "sha256": "0c280ae88e7906353df56d2866b89d638ca5d245ea447585cb8b890a6ae2509f",
+      "bytes": 957,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4NativeEffectState.h",
+      "sha256": "99905ce95f8fb00cacd39163b3c294fa91921f2cba4b0d62dad0e8f1e7b67867",
+      "bytes": 6202,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4OriginalShadowSource.mm",
+      "sha256": "28740545ca1484089f51b149f4a703402844b8e0b19758c1ec3b42a26b8c25a8",
+      "bytes": 13840,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4UnitPrimitive.mm",
+      "sha256": "225a5b964cc52c6a954895a75337d798c157f2d2d96b9c3eec8aab62f8bf5517",
+      "bytes": 13824,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldGeometryProbe174.inc",
+      "sha256": "25d6222b7d1313a4ba562845346eb1d02ee5e91ad7854088c23b46009cce23c7",
+      "bytes": 3650,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeExactPixelLineShaders.h",
+      "sha256": "bb9d93957e649aa72a466048248ea7743385e627b8da6cc67c4ada2fc83cb94a",
+      "bytes": 3096,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4OpaqueModelSource.h",
+      "sha256": "4c9bf983ef6e686bbc911d47ad2535ca0205311ee1c4ac59e4b6df06d958b641",
+      "bytes": 4160,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4OpaqueModelSource.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeExactWorldLineShaders.h",
+      "sha256": "a60b509ddd46fccdf983532d3dfc4ef7c8648f2d787c6aed5bd7668d5e001ff9",
+      "bytes": 13680,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PublicationProbe.h",
+      "sha256": "808e958613d676fd9a7846e5da7fbee87fb42221a7274ac4b09cce556b4188f6",
+      "bytes": 3095,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativePiPShaders.h",
+      "sha256": "1feb16754cbb00b98cb615f7bee7557f02a1e547beb98643151e4619360da986",
+      "bytes": 34177,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativePlacementGridShaders.h",
+      "sha256": "eb9dfb1656dfa3cb4a0adf66c5cb78654210a0bf59745438fade12516a59ec99",
+      "bytes": 8544,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CubeTextureSource.mm",
+      "sha256": "02bf75d35a1cd4a580847121c7b8d39c7b3c2a103cb3f62a409ca1f5552e2383",
+      "bytes": 17479,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldEnvironment.mm",
+      "sha256": "69d56594e7650e7e27376fea321cbec7fb4d8ca1777a97569ba58128f402e77d",
+      "bytes": 29982,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Blueprint.h",
+      "sha256": "121342363899f540e5f4811f4f0d56ed6b2c94b8f1c9be0bd20b0c2d06bd97dc",
+      "bytes": 1426,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldInfo.mm",
+      "sha256": "df7e4c35ab6168c72381beef546497926883fd17ed7d218a042d115283109a21",
+      "bytes": 7731,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativePiPSourceLineShaders130.h",
+      "sha256": "b64223dc6d3f85ff937b98348d0894caebaa9df777a7f830d684b680d8c45f71",
+      "bytes": 4297,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CUSSource.h",
+      "sha256": "36884352db99d67733620c0f6a906301362b89a783fcc27f9b8ad663b494b807",
+      "bytes": 2758,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4CUSSource.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeSourceLineShaders133.h",
+      "sha256": "2454c3a198c5b25b9d633c10b37a1c6fdedefae4fbcc3ca6747f88b031f7035a",
+      "bytes": 11181,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "sha256": "53a1f7401beb106f10217c3884802a5f6e0894a94f94b8c93d854be90404f8de",
+      "bytes": 10186,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeReclaimSourceLines131.h",
+      "sha256": "1172f20717058feb348e080dbc1bbe27567535e086dc00f082404674871dcf7a",
+      "bytes": 5532,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ResourceSpots.mm",
+      "sha256": "c998a6aabae1c2111ac606a48cde0f943e7e9ea17af04ed4a0e264c275726329",
+      "bytes": 13435,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeBlueprintOutlineShaders129.h",
+      "sha256": "446a138751940e7c566cfb9559b5167451891a9ead6492b2c0292842e6e74545",
+      "bytes": 5973,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ScreenNative.h",
+      "sha256": "b3ca28eaacb1cfcb2752622fceab9db4ef031dac24f1d368e92d94b79787106b",
+      "bytes": 10488,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Outline.mm",
+      "sha256": "480c080264a8a810d30912e3843f86179fc19b859c58ddb8f1cda1dea9231514",
+      "bytes": 21755,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Bloom.mm",
+      "sha256": "b5fd4bdd832a03f7b30e9992c47d4cbdb90b3e2b504a64ff3623e6824169d6ca",
+      "bytes": 36698,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldParticles.mm",
+      "sha256": "cd0a6443f9dd0dd19a02461597da7585b637472b4201644ab22e0e839ed3c4e4",
+      "bytes": 60572,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4WorldParticles.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TransientUpload177.h",
+      "sha256": "6af2be6d699d074d8ea9a85e20d7fb3f056f037bc35f9a9a5c51a7690d1bb698",
+      "bytes": 2549,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4OpaqueModelSource.mm",
+      "sha256": "643f8c17d766a83f367f3a621503064dc574d311a7b22d1728c8afb45c421b34",
+      "bytes": 20219,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4OpaqueModelSource.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CUSIdentityChannels194.h",
+      "sha256": "8ccaec9c2759803f0ad4be72b48e0b09dfcf1124f928e767982ea49616b90f94",
+      "bytes": 2478,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeSourceLineRasterShaders130.h",
+      "sha256": "f9feb5179ec674543c683ea043efdf23819c62e9e5d4a07459c0b406a99ee67a",
+      "bytes": 1814,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ModelGeometry155.h",
+      "sha256": "c86d5a45ed021294a12f0749db1df6466907ef10303e8db68e3fb3ad43c3742c",
+      "bytes": 3752,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4MRTObservation174.h",
+      "sha256": "9e5a530a328183853190a6b8acc259e9d512f7c7fdde1ab0c40742d7753a829d",
+      "bytes": 1659,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4BlueprintOutline129.inc",
+      "sha256": "628d872a90b7d2eef1ff33484f0e6da7d0e042a76841abaa1d91942436b33a8d",
+      "bytes": 1584,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainGroundClear.h",
+      "sha256": "ad56aaa12ca6348ec4fb3f4ff9b70eb1a159a7c1b6798e651ea5dae84509480b",
+      "bytes": 2703,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4MiniMapNative.mm",
+      "sha256": "2cf3703a91134cd459c64ed328b05bc25ed14ac832c290eb8d577985b167b42c",
+      "bytes": 41618,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainSquareSource.h",
+      "sha256": "297ddb577502bab7301e1d03f7d85e08dfb90ad1b3e9b144927389840549e6e0",
+      "bytes": 1404,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ProfilerSource132.inc",
+      "sha256": "0762c3ba8b2f60b90178c1db2fdafdd92c2b7226a81312b666ff0bb9337c3633",
+      "bytes": 2996,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CUSDeferred.h",
+      "sha256": "1bea0dc369a94af17805ea9b1478956a1f16e2fa5fc44ac5ae686df520c88e82",
+      "bytes": 3498,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4CUSDeferred.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeSMFTerrainShaders.h",
+      "sha256": "9de0d6d91f28ba85765ebc3b69457a90e83a44467f12bf0adfbad01e28724c62",
+      "bytes": 18069,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Blockout.mm",
+      "sha256": "67dbc163ec39b38c6f0487c84d29a019124034c696a3df3f213173b4d4d8fc18",
+      "bytes": 25296,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PostprocessTexturePool181.h",
+      "sha256": "5f869b51392c71885e0a8ff42b66d8e6572711763675ab02c167ac74e40af5f2",
+      "bytes": 4184,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ShadowTerrainPreparation.inc",
+      "sha256": "ad61f5f9199270763c6e4cdf0211ecdd6fec38d8854efab220c9c25915efae0c",
+      "bytes": 2062,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WindowSurface.mm",
+      "sha256": "aff0c6251405a7651311b266e88f80705376d49a20ede2822ea2c3db64a9c7e0",
+      "bytes": 10538,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeBlueprintShaders.h",
+      "sha256": "7e4eae007abd4ff37ea5495e8a47c9560d3880a3eac4fe6d15d96e9016aaa335",
+      "bytes": 10829,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CubeCopy206.h",
+      "sha256": "c9921699ed2547494d53377b9459eea7c20cc97a38c640802ec3e6823da62d01",
+      "bytes": 811,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CoverageCache178.h",
+      "sha256": "a8ffc716370c105a527ed07d0b64e207dcb640e50900f7d4b7ecb77ee9e710a6",
+      "bytes": 2938,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ProjectileEffects.mm",
+      "sha256": "6f089f77edf1476b6ee6a58bf7902c4ae8786ff880d741c79b212aaedb60b569",
+      "bytes": 11378,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PBRSourceService.mm",
+      "sha256": "a0dc7045661e5ed0e75baf8b2c4c39277adf18e1e8d0977be676304b1bdb76b5",
+      "bytes": 3263,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4DeferredStoragePool.inc",
+      "sha256": "444de52917fca279dcd5deecb519c5415b659425aff5082a547e61a1e7ddb0a5",
+      "bytes": 3091,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ShadowTerrainGeometryCache.inc",
+      "sha256": "dfaea3bdcb91fc6e3d73046246671d95e4c171dde7dfcd6c384a6a7201855339",
+      "bytes": 5905,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4OpaqueModelMRT.mm",
+      "sha256": "15990092c7920a3fb6ea4c1e504c0cf1a530477a0ff30271e88e9f1c212faca0",
+      "bytes": 5075,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PlacementGridHeight128.h",
+      "sha256": "a9961e7895c0d0030d7c44f8f32d96bf8e83064fe8d1ea4f94d8877e8119969b",
+      "bytes": 377,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ShadowTextureNative.h",
+      "sha256": "47a17c7cfcb385507c9435876e5c0319de09061ee66e297d9f8e7850bbe78c92",
+      "bytes": 1984,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Blueprint.mm",
+      "sha256": "d3c0b2cb4981d90bef02f960b80db1bd7d75680a71c7b48cf57166564391ad82",
+      "bytes": 30678,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldLineGeometryCache.inc",
+      "sha256": "8bc3113d18e66027815058cad9f5ea23b2a1f10dbfd9c2a081f84ff008f59ecd",
+      "bytes": 5560,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4LightningEffects.mm",
+      "sha256": "f3ab0686ee30a3380899359830f38df58aac706a9d7d7d30e7f713387f8bcf5a",
+      "bytes": 13868,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ImmutableSnapshotBuffers.h",
+      "sha256": "e283e4f470b5709b22a97ba31ce6b6082f6dc881ba60ef83f77e1a652938e38f",
+      "bytes": 4561,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PiPSourceLines130.inc",
+      "sha256": "39d8f6e935a99be980e8779199f0a70e9125bca8b5f143a337c0e72dcf278471",
+      "bytes": 2417,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4EngineShadow.mm",
+      "sha256": "94e29f2f449e895509be08dde2218204d422aa469503a5e7443ec3199f3e43bd",
+      "bytes": 48402,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4EnergyExplosion.mm",
+      "sha256": "2b8117d9ab60181a4ff4be014dd4eed4441a48ed3e8d7b6766d925c6e7679eef",
+      "bytes": 7979,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4DeferredLights.mm",
+      "sha256": "b90f296c6d7738e15015792fc31743afea3fb07b33465358553e78e9e1c796f9",
+      "bytes": 25643,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4DepthStateCache.h",
+      "sha256": "8b512986fd88be46370a6aa5475c3a7f8a7cb32fbc9e549a89fa55b5122b80d7",
+      "bytes": 1735,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4EngineShadow.h",
+      "sha256": "dda8f18dd528f7aaf510c6285cef2544049dd3101f360a7c4412ee90266176a0",
+      "bytes": 2024,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ReclaimField.mm",
+      "sha256": "d98951d9810993b6aa7ab2988234c10fdbce80f97f2fda6ece68ff8dbdd08c2d",
+      "bytes": 12901,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldGeometryView.inc",
+      "sha256": "223b84b609eee59218b9e27d9ba54d29907538a688c1f9108b1830b27eb03b3d",
+      "bytes": 2903,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SharedUploadPool.h",
+      "sha256": "bfd1f525cdd7c56e2e253b11d2cabb747755811ff9371c7c4ba32bd5d06551c8",
+      "bytes": 2357,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PiPNative.mm",
+      "sha256": "68b943a16759bf45123f1ed879a15c30103787a3a8e4ab5e37a26bf88238754a",
+      "bytes": 35896,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "sha256": "a65aa903a001497f3cb3b2bf2b86db0e199693a0f12d05146eb2f679e79f1555",
+      "bytes": 172778,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ModelPhaseExecution165.h",
+      "sha256": "252fb05302ac24547f40d6fa99aab57f8486eaef398cc2fcf95f157bfd9920e0",
+      "bytes": 1407,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4ModelPhaseExecution165.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PBRSource.mm",
+      "sha256": "bc725f297d8b137af4bc81919a8ecfb38971f53cd95d882cdd209048ff03556c",
+      "bytes": 10399,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ResourceSpots.h",
+      "sha256": "ce89a428052cf2b97b1ac14480960626abba2d1afd66db3a5fa2584748b07ea7",
+      "bytes": 1504,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Grass.mm",
+      "sha256": "a2de64d232c62068069dd21f49f919c1e39cf1b6e1fe145b8e025e586374c86b",
+      "bytes": 13377,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CUSUniformUpload.inc",
+      "sha256": "87954fe7c3de98a84a353219e103bdeafa425ab95886ba7426f3044f7130ea89",
+      "bytes": 1856,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4FrameResources.h",
+      "sha256": "147e1a94ca637f7bf4de45e3937e268da9353f1c9eb6e19553fdd67b66c81540",
+      "bytes": 4578,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CUSDeferred.mm",
+      "sha256": "c297c223c5d690316011f3e6accb0b1671cfc362e8356705e4a367150fec9193",
+      "bytes": 26829,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4CUSDeferred.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WeaponRangeNative.mm",
+      "sha256": "5db65af3113e7e54fffb437059248a9adc72aacb77e1e01c8ceda56ac3f4f01c",
+      "bytes": 18438,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4WeaponRangeNative.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4SSAO.h",
+      "sha256": "e27b94eb45c7ca7e809af9f994c0f353997519596f6774a317922889ffd2313c",
+      "bytes": 3974,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CubeStoragePool.inc",
+      "sha256": "ec8e393b665a0dbcf57c05081a7b0b0b118969c51a0de291dca5551bb7c5efa2",
+      "bytes": 3606,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4Blockout.h",
+      "sha256": "915151f8909ac447da7e0f569286fddf0684cab765a1d21b566ad278e3cf981c",
+      "bytes": 1894,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4WorldOverlayRenderer.h",
+      "sha256": "eb3b11218c1185ee511e89f77c071b667d09777e7b6db58ee88fe5688793fdb0",
+      "bytes": 2257,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PostprocessNative.h",
+      "sha256": "737ab0ade1085fb39fbd24be471e32e9daddea06ecf60526e5c389597b21acbf",
+      "bytes": 4102,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4EngineModelDeferred.mm",
+      "sha256": "ec4d83c69b7c54e3f82528ef7839829a9e17316e4362ff1e80cbccf6cc56492c",
+      "bytes": 18647,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainGeometryCache.inc",
+      "sha256": "fb7a2aa2121192d88951a04fe6f22f28461a2a41e5932b684abfaf01fb7fef11",
+      "bytes": 4182,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4ReclaimField.h",
+      "sha256": "d76d539918a0fdbcd427b87d0e96cdf5c6f92aa89a07c3fef1c4e6b3f552698a",
+      "bytes": 1261,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4PublishedRequestCache.h",
+      "sha256": "0bff0c7b9f13758128d043d8d8521de52892a702aafd7c1e7109c5d5aeb8764e",
+      "bytes": 4705,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4EngineModelForward.mm",
+      "sha256": "83f4d7dad1a0197d09b28062eb696056912007d1942795ef20dfc955b86283cc",
+      "bytes": 21197,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Fonts/glFontRenderer.cpp",
+      "sha256": "3ff4ff5a4705343da4ca8cd2d9878da9e25da190e26ca017458da7ac7efc72c7",
+      "bytes": 16897,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Sim/Misc/LosMap.cpp",
+      "sha256": "f4bdb965bb81037e8acfb149d0e947d336e3e8b894ceadbe979a9aea9fabf3f1",
+      "bytes": 23068,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Sim/Misc/LosMap.h",
+      "sha256": "8259e7f5bece21a9c62f1880f717becf6d9e77f132376119e8e24b6217768c57",
+      "bytes": 2216,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Sim/Units/Scripts/ShieldPowerToCob.h",
+      "sha256": "340bc76192641378b565076cdf940a183c212682b53b7ed9af7e4dcb422ba52e",
+      "bytes": 652,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Sim/Units/Scripts/UnitScript.cpp",
+      "sha256": "5091a7626dcfd2c005966e20480b0e488cbd137a60560886df1a6884aaefdcbc",
+      "bytes": 48422,
+      "releaseBase": "80f13accdc2a02b7e97cb732d230307528ce6990"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4MapEdgeRenderer.mm",
+      "sha256": "3f15b6cb05b3dec5435cf43fb1e447aee6ebb8f0473b82e16f8d1a52a39768eb",
+      "bytes": 18012,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4MapEdgeRenderer.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeCUSCPUReadWorker220.h",
+      "sha256": "af0f97bb09a426bd2609ad86b5b7e2baa7a8b537aa8423448b1de6218077d164",
+      "bytes": 3469,
+      "file": "overlay/engine/rts/Rendering/Backend/NativeCUSCPUReadWorker220.h"
+    },
+    {
+      "target": "dependencies/fmt-12.2.0/include/fmt/format.h",
+      "sha256": "b95f7c5b45d3d93e7cd8e691ae3040282ebcfe2d9c390f2c19d15ffcfae80a9c",
+      "bytes": 163032,
+      "dependency": "fmt 12.2.0",
+      "distribution": "dependency pin only; headers not copied"
+    },
+    {
+      "target": "dependencies/fmt-12.2.0/include/fmt/base.h",
+      "sha256": "888315df369b34360880a89998ce24191e7c1b2b0606666ec8fddb31f0cae2fb",
+      "bytes": 102347,
+      "dependency": "fmt 12.2.0",
+      "distribution": "dependency pin only; headers not copied"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4TerrainUniformRelease220.inc",
+      "sha256": "da607a5e2da01f9805406fffd828e7ed5c169bee5b34008877645715ed92e120",
+      "bytes": 7957,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4TerrainUniformRelease220.inc"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4CoverageRTTPool220.h",
+      "sha256": "8494a050b9aa1d0e9a50bd096528791dd339e735fa954d22309a656864186b9d",
+      "bytes": 1785,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4CoverageRTTPool220.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeCoverageRetiredPool220.h",
+      "sha256": "b96997ac83dcb8a9af106d88110dbe170fed77f5d7195b6064a0062d0b18ce9d",
+      "bytes": 1706,
+      "file": "overlay/engine/rts/Rendering/Metal4/NativeCoverageRetiredPool220.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/WorldParticleIndexLength220.h",
+      "sha256": "3bf7b648dc6fcf088ccd1c0fda944e311318f7bb1e4381791c1e96a20279cd24",
+      "bytes": 649,
+      "file": "overlay/engine/rts/Rendering/Metal4/WorldParticleIndexLength220.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4MainAttachments.h",
+      "sha256": "0e1535beb7bdeb9ecd3101b6f7f80b677b4b88ac924b9fca257b90c98e19954c",
+      "bytes": 15806,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4MainAttachments.h"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/Metal4NamedVolumeNative.mm",
+      "sha256": "72d8e38dcd1824c48cae0ab109032b065e02e854389f7d9e1f9828948e60ec32",
+      "bytes": 6628,
+      "file": "overlay/engine/rts/Rendering/Metal4/Metal4NamedVolumeNative.mm"
+    },
+    {
+      "target": "engine/rts/Rendering/Backend/NativeTerrainSourceData.cpp",
+      "sha256": "144046c8502989287b1cece4b9f87696fe59b104a40cf424db96a7da6b5a949a",
+      "bytes": 10005,
+      "file": "overlay/engine/rts/Rendering/Backend/NativeTerrainSourceData.cpp"
+    },
+    {
+      "target": "engine/rts/Rendering/Metal4/NativeWeaponRangeShaders.h",
+      "sha256": "562adf302e9f58dae6f2e5364962f60cb24bf47e3927283f9fd95a700b8b1863",
+      "bytes": 28579,
+      "file": "overlay/engine/rts/Rendering/Metal4/NativeWeaponRangeShaders.h"
+    }
+  ]
+}

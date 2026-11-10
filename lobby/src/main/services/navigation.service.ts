@@ -4,6 +4,7 @@
 import { app, BrowserWindow } from "electron";
 import { BarIpcWebContents } from "@main/typed-ipc";
 import { logger } from "@main/utils/logger";
+import { gameAPI } from "@main/game/game";
 import { replaysAPI } from "@main/replays/replays";
 import { typedWebContents } from "@main/typed-ipc";
 
@@ -30,10 +31,12 @@ function registerIpcHandlers(webContents: BarIpcWebContents) {
     });
 
     app.on("second-instance", (_event, argv, workingDirectory) => {
-        log.info("Second instance detected. Focusing the main window.");
-        // If someone tries to open a second instance, focus the main window
         const mainWindow = BrowserWindow.getAllWindows()[0];
-        if (mainWindow) {
+        if (!mainWindow) return;
+        if (gameAPI.isExperimentalSceneRunning()) {
+            log.info("Second instance detected during the native game. Leaving the foreground unchanged.");
+        } else {
+            log.info("Second instance detected. Focusing the main window.");
             if (mainWindow.isMinimized()) {
                 mainWindow.restore();
             }

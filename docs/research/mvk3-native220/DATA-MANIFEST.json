@@ -1,0 +1,219 @@
+{
+  "files": [
+    {
+      "file": "original/README.md",
+      "sha256": "6b97ac46766cc44f8b2e0b017e37da9addd07bd2f899f6b383026973763e30b6",
+      "bytes": 5559,
+      "source": "verified private comparison snapshot"
+    },
+    {
+      "file": "original/diagnostic-locked.json",
+      "sha256": "dd6e6ee637a330c47658a1465f2e2c266813d286ecb34b9682e4c74ca98d5b64",
+      "bytes": 4841,
+      "source": "verified private comparison snapshot"
+    },
+    {
+      "file": "original/diagnostic-unlocked.json",
+      "sha256": "244e25b9ad6d8e760b5db48e6d4fec7cc40b07c219b37f5312f6e1a7bba6700f",
+      "bytes": 8345,
+      "source": "verified private comparison snapshot"
+    },
+    {
+      "file": "original/frames/diagnostic-locked/ST1_220_OFF.csv",
+      "sha256": "52c34718d9c9515f059e9960ec7fa66e502dfd3f9964cc24404097d62acfd0b1",
+      "bytes": 81392,
+      "source": "verified private comparison snapshot",
+      "dataRows": 4787
+    },
+    {
+      "file": "original/frames/diagnostic-locked/ST1_220_ON.csv",
+      "sha256": "59750e93b47a8a76e639821e30227624d0cf07d2752ad25a5f0eb39657271212",
+      "bytes": 81324,
+      "source": "verified private comparison snapshot",
+      "dataRows": 4783
+    },
+    {
+      "file": "original/frames/diagnostic-locked/ST1_MVK3_OFF.csv",
+      "sha256": "a0a83446d65c8dcfa1798fc2081027eeea35a16073c170bbeb8443a6fa8023ee",
+      "bytes": 41986,
+      "source": "verified private comparison snapshot",
+      "dataRows": 2469
+    },
+    {
+      "file": "original/frames/diagnostic-locked/ST1_MVK3_ON.csv",
+      "sha256": "ed76227a008491218c1efcd71a8a1365a73fba6bfdc490d762ec7367a424d72e",
+      "bytes": 42190,
+      "source": "verified private comparison snapshot",
+      "dataRows": 2481
+    },
+    {
+      "file": "original/frames/diagnostic-unlocked/UR1_220_OFF.csv",
+      "sha256": "5d2c542597ba1576529ac3b838988edbc7e5a7c01e3e52a0ed72cea5076820d0",
+      "bytes": 109663,
+      "source": "verified private comparison snapshot",
+      "dataRows": 6450
+    },
+    {
+      "file": "original/frames/diagnostic-unlocked/UR1_220_ON.csv",
+      "sha256": "038f575c05a6be12470ffd5b157597e17203de7757373cd96fc1581f690cd322",
+      "bytes": 108592,
+      "source": "verified private comparison snapshot",
+      "dataRows": 6387
+    },
+    {
+      "file": "original/frames/diagnostic-unlocked/UR1_MVK3_OFF.csv",
+      "sha256": "e730096aa14500fb3d5550dd86137df031e17b1dc0893ea80af68a8e76b6d87c",
+      "bytes": 156090,
+      "source": "verified private comparison snapshot",
+      "dataRows": 8983
+    },
+    {
+      "file": "original/frames/diagnostic-unlocked/UR1_MVK3_ON.csv",
+      "sha256": "3f56615cd6bf9c418d4cdcae30e4aa2026833451010eeab37a844642958ae2a8",
+      "bytes": 156080,
+      "source": "verified private comparison snapshot",
+      "dataRows": 8985
+    },
+    {
+      "file": "original/frames/stock/M1_MVK3.csv",
+      "sha256": "44cd5feb77a6f5024f936bbf568868d1e7aa32b99f00a535ed650964cd5359ce",
+      "bytes": 156893,
+      "source": "verified private comparison snapshot",
+      "dataRows": 9054
+    },
+    {
+      "file": "original/frames/stock/M1_MVK4.csv",
+      "sha256": "0f39e42edd446f8c7083d8688add566cf9e79752fa37b8a1b542c1d8cf377645",
+      "bytes": 67333,
+      "source": "verified private comparison snapshot",
+      "dataRows": 3960
+    },
+    {
+      "file": "original/frames/stock/M2_MVK3.csv",
+      "sha256": "f48674af82399fa728a1379b48ea1ea6ddeb51584d02dfd9caf2ee531c1034a9",
+      "bytes": 156763,
+      "source": "verified private comparison snapshot",
+      "dataRows": 9026
+    },
+    {
+      "file": "original/frames/stock/M2_MVK4.csv",
+      "sha256": "77c3b427e8701053e7c41bc4965aff0779a824b9394a65e4d43eb5a45faa6c62",
+      "bytes": 67622,
+      "source": "verified private comparison snapshot",
+      "dataRows": 3977
+    },
+    {
+      "file": "original/frames/stock/N1_220.csv",
+      "sha256": "b60fb63dc220121199c9ed1bb2940039f7b48a412594f3f540d649f54909af5d",
+      "bytes": 109986,
+      "source": "verified private comparison snapshot",
+      "dataRows": 6469
+    },
+    {
+      "file": "original/frames/stock/N2_220.csv",
+      "sha256": "dc2b20575286411c3259fcb00479614136e96bce8793fee8655a8c628434c9e9",
+      "bytes": 109289,
+      "source": "verified private comparison snapshot",
+      "dataRows": 6428
+    },
+    {
+      "file": "original/gpu/mvk3-budget192.csv.gz",
+      "sha256": "21397bf119a113f8576b471e8e37b058d116f88de3f23867911759ef49b46c1c",
+      "bytes": 7473040,
+      "source": "verified private comparison snapshot",
+      "uncompressedSHA256": "a26439060919695726ce559e223f8c707426257cab331d9b169a0b7edc536ab9",
+      "dataRows": 348047
+    },
+    {
+      "file": "original/gpu/native-budget192.csv.gz",
+      "sha256": "556339bca29d33f64da188a1f04157d924f9f9cbbca9462386c4eaad67ffb3d8",
+      "bytes": 623658,
+      "source": "verified private comparison snapshot",
+      "uncompressedSHA256": "88fb94eb5b01ca9d9c405dc7dd66774641f0a32ef571d1f9a5aa64820e07cf40",
+      "dataRows": 25552
+    },
+    {
+      "file": "original/gpu-intervals.json",
+      "sha256": "961cc77300fdf1298eb625f8e506b8885dc52ef858e065f579f125cdc820a4be",
+      "bytes": 3440,
+      "source": "verified private comparison snapshot"
+    },
+    {
+      "file": "original/stock.json",
+      "sha256": "820538e822680bff91d3cb46c3bf49c35cc7317906cdabd22d48f9c1a14a5978",
+      "bytes": 12404,
+      "source": "verified private comparison snapshot"
+    },
+    {
+      "file": "original/SHA256SUMS",
+      "sha256": "7a9969c1c9ba569a42e5c68d97fb154f848562b222324ca49d52e1211c4f07e9",
+      "bytes": 2012,
+      "source": "verified private comparison snapshot"
+    },
+    {
+      "file": "analysis/cpu-sampling.json",
+      "source": "gbuffer-ui220-mvk3-01/cpu-sample01/RESULT.json",
+      "sourceSHA256": "102a940b7f9fc1e0f2398d74a6c4cf32f67f62c2dde3a149e5d91421aa639c65",
+      "sha256": "e2fe3baf9843efce88d29f848740134949999a7016de96449227e72666bde7c9",
+      "bytes": 1921,
+      "transform": "allowlisted fields"
+    },
+    {
+      "file": "analysis/native-cpu-phases.json",
+      "source": "gbuffer-ui220-mvk3-01/frame-trace01/RESULT.json",
+      "sourceSHA256": "0051cbecd3937d14189f213351f4c3cc6528485f8919f6df3ebc6a3f647d7a8c",
+      "sha256": "6ef6d42d3194bb4c4a3394435df618dfe0517673ab8e478492c75624039ae929",
+      "bytes": 1511,
+      "transform": "allowlisted fields"
+    },
+    {
+      "file": "analysis/submission-overlap.json",
+      "source": "gbuffer-ui220-mvk3-01/gpu-gap220-mvk3-01/SUBMISSION-OVERLAP.json",
+      "sourceSHA256": "49baed833cfe3412a81685748e048267444d75489825eb7dc5bb76a887983e35",
+      "sha256": "1ed68e0d69c0a08a164e628c0194c455953e050633ee2bf2adf0e4032bbaf6cc",
+      "bytes": 3581,
+      "transform": "allowlisted fields"
+    },
+    {
+      "file": "analysis/gpu-stage-matching.json",
+      "source": "gbuffer-ui220-mvk3-01/gpu-gap220-mvk3-01/STAGE-COMPARISON.json",
+      "sourceSHA256": "6c85b7fab96cedce3452b38ba7390217176d694a9f38962ef76b033c91a7a215",
+      "sha256": "b9d188780bcc691764fc833812256979391be5efa9b486baae9437c444393372",
+      "bytes": 5335,
+      "transform": "allowlisted fields"
+    },
+    {
+      "file": "analysis/replay-profile.json",
+      "source": "gbuffer-ui220-mvk3-01/RESULT.json",
+      "sourceSHA256": "c5e91b239db22f266299e2fab47c0a27c1938c0a9ceab89de7268b8132866257",
+      "sha256": "342beab27df98ae0012722017807c3f1aed9cd28a2d4513ef3e04e18d66f1220",
+      "bytes": 3457,
+      "transform": "allowlisted fields"
+    },
+    {
+      "file": "analysis/mvk3-mvk4.json",
+      "source": "mvk3-mvk4-analysis01/RESULT.json",
+      "sourceSHA256": "d28b21c6983f1f479a4ee502224e6078f261980d49ccc35cb650b519a5cba815",
+      "sha256": "52db08f15f5a8a4be944e77e3c0716837160d2ee264a59a849a1463209016e72",
+      "bytes": 1603,
+      "transform": "allowlisted fields"
+    },
+    {
+      "file": "analysis/cas-lineage.json",
+      "source": "cas-input-lineage220-mvk3-02/FIVE-CAPTURE-RESULT.json",
+      "sourceSHA256": "d9dd006da9fa67d9d1dc380093c122f1364381ee8b172e9a9efa6745c1342535",
+      "sha256": "5d5f4d47a1081c64bd375019649da130e403107b59c3240283aa508fb3b785c4",
+      "bytes": 1176,
+      "transform": "allowlisted fields"
+    },
+    {
+      "file": "analysis/screen-copy.json",
+      "source": "sim1200-screen-copy220-mvk3-01/HQ-RESULT.json",
+      "sourceSHA256": "7a067e12d1800090c3597728f445dcdcf40efb93dfa8b1b9740c2acae479c7ec",
+      "sha256": "5c21ce2b5ed51e07c51bc2e2a9744d7cd4ad273c13c198a39e0dc870105bf5d5",
+      "bytes": 731,
+      "transform": "allowlisted fields"
+    }
+  ],
+  "coreSnapshot": "private PR #16, commit 6fb3395"
+}

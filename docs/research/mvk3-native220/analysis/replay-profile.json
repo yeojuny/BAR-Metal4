@@ -1,0 +1,89 @@
+{
+  "status": "PARTIAL_MVK_TIMING_NATIVE_PROFILE_SERVICE_FAILURE",
+  "conclusion": "MVK selected encoder stage costs are usable as replay exploration clues. Native profiling failure prevents a like-for-like GPU cost comparison or attribution of the live throughput gap. No optimization/adoption decision follows from these incomplete timings.",
+  "liveTimingComparison": false,
+  "MVK": {
+    "scope": "Captured multiframe replay, not one live frame",
+    "selectedCosts": [
+      {
+        "encoder": "commands/cb3/re22",
+        "metric": "sum of reported vertex+fragment stage durations",
+        "GPUTimeMs": 1.2055,
+        "vertexMs": 0.4913,
+        "fragmentMs": 0.7142,
+        "fragmentBeginMs": 2.3845,
+        "fragmentEndMs": 3.0987,
+        "positiveDraws": 446,
+        "pipelineLastDraw": "rps137",
+        "vertex": "main0/lib82",
+        "fragment": "main0/lib83",
+        "target": "tex260 BGRA8Unorm1512x982",
+        "classification": "Forward CUS geometry; exact unit/Feature split unverified"
+      },
+      {
+        "encoder": "commands/cb3/re21",
+        "GPUTimeMs": 1.0382,
+        "vertexMs": 0.4932,
+        "fragmentMs": 0.545,
+        "fragmentBeginMs": 1.8394,
+        "fragmentEndMs": 2.3843,
+        "positiveDraws": 446,
+        "lastPositiveDraw": "draw445/api2662 indexCount4509 instanceCount1",
+        "lastPipeline": "rps136",
+        "lastVertex": "main0/lib82",
+        "lastFragment": "main0/lib127",
+        "colorAttachments": [
+          "tex645",
+          "tex655",
+          "tex679",
+          "tex654",
+          "tex680"
+        ],
+        "depth": "tex649",
+        "extent": [
+          1512,
+          950
+        ],
+        "classification": "Five-color CUS MRT; exact unit/Feature split unverified"
+      },
+      {
+        "encoder": "commands/cb3/re62",
+        "GPUTimeMs": 0.1832,
+        "vertexMs": 0.0251,
+        "fragmentMs": 0.1581,
+        "fragmentBeginMs": 4.7915,
+        "fragmentEndMs": 4.9495,
+        "draws": 68,
+        "classification": "CAS followed by UI; cost is combined, not CAS-exclusive",
+        "CASPipeline": "rps70 main0/lib79 main0/lib80",
+        "CASInput": "tex856",
+        "target": "tex260"
+      },
+      {
+        "encoder": "commands/cb3/re64",
+        "GPUTimeMs": 0.0474,
+        "vertexMs": 0.0079,
+        "fragmentMs": 0.0394,
+        "fragmentBeginMs": 4.9788,
+        "fragmentEndMs": 5.0183,
+        "lastPositiveDraw": "draw1/api5039 indexCount6 instanceCount1",
+        "pipeline": "rps63 main0/lib73 main0/lib62",
+        "target": "tex260",
+        "followingExcludedItem": "grp2 vkCmdClearAttachments",
+        "classification": "Final positive UI candidate plus subsequent clear; encoder end is conservative and not exact UI draw end"
+      }
+    ],
+    "timelineFrameDurationMs": 30.2655,
+    "boundaryAssessment": {
+      "firstNonFeatureUnitCUSGbufferEnd": "UNVERIFIED",
+      "lastUIDrawEnd": "UNRESOLVED_PER_COMMAND_TIMING_UNAVAILABLE",
+      "candidateEncoderEndDifferenceMs": 2.634,
+      "candidateEncoderEndDifferenceMeaning": "Only re21 fragment end to re64 fragment end; includes final clear and unverified unit/Feature classification. Not the requested exact common unit-Gbuffer to final-UI interval.",
+      "ranking": "Selected large-cost CUS encoder and CAS/UI only; no claim these are the exact top encoders of a fully verified target interval."
+    }
+  },
+  "Native": {
+    "profileSuccess": false,
+    "GPUCosts": null
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "observedBothBackings": {
+    "engineLifetime": 50,
+    "sceneWarmupAndCounted": 50,
+    "counted": 40
+  },
+  "createdDuringSameRecording": 50,
+  "retainedAcrossNextSensorWorldWrite": 50,
+  "actualPeaks": {
+    "engineLifetime": 4298158,
+    "launchBeforeGameplay": 1340818,
+    "sceneWarmupAndCounted": 4298158,
+    "counted": 3899400,
+    "teardown": 3506184
+  },
+  "unrealisticallyEarlyTailDropPeaks": {
+    "engineLifetime": 4298158,
+    "launchBeforeGameplay": 1340818,
+    "sceneWarmupAndCounted": 4298158,
+    "counted": 3895304,
+    "teardown": 3506184
+  },
+  "maximumPeakDifferenceInThisCounterfactual": {
+    "engineLifetime": 0,
+    "launchBeforeGameplay": 0,
+    "sceneWarmupAndCounted": 0,
+    "counted": 4096,
+    "teardown": 0
+  },
+  "limits": "Hypothetical deletion immediately after draw end keeps all overlap before that point; does not identify the last owner, establish candidate effect, or predict changed runtime scheduling."
+}

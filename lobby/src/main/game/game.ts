@@ -52,6 +52,7 @@ export interface MultiplayerLaunchSettings {
 export class GameAPI {
     public onGameLaunched = new Signal<void>();
     public onGameClosed: Signal<number | null> = new Signal();
+    public onNativeGameForeground = new Signal<void>();
     public readonly startScriptName = "script.txt";
 
     protected gameProcess: ChildProcess | null = null;
@@ -202,7 +203,9 @@ export class GameAPI {
                 });
                 child.stdout?.on("data", (data) => engineLogger.info(`${data}`));
                 child.stderr?.on("data", (data) => engineLogger.error(`${data}`));
-                await waitForExperimentalScene(child, () => this.onGameLaunched.dispatch());
+                await waitForExperimentalScene(child, () => this.onGameLaunched.dispatch(), {
+                    onForeground: () => this.onNativeGameForeground.dispatch(),
+                });
                 return;
             } catch (error) {
                 if (child?.pid && this.experimentalGameProcess === child) {
