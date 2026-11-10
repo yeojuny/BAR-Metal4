@@ -1,0 +1,30 @@
+{
+  "status": "TWO_EXISTING_SAMPLE_DIAGNOSTICS_COMPLETE_NATIVE_TOO_SPARSE_FOR_BOTTLENECK_COMPARISON",
+  "MVKFacts": {
+    "mainSamples": 1219,
+    "varied": true,
+    "mainExplicitCVwaitSamples": 471,
+    "mainQueueFencePathSamples": 469,
+    "mainMesaGlthreadFinishPathSamples": 169,
+    "countsAreInclusivePathWitnessesNotExclusiveCPUTime": true
+  },
+  "nativeFacts": {
+    "mainSamples": 3,
+    "insideCGameDrawOutsideDrawPrepared": 1,
+    "insideDrawPrepared": 1,
+    "insideGameUpdate": 1,
+    "observedMainWaitLeaves": 0,
+    "retireOrSubmissionMainEvidence": "UNVERIFIED_NOT_OBSERVED_IN3_SAMPLES",
+    "singleBlockedMainStack": false,
+    "quality": "INSUFFICIENT"
+  },
+  "conclusion": "Native produced only3 main-thread samples and a10.668-second frame gap under the requested10-second sample. Its3 leaves varied, but cannot identify a dominant original CGame::Draw or retirement bottleneck. MVK produced1219 varied main-thread samples with Lua/scene/GL-driver work and queue-fence waits. The uneven/intrusive collection prevents comparing backend CPU shares.",
+  "limits": [
+    "Both runs are materially intrusive diagnostics, not FPS benchmarks. Native large gap and all unfavorable frames retained.",
+    "Requested10seconds/2ms does not imply5000 usable samples; use actual reported counts3 vs1219.",
+    "Sample counts and stack-path counts are not exclusive CPU time, and nested path-family counts overlap.",
+    "No exact sim/frame ID is attached to individual OS samples; overlap is only bracketed by existing controller bins. Native bracket1320..1355 differs from MVK1320..1650 because target progress differed during collection.",
+    "Physical-footprint headers and existing ps RSS are different OS measures; no memory-improvement or exact GPU residency claim.",
+    "Signal/broadcast leaf calls are shown separately from explicit wait leaves; worker-thread waits are not main-thread CPU work."
+  ]
+}

@@ -4,6 +4,8 @@ The strongest lead is renderer encoding and preparation that extends past the pr
 
 Start with the [review prompt](REVIEW-PROMPT.md), [source inventory](../OVERLAY-MANIFEST.json), and [machine-readable evidence](DATA-MANIFEST.json). This packet separates observations, hypotheses, and gates for a follow-up experiment.
 
+For the earlier cross-backend evidence, see the [MVK3 versus Native 220 packet](../../mvk3-native220/README.md). Its raw traces and wait analysis use a separate test population.
+
 ## Versions and conditions
 
 | Item | Role |

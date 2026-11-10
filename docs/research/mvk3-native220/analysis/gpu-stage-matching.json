@@ -1,0 +1,207 @@
+{
+  "status": "NATIVE_GPU_AND_BOTH_SUBMIT_STREAMS_MEASURED_MVK_GPU_SPLIT_UNRESOLVED",
+  "nativeSameOwnerMs": {
+    "600": {
+      "command_start to opaque_mrt_phase_begin": {
+        "medianMs": 1.66325,
+        "actualOwnerMs": [
+          1.733708,
+          1.592792,
+          1.399417,
+          1.883417
+        ]
+      },
+      "opaque_mrt_phase_begin to opaque_mrt_phase_end": {
+        "medianMs": 0.492771,
+        "actualOwnerMs": [
+          0.515417,
+          0.488833,
+          0.49125,
+          0.494292
+        ]
+      },
+      "opaque_mrt_phase_end to main_before_water_updates": {
+        "medianMs": 0.651,
+        "actualOwnerMs": [
+          0.657292,
+          0.644,
+          0.644708,
+          0.702833
+        ]
+      },
+      "main_before_water_updates to first_bloom_entry": {
+        "medianMs": 0.677583,
+        "actualOwnerMs": [
+          0.663667,
+          0.6665,
+          0.688667,
+          0.693375
+        ]
+      },
+      "first_bloom_entry to main_world_ui_end": {
+        "medianMs": 0.799521,
+        "actualOwnerMs": [
+          0.799458,
+          0.7995,
+          0.799542,
+          0.818375
+        ]
+      },
+      "main_world_ui_end to postprocess_ui_end": {
+        "medianMs": 0.674646,
+        "actualOwnerMs": [
+          0.675792,
+          0.6735,
+          0.685792,
+          0.669833
+        ]
+      },
+      "postprocess_ui_end to frame_end": {
+        "medianMs": 0.035625,
+        "actualOwnerMs": [
+          0.037083,
+          0.034583,
+          0.0345,
+          0.036667
+        ]
+      },
+      "command_start to main_before_water_updates": {
+        "medianMs": 2.816021,
+        "actualOwnerMs": [
+          2.906417,
+          2.725625,
+          2.535375,
+          3.080542
+        ]
+      },
+      "main_before_water_updates to postprocess_ui_end": {
+        "medianMs": 2.15675,
+        "actualOwnerMs": [
+          2.138917,
+          2.1395,
+          2.174,
+          2.181583
+        ]
+      },
+      "command_start to postprocess_ui_end": {
+        "medianMs": 4.955229,
+        "actualOwnerMs": [
+          5.045333,
+          4.865125,
+          4.709375,
+          5.262125
+        ]
+      }
+    },
+    "1200": {
+      "command_start to opaque_mrt_phase_begin": {
+        "medianMs": 1.521854,
+        "actualOwnerMs": [
+          1.775667,
+          1.486208,
+          1.5575,
+          1.463833
+        ]
+      },
+      "opaque_mrt_phase_begin to opaque_mrt_phase_end": {
+        "medianMs": 0.500188,
+        "actualOwnerMs": [
+          0.495708,
+          0.503167,
+          0.497208,
+          0.542125
+        ]
+      },
+      "opaque_mrt_phase_end to main_before_water_updates": {
+        "medianMs": 0.641437,
+        "actualOwnerMs": [
+          0.639292,
+          0.653958,
+          0.632875,
+          0.643583
+        ]
+      },
+      "main_before_water_updates to first_bloom_entry": {
+        "medianMs": 0.684167,
+        "actualOwnerMs": [
+          0.676042,
+          0.682083,
+          0.690833,
+          0.68625
+        ]
+      },
+      "first_bloom_entry to main_world_ui_end": {
+        "medianMs": 0.906896,
+        "actualOwnerMs": [
+          0.912167,
+          0.955333,
+          0.859917,
+          0.901625
+        ]
+      },
+      "main_world_ui_end to postprocess_ui_end": {
+        "medianMs": 0.677792,
+        "actualOwnerMs": [
+          0.679458,
+          0.671708,
+          0.676125,
+          0.685667
+        ]
+      },
+      "postprocess_ui_end to frame_end": {
+        "medianMs": 0.035875,
+        "actualOwnerMs": [
+          0.036958,
+          0.035042,
+          0.035542,
+          0.036208
+        ]
+      },
+      "command_start to main_before_water_updates": {
+        "medianMs": 2.668563,
+        "actualOwnerMs": [
+          2.910667,
+          2.643333,
+          2.687583,
+          2.649542
+        ]
+      },
+      "main_before_water_updates to postprocess_ui_end": {
+        "medianMs": 2.270604,
+        "actualOwnerMs": [
+          2.267667,
+          2.309125,
+          2.226875,
+          2.273542
+        ]
+      },
+      "command_start to postprocess_ui_end": {
+        "medianMs": 4.937771,
+        "actualOwnerMs": [
+          5.178333,
+          4.952458,
+          4.914458,
+          4.923083
+        ]
+      }
+    }
+  },
+  "mvk": {
+    "hitsAllFiveMarkers": 8,
+    "ownersWithValidOrderedTimestamps": 0,
+    "positiveRawCounts": {
+      "DrawGenesis": 7,
+      "prewater": 0,
+      "Bloom": 8,
+      "screen_end": 0,
+      "world_end": 0
+    },
+    "qualifiedGPUWindows": {},
+    "timestampOrigin": "UNPROVEN"
+  },
+  "limits": [
+    "Diagnostics only. The separate first-construction run and historical sim600..1800 Native run share simulation windows but not a frame or clock. Native values alone do not establish how much of the cross-backend gap belongs to any pass.",
+    "All 40 GL group markers issued. Several available queries returned zero. Zero is invalid for this experiment and is not zero duration. CPU issue-to-issue times do not measure GPU. No audio-guard PASS, official FPS comparison, optimization adoption or extra game.",
+    "The global GPU counter pool allocations do not identify these particular 40 results. Metal stage-counter granularity, GPU-copy resolution and CPU fallback are known paths; zero-value cause is not established."
+  ]
+}

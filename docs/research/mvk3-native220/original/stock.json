@@ -1,0 +1,560 @@
+{
+  "recordedUTC": "2026-11-06T04:08:43.184776+00:00",
+  "order": [
+    "MVK3",
+    "MVK4",
+    "220",
+    "220",
+    "MVK4",
+    "MVK3"
+  ],
+  "runs": 6,
+  "retries": 0,
+  "excludedRuns": 0,
+  "excludedBins": 0,
+  "summary": {
+    "MVK3": {
+      "FPS": 226.01935261830016,
+      "samples": 18080,
+      "p99Ms": 7.0,
+      "slow1PercentFPS": 118.06914546640574,
+      "maximumMs": 34.000002,
+      "over16_667ms": 11,
+      "over33_333ms": 1,
+      "interpolation": false,
+      "excluded": 0
+    },
+    "MVK4": {
+      "FPS": 99.2375,
+      "samples": 7937,
+      "p99Ms": 14.0,
+      "slow1PercentFPS": 62.35385799917255,
+      "maximumMs": 35.999998,
+      "over16_667ms": 16,
+      "over33_333ms": 1,
+      "interpolation": false,
+      "excluded": 0
+    },
+    "220": {
+      "FPS": 161.22944295561578,
+      "samples": 12897,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 105.73770491803279,
+      "maximumMs": 21.0,
+      "over16_667ms": 1,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0
+    }
+  },
+  "native220FPSvsMVK3Percent": -28.66564695108259,
+  "native220FPSvsMVK4Percent": 62.468263464532846,
+  "conditions": {
+    "viewport": [
+      1512,
+      950
+    ],
+    "preset": "ultra",
+    "MSAA": 0,
+    "VSync": 0,
+    "simWindow": [
+      600,
+      1800
+    ],
+    "normalQuitFrame": 2250,
+    "measurement": "CPU-facing DrawScreen intervals; pooled complete raw samples"
+  },
+  "parserRecovery": {
+    "preservedOriginalFailures": 2,
+    "sameRawReparsed": true,
+    "gameReexecution": false,
+    "speed": "Require wanted=1/paused=0, preserve actual estimate and exact sim/wall relation",
+    "water": "UI option unavailable is distinct from effective setting; actual Water4 equal; original option removal branch changes only UI exposure"
+  },
+  "limits": [
+    "One controlled macro scene; no general game or pixel parity claim",
+    "Native and preserved Small implementations differ; compiler optimization flags not independently proven",
+    "The same Small engine and Mesa/Zink/loader/MoltenVK library are retained for both MVK arms; only requested Metal backend and original per-backend cache scope differ",
+    "DrawScreen deltas are CPU-facing frame intervals, not exclusive GPU time",
+    "Native-only MRT/Metal4 markers are native evidence only; MVK verified during one initial-warmup stack snapshot; backend labels require actual selection evidence"
+  ],
+  "identities": {
+    "native220EngineSHA256": "4a53fbd8bad898dace64545c47f80acfd806ead6aece2a801da23c5daa83ae2f",
+    "bothMVKArmsEngineSHA256": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa"
+  },
+  "backendEvidence": "MVK4 active and positive retired submissions on same PID/queue; MVK3 markers absent; native checks and warmup loaded-stack evidence retained in original results",
+  "powerControlCaveat": "Runs were unlocked. The actual BC213 limiter widget was enabled. These measurements are separate from the unlocked diagnostic runs with the limiter verified inactive.",
+  "pairwiseFPSChanges": [
+    {
+      "comparison": "MVK3_to_220",
+      "first": "M1_MVK3",
+      "second": "N1_220",
+      "FPSChangePercent": -28.551334047517607
+    },
+    {
+      "comparison": "MVK3_to_220_reverse",
+      "first": "M2_MVK3",
+      "second": "N2_220",
+      "FPSChangePercent": -28.780325689597873
+    },
+    {
+      "comparison": "MVK4_to_220",
+      "first": "M1_MVK4",
+      "second": "N1_220",
+      "FPSChangePercent": 63.31810416132553
+    },
+    {
+      "comparison": "MVK4_to_220_reverse",
+      "first": "M2_MVK4",
+      "second": "N2_220",
+      "FPSChangePercent": 61.621952371442966
+    },
+    {
+      "comparison": "MVK3_to_MVK4",
+      "first": "M1_MVK3",
+      "second": "M1_MVK4",
+      "FPSChangePercent": -56.25183973363696
+    },
+    {
+      "comparison": "MVK3_to_MVK4_reverse",
+      "first": "M2_MVK3",
+      "second": "M2_MVK4",
+      "FPSChangePercent": -55.934405403837985
+    }
+  ],
+  "sourceComparisonSHA256": "20f28fc709b6ea893eff6b20659845b3c44352aa514e953e250e9bd253575052",
+  "rawFrameReferences": [
+    {
+      "run": "M1_MVK3",
+      "backend": "MVK3",
+      "frameSHA256": "44cd5feb77a6f5024f936bbf568868d1e7aa32b99f00a535ed650964cd5359ce",
+      "gameSpeed": {
+        "wantedValues": [
+          1.0
+        ],
+        "actualMinimum": 0.999327898,
+        "actualMaximum": 1.0,
+        "actualValues": [
+          0.999327898,
+          0.999663949,
+          0.999663949,
+          0.999831975,
+          0.999831975,
+          0.999915957,
+          0.999915957,
+          0.999957979,
+          0.999957979,
+          0.999979019,
+          0.999979019,
+          0.99998951,
+          0.99998951,
+          0.999994755,
+          0.999994755,
+          0.999997377,
+          0.999997377,
+          0.999998689,
+          0.999998689,
+          0.999999344,
+          0.999999344,
+          0.999999642,
+          0.999999642,
+          0.999999821,
+          0.999999821,
+          0.999999881,
+          0.999999881,
+          0.99999994,
+          0.99999994,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pausedValues": [
+          "0"
+        ],
+        "simulationSecondsPerWallSecond": 0.9999750143492984,
+        "FPSUnscaled": true
+      },
+      "waterReadout": [
+        {
+          "frame": "480",
+          "Water": "4",
+          "option_water": "nil"
+        },
+        {
+          "frame": "2250",
+          "Water": "4",
+          "option_water": "nil"
+        }
+      ],
+      "frameCSV": "frames/stock/M1_MVK3.csv"
+    },
+    {
+      "run": "M1_MVK4",
+      "backend": "MVK4",
+      "frameSHA256": "0f39e42edd446f8c7083d8688add566cf9e79752fa37b8a1b542c1d8cf377645",
+      "gameSpeed": {
+        "wantedValues": [
+          1.0
+        ],
+        "actualMinimum": 1.0,
+        "actualMaximum": 1.0,
+        "actualValues": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pausedValues": [
+          "0"
+        ],
+        "simulationSecondsPerWallSecond": 1.0000749644192428,
+        "FPSUnscaled": true
+      },
+      "waterReadout": [
+        {
+          "frame": "480",
+          "Water": "4",
+          "option_water": "nil"
+        },
+        {
+          "frame": "2250",
+          "Water": "4",
+          "option_water": "nil"
+        }
+      ],
+      "frameCSV": "frames/stock/M1_MVK4.csv"
+    },
+    {
+      "run": "N1_220",
+      "backend": "220",
+      "frameSHA256": "b60fb63dc220121199c9ed1bb2940039f7b48a412594f3f540d649f54909af5d",
+      "gameSpeed": {
+        "wantedValues": [
+          1.0
+        ],
+        "actualMinimum": 1.0,
+        "actualMaximum": 1.0,
+        "actualValues": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pausedValues": [
+          "0"
+        ],
+        "simulationSecondsPerWallSecond": 0.9999250468184006,
+        "FPSUnscaled": true
+      },
+      "waterReadout": [
+        {
+          "frame": "480",
+          "Water": "4",
+          "option_water": "2"
+        },
+        {
+          "frame": "2250",
+          "Water": "4",
+          "option_water": "2"
+        }
+      ],
+      "frameCSV": "frames/stock/N1_220.csv"
+    },
+    {
+      "run": "N2_220",
+      "backend": "220",
+      "frameSHA256": "dc2b20575286411c3259fcb00479614136e96bce8793fee8655a8c628434c9e9",
+      "gameSpeed": {
+        "wantedValues": [
+          1.0
+        ],
+        "actualMinimum": 1.0,
+        "actualMaximum": 1.0,
+        "actualValues": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pausedValues": [
+          "0"
+        ],
+        "simulationSecondsPerWallSecond": 0.9999750143492984,
+        "FPSUnscaled": true
+      },
+      "waterReadout": [
+        {
+          "frame": "480",
+          "Water": "4",
+          "option_water": "2"
+        },
+        {
+          "frame": "2250",
+          "Water": "4",
+          "option_water": "2"
+        }
+      ],
+      "frameCSV": "frames/stock/N2_220.csv"
+    },
+    {
+      "run": "M2_MVK4",
+      "backend": "MVK4",
+      "frameSHA256": "77c3b427e8701053e7c41bc4965aff0779a824b9394a65e4d43eb5a45faa6c62",
+      "gameSpeed": {
+        "wantedValues": [
+          1.0
+        ],
+        "actualMinimum": 1.0,
+        "actualMaximum": 1.0,
+        "actualValues": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pausedValues": [
+          "0"
+        ],
+        "simulationSecondsPerWallSecond": 0.9999250468184006,
+        "FPSUnscaled": true
+      },
+      "waterReadout": [
+        {
+          "frame": "480",
+          "Water": "4",
+          "option_water": "nil"
+        },
+        {
+          "frame": "2250",
+          "Water": "4",
+          "option_water": "nil"
+        }
+      ],
+      "frameCSV": "frames/stock/M2_MVK4.csv"
+    },
+    {
+      "run": "M2_MVK3",
+      "backend": "MVK3",
+      "frameSHA256": "f48674af82399fa728a1379b48ea1ea6ddeb51584d02dfd9caf2ee531c1034a9",
+      "gameSpeed": {
+        "wantedValues": [
+          1.0
+        ],
+        "actualMinimum": 1.0,
+        "actualMaximum": 1.0,
+        "actualValues": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "pausedValues": [
+          "0"
+        ],
+        "simulationSecondsPerWallSecond": 0.9999750143492984,
+        "FPSUnscaled": true
+      },
+      "waterReadout": [
+        {
+          "frame": "480",
+          "Water": "4",
+          "option_water": "nil"
+        },
+        {
+          "frame": "2250",
+          "Water": "4",
+          "option_water": "nil"
+        }
+      ],
+      "frameCSV": "frames/stock/M2_MVK3.csv"
+    }
+  ]
+}

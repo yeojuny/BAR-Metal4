@@ -1,0 +1,165 @@
+{
+  "status": "COMPLETE_UNLOCKED_POWER_OFF_TRACE_VALIDATED",
+  "order": [
+    "UR1_MVK3_OFF",
+    "UR1_220_OFF",
+    "UR1_220_ON",
+    "UR1_MVK3_ON"
+  ],
+  "retries": 0,
+  "excludedBins": 0,
+  "excludedRuns": 0,
+  "rawFramesExcluded": 0,
+  "OFF_ON": {
+    "mvk3": {
+      "OFF_FPS": 224.6056120575894,
+      "ON_FPS": 224.67809076025006,
+      "ONMinusOFF_FPSPercent": 0.03226931954045664,
+      "OFFWallMsPerDraw": 4.452248502782725,
+      "ONWallMsPerDraw": 4.450812255953705,
+      "ONMinusOFFWallMsPerDraw": -0.0014362468290194386,
+      "interpretation": "One OFF/ON pair in fixed M_OFF/N_OFF/N_ON/M_ON order: apparent difference only; order/noise and instrumentation cost are not separated."
+    },
+    "native": {
+      "OFF_FPS": 161.2709704391831,
+      "ON_FPS": 159.69600979158295,
+      "ONMinusOFF_FPSPercent": -0.976592776313745,
+      "OFFWallMsPerDraw": 6.200743985583631,
+      "ONWallMsPerDraw": 6.261897221509079,
+      "ONMinusOFFWallMsPerDraw": 0.06115323592544808,
+      "interpretation": "One OFF/ON pair in fixed M_OFF/N_OFF/N_ON/M_ON order: apparent difference only; order/noise and instrumentation cost are not separated."
+    }
+  },
+  "sourceComparisonSHA256": "c434743c126a6d43ff40db67d5976f24605b09e2b2fa5884e57a164301d38013",
+  "runs": [
+    {
+      "run": "UR1_MVK3_OFF",
+      "backend": "mvk3",
+      "collectorOn": false,
+      "FPS": 224.6056120575894,
+      "draws": 8984,
+      "seconds": 39.999000549,
+      "frameStats": {
+        "samples": 8983,
+        "coveredSeconds": 39.99299999800054,
+        "p99Ms": 8.0,
+        "slow1PercentFPS": 106.00706738753128,
+        "maximumMs": 21.0,
+        "over16_667ms": 4,
+        "over33_333ms": 0,
+        "rawSHA256": "e730096aa14500fb3d5550dd86137df031e17b1dc0893ea80af68a8e76b6d87c",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 39.999000549,
+        "omittedBoundaryPartialSeconds": 0.0060005509994596196
+      },
+      "frameCSV": "frames/diagnostic-unlocked/UR1_MVK3_OFF.csv"
+    },
+    {
+      "run": "UR1_220_OFF",
+      "backend": "native",
+      "collectorOn": false,
+      "FPS": 161.2709704391831,
+      "draws": 6451,
+      "seconds": 40.000999451,
+      "frameStats": {
+        "samples": 6450,
+        "coveredSeconds": 39.990000000001125,
+        "p99Ms": 8.0,
+        "slow1PercentFPS": 100.77519379844956,
+        "maximumMs": 20.0,
+        "over16_667ms": 2,
+        "over33_333ms": 0,
+        "rawSHA256": "5d2c542597ba1576529ac3b838988edbc7e5a7c01e3e52a0ed72cea5076820d0",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 40.000999451,
+        "omittedBoundaryPartialSeconds": 0.010999450998873783
+      },
+      "frameCSV": "frames/diagnostic-unlocked/UR1_220_OFF.csv"
+    },
+    {
+      "run": "UR1_220_ON",
+      "backend": "native",
+      "collectorOn": true,
+      "FPS": 159.69600979158295,
+      "draws": 6388,
+      "seconds": 40.000999451,
+      "frameStats": {
+        "samples": 6387,
+        "coveredSeconds": 39.99500000400116,
+        "p99Ms": 9.0,
+        "slow1PercentFPS": 93.15866030184182,
+        "maximumMs": 23.0,
+        "over16_667ms": 6,
+        "over33_333ms": 0,
+        "rawSHA256": "038f575c05a6be12470ffd5b157597e17203de7757373cd96fc1581f690cd322",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 40.000999451,
+        "omittedBoundaryPartialSeconds": 0.005999446998835367
+      },
+      "frameCSV": "frames/diagnostic-unlocked/UR1_220_ON.csv"
+    },
+    {
+      "run": "UR1_MVK3_ON",
+      "backend": "mvk3",
+      "collectorOn": true,
+      "FPS": 224.67809076025006,
+      "draws": 8986,
+      "seconds": 39.994998932,
+      "frameStats": {
+        "samples": 8985,
+        "coveredSeconds": 39.98899999700068,
+        "p99Ms": 7.0,
+        "slow1PercentFPS": 113.20754759700952,
+        "maximumMs": 20.0,
+        "over16_667ms": 5,
+        "over33_333ms": 0,
+        "rawSHA256": "3f56615cd6bf9c418d4cdcae30e4aa2026833451010eeab37a844642958ae2a8",
+        "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+        "observerOverhead": "Identical observer in both arms; not independently quantified",
+        "measurementWallSeconds": 39.994998932,
+        "omittedBoundaryPartialSeconds": 0.005998934999318806
+      },
+      "frameCSV": "frames/diagnostic-unlocked/UR1_MVK3_ON.csv"
+    }
+  ],
+  "allRunsUnlockedAndRuntimePowerWidgetInactive": true,
+  "nativeOFFvsMVK3FPSPercent": -28.198156331983004,
+  "OFFFrameIntervalDifferenceMs": 1.748495482800906,
+  "gpuWorkOnlyMsPerObservedDraw": {
+    "mvk3": 3.2130187517552065,
+    "nativeMain": 5.1301351766939804,
+    "nativeMinusMVK3": 1.917116424938774,
+    "mvkPresentRemoval": 1.8582724524312456e-05
+  },
+  "limits": [
+    "Exact simulation600..1800, actual viewport1512x950, same original macro/camera/seed/AI-free scene/audio/normal2250quit; frozen seed validated before only power-policy amendment.",
+    "BC213.lua is selected by Game.gameShortName. Both backends had order0/LimitIdleFps0; at480 idle interface absent, option_limitoffscreenfps=false, VSync0/VSyncGame0; no limiter load line. No new Lua power receipt inside600..1800.",
+    "All existing periodic preflight calls required unlocked/online/active/not asleep/AC/nonthermal. Display active alone does not prove engine active; engine !active10ms sleep unchanged. No OS/security/lock configuration changed.",
+    "Native scope is deferred main command buffers; MVK scope includes work plus presentation command buffers; MVK empty waitIdle buffers omitted. Scoped union includes dependencies/waits; it is not exclusive GPU/shader time, occupancy, or physical memory traffic.",
+    "Outside recorded spans includes all uncovered work, dependency/present scheduling and CPU work; it is not CPU idle. Native vs MVK interval union/outside differences cannot be assigned directly to a pure performance cause.",
+    "Native submit starts after preparation/encoding. Native completion wait/predecessor release and MVK queue/fence/semaphore/present sections may nest/overlap and are not additive serial frame budgets.",
+    "Trace analyzer uses100ms boundary trim and 1Hz draw interpolation. All raw CPU frame deltas/bins remain preserved; no run/bin/outlier removal or FPS rescaling.",
+    "Requested speed1/paused0 required; positive actual speed estimates retained with raw/min/max and sim/wall ratio. Water UI nil remains unavailable; actual Water4 agrees.",
+    "Preserved diagnostic MVK library has33 recorded SDK input differences. Compiler optimization flag parity and pixel/workload equality are not proven. No MVK4 arm.",
+    "Single OFF and ON game each backend, fixed order; no variance estimate and no causal separation of instrumentation overhead/order effects."
+  ],
+  "workOnlyLimits": [
+    "Command-buffer interval union includes dependencies; not exclusive shader/GPU execution.",
+    "Native deferred main and MVK work-only remain different command-buffer organizations; pixel/effect parity not established.",
+    "Same frozen interpolated draw denominators retained; one ON run each, no independent run variance estimate.",
+    "No new game, build, probe or source modification."
+  ],
+  "diagnosticEngineSHA256": {
+    "native": "e747000710f1659b25274ce8a965b95f94b235ff43c5fe511347741e5a1cb803",
+    "mvk3": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa"
+  },
+  "diagnosticRuntimeLibrariesSHA256": {
+    "libEGL.1.dylib": "62adb20871cf6985bde4b20c78ffabd37a590fa9023cf362f87ce16739a3f533",
+    "libgallium-26.3.0-devel.dylib": "ca4f3ddd7a0bf20c7f39636ea58d04ba42bc8b9170f871eac62a53c068ad9c30",
+    "libvulkan.1.4.365.dylib": "b2b4bb1c9db72ff8639958e3137b308c67c15fe35cb846ffd5b1f7703cc0f7cd",
+    "libMoltenVK.1.4.3.dylib": "ea14dd3e20dd5630ec2f8a6c9b959ac5dc5c84e23063bcf03c857fc91b0d8bec"
+  }
+}

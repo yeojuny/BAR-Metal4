@@ -1,0 +1,79 @@
+{
+  "status": "PASS_INDEPENDENT_RAW_WORK_ONLY_SCOPE_CHECK",
+  "comparisonSHA256": "c434743c126a6d43ff40db67d5976f24605b09e2b2fa5884e57a164301d38013",
+  "nativeMainMinusMVKWorkOnlyMsPerDraw": 1.917116424938774,
+  "limitations": [
+    "Command-buffer interval union includes dependencies; not exclusive shader/GPU execution.",
+    "Native deferred main and MVK work-only remain different command-buffer organizations; pixel/effect parity not established.",
+    "Same frozen interpolated draw denominators retained; one ON run each, no independent run variance estimate.",
+    "No new game, build, probe or source modification."
+  ],
+  "runs": {
+    "mvk3": {
+      "csvSHA256": "a26439060919695726ce559e223f8c707426257cab331d9b169a0b7edc536ab9",
+      "method": "Independent Decimal40 clock calibration and sorted interval merge; frozen ROI,100ms clip each edge and existing interpolated draw denominator; no interval-duration subtraction",
+      "interpolatedDraws": 8940.508146834674,
+      "interiorSeconds": 39.79475517,
+      "allUnionSeconds": 28.726186465,
+      "allUnionMsPerDraw": 3.213037334479731,
+      "deltaVsRecordedUnionSeconds": -1.05406e-09,
+      "positiveIntervals": {
+        "1": 21596,
+        "11": 3164
+      },
+      "completedZeroWidthInROI": {
+        "1": 14168,
+        "11": 5777
+      },
+      "workOnlySeconds": 28.726020326,
+      "presentOnlySeconds": 0.000210758,
+      "workPresentOverlapSeconds": 4.4619e-05,
+      "unionReductionSeconds": 0.000166139,
+      "workOnlyMsPerDraw": 3.2130187517552065,
+      "presentOnlyMsPerDraw": 2.3573380454288546e-05,
+      "overlapMsPerDraw": 4.990655929976089e-06,
+      "unionReductionMsPerDraw": 1.8582724524312456e-05,
+      "compressedCSV": "gpu/mvk3-budget192.csv.gz",
+      "compressedSHA256": "21397bf119a113f8576b471e8e37b058d116f88de3f23867911759ef49b46c1c"
+    },
+    "native": {
+      "csvSHA256": "88fb94eb5b01ca9d9c405dc7dd66774641f0a32ef571d1f9a5aa64820e07cf40",
+      "method": "Independent Decimal40 clock calibration and sorted interval merge; frozen ROI,100ms clip each edge and existing interpolated draw denominator; no interval-duration subtraction",
+      "interpolatedDraws": 6355.820618358924,
+      "interiorSeconds": 39.802064217,
+      "allUnionSeconds": 32.606218931,
+      "allUnionMsPerDraw": 5.1301351766939804,
+      "deltaVsRecordedUnionSeconds": -5.2711e-10,
+      "positiveIntervals": {
+        "10": 6358
+      },
+      "completedZeroWidthInROI": {
+        "10": 0
+      },
+      "compressedCSV": "gpu/native-budget192.csv.gz",
+      "compressedSHA256": "556339bca29d33f64da188a1f04157d924f9f9cbbca9462386c4eaad67ffb3d8"
+    }
+  },
+  "pooledCommandBufferIntervals": {
+    "native": {
+      "runs": 1,
+      "interpolatedDraws": 6355.820618358924,
+      "interiorSeconds": 39.802064216986764,
+      "unionSeconds": 32.60621893152711,
+      "scopedUnionMsPerDraw": 5.130135176776914,
+      "recordedSpanFraction": 0.8192092438665881,
+      "outsideRecordedSpansMsPerDraw": 1.1321662012729405,
+      "interiorWallMsPerDraw": 6.262301378049854
+    },
+    "mvk3": {
+      "runs": 1,
+      "interpolatedDraws": 8940.508146834674,
+      "interiorSeconds": 39.79475516997627,
+      "unionSeconds": 28.72618646605406,
+      "scopedUnionMsPerDraw": 3.2130373345976277,
+      "recordedSpanFraction": 0.7218586053201038,
+      "outsideRecordedSpansMsPerDraw": 1.2380245643913383,
+      "interiorWallMsPerDraw": 4.451061898988966
+    }
+  }
+}
