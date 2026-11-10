@@ -1,0 +1,78 @@
+{
+  "scope": "local fixed-scene benchmark only",
+  "promotion": "USER_APPROVED_LOCAL_BENCHMARK_PROMOTED",
+  "engineSHA256": "3a0b5b4cfcd78240117664ce76a5f5ee5b01b4c0d2c03b23a32e1c8b41585ff6",
+  "flags": {
+    "BAR_NATIVE_CPU_READ_PACKET220": "2",
+    "BAR_NATIVE_RESIDENCY_RELEASE220": "1",
+    "BAR_NATIVE_TERRAIN_UNIFORM_RELEASE220": "1",
+    "BAR_NATIVE_SCREEN_TABLE_H5": "1",
+    "BAR_NATIVE_WORLD_PARTICLE_UPLOAD220": "1",
+    "BAR_NATIVE_COMBINED_OVERLAP220": "1",
+    "BAR_NATIVE_FORWARD_BOUNDARY220": "1",
+    "BAR_NATIVE_RESIDENCY_DIFF220": "1",
+    "BAR_NATIVE_TERRAIN_PROGRAM_VALIDATION220": "1",
+    "BAR_NATIVE_TERRAIN_DEFINITION232": "1",
+    "BAR_NATIVE_RANGE_DIVISION233": "1"
+  },
+  "aggregate": {
+    "FPSPercent": 0.6544721858153579,
+    "lowPercent": 0.38777219430485843,
+    "frameMsDifference": -0.03918180860917708
+  },
+  "pairs": [
+    {
+      "pair": 1,
+      "A": 165.94170747387471,
+      "B": 167.35825740880156,
+      "FPSPercent": 0.8536430994298794,
+      "lowA": 113.94557823129253,
+      "lowB": 113.36717428087987
+    },
+    {
+      "pair": 2,
+      "A": 166.22915344734105,
+      "B": 166.94165750384684,
+      "FPSPercent": 0.42862761539088634,
+      "lowA": 111.85308848080135,
+      "lowB": 111.11111111111111
+    },
+    {
+      "pair": 3,
+      "A": 165.675,
+      "B": 166.80416781480815,
+      "FPSPercent": 0.6815559467681531,
+      "lowA": 109.8360655737705,
+      "lowB": 112.22780569514238
+    }
+  ],
+  "fps": {
+    "A": {
+      "FPS": 165.94861785544904,
+      "samples": 19911,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 111.79429849077698,
+      "maximumMs": 13.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0
+    },
+    "B": {
+      "FPS": 167.034705402058,
+      "samples": 20042,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 112.22780569514238,
+      "maximumMs": 14.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0
+    }
+  },
+  "audio": "AUDIO_GATE_SKIPPED_BY_USER",
+  "limitations": [
+    "No full-frame pixel equivalence claim",
+    "No clean-machine or packaged release qualification"
+  ]
+}
