@@ -484,7 +484,7 @@ struct NativeUIRecorder::Impl {
 			screenRaster=!worldStage && (unsigned(mode)>unsigned(NativeDrawPrimitive::Quads) || state.world.frontPolygonMode!=NativePolygonMode::Fill || state.world.backPolygonMode!=NativePolygonMode::Fill);
 			if(worldStage || screenRaster) {if(worldStage)Require(GetWorldDrawRecorder().IsActive(),"Native world frame not begun by host");worldSurface=(HasRawShadowSource()?DrawState():ResolveDrawState()).draw;worldVertices.clear();rawShadowVertices.clear();
     worldGPUTransform=false;screenTransform.affineTexture=false;sourceGPUline=false;
-    if((mode==NativeDrawPrimitive::Lines||mode==NativeDrawPrimitive::LineStrip||mode==NativeDrawPrimitive::LineLoop)&&!HasRawShadowSource()&&OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound&&sourceLine133::Material(worldSurface)&&state.world.lineWidth<=64){
+    if((mode==NativeDrawPrimitive::Lines||mode==NativeDrawPrimitive::LineStrip||mode==NativeDrawPrimitive::LineLoop)&&!HasRawShadowSource()&&OriginalNativeSourceProgramBinding().CurrentKind()==NativeSourceProgramBinding::Kind::Unbound&&sourceLine133::Material(worldSurface)&&state.world.lineWidth<=64){
      const auto& texture=state.matrices[2].back();
      if(state.textureMatrixIdentity||(texture[3]==0&&texture[7]==0&&texture[15]==1)){sourceLineTransform=CaptureSourceLineTransform();sourceGPUline=true;}
     }
@@ -492,7 +492,7 @@ struct NativeUIRecorder::Impl {
      // These two source stages have no inherited water plane. Reject other
      // stages before any inverse-projection work or source-owner snapshot.
      auto world=state.world;world.inheritedClipPlane.reset();
-     if(WorldFillGPUState(worldStageId,worldSurface,world)&&OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound){
+     if(WorldFillGPUState(worldStageId,worldSurface,world)&&OriginalNativeSourceProgramBinding().CurrentKind()==NativeSourceProgramBinding::Kind::Unbound){
       worldGPUHeader={state.matrices[0].back(),state.matrices[1].back(),{float(worldZeroToOne),0,0,0}};
       worldGPUTransform=WorldFontMatricesSafe(worldGPUHeader);
       if(worldGPUTransform){
@@ -521,7 +521,7 @@ struct NativeUIRecorder::Impl {
 		Require(primitive,"Native UI End without Begin");
 		if (CanDraw()) {
 			if(primitiveMode==NativeDrawPrimitive::Points || state.world.frontPolygonMode==NativePolygonMode::Point || state.world.backPolygonMode==NativePolygonMode::Point)
-				Require(OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound,"Generic point draw has an active shader; its original point-size/vertex-output contract is unsupported");
+				Require(OriginalNativeSourceProgramBinding().CurrentKind()==NativeSourceProgramBinding::Kind::Unbound,"Generic point draw has an active shader; its original point-size/vertex-output contract is unsupported");
    if(sourceGPUline){
     auto input=std::make_shared<NativeSourceLineInput133>();input->sourceKind=worldStage?0:1;input->vertices=std::move(worldVertices);input->transforms.push_back(sourceLineTransform);sourceLine133::Topology(*input,primitiveMode,state.world);
     if(!input->segments.empty()){

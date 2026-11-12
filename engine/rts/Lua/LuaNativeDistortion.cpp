@@ -434,7 +434,7 @@ bool Available()
  auto& actual=OriginalNativeTextureContext();
  return services.ready&&services.compile&&services.ready()&&actual.Initialized()&&actual.UIAttached()&&actual.Registry().ContextGeneration()&&ui::GetRecorder().TextureObserver()==&actual.UI();
 }
-void Reset(){for(const auto& weak:contexts)if(auto context=weak.lock())context->Release();contexts.clear();if(OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Distortion)OriginalNativeSourceProgramBinding().Unbind();}
+void Reset(){for(const auto& weak:contexts)if(auto context=weak.lock())context->Release();contexts.clear();if(OriginalNativeSourceProgramBinding().CurrentKind()==NativeSourceProgramBinding::Kind::Distortion)OriginalNativeSourceProgramBinding().Unbind();}
 bool PushEntries(lua_State* state)
 {
 	sol::state_view lua(state); auto gl = sol::stack::get<sol::table>(state, -1); auto family = lua.create_table();

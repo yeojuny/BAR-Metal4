@@ -1,0 +1,287 @@
+{
+  "baseline_commit": "e4beaa3eb9856115508635f1147bf8a36bc220ae",
+  "scope": "Current/Restore call sites of the actual NativeSourceProgramBinding under engine/rts; baseline inventory, not post-migration line numbers",
+  "entries": [
+    {
+      "path": "engine/rts/Lua/LuaNativeCUSSource.cpp",
+      "line": 52,
+      "symbol": "Context::Active",
+      "classification": "inspect-owner",
+      "purpose": "Check kind, owner, source context and deleted flag; return retained typed CUS owner.",
+      "recommended_observation": "InspectCurrent locally; copy selected owner before any mutation/callback. Do not force terrain seal.",
+      "source_line": "\t\tconst auto selected=OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeDeferredLights.cpp",
+      "line": 122,
+      "symbol": "Context::Active",
+      "classification": "inspect-owner",
+      "purpose": "Check kind, owner, source context and deleted flag; return retained typed DeferredLights owner.",
+      "recommended_observation": "InspectCurrent locally; copy selected owner before any mutation/callback. Do not force terrain seal.",
+      "source_line": "\t\tconst auto selected = OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeDistortion.cpp",
+      "line": 161,
+      "symbol": "Context::Active",
+      "classification": "inspect-owner",
+      "purpose": "Check kind, owner, source context and deleted flag; return retained typed Distortion owner.",
+      "recommended_observation": "InspectCurrent locally; copy selected owner before any mutation/callback. Do not force terrain seal.",
+      "source_line": "\t\tconst auto selected = OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeOutline.cpp",
+      "line": 122,
+      "symbol": "Context::Active",
+      "classification": "inspect-owner",
+      "purpose": "Check kind, owner, source context and deleted flag; return retained typed Outline owner.",
+      "recommended_observation": "InspectCurrent locally; copy selected owner before any mutation/callback. Do not force terrain seal.",
+      "source_line": "\t\tconst auto selected = OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitStencil.cpp",
+      "line": 72,
+      "symbol": "Context::Active",
+      "classification": "inspect-owner",
+      "purpose": "Check kind, owner, source context and deleted flag; return retained typed UnitStencil owner.",
+      "recommended_observation": "InspectCurrent locally; copy selected owner before any mutation/callback. Do not force terrain seal.",
+      "source_line": "\t\tconst auto selected=OriginalNativeSourceProgramBinding().Current();if(selected.kind!=NativeSourceProgramBinding::Kind::UnitStencil||!selected.owner)return{};"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeDistortion.cpp",
+      "line": 437,
+      "symbol": "Reset",
+      "classification": "teardown",
+      "purpose": "After releasing contexts, unbind only Distortion selection.",
+      "recommended_observation": "CurrentKind, without materializing a saved terrain state.",
+      "source_line": "void Reset(){for(const auto& weak:contexts)if(auto context=weak.lock())context->Release();contexts.clear();if(OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Distortion)OriginalNativeSourceProgramBinding().Unbind();}"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitGlass.cpp",
+      "line": 36,
+      "symbol": "Context::Retire",
+      "classification": "teardown",
+      "purpose": "Retain selection across loop that unbinds matching owner, clears compiled state and programs.",
+      "recommended_observation": "Keep owning value copy. Borrowing across Unbind changes the observed selection.",
+      "source_line": " void Retire(){if(closed)return;closed=true;auto active=OriginalNativeSourceProgramBinding().Current();for(auto& p:programs){if(active.owner==p)OriginalNativeSourceProgramBinding().Unbind();p->deleted=true;p->compiled.reset();p->state.compiled.reset();}programs.clear();models.Reset();}"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitGlass.cpp",
+      "line": 39,
+      "symbol": "Context::Active",
+      "classification": "inspect-owner",
+      "purpose": "Check UnitGlass kind, retained owner, live context and deleted flag.",
+      "recommended_observation": "InspectCurrent locally; copy typed owner before further work.",
+      "source_line": " std::shared_ptr<Program> Active(){Actual();auto s=OriginalNativeSourceProgramBinding().Current();Check(s.kind==NativeSourceProgramBinding::Kind::UnitGlass&&s.owner,\"Glass uniform has no active source program\");auto p=std::const_pointer_cast<Program>(std::static_pointer_cast<const Program>(s.owner));Check(!p->deleted&&p->context.lock().get()==this,\"Glass program belongs to another/deleted source context\");return p;}"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitGlass.cpp",
+      "line": 48,
+      "symbol": "RestoreGlassSelection",
+      "classification": "save-restore",
+      "purpose": "Restore saved selection after guarding UnitGlass deleted/closed/expired context; failed guard unbinds.",
+      "recommended_observation": "Restore owning Selection; preserve family-specific guard.",
+      "source_line": " OriginalNativeSourceProgramBinding().Restore(std::move(saved));"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitGlass.cpp",
+      "line": 70,
+      "symbol": "Create: ActiveShader lambda",
+      "classification": "save-restore",
+      "purpose": "Save whole selection before binding and invoking Lua protected function; restore on success or C++ catch, then rethrow.",
+      "recommended_observation": "SaveCurrent, never borrowed inspection; nested callback can change terrain uniforms.",
+      "source_line": " Bind(t,\"ActiveShader\",[c](unsigned h,sol::protected_function f){c->Actual();auto saved=OriginalNativeSourceProgramBinding().Current();OriginalNativeSourceProgramBinding().BindUnitGlass(c->Get(h));try{auto r=f();if(!r.valid()){sol::error e=r;throw std::runtime_error(e.what());}}catch(...){RestoreGlassSelection(std::move(saved));throw;}RestoreGlassSelection(std::move(saved));});"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitGlass.cpp",
+      "line": 71,
+      "symbol": "Create: DeleteShader lambda",
+      "classification": "teardown",
+      "purpose": "Unbind matching owner before deleted flag and compiled owners reset.",
+      "recommended_observation": "Keep owning snapshot initially; do not widen into generic deletion policy.",
+      "source_line": " Bind(t,\"DeleteShader\",[c](unsigned h){auto p=c->Get(h);auto s=OriginalNativeSourceProgramBinding().Current();if(s.owner==p)OriginalNativeSourceProgramBinding().Unbind();p->deleted=true;p->compiled.reset();p->state.compiled.reset();});"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitGlass.cpp",
+      "line": 89,
+      "symbol": "DrawPiece",
+      "classification": "capture/read",
+      "purpose": "Read selected UnitGlass program then copy its state and selected texture snapshots into retained draw.",
+      "recommended_observation": "Retain selection/typed owner through capture; observation boundary, not kind-only.",
+      "source_line": " auto selection=OriginalNativeSourceProgramBinding().Current();if(selection.kind!=NativeSourceProgramBinding::Kind::UnitGlass)return false;"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitStencil.cpp",
+      "line": 184,
+      "symbol": "PushEntries: ActiveShader lambda",
+      "classification": "save-restore",
+      "purpose": "Alias binding=OriginalNativeSourceProgramBinding; save previous selection then bind target.",
+      "recommended_observation": "SaveCurrent; retain value across callback.",
+      "source_line": "\t\tauto& binding=OriginalNativeSourceProgramBinding();auto previous=binding.Current();binding.BindUnitStencil(context->Get(handle));"
+    },
+    {
+      "path": "engine/rts/Lua/LuaNativeUnitStencil.cpp",
+      "line": 185,
+      "symbol": "PushEntries: ActiveShader lambda",
+      "classification": "save-restore",
+      "purpose": "Two Restore calls on same line: catch restores before rethrow; normal path restores too. No deleted-owner guard here.",
+      "recommended_observation": "Preserve both restores; no implicit deletion-policy change.",
+      "source_line": "\t\ttry{auto result=callback();if(!result.valid()){sol::error e=result;throw std::runtime_error(e.what());}}catch(...){binding.Restore(std::move(previous));throw;}binding.Restore(std::move(previous));"
+    },
+    {
+      "path": "engine/rts/Lua/LuaShaders.cpp",
+      "line": 887,
+      "symbol": "LuaShaders::ActiveShader",
+      "classification": "save-restore",
+      "purpose": "Under RECOIL_METAL4_LIVE_SCENE save native selection before binding actual GL program and lua_pcall.",
+      "recommended_observation": "SaveCurrent. Existing glGetIntegerv/glUseProgram side effects/order remain unchanged.",
+      "source_line": "\tconst auto originalNativeProgram=rendering::OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Lua/LuaShaders.cpp",
+      "line": 900,
+      "symbol": "LuaShaders::ActiveShader",
+      "classification": "save-restore",
+      "purpose": "Restore saved native selection after lua_pcall and GL restore, before lua_error propagation.",
+      "recommended_observation": "Restore owning Selection. Do not delay sealing until after callback.",
+      "source_line": "\trendering::OriginalNativeSourceProgramBinding().Restore(originalNativeProgram);"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeOriginalShadowParticlesProgramSource.h",
+      "line": 38,
+      "symbol": "NativeOriginalShadowParticlesProgramSource::Reset",
+      "classification": "teardown",
+      "purpose": "Read matching compiled owner, unbind if selected, then clear variant owners and state. noexcept reset.",
+      "recommended_observation": "Keep owning copy for initial migration; no seal or throwing work in noexcept reset.",
+      "source_line": "\t\tconst auto current=OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeUIRecorder.cpp",
+      "line": 487,
+      "symbol": "Impl::StartPrimitive",
+      "classification": "inspect-kind",
+      "purpose": "Choose fixed-source line optimization only when no custom shader is selected.",
+      "recommended_observation": "CurrentKind; no publication/content observation required.",
+      "source_line": "    if((mode==NativeDrawPrimitive::Lines||mode==NativeDrawPrimitive::LineStrip||mode==NativeDrawPrimitive::LineLoop)&&!HasRawShadowSource()&&OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound&&sourceLine133::Material(worldSurface)&&state.world.lineWidth<=64){"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeUIRecorder.cpp",
+      "line": 495,
+      "symbol": "Impl::StartPrimitive",
+      "classification": "inspect-kind",
+      "purpose": "Choose fixed world-fill GPU transform only for Unbound selection.",
+      "recommended_observation": "CurrentKind; no publication/content observation required.",
+      "source_line": "     if(WorldFillGPUState(worldStageId,worldSurface,world)&&OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound){"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeUIRecorder.cpp",
+      "line": 524,
+      "symbol": "Impl::FinishPrimitive",
+      "classification": "inspect-kind",
+      "purpose": "Reject generic point path with active shader.",
+      "recommended_observation": "CurrentKind; no publication/content observation required.",
+      "source_line": "\t\t\t\tRequire(OriginalNativeSourceProgramBinding().Current().kind==NativeSourceProgramBinding::Kind::Unbound,\"Generic point draw has an active shader; its original point-size/vertex-output contract is unsupported\");"
+    },
+    {
+      "path": "engine/rts/Rendering/EngineBridge/NativeGenericShadowSource.cpp",
+      "line": 19,
+      "symbol": "NativeGenericShadowSource::Snapshot",
+      "classification": "capture/read",
+      "purpose": "Validate EngineModel selection and retain compiledOriginal owner in immutable shadow input.",
+      "recommended_observation": "Explicit capture/owning observation; preserve owner retained in result.",
+      "source_line": "\tconst auto program=OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp",
+      "line": 62,
+      "symbol": "SourceProgram::~SourceProgram",
+      "classification": "teardown",
+      "purpose": "Check originalProgram provenance; unbind matching terrain source before removing livePrograms entry.",
+      "recommended_observation": "Inspect only, never seal/allocate/throw from destructor; no borrowed use after Unbind.",
+      "source_line": "  const auto current=OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp",
+      "line": 221,
+      "symbol": "SourceProgram::OwnsCurrent",
+      "classification": "inspect-owner",
+      "purpose": "Check program pointer, originalProgramGeneration and sourceRevision; does not prove uniform owner equality.",
+      "recommended_observation": "InspectCurrent; must not trigger uniform sealing for every setter.",
+      "source_line": "  const auto current=OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp",
+      "line": 265,
+      "symbol": "SourceProgram::Write exact-match branch",
+      "classification": "inspect-owner",
+      "purpose": "Check kind/consumer and MatchesCurrentPublication for aligned no-op; stale snapshot falls back.",
+      "recommended_observation": "InspectCurrent. Keep full owner alignment proof and stale fallback.",
+      "source_line": "   const auto current=OriginalNativeSourceProgramBinding().Current();"
+    },
+    {
+      "path": "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp",
+      "line": 329,
+      "symbol": "CaptureCurrentNativeTerrainProgram",
+      "classification": "capture/read",
+      "purpose": "Validate publication/current original owner and return retained program/uniform snapshot for draw.",
+      "recommended_observation": "Explicit owning capture boundary; future T3 sealing must occur here and at saves.",
+      "source_line": " const auto current=OriginalNativeSourceProgramBinding().Current();"
+    }
+  ],
+  "counts": {
+    "sites": 25,
+    "classifications": {
+      "capture/read": 3,
+      "inspect-kind": 3,
+      "inspect-owner": 8,
+      "save-restore": 6,
+      "teardown": 5
+    }
+  },
+  "searches": [
+    "git grep OriginalNativeSourceProgramBinding e4beaa3 -- engine/rts",
+    "git grep NativeSourceProgramBinding e4beaa3 -- engine/rts",
+    "git grep -E \"\\.Current\\(|\\.Restore\\(\" e4beaa3 -- engine/rts; inspect aliases and enclosing functions"
+  ],
+  "alias_findings": [
+    {
+      "name": "binding",
+      "path": "engine/rts/Lua/LuaNativeUnitStencil.cpp",
+      "scope": "ActiveShader lambda",
+      "Current": 184,
+      "Restore": [
+        185,
+        185
+      ]
+    },
+    {
+      "name": "programs",
+      "path": "engine/rts/Rendering/EngineBridge/NativeWaterGroundSourceCapture.h",
+      "purpose": "Injected NativeSourceProgramBinding reference; implementation calls TerrainOwner(), not Current/Restore."
+    }
+  ],
+  "excluded_false_positives": [
+    {
+      "path": "engine/rts/Rendering/Backend/NativeParticleAtlasSource.cpp",
+      "symbols": "ScopedBinding::Restore / binding.Restore",
+      "reason": "Texture binding guard, not NativeSourceProgramBinding."
+    },
+    {
+      "symbols": "OriginalCUSUniformCapture().Current(), recorder.CurrentState(), texture History.Current, other Current methods",
+      "reason": "Different state domains; no program-binding seal implication."
+    }
+  ],
+  "source_sha256": {
+    "engine/rts/Lua/LuaNativeCUSSource.cpp": "7f934b6b49ce9c98b460f8670a205237f167de271e49b89b567f068967195c06",
+    "engine/rts/Lua/LuaNativeDeferredLights.cpp": "fc9b9b0dbd3a2bf8441b8958eebbf534d39f2e69ba317bd4716a475feb20d340",
+    "engine/rts/Lua/LuaNativeDistortion.cpp": "3d103b1d45b20c9e9977dcfa7d604369c03fab55dc474c34d479929c2aa7d006",
+    "engine/rts/Lua/LuaNativeOutline.cpp": "b364601f5626c386293d44d226e659ff2a2c5212791deef0661277cf0183b121",
+    "engine/rts/Lua/LuaNativeUnitGlass.cpp": "f3f3653e67ceafb24ae263ed5881312dd8a3f224c190d5f5cabbeff925de5a08",
+    "engine/rts/Lua/LuaNativeUnitStencil.cpp": "14cd097abea3d854da093c696e7b873ccfe4894e76e79df4d412a13636ae03be",
+    "engine/rts/Lua/LuaShaders.cpp": "63be22a9fe3865e161ea3e9272cb514f45854d248b3d692cd6c30c1302a613bb",
+    "engine/rts/Rendering/Backend/NativeOriginalShadowParticlesProgramSource.h": "331b72bbd8c831eda59b1a42fada3659c834645a7e66936149bf08f3331be774",
+    "engine/rts/Rendering/Backend/NativeUIRecorder.cpp": "615a623a425851396711e8afafeeb05e57608c1d68e18887c78a47d0a84c062d",
+    "engine/rts/Rendering/EngineBridge/NativeGenericShadowSource.cpp": "bcfc1d132ea36c981448e99fa15dbb4f1257182c4218ee66796c712e10c76478",
+    "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp": "07519cf9679f3610066615c32cc0ea171c1356b85d081306b7e7c84721b0b5a7"
+  }
+}

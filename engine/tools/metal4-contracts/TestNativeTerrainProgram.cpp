@@ -52,6 +52,39 @@ int main(){using namespace rendering;
  check(OriginalNativeSourceProgramBinding().Current().terrainSource->definition==initialDefinition);
  check(b.identity==initialDefinition->identity&&b.consumer==initialDefinition->consumer);
  check(std::get<std::vector<float>>(before.uniforms->values.at("value").values)[0]==0);
+ // Inspection is a borrowed immediate view, not a retained SaveCurrent snapshot.
+ auto& binding=OriginalNativeSourceProgramBinding();
+ const auto& inspection=binding.InspectCurrent();const auto* selectionAddress=&inspection;
+ const auto sourceOwners=inspection.terrainSource.use_count();
+ const auto consumerOwners=inspection.terrain.use_count();
+ allocationBaseline=allocations;
+ check(&binding.InspectCurrent()==selectionAddress);
+ check(binding.CurrentKind()==NativeSourceProgramBinding::Kind::Terrain);
+ check(binding.InspectCurrent().terrainSource.use_count()==sourceOwners);
+ check(binding.InspectCurrent().terrain.use_count()==consumerOwners);
+ check(allocations==allocationBaseline);
+ // Nested save/restore mirrors an ActiveShader callback unwinding an exception.
+ auto outer=binding.SaveCurrent();auto outerOwner=outer.terrainSource;
+ auto nonterrainOwner=std::make_shared<int>(42);
+ binding.BindCUS(nonterrainOwner);auto inner=binding.SaveCurrent();
+ check(binding.CurrentKind()==NativeSourceProgramBinding::Kind::CUS);
+ try{
+  binding.Restore(outer);p->SetUniform1f(slot,17.f);
+  check(outer.terrainSource==outerOwner);
+  check(std::get<std::vector<float>>(outerOwner->uniforms->values.at("value").values)[0]==2.f);
+  throw 17; // Dedicated fixture exception, never swallow check failures.
+ }catch(int){binding.Restore(inner);}
+ check(binding.CurrentKind()==NativeSourceProgramBinding::Kind::CUS);
+ check(binding.InspectCurrent().owner==nonterrainOwner);
+ binding.Restore(outer);rejects([&]{CaptureCurrentNativeTerrainProgram();});
+ TakeNativeTerrainUniformWriteStats();p->SetUniform1f(slot,17.f);
+ stats=TakeNativeTerrainUniformWriteStats();check(stats.stalePublicationFallbacks==1&&stats.publications==1);
+ check(std::get<std::vector<float>>(CaptureCurrentNativeTerrainProgram().uniforms->values.at("value").values)[0]==17.f);
+ check(outer.terrainSource==outerOwner);
+ // The borrowed Selection address stays stable but observes subsequent bindings.
+ binding.Restore(inner);check(selectionAddress==&binding.InspectCurrent());
+ check(inspection.kind==NativeSourceProgramBinding::Kind::CUS);
+ binding.Restore(outer);p->SetUniform1f(slot,2.f);
  auto saved=OriginalNativeSourceProgramBinding().Current();
  p->SetUniform1f(slot,3.f);auto c=CaptureCurrentNativeTerrainProgram();
  OriginalNativeSourceProgramBinding().Restore(saved);TakeNativeTerrainUniformWriteStats();
@@ -134,6 +167,16 @@ int main(){using namespace rendering;
  lua->DisableRaw();lua->Release();lua->EnableRaw();
  check(OriginalNativeSourceProgramBinding().Current().terrainSource->state==NativeTerrainProgramPublication::State::Unlinked);
  check(OriginalNativeSourceProgramBinding().Current().terrainSource->definition!=importedDefinition);
- rejects([&]{CaptureCurrentNativeTerrainProgram();});lua->DisableRaw();lua.reset();ConfigureNativeTerrainProgramSource({});
+ rejects([&]{CaptureCurrentNativeTerrainProgram();});lua->DisableRaw();lua.reset();
+ // A saved binding owns publications, not the original writer object.
+ auto dying=CreateNativeTerrainProgramSource(NativeTerrainProgramSelection::ForwardStandard,"dying","");
+ dying->Link();dying->EnableRaw();auto orphan=binding.SaveCurrent();dying.reset();
+ check(binding.CurrentKind()==NativeSourceProgramBinding::Kind::Unbound);
+ binding.Restore(orphan);rejects([&]{CaptureCurrentNativeTerrainProgram();});binding.Unbind();
+ auto replacement=CreateNativeTerrainProgramSource(NativeTerrainProgramSelection::ForwardStandard,"replacement","");
+ replacement->Link();replacement->EnableRaw();auto replacementBinding=binding.SaveCurrent();
+ binding.Restore(orphan);rejects([&]{CaptureCurrentNativeTerrainProgram();});
+ binding.Restore(replacementBinding);check(bool(CaptureCurrentNativeTerrainProgram().consumer));
+ replacement->DisableRaw();replacement.reset();binding.Unbind();ConfigureNativeTerrainProgramSource({});
  std::cout<<"PASS "<<checks<<" terrain writer contract checks; GPU/Lua/gameplay not exercised\n";
 }

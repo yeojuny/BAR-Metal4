@@ -884,7 +884,7 @@ int LuaShaders::ActiveShader(lua_State* L)
 	GLint currentProgram;
 	glGetIntegerv(GL_CURRENT_PROGRAM, &currentProgram);
 #ifdef RECOIL_METAL4_LIVE_SCENE
-	const auto originalNativeProgram=rendering::OriginalNativeSourceProgramBinding().Current();
+	const auto originalNativeProgram=rendering::OriginalNativeSourceProgramBinding().SaveCurrent();
 	rendering::OriginalNativeSourceProgramBinding().BindOriginalGL(prog?prog->id:0);
 	glUseProgram(prog?prog->id:0);
 #else

@@ -35,7 +35,14 @@ public:
  void BindTerrainSource(std::shared_ptr<const NativeTerrainProgramPublication>);
  void BindOriginalGL(std::uint32_t name){current={};if(name){current.kind=Kind::UnsupportedGL;current.originalGLName=name;}}
  void Unbind()noexcept{current={};}
+ // Immediate inspection only: never retain this reference across a bind,
+ // restore, callback, or source mutation. It is not a saved source snapshot.
+ const Selection& InspectCurrent()const noexcept{return current;}
+ Kind CurrentKind()const noexcept{return current.kind;}
+ // Explicit state-preservation boundary for nested ActiveShader callbacks.
+ // Current remains the owning observation API for existing draw consumers.
  Selection Current()const{return current;}
+ Selection SaveCurrent()const{return Current();}
  void Restore(Selection saved){current=std::move(saved);}
  bool IsCUS(const std::shared_ptr<const void>& actualProgram)const noexcept{
   return current.kind==Kind::CUS&&actualProgram&&current.owner.get()==actualProgram.get();

@@ -181,7 +181,7 @@ sol::table CreateContext(lua_State* L){
 	});
 	Bind(table,"UseShader",[context](unsigned handle){if(handle)OriginalNativeSourceProgramBinding().BindUnitStencil(context->Get(handle));else OriginalNativeSourceProgramBinding().Unbind();});
 	Bind(table,"ActiveShader",[context](unsigned handle,sol::protected_function callback){
-		auto& binding=OriginalNativeSourceProgramBinding();auto previous=binding.Current();binding.BindUnitStencil(context->Get(handle));
+		auto& binding=OriginalNativeSourceProgramBinding();auto previous=binding.SaveCurrent();binding.BindUnitStencil(context->Get(handle));
 		try{auto result=callback();if(!result.valid()){sol::error e=result;throw std::runtime_error(e.what());}}catch(...){binding.Restore(std::move(previous));throw;}binding.Restore(std::move(previous));
 	});
 	Bind(table,"DeleteShader",[context](unsigned handle){auto p=context->Get(handle);if(OriginalNativeSourceProgramBinding().IsUnitStencil(p))OriginalNativeSourceProgramBinding().Unbind();p->deleted=true;p->consumer.reset();p->floats.clear();});

@@ -59,7 +59,7 @@ public:
   livePrograms.push_back(this);
  }
  ~SourceProgram()override{
-  const auto current=OriginalNativeSourceProgramBinding().Current();
+  const auto& current=OriginalNativeSourceProgramBinding().InspectCurrent();
   if(current.terrainSource&&current.terrainSource->definition&&current.terrainSource->definition->identity.originalProgram==this)OriginalNativeSourceProgramBinding().Unbind();
   if(shaderHandler->GetCurrentlyBoundProgram()==this)shaderHandler->SetCurrentlyBoundProgram(nullptr);
   livePrograms.erase(std::find(livePrograms.begin(),livePrograms.end(),this));
@@ -218,7 +218,7 @@ private:
   definition.reset();consumer=linked.consumer;unsupportedReason.clear();state=NativeTerrainProgramPublication::State::Linked;valid=true;
  }
  bool OwnsCurrent()const{
-  const auto current=OriginalNativeSourceProgramBinding().Current();
+  const auto& current=OriginalNativeSourceProgramBinding().InspectCurrent();
   return current.terrainSource&&current.terrainSource->definition&&current.terrainSource->definition->identity.originalProgram==this&&
    current.terrainSource->definition->identity.originalProgramGeneration==identity.originalProgramGeneration&&
    current.terrainSource->definition->identity.sourceRevision==identity.sourceRevision;
@@ -262,7 +262,7 @@ private:
    if(exact)for(size_t i=0;i<size;++i)if(std::memcmp(&(*values)[i],input+i,sizeof(T))!=0){exact=false;break;}
   }
   if(exact){
-   const auto current=OriginalNativeSourceProgramBinding().Current();
+   const auto& current=OriginalNativeSourceProgramBinding().InspectCurrent();
    // OwnsCurrent alone is insufficient after Current(A), Write(B), Restore(A).
    // Also retain unsupported/unlinked publication behavior and binding repair.
    const bool bindingAligned=state==NativeTerrainProgramPublication::State::Linked?
@@ -329,8 +329,14 @@ NativeTerrainProgramSnapshot CaptureCurrentNativeTerrainProgram()
  const auto current=OriginalNativeSourceProgramBinding().Current();
  Require(bool(current.terrainSource),"Actual current water-ground program has no native terrain source publication");
  const auto& source=*current.terrainSource;
- Require(source.definition&&source.definition->identity.originalProgram&&
-  Actual(const_cast<Shader::IProgramObject*>(source.definition->identity.originalProgram)).MatchesCurrentPublication(source),
+ Require(source.definition&&source.definition->identity.originalProgram,
+  "Actual current terrain source publication has no original owner");
+ // A saved Selection retains definition/uniform data, not the source writer.
+ // Restore after deletion must reject without dynamic_cast/dereferencing a dead
+ // provenance pointer. Exact publication matching below also rejects reuse of
+ // the address by a different live program lifetime.
+ const auto live=std::find(livePrograms.begin(),livePrograms.end(),source.definition->identity.originalProgram);
+ Require(live!=livePrograms.end()&&(*live)->MatchesCurrentPublication(source),
   "Actual current terrain source publication no longer matches its original owner revision");
  if(source.state==NativeTerrainProgramPublication::State::Unsupported)throw std::runtime_error(source.unsupportedReason);
  Require(source.state==NativeTerrainProgramPublication::State::Linked&&current.kind==NativeSourceProgramBinding::Kind::Terrain&&
