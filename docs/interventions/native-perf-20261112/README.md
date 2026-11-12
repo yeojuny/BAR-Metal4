@@ -31,7 +31,7 @@ All new rendering experiments are off unless explicitly enabled. The fixed-width
 
 ## Download / build / run
 
-The intervention branch currently exists locally only. GitHub publication is blocked; do not try to clone this branch from the remote. Use the privately delivered cumulative patch on the pinned base. A separate test app is being packaged; it is not yet gameplay-qualified.
+The intervention source is published on the separate [`intervention/native-perf-20261112`](https://github.com/yeojuny/BAR-Metal4/tree/intervention/native-perf-20261112) branch. The initial published tree exactly matches local source snapshot `ab5586b17972957d918c1299e85b5766721c9460`; the original branches are unchanged. GitHub's source ZIP is source code, not a directly runnable Mac app. A separate test app is being packaged; it is not yet gameplay-qualified.
 
 Read `docs/REPRODUCING.md` and upstream `engine/README.markdown` first. Repository starting recipe:
 
