@@ -2,6 +2,7 @@
 #include "Metal4MapEdgeRenderer.h"
 #include "NativeSampleShadingShaders.h"
 #include <tuple>
+#include <array>
 #include "Metal4NativeEffectState.h"
 #include "Rendering/Backend/NativeCUSDeferredData.h"
 #import <simd/simd.h>
@@ -80,6 +81,26 @@ fragment float4 MapEdgeFragment(EdgeVarying input [[stage_in]],constant EdgeUnif
 	return float4(mix(u.fogColor.rgb,result,input.alphaFog.y),input.alphaFog.x);
 }
 )MSL";
+// Forward-only CPU submission plan; shader and instance storage stay unchanged.
+uint32_t ForwardStripLength220(uint32_t cols,uint32_t rows,uint32_t trimCols,uint32_t trimRows,const mapedge::Mirror& mirror)
+{
+ const uint32_t c=mirror[0]>0.5f?trimCols:cols,r=mirror[1]>0.5f?trimRows:rows;
+ const bool rev=(mirror[0]>0.5f&&mirror[2]<0.f)!=(mirror[1]>0.5f&&mirror[3]<0.f);
+ const bool mapRev=(mirror[0]>0.5f&&mirror[2]>0.f)!=(mirror[1]>0.5f&&mirror[3]>0.f);
+ const bool alongZ=rev==mapRev;
+ return (alongZ?c:r)*(2*((alongZ?r:c)+1)+2);
+}
+struct ForwardStripRun220 {uint32_t first=0,instances=0,vertices=0;};
+struct ForwardStripPlan220 {std::array<ForwardStripRun220,8> runs{};uint32_t count=0;};
+ForwardStripPlan220 MakeForwardStripPlan220(const std::array<uint32_t,8>& lengths,uint32_t instances)
+{
+ ForwardStripPlan220 plan;
+ for(uint32_t i=0;i<instances;++i){
+  if(plan.count&&plan.runs[plan.count-1].vertices==lengths[i])++plan.runs[plan.count-1].instances;
+  else plan.runs[plan.count++]={i,1,lengths[i]};
+ }
+ return plan;
+}
 struct Uniform {
 	simd_float4x4 viewProjection,view;
 	simd_float4 mapSize,parameters,sun,fogColor,fogParameters;
@@ -101,6 +122,7 @@ struct PreparedMapEdge::Impl {
 	__strong id<MTLDepthStencilState> depth=nil;
 	__strong id<MTL4ArgumentTable> arguments=nil;
 	NSUInteger vertices=0,instances=0;
+ ForwardStripPlan220 forwardStrip220;
 	bool cull=false;
 	bool deferred=false;
 	mutable bool encoded=false;
@@ -134,7 +156,12 @@ void PreparedMapEdge::Encode(id<MTL4RenderCommandEncoder> encoder)const
 	[encoder setRenderPipelineState:impl->pipeline];[encoder setDepthStencilState:impl->depth];[encoder setDepthClipMode:MTLDepthClipModeClip];
 	[encoder setCullMode:impl->cull?MTLCullModeBack:MTLCullModeNone];[encoder setFrontFacingWinding:MTLWindingCounterClockwise];
 	[encoder setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-	[encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
+ if(impl->deferred||impl->forwardStrip220.count<=1){
+  [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
+ }else for(uint32_t i=0;i<impl->forwardStrip220.count;++i){
+  const auto& run=impl->forwardStrip220.runs[i];
+  [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:run.vertices instanceCount:run.instances baseInstance:run.first];
+ }
 	if(impl->deferred)impl->encoded=true;
 }
 struct MapEdgeGPU::Impl {
@@ -197,9 +224,10 @@ std::unique_ptr<PreparedMapEdge> MapEdgeGPU::Prepare(RuntimeLease& lease,const W
 	const uint32_t trimCols=p.curvature?std::min(cols,uint32_t(std::ceil(visibleFraction*cols))):cols;
 	const uint32_t trimRows=p.curvature?std::min(rows,uint32_t(std::ceil(visibleFraction*rows))):rows;
 	Require(mesh[0]==cols&&mesh[1]==rows&&mesh[2]==trimCols&&mesh[3]==trimRows,"Map-edge original mesh tuple differs from its actual map/settings");
-	uint32_t count=0;
+	uint32_t count=0;std::array<uint32_t,8> stripLengths220{};uint32_t stripIndex220=0;
 	for(const auto& mirror:edge.draw->mirrors){
-		const uint32_t vertices=mirror[0]&&mirror[1]?trimCols*(2*(trimRows+1)+2):mirror[0]?rows*(2*(trimCols+1)+2):trimRows*(2*(cols+1)+2);
+		const uint32_t vertices=ForwardStripLength220(cols,rows,trimCols,trimRows,mirror);
+  stripLengths220[stripIndex220++]=vertices;
 		count=std::max(count,vertices);
 	}
 	Require(mesh[4]==count,"Map-edge strip invocation count differs from actual source mirrors");
@@ -218,6 +246,7 @@ std::unique_ptr<PreparedMapEdge> MapEdgeGPU::Prepare(RuntimeLease& lease,const W
 	auto depthState=[lease.Device() newDepthStencilStateWithDescriptor:depth];Require(depthState!=nil,"Cannot create map-edge original LEQUAL/write depth state");lease.Retain(depthState);
 	auto result=std::unique_ptr<PreparedMapEdge>(new PreparedMapEdge);result->impl->pipeline=impl->pipeline;result->impl->depth=depthState;result->impl->arguments=arguments;
 	result->impl->vertices=mesh[4];result->impl->instances=edge.draw->mirrors.size();result->impl->cull=p.cullBackFaces;
+	result->impl->forwardStrip220=MakeForwardStripPlan220(stripLengths220,stripIndex220);
 	result->impl->images={std::move(color),std::move(normal)};
 	return result;
 }

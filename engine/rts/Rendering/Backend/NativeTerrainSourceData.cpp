@@ -5,6 +5,10 @@
 #include <cmath>
 #include <set>
 #include <stdexcept>
+#include <array>
+#include <cstdlib>
+#include <cstring>
+#include <type_traits>
 
 namespace rendering {
 namespace {
@@ -23,6 +27,41 @@ void Object(const NativeCUSTextureObject& value,uint64_t context,NativeCUSTextur
 		"Original terrain retained image differs from its actual allocation");
 }
 }
+// Original source capture repeats definition syntax checks at every uniform
+// publication and square. Memoize only a successful complete identity proof;
+// all live consumer checks below still run. No publication or GPU owner is held.
+namespace {
+bool TerrainDefinition232(){
+ static const bool enabled=[] {const auto* p=std::getenv("BAR_NATIVE_TERRAIN_DEFINITION232");return p&&std::strcmp(p,"1")==0;}();return enabled;
+}
+struct TerrainDefinitionProof232 {
+ NativeTerrainProgramIdentity identity;
+ std::weak_ptr<const NativeTerrainProgramConsumer> owner;
+ const NativeTerrainProgramConsumer* pointer=nullptr;
+ uint64_t context=0,library=0;
+};
+struct TerrainDefinitionCache232 {std::array<TerrainDefinitionProof232,16> entries;size_t next=0;};
+TerrainDefinitionCache232& DefinitionCache232(){static thread_local TerrainDefinitionCache232 cache;return cache;}
+bool ReuseDefinition232(const NativeTerrainProgramIdentity& identity,
+ const std::shared_ptr<const NativeTerrainProgramConsumer>& owner,uint64_t context){
+ if(!owner||!context||owner->ContextGeneration()!=context)return false;
+ const auto library=owner->LibraryGeneration();if(!library)return false;
+ for(const auto& entry:DefinitionCache232().entries)
+  if(entry.pointer==owner.get()&&entry.context==context&&entry.library==library&&
+   !entry.owner.owner_before(owner)&&!owner.owner_before(entry.owner)&&entry.identity==identity)return true;
+ return false;
+}
+void RememberDefinition232(const NativeTerrainProgramIdentity& identity,
+ const std::shared_ptr<const NativeTerrainProgramConsumer>& owner,uint64_t context){
+ // Build the potentially allocating value first. Failure must not damage a
+ // previous certificate. The slot commit is explicitly nonthrowing.
+ static_assert(std::is_nothrow_move_assignable_v<TerrainDefinitionProof232>);
+ try{
+  TerrainDefinitionProof232 next{identity,owner,owner.get(),context,owner->LibraryGeneration()};
+  auto& cache=DefinitionCache232();cache.entries[cache.next]=std::move(next);cache.next=(cache.next+1)%cache.entries.size();
+ }catch(const std::bad_alloc&){} // Optional acceleration; original validation already succeeded.
+}
+}
 void ValidateNativeTerrainProgram(const NativeTerrainProgramIdentity& identity,
 	const std::shared_ptr<const NativeTerrainProgramConsumer>& consumer,uint64_t context)
 {
@@ -36,16 +75,20 @@ void ValidateNativeTerrainProgram(const NativeTerrainProgramIdentity& identity,
 		case NativeTerrainProgramSelection::Border:case NativeTerrainProgramSelection::Composite:break;
 		default:throw std::runtime_error("Original terrain selected an unknown shader variant");
 	}
+	const bool reuse232=TerrainDefinition232()&&ReuseDefinition232(identity,consumer,context);
+ if(!reuse232){
 	std::set<std::string> names;
 	for(const auto& [name,value]:identity.defines){
 		Check(!name.empty()&&name.find_first_not_of("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_")==std::string::npos&&
 			name.find_first_of("0123456789")!=0&&names.insert(name).second&&value.find('\0')==std::string::npos,
 			"Original terrain compile definitions are malformed or duplicated");
 	}
+ }
 	Check(consumer&&consumer->ContextGeneration()==context&&consumer->LibraryGeneration(),
 		"Original terrain has no actual same-context compiled terrain consumer");
 	Check(consumer->Matches(identity),"Compiled terrain owner belongs to another original program/source generation");
 	Check(consumer->Supports(identity),"Actual selected original terrain program variant is unsupported by its compiled consumer");
+ if(TerrainDefinition232()&&!reuse232)RememberDefinition232(identity,consumer,context);
 }
 void ValidateNativeTerrainSampling(const NativeTextureSampling& sampling)
 {

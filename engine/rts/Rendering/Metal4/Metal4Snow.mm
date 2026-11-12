@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4Snow.h"
+#include "Metal4InterventionMath.h"
 #include "NativeSnowShaders.h"
 #include "Metal4NativeEffectState.h"
 #import <simd/simd.h>
@@ -79,7 +80,7 @@ struct SnowGPU::Impl {
 		if(!library) {
 			auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Exact31657 original Snow point-footprint VS/FS";
 			descriptor.source=String(std::string(snow::SHADER));auto options=[MTLCompileOptions new];
-			options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
+			options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);descriptor.options=options;
 			library=lease.NewLibrary(descriptor,&error);
 			Require(library!=nil,"Cannot compile original Snow program: "+Error(error));
 		}

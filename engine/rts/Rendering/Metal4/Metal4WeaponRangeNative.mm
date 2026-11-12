@@ -8,6 +8,8 @@
 #include <unordered_map>
 #include <cmath>
 #include <vector>
+#include <cstdlib>
+#include <cstring>
 
 namespace rendering::metal4 {
 namespace {
@@ -125,7 +127,8 @@ struct WeaponRangeGPU::Impl {
 		const PipelineKey key{program,color,depth,stencil,lease.SampleShadingKey(samples),validation,PipelineBits(draw.surface.blend,draw.raster.colorWrite),draw.raster.alphaToCoverage};
 		if(auto found=pipelines.find(key);found!=pipelines.end()){lease.Retain(found->second);return found->second;}
 		const auto start=Clock::now();NSError* error=nil;
-		if(!library){auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Exact31657 original Attack/Defense range coverage and composite";descriptor.source=String(NativeWeaponRangeShaderSource);
+		if(!library){auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Exact31657 original Attack/Defense range coverage and composite";const char* division233=std::getenv("BAR_NATIVE_RANGE_DIVISION233");
+            descriptor.source=String(std::string("#define RECOIL_RANGE_DIVISION233 ")+(division233&&std::strcmp(division233,"1")==0?"1\n":"0\n")+NativeWeaponRangeShaderSource);
 			auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
 			library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile original weapon range MSL: "+Error(error));}
 		lease.Retain(library);auto descriptor=[MTL4RenderPipelineDescriptor new];

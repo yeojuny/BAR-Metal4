@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4FireGL4.h"
+#include "Metal4InterventionMath.h"
 #include "NativeFireGL4Shaders.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
 #import <simd/simd.h>
@@ -92,7 +93,7 @@ struct FireGL4GPU::Impl {
 		if (!library) {
 			auto descriptor=[MTL4LibraryDescriptor new]; descriptor.name=@"Original test30770 complete FireGL4 program";
 			descriptor.source=String(std::string(firegl4::SHADER));
-			auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise; descriptor.options=options;
+			auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options); descriptor.options=options;
 			library=lease.NewLibrary(descriptor,&error);
 			Require(library!=nil,"Cannot compile original FireGL4 native program: "+Error(error));
 		}

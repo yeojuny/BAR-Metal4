@@ -63,3 +63,19 @@ if(BUILD_METAL4_WINDOW_SURFACE)
 		target_compile_definitions(recoil-metal4-surface-state-tests PRIVATE METAL4_SURFACE_STATE_TEST_MAIN)
 	endif()
 endif()
+
+# Separate intervention: renderer-only optimization, never engine simulation.
+option(BAR_NATIVE_INTERVENTION_RENDERER_OPTIMIZE "Experimental renderer O3/FMA and supported IPO" OFF)
+if(BAR_NATIVE_INTERVENTION_RENDERER_OPTIMIZE)
+  target_compile_options(recoil-metal4-renderer PRIVATE
+    $<$<COMPILE_LANGUAGE:OBJCXX>:-O3>
+    $<$<COMPILE_LANGUAGE:OBJCXX>:-ffp-contract=fast>)
+  include(CheckIPOSupported)
+  check_ipo_supported(RESULT BAR_NATIVE_INTERVENTION_IPO_SUPPORTED
+    OUTPUT BAR_NATIVE_INTERVENTION_IPO_ERROR LANGUAGES CXX)
+  if(BAR_NATIVE_INTERVENTION_IPO_SUPPORTED)
+    set_property(TARGET recoil-metal4-renderer PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  else()
+    message(WARNING "Renderer intervention IPO unavailable: ${BAR_NATIVE_INTERVENTION_IPO_ERROR}")
+  endif()
+endif()

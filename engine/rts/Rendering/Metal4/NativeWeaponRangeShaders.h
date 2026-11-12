@@ -478,7 +478,25 @@ inline bool RangeDiamond(int2 a,int2 b,int2 pixel) {
  }
  return FractionCompare(leave,enter)>0&&FractionCompare(leave,zero)>=0&&FractionCompare(enter,one)<=0&&FractionCompare(leave,one)<0;
 }
-inline long FloorDivide(long n,long d) {return n>=0?n/d:-((-n+d-1)/d);}
+inline long FloorDivide(long n,long d) {
+#if RECOIL_RANGE_DIVISION233
+ // Guard integer operands directly: no dependence on projected coordinates.
+ // Floating arithmetic estimates only. The exact residual corrections prove
+ // q*d <= n < (q+1)*d, including negative inputs and exact edges.
+ if(d>0 && d<(1L<<34)){
+  const long bound=d<<18;
+  if(n>-bound && n<bound){
+   long q=long(floor(float(n)/float(d)));long r=n-q*d;
+   while(r<0){--q;r+=d;}
+   while(r>=d){++q;r-=d;}
+   return q;
+  }
+ }
+ return n>=0?n/d:-((-n+d-1)/d);
+#else
+ return n>=0?n/d:-((-n+d-1)/d);
+#endif
+}
 inline bool RangeLineCovered(float3 originalA,float3 originalB,float2 fragmentPosition,float width,thread float& depth) {
  const int2 a=int2(floor(originalA.xy*256.0f+0.5f)),b=int2(floor(originalB.xy*256.0f+0.5f));
  const int2 delta=b-a;if(all(delta==0))return false;const bool xMajor=abs(delta.x)>=abs(delta.y);

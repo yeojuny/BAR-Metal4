@@ -2,11 +2,19 @@
 #pragma once
 #include "Rendering/EngineBridge/NativeOpaqueModelCapture.h"
 #include <limits>
+#include <cstdlib>
 #include <new>
 #include <optional>
 #include <utility>
 
 namespace rendering::metal4 {
+inline bool MRTLuaWriteReuseInterventionEnabled() {
+ static const bool enabled=[] {
+  const char* value=std::getenv("BAR_NATIVE_INTERVENTION_MRT_LUA_REUSE");
+  return value&&value[0]=='1'&&value[1]=='\0';
+ }();
+ return enabled;
+}
 // A narrowly scoped permission, NOT a general shared_ptr last-reader test.
 // The only production issuer is the sealed normal-main opaque Prepare path,
 // before either fresh MRT has a native Resource. All later samplers in that
@@ -31,9 +39,13 @@ public:
     bool(p.mrt)!=(n%2==0))return {};
   }
   const auto& up=source.passes[0];const auto& fp=source.passes[2];
-  // Fast empty-feature frames keep164 without six registry lookups. This
-  // first candidate only handles the observed actual engine feature route.
-  if(fp.engine->beforeLua.empty()&&fp.engine->afterLua.empty())return {};
+  // Empty feature frames still take readonly164. The intervention also
+  // admits Lua-only writing features, but NONE of the sealed registry,
+  // exclusive-owner, exact publication/version or view proofs below change.
+  // A source sampler of the U publication adds an owner and rejects reuse.
+  const bool engineWrites=!fp.engine->beforeLua.empty()||!fp.engine->afterLua.empty();
+  const bool luaWrites=MRTLuaWriteReuseInterventionEnabled()&&fp.lua&&!fp.lua->draws.empty();
+  if(!engineWrites&&!luaWrites)return {};
   if(!up.FullInitialClear()||fp.initialClear)return {};
   const auto& u=*up.mrt;const auto& f=*fp.mrt;
   if(&u==&f||u.role!=NativeGeometryTextureRole::Models||f.role!=u.role||u.feature||!f.feature||

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ShieldNative.h"
+#include "Metal4InterventionMath.h"
 #include "NativeShieldShaders.h"
 #include "Metal4NativeEffectState.h"
 #include "Rendering/Backend/NativeShieldRecorder.h"
@@ -126,7 +127,7 @@ void ShieldGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,bool validat
 	if(impl->library!=nil&&impl->initializedFormat==color&&impl->validation==validation)return;
 	const auto start=Clock::now();auto candidate=std::make_unique<Impl>();
 	auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Exact current31657 ShieldSphereColorGL4 instances/binding6 plus finite impact-basis correction";descriptor.source=String(shield::SHADER);
-	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
+	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);descriptor.options=options;
 	NSError* error=nil;candidate->library=lease.NewLibrary(descriptor,&error);Require(candidate->library!=nil,"Cannot compile original Shield shader: "+Error(error));
 	auto sampler=[MTLSamplerDescriptor new];sampler.minFilter=sampler.magFilter=MTLSamplerMinMagFilterLinear;sampler.mipFilter=MTLSamplerMipFilterNotMipmapped;sampler.sAddressMode=sampler.tAddressMode=MTLSamplerAddressModeClampToBorderColor;sampler.borderColor=MTLSamplerBorderColorTransparentBlack;sampler.supportArgumentBuffers=YES;
 	candidate->sampler=[lease.Device()newSamplerStateWithDescriptor:sampler];Require(candidate->sampler!=nil,"Cannot create original GBuffer transparent-border linear sampler");

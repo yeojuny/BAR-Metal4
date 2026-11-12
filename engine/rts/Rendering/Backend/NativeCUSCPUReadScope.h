@@ -3,6 +3,7 @@
 #include "NativeCUSRenderInputs.h"
 #include <map>
 #include <stdexcept>
+#include <utility>
 
 namespace rendering {
 // CPU-only work for one serialized Draw invocation. Captured model inputs,
@@ -58,7 +59,56 @@ private:
   template<class A,class B>static bool SameOwner(const A& a,const B& b){return a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);}
   bool Matches(const NativeCUSSourceDraw& d)const{return SameOwner(program,d.program)&&SameOwner(modelInputs,d.modelInputs)&&SameOwner(engineUniforms,d.engineUniforms)&&SameOwner(instances,d.instances);}
  };
- std::map<Key,Entry> entries;size_t bytes=0;uint64_t preparationNanoseconds=0;
+ public:
+  // A sealed CPU receipt. Source/GPU owners are released by the receiving main
+  // thread; the worker's active scope and geometry cache are never transferred.
+  class Packet {
+   friend class NativeCUSCPUReadScope;
+   std::map<Key,Entry> entries;
+   size_t bytes=0;
+  public:
+   Packet()=default;
+   Packet(Packet&&)=default;
+   Packet& operator=(Packet&&)=default;
+   Packet(const Packet&)=delete;
+   Packet& operator=(const Packet&)=delete;
+   size_t Count()const{return entries.size();}
+   size_t Bytes()const{return bytes;}
+   uint64_t RowDigest()const{
+    uint64_t sum=0;
+    for(const auto& [key,entry]:entries){
+     uint64_t hash=14695981039346656037ull;
+     for(const auto* rows:{&entry.reads.transforms,&entry.reads.modelUniforms,&entry.reads.teamColors}){
+      hash=(hash^rows->size())*1099511628211ull;
+      hash=(hash^rows->capacity())*1099511628211ull;
+      for(uint32_t row:*rows)hash=(hash^row)*1099511628211ull;
+     }
+     sum+=hash; // Order-independent diagnostic only, never an identity check.
+    }
+    return sum;
+   }
+  };
+  Packet Seal(){Packet out;out.entries=std::move(entries);out.bytes=std::exchange(bytes,0);return out;}
+  void Adopt(Packet&& packet){
+   if(!entries.empty()||bytes)throw std::logic_error("CUS CPU receipt must precede alpha/shadow priming");
+   entries=std::move(packet.entries);bytes=std::exchange(packet.bytes,0);
+  }
+  bool Matches(const Packet& packet)const{
+   if(bytes!=packet.bytes||entries.size()!=packet.entries.size())return false;
+   auto right=packet.entries.begin();
+   for(const auto& [key,left]:entries){
+    const auto& r=right->second;
+    if(key!=right->first||!Entry::SameOwner(left.program,r.program)||!Entry::SameOwner(left.modelInputs,r.modelInputs)||
+       !Entry::SameOwner(left.engineUniforms,r.engineUniforms)||!Entry::SameOwner(left.instances,r.instances))return false;
+    const auto same=[](const auto& a,const auto& b){return a==b&&a.capacity()==b.capacity();};
+    if(!same(left.reads.transforms,r.reads.transforms)||!same(left.reads.modelUniforms,r.reads.modelUniforms)||!same(left.reads.teamColors,r.reads.teamColors))return false;
+    ++right;
+   }
+   return true;
+  }
+  static size_t GeometryCacheSize(){return geometry.Size();}
+ private:
+  std::map<Key,Entry> entries;size_t bytes=0;uint64_t preparationNanoseconds=0;
  NativeCUSCPUReadScope* previous;
  inline static thread_local NativeCUSCPUReadScope* active=nullptr;
  inline static thread_local NativeCUSGeometryReadCache geometry;

@@ -17,6 +17,7 @@ struct PostprocessTextureStorage181;
 // The spare never owns the primary: there is no cycle or unbounded frame queue.
 struct RuntimeFrameSlot {
 	std::shared_ptr<RuntimeFrameSlot> spare;
+	std::shared_ptr<RuntimeFrameSlot> third; // independent allocator/residency, no cycles
 	__strong id<MTL4CommandAllocator> allocator = nil;
 	__strong id<MTL4CommandBuffer> command = nil;
 	__strong id<MTLResidencySet> residency = nil;

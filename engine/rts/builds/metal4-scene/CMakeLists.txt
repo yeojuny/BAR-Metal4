@@ -125,6 +125,17 @@ set_target_properties(recoil-metal4-world-renderer PROPERTIES
 	OBJCXX_STANDARD 23 OBJCXX_STANDARD_REQUIRED YES OBJCXX_EXTENSIONS NO)
 target_compile_options(recoil-metal4-world-renderer PRIVATE -Wall -Wextra -ffp-contract=off -fobjc-arc -fblocks)
 target_link_libraries(recoil-metal4-world-renderer PUBLIC recoil-metal4-renderer recoil-metal4-surface squish)
+# Same renderer-only experiment as the core Metal archive, not GameMetal4Scene.
+if(BAR_NATIVE_INTERVENTION_RENDERER_OPTIMIZE)
+  target_compile_options(recoil-metal4-world-renderer PRIVATE
+    $<$<COMPILE_LANGUAGE:OBJCXX>:-O3>
+    $<$<COMPILE_LANGUAGE:OBJCXX>:-ffp-contract=fast>)
+  get_target_property(BAR_NATIVE_CORE_IPO recoil-metal4-renderer INTERPROCEDURAL_OPTIMIZATION)
+  if(BAR_NATIVE_CORE_IPO)
+    set_property(TARGET recoil-metal4-world-renderer PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+  endif()
+endif()
+
 
 add_library(GameMetal4Scene STATIC ${sources_engine_Game})
 add_dependencies(GameMetal4Scene generateVersionFiles)

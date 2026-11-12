@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4BumpWater.h"
+#include "Metal4InterventionMath.h"
 #include "Metal4WorldBCDecode.h"
 #include "NativeBumpWaterShaders.h"
 #include <algorithm>
@@ -237,7 +238,7 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 	PipelineKey key{uniforms.flags[0]&255u,color,depth,stencil,validation,lease.SampleShadingKey(samples)};auto found=impl->pipelines.find(key);
 	if(found==impl->pipelines.end()){
 		const auto start=Clock::now();auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String("#define NATIVE_WATER_FLAGS "+std::to_string(key.flags)+"\n"+NATIVE_BUMP_WATER_SHADERS);
-		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
+		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);descriptor.options=options;
 		NSError* error=nil;auto library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile original BumpWater shaders: "+Error(error));
 		Impl::Pipelines p;p.surface=Pipeline(lease,library,"BumpWaterVertex","BumpWaterFragment",color,depth,stencil,!f.settings.refraction,false,validation,samples);
 		p.normal=Pipeline(lease,library,"BumpWaterUpdateVertex","BumpWaterNormalFragment",MTLPixelFormatRGBA8Unorm,MTLPixelFormatInvalid,MTLPixelFormatInvalid,true,true,validation);

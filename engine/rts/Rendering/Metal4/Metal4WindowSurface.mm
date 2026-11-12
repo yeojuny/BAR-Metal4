@@ -18,6 +18,8 @@
 namespace rendering {
 namespace {
 
+thread_local const Metal4SurfaceWorkerSnapshot* workerSurface=nullptr;
+
 constexpr const char* SURFACE_OWNER_KEY = "recoil.direct-metal4.surface-owner";
 
 void MainThread()
@@ -211,6 +213,7 @@ Metal4SurfaceEventResult Metal4WindowSurface::HandleEvent(const SDL_Event& event
 
 bool Metal4WindowSurface::Refresh()
 {
+ if(workerSurface&&workerSurface->surface==this)return false;
 	MainThread();
 	Require(impl != nullptr, "Metal window surface is detached or moved from");
 	return impl->Refresh();
@@ -236,6 +239,7 @@ bool Metal4WindowSurface::RequestClose()
 
 Metal4SurfaceSnapshot Metal4WindowSurface::Snapshot() const
 {
+ if(workerSurface&&workerSurface->surface==this)return workerSurface->state;
 	MainThread();
 	if (impl) return impl->state.Snapshot();
 	Metal4SurfaceSnapshot snapshot;
@@ -260,6 +264,7 @@ Metal4WindowSurface Metal4WindowSurfaceNativeAccess::AttachWithDevice(SDL_Window
 
 id<MTLDevice> Metal4WindowSurfaceNativeAccess::Device(const Metal4WindowSurface& surface)
 {
+ if(workerSurface&&workerSurface->surface==&surface)return workerSurface->layer.device;
 	MainThread();
 	if (!surface.impl) return nil;
 	surface.impl->RequireLive();
@@ -268,10 +273,23 @@ id<MTLDevice> Metal4WindowSurfaceNativeAccess::Device(const Metal4WindowSurface&
 
 CAMetalLayer* Metal4WindowSurfaceNativeAccess::Layer(Metal4WindowSurface& surface)
 {
+ if(workerSurface&&workerSurface->surface==&surface)return workerSurface->layer;
 	MainThread();
 	if (!surface.impl) return nil;
 	surface.impl->Refresh();
 	return surface.impl->layer;
 }
 
+Metal4SurfaceWorkerSnapshot Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(Metal4WindowSurface& surface)
+{
+ MainThread();surface.Refresh();
+ return {&surface,surface.Snapshot(),Layer(surface)};
+}
+bool Metal4WindowSurfaceNativeAccess::WorkerAccessActive(){return workerSurface!=nullptr;}
+Metal4SurfaceWorkerScope::Metal4SurfaceWorkerScope(const Metal4SurfaceWorkerSnapshot& snapshot)
+{
+ Require(![NSThread isMainThread]&&!workerSurface&&snapshot.surface,"Invalid native worker surface scope");
+ workerSurface=&snapshot;
+}
+Metal4SurfaceWorkerScope::~Metal4SurfaceWorkerScope(){workerSurface=nullptr;}
 } // namespace rendering

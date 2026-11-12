@@ -21,8 +21,8 @@ struct AlphaKeepReport166 {
  AlphaKeepReason166 reason=AlphaKeepReason166::CallbackUnknown;
 };
 inline bool ModelPass166Enabled() {
- static const bool enabled=[](){const char* value=std::getenv("BAR_NATIVE_PASS166");return !value||!(value[0]=='0'&&value[1]=='\0');}();
- return enabled;
+ // Only CPU-only phases may use the no-in-pass-wait intervention.
+ return EmptyModelPassFusionInterventionEnabled();
 }
 // One completed frame's LOCAL alpha boundaries, not total render encoders.
 struct AlphaPassCounters166 {

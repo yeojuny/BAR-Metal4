@@ -1,6 +1,7 @@
 #include "Metal4PublishedRequestCache.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4RuntimeNative.h"
+#include "Metal4PersistentResidencyIntervention.h"
 #include "Metal4TransientUpload177.h"
 #include "Metal4FrameResources.h"
 #include "Rendering/Backend/NativePreparationTrace.h"
@@ -22,7 +23,11 @@
 #include <utility>
 
 #include "Metal4DeferredResidencyOwners.inc"
+#include "Metal4TerrainUniformRelease220.inc"
 #include "Metal4FrameOverlapProbe.inc"
+
+@implementation M4PersistentResidencySnapshot
+@end
 
 @implementation M4TransientUploadLifetime177
 @end
@@ -266,6 +271,9 @@ struct RuntimePendingSubmission {
  explicit RuntimePendingSubmission(const std::shared_ptr<RuntimeFrameResources>& frame):
   resources(frame, RuntimeSubmissionResources::DeferredPresentation{}) {}
  RuntimeSubmissionResources resources;
+ __strong NSHashTable* retirementTable220=nil;
+ __strong M4TerrainUniformSources220* uniformSources220=nil;
+ TerrainUniformReceipt220 uniformReceipt220;
  __strong NSError* error = nil;
  dispatch_semaphore_t feedback = dispatch_semaphore_create(0);
  std::function<void(const FrameMetrics&)> retire;
@@ -275,6 +283,9 @@ struct RuntimePendingSubmission {
 };
 
 namespace {
+bool InterventionTwoInFlight() {
+ static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_TWO_INFLIGHT");return p&&std::string_view(p)=="1";}();return enabled;
+}
 std::shared_ptr<RuntimeFrameSlot> SelectRecordingSlot158(const std::shared_ptr<RuntimeFrameSlot>& primary,
  const std::shared_ptr<RuntimeFrameResources>& pending) {
  Require(bool(primary),"Missing primary command slot");
@@ -347,8 +358,9 @@ Runtime::Runtime(): frameSlot(std::make_shared<RuntimeFrameSlot>())
 		Require(frameSlot->residency != nil, "Cannot create shared Metal4 residency: " + Error(error));
 		[frameSlot->residency commit];
 		// Each command buffer declares only its own retired slot residency.
-		if(RecordOverlap158()) {
+		if(RecordOverlap158() || InterventionTwoInFlight()) {
 			auto spare=std::make_shared<RuntimeFrameSlot>();CreateFrameSlot158(device,*spare);frameSlot->spare=std::move(spare);
+   if(InterventionTwoInFlight()){auto third=std::make_shared<RuntimeFrameSlot>();CreateFrameSlot158(device,*third);frameSlot->third=std::move(third);}
 		}
 		RegisterPublishedRuntime(this);
 	}
@@ -360,10 +372,13 @@ Runtime::Runtime(): frameSlot(std::make_shared<RuntimeFrameSlot>())
 Runtime::~Runtime()
 {
 	if (!poisoned) { try { DrainPendingLocked(); } catch (...) {} }
+	StopTerrainUniformWorker220(queue);
+	StopResidencyWorker220(queue);
 	UnregisterPublishedRuntime(this);
 	if (!unsafePendingWork && frameSlot->residency != nil) {
 		ClearFrameSlot158(*frameSlot);
 		if(frameSlot->spare)ClearFrameSlot158(*frameSlot->spare);
+  if(frameSlot->third)ClearFrameSlot158(*frameSlot->third);
 	}
 }
 
@@ -384,10 +399,12 @@ RuntimeCleanupLease::RuntimeCleanupLease(Runtime& runtime): lock(runtime.request
 {
 	if (!runtime.poisoned) runtime.DrainPendingLocked();
 	Require(!runtime.unsafePendingWork, "Cannot retire native resources with outstanding GPU work");
+ runtime.persistentResidency.reset();
 	if (runtime.capabilities.directMetal4) ClearPublishedPool(&runtime);
 	if (!runtime.poisoned) {
 		ClearFrameSlot158(*runtime.frameSlot);
 		if(runtime.frameSlot->spare)ClearFrameSlot158(*runtime.frameSlot->spare);
+  if(runtime.frameSlot->third)ClearFrameSlot158(*runtime.frameSlot->third);
 	}
 }
 
@@ -517,8 +534,14 @@ RuntimeLease::RuntimeLease(std::function<void()> previousRetired, Runtime& selec
 	const auto drainProbe91=StartPreparationScope();
 	if(!previousRetired)runtime.DrainPendingLocked();
 	EndPreparationScope(39,drainProbe91);
- auto selected=SelectRecordingSlot158(runtime.frameSlot,
+ auto selected=InterventionTwoInFlight()?std::shared_ptr<RuntimeFrameSlot>{}:SelectRecordingSlot158(runtime.frameSlot,
   previousRetired&&runtime.pendingSubmission?runtime.pendingSubmission->resources.owner:nullptr);
+ if(InterventionTwoInFlight()){
+  selected.reset();
+  for(const auto& slot:{runtime.frameSlot,runtime.frameSlot->spare,runtime.frameSlot->third})
+   if(slot&&!runtime.SlotPending(slot)){selected=slot;break;}
+  Require(bool(selected),"Bounded native queue has no retired recording slot");
+ }
 	frame = std::make_shared<RuntimeFrameResources>(std::move(selected));
  frame->previousRetired=std::move(previousRetired);
 	frame->publications.context = &runtime;
@@ -566,6 +589,7 @@ void RuntimeLease::AddAllocation(id<MTLAllocation> allocation)
 	// Only stage this lease's request. CommitResources invalidates retention
 	// before it mutates the shared set, including its exception cleanup path.
 	++frame->allocationRequests148;
+ if(runtime.persistentResidency&&runtime.persistentResidency->Contains(allocation))return;
 	// The strong, pointer-identity request set already owns the exact object.
 	// Repeated consumers cannot add residency or extend its request lifetime.
 	// Keep the execution guards above this lookup, even for an existing object.
@@ -575,9 +599,32 @@ void RuntimeLease::AddAllocation(id<MTLAllocation> allocation)
 	TrackResourceMemory(allocation);
 }
 
+void RuntimeLease::AddPersistentAllocation(id<MTLAllocation> allocation)
+{
+ Require(allocation!=nil&&!frame->recording&&!frame->pending&&!frame->residencyCommit.Active(),"Cannot add persistent allocation during Metal4 execution");
+ if(PersistentResidencyInterventionEnabled()){
+  if(!runtime.persistentResidency)runtime.persistentResidency=std::make_unique<InterventionPersistentResidency>(Device());
+  if(runtime.persistentResidency->TryAdd(allocation)){++frame->allocationRequests148;TrackResourceMemory(allocation);return;}
+ }
+ AddAllocation(allocation);
+}
+
 void RuntimeLease::PoisonAfterBegin() noexcept
 {
 	runtime.poisoned=true;runtime.failedFrame=frame;
+}
+
+void RuntimeLease::RetainTerrainUniformSources220(
+ const std::shared_ptr<const NativeWaterGroundSourceFrame>& main,
+ const std::shared_ptr<const NativeWaterGroundSourceFrame>& reflection)
+{
+ if(!TerrainUniformReleaseEnabled220()&&!TerrainUniformReleaseCounters220())return;
+ if(!main&&!reflection)return;
+ auto holder=[M4TerrainUniformSources220 new];if(!holder)return;
+ holder->sources={main,reflection};
+ // Caller-only ownership attached to the actual immutable graph. A copied
+ // prefix graph receives no receipt and cannot trigger asynchronous release.
+ objc_setAssociatedObject(frame->WritableRetained(),&terrainUniformSourcesKey220,holder,OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 void RuntimeLease::Retain(id object)
@@ -634,12 +681,15 @@ void RuntimeLease::RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmis
  for(const auto& [owner,check]:checks)check();
  } catch(...) {runtime.poisoned=true;runtime.failedFrame=frame;throw;}
 }
+static bool ResidencyDiffEnabled220(){static const bool value=[](){const char* p=std::getenv("BAR_NATIVE_RESIDENCY_DIFF220");return p&&std::string_view(p)=="1";}();return value;}
+static bool ResidencyDiffCounters220(){static const bool value=[](){const char* p=std::getenv("BAR_NATIVE_RESIDENCY_DIFF220_COUNTERS");return p&&std::string_view(p)=="1";}();return value;}
 void RuntimeLease::CommitResources() { StageResources(false); }
 void RuntimeLease::CommitResourcesWhileEncoding() { StageResources(true); }
 void RuntimeLease::StageResources(bool overlapEncoding)
 {
- if(!runtime.pendingSubmission||frame->slot==runtime.pendingSubmission->resources.owner->slot)RetirePreviousSubmission();
+ if(!runtime.pendingSubmission||runtime.SlotPending(frame->slot))RetirePreviousSubmission();
 	Require(!frame->recording && !frame->pending && !runtime.poisoned && !frame->residencyCommit.Active(), "Cannot update residency during Metal4 execution");
+ if(runtime.persistentResidency){auto snapshot=runtime.persistentResidency->SnapshotForRecording();if(snapshot)Retain(snapshot);}
 	frame->keepResidency = false;
 	const bool census = cpuPhaseStack.depth && cpuPhaseStack.captureLoop && !CPUPhaseTrace().finished.load(std::memory_order_relaxed) && residencyCensusSamples.load(std::memory_order_relaxed)<128;
 	if(census)residencyCensusSamples.fetch_add(1,std::memory_order_relaxed);
@@ -653,6 +703,22 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 	const auto prepCopyStart=StartPreparationScope();
 	NSHashTable* next = frame->PublishRequestedAllocations();
 	EndPreparationScope(22,prepCopyStart);
+ // The exact original synchronous/census and flag-off paths remain below.
+ // Publish all caller metadata before dispatch: no table/set reads while active.
+ if(overlapEncoding&&!census&&ResidencyDiffEnabled220()){
+  const auto ownerStart=StartPreparationScope();
+  NSHashTable* old=frame->slot->residentAllocations;
+  const auto requested=next.count;
+  if(old)DeferCompletedResidencyOwners(frame->WritableRetained(),old,next,runtime.queue);
+  InvalidateResidencyTable220(next);
+  EndPreparationScope(25,ownerStart);CountPreparationTrace(6,requested);
+  frame->residencyCommit.StartDiff220(frame->slot->residencyWorker,frame->slot->residency,
+   old,next,requested,StartPreparationScope()!=0||ResidencyDiffCounters220());
+  // Admission can allocate/throw before dispatch. Publish only after success;
+  // this pointer assignment does not read either immutable table or the set.
+  frame->slot->residentAllocations=next;
+  return;
+ }
 	const auto prepDiffStart=StartPreparationScope();
 	for (id<MTLAllocation> allocation in frame->slot->residentAllocations) {
 		if (![next containsObject:allocation]) {
@@ -676,7 +742,8 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 	// keeps its old meaning. The bounded resource probe measures this async path.
 	if(overlapEncoding && !census) {
 		const auto ownerStart=StartPreparationScope();
-		if (frame->slot->residentAllocations) DeferCompletedResidencyOwners(frame->WritableRetained(),frame->slot->residentAllocations);
+		if (frame->slot->residentAllocations) DeferCompletedResidencyOwners(frame->WritableRetained(),frame->slot->residentAllocations,next,runtime.queue);
+		InvalidateResidencyTable220(next);
 		frame->slot->residentAllocations=next;
 		EndPreparationScope(25,ownerStart);CountPreparationTrace(6,next.count);
 		frame->residencyCommit.Start(frame->slot->residencyWorker,frame->slot->residency,StartPreparationScope()!=0);
@@ -688,7 +755,8 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 	const auto censusAfterCommit=census?SubmissionTraceNow():0;
 	EndPreparationScope(24,prepCommitStart);
 	const auto prepOwnerStart=StartPreparationScope();
-	if (frame->slot->residentAllocations) DeferCompletedResidencyOwners(frame->WritableRetained(),frame->slot->residentAllocations);
+	if (frame->slot->residentAllocations) DeferCompletedResidencyOwners(frame->WritableRetained(),frame->slot->residentAllocations,next,runtime.queue);
+	InvalidateResidencyTable220(next);
 	frame->slot->residentAllocations = next;
 	EndPreparationScope(25,prepOwnerStart);
 	CountPreparationTrace(6,next.count);
@@ -721,29 +789,39 @@ void RuntimeLease::FinishResourceCommit()
 		const auto timing=frame->residencyCommit.Finish();
 		CountPreparationTrace(42,timing.commitNs);CountPreparationTrace(43,timing.joinNs);
 		CountPreparationTrace(44,timing.dispatchNs);CountPreparationTrace(45,1);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  if(timing.workerDiff220&&ResidencyDiffCounters220()){
+   static std::atomic<unsigned> receipts{0};
+   const auto receipt=receipts.fetch_add(1,std::memory_order_relaxed)+1;
+   if(receipt<=32)LOG("[NativeResidencyDiff220] worker_diff=1 receipt=%u requested=%llu added=%llu removed=%llu diff_ns=%llu commit_ns=%llu join_ns=%llu dispatch_ns=%llu",
+    receipt,(unsigned long long)timing.requested,(unsigned long long)timing.added,(unsigned long long)timing.removed,
+    (unsigned long long)timing.diffNs,(unsigned long long)timing.commitNs,(unsigned long long)timing.joinNs,(unsigned long long)timing.dispatchNs);
+  }
+#endif
 		frame->keepResidency=frame->slot->residentAllocations.count<=4096 && frame->slot->residency.allocatedSize<=(uint64_t{2}<<30);
 		if(cpuPhaseStack.depth)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
 	} catch (...) { runtime.poisoned=true;runtime.failedFrame=frame;throw; }
 }
 uint64_t RuntimeLease::ResidentBytes() const {
 	Require(!frame->residencyCommit.Active(),"Residency size requires completed registration");
-	return frame->slot->residency.allocatedSize;
+	return frame->slot->residency.allocatedSize+(runtime.persistentResidency?runtime.persistentResidency->Bytes():0);
 }
 uint32_t RuntimeLease::AllocationCount() const {
 	Require(!frame->residencyCommit.Active(),"Residency count requires completed registration");
-	return uint32_t(frame->slot->residency.allocationCount);
+	return uint32_t(frame->slot->residency.allocationCount+(runtime.persistentResidency?runtime.persistentResidency->Count():0));
 }
 
 id<MTL4CommandBuffer> RuntimeLease::Begin(const std::string& label)
 {
 	Require(!frame->recording && !frame->pending && !runtime.poisoned &&
-  (!runtime.pendingSubmission||(frame->previousRetired&&frame->slot!=runtime.pendingSubmission->resources.owner->slot)),
+  (!runtime.pendingSubmission||(frame->previousRetired&&!runtime.SlotPending(frame->slot))),
   "Metal4 command memory is not independently retired for recording");
  frame->recordedWhilePending=bool(runtime.pendingSubmission);
 	BeginSubmissionTraceEncoding(this);
 	frame->slot->command.label = String(label);
 	[frame->slot->command beginCommandBufferWithAllocator:frame->slot->allocator];
 	frame->recording = true;
+ if(runtime.persistentResidency)runtime.persistentResidency->Bind(frame->slot->command);
 	return frame->slot->command;
 }
 
@@ -751,7 +829,7 @@ namespace {
 void ReportAllocationPreparation148(const RuntimeFrameResources& frame,uint64_t frameIndex) {
 #ifdef RECOIL_METAL4_LIVE_SCENE
  static std::atomic<bool> overlapReported{false};
- if(frameIndex>=300&&frame.recordedWhilePending&&!overlapReported.exchange(true,std::memory_order_relaxed))
+ if(!InterventionTwoInFlight()&&frameIndex>=300&&frame.recordedWhilePending&&!overlapReported.exchange(true,std::memory_order_relaxed))
   LOG("[NativeRecord158] frame=%llu pending_at_begin=1 independent_command_slot=1 gpu_pending_limit=1 prior_retired_before_submit=1",(unsigned long long)frameIndex);
  static std::atomic<bool> reported{false};
  if(frameIndex<300 || frame.requestedAllocations.count<256 || reported.load(std::memory_order_relaxed))return;
@@ -773,8 +851,14 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  // retain only its completed owner graph until N+1 has been submitted.
  // Early preparation drains still release immediately for pool reuse.
  std::shared_ptr<RuntimePendingSubmission> completedPredecessor186;
- RetirePreviousSubmission(&completedPredecessor186);
- Require(frame->recording && !frame->pending && !runtime.pendingSubmission && bool(retire) && drawable!=nil,
+ const bool independentQueue=InterventionTwoInFlight()&&frame->priorReadChecks.empty();
+ if(independentQueue){
+  // Bound GPU occupancy; do not invoke producer checks before their retirement.
+  while(runtime.pendingSubmissions.size()>=2)runtime.DrainOldestLocked(&completedPredecessor186);
+  // Scene receipts are delivered only for genuinely completed frames.
+  if(frame->previousRetired){auto receipt=std::exchange(frame->previousRetired,{});receipt();}
+ }else RetirePreviousSubmission(&completedPredecessor186);
+ Require(frame->recording && !frame->pending && (!runtime.pendingSubmission||independentQueue) && bool(retire) && drawable!=nil,
   "Deferred Metal4 submission requires one recording presentation and an owned retirement");
  Require(runtime.nextEventValue != std::numeric_limits<uint64_t>::max(), "Metal4 completion event exhausted its monotonic value range");
  [frame->WritableRetained() addObject:drawable];
@@ -803,8 +887,22 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  [frame->slot->command useResidencySet:frame->slot->residency];
  [frame->slot->command endCommandBuffer];frame->recording=false;
  pending->eventValue=++runtime.nextEventValue;
+ pending->uniformSources220=TerrainUniformSources220(pending->resources.retained);
+ pending->uniformReceipt220=StampTerrainUniform220(runtime.queue,pending->uniformSources220,pending->eventValue);
+ if(ResidencyReleaseEnabled220()||ResidencyReleaseCounters220()){
+  // Receipt pins exactly the table bound to this slot, never a requested-only table.
+  if(frame->requestedAllocations==frame->slot->residentAllocations){pending->retirementTable220=frame->slot->residentAllocations;StampResidencyTable220(runtime.queue,pending->retirementTable220,pending->eventValue);}
+  else {InvalidateResidencyTable220(frame->slot->residentAllocations);InvalidateResidencyTable220(frame->requestedAllocations);}
+ }
  // Publish the quarantine owner before committing anything to the GPU.
- runtime.pendingSubmission=pending;frame->pending=true;
+ runtime.pendingSubmissions.push_back(pending);runtime.pendingSubmission=pending;frame->pending=true;
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ if(InterventionTwoInFlight()){
+  static bool reportedTwo=false;
+  if(runtime.pendingSubmissions.size()==2&&!reportedTwo){reportedTwo=true;
+   LOG("[NativeInterventionTwoInFlight] queued_tickets=2 slots=3 prior_read_checks=0 oldest_event_and_feedback_retirement=1");}
+ }
+#endif
  id<MTL4CommandBuffer> commands[]={frame->slot->command};
  const auto submitted=Clock::now();
  if(pending->probe)pending->probe->submit=FrameOverlapHostTime();
@@ -817,19 +915,29 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  // acquire pool slots. No extra pending GPU frame or deferred cleanup queue.
 #ifdef RECOIL_METAL4_LIVE_SCENE
  static std::atomic<bool> reported186{false};
- const bool report186=completedPredecessor186 && frameIndex>=600 &&
+ const bool report186=!InterventionTwoInFlight() && completedPredecessor186 && frameIndex>=600 &&
   !reported186.exchange(true,std::memory_order_relaxed);
  const auto graphEntries186=report186?completedPredecessor186->resources.retained.count:0;
  const auto ownerReferences186=report186?completedPredecessor186.use_count():0;
  const auto releaseStart186=report186?SubmissionTraceNow():0;
 #endif
+ // Capture only proven pure-CPU leaves immediately before the original
+ // caller-side graph destruction, after the successor has been committed.
+ TerrainUniformAttempt220 uniformAttempt220;
+ __strong M4TerrainUniformJob220* uniformJob220=nil;
+ if(completedPredecessor186)uniformJob220=PrepareTerrainUniformRelease220(runtime.queue,
+  completedPredecessor186->uniformSources220,completedPredecessor186->uniformReceipt220,
+  completedPredecessor186->eventValue,frameIndex,uniformAttempt220);
  completedPredecessor186.reset();
+ DispatchTerrainUniformRelease220(runtime.queue,uniformJob220,uniformAttempt220);
+ uniformJob220=nil;
 #ifdef RECOIL_METAL4_LIVE_SCENE
  if(report186)LOG("[NativeRetirement186] submission=%llu completed_graph_entries=%llu owner_references_at_release=%ld release_ns=%llu release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
   (unsigned long long)frameIndex,(unsigned long long)graphEntries186,
   ownerReferences186,(unsigned long long)(SubmissionTraceNow()-releaseStart186));
 #endif
- ReleaseCompletedResidencyOwners(frame->retained);
+ if(ResidencyReleaseEnabled220()||ResidencyReleaseCounters220())ReleaseCompletedResidencyOwners220(frame->retained,runtime.queue,frameIndex);
+ else ReleaseCompletedResidencyOwners(frame->retained);
  // Only this successful transfer permits a pending lease to end without poison.
  frame->completionTransferred=true;
  if(pending->probe)pending->probe->returned=FrameOverlapHostTime();
@@ -843,9 +951,18 @@ void Runtime::DrainPendingLocked()
 }
 void Runtime::DrainPendingLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner)
 {
- if(!pendingSubmission)return;
+ while(!pendingSubmissions.empty())DrainOldestLocked(completedOwner);
+}
+bool Runtime::SlotPending(const std::shared_ptr<RuntimeFrameSlot>& slot) const
+{
+ for(const auto& pending:pendingSubmissions)if(pending->resources.owner->slot==slot)return true;
+ return false;
+}
+void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner)
+{
+ if(pendingSubmissions.empty())return;
  Require(!poisoned,"Cannot retire a poisoned deferred Metal4 request");
- auto pending=pendingSubmission;auto frame=pending->resources.owner;
+ auto pending=pendingSubmissions.front();auto frame=pending->resources.owner;
  try {
   const auto start=Clock::now();
   if(pending->probe){pending->probe->drain=FrameOverlapHostTime();pending->probe->ready=completionEvent.signaledValue>=pending->eventValue;}
@@ -866,10 +983,14 @@ void Runtime::DrainPendingLocked(std::shared_ptr<RuntimePendingSubmission>* comp
   if(!frame->keepResidency){[frame->slot->residency removeAllAllocations];[frame->slot->residency commit];frame->slot->residentAllocations=nil;}
   // Publish only after every successful retirement action. On failure the
   // original pending owner remains quarantined, with no completion handoff.
+  CompleteResidencyTable220(queue,pending->retirementTable220,pending->eventValue);
+  CompleteTerrainUniform220(queue,pending->uniformReceipt220,pending->eventValue);
   if(completedOwner)*completedOwner=pending;
-  pendingSubmission.reset();
+  pendingSubmissions.pop_front();
+  pendingSubmission=pendingSubmissions.empty()?nullptr:pendingSubmissions.back();
  } catch(...) {
   poisoned=true;failedFrame=frame;unsafePendingWork=frame->pending;
+  for(const auto& ticket:pendingSubmissions)unsafePendingWork=unsafePendingWork||ticket->resources.owner->pending;
   // Keep pendingSubmission and its renderer owners quarantined as well.
   throw;
  }
@@ -916,6 +1037,8 @@ FrameMetrics RuntimeLease::SubmitAndWait(Clock::time_point preparationStart, uin
 		}
 		dispatch_semaphore_signal(feedbackSemaphore);
 	}];
+	InvalidateResidencyTable220(frame->slot->residentAllocations);
+	InvalidateResidencyTable220(frame->requestedAllocations);
 	const uint64_t eventValue = ++runtime.nextEventValue;
 	frame->pending = true;
 	const auto submissionStart = Clock::now();

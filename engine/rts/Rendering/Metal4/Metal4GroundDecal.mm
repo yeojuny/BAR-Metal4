@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4GroundDecal.h"
+#include "Metal4InterventionMath.h"
 #include "NativeGroundDecalShaders.h"
 #include <map>
 #include <tuple>
@@ -73,7 +74,7 @@ struct GroundDecalGPU::Impl {
 		const std::pair<bool,bool> libraryKey{high,shadows};
 		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
 		const auto start=Clock::now();auto it=libraries.find(libraryKey);NSError* error=nil;
-		if(it==libraries.end()){auto o=[MTLCompileOptions new];o.mathMode=MTLMathModeSafe;o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+		if(it==libraries.end()){auto o=[MTLCompileOptions new];o.mathMode=MTLMathModeSafe;o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(o);
 			auto lib=l.NewLibraryWithSource(String(NativeGroundDecalShaderSource(high,shadows)),o,&error);Require(lib!=nil,"Cannot compile original ground decal family: "+Error(error));it=libraries.emplace(libraryKey,lib).first;}
 		l.Retain(it->second);
 		auto d=[MTL4RenderPipelineDescriptor new];auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=it->second;v.name=atlas?@"GroundDecalAtlasVertex":@"GroundDecalVertex";f.name=atlas?@"GroundDecalAtlasFragment":@"GroundDecalFragment";

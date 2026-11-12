@@ -25,8 +25,10 @@
 #include "Lua/LuaNativePostprocess.h"
 #include "Rendering/EngineBridge/NativeCUSSourceCapture.h"
 #include "Rendering/Backend/NativeCUSCPUReadScope.h"
+#include "Rendering/Backend/NativeCUSCPUReadWorker220.h"
 #include <chrono>
 #include <cstdlib>
+#include <cstdio>
 #include "Rendering/EngineBridge/NativeOpaqueModelCapture.h"
 #include "Rendering/EngineBridge/NativeLegacyMaterialSource.h"
 #include "Rendering/EngineBridge/NativeEngineModelProgramCapture.h"
@@ -124,6 +126,7 @@
 #include <cstdlib>
 #include <memory>
 #include <exception>
+#include <deque>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -133,8 +136,55 @@
 namespace rendering::scene {
 namespace {
 
+int CPUReadPacketMode220(){
+ static const int mode=[] {const char* p=std::getenv("BAR_NATIVE_CPU_READ_PACKET220");return p&&p[0]>='1'&&p[0]<='3'&&!p[1]?p[0]-'0':0;}();
+ return mode; // 0 original, 1 early synchronous, 2 worker, 3 worker + exact comparison.
+}
+bool CPUReadPacketMeasure220(){
+ static const bool value=[] {const char* p=std::getenv("BAR_NATIVE_CPU_READ_PACKET220_FILE");return p&&p[0]=='/';}();
+ return value;
+}
+struct CPUReadReceipt220 {
+ uint64_t frame=0,ordinal=0,startupNs=0,mainBeginNs=0,mainEndNs=0;
+ std::shared_ptr<const NativeOpaqueModelFrame> models; // Main-only identity pin.
+ NativeCUSCPUReadWorker220::Job job;
+ template<class A,class B>static bool SameOwner(const A& a,const B& b){return a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);}
+ bool Matches(const WorldFrame& captured)const{
+  if(frame!=captured.sourceDrawFrame||!SameOwner(models,captured.opaqueModelFrame))return false;
+  if(models&&models->sourceDrawFrame!=frame)return false;
+  size_t index=0;
+  const auto next=[&](const auto& source){return (!source||source->sourceDrawFrame==frame)&&index<job.sources.size()&&SameOwner(job.sources[index++],source);};
+  if(models)for(const auto& pass:models->passes){if(!next(pass.lua))return false;if(pass.mrt&&!next(pass.mrt->lua))return false;}
+  return index==job.sources.size();
+ }
+};
+void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPUReadReceipt220* receipt,bool accepted,bool verified,int fallback,size_t count,size_t bytes,uint64_t consumeNs,uint64_t consumeBeginNs,uint64_t digest){
+ if(!CPUReadPacketMeasure220())return;
+ struct Output {
+  FILE* file=std::fopen(std::getenv("BAR_NATIVE_CPU_READ_PACKET220_FILE"),"w");
+  size_t rows=0;
+  Output(){if(file)std::fputs("frame,simulation_frame,mode,job,accepted,verified,fallback,sources,entries,bytes,cache_before,cache_after,startup_ns,queue_ns,work_ns,join_ns,consume_ns,row_digest,submit_ns,main_begin_ns,main_end_ns,consume_begin_ns\n",file);}
+  ~Output(){if(file)std::fclose(file);}
+ };
+ static Output output;
+ if(!output.file||output.rows++>=10000)return;
+ const auto* job=receipt?&receipt->job:nullptr;
+ std::fprintf(output.file,"%llu,%llu,%d,%llu,%d,%d,%d,%zu,%zu,%zu,%zu,%zu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n",
+  (unsigned long long)frame,(unsigned long long)simulationFrame,CPUReadPacketMode220(),(unsigned long long)(receipt?receipt->ordinal:0),int(accepted),int(verified),fallback,
+  job?job->sources.size():0,count,bytes,job?job->cacheBefore:0,job?job->cacheAfter:0,
+  (unsigned long long)(receipt?receipt->startupNs:0),(unsigned long long)(job?job->queueNs:0),(unsigned long long)(job?job->workNs:0),
+  (unsigned long long)(job?job->waitNs:0),(unsigned long long)consumeNs,(unsigned long long)digest,
+  (unsigned long long)(job?NativeCUSCPUReadWorker220::Timestamp(job->submitted):0),(unsigned long long)(receipt?receipt->mainBeginNs:0),
+  (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs);
+}
+
 struct Session {
- std::optional<Metal4WorldPresentationResult> deferredFrame;
+ std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
+ std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
+ uint64_t cpuReadJobs220=0;
+ bool cpuReadDisabled220=false;
+ int cpuReadFallback220=0; // 1 setup failed before publication; 2 disabled after failure.
+ std::deque<Metal4WorldPresentationResult> deferredFrames;
 	explicit Session(SDL_Window* window, uint32_t width, uint32_t height)
 		: requestedMSAA(globalRendering->msaaLevel)
 		, surface(AttachMetal4RendererSurface(window, MakeConfig(width, height)))
@@ -223,7 +273,7 @@ struct Session {
 		// Publish only after this Session has established all native owners.
 		globalRendering->msaaLevel=int(renderer->ActualMainSampling().effective);
 	}
-	~Session(){DisconnectNativeSources();}
+	~Session(){cpuReadReceipt220.reset();cpuReadWorker220.reset();DisconnectNativeSources();}
 	void DisconnectNativeSources()
 	{
 		// The constructor can fail before the Session unique_ptr is published.
@@ -446,8 +496,9 @@ std::unique_ptr<Session> session;
 
 void ApplyDeferredFrameReceipts()
 {
- if(!session || !session->deferredFrame)return;
- auto result=std::move(*session->deferredFrame);session->deferredFrame.reset();
+ if(!session)return;
+ while(!session->deferredFrames.empty()){
+ auto result=std::move(session->deferredFrames.front());session->deferredFrames.pop_front();
  if(!result.sourceFrameCompleted)throw std::logic_error("Deferred scene receipt is not GPU-completed");
  if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  // Source ownership was transferred at submission; do not clear N+1 capture.
@@ -456,6 +507,7 @@ void ApplyDeferredFrameReceipts()
  ui::GetRecorder().RetireSubmittedFrame(result.sourceDrawFrame);
  LuaNativePostprocess::RetireCompletedFrame(result.completedPostprocessSerial);
  LuaNativeVolumetricClouds::RetireCompletedFrame(result.sourceDrawFrame);
+ }
 }
 void RequireRetiredGPUWork()
 {
@@ -1164,6 +1216,33 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
   throw std::logic_error("Original main ground boundary was not captured before this world draw");
  frame.mainGround=session->mainGroundPending; // Retain for the existing pre-Begin abort path too.
  frame.genesisCUSFrame=std::exchange(session->genesisSourcePending,{});
+ // Only opaque CUS frames have sealed at this boundary. The following water,
+ // alpha and Lua captures stay on the original main thread in original order.
+ session->cpuReadReceipt220.reset();
+ std::unique_ptr<CPUReadReceipt220> cpuReceipt220;
+ NativeCUSCPUReadWorker220::Join cpuJoin220; // Destroyed before the main-owned job.
+ session->cpuReadFallback220=session->cpuReadDisabled220?2:0;
+ if(CPUReadPacketMode220()&&frame.opaqueModelFrame&&!session->cpuReadDisabled220)try{
+  cpuReceipt220=std::make_unique<CPUReadReceipt220>();
+  cpuReceipt220->frame=frame.sourceDrawFrame;cpuReceipt220->models=frame.opaqueModelFrame;
+  cpuReceipt220->ordinal=session->cpuReadJobs220+1;
+  auto& job=cpuReceipt220->job;job.measure=CPUReadPacketMeasure220();
+  for(const auto& pass:frame.opaqueModelFrame->passes){job.sources.push_back(pass.lua);if(pass.mrt)job.sources.push_back(pass.mrt->lua);}
+  if(CPUReadPacketMode220()>=2&&!session->cpuReadWorker220){
+   const auto start=job.measure?NativeCUSCPUReadWorker220::Clock::now():NativeCUSCPUReadWorker220::Clock::time_point{};
+   session->cpuReadWorker220=std::make_unique<NativeCUSCPUReadWorker220>();
+   if(job.measure)cpuReceipt220->startupNs=NativeCUSCPUReadWorker220::Elapsed(start);
+  }
+  if(job.measure)job.submitted=NativeCUSCPUReadWorker220::Clock::now();
+  if(CPUReadPacketMode220()>=2){session->cpuReadWorker220->Start(job);cpuJoin220.Arm(*session->cpuReadWorker220,job);}
+  else NativeCUSCPUReadWorker220::Build(job);
+  ++session->cpuReadJobs220;
+ }catch(...){
+  // Start cannot throw after publishing the job, and Arm/Build are noexcept.
+  // An unpublished setup failure must not advance the original error boundary.
+  cpuReceipt220.reset();session->cpuReadDisabled220=true;session->cpuReadFallback220=1;
+ }
+ if(cpuReceipt220&&cpuReceipt220->job.measure)cpuReceipt220->mainBeginNs=NativeCUSCPUReadWorker220::Timestamp(NativeCUSCPUReadWorker220::Clock::now());
 	if (frame.opaqueModelFrame) {
 		// Source capture already owns every model color/depth publication.
 		// Do not create a second standalone depth phase after that capture.
@@ -1274,6 +1353,9 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 		frame.alphaModelFrames[2]=CaptureOriginalAlphaModels(NativeWorldDrawStage::AlphaAll);
   frame.alphaAllLua=CaptureWaterPreParticles(NativeWorldDrawStage::AlphaAll,true,true,false,false);
  }
+ if(cpuReceipt220&&cpuReceipt220->job.measure)cpuReceipt220->mainEndNs=NativeCUSCPUReadWorker220::Timestamp(NativeCUSCPUReadWorker220::Clock::now());
+ cpuJoin220.Finish(); // No job may survive PrepareWorld, including exception unwinding.
+ session->cpuReadReceipt220=std::move(cpuReceipt220);
 }
 
 void AbortPreparedWorld()
@@ -1290,6 +1372,7 @@ void AbortPreparedWorld()
 	LuaNativeCommands::AbortWorldFrame();
 	if(session&&session->renderer)session->renderer->AbortShieldPublications(session->preparedFrame?session->preparedFrame->opaqueModelFrame:session->opaqueSourcePending,session->actualShadowSourcePending,session->preparedFrame&&session->preparedFrame->mainGround?session->preparedFrame->mainGround:session->mainGroundPending);
 	if (session) {
+		session->cpuReadReceipt220.reset();
 		session->preparedFrame.reset();session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();
 		session->preparedGroundDecals.reset();session->preparedGameDecals.reset();session->preparedDecalDraw.reset();
  session->mainGroundPending.reset();session->reflectionGroundPending.reset();session->mainInitialClear.reset();
@@ -1401,9 +1484,27 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   const auto primeModels=[&](const std::shared_ptr<const NativeOpaqueModelFrame>& models){
    if(!models)return;for(const auto& pass:models->passes){cpuReadScope.Prime(pass.lua);if(pass.mrt)cpuReadScope.Prime(pass.mrt->lua);}
   };
-  primeModels(captured.opaqueModelFrame);for(const auto& models:captured.alphaModelFrames)primeModels(models);
+   auto receipt=std::move(session->cpuReadReceipt220);
+   const bool accept=receipt&&receipt->Matches(captured);
+   const uint64_t digest=CPUReadPacketMeasure220()&&receipt?receipt->job.packet.RowDigest():0;
+   const auto consumeStart=CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Clock::now():NativeCUSCPUReadWorker220::Clock::time_point{};
+   bool verified=false;
+   if(accept){
+    // Errors not swallowed by the original Prime are delivered at its original
+    // position, after capture and before alpha/shadow, never on the worker.
+    if(receipt->job.error)std::rethrow_exception(receipt->job.error);
+    if(CPUReadPacketMode220()==3){
+     primeModels(captured.opaqueModelFrame);
+     if(!cpuReadScope.Matches(receipt->job.packet))throw std::runtime_error("CUS opaque CPU receipt differs from original rows/owners/capacity");
+     verified=true;
+    }else cpuReadScope.Adopt(std::move(receipt->job.packet));
+   }else primeModels(captured.opaqueModelFrame);
+   const uint64_t consumeNs=CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Elapsed(consumeStart):0;
+   TraceCPUReadPacket220(captured.sourceDrawFrame,captured.simulationFrame,receipt.get(),accept,verified,session->cpuReadFallback220,cpuReadScope.Count(),cpuReadScope.Bytes(),consumeNs,CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Timestamp(consumeStart):0,digest);
+   for(const auto& models:captured.alphaModelFrames)primeModels(models);
   if(captured.originalShadow)cpuReadScope.Prime(captured.originalShadow->cus);
  }
+  session->cpuReadReceipt220.reset(); // Also release a skipped/hidden world's receipt on main.
  if(measureCPU)cpuReadScope.SetPreparationNanoseconds(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-cpuBegin).count());
  // This owner pins N+1's exact source and immutable shared geometry across
  // retirement of N. No command, residency, producer image or published
@@ -1496,9 +1597,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  if(overlap&&options.presentWorld&&frame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
   const auto expectedDraw=frame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
   options.deferredCompleted=[owner=session.get(),expectedDraw,expectedPost](const Metal4WorldPresentationResult& completed) {
-   if(session.get()!=owner || owner->deferredFrame || !completed.sourceFrameCompleted || completed.sourceDrawFrame!=expectedDraw || completed.completedPostprocessSerial!=expectedPost)
+   if(session.get()!=owner || owner->deferredFrames.size()>=2 || !completed.sourceFrameCompleted || completed.sourceDrawFrame!=expectedDraw || completed.completedPostprocessSerial!=expectedPost)
     throw std::logic_error("Deferred completion differs from its owned original source frame");
-   owner->deferredFrame=completed;
+   owner->deferredFrames.push_back(completed);
   };
  }
  const auto result = overlapPreparation?

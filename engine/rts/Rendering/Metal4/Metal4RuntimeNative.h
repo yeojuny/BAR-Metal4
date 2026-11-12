@@ -12,8 +12,10 @@
 #include <map>
 #include <memory>
 #include <functional>
+#include <deque>
 #include <stdexcept>
 
+namespace rendering { struct NativeWaterGroundSourceFrame; }
 namespace rendering::metal4 {
 
 // The normal game target already defines RECOIL_METAL4_LIVE_SCENE.
@@ -82,6 +84,7 @@ struct RuntimeFrameResources;
 struct PostprocessTextureStorage181;
 struct RuntimePendingSubmission;
 struct PublishedRequestState;
+class InterventionPersistentResidency;
 
 // One actual native context for both asset and screen passes. All requests hold
 // a serialized lease; the monotonically increasing shared event spans requests.
@@ -100,17 +103,21 @@ private:
 		__strong id<MTLLibrary> sampleLibrary=nil;
 	};
 	std::map<std::uintptr_t,ShaderSource> shaderSources;
+	std::unique_ptr<InterventionPersistentResidency> persistentResidency;
 	DeviceCapabilities capabilities;
 	__strong id<MTLDevice> device = nil;
 	__strong id<MTL4CommandQueue> queue = nil;
-	// Primary owns at most one spare recording slot. GPU pending depth stays one.
+	// Separate intervention: optional third recording slot and bounded two-ticket queue.
 	std::shared_ptr<RuntimeFrameSlot> frameSlot;
 	__strong id<MTLSharedEvent> completionEvent = nil;
 	__strong id<MTL4Compiler> compiler = nil;
 	std::mutex requestMutex;
 	uint64_t nextEventValue = 0;
 	std::shared_ptr<RuntimeFrameResources> failedFrame;
-	std::shared_ptr<RuntimePendingSubmission> pendingSubmission;
+	std::shared_ptr<RuntimePendingSubmission> pendingSubmission; // newest, for predecessor contracts
+	std::deque<std::shared_ptr<RuntimePendingSubmission>> pendingSubmissions;
+	void DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner = nullptr);
+	bool SlotPending(const std::shared_ptr<RuntimeFrameSlot>&) const;
 	void DrainPendingLocked();
 	void DrainPendingLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner);
 	bool poisoned = false;
@@ -168,7 +175,12 @@ public:
 	std::string QueueClass() const;
 	std::string CommandBufferClass() const;
 	void AddAllocation(id<MTLAllocation> allocation);
+	void AddPersistentAllocation(id<MTLAllocation> allocation);
 	void Retain(id object);
+ // Caller-only source pins; only pure numeric uniform leaves can be offloaded
+ // after this request's original successful deferred-completion gates.
+ void RetainTerrainUniformSources220(const std::shared_ptr<const NativeWaterGroundSourceFrame>&,
+  const std::shared_ptr<const NativeWaterGroundSourceFrame>&);
 	// Family-local reuse token with bounded request deduplication, retained
 	// through every feedback/poison owner. True when an ownership pin is appended.
 	bool RetainPostprocessTexture181(const std::shared_ptr<PostprocessTextureStorage181>&);

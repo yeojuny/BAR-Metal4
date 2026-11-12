@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4BasicWater.h"
+#include "Metal4InterventionMath.h"
 #include "Metal4WorldBCDecode.h"
 #include "NativeBasicWaterShaders.h"
 #include <algorithm>
@@ -82,7 +83,7 @@ std::unique_ptr<PreparedBasicWater> BasicWaterGPU::Prepare(RuntimeLease& lease,s
 	auto prepared=std::make_unique<PreparedBasicWater::Impl>();prepared->frame=frame;
 	const auto key=Impl::Key{color,validation,lease.SampleShadingKey(samples)};auto it=impl->pipelines.find(key);
 	if(it==impl->pipelines.end()){
-		const auto start=Clock::now();auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+		const auto start=Clock::now();auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);
 		NSError* error=nil;auto lib=lease.NewLibraryWithSource(String(NativeBasicWaterShaders),options,&error);Require(lib!=nil,"Cannot compile original BasicWater shader: "+Error(error));
 		auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];
 		v.library=f.library=lib;v.name=@"BasicWaterVertex";f.name=@"BasicWaterFragment";d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;

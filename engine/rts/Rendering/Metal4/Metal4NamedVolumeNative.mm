@@ -1,6 +1,8 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4NamedVolumeNative.h"
 #include <algorithm>
+#include <cstdlib>
+#include <cstring>
 
 namespace rendering::metal4 {
 namespace {
@@ -9,6 +11,19 @@ struct Resource final:NativeNamedVolumeResource {
 	uint64_t encodedSubmission=0;
 	bool completed=false;
 };
+// NamedVolumeReadiness220 begin: pure classifier exercised by CPU fixture.
+SourceDependencyResult160 NamedVolumeReadiness220(bool completed,uint64_t encodedSubmission)
+{
+ if(completed)return {SourceDependencyWork160::NoCommands,false};
+ // Even same-submission encoding stays conservative without a captured
+ // submission in this borrowed query. Foreign in-flight state is never ready.
+ return {encodedSubmission?SourceDependencyWork160::Unknown:SourceDependencyWork160::CommandsRequired,false};
+}
+bool NamedVolumeQueryGeneration220(uint64_t context,uint64_t storage,uint64_t identity,uint64_t content,uint64_t version)
+{
+ return context&&storage==identity&&storage&&content&&content<=version;
+}
+// NamedVolumeReadiness220 end
 id<MTLSamplerState> Sampler(RuntimeLease& lease,const NativeTextureSampling& p)
 {
 	Require(!p.compareMode&&p.baseLevel==0&&p.maxLevel>=0&&p.lodBias==0&&p.anisotropy==1&&
@@ -58,6 +73,13 @@ CUSSourceImage ResolveNativeNamedVolume(RuntimeLease& lease,const NativeCUSTextu
 		[copy generateMipmapsForTexture:resource->texture];
 		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];resource->encodedSubmission=submission;
 	};
+ // Report only the exact resource captured by the unchanged dependency and
+ // readability callbacks. They retain it even if the registry reloads/deletes
+ // the logical name. Reload constructs a fresh backing with no resource.
+ static const bool classify220=[](){const char* v=std::getenv("BAR_NATIVE_COMBINED_OVERLAP220");return v&&std::strcmp(v,"1")==0;}();
+ if(classify220&&resource->texture.device==lease.Device()&&NamedVolumeQueryGeneration220(
+   binding.object->contextGeneration,backing->storageGeneration,binding.object->identity,backing->contentVersion,binding.object->version))
+  out.dependencyQuery160={resource.get(),[](const void* context){const auto& state=*static_cast<const Resource*>(context);return NamedVolumeReadiness220(state.completed,state.encodedSubmission);}};
 	out.requireReadable=[resource,submission]{Require(resource->completed||resource->encodedSubmission==submission,"Original named DDS3D sampled before its upload/mip dependency");};
 	out.didComplete=[resource,submission]{Require(resource->completed||resource->encodedSubmission==submission,"Original named DDS3D retired before its actual dependency");resource->completed=true;};
 	return out;

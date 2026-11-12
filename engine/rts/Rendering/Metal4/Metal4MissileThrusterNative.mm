@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4MissileThrusterNative.h"
+#include "Metal4InterventionMath.h"
 #include <map>
 #include <tuple>
 #include "NativeMissileThrusterShaders.h"
@@ -94,7 +95,7 @@ void MissileThrusterGPU::Initialize(RuntimeLease& lease,MTLPixelFormat colorForm
  }
 	const auto start=Clock::now();
 	auto descriptor=[MTL4LibraryDescriptor new]; descriptor.name=@"Original source-paired MissileThrusterGL4 legacy and31657 VS/FS pairs"; descriptor.source=String(missileThruster::SHADER);
-	auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise; descriptor.options=options;
+	auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options); descriptor.options=options;
 	NSError* error=nil; auto library=lease.NewLibrary(descriptor,&error);
 	Require(library!=nil,"Cannot compile original MissileThruster native program: "+Error(error));
  std::array<id<MTLRenderPipelineState>,7> pipelines{};

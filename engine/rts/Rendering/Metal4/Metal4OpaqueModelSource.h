@@ -34,6 +34,8 @@ public:
 	// forward bodies remain Unknown; no lifecycle or source ordinal is consumed.
 	ModelPhaseExecution165 InspectPhaseExecution165(size_t,const NativeOpaqueModelFrame* invocation,
 		uint64_t actualDrawFrame,uint64_t actualSubmission)const;
+	bool CanScopeFirstPair220()const;
+ void EncodeFirstMRTScoped220(id<MTL4CommandBuffer>);
 	void EncodeMRTPhase(size_t,id<MTL4CommandBuffer>);
 	// End the scene encoder before dependencies; resume the same scene targets
 	// with Load before EncodeForwardPhase. No source callback is replayed.

@@ -41,9 +41,16 @@ struct ModelPassCounters160 {
   else if(report.unknown)++unknownBoundaries;
  }
 };
-inline bool ModelPass160Enabled() {
- static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_PASS160");
-  return !(value&&value[0]=='0'&&value[1]=='\0');}();
+inline bool EmptyModelPassFusionInterventionEnabled() {
+ static const bool enabled=[] {
+  const char* value=std::getenv("BAR_NATIVE_INTERVENTION_EMPTY_PASS_FUSION");
+  return value&&value[0]=='1'&&value[1]=='\0';
+ }();
  return enabled;
+}
+inline bool ModelPass160Enabled() {
+ // Unlike the historical broad pass160 path, this experiment admits only
+ // physically empty source draws. No fragment wait is encoded in-pass.
+ return EmptyModelPassFusionInterventionEnabled();
 }
 } // namespace rendering::metal4

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4DynamicWater.h"
+#include "Metal4InterventionMath.h"
 #include "NativeDynamicWaterShaders.h"
 #include "Metal4WorldBCDecode.h"
 #include "Rendering/Backend/NativeDynamicWaterTransaction.h"
@@ -345,7 +346,7 @@ std::unique_ptr<PreparedDynamicWater> DynamicWaterGPU::Prepare(RuntimeLease& lea
 		const auto variant=surface?frame->profile.surfaceProgram:DynamicWaterSurfaceProgram::Unobserved;
 		const Impl::Key key{pass,variant,format,lease.SampleShadingKey(count),validation};
 		auto found=impl->pipelines.find(key);if(found!=impl->pipelines.end()){lease.Retain(found->second);return found->second;}
-		const auto start=Clock::now();auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+		const auto start=Clock::now();auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);
 		NSError* error=nil;
 		// RuntimeLease injects the same startup-effective sample-shading macros
 		// used by other native scene shaders. Key tracks its effective mode.

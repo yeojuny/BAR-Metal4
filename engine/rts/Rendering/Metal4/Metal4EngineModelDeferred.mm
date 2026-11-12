@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineModelDeferred.h"
+#include "Metal4InterventionMath.h"
 #include "Metal4ModelUpload146.h"
 #include "Metal4RetiredArguments.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
@@ -12,6 +13,7 @@
 #include "Metal4EngineModelState.h"
 #import <simd/simd.h>
 #include <algorithm>
+#include <array>
 #include <cstring>
 #include <limits>
 #include <map>
@@ -72,14 +74,20 @@ struct EngineModelDeferredGPU::Impl {
   Require(original.modern==(draw.shader==NativeEngineModelShader::GL4)&&original.shadows==draw.program.shadows&&original.target.colors==target.colors&&original.target.depth==target.depth&&original.target.stencil==target.stencil&&original.target.samples==target.samples,"Engine MRT actual program/target profile differs from source");
  }
 
- std::map<std::string,id<MTLRenderPipelineState>> pipelines;
+ using PipelineKey=std::array<uint64_t,14>;
+ std::map<PipelineKey,id<MTLRenderPipelineState>> pipelines;
  std::map<uint32_t,id<MTLLibrary>> libraries;__strong id<MTLDepthStencilState> depth=nil;
  id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,bool modern,bool validation,double& ms,const NativeEngineModelDraw* source=nullptr,uint32_t imageKey=0){
   ScreenDrawState initial;initial.blend.enabled=false;const auto& surface=source?source->sourceSurface:initial;const auto& blend=surface.blend;
-  std::ostringstream keyStream;keyStream<<modern<<':'<<validation<<':'<<imageKey<<':'<<blend.enabled<<':'<<unsigned(blend.sourceColor)<<':'<<unsigned(blend.destinationColor)<<':'<<unsigned(blend.sourceAlpha)<<':'<<unsigned(blend.destinationAlpha)<<':'<<unsigned(blend.colorEquation)<<':'<<unsigned(blend.alphaEquation);for(bool write:surface.colorWrite)keyStream<<':'<<write;const auto key=keyStream.str();auto it=pipelines.find(key);if(it!=pipelines.end()){lease.Retain(it->second);lease.Retain(libraries.at(imageKey));return it->second;}
+  // Same 14 independent fields as the former delimited string, without
+  // per-draw formatting or heap allocation. Ordering is not externally used.
+  const PipelineKey key{uint64_t(modern),uint64_t(validation),uint64_t(imageKey),uint64_t(blend.enabled),
+   uint64_t(blend.sourceColor),uint64_t(blend.destinationColor),uint64_t(blend.sourceAlpha),uint64_t(blend.destinationAlpha),
+   uint64_t(blend.colorEquation),uint64_t(blend.alphaEquation),uint64_t(surface.colorWrite[0]),uint64_t(surface.colorWrite[1]),uint64_t(surface.colorWrite[2]),uint64_t(surface.colorWrite[3])};
+  auto it=pipelines.find(key);if(it!=pipelines.end()){lease.Retain(it->second);lease.Retain(libraries.at(imageKey));return it->second;}
   const auto start=Clock::now();NSError* error=nil;
   auto& library=libraries[imageKey];
-  if(!library){auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;library=lease.NewLibraryWithSource(String(NativeEngineTextureShaderDefines(imageKey)+NativeEngineDeferredShaders),options,&error);Require(library,"Cannot compile actual engine five-output shader: "+Error(error));}
+  if(!library){auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);library=lease.NewLibraryWithSource(String(NativeEngineTextureShaderDefines(imageKey)+NativeEngineDeferredShaders),options,&error);Require(library,"Cannot compile actual engine five-output shader: "+Error(error));}
   auto d=[MTL4RenderPipelineDescriptor new];auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=library;v.name=@"NativeEngineDeferredVertex";f.name=modern?@"NativeEngineDeferredGL4":@"NativeEngineDeferredLegacy";d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
   for(unsigned i=0;i<5;++i){auto a=d.colorAttachments[i];a.pixelFormat=MTLPixelFormatRGBA8Unorm;a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;
    a.sourceRGBBlendFactor=effectstate::Factor(blend.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(blend.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(blend.destinationAlpha);a.rgbBlendOperation=Equation(blend.colorEquation);a.alphaBlendOperation=Equation(blend.alphaEquation);

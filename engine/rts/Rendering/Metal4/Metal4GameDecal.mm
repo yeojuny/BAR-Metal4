@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4GameDecal.h"
+#include "Metal4InterventionMath.h"
 #include "NativeGameDecalShaders.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
 #import <simd/simd.h>
@@ -108,7 +109,7 @@ struct GameDecalGPU::Impl {
 		const auto start=Clock::now();NSError* error=nil;
 		if(!library){
 			auto d=[MTL4LibraryDescriptor new];d.name=@"Original test30770 game Decals GL4 complete program family";d.source=String(NativeGameDecalShaderSource);
-			auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;d.options=options;
+			auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);d.options=options;
 			library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile original game decal program family: "+Error(error));
 		}
 		auto d=[MTL4RenderPipelineDescriptor new];auto vertex=[MTL4LibraryFunctionDescriptor new],fragment=[MTL4LibraryFunctionDescriptor new];vertex.library=fragment.library=library;

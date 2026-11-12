@@ -2,6 +2,7 @@
 #include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4Outline.h"
+#include "Metal4InterventionMath.h"
 #include "Metal4NativeEffectState.h"
 #include "NativeOutlineShaders.h"
 #include "Rendering/Backend/NativeCUSRenderInputs.h"
@@ -225,7 +226,7 @@ std::shared_ptr<const NativeOutlineProgramConsumer> OutlineGPU::LinkOriginalStag
 	descriptor.name = @"Original31657 Outline Shader GL4";
 	descriptor.source = String(SourceText(source));
 	auto options = [MTLCompileOptions new];
-	options.mathMode = MTLMathModeSafe; options.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise;
+	options.mathMode = MTLMathModeSafe; options.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);
 	descriptor.options = options;
 	NSError* error = nil;
 	program->library = lease.NewLibrary(descriptor,&error);

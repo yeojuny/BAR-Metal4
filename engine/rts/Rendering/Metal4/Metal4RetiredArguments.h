@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "Rendering/Backend/NativeRetiredResourcePool.h"
+#include "Rendering/Backend/NativeArgumentResetMask.h"
 #include <array>
 #include "Metal4RuntimeNative.h"
 namespace rendering::metal4 {
@@ -15,7 +16,7 @@ public:
   pool.BeginBatch();
  }
  template<class Lease> id<MTL4ArgumentTable> Acquire(Lease& lease,MTL4ArgumentTableDescriptor* descriptor,
-  RetiredArgumentOwners& owners,NSError** error){
+  RetiredArgumentOwners& owners,NSError** error,uint64_t overwrittenBuffers=0){
   Require(device==lease.Device()&&context==lease.ContextIdentity(),"Argument pool requires its actual context batch");
   Require(descriptor&&descriptor.initializeBindings&&!descriptor.supportAttributeStrides,
    "Retired argument pool requires original zero-initialized non-stride bindings");
@@ -27,7 +28,9 @@ public:
   },[&](RetiredArgumentSlot& slot){
    // The pool alone owns this token. Restore initializeBindings=YES before
    // rebinding; every prepared/completion owner keeps its own token alive.
-   for(NSUInteger i=0;i<key[0];++i)[slot.table setAddress:0 atIndex:i];
+   // Only explicitly guaranteed writes may skip the reset. Callers must
+   // perform these writes before publishing any draw; optional bindings stay zeroed.
+   for(NSUInteger i=0;i<key[0];++i)if(NeedsArgumentBufferReset(i,overwrittenBuffers))[slot.table setAddress:0 atIndex:i];
    for(NSUInteger i=0;i<key[1];++i)[slot.table setTexture:MTLResourceID{0} atIndex:i];
    for(NSUInteger i=0;i<key[2];++i)[slot.table setSamplerState:MTLResourceID{0} atIndex:i];
   });

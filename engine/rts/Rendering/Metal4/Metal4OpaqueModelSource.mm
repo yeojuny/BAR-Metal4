@@ -72,6 +72,22 @@ ModelPhaseExecution165 PreparedOpaqueModelSource::InspectPhaseExecution165(size_
 	return phase.mrt->InspectExecution165(frame,submission);
 }
 
+bool PreparedOpaqueModelSource::CanScopeFirstPair220()const
+{
+ const auto& p=*impl;
+ if(p.completed||p.nextPhase||p.source->alphaStage||p.source->drawReflection||p.source->drawRefraction||p.phases.size()<2)return false;
+ const auto& a=p.phases[0];const auto& b=p.phases[1];
+ const auto& sa=p.source->passes[0];const auto& sb=p.source->passes[1];
+ return sa.deferred&&!sa.feature&&!sb.deferred&&!sb.feature&&
+  sa.engine&&sb.engine&&sa.engine->beforeLua.empty()&&sa.engine->afterLua.empty()&&
+  sb.engine->beforeLua.empty()&&sb.engine->afterLua.empty()&&a.mrt&&a.mrt->HostOnlyInitialModel220()&&
+  !a.callbacks&&!b.callbacks&&b.engine&&b.engine->DrawCount()==0&&b.lua&&b.lua->HostOnlyNoDependencyCommands220();
+}
+void PreparedOpaqueModelSource::EncodeFirstMRTScoped220(id<MTL4CommandBuffer> command)
+{
+ Require(CanScopeFirstPair220(),"Combined first pair proof changed after admission");
+ auto& phase=impl->Current(0,true);phase.mrt->EncodeScopedVertex220(command,true);++impl->nextPhase;
+}
 void PreparedOpaqueModelSource::EncodeMRTPhase(size_t n,id<MTL4CommandBuffer> command)
 {
 	auto& phase=impl->Current(n,true);
@@ -114,6 +130,13 @@ ModelPassDependencyReport160 PreparedOpaqueModelSource::TryKeepForwardPass160(si
  auto& phase=impl->Current(n,false);
  Require(ModelPass160Enabled()&&pass&&phase.engine&&!phase.forwardDependencies,"Model pass continuation lacks its original dependency phase");
  ModelPassDependencyReport160 report;
+ // Separate intervention: DrawCount, not indexedDraws, proves there are no
+ // source draw callbacks or state-setting draw bodies in this phase. A
+ // culled draw is deliberately NOT treated as physically empty here.
+ if(EmptyModelPassFusionInterventionEnabled()&&
+    (phase.engine->DrawCount()!=0||(phase.lua&&phase.lua->DrawCount()!=0))){
+  report.Add({SourceDependencyWork160::Unknown,false});return report;
+ }
  // Callback presence is not evidence that it emits commands, or that it is
  // empty. Until its producers declare a contract, retain the original boundary.
  if(impl->source->alphaStage||phase.callbacks){report.Add({SourceDependencyWork160::Unknown,false});return report;}
@@ -144,6 +167,8 @@ AlphaKeepReport166 PreparedOpaqueModelSource::TryKeepAlphaPass166(size_t n,id<MT
 	Require(ModelPass166Enabled()&&command&&pass&&phase.engine&&impl->source->alphaStage&&!phase.forwardDependencies,
 		"Alpha continuation lacks its original typed dependency phase");
 	AlphaKeepReport166 result;
+	if(EmptyModelPassFusionInterventionEnabled()&&
+		(phase.engine->DrawCount()!=0||(phase.lua&&phase.lua->DrawCount()!=0)))return result;
 	if(!phase.callbacks||!phase.callbacks->inspectExecution166)return result;
 	const auto effect=phase.callbacks->inspectExecution166(invocation,n,frame,submission);
 	if(!phase.callbacks->commands.empty()||effect.body==AlphaCallbackBody166::OrderedCommands){result.reason=AlphaKeepReason166::OrderedCommands;return result;}

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4FireSmokeNative.h"
+#include "Metal4InterventionMath.h"
 #include <map>
 #include <tuple>
 #include "NativeFireSmokeShaders.h"
@@ -94,7 +95,7 @@ void FireSmokeGPU::Initialize(RuntimeLease& lease,MTLPixelFormat colorFormat,boo
  }
 	const auto start=Clock::now();
 	auto descriptor=[MTL4LibraryDescriptor new]; descriptor.name=@"Original test30770 FireSmokeGL4 VS/FS"; descriptor.source=String(fireSmoke::SHADER);
-	auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise; descriptor.options=options;
+	auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options); descriptor.options=options;
 	NSError* error=nil; auto library=lease.NewLibrary(descriptor,&error);
 	Require(library!=nil,"Cannot compile original FireSmoke native program: "+Error(error));
 	auto vertex=[MTL4LibraryFunctionDescriptor new]; vertex.library=library; vertex.name=@"FireSmokeVertexMain";

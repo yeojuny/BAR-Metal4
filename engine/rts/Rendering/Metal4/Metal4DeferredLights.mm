@@ -2,6 +2,11 @@
 #include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4DeferredLights.h"
+#include "Rendering/Backend/NativeDeferredLightPipelineKey.h"
+#include "Metal4InterventionMath.h"
+#include "Metal4RetiredArguments.h"
+#include "Metal4SharedUploadPool.h"
+#include "Metal4InterventionPools.h"
 #include "Metal4DeferredColorNative.h"
 #include "Metal4NativeEffectState.h"
 #include "NativeDeferredLightShaders.h"
@@ -26,7 +31,7 @@ struct LinkedProgram {
 	NativeDeferredLightProgramSource source;
 	__strong id<MTLLibrary> library = nil;
 	mutable __strong id<MTLLibrary> attachedLibrary = nil;
-	mutable std::map<std::vector<uint64_t>, id<MTLRenderPipelineState>> pipelines;
+	mutable std::map<DeferredLightPipelineKey, id<MTLRenderPipelineState>> pipelines;
 };
 float Define(const NativeDeferredLightProgramSource& source, const char* name)
 {
@@ -125,6 +130,8 @@ void ValidateImage(const NativeCUSTextureBinding& binding, const DeferredLightIm
 } // namespace
 
 struct PreparedDeferredLights::Impl {
+ RetiredArgumentOwners argumentOwners;
+ std::vector<std::shared_ptr<ScreenUploadStorage>> uniformOwners;
 	struct Draw {
 		uint64_t sequence = 0;
 		__strong id<MTLRenderPipelineState> pipeline = nil;
@@ -191,6 +198,8 @@ void PreparedDeferredLights::DidComplete()
 }
 
 struct DeferredLightsGPU::Impl {
+ RetiredArguments argumentPool;
+ ScreenUploadPool uniformPool;
 	struct Buffer { std::weak_ptr<const void> owner; __strong id<MTLBuffer> value = nil; };
 	std::unordered_map<const void*, Buffer> buffers, meshes;
 	std::unordered_map<const void*, std::weak_ptr<const LinkedProgram>> programs;
@@ -235,11 +244,10 @@ struct DeferredLightsGPU::Impl {
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease, const LinkedProgram& program,
 		const DeferredLightTarget& target, const ScreenBlendState& blend, const std::array<bool, 4>& mask, bool attached, bool validation, double& milliseconds, bool coverage)
 	{
-		std::vector<uint64_t> key{uint64_t(target.color), uint64_t(target.depth), uint64_t(target.stencil), uint64_t(validation), uint64_t(attached),
+		const auto key = MakeDeferredLightPipelineKey({uint64_t(target.color), uint64_t(target.depth), uint64_t(target.stencil), uint64_t(validation), uint64_t(attached),
 			uint64_t(blend.enabled), uint64_t(blend.sourceColor), uint64_t(blend.destinationColor), uint64_t(blend.sourceAlpha),
-			uint64_t(blend.destinationAlpha), uint64_t(blend.colorEquation), uint64_t(blend.alphaEquation)};
-		for (bool channel: mask) key.push_back(channel);
-		key.push_back(lease.SampleShadingKey(target.samples)); key.push_back(coverage);
+			uint64_t(blend.destinationAlpha), uint64_t(blend.colorEquation), uint64_t(blend.alphaEquation)},
+			mask, lease.SampleShadingKey(target.samples), coverage);
 		if (const auto found = program.pipelines.find(key); found != program.pipelines.end()) {
 			lease.Retain(attached ? program.attachedLibrary : program.library); return found->second;
 		}
@@ -249,7 +257,7 @@ struct DeferredLightsGPU::Impl {
 			libraryDescriptor.name = @"Original31657 unit-attached Deferred rendering GL4";
 			libraryDescriptor.source = String(SourceText(program.source, true));
 			auto compileOptions = [MTLCompileOptions new];
-			compileOptions.mathMode = MTLMathModeSafe; compileOptions.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise;
+			compileOptions.mathMode = MTLMathModeSafe; compileOptions.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise; ConfigureInterventionColorMath(compileOptions);
 			libraryDescriptor.options = compileOptions;
 			NSError* error = nil;
 			program.attachedLibrary = lease.NewLibrary(libraryDescriptor,&error);
@@ -288,7 +296,7 @@ struct DeferredLightsGPU::Impl {
 };
 DeferredLightsGPU::DeferredLightsGPU(): impl(std::make_unique<Impl>()) {}
 DeferredLightsGPU::~DeferredLightsGPU() = default;
-void DeferredLightsGPU::ClearResources() { impl->buffers.clear(); impl->meshes.clear(); impl->programs.clear(); }
+void DeferredLightsGPU::ClearResources() { impl->argumentPool.Clear(); impl->uniformPool=ScreenUploadPool{}; impl->buffers.clear(); impl->meshes.clear(); impl->programs.clear(); }
 std::shared_ptr<const NativeDeferredLightProgramConsumer> DeferredLightsGPU::LinkOriginalStages(
 	RuntimeLease& lease, const NativeDeferredLightProgramSource& source, double& milliseconds)
 {
@@ -300,7 +308,7 @@ std::shared_ptr<const NativeDeferredLightProgramConsumer> DeferredLightsGPU::Lin
 	descriptor.name = @"Original31657 Deferred rendering GL4";
 	descriptor.source = String(SourceText(source));
 	auto options = [MTLCompileOptions new];
-	options.mathMode = MTLMathModeSafe; options.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise;
+	options.mathMode = MTLMathModeSafe; options.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise; ConfigureInterventionColorMath(options);
 	descriptor.options = options;
 	NSError* error = nil;
 	program->library = lease.NewLibrary(descriptor,&error);
@@ -331,6 +339,8 @@ std::unique_ptr<PreparedDeferredLights> DeferredLightsGPU::Prepare(RuntimeLease&
 	std::erase_if(impl->programs, [](const auto& entry) { return entry.second.expired(); });
 	auto result = std::unique_ptr<PreparedDeferredLights>(new PreparedDeferredLights());
 	result->impl->source = std::move(source);
+ const bool reuse=InterventionPoolsEnabled();
+ if(reuse){impl->argumentPool.BeginBatch(lease);impl->uniformPool.BeginBatch(lease.Device());}
 	for (const auto& input: result->impl->source->draws) {
 		ValidateNativeDeferredLightDraw(input);
 		const auto linked = impl->programs.find(input.program->pipelineLifetime.get());
@@ -354,7 +364,7 @@ std::unique_ptr<PreparedDeferredLights> DeferredLightsGPU::Prepare(RuntimeLease&
 		auto table = [MTL4ArgumentTableDescriptor new];
 		table.maxBufferBindCount = 7; table.maxTextureBindCount = 10; table.maxSamplerStateBindCount = 10; table.initializeBindings = YES;
 		NSError* error = nil;
-		draw.arguments = [lease.Device() newArgumentTableWithDescriptor:table error:&error];
+		draw.arguments = reuse?impl->argumentPool.Acquire(lease,table,result->impl->argumentOwners,&error,0x4fu):[lease.Device() newArgumentTableWithDescriptor:table error:&error];
 		Require(draw.arguments != nil, "Cannot allocate original deferred-light arguments: " + Error(error));
 		lease.Retain(draw.arguments);
 		auto mesh = impl->Mesh(lease, input.vertices);
@@ -427,7 +437,9 @@ std::unique_ptr<PreparedDeferredLights> DeferredLightsGPU::Prepare(RuntimeLease&
 			draw.images.push_back(std::move(image));
 		}
 		ValidateNativeDeferredModelEpochs(modelEpochs);
-		auto uniformBuffer = Upload(lease, &uniforms, sizeof(uniforms));
+		auto uniformToken=reuse?impl->uniformPool.Acquire(lease.Device(),sizeof(uniforms)):nullptr;
+		auto uniformBuffer=uniformToken?uniformToken->buffer:Upload(lease,&uniforms,sizeof(uniforms));
+		if(uniformToken){std::memcpy(uniformBuffer.contents,&uniforms,sizeof(uniforms));lease.AddAllocation(uniformBuffer);result->impl->uniformOwners.push_back(std::move(uniformToken));}
 		[draw.arguments setAddress:uniformBuffer.gpuAddress atIndex:6];
 		draw.pipeline = impl->Pipeline(lease, *program, target, input.surface.blend, input.world.colorWrite, uniforms.attachedtounitID > 0, validation, milliseconds, input.world.alphaToCoverage);
 		draw.depth = effectstate::Depth(lease, input.world, target.stencil);

@@ -14,7 +14,20 @@
 
 namespace rendering {
 
+struct Metal4SurfaceWorkerSnapshot {
+ const Metal4WindowSurface* surface=nullptr;
+ Metal4SurfaceSnapshot state;
+ __strong CAMetalLayer* layer=nil;
+};
+class Metal4SurfaceWorkerScope {
+public:
+ explicit Metal4SurfaceWorkerScope(const Metal4SurfaceWorkerSnapshot&);
+ ~Metal4SurfaceWorkerScope();
+ Metal4SurfaceWorkerScope(const Metal4SurfaceWorkerScope&)=delete;
+};
 struct Metal4WindowSurfaceNativeAccess {
+ static Metal4SurfaceWorkerSnapshot PublishWorkerSnapshot(Metal4WindowSurface&);
+ static bool WorkerAccessActive();
 	static Metal4WindowSurface AttachWithDevice(SDL_Window* window, id<MTLDevice> device, const Metal4SurfaceConfig& config);
 	static id<MTLDevice> Device(const Metal4WindowSurface& surface);
 	// Refreshes native presentation metadata and restores the exact requested

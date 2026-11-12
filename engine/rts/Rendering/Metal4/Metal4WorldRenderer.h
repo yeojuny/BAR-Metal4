@@ -256,6 +256,7 @@ public:
 
 
 private:
+ Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
  Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
 	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&);
 	struct Impl;

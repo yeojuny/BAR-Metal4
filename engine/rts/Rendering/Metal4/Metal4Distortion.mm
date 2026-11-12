@@ -2,6 +2,7 @@
 #include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4Distortion.h"
+#include "Metal4InterventionMath.h"
 #include "Metal4MainAttachments.h"
 #include "Metal4NativeEffectState.h"
 #include "Metal4ShieldNative.h"
@@ -65,7 +66,7 @@ id<MTLLibrary> Library(RuntimeLease& lease,const LinkedProgram& program,unsigned
 	if(library){Require(library.device==lease.Device(),"Distortion library belongs to another device");return library;}
 	const auto begin=Clock::now();
 	auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original31657 Distortion GL4";descriptor.source=String(Source(program.source,modelBuffers));
-	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
+	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);descriptor.options=options;
 	NSError* error=nil;library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile original Distortion GLSL equations as MSL: "+Error(error));
 	ms+=Milliseconds(begin);return library;
 }

@@ -5,6 +5,8 @@
 #include "System/Log/ILog.h"
 #include "Metal4DeferredStoragePool.inc"
 #include "Metal4MRTObservation174.h"
+#include <cstdlib>
+#include <cstring>
 
 namespace rendering::metal4 {
 namespace {
@@ -68,9 +70,15 @@ template<class Prepared>
 bool CanReuseWritingMRT209(const Prepared& p,const MRTWriteReuse209& permission)
 {
  const auto* unit=permission.Unit();
+ // The sealed permission is unchanged. Expand only the prepared writer
+ // shape: Lua-only features retain their actual ordered draws, dependency
+ // callbacks and completion graph, while six preservation copies disappear.
+ const bool luaOnlyWriter=MRTLuaWriteReuseInterventionEnabled()&&
+  p.other.emptySourceCallbacksHaveNoCommands&&p.other.drawSequences.empty()&&
+  p.lua&&p.lua->DrawCount()!=0;
  if(!unit||!unit->depth.backing||!p.source->feature||p.source->role!=NativeGeometryTextureRole::Models||
   p.source->clearBefore||p.source->clearOnly||p.source->combinedColor.Changed()||p.discardPrior145||
-  !p.other.sourceOrder||p.other.emptySourceCallbacksHaveNoCommands||p.other.drawSequences.empty()||
+  !p.other.sourceOrder||(!luaOnlyWriter&&(p.other.emptySourceCallbacksHaveNoCommands||p.other.drawSequences.empty()))||
   p.sourceOrder.empty()||p.other.beforeLua||p.other.afterLua||p.other.initialAttachmentClear182||
   !p.source->depth.previous||!SameMRTSharedOwner(p.source->depth.previous->backing,unit->depth.backing))return false;
  const auto& prior=p.priorDepth;const auto& m=p.source->depth.backing->Metadata();
@@ -280,8 +288,39 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
 	return out;
 }
 
-void PreparedCUSDeferred::Encode(id<MTL4CommandBuffer> command)
+bool PreparedCUSDeferred::HostOnlyInitialModel220()const
 {
+ const auto& p=*impl;
+ return !p.encoded&&!p.completed&&p.source->role==NativeGeometryTextureRole::Models&&
+  !p.source->feature&&p.source->clearBefore&&!p.retainsReadOnlyContents&&!p.reusesWritingStorage209&&
+  p.other.observed&&p.other.sourceOrder&&p.other.drawSequences.empty()&&p.other.emptySourceCallbacksHaveNoCommands&&
+  p.lua&&p.lua->HostOnlyNoDependencyCommands220();
+}
+void PreparedCUSDeferred::Encode(id<MTL4CommandBuffer> command){EncodeScopedVertex220(command,false);}
+void PreparedCUSDeferred::EncodeScopedVertex220(id<MTL4CommandBuffer> command,bool scopedVertex220)
+{
+ // Separate intervention: the existing proof is local to this fresh initial
+ // model MRT, not dependent on enabling the larger terrain/forward overlap.
+ // It admits only host-fed vertex inputs, no engine draws, no dependency
+ // commands, and fresh cleared attachments. Unknown/readback/copy/load phases
+ // keep the original full queue wait. Fragment visibility and the pass-end
+ // publication are unchanged; no consumer is moved across this pass.
+ static const bool hostVertexIntervention=[] {
+  const char* value=std::getenv("BAR_NATIVE_INTERVENTION_HOST_VERTEX");
+  return value&&std::strcmp(value,"1")==0;
+ }();
+ const bool localHostVertex=hostVertexIntervention&&HostOnlyInitialModel220();
+ scopedVertex220=scopedVertex220||localHostVertex;
+ if(scopedVertex220)Require(HostOnlyInitialModel220(),"Combined MRT vertex proof changed after admission");
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ if(localHostVertex){
+  static bool reportedIntervention=false;
+  if(!reportedIntervention){
+   LOG("[NativeInterventionHostVertex] initial_model_mrt=1 host_only_proof=1 fragment_wait_retained=1 pass_boundary_retained=1");
+   reportedIntervention=true;
+  }
+ }
+#endif
 	auto& p=*impl;Require(command&&!p.encoded&&!p.completed,"Original model MRT phase is missing or encoded twice");
 #ifdef RECOIL_METAL4_LIVE_SCENE
  if(MRT174Enabled()&&MRT174Window(p.source->sourceDrawFrame)){
@@ -323,7 +362,7 @@ void PreparedCUSDeferred::Encode(id<MTL4CommandBuffer> command)
 	if(p.other.initialAttachmentClear182)p.other.initialAttachmentClear182(pass);
 	auto encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder,"Cannot encode original five-MRT model phase");
 	try{
-	[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+	[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:(scopedVertex220?MTLStageFragment:(MTLStageVertex|MTLStageFragment)) visibilityOptions:MTL4VisibilityOptionDevice];
 	[encoder setViewport:MTLViewport{0,0,double(pass.renderTargetWidth),double(pass.renderTargetHeight),0,1}];[encoder setScissorRect:MTLScissorRect{0,0,pass.renderTargetWidth,pass.renderTargetHeight}];
 	if(p.other.sourceOrder){
 		for(const auto& draw:p.sourceOrder){if(draw.engine)p.other.drawAt(draw.index,encoder);else p.lua->EncodeDraw(draw.index,encoder);}

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4LegacyWaterBump.h"
+#include "Metal4InterventionMath.h"
 #include "NativeLegacyWaterBumpShaders.h"
 #include "Rendering/Env/LegacyWaterBumpLayers.h"
 #include <map>
@@ -77,7 +78,7 @@ std::unique_ptr<PreparedLegacyWaterBump> LegacyWaterBumpGPU::Prepare(RuntimeLeas
 		const auto start = Clock::now();
 		auto options = [MTLCompileOptions new];
 		options.mathMode = MTLMathModeSafe;
-		options.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise;
+		options.mathFloatingPointFunctions = MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);
 		NSError* error = nil;
 		auto library = lease.NewLibraryWithSource(String(NativeLegacyWaterBumpShaders), options, &error);
 		Require(library != nil, "Cannot compile legacy water bump shaders: " + Error(error));

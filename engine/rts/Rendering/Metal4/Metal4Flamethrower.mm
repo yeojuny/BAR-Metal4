@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4Flamethrower.h"
+#include "Metal4InterventionMath.h"
 #include "NativeFlamethrowerShaders.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
 #import <simd/simd.h>
@@ -95,7 +96,7 @@ struct FlamethrowerGPU::Impl {
 		if (!library) {
 			auto descriptor=[MTL4LibraryDescriptor new]; descriptor.name=@"Original game31657 complete FlamethrowerGL4 program";
 			descriptor.source=String(std::string(flamethrower::SHADER));
-			auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise; descriptor.options=options;
+			auto options=[MTLCompileOptions new]; options.mathMode=MTLMathModeSafe; options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options); descriptor.options=options;
 			library=lease.NewLibrary(descriptor,&error);
 			Require(library!=nil,"Cannot compile original Flamethrower native program: "+Error(error));
 		}

@@ -269,7 +269,8 @@ public:
 
 	id<MTLTexture> SamplesImage() const { return sampleDepth; }
 	id<MTLTexture> SingleImage() const { return singleDepth; }
-	void Encode(id<MTL4CommandBuffer> command)
+	void Encode(id<MTL4CommandBuffer> command){EncodeScopedVertex220(command,false,nil);}
+ void EncodeScopedVertex220(id<MTL4CommandBuffer> command,bool scopedVertex220,id<MTLFence> localFence220)
 	{
 		Require(command && !encoded, "Original terrain-only depth snapshot is missing or duplicated");
 		if (singleDepth && main->Samples() > 1) main->EncodeResolve(command, MainReadImages::Depth);
@@ -283,7 +284,8 @@ public:
 		};
 		if (sampleDepth) blit(main->Depth(), sampleDepth);
 		if (singleDepth && singleDepth != sampleDepth) blit(main->ReadDepth(), singleDepth);
-		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex | MTLStageFragment | MTLStageDispatch
+		if(scopedVertex220){Require(localFence220,"Combined snapshot fence missing");[copy updateFence:localFence220 afterEncoderStages:MTLStageBlit];}
+		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:(scopedVertex220?(MTLStageFragment|MTLStageDispatch):(MTLStageVertex|MTLStageFragment|MTLStageDispatch))
 			visibilityOptions:MTL4VisibilityOptionDevice];
 		[copy endEncoding];
 		encoded = true;

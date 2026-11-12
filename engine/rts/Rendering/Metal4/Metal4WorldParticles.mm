@@ -1,6 +1,8 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WorldParticles.h"
 #include "Metal4RetiredArguments.h"
+#include "Metal4TransientUpload177.h"
+#include "WorldParticleIndexLength220.h"
 #include "Metal4ImmutableSnapshotBuffers.h"
 #include "NativeSampleShadingShaders.h"
 #include <tuple>
@@ -176,6 +178,7 @@ bool ParticleRoot218(id<MTLTexture> __unsafe_unretained texture)
 }
 }
 struct PreparedWorldParticles::Impl {
+ __strong M4TransientUploadLifetime177* worldUpload220=nil;
  RetiredArgumentOwners argumentOwners;
 	struct Draw {
 		NativeWorldParticleRange range;
@@ -187,6 +190,7 @@ struct PreparedWorldParticles::Impl {
 		NSUInteger indexStride=4,vertexCount=0,instanceCount=1;
 		bool stencil=false;
 		uint64_t sequence=0;
+  size_t logicalIndexBytes220=0;
 	};
 	std::vector<Draw> draws;
 	std::vector<std::shared_ptr<Atlas>> pendingMipmaps;
@@ -246,7 +250,7 @@ void PreparedWorldParticles::EncodeDraw(std::size_t index,id<MTL4RenderCommandEn
 		[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
 		if(draw.stencil)[encoder setStencilReferenceValue:0x40];
 		if(draw.indices!=nil){const NSUInteger offset=NSUInteger(draw.range.firstIndex)*draw.indexStride;
-			[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.range.indexCount indexType:draw.indexType indexBuffer:draw.indices.gpuAddress+offset indexBufferLength:draw.indices.length-offset instanceCount:draw.instanceCount];}
+			[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.range.indexCount indexType:draw.indexType indexBuffer:draw.indices.gpuAddress+offset indexBufferLength:(draw.logicalIndexBytes220?WorldParticleIndexLength220(draw.logicalIndexBytes220,draw.indices.length,draw.range.firstIndex,draw.range.indexCount,draw.indexStride):draw.indices.length-offset) instanceCount:draw.instanceCount];}
 		else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.vertexCount instanceCount:draw.instanceCount];
 	// Ground flashes must restore zero bias. Other draws already set zero above;
 	// no intervening command changes it, including an empty geometry invocation.
@@ -309,6 +313,7 @@ void PreparedShadowColor::DidComplete()const
 	impl->cache->completed=impl->image;
 }
 struct WorldParticlesGPU::Impl {
+ TransientUploadPool177 worldUpload220{"world-particles220"};
  RetiredArguments argumentPool;
  ImmutableSnapshotBuffers snapshotBuffers;
 	std::unordered_map<const NativeWorldParticleAtlas*,std::shared_ptr<Atlas>> atlases;
@@ -354,7 +359,7 @@ void WorldParticlesGPU::ClearResources()
 	// Preserve the actual initialized family across scene reload; the next
 	// original gadget Initialize must observe its already connected consumer.
 	for(const auto& [source,atlas]:impl->atlases)Require(!atlas->encodedSubmission||atlas->initialized,"Original atlas resources still have unretired work");
-	impl->snapshotBuffers.Clear();impl->argumentPool.Clear();impl->atlases.clear();impl->sourceAtlases.clear();impl->sourceSubmission=0;impl->shadowColor=std::make_shared<ShadowColorCache>();impl->normalInfo=nil;impl->normalInfoInitialized.reset();
+	impl->worldUpload220.Clear();impl->snapshotBuffers.Clear();impl->argumentPool.Clear();impl->atlases.clear();impl->sourceAtlases.clear();impl->sourceSubmission=0;impl->shadowColor=std::make_shared<ShadowColorCache>();impl->normalInfo=nil;impl->normalInfoInitialized.reset();
 	impl->infoGPU=std::make_unique<MiniMapGPU>();
 	impl->lastInfoNormal=true;
 }
@@ -419,13 +424,27 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 	}
 	lease.Retain(particleProgram.library);lease.Retain(particleProgram.alpha);lease.Retain(particleProgram.groundPipeline);
 	auto result=std::unique_ptr<PreparedWorldParticles>(new PreparedWorldParticles);result->impl->submission=submission;
+ static const bool upload220=[]{const char* v=std::getenv("BAR_NATIVE_WORLD_PARTICLE_UPLOAD220");return v&&std::strcmp(v,"1")==0;}();
+ static const bool counters220=[]{const char* v=std::getenv("BAR_NATIVE_WORLD_PARTICLE_UPLOAD220_COUNTERS");return v&&std::strcmp(v,"1")==0;}();
+ const auto beforeRequests220=impl->worldUpload220.requests,beforeReused220=impl->worldUpload220.reused,
+  beforeCreated220=impl->worldUpload220.created,beforeFallback220=impl->worldUpload220.fallbacks,
+  beforeBytes220=impl->worldUpload220.uploadedBytes;
+ uint64_t attempts220=0,bytes220=0;
+ if(upload220)impl->worldUpload220.BeginBatch(lease.Device());
+ const auto uploadBuffer220=[&](const void* data,size_t length)->id<MTLBuffer>{
+  if(counters220){++attempts220;bytes220+=length;}
+  const auto original=[&]{return Buffer(lease,data,length);};
+  if(!upload220)return original();
+  return UploadTransient177(lease,impl->worldUpload220,result->impl->worldUpload220,data,length,original);
+ };
+
 	auto& follow218=result->impl->follow218;
 	follow218.engine=frame.visibleWater&&!frame.drawReflection&&!frame.drawRefraction;
 	follow218.frame=frame.drawFrame;follow218.color=colorFormat;follow218.depth=depthFormat;follow218.samples=outputSamples;follow218.terrainDepth=terrainDepth;
 	const auto atlas=[&](bool ground) {auto cached=impl->GetAtlas(lease,ground?frame.groundAtlas:frame.atlas);
 		if(!cached->initialized&&std::find(result->impl->pendingMipmaps.begin(),result->impl->pendingMipmaps.end(),cached)==result->impl->pendingMipmaps.end())result->impl->pendingMipmaps.push_back(cached);return cached;};
-	id<MTLBuffer> vertices=frame.ranges.empty()?nil:Buffer(lease,frame.vertices.data(),frame.vertices.size()*sizeof(NativeWorldParticleVertex));
-	id<MTLBuffer> indices=frame.ranges.empty()?nil:Buffer(lease,frame.indices.data(),frame.indices.size()*sizeof(uint32_t));
+	id<MTLBuffer> vertices=frame.ranges.empty()?nil:uploadBuffer220(frame.vertices.data(),frame.vertices.size()*sizeof(NativeWorldParticleVertex));
+	id<MTLBuffer> indices=frame.ranges.empty()?nil:uploadBuffer220(frame.indices.data(),frame.indices.size()*sizeof(uint32_t));
 	if(terrainDepth!=nil)lease.AddAllocation(terrainDepth);
 	for(const auto& range:frame.ranges) {
 		auto image=atlas(range.groundAtlas);Uniform u{};u.view=Matrix(viewCamera.view);u.projection=Matrix(viewCamera.projection);u.viewProjection=simd_mul(u.projection,u.view);
@@ -434,12 +453,13 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 		u.camera=simd_make_float4(frame.fogCameraPosition[0],frame.fogCameraPosition[1],frame.fogCameraPosition[2],0);u.fogColor=simd_make_float4(frame.fogColor[0],frame.fogColor[1],frame.fogColor[2],0);
 		u.fogParameters=simd_make_float4(frame.fogDistances[0],frame.fogDistances[1],range.softenThreshold,range.alphaThreshold);u.options=simd_make_uint4(viewCamera.clipDepth==ClipDepthConvention::MinusOneToOne?1:0,frame.softenRequested?1:0,0,0);
 		for(const auto* matrix:{viewCamera.view.data(),viewCamera.projection.data()})for(unsigned n=0;n<16;++n)Require(std::isfinite(matrix[n]),"Original particle nonfinite camera matrix");
-		auto uniform=Buffer(lease,&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=2;ad.maxTextureBindCount=2;ad.initializeBindings=YES;NSError* error=nil;
+		auto uniform=uploadBuffer220(&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=2;ad.maxTextureBindCount=2;ad.initializeBindings=YES;NSError* error=nil;
 		auto arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(arguments!=nil,"Cannot allocate original particle argument table: "+Error(error));lease.Retain(arguments);
 		[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:uniform.gpuAddress atIndex:1];[arguments setTexture:image->texture.gpuResourceID atIndex:0];if(terrainDepth!=nil)[arguments setTexture:terrainDepth.gpuResourceID atIndex:1];
 		auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=range.depthTest?MTLCompareFunctionLessEqual:MTLCompareFunctionAlways;dd.depthWriteEnabled=range.depthWrite;
 		auto depth=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(depth!=nil,"Cannot allocate original particle depth state");lease.Retain(depth);
 		result->impl->draws.push_back({range,range.groundAtlas?particleProgram.groundPipeline:particleProgram.alpha,depth,arguments,indices});
+  result->impl->draws.back().logicalIndexBytes220=frame.indices.size()*sizeof(uint32_t);
 		if(range.stage==NativeWorldParticleStage::AlphaAboveWater){
 			if(!follow218.firstAlphaSeen){const auto& prepared=result->impl->draws.back();follow218.firstAlphaSeen=true;follow218.firstAlphaNonempty=prepared.indices!=nil&&prepared.range.indexCount>0&&prepared.instanceCount>0;follow218.atlas=image->texture;}
 			else if(follow218.atlas!=image->texture)follow218.inputsKnown=false;
@@ -451,8 +471,8 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 		Require(frame.engineNanoTemplate.size()==42,"Original engine nano requires its actual 42-vertex template");
 		for(const auto& v:frame.engineNano){for(float x:v.startPosition)Require(std::isfinite(x),"Nonfinite engine nano start position");for(float x:v.velocity)Require(std::isfinite(x),"Nonfinite engine nano velocity");for(float x:v.frames)Require(std::isfinite(x),"Nonfinite engine nano frame state");}
 		InitializeLuaNano(lease,colorFormat,validation,shaderMilliseconds,outputSamples);lease.Retain(impl->engineLibrary);lease.Retain(impl->enginePipeline);
-		auto mesh=Buffer(lease,frame.engineNanoTemplate.data(),frame.engineNanoTemplate.size()*sizeof(NativeEngineNanoTemplateVertex));
-		auto instances=Buffer(lease,frame.engineNano.data(),frame.engineNano.size()*sizeof(NativeEngineNanoInstance));
+		auto mesh=uploadBuffer220(frame.engineNanoTemplate.data(),frame.engineNanoTemplate.size()*sizeof(NativeEngineNanoTemplateVertex));
+		auto instances=uploadBuffer220(frame.engineNano.data(),frame.engineNano.size()*sizeof(NativeEngineNanoInstance));
 		const auto prepare=[&](NativeWorldParticleStage stage,float clipY) {
 			EngineNanoUniform u{};u.cameraViewProjection=Matrix(frame.cameraViewProjection);
 			u.cameraPosition=simd_make_float4(frame.cameraPosition[0],frame.cameraPosition[1],frame.cameraPosition[2],0);
@@ -461,7 +481,7 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 			for(unsigned n=0;n<6;++n)std::memcpy(&u.planes[n],frame.frustumPlanes[n].data(),sizeof(simd_float4));
 			static_assert(sizeof(NativeEngineNanoAppearance)==19*sizeof(float));std::memcpy(u.parameters.data(),&frame.engineNanoAppearance,sizeof(NativeEngineNanoAppearance));u.parameters[19]=frame.animationFrame;
 			for(float value:u.parameters)Require(std::isfinite(value),"Nonfinite original engine nano appearance");u.options=simd_make_uint4(viewCamera.clipDepth==ClipDepthConvention::MinusOneToOne?1:0,0,0,0);
-			auto uniform=Buffer(lease,&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=3;ad.initializeBindings=YES;NSError* error=nil;
+			auto uniform=uploadBuffer220(&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=3;ad.initializeBindings=YES;NSError* error=nil;
 			auto arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(arguments!=nil,"Cannot allocate original engine nano arguments: "+Error(error));lease.Retain(arguments);
 			[arguments setAddress:mesh.gpuAddress atIndex:0];[arguments setAddress:instances.gpuAddress atIndex:1];[arguments setAddress:uniform.gpuAddress atIndex:2];
 			auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=MTLCompareFunctionLessEqual;dd.depthWriteEnabled=NO;auto depth=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(depth!=nil,"Cannot allocate original engine nano depth state");lease.Retain(depth);
@@ -471,7 +491,15 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 		else if(frame.drawRefraction)prepare(NativeWorldParticleStage::NanoBelowWater,-1);
 		else if(frame.visibleWater){prepare(NativeWorldParticleStage::NanoBelowWater,-1);prepare(NativeWorldParticleStage::NanoAboveWater,1);}else prepare(NativeWorldParticleStage::NanoAll,0);
 	}
-	return result;
+	if(counters220&&frame.drawFrame>=600){
+  static std::atomic<unsigned> rows220{0};if(rows220.fetch_add(1,std::memory_order_relaxed)<64)LOG("[NativeWorldParticleUpload220] frame=%llu submission=%llu mode=%u calls=%llu bytes=%llu requests=%llu reused=%llu created=%llu fallback=%llu pooled_bytes=%llu cached_count=%zu cached_bytes=%zu",
+   (unsigned long long)frame.drawFrame,(unsigned long long)submission,unsigned(upload220),
+   (unsigned long long)attempts220,(unsigned long long)bytes220,
+   (unsigned long long)(impl->worldUpload220.requests-beforeRequests220),(unsigned long long)(impl->worldUpload220.reused-beforeReused220),
+   (unsigned long long)(impl->worldUpload220.created-beforeCreated220),(unsigned long long)(impl->worldUpload220.fallbacks-beforeFallback220),
+   (unsigned long long)(impl->worldUpload220.uploadedBytes-beforeBytes220),impl->worldUpload220.storage.CachedCount(),impl->worldUpload220.storage.CachedBytes());
+ }
+ return result;
 }
 
 std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::PrepareLuaNano(RuntimeLease& lease,

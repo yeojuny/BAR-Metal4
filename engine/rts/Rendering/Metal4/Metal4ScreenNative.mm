@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ScreenNative.h"
+#include "Metal4CoverageRTTPool220.h"
 #include "System/Log/ILog.h"
 #include "Rendering/Backend/NativeDepthStencilKey.h"
 #include "Rendering/Backend/NativeUploadLayout.h"
@@ -39,6 +40,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstring>
+#include <mutex>
 #include <unordered_map>
 #include <map>
 #include <bit>
@@ -117,6 +119,16 @@ private:
 
 // Keep the readback/source owner alive even if encoding throws after Begin
 // and the common runtime retains this uncertain submission until teardown.
+// Pin the logical version in EVERY writing/reading lease, including later readers.
+// Native frame/feedback/failure owners retain this holder through GPU completion.
+@interface M4CoverageRTTLifetime220 : NSObject {
+@public
+ std::shared_ptr<const rendering::ScreenTexture> owner;
+}
+@end
+@implementation M4CoverageRTTLifetime220
+@end
+
 @interface M4ScreenReadbackLifetime : NSObject {
 @public
 	std::shared_ptr<const void> retained;
@@ -731,6 +743,7 @@ struct PreparedScreenFrame::Impl {
   std::shared_ptr<ExactScreenLineJob> exactLine;
   std::shared_ptr<PreparedSourceLines133> sourceLines;
   bool geometry=false,sourceLine=false;uint32_t geometryInstances=1;__strong id<MTLBuffer> geometryIndices=nil;size_t geometryIndexOffset170=0;
+  uint8_t mutableLayout220=0,eligibility220=0;std::array<uint64_t,9> bindings220{};
 	};
 	// Both the prepared frame and RuntimeLease completion graph retain this
 	// token. It outlives draws during destruction and blocks every pool write.
@@ -739,9 +752,25 @@ struct PreparedScreenFrame::Impl {
 	// Per-draw healthbar storage shares the same completion-safe pool. This
 	// array outlives draws and is created only when healthbar uploads exist.
 	__strong NSMutableArray<M4ScreenUploadLifetime*>* healthBarsUploadLifetimes=nil;
+ // Independent ordinary (3/2/2) and packed (5/2/2) tables, owned by this frame.
+ std::array<__strong id<MTL4ArgumentTable>,2> mutableTables220{};
+ mutable std::mutex mutableMutex220;
+ bool counters220=false,mode220=false;uint64_t receipt220=0,sourceFrame220=0;
+ uint32_t firstCommand220=0;
+ std::array<uint64_t,2> oldSharedTables220{},actualSharedTables220{};
+ uint64_t argumentAcquires220=0,prepareSetters220=0,oldPrepareSetters220=0;
 	ScreenBufferSlice indices;
 	MTLViewport viewport{};
 	std::vector<Draw> draws;
+ void ReportPreparation220()const {
+  if(!counters220)return;
+  // Eligibility is recorded even in mode0; reasons partition prepared draws.
+  std::array<uint64_t,7> reasons{};for(const auto& draw:draws)++reasons[draw.eligibility220];
+  LOG("[NativeScreenTableH5V2] stage=prepare receipt=%llu frame=%llu mode=%u first=%u source_commands=%u prepared=%zu eligible_ordinary=%llu eligible_packed=%llu reject_typed=%llu reject_clear=%llu reject_point=%llu reject_material=%llu reject_geometry=%llu old_shared_ordinary=%llu old_shared_packed=%llu actual_shared_ordinary=%llu actual_shared_packed=%llu all_argument_acquires=%llu old_prepare_setters=%llu actual_prepare_setters=%llu",
+   (unsigned long long)receipt220,(unsigned long long)sourceFrame220,unsigned(mode220),firstCommand220,sourceCommandCount,draws.size(),
+   (unsigned long long)reasons[1],(unsigned long long)reasons[2],(unsigned long long)reasons[0],(unsigned long long)reasons[3],(unsigned long long)reasons[4],(unsigned long long)reasons[5],(unsigned long long)reasons[6],
+   (unsigned long long)oldSharedTables220[0],(unsigned long long)oldSharedTables220[1],(unsigned long long)actualSharedTables220[0],(unsigned long long)actualSharedTables220[1],(unsigned long long)argumentAcquires220,(unsigned long long)oldPrepareSetters220,(unsigned long long)prepareSetters220);
+ }
 	uint32_t uploads=0,sourceCommandCount=0;
 	struct TargetPass {
 		__strong id<MTLTexture> previous = nil;
@@ -885,12 +914,26 @@ void PreparedScreenFrame::Encode(id<MTL4RenderCommandEncoder> encoder)const
 void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::uint32_t first,std::uint32_t end)const
 {
 	Require(first<=end && end<=impl->sourceCommandCount,"Postprocess root screen command range is invalid");
-	if (impl->draws.empty()) return;
+ // Even an empty range receives a diagnostic; no table mutation is concurrent.
+ std::unique_lock<std::mutex> mutableLock220(impl->mutableMutex220,std::defer_lock);
+ if(impl->mutableTables220[0]||impl->mutableTables220[1])mutableLock220.lock();
+ std::array<std::array<uint64_t,9>,2> previous220{};std::array<bool,2> havePrevious220{};
+ std::array<uint64_t,2> setters220{},draws220{},eligible220{};uint64_t encoded220=0;
+ const auto reportRange220=[&]{
+ if(impl->counters220){
+  static std::atomic<unsigned> rangeReceipts220{0};
+  if(rangeReceipts220.fetch_add(1)<256)LOG("[NativeScreenTableH5V2] stage=encode receipt=%llu frame=%llu mode=%u range_first=%u range_end=%u encoded=%llu eligible_ordinary=%llu eligible_packed=%llu mutable_ordinary=%llu mutable_packed=%llu setters_ordinary=%llu setters_packed=%llu fresh_range_baseline=1",
+   (unsigned long long)impl->receipt220,(unsigned long long)impl->sourceFrame220,unsigned(impl->mode220),first,end,(unsigned long long)encoded220,
+   (unsigned long long)eligible220[0],(unsigned long long)eligible220[1],(unsigned long long)draws220[0],(unsigned long long)draws220[1],(unsigned long long)setters220[0],(unsigned long long)setters220[1]);
+ }
+ };
+ if(impl->draws.empty()){reportRange220();return;}
 	if (!impl->targets.empty() || !impl->minimaps.empty()) [encoder barrierAfterQueueStages:MTLStageVertex | MTLStageFragment | MTLStageBlit | MTLStageDispatch beforeStages:MTLStageVertex | MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
 	[encoder setDepthClipMode:MTLDepthClipModeClip];[encoder setCullMode:MTLCullModeNone];[encoder setFrontFacingWinding:MTLWindingCounterClockwise];
 	[encoder setDepthBias:0 slopeScale:0 clamp:0];
 	for(const auto& draw:impl->draws) {
 		if(draw.originalCommand<first || draw.originalCommand>=end)continue;
+  if(impl->counters220){++encoded220;if(draw.eligibility220==1||draw.eligibility220==2)++eligible220[draw.eligibility220-1];}
   if(draw.unitIcons){
    for(std::size_t i=0;i<draw.unitIcons->DrawCount();++i)draw.unitIcons->EncodeDraw(i,encoder);
    [encoder setCullMode:MTLCullModeNone];[encoder setTriangleFillMode:MTLTriangleFillModeFill];[encoder setDepthBias:0 slopeScale:0 clamp:0];[encoder setDepthClipMode:MTLDepthClipModeClip];[encoder setFrontFacingWinding:MTLWindingCounterClockwise];continue;
@@ -940,6 +983,18 @@ void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::
   if(draw.sourceLines)draw.sourceLines->RequireReady();
   if(draw.exactLine)Require(draw.exactLine->encoded,"Exact screen line draw precedes its producer");
 		[encoder setRenderPipelineState:draw.pipeline];
+  if(draw.mutableLayout220){
+   const unsigned layout=draw.mutableLayout220-1;const auto& next=draw.bindings220;
+   for(unsigned slot=0;slot<9;++slot){
+    if(layout==0&&(slot==3||slot==4))continue;
+    if(havePrevious220[layout]&&previous220[layout][slot]==next[slot])continue;
+    if(slot<5)[draw.arguments setAddress:next[slot] atIndex:slot];
+    else if(slot<7)[draw.arguments setTexture:MTLResourceID{next[slot]} atIndex:slot-5];
+    else [draw.arguments setSamplerState:MTLResourceID{next[slot]} atIndex:slot-7];
+    if(impl->counters220)++setters220[layout];
+   }
+   previous220[layout]=next;havePrevious220[layout]=true;if(impl->counters220)++draws220[layout];
+  }
 		[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
 		if(draw.healthBars){[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.healthBarsInstances];continue;}
   if(draw.geometry){
@@ -950,6 +1005,7 @@ void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::
 		const size_t offset=size_t(draw.first)*sizeof(uint32_t);
 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:impl->indices.Address()+offset indexBufferLength:impl->indices.length-offset];
 	}
+ reportRange220();
 }
 struct TerraformCompiledOwner {__strong id<MTLLibrary> library=nil;std::array<__strong id<MTLRenderPipelineState>,3> pipelines{};};
 struct DiffuseCompiledOwner {__strong id<MTLLibrary> library=nil;std::array<__strong id<MTLRenderPipelineState>,4> pipelines{};};
@@ -1014,8 +1070,41 @@ struct ScreenGPU::Impl {
 		std::uint64_t sourceSequence=0;
 		std::uint32_t sourceOffset=0;
 		bool sourceDependent=false;
+  bool coveragePool220=false;
 	};
 	std::unordered_map<const ScreenTexture*,Texture> textures;
+ CoverageRetiredPool220<CoverageNativeImage220> coveragePool220;
+ static CoveragePoolKey220 CoverageKey220(id<MTLTexture> image){
+  return {reinterpret_cast<std::uintptr_t>((__bridge void*)image.device),image.width,image.height,std::uint64_t(image.pixelFormat)};
+ }
+ void SweepTextures220(){
+  for(auto i=textures.begin();i!=textures.end();){
+   auto& entry=i->second;
+   if(!entry.owner.expired()){++i;continue;}
+   if(entry.coveragePool220)
+    coveragePool220.Recycle(CoverageKey220(entry.image),{entry.image},entry.image.allocatedSize,
+     entry.owner,entry.initialized&&*entry.initialized);
+   i=textures.erase(i);
+  }
+ }
+ static void PinCoverage220(RuntimeLease& lease,const std::shared_ptr<const ScreenTexture>& source,const Texture& entry){
+  if(!entry.coveragePool220)return;
+  auto lifetime=[M4CoverageRTTLifetime220 new];lifetime->owner=source;lease.Retain(lifetime);
+ }
+ id<MTLTexture> AllocateCoverage220(RuntimeLease& lease,MTLTextureDescriptor* descriptor,bool eligible,std::uint64_t sourceFrame){
+  if(!eligible)return [lease.Device() newTextureWithDescriptor:descriptor];
+  auto cached=coveragePool220.Acquire({reinterpret_cast<std::uintptr_t>((__bridge void*)lease.Device()),descriptor.width,descriptor.height,std::uint64_t(descriptor.pixelFormat)});
+  const bool reused=cached.image!=nil;
+  auto image=reused?cached.image:[lease.Device() newTextureWithDescriptor:descriptor];
+  static const bool probe=[](){const char* p=std::getenv("BAR_NATIVE_COVERAGE_POOL220_PROBE");return p&&std::strcmp(p,"1")==0;}();
+  static unsigned receipts=0;
+  if(probe&&sourceFrame>=2048&&receipts<128){++receipts;
+   LOG("[NativeCoveragePool220] source_frame=%llu format=%llu width=%llu height=%llu created=%u reused=%u idle_slots=%llu idle_bytes=%llu copies_unchanged=1",
+    (unsigned long long)sourceFrame,(unsigned long long)descriptor.pixelFormat,(unsigned long long)descriptor.width,(unsigned long long)descriptor.height,
+    unsigned(!reused),unsigned(reused),(unsigned long long)coveragePool220.Size(),(unsigned long long)coveragePool220.Bytes());
+  }
+  return image;
+ }
 	struct HealthBarsPointStorage {std::weak_ptr<const NativeBufferSnapshot> owner;__strong id<MTLBuffer> value=nil;};
 	std::unordered_map<const NativeBufferSnapshot*,HealthBarsPointStorage> healthBarsPoints;
 	id<MTLBuffer> HealthBarsPoints(RuntimeLease& lease,const NativeBufferSnapshotRef& source){
@@ -1103,6 +1192,7 @@ struct ScreenGPU::Impl {
 			Require(!source->renderTarget || found->second.allocationOnly || (found->second.initialized && *found->second.initialized) ||
 				previousSubmission || std::find(available.begin(),available.end(),source.get())!=available.end(),"Native UI RTT version has no retired or earlier ordered producer");
 			const auto& entry=found->second;
+   PinCoverage220(lease,source,entry);
 			if(source->renderTarget && source->generation){
 				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized))
 					Require(consumer && consumer->stage==NativePostprocessStage::Screen &&
@@ -1350,8 +1440,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 	TextureSweepScope sweepScope(impl->textureSweepActive);
 	impl->pip.BeginFrame();
 	const auto order = OrderScreenRenderTargetPasses(frame);
-	for (auto i=impl->textures.begin(); i!=impl->textures.end();)
-		if (i->second.owner.expired()) i=impl->textures.erase(i); else ++i;
+ impl->SweepTextures220();
 	for (size_t index: order) {
 		const auto& sourcePass=frame.targetPasses[index];
 		const auto& source = sourcePass.destination;
@@ -1368,10 +1457,11 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 			width:source->width height:source->height mipmapped:NO];
 		d.storageMode = MTLStorageModePrivate;
 		d.usage = MTLTextureUsageShaderRead | MTLTextureUsageRenderTarget;
-		id<MTLTexture> image = [lease.Device() newTextureWithDescriptor:d];
+  const bool pool220=CoveragePoolEligible220(sourcePass);
+		id<MTLTexture> image = impl->AllocateCoverage220(lease,d,pool220,sourcePass.sourceDrawFrame);
 		Require(image != nil, "Cannot allocate original native UI RTT generation");
 		image.label = String(source->sourceName + " generation " + std::to_string(source->generation));
-		impl->textures.emplace(source.get(), Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),sourcePass.sourceStage,sourcePass.commandSequence,sourcePass.screenCommandOffset,sourcePass.sourceDependent});
+		impl->textures.emplace(source.get(), Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),sourcePass.sourceStage,sourcePass.commandSequence,sourcePass.screenCommandOffset,sourcePass.sourceDependent,pool220});
 	}
 	for(size_t index:order){const auto& pass=frame.targetPasses[index];const auto& source=pass.depthDestination;if(!source)continue;
 		auto found=impl->textures.find(source.get());if(found!=impl->textures.end()){
@@ -1379,8 +1469,9 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 		Require(source->width<=lease.Capabilities().maxTextureDimension2D && source->height<=lease.Capabilities().maxTextureDimension2D,"Coverage depth extent exceeds actual device");
 		auto d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatDepth16Unorm width:source->width height:source->height mipmapped:NO];
 		d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
-		auto image=[lease.Device() newTextureWithDescriptor:d];Require(image!=nil,"Cannot allocate actual coverage D16 version");
-		impl->textures.emplace(source.get(),Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),pass.sourceStage,pass.commandSequence,pass.screenCommandOffset,pass.sourceDependent});
+  const bool pool220=CoveragePoolEligible220(pass);
+		auto image=impl->AllocateCoverage220(lease,d,pool220,pass.sourceDrawFrame);Require(image!=nil,"Cannot allocate actual coverage D16 version");
+		impl->textures.emplace(source.get(),Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),pass.sourceStage,pass.commandSequence,pass.screenCommandOffset,pass.sourceDependent,pool220});
 	}
 	std::vector<const ScreenTexture*> available;
 	std::vector<PreparedScreenFrame::Impl::TargetPass> targets;
@@ -1389,6 +1480,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 		const auto& source = frame.targetPasses[index];
 		auto& destination = impl->textures.at(source.destination.get());
 		lease.AddAllocation(destination.image);
+  Impl::PinCoverage220(lease,source.destination,destination);
 		id<MTLTexture> previous = nil;
 		std::function<void()> requirePreviousReadable;
 		try {
@@ -1401,6 +1493,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 		}
 		Impl::Texture* depth=nullptr;id<MTLTexture> previousDepth=nil;std::function<void()> requirePreviousDepthReadable;
 		if(source.depthDestination){depth=&impl->textures.at(source.depthDestination.get());lease.AddAllocation(depth->image);
+   Impl::PinCoverage220(lease,source.depthDestination,*depth);
 			if(source.previousDepth)previousDepth=impl->Image(lease,source.previousDepth,uploads,available,
 				NativePostprocessConsumer{source.sourceStage,source.commandSequence,0,source.commandSequence},
 				[&](PreparedScreenExternalImage image){requirePreviousDepthReadable=std::move(image.requireReadable);});
@@ -1679,14 +1772,21 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 	// Indices refer to a separate vector, so check them against the final vertex count.
 	for(uint32_t i:list.Indices())Require(i<list.Vertices().size(),"UI index exceeds source vertices");
 	if(!impl->textureSweepActive)
-	for(auto i=impl->textures.begin();i!=impl->textures.end();)if(i->second.owner.expired())i=impl->textures.erase(i);else ++i;
+ impl->SweepTextures220();
 	auto prepared=std::make_unique<PreparedScreenFrame>();prepared->impl->sourceCommandCount=std::uint32_t(list.Commands().size());std::array<double,4> viewport{0,0,double(width),double(height)};bool visibleViewport=true;
 	if(frame.logicalViewport){const auto& v=*frame.logicalViewport;Require(v.width<=16384&&v.height<=16384,"UI viewport outside numeric bounds");auto mapped=(v.width && v.height)?MapWorldViewport({v.x,v.y,int32_t(v.width),int32_t(v.height)},logicalWidth,logicalHeight,width,height):std::nullopt;if(mapped)viewport=mapped->viewport;else visibleViewport=false;}
 	for (double value: viewport) Require(std::isfinite(value) && std::abs(value) <= 16384, "Mapped UI viewport outside numeric bounds");
 	prepared->impl->viewport={viewport[0],viewport[1],viewport[2],viewport[3],0,1};
 	Require(firstOriginalCommand<=list.Commands().size() && (rootScreen || !firstOriginalCommand),
 		"Screen preparation suffix is outside its original root command stream");
-	if(firstOriginalCommand==list.Commands().size())return prepared;
+ static const bool mutableMode220=[](){const char* v=std::getenv("BAR_NATIVE_SCREEN_TABLE_H5");return v&&std::strcmp(v,"1")==0;}();
+ static const bool mutableCounters220=[](){const char* v=std::getenv("BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS");return v&&std::strcmp(v,"1")==0;}();
+ prepared->impl->mode220=mutableMode220;prepared->impl->firstCommand220=firstOriginalCommand;
+ if(rootScreen&&mutableCounters220&&frame.postprocess&&frame.postprocess->sourceDrawFrame>=600){
+  static std::atomic<unsigned> frameReceipts220{0};const auto receipt=frameReceipts220.fetch_add(1);
+  if(receipt<32){prepared->impl->counters220=true;prepared->impl->receipt220=receipt;prepared->impl->sourceFrame220=frame.postprocess->sourceDrawFrame;}
+ }
+ if(firstOriginalCommand==list.Commands().size()){prepared->impl->ReportPreparation220();return prepared;}
 	const bool fixedGeometry=std::any_of(list.Commands().begin()+firstOriginalCommand,list.Commands().end(),[](const auto& command){return !command.pip && command.indexCount!=0;});
  const bool observe170=rootScreen&&!impl->reportedRetainedFont170&&frame.postprocess&&frame.postprocess->sourceDrawFrame>=600;
  struct FontStats170 {uint64_t listDraws=0,listBytes=0,draws=0,hits=0,hitBytes=0,misses=0,uploadBytes=0,missAllocated=0,uncached=0,tableHits=0,tableMisses=0,uniformBytes=0;};
@@ -1740,11 +1840,13 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 		auto owner=impl->argumentPool.Acquire(lease.Device(),layout,failure);
 		auto table=owner->table;
 		prepared->impl->argumentLifetime->slots.push_back(std::move(owner));
+  if(prepared->impl->counters220)++prepared->impl->argumentAcquires220;
 		return table;
 	};
  // These indices exist only for this PrepareList. The original argument
  // lifetime owns every acquired pool token until the prepared/completion
  // owners retire. A shared table is fully initialized once and never rewritten.
+ NativeScreenBindings151<> counterPlan220;uint64_t counterIndex220=0;
  NativeScreenBindings151<> bindingPlan151;
  std::vector<ScreenArgumentStorage> bindingTables151;
  // Each texture unit remembers only its latest validated immutable result.
@@ -1992,6 +2094,12 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
    draw.viewport={0,0,double(width),double(height),0,1};draw.scissor=*scissor;draw.frontReference=draw.backReference=uint32_t(std::clamp(state.depthStencil.frontStencil.reference,0,255));draw.cull=ScreenCull::None;draw.geometry=true;draw.sourceLine=true;draw.count=4;draw.geometryInstances=g.instanceCount;prepared->impl->draws.push_back(std::move(draw));continue;
   }
   id<MTL4ArgumentTable> args=nil;
+  // Only the existing fully bound common path; typed resource resolvers stay unchanged.
+  const uint8_t eligibility220=state.attachmentClear?3:state.pointDisk?4:
+   !(state.material==ScreenMaterial::Solid||state.material==ScreenMaterial::RGBA||state.material==ScreenMaterial::FontCoverage)?5:
+   (command.geometry&&!packedGeometry170)?6:(packedGeometry170?2:1);
+  const bool mutableDraw220=mutableMode220&&rootScreen&&(eligibility220==1||eligibility220==2);
+  std::array<uint64_t,9> capturedBindings220{};
   id<MTLBuffer> geometryIndices=nil;std::shared_ptr<ExactScreenLineJob> exactLine;
   size_t geometryIndexOffset170=0;
   uint64_t vertexAddress170=vertices.Address(),uvAddress170=uvs.Address();
@@ -2015,11 +2123,21 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
    }
    const NativeScreenBindingKey151 key{vertexAddress170,uvAddress170,uniforms.Address()+uniformOffsets151[i],transformAddress,
     image.gpuResourceID._impl,image1.gpuResourceID._impl,sampler.gpuResourceID._impl,sampler1.gpuResourceID._impl};
-   if(const auto found=bindingPlan151.Find(key)){
+   const unsigned layout220=packedGeometry170?1:0;
+   if(prepared->impl->counters220&&!counterPlan220.Find(key)){
+    counterPlan220.Remember(key,counterIndex220++);++prepared->impl->oldSharedTables220[layout220];prepared->impl->oldPrepareSetters220+=packedGeometry170?8:7;
+   }
+   if(mutableDraw220){
+    auto& table=prepared->impl->mutableTables220[layout220];
+    if(!table){table=newArguments({packedGeometry170?5u:3u,2,2},"Cannot allocate frame-owned mutable screen table: ");if(prepared->impl->counters220)++prepared->impl->actualSharedTables220[layout220];}
+    args=table;
+    capturedBindings220={key[0],key[1],key[2],0,key[3],key[4],key[5],key[6],key[7]};
+   }else if(const auto found=bindingPlan151.Find(key)){
     args=bindingTables151[*found].table;if(observe170&&retainedFont170)++font170.tableHits;
    }else{
     if(observe170&&retainedFont170)++font170.tableMisses;
     args=newArguments({packedGeometry170?5u:3u,2u,2u},"Cannot allocate native UI argument table: ");
+    if(prepared->impl->counters220){++prepared->impl->actualSharedTables220[layout220];prepared->impl->prepareSetters220+=packedGeometry170?8:7;}
     [args setAddress:key[0] atIndex:0];[args setAddress:key[1] atIndex:1];[args setAddress:key[2] atIndex:2];
     if(packedGeometry170)[args setAddress:key[3] atIndex:4];
     [args setTexture:image.gpuResourceID atIndex:0];[args setTexture:image1.gpuResourceID atIndex:1];
@@ -2096,6 +2214,9 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 			uint32_t(std::clamp(state.depthStencil.frontStencil.reference,0,255)),uint32_t(std::clamp(state.depthStencil.backStencil.reference,0,255)),
 			command.firstIndex,command.geometry?command.geometry->count:command.indexCount,std::uint32_t(i)});
   if(command.geometry&&!frameGeometry){auto& draw=prepared->impl->draws.back();draw.exactLine=std::move(exactLine);draw.geometry=true;draw.geometryInstances=command.geometry->instanceCount;draw.geometryIndices=geometryIndices;draw.geometryIndexOffset170=geometryIndexOffset170;}
+  prepared->impl->draws.back().mutableLayout220=mutableDraw220?eligibility220:0;
+  prepared->impl->draws.back().eligibility220=eligibility220;
+  prepared->impl->draws.back().bindings220=capturedBindings220;
 		prepared->impl->draws.back().externalImages=std::move(external);
 		prepared->impl->draws.back().cull=state.attachmentClear?ScreenCull::None:state.cull;
 	}
@@ -2124,6 +2245,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
    (unsigned long long)frame.postprocess->sourceDrawFrame,unsigned(list.Commands().size()),firstOriginalCommand,
    imageRequests152,imageResolutions152,samplerRequests152,samplerResolutions152,orderedImageRequests152,orderedImageResolutions152);
  }
+ prepared->impl->ReportPreparation220();
 	return prepared;
 }
 } // namespace rendering::metal4

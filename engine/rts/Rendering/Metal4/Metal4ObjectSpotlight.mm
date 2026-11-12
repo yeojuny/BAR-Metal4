@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ObjectSpotlight.h"
+#include "Metal4InterventionMath.h"
 #include "NativeSampleShadingShaders.h"
 #include <simd/simd.h>
 #include <cstring>
@@ -110,7 +111,7 @@ struct ObjectSpotlightGPU::Impl {
 		std::array<unsigned,16> key{unsigned(color),unsigned(validation),unsigned(blend.enabled),unsigned(blend.sourceColor),unsigned(blend.destinationColor),unsigned(blend.sourceAlpha),unsigned(blend.destinationAlpha),unsigned(blend.colorEquation),unsigned(blend.alphaEquation),unsigned(mask[0]),unsigned(mask[1]),unsigned(mask[2]),unsigned(mask[3]),unsigned(wreck),lease.SampleShadingKey(samples),unsigned(coverage)};
 		if(auto found=pipelines.find(key);found!=pipelines.end())return found->second;
 		const auto start=Clock::now();NSError* error=nil;
-		if(library==nil){auto d=[MTL4LibraryDescriptor new];d.source=String(Source);d.name=@"Original31657 Object Spotlight";auto o=[MTLCompileOptions new];o.mathMode=MTLMathModeSafe;o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;d.options=o;library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile original Object Spotlight: "+Error(error));}
+		if(library==nil){auto d=[MTL4LibraryDescriptor new];d.source=String(Source);d.name=@"Original31657 Object Spotlight";auto o=[MTLCompileOptions new];o.mathMode=MTLMathModeSafe;o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(o);d.options=o;library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile original Object Spotlight: "+Error(error));}
 		auto d=[MTL4RenderPipelineDescriptor new];auto vs=[MTL4LibraryFunctionDescriptor new],fs=[MTL4LibraryFunctionDescriptor new];vs.library=fs.library=library;vs.name=wreck?@"CommanderWreckVertex":@"ObjectSpotlightVertex";fs.name=wreck?@"CommanderWreckFragment":@"ObjectSpotlightFragment";d.vertexFunctionDescriptor=vs;d.fragmentFunctionDescriptor=fs;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;d.rasterSampleCount=samples;d.alphaToCoverageState=coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;
 		auto a=d.colorAttachments[0];a.pixelFormat=color;a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=effectstate::Factor(blend.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(blend.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(blend.destinationAlpha);a.rgbBlendOperation=Equation(blend.colorEquation);a.alphaBlendOperation=Equation(blend.alphaEquation);a.writeMask=MTLColorWriteMask((mask[0]?MTLColorWriteMaskRed:0)|(mask[1]?MTLColorWriteMaskGreen:0)|(mask[2]?MTLColorWriteMaskBlue:0)|(mask[3]?MTLColorWriteMaskAlpha:0));
 		auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);d.options=options;

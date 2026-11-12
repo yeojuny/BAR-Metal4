@@ -4,6 +4,7 @@
 #include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4CUSSource.h"
+#include "Metal4InterventionMath.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
 #include "NativeCUSGeneratedPrograms.h"
 #include "Metal4NativeEffectState.h"
@@ -20,6 +21,7 @@
 #include "Rendering/Backend/NativePreparationTrace.h"
 #include "Rendering/Backend/NativeCUSPublishedReuse.h"
 #include <cstring>
+#include "System/Sync/SHA512.hpp"
 #include <bit>
 #include <map>
 #include <set>
@@ -101,6 +103,47 @@ bool CanonicalModelSampler219(const NativeCUSTextureBinding& binding,const CUSSo
 }
 #include "Metal4ModelTrace.inc"
 }
+// CUSForwardVertexProof220 begin: independently exercised by the source fixture.
+namespace {
+std::string CUSForwardVertexTableDigest220(std::span<const NativeCUSGeneratedProgram> programs)
+{
+ // Freeze the actual native source, including its sample-shading prelude, and
+ // every admitted source pair/vertex uniform ABI. Original GLSL SHA alone does
+ // not identify the MSL actually passed to RuntimeLease::NewLibrary.
+ std::vector<uint8_t> bytes;
+ const auto number=[&](uint64_t value){for(unsigned n=0;n<8;++n)bytes.push_back(uint8_t(value>>(n*8)));};
+ const auto text=[&](const char* value){if(!value)return false;const size_t size=std::strlen(value);number(size);bytes.insert(bytes.end(),value,value+size);return true;};
+ number(programs.size());
+ for(const auto& program:programs){
+  const auto& vertex=program.vertex;
+  if(vertex.textureMask||!text(program.family))return {};
+  number(program.originalPass);
+  if(!text(program.vertexSHA512)||!text(program.fragmentSHA512)||!text(vertex.metalSource))return {};
+  number(vertex.uniformBytes);number(vertex.textureMask);number(vertex.fields.size());
+  for(const auto& field:vertex.fields){
+   if(!text(field.name))return {};
+   number(uint64_t(field.scalar));number(field.offset);number(field.components);
+   number(field.count);number(field.stride);number(field.active);
+  }
+ }
+ sha512::raw_digest digest;sha512::calc_digest(bytes,digest);return sha512::dump_digest(digest);
+}
+}
+bool CUSForwardVertexInputsAreHostOnly()
+{
+ // This is a capability of this closed program set and the existing private
+ // CPU-upload path, not of arbitrary argument tables or future shaders. Those
+ // paths bind host-copied immutable geometry/instances/publications/constants
+ // in slots0..6; reviewed MSL never observes fragment slots7/8 or images.
+ // One process-wide calculation; additions/changes fail closed without adding
+ // hashing or inspection to individual draws. Re-review source/layout/uploads
+ // and update the fixture before changing the frozen digest.
+ static const bool proven=CUSForwardVertexTableDigest220(NativeCUSGeneratedPrograms)==
+  "ed7d1a749f5b5f327af14365f2d72512e53c39289cfdfcbe5930c904c7aacbceda7fa6d474d33f1c6b12c1620648ac0142173c25503b7c6ae5201d4f37fd11a0";
+ return proven;
+}
+// CUSForwardVertexProof220 end
+
 
 struct PreparedCUSSource::Impl {
  RetiredArgumentOwners argumentOwners;
@@ -123,6 +166,13 @@ struct PreparedCUSSource::Impl {
 PreparedCUSSource::PreparedCUSSource():impl(std::make_unique<Impl>()){}
 PreparedCUSSource::~PreparedCUSSource()=default;
 size_t PreparedCUSSource::DrawCount()const{return impl->draws.size();}
+bool PreparedCUSSource::HostOnlyNoDependencyCommands220()const
+{
+ if(impl->completed||impl->dependenciesEncoded||impl->draws.empty()||!CUSForwardVertexInputsAreHostOnly())return false;
+ for(const auto& draw:impl->draws)for(const auto& image:draw.images)
+  if(InspectSourceDependency160(image).work!=SourceDependencyWork160::NoCommands)return false;
+ return true;
+}
 uint64_t PreparedCUSSource::SequenceAt(size_t n)const{return impl->draws.at(n).sequence;}
 void PreparedCUSSource::PreparePassInspection160()
 {
@@ -217,7 +267,7 @@ struct CUSSourceGPU::Impl {
   auto out=std::make_shared<Libraries>();const auto start=Clock::now();
   for(bool vertex:{true,false}){
    auto d=[MTL4LibraryDescriptor new];d.name=String(std::string("Original CUS ")+p.family+" pass"+std::to_string(p.originalPass));d.source=String(vertex?std::string(p.vertex.metalSource):ModelMaterialFragment156(p.fragment.metalSource,p.fragment.textureMask));
-   auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;d.options=options;
+   auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);d.options=options;
    NSError* error=nil;auto library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile full original CUS native stage: "+Error(error));
    if(vertex)out->vertex=library;else out->fragment=library;
   }
@@ -229,7 +279,7 @@ struct CUSSourceGPU::Impl {
   const auto start=Clock::now();auto d=[MTL4LibraryDescriptor new];
   d.name=String(std::string("Original CUS identity channels194 ")+p.family+" pass"+std::to_string(p.originalPass));
   d.source=String(NativeCUSIdentityFragment194(ModelMaterialFragment156(p.fragment.metalSource,p.fragment.textureMask),p.fragment.textureMask));
-  auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;d.options=options;
+  auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);d.options=options;
   NSError* error=nil;auto library=lease.NewLibrary(d,&error);Require(library,"Cannot compile exact CUS identity channels194: "+Error(error));
   identityFragments194.emplace(&p,library);ms+=Milliseconds(start);return library;
  }

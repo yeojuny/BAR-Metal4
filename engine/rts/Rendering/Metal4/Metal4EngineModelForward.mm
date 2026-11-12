@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineModelForward.h"
+#include "Metal4InterventionMath.h"
 #include "Metal4ModelUpload146.h"
 #include "Metal4RetiredArguments.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
@@ -112,7 +113,7 @@ struct EngineModelForwardGPU::Impl {
   k<<':'<<surface.alphaToCoverage;const auto key=k.str();if(auto i=original.pipelines.find(key);i!=original.pipelines.end()){lease.Retain(i->second);lease.Retain(original.libraries.at(imageKey));return i->second;}
   const auto start=Clock::now();NSError* error=nil;
   auto& library=original.libraries[imageKey];
-  if(!library){auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;library=lease.NewLibraryWithSource(String(NativeEngineTextureShaderDefines(imageKey)+NativeEngineDeferredShaders+NativeEngineForwardShaders),options,&error);Require(library,"Cannot compile full original engine forward shader: "+Error(error));}
+  if(!library){auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);library=lease.NewLibraryWithSource(String(NativeEngineTextureShaderDefines(imageKey)+NativeEngineDeferredShaders+NativeEngineForwardShaders),options,&error);Require(library,"Cannot compile full original engine forward shader: "+Error(error));}
   auto d=[MTL4RenderPipelineDescriptor new];auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=library;v.name=@"NativeEngineDeferredVertex";f.name=modern?@"NativeEngineForwardGL4":@"NativeEngineForwardLegacy";d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
   d.rasterSampleCount=target.samples;d.alphaToCoverageState=surface.alphaToCoverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;
   auto a=d.colorAttachments[0];a.pixelFormat=target.colors[0];a.blendingState=blend.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;

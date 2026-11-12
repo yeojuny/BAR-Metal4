@@ -16,10 +16,9 @@ struct ModelPhaseExecution165 {
 		return dependencies==SourceDependencyWork160::NoCommands&&body==ModelPhaseBody165::CPULifecycleOnly;
 	}
 };
-inline bool ModelPass165Enabled()
-{
-	static const bool enabled=[](){const char* value=std::getenv("BAR_NATIVE_PASS165");return !value||!(value[0]=='0'&&value[1]=='\0');}();
-	return enabled;
+inline bool ModelPass165Enabled() {
+ // Only CPU-only phases may use the no-in-pass-wait intervention.
+ return EmptyModelPassFusionInterventionEnabled();
 }
 // Local main opaque invocation counts only. These do NOT count all nested
 // render encoders and cannot establish a net pass reduction by themselves.

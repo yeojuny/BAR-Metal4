@@ -43,6 +43,8 @@ public:
 	// Pure query of the already-prepared 164 decision; does not test callbacks
 	// or replace Encode's actual same-submission prior-readability checks.
 	ModelPhaseExecution165 InspectExecution165(uint64_t actualDrawFrame,uint64_t actualSubmission)const;
+	bool HostOnlyInitialModel220()const;
+ void EncodeScopedVertex220(id<MTL4CommandBuffer>,bool);
 	void Encode(id<MTL4CommandBuffer>); // Actual source phase, in original order.
 	void DidComplete(); // After the common successful submission only.
 private:

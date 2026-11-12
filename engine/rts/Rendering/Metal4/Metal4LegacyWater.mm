@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4LegacyWater.h"
+#include "Metal4InterventionMath.h"
 #include "NativeLegacyWaterShaders.h"
 #include <cstring>
 #include <map>
@@ -126,7 +127,7 @@ std::unique_ptr<PreparedLegacyWater> LegacyWaterGPU::Prepare(RuntimeLease& lease
  NSError* error=nil;
  const auto key=Impl::Key{color,lease.SampleShadingKey(samples),validation,bool(refract)};auto found=impl->pipelines.find(key);
  if(found==impl->pipelines.end()){
- const auto start=Clock::now();auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+ const auto start=Clock::now();auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);
  auto lib=lease.NewLibraryWithSource(String(refract?NativeLegacyRefractiveWaterShaders:NativeLegacyWaterShaders),options,&error);Require(lib!=nil,"Water1 shader compile failed: "+Error(error));
  auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
  auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=lib;v.name=@"LegacyWaterVertex";f.name=@"LegacyWaterFragment";d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;

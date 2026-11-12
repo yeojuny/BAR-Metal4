@@ -7,6 +7,7 @@
 #include <functional>
 
 namespace rendering::metal4 {
+bool CUSForwardVertexInputsAreHostOnly();
 struct CUSSourceTarget {
  std::array<MTLPixelFormat,5> colors{}; // Actual original material draw buffers.
  MTLPixelFormat combinedColor=MTLPixelFormatInvalid; // Optional original Map color5; no depth renumbering.
@@ -21,6 +22,7 @@ class PreparedCUSSource {
 public:
  ~PreparedCUSSource();
  size_t DrawCount()const;
+ bool HostOnlyNoDependencyCommands220()const;
  uint64_t SequenceAt(size_t)const;
  void EncodeDependencies(id<MTL4CommandBuffer>);
  void EncodeDraw(size_t,id<MTL4RenderCommandEncoder>);
