@@ -345,6 +345,6 @@ NativeTerrainProgramSnapshot CaptureCurrentNativeTerrainProgram()
  Require(source.uniforms&&source.uniforms->contextGeneration==Context()&&
   source.uniforms->originalProgramGeneration==source.definition->identity.originalProgramGeneration,
   "Actual current terrain uniform publication belongs to another original lifetime");
- return {source.definition->identity,source.definition->consumer,source.uniforms};
+ return {source.definition,source.uniforms};
 }
 } // namespace rendering

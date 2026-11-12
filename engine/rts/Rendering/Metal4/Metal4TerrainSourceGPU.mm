@@ -444,8 +444,8 @@ simd_float4 Vec(const std::array<float,4>& source)
 }
 Uniform DrawUniform(const NativeTerrainSquareDraw& draw,const Profile& profile,const CUSSourceTarget& target)
 {
-	Require(draw.program.uniforms&&draw.program.uniforms->contextGeneration==draw.program.identity.contextGeneration&&
-		draw.program.uniforms->originalProgramGeneration==draw.program.identity.originalProgramGeneration,
+	Require(draw.program.uniforms&&draw.program.uniforms->contextGeneration==draw.program.Identity().contextGeneration&&
+		draw.program.uniforms->originalProgramGeneration==draw.program.Identity().originalProgramGeneration,
 		"Original terrain draw uniform lifetime differs from its compiled program");
 	const auto& source=*draw.program.uniforms;Uniform result{};
 	result.modelView=Matrix(draw.modelView.data());result.projection=Matrix(draw.projection.data());
@@ -746,11 +746,11 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		// Exact byte comparison against the validated immutable cache entry
 		// reuses geometry validation; misses validate inside Acquire before upload.
 		Require(draw.mesh==NativeTerrainMeshSource::Basic||draw.mesh==NativeTerrainMeshSource::ROAM||(draw.mesh==NativeTerrainMeshSource::Composite&&draw.composite),"Original terrain mesh provenance is unsupported");
-		const auto validatedProgram220=TerrainProgramValidation220Enabled()?dynamic_cast<const OriginalProgram*>(draw.program.consumer.get()):nullptr;
-		if(!validatedProgram220||!validatedProgram220->ReuseIdentityValidation220(draw.program.identity,out.source->contextGeneration))
-			ValidateNativeTerrainProgram(draw.program.identity,draw.program.consumer,out.source->contextGeneration);
+		const auto validatedProgram220=TerrainProgramValidation220Enabled()?dynamic_cast<const OriginalProgram*>(draw.program.Consumer().get()):nullptr;
+		if(!validatedProgram220||!validatedProgram220->ReuseIdentityValidation220(draw.program.Identity(),out.source->contextGeneration))
+			ValidateNativeTerrainProgram(draw.program.Identity(),draw.program.Consumer(),out.source->contextGeneration);
 		ValidateNativeTerrainImages(draw.images,out.source->contextGeneration,out.source->sourceDrawFrame);
-		auto original=std::dynamic_pointer_cast<const OriginalProgram>(draw.program.consumer);
+		auto original=std::dynamic_pointer_cast<const OriginalProgram>(draw.program.Consumer());
 		Require(original&&original->factory==impl->factory,"Original terrain draw does not retain this genuine terrain library/PSO owner");
 		Require(draw.border==original->profile.border&&draw.composite==original->profile.composite&&draw.deferred==original->profile.MRT(),
 			"Original terrain submission selected a different border/forward/deferred program family");

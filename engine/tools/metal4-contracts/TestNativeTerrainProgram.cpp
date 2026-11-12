@@ -1,6 +1,7 @@
 // GPL v2 or later. Included after the verbatim production terrain source TU.
 // External validation/compiler/VFS and shader-base services are test doubles.
 static size_t allocations=0;
+static size_t validationCalls=0;
 void* operator new(size_t size){++allocations;if(void* p=std::malloc(size?size:1))return p;throw std::bad_alloc();}
 void operator delete(void* p)noexcept{std::free(p);}
 void operator delete(void* p,size_t)noexcept{std::free(p);}
@@ -10,6 +11,7 @@ void operator delete[](void* p,size_t)noexcept{::operator delete(p);}
 namespace rendering {
 void ValidateNativeTerrainProgram(const NativeTerrainProgramIdentity& i,
  const std::shared_ptr<const NativeTerrainProgramConsumer>& c,uint64_t context){
+ ++validationCalls;
  if(!c || i.contextGeneration!=context || !c->Matches(i) || !c->Supports(i))throw std::runtime_error("fixture invalid consumer");
 }
 struct TestConsumer:NativeTerrainProgramConsumer {
@@ -34,6 +36,17 @@ int main(){using namespace rendering;
  p->Link();p->EnableRaw();int slot=p->Slot("value");
  auto before=CaptureCurrentNativeTerrainProgram();
  auto initialDefinition=OriginalNativeSourceProgramBinding().Current().terrainSource->definition;
+ check(before.definition==initialDefinition);
+ // Stub validation proves calls remain; no claim about the real validator cost.
+ auto captureAllocations=allocations;auto validations=validationCalls;
+ auto repeatedCapture=CaptureCurrentNativeTerrainProgram();
+ check(allocations==captureAllocations);
+ check(validationCalls==validations+1);
+ check(repeatedCapture.definition==before.definition&&repeatedCapture.uniforms==before.uniforms);
+ check(&repeatedCapture.Identity()==&before.Identity());
+ check(&repeatedCapture.Consumer()==&before.Consumer());
+ NativeTerrainProgramSnapshot missingDefinition;
+ rejects([&]{missingDefinition.Identity();});rejects([&]{missingDefinition.Consumer();});
  TakeNativeTerrainUniformWriteStats();
  auto allocationBaseline=allocations;
  p->SetUniform1f(slot,0.f);
@@ -47,10 +60,11 @@ int main(){using namespace rendering;
  check(stats.exactChanges==1&&stats.mapCopies==1&&stats.publications==1&&stats.definitionCopies==0);
  check(OriginalNativeSourceProgramBinding().Current().terrainSource->definition==initialDefinition);
  auto neg=CaptureCurrentNativeTerrainProgram();
+ check(neg.definition==before.definition);
  check(neg.uniforms!=before.uniforms);check(std::signbit(std::get<std::vector<float>>(neg.uniforms->values.at("value").values)[0]));
  p->SetUniform1f(slot,2.f);auto b=CaptureCurrentNativeTerrainProgram();
  check(OriginalNativeSourceProgramBinding().Current().terrainSource->definition==initialDefinition);
- check(b.identity==initialDefinition->identity&&b.consumer==initialDefinition->consumer);
+ check(b.Identity()==initialDefinition->identity&&b.Consumer()==initialDefinition->consumer);
  check(std::get<std::vector<float>>(before.uniforms->values.at("value").values)[0]==0);
  // Inspection is a borrowed immediate view, not a retained SaveCurrent snapshot.
  auto& binding=OriginalNativeSourceProgramBinding();
@@ -109,17 +123,20 @@ int main(){using namespace rendering;
  malformed.kind=NativeSourceProgramBinding::Kind::CUS;malformed.terrain.reset();
  OriginalNativeSourceProgramBinding().Restore(malformed);TakeNativeTerrainUniformWriteStats();
  p->SetUniform4iv(slot,ints);stats=TakeNativeTerrainUniformWriteStats();
- check(stats.stalePublicationFallbacks==1);check(bool(CaptureCurrentNativeTerrainProgram().consumer));
+ check(stats.stalePublicationFallbacks==1);check(bool(CaptureCurrentNativeTerrainProgram().Consumer()));
  // Relink keeps previously written names, but old source-revision bindings fail.
  auto oldBinding=OriginalNativeSourceProgramBinding().Current();
  p->Reload(true,false);OriginalNativeSourceProgramBinding().Restore(oldBinding);
  rejects([&]{p->SetUniform4iv(slot,ints);});
  p->DisableRaw();p->EnableRaw();check(std::get<std::vector<int32_t>>(CaptureCurrentNativeTerrainProgram().uniforms->values.at("value").values)[3]==5);
  auto reloadedDefinition=OriginalNativeSourceProgramBinding().Current().terrainSource->definition;
+ auto reloadedSnapshot=CaptureCurrentNativeTerrainProgram();
+ check(reloadedSnapshot.definition==reloadedDefinition&&reloadedSnapshot.definition!=before.definition);
+ check(before.Identity().sourceRevision<reloadedSnapshot.Identity().sourceRevision);
  check(reloadedDefinition!=oldBinding.terrainSource->definition);
  check(oldBinding.terrainSource->definition==initialDefinition);
  check(initialDefinition->identity.sourceRevision<reloadedDefinition->identity.sourceRevision);
- check(before.consumer==initialDefinition->consumer);
+ check(before.Consumer()==initialDefinition->consumer);
  // A throwing compiler invalidates source identity before any new publication.
  auto beforeFailure=OriginalNativeSourceProgramBinding().Current();failCompile=true;
  rejects([&]{p->Reload(true,false);});failCompile=false;
@@ -158,7 +175,7 @@ int main(){using namespace rendering;
  check(invalid.terrainSource->definition!=unsupportedDefinition);rejects([&]{CaptureCurrentNativeTerrainProgram();});
  lua->DisableRaw();LoadNativeTerrainLuaProgram(lua.get(),8);lua->EnableRaw();
  auto imported=CaptureCurrentNativeTerrainProgram();auto importedDefinition=OriginalNativeSourceProgramBinding().Current().terrainSource->definition;
- check(imported.identity.originalGLName==8&&imported.identity.originalProgramGeneration==99);
+ check(imported.Identity().originalGLName==8&&imported.Identity().originalProgramGeneration==99);
  check(importedDefinition!=invalid.terrainSource->definition);
  luaSlot=lua->Slot("value");TakeNativeTerrainUniformWriteStats();lua->SetUniform1f(luaSlot,9);stats=TakeNativeTerrainUniformWriteStats();
  check(stats.definitionCopies==0&&stats.publications==1);
@@ -170,13 +187,19 @@ int main(){using namespace rendering;
  rejects([&]{CaptureCurrentNativeTerrainProgram();});lua->DisableRaw();lua.reset();
  // A saved binding owns publications, not the original writer object.
  auto dying=CreateNativeTerrainProgramSource(NativeTerrainProgramSelection::ForwardStandard,"dying","");
- dying->Link();dying->EnableRaw();auto orphan=binding.SaveCurrent();dying.reset();
+ dying->Link();dying->EnableRaw();auto orphan=binding.SaveCurrent();
+ auto retainedCapture=CaptureCurrentNativeTerrainProgram();
+ auto retainedGeneration=retainedCapture.Identity().originalProgramGeneration;
+ dying.reset();
+ check(retainedCapture.Identity().originalProgramGeneration==retainedGeneration);
+ check(bool(retainedCapture.Consumer()));
+ check(retainedCapture.definition==orphan.terrainSource->definition);
  check(binding.CurrentKind()==NativeSourceProgramBinding::Kind::Unbound);
  binding.Restore(orphan);rejects([&]{CaptureCurrentNativeTerrainProgram();});binding.Unbind();
  auto replacement=CreateNativeTerrainProgramSource(NativeTerrainProgramSelection::ForwardStandard,"replacement","");
  replacement->Link();replacement->EnableRaw();auto replacementBinding=binding.SaveCurrent();
  binding.Restore(orphan);rejects([&]{CaptureCurrentNativeTerrainProgram();});
- binding.Restore(replacementBinding);check(bool(CaptureCurrentNativeTerrainProgram().consumer));
+ binding.Restore(replacementBinding);check(bool(CaptureCurrentNativeTerrainProgram().Consumer()));
  replacement->DisableRaw();replacement.reset();binding.Unbind();ConfigureNativeTerrainProgramSource({});
  std::cout<<"PASS "<<checks<<" terrain writer contract checks; GPU/Lua/gameplay not exercised\n";
 }

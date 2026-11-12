@@ -225,13 +225,13 @@ void NativeWaterGroundSourceCapture::SubmitSquare(NativeTerrainMeshSource mesh,c
 		throw std::runtime_error("Original terrain submit targets a nested framebuffer without an actual terrain consumer");
 	if(mesh!=NativeTerrainMeshSource::Basic && mesh!=NativeTerrainMeshSource::ROAM && !composite)
 		throw std::logic_error("Original terrain submission has an unknown source mesh");
-	if(programs.TerrainOwner()!=program.consumer)
+	if(programs.TerrainOwner()!=program.Consumer())
 		throw std::runtime_error("Original ground callback changed the actual current terrain program");
-	ValidateNativeTerrainProgram(program.identity,program.consumer,frame->contextGeneration);
-	if(border!=(program.identity.selection==NativeTerrainProgramSelection::Border)||composite!=(program.identity.selection==NativeTerrainProgramSelection::Composite))
+	ValidateNativeTerrainProgram(program.Identity(),program.Consumer(),frame->contextGeneration);
+	if(border!=(program.Identity().selection==NativeTerrainProgramSelection::Border)||composite!=(program.Identity().selection==NativeTerrainProgramSelection::Composite))
 		throw std::runtime_error("Original terrain border draw has another actual program family");
 	if(!program.uniforms || program.uniforms->contextGeneration!=frame->contextGeneration ||
-		program.uniforms->originalProgramGeneration!=program.identity.originalProgramGeneration || !program.uniforms->revision)
+		program.uniforms->originalProgramGeneration!=program.Identity().originalProgramGeneration || !program.uniforms->revision)
 		throw std::runtime_error("Original terrain draw lacks its actual current program uniform publication");
 	const auto& fixed=OriginalNativeModelContext();
 	if(!fixed.clips.observed || fixed.clips.contextGeneration!=frame->contextGeneration || !fixed.fog.observed)

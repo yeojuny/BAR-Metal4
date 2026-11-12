@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <stdexcept>
 #include "NativeTerrainSourceData.h"
 #include "NativeTerrainMeshSnapshot.h"
 #include "NativeWorldDrawData.h"
@@ -28,9 +29,18 @@ struct NativeTerrainUniformSnapshot {
 	uint64_t contextGeneration=0, originalProgramGeneration=0, revision=0;
 	std::map<std::string,NativeTerrainUniformValue> values;
 };
+// A draw retains the exact immutable source definition instead of copying its
+// strings/compile defines. This is not a validation bypass or a readiness token.
 struct NativeTerrainProgramSnapshot {
-	NativeTerrainProgramIdentity identity;
-	std::shared_ptr<const NativeTerrainProgramConsumer> consumer;
+	std::shared_ptr<const NativeTerrainProgramDefinition> definition;
+	const NativeTerrainProgramIdentity& Identity() const {
+		if(!definition)throw std::runtime_error("Original terrain snapshot has no source definition");
+		return definition->identity;
+	}
+	const std::shared_ptr<const NativeTerrainProgramConsumer>& Consumer() const {
+		if(!definition)throw std::runtime_error("Original terrain snapshot has no source definition");
+		return definition->consumer;
+	}
 	std::shared_ptr<const NativeTerrainUniformSnapshot> uniforms;
 };
 

@@ -51,6 +51,16 @@ public:
 void ValidateNativeTerrainProgram(const NativeTerrainProgramIdentity&,
 	const std::shared_ptr<const NativeTerrainProgramConsumer>&,uint64_t expectedContext);
 
+// Shared source definition, distinct from per-write sealed uniform content.
+// Not a GPU readiness certificate: existing validation still runs at its
+// original boundaries and target-specific pipeline checks remain in prepare.
+struct NativeTerrainProgramDefinition {
+ const NativeTerrainProgramIdentity identity;
+ const std::shared_ptr<const NativeTerrainProgramConsumer> consumer;
+ NativeTerrainProgramDefinition(NativeTerrainProgramIdentity id,
+  std::shared_ptr<const NativeTerrainProgramConsumer> owner):identity(std::move(id)),consumer(std::move(owner)){}
+};
+
 // Full source state: terrain uses units0..19, including Cube on9. Do not use
 // the smaller model/CUS submission sampler array to represent this history.
 struct NativeTerrainImageSnapshot {
