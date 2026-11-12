@@ -266,6 +266,21 @@ bool TerrainProgramValidation220Enabled() {
  return enabled;
 }
 class OriginalProgram final:public NativeTerrainProgramConsumer {
+private:
+	// Created only by the real compiler after its initial library and target PSO
+	// succeed. Once this consumer escapes the factory, this owner never changes.
+	// Source-side readiness must not inspect render-owned specialization maps.
+	struct LinkCertificate {
+		const uint64_t libraryGeneration;
+		explicit LinkCertificate(uint64_t value):libraryGeneration(value){}
+	};
+	std::unique_ptr<const LinkCertificate> linkCertificate;
+	friend class ::rendering::metal4::TerrainSourceGPU;
+	void SealInitialLink() {
+		Require(!linkCertificate,"Original terrain link certificate was already sealed");
+		Require(library&&generation&&!pipelines.empty(),"Original terrain link certificate requires actual library and initial pipeline success");
+		linkCertificate=std::make_unique<const LinkCertificate>(generation);
+	}
 public:
 	// Set after the original validator succeeds, before this owner is published.
 	bool identityValidated220=false;
@@ -303,10 +318,10 @@ public:
 	OriginalProgram(NativeTerrainProgramIdentity id,Profile p,uint64_t g,std::shared_ptr<const int> f):
 		identity(std::move(id)),profile(std::move(p)),normalSlot211(NormalSlot211(profile)),mathMode195(MathMode195(profile)),generation(g),factory(std::move(f)){}
 	uint64_t ContextGeneration()const noexcept override{return identity.contextGeneration;}
-	uint64_t LibraryGeneration()const noexcept override{return library&&!pipelines.empty()?generation:0;}
+	uint64_t LibraryGeneration()const noexcept override{return linkCertificate?linkCertificate->libraryGeneration:0;}
 	bool Matches(const NativeTerrainProgramIdentity& requested)const noexcept override{return identity==requested;}
 	bool Supports(const NativeTerrainProgramIdentity& requested)const noexcept override {
-		return Matches(requested)&&library&&generation&&!pipelines.empty();
+		return Matches(requested)&&LibraryGeneration()!=0;
 	}
 	id<MTLLibrary> LibraryForImages(RuntimeLease& lease,uint32_t imageDepthMask,bool alphaTest193,double& milliseconds,
 		SMFSamplerPolicy211 sampling211=SMFSamplerPolicy211::Generic)const {
@@ -678,6 +693,7 @@ NativeTerrainProgramLink TerrainSourceGPU::CompileOriginalProgram(RuntimeLease& 
 	milliseconds+=Milliseconds(start);
 	ScreenDrawState initial;initial.blend.enabled=false;
 	original->Pipeline(lease,target,initial,0,validation,milliseconds);
+	original->SealInitialLink();
 	ValidateNativeTerrainProgram(request.identity,original,request.identity.contextGeneration);
 	original->identityValidated220=true;
 	return {original,{},original->profile.defaults};

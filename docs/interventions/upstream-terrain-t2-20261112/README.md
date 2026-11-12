@@ -21,3 +21,11 @@ Neither source tests nor syntax extraction establish Objective-C++/Metal compila
 `python3 engine/tools/metal4-contracts/run_native_terrain_program_test.py --output /tmp/terrain-t2a-tests`
 
 59 checks pass with ASan/UBSan and diagnostics-off syntax compilation. Tests add changed-write definition sharing, reload/failed-compile separation, unsupported/invalid/observed Lua imports, and Release. Actual Lua VM and Metal compiler are stand-ins. `T2A-RESULTS.json` records exact source digest and compiler. Earlier T1 results are historical evidence for commit 11b9760, not new claims about this updated source.
+
+## T2b: immutable source readiness
+
+`OriginalProgram` now holds a private immutable link certificate. Only the actual `TerrainSourceGPU` factory can seal it, after successful Metal library creation and the initial target PSO. Existing full validation still runs before the consumer is returned. `LibraryGeneration()` and `Supports()` consult only that certificate and immutable source identity, not mutable specialization maps. The initial library and generation are never replaced after publication in the inspected source; pipeline caches only add specializations.
+
+Late `Pipeline()` validation of target, sample support, device ownership and actual PSO creation is unchanged. This certificate is not permission to skip those checks or to share GPU resources across frames. Existing per-publication/per-capture definition validation remains; full certificate-based draw provenance and T3/T4 are still future work.
+
+`python3 engine/tools/metal4-contracts/run_native_terrain_link_certificate_test.py --output /tmp/terrain-t2b-final` passes 11 checks with ASan/UBSan, plus structural guards for real factory ordering and late GPU guards. It extracts actual production methods but supplies CPU stand-ins for the library/cache: it does **not** compile the complete Objective-C++ translation unit or execute the Metal factory. LSan is disabled for the sandbox. Actual initial-PSO failure, new target specializations and GPU output remain Mac acceptance gates.

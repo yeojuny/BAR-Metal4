@@ -1,0 +1,31 @@
+{
+  "scope": "Compile exact production readiness/sealing methods with CPU stand-ins.\nThis does not compile Objective-C++ or test a Metal library/PSO. The production\nfactory ordering is guarded structurally; runtime tests cover the extracted\ncertificate methods, including failed seal and independence from mutable caches.\n",
+  "sourceSHA256": "113069bc8e72f4815936621439f00d77d7216083eaed8cd33bdcbe844a6903d0",
+  "command": [
+    "python3",
+    "engine/tools/metal4-contracts/run_native_terrain_link_certificate_test.py",
+    "--output",
+    "/tmp/terrain-t2b-final"
+  ],
+  "exit": 0,
+  "summary": "PASS 11 extracted terrain link certificate checks; Metal not exercised\n",
+  "sanitizers": "ASan+UBSan; LSan disabled for ptrace-compatible execution",
+  "structuralFactoryOrder": [
+    "original->library=lease.NewLibraryWithSource",
+    "Require(original->library!=nil",
+    "original->Pipeline(",
+    "original->SealInitialLink();",
+    "ValidateNativeTerrainProgram(",
+    "original->identityValidated220=true;",
+    "return {original,{},original->profile.defaults};"
+  ],
+  "passed": true,
+  "compilerVersion": "g++ (Debian 14.2.0-19) 14.2.0",
+  "notRun": [
+    "Objective-C++ full compilation",
+    "Metal library/PSO creation",
+    "GPU validation",
+    "Gameplay",
+    "Performance"
+  ]
+}
