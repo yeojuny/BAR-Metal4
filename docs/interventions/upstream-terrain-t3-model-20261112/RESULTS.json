@@ -1,0 +1,33 @@
+{
+  "scope": "DESIGN MODEL ONLY; not production or allocation/GPU proof",
+  "passed": true,
+  "directedTraces": 8,
+  "negativeControls": {
+    "restore-rewinds-writer": "detected",
+    "inspection-seals": "detected"
+  },
+  "randomSeeds": 100,
+  "randomEvents": 100000,
+  "eagerModeledSeals": 4188,
+  "lazyModeledSeals": 2982,
+  "unobservedThreeWrites": {
+    "eager": 3,
+    "lazy": 1
+  },
+  "command": [
+    "python3",
+    "engine/tools/metal4-contracts/test_native_terrain_observation_model.py"
+  ],
+  "testSHA256": "a81a8f594ea37948439bc64db75e0bc2de8812c87e1b3b9c2e7d06fa348a999c",
+  "productionSourceChecks": 79,
+  "extractedLinkCertificateChecks": 11,
+  "productionLazyEnabled": false,
+  "notRun": [
+    "Full Mac build",
+    "Metal or actual Lua callbacks",
+    "Production eager/lazy differential",
+    "Allocation-failure injection",
+    "Gameplay parity",
+    "Performance measurements"
+  ]
+}
