@@ -6,6 +6,7 @@
 #include "System/FileSystem/FileHandler.h"
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <limits>
 #include <sstream>
 #include <stdexcept>
@@ -14,6 +15,12 @@
 namespace rendering {
 namespace {
 NativeTerrainProgramServices services;
+#ifdef BAR_NATIVE_TERRAIN_WRITE_STATS
+NativeTerrainUniformWriteStats writeStats;
+#define TERRAIN_WRITE_STAT(field) (++writeStats.field)
+#else
+#define TERRAIN_WRITE_STAT(field) ((void)0)
+#endif
 uint64_t nextGeneration=0;
 class SourceProgram;
 std::vector<SourceProgram*> livePrograms; // Actual creation/deletion events; no program cache.
@@ -219,8 +226,10 @@ private:
   auto publication=std::make_shared<NativeTerrainProgramPublication>();publication->state=state;
   publication->program={identity,consumer,uniforms};publication->unsupportedReason=unsupportedReason;
   OriginalNativeSourceProgramBinding().BindTerrainSource(std::move(publication));
+  TERRAIN_WRITE_STAT(publications);
  }
  template<typename T>void Write(int location,uint32_t rows,uint32_t columns,GLsizei count,bool transpose,const T* input){
+  TERRAIN_WRITE_STAT(calls);
   CheckContext();Require(bound,"Original terrain uniform writer has no enabled original program");
   if(location==-1||count==0)return;
   Require(count>0&&location>=0&&size_t(location)<locations.size()&&input,"Original terrain uniform source location/count is invalid");
@@ -228,15 +237,47 @@ private:
   Require(uniforms->revision!=std::numeric_limits<uint64_t>::max(),"Original terrain uniform publication revision overflow");
   Require(size_t(count)<=std::numeric_limits<size_t>::max()/rows/columns,"Original terrain uniform extent overflow");
   const size_t size=size_t(count)*rows*columns;
-  NativeTerrainUniformValue value;value.rows=rows;value.columns=columns;value.count=uint32_t(count);value.transpose=transpose;
+  // Preserve all rejection boundaries before looking for an unchanged value.
   if constexpr(std::is_same_v<T,float>){
    for(size_t i=0;i<size;++i)Require(std::isfinite(input[i]),"Original terrain uniform source is nonfinite");
+  }else{
+   static_assert(std::is_same_v<T,int> && sizeof(int)==sizeof(int32_t));
+  }
+  const auto existing=uniforms->values.find(locations[size_t(location)]);
+  bool exact=false;
+  if(existing!=uniforms->values.end()){
+   const auto& old=existing->second;
+   using Stored=std::conditional_t<std::is_same_v<T,float>,float,int32_t>;
+   const auto* values=std::get_if<std::vector<Stored>>(&old.values);
+   exact=old.rows==rows&&old.columns==columns&&old.count==uint32_t(count)&&old.transpose==transpose&&
+    values&&values->size()==size;
+   // Element-wise memcmp avoids a byte-count multiplication overflow and keeps
+   // signed zero distinct. No temporary value vector or map is constructed.
+   if(exact)for(size_t i=0;i<size;++i)if(std::memcmp(&(*values)[i],input+i,sizeof(T))!=0){exact=false;break;}
+  }
+  if(exact){
+   const auto current=OriginalNativeSourceProgramBinding().Current();
+   // OwnsCurrent alone is insufficient after Current(A), Write(B), Restore(A).
+   // Also retain unsupported/unlinked publication behavior and binding repair.
+   const bool bindingAligned=state==NativeTerrainProgramPublication::State::Linked?
+    current.kind==NativeSourceProgramBinding::Kind::Terrain&&current.terrain==consumer:
+    state==NativeTerrainProgramPublication::State::Invalid?
+     current.kind==NativeSourceProgramBinding::Kind::Unbound:
+     current.kind==NativeSourceProgramBinding::Kind::UnsupportedTerrain;
+   if(bindingAligned&&current.terrainSource&&MatchesCurrentPublication(*current.terrainSource)){
+    TERRAIN_WRITE_STAT(alignedNoOps);return;
+   }
+   TERRAIN_WRITE_STAT(stalePublicationFallbacks);
+  }else{TERRAIN_WRITE_STAT(exactChanges);}
+  NativeTerrainUniformValue value;value.rows=rows;value.columns=columns;value.count=uint32_t(count);value.transpose=transpose;
+  if constexpr(std::is_same_v<T,float>){
    value.values=std::vector<float>(input,input+size);
   }else{
    static_assert(std::is_same_v<T,int> && sizeof(int)==sizeof(int32_t));
    value.values=std::vector<int32_t>(input,input+size);
   }
   auto next=std::make_shared<NativeTerrainUniformSnapshot>(*uniforms);++next->revision;
+  TERRAIN_WRITE_STAT(mapCopies);
   next->values[locations[size_t(location)]]=std::move(value);uniforms=std::move(next);Publish();
  }
 };
@@ -255,6 +296,12 @@ void NativeSourceProgramBinding::BindTerrainSource(std::shared_ptr<const NativeT
  if(current.terrainSource->state==NativeTerrainProgramPublication::State::Invalid){current.kind=Kind::Unbound;return;}
  current.kind=Kind::UnsupportedTerrain; // Preserve real unlinked/unsupported source, never a fabricated GL name.
 }
+#ifdef BAR_NATIVE_TERRAIN_WRITE_STATS
+NativeTerrainUniformWriteStats TakeNativeTerrainUniformWriteStats(){
+ const auto result=writeStats;writeStats={};return result;
+}
+#endif
+#undef TERRAIN_WRITE_STAT
 void ConfigureNativeTerrainProgramSource(NativeTerrainProgramServices actual)
 {
  Require(livePrograms.empty(),"Actual terrain source services cannot be replaced while original programs live");

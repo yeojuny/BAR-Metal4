@@ -45,6 +45,17 @@ struct NativeTerrainProgramPublication {
 	std::string unsupportedReason;
 };
 
+#ifdef BAR_NATIVE_TERRAIN_WRITE_STATS
+// Diagnostic-only main/source-thread counters. Call Take at source draw frame
+// boundaries; simulation frame IDs are not distinct draw IDs. No timers or
+// counters are compiled into ordinary builds. Publications includes Enable;
+// mapCopies/exactChanges refer only to setter work (not link defaults).
+struct NativeTerrainUniformWriteStats {
+ uint64_t calls=0,exactChanges=0,alignedNoOps=0,stalePublicationFallbacks=0,mapCopies=0,publications=0;
+};
+NativeTerrainUniformWriteStats TakeNativeTerrainUniformWriteStats();
+#endif
+
 // Actual Session owns these services; no device/compiler/cache is created here.
 // Configure before source program creation, clear after their real destruction.
 void ConfigureNativeTerrainProgramSource(NativeTerrainProgramServices);

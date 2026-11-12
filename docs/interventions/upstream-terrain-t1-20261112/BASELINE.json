@@ -1,0 +1,32 @@
+{
+  "status": "measurement_not_run",
+  "baseline_commit": "16e7f1844203bdd7e26bb19a39e9e0276f1fcb74",
+  "candidate_branch": "refactor/upstream-terrain-t1-20261112",
+  "scope": "Terrain setter exact-change only; inherited intervention changes identical between control and candidate",
+  "historical_native233_measured_flags": {
+    "BAR_NATIVE_CPU_READ_PACKET220": "2",
+    "BAR_NATIVE_RESIDENCY_RELEASE220": "1",
+    "BAR_NATIVE_TERRAIN_UNIFORM_RELEASE220": "1",
+    "BAR_NATIVE_SCREEN_TABLE_H5": "1",
+    "BAR_NATIVE_WORLD_PARTICLE_UPLOAD220": "1",
+    "BAR_NATIVE_COMBINED_OVERLAP220": "1",
+    "BAR_NATIVE_FORWARD_BOUNDARY220": "1",
+    "BAR_NATIVE_RESIDENCY_DIFF220": "1",
+    "BAR_NATIVE_TERRAIN_PROGRAM_VALIDATION220": "1",
+    "BAR_NATIVE_TERRAIN_DEFINITION232": "1",
+    "BAR_NATIVE_RANGE_DIVISION233": "1"
+  },
+  "comparison_warning": "These flags alone do not reconstruct measured native233. Compiler/link settings, inherited unconditional intervention changes and UI source pair must match between newly built control and candidate. Do not use run-candidate.sh as a clean control.",
+  "required_unmeasured_fields": [
+    "actual drawable and attachment sizes",
+    "viewport, AA, VSync",
+    "scene seed and camera",
+    "map/game/widget hashes and exact UI pair",
+    "compiler/SDK/build flags",
+    "warmup and sample window",
+    "power and foreground status",
+    "Metal validation and output parity",
+    "completed/presented throughput, latency and tails"
+  ],
+  "performance_claim": null
+}
