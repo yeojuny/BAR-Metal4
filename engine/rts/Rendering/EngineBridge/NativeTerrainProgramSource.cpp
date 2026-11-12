@@ -60,7 +60,7 @@ public:
  }
  ~SourceProgram()override{
   const auto current=OriginalNativeSourceProgramBinding().Current();
-  if(current.terrainSource&&current.terrainSource->program.identity.originalProgram==this)OriginalNativeSourceProgramBinding().Unbind();
+  if(current.terrainSource&&current.terrainSource->definition&&current.terrainSource->definition->identity.originalProgram==this)OriginalNativeSourceProgramBinding().Unbind();
   if(shaderHandler->GetCurrentlyBoundProgram()==this)shaderHandler->SetCurrentlyBoundProgram(nullptr);
   livePrograms.erase(std::find(livePrograms.begin(),livePrograms.end(),this));
  }
@@ -72,7 +72,7 @@ public:
  }
  void LoadLua(uint32_t handle){
   CheckContext();Require(IsLua(),"Original Lua map shader was assigned to a built-in terrain owner");
-  consumer.reset();unsupportedReason.clear();valid=false;objID=handle;
+  definition.reset();consumer.reset();unsupportedReason.clear();valid=false;objID=handle;
   identity.originalGLName=handle;identity.originalProgramGeneration=Generation();identity.sourceRevision=0;
   identity.vertexSourceHash=identity.fragmentSourceHash=0;identity.defines.clear();
   uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
@@ -113,6 +113,7 @@ public:
    request.fragmentSource=Stage(composite?"shaders/GLSL/SMFCompositeFragProg.glsl":border?"shaders/GLSL/SMFBorderFragProg.glsl":"shaders/GLSL/SMFFragProg.glsl");
   }
   Require(identity.sourceRevision!=std::numeric_limits<uint64_t>::max(),"Original terrain source revision overflow");++identity.sourceRevision;
+  definition.reset();
   identity.vertexSourceHash=Hash(request.vertexSource);identity.fragmentSourceHash=Hash(request.fragmentSource);
   request.rawDefinitions=rawDefinitions;request.flagDefinitions=shaderFlags.GetString();
   identity.defines=Defines(rawDefinitions+"\n"+request.flagDefinitions);request.identity=identity;
@@ -127,8 +128,8 @@ public:
  }
  void ReloadOriginalOwner(){if(IsLua())LoadLua(objID);else Reload(true,true);}
  bool MatchesCurrentPublication(const NativeTerrainProgramPublication& source)const{
-  CheckContext();return source.state==state&&source.program.identity==identity&&
-   source.program.consumer==consumer&&source.program.uniforms==uniforms;
+  CheckContext();return source.state==state&&source.definition&&source.definition==definition&&
+   source.definition->identity==identity&&source.definition->consumer==consumer&&source.uniforms==uniforms;
  }
  bool Validate()override{
   CheckContext();if(state!=NativeTerrainProgramPublication::State::Linked)return false;
@@ -148,7 +149,7 @@ public:
   Shader::IProgramObject::Disable();OriginalNativeSourceProgramBinding().Unbind();
  }
  void Release()override{
-  consumer.reset();request={};unsupportedReason.clear();valid=false;objID=0;state=NativeTerrainProgramPublication::State::Unlinked;
+  definition.reset();consumer.reset();request={};unsupportedReason.clear();valid=false;objID=0;state=NativeTerrainProgramPublication::State::Unlinked;
   uniformStates.clear();locations.clear();
   uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
   uniforms->originalProgramGeneration=identity.originalProgramGeneration;
@@ -184,6 +185,7 @@ private:
  NativeTerrainProgramRequest request;
  NativeTerrainProgramPublication::State state=NativeTerrainProgramPublication::State::Unlinked;
  std::shared_ptr<const NativeTerrainProgramConsumer> consumer;
+ std::shared_ptr<const NativeTerrainProgramDefinition> definition;
  std::shared_ptr<NativeTerrainUniformSnapshot> uniforms;
  std::vector<std::string> locations; // Source-name lookup slots, NEVER GL uniform locations or program names.
  bool IsLua()const{return selection==NativeTerrainProgramSelection::LuaForward||selection==NativeTerrainProgramSelection::LuaDeferred;}
@@ -197,7 +199,7 @@ private:
  }
  int GetUniformType(int)override{return -1;} // No GL type query is invented; publication retains actual writer shape/type.
  void Unsupported(std::string reason){
-  Require(!reason.empty(),"Original unsupported terrain source has no reason");consumer.reset();unsupportedReason=std::move(reason);
+  Require(!reason.empty(),"Original unsupported terrain source has no reason");definition.reset();consumer.reset();unsupportedReason=std::move(reason);
   state=NativeTerrainProgramPublication::State::Unsupported;valid=false;
  }
  void CompileRequest(){
@@ -213,18 +215,22 @@ private:
   // previously optimized out. Only genuinely new active names get link zero.
   for(const auto& [name,value]:linked.linkDefaults)next->values.try_emplace(name,value);
   uniforms=std::move(next);
-  consumer=linked.consumer;unsupportedReason.clear();state=NativeTerrainProgramPublication::State::Linked;valid=true;
+  definition.reset();consumer=linked.consumer;unsupportedReason.clear();state=NativeTerrainProgramPublication::State::Linked;valid=true;
  }
  bool OwnsCurrent()const{
   const auto current=OriginalNativeSourceProgramBinding().Current();
-  return current.terrainSource&&current.terrainSource->program.identity.originalProgram==this&&
-   current.terrainSource->program.identity.originalProgramGeneration==identity.originalProgramGeneration&&
-   current.terrainSource->program.identity.sourceRevision==identity.sourceRevision;
+  return current.terrainSource&&current.terrainSource->definition&&current.terrainSource->definition->identity.originalProgram==this&&
+   current.terrainSource->definition->identity.originalProgramGeneration==identity.originalProgramGeneration&&
+   current.terrainSource->definition->identity.sourceRevision==identity.sourceRevision;
  }
  void Publish(bool originalEnable=false){
   if(!originalEnable)Require(OwnsCurrent(),"Original terrain uniform write targets another actual current program; cross-program source location mapping is unsupported");
   auto publication=std::make_shared<NativeTerrainProgramPublication>();publication->state=state;
-  publication->program={identity,consumer,uniforms};publication->unsupportedReason=unsupportedReason;
+  if(!definition){
+   definition=std::make_shared<const NativeTerrainProgramDefinition>(identity,consumer);
+   TERRAIN_WRITE_STAT(definitionCopies);
+  }
+  publication->definition=definition;publication->uniforms=uniforms;publication->unsupportedReason=unsupportedReason;
   OriginalNativeSourceProgramBinding().BindTerrainSource(std::move(publication));
   TERRAIN_WRITE_STAT(publications);
  }
@@ -287,10 +293,10 @@ SourceProgram& Actual(Shader::IProgramObject* source){
 }
 void NativeSourceProgramBinding::BindTerrainSource(std::shared_ptr<const NativeTerrainProgramPublication> source)
 {
- Require(bool(source),"Original terrain source publication is missing");
+ Require(bool(source)&&bool(source->definition),"Original terrain source publication is missing");
  if(source->state==NativeTerrainProgramPublication::State::Linked){
-  ValidateNativeTerrainProgram(source->program.identity,source->program.consumer,Context());
-  BindTerrain(source->program.consumer);current.terrainSource=std::move(source);return;
+  ValidateNativeTerrainProgram(source->definition->identity,source->definition->consumer,Context());
+  BindTerrain(source->definition->consumer);current.terrainSource=std::move(source);return;
  }
  current={};current.terrainSource=std::move(source);
  if(current.terrainSource->state==NativeTerrainProgramPublication::State::Invalid){current.kind=Kind::Unbound;return;}
@@ -323,16 +329,16 @@ NativeTerrainProgramSnapshot CaptureCurrentNativeTerrainProgram()
  const auto current=OriginalNativeSourceProgramBinding().Current();
  Require(bool(current.terrainSource),"Actual current water-ground program has no native terrain source publication");
  const auto& source=*current.terrainSource;
- Require(source.program.identity.originalProgram&&
-  Actual(const_cast<Shader::IProgramObject*>(source.program.identity.originalProgram)).MatchesCurrentPublication(source),
+ Require(source.definition&&source.definition->identity.originalProgram&&
+  Actual(const_cast<Shader::IProgramObject*>(source.definition->identity.originalProgram)).MatchesCurrentPublication(source),
   "Actual current terrain source publication no longer matches its original owner revision");
  if(source.state==NativeTerrainProgramPublication::State::Unsupported)throw std::runtime_error(source.unsupportedReason);
  Require(source.state==NativeTerrainProgramPublication::State::Linked&&current.kind==NativeSourceProgramBinding::Kind::Terrain&&
-  current.terrain&&current.terrain==source.program.consumer,"Actual current terrain binding differs from its source publication");
- ValidateNativeTerrainProgram(source.program.identity,source.program.consumer,Context());
- Require(source.program.uniforms&&source.program.uniforms->contextGeneration==Context()&&
-  source.program.uniforms->originalProgramGeneration==source.program.identity.originalProgramGeneration,
+  current.terrain&&current.terrain==source.definition->consumer,"Actual current terrain binding differs from its source publication");
+ ValidateNativeTerrainProgram(source.definition->identity,source.definition->consumer,Context());
+ Require(source.uniforms&&source.uniforms->contextGeneration==Context()&&
+  source.uniforms->originalProgramGeneration==source.definition->identity.originalProgramGeneration,
   "Actual current terrain uniform publication belongs to another original lifetime");
- return source.program;
+ return {source.definition->identity,source.definition->consumer,source.uniforms};
 }
 } // namespace rendering

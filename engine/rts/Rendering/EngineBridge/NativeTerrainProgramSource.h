@@ -38,10 +38,20 @@ struct NativeTerrainProgramServices {
 	// unsupported handle is NOT declared invalid and cannot select STD instead.
 	std::function<NativeTerrainLuaProgramImport(uint32_t)> resolveLua;
 };
+// Shared source definition, distinct from per-write sealed uniform content.
+// Not a GPU readiness certificate: existing validation still runs at its
+// original boundaries and target-specific pipeline checks remain in prepare.
+struct NativeTerrainProgramDefinition {
+ const NativeTerrainProgramIdentity identity;
+ const std::shared_ptr<const NativeTerrainProgramConsumer> consumer;
+ NativeTerrainProgramDefinition(NativeTerrainProgramIdentity id,
+  std::shared_ptr<const NativeTerrainProgramConsumer> owner):identity(std::move(id)),consumer(std::move(owner)){}
+};
 struct NativeTerrainProgramPublication {
 	enum class State {Unlinked,Invalid,Linked,Unsupported};
 	State state=State::Unlinked;
-	NativeTerrainProgramSnapshot program;
+	std::shared_ptr<const NativeTerrainProgramDefinition> definition;
+	std::shared_ptr<const NativeTerrainUniformSnapshot> uniforms;
 	std::string unsupportedReason;
 };
 
@@ -51,7 +61,7 @@ struct NativeTerrainProgramPublication {
 // counters are compiled into ordinary builds. Publications includes Enable;
 // mapCopies/exactChanges refer only to setter work (not link defaults).
 struct NativeTerrainUniformWriteStats {
- uint64_t calls=0,exactChanges=0,alignedNoOps=0,stalePublicationFallbacks=0,mapCopies=0,publications=0;
+ uint64_t calls=0,exactChanges=0,alignedNoOps=0,stalePublicationFallbacks=0,mapCopies=0,publications=0,definitionCopies=0;
 };
 NativeTerrainUniformWriteStats TakeNativeTerrainUniformWriteStats();
 #endif
