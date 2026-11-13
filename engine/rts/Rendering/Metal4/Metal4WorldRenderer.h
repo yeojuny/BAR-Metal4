@@ -11,6 +11,8 @@
 #include "Rendering/Backend/RenderTypes.h"
 #include "Rendering/Backend/WorldFrameData.h"
 #include "Rendering/Backend/ScreenDrawList.h"
+#include "Rendering/Backend/NativeOwnedScreenFrame.h"
+#include <stdexcept>
 #include <memory>
 #include <optional>
 #include <functional>
@@ -84,6 +86,30 @@ struct Metal4WorldRenderOptions {
 	// Last actually observed logical window extent, used only for captured
 	// offscreen source work if SDL reports zero while minimizing.
 	std::array<std::uint32_t,2> sourceLogicalExtent{};
+};
+
+// Owned normal-frame descriptors. This does not make referenced GPU/source
+// services concurrent; the existing synchronous dispatch contract remains.
+class Metal4WorldSubmission {
+ std::shared_ptr<const WorldFrame> frame;
+ std::optional<ScreenFrameView> screen;
+ Metal4WorldRenderOptions options;
+public:
+ Metal4WorldSubmission(std::shared_ptr<const WorldFrame> frame,const Metal4WorldRenderOptions& source):frame(std::move(frame)),options(source) {
+  if(!this->frame||options.readback||!options.pbrDeclarations.has_value())
+   throw std::logic_error("Owned world submission lacks its frame/PBR receipt or contains borrowed readback");
+  if(source.screenUI){
+   screen=*source.screenUI;
+   if(!screen->storage||screen->drawList!=&screen->storage->root||
+    screen->targetPasses.data()!=screen->storage->targets.data()||screen->targetPasses.size()!=screen->storage->targets.size())
+    throw std::logic_error("Owned world submission has borrowed screen execution storage");
+   options.screenUI=&*screen;
+  }
+ }
+ const WorldFrame& Frame()const noexcept{return *frame;}
+ const Metal4WorldRenderOptions& Options()const noexcept{return options;}
+ Metal4WorldSubmission(const Metal4WorldSubmission&)=delete;
+ Metal4WorldSubmission& operator=(const Metal4WorldSubmission&)=delete;
 };
 
 struct Metal4MaintenanceResult {
@@ -190,6 +216,8 @@ public:
 	// Logical camera viewport and requested render pixels remain independent:
 	// camera's actual subview maps proportionally to the explicit target.
 	Metal4WorldPresentationResult Draw(const WorldFrame& frame, const Metal4WorldRenderOptions& options = {});
+ // Owned input is required for worker dispatch; this entry still joins.
+ Metal4WorldPresentationResult DrawOwned(std::shared_ptr<const Metal4WorldSubmission>,std::function<void()> previousRetired = {});
  // Prepare independent immutable shared-buffer inputs while the preceding
  // GPU frame runs. The returned owner must outlive this frame's Draw call.
  std::shared_ptr<const void> PrepareIndependentResources(const WorldFrame& frame);
@@ -270,7 +298,7 @@ public:
 
 
 private:
- Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
+ Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned = {});
  Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan);
 	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&);
 	struct Impl;

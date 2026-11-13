@@ -118,3 +118,11 @@ color/depth journal receipt snapshots; renderer keeps the original submitted-wor
 rejection without reintroducing mutable receipts into descriptors. Prefix fixture
 covers submitted/unsubmitted, missing/mismatched owner and journal mutation after
 snapshot; this remains immediate synchronous readback, not delayed replay support.
+
+Owned normal-dispatch follow-up: SceneBridge moves WorldFrame into a shared owner,
+seals options plus the exact owned screen descriptor before journal transfer, and
+releases its mutable owning alias. Worker captures this packet by value; borrowed
+direct/readback calls remain main-synchronous. No geometry copy is introduced.
+This pins CPU dispatch inputs only; existing runtime graph retains GPU owners.
+Stack receipts still require joined Invoke and global source/service concurrency
+remains unproven, so neither queueing nor CPU lookahead is enabled.

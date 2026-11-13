@@ -8,7 +8,7 @@ root=Path(__file__).resolve().parents[2]
 bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 completion=bridge.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
 assert completion.index('LuaNativeVolumetricClouds::ValidateHeldFrame') < completion.index('dynamicWaterCapture.DidComplete')
-submit=bridge.split('const auto expectedDraw=frame.sourceDrawFrame',1)[1]
+submit=bridge.split('const auto expectedDraw=capturedFrame.sourceDrawFrame',1)[1]
 assert submit.index('LuaNativeVolumetricClouds::HasSubmittedCapacity') < submit.index('RequireRetiredGPUWork()') < submit.index('admission.Validate()')
 assert submit.index('admission.Validate()') < submit.index('mailbox->Prepare') < submit.index('session->renderer->Draw')
 files=[Path(__file__).with_name('TestNativeFrameJournalOwners.cpp')]+[root/'rts/Rendering/Backend'/name for name in ['NativePostprocessRecorder.cpp','NativeVolumetricCloudContext.cpp','NativePostprocessData.cpp','NativeCUSUniformData.cpp','ScreenDrawList.cpp']]

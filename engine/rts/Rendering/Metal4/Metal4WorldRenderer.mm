@@ -2181,7 +2181,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 {return DrawDispatch(frame,options,{});}
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawPreparingWhilePending(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
 {return DrawDispatch(frame,options,std::move(previousRetired));}
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void()> previousRetired)
+{
+ Require(bool(owned),"Owned world submission is absent");
+ // Keep a local owner while binding references; argument evaluation order must
+ // not move it away before Frame/Options are evaluated.
+ return DrawDispatch(owned->Frame(),owned->Options(),std::move(previousRetired),owned);
+}
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned)
 {
  // Reject invalid callers before reading source policy, as preparation did.
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
@@ -2203,7 +2210,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
 
  static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return p&&std::string_view(p)=="1";}();
  // Readback/continuation and arbitrary engine source callbacks stay on main.
- if(!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
+ if(!owned||!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
     options.submissionBegan||options.submissionCompleted||options.sourceCompleted){
   cacheAccess.reset();
   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
@@ -2224,10 +2231,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
  try {
-  auto result=worker.Invoke([&,presentation]{@autoreleasepool {
+  auto result=worker.Invoke([this,owned,presentation,snapshot,&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
    NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
    Metal4SurfaceWorkerScope scope(snapshot);
-   return DrawPrepared(frame,options,presentation,std::move(deferredReceipt),[&](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);});
+   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);});
   }});
   cacheHandoff.reset();
   deliverTargetNotice();

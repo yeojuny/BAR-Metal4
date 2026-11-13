@@ -1582,31 +1582,32 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		if(!session->renderer->AbortShieldPublications(prepared?prepared->opaqueModelFrame:nullptr,session->actualShadowSourcePending,prepared?prepared->mainGround:session->mainGroundPending,session->environmentStage,session->shieldCapture))throw std::logic_error("Cannot discard failed-Begun source owners");session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();return submitTargets();
 	}
 
-	WorldFrame frame = std::move(*prepared);
-	frame.luaNanoFrame = std::move(luaNanoFrame);
-	frame.luaProjectileEffectsFrame = std::move(luaProjectileEffectsFrame);
-	frame.luaEnergyExplosionFrame = std::move(luaEnergyExplosionFrame);
-	frame.luaWorldDrawFrame = std::move(luaWorldDrawFrame);
-	frame.luaVolumetricCloudFrame = std::move(luaVolumetricCloudFrame);
-	frame.luaLightningEffectFrame = std::move(luaLightningEffectFrame);
-	frame.luaFireSmokeFrame = std::move(luaFireSmokeFrame);
-	frame.luaMissileThrusterFrame = std::move(luaMissileThrusterFrame);
-	frame.luaShieldFrame = std::move(luaShieldFrame);
-	frame.luaFlamethrowerFrame = std::move(luaFlamethrowerFrame);
-	frame.luaFireGL4Frame = std::move(luaFireGL4Frame);
-	frame.luaNapalmPreviewFrame = std::move(luaNapalmPreviewFrame);
-	frame.luaSnowFrame = std::move(luaSnowFrame);
-	frame.luaCommandsFrame = std::move(luaCommandsFrame);
-	frame.luaBloomFrame=std::move(luaBloomFrame);
-	frame.luaDeferredLightFrame=std::move(luaDeferredLightFrame);
+	auto frameOwner=std::make_shared<WorldFrame>(std::move(*prepared));
+ auto& capturedFrame=*frameOwner;
+	capturedFrame.luaNanoFrame = std::move(luaNanoFrame);
+	capturedFrame.luaProjectileEffectsFrame = std::move(luaProjectileEffectsFrame);
+	capturedFrame.luaEnergyExplosionFrame = std::move(luaEnergyExplosionFrame);
+	capturedFrame.luaWorldDrawFrame = std::move(luaWorldDrawFrame);
+	capturedFrame.luaVolumetricCloudFrame = std::move(luaVolumetricCloudFrame);
+	capturedFrame.luaLightningEffectFrame = std::move(luaLightningEffectFrame);
+	capturedFrame.luaFireSmokeFrame = std::move(luaFireSmokeFrame);
+	capturedFrame.luaMissileThrusterFrame = std::move(luaMissileThrusterFrame);
+	capturedFrame.luaShieldFrame = std::move(luaShieldFrame);
+	capturedFrame.luaFlamethrowerFrame = std::move(luaFlamethrowerFrame);
+	capturedFrame.luaFireGL4Frame = std::move(luaFireGL4Frame);
+	capturedFrame.luaNapalmPreviewFrame = std::move(luaNapalmPreviewFrame);
+	capturedFrame.luaSnowFrame = std::move(luaSnowFrame);
+	capturedFrame.luaCommandsFrame = std::move(luaCommandsFrame);
+	capturedFrame.luaBloomFrame=std::move(luaBloomFrame);
+	capturedFrame.luaDeferredLightFrame=std::move(luaDeferredLightFrame);
 	// Keep the Genesis source available to target-only fallback if presentation is unavailable.
-	frame.luaUnitStencilFrame=luaUnitStencilFrame;
-	frame.luaOutlineFrame=std::move(luaOutlineFrame);
-	frame.luaBlueprintFrame = std::move(luaBlueprintFrame);
-	frame.placementFrame = std::move(placementFrame);
+	capturedFrame.luaUnitStencilFrame=luaUnitStencilFrame;
+	capturedFrame.luaOutlineFrame=std::move(luaOutlineFrame);
+	capturedFrame.luaBlueprintFrame = std::move(luaBlueprintFrame);
+	capturedFrame.placementFrame = std::move(placementFrame);
 	if (!CUnitDrawer::UseScreenIcons())
-		frame.unsupported.push_back("World-space unit icon mode selected; native world-icon parity remains unverified (screen/minimap paths are separate)");
-	for (const auto& unsupported: frame.unsupported) {
+		capturedFrame.unsupported.push_back("World-space unit icon mode selected; native world-icon parity remains unverified (screen/minimap paths are separate)");
+	for (const auto& unsupported: capturedFrame.unsupported) {
 		if (session->reportedUnsupported.insert(unsupported).second)
 			LOG_L(L_WARNING, "[Metal4Scene] Rendering path needs review: %s", unsupported.c_str());
 	}
@@ -1624,13 +1625,13 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  static const bool overlap=[] {const char* value=std::getenv("BAR_NATIVE_FRAME_OVERLAP");return !value||std::string_view(value)=="1";}();
  CloudAdmissionOwner cloudAdmission;
  NativeFrameAdmissionTransaction admission(ui::GetRecorder(),LuaNativePostprocess::GetRecorder(),cloudAdmission,
-  frame.sourceDrawFrame,screenUI&&screenUI->postprocess?screenUI->postprocess->serial:0);
+  capturedFrame.sourceDrawFrame,screenUI&&screenUI->postprocess?screenUI->postprocess->serial:0);
  std::shared_ptr<NativeFrameCompletionMailbox::Ticket> completionTicket;
- if(overlap&&options.presentWorld&&frame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
-  const auto expectedDraw=frame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
+ if(overlap&&options.presentWorld&&capturedFrame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
+  const auto expectedDraw=capturedFrame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
   const auto mailbox=session->completionMailbox;
   // Preserve the prior renderer boundary's ability to drain full held ledgers.
-  // Do not reject a frame solely because its predecessors have not retired yet.
+  // Do not reject a capturedFrame solely because its predecessors have not retired yet.
   if(!ui::GetRecorder().HasSubmittedCapacity(expectedDraw) ||
      !LuaNativePostprocess::GetRecorder().HasSubmittedCapacity(expectedPost) ||
      !LuaNativeVolumetricClouds::HasSubmittedCapacity(expectedDraw) || !mailbox->HasCapacity())RequireRetiredGPUWork();
@@ -1648,8 +1649,11 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  // All allocations, callback construction and validation precede any move.
  // Capture stays main-blocked; the three no-throw moves are one admission step.
  bool admitted=bool(completionTicket);
+ if(admitted)options.heldSourceDraw=capturedFrame.sourceDrawFrame;
+ const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
+ frameOwner.reset(); // No mutable owning alias remains after sealing.
+ const auto& frame=submission->Frame();
  if(admitted){
-  options.heldSourceDraw=frame.sourceDrawFrame;
   admission.TransferValidated();
  }
  const auto restoreAdmitted=[&]{
@@ -1665,10 +1669,10 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  };
  const auto invokeRenderer=[&] {
  try {return overlapPreparation?
-  session->renderer->DrawPreparingWhilePending(frame,options,[owner=session.get()]{
+  session->renderer->DrawOwned(submission,[owner=session.get()]{
    if(session.get()!=owner)throw std::logic_error("Preparation retirement lost its scene owner");
    ApplyDeferredFrameReceipts();
-  }):session->renderer->Draw(frame,options);
+  }):session->renderer->DrawOwned(submission);
  }catch(...){
   failedAdmission();throw;
  }
