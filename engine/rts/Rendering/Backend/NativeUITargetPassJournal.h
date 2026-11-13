@@ -17,6 +17,7 @@ public:
   std::shared_ptr<const ScreenTexture> destination, depthDestination;
   std::uint64_t actualSubmission=0;
  };
+ const std::vector<Receipt>& Receipts() const noexcept {return receipts;}
  const std::vector<ScreenRenderTargetPass>& Passes() const noexcept {return passes;}
  void Append(ScreenRenderTargetPass pass) {
   // Allocate before publishing either row. On failure the two logical arrays

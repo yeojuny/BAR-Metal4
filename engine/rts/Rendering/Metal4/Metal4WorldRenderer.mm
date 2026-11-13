@@ -1260,7 +1260,7 @@ std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTar
    }
    if(found->sourceStage!=NativePostprocessStage::Screen &&
     !(found->editorTarget && found->sourceStage==NativePostprocessStage::World))return false;
-   Require(found->commandSequence && found->commandSequence<prefix.cutoff && !found->actualSubmission,
+   Require(found->commandSequence && found->commandSequence<prefix.cutoff && !prefix.TargetActualSubmission(*found),
     "SaveImage target prefix contains future or already-submitted work");
    visiting.push_back(image.get());
    if(!self(self,found->previous) || !self(self,found->previousDepth))return false;

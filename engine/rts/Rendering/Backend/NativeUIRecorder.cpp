@@ -937,6 +937,7 @@ NativeUIReadbackPrefix NativeUIRecorder::CaptureReadbackPrefix()
 	// Allocate all prefix/continuation storage before changing any live target.
 	prefix.root=std::make_shared<const ScreenDrawList>(impl->output);
 	prefix.targets=impl->targetJournal.Passes();
+ prefix.targetReceipts=impl->targetJournal.Receipts();
 	if(!impl->targets.empty()) {
 		auto& target=impl->targets.back();
 		Require(target.colorBinding && (!target.depthDestination || target.depthBinding),
@@ -953,6 +954,7 @@ NativeUIReadbackPrefix NativeUIRecorder::CaptureReadbackPrefix()
 		auto geometry=std::make_shared<ScreenDrawList>();
 		auto pass=impl->MakeTargetPass(target);
 		prefix.targets.push_back(pass);
+  prefix.targetReceipts.push_back({pass.destination,pass.depthDestination,0});
 		impl->targetJournal.Append(std::move(pass));
 		try {
 			if(target.depthBinding)CommitTargetPair(target.colorBinding,target.publishedColor,target.destination,

@@ -5,6 +5,7 @@
 #include "NativeBufferData.h"
 
 #include "ScreenDrawList.h"
+#include "NativeUITargetPassJournal.h"
 #include "NativeScreenLine.h"
 #include "NativeWorldDrawRecorder.h"
 #include "NativePostprocessData.h"
@@ -60,6 +61,12 @@ struct NativeUILuaTextureLookup {
 struct NativeUIReadbackPrefix {
 	std::shared_ptr<const ScreenDrawList> root;
 	std::vector<ScreenRenderTargetPass> targets;
+ std::vector<NativeUITargetPassJournal::Receipt> targetReceipts;
+ std::uint64_t TargetActualSubmission(const ScreenRenderTargetPass& pass) const {
+  const auto found=std::find_if(targetReceipts.begin(),targetReceipts.end(),[&](const auto& receipt){return receipt.destination==pass.destination&&receipt.depthDestination==pass.depthDestination;});
+  if(found==targetReceipts.end())throw std::logic_error("SaveImage target prefix lost its exact submission receipt");
+  return found->actualSubmission;
+ }
 	std::uint32_t coordinateWidth=0, coordinateHeight=0;
 	std::uint64_t cutoff=0;
 	bool screenStage=false; // Original callin, not the target-local projection.

@@ -111,3 +111,10 @@ destruction; completed cleanup releases receipts without reverting pixels.
 DrawWorld exit additionally respects renderer active-source ownership. Host actual
 publication/registry tests and structural Begin wiring checks cover the boundary;
 Metal runtime verification and concurrent source versioning remain outstanding.
+
+Native-build discovery follow-up: independent SaveImage still referenced the old
+execution-descriptor actualSubmission field. Readback prefixes now own exact
+color/depth journal receipt snapshots; renderer keeps the original submitted-work
+rejection without reintroducing mutable receipts into descriptors. Prefix fixture
+covers submitted/unsubmitted, missing/mismatched owner and journal mutation after
+snapshot; this remains immediate synchronous readback, not delayed replay support.
