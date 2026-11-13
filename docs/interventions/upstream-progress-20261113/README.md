@@ -77,3 +77,9 @@ See [CLIPPED-FILL-ELIGIBILITY-SEAL.md](CLIPPED-FILL-ELIGIBILITY-SEAL.md).
 - [x] Explicit off-by-default flag, bounded candidate/index/logical payload selection, original demand validation, optional-failure fallback and cancel/join ownership.
 - [ ] Native compilation, actual workload eligibility/numeric behavior, visual/error parity and performance/memory measurement remain unverified.
 See [CLIPPED-FILL-PRECOMPUTE.md](CLIPPED-FILL-PRECOMPUTE.md).
+
+### P6 pending-borrow safety gate
+- [x] Removed unsafe empty-read-check inference for two GPU tickets; predecessor retirement is unconditional before deferred submission.
+- [x] CPU lookahead/three recording slots retained; host regression and existing lease policy tests pass.
+- [ ] Full borrow eligibility and native/runtime/performance verification remain open.
+See [GPU-PENDING-RETIREMENT-GATE.md](GPU-PENDING-RETIREMENT-GATE.md).

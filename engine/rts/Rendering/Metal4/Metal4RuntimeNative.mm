@@ -887,15 +887,14 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  // retain only its completed owner graph until N+1 has been submitted.
  // Early preparation drains still release immediately for pool reuse.
  std::shared_ptr<RuntimePendingSubmission> completedPredecessor186;
- const bool independentQueue=InterventionTwoInFlight()&&frame->priorReadChecks.empty();
- if(independentQueue){
-  // Bound GPU occupancy; do not invoke producer checks before their retirement.
-  while(runtime.pendingSubmissions.size()>=2)runtime.DrainOldestLocked(&completedPredecessor186);
-  // Scene receipts are delivered only for genuinely completed frames.
-  if(frame->previousRetired){auto receipt=std::exchange(frame->previousRetired,{});receipt();}
- }else RetirePreviousSubmission(&completedPredecessor186);
- Require(frame->recording && !frame->pending && (!runtime.pendingSubmission||independentQueue) && bool(retire) && drawable!=nil,
-  "Deferred Metal4 submission requires one recording presentation and an owned retirement");
+ // P6 fail closed: an empty priorReadChecks map proves only that no checks
+ // were registered. Postprocess pending encoded inputs (and any other
+ // unregistered borrows) still require predecessor retirement. Keep the
+ // experimental recording slots/CPU lookahead, but never admit a second GPU
+ // ticket until a complete pending-borrow ordering/lifetime proof exists.
+ RetirePreviousSubmission(&completedPredecessor186);
+ Require(frame->recording && !frame->pending && !runtime.pendingSubmission && runtime.pendingSubmissions.empty() && bool(retire) && drawable!=nil,
+  "Deferred Metal4 submission requires retired predecessors, one recording presentation and an owned retirement");
  Require(runtime.nextEventValue != std::numeric_limits<uint64_t>::max(), "Metal4 completion event exhausted its monotonic value range");
  [frame->WritableRetained() addObject:drawable];
  ReportAllocationPreparation148(*frame,frameIndex);
@@ -935,8 +934,8 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
 #ifdef RECOIL_METAL4_LIVE_SCENE
  if(InterventionTwoInFlight()){
   static bool reportedTwo=false;
-  if(runtime.pendingSubmissions.size()==2&&!reportedTwo){reportedTwo=true;
-   LOG("[NativeInterventionTwoInFlight] queued_tickets=2 slots=3 prior_read_checks=0 oldest_event_and_feedback_retirement=1");}
+  if(!reportedTwo){reportedTwo=true;
+   LOG("[NativeInterventionTwoInFlight] gpu_pending_limit=1 recording_slots=3 second_gpu_ticket=disabled pending_borrow_coverage=unproven");}
  }
 #endif
  id<MTL4CommandBuffer> commands[]={frame->slot->command};
