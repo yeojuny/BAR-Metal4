@@ -8,7 +8,8 @@ args=['g++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined']
 env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'}
 subprocess.run(args+['-I'+str(root/'rts'),str(fixture),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],env=env,check=True,timeout=30)
-s=(root/'rts/Rendering/Backend/NativeSerialRenderWorker.h').read_text()
+# Keep the original busy-before-allocation negative independent of the new ticket API.
+s=subprocess.check_output(['git','show','62485fde819ea5ec3f6b287b701a392044767e58:engine/rts/Rendering/Backend/NativeSerialRenderWorker.h'],cwd=root.parent,text=True)
 a=s.index('  // Construct the owning callable');b=s.index('  ready.notify_one();',a)
 s=s[:a]+'''  {std::lock_guard lock(mutex);if(stopping||busy)throw std::logic_error("Native render worker has an outstanding invocation");
    busy=true;work=[task]{(*task)();};}

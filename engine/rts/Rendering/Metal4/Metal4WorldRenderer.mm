@@ -2361,10 +2361,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  const auto cpuTraceContext=CaptureNativeCPUPhaseContext();
  try {
   auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,cpuTraceContext,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable {@autoreleasepool {
+   struct FinishDispatch {std::shared_ptr<NativeRenderDispatchReceipt> receipt;~FinishDispatch(){receipt->MarkWorkerFinished();}} finish{dispatchReceipt};
    NativeRendererAccessGate::Scope admittedAccess(dispatchReceipt->Handoff());
    Metal4SurfaceWorkerScope scope(snapshot);
    NativeCPUPhaseContextScope traceContext(cpuTraceContext);
-   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[dispatchReceipt](std::uint64_t submission) noexcept {dispatchReceipt->MarkBegun(submission);},uiResolver,mrtFrontier,sourceContext,shadowFallback);
+   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[dispatchReceipt](std::uint64_t submission) noexcept {dispatchReceipt->MarkBegun(submission);dispatchReceipt->PublishBeginReady();},uiResolver,mrtFrontier,sourceContext,shadowFallback);
   }});
   dispatchReceipt->ReleaseHandoff();
   deliverTargetNotice();
