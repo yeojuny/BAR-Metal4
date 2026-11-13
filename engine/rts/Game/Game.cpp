@@ -1765,6 +1765,7 @@ bool CGame::Draw() {
 			static_cast<uint32_t>(globalRendering->viewSizeY)};
 		nativeResult = rendering::scene::DrawWorld(&screenFrame, drawScreen,
 			std::move(luaNanoFrame), std::move(luaProjectileEffectsFrame), std::move(worldDrawFrame), std::move(luaEnergyExplosionFrame),std::move(luaVolumetricCloudFrame),std::move(luaLightningEffectFrame),std::move(luaBlueprintFrame),std::move(placementFrame), std::move(luaFireSmokeFrame), std::move(luaMissileThrusterFrame), std::move(luaShieldFrame), std::move(luaFlamethrowerFrame), std::move(luaNapalmPreviewFrame), std::move(luaCommandsFrame),std::move(luaFireGL4Frame), std::move(luaBloomFrame), std::move(luaDeferredLightFrame), std::move(luaUnitStencilFrame), std::move(luaOutlineFrame), std::move(luaSnowFrame));
+		nativeResult.Validate(); // Reject queue/completion confusion before any source retirement.
 		// Lua target generations may already be cached by original widgets.
 		// Offscreen submissions execute those same producers while hidden;
 		// retirement follows GPU completion, independently of presentation.
@@ -1820,7 +1821,8 @@ bool CGame::Draw() {
 	eventHandler.DbgTimingInfo(TIMING_VIDEO, nativeDrawStart, nativeDrawEnd);
 	if (drawScreen)
 		lastDrawFrameTime = nativeDrawEnd;
-	return nativeResult.presented;
+	// Advance original CPU render buffers for accepted work, not only a display.
+	return nativeResult.AdvanceCPUFrame();
 #endif
 
 	RmlGui::Update();

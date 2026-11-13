@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cstdint>
+#include <stdexcept>
 #include "System/float3.h"
 #include <memory>
 #include <functional>
@@ -69,6 +70,16 @@ struct DrawResult {
 	bool sourceFrameCompleted = false;
 	std::uint64_t completedPostprocessSerial = 0;
 	std::uint64_t sourceDrawFrame = 0;
+ // Accepted CPU render work, not a claim that Metal presented or retired it.
+ // Appended to preserve existing synchronous aggregate initializers.
+ bool queued = false;
+ std::uint64_t queuedPostprocessSerial = 0;
+ void Validate() const {
+  if(queued&&(presented||screenTargetsCompleted||sourceFrameCompleted||completedPostprocessSerial||!queuedPostprocessSerial))
+   throw std::logic_error("Queued native draw cannot claim GPU completion/presentation or lack its source serial");
+  if(!queued&&queuedPostprocessSerial)throw std::logic_error("Nonqueued native draw has a queued source serial");
+ }
+ bool AdvanceCPUFrame() const {Validate();return presented||queued;}
 };
 // Original LuaIntro uses a real screen frame before map/camera initialization.
 DrawResult DrawLoadingScreen(const ScreenFrameView& screenUI);

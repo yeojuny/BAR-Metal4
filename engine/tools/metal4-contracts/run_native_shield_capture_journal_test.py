@@ -18,8 +18,8 @@ bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 assert 'NativeShieldCaptureJournal shieldCapture' in bridge
 print('Source-owned journal/failed-Begin veto/sealed worker receipt/pre-Begin GPU pin structural PASS')
 settle=bridge.split('const auto result=invokeRenderer();',1)[1].split('if(result.dynamicWaterGeneration)',1)[0]
-assert settle.index('restoreAdmitted();')<settle.index('completionMailbox->Accept')
-assert 'if(result.presented||result.sourceFrameCompleted)' in settle
+assert settle.index('restoreAdmitted();')<settle.index('pendingAdmission->Accept(result)')
+assert 'if(admitted && (!result.presented || result.sourceFrameCompleted))' in settle
 fallback=bridge.split('if (!result.presented) {',1)[1]
 assert fallback.index('AbortShieldPublications')<fallback.index('shieldCapture.Reset()')
 print('Hidden/no-Begin restore precedes acceptance; fallback cancellation retains journal structural PASS')
@@ -27,11 +27,13 @@ assert s.index('lease.Retain(originalLifetime)')<s.index('lease.Begin("Actual en
 assert abort.index('if(![NSThread isMainThread])return false')<abort.index('shield->CanCancel()')<abort.index('shield->Cancel()')
 print('Actual main-thread abort gate and retention before actual Begin structural PASS')
 
-transfer=bridge.split('std::shared_ptr<NativeMainSourceSettlement> settlement;',1)[1].split('const auto invokeRenderer=',1)[0]
-assert transfer.index('make_shared<NativeMainSourceSettlement>')<transfer.index('settlement->Take')<transfer.index('session->sourceSettlement=settlement')<transfer.index('admission.TransferValidated')
-restore=transfer.split('const auto restoreAdmitted=',1)[1].split('const auto quarantineAdmitted=',1)[0]
-assert restore.index('ValidateRestore')<restore.index('admission.Restore()')<restore.index('RestoreValidated')<restore.index('sourceSettlement.reset()')
-quarantine=transfer.split('const auto quarantineAdmitted=',1)[1].split('const auto failedAdmission=',1)[0]
+record=bridge.split('struct ScenePendingAdmission {',1)[1].split('void CompleteDynamicCapture',1)[0]
+assert record.index('make_shared<NativeMainSourceSettlement>')<record.index('source->Take')<record.index('owner->sourceSettlement=source')<record.index('admission.TransferValidated')
+restore=record.split(' void Restore(){',1)[1].split(' void Quarantine()',1)[0]
+assert restore.index('ValidateRestore')<restore.index('Transaction().Restore()')<restore.index('RestoreValidated')<restore.index('sourceSettlement.reset()')
+quarantine=record.split(' void Quarantine()',1)[1].split(' void Fail()',1)[0]
 assert 'sourceSettlement.reset' not in quarantine
-assert 'sourceSettlement.reset()' in settle
-print('100 exact main source owner detach/restore + occupied destination/epoch rejection; durable quarantine wiring PASS')
+accept=record.split(' void Accept(const Metal4WorldPresentationResult& result){',1)[1]
+assert accept.index('mailbox->Accept(ticket)')<accept.index('sourceSettlement.reset()')
+assert 'owner->admissionSettlement.get()!=this' in record
+print('100 exact main source owner detach/restore + occupied destination/epoch rejection; durable exact admission quarantine wiring PASS')

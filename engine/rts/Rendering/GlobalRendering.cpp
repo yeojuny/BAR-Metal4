@@ -856,6 +856,8 @@ void CGlobalRendering::SwapBuffers(bool allowSwapBuffers, bool clearErrors)
 	// Native capture owns copies of the submitted geometry. Retire the original
 	// per-frame CPU buffers at the same boundary as the GL path; otherwise the
 	// shadow-particle capture copies all earlier frames along with this one.
+	// Native allowSwapBuffers means an accepted CPU frame (queued or presented);
+	// it is not evidence of GPU completion or displayed-frame throughput.
 	// Keep the original read-only-buffer and allow/force-swap behavior.
 	if (allowSwapBuffers || forceSwapBuffers)
 		RenderBuffer::SwapRenderBuffers();

@@ -180,6 +180,7 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
   (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs);
 }
 
+struct ScenePendingAdmission;
 struct Session {
  std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
  std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
@@ -456,6 +457,7 @@ struct Session {
  NativeLegacyWaterCapture legacyWaterCapture;
  NativeDynamicWaterCapture dynamicWaterCapture;
  std::shared_ptr<const NativeDynamicWaterFrame> dynamicCaptureReceipt;
+ std::shared_ptr<ScenePendingAdmission> admissionSettlement;
 	NativeBasicWaterCapture basicWaterCapture;
 	std::optional<WorldFrame> preparedFrame;
 	std::optional<uint64_t> preparedDecalDraw;
@@ -517,6 +519,73 @@ struct DynamicWaterAdmissionOwner {
  void ValidateRestoreHeldFrame(uint64_t draw) const {if(frame)capture.ValidateRestoreHeldFrame(draw);}
  void RestoreHeldFrame(uint64_t draw) noexcept {if(frame)capture.RestoreHeldFrame(draw);}
  void QuarantineHeldFrame(uint64_t draw) noexcept {if(frame)capture.QuarantineHeldFrame(draw);}
+};
+
+// Stable main-owned admission record. Adapters and frame identities outlive
+// DrawWorld's stack; no late settlement borrows its local options or helpers.
+struct ScenePendingAdmission {
+ Session* const owner;
+ const uint64_t context,epoch;
+ const std::shared_ptr<const Metal4WorldSubmission> submission;
+ const std::shared_ptr<NativeFrameCompletionMailbox> mailbox;
+ const std::shared_ptr<NativeFrameCompletionMailbox::Ticket> ticket;
+ const std::shared_ptr<NativeMainSourceSettlement> source;
+ CloudAdmissionOwner cloud;
+ DynamicWaterAdmissionOwner water;
+ bool transferred=false;
+ ScenePendingAdmission(Session& owner,std::shared_ptr<const Metal4WorldSubmission> packet,
+  std::shared_ptr<NativeFrameCompletionMailbox::Ticket> ticket):owner(&owner),
+  context(OriginalNativeTextureContext().Registry().ContextGeneration()),epoch(owner.completionMailbox->Epoch()),
+  submission(std::move(packet)),mailbox(owner.completionMailbox),ticket(std::move(ticket)),
+  source(std::make_shared<NativeMainSourceSettlement>()),water{owner.dynamicWaterCapture,submission->Frame().dynamicWater} {}
+ ScenePendingAdmission(const ScenePendingAdmission&)=delete;
+ ScenePendingAdmission& operator=(const ScenePendingAdmission&)=delete;
+ void ValidateOwner()const{
+  if(session.get()!=owner||owner->admissionSettlement.get()!=this||owner->completionMailbox!=mailbox||mailbox->Epoch()!=epoch||
+   OriginalNativeTextureContext().Registry().ContextGeneration()!=context)
+   throw std::logic_error("Scene admission lost its exact context/mailbox owner");
+  if(transferred&&owner->sourceSettlement!=source)throw std::logic_error("Scene admission source owner was replaced");
+ }
+ auto Transaction(){return NativeFrameAdmissionTransaction(ui::GetRecorder(),LuaNativePostprocess::GetRecorder(),cloud,water,
+  submission->Frame().sourceDrawFrame,submission->Options().screenUI->postprocess->serial);}
+ void Transfer(){
+  ValidateOwner();if(transferred)throw std::logic_error("Scene admission transferred twice");
+  auto admission=Transaction();admission.Validate();
+  source->Take(context,submission->Frame().sourceDrawFrame,
+   owner->opaqueSourcePending,owner->actualShadowSourcePending,owner->mainGroundPending,
+   owner->dynamicCaptureReceipt,owner->environmentStage,owner->shieldCapture);
+  owner->sourceSettlement=source;
+  admission.TransferValidated();transferred=true;
+ }
+ void Restore(){
+  ValidateOwner();if(!transferred)throw std::logic_error("Scene admission has no held frame to restore");
+  source->ValidateRestore(context,owner->opaqueSourcePending,owner->actualShadowSourcePending,owner->mainGroundPending,
+   owner->dynamicCaptureReceipt,owner->environmentStage,owner->shieldCapture);
+  Transaction().Restore();
+  source->RestoreValidated(owner->opaqueSourcePending,owner->actualShadowSourcePending,owner->mainGroundPending,
+   owner->dynamicCaptureReceipt,owner->environmentStage,owner->shieldCapture);
+  owner->sourceSettlement.reset();transferred=false;
+ }
+ void Quarantine()noexcept{
+  // Invalid owner cannot be repaired by touching the currently active scene.
+  try{ValidateOwner();}catch(...){std::terminate();}
+  Transaction().Quarantine();
+ }
+ void Fail(){
+  ValidateOwner();const auto& begin=submission->Options().beginReceipt;
+  begin->MarkFailed();owner->lastFailedBeginReceipt=begin;
+  if(transferred){if(begin->Submission())Quarantine();else Restore();}
+ }
+ void ReleaseAnchor(){ValidateOwner();if(transferred)throw std::logic_error("Cannot release a held admission anchor");owner->admissionSettlement.reset();}
+ void Accept(const Metal4WorldPresentationResult& result){
+  ValidateOwner();
+  if(!result.presented||result.sourceFrameCompleted||result.screenTargetsCompleted||
+   result.sourceDrawFrame!=submission->Frame().sourceDrawFrame||!submission->Options().beginReceipt->Submission())
+   throw std::logic_error("Scene admission acceptance lacks its exact deferred renderer result");
+  if(!transferred)throw std::logic_error("Cannot accept an unheld scene frame");
+  mailbox->Accept(ticket);ui::GetRecorder().ReportSubmittedFrame(submission->Frame().sourceDrawFrame);
+  owner->sourceSettlement.reset();transferred=false;
+ }
 };
 
 void CompleteDynamicCapture(uint64_t generation,uint64_t through,uint64_t draw) {
@@ -1695,7 +1764,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
  frameOwner.reset(); // No mutable owning alias remains after sealing.
  const auto& frame=submission->Frame();
- std::shared_ptr<NativeMainSourceSettlement> settlement;
+ std::shared_ptr<ScenePendingAdmission> pendingAdmission;
  if(admitted){
   if(session->sourceSettlement)throw std::logic_error("An earlier source settlement remains quarantined");
   if(session->opaqueSourcePending!=frame.opaqueModelFrame || session->actualShadowSourcePending!=frame.originalShadow ||
@@ -1707,31 +1776,17 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
      frame.dynamicWater->sourceDrawFrame!=frame.sourceDrawFrame || session->dynamicCaptureReceipt->material!=frame.dynamicWater->material ||
      session->dynamicCaptureReceipt->throughUpdate!=frame.dynamicWater->throughUpdate)))
    throw std::logic_error("Dynamic rollback receipt differs from its finalized render frame");
-  settlement=std::make_shared<NativeMainSourceSettlement>();
-  settlement->Take(OriginalNativeTextureContext().Registry().ContextGeneration(),frame.sourceDrawFrame,
-   session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,
-   session->dynamicCaptureReceipt,session->environmentStage,session->shieldCapture);
-  session->sourceSettlement=settlement; // Durable before any GPU Begin/throw.
-  admission.TransferValidated();
+  if(session->admissionSettlement)throw std::logic_error("Earlier exact admission remains unsettled");
+  pendingAdmission=std::make_shared<ScenePendingAdmission>(*session,submission,completionTicket);
+  session->admissionSettlement=pendingAdmission; // Durable before any transfer or GPU Begin.
+  try{pendingAdmission->Transfer();}catch(...){session->admissionSettlement.reset();throw;}
  }
- const auto restoreAdmitted=[&]{
-  if(settlement)settlement->ValidateRestore(OriginalNativeTextureContext().Registry().ContextGeneration(),
-   session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,
-   session->dynamicCaptureReceipt,session->environmentStage,session->shieldCapture);
-  admission.Restore();
-  if(settlement){
-   settlement->RestoreValidated(session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,
-    session->dynamicCaptureReceipt,session->environmentStage,session->shieldCapture);
-   session->sourceSettlement.reset();
-  }
-  admitted=false;
+ const auto restoreAdmitted=[pendingAdmission,&admitted]{
+  pendingAdmission->Restore();pendingAdmission->ReleaseAnchor();admitted=false;
  };
- const auto quarantineAdmitted=[&]() noexcept {
-  admission.Quarantine();
- };
- const auto failedAdmission=[&]{
-  if(options.beginReceipt){options.beginReceipt->MarkFailed();session->lastFailedBeginReceipt=options.beginReceipt;}
-  if(admitted){if(options.beginReceipt->Submission())quarantineAdmitted();else restoreAdmitted();}
+ const auto quarantineAdmitted=[pendingAdmission]() noexcept {pendingAdmission->Quarantine();};
+ const auto failedAdmission=[pendingAdmission]{
+  if(pendingAdmission){pendingAdmission->Fail();if(!pendingAdmission->transferred)pendingAdmission->ReleaseAnchor();}
  };
  const auto invokeRenderer=[&] {
  try {return overlapPreparation?
@@ -1756,15 +1811,8 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   restoreAdmitted();
  }
  if(admitted) {
-  session->completionMailbox->Accept(completionTicket);
-  ui::GetRecorder().ReportSubmittedFrame(frame.sourceDrawFrame);
-  // Only accepted GPU work owns the immutable graph. A hidden/no-Begin
-  // fallback still needs the source journal for the rollback below.
-  if(result.presented||result.sourceFrameCompleted){
-   // Rendering owns its sealed packet before this accepted result. Clear only
-   // this detached settlement, never another capture's pending aliases.
-   session->sourceSettlement.reset();
-  }
+  pendingAdmission->Accept(result);
+  pendingAdmission->ReleaseAnchor();
  }
  }catch(...){failedAdmission();throw;}
  if(result.dynamicWaterGeneration)CompleteDynamicCapture(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
