@@ -684,6 +684,54 @@ struct ScreenMipGeneration {
 	std::shared_ptr<ScreenMipState> state;
 };
 }
+// BEGIN SCREEN_MIP_REQUEST_JOURNALS
+struct ScreenMipOwnerIdentity {};
+class ScreenMipPreparationJournal {
+public:
+ std::shared_ptr<const ScreenMipOwnerIdentity> owner;
+ std::vector<ScreenMipGeneration> images;
+ bool leaseActive=true;
+ explicit ScreenMipPreparationJournal(std::shared_ptr<const ScreenMipOwnerIdentity> value):owner(std::move(value)){}
+ void Queue(const std::shared_ptr<const ScreenTexture>& source,id<MTLTexture> image,const std::shared_ptr<ScreenMipState>& state) {
+  if(!state||state->initialized||state->queued)return;
+  images.push_back({source,image,state});state->queued=true;
+ }
+ template<class Retain> std::vector<ScreenMipGeneration> Take(Retain&& retain) {
+  for(const auto& image:images)retain(image.image);
+  auto result=std::move(images);images.clear();
+  for(const auto& image:result)image.state->queued=false;
+  return result;
+ }
+};
+class ScreenMipLeaseJournals {
+ std::vector<std::shared_ptr<ScreenMipPreparationJournal>> journals;
+public:
+ ~ScreenMipLeaseJournals(){for(const auto& journal:journals)journal->leaseActive=false;}
+ std::shared_ptr<ScreenMipPreparationJournal> Get(const std::shared_ptr<const ScreenMipOwnerIdentity>& owner) {
+  Require(bool(owner),"Screen mip request lacks its exact GPU owner identity");
+  for(const auto& journal:journals)if(journal->owner==owner)return journal;
+  auto journal=std::make_shared<ScreenMipPreparationJournal>(owner);journals.push_back(journal);return journal;
+ }
+};
+class ScreenMipRecovery {
+ std::shared_ptr<ScreenMipPreparationJournal> previous;
+public:
+ std::shared_ptr<ScreenMipPreparationJournal> Acquire(std::shared_ptr<ScreenMipPreparationJournal> current) {
+  Require(current&&current->leaseActive,"Screen mip preparation has no live request owner");
+  Require(!previous||previous->owner==current->owner,"Screen mip recovery belongs to another GPU owner");
+  if(previous&&previous!=current&&!previous->images.empty()){
+   Require(!previous->leaseActive,"Screen mip queue still belongs to another live request");
+   Require(current->images.empty(),"Screen mip recovery would reorder two pending queues");
+   current->images=std::move(previous->images);previous->images.clear();
+  }
+  previous=current;return current;
+ }
+};
+// END SCREEN_MIP_REQUEST_JOURNALS
+std::shared_ptr<ScreenMipPreparationJournal> RuntimeLease::ScreenMipPreparation(const std::shared_ptr<const ScreenMipOwnerIdentity>& owner) {
+ if(!screenMipJournals)screenMipJournals=std::make_shared<ScreenMipLeaseJournals>();
+ return screenMipJournals->Get(owner);
+}
 struct PreparedScreenMipmaps::Impl {
 	std::vector<ScreenMipGeneration> images;
 	mutable bool encoded=false;
@@ -1115,12 +1163,15 @@ struct ScreenGPU::Impl {
 		lease.AddAllocation(cached.value);return cached.value;
 	}
 
-	std::vector<ScreenMipGeneration> pendingMipmaps;
-	void QueueMipmaps(const std::shared_ptr<const ScreenTexture>& source,Texture& texture) {
-		if (!texture.mipState || texture.mipState->initialized || texture.mipState->queued) return;
-		pendingMipmaps.push_back({source,texture.image,texture.mipState});
-		texture.mipState->queued=true;
-	}
+ std::shared_ptr<const ScreenMipOwnerIdentity> mipOwner=std::make_shared<const ScreenMipOwnerIdentity>();
+ ScreenMipRecovery mipRecovery;
+ std::shared_ptr<ScreenMipPreparationJournal> MipPreparation(RuntimeLease& lease) {
+  return mipRecovery.Acquire(lease.ScreenMipPreparation(mipOwner));
+ }
+ void QueueMipmaps(RuntimeLease& lease,const std::shared_ptr<const ScreenTexture>& source,Texture& texture) {
+  if(!texture.mipState||texture.mipState->initialized||texture.mipState->queued)return;
+  MipPreparation(lease)->Queue(source,texture.image,texture.mipState);
+ }
 	__strong NSMutableDictionary<NSNumber*,id<MTLSamplerState>>* samplers=[NSMutableDictionary dictionary];
 	std::map<std::array<uint64_t,6>,id<MTLRenderPipelineState>> pipelines;
 	__strong id<MTLLibrary> library=nil;
@@ -1208,7 +1259,7 @@ struct ScreenGPU::Impl {
 				if(retainExternal)retainExternal({entry.image,source,[completed=entry.initialized,encoded=entry.encodedVersion,owner=source]{
 					Require(*completed || *encoded,"RTT image sampled before its exact immutable version encoded");}});
 			}
-			QueueMipmaps(source,found->second);lease.AddAllocation(found->second.image);return found->second.image;
+			QueueMipmaps(lease,source,found->second);lease.AddAllocation(found->second.image);return found->second.image;
 		}
 		if (source->renderTarget && source->generation==0) {
 			auto image=AllocateScreenInitialStorage(lease.Device(),source);
@@ -1316,7 +1367,7 @@ struct ScreenGPU::Impl {
 		}
 		Texture candidate{source,image,{}};
 		if (source->generateMipmaps && levels>1) candidate.mipState=std::make_shared<ScreenMipState>();
-		auto& cached=textures[source.get()];cached=std::move(candidate);QueueMipmaps(source,cached);
+		auto& cached=textures[source.get()];cached=std::move(candidate);QueueMipmaps(lease,source,cached);
 		lease.AddAllocation(image);++uploads;return image;
 	}
 	id<MTLSamplerState> Sampler(RuntimeLease& lease,const ScreenSampler& value) {
@@ -1426,10 +1477,7 @@ id<MTLSamplerState> ScreenGPU::PrepareSampler(RuntimeLease& lease,const ScreenSa
 std::unique_ptr<PreparedScreenMipmaps> ScreenGPU::PrepareMipmaps(RuntimeLease& lease)
 {
 	auto plan=std::unique_ptr<PreparedScreenMipmaps>(new PreparedScreenMipmaps);
-	for(const auto& image:impl->pendingMipmaps) lease.AddAllocation(image.image);
-	plan->impl->images=std::move(impl->pendingMipmaps);
-	impl->pendingMipmaps.clear();
-	for(const auto& image:plan->impl->images) image.state->queued=false;
+ plan->impl->images=impl->MipPreparation(lease)->Take([&](id<MTLTexture> image){lease.AddAllocation(image);});
 	return plan;
 }
 

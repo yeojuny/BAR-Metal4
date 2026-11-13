@@ -85,6 +85,9 @@ class CompletedCubeLeaseReceipts;
 class CubeLeaseSamplers;
 class WorldTexturePreparationJournal;
 class ParticleAtlasPreparationJournal;
+struct ScreenMipOwnerIdentity;
+class ScreenMipPreparationJournal;
+class ScreenMipLeaseJournals;
 class RuntimeLease;
 class RuntimeCleanupLease;
 struct RuntimeFrameSlot;
@@ -181,6 +184,7 @@ public:
  CubeLeaseSamplers* CubeSamplers() noexcept;
  std::shared_ptr<WorldTexturePreparationJournal> WorldTexturePreparation();
  std::shared_ptr<ParticleAtlasPreparationJournal> ParticleAtlasPreparation();
+ std::shared_ptr<ScreenMipPreparationJournal> ScreenMipPreparation(const std::shared_ptr<const ScreenMipOwnerIdentity>&);
 	// Per-submission original shading rate. Output count still belongs to each
 	// concrete target: named MRT/RTT/shadow targets never inherit main MSAA.
 	void SetMinSampleShadingRate(float rate);
@@ -235,6 +239,8 @@ private:
  std::shared_ptr<CubeLeaseSamplers> cubeSamplers;
  std::shared_ptr<WorldTexturePreparationJournal> worldTexturePreparation;
  std::shared_ptr<ParticleAtlasPreparationJournal> particleAtlasPreparation;
+ // Declared after lock: capsule marks abandoned queues inactive before unlock.
+ std::shared_ptr<ScreenMipLeaseJournals> screenMipJournals;
  NativeSubmissionReadIdentity sourceSubmission;
  ui::NativeUIBindingResolverOwner uiResolver;
 	void StageResources(bool overlapEncoding);
