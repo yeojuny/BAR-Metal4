@@ -517,3 +517,23 @@ aliased, wrong-shape, missing-backing, stale-snapshot and replaced-epoch cases
 reject without writes. Omitting reverse rollback fails the same assertion.
 Actual renderer-gate and coverage-control regressions pass; independent review GO.
 Backings in this CPU fixture are test resources, not executed Metal allocations.
+
+## Persistent PBR compile callback control
+
+The retained Lua PBR compile callback now captures the stable renderer worker slot
+and gate, not Initialize's stack. It drains pending completion callbacks on main,
+owns a copy of the exact shader source, then synchronously links on the worker
+using the already-retired lease. The original compiler, validation flag, timing
+accumulator and returned program owner are unchanged; no surface-layer requirement
+is added. Configure/Shutdown still owns callback installation/removal, and Session
+shutdown disconnects the callback before renderer members are destroyed.
+PBR declaration capture is explicitly main-only and no longer takes the render
+cache gate: it touches only the source-owned declaration store, while Prepare
+consumes an immutable batch. Reset/disconnect remain externally serialized.
+Validation: 700 actual source/control handoffs, 1,000 control-order sequences and
+8,027 declaration checks pass. Persistent callback lifetime uses a controlled
+adapter plus structural installation/shutdown review, not actual Lua/Metal runs.
+The declaration test's stale broad DrawDispatch extraction was narrowed to its
+actual PBR block rather than changing production to accommodate the fixture.
+Independent review GO, including source-only capture audit and updated full
+renderer-gate regression. Existing joined/serial gates remain in force.

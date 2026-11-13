@@ -36,7 +36,8 @@ class PBRSourceService {TestGPU gpu;public:
 '''+prepare+'}\n'
 world=(r/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 start=world.index(' std::optional<Metal4WorldRenderOptions> capturedOptions;')
-branch=world[start:world.index(' // Freeze source-side policy',start)]
+end=world.index(' const auto& options=capturedOptions?*capturedOptions:sourceOptions;',start)+len(' const auto& options=capturedOptions?*capturedOptions:sourceOptions;')
+branch=world[start:end]
 maintenance=next(line for line in world.splitlines() if 'const auto pbrDeclarations=capturedPBR?' in line)
 fixture+='\nnamespace rendering::metal4 {\n'+'''struct Metal4WorldRenderOptions {std::optional<NativePBRDeclarationReceipt> pbrDeclarations;};
 NativePBRDeclarationReceipt nextCapture;unsigned captureCalls=0;
@@ -83,7 +84,9 @@ subprocess.run(['g++','-std=c++20','-pthread','-O1','-g','-fsanitize=address,und
 subprocess.run([str(out/'test')],check=True,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
 # Real compiler and allocation hooks stay synchronous; all render selections take a receipt.
 s=(r/'rts/Rendering/Metal4/Metal4PBRSourceService.mm').read_text()
-assert 'RuntimeLease lease;return gpu.Compile(lease,source,validation,compileMilliseconds);' in s
+assert 'RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);' in s
+assert 'return gpu.Compile(lease,*captured,validation,compileMilliseconds);' in s
+assert 'InvokeNativeRendererControl(*renderWorker,*gate,' in s
 assert 'return ReserveNativePBRImageForCapture(allocation);' in s
 assert 'for(const auto& p:*batch)' in s
 print('Real immediate compile/allocation hooks preserved; captured batch selection present')

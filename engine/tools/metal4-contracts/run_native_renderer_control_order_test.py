@@ -24,6 +24,15 @@ subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=
 
 service=(root/'rts/Rendering/Metal4/Metal4PBRSourceService.mm').read_text()
 compile_callback=service.split('services.compile=',1)[1].split('services.allocate=',1)[0]
-assert compile_callback.index('NativeRendererAccessGate::Scope owner(gate)')<compile_callback.index('RuntimeLease lease')<compile_callback.index('gpu.Compile')
-assert 'impl->pbrSource.Initialize(context,impl->access,' in renderer
-print('Persistent PBR compile callback owner-before-runtime structural PASS')
+assert compile_callback.index('Require([NSThread isMainThread]')<compile_callback.index('NativeRendererAccessGate::Scope owner(gate)')<compile_callback.index('runtime.CanSafelyDetach()')<compile_callback.index('InvokeNativeRendererControl')<compile_callback.index('RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime)')<compile_callback.index('gpu.Compile')
+assert '[this,gate=&access,renderWorker=&worker]' in compile_callback
+assert 'make_shared<const NativePBRProgramSource>(source)' in compile_callback
+assert 'gpu.Compile(lease,*captured,validation,compileMilliseconds)' in compile_callback
+assert compile_callback.count('RuntimeLease lease')==1 and 'Metal4WindowSurfaceNativeAccess' not in compile_callback
+assert 'impl->pbrSource.Initialize(context,impl->access,impl->renderWorker,' in renderer
+shutdown=service.split('void PBRSourceService::Shutdown()',1)[1].split('bool PBRSourceService::Ready()',1)[0]
+assert shutdown.index('LuaNativePBRSource::Configure({},nullptr,nullptr)')<shutdown.index('context=nullptr')
+bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+detach=bridge.split('if(pbrTextureSourceAttached){renderer->ConnectPBRSourceContext(false)',1)[1]
+assert detach.index('pbrTextureSourceAttached=false')<detach.index('context.Destroy()')
+print('Persistent PBR stable slot/main-drain/worker-only lease and source shutdown structural PASS; callback adapter is not native Lua execution')

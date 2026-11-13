@@ -4,17 +4,26 @@
 #include <algorithm>
 
 namespace rendering::metal4 {
-void PBRSourceService::Initialize(NativeTextureContext& owner,NativeRendererAccessGate& access,Parser parser,std::function<bool()> ready,
+void PBRSourceService::Initialize(NativeTextureContext& owner,NativeRendererAccessGate& access,std::unique_ptr<NativeSerialRenderWorker>& worker,Parser parser,std::function<bool()> ready,
 	std::function<uint64_t()> drawFrame,std::function<void()> validateRaster,bool validate)
 {
 	Require(!context&&owner.Initialized()&&owner.UIAttached()&&parser&&ready&&drawFrame&&validateRaster,"PBR source context lacks its actual original resource/raster owners");
 	context=&owner;resourcesReady=std::move(ready);validation=validate;
 	LuaNativePBRSource::Services services;
 	services.ready=[this]{return Ready();};
-	// Persistent Lua callbacks are invoked outside ConnectPBRSourceContext's
- // stack guard. Reject a reserved/foreign renderer owner before RuntimeLease
- // can wait or run retirement callbacks. Same-owner recursion remains valid.
- services.compile=[this,gate=&access](const NativePBRProgramSource& source){NativeRendererAccessGate::Scope owner(gate);RuntimeLease lease;return gpu.Compile(lease,source,validation,compileMilliseconds);};
+ // Persistent source callback retains the renderer's stable worker slot, not
+ // Initialize's stack. Runtime completion callbacks run on main before handoff.
+ services.compile=[this,gate=&access,renderWorker=&worker](const NativePBRProgramSource& source){
+  Require([NSThread isMainThread],"PBR compile controls require the source thread");
+  auto& runtime=SharedRuntime();
+  {NativeRendererAccessGate::Scope owner(gate);Require(runtime.CanSafelyDetach(),"PBR compiler cannot pass unsafe pending GPU work");}
+  auto request=std::make_shared<const NativePBRProgramSource>(source);
+  return InvokeNativeRendererControl(*renderWorker,*gate,std::move(request),
+   [this,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->std::shared_ptr<const NativePBRProgram>{@autoreleasepool {
+    RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+    return gpu.Compile(lease,*captured,validation,compileMilliseconds);
+   }});
+ };
 	services.allocate=[](const NativePBRAllocation& allocation){return ReserveNativePBRImageForCapture(allocation);};
 	services.parseTexture=std::move(parser);services.sourceDrawFrame=std::move(drawFrame);
 	services.enqueue=[this](std::shared_ptr<const NativePBRImage> image){Require(Ready()&&image&&image->program,"Original PBR enqueue has no source owner");pending.Enqueue(std::move(image));};

@@ -3,6 +3,7 @@
 #include "Metal4PBRSource.h"
 #include "Rendering/Backend/NativePBRDeclarationBatch.h"
 #include "Rendering/Backend/NativeRendererAccessGate.h"
+#include "Rendering/Backend/NativeRendererControl.h"
 #include "Rendering/Backend/NativeTextureContext.h"
 #include "Lua/LuaNativePBRSource.h"
 namespace rendering::metal4 {
@@ -11,7 +12,7 @@ namespace rendering::metal4 {
 class PBRSourceService {
 public:
 	using Parser=std::function<NativeTextureLookup(lua_State*,const std::string&)>;
-	void Initialize(NativeTextureContext&,NativeRendererAccessGate&,Parser,std::function<bool()> actualResourcesReady,
+	void Initialize(NativeTextureContext&,NativeRendererAccessGate&,std::unique_ptr<NativeSerialRenderWorker>&,Parser,std::function<bool()> actualResourcesReady,
 		std::function<uint64_t()> drawFrame,std::function<void()> validateOriginalRaster,bool validation);
 	void Shutdown(); // After ReleaseLuaState for each actual Lua handle.
 	bool Ready()const;
