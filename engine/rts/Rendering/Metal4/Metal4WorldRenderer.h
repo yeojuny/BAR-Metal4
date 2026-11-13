@@ -23,6 +23,7 @@
 #include <functional>
 
 namespace rendering {
+class NativeShieldCaptureJournal;
 namespace ui { struct NativeUIReadbackPrefix; }
 struct NativeGeometryTextureRequest;
 struct NativeBlockoutTarget;
@@ -262,22 +263,22 @@ public:
 	// Local PSOs only; never call Session source.Ready from a provider.ready callback.
 	bool DeferredPostprocessConsumersInitialized() const noexcept;
 	void ClearStaticResources(const NativeEnvironmentStageReceipt& environment,
-  const std::shared_ptr<const NativeShieldDepthFrame>& shield); // Only between completed Draw calls.
+  NativeShieldCaptureJournal* shield); // Only between completed Draw calls.
 	// Actual compiled family owner; the Session publishes this only after its source services attach.
 	std::shared_ptr<const void> Sensor31657CircleConsumerLifetime() const;
 	std::uint32_t SensorPreviewMaximumDimension() const;
 	std::shared_ptr<const NativeSensorPreviewProgramConsumer> CompileOriginalSensorPreviewProgram(const NativeSensorPreviewProgramSource&);
 	bool CheckShieldGeometryAllocation(const NativeGeometryTextureRequest&,NativeTextureRegistry&,uint64_t sourceDrawFrame);
-	std::shared_ptr<const NativeShieldDepthFrame> BeginShieldMapPublication(NativeTextureContext&,uint64_t,const WorldCamera&,const NativeMapDepthSelection&);
-	std::shared_ptr<const NativeShieldDepthFrame> PublishShieldModelDepth(const WorldFrame&,const NativeModelDepthSelection&);
+	std::shared_ptr<const NativeShieldDepthFrame> BeginShieldMapPublication(NativeShieldCaptureJournal&,NativeTextureContext&,uint64_t,const WorldCamera&,const NativeMapDepthSelection&);
+	std::shared_ptr<const NativeShieldDepthFrame> PublishShieldModelDepth(NativeShieldCaptureJournal&,const WorldFrame&,const NativeModelDepthSelection&);
 	// Borrow the actual original named model depth; opaque source owns writes
 	// and cancellation. Map depth keeps its independent existing producer.
-	std::shared_ptr<const NativeShieldDepthFrame> BorrowActualMRTModelDepth(const WorldFrame&);
+	std::shared_ptr<const NativeShieldDepthFrame> BorrowActualMRTModelDepth(NativeShieldCaptureJournal&,const WorldFrame&);
 	bool AbortShieldPublications(std::shared_ptr<const NativeOpaqueModelFrame> unsubmittedOpaque = {},
   std::shared_ptr<const NativeOriginalShadowFrame> unsubmittedShadow = {},
   std::shared_ptr<const NativeTerrainSceneSourceFrame> unsubmittedGround = {},
   const NativeEnvironmentStageReceipt& environment = {},
-  const std::shared_ptr<const NativeShieldDepthFrame>& shield = {}) noexcept;
+  NativeShieldCaptureJournal* shield = nullptr) noexcept;
 	void ConnectShieldTextureContext(bool connected);
 	void ConnectPBRSourceContext(bool connected);
 	std::shared_ptr<const void> AllocateCoverageTarget(const std::shared_ptr<const ScreenTexture>& color,

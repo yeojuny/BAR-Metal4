@@ -160,6 +160,7 @@ struct M4WaterAttachments {
  std::shared_ptr<rendering::metal4::PreparedOriginalShadowSource> shadow;
  std::shared_ptr<const rendering::NativeOriginalShadowFrame> shadowSource;
  std::array<std::shared_ptr<const rendering::NativeShadowTextureBacking>,2> initialShadow;
+ std::shared_ptr<const rendering::NativeShieldDepthFrame> shieldSource;
  std::shared_ptr<const rendering::NativeWorldDrawFrame> commonCommands;
  std::shared_ptr<rendering::metal4::PreparedReclaimField> reclaimFields;
  std::shared_ptr<rendering::metal4::PreparedObjectSpotlight> objectSpotlights;
@@ -413,8 +414,7 @@ struct Metal4WorldRenderer::Impl {
 	metal4::ShieldGPU shieldGPU;metal4::MapDepthGPU mapDepthGPU;metal4::ModelDepthGPU modelDepthGPU;
 	double shieldCompileMs=0;
 	std::vector<std::pair<NativeTextureSampling,id<MTLSamplerState>>> shieldColorSamplers;
-	NativeTextureRegistry* shieldRegistry=nullptr;
-	std::shared_ptr<NativeShieldDepthFrame> shieldPending;
+
 	NativeSubmissionReadBinding submissionReads;
 	// Non-null only after a source submission actually began and until every
 	// successful retirement callback has finished. An error retains it.
@@ -1202,7 +1202,7 @@ std::shared_ptr<const NativeSensorPreviewProgramConsumer> Metal4WorldRenderer::C
 }
 
 void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageReceipt& environment,
- const std::shared_ptr<const NativeShieldDepthFrame>& shield)
+ NativeShieldCaptureJournal* shield)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread(); Require(impl != nullptr, "World renderer was moved from");
@@ -1986,64 +1986,29 @@ void Metal4WorldRenderer::ConnectSSAODeferredSources(bool connected)
  SetNativeSSAOConsumerAvailable(connected);
 }
 
-std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BeginShieldMapPublication(NativeTextureContext& context,uint64_t frame,const WorldCamera& camera,const NativeMapDepthSelection& selection)
+std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BeginShieldMapPublication(NativeShieldCaptureJournal& journal,NativeTextureContext& context,uint64_t frame,const WorldCamera& camera,const NativeMapDepthSelection& selection)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	Require(!impl->shieldPending,"Original map GBuffer publication was not consumed or aborted");
-	auto next=std::make_shared<NativeShieldDepthFrame>();next->sourceDrawFrame=frame;next->submissionIdentity=CreateShieldSubmissionIdentity();next->camera=camera;next->mapSelection=selection;
-	// The actual phase published before its callbacks. This shared summary
- // borrows that current version (or the retained previous allocation).
- const auto mapName=context.Geometry(NativeGeometryTextureRole::Map).Name(NativeGeometryTextureNames::DepthAttachment);
- const auto object=context.Registry().Find(mapName);
- const auto backing=object?std::dynamic_pointer_cast<const NativeShieldDepthBacking>(object->backing):nullptr;
- Require(backing&&backing->Kind()==NativeTextureBackingKind::MapDepth,"Retained original map depth has no actual named backing");
- next->map={object,object,backing};
-	impl->shieldRegistry=&context.Registry();impl->shieldPending=std::move(next);
- return impl->shieldPending;
+ Require([NSThread isMainThread],"Shield capture requires the source thread");
+ return journal.Begin(context,frame,camera,selection,CreateShieldSubmissionIdentity());
 }
-std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::PublishShieldModelDepth(const WorldFrame& frame,const NativeModelDepthSelection& selection)
+std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::PublishShieldModelDepth(NativeShieldCaptureJournal& journal,const WorldFrame& frame,const NativeModelDepthSelection& selection)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	Require(!frame.opaqueModelFrame,"Standalone model depth cannot replace actual MRT model publications");
-	Require(impl->shieldPending&&impl->shieldPending->sourceDrawFrame==frame.sourceDrawFrame,"Original model GBuffer publication lacks this draw's prior map stage");
-	Require(impl->shieldPending->camera.view==frame.viewCamera.view&&impl->shieldPending->camera.projection==frame.viewCamera.projection&&impl->shieldPending->camera.viewport==frame.viewCamera.viewport,"Main camera changed between original map and model GBuffer writers");
-	auto& context=OriginalNativeTextureContext();auto& output=*impl->shieldPending;
-	output.modelPlan=BuildNativeModelDepthPlan(frame,selection);
-	output.models=PublishNativeShieldDepth(context.Registry(),context.Geometry(NativeGeometryTextureRole::Models),NativeTextureBackingKind::ModelDepth,frame.sourceDrawFrame,frame.viewCamera,!output.modelPlan.phases.empty());
-	return impl->shieldPending;
+ Require([NSThread isMainThread],"Shield capture requires the source thread");
+ return journal.PublishModels(OriginalNativeTextureContext(),frame,selection);
 }
-std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BorrowActualMRTModelDepth(const WorldFrame& frame)
+std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BorrowActualMRTModelDepth(NativeShieldCaptureJournal& journal,const WorldFrame& frame)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	MainThread();
-	Require(frame.opaqueModelFrame&&frame.opaqueModelFrame->sourceDrawFrame==frame.sourceDrawFrame,
-		"Actual MRT depth borrowing requires the retained original opaque source frame");
-	Require(impl->shieldPending&&impl->shieldPending->sourceDrawFrame==frame.sourceDrawFrame,
-		"Actual MRT depth borrowing lacks this source draw's independent map publication");
-	auto& output=*impl->shieldPending;
-	Require(output.camera.view==frame.viewCamera.view&&output.camera.projection==frame.viewCamera.projection&&output.camera.viewport==frame.viewCamera.viewport,
-		"Actual opaque source and independent map publication use different cameras");
-	Require(!output.models.published&&!output.models.Changed(),
-		"A standalone model depth publication already owns this source draw");
-	auto& context=OriginalNativeTextureContext();
-	const auto depthName=context.Geometry(NativeGeometryTextureRole::Models).Name(5);
-	Require(depthName!=0,"Actual original model depth5 name is absent");
-	const auto object=context.Registry().Find(depthName);
-	const auto backing=object?std::dynamic_pointer_cast<const NativeShieldDepthBacking>(object->backing):nullptr;
-	Require(backing&&backing->Kind()==NativeTextureBackingKind::ModelDepth,
-		"Actual original model depth5 has no retained model-depth backing");
-	// The latest selected original phase or genuinely retained prior contents.
-	// No publication, binding event, clear or source-coverage claim occurs here.
-	output.models={object,object,backing};
-	return impl->shieldPending;
+ Require([NSThread isMainThread],"Shield capture requires the source thread");
+ return journal.BorrowModels(OriginalNativeTextureContext(),frame);
 }
 
 bool Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOpaqueModelFrame> unsubmittedOpaque,
  std::shared_ptr<const NativeOriginalShadowFrame> unsubmittedShadow,
  std::shared_ptr<const NativeTerrainSceneSourceFrame> unsubmittedGround,
  const NativeEnvironmentStageReceipt& environment,
- const std::shared_ptr<const NativeShieldDepthFrame>& shield) noexcept
+ NativeShieldCaptureJournal* shield) noexcept
 {
+ if(![NSThread isMainThread])return false; // Source journals never mutate on the worker.
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
  if(!cacheAccess.Acquired())return false;
 	if(impl&&impl->activeSourceSubmission)return false; // Recorded work must never roll back.
@@ -2052,11 +2017,11 @@ bool Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOp
   if(pass.mrt&&!CanCancelNativeCUSDeferredPhase(*pass.mrt))return false;
  if(unsubmittedGround&&unsubmittedGround->ground&&unsubmittedGround->ground->mapMRT&&
   !CanCancelNativeCUSDeferredPhase(*unsubmittedGround->ground->mapMRT))return false;
- if(impl&&impl->shieldPending==shield&&shield&&!CanCancelNativeShieldDepth(*shield))return false;
+ if(shield&&!shield->CanCancel())return false;
 	if(unsubmittedOpaque)CancelNativeOpaqueModels(OriginalNativeTextureContext().Registry(),*unsubmittedOpaque);
  if(unsubmittedGround&&unsubmittedGround->ground&&unsubmittedGround->ground->mapMRT)
   CancelNativeCUSDeferredPhase(OriginalNativeTextureContext().Registry(),*unsubmittedGround->ground->mapMRT);
-	if(impl&&impl->shieldRegistry)CancelPendingNativeShieldDepth(*impl->shieldRegistry,impl->shieldPending,shield);
+	if(shield&&!shield->Cancel())return false;
 	if(OriginalNativeCubeTextures().Attached() && environment.HasCubeSource())
   OriginalNativeCubeTextures().CancelUnsubmittedReflection(*environment.frame->sourceCubeUpdate);
 	if(unsubmittedShadow&&unsubmittedShadow->textures)OriginalNativeShadowTextures().Cancel(*unsubmittedShadow->textures);
@@ -3028,7 +2993,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		std::unique_ptr<PreparedShield> shield;
 		if(frame.shieldDepthFrame){
 			const auto& depthFrame=*frame.shieldDepthFrame;
-			Require(impl->shieldPending==frame.shieldDepthFrame&&depthFrame.sourceDrawFrame==frame.sourceDrawFrame,"Shield depth plan is not this actual captured world draw");
+			Require(depthFrame.sealed&&depthFrame.submissionIdentity!=0&&depthFrame.sourceDrawFrame==frame.sourceDrawFrame&&depthFrame.camera.view==frame.viewCamera.view&&depthFrame.camera.projection==frame.viewCamera.projection&&depthFrame.camera.viewport==frame.viewCamera.viewport,"Shield depth plan is not this actual captured world draw");
 			const auto previousImage=[](const NativeShieldDepthVersion& version)->const ShieldDepthImage*{
 				if(!version.previous||!version.previous->backing)return nullptr;
 				auto backing=std::dynamic_pointer_cast<const NativeShieldDepthBacking>(version.previous->backing);
@@ -4206,7 +4171,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   originalLifetime->shadow=originalShadow;originalLifetime->shadowSource=frame.originalShadow;
   originalLifetime->waterGround.push_back(overlays);
   for(const auto& lines:separateLineOwners)if(lines)originalLifetime->waterGround.push_back(lines);
-  originalLifetime->initialShadow=initialShadow;originalLifetime->commonCommands=frame.luaWorldDrawFrame;originalLifetime->reclaimFields=reclaimFields;originalLifetime->objectSpotlights=objectSpotlights;
+  originalLifetime->shieldSource=frame.shieldDepthFrame;originalLifetime->initialShadow=initialShadow;originalLifetime->commonCommands=frame.luaWorldDrawFrame;originalLifetime->reclaimFields=reclaimFields;originalLifetime->objectSpotlights=objectSpotlights;
   originalLifetime->grass=grass;originalLifetime->resourceSpots=resourceSpots;originalLifetime->sensorLOS=sensorLOS;
   originalLifetime->mainAttachments=mainAttachments;originalLifetime->terrainSnapshot=terrainSnapshot;
   originalLifetime->terrainImages=std::move(terrainImages);originalLifetime->screen=screen;originalLifetime->presentationMargins=presentationMargins;
@@ -5328,7 +5293,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    completeTextureMips=impl->TakeTextureMipCompletion(sourceSubmission),
    completeAtlasMips=impl->particlesGPU.TakeAtlasCompletion(sourceSubmission),
    hasDrawable=drawable!=nil, sourceDrawFrame=frame.sourceDrawFrame,
-   completedShield=frame.shieldDepthFrame,reflectionWorldInfo,
+   reflectionWorldInfo,
    postprocessSerial=options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0,
    submissionCompleted=options.submissionCompleted,isReadback=bool(options.readback),readback,
    originalShadow=std::move(originalShadow),
@@ -5455,7 +5420,6 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    for(const auto& failure:retirementFailures)try{std::rethrow_exception(failure);}catch(const std::exception& error){message+="\n";message+=error.what();}catch(...){message+="\nUnknown original retirement failure";}
    throw std::runtime_error(message);
   }
-  if(owner->shieldPending==completedShield)owner->shieldPending.reset();
   if(owner->activeSourceSubmission==sourceSubmission){owner->submittedOpaqueSource.reset();owner->activeSourceSubmission=0;}
 		result.capabilities.gpuTimestamps = result.metrics->gpuExecutionMs.has_value();
 		result.presented=!offscreenSource && hasDrawable;
@@ -5522,7 +5486,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    preparationDetail.Mark(38);
    originalSubmission.retired=true; // Ownership transferred, NOT GPU-completed.
    // Capture transaction slots are reusable; GPU owners remain in the ticket.
-   impl->shieldPending.reset();impl->submittedOpaqueSource.reset();impl->activeSourceSubmission=0;
+   impl->submittedOpaqueSource.reset();impl->activeSourceSubmission=0;
    result.presented=true;result.sourceFrameCompleted=false;result.screenTargetsCompleted=false;
    result.sourceDrawFrame=frame.sourceDrawFrame;result.metrics.reset();
    return result;

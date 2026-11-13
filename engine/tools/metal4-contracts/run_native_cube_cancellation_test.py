@@ -18,7 +18,7 @@ assert handler.index('rollback.Capture(update)')<handler.index('CreateReflection
 bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 prepare=bridge.split('void PrepareEnvironmentBeforePreUnit()',1)[1].split('bool CanInitializeWater',1)[0]
 assert prepare.index('environmentStage={}')<prepare.index('shadowHandler.CreateShadows')
-assert bridge.count('ClearStaticResources(session->environmentStage,session->shieldCapture)')==2
+assert bridge.count('ClearStaticResources(session->environmentStage,&session->shieldCapture)')==2
 assert 'AbortShieldPublications({}, {}, {}, environment, shield)' in renderer
 subprocess.run(['g++','-std=c++23','-pthread','-I'+str(root/'rts'),'-O1','-g','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-fsanitize=address,undefined',str(Path(__file__).with_name('TestNativeCubeCancellation.cpp')),*[str(backend/(name+'.cpp')) for name in ['NativeCubeTextureSource','NativeTextureRegistry','NativeCUSTextureHistory']],'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},check=True)

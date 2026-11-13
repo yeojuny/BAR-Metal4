@@ -399,3 +399,35 @@ adapters under ASan/UBSan, covering replacement/reset, absent source/owner,
 missing images and live completion on the retained backing. Structural checks
 cover dispatch/direct timing and existing GPU retention. SceneBridge host C++
 syntax passes; independent review GO. No actual ShadowHandler/Metal run claim.
+
+## Source-owned shield capture journal
+
+The original P4 single `Impl::shieldPending` capture slot is removed. Session now
+owns a noncopyable journal tied to the registry epoch. Map capture borrows the
+exact map backing; model finalization stages its plan/publication, commits with
+no-throw moves, and seals once. Duplicate finalization, camera/draw mismatches
+and source-epoch replacement are rejected. Renderer preparation uses the sealed
+frame receipt and never compares or clears a live source capture slot.
+
+The immutable shield receipt is pinned in the GPU lifetime before Begin, including
+failed-Begun work. Source cancellation remains main-only, behind the existing
+renderer active-submission veto and all-family preflight. Successful acceptance,
+synchronous completion and verified abort release Session ownership; hidden
+no-Begin results retain it until rollback. An explicit accepted-result guard
+reinforces the existing restoreAdmitted transition; no prior no-Begin loss is
+claimed from that branch.
+The shared actual submission identity allocator is unchanged. Existing serial
+and GPU gates remain; this is not permission for stale-frame cancellation against
+a newer journal or general younger-frame dependency rollback.
+Validation uses the actual journal, NativeTextureContext, registry and source
+publication code (not a mock journal): 100 begin/seal/borrow/rollback/retention
+cycles, duplicate/mismatched finalization rejection, invalid-storage failure and
+retry, and busy-resource cancellation refusal. Existing shield cancellation and
+cube cancellation each retain their 100-case regression. Host SceneBridge and
+publication C++ syntax pass. Structural checks cover the failed-Begin veto,
+source-owner reset points and GPU pin before Begin; Metal execution is still not
+claimed. The source publication helper's serial cancellation semantics remain;
+a general rollback dependency graph is still required before younger overlap.
+Final actual-context sanitizer rerun additionally verifies destroy/reinitialize
+rejects the old journal epoch without cancellation. Independent review GO;
+shadow-fallback and CPU-trace regressions remain passing after the ownership split.

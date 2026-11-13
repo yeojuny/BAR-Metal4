@@ -12,11 +12,32 @@ struct NativeShieldDepthVersion {
 };
 struct NativeShieldDepthFrame {
 	uint64_t sourceDrawFrame=0, submissionIdentity=0;
+	bool sealed=false;
 	WorldCamera camera;
 	NativeMapDepthSelection mapSelection;
 	NativeModelDepthPlan modelPlan;
 	NativeShieldDepthVersion map, models;
 	bool HasWriters() const noexcept { return map.Changed() || models.Changed(); }
+};
+class NativeTextureContext;
+// Main/source-owned mutable builder. Render receives only Receipt() after seal.
+class NativeShieldCaptureJournal {
+public:
+ NativeShieldCaptureJournal()=default;
+ NativeShieldCaptureJournal(const NativeShieldCaptureJournal&)=delete;
+ NativeShieldCaptureJournal& operator=(const NativeShieldCaptureJournal&)=delete;
+ std::shared_ptr<const NativeShieldDepthFrame> Begin(NativeTextureContext&,uint64_t,const WorldCamera&,const NativeMapDepthSelection&,uint64_t submissionIdentity);
+ std::shared_ptr<const NativeShieldDepthFrame> PublishModels(NativeTextureContext&,const WorldFrame&,const NativeModelDepthSelection&);
+ std::shared_ptr<const NativeShieldDepthFrame> BorrowModels(NativeTextureContext&,const WorldFrame&);
+ std::shared_ptr<const NativeShieldDepthFrame> Receipt() const noexcept {return pending;}
+ bool CanCancel() const noexcept;
+ bool Cancel() noexcept;
+ void Reset() noexcept {pending.reset();registry=nullptr;generation=0;} // Accepted/retired by caller.
+private:
+ void ValidateModelStage(const WorldFrame&) const;
+ uint64_t generation=0;
+ NativeTextureRegistry* registry=nullptr;
+ std::shared_ptr<NativeShieldDepthFrame> pending;
 };
 NativeShieldDepthVersion PublishNativeShieldDepth(NativeTextureRegistry&,const NativeGeometryTextureNames&,
 	NativeTextureBackingKind,uint64_t sourceDrawFrame,const WorldCamera&,bool actualWriter);
