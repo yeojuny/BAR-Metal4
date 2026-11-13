@@ -219,6 +219,7 @@ public:
 		std::shared_ptr<const NativeUnitStencilFrame> unitStencilFrame = {}, std::optional<NativePBRDeclarationReceipt> pbrDeclarations = std::nullopt);
 	bool HasScreenContinuation() const;
 	bool AbortScreenContinuation() noexcept;
+ bool CanAbortUnsubmittedSource() const noexcept;
 	void ClearWaterResources();
 	void ClearBasicWaterResources();
 	void ClearLegacyWaterResources();

@@ -1540,7 +1540,12 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   !session->renderer->HasScreenContinuation()&&session->surface.Snapshot().CanPresent();
  if(!overlapPreparation)RequireRetiredGPUWork();
 	// A later presentation must use its own engine/Lua world callback ordering.
-	struct LegacyCopyExit {~LegacyCopyExit(){session->legacyWaterCapture.AbortUncompletedRefraction();}} legacyCopyExit;
+	struct LegacyCopyExit {~LegacyCopyExit(){
+  // A failed actual Begin may precede EncodeCopy, so resource encoding flags
+  // alone cannot authorize rollback of this still-quarantined source owner.
+  if(session->renderer&&!session->renderer->CanAbortUnsubmittedSource())return;
+  session->legacyWaterCapture.AbortUncompletedRefraction();
+ }} legacyCopyExit;
 	auto prepared = std::move(session->preparedFrame);
 	session->preparedFrame.reset();
 	session->surface.Refresh();

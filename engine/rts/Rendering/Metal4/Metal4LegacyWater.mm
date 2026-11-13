@@ -25,6 +25,7 @@ struct LegacyRefractionImage final:NativeLegacyRefractionResource {
  __strong id<MTLTexture> texture=nil;
  uint64_t encodedSubmission=0;bool completed=false;
  bool Completed()const noexcept override{return completed;}
+ bool CanCancelUnsubmitted()const noexcept override{return !encodedSubmission&&!completed;}
 };
 // Resolve the immutable source version during preparation, regardless of
 // whether an inherited reader or the original copy producer prepares first.

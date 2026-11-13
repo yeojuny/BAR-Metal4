@@ -3,12 +3,14 @@
 #include "NativeTextureRegistry.h"
 #include <stdexcept>
 #include <limits>
+#include <atomic>
 namespace rendering {
 // Real CRefractWater::subSurfaceTex contents. Allocation is RGB and one level;
 // each CopyTexSubImage creates a retained source version, not a global scratch image.
 struct NativeLegacyRefractionResource {
  virtual ~NativeLegacyRefractionResource()=default;
  virtual bool Completed()const noexcept=0;
+ virtual bool CanCancelUnsubmitted()const noexcept{return false;}
 };
 struct NativeLegacyRefractionBacking final:NativeTextureBacking {
  NativeTextureBackingKind Kind()const noexcept override{return NativeTextureBackingKind::ColorImage;}
@@ -17,7 +19,9 @@ struct NativeLegacyRefractionBacking final:NativeTextureBacking {
   resource=std::move(r);
  }
  const auto& Resource()const{return resource;}
-private:mutable std::shared_ptr<const NativeLegacyRefractionResource> resource;
+ void MarkBegun(uint64_t submission)const noexcept{begunSubmission.store(submission,std::memory_order_release);}
+ uint64_t BegunSubmission()const noexcept{return begunSubmission.load(std::memory_order_acquire);}
+private:mutable std::atomic<uint64_t> begunSubmission{0};mutable std::shared_ptr<const NativeLegacyRefractionResource> resource;
 };
 class NativeLegacyRefractionPublication {
  NativeTextureRegistry* registry=nullptr;NativeCUSTextureHistory* history=nullptr;
@@ -34,7 +38,7 @@ public:
   }catch(...){r.Delete(name);name=0;throw;}
  }
  std::shared_ptr<const NativeCUSTextureObject> Copy(uint64_t frame){
-  Check();AbortUncompleted();if(revision==std::numeric_limits<uint64_t>::max())throw std::overflow_error("Refractive source copy revision overflows");prior=registry->Find(name);
+  Check();if(!AbortUncompleted())throw std::logic_error("Refractive copy still owns unfinished submitted work");if(revision==std::numeric_limits<uint64_t>::max())throw std::overflow_error("Refractive source copy revision overflows");prior=registry->Find(name);
   auto b=std::make_shared<NativeLegacyRefractionBacking>();b->storageGeneration=prior->identity;b->contentVersion=++revision;b->sourceDrawFrame=frame;b->content=NativeTextureContent::ProducerVersion;
   history->ActiveTexture(2);registry->Bind(2,name,prior->target);history->Enable(2,prior->target,true);
   registry->PublishContent(name,{},b);pending=registry->Find(name);return pending;
@@ -43,16 +47,18 @@ public:
  // Called at every source submission exit, including skipped/failed submissions.
  // Successful immutable GPU contents remain published; aborted writes never leak
  // into a later frame's inherited binding. Saved draw snapshots are not rewritten.
- void AbortUncompleted()noexcept{
-  if(!pending)return;
+ bool AbortUncompleted()noexcept{
+  if(!pending)return true;
   auto b=std::dynamic_pointer_cast<const NativeLegacyRefractionBacking>(pending->backing);
+  if(b&&(!b->Resource()||!b->Resource()->Completed())&&
+   (b->BegunSubmission()||(b->Resource()&&!b->Resource()->CanCancelUnsubmitted())))return false;
   if(registry&&registry->ContextGeneration()==context&&(!b||!b->Resource()||!b->Resource()->Completed()))
    registry->CancelContentPublication(pending,prior);
-  pending.reset();prior.reset();
+  pending.reset();prior.reset();return true;
  }
  void Destroy(){
   if(!name)return;
-  Check();AbortUncompleted();registry->Delete(name);name=0;registry=nullptr;history=nullptr;context=revision=0;
+  Check();if(!AbortUncompleted())throw std::logic_error("Refractive destruction still owns unfinished submitted work");registry->Delete(name);name=0;registry=nullptr;history=nullptr;context=revision=0;
  }
 };
 }

@@ -103,3 +103,11 @@ rejects blocked opaque/ground/exact-shield owners before any family mutation.
 Exact blocked shield pending ownership is retained. Prepared submission IDs alone
 do not block rollback. Failed-Begun rejection remains necessary; this is serial
 execution safety, not a younger-dependency version graph or lookahead permission.
+
+Legacy refraction follow-up: actual Begin marks the exact copied-color backing,
+so source-exit cleanup cannot discard pending/prior owners after Begin but before
+EncodeCopy. Encoded-uncompleted copies also refuse rollback, replacement and
+destruction; completed cleanup releases receipts without reverting pixels.
+DrawWorld exit additionally respects renderer active-source ownership. Host actual
+publication/registry tests and structural Begin wiring checks cover the boundary;
+Metal runtime verification and concurrent source versioning remain outstanding.

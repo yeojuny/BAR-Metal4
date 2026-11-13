@@ -2024,6 +2024,11 @@ bool Metal4WorldRenderer::HasScreenContinuation() const
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  return impl && bool(impl->screenContinuation);
 }
+bool Metal4WorldRenderer::CanAbortUnsubmittedSource() const noexcept
+{
+ NativeRendererAccessGate::Scope access(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
+ return access.Acquired()&&(!impl||!impl->activeSourceSubmission);
+}
 bool Metal4WorldRenderer::AbortScreenContinuation() noexcept
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
@@ -4138,8 +4143,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    RuntimeLease& lease;bool began=false,retired=false;
    ~OriginalSubmissionFailure(){if(began&&!retired)lease.PoisonAfterBegin();}
   } originalSubmission{lease};
+  const auto refractionObject=frame.legacyWater&&frame.legacyWater->refraction?frame.legacyWater->refraction->copiedColor:nullptr;
+  const auto refractionOwner=refractionObject?std::dynamic_pointer_cast<const NativeLegacyRefractionBacking>(refractionObject->backing):nullptr;
+  Require(!refractionObject||bool(refractionOwner),"Refractive source Begin lost its exact copied-image owner");
 		id<MTL4CommandBuffer> command = lease.Begin("Actual engine terrain and current S3O unit poses to CAMetalLayer");
   originalSubmission.began=true;
+  if(refractionOwner)refractionOwner->MarkBegun(sourceSubmission);
   if(options.beginReceipt)options.beginReceipt->MarkBegun(sourceSubmission);
   impl->submittedOpaqueSource=frame.opaqueModelFrame;impl->activeSourceSubmission=sourceSubmission;
   if(screen && options.screenUI)targetSubmissionBegan(sourceSubmission);
