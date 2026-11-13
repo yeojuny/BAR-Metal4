@@ -9,7 +9,7 @@
 #include <utility>
 
 namespace rendering {
-// Diagnostic-only single worker. Jobs and every input owner stay main-owned;
+// Opt-in single CPU-read worker. Jobs and every input owner stay main-owned;
 // no Session, GPU object, texture provider or producer callback is visited.
 class NativeCUSCPUReadWorker220 {
 public:
@@ -19,7 +19,24 @@ public:
   NativeCUSCPUReadScope::Packet packet;
   std::exception_ptr error;
   bool measure=false,done=false;
-  uint64_t queueNs=0,workNs=0,waitNs=0;
+  // Main owns both lists. A single worker scope preserves opaque/alpha/shadow
+  // deduplication and capacity order; terminal tail state shares one mutex.
+  enum class TailState { Disabled, Waiting, Published, Cancelled };
+  std::mutex tailMutex;std::condition_variable tailReady;
+  TailState tailState=TailState::Disabled;
+  std::vector<std::shared_ptr<const NativeCUSSourceFrame>> tailSources;
+  void ExpectTail(){std::lock_guard lock(tailMutex);if(tailState!=TailState::Disabled)throw std::logic_error("CPU read tail already configured");tailState=TailState::Waiting;}
+  void PublishTail(std::vector<std::shared_ptr<const NativeCUSSourceFrame>> sources){
+   {std::lock_guard lock(tailMutex);if(tailState!=TailState::Waiting)throw std::logic_error("CPU read tail already terminal");tailSources=std::move(sources);tailState=TailState::Published;}
+   tailReady.notify_one();
+  }
+  void CancelTail(){
+   {std::lock_guard lock(tailMutex);if(tailState==TailState::Waiting)tailState=TailState::Cancelled;}
+   tailReady.notify_one();
+  }
+  bool AwaitTail(){std::unique_lock lock(tailMutex);tailReady.wait(lock,[&]{return tailState!=TailState::Waiting;});return tailState==TailState::Published;}
+
+  uint64_t queueNs=0,workNs=0,waitNs=0,tailWaitNs=0;
   size_t cacheBefore=0,cacheAfter=0;
   Clock::time_point submitted{};
  };
@@ -32,9 +49,13 @@ public:
    NativeCUSCPUReadScope scope;
    if(job.measure)job.cacheBefore=NativeCUSCPUReadScope::GeometryCacheSize();
    for(const auto& source:job.sources)scope.Prime(source);
+   const auto tailBegin=job.measure?Clock::now():Clock::time_point{};
+   const bool hasTail=job.AwaitTail();
+   if(job.measure)job.tailWaitNs=Elapsed(tailBegin);
+   if(hasTail)for(const auto& source:job.tailSources)scope.Prime(source);
    job.packet=scope.Seal();
   }catch(...){job.error=std::current_exception();}
-  if(job.measure){job.cacheAfter=NativeCUSCPUReadScope::GeometryCacheSize();job.workNs=Elapsed(start);}
+  if(job.measure){job.cacheAfter=NativeCUSCPUReadScope::GeometryCacheSize();job.workNs=Elapsed(start)-job.tailWaitNs;}
  }
  NativeCUSCPUReadWorker220():thread([this]{Loop();}){}
  ~NativeCUSCPUReadWorker220(){
@@ -69,7 +90,7 @@ public:
    if(target.worker)std::terminate();
    target.worker=std::exchange(worker,nullptr);target.job=std::exchange(job,nullptr);
   }
-  void Finish(){if(worker){worker->Wait(*job);worker=nullptr;}}
+  void Finish(){if(worker){job->CancelTail();worker->Wait(*job);worker=nullptr;}}
   ~Join(){Finish();}
  };
 private:

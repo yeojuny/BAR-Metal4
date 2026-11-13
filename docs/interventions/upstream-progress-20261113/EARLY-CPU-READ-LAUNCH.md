@@ -87,3 +87,44 @@ fixture PASS independently; capture-boundary 1,000 and surface-control 15,000
 regression cases PASS. Full SceneBridge.cpp and Game.cpp Linux host translation
 unit syntax checks PASS with actual SDL3/include dependencies, no replacement
 stubs. These are not Objective-C++/Metal builds or app execution.
+
+## Ordered alpha/shadow continuation
+
+Successful early mode 2/3 jobs now retain one CPU read scope across opaque reads
+and a single sealed continuation. At the end of PrepareWorld, main publishes
+already-captured alpha models in original array/pass order (lua, then MRT lua),
+followed by originalShadow CUS. These are exactly the sources formerly primed on
+main in DrawWorld; reflection/refraction CUS scans are not added. All alpha/water/
+Lua producer callbacks remain main-thread, at their original positions.
+
+The same scope preserves deduplication, EntryLimit and ByteLimit across the
+boundary. Job owns both immutable source lists; worker never consumes a live
+provider. Tail publication/cancellation use one mutex and terminal state:
+Waiting becomes Published or Cancelled, never both; duplicate/late publication
+is rejected. Every Join cancels a still-missing tail before waiting, so capture
+failure, control, hidden and teardown cannot strand the worker. Published empty
+tails are valid. Setup/publication allocation failure cancels/joins and disables
+acceleration, retaining the original main-side fallback. No second job is queued.
+
+Receipt acceptance checks exact alpha/shadow owners, source draw IDs, ordered
+source lists and Published state. Mode 3 compares the full original opaque→alpha→
+shadow scope. Accepted tails are not primed twice. Worker exceptions are consumed
+at DrawWorld before renderer preparation, as before; a tail exception (including allocation failure) now precedes
+the diagnostic trace and mode-3 synchronous re-priming instead of following them, with no renderer/source action
+between those old/new diagnostic positions. Modes 0/1 and non-early mode 2/3 keep
+the old synchronous alpha/shadow boundary.
+
+`tail_wait_ns` is separate from active `work_ns`: waiting for the main publication
+is subtracted from work time. Prior `main_end_ns` still marks PrepareWorld, not
+later Lua/UI capture. This is CPU preparation overlap, not concurrent GPU Prepare:
+DrawPrepared still exclusively owns impl map/model/texture caches, RuntimeLease,
+submissionReads and pendingMipTextures. No renderer access gate was weakened.
+
+Tests use actual extracted launch and tail-publish code, real read-row validation,
+Published/Cancelled/empty/duplicate cases, simultaneous publish/cancel races,
+exact owner/draw mismatch rejection, and a 4,095 opaque-row prefix plus duplicate
+and new tail rows crossing EntryLimit 4,096 against one original synchronous
+scope. Extracted actual launch/tail fixture ASan/UBSan PASS; independent isolated
+Linux ThreadSanitizer run also PASS without race reports. Full SceneBridge Linux
+host translation-unit syntax PASS. Native Metal execution, native TSAN, visual
+parity and measured positive overlap/performance remain unverified.

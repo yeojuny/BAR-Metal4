@@ -152,6 +152,9 @@ struct CPUReadReceipt220 {
  uint64_t frame=0,ordinal=0,startupNs=0,mainBeginNs=0,mainEndNs=0;
  std::shared_ptr<const NativeOpaqueModelFrame> models; // Main-only identity pin.
  NativeCUSCPUReadWorker220::Job job;
+ bool includesTail=false;
+ std::array<std::shared_ptr<const NativeOpaqueModelFrame>,3> alphaModels;
+ std::shared_ptr<const NativeOriginalShadowFrame> shadow;
  NativeCUSCPUReadWorker220::Join pending; // Destroy first, before job/source owners. Main-only.
  template<class A,class B>static bool SameOwner(const A& a,const B& b){return a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);}
  bool Matches(const WorldFrame& captured)const{
@@ -160,7 +163,17 @@ struct CPUReadReceipt220 {
   size_t index=0;
   const auto next=[&](const auto& source){return (!source||source->sourceDrawFrame==frame)&&index<job.sources.size()&&SameOwner(job.sources[index++],source);};
   if(models)for(const auto& pass:models->passes){if(!next(pass.lua))return false;if(pass.mrt&&!next(pass.mrt->lua))return false;}
-  return index==job.sources.size();
+  if(index!=job.sources.size())return false;
+  if(!includesTail)return true;
+  if(job.tailState!=NativeCUSCPUReadWorker220::Job::TailState::Published)return false;
+  for(size_t i=0;i<alphaModels.size();++i)if(!SameOwner(alphaModels[i],captured.alphaModelFrames[i]))return false;
+  if(!SameOwner(shadow,captured.originalShadow))return false;
+  size_t tailIndex=0;
+  const auto sameTail=[&](const auto& source){return (!source||source->sourceDrawFrame==frame)&&tailIndex<job.tailSources.size()&&SameOwner(job.tailSources[tailIndex++],source);};
+  for(const auto& models:alphaModels)if(models){if(models->sourceDrawFrame!=frame)return false;for(const auto& pass:models->passes){if(!sameTail(pass.lua))return false;if(pass.mrt&&!sameTail(pass.mrt->lua))return false;}}
+  if(shadow&&(shadow->sourceDrawFrame!=frame||!sameTail(shadow->cus)))return false;
+  return tailIndex==job.tailSources.size();
+
  }
 };
 void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPUReadReceipt220* receipt,bool accepted,bool verified,int fallback,size_t count,size_t bytes,uint64_t consumeNs,uint64_t consumeBeginNs,uint64_t digest){
@@ -168,19 +181,19 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
  struct Output {
   FILE* file=std::fopen(std::getenv("BAR_NATIVE_CPU_READ_PACKET220_FILE"),"w");
   size_t rows=0;
-  Output(){if(file)std::fputs("frame,simulation_frame,mode,job,accepted,verified,fallback,sources,entries,bytes,cache_before,cache_after,startup_ns,queue_ns,work_ns,join_ns,consume_ns,row_digest,submit_ns,main_begin_ns,main_end_ns,consume_begin_ns\n",file);}
+  Output(){if(file)std::fputs("frame,simulation_frame,mode,job,accepted,verified,fallback,sources,entries,bytes,cache_before,cache_after,startup_ns,queue_ns,work_ns,join_ns,consume_ns,row_digest,submit_ns,main_begin_ns,main_end_ns,consume_begin_ns,tail_wait_ns\n",file);}
   ~Output(){if(file)std::fclose(file);}
  };
  static Output output;
  if(!output.file||output.rows++>=10000)return;
  const auto* job=receipt?&receipt->job:nullptr;
- std::fprintf(output.file,"%llu,%llu,%d,%llu,%d,%d,%d,%zu,%zu,%zu,%zu,%zu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n",
+ std::fprintf(output.file,"%llu,%llu,%d,%llu,%d,%d,%d,%zu,%zu,%zu,%zu,%zu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n",
   (unsigned long long)frame,(unsigned long long)simulationFrame,CPUReadPacketMode220(),(unsigned long long)(receipt?receipt->ordinal:0),int(accepted),int(verified),fallback,
-  job?job->sources.size():0,count,bytes,job?job->cacheBefore:0,job?job->cacheAfter:0,
+  job?job->sources.size()+job->tailSources.size():0,count,bytes,job?job->cacheBefore:0,job?job->cacheAfter:0,
   (unsigned long long)(receipt?receipt->startupNs:0),(unsigned long long)(job?job->queueNs:0),(unsigned long long)(job?job->workNs:0),
   (unsigned long long)(job?job->waitNs:0),(unsigned long long)consumeNs,(unsigned long long)digest,
   (unsigned long long)(job?NativeCUSCPUReadWorker220::Timestamp(job->submitted):0),(unsigned long long)(receipt?receipt->mainBeginNs:0),
-  (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs);
+  (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs,(unsigned long long)(job?job->tailWaitNs:0));
 }
 
 struct ScenePendingAdmission;
@@ -1584,6 +1597,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
   cpuReceipt220->frame=frame.sourceDrawFrame;cpuReceipt220->models=frame.opaqueModelFrame;
   cpuReceipt220->ordinal=session->cpuReadJobs220+1;
   auto& job=cpuReceipt220->job;job.measure=CPUReadPacketMeasure220();
+  if(earlyCPURead220)job.ExpectTail();
   for(const auto& pass:frame.opaqueModelFrame->passes){job.sources.push_back(pass.lua);if(pass.mrt)job.sources.push_back(pass.mrt->lua);}
   if(CPUReadPacketMode220()>=2&&!session->cpuReadWorker220){
    const auto start=job.measure?NativeCUSCPUReadWorker220::Clock::now():NativeCUSCPUReadWorker220::Clock::time_point{};
@@ -1743,6 +1757,21 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 		frame.alphaModelFrames[2]=CaptureOriginalAlphaModels(NativeWorldDrawStage::AlphaAll);
   frame.alphaAllLua=CaptureWaterPreParticles(NativeWorldDrawStage::AlphaAll,true,true,false,false);
  }
+ // BEGIN CPU_READ_TAIL220
+ // Seal only sources already captured at their original main-thread sites.
+ // No new callback/order or water-view scan is introduced.
+ if(earlyCPURead220&&cpuReceipt220){
+  try{
+   std::vector<std::shared_ptr<const NativeCUSSourceFrame>> tail;
+   for(const auto& models:frame.alphaModelFrames)if(models)for(const auto& pass:models->passes){tail.push_back(pass.lua);if(pass.mrt)tail.push_back(pass.mrt->lua);}
+   if(frame.originalShadow)tail.push_back(frame.originalShadow->cus);
+   cpuReceipt220->alphaModels=frame.alphaModelFrames;cpuReceipt220->shadow=frame.originalShadow;
+   cpuReceipt220->job.PublishTail(std::move(tail));cpuReceipt220->includesTail=true;
+  }catch(...){
+   cpuJoin220.Finish();cpuReceipt220.reset();session->cpuReadDisabled220=true;session->cpuReadFallback220=1;
+  }
+ }
+ // END CPU_READ_TAIL220
  if(cpuReceipt220&&cpuReceipt220->job.measure)cpuReceipt220->mainEndNs=NativeCUSCPUReadWorker220::Timestamp(NativeCUSCPUReadWorker220::Clock::now());
  // Only successful opt-in early jobs may span subsequent original Lua/UI capture.
  // Exceptions before this transfer retain the local join-before-owner guard.
@@ -1888,21 +1917,23 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
    const bool accept=receipt&&receipt->Matches(captured);
    const uint64_t digest=CPUReadPacketMeasure220()&&receipt?receipt->job.packet.RowDigest():0;
    const auto consumeStart=CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Clock::now():NativeCUSCPUReadWorker220::Clock::time_point{};
+   const bool tailAccepted=accept&&receipt->includesTail;
+   const auto primeTail=[&]{for(const auto& models:captured.alphaModelFrames)primeModels(models);if(captured.originalShadow)cpuReadScope.Prime(captured.originalShadow->cus);};
    bool verified=false;
    if(accept){
     // Errors not swallowed by the original Prime are delivered at its original
-    // position, after capture and before alpha/shadow, never on the worker.
+    // pre-render consume boundary, including sealed tail errors. Diagnostic
+    // trace/mode3 re-priming follows error delivery; no producer callback moves.
     if(receipt->job.error)std::rethrow_exception(receipt->job.error);
     if(CPUReadPacketMode220()==3){
-     primeModels(captured.opaqueModelFrame);
+     primeModels(captured.opaqueModelFrame);if(tailAccepted)primeTail();
      if(!cpuReadScope.Matches(receipt->job.packet))throw std::runtime_error("CUS opaque CPU receipt differs from original rows/owners/capacity");
      verified=true;
     }else cpuReadScope.Adopt(std::move(receipt->job.packet));
    }else primeModels(captured.opaqueModelFrame);
    const uint64_t consumeNs=CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Elapsed(consumeStart):0;
    TraceCPUReadPacket220(captured.sourceDrawFrame,captured.simulationFrame,receipt.get(),accept,verified,session->cpuReadFallback220,cpuReadScope.Count(),cpuReadScope.Bytes(),consumeNs,CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Timestamp(consumeStart):0,digest);
-   for(const auto& models:captured.alphaModelFrames)primeModels(models);
-  if(captured.originalShadow)cpuReadScope.Prime(captured.originalShadow->cus);
+   if(!tailAccepted)primeTail();
  }
   session->cpuReadReceipt220.reset(); // Also release a skipped/hidden world's receipt on main.
  if(measureCPU)cpuReadScope.SetPreparationNanoseconds(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now()-cpuBegin).count());

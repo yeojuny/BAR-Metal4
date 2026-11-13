@@ -22,9 +22,12 @@ repeated, reentrant or failed completion is rejected; both owned-packet construc
 and direct DrawDispatch reject a partially completed frame. Failed writers cannot
 be retried and replay their partial side effects.
 
-The boundary always drains before this particle completion, CPURead jobs, shield
-model publication, alpha callbacks, water capture, Lua DrawWorld or subsequent
-source work. N+1 selecting another water mode therefore does not inherit N's
+The boundary always drains before particle completion, shield model publication,
+alpha callbacks, water capture, Lua DrawWorld or subsequent source writers.
+The later EARLY-CPU-READ-LAUNCH milestone permits only the immutable opaque
+CPURead job to start after the snapshot prefix and before this drain; successful
+receipt ownership can retain that CPU-only job through later source capture.
+It does not move those source writers ahead of the renderer drain. N+1 selecting another water mode therefore does not inherit N's
 eligibility as permission to overlap that mode's capture.
 
 A throwing Capture drains before the outer existing abort can restore source

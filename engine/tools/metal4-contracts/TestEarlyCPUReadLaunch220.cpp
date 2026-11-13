@@ -1,15 +1,18 @@
 #include "Rendering/Backend/NativeCUSCPUReadWorker220.h"
 #include "Rendering/EngineBridge/NativeOpaqueModelCapture.h"
 #include "Rendering/Backend/WorldFrameData.h"
+#include "Rendering/Backend/NativeOriginalShadowData.h"
 #include "Rendering/Metal4/Metal4CaptureSurfaceBoundary.h"
 #include <cassert>
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <atomic>
 using namespace rendering;
+bool earlyCPURead220=true;
 int mode=2;bool CPUReadPacketMeasure220(){return true;}int CPUReadPacketMode220(){return mode;}
 #include "receipt.inc"
-struct Session {std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;bool cpuReadDisabled220=false;uint64_t cpuReadJobs220=0;};
+struct Session {std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;bool cpuReadDisabled220=false;int cpuReadFallback220=0;uint64_t cpuReadJobs220=0;};
 struct Producers {
  NativeCUSPublishedStorage transforms{NativeCUSPublishedKind::Transforms}, uniforms{NativeCUSPublishedKind::ModelUniforms};
  NativeCUSUniformStorage engine;
@@ -55,6 +58,7 @@ int main(){
     order+='C';if(prefixFails)throw std::runtime_error("prefix");launchCPURead220(frame);order+='L';
    });
    order+='P';if(particleFails)throw std::runtime_error("particle");
+#include "tail.inc"
   }catch(const std::runtime_error&){}
   assert(order==(prefixFails?"CD":drainFails?"CLD":"CLDP"));
   const bool handedOff=!prefixFails&&!drainFails&&!particleFails;
@@ -94,7 +98,55 @@ int main(){
   frame.opaqueModelFrame.reset();models.reset();source.reset();assert(prefixFails?destroyed:!destroyed);
   cpuReceipt220.reset();assert(destroyed);assert(cpuReadFallback220==0);
  }
+ // One actual worker scope retains ordering/dedup across the sealed tail.
+ for(int n=0;n<100;++n){
+  NativeCUSCPUReadWorker220 worker;NativeCUSCPUReadWorker220::Job job;
+  auto opaque=std::make_shared<NativeCUSSourceFrame>();opaque->sourceDrawFrame=77;opaque->draws.push_back(ValidDraw(77,0));
+  auto alpha=std::make_shared<NativeCUSSourceFrame>();alpha->sourceDrawFrame=77;alpha->draws.push_back(ValidDraw(77,4));
+  job.sources={opaque};job.ExpectTail();NativeCUSCPUReadWorker220::Join join;
+  worker.Start(job);join.Arm(worker,job);
+  bool publish=n%3!=0;
+  if(publish){job.PublishTail(n%3==1?std::vector<std::shared_ptr<const NativeCUSSourceFrame>>{opaque,alpha}:std::vector<std::shared_ptr<const NativeCUSSourceFrame>>{});
+   bool rejected=false;try{job.PublishTail({});}catch(const std::logic_error&){rejected=true;}assert(rejected);
+  }
+  join.Finish();assert(job.done&&!job.error);
+  NativeCUSCPUReadScope expected;expected.Prime(opaque);if(n%3==1)expected.Prime(alpha);
+  assert(expected.Matches(job.packet));assert(job.packet.Count()==(n%3==1?2:1));
+  if(!publish){bool rejected=false;try{job.PublishTail({});}catch(const std::logic_error&){rejected=true;}assert(rejected);}
+ }
+ {
+  CPUReadReceipt220 receipt;receipt.frame=88;receipt.includesTail=true;
+  auto alpha=std::make_shared<NativeOpaqueModelFrame>();alpha->sourceDrawFrame=88;alpha->passes.resize(1);
+  auto source=std::make_shared<NativeCUSSourceFrame>();source->sourceDrawFrame=88;alpha->passes[0].lua=source;
+  auto shadow=std::make_shared<NativeOriginalShadowFrame>();shadow->sourceDrawFrame=88;shadow->cus=source;
+  receipt.alphaModels[1]=alpha;receipt.shadow=shadow;receipt.job.ExpectTail();receipt.job.PublishTail({source,source});
+  WorldFrame frame;frame.sourceDrawFrame=88;frame.alphaModelFrames[1]=alpha;frame.originalShadow=shadow;
+  assert(receipt.Matches(frame));frame.alphaModelFrames[1]=std::make_shared<NativeOpaqueModelFrame>(*alpha);assert(!receipt.Matches(frame));
+  frame.alphaModelFrames[1]=alpha;receipt.job.tailSources.pop_back();assert(!receipt.Matches(frame));
+  receipt.job.tailSources.push_back(source);shadow->sourceDrawFrame=89;assert(!receipt.Matches(frame));
+ }
+ { // Exact cap and duplicate order across the actual continuation boundary.
+  auto a=std::make_shared<NativeCUSSourceFrame>(),b=std::make_shared<NativeCUSSourceFrame>();
+  auto draw=ValidDraw(99,0);
+  for(size_t i=0;i<NativeCUSCPUReadScope::EntryLimit+8;++i){auto d=draw;d.program=std::make_shared<NativeCUSProgramConsumer>(*draw.program);(i<4095?a:b)->draws.push_back(std::move(d));}
+  b->draws.insert(b->draws.begin(),a->draws.front());
+  NativeCUSCPUReadWorker220 worker;NativeCUSCPUReadWorker220::Job job;job.sources={a};job.ExpectTail();
+  NativeCUSCPUReadWorker220::Join join;worker.Start(job);join.Arm(worker,job);job.PublishTail({b});join.Finish();
+  NativeCUSCPUReadScope expected;expected.Prime(a);expected.Prime(b);assert(expected.Count()==NativeCUSCPUReadScope::EntryLimit);assert(expected.Matches(job.packet));
+ }
+ for(int n=0;n<100;++n){
+  NativeCUSCPUReadWorker220 worker;NativeCUSCPUReadWorker220::Job job;job.ExpectTail();
+  auto tail=std::make_shared<NativeCUSSourceFrame>();tail->draws.push_back(ValidDraw(101,0));
+  NativeCUSCPUReadWorker220::Join join;worker.Start(job);join.Arm(worker,job);
+  std::atomic<bool> go=false;bool published=false;
+  std::thread publisher([&]{while(!go.load()){}try{job.PublishTail({tail});published=true;}catch(const std::logic_error&){} });
+  std::thread cancel([&]{while(!go.load()){}job.CancelTail();});go=true;
+  publisher.join();cancel.join();join.Finish();
+  assert(job.done&&!job.error);assert(job.packet.Count()==size_t(published));
+  assert(job.tailState==(published?NativeCUSCPUReadWorker220::Job::TailState::Published:NativeCUSCPUReadWorker220::Job::TailState::Cancelled));
+ }
  // Original modes retain their existing caller location; actual launch behavior remains unchanged.
+ earlyCPURead220=false;
  for(mode=0;mode<=1;++mode){WorldFrame frame;frame.opaqueModelFrame=std::make_shared<NativeOpaqueModelFrame>();
   std::unique_ptr<CPUReadReceipt220> cpuReceipt220;NativeCUSCPUReadWorker220::Join cpuJoin220;int cpuReadFallback220=0;
 #include "launch.inc"

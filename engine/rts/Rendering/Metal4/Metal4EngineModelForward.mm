@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineModelForward.h"
+#include "Metal4TerrainOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "Metal4ModelUpload146.h"
 #include "Metal4RetiredArguments.h"
@@ -34,6 +35,7 @@ struct PreparedEngineModelForward::Impl {
   __strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;
  };
  std::shared_ptr<const NativeEngineModelPhase> source;std::vector<Draw> draws;
+ TerrainOwnerRoster firstOwners;
  std::vector<const CUSSourceImage*> inspection160;std::vector<id<MTLTexture>> sampledRoots160;
  uint64_t indexedDraws160=0;bool inspectionReady160=false;
  bool dependencies=false,finished=false,completed=false;size_t encoded=0;
@@ -44,14 +46,17 @@ size_t PreparedEngineModelForward::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedEngineModelForward::SequenceAt(size_t i)const{Require(i<DrawCount(),"Original forward draw index exceeds source");return impl->draws[i].sequence;}
 void PreparedEngineModelForward::PreparePassInspection160(){
  Require(!impl->inspectionReady160&&!impl->dependencies&&!impl->completed,"Engine forward pass inspection prepared after use or twice");
- std::set<const void*> seen,roots;
- for(const auto& draw:impl->draws){
+ std::set<const void*> roots;size_t nextOwner=0;
+ for(size_t d=0;d<impl->draws.size();++d){
+  const auto& draw=impl->draws[d];
   if(draw.raster&&(!draw.state.cullEnabled||draw.state.cull!=NativeWorldCull::FrontAndBack))impl->indexedDraws160+=draw.pieces.size();
-  for(const auto& image:draw.images)if(image.owner){
-   if(seen.insert(image.owner.get()).second&&image.encodeDependencies)impl->inspection160.push_back(&image);
+  for(size_t i=0;i<draw.images.size();++i){const auto& image=draw.images[i];if(image.owner){
+   if(nextOwner<impl->firstOwners.size()&&impl->firstOwners[nextOwner]==std::pair<size_t,size_t>{d,i}){
+    ++nextOwner;if(image.encodeDependencies)impl->inspection160.push_back(&image);
+   }
    const auto root=SourceTextureRoot160(image.texture);
    if(root&&roots.insert((__bridge const void*)root).second)impl->sampledRoots160.push_back(root);
-  }
+  }}
  }
  impl->inspectionReady160=true;
 }
@@ -69,8 +74,8 @@ void PreparedEngineModelForward::AcceptDependenciesWithoutCommands160(){
  impl->dependencies=true;
 }
 void PreparedEngineModelForward::EncodeDependencies(id<MTL4CommandBuffer> command){
- Require(command&&!impl->dependencies&&!impl->completed,"Original forward dependencies missing or repeated");std::set<const void*> seen;
- for(const auto& d:impl->draws)for(const auto& image:d.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.encodeDependencies)image.encodeDependencies(command);impl->dependencies=true;
+ Require(command&&!impl->dependencies&&!impl->completed,"Original forward dependencies missing or repeated");
+ for(const auto& [d,i]:impl->firstOwners){const auto& image=impl->draws[d].images[i];if(image.encodeDependencies)image.encodeDependencies(command);}impl->dependencies=true;
 }
 void PreparedEngineModelForward::EncodeOrderedDraw(size_t i,id<MTL4RenderCommandEncoder> encoder){
  Require(encoder&&impl->dependencies&&!impl->finished&&!impl->completed&&i==impl->encoded&&i<DrawCount(),"Original forward draw repeated/skipped or lacks dependencies");
@@ -88,7 +93,7 @@ void PreparedEngineModelForward::EncodeOrderedDraw(size_t i,id<MTL4RenderCommand
  ++impl->encoded;
 }
 void PreparedEngineModelForward::FinishOrderedDraws(){Require(impl->dependencies&&!impl->finished&&!impl->completed&&impl->encoded==DrawCount(),"Original forward source list did not finish once");impl->finished=true;}
-void PreparedEngineModelForward::DidComplete(){Require(impl->finished&&!impl->completed,"Original forward retirement preceded its real submission");std::set<const void*> seen;for(const auto& d:impl->draws)for(const auto& image:d.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;if(impl->setterProbe176)impl->setterProbe176->Report();}
+void PreparedEngineModelForward::DidComplete(){Require(impl->finished&&!impl->completed,"Original forward retirement preceded its real submission");for(const auto& [d,i]:impl->firstOwners){const auto& image=impl->draws[d].images[i];if(image.didComplete)image.didComplete();}impl->completed=true;if(impl->setterProbe176)impl->setterProbe176->Report();}
 struct EngineModelForwardGPU::Impl {
  ModelUploadPool146 uniformPool;RetiredArguments argumentPool;bool reported146=false;
  struct Original {
@@ -193,6 +198,8 @@ std::shared_ptr<PreparedEngineModelForward> EngineModelForwardGPU::Prepare(Runti
   p.draws.push_back(std::move(draw));
  }
  uniformArena.Report("EngineForward",p.source->sourceDrawFrame,impl->reported146);
+ // Engine forward historically skips null owners in all lifecycle phases.
+ p.firstOwners=BuildTerrainOwnerRoster(p.draws,true);
  return out;
 }
 } // namespace rendering::metal4
