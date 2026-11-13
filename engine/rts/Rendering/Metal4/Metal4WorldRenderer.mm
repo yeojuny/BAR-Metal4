@@ -1968,7 +1968,7 @@ void Metal4WorldRenderer::AbortScreenContinuation() noexcept
  if(impl)impl->screenContinuation.reset();
 }
 
-Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFrame& frame,const Metal4WorldRenderOptions& options)
+Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation)
 {
  @autoreleasepool {
   MainThread();const auto continuation=impl->screenContinuation;
@@ -2041,9 +2041,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
      drawable=[layer nextDrawable];}
     if(drawable){
      main->PrepareFinalDestination(lease,drawable.texture);lease.Retain(drawable);
-     if(globalRendering->fullScreen && !globalRendering->dualScreenMode){
-      const ScreenScissor safe{globalRendering->viewPosX,globalRendering->viewPosY,
-       std::uint32_t(globalRendering->viewSizeX),std::uint32_t(globalRendering->viewSizeY)};
+     if(presentation.drawMargins){
+      const auto& safe=presentation.safeViewport;
       margins=impl->screenGPU.PreparePresentationMargins(lease,safe,current.renderWidth,current.renderHeight,
        continuation->logicalWidth,continuation->logicalHeight,main->Color().pixelFormat,options.shaderValidation,result.shaderCompileMs,main->Samples());
      }
@@ -2109,11 +2108,21 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPreparingWhilePending(con
 {return DrawDispatch(frame,options,std::move(previousRetired));}
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
 {
+ // Reject invalid callers before reading source policy, as preparation did.
+ MainThread();Require(impl!=nullptr,"World renderer was moved from");
+ // Freeze source-side policy before worker dispatch. Continuation suffixes enter
+ // here again, so a SaveImage prefix never freezes a later presentation policy.
+ // Existing synchronous callbacks retire source receipts, not window events.
+ const auto presentation=globalRendering?CaptureNativePresentationPolicy(
+  globalRendering->fullScreen,globalRendering->dualScreenMode,
+  globalRendering->viewPosX,globalRendering->viewPosY,
+  globalRendering->viewSizeX,globalRendering->viewSizeY):NativePresentationPolicy{};
+
  static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return p&&std::string_view(p)=="1";}();
  // Readback/continuation and arbitrary engine source callbacks stay on main.
  if(!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
     options.submissionBegan||options.submissionCompleted||options.sourceCompleted)
-  return DrawPrepared(frame,options,std::move(previousRetired));
+  return DrawPrepared(frame,options,presentation,std::move(previousRetired));
  const auto snapshot=Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(*impl->surface);
  static NativeSerialRenderWorker worker;
  bool receiptReady=false;
@@ -2121,9 +2130,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
  try {
-  auto result=worker.Invoke([&]{@autoreleasepool {
+  auto result=worker.Invoke([&,presentation]{@autoreleasepool {
    Metal4SurfaceWorkerScope scope(snapshot);
-   return DrawPrepared(frame,options,std::move(deferredReceipt));
+   return DrawPrepared(frame,options,presentation,std::move(deferredReceipt));
   }});
   deliverReceipt();
 #ifdef RECOIL_METAL4_LIVE_SCENE
@@ -2132,12 +2141,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   return result;
  }catch(...){deliverReceipt();throw;}
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired)
 {
  NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
-		if(impl->screenContinuation)return ContinueScreen(frame,options);
+		if(impl->screenContinuation)return ContinueScreen(frame,options,presentation);
 		if(options.readback)Require(options.screenUI && options.screenUI->drawList &&
 			options.submissionBegan && options.submissionCompleted && frame.luaWorldDrawFrame && frame.luaVolumetricCloudFrame &&
 			options.readback->screenStage && options.readback->cutoff && options.readback->root &&
@@ -3770,9 +3779,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 
 		sceneColor=mainAttachments->Color();
 		std::shared_ptr<PreparedScreenFrame> presentationMargins;
-		if(!offscreenSource && drawable && globalRendering->fullScreen && !globalRendering->dualScreenMode) {
-			const ScreenScissor safe{globalRendering->viewPosX,globalRendering->viewPosY,
-				uint32_t(globalRendering->viewSizeX),uint32_t(globalRendering->viewSizeY)};
+		if(!offscreenSource && drawable && presentation.drawMargins) {
+			const auto& safe=presentation.safeViewport;
 			presentationMargins=impl->screenGPU.PreparePresentationMargins(lease,safe,
 				result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
 				layer.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);

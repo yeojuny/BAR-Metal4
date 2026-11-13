@@ -90,6 +90,8 @@ public:
 	// Keep published producer generations until their GPU work completes,
 	// including target-only submissions while the window cannot present.
 	void RetireCompletedFrame(bool sourceFrameCompleted = true);
+ // Capture-owner-only exact completion ledger; at most two held frames.
+ // This API does not enable parallel recording or render-worker callbacks.
  void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
  void RetireSubmittedFrame(std::uint64_t sourceDrawFrame);
 	void SetSourceDependencyQuery(std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> query);

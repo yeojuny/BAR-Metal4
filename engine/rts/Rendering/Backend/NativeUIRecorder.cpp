@@ -15,6 +15,7 @@
 #include "NativePanelShaderData.h"
 #include "NativeUIRecorder.h"
 #include "NativeUITargetPassJournal.h"
+#include "NativeCompletedFrameLedger.h"
 #include "NativeLegacyWaterTextureEnvironment.h"
 #include "NativeLegacyWaterTexGen.h"
 #include "NativeLegacyWaterLighting.h"
@@ -235,8 +236,14 @@ struct NativeUIRecorder::Impl {
 	std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> sourceDependency;
 	struct TargetChange {std::shared_ptr<NativeUITextureBinding> binding;std::shared_ptr<const ScreenTexture> previous,published;bool sourceDependent;NativeUITexturePublication texturePublication;std::uint64_t actualSubmission=0;};
 	std::vector<TargetChange> targetChanges;
- struct SubmittedFrame {std::uint64_t sourceDrawFrame;NativeUITargetPassJournal targetJournal;std::vector<TargetChange> changes;};
- std::optional<SubmittedFrame> submittedFrame;
+ struct SubmittedFrame {
+  NativeUITargetPassJournal targetJournal;std::vector<TargetChange> changes;
+  SubmittedFrame(NativeUITargetPassJournal&& journal,std::vector<TargetChange>&& publications) noexcept:
+   targetJournal(std::move(journal)),changes(std::move(publications)) {}
+ };
+ // Same bound as SceneBridge deferred receipt retention. This does not enable
+ // additional GPU overlap or make recorder access safe across threads.
+ NativeCompletedFrameLedger<SubmittedFrame,2> submittedFrames;
 	bool DependsOnSource(const std::shared_ptr<const ScreenTexture>& image) const {
 		if(!image)return false;
 		if(image->sourceTexture)return image->sourceDependent;
@@ -796,19 +803,21 @@ static void LogFontRecycle169(std::uint64_t sourceDrawFrame)
 
 void NativeUIRecorder::HoldSubmittedFrame(std::uint64_t sourceDrawFrame)
 {
- Require(sourceDrawFrame && !impl->frame && !impl->submittedFrame && impl->targets.empty() && impl->compiling.empty(),
+ Require(impl->submittedFrames.CanHold(sourceDrawFrame) && !impl->frame && impl->targets.empty() && impl->compiling.empty(),
   "Native UI submitted frame ownership is repeated or still recording");
  // Called only after successful final submission. Move, never copy or retire,
  // the old publications so BeginFrame/abort can affect only the next frame.
- impl->submittedFrame.emplace(Impl::SubmittedFrame{sourceDrawFrame,std::move(impl->targetJournal),std::move(impl->targetChanges)});
+ Require(impl->submittedFrames.TryHold(sourceDrawFrame,std::move(impl->targetJournal),std::move(impl->targetChanges)),
+  "Native UI submitted frame ownership is repeated or still recording");
  impl->targetJournal.Clear();impl->targetChanges.clear();
  LogFontRecycle169(sourceDrawFrame);
 }
 void NativeUIRecorder::RetireSubmittedFrame(std::uint64_t sourceDrawFrame)
 {
- Require(impl->submittedFrame && impl->submittedFrame->sourceDrawFrame==sourceDrawFrame,
+ // Retires only the exact completed owner, never the current frame or another
+ // outstanding frame. Unknown/duplicate notices retain the original error.
+ Require(impl->submittedFrames.Retire(sourceDrawFrame),
   "Native UI completion does not identify its submitted frame");
- impl->submittedFrame.reset(); // Never clear the current frame's transactions.
 }
 void NativeUIRecorder::SetSourceDependencyQuery(std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> query){impl->sourceDependency=std::move(query);}
 void NativeUIRecorder::CommitTargetBinding(std::shared_ptr<NativeUITextureBinding> binding,std::shared_ptr<const ScreenTexture> previous,std::shared_ptr<const ScreenTexture> published)

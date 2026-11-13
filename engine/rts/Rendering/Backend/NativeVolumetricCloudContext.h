@@ -31,7 +31,7 @@ public:
 private:
 	std::shared_ptr<NativeVolumetricCloudFrame> recording;
 	std::shared_ptr<const NativeVolumetricCloudFrame> pending;
- std::shared_ptr<const NativeVolumetricCloudFrame> submittedFrame;
+ NativeCompletedFrameLedger<std::shared_ptr<const NativeVolumetricCloudFrame>,2,true> submittedFrames;
 };
 class NativeVolumetricCloudContext {
 public:

@@ -319,12 +319,13 @@ private:
   if(lazy&&dirtyUniforms){
    // This map has never escaped to a publication. All potentially allocating
    // input construction/validation completed before changing its revision.
-   uniforms->InvalidateSlots();
+   uniforms->InvalidateWrittenSlot(locations[size_t(location)]);
    uniforms->values.insert_or_assign(locations[size_t(location)],std::move(value));
    ++uniforms->revision;
   }else{
    auto next=std::make_shared<NativeTerrainUniformSnapshot>(*uniforms);
    next->values.insert_or_assign(locations[size_t(location)],std::move(value));++next->revision;
+   next->ReuseTypedBaseAfterSingleWrite(*uniforms,locations[size_t(location)]);
    TERRAIN_WRITE_STAT(mapCopies);uniforms=std::move(next);dirtyUniforms=true;
   }
   if(lazy){

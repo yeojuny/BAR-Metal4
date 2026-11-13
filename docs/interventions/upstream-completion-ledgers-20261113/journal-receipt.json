@@ -1,0 +1,27 @@
+{
+  "scope": "Production UI target journal host contract; not Metal or full recorder runtime.",
+  "syntaxExit": 0,
+  "testExit": 0,
+  "summary": "108472 production journal checks passed",
+  "fatalContracts": {
+    "zero": {
+      "exit": -6,
+      "expectedTermination": true
+    },
+    "conflict": {
+      "exit": -6,
+      "expectedTermination": true
+    }
+  },
+  "sha256": {
+    "rts/Rendering/Backend/ScreenDrawList.h": "afc04b6222f8430508c195a3acb8b5d51d8b99388a10c221d137a69759600e6c",
+    "rts/Rendering/Backend/NativeUIRecorder.cpp": "a3442889e8f62a2bdaedb156ab05504c6e7e917b8e88d6913ec10beed8e3ed76",
+    "rts/Rendering/Backend/NativeUITargetPassJournal.h": "908195534dcd04422f271811cab06d5e26feba7b8ed67f469f7d0bc8dd5ec900",
+    "tools/metal4-contracts/TestNativeUITargetPassJournal.cpp": "6b410ac1f48b5706590ad621d9669f59c14dc67c20d57f4ca3365c831b05a27a"
+  },
+  "passed": true,
+  "limits": [
+    "Full recorder runtime link not verified; existing target fixture requires BeginGenesisStage bool update and additional engine service linkage.",
+    "No Mac build, Metal execution, frame concurrency or FPS claim."
+  ]
+}

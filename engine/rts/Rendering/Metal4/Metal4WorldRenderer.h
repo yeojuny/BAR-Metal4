@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Metal4WindowSurface.h"
+#include "Rendering/Backend/NativePresentationPolicy.h"
 #include "Rendering/Backend/NativeMissileThrusterData.h"
 #include "Rendering/Backend/NativeMainSamplingData.h"
 #include "Rendering/Backend/RenderTypes.h"
@@ -257,8 +258,8 @@ public:
 
 private:
  Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
- Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
-	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&);
+ Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired);
+	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&);
 	struct Impl;
 	std::unique_ptr<Impl> impl;
 };

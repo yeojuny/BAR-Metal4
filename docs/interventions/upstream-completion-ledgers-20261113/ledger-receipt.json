@@ -1,0 +1,19 @@
+{
+  "scope": "Production UI frame completion ledger host contract; not Metal or full recorder runtime.",
+  "syntaxExit": 0,
+  "testExit": 0,
+  "summary": "57881 production completion-ledger checks passed",
+  "fatalContracts": {},
+  "sha256": {
+    "rts/Rendering/Backend/ScreenDrawList.h": "afc04b6222f8430508c195a3acb8b5d51d8b99388a10c221d137a69759600e6c",
+    "rts/Rendering/Backend/NativeUIRecorder.cpp": "a3442889e8f62a2bdaedb156ab05504c6e7e917b8e88d6913ec10beed8e3ed76",
+    "rts/Rendering/Backend/NativeUITargetPassJournal.h": "908195534dcd04422f271811cab06d5e26feba7b8ed67f469f7d0bc8dd5ec900",
+    "rts/Rendering/Backend/NativeCompletedFrameLedger.h": "29cb9cd62a20d7a62c13cae6c37cee852fa7e6e700eacb6061143844bf00f7ba",
+    "tools/metal4-contracts/TestNativeCompletedFrameLedger.cpp": "1c160ca8005e0f4619461199f1bd55589726964f6832d48c3b92e2597c45d93c"
+  },
+  "passed": true,
+  "limits": [
+    "Full recorder runtime link not verified; existing target fixture requires BeginGenesisStage bool update and additional engine service linkage.",
+    "No Mac build, Metal execution, frame concurrency or FPS claim."
+  ]
+}

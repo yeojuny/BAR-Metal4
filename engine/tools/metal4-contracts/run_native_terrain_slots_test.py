@@ -5,7 +5,11 @@ p=argparse.ArgumentParser();p.add_argument('--output',type=pathlib.Path,required
 r=pathlib.Path(__file__).resolve().parents[2]
 h=(r/'rts/Rendering/Backend/NativeWaterGroundSourceData.h').read_text()
 s=(r/'rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm').read_text()
-unit='''#include <array>
+unit='''#include <bit>
+#include <algorithm>
+#include <cstring>
+#include <random>
+#include <array>
 #include <map>
 #include <string>
 #include <vector>
@@ -58,6 +62,44 @@ int main(){
  auto& data=std::get<std::vector<float>>(m.values);for(unsigned i=0;i<16;++i)data[i]=i;c.SealSlots();
  auto matrix=Matrix(c,S::shadowMat);for(unsigned col=0;col<4;++col)for(unsigned row=0;row<4;++row)check(matrix.columns[col][row]==float(row*4+col));
  check(c.Find(S::Count)==nullptr);
+ // Unsealed copies take the unchanged validating reader path. Compare every
+ // packed byte, including padding components and signed zero, against it.
+ std::mt19937 rng(1234);
+ for(unsigned trial=0;trial<2000;++trial){
+  NativeTerrainUniformSnapshot packed;auto& f=packed.values["cameraPos"];
+  f.rows=1+rng()%4;std::vector<float> vf(f.rows);
+  for(auto& x:vf){uint32_t bits=rng();if((bits&0x7f800000u)==0x7f800000u)bits=0x80000000u;std::memcpy(&x,&bits,4);}
+  f.values=vf;auto& iv=packed.values["texSquare"];iv.rows=1+rng()%4;
+  std::vector<int32_t> vi(iv.rows);for(auto& x:vi)x=int32_t(rng());iv.values=vi;
+  auto& mv=packed.values["shadowMat"];mv.rows=mv.columns=4;mv.transpose=bool(rng()%2);
+  std::vector<float> vm(16);for(auto& x:vm)x=float(int(rng()%200)-100);vm[0]=-0.f;mv.values=vm;
+  NativeTerrainUniformSnapshot reference=packed;packed.SealSlots();
+  check(packed.PackedFloat(S::cameraPos,f.rows)!=nullptr);
+  check(packed.PackedInt(S::texSquare,iv.rows)!=nullptr);
+  check(packed.PackedMatrix(S::shadowMat)!=nullptr);
+  const auto pf=Float(packed,S::cameraPos,f.rows),rf=Float(reference,S::cameraPos,f.rows);
+  const auto pi=Int(packed,S::texSquare,iv.rows),ri=Int(reference,S::texSquare,iv.rows);
+  const auto pm=Matrix(packed,S::shadowMat),rm=Matrix(reference,S::shadowMat);
+  check(!std::memcmp(&pf,&rf,sizeof pf));check(!std::memcmp(&pi,&ri,sizeof pi));check(!std::memcmp(&pm,&rm,sizeof pm));
+  NativeTerrainUniformSnapshot next=packed;
+  next.values["texSquare"].values=std::vector<int32_t>(iv.rows,-17);
+  next.ReuseTypedBaseAfterSingleWrite(packed,"texSquare");next.SealSlots();
+  const auto nf=Float(next,S::cameraPos,f.rows);const auto nm=Matrix(next,S::shadowMat);
+  check(!std::memcmp(&nf,&pf,sizeof pf));check(!std::memcmp(&nm,&pm,sizeof pm));
+  check(Int(next,S::texSquare,iv.rows)[0]==-17);
+  check(Int(packed,S::texSquare,iv.rows)[0]==vi[0]);
+  next.InvalidateWrittenSlot("cameraPos");next.values["cameraPos"].values=std::vector<float>(f.rows,-0.f);next.SealSlots();
+  check(std::signbit(Float(next,S::cameraPos,f.rows)[0]));
+  next.InvalidateWrittenSlot("shadowMat");std::get<std::vector<float>>(next.values["shadowMat"].values)[0]=std::numeric_limits<float>::infinity();
+  next.SealSlots();check(!next.PackedMatrix(S::shadowMat));fails([&]{Matrix(next,S::shadowMat);},"nonfinite");
+  packed.InvalidateSlots();check(!packed.PackedFloat(S::cameraPos,f.rows));check(!packed.PackedMatrix(S::shadowMat));
+  f.values=std::vector<float>(f.rows,std::numeric_limits<float>::infinity());packed.SealSlots();
+  check(!packed.PackedFloat(S::cameraPos,f.rows));fails([&]{Float(packed,S::cameraPos,f.rows);},"nonfinite");
+  NativeTerrainUniformSnapshot assigned;assigned=packed;check(!assigned.PackedInt(S::texSquare,iv.rows));assigned.SealSlots();check(assigned.PackedInt(S::texSquare,iv.rows));
+ }
+ check(sizeof(NativeTerrainTypedVector)==20);
+ std::cout<<"typed vector bytes="<<sizeof(NativeTerrainTypedVector)<<" snapshot bytes="<<sizeof(NativeTerrainUniformSnapshot)<<"\\n";
+
  std::cout<<"PASS "<<checks<<" actual terrain slot/value-reader checks; Metal execution not tested\\n";
 }
 '''

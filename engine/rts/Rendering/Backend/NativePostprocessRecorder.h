@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "NativePostprocessData.h"
+#include "NativeCompletedFrameLedger.h"
 #include <functional>
 #include <optional>
 
@@ -66,8 +67,12 @@ private:
 	std::shared_ptr<NativePostprocessFrame> recording;
 	std::shared_ptr<const NativePostprocessFrame> pending;
 	std::vector<Change> changes;
- struct SubmittedFrame {std::shared_ptr<const NativePostprocessFrame> frame;std::vector<Change> changes;};
- std::optional<SubmittedFrame> submittedFrame;
+ struct SubmittedFrame {
+  std::shared_ptr<const NativePostprocessFrame> frame;std::vector<Change> changes;
+  SubmittedFrame(std::shared_ptr<const NativePostprocessFrame>&& f,std::vector<Change>&& c) noexcept:
+   frame(std::move(f)),changes(std::move(c)) {}
+ };
+ NativeCompletedFrameLedger<SubmittedFrame,2> submittedFrames;
  PublicationObserver publicationObserver;
 };
 } // namespace rendering

@@ -1,0 +1,25 @@
+{
+  "source_checks": {
+    "writer": 121,
+    "eager_boundary": 116,
+    "reader_bitwise": 38159,
+    "link_certificate": 11
+  },
+  "observation_fingerprint": "12487790920875332592",
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "independent_review": "GO; removing named slot invalidation triggers assertion failure",
+  "snapshot_bytes": 1424,
+  "previous_snapshot_bytes": 432,
+  "typed_vector_bytes": 20,
+  "full_app_build": false,
+  "metal_execution": false,
+  "performance_measured": false,
+  "source_sha256": {
+    "engine/rts/Rendering/Backend/NativeWaterGroundSourceData.h": "b4637df7d7365a672f82b4795c2d0a2a9793476104f26d4ad423724ac452fd20",
+    "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp": "80c14dfe44279676b787ed1069de936d49519042c55d08d4f85692113f1d8316",
+    "engine/rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm": "59248827b8604b2178e86b06053276dd3011d7b171ac4492c299b0a7175debbf"
+  }
+}

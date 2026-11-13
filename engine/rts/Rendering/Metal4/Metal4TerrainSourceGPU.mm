@@ -405,6 +405,9 @@ const NativeTerrainUniformValue& Value(const NativeTerrainUniformSnapshot& unifo
 }
 simd_float4 Float(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUniformSlot slot,unsigned components)
 {
+ if(const auto* packed=uniforms.PackedFloat(slot,components)){
+  simd_float4 result;for(unsigned i=0;i<4;++i)result[i]=(*packed)[i];return result;
+ }
 	const char* name=NativeTerrainUniformNames[size_t(slot)];
 	const auto& value=Value(uniforms,slot,components);
 	const auto* bytes=std::get_if<std::vector<float>>(&value.values);
@@ -415,6 +418,9 @@ simd_float4 Float(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUnif
 }
 simd_int4 Int(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUniformSlot slot,unsigned components)
 {
+ if(const auto* packed=uniforms.PackedInt(slot,components)){
+  simd_int4 result;for(unsigned i=0;i<4;++i)result[i]=(*packed)[i];return result;
+ }
 	const char* name=NativeTerrainUniformNames[size_t(slot)];
 	const auto& value=Value(uniforms,slot,components);
 	const auto* bytes=std::get_if<std::vector<int32_t>>(&value.values);
@@ -430,6 +436,9 @@ simd_float4x4 Matrix(const float* source,bool transpose=false)
 }
 simd_float4x4 Matrix(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUniformSlot slot)
 {
+ if(const auto* packed=uniforms.PackedMatrix(slot)){
+  simd_float4x4 result;for(unsigned c=0;c<4;++c)for(unsigned r=0;r<4;++r)result.columns[c][r]=(*packed)[c*4+r];return result;
+ }
 	const auto& value=Value(uniforms,slot,4,4);const auto* bytes=std::get_if<std::vector<float>>(&value.values);
 	Require(bytes&&bytes->size()==16,"Original terrain matrix uniform type differs");return Matrix(bytes->data(),value.transpose);
 }

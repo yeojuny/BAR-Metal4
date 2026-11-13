@@ -1,0 +1,21 @@
+{
+  "scope": "Link actual postprocess/cloud sources; no recorder algorithm stubs.",
+  "sourceSHA256": {
+    "tools/metal4-contracts/TestNativeFrameJournalOwners.cpp": "61d355875c7ad94cc679ebc9bc4509bf7d84c9448b13551196837502698b80ce",
+    "rts/Rendering/Backend/NativePostprocessRecorder.cpp": "09f8e25b13f758e9d37f993676b07a6a833e3179826a7f1ecd643fd566a72b2a",
+    "rts/Rendering/Backend/NativeVolumetricCloudContext.cpp": "bc84ced6d0684e43378de4a32252740c139596f575f7595ddae1738f21a36899",
+    "rts/Rendering/Backend/NativePostprocessData.cpp": "e572ebea2572842e65f514e40901f0f31fcd18921d625aaf4f26f7a928304e77",
+    "rts/Rendering/Backend/NativeCUSUniformData.cpp": "64edccb673d55e356c346e4b0a39225d4405d2be5f6bdf2ce7072c84e248089b",
+    "rts/Rendering/Backend/ScreenDrawList.cpp": "bab36585cdc3413f93057afb9abbd234319312a6611ab6805cb0c07d207f6df7",
+    "rts/Rendering/Backend/NativeCompletedFrameLedger.h": "29cb9cd62a20d7a62c13cae6c37cee852fa7e6e700eacb6061143844bf00f7ba",
+    "rts/Rendering/Backend/NativePostprocessRecorder.h": "7951ab10be9681bd709b5ed3d4f74b8ab6095b89b1064c87c84f0938bd00bc39",
+    "rts/Rendering/Backend/NativeVolumetricCloudContext.h": "0dadee3e2a0b3e186d98a8a5a6474a1fcf61598a27cf529df3b3c3b2782c764b"
+  },
+  "passed": true,
+  "exit": 0,
+  "output": "1028 actual postprocess/cloud owner checks passed\n",
+  "limits": [
+    "No Metal execution or async enabled; UI runtime linkage not included.",
+    "ASan/UBSan enabled; LeakSanitizer disabled in sandbox."
+  ]
+}

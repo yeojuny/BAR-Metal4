@@ -31,7 +31,9 @@ def main():
         assert cpp.count(needle)==1
         cpp=cpp.replace(needle,needle+' OriginalNativeSourceProgramBinding().Current(); /* fixture eager observation hook */')
     raw=shader[shader.index('\t\tvirtual void SetUniform1i('):shader.index('\n\tpublic:',shader.index('\t\tvirtual void SetUniform1i('))]
-    prefix='''#include <array>
+    prefix='''#include <algorithm>
+#include <bit>
+#include <array>
 #include <cstdint>
 #include <map>
 #include <variant>
