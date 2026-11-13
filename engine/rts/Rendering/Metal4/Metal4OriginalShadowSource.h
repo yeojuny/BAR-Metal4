@@ -25,12 +25,12 @@ private:
  PreparedOriginalShadowSource();struct Impl;std::unique_ptr<Impl> impl;
  friend std::unique_ptr<PreparedOriginalShadowSource> PrepareOriginalShadowSource(RuntimeLease&,
   std::shared_ptr<const NativeOriginalShadowFrame>,std::shared_ptr<const NativeWorldDrawFrame>,CUSSourceGPU&,EngineShadowGPU&,OriginalShadowParticlesGPU&,
-  const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,std::span<const NativeWorldAttachmentClear>,uint64_t,uint64_t,bool,double&);
+  const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,std::span<const NativeWorldAttachmentClear>,uint64_t,uint64_t,bool,double&,std::shared_ptr<const ShadowTerrainPreparation>);
 };
 std::unique_ptr<PreparedOriginalShadowSource> PrepareOriginalShadowSource(RuntimeLease&,
  std::shared_ptr<const NativeOriginalShadowFrame>,std::shared_ptr<const NativeWorldDrawFrame>,CUSSourceGPU&,EngineShadowGPU&,OriginalShadowParticlesGPU&,
  const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,std::span<const NativeWorldAttachmentClear> actualClearQueue,
- uint64_t actualDrawFrame,uint64_t actualSubmission,bool validation,double& milliseconds);
+ uint64_t actualDrawFrame,uint64_t actualSubmission,bool validation,double& milliseconds,std::shared_ptr<const ShadowTerrainPreparation> preparedGeometry={});
 // Used BEFORE Lua construction too; this exact target comes from the real
 // original allocated backing, not a hardcoded D32 profile or normal MRT.
 CUSSourceTarget OriginalShadowSourceTarget(const NativeShadowTextureBacking& depth,

@@ -2,6 +2,8 @@
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
 #include <cassert>
 #include <iostream>
+// CPU sentinel for the opaque typed Metal handle; no Metal implementation linked.
+namespace rendering::metal4 {struct ShadowTerrainPreparation {int serial;};}
 using namespace rendering;
 int main(){
  WorldFrame source;source.sourceDrawFrame=7;source.units.resize(2);const auto units=source.units.data();
@@ -21,6 +23,17 @@ int main(){
   if(bad==1)o.readback=reinterpret_cast<const ui::NativeUIReadbackPrefix*>(1);
   if(bad>=2){o.screenUI=&borrowed;if(bad==2)borrowed.storage.reset();if(bad==3)borrowed.drawList=nullptr;if(bad==4)borrowed.targetPasses=std::span<const ScreenRenderTargetPass>(reinterpret_cast<const ScreenRenderTargetPass*>(1),0);}
   try{Metal4WorldSubmission rejected(owned,o);assert(false);}catch(const std::logic_error&){}
+ }
+ {
+  auto a=std::make_shared<metal4::ShadowTerrainPreparation>();a->serial=1;
+  auto b=std::make_shared<metal4::ShadowTerrainPreparation>();b->serial=2;
+  std::weak_ptr<const metal4::ShadowTerrainPreparation> wa=a,wb=b;
+  auto oa=valid;oa.preparedShadowTerrain=a;auto ob=valid;ob.preparedShadowTerrain=b;
+  auto pa=std::make_shared<const Metal4WorldSubmission>(owned,oa);auto pb=std::make_shared<const Metal4WorldSubmission>(owned,ob);
+  a.reset();b.reset();oa={};ob={};
+  worker.Invoke([pa,pb]{assert(pa->Options().preparedShadowTerrain->serial==1);assert(pb->Options().preparedShadowTerrain->serial==2);});
+  pa.reset();assert(wa.expired()&&!wb.expired()); // A completion/no-Begin release cannot clear B.
+  pb.reset();assert(wb.expired());
  }
  auto partial=std::make_shared<WorldFrame>();partial->deferredMainParticles.Defer();
  try{Metal4WorldSubmission rejected(partial,valid);assert(false);}catch(const std::logic_error&){}

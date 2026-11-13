@@ -10,7 +10,7 @@ struct ShadowTerrainPreparation {
  std::uint64_t nanoseconds=0,sourceBytes=0;
  bool Matches(const Runtime* selectedContext,id<MTLDevice> selectedDevice,
   const std::shared_ptr<const NativeTerrainShadowFrame>& selected) const {
-  return context==selectedContext&&device==selectedDevice&&source==selected&&
+  return context==selectedContext&&device==selectedDevice&&source==selected&&!source.owner_before(selected)&&!selected.owner_before(source)&&
    source&&geometry.size()==source->draws.size();
  }
  static std::shared_ptr<const ShadowTerrainPreparation> Prepare(ShadowTerrainGeometryCache& cache,

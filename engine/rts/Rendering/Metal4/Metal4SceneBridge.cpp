@@ -1942,7 +1942,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  // completion is touched until the existing retirement boundary below.
  static const bool prepareOverlap=[] {const char* value=std::getenv("BAR_NATIVE_PREPARE_OVERLAP");return !value||std::string_view(value)=="1";}();
  const auto independentResources=(prepareOverlap&&presentWorld&&session->preparedFrame&&session->renderer)?
-  session->renderer->PrepareIndependentResources(*session->preparedFrame):std::shared_ptr<const void>{};
+  session->renderer->PrepareIndependentResources(*session->preparedFrame):std::shared_ptr<const metal4::ShadowTerrainPreparation>{};
 	// Consume even if the window became hidden or its drawable is unavailable.
  // CPU capture is complete. Retire N before touching shared GPU preparation
  // caches/targets for N+1. Completion identifies only N's producer records.
@@ -2031,6 +2031,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		globalRendering->msaaLevel=int(session->renderer->ActualMainSampling().effective);
 	}
 	Metal4WorldRenderOptions options;
+ options.preparedShadowTerrain=independentResources;
  session->sourceCredits.Validate(sourceCredit,capturedFrame.sourceDrawFrame);options.sourceCredit=sourceCredit;
  // Preserve the already-built exact read receipt across the joined worker.
  // Allocate before moving rows; independent main preparation has finished.

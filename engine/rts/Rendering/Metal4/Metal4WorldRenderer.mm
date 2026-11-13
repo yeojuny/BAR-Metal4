@@ -2322,7 +2322,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
  }
 }
 
-std::shared_ptr<const void> Metal4WorldRenderer::PrepareIndependentResources(const WorldFrame& frame)
+std::shared_ptr<const metal4::ShadowTerrainPreparation> Metal4WorldRenderer::PrepareIndependentResources(const WorldFrame& frame)
 {
  FinishCPUWork();
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
@@ -3286,7 +3286,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
     Require(!lua->ssao||lua->ssao->draws.empty(),"Original shadow Lua SSAO needs its actual named-target command consumer");
    }
    originalShadow=PrepareOriginalShadowSource(lease,frame.originalShadow,frame.luaWorldDrawFrame,impl->cusSourceGPU,impl->originalShadowGPU,impl->originalShadowParticlesGPU,
-    sourceGeometry,sourceImages,shadowClears,frame.sourceDrawFrame,sourceSubmission,options.shaderValidation,result.shaderCompileMs);
+    sourceGeometry,sourceImages,shadowClears,frame.sourceDrawFrame,sourceSubmission,options.shaderValidation,result.shaderCompileMs,options.preparedShadowTerrain);
   }else {
    Require(shadowClears.empty(),"Common shadow clears lost their original named source frame");
    if(frame.luaWorldDrawFrame)for(const auto& draw:frame.luaWorldDrawFrame->draws)Require(draw.stage!=NativeWorldDrawStage::ShadowOpaque,

@@ -25,6 +25,7 @@
 #include <functional>
 
 namespace rendering {
+namespace metal4 { struct ShadowTerrainPreparation; }
 class NativeShieldCaptureJournal;
 namespace ui { struct NativeUIReadbackPrefix; }
 struct NativeGeometryTextureRequest;
@@ -78,6 +79,7 @@ struct Metal4WorldRenderOptions {
 	bool shaderValidation = DefaultShaderValidation;
  NativeSourceFrameCredits::Lease sourceCredit;
  bool allowBeginReady=false;
+ std::shared_ptr<const metal4::ShadowTerrainPreparation> preparedShadowTerrain; // Exact request owner, never ambient latest state.
  std::shared_ptr<const NativeCUSCPUReadScope::Packet> cpuReadPacket; // Joined-call immutable rows; main retains final owner.
  std::optional<std::uint64_t> heldSourceDraw; // Exact admitted UI owner, never latest-pending inference.
  std::shared_ptr<NativeFrameBeginReceipt> beginReceipt; // Owned ordinary-frame Begin evidence; no source callback.
@@ -235,7 +237,7 @@ public:
  Metal4WorldPresentationResult DrawOwned(std::shared_ptr<const Metal4WorldSubmission>,std::function<void()> previousRetired = {},std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled = {});
  // Prepare independent immutable shared-buffer inputs while the preceding
  // GPU frame runs. The returned owner must outlive this frame's Draw call.
- std::shared_ptr<const void> PrepareIndependentResources(const WorldFrame& frame);
+ std::shared_ptr<const metal4::ShadowTerrainPreparation> PrepareIndependentResources(const WorldFrame& frame);
  // Callback consumes N's receipts only after its real completion. This entry
  // retains one GPU submission and does not alter shader/pass ordering.
  Metal4WorldPresentationResult DrawPreparingWhilePending(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);

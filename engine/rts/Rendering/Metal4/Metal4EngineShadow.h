@@ -5,6 +5,7 @@
 #include "Metal4GenericShadow.h"
 #include "Rendering/Backend/NativeEngineShadowData.h"
 namespace rendering::metal4 {
+struct ShadowTerrainPreparation;
 class PreparedEngineShadow {
 public:
  ~PreparedEngineShadow();
@@ -18,15 +19,16 @@ private:
 class EngineShadowGPU {
 public:
  EngineShadowGPU();~EngineShadowGPU();
- // CPU-only immutable geometry preparation; no runtime lease, GPU commands,
+ // Immutable geometry preparation may allocate GPU buffers; no runtime lease, GPU commands,
  // residency change or completion publication. Keep the owner through Draw.
- std::shared_ptr<const void> PrepareTerrainGeometry(std::shared_ptr<const NativeTerrainShadowFrame>);
+ std::shared_ptr<const ShadowTerrainPreparation> PrepareTerrainGeometry(std::shared_ptr<const NativeTerrainShadowFrame>);
  std::shared_ptr<const void> CompileOriginalProgram(RuntimeLease&,bool modern,const CUSSourceTarget&,bool,double&);
  std::shared_ptr<const void> CompileOriginalProgram(RuntimeLease&,NativeEngineShadowProfile,const CUSSourceTarget&,bool,double&);
  std::shared_ptr<PreparedEngineShadow> Prepare(RuntimeLease&,std::shared_ptr<const NativeEngineShadowFrame>,const CUSSourceTarget&,
   const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,bool,double&);
  std::shared_ptr<PreparedEngineShadow> PrepareTerrain(RuntimeLease&,
-  std::shared_ptr<const NativeTerrainShadowFrame>,const CUSSourceTarget&,const CUSSourceImageProvider&);
+  std::shared_ptr<const NativeTerrainShadowFrame>,const CUSSourceTarget&,const CUSSourceImageProvider&,
+  std::shared_ptr<const ShadowTerrainPreparation> preparedGeometry={});
  // Consumes the common recorder's actual ShadowOpaque commands and ordinals.
  // Expected context comes from the retained shadow depth object's context.
  std::shared_ptr<PreparedGenericShadow> PrepareGeneric(RuntimeLease&,std::shared_ptr<const NativeWorldDrawFrame>,

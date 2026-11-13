@@ -83,7 +83,7 @@ void PreparedOriginalShadowSource::DidComplete(){
   throw std::runtime_error(message);
  }
 }
-std::unique_ptr<PreparedOriginalShadowSource> PrepareOriginalShadowSource(RuntimeLease& lease,std::shared_ptr<const NativeOriginalShadowFrame> source,std::shared_ptr<const NativeWorldDrawFrame> commonFrame,CUSSourceGPU& cus,EngineShadowGPU& engine,OriginalShadowParticlesGPU& particles,const EngineDeferredGeometryProvider& geometry,const CUSSourceImageProvider& images,std::span<const NativeWorldAttachmentClear> actualClearQueue,uint64_t frame,uint64_t submission,bool validation,double& milliseconds){
+std::unique_ptr<PreparedOriginalShadowSource> PrepareOriginalShadowSource(RuntimeLease& lease,std::shared_ptr<const NativeOriginalShadowFrame> source,std::shared_ptr<const NativeWorldDrawFrame> commonFrame,CUSSourceGPU& cus,EngineShadowGPU& engine,OriginalShadowParticlesGPU& particles,const EngineDeferredGeometryProvider& geometry,const CUSSourceImageProvider& images,std::span<const NativeWorldAttachmentClear> actualClearQueue,uint64_t frame,uint64_t submission,bool validation,double& milliseconds,std::shared_ptr<const ShadowTerrainPreparation> preparedGeometry){
  Require(source&&source->textures&&source->cus&&source->sourceDrawFrame==frame&&source->textures->sourceDrawFrame==frame&&source->cus->sourceDrawFrame==frame&&submission&&source->beginSequence&&source->endSequence>source->beginSequence,"Original shadow graph lost its actual immutable frame/source ordinals/submission");
  Require(bool(source->clearProof),"Original shadow source has no actual clear initialization owner");source->clearProof->RequireQueue(source->textures,actualClearQueue,source->beginSequence,source->endSequence);
  const auto& textures=*source->textures;
@@ -106,7 +106,7 @@ std::unique_ptr<PreparedOriginalShadowSource> PrepareOriginalShadowSource(Runtim
  EndPreparationScope(13,prepSubStart);prepSubStart=StartPreparationScope();
  if(out.source->terrain){
   Require(out.source->terrain->sourceDrawFrame==frame&&out.source->terrain->contextGeneration==textures.depth.current->contextGeneration,"Original MAP shadow frame changed its actual source/context");
-  out.terrain=engine.PrepareTerrain(lease,out.source->terrain,out.target,images);
+  out.terrain=engine.PrepareTerrain(lease,out.source->terrain,out.target,images,std::move(preparedGeometry));
   for(size_t i=0;i<out.terrain->DrawCount();++i)out.draws.push_back({out.terrain->SequenceAt(i),i,5});
  }
  EndPreparationScope(14,prepSubStart);prepSubStart=StartPreparationScope();

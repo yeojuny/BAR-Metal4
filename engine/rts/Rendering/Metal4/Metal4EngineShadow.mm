@@ -253,7 +253,6 @@ struct EngineShadowGPU::Impl {
  RetiredArguments argumentPool;
  ShadowUploadPool uploadPool;
  ShadowTerrainGeometryCache terrainGeometry;
- std::weak_ptr<const ShadowTerrainPreparation> terrainPreparation;
  struct Original{bool modern=false,validation=false;NativeEngineShadowProfile profile=NativeEngineShadowProfile::LegacyModel;CUSSourceTarget target;__strong id<MTLRenderPipelineState> pipeline=nil;};
  std::map<const void*,std::shared_ptr<const Original>> programs;__strong id<MTLLibrary> library=nil;
  std::map<uint32_t,id<MTLLibrary>> imageLibraries;
@@ -381,17 +380,18 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::Prepare(RuntimeLease& lea
   }result->impl->draws.push_back(std::move(draw));
  }return result;
 }
-std::shared_ptr<const void> EngineShadowGPU::PrepareTerrainGeometry(std::shared_ptr<const NativeTerrainShadowFrame> source)
+std::shared_ptr<const ShadowTerrainPreparation> EngineShadowGPU::PrepareTerrainGeometry(std::shared_ptr<const NativeTerrainShadowFrame> source)
 {
  // EngineShadowGPU has the existing serialized main-thread owner. GPU
  // callbacks do not mutate this cache; old submissions own their buffers.
  auto& runtime=SharedRuntime();
  static const bool measure=[] {const char* p=std::getenv("BAR_NATIVE_RESOURCE_PROBE_FILE");return p&&p[0]=='/';}();
  auto prepared=ShadowTerrainPreparation::Prepare(impl->terrainGeometry,&runtime,runtime.Device(),std::move(source),measure);
- impl->terrainPreparation=prepared;return prepared;
+ return prepared;
 }
 std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLease& lease,
- std::shared_ptr<const NativeTerrainShadowFrame> source,const CUSSourceTarget& target,const CUSSourceImageProvider& images)
+ std::shared_ptr<const NativeTerrainShadowFrame> source,const CUSSourceTarget& target,const CUSSourceImageProvider& images,
+ std::shared_ptr<const ShadowTerrainPreparation> early)
 {
  Target(target);
  Require(source&&source->drawInvoked&&source->contextGeneration&&source->sourceDrawFrame&&images&&
@@ -400,7 +400,6 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
  Require(source->drawEntered||source->draws.empty(),"Original MAP shadow early return emitted geometry");
  impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->terrainSource=std::move(source);
  TerrainUniformBatch terrainUniforms(lease,result->impl->terrainSource->draws.size(),sizeof(TerrainShadowUniform),32);
- const auto early=impl->terrainPreparation.lock();
  const bool useEarly=early&&early->Matches(lease.ContextIdentity(),lease.Device(),result->impl->terrainSource);
  if(useEarly) {
   CountPreparationTrace(7,early->statistics.hits);CountPreparationTrace(8,early->statistics.misses);

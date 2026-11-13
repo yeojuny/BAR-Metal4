@@ -13,7 +13,23 @@ std::atomic<uint64_t> nextStorage{1};
 std::shared_ptr<const ImageStorage> Storage(std::shared_ptr<const NativePBRImage> image){auto value=std::dynamic_pointer_cast<const ImageStorage>(image);Require(value&&value->texture,"Original PBR image lacks its actual GPU storage");return value;}
 void Readable(const NativePBRImage& image,uint64_t submission){if(image.content==NativeTextureContent::AllocationOnly)return;Require(image.completed.load(std::memory_order_acquire)||(submission&&image.encodedSubmission.load(std::memory_order_acquire)==submission),"Original PBR producer has not executed before this consumer");}
 }
+// BEGIN PBR_SAMPLER_CACHE
+struct PBRSamplerCache {
+ __strong id<MTLDevice> device=nil;
+ __strong id<MTLSamplerState> nearest=nil,linear=nil;
+ template<class Create> id<MTLSamplerState> Get(id<MTLDevice> requested,bool useLinear,Create&& create) {
+  if(device==requested){id<MTLSamplerState> cached=useLinear?linear:nearest;if(cached)return cached;}
+  id<MTLSamplerState> sampler=create();
+  Require(sampler!=nil,"Cannot allocate original PBR sampler");
+  // Publish only successful creation. A strong device owner prevents pointer reuse.
+  if(device!=requested){nearest=nil;linear=nil;device=requested;}
+  if(useLinear)linear=sampler;else nearest=sampler;
+  return sampler;
+ }
+};
+// END PBR_SAMPLER_CACHE
 struct PBRSourceGPU::Impl {
+ PBRSamplerCache samplers;
 	std::shared_ptr<Pipeline> brdf,environment;
 	bool validation=false,compiled=false;
 	void Compile(RuntimeLease& lease,bool validate,double& elapsed){
@@ -84,7 +100,10 @@ void PreparedPBRSource::DidComplete(uint64_t submission){Require(submission&&imp
 CUSSourceImage PBRSourceGPU::Image(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission)const
 {
 	auto image=GetNativePBRImage(binding);Require(bool(image),"Source binding is not an original PBR image");auto storage=Storage(image);lease.AddAllocation(storage->texture);
-	const auto& state=binding.object->sampling;Require(state==image->allocation.sampling,"Original PBR sampler was changed and requires the shared general sampler provider");auto* sd=[MTLSamplerDescriptor new];sd.minFilter=sd.magFilter=state.minFilter==0x2601?MTLSamplerMinMagFilterLinear:MTLSamplerMinMagFilterNearest;sd.mipFilter=MTLSamplerMipFilterNotMipmapped;sd.sAddressMode=sd.tAddressMode=sd.rAddressMode=MTLSamplerAddressModeClampToEdge;sd.supportArgumentBuffers=YES;
-	id<MTLSamplerState> sampler=[lease.Device() newSamplerStateWithDescriptor:sd];Require(sampler,"Cannot allocate original PBR sampler");lease.Retain(sampler);CUSSourceImage result;result.texture=storage->texture;result.sampler=sampler;result.owner=storage;result.requireReadable=[storage,submission]{Readable(*storage,submission);};return result;
+	const auto& state=binding.object->sampling;Require(state==image->allocation.sampling,"Original PBR sampler was changed and requires the shared general sampler provider");const bool useLinear=state.minFilter==0x2601;
+ id<MTLSamplerState> sampler=impl->samplers.Get(lease.Device(),useLinear,[&]{
+ auto* sd=[MTLSamplerDescriptor new];sd.minFilter=sd.magFilter=useLinear?MTLSamplerMinMagFilterLinear:MTLSamplerMinMagFilterNearest;sd.mipFilter=MTLSamplerMipFilterNotMipmapped;sd.sAddressMode=sd.tAddressMode=sd.rAddressMode=MTLSamplerAddressModeClampToEdge;sd.supportArgumentBuffers=YES;
+	return [lease.Device() newSamplerStateWithDescriptor:sd];
+ });lease.Retain(sampler);CUSSourceImage result;result.texture=storage->texture;result.sampler=sampler;result.owner=storage;result.requireReadable=[storage,submission]{Readable(*storage,submission);};return result;
 }
 } // namespace rendering::metal4
