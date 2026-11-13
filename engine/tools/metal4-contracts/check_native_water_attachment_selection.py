@@ -23,3 +23,16 @@ assert 'toTexture:waterAttachments->preDepth' in body
 assert 'setTexture:waterAttachments->preColor.gpuResourceID' in body
 assert body.index('lease.RetirePreviousSubmission();')<start
 print('Water attachment selection/retention/publication and exact downstream routing structural PASS; no native execution')
+assert 'NativeIdleResourcePool<M4WaterPair,2> waterReflectionStorage,waterRefractionStorage,preWaterStorage;' in s
+assert 'std::shared_ptr<const M4WaterPair> reflectionOwner,refractionOwner,preOwner;' in s
+assert 'waterAttachments->preOwner=waterPair(impl->preWaterStorage' in body
+assert 'pairOwner=waterPair(reflected?impl->waterReflectionStorage:impl->waterRefractionStorage' in body
+assert 'color=pairOwner->color;depth=pairOwner->depth;' in body
+assert 'waterAttachments->preColor=waterAttachments->preOwner->color;waterAttachments->preDepth=waterAttachments->preOwner->depth;' in body
+for pool in ['waterReflectionStorage','waterRefractionStorage','preWaterStorage']:
+ assert 'impl->'+pool+'.Clear()' in s
+control=s.split('const auto clear=[owner,family]',1)[1].split('if(!owner->renderWorker',1)[0]
+for family,pools in [('Bump',['waterReflectionStorage','waterRefractionStorage','preWaterStorage']),('Dynamic',['waterReflectionStorage','waterRefractionStorage']),('Legacy',['waterReflectionStorage','preWaterStorage'])]:
+ section=control.split('case WaterReset::'+family+':',1)[1].split('break;',1)[0]
+ for pool in pools: assert 'owner->'+pool+'.Clear()' in section
+print('Water per-role exact pair pins and bounded idle-pool reset routing structural PASS')

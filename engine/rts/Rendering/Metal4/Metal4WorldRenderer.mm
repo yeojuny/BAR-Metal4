@@ -24,6 +24,7 @@
 #include "Metal4WindowSurfaceNative.h"
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
 #include "Rendering/Backend/NativeSourceResourceCache.h"
+#include "Rendering/Backend/NativeIdleResourcePool.h"
 #include "Rendering/Backend/NativeRendererAccessGate.h"
 #include "Metal4WorldViewport.h"
 #include "Metal4LogicalCopyMapping.h"
@@ -133,7 +134,11 @@
 
 // One draw selects a complete attachment set. Storage reuse remains serial;
 // this owner is not permission for overlapping writes to the same textures.
+struct M4WaterPair {
+ __strong id<MTLTexture> color=nil,depth=nil;
+};
 struct M4WaterAttachments {
+ std::shared_ptr<const M4WaterPair> reflectionOwner,refractionOwner,preOwner;
  __strong id<MTLTexture> reflection=nil,reflectionDepth=nil;
  __strong id<MTLTexture> refraction=nil,refractionDepth=nil;
  __strong id<MTLTexture> preColor=nil,preDepth=nil;
@@ -421,6 +426,7 @@ struct Metal4WorldRenderer::Impl {
 	GameDecalGPU gameDecalGPU;
 	UnitPrimitiveGPU unitPrimitiveGPU;
 	metal4::FireSmokeGPU waterFireSmokeGPU;
+ NativeIdleResourcePool<M4WaterPair,2> waterReflectionStorage,waterRefractionStorage,preWaterStorage;
 	__strong id<MTLTexture> waterReflection=nil,waterReflectionDepth=nil;
 	__strong id<MTLTexture> waterRefraction=nil,waterRefractionDepth=nil;
  std::array<bool,2> reportedPlanar173{};
@@ -1121,14 +1127,17 @@ void Metal4WorldRenderer::ClearWaterFamily(WaterReset family)
    case WaterReset::Basic:owner->basicWaterGPU.ClearResources();break;
    case WaterReset::Bump:
     owner->waterGPU.ClearResources();
+    owner->waterReflectionStorage.Clear();owner->waterRefractionStorage.Clear();owner->preWaterStorage.Clear();
     owner->waterReflection=nil;owner->waterReflectionDepth=nil;owner->preWaterColor=nil;
     owner->waterRefraction=nil;owner->waterRefractionDepth=nil;owner->preWaterDepth=nil;break;
    case WaterReset::Dynamic:
     // ClearResources rejects a live prepared transaction before any mutation.
     owner->dynamicWaterGPU.ClearResources();
+    owner->waterReflectionStorage.Clear();owner->waterRefractionStorage.Clear();
     owner->waterReflection=nil;owner->waterReflectionDepth=nil;owner->waterRefraction=nil;owner->waterRefractionDepth=nil;break;
    case WaterReset::Legacy:
     owner->legacyWaterBumpGPU.ClearResources();
+    owner->waterReflectionStorage.Clear();owner->preWaterStorage.Clear();
     owner->waterReflection=nil;owner->waterReflectionDepth=nil;owner->preWaterColor=nil;break;
   }
  };
@@ -1202,6 +1211,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->sensorPreviewGPU.ClearResources();impl->sensorRadarGPU.ClearResources();
 	impl->basicWaterGPU.ClearResources();
 	impl->legacyWaterBumpGPU.ClearResources();impl->dynamicWaterGPU.ClearResources();
+	impl->waterReflectionStorage.Clear();impl->waterRefractionStorage.Clear();impl->preWaterStorage.Clear();
 	impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
 	impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
 	impl->preWaterColor=nil;impl->preWaterDepth=nil;
@@ -2538,14 +2548,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			Require(std::isfinite(uniform.viewProjection.columns[c][r]), "Actual camera matrix product overflow");
 		id<MTLBuffer> uniformBuffer = Buffer(lease.Device(), uniforms.data(), uniforms.size() * sizeof(WorldUniform), @"Actual camera/unit current piece matrices");
 		lease.AddAllocation(uniformBuffer);
-		const auto allocateTarget = [&](__strong id<MTLTexture>& target, MTLPixelFormat format, uint32_t width, uint32_t height, MTLTextureUsage usage) {
+		const auto allocateTarget = [&](__strong id<MTLTexture>& target, MTLPixelFormat format, uint32_t width, uint32_t height, MTLTextureUsage usage, bool retain=true) {
 			Require(width && height && width <= lease.Capabilities().maxTextureDimension2D && height <= lease.Capabilities().maxTextureDimension2D, "World target extent exceeds actual device bounds");
 			if (target == nil || target.width != width || target.height != height || target.pixelFormat != format || target.device != lease.Device() || (target.usage & usage) != usage) {
 				MTLTextureDescriptor* descriptor = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:format width:width height:height mipmapped:NO];
 				descriptor.storageMode = MTLStorageModePrivate; descriptor.usage = usage;
 				target = [lease.Device() newTextureWithDescriptor:descriptor]; Require(target != nil, "Cannot allocate original world target");
 			}
-			lease.AddAllocation(target);
+			if(retain)lease.AddAllocation(target);
 		};
 		prepPhase->Mark(2);
 		const auto mainSamples=impl->mainSampling.samples;
@@ -2888,6 +2898,19 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    belowWaterScene=Buffer(lease.Device(),&below,sizeof(below),@"Original below-water model plane3");lease.AddAllocation(belowWaterScene);
    aboveWaterScene=Buffer(lease.Device(),&above,sizeof(above),@"Original above-water model plane3");lease.AddAllocation(aboveWaterScene);
   }
+  const auto waterPair=[&](NativeIdleResourcePool<M4WaterPair,2>& storage,uint32_t width,uint32_t height,MTLTextureUsage colorUsage){
+   const auto matches=[&](id<MTLTexture> texture,MTLPixelFormat format,MTLTextureUsage usage){
+    return texture&&texture.device==lease.Device()&&texture.width==width&&texture.height==height&&texture.pixelFormat==format&&
+     texture.sampleCount==1&&texture.textureType==MTLTextureType2D&&texture.storageMode==MTLStorageModePrivate&&(texture.usage&usage)==usage;
+   };
+   const auto depthUsage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
+   return storage.Acquire([&](const M4WaterPair& pair){return matches(pair.color,MTLPixelFormatRGBA8Unorm,colorUsage)&&matches(pair.depth,MTLPixelFormatDepth32Float,depthUsage);},[&]{
+    auto pair=std::make_shared<M4WaterPair>();
+    allocateTarget(pair->color,MTLPixelFormatRGBA8Unorm,width,height,colorUsage,false);
+    allocateTarget(pair->depth,MTLPixelFormatDepth32Float,width,height,depthUsage,false);
+    return pair;
+   },[&](const auto& pair){lease.AddAllocation(pair->color);lease.AddAllocation(pair->depth);});
+  };
   auto waterAttachments=std::make_shared<M4WaterAttachments>();
   waterAttachments->reflection=impl->waterReflection;waterAttachments->reflectionDepth=impl->waterReflectionDepth;
   waterAttachments->refraction=impl->waterRefraction;waterAttachments->refractionDepth=impl->waterRefractionDepth;
@@ -2899,8 +2922,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
     water.screenTextureWidth==logicalCopyMapping->width&&water.screenTextureHeight==logicalCopyMapping->height&&
     water.material&&water.material->shaderViewport==water.camera.viewport,
     "Original water copy allocation/camera requires its same-frame logical resize reload");
-   allocateTarget(waterAttachments->preColor,MTLPixelFormatRGBA8Unorm,water.screenTextureWidth,water.screenTextureHeight,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite);
-   allocateTarget(waterAttachments->preDepth,MTLPixelFormatDepth32Float,water.screenTextureWidth,water.screenTextureHeight,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
+   waterAttachments->preOwner=waterPair(impl->preWaterStorage,water.screenTextureWidth,water.screenTextureHeight,MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite);
+   waterAttachments->preColor=waterAttachments->preOwner->color;waterAttachments->preDepth=waterAttachments->preOwner->depth;
   }
   if(legacyWaterActive&&frame.legacyWater->refraction){
    const auto& ref=*frame.legacyWater->refraction;
@@ -2918,8 +2941,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
     auto& depth=reflected?waterAttachments->reflectionDepth:waterAttachments->refractionDepth;
     uint32_t width=dynamicWaterActive?(reflected?512:frame.dynamicWater->material->refractionExtent):legacyWaterActive?512:(reflected?frame.bumpWater->settings.reflectionSize:frame.bumpWater->screenTextureWidth);
     uint32_t height=dynamicWaterActive?width:legacyWaterActive?512:(reflected?frame.bumpWater->settings.reflectionSize:frame.bumpWater->screenTextureHeight);
-    allocateTarget(color,MTLPixelFormatRGBA8Unorm,width,height,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
-    allocateTarget(depth,MTLPixelFormatDepth32Float,width,height,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
+    auto& pairOwner=reflected?waterAttachments->reflectionOwner:waterAttachments->refractionOwner;
+    pairOwner=waterPair(reflected?impl->waterReflectionStorage:impl->waterRefractionStorage,width,height,MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget);
+    color=pairOwner->color;depth=pairOwner->depth;
     // Original BumpWater FBOs own color and depth only.
     target.color=color;target.depth=depth;
     const auto& view=*target.source;

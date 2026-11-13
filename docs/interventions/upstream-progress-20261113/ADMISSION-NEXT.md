@@ -170,3 +170,8 @@ other caches still require existing barriers, so lookahead remains disabled.
 Cropped terrain depth now also uses a bounded idle pair cache and exact snapshot
 pin, replacing latest raw-texture reuse. N=1 alias and multisample distinction,
 per-snapshot encode guard and original events/barriers are preserved.
+
+Water reflection/refraction/pre-copy now have separate bounded idle pair pools;
+each active selection pins its physical pair through runtime lifetime. The earlier
+selection-only limitation is superseded for these three roles, not for other
+caches. Existing barriers stay; cache bounds do not bound all live GPU memory.

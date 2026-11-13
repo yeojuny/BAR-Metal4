@@ -27,3 +27,28 @@ are still governed by RuntimeLease failure handling, not rolled back here.
 Independent review: GO; independently reran gate/control sanitizer regressions.
 Later scene-color retention or resource commit can still fail after a complete
 set has been published; this change does not roll back every later Draw failure.
+
+## Follow-up: bounded per-role physical pairs
+
+Reflection, refraction and pre-water copy now each use the tested two-slot idle
+pool. Every active role acquires an exact color/depth pair and pins it in the
+selected bundle through runtime retirement. An externally pinned pair is never
+reused. The three pools cannot substitute resources across roles; compatibility
+includes device, extent, format, type, sample count, private storage and required
+usage. Pre-copy color remains shader-write capable; planar color remains a render
+target. Both allocations and retention complete before a pool entry publishes.
+The complete visible selection still publishes only after all draw preparation.
+
+Existing validation requires current producers for enabled planar roles. Every
+Bump frame still acquires its pre-copy pair, preserving existing behavior even
+when a particular copy is disabled. Preserved inactive raw aliases are not used
+as substitutes for active producers. Family controls clear the corresponding
+pools; static reset clears all three. Existing barriers remain for uncounted raw
+aliases and other dependencies. Two slots per role bound the cache, not total
+live images/bytes. More memory versus a single scratch set is possible; real
+native allocation count and performance have not been measured. Earlier text
+about unchanged physical reuse describes the prior selection-only checkpoint.
+
+Production generic pool sanitizer tests remain applicable. Additional native
+pair acquisition/pinning and family reset wiring are structural checks only;
+Objective-C++ compilation and GPU allocation failure execution remain pending.
