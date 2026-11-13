@@ -143,6 +143,8 @@ private:
 
 class RuntimeLease {
 public:
+ enum class Retirement { DrainOnCaller, RequireAlreadyRetired };
+ explicit RuntimeLease(Retirement,Runtime& runtime = SharedRuntime());
 	explicit RuntimeLease(Runtime& runtime = SharedRuntime());
  // Owned preparation/recording may precede retirement on an independent slot.
  // Every submit still requires the preceding event AND feedback to retire.
@@ -204,6 +206,7 @@ public:
 	void SubmitAndDefer(Clock::time_point, uint64_t, id<MTLDrawable>, std::function<void(const FrameMetrics&)>);
 	std::vector<uint8_t> Readback(id<MTLTexture> texture, uint32_t width, uint32_t height, double& milliseconds);
 private:
+ RuntimeLease(std::function<void()> previousRetired,Runtime&,Retirement);
 	Runtime& runtime;
 	std::unique_lock<std::mutex> lock;
 	std::shared_ptr<RuntimeFrameResources> frame;

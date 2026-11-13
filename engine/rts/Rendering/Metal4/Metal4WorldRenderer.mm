@@ -1920,14 +1920,27 @@ void Metal4WorldRenderer::ConstructOriginalShadowParticlePrograms(NativeOriginal
 }
 std::shared_ptr<const NativeCUSProgramConsumer> Metal4WorldRenderer::CompileOriginalCUSProgram(const NativeCUSProgramSource& source)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
- MainThread();Require(impl!=nullptr,"Original CUS construction has no actual renderer");
- RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
- Require(layer&&layer.device==lease.Device(),"Original CUS compiler belongs to another actual device");
- // Original gl.CreateShader/link does not bind a framebuffer. Compile the
- // exact full stages now; each real source draw supplies its genuine target.
- double milliseconds=0;return impl->cusSourceGPU.LinkOriginalStages(lease,source,milliseconds);
+ Require([NSThread isMainThread]&&impl!=nullptr,"Original CUS construction requires its source renderer");
+ auto& runtime=SharedRuntime();
+ __strong id<MTLDevice> device=nil;
+ {
+  NativeRendererAccessGate::Scope cacheAccess(&impl->access);
+  Require(runtime.CanSafelyDetach(),"CUS compiler cannot pass unsafe pending GPU work");
+  auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
+  Require(layer&&layer.device==runtime.Device(),"Original CUS compiler belongs to another actual device");
+  device=layer.device;
+ }
+ // Compilation is an immediate API result. Only this creation request is copied;
+ // ordinary frame capture does not relink or copy shader stage strings.
+ auto request=std::make_shared<const NativeCUSProgramSource>(source);
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,std::move(request),
+  [this,device,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->std::shared_ptr<const NativeCUSProgramConsumer>{@autoreleasepool {
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+   Require(device==lease.Device(),"Captured CUS compiler device changed");
+   double milliseconds=0;return impl->cusSourceGPU.LinkOriginalStages(lease,*captured,milliseconds);
+  }});
 }
+
 NativeTerrainProgramLink Metal4WorldRenderer::CompileOriginalTerrainProgram(const NativeTerrainProgramRequest& source)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);

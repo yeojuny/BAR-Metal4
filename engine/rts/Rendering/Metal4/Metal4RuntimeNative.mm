@@ -7,6 +7,7 @@
 #include "Rendering/Backend/NativePreparationTrace.h"
 #include "Rendering/Backend/NativeSubmissionTrace.h"
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
+#include "Rendering/Backend/NativeLeaseRetirementPolicy.h"
 #include <atomic>
 #include <cstdlib>
 #ifdef RECOIL_METAL4_LIVE_SCENE
@@ -546,14 +547,17 @@ void RuntimeLease::ConfigureSampleShading(MTL4RenderPipelineDescriptor* descript
 	descriptor.fragmentFunctionDescriptor=SampleFunction(descriptor.fragmentFunctionDescriptor);
 }
 
-RuntimeLease::RuntimeLease(Runtime& selectedRuntime): RuntimeLease({},selectedRuntime) {}
-RuntimeLease::RuntimeLease(std::function<void()> previousRetired, Runtime& selectedRuntime): runtime(selectedRuntime), lock(runtime.requestMutex)
+RuntimeLease::RuntimeLease(Runtime& selectedRuntime): RuntimeLease({},selectedRuntime,Retirement::DrainOnCaller) {}
+RuntimeLease::RuntimeLease(std::function<void()> previousRetired, Runtime& selectedRuntime): RuntimeLease(std::move(previousRetired),selectedRuntime,Retirement::DrainOnCaller) {}
+RuntimeLease::RuntimeLease(Retirement retirement,Runtime& selectedRuntime): RuntimeLease({},selectedRuntime,retirement) {}
+RuntimeLease::RuntimeLease(std::function<void()> previousRetired, Runtime& selectedRuntime,Retirement retirement): runtime(selectedRuntime), lock(runtime.requestMutex)
 {
 	Require(runtime.capabilities.directMetal4, "Device does not support MTLGPUFamilyMetal4; no renderer fallback exists");
 	Require(runtime.capabilities.unifiedMemory, "Native diagnostic shared-resource contract requires unified memory");
 	Require(!runtime.poisoned, "Shared Metal4 runtime is poisoned after an unsafe recording/execution failure; restart required");
 	const auto drainProbe91=StartPreparationScope();
-	if(!previousRetired)runtime.DrainPendingLocked();
+	ApplyNativeLeaseRetirementPolicy(retirement==Retirement::RequireAlreadyRetired,bool(previousRetired),
+  bool(runtime.pendingSubmission)||!runtime.pendingSubmissions.empty(),[&]{runtime.DrainPendingLocked();});
 	EndPreparationScope(39,drainProbe91);
  auto selected=InterventionTwoInFlight()?std::shared_ptr<RuntimeFrameSlot>{}:SelectRecordingSlot158(runtime.frameSlot,
   previousRetired&&runtime.pendingSubmission?runtime.pendingSubmission->resources.owner:nullptr);

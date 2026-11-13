@@ -453,3 +453,26 @@ success and failure remain structural evidence only until Metal validation.
 Independent review GO. Access-gate regression passes 1,000 nested/error and 100
 cross-thread cases plus handoff/inversion checks; worker allocation failure and
 CPU trace regressions remain passing. No full app/Metal build was performed.
+
+## CUS compile control with caller-side retirement
+
+CUS stage linking now joins the same renderer control worker with an owned shader
+source request and captured actual device. Main drains existing pending work while
+holding the renderer gate before reading the surface device, matching the prior
+retirement-before-device-validation order. The worker opens a new
+`RuntimeLease::Retirement::RequireAlreadyRetired` lease: under requestMutex it
+rejects either pending queue/compatibility owner before frame allocation and never
+runs a drain callback. A late pending owner fails rather than silently running
+source retirement on the worker. Existing ordinary/preparation constructors keep
+their old drain/deferred-retirement semantics. Compilation remains an immediate
+source API result; this control does not Begin or submit a command buffer.
+This is the first lease-using compile control (CUS only); terrain, other shader
+families and geometry allocation still require their own audited transitions.
+The coverage allocation control remains lease-free. No broad worker permission
+or asynchronous enqueue is implied by the new lease mode.
+Validation: actual portable retirement policy/control/worker ASan/UBSan passes
+1,000 main-drain/worker compile/throw-recovery cases, both pending representations,
+and legacy drain/preparation modes. Constructor lock/poison/slot ordering and
+native CUS callback-thread wiring are structurally checked; access-gate, coverage
+control and CPU trace regressions pass. Independent review GO. Metal compilation
+and actual driver success/failure are not claimed from the portable tests.
