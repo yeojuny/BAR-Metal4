@@ -16,6 +16,7 @@
 #include "Rendering/Backend/NativeDeferredPostprocessSource.h"
 #include "Metal4SceneBridge.h"
 #include "Metal4DisplayGeometry.h"
+#include "Metal4SurfaceEventPolicy.h"
 #include "System/Config/ConfigHandler.h"
 #include "System/Platform/Threading.h"
 #include "Rendering/Backend/NativeLegacyWaterData.h"
@@ -860,6 +861,11 @@ void ApplyDeferredFrameReceipts()
  session->sourceCredits.ReleaseHeld(result.sourceDrawFrame);
  }
 }
+bool BeginReadyPilotRequested() {
+ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_READY_PILOT");return value&&std::string_view(value)=="1";}();
+ return enabled;
+}
+
 void RequireRetiredGPUWork()
 {
  if(!session || !session->renderer)return;
@@ -1076,8 +1082,8 @@ NativeDisplayGeometry GetNativeDisplayGeometry()
 void HandleEvent(const SDL_Event& event)
 {
 	if (session) {
-		session->surface.HandleEvent(event);
-		session->RememberLogicalExtent();
+  ApplyDrainedMetal4SurfaceEvent(event,session->surface.Snapshot().windowID,
+   []{RequireRetiredGPUWork();},[&]{session->surface.HandleEvent(event);session->RememberLogicalExtent();});
 	}
 }
 
@@ -1560,7 +1566,10 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 		return;
 	if (session->preparedFrame)
 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
-	session->opaqueSourcePending=actualOpaqueModels;
+ // Refresh writes CAMetalLayer properties, not just an immutable observation.
+ // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
+ if(BeginReadyPilotRequested())RequireRetiredGPUWork();
+ session->opaqueSourcePending=actualOpaqueModels;
 	session->surface.Refresh();
 	// Game already applies the original inactive-window 30-second throttle.
 	// Its periodic cleanup must still run the engine particle Draw producers
@@ -1894,6 +1903,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  }} legacyCopyExit;
 	auto prepared = std::move(session->preparedFrame);
 	session->preparedFrame.reset();
+ // Refresh writes CAMetalLayer properties, not just an immutable observation.
+ // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
+ if(BeginReadyPilotRequested())RequireRetiredGPUWork();
 	session->surface.Refresh();
  const auto pbrDeclarations=session->renderer?session->renderer->CapturePBRSource():NativePBRDeclarationReceipt{};
 	const auto submitTargets = [&]() -> DrawResult {
@@ -2003,8 +2015,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  // Capture stays main-blocked; the three no-throw moves are one admission step.
  bool admitted=bool(completionTicket);
  if(admitted)options.heldSourceDraw=capturedFrame.sourceDrawFrame;
- static const bool beginReadyPilot=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_READY_PILOT");return value&&std::string_view(value)=="1";}();
- options.allowBeginReady=beginReadyPilot&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+ options.allowBeginReady=BeginReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
  // Begin alone does NOT retire N-1. This pilot permits only N plus capture N+1.
  if(options.allowBeginReady)RequireRetiredGPUWork();
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);

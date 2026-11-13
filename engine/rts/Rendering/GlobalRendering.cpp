@@ -123,7 +123,7 @@ CONFIG(int, YResolution).defaultValue(0).headlessValue(headlessResolutionY).mini
 CONFIG(int, XResolutionWindowed).defaultValue(0).headlessValue(headlessResolutionX).minimumValue(0).description("See XResolution, just for windowed.");
 CONFIG(int, YResolutionWindowed).defaultValue(0).headlessValue(headlessResolutionY).minimumValue(0).description("See YResolution, just for windowed.");
 #ifdef RECOIL_METAL4_LIVE_SCENE
-namespace { std::atomic_bool nativeRenderExtentPending{false}; }
+namespace { std::atomic_bool nativeRenderExtentPending{false}, nativeDualScreenPending{false}; }
 CONFIG(int, NativeFullscreenRenderWidth).defaultValue(0).minimumValue(0).maximumValue(4096).description("Fullscreen render pixels; zero follows the logical window. Does not alter display, camera or mouse geometry.");
 CONFIG(int, NativeFullscreenRenderHeight).defaultValue(0).minimumValue(0).maximumValue(4096).description("Fullscreen render pixels; zero follows the logical window.");
 CONFIG(bool, NativeResolutionOverlay).defaultValue(false).description("Show actual render pixels, logical window and safe viewport for display testing.");
@@ -1537,6 +1537,12 @@ void CGlobalRendering::ConfigNotify(const std::string& key, const std::string& v
 	}
 
 	if (key == "DualScreenMode" || key == "DualScreenMiniMapOnLeft") {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  // ConfigNotify holds the configuration mutex. Completion callbacks may read
+  // config, so neither GPU/CPU drain nor native geometry belongs in this scope.
+  nativeDualScreenPending.store(true,std::memory_order_release);
+  return;
+#endif
 		SetDualScreenParams();
 		UpdateGLGeometry();
 
@@ -1559,6 +1565,15 @@ void CGlobalRendering::UpdateWindow()
 		spring::QueuedFunction::Clear();
 	}
 
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ if(sdlWindow && nativeDualScreenPending.load(std::memory_order_acquire)) {
+  rendering::scene::FinishPendingFrame();
+  nativeDualScreenPending.exchange(false,std::memory_order_acq_rel);
+  SetDualScreenParams();
+  UpdateGLGeometry();
+  if(game!=nullptr)gmeChgFrame=drawFrame;
+ }
+#endif
 	if (gmeChgFrame == drawFrame)
 		game->ResizeEvent();
 
@@ -1579,6 +1594,8 @@ void CGlobalRendering::UpdateWindow()
 		return;
 
 #ifdef RECOIL_METAL4_LIVE_SCENE
+ // SDL attributes may change the native layer before any resize event arrives.
+ rendering::scene::FinishPendingFrame();
 	const std::array<int, 7> oldGeometry{winSizeX, winSizeY, viewSizeX, viewSizeY, viewPosX, viewPosY, viewWindowOffsetY};
 #endif
 	SetWindowAttributes(sdlWindow);

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WindowSurfaceNative.h"
+#include "Metal4SurfaceEventPolicy.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "System/Config/ConfigHandler.h"
 #include "System/Log/ILog.h"
@@ -179,34 +180,11 @@ Metal4WindowSurface& Metal4WindowSurface::operator=(Metal4WindowSurface&&) noexc
 Metal4SurfaceEventResult Metal4WindowSurface::HandleEvent(const SDL_Event& event)
 {
 	MainThread();
-	if (!impl || event.type < SDL_EVENT_WINDOW_FIRST || event.type > SDL_EVENT_WINDOW_LAST ||
-		event.window.windowID != impl->state.Snapshot().windowID) return {};
-	Metal4SurfaceEventResult result;
-	switch (event.type) {
-		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-			result.relevant = true;
-			result.stateChanged = RequestClose();
-			break;
-		case SDL_EVENT_WINDOW_RESIZED:
-		case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
-		case SDL_EVENT_WINDOW_METAL_VIEW_RESIZED:
-		case SDL_EVENT_WINDOW_MOVED:
-		case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
-		case SDL_EVENT_WINDOW_DISPLAY_SCALE_CHANGED:
-		case SDL_EVENT_WINDOW_ENTER_FULLSCREEN:
-		case SDL_EVENT_WINDOW_LEAVE_FULLSCREEN:
-		case SDL_EVENT_WINDOW_SAFE_AREA_CHANGED:
-		case SDL_EVENT_WINDOW_MINIMIZED:
-		case SDL_EVENT_WINDOW_MAXIMIZED:
-		case SDL_EVENT_WINDOW_RESTORED:
-		case SDL_EVENT_WINDOW_SHOWN:
-		case SDL_EVENT_WINDOW_HIDDEN:
-			result.relevant = true;
-			result.stateChanged = Refresh();
-			break;
-		default:
-			return {};
-	}
+ if(!impl)return {};
+ const auto action=ClassifyMetal4SurfaceEvent(event,impl->state.Snapshot().windowID);
+ if(action==Metal4SurfaceEventAction::Ignore)return {};
+ Metal4SurfaceEventResult result;result.relevant=true;
+ result.stateChanged=action==Metal4SurfaceEventAction::Close?RequestClose():Refresh();
 	result.closeRequested = impl->state.Snapshot().closeRequested;
 	return result;
 }

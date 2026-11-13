@@ -45,3 +45,8 @@ portable tests establish ownership ordering, not performance. This is encoding-
 tail overlap only, not general capture versus renderer preparation overlap or a
 claim that the entire handoff P5 acceptance suite is finished. Full app build/run
 remains deferred under the user's instruction.
+
+Follow-up surface audit: see `SURFACE-CONTROL-DRAIN.md`. Engine-owned window/layer
+changes are explicitly drained, including ordinary Scene Refresh when the pilot
+is requested. Possible capture overlap ends at that earlier refresh boundary;
+it is not guaranteed to cover the entire N+1 capture.

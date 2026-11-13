@@ -1196,6 +1196,11 @@ bool SpringApp::MainEventHandler(const SDL_Event& event)
 		case SDL_EVENT_WINDOW_FOCUS_LOST:
 		case SDL_EVENT_WINDOW_DISPLAY_CHANGED:
 		case SDL_EVENT_WINDOW_CLOSE_REQUESTED: {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   // Scene ignores foreign-window events; do not mutate our native window
+   // afterward through the engine geometry handler either.
+   if(!globalRendering->GetWindow() || event.window.windowID!=SDL_GetWindowID(globalRendering->GetWindow()))break;
+#endif
 			switch (event.type) {
 #else
 		case SDL_WINDOWEVENT: {
