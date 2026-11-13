@@ -2,6 +2,9 @@
 #include "Metal4TerrainShadingSource.h"
 #include "Metal4MiniMapNative.h"
 #include "Rendering/EngineBridge/NativeTerrainImagePublication.h"
+#include <array>
+#include <optional>
+#include <new>
 
 namespace rendering::metal4 {
 namespace {
@@ -107,6 +110,40 @@ struct Owner {
 	uint64_t submission=0;
 };
 }
+// BEGIN TERRAIN_SHADING_LEASE_RECEIPTS
+class TerrainShadingLeaseReceipts {
+public:
+ struct Key {
+  std::shared_ptr<const NativeCUSTextureObject> object;
+  std::shared_ptr<const NativeTerrainShadingBacking> source,priorSource;
+  std::shared_ptr<const NativeTerrainShadingResource> resource,prior;
+  std::shared_ptr<const void> plan;
+  uintptr_t sampler=0,producer=0;
+  uint64_t submission=0,prepared=0,encoding=0,encoded=0;
+  bool validation=false,completed=false;
+  bool operator==(const Key&)const=default;
+ };
+private:
+ struct Entry{Key key;CUSSourceImage image;};
+ std::array<std::optional<Entry>,32> entries;
+ size_t count=0;
+public:
+ const CUSSourceImage* Find(const Key& key)const noexcept {
+  for(size_t i=0;i<count;++i)if(entries[i]->key==key)return &entries[i]->image;
+  return nullptr;
+ }
+ void Remember(const Key& key,const CUSSourceImage& image) {
+  if(count==entries.size())return;
+  try{entries[count].emplace(Entry{key,image});++count;}
+  catch(const std::bad_alloc&){/* Reuse is optional; preserve the resolved result. */}
+ }
+};
+// END TERRAIN_SHADING_LEASE_RECEIPTS
+TerrainShadingLeaseReceipts* RuntimeLease::TerrainShadingReads() noexcept {
+ try{if(!terrainShadingReads)terrainShadingReads=std::make_shared<TerrainShadingLeaseReceipts>();}
+ catch(const std::bad_alloc&){return nullptr;}
+ return terrainShadingReads.get();
+}
 CUSSourceImage ResolveNativeTerrainShadingImage(RuntimeLease& lease,MiniMapGPU& producer,
 	const NativeCUSTextureBinding& binding,uint64_t submission,id<MTLSamplerState> sampler,bool validation,double& shaderMs)
 {
@@ -124,10 +161,20 @@ CUSSourceImage ResolveNativeTerrainShadingImage(RuntimeLease& lease,MiniMapGPU& 
 		resource->texture.width==binding.object->allocation.width&&resource->texture.height==binding.object->allocation.height,
 		"Original shading physical extent differs from its actual allocation");
 	lease.Retain(sampler);
+ // Register/validation and recursive prior preparation above stay per-call.
+ // Only the exact completed outer resolution may be reused within this lease.
+ auto* receipts=lease.TerrainShadingReads();
+ const TerrainShadingLeaseReceipts::Key key{binding.object,source,resource->priorSource,
+  resource,resource->prior,resource->plan,reinterpret_cast<uintptr_t>((__bridge void*)sampler),
+  reinterpret_cast<uintptr_t>(&producer),submission,resource->preparedSubmission,
+  resource->encodingSubmission,resource->encodedSubmission,validation,resource->completed};
+ if(receipts)if(const auto* image=receipts->Find(key))return *image;
 	auto owner=std::make_shared<Owner>();owner->object=binding.object;owner->source=std::move(source);owner->resource=std::move(resource);owner->submission=submission;
 	CUSSourceImage out;out.texture=owner->resource->texture;out.sampler=sampler;out.owner=owner;
 	out.encodeDependencies=[owner](id<MTL4CommandBuffer> command){Encode(*owner->resource,owner->submission,command);};
 	out.requireReadable=[owner]{Readable(*owner->resource,owner->submission);};
-	out.didComplete=[owner]{Complete(*owner->resource,*owner->source,owner->submission);};return out;
+	out.didComplete=[owner]{Complete(*owner->resource,*owner->source,owner->submission);};
+ if(receipts)receipts->Remember(key,out);
+ return out;
 }
 }
