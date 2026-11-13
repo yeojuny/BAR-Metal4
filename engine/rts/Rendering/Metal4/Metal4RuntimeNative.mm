@@ -395,9 +395,11 @@ bool Runtime::CanSafelyDetach()
 	return !unsafePendingWork;
 }
 
-RuntimeCleanupLease::RuntimeCleanupLease(Runtime& runtime): lock(runtime.requestMutex)
+RuntimeCleanupLease::RuntimeCleanupLease(Runtime& runtime,Retirement retirement): lock(runtime.requestMutex)
 {
-	if (!runtime.poisoned) runtime.DrainPendingLocked();
+ if(retirement==Retirement::RequireAlreadyRetired)
+  Require(runtime.pendingSubmissions.empty(),"Renderer control requires main-retired completion receipts");
+ else if (!runtime.poisoned) runtime.DrainPendingLocked();
 	Require(!runtime.unsafePendingWork, "Cannot retire native resources with outstanding GPU work");
  runtime.persistentResidency.reset();
 	if (runtime.capabilities.directMetal4) ClearPublishedPool(&runtime);

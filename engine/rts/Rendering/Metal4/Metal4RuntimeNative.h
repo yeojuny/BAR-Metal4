@@ -133,7 +133,8 @@ Runtime& SharedRuntime();
 // cleanup. This guard exposes no device, command, or submission operations.
 class RuntimeCleanupLease {
 public:
-	explicit RuntimeCleanupLease(Runtime& runtime = SharedRuntime());
+	enum class Retirement { DrainOnCaller, RequireAlreadyRetired };
+ explicit RuntimeCleanupLease(Runtime& runtime = SharedRuntime(),Retirement retirement = Retirement::DrainOnCaller);
 	RuntimeCleanupLease(const RuntimeCleanupLease&) = delete;
 	RuntimeCleanupLease& operator=(const RuntimeCleanupLease&) = delete;
 private:

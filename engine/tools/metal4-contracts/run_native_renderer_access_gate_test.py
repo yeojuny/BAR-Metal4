@@ -4,7 +4,7 @@ import os,re,subprocess
 from pathlib import Path
 root=Path(__file__).resolve().parents[2];out=Path('/tmp/bar-renderer-gate');out.mkdir(exist_ok=True)
 s=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
-expected='ActualMainSampling ClearWaterResources ClearBasicWaterResources ClearDynamicWaterResources ClearLegacyWaterResources CanInitializeWater Sensor31657CircleConsumerLifetime SensorPreviewMaximumDimension CompileOriginalSensorPreviewProgram ClearStaticResources ReadIndependentTargetPrefix SubmitMaintenance CheckShieldGeometryAllocation CapturePBRSource AllocateCoverageTarget AllocateBlockoutTarget ConnectPBRSourceContext ConnectShieldTextureContext ConstructOriginalModelPrograms SetOriginalShadowCapture ConstructOriginalShadowPrograms ConstructOriginalShadowParticlePrograms CompileOriginalCUSProgram CompileOriginalTerrainProgram CompileOriginalDeferredLightProgram CompileOriginalUnitStencilProgramConsumer CompileOriginalOutlineProgram CompileOriginalDistortionProgram ClearOriginalModelSources ConnectBloomDeferredSources ConnectSSAODeferredSources BeginShieldMapPublication PublishShieldModelDepth BorrowActualMRTModelDepth HasScreenContinuation ContinueScreen PrepareIndependentResources DrawPrepared'.replace('CompileOriginalUnitStencilProgramConsumer','CompileOriginalUnitStencilProgram').split()
+expected='ActualMainSampling CanInitializeWater Sensor31657CircleConsumerLifetime SensorPreviewMaximumDimension CompileOriginalSensorPreviewProgram ClearStaticResources ReadIndependentTargetPrefix SubmitMaintenance CheckShieldGeometryAllocation CapturePBRSource AllocateCoverageTarget AllocateBlockoutTarget ConnectPBRSourceContext ConnectShieldTextureContext ConstructOriginalModelPrograms SetOriginalShadowCapture ConstructOriginalShadowPrograms ConstructOriginalShadowParticlePrograms CompileOriginalCUSProgram CompileOriginalTerrainProgram CompileOriginalDeferredLightProgram CompileOriginalUnitStencilProgramConsumer CompileOriginalOutlineProgram CompileOriginalDistortionProgram ClearOriginalModelSources ConnectBloomDeferredSources ConnectSSAODeferredSources BeginShieldMapPublication PublishShieldModelDepth BorrowActualMRTModelDepth HasScreenContinuation ContinueScreen PrepareIndependentResources DrawPrepared'.replace('CompileOriginalUnitStencilProgramConsumer','CompileOriginalUnitStencilProgram').split()
 for name in expected:
  m=re.search(r'Metal4WorldRenderer::'+name+r'\([^;]*?\)(?: const)?\s*\{',s);assert m,name
  assert s[m.end():].lstrip().startswith('NativeRendererAccessGate::Scope cacheAccess'),name
@@ -14,6 +14,10 @@ assert part.index('admittedAccess(*cacheHandoff)')<part.index('Metal4SurfaceWork
 assert part.count('cacheHandoff.reset();')==2
 assert 'cacheHandoff.reset();\n  deliverTargetNotice();' in part
 assert 'catch(...){cacheHandoff.reset();deliverTargetNotice();' in part
+basic=s.split('void Metal4WorldRenderer::ClearWaterFamily(',1)[1].split('bool Metal4WorldRenderer::DeferredPostprocessConsumersInitialized',1)[0]
+assert 'std::optional<NativeRendererAccessGate::Scope> cacheAccess' in basic
+assert basic.index('SharedRuntime().CanSafelyDetach()')<basic.index('Handoff handoff')<basic.index('cacheAccess.reset()')<basic.index('renderWorker->Invoke')
+assert 'Retirement::RequireAlreadyRetired' in basic
 assert 'NativeRendererAccessGate::Scope completionAccess(&owner->access);' in s
 assert s.count('NativeRendererAccessGate::Scope providerAccess')==11
 runtime=(root/'rts/Rendering/Metal4/Metal4RuntimeNative.mm').read_text().split('void Runtime::DrainOldestLocked(',1)[1].split('FrameMetrics RuntimeLease::SubmitAndWait',1)[0]

@@ -126,3 +126,10 @@ direct/readback calls remain main-synchronous. No geometry copy is introduced.
 This pins CPU dispatch inputs only; existing runtime graph retains GPU owners.
 Stack receipts still require joined Invoke and global source/service concurrency
 remains unproven, so neither queueing nor CPU lookahead is enabled.
+
+Ordered control follow-up: the worker is now renderer-owned and joins before
+provider teardown. Water-family GPU resets reuse it after main-thread retirement,
+with exact handoff and a cleanup lease that rejects pending submissions rather
+than draining source callbacks on the worker. No window refresh is added. Other
+controls still retain direct serial behavior; these routed water controls are not a
+general control queue, asynchronous renderer lifetime or lookahead admission.

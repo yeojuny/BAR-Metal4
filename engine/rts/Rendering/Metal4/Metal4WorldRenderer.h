@@ -298,6 +298,8 @@ public:
 
 
 private:
+ enum class WaterReset { Bump, Basic, Dynamic, Legacy };
+ void ClearWaterFamily(WaterReset);
  Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned = {});
  Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan);
 	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&);

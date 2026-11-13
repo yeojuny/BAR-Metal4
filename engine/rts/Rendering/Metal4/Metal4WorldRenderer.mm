@@ -337,6 +337,7 @@ Metal4PresentationStatus SurfaceStatus(const Metal4SurfaceSnapshot& state)
 
 struct Metal4WorldRenderer::Impl {
  mutable NativeRendererAccessGate access;
+ std::unique_ptr<NativeSerialRenderWorker> renderWorker;
  metal4::InterventionShadowViews interventionShadowViews;
 	metal4::ScreenGPU screenGPU;
 	metal4::StartBoxGPU startBoxGPU;
@@ -478,6 +479,7 @@ struct Metal4WorldRenderer::Impl {
 	~Impl()
 	{
 		if (![NSThread isMainThread] || !SharedRuntime().CanSafelyDetach()) std::terminate();
+  renderWorker.reset(); // Joined before provider teardown and GPU cache destruction.
 		SetNativeCUSMaterialConsumerReady(false);
 		SetNativeTerrainShadingConsumerAvailable(false);
 		SetNativeScreenCopyConsumerAvailable(false);
@@ -1086,15 +1088,44 @@ Metal4WorldRenderer::~Metal4WorldRenderer() { if(impl && !SharedRuntime().CanSaf
 Metal4WorldRenderer::Metal4WorldRenderer(Metal4WorldRenderer&&) noexcept = default;
 Metal4WorldRenderer& Metal4WorldRenderer::operator=(Metal4WorldRenderer&& other) noexcept { if(this!=&other){if(impl&&!SharedRuntime().CanSafelyDetach())std::terminate();impl=std::move(other.impl);}return *this; }
 
-void Metal4WorldRenderer::ClearWaterResources()
+void Metal4WorldRenderer::ClearWaterResources(){ClearWaterFamily(WaterReset::Bump);}
+void Metal4WorldRenderer::ClearBasicWaterResources(){ClearWaterFamily(WaterReset::Basic);}
+void Metal4WorldRenderer::ClearDynamicWaterResources(){ClearWaterFamily(WaterReset::Dynamic);}
+void Metal4WorldRenderer::ClearLegacyWaterResources(){ClearWaterFamily(WaterReset::Legacy);}
+
+void Metal4WorldRenderer::ClearWaterFamily(WaterReset family)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
+ std::optional<NativeRendererAccessGate::Scope> cacheAccess;cacheAccess.emplace(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
- RuntimeCleanupLease lease;
- impl->waterGPU.ClearResources();
- impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
- impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
- impl->preWaterColor=nil;impl->preWaterDepth=nil;
+ auto* owner=impl.get();
+ const auto clear=[owner,family]{
+  switch(family){
+   case WaterReset::Basic:owner->basicWaterGPU.ClearResources();break;
+   case WaterReset::Bump:
+    owner->waterGPU.ClearResources();
+    owner->waterReflection=nil;owner->waterReflectionDepth=nil;owner->preWaterColor=nil;
+    owner->waterRefraction=nil;owner->waterRefractionDepth=nil;owner->preWaterDepth=nil;break;
+   case WaterReset::Dynamic:
+    // ClearResources rejects a live prepared transaction before any mutation.
+    owner->dynamicWaterGPU.ClearResources();
+    owner->waterReflection=nil;owner->waterReflectionDepth=nil;owner->waterRefraction=nil;owner->waterRefractionDepth=nil;break;
+   case WaterReset::Legacy:
+    owner->legacyWaterBumpGPU.ClearResources();
+    owner->waterReflection=nil;owner->waterReflectionDepth=nil;owner->preWaterColor=nil;break;
+  }
+ };
+ if(!owner->renderWorker||![NSThread isMainThread]){
+  RuntimeCleanupLease lease;clear();return;
+ }
+ // Deliver any captured source callbacks on main before reserving a control.
+ // The worker lease rejects newly pending work instead of draining callbacks.
+ Require(SharedRuntime().CanSafelyDetach(),"Water control still owns unretired GPU work");
+ NativeRendererAccessGate::Handoff handoff(owner->access);cacheAccess.reset();
+ owner->renderWorker->Invoke([clear,&handoff]{@autoreleasepool {
+  NativeRendererAccessGate::Scope access(handoff);
+  RuntimeCleanupLease lease(SharedRuntime(),RuntimeCleanupLease::Retirement::RequireAlreadyRetired);
+  clear();
+ }});
 }
 
 bool Metal4WorldRenderer::DeferredPostprocessConsumersInitialized() const noexcept
@@ -1102,26 +1133,6 @@ bool Metal4WorldRenderer::DeferredPostprocessConsumersInitialized() const noexce
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
  if(!cacheAccess.Acquired())return false;
 	return impl && impl->ssaoGPU.Initialized() && impl->bloomGPU.Initialized();
-}
-
-void Metal4WorldRenderer::ClearBasicWaterResources()
-{
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
- MainThread();Require(impl!=nullptr,"World renderer was moved from");
- RuntimeCleanupLease lease;impl->basicWaterGPU.ClearResources();
-}
-
-void Metal4WorldRenderer::ClearDynamicWaterResources(){
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
- MainThread();Require(impl!=nullptr,"World renderer was moved from");RuntimeCleanupLease lease;impl->dynamicWaterGPU.ClearResources();
- impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
-}
-void Metal4WorldRenderer::ClearLegacyWaterResources()
-{
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
- MainThread();Require(impl!=nullptr,"World renderer was moved from");
- RuntimeCleanupLease lease;impl->legacyWaterBumpGPU.ClearResources();
- impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
 }
 
 bool Metal4WorldRenderer::CanInitializeWater() const
@@ -2223,9 +2234,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   ui::GetRecorder().RecordTargetSubmission(passes,submission,std::move(postprocess),heldSourceDraw);
  });};
  const auto snapshot=Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(*impl->surface);
+ if(!impl->renderWorker)impl->renderWorker=std::make_unique<NativeSerialRenderWorker>();
+ auto& worker=*impl->renderWorker;
  std::optional<NativeRendererAccessGate::Handoff> cacheHandoff;cacheHandoff.emplace(impl->access);
  cacheAccess.reset(); // Reservation, not a mutex, crosses worker.Invoke.
- static NativeSerialRenderWorker worker;
  bool receiptReady=false;
  auto mainReceipt=std::move(previousRetired);
  auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
