@@ -6,7 +6,7 @@ root=Path(__file__).resolve().parents[2];out=Path('/tmp/bar-renderer-gate');out.
 s=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 expected='ActualMainSampling CanInitializeWater Sensor31657CircleConsumerLifetime SensorPreviewMaximumDimension CompileOriginalSensorPreviewProgram ClearStaticResources ReadIndependentTargetPrefix SubmitMaintenance CheckShieldGeometryAllocation CapturePBRSource AllocateCoverageTarget AllocateBlockoutTarget ConnectPBRSourceContext ConnectShieldTextureContext ConstructOriginalModelPrograms SetOriginalShadowCapture ConstructOriginalShadowPrograms ConstructOriginalShadowParticlePrograms CompileOriginalCUSProgram CompileOriginalTerrainProgram CompileOriginalDeferredLightProgram CompileOriginalUnitStencilProgramConsumer CompileOriginalOutlineProgram CompileOriginalDistortionProgram ClearOriginalModelSources ConnectBloomDeferredSources ConnectSSAODeferredSources BeginShieldMapPublication PublishShieldModelDepth BorrowActualMRTModelDepth HasScreenContinuation ContinueScreen PrepareIndependentResources DrawPrepared'.replace('CompileOriginalUnitStencilProgramConsumer','CompileOriginalUnitStencilProgram').split()
 source_only=['BeginShieldMapPublication','PublishShieldModelDepth','BorrowActualMRTModelDepth']
-expected=[name for name in expected if name not in source_only+['AllocateCoverageTarget','CompileOriginalCUSProgram']]
+expected=[name for name in expected if name not in source_only+['AllocateCoverageTarget','CompileOriginalCUSProgram']+['CompileOriginal'+f+'Program' for f in ['Terrain','DeferredLight','UnitStencil','Outline','Distortion','SensorPreview']]]
 for name in source_only:
  m=re.search(r'Metal4WorldRenderer::'+name+r'\([^;]*?\)(?: const)?\s*\{',s);assert m,name
  body=s[m.end():].split('\n}',1)[0]

@@ -476,3 +476,23 @@ and legacy drain/preparation modes. Constructor lock/poison/slot ordering and
 native CUS callback-thread wiring are structurally checked; access-gate, coverage
 control and CPU trace regressions pass. Independent review GO. Metal compilation
 and actual driver success/failure are not claimed from the portable tests.
+
+## Six further shader-family controls
+
+Terrain, DeferredLight, UnitStencil, Outline, Distortion and SensorPreview now
+use the same owned-source, main-retirement, joined worker-control contract as CUS.
+The original GPU link/compile functions and return values are retained. Terrain's
+unsupported-link result is not converted to an exception, its forward/deferred/
+combined target formats remain exact, and UnitStencil still initializes its real
+PSO/clear program through the original compiler. SensorPreview captures the
+runtime device without adding a surface-layer requirement it never had.
+The other five validate the actual layer device after main-side retirement.
+No family is permitted to Begin/submit or run source completion callbacks as part
+of this compile control. Ordinary frame capture does not invoke these creation
+controls on each frame; remaining geometry/PBR/initialization paths are separate.
+Validation uses the six actual owning source DTO types with the real control/gate/
+worker: 600 copy-isolated handoffs and failure/recovery cases plus 100 actual
+TerrainProgramLink unsupported-result envelopes. Native entrypoint and destination
+format preservation is checked structurally, not by executing Metal compilers.
+Independent review GO; the actual renderer-gate regression also passes 1,000
+nested/error and 100 cross-thread cases plus reservation/inversion checks.

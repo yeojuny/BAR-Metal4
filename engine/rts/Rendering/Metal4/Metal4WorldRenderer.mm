@@ -1196,10 +1196,21 @@ std::uint32_t Metal4WorldRenderer::SensorPreviewMaximumDimension() const
 }
 std::shared_ptr<const NativeSensorPreviewProgramConsumer> Metal4WorldRenderer::CompileOriginalSensorPreviewProgram(const NativeSensorPreviewProgramSource& source)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	MainThread();Require(impl!=nullptr,"Sensor Preview compile requires its actual renderer");
-	RuntimeLease lease;double milliseconds=0;
-	return impl->sensorPreviewGPU.CompileOriginalStages(lease,source,milliseconds);
+ Require([NSThread isMainThread]&&impl!=nullptr,"Original SensorPreview construction requires its source renderer");
+ auto& runtime=SharedRuntime();
+ __strong id<MTLDevice> device=nil;
+ {
+  NativeRendererAccessGate::Scope cacheAccess(&impl->access);
+  Require(runtime.CanSafelyDetach(),"SensorPreview compiler cannot pass unsafe pending GPU work");
+  device=runtime.Device(); // SensorPreview never required a surface layer.
+ }
+ auto request=std::make_shared<const NativeSensorPreviewProgramSource>(source);
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,std::move(request),
+  [this,device,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->std::shared_ptr<const NativeSensorPreviewProgramConsumer>{@autoreleasepool {
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+   Require(device==lease.Device(),"Captured SensorPreview compiler device changed");
+   double milliseconds=0;return impl->sensorPreviewGPU.CompileOriginalStages(lease,*captured,milliseconds);
+  }});
 }
 
 void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageReceipt& environment,
@@ -1943,52 +1954,108 @@ std::shared_ptr<const NativeCUSProgramConsumer> Metal4WorldRenderer::CompileOrig
 
 NativeTerrainProgramLink Metal4WorldRenderer::CompileOriginalTerrainProgram(const NativeTerrainProgramRequest& source)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
- MainThread();Require(impl!=nullptr,"Original terrain construction has no actual renderer");
- RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
- Require(layer&&layer.device==lease.Device(),"Original terrain compiler belongs to another actual device");
- // This source route owns the real CBumpWater reflection/refraction targets.
- // A later different destination must obtain its own genuine PSO variant.
- CUSSourceTarget target;target.colors[0]=MTLPixelFormatRGBA8Unorm;
- if(source.identity.selection==NativeTerrainProgramSelection::DeferredAdvanced||source.identity.selection==NativeTerrainProgramSelection::CombinedAdvanced)target.colors.fill(MTLPixelFormatRGBA8Unorm);
- if(source.identity.selection==NativeTerrainProgramSelection::CombinedAdvanced)target.combinedColor=MTLPixelFormatRGBA8Unorm;
- target.depth=MTLPixelFormatDepth32Float;target.stencil=MTLPixelFormatInvalid;target.samples=1;
- double milliseconds=0;
- return impl->terrainSourceGPU.CompileOriginalProgram(lease,source,target,NativeDiagnosticInstrumentation,milliseconds);
+ Require([NSThread isMainThread]&&impl!=nullptr,"Original Terrain construction requires its source renderer");
+ auto& runtime=SharedRuntime();
+ __strong id<MTLDevice> device=nil;
+ {
+  NativeRendererAccessGate::Scope cacheAccess(&impl->access);
+  Require(runtime.CanSafelyDetach(),"Terrain compiler cannot pass unsafe pending GPU work");
+  auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
+  Require(layer&&layer.device==runtime.Device(),"Original Terrain compiler belongs to another actual device");
+  device=layer.device;
+ }
+ auto request=std::make_shared<const NativeTerrainProgramRequest>(source);
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,std::move(request),
+  [this,device,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->NativeTerrainProgramLink{@autoreleasepool {
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+   Require(device==lease.Device(),"Captured Terrain compiler device changed");
+   // Preserve actual CBumpWater and deferred/combined destination formats.
+   CUSSourceTarget target;target.colors[0]=MTLPixelFormatRGBA8Unorm;
+   if(captured->identity.selection==NativeTerrainProgramSelection::DeferredAdvanced||captured->identity.selection==NativeTerrainProgramSelection::CombinedAdvanced)target.colors.fill(MTLPixelFormatRGBA8Unorm);
+   if(captured->identity.selection==NativeTerrainProgramSelection::CombinedAdvanced)target.combinedColor=MTLPixelFormatRGBA8Unorm;
+   target.depth=MTLPixelFormatDepth32Float;target.stencil=MTLPixelFormatInvalid;target.samples=1;
+   double milliseconds=0;return impl->terrainSourceGPU.CompileOriginalProgram(lease,*captured,target,NativeDiagnosticInstrumentation,milliseconds);
+  }});
 }
 std::shared_ptr<const NativeDeferredLightProgramConsumer> Metal4WorldRenderer::CompileOriginalDeferredLightProgram(const NativeDeferredLightProgramSource& source)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	MainThread();Require(impl!=nullptr,"Original deferred-light compiler has no actual renderer");
-	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
-	Require(layer&&layer.device==lease.Device(),"Original deferred-light compiler belongs to another device");
-	double milliseconds=0;
-	return impl->deferredLightsGPU.LinkOriginalStages(lease,source,milliseconds);
+ Require([NSThread isMainThread]&&impl!=nullptr,"Original DeferredLight construction requires its source renderer");
+ auto& runtime=SharedRuntime();
+ __strong id<MTLDevice> device=nil;
+ {
+  NativeRendererAccessGate::Scope cacheAccess(&impl->access);
+  Require(runtime.CanSafelyDetach(),"DeferredLight compiler cannot pass unsafe pending GPU work");
+  auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
+  Require(layer&&layer.device==runtime.Device(),"Original DeferredLight compiler belongs to another actual device");
+  device=layer.device;
+ }
+ auto request=std::make_shared<const NativeDeferredLightProgramSource>(source);
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,std::move(request),
+  [this,device,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->std::shared_ptr<const NativeDeferredLightProgramConsumer>{@autoreleasepool {
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+   Require(device==lease.Device(),"Captured DeferredLight compiler device changed");
+   double milliseconds=0;return impl->deferredLightsGPU.LinkOriginalStages(lease,*captured,milliseconds);
+  }});
 }
 std::shared_ptr<const NativeUnitStencilProgramConsumer> Metal4WorldRenderer::CompileOriginalUnitStencilProgram(const NativeUnitStencilProgramSource& source)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	MainThread();Require(impl!=nullptr,"Original Unit Stencil compiler has no actual renderer");
-	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
-	Require(layer&&layer.device==lease.Device(),"Original Unit Stencil compiler belongs to another device");
-	double milliseconds=0;return impl->unitStencilGPU.LinkOriginalProgram(lease,source,NativeDiagnosticInstrumentation,milliseconds);
+ Require([NSThread isMainThread]&&impl!=nullptr,"Original UnitStencil construction requires its source renderer");
+ auto& runtime=SharedRuntime();
+ __strong id<MTLDevice> device=nil;
+ {
+  NativeRendererAccessGate::Scope cacheAccess(&impl->access);
+  Require(runtime.CanSafelyDetach(),"UnitStencil compiler cannot pass unsafe pending GPU work");
+  auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
+  Require(layer&&layer.device==runtime.Device(),"Original UnitStencil compiler belongs to another actual device");
+  device=layer.device;
+ }
+ auto request=std::make_shared<const NativeUnitStencilProgramSource>(source);
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,std::move(request),
+  [this,device,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->std::shared_ptr<const NativeUnitStencilProgramConsumer>{@autoreleasepool {
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+   Require(device==lease.Device(),"Captured UnitStencil compiler device changed");
+   double milliseconds=0;return impl->unitStencilGPU.LinkOriginalProgram(lease,*captured,NativeDiagnosticInstrumentation,milliseconds);
+  }});
 }
 std::shared_ptr<const NativeOutlineProgramConsumer> Metal4WorldRenderer::CompileOriginalOutlineProgram(const NativeOutlineProgramSource& source)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	MainThread();Require(impl!=nullptr,"Original Outline compiler has no actual renderer");
-	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
-	Require(layer&&layer.device==lease.Device(),"Original Outline compiler belongs to another device");
-	double milliseconds=0;return impl->outlineGPU.LinkOriginalStages(lease,source,milliseconds);
+ Require([NSThread isMainThread]&&impl!=nullptr,"Original Outline construction requires its source renderer");
+ auto& runtime=SharedRuntime();
+ __strong id<MTLDevice> device=nil;
+ {
+  NativeRendererAccessGate::Scope cacheAccess(&impl->access);
+  Require(runtime.CanSafelyDetach(),"Outline compiler cannot pass unsafe pending GPU work");
+  auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
+  Require(layer&&layer.device==runtime.Device(),"Original Outline compiler belongs to another actual device");
+  device=layer.device;
+ }
+ auto request=std::make_shared<const NativeOutlineProgramSource>(source);
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,std::move(request),
+  [this,device,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->std::shared_ptr<const NativeOutlineProgramConsumer>{@autoreleasepool {
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+   Require(device==lease.Device(),"Captured Outline compiler device changed");
+   double milliseconds=0;return impl->outlineGPU.LinkOriginalStages(lease,*captured,milliseconds);
+  }});
 }
 std::shared_ptr<const NativeDistortionProgramConsumer> Metal4WorldRenderer::CompileOriginalDistortionProgram(const NativeDistortionProgramSource& source)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	MainThread();Require(impl!=nullptr,"Original Distortion compiler has no actual renderer");
-	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
-	Require(layer&&layer.device==lease.Device(),"Original Distortion compiler belongs to another device");
-	double milliseconds=0;
-	return impl->distortionGPU.LinkOriginalStages(lease,source,milliseconds);
+ Require([NSThread isMainThread]&&impl!=nullptr,"Original Distortion construction requires its source renderer");
+ auto& runtime=SharedRuntime();
+ __strong id<MTLDevice> device=nil;
+ {
+  NativeRendererAccessGate::Scope cacheAccess(&impl->access);
+  Require(runtime.CanSafelyDetach(),"Distortion compiler cannot pass unsafe pending GPU work");
+  auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
+  Require(layer&&layer.device==runtime.Device(),"Original Distortion compiler belongs to another actual device");
+  device=layer.device;
+ }
+ auto request=std::make_shared<const NativeDistortionProgramSource>(source);
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,std::move(request),
+  [this,device,&runtime](const auto& captured,const NativeRendererAccessGate::Scope&)->std::shared_ptr<const NativeDistortionProgramConsumer>{@autoreleasepool {
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+   Require(device==lease.Device(),"Captured Distortion compiler device changed");
+   double milliseconds=0;return impl->distortionGPU.LinkOriginalStages(lease,*captured,milliseconds);
+  }});
 }
 void Metal4WorldRenderer::ClearOriginalModelSources()
 {
