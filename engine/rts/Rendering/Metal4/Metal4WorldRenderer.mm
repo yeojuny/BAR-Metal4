@@ -838,7 +838,7 @@ struct Metal4WorldRenderer::Impl {
 		}
 		throw std::runtime_error("Original terrain image has no actual retained native producer for its selected source");
 	}
-	void Map(RuntimeLease& lease, const WorldTerrain& terrain)
+	std::shared_ptr<MapImage> Map(RuntimeLease& lease, const WorldTerrain& terrain)
 	{
 		const auto& owner = terrain.tiles;
 		Require(owner != nullptr && terrain.heights != nullptr, "World scene requires original terrain tiles and corner heights");
@@ -854,7 +854,8 @@ struct Metal4WorldRenderer::Impl {
 		Require(inputHeights.width == terrain.squaresX + 1 && inputHeights.height == terrain.squaresZ + 1 &&
 			inputHeights.corners.size() == size_t(inputHeights.width) * inputHeights.height, "World corner-height dimensions mismatch");
 		const size_t heightBytes = inputHeights.corners.size() * sizeof(float);
-		const bool updateHeights = heightOwner != terrain.heights || heights == nil || heights.length != heightBytes;
+		const auto previousPair=terrainPair.Find(terrain.heights);
+		const bool updateHeights = !previousPair || previousPair->cornerBuffer == nil || previousPair->cornerBuffer.length != heightBytes;
 		if (updateHeights) {
 			for(float value:inputHeights.corners)Require(std::isfinite(value),"Non-finite actual terrain height");
 		}
@@ -906,8 +907,7 @@ struct Metal4WorldRenderer::Impl {
    static_assert(std::is_nothrow_move_assignable_v<MapCache>);
    if(stagedMap)map=std::move(*stagedMap);
   });
-  heights=pair->cornerBuffer;terrainNormals=pair->texture;
-  heightOwner=terrain.heights;normalImage=std::move(pair);
+  heightOwner=terrain.heights;return pair;
 	}
 
 	ModelCache& Model(RuntimeLease& lease, const std::shared_ptr<const WorldModel>& owner)
@@ -1031,10 +1031,8 @@ struct Metal4WorldRenderer::Impl {
 	std::unordered_map<const WorldTexture*, TextureCache> textures;
  // Interrupted prepare recovery is explicit; never used for encode/retirement.
  std::shared_ptr<metal4::WorldTexturePreparationJournal> interruptedTexturePreparation;
-	__strong id<MTLBuffer> heights = nil;
 	std::shared_ptr<const WorldTerrainHeights> heightOwner;
-	__strong id<MTLTexture> depth = nil, stencil = nil, terrainDepth = nil, shadowDepth = nil, terrainNormals = nil;
-	std::shared_ptr<MapImage> normalImage;
+	__strong id<MTLTexture> depth = nil, stencil = nil, terrainDepth = nil, shadowDepth = nil;
  NativeSourceResourceCache<WorldTerrainHeights,MapImage> terrainPair;
 	__strong id<MTLLibrary> library = nil;
 
@@ -1279,7 +1277,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
 	impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
 	impl->preWaterColor=nil;impl->preWaterDepth=nil;
-	impl->map = {}; impl->models.clear(); impl->textures.clear(); impl->heights = nil;
+	impl->map = {}; impl->models.clear(); impl->textures.clear();
 	impl->heightOwner.reset(); impl->interruptedTexturePreparation.reset();
 	impl->mapEdgeGPU.ClearResources(); impl->particlesGPU.ClearResources(); impl->environmentGPU.ClearResources();
 	impl->pbrSource.ResetWorld();
@@ -1307,7 +1305,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->shieldGPU.ClearResources();impl->mapDepthGPU.ClearResources();impl->modelDepthGPU.ClearResources();
 	impl->blueprintGPU.ClearResources();
 	impl->blockoutGPU.ClearResources();
-	impl->terrainNormals = nil; impl->normalImage.reset();impl->terrainPair.Clear();
+	impl->terrainPair.Clear();
 	impl->standardTerrainGPU->ClearResources();
 	impl->screenContinuation.reset();impl->postprocessGPU.ClearResources();impl->offscreenSourceColor=nil;
 	impl->volumetricCloudsGPU.ClearResources();
@@ -2568,10 +2566,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		Require(layer != nil && layer.device == lease.Device(), "World layer/device ownership mismatch");
 		const auto resourceStart = Clock::now();
 		impl->StartTexturePreparation(lease);
-		impl->Map(lease, frame.terrain);
+		const auto normalResource=impl->Map(lease, frame.terrain);
   // Select before any early world provider captures readiness. A failed prepare
   // cannot let a later resource/epoch satisfy an already retained callback.
-  const auto normalResource=impl->normalImage;
   const auto normalEpoch=normalResource->normalEpochs.Begin(normalResource->Completed());
 		WorldUniform terrainUniform{};
 		terrainUniform.viewProjection = simd_mul(Matrix(frame.viewCamera.projection), Matrix(frame.viewCamera.view));
@@ -3240,8 +3237,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		const auto normalObject=frame.mapTextures->images[0];
 		auto normalBacking=normalObject?std::dynamic_pointer_cast<const NativeMapTextureBacking>(normalObject->backing):nullptr;
 		Require(normalBacking && normalBacking->heights==frame.terrain.heights,"Original normal texture and terrain do not share the retained height cache");
-		if(!normalBacking->Resource())normalBacking->Fulfill(impl->normalImage);
-		else {auto actual=std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource());Require(actual && actual==impl->normalImage && actual->texture==impl->terrainNormals,"Original normal allocation was replaced without a new source version");}
+		if(!normalBacking->Resource())normalBacking->Fulfill(normalResource);
+		else {auto actual=std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource());Require(actual && actual==normalResource && actual->texture==normalResource->texture,"Original normal allocation was replaced without a new source version");}
 		// Original height is a retained R32F corner image; reuse the minimap
 		// owner's upload independently of terrain shading selection.
 		const auto heightObject=frame.mapTextures->images[1];
@@ -3876,7 +3873,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		if (frame.luaBlueprintFrame) {
 			blueprint = impl->blueprintGPU.Prepare(lease,*frame.luaBlueprintFrame,frame.viewCamera,
 				result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
-				layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples,*impl->standardTerrainGPU,impl->heightOwner);
+				layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples,*impl->standardTerrainGPU,normalResource->cornerSource);
 			for (const auto& draw: frame.luaBlueprintFrame->models) result.luaBlueprintModels += draw.submissions.size();
 			for (const auto& draw: frame.luaBlueprintFrame->outlines) result.luaBlueprintOutlines += draw.instanceCount;
 			result.luaBlueprintStencilClears = frame.luaBlueprintFrame->clears.size();
@@ -3899,7 +3896,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			// Original Shadows=0 allocates/clears a real1x1 depth FBO. The
 			// existing same-submit native shadow pass preserves that lifetime.
 			images.images[3]={impl->shadowDepth,shadowSampler,true};
-			images.images[4]={impl->terrainNormals,heightSampler,false};
+			images.images[4]={normalResource->texture,heightSampler,false};
 			gameDecals=impl->gameDecalGPU.Prepare(lease,*frame.luaGameDecalFrame,images,frame.viewCamera,
 				result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
 				impl->screenGPU,screen.get(),layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,mainSamples,options.shaderValidation,result.shaderCompileMs);
@@ -3917,7 +3914,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		// from later World, then merge within each stage before any GPU work.
 		std::unique_ptr<PreparedPlacementGrid> placementGrid;
         PlacementGridHeight128 placementHeights;
-        if(frame.placementFrame&&!frame.placementFrame->grids.empty()){auto h=impl->standardTerrainGPU->PrepareHeight(lease,impl->heightOwner);placementHeights={h->source,h->texture};}
+        if(frame.placementFrame&&!frame.placementFrame->grids.empty()){auto h=impl->standardTerrainGPU->PrepareHeight(lease,normalResource->cornerSource);placementHeights={h->source,h->texture};}
 		if(frame.placementFrame)placementGrid=impl->placementGPU.Prepare(lease,*frame.placementFrame,frame.viewCamera,
 			result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
 			layer.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples,placementHeights);
@@ -4354,7 +4351,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    Require(decals.sourceDrawFrame==frame.sourceDrawFrame && standardShade,"Original decal CPU/framebuffer generations differ");
    Require(decals.sampleCount==impl->depth.sampleCount,"Original decal MSAA requires matching actual terrain/main targets");
    GroundDecalSceneImages images;images.sourceDrawFrame=frame.sourceDrawFrame;
-   images.height={standardShade->Height(),false};images.normals={impl->terrainNormals,false};
+   images.height={standardShade->Height(),false};images.normals={normalResource->texture,false};
    const auto& base=terrainMaterial.standardShading->base;
    images.minimap={impl->screenGPU.PrepareImage(lease,base,ScreenSampler{},screen.get(),std::nullopt,retainTerrainImage).texture,base->flipV};
    images.terrainDepth={decals.highQuality?terrainSnapshot->SamplesImage():terrainSnapshot->SingleImage(),true};
@@ -4599,7 +4596,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		if(shadowEnabled && (frame.shadow->generationBits&2u)){
 			[shadowEncoder setRenderPipelineState:impl->shadowTerrainPipeline];
 			[shadowEncoder setDepthBias:frame.shadow->terrainDepthBias slopeScale:frame.shadow->terrainSlopeBias clamp:0];
-			[arguments setAddress:impl->heights.gpuAddress atIndex:0];[arguments setAddress:uniformBuffer.gpuAddress+shadowTerrainOffset atIndex:1];
+			[arguments setAddress:normalResource->cornerBuffer.gpuAddress atIndex:0];[arguments setAddress:uniformBuffer.gpuAddress+shadowTerrainOffset atIndex:1];
 			for(const auto& batch:impl->map.batches)if(batch.count){
 				[arguments setAddress:batch.instances.gpuAddress atIndex:2];[shadowEncoder setArgumentTable:arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
 				[shadowEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:96 instanceCount:batch.count];++result.shadowTerrainDraws;

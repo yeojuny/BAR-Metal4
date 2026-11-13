@@ -48,3 +48,30 @@ cycles passed. Readback regression: exact snapshots, retirement/depth/missing
 receipt/continuation and 1,000 copies passed. Independent review caught a premature
 pipeline snapshot; corrected before final verification. Full app build/run remains
 explicitly deferred per user instruction. No performance claim.
+
+## Follow-up: eliminate remaining physical height/normal aliases
+
+- [x] Map returns its exact transactional pair directly; remove renderer-wide
+  `heights`, `terrainNormals` and `normalImage` aliases entirely.
+- [x] Blueprint/placement use the pinned pair's immutable cornerSource; game/ground
+  decals use its texture, shadow terrain uses its corner buffer.
+- [x] Source cache exposes read-only exact-identity Find for preflight nil/length
+  validation; no allocation/publication occurs in Find. Existing finite-value
+  checks, failed allocation transaction and deformation drain boundary remain.
+- [x] Update prior normal ownership regression expectations to the direct pair;
+  actual backing one-shot ownership (100), cache failure boundaries (3,000 factory
+  and 2,000 retention failures) and epoch tests pass with ASan/UBSan.
+
+Remaining concrete ownership boundaries, NOT removed by these checkpoints:
+
+| Surface | Observed protection | Why it is not general P5 closure |
+|---|---|---|
+| MapImage heightRRRR view | Exact source/physical image/device cache, provider access gate | Lazy cache mutation is still serial preparation, not lock-free simultaneous preparation |
+| MapCache tile batches | Transactional Map update plus terrain/source deformation previous-submission drain | Shadow/main encode still reads renderer map.batches; no immutable request packet for this cache |
+| SharedWorldInfoGPU / SharedMetalInfoGPU | Runtime lease and existing access/retirement contracts | Shared service Prepare/Clear remains outside the resource-pair proof; cross-provider ownership needs separate audit |
+| Render pipelines/attachments | Existing lease retains and renderer access gate | Except the pinned normal compute pipeline, other paths still select renderer state; retaining alone is not concurrency eligibility |
+
+Do not remove the deformation drain, enlarge worker eligibility, or call these
+shared services concurrently based only on this normal/height ownership work.
+Independent review caught a stale removed-height preflight reference; exact-cache
+Find corrected it before final regression checks. No full application build/run.

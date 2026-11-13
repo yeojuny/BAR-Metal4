@@ -12,6 +12,9 @@ template<class Source,class Resource> class NativeSourceResourceCache {
  std::shared_ptr<const Source> source;
  std::shared_ptr<Resource> resource;
 public:
+ std::shared_ptr<const Resource> Find(const std::shared_ptr<const Source>& candidate) const noexcept {
+  return source==candidate?resource:nullptr;
+ }
  // Prepare may throw (for example allocation retention); the companion commit
  // must not throw. Both cache-hit and replacement paths honor this transaction.
  template<class Create,class Prepare,class Commit>
