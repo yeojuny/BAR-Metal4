@@ -2269,9 +2269,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   cacheAccess.reset();
   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
    ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
-  },std::move(uiResolver),std::move(mrtFrontier),std::nullopt);
+  },std::move(uiResolver),std::move(mrtFrontier),std::nullopt,std::nullopt);
  }
  const auto sourceContext=NativeSourceContextSnapshot::Capture(uiContext,NativeGeometryTextureRole::Models);
+ const auto shadowFallback=frame.originalShadow?NativeShadowFallbackSnapshot{}:
+  NativeShadowFallbackSnapshot::Capture(OriginalNativeShadowTextures(),shadowHandler);
  // Allocate/retain the exact publication identities before worker Begin.
  NativeTargetSubmissionNotice targetNotice(options.screenUI);
  auto deliverTargetNotice=[&]() noexcept {targetNotice.Deliver([heldSourceDraw=options.heldSourceDraw](auto passes,std::uint64_t submission,auto postprocess) noexcept {
@@ -2288,11 +2290,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
  const auto cpuTraceContext=CaptureNativeCPUPhaseContext();
  try {
-  auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,cpuTraceContext,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
+  auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,cpuTraceContext,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
    NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
    Metal4SurfaceWorkerScope scope(snapshot);
    NativeCPUPhaseContextScope traceContext(cpuTraceContext);
-   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver,mrtFrontier,sourceContext);
+   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver,mrtFrontier,sourceContext,shadowFallback);
   }});
   cacheHandoff.reset();
   deliverTargetNotice();
@@ -2303,7 +2305,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   return result;
  }catch(...){cacheHandoff.reset();deliverTargetNotice();deliverReceipt();throw;}
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver,std::optional<MRTFrontier209> mrtFrontier,std::optional<NativeSourceContextSnapshot> sourceContext)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver,std::optional<MRTFrontier209> mrtFrontier,std::optional<NativeSourceContextSnapshot> sourceContext,std::optional<NativeShadowFallbackSnapshot> shadowFallback)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  struct ResolverScope {
@@ -2654,6 +2656,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    auto view=InterventionPoolsEnabled()?impl->interventionShadowViews.Acquire(lease,target,backing.request.colored,create):create();
    Require(view!=nil,"Original shadow sampling has no actual RGB1/RRR1 resource view");lease.AddAllocation(target);lease.Retain(view);return view;
   };
+  // Direct callbacks may change source state during retirement. Capture them
+  // lazily here; the joined worker must use its pre-handoff exact receipt.
+  if(!frame.originalShadow&&!shadowFallback){
+   Require([NSThread isMainThread],"Shadow fallback requires a captured worker receipt");
+   shadowFallback=NativeShadowFallbackSnapshot::Capture(OriginalNativeShadowTextures(),shadowHandler);
+  }
   if(frame.originalShadow){
    Require(frame.originalShadow->sourceDrawFrame==frame.sourceDrawFrame&&frame.originalShadow->textures&&frame.originalShadow->cus,
     "Original shadow graph has another actual source draw");
@@ -2663,9 +2671,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    Require(color!=nullptr,"Original shadow graph lost its actual color version");
    impl->shadowDepth=NativeShadowTextureImage(*named.depth.backing);sampledShadowColor=shadowColorView(*color);
    lease.AddAllocation(impl->shadowDepth);lease.AddAllocation(sampledShadowColor);
-  }else if(OriginalNativeShadowTextures().Attached()&&shadowHandler.HasNativeTextureOwner()){
+  }else if(shadowFallback&&shadowFallback->attached){
    Require(!shadowEnabled,"Actual original pre-IBL shadow producer is missing");
-   initialShadow={OriginalNativeShadowTextures().Image(shadowHandler.GetShadowTextureID()),OriginalNativeShadowTextures().Image(shadowHandler.GetColorTextureID())};
+   initialShadow=shadowFallback->images;
    for(const auto& backing:initialShadow)Require(backing&&(backing->operation==NativeShadowTextureOperation::InitialClear||backing->completed.load()),
     "Native disabled-shadow target has an unexecuted original draw producer");
    impl->shadowDepth=NativeShadowTextureImage(*initialShadow[0]);sampledShadowColor=shadowColorView(*initialShadow[1]);

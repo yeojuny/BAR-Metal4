@@ -382,3 +382,20 @@ four-phase ancestry, nested contexts, local-scope protection and exception clean
 Restoring the old missing-parent rule is rejected by the same fixture. This closes
 a diagnostic handoff prerequisite, not the P5 positive-overlap measurement: the
 worker still joins, and full native Metal compilation/execution remains deferred.
+
+## Exact disabled-shadow fallback selection
+
+The original P4 audit's disabled-shadow path still resolved live handler names and
+source state on the joined render worker. It now captures the selected depth/color
+backings on main after direct-route selection, then consumes only that receipt.
+An engaged empty receipt remains empty even if the source later attaches. Actual
+producer readiness is still checked after retirement at use, not guessed during
+capture; the existing GPU lifetime retains the selected pair. Direct synchronous
+callbacks keep their lazy source lookup at the original use site, and original
+shadow producer frames bypass fallback capture entirely. This does not relax the
+joined barrier or permit source publication overlap by itself.
+Validation: 1,000 actual snapshot-template cases with controlled source/handler
+adapters under ASan/UBSan, covering replacement/reset, absent source/owner,
+missing images and live completion on the retained backing. Structural checks
+cover dispatch/direct timing and existing GPU retention. SceneBridge host C++
+syntax passes; independent review GO. No actual ShadowHandler/Metal run claim.
