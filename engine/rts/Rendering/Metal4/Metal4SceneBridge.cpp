@@ -558,6 +558,7 @@ void ApplyDeferredFrameReceipts()
 void RequireRetiredGPUWork()
 {
  if(!session || !session->renderer)return;
+ session->renderer->FinishCPUWork();
  if(Metal4RendererCanSafelyDetachSurface()){ApplyDeferredFrameReceipts();session->completionMailbox->RequireNoQueuedCompletions();return;}
  LOG_L(L_ERROR,"[Metal4Scene] GPU submission has not retired; refusing unsafe renderer/window teardown. Process restart is required");
  std::terminate();

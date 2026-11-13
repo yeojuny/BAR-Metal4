@@ -4,17 +4,18 @@
 #include <algorithm>
 
 namespace rendering::metal4 {
-void PBRSourceService::Initialize(NativeTextureContext& owner,NativeRendererAccessGate& access,std::unique_ptr<NativeSerialRenderWorker>& worker,Parser parser,std::function<bool()> ready,
+void PBRSourceService::Initialize(NativeTextureContext& owner,NativeRendererAccessGate& access,std::unique_ptr<NativeSerialRenderWorker>& worker,std::function<void()> finishCPU,Parser parser,std::function<bool()> ready,
 	std::function<uint64_t()> drawFrame,std::function<void()> validateRaster,bool validate)
 {
-	Require(!context&&owner.Initialized()&&owner.UIAttached()&&parser&&ready&&drawFrame&&validateRaster,"PBR source context lacks its actual original resource/raster owners");
+	Require(!context&&owner.Initialized()&&owner.UIAttached()&&finishCPU&&parser&&ready&&drawFrame&&validateRaster,"PBR source context lacks its actual original resource/raster owners");
 	context=&owner;resourcesReady=std::move(ready);validation=validate;
 	LuaNativePBRSource::Services services;
 	services.ready=[this]{return Ready();};
  // Persistent source callback retains the renderer's stable worker slot, not
  // Initialize's stack. Runtime completion callbacks run on main before handoff.
- services.compile=[this,gate=&access,renderWorker=&worker](const NativePBRProgramSource& source){
+ services.compile=[this,gate=&access,renderWorker=&worker,finishCPU=std::move(finishCPU)](const NativePBRProgramSource& source){
   Require([NSThread isMainThread],"PBR compile controls require the source thread");
+  finishCPU(); // Before gate/runtime locks; stable renderer owner callback.
   auto& runtime=SharedRuntime();
   {NativeRendererAccessGate::Scope owner(gate);Require(runtime.CanSafelyDetach(),"PBR compiler cannot pass unsafe pending GPU work");}
   auto request=std::make_shared<const NativePBRProgramSource>(source);

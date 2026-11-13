@@ -25,7 +25,8 @@ subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=
 service=(root/'rts/Rendering/Metal4/Metal4PBRSourceService.mm').read_text()
 compile_callback=service.split('services.compile=',1)[1].split('services.allocate=',1)[0]
 assert compile_callback.index('Require([NSThread isMainThread]')<compile_callback.index('NativeRendererAccessGate::Scope owner(gate)')<compile_callback.index('runtime.CanSafelyDetach()')<compile_callback.index('InvokeNativeRendererControl')<compile_callback.index('RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime)')<compile_callback.index('gpu.Compile')
-assert '[this,gate=&access,renderWorker=&worker]' in compile_callback
+assert '[this,gate=&access,renderWorker=&worker,finishCPU=std::move(finishCPU)]' in compile_callback
+assert compile_callback.index('finishCPU();')<compile_callback.index('NativeRendererAccessGate::Scope owner(gate)')
 assert 'make_shared<const NativePBRProgramSource>(source)' in compile_callback
 assert 'gpu.Compile(lease,*captured,validation,compileMilliseconds)' in compile_callback
 assert compile_callback.count('RuntimeLease lease')==1 and 'Metal4WindowSurfaceNativeAccess' not in compile_callback

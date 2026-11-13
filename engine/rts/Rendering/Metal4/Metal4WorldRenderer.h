@@ -223,6 +223,8 @@ public:
 	// Logical camera viewport and requested render pixels remain independent:
 	// camera's actual subview maps proportionally to the explicit target.
 	Metal4WorldPresentationResult Draw(const WorldFrame& frame, const Metal4WorldRenderOptions& options = {});
+ // Main only, before acquiring renderer or runtime locks. Does not claim GPU retirement.
+ void FinishCPUWork() const;
  // Owned input is required for worker dispatch; this entry still joins.
  Metal4WorldPresentationResult DrawOwned(std::shared_ptr<const Metal4WorldSubmission>,std::function<void()> previousRetired = {});
  // Prepare independent immutable shared-buffer inputs while the preceding
