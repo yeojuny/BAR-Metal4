@@ -15,6 +15,8 @@ struct NativeMainSampling {
 	std::uint32_t requested = 0;
 	std::uint32_t effective = 0; // Original msaaLevel convention: zero means OFF.
 	std::uint32_t samples = 1; // Actual texture/PSO count, always at least one.
+	// Initial successful allocation witness, not the latest resized attachment.
+	// Frame-local attachment receipts carry their own current generation.
 	std::uint64_t allocationGeneration = 0;
 };
 

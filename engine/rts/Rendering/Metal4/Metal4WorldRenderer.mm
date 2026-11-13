@@ -912,7 +912,7 @@ struct Metal4WorldRenderer::Impl {
 
 	void Pipelines(RuntimeLease& lease, MTLPixelFormat format, bool validation, double& elapsed)
 	{
-		if (unitPipeline != nil && pipelineFormat == format && pipelineValidation == validation && pipelineSampleShading == lease.SampleShadingEnabled(mainSampling.samples)) return;
+		if (unitPipeline != nil && pipelineFormat == format && pipelineValidation == validation && pipelineSampleShading == lease.SampleShadingEnabled(mainSampling->samples)) return;
 		const auto start = Clock::now(); NSError* error = nil;
 		MTL4LibraryDescriptor* libraryDescriptor = [MTL4LibraryDescriptor new];
 		libraryDescriptor.source = String(WORLD_SHADER); libraryDescriptor.name = @"Original SMF and selected CUS forward contributions";
@@ -931,7 +931,7 @@ struct Metal4WorldRenderer::Impl {
 				specialized.functionDescriptor = fragmentFunction; specialized.constantValues = constants;
 				descriptor.fragmentFunctionDescriptor = specialized;
 			}
-			descriptor.rasterSampleCount = (depthOnly || targetFormat != MTLPixelFormatInvalid) ? 1 : mainSampling.samples;
+			descriptor.rasterSampleCount = (depthOnly || targetFormat != MTLPixelFormatInvalid) ? 1 : mainSampling->samples;
 			descriptor.colorAttachments[0].pixelFormat = depthOnly ? MTLPixelFormatInvalid : (targetFormat==MTLPixelFormatInvalid?format:targetFormat);
 			if (alpha) {
 				auto blend = descriptor.colorAttachments[0]; blend.blendingState = MTL4BlendStateEnabled;
@@ -980,14 +980,16 @@ struct Metal4WorldRenderer::Impl {
 		function.name=@"LogicalSceneColorCopy";compute.computeFunctionDescriptor=function;
 		logicalColorCopyPipeline=[lease.Compiler() newComputePipelineStateWithDescriptor:compute compilerTaskOptions:nil error:&error];
 		Require(logicalColorCopyPipeline!=nil,"Cannot compile logical scene color copy: "+Error(error));
-		pipelineFormat = format; pipelineValidation = validation; pipelineSampleShading = lease.SampleShadingEnabled(mainSampling.samples);
+		pipelineFormat = format; pipelineValidation = validation; pipelineSampleShading = lease.SampleShadingEnabled(mainSampling->samples);
 		elapsed = Milliseconds(start);
 	}
 
 	Metal4WindowSurface* surface;
 	MainAttachmentStorage mainStorage;
  NativeIdleResourcePool<MainTerrainDepthStorage,2> terrainDepthStorage;
-	NativeMainSampling mainSampling;
+	// Published once before this renderer escapes construction. Render attachment
+	// generations belong to mainStorage receipts, never this capture-time contract.
+	std::unique_ptr<const NativeMainSampling> mainSampling;
 	__strong id<MTLTexture> terrainDepthSamples=nil;
 	MapCache map;
 	std::unordered_map<const WorldModel*, ModelCache> models;
@@ -1034,8 +1036,8 @@ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int reques
 	CAMetalLayer* layer = Metal4WindowSurfaceNativeAccess::Layer(surface);
 	Require(layer != nil && layer.device == lease.Device(), "Native family initialization requires the renderer's actual attached device");
 	const auto initial=surface.Snapshot();
-	impl->mainSampling=SelectMainSampling(lease,impl->mainStorage,requestedSamples,initial.renderWidth,initial.renderHeight,layer.pixelFormat).actual;
-	const auto mainSamples=impl->mainSampling.samples;
+	impl->mainSampling=std::make_unique<const NativeMainSampling>(SelectMainSampling(lease,impl->mainStorage,requestedSamples,initial.renderWidth,initial.renderHeight,layer.pixelFormat).actual);
+	const auto mainSamples=impl->mainSampling->samples;
 	double compileMs = 0;
 	impl->Pipelines(lease,layer.pixelFormat,NativeDiagnosticInstrumentation,compileMs);
 	impl->standardTerrainGPU->Initialize(lease,NativeDiagnosticInstrumentation,compileMs);
@@ -1112,7 +1114,8 @@ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int reques
 	}
 }
 NativeMainSampling Metal4WorldRenderer::ActualMainSampling() const {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr); return impl->mainSampling; }
+ // Immutable startup contract: no renderer ownership or GPU completion needed.
+ return *impl->mainSampling; }
 
 // External lifecycle contract: never destroy or move a renderer while any
 // entry/provider/retirement is running. The cache gate does not own Impl lifetime.
@@ -1888,7 +1891,7 @@ void Metal4WorldRenderer::ConstructOriginalModelPrograms(NativeEngineModelProgra
 	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 	Require(layer&&layer.device==lease.Device(),"Original model source belongs to another actual device");
 	double milliseconds=0;CUSSourceTarget forward,mrt;
-	forward.samples=impl->mainSampling.samples;forward.colors[0]=layer.pixelFormat;forward.depth=MTLPixelFormatDepth32Float;forward.stencil=MTLPixelFormatStencil8;
+	forward.samples=impl->mainSampling->samples;forward.colors[0]=layer.pixelFormat;forward.depth=MTLPixelFormatDepth32Float;forward.stencil=MTLPixelFormatStencil8;
 	mrt.colors.fill(MTLPixelFormatRGBA8Unorm);mrt.depth=MTLPixelFormatDepth32Float;
 	for(bool modern:{false,true})for(bool shadows:{false,true}){
 		source.Construct(modern,shadows,false,impl->originalForwardGPU.CompileOriginalProgram(lease,modern,shadows,forward,NativeDiagnosticInstrumentation,milliseconds));
@@ -2460,7 +2463,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
     reflectionWorldInfo=SharedWorldInfoGPU().Prepare(lease,input->worldInfoFrame,options.environmentStage.shaderValidation,compileMs);
   }
 
-		Require(frame.mainSampling.samples==impl->mainSampling.samples && frame.mainSampling.effective==impl->mainSampling.effective,"Captured main sampling differs from the allocated renderer context");
+		Require(frame.mainSampling.samples==impl->mainSampling->samples && frame.mainSampling.effective==impl->mainSampling->effective,"Captured main sampling differs from the allocated renderer context");
 		prepPhase->Mark(0);
 		if(options.screenUI && options.screenUI->postprocess)
 			impl->postprocessGPU.PrepareFrameImages(lease,options.screenUI->postprocess,frame.sourceDrawFrame);
@@ -2667,9 +2670,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			if(retain)lease.AddAllocation(target);
 		};
 		prepPhase->Mark(2);
-		const auto mainSamples=impl->mainSampling.samples;
+		const auto mainSamples=impl->mainSampling->samples;
 		auto mainAttachments=impl->mainStorage.Prepare(lease,result.surface.renderWidth,result.surface.renderHeight,layer.pixelFormat,mainSamples);
-		impl->mainSampling.allocationGeneration=mainAttachments->Generation();
 		impl->depth=mainAttachments->Depth();impl->stencil=mainAttachments->Stencil();
 		// Preserve the cropped per-sample and decal images. Soft particles get a
 		// separate logical-size single-depth image at this same terrain-only event.
