@@ -27,7 +27,7 @@ class NativeFrameCompletionMailbox {
 public:
  class Ticket;
 private:
- struct Slot {std::weak_ptr<Ticket> ticket;bool queued=false;};
+ struct Slot {std::weak_ptr<Ticket> ticket;bool queued=false,accepted=false;};
  std::array<Slot,2> slots{};
  std::array<std::size_t,2> entrySlots{};
  const std::uint64_t epoch;
@@ -65,9 +65,17 @@ public:
   if(!open || epoch!=expectedEpoch)Reject();
   for(std::size_t i=0;i<slots.size();++i)if(!slots[i].queued && slots[i].ticket.expired()){
    auto ticket=std::shared_ptr<Ticket>(new Ticket(this,epoch,draw,post,i));
-   slots[i].ticket=ticket;return ticket;
+   slots[i]={ticket,false,false};return ticket;
   }
   Reject();return {};
+ }
+ // Main acknowledges ownership transfer only after every held journal exists.
+ // GPU completion may arrive first, but must not retire an unaccepted frame.
+ void Accept(const std::shared_ptr<Ticket>& ticket) {
+  const std::lock_guard lock(mutex);
+  if(!open || !ticket || ticket->owner!=this || ticket->epoch!=epoch ||
+     slots[ticket->slot].ticket.lock()!=ticket || slots[ticket->slot].accepted)Reject();
+  slots[ticket->slot].accepted=true;
  }
  void Publish(const std::shared_ptr<Ticket>& ticket,const NativeFrameCompletionNotice& notice) {
   const std::lock_guard lock(mutex);
@@ -82,7 +90,21 @@ public:
   const std::lock_guard lock(mutex);
   if(!open)Reject();
   if(!count)return std::nullopt;
+  const auto& front=slots[entrySlots[read]];
+  if(!front.accepted){
+   // Completed work with no surviving acceptance owner is an explicit failure,
+   // never an empty queue that teardown could mistake for successful retirement.
+   if(front.ticket.expired())Reject();
+   return std::nullopt;
+  }
   auto result=entries[read];slots[entrySlots[read]]={};read=(read+1)%entries.size();--count;return result;
+ }
+ // A terminal GPU drain may not treat a blocked unaccepted notice as empty.
+ // Unpublished reservations are permitted: the current frame can be preparing
+ // while its predecessors drain, before it has submitted any GPU work.
+ void RequireNoQueuedCompletions() {
+  const std::lock_guard lock(mutex);
+  if(!open || count)Reject();
  }
  void Close() {
   const std::lock_guard lock(mutex);open=false;

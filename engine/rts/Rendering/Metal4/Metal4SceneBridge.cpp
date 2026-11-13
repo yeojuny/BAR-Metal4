@@ -518,7 +518,7 @@ void ApplyDeferredFrameReceipts()
 void RequireRetiredGPUWork()
 {
  if(!session || !session->renderer)return;
- if(Metal4RendererCanSafelyDetachSurface()){ApplyDeferredFrameReceipts();return;}
+ if(Metal4RendererCanSafelyDetachSurface()){ApplyDeferredFrameReceipts();session->completionMailbox->RequireNoQueuedCompletions();return;}
  LOG_L(L_ERROR,"[Metal4Scene] GPU submission has not retired; refusing unsafe renderer/window teardown. Process restart is required");
  std::terminate();
 }
@@ -1605,6 +1605,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	options.sourceLogicalExtent=session->lastLogicalExtent;
  if(session->renderer->HasScreenContinuation())SetReadbackSubmissionReceipts(options);
  static const bool overlap=[] {const char* value=std::getenv("BAR_NATIVE_FRAME_OVERLAP");return !value||std::string_view(value)=="1";}();
+ std::shared_ptr<NativeFrameCompletionMailbox::Ticket> completionTicket;
  if(overlap&&options.presentWorld&&frame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
   const auto expectedDraw=frame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
   const auto mailbox=session->completionMailbox;
@@ -1617,7 +1618,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   ui::GetRecorder().ValidateSubmittedCapacity(expectedDraw);
   LuaNativePostprocess::GetRecorder().ValidateSubmittedCapacity(expectedPost);
   LuaNativeVolumetricClouds::ValidateSubmittedCapacity(expectedDraw);
-  const auto ticket=mailbox->Prepare(mailbox->Epoch(),expectedDraw,expectedPost);
+  const auto ticket=completionTicket=mailbox->Prepare(mailbox->Epoch(),expectedDraw,expectedPost);
   options.deferredCompleted=[mailbox,ticket](const Metal4WorldPresentationResult& completed) {
    mailbox->Publish(ticket,{completed.sourceFrameCompleted,
     completed.sourceDrawFrame,completed.completedPostprocessSerial,completed.dynamicWaterGeneration,
@@ -1636,6 +1637,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   ui::GetRecorder().HoldSubmittedFrame(frame.sourceDrawFrame);
   LuaNativePostprocess::GetRecorder().HoldSubmittedFrame(screenUI->postprocess->serial);
   LuaNativeVolumetricClouds::HoldSubmittedFrame(frame.sourceDrawFrame);
+  session->completionMailbox->Accept(completionTicket);
   // The runtime ticket owns the immutable frame graph until true completion.
   session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();
  }

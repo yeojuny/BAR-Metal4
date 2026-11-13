@@ -33,9 +33,11 @@ needed before Begin by external image providers. Exact cube cancellation alone
 cannot prevent A being restored when younger B rolls back to A; dependent younger
 capture must remain prohibited until dependency-aware cancellation is designed.
 
-Current completion processing retires water/world sources before checking all
-journals. This order remains the synchronous reference but needs whole-frame
-prevalidation before asynchronous admission. Existing callback mailbox/tickets
-provide lifetime and replay protection, not capacity reservation or this state
-machine. Renderer cache isolation, source controls and teardown drains remain
-separate mandatory gates. Do not enable CPU lookahead yet.
+Current completion processing prevalidates all three journal owners before
+water/world retirement. The callback mailbox now reserves bounded result capacity
+before renderer invocation, and completed notices are gated on main's explicit
+acceptance after all three ownership transfers. Terminal drains reject any blocked
+queued result. These are prerequisites, not early ownership transfer, durable
+Begun/quarantine state or whole-frame atomic admission. Renderer cache isolation,
+source controls and teardown drains remain separate mandatory gates. Do not enable
+CPU lookahead yet.
