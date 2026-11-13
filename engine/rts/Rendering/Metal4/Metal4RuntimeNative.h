@@ -6,6 +6,7 @@
 
 #include "../Backend/RenderTypes.h"
 #include "../Backend/NativeSubmissionReadScope.h"
+#include "../Backend/NativeUIBindingResolverOwner.h"
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
 #include <chrono>
@@ -166,6 +167,8 @@ public:
 	RuntimeLease& operator=(const RuntimeLease&) = delete;
  void BindSourceSubmission(uint64_t submission) {sourceSubmission.Bind(submission);}
  uint64_t SourceSubmission() const noexcept {return sourceSubmission.Current();}
+ void BindUIResolver(ui::NativeUICapturedBindingResolver resolver) {uiResolver.Bind(std::move(resolver));}
+ const ui::NativeUIBindingResolverOwner& UIResolver() const noexcept {return uiResolver;}
 	id<MTLDevice> Device() const { return runtime.device; }
 	id<MTL4Compiler> Compiler() const { return runtime.compiler; }
 	DeviceCapabilities Capabilities() const { return runtime.capabilities; }
@@ -233,6 +236,7 @@ private:
  std::shared_ptr<WorldTexturePreparationJournal> worldTexturePreparation;
  std::shared_ptr<ParticleAtlasPreparationJournal> particleAtlasPreparation;
  NativeSubmissionReadIdentity sourceSubmission;
+ ui::NativeUIBindingResolverOwner uiResolver;
 	void StageResources(bool overlapEncoding);
 	void RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmission>* completedOwner);
 	id<MTLLibrary> SampleLibrary(id<MTLLibrary>);

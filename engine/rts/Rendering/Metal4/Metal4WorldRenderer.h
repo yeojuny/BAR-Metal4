@@ -319,7 +319,7 @@ private:
  void ClearWaterFamily(WaterReset);
  Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned = {},std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled = {});
  Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver,std::optional<metal4::MRTFrontier209>,std::optional<NativeSourceContextSnapshot>,std::optional<NativeShadowFallbackSnapshot>);
-	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&);
+	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,ui::NativeUICapturedBindingResolver);
 	struct Impl;
 	std::unique_ptr<Impl> impl;
 };

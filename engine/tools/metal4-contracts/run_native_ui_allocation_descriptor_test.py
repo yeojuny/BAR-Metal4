@@ -20,9 +20,13 @@ world=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 dispatch=world.split('Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldRenderer::DrawPrepared(',1)[0]
 assert dispatch.index('uiContext.UI().CaptureResolver()')<dispatch.index('cacheAccess.reset()')
 assert 'uiResolver=std::move(uiResolver)' in dispatch
-assert 'const auto source=DescribeUIBinding(binding)' in world and 'const auto source=owner->DescribeUIBinding(binding)' in world
+assert 'const auto source=DescribeUIBinding(lease,binding)' in world and 'const auto source=owner->DescribeUIBinding(lease,binding)' in world
 assert world.count('OriginalNativeTextureContext().UI().DescribeBinding(binding)')==1
 helper=world.split('ObservedImage DescribeUIBinding(',1)[1].split('}',1)[0]
-assert helper.index('if(uiBindingResolver)')<helper.index('isMainThread')<helper.index('OriginalNativeTextureContext')
-assert '~ResolverScope(){destination=std::move(previous);}' in world
-print('Captured resolver value handoff and exception restoration structural PASS; no native execution')
+assert helper.index('lease.UIResolver().Describe')<helper.index('isMainThread')<helper.index('OriginalNativeTextureContext')
+assert 'ResolverScope' not in world and 'uiBindingResolver' not in world
+assert world.count('lease.BindUIResolver(std::move(uiResolver))')==2
+assert 'return ContinueScreen(frame,options,presentation,std::move(uiResolver));' in world
+owner=(b/'NativeUIBindingResolverOwner.h').read_text()
+assert owner.index('if(resolver)return resolver(binding)')<owner.index('if(!mainThread)')<owner.index('std::forward<Fallback>(fallback)()')
+print('Captured resolver exact lease ownership, main-only fallback and continuation handoff structural PASS; no native execution')

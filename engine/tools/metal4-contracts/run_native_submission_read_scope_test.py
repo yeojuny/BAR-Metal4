@@ -17,7 +17,7 @@ assert world.index('NativeSubmissionReadBinding::Scope')<world.index('RuntimeLea
 assert world.index('NativeSubmissionReadBinding::Scope')<world.index('lease.Begin("Actual engine')
 h=(root/'rts/Rendering/Metal4/Metal4RuntimeNative.h').read_text()
 assert h.count('void BindSourceSubmission(')==1 and h.count('uint64_t SourceSubmission()')==1
-accessors=h.split(' void BindSourceSubmission(',1)[1].split('\tid<MTLDevice> Device()',1)[0]
+accessors=h.split(' void BindSourceSubmission(',1)[1].split(' void BindUIResolver(',1)[0]
 (a.output/'lease-submission.inc').write_text('void BindSourceSubmission('+accessors)
 assert 'NativeSubmissionReadIdentity sourceSubmission;' in h
 for name in ['ReadIndependentTargetPrefix','SubmitMaintenance','ContinueScreen']:
@@ -27,7 +27,7 @@ for name in ['ReadIndependentTargetPrefix','SubmitMaintenance','ContinueScreen']
  before=part[0].split('RuntimeLease lease',1)[1]
  assert '.Prepare(' not in before and '.PrepareFrameImages(' not in before
 providers=s.split('void Metal4WorldRenderer::ConnectShieldTextureContext(',1)[1].split('void Metal4WorldRenderer::ConstructOriginalModelPrograms(',1)[0]
-assert hashlib.sha256(providers.encode()).hexdigest()=='22f0953d5fbaac6a145434d2ad27e8bb3fb5be774d6c680bed32fd06d2f971c0'
+assert hashlib.sha256(providers.encode()).hexdigest()=='0347aaec1930112ccb9bfc44d548f8a122495cdd8332428bcdaaa5f4a9b74d63'
 fixture=Path(__file__).with_name('TestNativeSubmissionReadScope.cpp');binary=a.output.resolve()/'test'
 subprocess.run(['g++','-std=c++23','-Wall','-Wextra','-Werror','-fsanitize=address,undefined','-I'+str(root/'rts'),'-I'+str(a.output.resolve()),str(fixture),'-o',str(binary)],check=True)
 r=subprocess.run([str(binary)],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},capture_output=True,text=True,check=True)

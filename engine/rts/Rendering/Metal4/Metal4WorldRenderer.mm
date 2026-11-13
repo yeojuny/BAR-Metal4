@@ -422,12 +422,12 @@ struct Metal4WorldRenderer::Impl {
 	metal4::WorldParticlesGPU particlesGPU;
 	metal4::WorldEnvironmentGPU environmentGPU;
 	metal4::PBRSourceService pbrSource;
- ui::NativeUICapturedBindingResolver uiBindingResolver;
- ui::NativeUITextureObserver::ObservedImage DescribeUIBinding(const NativeCUSTextureBinding& binding) {
-  if(uiBindingResolver)return uiBindingResolver(binding);
-  Require([NSThread isMainThread],"Worker UI binding lacks captured descriptor resolver");
-  return OriginalNativeTextureContext().UI().DescribeBinding(binding);
+ ui::NativeUITextureObserver::ObservedImage DescribeUIBinding(RuntimeLease& lease,const NativeCUSTextureBinding& binding) {
+  return lease.UIResolver().Describe(binding,[NSThread isMainThread],[&]{
+   return OriginalNativeTextureContext().UI().DescribeBinding(binding);
+  });
  }
+
 	metal4::WorldOverlayGPU overlayGPU;
 	metal4::ProjectileEffectsGPU projectileEffectsGPU;
 	metal4::EnergyExplosionGPU energyExplosionGPU;
@@ -722,7 +722,7 @@ struct Metal4WorldRenderer::Impl {
 		// Ordinary named/Lua color images keep the one existing UI image cache.
 		// A source-dependent framebuffer needs its actual prepared producer;
 		// an absent producer remains a strict source error at this boundary.
-		const auto source=DescribeUIBinding(binding);
+		const auto source=DescribeUIBinding(lease,binding);
 		Require(source.image!=nullptr,"Original model image lacks its captured UI storage");
 		auto external=std::make_shared<PreparedScreenExternalImage>();
 		auto prepared=screenGPU.PrepareImage(lease,source.image,source.sampler,nullptr,std::nullopt,
@@ -1759,7 +1759,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			const auto encoded=owner->normalsEncoded;
 			return PreparedStartBoxImage{kind,resource->texture,sampler,binding.object,resource,false,[encoded]{Require(*encoded,"Original map normal image sampled before its existing producer");}};
 		}
-		const auto source=owner->DescribeUIBinding(binding);
+		const auto source=owner->DescribeUIBinding(lease,binding);
 		Require(source.image!=nullptr,"Original StartBox binding has no actual retained image");
 		if(source.image->renderTarget && (source.image->format==ScreenTextureFormat::RGBA16Float || source.image->format==ScreenTextureFormat::R8Unorm))
 			Require(source.image->generation,"Original StartBox SDF cannot sample allocation-only unbaked contents");
@@ -2220,7 +2220,7 @@ bool Metal4WorldRenderer::AbortScreenContinuation() noexcept
  return true;
 }
 
-Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation)
+Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,ui::NativeUICapturedBindingResolver uiResolver)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  @autoreleasepool {
@@ -2257,7 +2257,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
   // First-prefix source callbacks already retired these simulation-owned tokens.
   result.completedWorldInfo={};result.completedWaterUpdates={};
   const auto main=continuation->main;
-  RuntimeLease lease;const auto start=Clock::now();lease.SetMinSampleShadingRate(frame.minSampleShadingRate);
+  RuntimeLease lease;lease.BindUIResolver(std::move(uiResolver));const auto start=Clock::now();lease.SetMinSampleShadingRate(frame.minSampleShadingRate);
   main->RetainForContinuation(lease);
   const auto submission=CreateShieldSubmissionIdentity();
   NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,submission);
@@ -2478,11 +2478,6 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver,std::optional<MRTFrontier209> mrtFrontier,std::optional<NativeSourceContextSnapshot> sourceContext,std::optional<NativeShadowFallbackSnapshot> shadowFallback)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
- struct ResolverScope {
-  ui::NativeUICapturedBindingResolver& destination;ui::NativeUICapturedBindingResolver previous;
-  ResolverScope(ui::NativeUICapturedBindingResolver& slot,ui::NativeUICapturedBindingResolver resolver) noexcept:destination(slot),previous(std::move(slot)){destination=std::move(resolver);}
-  ~ResolverScope(){destination=std::move(previous);}
- } resolverScope(impl->uiBindingResolver,std::move(uiResolver));
  // Direct main calls intentionally read at the original use sites, after any
  // retirement callback. Workers must never fall back to the mutable context.
  const auto contextGeneration=[&] {
@@ -2501,7 +2496,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
  NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);cpuPhase.Draw(frame.sourceDrawFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
-		if(impl->screenContinuation)return ContinueScreen(frame,options,presentation);
+		if(impl->screenContinuation)return ContinueScreen(frame,options,presentation,std::move(uiResolver));
 		if(options.readback)Require(options.screenUI && options.screenUI->drawList &&
 			options.submissionBegan && options.submissionCompleted && frame.luaWorldDrawFrame && frame.luaVolumetricCloudFrame &&
 			options.readback->screenStage && options.readback->cutoff && options.readback->root &&
@@ -2539,6 +2534,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
 		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,sourceSubmission);
   RuntimeLease lease(std::move(previousRetired));
+  lease.BindUIResolver(std::move(uiResolver));
   lease.BindSourceSubmission(sourceSubmission);
   // Sweep once even when main/water effect frames are absent or empty.
   impl->projectileEffectsGPU.PruneExpiredImages();
