@@ -16,7 +16,7 @@ for every in ['0','1']:
 subprocess.run([str(out/'test')],env={**env,'BAR_NATIVE_FRAME_TRACE':'0'},check=True,timeout=30)
 world=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 a=world.index('const auto cpuTraceContext=CaptureNativeCPUPhaseContext();')
-b=world.index('worker.Invoke([this,owned,presentation,snapshot,sourceContext,cpuTraceContext,',a)
+b=world.index('impl->cpuJob->Submit(worker,[this,owned,presentation,snapshot,sourceContext,cpuTraceContext,',a)
 c=world.index('NativeCPUPhaseContextScope traceContext(cpuTraceContext);',b)
 assert world.index('return DrawPrepared(owned->Frame()',c)>c
 # Leave sampling installed but reproduce the previous missing ancestry rule.
