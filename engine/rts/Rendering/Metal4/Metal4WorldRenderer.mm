@@ -972,6 +972,7 @@ struct Metal4WorldRenderer::Impl {
 
 	Metal4WindowSurface* surface;
 	MainAttachmentStorage mainStorage;
+ NativeIdleResourcePool<MainTerrainDepthStorage,2> terrainDepthStorage;
 	NativeMainSampling mainSampling;
 	__strong id<MTLTexture> terrainDepthSamples=nil;
 	MapCache map;
@@ -1236,7 +1237,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->standardTerrainGPU->ClearResources();
 	impl->screenContinuation.reset();impl->postprocessGPU.ClearResources();impl->offscreenSourceColor=nil;
 	impl->volumetricCloudsGPU.ClearResources();
-	impl->depth = nil; impl->stencil = nil; impl->terrainDepth = nil; impl->terrainDepthSamples=nil; impl->shadowDepth = nil;impl->mainStorage.Clear();
+	impl->depth = nil; impl->stencil = nil; impl->terrainDepth = nil; impl->terrainDepthSamples=nil; impl->shadowDepth = nil;impl->mainStorage.Clear();impl->terrainDepthStorage.Clear();
 	impl->screenGPU.ClearResources();
 	SharedWorldInfoGPU().ClearResources();
 }
@@ -2555,7 +2556,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		// separate logical-size single-depth image at this same terrain-only event.
 		const auto& crop = mappedViewport->scissor;
 		const bool needsSampleDepth=frame.groundDecals&&frame.groundDecals->highQuality;
-		auto terrainSnapshot=MainTerrainDepthSnapshot::Prepare(lease,mainAttachments,crop,needsSampleDepth,true,impl->terrainDepthSamples,impl->terrainDepth);
+		auto terrainSnapshot=MainTerrainDepthSnapshot::Prepare(lease,mainAttachments,crop,needsSampleDepth,true,impl->terrainDepthStorage);
 		impl->terrainDepthSamples=terrainSnapshot->SamplesImage();impl->terrainDepth=terrainSnapshot->SingleImage();
 		const bool needsLogicalParticleDepth=frame.particleFrame&&frame.particleFrame->softenRequested&&!frame.particleFrame->ranges.empty();
 		std::optional<LogicalCopyMapping> logicalCopyMapping;

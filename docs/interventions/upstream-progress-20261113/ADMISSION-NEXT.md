@@ -157,3 +157,16 @@ publication, and route all later consumers/copies through that exact selection.
 The live cache cannot publish a partial failed allocation. Physical compatible
 storage still reuses serially: this is not water overlap readiness. Native Metal
 allocation tests remain pending; see water-attachment-selection report.
+
+### Main framebuffer bounded idle reuse
+
+Prepared main descriptors now pin their immutable unbound allocation prototype.
+At most two prototypes are cached; only unpinned compatible slots are reused,
+with owned uncached fallback if both are held. Production CPU policy tests cover
+1000 alternating frames and 3000 preparation failures. Continuation keeps exact
+frame identity. Native execution/performance remains pending; raw aliases and
+other caches still require existing barriers, so lookahead remains disabled.
+
+Cropped terrain depth now also uses a bounded idle pair cache and exact snapshot
+pin, replacing latest raw-texture reuse. N=1 alias and multisample distinction,
+per-snapshot encode guard and original events/barriers are preserved.

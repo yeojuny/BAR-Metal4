@@ -3,7 +3,10 @@
 
 #include "Metal4RuntimeNative.h"
 #include "../Backend/NativeMainSamplingData.h"
+#include "../Backend/NativeIdleResourcePool.h"
+#include <limits>
 #include <array>
+#include <algorithm>
 #include <memory>
 #include <stdexcept>
 
@@ -155,11 +158,15 @@ private:
 	std::uint32_t samples = 1;
 	std::uint64_t generation = 0;
 	bool destinationBound = false;
+ // Cached prototypes never bind destinations or pin themselves. Prepared
+ // descriptors pin the exact physical prototype through every continuation.
+ std::shared_ptr<const MainFrameAttachments> storageOwner;
 	friend class MainAttachmentStorage;
 };
 
-// Persistent storage is replaced only between retired submissions. Prepared
-// frame handles retain the exact generation, so they cannot follow a resize.
+// Two cached immutable prototypes avoid overwriting externally pinned storage.
+// Prepared descriptors retain exact prototypes; continuation never re-acquires.
+// Existing submission retirement barriers still protect uncounted raw aliases.
 class MainAttachmentStorage {
 public:
 	std::shared_ptr<MainFrameAttachments> Prepare(RuntimeLease& lease, std::uint32_t width,
@@ -173,31 +180,33 @@ public:
 		Require(format == MTLPixelFormatBGRA8Unorm || format == MTLPixelFormatBGRA8Unorm_sRGB ||
 			format == MTLPixelFormatRGBA8Unorm || format == MTLPixelFormatRGBA8Unorm_sRGB,
 			"Main framebuffer has an unsupported presentation color format");
-		if (!storage || storage->depth.device != lease.Device() || storage->depth.width != width ||
-			storage->depth.height != height || storage->format != format || storage->samples != samples) {
-			auto next = std::make_shared<MainFrameAttachments>();
-			next->format = format;
-			next->samples = samples;
-			next->generation = generation + 1;
-			next->depth = Allocate(lease, width, height, MTLPixelFormatDepth32Float, samples, @"Main preserved depth samples");
-			next->stencil = Allocate(lease, width, height, MTLPixelFormatStencil8, samples, @"Main preserved stencil samples");
-			if (samples > 1) {
-				next->color = Allocate(lease, width, height, format, samples, @"Main preserved color samples");
-				next->readColor = Allocate(lease, width, height, format, 1, @"Main ordered resolved color scratch");
-				next->readDepth = Allocate(lease, width, height, MTLPixelFormatDepth32Float, 1, @"Main ordered resolved depth scratch");
-			}
-			// Publish only the complete allocation set; a failed resize leaves the
-			// old generation intact and propagates the error to the frame owner.
-			storage = std::move(next);
-			++generation;
-		}
-		auto frame = std::make_shared<MainFrameAttachments>(*storage);
-		for (auto image : {frame->color, frame->depth, frame->stencil, frame->readColor, frame->readDepth})
-			if (image) lease.AddAllocation(image);
-		return frame;
+		std::shared_ptr<MainFrameAttachments> frame;
+  auto selected=storage.Acquire([&](const MainFrameAttachments& slot){
+   return slot.depth.device==lease.Device()&&slot.depth.width==width&&slot.depth.height==height&&slot.format==format&&slot.samples==samples;
+  },[&]{
+   Require(generation!=std::numeric_limits<std::uint64_t>::max(),"Main attachment generation exhausted");
+   auto next=std::make_shared<MainFrameAttachments>();
+   next->format=format;next->samples=samples;next->generation=generation+1;
+   next->depth=Allocate(lease,width,height,MTLPixelFormatDepth32Float,samples,@"Main preserved depth samples");
+   next->stencil=Allocate(lease,width,height,MTLPixelFormatStencil8,samples,@"Main preserved stencil samples");
+   if(samples>1){
+    next->color=Allocate(lease,width,height,format,samples,@"Main preserved color samples");
+    next->readColor=Allocate(lease,width,height,format,1,@"Main ordered resolved color scratch");
+    next->readDepth=Allocate(lease,width,height,MTLPixelFormatDepth32Float,1,@"Main ordered resolved depth scratch");
+   }
+   return next;
+  },[&](const auto& candidate){
+   auto prepared=std::make_shared<MainFrameAttachments>(*candidate);
+   prepared->storageOwner=candidate;
+   for(auto image:{prepared->color,prepared->depth,prepared->stencil,prepared->readColor,prepared->readDepth})
+    if(image)lease.AddAllocation(image);
+   frame=std::move(prepared);
+  });
+  generation=std::max(generation,selected->generation);
+  return frame;
 	}
 
-	void Clear() { storage.reset(); }
+	void Clear() { storage.Clear(); }
 
 	static id<MTLTexture> Allocate(RuntimeLease& lease, std::uint32_t width, std::uint32_t height,
 		MTLPixelFormat format, std::uint32_t samples, NSString* label)
@@ -223,18 +232,22 @@ public:
 	}
 
 private:
-	std::shared_ptr<MainFrameAttachments> storage;
+	NativeIdleResourcePool<MainFrameAttachments,2> storage;
 	std::uint64_t generation = 0;
 };
 
 // Captured at the original terrain-only event, before model depth is written.
 // HQ consumers read the N-sample copy; low-quality consumers read a separate
 // single image. Neither image is refreshed at a later world/UI read sequence.
+struct MainTerrainDepthStorage {
+ __strong id<MTLTexture> samples=nil,single=nil;
+};
+
 class MainTerrainDepthSnapshot {
 public:
 	static std::shared_ptr<MainTerrainDepthSnapshot> Prepare(RuntimeLease& lease,
 		std::shared_ptr<const MainFrameAttachments> main, const std::array<std::uint32_t, 4>& crop,
-		bool needsSamples, bool needsSingle, id<MTLTexture> reusableSamples = nil, id<MTLTexture> reusableSingle = nil)
+		bool needsSamples, bool needsSingle, NativeIdleResourcePool<MainTerrainDepthStorage,2>& storage)
 	{
 		Require(main && (needsSamples || needsSingle), "Terrain depth snapshot has no actual source/consumer");
 		const auto depth = main->Depth();
@@ -244,26 +257,28 @@ public:
 		auto result = std::make_shared<MainTerrainDepthSnapshot>();
 		result->main = std::move(main);
 		result->crop = crop;
-		// Reuse the previous retired frame's cropped images when their complete
-		// device/extent/format/count contract matches. The caller retains them;
-		// every new snapshot still starts unencoded and owns this frame's event.
-		const auto image = [&](id<MTLTexture> previous, unsigned count, NSString* label) {
-			if (previous && previous.device == lease.Device() && previous.width == crop[2] && previous.height == crop[3] &&
-				previous.pixelFormat == MTLPixelFormatDepth32Float && previous.sampleCount == count &&
-				previous.textureType == (count > 1 ? MTLTextureType2DMultisample : MTLTextureType2D) &&
-				(previous.usage & MTLTextureUsageShaderRead) && previous.storageMode == MTLStorageModePrivate)
-				return previous;
-			return MainAttachmentStorage::Allocate(lease, crop[2], crop[3], MTLPixelFormatDepth32Float, count, label);
-		};
-		if (needsSamples) {
-			result->sampleDepth = image(reusableSamples, result->main->Samples(), @"Original terrain-only per-sample depth copy");
-			lease.AddAllocation(result->sampleDepth);
-		}
-		if (needsSingle) {
-			result->singleDepth = needsSamples && result->main->Samples() == 1 ? result->sampleDepth :
-				image(reusableSingle, 1, @"Original terrain-only resolved depth copy");
-			lease.AddAllocation(result->singleDepth);
-		}
+  const auto compatible=[&](id<MTLTexture> image,unsigned count){
+   return image&&image.device==lease.Device()&&image.width==crop[2]&&image.height==crop[3]&&
+    image.pixelFormat==MTLPixelFormatDepth32Float&&image.sampleCount==count&&
+    image.textureType==(count>1?MTLTextureType2DMultisample:MTLTextureType2D)&&
+    (image.usage&MTLTextureUsageShaderRead)&&image.storageMode==MTLStorageModePrivate;
+  };
+  storage.Acquire([&](const MainTerrainDepthStorage& candidate){
+   return bool(candidate.samples)==needsSamples&&bool(candidate.single)==needsSingle&&
+    (!needsSamples||compatible(candidate.samples,result->main->Samples()))&&
+    (!needsSingle||compatible(candidate.single,1));
+  },[&]{
+   auto next=std::make_shared<MainTerrainDepthStorage>();
+   if(needsSamples)next->samples=MainAttachmentStorage::Allocate(lease,crop[2],crop[3],MTLPixelFormatDepth32Float,result->main->Samples(),@"Original terrain-only per-sample depth copy");
+   if(needsSingle)next->single=needsSamples&&result->main->Samples()==1?next->samples:
+    MainAttachmentStorage::Allocate(lease,crop[2],crop[3],MTLPixelFormatDepth32Float,1,@"Original terrain-only resolved depth copy");
+   return next;
+  },[&](const auto& candidate){
+   if(candidate->samples)lease.AddAllocation(candidate->samples);
+   if(candidate->single)lease.AddAllocation(candidate->single);
+   result->storageOwner=candidate;
+   result->sampleDepth=candidate->samples;result->singleDepth=candidate->single;
+  });
 		return result;
 	}
 
@@ -293,6 +308,7 @@ public:
 
 private:
 	std::shared_ptr<const MainFrameAttachments> main;
+ std::shared_ptr<const MainTerrainDepthStorage> storageOwner;
 	std::array<std::uint32_t, 4> crop{};
 	__strong id<MTLTexture> sampleDepth = nil, singleDepth = nil;
 	bool encoded = false;
