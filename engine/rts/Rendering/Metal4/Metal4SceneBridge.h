@@ -63,6 +63,8 @@ void HandleEvent(const SDL_Event& event);
 // Hidden/zero-size windows retain their last observed logical extent for RTTs.
 ui::NativeUIFrameRasterMapping GetUIFrameRasterMapping(const ScreenViewport& defaultViewport);
 // Complete a queued presentation before recorder reuse or scene teardown.
+// Join immutable CPU preparation before source aborts; does not submit or drain GPU work.
+void FinishCPUReadPreparation();
 void FinishPendingFrame();
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(std::uint64_t draw);
 

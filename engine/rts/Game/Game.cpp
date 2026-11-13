@@ -1786,6 +1786,7 @@ bool CGame::Draw() {
 			LuaNativeVolumetricClouds::RetireCompletedFrame(nativeResult.sourceDrawFrame);
 		}
 	} catch (...) {
+		rendering::scene::FinishCPUReadPreparation();
 		LuaNativePostprocess::AbortFrame();
 		LuaNativeVolumetricClouds::AbortFrame();
 		LuaNativeNano::AbortWorldFrame();

@@ -42,3 +42,48 @@ nonempty row receipts and exact TLS view restoration. SceneBridge full translati
 unit host syntax passed with actual SDL3 headers; no ObjC++/Metal compiler or full
 application execution was used. Existing surface-boundary and surface-event
 regressions pass unchanged.
+
+## Successful receipt continuation through later original capture
+
+The opt-in early mode 2/3 path now transfers its local Join into the completed
+capture's CPUReadReceipt220 rather than waiting at PrepareWorld return. This
+extends immutable opaque-row preparation across Game.cpp's subsequent original
+DrawWorld, effects/overlay, DrawScreenEffects, screen/minimap and DrawScreenPost
+capture. No callback moves off main; renderer Encode and alpha/water capture
+ownership gates are unchanged. Modes 0/1 and non-early mode 2/3 retain the old join.
+
+The receipt's guard is declared after Job, so destruction joins before job and
+source owners release. The local guard still joins on prefix/drain/particle or
+later PrepareWorld failure before transfer. DrawWorld explicitly joins before
+Matches, RowDigest, error access or packet adoption. Hidden/skipped receipts join
+on reset; native Game catch joins before its first Lua abort; AbortPreparedWorld
+joins before quarantine checks or source rollback; common renderer control drain
+joins first. Session resets receipt before worker destruction and source detach.
+Worker Build never owns or destroys the receipt, so these paths cannot self-join.
+Captured worker errors still surface only at the existing accepted DrawWorld
+receipt consumption; abort/hidden paths discard them as before. Timing mainEndNs
+still measures PrepareWorld capture only, not the newly overlapped later callins.
+
+Transitive ownership evidence: NativeCUSModelCapture assigns geometry through
+WorldFrameCapture::CaptureModel. State::Model copies each vertex field and index
+vector under CModelsLock into a new WorldModel, then caches const owners, not
+original S3DModelPiece pointers. NativeCUSPublishedStorage::Publish allocates a
+new buffer and copies modified pages; NativeCUSUniformStorage publishes fresh
+matrix/parameter/publication objects. Instance snapshot and sealed roster are
+retained inputs. ValidateRenderReads traverses those snapshots only; its geometry
+cache and active read scope are thread-local. Source callbacks can publish new
+values without mutating the worker's retained values.
+
+Validation extends the extracted actual receipt/launch fixture with transferred
+consume and hidden/abort destruction, main-thread last-owner release, and repeated
+live transform/parameter publications after handoff while old captured bytes stay
+unchanged. Existing distinct old/new packet/TLS tests remain. This proves source
+ownership and sanitizer-tested behavior, not positive native overlap, Metal
+correctness, visual parity or a performance gain. General renderer preparation
+parallelism remains unfinished.
+
+Verification for this continuation: extracted actual receipt/launch ASan/UBSan
+fixture PASS independently; capture-boundary 1,000 and surface-control 15,000
+regression cases PASS. Full SceneBridge.cpp and Game.cpp Linux host translation
+unit syntax checks PASS with actual SDL3/include dependencies, no replacement
+stubs. These are not Objective-C++/Metal builds or app execution.

@@ -18,3 +18,16 @@ assert b.index('std::unique_ptr<CPUReadReceipt220> cpuReceipt220;')<b.index('Nat
 assert b.index('CompleteDeferredMainParticles(')<b.index('session->cpuReadReceipt220.reset();')<b.index('if(!earlyCPURead220)launchCPURead220(frame);')<b.index('mainBeginNs=')
 assert b.index('cpuJoin220.Finish();')<b.index('session->cpuReadReceipt220=std::move(cpuReceipt220);')
 print('Production early mode2/3 wiring, delayed session reset, main-local Join lifetime and post-drain main timing PASS')
+
+assert 'if(earlyCPURead220&&cpuReceipt220)cpuJoin220.TransferTo(cpuReceipt220->pending);' in b
+receipt=s.split('struct CPUReadReceipt220 {',1)[1].split('void TraceCPUReadPacket220',1)[0]
+assert receipt.index('::Job job;')<receipt.index('::Join pending;')
+draw=s.split('DrawResult DrawWorld(',1)[1]
+assert draw.index('receipt->pending.Finish()')<draw.index('receipt->Matches(captured)')<draw.index('RowDigest()')
+abort=s.split('void AbortPreparedWorld()',1)[1]
+assert abort.index('FinishCPUReadPreparation()')<abort.index('CanAbortCapture(')
+game=(root/'rts/Game/Game.cpp').read_text()
+catch=game.split('rendering::scene::FinishCPUReadPreparation();',1)[1]
+assert catch.lstrip().startswith('LuaNativePostprocess::AbortFrame();')
+assert 'cpuReadReceipt220.reset();cpuReadWorker220.reset();DisconnectNativeSources();' in s
+print('Transferred receipt join precedes consumption, source abort, hidden reset and session worker destruction PASS')

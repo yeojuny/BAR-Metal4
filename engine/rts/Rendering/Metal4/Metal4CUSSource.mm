@@ -4,6 +4,7 @@
 #include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4CUSSource.h"
+#include "Metal4TerrainOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
 #include "NativeCUSGeneratedPrograms.h"
@@ -158,6 +159,7 @@ struct PreparedCUSSource::Impl {
   float shadowPolygonOffsetUnitsScale=1.f;
   bool encoded=false;
  };
+ TerrainOwnerRoster firstOwners;
  std::vector<const CUSSourceImage*> inspection160;std::vector<id<MTLTexture>> sampledRoots160;
  uint64_t indexedDraws160=0;bool inspectionReady160=false;
  std::unique_ptr<model176::Probe> setterProbe176;
@@ -177,11 +179,14 @@ uint64_t PreparedCUSSource::SequenceAt(size_t n)const{return impl->draws.at(n).s
 void PreparedCUSSource::PreparePassInspection160()
 {
  Require(!impl->inspectionReady160&&!impl->dependenciesEncoded&&!impl->completed,"CUS pass inspection prepared after use or twice");
- std::set<const void*> seen,roots;
- for(const auto& draw:impl->draws){
-  impl->indexedDraws160+=draw.objects.size();
-  for(const auto& image:draw.images){
-   if(seen.insert(image.owner.get()).second&&image.encodeDependencies)impl->inspection160.push_back(&image);
+ std::set<const void*> roots;size_t nextOwner=0;
+ for(size_t d=0;d<impl->draws.size();++d){
+  const auto& draw=impl->draws[d];impl->indexedDraws160+=draw.objects.size();
+  for(size_t i=0;i<draw.images.size();++i){
+   const auto& image=draw.images[i];
+   if(nextOwner<impl->firstOwners.size()&&impl->firstOwners[nextOwner]==std::pair<size_t,size_t>{d,i}){
+    ++nextOwner;if(image.encodeDependencies)impl->inspection160.push_back(&image);
+   }
    const auto root=SourceTextureRoot160(image.texture);
    if(root&&roots.insert((__bridge const void*)root).second)impl->sampledRoots160.push_back(root);
   }
@@ -208,8 +213,10 @@ void PreparedCUSSource::AcceptDependenciesWithoutCommands160()
 void PreparedCUSSource::EncodeDependencies(id<MTL4CommandBuffer> command)
 {
  Require(command!=nil&&!impl->dependenciesEncoded,"CUS source dependencies repeated or missing command");
- std::set<const void*> seen;
- for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.encodeDependencies)image.encodeDependencies(command);
+ for(const auto& [d,i]:impl->firstOwners){
+  const auto& image=impl->draws[d].images[i];
+  if(image.encodeDependencies)image.encodeDependencies(command);
+ }
  impl->dependenciesEncoded=true;
 }
 void PreparedCUSSource::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder)
@@ -242,8 +249,11 @@ void PreparedCUSSource::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder
 void PreparedCUSSource::DidComplete()
 {
  Require(!impl->completed&&impl->dependenciesEncoded&&std::all_of(impl->draws.begin(),impl->draws.end(),[](const auto& d){return d.encoded;}),"CUS source cannot complete an unencoded/repeated submission");
- std::set<const void*> seen;
- for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;
+ for(const auto& [d,i]:impl->firstOwners){
+  const auto& image=impl->draws[d].images[i];
+  if(image.didComplete)image.didComplete();
+ }
+ impl->completed=true;
  if(impl->setterProbe176)impl->setterProbe176->Report();
 }
 
@@ -492,6 +502,8 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   LOG("[NativeModel147] source_draws=%zu original_objects=%llu prepared_runs=%llu omitted_model_lookups=%llu omitted_geometry_registration_calls=%llu instance_order_retained=1",out->impl->draws.size(),(unsigned long long)originalObjects147,(unsigned long long)preparedRuns147,(unsigned long long)(originalObjects147-preparedRuns147),(unsigned long long)(2*(originalObjects147-preparedRuns147)));
   impl->reported147=true;
  }
+ // Seal exact first-owner order only after all image vectors are stable.
+ out->impl->firstOwners=BuildTerrainOwnerRoster(out->impl->draws);
  return out;
 }
 } // namespace rendering::metal4

@@ -6,6 +6,7 @@
 #include <exception>
 #include <mutex>
 #include <thread>
+#include <utility>
 
 namespace rendering {
 // Diagnostic-only single worker. Jobs and every input owner stay main-owned;
@@ -63,6 +64,11 @@ public:
   Join(const Join&)=delete;
   Join& operator=(const Join&)=delete;
   void Arm(NativeCUSCPUReadWorker220& w,Job& j)noexcept{worker=&w;job=&j;}
+  // Transfer only to a fresh main-owned guard; never orphan an active job.
+  void TransferTo(Join& target)noexcept{
+   if(target.worker)std::terminate();
+   target.worker=std::exchange(worker,nullptr);target.job=std::exchange(job,nullptr);
+  }
   void Finish(){if(worker){worker->Wait(*job);worker=nullptr;}}
   ~Join(){Finish();}
  };

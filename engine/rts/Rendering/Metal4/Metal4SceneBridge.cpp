@@ -152,6 +152,7 @@ struct CPUReadReceipt220 {
  uint64_t frame=0,ordinal=0,startupNs=0,mainBeginNs=0,mainEndNs=0;
  std::shared_ptr<const NativeOpaqueModelFrame> models; // Main-only identity pin.
  NativeCUSCPUReadWorker220::Job job;
+ NativeCUSCPUReadWorker220::Join pending; // Destroy first, before job/source owners. Main-only.
  template<class A,class B>static bool SameOwner(const A& a,const B& b){return a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);}
  bool Matches(const WorldFrame& captured)const{
   if(frame!=captured.sourceDrawFrame||!SameOwner(models,captured.opaqueModelFrame))return false;
@@ -869,6 +870,7 @@ bool BeginReadyPilotRequested() {
 
 void RequireRetiredGPUWork()
 {
+ if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
  if(!session || !session->renderer)return;
  session->renderer->FinishCPUWork();
  if(Metal4RendererCanSafelyDetachSurface()){ApplyDeferredFrameReceipts();session->completionMailbox->RequireNoQueuedCompletions();return;}
@@ -878,6 +880,7 @@ void RequireRetiredGPUWork()
 
 } // namespace
 
+void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
 void FinishPendingFrame() { RequireRetiredGPUWork(); }
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
  if(!session)throw std::logic_error("World capture has no source credit owner");
@@ -1741,12 +1744,16 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
   frame.alphaAllLua=CaptureWaterPreParticles(NativeWorldDrawStage::AlphaAll,true,true,false,false);
  }
  if(cpuReceipt220&&cpuReceipt220->job.measure)cpuReceipt220->mainEndNs=NativeCUSCPUReadWorker220::Timestamp(NativeCUSCPUReadWorker220::Clock::now());
- cpuJoin220.Finish(); // No job may survive PrepareWorld, including exception unwinding.
+ // Only successful opt-in early jobs may span subsequent original Lua/UI capture.
+ // Exceptions before this transfer retain the local join-before-owner guard.
+ if(earlyCPURead220&&cpuReceipt220)cpuJoin220.TransferTo(cpuReceipt220->pending);
+ else cpuJoin220.Finish();
  session->cpuReadReceipt220=std::move(cpuReceipt220);
 }
 
 void AbortPreparedWorld()
 {
+ FinishCPUReadPreparation(); // Before source aborts, including quarantine early returns.
  if(session&&!session->dynamicWaterCapture.CanAbortCapture(session->dynamicCaptureReceipt))return;
 	if(session&&session->renderer && !session->renderer->AbortShieldPublications(session->preparedFrame?session->preparedFrame->opaqueModelFrame:session->opaqueSourcePending,session->actualShadowSourcePending,session->preparedFrame&&session->preparedFrame->mainGround?session->preparedFrame->mainGround:session->mainGroundPending,session->environmentStage,&session->shieldCapture))return; // Keep failed-Begun source owners intact.
 
@@ -1877,6 +1884,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
    if(!models)return;for(const auto& pass:models->passes){cpuReadScope.Prime(pass.lua);if(pass.mrt)cpuReadScope.Prime(pass.mrt->lua);}
   };
    auto receipt=std::move(session->cpuReadReceipt220);
+   if(receipt)receipt->pending.Finish(); // Synchronize before Matches, errors, digest or packet reads.
    const bool accept=receipt&&receipt->Matches(captured);
    const uint64_t digest=CPUReadPacketMeasure220()&&receipt?receipt->job.packet.RowDigest():0;
    const auto consumeStart=CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Clock::now():NativeCUSCPUReadWorker220::Clock::time_point{};
