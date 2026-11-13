@@ -181,11 +181,11 @@ struct CPUPhaseTraceState {
 CPUPhaseTraceState& CPUPhaseTrace() {static CPUPhaseTraceState state;return state;}
 struct CPUPhaseSlot {const void* owner=nullptr;NativeCPUPhaseSample sample;};
 struct CPUPhaseStack {
- std::array<CPUPhaseSlot,4> slots{};
+ std::array<CPUPhaseSlot,6> slots{};
  std::uint64_t loopOrdinal=0;
  bool captureLoop=false;
  std::uint64_t inheritedParent=0;
- std::array<std::uint64_t,5> previous{};
+ std::array<std::uint64_t,7> previous{};
  unsigned depth=0;
 };
 thread_local CPUPhaseStack cpuPhaseStack;
@@ -225,9 +225,17 @@ bool BeginNativeCPUPhase(const void* owner,unsigned kind,std::int64_t frame) noe
   if(!state.budget.TakeSample(now)){state.finished=true;return false;}
   NativeCPUPhaseSample sample;sample.id=state.budget.tickets;sample.kind=kind;sample.frame=frame;
   sample.parent=stack.depth?stack.slots[stack.depth-1].sample.id:stack.inheritedParent;
+  sample.threadCPUStart=ReadNativeThreadCPUTime();
   sample.start=now;sample.previous=stack.previous[kind];stack.previous[kind]=now;
   stack.slots[stack.depth++]={owner,sample};return true;
  } catch(...) {state.finished=true;return false;}
+}
+void SetNativeCPUPhaseDraw(const void* owner,std::uint64_t draw) noexcept {
+ auto& stack=cpuPhaseStack;
+ if(!stack.depth || stack.slots[stack.depth-1].owner!=owner)return;
+ auto& sample=stack.slots[stack.depth-1].sample;
+ if(sample.hasSourceDraw && sample.sourceDraw!=draw){sample.invalid=true;return;}
+ sample.sourceDraw=draw;sample.hasSourceDraw=true;
 }
 void MarkNativeCPUPhase(const void* owner,unsigned phase) noexcept {
  auto& stack=cpuPhaseStack;
@@ -244,11 +252,14 @@ void CountNativeCPUPhase(const void* owner,std::uint64_t a,std::uint64_t b) noex
 void FinishNativeCPUPhase(const void* owner) noexcept {
  auto& stack=cpuPhaseStack;
  if(!stack.depth || stack.slots[stack.depth-1].owner!=owner)return;
- const auto sample=stack.slots[--stack.depth].sample;
+ auto sample=stack.slots[--stack.depth].sample;
+ const auto cpuEnd=ReadNativeThreadCPUTime();
+ sample.threadCPUValid=sample.threadCPUStart.valid&&cpuEnd.valid&&cpuEnd.ns>=sample.threadCPUStart.ns;
+ if(sample.threadCPUValid)sample.threadCPUNs=cpuEnd.ns-sample.threadCPUStart.ns;
  if(sample.kind==1)stack.captureLoop=false;
  auto& state=CPUPhaseTrace();if(state.finished.load(std::memory_order_relaxed))return;
  try {
-  const auto now=SubmissionTraceNow();char text[768];
+  const auto now=SubmissionTraceNow();char text[1536];
   const auto length=FormatNativeCPUPhase(text,sizeof(text),sample,now);
   if(!length)return;
   std::lock_guard<std::mutex> lock(state.mutex);

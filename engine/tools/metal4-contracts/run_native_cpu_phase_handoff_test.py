@@ -33,3 +33,17 @@ assert dispatch.index('return DrawPrepared(frame,options,')<dispatch.index('Capt
 assert 'snapshot,sourceContext,cpuTraceContext,' in dispatch
 assert dispatch.index('NativeCPUPhaseContextScope traceContext(cpuTraceContext)') < dispatch.index('return DrawPrepared(owned->Frame()')
 print('Worker value-only trace handoff; direct path unchanged structural PASS')
+
+assert 'cpuPhase.Draw(frame.sourceDrawFrame)' in renderer
+assert 'prepPhase->Draw(frame.sourceDrawFrame)' in renderer
+start=renderer.index('NativeCPUPhaseScope encodeWorkTrace(6,frame.simulationFrame)')
+end=renderer.index('encodeWorkTrace.Mark(0);encodeWorkTrace.Finish();',start)
+assert renderer.index('id<MTL4CommandBuffer> command = lease.Begin(')<start
+assert renderer.index('if(options.submissionBegan)options.submissionBegan(sourceSubmission,')<start
+assert end<renderer.index('lease.FinishResourceCommit();',end)
+game=(root/'rts/Game/Game.cpp').read_text()
+a=game.index('auto nativeFrameCredit=rendering::scene::AcquireWorldFrameCredit')
+b=game.index('NativeCPUPhaseScope nativeCaptureTrace(5,gs->frameNum)',a)
+c=game.index('nativeCaptureTrace.Mark(0);nativeCaptureTrace.Finish();',b)
+assert a<b<game.index('nativeUI.BeginFrame',b)<c<game.index('rendering::scene::DrawWorld(&screenFrame',c)
+print('Exact source draw + recording/encode wall intervals exclude outer credit/dispatch/runtime waits PASS')

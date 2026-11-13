@@ -2468,7 +2468,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
  };
  std::optional<NativeCUSCPUReadScope::ReadView> cpuReads;
  if(options.cpuReadPacket)cpuReads.emplace(*options.cpuReadPacket);
- NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
+ NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);cpuPhase.Draw(frame.sourceDrawFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
 		if(impl->screenContinuation)return ContinueScreen(frame,options,presentation);
@@ -2505,7 +2505,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		PreparationTraceFrame preparationDetail(frame.simulationFrame);
   CountPreparationTrace(35,NativeCUSCPUReadScope::ActiveCount());
   CountPreparationTrace(38,NativeCUSCPUReadScope::ActivePreparationNanoseconds());
-		std::optional<NativeCPUPhaseScope> prepPhase;prepPhase.emplace(4,frame.simulationFrame);
+		std::optional<NativeCPUPhaseScope> prepPhase;prepPhase.emplace(4,frame.simulationFrame);prepPhase->Draw(frame.sourceDrawFrame);
 		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
 		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,sourceSubmission);
   RuntimeLease lease(std::move(previousRetired));
@@ -4408,6 +4408,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   impl->submittedOpaqueSource=frame.opaqueModelFrame;impl->activeSourceSubmission=sourceSubmission;
   if(screen && options.screenUI)targetSubmissionBegan(sourceSubmission);
   if(options.submissionBegan)options.submissionBegan(sourceSubmission,options.screenUI?options.screenUI->postprocess.get():nullptr);
+  // This encode-work wall interval excludes Begin/notice callbacks and the
+  // later resource-commit/GPU waits. Driver/mutex stalls inside Encode remain
+  // possible: it is not a CPU-on-core utilization claim.
+  NativeCPUPhaseScope encodeWorkTrace(6,frame.simulationFrame);encodeWorkTrace.Draw(frame.sourceDrawFrame);
   const auto requireLogicalCopySource=[&]{
    Require(logicalCopyMapping.has_value(),"Logical copy lost its prepared source mapping");
    logicalCopyMapping->RequireSource(frame.sourceDrawFrame,mainAttachments->Generation(),
@@ -5439,6 +5443,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			if(!options.readback->readColor)mainAttachments->EncodeResolve(command,MainReadImages::Color);
 			*mainReadReady=true;readback->Encode(command);
 		}else mainAttachments->EncodePresentationResolve(command);
+  encodeWorkTrace.Mark(0);encodeWorkTrace.Finish();
 		encodingProbe.Finish(frame.sourceDrawFrame,frame.simulationFrame);
 		cpuPhase.Mark(10);preparationDetail.Mark(36);
 		lease.FinishResourceCommit();

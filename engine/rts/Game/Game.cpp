@@ -35,6 +35,7 @@
 #include "Rendering/WorldDrawer.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Rendering/Metal4/Metal4SceneBridge.h"
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include "Rendering/Backend/NativeUIRecorder.h"
 #include "Rendering/Backend/NativeWorldDrawRecorder.h"
 #include "Rendering/Backend/MapEdgeData.h"
@@ -1539,6 +1540,8 @@ bool CGame::Draw() {
 	if (globalRendering->viewSizeX <= 0 || globalRendering->viewSizeY <= 0)
 		return false;
 	auto nativeFrameCredit=rendering::scene::AcquireWorldFrameCredit(globalRendering->drawFrame);
+ rendering::metal4::NativeCPUPhaseScope nativeCaptureTrace(5,gs->frameNum);
+ nativeCaptureTrace.Draw(globalRendering->drawFrame);
 	auto& nativeUI = rendering::ui::GetRecorder();
 	nativeUI.BeginFrame(globalRendering->viewSizeX, globalRendering->viewSizeY,
 		rendering::scene::GetUIFrameRasterMapping({globalRendering->viewPosX, globalRendering->viewPosY,
@@ -1764,6 +1767,7 @@ bool CGame::Draw() {
 			globalRendering->viewPosX, globalRendering->viewPosY,
 			static_cast<uint32_t>(globalRendering->viewSizeX),
 			static_cast<uint32_t>(globalRendering->viewSizeY)};
+  nativeCaptureTrace.Mark(0);nativeCaptureTrace.Finish();
 		nativeResult = rendering::scene::DrawWorld(&screenFrame, drawScreen,
 			std::move(luaNanoFrame), std::move(luaProjectileEffectsFrame), std::move(worldDrawFrame), std::move(luaEnergyExplosionFrame),std::move(luaVolumetricCloudFrame),std::move(luaLightningEffectFrame),std::move(luaBlueprintFrame),std::move(placementFrame), std::move(luaFireSmokeFrame), std::move(luaMissileThrusterFrame), std::move(luaShieldFrame), std::move(luaFlamethrowerFrame), std::move(luaNapalmPreviewFrame), std::move(luaCommandsFrame),std::move(luaFireGL4Frame), std::move(luaBloomFrame), std::move(luaDeferredLightFrame), std::move(luaUnitStencilFrame), std::move(luaOutlineFrame), std::move(luaSnowFrame),nativeFrameCredit);
 		nativeResult.Validate(); // Reject queue/completion confusion before any source retirement.
