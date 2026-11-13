@@ -4,8 +4,46 @@
 #include "Rendering/EngineBridge/NativeTerrainImagePublication.h"
 #include <algorithm>
 #include <bit>
+#include <array>
+#include <optional>
+#include <new>
 
 namespace rendering::metal4 {
+// BEGIN TERRAIN_INFO_LEASE_RECEIPTS
+// Only full immutable object/sampler views within this exact lease may share an
+// outer callback owner. State changes force a fresh receipt; no backing cycle.
+class TerrainInfoLeaseReceipts {
+public:
+ struct Key {
+  std::shared_ptr<const NativeCUSTextureObject> object;
+  std::shared_ptr<const NativeTerrainInfoResource> resource;
+  uint64_t submission=0,registered=0,encoding=0;
+  uintptr_t sampler=0;
+  bool validation=false,completed=false,encoded=false,pending=false;
+  bool operator==(const Key&)const=default;
+ };
+private:
+ struct Entry{Key key;CUSSourceImage image;};
+ std::array<std::optional<Entry>,32> entries;
+ size_t count=0;
+public:
+ const CUSSourceImage* Find(const Key& key)const noexcept {
+  for(size_t i=0;i<count;++i)if(entries[i]->key==key)return &entries[i]->image;
+  return nullptr;
+ }
+ void Remember(const Key& key,const CUSSourceImage& image) {
+  if(count==entries.size())return; // Bounded optimization, not an admission gate.
+  try{entries[count].emplace(Entry{key,image});++count;}
+  catch(const std::bad_alloc&){/* The original successfully resolved image remains usable. */}
+ }
+};
+// END TERRAIN_INFO_LEASE_RECEIPTS
+TerrainInfoLeaseReceipts* RuntimeLease::TerrainInfoReads() noexcept {
+ try{if(!terrainInfoReads)terrainInfoReads=std::make_shared<TerrainInfoLeaseReceipts>();}
+ catch(const std::bad_alloc&){return nullptr;}
+ return terrainInfoReads.get();
+}
+
 namespace {
 struct InfoResource final:NativeTerrainInfoResource {
 	// No backing/object owner here: backing->resource must never form a cycle.
@@ -152,6 +190,14 @@ CUSSourceImage ResolveNativeTerrainInfoImage(RuntimeLease& lease,const NativeCUS
 	resource->Register(lease,submission);
 	lease.Retain(sampler);
 	backing->resource=resource;
+ // Keep validation, registration and sampler retention at their original call
+ // sites. Only equivalent outer owners/callbacks are shared in this first step.
+ auto* receipts=lease.TerrainInfoReads();
+ const TerrainInfoLeaseReceipts::Key key{object,resource,submission,
+  resource->registeredSubmission,resource->encodingSubmission,
+  reinterpret_cast<uintptr_t>((__bridge void*)sampler),validation,
+  resource->completed,resource->dependenciesEncoded,lease.PreparingWhilePending()};
+ if(receipts)if(const auto* image=receipts->Find(key))return *image;
 
 	auto owner=std::make_shared<ImageOwner>();owner->object=object;owner->backing=backing;owner->resource=resource;owner->submission=submission;
 	CUSSourceImage out;out.texture=resource->plan->Info();out.sampler=sampler;out.owner=owner;
@@ -173,11 +219,12 @@ CUSSourceImage ResolveNativeTerrainInfoImage(RuntimeLease& lease,const NativeCUS
   out.encodeDependencies=[readable](id<MTL4CommandBuffer> command){Require(command!=nil,"Missing ordered terrain command buffer");readable();};
   out.requireReadable=readable;
   out.didComplete=[owner]{Require(owner->resource->completed,"Borrowed terrain info cannot publish another submission's completion");};
-  return out;
+  if(receipts)receipts->Remember(key,out);return out;
  }
 	out.encodeDependencies=[owner,submission](id<MTL4CommandBuffer> command){owner->resource->Encode(command,submission);};
 	out.requireReadable=[owner,submission]{owner->resource->Readable(submission);};
 	out.didComplete=[owner,submission]{owner->resource->Complete(submission);};
+ if(receipts)receipts->Remember(key,out);
 	return out;
 }
 } // namespace rendering::metal4

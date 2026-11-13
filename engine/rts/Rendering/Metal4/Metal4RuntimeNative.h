@@ -77,6 +77,7 @@ inline void Require(bool condition, const char* message)
 	if (!condition) throw std::runtime_error(message);
 }
 
+class TerrainInfoLeaseReceipts;
 class RuntimeLease;
 class RuntimeCleanupLease;
 struct RuntimeFrameSlot;
@@ -163,6 +164,7 @@ public:
 	const Runtime* ContextIdentity() const noexcept { return &runtime; }
 	// Cache and independent write-exclusion pins belong to this frame owner.
 	PublishedRequestState& Publications();
+ TerrainInfoLeaseReceipts* TerrainInfoReads() noexcept;
 	// Per-submission original shading rate. Output count still belongs to each
 	// concrete target: named MRT/RTT/shadow targets never inherit main MSAA.
 	void SetMinSampleShadingRate(float rate);
@@ -211,6 +213,7 @@ private:
 	std::unique_lock<std::mutex> lock;
 	std::shared_ptr<RuntimeFrameResources> frame;
 	float minSampleShadingRate=0.0f;
+ std::shared_ptr<TerrainInfoLeaseReceipts> terrainInfoReads;
 	void StageResources(bool overlapEncoding);
 	void RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmission>* completedOwner);
 	id<MTLLibrary> SampleLibrary(id<MTLLibrary>);
