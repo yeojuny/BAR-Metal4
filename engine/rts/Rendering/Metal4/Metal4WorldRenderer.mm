@@ -2114,6 +2114,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  std::optional<Metal4WorldRenderOptions> capturedOptions;
  if(!sourceOptions.pbrDeclarations){capturedOptions.emplace(sourceOptions);capturedOptions->pbrDeclarations=CapturePBRSource();}
  const auto& options=capturedOptions?*capturedOptions:sourceOptions;
+ Require(!options.beginReceipt || (options.beginReceipt->Matches(frame.sourceDrawFrame,options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0) && !options.beginReceipt->Submission() && options.beginReceipt->FailureStage()==NativeFrameBeginReceipt::Failure::None),"Frame Begin receipt belongs to another invocation");
  // Freeze source-side policy before worker dispatch. Continuation suffixes enter
  // here again, so a SaveImage prefix never freezes a later presentation policy.
  // Existing synchronous callbacks retire source receipts, not window events.
@@ -4057,7 +4058,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    ~OriginalSubmissionFailure(){if(began&&!retired)lease.PoisonAfterBegin();}
   } originalSubmission{lease};
 		id<MTL4CommandBuffer> command = lease.Begin("Actual engine terrain and current S3O unit poses to CAMetalLayer");
-  originalSubmission.began=true;impl->submittedOpaqueSource=frame.opaqueModelFrame;impl->activeSourceSubmission=sourceSubmission;
+  originalSubmission.began=true;
+  if(options.beginReceipt)options.beginReceipt->MarkBegun(sourceSubmission);
+  impl->submittedOpaqueSource=frame.opaqueModelFrame;impl->activeSourceSubmission=sourceSubmission;
   if(screen && options.screenUI)targetSubmissionBegan(sourceSubmission);
   if(options.submissionBegan)options.submissionBegan(sourceSubmission,options.screenUI?options.screenUI->postprocess.get():nullptr);
   const auto requireLogicalCopySource=[&]{

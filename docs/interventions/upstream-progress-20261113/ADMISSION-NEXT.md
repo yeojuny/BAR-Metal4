@@ -37,7 +37,8 @@ Current completion processing prevalidates all three journal owners before
 water/world retirement. The callback mailbox now reserves bounded result capacity
 before renderer invocation, and completed notices are gated on main's explicit
 acceptance after all three ownership transfers. Terminal drains reject any blocked
-queued result. These are prerequisites, not early ownership transfer, durable
-Begun/quarantine state or whole-frame atomic admission. Renderer cache isolation,
+queued result. The renderer now also supplies owned durable actual Begin evidence on failed
+ordinary invocations. These are prerequisites, not early ownership transfer,
+quarantine policy or whole-frame atomic admission. Renderer cache isolation,
 source controls and teardown drains remain separate mandatory gates. Do not enable
 CPU lookahead yet.

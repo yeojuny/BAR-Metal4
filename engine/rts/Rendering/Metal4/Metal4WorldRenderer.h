@@ -3,6 +3,7 @@
 
 #include "Metal4WindowSurface.h"
 #include "Rendering/Backend/NativePresentationPolicy.h"
+#include "Rendering/Backend/NativeFrameBeginReceipt.h"
 #include "Rendering/Backend/NativeEnvironmentStageReceipt.h"
 #include "Rendering/Backend/NativePBRDeclarationBatch.h"
 #include "Rendering/Backend/NativeMissileThrusterData.h"
@@ -65,6 +66,7 @@ struct Metal4WorldRenderOptions {
 	static constexpr bool DefaultShaderValidation = true;
 #endif
 	bool shaderValidation = DefaultShaderValidation;
+ std::shared_ptr<NativeFrameBeginReceipt> beginReceipt; // Owned ordinary-frame Begin evidence; no source callback.
  NativeEnvironmentStageReceipt environmentStage; // Exact pre-PreUnit source receipt.
  std::optional<NativePBRDeclarationReceipt> pbrDeclarations; // nullopt: legacy caller; engaged null: captured empty.
 	const ScreenFrameView* screenUI = nullptr; // Same drawable/encoder, before one present.

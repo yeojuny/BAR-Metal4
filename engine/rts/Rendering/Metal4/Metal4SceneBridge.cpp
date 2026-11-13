@@ -185,6 +185,7 @@ struct Session {
  bool cpuReadDisabled220=false;
  int cpuReadFallback220=0; // 1 setup failed before publication; 2 disabled after failure.
  std::shared_ptr<NativeFrameCompletionMailbox> completionMailbox;
+ std::shared_ptr<const NativeFrameBeginReceipt> lastFailedBeginReceipt;
 	explicit Session(SDL_Window* window, uint32_t width, uint32_t height)
 		: requestedMSAA(globalRendering->msaaLevel)
 		, surface(AttachMetal4RendererSurface(window, MakeConfig(width, height)))
@@ -1618,6 +1619,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   ui::GetRecorder().ValidateSubmittedCapacity(expectedDraw);
   LuaNativePostprocess::GetRecorder().ValidateSubmittedCapacity(expectedPost);
   LuaNativeVolumetricClouds::ValidateSubmittedCapacity(expectedDraw);
+  options.beginReceipt=std::make_shared<NativeFrameBeginReceipt>(expectedDraw,expectedPost);
   const auto ticket=completionTicket=mailbox->Prepare(mailbox->Epoch(),expectedDraw,expectedPost);
   options.deferredCompleted=[mailbox,ticket](const Metal4WorldPresentationResult& completed) {
    mailbox->Publish(ticket,{completed.sourceFrameCompleted,
@@ -1626,11 +1628,18 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
     completed.completedWorldInfo,completed.completedWaterUpdates});
   };
  }
- const auto result = overlapPreparation?
+ const auto invokeRenderer=[&] {
+ try {return overlapPreparation?
   session->renderer->DrawPreparingWhilePending(frame,options,[owner=session.get()]{
    if(session.get()!=owner)throw std::logic_error("Preparation retirement lost its scene owner");
    ApplyDeferredFrameReceipts();
   }):session->renderer->Draw(frame,options);
+ }catch(...){
+  if(options.beginReceipt){options.beginReceipt->MarkFailed();session->lastFailedBeginReceipt=options.beginReceipt;}
+  throw;
+ }
+ };
+ const auto result=invokeRenderer();
  // A hidden/unavailable surface may return before opening a runtime lease.
  if(!result.presented&&overlapPreparation)RequireRetiredGPUWork();
  if(options.deferredCompleted && result.presented && !result.sourceFrameCompleted) {

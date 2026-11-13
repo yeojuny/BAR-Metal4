@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "output": "3000 actual serial-worker owned Begin receipt lifecycles passed\n",
+  "fatal": {
+    "zero": -6,
+    "duplicate": -6
+  },
+  "hashes": {
+    "rts/Rendering/Backend/NativeFrameBeginReceipt.h": "1b3e4b22f9e7457c5e9fd0bce52dbd0cae5de3fb5203b847f8b3ac9114f789fe",
+    "tools/metal4-contracts/TestNativeFrameBeginReceipt.cpp": "fe92cb8a385e300b258910eaa5376c159d67ee103f64c91a1604de7ff1d878d1"
+  },
+  "limits": [
+    "Not Objective-C++ compilation or Metal execution. No early journal transfer, rollback or new lookahead."
+  ]
+}
