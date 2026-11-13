@@ -189,11 +189,12 @@ void CubeMapHandler::UpdateReflectionTexture()
 	if (nativeTextureSource) {
 		auto& source = rendering::OriginalNativeCubeTextures();
 		const auto nextFace = (currReflectionFace + 1) % (mapSkyReflections ? 12u : 6u);
-		source.AdvanceReflection(envReflectionTexID, skyReflectionTexID, currReflectionFace, generateMipMaps && nextFace == 0);
-  try {CreateReflectionFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X+currReflectionFace%6,currReflectionFace>=6);}
-  catch(...){source.CancelReflection();throw;}
-		currReflectionFace = nextFace;
-		if (generateMipMaps && currReflectionFace == 0) { source.Bind(envReflectionTexID); source.Bind(0); }
+		const auto update=source.AdvanceReflection(envReflectionTexID, skyReflectionTexID, currReflectionFace, generateMipMaps && nextFace == 0);
+  rendering::NativeCubeReflectionCaptureRollback rollback(source);rollback.Capture(update);
+  CreateReflectionFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X+currReflectionFace%6,currReflectionFace>=6);
+  if (generateMipMaps && nextFace == 0) { source.Bind(envReflectionTexID); source.Bind(0); }
+  currReflectionFace = nextFace;
+  rollback.Release();
 		return;
 	}
 #endif

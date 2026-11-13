@@ -51,6 +51,11 @@ NativeCubeReflectionUpdate NativeCubeTextureSource::AdvanceReflection(uint32_t r
 	}
 	update=std::move(next);return update;
 }
+void NativeCubeTextureSource::CancelUnsubmittedReflection(const NativeCubeReflectionUpdate& expected)noexcept {
+ const auto unsubmitted=[](const auto& backing){return !backing ||
+  (!backing->completed.load()&&!backing->encodedSubmission.load()&&!backing->dependenciesSubmission.load());};
+ if(expected.backing && unsubmitted(expected.backing) && unsubmitted(expected.mipBacking))CancelReflection(expected);
+}
 void NativeCubeTextureSource::CancelReflection()noexcept{CancelReflection(update);}
 void NativeCubeTextureSource::CancelReflection(const NativeCubeReflectionUpdate& expected)noexcept {
 	// Copy first: the compatibility overload aliases our current update.

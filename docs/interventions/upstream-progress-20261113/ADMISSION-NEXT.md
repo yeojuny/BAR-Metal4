@@ -48,3 +48,21 @@ comes from an explicit per-invocation serial scope, not shieldPending. World,
 maintenance, independent readback and continuation each bind their own identity.
 This removes provider inference only; shield publication/cancellation still needs
 exact source-family ownership before concurrent younger capture can be admitted.
+
+Cube rollback follow-up: all world abort callers now pass the captured environment
+receipt; cube cancellation no longer chooses CurrentReflectionUpdate. Exact CPU
+capture guards cover failures before a receipt is installed, and submitted cube/
+paired-mip work is preserved. Younger dependent capture remains prohibited;
+this is not a dependency-aware version graph or full source-family transaction.
+
+Shield rollback follow-up: Session now retains the exact capture from the map
+boundary (before model capture can throw), passes it to abort/clear, and releases
+it on success or safe abort only. Failed actual Begin rejects abort before family
+resets; stale/absent receipts cannot cancel a different pending shield owner.
+This is serial capture ownership, not concurrent mutable cache safety.
+
+Normal cache follow-up: readiness is owned by the exact retained normal MapImage
+instead of a renderer-global flag. Deferred completion cannot mark a newer owner
+ready. Height/normal GPU storage remains in-place under its existing retirement
+barrier; actual resource renaming/exclusive renderer ownership is still required
+before lookahead. This ObjC++ step has structural review only until Mac validation.

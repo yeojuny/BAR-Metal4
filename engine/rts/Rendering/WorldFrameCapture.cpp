@@ -807,7 +807,11 @@ std::shared_ptr<const NativeWorldEnvironmentFrame> WorldFrameCapture::PrepareEnv
 	const auto reflectionLighting = CaptureLighting();
 	// Original IBL order: reflection face first, then sun delivery and the
 	// CPU specular rows. CubeMapHandler owns the cursor and the actual bytes.
-	if (sourceCubes) cubeMapHandler.UpdateReflectionTexture();
+	NativeCubeReflectionCaptureRollback cubeRollback(OriginalNativeCubeTextures());
+ if (sourceCubes) {
+  cubeMapHandler.UpdateReflectionTexture();
+  cubeRollback.Capture(OriginalNativeCubeTextures().CurrentReflectionUpdate());
+ }
 	// Exactly the original GenerateIBLTextures change delivery, consumed once.
 	const bool directionChanged=sky->GetLight()->Update();
 	if(directionChanged)bump(state->sunDirectionRevision);
@@ -861,6 +865,7 @@ std::shared_ptr<const NativeWorldEnvironmentFrame> WorldFrameCapture::PrepareEnv
 	}
  }
 	state->environmentFrame=std::move(out);
+ cubeRollback.Release();
 	return state->environmentFrame;
 }
 

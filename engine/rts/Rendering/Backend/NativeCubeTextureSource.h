@@ -48,11 +48,26 @@ public:
 	void CancelReflection()noexcept;
 	// Withdraw only this retained publication; never clear a newer source update.
 	void CancelReflection(const NativeCubeReflectionUpdate& expected)noexcept;
+	void CancelUnsubmittedReflection(const NativeCubeReflectionUpdate& expected)noexcept;
 private:
 	NativeTextureRegistry* registry=nullptr;NativeCUSTextureHistory* history=nullptr;
 	NativeCubeTextureServices services;
 	NativeCubeReflectionUpdate update;
 	std::shared_ptr<NativeCubeTextureBacking> Next(uint32_t,NativeTextureContent);
+};
+// Owns only this capture's publication through potentially throwing CPU capture.
+// Does not roll back GPU work or permit dependent younger captures.
+class NativeCubeReflectionCaptureRollback {
+ NativeCubeTextureSource& source;
+ NativeCubeReflectionUpdate retained;
+ bool armed=false;
+public:
+ explicit NativeCubeReflectionCaptureRollback(NativeCubeTextureSource& source) noexcept:source(source) {}
+ void Capture(const NativeCubeReflectionUpdate& update) noexcept {retained=update;armed=true;}
+ void Release() noexcept {armed=false;}
+ ~NativeCubeReflectionCaptureRollback() noexcept {if(armed)source.CancelUnsubmittedReflection(retained);}
+ NativeCubeReflectionCaptureRollback(const NativeCubeReflectionCaptureRollback&)=delete;
+ NativeCubeReflectionCaptureRollback& operator=(const NativeCubeReflectionCaptureRollback&)=delete;
 };
 NativeCubeTextureSource& OriginalNativeCubeTextures();
 } // namespace rendering

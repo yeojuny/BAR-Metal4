@@ -448,6 +448,7 @@ struct Session {
 	std::unique_ptr<Metal4ScreenPresenter> loadingScreen;
 	WorldFrameCapture capture;
  NativeEnvironmentStageReceipt environmentStage;
+ std::shared_ptr<const NativeShieldDepthFrame> shieldCapture;
 	NativeBumpWaterCapture waterCapture;
  NativeLegacyWaterCapture legacyWaterCapture;
  NativeDynamicWaterCapture dynamicWaterCapture;
@@ -829,6 +830,7 @@ void CompleteUnitPrimitiveWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> 
 void PrepareEnvironmentBeforePreUnit()
 {
  if(!session)return;
+ session->environmentStage={}; // A failed new capture must not cancel an older receipt.
  // Original WorldDrawer GenerateIBL: shadow source occurs BEFORE cube/sun.
  // The actual attached capture service must fill actualShadowSourcePending;
  // incomplete selected producers throw rather than setting availability.
@@ -1179,7 +1181,7 @@ void PrepareShieldMapBeforePreUnit()
  selection.namedDepthStorageExists=names.Name(NativeGeometryTextureNames::DepthAttachment)!=0;
  selection.storageWidth=names.Width();selection.storageHeight=names.Height();
  session->mainGroundPending=out;
- session->renderer->BeginShieldMapPublication(context,globalRendering->drawFrame,actual,selection);
+ session->shieldCapture=session->renderer->BeginShieldMapPublication(context,globalRendering->drawFrame,actual,selection);
  session->mainGroundPending=std::move(out);session->mainInitialClear.reset();
 }
 
@@ -1375,6 +1377,8 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 
 void AbortPreparedWorld()
 {
+	if(session&&session->renderer && !session->renderer->AbortShieldPublications(session->preparedFrame?session->preparedFrame->opaqueModelFrame:session->opaqueSourcePending,session->actualShadowSourcePending,session->preparedFrame&&session->preparedFrame->mainGround?session->preparedFrame->mainGround:session->mainGroundPending,session->environmentStage,session->shieldCapture))return; // Keep failed-Begun source owners intact.
+
 	if(session)session->legacyWaterCapture.AbortUncompletedRefraction();
 	if(session && session->renderer)session->renderer->AbortScreenContinuation();
 	LuaNativeBlockout::AbortWorldFrame();
@@ -1385,12 +1389,11 @@ void AbortPreparedWorld()
 	LuaNativeSensor31657Circle::AbortWorldFrame();
 	LuaNativeSensorPreview::AbortCapture();
 	LuaNativeCommands::AbortWorldFrame();
-	if(session&&session->renderer)session->renderer->AbortShieldPublications(session->preparedFrame?session->preparedFrame->opaqueModelFrame:session->opaqueSourcePending,session->actualShadowSourcePending,session->preparedFrame&&session->preparedFrame->mainGround?session->preparedFrame->mainGround:session->mainGroundPending);
 	if (session) {
 		session->cpuReadReceipt220.reset();
 		session->preparedFrame.reset();session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();
 		session->preparedGroundDecals.reset();session->preparedGameDecals.reset();session->preparedDecalDraw.reset();
- session->mainGroundPending.reset();session->reflectionGroundPending.reset();session->mainInitialClear.reset();
+ session->mainGroundPending.reset();session->shieldCapture.reset();session->reflectionGroundPending.reset();session->mainInitialClear.reset();
 	}
 }
 
@@ -1456,7 +1459,7 @@ std::vector<std::uint8_t> ReadCurrentImage(const ui::NativeUIReadbackPrefix& pre
 	options.sourceCompleted=[](const Metal4WorldPresentationResult& completed){
 		if(completed.completedWorldInfo[0])RetireNativeWorldInfo(completed.completedWorldInfo[0],completed.completedWorldInfo[1]);
 		if(completed.completedWaterUpdates[0])session->waterCapture.DidComplete(completed.completedWaterUpdates[0],completed.completedWaterUpdates[1],completed.completedWaterUpdates[2]);
-		session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();
+		session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();
 	};
 	auto result=session->renderer->Draw(frame,options);
  if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
@@ -1571,7 +1574,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		sourcePlan=NativeSourceSubmission::OffscreenSource;
 	if (sourcePlan==NativeSourceSubmission::IndependentTargets){
   if(overlapPreparation)RequireRetiredGPUWork();
-		session->renderer->AbortShieldPublications(prepared?prepared->opaqueModelFrame:nullptr,session->actualShadowSourcePending,prepared?prepared->mainGround:session->mainGroundPending);session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();return submitTargets();
+		if(!session->renderer->AbortShieldPublications(prepared?prepared->opaqueModelFrame:nullptr,session->actualShadowSourcePending,prepared?prepared->mainGround:session->mainGroundPending,session->environmentStage,session->shieldCapture))throw std::logic_error("Cannot discard failed-Begun source owners");session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();return submitTargets();
 	}
 
 	WorldFrame frame = std::move(*prepared);
@@ -1681,15 +1684,15 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   session->completionMailbox->Accept(completionTicket);
   ui::GetRecorder().ReportSubmittedFrame(frame.sourceDrawFrame);
   // The runtime ticket owns the immutable frame graph until true completion.
-  session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();
+  session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();
  }
  }catch(...){failedAdmission();throw;}
  if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
- if(result.sourceFrameCompleted){session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();}
+ if(result.sourceFrameCompleted){session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();}
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);
  if(result.completedWaterUpdates[0])session->waterCapture.DidComplete(result.completedWaterUpdates[0],result.completedWaterUpdates[1],result.completedWaterUpdates[2]);
 	if (!result.presented) {
-		if(!result.sourceFrameCompleted){session->renderer->AbortShieldPublications(frame.opaqueModelFrame,session->actualShadowSourcePending,frame.mainGround);session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();}
+		if(!result.sourceFrameCompleted){if(!session->renderer->AbortShieldPublications(frame.opaqueModelFrame,session->actualShadowSourcePending,frame.mainGround,session->environmentStage,session->shieldCapture))throw std::logic_error("Cannot discard failed-Begun source owners");session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();}
 		if(result.sourceFrameCompleted)return {false,result.screenTargetsCompleted,true,result.completedPostprocessSerial,result.sourceDrawFrame};
 		return submitTargets();
 	}
@@ -1899,7 +1902,7 @@ void ResetWorld()
 	if (!session)
 		return;
 	RequireRetiredGPUWork();
- if(session->renderer)session->renderer->AbortShieldPublications(session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending);
+ if(session->renderer)session->renderer->AbortShieldPublications(session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,session->environmentStage,session->shieldCapture);
 	if (session->presentedFrames > 0)
 		LOG("[Metal4Scene] Retired world after %llu presented frames; last simulation frame %llu",
 			static_cast<unsigned long long>(session->presentedFrames),
@@ -1910,14 +1913,14 @@ void ResetWorld()
 			static_cast<unsigned long long>(session->targetOnlyPasses));
 	// Keep the actually compiled native effect families available before the
 	// next game's original Lua Initialize callbacks; clear all per-game caches.
-	if (session->renderer) session->renderer->ClearStaticResources();
+	if (session->renderer) session->renderer->ClearStaticResources(session->environmentStage,session->shieldCapture);
  session->environmentStage={};
 	ResetNativeWorldInfo();
 	ResetMetalInfoResources();
 	EndLoadingScreen();
 	session->preparedFrame.reset();
 	session->preparedGroundDecals.reset();session->preparedGameDecals.reset();session->preparedDecalDraw.reset();
- session->mainGroundPending.reset();session->reflectionGroundPending.reset();session->mainInitialClear.reset();
+ session->mainGroundPending.reset();session->shieldCapture.reset();session->reflectionGroundPending.reset();session->mainInitialClear.reset();
 	session->waterCapture.Reset();
 	session->basicWaterCapture.Reset();session->legacyWaterCapture.Reset();
 	session->capture.Reset();
@@ -2018,7 +2021,7 @@ void Shutdown()
 	SetNativeUnitPrimitiveConsumerAvailable(false);
 	SetNativeCommandsConsumerAvailable(false);
 	if (session) {
-		if (session->renderer) session->renderer->ClearStaticResources();
+		if (session->renderer) session->renderer->ClearStaticResources(session->environmentStage,session->shieldCapture);
  session->environmentStage={};
 		ResetNativeWorldInfo();
 		ShutdownMetalInfoMaintenance();

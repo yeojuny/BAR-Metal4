@@ -21,4 +21,7 @@ struct NativeShieldDepthFrame {
 NativeShieldDepthVersion PublishNativeShieldDepth(NativeTextureRegistry&,const NativeGeometryTextureNames&,
 	NativeTextureBackingKind,uint64_t sourceDrawFrame,const WorldCamera&,bool actualWriter);
 void CancelNativeShieldDepth(NativeTextureRegistry&,const NativeShieldDepthFrame&) noexcept;
+// Serial capture rollback requires the exact retained pending owner.
+void CancelPendingNativeShieldDepth(NativeTextureRegistry&,std::shared_ptr<NativeShieldDepthFrame>& pending,
+ const std::shared_ptr<const NativeShieldDepthFrame>& expected) noexcept;
 }

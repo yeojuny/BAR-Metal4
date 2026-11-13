@@ -27,4 +27,12 @@ void CancelNativeShieldDepth(NativeTextureRegistry& registry,const NativeShieldD
 	for(const auto* version:{&frame.models,&frame.map})if(version->Changed())
 		registry.CancelContentPublication(version->published,version->previous);
 }
+void CancelPendingNativeShieldDepth(NativeTextureRegistry& registry,std::shared_ptr<NativeShieldDepthFrame>& pending,
+ const std::shared_ptr<const NativeShieldDepthFrame>& expected) noexcept
+{
+ if(!expected || pending!=expected)return;
+ CancelNativeShieldDepth(registry,*expected);
+ pending.reset();
+}
+
 }

@@ -828,14 +828,15 @@ struct Metal4WorldRenderer::Impl {
 			// Retain the validated immutable snapshot. A new/deformed owner must
 			// validate and upload; address reuse cannot masquerade as unchanged.
 			heightOwner = terrain.heights;
-			normalsReady = false;
+			normalImage.reset();
 		}
 		lease.AddAllocation(heights);
 		if (terrainNormals == nil || terrainNormals.width != inputHeights.width || terrainNormals.height != inputHeights.height) {
 			MTLTextureDescriptor* d = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRG16Float width:inputHeights.width height:inputHeights.height mipmapped:NO];
 			d.storageMode = MTLStorageModePrivate; d.usage = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite | MTLTextureUsagePixelFormatView;
-			terrainNormals = [lease.Device() newTextureWithDescriptor:d]; Require(terrainNormals != nil, "Cannot allocate original SMF normal producer"); normalsReady = false;
+			terrainNormals = [lease.Device() newTextureWithDescriptor:d]; Require(terrainNormals != nil, "Cannot allocate original SMF normal producer"); normalImage.reset();
 		}
+		if(!normalImage){auto image=std::make_shared<MapImage>();image->texture=terrainNormals;normalImage=std::move(image);}
 		lease.AddAllocation(terrainNormals);
 		for (const auto& batch: map.batches) if (batch.count) { lease.AddPersistentAllocation(batch.texture); lease.AddPersistentAllocation(batch.instances); }
 	}
@@ -960,7 +961,7 @@ struct Metal4WorldRenderer::Impl {
 	__strong id<MTLBuffer> heights = nil;
 	std::shared_ptr<const WorldTerrainHeights> heightOwner;
 	__strong id<MTLTexture> depth = nil, stencil = nil, terrainDepth = nil, shadowDepth = nil, terrainNormals = nil;
-	bool normalsReady = false;
+	std::shared_ptr<MapImage> normalImage;
 	__strong id<MTLLibrary> library = nil;
 
 	__strong id<MTLRenderPipelineState> unitPipeline = nil, engineModelPipeline = nil, engineStandardShadowPipeline = nil, alphaPipeline = nil, shadowModelPipeline = nil, shadowTerrainPipeline = nil;
@@ -1138,10 +1139,12 @@ std::shared_ptr<const NativeSensorPreviewProgramConsumer> Metal4WorldRenderer::C
 	return impl->sensorPreviewGPU.CompileOriginalStages(lease,source,milliseconds);
 }
 
-void Metal4WorldRenderer::ClearStaticResources()
+void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageReceipt& environment,
+ const std::shared_ptr<const NativeShieldDepthFrame>& shield)
 {
 	MainThread(); Require(impl != nullptr, "World renderer was moved from");
 	RuntimeCleanupLease lease;
+ Require(AbortShieldPublications({}, {}, {}, environment, shield),"Cannot clear source resources after failed Begin");
 	impl->waterGPU.ClearResources();
 	impl->waterFireSmokeGPU.ClearResources();
 	impl->groundDecalGPU.ClearResources();
@@ -1179,10 +1182,10 @@ void Metal4WorldRenderer::ClearStaticResources()
 	impl->unitStencilGPU.ClearResources();
 	impl->outlineGPU.ClearResources();
 	impl->distortionGPU.ClearResources();
-	AbortShieldPublications();impl->shieldGPU.ClearResources();impl->mapDepthGPU.ClearResources();impl->modelDepthGPU.ClearResources();
+	impl->shieldGPU.ClearResources();impl->mapDepthGPU.ClearResources();impl->modelDepthGPU.ClearResources();
 	impl->blueprintGPU.ClearResources();
 	impl->blockoutGPU.ClearResources();
-	impl->terrainNormals = nil; impl->normalsReady = false;impl->normalsEncoded=std::make_shared<bool>(false);
+	impl->terrainNormals = nil; impl->normalImage.reset();impl->normalsEncoded=std::make_shared<bool>(false);
 	impl->standardTerrainGPU->ClearResources();
 	impl->screenContinuation.reset();impl->postprocessGPU.ClearResources();impl->offscreenSourceColor=nil;
 	impl->volumetricCloudsGPU.ClearResources();
@@ -1893,7 +1896,7 @@ void Metal4WorldRenderer::ConnectSSAODeferredSources(bool connected)
  SetNativeSSAOConsumerAvailable(connected);
 }
 
-void Metal4WorldRenderer::BeginShieldMapPublication(NativeTextureContext& context,uint64_t frame,const WorldCamera& camera,const NativeMapDepthSelection& selection)
+std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BeginShieldMapPublication(NativeTextureContext& context,uint64_t frame,const WorldCamera& camera,const NativeMapDepthSelection& selection)
 {
 	Require(!impl->shieldPending,"Original map GBuffer publication was not consumed or aborted");
 	auto next=std::make_shared<NativeShieldDepthFrame>();next->sourceDrawFrame=frame;next->submissionIdentity=CreateShieldSubmissionIdentity();next->camera=camera;next->mapSelection=selection;
@@ -1905,6 +1908,7 @@ void Metal4WorldRenderer::BeginShieldMapPublication(NativeTextureContext& contex
  Require(backing&&backing->Kind()==NativeTextureBackingKind::MapDepth,"Retained original map depth has no actual named backing");
  next->map={object,object,backing};
 	impl->shieldRegistry=&context.Registry();impl->shieldPending=std::move(next);
+ return impl->shieldPending;
 }
 std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::PublishShieldModelDepth(const WorldFrame& frame,const NativeModelDepthSelection& selection)
 {
@@ -1941,23 +1945,21 @@ std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BorrowActualM
 	return impl->shieldPending;
 }
 
-void Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOpaqueModelFrame> unsubmittedOpaque,
+bool Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOpaqueModelFrame> unsubmittedOpaque,
  std::shared_ptr<const NativeOriginalShadowFrame> unsubmittedShadow,
- std::shared_ptr<const NativeTerrainSceneSourceFrame> unsubmittedGround) noexcept
+ std::shared_ptr<const NativeTerrainSceneSourceFrame> unsubmittedGround,
+ const NativeEnvironmentStageReceipt& environment,
+ const std::shared_ptr<const NativeShieldDepthFrame>& shield) noexcept
 {
-	if(impl&&impl->activeSourceSubmission)return; // Recorded work must never roll back.
+	if(impl&&impl->activeSourceSubmission)return false; // Recorded work must never roll back.
 	if(unsubmittedOpaque)CancelNativeOpaqueModels(OriginalNativeTextureContext().Registry(),*unsubmittedOpaque);
  if(unsubmittedGround&&unsubmittedGround->ground&&unsubmittedGround->ground->mapMRT)
   CancelNativeCUSDeferredPhase(OriginalNativeTextureContext().Registry(),*unsubmittedGround->ground->mapMRT);
-	if(impl&&impl->shieldPending&&impl->shieldRegistry)CancelNativeShieldDepth(*impl->shieldRegistry,*impl->shieldPending);
-	if(OriginalNativeCubeTextures().Attached()){
-  const auto update=OriginalNativeCubeTextures().CurrentReflectionUpdate();
-  if(update.backing&&!update.backing->completed.load()&&!update.backing->encodedSubmission.load()&&!update.backing->dependenciesSubmission.load()&&
-   (!update.mipBacking||(!update.mipBacking->completed.load()&&!update.mipBacking->encodedSubmission.load()&&!update.mipBacking->dependenciesSubmission.load())))
-   OriginalNativeCubeTextures().CancelReflection(update);
- }
+	if(impl&&impl->shieldRegistry)CancelPendingNativeShieldDepth(*impl->shieldRegistry,impl->shieldPending,shield);
+	if(OriginalNativeCubeTextures().Attached() && environment.HasCubeSource())
+  OriginalNativeCubeTextures().CancelUnsubmittedReflection(*environment.frame->sourceCubeUpdate);
 	if(unsubmittedShadow&&unsubmittedShadow->textures)OriginalNativeShadowTextures().Cancel(*unsubmittedShadow->textures);
-	if(impl)impl->shieldPending.reset();
+ return true;
 }
 
 
@@ -2878,12 +2880,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		}
 
 		Require(frame.mapTextures && frame.mapTextures->sourceDrawFrame==frame.sourceDrawFrame,"Original map publication is not this source draw");
-		impl->normalsEncoded=std::make_shared<bool>(impl->normalsReady);
+		impl->normalsEncoded=std::make_shared<bool>(impl->normalImage->completed);
 		const auto normalObject=frame.mapTextures->images[0];
 		auto normalBacking=normalObject?std::dynamic_pointer_cast<const NativeMapTextureBacking>(normalObject->backing):nullptr;
 		Require(normalBacking && normalBacking->heights==frame.terrain.heights,"Original normal texture and terrain do not share the retained height cache");
-		if(!normalBacking->Resource()){auto actual=std::make_shared<Impl::MapImage>();actual->texture=impl->terrainNormals;actual->completed=impl->normalsReady;normalBacking->Fulfill(std::move(actual));}
-		else {auto actual=std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource());Require(actual && actual->texture==impl->terrainNormals,"Original normal allocation was replaced without a new source version");}
+		if(!normalBacking->Resource())normalBacking->Fulfill(impl->normalImage);
+		else {auto actual=std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource());Require(actual && actual==impl->normalImage && actual->texture==impl->terrainNormals,"Original normal allocation was replaced without a new source version");}
 		// Original height is a retained R32F corner image; reuse the minimap
 		// owner's upload independently of terrain shading selection.
 		const auto heightObject=frame.mapTextures->images[1];
@@ -4184,7 +4186,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		if(reflectionWorldInfo)reflectionWorldInfo->EncodeDependencies(command);
 		environment->EncodeDependencies(command);
 		if (standardShade) standardShade->EncodeDependencies(command);
-		if (!impl->normalsReady) {
+		if (!impl->normalImage->completed) {
 			id<MTL4ComputeCommandEncoder> normals = [command computeCommandEncoder]; Require(normals != nil,"Cannot encode original terrain normal producer");
 			[arguments setAddress:impl->heights.gpuAddress atIndex:0]; [arguments setTexture:impl->terrainNormals.gpuResourceID atIndex:0];
 			[normals setComputePipelineState:impl->normalPipeline]; [normals setArgumentTable:arguments];
@@ -5247,7 +5249,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   for(const auto& lines:separateLineOwners)if(lines)retire([&]{lines->CompleteLineDependencies();});
   if(blockout)retire([&]{blockout->DidComplete();});
   retire([&]{namedImageMipmaps->DidComplete();});
-  retire([&]{owner->normalsReady=true;std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource())->completed=true;});
+  retire([&]{std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource())->completed=true;});
   if(readback)retire([&]{readback->DidComplete();});
   if(submissionCompleted)retire([&]{submissionCompleted(sourceSubmission);});
   if(isReadback)retire([&]{ui::GetRecorder().RetireTargetSubmission(sourceSubmission);});
