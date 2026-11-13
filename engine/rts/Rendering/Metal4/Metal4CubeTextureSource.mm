@@ -41,6 +41,29 @@ CompletedCubeLeaseReceipts* RuntimeLease::CompletedCubeReads() noexcept {
  catch(const std::bad_alloc&){return nullptr;}
  return completedCubeReads.get();
 }
+// BEGIN CUBE_LEASE_SAMPLERS
+// Immutable states only, bounded to the exact lease/device. Descriptor validation
+// always runs before lookup; this is not a resource/producer receipt cache.
+class CubeLeaseSamplers {
+ struct Entry {NativeTextureSampling sampling; __strong id<MTLSamplerState> sampler;};
+ std::array<std::optional<Entry>,32> entries;
+ size_t count=0;
+public:
+ id<MTLSamplerState> Find(const NativeTextureSampling& sampling)const noexcept {
+  for(size_t i=0;i<count;++i)if(entries[i]->sampling==sampling)return entries[i]->sampler;
+  return nil;
+ }
+ void Remember(const NativeTextureSampling& sampling,id<MTLSamplerState> sampler) {
+  if(!sampler||count==entries.size())return;
+  entries[count].emplace(Entry{sampling,sampler});++count;
+ }
+};
+// END CUBE_LEASE_SAMPLERS
+CubeLeaseSamplers* RuntimeLease::CubeSamplers() noexcept {
+ try{if(!cubeSamplers)cubeSamplers=std::make_shared<CubeLeaseSamplers>();}
+ catch(const std::bad_alloc&){return nullptr;}
+ return cubeSamplers.get();
+}
 namespace {
 struct Resource final:NativeCubeTextureResource {
  std::shared_ptr<CubeStorage> storage;
@@ -109,7 +132,11 @@ id<MTLSamplerState> Sampler(RuntimeLease& lease,const NativeTextureSampling& p){
  Require(p.magFilter==0x2600||p.magFilter==0x2601,"Original cube magnification filter is invalid");d.magFilter=p.magFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;
  d.sAddressMode=Address(p.wrapS);d.tAddressMode=Address(p.wrapT);d.rAddressMode=Address(p.wrapR);d.lodMinClamp=std::max(0.f,p.minLod);d.lodMaxClamp=std::min(float(p.maxLevel),p.maxLod);
  Require(p.borderColor==std::array<float,4>{0,0,0,0}||p.borderColor==std::array<float,4>{0,0,0,1}||p.borderColor==std::array<float,4>{1,1,1,1},"Original cube custom border requires its exact sampler");d.borderColor=p.borderColor[3]==0?MTLSamplerBorderColorTransparentBlack:p.borderColor[0]==1?MTLSamplerBorderColorOpaqueWhite:MTLSamplerBorderColorOpaqueBlack;
- auto sampler=[lease.Device()newSamplerStateWithDescriptor:d];Require(sampler,"Cannot allocate original cube sampler");lease.Retain(sampler);return sampler;
+ auto* cache=lease.CubeSamplers();
+ if(cache)if(auto sampler=cache->Find(p)){lease.Retain(sampler);return sampler;}
+ auto sampler=[lease.Device()newSamplerStateWithDescriptor:d];Require(sampler,"Cannot allocate original cube sampler");
+ if(cache)cache->Remember(p,sampler);
+ lease.Retain(sampler);return sampler;
 }
 }
 std::shared_ptr<const NativeCubeTextureResource> AllocateNativeCubeTexture(RuntimeLease& lease,NativeCubeTextureKind kind,uint32_t size,uint32_t levels){
