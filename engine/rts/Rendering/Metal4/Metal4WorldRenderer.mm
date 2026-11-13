@@ -511,6 +511,7 @@ struct Metal4WorldRenderer::Impl {
 		// visible-square traversal selects these; this is no new geometry.
 		std::vector<std::vector<TileRange>> squareRanges;
 	};
+ struct PreparedMap {std::shared_ptr<MapImage> normals;std::shared_ptr<MapCache> tiles;};
 	struct PieceCache { __strong id<MTLBuffer> vertices = nil; __strong id<MTLBuffer> indices = nil; uint32_t count = 0; };
 	struct ModelCache { std::shared_ptr<const WorldModel> owner; std::vector<PieceCache> pieces; };
  using TextureCache=metal4::WorldTexturePreparationJournal::Entry;
@@ -782,10 +783,10 @@ struct Metal4WorldRenderer::Impl {
 		Require(submission&&binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&
 			actualSampler&&actualSampler.device==lease.Device(),"Original terrain image lacks its actual source object/sampler/submission");
 		if(auto square=std::dynamic_pointer_cast<const NativeTerrainSquareBacking>(binding.object->backing)){
-			Require(map.owner&&square->tiles==map.owner,"Original terrain square lost its actual committed map cache");
-			const uint64_t index=uint64_t(square->squareZ)*(map.owner->gridWidth/NATIVE_SMF_TILES_PER_SQUARE)+square->squareX;
-			const auto batch=size_t(index/2048);Require(batch<map.batches.size(),"Original terrain square has no uploaded map batch");
-			return ResolveNativeTerrainSquareImage(lease,binding,map.owner,map.batches[batch].texture,uint32_t(batch*2048),actualSampler,map.batches[batch].squareViews);
+			Require(map&&map->owner&&square->tiles==map->owner,"Original terrain square lost its actual committed map cache");
+			const uint64_t index=uint64_t(square->squareZ)*(map->owner->gridWidth/NATIVE_SMF_TILES_PER_SQUARE)+square->squareX;
+			const auto batch=size_t(index/2048);Require(batch<map->batches.size(),"Original terrain square has no uploaded map batch");
+			return ResolveNativeTerrainSquareImage(lease,binding,map->owner,map->batches[batch].texture,uint32_t(batch*2048),actualSampler,map->batches[batch].squareViews);
 		}
 		if(std::dynamic_pointer_cast<const NativeTerrainInfoBacking>(binding.object->backing))
 			return ResolveNativeTerrainInfoImage(lease,binding,submission,actualSampler,validation,shaderMs);
@@ -838,7 +839,7 @@ struct Metal4WorldRenderer::Impl {
 		}
 		throw std::runtime_error("Original terrain image has no actual retained native producer for its selected source");
 	}
-	std::shared_ptr<MapImage> Map(RuntimeLease& lease, const WorldTerrain& terrain)
+	PreparedMap Map(RuntimeLease& lease, const WorldTerrain& terrain)
 	{
 		const auto& owner = terrain.tiles;
 		Require(owner != nullptr && terrain.heights != nullptr, "World scene requires original terrain tiles and corner heights");
@@ -859,10 +860,10 @@ struct Metal4WorldRenderer::Impl {
 		if (updateHeights) {
 			for(float value:inputHeights.corners)Require(std::isfinite(value),"Non-finite actual terrain height");
 		}
-		std::optional<MapCache> stagedMap;
-		if (map.owner != owner) {
+		std::shared_ptr<MapCache> stagedMap;
+		if (!map || map->owner != owner) {
 			ValidateNativeSMFTiles(*owner);
-			MapCache updated; updated.owner = owner;
+			auto staged=std::make_shared<MapCache>();auto& updated=*staged;updated.owner = owner;
 			const uint32_t squareColumns = owner->gridWidth / NATIVE_SMF_TILES_PER_SQUARE;
 			const uint32_t squareCount = squareColumns * (owner->gridHeight / NATIVE_SMF_TILES_PER_SQUARE);
 			const uint32_t batchCount = (squareCount + 2047) / 2048;
@@ -887,7 +888,7 @@ struct Metal4WorldRenderer::Impl {
 				if (batch.count) batch.instances = Buffer(lease.Device(), instances[batchIndex].data(), instances[batchIndex].size() * sizeof(TileInstance), @"Exact SMF tile-grid instances");
 				updated.batches.push_back(std::move(batch));
 			}
-			stagedMap.emplace(std::move(updated));
+			stagedMap=std::move(staged);
 		}
   // Build both allocations before changing the live cache. A height snapshot
   // owns distinct buffer/normal storage even when the new extent is unchanged.
@@ -901,13 +902,13 @@ struct Metal4WorldRenderer::Impl {
   },[&](const auto& candidate){
    // Retention can allocate too. Finish it before either cache is published.
    lease.AddAllocation(candidate->cornerBuffer);lease.AddAllocation(candidate->texture);
-   const auto& candidateMap=stagedMap?*stagedMap:map;
+   const auto& candidateMap=stagedMap?*stagedMap:*map;
    for(const auto& batch:candidateMap.batches)if(batch.count){lease.AddPersistentAllocation(batch.texture);lease.AddPersistentAllocation(batch.instances);}
   },[&]() noexcept {
-   static_assert(std::is_nothrow_move_assignable_v<MapCache>);
-   if(stagedMap)map=std::move(*stagedMap);
+   static_assert(std::is_nothrow_move_assignable_v<std::shared_ptr<MapCache>>);
+   if(stagedMap)map=std::move(stagedMap);
   });
-  heightOwner=terrain.heights;return pair;
+  heightOwner=terrain.heights;return {std::move(pair),map};
 	}
 
 	ModelCache& Model(RuntimeLease& lease, const std::shared_ptr<const WorldModel>& owner)
@@ -1026,7 +1027,7 @@ struct Metal4WorldRenderer::Impl {
 	// generations belong to mainStorage receipts, never this capture-time contract.
 	std::unique_ptr<const NativeMainSampling> mainSampling;
 	__strong id<MTLTexture> terrainDepthSamples=nil;
-	MapCache map;
+	std::shared_ptr<MapCache> map;
 	std::unordered_map<const WorldModel*, ModelCache> models;
 	std::unordered_map<const WorldTexture*, TextureCache> textures;
  // Interrupted prepare recovery is explicit; never used for encode/retirement.
@@ -2540,7 +2541,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   impl->lightningGPU.PruneExpiredImages();
   // Height/normal pairs now retain distinct versions. Keep the conservative
   // deformation/map boundary until every dependent cache has an isolation proof.
-  if(impl->heightOwner!=frame.terrain.heights || impl->map.owner!=frame.terrain.tiles)
+  if(impl->heightOwner!=frame.terrain.heights || !impl->map || impl->map->owner!=frame.terrain.tiles)
    lease.RetirePreviousSubmission();
 		lease.SetMinSampleShadingRate(frame.minSampleShadingRate);
   // Render-only preparation of this request. Main can replace its own receipt
@@ -2566,7 +2567,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		Require(layer != nil && layer.device == lease.Device(), "World layer/device ownership mismatch");
 		const auto resourceStart = Clock::now();
 		impl->StartTexturePreparation(lease);
-		const auto normalResource=impl->Map(lease, frame.terrain);
+		const auto preparedMap=impl->Map(lease, frame.terrain);
+  const auto normalResource=preparedMap.normals;
+  const auto terrainMap=preparedMap.tiles; // Exact uploaded tile buffers retained for this request.
   // Select before any early world provider captures readiness. A failed prepare
   // cannot let a later resource/epoch satisfy an already retained callback.
   const auto normalEpoch=normalResource->normalEpochs.Begin(normalResource->Completed());
@@ -4597,7 +4600,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			[shadowEncoder setRenderPipelineState:impl->shadowTerrainPipeline];
 			[shadowEncoder setDepthBias:frame.shadow->terrainDepthBias slopeScale:frame.shadow->terrainSlopeBias clamp:0];
 			[arguments setAddress:normalResource->cornerBuffer.gpuAddress atIndex:0];[arguments setAddress:uniformBuffer.gpuAddress+shadowTerrainOffset atIndex:1];
-			for(const auto& batch:impl->map.batches)if(batch.count){
+			for(const auto& batch:terrainMap->batches)if(batch.count){
 				[arguments setAddress:batch.instances.gpuAddress atIndex:2];[shadowEncoder setArgumentTable:arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
 				[shadowEncoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:96 instanceCount:batch.count];++result.shadowTerrainDraws;
 			}

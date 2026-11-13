@@ -36,5 +36,20 @@ int main(){
  std::weak_ptr<const Source> oldSource=first;first.reset();assert(!oldSource.expired());
  cache.Clear();assert(!cache.Find(second));assert(newer->buffer==second->heights&&old->buffer[0]==1);auto recreated=cache.GetOrCreate(second,build);assert(recreated!=newer);
  old.reset();same.reset();assert(oldSource.expired());
- std::cout<<"Source resource cache:2000 failed preparations and companion cache-hit/replacement commits;3000 failed pair creations preserve prior owner;reuse/same-size version isolation/retained source/clear-recreate passed\n";
+ // Exact companion owner publication: old request pins survive both cache
+ // replacement and renderer clearing; failed retention publishes neither side.
+ for(unsigned i=0;i<1000;++i){
+  NativeSourceResourceCache<Source,Resource> pairCache;
+  auto tiles=std::make_shared<const std::vector<int>>(std::initializer_list<int>{1,2});
+  auto pair=pairCache.GetOrCreate(first=std::make_shared<Source>(),build);
+  auto packetTiles=tiles;std::weak_ptr<const std::vector<int>> weakTiles=tiles;
+  auto staged=std::make_shared<const std::vector<int>>(std::initializer_list<int>{7,8});
+  try{pairCache.GetOrCreatePrepared(second,build,[](const auto&){throw std::bad_alloc();},[&]() noexcept {tiles=std::move(staged);});assert(false);}catch(const std::bad_alloc&){}
+  assert(tiles==packetTiles&&staged&&pairCache.Find(first)==pair);
+  pairCache.GetOrCreatePrepared(second,build,[](const auto&){},[&]() noexcept {tiles=std::move(staged);});
+  assert(tiles!=packetTiles&&(*packetTiles)[0]==1&&!staged);
+  tiles.reset();pairCache.Clear();assert(!weakTiles.expired());
+  packetTiles.reset();assert(weakTiles.expired());
+ }
+ std::cout<<"Source resource cache:2000 failed preparations and companion cache-hit/replacement commits;3000 failed pair creations preserve prior owner;reuse/same-size version isolation/retained source/clear-recreate and1000 tile-owner transaction lifetimes passed\n";
 }

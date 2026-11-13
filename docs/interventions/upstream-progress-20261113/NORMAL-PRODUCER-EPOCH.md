@@ -75,3 +75,24 @@ Do not remove the deformation drain, enlarge worker eligibility, or call these
 shared services concurrently based only on this normal/height ownership work.
 Independent review caught a stale removed-height preflight reference; exact-cache
 Find corrected it before final regression checks. No full application build/run.
+
+## Follow-up: uploaded tile owner for shadow encoding
+
+- [x] MapCache is a shared uploaded resource owner. A replacement owner is allocated
+  and built before either cache changes; all original buffer/texture retention must
+  succeed before the same noexcept commit publishes it.
+- [x] Map returns a PreparedMap containing the exact normal pair AND tile owner.
+  Shadow terrain encoding uses this packet's tile batch vector, not impl->map.
+- [x] Old request owner survives replacement/clear without copying the tile vector.
+  Existing lease persistent allocations continue to retain GPU resources through
+  GPU lifetime; this change does not substitute a CPU pin for that residency.
+- [x] 1,000 companion-owner failure/commit/clear/lifetime cases added to the actual
+  source-cache helper regression. Existing 3,000 factory/2,000 retention failures,
+  backing100 and epoch1,000 ASan/UBSan regressions pass.
+
+This resolves the shadow `map.batches` selection noted above. Terrain-square
+provider still selects the serial renderer's current cache (with exact source
+checks) and mutates its source-specific view cache under the existing access gate.
+That provider requires a separate lease/request binding before concurrent older
+render/newer preparation could be allowed. No such concurrency is enabled here.
+Existing deformation previous-submission drain remains unchanged.
