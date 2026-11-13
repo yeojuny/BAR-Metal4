@@ -761,7 +761,7 @@ struct Metal4WorldRenderer::Impl {
 			if(input.version){
 				Require(input.version->image==input.allocation,"Original Preview produced version belongs to another allocation");
 				result.texture=postprocessGPU.ResolveImage(lease,input.version,consumer);
-				result.requireReadable=[this,version=input.version]{NativeRendererAccessGate::Scope providerAccess(&access);postprocessGPU.RequireReadable(version);};
+				result.requireReadable=postprocessGPU.CaptureReadability(input.version);
 			}else{
 				Require(!requireContents,"Original Preview cannot read texels from undefined allocation-only storage");
 				result.texture=postprocessGPU.ResolveAllocation(lease,input.allocation);
@@ -1086,7 +1086,7 @@ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int reques
 		const std::shared_ptr<const NativePostprocessVersion>& version,std::optional<NativePostprocessConsumer> consumer) {
  NativeRendererAccessGate::Scope providerAccess(&owner->access);
 		return metal4::PreparedScreenExternalImage{owner->postprocessGPU.ResolveImage(sourceLease,version,consumer),version,
-			[owner,version]{NativeRendererAccessGate::Scope providerAccess(&owner->access);owner->postprocessGPU.RequireReadable(version);}};
+			owner->postprocessGPU.CaptureReadability(version)};
 	});
 	impl->postprocessGPU.SetCPUImageProvider([owner=impl.get()](metal4::RuntimeLease& sourceLease,
 		const std::shared_ptr<const ScreenTexture>& image) {
@@ -4296,7 +4296,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 					target.depth=MTLPixelFormatInvalid;target.stencil=MTLPixelFormatInvalid;
 					if(command.previous){
 						target.previous=impl->postprocessGPU.ResolveImage(lease,command.previous,consumer);
-						target.requirePreviousReadable=[owner=impl.get(),version=command.previous]{NativeRendererAccessGate::Scope providerAccess(&owner->access);owner->postprocessGPU.RequireReadable(version);};
+						target.requirePreviousReadable=impl->postprocessGPU.CaptureReadability(command.previous);
 					}
 				}
 				auto images=[&](RuntimeLease& sourceLease,const NativeSensorPreviewImageInput& input,bool contents,NativePostprocessConsumer at){

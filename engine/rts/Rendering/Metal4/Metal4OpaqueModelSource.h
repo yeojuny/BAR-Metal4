@@ -59,7 +59,7 @@ private:
 		CUSSourceGPU&,EngineModelDeferredGPU&,EngineModelForwardGPU&,
 		std::shared_ptr<const NativeOpaqueModelFrame>,const CUSSourceTarget&,
 		const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,
-		uint64_t,uint64_t,bool,double&,const NativeTextureRegistry*);
+		uint64_t,uint64_t,bool,double&,const MRTFrontier209*);
 };
 
 // Prepare all actual MRT phases first, so every consumer sees its six fulfilled

@@ -45,7 +45,14 @@ assert 'std::optional<NativeRendererAccessGate::Scope> cacheAccess' in basic
 assert basic.index('SharedRuntime().CanSafelyDetach()')<basic.index('Handoff handoff')<basic.index('cacheAccess.reset()')<basic.index('renderWorker->Invoke')
 assert 'Retirement::RequireAlreadyRetired' in basic
 assert 'NativeRendererAccessGate::Scope completionAccess(&owner->access);' in s
-assert s.count('NativeRendererAccessGate::Scope providerAccess')==11
+# Three old mutable postprocess readability callbacks now retain exact owned
+# receipts; retain gate coverage for the remaining eight live providers.
+assert s.count('NativeRendererAccessGate::Scope providerAccess')==8
+assert s.count('postprocessGPU.CaptureReadability(')==3
+assert 'postprocessGPU.RequireReadable(' not in s
+assert 'result.requireReadable=postprocessGPU.CaptureReadability(input.version);' in s
+assert 'owner->postprocessGPU.CaptureReadability(version)};' in s
+assert 'target.requirePreviousReadable=impl->postprocessGPU.CaptureReadability(command.previous);' in s
 runtime=(root/'rts/Rendering/Metal4/Metal4RuntimeNative.mm').read_text().split('void Runtime::DrainOldestLocked(',1)[1].split('FrameMetrics RuntimeLease::SubmitAndWait',1)[0]
 assert runtime.index('pending->retire(')<runtime.index('pendingSubmissions.pop_front()')
 assert 'poisoned=true;failedFrame=frame;' in runtime

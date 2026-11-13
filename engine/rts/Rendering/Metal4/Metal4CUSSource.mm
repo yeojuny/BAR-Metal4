@@ -488,6 +488,8 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   LOG("[NativeModel156Material] prior_resource_setters=%zu material_address_bindings=%zu cache_hits=%zu new_buffers=%zu encoded_resource_slots=%zu encoded_bytes=%zu cache_entries=%zu cache_bytes=%zu cache_allocated_bytes=%zu direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1",priorResourceSetters156,materialBindings156,material.hits,material.created,material.created*24,material.encodedBytes,impl->materials156.Entries(),impl->materials156.Bytes(),impl->materials156.AllocatedBytes());
   impl->reportedMaterial156=true;
  }
+ // Seal exact first-owner order only after all image vectors are stable.
+ out->impl->firstOwners=BuildTerrainOwnerRoster(out->impl->draws);
  if(sampled)TraceRecord("perf f=%llu sample=%zu maxSeconds=300 sourceDraws=%zu prepared=%zu prepareCPUus=%.3f validateCPUus=%.3f publishedCPUus=%.3f traceCPUus=%.3f immutableCacheAllocs=%llu immutableCacheBytes=%llu cacheHits=%llu publishedUploads=%llu publishedCopyBytes=%llu",(unsigned long long)source->sourceDrawFrame,trace.budget.samples,source->draws.size(),out->impl->draws.size(),TraceUS(prepareStart)-diagnosticUS,validationUS,publicationUS,diagnosticUS,(unsigned long long)trace.allocations,(unsigned long long)trace.allocationBytes,(unsigned long long)trace.cacheHits,(unsigned long long)trace.publishedUploads,(unsigned long long)trace.publishedBytes);
  if(!impl->reported155&&source->sourceDrawFrame>=512&&preparedRuns147){
   size_t binds=0,logical=0,stored=0,allocated=0;std::set<MTLGPUAddress> pages,cachePages;
@@ -502,8 +504,6 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   LOG("[NativeModel147] source_draws=%zu original_objects=%llu prepared_runs=%llu omitted_model_lookups=%llu omitted_geometry_registration_calls=%llu instance_order_retained=1",out->impl->draws.size(),(unsigned long long)originalObjects147,(unsigned long long)preparedRuns147,(unsigned long long)(originalObjects147-preparedRuns147),(unsigned long long)(2*(originalObjects147-preparedRuns147)));
   impl->reported147=true;
  }
- // Seal exact first-owner order only after all image vectors are stable.
- out->impl->firstOwners=BuildTerrainOwnerRoster(out->impl->draws);
  return out;
 }
 } // namespace rendering::metal4

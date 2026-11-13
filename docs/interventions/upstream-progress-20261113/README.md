@@ -95,3 +95,9 @@ See [POSTPROCESS-PENDING-INPUT-RECEIPT.md](POSTPROCESS-PENDING-INPUT-RECEIPT.md)
 - [x] Actual credit and extracted scene-admission regressions cover a younger current capture during old-worker failure.
 - [ ] General provider eligibility and whole-world rollback/rebuild remain unimplemented; this path intentionally requires restart.
 See [SOURCE-LINEAGE-QUARANTINE.md](SOURCE-LINEAGE-QUARANTINE.md).
+
+### P4 → P5 exact Postprocess read-provider ownership
+- [x] Sensor-preview, shared screen and target previous-image reads use owned version/state receipts, without encode-time renderer/cache reentry.
+- [x] Original read timing/encoded-or-completed semantics retained; 10 receipt and 13 pending-input host scenarios pass.
+- [ ] General provider eligibility and rollback/destruction audit remain open.
+See [POSTPROCESS-READABILITY-OWNER.md](POSTPROCESS-READABILITY-OWNER.md).

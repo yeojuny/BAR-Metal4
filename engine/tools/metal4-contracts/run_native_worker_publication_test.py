@@ -8,15 +8,20 @@ args=['g++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined']
 env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'}
 subprocess.run(args+['-I'+str(root/'rts'),str(fixture),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],env=env,check=True,timeout=30)
-# Keep the original busy-before-allocation negative independent of the new ticket API.
-s=subprocess.check_output(['git','show','62485fde819ea5ec3f6b287b701a392044767e58:engine/rts/Rendering/Backend/NativeSerialRenderWorker.h'],cwd=root.parent,text=True)
-a=s.index('  // Construct the owning callable');b=s.index('  ready.notify_one();',a)
-s=s[:a]+'''  {std::lock_guard lock(mutex);if(stopping||busy)throw std::logic_error("Native render worker has an outstanding invocation");
-   busy=true;work=[task]{(*task)();};}
-'''+s[b:]
+# Deterministic negative control derived from the current production header:
+# suppress allocation-failure credit rollback. This models the original leaked
+# busy/credit bug without depending on an unpublished historical commit/API.
+header=root/'rts/Rendering/Backend/NativeSerialRenderWorker.h'
+s=header.read_text()
+rollback='~Claim(){if(!published){std::lock_guard lock(state->mutex);state->claimed=false;}}'
+assert s.count(rollback)==1
+s=s.replace(rollback,'~Claim(){} // NEGATIVE CONTROL: leaked construction credit')
+import hashlib,json
+(out/'negative-provenance.json').write_text(json.dumps({'source':str(header.relative_to(root)), 'sha256':hashlib.sha256(header.read_bytes()).hexdigest(), 'mutation':'Remove Claim destructor allocation-failure credit rollback'},indent=2)+'\n')
 p=out/'old/Rendering/Backend/NativeSerialRenderWorker.h';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(s)
 subprocess.run(args+['-I'+str(out/'old'),'-I'+str(root/'rts'),str(fixture),'-o',str(out/'old-test')],check=True)
 r=subprocess.run([str(out/'old-test')],env=env,capture_output=True,text=True,timeout=30)
+(out/'negative.log').write_text(r.stdout+r.stderr)
 assert r.returncode!=0
-assert 'outstanding invocation' in r.stderr
-print('Previous busy-before-allocation ordering rejected by recovery test as expected')
+assert 'no task credit' in r.stderr
+print('Missing allocation-failure credit rollback rejected by recovery test as expected')

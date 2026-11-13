@@ -12,14 +12,24 @@ def build(pub,target):
  subprocess.run(base+[str(source),str(pub)]+[str(f) for f in files]+['-o',str(target)],check=True)
 build(b/'NativeMapTexturePublication.cpp',out/'test')
 subprocess.run([str(out/'test')],env=env,check=True)
-# Negative control: original nontransactional pair loop, keeping current registry.
-old=subprocess.check_output(['git','show','0779432d2404009686d45bfaa5abc8b2337bb306:engine/rts/Rendering/Backend/NativeMapTexturePublication.cpp'],cwd=root.parent,text=True)
-assert 'catch' not in old.split('NativeMapTexturePublication::Publish(',1)[1].split('NativeMapTexturePublication& OriginalNativeMapTextures',1)[0]
-# Keep the old transaction algorithm, adapt only fulfillment to the current atomic backing API.
-old=old.replace('Require(actual && !resource,"Original map texture backing must receive its actual GPU resource once");resource=std::move(actual);', 'std::shared_ptr<const NativeMapTextureResource> empty;Require(actual && resource.compare_exchange_strong(empty,std::move(actual),std::memory_order_release,std::memory_order_relaxed),"Original map texture backing must receive its actual GPU resource once");')
+# Deterministic current-source mutant: publish each image immediately, without
+# staging or pair rollback. Recreates the nontransactional pair algorithm while
+# keeping current backing APIs, independent of private historical Git objects.
+production=b/'NativeMapTexturePublication.cpp';old=production.read_text()
+start=old.index(' std::array<std::shared_ptr<const NativeCUSTextureObject>,2> priorWrites{};')
+end=old.index('\treturn output;',start)
+body=old[start:end]
+loop=body[body.index('\tfor(size_t i=0;i<names.size();++i){'):body.index('  // Finish all source validation')]
+assignment='  priorWrites[i]=prior;staged[i]=std::move(backing);'
+assert loop.count(assignment)==1
+loop=loop.replace(assignment,'  registry->PublishContent(prior->name,{},std::move(backing));\n  output->images[i]=registry->Find(prior->name);')
+old=old[:start]+loop+old[end:]
+import hashlib,json
+(out/'negative-provenance.json').write_text(json.dumps({'source':str(production.relative_to(root)), 'sha256':hashlib.sha256(production.read_bytes()).hexdigest(), 'mutation':'Immediate per-image publication without pair staging/rollback'},indent=2)+'\n')
 (out/'old.cpp').write_text(old)
 build(out/'old.cpp',out/'negative')
 r=subprocess.run([str(out/'negative')],env=env,capture_output=True,text=True)
+(out/'negative.log').write_text(r.stdout+r.stderr)
 assert r.returncode!=0 and 'Assertion' in r.stderr,(r.returncode,r.stdout,r.stderr)
 print('Negative control original pair publication fails exact prior-backing restoration')
 # Test-only accessor exposes the real history overflow branch, with identical

@@ -603,6 +603,18 @@ void PostprocessGPU::RequireReadable(const std::shared_ptr<const NativePostproce
 	Require(found!=impl->images.end()&&found->second.owner.lock()==version&&
 		(*found->second.completed||*found->second.encoded),"Original postprocess image read precedes its actual producer encoding/retirement");
 }
+std::function<void()> PostprocessGPU::CaptureReadability(const std::shared_ptr<const NativePostprocessVersion>& version) const
+{
+ Require(version&&version->image,"Missing actual postprocess read version");
+ if(HasNativePostprocessCPUContents(*version))return [version]{};
+ const auto found=impl->images.find(version.get());
+ Require(found!=impl->images.end()&&found->second.owner.lock()==version,
+  "Postprocess readability receipt lacks its exact prepared allocation");
+ const auto completed=found->second.completed,encoded=found->second.encoded;
+ return [version,completed,encoded]{
+  Require(*completed||*encoded,"Original postprocess image read precedes its actual producer encoding/retirement");
+ };
+}
 std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativePostprocessFrame> frame,
 	id<MTLTexture> color,id<MTLTexture> depth,const PreparedScreenFrame& originalScreen,bool validation,double& compileMs,id<MTLTexture> actualStencil,std::shared_ptr<const MainFrameAttachments> main,bool independentRootShaderResources)
 {

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4RuntimeNative.h"
+#include "Metal4SceneBridge.h"
 #include "Rendering/Backend/NativeUnitUniformCopy.h"
 #include <cstring>
 #include <limits>
@@ -48,6 +49,8 @@ public:
    "Unit uniform compute source/destination extent differs");
   std::vector<uint8_t> input(size_t(entries)*128);
   for(size_t i=0;i<entries;++i)ReadNativeCUSPublishedElement(source,i,std::span(input).subspan(i*128,128));
+  Require([NSThread isMainThread],"Unit uniform dispatch requires the source thread");
+  scene::FinishRuntimeControl(); // Before Runtime mutex and GPU retirement callbacks.
   RuntimeLease lease;const auto start=Clock::now();
   Require(pipeline&&library&&library.device==lease.Device(),"Unit uniform compute owner/device changed");
   auto upload=[&](const void* bytes,size_t count){
@@ -82,6 +85,8 @@ public:
 };
 }
 std::shared_ptr<const NativeUnitUniformCopyProgram> CompileNativeUnitUniformCopy() {
+ metal4::Require([NSThread isMainThread],"Unit uniform compile requires the source thread");
+ scene::FinishRuntimeControl();
  metal4::RuntimeLease lease;auto owner=std::make_shared<UnitCopyProgram>();
  auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original API UnitBufferUniform Copy";descriptor.source=metal4::String(UnitCopySource);
  auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;

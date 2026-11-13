@@ -56,6 +56,9 @@ public:
 		std::optional<NativePostprocessConsumer> consumer = std::nullopt);
 	// Encode-time proof for a captured immutable version; ordering validation alone does not mean its producer ran.
 	void RequireReadable(const std::shared_ptr<const NativePostprocessVersion>& version) const;
+ // Capture exact owner/flags during preparation; invocation stays at the
+ // original encode/read boundary without revisiting this mutable GPU cache.
+ std::function<void()> CaptureReadability(const std::shared_ptr<const NativePostprocessVersion>& version) const;
 	// Opt in only for the audited WorldRenderer root providers: render shaders
 	// read separate resources (including view backings), write only attachments,
 	// and never sample the live main C/D/S. Custom providers keep the default.

@@ -945,6 +945,7 @@ void RequireRetiredGPUWork()
 
 void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
 void FinishPendingFrame() { RequireRetiredGPUWork(); }
+void FinishRuntimeControl() { RequireRetiredGPUWork(); }
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
  if(!session)throw std::logic_error("World capture has no source credit owner");
  if(!session->sourceCredits.HasCapacity())RequireRetiredGPUWork();
@@ -1169,6 +1170,7 @@ ui::NativeUIFrameRasterMapping GetUIFrameRasterMapping(const ScreenViewport& def
 DrawResult DrawLoadingScreen(const ScreenFrameView& screenUI)
 {
 	if (!session) return {};
+	FinishRuntimeControl(); // Also safe if a loading/reload presentation follows a world frame.
 	const auto result = session->loadingScreen->Draw(screenUI);
 	if (result.presented && !session->reportedLoadingScreen) {
 		session->reportedLoadingScreen = true;

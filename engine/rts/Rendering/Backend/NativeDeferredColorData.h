@@ -21,7 +21,7 @@ public:
 		NativeTextureContent,const NativeDeferredColorMetadata&);
 	NativeTextureBackingKind Kind()const noexcept override{return NativeTextureBackingKind::ColorImage;}
 	const NativeDeferredColorMetadata& Metadata()const{return metadata;}
-	std::shared_ptr<const NativeDeferredColorResource> Resource()const{return resource.load(std::memory_order_acquire);}
+	std::shared_ptr<const NativeDeferredColorResource> Resource()const{return std::atomic_load_explicit(&resource,std::memory_order_acquire);}
  bool Completed()const noexcept{const auto actual=Resource();return actual&&actual->Completed();}
 	// One-shot release publication; capture reads only Completed(), never GPU state.
 	// Owned Resource snapshots remain valid for the lifetime of this backing.
@@ -29,7 +29,7 @@ public:
  bool CanCancelUnsubmitted()const noexcept{const auto actual=Resource();return !actual||actual->CanCancelUnsubmitted();}
 private:
 	NativeDeferredColorMetadata metadata;
-	mutable std::atomic<std::shared_ptr<const NativeDeferredColorResource>> resource;
+	mutable std::shared_ptr<const NativeDeferredColorResource> resource;
 };
 struct NativeDeferredColorVersion {
 	std::shared_ptr<const NativeCUSTextureObject> previous,current;

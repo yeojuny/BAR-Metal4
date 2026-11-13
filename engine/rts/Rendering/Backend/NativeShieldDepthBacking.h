@@ -23,7 +23,7 @@ public:
 		uint64_t sourceDrawFrame,NativeTextureContent,const NativeShieldDepthMetadata&);
 	NativeTextureBackingKind Kind()const noexcept override{return kind;}
 	const NativeShieldDepthMetadata& Metadata()const{return metadata;}
-	std::shared_ptr<const NativeShieldDepthResource> Resource()const{return resource.load(std::memory_order_acquire);}
+	std::shared_ptr<const NativeShieldDepthResource> Resource()const{return std::atomic_load_explicit(&resource,std::memory_order_acquire);}
  bool Completed()const noexcept{const auto actual=Resource();return actual&&actual->Completed();}
 	// One-shot release publication; capture reads only Completed(), never GPU state.
 	// Owned Resource snapshots remain valid for the lifetime of this backing.
@@ -32,7 +32,7 @@ public:
 private:
 	NativeTextureBackingKind kind;
 	NativeShieldDepthMetadata metadata;
-	mutable std::atomic<std::shared_ptr<const NativeShieldDepthResource>> resource;
+	mutable std::shared_ptr<const NativeShieldDepthResource> resource;
 };
 bool IsNativeShieldDepthReadable(bool encoded,bool completed,bool allocationOnly,bool actualAllocationVerified,
 	uint64_t producerSubmission,uint64_t consumerSubmission) noexcept;

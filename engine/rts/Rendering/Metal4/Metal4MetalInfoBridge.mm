@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4MetalInfoBridge.h"
 #include "Metal4MetalInfo.h"
+#include "Metal4SceneBridge.h"
 #include "../Backend/NativeMetalInfoCapture.h"
 
 namespace rendering {
@@ -8,6 +9,8 @@ using namespace metal4;
 
 void InitializeMetalInfoMaintenance()
 {
+	Require([NSThread isMainThread], "Metal info controls require the source thread");
+	scene::FinishRuntimeControl();
 	{
 		RuntimeLease lease;
 		double compileMilliseconds = 0;
@@ -26,11 +29,16 @@ void InitializeMetalInfoMaintenance()
 			prepared->DidComplete();
 		}
 		return prepared->CompletionSerial();
+	}, [] {
+		Require([NSThread isMainThread], "Metal info controls require the source thread");
+		scene::FinishRuntimeControl();
 	});
 }
 
 void ResetMetalInfoResources()
 {
+	Require([NSThread isMainThread], "Metal info reset requires the source thread");
+	scene::FinishRuntimeControl();
 	Require(SharedRuntime().CanSafelyDetach(), "Cannot reset original metal info before GPU retirement");
 	ResetNativeMetalInfo();
 	SharedMetalInfoGPU().ClearResources();

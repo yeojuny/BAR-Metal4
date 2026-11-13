@@ -8,7 +8,7 @@ NativeDeferredColorBacking::NativeDeferredColorBacking(uint64_t storage,uint64_t
 	Check(storage&&version&&(m.attachment<5||(m.role==NativeGeometryTextureRole::Map&&m.attachment==NativeGeometryTextureNames::CombinedColorAttachment))&&m.view.width&&m.view.height,"Original deferred color metadata missing");
 	storageGeneration=storage;contentVersion=version;sourceDrawFrame=frame;content=kind;
 }
-void NativeDeferredColorBacking::Fulfill(std::shared_ptr<const NativeDeferredColorResource> value)const{std::shared_ptr<const NativeDeferredColorResource> empty;Check(value&&resource.compare_exchange_strong(empty,std::move(value),std::memory_order_release,std::memory_order_relaxed),"Original deferred color storage missing or fulfilled twice");}
+void NativeDeferredColorBacking::Fulfill(std::shared_ptr<const NativeDeferredColorResource> value)const{std::shared_ptr<const NativeDeferredColorResource> empty;Check(value&&std::atomic_compare_exchange_strong_explicit(&resource,&empty,std::move(value),std::memory_order_release,std::memory_order_relaxed),"Original deferred color storage missing or fulfilled twice");}
 NativeDeferredColorVersion PublishNativeDeferredColor(NativeTextureRegistry& registry,const NativeGeometryTextureNames& names,NativeGeometryTextureRole role,unsigned attachment,uint64_t frame,const NativeShieldDepthMetadata& view,bool writes)
 {
 	Check(attachment<5||(role==NativeGeometryTextureRole::Map&&attachment==NativeGeometryTextureNames::CombinedColorAttachment&&names.HasCombinedColor()),"Original deferred color index out of range");NativeDeferredColorVersion result;result.previous=result.current=registry.Find(names.Name(attachment));

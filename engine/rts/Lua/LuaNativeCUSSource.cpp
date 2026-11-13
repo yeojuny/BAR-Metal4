@@ -185,8 +185,7 @@ sol::table CreateContext(lua_State* L){
 		if(OriginalNativeSourceProgramBinding().IsCUS(p))OriginalNativeSourceProgramBinding().Unbind();
 		p->deleted=true;
 		p->consumer.reset();
-		p->floats.clear();
-		p->ints.clear();
+		p->uniforms.Initialize({},{});
 	});
 	BindFunction(t,"Uniform",[c](int location,sol::variadic_args values){c->UniformValue(location,values,false);});
 	BindFunction(t,"UniformInt",[c](int location,sol::variadic_args values){c->UniformValue(location,values,true);});

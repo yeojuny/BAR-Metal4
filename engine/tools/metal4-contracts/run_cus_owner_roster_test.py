@@ -16,3 +16,6 @@ assert a.count('impl->firstOwners')==4
 assert 'for(const auto& image:d.images)if(image.requireReadable)image.requireReadable();' in s
 assert 'InspectSourceDependency' not in a
 print('CUS actual three-phase roster: 2000 randomized reference/inspection, null/alias/live callbacks, retry/retirement/lifetime/allocation faults PASS')
+
+# R5: mandatory census belongs to prepare time, before diagnostic reporting.
+assert s.index("out->impl->firstOwners=BuildTerrainOwnerRoster") < s.index('if(sampled)TraceRecord("perf f=')

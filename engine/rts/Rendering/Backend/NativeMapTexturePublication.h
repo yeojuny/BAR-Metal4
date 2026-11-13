@@ -20,10 +20,10 @@ struct NativeMapTextureBacking final:NativeTextureBacking {
 	// One-shot release publication; capture reads only Completed(), never GPU state.
 	// Owned Resource snapshots remain valid for the lifetime of this backing.
 	void Fulfill(std::shared_ptr<const NativeMapTextureResource>)const;
-	std::shared_ptr<const NativeMapTextureResource> Resource()const{return resource.load(std::memory_order_acquire);}
+	std::shared_ptr<const NativeMapTextureResource> Resource()const{return std::atomic_load_explicit(&resource,std::memory_order_acquire);}
  bool Completed()const noexcept{const auto actual=Resource();return actual&&actual->Completed();}
 private:
-	mutable std::atomic<std::shared_ptr<const NativeMapTextureResource>> resource;
+	mutable std::shared_ptr<const NativeMapTextureResource> resource;
 };
 struct NativeMapTextureFrame {
 	uint64_t sourceDrawFrame=0;

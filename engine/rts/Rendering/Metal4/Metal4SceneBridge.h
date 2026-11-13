@@ -66,6 +66,9 @@ ui::NativeUIFrameRasterMapping GetUIFrameRasterMapping(const ScreenViewport& def
 // Join immutable CPU preparation before source aborts; does not submit or drain GPU work.
 void FinishCPUReadPreparation();
 void FinishPendingFrame();
+// Source-thread external GPU control boundary: settle CPU/Begin, then retire GPU
+// and apply exact scene receipts before taking a new Runtime lease/source mutation.
+void FinishRuntimeControl();
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(std::uint64_t draw);
 
 struct DrawResult {
