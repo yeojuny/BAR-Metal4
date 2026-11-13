@@ -496,3 +496,24 @@ TerrainProgramLink unsupported-result envelopes. Native entrypoint and destinati
 format preservation is checked structurally, not by executing Metal compilers.
 Independent review GO; the actual renderer-gate regression also passes 1,000
 nested/error and 100 cross-thread cases plus reservation/inversion checks.
+
+## Geometry allocation: worker backings, main publication
+
+CheckShieldGeometryAllocation now sends retained six/seven-attachment descriptors
+and the source frame to a joined render control. Actual texture/depth preparation
+uses the retired-only lease on the worker; no registry pointer is captured there.
+Main preflights exact source epoch/current objects after retirement, and rechecks
+before publication. Distinct names/identities, shape/sample and rollback version
+capacity are required. A partial GPU allocation returns an incomplete receipt and
+publishes nothing. Complete allocation-only backings are published on main as a
+transaction; a throwing write reverses only this transaction's exact completed
+writes in reverse order. Rollback does not rewind registry version/history IDs.
+Source API allocation failure remains false; stale source identities are rejected
+rather than rebasing a backing produced for another object version.
+Validation: actual receipt/registry ASan/UBSan tests restore prior contents at 26
+allocator-failure positions (six/seven attachment variants), then successfully
+retry with refreshed current versions; 46 normal success cases pass. Incomplete,
+aliased, wrong-shape, missing-backing, stale-snapshot and replaced-epoch cases
+reject without writes. Omitting reverse rollback fails the same assertion.
+Actual renderer-gate and coverage-control regressions pass; independent review GO.
+Backings in this CPU fixture are test resources, not executed Metal allocations.

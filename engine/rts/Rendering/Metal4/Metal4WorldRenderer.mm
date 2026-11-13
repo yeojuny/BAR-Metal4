@@ -24,6 +24,7 @@
 #include "Metal4WindowSurfaceNative.h"
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
 #include "Rendering/Backend/NativeRendererControl.h"
+#include "Rendering/Backend/NativeGeometryAllocationReceipt.h"
 #include "Rendering/Backend/NativeSourceResourceCache.h"
 #include "Rendering/Backend/NativeIdleResourcePool.h"
 #include "Rendering/Backend/NativeRendererAccessGate.h"
@@ -1536,11 +1537,19 @@ ResolvedSSAOImage ResolvePostprocessDepth(RuntimeLease& lease,
 }
 bool Metal4WorldRenderer::CheckShieldGeometryAllocation(const NativeGeometryTextureRequest& request,NativeTextureRegistry& registry,uint64_t sourceFrame)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
-	if(!request.width||!request.height||request.target!=NativeCUSTextureTarget::Image2D||request.samples!=1)return false;
-	RuntimeLease lease;
-	if(request.width>lease.Capabilities().maxTextureDimension2D||request.height>lease.Capabilities().maxTextureDimension2D)return false;
-	std::array<std::shared_ptr<const NativeTextureBacking>,7> allocations;
+ Require([NSThread isMainThread]&&impl,"Geometry allocation controls require the source renderer");
+ if(!request.width||!request.height||request.target!=NativeCUSTextureTarget::Image2D||request.samples!=1)return false;
+ auto& runtime=SharedRuntime();
+ {NativeRendererAccessGate::Scope owner(&impl->access);Require(runtime.CanSafelyDetach(),"Geometry allocator cannot pass unsafe pending GPU work");}
+ const auto generation=registry.ContextGeneration();
+ NativeGeometryAllocationReceipt::ValidateSources(registry,generation,request);
+ struct Request {NativeGeometryTextureRequest geometry;uint64_t frame;};
+ const auto receipt=InvokeNativeRendererControl(impl->renderWorker,impl->access,Request{request,sourceFrame},
+  [this,&runtime](const Request& captured,const NativeRendererAccessGate::Scope&)->NativeGeometryAllocationReceipt{@autoreleasepool {
+   const auto& request=captured.geometry;const auto sourceFrame=captured.frame;
+   RuntimeLease lease(RuntimeLease::Retirement::RequireAlreadyRetired,runtime);
+	if(request.width>lease.Capabilities().maxTextureDimension2D||request.height>lease.Capabilities().maxTextureDimension2D)return NativeGeometryAllocationReceipt{};
+	NativeGeometryAllocationReceipt result;auto& allocations=result.allocations;
 	Require(!request.combinedColor||request.role==NativeGeometryTextureRole::Map,"Combined color allocation belongs to a non-map owner");
 	const unsigned attachmentCount=request.combinedColor?7:6;
 	for(unsigned i=0;i<attachmentCount;++i){
@@ -1557,7 +1566,7 @@ bool Metal4WorldRenderer::CheckShieldGeometryAllocation(const NativeGeometryText
 			FulfillShieldDepthBacking(*backing,image);allocations[i]=std::move(backing);
 		}else{
 			auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRGBA8Unorm width:request.width height:request.height mipmapped:NO];descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;
-			auto backing=std::make_shared<ShieldAllocationBacking>();backing->texture=[lease.Device()newTextureWithDescriptor:descriptor];if(!backing->texture)return false;
+			auto backing=std::make_shared<ShieldAllocationBacking>();backing->texture=[lease.Device()newTextureWithDescriptor:descriptor];if(!backing->texture)return NativeGeometryAllocationReceipt{};
 			backing->storageGeneration=object->identity;backing->contentVersion=object->version+1;backing->sourceDrawFrame=sourceFrame;backing->content=NativeTextureContent::AllocationOnly;
    {
     // A first masked/scissored clear also preserves allocated model pixels.
@@ -1570,9 +1579,13 @@ bool Metal4WorldRenderer::CheckShieldGeometryAllocation(const NativeGeometryText
    }
 		}
 	}
-	for(unsigned i=0;i<attachmentCount;++i)registry.PublishContent((i==6?request.combinedColor:request.attachments[i])->name,{},allocations[i]);
-	return true; // Actual six attachments exist; this does not certify their rendered color contents.
+
+   result.complete=true;return result;
+  }});
+ // Actual GPU backing only; original registry/history writers stay on main.
+ return receipt.Publish(registry,generation,request);
 }
+
 NativePBRDeclarationReceipt Metal4WorldRenderer::CapturePBRSource()
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
