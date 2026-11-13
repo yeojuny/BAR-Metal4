@@ -44,3 +44,7 @@ phase-live callbacks and grouped/ordered completion rules. Native acceptance rem
 P5 evidence instrumentation: [CPU-read worker timing](CPU-READ-WORKER-TIMING.md)
 adds real worker wall endpoints and valid per-thread CPU totals to the opt-in trace.
 Elapsed wall-minus-tail time is not labeled actual CPU execution or overlap proof.
+
+CPU preparation checkpoint: [shadow rigid proof reuse](SHADOW-RIGID-PROOF.md)
+reuses positive geometry classification from the exact immutable captured model.
+Per-draw guards and unsupported/unclassified detailed checks remain unchanged.

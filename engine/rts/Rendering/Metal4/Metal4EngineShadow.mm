@@ -123,6 +123,9 @@ void Rigid(const NativeEngineShadowDraw& draw,std::set<const WorldModel*>& valid
  // The retained source frame owns every immutable model for this Prepare.
  // Format/pose is per draw; only successful geometry checks may be reused.
  if(validated.contains(draw.object->model.get()))return;
+ // Capture classified these exact immutable vertices before publication. Keep
+ // per-draw pose/format guards and the original successful-set insertion.
+ if(draw.object->model->gl4BoneLayout==WorldModelGL4BoneLayout::RigidPerPiece){validated.insert(draw.object->model.get());return;}
 	for (size_t p = 0; p < draw.object->model->pieces.size(); ++p) {
 		const auto& piece = draw.object->model->pieces[p];
 		// Match original HasGeometryData/PostProcessGeometry and the shared
