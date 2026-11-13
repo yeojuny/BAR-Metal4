@@ -2,7 +2,9 @@
 #include "Metal4DeferredColorNative.h"
 namespace rendering::metal4 {
 namespace {
-struct Resource final:NativeDeferredColorResource {DeferredColorImage image;__strong id<MTLTexture> retained=nil;};
+struct Resource final:NativeDeferredColorResource {DeferredColorImage image;__strong id<MTLTexture> retained=nil;
+ bool CanCancelUnsubmitted()const noexcept override{return image.producer&&!image.producer->encoded&&!image.producer->completed;}
+};
 MTLSamplerAddressMode Address(unsigned v){switch(v){case 0x2901:return MTLSamplerAddressModeRepeat;case 0x812F:return MTLSamplerAddressModeClampToEdge;case 0x812D:return MTLSamplerAddressModeClampToBorderColor;default:throw std::runtime_error("Original deferred image addressing requires its exact sampler consumer");}}
 }
 void FulfillDeferredColorBacking(const NativeDeferredColorBacking& backing,const DeferredColorImage& image)

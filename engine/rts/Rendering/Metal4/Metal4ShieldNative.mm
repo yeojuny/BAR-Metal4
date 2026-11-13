@@ -25,7 +25,9 @@ std::shared_ptr<ShieldDepthProducerState> CreateShieldDepthProducer(ShieldDepthR
 	return std::make_shared<ShieldDepthProducerState>(ShieldDepthProducerState{role,frame,identity});
 }
 namespace {
-struct DepthBackingResource final:NativeShieldDepthResource {ShieldDepthImage image;explicit DepthBackingResource(const ShieldDepthImage& source):image(source){}};
+struct DepthBackingResource final:NativeShieldDepthResource {ShieldDepthImage image;explicit DepthBackingResource(const ShieldDepthImage& source):image(source){}
+ bool CanCancelUnsubmitted()const noexcept override{return image.producer&&!image.producer->encoded&&!image.producer->completed;}
+};
 struct Uniform {
 	simd_float4x4 view,projection;
 	simd_float4 cameraPosition;

@@ -9,7 +9,9 @@ struct NativeShieldDepthMetadata {
 	std::array<int32_t,4> viewport{};
 	uint32_t width=0,height=0;
 };
-struct NativeShieldDepthResource { virtual ~NativeShieldDepthResource()=default; };
+struct NativeShieldDepthResource { virtual ~NativeShieldDepthResource()=default;
+ // Unknown fulfilled resources must not authorize rollback. Serial owner only.
+ virtual bool CanCancelUnsubmitted()const noexcept{return false;} };
 // Logical object/version publication precedes Lua DrawWorld; the typed GPU
 // resource is fulfilled once during Prepare, before the same-submit producer
 // and consumer. Publication alone never certifies pixels or GPU completion.
@@ -21,6 +23,7 @@ public:
 	const NativeShieldDepthMetadata& Metadata()const{return metadata;}
 	const std::shared_ptr<const NativeShieldDepthResource>& Resource()const{return resource;}
 	void Fulfill(std::shared_ptr<const NativeShieldDepthResource>)const;
+ bool CanCancelUnsubmitted()const noexcept{return !resource||resource->CanCancelUnsubmitted();}
 private:
 	NativeTextureBackingKind kind;
 	NativeShieldDepthMetadata metadata;

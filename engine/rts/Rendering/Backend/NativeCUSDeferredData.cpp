@@ -45,8 +45,18 @@ void FinishNativeCUSDeferredPhase(NativeCUSDeferredPhase& phase,std::shared_ptr<
 		Check(draw.program&&(draw.program->originalPass==0||HasNoNativeCUSAttachmentEffects(draw)),"Original model MRT received a forward/reflection/shadow program");
 	phase.lua=std::move(callback);ValidateNativeCUSDeferredPhase(phase);
 }
+bool CanCancelNativeCUSDeferredPhase(const NativeCUSDeferredPhase& phase) noexcept
+{
+ // A multi-output producer is indivisible: preflight before changing any name.
+ if(phase.depth.Changed()&&(!phase.depth.backing||!phase.depth.backing->CanCancelUnsubmitted()))return false;
+ const auto blocked=[](const auto& color){return color.Changed()&&(!color.backing||!color.backing->CanCancelUnsubmitted());};
+ if(blocked(phase.combinedColor))return false;
+ for(const auto& color:phase.colors)if(blocked(color))return false;
+ return true;
+}
 void CancelNativeCUSDeferredPhase(NativeTextureRegistry& registry,const NativeCUSDeferredPhase& phase) noexcept
 {
+ if(!CanCancelNativeCUSDeferredPhase(phase))return;
 	if(phase.depth.Changed())registry.CancelContentPublication(phase.depth.published,phase.depth.previous);
 	CancelNativeDeferredColor(registry,phase.combinedColor);
 	for(auto it=phase.colors.rbegin();it!=phase.colors.rend();++it)CancelNativeDeferredColor(registry,*it);

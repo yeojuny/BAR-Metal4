@@ -22,17 +22,24 @@ NativeShieldDepthVersion PublishNativeShieldDepth(NativeTextureRegistry& registr
 	registry.PublishContent(name,{},next);
 	result.published=registry.Find(name);result.backing=std::move(next);return result;
 }
-void CancelNativeShieldDepth(NativeTextureRegistry& registry,const NativeShieldDepthFrame& frame) noexcept
+bool CanCancelNativeShieldDepth(const NativeShieldDepthFrame& frame) noexcept
 {
+ for(const auto* version:{&frame.models,&frame.map})if(version->Changed()&&(!version->backing||!version->backing->CanCancelUnsubmitted()))return false;
+ return true;
+}
+bool CancelNativeShieldDepth(NativeTextureRegistry& registry,const NativeShieldDepthFrame& frame) noexcept
+{
+ if(!CanCancelNativeShieldDepth(frame))return false;
 	for(const auto* version:{&frame.models,&frame.map})if(version->Changed())
 		registry.CancelContentPublication(version->published,version->previous);
+ return true;
 }
-void CancelPendingNativeShieldDepth(NativeTextureRegistry& registry,std::shared_ptr<NativeShieldDepthFrame>& pending,
+bool CancelPendingNativeShieldDepth(NativeTextureRegistry& registry,std::shared_ptr<NativeShieldDepthFrame>& pending,
  const std::shared_ptr<const NativeShieldDepthFrame>& expected) noexcept
 {
- if(!expected || pending!=expected)return;
- CancelNativeShieldDepth(registry,*expected);
- pending.reset();
+ if(!expected || pending!=expected)return true;
+ if(!CancelNativeShieldDepth(registry,*expected))return false;
+ pending.reset();return true;
 }
 
 }

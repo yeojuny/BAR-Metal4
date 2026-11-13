@@ -32,6 +32,7 @@ NativeCUSDeferredPhase BeginNativeMapDeferredPhase(NativeTextureRegistry&,
 void FinishNativeMapDeferredPhase(NativeCUSDeferredPhase&,std::shared_ptr<const NativeCUSSourceFrame>);
 void FinishNativeCUSDeferredPhase(NativeCUSDeferredPhase&,
 	std::shared_ptr<const NativeCUSSourceFrame> actualCallback);
+bool CanCancelNativeCUSDeferredPhase(const NativeCUSDeferredPhase&) noexcept;
 void CancelNativeCUSDeferredPhase(NativeTextureRegistry&,const NativeCUSDeferredPhase&) noexcept;
 void ValidateNativeCUSDeferredPhase(const NativeCUSDeferredPhase&);
 } // namespace rendering

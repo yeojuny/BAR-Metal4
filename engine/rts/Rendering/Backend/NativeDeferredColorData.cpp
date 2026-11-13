@@ -18,5 +18,5 @@ NativeDeferredColorVersion PublishNativeDeferredColor(NativeTextureRegistry& reg
 	result.backing=std::make_shared<NativeDeferredColorBacking>(result.previous->identity,result.previous->version+1,frame,NativeTextureContent::ProducerVersion,NativeDeferredColorMetadata{role,attachment,view});
 	registry.PublishContent(result.previous->name,{},result.backing);result.current=registry.Find(result.previous->name);return result;
 }
-void CancelNativeDeferredColor(NativeTextureRegistry& registry,const NativeDeferredColorVersion& v)noexcept{if(v.Changed())registry.CancelContentPublication(v.current,v.previous);}
+void CancelNativeDeferredColor(NativeTextureRegistry& registry,const NativeDeferredColorVersion& v)noexcept{if(v.Changed()&&v.backing&&v.backing->CanCancelUnsubmitted())registry.CancelContentPublication(v.current,v.previous);}
 }

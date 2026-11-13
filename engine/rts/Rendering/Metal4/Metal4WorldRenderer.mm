@@ -2002,6 +2002,12 @@ bool Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOp
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
  if(!cacheAccess.Acquired())return false;
 	if(impl&&impl->activeSourceSubmission)return false; // Recorded work must never roll back.
+ // Reject the entire scene abort before any source family is mutated.
+ if(unsubmittedOpaque)for(const auto& pass:unsubmittedOpaque->passes)
+  if(pass.mrt&&!CanCancelNativeCUSDeferredPhase(*pass.mrt))return false;
+ if(unsubmittedGround&&unsubmittedGround->ground&&unsubmittedGround->ground->mapMRT&&
+  !CanCancelNativeCUSDeferredPhase(*unsubmittedGround->ground->mapMRT))return false;
+ if(impl&&impl->shieldPending==shield&&shield&&!CanCancelNativeShieldDepth(*shield))return false;
 	if(unsubmittedOpaque)CancelNativeOpaqueModels(OriginalNativeTextureContext().Registry(),*unsubmittedOpaque);
  if(unsubmittedGround&&unsubmittedGround->ground&&unsubmittedGround->ground->mapMRT)
   CancelNativeCUSDeferredPhase(OriginalNativeTextureContext().Registry(),*unsubmittedGround->ground->mapMRT);

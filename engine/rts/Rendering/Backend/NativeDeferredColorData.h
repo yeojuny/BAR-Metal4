@@ -3,7 +3,9 @@
 #include "NativeShieldDepthBacking.h"
 #include "NativeTextureContext.h"
 namespace rendering {
-struct NativeDeferredColorResource {virtual ~NativeDeferredColorResource()=default;};
+struct NativeDeferredColorResource {virtual ~NativeDeferredColorResource()=default;
+ // Unknown fulfilled resources must not authorize rollback. Serial owner only.
+ virtual bool CanCancelUnsubmitted()const noexcept{return false;}};
 struct NativeDeferredColorMetadata {
 	NativeGeometryTextureRole role=NativeGeometryTextureRole::Models;
 	unsigned attachment=0;
@@ -19,6 +21,7 @@ public:
 	const NativeDeferredColorMetadata& Metadata()const{return metadata;}
 	const std::shared_ptr<const NativeDeferredColorResource>& Resource()const{return resource;}
 	void Fulfill(std::shared_ptr<const NativeDeferredColorResource>)const;
+ bool CanCancelUnsubmitted()const noexcept{return !resource||resource->CanCancelUnsubmitted();}
 private:
 	NativeDeferredColorMetadata metadata;
 	mutable std::shared_ptr<const NativeDeferredColorResource> resource;

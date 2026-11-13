@@ -95,3 +95,11 @@ color is not a write and does not veto rollback. Actual source/registry tests co
 unlit/detach cases. Independent sanitizer review passed. Deferred MRT color/depth
 resources still need equivalent execution-state-aware whole-phase preflight;
 this source guard does not provide a younger-capture dependency version graph.
+
+MRT cancellation follow-up: actual color/depth resource execution state now gates
+rollback conservatively (unknown fulfilled resource refuses; unfulfilled allowed).
+Every changed output and opaque pass is preflighted, and renderer scene abort
+rejects blocked opaque/ground/exact-shield owners before any family mutation.
+Exact blocked shield pending ownership is retained. Prepared submission IDs alone
+do not block rollback. Failed-Begun rejection remains necessary; this is serial
+execution safety, not a younger-dependency version graph or lookahead permission.

@@ -24,9 +24,6 @@ bool NativeOpaqueModelFrame::HasWriters()const noexcept{
 	for(const auto& pass:passes)if(pass.mrt)return true;
 	return false;
 }
-void CancelNativeOpaqueModels(NativeTextureRegistry& registry,const NativeOpaqueModelFrame& frame)noexcept{
-	for(auto i=frame.passes.rbegin();i!=frame.passes.rend();++i)if(i->mrt)CancelNativeCUSDeferredPhase(registry,*i->mrt);
-}
 NativeOpaqueModelCapture::NativeOpaqueModelCapture(WorldFrameCapture& world,NativeCUSSourceCapture& source,
 	NativeTextureContext& context,ui::NativeUIRecorder& ui):models(world),cus(source),textures(context),recorder(ui){}
 std::shared_ptr<const NativeOpaqueModelFrame> NativeOpaqueModelCapture::Capture(uint64_t frame,

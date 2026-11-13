@@ -41,7 +41,11 @@ struct NativeOpaqueModelFrame {
 	std::vector<NativeOpaqueModelPass> passes;
 	bool HasWriters()const noexcept;
 };
-void CancelNativeOpaqueModels(NativeTextureRegistry&,const NativeOpaqueModelFrame&)noexcept;
+// Cancellation depends only on the immutable captured pass list, not capture services.
+inline void CancelNativeOpaqueModels(NativeTextureRegistry& registry,const NativeOpaqueModelFrame& frame)noexcept{
+ for(const auto& pass:frame.passes)if(pass.mrt&&!CanCancelNativeCUSDeferredPhase(*pass.mrt))return;
+	for(auto i=frame.passes.rbegin();i!=frame.passes.rend();++i)if(i->mrt)CancelNativeCUSDeferredPhase(registry,*i->mrt);
+}
 
 struct NativeOpaqueModelCallbacks {
 	// Graph readiness must include the native standard/legacy remainder and
