@@ -23,6 +23,7 @@
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include "Metal4WindowSurfaceNative.h"
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
+#include "Rendering/Backend/NativeRendererControl.h"
 #include "Rendering/Backend/NativeSourceResourceCache.h"
 #include "Rendering/Backend/NativeIdleResourcePool.h"
 #include "Rendering/Backend/NativeRendererAccessGate.h"
@@ -1579,17 +1580,26 @@ bool Metal4WorldRenderer::HasPendingEnvironmentSource(const NativeEnvironmentSta
 std::shared_ptr<const void> Metal4WorldRenderer::AllocateCoverageTarget(const std::shared_ptr<const ScreenTexture>& color,
  const std::shared_ptr<const ScreenTexture>& depth)
 {
- NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
- MainThread();Require(impl && color && depth && color->format==ScreenTextureFormat::R8Unorm && depth->format==ScreenTextureFormat::Depth16Unorm &&
+ Require([NSThread isMainThread],"Coverage allocation controls require the source thread");
+ Require(impl && color && depth && color->format==ScreenTextureFormat::R8Unorm && depth->format==ScreenTextureFormat::Depth16Unorm &&
   color->width==depth->width && color->height==depth->height,"Coverage FBO allocation metadata differs from original R8+D16");
- auto c=impl->screenGPU.ReserveAttachmentAllocationForCapture(color),d=impl->screenGPU.ReserveAttachmentAllocationForCapture(depth);
- Require(c && d && c.pixelFormat==MTLPixelFormatR8Unorm && d.pixelFormat==MTLPixelFormatDepth16Unorm &&
-  c.width==d.width && c.height==d.height && c.sampleCount==1 && d.sampleCount==1 &&
-  (c.usage&MTLTextureUsageRenderTarget) && (d.usage&MTLTextureUsageRenderTarget),"Coverage FBO has no actual native attachment pair");
+ // Runtime/device initialization remains on main; the control cannot initialize
+ // a scene or invoke source retirement while reserving the actual attachments.
+ (void)SharedRuntime();
+ struct Request {std::shared_ptr<const ScreenTexture> color,depth;};
  struct Owner {std::shared_ptr<const ScreenTexture> colorSource,depthSource;__strong id<MTLTexture> color=nil,depth=nil;};
- return std::make_shared<Owner>(Owner{color,depth,c,d});
+ return InvokeNativeRendererControl(impl->renderWorker,impl->access,Request{color,depth},
+  [this](const Request& request,const NativeRendererAccessGate::Scope& owner)->std::shared_ptr<const void>{@autoreleasepool {
+   auto c=impl->screenGPU.ReserveAttachmentAllocationForControl(request.color,owner),d=impl->screenGPU.ReserveAttachmentAllocationForControl(request.depth,owner);
+   Require(c && d && c.pixelFormat==MTLPixelFormatR8Unorm && d.pixelFormat==MTLPixelFormatDepth16Unorm &&
+    c.width==d.width && c.height==d.height && c.sampleCount==1 && d.sampleCount==1 &&
+    (c.usage&MTLTextureUsageRenderTarget) && (d.usage&MTLTextureUsageRenderTarget),"Coverage FBO has no actual native attachment pair");
+   return std::make_shared<Owner>(Owner{request.color,request.depth,c,d});
+  }});
+ // Joined result preserves CreateFBO's immediate allocation/error behavior.
  // No command Begin/submit, clear, generation or contents proof here.
 }
+
 std::shared_ptr<const NativeBlockoutTarget> Metal4WorldRenderer::AllocateBlockoutTarget(uint32_t width,uint32_t height)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);

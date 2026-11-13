@@ -1691,9 +1691,9 @@ id<MTLTexture> ScreenGPU::PrepareAttachmentAllocation(RuntimeLease& lease,const 
   "Coverage FBO allocation requires original R8/D16 allocation identities");
  uint32_t uploads=0;return impl->Image(lease,source,uploads,{});
 }
-id<MTLTexture> ScreenGPU::ReserveAttachmentAllocationForCapture(const std::shared_ptr<const ScreenTexture>& source)
+id<MTLTexture> ScreenGPU::ReserveAttachmentAllocationForControl(const std::shared_ptr<const ScreenTexture>& source,const NativeRendererAccessGate::Scope& owner)
 {
- Require([NSThread isMainThread],"Coverage capture reservation requires the engine main thread");
+ Require(owner.Acquired()&&![NSThread isMainThread],"Coverage reservation requires an admitted render control owner");
  Require(source && source->renderTarget && !source->generation && !source->incomplete &&
   !source->sourceTexture && !source->postprocessVersion &&
   (source->format==ScreenTextureFormat::R8Unorm || source->format==ScreenTextureFormat::Depth16Unorm),

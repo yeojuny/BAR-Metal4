@@ -5,6 +5,17 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[2];out=Path('/tmp/bar-renderer-gate');out.mkdir(exist_ok=True)
 s=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 expected='ActualMainSampling CanInitializeWater Sensor31657CircleConsumerLifetime SensorPreviewMaximumDimension CompileOriginalSensorPreviewProgram ClearStaticResources ReadIndependentTargetPrefix SubmitMaintenance CheckShieldGeometryAllocation CapturePBRSource AllocateCoverageTarget AllocateBlockoutTarget ConnectPBRSourceContext ConnectShieldTextureContext ConstructOriginalModelPrograms SetOriginalShadowCapture ConstructOriginalShadowPrograms ConstructOriginalShadowParticlePrograms CompileOriginalCUSProgram CompileOriginalTerrainProgram CompileOriginalDeferredLightProgram CompileOriginalUnitStencilProgramConsumer CompileOriginalOutlineProgram CompileOriginalDistortionProgram ClearOriginalModelSources ConnectBloomDeferredSources ConnectSSAODeferredSources BeginShieldMapPublication PublishShieldModelDepth BorrowActualMRTModelDepth HasScreenContinuation ContinueScreen PrepareIndependentResources DrawPrepared'.replace('CompileOriginalUnitStencilProgramConsumer','CompileOriginalUnitStencilProgram').split()
+source_only=['BeginShieldMapPublication','PublishShieldModelDepth','BorrowActualMRTModelDepth']
+expected=[name for name in expected if name not in source_only+['AllocateCoverageTarget']]
+for name in source_only:
+ m=re.search(r'Metal4WorldRenderer::'+name+r'\([^;]*?\)(?: const)?\s*\{',s);assert m,name
+ body=s[m.end():].split('\n}',1)[0]
+ assert 'Require([NSThread isMainThread]' in body and 'journal.' in body,name
+allocation=s.split('Metal4WorldRenderer::AllocateCoverageTarget(',1)[1].split('Metal4WorldRenderer::AllocateBlockoutTarget',1)[0]
+assert 'InvokeNativeRendererControl(impl->renderWorker,impl->access,' in allocation
+control=(root/'rts/Rendering/Backend/NativeRendererControl.h').read_text()
+assert control.index('source.emplace(&gate)')<control.index('Handoff handoff(gate)')<control.index('source.reset()')<control.index('worker->Invoke')
+assert 'NativeRendererAccessGate::Scope owner(handoff)' in control
 for name in expected:
  m=re.search(r'Metal4WorldRenderer::'+name+r'\([^;]*?\)(?: const)?\s*\{',s);assert m,name
  assert s[m.end():].lstrip().startswith('NativeRendererAccessGate::Scope cacheAccess'),name

@@ -431,3 +431,25 @@ a general rollback dependency graph is still required before younger overlap.
 Final actual-context sanitizer rerun additionally verifies destroy/reinitialize
 rejects the old journal epoch without cancellation. Independent review GO;
 shadow-fallback and CPU-trace regressions remain passing after the ownership split.
+
+## Ordered coverage allocation control
+
+CreateCoverageFBO keeps its synchronous source API contract: exact R8/D16
+attachment descriptors are retained in a typed request, allocation/validation and
+ScreenGPU cache mutation execute on the existing serial render worker, and the
+strong pair owner returns before Lua creates its userdata. Allocation is not
+postponed to DrawPrepared and no placeholder success is returned. Runtime/device
+initialization remains on main. The allocation-only control opens no RuntimeLease,
+so it neither drains pending GPU work nor runs source retirement callbacks on the
+worker. Gate reservation spans the joined call without transferring a mutex.
+The worker entry requires an admitted owner; broader main-thread checks are not
+relaxed. This is an immediate-result control, not CPU lookahead or a GPU submit.
+Validation: actual control helper/access gate/serial worker sanitizer tests pass
+1,000 success and throw/recovery cases, exact returned-owner retention, foreign
+owner rejection and final source destruction on main. Nested outer-gate invocation
+is explicitly unsupported and fails without deadlock; the audited production Lua
+CreateCoverageFBO call chain has no such outer renderer scope. Native texture/FBO
+success and failure remain structural evidence only until Metal validation.
+Independent review GO. Access-gate regression passes 1,000 nested/error and 100
+cross-thread cases plus handoff/inversion checks; worker allocation failure and
+CPU trace regressions remain passing. No full app/Metal build was performed.
