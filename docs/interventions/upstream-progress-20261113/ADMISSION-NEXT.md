@@ -141,3 +141,19 @@ retained old normal owners no longer alias overwritten terrain storage. Same-own
 reuse remains, and static reset clears the cache. Existing height/map retirement
 barrier stays until other dependency caches are proven isolated. Host allocation-
 failure/cache ownership tests do not substitute for native texture validation.
+
+### Terrain cache transaction follow-up
+
+Tile cache staging and pair allocation/retention now precede one no-throw commit
+boundary. Failure no longer publishes new tiles with the old height/normal pair.
+Cache-hit preparation is intentional (tiles can change independently of heights).
+Existing runtime failure handling and retirement barriers remain; this does not
+roll back a runtime lease or authorize lookahead. See terrain-pair-isolation report.
+
+### Water attachment selection boundary
+
+Six planar/pre-water images now stage as one draw-owned bundle, retain before
+publication, and route all later consumers/copies through that exact selection.
+The live cache cannot publish a partial failed allocation. Physical compatible
+storage still reuses serially: this is not water overlap readiness. Native Metal
+allocation tests remain pending; see water-attachment-selection report.

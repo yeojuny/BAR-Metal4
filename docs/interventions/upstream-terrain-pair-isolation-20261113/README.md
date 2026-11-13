@@ -22,3 +22,20 @@ ownership tests remain. Objective-C++ factory/commit order and barrier placement
 are checked structurally; no Metal execution or native texture validation is
 claimed. The guarantee is pair publication, not transactionality of the entire
 map-cache rebuild that precedes it.
+
+## Follow-up: whole tile/pair publication boundary
+
+Tile batches now remain staged while the height/normal pair is created. Allocation
+retention is also prepared before publication: retention can allocate and fail.
+The actual source/resource cache accepts a throwing preparation and an enforced
+no-throw companion commit. Only after preparation succeeds are tiles, pair and
+renderer aliases switched. Cache hits also run preparation/companion commit, so a
+new tile owner with unchanged heights is not accidentally skipped. The MapCache
+move assignment is statically required to be no-throw.
+
+The actual cache test adds 2000 preparation failures across cache-hit and changed
+source cases, plus successful companion commits for both paths. Native staging,
+allocation-retention order and alias publication are structural checks only.
+Previously recorded upload work and residency/retention bookkeeping may remain in the current failed runtime
+lease; this does not promise runtime rollback or make failed leases reusable.
+No full build, Metal execution, barrier removal or overlap claim is made.

@@ -17,9 +17,23 @@ int main(){
    assert(cache.GetOrCreate(first,build)==old);assert(old->buffer==first->heights);
   }
  }
+ // The actual cache transaction also gates companion tile publication on
+ // successful retention, including when the height source itself is unchanged.
+ unsigned companion=0,prepared=0;
+ for(unsigned i=0;i<1000;++i){
+  for(bool cacheHit:{false,true}){
+   try{cache.GetOrCreatePrepared(cacheHit?first:second,build,[&](const auto&){++prepared;throw std::bad_alloc();},[&]() noexcept {++companion;});assert(false);}catch(const std::bad_alloc&){}
+   assert(companion==0);assert(cache.GetOrCreate(first,build)==old);
+  }
+ }
+ assert(prepared==2000);
+ auto same=cache.GetOrCreatePrepared(first,build,[&](const auto& r){assert(r==old);},[&]() noexcept {++companion;});
+ assert(same==old&&companion==1);
+ auto replacement=cache.GetOrCreatePrepared(second,build,[&](const auto& r){assert(r!=old&&r->buffer==second->heights);},[&]() noexcept {++companion;});
+ assert(companion==2&&replacement!=old);
  auto newer=cache.GetOrCreate(second,build);assert(newer!=old&&newer->buffer==second->heights&&old->buffer==first->heights);assert(newer->buffer.data()!=old->buffer.data());
  std::weak_ptr<const Source> oldSource=first;first.reset();assert(!oldSource.expired());
  cache.Clear();assert(newer->buffer==second->heights&&old->buffer[0]==1);auto recreated=cache.GetOrCreate(second,build);assert(recreated!=newer);
- old.reset();assert(oldSource.expired());
- std::cout<<"Source resource cache:3000 failed pair creations preserve prior owner;reuse/same-size version isolation/retained source/clear-recreate passed\n";
+ old.reset();same.reset();assert(oldSource.expired());
+ std::cout<<"Source resource cache:2000 failed preparations and companion cache-hit/replacement commits;3000 failed pair creations preserve prior owner;reuse/same-size version isolation/retained source/clear-recreate passed\n";
 }
