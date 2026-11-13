@@ -2269,8 +2269,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   cacheAccess.reset();
   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
    ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
-  },std::move(uiResolver),std::move(mrtFrontier));
+  },std::move(uiResolver),std::move(mrtFrontier),std::nullopt);
  }
+ const auto sourceContext=NativeSourceContextSnapshot::Capture(uiContext,NativeGeometryTextureRole::Models);
  // Allocate/retain the exact publication identities before worker Begin.
  NativeTargetSubmissionNotice targetNotice(options.screenUI);
  auto deliverTargetNotice=[&]() noexcept {targetNotice.Deliver([heldSourceDraw=options.heldSourceDraw](auto passes,std::uint64_t submission,auto postprocess) noexcept {
@@ -2286,10 +2287,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
  try {
-  auto result=worker.Invoke([this,owned,presentation,snapshot,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
+  auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
    NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
    Metal4SurfaceWorkerScope scope(snapshot);
-   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver,mrtFrontier);
+   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver,mrtFrontier,sourceContext);
   }});
   cacheHandoff.reset();
   deliverTargetNotice();
@@ -2300,7 +2301,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   return result;
  }catch(...){cacheHandoff.reset();deliverTargetNotice();deliverReceipt();throw;}
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver,std::optional<MRTFrontier209> mrtFrontier)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver,std::optional<MRTFrontier209> mrtFrontier,std::optional<NativeSourceContextSnapshot> sourceContext)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  struct ResolverScope {
@@ -2308,6 +2309,19 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   ResolverScope(ui::NativeUICapturedBindingResolver& slot,ui::NativeUICapturedBindingResolver resolver) noexcept:destination(slot),previous(std::move(slot)){destination=std::move(resolver);}
   ~ResolverScope(){destination=std::move(previous);}
  } resolverScope(impl->uiBindingResolver,std::move(uiResolver));
+ // Direct main calls intentionally read at the original use sites, after any
+ // retirement callback. Workers must never fall back to the mutable context.
+ const auto contextGeneration=[&] {
+  if(sourceContext)return sourceContext->ContextGeneration();
+  Require([NSThread isMainThread],"Live source context queried from worker");
+  return OriginalNativeTextureContext().Registry().ContextGeneration();
+ };
+ const auto modelGeometry=[&] {
+  if(sourceContext)return sourceContext->Models();
+  Require([NSThread isMainThread],"Live model geometry queried from worker");
+  const auto& names=OriginalNativeTextureContext().Geometry(NativeGeometryTextureRole::Models);
+  return NativeSourceContextSnapshot::ModelGeometry{names.Name(5)!=0,names.Width(),names.Height()};
+ };
  NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
@@ -3030,8 +3044,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 				}
 				modelPhases.push_back({phase.feature,first,modelDraws.size()-first,phase.clearBefore});
 			}
-			const auto& modelNames=OriginalNativeTextureContext().Geometry(NativeGeometryTextureRole::Models);
-			ModelDepthSource source{modelPhases,modelNames.Name(5)!=0,modelNames.Width(),modelNames.Height(),previousImage(depthFrame.models)};
+			const auto modelNames=modelGeometry();
+			ModelDepthSource source{modelPhases,modelNames.depthPresent,modelNames.width,modelNames.height,previousImage(depthFrame.models)};
 			modelGBuffer=impl->modelDepthGPU.Prepare(lease,frame.sourceDrawFrame,frame.viewCamera,result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
 				modelDraws,impl->library,options.shaderValidation,result.shaderCompileMs,&source,depthFrame.submissionIdentity);
 			if(depthFrame.models.Changed()){Require(modelGBuffer&&depthFrame.models.backing,"Published model depth has no actual native producer");FulfillShieldDepthBacking(*depthFrame.models.backing,modelGBuffer->Image());}
@@ -3264,7 +3278,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    view.initialClear=PrepareTerrainGroundClears(lease,view.initialClearSource,actualTarget,options.shaderValidation,result.shaderCompileMs);
    Require(view.source->drawGround==bool(view.source->groundSource),"Original water ground invocation and retained source disagree");
    if(const auto& ground=view.source->groundSource){
-    Require(ground->sourceDrawFrame==frame.sourceDrawFrame&&ground->contextGeneration==OriginalNativeTextureContext().Registry().ContextGeneration()&&
+    Require(ground->sourceDrawFrame==frame.sourceDrawFrame&&ground->contextGeneration==contextGeneration()&&
      ground->stage==(view.source->pass==NativeWaterScenePass::Reflection?NativeWorldDrawStage::WaterReflection:NativeWorldDrawStage::WaterRefraction),
      "Original water ground source belongs to another draw/context/stage");
     Require(view.source->groundCUS&&view.source->groundLua,"Original water ground lost its same-invocation callback owners");
@@ -3420,7 +3434,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    separateLineOwners[source.stage==NativeWorldDrawStage::Ground?4:5]=ground.overlays;
    if(const auto& actual=source.ground){
     Require(source.cus&&source.lua&&actual->sourceDrawFrame==frame.sourceDrawFrame&&actual->stage==source.stage&&
-     actual->contextGeneration==OriginalNativeTextureContext().Registry().ContextGeneration(),
+     actual->contextGeneration==contextGeneration(),
      "Original main/IBL ground lost its same-invocation program/callback owners");
     ground.terrain=impl->terrainSourceGPU.Prepare(lease,actual,target,
      [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned,id<MTLSamplerState> sampler){

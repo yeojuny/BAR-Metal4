@@ -212,3 +212,22 @@ SceneBridge C++ syntax, independent review. Full successful reuse issuance and
 native Metal execution are not claimed. Remaining worker source reads include
 model geometry metadata and registry context-generation checks; capture these
 next without weakening context validity or the existing serial barriers.
+
+### Worker source-context metadata boundary (2026-11-13)
+
+Joined worker dispatch now captures context initialization/generation and model
+GBuffer depth-presence/width/height on main. `Name(5)` means depth attachment,
+not combined color. Both ground-context checks and fallback model-depth metadata
+consume this value snapshot. Missing/zero context fails at actual use; a valid
+context with empty model geometry remains valid. Direct calls retain lazy live
+reads at the original use sites, after any retirement callback, and explicitly
+require the actual main thread before live access. The worker cannot silently
+fall back to mutable source state.
+
+Validation: 1,000 sanitizer cases exercise the actual production capture template
+with a controlled fake context adapter (not the real engine context), plus source
+handoff/use-site assertions, actual owned-worker 1,000 handoffs, SceneBridge syntax
+and independent review. Native runtime verification remains deferred. Snapshot
+lifetime still relies on joined dispatch; no concurrent context teardown, younger
+source capture, or lookahead is permitted. The next architectural gate remains
+shared-source version dependencies and whole-world admission/rollback ownership.
