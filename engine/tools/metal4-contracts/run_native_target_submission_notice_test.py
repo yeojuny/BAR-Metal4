@@ -6,10 +6,10 @@ root=Path(__file__).resolve().parents[2]
 out=Path('/tmp/bar-native-target-submission-notice');out.mkdir(exist_ok=True)
 source=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 dispatch=source.split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(',1)[0]
-assert 'NativeTargetSubmissionNotice targetNotice(options.screenUI);' in dispatch
-assert 'targetNotice.MarkBegun(submission);' in dispatch
+assert 'make_shared<NativeRenderDispatchReceipt>(options.screenUI,std::move(previousRetired))' in dispatch
+assert 'dispatchReceipt->MarkBegun(submission);' in dispatch
 assert 'deliverTargetNotice();\n  deliverReceipt();' in dispatch
-assert 'catch(...){deliverTargetNotice();deliverReceipt();throw;}' in dispatch
+assert 'catch(...){dispatchReceipt->ReleaseHandoff();deliverTargetNotice();deliverReceipt();throw;}' in dispatch
 assert 'ui::GetRecorder().RecordTargetSubmission' in dispatch
 prepared=source.split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(',1)[1]
 assert 'ui::GetRecorder().RecordTargetSubmission' not in prepared

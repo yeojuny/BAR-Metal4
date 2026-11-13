@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <utility>
 #include "Rendering/Backend/NativeShieldDepthBacking.h"
 #include "Rendering/Backend/NativeTextureRegistry.h"
 #include "Rendering/Backend/NativeMapDepthPlan.h"
@@ -30,6 +31,9 @@ public:
  std::shared_ptr<const NativeShieldDepthFrame> PublishModels(NativeTextureContext&,const WorldFrame&,const NativeModelDepthSelection&);
  std::shared_ptr<const NativeShieldDepthFrame> BorrowModels(NativeTextureContext&,const WorldFrame&);
  std::shared_ptr<const NativeShieldDepthFrame> Receipt() const noexcept {return pending;}
+ void Swap(NativeShieldCaptureJournal& other) noexcept {
+  using std::swap;swap(generation,other.generation);swap(registry,other.registry);pending.swap(other.pending);
+ }
  bool CanCancel() const noexcept;
  bool Cancel() noexcept;
  void Reset() noexcept {pending.reset();registry=nullptr;generation=0;} // Accepted/retired by caller.

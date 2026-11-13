@@ -26,3 +26,12 @@ print('Hidden/no-Begin restore precedes acceptance; fallback cancellation retain
 assert s.index('lease.Retain(originalLifetime)')<s.index('lease.Begin("Actual engine')
 assert abort.index('if(![NSThread isMainThread])return false')<abort.index('shield->CanCancel()')<abort.index('shield->Cancel()')
 print('Actual main-thread abort gate and retention before actual Begin structural PASS')
+
+transfer=bridge.split('std::shared_ptr<NativeMainSourceSettlement> settlement;',1)[1].split('const auto invokeRenderer=',1)[0]
+assert transfer.index('make_shared<NativeMainSourceSettlement>')<transfer.index('settlement->Take')<transfer.index('session->sourceSettlement=settlement')<transfer.index('admission.TransferValidated')
+restore=transfer.split('const auto restoreAdmitted=',1)[1].split('const auto quarantineAdmitted=',1)[0]
+assert restore.index('ValidateRestore')<restore.index('admission.Restore()')<restore.index('RestoreValidated')<restore.index('sourceSettlement.reset()')
+quarantine=transfer.split('const auto quarantineAdmitted=',1)[1].split('const auto failedAdmission=',1)[0]
+assert 'sourceSettlement.reset' not in quarantine
+assert 'sourceSettlement.reset()' in settle
+print('100 exact main source owner detach/restore + occupied destination/epoch rejection; durable quarantine wiring PASS')

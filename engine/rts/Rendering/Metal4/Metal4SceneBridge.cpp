@@ -24,6 +24,7 @@
 #include "Rendering/Backend/NativePostprocessRecorder.h"
 #include "Rendering/Backend/NativeFrameCompletionMailbox.h"
 #include "Rendering/Backend/NativeFrameAdmissionTransaction.h"
+#include "Rendering/Backend/NativeMainSourceSettlement.h"
 #include "Lua/LuaNativePostprocess.h"
 #include "Rendering/EngineBridge/NativeCUSSourceCapture.h"
 #include "Rendering/Backend/NativeCUSCPUReadScope.h"
@@ -449,6 +450,8 @@ struct Session {
 	WorldFrameCapture capture;
  NativeEnvironmentStageReceipt environmentStage;
  NativeShieldCaptureJournal shieldCapture;
+ // Main-owned until joined acceptance/rollback; failed-Begun retains it durably.
+ std::shared_ptr<NativeMainSourceSettlement> sourceSettlement;
 	NativeBumpWaterCapture waterCapture;
  NativeLegacyWaterCapture legacyWaterCapture;
  NativeDynamicWaterCapture dynamicWaterCapture;
@@ -1691,11 +1694,35 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
  frameOwner.reset(); // No mutable owning alias remains after sealing.
  const auto& frame=submission->Frame();
+ std::shared_ptr<NativeMainSourceSettlement> settlement;
  if(admitted){
+  if(session->sourceSettlement)throw std::logic_error("An earlier source settlement remains quarantined");
+  if(session->opaqueSourcePending!=frame.opaqueModelFrame || session->actualShadowSourcePending!=frame.originalShadow ||
+     session->mainGroundPending!=frame.mainGround || session->shieldCapture.Receipt()!=frame.shieldDepthFrame ||
+     !session->environmentStage.Matches(options.environmentStage.frame))
+   throw std::logic_error("Source settlement differs from its sealed render packet");
+  if(bool(session->dynamicCaptureReceipt)!=bool(frame.dynamicWater) ||
+     (session->dynamicCaptureReceipt && (session->dynamicCaptureReceipt->sourceDrawFrame!=frame.sourceDrawFrame ||
+     frame.dynamicWater->sourceDrawFrame!=frame.sourceDrawFrame || session->dynamicCaptureReceipt->material!=frame.dynamicWater->material ||
+     session->dynamicCaptureReceipt->throughUpdate!=frame.dynamicWater->throughUpdate)))
+   throw std::logic_error("Dynamic rollback receipt differs from its finalized render frame");
+  settlement=std::make_shared<NativeMainSourceSettlement>();
+  settlement->Take(OriginalNativeTextureContext().Registry().ContextGeneration(),frame.sourceDrawFrame,
+   session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,
+   session->dynamicCaptureReceipt,session->environmentStage,session->shieldCapture);
+  session->sourceSettlement=settlement; // Durable before any GPU Begin/throw.
   admission.TransferValidated();
  }
  const auto restoreAdmitted=[&]{
+  if(settlement)settlement->ValidateRestore(OriginalNativeTextureContext().Registry().ContextGeneration(),
+   session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,
+   session->dynamicCaptureReceipt,session->environmentStage,session->shieldCapture);
   admission.Restore();
+  if(settlement){
+   settlement->RestoreValidated(session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,
+    session->dynamicCaptureReceipt,session->environmentStage,session->shieldCapture);
+   session->sourceSettlement.reset();
+  }
   admitted=false;
  };
  const auto quarantineAdmitted=[&]() noexcept {
@@ -1733,7 +1760,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   // Only accepted GPU work owns the immutable graph. A hidden/no-Begin
   // fallback still needs the source journal for the rollback below.
   if(result.presented||result.sourceFrameCompleted){
-   session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.Reset();
+   // Rendering owns its sealed packet before this accepted result. Clear only
+   // this detached settlement, never another capture's pending aliases.
+   session->sourceSettlement.reset();
   }
  }
  }catch(...){failedAdmission();throw;}

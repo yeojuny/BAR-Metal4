@@ -1,6 +1,10 @@
 #include "Rendering/Backend/NativeShieldDepthPublication.h"
 #include "Rendering/Backend/NativeTextureContext.h"
 #include "Rendering/EngineBridge/NativeOpaqueModelCapture.h"
+#include "Rendering/Backend/NativeMainSourceSettlement.h"
+#include "Rendering/Backend/NativeOriginalShadowData.h"
+#include "Rendering/Backend/NativeWaterGroundSourceData.h"
+#include "Rendering/Backend/NativeDynamicWaterData.h"
 #include <cassert>
 #include <iostream>
 using namespace rendering;
@@ -25,6 +29,40 @@ int main(){
   const auto prior=context.Registry().Find(models.Name(5));
   auto sealed=journal.PublishModels(context,frame,selection);assert(sealed==partial&&sealed->sealed&&sealed->models.Changed());
   Reject([&]{journal.PublishModels(context,frame,selection);});Reject([&]{journal.BorrowModels(context,frame);});
+  NativeMainSourceSettlement settlement;
+  std::shared_ptr<const NativeOpaqueModelFrame> o=std::make_shared<NativeOpaqueModelFrame>();
+  std::shared_ptr<const NativeOriginalShadowFrame> sh=std::make_shared<NativeOriginalShadowFrame>();
+  std::shared_ptr<const NativeTerrainSceneSourceFrame> gr=std::make_shared<NativeTerrainSceneSourceFrame>();
+  std::shared_ptr<const NativeDynamicWaterFrame> wa=std::make_shared<NativeDynamicWaterFrame>();
+  NativeEnvironmentStageReceipt env{std::make_shared<NativeWorldEnvironmentFrame>(),true};
+  const auto oldO=o;const auto oldS=sh;const auto oldG=gr;const auto oldW=wa;const auto oldE=env.frame;
+  const auto epoch=context.Registry().ContextGeneration();
+  settlement.Take(epoch,i,o,sh,gr,wa,env,journal);
+  assert(settlement.detached&&!o&&!sh&&!gr&&!wa&&!env.frame&&!journal.Receipt());
+  assert(settlement.shield.Receipt()==sealed&&settlement.shield.CanCancel());
+  Reject([&]{settlement.Take(epoch,i,o,sh,gr,wa,env,journal);});
+  Reject([&]{settlement.ValidateRestore(epoch+1,o,sh,gr,wa,env,journal);});
+  // Every destination is preflighted before any owner is moved back.
+  o=oldO;Reject([&]{settlement.ValidateRestore(epoch,o,sh,gr,wa,env,journal);});o.reset();
+  sh=oldS;Reject([&]{settlement.ValidateRestore(epoch,o,sh,gr,wa,env,journal);});sh.reset();
+  gr=oldG;Reject([&]{settlement.ValidateRestore(epoch,o,sh,gr,wa,env,journal);});gr.reset();
+  wa=oldW;Reject([&]{settlement.ValidateRestore(epoch,o,sh,gr,wa,env,journal);});wa.reset();
+  env.frame=oldE;Reject([&]{settlement.ValidateRestore(epoch,o,sh,gr,wa,env,journal);});env={};
+  journal.Begin(context,i+1000,camera,{},i+1000);
+  Reject([&]{settlement.ValidateRestore(epoch,o,sh,gr,wa,env,journal);});journal.Reset();
+  assert(settlement.shield.Receipt()==sealed&&settlement.opaque==oldO);
+  settlement.ValidateRestore(epoch,o,sh,gr,wa,env,journal);
+  settlement.RestoreValidated(o,sh,gr,wa,env,journal);
+  assert(!settlement.detached&&settlement.Empty()&&o==oldO&&sh==oldS&&gr==oldG&&wa==oldW&&env.frame==oldE&&env.shaderValidation&&journal.Receipt()==sealed);
+  // Failed-Begun ownership survives the local throwing scope in a durable slot.
+  std::shared_ptr<NativeMainSourceSettlement> durable;
+  try{auto job=std::make_shared<NativeMainSourceSettlement>();
+   job->Take(epoch,0,o,sh,gr,wa,env,journal);durable=job;throw 7;
+  }catch(int){}
+  assert(durable&&durable->detached&&durable->draw==0&&durable->shield.Receipt()==sealed&&!journal.Receipt());
+  durable->ValidateRestore(epoch,o,sh,gr,wa,env,journal);
+  durable->RestoreValidated(o,sh,gr,wa,env,journal);durable.reset();
+
   assert(journal.Cancel()&&!journal.Receipt());assert(context.Registry().Find(models.Name(5))->backing==prior->backing);
   assert(sealed->models.backing&&sealed->sealed); // Consumer survives journal release.
   assert(journal.Cancel());

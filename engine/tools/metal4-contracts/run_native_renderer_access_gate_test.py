@@ -27,11 +27,11 @@ for name in expected:
  m=re.search(r'Metal4WorldRenderer::'+name+r'\([^;]*?\)(?: const)?\s*\{',s);assert m,name
  assert s[m.end():].lstrip().startswith('NativeRendererAccessGate::Scope cacheAccess'),name
 part=s.split('Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldRenderer::DrawPrepared(',1)[0]
-assert part.index('cacheHandoff.emplace(impl->access)')<part.index('cacheAccess.reset(); // Reservation')<part.index('worker.Invoke(')
-assert part.index('admittedAccess(*cacheHandoff)')<part.index('Metal4SurfaceWorkerScope scope(snapshot)')
-assert part.count('cacheHandoff.reset();')==2
-assert 'cacheHandoff.reset();\n  deliverTargetNotice();' in part
-assert 'catch(...){cacheHandoff.reset();deliverTargetNotice();' in part
+assert part.index('dispatchReceipt->Reserve(impl->access)')<part.index('cacheAccess.reset(); // Reservation')<part.index('worker.Invoke(')
+assert part.index('admittedAccess(dispatchReceipt->Handoff())')<part.index('Metal4SurfaceWorkerScope scope(snapshot)')
+assert part.count('dispatchReceipt->ReleaseHandoff();')==2
+assert 'dispatchReceipt->ReleaseHandoff();\n  deliverTargetNotice();' in part
+assert 'catch(...){dispatchReceipt->ReleaseHandoff();deliverTargetNotice();' in part
 basic=s.split('void Metal4WorldRenderer::ClearWaterFamily(',1)[1].split('bool Metal4WorldRenderer::DeferredPostprocessConsumersInitialized',1)[0]
 assert 'std::optional<NativeRendererAccessGate::Scope> cacheAccess' in basic
 assert basic.index('SharedRuntime().CanSafelyDetach()')<basic.index('Handoff handoff')<basic.index('cacheAccess.reset()')<basic.index('renderWorker->Invoke')

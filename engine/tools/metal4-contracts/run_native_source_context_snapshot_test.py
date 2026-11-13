@@ -6,8 +6,8 @@ subprocess.run(['g++','-std=c++23','-O1','-g','-fsanitize=address,undefined','-I
 subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},check=True)
 s=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 dispatch=s.split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(',1)[0]
-assert dispatch.index('return DrawPrepared')<dispatch.index('NativeSourceContextSnapshot::Capture')<dispatch.index('Handoff> cacheHandoff')
-assert 'std::move(mrtFrontier),std::nullopt)' in dispatch
+assert dispatch.index('return DrawPrepared')<dispatch.index('NativeSourceContextSnapshot::Capture')<dispatch.index('dispatchReceipt->Reserve')
+assert 'std::move(mrtFrontier),std::nullopt,std::nullopt)' in dispatch
 assert 'snapshot,sourceContext,' in dispatch
 prepared=s.split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(',1)[1]
 helpers=prepared.split('NativeCPUPhaseScope cpuPhase',1)[0]

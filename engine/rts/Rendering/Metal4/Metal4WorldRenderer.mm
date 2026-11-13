@@ -1,4 +1,4 @@
-#include "Rendering/Backend/NativeTargetSubmissionNotice.h"
+#include "Rendering/Backend/NativeRenderDispatchReceipt.h"
 #include "Rendering/Backend/NativeSubmissionReadScope.h"
 #include "Metal4CubeCopy206.h"
 #include <cstdlib>
@@ -2347,35 +2347,33 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  const auto shadowFallback=frame.originalShadow?NativeShadowFallbackSnapshot{}:
   NativeShadowFallbackSnapshot::Capture(OriginalNativeShadowTextures(),shadowHandler);
  // Allocate/retain the exact publication identities before worker Begin.
- NativeTargetSubmissionNotice targetNotice(options.screenUI);
- auto deliverTargetNotice=[&]() noexcept {targetNotice.Deliver([heldSourceDraw=options.heldSourceDraw](auto passes,std::uint64_t submission,auto postprocess) noexcept {
+ auto dispatchReceipt=std::make_shared<NativeRenderDispatchReceipt>(options.screenUI,std::move(previousRetired));
+ auto deliverTargetNotice=[&]() noexcept {dispatchReceipt->DeliverTarget([heldSourceDraw=options.heldSourceDraw](auto passes,std::uint64_t submission,auto postprocess) noexcept {
   ui::GetRecorder().RecordTargetSubmission(passes,submission,std::move(postprocess),heldSourceDraw);
  });};
  const auto snapshot=Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(*impl->surface);
  if(!impl->renderWorker)impl->renderWorker=std::make_unique<NativeSerialRenderWorker>();
  auto& worker=*impl->renderWorker;
- std::optional<NativeRendererAccessGate::Handoff> cacheHandoff;cacheHandoff.emplace(impl->access);
+ dispatchReceipt->Reserve(impl->access);
  cacheAccess.reset(); // Reservation, not a mutex, crosses worker.Invoke.
- bool receiptReady=false;
- auto mainReceipt=std::move(previousRetired);
- auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
- auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
+ auto deferredReceipt=dispatchReceipt->NeedsRetirementNotice()?std::function<void()>([dispatchReceipt]{dispatchReceipt->MarkRetirementReady();}):std::function<void()>{};
+ auto deliverReceipt=[&]{dispatchReceipt->DeliverRetirement();};
  const auto cpuTraceContext=CaptureNativeCPUPhaseContext();
  try {
-  auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,cpuTraceContext,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
-   NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
+  auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,cpuTraceContext,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable {@autoreleasepool {
+   NativeRendererAccessGate::Scope admittedAccess(dispatchReceipt->Handoff());
    Metal4SurfaceWorkerScope scope(snapshot);
    NativeCPUPhaseContextScope traceContext(cpuTraceContext);
-   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver,mrtFrontier,sourceContext,shadowFallback);
+   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[dispatchReceipt](std::uint64_t submission) noexcept {dispatchReceipt->MarkBegun(submission);},uiResolver,mrtFrontier,sourceContext,shadowFallback);
   }});
-  cacheHandoff.reset();
+  dispatchReceipt->ReleaseHandoff();
   deliverTargetNotice();
   deliverReceipt();
 #ifdef RECOIL_METAL4_LIVE_SCENE
   static bool reported=false;if(!reported){reported=true;LOG("[NativeInterventionRenderWorker] serial_worker=1 main_wait=1 pinned_surface=1 simulation_overlap=0");}
 #endif
   return result;
- }catch(...){cacheHandoff.reset();deliverTargetNotice();deliverReceipt();throw;}
+ }catch(...){dispatchReceipt->ReleaseHandoff();deliverTargetNotice();deliverReceipt();throw;}
 }
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver,std::optional<MRTFrontier209> mrtFrontier,std::optional<NativeSourceContextSnapshot> sourceContext,std::optional<NativeShadowFallbackSnapshot> shadowFallback)
 {

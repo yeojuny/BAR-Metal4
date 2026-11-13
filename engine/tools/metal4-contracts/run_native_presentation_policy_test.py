@@ -16,6 +16,6 @@ assert 'globalRendering->viewPosX' not in prepared
 dispatch=source.split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(',1)[0]
 assert dispatch.index('MainThread();Require(impl!=nullptr')<dispatch.index('CaptureNativePresentationPolicy(')<dispatch.index('worker.Invoke(')
 assert 'DrawPrepared(frame,options,presentation,std::move(previousRetired),' in dispatch
-assert 'DrawPrepared(frame,options,presentation,std::move(deferredReceipt),' in dispatch
+assert 'DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),' in dispatch
 subprocess.run(['g++','-std=c++23','-pthread','-I'+str(root/'rts'),'-O1','-g','-fsanitize=address,undefined',str(Path(__file__).with_name('TestNativePresentationPolicy.cpp')),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},check=True)
