@@ -1570,30 +1570,12 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  // Only an exactly unchanged surface permits this value-snapshot capture to
  // overlap N's encoding tail. Always drain before any later alpha/water/Lua work.
  const bool deferredParticles=BeginReadyPilotRequested();
- CaptureAtNativeSurfaceBoundary(deferredParticles,
-  [&]{return session->surface.CaptureRefreshUnchanged();},
-  []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
-   // Publish only at the actual capture boundary, after any changed-surface drain.
-   session->opaqueSourcePending=actualOpaqueModels;
-   // Particle source writers run once after the old encoding tail is drained.
-   session->preparedFrame=session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels,deferredParticles);
-  });
- if(deferredParticles)session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
-
- auto& frame=*session->preparedFrame;
- frame.mainSampling=session->renderer->ActualMainSampling();
- frame.minSampleShadingRate=globalRendering->minSampleShadingRate;
- frame.mapTextures=session->mapTextures;
- if(!session->mainGroundPending||session->mainGroundPending->sourceDrawFrame!=frame.sourceDrawFrame)
-  throw std::logic_error("Original main ground boundary was not captured before this world draw");
- frame.mainGround=session->mainGroundPending; // Retain for the existing pre-Begin abort path too.
- frame.genesisCUSFrame=std::exchange(session->genesisSourcePending,{});
- // Only opaque CUS frames have sealed at this boundary. The following water,
- // alpha and Lua captures stay on the original main thread in original order.
- session->cpuReadReceipt220.reset();
+ const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
  std::unique_ptr<CPUReadReceipt220> cpuReceipt220;
- NativeCUSCPUReadWorker220::Join cpuJoin220; // Destroyed before the main-owned job.
- session->cpuReadFallback220=session->cpuReadDisabled220?2:0;
+ NativeCUSCPUReadWorker220::Join cpuJoin220; // Join before main-owned receipt destruction on every exit.
+ int cpuReadFallback220=session->cpuReadDisabled220?2:0;
+ // BEGIN EARLY_CPU_READ_LAUNCH220
+ const auto launchCPURead220=[&](const WorldFrame& frame){
  if(CPUReadPacketMode220()&&frame.opaqueModelFrame&&!session->cpuReadDisabled220)try{
   cpuReceipt220=std::make_unique<CPUReadReceipt220>();
   cpuReceipt220->frame=frame.sourceDrawFrame;cpuReceipt220->models=frame.opaqueModelFrame;
@@ -1612,8 +1594,38 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  }catch(...){
   // Start cannot throw after publishing the job, and Arm/Build are noexcept.
   // An unpublished setup failure must not advance the original error boundary.
-  cpuReceipt220.reset();session->cpuReadDisabled220=true;session->cpuReadFallback220=1;
+  cpuReceipt220.reset();session->cpuReadDisabled220=true;cpuReadFallback220=1;
  }
+ };
+ // END EARLY_CPU_READ_LAUNCH220
+
+ CaptureAtNativeSurfaceBoundary(deferredParticles,
+  [&]{return session->surface.CaptureRefreshUnchanged();},
+  []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
+   // Publish only at the actual capture boundary, after any changed-surface drain.
+   session->opaqueSourcePending=actualOpaqueModels;
+   // Particle source writers run once after the old encoding tail is drained.
+   session->preparedFrame=session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels,deferredParticles);
+   // No producer callback or GPU access: only retained opaque read rows.
+   if(earlyCPURead220)launchCPURead220(*session->preparedFrame);
+  });
+ if(deferredParticles)session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
+
+ auto& frame=*session->preparedFrame;
+ frame.mainSampling=session->renderer->ActualMainSampling();
+ frame.minSampleShadingRate=globalRendering->minSampleShadingRate;
+ frame.mapTextures=session->mapTextures;
+ if(!session->mainGroundPending||session->mainGroundPending->sourceDrawFrame!=frame.sourceDrawFrame)
+  throw std::logic_error("Original main ground boundary was not captured before this world draw");
+ frame.mainGround=session->mainGroundPending; // Retain for the existing pre-Begin abort path too.
+ frame.genesisCUSFrame=std::exchange(session->genesisSourcePending,{});
+ // Only opaque CUS frames have sealed at this boundary. The following water,
+ // alpha and Lua captures stay on the original main thread in original order.
+ // Reset only after the old render job has settled. It may still retain its
+ // own immutable packet, which is never replaced by this new local receipt.
+ session->cpuReadReceipt220.reset();
+ if(!earlyCPURead220)launchCPURead220(frame);
+ session->cpuReadFallback220=cpuReadFallback220;
  if(cpuReceipt220&&cpuReceipt220->job.measure)cpuReceipt220->mainBeginNs=NativeCUSCPUReadWorker220::Timestamp(NativeCUSCPUReadWorker220::Clock::now());
 	if (frame.opaqueModelFrame) {
 		// Source capture already owns every model color/depth publication.
