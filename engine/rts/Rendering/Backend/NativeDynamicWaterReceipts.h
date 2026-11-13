@@ -49,6 +49,18 @@ public:
   Require(found&&found->state==State::Captured&&found->source==source&&out&&Tuple(*source,*out),"Dynamic finalized receipt differs from exact captured owner");
   auto* s=Find(source->sourceDrawFrame);s->finalized=std::move(out);s->state=State::Finalized;
  }
+ bool CanAbort(const std::shared_ptr<const Frame>& receipt)const noexcept {
+  if(!receipt)return true;
+  const auto* s=Find(receipt->sourceDrawFrame);
+  if(!s)return true; // Already retired/aborted; never select a different draw.
+  return (s->source==receipt||s->finalized==receipt)&&
+   (s->state==State::Captured||s->state==State::Finalized);
+ }
+ bool Abort(const std::shared_ptr<const Frame>& receipt)noexcept {
+  if(!CanAbort(receipt))return false;
+  if(receipt)if(auto* s=Find(receipt->sourceDrawFrame))*s=Slot{};
+  return true;
+ }
  void ValidateHold(uint64_t draw)const {const auto* s=Find(draw);Require(s&&s->state==State::Finalized&&s->finalized,"Dynamic admission lacks finalized owner");}
  void Hold(uint64_t draw)noexcept {auto* s=Find(draw);if(!s||s->state!=State::Finalized||!s->finalized)std::terminate();s->state=State::Held;}
  void ValidateHeld(uint64_t draw)const {const auto* s=Find(draw);Require(s&&s->state==State::Held&&s->finalized,"Dynamic completion lacks held owner");}

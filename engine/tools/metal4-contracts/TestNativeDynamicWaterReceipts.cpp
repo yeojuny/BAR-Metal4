@@ -65,6 +65,23 @@ int main(){
  invalid->generation=1;auto a=Reserve(r,invalid,1,0);Finalize(r,a);
  auto changed=std::make_shared<NativeDynamicWaterMaterial>();changed->generation=2;
  Reject([&]{r.ValidateReserve(Source(changed,2,1));});assert(r.Current(1)==a);
+ // Exact pre-Begin abort: no tuple-only guesses and no unrelated retirement.
+ for(unsigned n=0;n<1000;++n){
+  NativeDynamicWaterReceipts aborts;
+  assert(aborts.CanAbort({})&&aborts.Abort({}));
+  auto partial=Reserve(aborts,invalid,30,1);
+  auto wrong=std::make_shared<const Frame>(*partial);
+  assert(!aborts.CanAbort(wrong)&&!aborts.Abort(wrong)&&aborts.Current(30)==partial);
+  assert(aborts.CanAbort(partial)&&aborts.Abort(partial)&&!aborts.Any());
+  auto retry=Reserve(aborts,invalid,30,1);Finalize(aborts,retry);auto final=aborts.Finalized(30);
+  assert(!aborts.Abort(partial)&&aborts.Current(30)==retry); // Same draw, wrong exact owner.
+  auto younger=Reserve(aborts,invalid,31,2);Finalize(aborts,younger);
+  assert(aborts.Abort(final)&&!aborts.Current(30)&&aborts.Current(31)==younger);
+  assert(aborts.Abort(partial)&&aborts.Abort(final)&&aborts.Current(31)==younger); // stale no-op
+  aborts.ValidateHold(31);aborts.Hold(31);
+  assert(!aborts.CanAbort(younger)&&!aborts.Abort(younger));aborts.ValidateHeld(31);
+  aborts.Quarantine(31);assert(!aborts.Abort(younger)&&aborts.Current(31)==younger);
+ }
  // Zero draw was historically allowed by capture; retain that contract.
  NativeDynamicWaterReceipts zero;auto z=Reserve(zero,invalid,0,0);Finalize(zero,z);zero.ValidateReset();
  for(unsigned mode=0;mode<3;++mode){
@@ -87,5 +104,5 @@ int main(){
    Reject([&]{ledger.ValidateCompletion(1,0,20,0,0);});Reject([&]{ledger.ValidateReset();});
   }
  }
- std::cout<<"Actual dynamic-water receipt ledger1000:exact owners,capacity,restore/retry,sync/held ordered retirement,younger preservation,duplicate/tuple rejection,quarantine;no gates relaxed\n";
+ std::cout<<"Actual dynamic-water receipt ledger1000:exact owners,capacity,restore/retry,sync/held ordered retirement,younger preservation,duplicate/tuple rejection,quarantine,exact pre-Begin abort;no gates relaxed\n";
 }

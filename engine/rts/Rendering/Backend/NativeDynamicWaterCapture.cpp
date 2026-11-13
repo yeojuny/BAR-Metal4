@@ -555,6 +555,8 @@ std::shared_ptr<const NativeDynamicWaterFrame> NativeDynamicWaterCapture::Finali
 
  outer.Quads(impl->profile.outerQuadDiagonal301);out->surface.push_back(std::move(outer.draw));impl->receipts.SetFinalized(source,out);return out;
 }
+bool NativeDynamicWaterCapture::CanAbortCapture(const std::shared_ptr<const NativeDynamicWaterFrame>& frame) const noexcept {return impl->receipts.CanAbort(frame);}
+bool NativeDynamicWaterCapture::AbortCapture(const std::shared_ptr<const NativeDynamicWaterFrame>& frame) noexcept {return impl->receipts.Abort(frame);}
 void NativeDynamicWaterCapture::ValidateSubmittedCapacity(const std::shared_ptr<const NativeDynamicWaterFrame>& frame) const {
  if(!frame||frame!=impl->receipts.Finalized(frame->sourceDrawFrame))throw std::logic_error("Dynamic admission lost its exact finalized source");
  impl->receipts.ValidateHold(frame->sourceDrawFrame);

@@ -452,6 +452,7 @@ struct Session {
 	NativeBumpWaterCapture waterCapture;
  NativeLegacyWaterCapture legacyWaterCapture;
  NativeDynamicWaterCapture dynamicWaterCapture;
+ std::shared_ptr<const NativeDynamicWaterFrame> dynamicCaptureReceipt;
 	NativeBasicWaterCapture basicWaterCapture;
 	std::optional<WorldFrame> preparedFrame;
 	std::optional<uint64_t> preparedDecalDraw;
@@ -515,6 +516,18 @@ struct DynamicWaterAdmissionOwner {
  void QuarantineHeldFrame(uint64_t draw) noexcept {if(frame)capture.QuarantineHeldFrame(draw);}
 };
 
+void CompleteDynamicCapture(uint64_t generation,uint64_t through,uint64_t draw) {
+ session->dynamicWaterCapture.DidComplete(generation,through,draw);
+ const auto& receipt=session->dynamicCaptureReceipt;
+ if(receipt&&receipt->material&&receipt->material->generation==generation&&receipt->sourceDrawFrame==draw&&receipt->throughUpdate==through)
+  session->dynamicCaptureReceipt.reset();
+}
+bool AbortDynamicCapture() noexcept {
+ if(!session||!session->dynamicCaptureReceipt)return true;
+ if(!session->dynamicWaterCapture.AbortCapture(session->dynamicCaptureReceipt))return false;
+ session->dynamicCaptureReceipt.reset();return true;
+}
+
 void ApplyDeferredFrameReceipts()
 {
  if(!session)return;
@@ -530,7 +543,7 @@ void ApplyDeferredFrameReceipts()
  ui::GetRecorder().ValidateHeldFrame(result.sourceDrawFrame);
  LuaNativePostprocess::GetRecorder().ValidateHeldFrame(result.completedPostprocessSerial);
  LuaNativeVolumetricClouds::ValidateHeldFrame(result.sourceDrawFrame);
- if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
+ if(result.dynamicWaterGeneration)CompleteDynamicCapture(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  // Source ownership was transferred at submission; do not clear N+1 capture.
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);
  if(result.completedWaterUpdates[0])session->waterCapture.DidComplete(result.completedWaterUpdates[0],result.completedWaterUpdates[1],result.completedWaterUpdates[2]);
@@ -895,7 +908,7 @@ void InitializeDynamicWater(){
  if(!CanInitializeDynamicWater()||!session||!session->renderer)throw std::runtime_error("Dynamic original source profile/native acceptance is incomplete");
  RequireRetiredGPUWork();session->dynamicWaterCapture.Initialize(DynamicWaterSourceProfile{});
 }
-void ResetDynamicWater(){if(!session)return;RequireRetiredGPUWork();session->dynamicWaterCapture.Reset();if(session->renderer)session->renderer->ClearDynamicWaterResources();}
+void ResetDynamicWater(){if(!session)return;RequireRetiredGPUWork();session->dynamicWaterCapture.Reset();session->dynamicCaptureReceipt.reset();if(session->renderer)session->renderer->ClearDynamicWaterResources();}
 void UpdateDynamicWater(){if(!session||!session->dynamicWaterCapture.Initialized())throw std::logic_error("Dynamic Update without its source lifetime");session->dynamicWaterCapture.Update();}
 void AddDynamicWaterExplosion(const float3& pos,float strength,float size){if(!session||!session->dynamicWaterCapture.Initialized())throw std::logic_error("Dynamic explosion without source lifetime");session->dynamicWaterCapture.AddExplosion(pos,strength,size);}
 bool CanInitializeLegacyWater()
@@ -1308,7 +1321,10 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
   scenes->belowWaterLua=CaptureWaterPreParticles(NativeWorldDrawStage::AlphaBelowWater,false,true,false,false);
   if(session->legacyWaterCapture.Initialized())frame.legacyWater=session->legacyWaterCapture.Capture(frame,water->WireFrameModeRef());
   std::array<float,9> dynamicReflectionBasis{},dynamicRefractionBasis{};
-  if(session->dynamicWaterCapture.Initialized())frame.dynamicWater=session->dynamicWaterCapture.CaptureDerived(frame.sourceDrawFrame);
+  if(session->dynamicWaterCapture.Initialized()){
+   frame.dynamicWater=session->dynamicWaterCapture.CaptureDerived(frame.sourceDrawFrame);
+   session->dynamicCaptureReceipt=frame.dynamicWater; // Retain before later view/finalization can throw.
+  }
   {
    WaterUpdateFogScope originalWaterFog;
    if(frame.dynamicWater){
@@ -1391,10 +1407,12 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 
 void AbortPreparedWorld()
 {
+ if(session&&!session->dynamicWaterCapture.CanAbortCapture(session->dynamicCaptureReceipt))return;
 	if(session&&session->renderer && !session->renderer->AbortShieldPublications(session->preparedFrame?session->preparedFrame->opaqueModelFrame:session->opaqueSourcePending,session->actualShadowSourcePending,session->preparedFrame&&session->preparedFrame->mainGround?session->preparedFrame->mainGround:session->mainGroundPending,session->environmentStage,session->shieldCapture))return; // Keep failed-Begun source owners intact.
 
 	if(session)session->legacyWaterCapture.AbortUncompletedRefraction();
 	if(session && session->renderer && !session->renderer->AbortScreenContinuation())return;
+ if(!AbortDynamicCapture())return;
 	LuaNativeBlockout::AbortWorldFrame();
 	LuaNativeGameDecal::AbortWorldFrame();
 	LuaNativeUnitPrimitive::AbortWorldFrame();
@@ -1476,7 +1494,7 @@ std::vector<std::uint8_t> ReadCurrentImage(const ui::NativeUIReadbackPrefix& pre
 		session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();
 	};
 	auto result=session->renderer->Draw(frame,options);
- if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
+ if(result.dynamicWaterGeneration)CompleteDynamicCapture(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
 	if(!result.sourceFrameCompleted || result.sourceDrawFrame!=frame.sourceDrawFrame ||
 		result.completedPostprocessSerial!=screen.postprocess->serial)
 		throw std::runtime_error("SaveImage did not retire its actual current source frame");
@@ -1593,7 +1611,8 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		sourcePlan=NativeSourceSubmission::OffscreenSource;
 	if (sourcePlan==NativeSourceSubmission::IndependentTargets){
   if(overlapPreparation)RequireRetiredGPUWork();
-		if(!session->renderer->AbortShieldPublications(prepared?prepared->opaqueModelFrame:nullptr,session->actualShadowSourcePending,prepared?prepared->mainGround:session->mainGroundPending,session->environmentStage,session->shieldCapture))throw std::logic_error("Cannot discard failed-Begun source owners");session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();return submitTargets();
+  if(!session->dynamicWaterCapture.CanAbortCapture(session->dynamicCaptureReceipt))throw std::logic_error("Cannot discard admitted dynamic water");
+		if(!session->renderer->AbortShieldPublications(prepared?prepared->opaqueModelFrame:nullptr,session->actualShadowSourcePending,prepared?prepared->mainGround:session->mainGroundPending,session->environmentStage,session->shieldCapture))throw std::logic_error("Cannot discard failed-Begun source owners");session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();if(!AbortDynamicCapture())throw std::logic_error("Cannot abort dynamic capture");return submitTargets();
 	}
 
 	auto frameOwner=std::make_shared<WorldFrame>(std::move(*prepared));
@@ -1711,12 +1730,12 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();
  }
  }catch(...){failedAdmission();throw;}
- if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
+ if(result.dynamicWaterGeneration)CompleteDynamicCapture(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  if(result.sourceFrameCompleted){session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();}
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);
  if(result.completedWaterUpdates[0])session->waterCapture.DidComplete(result.completedWaterUpdates[0],result.completedWaterUpdates[1],result.completedWaterUpdates[2]);
 	if (!result.presented) {
-		if(!result.sourceFrameCompleted){if(!session->renderer->AbortShieldPublications(frame.opaqueModelFrame,session->actualShadowSourcePending,frame.mainGround,session->environmentStage,session->shieldCapture))throw std::logic_error("Cannot discard failed-Begun source owners");session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();}
+		if(!result.sourceFrameCompleted){if(!session->dynamicWaterCapture.CanAbortCapture(session->dynamicCaptureReceipt))throw std::logic_error("Cannot discard admitted dynamic water");if(!session->renderer->AbortShieldPublications(frame.opaqueModelFrame,session->actualShadowSourcePending,frame.mainGround,session->environmentStage,session->shieldCapture))throw std::logic_error("Cannot discard failed-Begun source owners");session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.reset();if(!AbortDynamicCapture())throw std::logic_error("Cannot abort dynamic capture");}
 		if(result.sourceFrameCompleted)return {false,result.screenTargetsCompleted,true,result.completedPostprocessSerial,result.sourceDrawFrame};
 		return submitTargets();
 	}

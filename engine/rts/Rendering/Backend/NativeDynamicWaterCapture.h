@@ -14,6 +14,8 @@ public:
  std::shared_ptr<const NativeDynamicWaterFrame> CaptureDerived(uint64_t sourceDrawFrame);
  std::shared_ptr<const NativeDynamicWaterFrame> FinalizeSurface(std::shared_ptr<const NativeDynamicWaterFrame>,const WorldCamera&,
   const std::array<float,9>& reflectionBasis,const std::array<float,9>& refractionBasis,bool wireframe);
+ bool CanAbortCapture(const std::shared_ptr<const NativeDynamicWaterFrame>&) const noexcept;
+ bool AbortCapture(const std::shared_ptr<const NativeDynamicWaterFrame>&) noexcept;
  void ValidateSubmittedCapacity(const std::shared_ptr<const NativeDynamicWaterFrame>&) const;
  void TransferPreparedFrame(uint64_t sourceDrawFrame) noexcept;
  void ValidateRestoreHeldFrame(uint64_t sourceDrawFrame) const;

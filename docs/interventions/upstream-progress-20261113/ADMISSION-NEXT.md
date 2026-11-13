@@ -277,3 +277,20 @@ restore/retry, synchronous/deferred settlement, quarantine and reset rejection.
 Both actual DynamicWaterCapture and SceneBridge translation units pass C++ syntax
 checks. Independent review and source wiring assertions cover the integration;
 full native application/Metal execution remains deferred.
+
+Dynamic-water recoverable capture-abort follow-up: Session retains the exact derived
+receipt immediately after capture, before water-view/finalization work can throw
+and independently of moving the prepared WorldFrame into submission ownership.
+After existing failed-Begun/continuation guards, failed preparation and no-Begin
+fallback may remove only that Captured/Finalized receipt. Held/Quarantined and a
+same-draw replacement owner are refused; stale missing receipts are harmless.
+Pending update/impulse data, sequence, retired prefix and first-draw state are not
+changed by this abort, so the next source capture can retry rather than remaining
+permanently blocked. Completion clears the Session token only on exact tuple match;
+validated reset clears it after the source reset succeeds.
+
+Additional 1,000 exact-abort ledger cases cover partial/finalized capture, wrong
+owner, stale/replaced owner, newer receipt preservation and held/quarantine refusal.
+Actual capture/SceneBridge syntax and independent source-wiring review pass. This
+still does not relax any overlap barrier or implement a speculative younger-frame
+bootstrap protocol.
