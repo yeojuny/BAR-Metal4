@@ -390,17 +390,22 @@ struct ScreenRenderTargetPass {
 // basis is logical UI pixels. An absent viewport covers the full window; an
 // explicit bottom-left logical viewport maps through actual logical window
 // dimensions to the independent requested raster pixels.
+struct ScreenFrameStorage;
 struct ScreenFrameView {
 	const ScreenDrawList* drawList = nullptr;
 	std::uint32_t coordinateWidth = 0;
 	std::uint32_t coordinateHeight = 0;
 	std::optional<ScreenScissor> logicalViewport;
-	// Borrowed immutable producers through synchronous retirement. Versions
+	// Immutable producers borrowed from storage when owned, or from the
+	// synchronous caller otherwise. Versions
 	// reference only lightweight identities, never an unbounded history graph.
 	// Dependencies may be listed in any order; the consumer validates/sorts them.
 	std::span<const ScreenRenderTargetPass> targetPasses{};
 	// Ordered copies/MRT effects inserted among the original root commands.
 	std::shared_ptr<const NativePostprocessFrame> postprocess;
+	// Optional immutable owner for queued/retained views; direct synchronous
+	// callers may still provide externally owned geometry.
+	std::shared_ptr<const ScreenFrameStorage> storage;
 };
 inline bool ScreenFrameRequiresSource(const ScreenFrameView* frame)
 {

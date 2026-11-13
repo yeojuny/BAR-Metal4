@@ -1,3 +1,4 @@
+#include "NativeOwnedScreenFrame.h"
 #include "NativeFontRecycle169.h"
 #include "System/Log/ILog.h"
 #include "NativeIndexedWorldGeometry.h"
@@ -228,6 +229,7 @@ struct NativeUIRecorder::Impl {
 	};
 	std::vector<SamplerUndo> samplerUndo;
 	ScreenDrawList output;
+	NativeOwnedScreenFrame sealedOutput;
 	ScreenDrawList* activeOutput = &output;
 	NativeUITargetPassJournal targetJournal;
 	std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> sourceDependency;
@@ -748,6 +750,7 @@ void NativeUIRecorder::BeginFrame(std::uint32_t w, std::uint32_t h,std::optional
 	impl->RollbackSourceTargets();
 	const auto raster=mapping.value_or(NativeUIFrameRasterMapping{w,h,w,h,{0,0,w,h}});
 	Require(raster.windowLogicalWidth && raster.windowLogicalHeight && raster.renderWidth && raster.renderHeight && raster.renderWidth<=16384 && raster.renderHeight<=16384,"Native UI actual raster mapping is invalid");
+	impl->sealedOutput.Recycle(impl->output);
 	impl->rasterMapping=raster;
 	impl->width = w; impl->height = h; impl->activeOutput = &impl->output; impl->output.ClearGeometry(); impl->ResetScreen(); impl->frame = true;
 }
@@ -762,7 +765,7 @@ ScreenFrameView NativeUIRecorder::EndFrame()
 {
 	Require(impl->frame && !impl->primitive && impl->compiling.empty() && impl->targets.empty() && !impl->typedTargetDepth && impl->miniMapStages.empty() && impl->pipMiniMapOutputs.empty() && !impl->worldStage && impl->originalTextureScopes.empty(), "Native UI unbalanced frame end");
 	EndScreenStage(); if(impl->genesisSource)EndGenesisStage();else EndResourceStage(); impl->frame = false;
-	return {&impl->output, impl->width, impl->height, {}, impl->targetJournal.Passes()};
+	return impl->sealedOutput.Seal(impl->output,impl->targetJournal.Passes(),impl->width,impl->height);
 }
 void NativeUIRecorder::RetireCompletedFrame(bool sourceFrameCompleted)
 {

@@ -76,6 +76,8 @@ public:
 	~NativeUIRecorder();
 	void BeginFrame(std::uint32_t logicalWidth, std::uint32_t logicalHeight,
 		std::optional<NativeUIFrameRasterMapping> rasterMapping = std::nullopt);
+	// Returned view owns root geometry and producer descriptors independently
+	// of the next BeginFrame and live publication retirement.
 	ScreenFrameView EndFrame();
 	// SaveImage's active target prefix is sealed into a real immutable pass;
 	// subsequent commands LOAD a fresh version without ending the Lua scope.
