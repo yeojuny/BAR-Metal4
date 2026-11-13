@@ -183,11 +183,30 @@ struct CPUPhaseStack {
  std::array<CPUPhaseSlot,4> slots{};
  std::uint64_t loopOrdinal=0;
  bool captureLoop=false;
+ std::uint64_t inheritedParent=0;
  std::array<std::uint64_t,5> previous{};
  unsigned depth=0;
 };
 thread_local CPUPhaseStack cpuPhaseStack;
 } // namespace
+
+NativeCPUPhaseContext CaptureNativeCPUPhaseContext() noexcept {
+ const auto& stack=cpuPhaseStack;
+ return {stack.depth?stack.slots[stack.depth-1].sample.id:stack.inheritedParent,stack.captureLoop};
+}
+NativeCPUPhaseContextScope::NativeCPUPhaseContextScope(NativeCPUPhaseContext context) noexcept {
+ auto& stack=cpuPhaseStack;
+ // A handoff cannot overwrite a locally active scope. Nested renderer calls
+ // keep their local ancestry instead of impersonating a different frame.
+ if(stack.depth)return;
+ previous={stack.inheritedParent,stack.captureLoop};installed=true;
+ stack.inheritedParent=context.parent;stack.captureLoop=context.sampled;
+}
+NativeCPUPhaseContextScope::~NativeCPUPhaseContextScope() {
+ if(!installed)return;
+ auto& stack=cpuPhaseStack;
+ stack.inheritedParent=previous.parent;stack.captureLoop=previous.sampled;
+}
 
 bool BeginNativeCPUPhase(const void* owner,unsigned kind,std::int64_t frame) noexcept {
  if(frame<=0)return false; // Loading/pregame loops must not consume the gameplay budget.
@@ -204,7 +223,7 @@ bool BeginNativeCPUPhase(const void* owner,unsigned kind,std::int64_t frame) noe
   const auto now=SubmissionTraceNow();std::lock_guard<std::mutex> lock(state.mutex);
   if(!state.budget.TakeSample(now)){state.finished=true;return false;}
   NativeCPUPhaseSample sample;sample.id=state.budget.tickets;sample.kind=kind;sample.frame=frame;
-  sample.parent=stack.depth?stack.slots[stack.depth-1].sample.id:0;
+  sample.parent=stack.depth?stack.slots[stack.depth-1].sample.id:stack.inheritedParent;
   sample.start=now;sample.previous=stack.previous[kind];stack.previous[kind]=now;
   stack.slots[stack.depth++]={owner,sample};return true;
  } catch(...) {state.finished=true;return false;}

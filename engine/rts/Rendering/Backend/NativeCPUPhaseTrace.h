@@ -36,6 +36,20 @@ inline std::size_t FormatNativeCPUPhase(char* output,std::size_t capacity,
 	return size>0 && std::size_t(size)<capacity?std::size_t(size):0;
 }
 
+// Value-only ancestry/sampling handoff. No source-thread scope pointer escapes.
+struct NativeCPUPhaseContext {std::uint64_t parent=0;bool sampled=false;};
+NativeCPUPhaseContext CaptureNativeCPUPhaseContext() noexcept;
+class NativeCPUPhaseContextScope {
+public:
+ explicit NativeCPUPhaseContextScope(NativeCPUPhaseContext context) noexcept;
+ ~NativeCPUPhaseContextScope();
+ NativeCPUPhaseContextScope(const NativeCPUPhaseContextScope&)=delete;
+ NativeCPUPhaseContextScope& operator=(const NativeCPUPhaseContextScope&)=delete;
+private:
+ NativeCPUPhaseContext previous{};
+ bool installed=false;
+};
+
 bool BeginNativeCPUPhase(const void* owner,unsigned kind,std::int64_t frame) noexcept;
 void MarkNativeCPUPhase(const void* owner,unsigned phase) noexcept;
 void CountNativeCPUPhase(const void* owner,std::uint64_t a,std::uint64_t b) noexcept;

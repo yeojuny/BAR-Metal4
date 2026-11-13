@@ -15,7 +15,7 @@ P0 is an additional baseline prerequisite, not evidence of optimization completi
 | P2 Payload/receipt sharing | Uniform, manifest, phase selection and exact read-key sharing implemented | Audit remaining payload copies and runtime retention; not blanket elimination |
 | P3 Owned frame/journals | Owned world/screen packet, bounded UI/post/cloud ledgers, typed Begin/completion notices; dynamic-water exact receipts and recovery added | Complete transitive source-family seal and dependency-safe rollback for queued younger work |
 | P4 Capture/render ownership | Joined executor, access gate/ordered controls; captured environment/PBR/UI/context/frontier; physical attachment/source pair isolation | Remaining global/provider/control audit and paused-render/concurrent-capture proof; a gate is not an exclusive asynchronous executor |
-| P5 Actual bounded CPU lookahead | NOT enabled; ordinary worker still joins | P3/P4 gates, total-source credit bound, enqueue/data-notice lifecycle, worker read receipt/trace continuity, measured positive active-work overlap |
+| P5 Actual bounded CPU lookahead | NOT enabled; ordinary worker still joins | P3/P4 gates, total-source credit bound, enqueue/data-notice lifecycle, measured positive active-work overlap (joined read-receipt/trace continuity now source-tested) |
 | P6 Resource-use GPU optimization | Some family-specific proofs exist; full area NOT claimed | Explicit producer/subresource/access/order proof and separate eligibility/Metal evidence before broader queue/barrier/copy changes |
 
 P5 is explicitly in the requested architecture, not an optional optimization that

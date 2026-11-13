@@ -2286,10 +2286,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto mainReceipt=std::move(previousRetired);
  auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
+ const auto cpuTraceContext=CaptureNativeCPUPhaseContext();
  try {
-  auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
+  auto result=worker.Invoke([this,owned,presentation,snapshot,sourceContext,cpuTraceContext,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
    NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
    Metal4SurfaceWorkerScope scope(snapshot);
+   NativeCPUPhaseContextScope traceContext(cpuTraceContext);
    return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver,mrtFrontier,sourceContext);
   }});
   cacheHandoff.reset();

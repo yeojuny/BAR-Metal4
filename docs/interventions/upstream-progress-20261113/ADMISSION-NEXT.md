@@ -363,3 +363,22 @@ worker cleanup order fails that contract. The hook exists only in the test heade
 overlay. Worker allocation/exception regression passes four allocation failures
 and 1,000 recovery pairs. SceneBridge passes host C++ syntax; native execution
 and the P5 positive active-overlap gate remain unverified.
+
+## CPU trace ancestry across the joined handoff
+
+The handoff Appendix C trace prerequisite now carries a value-only sampling/parent
+context into the ordinary joined render task. Previously the worker's TLS
+captureLoop stayed false, suppressing its encode/preparation phase records.
+The worker inherits the main capture sample ID, then its local nested scopes
+supply their normal parent IDs. Neither live stack pointers nor source-thread
+scope ownership cross the handoff. Local active scopes cannot be overwritten;
+context scopes restore on normal and exceptional exit. Per-thread interval history
+remains local, and the existing global ticket/record/byte budgets remain serialized.
+Direct rendering, gameplay-only sampling and the 1-in-16 default are unchanged.
+
+Validation extracts the actual runtime block and runs the real serial worker under
+ASan/UBSan: 100 invocations in default/every-loop/disabled modes, complete ordered
+four-phase ancestry, nested contexts, local-scope protection and exception cleanup.
+Restoring the old missing-parent rule is rejected by the same fixture. This closes
+a diagnostic handoff prerequisite, not the P5 positive-overlap measurement: the
+worker still joins, and full native Metal compilation/execution remains deferred.
