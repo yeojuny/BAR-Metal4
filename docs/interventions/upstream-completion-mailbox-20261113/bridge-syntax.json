@@ -1,0 +1,24 @@
+{
+  "exit": 0,
+  "sourceSHA256": "a9426db0e1c3212e38edff32926a50ceae034811b2617bf940d1588670c6a649",
+  "scope": "Full SceneBridge translation-unit Linux syntax only, including concurrent PBR wiring; not Objective-C++ or runtime",
+  "flags": [
+    "-std=c++23",
+    "-DRECOIL_USE_SDL3",
+    "-DRECOIL_METAL4_LIVE_SCENE",
+    "-DSYNCCHECK",
+    "-DSTREFLOP_SSE",
+    "-fsyntax-only",
+    "-include System/TimeProfiler.h"
+  ],
+  "includeRoots": [
+    "engine/rts",
+    "engine/rts/lib",
+    "engine/rts/lib/tracy/public",
+    "engine/rts/lib/nowide/include",
+    "engine/rts/lib/lua/include",
+    "engine/rts/System/SDL3Compat",
+    "actual SDL3 source include directory"
+  ],
+  "stubs": false
+}

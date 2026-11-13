@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeTargetSubmissionNotice.h"
 #include "Metal4CubeCopy206.h"
 #include <cstdlib>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
@@ -1197,7 +1198,7 @@ NativeEnvironmentStageReceipt Metal4WorldRenderer::CaptureEnvironmentInputs(std:
 
 bool Metal4WorldRenderer::SubmitScreenTargets(const ScreenFrameView& frame, bool shaderValidation)
 {
-	return SubmitMaintenance(&frame, {}, shaderValidation).screenTargetsCompleted;
+	return SubmitMaintenance(&frame, {}, shaderValidation, {}, CapturePBRSource()).screenTargetsCompleted;
 }
 
 
@@ -1297,18 +1298,21 @@ std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTar
 
 Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrameView* frame,
 	std::shared_ptr<const NativeWorldInfoFrame> worldInfoFrame, bool shaderValidation,
-	std::shared_ptr<const NativeUnitStencilFrame> unitStencilFrame)
+	std::shared_ptr<const NativeUnitStencilFrame> unitStencilFrame, std::optional<NativePBRDeclarationReceipt> capturedPBR)
 {
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
 		Metal4MaintenanceResult result;
+  // This public maintenance path is synchronous/main-only. An explicit empty
+  // capture must not be replaced by later source declarations.
+  const auto pbrDeclarations=capturedPBR?*capturedPBR:CapturePBRSource();
 		std::vector<ScreenRenderTargetPass> independent;
 		if (frame) {
 			for (const auto& pass: frame->targetPasses)
 				if (!pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen) independent.push_back(pass);
 		}
 		const bool stencilUpdates=unitStencilFrame && !unitStencilFrame->passes.empty();
-		if (independent.empty() && !stencilUpdates && !worldInfoFrame && !HasPendingPBRSource()) return result;
+		if (independent.empty() && !stencilUpdates && !worldInfoFrame && !HasPendingPBRSource(pbrDeclarations)) return result;
 		RuntimeLease lease;
 		const auto preparationStart = Clock::now();
 		double shaderCompileMs = 0;
@@ -1317,7 +1321,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 		const auto sourceSubmission=CreateShieldSubmissionIdentity();
 		impl->pbrSubmission=sourceSubmission;
 		impl->particlesGPU.PrepareAtlasImages(sourceSubmission);
-		auto pbrBRDF=impl->pbrSource.Prepare(lease,NativePBRKind::BRDF,{});
+		auto pbrBRDF=impl->pbrSource.Prepare(lease,NativePBRKind::BRDF,{},pbrDeclarations);
 		std::shared_ptr<PreparedUnitStencil> unitStencil;
 		if(stencilUpdates)unitStencil=impl->unitStencilGPU.Prepare(lease,unitStencilFrame,shaderValidation,shaderCompileMs,sourceSubmission);
 		std::shared_ptr<PreparedWorldInfo> worldInfo;
@@ -1360,7 +1364,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 			impl->CompletePendingTextureMipmaps(sourceSubmission);
 			impl->particlesGPU.CompleteAtlasImages(sourceSubmission);
 			if(pbrBRDF)pbrBRDF->DidComplete(sourceSubmission);
-			impl->pbrSource.PruneCompleted();
+			// Producer declaration compaction occurs at the next main capture boundary.
 			if (prepared) prepared->DidComplete();
 			if (namedImageMipmaps) namedImageMipmaps->DidComplete();
 			result.submitted = true;
@@ -1482,14 +1486,18 @@ bool Metal4WorldRenderer::CheckShieldGeometryAllocation(const NativeGeometryText
 	for(unsigned i=0;i<attachmentCount;++i)registry.PublishContent((i==6?request.combinedColor:request.attachments[i])->name,{},allocations[i]);
 	return true; // Actual six attachments exist; this does not certify their rendered color contents.
 }
-bool Metal4WorldRenderer::HasPendingPBRSource() const
+NativePBRDeclarationReceipt Metal4WorldRenderer::CapturePBRSource()
 {
-	return impl && impl->pbrSource.HasPending(NativePBRKind::BRDF);
+ MainThread();return impl?impl->pbrSource.CapturePending():NativePBRDeclarationReceipt{};
 }
-bool Metal4WorldRenderer::HasPendingEnvironmentSource(const NativeEnvironmentStageReceipt& stage) const
+bool Metal4WorldRenderer::HasPendingPBRSource(const NativePBRDeclarationReceipt& batch) const
+{
+ return impl&&HasPendingNativePBR(batch,NativePBRKind::BRDF);
+}
+bool Metal4WorldRenderer::HasPendingEnvironmentSource(const NativeEnvironmentStageReceipt& stage,const NativePBRDeclarationReceipt& batch) const
 {
 	if(!impl)return false;
-	if(impl->pbrSource.HasPending(NativePBRKind::Environment))return true;
+	if(HasPendingNativePBR(batch,NativePBRKind::Environment))return true;
 	return stage.HasPendingCubeSource();
 }
 std::shared_ptr<const void> Metal4WorldRenderer::AllocateCoverageTarget(const std::shared_ptr<const ScreenTexture>& color,
@@ -1938,10 +1946,10 @@ void Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOp
   CancelNativeCUSDeferredPhase(OriginalNativeTextureContext().Registry(),*unsubmittedGround->ground->mapMRT);
 	if(impl&&impl->shieldPending&&impl->shieldRegistry)CancelNativeShieldDepth(*impl->shieldRegistry,*impl->shieldPending);
 	if(OriginalNativeCubeTextures().Attached()){
-  const auto& update=OriginalNativeCubeTextures().CurrentReflectionUpdate();
+  const auto update=OriginalNativeCubeTextures().CurrentReflectionUpdate();
   if(update.backing&&!update.backing->completed.load()&&!update.backing->encodedSubmission.load()&&!update.backing->dependenciesSubmission.load()&&
    (!update.mipBacking||(!update.mipBacking->completed.load()&&!update.mipBacking->encodedSubmission.load()&&!update.mipBacking->dependenciesSubmission.load())))
-   OriginalNativeCubeTextures().CancelReflection();
+   OriginalNativeCubeTextures().CancelReflection(update);
  }
 	if(unsubmittedShadow&&unsubmittedShadow->textures)OriginalNativeShadowTextures().Cancel(*unsubmittedShadow->textures);
 	if(impl)impl->shieldPending.reset();
@@ -2097,10 +2105,15 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 {return DrawDispatch(frame,options,{});}
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawPreparingWhilePending(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
 {return DrawDispatch(frame,options,std::move(previousRetired));}
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired)
 {
  // Reject invalid callers before reading source policy, as preparation did.
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
+ // Compatibility for direct synchronous API callers: capture only here on
+ // main, never inside DrawPrepared. Engaged-empty receipts remain empty.
+ std::optional<Metal4WorldRenderOptions> capturedOptions;
+ if(!sourceOptions.pbrDeclarations){capturedOptions.emplace(sourceOptions);capturedOptions->pbrDeclarations=CapturePBRSource();}
+ const auto& options=capturedOptions?*capturedOptions:sourceOptions;
  // Freeze source-side policy before worker dispatch. Continuation suffixes enter
  // here again, so a SaveImage prefix never freezes a later presentation policy.
  // Existing synchronous callbacks retire source receipts, not window events.
@@ -2113,7 +2126,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  // Readback/continuation and arbitrary engine source callbacks stay on main.
  if(!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
     options.submissionBegan||options.submissionCompleted||options.sourceCompleted)
-  return DrawPrepared(frame,options,presentation,std::move(previousRetired));
+  return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
+   ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess);
+  });
+ // Allocate/retain the exact publication identities before worker Begin.
+ NativeTargetSubmissionNotice targetNotice(options.screenUI);
+ auto deliverTargetNotice=[&]() noexcept {targetNotice.Deliver([](auto passes,std::uint64_t submission,auto postprocess) noexcept {
+  ui::GetRecorder().RecordTargetSubmission(passes,submission,std::move(postprocess));
+ });};
  const auto snapshot=Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(*impl->surface);
  static NativeSerialRenderWorker worker;
  bool receiptReady=false;
@@ -2123,16 +2143,17 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  try {
   auto result=worker.Invoke([&,presentation]{@autoreleasepool {
    Metal4SurfaceWorkerScope scope(snapshot);
-   return DrawPrepared(frame,options,presentation,std::move(deferredReceipt));
+   return DrawPrepared(frame,options,presentation,std::move(deferredReceipt),[&](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);});
   }});
+  deliverTargetNotice();
   deliverReceipt();
 #ifdef RECOIL_METAL4_LIVE_SCENE
   static bool reported=false;if(!reported){reported=true;LOG("[NativeInterventionRenderWorker] serial_worker=1 main_wait=1 pinned_surface=1 simulation_overlap=0");}
 #endif
   return result;
- }catch(...){deliverReceipt();throw;}
+ }catch(...){deliverTargetNotice();deliverReceipt();throw;}
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan)
 {
  NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
 	@autoreleasepool {
@@ -2152,7 +2173,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		if (!impl->surface->Snapshot().attached) { result.surface = impl->surface->Snapshot(); result.status = Metal4PresentationStatus::Detached; return result; }
 		impl->surface->Refresh(); result.surface = impl->surface->Snapshot(); result.status = SurfaceStatus(result.surface);
 		const bool requiresSource=bool(options.readback)||bool(frame.originalShadow)||(frame.opaqueModelFrame&&frame.opaqueModelFrame->HasWriters())||ScreenFrameRequiresSource(options.screenUI)||HasNativeDeferredPostprocessWrites(frame)||(frame.shieldDepthFrame&&frame.shieldDepthFrame->HasWriters())||
-			options.environmentStage.HasCubeSource()||impl->pbrSource.HasPending(NativePBRKind::BRDF)||impl->pbrSource.HasPending(NativePBRKind::Environment);
+			options.environmentStage.HasCubeSource()||HasPendingNativePBR(*options.pbrDeclarations,NativePBRKind::BRDF)||HasPendingNativePBR(*options.pbrDeclarations,NativePBRKind::Environment);
 		bool offscreenSource=bool(options.readback) || !options.presentWorld || result.status!=Metal4PresentationStatus::Presented;
 		if(offscreenSource && (!requiresSource || result.surface.closeRequested))return result;
 		Require(frame.viewCamera.clipDepth != ClipDepthConvention::Unsupported && frame.viewCamera.viewport[2] > 0 && frame.viewCamera.viewport[3] > 0, "World renderer requires actual supported engine camera/viewport");
@@ -2502,8 +2523,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		auto pbrImages=[sourceSubmission](RuntimeLease& sourceLease,const NativeCUSTextureBinding& binding,unsigned unit){
 			Require(unit==7,"Original EnvLUT sampled an unexpected unit");return ResolveNativeCubeTexture(sourceLease,binding,sourceSubmission);
 		};
-		auto pbrBRDF=impl->pbrSource.Prepare(lease,NativePBRKind::BRDF,pbrImages);
-		auto pbrEnvironment=impl->pbrSource.Prepare(lease,NativePBRKind::Environment,pbrImages);
+		auto pbrBRDF=impl->pbrSource.Prepare(lease,NativePBRKind::BRDF,pbrImages,*options.pbrDeclarations);
+		auto pbrEnvironment=impl->pbrSource.Prepare(lease,NativePBRKind::Environment,pbrImages,*options.pbrDeclarations);
 		result.reflectionFace=environment->Face();result.reflectionReady=environment->ReflectionReady();
 		result.unitBRDFWidth=512;result.unitBRDFGOption=1;
 		// SceneBridge reports warm-up/readiness transitions separately from missing consumers.
@@ -4037,7 +4058,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   } originalSubmission{lease};
 		id<MTL4CommandBuffer> command = lease.Begin("Actual engine terrain and current S3O unit poses to CAMetalLayer");
   originalSubmission.began=true;impl->submittedOpaqueSource=frame.opaqueModelFrame;impl->activeSourceSubmission=sourceSubmission;
-  if(screen && options.screenUI)ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,sourceSubmission,options.screenUI->postprocess);
+  if(screen && options.screenUI)targetSubmissionBegan(sourceSubmission);
   if(options.submissionBegan)options.submissionBegan(sourceSubmission,options.screenUI?options.screenUI->postprocess.get():nullptr);
   const auto requireLogicalCopySource=[&]{
    Require(logicalCopyMapping.has_value(),"Logical copy lost its prepared source mapping");
@@ -5164,7 +5185,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   if(reflectionWorldInfo)retire([&]{reflectionWorldInfo->DidComplete();});
   if(pbrBRDF)retire([&]{pbrBRDF->DidComplete(sourceSubmission);});
   if(pbrEnvironment)retire([&]{pbrEnvironment->DidComplete(sourceSubmission);});
-  retire([&]{owner->pbrSource.PruneCompleted();});
+  // PBR completion updates atomics only; the main capture owner compacts declarations.
   if(modelGBuffer)retire([&]{modelGBuffer->DidComplete();});
   if(shadowColor)retire([&]{shadowColor->DidComplete();});
   if(shadowColor)retire([&]{shadowLua.Complete();});

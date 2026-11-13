@@ -14,29 +14,29 @@ void PBRSourceService::Initialize(NativeTextureContext& owner,Parser parser,std:
 	services.compile=[this](const NativePBRProgramSource& source){RuntimeLease lease;return gpu.Compile(lease,source,validation,compileMilliseconds);};
 	services.allocate=[](const NativePBRAllocation& allocation){return ReserveNativePBRImageForCapture(allocation);};
 	services.parseTexture=std::move(parser);services.sourceDrawFrame=std::move(drawFrame);
-	services.enqueue=[this](std::shared_ptr<const NativePBRImage> image){Require(Ready()&&image&&image->program,"Original PBR enqueue has no source owner");pending.push_back(std::move(image));};
+	services.enqueue=[this](std::shared_ptr<const NativePBRImage> image){Require(Ready()&&image&&image->program,"Original PBR enqueue has no source owner");pending.Enqueue(std::move(image));};
 	services.syncObservedBinding=[](unsigned unit){ui::GetRecorder().SyncObservedTextureBinding(unit);};
 	services.validateFullTargetRaster=std::move(validateRaster);
 	services.targetRaster=[](uint32_t width,uint32_t height,bool identities,const std::function<void()>& callback){ui::GetRecorder().RunFramebufferState(width,height,identities,callback);};
 	try{LuaNativePBRSource::Configure(std::move(services),&owner.Registry(),&owner.History());}catch(...){context=nullptr;resourcesReady={};throw;}
 }
-void PBRSourceService::Shutdown(){LuaNativePBRSource::Configure({},nullptr,nullptr);pending.clear();resourcesReady={};context=nullptr;}
+void PBRSourceService::Shutdown(){LuaNativePBRSource::Configure({},nullptr,nullptr);pending.Reset();resourcesReady={};context=nullptr;}
 bool PBRSourceService::Ready()const{return context&&context->Initialized()&&context->UIAttached()&&resourcesReady&&resourcesReady();}
-bool PBRSourceService::HasPending(NativePBRKind kind)const{return std::any_of(pending.begin(),pending.end(),[&](const auto& p){return p->program->kind==kind&&!p->completed.load();});}
-std::unique_ptr<PreparedPBRSource> PBRSourceService::Prepare(RuntimeLease& lease,NativePBRKind kind,const CUSSourceImageProvider& provider)
+NativePBRDeclarationReceipt PBRSourceService::CapturePending(){Require([NSThread isMainThread],"PBR source capture requires engine main thread");return pending.Capture();}
+std::unique_ptr<PreparedPBRSource> PBRSourceService::Prepare(RuntimeLease& lease,NativePBRKind kind,const CUSSourceImageProvider& provider,const NativePBRDeclarationReceipt& batch)
 {
+ if(!batch)return nullptr;
 	std::vector<std::shared_ptr<const NativePBRImage>> selected;
-	for(const auto& p:pending)if(p->program->kind==kind&&!p->completed.load())selected.push_back(p);
+	for(const auto& p:*batch)if(p->program->kind==kind&&!p->completed.load())selected.push_back(p);
 	return selected.empty()?nullptr:gpu.Prepare(lease,selected,provider);
 }
-void PBRSourceService::PruneCompleted(){std::erase_if(pending,[](const auto& p){return p->completed.load(std::memory_order_acquire);});}
 void PBRSourceService::ResetWorld()
 {
 	// ClearStaticResources holds RuntimeCleanupLease, which independently
 	// verifies that the common submission has retired. Encoded is not the
 	// same as submitted/completed: a failed recording or retired GPU failure
 	// must release safely without marking any failed image as completed.
-	pending.clear();
+	pending.Reset();
 }
 CUSSourceImage PBRSourceService::Image(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission)const{return gpu.Image(lease,binding,submission);}
 }

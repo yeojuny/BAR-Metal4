@@ -1,0 +1,15 @@
+{
+  "status": "source_contract_passed_native_validation_pending",
+  "pbr_checks": 8027,
+  "sanitizers": [
+    "ASan",
+    "UBSan"
+  ],
+  "environment_stage_checks": 2012,
+  "presentation_policy_checks": 4504,
+  "scene_bridge_full_tu_syntax": "passed",
+  "independent_review": "GO",
+  "native_metal_execution": false,
+  "full_app_build": false,
+  "scope": "immutable source declaration receipts; not full U3 or CPU lookahead"
+}

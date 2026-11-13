@@ -22,6 +22,7 @@
 #include "Rendering/Backend/NativeDynamicWaterCapture.h"
 #include "Rendering/Backend/NativeImageReadback.h"
 #include "Rendering/Backend/NativePostprocessRecorder.h"
+#include "Rendering/Backend/NativeFrameCompletionMailbox.h"
 #include "Lua/LuaNativePostprocess.h"
 #include "Rendering/EngineBridge/NativeCUSSourceCapture.h"
 #include "Rendering/Backend/NativeCUSCPUReadScope.h"
@@ -126,7 +127,6 @@
 #include <cstdlib>
 #include <memory>
 #include <exception>
-#include <deque>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -184,7 +184,7 @@ struct Session {
  uint64_t cpuReadJobs220=0;
  bool cpuReadDisabled220=false;
  int cpuReadFallback220=0; // 1 setup failed before publication; 2 disabled after failure.
- std::deque<Metal4WorldPresentationResult> deferredFrames;
+ std::shared_ptr<NativeFrameCompletionMailbox> completionMailbox;
 	explicit Session(SDL_Window* window, uint32_t width, uint32_t height)
 		: requestedMSAA(globalRendering->msaaLevel)
 		, surface(AttachMetal4RendererSurface(window, MakeConfig(width, height)))
@@ -199,6 +199,7 @@ struct Session {
 		context.Initialize([]{return uint64_t(globalRendering->drawFrame);},std::move(services));
 		nativeContextOwned=true;
 		try {
+  completionMailbox=std::make_shared<NativeFrameCompletionMailbox>(context.Registry().ContextGeneration());
 		OriginalNativeModelContext().Initialize(context.Registry().ContextGeneration());
   OriginalNativeLegacyWaterProgramState().InitializeContext(context.Registry().ContextGeneration());
 	OriginalNativeLegacyWaterTextureMatrices().InitializeContext(context.Registry().ContextGeneration());
@@ -273,7 +274,7 @@ struct Session {
 		// Publish only after this Session has established all native owners.
 		globalRendering->msaaLevel=int(renderer->ActualMainSampling().effective);
 	}
-	~Session(){cpuReadReceipt220.reset();cpuReadWorker220.reset();DisconnectNativeSources();}
+	~Session(){if(completionMailbox)completionMailbox->Close();cpuReadReceipt220.reset();cpuReadWorker220.reset();DisconnectNativeSources();}
 	void DisconnectNativeSources()
 	{
 		// The constructor can fail before the Session unique_ptr is published.
@@ -498,8 +499,8 @@ std::unique_ptr<Session> session;
 void ApplyDeferredFrameReceipts()
 {
  if(!session)return;
- while(!session->deferredFrames.empty()){
- auto result=std::move(session->deferredFrames.front());session->deferredFrames.pop_front();
+ while(auto notice=session->completionMailbox->Pop()){
+ const auto& result=*notice;
  if(!result.sourceFrameCompleted)throw std::logic_error("Deferred scene receipt is not GPU-completed");
  if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  // Source ownership was transferred at submission; do not clear N+1 capture.
@@ -1435,6 +1436,7 @@ std::vector<std::uint8_t> ReadCurrentImage(const ui::NativeUIReadbackPrefix& pre
 	screen.postprocess=LuaNativePostprocess::GetRecorder().SnapshotPrefix(prefix.cutoff);
 	Metal4WorldRenderOptions options;
  options.environmentStage=session->environmentStage;
+ options.pbrDeclarations=session->renderer->CapturePBRSource();
 	options.screenUI=&screen;options.presentWorld=false;options.readback=&prefix;options.readbackRectangle=rectangle;
 	options.sourceLogicalExtent=session->lastLogicalExtent;
 	SetReadbackSubmissionReceipts(options);
@@ -1526,16 +1528,17 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	auto prepared = std::move(session->preparedFrame);
 	session->preparedFrame.reset();
 	session->surface.Refresh();
+ const auto pbrDeclarations=session->renderer?session->renderer->CapturePBRSource():NativePBRDeclarationReceipt{};
 	const auto submitTargets = [&]() -> DrawResult {
 		const auto independent=screenUI?std::count_if(screenUI->targetPasses.begin(),screenUI->targetPasses.end(),[](const auto& pass){return !pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen;}):0;
 		auto worldInfo = CaptureNativeWorldInfo();
 		const bool stencilUpdates=luaUnitStencilFrame && !luaUnitStencilFrame->passes.empty();
-		if (!independent && !stencilUpdates && !worldInfo && !session->renderer->HasPendingPBRSource()){session->genesisSourcePending.reset();return {};}
+		if (!independent && !stencilUpdates && !worldInfo && !session->renderer->HasPendingPBRSource(pbrDeclarations)){session->genesisSourcePending.reset();return {};}
 		if (!session->renderer) {
 			session->renderer = std::make_unique<Metal4WorldRenderer>(session->surface,session->requestedMSAA);
 			globalRendering->msaaLevel=int(session->renderer->ActualMainSampling().effective);
 		}
-		const auto maintenance = session->renderer->SubmitMaintenance(screenUI, std::move(worldInfo), false, luaUnitStencilFrame);
+		const auto maintenance = session->renderer->SubmitMaintenance(screenUI, std::move(worldInfo), false, luaUnitStencilFrame,pbrDeclarations);
 		if (maintenance.completedWorldInfo[0])
 			RetireNativeWorldInfo(maintenance.completedWorldInfo[0], maintenance.completedWorldInfo[1]);
 		if (maintenance.screenTargetsCompleted) {
@@ -1551,7 +1554,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	if(session->renderer->HasScreenContinuation())
 		sourcePlan=presentWorld && session->surface.Snapshot().CanPresent()?NativeSourceSubmission::PresentWorld:NativeSourceSubmission::OffscreenSource;
 	if(sourcePlan==NativeSourceSubmission::IndependentTargets && prepared &&
-		((prepared->legacyWater&&prepared->legacyWater->refraction) || prepared->originalShadow || (prepared->mainGround&&prepared->mainGround->ground&&prepared->mainGround->ground->mapMRT) || (prepared->opaqueModelFrame&&prepared->opaqueModelFrame->HasWriters()) || (prepared->shieldDepthFrame && prepared->shieldDepthFrame->HasWriters()) || session->renderer->HasPendingEnvironmentSource(session->environmentStage) || HasNativeDeferredPostprocessWrites(*prepared,luaBloomFrame)))
+		((prepared->legacyWater&&prepared->legacyWater->refraction) || prepared->originalShadow || (prepared->mainGround&&prepared->mainGround->ground&&prepared->mainGround->ground->mapMRT) || (prepared->opaqueModelFrame&&prepared->opaqueModelFrame->HasWriters()) || (prepared->shieldDepthFrame && prepared->shieldDepthFrame->HasWriters()) || session->renderer->HasPendingEnvironmentSource(session->environmentStage,pbrDeclarations) || HasNativeDeferredPostprocessWrites(*prepared,luaBloomFrame)))
 		sourcePlan=NativeSourceSubmission::OffscreenSource;
 	if (sourcePlan==NativeSourceSubmission::IndependentTargets){
   if(overlapPreparation)RequireRetiredGPUWork();
@@ -1592,6 +1595,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	}
 	Metal4WorldRenderOptions options;
  options.environmentStage=session->environmentStage;
+ options.pbrDeclarations=pbrDeclarations;
 	options.screenUI = screenUI;
 	options.presentWorld=sourcePlan==NativeSourceSubmission::PresentWorld;
 	options.sourceLogicalExtent=session->lastLogicalExtent;
@@ -1599,10 +1603,13 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  static const bool overlap=[] {const char* value=std::getenv("BAR_NATIVE_FRAME_OVERLAP");return !value||std::string_view(value)=="1";}();
  if(overlap&&options.presentWorld&&frame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
   const auto expectedDraw=frame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
-  options.deferredCompleted=[owner=session.get(),expectedDraw,expectedPost](const Metal4WorldPresentationResult& completed) {
-   if(session.get()!=owner || owner->deferredFrames.size()>=2 || !completed.sourceFrameCompleted || completed.sourceDrawFrame!=expectedDraw || completed.completedPostprocessSerial!=expectedPost)
-    throw std::logic_error("Deferred completion differs from its owned original source frame");
-   owner->deferredFrames.push_back(completed);
+  const auto mailbox=session->completionMailbox;
+  const auto ticket=mailbox->Prepare(mailbox->Epoch(),expectedDraw,expectedPost);
+  options.deferredCompleted=[mailbox,ticket](const Metal4WorldPresentationResult& completed) {
+   mailbox->Publish(ticket,{completed.sourceFrameCompleted,
+    completed.sourceDrawFrame,completed.completedPostprocessSerial,completed.dynamicWaterGeneration,
+    completed.dynamicWaterSequence,completed.dynamicWaterSourceDrawFrame,
+    completed.completedWorldInfo,completed.completedWaterUpdates});
   };
  }
  const auto result = overlapPreparation?

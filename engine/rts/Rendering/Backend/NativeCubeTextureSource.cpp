@@ -51,5 +51,16 @@ NativeCubeReflectionUpdate NativeCubeTextureSource::AdvanceReflection(uint32_t r
 	}
 	update=std::move(next);return update;
 }
-void NativeCubeTextureSource::CancelReflection()noexcept{if(registry){if(update.mipCurrent)registry->CancelContentPublication(update.mipCurrent,update.mipPrevious);if(update.current)registry->CancelContentPublication(update.current,update.previous);}update={};}
+void NativeCubeTextureSource::CancelReflection()noexcept{CancelReflection(update);}
+void NativeCubeTextureSource::CancelReflection(const NativeCubeReflectionUpdate& expected)noexcept {
+	// Copy first: the compatibility overload aliases our current update.
+	const auto retained=expected;
+	if(registry){
+		if(retained.mipCurrent)registry->CancelContentPublication(retained.mipCurrent,retained.mipPrevious);
+		if(retained.current)registry->CancelContentPublication(retained.current,retained.previous);
+	}
+	if(update.current==retained.current && update.previous==retained.previous && update.backing==retained.backing &&
+	   update.mipCurrent==retained.mipCurrent && update.mipPrevious==retained.mipPrevious && update.mipBacking==retained.mipBacking &&
+	   update.face==retained.face && update.skyOnly==retained.skyOnly) update={};
+}
 } // namespace rendering

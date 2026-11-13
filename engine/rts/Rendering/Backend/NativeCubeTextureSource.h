@@ -46,6 +46,8 @@ public:
 	const NativeCubeReflectionUpdate& CurrentReflectionUpdate()const{return update;}
 	std::shared_ptr<const NativeCubeTextureBacking> Image(uint32_t)const;
 	void CancelReflection()noexcept;
+	// Withdraw only this retained publication; never clear a newer source update.
+	void CancelReflection(const NativeCubeReflectionUpdate& expected)noexcept;
 private:
 	NativeTextureRegistry* registry=nullptr;NativeCUSTextureHistory* history=nullptr;
 	NativeCubeTextureServices services;

@@ -4,12 +4,14 @@
 #include "Metal4WindowSurface.h"
 #include "Rendering/Backend/NativePresentationPolicy.h"
 #include "Rendering/Backend/NativeEnvironmentStageReceipt.h"
+#include "Rendering/Backend/NativePBRDeclarationBatch.h"
 #include "Rendering/Backend/NativeMissileThrusterData.h"
 #include "Rendering/Backend/NativeMainSamplingData.h"
 #include "Rendering/Backend/RenderTypes.h"
 #include "Rendering/Backend/WorldFrameData.h"
 #include "Rendering/Backend/ScreenDrawList.h"
 #include <memory>
+#include <optional>
 #include <functional>
 
 namespace rendering {
@@ -64,6 +66,7 @@ struct Metal4WorldRenderOptions {
 #endif
 	bool shaderValidation = DefaultShaderValidation;
  NativeEnvironmentStageReceipt environmentStage; // Exact pre-PreUnit source receipt.
+ std::optional<NativePBRDeclarationReceipt> pbrDeclarations; // nullopt: legacy caller; engaged null: captured empty.
 	const ScreenFrameView* screenUI = nullptr; // Same drawable/encoder, before one present.
 	// Non-null only for an explicit synchronous SaveImage cut after the world
 	// callins. The common first batch retains main attachments for its suffix.
@@ -210,7 +213,7 @@ public:
 		const ui::NativeUIReadbackPrefix&,ScreenScissor rectangle,bool shaderValidation);
 	Metal4MaintenanceResult SubmitMaintenance(const ScreenFrameView* frame,
 		std::shared_ptr<const NativeWorldInfoFrame> worldInfo, bool shaderValidation = Metal4WorldRenderOptions::DefaultShaderValidation,
-		std::shared_ptr<const NativeUnitStencilFrame> unitStencilFrame = {});
+		std::shared_ptr<const NativeUnitStencilFrame> unitStencilFrame = {}, std::optional<NativePBRDeclarationReceipt> pbrDeclarations = std::nullopt);
 	bool HasScreenContinuation() const noexcept;
 	void AbortScreenContinuation() noexcept;
 	void ClearWaterResources();
@@ -250,8 +253,9 @@ public:
 	std::shared_ptr<const NativeDistortionProgramConsumer> CompileOriginalDistortionProgram(const NativeDistortionProgramSource&);
 	NativeTerrainProgramLink CompileOriginalTerrainProgram(const NativeTerrainProgramRequest&);
 	void ClearOriginalModelSources();
-	bool HasPendingPBRSource() const;
-	bool HasPendingEnvironmentSource(const NativeEnvironmentStageReceipt&) const;
+	NativePBRDeclarationReceipt CapturePBRSource();
+	bool HasPendingPBRSource(const NativePBRDeclarationReceipt&) const;
+	bool HasPendingEnvironmentSource(const NativeEnvironmentStageReceipt&,const NativePBRDeclarationReceipt&) const;
 	// Enable only after the selected original deferred normal/depth producers
 	// are genuinely connected to the shared logical names and this draw sequence.
 	void ConnectSSAODeferredSources(bool connected);
@@ -260,7 +264,7 @@ public:
 
 private:
  Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
- Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired);
+ Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan);
 	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&);
 	struct Impl;
 	std::unique_ptr<Impl> impl;
