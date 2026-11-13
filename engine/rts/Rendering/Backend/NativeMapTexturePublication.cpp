@@ -95,15 +95,33 @@ std::shared_ptr<const NativeMapTextureFrame> NativeMapTexturePublication::Publis
 {
 	Check(owner);Require(heights && HasOriginalAllocation(),"Original map texture publication lacks source heights or allocations");
 	auto output=std::make_shared<NativeMapTextureFrame>();output->sourceDrawFrame=frame;
+ std::array<std::shared_ptr<const NativeCUSTextureObject>,2> priorWrites{};
+ std::array<std::shared_ptr<const NativeMapTextureBacking>,2> staged{};
+ try {
 	for(size_t i=0;i<names.size();++i){
 		auto prior=registry->Find(names[i]);Require(prior && prior->allocation.width==heights->width && prior->allocation.height==heights->height,"Original map texture dimensions differ from the retained existing height cache");
 		auto previous=std::dynamic_pointer_cast<const NativeMapTextureBacking>(prior->backing);
 		if(previous && previous->originalRevision==revisions[i] && previous->heights==heights){output->images[i]=std::move(prior);continue;}
 		Require(revisions[i]>0,"Original map texture has not yet had its actual source writer");
+  Require(prior->version<std::numeric_limits<uint64_t>::max()-1,"Map publication lacks rollback version capacity");
 		auto backing=std::make_shared<NativeMapTextureBacking>();backing->role=NativeMapTextureRole(i);backing->originalRevision=revisions[i];backing->heights=heights;
 		backing->storageGeneration=prior->identity;backing->contentVersion=prior->version+1;backing->sourceDrawFrame=frame;backing->content=NativeTextureContent::ProducerVersion;
-		registry->PublishContent(prior->name,{},backing);output->images[i]=registry->Find(prior->name);
+  priorWrites[i]=prior;staged[i]=std::move(backing);
 	}
+  // Finish all source validation/backing allocation before the first writer.
+  for(size_t i=0;i<names.size();++i)if(staged[i]){
+   registry->PublishContent(priorWrites[i]->name,{},staged[i]);
+   // Successful Replace clears deferred restoration, so Find only retains the
+   // committed object here; it cannot allocate after publication.
+   output->images[i]=registry->Find(priorWrites[i]->name);
+  }
+ }catch(...){
+  // Only writes from this attempt are reversed; reused complete images are not
+  // producers of this transaction. Source capture is still strictly serial.
+  for(size_t i=names.size();i-->0;)if(priorWrites[i]&&output->images[i])
+   registry->CancelContentPublication(output->images[i],priorWrites[i]);
+  throw;
+ }
 	return output;
 }
 NativeMapTexturePublication& OriginalNativeMapTextures(){static NativeMapTexturePublication owner;return owner;}

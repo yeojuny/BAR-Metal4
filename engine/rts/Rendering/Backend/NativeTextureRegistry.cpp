@@ -4,6 +4,7 @@
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#include <type_traits>
 
 namespace rendering {
 
@@ -101,8 +102,10 @@ void NativeTextureRegistry::Replace(std::shared_ptr<NativeCUSTextureObject> obje
 	if (prior->version == std::numeric_limits<uint64_t>::max()) throw std::runtime_error("Native texture version overflows");
 	object->version = prior->version + 1;
 	const auto name=object->name;
-	objects[name] = ObjectEntry{std::move(object),{},0};
-	history.ObjectStateChanged();
+	auto& entry=objects.at(name);
+ static_assert(std::is_nothrow_move_assignable_v<ObjectEntry>);
+	history.ObjectStateChanged(); // May throw: do not publish a receipt-less version.
+	entry = ObjectEntry{std::move(object),{},0};
 }
 
 void NativeTextureRegistry::SetSampling(uint64_t name, const NativeTextureSampling& actualState)

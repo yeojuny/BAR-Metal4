@@ -308,3 +308,30 @@ Validation: actual derived-selection policy sanitizer tests (1,000 iterations),
 malformed marker/order rejection and unchanged-update checks, actual capture C++
 syntax, structural renderer ordering/material/copy checks and independent review.
 The native Metal translation unit has not been compiled or executed here.
+
+### Paired map source-publication transaction (2026-11-13)
+
+Map normals/height publication previously could commit the first registry output
+then throw allocating/publishing the second, leaving a mixed source pair. Both
+source validations and new immutable backings now stage before the first write;
+any later failure reverses only this attempt's exact new publications. Reused
+outputs are not treated as new producers or rolled back. Each changed output
+reserves version capacity for a rollback increment. This protects source registry
+contents, separate from the previously implemented physical GPU pair transaction.
+
+Registry Replace now performs its throwing history-event advance before its
+no-throw existing-entry assignment. A history counter overflow no longer commits
+a version without delivering its receipt. Successful replacement clears deferred
+restoration, so retaining its immediate Find result introduces no allocation gap.
+Cancellation preserves real sampler state and advances content versions; it does
+not rewind history counters or claim exact numeric version rollback. Serial source
+capture remains required; this is not a younger-producer dependency graph.
+Validation: actual map/registry allocator fault injection restores both prior
+backings at 11 failing positions and verifies 71 successful/retry/reuse cases;
+old nontransactional pair code fails the expected restoration assertion. Actual
+history-overflow branch is exercised using an identical-layout test-only header
+accessor, verifying preservation of the exact prior registry object. MRT frontier
+regression passes 1,000 cases; actual modified source translation units pass C++
+syntax checks. Native application execution remains deferred.
+The old Replace ordering also fails the overflow negative-control assertion;
+independent review passed for both paired rollback and registry commit ordering.
