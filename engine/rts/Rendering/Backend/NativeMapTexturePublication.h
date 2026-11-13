@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <atomic>
 #include "NativeTextureRegistry.h"
 #include <array>
 #include <memory>
@@ -16,10 +17,13 @@ struct NativeMapTextureBacking final:NativeTextureBacking {
 	uint64_t originalRevision=0;
 	std::shared_ptr<const WorldTerrainHeights> heights;
 	NativeTextureBackingKind Kind()const noexcept override{return NativeTextureBackingKind::Other;}
+	// One-shot release publication; capture reads only Completed(), never GPU state.
+	// Owned Resource snapshots remain valid for the lifetime of this backing.
 	void Fulfill(std::shared_ptr<const NativeMapTextureResource>)const;
-	const std::shared_ptr<const NativeMapTextureResource>& Resource()const{return resource;}
+	std::shared_ptr<const NativeMapTextureResource> Resource()const{return resource.load(std::memory_order_acquire);}
+ bool Completed()const noexcept{const auto actual=Resource();return actual&&actual->Completed();}
 private:
-	mutable std::shared_ptr<const NativeMapTextureResource> resource;
+	mutable std::atomic<std::shared_ptr<const NativeMapTextureResource>> resource;
 };
 struct NativeMapTextureFrame {
 	uint64_t sourceDrawFrame=0;

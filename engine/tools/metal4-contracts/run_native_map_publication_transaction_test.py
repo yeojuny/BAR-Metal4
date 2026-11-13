@@ -15,6 +15,8 @@ subprocess.run([str(out/'test')],env=env,check=True)
 # Negative control: original nontransactional pair loop, keeping current registry.
 old=subprocess.check_output(['git','show','0779432d2404009686d45bfaa5abc8b2337bb306:engine/rts/Rendering/Backend/NativeMapTexturePublication.cpp'],cwd=root.parent,text=True)
 assert 'catch' not in old.split('NativeMapTexturePublication::Publish(',1)[1].split('NativeMapTexturePublication& OriginalNativeMapTextures',1)[0]
+# Keep the old transaction algorithm, adapt only fulfillment to the current atomic backing API.
+old=old.replace('Require(actual && !resource,"Original map texture backing must receive its actual GPU resource once");resource=std::move(actual);', 'std::shared_ptr<const NativeMapTextureResource> empty;Require(actual && resource.compare_exchange_strong(empty,std::move(actual),std::memory_order_release,std::memory_order_relaxed),"Original map texture backing must receive its actual GPU resource once");')
 (out/'old.cpp').write_text(old)
 build(out/'old.cpp',out/'negative')
 r=subprocess.run([str(out/'negative')],env=env,capture_output=True,text=True)

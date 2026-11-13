@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <atomic>
 #include "Rendering/Backend/NativeCUSUniformData.h"
 #include "Rendering/Backend/NativeCUSTextureHistory.h"
 #include "Rendering/Backend/NativeWorldDrawData.h"
@@ -16,7 +17,8 @@ struct NativeSSAOImage {
  NativeSSAOFormat format=NativeSSAOFormat::RGBA8;
  NativeTextureSampling sampling;
 };
-struct NativeSSAOProducerState {uint64_t submissionIdentity=0;bool encoded=false,completed=false;};
+struct NativeSSAOProducerState {uint64_t submissionIdentity=0;bool encoded=false;// Only this completion witness is shared with source capture.
+ std::atomic<bool> completed{false};};
 struct NativeSSAOImageResource {virtual ~NativeSSAOImageResource()=default;};
 struct NativeSSAOImageVersion {
  std::shared_ptr<const NativeSSAOImage> image;

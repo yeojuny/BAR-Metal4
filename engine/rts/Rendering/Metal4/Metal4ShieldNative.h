@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <atomic>
 #include "Metal4RuntimeNative.h"
 #include "Rendering/Backend/NativeShieldData.h"
 #include "Rendering/Backend/NativeShieldDepthBacking.h"
@@ -13,7 +14,8 @@ enum class ShieldDepthOperation { Raster, ClearOne, AllocationOnly };
 struct ShieldDepthProducerState {
 	ShieldDepthRole role=ShieldDepthRole::CombinedScene;
 	std::uint64_t sourceDrawFrame=0, identity=0;
-	bool encoded=false, completed=false;
+	bool encoded=false;
+	std::atomic<bool> completed{false};
 	ShieldDepthOperation operation=ShieldDepthOperation::Raster;
 	bool allocationVerified=false; // Only after actual native storage allocation. No invented pixels.
 	std::uint64_t submissionIdentity=0; // Actual common submission, not draw-frame or object identity.

@@ -22,10 +22,12 @@ std::shared_ptr<ShieldDepthProducerState> CreateShieldDepthProducer(ShieldDepthR
 	Require(role==ShieldDepthRole::TerrainOnly||role==ShieldDepthRole::ModelsOnly,"Original Shield cannot relabel combined scene or shadow depth as a GBuffer producer");
 	static std::atomic<std::uint64_t> next{1};auto identity=next.load();
 	for(;;){Require(identity!=std::numeric_limits<std::uint64_t>::max(),"Original Shield producer epoch exhausted");if(next.compare_exchange_weak(identity,identity+1))break;}
-	return std::make_shared<ShieldDepthProducerState>(ShieldDepthProducerState{role,frame,identity});
+	auto producer=std::make_shared<ShieldDepthProducerState>();
+	producer->role=role;producer->sourceDrawFrame=frame;producer->identity=identity;return producer;
 }
 namespace {
 struct DepthBackingResource final:NativeShieldDepthResource {ShieldDepthImage image;explicit DepthBackingResource(const ShieldDepthImage& source):image(source){}
+ bool Completed()const noexcept override{return image.producer&&image.producer->completed.load(std::memory_order_acquire);}
  bool CanCancelUnsubmitted()const noexcept override{return image.producer&&!image.producer->encoded&&!image.producer->completed;}
 };
 struct Uniform {

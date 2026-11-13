@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <atomic>
 #include "Rendering/Backend/NativeTextureBacking.h"
 #include <memory>
 
@@ -10,6 +11,7 @@ struct NativeShieldDepthMetadata {
 	uint32_t width=0,height=0;
 };
 struct NativeShieldDepthResource { virtual ~NativeShieldDepthResource()=default;
+ virtual bool Completed()const noexcept{return false;}
  // Unknown fulfilled resources must not authorize rollback. Serial owner only.
  virtual bool CanCancelUnsubmitted()const noexcept{return false;} };
 // Logical object/version publication precedes Lua DrawWorld; the typed GPU
@@ -21,13 +23,16 @@ public:
 		uint64_t sourceDrawFrame,NativeTextureContent,const NativeShieldDepthMetadata&);
 	NativeTextureBackingKind Kind()const noexcept override{return kind;}
 	const NativeShieldDepthMetadata& Metadata()const{return metadata;}
-	const std::shared_ptr<const NativeShieldDepthResource>& Resource()const{return resource;}
+	std::shared_ptr<const NativeShieldDepthResource> Resource()const{return resource.load(std::memory_order_acquire);}
+ bool Completed()const noexcept{const auto actual=Resource();return actual&&actual->Completed();}
+	// One-shot release publication; capture reads only Completed(), never GPU state.
+	// Owned Resource snapshots remain valid for the lifetime of this backing.
 	void Fulfill(std::shared_ptr<const NativeShieldDepthResource>)const;
- bool CanCancelUnsubmitted()const noexcept{return !resource||resource->CanCancelUnsubmitted();}
+ bool CanCancelUnsubmitted()const noexcept{const auto actual=Resource();return !actual||actual->CanCancelUnsubmitted();}
 private:
 	NativeTextureBackingKind kind;
 	NativeShieldDepthMetadata metadata;
-	mutable std::shared_ptr<const NativeShieldDepthResource> resource;
+	mutable std::atomic<std::shared_ptr<const NativeShieldDepthResource>> resource;
 };
 bool IsNativeShieldDepthReadable(bool encoded,bool completed,bool allocationOnly,bool actualAllocationVerified,
 	uint64_t producerSubmission,uint64_t consumerSubmission) noexcept;

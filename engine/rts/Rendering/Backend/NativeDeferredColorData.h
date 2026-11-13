@@ -1,9 +1,11 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <atomic>
 #include "NativeShieldDepthBacking.h"
 #include "NativeTextureContext.h"
 namespace rendering {
 struct NativeDeferredColorResource {virtual ~NativeDeferredColorResource()=default;
+ virtual bool Completed()const noexcept{return false;}
  // Unknown fulfilled resources must not authorize rollback. Serial owner only.
  virtual bool CanCancelUnsubmitted()const noexcept{return false;}};
 struct NativeDeferredColorMetadata {
@@ -19,12 +21,15 @@ public:
 		NativeTextureContent,const NativeDeferredColorMetadata&);
 	NativeTextureBackingKind Kind()const noexcept override{return NativeTextureBackingKind::ColorImage;}
 	const NativeDeferredColorMetadata& Metadata()const{return metadata;}
-	const std::shared_ptr<const NativeDeferredColorResource>& Resource()const{return resource;}
+	std::shared_ptr<const NativeDeferredColorResource> Resource()const{return resource.load(std::memory_order_acquire);}
+ bool Completed()const noexcept{const auto actual=Resource();return actual&&actual->Completed();}
+	// One-shot release publication; capture reads only Completed(), never GPU state.
+	// Owned Resource snapshots remain valid for the lifetime of this backing.
 	void Fulfill(std::shared_ptr<const NativeDeferredColorResource>)const;
- bool CanCancelUnsubmitted()const noexcept{return !resource||resource->CanCancelUnsubmitted();}
+ bool CanCancelUnsubmitted()const noexcept{const auto actual=Resource();return !actual||actual->CanCancelUnsubmitted();}
 private:
 	NativeDeferredColorMetadata metadata;
-	mutable std::shared_ptr<const NativeDeferredColorResource> resource;
+	mutable std::atomic<std::shared_ptr<const NativeDeferredColorResource>> resource;
 };
 struct NativeDeferredColorVersion {
 	std::shared_ptr<const NativeCUSTextureObject> previous,current;

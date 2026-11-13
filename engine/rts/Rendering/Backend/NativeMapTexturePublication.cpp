@@ -18,7 +18,8 @@ std::shared_ptr<const WorldTerrainHeights> CaptureNativeTerrainHeightSnapshot(
 }
 void NativeMapTextureBacking::Fulfill(std::shared_ptr<const NativeMapTextureResource> actual)const
 {
-	Require(actual && !resource,"Original map texture backing must receive its actual GPU resource once");resource=std::move(actual);
+	std::shared_ptr<const NativeMapTextureResource> empty;
+	Require(actual && resource.compare_exchange_strong(empty,std::move(actual),std::memory_order_release,std::memory_order_relaxed),"Original map texture backing must receive its actual GPU resource once");
 }
 void NativeMapTexturePublication::Attach(NativeTextureRegistry& r,NativeCUSTextureHistory& h)
 {

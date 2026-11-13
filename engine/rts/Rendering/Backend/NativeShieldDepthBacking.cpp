@@ -15,8 +15,8 @@ NativeShieldDepthBacking::NativeShieldDepthBacking(NativeTextureBackingKind k,ui
 }
 void NativeShieldDepthBacking::Fulfill(std::shared_ptr<const NativeShieldDepthResource> actual)const
 {
-	if(!actual||resource)throw std::logic_error("Original Shield depth backing must be fulfilled once with its real native resource");
-	resource=std::move(actual);
+	std::shared_ptr<const NativeShieldDepthResource> empty;
+	if(!actual||!resource.compare_exchange_strong(empty,std::move(actual),std::memory_order_release,std::memory_order_relaxed))throw std::logic_error("Original Shield depth backing must be fulfilled once with its real native resource");
 }
 bool IsNativeShieldDepthReadable(bool encoded,bool completed,bool allocationOnly,bool actualAllocationVerified,
 	uint64_t producerSubmission,uint64_t consumerSubmission) noexcept

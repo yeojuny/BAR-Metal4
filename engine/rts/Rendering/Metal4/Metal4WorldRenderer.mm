@@ -365,13 +365,13 @@ struct Metal4WorldRenderer::Impl {
 	metal4::SensorPreviewGPU sensorPreviewGPU;
 	metal4::MiniMapGPU sensorRadarGPU;
 	struct MapImage final:NativeMapTextureResource {
-		__strong id<MTLTexture> texture=nil;mutable bool completed=false;
+		__strong id<MTLTexture> texture=nil;mutable std::atomic<bool> completed{false};
   __strong id<MTLBuffer> cornerBuffer=nil;
   std::shared_ptr<const WorldTerrainHeights> cornerSource;
 		// One RRRR view for this actual immutable height upload, never by name/frame.
 		mutable __strong id<MTLTexture> heightRRRR=nil,heightRRRRSource=nil;
 		std::shared_ptr<const metal4::PreparedMiniMapHeight> heightOwner;
-		bool Completed()const noexcept override{return completed;}
+		bool Completed()const noexcept override{return completed.load(std::memory_order_acquire);}
 	};
 	std::shared_ptr<bool> normalsEncoded=std::make_shared<bool>(false);
 	metal4::MapEdgeGPU mapEdgeGPU;
@@ -1729,7 +1729,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			// External color retains the real R8 allocation without selecting the UI font-coverage material.
 			image->format=ScreenTextureFormat::ExternalColor;image->width=version.image->width;image->height=version.image->height;
 			image->sourceTexture=binding.object;image->flipV=true;
-			image->sourceDependent=!version.producer->allocationOnly&&!version.producer->completed;return image;
+			image->sourceDependent=!version.producer->allocationOnly&&!version.producer->completed.load(std::memory_order_acquire);return image;
 		}
 		if(auto height=std::dynamic_pointer_cast<const NativeMapTextureBacking>(binding.object->backing);height&&height->role==NativeMapTextureRole::Height){
 			const auto& object=*binding.object;const auto& a=object.allocation;
@@ -1739,7 +1739,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 				"Original UI height descriptor differs from its retained R32F map publication");
 			auto image=std::make_shared<ScreenTexture>();image->sourceName=object.source;image->generation=object.version;
 			image->format=ScreenTextureFormat::R32Float;image->width=a.width;image->height=a.height;image->sourceTexture=binding.object;
-			image->flipV=false;image->sourceDependent=!height->Resource()||!height->Resource()->Completed();return image;
+			image->flipV=false;image->sourceDependent=!height->Completed();return image;
 		}
 		if(binding.object->image&&!binding.object->backing){
 			const auto& source=PublishedWorldTexture(*binding.object);
@@ -1777,26 +1777,26 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
     case NativeBloomFormat::RGBA16Float:image->format=ScreenTextureFormat::RGBA16Float;break;
     default:throw std::runtime_error("Original Bloom descriptor has an unsupported captured HDR format");
    }
-   image->width=backing->version->image->width;image->height=backing->version->image->height;image->flipV=true;image->sourceTexture=binding.object;image->sourceDependent=!backing->version->producer->completed;return image;
+   image->width=backing->version->image->width;image->height=backing->version->image->height;image->flipV=true;image->sourceTexture=binding.object;image->sourceDependent=!backing->version->producer->completed.load(std::memory_order_acquire);return image;
   }
   if(auto backing=std::dynamic_pointer_cast<const NativeSSAOImageBacking>(binding.object?binding.object->backing:nullptr)){
    Require(backing->version&&backing->version->image,"Original SSAO binding has no immutable image generation");
    auto image=std::make_shared<ScreenTexture>();image->sourceName=binding.object->source;image->generation=binding.object->version;
    image->format=backing->version->image->format==NativeSSAOFormat::RGBA8?ScreenTextureFormat::RGBA8Unorm:ScreenTextureFormat::RGBA16Float;
    image->width=backing->version->image->width;image->height=backing->version->image->height;image->flipV=true;image->sourceTexture=binding.object;
-   image->sourceDependent=!backing->version->producer->completed;return image;
+   image->sourceDependent=!backing->version->producer->completed.load(std::memory_order_acquire);return image;
   }
   if(auto backing=std::dynamic_pointer_cast<const NativeDeferredColorBacking>(binding.object?binding.object->backing:nullptr)){
    auto image=std::make_shared<ScreenTexture>();image->sourceName=binding.object->source;image->generation=binding.object->version;
    image->format=ScreenTextureFormat::RGBA8Unorm;image->width=backing->Metadata().view.width;image->height=backing->Metadata().view.height;
    image->flipV=true;image->sourceTexture=binding.object;
-   image->sourceDependent=backing->content==NativeTextureContent::ProducerVersion&&(!backing->Resource()||!GetDeferredColorBackingImage(*backing).producer->completed);return image;
+   image->sourceDependent=backing->content==NativeTextureContent::ProducerVersion&&!backing->Completed();return image;
   }
   Require(ClassifyNativeShieldTexture(binding)==NativeShieldTextureKind::Depth,"Original UI external image needs its actual typed resource provider");
 		auto backing=std::dynamic_pointer_cast<const NativeShieldDepthBacking>(binding.object->backing);Require(backing!=nullptr,"Original UI named depth backing type differs");
 		auto image=std::make_shared<ScreenTexture>();image->sourceName=binding.object->source;image->generation=binding.object->version;image->format=ScreenTextureFormat::Depth32Float;
 		image->width=backing->Metadata().width;image->height=backing->Metadata().height;image->flipV=true;image->sourceTexture=binding.object;
-		image->sourceDependent=backing->content==NativeTextureContent::ProducerVersion&&(!backing->Resource()||!GetShieldDepthBackingImage(*backing).producer->completed);
+		image->sourceDependent=backing->content==NativeTextureContent::ProducerVersion&&!backing->Completed();
 		return image;
 	});
 	impl->screenGPU.SetExternalImageProvider([owner=impl.get()](RuntimeLease& lease,const std::shared_ptr<const NativeCUSTextureObject>& object,std::optional<NativePostprocessConsumer>)->PreparedScreenExternalImage{
