@@ -335,3 +335,31 @@ regression passes 1,000 cases; actual modified source translation units pass C++
 syntax checks. Native application execution remains deferred.
 The old Replace ordering also fails the overflow negative-control assertion;
 independent review passed for both paired rollback and registry commit ordering.
+
+### Preserve CPU read receipts on the joined executor
+
+The original handoff Appendix C section 8 identifies a real reuse loss: main primes
+or adopts a CPU read packet, but the renderer's worker has a different TLS scope
+and falls back to validating those same reads again. After independent main
+preparation, SceneBridge now seals that exact packet into the owned submission.
+DrawPrepared activates a read-only view on its consuming thread; exact retained
+owner-tuple checks still gate lookup. The worker does not inherit a TLS pointer,
+mutate the packet, move the geometry cache, or own final source destruction.
+Nested and exception exit restore the previous view. Packet preparation counters
+travel with the rows; this does not by itself fix all cross-thread CPU trace scopes.
+
+Joined-worker idle publication now occurs after releasing its local task reference.
+Previously Invoke could return before that release and race main's last source
+owner drop, making final destruction happen on the worker. The caller's packaged
+task reference now remains the last task reference until the joined call exits.
+The CPU packet is not added to GPU completion/continuation lifetimes, and the main
+submission/local packet pins it across both successful and exceptional return.
+This preserves a named original optimization; it does not enable CPU lookahead.
+Validation: actual roster/read-set fixture and serial worker pass 11,056 checks,
+including 1,000 handoffs, unchanged read rows, exact-owner mismatch, nested/error
+view restoration and unchanged worker geometry-cache size. A deterministic
+post-idle test hook confirms final source release on main; restoring the old
+worker cleanup order fails that contract. The hook exists only in the test header
+overlay. Worker allocation/exception regression passes four allocation failures
+and 1,000 recovery pairs. SceneBridge passes host C++ syntax; native execution
+and the P5 positive active-overlap gate remain unverified.

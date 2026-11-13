@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Metal4WindowSurface.h"
+#include "Rendering/Backend/NativeCUSCPUReadScope.h"
 #include "Rendering/Backend/NativeSourceContextSnapshot.h"
 #include "Metal4MRTFrontier209.h"
 #include "Rendering/Backend/NativePresentationPolicy.h"
@@ -71,6 +72,7 @@ struct Metal4WorldRenderOptions {
 	static constexpr bool DefaultShaderValidation = true;
 #endif
 	bool shaderValidation = DefaultShaderValidation;
+ std::shared_ptr<const NativeCUSCPUReadScope::Packet> cpuReadPacket; // Joined-call immutable rows; main retains final owner.
  std::optional<std::uint64_t> heldSourceDraw; // Exact admitted UI owner, never latest-pending inference.
  std::shared_ptr<NativeFrameBeginReceipt> beginReceipt; // Owned ordinary-frame Begin evidence; no source callback.
  NativeEnvironmentStageReceipt environmentStage; // Exact pre-PreUnit source receipt.

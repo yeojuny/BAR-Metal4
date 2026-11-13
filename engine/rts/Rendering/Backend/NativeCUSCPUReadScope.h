@@ -38,13 +38,14 @@ public:
   }
  }
  static const NativeCUSRenderReadSet* Find(const NativeCUSSourceDraw& draw){
+  if(view)return FindPacket(*view,draw);
   if(!active)return nullptr;
   const auto it=active->entries.find(KeyFor(draw));
   return it==active->entries.end()||!it->second.Matches(draw)?nullptr:&it->second.reads;
  }
  void SetPreparationNanoseconds(uint64_t value){preparationNanoseconds=value;}
- static uint64_t ActivePreparationNanoseconds(){return active?active->preparationNanoseconds:0;}
- static size_t ActiveCount(){return active?active->entries.size():0;}
+ static uint64_t ActivePreparationNanoseconds(){return view?PacketPreparation(*view):(active?active->preparationNanoseconds:0);}
+ static size_t ActiveCount(){return view?PacketCount(*view):(active?active->entries.size():0);}
  size_t Count()const{return entries.size();}
  size_t Bytes()const{return bytes;}
 private:
@@ -69,7 +70,7 @@ private:
   class Packet {
    friend class NativeCUSCPUReadScope;
    std::map<Key,Entry> entries;
-   size_t bytes=0;
+   size_t bytes=0;uint64_t preparationNanoseconds=0;
   public:
    Packet()=default;
    Packet(Packet&&)=default;
@@ -92,7 +93,18 @@ private:
     return sum;
    }
   };
-  Packet Seal(){Packet out;out.entries=std::move(entries);out.bytes=std::exchange(bytes,0);return out;}
+  // Borrow immutable rows for this joined invocation only. The main-owned
+  // submission retains the packet through return/exception; no source owners
+  // or worker geometry/TLS scope are transferred or destroyed by this view.
+  class ReadView {
+   const Packet* previous;
+  public:
+   explicit ReadView(const Packet& packet) noexcept:previous(view){view=&packet;}
+   ~ReadView(){view=previous;}
+   ReadView(const ReadView&)=delete;
+   ReadView& operator=(const ReadView&)=delete;
+  };
+  Packet Seal(){Packet out;out.entries=std::move(entries);out.bytes=std::exchange(bytes,0);out.preparationNanoseconds=preparationNanoseconds;return out;}
   void Adopt(Packet&& packet){
    if(!entries.empty()||bytes)throw std::logic_error("CUS CPU receipt must precede alpha/shadow priming");
    entries=std::move(packet.entries);bytes=std::exchange(packet.bytes,0);
@@ -112,6 +124,13 @@ private:
   }
   static size_t GeometryCacheSize(){return geometry.Size();}
  private:
+  static const NativeCUSRenderReadSet* FindPacket(const Packet& packet,const NativeCUSSourceDraw& draw){
+   const auto it=packet.entries.find(KeyFor(draw));
+   return it==packet.entries.end()||!it->second.Matches(draw)?nullptr:&it->second.reads;
+  }
+  static size_t PacketCount(const Packet& packet){return packet.entries.size();}
+  static uint64_t PacketPreparation(const Packet& packet){return packet.preparationNanoseconds;}
+  inline static thread_local const Packet* view=nullptr;
   std::map<Key,Entry> entries;size_t bytes=0;uint64_t preparationNanoseconds=0;
  NativeCUSCPUReadScope* previous;
  inline static thread_local NativeCUSCPUReadScope* active=nullptr;

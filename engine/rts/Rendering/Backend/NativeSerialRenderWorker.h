@@ -44,7 +44,12 @@ private:
    std::unique_lock lock(mutex);ready.wait(lock,[this]{return stopping||bool(work);});
    if(stopping&&!work)return;
    next=std::move(work);work={};}
-   next();{std::lock_guard lock(mutex);busy=false;}idle.notify_all();
+   next();
+   // Joined return includes release of the worker-side task reference. The
+   // invoking thread still owns packaged_task, so its source captures are
+   // finally released there, not in a post-idle worker-loop race.
+   next={};
+   {std::lock_guard lock(mutex);busy=false;}idle.notify_all();
   }
  }
  std::mutex mutex;std::condition_variable ready,idle;

@@ -1649,6 +1649,10 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		globalRendering->msaaLevel=int(session->renderer->ActualMainSampling().effective);
 	}
 	Metal4WorldRenderOptions options;
+ // Preserve the already-built exact read receipt across the joined worker.
+ // Allocate before moving rows; independent main preparation has finished.
+ auto cpuReadPacket=std::make_shared<NativeCUSCPUReadScope::Packet>();
+ *cpuReadPacket=cpuReadScope.Seal();options.cpuReadPacket=cpuReadPacket;
  options.environmentStage=session->environmentStage;
  options.pbrDeclarations=pbrDeclarations;
 	options.screenUI = screenUI;

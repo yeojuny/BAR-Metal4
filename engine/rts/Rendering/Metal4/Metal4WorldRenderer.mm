@@ -2322,6 +2322,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   const auto& names=OriginalNativeTextureContext().Geometry(NativeGeometryTextureRole::Models);
   return NativeSourceContextSnapshot::ModelGeometry{names.Name(5)!=0,names.Width(),names.Height()};
  };
+ std::optional<NativeCUSCPUReadScope::ReadView> cpuReads;
+ if(options.cpuReadPacket)cpuReads.emplace(*options.cpuReadPacket);
  NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");

@@ -3,7 +3,16 @@
 #include "Rendering/Backend/WorldFrameData.h"
 #include <iostream>
 #include <cstring>
+#include <thread>
+#include <atomic>
+#include "Rendering/Backend/NativeSerialRenderWorker.h"
 using namespace rendering;
+#ifdef BAR_TEST_WORKER_IDLE_HOOK
+namespace rendering {
+std::atomic<bool> testIdleArmed=false,testIdleEntered=false,testIdleRelease=false;
+void NativeTestAfterIdle(){if(testIdleArmed.exchange(false)){testIdleEntered=true;while(!testIdleRelease.load())std::this_thread::yield();}}
+}
+#endif
 int checks=0;
 void Check(bool v){++checks;if(!v)throw std::runtime_error("contract check "+std::to_string(checks));}
 template<class F>void Reject(F f){bool rejected=false;try{f();}catch(const std::exception&){rejected=true;}Check(rejected);}
@@ -62,6 +71,67 @@ int main(){
  changed=newer;changed.modelInputs.reset();Check(!NativeCUSCPUReadScope::Find(changed));
  changed=newer;changed.sequence=99;Reject([&]{ValidateNativeCUSSourceDraw(changed);});
  auto packet=scope.Seal();Check(packet.Count()==1);Check(scope.Count()==0);NativeCUSCPUReadScope receiving;receiving.Adopt(std::move(packet));Check(receiving.Count()==1);Check(NativeCUSCPUReadScope::Find(newer));
+ // The actual joined render worker must consume a sealed immutable packet,
+ // not main's TLS scope or geometry cache.
+ receiving.SetPreparationNanoseconds(12345);
+ auto sharedPacket=std::make_shared<const NativeCUSCPUReadScope::Packet>(receiving.Seal());
+ const auto mainThread=std::this_thread::get_id();
+ NativeSerialRenderWorker worker;
+ for(unsigned iteration=0;iteration<1000;++iteration){
+  worker.Invoke([sharedPacket,&draw,&newer,&program,&reads]{
+   Check(!NativeCUSCPUReadScope::Find(draw));
+   const auto cacheBefore=NativeCUSCPUReadScope::GeometryCacheSize();
+   {
+    NativeCUSCPUReadScope::ReadView view(*sharedPacket);
+    Check(NativeCUSCPUReadScope::ActiveCount()==1);
+    Check(NativeCUSCPUReadScope::ActivePreparationNanoseconds()==12345);
+    auto found=NativeCUSCPUReadScope::Find(draw);
+    Check(found && found->transforms==reads.transforms);
+    Check(found==NativeCUSCPUReadScope::Find(newer));
+    auto mismatch=draw;mismatch.program=std::shared_ptr<const NativeCUSProgramConsumer>(program.get(),[](auto*){});
+    Check(!NativeCUSCPUReadScope::Find(mismatch));
+    try {
+     NativeCUSCPUReadScope::Packet empty;
+     NativeCUSCPUReadScope::ReadView nested(empty);
+     Check(!NativeCUSCPUReadScope::Find(draw));Check(NativeCUSCPUReadScope::ActiveCount()==0);
+     throw std::runtime_error("nested view unwind");
+    }catch(const std::runtime_error&){}
+    Check(NativeCUSCPUReadScope::Find(draw)==found);
+   }
+   Check(!NativeCUSCPUReadScope::Find(draw));
+   Check(NativeCUSCPUReadScope::GeometryCacheSize()==cacheBefore);
+  });
+ }
+ Reject([&]{worker.Invoke([sharedPacket]{NativeCUSCPUReadScope::ReadView view(*sharedPacket);throw std::runtime_error("joined unwind");});});
+ worker.Invoke([&]{Check(!NativeCUSCPUReadScope::Find(draw));Check(NativeCUSCPUReadScope::ActiveCount()==0);});
+ Check(NativeCUSCPUReadScope::ActiveCount()==0);
+ {
+  NativeCUSCPUReadScope::ReadView mainView(*sharedPacket);
+  Check(NativeCUSCPUReadScope::Find(draw));
+ }
+ // Packet owns the last source-program reference; joined return must release
+ // the worker task capture before main drops its last packet owner.
+ std::atomic<bool> sourceReleased=false;std::thread::id releasedOn;
+ auto ownedProgram=std::shared_ptr<const NativeCUSProgramConsumer>(new NativeCUSProgramConsumer(*program),[&](const auto* p){releasedOn=std::this_thread::get_id();delete p;sourceReleased.store(true);});
+ auto ownedDraw=draw;ownedDraw.program=ownedProgram;
+ auto ownedFrame=std::make_shared<NativeCUSSourceFrame>();ownedFrame->draws={ownedDraw};
+ std::shared_ptr<const NativeCUSCPUReadScope::Packet> lastPacket;
+ {NativeCUSCPUReadScope build;build.Prime(ownedFrame);lastPacket=std::make_shared<const NativeCUSCPUReadScope::Packet>(build.Seal());}
+ ownedFrame.reset();ownedDraw.program.reset();ownedProgram.reset();
+#ifdef BAR_TEST_WORKER_IDLE_HOOK
+ testIdleArmed=true;
+#endif
+ worker.Invoke([lastPacket]{NativeCUSCPUReadScope::ReadView view(*lastPacket);Check(NativeCUSCPUReadScope::ActiveCount()==1);});
+#ifdef BAR_TEST_WORKER_IDLE_HOOK
+ while(!testIdleEntered.load())std::this_thread::yield();
+#endif
+ Check(!sourceReleased);lastPacket.reset();
+ const bool mainReleased=sourceReleased && releasedOn==mainThread;
+#ifdef BAR_TEST_WORKER_IDLE_HOOK
+ testIdleRelease=true;
+#endif
+ worker.Invoke([]{}); // Join old closure cleanup before any failing assertion unwinds locals.
+ Check(mainReleased);
  // Skinning retains exact original early-return and interpolation-sensitive owners.
  auto skin=std::make_shared<NativeCUSProgramConsumer>(*program);skin->family="unitskinning";auto skindraw=draw;skindraw.program=skin;
  skindraw.textures=std::make_shared<NativeCUSDrawTextureSnapshot>(textures.Submit(1,0,"unitskinning","bin1",roster));
