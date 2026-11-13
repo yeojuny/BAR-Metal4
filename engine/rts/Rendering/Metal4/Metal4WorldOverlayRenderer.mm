@@ -23,6 +23,7 @@
 #include "Rendering/Backend/NativeReclaimFieldData.h"
 #include "Metal4WorldViewport.h"
 #include "Rendering/Backend/NativeWorldDrawGeometry.h"
+#include "Rendering/Backend/NativeOwnedWorldGeometry.h"
 #include <algorithm>
 #include <cstring>
 #include <map>
@@ -572,7 +573,11 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
   if(source.sourceLines)mesh.fullViewport=true;
   else if(linePacket)mesh.fullViewport=samples>1;
   const bool borrowed=!source.sourceLines&&!linePacket&&!cachedLines&&validatedBorrow168.Borrow(mapped->viewport,width,height,samples);
-  if(!source.sourceLines&&!cachedLines&&!borrowed&&!linePacket)mesh=BuildNativeWorldDrawGeometry(source,mapped->viewport,width,height,samples);
+  if(!source.sourceLines&&!cachedLines&&!borrowed&&!linePacket){
+   NativeOwnedWorldGeometry geometry(std::shared_ptr<const NativeWorldDrawCommand>(frame.Owner(),&source),
+    {mapped->viewport,width,height,logicalWidth,logicalHeight,samples});
+   geometry.Execute();mesh=geometry.Take(); // Same synchronous failure/consumer boundary.
+  }
   const auto& meshVertices=borrowed?source.vertices:mesh.vertices;
   const auto& meshIndices=borrowed?source.indices:mesh.indices;
   if(row174){

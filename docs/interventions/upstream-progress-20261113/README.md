@@ -56,3 +56,7 @@ a replacement for the latest scoped evidence. Full application build remains def
 P5 overlay boundary audit: [selection and target contract](OVERLAY-SELECTION-BOUNDARY.md)
 records the existing exact branch order and blockers. Executable host regressions
 protect that boundary; no general overlay worker or transferable receipt was added.
+
+P5 ownership prerequisite: [owned synchronous overlay fallback](OWNED-OVERLAY-FALLBACK.md)
+now carries exact source/target and one-shot mesh/error through the actual fallback.
+Execution remains synchronous; general overlay worker eligibility/join is not complete.

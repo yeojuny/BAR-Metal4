@@ -10,6 +10,7 @@
 struct Buffers{int marker=7;bool completed=false;};
 struct Lease{};
 struct Source{bool sourceLines=false;};
+using NativeWorldDrawCommand=Source;
 struct Mapped{std::array<double,4> viewport;};
 struct Probe{struct Counter{void fetch_add(int,std::memory_order){}} hits;bool Enabled()const{return false;}};
 Probe& LineProbe(){static Probe p;return p;}
@@ -26,8 +27,12 @@ NativeWorldRasterMesh BuildNativeWorldDrawGeometry(const Source&,const std::arra
 struct Borrower{bool Borrow(const std::array<double,4>& vp,uint32_t w,uint32_t h,unsigned s){active->Call("Borrow",vp,w,h,s);return active->borrow;}};
 struct Cache{std::shared_ptr<const Buffers> Find(Lease& lease,const Source&,size_t ordinal,const std::array<double,4>& vp,uint32_t w,uint32_t h,unsigned s){assert(&lease==&active->lease&&ordinal==active->ordinal);active->Call("Find",vp,w,h,s);return active->cache;}};
 struct Impl{Cache lineGeometry;};
+// Actual owned helper compiled against the boundary fixture geometry mocks.
+#include "owned-world-geometry.inc"
+using rendering::NativeOwnedWorldGeometry;
+struct Frame{std::shared_ptr<const Source> owner;const auto& Owner()const{return owner;}};
 struct Result{std::shared_ptr<const Buffers> cache;bool packet,borrowed,built,full;};
-Result Select(Harness& h,const Source& source){active=&h;Impl state;auto* impl=&state;auto& lease=h.lease;size_t lineOrdinal92=h.ordinal;Mapped map{h.expected};auto* mapped=&map;auto width=h.width,height=h.height;auto samples=h.samples;Borrower validatedBorrow168;
+Result Select(Harness& h,const Source& input){Frame frame{std::make_shared<const Source>(input)};const auto& source=*frame.owner;active=&h;Impl state;auto* impl=&state;auto& lease=h.lease;size_t lineOrdinal92=h.ordinal;Mapped map{h.expected};auto* mapped=&map;auto width=h.width,height=h.height;auto logicalWidth=width+13,logicalHeight=height+17;auto samples=h.samples;Borrower validatedBorrow168;
 #include "overlay-selection.inc"
  return {cachedLines,bool(linePacket),borrowed,mesh.built,mesh.fullViewport};
 }

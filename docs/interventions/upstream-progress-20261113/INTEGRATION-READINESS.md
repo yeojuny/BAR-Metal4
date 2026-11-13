@@ -9,7 +9,7 @@ latest HANDOFF-SCOPE / BEGIN-READY-PILOT / OPTIONAL-WATER-CPU-READ evidence.
 | P1/P2 optimizations | Targeted implementation and host contracts exist | Integrated native compilation, actual workload/error/visual parity, measured cost |
 | P3/P4 ownership | Exact source/resource epochs, scoped providers, service generations, journal/control and serial owner guards implemented | General younger whole-world dependent rollback is not established |
 | P5 restricted pilot | Default-off Begin-ready encoding-tail and bounded CPU-read prefix/tail/optional water path implemented | Native compilation, complete source eligibility under real captures, equal-work overlap/latency evidence |
-| P5 general overlay work | Read-only audit identifies target/source/cache/diagnostic boundaries | No worker expansion implemented; exact invocation receipt, exception timing and useful independent work still need proof |
+| P5 general overlay work | Owned synchronous fallback binds source/target/result; audit identifies cache/typed/TLS boundaries | No worker expansion implemented; transitive eligibility, asynchronous transfer/cancellation/join and useful independent work still need proof |
 | P6 bounded changes | Exact eligible receipt reuse and sealed lifecycle censuses; redundant shadow vertex scan removed | Broader subresource/access/order eligibility, native Metal evidence and cost/retention measurements |
 
 The current branch is a candidate for native integration validation, not proof that

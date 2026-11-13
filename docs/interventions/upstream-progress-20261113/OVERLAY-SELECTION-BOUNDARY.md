@@ -52,3 +52,9 @@ would change workload and failure timing. The actual worker boundary therefore
 needs its own error/cancellation/target-identity design, not a mechanical wrapping
 of this block. The current serial code is not shown to have a race; the mutable
 metrics and cache become hazards only if concurrency is introduced carelessly.
+
+Follow-up: [owned synchronous fallback](OWNED-OVERLAY-FALLBACK.md) now routes the
+final fallback through an actual retained source/target/result payload. The
+regression uses that payload while keeping raster operations mocked. Full selection
+receipt and asynchronous transfer remain unimplemented; the original audit above
+predates this narrowly scoped synchronous change.
