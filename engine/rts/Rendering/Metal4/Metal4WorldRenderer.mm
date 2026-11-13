@@ -358,7 +358,8 @@ struct Metal4WorldRenderer::Impl {
  mutable NativeRendererAccessGate access;
  std::unique_ptr<NativeSerialRenderWorker> renderWorker;
  std::unique_ptr<NativeRenderJobSettlement<Metal4WorldPresentationResult>> cpuJob;
- void FinishCPUWork(){Require([NSThread isMainThread],"CPU settlement requires main");if(cpuJob)cpuJob->Finish();}
+ bool settlingDirectCPU=false;
+ void FinishCPUWork(){Require([NSThread isMainThread]&&!settlingDirectCPU,"CPU settlement requires nonrecursive main");if(cpuJob)cpuJob->Finish();}
  metal4::InterventionShadowViews interventionShadowViews;
 	metal4::ScreenGPU screenGPU;
 	metal4::StartBoxGPU startBoxGPU;
@@ -2338,14 +2339,14 @@ void Metal4WorldRenderer::FinishCPUWork() const
  // Must precede runtime/request locks and renderer ownership scopes.
  impl->FinishCPUWork();
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void()> previousRetired)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void()> previousRetired,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
 {
  Require(bool(owned),"Owned world submission is absent");
  // Keep a local owner while binding references; argument evaluation order must
  // not move it away before Frame/Options are evaluated.
- return DrawDispatch(owned->Frame(),owned->Options(),std::move(previousRetired),owned);
+ return DrawDispatch(owned->Frame(),owned->Options(),std::move(previousRetired),owned,std::move(cpuSettled));
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
 {
  FinishCPUWork();
  // Reject invalid callers before reading source policy, as preparation did.
@@ -2380,9 +2381,15 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   // callback contract, use COW rather than trust an earlier registry frontier.
   if(previousRetired)mrtFrontier.reset();
   cacheAccess.reset();
-  return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
-   ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
-  },std::move(uiResolver),std::move(mrtFrontier),std::nullopt,std::nullopt);
+  const auto notifyCPU=[&](const Metal4WorldPresentationResult* result,std::exception_ptr failure){
+   struct SourceNoticeScope{bool& active;explicit SourceNoticeScope(bool& active):active(active){Require(!active,"Recursive CPU source settlement");active=true;}~SourceNoticeScope(){active=false;}} noticeScope(impl->settlingDirectCPU);
+   if(cpuSettled)cpuSettled(result,failure);
+  };
+  return InvokeNativeSynchronousCPUJob([&]{
+   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
+    ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
+   },std::move(uiResolver),std::move(mrtFrontier),std::nullopt,std::nullopt);
+  },notifyCPU);
  }
  const auto sourceContext=NativeSourceContextSnapshot::Capture(uiContext,NativeGeometryTextureRole::Models);
  const auto shadowFallback=frame.originalShadow?NativeShadowFallbackSnapshot{}:
@@ -2399,7 +2406,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  cacheAccess.reset(); // Reservation, not a mutex, crosses worker.Invoke.
  auto deferredReceipt=dispatchReceipt->NeedsRetirementNotice()?std::function<void()>([dispatchReceipt]{dispatchReceipt->MarkRetirementReady();}):std::function<void()>{};
  Require(!impl->cpuJob,"Previous CPU job has not been consumed");
- impl->cpuJob=std::make_unique<NativeRenderJobSettlement<Metal4WorldPresentationResult>>(dispatchReceipt,std::move(deliverTargetNotice));
+ impl->cpuJob=std::make_unique<NativeRenderJobSettlement<Metal4WorldPresentationResult>>(dispatchReceipt,std::move(deliverTargetNotice),std::move(cpuSettled));
  const auto cpuTraceContext=CaptureNativeCPUPhaseContext();
  try {
   impl->cpuJob->Submit(worker,[this,owned,presentation,snapshot,sourceContext,cpuTraceContext,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable {@autoreleasepool {

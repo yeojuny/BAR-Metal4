@@ -4,6 +4,14 @@
 #include "NativeRenderDispatchReceipt.h"
 #include <optional>
 namespace rendering {
+// Direct/readback compatibility path. Draw scopes must unwind before the source
+// notice; a notice failure is never replayed as a second failure notification.
+template<class Draw,class Notify> auto InvokeNativeSynchronousCPUJob(Draw&& draw,Notify&& notify){
+ bool notified=false;
+ try{auto result=std::forward<Draw>(draw)();notified=true;notify(&result,{});return result;}
+ catch(...){const auto failure=std::current_exception();if(!notified){try{notify(nullptr,failure);}catch(...){}}std::rethrow_exception(failure);}
+}
+
 // Main-thread CPU settlement only. GPU/source-frame acceptance is a later,
 // separate transaction; a completed task must never imply presentation.
 template<class Result> class NativeRenderJobSettlement {
@@ -13,11 +21,15 @@ template<class Result> class NativeRenderJobSettlement {
  std::unique_ptr<typename NativeSerialRenderWorker::template Task<Result>> task;
  std::shared_ptr<NativeRenderDispatchReceipt> receipt;
  std::function<void()> target;
+ std::function<void(const Result*,std::exception_ptr)> settled;
  std::optional<Result> result;
  std::exception_ptr failure;
+ void Notify()noexcept{
+  try{if(settled)settled(result?&*result:nullptr,failure);}catch(...){if(!failure)failure=std::current_exception();}
+ }
  void Source()const{if(source!=std::this_thread::get_id())throw std::logic_error("CPU settlement requires its source thread");}
 public:
- NativeRenderJobSettlement(std::shared_ptr<NativeRenderDispatchReceipt> notice,std::function<void()> deliver):receipt(std::move(notice)),target(std::move(deliver)){
+ NativeRenderJobSettlement(std::shared_ptr<NativeRenderDispatchReceipt> notice,std::function<void()> deliver,std::function<void(const Result*,std::exception_ptr)> completed={}):receipt(std::move(notice)),target(std::move(deliver)),settled(std::move(completed)){
   if(!receipt||!target)throw std::logic_error("CPU settlement lacks exact dispatch receipt");
  }
  ~NativeRenderJobSettlement(){
@@ -29,7 +41,7 @@ public:
  template<class F>void Submit(NativeSerialRenderWorker& worker,F&& work){
   Source();if(state!=State::Empty)throw std::logic_error("CPU job already submitted");
   try{task=worker.Enqueue(std::forward<F>(work));state=State::Running;}
-  catch(...){failure=std::current_exception();state=State::Failed;receipt->ReleaseHandoff();throw;}
+  catch(...){failure=std::current_exception();state=State::Settling;receipt->ReleaseHandoff();Notify();state=State::Failed;std::rethrow_exception(failure);}
  }
  void Finish(){
   Source();
@@ -43,6 +55,7 @@ public:
   task.reset();receipt->ReleaseHandoff();
   try{target();}catch(...){if(!failure)failure=std::current_exception();}
   try{receipt->DeliverRetirement();}catch(...){if(!failure)failure=std::current_exception();}
+  Notify(); // Exact scene acceptance/quarantine precedes any later control.
   state=failure?State::Failed:State::Settled;
   if(failure)std::rethrow_exception(failure);
  }

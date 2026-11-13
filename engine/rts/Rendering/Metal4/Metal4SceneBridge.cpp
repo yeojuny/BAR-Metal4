@@ -532,7 +532,7 @@ struct ScenePendingAdmission {
  const std::shared_ptr<NativeMainSourceSettlement> source;
  CloudAdmissionOwner cloud;
  DynamicWaterAdmissionOwner water;
- bool transferred=false;
+ bool transferred=false,failureHandled=false,cpuAccepted=false;
  ScenePendingAdmission(Session& owner,std::shared_ptr<const Metal4WorldSubmission> packet,
   std::shared_ptr<NativeFrameCompletionMailbox::Ticket> ticket):owner(&owner),
   context(OriginalNativeTextureContext().Registry().ContextGeneration()),epoch(owner.completionMailbox->Epoch()),
@@ -572,9 +572,17 @@ struct ScenePendingAdmission {
   Transaction().Quarantine();
  }
  void Fail(){
+  if(failureHandled)return;
   ValidateOwner();const auto& begin=submission->Options().beginReceipt;
   begin->MarkFailed();owner->lastFailedBeginReceipt=begin;
   if(transferred){if(begin->Submission())Quarantine();else Restore();}
+  failureHandled=true;
+ }
+ void CompleteCPU(const Metal4WorldPresentationResult* result,std::exception_ptr failure){
+  if(failure){Fail();if(!transferred)ReleaseAnchor();return;}
+  if(!result)throw std::logic_error("CPU settlement has neither result nor failure");
+  if(result->presented&&!result->sourceFrameCompleted){Accept(*result);ReleaseAnchor();cpuAccepted=true;}
+  // Synchronous completion/no-Begin fallback still uses the joined source path.
  }
  void ReleaseAnchor(){ValidateOwner();if(transferred)throw std::logic_error("Cannot release a held admission anchor");owner->admissionSettlement.reset();}
  void Accept(const Metal4WorldPresentationResult& result){
@@ -1786,19 +1794,25 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  };
  const auto quarantineAdmitted=[pendingAdmission]() noexcept {pendingAdmission->Quarantine();};
  const auto failedAdmission=[pendingAdmission]{
-  if(pendingAdmission){pendingAdmission->Fail();if(!pendingAdmission->transferred)pendingAdmission->ReleaseAnchor();}
+  if(pendingAdmission&&!pendingAdmission->failureHandled&&!pendingAdmission->cpuAccepted){pendingAdmission->Fail();if(!pendingAdmission->transferred)pendingAdmission->ReleaseAnchor();}
+ };
+ const auto cpuSettled=[pendingAdmission](const Metal4WorldPresentationResult* result,std::exception_ptr failure){
+  if(pendingAdmission)pendingAdmission->CompleteCPU(result,failure);
  };
  const auto invokeRenderer=[&] {
  try {return overlapPreparation?
   session->renderer->DrawOwned(submission,[owner=session.get()]{
    if(session.get()!=owner)throw std::logic_error("Preparation retirement lost its scene owner");
    ApplyDeferredFrameReceipts();
-  }):session->renderer->DrawOwned(submission);
+  },cpuSettled):session->renderer->DrawOwned(submission,{},cpuSettled);
  }catch(...){
-  failedAdmission();throw;
+  const auto failure=std::current_exception();
+  try{failedAdmission();}catch(...){/* Keep the durable held record and original renderer failure. */}
+  std::rethrow_exception(failure);
  }
  };
  const auto result=invokeRenderer();
+ if(pendingAdmission&&pendingAdmission->cpuAccepted)admitted=false;
  try {
  // A hidden/unavailable surface may return before opening a runtime lease.
  if(!result.presented&&overlapPreparation)RequireRetiredGPUWork();
@@ -1814,7 +1828,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   pendingAdmission->Accept(result);
   pendingAdmission->ReleaseAnchor();
  }
- }catch(...){failedAdmission();throw;}
+ }catch(...){const auto failure=std::current_exception();try{failedAdmission();}catch(...){}std::rethrow_exception(failure);}
  if(result.dynamicWaterGeneration)CompleteDynamicCapture(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  if(result.sourceFrameCompleted){session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();session->shieldCapture.Reset();}
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);

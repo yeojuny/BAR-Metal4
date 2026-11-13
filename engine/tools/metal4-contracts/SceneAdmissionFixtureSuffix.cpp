@@ -7,6 +7,9 @@ std::shared_ptr<ScenePendingAdmission> Make(){
 }
 int main(){
  for(unsigned i=0;i<100;++i){
+  {auto job=Make();job->CompleteCPU(nullptr,std::make_exception_ptr(std::runtime_error("pre")));assert(job->failureHandled&&!job->transferred&&!session->admissionSettlement);job->Fail();}
+  {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);Metal4WorldPresentationResult result{true,false,false,0};job->CompleteCPU(&result,{});assert(job->cpuAccepted&&!job->transferred&&!session->admissionSettlement);}
+
   {auto job=Make();assert(ui::recorder.held&&!session->opaqueSourcePending);job->Fail();assert(ui::recorder.pending&&session->opaqueSourcePending);assert(job->submission->Options().beginReceipt->FailureStage()==NativeFrameBeginReceipt::Failure::BeforeBegin);job->ReleaseAnchor();assert(!session->admissionSettlement);}
   {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);job->Fail();assert(job->transferred&&ui::recorder.quarantined&&job->cloud.quarantined&&session->dynamicWaterCapture.quarantined);assert(session->sourceSettlement==job->source);Reject([&]{job->ReleaseAnchor();});}
   {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);job->mailbox->Publish(job->ticket,{true,0,9});assert(!job->mailbox->Pop());job->Accept({true,false,false,0});assert(job->mailbox->Pop());assert(!session->sourceSettlement);job->ReleaseAnchor();}

@@ -12,6 +12,11 @@ assert scene.index('FinishCPUWork()')<scene.index('Metal4RendererCanSafelyDetach
 pbr=(root/'rts/Rendering/Metal4/Metal4PBRSourceService.mm').read_text().split('services.compile=',1)[1]
 assert pbr.index('finishCPU();')<pbr.index('NativeRendererAccessGate::Scope')
 assert '[owner=impl.get()]{owner->FinishCPUWork();}' in s
+assert 'std::move(deliverTargetNotice),std::move(cpuSettled)' in s
+assert 'InvokeNativeSynchronousCPUJob([&]' in s
+job=(root/'rts/Rendering/Backend/NativeRenderJobSettlement.h').read_text().split(' void Finish(){',1)[1]
+assert job.index('receipt->DeliverRetirement()')<job.index('Notify();')<job.index('state=failure?State::Failed:State::Settled')
+assert 'pendingAdmission->CompleteCPU(result,failure)' in (root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 for name in ['CompileOriginalCUSProgram','CompileOriginalTerrainProgram','CompileOriginalSensorPreviewProgram','CompileOriginalDeferredLightProgram','CompileOriginalUnitStencilProgram','CompileOriginalOutlineProgram','CompileOriginalDistortionProgram','CheckShieldGeometryAllocation','AllocateCoverageTarget','PrepareIndependentResources','HasScreenContinuation','ClearWaterFamily','ClearStaticResources','ReadIndependentTargetPrefix','SubmitMaintenance','ClearOriginalModelSources']:
  body=s.split('Metal4WorldRenderer::'+name+'(',1)[1].split('{',1)[1]
  assert body.lstrip().startswith('FinishCPUWork();'),name

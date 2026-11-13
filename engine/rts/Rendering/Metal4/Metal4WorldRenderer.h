@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include <exception>
 
 #include "Metal4WindowSurface.h"
 #include "Rendering/Backend/NativeCUSCPUReadScope.h"
@@ -226,7 +227,7 @@ public:
  // Main only, before acquiring renderer or runtime locks. Does not claim GPU retirement.
  void FinishCPUWork() const;
  // Owned input is required for worker dispatch; this entry still joins.
- Metal4WorldPresentationResult DrawOwned(std::shared_ptr<const Metal4WorldSubmission>,std::function<void()> previousRetired = {});
+ Metal4WorldPresentationResult DrawOwned(std::shared_ptr<const Metal4WorldSubmission>,std::function<void()> previousRetired = {},std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled = {});
  // Prepare independent immutable shared-buffer inputs while the preceding
  // GPU frame runs. The returned owner must outlive this frame's Draw call.
  std::shared_ptr<const void> PrepareIndependentResources(const WorldFrame& frame);
@@ -309,7 +310,7 @@ public:
 private:
  enum class WaterReset { Bump, Basic, Dynamic, Legacy };
  void ClearWaterFamily(WaterReset);
- Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned = {});
+ Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned = {},std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled = {});
  Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver,std::optional<metal4::MRTFrontier209>,std::optional<NativeSourceContextSnapshot>,std::optional<NativeShadowFallbackSnapshot>);
 	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&);
 	struct Impl;

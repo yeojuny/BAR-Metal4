@@ -46,5 +46,26 @@ int main(){
   job->Submit(worker,[handoff]{NativeRendererAccessGate::Scope access(*handoff);return 1;});
   job.reset();{NativeRendererAccessGate::Scope access(&gate);}assert(!notices);Reject([&]{worker.Invoke([]{});});
  }
+ // Exact scene notification follows both receipts, and first error dominates.
+ for(bool workerFails:{false,true}){
+  NativeSerialRenderWorker worker;unsigned called=0;
+  auto receipt=std::make_shared<NativeRenderDispatchReceipt>(nullptr,std::function<void()>{});
+  NativeRenderJobSettlement<int>* live=nullptr;
+  NativeRenderJobSettlement<int> job(receipt,[]{},[&](const int* result,std::exception_ptr failure){
+   ++called;Reject([&]{live->Finish();});assert(bool(failure)==workerFails);assert(bool(result)!=workerFails);
+   if(result)assert(*result==33);throw std::runtime_error("scene");
+  });live=&job;
+  job.Submit(worker,[&]{if(workerFails)throw std::runtime_error("worker");return 33;});
+  for(unsigned i=0;i<2;++i){try{job.Finish();assert(false);}catch(const std::runtime_error& e){assert(std::string(e.what())==(workerFails?"worker":"scene"));}}
+  assert(called==1);
+ }
+ // Actual direct-fallback helper: scopes unwind before notification; failure
+ // notification cannot replace the render exception or repeat a source notice.
+ for(unsigned mode=0;mode<3;++mode){unsigned notified=0;bool scope=false;
+  try{InvokeNativeSynchronousCPUJob([&]{struct Scope{bool& active;Scope(bool& b):active(b){active=true;}~Scope(){active=false;}} live(scope);if(mode==0)throw std::runtime_error("direct");return 7;},
+   [&](const int* result,std::exception_ptr error){++notified;assert(!scope);assert(bool(error)==(mode==0));assert(bool(result)==(mode!=0));if(mode!=2)throw std::runtime_error("notice");});assert(mode==2);}
+  catch(const std::runtime_error& e){assert(std::string(e.what())==(mode==0?"direct":"notice"));}
+  assert(notified==1);
+ }
  std::cout<<"1000 CPU Join/handoff/notice/control cycles; recursive drain, result preservation, persistent first failure, single callback attempt, enqueue rejection PASS\n";
 }
