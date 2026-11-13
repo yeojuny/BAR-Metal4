@@ -22,6 +22,12 @@ int main(){
   if(bad>=2){o.screenUI=&borrowed;if(bad==2)borrowed.storage.reset();if(bad==3)borrowed.drawList=nullptr;if(bad==4)borrowed.targetPasses=std::span<const ScreenRenderTargetPass>(reinterpret_cast<const ScreenRenderTargetPass*>(1),0);}
   try{Metal4WorldSubmission rejected(owned,o);assert(false);}catch(const std::logic_error&){}
  }
+ auto partial=std::make_shared<WorldFrame>();partial->deferredMainParticles.Defer();
+ try{Metal4WorldSubmission rejected(partial,valid);assert(false);}catch(const std::logic_error&){}
+ partial->deferredMainParticles.Complete([]{});Metal4WorldSubmission complete(partial,valid);
+ auto failed=std::make_shared<WorldFrame>();failed->deferredMainParticles.Defer();
+ try{failed->deferredMainParticles.Complete([]{throw std::runtime_error("writer");});assert(false);}catch(const std::runtime_error&){}
+ try{Metal4WorldSubmission rejected(failed,valid);assert(false);}catch(const std::logic_error&){}
  for(unsigned i=0;i<1000;++i){auto p=std::make_shared<const Metal4WorldSubmission>(owned,valid);worker.Invoke([p]{assert(!p->Options().screenUI);});}
  std::cout<<"Owned world packet:move identity,screen descriptor/storage lifetime,borrowed rejection and1000 actual worker handoffs passed\n";
 }

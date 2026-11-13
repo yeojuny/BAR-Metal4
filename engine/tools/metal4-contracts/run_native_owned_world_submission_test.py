@@ -3,7 +3,10 @@ import os,subprocess
 from pathlib import Path
 root=Path(__file__).resolve().parents[2];out=Path('/tmp/bar-owned-world');out.mkdir(exist_ok=True)
 bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
-assert bridge.index('std::make_shared<const Metal4WorldSubmission>(frameOwner,options)')<bridge.index('admission.TransferValidated()')
+# Admission moved into its own durable record; compare the actual call site, not
+# the earlier helper definition's TransferValidated implementation.
+draw=bridge.split('DrawResult DrawWorld(',1)[1]
+assert draw.index('std::make_shared<const Metal4WorldSubmission>(frameOwner,options)')<draw.index('pendingAdmission->Transfer();')
 renderer=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 assert 'if(!owned||!enabled' in renderer
 assert 'dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable' in renderer

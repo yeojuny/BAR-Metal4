@@ -47,6 +47,8 @@ public:
 	// or synthesize SDL events. Events for other windows/global quit are ignored.
 	Metal4SurfaceEventResult HandleEvent(const SDL_Event& event);
 	bool Refresh();
+	// Main-thread observation only; never writes state or CAMetalLayer.
+	bool CaptureRefreshUnchanged() const;
 	bool SetRenderSize(uint32_t widthPixels, uint32_t heightPixels);
 	bool RequestClose();
 	Metal4SurfaceSnapshot Snapshot() const;

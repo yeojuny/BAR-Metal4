@@ -871,8 +871,9 @@ std::shared_ptr<const NativeWorldEnvironmentFrame> WorldFrameCapture::PrepareEnv
 
 WorldFrame WorldFrameCapture::Capture(NativeWaterScenePass pass,
 	std::shared_ptr<const NativeOriginalShadowFrame> originalShadow,
-	std::shared_ptr<const NativeOpaqueModelFrame> originalModels)
+	std::shared_ptr<const NativeOpaqueModelFrame> originalModels, bool deferMainParticles)
 {
+ if(deferMainParticles&&pass!=NativeWaterScenePass::Main)throw std::logic_error("Only main particle capture can defer");
 	if (readMap == nullptr || gameSetup == nullptr || mapInfo == nullptr || gs == nullptr || gu == nullptr ||
 		globalRendering == nullptr || mapDims.mapx <= 0 || mapDims.mapy <= 0)
 		throw content_error("World capture requires a fully loaded engine simulation");
@@ -1013,8 +1014,25 @@ WorldFrame WorldFrameCapture::Capture(NativeWaterScenePass pass,
 			if (instance.opaque || instance.fading || instance.castsShadow) result.features.push_back(std::move(instance));
 		}
 	}
-	result.particleFrame = state->particleCapture.Capture(*activeCamera, [this](const S3DModel* model) { return CaptureModel(model); }, pass);
+	if(deferMainParticles)result.deferredMainParticles.Defer();
+ else result.particleFrame = state->particleCapture.Capture(*activeCamera, [this](const S3DModel* model) { return CaptureModel(model); }, pass);
 	return result;
+}
+
+void WorldFrameCapture::CompleteDeferredMainParticles(WorldFrame& frame)
+{
+ frame.deferredMainParticles.Complete([&]{
+  const auto* active=CCameraHandler::GetActiveCamera();
+  if(!globalRendering||!gs||!active||frame.sourceDrawFrame!=uint64_t(globalRendering->drawFrame)||
+   frame.simulationFrame!=uint64_t(std::max(gs->frameNum,0))||frame.interpolationOffset!=globalRendering->timeOffset||
+   frame.viewCamera.view!=CopyMatrix(active->GetViewMatrix())||
+   frame.viewCamera.projection!=CopyMatrix(active->GetProjectionMatrix())||
+   frame.viewCamera.position!=CopyVector(active->GetPos())||frame.viewCamera.clipDepth!=GetClipDepth(*active)||
+   !std::equal(frame.viewCamera.viewport.begin(),frame.viewCamera.viewport.end(),active->viewport))
+   throw std::logic_error("Deferred particle capture lost its original draw/camera");
+  if(frame.particleFrame)throw std::logic_error("Deferred particle frame already populated");
+  frame.particleFrame=state->particleCapture.Capture(*active,[this](const S3DModel* model){return CaptureModel(model);},NativeWaterScenePass::Main);
+ });
 }
 
 std::shared_ptr<const WorldModel> WorldFrameCapture::CaptureModel(const S3DModel* model)

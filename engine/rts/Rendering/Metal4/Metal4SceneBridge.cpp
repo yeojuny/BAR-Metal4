@@ -17,6 +17,7 @@
 #include "Metal4SceneBridge.h"
 #include "Metal4DisplayGeometry.h"
 #include "Metal4SurfaceEventPolicy.h"
+#include "Metal4CaptureSurfaceBoundary.h"
 #include "System/Config/ConfigHandler.h"
 #include "System/Platform/Threading.h"
 #include "Rendering/Backend/NativeLegacyWaterData.h"
@@ -1566,15 +1567,19 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 		return;
 	if (session->preparedFrame)
 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
- // Refresh writes CAMetalLayer properties, not just an immutable observation.
- // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
- if(BeginReadyPilotRequested())RequireRetiredGPUWork();
- session->opaqueSourcePending=actualOpaqueModels;
-	session->surface.Refresh();
-	// Game already applies the original inactive-window 30-second throttle.
-	// Its periodic cleanup must still run the engine particle Draw producers
-	// before Lua DrawWorld, even when no GPU drawable can be presented.
-	session->preparedFrame = session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels);
+ // Only an exactly unchanged surface permits this value-snapshot capture to
+ // overlap N's encoding tail. Always drain before any later alpha/water/Lua work.
+ const bool deferredParticles=BeginReadyPilotRequested();
+ CaptureAtNativeSurfaceBoundary(deferredParticles,
+  [&]{return session->surface.CaptureRefreshUnchanged();},
+  []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
+   // Publish only at the actual capture boundary, after any changed-surface drain.
+   session->opaqueSourcePending=actualOpaqueModels;
+   // Particle source writers run once after the old encoding tail is drained.
+   session->preparedFrame=session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels,deferredParticles);
+  });
+ if(deferredParticles)session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
+
  auto& frame=*session->preparedFrame;
  frame.mainSampling=session->renderer->ActualMainSampling();
  frame.minSampleShadingRate=globalRendering->minSampleShadingRate;

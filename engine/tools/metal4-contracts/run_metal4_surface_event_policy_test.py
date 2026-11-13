@@ -9,10 +9,13 @@ subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=
 s=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 e=s.split('void HandleEvent(',1)[1].split('ui::NativeUIFrameRasterMapping',1)[0]
 assert 'ApplyDrainedMetal4SurfaceEvent' in e and 'RequireRetiredGPUWork();' in e
-for name in ['void PrepareWorld(', 'DrawResult DrawWorld(']:
- block=s.split(name,1)[1]
- pos=block.index('session->surface.Refresh();')
- assert 'if(BeginReadyPilotRequested())RequireRetiredGPUWork();' in block[max(0,pos-360):pos]
+# PrepareWorld now has a separately tested, no-write Capture(Main)-only boundary.
+prepare=s.split('void PrepareWorld(',1)[1].split('auto& frame=*session->preparedFrame;',1)[0]
+assert 'CaptureAtNativeSurfaceBoundary(deferredParticles,' in prepare
+assert 'RequireRetiredGPUWork();' in prepare
+block=s.split('DrawResult DrawWorld(',1)[1]
+pos=block.index('session->surface.Refresh();')
+assert 'if(BeginReadyPilotRequested())RequireRetiredGPUWork();' in block[max(0,pos-360):pos]
 w=(root/'rts/Rendering/Metal4/Metal4WindowSurface.mm').read_text()
 assert 'ClassifyMetal4SurfaceEvent(event,impl->state.Snapshot().windowID)' in w
 r=(root/'rts/Rendering/GlobalRendering.cpp').read_text().split('void CGlobalRendering::UpdateWindow()',1)[1].split('SetWindowAttributes(sdlWindow);',1)[0]

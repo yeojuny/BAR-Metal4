@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WindowSurfaceNative.h"
+#include "Metal4CaptureSurfaceBoundary.h"
 #include "Metal4SurfaceEventPolicy.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "System/Config/ConfigHandler.h"
@@ -125,15 +126,12 @@ struct Metal4WindowSurface::Impl {
 #endif
 	}
 
-	bool Refresh()
+	Metal4SurfaceObservation Observe() const
 	{
 		RequireLive();
-		ApplyDisplaySync();
 		int logicalWidth = 0, logicalHeight = 0;
 		Require(SDL_GetWindowSize(window, &logicalWidth, &logicalHeight), "Cannot query engine SDL3 logical window size: " + std::string(SDL_GetError()));
 		Require(logicalWidth >= 0 && logicalHeight >= 0, "SDL logical window dimensions are invalid");
-		// Native view bounds/backing conversion remains independent of the exact
-		// layer.drawableSize we own. Do not report render pixels as backing size.
 		NSView* nativeView = (__bridge NSView*)view;
 		const NSRect backing = [nativeView convertRectToBacking:nativeView.bounds];
 		const auto flags = SDL_GetWindowFlags(window);
@@ -144,7 +142,24 @@ struct Metal4WindowSurface::Impl {
 		observation.presentationBackingHeight = NativeExtent(backing.size.height);
 		observation.visible = (flags & SDL_WINDOW_HIDDEN) == 0;
 		observation.minimized = (flags & SDL_WINDOW_MINIMIZED) != 0;
-		const bool changed = state.Observe(observation);
+		return observation;
+	}
+	bool CaptureRefreshUnchanged() const
+	{
+		const auto observed=Observe();
+		bool syncUnchanged=false; // No configuration proof: retain old drained path.
+#ifdef RECOIL_METAL4_LIVE_SCENE
+		if(configHandler){const int requested=configHandler->GetInt("VSync");
+			syncUnchanged=requested==displaySyncRequest&&bool(layer.displaySyncEnabled)==(requested!=0);}
+#endif
+		const auto drawable=layer.drawableSize;
+		return NativeCaptureSurfaceUnchanged(state.Snapshot(),observed,drawable.width,drawable.height,syncUnchanged);
+	}
+	bool Refresh()
+	{
+		RequireLive();
+		ApplyDisplaySync();
+		const bool changed=state.Observe(Observe());
 		ApplyRenderSize();
 		return changed;
 	}
@@ -195,6 +210,13 @@ bool Metal4WindowSurface::Refresh()
 	MainThread();
 	Require(impl != nullptr, "Metal window surface is detached or moved from");
 	return impl->Refresh();
+}
+
+bool Metal4WindowSurface::CaptureRefreshUnchanged() const
+{
+ MainThread();
+ Require(impl!=nullptr,"Metal window surface is detached or moved from");
+ return impl->CaptureRefreshUnchanged();
 }
 
 bool Metal4WindowSurface::SetRenderSize(uint32_t widthPixels, uint32_t heightPixels)

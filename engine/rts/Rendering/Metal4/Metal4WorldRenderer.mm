@@ -2349,6 +2349,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<con
 }
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
 {
+ frame.deferredMainParticles.RequireComplete();
  FinishCPUWork();
  // Reject invalid callers before reading source policy, as preparation did.
  MainThread();Require(impl!=nullptr,"World renderer was moved from");

@@ -17,7 +17,8 @@ struct NativeMiniMapBackground;
 
 // Call on the normal unsynced draw thread after the engine's CPU map, camera
 // and unit-draw updates, at a stable simulation boundary. No engine state is
-// written; only this adapter's resource caches change. Reset before map unload.
+// written by the value-snapshot prefix; the default particle tail runs original
+// engine producers (fog/geometry writers). Reset before map unload.
 class WorldFrameCapture {
 public:
 	WorldFrameCapture();
@@ -39,7 +40,9 @@ public:
 	// consumers. Its alpha graph is attached at the unchanged later boundary.
 	WorldFrame Capture(NativeWaterScenePass pass = NativeWaterScenePass::Main,
 		std::shared_ptr<const NativeOriginalShadowFrame> originalShadow = {},
-		std::shared_ptr<const NativeOpaqueModelFrame> originalModels = {});
+		std::shared_ptr<const NativeOpaqueModelFrame> originalModels = {}, bool deferMainParticles = false);
+	// Complete once, on the same stable main draw/camera, after old render work drains.
+	void CompleteDeferredMainParticles(WorldFrame& frame);
 	std::shared_ptr<const WorldTexture> CaptureTexture(const std::string& path);
 	// Original source loader shares this cache. Missing/failed source decode
 	// returns null; strict bounds/layout/unsupported-format errors still throw.

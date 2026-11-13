@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include "NativeDeferredParticleCapture.h"
 
 #include <array>
 #include <cstddef>
@@ -276,6 +277,7 @@ struct WorldFrame {
 	std::shared_ptr<const NativeTerrainSceneSourceFrame> mainGround;
 	std::shared_ptr<const NativeWorldDrawFrame> luaWorldDrawFrame;
 	std::shared_ptr<const NativeWorldParticleFrame> particleFrame;
+	NativeDeferredParticleCapture deferredMainParticles;
 	std::shared_ptr<const NativeLuaNanoFrame> luaNanoFrame;
 	std::shared_ptr<const NativeProjectileEffectFrame> luaProjectileEffectsFrame;
 	std::shared_ptr<const NativeEnergyExplosionFrame> luaEnergyExplosionFrame;

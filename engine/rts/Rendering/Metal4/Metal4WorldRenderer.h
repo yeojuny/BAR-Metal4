@@ -107,6 +107,7 @@ class Metal4WorldSubmission {
  Metal4WorldRenderOptions options;
 public:
  Metal4WorldSubmission(std::shared_ptr<const WorldFrame> frame,const Metal4WorldRenderOptions& source):frame(std::move(frame)),options(source) {
+  if(this->frame)this->frame->deferredMainParticles.RequireComplete();
   if(!this->frame||options.readback||!options.pbrDeclarations.has_value())
    throw std::logic_error("Owned world submission lacks its frame/PBR receipt or contains borrowed readback");
   if(source.screenUI){
