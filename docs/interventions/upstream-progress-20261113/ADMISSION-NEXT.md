@@ -86,3 +86,12 @@ gap. Main receipt callbacks run after reservation cancellation. Allocation/worke
 failure cancellation and concurrent rejected-probe teardown are host-tested.
 This is exclusive serial handoff, not queued controls or younger source rollback;
 shared sources and GPU resource lifetime/versioning gates remain before lookahead.
+
+Shadow cancellation follow-up: exact depth/color publications now preflight both
+written backing states; encoded or completed either half preserves the pair.
+Repeated stale abort cannot erase successful current contents. Retained unlit
+color is not a write and does not veto rollback. Actual source/registry tests cover
+100 capture and partial-allocation failures plus encoded/completed/newer/sampler/
+unlit/detach cases. Independent sanitizer review passed. Deferred MRT color/depth
+resources still need equivalent execution-state-aware whole-phase preflight;
+this source guard does not provide a younger-capture dependency version graph.

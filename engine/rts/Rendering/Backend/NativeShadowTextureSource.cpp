@@ -132,6 +132,13 @@ std::shared_ptr<const NativeShadowTextureFrame> NativeShadowTextureSource::Begin
 void NativeShadowTextureSource::Cancel(const NativeShadowTextureFrame& frame)noexcept
 {
 	if(!registry)return;
+ // Depth and optional color are one captured source operation. Preserve both
+ // if either has entered encoding or completion, including repeated aborts.
+ const auto submitted=[](const auto& write) noexcept {
+  return write.backing&&(write.backing->encodedSubmission.load(std::memory_order_acquire)||
+   write.backing->completed.load(std::memory_order_acquire));
+ };
+ if(submitted(frame.depth)||submitted(frame.color))return;
 	if(frame.color.current)registry->CancelContentPublication(frame.color.current,frame.color.previous);
 	if(frame.depth.current)registry->CancelContentPublication(frame.depth.current,frame.depth.previous);
 }
