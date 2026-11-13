@@ -40,3 +40,7 @@ phase callbacks, resource order, GPU barriers and default P5 remain unchanged.
 P6 grouped-model checkpoint: [Deferred owner roster](DEFERRED-OWNER-ROSTER.md)
 seals one global before/after first-owner census, preserving null exclusion,
 phase-live callbacks and grouped/ordered completion rules. Native acceptance remains pending.
+
+P5 evidence instrumentation: [CPU-read worker timing](CPU-READ-WORKER-TIMING.md)
+adds real worker wall endpoints and valid per-thread CPU totals to the opt-in trace.
+Elapsed wall-minus-tail time is not labeled actual CPU execution or overlap proof.

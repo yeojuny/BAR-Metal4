@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "NativeCUSCPUReadScope.h"
+#include "NativeThreadCPUTime.h"
 #include <chrono>
 #include <condition_variable>
 #include <exception>
@@ -39,6 +40,12 @@ public:
   bool AwaitTail(){std::unique_lock lock(tailMutex);tailReady.wait(lock,[&]{return tailState!=TailState::Waiting;});return tailState==TailState::Published;}
 
   uint64_t queueNs=0,workNs=0,waitNs=0,tailWaitNs=0;
+  uint64_t workerBeginNs=0,workerEndNs=0,threadCPUNs=0;
+  bool threadCPUValid=false;
+  void RecordThreadCPU(metal4::NativeThreadCPUStamp begin,metal4::NativeThreadCPUStamp end)noexcept{
+   threadCPUValid=begin.valid&&end.valid&&end.ns>=begin.ns;
+   threadCPUNs=threadCPUValid?end.ns-begin.ns:0;
+  }
   size_t cacheBefore=0,cacheAfter=0;
   Clock::time_point submitted{};
  };
@@ -62,14 +69,21 @@ public:
  }
  static void Build(Job& job)noexcept{
   const auto start=job.measure?Clock::now():Clock::time_point{};
-  if(job.measure)job.queueNs=std::chrono::duration_cast<std::chrono::nanoseconds>(start-job.submitted).count();
+  const auto cpuStart=job.measure?metal4::ReadNativeThreadCPUTime():metal4::NativeThreadCPUStamp{};
+  if(job.measure){job.workerBeginNs=Timestamp(start);job.queueNs=std::chrono::duration_cast<std::chrono::nanoseconds>(start-job.submitted).count();}
   try{
    NativeCUSCPUReadScope scope;
    if(job.measure)job.cacheBefore=NativeCUSCPUReadScope::GeometryCacheSize();
    if(VisitSources(job,[&](const auto& source){scope.Prime(source);}))
     job.packet=scope.Seal();
   }catch(...){job.error=std::current_exception();}
-  if(job.measure){job.cacheAfter=NativeCUSCPUReadScope::GeometryCacheSize();job.workNs=Elapsed(start)-job.tailWaitNs;}
+  if(job.measure){
+   job.cacheAfter=NativeCUSCPUReadScope::GeometryCacheSize();
+   const auto finish=Clock::now();job.workerEndNs=Timestamp(finish);
+   job.workNs=std::chrono::duration_cast<std::chrono::nanoseconds>(finish-start).count()-job.tailWaitNs;
+   const auto cpuEnd=metal4::ReadNativeThreadCPUTime();
+   job.RecordThreadCPU(cpuStart,cpuEnd);
+  }
  }
  NativeCUSCPUReadWorker220():thread([this]{Loop();}){}
  ~NativeCUSCPUReadWorker220(){

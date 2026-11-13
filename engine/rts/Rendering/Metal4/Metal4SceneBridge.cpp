@@ -227,19 +227,20 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
  struct Output {
   FILE* file=std::fopen(std::getenv("BAR_NATIVE_CPU_READ_PACKET220_FILE"),"w");
   size_t rows=0;
-  Output(){if(file)std::fputs("frame,simulation_frame,mode,job,accepted,verified,fallback,sources,entries,bytes,cache_before,cache_after,startup_ns,queue_ns,work_ns,join_ns,consume_ns,row_digest,submit_ns,main_begin_ns,main_end_ns,consume_begin_ns,tail_wait_ns,optional_sources,optional_failed\n",file);}
+  Output(){if(file)std::fputs("frame,simulation_frame,mode,job,accepted,verified,fallback,sources,entries,bytes,cache_before,cache_after,startup_ns,queue_ns,work_ns,join_ns,consume_ns,row_digest,submit_ns,main_begin_ns,main_end_ns,consume_begin_ns,tail_wait_ns,optional_sources,optional_failed,worker_begin_ns,worker_end_ns,worker_thread_cpu_valid,worker_thread_cpu_ns\n",file);}
   ~Output(){if(file)std::fclose(file);}
  };
  static Output output;
  if(!output.file||output.rows++>=10000)return;
  const auto* job=receipt?&receipt->job:nullptr;
- std::fprintf(output.file,"%llu,%llu,%d,%llu,%d,%d,%d,%zu,%zu,%zu,%zu,%zu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%zu,%d\n",
+ std::fprintf(output.file,"%llu,%llu,%d,%llu,%d,%d,%d,%zu,%zu,%zu,%zu,%zu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%zu,%d,%llu,%llu,%d,%llu\n",
   (unsigned long long)frame,(unsigned long long)simulationFrame,CPUReadPacketMode220(),(unsigned long long)(receipt?receipt->ordinal:0),int(accepted),int(verified),fallback,
   job?job->sources.size()+job->tailSources.size()+job->optionalSources.size():0,count,bytes,job?job->cacheBefore:0,job?job->cacheAfter:0,
   (unsigned long long)(receipt?receipt->startupNs:0),(unsigned long long)(job?job->queueNs:0),(unsigned long long)(job?job->workNs:0),
   (unsigned long long)(job?job->waitNs:0),(unsigned long long)consumeNs,(unsigned long long)digest,
   (unsigned long long)(job?NativeCUSCPUReadWorker220::Timestamp(job->submitted):0),(unsigned long long)(receipt?receipt->mainBeginNs:0),
-  (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs,(unsigned long long)(job?job->tailWaitNs:0),job?job->optionalSources.size():0,int(job&&job->optionalFailed));
+  (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs,(unsigned long long)(job?job->tailWaitNs:0),job?job->optionalSources.size():0,int(job&&job->optionalFailed),
+  (unsigned long long)(job?job->workerBeginNs:0),(unsigned long long)(job?job->workerEndNs:0),int(job&&job->threadCPUValid),(unsigned long long)(job?job->threadCPUNs:0));
 }
 
 struct ScenePendingAdmission;
