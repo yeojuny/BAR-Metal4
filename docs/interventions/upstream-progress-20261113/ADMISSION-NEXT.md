@@ -250,3 +250,30 @@ attachment. A failure armed after successful Begin causes no later allocation;
 the old ordering negative control fails the expected receipt assertion. Both
 actual EngineBridge translation units pass C++ syntax checks; independent review
 passed. Native GPU execution and concurrent capture remain outside this evidence.
+
+### Dynamic-water exact admission ownership milestone (2026-11-13)
+
+Dynamic-water capture now retains bounded exact receipts keyed by material owner,
+source draw, and through-update sequence instead of one mutable reserved/finalized
+pair. Its real capture/finalization paths use the ledger; exact retirement removes
+only the matching receipt and update prefix. A fourth admission owner participates
+in collective validation before no-throw transfer, all-owner restoration validation,
+and post-Begin quarantine. Synchronous completion restores Held to Finalized before
+retiring; deferred completion requires Held plus the matching scene draw before
+any completion owner is mutated. Missing dynamic water is an explicit no-op adapter.
+Reset rejects held/quarantined receipts rather than dropping their owners.
+
+The ledger can preserve younger receipts in tests, but production still rejects
+Update/new-draw capture while any reservation exists and retains the dynamic-water
+early drain and GPU recurrence barriers. `firstDraw` changes only on exact successful
+retirement, as before. Therefore this milestone does NOT enable capture overlap or
+claim once-only bootstrap under concurrent admission; that remains a later gate.
+
+Validation: production ledger and four-owner transaction sanitizer tests use actual
+water frames and controlled other-journal adapters; actual postprocess/cloud owner
+regression passes 1,073 checks. Water cases cover wrong tuples/order/capacity,
+older retirement preserving younger owners, validation-before-moves, pre-Begin
+restore/retry, synchronous/deferred settlement, quarantine and reset rejection.
+Both actual DynamicWaterCapture and SceneBridge translation units pass C++ syntax
+checks. Independent review and source wiring assertions cover the integration;
+full native application/Metal execution remains deferred.

@@ -506,6 +506,15 @@ struct CloudAdmissionOwner {
  void QuarantineHeldFrame(std::uint64_t id) noexcept {LuaNativeVolumetricClouds::QuarantineHeldFrame(id);}
 };
 
+struct DynamicWaterAdmissionOwner {
+ NativeDynamicWaterCapture& capture;std::shared_ptr<const NativeDynamicWaterFrame> frame;
+ void ValidateSubmittedCapacity(uint64_t draw) const {if(frame){if(frame->sourceDrawFrame!=draw)throw std::logic_error("Water admission draw mismatch");capture.ValidateSubmittedCapacity(frame);}}
+ void TransferPreparedFrame(uint64_t draw) noexcept {if(frame)capture.TransferPreparedFrame(draw);}
+ void ValidateRestoreHeldFrame(uint64_t draw) const {if(frame)capture.ValidateRestoreHeldFrame(draw);}
+ void RestoreHeldFrame(uint64_t draw) noexcept {if(frame)capture.RestoreHeldFrame(draw);}
+ void QuarantineHeldFrame(uint64_t draw) noexcept {if(frame)capture.QuarantineHeldFrame(draw);}
+};
+
 void ApplyDeferredFrameReceipts()
 {
  if(!session)return;
@@ -513,6 +522,11 @@ void ApplyDeferredFrameReceipts()
  const auto& result=*notice;
  if(!result.sourceFrameCompleted)throw std::logic_error("Deferred scene receipt is not GPU-completed");
  // Reject missing/mismatched journal owners before any water/world retirement.
+ if(result.dynamicWaterGeneration){
+  if(result.dynamicWaterSourceDrawFrame!=result.sourceDrawFrame)throw std::logic_error("Deferred water receipt belongs to another scene draw");
+  session->dynamicWaterCapture.ValidateHeldFrame(result.dynamicWaterSourceDrawFrame);
+  session->dynamicWaterCapture.ValidateCompletion(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
+ }
  ui::GetRecorder().ValidateHeldFrame(result.sourceDrawFrame);
  LuaNativePostprocess::GetRecorder().ValidateHeldFrame(result.completedPostprocessSerial);
  LuaNativeVolumetricClouds::ValidateHeldFrame(result.sourceDrawFrame);
@@ -1624,7 +1638,8 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  if(session->renderer->HasScreenContinuation())SetReadbackSubmissionReceipts(options);
  static const bool overlap=[] {const char* value=std::getenv("BAR_NATIVE_FRAME_OVERLAP");return !value||std::string_view(value)=="1";}();
  CloudAdmissionOwner cloudAdmission;
- NativeFrameAdmissionTransaction admission(ui::GetRecorder(),LuaNativePostprocess::GetRecorder(),cloudAdmission,
+ DynamicWaterAdmissionOwner waterAdmission{session->dynamicWaterCapture,capturedFrame.dynamicWater};
+ NativeFrameAdmissionTransaction admission(ui::GetRecorder(),LuaNativePostprocess::GetRecorder(),cloudAdmission,waterAdmission,
   capturedFrame.sourceDrawFrame,screenUI&&screenUI->postprocess?screenUI->postprocess->serial:0);
  std::shared_ptr<NativeFrameCompletionMailbox::Ticket> completionTicket;
  if(overlap&&options.presentWorld&&capturedFrame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {

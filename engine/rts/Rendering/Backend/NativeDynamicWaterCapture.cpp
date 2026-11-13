@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeDynamicWaterCapture.h"
+#include "NativeDynamicWaterReceipts.h"
 #include "NativeLegacyWaterProgramState.h"
 #include "NativeOriginalModelContext.h"
 #include "NativeTextureContext.h"
@@ -120,12 +121,12 @@ struct NativeDynamicWaterCapture::Impl {
  std::vector<Explosion> explosions;
  std::deque<std::shared_ptr<const NativeDynamicWaterUpdate>> pending;
  uint64_t sequence=0,retired=0;bool firstDraw=true;
- std::shared_ptr<const NativeDynamicWaterFrame> reserved,finalized;
+ NativeDynamicWaterReceipts receipts;
 };
 NativeDynamicWaterCapture::NativeDynamicWaterCapture():impl(std::make_unique<Impl>()){}
 NativeDynamicWaterCapture::~NativeDynamicWaterCapture()=default;
 bool NativeDynamicWaterCapture::Initialized()const{return bool(impl->material);}
-void NativeDynamicWaterCapture::Reset(){impl=std::make_unique<Impl>();}
+void NativeDynamicWaterCapture::Reset(){impl->receipts.ValidateReset();impl=std::make_unique<Impl>();}
 void NativeDynamicWaterCapture::Initialize(const DynamicWaterSourceProfile& profile){
  if(Initialized())throw std::logic_error("Dynamic source already initialized");
  if(profile.surfaceProgram==DynamicWaterSurfaceProgram::Unobserved)throw std::runtime_error("Dynamic original surface-program capability is unobserved");
@@ -165,7 +166,7 @@ void NativeDynamicWaterCapture::AddExplosion(const float3& pos,float strength,fl
 }
 void NativeDynamicWaterCapture::Update(){
  if(!Initialized()||!camera)throw std::logic_error("Dynamic update missing source owner/camera");
- if(impl->reserved)throw std::logic_error("Dynamic Update cannot overtake unretired draw reservation");
+ if(impl->receipts.Any())throw std::logic_error("Dynamic Update cannot overtake unretired draw reservation");
  if(!waterRendering->forceRendering&&!readMap->HasVisibleWater())return;
  if(impl->sequence==UINT64_MAX)throw std::overflow_error("Dynamic update sequence overflow");
  const float3 oldCamPosBig=impl->camPosBig;float3 camPosBig=oldCamPosBig;
@@ -294,7 +295,8 @@ void NativeDynamicWaterCapture::Update(){
 }
 std::shared_ptr<const NativeDynamicWaterFrame> NativeDynamicWaterCapture::CaptureDerived(uint64_t sourceDrawFrame){
  if(!Initialized()||!camera)throw std::logic_error("Dynamic draw missing actual source owner");
- if(impl->reserved){if(impl->reserved->sourceDrawFrame!=sourceDrawFrame)throw std::logic_error("Dynamic draw cannot replace an unretired reservation");return impl->reserved;}
+ if(auto prior=impl->receipts.Current(sourceDrawFrame))return prior;
+ if(impl->receipts.Any())throw std::logic_error("Dynamic draw cannot replace an unretired reservation");
  auto frame=std::make_shared<NativeDynamicWaterFrame>();frame->sourceDrawFrame=sourceDrawFrame;frame->throughUpdate=impl->sequence;frame->material=impl->material;frame->profile=impl->profile;
  RequireFloatRaster(false);frame->profile.inheritedRasterObserved=true;
  frame->updates.assign(impl->pending.begin(),impl->pending.end());frame->shading=Shading();
@@ -306,12 +308,12 @@ std::shared_ptr<const NativeDynamicWaterFrame> NativeDynamicWaterCapture::Captur
  height.AddVertexQT({first,first,0},startx,startz);height.AddVertexQT({first,last,0},startx,endz);height.AddVertexQT({last,last,0},endx,endz);height.AddVertexQT({last,first,0},endx,startz);height.Quads();frame->derived.push_back(std::move(height.draw));
  if(impl->firstDraw){DynamicWaterDraw detail;Detail(detail,gs->frameNum);frame->derived.push_back(std::move(detail));}
  frame->fogColor=OriginalNativeModelContext().fog.color;frame->fogParameters=OriginalNativeModelContext().fog.parameters;
- impl->reserved=frame;return frame;
+ impl->receipts.ValidateReserve(frame);impl->receipts.Reserve(frame);return frame;
 }
 std::shared_ptr<const NativeDynamicWaterFrame> NativeDynamicWaterCapture::FinalizeSurface(std::shared_ptr<const NativeDynamicWaterFrame> source,const WorldCamera& actual,const std::array<float,9>& reflectionBasis,const std::array<float,9>& refractionBasis,bool wireframe){
  if(!source||source->material!=impl->material||!camera)throw std::logic_error("Dynamic surface lost actual source owner");
- if(impl->finalized){if(source!=impl->reserved)throw std::logic_error("Dynamic finalized draw differs from reservation");return impl->finalized;}
- if(source!=impl->reserved)throw std::logic_error("Dynamic surface missing source reservation");
+ if(source!=impl->receipts.Current(source->sourceDrawFrame))throw std::logic_error("Dynamic surface missing source reservation");
+ if(auto prior=impl->receipts.Finalized(source->sourceDrawFrame))return prior;
  auto out=std::make_shared<NativeDynamicWaterFrame>(*source);out->captureCamera=actual;out->viewProjection=std::to_array(camera->GetViewProjectionMatrix().m);out->wireframe=wireframe;
  out->raster=ui::GetRecorder().CurrentWorldState();out->blend=ui::GetRecorder().CurrentState().draw.blend;out->blend.enabled=true;
  out->fogColor=OriginalNativeModelContext().fog.color;out->fogParameters=OriginalNativeModelContext().fog.parameters;
@@ -551,10 +553,24 @@ std::shared_ptr<const NativeDynamicWaterFrame> NativeDynamicWaterCapture::Finali
 		}
 	}
 
- outer.Quads(impl->profile.outerQuadDiagonal301);out->surface.push_back(std::move(outer.draw));impl->finalized=out;return out;
+ outer.Quads(impl->profile.outerQuadDiagonal301);out->surface.push_back(std::move(outer.draw));impl->receipts.SetFinalized(source,out);return out;
+}
+void NativeDynamicWaterCapture::ValidateSubmittedCapacity(const std::shared_ptr<const NativeDynamicWaterFrame>& frame) const {
+ if(!frame||frame!=impl->receipts.Finalized(frame->sourceDrawFrame))throw std::logic_error("Dynamic admission lost its exact finalized source");
+ impl->receipts.ValidateHold(frame->sourceDrawFrame);
+}
+void NativeDynamicWaterCapture::TransferPreparedFrame(uint64_t draw) noexcept {impl->receipts.Hold(draw);}
+void NativeDynamicWaterCapture::ValidateRestoreHeldFrame(uint64_t draw) const {impl->receipts.ValidateRestore(draw);}
+void NativeDynamicWaterCapture::RestoreHeldFrame(uint64_t draw) noexcept {impl->receipts.Restore(draw);}
+void NativeDynamicWaterCapture::QuarantineHeldFrame(uint64_t draw) noexcept {impl->receipts.Quarantine(draw);}
+void NativeDynamicWaterCapture::ValidateHeldFrame(uint64_t draw) const {impl->receipts.ValidateHeld(draw);}
+void NativeDynamicWaterCapture::ValidateCompletion(uint64_t generation,uint64_t through,uint64_t draw) const {
+ if(!impl->material||impl->material->generation!=generation)throw std::logic_error("Dynamic completion material generation differs");
+ impl->receipts.ValidateCompletion(generation,through,draw,impl->retired,impl->sequence);
 }
 void NativeDynamicWaterCapture::DidComplete(uint64_t generation,uint64_t through,uint64_t sourceDrawFrame){
- if(!impl->material||!impl->reserved||!impl->finalized||impl->material->generation!=generation||impl->reserved->throughUpdate!=through||impl->finalized->sourceDrawFrame!=sourceDrawFrame||through<impl->retired||through>impl->sequence)throw std::logic_error("Dynamic source completion differs from actual generation/sequence");
- while(!impl->pending.empty()&&impl->pending.front()->sequence<=through)impl->pending.pop_front();impl->retired=through;impl->firstDraw=false;impl->reserved.reset();impl->finalized.reset();
+ ValidateCompletion(generation,through,sourceDrawFrame);
+ while(!impl->pending.empty()&&impl->pending.front()->sequence<=through)impl->pending.pop_front();
+ impl->retired=through;impl->firstDraw=false;impl->receipts.Complete(sourceDrawFrame);
 }
 }
