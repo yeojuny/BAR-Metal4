@@ -24,3 +24,7 @@ Latest P3/P4 source checkpoint: [normal producer resource/epoch ownership](NORMA
 Three map-normal consumers, the existing producer and retirement now pin the same
 physical resource and readiness epoch. This does not close the remaining whole-world
 ownership audit or change P5 default/Metal acceptance requirements.
+
+Shared-service audit checkpoint: [MetalInfo resource generation](METAL-INFO-GENERATION.md)
+pins prepared completion to its exact target/source-cache generation while retaining
+the pipeline cache. WorldInfo already had a generation boundary; P5 remains gated.
