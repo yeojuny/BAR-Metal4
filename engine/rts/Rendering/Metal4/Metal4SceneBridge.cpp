@@ -1380,7 +1380,7 @@ void AbortPreparedWorld()
 	if(session&&session->renderer && !session->renderer->AbortShieldPublications(session->preparedFrame?session->preparedFrame->opaqueModelFrame:session->opaqueSourcePending,session->actualShadowSourcePending,session->preparedFrame&&session->preparedFrame->mainGround?session->preparedFrame->mainGround:session->mainGroundPending,session->environmentStage,session->shieldCapture))return; // Keep failed-Begun source owners intact.
 
 	if(session)session->legacyWaterCapture.AbortUncompletedRefraction();
-	if(session && session->renderer)session->renderer->AbortScreenContinuation();
+	if(session && session->renderer && !session->renderer->AbortScreenContinuation())return;
 	LuaNativeBlockout::AbortWorldFrame();
 	LuaNativeGameDecal::AbortWorldFrame();
 	LuaNativeUnitPrimitive::AbortWorldFrame();

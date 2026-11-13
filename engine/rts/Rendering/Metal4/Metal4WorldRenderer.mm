@@ -23,6 +23,7 @@
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include "Metal4WindowSurfaceNative.h"
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
+#include "Rendering/Backend/NativeRendererAccessGate.h"
 #include "Metal4WorldViewport.h"
 #include "Metal4LogicalCopyMapping.h"
 #include "Metal4ScreenNative.h"
@@ -335,6 +336,7 @@ Metal4PresentationStatus SurfaceStatus(const Metal4SurfaceSnapshot& state)
 } // namespace
 
 struct Metal4WorldRenderer::Impl {
+ mutable NativeRendererAccessGate access;
  metal4::InterventionShadowViews interventionShadowViews;
 	metal4::ScreenGPU screenGPU;
 	metal4::StartBoxGPU startBoxGPU;
@@ -693,7 +695,7 @@ struct Metal4WorldRenderer::Impl {
 			if(input.version){
 				Require(input.version->image==input.allocation,"Original Preview produced version belongs to another allocation");
 				result.texture=postprocessGPU.ResolveImage(lease,input.version,consumer);
-				result.requireReadable=[this,version=input.version]{postprocessGPU.RequireReadable(version);};
+				result.requireReadable=[this,version=input.version]{NativeRendererAccessGate::Scope providerAccess(&access);postprocessGPU.RequireReadable(version);};
 			}else{
 				Require(!requireContents,"Original Preview cannot read texels from undefined allocation-only storage");
 				result.texture=postprocessGPU.ResolveAllocation(lease,input.allocation);
@@ -1009,11 +1011,13 @@ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int reques
 	impl->sensor31657CircleGPU.Initialize(lease,compileMs);
 	impl->screenGPU.SetSharedImageProvider([owner=impl.get()](metal4::RuntimeLease& sourceLease,
 		const std::shared_ptr<const NativePostprocessVersion>& version,std::optional<NativePostprocessConsumer> consumer) {
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);
 		return metal4::PreparedScreenExternalImage{owner->postprocessGPU.ResolveImage(sourceLease,version,consumer),version,
-			[owner,version]{owner->postprocessGPU.RequireReadable(version);}};
+			[owner,version]{NativeRendererAccessGate::Scope providerAccess(&owner->access);owner->postprocessGPU.RequireReadable(version);}};
 	});
 	impl->postprocessGPU.SetCPUImageProvider([owner=impl.get()](metal4::RuntimeLease& sourceLease,
 		const std::shared_ptr<const ScreenTexture>& image) {
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);
 		// Validated immediate CPU storage has no pending render producer.
 		// Reuse the actual UI BC upload/cache and the submission's own lease.
 		return owner->screenGPU.PrepareImage(sourceLease,image,ScreenSampler{}).texture;
@@ -1041,7 +1045,8 @@ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int reques
 	impl->ssaoGPU.Initialize(lease,layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,NativeDiagnosticInstrumentation,compileMs,mainSamples);
 	impl->bloomGPU.Initialize(lease,layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,NativeDiagnosticInstrumentation,compileMs,mainSamples);
 	impl->blueprintGPU.Initialize(lease,layer.pixelFormat,NativeDiagnosticInstrumentation,compileMs,mainSamples);
-	impl->blockoutGPU.SetNormalImageProvider([owner=impl.get()](metal4::RuntimeLease& actual,const std::shared_ptr<const ScreenTexture>& image,const ScreenSampler& sampling){return owner->screenGPU.PrepareImage(actual,image,sampling);});
+	impl->blockoutGPU.SetNormalImageProvider([owner=impl.get()](metal4::RuntimeLease& actual,const std::shared_ptr<const ScreenTexture>& image,const ScreenSampler& sampling){
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);return owner->screenGPU.PrepareImage(actual,image,sampling);});
 	impl->blockoutGPU.Initialize(lease,layer.pixelFormat,NativeDiagnosticInstrumentation,compileMs,mainSamples);
 	impl->placementGPU.Initialize(lease,layer.pixelFormat,NativeDiagnosticInstrumentation,compileMs,mainSamples);
 	impl->groundDecalGPU.Initialize(lease,layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,mainSamples,NativeDiagnosticInstrumentation,compileMs);
@@ -1072,14 +1077,18 @@ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int reques
 	SetNativeUnitPrimitiveConsumerAvailable(true);
 	}
 }
-NativeMainSampling Metal4WorldRenderer::ActualMainSampling() const { return impl->mainSampling; }
+NativeMainSampling Metal4WorldRenderer::ActualMainSampling() const {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr); return impl->mainSampling; }
 
+// External lifecycle contract: never destroy or move a renderer while any
+// entry/provider/retirement is running. The cache gate does not own Impl lifetime.
 Metal4WorldRenderer::~Metal4WorldRenderer() { if(impl && !SharedRuntime().CanSafelyDetach())std::terminate(); }
 Metal4WorldRenderer::Metal4WorldRenderer(Metal4WorldRenderer&&) noexcept = default;
 Metal4WorldRenderer& Metal4WorldRenderer::operator=(Metal4WorldRenderer&& other) noexcept { if(this!=&other){if(impl&&!SharedRuntime().CanSafelyDetach())std::terminate();impl=std::move(other.impl);}return *this; }
 
 void Metal4WorldRenderer::ClearWaterResources()
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
  RuntimeCleanupLease lease;
  impl->waterGPU.ClearResources();
@@ -1090,21 +1099,26 @@ void Metal4WorldRenderer::ClearWaterResources()
 
 bool Metal4WorldRenderer::DeferredPostprocessConsumersInitialized() const noexcept
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
+ if(!cacheAccess.Acquired())return false;
 	return impl && impl->ssaoGPU.Initialized() && impl->bloomGPU.Initialized();
 }
 
 void Metal4WorldRenderer::ClearBasicWaterResources()
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
  RuntimeCleanupLease lease;impl->basicWaterGPU.ClearResources();
 }
 
 void Metal4WorldRenderer::ClearDynamicWaterResources(){
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"World renderer was moved from");RuntimeCleanupLease lease;impl->dynamicWaterGPU.ClearResources();
  impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
 }
 void Metal4WorldRenderer::ClearLegacyWaterResources()
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
  RuntimeCleanupLease lease;impl->legacyWaterBumpGPU.ClearResources();
  impl->waterReflection=nil;impl->waterReflectionDepth=nil;impl->preWaterColor=nil;
@@ -1112,6 +1126,7 @@ void Metal4WorldRenderer::ClearLegacyWaterResources()
 
 bool Metal4WorldRenderer::CanInitializeWater() const
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  // Structural availability only: the constructor compiled the actual scene
  // consumers. Original terrain programs and all same-draw image contracts are checked
  // by Prepare; this does not assert cross-driver 100% pixel equivalence.
@@ -1123,17 +1138,20 @@ bool Metal4WorldRenderer::CanInitializeWater() const
 
 std::shared_ptr<const void> Metal4WorldRenderer::Sensor31657CircleConsumerLifetime() const
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Sensor family queried after renderer destruction");
 	return impl->sensor31657CircleGPU.CompiledFamilyLifetime();
 }
 
 std::uint32_t Metal4WorldRenderer::SensorPreviewMaximumDimension() const
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Sensor Preview has no actual renderer/device");
 	return SharedRuntime().Capabilities().maxTextureDimension2D;
 }
 std::shared_ptr<const NativeSensorPreviewProgramConsumer> Metal4WorldRenderer::CompileOriginalSensorPreviewProgram(const NativeSensorPreviewProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Sensor Preview compile requires its actual renderer");
 	RuntimeLease lease;double milliseconds=0;
 	return impl->sensorPreviewGPU.CompileOriginalStages(lease,source,milliseconds);
@@ -1142,6 +1160,7 @@ std::shared_ptr<const NativeSensorPreviewProgramConsumer> Metal4WorldRenderer::C
 void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageReceipt& environment,
  const std::shared_ptr<const NativeShieldDepthFrame>& shield)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread(); Require(impl != nullptr, "World renderer was moved from");
 	RuntimeCleanupLease lease;
  Require(AbortShieldPublications({}, {}, {}, environment, shield),"Cannot clear source resources after failed Begin");
@@ -1210,6 +1229,7 @@ bool Metal4WorldRenderer::SubmitScreenTargets(const ScreenFrameView& frame, bool
 std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTargetPrefix(
  const ui::NativeUIReadbackPrefix& prefix,ScreenScissor rectangle,bool shaderValidation)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  @autoreleasepool {
   MainThread();Require(impl!=nullptr,"World renderer was moved from");
   if(!prefix.readColor)return std::nullopt;
@@ -1307,6 +1327,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 	std::shared_ptr<const NativeWorldInfoFrame> worldInfoFrame, bool shaderValidation,
 	std::shared_ptr<const NativeUnitStencilFrame> unitStencilFrame, std::optional<NativePBRDeclarationReceipt> capturedPBR)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
 		Metal4MaintenanceResult result;
@@ -1458,6 +1479,7 @@ ResolvedSSAOImage ResolvePostprocessDepth(RuntimeLease& lease,
 }
 bool Metal4WorldRenderer::CheckShieldGeometryAllocation(const NativeGeometryTextureRequest& request,NativeTextureRegistry& registry,uint64_t sourceFrame)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	if(!request.width||!request.height||request.target!=NativeCUSTextureTarget::Image2D||request.samples!=1)return false;
 	RuntimeLease lease;
 	if(request.width>lease.Capabilities().maxTextureDimension2D||request.height>lease.Capabilities().maxTextureDimension2D)return false;
@@ -1496,6 +1518,7 @@ bool Metal4WorldRenderer::CheckShieldGeometryAllocation(const NativeGeometryText
 }
 NativePBRDeclarationReceipt Metal4WorldRenderer::CapturePBRSource()
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();return impl?impl->pbrSource.CapturePending():NativePBRDeclarationReceipt{};
 }
 bool Metal4WorldRenderer::HasPendingPBRSource(const NativePBRDeclarationReceipt& batch) const
@@ -1511,6 +1534,7 @@ bool Metal4WorldRenderer::HasPendingEnvironmentSource(const NativeEnvironmentSta
 std::shared_ptr<const void> Metal4WorldRenderer::AllocateCoverageTarget(const std::shared_ptr<const ScreenTexture>& color,
  const std::shared_ptr<const ScreenTexture>& depth)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl && color && depth && color->format==ScreenTextureFormat::R8Unorm && depth->format==ScreenTextureFormat::Depth16Unorm &&
   color->width==depth->width && color->height==depth->height,"Coverage FBO allocation metadata differs from original R8+D16");
  auto c=impl->screenGPU.ReserveAttachmentAllocationForCapture(color),d=impl->screenGPU.ReserveAttachmentAllocationForCapture(depth);
@@ -1523,12 +1547,14 @@ std::shared_ptr<const void> Metal4WorldRenderer::AllocateCoverageTarget(const st
 }
 std::shared_ptr<const NativeBlockoutTarget> Metal4WorldRenderer::AllocateBlockoutTarget(uint32_t width,uint32_t height)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(bool(impl),"Blockout FBO has no actual renderer owner");
  return ReserveNativeBlockoutTargetForCapture(width,height);
 }
 
 void Metal4WorldRenderer::ConnectPBRSourceContext(bool connected)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	auto& context=OriginalNativeTextureContext();
 	if(!connected){impl->pbrSource.Shutdown();OriginalNativeCubeTextures().Detach();return;}
 	NativeCubeTextureServices cubeServices;
@@ -1551,8 +1577,10 @@ void Metal4WorldRenderer::ConnectPBRSourceContext(bool connected)
 
 void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	impl->screenGPU.SetPiPSourceImageProvider(connected?PiPSourceImageProvider(
 		[owner=impl.get()](RuntimeLease& lease,const NativeCUSTextureBinding& binding,const ScreenSampler& sampling,bool validation,double& milliseconds){
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);
 			Require(binding.object!=nullptr,"Typed source image has no original binding");
    if(std::dynamic_pointer_cast<const NativeShadowTextureBacking>(binding.object->backing)){
     auto image=ResolveNativeShadowTexture(lease,binding,owner->pbrSubmission);
@@ -1566,6 +1594,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 		}):PiPSourceImageProvider{});
  impl->screenGPU.SetSensorLOSProvider(connected?metal4::ScreenGPU::SensorLOSProvider(
   [owner=impl.get()](RuntimeLease& lease,const NativeSensorLOSDraw& draw,const SensorPreviewTarget& target,const PreparedScreenFrame* producers,bool validation,double& ms,NativePostprocessConsumer consumer){
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);
    WorldCamera camera;camera.viewport=target.cameraViewport;
    auto resolver=[&](RuntimeLease& l,const NativeCUSTextureBinding& b,std::optional<NativePostprocessConsumer> at){return owner->screenGPU.ResolveStartBoxImage(l,b,producers,at);};
    return owner->sensorLOSGPU.Prepare(lease,draw,resolver,camera,target.width,target.height,target.logicalWidth,target.logicalHeight,target.color,target.depth,target.stencil,target.samples,validation,ms,consumer);
@@ -1573,6 +1602,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 	impl->screenGPU.SetSensorPreviewProvider(connected?metal4::ScreenGPU::SensorPreviewProvider(
 		[owner=impl.get()](RuntimeLease& lease,const NativeSensorPreviewDraw& draw,const SensorPreviewTarget& target,
 			const PreparedScreenFrame* producers,bool validation,double& milliseconds,NativePostprocessConsumer consumer){
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);
 			Require(draw.callin==NativeSensorPreviewCallin::Minimap,"Preview UI marker is outside its actual minimap callback");
 			NativeSensorPreviewCommand command;command.kind=NativeSensorPreviewCommandKind::Draw;
 			command.sequence=draw.sequence;command.sourceDrawFrame=draw.sourceDrawFrame;command.callin=draw.callin;
@@ -1583,16 +1613,17 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			return owner->sensorPreviewGPU.Prepare(lease,command,target,images,owner->screenGPU,validation,milliseconds,consumer);
 		}):metal4::ScreenGPU::SensorPreviewProvider{});
 
-	impl->screenGPU.SetStartBoxImageProvider(connected?metal4::ScreenGPU::StartBoxImageProvider([this](RuntimeLease& lease,const NativeCUSTextureBinding& binding,const PreparedScreenFrame* producers,std::optional<NativePostprocessConsumer> consumer){
+	impl->screenGPU.SetStartBoxImageProvider(connected?metal4::ScreenGPU::StartBoxImageProvider([owner=impl.get()](RuntimeLease& lease,const NativeCUSTextureBinding& binding,const PreparedScreenFrame* producers,std::optional<NativePostprocessConsumer> consumer){
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);
 		Require(binding.object!=nullptr,"Original StartBox resolver has no actual object");
 		const auto kind=ClassifyNativeStartBoxImage(binding);
 		if(auto backing=std::dynamic_pointer_cast<const NativeMapTextureBacking>(binding.object->backing)){
 			auto resource=std::dynamic_pointer_cast<const Impl::MapImage>(backing->Resource());
 			Require(resource&&resource->texture,"Original map image has no paired existing producer storage");
-			auto sampler=impl->screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
+			auto sampler=owner->screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 			if(backing->role==NativeMapTextureRole::Height)
 				return PreparedStartBoxImage{kind,resource->texture,sampler,binding.object,resource,false,[resource]{Require(resource->Completed(),"Original height sampled before its CPU upload completed");}};
-			const auto encoded=impl->normalsEncoded;
+			const auto encoded=owner->normalsEncoded;
 			return PreparedStartBoxImage{kind,resource->texture,sampler,binding.object,resource,false,[encoded]{Require(*encoded,"Original map normal image sampled before its existing producer");}};
 		}
 		const auto source=OriginalNativeTextureContext().UI().DescribeBinding(binding);
@@ -1600,7 +1631,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 		if(source.image->renderTarget && (source.image->format==ScreenTextureFormat::RGBA16Float || source.image->format==ScreenTextureFormat::R8Unorm))
 			Require(source.image->generation,"Original StartBox SDF cannot sample allocation-only unbaked contents");
 		auto external=std::make_shared<PreparedScreenExternalImage>();
-		auto prepared=impl->screenGPU.PrepareImage(lease,source.image,source.sampler,producers,consumer,[external](PreparedScreenExternalImage v){*external=std::move(v);});
+		auto prepared=owner->screenGPU.PrepareImage(lease,source.image,source.sampler,producers,consumer,[external](PreparedScreenExternalImage v){*external=std::move(v);});
 		return PreparedStartBoxImage{kind,prepared.texture,prepared.sampler,binding.object,source.image,source.image->flipV,[external]{if(external->requireReadable)external->requireReadable();}};
 	}):metal4::ScreenGPU::StartBoxImageProvider{});
 
@@ -1686,6 +1717,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 		return image;
 	});
 	impl->screenGPU.SetExternalImageProvider([owner=impl.get()](RuntimeLease& lease,const std::shared_ptr<const NativeCUSTextureObject>& object,std::optional<NativePostprocessConsumer>)->PreparedScreenExternalImage{
+ NativeRendererAccessGate::Scope providerAccess(&owner->access);
 		Require(object!=nullptr,"Original external depth consumer has no immutable object");
 		if(auto mask=std::dynamic_pointer_cast<const NativeUnitStencilBacking>(object->backing)){
 			auto image=owner->unitStencilGPU.Resolve(lease,mask->version,owner->pbrSubmission);
@@ -1771,6 +1803,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 
 void Metal4WorldRenderer::ConstructOriginalModelPrograms(NativeEngineModelProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Original model construction has no actual renderer");
 	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 	Require(layer&&layer.device==lease.Device(),"Original model source belongs to another actual device");
@@ -1784,6 +1817,7 @@ void Metal4WorldRenderer::ConstructOriginalModelPrograms(NativeEngineModelProgra
 }
 void Metal4WorldRenderer::SetOriginalShadowCapture(std::function<void(std::shared_ptr<const NativeShadowTextureFrame>)> capture)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"Original shadow source has no actual renderer");
  auto& source=OriginalNativeShadowTextures();
  if(!capture){source.Detach();return;}
@@ -1802,6 +1836,7 @@ void Metal4WorldRenderer::SetOriginalShadowCapture(std::function<void(std::share
 }
 void Metal4WorldRenderer::ConstructOriginalShadowPrograms(NativeEngineShadowProgramSource& source,const WorldCamera& drawing)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"Original ShadowGen construction has no actual renderer");
  RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
  Require(layer&&layer.device==lease.Device(),"Original ShadowGen source belongs to another actual device");
@@ -1815,6 +1850,7 @@ void Metal4WorldRenderer::ConstructOriginalShadowPrograms(NativeEngineShadowProg
 }
 void Metal4WorldRenderer::ConstructOriginalShadowParticlePrograms(NativeOriginalShadowParticlesProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Original ProjFX construction has no actual renderer");
 	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 	Require(layer&&layer.device==lease.Device(),"Original ProjFX compiler belongs to another actual device");
@@ -1829,6 +1865,7 @@ void Metal4WorldRenderer::ConstructOriginalShadowParticlePrograms(NativeOriginal
 }
 std::shared_ptr<const NativeCUSProgramConsumer> Metal4WorldRenderer::CompileOriginalCUSProgram(const NativeCUSProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"Original CUS construction has no actual renderer");
  RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
  Require(layer&&layer.device==lease.Device(),"Original CUS compiler belongs to another actual device");
@@ -1838,6 +1875,7 @@ std::shared_ptr<const NativeCUSProgramConsumer> Metal4WorldRenderer::CompileOrig
 }
 NativeTerrainProgramLink Metal4WorldRenderer::CompileOriginalTerrainProgram(const NativeTerrainProgramRequest& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"Original terrain construction has no actual renderer");
  RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
  Require(layer&&layer.device==lease.Device(),"Original terrain compiler belongs to another actual device");
@@ -1852,6 +1890,7 @@ NativeTerrainProgramLink Metal4WorldRenderer::CompileOriginalTerrainProgram(cons
 }
 std::shared_ptr<const NativeDeferredLightProgramConsumer> Metal4WorldRenderer::CompileOriginalDeferredLightProgram(const NativeDeferredLightProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Original deferred-light compiler has no actual renderer");
 	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 	Require(layer&&layer.device==lease.Device(),"Original deferred-light compiler belongs to another device");
@@ -1860,6 +1899,7 @@ std::shared_ptr<const NativeDeferredLightProgramConsumer> Metal4WorldRenderer::C
 }
 std::shared_ptr<const NativeUnitStencilProgramConsumer> Metal4WorldRenderer::CompileOriginalUnitStencilProgram(const NativeUnitStencilProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Original Unit Stencil compiler has no actual renderer");
 	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 	Require(layer&&layer.device==lease.Device(),"Original Unit Stencil compiler belongs to another device");
@@ -1867,6 +1907,7 @@ std::shared_ptr<const NativeUnitStencilProgramConsumer> Metal4WorldRenderer::Com
 }
 std::shared_ptr<const NativeOutlineProgramConsumer> Metal4WorldRenderer::CompileOriginalOutlineProgram(const NativeOutlineProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Original Outline compiler has no actual renderer");
 	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 	Require(layer&&layer.device==lease.Device(),"Original Outline compiler belongs to another device");
@@ -1874,6 +1915,7 @@ std::shared_ptr<const NativeOutlineProgramConsumer> Metal4WorldRenderer::Compile
 }
 std::shared_ptr<const NativeDistortionProgramConsumer> Metal4WorldRenderer::CompileOriginalDistortionProgram(const NativeDistortionProgramSource& source)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(impl!=nullptr,"Original Distortion compiler has no actual renderer");
 	RuntimeLease lease;auto* layer=Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 	Require(layer&&layer.device==lease.Device(),"Original Distortion compiler belongs to another device");
@@ -1882,13 +1924,16 @@ std::shared_ptr<const NativeDistortionProgramConsumer> Metal4WorldRenderer::Comp
 }
 void Metal4WorldRenderer::ClearOriginalModelSources()
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();Require(Metal4RendererCanSafelyDetachSurface(),"Original model sources still own unretired GPU work");
 	impl->cusSourceGPU.ClearResources();
 }
 
-void Metal4WorldRenderer::ConnectBloomDeferredSources(bool connected){MainThread();Require(!connected||impl->bloomGPU.Initialized(),"Bloom source connection requires its genuine initialized consumer");SetNativeBloomConsumerAvailable(connected);}
+void Metal4WorldRenderer::ConnectBloomDeferredSources(bool connected){
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);MainThread();Require(!connected||impl->bloomGPU.Initialized(),"Bloom source connection requires its genuine initialized consumer");SetNativeBloomConsumerAvailable(connected);}
 void Metal4WorldRenderer::ConnectSSAODeferredSources(bool connected)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();
  // The deferred owner invokes this only after actual original MRT publication
  // and its same-submission encoder are installed. Compiled PSOs alone are insufficient.
@@ -1898,6 +1943,7 @@ void Metal4WorldRenderer::ConnectSSAODeferredSources(bool connected)
 
 std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BeginShieldMapPublication(NativeTextureContext& context,uint64_t frame,const WorldCamera& camera,const NativeMapDepthSelection& selection)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	Require(!impl->shieldPending,"Original map GBuffer publication was not consumed or aborted");
 	auto next=std::make_shared<NativeShieldDepthFrame>();next->sourceDrawFrame=frame;next->submissionIdentity=CreateShieldSubmissionIdentity();next->camera=camera;next->mapSelection=selection;
 	// The actual phase published before its callbacks. This shared summary
@@ -1912,6 +1958,7 @@ std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BeginShieldMa
 }
 std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::PublishShieldModelDepth(const WorldFrame& frame,const NativeModelDepthSelection& selection)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	Require(!frame.opaqueModelFrame,"Standalone model depth cannot replace actual MRT model publications");
 	Require(impl->shieldPending&&impl->shieldPending->sourceDrawFrame==frame.sourceDrawFrame,"Original model GBuffer publication lacks this draw's prior map stage");
 	Require(impl->shieldPending->camera.view==frame.viewCamera.view&&impl->shieldPending->camera.projection==frame.viewCamera.projection&&impl->shieldPending->camera.viewport==frame.viewCamera.viewport,"Main camera changed between original map and model GBuffer writers");
@@ -1922,6 +1969,7 @@ std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::PublishShield
 }
 std::shared_ptr<const NativeShieldDepthFrame> Metal4WorldRenderer::BorrowActualMRTModelDepth(const WorldFrame& frame)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
 	MainThread();
 	Require(frame.opaqueModelFrame&&frame.opaqueModelFrame->sourceDrawFrame==frame.sourceDrawFrame,
 		"Actual MRT depth borrowing requires the retained original opaque source frame");
@@ -1951,6 +1999,8 @@ bool Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOp
  const NativeEnvironmentStageReceipt& environment,
  const std::shared_ptr<const NativeShieldDepthFrame>& shield) noexcept
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
+ if(!cacheAccess.Acquired())return false;
 	if(impl&&impl->activeSourceSubmission)return false; // Recorded work must never roll back.
 	if(unsubmittedOpaque)CancelNativeOpaqueModels(OriginalNativeTextureContext().Registry(),*unsubmittedOpaque);
  if(unsubmittedGround&&unsubmittedGround->ground&&unsubmittedGround->ground->mapMRT)
@@ -1963,19 +2013,24 @@ bool Metal4WorldRenderer::AbortShieldPublications(std::shared_ptr<const NativeOp
 }
 
 
-bool Metal4WorldRenderer::HasScreenContinuation() const noexcept
+bool Metal4WorldRenderer::HasScreenContinuation() const
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  return impl && bool(impl->screenContinuation);
 }
-void Metal4WorldRenderer::AbortScreenContinuation() noexcept
+bool Metal4WorldRenderer::AbortScreenContinuation() noexcept
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr,NativeRendererAccessGate::Try{});
+ if(!cacheAccess.Acquired())return false;
  // Each successfully completed prefix is retired already. In the failure
  // case the poisoned RuntimeLease owns the exact in-flight allocations.
  if(impl)impl->screenContinuation.reset();
+ return true;
 }
 
 Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  @autoreleasepool {
   MainThread();const auto continuation=impl->screenContinuation;
   Require(continuation && continuation->main && continuation->source && options.screenUI &&
@@ -2106,6 +2161,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
 
 std::shared_ptr<const void> Metal4WorldRenderer::PrepareIndependentResources(const WorldFrame& frame)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
  if(impl->screenContinuation||!frame.originalShadow||!frame.originalShadow->terrain)return {};
  return impl->originalShadowGPU.PrepareTerrainGeometry(frame.originalShadow->terrain);
@@ -2118,6 +2174,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
 {
  // Reject invalid callers before reading source policy, as preparation did.
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
+ std::optional<NativeRendererAccessGate::Scope> cacheAccess;cacheAccess.emplace(&impl->access);
  // Compatibility for direct synchronous API callers: capture only here on
  // main, never inside DrawPrepared. Engaged-empty receipts remain empty.
  std::optional<Metal4WorldRenderOptions> capturedOptions;
@@ -2136,16 +2193,19 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return p&&std::string_view(p)=="1";}();
  // Readback/continuation and arbitrary engine source callbacks stay on main.
  if(!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
-    options.submissionBegan||options.submissionCompleted||options.sourceCompleted)
+    options.submissionBegan||options.submissionCompleted||options.sourceCompleted){
+  cacheAccess.reset();
   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
    ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
   });
+ }
  // Allocate/retain the exact publication identities before worker Begin.
  NativeTargetSubmissionNotice targetNotice(options.screenUI);
  auto deliverTargetNotice=[&]() noexcept {targetNotice.Deliver([heldSourceDraw=options.heldSourceDraw](auto passes,std::uint64_t submission,auto postprocess) noexcept {
   ui::GetRecorder().RecordTargetSubmission(passes,submission,std::move(postprocess),heldSourceDraw);
  });};
  const auto snapshot=Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(*impl->surface);
+ cacheAccess.reset(); // Do not retain main ownership across worker.Invoke.
  static NativeSerialRenderWorker worker;
  bool receiptReady=false;
  auto mainReceipt=std::move(previousRetired);
@@ -2166,6 +2226,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
 }
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan)
 {
+ NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");
@@ -3930,7 +3991,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 					target.depth=MTLPixelFormatInvalid;target.stencil=MTLPixelFormatInvalid;
 					if(command.previous){
 						target.previous=impl->postprocessGPU.ResolveImage(lease,command.previous,consumer);
-						target.requirePreviousReadable=[owner=impl.get(),version=command.previous]{owner->postprocessGPU.RequireReadable(version);};
+						target.requirePreviousReadable=[owner=impl.get(),version=command.previous]{NativeRendererAccessGate::Scope providerAccess(&owner->access);owner->postprocessGPU.RequireReadable(version);};
 					}
 				}
 				auto images=[&](RuntimeLease& sourceLease,const NativeSensorPreviewImageInput& input,bool contents,NativePostprocessConsumer at){
@@ -5183,6 +5244,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    blockout=std::move(blockout),
    namedImageMipmaps=std::move(namedImageMipmaps),
    normalBacking=std::move(normalBacking)](const FrameMetrics& metrics) mutable {
+   NativeRendererAccessGate::Scope completionAccess(&owner->access);
    result.metrics=metrics;
   std::vector<std::exception_ptr> retirementFailures;
   const auto retire=[&](const auto& completion){try{completion();}catch(...){retirementFailures.push_back(std::current_exception());}};

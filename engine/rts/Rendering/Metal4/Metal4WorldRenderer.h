@@ -217,8 +217,8 @@ public:
 	Metal4MaintenanceResult SubmitMaintenance(const ScreenFrameView* frame,
 		std::shared_ptr<const NativeWorldInfoFrame> worldInfo, bool shaderValidation = Metal4WorldRenderOptions::DefaultShaderValidation,
 		std::shared_ptr<const NativeUnitStencilFrame> unitStencilFrame = {}, std::optional<NativePBRDeclarationReceipt> pbrDeclarations = std::nullopt);
-	bool HasScreenContinuation() const noexcept;
-	void AbortScreenContinuation() noexcept;
+	bool HasScreenContinuation() const;
+	bool AbortScreenContinuation() noexcept;
 	void ClearWaterResources();
 	void ClearBasicWaterResources();
 	void ClearLegacyWaterResources();

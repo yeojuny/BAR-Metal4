@@ -71,3 +71,10 @@ Worker publication follow-up: all potentially throwing callable allocation now
 precedes busy-slot commit. Actual allocation-fault/recovery tests expose the old
 leaked busy slot and pass with noexcept publication. Worker remains synchronous
 and bounded; no new control queue/lookahead admission is enabled.
+
+Renderer access follow-up: cache/control/render entries, retained raw-owner
+providers and deferred completion now share a fail-fast serial CPU ownership gate.
+Same-thread retirement nesting is supported; cross-thread conflicts quarantine/
+reject rather than wait. DrawDispatch releases snapshot ownership before worker
+handoff. This enforces a boundary, not a control scheduling queue or source/global
+service thread-safety; lookahead remains disabled until those remaining gates.
