@@ -12,6 +12,8 @@ record=scene.split('struct ScenePendingAdmission {',1)[1].split('void CompleteDy
 assert record.index('sourceCredits.Hold')<record.index('source->Take')<record.index('TransferValidated')
 accept=record.split(' void Accept(',1)[1]
 assert 'sourceCredits.ReleaseHeld' not in accept
+quarantine=record.split(' void Quarantine()',1)[1].split(' void Fail()',1)[0]
+assert quarantine.index('ValidateOwner()')<quarantine.index('sourceCredits.QuarantineHeld')<quarantine.index('Transaction().Quarantine()')
 subprocess.run(['g++','-std=c++23','-O1','-g','-pthread','-fsanitize=address,undefined','-I'+str(root/'rts'),str(Path(__file__).with_name('TestNativeSourceFrameCredits.cpp')),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],check=True,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
 print('Game acquires before capture; exact admission retains through GPU+main ledger retirement; Accept does not release credit')

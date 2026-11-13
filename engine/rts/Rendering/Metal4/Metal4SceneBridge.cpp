@@ -838,6 +838,9 @@ struct ScenePendingAdmission {
  void Quarantine()noexcept{
   // Invalid owner cannot be repaired by touching the currently active scene.
   try{ValidateOwner();}catch(...){std::terminate();}
+  // Older Begun failure invalidates every dependent younger capture credit.
+  // Preserve all source owners; never restore historical state over N+1.
+  owner->sourceCredits.QuarantineHeld(submission->Frame().sourceDrawFrame);
   Transaction().Quarantine();
  }
  void Fail(){

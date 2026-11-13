@@ -89,3 +89,9 @@ See [GPU-PENDING-RETIREMENT-GATE.md](GPU-PENDING-RETIREMENT-GATE.md).
 - [x] 13 host scenarios pass; GPU pending limit one retained.
 - [ ] General P5 eligibility/younger rollback, full P6 borrow coverage and native acceptance remain open.
 See [POSTPROCESS-PENDING-INPUT-RECEIPT.md](POSTPROCESS-PENDING-INPUT-RECEIPT.md) and the refreshed integration-readiness decision.
+
+### P5 failed ancestor / younger capture boundary
+- [x] Monotonic source lineage invalidates failed and younger credits on Begun failure; owner retention and older-success retirement preserved.
+- [x] Actual credit and extracted scene-admission regressions cover a younger current capture during old-worker failure.
+- [ ] General provider eligibility and whole-world rollback/rebuild remain unimplemented; this path intentionally requires restart.
+See [SOURCE-LINEAGE-QUARANTINE.md](SOURCE-LINEAGE-QUARANTINE.md).

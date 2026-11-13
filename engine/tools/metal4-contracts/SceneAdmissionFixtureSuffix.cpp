@@ -7,9 +7,19 @@ std::shared_ptr<ScenePendingAdmission> Make(){
 }
 int main(){
  for(unsigned i=0;i<100;++i){
-  {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);job->MarkQueued();Metal4WorldPresentationResult wrong{true,false,false,1};Reject([&]{job->CompleteCPU(&wrong,{});});assert(job->failureHandled&&ui::recorder.quarantined&&job->transferred);session->sourceCredits.ValidateHeld(0);}
+  {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);job->MarkQueued();
+   auto younger=session->sourceCredits.Acquire(1);session->opaqueSourcePending=99;
+   job->CompleteCPU(nullptr,std::make_exception_ptr(std::runtime_error("older encode failed")));
+   assert(job->transferred&&job->failureHandled&&session->sourceSettlement==job->source);
+   assert(session->opaqueSourcePending==99); // Never restore N over N+1.
+   Reject([&]{session->sourceCredits.Validate(younger,1);});
+   Reject([&]{session->sourceCredits.Hold(younger);});
+   Reject([&]{session->sourceCredits.Acquire(2);});
+  }
 
-  {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);job->MarkQueued();Metal4WorldPresentationResult result{true,true,true,0};Reject([&]{job->CompleteCPU(&result,{});});assert(job->failureHandled&&job->transferred&&ui::recorder.quarantined);session->sourceCredits.ValidateHeld(0);assert(!reported);}
+  {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);job->MarkQueued();Metal4WorldPresentationResult wrong{true,false,false,1};Reject([&]{job->CompleteCPU(&wrong,{});});assert(job->failureHandled&&ui::recorder.quarantined&&job->transferred);Reject([&]{session->sourceCredits.ValidateHeld(0);});}
+
+  {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);job->MarkQueued();Metal4WorldPresentationResult result{true,true,true,0};Reject([&]{job->CompleteCPU(&result,{});});assert(job->failureHandled&&job->transferred&&ui::recorder.quarantined);Reject([&]{session->sourceCredits.ValidateHeld(0);});assert(!reported);}
 
   {auto job=Make();job->CompleteCPU(nullptr,std::make_exception_ptr(std::runtime_error("pre")));assert(job->failureHandled&&!job->transferred&&!session->admissionSettlement);job->Fail();}
   {auto job=Make();job->submission->Options().beginReceipt->MarkBegun(11);Metal4WorldPresentationResult result{true,false,false,0};job->CompleteCPU(&result,{});assert(job->cpuAccepted&&!job->transferred&&!session->admissionSettlement&&reported==1);}
