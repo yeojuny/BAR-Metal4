@@ -423,10 +423,6 @@ struct Metal4WorldRenderer::Impl {
 		std::uint32_t rootCommands=0,logicalWidth=0,logicalHeight=0;
 	};
 	std::shared_ptr<ScreenContinuation> screenContinuation;
-	std::shared_ptr<const NativeWorldEnvironmentFrame> environmentInputs;
-	std::shared_ptr<metal4::PreparedMetalInfo> reflectionMetalInfo;
-	std::shared_ptr<metal4::PreparedWorldInfo> reflectionWorldInfo;
- bool reflectionShaderValidation=false;
 	std::unique_ptr<MiniMapGPU> standardTerrainGPU = std::make_unique<MiniMapGPU>();
 	__strong id<MTLSamplerState> standardShadeSampler = nil;
 	uint32_t standardShadeAnisotropy = 0;
@@ -1183,7 +1179,6 @@ void Metal4WorldRenderer::ClearStaticResources()
 	AbortShieldPublications();impl->shieldGPU.ClearResources();impl->mapDepthGPU.ClearResources();impl->modelDepthGPU.ClearResources();
 	impl->blueprintGPU.ClearResources();
 	impl->blockoutGPU.ClearResources();
-	impl->environmentInputs.reset(); impl->reflectionMetalInfo.reset(); impl->reflectionWorldInfo.reset();
 	impl->terrainNormals = nil; impl->normalsReady = false;impl->normalsEncoded=std::make_shared<bool>(false);
 	impl->standardTerrainGPU->ClearResources();
 	impl->screenContinuation.reset();impl->postprocessGPU.ClearResources();impl->offscreenSourceColor=nil;
@@ -1193,13 +1188,11 @@ void Metal4WorldRenderer::ClearStaticResources()
 	SharedWorldInfoGPU().ClearResources();
 }
 
-void Metal4WorldRenderer::CaptureEnvironmentInputs(std::shared_ptr<const NativeWorldEnvironmentFrame> frame, bool shaderValidation)
+NativeEnvironmentStageReceipt Metal4WorldRenderer::CaptureEnvironmentInputs(std::shared_ptr<const NativeWorldEnvironmentFrame> frame, bool shaderValidation) const
 {
 	MainThread(); Require(impl != nullptr && frame != nullptr, "Original environment stage is missing");
- // Capture owns immutable source metadata only. GPU preparation happens
- // after the prior submission retires in Draw, never during N+1 collection.
- impl->environmentInputs=std::move(frame);impl->reflectionShaderValidation=shaderValidation;
- impl->reflectionMetalInfo.reset();impl->reflectionWorldInfo.reset();
+ // The scene capture owner keeps the receipt; no active renderer slot changes.
+ return {std::move(frame),shaderValidation};
 }
 
 bool Metal4WorldRenderer::SubmitScreenTargets(const ScreenFrameView& frame, bool shaderValidation)
@@ -1493,13 +1486,11 @@ bool Metal4WorldRenderer::HasPendingPBRSource() const
 {
 	return impl && impl->pbrSource.HasPending(NativePBRKind::BRDF);
 }
-bool Metal4WorldRenderer::HasPendingEnvironmentSource() const
+bool Metal4WorldRenderer::HasPendingEnvironmentSource(const NativeEnvironmentStageReceipt& stage) const
 {
 	if(!impl)return false;
 	if(impl->pbrSource.HasPending(NativePBRKind::Environment))return true;
-	const auto& frame=impl->environmentInputs;
-	return frame && frame->sourceCubeUpdate && frame->sourceCubeUpdate->backing &&
-		!frame->sourceCubeUpdate->backing->completed.load(std::memory_order_acquire);
+	return stage.HasPendingCubeSource();
 }
 std::shared_ptr<const void> Metal4WorldRenderer::AllocateCoverageTarget(const std::shared_ptr<const ScreenTexture>& color,
  const std::shared_ptr<const ScreenTexture>& depth)
@@ -2161,7 +2152,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		if (!impl->surface->Snapshot().attached) { result.surface = impl->surface->Snapshot(); result.status = Metal4PresentationStatus::Detached; return result; }
 		impl->surface->Refresh(); result.surface = impl->surface->Snapshot(); result.status = SurfaceStatus(result.surface);
 		const bool requiresSource=bool(options.readback)||bool(frame.originalShadow)||(frame.opaqueModelFrame&&frame.opaqueModelFrame->HasWriters())||ScreenFrameRequiresSource(options.screenUI)||HasNativeDeferredPostprocessWrites(frame)||(frame.shieldDepthFrame&&frame.shieldDepthFrame->HasWriters())||
-			(impl->environmentInputs&&impl->environmentInputs->sourceCubeUpdate)||impl->pbrSource.HasPending(NativePBRKind::BRDF)||impl->pbrSource.HasPending(NativePBRKind::Environment);
+			options.environmentStage.HasCubeSource()||impl->pbrSource.HasPending(NativePBRKind::BRDF)||impl->pbrSource.HasPending(NativePBRKind::Environment);
 		bool offscreenSource=bool(options.readback) || !options.presentWorld || result.status!=Metal4PresentationStatus::Presented;
 		if(offscreenSource && (!requiresSource || result.surface.closeRequested))return result;
 		Require(frame.viewCamera.clipDepth != ClipDepthConvention::Unsupported && frame.viewCamera.viewport[2] > 0 && frame.viewCamera.viewport[3] > 0, "World renderer requires actual supported engine camera/viewport");
@@ -2190,14 +2181,18 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   if(impl->heightOwner!=frame.terrain.heights || impl->map.owner!=frame.terrain.tiles)
    lease.RetirePreviousSubmission();
 		lease.SetMinSampleShadingRate(frame.minSampleShadingRate);
-  if(impl->environmentInputs){
-   const auto& input=impl->environmentInputs;double compileMs=0;
+  // Render-only preparation of this request. Main can replace its own receipt
+  // without resetting these resources or the completion owner below.
+  std::shared_ptr<PreparedMetalInfo> reflectionMetalInfo;
+  std::shared_ptr<PreparedWorldInfo> reflectionWorldInfo;
+  if(options.environmentStage.frame){
+   const auto& input=options.environmentStage.frame;double compileMs=0;
    if(input->metalInfoFrame){
-    impl->reflectionMetalInfo=SharedMetalInfoGPU().Prepare(lease,input->metalInfoFrame,impl->reflectionShaderValidation,compileMs);
-    Require(!impl->reflectionMetalInfo->HasUpdates(),"Original reflection must pin a completed metal producer");
+    reflectionMetalInfo=SharedMetalInfoGPU().Prepare(lease,input->metalInfoFrame,options.environmentStage.shaderValidation,compileMs);
+    Require(!reflectionMetalInfo->HasUpdates(),"Original reflection must pin a completed metal producer");
    }
    if(input->worldInfoFrame && input->worldInfoFrame->mode==NativeWorldInfoMode::Los)
-    impl->reflectionWorldInfo=SharedWorldInfoGPU().Prepare(lease,input->worldInfoFrame,impl->reflectionShaderValidation,compileMs);
+    reflectionWorldInfo=SharedWorldInfoGPU().Prepare(lease,input->worldInfoFrame,options.environmentStage.shaderValidation,compileMs);
   }
 
 		Require(frame.mainSampling.samples==impl->mainSampling.samples && frame.mainSampling.effective==impl->mainSampling.effective,"Captured main sampling differs from the allocated renderer context");
@@ -2499,9 +2494,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   if(frame.worldInfoFrame)worldInfo=SharedWorldInfoGPU().Prepare(lease,frame.worldInfoFrame,options.shaderValidation,result.shaderCompileMs);
   Require(frame.environmentFrame!=nullptr,"Original pre-unit environment frame is missing");
 		const auto& environmentFrame=*frame.environmentFrame;
-		Require(impl->environmentInputs == frame.environmentFrame, "Original reflection image stage was not retained before Lua PreUnit");
-		if (impl->reflectionMetalInfo) lease.AddAllocation(impl->reflectionMetalInfo->Info());
-		if (impl->reflectionWorldInfo) impl->reflectionWorldInfo->RegisterResources(lease);
+		Require(options.environmentStage.Matches(frame.environmentFrame), "Original reflection image stage was not retained before Lua PreUnit");
+		if (reflectionMetalInfo) lease.AddAllocation(reflectionMetalInfo->Info());
+		if (reflectionWorldInfo) reflectionWorldInfo->RegisterResources(lease);
 		Require(environmentFrame.terrain.tiles==frame.terrain.tiles&&environmentFrame.terrain.heights==frame.terrain.heights,"Original reflection terrain changed after its pre-unit capture stage");
 		auto environment=impl->environmentGPU.Prepare(lease,environmentFrame,frame.viewCamera,layer.pixelFormat,options.shaderValidation,result.shaderCompileMs,sourceSubmission,mainSamples);
 		auto pbrImages=[sourceSubmission](RuntimeLease& sourceLease,const NativeCUSTextureBinding& binding,unsigned unit){
@@ -4153,7 +4148,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    originalShadow->EndEncoding(command,shadowEncoder);shadowEncoder=nil;
   }
 		encodingProbe.Select(Family176::Other);
-		if(impl->reflectionWorldInfo)impl->reflectionWorldInfo->EncodeDependencies(command);
+		if(reflectionWorldInfo)reflectionWorldInfo->EncodeDependencies(command);
 		environment->EncodeDependencies(command);
 		if (standardShade) standardShade->EncodeDependencies(command);
 		if (!impl->normalsReady) {
@@ -5103,7 +5098,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    completeTextureMips=impl->TakeTextureMipCompletion(sourceSubmission),
    completeAtlasMips=impl->particlesGPU.TakeAtlasCompletion(sourceSubmission),
    hasDrawable=drawable!=nil, sourceDrawFrame=frame.sourceDrawFrame,
-   completedShield=frame.shieldDepthFrame,reflectionWorldInfo=impl->reflectionWorldInfo,
+   completedShield=frame.shieldDepthFrame,reflectionWorldInfo,
    postprocessSerial=options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0,
    submissionCompleted=options.submissionCompleted,isReadback=bool(options.readback),readback,
    originalShadow=std::move(originalShadow),

@@ -444,6 +444,7 @@ struct Session {
 	std::unique_ptr<Metal4WorldRenderer> renderer;
 	std::unique_ptr<Metal4ScreenPresenter> loadingScreen;
 	WorldFrameCapture capture;
+ NativeEnvironmentStageReceipt environmentStage;
 	NativeBumpWaterCapture waterCapture;
  NativeLegacyWaterCapture legacyWaterCapture;
  NativeDynamicWaterCapture dynamicWaterCapture;
@@ -822,7 +823,7 @@ void PrepareEnvironmentBeforePreUnit()
   try{shadowHandler.CreateShadows();}catch(...){game->SetDrawMode(previous);throw;}
   game->SetDrawMode(previous);
  }
- session->renderer->CaptureEnvironmentInputs(session->capture.PrepareEnvironmentBeforePreUnit());
+ session->environmentStage=session->renderer->CaptureEnvironmentInputs(session->capture.PrepareEnvironmentBeforePreUnit());
  // GenerateIBLTextures restores the main default viewport after the actual
  // selected reflection face and sun/specular updates.
  ui::GetRecorder().SetViewport({globalRendering->viewPosX,globalRendering->viewPosY,uint32_t(globalRendering->viewSizeX),uint32_t(globalRendering->viewSizeY)});
@@ -1433,6 +1434,7 @@ std::vector<std::uint8_t> ReadCurrentImage(const ui::NativeUIReadbackPrefix& pre
 		std::uint32_t(globalRendering->viewSizeX),std::uint32_t(globalRendering->viewSizeY)};
 	screen.postprocess=LuaNativePostprocess::GetRecorder().SnapshotPrefix(prefix.cutoff);
 	Metal4WorldRenderOptions options;
+ options.environmentStage=session->environmentStage;
 	options.screenUI=&screen;options.presentWorld=false;options.readback=&prefix;options.readbackRectangle=rectangle;
 	options.sourceLogicalExtent=session->lastLogicalExtent;
 	SetReadbackSubmissionReceipts(options);
@@ -1549,7 +1551,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	if(session->renderer->HasScreenContinuation())
 		sourcePlan=presentWorld && session->surface.Snapshot().CanPresent()?NativeSourceSubmission::PresentWorld:NativeSourceSubmission::OffscreenSource;
 	if(sourcePlan==NativeSourceSubmission::IndependentTargets && prepared &&
-		((prepared->legacyWater&&prepared->legacyWater->refraction) || prepared->originalShadow || (prepared->mainGround&&prepared->mainGround->ground&&prepared->mainGround->ground->mapMRT) || (prepared->opaqueModelFrame&&prepared->opaqueModelFrame->HasWriters()) || (prepared->shieldDepthFrame && prepared->shieldDepthFrame->HasWriters()) || session->renderer->HasPendingEnvironmentSource() || HasNativeDeferredPostprocessWrites(*prepared,luaBloomFrame)))
+		((prepared->legacyWater&&prepared->legacyWater->refraction) || prepared->originalShadow || (prepared->mainGround&&prepared->mainGround->ground&&prepared->mainGround->ground->mapMRT) || (prepared->opaqueModelFrame&&prepared->opaqueModelFrame->HasWriters()) || (prepared->shieldDepthFrame && prepared->shieldDepthFrame->HasWriters()) || session->renderer->HasPendingEnvironmentSource(session->environmentStage) || HasNativeDeferredPostprocessWrites(*prepared,luaBloomFrame)))
 		sourcePlan=NativeSourceSubmission::OffscreenSource;
 	if (sourcePlan==NativeSourceSubmission::IndependentTargets){
   if(overlapPreparation)RequireRetiredGPUWork();
@@ -1589,6 +1591,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		globalRendering->msaaLevel=int(session->renderer->ActualMainSampling().effective);
 	}
 	Metal4WorldRenderOptions options;
+ options.environmentStage=session->environmentStage;
 	options.screenUI = screenUI;
 	options.presentWorld=sourcePlan==NativeSourceSubmission::PresentWorld;
 	options.sourceLogicalExtent=session->lastLogicalExtent;
@@ -1843,6 +1846,7 @@ void ResetWorld()
 	// Keep the actually compiled native effect families available before the
 	// next game's original Lua Initialize callbacks; clear all per-game caches.
 	if (session->renderer) session->renderer->ClearStaticResources();
+ session->environmentStage={};
 	ResetNativeWorldInfo();
 	ResetMetalInfoResources();
 	EndLoadingScreen();
@@ -1950,6 +1954,7 @@ void Shutdown()
 	SetNativeCommandsConsumerAvailable(false);
 	if (session) {
 		if (session->renderer) session->renderer->ClearStaticResources();
+ session->environmentStage={};
 		ResetNativeWorldInfo();
 		ShutdownMetalInfoMaintenance();
 	}

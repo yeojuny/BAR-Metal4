@@ -3,6 +3,7 @@
 
 #include "Metal4WindowSurface.h"
 #include "Rendering/Backend/NativePresentationPolicy.h"
+#include "Rendering/Backend/NativeEnvironmentStageReceipt.h"
 #include "Rendering/Backend/NativeMissileThrusterData.h"
 #include "Rendering/Backend/NativeMainSamplingData.h"
 #include "Rendering/Backend/RenderTypes.h"
@@ -62,6 +63,7 @@ struct Metal4WorldRenderOptions {
 	static constexpr bool DefaultShaderValidation = true;
 #endif
 	bool shaderValidation = DefaultShaderValidation;
+ NativeEnvironmentStageReceipt environmentStage; // Exact pre-PreUnit source receipt.
 	const ScreenFrameView* screenUI = nullptr; // Same drawable/encoder, before one present.
 	// Non-null only for an explicit synchronous SaveImage cut after the world
 	// callins. The common first batch retains main attachments for its suffix.
@@ -188,9 +190,9 @@ public:
  // Callback consumes N's receipts only after its real completion. This entry
  // retains one GPU submission and does not alter shader/pass ordering.
  Metal4WorldPresentationResult DrawPreparingWhilePending(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired);
-	// Pin completed producer images at the original pre-unit IBL stage. Later
-	// Lua mode switches must not retroactively change an earlier reflection.
-	void CaptureEnvironmentInputs(std::shared_ptr<const NativeWorldEnvironmentFrame> frame, bool shaderValidation = Metal4WorldRenderOptions::DefaultShaderValidation);
+	// Validate and retain a capture-owned receipt at the original pre-unit IBL
+	// stage. Does not mutate render state; later Lua changes cannot replace it.
+	NativeEnvironmentStageReceipt CaptureEnvironmentInputs(std::shared_ptr<const NativeWorldEnvironmentFrame> frame, bool shaderValidation = Metal4WorldRenderOptions::DefaultShaderValidation) const;
 	// Execute only this frame's original cached-panel producers, using the same
 	// persistent UI resource cache as Draw. No drawable, world capture, readback
 	// or presentation is required. Each target keeps its own extent/load/store.
@@ -249,7 +251,7 @@ public:
 	NativeTerrainProgramLink CompileOriginalTerrainProgram(const NativeTerrainProgramRequest&);
 	void ClearOriginalModelSources();
 	bool HasPendingPBRSource() const;
-	bool HasPendingEnvironmentSource() const;
+	bool HasPendingEnvironmentSource(const NativeEnvironmentStageReceipt&) const;
 	// Enable only after the selected original deferred normal/depth producers
 	// are genuinely connected to the shared logical names and this draw sequence.
 	void ConnectSSAODeferredSources(bool connected);
