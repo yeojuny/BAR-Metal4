@@ -23,6 +23,7 @@
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include "Metal4WindowSurfaceNative.h"
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
+#include "Rendering/Backend/NativeSourceResourceCache.h"
 #include "Rendering/Backend/NativeRendererAccessGate.h"
 #include "Metal4WorldViewport.h"
 #include "Metal4LogicalCopyMapping.h"
@@ -348,6 +349,8 @@ struct Metal4WorldRenderer::Impl {
 	metal4::MiniMapGPU sensorRadarGPU;
 	struct MapImage final:NativeMapTextureResource {
 		__strong id<MTLTexture> texture=nil;mutable bool completed=false;
+  __strong id<MTLBuffer> cornerBuffer=nil;
+  std::shared_ptr<const WorldTerrainHeights> cornerSource;
 		// One RRRR view for this actual immutable height upload, never by name/frame.
 		mutable __strong id<MTLTexture> heightRRRR=nil,heightRRRRSource=nil;
 		std::shared_ptr<const metal4::PreparedMiniMapHeight> heightOwner;
@@ -826,22 +829,19 @@ struct Metal4WorldRenderer::Impl {
 			}
 			map = std::move(updated);
 		}
-		if (updateHeights) {
-			if (heights == nil || heights.length != heightBytes) heights = Buffer(lease.Device(), nullptr, heightBytes, @"Current unsynced terrain corner heights");
-			std::memcpy(heights.contents, inputHeights.corners.data(), heightBytes);
-			// Retain the validated immutable snapshot. A new/deformed owner must
-			// validate and upload; address reuse cannot masquerade as unchanged.
-			heightOwner = terrain.heights;
-			normalImage.reset();
-		}
-		lease.AddAllocation(heights);
-		if (terrainNormals == nil || terrainNormals.width != inputHeights.width || terrainNormals.height != inputHeights.height) {
-			MTLTextureDescriptor* d = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRG16Float width:inputHeights.width height:inputHeights.height mipmapped:NO];
-			d.storageMode = MTLStorageModePrivate; d.usage = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite | MTLTextureUsagePixelFormatView;
-			terrainNormals = [lease.Device() newTextureWithDescriptor:d]; Require(terrainNormals != nil, "Cannot allocate original SMF normal producer"); normalImage.reset();
-		}
-		if(!normalImage){auto image=std::make_shared<MapImage>();image->texture=terrainNormals;normalImage=std::move(image);}
-		lease.AddAllocation(terrainNormals);
+  // Build both allocations before changing the live cache. A height snapshot
+  // owns distinct buffer/normal storage even when the new extent is unchanged.
+  auto pair=terrainPair.GetOrCreate(terrain.heights,[&](const auto& source){
+   auto image=std::make_shared<MapImage>();image->cornerSource=source;
+   image->cornerBuffer=Buffer(lease.Device(),source->corners.data(),heightBytes,@"Owned unsynced terrain corner-height version");
+   MTLTextureDescriptor* d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatRG16Float width:source->width height:source->height mipmapped:NO];
+   d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageShaderRead|MTLTextureUsageShaderWrite|MTLTextureUsagePixelFormatView;
+   image->texture=[lease.Device()newTextureWithDescriptor:d];Require(image->texture!=nil,"Cannot allocate original SMF normal version");
+   return image;
+  });
+  heights=pair->cornerBuffer;terrainNormals=pair->texture;
+  heightOwner=terrain.heights;normalImage=std::move(pair);
+  lease.AddAllocation(heights);lease.AddAllocation(terrainNormals);
 		for (const auto& batch: map.batches) if (batch.count) { lease.AddPersistentAllocation(batch.texture); lease.AddPersistentAllocation(batch.instances); }
 	}
 
@@ -966,6 +966,7 @@ struct Metal4WorldRenderer::Impl {
 	std::shared_ptr<const WorldTerrainHeights> heightOwner;
 	__strong id<MTLTexture> depth = nil, stencil = nil, terrainDepth = nil, shadowDepth = nil, terrainNormals = nil;
 	std::shared_ptr<MapImage> normalImage;
+ NativeSourceResourceCache<WorldTerrainHeights,MapImage> terrainPair;
 	__strong id<MTLLibrary> library = nil;
 
 	__strong id<MTLRenderPipelineState> unitPipeline = nil, engineModelPipeline = nil, engineStandardShadowPipeline = nil, alphaPipeline = nil, shadowModelPipeline = nil, shadowTerrainPipeline = nil;
@@ -1215,7 +1216,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->shieldGPU.ClearResources();impl->mapDepthGPU.ClearResources();impl->modelDepthGPU.ClearResources();
 	impl->blueprintGPU.ClearResources();
 	impl->blockoutGPU.ClearResources();
-	impl->terrainNormals = nil; impl->normalImage.reset();impl->normalsEncoded=std::make_shared<bool>(false);
+	impl->terrainNormals = nil; impl->normalImage.reset();impl->terrainPair.Clear();impl->normalsEncoded=std::make_shared<bool>(false);
 	impl->standardTerrainGPU->ClearResources();
 	impl->screenContinuation.reset();impl->postprocessGPU.ClearResources();impl->offscreenSourceColor=nil;
 	impl->volumetricCloudsGPU.ClearResources();
@@ -2304,8 +2305,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   // Sweep once even when main/water effect frames are absent or empty.
   impl->projectileEffectsGPU.PruneExpiredImages();
   impl->lightningGPU.PruneExpiredImages();
-  // These existing stores upload in place. Keep their original last-reader
-  // boundary on deformation/map changes; unchanged immutable inputs overlap.
+  // Height/normal pairs now retain distinct versions. Keep the conservative
+  // deformation/map boundary until every dependent cache has an isolation proof.
   if(impl->heightOwner!=frame.terrain.heights || impl->map.owner!=frame.terrain.tiles)
    lease.RetirePreviousSubmission();
 		lease.SetMinSampleShadingRate(frame.minSampleShadingRate);

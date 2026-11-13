@@ -133,3 +133,11 @@ with exact handoff and a cleanup lease that rejects pending submissions rather
 than draining source callbacks on the worker. No window refresh is added. Other
 controls still retain direct serial behavior; these routed water controls are not a
 general control queue, asynchronous renderer lifetime or lookahead admission.
+
+Terrain pair isolation follow-up: changed immutable heights now create a distinct
+height buffer/normal texture pair, including same-size deformation. The complete
+resource retains its source and is published only after both allocations succeed;
+retained old normal owners no longer alias overwritten terrain storage. Same-owner
+reuse remains, and static reset clears the cache. Existing height/map retirement
+barrier stays until other dependency caches are proven isolated. Host allocation-
+failure/cache ownership tests do not substitute for native texture validation.
