@@ -7,7 +7,10 @@ out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
 root=Path(__file__).resolve().parents[2]
 bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 completion=bridge.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
-assert completion.index('LuaNativeVolumetricClouds::ValidateHeldFrame') < completion.index('dynamicWaterCapture.DidComplete')
+assert completion.index('LuaNativeVolumetricClouds::ValidateHeldFrame') < completion.index('CompleteDynamicCapture(')
+water_completion=bridge.split('void CompleteDynamicCapture(',1)[1].split('bool AbortDynamicCapture()',1)[0]
+assert water_completion.index('session->dynamicWaterCapture.DidComplete(generation,through,draw)') < water_completion.index('session->dynamicCaptureReceipt.reset()')
+assert 'receipt->material->generation==generation' in water_completion and 'receipt->sourceDrawFrame==draw' in water_completion and 'receipt->throughUpdate==through' in water_completion
 submit=bridge.split('const auto expectedDraw=capturedFrame.sourceDrawFrame',1)[1]
 assert submit.index('LuaNativeVolumetricClouds::HasSubmittedCapacity') < submit.index('RequireRetiredGPUWork()') < submit.index('admission.Validate()')
 assert submit.index('admission.Validate()') < submit.index('mailbox->Prepare') < submit.index('session->renderer->Draw')

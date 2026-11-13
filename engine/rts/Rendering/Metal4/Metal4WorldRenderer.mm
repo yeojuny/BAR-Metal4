@@ -186,6 +186,45 @@ struct M4WaterAttachments {
 @implementation M4OriginalSourceLifetime
 @end
 
+namespace rendering::metal4 {
+// BEGIN WORLD_TEXTURE_PREPARATION_JOURNAL
+class WorldTexturePreparationJournal {
+public:
+ struct UploadState {bool ready=false;uint64_t encodedSubmission=0;__strong id<MTLTexture> uploadSource=nil;};
+ struct Entry {
+  std::shared_ptr<const WorldTexture> owner;
+  __strong id<MTLTexture> texture=nil,sampled=nil;
+  std::shared_ptr<UploadState> status=std::make_shared<UploadState>();
+ };
+ std::vector<Entry> entries;
+ bool initialized=false;
+ void Register(const Entry& entry) {
+  if(entry.status->ready)return;
+  if(std::none_of(entries.begin(),entries.end(),[&](const auto& existing){return existing.owner.get()==entry.owner.get();}))entries.push_back(entry);
+ }
+ void Recover(const WorldTexturePreparationJournal& interrupted) {entries=interrupted.entries;}
+ std::function<void()> TakeCompletion(uint64_t submission) {
+  std::vector<std::shared_ptr<UploadState>> states;
+  for(const auto& cached:entries)if(!cached.status->ready)states.push_back(cached.status);
+  entries.clear();
+  return [states=std::move(states),submission]{
+   for(const auto& state:states)Require(submission&&state->encodedSubmission==submission,"Texture mip completion lost its submitting owner");
+   for(const auto& state:states){state->ready=true;state->uploadSource=nil;}
+  };
+ }
+ void Complete(uint64_t submission) {
+  for(const auto& cached:entries)Require(submission&&cached.status->encodedSubmission==submission,"Cannot complete original texture mips before their actual producer retires");
+  for(const auto& cached:entries){cached.status->ready=true;cached.status->uploadSource=nil;}
+  entries.clear();
+ }
+};
+// END WORLD_TEXTURE_PREPARATION_JOURNAL
+std::shared_ptr<WorldTexturePreparationJournal> RuntimeLease::WorldTexturePreparation() {
+ if(!worldTexturePreparation)worldTexturePreparation=std::make_shared<WorldTexturePreparationJournal>();
+ return worldTexturePreparation;
+}
+} // namespace rendering::metal4
+
 namespace rendering {
 namespace {
 using namespace metal4;
@@ -474,17 +513,8 @@ struct Metal4WorldRenderer::Impl {
 	};
 	struct PieceCache { __strong id<MTLBuffer> vertices = nil; __strong id<MTLBuffer> indices = nil; uint32_t count = 0; };
 	struct ModelCache { std::shared_ptr<const WorldModel> owner; std::vector<PieceCache> pieces; };
-	// Readiness covers all uploaded/generated levels and their one-time GPU optimization.
-	struct TextureUploadState {
-		bool ready = false;
-		uint64_t encodedSubmission = 0;
-		__strong id<MTLTexture> uploadSource = nil;
-	};
-	struct TextureCache {
-		std::shared_ptr<const WorldTexture> owner;
-		__strong id<MTLTexture> texture = nil, sampled = nil;
-		std::shared_ptr<TextureUploadState> status = std::make_shared<TextureUploadState>();
-	};
+ using TextureCache=metal4::WorldTexturePreparationJournal::Entry;
+ using TextureUploadState=metal4::WorldTexturePreparationJournal::UploadState;
 	enum LegacyDiagnostic : uint8_t {
 		CurrentUnitPose = 1, DamageDisplacement = 2, DamageTexturing = 4,
 		TreadUV = 8, FeatureFadeAndNight = 16, ViewerInfo = 32, ModelGamma = 64,
@@ -569,14 +599,17 @@ struct Metal4WorldRenderer::Impl {
 		if(!it->second.status->ready&&it->second.status->encodedSubmission&&lease.PreparingWhilePending())
    lease.RetirePreviousSubmission(); // First-use texture producer still owns its receipt.
 		RetainTextureAllocations(lease, it->second);
-		if (!it->second.status->ready && std::find(pendingMipTextures.begin(),pendingMipTextures.end(),&it->second)==pendingMipTextures.end()) pendingMipTextures.push_back(&it->second);
+		auto journal=lease.WorldTexturePreparation();
+  if(!journal->initialized)StartTexturePreparation(lease,true);
+  journal->Register(it->second);
 		return it->second.sampled;
 	}
 
-	void EncodePendingTextureMipmaps(id<MTL4CommandBuffer> command, uint64_t submission)
+	void EncodePendingTextureMipmaps(RuntimeLease& lease,id<MTL4CommandBuffer> command, uint64_t submission)
 	{
 		Require(command != nil && submission != 0, "Original texture mip producer needs its actual shared submission");
-		for (const auto* cached: pendingMipTextures) {
+		for (const auto& entry: lease.WorldTexturePreparation()->entries) {
+   const auto* cached=&entry;
    if(cached->status->ready)continue; // N retired after N+1 prepared this list.
 			Require(!cached->status->ready && (!cached->status->encodedSubmission || cached->status->encodedSubmission == submission),
 				"Original texture mips retain an unretired different submission");
@@ -601,23 +634,18 @@ struct Metal4WorldRenderer::Impl {
 		}
 	}
 
- std::function<void()> TakeTextureMipCompletion(uint64_t submission)
- {
-  std::vector<std::shared_ptr<TextureUploadState>> states;
-  for(const auto* cached:pendingMipTextures)if(!cached->status->ready)states.push_back(cached->status);
-  pendingMipTextures.clear();
-  return [states=std::move(states),submission]{
-   for(const auto& state:states)Require(submission&&state->encodedSubmission==submission,"Texture mip completion lost its submitting owner");
-   for(const auto& state:states){state->ready=true;state->uploadSource=nil;}
-  };
+ void StartTexturePreparation(RuntimeLease& lease,bool recover=false) {
+  auto journal=lease.WorldTexturePreparation();
+  if(recover&&interruptedTexturePreparation&&interruptedTexturePreparation!=journal)journal->Recover(*interruptedTexturePreparation);
+  else journal->entries.clear();
+  journal->initialized=true;interruptedTexturePreparation=journal;
  }
-	void CompletePendingTextureMipmaps(uint64_t submission)
-	{
-		for (const auto* cached: pendingMipTextures)
-			Require(submission && cached->status->encodedSubmission == submission, "Cannot complete original texture mips before their actual producer retires");
-		for (const auto* cached: pendingMipTextures) { cached->status->ready = true; cached->status->uploadSource = nil; }
-		pendingMipTextures.clear();
-	}
+ std::function<void()> TakeTextureMipCompletion(RuntimeLease& lease,uint64_t submission) {
+  return lease.WorldTexturePreparation()->TakeCompletion(submission);
+ }
+ void CompletePendingTextureMipmaps(RuntimeLease& lease,uint64_t submission) {
+  lease.WorldTexturePreparation()->Complete(submission);
+ }
 
 	id<MTLSamplerState> TerrainSourceSampler(RuntimeLease& lease,const NativeCUSTextureBinding& binding)
 	{
@@ -1001,7 +1029,8 @@ struct Metal4WorldRenderer::Impl {
 	MapCache map;
 	std::unordered_map<const WorldModel*, ModelCache> models;
 	std::unordered_map<const WorldTexture*, TextureCache> textures;
-	std::vector<TextureCache*> pendingMipTextures;
+ // Interrupted prepare recovery is explicit; never used for encode/retirement.
+ std::shared_ptr<metal4::WorldTexturePreparationJournal> interruptedTexturePreparation;
 	__strong id<MTLBuffer> heights = nil;
 	std::shared_ptr<const WorldTerrainHeights> heightOwner;
 	__strong id<MTLTexture> depth = nil, stencil = nil, terrainDepth = nil, shadowDepth = nil, terrainNormals = nil;
@@ -1251,7 +1280,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->waterRefraction=nil;impl->waterRefractionDepth=nil;
 	impl->preWaterColor=nil;impl->preWaterDepth=nil;
 	impl->map = {}; impl->models.clear(); impl->textures.clear(); impl->heights = nil;
-	impl->heightOwner.reset(); impl->pendingMipTextures.clear();
+	impl->heightOwner.reset(); impl->interruptedTexturePreparation.reset();
 	impl->mapEdgeGPU.ClearResources(); impl->particlesGPU.ClearResources(); impl->environmentGPU.ClearResources();
 	impl->pbrSource.ResetWorld();impl->pbrSubmission=0;
 	impl->overlayGPU.ClearResources(); impl->projectileEffectsGPU.ClearResources();
@@ -1359,7 +1388,7 @@ std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTar
   const auto submission=CreateShieldSubmissionIdentity();
   NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,submission);
   impl->pbrSubmission=submission;
-  impl->pendingMipTextures.clear();
+  impl->StartTexturePreparation(lease);
   ScreenDrawList empty;
   ScreenFrameView frame{&empty,prefix.coordinateWidth,prefix.coordinateHeight,{},selected};
   std::shared_ptr<PreparedScreenFrame> prepared=impl->screenGPU.Prepare(lease,frame,
@@ -1374,7 +1403,7 @@ std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTar
   if(mipmaps)lifetime->waterGround.push_back(mipmaps);lease.Retain(lifetime);
   lease.CommitResources();auto command=lease.Begin("Original SaveImage independent target prefix");
   ui::GetRecorder().RecordTargetSubmission(selected,submission);
-  impl->EncodePendingTextureMipmaps(command,submission);
+  impl->EncodePendingTextureMipmaps(lease,command,submission);
   if(mipmaps)mipmaps->EncodeDependencies(command);
   // Only the proven dependency closure is present. Preserve its real World
   // and Screen metadata, and execute their shared topological target order.
@@ -1385,7 +1414,7 @@ std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTar
   lease.SubmitAndWait(start,impl->screenTargetSubmission++);
   try {
    readback->DidComplete();
-   impl->CompletePendingTextureMipmaps(submission);
+   impl->CompletePendingTextureMipmaps(lease,submission);
    prepared->DidComplete();if(mipmaps)mipmaps->DidComplete();
    ui::GetRecorder().RetireTargetSubmission(submission);
   } catch(...) {
@@ -1419,6 +1448,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 		const bool stencilUpdates=unitStencilFrame && !unitStencilFrame->passes.empty();
 		if (independent.empty() && !stencilUpdates && !worldInfoFrame && !HasPendingPBRSource(pbrDeclarations)) return result;
 		RuntimeLease lease;
+  impl->StartTexturePreparation(lease,true); // Preserve exact interrupted-prepare recovery and order.
 		const auto preparationStart = Clock::now();
 		double shaderCompileMs = 0;
 		// DrawGenesis can run while the original world draw is skipped. BRDF
@@ -1452,11 +1482,11 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 			auto targetLifetime=[M4OriginalSourceLifetime new];targetLifetime->screen=prepared;targetLifetime->unitStencil=unitStencil;lease.Retain(targetLifetime);
 			// Maintenance can inherit a pending image from an interrupted prepare.
 			// Register its destination/view/staging with this actual submission.
-			for (const auto* cached: impl->pendingMipTextures) impl->RetainTextureAllocations(lease, *cached);
+			for (const auto& cached: lease.WorldTexturePreparation()->entries) impl->RetainTextureAllocations(lease, cached);
 			lease.CommitResources();
 			auto command = lease.Begin("Original info, PBR and UI maintenance without window presentation");
 			if(prepared)ui::GetRecorder().RecordTargetSubmission(targets.targetPasses,sourceSubmission);
-			impl->EncodePendingTextureMipmaps(command,sourceSubmission);
+			impl->EncodePendingTextureMipmaps(lease,command,sourceSubmission);
 		impl->particlesGPU.EncodeAtlasImages(command,sourceSubmission);
 			if(pbrBRDF)pbrBRDF->Encode(command,sourceSubmission);
 			if (worldInfo) worldInfo->EncodeDependencies(command);
@@ -1467,7 +1497,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 			lease.SubmitAndWait(preparationStart, impl->screenTargetSubmission++);
 			// Mark the real Genesis output retired before any unrelated cleanup can throw.
 			if(unitStencil)unitStencil->DidComplete();
-			impl->CompletePendingTextureMipmaps(sourceSubmission);
+			impl->CompletePendingTextureMipmaps(lease,sourceSubmission);
 			impl->particlesGPU.CompleteAtlasImages(sourceSubmission);
 			if(pbrBRDF)pbrBRDF->DidComplete(sourceSubmission);
 			// Producer declaration compaction occurs at the next main capture boundary.
@@ -2233,7 +2263,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
   const auto submission=CreateShieldSubmissionIdentity();
   NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,submission);
   impl->pbrSubmission=submission;
-  impl->pendingMipTextures.clear();impl->particlesGPU.PrepareAtlasImages(submission);
+  impl->StartTexturePreparation(lease);impl->particlesGPU.PrepareAtlasImages(submission);
   if(post)impl->postprocessGPU.PrepareFrameImages(lease,post,frame.sourceDrawFrame);
   std::shared_ptr<PreparedScreenFrame> screen=impl->screenGPU.Prepare(lease,selected,
    std::uint32_t(main->Color().width),std::uint32_t(main->Color().height),continuation->logicalWidth,continuation->logicalHeight,
@@ -2284,7 +2314,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
   auto command=lease.Begin("Original current-frame screen continuation after SaveImage");failure.began=true;
   ui::GetRecorder().RecordTargetSubmission(selected.targetPasses,submission,post);
   options.submissionBegan(submission,post.get());
-  impl->EncodePendingTextureMipmaps(command,submission);impl->particlesGPU.EncodeAtlasImages(command,submission);
+  impl->EncodePendingTextureMipmaps(lease,command,submission);impl->particlesGPU.EncodeAtlasImages(command,submission);
   if(mipmaps)mipmaps->EncodeDependencies(command);
   screen->EncodeDependencies(command);
   if(effects)effects->Encode(command,*screen,first);
@@ -2303,7 +2333,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
    Require(encoder!=nil,"Cannot encode final presentation margins after the screen suffix");margins->Encode(encoder);[encoder endEncoding];}
   if(drawable)main->EncodePresentationResolve(command);
   result.metrics=lease.SubmitAndWait(start,options.readback?impl->screenTargetSubmission++:impl->presentationFrame++,drawable);
-  impl->CompletePendingTextureMipmaps(submission);impl->particlesGPU.CompleteAtlasImages(submission);
+  impl->CompletePendingTextureMipmaps(lease,submission);impl->particlesGPU.CompleteAtlasImages(submission);
   screen->DidComplete();if(effects)effects->DidComplete();if(mipmaps)mipmaps->DidComplete();
   if(readback)readback->DidComplete();
   options.submissionCompleted(submission);
@@ -2540,7 +2570,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		CAMetalLayer* layer = Metal4WindowSurfaceNativeAccess::Layer(*impl->surface);
 		Require(layer != nil && layer.device == lease.Device(), "World layer/device ownership mismatch");
 		const auto resourceStart = Clock::now();
-		impl->pendingMipTextures.clear();
+		impl->StartTexturePreparation(lease);
 		impl->Map(lease, frame.terrain);
 		WorldUniform terrainUniform{};
 		terrainUniform.viewProjection = simd_mul(Matrix(frame.viewCamera.projection), Matrix(frame.viewCamera.view));
@@ -4440,7 +4470,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   };
 
 
-		impl->EncodePendingTextureMipmaps(command,sourceSubmission);
+		impl->EncodePendingTextureMipmaps(lease,command,sourceSubmission);
 		for(const auto& packet:sensorPreview)packet->EncodeDependencies(command);
 		for(const auto& image:originalLifetime->terrainImages)image.requireReadable();
 		impl->particlesGPU.EncodeAtlasImages(command,sourceSubmission);
@@ -5470,7 +5500,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 #ifdef RECOIL_METAL4_LIVE_SCENE
    mrt174Eligible,mrt174Expected,mrt174Simulation=frame.simulationFrame,
 #endif
-   completeTextureMips=impl->TakeTextureMipCompletion(sourceSubmission),
+   completeTextureMips=impl->TakeTextureMipCompletion(lease,sourceSubmission),
    completeAtlasMips=impl->particlesGPU.TakeAtlasCompletion(sourceSubmission),
    hasDrawable=drawable!=nil, sourceDrawFrame=frame.sourceDrawFrame,
    reflectionWorldInfo,
