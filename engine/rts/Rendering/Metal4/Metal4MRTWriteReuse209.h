@@ -1,6 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
-#include "Rendering/EngineBridge/NativeOpaqueModelCapture.h"
+#include "Metal4MRTFrontier209.h"
 #include <limits>
 #include <cstdlib>
 #include <new>
@@ -29,7 +29,7 @@ public:
   frame(other.frame),submission(other.submission),used(std::exchange(other.used,true)) {}
 
  static std::optional<MRTWriteReuse209> Try(const NativeOpaqueModelFrame& source,
-  uint64_t actualFrame,uint64_t actualSubmission,const NativeTextureRegistry* sealedMainRegistry) {
+  uint64_t actualFrame,uint64_t actualSubmission,const MRTFrontier209* sealedMainRegistry) {
   if(!sealedMainRegistry||!actualFrame||!actualSubmission||source.sourceDrawFrame!=actualFrame||
    source.alphaStage||source.drawReflection||source.drawRefraction||source.passes.size()!=4)return {};
   for(size_t n=0;n<4;++n){const auto& p=source.passes[n];
@@ -64,12 +64,12 @@ public:
     a.backing->Metadata().attachment!=n||b.backing->Metadata().attachment!=n||
     !SameView(view,a.backing->Metadata().view)||!SameView(view,b.backing->Metadata().view)||
     !ExclusiveFreshPair(a.previous,a.current,a.backing,b.previous,b.current,b.backing,actualFrame,view,
-     *sealedMainRegistry,false))return {};
+     sealedMainRegistry->context,sealedMainRegistry->current[n],false))return {};
   }
   if(u.depth.backing->Kind()!=NativeTextureBackingKind::ModelDepth||
    f.depth.backing->Kind()!=NativeTextureBackingKind::ModelDepth||
    !ExclusiveFreshPair(u.depth.previous,u.depth.published,u.depth.backing,
-    f.depth.previous,f.depth.published,f.depth.backing,actualFrame,view,*sealedMainRegistry,true))return {};
+    f.depth.previous,f.depth.published,f.depth.backing,actualFrame,view,sealedMainRegistry->context,sealedMainRegistry->current[5],true))return {};
   return MRTWriteReuse209(u,f,actualFrame,actualSubmission);
  }
 
@@ -102,11 +102,11 @@ private:
   const std::shared_ptr<const NativeCUSTextureObject>& u,const std::shared_ptr<const Backing>& ub,
   const std::shared_ptr<const NativeCUSTextureObject>& fPrevious,
   const std::shared_ptr<const NativeCUSTextureObject>& f,const std::shared_ptr<const Backing>& fb,
-  uint64_t draw,const NativeShieldDepthMetadata& view,const NativeTextureRegistry& registry,bool depth) {
+  uint64_t draw,const NativeShieldDepthMetadata& view,uint64_t context,const std::shared_ptr<const NativeCUSTextureObject>& current,bool depth) {
   if(!preU||!u||!ub||!f||!fb||preU==u||u==f||ub==fb||
    !SameOwner(u,fPrevious)||!SameOwner(u->backing,ub)||!SameOwner(f->backing,fb)||
    !SameLogicalAllocation(*preU,*u)||!SameLogicalAllocation(*u,*f)||
-   preU->backing.get()==ub.get()||registry.ContextGeneration()!=u->contextGeneration||
+   preU->backing.get()==ub.get()||context!=u->contextGeneration||
    u->image||f->image||u->target!=NativeCUSTextureTarget::Image2D||
    u->storage!=NativeTextureStorageKnowledge::Published||f->storage!=NativeTextureStorageKnowledge::Published||
    ub->content!=NativeTextureContent::ProducerVersion||fb->content!=NativeTextureContent::ProducerVersion||
@@ -125,15 +125,14 @@ private:
   // A sampler-state clone can pass the object test but fails the backing test.
   constexpr long structuralObjectMembers=2,structuralBackingMembers=2;
   if(u.use_count()!=structuralObjectMembers||ub.use_count()!=structuralBackingMembers)return false;
-  try {
-   const auto current=registry.Find(f->name);
+  {
    // Normal sealed Prepare has no later source writer. If a downstream
    // receipt transfer fails, reverse F->U->preU cancellation must have two
    // version increments available, with all original matching preconditions.
    return current&&SameLogicalAllocation(*current,*f)&&SameOwner(current->backing,fb)&&
     current->image==f->image&&current->storage==f->storage&&current->version>=f->version&&
     current->version<=std::numeric_limits<uint64_t>::max()-2;
-  } catch(const std::bad_alloc&) { return false; } // Optional normalization may allocate; COW remains valid.
+  }
  }
 };
 } // namespace rendering::metal4

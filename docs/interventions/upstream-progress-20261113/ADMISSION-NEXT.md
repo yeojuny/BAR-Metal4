@@ -192,3 +192,23 @@ handoff; pure retained-binding resolution no longer reads live context/registry
 on ordinary-model/StartBox worker paths. Main-only compatibility fallback remains
 outside draw scopes. Existing typed execution/readability dependencies stay;
 this is not complete source-family capture overlap readiness.
+
+### MRT209 normalized frontier boundary (2026-11-13)
+
+The main dispatch now normalizes and retains the six exact F publication tokens
+before the joined worker handoff. MRT209 compares those retained frontier values
+instead of calling mutable `NativeTextureRegistry::Find` inside preparation.
+The capture retains no extra U publication or U backing: both exclusive-owner
+counts remain exactly two. Absent/malformed/mismatching frontier or optional
+normalization allocation failure falls back to the existing COW path.
+Direct callers with a `previousRetired` callback disable this optional reuse:
+that callback may mutate source state after capture. Worker retirement remains
+a flag delivered on main only after joining. This is not a timeless seal and
+permits neither younger capture nor CPU/GPU lookahead.
+
+Validation: actual registry normalization/frontier lifetime/U-count sanitizer
+fixture 1,000 iterations, actual owned-worker handoff 1,000 iterations,
+SceneBridge C++ syntax, independent review. Full successful reuse issuance and
+native Metal execution are not claimed. Remaining worker source reads include
+model geometry metadata and registry context-generation checks; capture these
+next without weakening context validity or the existing serial barriers.

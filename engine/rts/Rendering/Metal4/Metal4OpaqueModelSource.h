@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "Metal4OpaqueModelMRT.h"
+#include "Metal4MRTFrontier209.h"
 #include "Metal4EngineModelForward.h"
 #include "Metal4AlphaPass166Policy.h"
 #include <functional>
@@ -68,5 +69,5 @@ std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease
 	std::shared_ptr<const NativeOpaqueModelFrame>,const CUSSourceTarget& actualForwardTarget,
 	const EngineDeferredGeometryProvider&,const CUSSourceImageProvider&,
 	uint64_t actualDrawFrame,uint64_t actualSubmission,bool validation,double& milliseconds,
- const NativeTextureRegistry* sealedMainRegistry209=nullptr);
+ const MRTFrontier209* sealedMainRegistry209=nullptr);
 } // namespace rendering::metal4

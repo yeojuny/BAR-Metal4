@@ -2246,6 +2246,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  ui::NativeUICapturedBindingResolver uiResolver;
  auto& uiContext=OriginalNativeTextureContext();
  if(uiContext.Initialized()&&uiContext.UIAttached())uiResolver=uiContext.UI().CaptureResolver();
+ std::optional<MRTFrontier209> mrtFrontier;
+ if(uiContext.Initialized()&&frame.opaqueModelFrame&&!options.readback&&options.presentWorld)
+  mrtFrontier=MRTFrontier209::Capture(*frame.opaqueModelFrame,uiContext.Registry());
  Require(!options.heldSourceDraw || (*options.heldSourceDraw==frame.sourceDrawFrame && options.beginReceipt && options.screenUI && options.screenUI->postprocess),"Admitted target owner differs from its source draw");
  Require(!options.beginReceipt || (options.beginReceipt->Matches(frame.sourceDrawFrame,options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0) && !options.beginReceipt->Submission() && options.beginReceipt->FailureStage()==NativeFrameBeginReceipt::Failure::None),"Frame Begin receipt belongs to another invocation");
  // Freeze source-side policy before worker dispatch. Continuation suffixes enter
@@ -2260,10 +2263,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  // Readback/continuation and arbitrary engine source callbacks stay on main.
  if(!owned||!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
     options.submissionBegan||options.submissionCompleted||options.sourceCompleted){
+  // A direct caller may retire source state during Prepare. Without a sealed
+  // callback contract, use COW rather than trust an earlier registry frontier.
+  if(previousRetired)mrtFrontier.reset();
   cacheAccess.reset();
   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
    ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
-  },std::move(uiResolver));
+  },std::move(uiResolver),std::move(mrtFrontier));
  }
  // Allocate/retain the exact publication identities before worker Begin.
  NativeTargetSubmissionNotice targetNotice(options.screenUI);
@@ -2280,10 +2286,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
  try {
-  auto result=worker.Invoke([this,owned,presentation,snapshot,uiResolver=std::move(uiResolver),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
+  auto result=worker.Invoke([this,owned,presentation,snapshot,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
    NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
    Metal4SurfaceWorkerScope scope(snapshot);
-   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver);
+   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver,mrtFrontier);
   }});
   cacheHandoff.reset();
   deliverTargetNotice();
@@ -2294,7 +2300,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   return result;
  }catch(...){cacheHandoff.reset();deliverTargetNotice();deliverReceipt();throw;}
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver,std::optional<MRTFrontier209> mrtFrontier)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
  struct ResolverScope {
@@ -3228,7 +3234,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 				frame.opaqueModelFrame,actualTarget,sourceGeometry,sourceImages,frame.sourceDrawFrame,sourceSubmission,
 				options.shaderValidation,result.shaderCompileMs,
     !offscreenSource&&!options.readback&&options.presentWorld?
-     &OriginalNativeTextureContext().Registry():nullptr);
+     (mrtFrontier?&*mrtFrontier:nullptr):nullptr);
 		}
 		for(size_t slot=0;slot<frame.alphaModelFrames.size();++slot){
 			const auto& source=frame.alphaModelFrames[slot];

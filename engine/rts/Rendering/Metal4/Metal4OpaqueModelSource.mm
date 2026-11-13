@@ -265,7 +265,7 @@ std::unique_ptr<PreparedOpaqueModelSource> PrepareOpaqueModelSource(RuntimeLease
 	CUSSourceGPU& cus,EngineModelDeferredGPU& deferred,EngineModelForwardGPU& forward,
 	std::shared_ptr<const NativeOpaqueModelFrame> source,const CUSSourceTarget& forwardTarget,
 	const EngineDeferredGeometryProvider& geometry,const CUSSourceImageProvider& images,
-	uint64_t frame,uint64_t submission,bool validation,double& ms,const NativeTextureRegistry* sealedMainRegistry209)
+	uint64_t frame,uint64_t submission,bool validation,double& ms,const MRTFrontier209* sealedMainRegistry209)
 {
 	Require(source&&source->sourceDrawFrame==frame&&source->endSequence&&submission&&geometry&&images,
 		"Original opaque source differs from its actual common frame/submission/providers");
