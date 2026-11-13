@@ -480,11 +480,23 @@ struct PostprocessGPU::Impl {
  // This is NOT retirement/readability publication: N's real event+feedback
  // still precede N+1 GPU submission, and original per-version read checks stay.
  // CPU encoding may refer to the pinned image; it never publishes completion.
- bool PreparationInput(const NativePostprocessVersion& version,const RuntimeLease& lease) const
+ bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease) const
  {
   if(Retired(version))return true;
-  auto i=images.find(&version);
-  return lease.PreparingWhilePending()&&i!=images.end()&&i->second.owner.lock().get()==&version&&*i->second.encoded;
+  if(!lease.PreparingWhilePending())return false;
+  auto i=images.find(&version);if(i==images.end())return false;
+  auto owner=i->second.owner.lock();
+  if(owner.get()!=&version || !*i->second.encoded)return false;
+  // Pin the exact logical version and its immutable allocation's completion
+  // flag, not this mutable cache or a later lookup by reused raw address.
+  // ImageFor separately pins the physical texture in this lease's GPU graph.
+  // Encoding is preparation permission only; event+feedback retirement must
+  // publish this exact producer completion before the consumer can submit.
+  const auto completed=i->second.completed;
+  const auto* key=owner.get();
+  return lease.OrderAfterPreviousSubmission(key,[owner=std::move(owner),completed]{
+   Require(bool(owner)&&*completed,"Pending postprocess input did not complete before consumer submission");
+  });
  }
  struct PreparationContext {Impl* cache;RuntimeLease* lease;};
  static bool PreparationInputCallback(const NativePostprocessVersion& v,void* raw){

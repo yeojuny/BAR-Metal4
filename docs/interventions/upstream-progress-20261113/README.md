@@ -83,3 +83,9 @@ See [CLIPPED-FILL-PRECOMPUTE.md](CLIPPED-FILL-PRECOMPUTE.md).
 - [x] CPU lookahead/three recording slots retained; host regression and existing lease policy tests pass.
 - [ ] Full borrow eligibility and native/runtime/performance verification remain open.
 See [GPU-PENDING-RETIREMENT-GATE.md](GPU-PENDING-RETIREMENT-GATE.md).
+
+### P6 Postprocess predecessor receipts
+- [x] Encoded pending inputs register exact owning version/completion checks before preparation admission.
+- [x] 13 host scenarios pass; GPU pending limit one retained.
+- [ ] General P5 eligibility/younger rollback, full P6 borrow coverage and native acceptance remain open.
+See [POSTPROCESS-PENDING-INPUT-RECEIPT.md](POSTPROCESS-PENDING-INPUT-RECEIPT.md) and the refreshed integration-readiness decision.
