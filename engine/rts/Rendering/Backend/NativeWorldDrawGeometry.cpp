@@ -87,6 +87,21 @@ std::vector<NativeWorldDrawVertex> ClipPolygon(std::vector<NativeWorldDrawVertex
 	return polygon;
 }
 }
+NativeWorldRasterMesh BuildValidatedNativeWorldClippedFill(std::span<const NativeWorldDrawVertex> vertices,
+ std::span<const uint32_t> indices,std::array<float,4> plane)
+{
+	NativeWorldRasterMesh result;
+	// Keep the existing source fill triangulation and perspective
+	// interpolants. The Metal vertex ABI remains homogeneous GL xyzw.
+	for(size_t i=0;i<indices.size();i+=3) {
+		const auto polygon=ClipUserPolygon({vertices[indices[i]],vertices[indices[i+1]],vertices[indices[i+2]]},plane);
+		if(polygon.size()<3)continue;
+		const auto first=uint32_t(result.vertices.size());
+		result.vertices.insert(result.vertices.end(),polygon.begin(),polygon.end());
+		for(uint32_t j=1;j+1<polygon.size();++j)result.indices.insert(result.indices.end(),{first,first+j,first+j+1});
+	}
+	return result;
+}
 static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const std::array<double,4>& viewport,uint32_t width,uint32_t height,bool polygonEdge,unsigned samples)
 {
 	ValidateNativeWorldDrawCommand(d);
@@ -97,17 +112,7 @@ static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const
 		Require(!d.world.point.sprite || (d.world.frontPolygonMode!=NativePolygonMode::Point && d.world.backPolygonMode!=NativePolygonMode::Point),"Polygon-mode sprites require their separate clipped-boundary contract");
 		if(d.world.frontPolygonMode==NativePolygonMode::Fill && d.world.backPolygonMode==NativePolygonMode::Fill) {
 			if(!d.world.inheritedClipPlane)return {d.vertices,d.indices};
-			NativeWorldRasterMesh result;
-			// Keep the existing source fill triangulation and perspective
-			// interpolants. The Metal vertex ABI remains homogeneous GL xyzw.
-			for(size_t i=0;i<d.indices.size();i+=3) {
-				const auto polygon=ClipUserPolygon({d.vertices[d.indices[i]],d.vertices[d.indices[i+1]],d.vertices[d.indices[i+2]]},*d.world.inheritedClipPlane);
-				if(polygon.size()<3)continue;
-				const auto first=uint32_t(result.vertices.size());
-				result.vertices.insert(result.vertices.end(),polygon.begin(),polygon.end());
-				for(uint32_t j=1;j+1<polygon.size();++j)result.indices.insert(result.indices.end(),{first,first+j,first+j+1});
-			}
-			return result;
+			return BuildValidatedNativeWorldClippedFill(d.vertices,d.indices,*d.world.inheritedClipPlane);
 		}
 		Require(!d.world.polygonOffset,"Native non-fill polygon offset requires its original plane-depth contract");
 		NativeWorldRasterMesh result;

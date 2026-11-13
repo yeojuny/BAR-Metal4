@@ -60,3 +60,7 @@ protect that boundary; no general overlay worker or transferable receipt was add
 P5 ownership prerequisite: [owned synchronous overlay fallback](OWNED-OVERLAY-FALLBACK.md)
 now carries exact source/target and one-shot mesh/error through the actual fallback.
 Execution remains synchronous; general overlay worker eligibility/join is not complete.
+
+P5 computation boundary: [validated clipped-fill kernel](CLIPPED-FILL-KERNEL.md)
+extracts the actual pure clipping loop while preserving its original validation
+site. Eligibility seals and asynchronous scheduling/cancellation remain separate gates.
