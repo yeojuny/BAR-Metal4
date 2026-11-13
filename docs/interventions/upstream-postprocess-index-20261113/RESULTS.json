@@ -1,0 +1,43 @@
+{
+  "scope": "Compile complete actual backend sources with section GC; no algorithm stubs.",
+  "structuralEvidence": {
+    "planConsumerDirectOrderCalls": 0,
+    "planConsumerUsesProducerIndex": true,
+    "method": "source inspection; not runtime renderer measurement"
+  },
+  "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+  "command": [
+    "/usr/bin/g++",
+    "-std=c++23",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-Wno-missing-field-initializers",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-I",
+    "engine/rts",
+    "engine/tools/metal4-contracts/TestNativePostprocessPlan.cpp",
+    "engine/rts/Rendering/Backend/NativePostprocessData.cpp",
+    "engine/rts/Rendering/Backend/NativeCUSUniformData.cpp",
+    "engine/rts/Rendering/Backend/ScreenDrawList.cpp",
+    "-o",
+    "/tmp/postprocess-plan-final/test"
+  ],
+  "sourceSHA256": {
+    "tools/metal4-contracts/TestNativePostprocessPlan.cpp": "1262b1187aa203df1be55a98a04bfdf873c1db0d3596d9ba7f3b4d383efa7c15",
+    "rts/Rendering/Backend/NativePostprocessData.cpp": "e572ebea2572842e65f514e40901f0f31fcd18921d625aaf4f26f7a928304e77",
+    "rts/Rendering/Backend/NativeCUSUniformData.cpp": "64edccb673d55e356c346e4b0a39225d4405d2be5f6bdf2ce7072c84e248089b",
+    "rts/Rendering/Backend/ScreenDrawList.cpp": "bab36585cdc3413f93057afb9abbd234319312a6611ab6805cb0c07d207f6df7"
+  },
+  "passed": true,
+  "exit": 0,
+  "output": "PASS 38 production postprocess-plan checks; Metal/GPU not exercised\n",
+  "leakSanitizer": "disabled: sandbox ptrace; ASan/UBSan active"
+}

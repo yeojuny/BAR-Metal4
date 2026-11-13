@@ -5,6 +5,8 @@
 #include <atomic>
 #include <cstdint>
 #include <memory>
+#include <map>
+#include <utility>
 #include <optional>
 #include <span>
 #include <vector>
@@ -157,6 +159,33 @@ struct NativePostprocessConsumer {
 	std::uint32_t screenCommandOffset = 0;
 	std::uint64_t commandSequence = 0;
 };
+// Immutable ordered index tied to the exact retained source-frame ownership.
+// Source frames must be frozen before construction; no readiness is cached here.
+class NativePostprocessPlan {
+public:
+ NativePostprocessPlan(const NativePostprocessPlan&)=delete;
+ NativePostprocessPlan& operator=(const NativePostprocessPlan&)=delete;
+ const NativePostprocessFrame& Frame() const noexcept { return *root; }
+ const std::shared_ptr<const NativePostprocessFrame>& Root() const noexcept { return root; }
+ const std::vector<NativePostprocessCommandRef>& Order() const noexcept { return order; }
+ bool MatchesRoot(const std::shared_ptr<const NativePostprocessFrame>& other) const noexcept {
+  return root.get()==other.get()&&!root.owner_before(other)&&!other.owner_before(root);
+ }
+private:
+ explicit NativePostprocessPlan(std::shared_ptr<const NativePostprocessFrame>);
+ std::shared_ptr<const NativePostprocessFrame> root;
+ std::vector<NativePostprocessCommandRef> order;
+ std::map<std::pair<std::uint64_t,std::uint64_t>,NativePostprocessCommandRef> producers;
+ friend std::shared_ptr<const NativePostprocessPlan> BuildNativePostprocessPlan(std::shared_ptr<const NativePostprocessFrame>);
+ friend void ValidateNativePostprocessConsumer(const NativePostprocessPlan&,const NativePostprocessVersion&,
+  const std::optional<NativePostprocessConsumer>&,bool (*)(const NativePostprocessVersion&,void*),void*);
+};
+std::shared_ptr<const NativePostprocessPlan> BuildNativePostprocessPlan(std::shared_ptr<const NativePostprocessFrame>);
+void ValidateNativePostprocessFrame(const NativePostprocessPlan&,
+ bool (*isRetired)(const NativePostprocessVersion&,void*),void* state);
+void ValidateNativePostprocessConsumer(const NativePostprocessPlan&,const NativePostprocessVersion&,
+ const std::optional<NativePostprocessConsumer>&,bool (*isRetired)(const NativePostprocessVersion&,void*),void* state);
+
 void ValidateNativeExternalImageProducer(const NativeExternalImageProducer& producer);
 std::vector<NativePostprocessCommandRef> OrderNativePostprocessCommands(const NativePostprocessFrame& frame);
 void ValidateNativePostprocessImage(const NativePostprocessImage& image);

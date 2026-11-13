@@ -280,12 +280,44 @@ std::vector<NativePostprocessCommandRef> OrderNativePostprocessCommands(const Na
 	for(std::size_t i=1;i<order.size();++i)if(stage(order[i])!=NativePostprocessStage::Screen && stage(order[i-1])==stage(order[i]))Check(sequence(order[i-1])!=sequence(order[i]),"Two source producers share a world command sequence");
 	return order;
 }
+NativePostprocessPlan::NativePostprocessPlan(std::shared_ptr<const NativePostprocessFrame> frame):root(std::move(frame))
+{
+ Check(bool(root),"Postprocess plan requires an actual source frame");
+ Check(root->serial&&root->logicalWidth&&root->logicalHeight,"Postprocess frame extent/serial invalid");
+ order=OrderNativePostprocessCommands(*root);
+ for(const auto& ref:order){
+  const auto& outputs=ref.external?root->externalOutputs[ref.index].outputs:root->operations[ref.index].outputs;
+  // Preserve first-in-source-order lookup. Duplicate producer errors belong to
+  // runtime frame validation, after that command's availability callbacks.
+  for(const auto& out:outputs)producers.try_emplace(std::pair{out->image->object,out->generation},ref);
+ }
+}
+std::shared_ptr<const NativePostprocessPlan> BuildNativePostprocessPlan(std::shared_ptr<const NativePostprocessFrame> frame)
+{
+ return std::shared_ptr<const NativePostprocessPlan>(new NativePostprocessPlan(std::move(frame)));
+}
 void ValidateNativePostprocessFrame(const NativePostprocessFrame& frame, bool (*isRetired)(const NativePostprocessVersion&, void*), void* state)
 {
 	Check(frame.serial && frame.logicalWidth && frame.logicalHeight,"Postprocess frame extent/serial invalid");
 	std::set<VersionKey> produced;
 	auto available=[&](const std::shared_ptr<const NativePostprocessVersion>& version){if(version)Check(produced.contains(Key(*version)) || HasNativePostprocessCPUContents(*version) || (isRetired && isRetired(*version,state)),"Postprocess references missing/unretired image contents");};
 	for(const auto& ref:OrderNativePostprocessCommands(frame)){
+		if(ref.external){const auto& producer=frame.externalOutputs[ref.index];for(const auto& in:producer.inputs)available(in);for(const auto& previous:producer.previous)available(previous);for(const auto& out:producer.outputs)Check(produced.insert(Key(*out)).second,"Image generation has multiple actual producers");}
+		else{const auto& op=frame.operations[ref.index];for(const auto& in:op.inputs)available(in);for(const auto& previous:op.previous)available(previous);
+			// An RTT prior is structurally validated above and resolved against the
+			// actual ScreenGPU ordered producer plus its encode-time readable flag.
+			// It is never passed to isRetired as a fabricated postprocess version.
+			if(op.priorScreen && op.priorScreen->postprocessVersion)available(op.priorScreen->postprocessVersion);
+			for(const auto& out:op.outputs)Check(produced.insert(Key(*out)).second,"Image generation has multiple actual producers");}
+	}
+}
+void ValidateNativePostprocessFrame(const NativePostprocessPlan& plan, bool (*isRetired)(const NativePostprocessVersion&, void*), void* state)
+{
+ const auto& frame=plan.Frame();
+	Check(frame.serial && frame.logicalWidth && frame.logicalHeight,"Postprocess frame extent/serial invalid");
+	std::set<VersionKey> produced;
+	auto available=[&](const std::shared_ptr<const NativePostprocessVersion>& version){if(version)Check(produced.contains(Key(*version)) || HasNativePostprocessCPUContents(*version) || (isRetired && isRetired(*version,state)),"Postprocess references missing/unretired image contents");};
+	for(const auto& ref:plan.Order()){
 		if(ref.external){const auto& producer=frame.externalOutputs[ref.index];for(const auto& in:producer.inputs)available(in);for(const auto& previous:producer.previous)available(previous);for(const auto& out:producer.outputs)Check(produced.insert(Key(*out)).second,"Image generation has multiple actual producers");}
 		else{const auto& op=frame.operations[ref.index];for(const auto& in:op.inputs)available(in);for(const auto& previous:op.previous)available(previous);
 			// An RTT prior is structurally validated above and resolved against the
@@ -306,6 +338,33 @@ void ValidateNativePostprocessConsumer(const NativePostprocessFrame& frame,const
 	for(const auto& ref:OrderNativePostprocessCommands(frame)){
 		const auto& outputs=ref.external?frame.externalOutputs[ref.index].outputs:frame.operations[ref.index].outputs;
 		if(std::none_of(outputs.begin(),outputs.end(),[&](const auto& out){return Key(*out)==key;}))continue;
+		const auto stage=ref.external?frame.externalOutputs[ref.index].stage:frame.operations[ref.index].stage;
+		const auto sequence=ref.external?frame.externalOutputs[ref.index].sequence:frame.operations[ref.index].sequence;
+		Check(stage<=consumer->stage,"Native image consumer precedes its actual source stage");
+		if(stage==consumer->stage){
+			if(stage==NativePostprocessStage::Screen){
+				Check(!ref.external && frame.operations[ref.index].screenCommandOffset<=consumer->screenCommandOffset,"Screen sample precedes its exact original copy insertion");
+				if(frame.operations[ref.index].screenCommandOffset==consumer->screenCommandOffset && consumer->commandSequence)
+					Check(frame.operations[ref.index].commandSequence<consumer->commandSequence,"Target sample precedes its same-offset original copy insertion");
+			}
+			else Check(sequence<consumer->sequence,"World sample precedes its exact source command");
+		}
+		return;
+	}
+	throw std::runtime_error("Image consumer has no actual declared/retired producer");
+}
+void ValidateNativePostprocessConsumer(const NativePostprocessPlan& plan,const NativePostprocessVersion& version,
+	const std::optional<NativePostprocessConsumer>& consumer,bool (*isRetired)(const NativePostprocessVersion&,void*),void* state)
+{
+ const auto& frame=plan.Frame();
+	const auto key=Key(version);
+	if(HasNativePostprocessCPUContents(version))return; // Original immediate upload, not GPU retirement.
+	if(isRetired && isRetired(version,state))return;
+	Check(consumer.has_value(),"Current source-frame image cannot be sampled by an unordered cached-panel producer");
+	Check(consumer->stage<=NativePostprocessStage::Screen && (consumer->stage==NativePostprocessStage::Screen?consumer->sequence==0:consumer->sequence!=0),"Image consumer stage/sequence invalid");
+ const auto found=plan.producers.find(key);
+ if(found!=plan.producers.end()){
+  const auto& ref=found->second;
 		const auto stage=ref.external?frame.externalOutputs[ref.index].stage:frame.operations[ref.index].stage;
 		const auto sequence=ref.external?frame.externalOutputs[ref.index].sequence:frame.operations[ref.index].sequence;
 		Check(stage<=consumer->stage,"Native image consumer precedes its actual source stage");

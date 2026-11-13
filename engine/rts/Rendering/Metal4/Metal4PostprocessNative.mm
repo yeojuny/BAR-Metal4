@@ -416,6 +416,7 @@ struct PostprocessGPU::Impl {
  }
 
 	std::shared_ptr<const NativePostprocessFrame> declaredFrame;
+	std::shared_ptr<const NativePostprocessPlan> declaredPlan;
 	CPUImageProvider cpuImages;
 	__strong id<MTLLibrary> library=nil;
 	bool validation=false;
@@ -540,9 +541,9 @@ void PostprocessGPU::Initialize(RuntimeLease& lease,MTLPixelFormat format,bool v
 	auto candidate=std::make_unique<Impl>();candidate->Compile(lease,format,validation,compileMs);
 	// Changing validation/paired PSOs must not erase retired immutable image
 	// generations that are still referenced by a later partial update.
-	candidate->images=std::move(impl->images);candidate->texturePool181=std::move(impl->texturePool181);candidate->freshIneligible181=impl->freshIneligible181;candidate->ownerRequests181=impl->ownerRequests181;candidate->ownerRegistrations181=impl->ownerRegistrations181;candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true);
+	candidate->images=std::move(impl->images);candidate->texturePool181=std::move(impl->texturePool181);candidate->freshIneligible181=impl->freshIneligible181;candidate->ownerRequests181=impl->ownerRequests181;candidate->ownerRegistrations181=impl->ownerRegistrations181;candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->declaredPlan=std::move(impl->declaredPlan);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true);
 }
-void PostprocessGPU::ClearResources(){impl->immutableQuads.clear();impl->argumentPool.Clear();impl->uniformPool.Clear();impl->declaredFrame.reset();impl->images.clear();impl->texturePool181->Clear();impl->allocations.clear();}
+void PostprocessGPU::ClearResources(){impl->immutableQuads.clear();impl->argumentPool.Clear();impl->uniformPool.Clear();impl->declaredFrame.reset();impl->declaredPlan.reset();impl->images.clear();impl->texturePool181->Clear();impl->allocations.clear();}
 void PostprocessGPU::SetCPUImageProvider(CPUImageProvider provider){impl->cpuImages=std::move(provider);}
 void PostprocessGPU::PrepareFrameImages(RuntimeLease& lease,std::shared_ptr<const NativePostprocessFrame> frame,std::uint64_t sourceDrawFrame)
 {
@@ -553,9 +554,13 @@ void PostprocessGPU::PrepareFrameImages(RuntimeLease& lease,std::shared_ptr<cons
 	for(auto i=impl->images.begin();i!=impl->images.end();)if(i->second.owner.expired())i=impl->images.erase(i);else ++i;
  impl->PruneAllocations();
 	Impl::PreparationContext context{impl.get(),&lease};
- ValidateNativePostprocessFrame(*frame,Impl::PreparationInputCallback,&context);
+ // Static ordering is scoped to this exact immutable owner, never serial alone.
+ // Availability and lease registration below still run on every preparation.
+ auto plan=impl->declaredPlan;
+ if(!plan||!plan->MatchesRoot(frame))plan=BuildNativePostprocessPlan(frame);
+ ValidateNativePostprocessFrame(*plan,Impl::PreparationInputCallback,&context);
 	std::vector<std::shared_ptr<bool>> ignored;
-	for(const auto& ref:OrderNativePostprocessCommands(*frame)){
+	for(const auto& ref:plan->Order()){
 		const auto& outputs=ref.external?frame->externalOutputs[ref.index].outputs:frame->operations[ref.index].outputs;
 		// Only this existing fixed-copy proof guarantees every pixel is written
 		// before the version's first read. DOF discard, external and partial writes
@@ -563,7 +568,7 @@ void PostprocessGPU::PrepareFrameImages(RuntimeLease& lease,std::shared_ptr<cons
 		const bool reusableCopy181=!ref.external && NativePostprocessOverwrite157(frame->operations[ref.index],frame->logicalWidth,frame->logicalHeight);
 		for(const auto& output:outputs)impl->ImageFor(lease,output,true,ignored,reusableCopy181);
 	}
-	impl->declaredFrame=std::move(frame);
+	impl->declaredFrame=std::move(frame);impl->declaredPlan=std::move(plan);
 }
 id<MTLTexture> PostprocessGPU::ResolveAllocation(RuntimeLease& lease,std::shared_ptr<const NativePostprocessImage> actualAllocation)
 {
@@ -573,8 +578,8 @@ id<MTLTexture> PostprocessGPU::ResolveImage(RuntimeLease& lease,const std::share
 {
 	Require(version!=nullptr,"Missing shared native image version");
 	if(!HasNativePostprocessCPUContents(*version)&&!impl->PreparationInput(*version,lease)){
-		Require(impl->declaredFrame!=nullptr,"Shared native image has no actual source frame");
-		ValidateNativePostprocessConsumer(*impl->declaredFrame,*version,consumer,[](const NativePostprocessVersion& v,void* state){return static_cast<Impl*>(state)->Retired(v);},impl.get());
+		Require(impl->declaredFrame&&impl->declaredPlan&&impl->declaredPlan->MatchesRoot(impl->declaredFrame),"Shared native image has no actual source frame");
+		ValidateNativePostprocessConsumer(*impl->declaredPlan,*version,consumer,[](const NativePostprocessVersion& v,void* state){return static_cast<Impl*>(state)->Retired(v);},impl.get());
 	}
 	std::vector<std::shared_ptr<bool>> ignored;return impl->ImageFor(lease,version,false,ignored);
 }
