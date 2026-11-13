@@ -801,6 +801,15 @@ static void LogFontRecycle169(std::uint64_t sourceDrawFrame)
   unsigned(sample.locked),sample.heldSlots,sample.heldBytes,sample.highWater);
 }
 
+bool NativeUIRecorder::HasSubmittedCapacity(std::uint64_t identity) const noexcept {return impl->submittedFrames.CanHold(identity);}
+void NativeUIRecorder::ValidateSubmittedCapacity(std::uint64_t sourceDrawFrame) const
+{
+ Require(impl->submittedFrames.CanHold(sourceDrawFrame) && !impl->frame && impl->targets.empty() && impl->compiling.empty(),"Native UI submitted frame ownership is repeated or still recording");
+}
+void NativeUIRecorder::ValidateHeldFrame(std::uint64_t identity) const
+{
+ Require(impl->submittedFrames.Contains(identity),"Native UI submitted frame ownership is repeated or still recording");
+}
 void NativeUIRecorder::HoldSubmittedFrame(std::uint64_t sourceDrawFrame)
 {
  Require(impl->submittedFrames.CanHold(sourceDrawFrame) && !impl->frame && impl->targets.empty() && impl->compiling.empty(),

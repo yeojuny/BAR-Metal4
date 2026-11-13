@@ -92,6 +92,9 @@ public:
 	void RetireCompletedFrame(bool sourceFrameCompleted = true);
  // Capture-owner-only exact completion ledger; at most two held frames.
  // This API does not enable parallel recording or render-worker callbacks.
+ bool HasSubmittedCapacity(std::uint64_t identity) const noexcept;
+ void ValidateSubmittedCapacity(std::uint64_t identity) const;
+ void ValidateHeldFrame(std::uint64_t identity) const;
  void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
  void RetireSubmittedFrame(std::uint64_t sourceDrawFrame);
 	void SetSourceDependencyQuery(std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> query);

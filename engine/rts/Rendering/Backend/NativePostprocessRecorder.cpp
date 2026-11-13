@@ -45,6 +45,15 @@ std::shared_ptr<const NativePostprocessFrame> NativePostprocessRecorder::Snapsho
 	return prefix;
 }
 void NativePostprocessRecorder::AbortFrame() noexcept { Rollback(); recording.reset(); pending.reset(); active = false; }
+bool NativePostprocessRecorder::HasSubmittedCapacity(std::uint64_t identity) const noexcept {return submittedFrames.CanHold(identity);}
+void NativePostprocessRecorder::ValidateSubmittedCapacity(std::uint64_t serial) const
+{
+ Check(!active && pending && pending->serial==serial && submittedFrames.CanHold(serial),"Postprocess submitted frame ownership differs");
+}
+void NativePostprocessRecorder::ValidateHeldFrame(std::uint64_t identity) const
+{
+ Check(submittedFrames.Contains(identity),"Postprocess submitted frame ownership differs");
+}
 void NativePostprocessRecorder::HoldSubmittedFrame(std::uint64_t serial)
 {
  Check(!active && pending && pending->serial==serial && submittedFrames.CanHold(serial),"Postprocess submitted frame ownership differs");

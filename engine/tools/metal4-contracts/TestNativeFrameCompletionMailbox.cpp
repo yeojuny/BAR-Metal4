@@ -13,13 +13,25 @@ int main(){
  Reject([]{NativeFrameCompletionMailbox invalid(0);});
  auto box=std::make_shared<NativeFrameCompletionMailbox>(17);Check(box->Epoch()==17);
  Check(!box->Pop());auto a=Notice(10),b=Notice(20);
- Reject([&]{box->Prepare(18,10,110);});auto ta=box->Prepare(17,10,110),tb=box->Prepare(17,20,120),tc=box->Prepare(17,30,130);auto bad=a;bad.sourceFrameCompleted=false;
- Reject([&]{box->Publish(ta,bad);});Reject([&]{box->Publish(box->Prepare(17,11,110),a);});Reject([&]{box->Publish(box->Prepare(17,10,111),a);});
+ Reject([&]{box->Prepare(18,10,110);});auto ta=box->Prepare(17,10,110),tb=box->Prepare(17,20,120);Check(!box->HasCapacity());Reject([&]{box->Prepare(17,30,130);});auto bad=a;bad.sourceFrameCompleted=false;
+ Reject([&]{box->Publish(ta,bad);});auto wrongDraw=a;wrongDraw.sourceDrawFrame=11;Reject([&]{box->Publish(ta,wrongDraw);});auto wrongPost=a;wrongPost.completedPostprocessSerial=111;Reject([&]{box->Publish(ta,wrongPost);});
  Check(!box->Pop());box->Publish(ta,a);box->Publish(tb,b);
- Reject([&]{box->Publish(tc,Notice(30));});
+ Reject([&]{box->Prepare(17,30,130);});
  Reject([&]{box->Publish(ta,a);});
  auto first=box->Pop();Check(first&&first->sourceDrawFrame==10&&first->dynamicWaterSourceDrawFrame==10&&first->completedWorldInfo==a.completedWorldInfo&&first->completedWaterUpdates==a.completedWaterUpdates);
  auto second=box->Pop();Check(second&&second->sourceDrawFrame==20);Check(!box->Pop());Reject([&]{box->Publish(ta,a);});
+ // Unpublished abandoned reservations are reusable; published entries are not.
+ Check(box->HasCapacity());
+ {auto abandoned=box->Prepare(17,30,130);auto copy=abandoned;abandoned.reset();
+  auto other=box->Prepare(17,40,140);Check(!box->HasCapacity());copy.reset();Check(box->HasCapacity());}
+ auto queued=box->Prepare(17,50,150);box->Publish(queued,Notice(50));queued.reset();
+ auto held=box->Prepare(17,60,160);Check(!box->HasCapacity());Reject([&]{box->Prepare(17,70,170);});
+ Check(box->Pop()->sourceDrawFrame==50);Check(box->HasCapacity());held.reset();
+ // Publication order, not reservation order, controls consumption.
+ auto x=box->Prepare(17,80,180),y=box->Prepare(17,90,190);
+ box->Publish(y,Notice(90));box->Publish(x,Notice(80));
+ Check(box->Pop()->sourceDrawFrame==90);Check(box->Pop()->sourceDrawFrame==80);
+ Reject([&]{box->Publish(y,Notice(90));});
  // Callback lifetime is solely the mailbox, not a destroyed Session or global.
  auto callback=[owned=box,ticket=box->Prepare(17,10,110)](const auto& value){owned->Publish(ticket,value);};
  box->Close();box.reset();Reject([&]{callback(a);});

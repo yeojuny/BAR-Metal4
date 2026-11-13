@@ -30,6 +30,10 @@ public:
   }
   return false;
  }
+ bool Contains(std::uint64_t id) const noexcept {
+  for(const auto& slot:slots)if(slot.payload && slot.id==id)return true;
+  return false;
+ }
  bool Retire(std::uint64_t id) noexcept {
   if(!id && !AllowZeroIdentity)return false;
   for(auto& slot:slots)if(slot.payload && slot.id==id){slot.payload.reset();slot.id=0;return true;}

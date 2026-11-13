@@ -10,7 +10,7 @@ This is a source implementation ledger, **not a runtime acceptance report or a c
 | P1-C CUS roster | Immutable ordered roster implemented | Integrated workload validation |
 | P2 payload/receipts | Uniform content, manifest/partition and exact receipt sharing implemented | Audit remaining per-phase copies; do not claim all payload transport eliminated |
 | P3 owned frames | Owned screen storage implemented | Complete combined submission packet, source-family seal validation and ownership audit |
-| P3 journals | UI/postprocess/cloud exact 2-slot held-frame ledger, epoch completion mailbox and one-shot callback replay tickets implemented | Atomic whole-frame pre-submit admission, reserved completion capacity and failure/quarantine lifecycle |
+| P3 journals | UI/postprocess/cloud exact 2-slot held-frame ledger, epoch completion mailbox and one-shot callback replay tickets and bounded pre-submit completion reservations implemented | Atomic whole-frame pre-submit admission and failure/quarantine lifecycle; completion storage now reserved before renderer invocation |
 | P4 input separation | Presentation policy, preunit environment receipt and immutable PBR declaration batches isolated; ordinary worker Begin notices applied on main before success/error receipts (`fe28d8a`) | Shield staging, allocation services, live registries/read proofs and mutable backend caches; future admitted-frame-addressed Begin routing |
 | P4 render owner | Existing serial worker retained with synchronous wait | Exclusive backend ownership and ordered controls, including teardown |
 | P5 CPU lookahead | **Not enabled** | All ownership gates, bounded credits and actual positive active-work overlap evidence |

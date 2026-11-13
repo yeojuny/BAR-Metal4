@@ -25,6 +25,9 @@ public:
 	std::shared_ptr<const NativePostprocessFrame> SnapshotPrefix(std::uint64_t cutoff) const;
 	void AbortFrame() noexcept;
 	void RetireCompletedFrame(std::uint64_t serial);
+ bool HasSubmittedCapacity(std::uint64_t identity) const noexcept;
+ void ValidateSubmittedCapacity(std::uint64_t identity) const;
+ void ValidateHeldFrame(std::uint64_t identity) const;
  void HoldSubmittedFrame(std::uint64_t serial);
 	// Frame transaction only: mark exactly the selected output publications
 	// after real Begin, then retire them after their actual batch completes.

@@ -39,6 +39,15 @@ void NativeVolumetricCloudRecorder::Append(NativeVolumetricCloudDraw draw)
 	recording->draws.push_back(std::move(draw));
 }
 void NativeVolumetricCloudRecorder::AbortFrame() noexcept { recording.reset(); pending.reset(); }
+bool NativeVolumetricCloudRecorder::HasSubmittedCapacity(std::uint64_t identity) const noexcept {return submittedFrames.CanHold(identity);}
+void NativeVolumetricCloudRecorder::ValidateSubmittedCapacity(std::uint64_t frame) const
+{
+ Check(!recording && pending && pending->sourceDrawFrame==frame && submittedFrames.CanHold(frame),"submitted cloud frame identity differs");
+}
+void NativeVolumetricCloudRecorder::ValidateHeldFrame(std::uint64_t identity) const
+{
+ Check(submittedFrames.Contains(identity),"submitted cloud frame identity differs");
+}
 void NativeVolumetricCloudRecorder::HoldSubmittedFrame(std::uint64_t frame)
 {
  Check(!recording && pending && pending->sourceDrawFrame==frame && submittedFrames.CanHold(frame),"submitted cloud frame identity differs");

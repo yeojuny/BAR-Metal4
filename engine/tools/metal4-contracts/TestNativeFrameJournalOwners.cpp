@@ -18,16 +18,17 @@ int main(){
   return std::pair{frame,version};
  };
  auto [a,va]=capture(10);std::weak_ptr<const NativePostprocessFrame> wa=a;
- recorder.HoldSubmittedFrame(a->serial);Check(recorder.OwnsPendingVersion(va));
+ recorder.ValidateSubmittedCapacity(a->serial);Reject([&]{recorder.ValidateHeldFrame(a->serial);});
+ recorder.HoldSubmittedFrame(a->serial);recorder.ValidateHeldFrame(a->serial);Check(recorder.OwnsPendingVersion(va));
  auto [b,vb]=capture(20);std::weak_ptr<const NativePostprocessFrame> wb=b;
  const auto aid=a->serial,bid=b->serial;
  recorder.HoldSubmittedFrame(bid);a.reset();b.reset();
  Check(!wa.expired()&&!wb.expired());Check(recorder.OwnsPendingVersion(va)&&recorder.OwnsPendingVersion(vb));
  // Rejection must not consume pending publications; after exact retirement it
  // can be held. Abort of a new capture must not retire either old frame.
- auto [c,vc]=capture(30);const auto cid=c->serial;Reject([&]{recorder.HoldSubmittedFrame(cid);});
+ auto [c,vc]=capture(30);const auto cid=c->serial;Check(!recorder.HasSubmittedCapacity(cid));Reject([&]{recorder.ValidateSubmittedCapacity(cid);});Reject([&]{recorder.ValidateHeldFrame(cid);});Reject([&]{recorder.HoldSubmittedFrame(cid);});
  Check(recorder.OwnsPendingVersion(va)&&recorder.OwnsPendingVersion(vb)&&recorder.OwnsPendingVersion(vc));
- recorder.RetireCompletedFrame(bid);Check(wb.expired()&&!wa.expired());Check(!recorder.OwnsPendingVersion(vb)&&recorder.OwnsPendingVersion(va));
+ recorder.RetireCompletedFrame(bid);Check(recorder.HasSubmittedCapacity(cid));Check(wb.expired()&&!wa.expired());Check(!recorder.OwnsPendingVersion(vb)&&recorder.OwnsPendingVersion(va));
  recorder.HoldSubmittedFrame(cid);c.reset();
  Reject([&]{recorder.RetireCompletedFrame(bid);});Reject([&]{recorder.RetireCompletedFrame(0);});
  recorder.BeginFrame(8,8,40);auto aborted=recorder.Copy(binding,NativePostprocessOperationKind::CopyColor,rect,rect,0);
@@ -41,11 +42,11 @@ int main(){
  auto [d,vd]=capture(50);recorder.RetireCompletedFrame(d->serial);Check(!recorder.OwnsPendingVersion(vd));
  NativeVolumetricCloudRecorder clouds;
  clouds.BeginFrame(10);auto ca=clouds.EndFrame();std::weak_ptr<const NativeVolumetricCloudFrame> cwa=ca;
- clouds.HoldSubmittedFrame(10);ca.reset();
+ clouds.ValidateSubmittedCapacity(10);Reject([&]{clouds.ValidateHeldFrame(10);});clouds.HoldSubmittedFrame(10);clouds.ValidateHeldFrame(10);ca.reset();
  clouds.BeginFrame(20);auto cb=clouds.EndFrame();std::weak_ptr<const NativeVolumetricCloudFrame> cwb=cb;
  clouds.HoldSubmittedFrame(20);cb.reset();Check(!cwa.expired()&&!cwb.expired());
- clouds.BeginFrame(30);auto cc=clouds.EndFrame();Reject([&]{clouds.HoldSubmittedFrame(30);});
- clouds.RetireCompletedFrame(20);Check(cwb.expired()&&!cwa.expired());clouds.HoldSubmittedFrame(30);
+ clouds.BeginFrame(30);auto cc=clouds.EndFrame();Check(!clouds.HasSubmittedCapacity(30));Reject([&]{clouds.ValidateSubmittedCapacity(30);});Reject([&]{clouds.ValidateHeldFrame(30);});Reject([&]{clouds.HoldSubmittedFrame(30);});
+ clouds.RetireCompletedFrame(20);Check(clouds.HasSubmittedCapacity(30));Check(cwb.expired()&&!cwa.expired());clouds.HoldSubmittedFrame(30);
  clouds.BeginFrame(40);clouds.AbortFrame();clouds.Reset();Check(!cwa.expired());
  Reject([&]{clouds.RetireCompletedFrame(20);});Reject([&]{clouds.RetireCompletedFrame(0);});
  clouds.RetireCompletedFrame(10);Check(cwa.expired());clouds.RetireCompletedFrame(30);
@@ -61,6 +62,15 @@ int main(){
  Reject([&]{clouds.HoldSubmittedFrame(55);});pending55.reset();
  clouds.RetireCompletedFrame(55);Check(weak55.expired()&&!weakPending55.expired());
  clouds.HoldSubmittedFrame(55);clouds.RetireCompletedFrame(55);Check(weakPending55.expired());
+ // Validate every held owner before retirement: a missing later cloud owner
+ // must leave an earlier valid postprocess owner and its publication alive.
+ auto [guarded,guardedVersion]=capture(58);auto guardedID=guarded->serial;
+ std::weak_ptr<const NativePostprocessFrame> guardedWeak=guarded;
+ recorder.HoldSubmittedFrame(guardedID);guarded.reset();
+ Reject([&]{recorder.ValidateHeldFrame(guardedID);clouds.ValidateHeldFrame(58);});
+ Check(!guardedWeak.expired()&&recorder.OwnsPendingVersion(guardedVersion));
+ recorder.ValidateHeldFrame(guardedID);recorder.RetireCompletedFrame(guardedID);
+ Check(guardedWeak.expired());Reject([&]{recorder.ValidateHeldFrame(guardedID);});
  // Many cycles continue to reuse bounded slots and release exact completed data.
  for(std::uint64_t i=60;i<1060;i+=2){
   clouds.BeginFrame(i);auto x=clouds.EndFrame();std::weak_ptr<const NativeVolumetricCloudFrame> wx=x;clouds.HoldSubmittedFrame(i);x.reset();

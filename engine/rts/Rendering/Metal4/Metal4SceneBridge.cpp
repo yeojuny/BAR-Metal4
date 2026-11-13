@@ -502,6 +502,10 @@ void ApplyDeferredFrameReceipts()
  while(auto notice=session->completionMailbox->Pop()){
  const auto& result=*notice;
  if(!result.sourceFrameCompleted)throw std::logic_error("Deferred scene receipt is not GPU-completed");
+ // Reject missing/mismatched journal owners before any water/world retirement.
+ ui::GetRecorder().ValidateHeldFrame(result.sourceDrawFrame);
+ LuaNativePostprocess::GetRecorder().ValidateHeldFrame(result.completedPostprocessSerial);
+ LuaNativeVolumetricClouds::ValidateHeldFrame(result.sourceDrawFrame);
  if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  // Source ownership was transferred at submission; do not clear N+1 capture.
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);
@@ -1604,6 +1608,15 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  if(overlap&&options.presentWorld&&frame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
   const auto expectedDraw=frame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
   const auto mailbox=session->completionMailbox;
+  // Preserve the prior renderer boundary's ability to drain full held ledgers.
+  // Do not reject a frame solely because its predecessors have not retired yet.
+  if(!ui::GetRecorder().HasSubmittedCapacity(expectedDraw) ||
+     !LuaNativePostprocess::GetRecorder().HasSubmittedCapacity(expectedPost) ||
+     !LuaNativeVolumetricClouds::HasSubmittedCapacity(expectedDraw) || !mailbox->HasCapacity())RequireRetiredGPUWork();
+  // Main remains blocked through Draw: these checks cannot race another capture.
+  ui::GetRecorder().ValidateSubmittedCapacity(expectedDraw);
+  LuaNativePostprocess::GetRecorder().ValidateSubmittedCapacity(expectedPost);
+  LuaNativeVolumetricClouds::ValidateSubmittedCapacity(expectedDraw);
   const auto ticket=mailbox->Prepare(mailbox->Epoch(),expectedDraw,expectedPost);
   options.deferredCompleted=[mailbox,ticket](const Metal4WorldPresentationResult& completed) {
    mailbox->Publish(ticket,{completed.sourceFrameCompleted,

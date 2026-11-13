@@ -24,6 +24,12 @@ static_assert(std::is_trivially_copyable_v<NativeFrameCompletionNotice>);
 // Close and publication/pop are serialized: a late completion never accesses the
 // destroyed Session or applies a retirement. Main remains the sole receipt applier.
 class NativeFrameCompletionMailbox {
+public:
+ class Ticket;
+private:
+ struct Slot {std::weak_ptr<Ticket> ticket;bool queued=false;};
+ std::array<Slot,2> slots{};
+ std::array<std::size_t,2> entrySlots{};
  const std::uint64_t epoch;
  std::mutex mutex;
  bool open=true;
@@ -35,33 +41,48 @@ public:
   friend class NativeFrameCompletionMailbox;
   const NativeFrameCompletionMailbox* const owner;
   const std::uint64_t epoch,draw,post;
+  const std::size_t slot;
   bool published=false; // Accessed only under this owner's mutex.
-  Ticket(const NativeFrameCompletionMailbox* owner,std::uint64_t epoch,std::uint64_t draw,std::uint64_t post):
-   owner(owner),epoch(epoch),draw(draw),post(post) {}
+  Ticket(const NativeFrameCompletionMailbox* owner,std::uint64_t epoch,std::uint64_t draw,std::uint64_t post,std::size_t slot):
+   owner(owner),epoch(epoch),draw(draw),post(post),slot(slot) {}
  public:
   Ticket(const Ticket&)=delete;Ticket& operator=(const Ticket&)=delete;
  };
  explicit NativeFrameCompletionMailbox(std::uint64_t generation):epoch(generation) {if(!generation)Reject();}
  std::uint64_t Epoch() const noexcept {return epoch;}
- // Allocate this one-shot identity before invoking the renderer/GPU submit.
+ bool HasCapacity() {
+  const std::lock_guard lock(mutex);
+  if(!open)Reject();
+  for(const auto& slot:slots)if(!slot.queued && slot.ticket.expired())return true;
+  return false;
+ }
+ // Reserve completion capacity before invoking the renderer/GPU submit.
+ // An abandoned unpublished callback releases its weak reservation. Published
+ // results keep their slot until Pop, even after every callback copy is gone.
  // Copies of the callback share a ticket, so replay after Pop is also rejected.
  std::shared_ptr<Ticket> Prepare(std::uint64_t expectedEpoch,std::uint64_t draw,std::uint64_t post) {
   const std::lock_guard lock(mutex);
   if(!open || epoch!=expectedEpoch)Reject();
-  return std::shared_ptr<Ticket>(new Ticket(this,epoch,draw,post));
+  for(std::size_t i=0;i<slots.size();++i)if(!slots[i].queued && slots[i].ticket.expired()){
+   auto ticket=std::shared_ptr<Ticket>(new Ticket(this,epoch,draw,post,i));
+   slots[i].ticket=ticket;return ticket;
+  }
+  Reject();return {};
  }
  void Publish(const std::shared_ptr<Ticket>& ticket,const NativeFrameCompletionNotice& notice) {
   const std::lock_guard lock(mutex);
   if(!open || !ticket || ticket->owner!=this || ticket->epoch!=epoch || ticket->published ||
-     count==entries.size() || !notice.sourceFrameCompleted ||
+     count==entries.size() || slots[ticket->slot].ticket.lock()!=ticket || slots[ticket->slot].queued || !notice.sourceFrameCompleted ||
      notice.sourceDrawFrame!=ticket->draw || notice.completedPostprocessSerial!=ticket->post)Reject();
-  entries[(read+count)%entries.size()]=notice;++count;ticket->published=true;
+  const auto index=(read+count)%entries.size();
+  entries[index]=notice;entrySlots[index]=ticket->slot;
+  slots[ticket->slot].queued=true;++count;ticket->published=true;
  }
  std::optional<NativeFrameCompletionNotice> Pop() {
   const std::lock_guard lock(mutex);
   if(!open)Reject();
   if(!count)return std::nullopt;
-  auto result=entries[read];read=(read+1)%entries.size();--count;return result;
+  auto result=entries[read];slots[entrySlots[read]]={};read=(read+1)%entries.size();--count;return result;
  }
  void Close() {
   const std::lock_guard lock(mutex);open=false;

@@ -1,0 +1,16 @@
+{
+  "scope": "Production completion mailbox concurrency and source-wiring contract, not Metal execution.",
+  "tsan": false,
+  "exit": 0,
+  "passed": true,
+  "output": "23030 production completion mailbox checks passed\n",
+  "errors": "",
+  "sourceSHA256": {
+    "rts/Rendering/Metal4/Metal4SceneBridge.cpp": "ff6efca035f41d9bd67ace3a438c07c2a229175b18d184dabb90fabda77dddc4",
+    "rts/Rendering/Backend/NativeFrameCompletionMailbox.h": "5783bece538ed69064f9d3bb4372a7c0ed520c08fa44eac9051e06e59048c697",
+    "tools/metal4-contracts/TestNativeFrameCompletionMailbox.cpp": "84b6f2886645cfca7576ebcce227b5fd71650e26b07ffdd7c3cc8c03ab509cb7"
+  },
+  "limits": [
+    "No whole app, Objective-C++, Metal or new CPU lookahead execution."
+  ]
+}

@@ -5,6 +5,12 @@ from pathlib import Path
 p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True);a=p.parse_args()
 out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
 root=Path(__file__).resolve().parents[2]
+bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+completion=bridge.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
+assert completion.index('LuaNativeVolumetricClouds::ValidateHeldFrame') < completion.index('dynamicWaterCapture.DidComplete')
+submit=bridge.split('const auto expectedDraw=frame.sourceDrawFrame',1)[1]
+assert submit.index('LuaNativeVolumetricClouds::HasSubmittedCapacity') < submit.index('RequireRetiredGPUWork()') < submit.index('LuaNativeVolumetricClouds::ValidateSubmittedCapacity')
+assert submit.index('LuaNativeVolumetricClouds::ValidateSubmittedCapacity') < submit.index('mailbox->Prepare') < submit.index('session->renderer->Draw')
 files=[Path(__file__).with_name('TestNativeFrameJournalOwners.cpp')]+[root/'rts/Rendering/Backend'/name for name in ['NativePostprocessRecorder.cpp','NativeVolumetricCloudContext.cpp','NativePostprocessData.cpp','NativeCUSUniformData.cpp','ScreenDrawList.cpp']]
 command=['g++','-std=c++23','-O1','-g','-Wall','-Wextra','-Werror','-Wno-misleading-indentation','-Wno-missing-field-initializers','-fsanitize=address,undefined','-fno-omit-frame-pointer','-ffunction-sections','-fdata-sections','-Wl,--gc-sections','-I',str(root/'rts'),*[str(f) for f in files],'-o',str(out/'test')]
 r=subprocess.run(command,capture_output=True,text=True);(out/'compile.log').write_text(r.stdout+r.stderr)

@@ -91,6 +91,9 @@ std::shared_ptr<const rendering::NativeVolumetricCloudFrame> EndFrame() { return
 std::shared_ptr<const rendering::NativeVolumetricCloudFrame> SnapshotPrefix(std::uint64_t cutoff) { return recorder.SnapshotPrefix(cutoff); }
 void AbortFrame() noexcept { recorder.AbortFrame(); }
 void RetireCompletedFrame(std::uint64_t frame) { recorder.RetireCompletedFrame(frame); }
+bool HasSubmittedCapacity(std::uint64_t identity) noexcept { return recorder.HasSubmittedCapacity(identity); }
+void ValidateSubmittedCapacity(std::uint64_t identity) { recorder.ValidateSubmittedCapacity(identity); }
+void ValidateHeldFrame(std::uint64_t identity) { recorder.ValidateHeldFrame(identity); }
 void HoldSubmittedFrame(std::uint64_t frame) { recorder.HoldSubmittedFrame(frame); }
 void Reset() noexcept { recorder.Reset(); }
 bool PushEntries(lua_State* L) { lua_pushcfunction(L,Factory); lua_setfield(L,-2,"NativeVolumetricCloudContext"); return true; }
@@ -102,6 +105,9 @@ std::shared_ptr<const rendering::NativeVolumetricCloudFrame> EndFrame() { return
 std::shared_ptr<const rendering::NativeVolumetricCloudFrame> SnapshotPrefix(std::uint64_t) { return {}; }
 void AbortFrame() noexcept {}
 void RetireCompletedFrame(std::uint64_t) {}
+bool HasSubmittedCapacity(std::uint64_t) noexcept { return true; }
+void ValidateSubmittedCapacity(std::uint64_t) {}
+void ValidateHeldFrame(std::uint64_t) {}
 void HoldSubmittedFrame(std::uint64_t) {}
 void Reset() noexcept {}
 bool PushEntries(lua_State*) { return true; }

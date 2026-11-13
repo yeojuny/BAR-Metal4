@@ -26,6 +26,9 @@ public:
 	void Append(NativeVolumetricCloudDraw draw);
 	void AbortFrame() noexcept;
 	void RetireCompletedFrame(std::uint64_t sourceDrawFrame);
+ bool HasSubmittedCapacity(std::uint64_t identity) const noexcept;
+ void ValidateSubmittedCapacity(std::uint64_t identity) const;
+ void ValidateHeldFrame(std::uint64_t identity) const;
  void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
 	void Reset() noexcept;
 private:
