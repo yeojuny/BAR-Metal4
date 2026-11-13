@@ -14,7 +14,7 @@ s=s[:a]+'''  {std::lock_guard lock(mutex);if(stopping||busy)throw std::logic_err
    busy=true;work=[task]{(*task)();};}
 '''+s[b:]
 p=out/'old/Rendering/Backend/NativeSerialRenderWorker.h';p.parent.mkdir(parents=True,exist_ok=True);p.write_text(s)
-subprocess.run(args+['-I'+str(out/'old'),str(fixture),'-o',str(out/'old-test')],check=True)
+subprocess.run(args+['-I'+str(out/'old'),'-I'+str(root/'rts'),str(fixture),'-o',str(out/'old-test')],check=True)
 r=subprocess.run([str(out/'old-test')],env=env,capture_output=True,text=True,timeout=30)
 assert r.returncode!=0
 assert 'outstanding invocation' in r.stderr

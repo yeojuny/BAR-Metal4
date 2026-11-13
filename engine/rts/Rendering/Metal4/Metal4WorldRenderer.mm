@@ -2205,7 +2205,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   ui::GetRecorder().RecordTargetSubmission(passes,submission,std::move(postprocess),heldSourceDraw);
  });};
  const auto snapshot=Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(*impl->surface);
- cacheAccess.reset(); // Do not retain main ownership across worker.Invoke.
+ std::optional<NativeRendererAccessGate::Handoff> cacheHandoff;cacheHandoff.emplace(impl->access);
+ cacheAccess.reset(); // Reservation, not a mutex, crosses worker.Invoke.
  static NativeSerialRenderWorker worker;
  bool receiptReady=false;
  auto mainReceipt=std::move(previousRetired);
@@ -2213,16 +2214,18 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
  try {
   auto result=worker.Invoke([&,presentation]{@autoreleasepool {
+   NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
    Metal4SurfaceWorkerScope scope(snapshot);
    return DrawPrepared(frame,options,presentation,std::move(deferredReceipt),[&](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);});
   }});
+  cacheHandoff.reset();
   deliverTargetNotice();
   deliverReceipt();
 #ifdef RECOIL_METAL4_LIVE_SCENE
   static bool reported=false;if(!reported){reported=true;LOG("[NativeInterventionRenderWorker] serial_worker=1 main_wait=1 pinned_surface=1 simulation_overlap=0");}
 #endif
   return result;
- }catch(...){deliverTargetNotice();deliverReceipt();throw;}
+ }catch(...){cacheHandoff.reset();deliverTargetNotice();deliverReceipt();throw;}
 }
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan)
 {

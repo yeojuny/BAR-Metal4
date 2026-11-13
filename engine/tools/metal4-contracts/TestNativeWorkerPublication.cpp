@@ -1,4 +1,5 @@
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
+#include "Rendering/Backend/NativeRendererAccessGate.h"
 #include <atomic>
 #include <cassert>
 #include <cstdlib>
@@ -14,11 +15,13 @@ void* operator new(std::size_t size){
 void operator delete(void* p) noexcept {std::free(p);}
 void operator delete(void* p,std::size_t) noexcept {std::free(p);}
 int main(){
+ rendering::NativeRendererAccessGate gate;
  rendering::NativeSerialRenderWorker worker;std::atomic<unsigned> calls=0;unsigned failed=0;
  for(int point=0;point<16;++point){
   const auto before=calls.load();allocationBudget=point;bool rejected=false;
-  try{assert(worker.Invoke([&]{++calls;return 7;})==7);}catch(const std::bad_alloc&){rejected=true;++failed;}
+  try{rendering::NativeRendererAccessGate::Handoff token(gate);assert(worker.Invoke([&]{rendering::NativeRendererAccessGate::Scope admitted(token);++calls;return 7;})==7);}catch(const std::bad_alloc&){rejected=true;++failed;}
   allocationBudget=-1;
+  {rendering::NativeRendererAccessGate::Scope recovered(&gate);assert(recovered.Acquired());}
   // No source work may run if constructing/publication failed.
   assert(calls==before+(rejected?0:1));
   // A failed admission cannot leak the sole busy slot.

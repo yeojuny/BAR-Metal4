@@ -9,7 +9,11 @@ for name in expected:
  m=re.search(r'Metal4WorldRenderer::'+name+r'\([^;]*?\)(?: const)?\s*\{',s);assert m,name
  assert s[m.end():].lstrip().startswith('NativeRendererAccessGate::Scope cacheAccess'),name
 part=s.split('Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldRenderer::DrawPrepared(',1)[0]
-assert part.index('cacheAccess.reset(); // Do not retain main ownership')<part.index('worker.Invoke(')
+assert part.index('cacheHandoff.emplace(impl->access)')<part.index('cacheAccess.reset(); // Reservation')<part.index('worker.Invoke(')
+assert part.index('admittedAccess(*cacheHandoff)')<part.index('Metal4SurfaceWorkerScope scope(snapshot)')
+assert part.count('cacheHandoff.reset();')==2
+assert 'cacheHandoff.reset();\n  deliverTargetNotice();' in part
+assert 'catch(...){cacheHandoff.reset();deliverTargetNotice();' in part
 assert 'NativeRendererAccessGate::Scope completionAccess(&owner->access);' in s
 assert s.count('NativeRendererAccessGate::Scope providerAccess')==11
 runtime=(root/'rts/Rendering/Metal4/Metal4RuntimeNative.mm').read_text().split('void Runtime::DrainOldestLocked(',1)[1].split('FrameMetrics RuntimeLease::SubmitAndWait',1)[0]

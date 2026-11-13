@@ -78,3 +78,11 @@ Same-thread retirement nesting is supported; cross-thread conflicts quarantine/
 reject rather than wait. DrawDispatch releases snapshot ownership before worker
 handoff. This enforces a boundary, not a control scheduling queue or source/global
 service thread-safety; lookahead remains disabled until those remaining gates.
+
+Renderer handoff follow-up: a reservation now bridges main snapshot release to
+worker acquisition and remains until synchronous Invoke joins. Only the exact
+worker token can enter; ordinary controls cannot invalidate the snapshot in the
+gap. Main receipt callbacks run after reservation cancellation. Allocation/worker
+failure cancellation and concurrent rejected-probe teardown are host-tested.
+This is exclusive serial handoff, not queued controls or younger source rollback;
+shared sources and GPU resource lifetime/versioning gates remain before lookahead.

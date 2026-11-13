@@ -1,6 +1,7 @@
 #include "Rendering/Backend/NativeRendererAccessGate.h"
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
 #include <cassert>
+#include <atomic>
 #include <future>
 #include <iostream>
 using namespace rendering;
@@ -32,5 +33,31 @@ int main(){
  NativeSerialRenderWorker worker;
  {NativeRendererAccessGate::Scope snapshot(&gate);}
  worker.Invoke([&]{NativeRendererAccessGate::Scope draw(&gate);NativeRendererAccessGate::Scope retirement(&gate);});
+ // Reserved snapshot cannot be invalidated even before worker acquisition.
+ for(unsigned i=0;i<100;++i){
+  {
+   NativeRendererAccessGate::Handoff token(gate);
+   NativeRendererAccessGate::Scope gap(&gate,NativeRendererAccessGate::Try{});assert(!gap.Acquired());
+   bool duplicate=false;try{NativeRendererAccessGate::Handoff other(gate);}catch(const std::logic_error&){duplicate=true;}assert(duplicate);
+   worker.Invoke([&]{NativeRendererAccessGate::Scope admit(token);NativeRendererAccessGate::Scope nested(&gate);
+    bool repeated=false;try{NativeRendererAccessGate::Scope again(token);}catch(const std::logic_error&){repeated=true;}assert(repeated);
+   });
+   NativeRendererAccessGate::Scope afterWorker(&gate,NativeRendererAccessGate::Try{});assert(!afterWorker.Acquired());
+  }
+  NativeRendererAccessGate::Scope restored(&gate);assert(restored.Acquired());
+ }
+ // Exceptions on either side of Invoke release reservation, and retirement
+ // inside the worker retains its normal same-thread nesting behavior.
+ for(unsigned i=0;i<100;++i){
+  try{NativeRendererAccessGate::Handoff token(gate);throw 1;}catch(int){}
+  try{NativeRendererAccessGate::Handoff token(gate);worker.Invoke([&]{NativeRendererAccessGate::Scope admit(token);throw 2;});}catch(int){}
+  NativeRendererAccessGate::Scope restored(&gate);assert(restored.Acquired());
+ }
+ // Rejected probes racing cancellation must not terminate the process.
+ std::atomic<bool> stop=false;
+ auto probe=std::async(std::launch::async,[&]{while(!stop.load()){NativeRendererAccessGate::Scope access(&gate,NativeRendererAccessGate::Try{});}});
+ unsigned reserved=0;
+ for(unsigned i=0;i<10000;++i){try{NativeRendererAccessGate::Handoff token(gate);++reserved;}catch(const std::logic_error&){} }
+ stop=true;probe.get();assert(reserved>0);
  std::cout<<"Renderer gate:1000 nested/error cycles,100 cross-thread reject/recover, lock inversion and worker handoff passed\n";
 }
