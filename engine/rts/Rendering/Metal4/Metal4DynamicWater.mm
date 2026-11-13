@@ -4,6 +4,7 @@
 #include "NativeDynamicWaterShaders.h"
 #include "Metal4WorldBCDecode.h"
 #include "Rendering/Backend/NativeDynamicWaterTransaction.h"
+#include "Rendering/Backend/NativeDynamicWaterDerivedPolicy.h"
 #include "Rendering/Backend/NativeDynamicWaterTexture.h"
 #include <algorithm>
 #include <bit>
@@ -263,6 +264,7 @@ std::unique_ptr<PreparedDynamicWater> DynamicWaterGPU::Prepare(RuntimeLease& lea
 	Require(frame && frame->material && frame->material->generation && resolve,"Dynamic water has no actual source material/provider");
 	Require(impl->owner->active.expired(),"Dynamic-water previous prepared submission has not retired or been discarded");
 	ValidateProfile(frame->profile,true);
+ (void)NativeDynamicWaterDerivedCount(*frame,false); // Validate capture before preparing resources.
 	Require(scene.reflection && scene.refraction && scene.reflection.width==512 && scene.reflection.height==512 &&
 		scene.refraction.width==frame->material->refractionExtent && scene.refraction.height==frame->material->refractionExtent,
 		"Dynamic water requires its actual512 reflection and original-sized refraction");
@@ -424,8 +426,8 @@ std::unique_ptr<PreparedDynamicWater> DynamicWaterGPU::Prepare(RuntimeLease& lea
 		Require(detail&&flow&&height&&normal,"Dynamic-water update omits a required recurrence stage");
 		const auto old=p->staging->wave;p->staging->wave={old[1],old[2],old[0]};
 	}
-	Require(!frame->derived.empty() && frame->derived.front().pass==DynamicWaterPass::DerivedHeight,"Dynamic-water draw lost its source derived-height pass");
-	for(size_t i=0;i<frame->derived.size();++i){const auto& d=frame->derived[i];Require(i==0?d.pass==DynamicWaterPass::DerivedHeight:d.pass==DynamicWaterPass::DetailNormal,"Dynamic-water derived pass order differs from source");
+ const auto derivedCount=NativeDynamicWaterDerivedCount(*frame,bool(p->previous));
+	for(size_t i=0;i<derivedCount;++i){const auto& d=frame->derived[i];
 		p->derived.push_back(prepareDraw(d,frame->profile,frame->fogColor,frame->fogParameters,frame->shading,frame->material->hoverDefault));}
 	Require(detailReady,"Dynamic-water first draw omitted original detail initialization");
 	for(size_t i=0;i<frame->surface.size();++i){const auto& d=frame->surface[i];Require(i==0?d.pass==DynamicWaterPass::Surface:d.pass==DynamicWaterPass::OuterSurface,"Dynamic-water surface order differs from source");

@@ -57,6 +57,7 @@ struct NativeDynamicWaterFrame {
  DynamicWaterSourceProfile profile;
  std::vector<std::shared_ptr<const NativeDynamicWaterUpdate>> updates;
  std::vector<DynamicWaterDraw> derived; // Height8..248 then first-draw detail, exactly once.
+ bool initializesDetail=false; // Explicit derived bootstrap intent, not per-update DetailNormal.
  std::vector<DynamicWaterDraw> surface; // Inner then outer(fixedUpTex).
  std::array<int32_t,2> derivedCameraCell{};
  WorldCamera captureCamera;

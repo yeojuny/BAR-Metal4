@@ -294,3 +294,17 @@ owner, stale/replaced owner, newer receipt preservation and held/quarantine refu
 Actual capture/SceneBridge syntax and independent source-wiring review pass. This
 still does not relax any overlap barrier or implement a speculative younger-frame
 bootstrap protocol.
+
+Dynamic-water bootstrap-intent follow-up: captured frames explicitly mark the
+optional derived first-draw detail initialization. Preparation validates that the
+marker matches the exact [height] or [height, detail] source sequence. Only this
+marked bootstrap suffix may be omitted when an exact same-material committed
+recurrence is already retained and its detail image is copied into staging.
+Regular per-update detail-normal work is unchanged. Without a committed predecessor
+(including a pre-Begin rejected predecessor), the captured bootstrap is preserved.
+This is a preparation prerequisite, not permission for younger capture; failed-
+Begun quarantine, active recurrence exclusivity and all drain gates remain intact.
+Validation: actual derived-selection policy sanitizer tests (1,000 iterations),
+malformed marker/order rejection and unchanged-update checks, actual capture C++
+syntax, structural renderer ordering/material/copy checks and independent review.
+The native Metal translation unit has not been compiled or executed here.

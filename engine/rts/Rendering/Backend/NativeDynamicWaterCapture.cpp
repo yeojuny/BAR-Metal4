@@ -306,7 +306,7 @@ std::shared_ptr<const NativeDynamicWaterFrame> NativeDynamicWaterCapture::Captur
  const float endx=(camPosX+120)/1024.f-(camPosBig.x-WH_SIZE)/WF_SIZE,endz=(camPosZ+120)/1024.f-(camPosBig.z-WH_SIZE)/WF_SIZE;
  Sink height;height.draw.pass=DynamicWaterPass::DerivedHeight;constexpr float first=8.f/256,last=248.f/256;
  height.AddVertexQT({first,first,0},startx,startz);height.AddVertexQT({first,last,0},startx,endz);height.AddVertexQT({last,last,0},endx,endz);height.AddVertexQT({last,first,0},endx,startz);height.Quads();frame->derived.push_back(std::move(height.draw));
- if(impl->firstDraw){DynamicWaterDraw detail;Detail(detail,gs->frameNum);frame->derived.push_back(std::move(detail));}
+ if(impl->firstDraw){DynamicWaterDraw detail;Detail(detail,gs->frameNum);frame->derived.push_back(std::move(detail));frame->initializesDetail=true;}
  frame->fogColor=OriginalNativeModelContext().fog.color;frame->fogParameters=OriginalNativeModelContext().fog.parameters;
  impl->receipts.ValidateReserve(frame);impl->receipts.Reserve(frame);return frame;
 }
