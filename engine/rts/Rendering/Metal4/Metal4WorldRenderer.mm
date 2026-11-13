@@ -28,6 +28,7 @@
 #include "Rendering/Backend/NativeBeginReadyPolicy.h"
 #include "Rendering/Backend/NativeGeometryAllocationReceipt.h"
 #include "Rendering/Backend/NativeSourceResourceCache.h"
+#include "Rendering/Backend/NativeResourceProducerEpoch.h"
 #include "Rendering/Backend/NativeIdleResourcePool.h"
 #include "Rendering/Backend/NativeRendererAccessGate.h"
 #include "Metal4WorldViewport.h"
@@ -410,6 +411,7 @@ struct Metal4WorldRenderer::Impl {
 	metal4::MiniMapGPU sensorRadarGPU;
 	struct MapImage final:NativeMapTextureResource {
 		__strong id<MTLTexture> texture=nil;mutable std::atomic<bool> completed{false};
+  NativeResourceProducerEpochs normalEpochs;
   __strong id<MTLBuffer> cornerBuffer=nil;
   std::shared_ptr<const WorldTerrainHeights> cornerSource;
 		// One RRRR view for this actual immutable height upload, never by name/frame.
@@ -417,7 +419,6 @@ struct Metal4WorldRenderer::Impl {
 		std::shared_ptr<const metal4::PreparedMiniMapHeight> heightOwner;
 		bool Completed()const noexcept override{return completed.load(std::memory_order_acquire);}
 	};
-	std::shared_ptr<bool> normalsEncoded=std::make_shared<bool>(false);
 	metal4::MapEdgeGPU mapEdgeGPU;
 	metal4::WorldParticlesGPU particlesGPU;
 	metal4::WorldEnvironmentGPU environmentGPU;
@@ -714,7 +715,7 @@ struct Metal4WorldRenderer::Impl {
 			image.sampler=screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 			image.owner=binding.object;
 			if(map->role==NativeMapTextureRole::Height)image.requireReadable=[resource]{Require(resource->Completed(),"Original model height input has no completed upload");};
-			else{const auto encoded=normalsEncoded;image.requireReadable=[encoded]{Require(encoded&&*encoded,"Original model normals input precedes its existing producer");};}
+			else{const auto encoded=resource->normalEpochs.Current();image.requireReadable=[resource,encoded]{Require(resource&&encoded->Encoded(),"Original model normals input precedes its existing producer");};}
 			lease.AddAllocation(image.texture);return image;
 		}
 		if(std::dynamic_pointer_cast<const NativeDeferredColorBacking>(binding.object->backing))
@@ -810,7 +811,7 @@ struct Metal4WorldRenderer::Impl {
 			Require(resource&&resource->texture,"Original terrain map input lacks its actual paired resource");
 			CUSSourceImage image;image.texture=resource->texture;image.sampler=actualSampler;image.owner=binding.object;
 			if(mapImage->role==NativeMapTextureRole::Height)image.requireReadable=[resource]{Require(resource->Completed(),"Original terrain height sampled before its actual upload completed");};
-			else{const auto encoded=normalsEncoded;image.requireReadable=[encoded]{Require(encoded&&*encoded,"Original terrain normals sampled before their actual shared producer");};}
+			else{const auto encoded=resource->normalEpochs.Current();image.requireReadable=[resource,encoded]{Require(resource&&encoded->Encoded(),"Original terrain normals sampled before their actual shared producer");};}
 			lease.AddAllocation(image.texture);lease.Retain(actualSampler);return image;
 		}
 		std::shared_ptr<const WorldTexture> pixels=binding.object->image;
@@ -1306,7 +1307,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->shieldGPU.ClearResources();impl->mapDepthGPU.ClearResources();impl->modelDepthGPU.ClearResources();
 	impl->blueprintGPU.ClearResources();
 	impl->blockoutGPU.ClearResources();
-	impl->terrainNormals = nil; impl->normalImage.reset();impl->terrainPair.Clear();impl->normalsEncoded=std::make_shared<bool>(false);
+	impl->terrainNormals = nil; impl->normalImage.reset();impl->terrainPair.Clear();
 	impl->standardTerrainGPU->ClearResources();
 	impl->screenContinuation.reset();impl->postprocessGPU.ClearResources();impl->offscreenSourceColor=nil;
 	impl->volumetricCloudsGPU.ClearResources();
@@ -1756,8 +1757,8 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			auto sampler=owner->screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 			if(backing->role==NativeMapTextureRole::Height)
 				return PreparedStartBoxImage{kind,resource->texture,sampler,binding.object,resource,false,[resource]{Require(resource->Completed(),"Original height sampled before its CPU upload completed");}};
-			const auto encoded=owner->normalsEncoded;
-			return PreparedStartBoxImage{kind,resource->texture,sampler,binding.object,resource,false,[encoded]{Require(*encoded,"Original map normal image sampled before its existing producer");}};
+			const auto encoded=resource->normalEpochs.Current();
+			return PreparedStartBoxImage{kind,resource->texture,sampler,binding.object,resource,false,[resource,encoded]{Require(resource&&encoded->Encoded(),"Original map normal image sampled before its existing producer");}};
 		}
 		const auto source=owner->DescribeUIBinding(lease,binding);
 		Require(source.image!=nullptr,"Original StartBox binding has no actual retained image");
@@ -2568,6 +2569,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		const auto resourceStart = Clock::now();
 		impl->StartTexturePreparation(lease);
 		impl->Map(lease, frame.terrain);
+  // Select before any early world provider captures readiness. A failed prepare
+  // cannot let a later resource/epoch satisfy an already retained callback.
+  const auto normalResource=impl->normalImage;
+  const auto normalEpoch=normalResource->normalEpochs.Begin(normalResource->Completed());
 		WorldUniform terrainUniform{};
 		terrainUniform.viewProjection = simd_mul(Matrix(frame.viewCamera.projection), Matrix(frame.viewCamera.view));
 		terrainUniform.world = matrix_identity_float4x4; terrainUniform.piece = matrix_identity_float4x4;
@@ -2924,6 +2929,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		for(const auto& owner:terrainMaterial.splatNormals)if(owner)sources.insert(owner->sourcePath);
 		result.materialSources.assign(sources.begin(),sources.end()); result.materialDependenciesPending.assign(pending.begin(),pending.end());
 		impl->Pipelines(lease, layer.pixelFormat, options.shaderValidation, result.shaderCompileMs);
+  const id<MTLComputePipelineState> normalPipeline=impl->normalPipeline;
 		for (id object : {id(impl->unitPipeline),id(impl->engineModelPipeline),id(impl->engineStandardShadowPipeline),id(impl->alphaPipeline),id(impl->shadowModelPipeline),id(impl->shadowTerrainPipeline),id(impl->normalPipeline),id(impl->waterUnitPipeline),id(impl->waterEnginePipeline),id(impl->waterColorCopyPipeline),id(impl->logicalColorCopyPipeline),id(impl->logicalDepthCopyPipeline),id(impl->library)}) lease.Retain(object);
 		for (unsigned presence = 0; presence < 2; ++presence)
 			for (id object : {id(impl->placementSamplePipelines[presence]),id(impl->engineStandardPipelines[presence]),id(impl->engineStandardAlphaPipelines[presence]),id(impl->waterStandardPipelines[presence]),id(impl->waterStandardAlphaPipelines[presence])}) lease.Retain(object);
@@ -3231,7 +3237,6 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		}
 
 		Require(frame.mapTextures && frame.mapTextures->sourceDrawFrame==frame.sourceDrawFrame,"Original map publication is not this source draw");
-		impl->normalsEncoded=std::make_shared<bool>(impl->normalImage->completed);
 		const auto normalObject=frame.mapTextures->images[0];
 		auto normalBacking=normalObject?std::dynamic_pointer_cast<const NativeMapTextureBacking>(normalObject->backing):nullptr;
 		Require(normalBacking && normalBacking->heights==frame.terrain.heights,"Original normal texture and terrain do not share the retained height cache");
@@ -4550,14 +4555,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		if(reflectionWorldInfo)reflectionWorldInfo->EncodeDependencies(command);
 		environment->EncodeDependencies(command);
 		if (standardShade) standardShade->EncodeDependencies(command);
-		if (!impl->normalImage->completed) {
+		if (!normalResource->Completed()) {
 			id<MTL4ComputeCommandEncoder> normals = [command computeCommandEncoder]; Require(normals != nil,"Cannot encode original terrain normal producer");
-			[arguments setAddress:impl->heights.gpuAddress atIndex:0]; [arguments setTexture:impl->terrainNormals.gpuResourceID atIndex:0];
-			[normals setComputePipelineState:impl->normalPipeline]; [normals setArgumentTable:arguments];
-			[normals dispatchThreads:MTLSizeMake(impl->terrainNormals.width,impl->terrainNormals.height,1) threadsPerThreadgroup:MTLSizeMake(8,8,1)];
+			[arguments setAddress:normalResource->cornerBuffer.gpuAddress atIndex:0]; [arguments setTexture:normalResource->texture.gpuResourceID atIndex:0];
+			[normals setComputePipelineState:normalPipeline]; [normals setArgumentTable:arguments];
+			[normals dispatchThreads:MTLSizeMake(normalResource->texture.width,normalResource->texture.height,1) threadsPerThreadgroup:MTLSizeMake(8,8,1)];
 			[normals barrierAfterStages:MTLStageDispatch beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice]; [normals endEncoding];
 		}
-		*impl->normalsEncoded=true;
+		normalEpoch->DidEncode();
 		if (screen != nullptr) screen->EncodeDependencies(command);
 		encodingProbe.Select(Family176::Effects);
 		if (particles) particles->EncodeDependencies(command);
@@ -5547,7 +5552,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    separateLineOwners=std::move(separateLineOwners),
    blockout=std::move(blockout),
    namedImageMipmaps=std::move(namedImageMipmaps),
-   normalBacking=std::move(normalBacking)](const FrameMetrics& metrics) mutable {
+   normalResource,normalEpoch](const FrameMetrics& metrics) mutable {
    NativeRendererAccessGate::Scope completionAccess(&owner->access);
    result.metrics=metrics;
   std::vector<std::exception_ptr> retirementFailures;
@@ -5615,7 +5620,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   for(const auto& lines:separateLineOwners)if(lines)retire([&]{lines->CompleteLineDependencies();});
   if(blockout)retire([&]{blockout->DidComplete();});
   retire([&]{namedImageMipmaps->DidComplete();});
-  retire([&]{std::dynamic_pointer_cast<const Impl::MapImage>(normalBacking->Resource())->completed=true;});
+  retire([&]{Require(normalEpoch->Encoded(),"Original normal retirement precedes its exact producer epoch");normalResource->completed.store(true,std::memory_order_release);});
   if(readback)retire([&]{readback->DidComplete();});
   if(submissionCompleted)retire([&]{submissionCompleted(sourceSubmission);});
   if(isReadback)retire([&]{ui::GetRecorder().RetireTargetSubmission(sourceSubmission);});
