@@ -227,7 +227,9 @@ private:
   if(!originalEnable)Require(OwnsCurrent(),"Original terrain uniform write targets another actual current program; cross-program source location mapping is unsupported");
   auto publication=std::make_shared<NativeTerrainProgramPublication>();publication->state=state;
   if(!definition){
-   definition=std::make_shared<const NativeTerrainProgramDefinition>(identity,consumer);
+   definition=state==NativeTerrainProgramPublication::State::Linked?
+    BuildValidatedNativeTerrainDefinition(identity,consumer):
+    std::make_shared<const NativeTerrainProgramDefinition>(identity,consumer);
    TERRAIN_WRITE_STAT(definitionCopies);
   }
   publication->definition=definition;publication->uniforms=uniforms;publication->unsupportedReason=unsupportedReason;
@@ -295,7 +297,7 @@ void NativeSourceProgramBinding::BindTerrainSource(std::shared_ptr<const NativeT
 {
  Require(bool(source)&&bool(source->definition),"Original terrain source publication is missing");
  if(source->state==NativeTerrainProgramPublication::State::Linked){
-  ValidateNativeTerrainProgram(source->definition->identity,source->definition->consumer,Context());
+  ValidateNativeTerrainDefinition(*source->definition,Context());
   BindTerrain(source->definition->consumer);current.terrainSource=std::move(source);return;
  }
  current={};current.terrainSource=std::move(source);
@@ -341,7 +343,7 @@ NativeTerrainProgramSnapshot CaptureCurrentNativeTerrainProgram()
  if(source.state==NativeTerrainProgramPublication::State::Unsupported)throw std::runtime_error(source.unsupportedReason);
  Require(source.state==NativeTerrainProgramPublication::State::Linked&&current.kind==NativeSourceProgramBinding::Kind::Terrain&&
   current.terrain&&current.terrain==source.definition->consumer,"Actual current terrain binding differs from its source publication");
- ValidateNativeTerrainProgram(source.definition->identity,source.definition->consumer,Context());
+ ValidateNativeTerrainDefinition(*source.definition,Context());
  Require(source.uniforms&&source.uniforms->contextGeneration==Context()&&
   source.uniforms->originalProgramGeneration==source.definition->identity.originalProgramGeneration,
   "Actual current terrain uniform publication belongs to another original lifetime");

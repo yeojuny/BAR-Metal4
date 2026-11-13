@@ -1,0 +1,22 @@
+{
+  "scope": "Host contract test of the complete production terrain source translation unit.\nOnly external shader/VFS/consumer services are stubbed. No Write/Publish/binding\nalgorithm is copied or replaced. This is not Metal, Lua VM or gameplay validation.\n",
+  "compilerVersion": "g++ (Debian 14.2.0-19) 14.2.0",
+  "negativeControl": false,
+  "leakSanitizer": "disabled: execution sandbox uses ptrace; ASan and UBSan remain enabled",
+  "command": [
+    "python3",
+    "engine/tools/metal4-contracts/run_native_terrain_program_test.py",
+    "--output",
+    "/tmp/terrain-cert-source-tests"
+  ],
+  "sourceSHA256": "976e5b54cdcefc9d32701a5874405b36a54fea22c0193ad5711b75ed7c66e1a0",
+  "fixtureSHA256": "a45be457aa6d17d7c9660442ce31d21c068fbaeda41446fc271d62c5d9df7b15",
+  "diagnosticsOffCompileExit": 0,
+  "exit": 0,
+  "summary": "aligned no-op: allocations=0 mapCopies=0 publications=0\nPASS 96 terrain writer contract checks; GPU/Lua/gameplay not exercised\n",
+  "passed": true,
+  "actualDefinitionValidatorChecks": 30,
+  "extractedLinkCertificateChecks": 11,
+  "fullMacMetalBuild": "not run",
+  "definitionTestSHA256": "805d6d3afe35f3ab953ac545b55bef33d13272b49da277ef7e9fb76060cdd075"
+}

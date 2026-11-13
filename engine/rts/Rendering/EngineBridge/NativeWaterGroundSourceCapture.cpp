@@ -227,7 +227,7 @@ void NativeWaterGroundSourceCapture::SubmitSquare(NativeTerrainMeshSource mesh,c
 		throw std::logic_error("Original terrain submission has an unknown source mesh");
 	if(programs.TerrainOwner()!=program.Consumer())
 		throw std::runtime_error("Original ground callback changed the actual current terrain program");
-	ValidateNativeTerrainProgram(program.Identity(),program.Consumer(),frame->contextGeneration);
+	ValidateNativeTerrainDefinition(*program.definition,frame->contextGeneration);
 	if(border!=(program.Identity().selection==NativeTerrainProgramSelection::Border)||composite!=(program.Identity().selection==NativeTerrainProgramSelection::Composite))
 		throw std::runtime_error("Original terrain border draw has another actual program family");
 	if(!program.uniforms || program.uniforms->contextGeneration!=frame->contextGeneration ||

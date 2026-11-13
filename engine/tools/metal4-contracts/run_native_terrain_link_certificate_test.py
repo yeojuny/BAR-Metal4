@@ -36,13 +36,13 @@ def main():
     seal = block(text, 'void SealInitialLink()')
     methods = '\n'.join(block(text, sig).replace(' override', '') for sig in [
         'uint64_t ContextGeneration()', 'uint64_t LibraryGeneration()',
-        'bool Matches(', 'bool Supports('])
+        'bool HasImmutableDefinition()', 'bool Matches(', 'bool Supports('])
     assert 'pipelines' not in methods and 'library&&' not in methods
     factory = block(text, 'NativeTerrainProgramLink TerrainSourceGPU::CompileOriginalProgram(')
     ordered = ['original->library=lease.NewLibraryWithSource',
                'Require(original->library!=nil', 'original->Pipeline(',
                'original->SealInitialLink();', 'ValidateNativeTerrainProgram(',
-               'original->identityValidated220=true;', 'return {original,{},original->profile.defaults};']
+               'return {original,{},original->profile.defaults};']
     positions = [factory.index(item) for item in ordered]
     assert positions == sorted(positions), 'Real factory publication order changed'
     assert 'friend class ::rendering::metal4::TerrainSourceGPU;' in text

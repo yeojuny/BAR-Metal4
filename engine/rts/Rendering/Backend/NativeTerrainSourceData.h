@@ -3,6 +3,7 @@
 #include "NativeCUSTextureHistory.h"
 #include "NativeTextureRegistry.h"
 #include <array>
+#include <stdexcept>
 #include <cstddef>
 #include <memory>
 #include <optional>
@@ -47,19 +48,49 @@ public:
 	virtual uint64_t LibraryGeneration() const noexcept=0;
 	virtual bool Matches(const NativeTerrainProgramIdentity&) const noexcept=0;
 	virtual bool Supports(const NativeTerrainProgramIdentity&) const noexcept=0;
+ // Opt-in only for owners whose Matches/Supports cannot change within a sealed
+ // library generation. Generic/imported owners retain full live validation.
+ virtual bool HasImmutableDefinition() const noexcept {return false;}
 };
 void ValidateNativeTerrainProgram(const NativeTerrainProgramIdentity&,
 	const std::shared_ptr<const NativeTerrainProgramConsumer>&,uint64_t expectedContext);
 
-// Shared source definition, distinct from per-write sealed uniform content.
-// Not a GPU readiness certificate: existing validation still runs at its
-// original boundaries and target-specific pipeline checks remain in prepare.
+// Shared immutable definition. Only the validating factory can issue a link
+// certificate. Public construction remains unvalidated for unsupported states.
 struct NativeTerrainProgramDefinition {
  const NativeTerrainProgramIdentity identity;
  const std::shared_ptr<const NativeTerrainProgramConsumer> consumer;
  NativeTerrainProgramDefinition(NativeTerrainProgramIdentity id,
   std::shared_ptr<const NativeTerrainProgramConsumer> owner):identity(std::move(id)),consumer(std::move(owner)){}
+private:
+ const uint64_t validatedLibraryGeneration=0;
+ NativeTerrainProgramDefinition(NativeTerrainProgramIdentity id,
+  std::shared_ptr<const NativeTerrainProgramConsumer> owner,uint64_t library):
+  identity(std::move(id)),consumer(std::move(owner)),validatedLibraryGeneration(library){}
+ friend std::shared_ptr<const NativeTerrainProgramDefinition> BuildValidatedNativeTerrainDefinition(
+  NativeTerrainProgramIdentity,std::shared_ptr<const NativeTerrainProgramConsumer>);
+ friend void ValidateNativeTerrainDefinition(const NativeTerrainProgramDefinition&,uint64_t);
 };
+inline std::shared_ptr<const NativeTerrainProgramDefinition> BuildValidatedNativeTerrainDefinition(
+ NativeTerrainProgramIdentity identity,std::shared_ptr<const NativeTerrainProgramConsumer> consumer)
+{
+ ValidateNativeTerrainProgram(identity,consumer,identity.contextGeneration);
+ const auto library=consumer->HasImmutableDefinition()?consumer->LibraryGeneration():0;
+ return std::shared_ptr<const NativeTerrainProgramDefinition>(
+  new NativeTerrainProgramDefinition(std::move(identity),std::move(consumer),library));
+}
+inline void ValidateNativeTerrainDefinition(const NativeTerrainProgramDefinition& definition,uint64_t context)
+{
+ if(!definition.validatedLibraryGeneration){
+  ValidateNativeTerrainProgram(definition.identity,definition.consumer,context);return;
+ }
+ // The consumer contract pins immutable identity/support to one library
+ // generation. Target formats/MSAA/PSO specialization still validate in Prepare.
+ if(!context||definition.identity.contextGeneration!=context||!definition.consumer||
+  definition.consumer->ContextGeneration()!=context||
+  definition.consumer->LibraryGeneration()!=definition.validatedLibraryGeneration)
+  throw std::runtime_error("Original terrain certified definition crossed context/library lifetime");
+}
 
 // Full source state: terrain uses units0..19, including Cube on9. Do not use
 // the smaller model/CUS submission sampler array to represent this history.

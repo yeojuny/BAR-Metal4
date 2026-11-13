@@ -259,12 +259,6 @@ auto TerrainPipelineKey(MTLMathMode mathMode,const CUSSourceTarget& target,unsig
 using TerrainPipelineKeyType=decltype(TerrainPipelineKey(MTLMathModeSafe,std::declval<const CUSSourceTarget&>(),0,
 	std::declval<const ScreenDrawState&>(),0,false,std::declval<const std::array<bool,4>&>()));
 
-// Only the real compiler can establish this validation proof; input equality
-// and live library availability are still checked at every use.
-bool TerrainProgramValidation220Enabled() {
- static const bool enabled=[] { const char* value=std::getenv("BAR_NATIVE_TERRAIN_PROGRAM_VALIDATION220");const bool active=value&&std::strcmp(value,"1")==0;const char* counters=std::getenv("BAR_NATIVE_TERRAIN_PROGRAM_VALIDATION220_COUNTERS");if(counters&&std::strcmp(counters,"1")==0)std::fprintf(stderr,"[NativeTerrainProgramValidation220] enabled=%d exact_identity=1 current_library_check=1 original_fallback=1\n",int(active));return active; }();
- return enabled;
-}
 class OriginalProgram final:public NativeTerrainProgramConsumer {
 private:
 	// Created only by the real compiler after its initial library and target PSO
@@ -282,11 +276,6 @@ private:
 		linkCertificate=std::make_unique<const LinkCertificate>(generation);
 	}
 public:
-	// Set after the original validator succeeds, before this owner is published.
-	bool identityValidated220=false;
-	bool ReuseIdentityValidation220(const NativeTerrainProgramIdentity& requested,uint64_t context)const noexcept {
-		return identityValidated220&&context&&ContextGeneration()==context&&LibraryGeneration()&&Supports(requested);
-	}
 	const NativeTerrainProgramIdentity identity;
 	const Profile profile;
 	static int NormalSlot211(const Profile& p) {
@@ -319,6 +308,7 @@ public:
 		identity(std::move(id)),profile(std::move(p)),normalSlot211(NormalSlot211(profile)),mathMode195(MathMode195(profile)),generation(g),factory(std::move(f)){}
 	uint64_t ContextGeneration()const noexcept override{return identity.contextGeneration;}
 	uint64_t LibraryGeneration()const noexcept override{return linkCertificate?linkCertificate->libraryGeneration:0;}
+	bool HasImmutableDefinition()const noexcept override{return LibraryGeneration()!=0;}
 	bool Matches(const NativeTerrainProgramIdentity& requested)const noexcept override{return identity==requested;}
 	bool Supports(const NativeTerrainProgramIdentity& requested)const noexcept override {
 		return Matches(requested)&&LibraryGeneration()!=0;
@@ -695,7 +685,6 @@ NativeTerrainProgramLink TerrainSourceGPU::CompileOriginalProgram(RuntimeLease& 
 	original->Pipeline(lease,target,initial,0,validation,milliseconds);
 	original->SealInitialLink();
 	ValidateNativeTerrainProgram(request.identity,original,request.identity.contextGeneration);
-	original->identityValidated220=true;
 	return {original,{},original->profile.defaults};
 }
 std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& lease,
@@ -746,9 +735,8 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		// Exact byte comparison against the validated immutable cache entry
 		// reuses geometry validation; misses validate inside Acquire before upload.
 		Require(draw.mesh==NativeTerrainMeshSource::Basic||draw.mesh==NativeTerrainMeshSource::ROAM||(draw.mesh==NativeTerrainMeshSource::Composite&&draw.composite),"Original terrain mesh provenance is unsupported");
-		const auto validatedProgram220=TerrainProgramValidation220Enabled()?dynamic_cast<const OriginalProgram*>(draw.program.Consumer().get()):nullptr;
-		if(!validatedProgram220||!validatedProgram220->ReuseIdentityValidation220(draw.program.Identity(),out.source->contextGeneration))
-			ValidateNativeTerrainProgram(draw.program.Identity(),draw.program.Consumer(),out.source->contextGeneration);
+		Require(bool(draw.program.definition),"Original terrain draw has no retained source definition");
+		ValidateNativeTerrainDefinition(*draw.program.definition,out.source->contextGeneration);
 		ValidateNativeTerrainImages(draw.images,out.source->contextGeneration,out.source->sourceDrawFrame);
 		auto original=std::dynamic_pointer_cast<const OriginalProgram>(draw.program.Consumer());
 		Require(original&&original->factory==impl->factory,"Original terrain draw does not retain this genuine terrain library/PSO owner");

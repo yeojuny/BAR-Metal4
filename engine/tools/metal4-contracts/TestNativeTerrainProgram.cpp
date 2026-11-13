@@ -17,6 +17,7 @@ void ValidateNativeTerrainProgram(const NativeTerrainProgramIdentity& i,
 struct TestConsumer:NativeTerrainProgramConsumer {
  NativeTerrainProgramIdentity id;
  explicit TestConsumer(NativeTerrainProgramIdentity i):id(std::move(i)){}
+ bool HasImmutableDefinition()const noexcept override{return true;}
  uint64_t ContextGeneration()const noexcept override{return id.contextGeneration;}
  uint64_t LibraryGeneration()const noexcept override{return 1;}
  bool Matches(const NativeTerrainProgramIdentity& i)const noexcept override{return id==i;}
@@ -37,11 +38,17 @@ int main(){using namespace rendering;
  auto before=CaptureCurrentNativeTerrainProgram();
  auto initialDefinition=OriginalNativeSourceProgramBinding().Current().terrainSource->definition;
  check(before.definition==initialDefinition);
- // Stub validation proves calls remain; no claim about the real validator cost.
+ // Certified source capture reuses static proof; generic definition still validates.
+ // Stub callback counts are structural evidence, not real-validator performance.
  auto captureAllocations=allocations;auto validations=validationCalls;
  auto repeatedCapture=CaptureCurrentNativeTerrainProgram();
  check(allocations==captureAllocations);
- check(validationCalls==validations+1);
+ check(validationCalls==validations);
+ NativeTerrainProgramDefinition unvalidated(before.Identity(),before.Consumer());
+ ValidateNativeTerrainDefinition(unvalidated,1);check(validationCalls==validations+1);
+ rejects([&]{ValidateNativeTerrainDefinition(*before.definition,2);});
+ NativeTerrainProgramDefinition nullConsumer(before.Identity(),{});
+ rejects([&]{ValidateNativeTerrainDefinition(nullConsumer,1);});
  check(repeatedCapture.definition==before.definition&&repeatedCapture.uniforms==before.uniforms);
  check(&repeatedCapture.Identity()==&before.Identity());
  check(&repeatedCapture.Consumer()==&before.Consumer());
