@@ -2,6 +2,7 @@
 #include <cstring>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4TerrainSourceGPU.h"
+#include "Metal4TerrainOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "Metal4RetiredArguments.h"
 #include "Metal4SharedUploadPool.h"
@@ -607,6 +608,7 @@ struct PreparedTerrainSource::Impl {
 	};
 	std::shared_ptr<const NativeWaterGroundSourceFrame> source;
 	std::vector<Draw> draws;
+ TerrainOwnerRoster firstOwners; // Sealed after the final draw/image append.
 	bool dependencyAttempted=false,dependencies=false,finished=false,completed=false;
 	size_t encoded=0;
 	uint32_t encodedDraws=0;
@@ -623,9 +625,10 @@ void PreparedTerrainSource::EncodeDependencies(id<MTL4CommandBuffer> command)
 {
 	Require(command&&!impl->dependencyAttempted&&!impl->completed,"Original terrain dependencies are missing or repeated");
 	impl->dependencyAttempted=true; // A failed encode may not be retried on a new command.
-	std::set<const void*> seen;
-	for(const auto& draw:impl->draws)for(const auto& image:draw.images)
-		if(seen.insert(image.owner.get()).second&&image.encodeDependencies)image.encodeDependencies(command);
+ for(const auto& [drawIndex,imageIndex]:impl->firstOwners){
+  const auto& image=impl->draws[drawIndex].images[imageIndex];
+  if(image.encodeDependencies)image.encodeDependencies(command);
+ }
 	impl->dependencies=true;
 }
 void PreparedTerrainSource::EncodeDraw(size_t index,id<MTL4RenderCommandEncoder> encoder)
@@ -659,9 +662,10 @@ void PreparedTerrainSource::FinishOrderedDraws()
 void PreparedTerrainSource::DidComplete()
 {
 	Require(impl->finished&&!impl->completed,"Original terrain retirement preceded its successful real submission");
-	std::set<const void*> seen;
-	for(const auto& draw:impl->draws)for(const auto& image:draw.images)
-		if(seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();
+ for(const auto& [drawIndex,imageIndex]:impl->firstOwners){
+  const auto& image=impl->draws[drawIndex].images[imageIndex];
+  if(image.didComplete)image.didComplete();
+ }
 	impl->completed=true;
 }
 struct TerrainSourceGPU::Impl {
@@ -844,6 +848,9 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		if(fragmentOffset){const auto& height=ready.images.front();[ready.vertex setTexture:height.texture.gpuResourceID atIndex:height.depthImage?1:0];[ready.vertex setSamplerState:height.sampler.gpuResourceID atIndex:0];}
 		out.draws.push_back(std::move(ready));
 	}
+ // All image vectors are now final. Census allocation failure aborts Prepare;
+ // neither GPU phase can observe a partially built first-owner roster.
+ out.firstOwners=BuildTerrainOwnerRoster(out.draws);
 	return prepared;
 }
 } // namespace rendering::metal4
