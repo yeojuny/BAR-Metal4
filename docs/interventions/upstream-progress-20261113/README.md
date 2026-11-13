@@ -36,3 +36,7 @@ speculative failure rejection. Particle/alpha/water/Lua capture drain is unchang
 P6 source bookkeeping: [Grass/ResourceSpots owner rosters](EFFECT-OWNER-ROSTERS.md)
 seals the exact first-owner indices once during preparation. Per-draw readability,
 phase callbacks, resource order, GPU barriers and default P5 remain unchanged.
+
+P6 grouped-model checkpoint: [Deferred owner roster](DEFERRED-OWNER-ROSTER.md)
+seals one global before/after first-owner census, preserving null exclusion,
+phase-live callbacks and grouped/ordered completion rules. Native acceptance remains pending.

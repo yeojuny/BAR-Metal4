@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineModelDeferred.h"
+#include "Metal4GroupedOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "Metal4ModelUpload146.h"
 #include "Metal4RetiredArguments.h"
@@ -34,7 +35,7 @@ struct PreparedEngineModelDeferred::Impl {
  struct Piece {EngineDeferredPieceBuffers geometry;__strong id<MTL4ArgumentTable> table=nil;};
  struct Draw {NativeWorldDrawState state;__strong id<MTLDepthStencilState> sourceDepth=nil;uint64_t sequence=0;std::optional<effectstate::Raster> raster;std::vector<Piece> pieces;std::array<CUSSourceImage,2> images;__strong id<MTLRenderPipelineState> pipeline=nil;bool wire=false,cull=true;float bias=0,slope=0;};
  std::shared_ptr<const NativeEngineModelPhase> source;
- std::vector<Draw> before,after;
+ std::vector<Draw> before,after;TerrainOwnerRoster firstOwners;
  __strong id<MTLDepthStencilState> depth=nil;
  bool dependencies=false,beforeEncoded=false,afterEncoded=false,completed=false;
  bool ordered=false;size_t orderedEncoded=0;
@@ -56,14 +57,14 @@ struct PreparedEngineModelDeferred::Impl {
 };
 PreparedEngineModelDeferred::PreparedEngineModelDeferred():impl(std::make_unique<Impl>()){}
 PreparedEngineModelDeferred::~PreparedEngineModelDeferred()=default;
-void PreparedEngineModelDeferred::EncodeDependencies(id<MTL4CommandBuffer> command){Require(command&&!impl->dependencies,"Engine MRT dependencies missing or repeated");std::set<const void*> seen;for(const auto* list:{&impl->before,&impl->after})for(const auto& draw:*list)for(const auto& image:draw.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.encodeDependencies)image.encodeDependencies(command);impl->dependencies=true;}
+void PreparedEngineModelDeferred::EncodeDependencies(id<MTL4CommandBuffer> command){Require(command&&!impl->dependencies,"Engine MRT dependencies missing or repeated");for(const auto& [draw,imageIndex]:impl->firstOwners){const auto& image=impl->At(draw).images[imageIndex];if(image.encodeDependencies)image.encodeDependencies(command);}impl->dependencies=true;}
 void PreparedEngineModelDeferred::EncodeBeforeLua(id<MTL4RenderCommandEncoder> e){Require(!impl->ordered&&!impl->beforeEncoded,"Engine MRT before-Lua list repeated or mixed with ordered draws");impl->Encode(e,impl->before);impl->beforeEncoded=true;}
 void PreparedEngineModelDeferred::EncodeAfterLua(id<MTL4RenderCommandEncoder> e){Require(!impl->ordered&&impl->beforeEncoded&&!impl->afterEncoded,"Engine MRT after-Lua order differs");impl->Encode(e,impl->after);impl->afterEncoded=true;}
 size_t PreparedEngineModelDeferred::DrawCount()const{return impl->before.size()+impl->after.size();}
 uint64_t PreparedEngineModelDeferred::SequenceAt(size_t index)const{return impl->At(index).sequence;}
 void PreparedEngineModelDeferred::EncodeOrderedDraw(size_t index,id<MTL4RenderCommandEncoder> e){Require(!impl->beforeEncoded&&!impl->afterEncoded&&index==impl->orderedEncoded,"Engine MRT ordered draw is repeated, skipped or mixed with grouped lists");const auto& draw=impl->At(index);Require(draw.sequence,"Engine MRT ordered draw lacks its real source sequence");impl->ordered=true;impl->EncodeDraw(e,draw);++impl->orderedEncoded;}
 void PreparedEngineModelDeferred::FinishOrderedDraws(){Require(impl->dependencies&&!impl->beforeEncoded&&!impl->afterEncoded&&!impl->completed&&impl->orderedEncoded==DrawCount(),"Engine MRT ordered source list did not finish exactly once");impl->ordered=true;impl->beforeEncoded=impl->afterEncoded=true;}
-void PreparedEngineModelDeferred::DidComplete(){Require(impl->beforeEncoded&&impl->afterEncoded&&!impl->completed,"Engine MRT retirement occurred before actual source pass");std::set<const void*> seen;for(const auto* list:{&impl->before,&impl->after})for(const auto& draw:*list)for(const auto& image:draw.images)if(image.owner&&seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;if(impl->setterProbe176)impl->setterProbe176->Report();}
+void PreparedEngineModelDeferred::DidComplete(){Require(impl->beforeEncoded&&impl->afterEncoded&&!impl->completed,"Engine MRT retirement occurred before actual source pass");for(const auto& [draw,imageIndex]:impl->firstOwners){const auto& image=impl->At(draw).images[imageIndex];if(image.didComplete)image.didComplete();}impl->completed=true;if(impl->setterProbe176)impl->setterProbe176->Report();}
 struct EngineModelDeferredGPU::Impl {
  ModelUploadPool146 uniformPool;RetiredArguments argumentPool;bool reported146=false;
  struct Original {bool modern=false,shadows=false;CUSSourceTarget target;__strong id<MTLRenderPipelineState> pipeline=nil;};
@@ -144,6 +145,6 @@ std::shared_ptr<PreparedEngineModelDeferred> EngineModelDeferredGPU::Prepare(Run
   }
   target.push_back(std::move(draw));
  }};
- prepareList(p.source->beforeLua,p.before);prepareList(p.source->afterLua,p.after);uniformArena.Report("EngineDeferred",p.source->sourceDrawFrame,impl->reported146);return out;
+ prepareList(p.source->beforeLua,p.before);prepareList(p.source->afterLua,p.after);uniformArena.Report("EngineDeferred",p.source->sourceDrawFrame,impl->reported146);p.firstOwners=BuildGroupedOwnerRoster(p.before,p.after);return out;
 }
 } // namespace rendering::metal4
