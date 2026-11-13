@@ -1,6 +1,7 @@
 #include "Rendering/Backend/NativeCUSCPUReadWorker220.h"
 #include "Rendering/EngineBridge/NativeOpaqueModelCapture.h"
 #include "Rendering/Backend/WorldFrameData.h"
+#include "Rendering/Backend/NativeWaterSceneData.h"
 #include "Rendering/Backend/NativeOriginalShadowData.h"
 #include "Rendering/Metal4/Metal4CaptureSurfaceBoundary.h"
 #include <cassert>
@@ -144,6 +145,29 @@ int main(){
   publisher.join();cancel.join();join.Finish();
   assert(job.done&&!job.error);assert(job.packet.Count()==size_t(published));
   assert(job.tailState==(published?NativeCUSCPUReadWorker220::Job::TailState::Published:NativeCUSCPUReadWorker220::Job::TailState::Cancelled));
+ }
+ // Exact already-captured water models are optional, after the old prefix.
+ for(int n=0;n<100;++n){
+  auto source=std::make_shared<NativeCUSSourceFrame>();source->sourceDrawFrame=91;source->draws.push_back(ValidDraw(91,0));
+  auto model=std::make_shared<NativeOpaqueModelFrame>();model->sourceDrawFrame=91;model->passes.resize(1);model->passes[0].lua=source;
+  auto reflection=std::make_shared<NativeWaterSceneView>(),refraction=std::make_shared<NativeWaterSceneView>();
+  reflection->frame.sourceDrawFrame=refraction->frame.sourceDrawFrame=91;
+  auto refrSource=std::make_shared<NativeCUSSourceFrame>();refrSource->sourceDrawFrame=91;refrSource->draws.push_back(ValidDraw(91,4));
+  auto refrModel=std::make_shared<NativeOpaqueModelFrame>(*model);refrModel->passes[0].lua=refrSource;
+  reflection->frame.opaqueModelFrame=model;refraction->frame.alphaModelFrames[0]=refrModel;
+  refraction->frame.alphaModelFrames[2]=std::make_shared<NativeOpaqueModelFrame>(); // Not consumed by renderer, not speculated.
+  auto water=std::make_shared<NativeWaterSceneFrame>();water->sourceDrawFrame=91;water->reflection=reflection;water->refraction=refraction;
+  WorldFrame frame;frame.sourceDrawFrame=91;frame.waterScene=water;
+  CPUReadReceipt220 receipt;receipt.frame=91;receipt.includesTail=true;receipt.waterReads=CPUReadWaterRoster220::Capture(91,water);
+  assert(receipt.waterReads->sources.size()==2&&receipt.waterReads->sources[0]==refrSource&&receipt.waterReads->sources[1]==source);receipt.job.ExpectTail();receipt.job.PublishTail({},receipt.waterReads->sources);
+  NativeCUSCPUReadWorker220::Build(receipt.job);assert(!receipt.job.error&&!receipt.job.optionalFailed&&receipt.Matches(frame));
+  NativeCUSCPUReadScope reference;for(const auto& src:receipt.waterReads->sources)reference.Prime(src);assert(reference.Matches(receipt.job.packet));
+  auto changed=std::make_shared<NativeWaterSceneFrame>(*water);frame.waterScene=changed;assert(!receipt.Matches(frame));frame.waterScene=water;
+  water->reflection=std::make_shared<NativeWaterSceneView>(*reflection);assert(!receipt.Matches(frame));water->reflection=reflection;
+  reflection->frame.opaqueModelFrame=std::make_shared<NativeOpaqueModelFrame>(*model);assert(!receipt.Matches(frame));reflection->frame.opaqueModelFrame=model;
+  source->sourceDrawFrame=92;assert(!receipt.Matches(frame));source->sourceDrawFrame=91;
+  receipt.job.optionalFailed=true;assert(!receipt.Matches(frame));receipt.job.optionalFailed=false;
+  receipt.job.optionalSources.pop_back();assert(!receipt.Matches(frame));
  }
  // Original modes retain their existing caller location; actual launch behavior remains unchanged.
  earlyCPURead220=false;

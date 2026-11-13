@@ -28,3 +28,7 @@ ownership audit or change P5 default/Metal acceptance requirements.
 Shared-service audit checkpoint: [MetalInfo resource generation](METAL-INFO-GENERATION.md)
 pins prepared completion to its exact target/source-cache generation while retaining
 the pipeline cache. WorldInfo already had a generation boundary; P5 remains gated.
+
+P5 source extension: [optional sealed water-model reads](OPTIONAL-WATER-CPU-READ.md)
+adds only already-captured model read rows to existing opt-in mode2/3, with separate
+speculative failure rejection. Particle/alpha/water/Lua capture drain is unchanged.

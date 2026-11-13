@@ -4,7 +4,7 @@ import subprocess,os
 root=Path(__file__).resolve().parents[2]
 out=Path('/tmp/bar-early-cpuread220');out.mkdir(exist_ok=True)
 s=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
-(out/'receipt.inc').write_text(s[s.index('struct CPUReadReceipt220 {'):s.index('void TraceCPUReadPacket220(')])
+(out/'receipt.inc').write_text(s[s.index('struct CPUReadWaterRoster220 {'):s.index('void TraceCPUReadPacket220(')])
 (out/'launch.inc').write_text(s.split('// BEGIN EARLY_CPU_READ_LAUNCH220',1)[1].split('// END EARLY_CPU_READ_LAUNCH220',1)[0])
 (out/'tail.inc').write_text(s.split('// BEGIN CPU_READ_TAIL220',1)[1].split('// END CPU_READ_TAIL220',1)[0])
 sources=['NativeCUSRenderInputs.cpp','NativeCUSSourceData.cpp','NativeCUSModelInputs.cpp','NativeCUSPublishedData.cpp','NativeCUSUniformData.cpp','NativeCUSTextureHistory.cpp']
@@ -39,3 +39,12 @@ assert 'if(!tailAccepted)primeTail();' in draw
 assert 'if(tailAccepted)primeTail();' in draw
 assert 'tail_wait_ns' in s
 print('Single-scope opaque/alpha/shadow continuation source order and active/wait metrics wiring PASS')
+
+water=s.split('struct CPUReadWaterRoster220 {',1)[1].split('struct CPUReadReceipt220 {',1)[0]
+assert 'out.views={out.owner->refraction,out.owner->reflection}' in water
+assert 'append(view->frame.alphaModelFrames[0])' in water
+assert 'if(job.optionalFailed)return false;' in receipt
+assert 'job.PublishTail(std::move(tail),std::move(optionalWater))' in b
+assert draw.index('receipt->pending.Finish()')<draw.index('receipt->Matches(captured)')
+assert 'optional_sources,optional_failed' in s
+print('Optional water model roster, actual refraction/reflection order, alpha0 only and failure rejection wiring PASS')

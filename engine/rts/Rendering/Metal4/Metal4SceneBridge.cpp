@@ -148,11 +148,51 @@ bool CPUReadPacketMeasure220(){
  static const bool value=[] {const char* p=std::getenv("BAR_NATIVE_CPU_READ_PACKET220_FILE");return p&&p[0]=='/';}();
  return value;
 }
+// Immutable optional model-read roster only; never visits Lua/water producers.
+struct CPUReadWaterRoster220 {
+ uint64_t frame=0;
+ std::shared_ptr<const NativeWaterSceneFrame> owner;
+ std::array<std::shared_ptr<const NativeWaterSceneView>,2> views;
+ std::vector<std::shared_ptr<const NativeOpaqueModelFrame>> models;
+ std::vector<std::shared_ptr<const NativeCUSSourceFrame>> sources;
+ template<class A,class B>static bool SameOwner(const A& a,const B& b){return a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);}
+ static CPUReadWaterRoster220 Capture(uint64_t draw,std::shared_ptr<const NativeWaterSceneFrame> water){
+  CPUReadWaterRoster220 out;out.frame=draw;out.owner=std::move(water);
+  if(!out.owner)return out;
+  if(out.owner->sourceDrawFrame!=draw)throw std::logic_error("Water CPU read roster draw mismatch");
+  out.views={out.owner->refraction,out.owner->reflection};
+  const auto append=[&](const auto& model){
+   out.models.push_back(model);if(!model)return;
+   if(model->sourceDrawFrame!=draw)throw std::logic_error("Water CPU model roster draw mismatch");
+   for(const auto& pass:model->passes){out.sources.push_back(pass.lua);if(pass.mrt)out.sources.push_back(pass.mrt->lua);}
+  };
+  for(const auto& view:out.views)if(view){
+   if(view->frame.sourceDrawFrame!=draw)throw std::logic_error("Water CPU view roster draw mismatch");
+   append(view->frame.opaqueModelFrame);append(view->frame.alphaModelFrames[0]);
+  }
+  return out;
+ }
+ bool Matches(const std::shared_ptr<const NativeWaterSceneFrame>& water)const{
+  if(!SameOwner(owner,water))return false;
+  if(!water)return views==decltype(views){}&&models.empty()&&sources.empty();
+  if(water->sourceDrawFrame!=frame||!SameOwner(views[0],water->refraction)||!SameOwner(views[1],water->reflection))return false;
+  size_t modelIndex=0,sourceIndex=0;
+  const auto source=[&](const auto& value){return (!value||value->sourceDrawFrame==frame)&&sourceIndex<sources.size()&&SameOwner(sources[sourceIndex++],value);};
+  const auto model=[&](const auto& value){
+   if(modelIndex>=models.size()||!SameOwner(models[modelIndex++],value))return false;
+   if(!value)return true;if(value->sourceDrawFrame!=frame)return false;
+   for(const auto& pass:value->passes){if(!source(pass.lua))return false;if(pass.mrt&&!source(pass.mrt->lua))return false;}return true;
+  };
+  for(const auto& view:views)if(view){if(view->frame.sourceDrawFrame!=frame||!model(view->frame.opaqueModelFrame))return false;if(!model(view->frame.alphaModelFrames[0]))return false;}
+  return modelIndex==models.size()&&sourceIndex==sources.size();
+ }
+};
 struct CPUReadReceipt220 {
  uint64_t frame=0,ordinal=0,startupNs=0,mainBeginNs=0,mainEndNs=0;
  std::shared_ptr<const NativeOpaqueModelFrame> models; // Main-only identity pin.
  NativeCUSCPUReadWorker220::Job job;
  bool includesTail=false;
+ std::optional<CPUReadWaterRoster220> waterReads;
  std::array<std::shared_ptr<const NativeOpaqueModelFrame>,3> alphaModels;
  std::shared_ptr<const NativeOriginalShadowFrame> shadow;
  NativeCUSCPUReadWorker220::Join pending; // Destroy first, before job/source owners. Main-only.
@@ -172,7 +212,13 @@ struct CPUReadReceipt220 {
   const auto sameTail=[&](const auto& source){return (!source||source->sourceDrawFrame==frame)&&tailIndex<job.tailSources.size()&&SameOwner(job.tailSources[tailIndex++],source);};
   for(const auto& models:alphaModels)if(models){if(models->sourceDrawFrame!=frame)return false;for(const auto& pass:models->passes){if(!sameTail(pass.lua))return false;if(pass.mrt&&!sameTail(pass.mrt->lua))return false;}}
   if(shadow&&(shadow->sourceDrawFrame!=frame||!sameTail(shadow->cus)))return false;
-  return tailIndex==job.tailSources.size();
+  if(tailIndex!=job.tailSources.size())return false;
+  if(job.optionalFailed)return false;
+  if(waterReads){
+   if(!waterReads->Matches(captured.waterScene)||waterReads->sources.size()!=job.optionalSources.size())return false;
+   for(size_t i=0;i<job.optionalSources.size();++i)if(!SameOwner(waterReads->sources[i],job.optionalSources[i]))return false;
+  }else if(!job.optionalSources.empty())return false;
+  return true;
 
  }
 };
@@ -181,19 +227,19 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
  struct Output {
   FILE* file=std::fopen(std::getenv("BAR_NATIVE_CPU_READ_PACKET220_FILE"),"w");
   size_t rows=0;
-  Output(){if(file)std::fputs("frame,simulation_frame,mode,job,accepted,verified,fallback,sources,entries,bytes,cache_before,cache_after,startup_ns,queue_ns,work_ns,join_ns,consume_ns,row_digest,submit_ns,main_begin_ns,main_end_ns,consume_begin_ns,tail_wait_ns\n",file);}
+  Output(){if(file)std::fputs("frame,simulation_frame,mode,job,accepted,verified,fallback,sources,entries,bytes,cache_before,cache_after,startup_ns,queue_ns,work_ns,join_ns,consume_ns,row_digest,submit_ns,main_begin_ns,main_end_ns,consume_begin_ns,tail_wait_ns,optional_sources,optional_failed\n",file);}
   ~Output(){if(file)std::fclose(file);}
  };
  static Output output;
  if(!output.file||output.rows++>=10000)return;
  const auto* job=receipt?&receipt->job:nullptr;
- std::fprintf(output.file,"%llu,%llu,%d,%llu,%d,%d,%d,%zu,%zu,%zu,%zu,%zu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n",
+ std::fprintf(output.file,"%llu,%llu,%d,%llu,%d,%d,%d,%zu,%zu,%zu,%zu,%zu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu,%zu,%d\n",
   (unsigned long long)frame,(unsigned long long)simulationFrame,CPUReadPacketMode220(),(unsigned long long)(receipt?receipt->ordinal:0),int(accepted),int(verified),fallback,
-  job?job->sources.size()+job->tailSources.size():0,count,bytes,job?job->cacheBefore:0,job?job->cacheAfter:0,
+  job?job->sources.size()+job->tailSources.size()+job->optionalSources.size():0,count,bytes,job?job->cacheBefore:0,job?job->cacheAfter:0,
   (unsigned long long)(receipt?receipt->startupNs:0),(unsigned long long)(job?job->queueNs:0),(unsigned long long)(job?job->workNs:0),
   (unsigned long long)(job?job->waitNs:0),(unsigned long long)consumeNs,(unsigned long long)digest,
   (unsigned long long)(job?NativeCUSCPUReadWorker220::Timestamp(job->submitted):0),(unsigned long long)(receipt?receipt->mainBeginNs:0),
-  (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs,(unsigned long long)(job?job->tailWaitNs:0));
+  (unsigned long long)(receipt?receipt->mainEndNs:0),(unsigned long long)consumeBeginNs,(unsigned long long)(job?job->tailWaitNs:0),job?job->optionalSources.size():0,int(job&&job->optionalFailed));
 }
 
 struct ScenePendingAdmission;
@@ -1766,7 +1812,9 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
    for(const auto& models:frame.alphaModelFrames)if(models)for(const auto& pass:models->passes){tail.push_back(pass.lua);if(pass.mrt)tail.push_back(pass.mrt->lua);}
    if(frame.originalShadow)tail.push_back(frame.originalShadow->cus);
    cpuReceipt220->alphaModels=frame.alphaModelFrames;cpuReceipt220->shadow=frame.originalShadow;
-   cpuReceipt220->job.PublishTail(std::move(tail));cpuReceipt220->includesTail=true;
+   std::vector<std::shared_ptr<const NativeCUSSourceFrame>> optionalWater;
+   try{auto water=CPUReadWaterRoster220::Capture(frame.sourceDrawFrame,frame.waterScene);optionalWater=water.sources;cpuReceipt220->waterReads=std::move(water);}catch(...){/* Speculation setup must not move a new consumer error earlier. */}
+   cpuReceipt220->job.PublishTail(std::move(tail),std::move(optionalWater));cpuReceipt220->includesTail=true;
   }catch(...){
    cpuJoin220.Finish();cpuReceipt220.reset();session->cpuReadDisabled220=true;session->cpuReadFallback220=1;
   }
@@ -1927,8 +1975,10 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
     if(receipt->job.error)std::rethrow_exception(receipt->job.error);
     if(CPUReadPacketMode220()==3){
      primeModels(captured.opaqueModelFrame);if(tailAccepted)primeTail();
-     if(!cpuReadScope.Matches(receipt->job.packet))throw std::runtime_error("CUS opaque CPU receipt differs from original rows/owners/capacity");
-     verified=true;
+     bool optionalReference=true;
+     try{if(receipt->waterReads)for(const auto& source:receipt->waterReads->sources)cpuReadScope.Prime(source);}catch(...){optionalReference=false;}
+     if(optionalReference){if(!cpuReadScope.Matches(receipt->job.packet))throw std::runtime_error("CUS opaque CPU receipt differs from original rows/owners/capacity");verified=true;}
+
     }else cpuReadScope.Adopt(std::move(receipt->job.packet));
    }else primeModels(captured.opaqueModelFrame);
    const uint64_t consumeNs=CPUReadPacketMeasure220()?NativeCUSCPUReadWorker220::Elapsed(consumeStart):0;
