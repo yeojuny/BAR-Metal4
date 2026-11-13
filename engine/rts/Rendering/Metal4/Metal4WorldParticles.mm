@@ -177,6 +177,39 @@ bool ParticleRoot218(id<MTLTexture> __unsafe_unretained texture)
 		&&(texture.storageMode==MTLStorageModePrivate||texture.storageMode==MTLStorageModeShared);
 }
 }
+// BEGIN PARTICLE_ATLAS_PREPARATION_JOURNAL
+class ParticleAtlasPreparationJournal {
+public:
+ std::vector<std::shared_ptr<Atlas>> atlases;
+ uint64_t submission=0;
+ void Prepare(uint64_t value,const std::shared_ptr<ParticleAtlasPreparationJournal>& previous) {
+  Require(value,"Original atlas image preparation lacks its actual common submission");
+  if(previous.get()==this&&submission==value)return;
+  // Same-submission continuation preserves the original idempotent roster.
+  if(previous&&previous.get()!=this&&previous->submission==value){atlases=previous->atlases;submission=value;return;}
+  if(previous)for(const auto& old:previous->atlases)Require(old->initialized||!old->encodedSubmission,"Original named atlas image still belongs to unretired work");
+  atlases.clear();submission=value;
+ }
+ void Register(const std::shared_ptr<Atlas>& atlas,uint64_t value) {
+  Require(submission==value,"Original atlas image was resolved outside its actual common preparation scope");
+  if(std::find(atlases.begin(),atlases.end(),atlas)==atlases.end())atlases.push_back(atlas);
+ }
+ std::function<void()> TakeCompletion(uint64_t value) {
+  Require(submission==value,"Atlas completion lost its submitting owner");
+  auto owned=std::move(atlases);atlases.clear();submission=0;
+  return [atlases=std::move(owned),value]{CompleteAtlasMipmaps(atlases,value);};
+ }
+ void Complete(uint64_t value) {
+  if(atlases.empty())return;
+  Require(submission==value,"Original atlas image retirement has another common submission");
+  CompleteAtlasMipmaps(atlases,value);atlases.clear();submission=0;
+ }
+};
+// END PARTICLE_ATLAS_PREPARATION_JOURNAL
+std::shared_ptr<ParticleAtlasPreparationJournal> RuntimeLease::ParticleAtlasPreparation() {
+ if(!particleAtlasPreparation)particleAtlasPreparation=std::make_shared<ParticleAtlasPreparationJournal>();
+ return particleAtlasPreparation;
+}
 struct PreparedWorldParticles::Impl {
  __strong M4TransientUploadLifetime177* worldUpload220=nil;
  RetiredArgumentOwners argumentOwners;
@@ -317,8 +350,8 @@ struct WorldParticlesGPU::Impl {
  RetiredArguments argumentPool;
  ImmutableSnapshotBuffers snapshotBuffers;
 	std::unordered_map<const NativeWorldParticleAtlas*,std::shared_ptr<Atlas>> atlases;
-	std::vector<std::shared_ptr<Atlas>> sourceAtlases;
-	uint64_t sourceSubmission=0;
+ // Prior request owner only for the existing unretired/same-submission checks.
+ std::shared_ptr<ParticleAtlasPreparationJournal> lastAtlasPreparation;
 	std::shared_ptr<Atlas> GetAtlas(RuntimeLease& lease,std::shared_ptr<const NativeWorldParticleAtlas> owner){
 		Require(owner!=nullptr,"Original atlas cache lost its immutable publication");
 		// Evict only versions no source object/frame retains. Prepared owners and
@@ -359,7 +392,7 @@ void WorldParticlesGPU::ClearResources()
 	// Preserve the actual initialized family across scene reload; the next
 	// original gadget Initialize must observe its already connected consumer.
 	for(const auto& [source,atlas]:impl->atlases)Require(!atlas->encodedSubmission||atlas->initialized,"Original atlas resources still have unretired work");
-	impl->worldUpload220.Clear();impl->snapshotBuffers.Clear();impl->argumentPool.Clear();impl->atlases.clear();impl->sourceAtlases.clear();impl->sourceSubmission=0;impl->shadowColor=std::make_shared<ShadowColorCache>();impl->normalInfo=nil;impl->normalInfoInitialized.reset();
+	impl->worldUpload220.Clear();impl->snapshotBuffers.Clear();impl->argumentPool.Clear();impl->atlases.clear();impl->lastAtlasPreparation.reset();impl->shadowColor=std::make_shared<ShadowColorCache>();impl->normalInfo=nil;impl->normalInfoInitialized.reset();
 	impl->infoGPU=std::make_unique<MiniMapGPU>();
 	impl->lastInfoNormal=true;
 }
@@ -632,8 +665,8 @@ CUSSourceImage WorldParticlesGPU::AtlasImage(RuntimeLease& lease,const NativeCUS
 	Require(sampling.baseLevel==0&&sampling.maxLevel==int(object.allocation.levels)-1&&sampling.minLod==-1000&&sampling.maxLod==1000&&sampling.lodBias==0&&sampling.compareMode==0,"Original atlas changed LOD/comparison needs its actual consumer");
 	auto atlas=impl->GetAtlas(lease,backing->atlas);
 	Require(object.allocation.width==atlas->texture.width&&object.allocation.height==atlas->texture.height,"Original atlas image extent differs from its published allocation");
-	Require(impl->sourceSubmission==submission,"Original atlas image was resolved outside its actual common preparation scope");
-	if(std::find(impl->sourceAtlases.begin(),impl->sourceAtlases.end(),atlas)==impl->sourceAtlases.end())impl->sourceAtlases.push_back(atlas);
+ Require(lease.SourceSubmission()==submission,"Original atlas image has another actual lease submission");
+ lease.ParticleAtlasPreparation()->Register(atlas,submission);
 	CUSSourceImage image;image.texture=target==NativeCUSTextureTarget::Image2D?atlas->image2D:atlas->texture;image.sampler=sampler;
 	image.owner=std::make_shared<RetainedAtlasImage>(RetainedAtlasImage{binding.object,atlas});lease.Retain(sampler);
 	image.encodeDependencies=[atlas,submission](id<MTL4CommandBuffer> command){const std::array atlases{atlas};EncodeAtlasMipmaps(atlases,command,submission);};
@@ -641,27 +674,32 @@ CUSSourceImage WorldParticlesGPU::AtlasImage(RuntimeLease& lease,const NativeCUS
 	image.didComplete=[atlas,submission]{const std::array atlases{atlas};CompleteAtlasMipmaps(atlases,submission);};
 	return image;
 }
-void WorldParticlesGPU::PrepareAtlasImages(uint64_t submission)
+void WorldParticlesGPU::PrepareAtlasImages(RuntimeLease& lease,uint64_t submission)
 {
-	Require(submission,"Original atlas image preparation lacks its actual common submission");
-	if(impl->sourceSubmission==submission)return;
-	for(const auto& old:impl->sourceAtlases)Require(old->initialized||!old->encodedSubmission,"Original named atlas image still belongs to unretired work");
-	impl->sourceAtlases.clear();impl->sourceSubmission=submission;
+ Require(lease.SourceSubmission()==submission,"Original atlas preparation has another actual lease submission");
+ auto journal=lease.ParticleAtlasPreparation();
+ // Only a new request inheriting the same source ID needs renewed residency.
+ // Same-lease idempotent Prepare does not touch resources (possibly after Begin).
+ if(impl->lastAtlasPreparation&&impl->lastAtlasPreparation!=journal&&impl->lastAtlasPreparation->submission==submission)
+  for(const auto& atlas:impl->lastAtlasPreparation->atlases)
+   Require(impl->GetAtlas(lease,atlas->owner)==atlas,"Same-submission atlas recovery lost its exact cached owner");
+ journal->Prepare(submission,impl->lastAtlasPreparation);
+ impl->lastAtlasPreparation=journal;
 }
-void WorldParticlesGPU::EncodeAtlasImages(id<MTL4CommandBuffer> command,uint64_t submission)
+void WorldParticlesGPU::EncodeAtlasImages(RuntimeLease& lease,id<MTL4CommandBuffer> command,uint64_t submission)
 {
-	if(impl->sourceAtlases.empty())return;
-	Require(impl->sourceSubmission==submission,"Original atlas image producer has another common submission");EncodeAtlasMipmaps(impl->sourceAtlases,command,submission);
+ auto journal=lease.ParticleAtlasPreparation();if(journal->atlases.empty())return;
+ Require(lease.SourceSubmission()==submission&&journal->submission==submission,"Original atlas image producer has another common submission");EncodeAtlasMipmaps(journal->atlases,command,submission);
 }
-std::function<void()> WorldParticlesGPU::TakeAtlasCompletion(uint64_t submission)
+std::function<void()> WorldParticlesGPU::TakeAtlasCompletion(RuntimeLease& lease,uint64_t submission)
 {
- Require(impl->sourceSubmission==submission,"Atlas completion lost its submitting owner");
- auto atlases=std::move(impl->sourceAtlases);impl->sourceAtlases.clear();impl->sourceSubmission=0;
- return [atlases=std::move(atlases),submission]{CompleteAtlasMipmaps(atlases,submission);};
+ Require(lease.SourceSubmission()==submission,"Atlas completion has another actual lease submission");
+ return lease.ParticleAtlasPreparation()->TakeCompletion(submission);
 }
-void WorldParticlesGPU::CompleteAtlasImages(uint64_t submission)
+void WorldParticlesGPU::CompleteAtlasImages(RuntimeLease& lease,uint64_t submission)
 {
-	if(impl->sourceAtlases.empty())return;
-	Require(impl->sourceSubmission==submission,"Original atlas image retirement has another common submission");CompleteAtlasMipmaps(impl->sourceAtlases,submission);impl->sourceAtlases.clear();impl->sourceSubmission=0;
+ auto journal=lease.ParticleAtlasPreparation();if(journal->atlases.empty())return;
+ Require(lease.SourceSubmission()==submission,"Original atlas retirement has another actual lease submission");
+ journal->Complete(submission);
 }
 }

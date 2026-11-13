@@ -83,6 +83,7 @@ class TerrainShadingLeaseReceipts;
 class CompletedCubeLeaseReceipts;
 class CubeLeaseSamplers;
 class WorldTexturePreparationJournal;
+class ParticleAtlasPreparationJournal;
 class RuntimeLease;
 class RuntimeCleanupLease;
 struct RuntimeFrameSlot;
@@ -176,6 +177,7 @@ public:
  CompletedCubeLeaseReceipts* CompletedCubeReads() noexcept;
  CubeLeaseSamplers* CubeSamplers() noexcept;
  std::shared_ptr<WorldTexturePreparationJournal> WorldTexturePreparation();
+ std::shared_ptr<ParticleAtlasPreparationJournal> ParticleAtlasPreparation();
 	// Per-submission original shading rate. Output count still belongs to each
 	// concrete target: named MRT/RTT/shadow targets never inherit main MSAA.
 	void SetMinSampleShadingRate(float rate);
@@ -229,6 +231,7 @@ private:
  std::shared_ptr<CompletedCubeLeaseReceipts> completedCubeReads;
  std::shared_ptr<CubeLeaseSamplers> cubeSamplers;
  std::shared_ptr<WorldTexturePreparationJournal> worldTexturePreparation;
+ std::shared_ptr<ParticleAtlasPreparationJournal> particleAtlasPreparation;
  NativeSubmissionReadIdentity sourceSubmission;
 	void StageResources(bool overlapEncoding);
 	void RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmission>* completedOwner);

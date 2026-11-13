@@ -1455,7 +1455,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 		const auto sourceSubmission=CreateShieldSubmissionIdentity();
 		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,sourceSubmission);
 		lease.BindSourceSubmission(sourceSubmission);
-		impl->particlesGPU.PrepareAtlasImages(sourceSubmission);
+		impl->particlesGPU.PrepareAtlasImages(lease,sourceSubmission);
 		auto pbrBRDF=impl->pbrSource.Prepare(lease,NativePBRKind::BRDF,{},pbrDeclarations);
 		std::shared_ptr<PreparedUnitStencil> unitStencil;
 		if(stencilUpdates)unitStencil=impl->unitStencilGPU.Prepare(lease,unitStencilFrame,shaderValidation,shaderCompileMs,sourceSubmission);
@@ -1486,7 +1486,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 			auto command = lease.Begin("Original info, PBR and UI maintenance without window presentation");
 			if(prepared)ui::GetRecorder().RecordTargetSubmission(targets.targetPasses,sourceSubmission);
 			impl->EncodePendingTextureMipmaps(lease,command,sourceSubmission);
-		impl->particlesGPU.EncodeAtlasImages(command,sourceSubmission);
+		impl->particlesGPU.EncodeAtlasImages(lease,command,sourceSubmission);
 			if(pbrBRDF)pbrBRDF->Encode(command,sourceSubmission);
 			if (worldInfo) worldInfo->EncodeDependencies(command);
 			if (namedImageMipmaps) namedImageMipmaps->EncodeDependencies(command);
@@ -1497,7 +1497,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 			// Mark the real Genesis output retired before any unrelated cleanup can throw.
 			if(unitStencil)unitStencil->DidComplete();
 			impl->CompletePendingTextureMipmaps(lease,sourceSubmission);
-			impl->particlesGPU.CompleteAtlasImages(sourceSubmission);
+			impl->particlesGPU.CompleteAtlasImages(lease,sourceSubmission);
 			if(pbrBRDF)pbrBRDF->DidComplete(sourceSubmission);
 			// Producer declaration compaction occurs at the next main capture boundary.
 			if (prepared) prepared->DidComplete();
@@ -2262,7 +2262,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
   const auto submission=CreateShieldSubmissionIdentity();
   NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,submission);
   lease.BindSourceSubmission(submission);
-  impl->StartTexturePreparation(lease);impl->particlesGPU.PrepareAtlasImages(submission);
+  impl->StartTexturePreparation(lease);impl->particlesGPU.PrepareAtlasImages(lease,submission);
   if(post)impl->postprocessGPU.PrepareFrameImages(lease,post,frame.sourceDrawFrame);
   std::shared_ptr<PreparedScreenFrame> screen=impl->screenGPU.Prepare(lease,selected,
    std::uint32_t(main->Color().width),std::uint32_t(main->Color().height),continuation->logicalWidth,continuation->logicalHeight,
@@ -2313,7 +2313,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
   auto command=lease.Begin("Original current-frame screen continuation after SaveImage");failure.began=true;
   ui::GetRecorder().RecordTargetSubmission(selected.targetPasses,submission,post);
   options.submissionBegan(submission,post.get());
-  impl->EncodePendingTextureMipmaps(lease,command,submission);impl->particlesGPU.EncodeAtlasImages(command,submission);
+  impl->EncodePendingTextureMipmaps(lease,command,submission);impl->particlesGPU.EncodeAtlasImages(lease,command,submission);
   if(mipmaps)mipmaps->EncodeDependencies(command);
   screen->EncodeDependencies(command);
   if(effects)effects->Encode(command,*screen,first);
@@ -2332,7 +2332,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
    Require(encoder!=nil,"Cannot encode final presentation margins after the screen suffix");margins->Encode(encoder);[encoder endEncoding];}
   if(drawable)main->EncodePresentationResolve(command);
   result.metrics=lease.SubmitAndWait(start,options.readback?impl->screenTargetSubmission++:impl->presentationFrame++,drawable);
-  impl->CompletePendingTextureMipmaps(lease,submission);impl->particlesGPU.CompleteAtlasImages(submission);
+  impl->CompletePendingTextureMipmaps(lease,submission);impl->particlesGPU.CompleteAtlasImages(lease,submission);
   screen->DidComplete();if(effects)effects->DidComplete();if(mipmaps)mipmaps->DidComplete();
   if(readback)readback->DidComplete();
   options.submissionCompleted(submission);
@@ -2811,7 +2811,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			Require(frame.luaUnitStencilFrame->sourceDrawFrame==frame.sourceDrawFrame,"Original Unit Stencil Genesis belongs to another source frame");
 			unitStencil=impl->unitStencilGPU.Prepare(lease,frame.luaUnitStencilFrame,options.shaderValidation,result.shaderCompileMs,sourceSubmission);
 		}
-		impl->particlesGPU.PrepareAtlasImages(sourceSubmission);
+		impl->particlesGPU.PrepareAtlasImages(lease,sourceSubmission);
 		prepPhase->Mark(3);
   std::shared_ptr<PreparedOriginalShadowSource> originalShadow;
   std::array<std::shared_ptr<const NativeShadowTextureBacking>,2> initialShadow;
@@ -4472,7 +4472,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		impl->EncodePendingTextureMipmaps(lease,command,sourceSubmission);
 		for(const auto& packet:sensorPreview)packet->EncodeDependencies(command);
 		for(const auto& image:originalLifetime->terrainImages)image.requireReadable();
-		impl->particlesGPU.EncodeAtlasImages(command,sourceSubmission);
+		impl->particlesGPU.EncodeAtlasImages(lease,command,sourceSubmission);
 		namedImageMipmaps->EncodeDependencies(command);
 		encodingProbe.Select(Family176::Effects);
 		if(groundDecals)groundDecals->EncodeDependencies(command);
@@ -5500,7 +5500,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    mrt174Eligible,mrt174Expected,mrt174Simulation=frame.simulationFrame,
 #endif
    completeTextureMips=impl->TakeTextureMipCompletion(lease,sourceSubmission),
-   completeAtlasMips=impl->particlesGPU.TakeAtlasCompletion(sourceSubmission),
+   completeAtlasMips=impl->particlesGPU.TakeAtlasCompletion(lease,sourceSubmission),
    hasDrawable=drawable!=nil, sourceDrawFrame=frame.sourceDrawFrame,
    reflectionWorldInfo,
    postprocessSerial=options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0,
