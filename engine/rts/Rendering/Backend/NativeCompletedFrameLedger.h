@@ -30,6 +30,17 @@ public:
   }
   return false;
  }
+ Payload* Find(std::uint64_t id) noexcept {
+  for(auto& slot:slots)if(slot.payload && slot.id==id)return &*slot.payload;
+  return nullptr;
+ }
+ std::optional<Payload> Take(std::uint64_t id) noexcept {
+  static_assert(std::is_nothrow_move_constructible_v<Payload>);
+  for(auto& slot:slots)if(slot.payload && slot.id==id){
+   auto result=std::move(slot.payload);slot.payload.reset();slot.id=0;return result;
+  }
+  return {};
+ }
  bool Contains(std::uint64_t id) const noexcept {
   for(const auto& slot:slots)if(slot.payload && slot.id==id)return true;
   return false;

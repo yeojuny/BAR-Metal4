@@ -95,6 +95,11 @@ public:
  bool HasSubmittedCapacity(std::uint64_t identity) const noexcept;
  void ValidateSubmittedCapacity(std::uint64_t identity) const;
  void ValidateHeldFrame(std::uint64_t identity) const;
+ void TransferPreparedFrame(std::uint64_t identity) noexcept;
+ void ReportSubmittedFrame(std::uint64_t identity);
+ void ValidateRestoreHeldFrame(std::uint64_t identity) const;
+ void RestoreHeldFrame(std::uint64_t identity) noexcept;
+ void QuarantineHeldFrame(std::uint64_t identity) noexcept;
  void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
  void RetireSubmittedFrame(std::uint64_t sourceDrawFrame);
 	void SetSourceDependencyQuery(std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> query);
@@ -109,7 +114,7 @@ public:
 	// Preserve exact publication identities through uncertain/retired failure;
 	// no allocation or Lua/source callback occurs after Begin here.
 	void RecordTargetSubmission(std::span<const ScreenRenderTargetPass> passes,std::uint64_t actualSubmission,
-		std::shared_ptr<const NativePostprocessFrame> actualSourceFrame = {}) noexcept;
+		std::shared_ptr<const NativePostprocessFrame> actualSourceFrame = {}, std::optional<std::uint64_t> heldSourceDraw = {}) noexcept;
 	void AbortFrame() noexcept;
 	void BeginScreenStage();
 	void ResetScreenStage();

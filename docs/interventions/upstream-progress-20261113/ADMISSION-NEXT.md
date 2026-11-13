@@ -1,8 +1,6 @@
 # Next required lifecycle transaction
 
-Do not move the three existing `HoldSubmittedFrame` calls earlier independently.
-Sequential validation/move can leave partial ownership and the held ledgers have
-no before-Begin restore or post-Begin quarantine contract yet.
+The ordinary synchronous path now uses a collective UI/postprocess/cloud transaction before renderer invocation. It prevalidates all owners, reserves completion capacity, transfers without throwing gaps, routes Begin to exact held UI ownership, restores no-Begin/fallback pending owners, and quarantines actual-Begin failures. Do not enable younger capture: world/shield dependency ownership is still incomplete.
 
 Required main-owned whole-frame state, keyed by epoch/source draw/postprocess:
 
@@ -34,11 +32,13 @@ cannot prevent A being restored when younger B rolls back to A; dependent younge
 capture must remain prohibited until dependency-aware cancellation is designed.
 
 Current completion processing prevalidates all three journal owners before
-water/world retirement. The callback mailbox now reserves bounded result capacity
-before renderer invocation, and completed notices are gated on main's explicit
-acceptance after all three ownership transfers. Terminal drains reject any blocked
-queued result. The renderer now also supplies owned durable actual Begin evidence on failed
-ordinary invocations. These are prerequisites, not early ownership transfer,
-quarantine policy or whole-frame atomic admission. Renderer cache isolation,
-source controls and teardown drains remain separate mandatory gates. Do not enable
-CPU lookahead yet.
+water/world retirement. The callback mailbox reserves bounded capacity and gates
+completed notices on main acceptance. Terminal drain rejects any blocked queued
+notice. Owned actual Begin evidence classifies both renderer and post-return
+settlement failures. The ordinary journal transaction is implemented, including
+synchronous completed fallback to Game.cpp's pending-retirement contract.
+
+Remaining: all world/shield source-family ownership and dependency-safe rollback,
+exclusive renderer/cache ownership, ordered control/teardown and actual Metal
+verification. No concurrent younger capture or CPU lookahead is enabled. Do not
+infer whole-world atomic admission from the three-journal coordinator.

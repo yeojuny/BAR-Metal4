@@ -22,6 +22,7 @@ void NativePostprocessRecorder::Rollback() noexcept
 }
 void NativePostprocessRecorder::BeginFrame(std::uint32_t width, std::uint32_t height, std::uint64_t sourceDrawFrame)
 {
+	Check(!admissionFailed,"Postprocess admission is quarantined after Begin failure");
 	Check(!active && width && height && nextSerial != std::numeric_limits<std::uint64_t>::max(), "Invalid/nested postprocess frame");
 	Check(std::none_of(changes.begin(),changes.end(),[](const auto& change){return change.actualSubmission!=0;}),
 		"Postprocess submitted publications require actual retirement or failed-context teardown");
@@ -48,16 +49,32 @@ void NativePostprocessRecorder::AbortFrame() noexcept { Rollback(); recording.re
 bool NativePostprocessRecorder::HasSubmittedCapacity(std::uint64_t identity) const noexcept {return submittedFrames.CanHold(identity);}
 void NativePostprocessRecorder::ValidateSubmittedCapacity(std::uint64_t serial) const
 {
- Check(!active && pending && pending->serial==serial && submittedFrames.CanHold(serial),"Postprocess submitted frame ownership differs");
+ Check(!admissionFailed && !active && pending && pending->serial==serial && submittedFrames.CanHold(serial),"Postprocess submitted frame ownership differs");
 }
 void NativePostprocessRecorder::ValidateHeldFrame(std::uint64_t identity) const
 {
  Check(submittedFrames.Contains(identity),"Postprocess submitted frame ownership differs");
 }
+void NativePostprocessRecorder::TransferPreparedFrame(std::uint64_t serial) noexcept
+{
+ if(admissionFailed || active || !pending || pending->serial!=serial || !submittedFrames.TryHold(serial,std::move(pending),std::move(changes)))std::terminate();changes.clear();
+}
 void NativePostprocessRecorder::HoldSubmittedFrame(std::uint64_t serial)
 {
- Check(!active && pending && pending->serial==serial && submittedFrames.CanHold(serial),"Postprocess submitted frame ownership differs");
- Check(submittedFrames.TryHold(serial,std::move(pending),std::move(changes)),"Postprocess submitted frame ownership differs");changes.clear();
+ ValidateSubmittedCapacity(serial);TransferPreparedFrame(serial);
+}
+void NativePostprocessRecorder::ValidateRestoreHeldFrame(std::uint64_t serial) const
+{
+ Check(!admissionFailed && !active && !recording && !pending && changes.empty() && submittedFrames.Contains(serial),"Postprocess held restore differs from empty pending owner");
+}
+void NativePostprocessRecorder::RestoreHeldFrame(std::uint64_t serial) noexcept
+{
+ if(admissionFailed || active || recording || pending || !changes.empty())std::terminate();
+ auto held=submittedFrames.Take(serial);if(!held)std::terminate();pending=std::move(held->frame);changes=std::move(held->changes);
+}
+void NativePostprocessRecorder::QuarantineHeldFrame(std::uint64_t serial) noexcept
+{
+ if(!submittedFrames.Contains(serial))std::terminate();admissionFailed=true;
 }
 void NativePostprocessRecorder::RetireCompletedFrame(std::uint64_t serial)
 {

@@ -29,9 +29,14 @@ public:
  bool HasSubmittedCapacity(std::uint64_t identity) const noexcept;
  void ValidateSubmittedCapacity(std::uint64_t identity) const;
  void ValidateHeldFrame(std::uint64_t identity) const;
+ void TransferPreparedFrame(std::uint64_t identity) noexcept;
+ void ValidateRestoreHeldFrame(std::uint64_t identity) const;
+ void RestoreHeldFrame(std::uint64_t identity) noexcept;
+ void QuarantineHeldFrame(std::uint64_t identity) noexcept;
  void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
 	void Reset() noexcept;
 private:
+ bool admissionFailed=false;
 	std::shared_ptr<NativeVolumetricCloudFrame> recording;
 	std::shared_ptr<const NativeVolumetricCloudFrame> pending;
  NativeCompletedFrameLedger<std::shared_ptr<const NativeVolumetricCloudFrame>,2,true> submittedFrames;

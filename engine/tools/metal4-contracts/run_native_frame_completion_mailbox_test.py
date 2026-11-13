@@ -8,9 +8,9 @@ bridge=root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp';source=bridge.read_text
 callback=source.split('options.deferredCompleted=[mailbox,',1)[1].split('\n  };',1)[0]
 assert 'session' not in callback and 'owner' not in callback and 'mailbox->Publish' in callback
 assert 'deferredFrames' not in source
-hold=source.index('ui::GetRecorder().HoldSubmittedFrame(frame.sourceDrawFrame)')
+hold=source.index('admission.TransferValidated()')
 accept=source.index('session->completionMailbox->Accept(completionTicket)',hold)
-assert hold < source.index('LuaNativePostprocess::GetRecorder().HoldSubmittedFrame',hold) < source.index('LuaNativeVolumetricClouds::HoldSubmittedFrame',hold) < accept
+assert hold < source.index('const auto invokeRenderer',hold) < accept
 assert 'ApplyDeferredFrameReceipts();session->completionMailbox->RequireNoQueuedCompletions();return;' in source
 assert 'while(auto notice=session->completionMailbox->Pop())' in source
 assert '~Session(){if(completionMailbox)completionMailbox->Close();' in source

@@ -175,6 +175,7 @@ static std::array<float,4> Transform(const NativeUIMatrix& m, std::array<float,4
 }
 
 struct NativeUIRecorder::Impl {
+ bool admissionFailed=false;
 	NativeUIRecorder* owner = nullptr;
 	struct State {
 		ScreenDrawListState draw;
@@ -751,6 +752,7 @@ NativeUIRecorder& GetRecorder() { static NativeUIRecorder recorder; return recor
 
 void NativeUIRecorder::BeginFrame(std::uint32_t w, std::uint32_t h,std::optional<NativeUIFrameRasterMapping> mapping)
 {
+	Require(!impl->admissionFailed,"Native UI admission is quarantined after Begin failure");
 	Require(std::none_of(impl->targetChanges.begin(),impl->targetChanges.end(),[](const auto& change){return change.actualSubmission!=0;}),
 		"Native UI target publications from an actual submission require real retirement or poisoned-context teardown");
 	Require(w > 0 && h > 0 && !impl->frame && !impl->genesis && impl->compiling.empty() && impl->targets.empty() && impl->originalTextureScopes.empty() && impl->pipMiniMapOutputs.empty(), "Native UI invalid frame begin");
@@ -804,22 +806,37 @@ static void LogFontRecycle169(std::uint64_t sourceDrawFrame)
 bool NativeUIRecorder::HasSubmittedCapacity(std::uint64_t identity) const noexcept {return impl->submittedFrames.CanHold(identity);}
 void NativeUIRecorder::ValidateSubmittedCapacity(std::uint64_t sourceDrawFrame) const
 {
- Require(impl->submittedFrames.CanHold(sourceDrawFrame) && !impl->frame && impl->targets.empty() && impl->compiling.empty(),"Native UI submitted frame ownership is repeated or still recording");
+ Require(!impl->admissionFailed && impl->submittedFrames.CanHold(sourceDrawFrame) && !impl->frame && impl->targets.empty() && impl->compiling.empty(),"Native UI submitted frame ownership is repeated or still recording");
 }
 void NativeUIRecorder::ValidateHeldFrame(std::uint64_t identity) const
 {
  Require(impl->submittedFrames.Contains(identity),"Native UI submitted frame ownership is repeated or still recording");
 }
-void NativeUIRecorder::HoldSubmittedFrame(std::uint64_t sourceDrawFrame)
+void NativeUIRecorder::TransferPreparedFrame(std::uint64_t identity) noexcept
 {
- Require(impl->submittedFrames.CanHold(sourceDrawFrame) && !impl->frame && impl->targets.empty() && impl->compiling.empty(),
-  "Native UI submitted frame ownership is repeated or still recording");
- // Called only after successful final submission. Move, never copy or retire,
- // the old publications so BeginFrame/abort can affect only the next frame.
- Require(impl->submittedFrames.TryHold(sourceDrawFrame,std::move(impl->targetJournal),std::move(impl->targetChanges)),
-  "Native UI submitted frame ownership is repeated or still recording");
+ if(impl->admissionFailed || impl->frame || !impl->targets.empty() || !impl->compiling.empty() ||
+    !impl->submittedFrames.TryHold(identity,std::move(impl->targetJournal),std::move(impl->targetChanges)))std::terminate();
  impl->targetJournal.Clear();impl->targetChanges.clear();
- LogFontRecycle169(sourceDrawFrame);
+}
+void NativeUIRecorder::ReportSubmittedFrame(std::uint64_t identity) {LogFontRecycle169(identity);}
+void NativeUIRecorder::HoldSubmittedFrame(std::uint64_t identity)
+{
+ ValidateSubmittedCapacity(identity);TransferPreparedFrame(identity);LogFontRecycle169(identity);
+}
+void NativeUIRecorder::ValidateRestoreHeldFrame(std::uint64_t identity) const
+{
+ Require(!impl->admissionFailed && !impl->frame && impl->targets.empty() && impl->compiling.empty() &&
+  impl->targetJournal.Passes().empty() && impl->targetChanges.empty() && impl->submittedFrames.Contains(identity),"Native UI held restore differs from empty pending owner");
+}
+void NativeUIRecorder::RestoreHeldFrame(std::uint64_t identity) noexcept
+{
+ if(impl->admissionFailed || impl->frame || !impl->targets.empty() || !impl->compiling.empty() || !impl->targetJournal.Passes().empty() || !impl->targetChanges.empty())std::terminate();
+ auto held=impl->submittedFrames.Take(identity);if(!held)std::terminate();
+ impl->targetJournal=std::move(held->targetJournal);impl->targetChanges=std::move(held->changes);
+}
+void NativeUIRecorder::QuarantineHeldFrame(std::uint64_t identity) noexcept
+{
+ if(!impl->submittedFrames.Contains(identity))std::terminate();impl->admissionFailed=true;
 }
 void NativeUIRecorder::RetireSubmittedFrame(std::uint64_t sourceDrawFrame)
 {
@@ -868,14 +885,19 @@ void NativeUIRecorder::CommitTargetPair(std::shared_ptr<NativeUITextureBinding> 
  }
 }
 void NativeUIRecorder::RecordTargetSubmission(std::span<const ScreenRenderTargetPass> passes,std::uint64_t actualSubmission,
-	std::shared_ptr<const NativePostprocessFrame> actualSourceFrame) noexcept
+	std::shared_ptr<const NativePostprocessFrame> actualSourceFrame,std::optional<std::uint64_t> heldSourceDraw) noexcept
 {
  if(!actualSubmission)std::terminate(); // Actual common submission identities are nonzero.
  // Every match in this call writes the same identity. Visit each owned row
  // once and stop after its first match, including all rows that alias it.
  // This runs after Begin: keep it allocation-free and noexcept.
- impl->targetJournal.Record(passes,actualSubmission);
- for(auto& change:impl->targetChanges) {
+ auto* journal=&impl->targetJournal;auto* changes=&impl->targetChanges;
+ if(heldSourceDraw){
+  auto* held=impl->submittedFrames.Find(*heldSourceDraw);if(!held)std::terminate();
+  journal=&held->targetJournal;changes=&held->changes;
+ }
+ journal->Record(passes,actualSubmission);
+ for(auto& change:*changes) {
   if(change.actualSubmission==actualSubmission)continue;
   for(const auto& pass:passes)
    if(change.published==pass.destination || change.published==pass.depthDestination) {

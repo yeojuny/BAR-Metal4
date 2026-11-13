@@ -1,4 +1,7 @@
 #include "Rendering/Backend/NativePostprocessRecorder.h"
+#include "Rendering/Backend/NativeFrameAdmissionTransaction.h"
+#include "Rendering/Backend/NativeFrameBeginReceipt.h"
+#include "Rendering/Backend/NativeUIRecorder.h"
 #include "Rendering/Backend/NativeVolumetricCloudContext.h"
 #include <iostream>
 #include <stdexcept>
@@ -71,6 +74,69 @@ int main(){
  Check(!guardedWeak.expired()&&recorder.OwnsPendingVersion(guardedVersion));
  recorder.ValidateHeldFrame(guardedID);recorder.RetireCompletedFrame(guardedID);
  Check(guardedWeak.expired());Reject([&]{recorder.ValidateHeldFrame(guardedID);});
+ // Early transfer is reversible before Begin and after synchronous completion.
+ for(unsigned failure=0;failure<4;++failure){
+  NativePostprocessRecorder early;NativeVolumetricCloudRecorder cloud;
+  auto cell=CreateNativePostprocessBinding(8,8,NativePostprocessFormat::RGBA8,{},false,16384);auto previous=cell->current;
+  early.BeginFrame(8,8,80);auto next=early.Copy(cell,NativePostprocessOperationKind::CopyColor,rect,rect,0);auto frame=early.EndFrame();
+  cloud.BeginFrame(80);auto cloudFrame=cloud.EndFrame();
+  early.ValidateSubmittedCapacity(frame->serial);cloud.ValidateSubmittedCapacity(80);
+  early.TransferPreparedFrame(frame->serial);cloud.TransferPreparedFrame(80);
+  Check(early.OwnsPendingVersion(next));
+  // No-Begin throw/fallback restores journals, not original values yet.
+  // The original Abort then rolls publications back in its normal order.
+  if(failure<2){
+   early.ValidateRestoreHeldFrame(frame->serial);cloud.ValidateRestoreHeldFrame(80);
+   early.RestoreHeldFrame(frame->serial);cloud.RestoreHeldFrame(80);
+   Check(cell->current==next);early.AbortFrame();cloud.AbortFrame();Check(cell->current==previous);
+  }else if(failure==2){
+   // Synchronous completed fallback restores for historical pending retirement.
+   early.ValidateRestoreHeldFrame(frame->serial);cloud.ValidateRestoreHeldFrame(80);
+   early.RestoreHeldFrame(frame->serial);cloud.RestoreHeldFrame(80);
+   early.RetireCompletedFrame(frame->serial);cloud.RetireCompletedFrame(80);Check(cell->current==next);
+  }else{
+   early.QuarantineHeldFrame(frame->serial);cloud.QuarantineHeldFrame(80);
+   Reject([&]{early.BeginFrame(8,8,81);});Reject([&]{cloud.BeginFrame(81);});
+   Reject([&]{early.ValidateRestoreHeldFrame(frame->serial);});Reject([&]{cloud.ValidateRestoreHeldFrame(80);});
+   early.Reset();cloud.Reset();Check(cell->current==next);Check(early.OwnsPendingVersion(next));
+   Reject([&]{early.BeginFrame(8,8,82);});Reject([&]{cloud.BeginFrame(82);});
+  }
+ }
+ // A younger pending capture may never be overwritten by restoration.
+ {NativeVolumetricCloudRecorder c;c.BeginFrame(1);c.EndFrame();c.TransferPreparedFrame(1);c.BeginFrame(2);c.EndFrame();
+  Reject([&]{c.ValidateRestoreHeldFrame(1);});c.ValidateHeldFrame(1);c.RetireCompletedFrame(2);c.ValidateRestoreHeldFrame(1);c.RestoreHeldFrame(1);c.RetireCompletedFrame(1);}
+ // Exercise the production collective coordinator with actual journal owners.
+ // UI's transfer ABI is checked at compile time; full UI runtime is not linked.
+ static_assert(noexcept(std::declval<ui::NativeUIRecorder&>().TransferPreparedFrame(1)));
+ static_assert(noexcept(std::declval<ui::NativeUIRecorder&>().RestoreHeldFrame(1)));
+ for(unsigned rejectAt=0;rejectAt<3;++rejectAt){
+  NativePostprocessRecorder first,second;NativeVolumetricCloudRecorder third;
+  if(rejectAt==0){first.BeginFrame(8,8,1);first.EndFrame();first.AbortFrame();}
+  if(rejectAt==1){second.BeginFrame(8,8,1);second.EndFrame();second.AbortFrame();}
+  first.BeginFrame(8,8,1);auto f=first.EndFrame();second.BeginFrame(8,8,1);auto s=second.EndFrame();
+  third.BeginFrame(rejectAt==2?2:1);third.EndFrame();
+  NativeFrameAdmissionTransaction transaction(first,second,third,1,1);
+  Reject([&]{transaction.Validate();});
+  first.ValidateSubmittedCapacity(f->serial);second.ValidateSubmittedCapacity(s->serial);third.ValidateSubmittedCapacity(rejectAt==2?2:1);
+ }
+ for(unsigned failure=0;failure<6;++failure){
+  NativePostprocessRecorder first,second;NativeVolumetricCloudRecorder third;
+  first.BeginFrame(8,8,1);first.EndFrame();second.BeginFrame(8,8,1);second.EndFrame();third.BeginFrame(1);third.EndFrame();
+  NativeFrameAdmissionTransaction transaction(first,second,third,1,1);NativeFrameBeginReceipt begun(1,1);
+  transaction.Validate();transaction.TransferValidated();
+  if(failure>=3)begun.MarkBegun(71);
+  try {throw std::runtime_error(failure==0?"renderer pre-Begin":failure==1?"post-return drain":failure==2?"fallback settlement":"after Begin");}
+  catch(...){if(begun.Submission())transaction.Quarantine();else transaction.Restore();}
+  if(failure<3){first.ValidateSubmittedCapacity(1);second.ValidateSubmittedCapacity(1);third.ValidateSubmittedCapacity(1);}
+  else{first.ValidateHeldFrame(1);second.ValidateHeldFrame(1);third.ValidateHeldFrame(1);
+   Reject([&]{first.BeginFrame(8,8,2);});Reject([&]{second.BeginFrame(8,8,2);});Reject([&]{third.BeginFrame(2);});}
+ }
+ // Restore validates every owner before moving any payload back.
+ {NativePostprocessRecorder first,second;NativeVolumetricCloudRecorder third;
+  first.BeginFrame(8,8,1);first.EndFrame();second.BeginFrame(8,8,1);second.EndFrame();third.BeginFrame(1);third.EndFrame();
+  NativeFrameAdmissionTransaction transaction(first,second,third,1,1);transaction.Validate();transaction.TransferValidated();
+  third.BeginFrame(2);third.EndFrame();Reject([&]{transaction.Restore();});first.ValidateHeldFrame(1);second.ValidateHeldFrame(1);
+  third.AbortFrame();transaction.Restore();first.ValidateSubmittedCapacity(1);second.ValidateSubmittedCapacity(1);}
  // Many cycles continue to reuse bounded slots and release exact completed data.
  for(std::uint64_t i=60;i<1060;i+=2){
   clouds.BeginFrame(i);auto x=clouds.EndFrame();std::weak_ptr<const NativeVolumetricCloudFrame> wx=x;clouds.HoldSubmittedFrame(i);x.reset();

@@ -1,0 +1,47 @@
+{
+  "scope": "Link actual postprocess/cloud sources; no recorder algorithm stubs.",
+  "command": [
+    "g++",
+    "-std=c++23",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-misleading-indentation",
+    "-Wno-missing-field-initializers",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-ffunction-sections",
+    "-fdata-sections",
+    "-Wl,--gc-sections",
+    "-I",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/tools/metal4-contracts/TestNativeFrameJournalOwners.cpp",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts/Rendering/Backend/NativePostprocessRecorder.cpp",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts/Rendering/Backend/NativeVolumetricCloudContext.cpp",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts/Rendering/Backend/NativePostprocessData.cpp",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts/Rendering/Backend/NativeCUSUniformData.cpp",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts/Rendering/Backend/ScreenDrawList.cpp",
+    "-o",
+    "/tmp/bar-early-admission-final/test"
+  ],
+  "sourceSHA256": {
+    "tools/metal4-contracts/TestNativeFrameJournalOwners.cpp": "4e36db0cca8ec1faeee2bb4f87952455dd8ade16dc1d2ccf5c94f79d64f64d98",
+    "rts/Rendering/Backend/NativePostprocessRecorder.cpp": "f443fa4dfaa399dc5036493c5a5698694f5fed99c0de35a5f7c1aa3a8bddafc2",
+    "rts/Rendering/Backend/NativeVolumetricCloudContext.cpp": "6773d9e373ca1e975f2858bfcddee7a59664952e7a24ada8af7a1bbe5afc2c4b",
+    "rts/Rendering/Backend/NativePostprocessData.cpp": "e572ebea2572842e65f514e40901f0f31fcd18921d625aaf4f26f7a928304e77",
+    "rts/Rendering/Backend/NativeCUSUniformData.cpp": "64edccb673d55e356c346e4b0a39225d4405d2be5f6bdf2ce7072c84e248089b",
+    "rts/Rendering/Backend/ScreenDrawList.cpp": "bab36585cdc3413f93057afb9abbd234319312a6611ab6805cb0c07d207f6df7",
+    "rts/Rendering/Backend/NativeCompletedFrameLedger.h": "d13fe274f62021847cd17051e2da3aec97213db8e6a6c491818cde5e632370d3",
+    "rts/Rendering/Backend/NativePostprocessRecorder.h": "b6b621b43933e6ef6475a09cd05366258663848f2c27bee34d9ba03fe2b6b22d",
+    "rts/Rendering/Backend/NativeVolumetricCloudContext.h": "2d7ce9560ac3ee5440ef1be7364a7c1617f71bfe3f6d495ecd045e893d01ddb2"
+  },
+  "passed": true,
+  "exit": 0,
+  "output": "1073 actual postprocess/cloud owner checks passed\n",
+  "limits": [
+    "No Metal execution or async enabled; UI runtime linkage not included.",
+    "ASan/UBSan enabled; LeakSanitizer disabled in sandbox."
+  ]
+}

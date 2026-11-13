@@ -15,6 +15,7 @@ void Check(bool valid, const char* reason)
 }
 void NativeVolumetricCloudRecorder::BeginFrame(std::uint64_t frame)
 {
+	Check(!admissionFailed,"cloud admission is quarantined after Begin failure");
 	Check(!recording, "previous cloud frame is still recording");
 	auto candidate = std::make_shared<NativeVolumetricCloudFrame>();
 	candidate->sourceDrawFrame = frame;
@@ -42,16 +43,31 @@ void NativeVolumetricCloudRecorder::AbortFrame() noexcept { recording.reset(); p
 bool NativeVolumetricCloudRecorder::HasSubmittedCapacity(std::uint64_t identity) const noexcept {return submittedFrames.CanHold(identity);}
 void NativeVolumetricCloudRecorder::ValidateSubmittedCapacity(std::uint64_t frame) const
 {
- Check(!recording && pending && pending->sourceDrawFrame==frame && submittedFrames.CanHold(frame),"submitted cloud frame identity differs");
+ Check(!admissionFailed && !recording && pending && pending->sourceDrawFrame==frame && submittedFrames.CanHold(frame),"submitted cloud frame identity differs");
 }
 void NativeVolumetricCloudRecorder::ValidateHeldFrame(std::uint64_t identity) const
 {
  Check(submittedFrames.Contains(identity),"submitted cloud frame identity differs");
 }
+void NativeVolumetricCloudRecorder::TransferPreparedFrame(std::uint64_t frame) noexcept
+{
+ if(admissionFailed || recording || !pending || pending->sourceDrawFrame!=frame || !submittedFrames.TryHold(frame,std::move(pending)))std::terminate();
+}
 void NativeVolumetricCloudRecorder::HoldSubmittedFrame(std::uint64_t frame)
 {
- Check(!recording && pending && pending->sourceDrawFrame==frame && submittedFrames.CanHold(frame),"submitted cloud frame identity differs");
- Check(submittedFrames.TryHold(frame,std::move(pending)),"submitted cloud frame identity differs");
+ ValidateSubmittedCapacity(frame);TransferPreparedFrame(frame);
+}
+void NativeVolumetricCloudRecorder::ValidateRestoreHeldFrame(std::uint64_t frame) const
+{
+ Check(!admissionFailed && !recording && !pending && submittedFrames.Contains(frame),"cloud held restore differs from empty pending owner");
+}
+void NativeVolumetricCloudRecorder::RestoreHeldFrame(std::uint64_t frame) noexcept
+{
+ if(admissionFailed || recording || pending)std::terminate();auto held=submittedFrames.Take(frame);if(!held)std::terminate();pending=std::move(*held);
+}
+void NativeVolumetricCloudRecorder::QuarantineHeldFrame(std::uint64_t frame) noexcept
+{
+ if(!submittedFrames.Contains(frame))std::terminate();admissionFailed=true;
 }
 void NativeVolumetricCloudRecorder::RetireCompletedFrame(std::uint64_t frame)
 {

@@ -95,6 +95,10 @@ bool HasSubmittedCapacity(std::uint64_t identity) noexcept { return recorder.Has
 void ValidateSubmittedCapacity(std::uint64_t identity) { recorder.ValidateSubmittedCapacity(identity); }
 void ValidateHeldFrame(std::uint64_t identity) { recorder.ValidateHeldFrame(identity); }
 void HoldSubmittedFrame(std::uint64_t frame) { recorder.HoldSubmittedFrame(frame); }
+void TransferPreparedFrame(std::uint64_t identity) noexcept { recorder.TransferPreparedFrame(identity); }
+void ValidateRestoreHeldFrame(std::uint64_t identity) { recorder.ValidateRestoreHeldFrame(identity); }
+void RestoreHeldFrame(std::uint64_t identity) noexcept { recorder.RestoreHeldFrame(identity); }
+void QuarantineHeldFrame(std::uint64_t identity) noexcept { recorder.QuarantineHeldFrame(identity); }
 void Reset() noexcept { recorder.Reset(); }
 bool PushEntries(lua_State* L) { lua_pushcfunction(L,Factory); lua_setfield(L,-2,"NativeVolumetricCloudContext"); return true; }
 }
@@ -109,6 +113,10 @@ bool HasSubmittedCapacity(std::uint64_t) noexcept { return true; }
 void ValidateSubmittedCapacity(std::uint64_t) {}
 void ValidateHeldFrame(std::uint64_t) {}
 void HoldSubmittedFrame(std::uint64_t) {}
+void TransferPreparedFrame(std::uint64_t) noexcept {}
+void ValidateRestoreHeldFrame(std::uint64_t) {}
+void RestoreHeldFrame(std::uint64_t) noexcept {}
+void QuarantineHeldFrame(std::uint64_t) noexcept {}
 void Reset() noexcept {}
 bool PushEntries(lua_State*) { return true; }
 }

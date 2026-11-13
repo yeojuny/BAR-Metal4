@@ -12,6 +12,10 @@ bool HasSubmittedCapacity(std::uint64_t identity) noexcept;
 void ValidateSubmittedCapacity(std::uint64_t identity);
 void ValidateHeldFrame(std::uint64_t identity);
 void HoldSubmittedFrame(std::uint64_t sourceDrawFrame);
+void TransferPreparedFrame(std::uint64_t identity) noexcept;
+void ValidateRestoreHeldFrame(std::uint64_t identity);
+void RestoreHeldFrame(std::uint64_t identity) noexcept;
+void QuarantineHeldFrame(std::uint64_t identity) noexcept;
 void Reset() noexcept;
 bool PushEntries(lua_State* L);
 }

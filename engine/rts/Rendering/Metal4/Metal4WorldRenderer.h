@@ -66,6 +66,7 @@ struct Metal4WorldRenderOptions {
 	static constexpr bool DefaultShaderValidation = true;
 #endif
 	bool shaderValidation = DefaultShaderValidation;
+ std::optional<std::uint64_t> heldSourceDraw; // Exact admitted UI owner, never latest-pending inference.
  std::shared_ptr<NativeFrameBeginReceipt> beginReceipt; // Owned ordinary-frame Begin evidence; no source callback.
  NativeEnvironmentStageReceipt environmentStage; // Exact pre-PreUnit source receipt.
  std::optional<NativePBRDeclarationReceipt> pbrDeclarations; // nullopt: legacy caller; engaged null: captured empty.

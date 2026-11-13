@@ -23,6 +23,7 @@
 #include "Rendering/Backend/NativeImageReadback.h"
 #include "Rendering/Backend/NativePostprocessRecorder.h"
 #include "Rendering/Backend/NativeFrameCompletionMailbox.h"
+#include "Rendering/Backend/NativeFrameAdmissionTransaction.h"
 #include "Lua/LuaNativePostprocess.h"
 #include "Rendering/EngineBridge/NativeCUSSourceCapture.h"
 #include "Rendering/Backend/NativeCUSCPUReadScope.h"
@@ -496,6 +497,13 @@ struct Session {
 };
 
 std::unique_ptr<Session> session;
+struct CloudAdmissionOwner {
+ void ValidateSubmittedCapacity(std::uint64_t id) const {LuaNativeVolumetricClouds::ValidateSubmittedCapacity(id);}
+ void TransferPreparedFrame(std::uint64_t id) noexcept {LuaNativeVolumetricClouds::TransferPreparedFrame(id);}
+ void ValidateRestoreHeldFrame(std::uint64_t id) const {LuaNativeVolumetricClouds::ValidateRestoreHeldFrame(id);}
+ void RestoreHeldFrame(std::uint64_t id) noexcept {LuaNativeVolumetricClouds::RestoreHeldFrame(id);}
+ void QuarantineHeldFrame(std::uint64_t id) noexcept {LuaNativeVolumetricClouds::QuarantineHeldFrame(id);}
+};
 
 void ApplyDeferredFrameReceipts()
 {
@@ -1606,6 +1614,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	options.sourceLogicalExtent=session->lastLogicalExtent;
  if(session->renderer->HasScreenContinuation())SetReadbackSubmissionReceipts(options);
  static const bool overlap=[] {const char* value=std::getenv("BAR_NATIVE_FRAME_OVERLAP");return !value||std::string_view(value)=="1";}();
+ CloudAdmissionOwner cloudAdmission;
+ NativeFrameAdmissionTransaction admission(ui::GetRecorder(),LuaNativePostprocess::GetRecorder(),cloudAdmission,
+  frame.sourceDrawFrame,screenUI&&screenUI->postprocess?screenUI->postprocess->serial:0);
  std::shared_ptr<NativeFrameCompletionMailbox::Ticket> completionTicket;
  if(overlap&&options.presentWorld&&frame.simulationFrame>0&&screenUI&&screenUI->postprocess&&!session->renderer->HasScreenContinuation()) {
   const auto expectedDraw=frame.sourceDrawFrame,expectedPost=screenUI->postprocess->serial;
@@ -1616,9 +1627,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
      !LuaNativePostprocess::GetRecorder().HasSubmittedCapacity(expectedPost) ||
      !LuaNativeVolumetricClouds::HasSubmittedCapacity(expectedDraw) || !mailbox->HasCapacity())RequireRetiredGPUWork();
   // Main remains blocked through Draw: these checks cannot race another capture.
-  ui::GetRecorder().ValidateSubmittedCapacity(expectedDraw);
-  LuaNativePostprocess::GetRecorder().ValidateSubmittedCapacity(expectedPost);
-  LuaNativeVolumetricClouds::ValidateSubmittedCapacity(expectedDraw);
+  admission.Validate();
   options.beginReceipt=std::make_shared<NativeFrameBeginReceipt>(expectedDraw,expectedPost);
   const auto ticket=completionTicket=mailbox->Prepare(mailbox->Epoch(),expectedDraw,expectedPost);
   options.deferredCompleted=[mailbox,ticket](const Metal4WorldPresentationResult& completed) {
@@ -1628,6 +1637,24 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
     completed.completedWorldInfo,completed.completedWaterUpdates});
   };
  }
+ // All allocations, callback construction and validation precede any move.
+ // Capture stays main-blocked; the three no-throw moves are one admission step.
+ bool admitted=bool(completionTicket);
+ if(admitted){
+  options.heldSourceDraw=frame.sourceDrawFrame;
+  admission.TransferValidated();
+ }
+ const auto restoreAdmitted=[&]{
+  admission.Restore();
+  admitted=false;
+ };
+ const auto quarantineAdmitted=[&]() noexcept {
+  admission.Quarantine();
+ };
+ const auto failedAdmission=[&]{
+  if(options.beginReceipt){options.beginReceipt->MarkFailed();session->lastFailedBeginReceipt=options.beginReceipt;}
+  if(admitted){if(options.beginReceipt->Submission())quarantineAdmitted();else restoreAdmitted();}
+ };
  const auto invokeRenderer=[&] {
  try {return overlapPreparation?
   session->renderer->DrawPreparingWhilePending(frame,options,[owner=session.get()]{
@@ -1635,21 +1662,28 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
    ApplyDeferredFrameReceipts();
   }):session->renderer->Draw(frame,options);
  }catch(...){
-  if(options.beginReceipt){options.beginReceipt->MarkFailed();session->lastFailedBeginReceipt=options.beginReceipt;}
-  throw;
+  failedAdmission();throw;
  }
  };
  const auto result=invokeRenderer();
+ try {
  // A hidden/unavailable surface may return before opening a runtime lease.
  if(!result.presented&&overlapPreparation)RequireRetiredGPUWork();
- if(options.deferredCompleted && result.presented && !result.sourceFrameCompleted) {
-  ui::GetRecorder().HoldSubmittedFrame(frame.sourceDrawFrame);
-  LuaNativePostprocess::GetRecorder().HoldSubmittedFrame(screenUI->postprocess->serial);
-  LuaNativeVolumetricClouds::HoldSubmittedFrame(frame.sourceDrawFrame);
+ if(admitted && (!result.presented || result.sourceFrameCompleted)){
+  // Synchronous completion returns ownership to the historical pending-retire
+  // caller. No-Begin fallback returns pending publications for original rollback.
+  if(!result.sourceFrameCompleted && options.beginReceipt->Submission()){
+   quarantineAdmitted();throw std::logic_error("Admitted frame began without a completed or deferred result");
+  }
+  restoreAdmitted();
+ }
+ if(admitted) {
   session->completionMailbox->Accept(completionTicket);
+  ui::GetRecorder().ReportSubmittedFrame(frame.sourceDrawFrame);
   // The runtime ticket owns the immutable frame graph until true completion.
   session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();
  }
+ }catch(...){failedAdmission();throw;}
  if(result.dynamicWaterGeneration)session->dynamicWaterCapture.DidComplete(result.dynamicWaterGeneration,result.dynamicWaterSequence,result.dynamicWaterSourceDrawFrame);
  if(result.sourceFrameCompleted){session->opaqueSourcePending.reset();session->actualShadowSourcePending.reset();session->mainGroundPending.reset();}
  if(result.completedWorldInfo[0])RetireNativeWorldInfo(result.completedWorldInfo[0],result.completedWorldInfo[1]);

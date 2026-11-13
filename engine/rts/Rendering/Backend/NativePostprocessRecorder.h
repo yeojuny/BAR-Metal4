@@ -28,6 +28,10 @@ public:
  bool HasSubmittedCapacity(std::uint64_t identity) const noexcept;
  void ValidateSubmittedCapacity(std::uint64_t identity) const;
  void ValidateHeldFrame(std::uint64_t identity) const;
+ void TransferPreparedFrame(std::uint64_t identity) noexcept;
+ void ValidateRestoreHeldFrame(std::uint64_t identity) const;
+ void RestoreHeldFrame(std::uint64_t identity) noexcept;
+ void QuarantineHeldFrame(std::uint64_t identity) noexcept;
  void HoldSubmittedFrame(std::uint64_t serial);
 	// Frame transaction only: mark exactly the selected output publications
 	// after real Begin, then retire them after their actual batch completes.
@@ -56,6 +60,7 @@ public:
  void DrawCAS(std::shared_ptr<const NativePostprocessVersion> input, NativeCASUniforms uniforms,
   NativePostprocessRect viewport, std::uint32_t screenCommandOffset);
 private:
+ bool admissionFailed=false;
 	struct Change {
 		std::shared_ptr<NativePostprocessBinding> binding;
 		std::shared_ptr<const NativePostprocessVersion> previous, published;

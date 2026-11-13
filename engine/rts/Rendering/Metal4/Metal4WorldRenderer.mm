@@ -2114,6 +2114,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  std::optional<Metal4WorldRenderOptions> capturedOptions;
  if(!sourceOptions.pbrDeclarations){capturedOptions.emplace(sourceOptions);capturedOptions->pbrDeclarations=CapturePBRSource();}
  const auto& options=capturedOptions?*capturedOptions:sourceOptions;
+ Require(!options.heldSourceDraw || (*options.heldSourceDraw==frame.sourceDrawFrame && options.beginReceipt && options.screenUI && options.screenUI->postprocess),"Admitted target owner differs from its source draw");
  Require(!options.beginReceipt || (options.beginReceipt->Matches(frame.sourceDrawFrame,options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0) && !options.beginReceipt->Submission() && options.beginReceipt->FailureStage()==NativeFrameBeginReceipt::Failure::None),"Frame Begin receipt belongs to another invocation");
  // Freeze source-side policy before worker dispatch. Continuation suffixes enter
  // here again, so a SaveImage prefix never freezes a later presentation policy.
@@ -2128,12 +2129,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  if(!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
     options.submissionBegan||options.submissionCompleted||options.sourceCompleted)
   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
-   ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess);
+   ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
   });
  // Allocate/retain the exact publication identities before worker Begin.
  NativeTargetSubmissionNotice targetNotice(options.screenUI);
- auto deliverTargetNotice=[&]() noexcept {targetNotice.Deliver([](auto passes,std::uint64_t submission,auto postprocess) noexcept {
-  ui::GetRecorder().RecordTargetSubmission(passes,submission,std::move(postprocess));
+ auto deliverTargetNotice=[&]() noexcept {targetNotice.Deliver([heldSourceDraw=options.heldSourceDraw](auto passes,std::uint64_t submission,auto postprocess) noexcept {
+  ui::GetRecorder().RecordTargetSubmission(passes,submission,std::move(postprocess),heldSourceDraw);
  });};
  const auto snapshot=Metal4WindowSurfaceNativeAccess::PublishWorkerSnapshot(*impl->surface);
  static NativeSerialRenderWorker worker;
