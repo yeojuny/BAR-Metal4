@@ -64,3 +64,9 @@ Execution remains synchronous; general overlay worker eligibility/join is not co
 P5 computation boundary: [validated clipped-fill kernel](CLIPPED-FILL-KERNEL.md)
 extracts the actual pure clipping loop while preserving its original validation
 site. Eligibility seals and asynchronous scheduling/cancellation remain separate gates.
+
+### Closed clipped-fill caller seal
+- [x] Production fallback now seals only plain immutable clipped-fill inputs after its existing selection decisions; generic/typed work remains synchronous.
+- [x] Shared original validation prefix and actual pure clipping kernel retain source checks and geometry/error behavior; host contracts pass.
+- [ ] Async dispatch/cancellation and native runtime/performance acceptance remain separate gates.
+See [CLIPPED-FILL-ELIGIBILITY-SEAL.md](CLIPPED-FILL-ELIGIBILITY-SEAL.md).

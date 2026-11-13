@@ -23,11 +23,25 @@ public:
  NativeOwnedWorldGeometry& operator=(const NativeOwnedWorldGeometry&)=delete;
  NativeOwnedWorldGeometry(NativeOwnedWorldGeometry&&)=delete;
  NativeOwnedWorldGeometry& operator=(NativeOwnedWorldGeometry&&)=delete;
+ // Called at the original fallback site, never during speculative capture.
+ // A successful seal permits only the closed pure kernel; false retains the
+ // original generic synchronous builder. No validation error is suppressed.
+ bool SealIndependentClippedFillOnCaller(){
+  if(state!=State::Pending||sealAttempted)throw std::logic_error("World geometry seal is not pending");
+  sealAttempted=true;
+  const auto& d=*source;
+  if(!IsIndependentNativeWorldClippedFill(d))return false;
+  // Exact Triangles cannot enter the generic wrapper's GPU-matrix rejection;
+  // Fill/Fill makes its later polygon-mode sprite condition identically true.
+  ValidateNativeWorldGeometryPrefix(d,target.viewport,target.width,target.height,target.samples);
+  clippedPlane=*d.world.inheritedClipPlane;independentSealed=true;return true;
+ }
+ bool HasIndependentClippedFillSeal()const noexcept{return independentSealed;}
  // Control calls must be serialized. An external executor must join before
  // Take/destruction; this payload neither launches a worker nor supplies a join.
  void Execute(){
   if(state!=State::Pending)throw std::logic_error("World geometry invocation executed twice");
-  try{mesh=BuildNativeWorldDrawGeometry(*source,target.viewport,target.width,target.height,target.samples);}
+  try{mesh=independentSealed?BuildValidatedNativeWorldClippedFill(source->vertices,source->indices,clippedPlane):BuildNativeWorldDrawGeometry(*source,target.viewport,target.width,target.height,target.samples);}
   catch(...){failure=std::current_exception();}
   state=State::Ready;
  }
@@ -43,6 +57,8 @@ private:
  const Target target;
  NativeWorldRasterMesh mesh;
  std::exception_ptr failure;
+ std::array<float,4> clippedPlane{};
+ bool sealAttempted=false,independentSealed=false;
  State state=State::Pending;
 };
 }

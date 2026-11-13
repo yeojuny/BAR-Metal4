@@ -22,6 +22,11 @@ reference='''NativeWorldRasterMesh Reference(const NativeWorldDrawCommand& d){
 '''
 # Full original caller prefix is retained before the real kernel invocation.
 prefix=s[s.index('static NativeWorldRasterMesh BuildGeometry('):s.index('return BuildValidatedNativeWorldClippedFill(d.vertices')]
+shared=s[s.index('void ValidateNativeWorldGeometryPrefix('):s.index('static NativeWorldRasterMesh BuildGeometry(')]
+body=shared[shared.index('{\n')+2:shared.rindex('\n}')]
+assert prefix.count('ValidateNativeWorldGeometryPrefix(d,viewport,width,height,samples);')==1
+prefix=prefix.replace('\tValidateNativeWorldGeometryPrefix(d,viewport,width,height,samples);',body)
+
 assert hashlib.sha256(prefix.encode()).hexdigest()=='9f24ee4ae9c992957a185d762ef6f6b86d3315ab64e5db7dbf4399bbbe7de8d0'
 assert prefix.index('ValidateNativeWorldDrawCommand(d)')<prefix.index('Require(samples')<prefix.index('for(double value:viewport)')<prefix.index('if(d.world.inheritedClipPlane)for(float value:')<prefix.index('if(d.primitive==NativeDrawPrimitive::Triangles)')<prefix.index('if(!d.world.inheritedClipPlane)return {d.vertices,d.indices};')
 with tempfile.TemporaryDirectory(prefix='bar-clipped-fill-') as path:

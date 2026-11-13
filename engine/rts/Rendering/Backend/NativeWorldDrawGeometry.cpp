@@ -102,12 +102,17 @@ NativeWorldRasterMesh BuildValidatedNativeWorldClippedFill(std::span<const Nativ
 	}
 	return result;
 }
-static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const std::array<double,4>& viewport,uint32_t width,uint32_t height,bool polygonEdge,unsigned samples)
+void ValidateNativeWorldGeometryPrefix(const NativeWorldDrawCommand& d,const std::array<double,4>& viewport,
+ uint32_t width,uint32_t height,unsigned samples)
 {
 	ValidateNativeWorldDrawCommand(d);
 	Require(samples&&samples<=32&&width&&height&&width<=16384&&height<=16384&&viewport[2]>0&&viewport[3]>0,"Native world raster extent invalid");
 	for(double value:viewport)Require(std::isfinite(value),"Native world viewport non-finite");
 	if(d.world.inheritedClipPlane)for(float value:*d.world.inheritedClipPlane)Require(std::isfinite(value),"Native inherited clip plane non-finite");
+}
+static NativeWorldRasterMesh BuildGeometry(const NativeWorldDrawCommand& d,const std::array<double,4>& viewport,uint32_t width,uint32_t height,bool polygonEdge,unsigned samples)
+{
+	ValidateNativeWorldGeometryPrefix(d,viewport,width,height,samples);
 	if(d.primitive==NativeDrawPrimitive::Triangles) {
 		Require(!d.world.point.sprite || (d.world.frontPolygonMode!=NativePolygonMode::Point && d.world.backPolygonMode!=NativePolygonMode::Point),"Polygon-mode sprites require their separate clipped-boundary contract");
 		if(d.world.frontPolygonMode==NativePolygonMode::Fill && d.world.backPolygonMode==NativePolygonMode::Fill) {

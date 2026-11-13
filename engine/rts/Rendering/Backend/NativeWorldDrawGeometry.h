@@ -19,6 +19,21 @@ struct NativeWorldRasterMesh {
 // diagnostics, TLS or scheduling is performed here; errors remain at the caller.
 NativeWorldRasterMesh BuildValidatedNativeWorldClippedFill(std::span<const NativeWorldDrawVertex> vertices,
  std::span<const uint32_t> indices,std::array<float,4> plane);
+// Structural closure only, not validation or permission to skip caller checks.
+inline bool IsIndependentNativeWorldClippedFill(const NativeWorldDrawCommand& d) noexcept
+{
+ const auto& s=d.surface;
+ return !(d.primitive!=NativeDrawPrimitive::Triangles||d.sourcePrimitive!=NativeDrawPrimitive::Triangles||
+   d.world.frontPolygonMode!=NativePolygonMode::Fill||d.world.backPolygonMode!=NativePolygonMode::Fill||!d.world.inheritedClipPlane||
+   s.material!=ScreenMaterial::Solid||s.texture||s.secondary.texture||s.minimapBackground||
+   s.terraformCapture||s.diffusePainter||s.splatPainter||s.decalCapture||s.deferredVisualizer||
+   d.originalShadowInput||d.easyFacing||d.squadHull||d.terraformOverlay||d.losView||d.waterOverlay||d.unitEffect||d.unitGlass||
+   d.distortion||d.objectSpotlight||d.grass||d.resourceSpots||d.sensorLOS||d.sourceLines||d.reclaimField);
+}
+// Original geometry validation prefix, shared with the narrow caller-thread seal.
+// Does not itself establish eligibility; generic wrapper still rejects GPU matrices.
+void ValidateNativeWorldGeometryPrefix(const NativeWorldDrawCommand& draw,
+ const std::array<double,4>& viewport,uint32_t width,uint32_t height,unsigned samples);
 // Raster width is explicit framebuffer pixels. Camera/SDL logical coordinates
 // have already been mapped to this viewport by the owning native world pass.
 // inheritedClipPlane retains dot(plane, GL homogeneous position) >= 0. It clips

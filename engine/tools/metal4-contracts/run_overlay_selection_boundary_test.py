@@ -8,7 +8,7 @@ end=s.index('  const auto& meshVertices=',start)
 block=s[start:end]
 assert block.count('lineGeometry.Find(')==1 and block.count('exactWorldLine::TryBuild(')==1
 assert block.count('validatedBorrow168.Borrow(')==1 and block.count('NativeOwnedWorldGeometry geometry(')==1
-assert 'geometry.Execute();mesh=geometry.Take();' in block
+assert block.index('geometry.SealIndependentClippedFillOnCaller();')<block.index('geometry.Execute();mesh=geometry.Take();')
 assert 'std::shared_ptr<const NativeWorldDrawCommand>(frame.Owner(),&source)' in block
 assert s.index('const ScopedWorldBorrow168 validatedBorrow168(source,borrowWork168)')<s.index('auto rectangle=camera.viewport')<s.index('auto mapped=MapWorldViewport(rectangle,logicalWidth,logicalHeight,width,height)')<start
 assert s.index('if(rectangle[2]==0 || rectangle[3]==0)continue;')<start
@@ -25,7 +25,9 @@ assert 'owner->draws.at(index)' in at
 with tempfile.TemporaryDirectory(prefix='bar-overlay-selection-') as path:
  out=Path(path);(out/'overlay-selection.inc').write_text(block)
  helper=(root/'rts/Rendering/Backend/NativeOwnedWorldGeometry.h').read_text()
- (out/'owned-world-geometry.inc').write_text(helper.replace('#include "NativeWorldDrawGeometry.h"',''))
- subprocess.run(['g++','-std=c++23','-O1','-g','-fsanitize=address,undefined','-I'+str(out),str(Path(__file__).with_name('TestOverlaySelectionBoundary.cpp')),'-o',str(out/'test')],check=True)
+ geometry=(root/'rts/Rendering/Backend/NativeWorldDrawGeometry.h').read_text()
+ predicate=geometry[geometry.index('inline bool IsIndependentNativeWorldClippedFill('):geometry.index('// Original geometry validation prefix')]
+ (out/'owned-world-geometry.inc').write_text('namespace rendering {\n'+predicate+'}\n'+helper.replace('#include "NativeWorldDrawGeometry.h"',''))
+ subprocess.run(['g++','-std=c++23','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),'-I'+str(out),str(Path(__file__).with_name('TestOverlaySelectionBoundary.cpp')),'-o',str(out/'test')],check=True)
  subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},check=True)
 print('Actual overlay selection block: branch ordering/shortcircuits/failure stops/exact target forwarding/cache owner retention PASS. Mutable selection metrics and lease-reset source gates PASS. Mocks only; no native or asynchronous execution.')

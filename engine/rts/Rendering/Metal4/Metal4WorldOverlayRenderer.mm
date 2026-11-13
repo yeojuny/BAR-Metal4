@@ -576,6 +576,7 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
   if(!source.sourceLines&&!cachedLines&&!borrowed&&!linePacket){
    NativeOwnedWorldGeometry geometry(std::shared_ptr<const NativeWorldDrawCommand>(frame.Owner(),&source),
     {mapped->viewport,width,height,logicalWidth,logicalHeight,samples});
+   geometry.SealIndependentClippedFillOnCaller();
    geometry.Execute();mesh=geometry.Take(); // Same synchronous failure/consumer boundary.
   }
   const auto& meshVertices=borrowed?source.vertices:mesh.vertices;

@@ -1,3 +1,5 @@
+#include "Rendering/Backend/NativeWorldDrawData.h"
+#include <span>
 #include <array>
 #include <atomic>
 #include <vector>
@@ -9,7 +11,7 @@
 #include <cstdint>
 struct Buffers{int marker=7;bool completed=false;};
 struct Lease{};
-struct Source{bool sourceLines=false;};
+using Source=rendering::NativeWorldDrawCommand;
 using NativeWorldDrawCommand=Source;
 struct Mapped{std::array<double,4> viewport;};
 struct Probe{struct Counter{void fetch_add(int,std::memory_order){}} hits;bool Enabled()const{return false;}};
@@ -27,6 +29,8 @@ NativeWorldRasterMesh BuildNativeWorldDrawGeometry(const Source&,const std::arra
 struct Borrower{bool Borrow(const std::array<double,4>& vp,uint32_t w,uint32_t h,unsigned s){active->Call("Borrow",vp,w,h,s);return active->borrow;}};
 struct Cache{std::shared_ptr<const Buffers> Find(Lease& lease,const Source&,size_t ordinal,const std::array<double,4>& vp,uint32_t w,uint32_t h,unsigned s){assert(&lease==&active->lease&&ordinal==active->ordinal);active->Call("Find",vp,w,h,s);return active->cache;}};
 struct Impl{Cache lineGeometry;};
+void ValidateNativeWorldGeometryPrefix(const Source&,const std::array<double,4>&,uint32_t,uint32_t,unsigned){assert(false);}
+NativeWorldRasterMesh BuildValidatedNativeWorldClippedFill(std::span<const rendering::NativeWorldDrawVertex>,std::span<const uint32_t>,std::array<float,4>){assert(false);return {};}
 // Actual owned helper compiled against the boundary fixture geometry mocks.
 #include "owned-world-geometry.inc"
 using rendering::NativeOwnedWorldGeometry;
@@ -38,7 +42,7 @@ Result Select(Harness& h,const Source& input){Frame frame{std::make_shared<const
 }
 int main(){
  for(unsigned samples:{1u,2u,8u})for(unsigned variant=0;variant<5;++variant){Harness h;h.expected={-17.25,41.5,1024.75,768.125};h.width=1537;h.height=901;h.samples=samples;h.ordinal=113;Source s;
-  if(variant==0)s.sourceLines=true;if(variant==1)h.cache=std::make_shared<Buffers>();if(variant==2)h.exact=true;if(variant==3)h.borrow=true;
+  if(variant==0){auto owner=std::make_shared<int>(1);s.sourceLines=std::shared_ptr<const rendering::NativeSourceLineInput133>(owner,reinterpret_cast<const rendering::NativeSourceLineInput133*>(owner.get()));}if(variant==1)h.cache=std::make_shared<Buffers>();if(variant==2)h.exact=true;if(variant==3)h.borrow=true;
   auto r=Select(h,s);
   const std::vector<std::vector<std::string>> expected={{},{"Find"},{"Find","Try"},{"Find","Try","Borrow"},{"Find","Try","Borrow","Build"}};
   assert(h.calls==expected[variant]);assert(r.built==(variant==4));assert(r.borrowed==(variant==3));assert(r.packet==(variant==2));assert(bool(r.cache)==(variant==1));assert(r.full==(variant==0||(variant==2&&samples>1)));
