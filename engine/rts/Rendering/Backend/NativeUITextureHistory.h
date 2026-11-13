@@ -3,6 +3,8 @@
 #include "NativeUITextureObserver.h"
 #include "NativeTextureRegistry.h"
 #include <map>
+#include <stdexcept>
+#include <limits>
 namespace rendering {struct NativePostprocessPublication;struct NativeTerrainBorrowedSquareWrite;}
 namespace rendering::ui {
 // Portable immutable owner of an actual screen image/version. GPU consumers
@@ -10,10 +12,32 @@ namespace rendering::ui {
 // replaced with constants when that producer has not run.
 struct NativeScreenTextureBacking final:NativeTextureBacking {
  std::shared_ptr<const ScreenTexture> image;
- NativeTextureBackingKind Kind()const noexcept override;
+ NativeTextureBackingKind Kind()const noexcept override {
+  return image&&(image->format==ScreenTextureFormat::Depth32Float||image->format==ScreenTextureFormat::Depth24Unorm||image->format==ScreenTextureFormat::Depth16Unorm)?NativeTextureBackingKind::Other:NativeTextureBackingKind::ColorImage;
+ }
 };
+// Retain allocation metadata on the exact object, without inventing pixels or
+// consulting a later logical-name binding. No producer/consumer frame is stamped.
+inline void PublishNativeUIAllocationDescriptor(NativeTextureRegistry& registry,uint64_t name,
+ std::shared_ptr<const ScreenTexture> image) {
+ auto object=registry.Find(name);
+ if(!object||object->storage!=NativeTextureStorageKnowledge::AllocatedUndefined||!image||
+  image->width!=object->allocation.width||image->height!=object->allocation.height||
+  !image->bytes.empty()||!image->mips.empty()||image->generation||image->postprocessVersion||
+  object->version==std::numeric_limits<uint64_t>::max())
+  throw std::runtime_error("UI allocation descriptor differs from its undefined source storage");
+ auto backing=std::make_shared<NativeScreenTextureBacking>();backing->image=std::move(image);
+ backing->storageGeneration=object->identity;backing->contentVersion=object->version+1;
+ backing->content=NativeTextureContent::AllocationOnly;
+ registry.PublishContent(name,{},std::move(backing));
+}
 class NativeUITextureHistory final:public NativeUITextureObserver {
 public:
+ // Captured resolvers copy this service. Providers must resolve retained
+ // binding owners, not query mutable registry/name state through captures.
+ using ExternalImageDescriptorProvider=std::function<std::shared_ptr<const ScreenTexture>(const NativeCUSTextureBinding&)>;
+ NativeUICapturedBindingResolver CaptureResolver() const;
+ static ObservedImage DescribeRetainedBinding(const NativeCUSTextureBinding&,const ExternalImageDescriptorProvider&);
  NativeUITextureHistory(NativeCUSTextureHistory&,NativeTextureRegistry&,std::function<uint64_t()> actualProducerFrame);
  ~NativeUITextureHistory() override;
  void ActiveTexture(unsigned)override;
@@ -55,7 +79,7 @@ public:
  // Original map setters use CNamedTextures::GetInfo(forceLoad=false).
  // This queries the real registered named owner without loading a new image.
  NativeTextureLookup LookupObservedNamed(const std::string&) const;
- using ExternalImageDescriptorProvider=std::function<std::shared_ptr<const ScreenTexture>(const NativeCUSTextureBinding&)>;
+
  void SetExternalImageDescriptorProvider(ExternalImageDescriptorProvider provider){externalImages=std::move(provider);}
  // Original UnitDefImage's owned load/delete, including borrowed Lua names.
  uint64_t UploadBuildPicture(const std::shared_ptr<NativeUITextureBinding>&,const std::string&,bool flatDDS);

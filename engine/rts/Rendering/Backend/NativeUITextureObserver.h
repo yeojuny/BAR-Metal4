@@ -37,4 +37,5 @@ struct NativeUITextureObserver {
  virtual void DeleteNamed(const std::string&)=0;
  virtual void UpdateNamed()=0;
 };
+using NativeUICapturedBindingResolver=std::function<NativeUITextureObserver::ObservedImage(const NativeCUSTextureBinding&)>;
 } // namespace rendering::ui

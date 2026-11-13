@@ -181,3 +181,14 @@ RuntimeLease (the connection-time stack guard did not cover later invocations).
 It fails unsupported ownership early; no concurrent capture permission follows.
 Worker UI DescribeBinding's live source context/name fallback remains a concrete
 next captured-descriptor handoff boundary.
+
+Initial UI allocation metadata is now retained as AllocationOnly backing on its
+exact immutable object; DescribeBinding no longer follows a mutable same-name
+cell. Actual registry1000-case sanitizer tests and whole UI history C++ syntax
+pass. Live context/external descriptor service access remains to be isolated.
+
+UI descriptor follow-up: main captures an owning resolver service before worker
+handoff; pure retained-binding resolution no longer reads live context/registry
+on ordinary-model/StartBox worker paths. Main-only compatibility fallback remains
+outside draw scopes. Existing typed execution/readability dependencies stay;
+this is not complete source-family capture overlap readiness.

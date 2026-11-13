@@ -375,6 +375,12 @@ struct Metal4WorldRenderer::Impl {
 	metal4::WorldParticlesGPU particlesGPU;
 	metal4::WorldEnvironmentGPU environmentGPU;
 	metal4::PBRSourceService pbrSource;
+ ui::NativeUICapturedBindingResolver uiBindingResolver;
+ ui::NativeUITextureObserver::ObservedImage DescribeUIBinding(const NativeCUSTextureBinding& binding) {
+  if(uiBindingResolver)return uiBindingResolver(binding);
+  Require([NSThread isMainThread],"Worker UI binding lacks captured descriptor resolver");
+  return OriginalNativeTextureContext().UI().DescribeBinding(binding);
+ }
 	uint64_t pbrSubmission=0;
 	metal4::WorldOverlayGPU overlayGPU;
 	metal4::ProjectileEffectsGPU projectileEffectsGPU;
@@ -680,7 +686,7 @@ struct Metal4WorldRenderer::Impl {
 		// Ordinary named/Lua color images keep the one existing UI image cache.
 		// A source-dependent framebuffer needs its actual prepared producer;
 		// an absent producer remains a strict source error at this boundary.
-		const auto source=OriginalNativeTextureContext().UI().DescribeBinding(binding);
+		const auto source=DescribeUIBinding(binding);
 		Require(source.image!=nullptr,"Original model image lacks its captured UI storage");
 		auto external=std::make_shared<PreparedScreenExternalImage>();
 		auto prepared=screenGPU.PrepareImage(lease,source.image,source.sampler,nullptr,std::nullopt,
@@ -1665,7 +1671,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			const auto encoded=owner->normalsEncoded;
 			return PreparedStartBoxImage{kind,resource->texture,sampler,binding.object,resource,false,[encoded]{Require(*encoded,"Original map normal image sampled before its existing producer");}};
 		}
-		const auto source=OriginalNativeTextureContext().UI().DescribeBinding(binding);
+		const auto source=owner->DescribeUIBinding(binding);
 		Require(source.image!=nullptr,"Original StartBox binding has no actual retained image");
 		if(source.image->renderTarget && (source.image->format==ScreenTextureFormat::RGBA16Float || source.image->format==ScreenTextureFormat::R8Unorm))
 			Require(source.image->generation,"Original StartBox SDF cannot sample allocation-only unbaked contents");
@@ -2237,6 +2243,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  std::optional<Metal4WorldRenderOptions> capturedOptions;
  if(!sourceOptions.pbrDeclarations){capturedOptions.emplace(sourceOptions);capturedOptions->pbrDeclarations=CapturePBRSource();}
  const auto& options=capturedOptions?*capturedOptions:sourceOptions;
+ ui::NativeUICapturedBindingResolver uiResolver;
+ auto& uiContext=OriginalNativeTextureContext();
+ if(uiContext.Initialized()&&uiContext.UIAttached())uiResolver=uiContext.UI().CaptureResolver();
  Require(!options.heldSourceDraw || (*options.heldSourceDraw==frame.sourceDrawFrame && options.beginReceipt && options.screenUI && options.screenUI->postprocess),"Admitted target owner differs from its source draw");
  Require(!options.beginReceipt || (options.beginReceipt->Matches(frame.sourceDrawFrame,options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0) && !options.beginReceipt->Submission() && options.beginReceipt->FailureStage()==NativeFrameBeginReceipt::Failure::None),"Frame Begin receipt belongs to another invocation");
  // Freeze source-side policy before worker dispatch. Continuation suffixes enter
@@ -2254,7 +2263,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   cacheAccess.reset();
   return DrawPrepared(frame,options,presentation,std::move(previousRetired),[&](std::uint64_t submission) noexcept {
    ui::GetRecorder().RecordTargetSubmission(options.screenUI->targetPasses,submission,options.screenUI->postprocess,options.heldSourceDraw);
-  });
+  },std::move(uiResolver));
  }
  // Allocate/retain the exact publication identities before worker Begin.
  NativeTargetSubmissionNotice targetNotice(options.screenUI);
@@ -2271,10 +2280,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deferredReceipt=mainReceipt?std::function<void()>([&]{receiptReady=true;}):std::function<void()>{};
  auto deliverReceipt=[&]{if(receiptReady){receiptReady=false;mainReceipt();}};
  try {
-  auto result=worker.Invoke([this,owned,presentation,snapshot,&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
+  auto result=worker.Invoke([this,owned,presentation,snapshot,uiResolver=std::move(uiResolver),&cacheHandoff,&deferredReceipt,&targetNotice]{@autoreleasepool {
    NativeRendererAccessGate::Scope admittedAccess(*cacheHandoff);
    Metal4SurfaceWorkerScope scope(snapshot);
-   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);});
+   return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[&targetNotice](std::uint64_t submission) noexcept {targetNotice.MarkBegun(submission);},uiResolver);
   }});
   cacheHandoff.reset();
   deliverTargetNotice();
@@ -2285,9 +2294,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   return result;
  }catch(...){cacheHandoff.reset();deliverTargetNotice();deliverReceipt();throw;}
 }
-Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan)
+Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame& frame,const Metal4WorldRenderOptions& options,const NativePresentationPolicy& presentation,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver uiResolver)
 {
  NativeRendererAccessGate::Scope cacheAccess(impl?&impl->access:nullptr);
+ struct ResolverScope {
+  ui::NativeUICapturedBindingResolver& destination;ui::NativeUICapturedBindingResolver previous;
+  ResolverScope(ui::NativeUICapturedBindingResolver& slot,ui::NativeUICapturedBindingResolver resolver) noexcept:destination(slot),previous(std::move(slot)){destination=std::move(resolver);}
+  ~ResolverScope(){destination=std::move(previous);}
+ } resolverScope(impl->uiBindingResolver,std::move(uiResolver));
  NativeCPUPhaseScope cpuPhase(3,frame.simulationFrame);
 	@autoreleasepool {
 		MainThread(); Require(impl != nullptr, "World renderer was moved from");

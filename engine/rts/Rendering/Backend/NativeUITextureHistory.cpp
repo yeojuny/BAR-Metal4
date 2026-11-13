@@ -20,9 +20,6 @@ const NativeUITextureBinding* Root(const std::shared_ptr<NativeUITextureBinding>
  while(p->source){Check(count<seen.size()&&std::find(seen.begin(),seen.begin()+count,p)==seen.begin()+count,"Original UI texture delegation is cyclic");seen[count++]=p;p=p->source.get();}return p;
 }
 }
-NativeTextureBackingKind NativeScreenTextureBacking::Kind()const noexcept{
- return image&&(image->format==ScreenTextureFormat::Depth32Float||image->format==ScreenTextureFormat::Depth24Unorm||image->format==ScreenTextureFormat::Depth16Unorm)?NativeTextureBackingKind::Other:NativeTextureBackingKind::ColorImage;
-}
 NativeUITextureHistory::NativeUITextureHistory(NativeCUSTextureHistory&h,NativeTextureRegistry&r,std::function<uint64_t()>frame):history(h),registry(r),context(r.ContextGeneration()),sourceFrame(std::move(frame)){Check(r.MatchesHistory(h)&&context&&bool(sourceFrame),"UI texture observer lacks actual shared context");}
 NativeUITextureHistory::~NativeUITextureHistory()=default;
 void NativeUITextureHistory::CheckContext()const{Check(context==registry.ContextGeneration(),"UI texture observer was not reset with its actual context");}
@@ -57,6 +54,7 @@ void NativeUITextureHistory::Create(const std::shared_ptr<NativeUITextureBinding
  // active unit; it does not leave the new image bound.
  auto unit=history.ActiveUnit();Check(bool(unit),"Lua image creation lacks actual active unit");auto prior=history.Binding(*unit,target);registry.Bind(*unit,o->name,target);registry.Allocate(o->name,Allocation(*b->current,format));registry.SetSampling(o->name,Sampling(b->sampler));
  if(prior.object)registry.Bind(*unit,prior.object->name,target);else{Check(prior.knowledge==NativeCUSBindingKnowledge::DefaultObject,"Original Lua image prior binding unobserved");registry.Bind(*unit,0,target);}
+ PublishNativeUIAllocationDescriptor(registry,e.name,b->current);
  e.declared=registry.Find(e.name);e.ownsStorage=true;bindings.emplace(b.get(),std::move(e));
  // Allocation with nullptr data is not an image upload or implicit clear.
 }
@@ -316,9 +314,18 @@ bool NativeUITextureHistory::SamplingIncomplete(const NativeCUSTextureBinding& b
  const bool mipmapped=sampling.minFilter!=0x2600&&sampling.minFilter!=0x2601;
  return !NativeUITextureLevelsComplete(*backing->image->levelDefinitions,mipmapped,sampling.baseLevel,sampling.maxLevel);
 }
+NativeUICapturedBindingResolver NativeUITextureHistory::CaptureResolver() const
+{
+ CheckContext();
+ return [provider=externalImages](const NativeCUSTextureBinding& binding){return DescribeRetainedBinding(binding,provider);};
+}
 NativeUITextureObserver::ObservedImage NativeUITextureHistory::DescribeBinding(const NativeCUSTextureBinding& b)
 {
- CheckContext();Check(b.object||b.knowledge==NativeCUSBindingKnowledge::DefaultObject,"Observed UI image has no original binding");
+ CheckContext();return DescribeRetainedBinding(b,externalImages);
+}
+NativeUITextureObserver::ObservedImage NativeUITextureHistory::DescribeRetainedBinding(const NativeCUSTextureBinding& b,const ExternalImageDescriptorProvider& externalImages)
+{
+ Check(b.object||b.knowledge==NativeCUSBindingKnowledge::DefaultObject,"Observed UI image has no original binding");
  const auto sampler=DescribeSampler(b);
  if(!b.object){Check(b.defaultStorageKnownEmpty,"Default UI texture has unobserved source storage");auto empty=std::make_shared<ScreenTexture>();empty->incomplete=true;empty->sourceName="original-default-object0";return{std::move(empty),sampler};}
  const auto&o=*b.object;
@@ -339,9 +346,8 @@ NativeUITextureObserver::ObservedImage NativeUITextureHistory::DescribeBinding(c
    Check(o.sampling.depthMode==0x1909,"External fixed-function depth requires original luminance sampling");
   return {std::move(descriptor),sampler};
  }
- // A real Lua allocation has a retained RTT/copy descriptor, not invented
- // contents. The renderer must allocate/resolve that descriptor before use.
- for(auto&[key,e]:bindings)if(e.name==o.name&&e.binding&&e.binding->current)return{e.binding->current,sampler};
+ // Allocated-only Lua images also retain their exact metadata in the object.
+ // Never resolve an older captured token through a later mutable name/cell.
  throw std::runtime_error("Original UI texture needs its actual immutable image provider");
 }
 bool NativeUITextureHistory::Enabled(unsigned unit)const{CheckContext();const auto b=history.Binding(unit,target);Check(b.enableObserved,"Original UI texture enable was not observed");return b.enabled;}

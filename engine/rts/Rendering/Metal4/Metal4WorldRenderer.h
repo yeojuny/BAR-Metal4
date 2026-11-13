@@ -12,6 +12,7 @@
 #include "Rendering/Backend/WorldFrameData.h"
 #include "Rendering/Backend/ScreenDrawList.h"
 #include "Rendering/Backend/NativeOwnedScreenFrame.h"
+#include "Rendering/Backend/NativeUITextureObserver.h"
 #include <stdexcept>
 #include <memory>
 #include <optional>
@@ -301,7 +302,7 @@ private:
  enum class WaterReset { Bump, Basic, Dynamic, Legacy };
  void ClearWaterFamily(WaterReset);
  Metal4WorldPresentationResult DrawDispatch(const WorldFrame&,const Metal4WorldRenderOptions&,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned = {});
- Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan);
+ Metal4WorldPresentationResult DrawPrepared(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&,std::function<void()> previousRetired,std::function<void(std::uint64_t)> targetSubmissionBegan,ui::NativeUICapturedBindingResolver);
 	Metal4WorldPresentationResult ContinueScreen(const WorldFrame&,const Metal4WorldRenderOptions&,const NativePresentationPolicy&);
 	struct Impl;
 	std::unique_ptr<Impl> impl;
