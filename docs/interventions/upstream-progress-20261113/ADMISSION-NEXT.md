@@ -42,3 +42,9 @@ Remaining: all world/shield source-family ownership and dependency-safe rollback
 exclusive renderer/cache ownership, ordered control/teardown and actual Metal
 verification. No concurrent younger capture or CPU lookahead is enabled. Do not
 infer whole-world atomic admission from the three-journal coordinator.
+
+External-image read routing follow-up: the preparation submission identity now
+comes from an explicit per-invocation serial scope, not shieldPending. World,
+maintenance, independent readback and continuation each bind their own identity.
+This removes provider inference only; shield publication/cancellation still needs
+exact source-family ownership before concurrent younger capture can be admitted.

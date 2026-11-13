@@ -1,4 +1,5 @@
 #include "Rendering/Backend/NativeTargetSubmissionNotice.h"
+#include "Rendering/Backend/NativeSubmissionReadScope.h"
 #include "Metal4CubeCopy206.h"
 #include <cstdlib>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
@@ -388,6 +389,7 @@ struct Metal4WorldRenderer::Impl {
 	std::vector<std::pair<NativeTextureSampling,id<MTLSamplerState>>> shieldColorSamplers;
 	NativeTextureRegistry* shieldRegistry=nullptr;
 	std::shared_ptr<NativeShieldDepthFrame> shieldPending;
+	NativeSubmissionReadBinding submissionReads;
 	// Non-null only after a source submission actually began and until every
 	// successful retirement callback has finished. An error retains it.
 	std::shared_ptr<const NativeOpaqueModelFrame> submittedOpaqueSource;
@@ -1255,7 +1257,9 @@ std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTar
   };
   if(!collect(collect,prefix.readColor))return std::nullopt;
   RuntimeLease lease;const auto start=Clock::now();double shaderCompileMs=0;
-  const auto submission=CreateShieldSubmissionIdentity();impl->pbrSubmission=submission;
+  const auto submission=CreateShieldSubmissionIdentity();
+  NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,submission);
+  impl->pbrSubmission=submission;
   impl->pendingMipTextures.clear();
   ScreenDrawList empty;
   ScreenFrameView frame{&empty,prefix.coordinateWidth,prefix.coordinateHeight,{},selected};
@@ -1319,6 +1323,7 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 		// DrawGenesis can run while the original world draw is skipped. BRDF
 		// has no world/cube dependency and still executes in the common submit.
 		const auto sourceSubmission=CreateShieldSubmissionIdentity();
+		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,sourceSubmission);
 		impl->pbrSubmission=sourceSubmission;
 		impl->particlesGPU.PrepareAtlasImages(sourceSubmission);
 		auto pbrBRDF=impl->pbrSource.Prepare(lease,NativePBRKind::BRDF,{},pbrDeclarations);
@@ -1739,7 +1744,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			const auto submission=owner->pbrSubmission;
 			auto image=owner->pbrSource.Image(lease,binding,submission);return {image.texture,image.owner,image.requireReadable};
 		}
-  const uint64_t actualSubmission=owner->shieldPending?owner->shieldPending->submissionIdentity:0;
+  const uint64_t actualSubmission=owner->submissionReads.Current();
   if(auto backing=std::dynamic_pointer_cast<const NativeBloomImageBacking>(object->backing)){
    auto image=owner->bloomGPU.Resolve(lease,backing->version,actualSubmission);return{image.texture,image.owner,image.requireReadable};
   }
@@ -1752,7 +1757,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
    auto image=ResolveDeferredColorImage(lease,binding,actualSubmission);return{image.texture,image.owner,image.requireReadable};
   }
 		auto backing=std::dynamic_pointer_cast<const NativeShieldDepthBacking>(object->backing);Require(backing!=nullptr,"Original external depth consumer has no actual map/model backing");
-		const auto image=GetShieldDepthBackingImage(*backing);const uint64_t submission=owner->shieldPending?owner->shieldPending->submissionIdentity:0;
+		const auto image=GetShieldDepthBackingImage(*backing);const uint64_t submission=owner->submissionReads.Current();
 		return{image.texture,backing,[image,submission]{
 			Require(image.producer&&IsNativeShieldDepthReadable(image.producer->encoded,image.producer->completed,image.producer->operation==ShieldDepthOperation::AllocationOnly,image.producer->allocationVerified,image.producer->submissionIdentity,submission)&&
 				(image.producer->completed||image.producer->operation==ShieldDepthOperation::AllocationOnly||submission!=0),"Original UI depth version was not produced in this actual submission or retired earlier");
@@ -2005,7 +2010,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
   const auto main=continuation->main;
   RuntimeLease lease;const auto start=Clock::now();lease.SetMinSampleShadingRate(frame.minSampleShadingRate);
   main->RetainForContinuation(lease);
-  const auto submission=CreateShieldSubmissionIdentity();impl->pbrSubmission=submission;
+  const auto submission=CreateShieldSubmissionIdentity();
+  NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,submission);
+  impl->pbrSubmission=submission;
   impl->pendingMipTextures.clear();impl->particlesGPU.PrepareAtlasImages(submission);
   if(post)impl->postprocessGPU.PrepareFrameImages(lease,post,frame.sourceDrawFrame);
   std::shared_ptr<PreparedScreenFrame> screen=impl->screenGPU.Prepare(lease,selected,
@@ -2195,6 +2202,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   CountPreparationTrace(35,NativeCUSCPUReadScope::ActiveCount());
   CountPreparationTrace(38,NativeCUSCPUReadScope::ActivePreparationNanoseconds());
 		std::optional<NativeCPUPhaseScope> prepPhase;prepPhase.emplace(4,frame.simulationFrame);
+		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
+		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,sourceSubmission);
   RuntimeLease lease(std::move(previousRetired));
   // Sweep once even when main/water effect frames are absent or empty.
   impl->projectileEffectsGPU.PruneExpiredImages();
@@ -2463,7 +2472,6 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		}
 		std::vector<PreparedScreenExternalImage> terrainImages;
 		const auto retainTerrainImage=[&](PreparedScreenExternalImage image){terrainImages.push_back(std::move(image));};
-		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
 		std::shared_ptr<PreparedUnitStencil> unitStencil;
 		if(frame.luaUnitStencilFrame && !frame.luaUnitStencilFrame->passes.empty()){
 			Require(frame.luaUnitStencilFrame->sourceDrawFrame==frame.sourceDrawFrame,"Original Unit Stencil Genesis belongs to another source frame");

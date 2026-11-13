@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "output": "1000 normal/exception, nested rejection, retained exact identity cycles passed\n",
+  "limits": [
+    "No Objective-C++/Metal execution. Serial scoped routing only; not concurrent renderer safety, whole-world ownership or enabled lookahead."
+  ]
+}
