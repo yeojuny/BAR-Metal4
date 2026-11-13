@@ -48,3 +48,11 @@ Elapsed wall-minus-tail time is not labeled actual CPU execution or overlap proo
 CPU preparation checkpoint: [shadow rigid proof reuse](SHADOW-RIGID-PROOF.md)
 reuses positive geometry classification from the exact immutable captured model.
 Per-draw guards and unsupported/unclassified detailed checks remain unchanged.
+
+Integration gate assessment: [readiness and unresolved boundaries](INTEGRATION-READINESS.md).
+The source candidate is not full P5/P6 acceptance; older checkpoint notes are not
+a replacement for the latest scoped evidence. Full application build remains deferred.
+
+P5 overlay boundary audit: [selection and target contract](OVERLAY-SELECTION-BOUNDARY.md)
+records the existing exact branch order and blockers. Executable host regressions
+protect that boundary; no general overlay worker or transferable receipt was added.
