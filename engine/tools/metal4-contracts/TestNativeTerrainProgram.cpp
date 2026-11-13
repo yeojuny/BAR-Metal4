@@ -1,8 +1,9 @@
 // GPL v2 or later. Included after the verbatim production terrain source TU.
 // External validation/compiler/VFS and shader-base services are test doubles.
 static size_t allocations=0;
+static int failAllocationAfter=-1;
 static size_t validationCalls=0;
-void* operator new(size_t size){++allocations;if(void* p=std::malloc(size?size:1))return p;throw std::bad_alloc();}
+void* operator new(size_t size){if(failAllocationAfter==0){failAllocationAfter=-1;throw std::bad_alloc();}if(failAllocationAfter>0)--failAllocationAfter;++allocations;if(void* p=std::malloc(size?size:1))return p;throw std::bad_alloc();}
 void operator delete(void* p)noexcept{std::free(p);}
 void operator delete(void* p,size_t)noexcept{std::free(p);}
 void* operator new[](size_t size){return ::operator new(size);}
@@ -15,7 +16,7 @@ void ValidateNativeTerrainProgram(const NativeTerrainProgramIdentity& i,
  if(!c || i.contextGeneration!=context || !c->Matches(i) || !c->Supports(i))throw std::runtime_error("fixture invalid consumer");
 }
 struct TestConsumer:NativeTerrainProgramConsumer {
- NativeTerrainProgramIdentity id;
+ const NativeTerrainProgramIdentity id;
  explicit TestConsumer(NativeTerrainProgramIdentity i):id(std::move(i)){}
  bool HasImmutableDefinition()const noexcept override{return true;}
  uint64_t ContextGeneration()const noexcept override{return id.contextGeneration;}
@@ -24,6 +25,20 @@ struct TestConsumer:NativeTerrainProgramConsumer {
  bool Supports(const NativeTerrainProgramIdentity&)const noexcept override{return true;}
 };
 }
+// Trace source observations only, excluding additional eager-reference hook calls.
+// Hash exact float/integer bytes, metadata and logical revision, not owner addresses.
+static uint64_t observationFingerprint=14695981039346656037ULL;
+static void TraceBytes(const void* bytes,size_t count){const auto* p=static_cast<const unsigned char*>(bytes);for(size_t i=0;i<count;++i)observationFingerprint=(observationFingerprint^p[i])*1099511628211ULL;}
+template<class T>static void TraceScalar(const T& value){TraceBytes(&value,sizeof(value));}
+static rendering::NativeTerrainProgramSnapshot TraceCapture(){
+ auto result=rendering::CaptureCurrentNativeTerrainProgram();
+ TraceScalar(result.Identity().sourceRevision);TraceScalar(result.uniforms->revision);
+ for(const auto& [name,value]:result.uniforms->values){TraceBytes(name.data(),name.size());TraceScalar(value.rows);TraceScalar(value.columns);TraceScalar(value.count);TraceScalar(value.transpose);auto type=value.values.index();TraceScalar(type);
+  std::visit([](const auto& values){auto size=values.size();TraceScalar(size);TraceBytes(values.data(),values.size()*sizeof(values[0]));},value.values);
+ }
+ return result;
+}
+#define CaptureCurrentNativeTerrainProgram TraceCapture
 static unsigned checks=0;
 void check(bool yes){++checks;if(!yes)throw std::runtime_error("check "+std::to_string(checks)+" failed");}
 template<class F>void rejects(F f){bool failed=false;try{f();}catch(const std::runtime_error&){failed=true;}check(failed);}
@@ -62,8 +77,30 @@ int main(){using namespace rendering;
  check(stats.alignedNoOps==1&&stats.mapCopies==0&&stats.publications==0);
  std::cout<<"aligned no-op: allocations=0 mapCopies=0 publications=0\n";
  check(CaptureCurrentNativeTerrainProgram().uniforms==before.uniforms);
+ // Three accepted writes with no owning observation: inspect/kind must not seal.
  TakeNativeTerrainUniformWriteStats();
- p->SetUniform1f(slot,-0.f);stats=TakeNativeTerrainUniformWriteStats();
+ const auto priorRevision=before.uniforms->revision;
+ p->SetUniform1f(slot,41.f);p->SetUniform1f(slot,42.f);p->SetUniform1f(slot,43.f);
+ OriginalNativeSourceProgramBinding().InspectCurrent();OriginalNativeSourceProgramBinding().CurrentKind();
+ stats=TakeNativeTerrainUniformWriteStats();
+#ifdef BAR_NATIVE_TERRAIN_EAGER_REFERENCE
+ check(stats.mapCopies==3&&stats.publications==3);
+#else
+ check(stats.mapCopies==1&&stats.publications==0);
+#endif
+ check(stats.exactChanges==3);
+ auto batch=CaptureCurrentNativeTerrainProgram();stats=TakeNativeTerrainUniformWriteStats();
+#ifdef BAR_NATIVE_TERRAIN_EAGER_REFERENCE
+ check(stats.publications==0);
+#else
+ check(stats.publications==1);
+#endif
+ check(batch.uniforms->revision==priorRevision+3);
+ check(std::get<std::vector<float>>(batch.uniforms->values.at("value").values)[0]==43.f);
+ check(std::get<std::vector<float>>(before.uniforms->values.at("value").values)[0]==0.f);
+ p->SetUniform1f(slot,0.f);CaptureCurrentNativeTerrainProgram();
+ TakeNativeTerrainUniformWriteStats();
+ p->SetUniform1f(slot,-0.f);OriginalNativeSourceProgramBinding().Current();stats=TakeNativeTerrainUniformWriteStats();
  check(stats.exactChanges==1&&stats.mapCopies==1&&stats.publications==1&&stats.definitionCopies==0);
  check(OriginalNativeSourceProgramBinding().Current().terrainSource->definition==initialDefinition);
  auto neg=CaptureCurrentNativeTerrainProgram();
@@ -99,7 +136,7 @@ int main(){using namespace rendering;
  check(binding.InspectCurrent().owner==nonterrainOwner);
  binding.Restore(outer);rejects([&]{CaptureCurrentNativeTerrainProgram();});
  TakeNativeTerrainUniformWriteStats();p->SetUniform1f(slot,17.f);
- stats=TakeNativeTerrainUniformWriteStats();check(stats.stalePublicationFallbacks==1&&stats.publications==1);
+ OriginalNativeSourceProgramBinding().Current();stats=TakeNativeTerrainUniformWriteStats();check(stats.stalePublicationFallbacks==1&&stats.publications==1);
  check(std::get<std::vector<float>>(CaptureCurrentNativeTerrainProgram().uniforms->values.at("value").values)[0]==17.f);
  check(outer.terrainSource==outerOwner);
  // The borrowed Selection address stays stable but observes subsequent bindings.
@@ -109,7 +146,7 @@ int main(){using namespace rendering;
  auto saved=OriginalNativeSourceProgramBinding().Current();
  p->SetUniform1f(slot,3.f);auto c=CaptureCurrentNativeTerrainProgram();
  OriginalNativeSourceProgramBinding().Restore(saved);TakeNativeTerrainUniformWriteStats();
- p->SetUniform1f(slot,3.f);stats=TakeNativeTerrainUniformWriteStats();
+ p->SetUniform1f(slot,3.f);OriginalNativeSourceProgramBinding().Current();stats=TakeNativeTerrainUniformWriteStats();
  check(stats.stalePublicationFallbacks==1&&stats.mapCopies==1&&stats.publications==1);
  check(CaptureCurrentNativeTerrainProgram().uniforms!=c.uniforms);
  check(std::get<std::vector<float>>(b.uniforms->values.at("value").values)[0]==2);
@@ -184,7 +221,7 @@ int main(){using namespace rendering;
  auto imported=CaptureCurrentNativeTerrainProgram();auto importedDefinition=OriginalNativeSourceProgramBinding().Current().terrainSource->definition;
  check(imported.Identity().originalGLName==8&&imported.Identity().originalProgramGeneration==99);
  check(importedDefinition!=invalid.terrainSource->definition);
- luaSlot=lua->Slot("value");TakeNativeTerrainUniformWriteStats();lua->SetUniform1f(luaSlot,9);stats=TakeNativeTerrainUniformWriteStats();
+ luaSlot=lua->Slot("value");TakeNativeTerrainUniformWriteStats();lua->SetUniform1f(luaSlot,9);OriginalNativeSourceProgramBinding().Current();stats=TakeNativeTerrainUniformWriteStats();
  check(stats.definitionCopies==0&&stats.publications==1);
  check(OriginalNativeSourceProgramBinding().Current().terrainSource->definition==importedDefinition);
  check(std::get<std::vector<float>>(imported.uniforms->values.at("value").values)[0]==0);
@@ -207,6 +244,39 @@ int main(){using namespace rendering;
  replacement->Link();replacement->EnableRaw();auto replacementBinding=binding.SaveCurrent();
  binding.Restore(orphan);rejects([&]{CaptureCurrentNativeTerrainProgram();});
  binding.Restore(replacementBinding);check(bool(CaptureCurrentNativeTerrainProgram().Consumer()));
+ // Current/Save seal without adding capture-time context validation.
+ const int replacementSlot=replacement->Slot("value");
+ replacement->SetUniform1f(replacementSlot,23.f);context=2;
+ auto contextSaved=binding.SaveCurrent();
+ check(std::get<std::vector<float>>(contextSaved.terrainSource->uniforms->values.at("value").values)[0]==23.f);
+ rejects([&]{CaptureCurrentNativeTerrainProgram();});context=1;
+ check(std::get<std::vector<float>>(CaptureCurrentNativeTerrainProgram().uniforms->values.at("value").values)[0]==23.f);
+ // Targeted allocation fault probes, not an exhaustive strong-exception proof.
+ // Keep these extra observations outside the cross-mode semantic fingerprint.
+#undef CaptureCurrentNativeTerrainProgram
+ auto faultSnapshot=rendering::CaptureCurrentNativeTerrainProgram();
+ for(int failurePoint:{0,1,2}){
+  failAllocationAfter=failurePoint;bool threw=false;
+  try{replacement->SetUniform1f(replacementSlot,24.f);}catch(const std::bad_alloc&){threw=true;}
+  failAllocationAfter=-1;check(threw);
+  check(rendering::CaptureCurrentNativeTerrainProgram().uniforms==faultSnapshot.uniforms);
+ }
+#ifndef BAR_NATIVE_TERRAIN_EAGER_REFERENCE
+ replacement->SetUniform1f(replacementSlot,25.f);
+ // Failure allocating the next input cannot mutate the existing dirty map.
+ failAllocationAfter=0;bool updateFailed=false;
+ try{replacement->SetUniform1f(replacementSlot,26.f);}catch(const std::bad_alloc&){updateFailed=true;}
+ failAllocationAfter=-1;check(updateFailed);
+ // Publication allocation failure leaves pending writer available for retry.
+ failAllocationAfter=0;bool sealFailed=false;
+ try{binding.SaveCurrent();}catch(const std::bad_alloc&){sealFailed=true;}
+ failAllocationAfter=-1;check(sealFailed);
+ check(std::get<std::vector<float>>(faultSnapshot.uniforms->values.at("value").values)[0]==23.f);
+ auto retried=binding.SaveCurrent();
+ check(std::get<std::vector<float>>(retried.terrainSource->uniforms->values.at("value").values)[0]==25.f);
+ check(retried.terrainSource->uniforms->revision==faultSnapshot.uniforms->revision+1);
+#endif
  replacement->DisableRaw();replacement.reset();binding.Unbind();ConfigureNativeTerrainProgramSource({});
+ std::cout<<"observationFingerprint="<<observationFingerprint<<"\n";
  std::cout<<"PASS "<<checks<<" terrain writer contract checks; GPU/Lua/gameplay not exercised\n";
 }

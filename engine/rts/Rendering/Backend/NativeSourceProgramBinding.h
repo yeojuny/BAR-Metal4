@@ -30,20 +30,40 @@ public:
  void BindOutline(std::shared_ptr<const void> actualProgram){Bind(Kind::Outline,std::move(actualProgram));}
  void BindTerrain(std::shared_ptr<const NativeTerrainProgramConsumer> actualProgram){
   if(!actualProgram)throw std::logic_error("Original terrain source binding has no actual compiled terrain owner");
-  current={};current.kind=Kind::Terrain;current.terrain=std::move(actualProgram);
+  Unbind();current.kind=Kind::Terrain;current.terrain=std::move(actualProgram);
  }
  void BindTerrainSource(std::shared_ptr<const NativeTerrainProgramPublication>);
- void BindOriginalGL(std::uint32_t name){current={};if(name){current.kind=Kind::UnsupportedGL;current.originalGLName=name;}}
- void Unbind()noexcept{current={};}
+ void BindOriginalGL(std::uint32_t name){Unbind();if(name){current.kind=Kind::UnsupportedGL;current.originalGLName=name;}}
+ void Unbind()noexcept{pending={};current={};}
  // Immediate inspection only: never retain this reference across a bind,
  // restore, callback, or source mutation. It is not a saved source snapshot.
  const Selection& InspectCurrent()const noexcept{return current;}
  Kind CurrentKind()const noexcept{return current.kind;}
  // Explicit state-preservation boundary for nested ActiveShader callbacks.
  // Current remains the owning observation API for existing draw consumers.
- Selection Current()const{return current;}
+ // InspectCurrent's terrain publication is provenance only while pending;
+ // immutable uniform contents are observed exclusively through Current/Save.
+ void MarkTerrainPending(void* writer,std::weak_ptr<const void> lifetime,void (*observe)(void*),
+  std::shared_ptr<const NativeTerrainProgramConsumer> consumer) noexcept {
+  current.kind=Kind::Terrain;current.owner.reset();current.originalGLName=0;current.terrain=std::move(consumer);
+  pending={writer,std::move(lifetime),observe};
+ }
+ bool HasPendingTerrain(const void* writer)const noexcept{return pending.writer==writer&&pending.observe;}
+ void SealTerrainSource(const void* writer,std::shared_ptr<const NativeTerrainProgramPublication> source){
+  if(!HasPendingTerrain(writer)||!source)throw std::runtime_error("Terrain seal lost its pending source selection");
+  current.terrainSource=std::move(source);pending={};
+ }
+ Selection Current()const{
+  if(pending.observe){
+   const auto lifetime=pending.lifetime.lock();
+   if(!lifetime)throw std::runtime_error("Pending terrain source writer no longer exists");
+   pending.observe(pending.writer);
+   if(pending.observe)throw std::runtime_error("Terrain observation did not seal its pending writer");
+  }
+  return current;
+ }
  Selection SaveCurrent()const{return Current();}
- void Restore(Selection saved){current=std::move(saved);}
+ void Restore(Selection saved){pending={};current=std::move(saved);}
  bool IsCUS(const std::shared_ptr<const void>& actualProgram)const noexcept{
   return current.kind==Kind::CUS&&actualProgram&&current.owner.get()==actualProgram.get();
  }
@@ -70,8 +90,10 @@ public:
 private:
  void Bind(Kind kind,std::shared_ptr<const void> owner){
   if(!owner)throw std::logic_error("Original source program binding has no actual compiled owner");
-  current={kind,std::move(owner),0};
+  pending={};current={kind,std::move(owner),0};
  }
+ struct Pending {void* writer=nullptr;std::weak_ptr<const void> lifetime;void (*observe)(void*)=nullptr;};
+ Pending pending;
  Selection current;
 };
 // There is one actual native GL-source context, owned by SceneBridge Session.

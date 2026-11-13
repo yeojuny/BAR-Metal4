@@ -9,6 +9,7 @@ from pathlib import Path
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--output',type=Path,required=True)
+    ap.add_argument('--eager-reference',action='store_true',help='Generated hook seals after accepted writes; same setter logic, not independent legacy oracle')
     ap.add_argument('--negative-control',action='store_true',help='Remove only aligned no-op return; expect allocation assertion failure')
     a=ap.parse_args(); out=a.output.resolve(); out.mkdir(parents=True,exist_ok=True)
     root=Path(__file__).resolve().parents[2]
@@ -25,6 +26,10 @@ def main():
         needle='TERRAIN_WRITE_STAT(alignedNoOps);return;'
         assert cpp.count(needle)==1
         cpp=cpp.replace(needle,'TERRAIN_WRITE_STAT(alignedNoOps); /* negative control: no return */')
+    if a.eager_reference:
+        needle='MarkTerrainPending(this,observationLifetime,&SourceProgram::ObservePending,consumer);'
+        assert cpp.count(needle)==1
+        cpp=cpp.replace(needle,needle+' OriginalNativeSourceProgramBinding().Current(); /* fixture eager observation hook */')
     raw=shader[shader.index('\t\tvirtual void SetUniform1i('):shader.index('\n\tpublic:',shader.index('\t\tvirtual void SetUniform1i('))]
     prefix='''#include <array>
 #include <cstdint>
@@ -76,9 +81,10 @@ struct CFileHandler { explicit CFileHandler(const char*){} bool FileExists(){ret
     fixture=Path(__file__).with_name('TestNativeTerrainProgram.cpp')
     unit=out/'terrain_program_test.cpp';unit.write_text(prefix+'\n'+cpp+'\n'+fixture.read_text())
     command=[shutil.which('g++') or 'c++','-std=c++20','-DBAR_NATIVE_TERRAIN_WRITE_STATS=1','-Wall','-Wextra','-Werror','-Wno-missing-field-initializers','-Wno-unused-parameter','-Wno-misleading-indentation','-Wno-mismatched-new-delete','-O1','-g','-fsanitize=address,undefined','-fno-omit-frame-pointer','-I',str(root/'rts'),str(unit),'-o',str(out/'test')]
+    if a.eager_reference: command.insert(2,'-DBAR_NATIVE_TERRAIN_EAGER_REFERENCE=1')
     result=subprocess.run(command,capture_output=True,text=True);(out/'compile.log').write_text(result.stdout+result.stderr)
     if result.returncode: print(result.stderr);return result.returncode
     result=subprocess.run([str(out/'test')],capture_output=True,text=True,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'});(out/'run.log').write_text(result.stdout+result.stderr)
-    receipt={'scope':__doc__,'compilerVersion':subprocess.check_output([command[0],'--version'],text=True).splitlines()[0],'negativeControl':a.negative_control,'leakSanitizer':'disabled: execution sandbox uses ptrace; ASan and UBSan remain enabled','command':command,'sourceSHA256':hashlib.sha256(source.read_bytes()).hexdigest(),'fixtureSHA256':hashlib.sha256(fixture.read_bytes()).hexdigest(),'diagnosticsOffCompileExit':plain_result.returncode,'exit':result.returncode,'summary':result.stdout,'passed':result.returncode==0}
+    receipt={'scope':__doc__,'compilerVersion':subprocess.check_output([command[0],'--version'],text=True).splitlines()[0],'negativeControl':a.negative_control,'eagerObservationReference':a.eager_reference,'leakSanitizer':'disabled: execution sandbox uses ptrace; ASan and UBSan remain enabled','command':command,'sourceSHA256':hashlib.sha256(source.read_bytes()).hexdigest(),'compiledTranslationSHA256':hashlib.sha256(unit.read_bytes()).hexdigest(),'fixtureSHA256':hashlib.sha256(fixture.read_bytes()).hexdigest(),'diagnosticsOffCompileExit':plain_result.returncode,'exit':result.returncode,'summary':result.stdout,'passed':result.returncode==0}
     (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(result.stdout+result.stderr,end='');return result.returncode
 if __name__=='__main__':raise SystemExit(main())

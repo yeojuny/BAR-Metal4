@@ -54,7 +54,7 @@ public:
   Shader::IProgramObject(originalName),selection(choice),rawDefinitions(std::move(definitions)){
   identity.contextGeneration=Context();identity.originalProgram=this;identity.originalName=std::move(originalName);
   identity.originalProgramGeneration=Generation();identity.selection=choice;
-  uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
+  dirtyUniforms=false;uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
   uniforms->originalProgramGeneration=identity.originalProgramGeneration;
   livePrograms.push_back(this);
  }
@@ -71,11 +71,11 @@ public:
   ValidateNativeTerrainProgram(identity,consumer,identity.contextGeneration);return true;
  }
  void LoadLua(uint32_t handle){
-  CheckContext();Require(IsLua(),"Original Lua map shader was assigned to a built-in terrain owner");
+  CheckContext();Require(IsLua(),"Original Lua map shader was assigned to a built-in terrain owner");SealBeforeMutation();
   definition.reset();consumer.reset();unsupportedReason.clear();valid=false;objID=handle;
   identity.originalGLName=handle;identity.originalProgramGeneration=Generation();identity.sourceRevision=0;
   identity.vertexSourceHash=identity.fragmentSourceHash=0;identity.defines.clear();
-  uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
+  dirtyUniforms=false;uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
   uniforms->originalProgramGeneration=identity.originalProgramGeneration;uniformStates.clear();locations.clear();
   if(!handle){state=NativeTerrainProgramPublication::State::Invalid;return;}
   if(!services.resolveLua){Unsupported("Actual nonzero Lua terrain shader has no observed native source/lifetime owner");return;}
@@ -112,7 +112,7 @@ public:
    request.vertexSource=Stage(composite?"shaders/GLSL/SMFCompositeVertProg.glsl":border?"shaders/GLSL/SMFBorderVertProg.glsl":"shaders/GLSL/SMFVertProg.glsl");
    request.fragmentSource=Stage(composite?"shaders/GLSL/SMFCompositeFragProg.glsl":border?"shaders/GLSL/SMFBorderFragProg.glsl":"shaders/GLSL/SMFFragProg.glsl");
   }
-  Require(identity.sourceRevision!=std::numeric_limits<uint64_t>::max(),"Original terrain source revision overflow");++identity.sourceRevision;
+  Require(identity.sourceRevision!=std::numeric_limits<uint64_t>::max(),"Original terrain source revision overflow");SealBeforeMutation();++identity.sourceRevision;
   definition.reset();
   identity.vertexSourceHash=Hash(request.vertexSource);identity.fragmentSourceHash=Hash(request.fragmentSource);
   request.rawDefinitions=rawDefinitions;request.flagDefinitions=shaderFlags.GetString();
@@ -149,9 +149,10 @@ public:
   Shader::IProgramObject::Disable();OriginalNativeSourceProgramBinding().Unbind();
  }
  void Release()override{
+  SealBeforeMutation();
   definition.reset();consumer.reset();request={};unsupportedReason.clear();valid=false;objID=0;state=NativeTerrainProgramPublication::State::Unlinked;
   uniformStates.clear();locations.clear();
-  uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
+  dirtyUniforms=false;uniforms=std::make_shared<NativeTerrainUniformSnapshot>();uniforms->contextGeneration=identity.contextGeneration;
   uniforms->originalProgramGeneration=identity.originalProgramGeneration;
  }
  void BindAttribLocation(const std::string& attribute,uint32_t index)override{attribLocations[attribute]=int(index);}
@@ -187,6 +188,32 @@ private:
  std::shared_ptr<const NativeTerrainProgramConsumer> consumer;
  std::shared_ptr<const NativeTerrainProgramDefinition> definition;
  std::shared_ptr<NativeTerrainUniformSnapshot> uniforms;
+ bool dirtyUniforms=false;
+ const std::shared_ptr<const void> observationLifetime=std::make_shared<const int>(0);
+ static void ObservePending(void* pointer){
+  const auto found=std::find(livePrograms.begin(),livePrograms.end(),pointer);
+  Require(found!=livePrograms.end(),"Pending terrain source owner was deleted");
+  auto& writer=**found;
+  Require(OriginalNativeSourceProgramBinding().HasPendingTerrain(pointer)&&writer.OwnsCurrent()&&
+   OriginalNativeSourceProgramBinding().InspectCurrent().terrainSource->definition==writer.definition,
+   "Pending terrain source no longer matches its original lifetime");
+  writer.SealPending();
+ }
+ bool LazyWrites()const{
+  return state==NativeTerrainProgramPublication::State::Linked&&consumer&&consumer->HasImmutableDefinition();
+ }
+ void SealPending(){
+  // Current/Save observe already accepted state, even after context closure.
+  // Capture separately retains its live context/consumer checks.
+  auto publication=std::make_shared<NativeTerrainProgramPublication>();
+  publication->state=state;publication->definition=definition;publication->uniforms=uniforms;
+  publication->unsupportedReason=unsupportedReason;
+  OriginalNativeSourceProgramBinding().SealTerrainSource(this,std::move(publication));
+  dirtyUniforms=false;TERRAIN_WRITE_STAT(publications);
+ }
+ void SealBeforeMutation(){
+  if(OriginalNativeSourceProgramBinding().HasPendingTerrain(this))SealPending();
+ }
  std::vector<std::string> locations; // Source-name lookup slots, NEVER GL uniform locations or program names.
  bool IsLua()const{return selection==NativeTerrainProgramSelection::LuaForward||selection==NativeTerrainProgramSelection::LuaDeferred;}
  void CheckContext()const{Require(identity.contextGeneration==Context(),"Original terrain program crossed actual native context lifetime");}
@@ -214,7 +241,7 @@ private:
   // GLSLCopyState retains the original named writer state, including names
   // previously optimized out. Only genuinely new active names get link zero.
   for(const auto& [name,value]:linked.linkDefaults)next->values.try_emplace(name,value);
-  uniforms=std::move(next);
+  dirtyUniforms=false;uniforms=std::move(next);
   definition.reset();consumer=linked.consumer;unsupportedReason.clear();state=NativeTerrainProgramPublication::State::Linked;valid=true;
  }
  bool OwnsCurrent()const{
@@ -234,6 +261,7 @@ private:
   }
   publication->definition=definition;publication->uniforms=uniforms;publication->unsupportedReason=unsupportedReason;
   OriginalNativeSourceProgramBinding().BindTerrainSource(std::move(publication));
+  dirtyUniforms=false;
   TERRAIN_WRITE_STAT(publications);
  }
  template<typename T>void Write(int location,uint32_t rows,uint32_t columns,GLsizei count,bool transpose,const T* input){
@@ -272,7 +300,7 @@ private:
     state==NativeTerrainProgramPublication::State::Invalid?
      current.kind==NativeSourceProgramBinding::Kind::Unbound:
      current.kind==NativeSourceProgramBinding::Kind::UnsupportedTerrain;
-   if(bindingAligned&&current.terrainSource&&MatchesCurrentPublication(*current.terrainSource)){
+   if(bindingAligned&&current.terrainSource&&(OriginalNativeSourceProgramBinding().HasPendingTerrain(this)||MatchesCurrentPublication(*current.terrainSource))){
     TERRAIN_WRITE_STAT(alignedNoOps);return;
    }
    TERRAIN_WRITE_STAT(stalePublicationFallbacks);
@@ -284,9 +312,22 @@ private:
    static_assert(std::is_same_v<T,int> && sizeof(int)==sizeof(int32_t));
    value.values=std::vector<int32_t>(input,input+size);
   }
-  auto next=std::make_shared<NativeTerrainUniformSnapshot>(*uniforms);++next->revision;
-  TERRAIN_WRITE_STAT(mapCopies);
-  next->values[locations[size_t(location)]]=std::move(value);uniforms=std::move(next);Publish();
+  const bool lazy=LazyWrites();
+  if(lazy)ValidateNativeTerrainDefinition(*definition,Context());
+  if(lazy&&dirtyUniforms){
+   // This map has never escaped to a publication. All potentially allocating
+   // input construction/validation completed before changing its revision.
+   uniforms->values.insert_or_assign(locations[size_t(location)],std::move(value));
+   ++uniforms->revision;
+  }else{
+   auto next=std::make_shared<NativeTerrainUniformSnapshot>(*uniforms);
+   next->values.insert_or_assign(locations[size_t(location)],std::move(value));++next->revision;
+   TERRAIN_WRITE_STAT(mapCopies);uniforms=std::move(next);dirtyUniforms=true;
+  }
+  if(lazy){
+   OriginalNativeSourceProgramBinding().MarkTerrainPending(this,observationLifetime,&SourceProgram::ObservePending,consumer);
+  }else Publish();
+  // T3_TEST_OBSERVATION_BOUNDARY: eager reference may seal here in generated tests only.
  }
 };
 SourceProgram& Actual(Shader::IProgramObject* source){
@@ -300,7 +341,7 @@ void NativeSourceProgramBinding::BindTerrainSource(std::shared_ptr<const NativeT
   ValidateNativeTerrainDefinition(*source->definition,Context());
   BindTerrain(source->definition->consumer);current.terrainSource=std::move(source);return;
  }
- current={};current.terrainSource=std::move(source);
+ Unbind();current.terrainSource=std::move(source);
  if(current.terrainSource->state==NativeTerrainProgramPublication::State::Invalid){current.kind=Kind::Unbound;return;}
  current.kind=Kind::UnsupportedTerrain; // Preserve real unlinked/unsupported source, never a fabricated GL name.
 }
