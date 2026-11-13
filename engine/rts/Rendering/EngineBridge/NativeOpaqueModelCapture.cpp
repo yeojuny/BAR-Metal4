@@ -79,7 +79,7 @@ std::shared_ptr<const NativeOpaqueModelFrame> NativeOpaqueModelCapture::Capture(
      }
      // Only the exact unmasked whole-target source clear can use loadAction.
      // A partial clear must load/COW the actual preceding six image versions.
-     unpublishedPhase=std::make_shared<NativeCUSDeferredPhase>(BeginNativeCUSDeferredPhase(textures.Registry(),textures.Geometry(NativeGeometryTextureRole::Models),frame,passView,feature,pass.FullInitialClear()));
+     unpublishedPhase=OwnNativeCUSDeferredPhase([&]{return BeginNativeCUSDeferredPhase(textures.Registry(),textures.Geometry(NativeGeometryTextureRole::Models),frame,passView,feature,pass.FullInitialClear());});
 				}
 				std::shared_ptr<NativeEngineModelPhase> engine;
 				// Per-object Lua callbacks can submit genuine CUS draws before a

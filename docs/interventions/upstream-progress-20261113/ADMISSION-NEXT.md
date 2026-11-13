@@ -231,3 +231,22 @@ and independent review. Native runtime verification remains deferred. Snapshot
 lifetime still relies on joined dispatch; no concurrent context teardown, younger
 source capture, or lookahead is permitted. The next architectural gate remains
 shared-source version dependencies and whole-world admission/rollback ownership.
+
+### MRT capture receipt allocation ordering (2026-11-13)
+
+Both map and opaque-model capture previously constructed a shared receipt with
+`make_shared<Phase>(BeginPhase(...))`: Begin could publish registry versions,
+then the outer owner allocation could fail without leaving a cancellation receipt.
+They now use `OwnNativeCUSDeferredPhase`, allocating the empty shared owner first,
+then invoking the actual Begin publisher and noexcept move-assigning its result.
+Begin's internal partial-publication rollback remains responsible for its failures;
+no allocating/type-erased callback or throwing operation follows successful Begin
+before receipt ownership reaches the existing outer rollback guard.
+
+Validation: real map/model Begin publishers, registry, and production ownership
+helper under allocator fault injection: 41 failing points rolled back and 89
+successful receipts retained/cancelled. Map tests include the seventh combined
+attachment. A failure armed after successful Begin causes no later allocation;
+the old ordering negative control fails the expected receipt assertion. Both
+actual EngineBridge translation units pass C++ syntax checks; independent review
+passed. Native GPU execution and concurrent capture remain outside this evidence.

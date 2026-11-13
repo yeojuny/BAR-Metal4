@@ -1,6 +1,8 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "NativeCUSSourceData.h"
+#include <type_traits>
+#include <utility>
 #include "NativeDeferredColorData.h"
 #include "NativeShieldDepthPublication.h"
 
@@ -19,6 +21,16 @@ struct NativeCUSDeferredPhase {
 	NativeShieldDepthVersion depth;
 	std::shared_ptr<const NativeCUSSourceFrame> lua;
 };
+
+// Allocate the durable receipt BEFORE Begin publishes registry contents. Begin
+// rolls back its own failures; after it succeeds there is no throwing ownership
+// gap before the caller receives the receipt. Do not wrap Begin in make_shared.
+template<class Begin> std::shared_ptr<NativeCUSDeferredPhase> OwnNativeCUSDeferredPhase(Begin&& begin) {
+ static_assert(std::is_nothrow_move_assignable_v<NativeCUSDeferredPhase>);
+ auto owner=std::make_shared<NativeCUSDeferredPhase>();
+ *owner=std::forward<Begin>(begin)();
+ return owner;
+}
 
 // Call only for an actual selected source phase, before its original Lua
 // callbacks. Six names keep one logical lifetime; each captured phase keeps

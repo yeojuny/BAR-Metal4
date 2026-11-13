@@ -88,8 +88,8 @@ void NativeWaterGroundSourceCapture::BeginDeferred(bool clearOnly,bool combined)
  frame->deferredEntered=true;frame->deferredClearOnly=clearOnly;frame->combined=combined;
  if(combined&&clearOnly)throw std::logic_error("Combined ground requires an actual selected mesh program");
  frame->deferred=NativeGroundSourceSpan{NextNativeWorldDrawSequence(),0};
- mapPhase=std::make_shared<NativeCUSDeferredPhase>(BeginNativeMapDeferredPhase(registry,
-  OriginalNativeTextureContext().Geometry(NativeGeometryTextureRole::Map),frame->sourceDrawFrame,*frame->sourceView));
+ mapPhase=OwnNativeCUSDeferredPhase([&]{return BeginNativeMapDeferredPhase(registry,
+  OriginalNativeTextureContext().Geometry(NativeGeometryTextureRole::Map),frame->sourceDrawFrame,*frame->sourceView);});
  if(combined&&!mapPhase->combinedColor.Changed())throw std::logic_error("Combined ground has no original optional color publication");
  mapPhase->clearOnly=clearOnly;frame->mapMRT=mapPhase;inDeferred=true;square.reset();
  const auto& m=mapPhase->depth.backing->Metadata();
