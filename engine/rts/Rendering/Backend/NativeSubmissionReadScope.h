@@ -3,6 +3,20 @@
 #include <cstdint>
 #include <stdexcept>
 namespace rendering {
+// Request-local identity. Zero means no source submission; it never inherits a
+// renderer's previous request. A successful binding cannot be changed or cleared.
+class NativeSubmissionReadIdentity {
+ std::uint64_t submission=0;
+public:
+ NativeSubmissionReadIdentity()=default;
+ NativeSubmissionReadIdentity(const NativeSubmissionReadIdentity&)=delete;
+ NativeSubmissionReadIdentity& operator=(const NativeSubmissionReadIdentity&)=delete;
+ void Bind(std::uint64_t value) {
+  if(!value||submission)throw std::logic_error("Invalid or repeated source submission identity binding");
+  submission=value;
+ }
+ std::uint64_t Current() const noexcept {return submission;}
+};
 // Serial renderer-owned binding, not GPU completion evidence or permission for
 // concurrent renderer entry. Consumers capture Current() by value for encoding.
 class NativeSubmissionReadBinding {

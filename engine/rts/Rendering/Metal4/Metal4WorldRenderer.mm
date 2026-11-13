@@ -428,7 +428,6 @@ struct Metal4WorldRenderer::Impl {
   Require([NSThread isMainThread],"Worker UI binding lacks captured descriptor resolver");
   return OriginalNativeTextureContext().UI().DescribeBinding(binding);
  }
-	uint64_t pbrSubmission=0;
 	metal4::WorldOverlayGPU overlayGPU;
 	metal4::ProjectileEffectsGPU projectileEffectsGPU;
 	metal4::EnergyExplosionGPU energyExplosionGPU;
@@ -461,7 +460,7 @@ struct Metal4WorldRenderer::Impl {
 	double shieldCompileMs=0;
 	std::vector<std::pair<NativeTextureSampling,id<MTLSamplerState>>> shieldColorSamplers;
 
-	NativeSubmissionReadBinding submissionReads;
+	NativeSubmissionReadBinding submissionEntry; // Reentry guard only; provider IDs belong to their lease.
 	// Non-null only after a source submission actually began and until every
 	// successful retirement callback has finished. An error retains it.
 	std::shared_ptr<const NativeOpaqueModelFrame> submittedOpaqueSource;
@@ -1282,7 +1281,7 @@ void Metal4WorldRenderer::ClearStaticResources(const NativeEnvironmentStageRecei
 	impl->map = {}; impl->models.clear(); impl->textures.clear(); impl->heights = nil;
 	impl->heightOwner.reset(); impl->interruptedTexturePreparation.reset();
 	impl->mapEdgeGPU.ClearResources(); impl->particlesGPU.ClearResources(); impl->environmentGPU.ClearResources();
-	impl->pbrSource.ResetWorld();impl->pbrSubmission=0;
+	impl->pbrSource.ResetWorld();
 	impl->overlayGPU.ClearResources(); impl->projectileEffectsGPU.ClearResources();
 	impl->energyExplosionGPU.ClearResources();
 	impl->lightningGPU.ClearResources();
@@ -1386,8 +1385,8 @@ std::optional<std::vector<std::uint8_t>> Metal4WorldRenderer::ReadIndependentTar
   if(!collect(collect,prefix.readColor))return std::nullopt;
   RuntimeLease lease;const auto start=Clock::now();double shaderCompileMs=0;
   const auto submission=CreateShieldSubmissionIdentity();
-  NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,submission);
-  impl->pbrSubmission=submission;
+  NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,submission);
+  lease.BindSourceSubmission(submission);
   impl->StartTexturePreparation(lease);
   ScreenDrawList empty;
   ScreenFrameView frame{&empty,prefix.coordinateWidth,prefix.coordinateHeight,{},selected};
@@ -1454,8 +1453,8 @@ Metal4MaintenanceResult Metal4WorldRenderer::SubmitMaintenance(const ScreenFrame
 		// DrawGenesis can run while the original world draw is skipped. BRDF
 		// has no world/cube dependency and still executes in the common submit.
 		const auto sourceSubmission=CreateShieldSubmissionIdentity();
-		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,sourceSubmission);
-		impl->pbrSubmission=sourceSubmission;
+		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,sourceSubmission);
+		lease.BindSourceSubmission(sourceSubmission);
 		impl->particlesGPU.PrepareAtlasImages(sourceSubmission);
 		auto pbrBRDF=impl->pbrSource.Prepare(lease,NativePBRKind::BRDF,{},pbrDeclarations);
 		std::shared_ptr<PreparedUnitStencil> unitStencil;
@@ -1717,12 +1716,12 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
  NativeRendererAccessGate::Scope providerAccess(&owner->access);
 			Require(binding.object!=nullptr,"Typed source image has no original binding");
    if(std::dynamic_pointer_cast<const NativeShadowTextureBacking>(binding.object->backing)){
-    auto image=ResolveNativeShadowTexture(lease,binding,owner->pbrSubmission);
+    auto image=ResolveNativeShadowTexture(lease,binding,lease.SourceSubmission());
     return PreparedPiPSourceImage{image.texture,image.sampler,image.owner,image.flipV,std::move(image.encodeDependencies),std::move(image.requireReadable),std::move(image.didComplete)};
    }
    Require(bool(std::dynamic_pointer_cast<const NativeTerrainInfoBacking>(binding.object->backing)),"Typed source image is outside its actual shadow/$info families");
 			auto sampler=owner->screenGPU.PrepareSampler(lease,sampling);
-			auto image=ResolveNativeTerrainInfoImage(lease,binding,owner->pbrSubmission,sampler,validation,milliseconds);
+			auto image=ResolveNativeTerrainInfoImage(lease,binding,lease.SourceSubmission(),sampler,validation,milliseconds);
 			return PreparedPiPSourceImage{image.texture,image.sampler,image.owner,image.flipV,
 				std::move(image.encodeDependencies),std::move(image.requireReadable),std::move(image.didComplete)};
 		}):PiPSourceImageProvider{});
@@ -1854,7 +1853,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
  NativeRendererAccessGate::Scope providerAccess(&owner->access);
 		Require(object!=nullptr,"Original external depth consumer has no immutable object");
 		if(auto mask=std::dynamic_pointer_cast<const NativeUnitStencilBacking>(object->backing)){
-			auto image=owner->unitStencilGPU.Resolve(lease,mask->version,owner->pbrSubmission);
+			auto image=owner->unitStencilGPU.Resolve(lease,mask->version,lease.SourceSubmission());
 			return {image.texture,image.owner,image.requireReadable};
 		}
 		if(auto height=std::dynamic_pointer_cast<const NativeMapTextureBacking>(object->backing);height&&height->role==NativeMapTextureRole::Height){
@@ -1889,20 +1888,20 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 		}
 		if(object->image&&!object->backing){
 			PublishedWorldTexture(*object);auto image=owner->Texture(lease,object->image);
-			const auto status=owner->textures.at(object->image.get()).status;const auto submission=owner->pbrSubmission;
+			const auto status=owner->textures.at(object->image.get()).status;const auto submission=lease.SourceSubmission();
 			return {image,object,[status,submission]{Require(status->ready||(submission&&status->encodedSubmission==submission),
 				"Original UI world image sampled before its common upload/mip producer");}};
 		}
 		if(std::dynamic_pointer_cast<const NativeParticleAtlasBacking>(object->backing)){
 			NativeCUSTextureBinding binding;binding.knowledge=NativeCUSBindingKnowledge::BoundObject;binding.object=object;
 			Require(object->target==NativeCUSTextureTarget::Image2D,"Original UI cannot substitute an array atlas for sampler2D");
-			auto image=owner->particlesGPU.AtlasImage(lease,binding,owner->screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding)),owner->pbrSubmission);
+			auto image=owner->particlesGPU.AtlasImage(lease,binding,owner->screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding)),lease.SourceSubmission());
 			return {image.texture,image.owner,image.requireReadable};
 		}
 		if (auto model = std::dynamic_pointer_cast<const NativeModelTextureBacking>(object->backing)) {
 			auto image = owner->Texture(lease,model->pixels,object.get());
 			const auto status = owner->textures.at(model->pixels.get()).status;
-			const auto submission = owner->pbrSubmission;
+			const auto submission = lease.SourceSubmission();
 			return {image,model,[status,submission] {
 				Require(status->ready || (submission && status->encodedSubmission == submission),
 					"Original S3O mip producer has not executed before this consumer");
@@ -1910,10 +1909,10 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 		}
 		if(std::dynamic_pointer_cast<const NativePBRImage>(object->backing)){
 			NativeCUSTextureBinding binding;binding.knowledge=NativeCUSBindingKnowledge::BoundObject;binding.object=object;
-			const auto submission=owner->pbrSubmission;
+			const auto submission=lease.SourceSubmission();
 			auto image=owner->pbrSource.Image(lease,binding,submission);return {image.texture,image.owner,image.requireReadable};
 		}
-  const uint64_t actualSubmission=owner->submissionReads.Current();
+  const uint64_t actualSubmission=lease.SourceSubmission();
   if(auto backing=std::dynamic_pointer_cast<const NativeBloomImageBacking>(object->backing)){
    auto image=owner->bloomGPU.Resolve(lease,backing->version,actualSubmission);return{image.texture,image.owner,image.requireReadable};
   }
@@ -1926,7 +1925,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
    auto image=ResolveDeferredColorImage(lease,binding,actualSubmission);return{image.texture,image.owner,image.requireReadable};
   }
 		auto backing=std::dynamic_pointer_cast<const NativeShieldDepthBacking>(object->backing);Require(backing!=nullptr,"Original external depth consumer has no actual map/model backing");
-		const auto image=GetShieldDepthBackingImage(*backing);const uint64_t submission=owner->submissionReads.Current();
+		const auto image=GetShieldDepthBackingImage(*backing);const uint64_t submission=lease.SourceSubmission();
 		return{image.texture,backing,[image,submission]{
 			Require(image.producer&&IsNativeShieldDepthReadable(image.producer->encoded,image.producer->completed,image.producer->operation==ShieldDepthOperation::AllocationOnly,image.producer->allocationVerified,image.producer->submissionIdentity,submission)&&
 				(image.producer->completed||image.producer->operation==ShieldDepthOperation::AllocationOnly||submission!=0),"Original UI depth version was not produced in this actual submission or retired earlier");
@@ -2261,8 +2260,8 @@ Metal4WorldPresentationResult Metal4WorldRenderer::ContinueScreen(const WorldFra
   RuntimeLease lease;const auto start=Clock::now();lease.SetMinSampleShadingRate(frame.minSampleShadingRate);
   main->RetainForContinuation(lease);
   const auto submission=CreateShieldSubmissionIdentity();
-  NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,submission);
-  impl->pbrSubmission=submission;
+  NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,submission);
+  lease.BindSourceSubmission(submission);
   impl->StartTexturePreparation(lease);impl->particlesGPU.PrepareAtlasImages(submission);
   if(post)impl->postprocessGPU.PrepareFrameImages(lease,post,frame.sourceDrawFrame);
   std::shared_ptr<PreparedScreenFrame> screen=impl->screenGPU.Prepare(lease,selected,
@@ -2538,8 +2537,9 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   CountPreparationTrace(38,NativeCUSCPUReadScope::ActivePreparationNanoseconds());
 		std::optional<NativeCPUPhaseScope> prepPhase;prepPhase.emplace(4,frame.simulationFrame);prepPhase->Draw(frame.sourceDrawFrame);
 		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
-		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionReads,sourceSubmission);
+		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,sourceSubmission);
   RuntimeLease lease(std::move(previousRetired));
+  lease.BindSourceSubmission(sourceSubmission);
   // Sweep once even when main/water effect frames are absent or empty.
   impl->projectileEffectsGPU.PruneExpiredImages();
   impl->lightningGPU.PruneExpiredImages();
@@ -2811,7 +2811,6 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			Require(frame.luaUnitStencilFrame->sourceDrawFrame==frame.sourceDrawFrame,"Original Unit Stencil Genesis belongs to another source frame");
 			unitStencil=impl->unitStencilGPU.Prepare(lease,frame.luaUnitStencilFrame,options.shaderValidation,result.shaderCompileMs,sourceSubmission);
 		}
-		impl->pbrSubmission=sourceSubmission;
 		impl->particlesGPU.PrepareAtlasImages(sourceSubmission);
 		prepPhase->Mark(3);
   std::shared_ptr<PreparedOriginalShadowSource> originalShadow;

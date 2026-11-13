@@ -5,6 +5,7 @@
 #endif
 
 #include "../Backend/RenderTypes.h"
+#include "../Backend/NativeSubmissionReadScope.h"
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
 #include <chrono>
@@ -162,6 +163,8 @@ public:
 	~RuntimeLease();
 	RuntimeLease(const RuntimeLease&) = delete;
 	RuntimeLease& operator=(const RuntimeLease&) = delete;
+ void BindSourceSubmission(uint64_t submission) {sourceSubmission.Bind(submission);}
+ uint64_t SourceSubmission() const noexcept {return sourceSubmission.Current();}
 	id<MTLDevice> Device() const { return runtime.device; }
 	id<MTL4Compiler> Compiler() const { return runtime.compiler; }
 	DeviceCapabilities Capabilities() const { return runtime.capabilities; }
@@ -226,6 +229,7 @@ private:
  std::shared_ptr<CompletedCubeLeaseReceipts> completedCubeReads;
  std::shared_ptr<CubeLeaseSamplers> cubeSamplers;
  std::shared_ptr<WorldTexturePreparationJournal> worldTexturePreparation;
+ NativeSubmissionReadIdentity sourceSubmission;
 	void StageResources(bool overlapEncoding);
 	void RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmission>* completedOwner);
 	id<MTLLibrary> SampleLibrary(id<MTLLibrary>);
