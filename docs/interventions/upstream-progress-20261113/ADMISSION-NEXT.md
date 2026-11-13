@@ -66,3 +66,8 @@ instead of a renderer-global flag. Deferred completion cannot mark a newer owner
 ready. Height/normal GPU storage remains in-place under its existing retirement
 barrier; actual resource renaming/exclusive renderer ownership is still required
 before lookahead. This ObjC++ step has structural review only until Mac validation.
+
+Worker publication follow-up: all potentially throwing callable allocation now
+precedes busy-slot commit. Actual allocation-fault/recovery tests expose the old
+leaked busy slot and pass with noexcept publication. Worker remains synchronous
+and bounded; no new control queue/lookahead admission is enabled.

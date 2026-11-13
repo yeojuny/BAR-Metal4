@@ -25,8 +25,12 @@ public:
   if(std::this_thread::get_id()==worker.get_id())throw std::logic_error("Recursive native render worker call");
   auto task=std::make_shared<std::packaged_task<R()>>(std::forward<F>(function));
   auto result=task->get_future();
+  // Construct the owning callable before committing busy. std::function may
+  // allocate; failure must leave an idle worker available for the next control.
+  std::function<void()> submitted=[task]{(*task)();};
   {std::lock_guard lock(mutex);if(stopping||busy)throw std::logic_error("Native render worker has an outstanding invocation");
-   busy=true;work=[task]{(*task)();};}
+   work=std::move(submitted);busy=true;} // std::function move assignment is noexcept.
+
   ready.notify_one();
   try {
    if constexpr(std::is_void_v<R>){result.get();WaitIdle();}
