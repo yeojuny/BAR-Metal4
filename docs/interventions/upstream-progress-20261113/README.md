@@ -32,3 +32,7 @@ the pipeline cache. WorldInfo already had a generation boundary; P5 remains gate
 P5 source extension: [optional sealed water-model reads](OPTIONAL-WATER-CPU-READ.md)
 adds only already-captured model read rows to existing opt-in mode2/3, with separate
 speculative failure rejection. Particle/alpha/water/Lua capture drain is unchanged.
+
+P6 source bookkeeping: [Grass/ResourceSpots owner rosters](EFFECT-OWNER-ROSTERS.md)
+seals the exact first-owner indices once during preparation. Per-draw readability,
+phase callbacks, resource order, GPU barriers and default P5 remain unchanged.

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4Grass.h"
+#include "Metal4TerrainOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "NativeGrassShaders.h"
 #include <simd/simd.h>
@@ -27,15 +28,15 @@ struct PreparedGrass::Impl {
 		__strong id<MTL4ArgumentTable> arguments=nil;__strong id<MTLBuffer> indices=nil;
 		std::vector<CUSSourceImage> images;bool visible=false,encoded=false;
 	};
-	std::vector<Draw> draws;bool dependencies=false,completed=false;
+	std::vector<Draw> draws;TerrainOwnerRoster firstOwners;bool dependencies=false,completed=false;
 };
 PreparedGrass::PreparedGrass():impl(std::make_unique<Impl>()){}
 PreparedGrass::~PreparedGrass()=default;
 size_t PreparedGrass::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedGrass::SequenceAt(size_t n)const{return impl->draws.at(n).sequence;}
 void PreparedGrass::EncodeDependencies(id<MTL4CommandBuffer> command){
-	Require(command&&!impl->dependencies&&!impl->completed,"Original Grass dependency stage repeated or absent");std::set<const void*> seen;
-	for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.encodeDependencies)image.encodeDependencies(command);
+	Require(command&&!impl->dependencies&&!impl->completed,"Original Grass dependency stage repeated or absent");
+	for(const auto& [draw,imageIndex]:impl->firstOwners){const auto& image=impl->draws[draw].images[imageIndex];if(image.encodeDependencies)image.encodeDependencies(command);}
 	impl->dependencies=true;
 }
 void PreparedGrass::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder){
@@ -49,7 +50,7 @@ void PreparedGrass::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder){
 }
 void PreparedGrass::DidComplete(){
 	Require(impl->dependencies&&!impl->completed&&std::all_of(impl->draws.begin(),impl->draws.end(),[](const auto& d){return d.encoded;}),"Original Grass retirement preceded its actual cull runs");
-	std::set<const void*> seen;for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;
+	for(const auto& [draw,imageIndex]:impl->firstOwners){const auto& image=impl->draws[draw].images[imageIndex];if(image.didComplete)image.didComplete();}impl->completed=true;
 }
 struct GrassGPU::Impl {
 	struct Cached {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> buffer=nil;};
@@ -103,6 +104,7 @@ std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const Nativ
 		}
 		auto constants=Upload(lease,&u,sizeof(u));[d.arguments setAddress:constants.gpuAddress atIndex:2];
 		const unsigned variant=unsigned(s.defines[9]==1)|(unsigned(s.defines[13]==1)<<1);d.pipeline=impl->Pipeline(lease,color,variant,validation,c.surface.blend,c.world.colorWrite,ms,samples,c.world.alphaToCoverage);d.depth=effectstate::Depth(lease,c.world,stencil);lease.Retain(d.pipeline);lease.Retain(impl->libraries.at(variant));out->impl->draws.push_back(std::move(d));
-	}return out;
+	}
+	out->impl->firstOwners=BuildTerrainOwnerRoster(out->impl->draws);return out;
 }
 }

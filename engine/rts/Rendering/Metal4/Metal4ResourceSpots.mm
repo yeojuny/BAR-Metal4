@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ResourceSpots.h"
+#include "Metal4TerrainOwnerRoster.h"
 #include "Metal4TransientUpload177.h"
 #include "NativeResourceSpotsShaders.h"
 #include <simd/simd.h>
@@ -27,7 +28,7 @@ struct PreparedResourceSpots::Impl {
 		__strong id<MTL4ArgumentTable> arguments=nil;__strong id<MTLBuffer> indices=nil;
 		std::vector<CUSSourceImage> images;bool visible=false,encoded=false;
 	};
-	std::vector<Draw> draws;bool dependencies=false,completed=false;
+	std::vector<Draw> draws;TerrainOwnerRoster firstOwners;bool dependencies=false,completed=false;
 };
 PreparedResourceSpots::PreparedResourceSpots():impl(std::make_unique<Impl>()){}
 PreparedResourceSpots::~PreparedResourceSpots()=default;
@@ -35,8 +36,8 @@ size_t PreparedResourceSpots::DrawCount()const{return impl->draws.size();}
 uint64_t PreparedResourceSpots::SequenceAt(size_t n)const{return impl->draws.at(n).sequence;}
 NativeWorldDrawStage PreparedResourceSpots::StageAt(size_t n)const{return impl->draws.at(n).stage;}
 void PreparedResourceSpots::EncodeDependencies(id<MTL4CommandBuffer> command){
-	Require(command&&!impl->dependencies&&!impl->completed,"Original ResourceSpots dependency stage repeated or absent");std::set<const void*> seen;
-	for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.encodeDependencies)image.encodeDependencies(command);
+	Require(command&&!impl->dependencies&&!impl->completed,"Original ResourceSpots dependency stage repeated or absent");
+	for(const auto& [draw,imageIndex]:impl->firstOwners){const auto& image=impl->draws[draw].images[imageIndex];if(image.encodeDependencies)image.encodeDependencies(command);}
 	impl->dependencies=true;
 }
 void PreparedResourceSpots::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder){
@@ -50,7 +51,7 @@ void PreparedResourceSpots::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> enc
 }
 void PreparedResourceSpots::DidComplete(){
 	Require(impl->dependencies&&!impl->completed&&std::all_of(impl->draws.begin(),impl->draws.end(),[](const auto& d){return d.encoded;}),"Original ResourceSpots retirement preceded its actual indexed draws");
-	std::set<const void*> seen;for(const auto& d:impl->draws)for(const auto& image:d.images)if(seen.insert(image.owner.get()).second&&image.didComplete)image.didComplete();impl->completed=true;
+	for(const auto& [draw,imageIndex]:impl->firstOwners){const auto& image=impl->draws[draw].images[imageIndex];if(image.didComplete)image.didComplete();}impl->completed=true;
 }
 struct ResourceSpotsGPU::Impl {
  TransientUploadPool177 uploads177{"resource_spots"};
@@ -111,6 +112,7 @@ std::shared_ptr<PreparedResourceSpots> ResourceSpotsGPU::Prepare(RuntimeLease& l
   }
 		auto constants=upload177(&u,sizeof(u));[d.arguments setAddress:constants.gpuAddress atIndex:2];
 		const unsigned variant=unsigned(s.kind==NativeResourceSpotKind::Metal);d.pipeline=impl->Pipeline(lease,color,variant,validation,c.surface.blend,c.world.colorWrite,ms,samples,c.world.alphaToCoverage);d.depth=effectstate::Depth(lease,c.world,stencil);lease.Retain(d.pipeline);lease.Retain(impl->libraries.at(variant));out->impl->draws.push_back(std::move(d));
-	}return out;
+	}
+	out->impl->firstOwners=BuildTerrainOwnerRoster(out->impl->draws);return out;
 }
 }
