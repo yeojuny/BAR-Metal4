@@ -175,3 +175,9 @@ Water reflection/refraction/pre-copy now have separate bounded idle pair pools;
 each active selection pins its physical pair through runtime lifetime. The earlier
 selection-only limitation is superseded for these three roles, not for other
 caches. Existing barriers stay; cache bounds do not bound all live GPU memory.
+
+Persistent PBR Lua compile callback now acquires the renderer gate before its
+RuntimeLease (the connection-time stack guard did not cover later invocations).
+It fails unsupported ownership early; no concurrent capture permission follows.
+Worker UI DescribeBinding's live source context/name fallback remains a concrete
+next captured-descriptor handoff boundary.

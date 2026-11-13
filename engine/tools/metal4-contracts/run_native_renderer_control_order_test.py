@@ -21,3 +21,9 @@ destructor=renderer.split('~Impl()',1)[1].split('void RetainTextureAllocations',
 assert destructor.index('renderWorker.reset()')<destructor.index('SetNativeCUSMaterialConsumerReady(false)')
 subprocess.run(['g++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),str(Path(__file__).with_name('TestNativeRendererControlOrder.cpp')),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},check=True)
+
+service=(root/'rts/Rendering/Metal4/Metal4PBRSourceService.mm').read_text()
+compile_callback=service.split('services.compile=',1)[1].split('services.allocate=',1)[0]
+assert compile_callback.index('NativeRendererAccessGate::Scope owner(gate)')<compile_callback.index('RuntimeLease lease')<compile_callback.index('gpu.Compile')
+assert 'impl->pbrSource.Initialize(context,impl->access,' in renderer
+print('Persistent PBR compile callback owner-before-runtime structural PASS')

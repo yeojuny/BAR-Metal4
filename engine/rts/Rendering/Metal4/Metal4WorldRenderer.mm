@@ -1601,7 +1601,7 @@ void Metal4WorldRenderer::ConnectPBRSourceContext(bool connected)
 	cubeServices.allocate=[](NativeCubeTextureKind kind,uint32_t size,uint32_t levels){return ReserveNativeCubeTextureForCapture(kind,size,levels);};
 	OriginalNativeCubeTextures().Attach(context.Registry(),context.History(),std::move(cubeServices));
 	try {
-		impl->pbrSource.Initialize(context,[](lua_State*,const std::string& name)->NativeTextureLookup {
+		impl->pbrSource.Initialize(context,impl->access,[](lua_State*,const std::string& name)->NativeTextureLookup {
 			Require(name=="$reflection","Original PBR source requested an unconnected texture owner");
 			return {true,OriginalNativeTextureContext().Registry().Find(cubeMapHandler.GetEnvReflectionTextureID()),false};
 		},[]{return OriginalNativeCubeTextures().Attached();},[]{return uint64_t(globalRendering->drawFrame);},[]{

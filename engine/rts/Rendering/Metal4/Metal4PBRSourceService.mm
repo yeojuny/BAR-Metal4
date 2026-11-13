@@ -4,14 +4,17 @@
 #include <algorithm>
 
 namespace rendering::metal4 {
-void PBRSourceService::Initialize(NativeTextureContext& owner,Parser parser,std::function<bool()> ready,
+void PBRSourceService::Initialize(NativeTextureContext& owner,NativeRendererAccessGate& access,Parser parser,std::function<bool()> ready,
 	std::function<uint64_t()> drawFrame,std::function<void()> validateRaster,bool validate)
 {
 	Require(!context&&owner.Initialized()&&owner.UIAttached()&&parser&&ready&&drawFrame&&validateRaster,"PBR source context lacks its actual original resource/raster owners");
 	context=&owner;resourcesReady=std::move(ready);validation=validate;
 	LuaNativePBRSource::Services services;
 	services.ready=[this]{return Ready();};
-	services.compile=[this](const NativePBRProgramSource& source){RuntimeLease lease;return gpu.Compile(lease,source,validation,compileMilliseconds);};
+	// Persistent Lua callbacks are invoked outside ConnectPBRSourceContext's
+ // stack guard. Reject a reserved/foreign renderer owner before RuntimeLease
+ // can wait or run retirement callbacks. Same-owner recursion remains valid.
+ services.compile=[this,gate=&access](const NativePBRProgramSource& source){NativeRendererAccessGate::Scope owner(gate);RuntimeLease lease;return gpu.Compile(lease,source,validation,compileMilliseconds);};
 	services.allocate=[](const NativePBRAllocation& allocation){return ReserveNativePBRImageForCapture(allocation);};
 	services.parseTexture=std::move(parser);services.sourceDrawFrame=std::move(drawFrame);
 	services.enqueue=[this](std::shared_ptr<const NativePBRImage> image){Require(Ready()&&image&&image->program,"Original PBR enqueue has no source owner");pending.Enqueue(std::move(image));};
