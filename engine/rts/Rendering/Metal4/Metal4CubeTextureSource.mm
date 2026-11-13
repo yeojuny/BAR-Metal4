@@ -3,8 +3,44 @@
 #include "Metal4CubeCopy206.h"
 #include "Rendering/Backend/NativeInitialClearLoad.h"
 #include <algorithm>
+#include <array>
+#include <optional>
+#include <new>
 #include "Metal4CubeStoragePool.inc"
 namespace rendering::metal4 {
+// BEGIN COMPLETED_CUBE_LEASE_RECEIPTS
+// Read wrappers only. Unfinished/borrowed producers and environment face writers
+// never enter this cache. Runtime/device identity is confined to one lease.
+class CompletedCubeLeaseReceipts {
+public:
+ struct Key {
+  std::shared_ptr<const NativeCUSTextureObject> object;
+  std::shared_ptr<const NativeCubeTextureResource> resource;
+  uint64_t submission=0;
+  uintptr_t sampler=0;
+  bool operator==(const Key&)const=default;
+ };
+private:
+ struct Entry {Key key;CUSSourceImage image;};
+ std::array<std::optional<Entry>,32> entries;
+ size_t count=0;
+public:
+ const CUSSourceImage* Find(const Key& key)const noexcept {
+  for(size_t i=0;i<count;++i)if(entries[i]->key==key)return &entries[i]->image;
+  return nullptr;
+ }
+ void Remember(const Key& key,const CUSSourceImage& image) {
+  if(count==entries.size())return;
+  try{entries[count].emplace(Entry{key,image});++count;}
+  catch(const std::bad_alloc&){/* Optional cache; retain the original result. */}
+ }
+};
+// END COMPLETED_CUBE_LEASE_RECEIPTS
+CompletedCubeLeaseReceipts* RuntimeLease::CompletedCubeReads() noexcept {
+ try{if(!completedCubeReads)completedCubeReads=std::make_shared<CompletedCubeLeaseReceipts>();}
+ catch(const std::bad_alloc&){return nullptr;}
+ return completedCubeReads.get();
+}
 namespace {
 struct Resource final:NativeCubeTextureResource {
  std::shared_ptr<CubeStorage> storage;
@@ -12,6 +48,13 @@ struct Resource final:NativeCubeTextureResource {
  // A per-version proof stamp; previous versions and pool ownership are unchanged.
  mutable std::atomic<uint64_t> overwriteSubmission206{0};
 };
+// BEGIN COMPLETED_CUBE_ELIGIBILITY
+bool CompletedCubeReadEligible(const NativeCubeTextureBacking& image,const Resource& resource,bool actualSampler) {
+ return actualSampler&&image.content!=NativeTextureContent::AllocationOnly&&
+  image.completed.load(std::memory_order_acquire)&&!image.prior&&
+  (image.kind!=NativeCubeTextureKind::Specular||resource.cpuUploaded);
+}
+// END COMPLETED_CUBE_ELIGIBILITY
 std::shared_ptr<const Resource> Storage(const NativeCubeTextureBacking& image){auto r=std::dynamic_pointer_cast<const Resource>(image.resource);Require(r&&r->storage&&r->storage->texture,"Original cube lacks its actual native allocation");return r;}
 // An ordered predecessor is this immutable version's exact successful producer,
 // not permission to consume any encoded cube. The runtime verifies its actual
@@ -179,7 +222,33 @@ CUSSourceImage PreparedCubeTexture::Image()const {
  CUSSourceImage out;out.texture=impl->storage->storage->texture;out.sampler=impl->sampler;out.owner=impl->image;auto image=impl->image;auto submission=impl->submission,predecessor=impl->predecessor;out.requireReadable=[image,submission,predecessor]{Readable(*image,submission,predecessor);};return out;
 }
 CUSSourceImage ResolveNativeCubeTexture(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission,id<MTLSamplerState> actualSampler){
- Require(binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&binding.object->target==NativeCUSTextureTarget::Cube,"Original cube binding is not an actual named cube");auto image=std::dynamic_pointer_cast<const NativeCubeTextureBacking>(binding.object->backing);Require(bool(image),"Original cube binding has another real producer");auto prepared=PrepareNativeCubeTexture(lease,std::move(image),binding.object->sampling,submission,actualSampler);auto out=prepared->Image();out.owner=prepared;out.encodeDependencies=[prepared](id<MTL4CommandBuffer> command){prepared->EncodeDependencies(command);};out.didComplete=[prepared]{prepared->DidComplete();};
- out.dependencyQuery160={prepared.get(),[](const void* context){return static_cast<const PreparedCubeTexture*>(context)->InspectDependencies160();}};return out;
+ Require(binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&binding.object->target==NativeCUSTextureTarget::Cube,"Original cube binding is not an actual named cube");
+ auto image=std::dynamic_pointer_cast<const NativeCubeTextureBacking>(binding.object->backing);
+ Require(bool(image),"Original cube binding has another real producer");
+ Require(submission,"Original cube prepare requires actual storage/submission identity");
+ auto resource=Storage(*image);
+ // Do not promote a producer/upload to eligibility during this call. Its first
+ // preparation/completion remains original, and all subsequent calls recheck.
+ const bool eligible=CompletedCubeReadEligible(*image,*resource,actualSampler!=nil);
+ auto* receipts=eligible?lease.CompletedCubeReads():nullptr;
+ const CompletedCubeLeaseReceipts::Key key{binding.object,resource,submission,
+  reinterpret_cast<uintptr_t>((__bridge void*)actualSampler)};
+ if(receipts)if(const auto* cached=receipts->Find(key)){
+  // Preserve every original per-consumer storage pin, device validation,
+  // sampler retention and allocation registration even when sharing wrappers.
+  RetainCubeStorage(lease,resource->storage);
+  Require(actualSampler.device==lease.Device(),"Original cube sampler belongs to another actual device");
+  lease.Retain(actualSampler);
+  lease.AddAllocation(resource->storage->texture);
+  if(resource->storage->depth)lease.AddAllocation(resource->storage->depth);
+  return *cached;
+ }
+ auto prepared=PrepareNativeCubeTexture(lease,std::move(image),binding.object->sampling,submission,actualSampler);
+ auto out=prepared->Image();out.owner=prepared;
+ out.encodeDependencies=[prepared](id<MTL4CommandBuffer> command){prepared->EncodeDependencies(command);};
+ out.didComplete=[prepared]{prepared->DidComplete();};
+ out.dependencyQuery160={prepared.get(),[](const void* context){return static_cast<const PreparedCubeTexture*>(context)->InspectDependencies160();}};
+ if(receipts)receipts->Remember(key,out);
+ return out;
 }
 } // namespace rendering::metal4
