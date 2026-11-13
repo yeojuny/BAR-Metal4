@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeClippedFillPrecompute.h"
 #include "Rendering/Backend/NativePreparationTrace.h"
 #include "Metal4RetiredArguments.h"
 #include "Rendering/Backend/NativeExactWorldLine.h"
@@ -486,7 +487,7 @@ void WorldOverlayGPU::InitializeReclaimLines(RuntimeLease& lease,MTLPixelFormat 
 void WorldOverlayGPU::ClearResources(){impl->sourceLines.Clear();impl->argumentPool.Clear();impl->unitGlass.ClearResources();impl->unitEffects.ClearResources();} // Immutable images belong to the shared ScreenGPU; compiled programs remain valid.
 std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& frame,
 	ScreenGPU& images,const PreparedScreenFrame* targetProducers,const WorldCamera& camera,uint32_t width,uint32_t height,uint32_t logicalWidth,uint32_t logicalHeight,
-	MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool validation,double& shaderMs,bool mapMRTBroadcast,unsigned samples,bool mapCombinedColor,const CUSSourceImageProvider& glassImages)
+	MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool validation,double& shaderMs,bool mapMRTBroadcast,unsigned samples,bool mapCombinedColor,const CUSSourceImageProvider& glassImages,NativeClippedFillPrecompute* clippedFill)
 {
  frame.RequireOverlay();
  std::unique_ptr<WorldGeometryProbe174> observed174;
@@ -576,8 +577,12 @@ std::unique_ptr<PreparedWorldOverlayFrame> WorldOverlayGPU::Prepare(RuntimeLease
   if(!source.sourceLines&&!cachedLines&&!borrowed&&!linePacket){
    NativeOwnedWorldGeometry geometry(std::shared_ptr<const NativeWorldDrawCommand>(frame.Owner(),&source),
     {mapped->viewport,width,height,logicalWidth,logicalHeight,samples});
-   geometry.SealIndependentClippedFillOnCaller();
-   geometry.Execute();mesh=geometry.Take(); // Same synchronous failure/consumer boundary.
+   const bool sealed=geometry.SealIndependentClippedFillOnCaller();
+   // Speculation never replaces original demand validation or selection. A miss
+   // or optional worker failure rebuilds at this same historical boundary.
+   if(!(sealed&&clippedFill&&clippedFill->TryTake(frame.Owner(),&source,mesh))){
+    geometry.Execute();mesh=geometry.Take();
+   }
   }
   const auto& meshVertices=borrowed?source.vertices:mesh.vertices;
   const auto& meshIndices=borrowed?source.indices:mesh.indices;

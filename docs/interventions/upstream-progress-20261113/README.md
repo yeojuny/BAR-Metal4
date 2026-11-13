@@ -68,5 +68,12 @@ site. Eligibility seals and asynchronous scheduling/cancellation remain separate
 ### Closed clipped-fill caller seal
 - [x] Production fallback now seals only plain immutable clipped-fill inputs after its existing selection decisions; generic/typed work remains synchronous.
 - [x] Shared original validation prefix and actual pure clipping kernel retain source checks and geometry/error behavior; host contracts pass.
-- [ ] Async dispatch/cancellation and native runtime/performance acceptance remain separate gates.
+- [x] Narrow clipped-fill dispatch/cancellation is implemented in the opt-in pilot below; generic typed dispatch remains excluded.
+- [ ] Native runtime/performance acceptance remains a separate gate.
 See [CLIPPED-FILL-ELIGIBILITY-SEAL.md](CLIPPED-FILL-ELIGIBILITY-SEAL.md).
+
+### Bounded main-overlay clipping pilot
+- [x] Optional pure clipping work now spans existing Map-MRT/model/screen preparation before exact main-overlay demand.
+- [x] Explicit off-by-default flag, bounded candidate/index/logical payload selection, original demand validation, optional-failure fallback and cancel/join ownership.
+- [ ] Native compilation, actual workload eligibility/numeric behavior, visual/error parity and performance/memory measurement remain unverified.
+See [CLIPPED-FILL-PRECOMPUTE.md](CLIPPED-FILL-PRECOMPUTE.md).

@@ -1,7 +1,9 @@
+#include "Rendering/Backend/NativeClippedFillPrecompute.h"
 #include "Rendering/Backend/NativeRenderDispatchReceipt.h"
 #include "Rendering/Backend/NativeSubmissionReadScope.h"
 #include "Metal4CubeCopy206.h"
 #include <cstdlib>
+#include <cstring>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4StartBoxNative.h"
 #include "Rendering/Backend/NativeUIRecorder.h"
@@ -3344,6 +3346,14 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   const bool timeWorldPlan167=worldPlanDiagnostic167&&worldPlanDiagnosticSamples167<32&&frame.sourceDrawFrame%16==0;
   if(timeWorldPlan167)++worldPlanDiagnosticSamples167;
   NativeWorldDrawPlan167 preparedWorld167(frame.luaWorldDrawFrame,frame.sourceDrawFrame,timeWorldPlan167);
+  // Explicit opt-in only. This retained raw-source scan never visits selection
+  // metrics, providers or caches. Its destructor cancels/joins on every exit.
+  static const bool clippedFillPilot=[] {const char* value=std::getenv("BAR_NATIVE_CLIPPED_FILL_PRECOMPUTE");return value&&std::strcmp(value,"1")==0;}();
+  std::optional<NativeClippedFillPrecompute> clippedFill;
+  if(clippedFillPilot){
+   clippedFill.emplace(frame.luaWorldDrawFrame,[](const NativeWorldDrawCommand& draw){return worldPlan167::MainStage(draw.stage);},NativeClippedFillPrecompute::Limits{});
+   clippedFill->Start();
+  }
   if(const auto& original=mainGround.source->ground;original&&original->mapMRT){
    Require(original->deferred.has_value(),"Original map MRT has no completed source span");
    const auto& phase=original->mapMRT;const auto& span=*original->deferred;
@@ -3496,7 +3506,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    overlays = impl->overlayGPU.Prepare(lease, mainDraws, impl->screenGPU, screen.get(), frame.viewCamera,
 				result.surface.renderWidth, result.surface.renderHeight, logicalWidth, logicalHeight,
 				layer.pixelFormat, MTLPixelFormatDepth32Float, MTLPixelFormatStencil8, options.shaderValidation, result.shaderCompileMs,false,mainSamples,false,
-    [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned){return impl->OriginalModelImage(l,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);});
+    [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned){return impl->OriginalModelImage(l,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);},clippedFill?&*clippedFill:nullptr);
 		}
 		if(frame.luaWorldDrawFrame && waterActive)for(auto& view:waterViews)if(view.source){
    const auto stage=view.source->pass==NativeWaterScenePass::Reflection?NativeWorldDrawStage::WaterReflection:NativeWorldDrawStage::WaterRefraction;

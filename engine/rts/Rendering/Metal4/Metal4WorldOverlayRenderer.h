@@ -7,6 +7,7 @@
 #include "Rendering/Backend/NativeWorldDrawData.h"
 #include "Rendering/Backend/WorldFrameData.h"
 #include <memory>
+namespace rendering { class NativeClippedFillPrecompute; }
 namespace rendering::metal4 {
 class WorldOverlayGPU;
 class PreparedWorldOverlayFrame {
@@ -35,7 +36,7 @@ public:
 		ScreenGPU& images,const PreparedScreenFrame* targetProducers,const WorldCamera& camera,
 		std::uint32_t width,std::uint32_t height,std::uint32_t logicalWidth,std::uint32_t logicalHeight,
 		MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,
-		bool shaderValidation,double& shaderMilliseconds,bool mapMRTBroadcast=false,unsigned samples=1,bool mapCombinedColor=false,const CUSSourceImageProvider& glassImages={});
+		bool shaderValidation,double& shaderMilliseconds,bool mapMRTBroadcast=false,unsigned samples=1,bool mapCombinedColor=false,const CUSSourceImageProvider& glassImages={},NativeClippedFillPrecompute* clippedFill=nullptr);
 	void InitializeReclaimLines(RuntimeLease&,MTLPixelFormat,bool validation,double& shaderMilliseconds,unsigned samples=1);
 	void ClearResources();
 private:
