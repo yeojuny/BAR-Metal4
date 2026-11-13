@@ -9,8 +9,10 @@
 #include <span>
 #include <string>
 #include <vector>
+#include <utility>
 namespace rendering {
 struct WorldTexture;
+class NativeCUSSubmissionRoster;
 enum class NativeCUSTextureTarget : uint8_t { Image2D, Image3D, Cube, Image2DMultisample, Image2DArray, Rectangle, Count };
 // Actual target-specific object creation defaults. ARB_texture_rectangle
 // section 3.8.10 and table 6.16 specify LINEAR and CLAMP_TO_EDGE for S/T/R.
@@ -54,7 +56,9 @@ struct NativeCUSDrawTextureSnapshot {
  uint64_t contextGeneration=0,eventSequence=0,sourceDrawFrame=0;
  unsigned originalPass=0;
  std::string originalShader,originalUniformBin;
- std::vector<NativeCUSSubmittedObject> originalSubmissionOrder;
+ std::vector<NativeCUSSubmittedObject> originalSubmissionOrder; // Legacy producer only.
+ std::shared_ptr<const NativeCUSSubmissionRoster> roster;
+ std::span<const NativeCUSSubmittedObject> SubmissionOrder() const;
  std::array<NativeCUSTextureBinding,12> samplers; // Actual source slots0..11, target-aware, including envLUT.
  std::array<NativeCUSTextureBinding,3> wreck; // Original sampler2D slots3,4,5.
 };
@@ -100,9 +104,14 @@ public:
  void PopAttributes();
  NativeCUSTextureBinding Binding(unsigned unit,NativeCUSTextureTarget) const;
  NativeCUSDrawTextureSnapshot Submit(uint64_t drawFrame,unsigned originalPass,
-  std::string shader,std::string uniformBin,std::span<const NativeCUSSubmittedObject>);
+  std::string shader,std::string uniformBin,std::span<const NativeCUSSubmittedObject> objects) {
+  return Submit(drawFrame,originalPass,std::move(shader),std::move(uniformBin),objects,true);
+ }
+ NativeCUSDrawTextureSnapshot Submit(uint64_t drawFrame,unsigned originalPass,
+  std::string shader,std::string uniformBin,std::shared_ptr<const NativeCUSSubmissionRoster>);
  uint64_t Sequence() const noexcept{return sequence;}
 private:
+ NativeCUSDrawTextureSnapshot Submit(uint64_t,unsigned,std::string,std::string,std::span<const NativeCUSSubmittedObject>,bool copyOrder);
  using TargetState=std::array<NativeCUSTextureBinding,size_t(NativeCUSTextureTarget::Count)>;
  using State=std::array<TargetState,Units>;
  struct Saved {State state;std::optional<unsigned>active;bool bindings,enables;

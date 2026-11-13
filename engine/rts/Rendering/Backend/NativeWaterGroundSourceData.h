@@ -25,9 +25,49 @@ struct NativeTerrainUniformValue {
 	bool transpose=false;
 	std::variant<std::vector<float>,std::vector<int32_t>,std::vector<uint32_t>> values;
 };
+// Fixed original terrain ABI slots. Names are resolved at source publication,
+// not repeatedly in each GPU draw. Unknown/inactive source names remain in values.
+enum class NativeTerrainUniformSlot : size_t {
+ blendNormalsTex, borderMinHeight, cameraPos, colorTex, depthTex, detailTex, detailsTex, diffuseTex, groundAmbientColor, groundDiffuseColor, groundShadowDensity, groundSpecularColor, groundSpecularExponent, heightMapTex, infoTex, infoTexGen, infoTexIntensityMul, lightDir, lightEmissionTex, mapHeights, mapSize, normalTexGen, normalsTex, parallaxHeightTex, shadingTex, shadowColorTex, shadowMat, shadowTex, skyReflectModTex, skyReflectTex, specularTex, specularTexGen, splatDetailNormalTex1, splatDetailNormalTex2, splatDetailNormalTex3, splatDetailNormalTex4, splatDetailTex, splatDistrTex, splatTexMults, splatTexScales, texSquare, waterAbsorbColor, waterBaseColor, waterMinColor, Count
+};
+inline constexpr std::array<const char*,size_t(NativeTerrainUniformSlot::Count)> NativeTerrainUniformNames={
+ "blendNormalsTex", "borderMinHeight", "cameraPos", "colorTex", "depthTex", "detailTex", "detailsTex", "diffuseTex", "groundAmbientColor", "groundDiffuseColor", "groundShadowDensity", "groundSpecularColor", "groundSpecularExponent", "heightMapTex", "infoTex", "infoTexGen", "infoTexIntensityMul", "lightDir", "lightEmissionTex", "mapHeights", "mapSize", "normalTexGen", "normalsTex", "parallaxHeightTex", "shadingTex", "shadowColorTex", "shadowMat", "shadowTex", "skyReflectModTex", "skyReflectTex", "specularTex", "specularTexGen", "splatDetailNormalTex1", "splatDetailNormalTex2", "splatDetailNormalTex3", "splatDetailNormalTex4", "splatDetailTex", "splatDistrTex", "splatTexMults", "splatTexScales", "texSquare", "waterAbsorbColor", "waterBaseColor", "waterMinColor"
+};
 struct NativeTerrainUniformSnapshot {
-	uint64_t contextGeneration=0, originalProgramGeneration=0, revision=0;
-	std::map<std::string,NativeTerrainUniformValue> values;
+ uint64_t contextGeneration=0, originalProgramGeneration=0, revision=0;
+ std::map<std::string,NativeTerrainUniformValue> values;
+ NativeTerrainUniformSnapshot()=default;
+ // Pointer slots must never point into a copied-from snapshot.
+ NativeTerrainUniformSnapshot(const NativeTerrainUniformSnapshot& other):
+  contextGeneration(other.contextGeneration),originalProgramGeneration(other.originalProgramGeneration),
+  revision(other.revision),values(other.values){}
+ NativeTerrainUniformSnapshot& operator=(const NativeTerrainUniformSnapshot& other){
+  if(this==&other)return *this;
+  auto copied=other.values; // Strong exception safety before invalidating current state.
+  contextGeneration=other.contextGeneration;originalProgramGeneration=other.originalProgramGeneration;
+  revision=other.revision;values=std::move(copied);InvalidateSlots();return *this;
+ }
+ void InvalidateSlots()noexcept{slotsReady=false;}
+ void SealSlots()noexcept{
+  if(slotsReady)return;
+  slots.fill(nullptr);
+  auto it=values.begin();
+  for(size_t i=0;i<slots.size();++i){
+   while(it!=values.end()&&it->first<NativeTerrainUniformNames[i])++it;
+   if(it!=values.end()&&it->first==NativeTerrainUniformNames[i])slots[i]=&it->second;
+  }
+  slotsReady=true;
+ }
+ const NativeTerrainUniformValue* Find(NativeTerrainUniformSlot slot)const{
+  const auto index=size_t(slot);
+  if(index>=slots.size())return nullptr;
+  if(slotsReady)return slots[index];
+  const auto it=values.find(NativeTerrainUniformNames[index]);
+  return it==values.end()?nullptr:&it->second;
+ }
+private:
+ std::array<const NativeTerrainUniformValue*,size_t(NativeTerrainUniformSlot::Count)> slots{};
+ bool slotsReady=false;
 };
 // A draw retains the exact immutable source definition instead of copying its
 // strings/compile defines. This is not a validation bypass or a readiness token.

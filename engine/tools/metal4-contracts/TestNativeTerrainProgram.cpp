@@ -276,6 +276,18 @@ int main(){using namespace rendering;
  check(std::get<std::vector<float>>(retried.terrainSource->uniforms->values.at("value").values)[0]==25.f);
  check(retried.terrainSource->uniforms->revision==faultSnapshot.uniforms->revision+1);
 #endif
+ // Typed slot index must follow the owning immutable snapshot across writes.
+ const int typedSlot=replacement->Slot("borderMinHeight");
+ replacement->SetUniform1f(typedSlot,31.f);
+ auto typedOld=CaptureCurrentNativeTerrainProgram();
+ auto* typedValue=typedOld.uniforms->Find(NativeTerrainUniformSlot::borderMinHeight);
+ check(typedValue==&typedOld.uniforms->values.at("borderMinHeight"));
+ check(std::get<std::vector<float>>(typedValue->values)[0]==31.f);
+ replacement->SetUniform1f(typedSlot,32.f);replacement->SetUniform1f(typedSlot,33.f);
+ auto typedNew=CaptureCurrentNativeTerrainProgram();
+ check(typedNew.uniforms->Find(NativeTerrainUniformSlot::borderMinHeight)!=typedValue);
+ check(std::get<std::vector<float>>(typedNew.uniforms->Find(NativeTerrainUniformSlot::borderMinHeight)->values)[0]==33.f);
+ check(std::get<std::vector<float>>(typedValue->values)[0]==31.f);
  replacement->DisableRaw();replacement.reset();binding.Unbind();ConfigureNativeTerrainProgramSource({});
  std::cout<<"observationFingerprint="<<observationFingerprint<<"\n";
  std::cout<<"PASS "<<checks<<" terrain writer contract checks; GPU/Lua/gameplay not exercised\n";

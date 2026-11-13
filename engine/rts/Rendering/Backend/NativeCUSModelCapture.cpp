@@ -42,12 +42,12 @@ std::shared_ptr<const NativeCUSModelSubmission> NativeCUSModelCapture::CaptureSu
 
 std::shared_ptr<const NativeCUSModelInputs> NativeCUSModelCapture::CaptureDraw(
 	uint64_t frame, uint64_t sequence,
-	std::span<const std::shared_ptr<const NativeCUSModelSubmission>> submissions,
+	std::shared_ptr<const NativeCUSSubmissionRoster> roster,
 	NativeBufferSnapshotRef instances,
 	std::shared_ptr<const NativeCUSPublishedBuffer> transforms,
 	std::shared_ptr<const NativeCUSPublishedBuffer> uniforms)
 {
-	return MakeNativeCUSModelInputs(frame, sequence, submissions, std::move(instances),
+	return MakeNativeCUSModelInputs(frame, sequence, std::move(roster), std::move(instances),
 		std::move(transforms), std::move(uniforms));
 }
 

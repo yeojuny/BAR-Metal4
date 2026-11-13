@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "NativeCUSTextureHistory.h"
+#include "NativeCUSModelInputs.h"
 #include <limits>
 #include <stdexcept>
 #include <utility>
@@ -122,11 +123,20 @@ NativeCUSTextureBinding NativeCUSTextureHistory::Binding(unsigned unit,NativeCUS
  if(result.knowledge==NativeCUSBindingKnowledge::DefaultObject)result.defaultSampling=defaultSampling[size_t(target)];
  return result;
 }
-NativeCUSDrawTextureSnapshot NativeCUSTextureHistory::Submit(uint64_t frame,unsigned pass,std::string shader,std::string bin,std::span<const NativeCUSSubmittedObject> objects){
+std::span<const NativeCUSSubmittedObject> NativeCUSDrawTextureSnapshot::SubmissionOrder() const {
+ return roster ? std::span<const NativeCUSSubmittedObject>(roster->Objects()) : originalSubmissionOrder;
+}
+NativeCUSDrawTextureSnapshot NativeCUSTextureHistory::Submit(uint64_t frame,unsigned pass,std::string shader,std::string bin,std::shared_ptr<const NativeCUSSubmissionRoster> roster){
+ if(!roster)throw std::invalid_argument("CUS draw requires sealed roster");
+ // Use the same capture path without duplicating its ordered-object storage.
+ auto out=Submit(frame,pass,std::move(shader),std::move(bin),roster->Objects(),false);
+ out.roster=std::move(roster);return out;
+}
+NativeCUSDrawTextureSnapshot NativeCUSTextureHistory::Submit(uint64_t frame,unsigned pass,std::string shader,std::string bin,std::span<const NativeCUSSubmittedObject> objects,bool copyOrder){
  if(pass!=0&&pass!=1&&pass!=5&&pass!=16)throw std::invalid_argument("CUS draw requires an actual selected30770 pass");
  if(shader.empty()||bin.empty()||objects.empty())throw std::invalid_argument("CUS draw requires original shader/bin/submission identities");
  NativeCUSDrawTextureSnapshot out;out.sourceDrawFrame=frame;out.originalPass=pass;out.originalShader=std::move(shader);out.originalUniformBin=std::move(bin);
- out.originalSubmissionOrder.assign(objects.begin(),objects.end());
+ if(copyOrder)out.originalSubmissionOrder.assign(objects.begin(),objects.end());
  for(unsigned i=0;i<out.samplers.size();++i)out.samplers[i]=Binding(i,i==7?NativeCUSTextureTarget::Cube:i==10?NativeCUSTextureTarget::Image3D:NativeCUSTextureTarget::Image2D);
  for(size_t i=0;i<3;++i)out.wreck[i]=out.samplers[i+3];
  Advance();out.contextGeneration=context;out.eventSequence=sequence;return out;

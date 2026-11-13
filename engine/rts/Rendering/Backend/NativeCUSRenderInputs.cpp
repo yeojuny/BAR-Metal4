@@ -71,7 +71,7 @@ static NativeCUSRenderReadSet ValidateRenderReads(const NativeCUSSourceDraw& dra
  const bool skin=draw.program->family=="unitskinning";
  float interpolation;std::memcpy(&interpolation,draw.engineUniforms->params->bytes.data()+28,4);
  interpolation=std::clamp(interpolation,0.0f,1.0f); // Match the original shader's Lerp.
- for(size_t object=0;object<inputs.submissions.size();++object){
+ for(size_t object=0;object<inputs.Submissions().size();++object){
   const auto instance=ReadNativeCUSInstance(inputs,object);out.modelUniforms.push_back(instance[1]);
   if (!IsPublishedRow(inputs.modelUniforms, instance[1], 128))
    (void)ReadNativeCUSModelUniform(inputs,object); // Original ABI/missing-row error at this object.
@@ -86,13 +86,13 @@ static NativeCUSRenderReadSet ValidateRenderReads(const NativeCUSSourceDraw& dra
   }
   out.transforms.push_back(instance[0]);out.transforms.push_back(Add(instance[0],1));
   if (cache && !skin) {
-   for (uint32_t first: cache->FirstBones(inputs.submissions[object]->geometry)) {
+   for (uint32_t first: cache->FirstBones(inputs.Submissions()[object]->geometry)) {
     const uint32_t offset = Add(instance[0], 2ull * (1 + first));
     out.transforms.push_back(offset); out.transforms.push_back(Add(offset, 1));
    }
    continue;
   }
-  for(const auto& piece:inputs.submissions[object]->geometry->pieces)for(uint32_t index:piece.indices){
+  for(const auto& piece:inputs.Submissions()[object]->geometry->pieces)for(uint32_t index:piece.indices){
    Check(index<piece.vertices.size(),"CUS actual submitted index is outside original geometry");const auto& vertex=piece.vertices[index];
    // The selected original's first bone deliberately reads ONLY its low byte.
    const uint32_t first=vertex.boneIds[0]&255u,offset=Add(instance[0],2ull*(1+first));

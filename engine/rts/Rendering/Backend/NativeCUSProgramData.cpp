@@ -41,7 +41,7 @@ void PackNativeCUSProgramUniformsInto(const NativeCUSGeneratedStage& stage,
    Check(name.size()==15 && name.back()>='0' && name.back()<='2',"CUS original map uniform identity differs");
    supplied=source.waterColors[name.back()-'0'];
   }else{
-   const auto& values=f.scalar==NativeCUSUniformScalar::Float?draw.floatUniforms:draw.intUniforms;
+   const auto& values=f.scalar==NativeCUSUniformScalar::Float?draw.FloatUniforms():draw.IntUniforms();
    const auto it=values.find(std::string(name));Check(it!=values.end(),"CUS active uniform lacks its original link/default/write value");supplied=it->second;
   }
   Check(supplied.size()==size_t(f.components)*f.count,"CUS original active uniform component count differs");

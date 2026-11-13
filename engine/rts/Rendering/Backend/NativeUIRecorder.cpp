@@ -13,6 +13,7 @@
 #include "NativeHealthBarsData.h"
 #include "NativePanelShaderData.h"
 #include "NativeUIRecorder.h"
+#include "NativeUITargetPassJournal.h"
 #include "NativeLegacyWaterTextureEnvironment.h"
 #include "NativeLegacyWaterTexGen.h"
 #include "NativeLegacyWaterLighting.h"
@@ -228,24 +229,24 @@ struct NativeUIRecorder::Impl {
 	std::vector<SamplerUndo> samplerUndo;
 	ScreenDrawList output;
 	ScreenDrawList* activeOutput = &output;
-	std::vector<ScreenRenderTargetPass> passes;
+	NativeUITargetPassJournal targetJournal;
 	std::function<bool(const std::shared_ptr<const NativePostprocessVersion>&)> sourceDependency;
 	struct TargetChange {std::shared_ptr<NativeUITextureBinding> binding;std::shared_ptr<const ScreenTexture> previous,published;bool sourceDependent;NativeUITexturePublication texturePublication;std::uint64_t actualSubmission=0;};
 	std::vector<TargetChange> targetChanges;
- struct SubmittedFrame {std::uint64_t sourceDrawFrame;std::vector<ScreenRenderTargetPass> passes;std::vector<TargetChange> changes;};
+ struct SubmittedFrame {std::uint64_t sourceDrawFrame;NativeUITargetPassJournal targetJournal;std::vector<TargetChange> changes;};
  std::optional<SubmittedFrame> submittedFrame;
 	bool DependsOnSource(const std::shared_ptr<const ScreenTexture>& image) const {
 		if(!image)return false;
 		if(image->sourceTexture)return image->sourceDependent;
 		if(image->postprocessVersion){Require(bool(sourceDependency),"Copied-image target requires the actual source-frame ownership query");return sourceDependency(image->postprocessVersion);}
-		for(const auto& pass:passes)if(pass.destination==image || pass.depthDestination==image)return pass.sourceDependent || pass.sourceStage!=NativePostprocessStage::Screen;
+		for(const auto& pass:targetJournal.Passes())if(pass.destination==image || pass.depthDestination==image)return pass.sourceDependent || pass.sourceStage!=NativePostprocessStage::Screen;
 		return false;
 	}
 	void RollbackSourceTargets() noexcept {
 		for(auto i=targetChanges.rbegin();i!=targetChanges.rend();++i)if(i->sourceDependent && !i->actualSubmission && i->binding->current==i->published){if(textureObserver)textureObserver->CancelPublication(i->texturePublication);i->binding->current=i->previous;}
 		std::erase_if(targetChanges,[](const auto& change){return change.sourceDependent && !change.actualSubmission;});
-		std::erase_if(passes,[this](const auto& pass){
-			if(pass.actualSubmission || (!pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen))return false;
+		targetJournal.EraseIf([this](const auto& pass,const auto& receipt){
+			if(receipt.actualSubmission || (!pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen))return false;
 			return std::none_of(targetChanges.begin(),targetChanges.end(),[&](const auto& change){return (change.published==pass.destination || change.published==pass.depthDestination) && change.actualSubmission;});
 		});
 	}
@@ -761,13 +762,13 @@ ScreenFrameView NativeUIRecorder::EndFrame()
 {
 	Require(impl->frame && !impl->primitive && impl->compiling.empty() && impl->targets.empty() && !impl->typedTargetDepth && impl->miniMapStages.empty() && impl->pipMiniMapOutputs.empty() && !impl->worldStage && impl->originalTextureScopes.empty(), "Native UI unbalanced frame end");
 	EndScreenStage(); if(impl->genesisSource)EndGenesisStage();else EndResourceStage(); impl->frame = false;
-	return {&impl->output, impl->width, impl->height, {}, impl->passes};
+	return {&impl->output, impl->width, impl->height, {}, impl->targetJournal.Passes()};
 }
 void NativeUIRecorder::RetireCompletedFrame(bool sourceFrameCompleted)
 {
 	Require(!impl->frame && impl->targets.empty() && impl->compiling.empty(),"Native UI producer retirement requires a closed, GPU-completed frame");
-	if(sourceFrameCompleted){impl->passes.clear();impl->targetChanges.clear();}
-	else {std::erase_if(impl->passes,[](const auto& pass){return !pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen;});std::erase_if(impl->targetChanges,[](const auto& change){return !change.sourceDependent;});}
+	if(sourceFrameCompleted){impl->targetJournal.Clear();impl->targetChanges.clear();}
+	else {impl->targetJournal.EraseIf([](const auto& pass,const auto&){return !pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen;});std::erase_if(impl->targetChanges,[](const auto& change){return !change.sourceDependent;});}
 }
 // One mandatory startup receipt, after a CPU source frame has successfully
 // submitted (not GPU completion). Counters are cumulative since cache creation, not
@@ -796,8 +797,8 @@ void NativeUIRecorder::HoldSubmittedFrame(std::uint64_t sourceDrawFrame)
   "Native UI submitted frame ownership is repeated or still recording");
  // Called only after successful final submission. Move, never copy or retire,
  // the old publications so BeginFrame/abort can affect only the next frame.
- impl->submittedFrame.emplace(Impl::SubmittedFrame{sourceDrawFrame,std::move(impl->passes),std::move(impl->targetChanges)});
- impl->passes.clear();impl->targetChanges.clear();
+ impl->submittedFrame.emplace(Impl::SubmittedFrame{sourceDrawFrame,std::move(impl->targetJournal),std::move(impl->targetChanges)});
+ impl->targetJournal.Clear();impl->targetChanges.clear();
  LogFontRecycle169(sourceDrawFrame);
 }
 void NativeUIRecorder::RetireSubmittedFrame(std::uint64_t sourceDrawFrame)
@@ -810,8 +811,8 @@ void NativeUIRecorder::SetSourceDependencyQuery(std::function<bool(const std::sh
 void NativeUIRecorder::CommitTargetBinding(std::shared_ptr<NativeUITextureBinding> binding,std::shared_ptr<const ScreenTexture> previous,std::shared_ptr<const ScreenTexture> published)
 {
 	Require(binding && binding->current==previous,"Native target binding was replaced during its callback");
-	auto found=std::find_if(impl->passes.rbegin(),impl->passes.rend(),[&](const auto& pass){return pass.destination==published || pass.depthDestination==published;});
-	Require(found!=impl->passes.rend(),"Native target publication has no completed original callback producer");
+	auto found=std::find_if(impl->targetJournal.Passes().rbegin(),impl->targetJournal.Passes().rend(),[&](const auto& pass){return pass.destination==published || pass.depthDestination==published;});
+	Require(found!=impl->targetJournal.Passes().rend(),"Native target publication has no completed original callback producer");
 	impl->targetChanges.push_back({binding,previous,published,found->sourceDependent || found->sourceStage!=NativePostprocessStage::Screen});binding->current=std::move(published);
 	try {if(impl->textureObserver)impl->targetChanges.back().texturePublication=impl->textureObserver->Publish(binding);}
 	catch(...) {binding->current=std::move(previous);impl->targetChanges.pop_back();throw;}
@@ -841,7 +842,7 @@ void NativeUIRecorder::CommitTargetPair(std::shared_ptr<NativeUITextureBinding> 
   // The callback ended, but neither attachment publication was accepted.
   // Remove only that never-submitted paired producer; successful nested
   // callbacks retain their own independent publications and producer passes.
-  std::erase_if(impl->passes,[&](const auto& pass){return pass.destination==nextColor && pass.depthDestination==nextDepth;});
+  impl->targetJournal.EraseIf([&](const auto& pass,const auto&){return pass.destination==nextColor && pass.depthDestination==nextDepth;});
   throw;
  }
 }
@@ -852,14 +853,7 @@ void NativeUIRecorder::RecordTargetSubmission(std::span<const ScreenRenderTarget
  // Every match in this call writes the same identity. Visit each owned row
  // once and stop after its first match, including all rows that alias it.
  // This runs after Begin: keep it allocation-free and noexcept.
- for(auto& owned:impl->passes) {
-  if(owned.actualSubmission==actualSubmission)continue;
-  for(const auto& pass:passes)if(owned.destination==pass.destination) {
-   if(owned.actualSubmission)std::terminate();
-   owned.actualSubmission=actualSubmission;
-   break;
-  }
- }
+ impl->targetJournal.Record(passes,actualSubmission);
  for(auto& change:impl->targetChanges) {
   if(change.actualSubmission==actualSubmission)continue;
   for(const auto& pass:passes)
@@ -882,7 +876,7 @@ void NativeUIRecorder::RetireTargetSubmission(std::uint64_t actualSubmission)
 {
 	Require(actualSubmission && impl->compiling.empty() && !impl->primitive,
 		"Native target prefix retirement requires its actual completed submission");
-	std::erase_if(impl->passes,[&](const auto& pass){return pass.actualSubmission==actualSubmission;});
+	impl->targetJournal.EraseIf([&](const auto&,const auto& receipt){return receipt.actualSubmission==actualSubmission;});
 	std::erase_if(impl->targetChanges,[&](const auto& change){return change.actualSubmission==actualSubmission;});
 }
 NativeUIReadbackPrefix NativeUIRecorder::CaptureReadbackPrefix()
@@ -899,7 +893,7 @@ NativeUIReadbackPrefix NativeUIRecorder::CaptureReadbackPrefix()
 	prefix.coordinateHeight=impl->targets.empty()?impl->height:impl->targets.front().height;
 	// Allocate all prefix/continuation storage before changing any live target.
 	prefix.root=std::make_shared<const ScreenDrawList>(impl->output);
-	prefix.targets=impl->passes;
+	prefix.targets=impl->targetJournal.Passes();
 	if(!impl->targets.empty()) {
 		auto& target=impl->targets.back();
 		Require(target.colorBinding && (!target.depthDestination || target.depthBinding),
@@ -916,13 +910,13 @@ NativeUIReadbackPrefix NativeUIRecorder::CaptureReadbackPrefix()
 		auto geometry=std::make_shared<ScreenDrawList>();
 		auto pass=impl->MakeTargetPass(target);
 		prefix.targets.push_back(pass);
-		impl->passes.push_back(std::move(pass));
+		impl->targetJournal.Append(std::move(pass));
 		try {
 			if(target.depthBinding)CommitTargetPair(target.colorBinding,target.publishedColor,target.destination,
 				target.depthBinding,target.publishedDepth,target.depthDestination);
 			else CommitTargetBinding(target.colorBinding,target.publishedColor,target.destination);
 		} catch(...) {
-			std::erase_if(impl->passes,[&](const auto& p){return p.destination==target.destination;});
+			impl->targetJournal.EraseIf([&](const auto& p,const auto&){return p.destination==target.destination;});
 			throw;
 		}
 		prefix.readColor=target.destination;prefix.readDepth=target.depthDestination;
@@ -1642,13 +1636,13 @@ void NativeUIRecorder::EndTarget()
 	for (unsigned mode=0;target.identities && mode<2;++mode)
 		Require(impl->state.matrices[mode].size()==target.before.matrices[mode].size()+1,"Native UI unbalanced target matrix stack");
 	auto pass=impl->MakeTargetPass(target);
-	impl->passes.push_back(std::move(pass));
+	impl->targetJournal.Append(std::move(pass));
 	try {
 		if(target.depthBinding)CommitTargetPair(target.colorBinding,target.publishedColor,target.destination,
 			target.depthBinding,target.publishedDepth,target.depthDestination);
 		else if(target.colorBinding)CommitTargetBinding(target.colorBinding,target.publishedColor,target.destination);
 	} catch(...) {
-		std::erase_if(impl->passes,[&](const auto& p){return p.destination==target.destination;});
+		impl->targetJournal.EraseIf([&](const auto& p,const auto&){return p.destination==target.destination;});
 		throw; // Keep this target open for the caller's matching AbortTarget.
 	}
 	for (unsigned mode=0;target.identities && mode<2;++mode) impl->state.matrices[mode]=target.before.matrices[mode];

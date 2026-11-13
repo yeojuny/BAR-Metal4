@@ -115,8 +115,7 @@ void NativeWaterGroundSourceCapture::FinishDeferredCallbacks(std::shared_ptr<con
 {
  RequireActive();if(!mapPhase)return;
  if(inDeferred||!whole||whole->sourceDrawFrame!=frame->sourceDrawFrame)throw std::logic_error("Original map callback finalization lost its actual completed source");
- auto slice=std::make_shared<NativeCUSSourceFrame>();slice->sourceDrawFrame=whole->sourceDrawFrame;slice->sourceLoads=whole->sourceLoads;
- for(const auto& draw:whole->draws)if(frame->deferred->Contains(draw.sequence))slice->draws.push_back(draw);
+ auto slice=SelectNativeCUSSourceFrame(*whole,[&](const auto& draw){return frame->deferred->Contains(draw.sequence);});
  FinishNativeMapDeferredPhase(*mapPhase,std::move(slice));
 }
 

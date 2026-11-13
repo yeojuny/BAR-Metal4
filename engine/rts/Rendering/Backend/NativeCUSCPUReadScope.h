@@ -33,7 +33,7 @@ public:
     cost+=rows->capacity()*sizeof(uint32_t);
    }
    if(!fits)continue;
-   Entry entry{draw.program,draw.modelInputs,draw.engineUniforms,draw.instances,std::move(reads)};
+   Entry entry{draw.program,draw.roster,draw.modelInputs->transforms,draw.modelInputs->modelUniforms,draw.engineUniforms,draw.instances,std::move(reads)};
    entries.emplace(key,std::move(entry));bytes+=cost;
   }
  }
@@ -48,16 +48,20 @@ public:
  size_t Count()const{return entries.size();}
  size_t Bytes()const{return bytes;}
 private:
- using Key=std::array<uintptr_t,4>;
- static Key KeyFor(const NativeCUSSourceDraw& d){return {reinterpret_cast<uintptr_t>(d.program.get()),reinterpret_cast<uintptr_t>(d.modelInputs.get()),reinterpret_cast<uintptr_t>(d.engineUniforms.get()),reinterpret_cast<uintptr_t>(d.instances.get())};}
+ // Exact immutable content tuple, not the per-event ModelInputs wrapper.
+ // Program owner keeps the skinning read profile; engineUniforms keeps
+ // interpolation and observed team mask, publications keep scale/bone rows.
+ using Key=std::array<uintptr_t,6>;
+ static Key KeyFor(const NativeCUSSourceDraw& d){return {reinterpret_cast<uintptr_t>(d.program.get()),reinterpret_cast<uintptr_t>(d.roster.get()),reinterpret_cast<uintptr_t>(d.modelInputs?d.modelInputs->transforms.get():nullptr),reinterpret_cast<uintptr_t>(d.modelInputs?d.modelInputs->modelUniforms.get():nullptr),reinterpret_cast<uintptr_t>(d.engineUniforms.get()),reinterpret_cast<uintptr_t>(d.instances.get())};}
  struct Entry {
   std::shared_ptr<const NativeCUSProgramConsumer> program;
-  std::shared_ptr<const NativeCUSModelInputs> modelInputs;
+  std::shared_ptr<const NativeCUSSubmissionRoster> roster;
+  std::shared_ptr<const NativeCUSPublishedBuffer> transforms,modelUniforms;
   std::shared_ptr<const NativeCUSUniformPublication> engineUniforms;
   NativeBufferSnapshotRef instances;
   NativeCUSRenderReadSet reads;
   template<class A,class B>static bool SameOwner(const A& a,const B& b){return a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);}
-  bool Matches(const NativeCUSSourceDraw& d)const{return SameOwner(program,d.program)&&SameOwner(modelInputs,d.modelInputs)&&SameOwner(engineUniforms,d.engineUniforms)&&SameOwner(instances,d.instances);}
+  bool Matches(const NativeCUSSourceDraw& d)const{return SameOwner(program,d.program)&&d.modelInputs&&SameOwner(roster,d.roster)&&SameOwner(roster,d.modelInputs->roster)&&SameOwner(transforms,d.modelInputs->transforms)&&SameOwner(modelUniforms,d.modelInputs->modelUniforms)&&SameOwner(engineUniforms,d.engineUniforms)&&SameOwner(instances,d.instances)&&SameOwner(instances,d.modelInputs->originalInstances);}
  };
  public:
   // A sealed CPU receipt. Source/GPU owners are released by the receiving main
@@ -98,7 +102,7 @@ private:
    auto right=packet.entries.begin();
    for(const auto& [key,left]:entries){
     const auto& r=right->second;
-    if(key!=right->first||!Entry::SameOwner(left.program,r.program)||!Entry::SameOwner(left.modelInputs,r.modelInputs)||
+    if(key!=right->first||!Entry::SameOwner(left.program,r.program)||!Entry::SameOwner(left.roster,r.roster)||!Entry::SameOwner(left.transforms,r.transforms)||!Entry::SameOwner(left.modelUniforms,r.modelUniforms)||
        !Entry::SameOwner(left.engineUniforms,r.engineUniforms)||!Entry::SameOwner(left.instances,r.instances))return false;
     const auto same=[](const auto& a,const auto& b){return a==b&&a.capacity()==b.capacity();};
     if(!same(left.reads.transforms,r.reads.transforms)||!same(left.reads.modelUniforms,r.reads.modelUniforms)||!same(left.reads.teamColors,r.reads.teamColors))return false;

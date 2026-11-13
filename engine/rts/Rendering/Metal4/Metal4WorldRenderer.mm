@@ -3229,8 +3229,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
      [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned,id<MTLSamplerState> sampler){
       return impl->OriginalTerrainImage(l,binding,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
      },options.shaderValidation,result.shaderCompileMs);
-    auto forwardCUS=std::make_shared<NativeCUSSourceFrame>(*source.cus);
-    if(actual->deferred)std::erase_if(forwardCUS->draws,[&](const auto& draw){return actual->deferred->Contains(draw.sequence);});
+    auto forwardCUS=actual->deferred?SelectNativeCUSSourceFrame(*source.cus,[&](const auto& draw){return !actual->deferred->Contains(draw.sequence);}):source.cus;
     ground.cus=impl->cusSourceGPU.Prepare(lease,forwardCUS,target,sourceImages,options.shaderValidation,result.shaderCompileMs);
     ground.clears=PrepareTerrainGroundClears(lease,ground.clearSource,target,options.shaderValidation,result.shaderCompileMs);
     prepareWaterLua(*ground.ordered,source.lua,source.viewCamera,target.width,target.height,target.logicalWidth,target.logicalHeight,

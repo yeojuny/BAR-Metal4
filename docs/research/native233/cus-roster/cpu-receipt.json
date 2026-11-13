@@ -1,0 +1,40 @@
+{
+  "scope": "Compile CPU-only production CUS roster/capture/read-set code; never app/Metal build.",
+  "negativeControl": false,
+  "command": [
+    "g++",
+    "-std=c++20",
+    "-g",
+    "-O1",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-Iengine/rts",
+    "engine/rts/Rendering/Backend/NativeCUSModelInputs.cpp",
+    "engine/rts/Rendering/Backend/NativeCUSTextureHistory.cpp",
+    "engine/rts/Rendering/Backend/NativeCUSPublishedData.cpp",
+    "engine/rts/Rendering/Backend/NativeCUSUniformData.cpp",
+    "engine/rts/Rendering/Backend/NativeCUSSourceData.cpp",
+    "engine/rts/Rendering/Backend/NativeCUSRenderInputs.cpp",
+    "engine/tools/metal4-contracts/TestNativeCUSRoster.cpp",
+    "-o",
+    "/tmp/bar-cus-roster-final/test"
+  ],
+  "exit": 0,
+  "summary": "48 CUS roster/read-receipt production checks passed\n",
+  "sourceSHA256": {
+    "rts/Rendering/Backend/NativeCUSModelInputs.cpp": "8fca3f67427b79e63682cb48d621775e6e40597d57c134ebb56cea1a0a7e2086",
+    "rts/Rendering/Backend/NativeCUSTextureHistory.cpp": "304eb4faff44bc5aa74afcc88b9fc1131123b868c17b8772a58b2dca4d1e22fb",
+    "rts/Rendering/Backend/NativeCUSPublishedData.cpp": "e3391cae966edc1eda62419ec0f5a70d36c4e3f2ca87720f52a5d02e6f01503d",
+    "rts/Rendering/Backend/NativeCUSUniformData.cpp": "64edccb673d55e356c346e4b0a39225d4405d2be5f6bdf2ce7072c84e248089b",
+    "rts/Rendering/Backend/NativeCUSSourceData.cpp": "2adb209eba8a2492d3e165f759a99876315b4bb2ceed80c6dbf991e12c39a924",
+    "rts/Rendering/Backend/NativeCUSRenderInputs.cpp": "a03be59c8ced7705c72a5c47df107aa88a9ba1367b1c7de3f534f99adba884ce",
+    "tools/metal4-contracts/TestNativeCUSRoster.cpp": "41eba56c8678072c7d4fde522f206b62797528b1fd6830a989b718969f6a0cff"
+  },
+  "builderSourceChecks": 6,
+  "notTested": [
+    "Lua VM integration",
+    "Metal Objective-C++",
+    "Mac app build",
+    "GPU gameplay/performance"
+  ]
+}

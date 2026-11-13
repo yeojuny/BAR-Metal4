@@ -38,7 +38,7 @@ bool TraceFrame(const NativeCUSSourceFrame& source) {
 	const auto now = std::chrono::duration_cast<std::chrono::milliseconds>(TraceClock::now().time_since_epoch()).count();
 	bool eligible = false;
 	if (!t.budget.samples || uint64_t(now) >= t.budget.next) {
-		for (const auto& d : source.draws) for (const auto& s : d.submissions)
+		for (const auto& d : source.draws) for (const auto& s : d.Submissions())
 			if (s && s->geometry && TraceFocus(*s)) { eligible = true; break; }
 	}
 	return t.budget.Select(source.sourceDrawFrame, now, eligible);
@@ -50,10 +50,10 @@ void TraceDraw(const NativeCUSSourceFrame& frame, const NativeCUSSourceDraw& d,
 	const NativeCUSRenderReadSet& reads, id<MTLBuffer> instances, id<MTLBuffer> transforms,
 	id<MTLBuffer> models, std::span<const uint8_t> vertex, std::span<const uint8_t> fragment) {
 	auto& t = ModelTrace();
-	if (!t.window || std::none_of(d.submissions.begin(), d.submissions.end(), [](const auto& s) { return TraceFocus(*s); }) || !t.budget.TakeDraw()) return;
+	if (!t.window || std::none_of(d.Submissions().begin(), d.Submissions().end(), [](const auto& s) { return TraceFocus(*s); }) || !t.budget.TakeDraw()) return;
 	const auto f = static_cast<unsigned long long>(frame.sourceDrawFrame), seq = static_cast<unsigned long long>(d.sequence);
 	TraceRecord("draw f=%llu seq=%llu family=%s pass=%u shader=%.16s/%.16s objects=%zu target=%ux%u samples=%u colors=%lu/%lu/%lu/%lu/%lu depthFormat=%lu stencilFormat=%lu depth=%d/%d/%u cull=%d/%u coverage=%d clamp=%d bias=%d/%.6g/%.6g stencil=%d clip=%u masks=%u/%u/%u/%u colorMask=%d%d%d%d blend=%d/%u/%u",
-		f, seq, d.program->family.c_str(), d.program->originalPass, d.program->vertexSHA512.c_str(), d.program->fragmentSHA512.c_str(), d.submissions.size(), target.width, target.height, target.samples,
+		f, seq, d.program->family.c_str(), d.program->originalPass, d.program->vertexSHA512.c_str(), d.program->fragmentSHA512.c_str(), d.Submissions().size(), target.width, target.height, target.samples,
 		(unsigned long)target.colors[0], (unsigned long)target.colors[1], (unsigned long)target.colors[2], (unsigned long)target.colors[3], (unsigned long)target.colors[4], (unsigned long)target.depth, (unsigned long)target.stencil,
 		state.depthTest, state.depthWrite, unsigned(state.depthCompare), state.cullEnabled, unsigned(state.cull), state.alphaToCoverage, state.depthClamp, state.polygonOffset, state.offsetFactor, state.offsetUnits, state.stencilTest, transport.clipFlags,
 		transport.emptyMask, transport.flipMask, transport.depthMask, transport.clampDepthCompareMask, state.colorWrite[0], state.colorWrite[1], state.colorWrite[2], state.colorWrite[3], d.surface.blend.enabled, unsigned(d.surface.blend.sourceColor), unsigned(d.surface.blend.destinationColor));
@@ -86,8 +86,8 @@ void TraceDraw(const NativeCUSSourceFrame& frame, const NativeCUSSourceDraw& d,
 		(unsigned long long)input.transforms->publicationSerial, (unsigned long long)input.modelUniforms->publicationSerial, input.transforms.get(), input.modelUniforms.get(), (unsigned long long)transforms.gpuAddress, (unsigned long long)models.gpuAddress,
 		checkedTransforms, reads.transforms.size(), checkedUniforms, reads.modelUniforms.size(), transformMismatch, uniformMismatch, (unsigned long long)transformHash, (unsigned long long)uniformHash, (unsigned long long)TraceHash(vertex.data(), vertex.size()), (unsigned long long)TraceHash(fragment.data(), fragment.size()));
 	size_t selected = 0;
-	for (size_t object = 0; object < d.submissions.size() && selected < 8; ++object) {
-		const auto& sub = *d.submissions[object]; if (!TraceFocus(sub)) continue; ++selected;
+	for (size_t object = 0; object < d.Submissions().size() && selected < 8; ++object) {
+		const auto& sub = *d.Submissions()[object]; if (!TraceFocus(sub)) continue; ++selected;
 		const auto instance = ReadNativeCUSInstance(input, object); const auto uniform = ReadNativeCUSModelUniform(input, object);
 		const bool instanceMatches = std::memcmp(instance.data(), static_cast<const uint8_t*>(instances.contents) + object * 16, 16) == 0;
 		std::array<uint32_t, 32> words; std::memcpy(words.data(), uniform.data(), uniform.size());

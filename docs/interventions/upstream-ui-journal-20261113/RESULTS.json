@@ -1,0 +1,42 @@
+{
+  "scope": "Production UI target journal host contract; not Metal or full recorder runtime.",
+  "syntaxExit": 0,
+  "testExit": 0,
+  "summary": "108472 production journal checks passed",
+  "fatalContracts": {
+    "zero": {
+      "exit": -6,
+      "expectedTermination": true
+    },
+    "conflict": {
+      "exit": -6,
+      "expectedTermination": true
+    }
+  },
+  "sha256": {
+    "rts/Rendering/Backend/ScreenDrawList.h": "7cbaf618227c1148ecd1f54610ae46164cd62e6b6bca2b7dffa4d3b2dd1f0d7d",
+    "rts/Rendering/Backend/NativeUIRecorder.cpp": "d37c0a7e51b10e6c876a8e487dfe93d6a8c6a0f466665a21f57b2a875e1cfcef",
+    "rts/Rendering/Backend/NativeUITargetPassJournal.h": "908195534dcd04422f271811cab06d5e26feba7b8ed67f469f7d0bc8dd5ec900",
+    "tools/metal4-contracts/TestNativeUITargetPassJournal.cpp": "6b410ac1f48b5706590ad621d9669f59c14dc67c20d57f4ca3365c831b05a27a"
+  },
+  "command": [
+    "g++",
+    "-std=c++23",
+    "-I/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-Wno-mismatched-new-delete",
+    "-O1",
+    "-g",
+    "-fsanitize=address,undefined",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/tools/metal4-contracts/TestNativeUITargetPassJournal.cpp",
+    "-o",
+    "/tmp/ui-journal/final/test"
+  ],
+  "passed": true,
+  "limits": [
+    "Full recorder runtime link not verified; existing target fixture requires BeginGenesisStage bool update and additional engine service linkage.",
+    "No Mac build, Metal execution, frame concurrency or FPS claim."
+  ]
+}

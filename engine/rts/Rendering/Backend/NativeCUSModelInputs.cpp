@@ -15,31 +15,18 @@ void Check(bool condition, const char* message)
 }
 }
 
-std::shared_ptr<const NativeCUSModelInputs> MakeNativeCUSModelInputs(
-	uint64_t frame, uint64_t sequence,
-	std::span<const std::shared_ptr<const NativeCUSModelSubmission>> submissions,
-	NativeBufferSnapshotRef instances,
-	std::shared_ptr<const NativeCUSPublishedBuffer> transforms,
-	std::shared_ptr<const NativeCUSPublishedBuffer> uniforms)
+std::shared_ptr<const NativeCUSSubmissionRoster> NativeCUSSubmissionRoster::Seal(
+ std::span<const NativeCUSSubmittedObject> objects,
+ std::span<const std::shared_ptr<const NativeCUSModelSubmission>> submissions,
+ std::span<const std::string> bins)
 {
-	Check(sequence != 0 && !submissions.empty() && instances && transforms && uniforms,
-		"CUS original model submission lacks immutable source owners");
-	Check(transforms->kind == NativeCUSPublishedKind::Transforms && transforms->stride == 32 &&
-		uniforms->kind == NativeCUSPublishedKind::ModelUniforms && uniforms->stride == 128,
-		"CUS original model SSBO ABI differs");
-	Check(transforms->contextGeneration != 0 && uniforms->contextGeneration != 0 &&
-		transforms->publicationSerial != 0 && uniforms->publicationSerial != 0,
-		"CUS original model buffers have no actual publication");
-	const auto& layout = instances->layout;
-	Check(layout.kind == NativeBufferKind::Vertex && layout.stride == 16 &&
-		layout.elements >= submissions.size() && layout.attributes.size() == 1,
-		"CUS original instance buffer layout/capacity differs");
-	const auto& attribute = layout.attributes[0];
-	Check(attribute.id == 6 && attribute.scalarType == NativeScalarType::UInt32 &&
-		attribute.offset == 0 && attribute.byteSize == 16 && attribute.declaredCount == 4 &&
-		!attribute.normalized && attribute.valueShape == NativeValueShape::Scalar &&
-		instances->bytes.size() == CheckedNativeBufferByteSize(layout),
-		"CUS original uvec4 instance payload differs");
+ Check(!objects.empty() && objects.size() == submissions.size() && bins.size() == objects.size(),
+  "CUS retained submission metadata differs");
+ for (size_t i = 0; i < objects.size(); ++i) {
+  Check(submissions[i] && submissions[i]->object.kind == objects[i].kind &&
+   submissions[i]->object.id == objects[i].id,
+   "CUS original indirect model owner differs from the submitted object");
+ }
 	for (const auto& submission: submissions) {
 		Check(submission && submission->geometry, "CUS submitted original model owner is unavailable");
 		size_t indices = 0;
@@ -51,10 +38,42 @@ std::shared_ptr<const NativeCUSModelInputs> MakeNativeCUSModelInputs(
 		Check(indices == submission->originalIndexCount,
 			"CUS retained original model differs from the AddToSubmission index range");
 	}
+ auto result = std::shared_ptr<NativeCUSSubmissionRoster>(new NativeCUSSubmissionRoster);
+ result->objects.assign(objects.begin(), objects.end());
+ result->submissions.assign(submissions.begin(), submissions.end());
+ result->uniformBins.assign(bins.begin(), bins.end());
+ return result;
+}
+
+std::shared_ptr<const NativeCUSModelInputs> MakeNativeCUSModelInputs(
+	uint64_t frame, uint64_t sequence,
+	std::shared_ptr<const NativeCUSSubmissionRoster> roster,
+	NativeBufferSnapshotRef instances,
+	std::shared_ptr<const NativeCUSPublishedBuffer> transforms,
+	std::shared_ptr<const NativeCUSPublishedBuffer> uniforms)
+{
+	Check(sequence != 0 && roster && !roster->Submissions().empty() && instances && transforms && uniforms,
+		"CUS original model submission lacks immutable source owners");
+	Check(transforms->kind == NativeCUSPublishedKind::Transforms && transforms->stride == 32 &&
+		uniforms->kind == NativeCUSPublishedKind::ModelUniforms && uniforms->stride == 128,
+		"CUS original model SSBO ABI differs");
+	Check(transforms->contextGeneration != 0 && uniforms->contextGeneration != 0 &&
+		transforms->publicationSerial != 0 && uniforms->publicationSerial != 0,
+		"CUS original model buffers have no actual publication");
+	const auto& layout = instances->layout;
+	Check(layout.kind == NativeBufferKind::Vertex && layout.stride == 16 &&
+		layout.elements >= roster->Submissions().size() && layout.attributes.size() == 1,
+		"CUS original instance buffer layout/capacity differs");
+	const auto& attribute = layout.attributes[0];
+	Check(attribute.id == 6 && attribute.scalarType == NativeScalarType::UInt32 &&
+		attribute.offset == 0 && attribute.byteSize == 16 && attribute.declaredCount == 4 &&
+		!attribute.normalized && attribute.valueShape == NativeValueShape::Scalar &&
+		instances->bytes.size() == CheckedNativeBufferByteSize(layout),
+		"CUS original uvec4 instance payload differs");
 	auto result = std::make_shared<NativeCUSModelInputs>();
 	result->sourceDrawFrame = frame;
 	result->sourceSequence = sequence;
-	result->submissions.assign(submissions.begin(), submissions.end());
+	result->roster = std::move(roster);
 	result->originalInstances = std::move(instances);
 	result->transforms = std::move(transforms);
 	result->modelUniforms = std::move(uniforms);
@@ -63,7 +82,7 @@ std::shared_ptr<const NativeCUSModelInputs> MakeNativeCUSModelInputs(
 
 std::array<uint32_t, 4> ReadNativeCUSInstance(const NativeCUSModelInputs& inputs, size_t submission)
 {
-	Check(submission < inputs.submissions.size() && inputs.originalInstances,
+	Check(inputs.roster && submission < inputs.Submissions().size() && inputs.originalInstances,
 		"CUS original instance submission is outside its captured draw");
 	Check(inputs.originalInstances->bytes.size() / 16 > submission,
 		"CUS original instance bytes were not retained");

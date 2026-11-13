@@ -62,7 +62,7 @@ Definitions ParseDefinitions(const NativeTerrainProgramRequest& request)
 	return result;
 }
 enum class ImageKind { Color2D, Cube, Shadow };
-struct SamplerABI {std::string name;ImageKind kind=ImageKind::Color2D;};
+struct SamplerABI {std::string name;NativeTerrainUniformSlot slot;ImageKind kind=ImageKind::Color2D;};
 struct Profile {
 	bool border=false, deferred=false, combined=false, composite=false;
 	bool MRT() const { return deferred||combined; }
@@ -77,7 +77,9 @@ struct Profile {
 	void Int(const char* name,unsigned rows=1) {
 		NativeTerrainUniformValue v;v.rows=rows;v.values=std::vector<int32_t>(rows,0);defaults.emplace(name,std::move(v));
 	}
-	void Image(const char* name,ImageKind kind=ImageKind::Color2D) {fragment.push_back({name,kind});Int(name);}
+	void Image(NativeTerrainUniformSlot slot,ImageKind kind=ImageKind::Color2D) {
+  const char* name=NativeTerrainUniformNames[size_t(slot)];fragment.push_back({name,slot,kind});Int(name);
+ }
 };
 Profile OriginalProfile(const NativeTerrainProgramRequest& request)
 {
@@ -100,7 +102,7 @@ Profile OriginalProfile(const NativeTerrainProgramRequest& request)
 		if(!request.attributeBindings.empty()||(!request.outputBindings.empty()&&request.outputBindings!=std::vector<std::pair<std::string,uint32_t>>{{"fragColor",0}}))
 			throw UnsupportedSource("Original SMFComposite built-in quad/output ABI differs");
 		Profile p;p.composite=true;p.defines=ParseDefinitions(request);if(!p.defines.empty())throw UnsupportedSource("Modified original composite definitions require their actual source translation");
-		p.Image("colorTex");p.Image("depthTex");return p;
+		p.Image(NativeTerrainUniformSlot::colorTex);p.Image(NativeTerrainUniformSlot::depthTex);return p;
 	}
 	if(identity.selection==NativeTerrainProgramSelection::Border) {
 		if(request.vertexSource!=smforiginal::BORDER_VERTEX_SOURCE||request.fragmentSource!=smforiginal::BORDER_FRAGMENT_SOURCE)
@@ -113,7 +115,7 @@ Profile OriginalProfile(const NativeTerrainProgramRequest& request)
 		if(!border.defines.empty())
 			throw UnsupportedSource("Original SMF border has modified compile definitions requiring their own exact translation");
 		border.Int("texSquare",2);border.Int("heightMapTex");border.Float("borderMinHeight",1);border.Float("mapSize",4);
-		border.Image("diffuseTex");border.Image("detailsTex");
+		border.Image(NativeTerrainUniformSlot::diffuseTex);border.Image(NativeTerrainUniformSlot::detailsTex);
 		return border;
 	}
 	if(request.vertexSource!=smforiginal::VERTEX_SOURCE||request.fragmentSource!=smforiginal::FRAGMENT_SOURCE)
@@ -161,25 +163,25 @@ Profile OriginalProfile(const NativeTerrainProgramRequest& request)
 	if(!advanced)for(const auto& [name,value]:p.defines) {
 		if(flags.contains(name)&&name!="HAVE_INFOTEX")throw UnsupportedSource("Original standard SMF source has a nonstandard feature definition: "+name);
 	}
-	p.Int("texSquare",2);p.Int("heightMapTex");p.Float("specularTexGen",2);p.Image("diffuseTex");
-	if(advanced){p.Image("normalsTex");p.Float("normalTexGen",2);
+	p.Int("texSquare",2);p.Int("heightMapTex");p.Float("specularTexGen",2);p.Image(NativeTerrainUniformSlot::diffuseTex);
+	if(advanced){p.Image(NativeTerrainUniformSlot::normalsTex);p.Float("normalTexGen",2);
 		if(!p.deferred){p.Float("lightDir",4);p.Float("groundAmbientColor",3);p.Float("groundDiffuseColor",3);}
 		if(!p.Has("SMF_SPECULAR_LIGHTING")){p.Float("groundSpecularColor",3);if(!p.deferred)p.Float("groundSpecularExponent",1);}
 		if((!p.deferred&&p.Has("SMF_SKY_REFLECTIONS"))||p.Has("SMF_PARALLAX_MAPPING"))p.Float("cameraPos",3);
-	}else p.Image("shadingTex");
+	}else p.Image(NativeTerrainUniformSlot::shadingTex);
 	if(p.Has("SMF_DETAIL_NORMAL_TEXTURE_SPLATTING")) {
-		p.Image("splatDetailNormalTex1");p.Image("splatDetailNormalTex2");p.Image("splatDetailNormalTex3");p.Image("splatDetailNormalTex4");p.Image("splatDistrTex");
-	}else if(p.Has("SMF_DETAIL_TEXTURE_SPLATTING")){p.Image("splatDetailTex");p.Image("splatDistrTex");}
-	else p.Image("detailTex");
+		p.Image(NativeTerrainUniformSlot::splatDetailNormalTex1);p.Image(NativeTerrainUniformSlot::splatDetailNormalTex2);p.Image(NativeTerrainUniformSlot::splatDetailNormalTex3);p.Image(NativeTerrainUniformSlot::splatDetailNormalTex4);p.Image(NativeTerrainUniformSlot::splatDistrTex);
+	}else if(p.Has("SMF_DETAIL_TEXTURE_SPLATTING")){p.Image(NativeTerrainUniformSlot::splatDetailTex);p.Image(NativeTerrainUniformSlot::splatDistrTex);}
+	else p.Image(NativeTerrainUniformSlot::detailTex);
 	if(p.Has("SMF_DETAIL_NORMAL_TEXTURE_SPLATTING")||p.Has("SMF_DETAIL_TEXTURE_SPLATTING")){p.Float("splatTexScales",4);p.Float("splatTexMults",4);}
-	if(!p.deferred&&p.Has("HAVE_INFOTEX")){p.Image("infoTex");p.Float("infoTexGen",2);p.Float("infoTexIntensityMul",1);}
-	if(p.Has("SMF_SPECULAR_LIGHTING"))p.Image("specularTex");
-	if(!p.deferred&&p.Has("HAVE_SHADOWS")){p.Image("shadowTex",ImageKind::Shadow);p.Image("shadowColorTex");p.Float("shadowMat",4,4);p.Float("groundShadowDensity",1);}
+	if(!p.deferred&&p.Has("HAVE_INFOTEX")){p.Image(NativeTerrainUniformSlot::infoTex);p.Float("infoTexGen",2);p.Float("infoTexIntensityMul",1);}
+	if(p.Has("SMF_SPECULAR_LIGHTING"))p.Image(NativeTerrainUniformSlot::specularTex);
+	if(!p.deferred&&p.Has("HAVE_SHADOWS")){p.Image(NativeTerrainUniformSlot::shadowTex,ImageKind::Shadow);p.Image(NativeTerrainUniformSlot::shadowColorTex);p.Float("shadowMat",4,4);p.Float("groundShadowDensity",1);}
 	if(!p.deferred&&p.Has("SMF_WATER_ABSORPTION")){p.Float("mapHeights",2);p.Float("waterMinColor",3);p.Float("waterBaseColor",3);p.Float("waterAbsorbColor",3);}
-	if(!p.deferred&&p.Has("SMF_SKY_REFLECTIONS")){p.Image("skyReflectTex",ImageKind::Cube);p.Image("skyReflectModTex");}
-	if(p.Has("SMF_BLEND_NORMALS"))p.Image("blendNormalsTex");
-	if(p.Has("SMF_LIGHT_EMISSION"))p.Image("lightEmissionTex");
-	if(p.Has("SMF_PARALLAX_MAPPING"))p.Image("parallaxHeightTex");
+	if(!p.deferred&&p.Has("SMF_SKY_REFLECTIONS")){p.Image(NativeTerrainUniformSlot::skyReflectTex,ImageKind::Cube);p.Image(NativeTerrainUniformSlot::skyReflectModTex);}
+	if(p.Has("SMF_BLEND_NORMALS"))p.Image(NativeTerrainUniformSlot::blendNormalsTex);
+	if(p.Has("SMF_LIGHT_EMISSION"))p.Image(NativeTerrainUniformSlot::lightEmissionTex);
+	if(p.Has("SMF_PARALLAX_MAPPING"))p.Image(NativeTerrainUniformSlot::parallaxHeightTex);
 	Require(p.fragment.size()<=16,"Actual SMF fragment sampler ABI exceeds Metal's per-stage sampler limit");
 	return p;
 }
@@ -391,27 +393,30 @@ void RequireNamedTerrainInput(bool condition,const char* message,const char* nam
 {
 	if(!condition)Require(false,std::string(message)+name);
 }
-const NativeTerrainUniformValue& Value(const NativeTerrainUniformSnapshot& uniforms,const char* name,unsigned rows,unsigned columns=1)
+const NativeTerrainUniformValue& Value(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUniformSlot slot,unsigned rows,unsigned columns=1)
 {
-	const auto it=uniforms.values.find(name);
-	RequireNamedTerrainInput(it!=uniforms.values.end(),"Actual original terrain uniform is unobserved: ",name);
-	const auto& value=it->second;
+	const char* name=NativeTerrainUniformNames[size_t(slot)];
+	const auto* found=uniforms.Find(slot);
+	RequireNamedTerrainInput(found!=nullptr,"Actual original terrain uniform is unobserved: ",name);
+	const auto& value=*found;
 	RequireNamedTerrainInput(value.rows==rows&&value.columns==columns&&value.count==1,
 		"Actual original terrain uniform shape differs: ",name);
 	return value;
 }
-simd_float4 Float(const NativeTerrainUniformSnapshot& uniforms,const char* name,unsigned components)
+simd_float4 Float(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUniformSlot slot,unsigned components)
 {
-	const auto& value=Value(uniforms,name,components);
+	const char* name=NativeTerrainUniformNames[size_t(slot)];
+	const auto& value=Value(uniforms,slot,components);
 	const auto* bytes=std::get_if<std::vector<float>>(&value.values);
 	RequireNamedTerrainInput(bytes&&bytes->size()==components&&!value.transpose,"Actual original terrain float uniform type differs: ",name);
 	simd_float4 result{};
 	for(unsigned i=0;i<components;++i){Require(std::isfinite((*bytes)[i]),"Original terrain float uniform is nonfinite");result[i]=(*bytes)[i];}
 	return result;
 }
-simd_int4 Int(const NativeTerrainUniformSnapshot& uniforms,const char* name,unsigned components)
+simd_int4 Int(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUniformSlot slot,unsigned components)
 {
-	const auto& value=Value(uniforms,name,components);
+	const char* name=NativeTerrainUniformNames[size_t(slot)];
+	const auto& value=Value(uniforms,slot,components);
 	const auto* bytes=std::get_if<std::vector<int32_t>>(&value.values);
 	RequireNamedTerrainInput(bytes&&bytes->size()==components&&!value.transpose,"Actual original terrain integer uniform type differs: ",name);
 	simd_int4 result{};for(unsigned i=0;i<components;++i)result[i]=(*bytes)[i];return result;
@@ -423,9 +428,9 @@ simd_float4x4 Matrix(const float* source,bool transpose=false)
 		Require(std::isfinite(value),"Original terrain matrix contains a nonfinite value");result.columns[c][r]=value;}
 	return result;
 }
-simd_float4x4 Matrix(const NativeTerrainUniformSnapshot& uniforms,const char* name)
+simd_float4x4 Matrix(const NativeTerrainUniformSnapshot& uniforms,NativeTerrainUniformSlot slot)
 {
-	const auto& value=Value(uniforms,name,4,4);const auto* bytes=std::get_if<std::vector<float>>(&value.values);
+	const auto& value=Value(uniforms,slot,4,4);const auto* bytes=std::get_if<std::vector<float>>(&value.values);
 	Require(bytes&&bytes->size()==16,"Original terrain matrix uniform type differs");return Matrix(bytes->data(),value.transpose);
 }
 simd_float4 Vec(const std::array<float,4>& source)
@@ -444,9 +449,9 @@ Uniform DrawUniform(const NativeTerrainSquareDraw& draw,const Profile& profile,c
 	Require(result.flags.w<=uint32_t(ScreenAlphaCompare::Always)&&std::isfinite(draw.surface.alphaTest.reference),"Original terrain alpha-test state is invalid");
 	result.alpha.x=std::clamp(draw.surface.alphaTest.reference,0.0f,1.0f);
 	if(profile.composite)return result;
-	result.texSquare=Int(source,"texSquare",2);
+	result.texSquare=Int(source,NativeTerrainUniformSlot::texSquare,2);
 	if(profile.border) {
-		result.texGen0=Float(source,"mapSize",4);result.mapHeights.x=Float(source,"borderMinHeight",1).x;
+		result.texGen0=Float(source,NativeTerrainUniformSlot::mapSize,4);result.mapHeights.x=Float(source,NativeTerrainUniformSlot::borderMinHeight,1).x;
 		Require(result.texGen0.x>0&&result.texGen0.y>0&&result.texGen0.z>0&&result.texGen0.w>0,
 			"Original border mapSize cannot address its actual height map");
 		// SMFBorderVertProg does not write gl_ClipVertex. Do not invent its value
@@ -454,30 +459,30 @@ Uniform DrawUniform(const NativeTerrainSquareDraw& draw,const Profile& profile,c
 		Require(std::none_of(draw.clipEnabled.begin(),draw.clipEnabled.end(),[](bool enabled){return enabled;})&&!draw.world.inheritedClipPlane,
 			"Original SMF border with active user clipping requires its actual defined clip-vertex source");
 	}else{
-		result.texGen0=Float(source,"specularTexGen",2);
+		result.texGen0=Float(source,NativeTerrainUniformSlot::specularTexGen,2);
 		Require(result.texGen0.x>0&&result.texGen0.y>0,"Original terrain specularTexGen cannot address its actual map");
 	}
 	if(profile.Has("SMF_ADV_SHADING")) {
-		const auto normal=Float(source,"normalTexGen",2);result.texGen0.z=normal.x;result.texGen0.w=normal.y;
+		const auto normal=Float(source,NativeTerrainUniformSlot::normalTexGen,2);result.texGen0.z=normal.x;result.texGen0.w=normal.y;
 		if(!profile.Has("SMF_SPECULAR_LIGHTING")) {
-			result.groundSpecular=Float(source,"groundSpecularColor",3);
-			if(!profile.deferred)result.groundSpecular.w=Float(source,"groundSpecularExponent",1).x;
+			result.groundSpecular=Float(source,NativeTerrainUniformSlot::groundSpecularColor,3);
+			if(!profile.deferred)result.groundSpecular.w=Float(source,NativeTerrainUniformSlot::groundSpecularExponent,1).x;
 		}
-		if((!profile.deferred&&profile.Has("SMF_SKY_REFLECTIONS"))||profile.Has("SMF_PARALLAX_MAPPING"))result.cameraPos=Float(source,"cameraPos",3);
+		if((!profile.deferred&&profile.Has("SMF_SKY_REFLECTIONS"))||profile.Has("SMF_PARALLAX_MAPPING"))result.cameraPos=Float(source,NativeTerrainUniformSlot::cameraPos,3);
 		if(!profile.deferred) {
-			result.lightDir=Float(source,"lightDir",4);result.groundAmbient=Float(source,"groundAmbientColor",3);result.groundDiffuse=Float(source,"groundDiffuseColor",3);
+			result.lightDir=Float(source,NativeTerrainUniformSlot::lightDir,4);result.groundAmbient=Float(source,NativeTerrainUniformSlot::groundAmbientColor,3);result.groundDiffuse=Float(source,NativeTerrainUniformSlot::groundDiffuseColor,3);
 			const auto determinant=simd_determinant(result.modelView);
 			Require(std::isfinite(determinant)&&determinant!=0,"Original terrain model-view inverse is undefined");
 			result.modelViewInverse=simd_inverse(result.modelView);
 			for(auto column:result.modelViewInverse.columns)for(unsigned row=0;row<4;++row)Require(std::isfinite(column[row]),"Original terrain model-view inverse is nonfinite");
 		}
 	}
-	if(!profile.deferred&&profile.Has("HAVE_INFOTEX")){result.texGen1=Float(source,"infoTexGen",2);result.texGen1.z=Float(source,"infoTexIntensityMul",1).x;}
-	if(!profile.deferred&&profile.Has("HAVE_SHADOWS")){result.shadowMat=Matrix(source,"shadowMat");result.mapHeights.z=Float(source,"groundShadowDensity",1).x;}
-	if(!profile.deferred&&profile.Has("SMF_WATER_ABSORPTION")){const auto heights=Float(source,"mapHeights",2);result.mapHeights.x=heights.x;result.mapHeights.y=heights.y;
-		result.waterMin=Float(source,"waterMinColor",3);result.waterBase=Float(source,"waterBaseColor",3);result.waterAbsorb=Float(source,"waterAbsorbColor",3);}
+	if(!profile.deferred&&profile.Has("HAVE_INFOTEX")){result.texGen1=Float(source,NativeTerrainUniformSlot::infoTexGen,2);result.texGen1.z=Float(source,NativeTerrainUniformSlot::infoTexIntensityMul,1).x;}
+	if(!profile.deferred&&profile.Has("HAVE_SHADOWS")){result.shadowMat=Matrix(source,NativeTerrainUniformSlot::shadowMat);result.mapHeights.z=Float(source,NativeTerrainUniformSlot::groundShadowDensity,1).x;}
+	if(!profile.deferred&&profile.Has("SMF_WATER_ABSORPTION")){const auto heights=Float(source,NativeTerrainUniformSlot::mapHeights,2);result.mapHeights.x=heights.x;result.mapHeights.y=heights.y;
+		result.waterMin=Float(source,NativeTerrainUniformSlot::waterMinColor,3);result.waterBase=Float(source,NativeTerrainUniformSlot::waterBaseColor,3);result.waterAbsorb=Float(source,NativeTerrainUniformSlot::waterAbsorbColor,3);}
 	if(profile.Has("SMF_DETAIL_NORMAL_TEXTURE_SPLATTING")||profile.Has("SMF_DETAIL_TEXTURE_SPLATTING")){
-		result.splatScales=Float(source,"splatTexScales",4);result.splatMults=Float(source,"splatTexMults",4);}
+		result.splatScales=Float(source,NativeTerrainUniformSlot::splatTexScales,4);result.splatMults=Float(source,NativeTerrainUniformSlot::splatTexMults,4);}
 	if(!profile.deferred){result.fogColor=Vec(draw.fogColor);result.fogParameters=Vec(draw.fogParameters);}
 	for(unsigned i=0;i<3;++i)if(draw.clipEnabled[i]){result.flags.y|=1u<<i;result.clipEye[i]=Vec(draw.clipEyeEquations[i]);}
 	if(draw.world.inheritedClipPlane){result.flags.y|=8u;result.inheritedClip=Vec(*draw.world.inheritedClipPlane);}
@@ -758,8 +763,9 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		Uniform uniforms=DrawUniform(draw,original->profile,target);
 		const auto& uniformSource=*draw.program.uniforms;
 		std::array<std::optional<ImageKind>,NativeCUSTextureHistory::Units> activeUnitTypes{};
-		auto resolve=[&](const char* name,ImageKind kind,ImageUniform& parameters,bool vertex){
-			const int32_t unit=Int(uniformSource,name,1).x;
+		auto resolve=[&](NativeTerrainUniformSlot slot,ImageKind kind,ImageUniform& parameters,bool vertex){
+			const char* name=NativeTerrainUniformNames[size_t(slot)];
+			const int32_t unit=Int(uniformSource,slot,1).x;
 			RequireNamedTerrainInput(unit>=0&&uint32_t(unit)<NativeCUSTextureHistory::Units,"Original terrain sampler unit is outside observed source history: ",name);
 			auto& unitType=activeUnitTypes[unsigned(unit)];
 			Require(!unitType||*unitType==kind,"Original terrain active samplers of different GL types alias one source unit");
@@ -784,11 +790,11 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 			lease.AddAllocation(image.texture);ready.images.push_back(std::move(image));
 		};
 		const size_t fragmentOffset=original->profile.composite?0:1;
-		if(fragmentOffset)resolve("heightMapTex",ImageKind::Color2D,uniforms.heightImage,true);
+		if(fragmentOffset)resolve(NativeTerrainUniformSlot::heightMapTex,ImageKind::Color2D,uniforms.heightImage,true);
 		SMFSamplerSelection211 sampling211(original->samplerSourceSupported211,original->normalSlot211);
 		for(size_t slot=0;slot<original->profile.fragment.size();++slot){
 			const auto& abi=original->profile.fragment[slot];
-			resolve(abi.name.c_str(),abi.kind,uniforms.images[slot],false);
+			resolve(abi.slot,abi.kind,uniforms.images[slot],false);
 			// Inspect the exact transport already resolved for this upload. No
 			// second sampler walk, owner census, or source-string work per draw.
 			if(abi.kind==ImageKind::Color2D)sampling211.ObserveColor(uniforms.images[slot],unsigned(slot));

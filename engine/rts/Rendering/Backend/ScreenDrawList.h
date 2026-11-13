@@ -378,9 +378,6 @@ struct ScreenRenderTargetPass {
 	bool sourceDependent = false;
 	std::uint32_t screenCommandOffset = 0;
 	std::uint64_t commandSequence = 0;
-	// Recorder-owned receipt. Set only after the real command buffer Begin;
-	// a suspended Lua callback cannot roll back submitted immutable contents.
-	std::uint64_t actualSubmission = 0;
 	bool editorTarget = false; // Explicit original editor color RTT, including empty SaveImage scopes.
 	// Actual world RTT callin, separate from copied/map-image dependencies.
 	// Actual StartBox PreUnit bake or paired range-coverage World FBO.

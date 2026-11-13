@@ -434,12 +434,12 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   for(unsigned slot=0;slot<12;++slot){
    if(!(program->generated->fragment.textureMask&(1u<<slot)))continue;
    const auto& binding=d.textures->samplers[slot];transport.sampleCodes[slot]=NativeCUSSampleCode(Sampling(binding));
-   const auto uniform=d.intUniforms.find(samplerNames[slot]);Require(uniform!=d.intUniforms.end()&&uniform->second.size()==1&&uniform->second[0]==slot,"CUS original sampler unit changed outside selected source contract");
+   const auto uniform=d.IntUniforms().find(samplerNames[slot]);Require(uniform!=d.IntUniforms().end()&&uniform->second.size()==1&&uniform->second[0]==slot,"CUS original sampler unit changed outside selected source contract");
    if(Empty(binding)){
     if(slot<2)canonicalPair219=false;
     if(slot==6){
-     const auto bits=d.intUniforms.find("bitOptions");
-     Require(bits!=d.intUniforms.end()&&bits->second.size()==1&&!(uint32_t(bits->second[0])&1u),"CUS enabled original shadow branch lacks its actual depth image");
+     const auto bits=d.IntUniforms().find("bitOptions");
+     Require(bits!=d.IntUniforms().end()&&bits->second.size()==1&&!(uint32_t(bits->second[0])&1u),"CUS enabled original shadow branch lacks its actual depth image");
      continue; // Exact source OPTION_SHADOWMAPPING=0 gates every shadow sample/size read.
     }
     transport.emptyMask|=1u<<slot;continue;
@@ -462,13 +462,13 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   const bool identityChannels194=NativeCUSIdentityChannels194(program->generated->fragment.textureMask,transport);
   const auto samplerPolicy219=canonicalPair219?ModelSamplerPolicy219::CanonicalPair:ModelSamplerPolicy219::Generic;
   draw.pipeline=impl->Pipeline(lease,*program,target,blend,state.colorWrite,validation,ms,state.alphaToCoverage,identityChannels194,samplerPolicy219);draw.depth=effectstate::Depth(lease,state,target.stencil);lease.Retain(draw.pipeline);lease.Retain(program->libraries->vertex);lease.Retain(program->libraries->fragment);
-  ForEachNativeCUSDrawRun147(d.submissions,[&](uint32_t first,uint32_t count,const NativeCUSModelSubmission& submission){
+  ForEachNativeCUSDrawRun147(d.Submissions(),[&](uint32_t first,uint32_t count,const NativeCUSModelSubmission& submission){
    const auto index=impl->Model(lease,submission.geometry,preparation154,out->impl->geometry,geometryBatch155);
    const auto& model=out->impl->geometry[index];
    Require(model.count==submission.originalIndexCount,"CUS GPU model index count differs from original submission");
    draw.objects.push_back({index,first,count});
   });
-  originalObjects147+=d.submissions.size();preparedRuns147+=draw.objects.size();
+  originalObjects147+=d.Submissions().size();preparedRuns147+=draw.objects.size();
   if(sampled){const auto begin=TraceClock::now();TraceDraw(*source,d,target,state,transport,traceImages,reads,instances,transforms,models,vertex,fragment);diagnosticUS+=TraceUS(begin);}
   out->impl->draws.push_back(std::move(draw));
  }

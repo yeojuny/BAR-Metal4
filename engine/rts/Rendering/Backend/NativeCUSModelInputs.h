@@ -21,9 +21,28 @@ struct NativeCUSModelSubmission {
 	uint32_t originalIndexFirst = 0, originalIndexCount = 0;
 };
 
+// Sealed at Submit, after successful builder mutations. Factory validation is
+// structural only: frame publications, pose and textures never live here.
+class NativeCUSSubmissionRoster final {
+public:
+ static std::shared_ptr<const NativeCUSSubmissionRoster> Seal(
+  std::span<const NativeCUSSubmittedObject>,
+  std::span<const std::shared_ptr<const NativeCUSModelSubmission>>,
+  std::span<const std::string> uniformBins);
+ const auto& Objects() const noexcept { return objects; }
+ const auto& Submissions() const noexcept { return submissions; }
+ const auto& UniformBins() const noexcept { return uniformBins; }
+private:
+ NativeCUSSubmissionRoster() = default;
+ std::vector<NativeCUSSubmittedObject> objects;
+ std::vector<std::shared_ptr<const NativeCUSModelSubmission>> submissions;
+ std::vector<std::string> uniformBins;
+};
+
 struct NativeCUSModelInputs {
 	uint64_t sourceDrawFrame = 0, sourceSequence = 0;
-	std::vector<std::shared_ptr<const NativeCUSModelSubmission>> submissions;
+	std::shared_ptr<const NativeCUSSubmissionRoster> roster;
+ const auto& Submissions() const noexcept { return roster->Submissions(); }
 	NativeBufferSnapshotRef originalInstances;
 	std::shared_ptr<const NativeCUSPublishedBuffer> transforms;
 	std::shared_ptr<const NativeCUSPublishedBuffer> modelUniforms;
@@ -31,7 +50,7 @@ struct NativeCUSModelInputs {
 
 std::shared_ptr<const NativeCUSModelInputs> MakeNativeCUSModelInputs(
 	uint64_t sourceDrawFrame, uint64_t sourceSequence,
-	std::span<const std::shared_ptr<const NativeCUSModelSubmission>>,
+	std::shared_ptr<const NativeCUSSubmissionRoster>,
 	NativeBufferSnapshotRef originalInstances,
 	std::shared_ptr<const NativeCUSPublishedBuffer> transforms,
 	std::shared_ptr<const NativeCUSPublishedBuffer> modelUniforms);

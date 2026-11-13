@@ -1,0 +1,30 @@
+{
+  "scope": "Host ASan/UBSan checks of production CUS immutable uniform builder, not Lua/Metal execution.",
+  "exit": 0,
+  "command": [
+    "g++",
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-g",
+    "-O1",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-I/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/rts/Rendering/Backend/NativeCUSProgramData.cpp",
+    "/workspace/scratch/adc301d8b5df/bar-upstream-refactor/engine/tools/metal4-contracts/TestNativeCUSProgramUniforms.cpp",
+    "-o",
+    "/tmp/bar-cus-uniform-content-packed/test"
+  ],
+  "summary": "CUS immutable uniform content and production packing: passed\n",
+  "sourceSHA256": "581a9f8d023e10ac32a2cd2e7f3b16e1e65937a35bc04fc4d081b15d113b5fc5",
+  "fixtureSHA256": "8d1f3a774b29e0fb65e94bfcd417264d14c124bb0c7ccffe5616c0d3df5b6c5b",
+  "luaSourceOrderChecks": 4,
+  "notTested": [
+    "Lua VM",
+    "Metal Objective-C++",
+    "macOS app build",
+    "GPU output or FPS"
+  ]
+}

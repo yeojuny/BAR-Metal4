@@ -38,7 +38,7 @@ void NativeCUSSourceCapture::Initialize(NativeCUSSourceProviders input)
 	services.captureSubmission=[this](const auto& object){return models.CaptureSubmission(object);};
 	services.captureObjectInputs=[this](const NativeCUSSourceDraw& d){
 		const auto& original=OriginalCUSModelPublication();
-		return models.CaptureDraw(d.textures->sourceDrawFrame,d.sequence,d.submissions,d.instances,original.Transforms(),original.ModelUniforms());
+		return models.CaptureDraw(d.textures->sourceDrawFrame,d.sequence,d.roster,d.instances,original.Transforms(),original.ModelUniforms());
 	};
 	services.captureEngineUniforms=[]{return OriginalCUSUniformCapture().Current();};
 	LuaNativeCUSSource::SetTextureContext(&textures.History(),&textures.Registry());

@@ -13,7 +13,7 @@ public:
 	explicit NativeCUSModelCapture(WorldFrameCapture& sharedModels): sharedModels(sharedModels) {}
 	std::shared_ptr<const NativeCUSModelSubmission> CaptureSubmission(const NativeCUSSubmittedObject&);
 	std::shared_ptr<const NativeCUSModelInputs> CaptureDraw(uint64_t frame, uint64_t sequence,
-		std::span<const std::shared_ptr<const NativeCUSModelSubmission>> submissions,
+		std::shared_ptr<const NativeCUSSubmissionRoster> roster,
 		NativeBufferSnapshotRef instances,
 		std::shared_ptr<const NativeCUSPublishedBuffer> transforms,
 		std::shared_ptr<const NativeCUSPublishedBuffer> modelUniforms);

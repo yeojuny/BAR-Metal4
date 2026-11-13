@@ -28,36 +28,32 @@ bool HasNoNativeCUSAttachmentEffects(const NativeCUSSourceDraw& d) noexcept
 void ValidateNativeCUSSourceDraw(const NativeCUSSourceDraw& d)
 {
 	const auto fail=[](const char* message){throw std::runtime_error(message);};
-	if(!d.program||!d.program->pipelineLifetime||!d.textures||d.objects.empty()||!d.instances||!d.modelInputs||!d.engineUniforms)
+	if(!d.uniformValues||!d.program||!d.program->pipelineLifetime||!d.textures||!d.roster||d.Objects().empty()||!d.instances||!d.modelInputs||!d.engineUniforms)
 		fail("CUS source draw lacks its compiled program, original submission, or instance data");
 	ValidateNativeCUSUniformPublication(*d.engineUniforms);
 	if(d.program->vertexSHA512.empty()||d.program->fragmentSHA512.empty())
 		fail("CUS source draw has no paired original program identity");
-	if(d.textures->originalSubmissionOrder.size()!=d.objects.size()||d.textures->originalShader!=d.program->family||
+	if(d.textures->SubmissionOrder().size()!=d.Objects().size()||d.textures->originalShader!=d.program->family||
 	   d.textures->originalPass!=d.program->originalPass)
 		fail("CUS original program/pass/submission identities differ");
-	for(size_t i=0;i<d.objects.size();++i)if(d.objects[i].kind!=d.textures->originalSubmissionOrder[i].kind||d.objects[i].id!=d.textures->originalSubmissionOrder[i].id)
-		fail("CUS original VAO submission order differs from captured history");
-	if(d.submissions.size()!=d.objects.size()||d.modelInputs->submissions!=d.submissions||
+	if(d.Submissions().size()!=d.Objects().size()||d.modelInputs->roster!=d.roster||d.textures->roster!=d.roster||
 	   d.modelInputs->originalInstances!=d.instances||d.modelInputs->sourceDrawFrame!=d.textures->sourceDrawFrame||
 	   d.modelInputs->sourceSequence!=d.sequence)
 		fail("CUS original model/pose publication is not paired with this actual submission");
-	for(size_t i=0;i<d.objects.size();++i)if(!d.submissions[i]||d.submissions[i]->object.kind!=d.objects[i].kind||d.submissions[i]->object.id!=d.objects[i].id)
-		fail("CUS original indirect model owner differs from the submitted object");
 	const auto& layout=d.instances->layout;
-	if(layout.kind!=NativeBufferKind::Vertex||layout.stride!=16||layout.attributes.size()!=1||layout.elements<d.objects.size())
+	if(layout.kind!=NativeBufferKind::Vertex||layout.stride!=16||layout.attributes.size()!=1||layout.elements<d.Objects().size())
 		fail("CUS original instData layout/capacity differs");
 	const auto& a=layout.attributes[0];
 	if(a.id!=6||a.scalarType!=NativeScalarType::UInt32||a.offset!=0||a.byteSize!=16||a.normalized||a.declaredCount!=4||a.valueShape!=NativeValueShape::Scalar)
 		fail("CUS source requires its actual uvec4 attribute 6");
 	if(d.instances->bytes.size()!=CheckedNativeBufferByteSize(layout))fail("CUS immutable instance payload is incomplete");
-	const auto pass=d.intUniforms.find("drawPass");
+	const auto pass=d.IntUniforms().find("drawPass");
 	// Original shadow variants compile this uniform out. LuaShader correctly
 	// skips their missing location; the source program identity still fixes16.
 	const bool activePass=std::any_of(d.program->uniforms.begin(),d.program->uniforms.end(),[](const auto& uniform){return uniform.name=="drawPass";});
-	if(activePass&&(pass==d.intUniforms.end()||pass->second.size()!=1||pass->second[0]!=d.program->originalPass))
+	if(activePass&&(pass==d.IntUniforms().end()||pass->second.size()!=1||pass->second[0]!=d.program->originalPass))
 		fail("CUS original drawPass uniform disagrees with its compiled program");
-	for(const auto& table:{&d.floatUniforms,&d.intUniforms})for(const auto& [name,values]:*table){
+	for(const auto& table:{&d.FloatUniforms(),&d.IntUniforms()})for(const auto& [name,values]:*table){
 		if(name.empty()||values.empty())fail("CUS source uniform has no name/value");
 		for(float v:values)if(!std::isfinite(v))fail("CUS source uniform is non-finite");
 	}

@@ -4,6 +4,7 @@
 #include "NativeCUSTextureHistory.h"
 #include "NativeCUSModelInputs.h"
 #include "NativeCUSUniformData.h"
+#include "NativeCUSProgramUniforms.h"
 #include "NativeWorldDrawData.h"
 #include <array>
 #include <map>
@@ -45,11 +46,14 @@ struct NativeCUSProgramConsumer {
 struct NativeCUSSourceDraw {
 	uint64_t sequence=0;
 	std::shared_ptr<const NativeCUSProgramConsumer> program;
-	std::map<std::string,std::vector<float>> floatUniforms,intUniforms;
+	std::shared_ptr<const NativeCUSProgramUniforms> uniformValues;
+ const auto& FloatUniforms() const {if(!uniformValues)throw std::runtime_error("CUS draw has no uniform owner");return uniformValues->floats;}
+ const auto& IntUniforms() const {if(!uniformValues)throw std::runtime_error("CUS draw has no uniform owner");return uniformValues->ints;}
 	NativeBufferSnapshotRef instances;
 	std::shared_ptr<const NativeCUSDrawTextureSnapshot> textures;
-	std::vector<NativeCUSSubmittedObject> objects;
-	std::vector<std::shared_ptr<const NativeCUSModelSubmission>> submissions;
+	std::shared_ptr<const NativeCUSSubmissionRoster> roster;
+ const auto& Objects() const noexcept { return roster->Objects(); }
+ const auto& Submissions() const noexcept { return roster->Submissions(); }
 	std::shared_ptr<const NativeCUSModelInputs> modelInputs;
 	std::shared_ptr<const NativeCUSUniformPublication> engineUniforms;
 	// Original warm-up draw masks are retained, including all-false color.
@@ -64,9 +68,20 @@ struct NativeCUSSourceDraw {
 };
 struct NativeCUSSourceFrame {
 	uint64_t sourceDrawFrame=0;
-	std::vector<NativeCUSLoadedSource> sourceLoads;
+	std::shared_ptr<const std::vector<NativeCUSLoadedSource>> sourceLoads;
 	std::vector<NativeCUSSourceDraw> draws;
 };
+// A partition owns only selected event envelopes. Never retain the parent
+// frame: doing so pins excluded texture/pose/instance owners until completion.
+template<class Predicate>
+std::shared_ptr<const NativeCUSSourceFrame> SelectNativeCUSSourceFrame(
+ const NativeCUSSourceFrame& source,Predicate selected)
+{
+ auto result=std::make_shared<NativeCUSSourceFrame>();
+ result->sourceDrawFrame=source.sourceDrawFrame;result->sourceLoads=source.sourceLoads;
+ for(const auto& draw:source.draws)if(selected(draw))result->draws.push_back(draw);
+ return result;
+}
 void ValidateNativeCUSSourceDraw(const NativeCUSSourceDraw&);
 // The actual original warm-up keeps every source draw, program/pass, ordinal,
 // pose and uniform owner. Only proven absence of attachment writes may omit

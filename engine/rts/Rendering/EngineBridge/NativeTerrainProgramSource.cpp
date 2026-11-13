@@ -206,6 +206,7 @@ private:
   // Current/Save observe already accepted state, even after context closure.
   // Capture separately retains its live context/consumer checks.
   auto publication=std::make_shared<NativeTerrainProgramPublication>();
+  uniforms->SealSlots();
   publication->state=state;publication->definition=definition;publication->uniforms=uniforms;
   publication->unsupportedReason=unsupportedReason;
   OriginalNativeSourceProgramBinding().SealTerrainSource(this,std::move(publication));
@@ -259,6 +260,7 @@ private:
     std::make_shared<const NativeTerrainProgramDefinition>(identity,consumer);
    TERRAIN_WRITE_STAT(definitionCopies);
   }
+  uniforms->SealSlots();
   publication->definition=definition;publication->uniforms=uniforms;publication->unsupportedReason=unsupportedReason;
   OriginalNativeSourceProgramBinding().BindTerrainSource(std::move(publication));
   dirtyUniforms=false;
@@ -317,6 +319,7 @@ private:
   if(lazy&&dirtyUniforms){
    // This map has never escaped to a publication. All potentially allocating
    // input construction/validation completed before changing its revision.
+   uniforms->InvalidateSlots();
    uniforms->values.insert_or_assign(locations[size_t(location)],std::move(value));
    ++uniforms->revision;
   }else{

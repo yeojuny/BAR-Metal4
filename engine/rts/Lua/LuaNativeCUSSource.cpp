@@ -26,6 +26,7 @@ NativeCUSTextureHistory* sharedHistory=nullptr;
 NativeTextureRegistry* sharedRegistry=nullptr;
 std::shared_ptr<NativeCUSSourceFrame> frame;
 std::vector<NativeCUSLoadedSource> loadedSources;
+std::shared_ptr<const std::vector<NativeCUSLoadedSource>> sealedLoads;
 void Check(bool v,const char* message){if(!v)throw std::runtime_error(message);}
 template<typename Signature>struct LuaBoundary;
 template<typename R,typename... Args>struct LuaBoundary<R(Args...)>{
@@ -40,7 +41,7 @@ struct Context;
 struct Program {
 	std::weak_ptr<Context> sourceContext;
 	std::shared_ptr<const NativeCUSProgramConsumer> consumer;
-	std::map<std::string,std::vector<float>> floats,ints;
+	NativeCUSProgramUniformBuilder uniforms;
 	bool deleted=false;
 };
 struct Uniform {std::shared_ptr<Program> program;NativeCUSUniformDescription description;};
@@ -72,7 +73,7 @@ struct Context {
 		Check(active&&active==l.program&&!active->deleted&&l.description.integer==integer,"CUS uniform belongs to another active program or scalar type");
 		Check(OriginalNativeSourceProgramBinding().IsCUS(active),"CUS uniform does not belong to the actual current source program");
 		std::vector<float> v;for(auto value:values){float n=value.as<float>();Check(std::isfinite(n)&&(!integer||n==std::trunc(n)),"CUS uniform contains an invalid original scalar");v.push_back(n);}
-		Check(!v.empty()&&v.size()<=4,"CUS original uniform arity differs");(integer?active->ints:active->floats)[l.description.name]=std::move(v);
+		Check(!v.empty()&&v.size()<=4,"CUS original uniform arity differs");active->uniforms.Write(integer,l.description.name,std::move(v));
 	}
 };
 struct Buffer {
@@ -98,6 +99,7 @@ struct VertexArray {
 	std::vector<NativeCUSSubmittedObject> objects;
 	std::vector<std::shared_ptr<const NativeCUSModelSubmission>> submissions;
 	std::vector<std::string> uniformBins;
+	std::shared_ptr<const NativeCUSSubmissionRoster> roster;
 	bool deleted=false;
 	void AttachVertexBuffer(std::shared_ptr<Buffer> b){Check(!deleted&&b&&!b->deleted&&b->modelView&&b->target==GL_ARRAY_BUFFER,"CUS original model vertex attachment differs");vertices=std::move(b);}
 	void AttachIndexBuffer(std::shared_ptr<Buffer> b){Check(!deleted&&b&&!b->deleted&&b->modelView&&b->target==GL_ELEMENT_ARRAY_BUFFER,"CUS original model index attachment differs");indices=std::move(b);}
@@ -115,24 +117,26 @@ struct VertexArray {
 		submissions.push_back(std::move(model));
 		try{uniformBins.push_back(std::move(bin));}catch(...){submissions.pop_back();throw;}
 		try{objects.push_back(o);}catch(...){uniformBins.pop_back();submissions.pop_back();throw;}
+  roster.reset(); // Each committed AddOne, including a partially failing Add(table).
 	}
 	void Add(sol::object ids,NativeCUSObjectKind kind){if(ids.is<int>()){AddOne(ids.as<int>(),kind);return;}auto values=ids.as<sol::table>();for(size_t i=1;i<=values.size();++i)AddOne(values.get<int>(i),kind);}
 	void AddUnits(sol::object ids){Add(ids,NativeCUSObjectKind::Unit);}
 	void AddFeatures(sol::object ids){Add(ids,NativeCUSObjectKind::Feature);}
 	void AddUnitDefs(sol::object ids){Add(ids,NativeCUSObjectKind::UnitDefinition);}
-	void ClearSubmission(){Check(!deleted,"CUS source VAO deleted");objects.clear();submissions.clear();uniformBins.clear();}
-	void RemoveFromSubmission(int index){Check(!deleted&&index>=0&&size_t(index)<objects.size(),"CUS source removal index differs");uniformBins[index].swap(uniformBins.back());uniformBins.pop_back();objects[index]=objects.back();objects.pop_back();submissions[index]=submissions.back();submissions.pop_back();}
-	void Delete(){deleted=true;objects.clear();submissions.clear();uniformBins.clear();vertices.reset();indices.reset();instances.reset();}
+	void ClearSubmission(){Check(!deleted,"CUS source VAO deleted");objects.clear();submissions.clear();uniformBins.clear();roster.reset();}
+	void RemoveFromSubmission(int index){Check(!deleted&&index>=0&&size_t(index)<objects.size(),"CUS source removal index differs");uniformBins[index].swap(uniformBins.back());uniformBins.pop_back();objects[index]=objects.back();objects.pop_back();submissions[index]=submissions.back();submissions.pop_back();roster.reset();}
+	void Delete(){deleted=true;objects.clear();submissions.clear();uniformBins.clear();roster.reset();vertices.reset();indices.reset();instances.reset();}
 	void Submit(){
 		const auto actualProgram=context->Active();
 		Check(Available()&&frame&&!deleted&&vertices&&indices&&instances&&!objects.empty()&&actualProgram&&!actualProgram->deleted,"CUS source draw lacks an actual active frame/program/model submission");
 		Check(OriginalNativeSourceProgramBinding().IsCUS(actualProgram),"CUS draw does not own the actual current source program");
 		Check(uniformBins.size()==objects.size()&&submissions.size()==objects.size(),"CUS retained submission metadata differs");
-		const auto& bin=uniformBins.front();
+		if(!roster)roster=NativeCUSSubmissionRoster::Seal(objects,submissions,uniformBins);
+		const auto& bin=roster->UniformBins().front();
 		auto draw=services.inheritedRaster();draw.program=actualProgram->consumer;
-		draw.floatUniforms=actualProgram->floats;draw.intUniforms=actualProgram->ints;
-		draw.instances=instances->value->CaptureNativeSnapshot();draw.objects=objects;draw.submissions=submissions;
-		draw.textures=std::make_shared<NativeCUSDrawTextureSnapshot>(TextureHistory().Submit(frame->sourceDrawFrame,draw.program->originalPass,draw.program->family,bin,objects));
+		draw.uniformValues=actualProgram->uniforms.Capture();
+		draw.instances=instances->value->CaptureNativeSnapshot();draw.roster=roster;
+		draw.textures=std::make_shared<NativeCUSDrawTextureSnapshot>(TextureHistory().Submit(frame->sourceDrawFrame,draw.program->originalPass,draw.program->family,bin,roster));
 		// The texture history ordinal and cross-family draw ordinal have
 		// different meanings. Preserve both instead of sorting by bind events.
 		draw.sequence=NextNativeWorldDrawSequence();
@@ -165,9 +169,9 @@ sol::table CreateContext(lua_State* L){
 		const auto identity=ValidateNativeCUSProgramSource(source);
 		auto actual=services.compile(source);Check(actual&&actual->pipelineLifetime&&actual->family==identity.family&&actual->originalPass==identity.pass&&actual->vertexSHA512==source.vertexSHA512&&actual->fragmentSHA512==source.fragmentSHA512,"CUS exact original program has no matching compiled native pipeline");
 		auto p=std::make_shared<Program>();p->sourceContext=c;p->consumer=std::move(actual);
-		p->floats=p->consumer->defaultFloat;p->ints=p->consumer->defaultInt;
-		for(auto& [name,value]:source.initialFloat)p->floats.insert_or_assign(name,std::move(value));
-		for(auto& [name,value]:source.initialInt)p->ints.insert_or_assign(name,std::move(value));
+		p->uniforms.Initialize(p->consumer->defaultFloat,p->consumer->defaultInt);
+		for(auto& [name,value]:source.initialFloat)p->uniforms.Write(false,name,std::move(value));
+		for(auto& [name,value]:source.initialInt)p->uniforms.Write(true,name,std::move(value));
 		c->programs.push_back(p);return unsigned(c->programs.size());
 	});
 	BindFunction(t,"GetShaderLog",[](){return std::string{};});
@@ -233,7 +237,7 @@ std::string LoadSource(lua_State* L,const std::string& path,sol::optional<std::s
 	Check(file.location!=NativeCUSSourceLocation::Unobserved,"CUS actual source owner was not observed");
  NativeCUSLoadedSource loaded;loaded.path=path;loaded.modes=modes;loaded.sha512=hash;
  loaded.location=file.location;loaded.archiveSection=file.section;loaded.archive=file.archive;loaded.resolvedPath=file.resolvedPath;
- loadedSources.push_back(std::move(loaded));return bytes;
+ loadedSources.push_back(std::move(loaded));sealedLoads.reset();return bytes;
 }
 }
 void Configure(Services value){Check(!frame,"Cannot change CUS source providers inside a frame");services=std::move(value);}
@@ -246,9 +250,9 @@ bool Available(){return sharedHistory&&sharedRegistry&&sharedRegistry->ContextGe
 NativeCUSTextureHistory& TextureHistory(){Check(sharedHistory&&sharedRegistry,"CUS has no actual shared texture context");return *sharedHistory;}
 void NewContext(){Check(!frame,"CUS context reset during a source frame");Check(sharedRegistry!=nullptr,"CUS cannot invent a texture context");sharedRegistry->NewContext();}
 void BeginFrame(uint64_t sourceDrawFrame){Check(!frame,"Nested CUS source frame");frame=std::make_shared<NativeCUSSourceFrame>();frame->sourceDrawFrame=sourceDrawFrame;}
-std::shared_ptr<const NativeCUSSourceFrame> EndFrame(){Check(bool(frame),"CUS source frame is not active");frame->sourceLoads=loadedSources;return std::exchange(frame,{});}
+std::shared_ptr<const NativeCUSSourceFrame> EndFrame(){Check(bool(frame),"CUS source frame is not active");if(!sealedLoads)sealedLoads=std::make_shared<const std::vector<NativeCUSLoadedSource>>(loadedSources);frame->sourceLoads=sealedLoads;return std::exchange(frame,{});}
 void AbortFrame()noexcept{frame.reset();}
-void Reset(){AbortFrame();loadedSources.clear();}
+void Reset(){AbortFrame();loadedSources.clear();sealedLoads.reset();}
 bool PushEntries(lua_State* L){
 	sol::state_view lua(L);auto gl=sol::stack::get<sol::table>(L,-1);auto f=lua.create_table();
 	f.new_usertype<Buffer>("Buffer",sol::no_constructor,"Define",&Buffer::Define,"Delete",&Buffer::Delete,"ModelsVBO",&Buffer::ModelsVBO,"InstanceDataFromUnitIDs",sol::overload(&Buffer::Units,&Buffer::UnitList),"InstanceDataFromFeatureIDs",sol::overload(&Buffer::Features,&Buffer::FeatureList),"InstanceDataFromUnitDefIDs",sol::overload(&Buffer::UnitDefs,&Buffer::UnitDefList));

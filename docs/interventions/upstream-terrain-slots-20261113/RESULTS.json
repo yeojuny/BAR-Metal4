@@ -1,0 +1,21 @@
+{
+  "sourceHashes": {
+    "engine/rts/Rendering/Backend/NativeWaterGroundSourceData.h": "3ae2e76ccdcee2d536761ac4c3ab9e503e9de3312e74f8a065b1869a0523108c",
+    "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp": "c038fc1689197a40c5ae7bfbb25787d3c70af6ac3cbeaa2e37adee783bc7591c",
+    "engine/rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm": "526d1cf7d3cecf0421730b9519b0af7ac7b1a024189d944acf718f272de2e21c"
+  },
+  "hostChecks": {
+    "productionWriterLazy": 121,
+    "productionWriterEagerBoundary": 116,
+    "slotAndGPUValueReaders": 158,
+    "linkCertificate": 11
+  },
+  "observationFingerprint": "12487790920875332592",
+  "sanitizers": [
+    "ASan",
+    "UBSan"
+  ],
+  "MetalCompile": false,
+  "MetalRun": false,
+  "performanceMeasured": false
+}
