@@ -777,16 +777,16 @@ struct Metal4WorldRenderer::Impl {
 		return result;
 	}
 
-	CUSSourceImage OriginalTerrainImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,
+	CUSSourceImage OriginalTerrainImage(RuntimeLease& lease,const std::shared_ptr<MapCache>& terrainMap,const NativeCUSTextureBinding& binding,
 		uint64_t submission,id<MTLSamplerState> actualSampler,bool validation,double& shaderMs)
 	{
 		Require(submission&&binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&
 			actualSampler&&actualSampler.device==lease.Device(),"Original terrain image lacks its actual source object/sampler/submission");
 		if(auto square=std::dynamic_pointer_cast<const NativeTerrainSquareBacking>(binding.object->backing)){
-			Require(map&&map->owner&&square->tiles==map->owner,"Original terrain square lost its actual committed map cache");
-			const uint64_t index=uint64_t(square->squareZ)*(map->owner->gridWidth/NATIVE_SMF_TILES_PER_SQUARE)+square->squareX;
-			const auto batch=size_t(index/2048);Require(batch<map->batches.size(),"Original terrain square has no uploaded map batch");
-			return ResolveNativeTerrainSquareImage(lease,binding,map->owner,map->batches[batch].texture,uint32_t(batch*2048),actualSampler,map->batches[batch].squareViews);
+			Require(terrainMap&&terrainMap->owner&&square->tiles==terrainMap->owner,"Original terrain square lost its actual committed map cache");
+			const uint64_t index=uint64_t(square->squareZ)*(terrainMap->owner->gridWidth/NATIVE_SMF_TILES_PER_SQUARE)+square->squareX;
+			const auto batch=size_t(index/2048);Require(batch<terrainMap->batches.size(),"Original terrain square has no uploaded map batch");
+			return ResolveNativeTerrainSquareImage(lease,binding,terrainMap->owner,terrainMap->batches[batch].texture,uint32_t(batch*2048),actualSampler,terrainMap->batches[batch].squareViews);
 		}
 		if(std::dynamic_pointer_cast<const NativeTerrainInfoBacking>(binding.object->backing))
 			return ResolveNativeTerrainInfoImage(lease,binding,submission,actualSampler,validation,shaderMs);
@@ -3370,7 +3370,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    target.camera.viewport={0,0,int32_t(metadata.width),int32_t(metadata.height)};
    owners->terrain=impl->terrainSourceGPU.Prepare(lease,original,target,
     [&](RuntimeLease& l,const NativeCUSTextureBinding& b,unsigned,id<MTLSamplerState> sampler){
-     return impl->OriginalTerrainImage(l,b,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
+     return impl->OriginalTerrainImage(l,terrainMap,b,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
     },options.shaderValidation,result.shaderCompileMs);
    owners->clears=PrepareTerrainGroundClears(lease,mainGround.mapClearSource,target,options.shaderValidation,result.shaderCompileMs);
    const auto generic=preparedWorld167.StageWhere(NativeWorldDrawStage::Ground,[&](const auto& draw){return span.Contains(draw.sequence);});
@@ -3387,7 +3387,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
      "Original deferred map-edge belongs to another Map MRT/callback span");
     auto images=[&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned){
      auto sampler=impl->screenGPU.PrepareSampler(l,ui::NativeUITextureHistory::DescribeSampler(binding));
-     return impl->OriginalTerrainImage(l,binding,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
+     return impl->OriginalTerrainImage(l,terrainMap,binding,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
     };
     auto prepared=impl->mapEdgeGPU.PrepareDeferred(lease,draw,target,images,options.shaderValidation,result.shaderCompileMs);
     Require(bool(prepared),"Original deferred map-edge has no paired same-target consumer");
@@ -3466,7 +3466,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
     Require(view.source->groundCUS&&view.source->groundLua,"Original water ground lost its same-invocation callback owners");
     view.groundTerrain=impl->terrainSourceGPU.Prepare(lease,ground,actualTarget,
      [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned,id<MTLSamplerState> sampler){
-      return impl->OriginalTerrainImage(l,binding,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
+      return impl->OriginalTerrainImage(l,terrainMap,binding,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
      },options.shaderValidation,result.shaderCompileMs);
     view.groundCUS=impl->cusSourceGPU.Prepare(lease,view.source->groundCUS,actualTarget,sourceImages,options.shaderValidation,result.shaderCompileMs);
     view.groundClears=PrepareTerrainGroundClears(lease,view.groundClearSource,actualTarget,options.shaderValidation,result.shaderCompileMs);
@@ -3620,7 +3620,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
      "Original main/IBL ground lost its same-invocation program/callback owners");
     ground.terrain=impl->terrainSourceGPU.Prepare(lease,actual,target,
      [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned,id<MTLSamplerState> sampler){
-      return impl->OriginalTerrainImage(l,binding,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
+      return impl->OriginalTerrainImage(l,terrainMap,binding,sourceSubmission,sampler,options.shaderValidation,result.shaderCompileMs);
      },options.shaderValidation,result.shaderCompileMs);
     auto forwardCUS=actual->deferred?SelectNativeCUSSourceFrame(*source.cus,[&](const auto& draw){return !actual->deferred->Contains(draw.sequence);}):source.cus;
     ground.cus=impl->cusSourceGPU.Prepare(lease,forwardCUS,target,sourceImages,options.shaderValidation,result.shaderCompileMs);

@@ -96,3 +96,19 @@ checks) and mutates its source-specific view cache under the existing access gat
 That provider requires a separate lease/request binding before concurrent older
 render/newer preparation could be allowed. No such concurrency is enabled here.
 Existing deformation previous-submission drain remains unchanged.
+
+## Follow-up: explicit tile owner in all terrain-image providers
+
+- [x] All four OriginalTerrainImage call sites now pass their PreparedMap tile
+  owner explicitly. The resolver no longer selects renderer `map` at all.
+- [x] Preserve exact source equality, square/batch addressing, sampler/device/
+  submission checks and the original ResolveNativeTerrainSquareImage operation.
+- [x] Source checks require all four callers and prohibit ambient map access in
+  the resolver. Existing owner/cache/epoch sanitizer regressions pass.
+
+This resolves the provider-selection gap described in the preceding checkpoint
+without introducing another RuntimeLease registry: all four providers already
+originate in the same prepared world request. Per-resource squareViews and
+heightRRRR lazy mutation remain serialized; physical-owner pinning alone does not
+prove simultaneous preparation of the SAME source safe. Shared service/control
+and remaining pipeline/attachment audits still apply. No eligibility widening.

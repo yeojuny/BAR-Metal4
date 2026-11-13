@@ -45,3 +45,11 @@ assert 'std::shared_ptr<MapCache> map;' in s
 assert 'const auto terrainMap=preparedMap.tiles;' in world
 assert 'for(const auto& batch:terrainMap->batches)' in world
 assert 'impl->map.batches' not in world and 'impl->map->batches' not in world
+
+# All four terrain-image consumers select the exact request tile packet.
+assert s.count('impl->OriginalTerrainImage(l,terrainMap,')==4
+provider=s.split('CUSSourceImage OriginalTerrainImage(',1)[1].split('PreparedMap Map(',1)[0]
+assert 'const std::shared_ptr<MapCache>& terrainMap' in provider
+assert 'map->' not in provider
+assert 'square->tiles==terrainMap->owner' in provider
+assert 'terrainMap->batches[batch].squareViews' in provider
