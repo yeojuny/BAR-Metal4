@@ -2,6 +2,7 @@
 #pragma once
 
 #include <cstdint>
+#include "Rendering/Backend/NativeSourceFrameCredits.h"
 #include <stdexcept>
 #include "System/float3.h"
 #include <memory>
@@ -63,6 +64,7 @@ void HandleEvent(const SDL_Event& event);
 ui::NativeUIFrameRasterMapping GetUIFrameRasterMapping(const ScreenViewport& defaultViewport);
 // Complete a queued presentation before recorder reuse or scene teardown.
 void FinishPendingFrame();
+NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(std::uint64_t draw);
 
 struct DrawResult {
 	bool presented = false;
@@ -187,7 +189,8 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI = nullptr, bool presentWorl
 	std::shared_ptr<const NativeDeferredLightFrame> luaDeferredLightFrame = {},
 	std::shared_ptr<const NativeUnitStencilFrame> luaUnitStencilFrame = {},
 	std::shared_ptr<const NativeOutlineFrame> luaOutlineFrame = {},
-	std::shared_ptr<const NativeSnowFrame> luaSnowFrame = {});
+	std::shared_ptr<const NativeSnowFrame> luaSnowFrame = {},
+ NativeSourceFrameCredits::Lease sourceCredit = {});
 void ResetWorld();
 // After original Lua Shutdown, before LuaOpenGL and source owners are freed.
 void DetachOriginalModelSourcesAfterLua();

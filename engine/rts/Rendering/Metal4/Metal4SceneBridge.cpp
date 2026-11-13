@@ -182,6 +182,7 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
 
 struct ScenePendingAdmission;
 struct Session {
+ NativeSourceFrameCredits sourceCredits;
  std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
  std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
  uint64_t cpuReadJobs220=0;
@@ -521,6 +522,206 @@ struct DynamicWaterAdmissionOwner {
  void QuarantineHeldFrame(uint64_t draw) noexcept {if(frame)capture.QuarantineHeldFrame(draw);}
 };
 
+DrawResult ReportPresentedWorldResult(Session& owner,const WorldFrame& frame,const Metal4WorldPresentationResult& result,const ScreenFrameView* screenUI)
+{
+	if (owner.reportedCUSRevision != frame.cusMaterial.revision ||
+		!owner.reportedAdvancedTerrain || *owner.reportedAdvancedTerrain != frame.terrain.material->advancedShading) {
+		LOG("[Metal4Scene] Presented original shading controls at frame %llu: terrain=%s, models=%s, CUS revision=%llu",
+			static_cast<unsigned long long>(frame.simulationFrame),
+			frame.terrain.material->advancedShading ? "advanced" : "standard",
+			frame.cusMaterial.enabled ? "CUS" : "engine-standard-GL4",
+			static_cast<unsigned long long>(frame.cusMaterial.revision));
+		owner.reportedCUSRevision = frame.cusMaterial.revision;
+		owner.reportedAdvancedTerrain = frame.terrain.material->advancedShading;
+	}
+	if (!owner.reportedReflectionReady || *owner.reportedReflectionReady != result.reflectionReady) {
+		LOG("[Metal4Scene] Original environment cube state at frame %llu: %s; full visual parity pending",
+			static_cast<unsigned long long>(frame.simulationFrame), result.reflectionReady ?
+			"first complete face/mip cycle available" : "first complete face/mip cycle warming up");
+		owner.reportedReflectionReady = result.reflectionReady;
+	}
+	if (result.sourceFrameCompleted) {
+		uint64_t ssaoDrawCommands = 0;
+		const auto countSSAO = [&](const std::shared_ptr<const NativeWaterLuaFrame>& bundle) {
+			if (!bundle || !bundle->ssao) return;
+			for (const auto& draw: bundle->ssao->draws) {
+				if (draw.clear) continue; // An FBO clear is not an SSAO draw command.
+				++ssaoDrawCommands;
+				if (draw.output && draw.output->image)
+					owner.lastSSAOImageIdentity = std::max(owner.lastSSAOImageIdentity,draw.output->image->identity);
+			}
+		};
+		countSSAO(frame.alphaAllLua);
+		if (frame.waterScene) countSSAO(frame.waterScene->aboveWaterLua);
+		for (const auto& models: frame.alphaModelFrames) if (models)
+			for (const auto& phase: models->passes) countSSAO(phase.luaEffects);
+		const bool mapMRT = frame.mainGround && frame.mainGround->ground && frame.mainGround->ground->mapMRT;
+		const bool modelMRT = frame.opaqueModelFrame && frame.opaqueModelFrame->HasWriters();
+		// Log only settings transitions or a newly created SSAO image owner.
+		// Do not key reporting on camera-dependent draw counts or MRT reuse.
+		const uint64_t settings = uint64_t(frame.lighting.requested.deferredMap) |
+			(uint64_t(frame.lighting.requested.deferredModel) << 1) |
+			(uint64_t(frame.terrain.material->advancedShading) << 2) | (uint64_t(frame.cusMaterial.enabled) << 3);
+		const std::array<uint64_t,2> paths{{settings,owner.lastSSAOImageIdentity}};
+		if (!owner.reportedSourcePaths || *owner.reportedSourcePaths != paths) {
+			LOG("[Metal4Scene] Completed frame with original source paths at frame %llu: mapMRT=%u modelMRT=%u capturedSSAODrawCommands=%llu; this frame only, full visual parity pending",
+				static_cast<unsigned long long>(frame.simulationFrame), unsigned(mapMRT), unsigned(modelMRT), static_cast<unsigned long long>(ssaoDrawCommands));
+			owner.reportedSourcePaths = paths;
+		}
+	}
+	for (const auto& dependency: result.materialDependenciesPending) {
+		if (owner.reportedUnsupported.insert("material: " + dependency).second)
+			LOG_L(L_WARNING, "[Metal4Scene] Pending original material dependency: %s", dependency.c_str());
+	}
+	owner.lastPresentedSimulationFrame = frame.simulationFrame;
+	if (owner.awaitingPresentationAfterTargets) {
+		LOG("[Metal4Scene] Resumed world presentation at simulation frame %llu; completed offscreen UI totals: %llu submissions, %llu target passes",
+			static_cast<unsigned long long>(frame.simulationFrame),
+			static_cast<unsigned long long>(owner.targetOnlySubmissions),
+			static_cast<unsigned long long>(owner.targetOnlyPasses));
+		owner.awaitingPresentationAfterTargets = false;
+	}
+
+	if (owner.presentedFrames++ == 0) {
+		LOG("[Metal4Scene] First presented simulation frame %llu: map %s, %u original terrain tiles, %u units, %u pieces; logical %ux%u, render %ux%u",
+			static_cast<unsigned long long>(frame.simulationFrame), frame.terrain.sourceMap.c_str(),
+			result.terrainTiles, result.unitsDrawn, result.piecesDrawn,
+			result.surface.logicalWidth, result.surface.logicalHeight, result.surface.renderWidth, result.surface.renderHeight);
+		LOG("[Metal4Scene] Native GPU objects: queue=%s buffer=%s encoder=%s",
+			result.queueClass.c_str(), result.commandBufferClass.c_str(), result.renderEncoderClass.c_str());
+		LOG("[Metal4Scene] First-frame resident allocation bytes=%llu, allocations=%u",
+			static_cast<unsigned long long>(result.residentBytes), result.residencyAllocationCount);
+		LOG("[Metal4Scene] First-frame original map-edge submission: draws=%u, mirror/seam instances=%u",
+			result.mapEdgeDraws, result.mapEdgeInstances);
+	}
+	if(!owner.reportedFirstStartBoxWorld && result.luaStartBoxDraws){owner.reportedFirstStartBoxWorld=true;LOG("[Metal4Scene] First completed original StartBox world at simulation frame %llu: draws=%u; strict pixel parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaStartBoxDraws);}
+	if(!owner.reportedFirstStartBoxMiniMap && result.luaStartBoxMiniMapDraws){owner.reportedFirstStartBoxMiniMap=true;LOG("[Metal4Scene] First completed original StartBox minimap/PiP at simulation frame %llu: draws=%u; strict pixel parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaStartBoxMiniMapDraws);}
+	if (!owner.reportedFirstUnits && result.unitsDrawn > 0) {
+		owner.reportedFirstUnits = true;
+		LOG("[Metal4Scene] First presented units at simulation frame %llu: units=%u, pieces=%u, selected=%u; actual camera=(%.3f, %.3f, %.3f)",
+			static_cast<unsigned long long>(frame.simulationFrame), result.unitsDrawn, result.piecesDrawn, result.selectedUnits,
+			frame.viewCamera.position[0], frame.viewCamera.position[1], frame.viewCamera.position[2]);
+	}
+	if (!owner.reportedFirstFeatures && result.featuresDrawn > 0) {
+		owner.reportedFirstFeatures = true;
+		LOG("[Metal4Scene] First presented features at simulation frame %llu: features=%u, pieces=%u, opaque draws=%u, alpha draws=%u; shadow terrain/model draws=%u/%u",
+			static_cast<unsigned long long>(frame.simulationFrame), result.featuresDrawn, result.featurePiecesDrawn,
+			result.opaqueFeatureDraws, result.alphaFeatureDraws, result.shadowTerrainDraws, result.shadowModelDraws);
+	}
+	if (!owner.reportedFirstParticles && (result.particleDraws > 0 || result.projectileModelsDrawn > 0)) {
+		owner.reportedFirstParticles = true;
+		LOG("[Metal4Scene] First presented original engine particle stream at simulation frame %llu: draws=%u, projectile models=%u, engine nano instances=%u",
+			static_cast<unsigned long long>(frame.simulationFrame), result.particleDraws,
+			result.projectileModelsDrawn, result.engineNanoInstances);
+	}
+	if (!owner.reportedFirstLuaNano && result.luaNanoDraws > 0 && result.luaNanoInstances > 0) {
+		owner.reportedFirstLuaNano = true;
+		LOG("[Metal4Scene] First presented original Lua nano stream at simulation frame %llu: draws=%u, submitted instances across original passes=%u",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaNanoDraws, result.luaNanoInstances);
+	}
+	if (!owner.reportedFirstPostprocess && screenUI && screenUI->postprocess && !screenUI->postprocess->operations.empty()) {
+		std::size_t colorCopies = 0, depthCopies = 0, dofPasses = 0;
+		for (const auto& operation: screenUI->postprocess->operations) {
+			colorCopies += operation.kind == NativePostprocessOperationKind::CopyColor;
+			depthCopies += operation.kind == NativePostprocessOperationKind::CopyDepth;
+			dofPasses += operation.kind == NativePostprocessOperationKind::DOF;
+		}
+		owner.reportedFirstPostprocess = true;
+		LOG("[Metal4Scene] First completed original DOF at simulation frame %llu: color copies=%zu, depth copies=%zu, shader passes=%zu; actual world framebuffer, original screen order, one present",
+			static_cast<unsigned long long>(frame.simulationFrame), colorCopies, depthCopies, dofPasses);
+	}
+	if (!owner.reportedFirstUI && result.screenDraws > 0) {
+		LOG("[Metal4Scene] Original environment submission: sky=%u, reflection terrain=%u, face=%u, complete cycle=%d, unit BRDF=%u G_OPTION=%u",
+			result.skyDraws, result.reflectionTerrainDraws, result.reflectionFace, result.reflectionReady, result.unitBRDFWidth, result.unitBRDFGOption);
+		owner.reportedFirstUI = true;
+		LOG("[Metal4Scene] First composited native UI at simulation frame %llu: draws=%u, texture uploads=%u; shared world drawable and one present",
+			static_cast<unsigned long long>(frame.simulationFrame), result.screenDraws, result.screenTextureUploads);
+	}
+	if (!owner.reportedFirstWorldOverlays && (result.luaPreUnitDraws>0 || result.luaWorldDraws>0)) {
+		owner.reportedFirstWorldOverlays = true;
+		LOG("[Metal4Scene] First original Lua world geometry at simulation frame %llu: PreUnit=%u, World=%u; original call order and shared scene depth/stencil",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaPreUnitDraws, result.luaWorldDraws);
+	}
+	if (!owner.reportedFirstEnergyExplosion && result.luaEnergyExplosionDraws > 0) {
+		owner.reportedFirstEnergyExplosion = true;
+		LOG("[Metal4Scene] First completed original energy explosion at simulation frame %llu: draws=%u, instances=%u; original VS motion, GS-equivalent triangles and shared world order",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaEnergyExplosionDraws, result.luaEnergyExplosionInstances);
+	}
+	if (!owner.reportedFirstGameDecal && result.luaGameDecalDraws>0) {
+		owner.reportedFirstGameDecal=true;
+		LOG("[Metal4Scene] First completed original Lua game Decals GL4 at simulation frame %llu: draws=%u, instances=%u; strict pixel parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaGameDecalDraws,result.luaGameDecalInstances);
+	}
+	for (size_t i=0;i<3;++i) if (!owner.reportedFirstUnitPrimitive[i] && result.luaUnitPrimitiveDraws[i]>0) {
+		owner.reportedFirstUnitPrimitive[i]=true;
+		constexpr std::array names{"BuildingAO","FeatureAO","TeamPlatter"};
+		LOG("[Metal4Scene] First completed original %s at simulation frame %llu: draws=%u, instances=%u; strict pixel parity pending",names[i],static_cast<unsigned long long>(frame.simulationFrame),result.luaUnitPrimitiveDraws[i],result.luaUnitPrimitiveInstances[i]);
+	}
+	if (!owner.reportedFirstPiP && result.luaPiPDraws > 0) {
+		owner.reportedFirstPiP = true;
+		LOG("[Metal4Scene] First completed original PiP programs: draws=%u; original screen/RTT order, shared images and private NoGS family; full visual parity pending", result.luaPiPDraws);
+	}
+	if (!owner.reportedFirstBuildingSample && result.buildingSampleDraws > 0) {
+		owner.reportedFirstBuildingSample = true;
+		LOG("[Metal4Scene] First completed original pre-click building sample at simulation frame %llu: samples=%u, pieces=%u; original engine placement producer and legacy material; strict visual parity pending", static_cast<unsigned long long>(frame.simulationFrame), result.buildingSampleDraws, result.buildingSamplePieces);
+	}
+	if (!owner.reportedFirstBuildingGrid && result.buildingGridDraws > 0) {
+		owner.reportedFirstBuildingGrid = true;
+		LOG("[Metal4Scene] First completed original optional Building Grid at simulation frame %llu: draws=%u; original height/mouse/water behavior; strict line parity pending", static_cast<unsigned long long>(frame.simulationFrame), result.buildingGridDraws);
+	}
+	if (!owner.reportedFirstBlueprint && result.luaBlueprintDraws > 0) {
+		owner.reportedFirstBlueprint = true;
+		LOG("[Metal4Scene] First completed original Blueprint family: draws=%u, models=%u, outlines=%u, stencil clears=%u; strict pixel parity pending",result.luaBlueprintDraws,result.luaBlueprintModels,result.luaBlueprintOutlines,result.luaBlueprintStencilClears);
+	}
+	if (!owner.reportedFirstFireSmoke && result.luaFireSmokeDraws > 0) {
+		owner.reportedFirstFireSmoke = true;
+		LOG("[Metal4Scene] First completed original FireSmoke at simulation frame %llu: draws=%u, submitted instances=%u (normal/highlight counted separately); full visual parity pending",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaFireSmokeDraws, result.luaFireSmokeSubmittedInstances);
+	}
+	if(!owner.reportedFirstShield && result.luaShieldDraws){owner.reportedFirstShield=true;
+		LOG("[Metal4Scene] First completed original Shield: draws=%u, actual map/model GBuffer passes=%u/%u model pieces=%u; corrected-reference strict color residual remains pending",result.luaShieldDraws,result.mapGBufferDepthPasses,result.modelGBufferDepthPasses,result.modelGBufferDepthPieces);}
+	if (!owner.reportedFirstCommands && result.luaCommandsDraws > 0) {
+		owner.reportedFirstCommands=true;
+		LOG("[Metal4Scene] First completed original Commands FX at simulation frame %llu: PreUnit line draws=%u; full visual parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaCommandsDraws);
+	}
+	if (!owner.reportedFirstSnow && result.luaSnowDraws > 0) {
+		owner.reportedFirstSnow=true;
+		LOG("[Metal4Scene] First completed original Snow: World point draws=%u; strict snow-map/command pixel parity pending",result.luaSnowDraws);
+	}
+	if (!owner.reportedFirstNapalmPreview && result.luaNapalmPreviewDraws > 0) {
+		owner.reportedFirstNapalmPreview=true;
+		LOG("[Metal4Scene] First completed original AoE Napalm preview: PreUnit draws=%u; full visual parity pending",result.luaNapalmPreviewDraws);
+	}
+	if (!owner.reportedFirstFlamethrower && result.luaFlamethrowerDraws > 0) {
+		owner.reportedFirstFlamethrower = true;
+		LOG("[Metal4Scene] First completed original Flamethrower at simulation frame %llu: draws=%u submitted instances=%u; full visual parity pending",
+			static_cast<unsigned long long>(frame.simulationFrame),result.luaFlamethrowerDraws,result.luaFlamethrowerSubmittedInstances);
+	}
+	if (!owner.reportedFirstMissileThruster && result.luaMissileThrusterDraws > 0) {
+		owner.reportedFirstMissileThruster = true;
+		LOG("[Metal4Scene] First completed original MissileThruster at simulation frame %llu: draws=%u, submitted instances=%u, programs=%u/%u/%u/%u/%u/%u/%u (legacy and31657 variants counted separately); full visual parity pending",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaMissileThrusterDraws, result.luaMissileThrusterSubmittedInstances,
+			result.luaMissileThrusterProgramDraws[0], result.luaMissileThrusterProgramDraws[1],
+			result.luaMissileThrusterProgramDraws[2], result.luaMissileThrusterProgramDraws[3],
+			result.luaMissileThrusterProgramDraws[4], result.luaMissileThrusterProgramDraws[5], result.luaMissileThrusterProgramDraws[6]);
+	}
+	if (!owner.reportedFirstDeferredLights && result.luaDeferredLightDraws > 0) {
+		owner.reportedFirstDeferredLights = true;
+		LOG("[Metal4Scene] First completed original Deferred rendering GL4: frame=%llu draws=%u submittedInstances=%u; pixel parity pending",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaDeferredLightDraws, result.luaDeferredLightInstances);
+	}
+	if (!owner.reportedFirstLightning && result.luaLightningDraws > 0) {
+		owner.reportedFirstLightning = true;
+		LOG("[Metal4Scene] First completed original Lightning family at simulation frame %llu: draws=%u, instances=%u; strict bolt pixel parity pending",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaLightningDraws, result.luaLightningInstances);
+	}
+	if (!owner.reportedFirstProjectileEffects && result.luaProjectileEffectDraws>0) {
+		owner.reportedFirstProjectileEffects = true;
+		LOG("[Metal4Scene] First original Lua Beam/Plasma submission at simulation frame %llu: draws=%u, instances across passes=%u; original order with Nano and world geometry",
+			static_cast<unsigned long long>(frame.simulationFrame), result.luaProjectileEffectDraws, result.luaProjectileEffectInstances);
+	}
+	return {true,result.screenTargetsCompleted,result.sourceFrameCompleted,result.completedPostprocessSerial,result.sourceDrawFrame};
+}
+
 // Stable main-owned admission record. Adapters and frame identities outlive
 // DrawWorld's stack; no late settlement borrows its local options or helpers.
 struct ScenePendingAdmission {
@@ -532,7 +733,7 @@ struct ScenePendingAdmission {
  const std::shared_ptr<NativeMainSourceSettlement> source;
  CloudAdmissionOwner cloud;
  DynamicWaterAdmissionOwner water;
- bool transferred=false,failureHandled=false,cpuAccepted=false;
+ bool transferred=false,failureHandled=false,cpuAccepted=false,queuedReturn=false;
  ScenePendingAdmission(Session& owner,std::shared_ptr<const Metal4WorldSubmission> packet,
   std::shared_ptr<NativeFrameCompletionMailbox::Ticket> ticket):owner(&owner),
   context(OriginalNativeTextureContext().Registry().ContextGeneration()),epoch(owner.completionMailbox->Epoch()),
@@ -549,22 +750,27 @@ struct ScenePendingAdmission {
  auto Transaction(){return NativeFrameAdmissionTransaction(ui::GetRecorder(),LuaNativePostprocess::GetRecorder(),cloud,water,
   submission->Frame().sourceDrawFrame,submission->Options().screenUI->postprocess->serial);}
  void Transfer(){
-  ValidateOwner();if(transferred)throw std::logic_error("Scene admission transferred twice");
+  ValidateOwner();
+  const auto& credit=submission->Options().sourceCredit;
+  owner->sourceCredits.Validate(credit,submission->Frame().sourceDrawFrame);if(transferred)throw std::logic_error("Scene admission transferred twice");
   auto admission=Transaction();admission.Validate();
-  source->Take(context,submission->Frame().sourceDrawFrame,
+  owner->sourceCredits.Hold(credit);
+  try{source->Take(context,submission->Frame().sourceDrawFrame,
    owner->opaqueSourcePending,owner->actualShadowSourcePending,owner->mainGroundPending,
-   owner->dynamicCaptureReceipt,owner->environmentStage,owner->shieldCapture);
+   owner->dynamicCaptureReceipt,owner->environmentStage,owner->shieldCapture);}
+  catch(...){owner->sourceCredits.ReleaseHeld(submission->Frame().sourceDrawFrame);throw;}
   owner->sourceSettlement=source;
   admission.TransferValidated();transferred=true;
  }
  void Restore(){
   ValidateOwner();if(!transferred)throw std::logic_error("Scene admission has no held frame to restore");
+  owner->sourceCredits.ValidateHeld(submission->Frame().sourceDrawFrame);
   source->ValidateRestore(context,owner->opaqueSourcePending,owner->actualShadowSourcePending,owner->mainGroundPending,
    owner->dynamicCaptureReceipt,owner->environmentStage,owner->shieldCapture);
   Transaction().Restore();
   source->RestoreValidated(owner->opaqueSourcePending,owner->actualShadowSourcePending,owner->mainGroundPending,
    owner->dynamicCaptureReceipt,owner->environmentStage,owner->shieldCapture);
-  owner->sourceSettlement.reset();transferred=false;
+  owner->sourceSettlement.reset();owner->sourceCredits.ReleaseHeld(submission->Frame().sourceDrawFrame);transferred=false;
  }
  void Quarantine()noexcept{
   // Invalid owner cannot be repaired by touching the currently active scene.
@@ -578,17 +784,37 @@ struct ScenePendingAdmission {
   if(transferred){if(begin->Submission())Quarantine();else Restore();}
   failureHandled=true;
  }
+ void MarkQueued(){
+  ValidateOwner();if(!transferred||!submission->Options().beginReceipt->Submission())throw std::logic_error("Queued source lacks actual Begin");
+  queuedReturn=true;
+ }
  void CompleteCPU(const Metal4WorldPresentationResult* result,std::exception_ptr failure){
   if(failure){Fail();if(!transferred)ReleaseAnchor();return;}
   if(!result)throw std::logic_error("CPU settlement has neither result nor failure");
-  if(result->presented&&!result->sourceFrameCompleted){Accept(*result);ReleaseAnchor();cpuAccepted=true;}
+  if(queuedReturn&&(result->queued||!result->presented||result->sourceFrameCompleted||result->screenTargetsCompleted)){
+   // A joined fallback may restore current state; a detached result must never
+   // restore an older packet over the next capture. Fail closed, keep owners.
+   Fail();throw std::logic_error("Begin-ready pilot returned a nondeferred result; source quarantined");
+  }
+  if(result->presented&&!result->sourceFrameCompleted){
+   try{
+    Accept(*result);ReleaseAnchor();cpuAccepted=true;
+    // Exact retained frame/UI, never a younger Session pending capture.
+    ReportPresentedWorldResult(*owner,submission->Frame(),*result,submission->Options().screenUI);
+   }catch(...){
+    const auto failure=std::current_exception();
+    if(!cpuAccepted){try{Fail();if(!transferred)ReleaseAnchor();}catch(...){}}
+    std::rethrow_exception(failure);
+   }
+  }
   // Synchronous completion/no-Begin fallback still uses the joined source path.
  }
  void ReleaseAnchor(){ValidateOwner();if(transferred)throw std::logic_error("Cannot release a held admission anchor");owner->admissionSettlement.reset();}
  void Accept(const Metal4WorldPresentationResult& result){
   ValidateOwner();
-  if(!result.presented||result.sourceFrameCompleted||result.screenTargetsCompleted||
-   result.sourceDrawFrame!=submission->Frame().sourceDrawFrame||!submission->Options().beginReceipt->Submission())
+  if(result.queued||!result.presented||result.sourceFrameCompleted||result.screenTargetsCompleted||result.completedPostprocessSerial||
+   result.sourceDrawFrame!=submission->Frame().sourceDrawFrame||!submission->Options().beginReceipt->Submission()||
+   submission->Options().beginReceipt->FailureStage()!=NativeFrameBeginReceipt::Failure::None)
    throw std::logic_error("Scene admission acceptance lacks its exact deferred renderer result");
   if(!transferred)throw std::logic_error("Cannot accept an unheld scene frame");
   mailbox->Accept(ticket);ui::GetRecorder().ReportSubmittedFrame(submission->Frame().sourceDrawFrame);
@@ -614,6 +840,7 @@ void ApplyDeferredFrameReceipts()
  while(auto notice=session->completionMailbox->Pop()){
  const auto& result=*notice;
  if(!result.sourceFrameCompleted)throw std::logic_error("Deferred scene receipt is not GPU-completed");
+ session->sourceCredits.ValidateHeld(result.sourceDrawFrame);
  // Reject missing/mismatched journal owners before any water/world retirement.
  if(result.dynamicWaterGeneration){
   if(result.dynamicWaterSourceDrawFrame!=result.sourceDrawFrame)throw std::logic_error("Deferred water receipt belongs to another scene draw");
@@ -630,6 +857,7 @@ void ApplyDeferredFrameReceipts()
  ui::GetRecorder().RetireSubmittedFrame(result.sourceDrawFrame);
  LuaNativePostprocess::RetireCompletedFrame(result.completedPostprocessSerial);
  LuaNativeVolumetricClouds::RetireCompletedFrame(result.sourceDrawFrame);
+ session->sourceCredits.ReleaseHeld(result.sourceDrawFrame);
  }
 }
 void RequireRetiredGPUWork()
@@ -644,6 +872,11 @@ void RequireRetiredGPUWork()
 } // namespace
 
 void FinishPendingFrame() { RequireRetiredGPUWork(); }
+NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
+ if(!session)throw std::logic_error("World capture has no source credit owner");
+ if(!session->sourceCredits.HasCapacity())RequireRetiredGPUWork();
+ return session->sourceCredits.Acquire(draw);
+}
 
 void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
 {
@@ -1602,7 +1835,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	std::shared_ptr<const NativeDeferredLightFrame> luaDeferredLightFrame,
 	std::shared_ptr<const NativeUnitStencilFrame> luaUnitStencilFrame,
 	std::shared_ptr<const NativeOutlineFrame> luaOutlineFrame,
-	std::shared_ptr<const NativeSnowFrame> luaSnowFrame)
+	std::shared_ptr<const NativeSnowFrame> luaSnowFrame,NativeSourceFrameCredits::Lease sourceCredit)
 {
 	if (!session)
 		return {};
@@ -1730,6 +1963,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		globalRendering->msaaLevel=int(session->renderer->ActualMainSampling().effective);
 	}
 	Metal4WorldRenderOptions options;
+ session->sourceCredits.Validate(sourceCredit,capturedFrame.sourceDrawFrame);options.sourceCredit=sourceCredit;
  // Preserve the already-built exact read receipt across the joined worker.
  // Allocate before moving rows; independent main preparation has finished.
  auto cpuReadPacket=std::make_shared<NativeCUSCPUReadScope::Packet>();
@@ -1769,6 +2003,10 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  // Capture stays main-blocked; the three no-throw moves are one admission step.
  bool admitted=bool(completionTicket);
  if(admitted)options.heldSourceDraw=capturedFrame.sourceDrawFrame;
+ static const bool beginReadyPilot=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_READY_PILOT");return value&&std::string_view(value)=="1";}();
+ options.allowBeginReady=beginReadyPilot&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+ // Begin alone does NOT retire N-1. This pilot permits only N plus capture N+1.
+ if(options.allowBeginReady)RequireRetiredGPUWork();
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
  frameOwner.reset(); // No mutable owning alias remains after sealing.
  const auto& frame=submission->Frame();
@@ -1800,7 +2038,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   if(pendingAdmission)pendingAdmission->CompleteCPU(result,failure);
  };
  const auto invokeRenderer=[&] {
- try {return overlapPreparation?
+ try {return (overlapPreparation&&!options.allowBeginReady)?
   session->renderer->DrawOwned(submission,[owner=session.get()]{
    if(session.get()!=owner)throw std::logic_error("Preparation retirement lost its scene owner");
    ApplyDeferredFrameReceipts();
@@ -1812,6 +2050,16 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  }
  };
  const auto result=invokeRenderer();
+ if(result.queued){
+  try{
+  if(!pendingAdmission||!pendingAdmission->transferred||result.presented||result.sourceFrameCompleted||result.screenTargetsCompleted||result.completedPostprocessSerial||
+   result.sourceDrawFrame!=frame.sourceDrawFrame||!options.beginReceipt->Submission())
+   throw std::logic_error("Queued renderer return lacks its exact begun source owner");
+  pendingAdmission->MarkQueued();
+  // No current pending reset, GPU retirement or presentation report here.
+  return {false,false,false,0,frame.sourceDrawFrame,true,screenUI->postprocess->serial};
+  }catch(...){const auto failure=std::current_exception();try{failedAdmission();}catch(...){}std::rethrow_exception(failure);}
+ }
  if(pendingAdmission&&pendingAdmission->cpuAccepted)admitted=false;
  try {
  // A hidden/unavailable surface may return before opening a runtime lease.
@@ -1838,202 +2086,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 		if(result.sourceFrameCompleted)return {false,result.screenTargetsCompleted,true,result.completedPostprocessSerial,result.sourceDrawFrame};
 		return submitTargets();
 	}
-	if (session->reportedCUSRevision != frame.cusMaterial.revision ||
-		!session->reportedAdvancedTerrain || *session->reportedAdvancedTerrain != frame.terrain.material->advancedShading) {
-		LOG("[Metal4Scene] Presented original shading controls at frame %llu: terrain=%s, models=%s, CUS revision=%llu",
-			static_cast<unsigned long long>(frame.simulationFrame),
-			frame.terrain.material->advancedShading ? "advanced" : "standard",
-			frame.cusMaterial.enabled ? "CUS" : "engine-standard-GL4",
-			static_cast<unsigned long long>(frame.cusMaterial.revision));
-		session->reportedCUSRevision = frame.cusMaterial.revision;
-		session->reportedAdvancedTerrain = frame.terrain.material->advancedShading;
-	}
-	if (!session->reportedReflectionReady || *session->reportedReflectionReady != result.reflectionReady) {
-		LOG("[Metal4Scene] Original environment cube state at frame %llu: %s; full visual parity pending",
-			static_cast<unsigned long long>(frame.simulationFrame), result.reflectionReady ?
-			"first complete face/mip cycle available" : "first complete face/mip cycle warming up");
-		session->reportedReflectionReady = result.reflectionReady;
-	}
-	if (result.sourceFrameCompleted) {
-		uint64_t ssaoDrawCommands = 0;
-		const auto countSSAO = [&](const std::shared_ptr<const NativeWaterLuaFrame>& bundle) {
-			if (!bundle || !bundle->ssao) return;
-			for (const auto& draw: bundle->ssao->draws) {
-				if (draw.clear) continue; // An FBO clear is not an SSAO draw command.
-				++ssaoDrawCommands;
-				if (draw.output && draw.output->image)
-					session->lastSSAOImageIdentity = std::max(session->lastSSAOImageIdentity,draw.output->image->identity);
-			}
-		};
-		countSSAO(frame.alphaAllLua);
-		if (frame.waterScene) countSSAO(frame.waterScene->aboveWaterLua);
-		for (const auto& models: frame.alphaModelFrames) if (models)
-			for (const auto& phase: models->passes) countSSAO(phase.luaEffects);
-		const bool mapMRT = frame.mainGround && frame.mainGround->ground && frame.mainGround->ground->mapMRT;
-		const bool modelMRT = frame.opaqueModelFrame && frame.opaqueModelFrame->HasWriters();
-		// Log only settings transitions or a newly created SSAO image owner.
-		// Do not key reporting on camera-dependent draw counts or MRT reuse.
-		const uint64_t settings = uint64_t(frame.lighting.requested.deferredMap) |
-			(uint64_t(frame.lighting.requested.deferredModel) << 1) |
-			(uint64_t(frame.terrain.material->advancedShading) << 2) | (uint64_t(frame.cusMaterial.enabled) << 3);
-		const std::array<uint64_t,2> paths{{settings,session->lastSSAOImageIdentity}};
-		if (!session->reportedSourcePaths || *session->reportedSourcePaths != paths) {
-			LOG("[Metal4Scene] Completed frame with original source paths at frame %llu: mapMRT=%u modelMRT=%u capturedSSAODrawCommands=%llu; this frame only, full visual parity pending",
-				static_cast<unsigned long long>(frame.simulationFrame), unsigned(mapMRT), unsigned(modelMRT), static_cast<unsigned long long>(ssaoDrawCommands));
-			session->reportedSourcePaths = paths;
-		}
-	}
-	for (const auto& dependency: result.materialDependenciesPending) {
-		if (session->reportedUnsupported.insert("material: " + dependency).second)
-			LOG_L(L_WARNING, "[Metal4Scene] Pending original material dependency: %s", dependency.c_str());
-	}
-	session->lastPresentedSimulationFrame = frame.simulationFrame;
-	if (session->awaitingPresentationAfterTargets) {
-		LOG("[Metal4Scene] Resumed world presentation at simulation frame %llu; completed offscreen UI totals: %llu submissions, %llu target passes",
-			static_cast<unsigned long long>(frame.simulationFrame),
-			static_cast<unsigned long long>(session->targetOnlySubmissions),
-			static_cast<unsigned long long>(session->targetOnlyPasses));
-		session->awaitingPresentationAfterTargets = false;
-	}
-
-	if (session->presentedFrames++ == 0) {
-		LOG("[Metal4Scene] First presented simulation frame %llu: map %s, %u original terrain tiles, %u units, %u pieces; logical %ux%u, render %ux%u",
-			static_cast<unsigned long long>(frame.simulationFrame), frame.terrain.sourceMap.c_str(),
-			result.terrainTiles, result.unitsDrawn, result.piecesDrawn,
-			result.surface.logicalWidth, result.surface.logicalHeight, result.surface.renderWidth, result.surface.renderHeight);
-		LOG("[Metal4Scene] Native GPU objects: queue=%s buffer=%s encoder=%s",
-			result.queueClass.c_str(), result.commandBufferClass.c_str(), result.renderEncoderClass.c_str());
-		LOG("[Metal4Scene] First-frame resident allocation bytes=%llu, allocations=%u",
-			static_cast<unsigned long long>(result.residentBytes), result.residencyAllocationCount);
-		LOG("[Metal4Scene] First-frame original map-edge submission: draws=%u, mirror/seam instances=%u",
-			result.mapEdgeDraws, result.mapEdgeInstances);
-	}
-	if(!session->reportedFirstStartBoxWorld && result.luaStartBoxDraws){session->reportedFirstStartBoxWorld=true;LOG("[Metal4Scene] First completed original StartBox world at simulation frame %llu: draws=%u; strict pixel parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaStartBoxDraws);}
-	if(!session->reportedFirstStartBoxMiniMap && result.luaStartBoxMiniMapDraws){session->reportedFirstStartBoxMiniMap=true;LOG("[Metal4Scene] First completed original StartBox minimap/PiP at simulation frame %llu: draws=%u; strict pixel parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaStartBoxMiniMapDraws);}
-	if (!session->reportedFirstUnits && result.unitsDrawn > 0) {
-		session->reportedFirstUnits = true;
-		LOG("[Metal4Scene] First presented units at simulation frame %llu: units=%u, pieces=%u, selected=%u; actual camera=(%.3f, %.3f, %.3f)",
-			static_cast<unsigned long long>(frame.simulationFrame), result.unitsDrawn, result.piecesDrawn, result.selectedUnits,
-			frame.viewCamera.position[0], frame.viewCamera.position[1], frame.viewCamera.position[2]);
-	}
-	if (!session->reportedFirstFeatures && result.featuresDrawn > 0) {
-		session->reportedFirstFeatures = true;
-		LOG("[Metal4Scene] First presented features at simulation frame %llu: features=%u, pieces=%u, opaque draws=%u, alpha draws=%u; shadow terrain/model draws=%u/%u",
-			static_cast<unsigned long long>(frame.simulationFrame), result.featuresDrawn, result.featurePiecesDrawn,
-			result.opaqueFeatureDraws, result.alphaFeatureDraws, result.shadowTerrainDraws, result.shadowModelDraws);
-	}
-	if (!session->reportedFirstParticles && (result.particleDraws > 0 || result.projectileModelsDrawn > 0)) {
-		session->reportedFirstParticles = true;
-		LOG("[Metal4Scene] First presented original engine particle stream at simulation frame %llu: draws=%u, projectile models=%u, engine nano instances=%u",
-			static_cast<unsigned long long>(frame.simulationFrame), result.particleDraws,
-			result.projectileModelsDrawn, result.engineNanoInstances);
-	}
-	if (!session->reportedFirstLuaNano && result.luaNanoDraws > 0 && result.luaNanoInstances > 0) {
-		session->reportedFirstLuaNano = true;
-		LOG("[Metal4Scene] First presented original Lua nano stream at simulation frame %llu: draws=%u, submitted instances across original passes=%u",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaNanoDraws, result.luaNanoInstances);
-	}
-	if (!session->reportedFirstPostprocess && screenUI && screenUI->postprocess && !screenUI->postprocess->operations.empty()) {
-		std::size_t colorCopies = 0, depthCopies = 0, dofPasses = 0;
-		for (const auto& operation: screenUI->postprocess->operations) {
-			colorCopies += operation.kind == NativePostprocessOperationKind::CopyColor;
-			depthCopies += operation.kind == NativePostprocessOperationKind::CopyDepth;
-			dofPasses += operation.kind == NativePostprocessOperationKind::DOF;
-		}
-		session->reportedFirstPostprocess = true;
-		LOG("[Metal4Scene] First completed original DOF at simulation frame %llu: color copies=%zu, depth copies=%zu, shader passes=%zu; actual world framebuffer, original screen order, one present",
-			static_cast<unsigned long long>(frame.simulationFrame), colorCopies, depthCopies, dofPasses);
-	}
-	if (!session->reportedFirstUI && result.screenDraws > 0) {
-		LOG("[Metal4Scene] Original environment submission: sky=%u, reflection terrain=%u, face=%u, complete cycle=%d, unit BRDF=%u G_OPTION=%u",
-			result.skyDraws, result.reflectionTerrainDraws, result.reflectionFace, result.reflectionReady, result.unitBRDFWidth, result.unitBRDFGOption);
-		session->reportedFirstUI = true;
-		LOG("[Metal4Scene] First composited native UI at simulation frame %llu: draws=%u, texture uploads=%u; shared world drawable and one present",
-			static_cast<unsigned long long>(frame.simulationFrame), result.screenDraws, result.screenTextureUploads);
-	}
-	if (!session->reportedFirstWorldOverlays && (result.luaPreUnitDraws>0 || result.luaWorldDraws>0)) {
-		session->reportedFirstWorldOverlays = true;
-		LOG("[Metal4Scene] First original Lua world geometry at simulation frame %llu: PreUnit=%u, World=%u; original call order and shared scene depth/stencil",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaPreUnitDraws, result.luaWorldDraws);
-	}
-	if (!session->reportedFirstEnergyExplosion && result.luaEnergyExplosionDraws > 0) {
-		session->reportedFirstEnergyExplosion = true;
-		LOG("[Metal4Scene] First completed original energy explosion at simulation frame %llu: draws=%u, instances=%u; original VS motion, GS-equivalent triangles and shared world order",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaEnergyExplosionDraws, result.luaEnergyExplosionInstances);
-	}
-	if (!session->reportedFirstGameDecal && result.luaGameDecalDraws>0) {
-		session->reportedFirstGameDecal=true;
-		LOG("[Metal4Scene] First completed original Lua game Decals GL4 at simulation frame %llu: draws=%u, instances=%u; strict pixel parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaGameDecalDraws,result.luaGameDecalInstances);
-	}
-	for (size_t i=0;i<3;++i) if (!session->reportedFirstUnitPrimitive[i] && result.luaUnitPrimitiveDraws[i]>0) {
-		session->reportedFirstUnitPrimitive[i]=true;
-		constexpr std::array names{"BuildingAO","FeatureAO","TeamPlatter"};
-		LOG("[Metal4Scene] First completed original %s at simulation frame %llu: draws=%u, instances=%u; strict pixel parity pending",names[i],static_cast<unsigned long long>(frame.simulationFrame),result.luaUnitPrimitiveDraws[i],result.luaUnitPrimitiveInstances[i]);
-	}
-	if (!session->reportedFirstPiP && result.luaPiPDraws > 0) {
-		session->reportedFirstPiP = true;
-		LOG("[Metal4Scene] First completed original PiP programs: draws=%u; original screen/RTT order, shared images and private NoGS family; full visual parity pending", result.luaPiPDraws);
-	}
-	if (!session->reportedFirstBuildingSample && result.buildingSampleDraws > 0) {
-		session->reportedFirstBuildingSample = true;
-		LOG("[Metal4Scene] First completed original pre-click building sample at simulation frame %llu: samples=%u, pieces=%u; original engine placement producer and legacy material; strict visual parity pending", static_cast<unsigned long long>(frame.simulationFrame), result.buildingSampleDraws, result.buildingSamplePieces);
-	}
-	if (!session->reportedFirstBuildingGrid && result.buildingGridDraws > 0) {
-		session->reportedFirstBuildingGrid = true;
-		LOG("[Metal4Scene] First completed original optional Building Grid at simulation frame %llu: draws=%u; original height/mouse/water behavior; strict line parity pending", static_cast<unsigned long long>(frame.simulationFrame), result.buildingGridDraws);
-	}
-	if (!session->reportedFirstBlueprint && result.luaBlueprintDraws > 0) {
-		session->reportedFirstBlueprint = true;
-		LOG("[Metal4Scene] First completed original Blueprint family: draws=%u, models=%u, outlines=%u, stencil clears=%u; strict pixel parity pending",result.luaBlueprintDraws,result.luaBlueprintModels,result.luaBlueprintOutlines,result.luaBlueprintStencilClears);
-	}
-	if (!session->reportedFirstFireSmoke && result.luaFireSmokeDraws > 0) {
-		session->reportedFirstFireSmoke = true;
-		LOG("[Metal4Scene] First completed original FireSmoke at simulation frame %llu: draws=%u, submitted instances=%u (normal/highlight counted separately); full visual parity pending",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaFireSmokeDraws, result.luaFireSmokeSubmittedInstances);
-	}
-	if(!session->reportedFirstShield && result.luaShieldDraws){session->reportedFirstShield=true;
-		LOG("[Metal4Scene] First completed original Shield: draws=%u, actual map/model GBuffer passes=%u/%u model pieces=%u; corrected-reference strict color residual remains pending",result.luaShieldDraws,result.mapGBufferDepthPasses,result.modelGBufferDepthPasses,result.modelGBufferDepthPieces);}
-	if (!session->reportedFirstCommands && result.luaCommandsDraws > 0) {
-		session->reportedFirstCommands=true;
-		LOG("[Metal4Scene] First completed original Commands FX at simulation frame %llu: PreUnit line draws=%u; full visual parity pending",static_cast<unsigned long long>(frame.simulationFrame),result.luaCommandsDraws);
-	}
-	if (!session->reportedFirstSnow && result.luaSnowDraws > 0) {
-		session->reportedFirstSnow=true;
-		LOG("[Metal4Scene] First completed original Snow: World point draws=%u; strict snow-map/command pixel parity pending",result.luaSnowDraws);
-	}
-	if (!session->reportedFirstNapalmPreview && result.luaNapalmPreviewDraws > 0) {
-		session->reportedFirstNapalmPreview=true;
-		LOG("[Metal4Scene] First completed original AoE Napalm preview: PreUnit draws=%u; full visual parity pending",result.luaNapalmPreviewDraws);
-	}
-	if (!session->reportedFirstFlamethrower && result.luaFlamethrowerDraws > 0) {
-		session->reportedFirstFlamethrower = true;
-		LOG("[Metal4Scene] First completed original Flamethrower at simulation frame %llu: draws=%u submitted instances=%u; full visual parity pending",
-			static_cast<unsigned long long>(frame.simulationFrame),result.luaFlamethrowerDraws,result.luaFlamethrowerSubmittedInstances);
-	}
-	if (!session->reportedFirstMissileThruster && result.luaMissileThrusterDraws > 0) {
-		session->reportedFirstMissileThruster = true;
-		LOG("[Metal4Scene] First completed original MissileThruster at simulation frame %llu: draws=%u, submitted instances=%u, programs=%u/%u/%u/%u/%u/%u/%u (legacy and31657 variants counted separately); full visual parity pending",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaMissileThrusterDraws, result.luaMissileThrusterSubmittedInstances,
-			result.luaMissileThrusterProgramDraws[0], result.luaMissileThrusterProgramDraws[1],
-			result.luaMissileThrusterProgramDraws[2], result.luaMissileThrusterProgramDraws[3],
-			result.luaMissileThrusterProgramDraws[4], result.luaMissileThrusterProgramDraws[5], result.luaMissileThrusterProgramDraws[6]);
-	}
-	if (!session->reportedFirstDeferredLights && result.luaDeferredLightDraws > 0) {
-		session->reportedFirstDeferredLights = true;
-		LOG("[Metal4Scene] First completed original Deferred rendering GL4: frame=%llu draws=%u submittedInstances=%u; pixel parity pending",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaDeferredLightDraws, result.luaDeferredLightInstances);
-	}
-	if (!session->reportedFirstLightning && result.luaLightningDraws > 0) {
-		session->reportedFirstLightning = true;
-		LOG("[Metal4Scene] First completed original Lightning family at simulation frame %llu: draws=%u, instances=%u; strict bolt pixel parity pending",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaLightningDraws, result.luaLightningInstances);
-	}
-	if (!session->reportedFirstProjectileEffects && result.luaProjectileEffectDraws>0) {
-		session->reportedFirstProjectileEffects = true;
-		LOG("[Metal4Scene] First original Lua Beam/Plasma submission at simulation frame %llu: draws=%u, instances across passes=%u; original order with Nano and world geometry",
-			static_cast<unsigned long long>(frame.simulationFrame), result.luaProjectileEffectDraws, result.luaProjectileEffectInstances);
-	}
-	return {true,result.screenTargetsCompleted,result.sourceFrameCompleted,result.completedPostprocessSerial,result.sourceDrawFrame};
+ return (pendingAdmission&&pendingAdmission->cpuAccepted)?
+  DrawResult{true,result.screenTargetsCompleted,result.sourceFrameCompleted,result.completedPostprocessSerial,result.sourceDrawFrame}:
+  ReportPresentedWorldResult(*session,frame,result,screenUI);
 }
 
 void ResetWorld()

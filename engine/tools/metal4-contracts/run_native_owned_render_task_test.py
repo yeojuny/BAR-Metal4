@@ -11,4 +11,4 @@ worker=(root/'rts/Rendering/Backend/NativeSerialRenderWorker.h').read_text()
 assert 'auto ticket=Enqueue(std::forward<F>(function));return ticket->Join();' in worker
 subprocess.run(['g++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),str(Path(__file__).with_name('TestNativeOwnedRenderTask.cpp')),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],check=True,timeout=60,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
-print('Production Invoke still joined; no Game queued-return or native execution enabled')
+print('Production Invoke still joined; separate renderer pilot must explicitly release after Begin; no native execution')

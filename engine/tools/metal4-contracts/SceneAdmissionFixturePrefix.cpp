@@ -3,6 +3,7 @@
 #include "Rendering/Backend/NativeFrameAdmissionTransaction.h"
 #include "Rendering/Backend/NativeFrameCompletionMailbox.h"
 #include "Rendering/Backend/NativeFrameBeginReceipt.h"
+#include "Rendering/Backend/NativeSourceFrameCredits.h"
 #include <cassert>
 #include <iostream>
 using namespace rendering;
@@ -41,15 +42,16 @@ struct NativeMainSourceSettlement{
  void RestoreValidated(int& a,int& b,int& d,std::shared_ptr<const NativeDynamicWaterFrame>& w,int& e,int& f)noexcept{a=b=d=e=f=1;w=std::move(water);detached=false;}
 };
 struct Post{uint64_t serial=9;};struct Screen{std::shared_ptr<Post> postprocess=std::make_shared<Post>();};
-struct Options{Screen* screenUI;std::shared_ptr<NativeFrameBeginReceipt> beginReceipt=std::make_shared<NativeFrameBeginReceipt>(0,9);};
+struct Options{Screen* screenUI;NativeSourceFrameCredits::Lease sourceCredit;std::shared_ptr<NativeFrameBeginReceipt> beginReceipt=std::make_shared<NativeFrameBeginReceipt>(0,9);};
 struct Frame{uint64_t sourceDrawFrame=0;std::shared_ptr<const NativeDynamicWaterFrame> dynamicWater=std::make_shared<NativeDynamicWaterFrame>();};
 struct Metal4WorldSubmission{
  ::Frame frame;Screen screen;::Options options{&screen};
  const ::Frame& Frame()const{return frame;}const ::Options& Options()const{return options;}
 };
-struct Metal4WorldPresentationResult{bool presented=false,sourceFrameCompleted=false,screenTargetsCompleted=false;uint64_t sourceDrawFrame=0;};
+struct Metal4WorldPresentationResult{bool presented=false,sourceFrameCompleted=false,screenTargetsCompleted=false;uint64_t sourceDrawFrame=0;bool queued=false;uint64_t completedPostprocessSerial=0;};
 struct ScenePendingAdmission;
 struct Session{
+ NativeSourceFrameCredits sourceCredits;
  std::shared_ptr<NativeFrameCompletionMailbox> completionMailbox=std::make_shared<NativeFrameCompletionMailbox>(4);
  Ledger dynamicWaterCapture;
  int opaqueSourcePending=1,actualShadowSourcePending=1,mainGroundPending=1,environmentStage=1,shieldCapture=1;
@@ -59,3 +61,6 @@ struct Session{
  std::shared_ptr<NativeFrameBeginReceipt> lastFailedBeginReceipt;
 };
 std::unique_ptr<Session> session;
+
+unsigned reported=0;
+void ReportPresentedWorldResult(Session&,const Frame& frame,const Metal4WorldPresentationResult& result,const Screen* screen){assert(frame.sourceDrawFrame==result.sourceDrawFrame&&screen&&screen->postprocess);++reported;}

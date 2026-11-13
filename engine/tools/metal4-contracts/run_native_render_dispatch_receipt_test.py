@@ -14,4 +14,4 @@ assert settlement.index('task->Join()')<settlement.index('task.reset();receipt->
 assert 'FinishCPUWork();\n  auto result=impl->cpuJob->Consume();' in s
 subprocess.run(['g++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),str(Path(__file__).with_name('TestNativeRenderDispatchReceipt.cpp')),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],check=True,timeout=40,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
-print('Actual joined worker wiring checked structurally; no native execution or async admission')
+print('Owned worker wiring checked structurally; Begin-ready pilot uses same exact receipts; no native execution')

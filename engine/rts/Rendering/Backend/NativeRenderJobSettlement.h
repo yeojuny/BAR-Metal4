@@ -43,13 +43,21 @@ public:
   try{task=worker.Enqueue(std::forward<F>(work));state=State::Running;}
   catch(...){failure=std::current_exception();state=State::Settling;receipt->ReleaseHandoff();Notify();state=State::Failed;std::rethrow_exception(failure);}
  }
+ bool ReleaseAfterBegin(){
+  Source();if(state!=State::Running)throw std::logic_error("Begin release requires a running CPU job");
+  const auto progress=receipt->WaitForBeginOrFinished();
+  // Already-finished jobs use the joined path; readiness is not a credit return.
+  if(!(progress&1)||(progress&2))return false;
+  try{target();}catch(...){failure=std::current_exception();Finish();}
+  return true;
+ }
  void Finish(){
   Source();
   if(state==State::Failed)std::rethrow_exception(failure);
   if(state==State::Settled||state==State::Consumed)return;
   if(state!=State::Running)throw std::logic_error("CPU job settlement is absent or recursive");
   state=State::Settling;
-  try{result.emplace(task->Join());}catch(...){failure=std::current_exception();}
+  try{result.emplace(task->Join());}catch(...){if(!failure)failure=std::current_exception();}
   // Join has destroyed worker callable on source and released its credit even
   // on exception. Detach the ticket before invoking any source callback.
   task.reset();receipt->ReleaseHandoff();

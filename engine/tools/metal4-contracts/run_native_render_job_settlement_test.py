@@ -22,4 +22,4 @@ for name in ['CompileOriginalCUSProgram','CompileOriginalTerrainProgram','Compil
  assert body.lstrip().startswith('FinishCPUWork();'),name
 subprocess.run(['g++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),str(Path(__file__).with_name('TestNativeRenderJobSettlement.cpp')),'-o',str(out/'test')],check=True)
 subprocess.run([str(out/'test')],check=True,timeout=60,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
-print('Production CPU settlement precedes explicit source control/GPU drain boundaries; dispatch remains joined')
+print('Production CPU settlement precedes explicit source control/GPU drain boundaries; default dispatch joined; pilot uses explicit Begin-ready release')

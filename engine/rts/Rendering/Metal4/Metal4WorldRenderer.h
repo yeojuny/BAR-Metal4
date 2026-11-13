@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include <exception>
+#include "Rendering/Backend/NativeSourceFrameCredits.h"
 
 #include "Metal4WindowSurface.h"
 #include "Rendering/Backend/NativeCUSCPUReadScope.h"
@@ -75,6 +76,8 @@ struct Metal4WorldRenderOptions {
 	static constexpr bool DefaultShaderValidation = true;
 #endif
 	bool shaderValidation = DefaultShaderValidation;
+ NativeSourceFrameCredits::Lease sourceCredit;
+ bool allowBeginReady=false;
  std::shared_ptr<const NativeCUSCPUReadScope::Packet> cpuReadPacket; // Joined-call immutable rows; main retains final owner.
  std::optional<std::uint64_t> heldSourceDraw; // Exact admitted UI owner, never latest-pending inference.
  std::shared_ptr<NativeFrameBeginReceipt> beginReceipt; // Owned ordinary-frame Begin evidence; no source callback.
@@ -129,6 +132,7 @@ struct Metal4MaintenanceResult {
 struct Metal4WorldPresentationResult {
 	Metal4PresentationStatus status = Metal4PresentationStatus::DrawableUnavailable;
 	bool presented = false;
+ bool queued=false; // CPU Begin-ready only; no presentation/completion claim.
 	bool sourceFrameCompleted = false;
  uint64_t dynamicWaterGeneration=0,dynamicWaterSequence=0,dynamicWaterSourceDrawFrame=0;
 	bool screenTargetsCompleted = false;

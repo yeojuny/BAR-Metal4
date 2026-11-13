@@ -1538,6 +1538,7 @@ bool CGame::Draw() {
 	const spring_time nativeDrawStart = spring_gettime();
 	if (globalRendering->viewSizeX <= 0 || globalRendering->viewSizeY <= 0)
 		return false;
+	auto nativeFrameCredit=rendering::scene::AcquireWorldFrameCredit(globalRendering->drawFrame);
 	auto& nativeUI = rendering::ui::GetRecorder();
 	nativeUI.BeginFrame(globalRendering->viewSizeX, globalRendering->viewSizeY,
 		rendering::scene::GetUIFrameRasterMapping({globalRendering->viewPosX, globalRendering->viewPosY,
@@ -1764,7 +1765,7 @@ bool CGame::Draw() {
 			static_cast<uint32_t>(globalRendering->viewSizeX),
 			static_cast<uint32_t>(globalRendering->viewSizeY)};
 		nativeResult = rendering::scene::DrawWorld(&screenFrame, drawScreen,
-			std::move(luaNanoFrame), std::move(luaProjectileEffectsFrame), std::move(worldDrawFrame), std::move(luaEnergyExplosionFrame),std::move(luaVolumetricCloudFrame),std::move(luaLightningEffectFrame),std::move(luaBlueprintFrame),std::move(placementFrame), std::move(luaFireSmokeFrame), std::move(luaMissileThrusterFrame), std::move(luaShieldFrame), std::move(luaFlamethrowerFrame), std::move(luaNapalmPreviewFrame), std::move(luaCommandsFrame),std::move(luaFireGL4Frame), std::move(luaBloomFrame), std::move(luaDeferredLightFrame), std::move(luaUnitStencilFrame), std::move(luaOutlineFrame), std::move(luaSnowFrame));
+			std::move(luaNanoFrame), std::move(luaProjectileEffectsFrame), std::move(worldDrawFrame), std::move(luaEnergyExplosionFrame),std::move(luaVolumetricCloudFrame),std::move(luaLightningEffectFrame),std::move(luaBlueprintFrame),std::move(placementFrame), std::move(luaFireSmokeFrame), std::move(luaMissileThrusterFrame), std::move(luaShieldFrame), std::move(luaFlamethrowerFrame), std::move(luaNapalmPreviewFrame), std::move(luaCommandsFrame),std::move(luaFireGL4Frame), std::move(luaBloomFrame), std::move(luaDeferredLightFrame), std::move(luaUnitStencilFrame), std::move(luaOutlineFrame), std::move(luaSnowFrame),nativeFrameCredit);
 		nativeResult.Validate(); // Reject queue/completion confusion before any source retirement.
 		// Lua target generations may already be cached by original widgets.
 		// Offscreen submissions execute those same producers while hidden;
