@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeTerrainMatrixMemo.h"
 #include <cstdlib>
 #include <cstring>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
@@ -447,7 +448,8 @@ simd_float4 Vec(const std::array<float,4>& source)
 {
 	simd_float4 result;for(unsigned i=0;i<4;++i){Require(std::isfinite(source[i]),"Original terrain fixed-function state is nonfinite");result[i]=source[i];}return result;
 }
-Uniform DrawUniform(const NativeTerrainSquareDraw& draw,const Profile& profile,const CUSSourceTarget& target)
+Uniform DrawUniform(const NativeTerrainSquareDraw& draw,const Profile& profile,const CUSSourceTarget& target,
+ NativeTerrainMatrixMemo<simd_float4x4>& inverseMemo)
 {
 	Require(draw.program.uniforms&&draw.program.uniforms->contextGeneration==draw.program.Identity().contextGeneration&&
 		draw.program.uniforms->originalProgramGeneration==draw.program.Identity().originalProgramGeneration,
@@ -481,10 +483,13 @@ Uniform DrawUniform(const NativeTerrainSquareDraw& draw,const Profile& profile,c
 		if((!profile.deferred&&profile.Has("SMF_SKY_REFLECTIONS"))||profile.Has("SMF_PARALLAX_MAPPING"))result.cameraPos=Float(source,NativeTerrainUniformSlot::cameraPos,3);
 		if(!profile.deferred) {
 			result.lightDir=Float(source,NativeTerrainUniformSlot::lightDir,4);result.groundAmbient=Float(source,NativeTerrainUniformSlot::groundAmbientColor,3);result.groundDiffuse=Float(source,NativeTerrainUniformSlot::groundDiffuseColor,3);
-			const auto determinant=simd_determinant(result.modelView);
-			Require(std::isfinite(determinant)&&determinant!=0,"Original terrain model-view inverse is undefined");
-			result.modelViewInverse=simd_inverse(result.modelView);
-			for(auto column:result.modelViewInverse.columns)for(unsigned row=0;row<4;++row)Require(std::isfinite(column[row]),"Original terrain model-view inverse is nonfinite");
+			result.modelViewInverse=inverseMemo.Get(std::span<const float,16>(draw.modelView.data(),16),[&]{
+				const auto determinant=simd_determinant(result.modelView);
+				Require(std::isfinite(determinant)&&determinant!=0,"Original terrain model-view inverse is undefined");
+				const auto inverse=simd_inverse(result.modelView);
+				for(auto column:inverse.columns)for(unsigned row=0;row<4;++row)Require(std::isfinite(column[row]),"Original terrain model-view inverse is nonfinite");
+				return inverse;
+			});
 		}
 	}
 	if(!profile.deferred&&profile.Has("HAVE_INFOTEX")){result.texGen1=Float(source,NativeTerrainUniformSlot::infoTexGen,2);result.texGen1.z=Float(source,NativeTerrainUniformSlot::infoTexIntensityMul,1).x;}
@@ -730,6 +735,7 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 	const bool reuse=InterventionPoolsEnabled();
 	if(reuse){impl->argumentPool.BeginBatch(lease);impl->uniformPool.BeginBatch(lease.Device());impl->mipViews.Begin(lease);}
 	TerrainUniformBatch uniformBatch(lease,uniformCount,sizeof(Uniform),9,reuse?&impl->uniformPool:nullptr,reuse?&out.uniformOwners:nullptr);
+	NativeTerrainMatrixMemo<simd_float4x4> inverseMemo;
 	uint64_t previous=0;
 	for(size_t index=0;index<out.source->squares.size();++index) {
 		const auto& draw=out.source->squares[index];const auto& mesh=draw.Geometry();
@@ -773,7 +779,7 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 			camera.viewport={viewport.x,viewport.y,int32_t(viewport.width),int32_t(viewport.height)};}
 		ready.raster=effectstate::Viewport(camera,target.width,target.height,target.logicalWidth,target.logicalHeight,draw.surface.scissor);
 		ready.depth=effectstate::Depth(lease,draw.world,target.stencil);
-		Uniform uniforms=DrawUniform(draw,original->profile,target);
+		Uniform uniforms=DrawUniform(draw,original->profile,target,inverseMemo);
 		const auto& uniformSource=*draw.program.uniforms;
 		std::array<std::optional<ImageKind>,NativeCUSTextureHistory::Units> activeUnitTypes{};
 		auto resolve=[&](NativeTerrainUniformSlot slot,ImageKind kind,ImageUniform& parameters,bool vertex){

@@ -1,0 +1,17 @@
+{
+  "scope": "Host memo contract, not Apple SIMD inverse, Metal compilation or game/FPS validation.",
+  "exit": 0,
+  "summary": "Terrain matrix memo: exact 16-scalar key, 100 repeats/one compute, signed zero, A/B/A, failure and Prepare lifetime passed\n",
+  "productionSHA256": {
+    "rts/Rendering/Backend/NativeTerrainMatrixMemo.h": "74462f0a9243dccfcf6ce0c441e2c1ca54beeabc9dd91f87623fb34099d4f38d",
+    "rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm": "55de6910b3978dc3ddd9f09b033b285147fa06b28dd1169acc2670fa918c4a16"
+  },
+  "fixtureSHA256": "bc7f06bd3945988b24b4dc508f26ea3d73cbf77866c3acea2478eb94f32180f6",
+  "sourceChecks": 3,
+  "notTested": [
+    "Apple SIMD inverse",
+    "Metal Objective-C++",
+    "macOS app build",
+    "GPU output or FPS"
+  ]
+}
