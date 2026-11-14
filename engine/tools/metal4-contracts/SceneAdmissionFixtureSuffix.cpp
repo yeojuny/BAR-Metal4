@@ -1,7 +1,7 @@
 template<class F>void Reject(F&& f){bool caught=false;try{f();}catch(const std::logic_error&){caught=true;}assert(caught);}
-std::shared_ptr<ScenePendingAdmission> Make(){
+std::shared_ptr<ScenePendingAdmission> Make(bool early=false){
  reported=0;ui::recorder={};LuaNativePostprocess::recorder={};context.registry.generation=3;session=std::make_unique<Session>();
- auto packet=std::make_shared<Metal4WorldSubmission>();packet->options.sourceCredit=session->sourceCredits.Acquire(0);auto mailbox=session->completionMailbox;
+ auto packet=std::make_shared<Metal4WorldSubmission>();packet->options.allowPrepareReady=early;packet->options.sourceCredit=session->sourceCredits.Acquire(0);auto mailbox=session->completionMailbox;
  auto result=std::make_shared<ScenePendingAdmission>(*session,packet,mailbox->Prepare(mailbox->Epoch(),0,9));
  session->admissionSettlement=result;result->Transfer();return result;
 }
@@ -34,6 +34,16 @@ int main(){
   {auto job=Make();auto exact=session->sourceSettlement;session->sourceSettlement=std::make_shared<NativeMainSourceSettlement>();Reject([&]{job->Restore();});assert(ui::recorder.held);session->sourceSettlement=exact;job->Restore();job->ReleaseAnchor();}
   {auto job=Make();session->admissionSettlement.reset();Reject([&]{job->Restore();});session->admissionSettlement=job;job->Restore();job->ReleaseAnchor();}
   {auto job=Make();auto exact=session->completionMailbox;session->completionMailbox=std::make_shared<NativeFrameCompletionMailbox>(5);Reject([&]{job->Accept({true,false,false,0});});session->completionMailbox=exact;job->Restore();job->ReleaseAnchor();}
+ }
+ for(unsigned mode=0;mode<2;++mode){
+  auto job=Make(true);job->MarkQueued();auto younger=session->sourceCredits.Acquire(1);
+  session->opaqueSourcePending=99;
+  if(mode==0)job->CompleteCPU(nullptr,std::make_exception_ptr(std::runtime_error("prepare-before-Begin")));
+  else {Metal4WorldPresentationResult skipped{};Reject([&]{job->CompleteCPU(&skipped,{});});}
+  assert(job->failureHandled&&job->transferred&&ui::recorder.quarantined);
+  assert(session->opaqueSourcePending==99); // No historical Restore over N+1.
+  assert(!job->submission->Options().beginReceipt->Submission());
+  Reject([&]{session->sourceCredits.Validate(younger,1);});
  }
  std::cout<<"100 extracted production scene records: real transaction/mailbox/Begin, pre-Begin restore, post-Begin quarantine, acceptance ordering, stale owner/context/anchor and occupied restore rejection PASS (engine adapters modeled)\n";
 }

@@ -9,6 +9,10 @@ int main(){
  NativeBeginReadyPolicy valid{true,true,true,true,true,true,true,true,true};assert(valid.Eligible());
  for(auto flag:{&NativeBeginReadyPolicy::requested,&NativeBeginReadyPolicy::worker,&NativeBeginReadyPolicy::owned,&NativeBeginReadyPolicy::visible,&NativeBeginReadyPolicy::admitted,&NativeBeginReadyPolicy::sourceCredit,&NativeBeginReadyPolicy::deferred,&NativeBeginReadyPolicy::screen,&NativeBeginReadyPolicy::cpuSettlement}){auto bad=valid;bad.*flag=false;assert(!bad.Eligible());}
  for(auto flag:{&NativeBeginReadyPolicy::readback,&NativeBeginReadyPolicy::continuation,&NativeBeginReadyPolicy::dynamicWater,&NativeBeginReadyPolicy::legacyWater,&NativeBeginReadyPolicy::arbitraryCallback,&NativeBeginReadyPolicy::previousRetirement}){auto bad=valid;bad.*flag=true;assert(!bad.Eligible());}
+ auto preparation=valid;preparation.previousRetirement=true;
+ assert(!preparation.Eligible()&&preparation.EligibleForPreparation());
+ preparation.readback=true;assert(!preparation.EligibleForPreparation());
+ preparation.readback=false;preparation.dynamicWater=true;assert(!preparation.EligibleForPreparation());
  for(unsigned n=0;n<100;++n){
   NativeSourceFrameCredits credits;NativeSerialRenderWorker worker;NativeRendererAccessGate gate;
   auto frame=credits.Acquire(0);credits.Hold(frame);unsigned targets=0,settled=0;

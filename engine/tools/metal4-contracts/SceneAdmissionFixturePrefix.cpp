@@ -42,7 +42,7 @@ struct NativeMainSourceSettlement{
  void RestoreValidated(int& a,int& b,int& d,std::shared_ptr<const NativeDynamicWaterFrame>& w,int& e,int& f)noexcept{a=b=d=e=f=1;w=std::move(water);detached=false;}
 };
 struct Post{uint64_t serial=9;};struct Screen{std::shared_ptr<Post> postprocess=std::make_shared<Post>();};
-struct Options{Screen* screenUI;NativeSourceFrameCredits::Lease sourceCredit;std::shared_ptr<NativeFrameBeginReceipt> beginReceipt=std::make_shared<NativeFrameBeginReceipt>(0,9);};
+struct Options{Screen* screenUI;bool allowPrepareReady=false;NativeSourceFrameCredits::Lease sourceCredit;std::shared_ptr<NativeFrameBeginReceipt> beginReceipt=std::make_shared<NativeFrameBeginReceipt>(0,9);};
 struct Frame{uint64_t sourceDrawFrame=0;std::shared_ptr<const NativeDynamicWaterFrame> dynamicWater=std::make_shared<NativeDynamicWaterFrame>();};
 struct Metal4WorldSubmission{
  ::Frame frame;Screen screen;::Options options{&screen};

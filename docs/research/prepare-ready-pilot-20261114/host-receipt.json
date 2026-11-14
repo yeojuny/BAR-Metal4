@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "scope": "Source-contract tests for default-off preparation release, not native overlap evidence.",
+  "macCompile": false,
+  "gameRun": false,
+  "performanceMeasured": false,
+  "sourceHashes": {
+    "rts/Rendering/Backend/NativeSourceFrameCredits.h": "4ec0ab679f728a0b75ea385f0ad15ff9cd5a9ce2438809877511d357eef76af2",
+    "rts/Rendering/Backend/NativeRenderJobSettlement.h": "78cdd4d34734c485b54881d4d1ed9955f555028cfb074c4662724ffd06424472",
+    "rts/Rendering/Backend/NativeBeginReadyPolicy.h": "05b3dcaaedffe1fc6a854b1d86f7237447d6e9e5f5d2d61777788a53727e5098",
+    "rts/Rendering/Metal4/Metal4WorldRenderer.h": "c0f4f7d29a4fbc954e08b4830ee0f9000537458d35a20fac80d090b7daddd8f8",
+    "rts/Rendering/Metal4/Metal4WorldRenderer.mm": "e8782d0b51e64523db8ee2e8eebba76215f3140c55f9ae921ef3d01a8a449558",
+    "rts/Rendering/Metal4/Metal4SceneBridge.cpp": "a7145e9fc678e9f6c2bf96aa12356061b8e6123f555ae76e8b5c954394899d81"
+  }
+}

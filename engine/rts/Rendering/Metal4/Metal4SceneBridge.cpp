@@ -243,9 +243,14 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
   (unsigned long long)(job?job->workerBeginNs:0),(unsigned long long)(job?job->workerEndNs:0),int(job&&job->threadCPUValid),(unsigned long long)(job?job->threadCPUNs:0));
 }
 
+bool PrepareReadyPilotRequested() {
+ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_PREPARE_READY_PILOT");return value&&std::string_view(value)=="1";}();
+ return enabled;
+}
 struct ScenePendingAdmission;
 struct Session {
- NativeSourceFrameCredits sourceCredits;
+ // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
+ NativeSourceFrameCredits sourceCredits{PrepareReadyPilotRequested()?3u:2u};
  std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
  std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
  uint64_t cpuReadJobs220=0;
@@ -838,7 +843,7 @@ struct ScenePendingAdmission {
  void Quarantine()noexcept{
   // Invalid owner cannot be repaired by touching the currently active scene.
   try{ValidateOwner();}catch(...){std::terminate();}
-  // Older Begun failure invalidates every dependent younger capture credit.
+  // A failed older early-return frame invalidates dependent younger capture credits.
   // Preserve all source owners; never restore historical state over N+1.
   owner->sourceCredits.QuarantineHeld(submission->Frame().sourceDrawFrame);
   Transaction().Quarantine();
@@ -847,11 +852,11 @@ struct ScenePendingAdmission {
   if(failureHandled)return;
   ValidateOwner();const auto& begin=submission->Options().beginReceipt;
   begin->MarkFailed();owner->lastFailedBeginReceipt=begin;
-  if(transferred){if(begin->Submission())Quarantine();else Restore();}
+  if(transferred){if(queuedReturn||begin->Submission())Quarantine();else Restore();}
   failureHandled=true;
  }
  void MarkQueued(){
-  ValidateOwner();if(!transferred||!submission->Options().beginReceipt->Submission())throw std::logic_error("Queued source lacks actual Begin");
+  ValidateOwner();if(!transferred||(!submission->Options().allowPrepareReady&&!submission->Options().beginReceipt->Submission()))throw std::logic_error("Queued source lacks admitted early-return boundary");
   queuedReturn=true;
  }
  void CompleteCPU(const Metal4WorldPresentationResult* result,std::exception_ptr failure){
@@ -860,7 +865,7 @@ struct ScenePendingAdmission {
   if(queuedReturn&&(result->queued||!result->presented||result->sourceFrameCompleted||result->screenTargetsCompleted)){
    // A joined fallback may restore current state; a detached result must never
    // restore an older packet over the next capture. Fail closed, keep owners.
-   Fail();throw std::logic_error("Begin-ready pilot returned a nondeferred result; source quarantined");
+   Fail();throw std::logic_error("Early-return pilot returned a nondeferred result; source quarantined");
   }
   if(result->presented&&!result->sourceFrameCompleted){
    try{
@@ -1636,8 +1641,8 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 	if (session->preparedFrame)
 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
  // Only an exactly unchanged surface permits this value-snapshot capture to
- // overlap N's encoding tail. Always drain before any later alpha/water/Lua work.
- const bool deferredParticles=BeginReadyPilotRequested();
+ // overlap N's admitted prepare/encode work. Drain before later alpha/water/Lua work.
+ const bool deferredParticles=BeginReadyPilotRequested()||PrepareReadyPilotRequested();
  const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
  std::unique_ptr<CPUReadReceipt220> cpuReceipt220;
  NativeCUSCPUReadWorker220::Join cpuJoin220; // Join before main-owned receipt destruction on every exit.
@@ -2017,7 +2022,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	session->preparedFrame.reset();
  // Refresh writes CAMetalLayer properties, not just an immutable observation.
  // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
- if(BeginReadyPilotRequested())RequireRetiredGPUWork();
+ if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();
 	session->surface.Refresh();
  const auto pbrDeclarations=session->renderer?session->renderer->CapturePBRSource():NativePBRDeclarationReceipt{};
 	const auto submitTargets = [&]() -> DrawResult {
@@ -2128,7 +2133,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  // Capture stays main-blocked; the three no-throw moves are one admission step.
  bool admitted=bool(completionTicket);
  if(admitted)options.heldSourceDraw=capturedFrame.sourceDrawFrame;
- options.allowBeginReady=BeginReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+ // The prepare-ready experiment supersedes the narrower Begin-ready mode.
+ options.allowPrepareReady=PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+ options.allowBeginReady=BeginReadyPilotRequested()&&!PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
  // Begin alone does NOT retire N-1. This pilot permits only N plus capture N+1.
  if(options.allowBeginReady)RequireRetiredGPUWork();
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
@@ -2177,8 +2184,8 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  if(result.queued){
   try{
   if(!pendingAdmission||!pendingAdmission->transferred||result.presented||result.sourceFrameCompleted||result.screenTargetsCompleted||result.completedPostprocessSerial||
-   result.sourceDrawFrame!=frame.sourceDrawFrame||!options.beginReceipt->Submission())
-   throw std::logic_error("Queued renderer return lacks its exact begun source owner");
+   result.sourceDrawFrame!=frame.sourceDrawFrame||(!options.allowPrepareReady&&!options.beginReceipt->Submission()))
+   throw std::logic_error("Queued renderer return lacks its exact admitted source owner");
   pendingAdmission->MarkQueued();
   // No current pending reset, GPU retirement or presentation report here.
   return {false,false,false,0,frame.sourceDrawFrame,true,screenUI->postprocess->serial};

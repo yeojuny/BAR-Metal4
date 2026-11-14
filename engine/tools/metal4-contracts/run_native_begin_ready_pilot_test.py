@@ -4,7 +4,7 @@ from pathlib import Path
 root=Path(__file__).resolve().parents[2];out=Path('/tmp/bar-begin-ready-pilot');out.mkdir(exist_ok=True)
 s=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 assert 'frame.opaqueModelFrame&&!options.readback&&options.presentWorld&&!options.allowBeginReady' in s
-assert 'if(beginReady&&impl->cpuJob->ReleaseAfterBegin())' in s
+assert '(beginReady&&impl->cpuJob->ReleaseAfterBegin())' in s
 assert 'impl->detachedCPUJob=true;' in s and 'queued.queued=true;' in s
 assert 'if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob=false;}' in s
 scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()

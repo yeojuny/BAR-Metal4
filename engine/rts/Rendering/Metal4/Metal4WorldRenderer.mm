@@ -2394,7 +2394,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto& uiContext=OriginalNativeTextureContext();
  if(uiContext.Initialized()&&uiContext.UIAttached())uiResolver=uiContext.UI().CaptureResolver();
  std::optional<MRTFrontier209> mrtFrontier;
- if(uiContext.Initialized()&&frame.opaqueModelFrame&&!options.readback&&options.presentWorld&&!options.allowBeginReady)
+ if(uiContext.Initialized()&&frame.opaqueModelFrame&&!options.readback&&options.presentWorld&&!options.allowBeginReady&&!options.allowPrepareReady)
   mrtFrontier=MRTFrontier209::Capture(*frame.opaqueModelFrame,uiContext.Registry());
  Require(!options.heldSourceDraw || (*options.heldSourceDraw==frame.sourceDrawFrame && options.beginReceipt && options.screenUI && options.screenUI->postprocess),"Admitted target owner differs from its source draw");
  Require(!options.beginReceipt || (options.beginReceipt->Matches(frame.sourceDrawFrame,options.screenUI&&options.screenUI->postprocess?options.screenUI->postprocess->serial:0) && !options.beginReceipt->Submission() && options.beginReceipt->FailureStage()==NativeFrameBeginReceipt::Failure::None),"Frame Begin receipt belongs to another invocation");
@@ -2407,7 +2407,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   globalRendering->viewSizeX,globalRendering->viewSizeY):NativePresentationPolicy{};
 
  static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return p&&std::string_view(p)=="1";}();
- const bool beginReady=NativeBeginReadyPolicy{
+ const auto releasePolicy=NativeBeginReadyPolicy{
   .requested=options.allowBeginReady,.worker=enabled,.owned=bool(owned),
   .visible=options.presentWorld&&frame.simulationFrame>0&&impl->surface->Snapshot().CanPresent(),
   .admitted=options.heldSourceDraw.has_value()&&bool(options.beginReceipt),.sourceCredit=bool(options.sourceCredit),
@@ -2415,7 +2415,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   .cpuSettlement=bool(cpuSettled),.readback=bool(options.readback),.continuation=bool(impl->screenContinuation),
   .dynamicWater=bool(frame.dynamicWater),.legacyWater=bool(frame.legacyWater),
   .arbitraryCallback=bool(options.submissionBegan)||bool(options.submissionCompleted)||bool(options.sourceCompleted),
-  .previousRetirement=bool(previousRetired)}.Eligible();
+  .previousRetirement=bool(previousRetired)};
+ const bool beginReady=releasePolicy.Eligible();
+ auto preparePolicy=releasePolicy;preparePolicy.requested=options.allowPrepareReady;
+ const bool prepareReady=preparePolicy.EligibleForPreparation();
  if(beginReady)Require(SharedRuntime().CanSafelyDetach(),"Begin-ready pilot requires prior GPU retirement");
  // Readback/continuation and arbitrary engine source callbacks stay on main.
  if(!owned||!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
@@ -2459,7 +2462,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
    NativeCPUPhaseContextScope traceContext(cpuTraceContext);
    return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[dispatchReceipt](std::uint64_t submission) noexcept {dispatchReceipt->MarkBegun(submission);dispatchReceipt->PublishBeginReady();},uiResolver,mrtFrontier,sourceContext,shadowFallback);
   }});
-  if(beginReady&&impl->cpuJob->ReleaseAfterBegin()){
+  if((prepareReady&&impl->cpuJob->ReleaseForPreparation())||(beginReady&&impl->cpuJob->ReleaseAfterBegin())){
    impl->detachedCPUJob=true;
    Metal4WorldPresentationResult queued;queued.queued=true;queued.sourceDrawFrame=frame.sourceDrawFrame;
    return queued;

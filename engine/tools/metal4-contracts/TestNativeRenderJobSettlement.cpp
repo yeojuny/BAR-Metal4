@@ -67,5 +67,23 @@ int main(){
   catch(const std::runtime_error& e){assert(std::string(e.what())==(mode==0?"direct":"notice"));}
   assert(notified==1);
  }
+ // Early preparation release does not wait for Begin or deliver notices.
+ // Main advances a bounded capture prefix while the worker owns preparation.
+ for(bool failBeforeBegin:{false,true}){
+  NativeSerialRenderWorker worker;NativeRendererAccessGate gate;
+  std::atomic<bool> prefixAdvanced=false;unsigned target=0,retired=0,settled=0;
+  auto receipt=std::make_shared<NativeRenderDispatchReceipt>(nullptr,[&]{++retired;});
+  NativeRenderJobSettlement<int> job(receipt,[&]{++target;},[&](const int* result,std::exception_ptr error){++settled;assert(bool(error)==failBeforeBegin);assert(bool(result)!=failBeforeBegin);});
+  {NativeRendererAccessGate::Scope access(&gate);receipt->Reserve(gate);}
+  job.Submit(worker,[&]{NativeRendererAccessGate::Scope access(receipt->Handoff());
+   while(!prefixAdvanced.load(std::memory_order_acquire))std::this_thread::yield();
+   receipt->MarkRetirementReady();if(failBeforeBegin)throw std::runtime_error("prepare");return 11;
+  });
+  assert(job.ReleaseForPreparation());assert(target==0&&retired==0&&settled==0);
+  Reject([&]{NativeRendererAccessGate::Scope access(&gate);});
+  prefixAdvanced.store(true,std::memory_order_release);
+  if(failBeforeBegin)Reject([&]{job.Finish();});else {job.Finish();assert(job.Consume()==11);}
+  assert(target==1&&retired==1&&settled==1);
+ }
  std::cout<<"1000 CPU Join/handoff/notice/control cycles; recursive drain, result preservation, persistent first failure, single callback attempt, enqueue rejection PASS\n";
 }

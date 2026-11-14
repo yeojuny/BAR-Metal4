@@ -43,6 +43,13 @@ public:
   try{task=worker.Enqueue(std::forward<F>(work));state=State::Running;}
   catch(...){failure=std::current_exception();state=State::Settling;receipt->ReleaseHandoff();Notify();state=State::Failed;std::rethrow_exception(failure);}
  }
+ // Caller has transferred exact source ownership and accepts quarantine, not
+ // historical restore, after returning to a younger capture. No Begin/target
+ // notice is fabricated here; both notices settle only when this job joins.
+ bool ReleaseForPreparation(){
+  Source();if(state!=State::Running)throw std::logic_error("Preparation release requires a running CPU job");
+  return true;
+ }
  bool ReleaseAfterBegin(){
   Source();if(state!=State::Running)throw std::logic_error("Begin release requires a running CPU job");
   const auto progress=receipt->WaitForBeginOrFinished();

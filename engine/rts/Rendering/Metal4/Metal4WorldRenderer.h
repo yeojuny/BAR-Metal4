@@ -79,6 +79,7 @@ struct Metal4WorldRenderOptions {
 	bool shaderValidation = DefaultShaderValidation;
  NativeSourceFrameCredits::Lease sourceCredit;
  bool allowBeginReady=false;
+ bool allowPrepareReady=false; // Default-off normal-frame capture-prefix experiment.
  std::shared_ptr<const metal4::ShadowTerrainPreparation> preparedShadowTerrain; // Exact request owner, never ambient latest state.
  std::shared_ptr<const NativeCUSCPUReadScope::Packet> cpuReadPacket; // Joined-call immutable rows; main retains final owner.
  std::optional<std::uint64_t> heldSourceDraw; // Exact admitted UI owner, never latest-pending inference.

@@ -1,13 +1,15 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include <array>
+#include <span>
 #include <memory>
 #include <thread>
 #include <cstdint>
 #include <stdexcept>
 #include <limits>
 namespace rendering {
-// Two SOURCE frames, not two CPU tasks. Capture leases expire naturally;
+// Two SOURCE frames by default; a caller may explicitly opt in to three.
+// This is not a CPU task or GPU submission limit. Capture leases expire naturally;
 // transferred leases stay held through actual main-side GPU receipt retirement.
 class NativeSourceFrameCredits {
  const std::thread::id source=std::this_thread::get_id();
@@ -25,7 +27,10 @@ public:
  using Lease=std::shared_ptr<const Token>;
 private:
  struct Slot{std::weak_ptr<const Token> lease;Lease held;};
- std::array<Slot,2> slots;
+ const unsigned capacity;
+ std::array<Slot,3> slots;
+ auto ActiveSlots(){return std::span<Slot>(slots).first(capacity);}
+ auto ActiveSlots()const{return std::span<const Slot>(slots).first(capacity);}
  // Capture order, not simulation/draw numbers (which may repeat or decrease).
  // A begun failure quarantines the dependency suffix. Never restore old
  // journals over a younger capture or recycle its credit as successful work.
@@ -40,27 +45,29 @@ private:
  void Source()const{if(source!=std::this_thread::get_id())throw std::logic_error("Source credit requires capture thread");}
  Slot& Find(const Lease& token){
   Source();if(!token||token->owner!=identity)throw std::logic_error("Foreign source credit");
-  for(auto& slot:slots)if(slot.lease.lock()==token)return slot;
+  for(auto& slot:ActiveSlots())if(slot.lease.lock()==token)return slot;
   throw std::logic_error("Source credit is not reserved");
  }
 public:
- NativeSourceFrameCredits()=default;
+ explicit NativeSourceFrameCredits(unsigned requestedCapacity=2):capacity(requestedCapacity){
+  if(capacity!=2&&capacity!=3)throw std::invalid_argument("Source frame capacity must be two or three");
+ }
  NativeSourceFrameCredits(const NativeSourceFrameCredits&)=delete;
  NativeSourceFrameCredits& operator=(const NativeSourceFrameCredits&)=delete;
  NativeSourceFrameCredits(NativeSourceFrameCredits&&)=delete;
  NativeSourceFrameCredits& operator=(NativeSourceFrameCredits&&)=delete;
- bool HasCapacity()const{Source();RequireOpenLineage();for(const auto& slot:slots)if(slot.lease.expired())return true;return false;}
+ bool HasCapacity()const{Source();RequireOpenLineage();for(const auto& slot:ActiveSlots())if(slot.lease.expired())return true;return false;}
  Lease Acquire(uint64_t draw){
   Source();RequireOpenLineage();
   if(nextOrdinal==std::numeric_limits<uint64_t>::max())throw std::logic_error("Source capture ordinal exhausted");
-  for(const auto& slot:slots)if(auto live=slot.lease.lock();live&&live->draw==draw)throw std::logic_error("Repeated source capture credit");
-  for(auto& slot:slots)if(slot.lease.expired()){auto token=Lease(new Token(identity,draw,nextOrdinal++));slot.lease=token;return token;}
-  throw std::logic_error("Two source frames already retained");
+  for(const auto& slot:ActiveSlots())if(auto live=slot.lease.lock();live&&live->draw==draw)throw std::logic_error("Repeated source capture credit");
+  for(auto& slot:ActiveSlots())if(slot.lease.expired()){auto token=Lease(new Token(identity,draw,nextOrdinal++));slot.lease=token;return token;}
+  throw std::logic_error("Source frame retention capacity exhausted");
  }
  void Validate(const Lease& token,uint64_t draw){(void)Find(token);ValidateLineage(*token);if(token->draw!=draw)throw std::logic_error("Source credit draw mismatch");}
  void Hold(const Lease& token){auto& slot=Find(token);ValidateLineage(*token);if(slot.held)throw std::logic_error("Source credit transferred twice");slot.held=token;}
  void ValidateHeld(uint64_t draw)const{
-  Source();for(const auto& slot:slots)if(slot.held&&slot.held->draw==draw){ValidateLineage(*slot.held);return;}
+  Source();for(const auto& slot:ActiveSlots())if(slot.held&&slot.held->draw==draw){ValidateLineage(*slot.held);return;}
   throw std::logic_error("GPU receipt has no held source credit");
  }
  // Called only for exact transferred/Begun failure on the capture thread.
@@ -68,7 +75,7 @@ public:
  // future admission. This is quarantine, not general dependent rollback.
  void QuarantineHeld(uint64_t draw)noexcept {
   if(source!=std::this_thread::get_id())std::terminate();
-  for(const auto& slot:slots)if(slot.held&&slot.held->draw==draw){
+  for(const auto& slot:ActiveSlots())if(slot.held&&slot.held->draw==draw){
    if(!failedOrdinal || slot.held->ordinal<failedOrdinal)failedOrdinal=slot.held->ordinal;
    return;
   }
@@ -76,7 +83,7 @@ public:
  }
  void ReleaseHeld(uint64_t draw)noexcept{
   if(source!=std::this_thread::get_id())std::terminate();
-  for(auto& slot:slots)if(slot.held&&slot.held->draw==draw){if(failedOrdinal&&slot.held->ordinal>=failedOrdinal)std::terminate();slot.held.reset();return;}
+  for(auto& slot:ActiveSlots())if(slot.held&&slot.held->draw==draw){if(failedOrdinal&&slot.held->ordinal>=failedOrdinal)std::terminate();slot.held.reset();return;}
   std::terminate();
  }
 };

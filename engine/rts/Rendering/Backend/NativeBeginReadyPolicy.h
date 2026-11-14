@@ -11,5 +11,8 @@ struct NativeBeginReadyPolicy {
   return requested&&worker&&owned&&visible&&admitted&&sourceCredit&&deferred&&screen&&cpuSettlement&&
    !readback&&!continuation&&!dynamicWater&&!legacyWater&&!arbitraryCallback&&!previousRetirement;
  }
+ // Prepare release retains the older GPU submission. Its retirement callback
+ // is only an atomic worker notice; the main-thread action remains after Join.
+ bool EligibleForPreparation()const noexcept{auto policy=*this;policy.previousRetirement=false;return policy.Eligible();}
 };
 }
