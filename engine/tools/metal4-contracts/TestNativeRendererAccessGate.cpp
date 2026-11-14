@@ -4,6 +4,8 @@
 #include <atomic>
 #include <future>
 #include <iostream>
+#include <optional>
+#include <chrono>
 using namespace rendering;
 int main(){
  NativeRendererAccessGate gate;
@@ -52,6 +54,38 @@ int main(){
   try{NativeRendererAccessGate::Handoff token(gate);throw 1;}catch(int){}
   try{NativeRendererAccessGate::Handoff token(gate);worker.Invoke([&]{NativeRendererAccessGate::Scope admit(token);throw 2;});}catch(int){}
   NativeRendererAccessGate::Scope restored(&gate);assert(restored.Acquired());
+ }
+ // Controlled contention at reservation handoff: worker waits for the source
+ // mutex; duplicate token admission remains fail-fast while worker owns it.
+ for(unsigned i=0;i<100;++i){
+  std::optional<NativeRendererAccessGate::Scope> source;source.emplace(&gate);
+  NativeRendererAccessGate::Handoff token(gate);
+  std::promise<void> started,entered,release;auto finish=release.get_future();
+  auto owned=std::async(std::launch::async,[&]{started.set_value();
+   NativeRendererAccessGate::Scope admit(token);entered.set_value();finish.wait();});
+  started.get_future().wait();auto ready=entered.get_future();
+  assert(ready.wait_for(std::chrono::milliseconds(2))==std::future_status::timeout);
+  source.reset(); // Never Join while holding the source gate.
+  ready.get();
+  auto duplicate=std::async(std::launch::async,[&]{
+   try{NativeRendererAccessGate::Scope again(token);return false;}
+   catch(const std::logic_error&){return true;}});
+  assert(duplicate.wait_for(std::chrono::seconds(2))==std::future_status::ready);
+  assert(duplicate.get());
+  NativeRendererAccessGate::Scope denied(&gate,NativeRendererAccessGate::Try{});assert(!denied.Acquired());
+  release.set_value();owned.get();
+  // Original sequential token reuse semantics are preserved.
+  worker.Invoke([&]{NativeRendererAccessGate::Scope next(token);assert(next.Acquired());});
+ }
+ // A runtime-owning rejected observer must never wait on a worker gate.
+ {
+  NativeRendererAccessGate::Handoff token(gate);
+  std::promise<void> runtimeHeld,workerHeld;auto start=runtimeHeld.get_future();auto acquired=workerHeld.get_future();
+  auto observer=std::async(std::launch::async,[&]{std::lock_guard lock(runtime);runtimeHeld.set_value();acquired.wait();
+   NativeRendererAccessGate::Scope probe(&gate,NativeRendererAccessGate::Try{});assert(!probe.Acquired());});
+  start.wait();
+  worker.Invoke([&]{NativeRendererAccessGate::Scope admit(token);workerHeld.set_value();std::lock_guard lock(runtime);});
+  observer.get();
  }
  // Rejected probes racing cancellation must not terminate the process.
  std::atomic<bool> stop=false;

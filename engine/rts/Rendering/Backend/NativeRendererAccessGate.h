@@ -1,10 +1,12 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include <mutex>
+#include <atomic>
 #include <stdexcept>
 #include <thread>
 namespace rendering {
-// Fail-fast CPU ownership; never wait while holding RuntimeLease's lock.
+// General access is fail-fast. Only a reserved worker may wait for a rejected
+// observer, before acquiring RuntimeLease.
 // Lifetime/move/destruction remain externally serialized.
 class NativeRendererAccessGate {
  std::recursive_mutex mutex;
@@ -18,6 +20,7 @@ public:
  class Handoff {
   friend class Scope;
   NativeRendererAccessGate* gate;
+  std::atomic<bool> admissionClaim{false};
  public:
   explicit Handoff(NativeRendererAccessGate& owner):gate(&owner) {
    std::unique_lock lock(gate->mutex,std::try_to_lock);
@@ -39,6 +42,7 @@ public:
   NativeRendererAccessGate* gate;
   bool acquired=false;
   bool handoff=false;
+  Handoff* admissionToken=nullptr;
  public:
   Scope(NativeRendererAccessGate* gate,Try) noexcept:gate(gate) {
    if(!gate){acquired=true;return;}
@@ -53,14 +57,24 @@ public:
    if(!acquired)throw std::logic_error("Concurrent native renderer cache/control access");
   }
   explicit Scope(Handoff& token):gate(token.gate) {
-   acquired=gate->mutex.try_lock();
-   if(!acquired)throw std::logic_error("Renderer handoff access conflict");
-   if(gate->reservation!=&token||gate->admitted!=std::thread::id{}){
-    gate->mutex.unlock();acquired=false;throw std::logic_error("Renderer handoff already admitted");
+   // Claim before waiting: concurrent/reentrant admission must still fail,
+   // not turn into a second worker after the first releases the mutex.
+   if(token.admissionClaim.exchange(true,std::memory_order_acq_rel))
+    throw std::logic_error("Renderer handoff already admitted");
+   try {
+    // Reservation prevents foreign mutable scopes. A rejected Try observer
+    // can nevertheless own the mutex briefly. It must not fail this worker.
+    // All dispatch callers enter here before RuntimeLease/request locks.
+    gate->mutex.lock();acquired=true;
+    if(gate->reservation!=&token||gate->admitted!=std::thread::id{})
+     throw std::logic_error("Renderer handoff already admitted");
+    gate->admitted=std::this_thread::get_id();handoff=true;admissionToken=&token;
+   } catch(...) {
+    if(acquired){gate->mutex.unlock();acquired=false;}
+    token.admissionClaim.store(false,std::memory_order_release);throw;
    }
-   gate->admitted=std::this_thread::get_id();handoff=true;
   }
-  ~Scope() noexcept {if(gate&&acquired){if(handoff)gate->admitted={};gate->mutex.unlock();}}
+  ~Scope() noexcept {if(gate&&acquired){if(handoff)gate->admitted={};gate->mutex.unlock();if(admissionToken)admissionToken->admissionClaim.store(false,std::memory_order_release);}}
   bool Acquired() const noexcept {return acquired;}
   Scope(const Scope&)=delete;
   Scope& operator=(const Scope&)=delete;
