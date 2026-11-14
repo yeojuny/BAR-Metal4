@@ -1,0 +1,10 @@
+{
+  "exit": 0,
+  "summary": "PASS 211 image proof checks; 100 validations without repeated table scan; GPU/history integration not executed\n",
+  "sourceSHA256": "99ffaa9eda4ac6b97834bd47419906dd8e211fd0679e257660eefe62db75e7ab",
+  "headerSHA256": "79353a4a90ade75d394470506222f8d154746df2e9f7e1fcd84ae691b7bb580f",
+  "scope": "Host-test production image table capture/proof functions with history/object stubs.",
+  "asan": true,
+  "ubsan": true,
+  "gameRun": false
+}

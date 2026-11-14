@@ -98,22 +98,10 @@ void ValidateNativeTerrainSampling(const NativeTextureSampling& sampling)
 	Check(sampling.anisotropy>=1&&sampling.baseLevel>=0&&sampling.maxLevel>=0,
 		"Original terrain texture parameter is outside the original source domain");
 }
-NativeTerrainImageSnapshot CaptureNativeTerrainImages(const NativeTextureRegistry& registry,
-	const NativeCUSTextureHistory& history,uint64_t frame)
+namespace {
+void ValidateTerrainImageTable(const NativeTerrainImageSnapshot::Table& units,uint64_t context)
 {
-	Check(registry.ContextGeneration()&&registry.MatchesHistory(history),"Terrain capture lacks the actual shared texture context");
-	NativeTerrainImageSnapshot result;result.contextGeneration=registry.ContextGeneration();
-	result.sourceDrawFrame=frame;result.eventSequence=history.Sequence();result.activeUnit=history.ActiveUnit();
-	for(unsigned unit=0;unit<result.units.size();++unit)for(size_t target=0;target<result.units[unit].size();++target)
-		result.units[unit][target]=history.Binding(unit,NativeCUSTextureTarget(target));
-	ValidateNativeTerrainImages(result,registry.ContextGeneration(),frame);return result;
-}
-void ValidateNativeTerrainImages(const NativeTerrainImageSnapshot& snapshot,uint64_t context,uint64_t frame)
-{
-	Check(context&&snapshot.contextGeneration==context&&snapshot.sourceDrawFrame==frame&&snapshot.eventSequence&&
-		snapshot.activeUnit&&*snapshot.activeUnit<NativeCUSTextureHistory::Units,
-		"Original terrain image history lacks its actual context/frame/active unit");
-	for(const auto& unit:snapshot.units)for(size_t target=0;target<unit.size();++target){
+	for(const auto& unit:units)for(size_t target=0;target<unit.size();++target){
 		const auto& binding=unit[target];
 		switch(binding.knowledge){
 			case NativeCUSBindingKnowledge::Unobserved:
@@ -128,11 +116,32 @@ void ValidateNativeTerrainImages(const NativeTerrainImageSnapshot& snapshot,uint
 		}
 	}
 }
+}
+NativeTerrainImageSnapshot CaptureNativeTerrainImages(const NativeTextureRegistry& registry,
+ const NativeCUSTextureHistory& history,uint64_t frame)
+{
+ Check(registry.ContextGeneration()&&registry.MatchesHistory(history),"Terrain capture lacks the actual shared texture context");
+ NativeTerrainImageSnapshot result;result.contextGeneration=registry.ContextGeneration();
+ result.sourceDrawFrame=frame;result.eventSequence=history.Sequence();result.activeUnit=history.ActiveUnit();
+ auto table=std::make_shared<NativeTerrainImageSnapshot::Table>();
+ for(unsigned unit=0;unit<table->size();++unit)for(size_t target=0;target<(*table)[unit].size();++target)
+  (*table)[unit][target]=history.Binding(unit,NativeCUSTextureTarget(target));
+ ValidateTerrainImageTable(*table,result.contextGeneration);
+ result.units=std::move(table);result.validatedContext=result.contextGeneration;
+ ValidateNativeTerrainImages(result,registry.ContextGeneration(),frame);return result;
+}
+void ValidateNativeTerrainImages(const NativeTerrainImageSnapshot& snapshot,uint64_t context,uint64_t frame)
+{
+ Check(context&&snapshot.contextGeneration==context&&snapshot.sourceDrawFrame==frame&&snapshot.eventSequence&&
+  snapshot.activeUnit&&*snapshot.activeUnit<NativeCUSTextureHistory::Units,
+  "Original terrain image history lacks its actual context/frame/active unit");
+ Check(snapshot.units&&snapshot.validatedContext==context,"Original terrain image table lacks its same-context capture proof");
+}
 const NativeCUSTextureBinding& RequireNativeTerrainImage(const NativeTerrainImageSnapshot& snapshot,unsigned unit,NativeCUSTextureTarget target)
 {
-	Check(snapshot.contextGeneration&&snapshot.eventSequence&&snapshot.activeUnit&&unit<snapshot.units.size(),
+	Check(snapshot.contextGeneration&&snapshot.eventSequence&&snapshot.activeUnit&&unit<snapshot.Units().size(),
 		"Original terrain sampler lacks its actual captured context/history/unit");
-	const auto& binding=snapshot.units[unit][Target(target)];
+	const auto& binding=snapshot.Units()[unit][Target(target)];
 	Check(binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object,
 		"Original terrain sampled default/unobserved storage requires its actual supported image owner");
 	Object(*binding.object,snapshot.contextGeneration,target);

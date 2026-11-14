@@ -95,10 +95,17 @@ inline void ValidateNativeTerrainDefinition(const NativeTerrainProgramDefinition
 // Full source state: terrain uses units0..19, including Cube on9. Do not use
 // the smaller model/CUS submission sampler array to represent this history.
 struct NativeTerrainImageSnapshot {
-	uint64_t contextGeneration=0, sourceDrawFrame=0, eventSequence=0;
-	std::optional<unsigned> activeUnit;
-	std::array<std::array<NativeCUSTextureBinding,std::size_t(NativeCUSTextureTarget::Count)>,
-		NativeCUSTextureHistory::Units> units;
+ uint64_t contextGeneration=0, sourceDrawFrame=0, eventSequence=0;
+ std::optional<unsigned> activeUnit;
+ using Table=std::array<std::array<NativeCUSTextureBinding,std::size_t(NativeCUSTextureTarget::Count)>,NativeCUSTextureHistory::Units>;
+ // Only Capture can seal a table after validating every resolved binding.
+ // Public metadata remains checked against this immutable proof on every use.
+ const Table& Units()const {if(!units)throw std::runtime_error("Terrain image table is not captured");return *units;}
+private:
+ std::shared_ptr<const Table> units;
+ uint64_t validatedContext=0;
+ friend NativeTerrainImageSnapshot CaptureNativeTerrainImages(const NativeTextureRegistry&,const NativeCUSTextureHistory&,uint64_t);
+ friend void ValidateNativeTerrainImages(const NativeTerrainImageSnapshot&,uint64_t,uint64_t);
 };
 NativeTerrainImageSnapshot CaptureNativeTerrainImages(const NativeTextureRegistry&,
 	const NativeCUSTextureHistory&,uint64_t sourceDrawFrame);
