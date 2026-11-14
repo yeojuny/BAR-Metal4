@@ -2419,6 +2419,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  const bool beginReady=releasePolicy.Eligible();
  auto preparePolicy=releasePolicy;preparePolicy.requested=options.allowPrepareReady;
  const bool prepareReady=preparePolicy.EligibleForPreparation();
+ NativeCPUPhaseScope admissionTrace(7,frame.simulationFrame);admissionTrace.Draw(frame.sourceDrawFrame);
+ // count_a bits: Begin requested, Prepare requested, eligible, actual queued.
+ const unsigned admissionFlags=unsigned(options.allowBeginReady)|unsigned(options.allowPrepareReady)<<1|
+  unsigned(beginReady||prepareReady)<<2;
+ const auto rejectionMask=admissionTrace.active?(options.allowPrepareReady?preparePolicy.RejectionMask(true):releasePolicy.RejectionMask()):0u;
+ admissionTrace.Counts(admissionFlags,rejectionMask);
  if(beginReady)Require(SharedRuntime().CanSafelyDetach(),"Begin-ready pilot requires prior GPU retirement");
  // Readback/continuation and arbitrary engine source callbacks stay on main.
  if(!owned||!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
@@ -2463,6 +2469,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
    return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[dispatchReceipt](std::uint64_t submission) noexcept {dispatchReceipt->MarkBegun(submission);dispatchReceipt->PublishBeginReady();},uiResolver,mrtFrontier,sourceContext,shadowFallback);
   }});
   if((prepareReady&&impl->cpuJob->ReleaseForPreparation())||(beginReady&&impl->cpuJob->ReleaseAfterBegin())){
+   admissionTrace.Counts(admissionFlags|8u,rejectionMask);
    impl->detachedCPUJob=true;
    Metal4WorldPresentationResult queued;queued.queued=true;queued.sourceDrawFrame=frame.sourceDrawFrame;
    return queued;

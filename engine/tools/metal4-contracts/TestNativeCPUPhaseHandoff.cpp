@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cstdio>
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
+#include "Rendering/Backend/NativeBeginReadyPolicy.h"
 #include "Rendering/Backend/NativeSubmissionTrace.h"
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
 static std::vector<std::string> logs;
@@ -118,6 +119,29 @@ int main() {
   assert(start.valid&&end.valid&&end.ns>=start.ns);
   const auto elapsed=std::chrono::duration_cast<std::chrono::nanoseconds>(wallEnd-wall).count();
   assert(end.ns-start.ns<std::uint64_t(elapsed)); // Clock excludes this intentional blocked wait.
+ }
+ // New diagnostic kinds use the same bounded formatter/ancestry and stay off
+ // with the existing FRAME_TRACE toggle. No independent logging channel.
+ {
+  const auto before=logs.size();NativeCPUPhaseContextScope context({4321,true});
+  for(unsigned kind=7;kind<=10;++kind){NativeCPUPhaseScope diagnostic(kind,1);
+   assert(diagnostic.active==traceEnabled);diagnostic.Draw(77);diagnostic.Counts(15,0);
+   diagnostic.Mark(0);diagnostic.Mark(1);diagnostic.Mark(2);diagnostic.Mark(3);}
+  assert(logs.size()==before+(traceEnabled?4:0));
+  if(traceEnabled)for(unsigned kind=7;kind<=10;++kind)
+   assert(logs[before+kind-7].find("kind="+std::to_string(kind)+" ")!=std::string::npos);
+ }
+ // Diagnostic rejection mask must match unchanged eligibility for all inputs.
+ {
+  using P=rendering::NativeBeginReadyPolicy;
+  bool P::*fields[]={&P::requested,&P::worker,&P::owned,&P::visible,&P::admitted,
+   &P::sourceCredit,&P::deferred,&P::screen,&P::cpuSettlement,&P::readback,
+   &P::continuation,&P::dynamicWater,&P::legacyWater,&P::arbitraryCallback,&P::previousRetirement};
+  for(unsigned bits=0;bits<(1u<<15);++bits){P policy;
+   for(unsigned i=0;i<15;++i)policy.*fields[i]=bool(bits&(1u<<i));
+   assert((policy.RejectionMask()==0)==policy.Eligible());
+   assert((policy.RejectionMask(true)==0)==policy.EligibleForPreparation());
+  }
  }
  NativeCPUPhaseScope pregame(1,0);assert(!pregame.active);
  std::printf("CPU phase handoff: 100 invocations, %u sampled complete ancestry chains PASS\n",sampled);

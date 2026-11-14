@@ -32,7 +32,8 @@ struct PreparedCUSDeferred::Impl {
  unsigned discardPrior145=0;
  std::unique_ptr<MRT174Observation> observation174;
 	bool encoded=false,completed=false,retainsReadOnlyContents=false;
- bool reusesWritingStorage209=false;
+ bool reusesWritingStorage209=false,writeReusePermission174=false;
+ DeferredStorageObservation174 poolObservation174;
 };
 
 namespace {
@@ -251,6 +252,7 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
 	// Decide only after both actual consumers and their source order exist.
 	// Prepared empty engine/CUS consumers have no image dependencies. A writing
 	// phase preserves COW unless the sealed zero-reader permission also holds.
+ p.writeReusePermission174=bool(writeReuse209);
 	p.retainsReadOnlyContents=CanRetainReadOnlyMRT(p);
 	p.reusesWritingStorage209=!p.retainsReadOnlyContents&&writeReuse209&&
   CanReuseWritingMRT209(p,*writeReuse209)&&writeReuse209->Consume(*p.source,submission);
@@ -258,7 +260,8 @@ std::unique_ptr<PreparedCUSDeferred> PrepareCUSDeferred(RuntimeLease& lease,CUSS
 		BindPriorMRTContents(p);
 		RetainBorrowedMRTStorage(lease,p.depth.storageOwner);
 	}else{
-		p.storage=AcquireDeferredStorage(lease,m.width,m.height,p.source->combinedColor.Changed());
+		p.storage=AcquireDeferredStorage(lease,m.width,m.height,p.source->combinedColor.Changed(),
+   MRT174Enabled()&&MRT174Window(p.source->sourceDrawFrame)?&p.poolObservation174:nullptr);
 		for(unsigned attachment=0;attachment<5;++attachment){
 			auto texture=p.storage->colors[attachment];lease.AddAllocation(texture);
 			p.colors[attachment]={texture,p.storage,p.producer,p.source->colors[attachment].backing->Metadata()};
@@ -387,9 +390,11 @@ void PreparedCUSDeferred::DidComplete()
 #ifdef RECOIL_METAL4_LIVE_SCENE
  if(p.observation174){const auto& o=*p.observation174;const auto& m=p.source->depth.backing->Metadata();
   const unsigned domain=p.source->role==NativeGeometryTextureRole::Map?0u:p.source->role==NativeGeometryTextureRole::Models?(p.source->feature?2u:1u):3u;
-  LOG("[NativeMRT174] source_frame=%llu submission=%llu domain=%u width=%u height=%u readonly=%u clear_before=%u clear_only=%u discard_mask=%u copy_path_eligible=%u copy_encoder=%u calls=%llu logical_source_bytes=%llu copy_width=%llu copy_height=%llu copy_depth=%llu c0_calls=%llu c0_bytes=%llu c1_calls=%llu c1_bytes=%llu c2_calls=%llu c2_bytes=%llu c3_calls=%llu c3_bytes=%llu c4_calls=%llu c4_bytes=%llu combined_calls=%llu combined_bytes=%llu depth_calls=%llu depth_bytes=%llu unknown_format=%llu invalid_extent=%llu overflow=%llu timestamp_samples=0 gpu_time=unknown retired=1",
+  LOG("[NativeMRT174] source_frame=%llu submission=%llu domain=%u width=%u height=%u readonly=%u reuse209=%u reuse209_permission=%u cow_storage=%u pool_requested=%u pool_hit=%u pool_new_bytes=%llu clear_before=%u clear_only=%u discard_mask=%u copy_path_eligible=%u copy_encoder=%u calls=%llu logical_source_bytes=%llu copy_width=%llu copy_height=%llu copy_depth=%llu c0_calls=%llu c0_bytes=%llu c1_calls=%llu c1_bytes=%llu c2_calls=%llu c2_bytes=%llu c3_calls=%llu c3_bytes=%llu c4_calls=%llu c4_bytes=%llu combined_calls=%llu combined_bytes=%llu depth_calls=%llu depth_bytes=%llu unknown_format=%llu invalid_extent=%llu overflow=%llu timestamp_samples=0 gpu_time=unknown retired=1",
    static_cast<unsigned long long>(p.source->sourceDrawFrame),static_cast<unsigned long long>(p.submission),domain,m.width,m.height,
-   unsigned(p.retainsReadOnlyContents),unsigned(p.source->clearBefore),unsigned(p.source->clearOnly),p.discardPrior145,unsigned(!p.retainsReadOnlyContents&&!p.source->clearBefore&&(p.priorColors[0].texture||p.priorCombinedColor.texture||p.priorDepth.texture)),unsigned(o.copyEncoder),
+   unsigned(p.retainsReadOnlyContents),unsigned(p.reusesWritingStorage209),unsigned(p.writeReusePermission174),
+   unsigned(!p.retainsReadOnlyContents&&!p.reusesWritingStorage209),unsigned(p.poolObservation174.requested),unsigned(p.poolObservation174.hit),
+   static_cast<unsigned long long>(p.poolObservation174.allocatedBytes),unsigned(p.source->clearBefore),unsigned(p.source->clearOnly),p.discardPrior145,unsigned(!p.retainsReadOnlyContents&&!p.source->clearBefore&&(p.priorColors[0].texture||p.priorCombinedColor.texture||p.priorDepth.texture)),unsigned(o.copyEncoder),
    static_cast<unsigned long long>(o.Calls()),static_cast<unsigned long long>(o.Bytes()),
    static_cast<unsigned long long>(o.width),static_cast<unsigned long long>(o.height),static_cast<unsigned long long>(o.depth),
    static_cast<unsigned long long>(o.calls[0]),static_cast<unsigned long long>(o.bytes[0]),

@@ -181,11 +181,11 @@ struct CPUPhaseTraceState {
 CPUPhaseTraceState& CPUPhaseTrace() {static CPUPhaseTraceState state;return state;}
 struct CPUPhaseSlot {const void* owner=nullptr;NativeCPUPhaseSample sample;};
 struct CPUPhaseStack {
- std::array<CPUPhaseSlot,6> slots{};
+ std::array<CPUPhaseSlot,10> slots{};
  std::uint64_t loopOrdinal=0;
  bool captureLoop=false;
  std::uint64_t inheritedParent=0;
- std::array<std::uint64_t,7> previous{};
+ std::array<std::uint64_t,11> previous{};
  unsigned depth=0;
 };
 thread_local CPUPhaseStack cpuPhaseStack;

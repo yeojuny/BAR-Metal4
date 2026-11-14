@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Rendering/Backend/NativeLegacyWaterProgramState.h"
 #include "Rendering/Backend/NativeLegacyWaterTextureMatrices.h"
@@ -938,10 +939,16 @@ bool BeginReadyPilotRequested() {
 
 void RequireRetiredGPUWork()
 {
+ metal4::NativeCPUPhaseScope drainTrace(9,gs?gs->frameNum:0);
+ if(globalRendering)drainTrace.Draw(globalRendering->drawFrame);
  if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
+ drainTrace.Mark(0); // p0: optional CPU source-reader completion.
  if(!session || !session->renderer)return;
  session->renderer->FinishCPUWork();
- if(Metal4RendererCanSafelyDetachSurface()){ApplyDeferredFrameReceipts();session->completionMailbox->RequireNoQueuedCompletions();return;}
+ drainTrace.Mark(1); // p1: render CPU Join/settlement wall interval (may include worker waits).
+ const bool retired=Metal4RendererCanSafelyDetachSurface();
+ drainTrace.Mark(2); // p2: runtime drain including GPU wait/retirement callbacks.
+ if(retired){ApplyDeferredFrameReceipts();session->completionMailbox->RequireNoQueuedCompletions();drainTrace.Mark(3);return;}
  LOG_L(L_ERROR,"[Metal4Scene] GPU submission has not retired; refusing unsafe renderer/window teardown. Process restart is required");
  std::terminate();
 }
@@ -1675,7 +1682,8 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 
  CaptureAtNativeSurfaceBoundary(deferredParticles,
   [&]{return session->surface.CaptureRefreshUnchanged();},
-  []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
+  []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
+   metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
    // Publish only at the actual capture boundary, after any changed-surface drain.
    session->opaqueSourcePending=actualOpaqueModels;
    // Particle source writers run once after the old encoding tail is drained.
