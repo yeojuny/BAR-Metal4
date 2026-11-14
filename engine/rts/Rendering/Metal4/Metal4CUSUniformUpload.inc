@@ -8,11 +8,10 @@ struct CUSUniformUpload {
  } vertex,fragment;
 };
 CUSUniformUpload UploadCUSUniforms(RuntimeLease& lease,ModelUploadArena146& arena,
- const NativeCUSGeneratedProgram& program,const NativeCUSSourceDraw& draw,
- const NativeCUSProgramSource& source,const NativeCUSSampleTransport& transport)
+ const Program& program,const NativeCUSSourceDraw& draw,const NativeCUSSampleTransport& transport)
 {
- const auto vertexSize=NativeCUSProgramUniformBytes(program.vertex);
- const auto fragmentSize=NativeCUSProgramUniformBytes(program.fragment);
+ const auto vertexSize=NativeCUSProgramUniformBytes(program.generated->vertex);
+ const auto fragmentSize=NativeCUSProgramUniformBytes(program.generated->fragment);
  const size_t limit=lease.Device().maxBufferLength;
  Require(vertexSize&&fragmentSize&&vertexSize<=limit&&fragmentSize<=limit,
   "CUS original buffer exceeds actual native device capacity");
@@ -27,7 +26,7 @@ CUSUniformUpload UploadCUSUniforms(RuntimeLease& lease,ModelUploadArena146& aren
   auto vertex=arena.Allocate(lease,vertexSize),fragment=arena.Allocate(lease,fragmentSize);
   out={{vertex.buffer,vertex.offset,vertexSize},{fragment.buffer,fragment.offset,fragmentSize}};
  }
- PackNativeCUSProgramUniformsInto(program.vertex,draw,source,transport,out.vertex.Bytes());
- PackNativeCUSProgramUniformsInto(program.fragment,draw,source,transport,out.fragment.Bytes());
+ program.vertexUniformPlan->Pack(draw,*program.source,transport,out.vertex.Bytes());
+ program.fragmentUniformPlan->Pack(draw,*program.source,transport,out.fragment.Bytes());
  return out;
 }

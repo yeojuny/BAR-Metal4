@@ -41,6 +41,7 @@ struct Program {
  const NativeCUSGeneratedProgram* generated=nullptr;
  std::shared_ptr<const NativeCUSProgramSource> source;
  std::shared_ptr<const Libraries> libraries;
+ std::unique_ptr<NativeCUSProgramUniformPlan> vertexUniformPlan,fragmentUniformPlan;
 };
 id<MTLBuffer> Allocate(RuntimeLease& lease,size_t bytes)
 {
@@ -369,7 +370,10 @@ std::shared_ptr<const NativeCUSProgramConsumer> CUSSourceGPU::LinkOriginalStages
      p.vertexSHA512==source->vertexSHA512&&p.fragmentSHA512==source->fragmentSHA512){generated=&p;break;}
  }
  Require(generated!=nullptr,"CUS original shader variant has no full native generated consumer");
- auto program=std::make_shared<Program>();program->generated=generated;program->source=source;program->libraries=impl->Library(lease,*generated,ms);
+ auto program=std::make_shared<Program>();program->generated=generated;program->source=source;
+ program->vertexUniformPlan=std::make_unique<NativeCUSProgramUniformPlan>(generated->vertex);
+ program->fragmentUniformPlan=std::make_unique<NativeCUSProgramUniformPlan>(generated->fragment);
+ program->libraries=impl->Library(lease,*generated,ms);
  Require([program->libraries->vertex newFunctionWithName:@"NativeCUSVertex"]!=nil&&
   [program->libraries->fragment newFunctionWithName:@"NativeCUSFragment"]!=nil,
   "Original CUS compiled stages lack their exact native entrypoints");
@@ -464,7 +468,7 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
    lease.AddAllocation(image.texture);lease.Retain(image.sampler);materialTextures156[slot]=image.texture;materialSamplers156[slot]=image.sampler;priorResourceSetters156+=2;draw.images.push_back(std::move(image));
   }
   if(program->generated->fragment.textureMask){draw.material156=impl->materials156.Get(lease,materialTextures156,materialSamplers156);[draw.table setAddress:draw.material156.gpuAddress atIndex:8];++materialBindings156;}
-  const auto uniforms=UploadCUSUniforms(lease,uniformArena,*program->generated,d,*program->source,transport);
+  const auto uniforms=UploadCUSUniforms(lease,uniformArena,*program,d,transport);
   const auto vertex=uniforms.vertex.Bytes(),fragment=uniforms.fragment.Bytes();
   [draw.table setAddress:uniforms.vertex.Address() atIndex:6];[draw.table setAddress:uniforms.fragment.Address() atIndex:7];
   // The same resolved transport is uploaded above. Every selected color

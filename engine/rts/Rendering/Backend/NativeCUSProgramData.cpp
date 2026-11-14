@@ -24,12 +24,12 @@ std::vector<uint8_t> PackNativeCUSProgramUniforms(const NativeCUSGeneratedStage&
  PackNativeCUSProgramUniformsInto(stage,draw,source,transport,bytes);
  return bytes;
 }
-void PackNativeCUSProgramUniformsInto(const NativeCUSGeneratedStage& stage,
- const NativeCUSSourceDraw& draw,const NativeCUSProgramSource& source,const NativeCUSSampleTransport& transport,std::span<uint8_t> bytes)
+namespace {
+void PackFields(std::span<const NativeCUSGeneratedField> fields,
+ const NativeCUSSourceDraw& draw,const NativeCUSProgramSource& source,
+ const NativeCUSSampleTransport& transport,std::span<uint8_t> bytes)
 {
- Check(bytes.size()==NativeCUSProgramUniformBytes(stage),"CUS uniform destination differs from its original padded block");
- std::fill(bytes.begin(),bytes.end(),uint8_t(0));
- for(const auto& f:stage.fields){
+ for(const auto& f:fields){
   if(!f.active)continue;
   const std::string_view name=f.name;
   std::array<float,12> converted;
@@ -54,6 +54,56 @@ void PackNativeCUSProgramUniformsInto(const NativeCUSGeneratedStage& stage,
    else{Check(value>=0 && double(value)<=4294967295.0 && std::trunc(value)==value,"CUS unsigned transport value is outside its ABI");const auto i=uint32_t(value);std::memcpy(bytes.data()+offset,&i,4);}
   }
  }
+}
+} // namespace
+void PackNativeCUSProgramUniformsInto(const NativeCUSGeneratedStage& stage,
+ const NativeCUSSourceDraw& draw,const NativeCUSProgramSource& source,const NativeCUSSampleTransport& transport,std::span<uint8_t> bytes)
+{
+ Check(bytes.size()==NativeCUSProgramUniformBytes(stage),"CUS uniform destination differs from its original padded block");
+ std::fill(bytes.begin(),bytes.end(),uint8_t(0));
+ PackFields(stage.fields,draw,source,transport,bytes);
+}
+NativeCUSProgramUniformPlan::NativeCUSProgramUniformPlan(const NativeCUSGeneratedStage& stage)
+ :byteSize(NativeCUSProgramUniformBytes(stage))
+{
+ names.reserve(stage.fields.size());
+ for(const auto& f:stage.fields)names.emplace_back(f.name);
+ // Preserve original field order, names and ABI independently of caller storage.
+ // Unexpected overlapping reflection falls back to the original ordered pack.
+ std::vector<bool> written(byteSize,false);
+ for(size_t i=0;i<stage.fields.size();++i){
+  auto f=stage.fields[i];f.name=names[i].c_str();allFields.push_back(f);
+  if(!f.active)continue;
+  for(unsigned element=0;element<f.count;++element)for(unsigned component=0;component<f.components;++component){
+   const size_t offset=f.offset+size_t(element)*f.stride+size_t(component)*4;
+   if(offset>byteSize||byteSize-offset<4){split=false;continue;}
+   for(size_t j=offset;j<offset+4;++j){if(written[j])split=false;written[j]=true;}
+  }
+  const std::string_view name=f.name;
+  const bool dynamic=name=="NativeCUSImageMasks"||name=="NativeCUSSampleCodes"||
+   name=="NativeCUSClipFlags"||name.starts_with("NativeCUSWater");
+  (dynamic?dynamicFields:staticFields).push_back(f);
+ }
+}
+bool NativeCUSProgramUniformPlan::Pack(const NativeCUSSourceDraw& draw,
+ const NativeCUSProgramSource& source,const NativeCUSSampleTransport& transport,std::span<uint8_t> bytes)
+{
+ Check(bytes.size()==byteSize,"CUS uniform destination differs from its original padded block");
+ if(!split){
+  std::fill(bytes.begin(),bytes.end(),uint8_t(0));
+  PackFields(allFields,draw,source,transport,bytes);return true;
+ }
+ const auto& current=draw.uniformValues;
+ const bool hit=current&&ownerAddress==current.get()&&!owner.owner_before(current)&&!current.owner_before(owner);
+ if(!hit){
+  std::vector<uint8_t> candidate(byteSize,0);
+  PackFields(staticFields,draw,source,transport,candidate);
+  // Failed packing must not publish a new key or corrupt the previous template.
+  packed=std::move(candidate);owner=current;ownerAddress=current.get();
+ }
+ std::copy(packed.begin(),packed.end(),bytes.begin());
+ PackFields(dynamicFields,draw,source,transport,bytes);
+ return !hit;
 }
 void PopulateNativeCUSProgramUniformMetadata(const NativeCUSGeneratedProgram& program,NativeCUSProgramConsumer& out)
 {

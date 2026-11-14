@@ -1,0 +1,27 @@
+{
+  "productionSHA256": {
+    "rts/Rendering/Backend/NativeCUSProgramData.h": "59e0d1551c72d6b9f2f8e6da6d7c6a4926ffa4c0533ead6115844e62606ef81c",
+    "rts/Rendering/Backend/NativeCUSProgramData.cpp": "6f24bf8d5aa6dcb4a1da8494b85d5cb8b61bab5f41bbd38403e8e45b3d4b2d84",
+    "rts/Rendering/Metal4/Metal4CUSSource.mm": "f417286320b6458f199daa8694e5da1da6be7f832e3a319dcea9da500475609e",
+    "rts/Rendering/Metal4/Metal4CUSUniformUpload.inc": "b06c12d6c7efdb0edb93fac63d9dfe47d2d9086bae7390dc9045bf0f3f56b2ad",
+    "rts/Rendering/Metal4/NativeCUSGeneratedPrograms.h": "39e35e2dded88cfad389d1a2428051c53013f08fb4b725cf0e0c7fd6edf6ca27"
+  },
+  "scope": "Host ASan/UBSan checks of production CUS packed-plan reuse, not Lua/Metal execution.",
+  "exit": 0,
+  "command": [
+    "python3",
+    "engine/tools/metal4-contracts/run_native_cus_uniform_plan_test.py",
+    "--output",
+    "<receipt-directory>"
+  ],
+  "summary": "CUS packed plan: stages=80 byte comparisons=1920 static builds=160 reuse hits=1760; owner/ABI/failure cases passed\n",
+  "sourceSHA256": "581a9f8d023e10ac32a2cd2e7f3b16e1e65937a35bc04fc4d081b15d113b5fc5",
+  "fixtureSHA256": "1efb46a4ee23eca83e317f98882f9be916eb15e11db4d35ce2380a76d540975c",
+  "luaSourceOrderChecks": 4,
+  "notTested": [
+    "Lua VM",
+    "Metal Objective-C++",
+    "macOS app build",
+    "GPU output or FPS"
+  ]
+}

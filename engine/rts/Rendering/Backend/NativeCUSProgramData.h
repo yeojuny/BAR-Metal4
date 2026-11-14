@@ -39,5 +39,25 @@ void PackNativeCUSProgramUniformsInto(const NativeCUSGeneratedStage&,
 uint32_t NativeCUSSampleCode(const NativeTextureSampling&);
 std::vector<uint8_t> PackNativeCUSProgramUniforms(const NativeCUSGeneratedStage&,
  const NativeCUSSourceDraw&,const NativeCUSProgramSource&,const NativeCUSSampleTransport&);
+// One renderer-owned plan per linked stage. Only immutable scalar content is
+// cached; image transport and map values are patched for every draw. Weak owner
+// identity does not keep excluded frame/phase uniform content alive. Calls are
+// serialized by the existing renderer gate (this is not a concurrent cache).
+class NativeCUSProgramUniformPlan {
+ std::vector<std::string> names;
+ std::vector<NativeCUSGeneratedField> allFields,staticFields,dynamicFields;
+ std::size_t byteSize=0;
+ bool split=true;
+ std::weak_ptr<const NativeCUSProgramUniforms> owner;
+ const NativeCUSProgramUniforms* ownerAddress=nullptr;
+ std::vector<uint8_t> packed;
+public:
+ explicit NativeCUSProgramUniformPlan(const NativeCUSGeneratedStage&);
+ NativeCUSProgramUniformPlan(const NativeCUSProgramUniformPlan&)=delete;
+ NativeCUSProgramUniformPlan& operator=(const NativeCUSProgramUniformPlan&)=delete;
+ // Returns true when static packing ran; false means exact-owner reuse.
+ bool Pack(const NativeCUSSourceDraw&,const NativeCUSProgramSource&,
+  const NativeCUSSampleTransport&,std::span<uint8_t>);
+};
 void PopulateNativeCUSProgramUniformMetadata(const NativeCUSGeneratedProgram&,NativeCUSProgramConsumer&);
 } // namespace rendering
