@@ -226,6 +226,7 @@ bool NativeTextureRegistry::CancelContentPublication(std::shared_ptr<const Nativ
 	// Sampler changes are real source events, even if this image producer was
 	// not submitted. Restore only image content, never object identity or state.
 	entry.restoredContent=std::move(previous);entry.restoredVersion=version+1;
+	history.InvalidateResolvedRows();
 	// Cancellation is not an original GL writer event. In particular this
 	// noexcept path must not allocate or call the throwing event-counter code.
 	return true;

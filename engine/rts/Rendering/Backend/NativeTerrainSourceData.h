@@ -97,7 +97,7 @@ inline void ValidateNativeTerrainDefinition(const NativeTerrainProgramDefinition
 struct NativeTerrainImageSnapshot {
  uint64_t contextGeneration=0, sourceDrawFrame=0, eventSequence=0;
  std::optional<unsigned> activeUnit;
- using Table=std::array<std::array<NativeCUSTextureBinding,std::size_t(NativeCUSTextureTarget::Count)>,NativeCUSTextureHistory::Units>;
+ using Table=NativeCUSTextureHistory::ResolvedTable;
  // Only Capture can seal a table after validating every resolved binding.
  // Public metadata remains checked against this immutable proof on every use.
  const Table& Units()const {if(!units)throw std::runtime_error("Terrain image table is not captured");return *units;}

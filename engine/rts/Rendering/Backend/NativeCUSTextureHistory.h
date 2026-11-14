@@ -68,6 +68,12 @@ struct NativeCUSDrawTextureSnapshot {
 class NativeCUSTextureHistory {
 public:
  static constexpr unsigned Units=32; // CGlobalRendering::MAX_TEXTURE_UNITS.
+ using TargetState=std::array<NativeCUSTextureBinding,size_t(NativeCUSTextureTarget::Count)>;
+ using ResolvedTable=std::array<std::shared_ptr<const TargetState>,Units>;
+ // Capture-only cache: returned immutable rows preserve prior resolved versions.
+ ResolvedTable ResolvedRows()const;
+ // Also used by non-GL content cancellation, which must not advance sequence.
+ void InvalidateResolvedRows()noexcept;
  void ResetForNewContext(); // Only a real context creation establishes defaults.
  void CloseContext() noexcept; // Drops observations, without inventing another context.
  using ObjectResolver=std::function<std::shared_ptr<const NativeCUSTextureObject>(std::shared_ptr<const NativeCUSTextureObject>)>;
@@ -112,11 +118,11 @@ public:
  uint64_t Sequence() const noexcept{return sequence;}
 private:
  NativeCUSDrawTextureSnapshot Submit(uint64_t,unsigned,std::string,std::string,std::span<const NativeCUSSubmittedObject>,bool copyOrder);
- using TargetState=std::array<NativeCUSTextureBinding,size_t(NativeCUSTextureTarget::Count)>;
  using State=std::array<TargetState,Units>;
  struct Saved {State state;std::optional<unsigned>active;bool bindings,enables;
   std::array<NativeTextureSampling,size_t(NativeCUSTextureTarget::Count)> defaultSampling;};
  State state{};
+ mutable ResolvedTable resolvedRows{};
  std::array<bool,size_t(NativeCUSTextureTarget::Count)> defaultStorageKnownEmpty{};
  std::array<NativeTextureSampling,size_t(NativeCUSTextureTarget::Count)> defaultSampling{};
  std::optional<unsigned>activeUnit;std::vector<Saved> stack;uint64_t context=0,sequence=0;

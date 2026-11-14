@@ -18,21 +18,24 @@ void NativeCUSTextureHistory::Advance(){
 }
 void NativeCUSTextureHistory::ResetForNewContext(){
  if(context==std::numeric_limits<uint64_t>::max())throw std::overflow_error("CUS texture context generation overflow");
- Advance();++context;state={};stack.clear();activeUnit=0;defaultStorageKnownEmpty.fill(true);defaultSampling={};
+ Advance();InvalidateResolvedRows();++context;state={};stack.clear();activeUnit=0;defaultStorageKnownEmpty.fill(true);defaultSampling={};
  for(size_t target=0;target<defaultSampling.size();++target)defaultSampling[target]=InitialNativeTextureSampling(NativeCUSTextureTarget(target));
  for(auto&unit:state)for(auto&binding:unit){binding.knowledge=NativeCUSBindingKnowledge::DefaultObject;binding.enableObserved=true;binding.defaultStorageKnownEmpty=true;}
 }
 void NativeCUSTextureHistory::CloseContext()noexcept{
- state={};stack.clear();activeUnit.reset();defaultStorageKnownEmpty.fill(false);defaultSampling={};
+ InvalidateResolvedRows();state={};stack.clear();activeUnit.reset();defaultStorageKnownEmpty.fill(false);defaultSampling={};
 }
 void NativeCUSTextureHistory::SetObjectResolvers(ObjectResolver current,ObjectResolver restoreSaved){
  if(bool(current)!=bool(restoreSaved))throw std::invalid_argument("Texture history requires both registry resolvers");
- resolveObject=std::move(current);restoreObject=std::move(restoreSaved);
+ InvalidateResolvedRows();resolveObject=std::move(current);restoreObject=std::move(restoreSaved);
 }
-void NativeCUSTextureHistory::ObjectStateChanged(){Advance();}
+void NativeCUSTextureHistory::InvalidateResolvedRows()noexcept{
+ for(auto& row:resolvedRows)row.reset();
+}
+void NativeCUSTextureHistory::ObjectStateChanged(){Advance();InvalidateResolvedRows();}
 void NativeCUSTextureHistory::DeletedObject(uint64_t identity){
  if(!identity)throw std::invalid_argument("Texture deletion needs an observed object identity");
- Advance();
+ Advance();InvalidateResolvedRows();
  for(auto&unit:state)for(size_t t=0;t<unit.size();++t){auto&binding=unit[t];
   if(binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object->identity==identity){
    binding.knowledge=NativeCUSBindingKnowledge::DefaultObject;binding.object.reset();binding.defaultStorageKnownEmpty=defaultStorageKnownEmpty[t];
@@ -42,24 +45,24 @@ void NativeCUSTextureHistory::DeletedObject(uint64_t identity){
 void NativeCUSTextureHistory::ActiveTexture(unsigned unit){Target(unit,NativeCUSTextureTarget::Image2D);Advance();activeUnit=unit;}
 void NativeCUSTextureHistory::Bind(unsigned unit,std::shared_ptr<const NativeCUSTextureObject> object){
  if(!object||!object->identity||object->source.empty())throw std::invalid_argument("CUS binding needs an actual owned texture object");
- const auto target=Target(unit,object->target);Advance();auto&binding=state[unit][target];
+ const auto target=Target(unit,object->target);Advance();resolvedRows[unit].reset();auto&binding=state[unit][target];
  binding.knowledge=NativeCUSBindingKnowledge::BoundObject;binding.object=std::move(object);binding.defaultStorageKnownEmpty=false;
 }
 void NativeCUSTextureHistory::BindDefault(unsigned unit,NativeCUSTextureTarget target){
- auto index=Target(unit,target);Advance();auto&binding=state[unit][index];binding.knowledge=NativeCUSBindingKnowledge::DefaultObject;binding.object.reset();binding.defaultStorageKnownEmpty=defaultStorageKnownEmpty[index];
+ auto index=Target(unit,target);Advance();resolvedRows[unit].reset();auto&binding=state[unit][index];binding.knowledge=NativeCUSBindingKnowledge::DefaultObject;binding.object.reset();binding.defaultStorageKnownEmpty=defaultStorageKnownEmpty[index];
 }
 void NativeCUSTextureHistory::ObserveDefaultStorage(NativeCUSTextureTarget target,bool knownEmpty)
 {
- const auto index=Target(0,target);Advance();defaultStorageKnownEmpty[index]=knownEmpty;
+ const auto index=Target(0,target);Advance();InvalidateResolvedRows();defaultStorageKnownEmpty[index]=knownEmpty;
  for(auto& unit:state)if(unit[index].knowledge==NativeCUSBindingKnowledge::DefaultObject)
   unit[index].defaultStorageKnownEmpty=knownEmpty;
 }
 void NativeCUSTextureHistory::ObserveDefaultSampling(NativeCUSTextureTarget target,const NativeTextureSampling& actual)
 {
- const auto index=Target(0,target);Advance();defaultSampling[index]=actual;
+ const auto index=Target(0,target);Advance();InvalidateResolvedRows();defaultSampling[index]=actual;
 }
 void NativeCUSTextureHistory::Enable(unsigned unit,NativeCUSTextureTarget target,bool enabled){
- auto index=Target(unit,target);Advance();auto&binding=state[unit][index];binding.enabled=enabled;binding.enableObserved=true;
+ auto index=Target(unit,target);Advance();resolvedRows[unit].reset();auto&binding=state[unit][index];binding.enabled=enabled;binding.enableObserved=true;
 }
 void NativeCUSTextureHistory::LuaEnable2D(unsigned unit,bool enabled){Enable(unit,NativeCUSTextureTarget::Image2D,enabled);}
 void NativeCUSTextureHistory::FailedImageLookup(unsigned unit){Target(unit,NativeCUSTextureTarget::Image2D);Advance();}
@@ -111,11 +114,22 @@ void NativeCUSTextureHistory::PushAttributes(bool bindings,bool enables){
 }
 void NativeCUSTextureHistory::PopAttributes(){
  if(stack.empty())throw std::logic_error("CUS texture history attribute stack underflow");
- Advance();auto saved=std::move(stack.back());stack.pop_back();if(saved.bindings){activeUnit=saved.active;defaultSampling=saved.defaultSampling;}
+ Advance();InvalidateResolvedRows();auto saved=std::move(stack.back());stack.pop_back();if(saved.bindings){activeUnit=saved.active;defaultSampling=saved.defaultSampling;}
  for(size_t u=0;u<Units;++u)for(size_t t=0;t<state[u].size();++t){auto&current=state[u][t];const auto&prior=saved.state[u][t];
   if(saved.bindings){current.knowledge=prior.knowledge;current.object=prior.object&&restoreObject?restoreObject(prior.object):prior.object;current.defaultStorageKnownEmpty=prior.knowledge==NativeCUSBindingKnowledge::DefaultObject?defaultStorageKnownEmpty[t]:false;}
   if(saved.enables){current.enabled=prior.enabled;current.enableObserved=prior.enableObserved;}
  }
+}
+NativeCUSTextureHistory::ResolvedTable NativeCUSTextureHistory::ResolvedRows()const{
+ for(unsigned unit=0;unit<Units;++unit){
+  if(resolvedRows[unit])continue;
+  auto next=std::make_shared<TargetState>();
+  for(size_t target=0;target<next->size();++target)
+   (*next)[target]=Binding(unit,NativeCUSTextureTarget(target));
+  // Publish only a completely resolved row; exceptions leave this row empty.
+  resolvedRows[unit]=std::move(next);
+ }
+ return resolvedRows;
 }
 NativeCUSTextureBinding NativeCUSTextureHistory::Binding(unsigned unit,NativeCUSTextureTarget target)const{
  auto result=state[unit][Target(unit,target)];

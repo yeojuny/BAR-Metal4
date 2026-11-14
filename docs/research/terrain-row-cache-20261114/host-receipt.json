@@ -1,0 +1,15 @@
+{
+  "scope": "Link actual history, registry and terrain capture on host; no game/Metal execution.",
+  "exit": 0,
+  "summary": "PASS 92 production row-cache checks; game/GPU not run\n",
+  "asan": true,
+  "ubsan": true,
+  "sourceHashes": {
+    "tools/metal4-contracts/TestNativeTerrainRows.cpp": "8b27faaaa1c984987c7af74c3ef57418e7d2fa443567b3448eb859b81f6f490e",
+    "rts/Rendering/Backend/NativeCUSTextureHistory.cpp": "f8ad2a8b37904f2f5fb4c5ca10fa914864ad64ca5df3ad247d59e84bc7a42e53",
+    "rts/Rendering/Backend/NativeTextureRegistry.cpp": "2d7e958adae2962f9eb9924eea490e52b98c2045cd8840a436de63462cbfe6ad",
+    "rts/Rendering/Backend/NativeTerrainSourceData.cpp": "4300d79db2610b5c23c259f7bf90b27310414d4ac4a18809e60c5d47f29d4031",
+    "rts/Rendering/Backend/NativeCUSTextureHistory.h": "5382a6faec34d5e0ba31dc57020b76ecd083eeeeac1dfcc2f632a9b355a79ac0",
+    "rts/Rendering/Backend/NativeTerrainSourceData.h": "1039f9952cadeabd19b19fc19ad84b564f6f7b2c3463987abf05bfc8dbc37969"
+  }
+}

@@ -19,7 +19,7 @@ enum class NativeTextureStorageKnowledge {Published,Empty};
 struct NativeTextureSampling {bool valid=true;};
 struct NativeCUSTextureObject {uint64_t context=1;NativeCUSTextureTarget target=NativeCUSTextureTarget::Image2D;bool valid=true;NativeTextureStorageKnowledge storage=NativeTextureStorageKnowledge::Published;bool image=true,backing=false;int version=1;};
 struct NativeCUSTextureBinding {NativeCUSBindingKnowledge knowledge=NativeCUSBindingKnowledge::Unobserved;std::shared_ptr<const NativeCUSTextureObject>object;NativeTextureSampling defaultSampling;};
-struct NativeCUSTextureHistory {static constexpr unsigned Units=32;std::array<std::array<NativeCUSTextureBinding,6>,32> state{};uint64_t seq=1;std::optional<unsigned>active=0;uint64_t Sequence()const{return seq;}auto ActiveUnit()const{return active;}auto Binding(unsigned u,NativeCUSTextureTarget t)const{return state[u][size_t(t)];}};
+struct NativeCUSTextureHistory {static constexpr unsigned Units=32;using TargetState=std::array<NativeCUSTextureBinding,6>;using ResolvedTable=std::array<std::shared_ptr<const TargetState>,32>;ResolvedTable ResolvedRows()const{ResolvedTable r;for(unsigned i=0;i<32;++i)r[i]=std::make_shared<const TargetState>(state[i]);return r;}std::array<std::array<NativeCUSTextureBinding,6>,32> state{};uint64_t seq=1;std::optional<unsigned>active=0;uint64_t Sequence()const{return seq;}auto ActiveUnit()const{return active;}auto Binding(unsigned u,NativeCUSTextureTarget t)const{return state[u][size_t(t)];}};
 struct NativeTextureRegistry {uint64_t context=1;bool matches=true;uint64_t ContextGeneration()const{return context;}bool MatchesHistory(const NativeCUSTextureHistory&)const{return matches;}};
 static unsigned objectChecks=0,samplingChecks=0;
 void Check(bool v,const char* m){if(!v)throw std::runtime_error(m);}
@@ -38,7 +38,7 @@ int main(){
  history.state[0][0].knowledge=NativeCUSBindingKnowledge::BoundObject;history.state[0][0].object=object;
  auto captured=CaptureNativeTerrainImages(registry,history,7);
  check(objectChecks==1&&samplingChecks==191);
- for(unsigned u=0;u<32;++u)for(unsigned t=0;t<6;++t){const auto& b=captured.Units()[u][t];const auto& ref=history.state[u][t];check(b.knowledge==ref.knowledge&&b.object==ref.object&&b.defaultSampling.valid==ref.defaultSampling.valid);}
+ for(unsigned u=0;u<32;++u)for(unsigned t=0;t<6;++t){const auto& b=(*captured.Units()[u])[t];const auto& ref=history.state[u][t];check(b.knowledge==ref.knowledge&&b.object==ref.object&&b.defaultSampling.valid==ref.defaultSampling.valid);}
  auto copy=captured;check(&copy.Units()==&captured.Units());
  for(unsigned i=0;i<100;++i)ValidateNativeTerrainImages(copy,1,7);
  check(objectChecks==1&&samplingChecks==191); // No repeated static table scan.
@@ -47,12 +47,12 @@ int main(){
  auto newer=std::make_shared<NativeCUSTextureObject>(*object);newer->version=2;
  history.state[0][0].object=newer;++history.seq;
  auto next=CaptureNativeTerrainImages(registry,history,7);
- check(next.Units()[0][0].object==newer&&captured.Units()[0][0].object==object);
+ check((*next.Units()[0])[0].object==newer&&(*captured.Units()[0])[0].object==object);
  history.state[3][0]=history.state[0][0];auto shared=CaptureNativeTerrainImages(registry,history,7);
- check(shared.Units()[0][0].object==shared.Units()[3][0].object);
+ check((*shared.Units()[0])[0].object==(*shared.Units()[3])[0].object);
  auto moved=std::move(shared);ValidateNativeTerrainImages(moved,1,7);rejects([&]{ValidateNativeTerrainImages(shared,1,7);});
  history.state[0][0]={};++history.seq;auto deleted=CaptureNativeTerrainImages(registry,history,7);
- check(!deleted.Units()[0][0].object&&captured.Units()[0][0].object==object);
+ check(!(*deleted.Units()[0])[0].object&&(*captured.Units()[0])[0].object==object);
  rejects([&]{RequireNativeTerrainImage(deleted,0,NativeCUSTextureTarget::Image2D);});
  rejects([&]{ValidateNativeTerrainImages(captured,2,7);});rejects([&]{ValidateNativeTerrainImages(captured,1,8);});
  auto forged=captured;forged.contextGeneration=2;rejects([&]{ValidateNativeTerrainImages(forged,2,7);});

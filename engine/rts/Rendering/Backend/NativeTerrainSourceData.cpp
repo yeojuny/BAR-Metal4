@@ -101,7 +101,15 @@ void ValidateNativeTerrainSampling(const NativeTextureSampling& sampling)
 namespace {
 void ValidateTerrainImageTable(const NativeTerrainImageSnapshot::Table& units,uint64_t context)
 {
-	for(const auto& unit:units)for(size_t target=0;target<unit.size();++target){
+	// Bounded weak proofs: no prior row/content owner is retained by this cache.
+ struct Proof {std::weak_ptr<const NativeCUSTextureHistory::TargetState> owner;uint64_t context=0;};
+ static thread_local std::array<Proof,NativeCUSTextureHistory::Units> proofs;
+ for(size_t i=0;i<units.size();++i){
+  const auto& row=units[i];Check(bool(row),"Original terrain image row lacks its capture owner");
+  auto& proof=proofs[i];const auto& weak=proof.owner;
+  if(proof.context==context&&!weak.owner_before(row)&&!row.owner_before(weak)&&weak.lock().get()==row.get())continue;
+  const auto& unit=*row;
+  for(size_t target=0;target<unit.size();++target){
 		const auto& binding=unit[target];
 		switch(binding.knowledge){
 			case NativeCUSBindingKnowledge::Unobserved:
@@ -115,6 +123,8 @@ void ValidateTerrainImageTable(const NativeTerrainImageSnapshot::Table& units,ui
 			default:throw std::runtime_error("Original terrain binding knowledge is invalid");
 		}
 	}
+  proof.owner=row;proof.context=context;
+ }
 }
 }
 NativeTerrainImageSnapshot CaptureNativeTerrainImages(const NativeTextureRegistry& registry,
@@ -123,9 +133,7 @@ NativeTerrainImageSnapshot CaptureNativeTerrainImages(const NativeTextureRegistr
  Check(registry.ContextGeneration()&&registry.MatchesHistory(history),"Terrain capture lacks the actual shared texture context");
  NativeTerrainImageSnapshot result;result.contextGeneration=registry.ContextGeneration();
  result.sourceDrawFrame=frame;result.eventSequence=history.Sequence();result.activeUnit=history.ActiveUnit();
- auto table=std::make_shared<NativeTerrainImageSnapshot::Table>();
- for(unsigned unit=0;unit<table->size();++unit)for(size_t target=0;target<(*table)[unit].size();++target)
-  (*table)[unit][target]=history.Binding(unit,NativeCUSTextureTarget(target));
+ auto table=std::make_shared<NativeTerrainImageSnapshot::Table>(history.ResolvedRows());
  ValidateTerrainImageTable(*table,result.contextGeneration);
  result.units=std::move(table);result.validatedContext=result.contextGeneration;
  ValidateNativeTerrainImages(result,registry.ContextGeneration(),frame);return result;
@@ -141,7 +149,7 @@ const NativeCUSTextureBinding& RequireNativeTerrainImage(const NativeTerrainImag
 {
 	Check(snapshot.contextGeneration&&snapshot.eventSequence&&snapshot.activeUnit&&unit<snapshot.Units().size(),
 		"Original terrain sampler lacks its actual captured context/history/unit");
-	const auto& binding=snapshot.Units()[unit][Target(target)];
+	const auto& binding=(*snapshot.Units()[unit])[Target(target)];
 	Check(binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object,
 		"Original terrain sampled default/unobserved storage requires its actual supported image owner");
 	Object(*binding.object,snapshot.contextGeneration,target);
