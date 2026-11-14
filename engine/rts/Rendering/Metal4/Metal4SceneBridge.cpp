@@ -1690,8 +1690,15 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
    session->preparedFrame=session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels,deferredParticles);
    // No producer callback or GPU access: only retained opaque read rows.
    if(earlyCPURead220)launchCPURead220(*session->preparedFrame);
+   if(deferredParticles){
+    // Particle writers require the prior CPU/source job to settle, not its GPU
+    // completion. They produce fresh CPU geometry and retain immutable sources.
+    // Keep the boundary's full GPU drain after this tail, before shield/water/
+    // alpha callbacks. A throwing tail still drains before source rollback.
+    session->renderer->FinishCPUWork();
+    session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
+   }
   });
- if(deferredParticles)session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
 
  auto& frame=*session->preparedFrame;
  frame.mainSampling=session->renderer->ActualMainSampling();

@@ -21,6 +21,27 @@ int main(){
   try{failed.RequireComplete();assert(false);}catch(const std::logic_error&){}assert(writes==2);
  }
 
+
+ // Production placement: CPU settlement and particle-only tail stay inside
+ // capture so its existing exception fence still GPU-drains before rollback.
+ {
+  std::string order; bool gpuPending=true, cpuPending=true;
+  auto gpuDrain=[&]{order+='G';gpuPending=false;};
+  auto cpuTail=[&]{order+='C';cpuPending=false;order+='J';
+   assert(!cpuPending&&gpuPending);order+='P';};
+  CaptureAtNativeSurfaceBoundary(true,[]{return true;},gpuDrain,[]{},cpuTail);
+  assert(order=="CJPG"&&!gpuPending);
+  order.clear();gpuPending=true;
+  try{CaptureAtNativeSurfaceBoundary(true,[]{return true;},gpuDrain,[]{},[&]{
+   order+='J';throw std::runtime_error("particle");});assert(false);}
+  catch(const std::runtime_error& e){assert(std::string(e.what())=="particle");}
+  assert(order=="JG"&&!gpuPending);
+  order.clear();gpuPending=true;
+  try{CaptureAtNativeSurfaceBoundary(true,[]{return true;},gpuDrain,[]{},[&]{
+   order+='J';throw std::runtime_error("cpu settlement");});assert(false);}
+  catch(const std::runtime_error& e){assert(std::string(e.what())=="cpu settlement");}
+  assert(order=="JG"&&!gpuPending);
+ }
  Metal4SurfaceSnapshot p; p.logicalWidth=800;p.logicalHeight=600;
  p.presentationBackingWidth=1600;p.presentationBackingHeight=1200;
  p.renderWidth=1024;p.renderHeight=768;p.visible=true;

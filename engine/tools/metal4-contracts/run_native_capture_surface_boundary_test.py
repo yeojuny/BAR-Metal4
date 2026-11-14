@@ -9,14 +9,15 @@ s=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 b=s.split('void PrepareWorld(',1)[1].split('void AbortPreparedWorld()',1)[0]
 prefix=b.split('auto& frame=*session->preparedFrame;',1)[0]
 assert prefix.count('CaptureAtNativeSurfaceBoundary(')==1
-assert prefix.index('capture.Capture(')<prefix.index('CompleteDeferredMainParticles(')
+assert prefix.index('capture.Capture(')<prefix.index('renderer->FinishCPUWork();')<prefix.index('CompleteDeferredMainParticles(')
+assert prefix.index('CompleteDeferredMainParticles(')<prefix.rindex('});')
 assert prefix.index('CaptureRefreshUnchanged()')<prefix.index('RequireRetiredGPUWork();')<prefix.index('surface.Refresh();')<prefix.index('capture.Capture(')
 assert 'CaptureWater' not in prefix and 'CaptureOriginalAlphaModels' not in prefix
 assert 'NativeWaterScenePass::Main' in prefix
 # The other refresh/control boundary is unchanged.
 draw=s.split('DrawResult DrawWorld(',1)[1]
 pos=draw.index('session->surface.Refresh();')
-assert 'if(BeginReadyPilotRequested())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
+assert 'if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
 w=(root/'rts/Rendering/Metal4/Metal4WindowSurface.mm').read_text()
 probe=w.split('bool CaptureRefreshUnchanged() const',1)[1].split('bool Refresh()',1)[0]
 assert 'layer.drawableSize' in probe and 'layer.displaySyncEnabled' in probe and 'requested==displaySyncRequest' in probe
@@ -39,4 +40,4 @@ r=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text().split('Metal4
 assert r.index('frame.deferredMainParticles.RequireComplete();')<r.index('FinishCPUWork();')
 h=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.h').read_text()
 assert 'this->frame->deferredMainParticles.RequireComplete();' in h
-print('Deferred particle writer: missing/repeated/reentrant/failed completion rejected; particle source runs only after boundary drain; submission rejects partial frame')
+print('Deferred particle writer: missing/repeated/reentrant/failed completion rejected; particle source runs after CPU settlement and before final GPU drain; submission rejects partial frame')
