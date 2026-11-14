@@ -11,6 +11,7 @@ prefix=b.split('auto& frame=*session->preparedFrame;',1)[0]
 assert prefix.count('CaptureAtNativeSurfaceBoundary(')==1
 assert prefix.index('capture.Capture(')<prefix.index('renderer->FinishCPUWork();')<prefix.index('CompleteDeferredMainParticles(')
 assert prefix.index('CompleteDeferredMainParticles(')<prefix.rindex('});')
+assert prefix.index('Keep prefix timing separate')<prefix.index('renderer->FinishCPUWork();')
 assert prefix.index('CaptureRefreshUnchanged()')<prefix.index('RequireRetiredGPUWork();')<prefix.index('surface.Refresh();')<prefix.index('capture.Capture(')
 assert 'CaptureWater' not in prefix and 'CaptureOriginalAlphaModels' not in prefix
 assert 'NativeWaterScenePass::Main' in prefix

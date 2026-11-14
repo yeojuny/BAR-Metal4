@@ -1683,13 +1683,14 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  CaptureAtNativeSurfaceBoundary(deferredParticles,
   [&]{return session->surface.CaptureRefreshUnchanged();},
   []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
-   metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
+   {metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
    // Publish only at the actual capture boundary, after any changed-surface drain.
    session->opaqueSourcePending=actualOpaqueModels;
    // Particle source writers run once after the old encoding tail is drained.
    session->preparedFrame=session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels,deferredParticles);
    // No producer callback or GPU access: only retained opaque read rows.
    if(earlyCPURead220)launchCPURead220(*session->preparedFrame);
+   } // Keep prefix timing separate from CPU settlement and particle tail.
    if(deferredParticles){
     // Particle writers require the prior CPU/source job to settle, not its GPU
     // completion. They produce fresh CPU geometry and retain immutable sources.

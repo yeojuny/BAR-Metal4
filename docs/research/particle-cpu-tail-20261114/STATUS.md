@@ -33,3 +33,11 @@ The particle tail stays inside the existing capture exception fence. CPU settlem
 ## Integration
 
 This is based on remote `1bee26a`, not the offline Mac diagnostics commit `ac4b9f1`. Both touch SceneBridge, but diagnostics adds tracing at the boundary and this candidate adds a particle tail inside its capture callback. Reconcile against the actual diagnostics file after Mac reconnect; do not overwrite that committed work. Other diagnostics files are untouched. Keep this candidate separate until integration review.
+
+## Integrated verification
+
+Diagnostics were recovered as `2e8423d3f427943d58cbfc78e5c639ef72501bfd` (tree identical to the previously offline Mac commit). The particle candidate cherry-picked without conflict. The kind-8 prefix trace scope was then closed before CPU Join/particle capture to retain its original meaning; kind-9/10 drain timings do not include this explicit earlier Join. Use parent/worker spans for total timing, not kind-9 alone.
+
+Integrated surface ASan/UBSan, P5 source-contract and CPU trace sampled/loop/off suites passed. All four changed translation units passed Mac syntax checks. A separate cloned build recompiled all 22 translation units selected by Ninja's recorded dependencies on the changed production sources/headers, then linked the complete executable successfully. This is an incremental build, not a clean rebuild. Original build/app preserved.
+
+Binary SHA-256: `9ee2b49a30003fe4f68faa1239f1fc80cb9f3591ae2edb8167874bf8aa089cca`. No game execution, performance comparison or visual acceptance was performed. Local build receipt retains full commands/log location; no raw local paths are published here.
