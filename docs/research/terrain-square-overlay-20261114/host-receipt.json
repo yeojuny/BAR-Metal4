@@ -1,0 +1,43 @@
+{
+  "writerRuns": [
+    {
+      "scope": "Host contract test of the complete production terrain source translation unit.\nOnly external shader/VFS/consumer services are stubbed. No Write/Publish/binding\nalgorithm is copied or replaced. This is not Metal, Lua VM or gameplay validation.\n",
+      "compilerVersion": "g++ (Debian 14.2.0-19) 14.2.0",
+      "negativeControl": false,
+      "eagerObservationReference": false,
+      "leakSanitizer": "disabled: execution sandbox uses ptrace; ASan and UBSan remain enabled",
+      "sourceSHA256": "9e274e3ff9e4e5142507c57c4d0ec4410d1e7ca496f1ff6320b8b59dfb0771bb",
+      "compiledTranslationSHA256": "01d58d5de8558d477d0ac15f2ef07781fdbb9f76fb70f99094db79c6d1fe428d",
+      "fixtureSHA256": "3830a764c380d67b53472cac1d0ca30101f79158309d267592da6b0efa919f12",
+      "diagnosticsOffCompileExit": 0,
+      "exit": 0,
+      "summary": "aligned no-op: allocations=0 mapCopies=0 publications=0\nobservationFingerprint=9120704849664684142\nPASS 306 terrain writer contract checks; GPU/Lua/gameplay not exercised\n",
+      "passed": true
+    },
+    {
+      "scope": "Host contract test of the complete production terrain source translation unit.\nOnly external shader/VFS/consumer services are stubbed. No Write/Publish/binding\nalgorithm is copied or replaced. This is not Metal, Lua VM or gameplay validation.\n",
+      "compilerVersion": "g++ (Debian 14.2.0-19) 14.2.0",
+      "negativeControl": false,
+      "eagerObservationReference": true,
+      "leakSanitizer": "disabled: execution sandbox uses ptrace; ASan and UBSan remain enabled",
+      "sourceSHA256": "9e274e3ff9e4e5142507c57c4d0ec4410d1e7ca496f1ff6320b8b59dfb0771bb",
+      "compiledTranslationSHA256": "ea682dd4c49154dd98d8b26f750822f47e771161f63172301295cb230247b92f",
+      "fixtureSHA256": "3830a764c380d67b53472cac1d0ca30101f79158309d267592da6b0efa919f12",
+      "diagnosticsOffCompileExit": 0,
+      "exit": 0,
+      "summary": "aligned no-op: allocations=0 mapCopies=0 publications=0\nobservationFingerprint=9120704849664684142\nPASS 301 terrain writer contract checks; GPU/Lua/gameplay not exercised\n",
+      "passed": true
+    }
+  ],
+  "readerChecks": 38159,
+  "sourceHashes": {
+    "engine/rts/Rendering/Backend/NativeWaterGroundSourceData.h": "c82076d33bc43ed1875635c1a182289ee3104717234dcc943ea2465310a4b661",
+    "engine/rts/Rendering/EngineBridge/NativeTerrainProgramSource.cpp": "9e274e3ff9e4e5142507c57c4d0ec4410d1e7ca496f1ff6320b8b59dfb0771bb",
+    "engine/tools/metal4-contracts/TestNativeTerrainProgram.cpp": "3830a764c380d67b53472cac1d0ca30101f79158309d267592da6b0efa919f12",
+    "engine/tools/metal4-contracts/run_native_terrain_program_test.py": "2c7e33d5bd93564876b9f9028f766b34fef2e80848aff4be3ac0984745c254a5",
+    "engine/tools/metal4-contracts/run_native_terrain_slots_test.py": "45bd258ab959379d89b173b01c81fc77c82405a794c8c7d4ff0363f508647121"
+  },
+  "gameRun": false,
+  "macCompile": false,
+  "performanceMeasured": false
+}

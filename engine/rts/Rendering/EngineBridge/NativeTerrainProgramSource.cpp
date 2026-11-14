@@ -281,10 +281,10 @@ private:
   }else{
    static_assert(std::is_same_v<T,int> && sizeof(int)==sizeof(int32_t));
   }
-  const auto existing=uniforms->values.find(locations[size_t(location)]);
+  const auto* existing=uniforms->FindName(locations[size_t(location)]);
   bool exact=false;
-  if(existing!=uniforms->values.end()){
-   const auto& old=existing->second;
+  if(existing){
+   const auto& old=*existing;
    using Stored=std::conditional_t<std::is_same_v<T,float>,float,int32_t>;
    const auto* values=std::get_if<std::vector<Stored>>(&old.values);
    exact=old.rows==rows&&old.columns==columns&&old.count==uint32_t(count)&&old.transpose==transpose&&
@@ -316,7 +316,12 @@ private:
   }
   const bool lazy=LazyWrites();
   if(lazy)ValidateNativeTerrainDefinition(*definition,Context());
-  if(lazy&&dirtyUniforms){
+  if(lazy&&locations[size_t(location)]=="texSquare"){
+   if(dirtyUniforms&&uniforms->HasTexSquareOverride())uniforms->RewriteTexSquare(std::move(value));
+   else uniforms=NativeTerrainUniformSnapshot::WithTexSquare(uniforms,std::move(value));
+   ++uniforms->revision;dirtyUniforms=true;
+  }else if(lazy&&dirtyUniforms){
+   if(uniforms->MaterializeForWrite())TERRAIN_WRITE_STAT(mapCopies);
    // This map has never escaped to a publication. All potentially allocating
    // input construction/validation completed before changing its revision.
    uniforms->InvalidateWrittenSlot(locations[size_t(location)]);

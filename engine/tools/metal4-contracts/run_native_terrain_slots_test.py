@@ -11,6 +11,8 @@ unit='''#include <bit>
 #include <random>
 #include <array>
 #include <map>
+#include <optional>
+#include <memory>
 #include <string>
 #include <vector>
 #include <variant>

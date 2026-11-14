@@ -13,6 +13,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <variant>
 #include <vector>
 
@@ -44,17 +45,59 @@ struct NativeTerrainTypedVector {
 };
 struct NativeTerrainUniformSnapshot {
  uint64_t contextGeneration=0, originalProgramGeneration=0, revision=0;
- std::map<std::string,NativeTerrainUniformValue> values;
+ using Table=std::map<std::string,NativeTerrainUniformValue>;
+ // Materialized writer/import storage. Consumers use Find/FindName; an overlay
+ // deliberately leaves this empty. ValuesCopy is for serialization/debug only.
+ Table values;
  NativeTerrainUniformSnapshot()=default;
  // Pointer slots must never point into a copied-from snapshot.
  NativeTerrainUniformSnapshot(const NativeTerrainUniformSnapshot& other):
   contextGeneration(other.contextGeneration),originalProgramGeneration(other.originalProgramGeneration),
-  revision(other.revision),values(other.values){}
+  revision(other.revision),values(other.ValuesCopy()){}
  NativeTerrainUniformSnapshot& operator=(const NativeTerrainUniformSnapshot& other){
   if(this==&other)return *this;
-  auto copied=other.values; // Strong exception safety before invalidating current state.
+  auto copied=other.ValuesCopy(); // Strong exception safety before invalidating current state.
   contextGeneration=other.contextGeneration;originalProgramGeneration=other.originalProgramGeneration;
-  revision=other.revision;values=std::move(copied);InvalidateSlots();return *this;
+  revision=other.revision;values=std::move(copied);commonBase.reset();squareOverride.reset();InvalidateSlots();return *this;
+ }
+ // A single immutable common root, never a chain of square snapshots.
+ static std::shared_ptr<NativeTerrainUniformSnapshot> WithTexSquare(
+  const std::shared_ptr<const NativeTerrainUniformSnapshot>& previous,NativeTerrainUniformValue value){
+  auto next=std::make_shared<NativeTerrainUniformSnapshot>();
+  next->contextGeneration=previous->contextGeneration;next->originalProgramGeneration=previous->originalProgramGeneration;
+  next->revision=previous->revision;
+  next->commonBase=previous->commonBase?previous->commonBase:previous;
+  next->squareOverride=std::move(value);
+  next->ReuseTypedBaseAfterSingleWrite(*previous,"texSquare");
+  return next;
+ }
+ bool HasTexSquareOverride()const noexcept{return bool(commonBase);}
+ void RewriteTexSquare(NativeTerrainUniformValue value){
+  // Writer-only: this snapshot has not escaped to an observed publication.
+  squareOverride=std::move(value);InvalidateWrittenSlot("texSquare");
+ }
+ const NativeTerrainUniformValue* FindName(const std::string& name)const{
+  if(commonBase){if(name=="texSquare")return &*squareOverride;return commonBase->FindName(name);}
+  const auto it=values.find(name);return it==values.end()?nullptr:&it->second;
+ }
+ template<class Visitor> void ForEachValue(Visitor&& visit)const{
+  if(!commonBase){for(const auto& [name,value]:values)visit(name,value);return;}
+  bool emitted=false;
+  const std::string_view squareName="texSquare";
+  for(const auto& [name,value]:commonBase->values){
+   if(!emitted&&name>=squareName){visit(squareName,*squareOverride);emitted=true;}
+   if(name!=squareName)visit(name,value);
+  }
+  if(!emitted)visit(squareName,*squareOverride);
+ }
+ Table ValuesCopy()const{
+  if(!commonBase)return values;
+  auto result=commonBase->values;result.insert_or_assign("texSquare",*squareOverride);return result;
+ }
+ bool MaterializeForWrite(){
+  if(!commonBase)return false;
+  auto copied=ValuesCopy(); // No observable mutation if allocation fails.
+  values=std::move(copied);commonBase.reset();squareOverride.reset();slotsReady=false;return true;
  }
  void InvalidateSlots()noexcept{slotsReady=false;typedClassified.fill(false);shadowMatrixReady=false;}
  // Writer-only transport after an exact map copy and one named write. Unlike
@@ -75,11 +118,13 @@ struct NativeTerrainUniformSnapshot {
  void SealSlots()noexcept{
   if(slotsReady)return;
   slots.fill(nullptr);
-  auto it=values.begin();
+  const auto& common=commonBase?commonBase->values:values;
+  auto it=common.begin();
   for(size_t i=0;i<slots.size();++i){
-   while(it!=values.end()&&it->first<NativeTerrainUniformNames[i])++it;
-   if(it!=values.end()&&it->first==NativeTerrainUniformNames[i])slots[i]=&it->second;
+   while(it!=common.end()&&it->first<NativeTerrainUniformNames[i])++it;
+   if(it!=common.end()&&it->first==NativeTerrainUniformNames[i])slots[i]=&it->second;
   }
+  if(commonBase)slots[size_t(NativeTerrainUniformSlot::texSquare)]=&*squareOverride;
   // Classification cannot throw or report an error at publication. All values
   // not represented here still undergo the original reader validation later.
   for(size_t i=0;i<slots.size();++i){
@@ -113,8 +158,7 @@ struct NativeTerrainUniformSnapshot {
   const auto index=size_t(slot);
   if(index>=slots.size())return nullptr;
   if(slotsReady)return slots[index];
-  const auto it=values.find(NativeTerrainUniformNames[index]);
-  return it==values.end()?nullptr:&it->second;
+  return FindName(NativeTerrainUniformNames[index]);
  }
  const std::array<float,4>* PackedFloat(NativeTerrainUniformSlot slot,unsigned components)const noexcept{
   const size_t i=size_t(slot);if(!slotsReady||i>=typedVectors.size())return nullptr;
@@ -128,6 +172,8 @@ struct NativeTerrainUniformSnapshot {
   return slotsReady&&shadowMatrixReady&&slot==NativeTerrainUniformSlot::shadowMat?&shadowMatrix:nullptr;
  }
 private:
+ std::shared_ptr<const NativeTerrainUniformSnapshot> commonBase;
+ std::optional<NativeTerrainUniformValue> squareOverride;
  std::array<NativeTerrainTypedVector,size_t(NativeTerrainUniformSlot::Count)> typedVectors{};
  std::array<bool,size_t(NativeTerrainUniformSlot::Count)> typedClassified{};
  std::array<float,16> shadowMatrix{};

@@ -33,9 +33,9 @@ template<class T>static void TraceScalar(const T& value){TraceBytes(&value,sizeo
 static rendering::NativeTerrainProgramSnapshot TraceCapture(){
  auto result=rendering::CaptureCurrentNativeTerrainProgram();
  TraceScalar(result.Identity().sourceRevision);TraceScalar(result.uniforms->revision);
- for(const auto& [name,value]:result.uniforms->values){TraceBytes(name.data(),name.size());TraceScalar(value.rows);TraceScalar(value.columns);TraceScalar(value.count);TraceScalar(value.transpose);auto type=value.values.index();TraceScalar(type);
+ result.uniforms->ForEachValue([](const auto& name,const auto& value){TraceBytes(name.data(),name.size());TraceScalar(value.rows);TraceScalar(value.columns);TraceScalar(value.count);TraceScalar(value.transpose);auto type=value.values.index();TraceScalar(type);
   std::visit([](const auto& values){auto size=values.size();TraceScalar(size);TraceBytes(values.data(),values.size()*sizeof(values[0]));},value.values);
- }
+ });
  return result;
 }
 #define CaptureCurrentNativeTerrainProgram TraceCapture
@@ -275,6 +275,9 @@ int main(){using namespace rendering;
  auto retried=binding.SaveCurrent();
  check(std::get<std::vector<float>>(retried.terrainSource->uniforms->values.at("value").values)[0]==25.f);
  check(retried.terrainSource->uniforms->revision==faultSnapshot.uniforms->revision+1);
+#else
+ // Align logical state after lazy-only allocation fault probes.
+ replacement->SetUniform1f(replacementSlot,25.f);
 #endif
  // Typed slot index must follow the owning immutable snapshot across writes.
  const int typedSlot=replacement->Slot("borderMinHeight");
@@ -288,6 +291,88 @@ int main(){using namespace rendering;
  check(typedNew.uniforms->Find(NativeTerrainUniformSlot::borderMinHeight)!=typedValue);
  check(std::get<std::vector<float>>(typedNew.uniforms->Find(NativeTerrainUniformSlot::borderMinHeight)->values)[0]==33.f);
  check(std::get<std::vector<float>>(typedValue->values)[0]==31.f);
+ #define CaptureCurrentNativeTerrainProgram TraceCapture
+ // texSquare override shares the immutable common map across observed squares.
+ const int squareSlot=replacement->Slot("texSquare");
+ const int unknownSlot=replacement->Slot("unknownInactiveName"),shadowSlot=replacement->Slot("shadowMat");
+ float shadow[16]{};for(unsigned i=0;i<16;++i)shadow[i]=float(i);shadow[0]=-0.f;
+ replacement->SetUniform1f(unknownSlot,19.f);replacement->SetUniformMatrix4fv(shadowSlot,true,shadow);
+ const auto common=CaptureCurrentNativeTerrainProgram();
+ const auto* commonHeight=common.uniforms->Find(NativeTerrainUniformSlot::borderMinHeight);
+ TakeNativeTerrainUniformWriteStats();
+ std::shared_ptr<const NativeTerrainUniformSnapshot> firstSquare,previousSquare;
+ std::weak_ptr<const NativeTerrainUniformSnapshot> expiredSquare;
+ for(int i=0;i<32;++i){
+  replacement->SetUniform2i(squareSlot,i,i+1);
+  auto square=CaptureCurrentNativeTerrainProgram();
+  check(square.uniforms->HasTexSquareOverride());
+  check(square.uniforms->Find(NativeTerrainUniformSlot::borderMinHeight)==commonHeight);
+  check(square.uniforms->FindName("unknownInactiveName")==common.uniforms->FindName("unknownInactiveName"));
+  check(square.uniforms->PackedMatrix(NativeTerrainUniformSlot::shadowMat)&&
+   *square.uniforms->PackedMatrix(NativeTerrainUniformSlot::shadowMat)==*common.uniforms->PackedMatrix(NativeTerrainUniformSlot::shadowMat));
+  check((*square.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==i);
+  if(i==0)firstSquare=square.uniforms;
+  if(i==1)expiredSquare=square.uniforms;
+  previousSquare=square.uniforms;
+ }
+ stats=TakeNativeTerrainUniformWriteStats();check(stats.mapCopies==0&&stats.exactChanges==32);
+ check(expiredSquare.expired()); // No linked chain of previous square snapshots.
+ check((*firstSquare->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==0);
+ check(std::get<std::vector<int32_t>>(previousSquare->ValuesCopy().at("texSquare").values)[0]==31);
+ NativeTerrainUniformSnapshot copiedSquare=*previousSquare;copiedSquare.SealSlots();
+ check(!copiedSquare.HasTexSquareOverride()&&(*copiedSquare.PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==31);
+ NativeTerrainUniformSnapshot assignedSquare;assignedSquare=*previousSquare;assignedSquare.SealSlots();
+ check(!assignedSquare.HasTexSquareOverride()&&(*assignedSquare.PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==31);
+ check(assignedSquare.FindName("unknownInactiveName")&&std::get<std::vector<float>>(assignedSquare.FindName("unknownInactiveName")->values)[0]==19.f);
+ // General writes after an observed square copy/materialize once and preserve it.
+ TakeNativeTerrainUniformWriteStats();replacement->SetUniform1f(typedSlot,34.f);
+ auto afterCommon=CaptureCurrentNativeTerrainProgram();stats=TakeNativeTerrainUniformWriteStats();
+ check(stats.mapCopies==1&&!afterCommon.uniforms->HasTexSquareOverride());
+ check((*afterCommon.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==31);
+ check(std::get<std::vector<float>>(commonHeight->values)[0]==33.f);
+ // General write while a square is pending materializes before mutation.
+ replacement->SetUniform2i(squareSlot,90,91);replacement->SetUniform1f(typedSlot,35.f);
+ auto mixed=CaptureCurrentNativeTerrainProgram();check(!mixed.uniforms->HasTexSquareOverride());
+ check((*mixed.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==90);
+ check((*mixed.uniforms->PackedFloat(NativeTerrainUniformSlot::borderMinHeight,1))[0]==35.f);
+ // Dirty common -> square retains the current effective map, not the last observed one.
+ replacement->SetUniform1f(typedSlot,36.f);replacement->SetUniform2i(squareSlot,91,92);replacement->SetUniform2i(squareSlot,92,93);
+ auto dirtyRoot=CaptureCurrentNativeTerrainProgram();
+ check(dirtyRoot.uniforms->HasTexSquareOverride()&&(*dirtyRoot.uniforms->PackedFloat(NativeTerrainUniformSlot::borderMinHeight,1))[0]==36.f);
+ check((*dirtyRoot.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==92);
+ replacement->SetUniform1f(typedSlot,37.f);replacement->SetUniform2i(squareSlot,93,94);replacement->SetUniform1f(typedSlot,38.f);
+ auto mixedDirty=CaptureCurrentNativeTerrainProgram();
+ check(!mixedDirty.uniforms->HasTexSquareOverride()&&(*mixedDirty.uniforms->PackedFloat(NativeTerrainUniformSlot::borderMinHeight,1))[0]==38.f);
+ check((*mixedDirty.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==93);
+ // Source shape/type and signed zero are preserved, not normalized as an integer override.
+ replacement->SetUniform1f(squareSlot,-0.f);auto malformedSquare=CaptureCurrentNativeTerrainProgram();
+ check(!malformedSquare.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2));
+ check(std::signbit(std::get<std::vector<float>>(malformedSquare.uniforms->FindName("texSquare")->values)[0]));
+ replacement->SetUniform2i(squareSlot,90,91);CaptureCurrentNativeTerrainProgram();
+ // Restored stale publication must not allow an unchanged writer value to return early.
+ auto savedSquare=binding.SaveCurrent();replacement->SetUniform2i(squareSlot,92,93);CaptureCurrentNativeTerrainProgram();
+ binding.Restore(savedSquare);replacement->SetUniform2i(squareSlot,92,93);
+ auto repairedSquare=CaptureCurrentNativeTerrainProgram();
+ check((*repairedSquare.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==92);
+ // Link/default merge must materialize the effective map, never drop the override.
+ replacement->DisableRaw();replacement->Reload(true,false);replacement->EnableRaw();
+ auto reloaded=CaptureCurrentNativeTerrainProgram();
+ check((*reloaded.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==92);
+ // An unsealed common root must not allocate while SealSlots is noexcept.
+ auto rawRoot=std::make_shared<NativeTerrainUniformSnapshot>();
+ rawRoot->values["groundSpecularExponent"].values=std::vector<float>{7};
+ NativeTerrainUniformValue rawSquare;rawSquare.rows=2;rawSquare.values=std::vector<int32_t>{4,5};
+ auto rawOverlay=NativeTerrainUniformSnapshot::WithTexSquare(rawRoot,std::move(rawSquare));
+ failAllocationAfter=0;rawOverlay->SealSlots();failAllocationAfter=-1;
+ check((*rawOverlay->PackedFloat(NativeTerrainUniformSlot::groundSpecularExponent,1))[0]==7);
+ // Failed general-write materialization keeps the pending square value valid.
+ replacement->SetUniform2i(squareSlot,95,96);
+ failAllocationAfter=1;bool materializeFailed=false;
+ try{replacement->SetUniform1f(typedSlot,40.f);}catch(const std::bad_alloc&){materializeFailed=true;}
+ failAllocationAfter=-1;check(materializeFailed);
+ auto afterFailure=CaptureCurrentNativeTerrainProgram();
+ check((*afterFailure.uniforms->PackedInt(NativeTerrainUniformSlot::texSquare,2))[0]==95);
+ check((*afterFailure.uniforms->PackedFloat(NativeTerrainUniformSlot::borderMinHeight,1))[0]==38.f);
  replacement->DisableRaw();replacement.reset();binding.Unbind();ConfigureNativeTerrainProgramSource({});
  std::cout<<"observationFingerprint="<<observationFingerprint<<"\n";
  std::cout<<"PASS "<<checks<<" terrain writer contract checks; GPU/Lua/gameplay not exercised\n";

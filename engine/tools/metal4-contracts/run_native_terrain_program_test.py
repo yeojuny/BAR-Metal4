@@ -36,6 +36,8 @@ def main():
 #include <array>
 #include <cstdint>
 #include <map>
+#include <optional>
+#include <memory>
 #include <variant>
 #include <vector>
 #include <memory>
