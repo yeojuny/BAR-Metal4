@@ -1,0 +1,69 @@
+{
+  "status": "PASS_WITH_RUNTIME_VALIDATION_PENDING",
+  "scope": "Focused read-only ownership/order review of H against G, plus host contract tests; no production edits or Metal game run by reviewer",
+  "blockingFindings": [],
+  "proof": [
+    {
+      "claim": "Fixed BEGIN is enabled only for the selected BEGIN mode, explicit overlap gate, and real serial worker. Gate 0 and worker 0 retain the prior pre-dispatch full GPU drain and CanSafelyDetach requirement; PREPARE selection wins both raw flags and retains its existing path.",
+      "source": [
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp:249",
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp:257",
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp:2223",
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp:2228",
+        "source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2438"
+      ]
+    },
+    {
+      "claim": "The scene-only capability has a private constructor and checks exact source credit and Begin receipt. Factory checks current scene, mailbox and credit; its main action checks scene identity, mailbox epoch and context generation before applying deferred receipts. Renderer also checks owned submission, exclusive BEGIN selection, exact pointers, eligibility and main thread before callback injection. Generic caller callbacks remain excluded.",
+      "source": [
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBeginRetirement.h:11",
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp:966",
+        "source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2399",
+        "source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2410"
+      ]
+    },
+    {
+      "claim": "Actual Begin, rather than submission or a raw environment flag, gates BEGIN release. The worker only marks predecessor retirement ready; main delivers that notice after Join, handoff release and target delivery, then settles current CPU admission. RuntimeLease may prepare and record with old GPU pending, while its existing SubmitAndDefer retirement gate still retires old GPU before current GPU commit. Source credits remain two.",
+      "source": [
+        "source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2460",
+        "source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2469",
+        "source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2481",
+        "source/engine/rts/Rendering/Backend/NativeRenderJobSettlement.h:53",
+        "source/engine/rts/Rendering/Backend/NativeRenderJobSettlement.h:63",
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp:261"
+      ]
+    },
+    {
+      "claim": "When both source credits are occupied, CPU reclaim first joins current work and applies exact predecessor receipts, then rechecks actual weak lease capacity. A live alias or missing predecessor completion takes the original full GPU drain. A settlement throw propagates without fabricating capacity. Quarantined lineage rejects admission.",
+      "source": [
+        "source/engine/rts/Rendering/Backend/NativeSourceFrameCredits.h:53",
+        "source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp:991"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "name": "new production-helper CPU reclaim and private-constructor fixture",
+      "status": "PASS",
+      "log": "host-tests/begin-cpu-reclaim-run.log",
+      "receipt": "host-tests/BEGIN-CPU-RECLAIM.json",
+      "coverage": "1000 two-credit real serial worker/Begin/Join/mailbox cycles; 1000 live-alias fallback cycles; missing completion, gate 0, CPU throw, quarantine; static factory epoch/context/wrong-mailbox and worker-0 guards"
+    },
+    {
+      "name": "updated Begin policy and pilot wrapper",
+      "status": "PASS",
+      "log": "host-tests/begin-ready-wrapper.log",
+      "coverage": "Exact scene retirement relaxes only predecessor veto; generic predecessor still rejected; all other vetoes; 100 actual worker cycles; gate-0 source guard"
+    },
+    {
+      "name": "existing PREPARE wrapper",
+      "status": "PASS",
+      "log": "host-tests/prepare-ready-wrapper.log",
+      "coverage": "Source credits, Join/notice and scene admission/failure contracts"
+    }
+  ],
+  "limits": [
+    "Host fixtures and source checks cannot establish Metal GPU timing or observed overlap frequency; the staged game run must show actual BEGIN release, pending-at-prepare and credit-reclaim witnesses.",
+    "The context-generation and scene-epoch closure checks are source verified; the Objective-C scene factory is not invoked by the C++ host fixture."
+  ]
+}

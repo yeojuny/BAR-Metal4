@@ -1,0 +1,320 @@
+--- a/rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h
++++ b/rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h
+@@ -2,6 +2,28 @@
+ #pragma once
+ #include "Metal4SurfaceState.h"
+ namespace rendering {
++// Source-frame transaction marker, not a resource owner or GPU completion.
++// A later callback failure must drain before any source journal rolls back.
++class NativeCaptureRollbackFence {
++ bool pending=false;
++public:
++ void Arm()noexcept{pending=true;}
++ void Dismiss()noexcept{pending=false;}
++ template<class Drain>void BeforeRollback(Drain&& drain){
++  if(!pending)return;
++  drain(); // Leave armed on failure; do not authorize rollback.
++  pending=false;
++ }
++ template<class Observe,class Drain,class Refresh>
++ void RefreshForDispatch(Observe&& unchanged,Drain&& drain,Refresh&& refresh){
++  if(!pending){refresh();return;}
++  bool same=false;
++  try{same=unchanged();}catch(...){/* Unknown surface requires full retirement. */}
++  if(same)return; // No CAMetalLayer property writes while predecessor is pending.
++  drain();
++  refresh(); // Reobserve after the drain, never apply the earlier observation.
++ }
++};
+ // A no-write observation is deliberately stricter than matching an old revision:
+ // SDL can change the actual drawable size without changing our CPU snapshot.
+ inline bool NativeCaptureSurfaceUnchanged(const Metal4SurfaceSnapshot& prior,
+@@ -15,18 +37,30 @@
+   prior.visible==observed.visible&&prior.minimized==observed.minimized&&
+   drawableWidth==double(prior.renderWidth)&&drawableHeight==double(prior.renderHeight);
+ }
+-// Only the value-snapshot capture may overlap the previous encode tail. Unknown
+-// observations take the original drained Refresh path. A throwing capture drains
+-// before the caller attempts source rollback; a failed drain keeps quarantine.
++// Unknown observations retain the drained Refresh path. Only an exactly stable
++// surface and a caller-proved, successfully CPU-settled suffix may retain the
++// predecessor GPU ticket. This is the ordinary joined-OFF source-capture state,
++// not GPU completion or permission to reuse its physical storage. The existing
++// runtime retirement gate still precedes the successor GPU commit.
++// A throwing capture/readiness check drains before source rollback; failed
++// drains keep the existing quarantine semantics.
++template<class Observe,class Drain,class Refresh,class Capture,class Ready>
++bool CaptureAtNativeSurfaceBoundary(bool pilot,Observe&& unchanged,Drain&& drain,
++ Refresh&& refresh,Capture&& capture,Ready&& cpuSettledSuffix)
++{
++ if(!pilot){refresh();capture();return false;}
++ bool same=false;
++ try{same=unchanged();}catch(...){/* Reobserve through original Refresh after drain. */}
++ if(!same){drain();refresh();}
++ try{capture();if(same&&cpuSettledSuffix())return true;}
++ catch(...){drain();throw;}
++ drain(); // Required/unknown suffix, changed surface, or conservative fallback.
++ return false;
++}
+ template<class Observe,class Drain,class Refresh,class Capture>
+ void CaptureAtNativeSurfaceBoundary(bool pilot,Observe&& unchanged,Drain&& drain,
+  Refresh&& refresh,Capture&& capture)
+ {
+- if(!pilot){refresh();capture();return;}
+- bool same=false;
+- try{same=unchanged();}catch(...){/* Reobserve through original Refresh after drain. */}
+- if(!same){drain();refresh();}
+- try{capture();}catch(...){drain();throw;}
+- drain(); // Before alpha, water, callbacks or source-owner settlement.
++ (void)CaptureAtNativeSurfaceBoundary(pilot,unchanged,drain,refresh,capture,[]{return false;});
+ }
+ }
+--- a/rts/Rendering/Metal4/Metal4SceneBridge.cpp
++++ b/rts/Rendering/Metal4/Metal4SceneBridge.cpp
+@@ -252,6 +252,7 @@
+ struct Session {
+  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
+  NativeSourceFrameCredits sourceCredits{PrepareReadyPilotRequested()?3u:2u};
++ NativeCaptureRollbackFence captureRollbackFence;
+  std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
+  std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
+  uint64_t cpuReadJobs220=0;
+@@ -956,6 +957,12 @@
+ } // namespace
+ 
+ void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
++void FinishCaptureBeforeRollback() {
++ if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork();});
++}
++void DismissCaptureRollbackFence() {
++ if(session)session->captureRollbackFence.Dismiss();
++}
+ void FinishPendingFrame() { RequireRetiredGPUWork(); }
+ void FinishRuntimeControl() { RequireRetiredGPUWork(); }
+ NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
+@@ -1647,8 +1654,9 @@
+ 		return;
+ 	if (session->preparedFrame)
+ 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
+- // Only an exactly unchanged surface permits this value-snapshot capture to
+- // overlap N's admitted prepare/encode work. Drain before later alpha/water/Lua work.
++ // An unchanged surface permits value capture to overlap N's CPU work. After
++ // joining that job, the proved PREPARE suffix may use the ordinary OFF state:
++ // source CPU settled, immutable predecessors still owned by the GPU ticket.
+  const bool deferredParticles=BeginReadyPilotRequested()||PrepareReadyPilotRequested();
+  const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
+  std::unique_ptr<CPUReadReceipt220> cpuReceipt220;
+@@ -1680,7 +1688,7 @@
+  };
+  // END EARLY_CPU_READ_LAUNCH220
+ 
+- CaptureAtNativeSurfaceBoundary(deferredParticles,
++ const bool retainedPredecessorGPU=CaptureAtNativeSurfaceBoundary(deferredParticles,
+   [&]{return session->surface.CaptureRefreshUnchanged();},
+   []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
+    {metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
+@@ -1694,13 +1702,30 @@
+    if(deferredParticles){
+     // Particle writers require the prior CPU/source job to settle, not its GPU
+     // completion. They produce fresh CPU geometry and retain immutable sources.
+-    // Keep the boundary's full GPU drain after this tail, before shield/water/
+-    // alpha callbacks. A throwing tail still drains before source rollback.
++    // A throwing join/tail still takes the boundary's full GPU drain before
++    // source rollback. Successful CPU settlement does not retire GPU credits.
+     session->renderer->FinishCPUWork();
+     session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
+    }
++  },[&]{
++   static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_CAPTURE_READY_BOUNDARY");return !value||std::string_view(value)=="1";}();
++   // Unknown/special paths preserve the old tail drain. Evaluate only AFTER
++   // FinishCPUWork and particle capture succeed; no admission or notice is
++   // fabricated here. Source receipts/credits remain held until real GPU
++   // completion is published and delivered at the existing retirement site.
++   return enabled&&PrepareReadyPilotRequested()&&!BeginReadyPilotRequested()&&
++    session->renderer&&!session->renderer->HasScreenContinuation()&&
++    !session->dynamicWaterCapture.Initialized()&&!session->legacyWaterCapture.Initialized()&&
++    !session->sourceSettlement&&!session->admissionSettlement&&
++    session->preparedFrame&&session->preparedFrame->simulationFrame>0&&
++    session->preparedFrame->sourceDrawFrame==globalRendering->drawFrame&&
++    session->preparedFrame->opaqueModelFrame&&session->ModelSourceOwnersConnected()&&
++    session->preparedFrame->unsupported.empty()&&session->surface.Snapshot().CanPresent();
+   });
+-
++ if(retainedPredecessorGPU){session->captureRollbackFence.Arm();static bool reported=false;if(!reported){reported=true;
++  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3");}}
++
++ try {
+  auto& frame=*session->preparedFrame;
+  frame.mainSampling=session->renderer->ActualMainSampling();
+  frame.minSampleShadingRate=globalRendering->minSampleShadingRate;
+@@ -1853,6 +1878,13 @@
+  if(earlyCPURead220&&cpuReceipt220)cpuJoin220.TransferTo(cpuReceipt220->pending);
+  else cpuJoin220.Finish();
+  session->cpuReadReceipt220=std::move(cpuReceipt220);
++ }catch(...){
++  // New CPU-only suffix failures must observe real GPU retirement before the
++  // outer source rollback. Never cancel an old ticket or release its credits
++  // merely because the source worker joined. A failed drain keeps quarantine.
++  if(retainedPredecessorGPU){cpuJoin220.Finish();FinishCaptureBeforeRollback();}
++  throw;
++ }
+ }
+ 
+ void AbortPreparedWorld()
+@@ -2039,7 +2071,9 @@
+  // Refresh writes CAMetalLayer properties, not just an immutable observation.
+  // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
+  if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();
+-	session->surface.Refresh();
++ session->captureRollbackFence.RefreshForDispatch(
++  [&]{return session->surface.CaptureRefreshUnchanged();},
++  []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();});
+  const auto pbrDeclarations=session->renderer?session->renderer->CapturePBRSource():NativePBRDeclarationReceipt{};
+ 	const auto submitTargets = [&]() -> DrawResult {
+ 		const auto independent=screenUI?std::count_if(screenUI->targetPasses.begin(),screenUI->targetPasses.end(),[](const auto& pass){return !pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen;}):0;
+--- a/rts/Rendering/Metal4/Metal4SceneBridge.h
++++ b/rts/Rendering/Metal4/Metal4SceneBridge.h
+@@ -65,6 +65,10 @@
+ // Complete a queued presentation before recorder reuse or scene teardown.
+ // Join immutable CPU preparation before source aborts; does not submit or drain GPU work.
+ void FinishCPUReadPreparation();
++// Conditional full retirement before source rollback on a failed capture.
++void FinishCaptureBeforeRollback();
++// Successful source transaction; does not retire a GPU receipt or credit.
++void DismissCaptureRollbackFence();
+ void FinishPendingFrame();
+ // Source-thread external GPU control boundary: settle CPU/Begin, then retire GPU
+ // and apply exact scene receipts before taking a new Runtime lease/source mutation.
+--- a/rts/Game/Game.cpp
++++ b/rts/Game/Game.cpp
+@@ -1785,7 +1785,13 @@
+ 			LuaNativePostprocess::RetireCompletedFrame(nativeResult.completedPostprocessSerial);
+ 			LuaNativeVolumetricClouds::RetireCompletedFrame(nativeResult.sourceDrawFrame);
+ 		}
++		// Keep the exceptional fence through all throwing world/screen/result
++		// work, including queued DrawWorld returns. This is not GPU retirement.
++		rendering::scene::DismissCaptureRollbackFence();
+ 	} catch (...) {
++		// A CPU-settled stable capture may retain the predecessor GPU ticket.
++		// Complete its real retirement before the first Lua/source rollback.
++		rendering::scene::FinishCaptureBeforeRollback();
+ 		rendering::scene::FinishCPUReadPreparation();
+ 		LuaNativePostprocess::AbortFrame();
+ 		LuaNativeVolumetricClouds::AbortFrame();
+--- a/tools/metal4-contracts/TestNativeCaptureSurfaceBoundary.cpp
++++ b/tools/metal4-contracts/TestNativeCaptureSurfaceBoundary.cpp
+@@ -1,11 +1,88 @@
+ #include "Rendering/Metal4/Metal4CaptureSurfaceBoundary.h"
+ #include <cassert>
+ #include "Rendering/Backend/NativeDeferredParticleCapture.h"
++#include "Rendering/Backend/NativeFrameCompletionMailbox.h"
++#include "Rendering/Backend/NativeSourceFrameCredits.h"
+ #include <limits>
+ #include <string>
+ #include <stdexcept>
+ using namespace rendering;
+ int main(){
++ // A surface can change after stable capture but before dispatch. Do not write
++ // CAMetalLayer properties under a retained predecessor, even on that edge.
++ {
++  NativeCaptureRollbackFence fence;std::string order;int observed=1,applied=0;
++  auto refresh=[&]{order+='R';applied=observed;};
++  auto drain=[&]{order+='D';observed=2;};
++  fence.RefreshForDispatch([&]{order+='O';return true;},drain,refresh);assert(order=="R");
++  fence.Arm();order.clear();
++  fence.RefreshForDispatch([&]{order+='O';return true;},drain,refresh);assert(order=="O");
++  order.clear();fence.RefreshForDispatch([&]{order+='O';return false;},drain,refresh);
++  assert(order=="ODR"&&applied==2);
++  order.clear();fence.RefreshForDispatch([&]()->bool{order+='O';throw std::runtime_error("unknown");},drain,refresh);assert(order=="ODR");
++  order.clear();try{fence.RefreshForDispatch([&]{order+='O';return false;},[&]{order+='D';throw std::runtime_error("drain");},refresh);assert(false);}catch(const std::runtime_error&){}assert(order=="OD");
++ }
++ // Exceptions after the surface helper returned (alpha/Lua/publication or
++ // later DrawWorld preparation) must fence before ANY source rollback.
++ {
++  NativeCaptureRollbackFence fence;bool gpuPending=true,rolledBack=false;int drains=0;
++  auto drain=[&]{++drains;gpuPending=false;};
++  fence.BeforeRollback(drain);assert(drains==0); // OFF/fallback unchanged.
++  const bool retained=CaptureAtNativeSurfaceBoundary(true,[]{return true;},drain,[]{},[]{},[]{return true;});
++  assert(retained&&gpuPending);fence.Arm();
++  try{throw std::runtime_error("later alpha callback");}
++  catch(...){fence.BeforeRollback(drain);assert(!gpuPending);rolledBack=true;}
++  assert(rolledBack&&drains==1);fence.BeforeRollback(drain);assert(drains==1);
++  fence.Arm();gpuPending=true;
++  try{fence.BeforeRollback([]{throw std::runtime_error("GPU quarantine");});assert(false);}catch(const std::runtime_error&){}
++  assert(gpuPending);fence.BeforeRollback(drain);assert(drains==2&&!gpuPending);
++  fence.Arm();gpuPending=true;fence.Dismiss();fence.BeforeRollback(drain);
++  assert(gpuPending&&drains==2); // Successful source end doesn't claim GPU done.
++ }
++ // A stable, CPU-settled suffix must retain the exact older GPU source lease.
++ // CPU acceptance alone cannot pop a GPU notice or admit unbounded captures.
++ {
++  NativeSourceFrameCredits credits(3);NativeFrameCompletionMailbox mailbox(7);
++  auto old=credits.Acquire(10);credits.Hold(old);
++  const auto ticket=mailbox.Prepare(7,10,110);
++  auto current=credits.Acquire(11);
++  bool cpuPending=true,gpuPending=true;unsigned drains=0;
++  const auto drain=[&]{++drains;gpuPending=false;mailbox.Publish(ticket,{true,10,110});};
++  const bool deferred=CaptureAtNativeSurfaceBoundary(true,[]{return true;},drain,[]{assert(false);},
++   [&]{cpuPending=false;mailbox.Accept(ticket);},[&]{assert(!cpuPending);return true;});
++  assert(deferred&&gpuPending&&drains==0&&!mailbox.Pop());credits.ValidateHeld(10);
++  auto third=credits.Acquire(12);assert(!credits.HasCapacity());
++  try{credits.Acquire(13);assert(false);}catch(const std::logic_error&){}
++  old.reset();assert(!credits.HasCapacity()); // GPU-held even without caller alias.
++  drain();const auto notice=mailbox.Pop();assert(notice&&notice->sourceDrawFrame==10);
++  credits.ReleaseHeld(notice->sourceDrawFrame);assert(credits.HasCapacity());
++  credits.Validate(current,11);credits.Validate(third,12); // Never retire N+1.
++  try{mailbox.Publish(ticket,{true,10,110});assert(false);}catch(const std::logic_error&){}
++  mailbox.Close();NativeFrameCompletionMailbox replacement(8);
++  try{replacement.Publish(ticket,{true,10,110});assert(false);}catch(const std::logic_error&){}
++  try{mailbox.Publish(ticket,{true,10,110});assert(false);}catch(const std::logic_error&){}
++ }
++ // Readiness is a post-capture proof. Required GPU consumers, unknown policy,
++ // changed/unknown surface, failing join/capture and failed drain all preserve
++ // the full conservative boundary. No readiness claim survives failure.
++ for(unsigned scenario=0;scenario<8;++scenario){
++  std::string order;bool readyCalled=false;bool threw=false;
++  const auto observe=[&](){order+='O';if(scenario==3)throw std::runtime_error("observation");return scenario!=2;};
++  const auto drain=[&]{order+='D';if(scenario==7)throw std::runtime_error("quarantine");};
++  try{
++   bool retained=CaptureAtNativeSurfaceBoundary(true,observe,drain,[&]{order+='R';},[&]{
++    order+='C';if(scenario==4||scenario==7)throw std::runtime_error("join");
++    if(scenario==5)throw std::runtime_error("capture");
++   },[&]{readyCalled=true;order+='P';if(scenario==6)throw std::runtime_error("proof");return scenario!=1;});
++   assert(retained==(scenario==0));
++  }catch(const std::runtime_error& e){threw=true;if(scenario==7)assert(std::string(e.what())=="quarantine");}
++  assert(threw==(scenario>=4));
++  if(scenario==0)assert(order=="OCP");
++  if(scenario==1)assert(order=="OCPD");
++  if(scenario==2||scenario==3)assert(order=="ODRCD"&&!readyCalled);
++  if(scenario==4||scenario==5||scenario==7)assert(order=="OCD"&&!readyCalled);
++  if(scenario==6)assert(order=="OCPD");
++ }
+  {
+   NativeDeferredParticleCapture state;state.RequireComplete();int writes=0;
+   try{state.Complete([&]{++writes;});assert(false);}catch(const std::logic_error&){}assert(writes==0);
+--- a/tools/metal4-contracts/run_native_capture_surface_boundary_test.py
++++ b/tools/metal4-contracts/run_native_capture_surface_boundary_test.py
+@@ -30,7 +30,7 @@
+ p=(root/'rts/Rendering/Backend/NativeWorldParticleCapture.cpp').read_text()
+ assert 'auto frame=std::make_shared<NativeWorldParticleFrame>();' in p
+ assert 'AppendNativeParticleGeometry(frame,vertices,geometry.GetIndcs(),range);' in p
+-print('Capture surface: 1000 exact observations, all changed/unknown states, drain/capture failures and reobservation PASS; production scope limited to Capture(Main)')
++print('Capture surface: 1000 exact observations, changed/unknown/required-GPU fallback, failed join/capture/readiness/drain PASS; CPU-only stable suffix retains GPU-held source credit until exact real completion; bounded capacity and stale/late mailbox rejection PASS')
+ 
+ c=(root/'rts/Rendering/WorldFrameCapture.cpp').read_text()
+ assert 'if(deferMainParticles)result.deferredMainParticles.Defer();\n else result.particleFrame =' in c
+@@ -41,4 +41,13 @@
+ assert r.index('frame.deferredMainParticles.RequireComplete();')<r.index('FinishCPUWork();')
+ h=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.h').read_text()
+ assert 'this->frame->deferredMainParticles.RequireComplete();' in h
+-print('Deferred particle writer: missing/repeated/reentrant/failed completion rejected; particle source runs after CPU settlement and before final GPU drain; submission rejects partial frame')
++print('Deferred particle writer: missing/repeated/reentrant/failed completion rejected; particle source runs after CPU settlement before suffix readiness proof; submission rejects partial frame')
++g=(root/'rts/Game/Game.cpp').read_text().split('bool CGame::Draw()',1)[1].split('#endif',1)[0]
++# Use the entire native Draw body (the early #endif above is only declarations).
++g=(root/'rts/Game/Game.cpp').read_text().split('bool CGame::Draw()',1)[1].split('RmlGui::Update();',1)[0]
++abort=g.split('rendering::scene::FinishCaptureBeforeRollback();',1)[1]
++assert abort.index('FinishCPUReadPreparation();')<abort.index('LuaNativePostprocess::AbortFrame();')
++assert g.index('DismissCaptureRollbackFence();')<g.index('FinishCaptureBeforeRollback();')
++assert 'session->captureRollbackFence.Arm()' in b
++assert 'if(retainedPredecessorGPU){cpuJoin220.Finish();FinishCaptureBeforeRollback();}' in b
++print('Post-boundary suffix/later-callback exception: full retirement before first rollback; failed drain stays armed; successful capture does not fabricate GPU completion PASS')

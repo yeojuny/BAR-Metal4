@@ -1,0 +1,8 @@
+{
+  "status": "NO_OBVIOUS_NEW_STATIC_DIFFERENCE",
+  "review": "Both 1512x950 internal sim1500 PNGs inspected. Mountain/terrain/tree/unit/ring placement and occlusion visually align. Water animation and GAME PAUSED text position differ. Shared dark/blur horizontal regions remain. No pixel equality or full renderer parity claimed.",
+  "images": [
+    "measurement/screen_paced/preparation/runs/S_OLD_BEGIN_PACED/scene.png",
+    "measurement/screen_paced/preparation/runs/S_FIXED_BEGIN_PACED/scene.png"
+  ]
+}

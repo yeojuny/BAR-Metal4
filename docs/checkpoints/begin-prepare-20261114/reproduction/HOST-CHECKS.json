@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "review": "OWNERSHIP-REVIEW.json",
+  "suites": [
+    "new real serial worker/Begin/Join/mailbox two-credit reclaim 1000 cycles",
+    "surviving alias fallback 1000 cycles; missing completion; gate0; settlement failure; quarantine",
+    "Begin exact scene retirement eligibility and all old vetoes; actual worker100cycles",
+    "PREPARE/sourcecredits5000/jobsettlement1000/extractedscene100",
+    "readback1000; extractedGPUretirement15; runtimeleasepolicy1000"
+  ],
+  "limitations": [
+    "Host GPU completions simulated; actual Metal validation pending",
+    "Factory context/epoch binding checked in source; actualScene runtime validation pending"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "candidateSHA256": "fd2ba879ee5867c4ebde836689e1e53c2e699d0571b8f5efaa54ce3b0135c4b9",
+  "runtime": "9 normal; validation errors0; actual fixedBEGIN/pendingownership/CPUreclaim observed",
+  "adoption": "Preserve tested BEGIN repair separately; adopted8aPREPARE baseline remains unchanged",
+  "buildReceipt": "CANDIDATE.json remains immutable pre-run snapshot; this file and RESULTS.json are authoritative final result"
+}

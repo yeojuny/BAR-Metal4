@@ -1,0 +1,22 @@
+[
+  {
+    "path": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+    "sha256": "0adc79d1991f2f425892cb0beb4f0ebae29ab0b89c30c68eb4b68b9edbebe6ef"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4RuntimeNative.h",
+    "sha256": "2d3bdc2250d1450f880ef326fd65e35d094695df5c223b3fdd0b00df171937b8"
+  },
+  {
+    "path": "rts/Rendering/Backend/NativeRenderDispatchReceipt.h",
+    "sha256": "ce8b45fd4230e59624f2587e1fb8bc91df27da55a0a7547a9b53ae99dfdde525"
+  },
+  {
+    "path": "rts/Rendering/Backend/NativeRenderJobSettlement.h",
+    "sha256": "78cdd4d34734c485b54881d4d1ed9955f555028cfb074c4662724ffd06424472"
+  },
+  {
+    "path": "rts/Rendering/Backend/NativeFrameCompletionMailbox.h",
+    "sha256": "3a0fc0d8bc0fff34b8e2e51fe558ba5fd7a4f6b1eeff235d5a44dede1f0e4983"
+  }
+]

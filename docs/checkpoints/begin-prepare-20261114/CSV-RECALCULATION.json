@@ -1,0 +1,147 @@
+{
+  "status": "PASS",
+  "games": 14,
+  "method": "total draws / counted wall time; reciprocal of slowest ceil(1% interval count) mean",
+  "results": [
+    {
+      "campaign": "repair",
+      "arm": "A1_OLD_BEGIN_PACED",
+      "csv": "repair/frames/A1_OLD_BEGIN_PACED.csv",
+      "draws": 4283,
+      "seconds": 39.997001648,
+      "FPS": 107.08302681519044,
+      "intervalSamples": 4282,
+      "slow1PercentFPS": 75.43859649122808
+    },
+    {
+      "campaign": "repair",
+      "arm": "B1_FIXED_BEGIN_PACED",
+      "csv": "repair/frames/B1_FIXED_BEGIN_PACED.csv",
+      "draws": 7411,
+      "seconds": 39.999000549,
+      "FPS": 185.27962944777326,
+      "intervalSamples": 7410,
+      "slow1PercentFPS": 128.6449399656947
+    },
+    {
+      "campaign": "repair",
+      "arm": "C1_PREPARE_PACED",
+      "csv": "repair/frames/C1_PREPARE_PACED.csv",
+      "draws": 7383,
+      "seconds": 40.0,
+      "FPS": 184.575,
+      "intervalSamples": 7382,
+      "slow1PercentFPS": 131.6725976304758
+    },
+    {
+      "campaign": "repair",
+      "arm": "C2_PREPARE_PACED",
+      "csv": "repair/frames/C2_PREPARE_PACED.csv",
+      "draws": 7409,
+      "seconds": 39.998001099,
+      "FPS": 185.23425662351997,
+      "intervalSamples": 7408,
+      "slow1PercentFPS": 138.6321626617375
+    },
+    {
+      "campaign": "repair",
+      "arm": "B2_FIXED_BEGIN_PACED",
+      "csv": "repair/frames/B2_FIXED_BEGIN_PACED.csv",
+      "draws": 7409,
+      "seconds": 39.998001099,
+      "FPS": 185.23425662351997,
+      "intervalSamples": 7408,
+      "slow1PercentFPS": 127.76831345826236
+    },
+    {
+      "campaign": "repair",
+      "arm": "A2_OLD_BEGIN_PACED",
+      "csv": "repair/frames/A2_OLD_BEGIN_PACED.csv",
+      "draws": 4230,
+      "seconds": 40.0,
+      "FPS": 105.75,
+      "intervalSamples": 4229,
+      "slow1PercentFPS": 73.63013673414336
+    },
+    {
+      "campaign": "comparison",
+      "arm": "A1_FIXED_BEGIN_PACED",
+      "csv": "comparison/frames/A1_FIXED_BEGIN_PACED.csv",
+      "draws": 7413,
+      "seconds": 39.995998383,
+      "FPS": 185.34354184669735,
+      "intervalSamples": 7412,
+      "slow1PercentFPS": 129.5336787564767
+    },
+    {
+      "campaign": "comparison",
+      "arm": "B1_PREPARE_PACED",
+      "csv": "comparison/frames/B1_PREPARE_PACED.csv",
+      "draws": 7408,
+      "seconds": 39.998001099,
+      "FPS": 185.20925537414442,
+      "intervalSamples": 7407,
+      "slow1PercentFPS": 142.58555133079847
+    },
+    {
+      "campaign": "comparison",
+      "arm": "B2_PREPARE_PACED",
+      "csv": "comparison/frames/B2_PREPARE_PACED.csv",
+      "draws": 7388,
+      "seconds": 39.999000549,
+      "FPS": 184.70461508030616,
+      "intervalSamples": 7387,
+      "slow1PercentFPS": 140.68441064638782
+    },
+    {
+      "campaign": "comparison",
+      "arm": "A2_FIXED_BEGIN_PACED",
+      "csv": "comparison/frames/A2_FIXED_BEGIN_PACED.csv",
+      "draws": 7401,
+      "seconds": 39.999000549,
+      "FPS": 185.02962320104845,
+      "intervalSamples": 7400,
+      "slow1PercentFPS": 131.67259786476868
+    },
+    {
+      "campaign": "comparison",
+      "arm": "B3_PREPARE_PACED",
+      "csv": "comparison/frames/B3_PREPARE_PACED.csv",
+      "draws": 7407,
+      "seconds": 40.0,
+      "FPS": 185.175,
+      "intervalSamples": 7406,
+      "slow1PercentFPS": 144.50867052023122
+    },
+    {
+      "campaign": "comparison",
+      "arm": "A3_FIXED_BEGIN_PACED",
+      "csv": "comparison/frames/A3_FIXED_BEGIN_PACED.csv",
+      "draws": 7402,
+      "seconds": 40.000999451,
+      "FPS": 185.04537640533766,
+      "intervalSamples": 7401,
+      "slow1PercentFPS": 128.2051282051282
+    },
+    {
+      "campaign": "comparison",
+      "arm": "A4_FIXED_BEGIN_PACED",
+      "csv": "comparison/frames/A4_FIXED_BEGIN_PACED.csv",
+      "draws": 7427,
+      "seconds": 40.000999451,
+      "FPS": 185.670360789306,
+      "intervalSamples": 7426,
+      "slow1PercentFPS": 132.9787234042553
+    },
+    {
+      "campaign": "comparison",
+      "arm": "B4_PREPARE_PACED",
+      "csv": "comparison/frames/B4_PREPARE_PACED.csv",
+      "draws": 7414,
+      "seconds": 40.002998352,
+      "FPS": 185.33610742779055,
+      "intervalSamples": 7413,
+      "slow1PercentFPS": 135.1351348916484
+    }
+  ]
+}

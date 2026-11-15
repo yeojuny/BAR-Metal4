@@ -1,0 +1,86 @@
+{
+  "status": "STATIC_REVIEW_COMPLETE",
+  "scope": "Frozen signed H source only; architecture assessment before additional same-engine comparisons; no code changes, builds or games",
+  "sourceRoot": "../begin-prepare-overlap-fix-20261114-01/source/engine",
+  "findings": [
+    {
+      "topic": "Actual release point",
+      "assessment": "Both modes use the same owned serial worker and DrawPrepared path. PREPARE returns to Game immediately after successful enqueue via ReleaseForPreparation; BEGIN waits for an actual Begin-ready publication, delivers the target notice, and returns only if the worker is still running. A fast finished/no-Begin worker joins instead. Neither release means GPU completion or source-credit release.",
+      "refs": [
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:2460",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:2481",
+        "rts/Rendering/Backend/NativeRenderJobSettlement.h:49",
+        "rts/Rendering/Backend/NativeRenderJobSettlement.h:53",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:2277"
+      ]
+    },
+    {
+      "topic": "GPU depth and source capacity",
+      "assessment": "Current SubmitAndDefer fully retires the predecessor before committing the current GPU ticket; independent CPU preparation/recording may overlap a pending predecessor, but the modes do not create two simultaneously pending GPU submissions. PREPARE allocates three source-credit slots; BEGIN retains two. A credit is released on the main thread only after the exact GPU completion mailbox receipt retires source/UI/world/water owners, not when Begin or CPU Join completes.",
+      "refs": [
+        "rts/Rendering/Metal4/Metal4RuntimeNative.mm:881",
+        "rts/Rendering/Metal4/Metal4RuntimeNative.mm:895",
+        "rts/Rendering/Metal4/Metal4RuntimeNative.mm:896",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:265",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:921",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:944"
+      ]
+    },
+    {
+      "topic": "CPU capture and recording overlap",
+      "assessment": "The third PREPARE credit can admit N+1 at Game's acquisition while N-1 and N are retained, so N+1's stable-surface capture prefix can overlap N's worker preparation/encoding. The capture boundary joins N before deferred particle writers and then may leave its predecessor GPU ticket pending through a proven stable suffix. In steady-state BEGIN with two held credits, N+1 acquisition instead calls FinishCPUWork for N and applies N-1's exact completion before capture starts; thus its release-after-Begin generally cannot overlap N+1 source capture with N's remaining worker tail when both credits are occupied. This is a source-level pressure explanation, not a measured frequency or speed attribution. Either mode can hit earlier GPU drains for changed surface, first-use resources, residency/slot reuse or readback.",
+      "refs": [
+        "rts/Game/Game.cpp:1542",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:991",
+        "rts/Rendering/Backend/NativeSourceFrameCredits.h:53",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:1724",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:1740",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:1749",
+        "rts/Rendering/Metal4/Metal4RuntimeNative.mm:705",
+        "rts/Rendering/Metal4/Metal4RuntimeNative.mm:726"
+      ]
+    },
+    {
+      "topic": "Backpressure and responsiveness",
+      "assessment": "BEGIN's two-credit budget bounds retained source generations more tightly but can move the worker Join to the next Game acquisition; if CPU settlement does not free a weak lease, the original full GPU drain remains the fallback. PREPARE offers an earlier main return and one extra source-credit generation, but may wait later at its capture suffix, slot reuse or GPU retirement. BEGIN publishes a real target-submission notice at Begin; PREPARE delivers that notice at Join. These are different latency placements, so frame-rate averages alone cannot establish input or presentation responsiveness.",
+      "refs": [
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:993",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:996",
+        "rts/Rendering/Backend/NativeSourceFrameCredits.h:53",
+        "rts/Rendering/Backend/NativeRenderJobSettlement.h:53",
+        "rts/Rendering/Backend/NativeRenderJobSettlement.h:67"
+      ]
+    },
+    {
+      "topic": "Ownership, failures and RAM",
+      "assessment": "The shared admission transfers an exact source credit and journals; queued or begun failures quarantine dependent younger captures instead of restoring an older frame over them. The scene-only BEGIN predecessor notice is delivered after worker Join and checks scene identity, mailbox epoch and texture context generation. Stable-surface rollback drains before mutating old journals; changed/unknown surface uses the drained Refresh path. PREPARE's three slots and earlier capture can retain more source owner graphs, but actual resident-set size, texture residency and peak bytes are not measured by this static review; credit count is not a RAM measurement.",
+      "refs": [
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:825",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:836",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:856",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:868",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:966",
+        "rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h:19",
+        "rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h:49",
+        "rts/Game/Game.cpp:1794"
+      ]
+    },
+    {
+      "topic": "Long-term shape and ceiling",
+      "assessment": "Keep one owned submission, admission, worker, runtime and completion implementation with a session-selected release policy; do not fork renderer pipelines. The mode-specific policy needs to state the release gate (enqueued versus actual Begin), two versus three source credits, and the exact predecessor-retirement capability, with per-frame ineligibility falling back to the joined path. A per-frame switch between budgets would require a new source-owner proof because current credit capacity is fixed at Session construction. Preserve common surface, rollback, epoch, failure, mailbox and one-GPU-commit gates. A shared next investigation is whether more immutable capture-prefix work can safely run before the mandatory particle-writer Join, and where common CPU preparation, GPU work, event wait and submission setup actually consume the critical cycle. This requires source-owner proof and matched timing, not widening a gate by assumption. Choose a default from repeated paired same-engine results plus measured frame latency and peak memory. At 185 FPS, 230 FPS corresponds to about 5.405 versus 4.348 ms per frame, roughly 1.06 ms or 19.6% less critical cycle time under the same workload; this does not imply extra GPU depth is necessary or promise the target. Equal FPS alone would not prove GPU limitation without GPU timing.",
+      "refs": [
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:248",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:265",
+        "rts/Rendering/Metal4/Metal4SceneBridge.cpp:2221",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:2425",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:2481",
+        "rts/Rendering/Metal4/Metal4RuntimeNative.mm:895"
+      ]
+    }
+  ],
+  "uncertainties": [
+    "Static code permits conditional overlap but does not show how often a real frame reaches the stable/eligible paths or where its bottleneck lands.",
+    "The repeated ABBA/BAAB comparison is required for same-engine performance direction; this review makes no causal percentage or FPS prediction.",
+    "No direct peak-RSS or end-to-end input-to-present latency measurement is available here."
+  ]
+}

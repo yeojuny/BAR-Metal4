@@ -1,0 +1,351 @@
+{
+  "status": "COMPLETE_8_RUN_COMPARISON_NO_CLEAR_MEAN_FPS_WINNER",
+  "candidateSHA256": "fd2ba879ee5867c4ebde836689e1e53c2e699d0571b8f5efaa54ce3b0135c4b9",
+  "newRunsOnly": true,
+  "perRun": [
+    {
+      "order": 1,
+      "arm": "A1_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.34354184669735,
+      "draws": 7413,
+      "seconds": 39.995998383,
+      "slow1PercentFPS": 129.5336787564767,
+      "warmupSeconds": 13.975000381,
+      "foregroundMatched": 158,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2169",
+        "begin_prepare_overlap": "1"
+      },
+      "cpuReclaim": "OBSERVED"
+    },
+    {
+      "order": 2,
+      "arm": "B1_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 185.20925537414442,
+      "draws": 7408,
+      "seconds": 39.998001099,
+      "slow1PercentFPS": 142.58555133079847,
+      "warmupSeconds": 13.970999718,
+      "foregroundMatched": 158,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "cpuReclaim": "NOT_OBSERVED"
+    },
+    {
+      "order": 3,
+      "arm": "B2_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 184.70461508030616,
+      "draws": 7388,
+      "seconds": 39.999000549,
+      "slow1PercentFPS": 140.68441064638782,
+      "warmupSeconds": 13.975000381,
+      "foregroundMatched": 158,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "cpuReclaim": "NOT_OBSERVED"
+    },
+    {
+      "order": 4,
+      "arm": "A2_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.02962320104845,
+      "draws": 7401,
+      "seconds": 39.999000549,
+      "slow1PercentFPS": 131.67259786476868,
+      "warmupSeconds": 13.972999573,
+      "foregroundMatched": 157,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2110",
+        "begin_prepare_overlap": "1"
+      },
+      "cpuReclaim": "OBSERVED"
+    },
+    {
+      "order": 5,
+      "arm": "B3_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 185.175,
+      "draws": 7407,
+      "seconds": 40.0,
+      "slow1PercentFPS": 144.50867052023122,
+      "warmupSeconds": 13.972999573,
+      "foregroundMatched": 155,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "cpuReclaim": "NOT_OBSERVED"
+    },
+    {
+      "order": 6,
+      "arm": "A3_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.04537640533766,
+      "draws": 7402,
+      "seconds": 40.000999451,
+      "slow1PercentFPS": 128.2051282051282,
+      "warmupSeconds": 13.972999573,
+      "foregroundMatched": 155,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2122",
+        "begin_prepare_overlap": "1"
+      },
+      "cpuReclaim": "OBSERVED"
+    },
+    {
+      "order": 7,
+      "arm": "A4_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.670360789306,
+      "draws": 7427,
+      "seconds": 40.000999451,
+      "slow1PercentFPS": 132.9787234042553,
+      "warmupSeconds": 13.970999718,
+      "foregroundMatched": 154,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2132",
+        "begin_prepare_overlap": "1"
+      },
+      "cpuReclaim": "OBSERVED"
+    },
+    {
+      "order": 8,
+      "arm": "B4_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 185.33610742779055,
+      "draws": 7414,
+      "seconds": 40.002998352,
+      "slow1PercentFPS": 135.1351348916484,
+      "warmupSeconds": 13.968999863,
+      "foregroundMatched": 155,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "cpuReclaim": "NOT_OBSERVED"
+    }
+  ],
+  "pooled": {
+    "FIXED_BEGIN": {
+      "FPS": 185.27222636236704,
+      "samples": 29639,
+      "p99Ms": 7.0,
+      "slow1PercentFPS": 130.49209138840072,
+      "maximumMs": 13.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0,
+      "draws": 29643,
+      "seconds": 159.996997834,
+      "runs": 4,
+      "arithmeticMeanFPS": 185.27222556059735,
+      "minFPS": 185.02962320104845,
+      "maxFPS": 185.670360789306,
+      "sampleStdDevFPS": 0.3021666852929042,
+      "coefficientOfVariationPercent": 0.16309335324202384,
+      "meanOrder": 4.5,
+      "independentRecalculation": "PASS totaldraws/totaltime and slowestceil1percent intervals"
+    },
+    "PREPARE": {
+      "FPS": 185.10625,
+      "samples": 29613,
+      "p99Ms": 6.0,
+      "slow1PercentFPS": 140.4919583062952,
+      "maximumMs": 16.000001,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0,
+      "draws": 29617,
+      "seconds": 160.0,
+      "runs": 4,
+      "arithmeticMeanFPS": 185.10624447056028,
+      "minFPS": 184.70461508030616,
+      "maxFPS": 185.33610742779055,
+      "sampleStdDevFPS": 0.27657531542559644,
+      "coefficientOfVariationPercent": 0.14941436266326694,
+      "meanOrder": 4.5,
+      "independentRecalculation": "PASS totaldraws/totaltime and slowestceil1percent intervals"
+    }
+  },
+  "beginMinusPrepareFPS": 0.16597636236704716,
+  "beginVsPreparePercent": 0.08966545557864691,
+  "pairedComparisons": [
+    {
+      "pair": 1,
+      "orders": [
+        1,
+        2
+      ],
+      "sequence": "A-B",
+      "beginFPS": 185.34354184669735,
+      "prepareFPS": 185.20925537414442,
+      "beginMinusPrepareFPS": 0.13428647255292958,
+      "beginVsPreparePercent": 0.07250527101447801
+    },
+    {
+      "pair": 2,
+      "orders": [
+        3,
+        4
+      ],
+      "sequence": "B-A",
+      "beginFPS": 185.02962320104845,
+      "prepareFPS": 184.70461508030616,
+      "beginMinusPrepareFPS": 0.32500812074229657,
+      "beginVsPreparePercent": 0.1759610178668103
+    },
+    {
+      "pair": 3,
+      "orders": [
+        5,
+        6
+      ],
+      "sequence": "B-A",
+      "beginFPS": 185.04537640533766,
+      "prepareFPS": 185.175,
+      "beginMinusPrepareFPS": -0.1296235946623483,
+      "beginVsPreparePercent": -0.07000059115017665
+    },
+    {
+      "pair": 4,
+      "orders": [
+        7,
+        8
+      ],
+      "sequence": "A-B",
+      "beginFPS": 185.670360789306,
+      "prepareFPS": 185.33610742779055,
+      "beginMinusPrepareFPS": 0.3342533615154366,
+      "beginVsPreparePercent": 0.1803498336910181
+    }
+  ],
+  "pairedSummary": {
+    "meanFPS": 0.16598109003707862,
+    "minFPS": -0.1296235946623483,
+    "maxFPS": 0.3342533615154366,
+    "sampleStdDevFPS": 0.21755599450648613,
+    "meanPercent": 0.08970388285553244,
+    "beginHigherPairs": 3,
+    "prepareHigherPairs": 1,
+    "independentUnits": "four adjacent run pairs, not individual frames",
+    "firstOrderEffects": {
+      "A-B": 0.2342699170341831,
+      "B-A": 0.09769226303997414
+    }
+  },
+  "blocks": [
+    {
+      "orders": [
+        1,
+        4
+      ],
+      "sequence": "ABBA",
+      "beginFPS": 185.18657663328037,
+      "prepareFPS": 184.95693207483998,
+      "beginMinusPrepareFPS": 0.22964455844038412,
+      "beginVsPreparePercent": 0.12416109840502898
+    },
+    {
+      "orders": [
+        5,
+        8
+      ],
+      "sequence": "BAAB",
+      "beginFPS": 185.3578685973218,
+      "prepareFPS": 185.25555673288702,
+      "beginMinusPrepareFPS": 0.10231186443479601,
+      "beginVsPreparePercent": 0.05522742002406211
+    }
+  ],
+  "secondaryPrepareSlow1PercentGain": 7.663197678494216,
+  "historicalContextOnly": {
+    "previousCandidateComparison": {
+      "FIXED_BEGIN": {
+        "FPS": 185.25694331908142,
+        "samples": 14818,
+        "p99Ms": 7.0,
+        "slow1PercentFPS": 128.1169389509888,
+        "maximumMs": 13.0,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      },
+      "PREPARE": {
+        "FPS": 184.90462007537468,
+        "samples": 14790,
+        "p99Ms": 6.0,
+        "slow1PercentFPS": 134.91340005933145,
+        "maximumMs": 16.000001,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      }
+    },
+    "pooledIntoNewResults": false,
+    "previousGateRawUnderPrepare": 0,
+    "newGateRawUnderPrepare": 1,
+    "effectivePrepareOverlapBoth": 0
+  },
+  "recommendation": {
+    "mainDevelopmentDirection": "Shared renderer/ownership/runtime implementation with PREPARE as primary development/default policy; retain repaired BEGIN as selectable bounded-source diagnostic/comparison policy",
+    "basis": "Mean FPS is effectively tied in this tested scene; PREPARE offers broader bounded CPU capture-prefix headroom. Secondary1percent favorsPREPARE but is not the reason to rejectBEGIN. No parallel renderer forks.",
+    "confidence": "High on source-level release/ownership distinctions and this scene repeatability; limited on cross-scene throughput ranking, memory, latency and futureFPSceiling",
+    "automaticPromotion": false,
+    "sourceEdits": 0,
+    "rebuilds": 0,
+    "newProbes": 0
+  },
+  "limitations": [
+    "One map/camera/preset/script/scene, four runs per mode; no general workload winner or precise confidence bound",
+    "Both modes share mandatory CPU Join before particle writers and one pending GPU commit; equal meanFPS does not diagnose GPU-bound behavior",
+    "No actual peak RSS, input-to-display latency or clean GPUhardwaretime collected",
+    "Runtime display observations active/unlocked; screen-off mode not separately tested",
+    "Same ASSETS clone source and selected5asset/9profilefile hashes verified; entire2.3GBpool not rehashed perarm"
+  ],
+  "allValidRunsRetained": true,
+  "pinsPreserved": true,
+  "closure": "8normal,ownedgroupsgone,idlematches0,AWAKEreleased"
+}

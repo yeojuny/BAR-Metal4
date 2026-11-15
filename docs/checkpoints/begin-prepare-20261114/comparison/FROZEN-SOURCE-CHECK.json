@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "source": "engine",
+  "checkedFiles": [
+    {
+      "path": "rts/Rendering/Backend/NativeBeginReadyPolicy.h",
+      "sha256": "6129a06f39cdfaa4d607a89acbddfd4f5b9fef9bd57b79a2ece49312b195a78c"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSourceFrameCredits.h",
+      "sha256": "80ca606c040a39a38e9f787d67f51c474921501f53fe9c9bc581f4a70fc7cd58"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBeginRetirement.h",
+      "sha256": "08fdc00a51d64b4dbdfe0b4c06145e0477f770742ace9e94edc4a99d0eb1c691"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "sha256": "a49bae70f3c99d7e2e2038872fe10c70db5938a7b45719e0c324f494b5afd875"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.h",
+      "sha256": "e12b49c6ec375b85313df5818a397673c2255157768358267a3597f51273bb76"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "f7564e1b46fc0e977da5ceef5bad72e3a297f2b0c6d3f991cbaba05f0da2438e"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeBeginCPUReclaim.cpp",
+      "sha256": "7683bb0b684bf52853ba095255d51cb7b0d06650b46031f8e7110260b2d5a6bd"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeBeginReadyPilot.cpp",
+      "sha256": "d6d2cf10630634f15438a97adea37d58bac0902fe1c19ad22bf51ff833df1116"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_begin_cpu_reclaim_test.py",
+      "sha256": "fc37f7bd36c1e52db10ee66fb0726278e15f9812a1639cccc4afcfa2a7248d2e"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_begin_ready_pilot_test.py",
+      "sha256": "99e6102b89076e5c5e2962c05dab737f499c5f2c289fcdd8b5599ae63f7fd5cb"
+    }
+  ],
+  "buildsPerformed": 0,
+  "sourceEdits": 0,
+  "parentRuntime": "H/measurement/OWNER-CLOSED.json;9normalMetalerrors0"
+}

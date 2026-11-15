@@ -1,0 +1,107 @@
+{
+  "baseCommit": "c8a8ac929cb69b40a3bdb87543daa855963b4b90",
+  "baseRootTree": "c182eb4de0abc24832366501e10ab67d05d80799",
+  "baseEngineTree": "c78d0e44a8e9ead1686c61b0aaf5798a2a65c828",
+  "engineTree": "ad2cfb3c1b795d1069fb4421e59b1fead785cb7c",
+  "trackedEngineEntries": 10229,
+  "orderedSourceCommits": [
+    {
+      "commit": "78dc5287912d8f2068e6e204fa3cc0b45a7ddc0c",
+      "parent": "c8a8ac929cb69b40a3bdb87543daa855963b4b90",
+      "tree": "57d2cce4a927b060807fd1a81bc6f50e204158bd",
+      "patch": "parent-capture-ready.patch",
+      "patchSHA256": "62eac5decd19503c71dd439a70e4fb4e4219c2501e9326fcf6a874e314916256"
+    },
+    {
+      "commit": "834323060413da80f8739afc3c4e83957436aa80",
+      "parent": "78dc5287912d8f2068e6e204fa3cc0b45a7ddc0c",
+      "tree": "c1462a908e68745c1f9430aa6529ae2ffa8cc4f2",
+      "patch": "begin-functional.patch",
+      "patchSHA256": "8006661e8f5ed4ba3b03c835fcb7bcb44534ec031bc700ac43f1d29b36d83366"
+    },
+    {
+      "commit": "200775e67f3cdd51ca5cec8b93dd4e85b0736f89",
+      "parent": "834323060413da80f8739afc3c4e83957436aa80",
+      "tree": "354c6f4b5528dd5123850fdef8a903a1c00c98dd",
+      "patch": "begin-prepare-overlap.patch",
+      "patchSHA256": "cf3a0f4e5d5f9ce40b525299989170480c2228aa9607c9b9004e99a4dcf331da"
+    }
+  ],
+  "changedFiles": [
+    {
+      "path": "rts/Game/Game.cpp",
+      "sha256": "613c22743c5c9e2efacd12816c7775c5b6ddd2f09ba64d53b1937ea7a952c67a"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeBeginReadyPolicy.h",
+      "sha256": "6129a06f39cdfaa4d607a89acbddfd4f5b9fef9bd57b79a2ece49312b195a78c"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSourceFrameCredits.h",
+      "sha256": "80ca606c040a39a38e9f787d67f51c474921501f53fe9c9bc581f4a70fc7cd58"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h",
+      "sha256": "224bf5cd9743c80d2c90f1566c29218899f3a91409cda8412e1cf7bdef4f1003"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBeginRetirement.h",
+      "sha256": "08fdc00a51d64b4dbdfe0b4c06145e0477f770742ace9e94edc4a99d0eb1c691"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "sha256": "a49bae70f3c99d7e2e2038872fe10c70db5938a7b45719e0c324f494b5afd875"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBridge.h",
+      "sha256": "7c05cad4e7c562b39a381a18c99456c1953b49ac78c86bd87e3abe9075eb379c"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.h",
+      "sha256": "e12b49c6ec375b85313df5818a397673c2255157768358267a3597f51273bb76"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "f7564e1b46fc0e977da5ceef5bad72e3a297f2b0c6d3f991cbaba05f0da2438e"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeBeginCPUReclaim.cpp",
+      "sha256": "7683bb0b684bf52853ba095255d51cb7b0d06650b46031f8e7110260b2d5a6bd"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeBeginReadyPilot.cpp",
+      "sha256": "d6d2cf10630634f15438a97adea37d58bac0902fe1c19ad22bf51ff833df1116"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeCaptureSurfaceBoundary.cpp",
+      "sha256": "b96092106a8cd8fc6e85a36f0964292c6fadf5728b78ae87e80e404ae8a533fd"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_begin_cpu_reclaim_test.py",
+      "sha256": "fc37f7bd36c1e52db10ee66fb0726278e15f9812a1639cccc4afcfa2a7248d2e"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_begin_ready_pilot_test.py",
+      "sha256": "99e6102b89076e5c5e2962c05dab737f499c5f2c289fcdd8b5599ae63f7fd5cb"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_capture_surface_boundary_test.py",
+      "sha256": "be5245efc2a23d52f739910fb21956bda9ce87724ab4d7b8d59a67ae3cba4217"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_prepare_ready_pilot_test.py",
+      "sha256": "6012827678c2081540a0649b02d0c7a649f7db50dd6f5b6da853d57903d5c62a"
+    }
+  ],
+  "sourceComparison": "13 modified and 3 new engine files; 9 production and 7 tests",
+  "archiveOmittedGitFilesRetained": [
+    "rts/lib/simdjson/.editorconfig",
+    "rts/lib/simdjson/.gitattributes",
+    "rts/lib/simdjson/.gitignore",
+    "rts/lib/simdjson/dependencies/.gitignore"
+  ],
+  "evidence": {
+    "finalSourceFilesSHA256": "3fecdd6ce9fce80ee99f75165b654ab9d479038f8edf7027bdf5fee2da81c8f9",
+    "ownerFullTreeComparisonSHA256": "7d5edd7f6beedc2c754a8ac17d8a2183d45655a49636abcdb9e135a640b882a0"
+  }
+}

@@ -1,0 +1,299 @@
+{
+  "status": "CLOSED_ALL_9_NORMAL_VALIDATION_RECOVERED_FROM_RAW",
+  "utc": "2026-11-15T03:49:52.599397+00:00",
+  "candidateSHA256": "66a671532715cfe8605cda5d6a8855f7b9db17d2281afe4d560193aec6fbc6ec",
+  "totalGamesLaunched": 9,
+  "gamesAfterParserFix": 8,
+  "validationOriginalFailurePreserved": true,
+  "validationRecoveredWithoutRerun": true,
+  "validation": {
+    "status": "RECOVERED_EXISTING_VALIDATION_NO_NEW_GAME",
+    "utc": "2026-11-15T03:38:57.922210+00:00",
+    "sourceRun": "<local-reference>",
+    "originalFailure": "<local-reference>",
+    "originalStoppedCompletion": "<local-reference>",
+    "normalExit": true,
+    "originalWarmupSeconds": 14.043999672,
+    "metalValidationEnabled": true,
+    "detectedMetalValidationErrors": 0,
+    "sampledCountedBeginQueued": 162,
+    "actualBeginRelease": {
+      "mode": "BEGIN",
+      "eligible": "1",
+      "queued": "1",
+      "simulation": "300",
+      "begin_submission": "353"
+    },
+    "diagnosticFPS": 64.58307460869418,
+    "performanceAccepted": false,
+    "parserCorrection": "held_draws>=2 only when held_seconds>0.5, identical to unchanged Lua guard"
+  },
+  "screens": {
+    "status": "CAPTURED_FOR_REVIEW",
+    "runs": 2,
+    "screenshots": [
+      "<local-reference>",
+      "<local-reference>"
+    ],
+    "comparisonLimits": "Dynamic water, cloud and text may differ; inspect static shape, depth and stencil separately",
+    "utc": "2026-11-15T03:41:54.451287+00:00"
+  },
+  "clean": {
+    "status": "COMPLETE",
+    "runs": 6,
+    "pooled": {
+      "JOINED": {
+        "FPS": 179.15,
+        "samples": 14330,
+        "p99Ms": 8.0,
+        "slow1PercentFPS": 116.22276029055689,
+        "maximumMs": 12.0,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      },
+      "BEGIN": {
+        "FPS": 106.48431733650426,
+        "samples": 8516,
+        "p99Ms": 13.0,
+        "slow1PercentFPS": 73.44150273803074,
+        "maximumMs": 20.0,
+        "over16_667ms": 2,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      },
+      "PREPARE": {
+        "FPS": 185.42732540932036,
+        "samples": 14832,
+        "p99Ms": 6.0,
+        "slow1PercentFPS": 142.58373205741628,
+        "maximumMs": 13.0,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      }
+    },
+    "beginVsJoinedPercent": -40.56136347390217,
+    "beginVsPreparePercent": -42.5735569978987,
+    "prepareVsJoinedPercent": 3.503949433056297,
+    "previousSamplesPooled": false,
+    "validSlowRunsRetained": true,
+    "utc": "2026-11-15T03:49:25.607684+00:00"
+  },
+  "rows": [
+    {
+      "campaign": "validation_paced",
+      "arm": "V_BEGIN_PACED",
+      "mode": "BEGIN",
+      "diagnosticOnly": true,
+      "FPS": 64.58307460869418,
+      "warmupSeconds": 14.043999672,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "BEGIN",
+        "queuedReleaseCount": 1,
+        "release": {
+          "mode": "BEGIN",
+          "eligible": "1",
+          "queued": "1",
+          "simulation": "300",
+          "begin_submission": "353"
+        },
+        "boundaryCount": 1,
+        "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=2",
+        "effectiveModeFromActualRelease": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "screen_paced",
+      "arm": "S_BEGIN_PACED",
+      "mode": "BEGIN",
+      "diagnosticOnly": true,
+      "FPS": 107.16696689276208,
+      "warmupSeconds": 13.977000237,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "BEGIN",
+        "queuedReleaseCount": 1,
+        "release": {
+          "mode": "BEGIN",
+          "eligible": "1",
+          "queued": "1",
+          "simulation": "300",
+          "begin_submission": "1413"
+        },
+        "boundaryCount": 1,
+        "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=2",
+        "effectiveModeFromActualRelease": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "screen_paced",
+      "arm": "S_PREPARE_PACED",
+      "mode": "PREPARE",
+      "diagnosticOnly": true,
+      "FPS": 185.5046350698256,
+      "warmupSeconds": 13.970999718,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "PREPARE",
+        "queuedReleaseCount": 1,
+        "release": {
+          "mode": "PREPARE",
+          "eligible": "1",
+          "queued": "1",
+          "simulation": "300",
+          "begin_submission": "0"
+        },
+        "boundaryCount": 1,
+        "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3",
+        "effectiveModeFromActualRelease": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "clean_paced",
+      "arm": "A1_JOINED_PACED",
+      "mode": "JOINED",
+      "diagnosticOnly": false,
+      "FPS": 178.9205294424482,
+      "warmupSeconds": 13.970000267,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "JOINED",
+        "queuedReleaseCount": 0,
+        "boundaryCount": 0,
+        "joinedMainWaitWitness": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "clean_paced",
+      "arm": "B1_BEGIN_PACED",
+      "mode": "BEGIN",
+      "diagnosticOnly": false,
+      "FPS": 106.36064036366525,
+      "warmupSeconds": 13.977999687,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "BEGIN",
+        "queuedReleaseCount": 1,
+        "release": {
+          "mode": "BEGIN",
+          "eligible": "1",
+          "queued": "1",
+          "simulation": "300",
+          "begin_submission": "1394"
+        },
+        "boundaryCount": 1,
+        "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=2",
+        "effectiveModeFromActualRelease": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "clean_paced",
+      "arm": "C1_PREPARE_PACED",
+      "mode": "PREPARE",
+      "diagnosticOnly": false,
+      "FPS": 185.7935868693927,
+      "warmupSeconds": 13.973999977,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "PREPARE",
+        "queuedReleaseCount": 1,
+        "release": {
+          "mode": "PREPARE",
+          "eligible": "1",
+          "queued": "1",
+          "simulation": "300",
+          "begin_submission": "0"
+        },
+        "boundaryCount": 1,
+        "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3",
+        "effectiveModeFromActualRelease": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "clean_paced",
+      "arm": "C2_PREPARE_PACED",
+      "mode": "PREPARE",
+      "diagnosticOnly": false,
+      "FPS": 185.06112803991547,
+      "warmupSeconds": 13.973999977,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "PREPARE",
+        "queuedReleaseCount": 1,
+        "release": {
+          "mode": "PREPARE",
+          "eligible": "1",
+          "queued": "1",
+          "simulation": "300",
+          "begin_submission": "0"
+        },
+        "boundaryCount": 1,
+        "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3",
+        "effectiveModeFromActualRelease": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "clean_paced",
+      "arm": "B2_BEGIN_PACED",
+      "mode": "BEGIN",
+      "diagnosticOnly": false,
+      "FPS": 106.60799120709129,
+      "warmupSeconds": 13.984999657,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "BEGIN",
+        "queuedReleaseCount": 1,
+        "release": {
+          "mode": "BEGIN",
+          "eligible": "1",
+          "queued": "1",
+          "simulation": "300",
+          "begin_submission": "1391"
+        },
+        "boundaryCount": 1,
+        "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=2",
+        "effectiveModeFromActualRelease": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "campaign": "clean_paced",
+      "arm": "A2_JOINED_PACED",
+      "mode": "JOINED",
+      "diagnosticOnly": false,
+      "FPS": 179.37948202506723,
+      "warmupSeconds": 13.968999863,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "release": {
+        "mode": "JOINED",
+        "queuedReleaseCount": 0,
+        "boundaryCount": 0,
+        "joinedMainWaitWitness": true
+      },
+      "result": "<local-reference>"
+    }
+  ],
+  "sharedAwake": "RELEASED",
+  "idleProcessMatches": []
+}
