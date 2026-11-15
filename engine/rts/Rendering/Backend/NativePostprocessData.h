@@ -9,9 +9,11 @@
 #include <utility>
 #include <optional>
 #include <span>
+#include <stdexcept>
 #include <vector>
 
 namespace rendering {
+namespace sharedpilot {struct MaterialContent;}
 struct ScreenTexture;
 struct NativeCUSUniformPublication;
 struct NativeCASRaster;
@@ -102,6 +104,9 @@ struct NativeSepiaUniforms {
 	std::array<std::int32_t,2> viewPos{};
 	std::array<std::array<float,3>,3> rows{};
 	float gamma=0;
+	// Appended so existing old-path aggregate payload callers stay compatible.
+	std::shared_ptr<const sharedpilot::MaterialContent> material;
+	bool sharedPath=false;
 };
 enum class NativePostprocessOperationKind : std::uint8_t { CopyColor, CopyDepth, DOF, CAS, Sepia };
 enum class NativePostprocessStage : std::uint8_t { PreDecals, PreUnit, World, Screen };
@@ -204,8 +209,13 @@ void ValidateNativePostprocessConsumer(const NativePostprocessFrame& frame,
 	bool (*isRetired)(const NativePostprocessVersion&, void*), void* state);
 
 inline std::atomic<bool> nativeSepiaConsumerAvailable{false};
+inline std::shared_ptr<const void> nativeSepiaCompiledOwner;
+inline std::shared_ptr<const void> NativeSepiaCompiledOwner() noexcept {return std::atomic_load_explicit(&nativeSepiaCompiledOwner,std::memory_order_acquire);}
 inline bool IsNativeSepiaConsumerAvailable() noexcept {return nativeSepiaConsumerAvailable.load(std::memory_order_acquire);}
-inline void SetNativeSepiaConsumerAvailable(bool value) noexcept {nativeSepiaConsumerAvailable.store(value,std::memory_order_release);}
+inline void SetNativeSepiaConsumerAvailable(bool value,std::shared_ptr<const void> compiledOwner={}) {
+ if(value){if(!compiledOwner)throw std::runtime_error("Sepia availability requires actual compiled library ownership");std::atomic_store_explicit(&nativeSepiaCompiledOwner,std::move(compiledOwner),std::memory_order_release);nativeSepiaConsumerAvailable.store(true,std::memory_order_release);}
+ else{nativeSepiaConsumerAvailable.store(false,std::memory_order_release);std::atomic_store_explicit(&nativeSepiaCompiledOwner,std::shared_ptr<const void>{},std::memory_order_release);}
+}
 inline std::atomic<bool> nativeCASConsumerAvailable{false};
 inline bool IsNativeCASConsumerAvailable() noexcept {return nativeCASConsumerAvailable.load(std::memory_order_acquire);}
 inline void SetNativeCASConsumerAvailable(bool value) noexcept {nativeCASConsumerAvailable.store(value,std::memory_order_release);}

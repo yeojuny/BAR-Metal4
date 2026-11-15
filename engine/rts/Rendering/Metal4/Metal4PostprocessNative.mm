@@ -8,6 +8,7 @@
 #include "Metal4DOFShaderSource.h"
 #include "Metal4CASShaderSource.h"
 #include "Metal4SepiaShaderSource.h"
+#include "Rendering/Backend/NativeSepiaPilot.h"
 #include "Rendering/Backend/NativeCUSUniformData.h"
 #include "Rendering/Backend/NativeCASProgram.h"
 #include "Metal4NativeEffectState.h"
@@ -24,6 +25,7 @@
 #include <simd/simd.h>
 
 namespace rendering::metal4 {
+struct SepiaCompiledLibraryOwner {__strong id<MTLLibrary> library=nil;};
 struct PostprocessUniformStorage {
 	__strong id<MTLBuffer> buffer=nil;
 };
@@ -37,8 +39,8 @@ public:
 	}
 	std::shared_ptr<PostprocessUniformStorage> Acquire(id<MTLDevice> device,const void* data,size_t length) {
 		Require(device==owner,"Postprocess uniform pool has no matching device batch");
-		Require(length==112 || length==160 || length==288,"Postprocess uniform size differs from its three original layouts");
-		auto& bucket=buckets[length==112?0:length==160?1:2];
+		Require(length==112 || length==160 || length==288 || length==sepiaGenerated::UniformBytes,"Postprocess uniform size differs from admitted original/generated layouts");
+		auto& bucket=buckets[length==112?0:length==160?1:length==288?2:3];
 		// Only a pool-owned slot is retired. Every prepared operation and its
 		// completion/poison graph retain the same immutable shared owner.
 		while(bucket.next<bucket.slots.size()) {
@@ -69,9 +71,9 @@ public:
 	size_t CachedCount() const {return entries;}
 private:
 	struct Bucket {std::vector<std::shared_ptr<PostprocessUniformStorage>> slots;size_t next=0;};
-	// Three exact uniform sizes keep both resource bytes and lookup storage
+	// Four admitted uniform sizes keep both resource bytes and lookup storage
 	// bounded. No weak tokens can acquire ownership after the retirement test.
-	std::array<Bucket,3> buckets;
+	std::array<Bucket,4> buckets;
 	__strong id<MTLDevice> owner=nil;
 	size_t bytes=0,entries=0;
 };
@@ -174,7 +176,7 @@ id<MTLBuffer> Buffer(RuntimeLease& lease,const void* bytes,size_t length)
 	auto buffer=[lease.Device()newBufferWithBytes:bytes length:length options:MTLResourceStorageModeShared];Require(buffer!=nil,"Cannot allocate actual DOF uniforms/quad");lease.AddAllocation(buffer);return buffer;
 }
 // Current original pass/FBO contract; copy pipeline IDs are kept outside0..7.
-constexpr int COPY_COLOR_PIPELINE=8,COPY_DEPTH_PIPELINE=9,COPY_DEPTH24_PIPELINE=10,CAS_PIPELINE=11,SEPIA_PIPELINE=19;
+constexpr int COPY_COLOR_PIPELINE=8,COPY_DEPTH_PIPELINE=9,COPY_DEPTH24_PIPELINE=10,CAS_PIPELINE=11,SEPIA_PIPELINE=19,SHARED_SEPIA_PIPELINE=20;
 unsigned Outputs(const NativeDOFUniforms& u) {return u.pass==0?2:u.pass==1?3:u.pass==3?4:1;}
 unsigned RequiredInputs(const NativeDOFUniforms& u) {
  switch(u.pass){case 0:return (1u<<0)|(1u<<1);case 1:case 3:return (1u<<0)|(1u<<5);
@@ -213,6 +215,7 @@ struct PreparedPostprocessFrame::Impl {
 		MTLScissorRect scissor{};
 		bool noDraw=false;unsigned vertexCount=6;
   std::shared_ptr<const NativeCASRaster> casRaster;
+  std::shared_ptr<const sharedpilot::PreparedSlice> sharedSlice;
 		std::vector<std::pair<std::shared_ptr<bool>,std::shared_ptr<bool>>> reads;
 		bool screenOutput=false;
 		unsigned resolveMain=0;
@@ -427,13 +430,14 @@ struct PostprocessGPU::Impl {
 	void Compile(RuntimeLease& lease,MTLPixelFormat format,bool verify,double& compileMs)
 	{
 		const auto start=Clock::now();NSError* error=nil;
-		auto source=std::string(NATIVE_DOF_SHADER)+COPY_SHADER+NATIVE_CAS_SHADER+NATIVE_SEPIA_SHADER;auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String(source);
+		auto source=std::string(NATIVE_DOF_SHADER)+COPY_SHADER+NATIVE_CAS_SHADER+NATIVE_SEPIA_SHADER+sepiaGenerated::MSL;auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String(source);
 		auto candidate=lease.NewLibrary(descriptor,&error);Require(candidate!=nil,"Original31657 eight-pass DOF shader compilation failed: "+Error(error));
 		library=candidate;validation=verify;screenFormat=format;
 		for(int pass=0;pass<=7;++pass)Pipeline(lease,pass,1,pass==5?format:pass==0||pass==1||pass==3?MTLPixelFormatRGBA16Float:MTLPixelFormatRGBA8Unorm);
 		Pipeline(lease,5,0,format);
   for(int variant=0;variant<8;++variant)Pipeline(lease,CAS_PIPELINE+variant,0,format);
   Pipeline(lease,SEPIA_PIPELINE,0,format);
+  Pipeline(lease,SHARED_SEPIA_PIPELINE,0,format);
 		Pipeline(lease,COPY_COLOR_PIPELINE,0,MTLPixelFormatRGBA8Unorm);Pipeline(lease,COPY_DEPTH_PIPELINE,0,MTLPixelFormatDepth32Float);Pipeline(lease,COPY_DEPTH24_PIPELINE,0,MTLPixelFormatDepth32Float);
 		auto depth=[MTLDepthStencilDescriptor new];depth.depthCompareFunction=MTLCompareFunctionAlways;depth.depthWriteEnabled=YES;copyDepth=[lease.Device()newDepthStencilStateWithDescriptor:depth];Require(copyDepth!=nil,"Cannot create original depth-copy write state");
 		compileMs+=Milliseconds(start);
@@ -448,9 +452,10 @@ struct PostprocessGPU::Impl {
 		const bool coverage=raster && raster->world.alphaToCoverage;
 		const auto key=std::make_tuple(PipelineKey(pass,quality,format)|stateBits,lease.SampleShadingKey(samples),coverage);auto found=pipelines.find(key);if(found!=pipelines.end()){lease.Retain(found->second);return found->second;}
 		Require(library!=nil,"DOF native library is not initialized");
-		auto descriptor=[MTL4RenderPipelineDescriptor new];auto vertex=[MTL4LibraryFunctionDescriptor new];vertex.library=library;vertex.name=pass==SEPIA_PIPELINE?@"SepiaVertex":pass>=CAS_PIPELINE?@"CASVertex":pass==0?@"DOFFilterVertex":@"DOFVertex";descriptor.vertexFunctionDescriptor=vertex;
+		auto descriptor=[MTL4RenderPipelineDescriptor new];auto vertex=[MTL4LibraryFunctionDescriptor new];vertex.library=library;vertex.name=pass==SHARED_SEPIA_PIPELINE?@"SharedSepiaVertex":pass==SEPIA_PIPELINE?@"SepiaVertex":pass>=CAS_PIPELINE?@"CASVertex":pass==0?@"DOFFilterVertex":@"DOFVertex";descriptor.vertexFunctionDescriptor=vertex;
 		auto fragment=[MTL4LibraryFunctionDescriptor new];fragment.library=library;
-		if(pass==SEPIA_PIPELINE)fragment.name=@"SepiaFragment";
+		if(pass==SHARED_SEPIA_PIPELINE)fragment.name=@"SharedSepiaFragment";
+		else if(pass==SEPIA_PIPELINE)fragment.name=@"SepiaFragment";
 		else if(pass>=CAS_PIPELINE){Require(pass<CAS_PIPELINE+8,"Unknown CAS source variant");fragment.name=String("CASFragment"+std::to_string(pass-CAS_PIPELINE));}
   else if(pass==COPY_COLOR_PIPELINE)fragment.name=@"DOFCopyColor";else if(pass==COPY_DEPTH_PIPELINE)fragment.name=@"DOFCopyDepth";else if(pass==COPY_DEPTH24_PIPELINE)fragment.name=@"DOFCopyDepth24";
 		else{Require(pass>=0&&pass<=7&&(quality==1||(pass==5&&quality==0)),"DOF pipeline differs from its original fixed-pass/quality program");fragment.name=String("DOFFragmentPass"+std::to_string(pass)+(quality?"HQ":"LQ"));}
@@ -553,7 +558,7 @@ void PostprocessGPU::Initialize(RuntimeLease& lease,MTLPixelFormat format,bool v
 	auto candidate=std::make_unique<Impl>();candidate->Compile(lease,format,validation,compileMs);
 	// Changing validation/paired PSOs must not erase retired immutable image
 	// generations that are still referenced by a later partial update.
-	candidate->images=std::move(impl->images);candidate->texturePool181=std::move(impl->texturePool181);candidate->freshIneligible181=impl->freshIneligible181;candidate->ownerRequests181=impl->ownerRequests181;candidate->ownerRegistrations181=impl->ownerRegistrations181;candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->declaredPlan=std::move(impl->declaredPlan);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true);
+	candidate->images=std::move(impl->images);candidate->texturePool181=std::move(impl->texturePool181);candidate->freshIneligible181=impl->freshIneligible181;candidate->ownerRequests181=impl->ownerRequests181;candidate->ownerRegistrations181=impl->ownerRegistrations181;candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->declaredPlan=std::move(impl->declaredPlan);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true,std::make_shared<const SepiaCompiledLibraryOwner>(SepiaCompiledLibraryOwner{impl->library}));
 }
 void PostprocessGPU::ClearResources(){impl->immutableQuads.clear();impl->argumentPool.Clear();impl->uniformPool.Clear();impl->declaredFrame.reset();impl->declaredPlan.reset();impl->images.clear();impl->texturePool181->Clear();impl->allocations.clear();}
 void PostprocessGPU::SetCPUImageProvider(CPUImageProvider provider){impl->cpuImages=std::move(provider);}
@@ -700,15 +705,32 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			out.pass.depthAttachment.texture=depth;out.pass.depthAttachment.loadAction=MTLLoadActionLoad;out.pass.depthAttachment.storeAction=MTLStoreActionStore;
 			if(actualStencil){out.pass.stencilAttachment.texture=actualStencil;out.pass.stencilAttachment.loadAction=MTLLoadActionLoad;out.pass.stencilAttachment.storeAction=MTLStoreActionStore;}
 			out.depthState=effectstate::Depth(lease,state,actualStencil?actualStencil.pixelFormat:MTLPixelFormatInvalid);
+			ValidateNativeCUSUniformPublication(*u.engine);std::uint32_t caps=0;std::memcpy(&caps,u.engine->params->bytes.data()+12,4);
+   if(u.sharedPath){
+    Require(bool(u.material),"Shared Sepia immutable material missing");sepiaPilot::ValidateMaterial(*u.material);
+    auto slice=std::make_shared<sharedpilot::PreparedSlice>();slice->material=u.material;
+    slice->scope.context=impl.get();slice->scope.device=(__bridge const void*)lease.Device();slice->scope.lease=&lease;
+    slice->scope.journal=impl->declaredPlan.get();slice->scope.submission=lease.SourceSubmission();
+    slice->scope.target={std::uint64_t(color.pixelFormat),std::uint64_t(depth.pixelFormat),std::uint64_t(color.sampleCount),width,height,frame->logicalWidth,frame->logicalHeight};
+    slice->owners.push_back(operation.inputs[0]);out.sharedSlice=std::move(slice);
+    // Transport stays per use. Generated user fields are copied as an opaque,
+    // immutable typed block; adding fields does not change this native adapter.
+    auto bytes=*u.material->uniformBytes;
+    const auto target=simd_make_float4(float(width),float(height),float(frame->logicalWidth)/width,float(frame->logicalHeight)/height);
+    const auto alpha=simd_make_uint4(surface.alphaTest.enabled,unsigned(surface.alphaTest.compare),0,0);
+    const auto rasterParameters=simd_make_float4(surface.alphaTest.reference,(caps&1u)?0.f:.5f,0,0);
+    std::memcpy(bytes.data(),&target,16);std::memcpy(bytes.data()+16,&alpha,16);std::memcpy(bytes.data()+32,&rasterParameters,16);
+    auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,bytes.data(),bytes.size());[args setAddress:uniform.gpuAddress atIndex:1];
+   }else{
 			SepiaGPUUniforms gpu{};for(unsigned i=0;i<3;++i)gpu.rows[i]=simd_make_float4(u.rows[i][0],u.rows[i][1],u.rows[i][2],0);
 			gpu.target={float(width),float(height),float(frame->logicalWidth)/width,float(frame->logicalHeight)/height};
 			gpu.viewPos=simd_make_int4(u.viewPos[0],u.viewPos[1],0,0);gpu.alpha=simd_make_uint4(surface.alphaTest.enabled,unsigned(surface.alphaTest.compare),0,0);
-			ValidateNativeCUSUniformPublication(*u.engine);std::uint32_t caps=0;std::memcpy(&caps,u.engine->params->bytes.data()+12,4);
 			gpu.parameters=simd_make_float4(u.gamma,surface.alphaTest.reference,(caps&1u)?0.f:.5f,0);
 			auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
+   }
 			const auto& version=operation.inputs[0];auto image=impl->ImageFor(lease,version,false,prepared->impl->completed);
 			const auto& entry=impl->images.at(version.get());out.reads.emplace_back(entry.completed,entry.encoded);[args setTexture:image.gpuResourceID atIndex:0];
-			out.pipeline=impl->Pipeline(lease,SEPIA_PIPELINE,0,color.pixelFormat,out.casRaster.get(),std::uint32_t(color.sampleCount));out.vertexCount=3;
+			out.pipeline=impl->Pipeline(lease,u.sharedPath?SHARED_SEPIA_PIPELINE:SEPIA_PIPELINE,0,color.pixelFormat,out.casRaster.get(),std::uint32_t(color.sampleCount));out.vertexCount=3;
 		}else if(operation.kind==NativePostprocessOperationKind::CAS){
    out.casRaster=operation.cas.raster;Require(bool(out.casRaster),"CAS captured raster missing");
    const auto& state=out.casRaster->world;const auto& surface=out.casRaster->surface;
