@@ -1,0 +1,68 @@
+{
+  "status": "PASS",
+  "verifiedUTC": "2026-11-15T07:30:15.527032+00:00",
+  "version": "1.11.3",
+  "releaseURL": "https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.3",
+  "releaseID": 445878781,
+  "releaseCommit": "0b0fd234af3bf5dd073ab7094350ec63fc3a7e04",
+  "compiledSourceCommit": "ddd31f55961d6e715283ea48d03a2b35559128f2",
+  "engineTree": "596f6604ab7ed636dbe2cd5fa36fdc01c02f342e",
+  "rawEngineSHA256": "4dd6d8465fe9b6838db1ed5f85d15b5e3274c305468e38858ca373b7d502e32f",
+  "deployedEngineSHA256": "fcba7e5a2388ee09597a9abe1db4420926c470ca12be5edc41d757e81ee63e11",
+  "assets": [
+    {
+      "name": "BAR-Metal4-1.11.3-arm64.zip",
+      "bytes": 203640212,
+      "sha256": "aab95eaff3e229ea6092522605b5519b89956cf2e7102a27afd9d4482d71b1e4",
+      "url": "https://github.com/yeojuny/BAR-Metal4/releases/download/v1.11.3/BAR-Metal4-1.11.3-arm64.zip",
+      "serverDigest": "sha256:aab95eaff3e229ea6092522605b5519b89956cf2e7102a27afd9d4482d71b1e4",
+      "anonymousDownload": true
+    },
+    {
+      "name": "BAR-Metal4-1.11.3-MANIFEST.json",
+      "bytes": 180042,
+      "sha256": "1a50fa59e1bf937ba2170678d0c699dea60e277b4c1047e70c8f93ff4755964a",
+      "url": "https://github.com/yeojuny/BAR-Metal4/releases/download/v1.11.3/BAR-Metal4-1.11.3-MANIFEST.json",
+      "serverDigest": "sha256:1a50fa59e1bf937ba2170678d0c699dea60e277b4c1047e70c8f93ff4755964a",
+      "anonymousDownload": true
+    },
+    {
+      "name": "BAR-Metal4-1.11.3-engine-source.tar.gz",
+      "bytes": 59620648,
+      "sha256": "79f5fea69eb31ff187307bea956d458c1b6028e745daa2b6e0ab35bb05af8f04",
+      "url": "https://github.com/yeojuny/BAR-Metal4/releases/download/v1.11.3/BAR-Metal4-1.11.3-engine-source.tar.gz",
+      "serverDigest": "sha256:79f5fea69eb31ff187307bea956d458c1b6028e745daa2b6e0ab35bb05af8f04",
+      "anonymousDownload": true
+    },
+    {
+      "name": "SHA256SUMS",
+      "bytes": 297,
+      "sha256": "2545494f24379250e63dd8e892da1abc6bf4702b8062d3505536450730bad16e",
+      "url": "https://github.com/yeojuny/BAR-Metal4/releases/download/v1.11.3/SHA256SUMS",
+      "serverDigest": "sha256:2545494f24379250e63dd8e892da1abc6bf4702b8062d3505536450730bad16e",
+      "anonymousDownload": true
+    }
+  ],
+  "restoredEntries": 690,
+  "deepStrictSignature": true,
+  "appVersions": [
+    {
+      "path": "Contents/Info.plist",
+      "version": "1.11.3",
+      "build": "11103"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Info.plist",
+      "version": "1.11.3",
+      "build": "11103"
+    }
+  ],
+  "verificationLaunch": false,
+  "tapCommit": "5dc16ffabb823852d31f732da7fcc975fbf01e75",
+  "caskURL": "https://github.com/yeojuny/homebrew-bar-metal4/blob/5dc16ffabb823852d31f732da7fcc975fbf01e75/Casks/bar-metal4.rb",
+  "tapVersion": "1.11.3",
+  "caskMatchesDownloadedArchive": true,
+  "publicEvidenceAnonymousFiles": 45,
+  "defaultBranchEngineUnchanged": true,
+  "limitations": "Four app-first engine completions; last two normal outer exits. First two fixture FAIL/cleanup SIGTERM retained. Locked display: foreground and new visual equivalence not verified. No new comparative FPS claim. See RUNTIME-RESULT.json."
+}
