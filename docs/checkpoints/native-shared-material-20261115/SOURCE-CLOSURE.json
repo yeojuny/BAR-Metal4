@@ -1,0 +1,92 @@
+{
+  "status": "PASS_FROZEN_SOURCE_TO_GIT",
+  "baseRelease": "v1.11.3",
+  "baseCommit": "0b0fd234af3bf5dd073ab7094350ec63fc3a7e04",
+  "compiledSignedEngineSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "chain": [
+    {
+      "stage": "P",
+      "commit": "2b82374573dff256fafc2e7c1733c867de7aafae",
+      "parent": "0b0fd234af3bf5dd073ab7094350ec63fc3a7e04",
+      "engineTree": "7929d901ae101b32b0896fda9e6d81d70ca8bfca",
+      "delta": [
+        "rts/Rendering/Metal4/Metal4ScreenNative.mm"
+      ],
+      "frozenFiles": 10227,
+      "gitFiles": 10231
+    },
+    {
+      "stage": "Q",
+      "commit": "10f09d4e7d24502cd28aab284cb6392b1fd95a0a",
+      "parent": "2b82374573dff256fafc2e7c1733c867de7aafae",
+      "engineTree": "e3182dc2c9f9c47d5a64a0b38292c848b06ef8b2",
+      "delta": [
+        "data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+        "data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+        "rts/Lua/NativeSepiaLuaContext.h",
+        "rts/Lua/NativeWidgetAdapters.h",
+        "rts/Rendering/Backend/NativePostprocessData.cpp",
+        "rts/Rendering/Backend/NativePostprocessData.h",
+        "rts/Rendering/Backend/NativePostprocessRecorder.cpp",
+        "rts/Rendering/Backend/NativeSepiaPilot.h",
+        "rts/Rendering/Backend/NativeSharedProgramPilot.h",
+        "rts/Rendering/Metal4/Metal4CUSSource.mm",
+        "rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+        "rts/Rendering/Metal4/Metal4RuntimeNative.h",
+        "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+        "rts/Rendering/Metal4/Metal4SharedProgramPilot.h",
+        "rts/Rendering/Metal4/Metal4SourceImage.h",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+        "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h",
+        "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.json",
+        "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.metal",
+        "tools/sepia-pilot/PROVENANCE.json",
+        "tools/sepia-pilot/README.md",
+        "tools/sepia-pilot/compile_subset.py",
+        "tools/sepia-pilot/identity-exposure-bias.frag.glsl",
+        "tools/sepia-pilot/original-widget.lua",
+        "tools/sepia-pilot/sepia.frag.glsl",
+        "tools/sepia-pilot/sepia.vert.glsl",
+        "tools/sepia-pilot/test_lua_adapter.lua",
+        "tools/sepia-pilot/test_payload.cpp",
+        "tools/sepia-pilot/test_subset.py"
+      ],
+      "frozenFiles": 10245,
+      "gitFiles": 10249
+    },
+    {
+      "stage": "S",
+      "commit": "8412adc758db31b0abed71db1f0a800d9bb68a1b",
+      "parent": "10f09d4e7d24502cd28aab284cb6392b1fd95a0a",
+      "engineTree": "624267e4ee411b87e145ac3d2cd12ed857f411c9",
+      "delta": [
+        "rts/Rendering/Backend/NativeCPUPhaseTrace.h",
+        "rts/Rendering/Backend/NativePositiveBackingFacts.h",
+        "rts/Rendering/Metal4/Metal4ModelTypeFacts.inc",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+        "tools/model-type-facts/test_facts.cpp"
+      ],
+      "frozenFiles": 10248,
+      "gitFiles": 10252
+    }
+  ],
+  "finalSourceCommit": "8412adc758db31b0abed71db1f0a800d9bb68a1b",
+  "engineTree": "624267e4ee411b87e145ac3d2cd12ed857f411c9",
+  "frozenSourceFiles": 10248,
+  "publishedEngineEntries": 10252,
+  "normalizationExceptions": [
+    {
+      "path": "tools/sepia-pilot/PROVENANCE.json",
+      "originalSHA256": "904115382d72cb6f8e324beaf2ea53d2076f921282a92512a6125fb39da3c430",
+      "publishedSHA256": "13a57156e1b8d814208458a2ed9e4b372b854d61097c36310990f8de9540e7be",
+      "reason": "Two personal absolute provenance paths normalized; attribution, hashes and all build/program inputs unchanged. Original retained privately."
+    }
+  ],
+  "retainedHistoricalDotfiles": [
+    "rts/lib/simdjson/.editorconfig",
+    "rts/lib/simdjson/.gitattributes",
+    "rts/lib/simdjson/.gitignore",
+    "rts/lib/simdjson/dependencies/.gitignore"
+  ],
+  "scope": "All frozen source files and executable modes compared to Git blobs. Only provenance path metadata normalized; four historical simdjson non-build dotfiles retained from release. No build or game run during publication."
+}
