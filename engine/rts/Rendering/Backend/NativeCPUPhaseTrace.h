@@ -19,7 +19,12 @@ enum class NativeCPUPhaseKind : unsigned {
  FeedbackWait=20, AllocatorReset=21, GPUCallback=22, ResidencyCleanup=23,
  ResourceCommit=24, Submit=25, CompletedOwnerRelease=26, WorkerJob=27,
  CaptureInvocation=28, ReadChecks=29, ModelFactsRequests=30, ModelFactsPositive=31,
- ModelFactsCasts=32, ModelFactsCapacity=33, ModelFactsProviderTime=34, ModelFactsCPUValidity=35, Count=36
+ ModelFactsCasts=32, ModelFactsCapacity=33, ModelFactsProviderTime=34, ModelFactsCPUValidity=35,
+ // Sampled provider aggregates; count_a/count_b carry nanoseconds or counts,
+ // never the emission scope's own duration. Existing kind values stay fixed.
+ ModelProviderSummary=36, ModelProviderCompleted=37, ModelProviderFailures=38,
+ ModelProviderDispatchTime=39, ModelProviderPreparationTime=40,
+ ModelProviderOtherTime=41, ModelProviderFailureTime=42, Count=43
 };
 enum class NativeCPUFinishReason : unsigned {Control=1, CapturePrefix=2, Credit=3, FullDrain=4, DispatchPrior=5, JoinedFallback=6, NonPresent=7, Rollback=8, SurfaceBoundary=9};
 // A copied identity is diagnostic data, never an owner or an admission token.
