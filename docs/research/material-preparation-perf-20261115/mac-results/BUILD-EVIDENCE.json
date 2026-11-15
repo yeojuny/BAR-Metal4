@@ -1,0 +1,18 @@
+{
+  "sourceHead": "c63eae437fe4a0545f9821e666e1220edcffd607",
+  "signedEngineSHA256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+  "rawEngineSHA256": "d0e73b2ff903dbd18adb9647f2ea8783be40a9b2eb1e3d639851d49fc0172fcb",
+  "buildLogSHA256": "48ca5e58d54dc689b73fdecfb50c8c13060c26cf35e36fb43ec8ca57434602eb",
+  "archiveClosureSHA256": "f35066f4b1f6be6ee672cc6d60ab804b5ab97df8b31ffadbb26cb7e768529141",
+  "archiveSummary": {
+    "status": "PASS",
+    "scope": "Archive-to-loose-object identity only; fresh build and source receipts establish source closure separately",
+    "objectCount": 1538,
+    "archiveCount": 35,
+    "mismatchCount": 0,
+    "mismatches": []
+  },
+  "lastBuildLines": "11 warnings generated.\n[1575/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/WorldFrameCapture.cpp.o\n[1576/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Metal4/Metal4SceneBridge.cpp.o\n[1577/1578] Linking CXX executable spring-metal4-scene\nld: warning: ignoring duplicate libraries: 'librmlui.a', 'rts/Sim/libengineSim.a', 'rts/System/Sound/libsound.a', 'rts/lib/nowide/libnowide.a', 'rts/lib/simdjson/libsimdjson.a', 'rts/lib/squish/libsquish.a', 'rts/lib/streflop/libstreflop.a', 'rts/lib/tracy/libTracyClient.a', 'tools/pr-downloader/src/lib/7z/lib7zip.a', 'tools/pr-downloader/src/lib/base64/libpr-base64.a', 'tools/pr-downloader/src/lib/jsoncpp/libpr-jsoncpp.a'",
+  "publicationBuilds": 0,
+  "publicationGames": 0
+}

@@ -1,3 +1,5 @@
+> **Mac update (November15):** D now has full native build, construction OFF/ON Validation/still checks and two-scene clean ABBA results. No clear FPS gain is established; U remains Mac untested. [Measured results and the minimal diagnostic delta](mac-results/README.md). The original candidate/host-test description below is retained.
+
 # Material preparation: two independent performance candidates
 
 **Base:** `977c88d15adf5217e05b4a3ad8ef1176432515bf` (diagnostic PR #5, stacked on PR #4).  

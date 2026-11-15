@@ -21,6 +21,7 @@
 #include "Metal4ModelMaterial156.h"
 #include "Metal4CUSIdentityChannels194.h"
 #include "Rendering/Backend/NativePreparationTrace.h"
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include "Rendering/Backend/NativeCUSPublishedReuse.h"
 #include <cstring>
 #include "System/Sync/SHA512.hpp"
@@ -545,6 +546,24 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   out->impl->draws.push_back(std::move(draw));
  }
  geometryBatch155.Flush();
+ // Private D validation: one bounded aggregate per completed material batch.
+ // The existing sampled job buffer is emitted only after Join, never per Get.
+ static const bool identityDiagnostic=[] {const char* v=std::getenv("BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS");return v&&std::strcmp(v,"1")==0;}();
+ if(identityDiagnostic&&materialBindings156){
+  const auto context=CaptureNativeCPUPhaseContext();
+  if(context.sampled&&context.buffer){
+   const auto& material=impl->materials156.Stats();
+   const bool memoActive=material.identityHits+material.identityMisses!=0;
+   const auto record=[](NativeCPUPhaseKind kind,uint64_t a,uint64_t b){NativeCPUPhaseScope row(kind);row.Counts(a,b);};
+   record(NativeCPUPhaseKind::MaterialIdentityLookup,material.identityHits,material.identityMisses);
+   // Reader invocations INCLUDE nil slots. They are not counts of non-nil
+   // Objective-C property executions or GPU operations. OFF stats are zero
+   // upstream, so derive its unchanged 24 reader invocations per successful Get.
+   record(NativeCPUPhaseKind::MaterialIdentityReads,memoActive?material.resourceIDReads:materialBindings156*24,material.omittedResourceIDReads);
+   record(NativeCPUPhaseKind::MaterialIdentityGets,materialBindings156,material.hits);
+   record(NativeCPUPhaseKind::MaterialIdentityAllocation,material.created,material.encodedBytes);
+  }
+ }
  if(!impl->reportedMaterial156&&source->sourceDrawFrame>=512&&preparedRuns147){
   const auto& material=impl->materials156.Stats();
   LOG("[NativeModel156Material] prior_resource_setters=%zu material_address_bindings=%zu cache_hits=%zu new_buffers=%zu encoded_resource_slots=%zu encoded_bytes=%zu cache_entries=%zu cache_bytes=%zu cache_allocated_bytes=%zu direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1",priorResourceSetters156,materialBindings156,material.hits,material.created,material.created*24,material.encodedBytes,impl->materials156.Entries(),impl->materials156.Bytes(),impl->materials156.AllocatedBytes());

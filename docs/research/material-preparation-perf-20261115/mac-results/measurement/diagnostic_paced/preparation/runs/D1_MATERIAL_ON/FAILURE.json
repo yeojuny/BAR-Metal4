@@ -1,0 +1,5 @@
+{
+  "arm": "D1_MATERIAL_ON",
+  "error": "Traceback (most recent call last):\n  File \"$D/measurement/run.py\", line 259, in run\n    assert diagnostic_trace_valid(trace, mode), 'Material identity batch counts/window/validity failed'\nAssertionError: Material identity batch counts/window/validity failed\n",
+  "utc": "2026-11-15T23:03:38.932314+00:00"
+}

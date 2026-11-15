@@ -1,0 +1,18 @@
+{
+  "status": "CLOSED",
+  "processesRemaining": 0,
+  "awakeReleased": true,
+  "default": "D OFF; prior S baseline retained; public deployment unchanged",
+  "sourceHead": "c63eae437fe4a0545f9821e666e1220edcffd607",
+  "engineSHA256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+  "result": "RESULT.json",
+  "csv": "FPS.csv",
+  "sourcePatch": "local-diagnostic.patch",
+  "images": [
+    "measurement/diagnostic_paced/preparation/runs/D0_MATERIAL_OFF/scene.png",
+    "measurement/diagnostic_paced/preparation/runs/D1_MATERIAL_ON/scene.png"
+  ],
+  "logs": "measurement/{diagnostic_paced,clean_paced}/preparation/runs/*/{infolog.txt,engine.log}",
+  "outcome": "Reader calls (including nil) reduced76.6927%; recent buffer hits0; clean mean185.257872OFF vs184.981935ON, delta\u22120.148947%; FPS gain not demonstrated",
+  "nextImplementation": "None performed"
+}

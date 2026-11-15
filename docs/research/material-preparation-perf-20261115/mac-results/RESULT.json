@@ -1,0 +1,103 @@
+{
+  "status": "COMPLETE_CLOSED",
+  "sourceHead": "c63eae437fe4a0545f9821e666e1220edcffd607",
+  "signedSHA256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+  "fullBuild": "PASS",
+  "metalValidation": "Both diagnostic runs enabled; errors0",
+  "visual": "Both sim1500 images inspected; no new regression observed",
+  "diagnostic": {
+    "status": "PASS",
+    "productSHA256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+    "scope": "Correctness and work conservation only; no FPS or buffer-hit efficacy claim",
+    "visualReview": "Both sim1500 PNGs inspected; matching terrain/units/UI, no new visual regression observed; animated water/pause text timing differ",
+    "normalExitBoth": true,
+    "metalErrorsBoth": 0,
+    "droppedRecordsBoth": 0,
+    "limiterOffBoth": true,
+    "workPerPair": {
+      "Gets": 16,
+      "cacheHits": 8,
+      "created": 8,
+      "encodedBytes": 1536
+    },
+    "offPairs": 44,
+    "onPairs": 46,
+    "onIdentityBufferHits": 0,
+    "onResourceIDReaderCalls": 4117,
+    "onOmittedReaderCalls": 13547,
+    "onOmittedPercent": 76.69270833333333,
+    "readerCountCaveat": "Includes nil slots, not equal nonnil ObjC property calls or GPU operations",
+    "reviewedGateFailure": "Positive recent-buffer-hit expectation was efficacy, not correctness. Original FAILURE/COMPLETION retained. No engine or algorithm changes and no diagnostic rerun.",
+    "cleanOrder": [
+      "OFF",
+      "ON",
+      "ON",
+      "OFF"
+    ],
+    "priorFPSPooled": false
+  },
+  "clean": {
+    "status": "COMPLETE",
+    "runs": 4,
+    "means": {
+      "OFF": 185.2578715261684,
+      "ON": 184.98193491484318
+    },
+    "onVsOffPercent": -0.14894730736785267,
+    "priorSamplesPooled": false,
+    "validSlowRunsRetained": true,
+    "utc": "2026-11-15T23:10:55.729734+00:00"
+  },
+  "runs": [
+    {
+      "run": "A1_MATERIAL_OFF",
+      "mode": "OFF",
+      "meanFPS": 185.2407430523368,
+      "slow1PercentFPS": 139.92537313432825,
+      "seconds": 40.001998901,
+      "draws": 7410,
+      "normalACmode": 0,
+      "normalExit": true
+    },
+    {
+      "run": "B1_MATERIAL_ON",
+      "mode": "ON",
+      "meanFPS": 185.13425162601774,
+      "slow1PercentFPS": 136.11615245009065,
+      "seconds": 39.998001099,
+      "draws": 7405,
+      "normalACmode": 0,
+      "normalExit": true
+    },
+    {
+      "run": "B2_MATERIAL_ON",
+      "mode": "ON",
+      "meanFPS": 184.8296182036686,
+      "slow1PercentFPS": 131.90730814276765,
+      "seconds": 39.999000549,
+      "draws": 7393,
+      "normalACmode": 0,
+      "normalExit": true
+    },
+    {
+      "run": "A2_MATERIAL_OFF",
+      "mode": "OFF",
+      "meanFPS": 185.275,
+      "slow1PercentFPS": 130.66202090592324,
+      "seconds": 40.0,
+      "draws": 7411,
+      "normalACmode": 0,
+      "normalExit": true
+    }
+  ],
+  "conclusion": "Slot ID reader invocations reduced 76.69% including nil callbacks; recent-buffer hit0; no measured FPS gain. Two runs per arm do not establish regression/equivalence or non-regression.",
+  "limiter": "All six runtime receipts LimitIdleFps0 / option_limitoffscreenfps=false",
+  "adopted": false,
+  "baseline": "Previous S adopted baseline unchanged; D compiled defaultOFF",
+  "scope": "D only; U0; MODEL_TYPE_FACTS1; CUS0; SepiaOFF; no extra runs",
+  "files": {
+    "fps": "FPS.csv",
+    "diagnosticGate": "measurement/DIAGNOSTIC-GATE.json",
+    "raw": "measurement/"
+  }
+}
