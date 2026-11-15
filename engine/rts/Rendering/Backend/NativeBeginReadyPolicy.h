@@ -25,6 +25,11 @@ struct NativeBeginReadyPolicy {
  }
  // Prepare release retains the older GPU submission. Its retirement callback
  // is only an atomic worker notice; the main-thread action remains after Join.
+ // A generic callback never qualifies: the renderer must validate the private
+ // exact-scene capability before passing true. Every other BEGIN veto remains.
+ bool EligibleWithSceneRetirement(bool exactScene)const noexcept{
+  return exactScene&&previousRetirement?EligibleForPreparation():Eligible();
+ }
  bool EligibleForPreparation()const noexcept{auto policy=*this;policy.previousRetirement=false;return policy.Eligible();}
 };
 }

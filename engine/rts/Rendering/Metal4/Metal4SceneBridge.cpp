@@ -254,6 +254,11 @@ NativeRenderReleaseMode SelectedReleaseMode() {
 }
 bool PrepareReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Prepare;}
 bool BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}
+bool BeginPreparationOverlapRequested(){
+ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_PREPARE_OVERLAP");return value&&std::string_view(value)=="1";}();
+ static const bool worker=[] {const char* value=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return value&&std::string_view(value)=="1";}();
+ return enabled&&worker&&BeginReadyPilotRequested();
+}
 struct ScenePendingAdmission;
 struct Session {
  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
@@ -958,6 +963,22 @@ void RequireRetiredGPUWork()
 
 } // namespace
 
+std::shared_ptr<const Metal4SceneBeginRetirement> MakeBeginPreparationRetirement(
+ const NativeSourceFrameCredits::Lease& credit,const std::shared_ptr<NativeFrameBeginReceipt>& begin,
+ const std::shared_ptr<NativeFrameCompletionMailbox>& mailbox){
+ if(!session||!BeginPreparationOverlapRequested()||!credit||!begin||!mailbox||mailbox!=session->completionMailbox)
+  throw std::logic_error("BEGIN preparation retirement has no exact scene owner");
+ session->sourceCredits.Validate(credit,credit->Draw());
+ const auto epoch=mailbox->Epoch(),context=OriginalNativeTextureContext().Registry().ContextGeneration();
+ return std::shared_ptr<const Metal4SceneBeginRetirement>(new Metal4SceneBeginRetirement(credit,begin,mailbox,
+  [owner=session.get(),mailbox,epoch,context]{
+   if(session.get()!=owner||session->completionMailbox!=mailbox||mailbox->Epoch()!=epoch||
+    OriginalNativeTextureContext().Registry().ContextGeneration()!=context)
+    throw std::logic_error("BEGIN preparation retirement lost its scene epoch");
+   ApplyDeferredFrameReceipts();
+  }));
+}
+
 void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
 void FinishCaptureBeforeRollback() {
  if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork();});
@@ -969,8 +990,18 @@ void FinishPendingFrame() { RequireRetiredGPUWork(); }
 void FinishRuntimeControl() { RequireRetiredGPUWork(); }
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
  if(!session)throw std::logic_error("World capture has no source credit owner");
- if(!session->sourceCredits.HasCapacity())RequireRetiredGPUWork();
- return session->sourceCredits.Acquire(draw);
+ return session->sourceCredits.AcquireWithCPUReclaim(draw,BeginPreparationOverlapRequested(),[&]{
+  metal4::NativeCPUPhaseScope reclaimTrace(11,gs?gs->frameNum:0);reclaimTrace.Draw(draw);
+  if(session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
+  session->renderer->FinishCPUWork(); // Join, release access, deliver old notice, accept current CPU.
+  reclaimTrace.Mark(0);
+  ApplyDeferredFrameReceipts();reclaimTrace.Mark(1);
+  const bool recovered=session->sourceCredits.HasCapacity();reclaimTrace.Counts(recovered,2);
+  static bool reported=false;
+  if(recovered&&!reported&&gs&&gs->frameNum>=300&&gs->frameNum<=1500)try{
+   LOG("[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=2 simulation=%d",gs->frameNum);reported=true;
+  }catch(...){/* Optional evidence must not change settlement. */}
+ },[]{RequireRetiredGPUWork();});
 }
 
 void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
@@ -2189,10 +2220,12 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  // The prepare-ready experiment supersedes the narrower Begin-ready mode.
  options.allowPrepareReady=PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
  options.allowBeginReady=BeginReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
- // Last safe BEGIN edge: stable capture/main CPU preparation may overlap N-1,
- // but retire its real GPU ticket and deliver exact receipts BEFORE dispatch.
- // Keep 2 source credits, empty previousRetired and runtime detach precondition.
- if(options.allowBeginReady)RequireRetiredGPUWork();
+ // Fixed BEGIN uses PREPARE's existing independently owned recording path,
+ // but still releases only after actual Begin and retains two source credits.
+ // The exact scene action remains post-Join; worker retirement only marks it.
+ if(options.allowBeginReady&&BeginPreparationOverlapRequested()&&overlapPreparation)
+  options.beginPreparationRetirement=MakeBeginPreparationRetirement(options.sourceCredit,options.beginReceipt,session->completionMailbox);
+ if(options.allowBeginReady&&!options.beginPreparationRetirement)RequireRetiredGPUWork();
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
  frameOwner.reset(); // No mutable owning alias remains after sealing.
  const auto& frame=submission->Frame();

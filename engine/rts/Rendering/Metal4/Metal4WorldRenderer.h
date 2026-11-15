@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include <exception>
+#include "Metal4SceneBeginRetirement.h"
 #include "Rendering/Backend/NativeSourceFrameCredits.h"
 
 #include "Metal4WindowSurface.h"
@@ -79,6 +80,7 @@ struct Metal4WorldRenderOptions {
 	bool shaderValidation = DefaultShaderValidation;
  NativeSourceFrameCredits::Lease sourceCredit;
  bool allowBeginReady=false;
+ std::shared_ptr<const Metal4SceneBeginRetirement> beginPreparationRetirement;
  bool allowPrepareReady=false; // Default-off normal-frame capture-prefix experiment.
  std::shared_ptr<const metal4::ShadowTerrainPreparation> preparedShadowTerrain; // Exact request owner, never ambient latest state.
  std::shared_ptr<const NativeCUSCPUReadScope::Packet> cpuReadPacket; // Joined-call immutable rows; main retains final owner.

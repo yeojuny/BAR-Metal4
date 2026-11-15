@@ -57,6 +57,14 @@ public:
  NativeSourceFrameCredits(NativeSourceFrameCredits&&)=delete;
  NativeSourceFrameCredits& operator=(NativeSourceFrameCredits&&)=delete;
  bool HasCapacity()const{Source();RequireOpenLineage();for(const auto& slot:ActiveSlots())if(slot.lease.expired())return true;return false;}
+ // Only CPU settlement may reclaim first. Recheck weak lease ownership:
+ // an unexpected alias or missing retirement still takes the original drain.
+ template<class SettleCPU,class DrainGPU>
+ Lease AcquireWithCPUReclaim(uint64_t draw,bool enabled,SettleCPU settle,DrainGPU drain){
+  if(enabled&&!HasCapacity())settle();
+  if(!HasCapacity())drain();
+  return Acquire(draw);
+ }
  Lease Acquire(uint64_t draw){
   Source();RequireOpenLineage();
   if(nextOrdinal==std::numeric_limits<uint64_t>::max())throw std::logic_error("Source capture ordinal exhausted");

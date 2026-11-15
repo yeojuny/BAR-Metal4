@@ -16,6 +16,10 @@ int main(){
  for(auto flag:{&NativeBeginReadyPolicy::readback,&NativeBeginReadyPolicy::continuation,&NativeBeginReadyPolicy::dynamicWater,&NativeBeginReadyPolicy::legacyWater,&NativeBeginReadyPolicy::arbitraryCallback,&NativeBeginReadyPolicy::previousRetirement}){auto bad=valid;bad.*flag=true;assert(!bad.Eligible());}
  auto preparation=valid;preparation.previousRetirement=true;
  assert(!preparation.Eligible()&&preparation.EligibleForPreparation());
+ assert(preparation.EligibleWithSceneRetirement(true));
+ assert(!preparation.EligibleWithSceneRetirement(false));
+ for(auto flag:{&NativeBeginReadyPolicy::requested,&NativeBeginReadyPolicy::worker,&NativeBeginReadyPolicy::owned,&NativeBeginReadyPolicy::visible,&NativeBeginReadyPolicy::admitted,&NativeBeginReadyPolicy::sourceCredit,&NativeBeginReadyPolicy::deferred,&NativeBeginReadyPolicy::screen,&NativeBeginReadyPolicy::cpuSettlement}){auto bad=preparation;bad.*flag=false;assert(!bad.EligibleWithSceneRetirement(true));}
+ for(auto flag:{&NativeBeginReadyPolicy::readback,&NativeBeginReadyPolicy::continuation,&NativeBeginReadyPolicy::dynamicWater,&NativeBeginReadyPolicy::legacyWater,&NativeBeginReadyPolicy::arbitraryCallback}){auto bad=preparation;bad.*flag=true;assert(!bad.EligibleWithSceneRetirement(true));}
  preparation.readback=true;assert(!preparation.EligibleForPreparation());
  preparation.readback=false;preparation.dynamicWater=true;assert(!preparation.EligibleForPreparation());
  for(unsigned n=0;n<100;++n){
