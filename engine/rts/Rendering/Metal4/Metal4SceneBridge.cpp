@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeBeginReadyPolicy.h"
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Rendering/Backend/NativeLegacyWaterProgramState.h"
@@ -244,14 +245,25 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
   (unsigned long long)(job?job->workerBeginNs:0),(unsigned long long)(job?job->workerEndNs:0),int(job&&job->threadCPUValid),(unsigned long long)(job?job->threadCPUNs:0));
 }
 
-bool PrepareReadyPilotRequested() {
- static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_PREPARE_READY_PILOT");return value&&std::string_view(value)=="1";}();
- return enabled;
+NativeRenderReleaseMode SelectedReleaseMode() {
+ static const auto mode=[] {
+  const auto requested=[](const char* name){const char* value=std::getenv(name);return value&&std::string_view(value)=="1";};
+  return SelectNativeRenderReleaseMode(requested("BAR_NATIVE_BEGIN_READY_PILOT"),requested("BAR_NATIVE_PREPARE_READY_PILOT"));
+ }();
+ return mode;
+}
+bool PrepareReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Prepare;}
+bool BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}
+bool BeginPreparationOverlapRequested(){
+ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_PREPARE_OVERLAP");return value&&std::string_view(value)=="1";}();
+ static const bool worker=[] {const char* value=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return value&&std::string_view(value)=="1";}();
+ return enabled&&worker&&BeginReadyPilotRequested();
 }
 struct ScenePendingAdmission;
 struct Session {
  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
  NativeSourceFrameCredits sourceCredits{PrepareReadyPilotRequested()?3u:2u};
+ NativeCaptureRollbackFence captureRollbackFence;
  std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
  std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
  uint64_t cpuReadJobs220=0;
@@ -932,10 +944,6 @@ void ApplyDeferredFrameReceipts()
  session->sourceCredits.ReleaseHeld(result.sourceDrawFrame);
  }
 }
-bool BeginReadyPilotRequested() {
- static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_READY_PILOT");return value&&std::string_view(value)=="1";}();
- return enabled;
-}
 
 void RequireRetiredGPUWork()
 {
@@ -955,13 +963,45 @@ void RequireRetiredGPUWork()
 
 } // namespace
 
+std::shared_ptr<const Metal4SceneBeginRetirement> MakeBeginPreparationRetirement(
+ const NativeSourceFrameCredits::Lease& credit,const std::shared_ptr<NativeFrameBeginReceipt>& begin,
+ const std::shared_ptr<NativeFrameCompletionMailbox>& mailbox){
+ if(!session||!BeginPreparationOverlapRequested()||!credit||!begin||!mailbox||mailbox!=session->completionMailbox)
+  throw std::logic_error("BEGIN preparation retirement has no exact scene owner");
+ session->sourceCredits.Validate(credit,credit->Draw());
+ const auto epoch=mailbox->Epoch(),context=OriginalNativeTextureContext().Registry().ContextGeneration();
+ return std::shared_ptr<const Metal4SceneBeginRetirement>(new Metal4SceneBeginRetirement(credit,begin,mailbox,
+  [owner=session.get(),mailbox,epoch,context]{
+   if(session.get()!=owner||session->completionMailbox!=mailbox||mailbox->Epoch()!=epoch||
+    OriginalNativeTextureContext().Registry().ContextGeneration()!=context)
+    throw std::logic_error("BEGIN preparation retirement lost its scene epoch");
+   ApplyDeferredFrameReceipts();
+  }));
+}
+
 void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
+void FinishCaptureBeforeRollback() {
+ if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork();});
+}
+void DismissCaptureRollbackFence() {
+ if(session)session->captureRollbackFence.Dismiss();
+}
 void FinishPendingFrame() { RequireRetiredGPUWork(); }
 void FinishRuntimeControl() { RequireRetiredGPUWork(); }
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
  if(!session)throw std::logic_error("World capture has no source credit owner");
- if(!session->sourceCredits.HasCapacity())RequireRetiredGPUWork();
- return session->sourceCredits.Acquire(draw);
+ return session->sourceCredits.AcquireWithCPUReclaim(draw,BeginPreparationOverlapRequested(),[&]{
+  metal4::NativeCPUPhaseScope reclaimTrace(11,gs?gs->frameNum:0);reclaimTrace.Draw(draw);
+  if(session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
+  session->renderer->FinishCPUWork(); // Join, release access, deliver old notice, accept current CPU.
+  reclaimTrace.Mark(0);
+  ApplyDeferredFrameReceipts();reclaimTrace.Mark(1);
+  const bool recovered=session->sourceCredits.HasCapacity();reclaimTrace.Counts(recovered,2);
+  static bool reported=false;
+  if(recovered&&!reported&&gs&&gs->frameNum>=300&&gs->frameNum<=1500)try{
+   LOG("[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=2 simulation=%d",gs->frameNum);reported=true;
+  }catch(...){/* Optional evidence must not change settlement. */}
+ },[]{RequireRetiredGPUWork();});
 }
 
 void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
@@ -1647,8 +1687,9 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 		return;
 	if (session->preparedFrame)
 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
- // Only an exactly unchanged surface permits this value-snapshot capture to
- // overlap N's admitted prepare/encode work. Drain before later alpha/water/Lua work.
+ // An unchanged surface permits value capture to overlap N's CPU work. After
+ // joining that job, the proved selected-mode suffix may use the ordinary OFF state:
+ // source CPU settled, immutable predecessors still owned by the GPU ticket.
  const bool deferredParticles=BeginReadyPilotRequested()||PrepareReadyPilotRequested();
  const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
  std::unique_ptr<CPUReadReceipt220> cpuReceipt220;
@@ -1680,19 +1721,44 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  };
  // END EARLY_CPU_READ_LAUNCH220
 
- CaptureAtNativeSurfaceBoundary(deferredParticles,
+ const bool retainedPredecessorGPU=CaptureAtNativeSurfaceBoundary(deferredParticles,
   [&]{return session->surface.CaptureRefreshUnchanged();},
   []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
-   metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
+   {metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
    // Publish only at the actual capture boundary, after any changed-surface drain.
    session->opaqueSourcePending=actualOpaqueModels;
    // Particle source writers run once after the old encoding tail is drained.
    session->preparedFrame=session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels,deferredParticles);
    // No producer callback or GPU access: only retained opaque read rows.
    if(earlyCPURead220)launchCPURead220(*session->preparedFrame);
+   } // Keep prefix timing separate from CPU settlement and particle tail.
+   if(deferredParticles){
+    // Particle writers require the prior CPU/source job to settle, not its GPU
+    // completion. They produce fresh CPU geometry and retain immutable sources.
+    // A throwing join/tail still takes the boundary's full GPU drain before
+    // source rollback. Successful CPU settlement does not retire GPU credits.
+    session->renderer->FinishCPUWork();
+    session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
+   }
+  },[&]{
+   static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_CAPTURE_READY_BOUNDARY");return !value||std::string_view(value)=="1";}();
+   // Unknown/special paths preserve the old tail drain. Evaluate only AFTER
+   // FinishCPUWork and particle capture succeed; no admission or notice is
+   // fabricated here. Source receipts/credits remain held until real GPU
+   // completion is published and delivered at the existing retirement site.
+   return enabled&&(PrepareReadyPilotRequested()||BeginReadyPilotRequested())&&
+    session->renderer&&!session->renderer->HasScreenContinuation()&&
+    !session->dynamicWaterCapture.Initialized()&&!session->legacyWaterCapture.Initialized()&&
+    !session->sourceSettlement&&!session->admissionSettlement&&
+    session->preparedFrame&&session->preparedFrame->simulationFrame>0&&
+    session->preparedFrame->sourceDrawFrame==globalRendering->drawFrame&&
+    session->preparedFrame->opaqueModelFrame&&session->ModelSourceOwnersConnected()&&
+    session->preparedFrame->unsupported.empty()&&session->surface.Snapshot().CanPresent();
   });
- if(deferredParticles)session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
+ if(retainedPredecessorGPU){session->captureRollbackFence.Arm();static bool reported=false;if(!reported){reported=true;
+  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=%u",PrepareReadyPilotRequested()?3u:2u);}}
 
+ try {
  auto& frame=*session->preparedFrame;
  frame.mainSampling=session->renderer->ActualMainSampling();
  frame.minSampleShadingRate=globalRendering->minSampleShadingRate;
@@ -1845,6 +1911,13 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  if(earlyCPURead220&&cpuReceipt220)cpuJoin220.TransferTo(cpuReceipt220->pending);
  else cpuJoin220.Finish();
  session->cpuReadReceipt220=std::move(cpuReceipt220);
+ }catch(...){
+  // New CPU-only suffix failures must observe real GPU retirement before the
+  // outer source rollback. Never cancel an old ticket or release its credits
+  // merely because the source worker joined. A failed drain keeps quarantine.
+  if(retainedPredecessorGPU){cpuJoin220.Finish();FinishCaptureBeforeRollback();}
+  throw;
+ }
 }
 
 void AbortPreparedWorld()
@@ -2029,9 +2102,12 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	auto prepared = std::move(session->preparedFrame);
 	session->preparedFrame.reset();
  // Refresh writes CAMetalLayer properties, not just an immutable observation.
- // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
- if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();
-	session->surface.Refresh();
+ // Armed BEGIN has the same stable-surface proof as PREPARE. Keep the
+ // unarmed fallback; actual BEGIN still fully retires before dispatch below.
+ if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();
+ session->captureRollbackFence.RefreshForDispatch(
+  [&]{return session->surface.CaptureRefreshUnchanged();},
+  []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();});
  const auto pbrDeclarations=session->renderer?session->renderer->CapturePBRSource():NativePBRDeclarationReceipt{};
 	const auto submitTargets = [&]() -> DrawResult {
 		const auto independent=screenUI?std::count_if(screenUI->targetPasses.begin(),screenUI->targetPasses.end(),[](const auto& pass){return !pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen;}):0;
@@ -2143,9 +2219,13 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  if(admitted)options.heldSourceDraw=capturedFrame.sourceDrawFrame;
  // The prepare-ready experiment supersedes the narrower Begin-ready mode.
  options.allowPrepareReady=PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
- options.allowBeginReady=BeginReadyPilotRequested()&&!PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
- // Begin alone does NOT retire N-1. This pilot permits only N plus capture N+1.
- if(options.allowBeginReady)RequireRetiredGPUWork();
+ options.allowBeginReady=BeginReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+ // Fixed BEGIN uses PREPARE's existing independently owned recording path,
+ // but still releases only after actual Begin and retains two source credits.
+ // The exact scene action remains post-Join; worker retirement only marks it.
+ if(options.allowBeginReady&&BeginPreparationOverlapRequested()&&overlapPreparation)
+  options.beginPreparationRetirement=MakeBeginPreparationRetirement(options.sourceCredit,options.beginReceipt,session->completionMailbox);
+ if(options.allowBeginReady&&!options.beginPreparationRetirement)RequireRetiredGPUWork();
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
  frameOwner.reset(); // No mutable owning alias remains after sealing.
  const auto& frame=submission->Frame();

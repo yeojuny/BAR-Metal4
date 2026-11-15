@@ -1,0 +1,96 @@
+{
+  "baseCommit": "c8a8ac929cb69b40a3bdb87543daa855963b4b90",
+  "engineTree": "c78d0e44a8e9ead1686c61b0aaf5798a2a65c828",
+  "trackedEntries": 10226,
+  "changed": [
+    {
+      "path": "rts/Game/Game.cpp",
+      "baseBlob": "20403163df006c51cabd8750ee5f6092d81cef3d",
+      "finalBlob": "0a16fea8d3a5b434298aa382ec4a701a35eea01f",
+      "finalSHA256": "613c22743c5c9e2efacd12816c7775c5b6ddd2f09ba64d53b1937ea7a952c67a"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeBeginReadyPolicy.h",
+      "baseBlob": "64f1a4a4b8b4b9c9811c8fb25f40a247b29323f4",
+      "finalBlob": "47c74ac7ed7d6e2a0f3ae45845e1a1f96845951a",
+      "finalSHA256": "6129a06f39cdfaa4d607a89acbddfd4f5b9fef9bd57b79a2ece49312b195a78c"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSourceFrameCredits.h",
+      "baseBlob": "cd814f1fb1331a14c12d23a95f76bf34ccd24b23",
+      "finalBlob": "d2394ffcd617aa3c09f18cc4ca007d4d48593f30",
+      "finalSHA256": "80ca606c040a39a38e9f787d67f51c474921501f53fe9c9bc581f4a70fc7cd58"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h",
+      "baseBlob": "60ae0454a7c8da0e39f598ace6b0462dcdba04b1",
+      "finalBlob": "bd7d15791b928ee98e0b12b8166f5fda4fb76204",
+      "finalSHA256": "224bf5cd9743c80d2c90f1566c29218899f3a91409cda8412e1cf7bdef4f1003"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "baseBlob": "d3e5790d5e2f961bab73c17a67016ff8bf92c904",
+      "finalBlob": "0e0f944337663b7f9a3d00cfa8fd6caac1b53292",
+      "finalSHA256": "a49bae70f3c99d7e2e2038872fe10c70db5938a7b45719e0c324f494b5afd875"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBridge.h",
+      "baseBlob": "90ea00f4b96cbe18e5ff1fa98e04b045d0b70a99",
+      "finalBlob": "b209c95797f2aa419130b583fada595c559f72d3",
+      "finalSHA256": "7c05cad4e7c562b39a381a18c99456c1953b49ac78c86bd87e3abe9075eb379c"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.h",
+      "baseBlob": "e854262d4245811345da2dbad89bd5f475cb5dcc",
+      "finalBlob": "c9dc58a937ed427ccba5f676939819a691b487db",
+      "finalSHA256": "e12b49c6ec375b85313df5818a397673c2255157768358267a3597f51273bb76"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "baseBlob": "3501aa94910a2bad44c946e2f3a4e6c6427b30e2",
+      "finalBlob": "8f06a04194021759259ea973f7792fb9f9018ffd",
+      "finalSHA256": "f7564e1b46fc0e977da5ceef5bad72e3a297f2b0c6d3f991cbaba05f0da2438e"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeBeginReadyPilot.cpp",
+      "baseBlob": "a6996176a8e115c6fc130fddcef606383faabd27",
+      "finalBlob": "931ca94f12d506d7b2b98b7f141b318e2cfe70b8",
+      "finalSHA256": "d6d2cf10630634f15438a97adea37d58bac0902fe1c19ad22bf51ff833df1116"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeCaptureSurfaceBoundary.cpp",
+      "baseBlob": "4339886244ad8bcef01010fed20c56ed6127a77f",
+      "finalBlob": "d08de22fd94d6387969c90eab99f08a2d8b8c6d8",
+      "finalSHA256": "b96092106a8cd8fc6e85a36f0964292c6fadf5728b78ae87e80e404ae8a533fd"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_begin_ready_pilot_test.py",
+      "baseBlob": "ce7b8be3b56af0da22258efce78d9b28fbe7762a",
+      "finalBlob": "f2773650902a0fcb43530d5cd6c9154a01e73fce",
+      "finalSHA256": "99e6102b89076e5c5e2962c05dab737f499c5f2c289fcdd8b5599ae63f7fd5cb"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_capture_surface_boundary_test.py",
+      "baseBlob": "4becedf200df6d38f5750b67b457a42bbc7a93d4",
+      "finalBlob": "e620a7f60af2dea46939bf4627b5532ae25de53a",
+      "finalSHA256": "be5245efc2a23d52f739910fb21956bda9ce87724ab4d7b8d59a67ae3cba4217"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_prepare_ready_pilot_test.py",
+      "baseBlob": "e31d86d09005bb9d7ef5b9ffa154f2713ac84716",
+      "finalBlob": "70c6c30487c8862ae3c0e9be012febdea1a6de88",
+      "finalSHA256": "6012827678c2081540a0649b02d0c7a649f7db50dd6f5b6da853d57903d5c62a"
+    }
+  ],
+  "missing": [
+    "rts/lib/simdjson/.editorconfig",
+    "rts/lib/simdjson/.gitattributes",
+    "rts/lib/simdjson/.gitignore",
+    "rts/lib/simdjson/dependencies/.gitignore"
+  ],
+  "extra": [
+    "rts/Rendering/Metal4/Metal4SceneBeginRetirement.h",
+    "tools/metal4-contracts/run_native_begin_cpu_reclaim_test.py",
+    "tools/metal4-contracts/TestNativeBeginCPUReclaim.cpp"
+  ]
+}

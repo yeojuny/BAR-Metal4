@@ -1,6 +1,12 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 namespace rendering {
+// Raw flags select one release mode. PREPARE consistently wins an aliasing
+// both-on configuration; raw BEGIN must not disable PREPARE's capture proof.
+enum class NativeRenderReleaseMode { Joined, Begin, Prepare };
+constexpr NativeRenderReleaseMode SelectNativeRenderReleaseMode(bool begin,bool prepare)noexcept {
+ return prepare?NativeRenderReleaseMode::Prepare:begin?NativeRenderReleaseMode::Begin:NativeRenderReleaseMode::Joined;
+}
 // Initial encoding-tail pilot, not preparation overlap or general U5 completion.
 struct NativeBeginReadyPolicy {
  bool requested=false,worker=false,owned=false,visible=false,admitted=false;
@@ -19,6 +25,11 @@ struct NativeBeginReadyPolicy {
  }
  // Prepare release retains the older GPU submission. Its retirement callback
  // is only an atomic worker notice; the main-thread action remains after Join.
+ // A generic callback never qualifies: the renderer must validate the private
+ // exact-scene capability before passing true. Every other BEGIN veto remains.
+ bool EligibleWithSceneRetirement(bool exactScene)const noexcept{
+  return exactScene&&previousRetirement?EligibleForPreparation():Eligible();
+ }
  bool EligibleForPreparation()const noexcept{auto policy=*this;policy.previousRetirement=false;return policy.Eligible();}
 };
 }

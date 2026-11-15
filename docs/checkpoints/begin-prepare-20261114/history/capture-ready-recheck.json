@@ -1,0 +1,118 @@
+{
+  "status": "CLOSED_ALL_4_NORMAL",
+  "utc": "2026-11-15T02:16:54.028854+00:00",
+  "games": 4,
+  "idleProcessMatches": [],
+  "sharedAwake": "RELEASED",
+  "priorPoolsSeparate": true,
+  "arms": [
+    {
+      "arm": "A1_OFF_PACED",
+      "FPS": 179.29741696436156,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "originalWallWarmupSeconds": 13.973999977,
+      "heldDraws": 689,
+      "display": {
+        "utc": "2026-11-15T02:11:40.578816+00:00",
+        "monotonic": 0.045969916,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "arm": "B1_PREPARE_PACED",
+      "FPS": 185.3157393045847,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "originalWallWarmupSeconds": 13.977000237,
+      "heldDraws": 731,
+      "display": {
+        "utc": "2026-11-15T02:12:54.010102+00:00",
+        "monotonic": 0.048841333,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "arm": "B2_PREPARE_PACED",
+      "FPS": 185.4092653691489,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "originalWallWarmupSeconds": 13.972999573,
+      "heldDraws": 738,
+      "display": {
+        "utc": "2026-11-15T02:14:07.372374+00:00",
+        "monotonic": 0.048452875,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "result": "<local-reference>"
+    },
+    {
+      "arm": "A2_OFF_PACED",
+      "FPS": 179.3615552730506,
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "originalWallWarmupSeconds": 13.975000381,
+      "heldDraws": 676,
+      "display": {
+        "utc": "2026-11-15T02:15:21.322572+00:00",
+        "monotonic": 0.046218083,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "result": "<local-reference>"
+    }
+  ],
+  "completion": {
+    "status": "COMPLETE",
+    "runs": 4,
+    "pooled": {
+      "OFF": {
+        "FPS": 179.3294893254693,
+        "samples": 14344,
+        "p99Ms": 8.0,
+        "slow1PercentFPS": 111.54144048441184,
+        "maximumMs": 17.000001,
+        "over16_667ms": 2,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      },
+      "PREPARE": {
+        "FPS": 185.3625,
+        "samples": 14827,
+        "p99Ms": 6.0,
+        "slow1PercentFPS": 142.58373205741628,
+        "maximumMs": 15.0,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      }
+    },
+    "changePercent": 3.364204458075082,
+    "previousSamplesPooled": false,
+    "validSlowRunsRetained": true,
+    "utc": "2026-11-15T02:16:34.951285+00:00"
+  }
+}

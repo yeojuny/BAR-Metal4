@@ -2407,6 +2407,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   globalRendering->viewSizeX,globalRendering->viewSizeY):NativePresentationPolicy{};
 
  static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return p&&std::string_view(p)=="1";}();
+ const bool sceneRetirement=bool(options.beginPreparationRetirement);
+ if(sceneRetirement){
+  Require(owned&&options.allowBeginReady&&!options.allowPrepareReady&&!previousRetired,
+   "BEGIN preparation requires its owned scene capability, not a caller callback");
+  options.beginPreparationRetirement->Validate(options.sourceCredit,options.beginReceipt);
+ }
  const auto releasePolicy=NativeBeginReadyPolicy{
   .requested=options.allowBeginReady,.worker=enabled,.owned=bool(owned),
   .visible=options.presentWorld&&frame.simulationFrame>0&&impl->surface->Snapshot().CanPresent(),
@@ -2415,17 +2421,21 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   .cpuSettlement=bool(cpuSettled),.readback=bool(options.readback),.continuation=bool(impl->screenContinuation),
   .dynamicWater=bool(frame.dynamicWater),.legacyWater=bool(frame.legacyWater),
   .arbitraryCallback=bool(options.submissionBegan)||bool(options.submissionCompleted)||bool(options.sourceCompleted),
-  .previousRetirement=bool(previousRetired)};
- const bool beginReady=releasePolicy.Eligible();
+  .previousRetirement=sceneRetirement||bool(previousRetired)};
+ const bool beginReady=releasePolicy.EligibleWithSceneRetirement(sceneRetirement);
+ if(sceneRetirement){
+  Require(beginReady&&[NSThread isMainThread],"Scene BEGIN retirement cannot enter a synchronous fallback");
+  previousRetired=[request=options.beginPreparationRetirement]{request->DeliverAfterJoin();};
+ }
  auto preparePolicy=releasePolicy;preparePolicy.requested=options.allowPrepareReady;
  const bool prepareReady=preparePolicy.EligibleForPreparation();
  NativeCPUPhaseScope admissionTrace(7,frame.simulationFrame);admissionTrace.Draw(frame.sourceDrawFrame);
  // count_a bits: Begin requested, Prepare requested, eligible, actual queued.
  const unsigned admissionFlags=unsigned(options.allowBeginReady)|unsigned(options.allowPrepareReady)<<1|
   unsigned(beginReady||prepareReady)<<2;
- const auto rejectionMask=admissionTrace.active?(options.allowPrepareReady?preparePolicy.RejectionMask(true):releasePolicy.RejectionMask()):0u;
+ const auto rejectionMask=admissionTrace.active?(options.allowPrepareReady?preparePolicy.RejectionMask(true):releasePolicy.RejectionMask(sceneRetirement)):0u;
  admissionTrace.Counts(admissionFlags,rejectionMask);
- if(beginReady)Require(SharedRuntime().CanSafelyDetach(),"Begin-ready pilot requires prior GPU retirement");
+ if(beginReady&&!sceneRetirement)Require(SharedRuntime().CanSafelyDetach(),"Begin-ready pilot requires prior GPU retirement");
  // Readback/continuation and arbitrary engine source callbacks stay on main.
  if(!owned||!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
     options.submissionBegan||options.submissionCompleted||options.sourceCompleted){
@@ -2470,6 +2480,15 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   }});
   if((prepareReady&&impl->cpuJob->ReleaseForPreparation())||(beginReady&&impl->cpuJob->ReleaseAfterBegin())){
    admissionTrace.Counts(admissionFlags|8u,rejectionMask);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   // A counted-window witness follows the actual successful release, never
+   // just the raw environment request. No timing instrumentation is enabled.
+   static bool beginReported=false,prepareReported=false;
+   bool& reported=beginReady?beginReported:prepareReported;
+   if(!reported&&frame.simulationFrame>=300&&frame.simulationFrame<=1500)try{
+    LOG("[NativeReleaseMode] mode=%s eligible=1 queued=1 simulation=%llu begin_submission=%llu begin_prepare_overlap=%u",beginReady?"BEGIN":"PREPARE",(unsigned long long)frame.simulationFrame,(unsigned long long)options.beginReceipt->Submission(),unsigned(beginReady&&sceneRetirement));reported=true;
+   }catch(...){/* Diagnostic failure cannot unwind an active worker handoff. */}
+#endif
    impl->detachedCPUJob=true;
    Metal4WorldPresentationResult queued;queued.queued=true;queued.sourceDrawFrame=frame.sourceDrawFrame;
    return queued;
@@ -2546,6 +2565,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
 		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,sourceSubmission);
   RuntimeLease lease(std::move(previousRetired));
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  static bool pendingReported=false;
+  if(options.beginPreparationRetirement&&lease.PreparingWhilePending()&&!pendingReported&&frame.simulationFrame>=300&&frame.simulationFrame<=1500)try{
+   LOG("[NativeBeginPrepareOverlap] pending_at_prepare=1 simulation=%llu source_draw=%llu",(unsigned long long)frame.simulationFrame,(unsigned long long)frame.sourceDrawFrame);pendingReported=true;
+  }catch(...){/* Optional bounded evidence; no live handoff unwind. */}
+#endif
   lease.BindUIResolver(std::move(uiResolver));
   lease.BindSourceSubmission(sourceSubmission);
   // Sweep once even when main/water effect frames are absent or empty.

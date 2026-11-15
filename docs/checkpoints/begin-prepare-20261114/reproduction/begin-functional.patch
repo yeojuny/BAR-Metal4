@@ -1,0 +1,219 @@
+--- a/rts/Rendering/Backend/NativeBeginReadyPolicy.h
++++ b/rts/Rendering/Backend/NativeBeginReadyPolicy.h
+@@ -1,6 +1,12 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #pragma once
+ namespace rendering {
++// Raw flags select one release mode. PREPARE consistently wins an aliasing
++// both-on configuration; raw BEGIN must not disable PREPARE's capture proof.
++enum class NativeRenderReleaseMode { Joined, Begin, Prepare };
++constexpr NativeRenderReleaseMode SelectNativeRenderReleaseMode(bool begin,bool prepare)noexcept {
++ return prepare?NativeRenderReleaseMode::Prepare:begin?NativeRenderReleaseMode::Begin:NativeRenderReleaseMode::Joined;
++}
+ // Initial encoding-tail pilot, not preparation overlap or general U5 completion.
+ struct NativeBeginReadyPolicy {
+  bool requested=false,worker=false,owned=false,visible=false,admitted=false;
+--- a/rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h
++++ b/rts/Rendering/Metal4/Metal4CaptureSurfaceBoundary.h
+@@ -7,6 +7,7 @@
+ class NativeCaptureRollbackFence {
+  bool pending=false;
+ public:
++ bool Armed()const noexcept{return pending;}
+  void Arm()noexcept{pending=true;}
+  void Dismiss()noexcept{pending=false;}
+  template<class Drain>void BeforeRollback(Drain&& drain){
+--- a/rts/Rendering/Metal4/Metal4SceneBridge.cpp
++++ b/rts/Rendering/Metal4/Metal4SceneBridge.cpp
+@@ -1,3 +1,4 @@
++#include "Rendering/Backend/NativeBeginReadyPolicy.h"
+ #include "Rendering/Backend/NativeCPUPhaseTrace.h"
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "Rendering/Backend/NativeLegacyWaterProgramState.h"
+@@ -244,10 +245,15 @@
+   (unsigned long long)(job?job->workerBeginNs:0),(unsigned long long)(job?job->workerEndNs:0),int(job&&job->threadCPUValid),(unsigned long long)(job?job->threadCPUNs:0));
+ }
+ 
+-bool PrepareReadyPilotRequested() {
+- static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_PREPARE_READY_PILOT");return value&&std::string_view(value)=="1";}();
+- return enabled;
+-}
++NativeRenderReleaseMode SelectedReleaseMode() {
++ static const auto mode=[] {
++  const auto requested=[](const char* name){const char* value=std::getenv(name);return value&&std::string_view(value)=="1";};
++  return SelectNativeRenderReleaseMode(requested("BAR_NATIVE_BEGIN_READY_PILOT"),requested("BAR_NATIVE_PREPARE_READY_PILOT"));
++ }();
++ return mode;
++}
++bool PrepareReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Prepare;}
++bool BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}
+ struct ScenePendingAdmission;
+ struct Session {
+  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
+@@ -933,10 +939,6 @@
+  session->sourceCredits.ReleaseHeld(result.sourceDrawFrame);
+  }
+ }
+-bool BeginReadyPilotRequested() {
+- static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_READY_PILOT");return value&&std::string_view(value)=="1";}();
+- return enabled;
+-}
+ 
+ void RequireRetiredGPUWork()
+ {
+@@ -1655,7 +1657,7 @@
+ 	if (session->preparedFrame)
+ 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
+  // An unchanged surface permits value capture to overlap N's CPU work. After
+- // joining that job, the proved PREPARE suffix may use the ordinary OFF state:
++ // joining that job, the proved selected-mode suffix may use the ordinary OFF state:
+  // source CPU settled, immutable predecessors still owned by the GPU ticket.
+  const bool deferredParticles=BeginReadyPilotRequested()||PrepareReadyPilotRequested();
+  const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
+@@ -1713,7 +1715,7 @@
+    // FinishCPUWork and particle capture succeed; no admission or notice is
+    // fabricated here. Source receipts/credits remain held until real GPU
+    // completion is published and delivered at the existing retirement site.
+-   return enabled&&PrepareReadyPilotRequested()&&!BeginReadyPilotRequested()&&
++   return enabled&&(PrepareReadyPilotRequested()||BeginReadyPilotRequested())&&
+     session->renderer&&!session->renderer->HasScreenContinuation()&&
+     !session->dynamicWaterCapture.Initialized()&&!session->legacyWaterCapture.Initialized()&&
+     !session->sourceSettlement&&!session->admissionSettlement&&
+@@ -1723,7 +1725,7 @@
+     session->preparedFrame->unsupported.empty()&&session->surface.Snapshot().CanPresent();
+   });
+  if(retainedPredecessorGPU){session->captureRollbackFence.Arm();static bool reported=false;if(!reported){reported=true;
+-  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3");}}
++  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=%u",PrepareReadyPilotRequested()?3u:2u);}}
+ 
+  try {
+  auto& frame=*session->preparedFrame;
+@@ -2069,8 +2071,9 @@
+ 	auto prepared = std::move(session->preparedFrame);
+ 	session->preparedFrame.reset();
+  // Refresh writes CAMetalLayer properties, not just an immutable observation.
+- // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
+- if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();
++ // Armed BEGIN has the same stable-surface proof as PREPARE. Keep the
++ // unarmed fallback; actual BEGIN still fully retires before dispatch below.
++ if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();
+  session->captureRollbackFence.RefreshForDispatch(
+   [&]{return session->surface.CaptureRefreshUnchanged();},
+   []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();});
+@@ -2185,8 +2188,10 @@
+  if(admitted)options.heldSourceDraw=capturedFrame.sourceDrawFrame;
+  // The prepare-ready experiment supersedes the narrower Begin-ready mode.
+  options.allowPrepareReady=PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+- options.allowBeginReady=BeginReadyPilotRequested()&&!PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+- // Begin alone does NOT retire N-1. This pilot permits only N plus capture N+1.
++ options.allowBeginReady=BeginReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
++ // Last safe BEGIN edge: stable capture/main CPU preparation may overlap N-1,
++ // but retire its real GPU ticket and deliver exact receipts BEFORE dispatch.
++ // Keep 2 source credits, empty previousRetired and runtime detach precondition.
+  if(options.allowBeginReady)RequireRetiredGPUWork();
+  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
+  frameOwner.reset(); // No mutable owning alias remains after sealing.
+--- a/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -2470,6 +2470,15 @@
+   }});
+   if((prepareReady&&impl->cpuJob->ReleaseForPreparation())||(beginReady&&impl->cpuJob->ReleaseAfterBegin())){
+    admissionTrace.Counts(admissionFlags|8u,rejectionMask);
++#ifdef RECOIL_METAL4_LIVE_SCENE
++   // A counted-window witness follows the actual successful release, never
++   // just the raw environment request. No timing instrumentation is enabled.
++   static bool beginReported=false,prepareReported=false;
++   bool& reported=beginReady?beginReported:prepareReported;
++   if(!reported&&frame.simulationFrame>=300&&frame.simulationFrame<=1500)try{
++    LOG("[NativeReleaseMode] mode=%s eligible=1 queued=1 simulation=%llu begin_submission=%llu",beginReady?"BEGIN":"PREPARE",(unsigned long long)frame.simulationFrame,(unsigned long long)options.beginReceipt->Submission());reported=true;
++   }catch(...){/* Diagnostic failure cannot unwind an active worker handoff. */}
++#endif
+    impl->detachedCPUJob=true;
+    Metal4WorldPresentationResult queued;queued.queued=true;queued.sourceDrawFrame=frame.sourceDrawFrame;
+    return queued;
+--- a/tools/metal4-contracts/TestNativeBeginReadyPilot.cpp
++++ b/tools/metal4-contracts/TestNativeBeginReadyPilot.cpp
+@@ -6,6 +6,11 @@
+ using namespace rendering;
+ template<class F>void Reject(F&& f){bool caught=false;try{f();}catch(...){caught=true;}assert(caught);}
+ int main(){
++ static_assert(SelectNativeRenderReleaseMode(false,false)==NativeRenderReleaseMode::Joined);
++ static_assert(SelectNativeRenderReleaseMode(true,false)==NativeRenderReleaseMode::Begin);
++ static_assert(SelectNativeRenderReleaseMode(false,true)==NativeRenderReleaseMode::Prepare);
++ static_assert(SelectNativeRenderReleaseMode(true,true)==NativeRenderReleaseMode::Prepare);
++
+  NativeBeginReadyPolicy valid{true,true,true,true,true,true,true,true,true};assert(valid.Eligible());
+  for(auto flag:{&NativeBeginReadyPolicy::requested,&NativeBeginReadyPolicy::worker,&NativeBeginReadyPolicy::owned,&NativeBeginReadyPolicy::visible,&NativeBeginReadyPolicy::admitted,&NativeBeginReadyPolicy::sourceCredit,&NativeBeginReadyPolicy::deferred,&NativeBeginReadyPolicy::screen,&NativeBeginReadyPolicy::cpuSettlement}){auto bad=valid;bad.*flag=false;assert(!bad.Eligible());}
+  for(auto flag:{&NativeBeginReadyPolicy::readback,&NativeBeginReadyPolicy::continuation,&NativeBeginReadyPolicy::dynamicWater,&NativeBeginReadyPolicy::legacyWater,&NativeBeginReadyPolicy::arbitraryCallback,&NativeBeginReadyPolicy::previousRetirement}){auto bad=valid;bad.*flag=true;assert(!bad.Eligible());}
+--- a/tools/metal4-contracts/TestNativeCaptureSurfaceBoundary.cpp
++++ b/tools/metal4-contracts/TestNativeCaptureSurfaceBoundary.cpp
+@@ -8,6 +8,29 @@
+ #include <stdexcept>
+ using namespace rendering;
+ int main(){
++ // BEGIN uses two credits: held N and captured N+1. Stable CPU capture keeps
++ // N pending until the existing full predispatch drain, not after Begin.
++ {
++  NativeSourceFrameCredits credits(2);NativeFrameCompletionMailbox mailbox(9);
++  auto old=credits.Acquire(20);credits.Hold(old);old.reset(); // Prior CPU owner settled; GPU-held credit remains.
++  auto next=credits.Acquire(21);
++  const auto ticket=mailbox.Prepare(9,20,120);mailbox.Accept(ticket);
++  bool gpuPending=true;unsigned drains=0;
++  const auto drain=[&]{++drains;gpuPending=false;mailbox.Publish(ticket,{true,20,120});
++   const auto notice=mailbox.Pop();assert(notice&&notice->sourceDrawFrame==20);credits.ReleaseHeld(20);};
++  NativeCaptureRollbackFence fence;
++  assert(CaptureAtNativeSurfaceBoundary(true,[]{return true;},drain,[]{assert(false);},[]{},[]{return true;}));
++  fence.Arm();assert(fence.Armed()&&gpuPending&&!credits.HasCapacity());
++  try{credits.Acquire(22);assert(false);}catch(const std::logic_error&){}
++  // The production guard skips early drain only when this exact fence is armed.
++  if(!fence.Armed())drain();
++  fence.RefreshForDispatch([]{return true;},drain,[]{assert(false);});assert(drains==0&&gpuPending);
++  drain(); // Preserved options.allowBeginReady predispatch requirement.
++  assert(!gpuPending&&drains==1);credits.Validate(next,21);credits.Hold(next);
++  auto future=credits.Acquire(22);assert(!credits.HasCapacity());
++  fence.Dismiss();assert(!fence.Armed());
++ }
++
+  // A surface can change after stable capture but before dispatch. Do not write
+  // CAMetalLayer properties under a retained predecessor, even on that edge.
+  {
+--- a/tools/metal4-contracts/run_native_begin_ready_pilot_test.py
++++ b/tools/metal4-contracts/run_native_begin_ready_pilot_test.py
+@@ -10,7 +10,10 @@
+ scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+ assert 'if(options.allowBeginReady)RequireRetiredGPUWork();' in scene
+ assert '(overlapPreparation&&!options.allowBeginReady)?' in scene
+-assert 'return value&&std::string_view(value)=="1";' in scene.split('BAR_NATIVE_BEGIN_READY_PILOT',1)[1]
++assert 'BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}' in scene
++assert 'SelectNativeRenderReleaseMode(requested("BAR_NATIVE_BEGIN_READY_PILOT"),requested("BAR_NATIVE_PREPARE_READY_PILOT"))' in scene
++assert 'if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();' in scene
++assert 'return enabled&&(PrepareReadyPilotRequested()||BeginReadyPilotRequested())&&' in scene
+ queued=scene.split(' if(result.queued){',1)[1].split(' if(pendingAdmission',1)[0]
+ assert 'sourceFrameCompleted' in queued and 'sourceDrawFrame!=frame.sourceDrawFrame' in queued
+ assert 'return {false,false,false,0,frame.sourceDrawFrame,true,screenUI->postprocess->serial}' in queued
+--- a/tools/metal4-contracts/run_native_capture_surface_boundary_test.py
++++ b/tools/metal4-contracts/run_native_capture_surface_boundary_test.py
+@@ -15,10 +15,10 @@
+ assert prefix.index('CaptureRefreshUnchanged()')<prefix.index('RequireRetiredGPUWork();')<prefix.index('surface.Refresh();')<prefix.index('capture.Capture(')
+ assert 'CaptureWater' not in prefix and 'CaptureOriginalAlphaModels' not in prefix
+ assert 'NativeWaterScenePass::Main' in prefix
+-# The other refresh/control boundary is unchanged.
++# BEGIN retains its pre-Refresh drain unless the actual capture fence is armed.
+ draw=s.split('DrawResult DrawWorld(',1)[1]
+ pos=draw.index('session->surface.Refresh();')
+-assert 'if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
++assert 'if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
+ w=(root/'rts/Rendering/Metal4/Metal4WindowSurface.mm').read_text()
+ probe=w.split('bool CaptureRefreshUnchanged() const',1)[1].split('bool Refresh()',1)[0]
+ assert 'layer.drawableSize' in probe and 'layer.displaySyncEnabled' in probe and 'requested==displaySyncRequest' in probe
+--- a/tools/metal4-contracts/run_native_prepare_ready_pilot_test.py
++++ b/tools/metal4-contracts/run_native_prepare_ready_pilot_test.py
+@@ -17,7 +17,7 @@
+ assert 'target()' not in release and 'Wait' not in release
+ finish=job.split(' void Finish(){',1)[1]
+ assert finish.index('task->Join()')<finish.index('target()')<finish.index('DeliverRetirement()')<finish.index('Notify()')
+-retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('bool BeginReadyPilotRequested',1)[0]
++retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
+ assert 'sourceSettlement.reset' not in retire and 'opaqueSourcePending' not in retire
+ assert 'sourceCredits.ReleaseHeld(result.sourceDrawFrame)' in retire
+ for script in ['run_native_source_frame_credits_test.py','run_native_render_job_settlement_test.py','run_native_scene_admission_record_test.py','run_native_begin_ready_pilot_test.py']:

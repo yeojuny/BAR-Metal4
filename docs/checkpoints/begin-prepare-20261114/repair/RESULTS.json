@@ -1,0 +1,161 @@
+{
+  "status": "BEGIN_REPAIR_VALIDATED_RETAINED_AS_TESTED_OPTION",
+  "candidate": {
+    "parentSignedSHA256": "66a671532715cfe8605cda5d6a8855f7b9db17d2281afe4d560193aec6fbc6ec",
+    "patchSHA256": "cf3a0f4e5d5f9ce40b525299989170480c2228aa9607c9b9004e99a4dcf331da",
+    "signedSHA256": "fd2ba879ee5867c4ebde836689e1e53c2e699d0571b8f5efaa54ce3b0135c4b9",
+    "defaults": {
+      "worker": 1,
+      "beginReady": 1,
+      "prepareReady": 0,
+      "beginPrepareOverlap": 1,
+      "sourceCredits": 2
+    },
+    "runtime": "PENDING",
+    "adopted": false,
+    "package": "docs/checkpoints/begin-prepare-20261114/repair/BAR Begin Overlap Test.app",
+    "binary": "docs/checkpoints/begin-prepare-20261114/repair/BAR Begin Overlap Test.app/Contents/Resources/BAR.app/Contents/Resources/native-engines/development/bin/spring-metal4-scene",
+    "native": "docs/checkpoints/begin-prepare-20261114/repair/BAR Begin Overlap Test.app/Contents/Resources/BAR.app/Contents/Resources/native-engines/development",
+    "sha256": "fd2ba879ee5867c4ebde836689e1e53c2e699d0571b8f5efaa54ce3b0135c4b9",
+    "unsignedSHA256": "aa156191fa130066984ed25e4e75a5edd1f20b226629103f08aae82798734a05",
+    "wrapperSHA256": "24bb0ee1e48280f0fbd1c68a835fe5f0fc5f3c149ca6d55b3f1e00852a930eea",
+    "profile": "BAR-Begin-Overlap-Test-20261114",
+    "signature": "PASS deep strict ad hoc"
+  },
+  "games": 9,
+  "cleanRuns": 6,
+  "rows": [
+    {
+      "arm": "A1_OLD_BEGIN_PACED",
+      "mode": "OLD_BEGIN",
+      "FPS": 107.08302681519044,
+      "draws": 4283,
+      "seconds": 39.997001648,
+      "slow1PercentFPS": 75.43859649122808,
+      "warmupSeconds": 13.977757999999998,
+      "reclaim": "NOT_OBSERVED"
+    },
+    {
+      "arm": "B1_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.27962944777326,
+      "draws": 7411,
+      "seconds": 39.999000549,
+      "slow1PercentFPS": 128.6449399656947,
+      "warmupSeconds": 13.970966999999998,
+      "reclaim": "OBSERVED"
+    },
+    {
+      "arm": "C1_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 184.575,
+      "draws": 7383,
+      "seconds": 40.0,
+      "slow1PercentFPS": 131.6725976304758,
+      "warmupSeconds": 13.968298,
+      "reclaim": "NOT_OBSERVED"
+    },
+    {
+      "arm": "C2_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 185.23425662351997,
+      "draws": 7409,
+      "seconds": 39.998001099,
+      "slow1PercentFPS": 138.6321626617375,
+      "warmupSeconds": 13.974006,
+      "reclaim": "NOT_OBSERVED"
+    },
+    {
+      "arm": "B2_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.23425662351997,
+      "draws": 7409,
+      "seconds": 39.998001099,
+      "slow1PercentFPS": 127.76831345826236,
+      "warmupSeconds": 13.974902000000004,
+      "reclaim": "OBSERVED"
+    },
+    {
+      "arm": "A2_OLD_BEGIN_PACED",
+      "mode": "OLD_BEGIN",
+      "FPS": 105.75,
+      "draws": 4230,
+      "seconds": 40.0,
+      "slow1PercentFPS": 73.63013673414336,
+      "warmupSeconds": 13.972755,
+      "reclaim": "NOT_OBSERVED"
+    }
+  ],
+  "pooled": {
+    "OLD_BEGIN": {
+      "FPS": 106.41648842613631,
+      "samples": 8511,
+      "p99Ms": 12.0,
+      "slow1PercentFPS": 74.52339675125927,
+      "maximumMs": 17.000001,
+      "over16_667ms": 1,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0,
+      "totalDraws": 8513,
+      "totalSeconds": 79.99700164800001,
+      "independentRecalculation": "PASS",
+      "slow1PercentDefinition": "reciprocal of mean of slowest ceil(1% interval count) CPU DrawScreen wall intervals"
+    },
+    "FIXED_BEGIN": {
+      "FPS": 185.25694331908142,
+      "samples": 14818,
+      "p99Ms": 7.0,
+      "slow1PercentFPS": 128.1169389509888,
+      "maximumMs": 13.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0,
+      "totalDraws": 14820,
+      "totalSeconds": 79.99700164800001,
+      "independentRecalculation": "PASS",
+      "slow1PercentDefinition": "reciprocal of mean of slowest ceil(1% interval count) CPU DrawScreen wall intervals"
+    },
+    "PREPARE": {
+      "FPS": 184.90462007537468,
+      "samples": 14790,
+      "p99Ms": 6.0,
+      "slow1PercentFPS": 134.91340005933145,
+      "maximumMs": 16.000001,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0,
+      "totalDraws": 14792,
+      "totalSeconds": 79.99800109899999,
+      "independentRecalculation": "PASS",
+      "slow1PercentDefinition": "reciprocal of mean of slowest ceil(1% interval count) CPU DrawScreen wall intervals"
+    }
+  },
+  "fixedBeginVsOldBeginPercent": 74.08669094326324,
+  "fixedBeginVsPreparePercent": 0.19054323443250532,
+  "validation": {
+    "status": "NO_DETECTED_VALIDATION_ERRORS",
+    "runs": 1,
+    "errors": {},
+    "utc": "2026-11-15T04:25:36.291200+00:00"
+  },
+  "visual": {
+    "status": "NO_OBVIOUS_NEW_STATIC_DIFFERENCE",
+    "review": "Both 1512x950 internal sim1500 PNGs inspected. Mountain/terrain/tree/unit/ring placement and occlusion visually align. Water animation and GAME PAUSED text position differ. Shared dark/blur horizontal regions remain. No pixel equality or full renderer parity claimed.",
+    "images": [
+      "measurement/screen_paced/preparation/runs/S_OLD_BEGIN_PACED/scene.png",
+      "measurement/screen_paced/preparation/runs/S_FIXED_BEGIN_PACED/scene.png"
+    ]
+  },
+  "pinsChanged": false,
+  "adoptedBaseline": "8a65879e/PREPARE1 BEGIN0 preserved",
+  "newCandidatePromoted": false,
+  "previousSamplesPooled": false,
+  "allValidRunsRetained": true,
+  "bothRawOn": "This candidate canonically selects PREPARE; no additive BEGIN+PREPARE overlap. Adopted older baseline remains explicit PREPARE1/BEGIN0.",
+  "display": "All9 observed active, unlocked, not asleep; display-off execution not separately tested. Runtime LimitIdleFps0 and option_limitoffscreenfps=false confirmed.",
+  "warmup": "Identical accepted pacing module/widget and original9.8s gate; no warmup edits or retries; counted40s sim300..1500. All9 normal.",
+  "closure": "All9 normal exit, owned groups gone, matching app/engine processes0, shared AWAKEreleased"
+}

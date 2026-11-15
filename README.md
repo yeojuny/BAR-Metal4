@@ -1,3 +1,11 @@
+# BEGIN/PREPARE validated source checkpoint
+
+This branch preserves the tested 2026-11-14 source, both current result campaigns and the earlier capture-ready/BEGIN history.
+
+[Checkpoint, results and next strategy](docs/checkpoints/begin-prepare-20261114/README.md) · [Source restoration](docs/checkpoints/begin-prepare-20261114/reproduction/README.md)
+
+The measurements pin signed engine fd2ba879ee5867c4ebde836689e1e53c2e699d0571b8f5efaa54ce3b0135c4b9. The adopted local performance policy remains the separately recorded 8a65879e/PREPARE baseline. The product installation information below refers to the v1.11.2 release.
+
 # BAR Metal4 v1.11.2
 
 Experimental single-player BAR with native Metal 4 for Apple Silicon, macOS 27.2 or later.

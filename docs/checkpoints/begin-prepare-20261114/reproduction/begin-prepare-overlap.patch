@@ -1,0 +1,455 @@
+--- a/rts/Rendering/Backend/NativeBeginReadyPolicy.h
++++ b/rts/Rendering/Backend/NativeBeginReadyPolicy.h
+@@ -25,6 +25,11 @@
+  }
+  // Prepare release retains the older GPU submission. Its retirement callback
+  // is only an atomic worker notice; the main-thread action remains after Join.
++ // A generic callback never qualifies: the renderer must validate the private
++ // exact-scene capability before passing true. Every other BEGIN veto remains.
++ bool EligibleWithSceneRetirement(bool exactScene)const noexcept{
++  return exactScene&&previousRetirement?EligibleForPreparation():Eligible();
++ }
+  bool EligibleForPreparation()const noexcept{auto policy=*this;policy.previousRetirement=false;return policy.Eligible();}
+ };
+ }
+--- a/rts/Rendering/Backend/NativeSourceFrameCredits.h
++++ b/rts/Rendering/Backend/NativeSourceFrameCredits.h
+@@ -57,6 +57,14 @@
+  NativeSourceFrameCredits(NativeSourceFrameCredits&&)=delete;
+  NativeSourceFrameCredits& operator=(NativeSourceFrameCredits&&)=delete;
+  bool HasCapacity()const{Source();RequireOpenLineage();for(const auto& slot:ActiveSlots())if(slot.lease.expired())return true;return false;}
++ // Only CPU settlement may reclaim first. Recheck weak lease ownership:
++ // an unexpected alias or missing retirement still takes the original drain.
++ template<class SettleCPU,class DrainGPU>
++ Lease AcquireWithCPUReclaim(uint64_t draw,bool enabled,SettleCPU settle,DrainGPU drain){
++  if(enabled&&!HasCapacity())settle();
++  if(!HasCapacity())drain();
++  return Acquire(draw);
++ }
+  Lease Acquire(uint64_t draw){
+   Source();RequireOpenLineage();
+   if(nextOrdinal==std::numeric_limits<uint64_t>::max())throw std::logic_error("Source capture ordinal exhausted");
+--- /dev/null
++++ b/rts/Rendering/Metal4/Metal4SceneBeginRetirement.h
+@@ -0,0 +1,40 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++#include "Rendering/Backend/NativeSourceFrameCredits.h"
++#include "Rendering/Backend/NativeFrameBeginReceipt.h"
++#include "Rendering/Backend/NativeFrameCompletionMailbox.h"
++#include <functional>
++namespace rendering {
++class Metal4SceneBeginRetirement;
++namespace scene {
++// The scene alone constructs this capability; callers cannot supply a callback.
++std::shared_ptr<const Metal4SceneBeginRetirement> MakeBeginPreparationRetirement(
++ const NativeSourceFrameCredits::Lease&,const std::shared_ptr<NativeFrameBeginReceipt>&,
++ const std::shared_ptr<NativeFrameCompletionMailbox>&);
++}
++// Exact current admission and scene epoch. Its main action is delivered by the
++// existing dispatch receipt only after the worker has Joined and released access.
++class Metal4SceneBeginRetirement {
++ const std::thread::id source=std::this_thread::get_id();
++ const NativeSourceFrameCredits::Lease credit;
++ const std::shared_ptr<NativeFrameBeginReceipt> begin;
++ const std::shared_ptr<NativeFrameCompletionMailbox> mailbox;
++ const std::function<void()> afterJoin;
++ Metal4SceneBeginRetirement(NativeSourceFrameCredits::Lease credit,
++  std::shared_ptr<NativeFrameBeginReceipt> begin,std::shared_ptr<NativeFrameCompletionMailbox> mailbox,
++  std::function<void()> afterJoin):credit(std::move(credit)),begin(std::move(begin)),mailbox(std::move(mailbox)),afterJoin(std::move(afterJoin)){}
++ friend std::shared_ptr<const Metal4SceneBeginRetirement> scene::MakeBeginPreparationRetirement(
++  const NativeSourceFrameCredits::Lease&,const std::shared_ptr<NativeFrameBeginReceipt>&,
++  const std::shared_ptr<NativeFrameCompletionMailbox>&);
++public:
++ void Validate(const NativeSourceFrameCredits::Lease& expectedCredit,
++  const std::shared_ptr<NativeFrameBeginReceipt>& expectedBegin)const {
++  if(source!=std::this_thread::get_id()||!credit||!begin||!mailbox||!afterJoin||
++   credit!=expectedCredit||begin!=expectedBegin)
++   throw std::logic_error("BEGIN preparation retirement differs from exact scene admission");
++ }
++ void DeliverAfterJoin()const {
++  Validate(credit,begin);afterJoin();
++ }
++};
++}
+--- a/rts/Rendering/Metal4/Metal4SceneBridge.cpp
++++ b/rts/Rendering/Metal4/Metal4SceneBridge.cpp
+@@ -254,6 +254,11 @@
+ }
+ bool PrepareReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Prepare;}
+ bool BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}
++bool BeginPreparationOverlapRequested(){
++ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_PREPARE_OVERLAP");return value&&std::string_view(value)=="1";}();
++ static const bool worker=[] {const char* value=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return value&&std::string_view(value)=="1";}();
++ return enabled&&worker&&BeginReadyPilotRequested();
++}
+ struct ScenePendingAdmission;
+ struct Session {
+  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
+@@ -958,6 +963,22 @@
+ 
+ } // namespace
+ 
++std::shared_ptr<const Metal4SceneBeginRetirement> MakeBeginPreparationRetirement(
++ const NativeSourceFrameCredits::Lease& credit,const std::shared_ptr<NativeFrameBeginReceipt>& begin,
++ const std::shared_ptr<NativeFrameCompletionMailbox>& mailbox){
++ if(!session||!BeginPreparationOverlapRequested()||!credit||!begin||!mailbox||mailbox!=session->completionMailbox)
++  throw std::logic_error("BEGIN preparation retirement has no exact scene owner");
++ session->sourceCredits.Validate(credit,credit->Draw());
++ const auto epoch=mailbox->Epoch(),context=OriginalNativeTextureContext().Registry().ContextGeneration();
++ return std::shared_ptr<const Metal4SceneBeginRetirement>(new Metal4SceneBeginRetirement(credit,begin,mailbox,
++  [owner=session.get(),mailbox,epoch,context]{
++   if(session.get()!=owner||session->completionMailbox!=mailbox||mailbox->Epoch()!=epoch||
++    OriginalNativeTextureContext().Registry().ContextGeneration()!=context)
++    throw std::logic_error("BEGIN preparation retirement lost its scene epoch");
++   ApplyDeferredFrameReceipts();
++  }));
++}
++
+ void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
+ void FinishCaptureBeforeRollback() {
+  if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork();});
+@@ -969,8 +990,18 @@
+ void FinishRuntimeControl() { RequireRetiredGPUWork(); }
+ NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
+  if(!session)throw std::logic_error("World capture has no source credit owner");
+- if(!session->sourceCredits.HasCapacity())RequireRetiredGPUWork();
+- return session->sourceCredits.Acquire(draw);
++ return session->sourceCredits.AcquireWithCPUReclaim(draw,BeginPreparationOverlapRequested(),[&]{
++  metal4::NativeCPUPhaseScope reclaimTrace(11,gs?gs->frameNum:0);reclaimTrace.Draw(draw);
++  if(session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
++  session->renderer->FinishCPUWork(); // Join, release access, deliver old notice, accept current CPU.
++  reclaimTrace.Mark(0);
++  ApplyDeferredFrameReceipts();reclaimTrace.Mark(1);
++  const bool recovered=session->sourceCredits.HasCapacity();reclaimTrace.Counts(recovered,2);
++  static bool reported=false;
++  if(recovered&&!reported&&gs&&gs->frameNum>=300&&gs->frameNum<=1500)try{
++   LOG("[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=2 simulation=%d",gs->frameNum);reported=true;
++  }catch(...){/* Optional evidence must not change settlement. */}
++ },[]{RequireRetiredGPUWork();});
+ }
+ 
+ void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
+@@ -2189,10 +2220,12 @@
+  // The prepare-ready experiment supersedes the narrower Begin-ready mode.
+  options.allowPrepareReady=PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+  options.allowBeginReady=BeginReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+- // Last safe BEGIN edge: stable capture/main CPU preparation may overlap N-1,
+- // but retire its real GPU ticket and deliver exact receipts BEFORE dispatch.
+- // Keep 2 source credits, empty previousRetired and runtime detach precondition.
+- if(options.allowBeginReady)RequireRetiredGPUWork();
++ // Fixed BEGIN uses PREPARE's existing independently owned recording path,
++ // but still releases only after actual Begin and retains two source credits.
++ // The exact scene action remains post-Join; worker retirement only marks it.
++ if(options.allowBeginReady&&BeginPreparationOverlapRequested()&&overlapPreparation)
++  options.beginPreparationRetirement=MakeBeginPreparationRetirement(options.sourceCredit,options.beginReceipt,session->completionMailbox);
++ if(options.allowBeginReady&&!options.beginPreparationRetirement)RequireRetiredGPUWork();
+  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
+  frameOwner.reset(); // No mutable owning alias remains after sealing.
+  const auto& frame=submission->Frame();
+--- a/rts/Rendering/Metal4/Metal4WorldRenderer.h
++++ b/rts/Rendering/Metal4/Metal4WorldRenderer.h
+@@ -1,6 +1,7 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #pragma once
+ #include <exception>
++#include "Metal4SceneBeginRetirement.h"
+ #include "Rendering/Backend/NativeSourceFrameCredits.h"
+ 
+ #include "Metal4WindowSurface.h"
+@@ -79,6 +80,7 @@
+ 	bool shaderValidation = DefaultShaderValidation;
+  NativeSourceFrameCredits::Lease sourceCredit;
+  bool allowBeginReady=false;
++ std::shared_ptr<const Metal4SceneBeginRetirement> beginPreparationRetirement;
+  bool allowPrepareReady=false; // Default-off normal-frame capture-prefix experiment.
+  std::shared_ptr<const metal4::ShadowTerrainPreparation> preparedShadowTerrain; // Exact request owner, never ambient latest state.
+  std::shared_ptr<const NativeCUSCPUReadScope::Packet> cpuReadPacket; // Joined-call immutable rows; main retains final owner.
+--- a/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -2407,6 +2407,12 @@
+   globalRendering->viewSizeX,globalRendering->viewSizeY):NativePresentationPolicy{};
+ 
+  static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_RENDER_WORKER");return p&&std::string_view(p)=="1";}();
++ const bool sceneRetirement=bool(options.beginPreparationRetirement);
++ if(sceneRetirement){
++  Require(owned&&options.allowBeginReady&&!options.allowPrepareReady&&!previousRetired,
++   "BEGIN preparation requires its owned scene capability, not a caller callback");
++  options.beginPreparationRetirement->Validate(options.sourceCredit,options.beginReceipt);
++ }
+  const auto releasePolicy=NativeBeginReadyPolicy{
+   .requested=options.allowBeginReady,.worker=enabled,.owned=bool(owned),
+   .visible=options.presentWorld&&frame.simulationFrame>0&&impl->surface->Snapshot().CanPresent(),
+@@ -2415,17 +2421,21 @@
+   .cpuSettlement=bool(cpuSettled),.readback=bool(options.readback),.continuation=bool(impl->screenContinuation),
+   .dynamicWater=bool(frame.dynamicWater),.legacyWater=bool(frame.legacyWater),
+   .arbitraryCallback=bool(options.submissionBegan)||bool(options.submissionCompleted)||bool(options.sourceCompleted),
+-  .previousRetirement=bool(previousRetired)};
+- const bool beginReady=releasePolicy.Eligible();
++  .previousRetirement=sceneRetirement||bool(previousRetired)};
++ const bool beginReady=releasePolicy.EligibleWithSceneRetirement(sceneRetirement);
++ if(sceneRetirement){
++  Require(beginReady&&[NSThread isMainThread],"Scene BEGIN retirement cannot enter a synchronous fallback");
++  previousRetired=[request=options.beginPreparationRetirement]{request->DeliverAfterJoin();};
++ }
+  auto preparePolicy=releasePolicy;preparePolicy.requested=options.allowPrepareReady;
+  const bool prepareReady=preparePolicy.EligibleForPreparation();
+  NativeCPUPhaseScope admissionTrace(7,frame.simulationFrame);admissionTrace.Draw(frame.sourceDrawFrame);
+  // count_a bits: Begin requested, Prepare requested, eligible, actual queued.
+  const unsigned admissionFlags=unsigned(options.allowBeginReady)|unsigned(options.allowPrepareReady)<<1|
+   unsigned(beginReady||prepareReady)<<2;
+- const auto rejectionMask=admissionTrace.active?(options.allowPrepareReady?preparePolicy.RejectionMask(true):releasePolicy.RejectionMask()):0u;
++ const auto rejectionMask=admissionTrace.active?(options.allowPrepareReady?preparePolicy.RejectionMask(true):releasePolicy.RejectionMask(sceneRetirement)):0u;
+  admissionTrace.Counts(admissionFlags,rejectionMask);
+- if(beginReady)Require(SharedRuntime().CanSafelyDetach(),"Begin-ready pilot requires prior GPU retirement");
++ if(beginReady&&!sceneRetirement)Require(SharedRuntime().CanSafelyDetach(),"Begin-ready pilot requires prior GPU retirement");
+  // Readback/continuation and arbitrary engine source callbacks stay on main.
+  if(!owned||!enabled||![NSThread isMainThread]||!impl||impl->screenContinuation||options.readback||
+     options.submissionBegan||options.submissionCompleted||options.sourceCompleted){
+@@ -2476,7 +2486,7 @@
+    static bool beginReported=false,prepareReported=false;
+    bool& reported=beginReady?beginReported:prepareReported;
+    if(!reported&&frame.simulationFrame>=300&&frame.simulationFrame<=1500)try{
+-    LOG("[NativeReleaseMode] mode=%s eligible=1 queued=1 simulation=%llu begin_submission=%llu",beginReady?"BEGIN":"PREPARE",(unsigned long long)frame.simulationFrame,(unsigned long long)options.beginReceipt->Submission());reported=true;
++    LOG("[NativeReleaseMode] mode=%s eligible=1 queued=1 simulation=%llu begin_submission=%llu begin_prepare_overlap=%u",beginReady?"BEGIN":"PREPARE",(unsigned long long)frame.simulationFrame,(unsigned long long)options.beginReceipt->Submission(),unsigned(beginReady&&sceneRetirement));reported=true;
+    }catch(...){/* Diagnostic failure cannot unwind an active worker handoff. */}
+ #endif
+    impl->detachedCPUJob=true;
+@@ -2555,6 +2565,12 @@
+ 		const uint64_t sourceSubmission=frame.shieldDepthFrame?frame.shieldDepthFrame->submissionIdentity:CreateShieldSubmissionIdentity();
+ 		NativeSubmissionReadBinding::Scope submissionReads(impl->submissionEntry,sourceSubmission);
+   RuntimeLease lease(std::move(previousRetired));
++#ifdef RECOIL_METAL4_LIVE_SCENE
++  static bool pendingReported=false;
++  if(options.beginPreparationRetirement&&lease.PreparingWhilePending()&&!pendingReported&&frame.simulationFrame>=300&&frame.simulationFrame<=1500)try{
++   LOG("[NativeBeginPrepareOverlap] pending_at_prepare=1 simulation=%llu source_draw=%llu",(unsigned long long)frame.simulationFrame,(unsigned long long)frame.sourceDrawFrame);pendingReported=true;
++  }catch(...){/* Optional bounded evidence; no live handoff unwind. */}
++#endif
+   lease.BindUIResolver(std::move(uiResolver));
+   lease.BindSourceSubmission(sourceSubmission);
+   // Sweep once even when main/water effect frames are absent or empty.
+--- /dev/null
++++ b/tools/metal4-contracts/TestNativeBeginCPUReclaim.cpp
+@@ -0,0 +1,136 @@
++#include "Rendering/Backend/NativeSourceFrameCredits.h"
++#include "Rendering/Backend/NativeFrameCompletionMailbox.h"
++#include "Rendering/Backend/NativeRenderJobSettlement.h"
++#include "Rendering/Metal4/Metal4SceneBeginRetirement.h"
++#include <atomic>
++#include <cassert>
++#include <iostream>
++#include <stdexcept>
++#include <string_view>
++#include <thread>
++#include <type_traits>
++
++using namespace rendering;
++static_assert(!std::is_constructible_v<Metal4SceneBeginRetirement,
++ NativeSourceFrameCredits::Lease,std::shared_ptr<NativeFrameBeginReceipt>,
++ std::shared_ptr<NativeFrameCompletionMailbox>,std::function<void()>>);
++
++int main() {
++ // The real serial worker may publish Begin while its encoding tail is still
++ // running. The next two-credit admission joins that tail and applies only the
++ // predecessor's accepted GPU notice, leaving the current GPU credit held.
++ for (unsigned i=0;i<1000;++i) {
++  NativeSourceFrameCredits credits(2);
++  NativeFrameCompletionMailbox mailbox(9);
++  auto predecessor=credits.Acquire(100), current=credits.Acquire(101);
++  credits.Hold(predecessor);credits.Hold(current);
++  auto oldTicket=mailbox.Prepare(9,100,200);
++  mailbox.Accept(oldTicket);
++  auto currentTicket=mailbox.Prepare(9,101,201);
++  std::weak_ptr<const NativeSourceFrameCredits::Token> oldLife=predecessor;
++  predecessor.reset();
++  std::atomic<bool> encodeTailAllowed=false;
++  NativeSerialRenderWorker worker;
++  NativeRendererAccessGate gate;
++  unsigned targets=0,oldRetirements=0,currentSettlements=0,gpuDrains=0;
++  const auto main=std::this_thread::get_id();
++  auto receipt=std::make_shared<NativeRenderDispatchReceipt>(nullptr,[&]{
++   assert(std::this_thread::get_id()==main);
++   auto notice=mailbox.Pop();
++   assert(notice && notice->sourceDrawFrame==100 && notice->completedPostprocessSerial==200);
++   credits.ValidateHeld(100);credits.ReleaseHeld(100);++oldRetirements;
++   // Current GPU work has not published a completion and remains held.
++   assert(!mailbox.Pop());credits.ValidateHeld(101);
++  });
++  NativeRenderJobSettlement<int> job(receipt,[&]{
++   receipt->DeliverTarget([&](auto, std::uint64_t submission, auto) noexcept {
++    assert(std::this_thread::get_id()==main && submission==77);++targets;
++   });
++  },[&](const int* result,std::exception_ptr failure){
++   assert(std::this_thread::get_id()==main && !failure && result && *result==7);
++   assert(oldRetirements==1);
++   mailbox.Accept(currentTicket);++currentSettlements;
++  });
++  receipt->Reserve(gate);
++  job.Submit(worker,[&]{
++   NativeRendererAccessGate::Scope access(receipt->Handoff());
++   receipt->MarkBegun(77);receipt->PublishBeginReady();
++   while(!encodeTailAllowed.load(std::memory_order_acquire))std::this_thread::yield();
++   // SubmitAndDefer retires the predecessor before committing this frame.
++   mailbox.Publish(oldTicket,{true,100,200});
++   receipt->MarkRetirementReady();
++   return 7;
++  });
++  assert(job.ReleaseAfterBegin());
++  assert(targets==1 && oldRetirements==0 && currentSettlements==0);
++  assert(!credits.HasCapacity());
++  encodeTailAllowed.store(true,std::memory_order_release);
++  auto next=credits.AcquireWithCPUReclaim(102,true,[&]{
++   job.Finish();assert(job.Consume()==7);
++  },[&]{++gpuDrains;});
++  assert(next && targets==1 && oldRetirements==1 && currentSettlements==1 && gpuDrains==0);
++  assert(oldLife.expired());
++  assert(next->Draw()==102 && !credits.HasCapacity());
++  credits.ValidateHeld(101);
++ }
++
++ // A surviving CPU alias can keep the old weak slot occupied even after its
++ // held GPU credit is released; the helper must recheck and take full drain.
++ for(unsigned i=0;i<1000;++i){
++  NativeSourceFrameCredits credits(2);
++  auto old=credits.Acquire(7),current=credits.Acquire(8);
++  credits.Hold(old);credits.Hold(current);
++  unsigned joins=0,drains=0;
++  current.reset();
++  auto next=credits.AcquireWithCPUReclaim(9,true,[&]{
++   ++joins;credits.ReleaseHeld(7); // `old` is an intentional surviving alias.
++   assert(!credits.HasCapacity());
++  },[&]{++drains;credits.ReleaseHeld(8);});
++  assert(next && joins==1 && drains==1 && next->Draw()==9);
++ }
++
++ // Gate 0 retains the original full-drain-only route. A settlement exception
++ // never fabricates capacity or invokes the fallback drain after failure.
++ {
++  NativeSourceFrameCredits credits(2);
++  auto old=credits.Acquire(1),current=credits.Acquire(2);
++  credits.Hold(old);credits.Hold(current);old.reset();current.reset();
++  unsigned joins=0,drains=0;
++  auto next=credits.AcquireWithCPUReclaim(3,false,[&]{++joins;},[&]{
++   ++drains;credits.ReleaseHeld(1);
++  });
++  assert(next && joins==0 && drains==1);
++ }
++ {
++  NativeSourceFrameCredits credits(2);
++  auto old=credits.Acquire(1),current=credits.Acquire(2);
++  credits.Hold(old);credits.Hold(current);old.reset();current.reset();
++  unsigned drains=0;
++  bool failed=false;
++  try{(void)credits.AcquireWithCPUReclaim(3,true,[]{throw std::runtime_error("CPU settlement failed");},[&]{++drains;});}
++  catch(const std::runtime_error& e){failed=std::string_view(e.what())=="CPU settlement failed";}
++  assert(failed && drains==0 && !credits.HasCapacity());
++ }
++ // A CPU join with no published predecessor completion cannot claim credit;
++ // the helper must invoke its original full drain fallback.
++ {
++  NativeSourceFrameCredits credits(2);
++  auto old=credits.Acquire(11),current=credits.Acquire(12);
++  credits.Hold(old);credits.Hold(current);old.reset();current.reset();
++  unsigned joins=0,drains=0;
++  auto next=credits.AcquireWithCPUReclaim(13,true,[&]{++joins;assert(!credits.HasCapacity());},[&]{
++   ++drains;credits.ReleaseHeld(11);
++  });
++  assert(next && joins==1 && drains==1);
++ }
++ // Quarantine rejects even an available slot before attempting any callback.
++ {
++  NativeSourceFrameCredits credits(2);
++  auto old=credits.Acquire(21);credits.Hold(old);credits.QuarantineHeld(21);
++  bool rejected=false;unsigned joins=0,drains=0;
++  try{(void)credits.AcquireWithCPUReclaim(22,true,[&]{++joins;},[&]{++drains;});}
++  catch(const std::logic_error&){rejected=true;}
++  assert(rejected && joins==0 && drains==0);
++ }
++ std::cout<<"BEGIN CPU-only credit reclaim: real serial Begin/Join/notice/mailbox, 2-credit rotation, surviving alias fallback, gate0 and settlement failure PASS\n";
++}
+--- a/tools/metal4-contracts/TestNativeBeginReadyPilot.cpp
++++ b/tools/metal4-contracts/TestNativeBeginReadyPilot.cpp
+@@ -16,6 +16,10 @@
+  for(auto flag:{&NativeBeginReadyPolicy::readback,&NativeBeginReadyPolicy::continuation,&NativeBeginReadyPolicy::dynamicWater,&NativeBeginReadyPolicy::legacyWater,&NativeBeginReadyPolicy::arbitraryCallback,&NativeBeginReadyPolicy::previousRetirement}){auto bad=valid;bad.*flag=true;assert(!bad.Eligible());}
+  auto preparation=valid;preparation.previousRetirement=true;
+  assert(!preparation.Eligible()&&preparation.EligibleForPreparation());
++ assert(preparation.EligibleWithSceneRetirement(true));
++ assert(!preparation.EligibleWithSceneRetirement(false));
++ for(auto flag:{&NativeBeginReadyPolicy::requested,&NativeBeginReadyPolicy::worker,&NativeBeginReadyPolicy::owned,&NativeBeginReadyPolicy::visible,&NativeBeginReadyPolicy::admitted,&NativeBeginReadyPolicy::sourceCredit,&NativeBeginReadyPolicy::deferred,&NativeBeginReadyPolicy::screen,&NativeBeginReadyPolicy::cpuSettlement}){auto bad=preparation;bad.*flag=false;assert(!bad.EligibleWithSceneRetirement(true));}
++ for(auto flag:{&NativeBeginReadyPolicy::readback,&NativeBeginReadyPolicy::continuation,&NativeBeginReadyPolicy::dynamicWater,&NativeBeginReadyPolicy::legacyWater,&NativeBeginReadyPolicy::arbitraryCallback}){auto bad=preparation;bad.*flag=true;assert(!bad.EligibleWithSceneRetirement(true));}
+  preparation.readback=true;assert(!preparation.EligibleForPreparation());
+  preparation.readback=false;preparation.dynamicWater=true;assert(!preparation.EligibleForPreparation());
+  for(unsigned n=0;n<100;++n){
+--- /dev/null
++++ b/tools/metal4-contracts/run_native_begin_cpu_reclaim_test.py
+@@ -0,0 +1,50 @@
++#!/usr/bin/env python3
++"""Exercise production credit/worker/dispatch/mailbox helpers without Metal execution."""
++import json
++import os
++import subprocess
++from pathlib import Path
++
++root=Path(__file__).resolve().parents[2]
++here=Path(__file__).parent
++out=Path(__file__).resolve().parents[4]/'host-tests'
++out.mkdir(exist_ok=True)
++scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
++renderer=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
++capability=(root/'rts/Rendering/Metal4/Metal4SceneBeginRetirement.h').read_text()
++credits=(root/'rts/Rendering/Backend/NativeSourceFrameCredits.h').read_text()
++assert 'AcquireWithCPUReclaim(draw,BeginPreparationOverlapRequested()' in scene
++assert 'return enabled&&worker&&BeginReadyPilotRequested();' in scene
++assert 'session->renderer->FinishCPUWork();' in scene
++assert 'ApplyDeferredFrameReceipts();reclaimTrace.Mark(1);' in scene
++assert 'if(options.allowBeginReady&&!options.beginPreparationRetirement)RequireRetiredGPUWork();' in scene
++assert 'options.beginPreparationRetirement=MakeBeginPreparationRetirement' in scene
++factory=scene.split('std::shared_ptr<const Metal4SceneBeginRetirement> MakeBeginPreparationRetirement(',1)[1].split('void FinishCPUReadPreparation()',1)[0]
++assert 'session->sourceCredits.Validate(credit,credit->Draw())' in factory
++assert 'session->completionMailbox!=mailbox' in factory and 'mailbox->Epoch()!=epoch' in factory
++assert 'session.get()!=owner' in factory
++assert 'ContextGeneration()' in factory and 'context' in factory
++assert factory.index('ContextGeneration()')<factory.index('ApplyDeferredFrameReceipts();')
++assert 'friend std::shared_ptr<const Metal4SceneBeginRetirement> scene::MakeBeginPreparationRetirement(' in capability
++assert 'credit!=expectedCredit||begin!=expectedBegin' in capability
++assert 'if(sceneRetirement)' in renderer and 'options.beginPreparationRetirement->Validate(options.sourceCredit,options.beginReceipt)' in renderer
++assert 'Require(beginReady&&[NSThread isMainThread]' in renderer
++assert 'options.beginReceipt->Matches(frame.sourceDrawFrame' in renderer
++assert 'previousRetired=[request=options.beginPreparationRetirement]{request->DeliverAfterJoin();};' in renderer
++assert 'if(beginReady&&!sceneRetirement)Require(SharedRuntime().CanSafelyDetach()' in renderer
++assert 'if(!HasCapacity())drain();' in credits and 'if(enabled&&!HasCapacity())settle();' in credits
++
++binary=out/'test-native-begin-cpu-reclaim'
++build=subprocess.run(['g++','-std=c++23','-O1','-g','-pthread','-fsanitize=address,undefined',
++ '-I'+str(root/'rts'),str(here/'TestNativeBeginCPUReclaim.cpp'),'-o',str(binary)],capture_output=True,text=True)
++(out/'begin-cpu-reclaim-build.log').write_text(build.stdout+build.stderr)
++if build.returncode:raise SystemExit(build.returncode)
++run=subprocess.run([str(binary)],capture_output=True,text=True,timeout=60,
++ env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
++(out/'begin-cpu-reclaim-run.log').write_text(run.stdout+run.stderr)
++receipt={'status':'PASS' if run.returncode==0 else 'FAIL','returncode':run.returncode,
++ 'scope':'Production credit/serial-worker/dispatch-receipt/mailbox helpers plus source wiring; no Metal GPU execution',
++ 'buildLog':str(out/'begin-cpu-reclaim-build.log'),'runLog':str(out/'begin-cpu-reclaim-run.log')}
++(out/'BEGIN-CPU-RECLAIM.json').write_text(json.dumps(receipt,indent=2)+'\n')
++if run.returncode:raise SystemExit(run.returncode)
++print(run.stdout.strip())
+--- a/tools/metal4-contracts/run_native_begin_ready_pilot_test.py
++++ b/tools/metal4-contracts/run_native_begin_ready_pilot_test.py
+@@ -8,8 +8,9 @@
+ assert 'impl->detachedCPUJob=true;' in s and 'queued.queued=true;' in s
+ assert 'if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob=false;}' in s
+ scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+-assert 'if(options.allowBeginReady)RequireRetiredGPUWork();' in scene
+-assert '(overlapPreparation&&!options.allowBeginReady)?' in scene
++assert 'if(options.allowBeginReady&&!options.beginPreparationRetirement)RequireRetiredGPUWork();' in scene
++assert 'if(options.allowBeginReady&&BeginPreparationOverlapRequested()&&overlapPreparation)' in scene
++assert 'return enabled&&worker&&BeginReadyPilotRequested();' in scene
+ assert 'BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}' in scene
+ assert 'SelectNativeRenderReleaseMode(requested("BAR_NATIVE_BEGIN_READY_PILOT"),requested("BAR_NATIVE_PREPARE_READY_PILOT"))' in scene
+ assert 'if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();' in scene
+@@ -20,4 +21,4 @@
+ assert '.reset()' not in queued
+ subprocess.run(['g++','-std=c++23','-O1','-g','-pthread','-fsanitize=address,undefined','-I'+str(root/'rts'),str(Path(__file__).with_name('TestNativeBeginReadyPilot.cpp')),'-o',str(out/'test')],check=True)
+ subprocess.run([str(out/'test')],check=True,timeout=60,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
+-print('Actual opt-in encoding-tail pilot wiring; prior GPU drain, no previousRetired, MRT209 disabled, exact queued result and final consume')
++print('Actual opt-in encoding-tail pilot wiring; gate0 prior GPU drain, gate1 owned scene retirement, exact queued result and final consume')

@@ -9,14 +9,16 @@ s=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 b=s.split('void PrepareWorld(',1)[1].split('void AbortPreparedWorld()',1)[0]
 prefix=b.split('auto& frame=*session->preparedFrame;',1)[0]
 assert prefix.count('CaptureAtNativeSurfaceBoundary(')==1
-assert prefix.index('capture.Capture(')<prefix.index('CompleteDeferredMainParticles(')
+assert prefix.index('capture.Capture(')<prefix.index('renderer->FinishCPUWork();')<prefix.index('CompleteDeferredMainParticles(')
+assert prefix.index('CompleteDeferredMainParticles(')<prefix.rindex('});')
+assert prefix.index('Keep prefix timing separate')<prefix.index('renderer->FinishCPUWork();')
 assert prefix.index('CaptureRefreshUnchanged()')<prefix.index('RequireRetiredGPUWork();')<prefix.index('surface.Refresh();')<prefix.index('capture.Capture(')
 assert 'CaptureWater' not in prefix and 'CaptureOriginalAlphaModels' not in prefix
 assert 'NativeWaterScenePass::Main' in prefix
-# The other refresh/control boundary is unchanged.
+# BEGIN retains its pre-Refresh drain unless the actual capture fence is armed.
 draw=s.split('DrawResult DrawWorld(',1)[1]
 pos=draw.index('session->surface.Refresh();')
-assert 'if(BeginReadyPilotRequested())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
+assert 'if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
 w=(root/'rts/Rendering/Metal4/Metal4WindowSurface.mm').read_text()
 probe=w.split('bool CaptureRefreshUnchanged() const',1)[1].split('bool Refresh()',1)[0]
 assert 'layer.drawableSize' in probe and 'layer.displaySyncEnabled' in probe and 'requested==displaySyncRequest' in probe
@@ -28,7 +30,7 @@ assert 'state.Observe' not in observe and 'layer.' not in observe
 p=(root/'rts/Rendering/Backend/NativeWorldParticleCapture.cpp').read_text()
 assert 'auto frame=std::make_shared<NativeWorldParticleFrame>();' in p
 assert 'AppendNativeParticleGeometry(frame,vertices,geometry.GetIndcs(),range);' in p
-print('Capture surface: 1000 exact observations, all changed/unknown states, drain/capture failures and reobservation PASS; production scope limited to Capture(Main)')
+print('Capture surface: 1000 exact observations, changed/unknown/required-GPU fallback, failed join/capture/readiness/drain PASS; CPU-only stable suffix retains GPU-held source credit until exact real completion; bounded capacity and stale/late mailbox rejection PASS')
 
 c=(root/'rts/Rendering/WorldFrameCapture.cpp').read_text()
 assert 'if(deferMainParticles)result.deferredMainParticles.Defer();\n else result.particleFrame =' in c
@@ -39,4 +41,13 @@ r=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text().split('Metal4
 assert r.index('frame.deferredMainParticles.RequireComplete();')<r.index('FinishCPUWork();')
 h=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.h').read_text()
 assert 'this->frame->deferredMainParticles.RequireComplete();' in h
-print('Deferred particle writer: missing/repeated/reentrant/failed completion rejected; particle source runs only after boundary drain; submission rejects partial frame')
+print('Deferred particle writer: missing/repeated/reentrant/failed completion rejected; particle source runs after CPU settlement before suffix readiness proof; submission rejects partial frame')
+g=(root/'rts/Game/Game.cpp').read_text().split('bool CGame::Draw()',1)[1].split('#endif',1)[0]
+# Use the entire native Draw body (the early #endif above is only declarations).
+g=(root/'rts/Game/Game.cpp').read_text().split('bool CGame::Draw()',1)[1].split('RmlGui::Update();',1)[0]
+abort=g.split('rendering::scene::FinishCaptureBeforeRollback();',1)[1]
+assert abort.index('FinishCPUReadPreparation();')<abort.index('LuaNativePostprocess::AbortFrame();')
+assert g.index('DismissCaptureRollbackFence();')<g.index('FinishCaptureBeforeRollback();')
+assert 'session->captureRollbackFence.Arm()' in b
+assert 'if(retainedPredecessorGPU){cpuJoin220.Finish();FinishCaptureBeforeRollback();}' in b
+print('Post-boundary suffix/later-callback exception: full retirement before first rollback; failed drain stays armed; successful capture does not fabricate GPU completion PASS')

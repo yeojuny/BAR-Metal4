@@ -1,0 +1,349 @@
+{
+  "status": "CLOSED_ALL_8_NORMAL",
+  "utc": "2026-11-15T05:00:51.121218+00:00",
+  "candidateSHA256": "fd2ba879ee5867c4ebde836689e1e53c2e699d0571b8f5efaa54ce3b0135c4b9",
+  "games": 8,
+  "clean": {
+    "status": "COMPLETE",
+    "runs": 8,
+    "pooled": {
+      "FIXED_BEGIN": {
+        "FPS": 185.27222636236704,
+        "samples": 29639,
+        "p99Ms": 7.0,
+        "slow1PercentFPS": 130.49209138840072,
+        "maximumMs": 13.0,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      },
+      "PREPARE": {
+        "FPS": 185.10625,
+        "samples": 29613,
+        "p99Ms": 6.0,
+        "slow1PercentFPS": 140.4919583062952,
+        "maximumMs": 16.000001,
+        "over16_667ms": 0,
+        "over33_333ms": 0,
+        "interpolation": false,
+        "excluded": 0
+      }
+    },
+    "fixedBeginVsPreparePercent": 0.08966545557864691,
+    "previousSamplesPooled": false,
+    "validSlowRunsRetained": true,
+    "utc": "2026-11-15T05:00:12.979284+00:00"
+  },
+  "sameInitialProfileProof": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/PROFILE-EQUALITY.json",
+  "rows": [
+    {
+      "arm": "A1_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.34354184669735,
+      "slow1PercentFPS": 129.5336787564767,
+      "seconds": 39.995998383,
+      "warmupSeconds": 13.975000381,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2169",
+        "begin_prepare_overlap": "1"
+      },
+      "pendingAtPrepare": {
+        "pending_at_prepare": "1",
+        "simulation": "300",
+        "source_draw": "2202"
+      },
+      "cpuReclaimStatus": "OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:50:22.088150+00:00",
+        "monotonic": 0.036969291,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 158,
+      "menuGameCoversDisplay": 158,
+      "menuSamples": 158,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/A1_FIXED_BEGIN_PACED/RESULT.json"
+    },
+    {
+      "arm": "B1_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 185.20925537414442,
+      "slow1PercentFPS": 142.58555133079847,
+      "seconds": 39.998001099,
+      "warmupSeconds": 13.970999718,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "pendingAtPrepare": null,
+      "cpuReclaimStatus": "NOT_OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:51:35.338855+00:00",
+        "monotonic": 0.048839708,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 158,
+      "menuGameCoversDisplay": 158,
+      "menuSamples": 158,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/B1_PREPARE_PACED/RESULT.json"
+    },
+    {
+      "arm": "B2_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 184.70461508030616,
+      "slow1PercentFPS": 140.68441064638782,
+      "seconds": 39.999000549,
+      "warmupSeconds": 13.975000381,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "pendingAtPrepare": null,
+      "cpuReclaimStatus": "NOT_OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:52:48.667061+00:00",
+        "monotonic": 0.043916083,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 158,
+      "menuGameCoversDisplay": 158,
+      "menuSamples": 158,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/B2_PREPARE_PACED/RESULT.json"
+    },
+    {
+      "arm": "A2_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.02962320104845,
+      "slow1PercentFPS": 131.67259786476868,
+      "seconds": 39.999000549,
+      "warmupSeconds": 13.972999573,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2110",
+        "begin_prepare_overlap": "1"
+      },
+      "pendingAtPrepare": {
+        "pending_at_prepare": "1",
+        "simulation": "300",
+        "source_draw": "2143"
+      },
+      "cpuReclaimStatus": "OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:54:02.494636+00:00",
+        "monotonic": 0.047568916,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 157,
+      "menuGameCoversDisplay": 157,
+      "menuSamples": 157,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/A2_FIXED_BEGIN_PACED/RESULT.json"
+    },
+    {
+      "arm": "B3_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 185.175,
+      "slow1PercentFPS": 144.50867052023122,
+      "seconds": 40.0,
+      "warmupSeconds": 13.972999573,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "pendingAtPrepare": null,
+      "cpuReclaimStatus": "NOT_OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:55:16.827031+00:00",
+        "monotonic": 0.051106083,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 155,
+      "menuGameCoversDisplay": 155,
+      "menuSamples": 155,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/B3_PREPARE_PACED/RESULT.json"
+    },
+    {
+      "arm": "A3_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.04537640533766,
+      "slow1PercentFPS": 128.2051282051282,
+      "seconds": 40.000999451,
+      "warmupSeconds": 13.972999573,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2122",
+        "begin_prepare_overlap": "1"
+      },
+      "pendingAtPrepare": {
+        "pending_at_prepare": "1",
+        "simulation": "300",
+        "source_draw": "2155"
+      },
+      "cpuReclaimStatus": "OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:56:31.200575+00:00",
+        "monotonic": 0.044708125,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 155,
+      "menuGameCoversDisplay": 155,
+      "menuSamples": 155,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/A3_FIXED_BEGIN_PACED/RESULT.json"
+    },
+    {
+      "arm": "A4_FIXED_BEGIN_PACED",
+      "mode": "FIXED_BEGIN",
+      "FPS": 185.670360789306,
+      "slow1PercentFPS": 132.9787234042553,
+      "seconds": 40.000999451,
+      "warmupSeconds": 13.970999718,
+      "actualRelease": {
+        "mode": "BEGIN",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "2132",
+        "begin_prepare_overlap": "1"
+      },
+      "pendingAtPrepare": {
+        "pending_at_prepare": "1",
+        "simulation": "300",
+        "source_draw": "2165"
+      },
+      "cpuReclaimStatus": "OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:57:45.180748+00:00",
+        "monotonic": 0.050604166,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 154,
+      "menuGameCoversDisplay": 154,
+      "menuSamples": 154,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/A4_FIXED_BEGIN_PACED/RESULT.json"
+    },
+    {
+      "arm": "B4_PREPARE_PACED",
+      "mode": "PREPARE",
+      "FPS": 185.33610742779055,
+      "slow1PercentFPS": 135.1351348916484,
+      "seconds": 40.002998352,
+      "warmupSeconds": 13.968999863,
+      "actualRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "pendingAtPrepare": null,
+      "cpuReclaimStatus": "NOT_OBSERVED",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "display": {
+        "utc": "2026-11-15T04:58:59.153586+00:00",
+        "monotonic": 0.052857,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "menuForegroundPIDMatches": 155,
+      "menuGameCoversDisplay": 155,
+      "menuSamples": 155,
+      "runtimeLimiterOff": true,
+      "childRawOverlapGate": "1",
+      "result": "owner-reference/evidence/begin-prepare-longterm-comparison-20261114-01/measurement/clean_paced/preparation/runs/B4_PREPARE_PACED/RESULT.json"
+    }
+  ],
+  "sharedAwake": "RELEASED",
+  "idleProcessMatches": [],
+  "priorSamplesPooled": false,
+  "allValidRunsRetained": true
+}
