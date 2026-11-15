@@ -1,0 +1,299 @@
+{
+  "baseSourceHead": "c63eae437fe4a0545f9821e666e1220edcffd607",
+  "signedEngineSHA256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+  "actualPatchedSource": [
+    {
+      "path": "engine/rts/Rendering/Backend/NativeCPUPhaseTrace.h",
+      "sha256": "b29b1b4d33de3b24d9ea6c3b16541d0be3260ebc88ea79433dead630e215b144",
+      "bytes": 10042
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4CUSSource.mm",
+      "sha256": "8aabda85d00a8480c7cb2b1d9bf3019d3582be0cb5ca3b2e6f60e676d99175e6",
+      "bytes": 45389
+    }
+  ],
+  "files": [
+    {
+      "source": "RESULT.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/RESULT.json",
+      "originalBytes": 3412,
+      "originalSHA256": "739844e1b9677909c680f7292623f97d95be0e7efb0620b48a17e4d3253fa578",
+      "publishedBytes": 3412,
+      "publishedSHA256": "739844e1b9677909c680f7292623f97d95be0e7efb0620b48a17e4d3253fa578",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "HANDOFF.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/HANDOFF.json",
+      "originalBytes": 879,
+      "originalSHA256": "1cae51a125d94b4d45631c7b663c267be09a6f286a5a36e902e494816d414a3e",
+      "publishedBytes": 879,
+      "publishedSHA256": "1cae51a125d94b4d45631c7b663c267be09a6f286a5a36e902e494816d414a3e",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "FPS.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/FPS.csv",
+      "originalBytes": 331,
+      "originalSHA256": "f98a406d18e4869e8bcd99baca609b8306159ac4c7a56b428fb5ee434caed1d8",
+      "publishedBytes": 331,
+      "publishedSHA256": "f98a406d18e4869e8bcd99baca609b8306159ac4c7a56b428fb5ee434caed1d8",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "SOURCE-PIN.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/SOURCE-PIN.json",
+      "originalBytes": 357,
+      "originalSHA256": "d4f67ce0c940d8febe659ff6508074f60cd98cb47665fd71706b2e96a34ed840",
+      "publishedBytes": 357,
+      "publishedSHA256": "d4f67ce0c940d8febe659ff6508074f60cd98cb47665fd71706b2e96a34ed840",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "CANDIDATE.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/CANDIDATE.json",
+      "originalBytes": 2333,
+      "originalSHA256": "9128a1bf4b27a939fc2f0a7f7a22bf9f7f3a9342f7f716188b75d5630d49d8a9",
+      "publishedBytes": 2110,
+      "publishedSHA256": "9d5b7345cdfcd1042809708ce1bd7c29478f6baa72e30599c43ff15bd1d2c7e7",
+      "logExcerpt": false,
+      "pathNormalized": true
+    },
+    {
+      "source": "VALIDATION-NOTES.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/VALIDATION-NOTES.json",
+      "originalBytes": 695,
+      "originalSHA256": "8ff9f134be13cc563a41e8c2bf43fea2a4af5275217144cc342ff0576f753c4a",
+      "publishedBytes": 695,
+      "publishedSHA256": "8ff9f134be13cc563a41e8c2bf43fea2a4af5275217144cc342ff0576f753c4a",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "local-diagnostic.patch",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/local-diagnostic.patch",
+      "originalBytes": 3413,
+      "originalSHA256": "2c1371b20d60b5197fc33d1f204bd3aab3a33abf1d52a6c0e03aa1a8745688e1",
+      "publishedBytes": 3413,
+      "publishedSHA256": "2c1371b20d60b5197fc33d1f204bd3aab3a33abf1d52a6c0e03aa1a8745688e1",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/DIAGNOSTIC-GATE.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/DIAGNOSTIC-GATE.json",
+      "originalBytes": 1115,
+      "originalSHA256": "45c68dbac0ec9332392432e225b6941d4fdfb2e93088659afe7a76341904595f",
+      "publishedBytes": 1115,
+      "publishedSHA256": "45c68dbac0ec9332392432e225b6941d4fdfb2e93088659afe7a76341904595f",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/diagnostic_paced/preparation/runs/D1_MATERIAL_ON/FAILURE.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/diagnostic_paced/preparation/runs/D1_MATERIAL_ON/FAILURE.json",
+      "originalBytes": 462,
+      "originalSHA256": "f566c9c36569e7b7099ea2c557d7af0a90a82ae86c00c46091b40a067cc80192",
+      "publishedBytes": 354,
+      "publishedSHA256": "e8c4b763fb85523628c5fee67430c7e27452577f9be0dcba61d8e0de407ea339",
+      "logExcerpt": false,
+      "pathNormalized": true
+    },
+    {
+      "source": "battle-measurement/RESULT.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/RESULT.json",
+      "originalBytes": 4936,
+      "originalSHA256": "61b55bfd241503451e0314c9e2aba060a599e17885ea54eb00b532719d9fcb37",
+      "publishedBytes": 4936,
+      "publishedSHA256": "61b55bfd241503451e0314c9e2aba060a599e17885ea54eb00b532719d9fcb37",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/HANDOFF.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/HANDOFF.json",
+      "originalBytes": 846,
+      "originalSHA256": "4f1e6883c484e8604dafcecf149e21329e6670da6bc91b4264fe6087848cbfd8",
+      "publishedBytes": 846,
+      "publishedSHA256": "4f1e6883c484e8604dafcecf149e21329e6670da6bc91b4264fe6087848cbfd8",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/FPS.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/FPS.csv",
+      "originalBytes": 457,
+      "originalSHA256": "1c37f72924dc3ba225bf1183af5fb2b749ffa0a5fb98d7f807b1405846da8823",
+      "publishedBytes": 457,
+      "publishedSHA256": "1c37f72924dc3ba225bf1183af5fb2b749ffa0a5fb98d7f807b1405846da8823",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/DIAGNOSTIC-GATE.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/DIAGNOSTIC-GATE.json",
+      "originalBytes": 1412,
+      "originalSHA256": "4c9f8a47b4d13f29d706a077a14208fc751f5c50ea983474ad6487f3df0696ac",
+      "publishedBytes": 1412,
+      "publishedSHA256": "4c9f8a47b4d13f29d706a077a14208fc751f5c50ea983474ad6487f3df0696ac",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-scene/SCENE-SOURCE.json",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-scene/SCENE-SOURCE.json",
+      "originalBytes": 1715,
+      "originalSHA256": "219fd62e70985737d6bc3a30d3402d39e7e198023b66e231037794cc071f4da7",
+      "publishedBytes": 1701,
+      "publishedSHA256": "c4140974272dae8fcc9b01f630e03c906dd638a46913aeda785a7ca6531f3696",
+      "logExcerpt": false,
+      "pathNormalized": true
+    },
+    {
+      "source": "measurement/clean_paced/preparation/runs/A1_MATERIAL_OFF/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/clean_paced/preparation/runs/A1_MATERIAL_OFF/TERRAIN211-FRAMES.csv",
+      "originalBytes": 125966,
+      "originalSHA256": "be1a1125bbf15278fe97951d57b196007ad07a2ab6d0afd96bb0e80c8e193fe7",
+      "publishedBytes": 125966,
+      "publishedSHA256": "be1a1125bbf15278fe97951d57b196007ad07a2ab6d0afd96bb0e80c8e193fe7",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/clean_paced/preparation/runs/A2_MATERIAL_OFF/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/clean_paced/preparation/runs/A2_MATERIAL_OFF/TERRAIN211-FRAMES.csv",
+      "originalBytes": 125983,
+      "originalSHA256": "8f026ed2e56e785e9cdc04e62fc26f8f165ae693b1ea0b72be95cb62d7444f32",
+      "publishedBytes": 125983,
+      "publishedSHA256": "8f026ed2e56e785e9cdc04e62fc26f8f165ae693b1ea0b72be95cb62d7444f32",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/clean_paced/preparation/runs/B1_MATERIAL_ON/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/clean_paced/preparation/runs/B1_MATERIAL_ON/TERRAIN211-FRAMES.csv",
+      "originalBytes": 125881,
+      "originalSHA256": "6b9045f4a959461f4c27acdd1530813a7f1246613885878ce369f1f0d6cdbd9e",
+      "publishedBytes": 125881,
+      "publishedSHA256": "6b9045f4a959461f4c27acdd1530813a7f1246613885878ce369f1f0d6cdbd9e",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/clean_paced/preparation/runs/B2_MATERIAL_ON/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/clean_paced/preparation/runs/B2_MATERIAL_ON/TERRAIN211-FRAMES.csv",
+      "originalBytes": 125677,
+      "originalSHA256": "b9e86ffd842742dc9497d431102ad0b43302c1c1e07dd92789ae4c37350e9b23",
+      "publishedBytes": 125677,
+      "publishedSHA256": "b9e86ffd842742dc9497d431102ad0b43302c1c1e07dd92789ae4c37350e9b23",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/clean_paced/preparation/runs/A1_BATTLE_OFF/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/clean_paced/preparation/runs/A1_BATTLE_OFF/TERRAIN211-FRAMES.csv",
+      "originalBytes": 37634,
+      "originalSHA256": "0351d2d91019f66adc798e024caa2320eec71aff52ec665a4b4501438ad9ac38",
+      "publishedBytes": 37634,
+      "publishedSHA256": "0351d2d91019f66adc798e024caa2320eec71aff52ec665a4b4501438ad9ac38",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/clean_paced/preparation/runs/A2_BATTLE_OFF/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/clean_paced/preparation/runs/A2_BATTLE_OFF/TERRAIN211-FRAMES.csv",
+      "originalBytes": 37617,
+      "originalSHA256": "e83da91a63b74dfac115c587050c63023cae5c77fdfc84a65f13a1ee14ec6c5b",
+      "publishedBytes": 37617,
+      "publishedSHA256": "e83da91a63b74dfac115c587050c63023cae5c77fdfc84a65f13a1ee14ec6c5b",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/clean_paced/preparation/runs/B1_BATTLE_ON/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/clean_paced/preparation/runs/B1_BATTLE_ON/TERRAIN211-FRAMES.csv",
+      "originalBytes": 37634,
+      "originalSHA256": "2ff4ffb794bd6a8c88c384c2f9697186c09851d0642b701b3b2ab67360ce0da4",
+      "publishedBytes": 37634,
+      "publishedSHA256": "2ff4ffb794bd6a8c88c384c2f9697186c09851d0642b701b3b2ab67360ce0da4",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/clean_paced/preparation/runs/B2_BATTLE_ON/TERRAIN211-FRAMES.csv",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/clean_paced/preparation/runs/B2_BATTLE_ON/TERRAIN211-FRAMES.csv",
+      "originalBytes": 37651,
+      "originalSHA256": "5a993f99461eac651e4e22056d7d6f714e575c31f65e6022c77c2cfdefe4f31e",
+      "publishedBytes": 37651,
+      "publishedSHA256": "5a993f99461eac651e4e22056d7d6f714e575c31f65e6022c77c2cfdefe4f31e",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/diagnostic_paced/preparation/runs/D0_MATERIAL_OFF/scene.png",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/diagnostic_paced/preparation/runs/D0_MATERIAL_OFF/scene.png",
+      "originalBytes": 1963991,
+      "originalSHA256": "631e069d2414972a701e81fdfab18ed48ead835c1ad55b87cb96be40c0e3c0a5",
+      "publishedBytes": 1963991,
+      "publishedSHA256": "631e069d2414972a701e81fdfab18ed48ead835c1ad55b87cb96be40c0e3c0a5",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/diagnostic_paced/preparation/runs/D0_MATERIAL_OFF/engine.log",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/diagnostic_paced/preparation/runs/D0_MATERIAL_OFF/SELECTED.log",
+      "originalBytes": 1166875,
+      "originalSHA256": "45368ae60ef029ad4e5dbabfc83dbd4b92bf7898ab25ae9a8ef3452617318a3b",
+      "publishedBytes": 249647,
+      "publishedSHA256": "a88c9346c3be611c4a351f6a6f9d22b026e84d24bf17eaf267440388b1c811e6",
+      "logExcerpt": true,
+      "pathNormalized": true
+    },
+    {
+      "source": "measurement/diagnostic_paced/preparation/runs/D1_MATERIAL_ON/scene.png",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/diagnostic_paced/preparation/runs/D1_MATERIAL_ON/scene.png",
+      "originalBytes": 1970952,
+      "originalSHA256": "15bb6587a52fe169e3b11f61a89e33350f573eb21d99627973f79ea314d63623",
+      "publishedBytes": 1970952,
+      "publishedSHA256": "15bb6587a52fe169e3b11f61a89e33350f573eb21d99627973f79ea314d63623",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "measurement/diagnostic_paced/preparation/runs/D1_MATERIAL_ON/engine.log",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/measurement/diagnostic_paced/preparation/runs/D1_MATERIAL_ON/SELECTED.log",
+      "originalBytes": 1211790,
+      "originalSHA256": "d7c14985192aa70ab21ae59dbf50fdc3bb228819f6921c2571cc4712ce509299",
+      "publishedBytes": 261815,
+      "publishedSHA256": "ee080dee71cd04b39c39f76d6c2b52fcda2a31729d8b994ca2ed7edad0575cc4",
+      "logExcerpt": true,
+      "pathNormalized": true
+    },
+    {
+      "source": "battle-measurement/diagnostic_paced/preparation/runs/V_BATTLE_ON/scene.png",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/diagnostic_paced/preparation/runs/V_BATTLE_ON/scene.png",
+      "originalBytes": 2669163,
+      "originalSHA256": "abae890bee05b3283bad8fc66349d1ca9566500b150944df9f5cf02d64637cd1",
+      "publishedBytes": 2669163,
+      "publishedSHA256": "abae890bee05b3283bad8fc66349d1ca9566500b150944df9f5cf02d64637cd1",
+      "logExcerpt": false,
+      "pathNormalized": false
+    },
+    {
+      "source": "battle-measurement/diagnostic_paced/preparation/runs/V_BATTLE_ON/engine.log",
+      "published": "docs/research/material-preparation-perf-20261115/mac-results/battle-measurement/diagnostic_paced/preparation/runs/V_BATTLE_ON/SELECTED.log",
+      "originalBytes": 796504,
+      "originalSHA256": "218a033543b30782cea6ce76ab3db00ae785811c561246acb88da7eeafa6d47e",
+      "publishedBytes": 111958,
+      "publishedSHA256": "c0406269a3e59dfb3ec20ecb1839c47d3abf495ba4e7be4176bfa95d93d060b0",
+      "logExcerpt": true,
+      "pathNormalized": true
+    }
+  ],
+  "selection": "Two result tables/decisions, eight clean frame CSVs, three diagnostic images and line-numbered log excerpts, source patch and compact identity/gate receipts. Original evidence untouched; no bulk preservation project."
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "PR6 D only; U disabled",
+  "sourceHead": "c63eae437fe4a0545f9821e666e1220edcffd607",
+  "hostTests": "PASS",
+  "actualProductionSyntax": {
+    "Metal4CUSSource.mm": "PASS",
+    "Metal4WorldRenderer.mm": "PASS"
+  },
+  "review": "PASS; bounded aggregate has no blocker",
+  "diagnosticPatch": "local-diagnostic.patch",
+  "diagnosticFlag": "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS",
+  "cleanDiagnosticFlag": 0,
+  "readerCounts": "Include nil slot callbacks; OFF derived as 24 per successful Get; not nonnil property calls or GPU operations",
+  "retainedHandleBound": {
+    "textures": 12,
+    "samplers": 12,
+    "buffer": 1
+  },
+  "traceCapacity": 128,
+  "requireDroppedRecords": 0
+}

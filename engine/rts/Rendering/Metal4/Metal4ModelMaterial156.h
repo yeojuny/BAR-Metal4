@@ -1,9 +1,13 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #import <Metal/Metal.h>
+#include "Rendering/Backend/NativeExactBindingMemo.h"
+#include <cstdlib>
+#include <cstring>
 #include <array>
 #include <cstdint>
 #include <map>
+#include <optional>
 #include <regex>
 #include <string>
 #include <stdexcept>
@@ -60,7 +64,7 @@ inline std::string ModelMaterialFragment156(const char* source,uint32_t mask) {
  return original.substr(0,entry)+declaration+converted+"\n{"+locals+original.substr(body+2);
 }
 
-struct ModelMaterialStats156 {size_t hits=0,created=0,encodedBytes=0;};
+struct ModelMaterialStats156 {size_t hits=0,created=0,encodedBytes=0,identityHits=0,identityMisses=0,resourceIDReads=0,omittedResourceIDReads=0;};
 class ModelMaterials156 {
  using Key=std::array<uint64_t,24>;
  struct Entry {__strong id<MTLBuffer> buffer=nil;uint64_t lastSeen=0;};
@@ -69,17 +73,41 @@ class ModelMaterials156 {
  __strong id<MTLArgumentEncoder> encoder=nil;
  const void* context=nullptr;uint64_t generation=0;
  ModelMaterialStats156 stats;
+ static bool IdentityLookupEnabled() noexcept {
+  static const bool enabled=[] {const char* v=std::getenv("BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP");return v&&std::strcmp(v,"1")==0;}();
+  return enabled;
+ }
+ // ARC owning handles, at most one set: never a raw-address lifetime guess.
+ // Created only when the experiment is enabled; OFF adds no resource owners.
+ using Memo=NativeExactBindingMemo<id<MTLTexture>,id<MTLSamplerState>,id<MTLBuffer>,12>;
+ const bool identityLookup=IdentityLookupEnabled();
+ std::optional<Memo> recent;
+ void Remember(const Key& key,id<MTLBuffer> buffer) {
+  if(recent)recent->Remember(key,buffer);
+ }
 public:
- void Clear(){entries.clear();encoder=nil;device=nil;context=nullptr;}
+ void Clear(){recent.reset();entries.clear();encoder=nil;device=nil;context=nullptr;}
  template<class Lease>void BeginBatch(Lease& lease){
   if(device!=lease.Device()||context!=lease.ContextIdentity()){Clear();device=lease.Device();context=lease.ContextIdentity();}
   if(generation==UINT64_MAX)throw std::runtime_error("Material cache generation exhausted");
-  ++generation;stats={};
+  ++generation;stats={};recent.reset();if(identityLookup)recent.emplace();
  }
  template<class Lease>id<MTLBuffer> Get(Lease& lease,const std::array<id<MTLTexture>,12>& textures,const std::array<id<MTLSamplerState>,12>& samplers){
   if(device!=lease.Device()||context!=lease.ContextIdentity()||!generation)throw std::runtime_error("Material cache context differs");
-  Key key{};for(size_t i=0;i<12;++i){key[i]=textures[i].gpuResourceID._impl;key[i+12]=samplers[i].gpuResourceID._impl;}
-  if(auto it=entries.find(key);it!=entries.end()){it->second.lastSeen=generation;++stats.hits;lease.AddAllocation(it->second.buffer);return it->second.buffer;}
+  Key key{};
+  if(recent){
+   size_t reads=0;
+   key=recent->Resolve(textures,samplers,
+    [&](id<MTLTexture> value){++reads;return value.gpuResourceID._impl;},
+    [&](id<MTLSamplerState> value){++reads;return value.gpuResourceID._impl;});
+   stats.resourceIDReads+=reads;stats.omittedResourceIDReads+=24-reads;
+   if(auto buffer=recent->Find(key)){
+    // The entry was seen in this same generation. Preserve every lease pin.
+    ++stats.hits;++stats.identityHits;lease.AddAllocation(buffer);return buffer;
+   }
+   ++stats.identityMisses;recent->ForgetBuffer(); // Do not publish a failed slow path.
+  }else for(size_t i=0;i<12;++i){key[i]=textures[i].gpuResourceID._impl;key[i+12]=samplers[i].gpuResourceID._impl;}
+  if(auto it=entries.find(key);it!=entries.end()){it->second.lastSeen=generation;++stats.hits;lease.AddAllocation(it->second.buffer);Remember(key,it->second.buffer);return it->second.buffer;}
   if(!encoder){
    auto descriptors=[NSMutableArray new];
    for(NSUInteger i=0;i<24;++i){auto d=[MTLArgumentDescriptor argumentDescriptor];d.index=i;d.arrayLength=1;d.access=MTLBindingAccessReadOnly;d.dataType=i<12?MTLDataTypeTexture:MTLDataTypeSampler;if(i<12)d.textureType=i==7?MTLTextureTypeCube:i==10?MTLTextureType3D:MTLTextureType2D;[descriptors addObject:d];}
@@ -95,7 +123,7 @@ public:
   // Prepared Draw and its lease retain the buffer independently of this cache.
   // Textures/samplers retain their existing current-draw source ownership.
   entries.emplace(key,Entry{buffer,generation});++stats.created;stats.encodedBytes+=encoder.encodedLength;
-  lease.AddAllocation(buffer);return buffer;
+  lease.AddAllocation(buffer);Remember(key,buffer);return buffer;
  }
  const ModelMaterialStats156& Stats()const{return stats;}
  size_t Entries()const{return entries.size();}

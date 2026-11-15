@@ -1,0 +1,60 @@
+{
+  "status": "SIGNED_PRIVATE_CANDIDATE",
+  "utc": "2026-11-15T22:59:46.929194+00:00",
+  "rawSHA256": "d0e73b2ff903dbd18adb9647f2ea8783be40a9b2eb1e3d639851d49fc0172fcb",
+  "signedSHA256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+  "parentSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "relocations": [
+    [
+      "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "@loader_path/../lib/libIL.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "@loader_path/../lib/libminizip.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "@loader_path/../lib/libfreetype.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "@loader_path/../lib/libfontconfig.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "@loader_path/../lib/libvorbisfile.3.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "@loader_path/../lib/libvorbis.0.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "@loader_path/../lib/libogg.0.8.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "@loader_path/../lib/libopenal.1.25.2.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "@loader_path/../lib/libSDL3.0.dylib"
+    ]
+  ],
+  "product": {
+    "variant": "private-material-identity-pr6",
+    "package": "<HOME>/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "$D/runtime/native/bin/spring-metal4-scene",
+    "native": "$D/runtime/native",
+    "sha256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+    "publishedPackageReadOnly": true
+  },
+  "adopted": false,
+  "runtime": "COMPLETE_CLOSED",
+  "cause": "PR6 D exact owned texture/sampler identity memo; U disabled",
+  "environmentFlag": "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP",
+  "compiledDefault": 0,
+  "sourcePin": "SOURCE-PIN.json",
+  "result": "RESULT.json"
+}

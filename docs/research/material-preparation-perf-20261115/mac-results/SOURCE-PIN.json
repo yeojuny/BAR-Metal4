@@ -1,0 +1,10 @@
+{
+  "repository": "yeojuny/BAR-Metal4",
+  "PR": 6,
+  "head": "c63eae437fe4a0545f9821e666e1220edcffd607",
+  "engineTree": "19ef104cbad6fad6629921cab2a013c7f3eef06b",
+  "basePR5": "977c88d15adf5217e05b4a3ad8ef1176432515bf",
+  "source": "fixed-head GitHub tarball, parent changes included",
+  "experiment": "D only; U0/CUSpilot0",
+  "archiveBytes": 97154289
+}

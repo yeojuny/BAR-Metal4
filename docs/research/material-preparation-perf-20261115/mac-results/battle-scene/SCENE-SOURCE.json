@@ -1,0 +1,31 @@
+{
+  "status": "SOURCE_AND_MAP_VERIFIED_NO_GAME",
+  "historicalSource": "<HOME>/Desktop/BAR-AppleSilicon-App/reports/run95-stack-benchmark-20261002.md",
+  "historicalAudit": "<HOME>/Desktop/BAR-AppleSilicon-App/artifacts/validation/run95-stack-benchmark-20261002/scene-source-audit.md",
+  "scope": "Past MVK battle workload; exact historical MVK3/MVK4 pairing not established",
+  "game": "Beyond All Reason test-31691-a617033-local26",
+  "package": "7a0e6ff2ee6f899654edd8cc997b5386.sdp",
+  "gadget": "luarules/gadgets/dbg_benchmark.lua",
+  "gadgetSHA256": "403e769e0df9a3224932266754ace7610ea04b7ab46ca3e6192274bd9ae56147",
+  "gadgetMatchesHistorical": true,
+  "map": "Seths Ravine Remake 1.3.1",
+  "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+  "command": "luarules benchmark armbull armbull 80 8 1400",
+  "benchmarkSeed": 7654321,
+  "populationPerTeam": 80,
+  "replenishmentBatch": 8,
+  "spawnEverySimulationFrames": 3,
+  "placementSpan": 1400,
+  "camera": "Official centerCamera: map center/groundheight; height/dist ground+2000, spring camera, 0.75s transition",
+  "historicalFullDurationCounts": "544 created/377 destroyed over1800simframes are reference only, not current acceptance targets",
+  "currentTimeline": {
+    "command": 240,
+    "measuredStart": 540,
+    "measuredEnd": 1740,
+    "combatWarmupSeconds": 10,
+    "measureSeconds": 40
+  },
+  "graphics": "Current native1512x950/AA0/VSync0 retained",
+  "engine": "existing signed5c37f755; no rebuild",
+  "sourceLimit": "Historical scene.txt and benchmark-summary.json not present at cited path; retain report and official gadget source, define fixed equal initial state for current two-team fixture"
+}

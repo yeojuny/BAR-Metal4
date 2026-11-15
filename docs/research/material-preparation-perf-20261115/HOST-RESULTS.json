@@ -1,0 +1,19 @@
+{
+  "status": "PASS",
+  "native_sdk_syntax": false,
+  "full_engine_build": false,
+  "metal_runtime": false,
+  "fps_measured": false,
+  "compiler": "clang version 17.0.0 (https://github.com/swiftlang/llvm-project.git 10999b6d034fe318f3d56c83bddb6572593a8bb0)",
+  "test_output": [
+    "pair_lookup mode=0 hit_lookups=1000 target_allocations=2000 proof_checks=2000 boundaries=PASS",
+    "pair_lookup mode=1 hit_lookups=1000 target_allocations=0 proof_checks=2000 boundaries=PASS",
+    "binding_memo repeated=10000 key_reads_off=240000 key_reads_on=24 pins=10000 alternating_changed_slots=2 PASS"
+  ],
+  "scope": "Portable actual memo; actual pair scope/schema with modeled Metal/runtime; actual material header ARC syntax using declaration-only Metal stub.",
+  "limits": [
+    "Not a complete engine build",
+    "Not an Apple GPU/runtime or timing test",
+    "No per-frame repeat frequency or FPS gain established"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "status": "CLOSED",
+  "processesRemaining": 0,
+  "awakeReleased": true,
+  "result": "RESULT.json",
+  "fps": "FPS.csv",
+  "engineSHA256": "5c37f7554fc8588783f27558dfa9363299fc3c6ec3d80a8e9804fa902ebf1e2a",
+  "privateControllerSHA256": "2550852aa53b56b7e1755740b6dbbff951974434974453b2feb340414b543754",
+  "privateStartScriptSHA256": "e52e88c99e24e5b7a02b55c5b7ea8ea261fa1d75ea54e59007433956f26d8022",
+  "privateOverlaySHA256": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+  "sourcePatch": "../local-diagnostic.patch",
+  "sourceReceipt": "../battle-scene/SCENE-SOURCE.json",
+  "image": "diagnostic_paced/preparation/runs/V_BATTLE_ON/scene.png",
+  "logs": "{diagnostic_paced,clean_paced}/preparation/runs/*/{infolog.txt,engine.log}",
+  "default": "D OFF; no public deployment changes",
+  "newGames": 5,
+  "newBuilds": 0
+}
