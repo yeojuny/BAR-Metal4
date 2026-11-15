@@ -1,0 +1,140 @@
+{
+  "status": "PASS",
+  "utc": "2026-11-15T06:48:40.931020+00:00",
+  "sourceCommit": "ddd31f55961d6e715283ea48d03a2b35559128f2",
+  "engineTree": "596f6604ab7ed636dbe2cd5fa36fdc01c02f342e",
+  "binary": "<RELEASE_WORK>/build-runtime/build/spring-metal4-scene",
+  "rawSHA256": "4dd6d8465fe9b6838db1ed5f85d15b5e3274c305468e38858ca373b7d502e32f",
+  "binaryBytes": 65266352,
+  "engineVERSION": "2026.09.01-24-g01efdf4 master",
+  "versionAdditionalEdited": false,
+  "buildType": "RelWithDebInfo",
+  "target": "spring-metal4-scene",
+  "freshIntegratedBuild": true,
+  "ninjaSteps": 1578,
+  "configuredCompileCommandCount": 3142,
+  "builtCompileCommandCount": 1537,
+  "compilerProbeObjectCount": 1,
+  "compiledSourceRoot": "<RELEASE_WORK>/source/engine",
+  "sourceHashes": [
+    {
+      "path": "rts/Game/Game.cpp",
+      "sha256": "c550642dedc105478b1dc4e17610709b0b9e60ac1e3decb6421cdd50a01fe373"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeCPUPhaseTrace.h",
+      "sha256": "a7e7f0bd08201786cd084c31f12b75ff00803adbded13b88f7a3bd6f55343b2e"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeRenderJobSettlement.h",
+      "sha256": "8c427f286b705fb5ad3c489be163c24e04abe570ce13615a0ff656b77d99c938"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4FrameResources.h",
+      "sha256": "8f1536556496af67a42a5c95f40bdf2c1932cbbaf93877b16f9d92b88d9c936d"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "sha256": "c3b6926fdc7bbbc69f67b354240c6b31648632c37c9eadf05a2147f2a061b933"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "sha256": "d3d2a43aa10e956744b643eb30bcc1a4c2370767641d8f46a9ba0298eb47be87"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.h",
+      "sha256": "e2f2a2bd9a185e464bc1708e63e95275ff8ca4f10d3e89a35ad307ba80d2489d"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "cce8a2dbc3cde46d64250de5d58796f5daa19abe17547f456a407824b132d4dc"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeCPUPhaseHandoff.cpp",
+      "sha256": "5cb8f57bd27c40567724ada9a5bec26e146f7806b1e366529c10b48daed76243"
+    },
+    {
+      "path": "tools/metal4-contracts/TestNativeCriticalPathTrace.cpp",
+      "sha256": "054f5bdf51c5f299aba23755414ed990f785b842d1932414966148505b3501ff"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_cpu_phase_handoff_test.py",
+      "sha256": "6b8ca16d0848a5051fa6b85568181600e90ed060d899970f6cbe32e02c720785"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_critical_path_trace_test.py",
+      "sha256": "b770427502597dd59e0c26e8cd8397ac7da1ec45b1f854734e12ce9f27f249f0"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_dynamic_water_receipts_test.py",
+      "sha256": "dc51f80e2dbcebd613be30ce3388bac9216a884997315776bb48bc18280f56b1"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_external_runtime_control_test.py",
+      "sha256": "29835fc9d17834449bea480a11361f5441d0fa6f99f373099bfe8be28b83b95b"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_frame_journal_owners_test.py",
+      "sha256": "ea387d7a6c31bef197c0ea72e78a48463fb332771ceede2dc6436cb9c25e0bcf"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_prepare_ready_pilot_test.py",
+      "sha256": "cdfc8e48c76912bafbbe54e85d35f81c6a94c0efa301f26c138bfddaba5dd8c1"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_render_dispatch_receipt_test.py",
+      "sha256": "16d30a0df0c4fdd7dcec06898ae525c5ee97801dbf1e3b100fddd4b522c92a42"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_render_job_settlement_test.py",
+      "sha256": "6149e1a453210e82ac79b47a83ce3956f78a818f47bcdbb410448ee9d3304d7b"
+    },
+    {
+      "path": "tools/metal4-contracts/run_native_source_frame_credits_test.py",
+      "sha256": "657af906ca11cc05e91b1ad2cb3ea7993ea2a1487a710a5f512951e9fce7bd00"
+    }
+  ],
+  "changedProductionTranslationUnits": [
+    {
+      "source": "rts/Game/Game.cpp",
+      "sourceSHA256": "c550642dedc105478b1dc4e17610709b0b9e60ac1e3decb6421cdd50a01fe373",
+      "object": "rts/builds/metal4-scene/CMakeFiles/GameMetal4Scene.dir/__/__/Game/Game.cpp.o",
+      "objectSHA256": "ed20da8c69ed43c2c2c2be5e673a4fa1ae1e56862cbdcfdacc880d2f7e266f49",
+      "command": "/usr/bin/c++ -DASIO_STANDALONE -DHEADLESS -DMACOSX_BUNDLE -DNOWIDE_NO_LIB -DRECOIL_METAL4_LIVE_SCENE -DRECOIL_USE_SDL3=1 -DREPORT_LUANAN -DRMLUI_STATIC_LIB -DSDL_ENABLE_OLD_NAMES=1 -DSPRING_DATADIR=\\\"\\\" -DSSE2NEON -DSSE2NEON_SUPPRESS_WARNINGS -DSTREFLOP_NEON -DSYNCCHECK -DSYNC_HISTORY -DTHREADPOOL -DTRACY_ON_DEMAND -DUSE_FONTCONFIG -DUSE_MIMALLOC -D_GLIBCXX_USE_NANOSLEEP -I<RELEASE_WORK>/source/engine/rts/lib/lua/include -I<RELEASE_WORK>/source/engine/rts/lib -I<RELEASE_WORK>/source/engine/rts/System/SDL3Compat -I<RELEASE_WORK>/source/engine/include/AL -I<RELEASE_WORK>/source/engine/rts -I<RELEASE_WORK>/source/engine/rts/lib/cereal/include -I<RELEASE_WORK>/source/engine/rts/lib/assimp/include -I<RELEASE_WORK>/source/engine/rts/lib/fastgltf/include -I<RELEASE_WORK>/build-runtime/build/src-generated/engine -I<RELEASE_WORK>/build-runtime/build/rts/lib/gflags/include -I<RELEASE_WORK>/source/engine/rts/lib/asio/include -I<RELEASE_WORK>/source/engine/rts/lib/slimsig/include -I<RELEASE_WORK>/source/engine/rts/lib/RmlUi/Include -I<RELEASE_WORK>/source/engine/tools/pr-downloader/src/lib/jsoncpp/include -I<RELEASE_WORK>/source/engine/rts/lib/streflop -I<RELEASE_WORK>/source/engine/rts/lib/nowide/include -I<RELEASE_WORK>/source/engine/rts/lib/fmt/include -isystem /opt/homebrew/include -isystem <RELEASE_WORK>/source/engine/rts/lib/tracy/public -isystem /opt/homebrew/include/freetype2 -isystem /opt/homebrew/Cellar/fontconfig/2.18.3/include -isystem /opt/homebrew/Cellar/openal-soft/1.25.2/include -isystem /opt/homebrew/Cellar/openal-soft/1.25.2/include/AL  -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread -O2 -g -DNDEBUG  -Wformat -Wformat-security -DNDEBUG -std=c++23 -arch arm64   -fPIC -o rts/builds/metal4-scene/CMakeFiles/GameMetal4Scene.dir/__/__/Game/Game.cpp.o -c <RELEASE_WORK>/source/engine/rts/Game/Game.cpp",
+      "dependenciesValid": true
+    },
+    {
+      "source": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "sourceSHA256": "c3b6926fdc7bbbc69f67b354240c6b31648632c37c9eadf05a2147f2a061b933",
+      "object": "rts/builds/metal4-scene/metal4-renderer/CMakeFiles/recoil-metal4-renderer.dir/Metal4RuntimeNative.mm.o",
+      "objectSHA256": "1815e289097199770c446298195621c96f2dd4c95106aec46ca4a6307908145e",
+      "command": "/usr/bin/clang++ -DASIO_STANDALONE -DHEADLESS -DMACOSX_BUNDLE -DRECOIL_METAL4_LIVE_SCENE -DRECOIL_USE_SDL3=1 -DREPORT_LUANAN -DSDL_ENABLE_OLD_NAMES=1 -DSPRING_DATADIR=\\\"\\\" -DSSE2NEON -DSSE2NEON_SUPPRESS_WARNINGS -DSYNCCHECK -DSYNC_HISTORY -DTHREADPOOL -DUSE_FONTCONFIG -DUSE_MIMALLOC -D_GLIBCXX_USE_NANOSLEEP -I<RELEASE_WORK>/source/engine/rts/lib/lua/include -I<RELEASE_WORK>/source/engine/rts/lib -I<RELEASE_WORK>/source/engine/rts/System/SDL3Compat -I<RELEASE_WORK>/source/engine/include/AL -I<RELEASE_WORK>/source/engine/rts -I<RELEASE_WORK>/source/engine/rts/lib/cereal/include -I<RELEASE_WORK>/source/engine/rts/lib/assimp/include -I<RELEASE_WORK>/source/engine/rts/lib/fastgltf/include -I<RELEASE_WORK>/build-runtime/build/src-generated/engine -I<RELEASE_WORK>/build-runtime/build/rts/lib/gflags/include -I<RELEASE_WORK>/source/engine/rts/lib/asio/include -I<RELEASE_WORK>/source/engine/rts/lib/slimsig/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -isystem /opt/homebrew/include -x objective-c++ -O2 -g -DNDEBUG -std=c++23 -arch arm64   -fPIC -Wall -Wextra -ffp-contract=off -fobjc-arc -fblocks -O3 -ffp-contract=fast -o rts/builds/metal4-scene/metal4-renderer/CMakeFiles/recoil-metal4-renderer.dir/Metal4RuntimeNative.mm.o -c <RELEASE_WORK>/source/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "dependenciesValid": true
+    },
+    {
+      "source": "rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "sourceSHA256": "d3d2a43aa10e956744b643eb30bcc1a4c2370767641d8f46a9ba0298eb47be87",
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Metal4/Metal4SceneBridge.cpp.o",
+      "objectSHA256": "6e410eebb9f76dcdad345e8f9a03e8926da87294e6d0de36f46e49bd79d706bf",
+      "command": "/usr/bin/c++ -DASIO_STANDALONE -DFASTGLTF_DISABLE_CUSTOM_MEMORY_POOL=0 -DFASTGLTF_ENABLE_DEPRECATED_EXT=0 -DFASTGLTF_USE_64BIT_FLOAT=0 -DFASTGLTF_USE_CUSTOM_SMALLVECTOR=0 -DGFLAGS_IS_A_DLL=0 -DHEADLESS -DLIBUNWIND -DLUNASVG_BUILD_STATIC -DMACOSX_BUNDLE -DNOWIDE_NO_LIB -DRECOIL_METAL4_LIVE_SCENE -DRECOIL_USE_SDL3=1 -DREPORT_LUANAN -DRMLUI_STATIC_LIB -DSDL_ENABLE_OLD_NAMES=1 -DSIMDJSON_BUILTIN_IMPLEMENTATION=arm64 -DSIMDJSON_IMPLEMENTATION_ARM64=1 -DSIMDJSON_IMPLEMENTATION_FALLBACK=0 -DSIMDJSON_IMPLEMENTATION_HASWELL=0 -DSIMDJSON_IMPLEMENTATION_ICELAKE=0 -DSIMDJSON_IMPLEMENTATION_PPC64=0 -DSIMDJSON_IMPLEMENTATION_WESTMERE=0 -DSPRING_DATADIR=\\\"\\\" -DSSE2NEON -DSSE2NEON_SUPPRESS_WARNINGS -DSTREFLOP_NEON -DSYNCCHECK -DSYNC_HISTORY -DTHREADPOOL -DTRACY_ON_DEMAND -DUSE_FONTCONFIG -DUSE_MIMALLOC -D_GLIBCXX_USE_NANOSLEEP -Dengine_metal4_scene_EXPORTS -I<RELEASE_WORK>/source/engine/rts/lib/lua/include -I<RELEASE_WORK>/source/engine/rts/lib -I<RELEASE_WORK>/source/engine/rts/System/SDL3Compat -I<RELEASE_WORK>/source/engine/include/AL -I<RELEASE_WORK>/source/engine/rts -I<RELEASE_WORK>/source/engine/rts/lib/cereal/include -I<RELEASE_WORK>/source/engine/rts/lib/assimp/include -I<RELEASE_WORK>/source/engine/rts/lib/fastgltf/include -I<RELEASE_WORK>/build-runtime/build/src-generated/engine -I<RELEASE_WORK>/build-runtime/build/rts/lib/gflags/include -I<RELEASE_WORK>/source/engine/rts/lib/asio/include -I<RELEASE_WORK>/source/engine/rts/lib/slimsig/include -I<RELEASE_WORK>/source/engine/rts/lib/nowide/include -I<RELEASE_WORK>/source/engine/rts/lib/fmt/include -I<RELEASE_WORK>/source/engine/rts/lib/streflop -I<RELEASE_WORK>/source/engine/rts/lib/monocypher/src -I<RELEASE_WORK>/source/engine/rts/lib/monocypher/src/optional -I<RELEASE_WORK>/source/engine/tools/pr-downloader/src/lib/base64 -I<RELEASE_WORK>/source/engine/tools/pr-downloader/src/lib/7z -I<RELEASE_WORK>/source/engine/tools/pr-downloader/src/lib/jsoncpp/include -I<RELEASE_WORK>/source/engine/rts/lib/simdjson/include -I<RELEASE_WORK>/source/engine/rts/lib/mimalloc/include -I<RELEASE_WORK>/source/engine/tools/pr-downloader/src -I<RELEASE_WORK>/source/engine/tools/pr-downloader/src/lib/readerwriterqueue -I<RELEASE_WORK>/source/engine/rts/lib/RmlUi/Include -I<RELEASE_WORK>/source/engine/rts/lib/lunasvg/include -F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -isystem /opt/homebrew/include -isystem <RELEASE_WORK>/source/engine/rts/lib/tracy/public -isystem <RELEASE_WORK>/source/engine/rts/lib/smmalloc -isystem /opt/homebrew/include/IL -isystem /opt/homebrew/Cellar/openal-soft/1.25.2/include -isystem /opt/homebrew/Cellar/openal-soft/1.25.2/include/AL -isystem /opt/homebrew/Cellar/minizip/1.4/include -isystem /opt/homebrew/include/freetype2 -isystem /opt/homebrew/Cellar/fontconfig/2.18.3/include  -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread -O2 -g -DNDEBUG  -Wformat -Wformat-security -DNDEBUG -std=c++23 -arch arm64   -fPIC -o rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Metal4/Metal4SceneBridge.cpp.o -c <RELEASE_WORK>/source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "dependenciesValid": true
+    },
+    {
+      "source": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sourceSHA256": "cce8a2dbc3cde46d64250de5d58796f5daa19abe17547f456a407824b132d4dc",
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4WorldRenderer.mm.o",
+      "objectSHA256": "fbcb892b04a48cf237ed72084552c2165d577d2e649947d1be2cc59555d840ad",
+      "command": "/usr/bin/clang++ -DASIO_STANDALONE -DHEADLESS -DMACOSX_BUNDLE -DRECOIL_METAL4_LIVE_SCENE -DRECOIL_USE_SDL3=1 -DREPORT_LUANAN -DSDL_ENABLE_OLD_NAMES=1 -DSPRING_DATADIR=\\\"\\\" -DSSE2NEON -DSSE2NEON_SUPPRESS_WARNINGS -DSYNCCHECK -DSYNC_HISTORY -DTHREADPOOL -DUSE_FONTCONFIG -DUSE_MIMALLOC -D_GLIBCXX_USE_NANOSLEEP -I<RELEASE_WORK>/source/engine/rts/lib/lua/include -I<RELEASE_WORK>/source/engine/rts/lib -I<RELEASE_WORK>/source/engine/rts/System/SDL3Compat -I<RELEASE_WORK>/source/engine/include/AL -I<RELEASE_WORK>/source/engine/rts -I<RELEASE_WORK>/source/engine/rts/lib/cereal/include -I<RELEASE_WORK>/source/engine/rts/lib/assimp/include -I<RELEASE_WORK>/source/engine/rts/lib/fastgltf/include -I<RELEASE_WORK>/build-runtime/build/src-generated/engine -I<RELEASE_WORK>/build-runtime/build/rts/lib/gflags/include -I<RELEASE_WORK>/source/engine/rts/lib/asio/include -I<RELEASE_WORK>/source/engine/rts/lib/slimsig/include -isystem /opt/homebrew/include -x objective-c++ -O2 -g -DNDEBUG -std=c++23 -arch arm64   -fPIC -Wall -Wextra -ffp-contract=off -fobjc-arc -fblocks -O3 -ffp-contract=fast -o rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4WorldRenderer.mm.o -c <RELEASE_WORK>/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "dependenciesValid": true
+    }
+  ],
+  "archiveClosure": {
+    "status": "PASS",
+    "objectCount": 1538,
+    "archiveCount": 35,
+    "mismatchCount": 0
+  },
+  "noWork": true,
+  "signedByThisAgent": false,
+  "packageOrGamesExecuted": false
+}

@@ -1,8 +1,9 @@
-# BAR Metal4 v1.11.2
+# BAR Metal4 v1.11.3
 
 Experimental single-player BAR with native Metal 4 for Apple Silicon, macOS 27.2 or later.
-This update fixes scenario selection and adds fullscreen render resolution controls.
-New profiles use 2× health bar scale and height, anti-aliasing off, and VSync off.
+This release integrates the reviewed BEGIN/PREPARE handoff corrections and bounded critical-path diagnostics.
+Normal launch uses **PREPARE**; diagnostics and Metal Validation are **off** by default.
+New profiles retain 2× health bar scale and height, anti-aliasing off, and ordinary/adaptive VSync off.
 
 ```sh
 brew tap yeojuny/bar-metal4
@@ -13,8 +14,8 @@ open "/Applications/BAR Metal4.app"
 
 Already installed? Run `brew update` and `brew upgrade --cask yeojuny/bar-metal4/bar-metal4`.
 
-[Release and downloads](https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.2) · [Installation and verification](docs/RELEASE-1.11.2.md) · [Licenses and provenance](NOTICE.md)
+[Release and downloads](https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.3) · [Installation and checks](docs/releases/v1.11.3/README.md) · [Licenses and provenance](NOTICE.md)
 
 ## Performance research
 
-[MVK3 vs Native Metal 4 220: bottlenecks, waits, and measurement data](docs/research/mvk3-native220/README.md)
+[MVK3 versus Native 220](docs/research/mvk3-native220/README.md) · [Native 233–242 diagnostic packet](https://github.com/yeojuny/BAR-Metal4/blob/80d173cdd354272bf4a7d407cbd6b9662fbf6a79/docs/research/native233/diagnostic/README.md) · [BEGIN/PREPARE source checkpoint and historical comparisons](https://github.com/yeojuny/BAR-Metal4/blob/e9acbc66115c5fecd872f3385db248371362b97b/docs/checkpoints/begin-prepare-20261114/README.md)

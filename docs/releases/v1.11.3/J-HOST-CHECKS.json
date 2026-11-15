@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "criticalPath": [
+    "ASAN+UBSAN success, worker failure, target failure, retirement failure, enqueue failure, late-window tail under ON and OFF",
+    "highest registered kind, exact nonconsecutive waiting/job/retired identities",
+    "buffer and global output cap",
+    "worker callable destroyed before main enqueue; no worker emission",
+    "OFF no IDs/buffer allocation"
+  ],
+  "legacy": [
+    "sampled/everyloop/OFF handoff and intentional missing-parent mutant rejection",
+    "actual task settlement1000cycles",
+    "actual dispatchreceipt1000cycles"
+  ],
+  "gpu": "not simulated as hardware evidence"
+}

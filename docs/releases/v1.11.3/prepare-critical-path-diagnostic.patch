@@ -1,0 +1,1112 @@
+--- a/rts/Game/Game.cpp
++++ b/rts/Game/Game.cpp
+@@ -1539,6 +1539,9 @@
+ 	const spring_time nativeDrawStart = spring_gettime();
+ 	if (globalRendering->viewSizeX <= 0 || globalRendering->viewSizeY <= 0)
+ 		return false;
++ rendering::metal4::NativeCPUCaptureTraceScope nativeCaptureIdentity(globalRendering->drawFrame,gs->frameNum);
++ rendering::metal4::NativeCPUPhaseScope nativeInvocation(rendering::metal4::NativeCPUPhaseKind::CaptureInvocation);
++ nativeInvocation.Draw(globalRendering->drawFrame);
+ 	auto nativeFrameCredit=rendering::scene::AcquireWorldFrameCredit(globalRendering->drawFrame);
+  rendering::metal4::NativeCPUPhaseScope nativeCaptureTrace(5,gs->frameNum);
+  nativeCaptureTrace.Draw(globalRendering->drawFrame);
+--- a/rts/Rendering/Backend/NativeCPUPhaseTrace.h
++++ b/rts/Rendering/Backend/NativeCPUPhaseTrace.h
+@@ -5,9 +5,27 @@
+ #include <cstddef>
+ #include <cstdint>
+ #include <cstdio>
++#include <memory>
++#include <exception>
+ 
+ namespace rendering::metal4 {
+ 
++// Append registered kinds here; the sentinel sizes the actual runtime table.
++enum class NativeCPUPhaseKind : unsigned {
++ Loop=1, World=2, WorkerDraw=3, Prepare=4, Capture=5, Encode=6,
++ Admission=7, ImmutablePrefix=8, FullDrain=9, Boundary=10, CPUCreditReclaim=11,
++ MainFinish=12, TaskJoin=13, HandoffRelease=14, TargetNotice=15,
++ RetirementNotice=16, CPUNotice=17, RuntimeRetire=18, EventWait=19,
++ FeedbackWait=20, AllocatorReset=21, GPUCallback=22, ResidencyCleanup=23,
++ ResourceCommit=24, Submit=25, CompletedOwnerRelease=26, WorkerJob=27,
++ CaptureInvocation=28, ReadChecks=29, Count=30
++};
++enum class NativeCPUFinishReason : unsigned {Control=1, CapturePrefix=2, Credit=3, FullDrain=4, DispatchPrior=5, JoinedFallback=6, NonPresent=7, Rollback=8, SurfaceBoundary=9};
++// A copied identity is diagnostic data, never an owner or an admission token.
++struct NativeCPUTraceIdentity {
++ std::uint64_t request=0,draw=0,job=0,lease=0,submission=0,event=0,runtimeIndex=0;
++ std::int64_t simulation=0;
++};
+ struct NativeCPUPhaseSample {
+ 	std::uint64_t id=0,parent=0,start=0,previous=0;
+ 	std::int64_t frame=0;
+@@ -20,6 +38,9 @@
+ 	std::array<std::uint64_t,12> marks{};
+ 	std::uint64_t bytes=0,allocations=0;
+ 	bool invalid=false;
++ NativeCPUTraceIdentity incoming{},job{},retired{};
++ unsigned reason=0,status=0; // 0 success/ordinary, 1 no job, 2 failure, 3 no predecessor, 4 missing sampled job
++
+ };
+ 
+ // Common monotonic endpoints are required for cross-thread intersection tests.
+@@ -37,19 +58,66 @@
+ 	}
+ 	const double interval=sample.previous && sample.previous<=sample.start?double(sample.start-sample.previous)/1000.0:-1;
+ 	const int size=std::snprintf(output,capacity,
+-		"[NativeCPUTrace] id=%llu parent=%llu kind=%u frame=%lld phases=%u total_us=%.3f interval_us=%.3f tail_us=%.3f p0=%.3f p1=%.3f p2=%.3f p3=%.3f p4=%.3f p5=%.3f p6=%.3f p7=%.3f p8=%.3f p9=%.3f p10=%.3f p11=%.3f count_a=%llu count_b=%llu start_ns=%llu end_ns=%llu draw_valid=%u source_draw=%llu thread_cpu_valid=%u thread_cpu_ns=%llu",
++		"[NativeCPUTrace] id=%llu parent=%llu kind=%u frame=%lld phases=%u total_us=%.3f interval_us=%.3f tail_us=%.3f p0=%.3f p1=%.3f p2=%.3f p3=%.3f p4=%.3f p5=%.3f p6=%.3f p7=%.3f p8=%.3f p9=%.3f p10=%.3f p11=%.3f count_a=%llu count_b=%llu start_ns=%llu end_ns=%llu draw_valid=%u source_draw=%llu thread_cpu_valid=%u thread_cpu_ns=%llu request=%llu request_draw=%llu request_sim=%lld job=%llu job_request=%llu job_draw=%llu job_sim=%lld lease=%llu submission=%llu event=%llu runtime_index=%llu retired_job=%llu retired_request=%llu retired_draw=%llu retired_sim=%lld retired_lease=%llu retired_submission=%llu retired_event=%llu retired_runtime_index=%llu reason=%u status=%u",
+ 		static_cast<unsigned long long>(sample.id),static_cast<unsigned long long>(sample.parent),sample.kind,
+ 		static_cast<long long>(sample.frame),sample.count,double(end-sample.start)/1000.0,interval,double(end-previous)/1000.0,
+ 		phases[0],phases[1],phases[2],phases[3],phases[4],phases[5],phases[6],phases[7],phases[8],phases[9],phases[10],phases[11],
+ 		static_cast<unsigned long long>(sample.bytes),static_cast<unsigned long long>(sample.allocations),
+ 		static_cast<unsigned long long>(sample.start),static_cast<unsigned long long>(end),
+ 		unsigned(sample.hasSourceDraw),static_cast<unsigned long long>(sample.sourceDraw),
+-		unsigned(sample.threadCPUValid),static_cast<unsigned long long>(sample.threadCPUNs));
++		unsigned(sample.threadCPUValid),static_cast<unsigned long long>(sample.threadCPUNs),
++  static_cast<unsigned long long>(sample.incoming.request),static_cast<unsigned long long>(sample.incoming.draw),static_cast<long long>(sample.incoming.simulation),
++  static_cast<unsigned long long>(sample.job.job),static_cast<unsigned long long>(sample.job.request),static_cast<unsigned long long>(sample.job.draw),static_cast<long long>(sample.job.simulation),
++  static_cast<unsigned long long>(sample.job.lease),static_cast<unsigned long long>(sample.job.submission),static_cast<unsigned long long>(sample.job.event),static_cast<unsigned long long>(sample.job.runtimeIndex),
++  static_cast<unsigned long long>(sample.retired.job),static_cast<unsigned long long>(sample.retired.request),static_cast<unsigned long long>(sample.retired.draw),static_cast<long long>(sample.retired.simulation),
++  static_cast<unsigned long long>(sample.retired.lease),static_cast<unsigned long long>(sample.retired.submission),static_cast<unsigned long long>(sample.retired.event),static_cast<unsigned long long>(sample.retired.runtimeIndex),sample.reason,sample.status);
+ 	return size>0 && std::size_t(size)<capacity?std::size_t(size):0;
+ }
+ 
+-// Value-only ancestry/sampling handoff. No source-thread scope pointer escapes.
+-struct NativeCPUPhaseContext {std::uint64_t parent=0;bool sampled=false;};
++struct NativeCPUPhaseRecord {NativeCPUPhaseSample sample;std::uint64_t end=0;};
++// Exactly one writer until the existing task Join destroys its callable. No
++// callback writes here. Source emission is legal only after that handoff.
++struct NativeCPUPhaseBuffer {
++ static constexpr std::size_t Capacity=128;
++ NativeCPUTraceIdentity identity{};
++ std::array<NativeCPUPhaseRecord,Capacity> records{};
++ std::size_t size=0,dropped=0;
++ bool emitted=false;
++ void Append(const NativeCPUPhaseSample& sample,std::uint64_t end) noexcept {
++  if(size<Capacity)records[size++]={sample,end};else ++dropped;
++ }
++};
++// Scalars plus a borrowed diagnostic-only sink. Its explicit owner must outlive
++// this installed scope; no runtime/source object pointer is transported.
++struct NativeCPUPhaseContext {
++ std::uint64_t parent=0;bool sampled=false;
++ NativeCPUTraceIdentity incoming{},job{},retired{};
++ NativeCPUPhaseBuffer* buffer=nullptr;
++ unsigned reason=0;
++};
++std::shared_ptr<NativeCPUPhaseBuffer> MakeNativeCPUJobTrace(std::uint64_t draw,std::int64_t simulation) noexcept;
++void FlushNativeCPUPhaseBuffer(NativeCPUPhaseBuffer&) noexcept;
++void QueueJoinedNativeCPUTrace(std::shared_ptr<NativeCPUPhaseBuffer>&) noexcept;
++NativeCPUTraceIdentity NewNativeCPUTraceLease() noexcept;
++class NativeCPUCaptureTraceScope {
++public:
++ NativeCPUCaptureTraceScope(std::uint64_t draw,std::int64_t simulation) noexcept;
++ ~NativeCPUCaptureTraceScope();
++ NativeCPUCaptureTraceScope(const NativeCPUCaptureTraceScope&)=delete;
++private:
++ std::shared_ptr<NativeCPUPhaseBuffer> buffer;
++ NativeCPUPhaseContext previous{};
++};
++// Temporarily identify a joined job or a retired ticket without changing the
++// incoming request or borrowing the old job's buffer/owners.
++class NativeCPUTraceRelationScope {
++public:
++ NativeCPUTraceRelationScope(NativeCPUTraceIdentity value,NativeCPUFinishReason reason) noexcept;
++ explicit NativeCPUTraceRelationScope(NativeCPUTraceIdentity retired) noexcept;
++ ~NativeCPUTraceRelationScope();
++ NativeCPUTraceRelationScope(const NativeCPUTraceRelationScope&)=delete;
++private: NativeCPUPhaseContext previous{};
++};
+ NativeCPUPhaseContext CaptureNativeCPUPhaseContext() noexcept;
+ class NativeCPUPhaseContextScope {
+ public:
+@@ -67,9 +135,15 @@
+ void SetNativeCPUPhaseDraw(const void* owner,std::uint64_t draw) noexcept;
+ void CountNativeCPUPhase(const void* owner,std::uint64_t a,std::uint64_t b) noexcept;
+ void FinishNativeCPUPhase(const void* owner) noexcept;
++void SetNativeCPUPhaseIdentity(const void*,NativeCPUTraceIdentity) noexcept;
++void SetNativeCPUPhaseStatus(const void*,unsigned) noexcept;
++std::int64_t NativeCPUTraceFrame() noexcept;
+ struct NativeCPUPhaseScope {
+ 	explicit NativeCPUPhaseScope(unsigned kind,std::int64_t frame) noexcept:active(BeginNativeCPUPhase(this,kind,frame)) {}
+-	~NativeCPUPhaseScope() {Finish();}
++ explicit NativeCPUPhaseScope(NativeCPUPhaseKind kind) noexcept:NativeCPUPhaseScope(unsigned(kind),NativeCPUTraceFrame()) {}
++ ~NativeCPUPhaseScope() {if(std::uncaught_exceptions()>exceptions)Status(2);Finish();}
++ void Identity(NativeCPUTraceIdentity value) noexcept {if(active)SetNativeCPUPhaseIdentity(this,value);}
++ void Status(unsigned value) noexcept {if(active)SetNativeCPUPhaseStatus(this,value);}
+ 	void Finish() noexcept {if(active){FinishNativeCPUPhase(this);active=false;}}
+ 	void Draw(std::uint64_t draw) noexcept {if(active)SetNativeCPUPhaseDraw(this,draw);}
+ 	void Mark(unsigned phase) noexcept {if(active)MarkNativeCPUPhase(this,phase);}
+@@ -77,6 +151,7 @@
+ 	NativeCPUPhaseScope(const NativeCPUPhaseScope&)=delete;
+ 	NativeCPUPhaseScope& operator=(const NativeCPUPhaseScope&)=delete;
+ 	bool active=false;
++ int exceptions=std::uncaught_exceptions();
+ };
+ 
+ } // namespace rendering::metal4
+--- a/rts/Rendering/Backend/NativeRenderJobSettlement.h
++++ b/rts/Rendering/Backend/NativeRenderJobSettlement.h
+@@ -3,6 +3,9 @@
+ #include "NativeSerialRenderWorker.h"
+ #include "NativeRenderDispatchReceipt.h"
+ #include <optional>
++#ifdef RECOIL_METAL4_LIVE_SCENE
++#include "NativeCPUPhaseTrace.h"
++#endif
+ namespace rendering {
+ // Direct/readback compatibility path. Draw scopes must unwind before the source
+ // notice; a notice failure is never replayed as a second failure notification.
+@@ -58,19 +61,60 @@
+   try{target();}catch(...){failure=std::current_exception();Finish();}
+   return true;
+  }
++ bool WorkerCallableReleased() const noexcept {return !task;}
+  void Finish(){
+   Source();
+   if(state==State::Failed)std::rethrow_exception(failure);
+   if(state==State::Settled||state==State::Consumed)return;
+   if(state!=State::Running)throw std::logic_error("CPU job settlement is absent or recursive");
+   state=State::Settling;
+-  try{result.emplace(task->Join());}catch(...){if(!failure)failure=std::current_exception();}
++  {
++#ifdef RECOIL_METAL4_LIVE_SCENE
++   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::TaskJoin);
++#endif
++   try{result.emplace(task->Join());}catch(...){
++#ifdef RECOIL_METAL4_LIVE_SCENE
++    trace.Status(2);
++#endif
++    if(!failure)failure=std::current_exception();}
++  }
+   // Join has destroyed worker callable on source and released its credit even
+   // on exception. Detach the ticket before invoking any source callback.
+-  task.reset();receipt->ReleaseHandoff();
+-  try{target();}catch(...){if(!failure)failure=std::current_exception();}
+-  try{receipt->DeliverRetirement();}catch(...){if(!failure)failure=std::current_exception();}
+-  Notify(); // Exact scene acceptance/quarantine precedes any later control.
++  {
++#ifdef RECOIL_METAL4_LIVE_SCENE
++   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::HandoffRelease);
++#endif
++   task.reset();receipt->ReleaseHandoff();
++  }
++  {
++#ifdef RECOIL_METAL4_LIVE_SCENE
++   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::TargetNotice);
++#endif
++   try{target();}catch(...){
++#ifdef RECOIL_METAL4_LIVE_SCENE
++    trace.Status(2);
++#endif
++    if(!failure)failure=std::current_exception();}
++  }
++  {
++#ifdef RECOIL_METAL4_LIVE_SCENE
++   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::RetirementNotice);
++#endif
++   try{receipt->DeliverRetirement();}catch(...){
++#ifdef RECOIL_METAL4_LIVE_SCENE
++    trace.Status(2);
++#endif
++    if(!failure)failure=std::current_exception();}
++  }
++  {
++#ifdef RECOIL_METAL4_LIVE_SCENE
++   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::CPUNotice);
++#endif
++   Notify(); // Exact scene acceptance/quarantine precedes any later control.
++#ifdef RECOIL_METAL4_LIVE_SCENE
++   if(failure)trace.Status(2);
++#endif
++  }
+   state=failure?State::Failed:State::Settled;
+   if(failure)std::rethrow_exception(failure);
+  }
+--- a/rts/Rendering/Metal4/Metal4FrameResources.h
++++ b/rts/Rendering/Metal4/Metal4FrameResources.h
+@@ -4,6 +4,7 @@
+ #include "Metal4DepthStateCache.h"
+ #include "Metal4ResidencyCommit.h"
+ #include <map>
++#include "Rendering/Backend/NativeCPUPhaseTrace.h"
+ #include <functional>
+ #include <new>
+ #include <vector>
+@@ -34,6 +35,7 @@
+ struct RuntimeFrameResources {
+ 	explicit RuntimeFrameResources(std::shared_ptr<RuntimeFrameSlot> selected): slot(std::move(selected)) {}
+ 	const std::shared_ptr<RuntimeFrameSlot> slot;
++ NativeCPUTraceIdentity traceIdentity{}; // Scalars only; no extra completion/source owner.
+ 	__strong NSMutableArray* retained = nil;
+ 	__strong NSHashTable* requestedAllocations = nil;
+ 	// Published containers stay immutable even if a later prefix in this lease
+--- a/rts/Rendering/Metal4/Metal4RuntimeNative.mm
++++ b/rts/Rendering/Metal4/Metal4RuntimeNative.mm
+@@ -174,60 +174,187 @@
+   return false;
+ #endif
+  }();
++ const std::int64_t first=[] {const auto* p=std::getenv("BAR_NATIVE_FRAME_TRACE_START_SIM");return p?std::strtoll(p,nullptr,10):0;}();
++ const std::int64_t last=[] {const auto* p=std::getenv("BAR_NATIVE_FRAME_TRACE_END_SIM");return p?std::strtoll(p,nullptr,10):std::numeric_limits<long long>::max();}();
++ const bool bufferedWindow=first>0&&last>=first&&last<std::numeric_limits<long long>::max();
++ std::atomic<bool> collectionClosed{false};
+  std::atomic<bool> finished{false};
++ std::atomic<std::uint64_t> ids{0},requests{0},jobs{0},leases{0};
+  std::mutex mutex;
+  NativeSubmissionTraceBudget budget;
+ };
+ CPUPhaseTraceState& CPUPhaseTrace() {static CPUPhaseTraceState state;return state;}
+-struct CPUPhaseSlot {const void* owner=nullptr;NativeCPUPhaseSample sample;};
++struct CPUPhaseSlot {const void* owner=nullptr;NativeCPUPhaseSample sample;NativeCPUPhaseBuffer* buffer=nullptr;};
+ struct CPUPhaseStack {
+- std::array<CPUPhaseSlot,10> slots{};
++ std::array<CPUPhaseSlot,16> slots{};
+  std::uint64_t loopOrdinal=0;
+  bool captureLoop=false;
+  std::uint64_t inheritedParent=0;
+- std::array<std::uint64_t,11> previous{};
++ std::array<std::uint64_t,unsigned(NativeCPUPhaseKind::Count)> previous{};
+  unsigned depth=0;
++ NativeCPUPhaseContext context{};
++ std::array<std::shared_ptr<NativeCPUPhaseBuffer>,128> joined{};
+ };
+ thread_local CPUPhaseStack cpuPhaseStack;
++bool CPUPhaseEnabled(std::int64_t frame) noexcept {
++ auto& state=CPUPhaseTrace();
++ return state.enabled&&!state.collectionClosed.load(std::memory_order_relaxed)&&!state.finished.load(std::memory_order_relaxed)&&frame>0&&frame>=state.first&&frame<=state.last;
++}
++// The caller is outside request/cache locks. The shared budget includes buffer
++// manifests, so an incomplete chain is recognizable even if a cap cuts it off.
++bool EmitCPUPhaseText(CPUPhaseTraceState& state,std::uint64_t now,const char* text,std::size_t length,bool ticket=false) {
++ if(!length)return true;
++ if((!ticket&&!state.budget.TakeSample(now))||!state.budget.TakeRecord(now,length+160)){state.finished=true;return false;}
++#ifdef RECOIL_METAL4_LIVE_SCENE
++ LOG("%s",text);
++#endif
++ return true;
++}
+ } // namespace
+ 
+ NativeCPUPhaseContext CaptureNativeCPUPhaseContext() noexcept {
+- const auto& stack=cpuPhaseStack;
+- return {stack.depth?stack.slots[stack.depth-1].sample.id:stack.inheritedParent,stack.captureLoop};
++ auto context=cpuPhaseStack.context;
++ context.parent=cpuPhaseStack.depth?cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.id:cpuPhaseStack.inheritedParent;
++ context.sampled=cpuPhaseStack.captureLoop;
++ return context;
+ }
+ NativeCPUPhaseContextScope::NativeCPUPhaseContextScope(NativeCPUPhaseContext context) noexcept {
+  auto& stack=cpuPhaseStack;
+- // A handoff cannot overwrite a locally active scope. Nested renderer calls
+- // keep their local ancestry instead of impersonating a different frame.
+  if(stack.depth)return;
+- previous={stack.inheritedParent,stack.captureLoop};installed=true;
+- stack.inheritedParent=context.parent;stack.captureLoop=context.sampled;
++ previous=CaptureNativeCPUPhaseContext();installed=true;
++ stack.context=context;stack.inheritedParent=context.parent;stack.captureLoop=context.sampled;
+ }
+ NativeCPUPhaseContextScope::~NativeCPUPhaseContextScope() {
+  if(!installed)return;
+  auto& stack=cpuPhaseStack;
+- stack.inheritedParent=previous.parent;stack.captureLoop=previous.sampled;
++ stack.context=previous;stack.inheritedParent=previous.parent;stack.captureLoop=previous.sampled;
++}
++namespace {
++void EmitDeferredCPUPhaseBuffers() noexcept {
++ // Only the main CGame boundary calls this, after the bounded attribution
++ // window has closed. These owners contain diagnostic records only.
++ const auto start=SubmissionTraceNow();std::size_t buffers=0;
++ for(auto& joined:cpuPhaseStack.joined)if(joined){++buffers;FlushNativeCPUPhaseBuffer(*joined);joined.reset();}
++ if(!buffers)return;
++ auto& state=CPUPhaseTrace();
++ try {
++  std::lock_guard<std::mutex> lock(state.mutex);char text[256];
++  const auto end=SubmissionTraceNow();
++  const auto length=std::snprintf(text,sizeof(text),"[NativeCPUTraceEmission] buffers=%zu start_ns=%llu end_ns=%llu outside_window=%u",
++   buffers,(unsigned long long)start,(unsigned long long)end,unsigned(state.bufferedWindow));
++  if(!state.finished.load(std::memory_order_relaxed)&&length>0)EmitCPUPhaseText(state,end,text,std::size_t(length));
++ }catch(...){state.finished=true;}
++}
++}
++NativeCPUCaptureTraceScope::NativeCPUCaptureTraceScope(std::uint64_t draw,std::int64_t simulation) noexcept {
++ auto& state=CPUPhaseTrace();
++ if(state.enabled&&state.bufferedWindow&&(simulation>state.last||state.collectionClosed.load(std::memory_order_relaxed))){
++  state.collectionClosed=true;EmitDeferredCPUPhaseBuffers();
++ }
++ if(!CPUPhaseEnabled(simulation)||!cpuPhaseStack.captureLoop||cpuPhaseStack.context.buffer)return;
++ try {
++  buffer=std::make_shared<NativeCPUPhaseBuffer>();
++  previous=cpuPhaseStack.context;
++  buffer->identity={.request=state.requests.fetch_add(1,std::memory_order_relaxed)+1,.draw=draw,.simulation=simulation};
++  cpuPhaseStack.context.incoming=buffer->identity;cpuPhaseStack.context.job={};cpuPhaseStack.context.retired={};
++  cpuPhaseStack.context.buffer=buffer.get();cpuPhaseStack.context.reason=0;
++ }catch(...){state.finished=true;}
++}
++NativeCPUCaptureTraceScope::~NativeCPUCaptureTraceScope() {
++ if(!buffer)return;
++ cpuPhaseStack.context=previous;
++ QueueJoinedNativeCPUTrace(buffer);
++ if(!CPUPhaseTrace().bufferedWindow)EmitDeferredCPUPhaseBuffers();
++}
++void QueueJoinedNativeCPUTrace(std::shared_ptr<NativeCPUPhaseBuffer>& buffer) noexcept {
++ if(!buffer)return;
++ for(auto& slot:cpuPhaseStack.joined)if(!slot){slot=std::move(buffer);return;}
++ // No unbounded collection, emission under a caller lock, or source owner.
++ // The surviving final manifest marks loss explicitly.
++ if(cpuPhaseStack.joined.back())++cpuPhaseStack.joined.back()->dropped;
++ CPUPhaseTrace().collectionClosed=true;
++ buffer.reset();
++}
++std::shared_ptr<NativeCPUPhaseBuffer> MakeNativeCPUJobTrace(std::uint64_t draw,std::int64_t simulation) noexcept {
++ if(!CPUPhaseEnabled(simulation)||!cpuPhaseStack.context.buffer)return {};
++ try {
++  auto buffer=std::make_shared<NativeCPUPhaseBuffer>();
++  buffer->identity=cpuPhaseStack.context.incoming;
++  buffer->identity.job=CPUPhaseTrace().jobs.fetch_add(1,std::memory_order_relaxed)+1;
++  buffer->identity.draw=draw;buffer->identity.simulation=simulation;
++  return buffer;
++ }catch(...){CPUPhaseTrace().finished=true;return {};}
++}
++NativeCPUTraceIdentity NewNativeCPUTraceLease() noexcept {
++ if(!cpuPhaseStack.context.buffer)return {};
++ auto value=cpuPhaseStack.context.job;
++ if(!value.request)value=cpuPhaseStack.context.incoming;
++ value.lease=CPUPhaseTrace().leases.fetch_add(1,std::memory_order_relaxed)+1;
++ return value;
++}
++NativeCPUTraceRelationScope::NativeCPUTraceRelationScope(NativeCPUTraceIdentity value,NativeCPUFinishReason reason) noexcept {
++ previous=cpuPhaseStack.context;
++ if(!previous.buffer)return;
++ cpuPhaseStack.context.job=value;cpuPhaseStack.context.reason=unsigned(reason);
++}
++NativeCPUTraceRelationScope::NativeCPUTraceRelationScope(NativeCPUTraceIdentity retired) noexcept {
++ previous=cpuPhaseStack.context;
++ if(previous.buffer)cpuPhaseStack.context.retired=retired;
++}
++NativeCPUTraceRelationScope::~NativeCPUTraceRelationScope() {cpuPhaseStack.context=previous;}
++std::int64_t NativeCPUTraceFrame() noexcept {
++ const auto& context=cpuPhaseStack.context;
++ return context.buffer?(context.incoming.simulation?context.incoming.simulation:context.job.simulation):0;
++}
++void FlushNativeCPUPhaseBuffer(NativeCPUPhaseBuffer& buffer) noexcept {
++ if(buffer.emitted)return;
++ buffer.emitted=true;
++ auto& state=CPUPhaseTrace();if(!state.enabled||state.finished.load(std::memory_order_relaxed))return;
++ try {
++  std::lock_guard<std::mutex> lock(state.mutex);
++  const auto now=SubmissionTraceNow();char text[2048];
++  const auto length=std::snprintf(text,sizeof(text),"[NativeCPUTraceBuffer] request=%llu job=%llu records=%zu dropped=%zu",
++   (unsigned long long)buffer.identity.request,(unsigned long long)buffer.identity.job,buffer.size,buffer.dropped);
++  if(length<=0||!EmitCPUPhaseText(state,now,text,std::size_t(length)))return;
++  for(std::size_t i=0;i<buffer.size;++i){
++   const auto& record=buffer.records[i];
++   if(!EmitCPUPhaseText(state,now,text,FormatNativeCPUPhase(text,sizeof(text),record.sample,record.end)))return;
++  }
++ }catch(...){state.finished=true;}
+ }
+ 
+ bool BeginNativeCPUPhase(const void* owner,unsigned kind,std::int64_t frame) noexcept {
+- if(frame<=0)return false; // Loading/pregame loops must not consume the gameplay budget.
+- auto& state=CPUPhaseTrace();if(!state.enabled || state.finished.load(std::memory_order_relaxed))return false;
+  auto& stack=cpuPhaseStack;
+  if(kind==1)stack.captureLoop=false;
++ // An admitted worker finishes its bounded chain even when a younger main
++ // capture closes the collection window. No new buffer/job is admitted here.
++ const bool completingJob=stack.context.buffer&&stack.context.buffer->identity.job!=0;
++ if(!CPUPhaseEnabled(frame)&&!completingJob)return false;
++ auto& state=CPUPhaseTrace();
+  if(!owner || kind==0 || kind>=stack.previous.size() || stack.depth>=stack.slots.size())return false;
+  if(kind==1){
+   static const bool everyLoop=[] {const char* v=std::getenv("BAR_NATIVE_FRAME_TRACE_EVERY_LOOP");return v&&v[0]=='1'&&v[1]=='\0';}();
+   stack.captureLoop=everyLoop || (++stack.loopOrdinal%16==1);
+  }
+  if(!stack.captureLoop)return false;
++ // Bounded-window mode suppresses unsunk outer loops; capture/job rows have
++ // explicit identities and are all emitted after this window.
++ if(state.bufferedWindow&&!stack.context.buffer)return false;
++ // New critical-path scopes require a sink; this prevents a new logging call
++ // under runtime locks on maintenance/direct paths outside a capture.
++ if(kind>=unsigned(NativeCPUPhaseKind::MainFinish)&&!stack.context.buffer)return false;
+  try {
+-  const auto now=SubmissionTraceNow();std::lock_guard<std::mutex> lock(state.mutex);
+-  if(!state.budget.TakeSample(now)){state.finished=true;return false;}
+-  NativeCPUPhaseSample sample;sample.id=state.budget.tickets;sample.kind=kind;sample.frame=frame;
++  const auto now=SubmissionTraceNow();
++  if(!stack.context.buffer){
++   std::lock_guard<std::mutex> lock(state.mutex);
++   if(!state.budget.TakeSample(now)){state.finished=true;return false;}
++  }
++  NativeCPUPhaseSample sample;sample.id=state.ids.fetch_add(1,std::memory_order_relaxed)+1;sample.kind=kind;sample.frame=frame;
+   sample.parent=stack.depth?stack.slots[stack.depth-1].sample.id:stack.inheritedParent;
++  sample.incoming=stack.context.incoming;sample.job=stack.context.job;sample.retired=stack.context.retired;sample.reason=stack.context.reason;
+   sample.threadCPUStart=ReadNativeThreadCPUTime();
+   sample.start=now;sample.previous=stack.previous[kind];stack.previous[kind]=now;
+-  stack.slots[stack.depth++]={owner,sample};return true;
++  stack.slots[stack.depth++]={owner,sample,stack.context.buffer};return true;
+  } catch(...) {state.finished=true;return false;}
+ }
+ void SetNativeCPUPhaseDraw(const void* owner,std::uint64_t draw) noexcept {
+@@ -237,6 +364,14 @@
+  if(sample.hasSourceDraw && sample.sourceDraw!=draw){sample.invalid=true;return;}
+  sample.sourceDraw=draw;sample.hasSourceDraw=true;
+ }
++void SetNativeCPUPhaseIdentity(const void* owner,NativeCPUTraceIdentity value) noexcept {
++ auto& stack=cpuPhaseStack;
++ if(stack.depth&&stack.slots[stack.depth-1].owner==owner)stack.slots[stack.depth-1].sample.job=value;
++}
++void SetNativeCPUPhaseStatus(const void* owner,unsigned value) noexcept {
++ auto& stack=cpuPhaseStack;
++ if(stack.depth&&stack.slots[stack.depth-1].owner==owner)stack.slots[stack.depth-1].sample.status=value;
++}
+ void MarkNativeCPUPhase(const void* owner,unsigned phase) noexcept {
+  auto& stack=cpuPhaseStack;
+  if(!stack.depth || stack.slots[stack.depth-1].owner!=owner)return;
+@@ -252,21 +387,20 @@
+ void FinishNativeCPUPhase(const void* owner) noexcept {
+  auto& stack=cpuPhaseStack;
+  if(!stack.depth || stack.slots[stack.depth-1].owner!=owner)return;
+- auto sample=stack.slots[--stack.depth].sample;
++ auto slot=stack.slots[--stack.depth];auto& sample=slot.sample;
+  const auto cpuEnd=ReadNativeThreadCPUTime();
+  sample.threadCPUValid=sample.threadCPUStart.valid&&cpuEnd.valid&&cpuEnd.ns>=sample.threadCPUStart.ns;
+  if(sample.threadCPUValid)sample.threadCPUNs=cpuEnd.ns-sample.threadCPUStart.ns;
+  if(sample.kind==1)stack.captureLoop=false;
+- auto& state=CPUPhaseTrace();if(state.finished.load(std::memory_order_relaxed))return;
++ const auto now=SubmissionTraceNow();
++ // No shared mutex, formatting, logging, or callback here on the worker.
++ if(slot.buffer){slot.buffer->Append(sample,now);return;}
++ auto& state=CPUPhaseTrace();if(!state.enabled||state.finished.load(std::memory_order_relaxed))return;
+  try {
+-  const auto now=SubmissionTraceNow();char text[1536];
+-  const auto length=FormatNativeCPUPhase(text,sizeof(text),sample,now);
++  char text[2048];const auto length=FormatNativeCPUPhase(text,sizeof(text),sample,now);
+   if(!length)return;
+   std::lock_guard<std::mutex> lock(state.mutex);
+-  if(!state.budget.TakeRecord(now,length+160)){state.finished=true;return;}
+-#ifdef RECOIL_METAL4_LIVE_SCENE
+-  LOG("%s",text);
+-#endif
++  EmitCPUPhaseText(state,now,text,length,true);
+  } catch(...) {state.finished=true;}
+ }
+ // END NATIVE_CPU_PHASE_RUNTIME
+@@ -302,6 +436,7 @@
+  explicit RuntimePendingSubmission(const std::shared_ptr<RuntimeFrameResources>& frame):
+   resources(frame, RuntimeSubmissionResources::DeferredPresentation{}) {}
+  RuntimeSubmissionResources resources;
++ NativeCPUTraceIdentity traceIdentity{};
+  __strong NSHashTable* retirementTable220=nil;
+  __strong M4TerrainUniformSources220* uniformSources220=nil;
+  TerrainUniformReceipt220 uniformReceipt220;
+@@ -579,6 +714,7 @@
+   Require(bool(selected),"Bounded native queue has no retired recording slot");
+  }
+ 	frame = std::make_shared<RuntimeFrameResources>(std::move(selected));
++ frame->traceIdentity=NewNativeCPUTraceLease();
+  frame->previousRetired=std::move(previousRetired);
+ 	frame->publications.context = &runtime;
+ 	frame->publications.device = runtime.device;
+@@ -712,6 +848,7 @@
+  const auto started=StartPreparationScope();
+  runtime.DrainPendingLocked(completedOwner);
+  EndPreparationScope(39,started);
++ NativeCPUPhaseScope trace(NativeCPUPhaseKind::ReadChecks);
+  if(frame->previousRetired){auto receipt=std::exchange(frame->previousRetired,{});receipt();}
+  auto checks=std::move(frame->priorReadChecks);frame->priorReadChecks.clear();
+  for(const auto& [owner,check]:checks)check();
+@@ -727,7 +864,7 @@
+ 	Require(!frame->recording && !frame->pending && !runtime.poisoned && !frame->residencyCommit.Active(), "Cannot update residency during Metal4 execution");
+  if(runtime.persistentResidency){auto snapshot=runtime.persistentResidency->SnapshotForRecording();if(snapshot)Retain(snapshot);}
+ 	frame->keepResidency = false;
+-	const bool census = cpuPhaseStack.depth && cpuPhaseStack.captureLoop && !CPUPhaseTrace().finished.load(std::memory_order_relaxed) && residencyCensusSamples.load(std::memory_order_relaxed)<128;
++	const bool census = !cpuPhaseStack.context.buffer && cpuPhaseStack.depth && cpuPhaseStack.captureLoop && !CPUPhaseTrace().finished.load(std::memory_order_relaxed) && residencyCensusSamples.load(std::memory_order_relaxed)<128;
+ 	if(census)residencyCensusSamples.fetch_add(1,std::memory_order_relaxed);
+ 	const auto censusStart = census ? SubmissionTraceNow() : 0;
+ 	const auto previousCount = census ? frame->slot->residentAllocations.count : 0;
+@@ -800,7 +937,7 @@
+ 	// Bound additional between-lease residency; larger requests keep the
+ 	// original completed-lease clear behavior, with no omitted allocation.
+ 	frame->keepResidency = next.count <= 4096 && frame->slot->residency.allocatedSize <= (uint64_t{2} << 30);
+-	if(cpuPhaseStack.depth)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
++	if(cpuPhaseStack.depth&&!cpuPhaseStack.context.buffer)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
+ #ifdef RECOIL_METAL4_LIVE_SCENE
+ 	if(census){
+ 		const auto parent=cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.id;
+@@ -821,6 +958,7 @@
+ void RuntimeLease::FinishResourceCommit()
+ {
+ 	if(!frame->residencyCommit.Active())return;
++ NativeCPUPhaseScope trace(NativeCPUPhaseKind::ResourceCommit);
+ 	try {
+ 		const auto timing=frame->residencyCommit.Finish();
+ 		CountPreparationTrace(42,timing.commitNs);CountPreparationTrace(43,timing.joinNs);
+@@ -835,7 +973,7 @@
+   }
+ #endif
+ 		frame->keepResidency=frame->slot->residentAllocations.count<=4096 && frame->slot->residency.allocatedSize<=(uint64_t{2}<<30);
+-		if(cpuPhaseStack.depth)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
++		if(cpuPhaseStack.depth&&!cpuPhaseStack.context.buffer)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
+ 	} catch (...) { runtime.poisoned=true;runtime.failedFrame=frame;throw; }
+ }
+ uint64_t RuntimeLease::ResidentBytes() const {
+@@ -899,6 +1037,8 @@
+  [frame->WritableRetained() addObject:drawable];
+  ReportAllocationPreparation148(*frame,frameIndex);
+  auto pending=std::make_shared<RuntimePendingSubmission>(frame);
++ pending->traceIdentity=frame->traceIdentity;pending->traceIdentity.submission=SourceSubmission();
++ if(pending->traceIdentity.lease)pending->traceIdentity.runtimeIndex=frameIndex;
+ #ifdef RECOIL_METAL4_LIVE_SCENE
+  static std::atomic<bool> reported175{false};
+  if (frameIndex>=300 && !reported175.load(std::memory_order_relaxed) &&
+@@ -922,6 +1062,7 @@
+  [frame->slot->command useResidencySet:frame->slot->residency];
+  [frame->slot->command endCommandBuffer];frame->recording=false;
+  pending->eventValue=++runtime.nextEventValue;
++ if(pending->traceIdentity.lease)pending->traceIdentity.event=pending->eventValue;
+  pending->uniformSources220=TerrainUniformSources220(pending->resources.retained);
+  pending->uniformReceipt220=StampTerrainUniform220(runtime.queue,pending->uniformSources220,pending->eventValue);
+  if(ResidencyReleaseEnabled220()||ResidencyReleaseCounters220()){
+@@ -938,6 +1079,7 @@
+    LOG("[NativeInterventionTwoInFlight] gpu_pending_limit=1 recording_slots=3 second_gpu_ticket=disabled pending_borrow_coverage=unproven");}
+  }
+ #endif
++ NativeCPUPhaseScope submitTrace(NativeCPUPhaseKind::Submit);submitTrace.Identity(pending->traceIdentity);
+  id<MTL4CommandBuffer> commands[]={frame->slot->command};
+  const auto submitted=Clock::now();
+  if(pending->probe)pending->probe->submit=FrameOverlapHostTime();
+@@ -945,6 +1087,7 @@
+  [runtime.queue commit:commands count:1 options:options];
+  [runtime.queue signalDrawable:drawable];[drawable present];
+  [runtime.queue signalEvent:runtime.completionEvent value:pending->eventValue];
++ submitTrace.Finish();
+  if constexpr(NativeCPUTimingInstrumentation)pending->metrics.cpuSubmissionMs=Milliseconds(submitted);
+  // Release on this same serialized caller, before another preparation can
+  // acquire pool slots. No extra pending GPU frame or deferred cleanup queue.
+@@ -958,6 +1101,9 @@
+ #endif
+  // Capture only proven pure-CPU leaves immediately before the original
+  // caller-side graph destruction, after the successor has been committed.
++ NativeCPUTraceRelationScope releaseIdentity(completedPredecessor186?completedPredecessor186->traceIdentity:NativeCPUTraceIdentity{});
++ NativeCPUPhaseScope ownerReleaseTrace(NativeCPUPhaseKind::CompletedOwnerRelease);
++ if(!completedPredecessor186)ownerReleaseTrace.Status(3);
+  TerrainUniformAttempt220 uniformAttempt220;
+  __strong M4TerrainUniformJob220* uniformJob220=nil;
+  if(completedPredecessor186)uniformJob220=PrepareTerrainUniformRelease220(runtime.queue,
+@@ -966,6 +1112,7 @@
+  completedPredecessor186.reset();
+  DispatchTerrainUniformRelease220(runtime.queue,uniformJob220,uniformAttempt220);
+  uniformJob220=nil;
++ ownerReleaseTrace.Finish();
+ #ifdef RECOIL_METAL4_LIVE_SCENE
+  if(report186)LOG("[NativeRetirement186] submission=%llu completed_graph_entries=%llu owner_references_at_release=%ld release_ns=%llu release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
+   (unsigned long long)frameIndex,(unsigned long long)graphEntries186,
+@@ -997,12 +1144,19 @@
+ {
+  if(pendingSubmissions.empty())return;
+  Require(!poisoned,"Cannot retire a poisoned deferred Metal4 request");
++ auto identity=pendingSubmissions.front()->traceIdentity;
++ if(cpuPhaseStack.context.buffer)identity.event=pendingSubmissions.front()->eventValue;
++ NativeCPUTraceRelationScope retiredIdentity(identity);
++ NativeCPUPhaseScope retireTrace(NativeCPUPhaseKind::RuntimeRetire);
++ if(!identity.job)retireTrace.Status(4); // Exact event, unavailable boundary job.
+  auto pending=pendingSubmissions.front();auto frame=pending->resources.owner;
+  try {
+   const auto start=Clock::now();
+   if(pending->probe){pending->probe->drain=FrameOverlapHostTime();pending->probe->ready=completionEvent.signaledValue>=pending->eventValue;}
+-  Require([completionEvent waitUntilSignaledValue:pending->eventValue timeoutMS:30000],"GPU completion shared-event timeout (30 seconds)");
+-  Require(dispatch_semaphore_wait(pending->feedback,dispatch_time(DISPATCH_TIME_NOW,30*NSEC_PER_SEC))==0,"MTL4 commit feedback timeout (30 seconds)");
++  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::EventWait);
++   Require([completionEvent waitUntilSignaledValue:pending->eventValue timeoutMS:30000],"GPU completion shared-event timeout (30 seconds)");}
++  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::FeedbackWait);
++   Require(dispatch_semaphore_wait(pending->feedback,dispatch_time(DISPATCH_TIME_NOW,30*NSEC_PER_SEC))==0,"MTL4 commit feedback timeout (30 seconds)");}
+   if constexpr(NativeCPUTimingInstrumentation)pending->metrics.cpuCompletionWaitMs=Milliseconds(start);
+   frame->pending=false;
+   if(pending->probe){pending->probe->done=FrameOverlapHostTime();pending->probe->complete.store(true,std::memory_order_release);}
+@@ -1011,10 +1165,11 @@
+    if(details.length>4096)details=[details substringToIndex:4096];
+    throw std::runtime_error("GPU reported deferred failure: "+Error(pending->error)+"; userInfo="+(details.UTF8String?:""));
+   }
+-  [frame->slot->allocator reset];
++  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::AllocatorReset);[frame->slot->allocator reset];}
+   // Same completion order as the synchronous renderer; no acknowledgment on
+   // submission, event timeout, feedback timeout, or GPU execution failure.
+-  pending->retire(pending->metrics);
++  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::GPUCallback);pending->retire(pending->metrics);}
++  NativeCPUPhaseScope cleanupTrace(NativeCPUPhaseKind::ResidencyCleanup);
+   if(!frame->keepResidency){[frame->slot->residency removeAllAllocations];[frame->slot->residency commit];frame->slot->residentAllocations=nil;}
+   // Publish only after every successful retirement action. On failure the
+   // original pending owner remains quarantined, with no completion handoff.
+--- a/rts/Rendering/Metal4/Metal4SceneBridge.cpp
++++ b/rts/Rendering/Metal4/Metal4SceneBridge.cpp
+@@ -945,14 +945,14 @@
+  }
+ }
+ 
+-void RequireRetiredGPUWork()
++void RequireRetiredGPUWork(metal4::NativeCPUFinishReason reason=metal4::NativeCPUFinishReason::FullDrain)
+ {
+  metal4::NativeCPUPhaseScope drainTrace(9,gs?gs->frameNum:0);
+  if(globalRendering)drainTrace.Draw(globalRendering->drawFrame);
+  if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
+  drainTrace.Mark(0); // p0: optional CPU source-reader completion.
+  if(!session || !session->renderer)return;
+- session->renderer->FinishCPUWork();
++ session->renderer->FinishCPUWork(reason);
+  drainTrace.Mark(1); // p1: render CPU Join/settlement wall interval (may include worker waits).
+  const bool retired=Metal4RendererCanSafelyDetachSurface();
+  drainTrace.Mark(2); // p2: runtime drain including GPU wait/retirement callbacks.
+@@ -981,19 +981,19 @@
+ 
+ void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
+ void FinishCaptureBeforeRollback() {
+- if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork();});
++ if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork(metal4::NativeCPUFinishReason::Rollback);});
+ }
+ void DismissCaptureRollbackFence() {
+  if(session)session->captureRollbackFence.Dismiss();
+ }
+ void FinishPendingFrame() { RequireRetiredGPUWork(); }
+-void FinishRuntimeControl() { RequireRetiredGPUWork(); }
++void FinishRuntimeControl() { RequireRetiredGPUWork(metal4::NativeCPUFinishReason::Control); }
+ NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
+  if(!session)throw std::logic_error("World capture has no source credit owner");
+  return session->sourceCredits.AcquireWithCPUReclaim(draw,BeginPreparationOverlapRequested(),[&]{
+   metal4::NativeCPUPhaseScope reclaimTrace(11,gs?gs->frameNum:0);reclaimTrace.Draw(draw);
+   if(session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
+-  session->renderer->FinishCPUWork(); // Join, release access, deliver old notice, accept current CPU.
++  session->renderer->FinishCPUWork(metal4::NativeCPUFinishReason::Credit); // Join, release access, deliver old notice, accept current CPU.
+   reclaimTrace.Mark(0);
+   ApplyDeferredFrameReceipts();reclaimTrace.Mark(1);
+   const bool recovered=session->sourceCredits.HasCapacity();reclaimTrace.Counts(recovered,2);
+@@ -1723,7 +1723,7 @@
+ 
+  const bool retainedPredecessorGPU=CaptureAtNativeSurfaceBoundary(deferredParticles,
+   [&]{return session->surface.CaptureRefreshUnchanged();},
+-  []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
++  []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork(metal4::NativeCPUFinishReason::SurfaceBoundary);},[&]{session->surface.Refresh();},[&]{
+    {metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
+    // Publish only at the actual capture boundary, after any changed-surface drain.
+    session->opaqueSourcePending=actualOpaqueModels;
+@@ -1737,7 +1737,7 @@
+     // completion. They produce fresh CPU geometry and retain immutable sources.
+     // A throwing join/tail still takes the boundary's full GPU drain before
+     // source rollback. Successful CPU settlement does not retire GPU credits.
+-    session->renderer->FinishCPUWork();
++    session->renderer->FinishCPUWork(metal4::NativeCPUFinishReason::CapturePrefix);
+     session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
+    }
+   },[&]{
+@@ -2282,7 +2282,7 @@
+  if(pendingAdmission&&pendingAdmission->cpuAccepted)admitted=false;
+  try {
+  // A hidden/unavailable surface may return before opening a runtime lease.
+- if(!result.presented&&overlapPreparation)RequireRetiredGPUWork();
++ if(!result.presented&&overlapPreparation)RequireRetiredGPUWork(metal4::NativeCPUFinishReason::NonPresent);
+  if(admitted && (!result.presented || result.sourceFrameCompleted)){
+   // Synchronous completion returns ownership to the historical pending-retire
+   // caller. No-Begin fallback returns pending publications for original rollback.
+--- a/rts/Rendering/Metal4/Metal4WorldRenderer.h
++++ b/rts/Rendering/Metal4/Metal4WorldRenderer.h
+@@ -1,5 +1,6 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #pragma once
++#include "Rendering/Backend/NativeCPUPhaseTrace.h"
+ #include <exception>
+ #include "Metal4SceneBeginRetirement.h"
+ #include "Rendering/Backend/NativeSourceFrameCredits.h"
+@@ -235,7 +236,7 @@
+ 	// camera's actual subview maps proportionally to the explicit target.
+ 	Metal4WorldPresentationResult Draw(const WorldFrame& frame, const Metal4WorldRenderOptions& options = {});
+  // Main only, before acquiring renderer or runtime locks. Does not claim GPU retirement.
+- void FinishCPUWork() const;
++ void FinishCPUWork(metal4::NativeCPUFinishReason reason=metal4::NativeCPUFinishReason::Control) const;
+  // Owned input is required for worker dispatch; this entry still joins.
+  Metal4WorldPresentationResult DrawOwned(std::shared_ptr<const Metal4WorldSubmission>,std::function<void()> previousRetired = {},std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled = {});
+  // Prepare independent immutable shared-buffer inputs while the preceding
+--- a/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -402,7 +402,22 @@
+  std::unique_ptr<NativeSerialRenderWorker> renderWorker;
+  std::unique_ptr<NativeRenderJobSettlement<Metal4WorldPresentationResult>> cpuJob;
+  bool settlingDirectCPU=false,detachedCPUJob=false;
+- void FinishCPUWork(){Require([NSThread isMainThread]&&!settlingDirectCPU,"CPU settlement requires nonrecursive main");if(cpuJob){cpuJob->Finish();if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob=false;}}}
++ std::shared_ptr<NativeCPUPhaseBuffer> cpuTraceBuffer;
++ void FinishCPUWork(NativeCPUFinishReason reason=NativeCPUFinishReason::Control){
++  NativeCPUTraceRelationScope relation(cpuTraceBuffer?cpuTraceBuffer->identity:NativeCPUTraceIdentity{},reason);
++  NativeCPUPhaseScope trace(NativeCPUPhaseKind::MainFinish);
++  Require([NSThread isMainThread]&&!settlingDirectCPU,"CPU settlement requires nonrecursive main");
++  if(!cpuJob){trace.Status(1);return;}
++  if(!cpuTraceBuffer)trace.Status(4); // Job outside the sampled window: not attributable.
++  try {
++   cpuJob->Finish();
++   if(cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(cpuTraceBuffer);
++   if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob=false;}
++  }catch(...){
++   if(cpuJob&&cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(cpuTraceBuffer);
++   throw;
++  }
++ }
+  metal4::InterventionShadowViews interventionShadowViews;
+ 	metal4::ScreenGPU screenGPU;
+ 	metal4::StartBoxGPU startBoxGPU;
+@@ -2365,11 +2380,11 @@
+ {return DrawDispatch(frame,options,{});}
+ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPreparingWhilePending(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
+ {return DrawDispatch(frame,options,std::move(previousRetired));}
+-void Metal4WorldRenderer::FinishCPUWork() const
++void Metal4WorldRenderer::FinishCPUWork(NativeCPUFinishReason reason) const
+ {
+  Require([NSThread isMainThread]&&impl!=nullptr,"CPU job drain requires its source renderer");
+  // Must precede runtime/request locks and renderer ownership scopes.
+- impl->FinishCPUWork();
++ impl->FinishCPUWork(reason);
+ }
+ Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void()> previousRetired,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
+ {
+@@ -2381,7 +2396,7 @@
+ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
+ {
+  frame.deferredMainParticles.RequireComplete();
+- FinishCPUWork();
++ FinishCPUWork(NativeCPUFinishReason::DispatchPrior);
+  // Reject invalid callers before reading source policy, as preparation did.
+  MainThread();Require(impl!=nullptr,"World renderer was moved from");
+  std::optional<NativeRendererAccessGate::Scope> cacheAccess;cacheAccess.emplace(&impl->access);
+@@ -2469,13 +2484,18 @@
+  auto deferredReceipt=dispatchReceipt->NeedsRetirementNotice()?std::function<void()>([dispatchReceipt]{dispatchReceipt->MarkRetirementReady();}):std::function<void()>{};
+  Require(!impl->cpuJob,"Previous CPU job has not been consumed");
+  impl->cpuJob=std::make_unique<NativeRenderJobSettlement<Metal4WorldPresentationResult>>(dispatchReceipt,std::move(deliverTargetNotice),std::move(cpuSettled));
+- const auto cpuTraceContext=CaptureNativeCPUPhaseContext();
++ impl->cpuTraceBuffer=MakeNativeCPUJobTrace(frame.sourceDrawFrame,frame.simulationFrame);
++ auto cpuTraceContext=CaptureNativeCPUPhaseContext();
++ cpuTraceContext.buffer=impl->cpuTraceBuffer.get(); // Never lend the main writer's sink to the worker.
++ cpuTraceContext.sampled=cpuTraceContext.sampled&&bool(impl->cpuTraceBuffer);
++ if(impl->cpuTraceBuffer){cpuTraceContext.buffer=impl->cpuTraceBuffer.get();cpuTraceContext.job=impl->cpuTraceBuffer->identity;cpuTraceContext.retired={};cpuTraceContext.reason=0;}
+  try {
+-  impl->cpuJob->Submit(worker,[this,owned,presentation,snapshot,sourceContext,cpuTraceContext,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable {@autoreleasepool {
++  impl->cpuJob->Submit(worker,[this,owned,presentation,snapshot,sourceContext,cpuTraceContext,traceOwner=impl->cpuTraceBuffer,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable {@autoreleasepool {
++   NativeCPUPhaseContextScope traceContext(cpuTraceContext);
++   NativeCPUPhaseScope workerTrace(NativeCPUPhaseKind::WorkerJob);
+    struct FinishDispatch {std::shared_ptr<NativeRenderDispatchReceipt> receipt;~FinishDispatch(){receipt->MarkWorkerFinished();}} finish{dispatchReceipt};
+    NativeRendererAccessGate::Scope admittedAccess(dispatchReceipt->Handoff());
+    Metal4SurfaceWorkerScope scope(snapshot);
+-   NativeCPUPhaseContextScope traceContext(cpuTraceContext);
+    return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[dispatchReceipt](std::uint64_t submission) noexcept {dispatchReceipt->MarkBegun(submission);dispatchReceipt->PublishBeginReady();},uiResolver,mrtFrontier,sourceContext,shadowFallback);
+   }});
+   if((prepareReady&&impl->cpuJob->ReleaseForPreparation())||(beginReady&&impl->cpuJob->ReleaseAfterBegin())){
+@@ -2493,7 +2513,7 @@
+    Metal4WorldPresentationResult queued;queued.queued=true;queued.sourceDrawFrame=frame.sourceDrawFrame;
+    return queued;
+   }
+-  FinishCPUWork();
++  FinishCPUWork(NativeCPUFinishReason::JoinedFallback);
+   auto result=impl->cpuJob->Consume();
+   impl->cpuJob.reset();
+ #ifdef RECOIL_METAL4_LIVE_SCENE
+@@ -2503,6 +2523,7 @@
+  }catch(...){
+   // Enqueue failure has no ticket; normal/failed jobs have already joined.
+   // Preserve terminal settlement failure for every subsequent drain.
++  if(impl->cpuJob&&impl->cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(impl->cpuTraceBuffer);
+   dispatchReceipt->ReleaseHandoff();throw;
+  }
+ }
+--- a/tools/metal4-contracts/TestNativeCPUPhaseHandoff.cpp
++++ b/tools/metal4-contracts/TestNativeCPUPhaseHandoff.cpp
+@@ -90,7 +90,7 @@
+   assert(parents[0]==ids[1]&&parents[1]==ids[2]&&parents[2]==ids[3]&&parents[3]==0);
+   assert(ids[3]<ids[2]&&ids[2]<ids[1]&&ids[1]<ids[0]);
+  }
+- {char buffer[768];NativeCPUPhaseSample sample;sample.start=100;sample.kind=3;
++ {char buffer[2048];NativeCPUPhaseSample sample;sample.start=100;sample.kind=3;
+   assert(FormatNativeCPUPhase(buffer,sizeof(buffer),sample,200)>0);
+   assert(std::string(buffer).find("start_ns=100 end_ns=200")!=std::string::npos);
+   sample.hasSourceDraw=true;sample.sourceDraw=0;
+@@ -124,11 +124,11 @@
+  // with the existing FRAME_TRACE toggle. No independent logging channel.
+  {
+   const auto before=logs.size();NativeCPUPhaseContextScope context({4321,true});
+-  for(unsigned kind=7;kind<=10;++kind){NativeCPUPhaseScope diagnostic(kind,1);
++  for(unsigned kind=7;kind<=11;++kind){NativeCPUPhaseScope diagnostic(kind,1);
+    assert(diagnostic.active==traceEnabled);diagnostic.Draw(77);diagnostic.Counts(15,0);
+    diagnostic.Mark(0);diagnostic.Mark(1);diagnostic.Mark(2);diagnostic.Mark(3);}
+-  assert(logs.size()==before+(traceEnabled?4:0));
+-  if(traceEnabled)for(unsigned kind=7;kind<=10;++kind)
++  assert(logs.size()==before+(traceEnabled?5:0));
++  if(traceEnabled)for(unsigned kind=7;kind<=11;++kind)
+    assert(logs[before+kind-7].find("kind="+std::to_string(kind)+" ")!=std::string::npos);
+  }
+  // Diagnostic rejection mask must match unchanged eligibility for all inputs.
+--- /dev/null
++++ b/tools/metal4-contracts/TestNativeCriticalPathTrace.cpp
+@@ -0,0 +1,139 @@
++#include <atomic>
++#include <chrono>
++#include <cstdlib>
++#include <mutex>
++#include <stdexcept>
++#include <string>
++#include <vector>
++#include <cassert>
++#include <cstdio>
++#include "Rendering/Backend/NativeCPUPhaseTrace.h"
++#include "Rendering/Backend/NativeSubmissionTrace.h"
++#include "Rendering/Backend/NativeRenderJobSettlement.h"
++static std::vector<std::string> logs;
++#define LOG(format,text) logs.emplace_back(text)
++namespace rendering::metal4 {
++static std::uint64_t SubmissionTraceNow() noexcept {
++ return std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
++}
++#include "cpu-phase-runtime.inc"
++}
++using namespace rendering;
++using namespace rendering::metal4;
++static unsigned long long Field(const std::string& row,const std::string& key) {
++ auto at=row.find(" "+key+"=");assert(at!=std::string::npos);
++ return std::strtoull(row.c_str()+at+key.size()+2,nullptr,10);
++}
++int main(int argc,char** argv) {
++ const std::string mode=argc>1?argv[1]:"success";
++ const bool tail=mode=="tail";
++ const bool enabled=std::string(std::getenv("BAR_NATIVE_FRAME_TRACE"))=="1";
++ NativeSerialRenderWorker worker;
++ std::atomic<bool> go=false;
++ unsigned target=0,retired=0,notified=0;
++ auto receipt=std::make_shared<NativeRenderDispatchReceipt>(nullptr,[&]{++retired;if(mode=="retirement")throw std::runtime_error("retirement");});
++ NativeRenderJobSettlement<int> job(receipt,[&]{++target;if(mode=="target")throw std::runtime_error("target");},[&](const int*,std::exception_ptr){++notified;});
++ std::shared_ptr<NativeCPUPhaseBuffer> owned;
++ NativeCPUTraceIdentity source;
++ std::weak_ptr<int> callableOwner;
++ std::unique_ptr<NativeSerialRenderWorker::Task<int>> occupied;
++ {NativeCPUPhaseScope loop(1,299);NativeCPUCaptureTraceScope pregame(1,299);assert(!MakeNativeCPUJobTrace(1,299));}
++ assert(CPUPhaseTrace().ids==0&&CPUPhaseTrace().requests==0&&CPUPhaseTrace().jobs==0);
++ {
++  NativeCPUPhaseScope loop(1,tail?306:300);NativeCPUCaptureTraceScope capture(100,tail?306:300);
++  NativeCPUPhaseScope incoming(NativeCPUPhaseKind::CaptureInvocation);
++  owned=MakeNativeCPUJobTrace(100,tail?306:300);
++  assert(bool(owned)==enabled);
++  auto context=CaptureNativeCPUPhaseContext();
++  if(owned){source=owned->identity;context.job=source;context.buffer=owned.get();}
++  auto token=std::make_shared<int>(1);callableOwner=token;
++  if(mode=="enqueue")occupied=worker.Enqueue([]{return 1;});
++  try {
++   job.Submit(worker,[&,context,traceOwner=owned,token=std::move(token)]()->int{
++    NativeCPUPhaseContextScope transferred(context);
++    NativeCPUPhaseScope whole(NativeCPUPhaseKind::WorkerJob);
++    while(!go.load(std::memory_order_acquire))std::this_thread::yield();
++    {
++     const NativeCPUTraceIdentity predecessor{.request=11,.draw=45,.job=73,.lease=91,.submission=19,.event=87,.runtimeIndex=15,.simulation=299};
++     NativeCPUTraceRelationScope retiredIdentity(predecessor);
++     NativeCPUPhaseScope retirement(NativeCPUPhaseKind::RuntimeRetire);
++     {NativeCPUPhaseScope event(NativeCPUPhaseKind::EventWait);std::this_thread::sleep_for(std::chrono::milliseconds(2));}
++     {NativeCPUPhaseScope feedback(NativeCPUPhaseKind::FeedbackWait);}
++     if(mode=="worker")throw std::runtime_error("worker");
++     {NativeCPUPhaseScope callback(NativeCPUPhaseKind::GPUCallback);}
++    }
++    {NativeCPUPhaseScope submit(NativeCPUPhaseKind::Submit);}
++    receipt->MarkRetirementReady();
++    return 17;
++   });
++   assert(mode!="enqueue");
++  }catch(const std::logic_error&){assert(mode=="enqueue");}
++ }
++ assert(logs.empty()); // No formatter/LOG publication from the worker/capture.
++ {
++  NativeCPUPhaseScope loop(1,tail?307:301);NativeCPUCaptureTraceScope capture(905,tail?307:301);
++  const auto waiting=CaptureNativeCPUPhaseContext().incoming;
++  if(enabled&&!tail){assert(waiting.request!=source.request&&waiting.draw!=source.draw+1);}
++  {NativeCPUPhaseScope prefix(8,301);prefix.Draw(905);}
++  if(mode!="enqueue")assert(!job.WorkerCallableReleased());
++  go.store(true,std::memory_order_release);
++  try {
++   NativeCPUTraceRelationScope relation(source,NativeCPUFinishReason::CapturePrefix);
++   NativeCPUPhaseScope finish(NativeCPUPhaseKind::MainFinish);
++   job.Finish();assert(mode=="success"||tail);
++  }catch(const std::exception&){assert(mode!="success");}
++  assert(job.WorkerCallableReleased());assert(callableOwner.expired());
++  QueueJoinedNativeCPUTrace(owned);assert(!owned);
++  if(!tail)assert(logs.empty());
++  {NativeCPUPhaseScope highest(unsigned(NativeCPUPhaseKind::Count)-1,301);assert(highest.active==(enabled&&!tail));}
++  {NativeCPUPhaseScope invalid(unsigned(NativeCPUPhaseKind::Count),301);assert(!invalid.active);}
++ }
++ if(occupied)occupied->Join();
++ if(!tail)assert(logs.empty()); // Emission remains outside the attribution window.
++ {
++  NativeCPUPhaseScope loop(1,tail?308:307);NativeCPUCaptureTraceScope after(1100,tail?308:307);
++  assert(!MakeNativeCPUJobTrace(1100,307));
++ }
++ if(enabled){
++  unsigned joins=0,waits=0,workerRows=0,highest=0,submits=0;bool emission=false;
++  for(const auto& row:logs){
++   if(row.starts_with("[NativeCPUTraceEmission]")){assert(Field(row,"outside_window")==1);emission=true;continue;}
++   if(!row.starts_with("[NativeCPUTrace]"))continue;
++   const auto kind=Field(row,"kind");
++   if(kind==13){++joins;assert(Field(row,"request")!=Field(row,"job_request"));assert(Field(row,"request_draw")==905&&Field(row,"job_draw")==100);}
++   if(kind==19){++waits;assert(Field(row,"job")==source.job&&Field(row,"retired_job")==73);assert(Field(row,"retired_event")==87&&Field(row,"retired_submission")==19&&Field(row,"retired_runtime_index")==15);}
++   if(kind==27)++workerRows;
++   if(kind==25)++submits;
++   if(kind==unsigned(NativeCPUPhaseKind::Count)-1)++highest;
++   if(kind==18)assert(Field(row,"status")==unsigned(mode=="worker"?2:0));
++   if(kind==12)assert(Field(row,"status")==unsigned(mode=="success"?0:2));
++  }
++  assert(emission&&highest==unsigned(!tail));
++  if(tail)assert(submits==1);
++  assert(joins==unsigned(mode!="enqueue"&&!tail)&&waits==unsigned(mode!="enqueue")&&workerRows==unsigned(mode!="enqueue"));
++ }else{
++  assert(logs.empty()&&CPUPhaseTrace().ids==0&&CPUPhaseTrace().requests==0&&CPUPhaseTrace().jobs==0&&CPUPhaseTrace().leases==0);
++ }
++ assert(target==unsigned(mode!="enqueue"));
++ assert(notified==1);
++ assert(retired==unsigned(mode!="enqueue"&&mode!="worker"));
++ // A fixed record ring drops explicitly, never grows or overwrites a chain.
++ NativeCPUPhaseBuffer bounded;
++ NativeCPUPhaseSample sample;sample.start=1;sample.kind=unsigned(NativeCPUPhaseKind::Count)-1;
++ for(std::size_t i=0;i<NativeCPUPhaseBuffer::Capacity+3;++i)bounded.Append(sample,2);
++ assert(bounded.size==NativeCPUPhaseBuffer::Capacity&&bounded.dropped==3);
++ char formatted[2048];sample.incoming.request=sample.job.job=sample.retired.event=~std::uint64_t{};
++ assert(FormatNativeCPUPhase(formatted,sizeof(formatted),sample,2)>0);
++ assert(!FormatNativeCPUPhase(formatted,32,sample,2));
++ if(enabled){
++  FlushNativeCPUPhaseBuffer(bounded);
++  bool overflowReported=false;
++  for(const auto& row:logs)if(row.starts_with("[NativeCPUTraceBuffer]")&&Field(row,"dropped")==3)overflowReported=true;
++  assert(overflowReported);
++  for(unsigned i=0;i<100&&!CPUPhaseTrace().finished;++i){bounded.emitted=false;FlushNativeCPUPhaseBuffer(bounded);}
++  assert(CPUPhaseTrace().finished);
++  assert(CPUPhaseTrace().budget.bytes<=NativeSubmissionTraceBudget::MaxBytes);
++  assert(CPUPhaseTrace().budget.tickets<=NativeSubmissionTraceBudget::MaxRecords);
++ }
++ std::printf("Critical trace %s enabled=%u: exact three identities, real Join/callable release, deferred emission, highest kind, bounded/OFF PASS\n",mode.c_str(),unsigned(enabled));
++}
+--- a/tools/metal4-contracts/run_native_cpu_phase_handoff_test.py
++++ b/tools/metal4-contracts/run_native_cpu_phase_handoff_test.py
+@@ -15,7 +15,7 @@
+  subprocess.run([str(out/'test')],env={**env,'BAR_NATIVE_FRAME_TRACE_EVERY_LOOP':every},check=True,timeout=30)
+ subprocess.run([str(out/'test')],env={**env,'BAR_NATIVE_FRAME_TRACE':'0'},check=True,timeout=30)
+ world=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
+-a=world.index('const auto cpuTraceContext=CaptureNativeCPUPhaseContext();')
++a=world.index('auto cpuTraceContext=CaptureNativeCPUPhaseContext();')
+ b=world.index('impl->cpuJob->Submit(worker,[this,owned,presentation,snapshot,sourceContext,cpuTraceContext,',a)
+ c=world.index('NativeCPUPhaseContextScope traceContext(cpuTraceContext);',b)
+ assert world.index('return DrawPrepared(owned->Frame()',c)>c
+--- /dev/null
++++ b/tools/metal4-contracts/run_native_critical_path_trace_test.py
+@@ -0,0 +1,22 @@
++#!/usr/bin/env python3
++import os, subprocess
++from pathlib import Path
++root=Path(__file__).resolve().parents[2]
++out=Path('/tmp/bar-critical-path-trace');out.mkdir(exist_ok=True)
++runtime=(root/'rts/Rendering/Metal4/Metal4RuntimeNative.mm').read_text()
++a=runtime.index('// BEGIN NATIVE_CPU_PHASE_RUNTIME');b=runtime.index('// END NATIVE_CPU_PHASE_RUNTIME',a)
++(out/'cpu-phase-runtime.inc').write_text(runtime[a:b])
++subprocess.run(['clang++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined','-DRECOIL_METAL4_LIVE_SCENE','-I'+str(root/'rts'),'-I'+str(out),str(Path(__file__).with_name('TestNativeCriticalPathTrace.cpp')),'-o',str(out/'test')],check=True)
++env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0','BAR_NATIVE_FRAME_TRACE_EVERY_LOOP':'1','BAR_NATIVE_FRAME_TRACE_START_SIM':'300','BAR_NATIVE_FRAME_TRACE_END_SIM':'306'}
++for enabled in ['1','0']:
++ for mode in ['success','worker','target','retirement','enqueue','tail']:
++  subprocess.run([str(out/'test'),mode],env={**env,'BAR_NATIVE_FRAME_TRACE':enabled},check=True,timeout=30)
++# Actual async feedback callback must remain free of worker-buffer access.
++a=runtime.index('[options addFeedbackHandler:',runtime.index('void RuntimeLease::SubmitAndDefer'))
++b=runtime.index('}];',a)
++assert not any(x in runtime[a:b] for x in ['NativeCPUPhase','cpuPhaseStack','traceIdentity'])
++world=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
++assert 'traceOwner=impl->cpuTraceBuffer' in world
++assert 'if(cpuJob&&cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(cpuTraceBuffer)' in world
++assert 'FlushNativeCPUPhaseBuffer' not in world
++print('Production async callback single-writer and safe queue-after-Join wiring PASS')
+--- a/tools/metal4-contracts/run_native_dynamic_water_receipts_test.py
++++ b/tools/metal4-contracts/run_native_dynamic_water_receipts_test.py
+@@ -13,7 +13,7 @@
+ scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+ assert 'cloudAdmission,waterAdmission,' in scene
+ assert '(session && session->dynamicWaterCapture.Initialized()))RequireRetiredGPUWork()' in scene
+-apply=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
++apply=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork(',1)[0]
+ assert 'result.dynamicWaterSourceDrawFrame!=result.sourceDrawFrame' in apply
+ assert apply.index('dynamicWaterCapture.ValidateHeldFrame')<apply.index('dynamicWaterCapture.ValidateCompletion')
+ assert apply.index('dynamicWaterCapture.ValidateCompletion')<apply.index('CompleteDynamicCapture(')
+--- a/tools/metal4-contracts/run_native_external_runtime_control_test.py
++++ b/tools/metal4-contracts/run_native_external_runtime_control_test.py
+@@ -47,7 +47,7 @@
+  assert body.index('scene::FinishRuntimeControl();')<body.index('RuntimeLease lease')
+ scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+ assert 'void FinishRuntimeControl() { RequireRetiredGPUWork(); }' in scene
+-body=scene.split('void RequireRetiredGPUWork()',1)[1].split('} // namespace',1)[0]
++body=scene.split('void RequireRetiredGPUWork(',1)[1].split('} // namespace',1)[0]
+ assert body.index('FinishCPUWork()')<body.index('Metal4RendererCanSafelyDetachSurface()')<body.index('ApplyDeferredFrameReceipts()')
+ with tempfile.TemporaryDirectory(prefix='bar-runtime-control-') as out:
+  p=Path(out);(p/'test.cpp').write_text(cpp)
+--- a/tools/metal4-contracts/run_native_frame_journal_owners_test.py
++++ b/tools/metal4-contracts/run_native_frame_journal_owners_test.py
+@@ -6,7 +6,7 @@
+ out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
+ root=Path(__file__).resolve().parents[2]
+ bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+-completion=bridge.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
++completion=bridge.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork(',1)[0]
+ assert completion.index('LuaNativeVolumetricClouds::ValidateHeldFrame') < completion.index('CompleteDynamicCapture(')
+ water_completion=bridge.split('void CompleteDynamicCapture(',1)[1].split('bool AbortDynamicCapture()',1)[0]
+ assert water_completion.index('session->dynamicWaterCapture.DidComplete(generation,through,draw)') < water_completion.index('session->dynamicCaptureReceipt.reset()')
+--- a/tools/metal4-contracts/run_native_prepare_ready_pilot_test.py
++++ b/tools/metal4-contracts/run_native_prepare_ready_pilot_test.py
+@@ -17,7 +17,7 @@
+ assert 'target()' not in release and 'Wait' not in release
+ finish=job.split(' void Finish(){',1)[1]
+ assert finish.index('task->Join()')<finish.index('target()')<finish.index('DeliverRetirement()')<finish.index('Notify()')
+-retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
++retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork(',1)[0]
+ assert 'sourceSettlement.reset' not in retire and 'opaqueSourcePending' not in retire
+ assert 'sourceCredits.ReleaseHeld(result.sourceDrawFrame)' in retire
+ for script in ['run_native_source_frame_credits_test.py','run_native_render_job_settlement_test.py','run_native_scene_admission_record_test.py','run_native_begin_ready_pilot_test.py']:
+--- a/tools/metal4-contracts/run_native_render_dispatch_receipt_test.py
++++ b/tools/metal4-contracts/run_native_render_dispatch_receipt_test.py
+@@ -3,7 +3,7 @@
+ from pathlib import Path
+ root=Path(__file__).resolve().parents[2];out=Path('/tmp/bar-render-dispatch-receipt');out.mkdir(exist_ok=True)
+ s=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text().split('Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldRenderer::DrawPrepared(',1)[0]
+-worker=s.split('impl->cpuJob->Submit(worker,',1)[1].split('FinishCPUWork();',1)[0]
++worker=s.split('impl->cpuJob->Submit(worker,',1)[1].split('FinishCPUWork(NativeCPUFinishReason::JoinedFallback);',1)[0]
+ capture=worker.split(']() mutable',1)[0]
+ assert '&' not in capture
+ assert 'dispatchReceipt,deferredReceipt=std::move(deferredReceipt)' in capture
+@@ -11,7 +11,7 @@
+ assert s.index('make_shared<NativeRenderDispatchReceipt>')<s.index('dispatchReceipt->Reserve')<s.index('cacheAccess.reset(); // Reservation')<s.index('impl->cpuJob->Submit(worker,')
+ settlement=(root/'rts/Rendering/Backend/NativeRenderJobSettlement.h').read_text().split(' void Finish(){',1)[1]
+ assert settlement.index('task->Join()')<settlement.index('task.reset();receipt->ReleaseHandoff();')<settlement.index('try{target();}')<settlement.index('receipt->DeliverRetirement();')
+-assert 'FinishCPUWork();\n  auto result=impl->cpuJob->Consume();' in s
++assert 'FinishCPUWork(NativeCPUFinishReason::JoinedFallback);\n  auto result=impl->cpuJob->Consume();' in s
+ subprocess.run(['g++','-std=c++23','-pthread','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),str(Path(__file__).with_name('TestNativeRenderDispatchReceipt.cpp')),'-o',str(out/'test')],check=True)
+ subprocess.run([str(out/'test')],check=True,timeout=40,env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'})
+ print('Owned worker wiring checked structurally; Begin-ready pilot uses same exact receipts; no native execution')
+--- a/tools/metal4-contracts/run_native_render_job_settlement_test.py
++++ b/tools/metal4-contracts/run_native_render_job_settlement_test.py
+@@ -4,11 +4,11 @@
+ root=Path(__file__).resolve().parents[2];out=Path('/tmp/bar-render-job-settlement');out.mkdir(exist_ok=True)
+ s=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
+ a=s.split('Metal4WorldRenderer::DrawDispatch(',1)[1].split('Metal4WorldRenderer::DrawPrepared(',1)[0]
+-assert a.index('FinishCPUWork();')<a.index('cacheAccess.emplace')
++assert a.index('FinishCPUWork(NativeCPUFinishReason::DispatchPrior);')<a.index('cacheAccess.emplace')
+ assert 'impl->cpuJob->Submit(worker,' in a
+-assert a.index('FinishCPUWork();',a.index('impl->cpuJob->Submit'))<a.index('impl->cpuJob->Consume()')
+-scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text().split('void RequireRetiredGPUWork()',1)[1]
+-assert scene.index('FinishCPUWork()')<scene.index('Metal4RendererCanSafelyDetachSurface()')
++assert a.index('FinishCPUWork(NativeCPUFinishReason::JoinedFallback);',a.index('impl->cpuJob->Submit'))<a.index('impl->cpuJob->Consume()')
++scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text().split('void RequireRetiredGPUWork(',1)[1]
++assert scene.index('FinishCPUWork(reason)')<scene.index('Metal4RendererCanSafelyDetachSurface()')
+ pbr=(root/'rts/Rendering/Metal4/Metal4PBRSourceService.mm').read_text().split('services.compile=',1)[1]
+ assert pbr.index('finishCPU();')<pbr.index('NativeRendererAccessGate::Scope')
+ assert '[owner=impl.get()]{owner->FinishCPUWork();}' in s
+--- a/tools/metal4-contracts/run_native_source_frame_credits_test.py
++++ b/tools/metal4-contracts/run_native_source_frame_credits_test.py
+@@ -6,7 +6,7 @@
+ assert game.index('AcquireWorldFrameCredit(globalRendering->drawFrame)')<game.index('nativeUI.BeginFrame')
+ assert 'std::move(luaSnowFrame),nativeFrameCredit)' in game
+ scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
+-retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
++retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork(',1)[0]
+ assert retire.index('sourceCredits.ValidateHeld')<retire.index('ValidateHeldFrame')<retire.index('RetireCompletedFrame')<retire.index('sourceCredits.ReleaseHeld')
+ record=scene.split('struct ScenePendingAdmission {',1)[1].split('void CompleteDynamicCapture',1)[0]
+ assert record.index('sourceCredits.Hold')<record.index('source->Take')<record.index('TransferValidated')

@@ -1,0 +1,20 @@
+COMMAND ['xcodebuild', '-version']
+Xcode 27.2
+Build version 27B52
+COMMAND ['xcrun', '--show-sdk-path']
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+COMMAND ['xcrun', 'clang++', '--version']
+Apple clang version 21.0.0 (clang-2100.4.1.1)
+Target: arm64-apple-darwin27.3.0
+Thread model: posix
+InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+COMMAND ['cmake', '--version']
+cmake version 4.5.0
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+COMMAND ['ninja', '--version']
+1.13.2
+COMMAND ['sw_vers']
+ProductName:		macOS
+ProductVersion:		27.3
+BuildVersion:		26C5035r

@@ -1,0 +1,19 @@
+{
+  "original": "<MANAGEMENT_WORK>/work/native-foreground-handoff-v1.11.2/integrated01/runtime-fixture",
+  "originalHashes": {
+    "check-install.py": "b9076b9f7aeb0b0640bf70eebf7c2b8d8447994358e3e09488ae5b10035dbca2",
+    "lobby-smoke.mjs": "021eeac0b8de25efee622167bf665ff16993943467f6fcfaa03c2dd5c7f13831",
+    "close-owned-lobby.mjs": "b1d968d2118ec0a9728c82728b4680d2aacf3405f1134be2f853ef383890270e",
+    "acceptance.lua": "943cb035debd7baa3c2787fa7cc0f0a6ce0f843100491a64ff1752b80ea280e8"
+  },
+  "localHashes": {
+    "run-release-first-issue.py": "825827f1fc95166e51133b96f4ff1a22834b1c40f5e3551606c2226c43f0fe74",
+    "run-release.py": "5ba45f978fe77be773acf16044088668d06145d5cee2fe7858846a1722d25a68",
+    "acceptance.lua": "e11ea2410255948c13d2c468f4cbbac6295c893dfb8e52e16ee074ce750d0290",
+    "close-owned-lobby.mjs": "b1d968d2118ec0a9728c82728b4680d2aacf3405f1134be2f853ef383890270e",
+    "lobby-smoke.mjs": "021eeac0b8de25efee622167bf665ff16993943467f6fcfaa03c2dd5c7f13831",
+    "run-release-before-locked-fix.py": "457cb37ce8c0359e83e96c104c893762f9b583d5150e14ffd4e04c1eca2fc020"
+  },
+  "scope": "Final prepared four-case GUI fixture. No applications launched.",
+  "amendmentReason": "Root authorized locked-display foreground NOT_OBSERVABLE classification, preserve raw first2, actual game closed IPC+shutdown+lobby return then graceful outer close; physical samples1 and live MSAA0 remain mandatory. Remaining2 cases only."
+}
