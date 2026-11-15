@@ -1,0 +1,11 @@
+{
+  "shippedProduct": {
+    "variant": "published-release-v1.11.3-prepare-baseline",
+    "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app/Contents/Resources/BAR.app/Contents/Resources/native-engines/development/bin/spring-metal4-scene",
+    "native": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app/Contents/Resources/BAR.app/Contents/Resources/native-engines/development",
+    "sha256": "fcba7e5a2388ee09597a9abe1db4420926c470ca12be5edc41d757e81ee63e11"
+  },
+  "testNative": "$P/runtime/native",
+  "scope": "Private standalone test runtime. Published app and wrapper remain unmodified. Candidate binary pending."
+}

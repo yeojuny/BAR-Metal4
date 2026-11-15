@@ -1,0 +1,19 @@
+{
+  "status": "READY",
+  "utc": "2026-11-15T19:43:45.716852+00:00",
+  "productSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "arms": [
+    {
+      "arm": "D0_OFF",
+      "mode": "ELISION1",
+      "data": "$S/measurement/diagnostic_paced/preparation/private/D0_OFF/state/data",
+      "out": "$S/measurement/diagnostic_paced/preparation/runs/D0_OFF"
+    },
+    {
+      "arm": "D1_ON",
+      "mode": "ELISION1",
+      "data": "$S/measurement/diagnostic_paced/preparation/private/D1_ON/state/data",
+      "out": "$S/measurement/diagnostic_paced/preparation/runs/D1_ON"
+    }
+  ]
+}

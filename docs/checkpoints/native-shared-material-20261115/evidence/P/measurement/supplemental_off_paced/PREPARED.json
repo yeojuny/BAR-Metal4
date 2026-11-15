@@ -1,0 +1,13 @@
+{
+  "status": "READY",
+  "utc": "2026-11-15T18:07:58.574602+00:00",
+  "productSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "arms": [
+    {
+      "arm": "A3_ELISION0_SUPPLEMENTAL",
+      "mode": "ELISION0",
+      "data": "$P/measurement/supplemental_off_paced/preparation/private/A3_ELISION0_SUPPLEMENTAL/state/data",
+      "out": "$P/measurement/supplemental_off_paced/preparation/runs/A3_ELISION0_SUPPLEMENTAL"
+    }
+  ]
+}

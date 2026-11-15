@@ -1,0 +1,18 @@
+{
+  "status": "ONE_SHARED_RECOVERY_CAPTURED",
+  "runs": 1,
+  "statuses": [
+    "FUNCTIONAL_EVIDENCE_CAPTURED"
+  ],
+  "performanceAccepted": false,
+  "FPSCompared": false,
+  "images": [
+    {
+      "kind": "shared-variant",
+      "path": "$Q/measurement/functional_recovery/preparation/runs/F3_SHARED_SEPIA/v2-shared-variant.png",
+      "bytes": 2206367,
+      "sha256": "1fc95a86be9f2bed729eb4f3d5d96b91a9a46f47251e2701334a8b7af7fddf70"
+    }
+  ],
+  "utc": "2026-11-15T19:01:42.225036+00:00"
+}

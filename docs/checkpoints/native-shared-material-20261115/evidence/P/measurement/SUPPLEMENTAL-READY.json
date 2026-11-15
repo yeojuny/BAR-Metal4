@@ -1,0 +1,23 @@
+{
+  "status": "READY_ONE_SUPPLEMENTAL_OFF_NO_GAME",
+  "utc": "2026-11-15T18:08:59.050035+00:00",
+  "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "runnerSHA256": "6d9b9c4959792c420614c4ae6266417c66c83d5070c8029f3ba4993749777529",
+  "originalABBACompletionSHA256": "120fd2e336f73451ee977ad7d7ab8f291d851a06b0973dacdefd7f31ab661738",
+  "sameAsA1StagedChecksumMap": {
+    "LuaUI/Widgets/zzz_native_short_run.lua": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+    "games/bar-commander-control-213c1.sdz": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+    "script.txt": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+    "springsettings.cfg": "e95d62c800193c5fc7cb05cc777d02f1efd5c4908416a6dfc45a02983633b579",
+    "LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+    "LuaUI/Config/BC213.lua": "a18192ce6281848da803b3beeff061cb3a3b3d54ed5ccfb4472f9db65e35f4dd",
+    "LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+    "LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "sameAsA1StagedInputs": true,
+  "currentACPowerMode": 0,
+  "arm": "A3_ELISION0_SUPPLEMENTAL",
+  "pooledWithABBA": false,
+  "gameLaunched": false
+}

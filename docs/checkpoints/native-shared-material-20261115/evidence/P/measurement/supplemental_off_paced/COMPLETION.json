@@ -1,0 +1,11 @@
+{
+  "status": "COMPLETE_ONE_SUPPLEMENTAL_OFF",
+  "runs": 1,
+  "result": "$P/measurement/supplemental_off_paced/preparation/runs/A3_ELISION0_SUPPLEMENTAL/RESULT.json",
+  "meanFPS": 184.58883655768176,
+  "slow1PercentFPS": 133.33333333333331,
+  "previousSamplesPooled": false,
+  "originalABBAUnchanged": true,
+  "validSlowRunsRetained": true,
+  "utc": "2026-11-15T18:10:20.656170+00:00"
+}

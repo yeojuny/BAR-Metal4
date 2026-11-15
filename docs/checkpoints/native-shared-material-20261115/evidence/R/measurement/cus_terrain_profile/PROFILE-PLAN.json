@@ -1,0 +1,41 @@
+{
+  "status": "READY_NO_GAME",
+  "arm": "P1_Q_CUS0",
+  "product": {
+    "variant": "screen-state-elision-standalone-test",
+    "binary": "$Q/runtime/native/bin/spring-metal4-scene",
+    "native": "$Q/runtime/native",
+    "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "sha256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2"
+  },
+  "controllerSHA256": "d29b344f4f4a581170e0576e75148aa93808d2e50d6aa9c2866b74a5768ef4ee",
+  "originalControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+  "controllerChange": "externalProfiles=false to true only; marker at simulation 600",
+  "sepiaWidget": "OFF",
+  "cusPilot": "0",
+  "power": "AC powermode 0 per existing preflight",
+  "runtimeLimiter": "LimitIdleFps=0 and option_limitoffscreenfps=false required",
+  "flags": {
+    "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+    "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+    "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+    "BAR_NATIVE_FRAME_OVERLAP": "1",
+    "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+    "BAR_NATIVE_PREPARE_OVERLAP": "1",
+    "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+    "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+    "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+    "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+    "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": "0",
+    "BAR_NATIVE_FRAME_TRACE": "0",
+    "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+    "MTL_DEBUG_LAYER": "0",
+    "MTL_SHADER_VALIDATION": "0",
+    "BAR_METAL4_SHARED_CUS_PILOT": "0",
+    "BAR_METAL4_SEPIA_PATH": null
+  },
+  "nativeWindow": "BC213 simulation 300..1500; 40 counted seconds; common pacing",
+  "capture": "xcrun xctrace Time Profiler attach owned PID for 15s after sim600 marker",
+  "performanceAccepted": false
+}

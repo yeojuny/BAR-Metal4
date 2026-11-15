@@ -1,0 +1,17 @@
+{
+  "status": "SOURCE_FROZEN_FOR_ROOT_REVIEW",
+  "paths": 28,
+  "nativeTUsSyntaxPassed": [
+    "Metal4CUSSource.mm",
+    "Metal4RuntimeNative.mm",
+    "Metal4PostprocessNative.mm",
+    "Metal4WorldRenderer.mm (actual P recipe on J+overlay)"
+  ],
+  "contractHostAssertions": 23,
+  "legacyPostprocessHostChecks": 38,
+  "noFullEngineBuild": true,
+  "noRuntimeOrGPUValidation": true,
+  "noPerformanceClaim": true,
+  "manifestSHA256": "0af97269a5289a241556f9dfbcc2b411b5a4b78b760fdae1b45d3933ecb693b1",
+  "checkpointSHA256": "3fe34c1d0af8140c6fb64da7a056f3b199de38eff639c3be8d2f398d0de705e4"
+}

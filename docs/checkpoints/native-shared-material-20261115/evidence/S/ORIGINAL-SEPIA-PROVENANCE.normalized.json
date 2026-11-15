@@ -1,0 +1,13 @@
+{
+  "widgetAuthor": "Beherith",
+  "widgetDate": "2023.01.05",
+  "license": "GNU GPL v2 or later",
+  "widgetPool": "$PERFORMANCE_WORK/evidence/release-v1113-prepare-baseline-20261115-01/measurement/screen_paced/preparation/private/S_RELEASE1113_PREPARE/assets/pool/94/695aa01dfa26a4a05f8decb718e2b5.gz",
+  "widgetMD5": "94695aa01dfa26a4a05f8decb718e2b5",
+  "widgetSHA512": "66ae2c235ef17f2da1e371d357996925c630631487b0dabf12caeb1704a5aeb023f924a3be20d8deca8fe99108026df642544294ec964b6fc73d0d5765074e52",
+  "extraction": "Lua long-string first newline removed, matching runtime semantics",
+  "vertexFNV": 16905188423406352921,
+  "fragmentFNV": 17382421314025316268,
+  "adapterOriginal": "<HOME>/Downloads/BAR-Integrated-Pilot-20261114/BAR Integrated Test.app/Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+  "implementation": "Private v2 typed expression AST compiler, generated metadata, generic linked uniform ownership and Sepia shared binding integration; no external GLSL compiler or external contributor implementation imported"
+}

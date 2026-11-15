@@ -1,0 +1,19 @@
+{
+  "status": "READY_NO_GAMES",
+  "utc": "2026-11-15T18:46:45.509689+00:00",
+  "productSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "arms": [
+    {
+      "arm": "F1_OLD_SEPIA",
+      "mode": "old",
+      "data": "$Q/measurement/functional/preparation/private/F1_OLD_SEPIA/state/data",
+      "out": "$Q/measurement/functional/preparation/runs/F1_OLD_SEPIA"
+    },
+    {
+      "arm": "F2_SHARED_SEPIA",
+      "mode": "shared",
+      "data": "$Q/measurement/functional/preparation/private/F2_SHARED_SEPIA/state/data",
+      "out": "$Q/measurement/functional/preparation/runs/F2_SHARED_SEPIA"
+    }
+  ]
+}

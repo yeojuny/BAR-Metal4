@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "baselineFiles": 10227,
+  "candidateFiles": 10227,
+  "changed": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "beforeSHA256": "a882f5f581e31389d6d17af05dcfb44e8933171f0e1d751669aa2cbc4a447f54",
+      "afterSHA256": "85e3d88e1cdc1936b6d14a7de426c2bb88f43b0c384949a7d746e687ffe15763"
+    }
+  ],
+  "patchSHA256": "93119be93a85331e1833bbf8277b988490c1b3bef1355b9800d47bc0f6c045b1"
+}

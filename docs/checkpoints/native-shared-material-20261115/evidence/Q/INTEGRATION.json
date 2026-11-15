@@ -1,0 +1,19 @@
+{
+  "status": "EXACT_FROZEN_PACKET_ON_P",
+  "baseSource": "$P/source/engine",
+  "baseSignedSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "manifestSHA256": "0af97269a5289a241556f9dfbcc2b411b5a4b78b760fdae1b45d3933ecb693b1",
+  "packetPaths": 28,
+  "originalHashesVerifiedAgainstP": true,
+  "wrapperSHA512": "2a2746ca8b7e213e1651c324db58ea466f5640c9110055a49f0025c43f840193088b580bec9e4524395904a62555e5bfc745bba828f66ecd7222ee0031c486fd",
+  "source": "$Q/source/engine",
+  "runtimeEnvironment": {
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+    "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+    "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+    "BAR_NATIVE_FINAL_COLOR_STAGE": "1"
+  },
+  "KIncluded": false,
+  "build": "NOT_STARTED",
+  "runtime": "NOT_STARTED"
+}

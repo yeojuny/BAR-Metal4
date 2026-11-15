@@ -1,0 +1,27 @@
+[
+  {
+    "command": [
+      "xcrun",
+      "clang++",
+      "-std=c++23",
+      "-O1",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-fsanitize=address,undefined",
+      "-I",
+      "$Q/source/engine/rts",
+      "$Q/source/engine/tools/sepia-pilot/test_payload.cpp",
+      "-o",
+      "$Q/host-checks/test_payload"
+    ],
+    "exit": 0
+  },
+  {
+    "command": [
+      "$Q/host-checks/test_payload",
+      "$Q/host-checks/old-shared-variant.metal"
+    ],
+    "exit": 0
+  }
+]

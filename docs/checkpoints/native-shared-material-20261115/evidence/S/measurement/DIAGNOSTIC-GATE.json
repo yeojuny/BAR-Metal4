@@ -1,0 +1,243 @@
+{
+  "status": "PASS",
+  "productSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "utc": "2026-11-15T19:53:35.159913+00:00",
+  "kindCounts": {
+    "D0_POWER1_OFF": {
+      "30": {
+        "records": 23,
+        "countA": 5014,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "31": {
+        "records": 23,
+        "countA": 1357,
+        "countB": 5014,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "32": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "33": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "34": {
+        "records": 23,
+        "countA": 0,
+        "countB": 3959604,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "35": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      }
+    },
+    "D1_POWER1_ON": {
+      "30": {
+        "records": 22,
+        "countA": 4796,
+        "countB": 902,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "31": {
+        "records": 22,
+        "countA": 396,
+        "countB": 3894,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "32": {
+        "records": 22,
+        "countA": 9020,
+        "countB": 4979,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "33": {
+        "records": 22,
+        "countA": 396,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "34": {
+        "records": 22,
+        "countA": 0,
+        "countB": 3588787,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "35": {
+        "records": 22,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      }
+    }
+  },
+  "work": {
+    "offSampledJobs": 23,
+    "onSampledJobs": 22,
+    "requestsPerJobOFF": 218.0,
+    "requestsPerJobON": 218.0,
+    "onHits": 902,
+    "omittedCasts": 9020,
+    "omittedCastsPerJob": 410.0,
+    "positiveCastsPerJobOFF": 59.0,
+    "positiveCastsPerJobON": 18.0,
+    "cachedPositiveEntriesPerJob": 18.0
+  },
+  "visual": "Root opened both native pausedsim1500 PNGs; same terrain/object/range/effect appearance with dynamic clouds/water/pausedtext differences. Prior dark rectangular/blur bands remain; no new visible regression found. Not exact pixel equivalence.",
+  "metalErrors": 0,
+  "traceDrops": 0,
+  "CPUComparison": "NOT_VALID: D0 ACmode1->0; D1 ACmode0. Per-provider stamps are observer-instrumented, not uninstrumented CPU cost.",
+  "wallTiming": "UNAVAILABLE: renderer Clock::now returns{} when NativeCPUTimingInstrumentation compiledOFF. Zero count_a is not zero elapsed work. No rebuild for unused wall diagnostic.",
+  "cleanRequired": {
+    "powerMode": 0,
+    "diagnostics": false,
+    "order": [
+      "OFF",
+      "ON",
+      "ON",
+      "OFF"
+    ]
+  },
+  "engineBuilds": 1
+}

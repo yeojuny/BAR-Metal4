@@ -1,0 +1,32 @@
+{
+  "status": "CLOSED_ON_SHARED_FUNCTIONAL_TIMEOUT",
+  "utc": "2026-11-15T18:53:55.858449+00:00",
+  "oldImages": [
+    {
+      "kind": "old-identity",
+      "path": "$Q/measurement/functional/preparation/runs/F1_OLD_SEPIA/v2-old-identity.png",
+      "bytes": 2008399,
+      "sha256": "8c02b5fcda91647a90c5c594d0b5ff0351f5e635da2b55db799a1c0fa8c01669"
+    }
+  ],
+  "sharedImages": [
+    {
+      "kind": "shared-identity",
+      "path": "$Q/measurement/functional/preparation/runs/F2_SHARED_SEPIA/v2-shared-identity.png",
+      "bytes": 1972501,
+      "sha256": "264183a34de30c2bd4ea14fa90c1d8328dab2c126a846452caf6d8a19e4b70aa"
+    }
+  ],
+  "sharedFailure": "[V2Functional] FAILED_PAUSED_TIMEOUT mode=shared state=await_disabled sim=1500",
+  "sharedLastAction": "widget_disable_requested returned=nil",
+  "sharedVariantImageAbsent": true,
+  "oldNormalExit": true,
+  "sharedNormalExit": true,
+  "oldOwnedGone": true,
+  "sharedOwnedGone": true,
+  "awakeStatus": "RELEASED",
+  "ownCaffeinateAlive": false,
+  "matchingEngineProcesses": [],
+  "retries": 0,
+  "functionalResult": "OLD identity captured; SHARED identity captured; paused relink/variant change unproven due widget disable never observed WG.sepia nil"
+}

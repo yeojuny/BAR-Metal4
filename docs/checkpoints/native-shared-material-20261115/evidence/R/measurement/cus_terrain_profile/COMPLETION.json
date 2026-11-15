@@ -1,0 +1,7 @@
+{
+  "status": "DIAGNOSTIC_CAPTURE_PARTIAL",
+  "arm": "P1_Q_CUS0",
+  "trace": "$R/measurement/cus_terrain_profile/preparation/runs/P1_Q_CUS0/time-profiler.trace",
+  "performanceAccepted": false,
+  "utc": "2026-11-15T19:13:42.696522+00:00"
+}

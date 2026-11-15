@@ -1,0 +1,14 @@
+{
+  "status": "DIAGNOSTIC_REVIEW_REQUIRED",
+  "runs": 2,
+  "performanceAccepted": false,
+  "images": [
+    "$S/measurement/power1/diagnostic_power1_paced/preparation/runs/D0_POWER1_OFF/scene.png",
+    "$S/measurement/power1/diagnostic_power1_paced/preparation/runs/D1_POWER1_ON/scene.png"
+  ],
+  "errors": {
+    "D0_POWER1_OFF": [],
+    "D1_POWER1_ON": []
+  },
+  "utc": "2026-11-15T19:51:57.653054+00:00"
+}

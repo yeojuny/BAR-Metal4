@@ -1,0 +1,22 @@
+[game] {
+    gametype=BAR Commander Control 213c1;
+    mapname=All That Simmers v1.1.1;
+    fixedrngseed=154658555;
+    gameid=30 e5 eb 6a 07 52 5a ed 75 be 57 ce 04 02 e0 eb;
+    ishost=1;
+    myplayername=Player;
+    startpostype=3;
+    [modoptions] {
+        experimentallegionfaction=1;
+        deathmode=neverend;
+    }
+    [allyteam0] { numallies=0; }
+    [team0] {
+        allyteam=0;
+        teamleader=0;
+        side=Armada;
+        startposx=5120;
+        startposz=640;
+    }
+    [player0] { team=0; name=Player; spectator=0; }
+}

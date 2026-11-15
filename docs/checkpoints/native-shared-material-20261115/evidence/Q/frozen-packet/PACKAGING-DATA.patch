@@ -1,0 +1,96 @@
+--- a/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua
++++ b/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua
+@@ -5,10 +5,13 @@
+ local path = "LuaUI/Widgets/gfx_sepia_tone.lua"
+ local text = native and gl.NativeSepiaLoadSource() or VFS.LoadFile(path, VFS.ZIP_ONLY)
+ if type(text) ~= "string" then error("Original Sepia archive source missing") end
+-if native and (VFS.CalculateHash(text, 1) ~= "d6d310eac2f86fed0c4e9108067577a2c337e8b4494ce2667e45d9b810cd2da34ae3b6dd83f2a64102ee78f0c85db71d91f5352030ed8d54d799e19b893a3be8" and VFS.CalculateHash(text, 1) ~= "66ae2c235ef17f2da1e371d357996925c630631487b0dabf12caeb1704a5aeb023f924a3be20d8deca8fe99108026df642544294ec964b6fc73d0d5765074e52") then error("Original Sepia archive source identity changed") end
++local pair = native and gl.NativeSepiaContext() or nil
++if native and not pair.SharedPath and (VFS.CalculateHash(text, 1) ~= "d6d310eac2f86fed0c4e9108067577a2c337e8b4494ce2667e45d9b810cd2da34ae3b6dd83f2a64102ee78f0c85db71d91f5352030ed8d54d799e19b893a3be8" and VFS.CalculateHash(text, 1) ~= "66ae2c235ef17f2da1e371d357996925c630631487b0dabf12caeb1704a5aeb023f924a3be20d8deca8fe99108026df642544294ec964b6fc73d0d5765074e52") then error("Original Sepia archive source identity changed") end
+ local environment = original
+ if native then
+- local pair = gl.NativeSepiaContext()
++ -- GLSL is the offline compiler input; its generated Lua copy and linked native
++ -- admission must match exactly. Old mode continues to consume archive GLSL.
++ local generated = pair.SharedPath and VFS.Include("LuaUI/NativeWidgets/sepia_pilot_program.lua", nil, VFS.RAW_FIRST) or nil
+  local active, texture, blend = nil, nil, false
+  local scope = setmetatable({}, {__index = gl})
+  local function live(program)
+@@ -16,27 +19,27 @@
+  end
+  scope.LuaShader = setmetatable({GetEngineUniformBufferDefs = gl.LuaShader.GetEngineUniformBufferDefs}, {
+   __call = function(_, params, name)
+-   pair.ValidateProgram(params,name)
+-   local p={values={gamma=0,viewPos={0,0},colorR={0,0,0},colorG={0,0,0},colorB={0,0,0}}}
++   if generated then params.vertex=generated.vertex; params.fragment=generated.fragment; params.uniformInt=generated.uniformInt end
++   local p={linked=pair.LinkProgram(params,name)}
+    function p:Initialize() live(self); return true end -- exact pair was compiled before this context became available
+    function p:Activate() live(self); active=self end
+    function p:Deactivate() if active==self then active=nil end end
+-   function p:Finalize() self:Deactivate(); self.deleted=true end
++   function p:Finalize() self:Deactivate(); pair.DeleteProgram(self.linked); self.deleted=true end
+    function p:ActivateWith(fn)
+     self:Activate(); local ok, failure=pcall(fn); self:Deactivate(); if not ok then error(failure) end
+    end
+    function p:SetUniform(name,...)
+-    live(self)
+-    local values={...}
+-    local count=name=="gamma" and 1 or (name=="colorR" or name=="colorG" or name=="colorB") and 3 or 0
+-    if count==0 or select("#",...)~=count then error("Original Sepia uniform changed") end
+-    for i=1,count do if type(values[i])~="number" then error("Sepia uniform is not numeric") end end
+-    self.values[name]=count==1 and values[1] or values
++    live(self); pair.SetUniform(self.linked,name,{...},false)
+    end
+-   function p:SetUniformInt(name,x,y,...)
+-    live(self)
+-    if name~="viewPos" or select("#",...)~=0 or type(x)~="number" or type(y)~="number" then error("Original Sepia integer uniform changed") end
+-    self.values.viewPos={x,y}
++   function p:SetUniformInt(name,...)
++    live(self); pair.SetUniform(self.linked,name,{...},true)
++   end
++   -- Optional ordinary Lua values support additional generated uniforms without
++   -- new native branches. Values are applied at link, never reflected per draw.
++   if generated and generated.uniforms then
++    for name,value in pairs(generated.uniforms) do
++     pair.SetUniform(p.linked,name,value.values,value.integer==true)
++    end
+    end
+    return p
+   end,
+@@ -53,7 +56,7 @@
+    if self.deleted or mode~=GL.TRIANGLES or count~=3 or select("#",...)~=0 or not active or not texture then error("Original Sepia triangle/program/input changed") end
+    live(active)
+    if blend then error("Original Sepia requires blending disabled") end
+-   pair.Draw(active.values,texture,self.vertex,self.index,self.instance)
++   pair.Draw(active.linked,texture,self.vertex,self.index,self.instance)
+   end
+   return vao
+  end
+--- /dev/null
++++ b/data/LuaUI/NativeWidgets/sepia_pilot_program.lua
+@@ -0,0 +1,25 @@
++-- Generated from GLSL by compile_subset.py; Beherith original shader, GPL v2 or later.
++return {vertex=[=[#version 330
++// full screen triangle
++const vec2 vertices[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
++
++void main() {
++	gl_Position = vec4(vertices[gl_VertexID], 0.0, 1.0);
++}
++]=],fragment=[=[#version 330
++
++uniform sampler2D screenCopyTex;
++uniform ivec2 viewPos;
++uniform float gamma;
++// rows of the color matrix: contrast * saturation, blended toward sepia
++uniform vec3 colorR;
++uniform vec3 colorG;
++uniform vec3 colorB;
++
++out vec4 fragColor;
++
++void main() {
++	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma));
++	fragColor = vec4(dot(colorR, color), dot(colorG, color), dot(colorB, color), 1.0);
++}
++]=],uniformInt={["screenCopyTex"]=0}}

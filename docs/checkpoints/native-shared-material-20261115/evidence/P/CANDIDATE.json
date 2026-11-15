@@ -1,0 +1,66 @@
+{
+  "status": "SIGNED_PRIVATE_TEST",
+  "adopted": true,
+  "rawSHA256": "d17c72e6e65c1762a866b1d62fe81888187de062de592c71217fa514dc46ba1f",
+  "signedSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "sourceClosure": "SOURCE-CLOSURE.json",
+  "review": "SOURCE-REVIEW.json",
+  "relocations": [
+    [
+      "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "@loader_path/../lib/libIL.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "@loader_path/../lib/libminizip.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "@loader_path/../lib/libfreetype.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "@loader_path/../lib/libfontconfig.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "@loader_path/../lib/libvorbisfile.3.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "@loader_path/../lib/libvorbis.0.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "@loader_path/../lib/libogg.0.8.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "@loader_path/../lib/libopenal.1.25.2.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "@loader_path/../lib/libSDL3.0.dylib"
+    ]
+  ],
+  "shippedBaselineSHA256": "fcba7e5a2388ee09597a9abe1db4420926c470ca12be5edc41d757e81ee63e11",
+  "engineDefaults": {
+    "screenStateElision": 0
+  },
+  "runtime": "COMPLETE_VALIDATION_AND_CLEAN_ABBA",
+  "product": {
+    "variant": "screen-state-elision-private-test",
+    "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "$P/runtime/native/bin/spring-metal4-scene",
+    "native": "$P/runtime/native",
+    "sha256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+    "publishedPackageReadOnly": true
+  },
+  "disposition": "WORK_REDUCTION_ADOPTED_MEAN_FPS_GAIN_UNESTABLISHED",
+  "finalResult": "$HANDOFF_WORK/outputs/screen-state-elision/RESULT.json",
+  "adoptionScope": "Next private local work only",
+  "executionEnvironmentOverrides": {
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1"
+  },
+  "adoptionRecord": "$HANDOFF_WORK/outputs/screen-state-elision/ADOPTED-LOCAL-BASELINE.json"
+}

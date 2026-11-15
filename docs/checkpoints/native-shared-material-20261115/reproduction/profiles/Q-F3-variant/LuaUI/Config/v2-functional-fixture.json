@@ -1,0 +1,18 @@
+{
+  "mode": "shared",
+  "privateData": "$Q/measurement/functional_recovery/preparation/private/F3_SHARED_SEPIA/state/data",
+  "frozenControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+  "stagedControllerSHA256": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+  "originalWidgetName": "Sepia Tone",
+  "originalWidgetShaderControl": "WG.sepia.setSepia(0.5); shadeUI false",
+  "moduleSelection": "VFS.RAW_FIRST from private profile only in shared mode",
+  "generatedBaseSHA256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9",
+  "privateGeneratedModuleSHA256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212",
+  "privateFunctionalProbeSHA256": "03821516270837d096561862a03a277a1d7499c1280a257b5312705064dbba01",
+  "privateWidgetConfigSHA256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+  "privateSettingsSHA256": "50a8f736cf28d407e509793b490b6afbf12e765c4c19c3b3f67a6854a2ad0ea3",
+  "images": [
+    "v2-shared-variant.png"
+  ],
+  "uniformControl": "Initial private Spring config values only; generated GLSL strings and native source unmodified; relink untested"
+}

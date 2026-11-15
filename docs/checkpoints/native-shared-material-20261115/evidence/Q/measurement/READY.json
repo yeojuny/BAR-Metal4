@@ -1,0 +1,51 @@
+{
+  "status": "READY_TWO_FUNCTIONAL_GAMES_NO_LAUNCH",
+  "utc": "2026-11-15T18:49:13.323130+00:00",
+  "engineSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "runnerSHA256": "ca4dbc72e676324dd5b531035a4dcdafab402057f62a2488d8858d7fd6d7db7a",
+  "assemblerSHA256": "8d4a83e770fe791357236e0110b3932967bc5c5b7e2ebe9f3e5403d9d84a05fc",
+  "probeSHA256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+  "currentACPowerMode": "0",
+  "sameCommonProfileHashes": {
+    "script.txt": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+    "games/bar-commander-control-213c1.sdz": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+    "LuaUI/Widgets/zzz_native_short_run.lua": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+    "LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+    "LuaUI/Widgets/zzz_v2_functional_probe.lua": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83"
+  },
+  "arms": [
+    {
+      "arm": "F1_OLD_SEPIA",
+      "mode": "old",
+      "engineSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+      "controllerSHA256": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+      "profileCommonHashes": {
+        "script.txt": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "games/bar-commander-control-213c1.sdz": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+        "LuaUI/Widgets/zzz_native_short_run.lua": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+        "LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+        "LuaUI/Widgets/zzz_v2_functional_probe.lua": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83"
+      },
+      "uniformFixtureSHA256": null
+    },
+    {
+      "arm": "F2_SHARED_SEPIA",
+      "mode": "shared",
+      "engineSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+      "controllerSHA256": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+      "profileCommonHashes": {
+        "script.txt": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "games/bar-commander-control-213c1.sdz": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+        "LuaUI/Widgets/zzz_native_short_run.lua": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+        "LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+        "LuaUI/Widgets/zzz_v2_functional_probe.lua": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83"
+      },
+      "uniformFixtureSHA256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212"
+    }
+  ],
+  "warmupAndFPS": "observational only; images copied before functional classification",
+  "gamesLaunched": 0
+}

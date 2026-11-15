@@ -1,0 +1,6 @@
+{
+  "arm": "V_ELISION1_IMAGE",
+  "mode": "ELISION1",
+  "error": "Traceback (most recent call last):\n  File \"$P/measurement/run.py\", line 443, in run\n    row = harness.launch(stage, arm, prepared[arm], len(order)-index)\n  File \"$PERFORMANCE_WORK/evidence/bloom217-boundary02/build-recovery01/run/campaign.py\", line 4, in launch\n    from preflight import preflight\n    \n  File \"$P/measurement/run.py\", line 271, in preflight\n    assert \"'AC Power'\" in battery.splitlines()[0] and re.search(r'^\\s*powermode\\s+0\\s*$', settings, re.M)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+  "utc": "2026-11-15T17:51:07.643540+00:00"
+}

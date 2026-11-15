@@ -1,0 +1,43 @@
+{
+  "status": "UNRECOVERABLE_WITH_ESTABLISHED_XCTRACE_EXPORT",
+  "captureReceipt": "$R/measurement/cus_terrain_profile/preparation/runs/P1_Q_CUS0/CAPTURES.json",
+  "captureLog": "$R/measurement/cus_terrain_profile/preparation/runs/P1_Q_CUS0/time-profiler.log",
+  "captureObserved": {
+    "ownedPID": 27370,
+    "captureRequestedSeconds": 15,
+    "logReachedSpecifiedTimeLimit": true,
+    "xctraceExit": "timeout",
+    "tracePresent": true
+  },
+  "offlineExportAttempt": {
+    "command": [
+      "/usr/bin/xcrun",
+      "xctrace",
+      "export",
+      "--input",
+      "$R/measurement/cus_terrain_profile/preparation/runs/P1_Q_CUS0/time-profiler.trace",
+      "--toc",
+      "--output",
+      "$R/outputs/offline-profile/time-profiler-TOC.xml"
+    ],
+    "exitCode": 10,
+    "stderr": "Export failed: Document Missing Template Error",
+    "tocCreated": false
+  },
+  "bundleInspection": {
+    "failedBundleSizeApprox": "48 MB",
+    "present": [
+      "Trace1.run/Attachments/trace-data.atrc",
+      "Trace1.run/RunIssues.storedata"
+    ],
+    "absent": [
+      "form.template",
+      "open.creq",
+      "corespace",
+      "symbols"
+    ],
+    "successfulReference": "$PERFORMANCE_WORK/evidence/combined-critical-path220-profile01/profiles/preparation/runs/P_220/time-profiler.trace"
+  },
+  "attribution": "No exportable Time Profiler table or symbolized call stacks; cannot select a measured current Q CUS/terrain Prepare CPU subpath from this capture.",
+  "actionTaken": "Offline read/export attempt only. No game, build, source edit, or rerun."
+}

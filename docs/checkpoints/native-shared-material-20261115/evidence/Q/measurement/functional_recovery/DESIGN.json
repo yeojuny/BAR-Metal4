@@ -1,0 +1,46 @@
+{
+  "status": "FUNCTIONAL_ONLY",
+  "product": {
+    "variant": "private-v2-sepia-functional",
+    "binary": "$Q/runtime/native/bin/spring-metal4-scene",
+    "native": "$Q/runtime/native",
+    "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "sha256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+    "generatedLayoutSHA256": "46759272628b437f2137650654f06f2a611b0338abc7ae6a7e8671167161b9cf",
+    "nativeWrapperSHA256": "3e43f742c2e69fa98df42564da6b085d71409327f727e4ab2041b21bdf073d37",
+    "generatedModuleSHA256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9"
+  },
+  "order": [
+    [
+      "F3_SHARED_SEPIA",
+      "shared"
+    ]
+  ],
+  "wrapperSHA256": "f35ba814c4b5c1ee3341696d66b96395c0723bd1975b67fd0c1cd09f71790ddd",
+  "originalControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+  "assemblerSHA256": "7ecdbbd1fe316a8919e1fb61eeea62e459cb634e4b5fed28d2a5a1eba5a194c6",
+  "probeSHA256": "03821516270837d096561862a03a277a1d7499c1280a257b5312705064dbba01",
+  "pacing": {
+    "status": "HOST_TEST_PASS_PENDING_REVIEW_RUNTIME",
+    "pauseRequestSimulation": 180,
+    "ackDeadlineSimulation": 240,
+    "resumeMinimumWallSeconds": 10,
+    "countStart": 300,
+    "countEnd": 1500,
+    "originalWallGate": 9.8,
+    "sharedControllerEdits": 0,
+    "removeOnAuthoritativeResumeAck": true,
+    "expectedRealWarmupSeconds": 14,
+    "hashes": {
+      "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+      "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+      "test_warmup_pacing.lua": "85a1607728105dafd8030e8bef4544693a4a688b66e97c0443456a2d88f4d5c9"
+    },
+    "originalControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+    "originalControllerGateLiteral": "assert(warm and Spring.DiffTimers(now,warm)>=9.8,'[MatchedGameplay] FAILED_WARMUP_BEFORE_SIM300')"
+  },
+  "scene": "BC213 sim300..1500 same camera and pause sim1500",
+  "performanceAccepted": false,
+  "cusPilot": "0 both arms",
+  "sourceAndReleaseUnchanged": true
+}

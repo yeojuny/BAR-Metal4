@@ -1,0 +1,28 @@
+{
+  "commands": [
+    [
+      "cmake",
+      "-S",
+      "$S/source/engine",
+      "-B",
+      "$S/build",
+      "-G",
+      "Ninja",
+      "-C",
+      "$S/initial-cache.cmake"
+    ],
+    [
+      "cmake",
+      "--build",
+      "$S/build",
+      "--target",
+      "spring-metal4-scene",
+      "-j8"
+    ]
+  ],
+  "startUTC": "2026-11-15T19:37:13.799279+00:00",
+  "environment": {
+    "PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig"
+  },
+  "initialConfigureFailure": "Missing existing OpenAL pkg-config search directory; no compilation started; restored dependency search path only"
+}

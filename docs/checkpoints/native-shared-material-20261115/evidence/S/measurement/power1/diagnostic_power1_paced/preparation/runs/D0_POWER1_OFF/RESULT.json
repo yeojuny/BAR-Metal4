@@ -1,0 +1,266 @@
+{
+  "run": "D0_POWER1_OFF",
+  "FPS": null,
+  "frameStats": null,
+  "seconds": null,
+  "draws": null,
+  "diagnosticFPSParse": "FAILED_BUT_RAW_PRESERVED",
+  "backend": "OFF",
+  "modelTypeFactsMode": "OFF",
+  "powerWitness": "frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+  "pacingWitness": {
+    "status": "PASS",
+    "events": [
+      {
+        "event": "start",
+        "fields": {
+          "simulation": "1",
+          "wall_seconds": "0.000000000",
+          "state": "waiting"
+        },
+        "raw": "[t=00:00:47.552608][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting"
+      },
+      {
+        "event": "pause_request",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "9.585000038",
+          "state": "pause_requested"
+        },
+        "raw": "[t=00:00:57.137277][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=9.585000038 state=pause_requested"
+      },
+      {
+        "event": "pause_ack",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "9.585000038",
+          "state": "held"
+        },
+        "raw": "[t=00:00:57.137804][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=9.585000038 state=held"
+      },
+      {
+        "event": "resume_request",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.006999969",
+          "state": "resume_requested",
+          "held_seconds": "0.421999991",
+          "held_draws": "30"
+        },
+        "raw": "[t=00:00:57.559562][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.006999969 state=resume_requested held_seconds=0.421999991 held_draws=30"
+      },
+      {
+        "event": "resume_ack",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.020999908",
+          "state": "resumed"
+        },
+        "raw": "[t=00:00:57.573380][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.020999908 state=resumed"
+      },
+      {
+        "event": "removed_before_count",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.020999908"
+        },
+        "raw": "[t=00:00:57.573400][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.020999908"
+      }
+    ],
+    "originalWallGateSeconds": 13.979999542,
+    "moduleSHA256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "widgetSHA256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "releaseWitness": {
+    "mode": "PREPARE",
+    "actualReleaseMode": "PREPARE",
+    "queuedReleaseCount": 1,
+    "release": {
+      "mode": "PREPARE",
+      "eligible": "1",
+      "queued": "1",
+      "simulation": "300",
+      "begin_submission": "0",
+      "begin_prepare_overlap": "0"
+    },
+    "boundaryCount": 1,
+    "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3",
+    "pendingAtPrepareWitness": null,
+    "cpuCreditReclaimWitness": null,
+    "cpuCreditReclaimStatus": "NOT_OBSERVED",
+    "effectiveModeFromActualRelease": true
+  },
+  "screenWitness": {
+    "requestedElision": 1,
+    "finalColorStageActive": true,
+    "h5Mode": 0,
+    "countersEnabled": false,
+    "boundedRecords": 0,
+    "omittedSetters": null,
+    "scope": "bounded value-only receipts; validation run excluded from FPS"
+  },
+  "modelFactsTrace": {
+    "kinds": {
+      "30": {
+        "records": 23,
+        "countA": 5014,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "31": {
+        "records": 23,
+        "countA": 1357,
+        "countB": 5014,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "32": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "33": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "34": {
+        "records": 23,
+        "countA": 0,
+        "countB": 3959604,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "35": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      }
+    },
+    "prepareSamples": 23,
+    "emission": [
+      "buffers=45 start_ns=272879190746541 end_ns=272879196389208 outside_window=1",
+      "buffers=1 start_ns=272880336872250 end_ns=272880338330416 outside_window=1"
+    ],
+    "buffers": [
+      "request=1 job=0 records=17 dropped=0",
+      "request=1 job=1 records=20 dropped=0",
+      "request=2 job=0 records=17 dropped=0",
+      "request=2 job=2 records=20 dropped=0",
+      "request=3 job=0 records=17 dropped=0",
+      "request=3 job=3 records=20 dropped=0",
+      "request=4 job=0 records=17 dropped=0",
+      "request=4 job=4 records=20 dropped=0",
+      "request=5 job=0 records=17 dropped=0",
+      "request=5 job=5 records=20 dropped=0",
+      "request=6 job=0 records=17 dropped=0",
+      "request=6 job=6 records=20 dropped=0",
+      "request=7 job=0 records=17 dropped=0",
+      "request=7 job=7 records=20 dropped=0",
+      "request=8 job=0 records=17 dropped=0",
+      "request=8 job=8 records=20 dropped=0",
+      "request=9 job=0 records=17 dropped=0",
+      "request=9 job=9 records=20 dropped=0",
+      "request=10 job=0 records=17 dropped=0",
+      "request=10 job=10 records=20 dropped=0",
+      "request=11 job=0 records=17 dropped=0",
+      "request=11 job=11 records=20 dropped=0",
+      "request=12 job=0 records=17 dropped=0",
+      "request=12 job=12 records=20 dropped=0",
+      "request=13 job=0 records=17 dropped=0",
+      "request=13 job=13 records=20 dropped=0",
+      "request=14 job=0 records=17 dropped=0",
+      "request=14 job=14 records=20 dropped=0",
+      "request=15 job=0 records=17 dropped=0",
+      "request=15 job=15 records=20 dropped=0",
+      "request=16 job=0 records=17 dropped=0",
+      "request=16 job=16 records=20 dropped=0",
+      "request=17 job=0 records=17 dropped=0",
+      "request=17 job=17 records=20 dropped=0",
+      "request=18 job=0 records=17 dropped=0",
+      "request=18 job=18 records=20 dropped=0",
+      "request=19 job=0 records=17 dropped=0",
+      "request=19 job=19 records=20 dropped=0",
+      "request=20 job=0 records=17 dropped=0",
+      "request=20 job=20 records=20 dropped=0",
+      "request=21 job=0 records=17 dropped=0",
+      "request=21 job=21 records=20 dropped=0",
+      "request=22 job=0 records=17 dropped=0",
+      "request=22 job=22 records=20 dropped=0",
+      "request=23 job=0 records=17 dropped=0",
+      "request=23 job=23 records=20 dropped=0"
+    ],
+    "dropped": 0,
+    "allRecords": 851,
+    "newKindsPresent": true
+  },
+  "performanceAccepted": false,
+  "visualImage": "$S/measurement/power1/diagnostic_power1_paced/preparation/runs/D0_POWER1_OFF/scene.png"
+}

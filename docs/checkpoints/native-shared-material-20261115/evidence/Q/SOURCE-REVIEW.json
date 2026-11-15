@@ -1,0 +1,15 @@
+{
+  "status": "PASS_FOR_BUILD",
+  "reviewer": "existing contract_review",
+  "scope": "FrozenV2+identityexposure/biasvariant+generic admission corrections",
+  "schema": "Source identity/byte size/all field+block+resource values exact, generation nonzero and current compiled owner separately; offset access bounded",
+  "layout": "160bytes; viewPos48/exposure64/bias80/gamma96/rows112,128,144; buffer1/texture0",
+  "lifetimes": "No new GPU owner relative frozen packet; per-draw readiness and ordered provider/lifetime proofs preserved",
+  "policies": [
+    "old/shared front end shared",
+    "old mode also initializes generated shader",
+    "renderer reset requires relink",
+    "runtime output not verified yet"
+  ],
+  "CUSRuntimeThisGate": 0
+}

@@ -1,0 +1,11 @@
+{
+  "status": "STOPPED_ON_FAILURE",
+  "completed": 1,
+  "failure": {
+    "arm": "F2_SHARED_SEPIA",
+    "mode": "shared",
+    "error": "Traceback (most recent call last):\n  File \"$Q/measurement/run.py\", line 296, in run\n    witness=functional_evidence(out,data,plan,row,mode)\n  File \"$Q/measurement/run.py\", line 231, in functional_evidence\n    assert '[MatchedGameplay] FAILED_' not in info and '[V2Functional] FAILED_' not in info\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+    "utc": "2026-11-15T18:53:31.120190+00:00"
+  },
+  "utc": "2026-11-15T18:53:31.120378+00:00"
+}

@@ -1,0 +1,13 @@
+{
+  "status": "READY",
+  "utc": "2026-11-15T19:11:40.534472+00:00",
+  "productSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "arms": [
+    {
+      "arm": "P1_Q_CUS0",
+      "mode": "ELISION1",
+      "data": "$R/measurement/cus_terrain_profile/preparation/private/P1_Q_CUS0/state/data",
+      "out": "$R/measurement/cus_terrain_profile/preparation/runs/P1_Q_CUS0"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "READY_NO_GAMES",
+  "utc": "2026-11-15T18:59:56.204891+00:00",
+  "productSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "arms": [
+    {
+      "arm": "F3_SHARED_SEPIA",
+      "mode": "shared",
+      "data": "$Q/measurement/functional_recovery/preparation/private/F3_SHARED_SEPIA/state/data",
+      "out": "$Q/measurement/functional_recovery/preparation/runs/F3_SHARED_SEPIA"
+    }
+  ]
+}

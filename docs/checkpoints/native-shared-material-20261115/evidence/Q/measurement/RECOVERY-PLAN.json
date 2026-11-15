@@ -1,0 +1,19 @@
+{
+  "status": "INITIAL_CONFIG_F3_PREPARE_NO_GAME",
+  "utc": "2026-11-15T18:57:33.932022+00:00",
+  "engineSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "runner": "$Q/measurement/run_recovery.py",
+  "runnerSHA256": "a0f06d43ad155918c9ae9ebb8feecbc76632b709e8acd23928b9f3cdaf1c1c41",
+  "newCampaign": "functional_recovery",
+  "newArm": "F3_SHARED_SEPIA",
+  "priorF1F2Preserved": true,
+  "newFixtureAssembler": "$Q/measurement/assemble_variant_once_fixture.py",
+  "newProbe": "$Q/measurement/v2_variant_once_widget.lua",
+  "handlerSemantics": "No widget disable/enable or relink in this recovery",
+  "profilesStaged": 0,
+  "gamesLaunched": 0,
+  "hqGO": false,
+  "uniformValues": "exposure1.25 bias0.1,0.2,0.3 from initial private config",
+  "archiveModified": false,
+  "updatedUTC": "2026-11-15T18:59:47.887959+00:00"
+}

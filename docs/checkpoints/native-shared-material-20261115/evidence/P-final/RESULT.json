@@ -1,0 +1,201 @@
+{
+  "status": "COMPLETE_ADOPTED_WORK_REDUCTION_MEAN_FPS_MAINTAINED",
+  "utc": "2026-11-15T18:06:45.296031+00:00",
+  "candidate": "Invocation-local screen render-state setter elision",
+  "candidateSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "buildCount": 1,
+  "sourceDeltaFiles": 1,
+  "runtime": "CLOSED",
+  "acceptedForDefault": true,
+  "testConditions": {
+    "power": "AC powermode0 for all four clean runs",
+    "order": "OFF ON ON OFF",
+    "scene": "BC213 / All That Simmers",
+    "warmup": "same original paced controller, approximately14 wall seconds",
+    "counted": "approximately40 seconds each",
+    "LimitIdleFps": 0,
+    "finalColorStage": 1,
+    "PREPARE": 1,
+    "BEGIN": 0,
+    "traceCountersValidationDuringClean": 0
+  },
+  "runs": [
+    {
+      "run": "A1_ELISION0",
+      "elision": 0,
+      "meanFPS": 184.55922289037989,
+      "onePercentLowFPS": 114.02157129731411,
+      "draws": 7382,
+      "seconds": 39.998001099,
+      "warmupSeconds": 13.975377000000002,
+      "sourceResult": "$P/measurement/clean_paced/preparation/runs/A1_ELISION0/RESULT.json"
+    },
+    {
+      "run": "B1_ELISION1",
+      "elision": 1,
+      "meanFPS": 184.64077303435351,
+      "onePercentLowFPS": 136.53136531365314,
+      "draws": 7386,
+      "seconds": 40.001998901,
+      "warmupSeconds": 13.971044,
+      "sourceResult": "$P/measurement/clean_paced/preparation/runs/B1_ELISION1/RESULT.json"
+    },
+    {
+      "run": "B2_ELISION1",
+      "elision": 1,
+      "meanFPS": 184.83614490438134,
+      "onePercentLowFPS": 140.41745730550284,
+      "draws": 7394,
+      "seconds": 40.002998352,
+      "warmupSeconds": 13.973579999999998,
+      "sourceResult": "$P/measurement/clean_paced/preparation/runs/B2_ELISION1/RESULT.json"
+    },
+    {
+      "run": "A2_ELISION0",
+      "elision": 0,
+      "meanFPS": 184.84076304034795,
+      "onePercentLowFPS": 138.3177570093458,
+      "draws": 7394,
+      "seconds": 40.001998901,
+      "warmupSeconds": 13.972048999999998,
+      "sourceResult": "$P/measurement/clean_paced/preparation/runs/A2_ELISION0/RESULT.json"
+    }
+  ],
+  "pooled": {
+    "ELISION0": {
+      "FPS": 184.7,
+      "samples": 14774,
+      "p99Ms": 6.0,
+      "slow1PercentFPS": 123.74581919106052,
+      "maximumMs": 16.000001,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0
+    },
+    "ELISION1": {
+      "FPS": 184.73846018969502,
+      "samples": 14778,
+      "p99Ms": 6.0,
+      "slow1PercentFPS": 138.44714686623013,
+      "maximumMs": 14.0,
+      "over16_667ms": 0,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0
+    }
+  },
+  "meanChangePercent": 0.02082305884949509,
+  "interpretation": "Mean FPS is effectively unchanged in this four-run scene. Structural API setter reduction is proven, but is not a demonstrated mean-FPS optimization. Pooled 1% low is higher with ON; the first OFF low is much lower than the final OFF low, so a repeatable low-FPS benefit is not established. All valid runs are retained.",
+  "correctness": {
+    "detectedMetalErrors": 0,
+    "normalExit": true,
+    "performanceAccepted": false,
+    "rawValidationFPS": 68.39315791941465,
+    "power": "ACmode1 during sampled checks; returned to0 after run, exact transition time unknown",
+    "screenStateWitness": {
+      "requestedElision": 1,
+      "finalColorStageActive": true,
+      "h5Mode": 0,
+      "countersEnabled": true,
+      "boundedRecords": 64,
+      "omittedSetters": {
+        "omitted_cull": 2272,
+        "omitted_depth": 2080,
+        "omitted_stencil": 2176,
+        "omitted_viewport": 2144,
+        "omitted_scissor": 2176,
+        "omitted_depthclip": 2208,
+        "omitted_pipeline": 1568
+      },
+      "scope": "bounded value-only receipts; validation run excluded from FPS"
+    },
+    "imageReview": {
+      "status": "REPRESENTATIVE_STILL_NO_NEW_VISIBLE_REGRESSION",
+      "reviewers": [
+        "performance root",
+        "HQ root"
+      ],
+      "baseline": "current-v1113-baseline/scene.png",
+      "candidate": "$P/measurement/validation_paced_power1/preparation/runs/V_POWER1_ELISION1_IMAGE/scene.png",
+      "observations": "Same terrain, rocks, trees, unit placement and range rings. Animated clouds/water and GAME PAUSED position differ. Existing dark/blur rectangular bands occur in both.",
+      "limits": "Visual inspection of representative still only; no all-frame parity or final-color0 equivalence claim. Numeric pixel comparison not performed because optional PIL was unavailable; no dependencies installed."
+    }
+  },
+  "preservedEvents": [
+    {
+      "event": "Initial AC0 validation stopped before launch because actual ACmode1",
+      "gameCount": 0,
+      "record": "$P/measurement/validation_paced/COMPLETION.json"
+    },
+    {
+      "event": "ACmode1 correctness completed and retained separately; no mode1 clean games",
+      "record": "$P/measurement/OWNER-CLOSED-VALIDATION-POWER1.json"
+    },
+    {
+      "event": "User confirmed normalmode0; prior correctness reused after visual review; existing four AC0 profiles used, extra validation omitted"
+    }
+  ],
+  "historical184FPSBaselinePooled": false,
+  "noRetriesOrDiscardedValidRuns": true,
+  "ownedProcessesRemaining": 0,
+  "awakeReleased": true,
+  "rawOwnerClosure": "$P/measurement/OWNER-CLOSED-CLEAN-AC0.json",
+  "supplementalOFF": {
+    "requestedByUser": true,
+    "games": 1,
+    "meanFPS": 184.58883655768176,
+    "onePercentLowFPS": 133.33333333333331,
+    "warmupSeconds": 13.975000381,
+    "countedSeconds": 39.997001648,
+    "originalABBAUnchanged": true,
+    "pooledIntoOriginalABBA": false,
+    "receipt": "$HANDOFF_WORK/outputs/screen-state-elision/SUPPLEMENTAL-OFF.json",
+    "sourceResult": "$P/measurement/supplemental_off_paced/preparation/runs/A3_ELISION0_SUPPLEMENTAL/RESULT.json"
+  },
+  "additionalInterpretation": "The supplementary OFF low133.33 did not reproduce first OFF114.02; final original OFF was138.32. Do not attribute the original pooled low difference to elision. Original ABBA mean conclusion remains unchanged.",
+  "tailAnalysis": {
+    "artifact": "$HANDOFF_WORK/outputs/screen-state-elision/tail-analysis/ANALYSIS.json",
+    "reproduction": "$HANDOFF_WORK/outputs/screen-state-elision/tail-analysis/analyze.py",
+    "metric": "Reciprocal mean of ceil(1%N)=74 slowest positive finite CPU-observed frame intervals per run.",
+    "OFFAtLeast8msFrames": {
+      "A1": 49,
+      "A2": 13,
+      "A3": 15
+    },
+    "A1Clusters": "13 consecutive intervals >=8ms near counted second1, and 11 near counted seconds14–15; two distinct bursts, not one 24-frame burst.",
+    "checks": "CSV hashes, finite/positive values, N=draws-1, sim300–1500/40 samples, matched pacing and13.972–13.976s warmup all verified.",
+    "conclusion": "Heavier A1 slow tail accounts for its lower numeric1%low. The recorded data does not establish the underlying cause or an ON-only benefit. A3 remains separate and originalA1 retained."
+  },
+  "adoptionScope": "Next private local work only; explicit environment flag1, compiled default remains0",
+  "adoption": {
+    "status": "ADOPTED_FOR_NEXT_LOCAL_WORK",
+    "utc": "2026-11-15T18:22:37.781554+00:00",
+    "basis": "User explicitly chose adoption based on proven setter reduction, representative visual/Metal validation pass, and maintained mean FPS.",
+    "scope": "Private local optimization baseline only; not public release or original pin promotion.",
+    "engine": "$P/runtime/native/bin/spring-metal4-scene",
+    "sha256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+    "source": "$P/source/engine",
+    "environmentOverrides": {
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1"
+    },
+    "engineCompiledDefault": 0,
+    "rebuildRequired": false,
+    "meanFPSGainEstablished": false,
+    "originalABBAAndSupplementPreserved": true,
+    "additionalOFFAnalysisOrGames": "STOPPED",
+    "next": "Wait for HQ frozen V2 source/review packet; integrate one private candidate on P with explicit ELISION1. K excluded. No build or runtime before packet; runtime requires fresh isolation ACK."
+  },
+  "decisionHistory": [
+    {
+      "record": "$HANDOFF_WORK/outputs/screen-state-elision/RESULT.before-local-adoption.json",
+      "decision": "Not adopted based on lack of established mean-FPS gain; superseded by explicit user adoption of work reduction."
+    },
+    {
+      "utc": "2026-11-15T18:22:37.781554+00:00",
+      "decision": "Adopt for next local work with ELISION1; measured mean +0.0208% remains unestablished as a performance gain."
+    }
+  ],
+  "compiledEngineDefaultFlag": 0,
+  "nextLocalExecutionFlag": 1
+}

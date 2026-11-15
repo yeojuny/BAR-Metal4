@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+
+<trace-toc>
+    <run number="1">
+        <info>
+            <target>
+                <device platform="macOS" model="MacBook Pro" memory-size="25769803776" name="Yeo-Jun의 MacBook Pro" os-version="27.3 (26C5035r)" uuid="97CE3646-174E-56B3-ACE0-57A9186129F6"/>
+                <process type="attached" return-exit-status="0" name="spring-metal4-scene" pid="28830" termination-reason="exit(0)"/>
+                <environment>
+                    <item key="LIBRARY_PATH" value="/usr/local/lib"/>
+                    <item key="_CE_M" value=""/>
+                    <item key="BAR_NATIVE_INTERVENTION_RENDER_WORKER" value="1"/>
+                    <item key="BAR_NATIVE_FRAME_TRACE" value="0"/>
+                    <item key="CONDA_DEFAULT_ENV" value="base"/>
+                    <item key="BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS" value="0"/>
+                    <item key="BAR_NATIVE_BEGIN_READY_PILOT" value="0"/>
+                    <item key="BAR_NATIVE_PREPARE_OVERLAP" value="1"/>
+                    <item key="BAR_NATIVE_COMPILER_MEMORY" value="0"/>
+                    <item key="CODEX_APPLY_PATCH_PRESERVE_LINE_ENDINGS" value="1"/>
+                    <item key="SPRING_DATADIR" value="$Q/runtime/native/data:$R/measurement/p2/cus_terrain_profile_p2/preparation/private/P2_Q_CUS0/assets"/>
+                    <item key="MANPATH" value="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/share/man:/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/usr/share/man:/Applications/Xcode.app/Contents/Developer/usr/share/man:/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man:"/>
+                    <item key="NO_COLOR" value="1"/>
+                    <item key="NODE_REPL_TRUSTED_BROWSER_CLIENT_SHA256S" value="9230e2bd8b24b7ac7a0ba6774c64bf0d78ecdabbdd91d0ed627b02a587bae2df"/>
+                    <item key="BAR_NATIVE_BEGIN_PREPARE_OVERLAP" value="1"/>
+                    <item key="security_config" value="0x0"/>
+                    <item key="BAR_NATIVE_FRAME_OVERLAP" value="1"/>
+                    <item key="OLDPWD" value="$HANDOFF_WORK"/>
+                    <item key="BAR_NATIVE_RETAINED_FONT170" value="1"/>
+                    <item key="BAR_NATIVE_PASS_COST136_FILE" value=""/>
+                    <item key="FPATH" value="<HOME>/.oh-my-zsh/plugins/git:<HOME>/.oh-my-zsh/functions:<HOME>/.oh-my-zsh/completions:<HOME>/.oh-my-zsh/custom/functions:<HOME>/.oh-my-zsh/custom/completions:/opt/homebrew/share/zsh/site-functions:<HOME>/.oh-my-zsh/plugins/git:<HOME>/.oh-my-zsh/functions:<HOME>/.oh-my-zsh/completions:<HOME>/.oh-my-zsh/custom/functions:<HOME>/.oh-my-zsh/custom/completions:<HOME>/.oh-my-zsh/cache/completions:/opt/homebrew/share/zsh/site-functions:/usr/local/share/zsh/site-functions:/usr/share/zsh/site-functions:/usr/share/zsh/5.9/functions"/>
+                    <item key="PYENV_ROOT" value="<HOME>/.pyenv"/>
+                    <item key="BAR_NATIVE_PUBLICATION_TRACE" value="0"/>
+                    <item key="SHELL" value="/bin/zsh"/>
+                    <item key="CODEX_SHELL" value="1"/>
+                    <item key="CODEX_INTERNAL_ORIGINATOR_OVERRIDE" value="Codex Desktop"/>
+                    <item key="_" value="/usr/bin/python3"/>
+                    <item key="SHLVL" value="1"/>
+                    <item key="HOMEBREW_CELLAR" value="/opt/homebrew/Cellar"/>
+                    <item key="BAR_NATIVE_HOST_COST_TRACE" value="0"/>
+                    <item key="BAR_NATIVE_HEAP_COLLECT" value="0"/>
+                    <item key="BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE" value=""/>
+                    <item key="BAR_NATIVE_PASS165" value="1"/>
+                    <item key="LESS" value="-R"/>
+                    <item key="BAR_NATIVE_PASS160" value="1"/>
+                    <item key="CONDA_EXE" value="/opt/anaconda3/bin/conda"/>
+                    <item key="USER" value="yeojun"/>
+                    <item key="LOG_FORMAT" value="json"/>
+                    <item key="CODEX_VERSION" value="0.169.0-alpha.11.1"/>
+                    <item key="RUST_LOG" value="warn"/>
+                    <item key="BAR_NATIVE_SCREEN_TABLE_H5" value="0"/>
+                    <item key="GH_PAGER" value="cat"/>
+                    <item key="INFOPATH" value="/opt/homebrew/share/info:/opt/homebrew/share/info:"/>
+                    <item key="BAR_NATIVE_FRAME_TRACE_EVERY_LOOP" value="0"/>
+                    <item key="HOMEBREW_PREFIX" value="/opt/homebrew"/>
+                    <item key="DISPLAY" value="/var/run/com.apple.launchd.Sc1fIKzd7G/org.xquartz:0"/>
+                    <item key="MTL_SHADER_VALIDATION" value="0"/>
+                    <item key="CONDA_PREFIX" value="/opt/anaconda3"/>
+                    <item key="BAR_NATIVE_RESOURCE_PROBE_FILE" value=""/>
+                    <item key="executable_cdhash" value="a4c83419315a86ebd93303ab24699e81403fd8bb"/>
+                    <item key="BROWSER_USE_ACCESS_PIPE_PATH" value="/tmp/codex-app-tools/d03fbcb0-fe14-425d-bde9-e2d2c8072d13.sock"/>
+                    <item key="th_port" value=""/>
+                    <item key="BAR_NATIVE_COMMON_LINE_PROBE_FILE" value=""/>
+                    <item key="BAR_ASSETS_PATH" value="$R/measurement/p2/cus_terrain_profile_p2/preparation/private/P2_Q_CUS0/assets"/>
+                    <item key="BAR_METAL4_SHARED_CUS_PILOT" value="0"/>
+                    <item key="BAR_NATIVE_SUBMISSION_TRACE" value="0"/>
+                    <item key="TERM" value="dumb"/>
+                    <item key="SDKROOT" value="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"/>
+                    <item key="BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE" value=""/>
+                    <item key="OSLogRateLimit" value="64"/>
+                    <item key="CODEX_APP_TOOLS_PIPE_PATH" value="/tmp/codex-app-tools/d03fbcb0-fe14-425d-bde9-e2d2c8072d13.sock"/>
+                    <item key="__CF_USER_TEXT_ENCODING" value="0x1F5:0x0:0x0"/>
+                    <item key="CODEX_SAGE_BACKFILL_TRACKER_TAB_REUSE" value="1"/>
+                    <item key="XPC_FLAGS" value="0x0"/>
+                    <item key="BAR_NATIVE_PREPARATION_TRACE" value="0"/>
+                    <item key="BAR_NATIVE_PREPARE_READY_PILOT" value="1"/>
+                    <item key="TMPDIR" value="/var/folders/7c/424lvy2s4xq015b7_swks0ww0000gn/T/"/>
+                    <item key="LC_CTYPE" value="C.UTF-8"/>
+                    <item key="CODEX_MCP_NODE_PATH" value="/Applications/ChatGPT.app/Contents/Resources/cua_node/bin/node"/>
+                    <item key="COMMAND_MODE" value="unix2003"/>
+                    <item key="CODEX_PERMISSION_PROFILE" value=":danger-full-access"/>
+                    <item key="_CE_CONDA" value=""/>
+                    <item key="executable_boothash" value="b7470f822cc8c9aa933f9f928dbf6284e90724ea"/>
+                    <item key="main_stack" value=""/>
+                    <item key="SSH_AUTH_SOCK" value="/var/run/com.apple.launchd.La7OuaOZ3Y/Listeners"/>
+                    <item key="GSETTINGS_SCHEMA_DIR_CONDA_BACKUP" value=""/>
+                    <item key="LANG" value="C.UTF-8"/>
+                    <item key="PYENV_SHELL" value="zsh"/>
+                    <item key="BAR_NATIVE_PASS166" value="1"/>
+                    <item key="CODEX_SESSION_ID" value="01a1db70-1d19-7892-a846-3e57a90aad50"/>
+                    <item key="PATH" value="/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:<HOME>/.pyenv/shims:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/opt/X11/bin:/Library/Apple/usr/bin:<HOME>/.codex/tmp/arg0-macos/codex-arg04cspQm:/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path:<HOME>/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/opt/anaconda3/bin:/opt/anaconda3/condabin:/opt/homebrew/bin:/opt/homebrew/sbin:<HOME>/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources:/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS"/>
+                    <item key="CODEX_TECTONIC_PATH" value="/Applications/ChatGPT.app/Contents/Resources/tectonic/tectonic"/>
+                    <item key="PWD" value="$HANDOFF_WORK"/>
+                    <item key="CONDA_PROMPT_MODIFIER" value="(base) "/>
+                    <item key="BAR_NATIVE_MEMORY_CENSUS" value="0"/>
+                    <item key="DISABLE_AUTO_UPDATE" value="true"/>
+                    <item key="HOME" value="$R/measurement/p2/cus_terrain_profile_p2/preparation/private/P2_Q_CUS0/home"/>
+                    <item key="ZSH_TMUX_AUTOSTART" value="false"/>
+                    <item key="CODEX_THREAD_ID" value="01a1db73-2666-7e63-b14f-4c44bd84fe44"/>
+                    <item key="XPC_SERVICE_NAME" value="0"/>
+                    <item key="BAR_NATIVE_SCREEN_STATE_ELISION" value="1"/>
+                    <item key="dyld_file" value="0x1a01000011,0xfffffff000b5240"/>
+                    <item key="CONDA_SHLVL" value="1"/>
+                    <item key="GIT_PAGER" value="cat"/>
+                    <item key="CODEX_APP_RUNTIME_CLI_PATH" value="/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex"/>
+                    <item key="ZSH_TMUX_AUTOSTARTED" value="true"/>
+                    <item key="BAR_METAL4_EXPERIMENTAL_SINGLEPLAYER" value="1"/>
+                    <item key="BAR_NATIVE_MODEL_TRACE" value="0"/>
+                    <item key="MallocNanoZone" value="0"/>
+                    <item key="GSETTINGS_SCHEMA_DIR" value="/opt/anaconda3/share/glib-2.0/schemas"/>
+                    <item key="BAR_NATIVE_RECORD158" value="1"/>
+                    <item key="CODEX_TOOL_CALL_ID" value="exec-8f82da83-5792-4ec8-bfea-da27cfa76a19"/>
+                    <item key="BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE" value=""/>
+                    <item key="MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING" value="0"/>
+                    <item key="ZSH" value="<HOME>/.oh-my-zsh"/>
+                    <item key="BAR_NATIVE_CAPTURE_READY_BOUNDARY" value="1"/>
+                    <item key="MTL_DEBUG_LAYER" value="0"/>
+                    <item key="executable_file" value="0x1a01000011,0xb7dede0"/>
+                    <item key="ptr_munge" value=""/>
+                    <item key="LC_ALL" value="C.UTF-8"/>
+                    <item key="LOGNAME" value="yeojun"/>
+                    <item key="BAR_NATIVE_CAPTURE_OVERLAP" value="1"/>
+                    <item key="BROWSER_USE_ACCESS_EXECUTOR_ID" value="[&quot;6abe58df-d351-4cba-992c-c816884aa861&quot;,&quot;native-browser-plugin&quot;]"/>
+                    <item key="BAR_NATIVE_FINAL_COLOR_STAGE" value="1"/>
+                    <item key="BAR_STATE_PATH" value="$R/measurement/p2/cus_terrain_profile_p2/preparation/private/P2_Q_CUS0/state"/>
+                    <item key="BAR_NATIVE_VBO_COPY_TRACE" value="0"/>
+                    <item key="CONDA_PYTHON_EXE" value="/opt/anaconda3/bin/python"/>
+                    <item key="CODEX_CI" value="1"/>
+                    <item key="LSCOLORS" value="Gxfxcxdxbxegedabagacad"/>
+                    <item key="BAR_NATIVE_LARGE_HEAP" value="0"/>
+                    <item key="HOMEBREW_REPOSITORY" value="/opt/homebrew"/>
+                    <item key="BAR_NATIVE_HEAP_STATS" value="0"/>
+                    <item key="PAGER" value="less"/>
+                    <item key="CPATH" value="/usr/local/include"/>
+                    <item key="BAR_MACOS_TARGET_DISPLAY" value="0,0,1512,982"/>
+                    <item key="COLORTERM" value=""/>
+                </environment>
+            </target>
+            <summary>
+                <start-date>2026-11-15T11:17:09.277-08:00</start-date>
+                <end-date>2026-11-15T11:17:25.129-08:00</end-date>
+                <duration>15.852025</duration>
+                <end-reason>Time limit reached</end-reason>
+                <instruments-version>27.2 (27B52)</instruments-version>
+                <template-name>Time Profiler</template-name>
+                <recording-mode>Deferred</recording-mode>
+                <time-limit>15 seconds</time-limit>
+                <intruments-recording-settings>
+                    <instrument name="Hangs">
+                        <options>
+                            <option key="Reporting Threshold" value="Include Microhangs (&gt;250ms)"/>
+                        </options>
+                    </instrument>
+                </intruments-recording-settings>
+            </summary>
+        </info>
+        <processes>
+            <process name="spring-metal4-scene" pid="28830" path="$Q/runtime/native/bin/spring-metal4-scene"/>
+            <process name="kernel" pid="0" path="/System/Library/Kernels/kernel.release.t6041"/>
+        </processes>
+        <data>
+            <table schema="tick" frequency="10" documentation="Provides modelers with a regular reference time for modeling fixed time-based statistics. The ticks are evenly spaced with a configurable frequency specifying the number of events to generate per second, so a tick schema with a frequency of 10 will generate a row every 100ms."/>
+            <table swift-table="&quot;any_AnalysisCoreTable(value: InstrumentsPlugIn.SystemCPUUsage(dataSource: InstrumentsPlugIn.CPUUsageModeling(profileTable: LegacyTableBridge.LegacyTables.Sampling.TimeProfiles(mustTargetAllProcesses: false, highFrequencySampling: false, needsKernelCallstack: false, recordWaitingThreads: false, contextSwitchSampling: false), bucketStart: 0, systemWeight: 0, processWeight: [:], threadWeight: [:], threadProcess: [:])))&quot;" schema="SystemCPUUsage"/>
+            <table schema="life-cycle-period" target-pid="SINGLE" documentation="Identifies where an application is in its lifecycle."/>
+            <table schema="tick" frequency="1" documentation="Provides modelers with a regular reference time for modeling fixed time-based statistics. The ticks are evenly spaced with a configurable frequency specifying the number of events to generate per second, so a tick schema with a frequency of 10 will generate a row every 100ms."/>
+            <table swift-table="&quot;any_AnalysisCoreTable(value: InstrumentsPlugIn.ProcessCPUUsage(dataSource: InstrumentsPlugIn.CPUUsageModeling(profileTable: LegacyTableBridge.LegacyTables.Sampling.TimeProfiles(mustTargetAllProcesses: false, highFrequencySampling: false, needsKernelCallstack: false, recordWaitingThreads: false, contextSwitchSampling: false), bucketStart: 0, systemWeight: 0, processWeight: [:], threadWeight: [:], threadProcess: [:])))&quot;" schema="ProcessCPUUsage"/>
+            <table schema="tick" frequency="100" documentation="Provides modelers with a regular reference time for modeling fixed time-based statistics. The ticks are evenly spaced with a configurable frequency specifying the number of events to generate per second, so a tick schema with a frequency of 10 will generate a row every 100ms."/>
+            <table swift-table="&quot;any_AnalysisCoreTable(value: InstrumentsPlugIn.StateReportingIntervals())&quot;" schema="StateReportingIntervals" documentation="Tracks named application states, volatile updates, and rate-limit windows reported via the State Reporting API, per process and domain"/>
+            <table schema="device-thermal-state-intervals" documentation="Denotes the current thermal state of the device."/>
+            <table schema="os-log" category="PointsOfInterest" target-pid="SINGLE" documentation="Holds a message from the OS's Unified Logging and Tracing component."/>
+            <table schema="os-signpost" category="PointsOfInterest" target-pid="SINGLE" documentation="Holds a signpost event from the OS's Unified Logging and Tracing component."/>
+            <table schema="os-signpost" subsystem="&quot;com.apple.StateReporting.Volatile&quot; &quot;com.apple.StateReporting.Transition&quot; &quot;com.apple.StateReporting.Heartbeat&quot;" target-pid="ALL" documentation="Holds a signpost event from the OS's Unified Logging and Tracing component."/>
+            <table target-pid="SINGLE" dynamic-tracing-enabled-subsystems="&quot;com.apple.neappprivacy&quot;" category="PointsOfInterest" schema="os-signpost" documentation="Holds a signpost event from the OS's Unified Logging and Tracing component."/>
+            <table enable-priority-inversion-detection="0" target-pid="SINGLE" message-type="Fault" schema="os-log" category="&quot;Hang Risk&quot; &quot;Severe Hang Risk&quot; CFNetwork Contacts CoreML" subsystem="&quot;com.apple.runtime-issues&quot;" documentation="Holds a message from the OS's Unified Logging and Tracing component."/>
+            <table schema="os-signpost" category="InduceCondition" subsystem="&quot;com.apple.ConditionInducer.LowSeverity&quot;" documentation="Holds a signpost event from the OS's Unified Logging and Tracing component."/>
+            <table schema="hang-risks" detect-priority-inversions="0" target-pid="SINGLE"/>
+            <table hangs-threshold="250" schema="potential-hangs" target-pid="SINGLE"/>
+            <table target-pid="SINGLE" context-switch-sampling="0" high-frequency-sampling="0" schema="time-profile" needs-kernel-callstack="0" record-waiting-threads="0" documentation="When combined with other time-profile samples, creates a statistical picture of where your application is spending its time."/>
+            <table swift-table="&quot;any_AnalysisCoreTable(value: InstrumentsPlugIn.PointsOfInterestEvents(excludeOSLogs: false, mustTargetAllProcesses: false))&quot;" schema="PointsOfInterestEvents"/>
+            <table codes="&quot;33,0x11&quot;" target="SINGLE" schema="kdebug-strings" documentation="Associates numeric arguments with strings in kdebug trace points."/>
+            <table schema="process-info" documentation="Associates processes with their process names."/>
+            <table schema="dyld-library-load" target-pid="SINGLE"/>
+            <table codes="&quot;0x1f,0x05&quot;" target="SINGLE" schema="kdebug-strings" documentation="Associates numeric arguments with strings in kdebug trace points."/>
+            <table codes="&quot;33,0x11&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x1,0x25&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x07,0x00&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x2d,*&quot;" schema="kdebug" callstack="user" target="SINGLE" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x31,0xca&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x1f,0x7&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x2b,0xd8&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x2b,0xdc&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x2b,0x87&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x2b,0x65&quot;" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table codes="&quot;0x07,0x00&quot; &quot;0x1f,0x05&quot;" target="SINGLE" schema="kdebug" documentation="Tracing the kernel and some system frameworks."/>
+            <table swift-table="&quot;any_AnalysisCoreTable(value: InstrumentsPlugIn.OSSignpostIntervals(layoutScope: InstrumentsPlugIn.OSSignpostLayoutScope.name, categories: Set([\&quot;PointsOfInterest\&quot;]), mustTargetAllProcesses: false))&quot;" schema="OSSignpostIntervals"/>
+            <table swift-table="&quot;any_AnalysisCoreTable(value: InstrumentsPlugIn.ThreadCPUUsage(dataSource: InstrumentsPlugIn.CPUUsageModeling(profileTable: LegacyTableBridge.LegacyTables.Sampling.TimeProfiles(mustTargetAllProcesses: false, highFrequencySampling: false, needsKernelCallstack: false, recordWaitingThreads: false, contextSwitchSampling: false), bucketStart: 0, systemWeight: 0, processWeight: [:], threadWeight: [:], threadProcess: [:])))&quot;" schema="ThreadCPUUsage"/>
+            <table schema="thread-info" documentation="Associates threads with their owning process."/>
+            <table schema="runloop-events" target-pid="SINGLE"/>
+            <table schema="os-signpost-arg" category="PointsOfInterest" target-pid="SINGLE" documentation="Holds a signpost metadata argument from the OS's Unified Logging and Tracing component."/>
+            <table sample-rate-micro-seconds="1000" target="SINGLE" schema="time-sample" callstack="user" all-thread-states="NO" documentation="Holds a raw CPU profiling sample."/>
+        </data>
+        <tracks/>
+    </run>
+</trace-toc>

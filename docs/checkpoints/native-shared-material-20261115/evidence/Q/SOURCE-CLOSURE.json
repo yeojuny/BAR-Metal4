@@ -1,0 +1,156 @@
+{
+  "status": "PASS",
+  "base": "P adopted ELISION1",
+  "baseFiles": 10227,
+  "candidateFiles": 10245,
+  "changed": [
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+      "beforeSHA256": null,
+      "afterSHA256": "3e43f742c2e69fa98df42564da6b085d71409327f727e4ab2041b21bdf073d37"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+      "beforeSHA256": null,
+      "afterSHA256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9"
+    },
+    {
+      "path": "rts/Lua/NativeSepiaLuaContext.h",
+      "beforeSHA256": "1dba7f0719e53c0700f686e01e8fb26304e09e6a7f44a20c02b3ce4042454e21",
+      "afterSHA256": "b8ee33561d9d20b91eba3b17c3ddf34933348ba92cebaa86c918b257f42022b6"
+    },
+    {
+      "path": "rts/Lua/NativeWidgetAdapters.h",
+      "beforeSHA256": "4df1c89d8ec11a47f6ac2b604dfc6fb90c4319f520be16bc03fd36c1637f4474",
+      "afterSHA256": "da4ac543cddbf6fa433ae04b907e6dbc7ae33a5656a0e1ac8f8351f0615b572b"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePostprocessData.cpp",
+      "beforeSHA256": "e572ebea2572842e65f514e40901f0f31fcd18921d625aaf4f26f7a928304e77",
+      "afterSHA256": "600514fd46fda989af3aee891c9bd3a8a168ce3cdb6d69ba857d61beaf13a4d6"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePostprocessData.h",
+      "beforeSHA256": "7327126d1ea6896a7b814caafbbfbec83322675ff681f251d762d45051a86598",
+      "afterSHA256": "72f6e91959087031e8841a99b5e21ad372f342ca9407abf571590c874e699ff9"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePostprocessRecorder.cpp",
+      "beforeSHA256": "f443fa4dfaa399dc5036493c5a5698694f5fed99c0de35a5f7c1aa3a8bddafc2",
+      "afterSHA256": "37fb9e8d17ff7194c881caecdacb203bc5a316b0971557f513ce8a44ad0eb05e"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSepiaPilot.h",
+      "beforeSHA256": null,
+      "afterSHA256": "d234f795f126225cb03037fc9ea2745ab2d04cc0738acb309393c7e2cea0d11c"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSharedProgramPilot.h",
+      "beforeSHA256": null,
+      "afterSHA256": "3d985ba895db576932d707d57cc1c91644a861caeab6114adb45d8a5ce6c94f8"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4CUSSource.mm",
+      "beforeSHA256": "f417286320b6458f199daa8694e5da1da6be7f832e3a319dcea9da500475609e",
+      "afterSHA256": "e5f31f4789798113507f9f89040425c66395f4f4a36f03f1b4b26c223e53b9f2"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "beforeSHA256": "4c4bd941a8bd62b135f1b07cab153ae2ea2e5029053405b92397e64a9bdb89b8",
+      "afterSHA256": "67223a9686d1fae4877c68a0a039d26a8fe05047e212a36f51f56e053e724415"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "beforeSHA256": "2d3bdc2250d1450f880ef326fd65e35d094695df5c223b3fdd0b00df171937b8",
+      "afterSHA256": "bf42e42224f1f88aa894ee59693437c6291a4f8f1cb8b464057e368e4512ae49"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "beforeSHA256": "c3b6926fdc7bbbc69f67b354240c6b31648632c37c9eadf05a2147f2a061b933",
+      "afterSHA256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SharedProgramPilot.h",
+      "beforeSHA256": null,
+      "afterSHA256": "31266d86876d82c6b0f4fe0d6ce370c073b4001b90dd09b608b603c5b73b8ac2"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SourceImage.h",
+      "beforeSHA256": "5da4d74d748d6539bc786d860e54e21b93d75d85f714da176c058132c1d5fd77",
+      "afterSHA256": "5c8d3467571f0e9aec4ce3527b5079857dca51bb095b4db57be33e1784b79226"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "beforeSHA256": "cce8a2dbc3cde46d64250de5d58796f5daa19abe17547f456a407824b132d4dc",
+      "afterSHA256": "1ce655a505a4e31fe73b79cff6b44d47ee2da531f9bf06e42934a0f203974d3b"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h",
+      "beforeSHA256": null,
+      "afterSHA256": "0c06aa6c8ca626640597c9abd5cb0d2bad3ec6a5b05214eee6f7a06092303543"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.json",
+      "beforeSHA256": null,
+      "afterSHA256": "46759272628b437f2137650654f06f2a611b0338abc7ae6a7e8671167161b9cf"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.metal",
+      "beforeSHA256": null,
+      "afterSHA256": "06b4a864865de699e235340749fdbc6b6fd524ae0827e27fe8a4ce3a2a51f296"
+    },
+    {
+      "path": "tools/sepia-pilot/PROVENANCE.json",
+      "beforeSHA256": null,
+      "afterSHA256": "904115382d72cb6f8e324beaf2ea53d2076f921282a92512a6125fb39da3c430"
+    },
+    {
+      "path": "tools/sepia-pilot/README.md",
+      "beforeSHA256": null,
+      "afterSHA256": "aa14d4d6ffe6627df9a0356869460c581f8780e7b922213d2e3b6e7ddd6345fb"
+    },
+    {
+      "path": "tools/sepia-pilot/compile_subset.py",
+      "beforeSHA256": null,
+      "afterSHA256": "6ee1fb2d8fd380854d30de69b0010aea558a4ca9eafb780e8004ba1dfa3a006a"
+    },
+    {
+      "path": "tools/sepia-pilot/identity-exposure-bias.frag.glsl",
+      "beforeSHA256": null,
+      "afterSHA256": "2733f0c6c44ebe9db28ed466ea6eab6545c7eae94d3a65159a1e1505535b3ab5"
+    },
+    {
+      "path": "tools/sepia-pilot/original-widget.lua",
+      "beforeSHA256": null,
+      "afterSHA256": "637d0c5d535b5c00335c0bcb6b634479513de7c2bdee33a29dc14077bb5fac64"
+    },
+    {
+      "path": "tools/sepia-pilot/sepia.frag.glsl",
+      "beforeSHA256": null,
+      "afterSHA256": "8d9ee3a1d195e1cfd2e8eecc9ab9814abaf123e24995bc33e51fb60c205642c7"
+    },
+    {
+      "path": "tools/sepia-pilot/sepia.vert.glsl",
+      "beforeSHA256": null,
+      "afterSHA256": "120ff97ac3a0f06011c2f6c8010c04660d8de75f80d7ba54aa5040f738f67987"
+    },
+    {
+      "path": "tools/sepia-pilot/test_lua_adapter.lua",
+      "beforeSHA256": null,
+      "afterSHA256": "f3c348142c77116ff7990c468c9ba161cf5e0748f9fcdc6d3009d1cfc02a434f"
+    },
+    {
+      "path": "tools/sepia-pilot/test_payload.cpp",
+      "beforeSHA256": null,
+      "afterSHA256": "d149434784ce51c215ce48bcc54963a245c943a6a165cf97970e1fd90d4f027d"
+    },
+    {
+      "path": "tools/sepia-pilot/test_subset.py",
+      "beforeSHA256": null,
+      "afterSHA256": "e97b9e3635c0259c7fa349c4fe839d386439b3cb5d94f227c67e7d2c052919e2"
+    }
+  ],
+  "PUIChangePreserved": true,
+  "KIncluded": false,
+  "wrapperSHA512": "2a2746ca8b7e213e1651c324db58ea466f5640c9110055a49f0025c43f840193088b580bec9e4524395904a62555e5bfc745bba828f66ecd7222ee0031c486fd"
+}

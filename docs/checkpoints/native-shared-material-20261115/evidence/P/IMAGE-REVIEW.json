@@ -1,0 +1,11 @@
+{
+  "status": "REPRESENTATIVE_STILL_NO_NEW_VISIBLE_REGRESSION",
+  "reviewers": [
+    "performance root",
+    "HQ root"
+  ],
+  "baseline": "current-v1113-baseline/scene.png",
+  "candidate": "$P/measurement/validation_paced_power1/preparation/runs/V_POWER1_ELISION1_IMAGE/scene.png",
+  "observations": "Same terrain, rocks, trees, unit placement and range rings. Animated clouds/water and GAME PAUSED position differ. Existing dark/blur rectangular bands occur in both.",
+  "limits": "Visual inspection of representative still only; no all-frame parity or final-color0 equivalence claim. Numeric pixel comparison not performed because optional PIL was unavailable; no dependencies installed."
+}

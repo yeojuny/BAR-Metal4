@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "checks": [
+    "existing subset compiler4tests",
+    "identityvariant reproducibility --check",
+    "actual Sepia payload ASan+UBSan incl malformed schema and short uniform rejection",
+    "combined old/shared variant MSL syntax sample shading0 and1"
+  ],
+  "fullEngine": "PENDING",
+  "runtime": "PENDING"
+}

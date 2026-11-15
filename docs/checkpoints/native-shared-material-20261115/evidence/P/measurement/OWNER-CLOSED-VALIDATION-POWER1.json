@@ -1,0 +1,112 @@
+{
+  "status": "CLOSED_VALIDATION_POWER1",
+  "utc": "2026-11-15T17:57:08.378932+00:00",
+  "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "result": "$P/measurement/validation_paced_power1/preparation/runs/V_POWER1_ELISION1_IMAGE/RESULT.json",
+  "image": "$P/measurement/validation_paced_power1/preparation/runs/V_POWER1_ELISION1_IMAGE/scene.png",
+  "imageBytes": 1986037,
+  "imageSHA256": "be785e51765acd602dbb57c3512275751fa0ac9c70d3018cccc779baa7c6b507",
+  "diagnosticFPS": 68.39315791941465,
+  "diagnosticSlow1PercentFPS": 29.07580423326638,
+  "performanceAccepted": false,
+  "countedSeconds": 40.004001617,
+  "child": {
+    "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+    "pid": 7232,
+    "actual": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+      "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": "1",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "MTL_DEBUG_LAYER": "1",
+      "MTL_SHADER_VALIDATION": "0"
+    },
+    "expected": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+      "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": "1",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "MTL_DEBUG_LAYER": "1",
+      "MTL_SHADER_VALIDATION": "0"
+    },
+    "beforeCountedWindow": true
+  },
+  "screenState": {
+    "requestedElision": 1,
+    "finalColorStageActive": true,
+    "h5Mode": 0,
+    "countersEnabled": true,
+    "boundedRecords": 64,
+    "omittedSetters": {
+      "omitted_cull": 2272,
+      "omitted_depth": 2080,
+      "omitted_stencil": 2176,
+      "omitted_viewport": 2144,
+      "omitted_scissor": 2176,
+      "omitted_depthclip": 2208,
+      "omitted_pipeline": 1568
+    },
+    "scope": "bounded value-only receipts; validation run excluded from FPS"
+  },
+  "powerWitness": "frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+  "pacing": {
+    "status": "PASS",
+    "originalWallGateSeconds": 16.174999237
+  },
+  "displayBefore": {
+    "utc": "2026-11-15T17:54:36.038451+00:00",
+    "monotonic": 0.061708375,
+    "display": 1,
+    "asleep": false,
+    "active": true,
+    "online": true,
+    "locked": false,
+    "valid": true
+  },
+  "displayAfter": {
+    "utc": "2026-11-15T17:56:46.683859+00:00",
+    "monotonic": 0.060336833,
+    "display": 1,
+    "asleep": false,
+    "active": true,
+    "online": true,
+    "locked": false,
+    "valid": true
+  },
+  "metalValidationEnabled": true,
+  "metalValidationErrors": [],
+  "metalValidationLogMentions": 1,
+  "cleanup": {
+    "normalExit": true,
+    "pid": 7232,
+    "ownedGroupGone": true,
+    "privateWidgetRemoved": true,
+    "privateGameOverlayRemoved": true
+  },
+  "awakeStatus": "RELEASED",
+  "matchingEngineProcesses": [],
+  "cleanABBAUnlaunched": true,
+  "priorAC0PrelaunchFailurePreserved": true,
+  "postrunACPowermode": 0,
+  "ACPowermodeRequiredAtEachPreflight": 1
+}

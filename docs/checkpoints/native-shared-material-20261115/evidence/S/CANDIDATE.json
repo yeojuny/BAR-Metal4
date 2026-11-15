@@ -1,0 +1,63 @@
+{
+  "status": "SIGNED_PRIVATE_CANDIDATE",
+  "utc": "2026-11-15T19:43:10.330050+00:00",
+  "rawSHA256": "632b9e215eb9fb126fb936e3a85f17c14bb1392d40bd3db3aa9eb92750c50d66",
+  "signedSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "parentSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "relocations": [
+    [
+      "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "@loader_path/../lib/libIL.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "@loader_path/../lib/libminizip.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "@loader_path/../lib/libfreetype.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "@loader_path/../lib/libfontconfig.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "@loader_path/../lib/libvorbisfile.3.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "@loader_path/../lib/libvorbis.0.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "@loader_path/../lib/libogg.0.8.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "@loader_path/../lib/libopenal.1.25.2.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "@loader_path/../lib/libSDL3.0.dylib"
+    ]
+  ],
+  "product": {
+    "variant": "private-model-source-type-facts",
+    "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "$S/runtime/native/bin/spring-metal4-scene",
+    "native": "$S/runtime/native",
+    "sha256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+    "publishedPackageReadOnly": true
+  },
+  "adopted": true,
+  "runtime": "VALIDATED_WORK_REDUCTION_NO_FPS_GAIN",
+  "cause": "Positive-only immutable CPU backing type facts; no GPU binding/readiness reuse",
+  "environmentFlag": "BAR_NATIVE_MODEL_TYPE_FACTS",
+  "compiledDefault": 0,
+  "sourceClosure": "SOURCE-CLOSURE.json",
+  "result": "RESULT.json",
+  "adoptionDecision": "ADOPT_CPU_STATIC_FACTS_FOR_PRIVATE_LOCAL_EXPERIMENTS_ONLY",
+  "adoptionReceipt": "$S/ADOPTED-LOCAL-BASELINE.json",
+  "adoptionUTC": "2026-11-15T20:06:10.100634+00:00"
+}

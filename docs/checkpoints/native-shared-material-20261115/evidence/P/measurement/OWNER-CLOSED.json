@@ -1,0 +1,18 @@
+{
+  "status": "CLOSED_PRELAUNCH_POWER_GATE",
+  "recordedUTC": "2026-11-15T17:51:33.054475+00:00",
+  "gameLaunched": false,
+  "ownedReceiptAbsent": true,
+  "failureReceipt": "$P/measurement/validation_paced/preparation/runs/V_ELISION1_IMAGE/FAILURE.json",
+  "reason": "Preflight required AC powermode 0; actual AC powermode 1",
+  "powerBatteryRaw": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t95%; AC attached; not charging present: true\n",
+  "powerCustomRaw": "Battery Power:\n Sleep On Power Button 1\n powermode            1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         2\n womp                 0\n networkoversleep     0\n sleep                1\n lessbright           1\n tcpkeepalive         1\n disksleep            10\nAC Power:\n Sleep On Power Button 1\n powermode            1\n standby              1\n ttyskeepawake        1\n hibernatemode        3\n powernap             1\n hibernatefile        /var/vm/sleepimage\n displaysleep         60\n womp                 1\n networkoversleep     0\n sleep                0\n tcpkeepalive         1\n disksleep            10\n",
+  "candidateSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "validationResult": null,
+  "cleanABBAUnlaunched": true,
+  "awake": "RELEASED",
+  "matchingEngineProcesses": [],
+  "settingsChangedByOwner": false,
+  "thermalObservedAfterFailedPreflight": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+  "thermalObservationTimeUTC": "2026-11-15T17:51:41.969481+00:00"
+}

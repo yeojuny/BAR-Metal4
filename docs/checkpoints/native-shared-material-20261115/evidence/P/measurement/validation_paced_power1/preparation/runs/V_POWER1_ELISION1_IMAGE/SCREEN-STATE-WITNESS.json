@@ -1,0 +1,17 @@
+{
+  "requestedElision": 1,
+  "finalColorStageActive": true,
+  "h5Mode": 0,
+  "countersEnabled": true,
+  "boundedRecords": 64,
+  "omittedSetters": {
+    "omitted_cull": 2272,
+    "omitted_depth": 2080,
+    "omitted_stencil": 2176,
+    "omitted_viewport": 2144,
+    "omitted_scissor": 2176,
+    "omitted_depthclip": 2208,
+    "omitted_pipeline": 1568
+  },
+  "scope": "bounded value-only receipts; validation run excluded from FPS"
+}

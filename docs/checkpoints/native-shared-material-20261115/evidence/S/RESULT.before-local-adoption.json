@@ -1,0 +1,92 @@
+{
+  "status": "VALIDATED_WORK_REDUCTION_NO_FPS_GAIN",
+  "utc": "2026-11-15T20:02:08.644059+00:00",
+  "candidateSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "modeFlag": "BAR_NATIVE_MODEL_TYPE_FACTS",
+  "compiledDefault": 0,
+  "commonContract": "NativePositiveBackingFacts: private real-cast proof, weak exact owner, execution scope, bounded allocation-free table",
+  "consumer": "OriginalModelImage model-positive type dispatch through synchronous sourceImages adapter; GPU resource/registration/sampler/readability original path unchanged",
+  "work": {
+    "offSampledJobs": 23,
+    "onSampledJobs": 22,
+    "requestsPerJobOFF": 218.0,
+    "requestsPerJobON": 218.0,
+    "onHits": 902,
+    "omittedCasts": 9020,
+    "omittedCastsPerJob": 410.0,
+    "positiveCastsPerJobOFF": 59.0,
+    "positiveCastsPerJobON": 18.0,
+    "cachedPositiveEntriesPerJob": 18.0
+  },
+  "runs": [
+    {
+      "run": "A1_OFF",
+      "mode": "OFF",
+      "FPS": 185.00924537913994,
+      "low1PercentFPS": 134.54545454545445,
+      "draws": 7400,
+      "seconds": 39.998001099,
+      "normalExit": true
+    },
+    {
+      "run": "B1_ON",
+      "mode": "ON",
+      "FPS": 184.05919790286868,
+      "low1PercentFPS": 115.4446176046105,
+      "draws": 7362,
+      "seconds": 39.998001099,
+      "normalExit": true
+    },
+    {
+      "run": "B2_ON",
+      "mode": "ON",
+      "FPS": 185.17684794978445,
+      "low1PercentFPS": 135.6238698010849,
+      "draws": 7408,
+      "seconds": 40.005001068,
+      "normalExit": true
+    },
+    {
+      "run": "A2_OFF",
+      "mode": "OFF",
+      "FPS": 184.79538265175034,
+      "low1PercentFPS": 124.36974789915958,
+      "draws": 7392,
+      "seconds": 40.000999451,
+      "normalExit": true
+    }
+  ],
+  "meanFPS": {
+    "OFF": 184.90231401544514,
+    "ON": 184.61802292632655
+  },
+  "durationWeightedFPS": {
+    "OFF": 184.9023100076717,
+    "ON": 184.61807182146467
+  },
+  "onMinusOffFPS": -0.2842910891185966,
+  "onVsOffPercent": -0.15375204503652595,
+  "FPSGainEstablished": false,
+  "performanceInterpretation": "Observed mean ON is 0.154% lower. Small sample and run variability do not establish gain or statistical equivalence; preserve all 4 runs including B1.",
+  "diagnosticCPUComparison": "Not valid: D0 changed power1->0; D1 power0, observer stamps included. Wall time unavailable because compiled diagnostic Clock returns{}.",
+  "validation": {
+    "host": "ASan/UBSan actual-class PASS;1000hits noalloc",
+    "sourceReview": "PASS owner/lifetime/noescape/order",
+    "build": "one fresh full compilation;1538objects35archives0mismatch;final no work",
+    "MetalErrors": 0,
+    "traceDrops": 0,
+    "invalidCPU": 0,
+    "scopeMismatch": 0,
+    "visual": "Both PNGs reviewed, no new visible regression; prior bands remain; no exact-pixel parity claim"
+  },
+  "limitations": [
+    "Only sampled sourceImages route gains; unrelated providers unchanged",
+    "Source type facts only, not GPUbinding or uploadcompletion reuse",
+    "Fixed weak cache occupies bounded stack storage and adds lookup work",
+    "No performance-based row exclusion or historical pooling"
+  ],
+  "runtime": "CLOSED; no owned processes; awake released",
+  "adopted": false,
+  "adoptionDecision": "PENDING_HQ_DISPOSITION",
+  "publicAppChanged": false
+}

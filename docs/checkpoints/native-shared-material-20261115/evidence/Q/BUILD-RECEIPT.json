@@ -1,0 +1,15 @@
+{
+  "status": "PASS_BUILD_SIGN_AND_CLOSURE",
+  "utc": "2026-11-15T18:46:48.026275+00:00",
+  "fullBuilds": 1,
+  "changedSourceHashesVerified": 29,
+  "archiveObjects": 1538,
+  "archiveCount": 35,
+  "archiveMismatches": 0,
+  "finalBuild": "no work to do",
+  "signedSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "runtime": "PENDING",
+  "sourceClosure": "SOURCE-CLOSURE.json",
+  "archiveClosure": "ARCHIVE-CLOSURE.json",
+  "candidate": "CANDIDATE.json"
+}

@@ -1,0 +1,32 @@
+{
+  "status": "FROZEN_FOR_ONE_FULL_BUILD",
+  "base": "$Q/source/engine",
+  "changed": [
+    {
+      "path": "rts/Rendering/Backend/NativeCPUPhaseTrace.h",
+      "beforeSHA256": "a7e7f0bd08201786cd084c31f12b75ff00803adbded13b88f7a3bd6f55343b2e",
+      "afterSHA256": "6fa3e8385aa68a670e49266cf3037384b4a82132e340d17e8ba8126a2b0f5388"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePositiveBackingFacts.h",
+      "beforeSHA256": null,
+      "afterSHA256": "e945e758d02d80b844f35d48c791fe40d0d080e47a7887a02ef333492695b2f5"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4ModelTypeFacts.inc",
+      "beforeSHA256": null,
+      "afterSHA256": "dcbe73a58c9ab0e0c7024acd3734bc62f6510b01d99cda90b9eab7302c312da1"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "beforeSHA256": "1ce655a505a4e31fe73b79cff6b44d47ee2da531f9bf06e42934a0f203974d3b",
+      "afterSHA256": "c053325b88eac66bba2cf00fee9a5ad2f690f0164c6f7bc7f9fbddc0d8dbd86f"
+    },
+    {
+      "path": "tools/model-type-facts/test_facts.cpp",
+      "beforeSHA256": null,
+      "afterSHA256": "6d71e3325db8050c08a1a4295eef68c4c3fbe9c4485b6d35a52f2faa737cdd4e"
+    }
+  ],
+  "utc": "2026-11-15T19:36:53.248859+00:00"
+}

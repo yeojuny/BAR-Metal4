@@ -1,0 +1,5 @@
+{
+  "arm": "D0_OFF",
+  "error": "Traceback (most recent call last):\n  File \"$S/measurement/run.py\", line 201, in run\n    raise RuntimeError('Owned engine did not prove normal exit; ' + launch_error)\nRuntimeError: Owned engine did not prove normal exit; Traceback (most recent call last):\n  File \"$S/measurement/run.py\", line 183, in run\n    row = base.harness.launch(HERE / campaign / 'preparation', arm,\n  File \"$PERFORMANCE_WORK/evidence/bloom217-boundary02/build-recovery01/run/campaign.py\", line 4, in launch\n    from preflight import preflight\n  File \"$P/measurement/run_ac0_prelaunch.py\", line 271, in preflight\n    assert \"'AC Power'\" in battery.splitlines()[0] and re.search(r'^\\s*powermode\\s+0\\s*$', settings, re.M)\nAssertionError\n\n",
+  "utc": "2026-11-15T19:44:46.524029+00:00"
+}

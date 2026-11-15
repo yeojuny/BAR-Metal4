@@ -1,0 +1,273 @@
+{
+  "status": "PREBUILD_VARIANT_AND_REVIEW_FIXES",
+  "originalPacketPreserved": true,
+  "compilerUnchanged": true,
+  "originalGLSLFixtureUnchanged": true,
+  "generateCommand": [
+    "python3",
+    "tools/sepia-pilot/compile_subset.py",
+    "--fragment",
+    "tools/sepia-pilot/identity-exposure-bias.frag.glsl"
+  ],
+  "baselineGenerated": {
+    "revision": "sepia-subset-ast-1;MTL4LibraryDescriptor-default-options-frozenJ;sample-position-v1",
+    "identity": "f68e648c6dfbf4b4c056baeaa68cafae23a5ca5ad13ccfe17d9e7735dda3872f",
+    "vertexHash": 16905188423406352921,
+    "fragmentHash": 17382421314025316268,
+    "uniformBytes": 128,
+    "fields": [
+      {
+        "name": "viewPos",
+        "scalar": "int",
+        "components": 2,
+        "offset": 48,
+        "defaults": [
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "gamma",
+        "scalar": "float",
+        "components": 1,
+        "offset": 64,
+        "defaults": [
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "colorR",
+        "scalar": "float",
+        "components": 3,
+        "offset": 80,
+        "defaults": [
+          0,
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "colorG",
+        "scalar": "float",
+        "components": 3,
+        "offset": 96,
+        "defaults": [
+          0,
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "colorB",
+        "scalar": "float",
+        "components": 3,
+        "offset": 112,
+        "defaults": [
+          0,
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      }
+    ],
+    "sampler": "screenCopyTex",
+    "vertexEntry": "SharedSepiaVertex",
+    "fragmentEntry": "SharedSepiaFragment"
+  },
+  "candidateGenerated": {
+    "revision": "sepia-subset-ast-1;MTL4LibraryDescriptor-default-options-frozenJ;sample-position-v1",
+    "identity": "d23a8b75086bf172418574044d1c5c2d8497ed4d6da7223b6b9c2ac3d5c2d0c7",
+    "vertexHash": 16905188423406352921,
+    "fragmentHash": 4623502877096422297,
+    "uniformBytes": 160,
+    "fields": [
+      {
+        "name": "viewPos",
+        "scalar": "int",
+        "components": 2,
+        "offset": 48,
+        "defaults": [
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "exposure",
+        "scalar": "float",
+        "components": 1,
+        "offset": 64,
+        "defaults": [
+          1.0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "bias",
+        "scalar": "float",
+        "components": 3,
+        "offset": 80,
+        "defaults": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "gamma",
+        "scalar": "float",
+        "components": 1,
+        "offset": 96,
+        "defaults": [
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "colorR",
+        "scalar": "float",
+        "components": 3,
+        "offset": 112,
+        "defaults": [
+          0,
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "colorG",
+        "scalar": "float",
+        "components": 3,
+        "offset": 128,
+        "defaults": [
+          0,
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      },
+      {
+        "name": "colorB",
+        "scalar": "float",
+        "components": 3,
+        "offset": 144,
+        "defaults": [
+          0,
+          0,
+          0
+        ],
+        "blockSlot": 1,
+        "count": 1,
+        "stride": 16,
+        "stages": 2
+      }
+    ],
+    "sampler": "screenCopyTex",
+    "vertexEntry": "SharedSepiaVertex",
+    "fragmentEntry": "SharedSepiaFragment"
+  },
+  "variantDefaults": {
+    "exposure": 1,
+    "bias": [
+      0,
+      0,
+      0
+    ]
+  },
+  "manualEffectSpecificCppBranchesAdded": 0,
+  "frameworkFixes": [
+    "Restore exact original Sepia program-name admission",
+    "Validate all generated interface values and immutable byte-owner size/bounds before use"
+  ],
+  "prototypePolicies": [
+    "Old/default also compiles generated shader at initialization",
+    "Renderer admission-owner replacement fails closed until Lua program relinks",
+    "Both shader modes share new capture front end; not production end-to-end comparator"
+  ],
+  "changedFromFrozenPacket": [
+    {
+      "path": "rts/Rendering/Backend/NativeSharedProgramPilot.h",
+      "frozenSHA256": "0e0896603d7eb32ffc28687f2eb1ad51a7ab57da567b7c5f47dbce72397eea9c",
+      "candidateSHA256": "3d985ba895db576932d707d57cc1c91644a861caeab6114adb45d8a5ce6c94f8"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSepiaPilot.h",
+      "frozenSHA256": "3643feda6cddf60c5297b5c7b074c1665c00058a563066e85141bbe49212627b",
+      "candidateSHA256": "d234f795f126225cb03037fc9ea2745ab2d04cc0738acb309393c7e2cea0d11c"
+    },
+    {
+      "path": "rts/Lua/NativeSepiaLuaContext.h",
+      "frozenSHA256": "f18ce58bc9ecf45116b7bfcd7a8bd150f7f434b95d1596f4f9dda9bbe9d6d311",
+      "candidateSHA256": "b8ee33561d9d20b91eba3b17c3ddf34933348ba92cebaa86c918b257f42022b6"
+    },
+    {
+      "path": "tools/sepia-pilot/test_payload.cpp",
+      "frozenSHA256": "2f3501bf80b1d27060a9b1d4c6a148c30e5bcdf14249aa931cb83584c8f9cf00",
+      "candidateSHA256": "d149434784ce51c215ce48bcc54963a245c943a6a165cf97970e1fd90d4f027d"
+    },
+    {
+      "path": "tools/sepia-pilot/identity-exposure-bias.frag.glsl",
+      "frozenSHA256": null,
+      "candidateSHA256": "2733f0c6c44ebe9db28ed466ea6eab6545c7eae94d3a65159a1e1505535b3ab5"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h",
+      "frozenSHA256": "140c259c102a7028c801a9ccfa54a359fd01e5d1d105a4ae6b39da93b4ab7d69",
+      "candidateSHA256": "0c06aa6c8ca626640597c9abd5cb0d2bad3ec6a5b05214eee6f7a06092303543"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.json",
+      "frozenSHA256": "35aa9071dd4f25de712dd05719a0e9a1e70a33f95443cfbc1b7e9a349a3226e4",
+      "candidateSHA256": "46759272628b437f2137650654f06f2a611b0338abc7ae6a7e8671167161b9cf"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.metal",
+      "frozenSHA256": "57923ba5e2d3e5a7db12b393259f1154ed1c8eb7ccc412bd4717963f129dd76b",
+      "candidateSHA256": "06b4a864865de699e235340749fdbc6b6fd524ae0827e27fe8a4ce3a2a51f296"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+      "frozenSHA256": "8eb2f0ef943e00d39556945f6173aaece0b8f7dbb307362be17269bbe32b583f",
+      "candidateSHA256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9"
+    }
+  ]
+}

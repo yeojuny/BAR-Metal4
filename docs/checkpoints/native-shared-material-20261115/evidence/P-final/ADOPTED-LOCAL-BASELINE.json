@@ -1,0 +1,18 @@
+{
+  "status": "ADOPTED_FOR_NEXT_LOCAL_WORK",
+  "utc": "2026-11-15T18:22:37.781554+00:00",
+  "basis": "User explicitly chose adoption based on proven setter reduction, representative visual/Metal validation pass, and maintained mean FPS.",
+  "scope": "Private local optimization baseline only; not public release or original pin promotion.",
+  "engine": "$P/runtime/native/bin/spring-metal4-scene",
+  "sha256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "source": "$P/source/engine",
+  "environmentOverrides": {
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1"
+  },
+  "engineCompiledDefault": 0,
+  "rebuildRequired": false,
+  "meanFPSGainEstablished": false,
+  "originalABBAAndSupplementPreserved": true,
+  "additionalOFFAnalysisOrGames": "STOPPED",
+  "next": "Wait for HQ frozen V2 source/review packet; integrate one private candidate on P with explicit ELISION1. K excluded. No build or runtime before packet; runtime requires fresh isolation ACK."
+}

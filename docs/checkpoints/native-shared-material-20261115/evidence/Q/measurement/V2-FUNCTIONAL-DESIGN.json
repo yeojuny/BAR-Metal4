@@ -1,0 +1,81 @@
+{
+  "status": "FIXTURE_DESIGN_READY_NO_GAMES",
+  "recordedUTC": "2026-11-15T18:37:18.289997+00:00",
+  "sourceCandidate": "Q source=P plus frozen V2 Sepia packet; signed binary and generated 160B module pending",
+  "fixtureFiles": {
+    "controllerAssembler": "$Q/measurement/assemble_private_fixture.py",
+    "controllerAssemblerSHA256": "434512f1fcbeb44539133c18c79dec95a0b8173b1ee849087e4bce42b69864fe",
+    "probeWidget": "$Q/measurement/v2_functional_widget.lua",
+    "probeWidgetSHA256": "fd98ce0adb283ef857c34e2b6472147d4158a433f5fd8b49f24a7bca32bfaea8"
+  },
+  "executionOrder": [
+    {
+      "arm": "OLD_MSL",
+      "env": {
+        "BAR_METAL4_SEPIA_PATH": "old",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "MTL_DEBUG_LAYER": "0"
+      },
+      "images": [
+        "v2-old-identity.png"
+      ]
+    },
+    {
+      "arm": "SHARED_MSL",
+      "env": {
+        "BAR_METAL4_SEPIA_PATH": "shared",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "MTL_DEBUG_LAYER": "1"
+      },
+      "images": [
+        "v2-shared-identity.png",
+        "v2-shared-variant.png"
+      ]
+    }
+  ],
+  "commonEngineAndScene": {
+    "sameSignedBinary": true,
+    "BC213": true,
+    "render": [
+      1512,
+      950
+    ],
+    "AA": 0,
+    "VSync": 0,
+    "VSyncGame": 0,
+    "LimitIdleFps": 0,
+    "option_limitoffscreenfps": false,
+    "ACPowerMode": 0,
+    "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+    "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+    "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+    "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+    "BAR_NATIVE_FRAME_TRACE": "0",
+    "originalPacing": "unchanged >=9.8s wall gate with 180 pause/resume before240",
+    "countedWindow": "frozen sim300..1500; output excluded from FPS comparison",
+    "sameCameraAndPausedCaptureSim": 1500
+  },
+  "privateFixtureSequence": [
+    "Enable exact original Sepia Tone widget by private BC213 order; set WG.sepia.setSepia(0.5), shadeUI=false before counted scene.",
+    "Frozen controller patched only to pause at sim1500 and wait for WG.v2FunctionalDone; original scene/camera/count continues unchanged.",
+    "DrawScreenEffects runs before DrawScreen, so private DrawScreen SaveImage after eight paused draws captures old or shared identity.",
+    "Shared generated Lua module from signed candidate is copied only to private RAW_FIRST path with appended config-read uniforms; exact GLSL strings unchanged. Initial exposure=1 and bias=0,0,0.",
+    "After shared identity image, private Spring.SetConfigFloat(...,true) sets exposure1.25 and bias0.1,0.2,0.3; DisableWidget clears WG.sepia, EnableWidget loads and links original widget again, module rereads config and logs variant values; setSepia(0.5) reapplied.",
+    "After eight more paused draws capture shared variant at same sim1500/camera, then controller logs completion and exits."
+  ],
+  "requiredRuntimeEvidence": [
+    "actual child old/shared env plus CUS pilot0 and common flags",
+    "signed candidate engine hash and exact installed native-widget loader/generated program hashes",
+    "WG.sepia active/disabled nil/re-enabled restored markers with no Lua errors",
+    "shared generated module load twice with identity then variant values",
+    "three image markers and files at sim1500 identical camera; no image before pause",
+    "native scene encode/submit/retire, LimitIdleFps0/offscreenfalse, normal exits, Metal Validation enabled on shared with errors explicitly classified"
+  ],
+  "limits": [
+    "No per-call native LinkProgram/SetUniform/DeleteProgram log exists in frozen source; infer those calls from source-backed wrapper traversal, successful guards, module/relink markers and rendered image response, not from a direct native trace.",
+    "NativeSharedCUSPilot is disabled in both games; zero counters are expected and neither CUS activity nor FPS improvement is claimed.",
+    "Old/shared image comparison masks dynamic cloud and paused text and checks static terrain/units/rings/color separately."
+  ],
+  "gamesLaunched": 0
+}

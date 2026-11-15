@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "functional",
+  "pid": 19196,
+  "startUTC": "2026-11-15T18:49:25.262398+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-15T18:53:31.122171+00:00",
+  "ownCaffeinateAlive": false
+}

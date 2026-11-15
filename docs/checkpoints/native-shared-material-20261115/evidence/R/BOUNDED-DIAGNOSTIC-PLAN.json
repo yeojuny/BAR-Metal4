@@ -1,0 +1,41 @@
+{
+  "status": "SOURCE_REVIEWED_PLAN_ONLY",
+  "target": "Actual CUS OriginalModelImage provider calls",
+  "admission": "Existing NativeCPUPhaseTrace START_SIM300/END_SIM306/EVERY_LOOP1, additional diagnostic defaultOFF",
+  "sites": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4CUSSource.mm",
+      "lines": "451,495-508",
+      "purpose": "Actual nonempty active family/pass/slot/binding and images() wall/threadCPU, count once"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "lines": "724-773; textures completion209-223,627-660",
+      "purpose": "Observe existing S3O ready&&uploadSource==nil BEFORE Texture(); no completion inference after provider"
+    },
+    {
+      "path": "small existing trace or CUS declaration",
+      "purpose": "Carry observation only between those sites and bounded post-join emission"
+    }
+  ],
+  "repeatKey": "Exact immutable object owner plus context/lease/submission and complete captured binding/sampling identity, collision-safe equality. Weak/value observation; no strong resource pin or raw-pointer-only equivalence.",
+  "states": [
+    "missing",
+    "pending",
+    "complete before provider",
+    "unknown other branches"
+  ],
+  "boundedOutput": "Aggregate bounded records and dropped count, emit only after worker join; no provider/lock prints",
+  "timing": "Only provider images() wall/threadCPU, not inclusive layered CUS/opaque/deferred sums. Diagnostic cost excluded from performance claim.",
+  "notAuthorizationToReuse": "Repeated+complete only selects input; final cache still requires actual texture/sampler/owner, per-draw readability and target/generation safety.",
+  "excluded": [
+    "Shared CUS pilot0 stays0",
+    "No new generic profiler",
+    "No reflection/string work per draw",
+    "No existing caches rewritten",
+    "No quality/graphics changes"
+  ],
+  "sourceEdited": false,
+  "engineBuilt": false,
+  "runtimeStarted": false
+}

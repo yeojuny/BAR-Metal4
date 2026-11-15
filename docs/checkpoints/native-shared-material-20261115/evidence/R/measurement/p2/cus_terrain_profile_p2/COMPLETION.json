@@ -1,0 +1,7 @@
+{
+  "status": "CAPTURED",
+  "arm": "P2_Q_CUS0",
+  "trace": "$R/measurement/p2/cus_terrain_profile_p2/preparation/runs/P2_Q_CUS0/time-profiler.trace",
+  "performanceAccepted": false,
+  "utc": "2026-11-15T19:17:41.349041+00:00"
+}

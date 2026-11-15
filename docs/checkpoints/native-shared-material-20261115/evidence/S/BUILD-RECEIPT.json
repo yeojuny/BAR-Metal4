@@ -1,0 +1,15 @@
+{
+  "status": "PASS_BUILD_SIGN_AND_CLOSURE",
+  "utc": "2026-11-15T19:43:41.319095+00:00",
+  "fullCompilations": 1,
+  "engineSourceCorrectionsDuringBuild": 0,
+  "initialConfigureFailure": "ExistingOpenALpkgconfigpathmissing;correctedbeforecompilation;originalconfigurelogpreserved",
+  "archiveObjects": 1538,
+  "archiveCount": 35,
+  "archiveMismatches": 0,
+  "frozenChangedSourcesVerified": 5,
+  "finalBuild": "ninja:no work to do",
+  "signedSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "host": "actualNativeModelclassASanUBSanPASS",
+  "runtime": "PENDING"
+}

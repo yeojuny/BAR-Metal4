@@ -1,0 +1,67 @@
+{
+  "status": "IDENTITY_IMAGES_COMPARED",
+  "images": [
+    "$Q/measurement/functional/preparation/runs/F1_OLD_SEPIA/v2-old-identity.png",
+    "$Q/measurement/functional/preparation/runs/F2_SHARED_SEPIA/v2-shared-identity.png"
+  ],
+  "dimensions": [
+    1512,
+    950
+  ],
+  "comparison": {
+    "whole": {
+      "rect": [
+        0,
+        0,
+        1512,
+        950
+      ],
+      "channelSamples": 4309200,
+      "meanAbsolute8bit": 2.7560291933537546,
+      "equalPercent": 15.737004548408057,
+      "within1Percent": 42.94340016708438,
+      "maxAbsolute8bit": 162
+    },
+    "upper_right_terrain": {
+      "rect": [
+        1000,
+        50,
+        1400,
+        350
+      ],
+      "channelSamples": 360000,
+      "meanAbsolute8bit": 1.988288888888889,
+      "equalPercent": 9.924722222222222,
+      "within1Percent": 41.95916666666667,
+      "maxAbsolute8bit": 11
+    },
+    "center_left_terrain": {
+      "rect": [
+        350,
+        100,
+        650,
+        300
+      ],
+      "channelSamples": 180000,
+      "meanAbsolute8bit": 2.009261111111111,
+      "equalPercent": 18.49888888888889,
+      "within1Percent": 41.95333333333333,
+      "maxAbsolute8bit": 17
+    },
+    "lower_center_terrain": {
+      "rect": [
+        700,
+        700,
+        950,
+        900
+      ],
+      "channelSamples": 150000,
+      "meanAbsolute8bit": 1.2526533333333334,
+      "equalPercent": 24.442666666666668,
+      "within1Percent": 67.75266666666667,
+      "maxAbsolute8bit": 29
+    }
+  },
+  "visualReview": "Same terrain/effect appearance; clouds and moving paused label differ. Prior dark rectangular/blur bands remain in both.",
+  "limitations": "Separate runs include wall-time animated clouds/water/text. This comparison alone is not exact pixel parity or changed-uniform proof. Variant image absent due lifecycle fixture timeout."
+}

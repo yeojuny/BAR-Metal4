@@ -1,0 +1,39 @@
+{
+  "status": "MEASURED_AREA_SELECTED_REUSE_KEY_UNPROVEN",
+  "utc": "2026-11-15T19:23:36.827152+00:00",
+  "candidate": "CUS OriginalModelImage provider preparation",
+  "evidence": "outputs/offline-profile-p2/ANALYSIS.json",
+  "binarySHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "sampleCounts": {
+    "ownedRunning": 24744,
+    "DrawPrepared": 7339,
+    "CUSPrepare": 942,
+    "TerrainPrepare": 885,
+    "OriginalModelImage": 323,
+    "OriginalModelImageUnderCUS": 265,
+    "ModelMaterialsGetUnderCUS": 170,
+    "OriginalTerrainImage": 241,
+    "OriginalTerrainImageUnderTerrain": 221,
+    "TerrainSampler": 58
+  },
+  "selectionReason": "Substantial currently active CUS provider CPU samples with repeated RTTI/type comparison among leaves; stronger measured area than unmeasured terrain height-only binding. No specific resource or pass inferred.",
+  "notYetProven": [
+    "actual family/pass/slot and exact binding",
+    "same-lease exact immutable input repeat counts",
+    "completed vs pending provider inputs",
+    "net saved work versus any added allocation/registration"
+  ],
+  "nextGate": "Source-reviewed minimal default-OFF existing sim300..306 scope for actual provider identity/repetition/completion and bounded threadCPU; no cache implementation before evidence.",
+  "constraints": [
+    "CUS prototype remains0",
+    "Do not infer cube from optimized line746",
+    "Inclusive intersections overlap; samples not exact durations",
+    "Do not redo existing packing/sampler/mip/geometry/owner caches",
+    "Per-draw readability and same-source producer order remain required"
+  ],
+  "P1": "Preserved failed finalization; export exit10 missing template",
+  "P2": "Succeeded after runner wait28->180; same15s collection and same engine/scene",
+  "engineBuilds": 0,
+  "optimizationImplemented": false,
+  "FPSCompared": false
+}

@@ -1,0 +1,78 @@
+{
+  "status": "ADOPTED_PRIVATE_LOCAL_EXPERIMENT_BASELINE",
+  "utc": "2026-11-15T20:06:10.100634+00:00",
+  "decision": "Adopt CPU static source-type facts structure for subsequent private experiments; not an established FPS gain patch",
+  "authorization": "HQ disposition applying the user policy: preserve verified intended work reduction with visual/Metal validation despite uncertain FPS effect",
+  "source": "$S/source/engine",
+  "binary": "$S/runtime/native/bin/spring-metal4-scene",
+  "signedSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "parentQSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "compiledDefault": 0,
+  "localExecutionEnvironment": {
+    "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+    "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+    "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+    "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+    "BAR_METAL4_SHARED_CUS_PILOT": "0",
+    "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1"
+  },
+  "sepia": "OFF in private normal test profile",
+  "environmentAppliedNow": false,
+  "work": {
+    "offSampledJobs": 23,
+    "onSampledJobs": 22,
+    "requestsPerJobOFF": 218.0,
+    "requestsPerJobON": 218.0,
+    "onHits": 902,
+    "omittedCasts": 9020,
+    "omittedCastsPerJob": 410.0,
+    "positiveCastsPerJobOFF": 59.0,
+    "positiveCastsPerJobON": 18.0,
+    "cachedPositiveEntriesPerJob": 18.0
+  },
+  "meanFPS": {
+    "OFF": 184.90231401544514,
+    "ON": 184.61802292632655
+  },
+  "durationWeightedFPS": {
+    "OFF": 184.9023100076717,
+    "ON": 184.61807182146467
+  },
+  "onVsOffPercent": -0.15375204503652595,
+  "durationWeightedOnVsOffPercent": -0.15372343709240122,
+  "samplesPerMode": 2,
+  "pairComparisons": [
+    {
+      "OFF": "A1_OFF",
+      "ON": "B1_ON",
+      "onMinusOffFPS": -0.9500474762712656
+    },
+    {
+      "OFF": "A2_OFF",
+      "ON": "B2_ON",
+      "onMinusOffFPS": 0.3814652980341009
+    }
+  ],
+  "limits": [
+    "No stable FPS benefit established; paired differences have opposite signs",
+    "Statistical equivalence and absence of regression are not established with n=2 per mode",
+    "Observed negative 0.153752% mean difference is preserved, not rounded to equality",
+    "S includes private Q V2 testbed code; A/B isolates the S type-facts flag, not whole-S versus public v1.11.3 or P",
+    "Provider wall time unavailable; diagnostic CPU comparison invalid after D0 power-mode transition",
+    "No GPU binding, readiness or resource reuse claim"
+  ],
+  "productionPromotion": false,
+  "preserved": [
+    "Public app and default profiles",
+    "Existing P reference pin",
+    "Original raw ABBA runs and all slow samples",
+    "No-engine power preflight failure",
+    "P1 incomplete profiler trace and failed export",
+    "D0/D1 diagnostic wall-time-unavailable records",
+    "Q F2 failed relink fixture and F3 recovery proof"
+  ],
+  "newBuilds": 0,
+  "newGames": 0,
+  "sourceOrBinaryEdits": 0
+}

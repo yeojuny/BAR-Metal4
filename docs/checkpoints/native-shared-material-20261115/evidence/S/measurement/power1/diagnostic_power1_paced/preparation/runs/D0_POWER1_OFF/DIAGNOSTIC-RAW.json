@@ -1,0 +1,171 @@
+{
+  "imagePresent": true,
+  "image": "$S/measurement/power1/diagnostic_power1_paced/preparation/runs/D0_POWER1_OFF/scene.png",
+  "frameReceipt": true,
+  "countedStart": true,
+  "countedEnd": true,
+  "trace": {
+    "kinds": {
+      "30": {
+        "records": 23,
+        "countA": 5014,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "31": {
+        "records": 23,
+        "countA": 1357,
+        "countB": 5014,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "32": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "33": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "34": {
+        "records": 23,
+        "countA": 0,
+        "countB": 3959604,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      },
+      "35": {
+        "records": 23,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [
+          300,
+          301,
+          302,
+          303,
+          304,
+          305,
+          306
+        ],
+        "statuses": [
+          0
+        ]
+      }
+    },
+    "prepareSamples": 23,
+    "emission": [
+      "buffers=45 start_ns=272879190746541 end_ns=272879196389208 outside_window=1",
+      "buffers=1 start_ns=272880336872250 end_ns=272880338330416 outside_window=1"
+    ],
+    "buffers": [
+      "request=1 job=0 records=17 dropped=0",
+      "request=1 job=1 records=20 dropped=0",
+      "request=2 job=0 records=17 dropped=0",
+      "request=2 job=2 records=20 dropped=0",
+      "request=3 job=0 records=17 dropped=0",
+      "request=3 job=3 records=20 dropped=0",
+      "request=4 job=0 records=17 dropped=0",
+      "request=4 job=4 records=20 dropped=0",
+      "request=5 job=0 records=17 dropped=0",
+      "request=5 job=5 records=20 dropped=0",
+      "request=6 job=0 records=17 dropped=0",
+      "request=6 job=6 records=20 dropped=0",
+      "request=7 job=0 records=17 dropped=0",
+      "request=7 job=7 records=20 dropped=0",
+      "request=8 job=0 records=17 dropped=0",
+      "request=8 job=8 records=20 dropped=0",
+      "request=9 job=0 records=17 dropped=0",
+      "request=9 job=9 records=20 dropped=0",
+      "request=10 job=0 records=17 dropped=0",
+      "request=10 job=10 records=20 dropped=0",
+      "request=11 job=0 records=17 dropped=0",
+      "request=11 job=11 records=20 dropped=0",
+      "request=12 job=0 records=17 dropped=0",
+      "request=12 job=12 records=20 dropped=0",
+      "request=13 job=0 records=17 dropped=0",
+      "request=13 job=13 records=20 dropped=0",
+      "request=14 job=0 records=17 dropped=0",
+      "request=14 job=14 records=20 dropped=0",
+      "request=15 job=0 records=17 dropped=0",
+      "request=15 job=15 records=20 dropped=0",
+      "request=16 job=0 records=17 dropped=0",
+      "request=16 job=16 records=20 dropped=0",
+      "request=17 job=0 records=17 dropped=0",
+      "request=17 job=17 records=20 dropped=0",
+      "request=18 job=0 records=17 dropped=0",
+      "request=18 job=18 records=20 dropped=0",
+      "request=19 job=0 records=17 dropped=0",
+      "request=19 job=19 records=20 dropped=0",
+      "request=20 job=0 records=17 dropped=0",
+      "request=20 job=20 records=20 dropped=0",
+      "request=21 job=0 records=17 dropped=0",
+      "request=21 job=21 records=20 dropped=0",
+      "request=22 job=0 records=17 dropped=0",
+      "request=22 job=22 records=20 dropped=0",
+      "request=23 job=0 records=17 dropped=0",
+      "request=23 job=23 records=20 dropped=0"
+    ],
+    "dropped": 0,
+    "allRecords": 851,
+    "newKindsPresent": true
+  },
+  "validationEnabled": true,
+  "metalErrors": []
+}

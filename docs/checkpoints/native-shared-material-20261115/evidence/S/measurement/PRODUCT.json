@@ -1,0 +1,8 @@
+{
+  "variant": "private-model-source-type-facts",
+  "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "$S/runtime/native/bin/spring-metal4-scene",
+  "native": "$S/runtime/native",
+  "sha256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "publishedPackageReadOnly": true
+}

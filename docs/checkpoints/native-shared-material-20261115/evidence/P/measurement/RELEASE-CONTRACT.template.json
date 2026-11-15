@@ -1,0 +1,11 @@
+{
+  "status": "PENDING_SIGNED_CANDIDATE_HASH",
+  "candidateSHA256": null,
+  "boundaryMarkers": {
+    "BEGIN": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=2",
+    "PREPARE": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3"
+  },
+  "releaseLog": "[NativeReleaseMode] mode=BEGIN/PREPARE eligible=1 queued=1 simulation=300..1500 begin_submission=N begin_prepare_overlap=0/1",
+  "pendingLog": "[NativeBeginPrepareOverlap] pending_at_prepare=1 simulation=300..1500 source_draw>0 for FIXED_BEGIN",
+  "reclaimLog": "[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=2 simulation=300..1500, optional"
+}

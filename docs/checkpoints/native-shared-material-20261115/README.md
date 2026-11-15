@@ -1,15 +1,36 @@
-# Current native shared-material / model-type-facts checkpoint
+# Current native source and independent-maintainer handoff
 
-This development checkpoint is based on **v1.11.3**, then P (screen setter elision), Q (shared-program Sepia testbed) and S (model-positive backing facts). It contains the complete integrated engine under `engine/`, not only the last five-file patch. It is not a release, public performance promotion or Homebrew update.
+This is the complete **P → Q → S** development checkpoint on v1.11.3. It is intended for another maintainer or LLM to modify and diagnose. The public release, default `main` engine and Homebrew are unchanged. No new build, game or benchmark was performed to publish this checkpoint.
 
-[Exact source chain, trees, signed engine and normalization exceptions](SOURCE-CLOSURE.json) · [Every frozen input and Git blob](FULL-SOURCE-FILES.json).
+Start with [SOURCE GUIDE](SOURCE-GUIDE.md), [results and limits](RESULTS.md), [reproduction](REPRODUCTION.md), then [remaining problems](NEXT.md). Do not begin by reading all 10k files. The large [FULL-SOURCE-FILES manifest](FULL-SOURCE-FILES.json) is verification metadata, not new implementation.
 
-The actual compiled S engine has SHA-256 `5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7`. P/Q/S source commits are separated in history. Every frozen file is compared against Git; four historical simdjson dotfiles remain and two personal path strings in one non-build provenance JSON are normalized, with original/published hashes recorded. All C++/Objective-C++, generated shaders, GLSL, Lua and test input bytes are preserved.
+| Identity | Value |
+| --- | --- |
+| Release base | `v1.11.3`, commit `0b0fd234af3bf5dd073ab7094350ec63fc3a7e04` |
+| P source commit | `2b82374573dff256fafc2e7c1733c867de7aafae` |
+| Q source commit | `10f09d4e7d24502cd28aab284cb6392b1fd95a0a` |
+| S source commit | `8412adc758db31b0abed71db1f0a800d9bb68a1b` |
+| Current engine tree | `624267e4ee411b87e145ac3d2cd12ed857f411c9` |
+| Actual tested signed S engine | `5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7` |
 
-P observed setter reduction, with mean 184.700 → 184.738 FPS (+0.0208%); no established FPS gain. Q is a restricted GLSL AST-to-MSL/typed metadata/Lua testbed using the **160-byte exposure/bias variant**. The original tools README describes the earlier 128-byte packet; do not regenerate without the variant argument. Same-session hot relink, exact pixel equivalence, generic GLSL compilation and CUS pilot performance are not proved. Q's CUS prototype is off in all current tests.
+The full frozen S snapshot has 10,248 input files. Every input byte/mode was compared with the Git tree; the only publication change is two personal path prefixes in one non-build provenance JSON. Original/published hashes are recorded. Four historical simdjson dotfiles missing from the local archives are retained, yielding 10,252 Git entries. No compiled C++/Objective-C++, GLSL, MSL, Lua, generated layout or test payload is modified. [Source closure](SOURCE-CLOSURE.json).
 
-S reuses only positive CPU model-type facts, with exact weak owner and execution-scope bounds. Provider requests stay 218/job; successful model casts fall 59 → 18, with 410 RTTI operations omitted per sampled job. GPU binding/readiness/lifetime work remains on its original path. The complete clean OFF/ON/ON/OFF set has mean OFF 184.902314 and ON 184.618023 FPS (−0.153752%); B1 is retained. FPS improvement and statistical equivalence are not established. The next private experiment policy selects MODEL_TYPE_FACTS=1 and SCREEN_STATE_ELISION=1; compiled defaults remain 0.
+The final source delta from the release is 34 paths: 13 modified and 21 added. P has one path, Q 29 and S five, with overlap between phases. No undeclared source changes were found. K is excluded by this source chain; this publication does not claim to have independently tested K's implementation.
 
-The shipped outer launcher clears BAR_NATIVE variables. Exporting pilot flags before launching that wrapper does not enable this experiment. Use a separately signed private native runtime and the recorded explicit child environment, with PREPARE=1, BEGIN=0, worker=1, FINAL_COLOR_STAGE=1, CUS pilot=0, Sepia off, and trace/Validation off for clean measurement. More detailed result, fixture and reproduction records are being added to this draft checkpoint; the release and Homebrew remain pinned.
+## Evidence index
 
-Credits: existing engine/native work retains original authors including yeojuny; the inherited LuaVBO two-format-argument correction is from tomjn's RecoilEngine PR #3695, not a new import here. PR #3035 affinity and the benbreen QoS experiment are absent in this lineage. Beherith's Sepia widget/GLSL copyright and GPL v2-or-later notices are retained in `engine/tools/sepia-pilot/PROVENANCE.json` and original source.
+- [P final decision](evidence/P-final/RESULT.json), [original four-run completion](evidence/P/measurement/clean_paced/COMPLETION.json), [supplemental OFF](evidence/P-final/SUPPLEMENTAL-OFF.json), [slow-tail analysis](evidence/P-final/tail-analysis/ANALYSIS.json).
+- [Q functional result](evidence/Q/RESULT.json), [integration adjustments](evidence/Q/INTEGRATION-ADJUSTMENTS.json), [F2 partial/failed relink](evidence/Q/measurement/F2-PARTIAL-AUDIT.json), [original packet](evidence/Q-design/CHECKPOINT.md).
+- [R/P2 all-thread analysis](evidence/R/outputs/offline-profile-p2/ANALYSIS.json), [lossless normalized XML](evidence/R/outputs/offline-profile-p2/time-profile.xml.gz), [P1 export failure/recovery](evidence/R/outputs/offline-profile/EXPORT-RECOVERY.json).
+- [S handoff](evidence/S/HANDOFF.json), [result](evidence/S/RESULT.json), [private adoption](evidence/S/ADOPTED-LOCAL-BASELINE.json), [diagnostic work/Metal check](evidence/S/DIAGNOSTIC-RESULT.json), [clean four-run completion](evidence/S/measurement/clean_paced/COMPLETION.json), [host sanitizer log](evidence/S/checks/host-run.log).
+- [Every selected evidence file and original/published hashes](EVIDENCE-MANIFEST.json), [large omitted artifacts/checksums](OMITTED-ARTIFACTS.json), [exact prelaunch fixture verification](reproduction/FROZEN-INPUT-VERIFICATION.json).
+
+Pending fields in original pre-runtime snapshots are retained; final results and adoption records provide the later disposition. Original raw failures are not overwritten by later success. Path tokens `$P/$Q/$R/$S` identify the corresponding `evidence/` phase. Some immutable launch records refer to private original paths; the actual small portable inputs are included under `reproduction/frozen-inputs/`.
+
+[Separate current-J wall-span context](RESULTS.md#current-j-background-kept-separate-from-pqrs) is included to distinguish the older locked/Pinewood runs and broader retirement/encoding questions.
+
+## Credits and public scope
+
+Existing engine/native work keeps its original authors including yeojuny. The two LuaVBO invalid-index format arguments inherited from H/J remain credited to tomjn, RecoilEngine PR #3695, commit `29b950671fd883d2e01bc2cf1f6f6d0b7168280a`; this is not a new import. PR #3035 affinity and benbreen's QoS experiment are not present in S. Beherith's Sepia widget/GLSL copyright (2023.01.05), GPL v2 or later, original stages, hashes and notices are retained. [Original contribution records](UPSTREAM-CONTRIBUTIONS.original-record.json) · [applicability](evidence/Q-design/PROVENANCE-APPLICABILITY.json) · [source provenance](../../../engine/tools/sepia-pilot/PROVENANCE.json).
+
+Public evidence normalizes local paths. Original records changed by normalization are preserved privately by the repository manager, keyed by manifest hashes. Unchanged CSVs/images are stored once by Git blob identity. No raw conversations, account data, engine binaries, object/debug files, full user profiles, game pool or trace container is included.

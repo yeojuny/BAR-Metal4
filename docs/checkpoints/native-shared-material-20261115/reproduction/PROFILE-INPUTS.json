@@ -1,0 +1,200 @@
+[
+  {
+    "name": "S-clean",
+    "kind": "Closed private synthetic profile, explicit whitelist only; configs may include post-run serialization.",
+    "inputs": [
+      {
+        "path": "script.txt",
+        "currentSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "prelaunchSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "springsettings.cfg",
+        "currentSHA256": "061680cd42a4c30cc28ee8005f868e947d936a1ba253019728a40dafb9d4621b",
+        "prelaunchSHA256": "e95d62c800193c5fc7cb05cc777d02f1efd5c4908416a6dfc45a02983633b579",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BC213.lua",
+        "currentSHA256": "42420cfba679aba4527199c7d44f221345a6d56581245c92ff8b948765110167",
+        "prelaunchSHA256": "a18192ce6281848da803b3beeff061cb3a3b3d54ed5ccfb4472f9db65e35f4dd",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BYAR.lua",
+        "currentSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "prelaunchSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "unchangedSinceLaunch": true
+      }
+    ]
+  },
+  {
+    "name": "S-diagnostic",
+    "kind": "Closed private synthetic profile, explicit whitelist only; configs may include post-run serialization.",
+    "inputs": [
+      {
+        "path": "script.txt",
+        "currentSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "prelaunchSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "springsettings.cfg",
+        "currentSHA256": "061680cd42a4c30cc28ee8005f868e947d936a1ba253019728a40dafb9d4621b",
+        "prelaunchSHA256": "e95d62c800193c5fc7cb05cc777d02f1efd5c4908416a6dfc45a02983633b579",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BC213.lua",
+        "currentSHA256": "5c715fea9803ddbd24ffea071d0d5dd6231759306756e4c20ee1cedf270a465b",
+        "prelaunchSHA256": "a18192ce6281848da803b3beeff061cb3a3b3d54ed5ccfb4472f9db65e35f4dd",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BYAR.lua",
+        "currentSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "prelaunchSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "unchangedSinceLaunch": true
+      }
+    ]
+  },
+  {
+    "name": "Q-F1-old",
+    "kind": "Closed private synthetic profile, explicit whitelist only; configs may include post-run serialization.",
+    "inputs": [
+      {
+        "path": "script.txt",
+        "currentSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "prelaunchSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "springsettings.cfg",
+        "currentSHA256": "93a53a9936944afc51def851dc22fc0f511c5dfe20f3a04157131f3a66df1086",
+        "prelaunchSHA256": "ea93d2fd7005073f7da337a8d938a7c0e7b08e9584941b8ae05f5492fe65ac29",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BC213.lua",
+        "currentSHA256": "b7e1f60360dba0024923efd529007d1732e96747ecabc883cb267a693b1b860b",
+        "prelaunchSHA256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BYAR.lua",
+        "currentSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "prelaunchSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/Config/v2-functional-fixture.json",
+        "currentSHA256": "8e06a8af5232765f138cb50d965d0700fd82f76a525d4c61e81744fc56929e1a",
+        "prelaunchSHA256": "8e06a8af5232765f138cb50d965d0700fd82f76a525d4c61e81744fc56929e1a",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/Widgets/zzz_v2_functional_probe.lua",
+        "currentSHA256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+        "prelaunchSHA256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+        "unchangedSinceLaunch": true
+      }
+    ]
+  },
+  {
+    "name": "Q-F2-shared",
+    "kind": "Closed private synthetic profile, explicit whitelist only; configs may include post-run serialization.",
+    "inputs": [
+      {
+        "path": "script.txt",
+        "currentSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "prelaunchSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "springsettings.cfg",
+        "currentSHA256": "e07def497c5c3b2085e03d094005927b3f21a009640c0b4115ea799c7b0708e1",
+        "prelaunchSHA256": "b24c185672b506e3c8854fd139512eb8282051de6cd494b5ab951fee37e45944",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BC213.lua",
+        "currentSHA256": "bea3b48b0d5874e393fb3a4d14a5ecba6a7a0f608f20cb77ace03c02853dbaef",
+        "prelaunchSHA256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BYAR.lua",
+        "currentSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "prelaunchSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/Config/v2-functional-fixture.json",
+        "currentSHA256": "8605bbe8e5c4b026f92828d27b9bf23c3adf7a76ee905bb01f814a118b364d6a",
+        "prelaunchSHA256": "8605bbe8e5c4b026f92828d27b9bf23c3adf7a76ee905bb01f814a118b364d6a",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/NativeWidgets/sepia_pilot_program.lua",
+        "currentSHA256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212",
+        "prelaunchSHA256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/Widgets/zzz_v2_functional_probe.lua",
+        "currentSHA256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+        "prelaunchSHA256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+        "unchangedSinceLaunch": true
+      }
+    ]
+  },
+  {
+    "name": "Q-F3-variant",
+    "kind": "Closed private synthetic profile, explicit whitelist only; configs may include post-run serialization.",
+    "inputs": [
+      {
+        "path": "script.txt",
+        "currentSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "prelaunchSHA256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "springsettings.cfg",
+        "currentSHA256": "b9a9fd4174dca9ade99e62d4f642f05391ede7d8b25712949177d136088cdd9f",
+        "prelaunchSHA256": "50a8f736cf28d407e509793b490b6afbf12e765c4c19c3b3f67a6854a2ad0ea3",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BC213.lua",
+        "currentSHA256": "81698aeaf0d33d78650a4d79f696a56ba0950ed86cdc647f307e85cbe2bfd88e",
+        "prelaunchSHA256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+        "unchangedSinceLaunch": false
+      },
+      {
+        "path": "LuaUI/Config/BYAR.lua",
+        "currentSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "prelaunchSHA256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/Config/v2-functional-fixture.json",
+        "currentSHA256": "851cd33f4cd03d8b7e3645f5b64bfd7170310e0d6ac2a52c20986e836b0bc0ac",
+        "prelaunchSHA256": "851cd33f4cd03d8b7e3645f5b64bfd7170310e0d6ac2a52c20986e836b0bc0ac",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/NativeWidgets/sepia_pilot_program.lua",
+        "currentSHA256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212",
+        "prelaunchSHA256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212",
+        "unchangedSinceLaunch": true
+      },
+      {
+        "path": "LuaUI/Widgets/zzz_v2_functional_probe.lua",
+        "currentSHA256": "03821516270837d096561862a03a277a1d7499c1280a257b5312705064dbba01",
+        "prelaunchSHA256": "03821516270837d096561862a03a277a1d7499c1280a257b5312705064dbba01",
+        "unchangedSinceLaunch": true
+      }
+    ]
+  }
+]

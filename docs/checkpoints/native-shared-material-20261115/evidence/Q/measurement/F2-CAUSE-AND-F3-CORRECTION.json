@@ -1,0 +1,28 @@
+{
+  "status": "EXACT_FIXTURE_CAUSE_IDENTIFIED",
+  "failedArm": "F2_SHARED_SEPIA",
+  "failure": "FAILED_PAUSED_TIMEOUT state=await_disabled sim1500",
+  "cause": "Raw user widget proxy does not expose named DisableWidget/EnableWidget; warning observed, Shutdown never requested.",
+  "observedWarning": "V2 Sepia Functional Probe: widgetHandler.DisableWidget is not available to user widgets",
+  "warmupCause": false,
+  "engineFaultObserved": false,
+  "correction": "Fresh private BC213 SDZ adds same probe with GetInfo.handler=true, no raw duplicate; trusted fromZip handler grant enables real queued named lifecycle.",
+  "sourceEvidence": {
+    "actualGameFile": "luaui/barwidgets.lua",
+    "archiveScan": "518-533;1002-1011",
+    "handlerGrant": "1414-1418",
+    "GetInfoPreservation": "1842-1854",
+    "queuedMethods": "2094-2139",
+    "namedLifecycle": "2349-2392",
+    "userCommandFilter": "543-549;905-917"
+  },
+  "successStillRequires": [
+    "WG.sepia nil after Shutdown",
+    "WG.sepia restored after Initialize",
+    "generated module load twice with 1/0 then 1.25/.1,.2,.3",
+    "same paused sim1500/camera identity and changed images",
+    "actual shared child mode and Metal Validation review"
+  ],
+  "recovery": "F3 shared-only fresh private profile; same signed a09c72 engine; F1/F2 preserved",
+  "sourceOrBuildChanges": 0
+}
