@@ -41,6 +41,7 @@
 #include "Metal4WorldShaderSource.h"
 #include "Rendering/Backend/NativeCUSMaterialControl.h"
 #include "Rendering/Backend/NativeS3OTextureSource.h"
+#include "Rendering/Backend/NativePositiveBackingFacts.h"
 #include "Rendering/Backend/NativeParticleAtlasSource.h"
 #include "Metal4OpaqueModelSource.h"
 #include "Metal4ShadowTextureNative.h"
@@ -232,6 +233,7 @@ std::shared_ptr<WorldTexturePreparationJournal> RuntimeLease::WorldTexturePrepar
 namespace rendering {
 namespace {
 using namespace metal4;
+#include "Metal4ModelTypeFacts.inc"
 
 void MainThread() { Require([NSThread isMainThread]||Metal4WindowSurfaceNativeAccess::WorkerAccessActive(), "Metal4 world presentation requires main or pinned render worker"); }
 void MatrixFinite(const WorldMatrix& matrix) { for (float value: matrix) Require(std::isfinite(value), "Non-finite world matrix"); }
@@ -721,10 +723,13 @@ struct Metal4WorldRenderer::Impl {
 		Require(sampling.magFilter==0x2600||sampling.magFilter==0x2601,"Original terrain input magnification filter is invalid");
 		return screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 	}
-	CUSSourceImage OriginalModelImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission,bool validation,double& shaderMs)
+	CUSSourceImage OriginalModelImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission,bool validation,double& shaderMs,ModelTypeFactsScope* typeFacts=nullptr)
 	{
 		Require(submission&&binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&(binding.object->backing||binding.object->image),
 			"Original model image lacks its retained source object/content/submission");
+  ModelTypeFactsScope::ProviderCall typeCall(typeFacts,lease,submission);
+  auto model=typeCall.Find(binding.object->backing);
+  if(!model){
 		if(std::dynamic_pointer_cast<const NativeLegacyRefractionBacking>(binding.object->backing))return legacyWaterGPU.ResolveCopy(lease,binding,submission);
 		if(auto mask=std::dynamic_pointer_cast<const NativeUnitStencilBacking>(binding.object->backing))
 			return unitStencilGPU.Resolve(lease,mask->version,submission);
@@ -752,10 +757,17 @@ struct Metal4WorldRenderer::Impl {
 			return pbrSource.Image(lease,binding,submission);
 		if(std::dynamic_pointer_cast<const NativeParticleAtlasBacking>(binding.object->backing))
 			return particlesGPU.AtlasImage(lease,binding,screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding)),submission);
+  } // A prior positive final-type proof skips only impossible type dispatch.
 		Require(binding.object->target==NativeCUSTextureTarget::Image2D,
 			"Original model image target has no actual paired source consumer");
-		if(auto model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing)){
+  std::optional<ModelTypeFactsScope::Facts::Proof> modelProof;
+  if(!model){
+   if(typeCall.ReuseEnabled()){modelProof.emplace(ModelTypeFactsScope::Facts::Classify(binding.object->backing));model=modelProof->Typed();}
+   else model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing);
+  }
+		if(model){
 			Require(model->pixels!=nullptr,"Original model image has no actual retained upload bytes");
+   typeCall.Positive(modelProof);
    // The pilot admits only completion observed BEFORE this provider invocation.
    // Texture() may retire/register work; its successful return is not a proof.
    bool previouslyComplete=false;
@@ -3369,8 +3381,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 					buffers.push_back({piece.vertices,piece.indices,piece.count});
 				}return buffers;
 			};
+  std::optional<ModelTypeFactsScope> modelTypeFacts;
+  if(ModelTypeFactsScope::Wanted())modelTypeFacts.emplace(lease,sourceSubmission);
 			const auto sourceImages=[&](RuntimeLease& sourceLease,const NativeCUSTextureBinding& binding,unsigned){
-				return impl->OriginalModelImage(sourceLease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);
+				return impl->OriginalModelImage(sourceLease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs,modelTypeFacts?&*modelTypeFacts:nullptr);
 			};
   std::vector<NativeWorldAttachmentClear> shadowClears;
   if(frame.luaWorldDrawFrame){
