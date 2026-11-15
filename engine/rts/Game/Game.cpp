@@ -1785,7 +1785,13 @@ bool CGame::Draw() {
 			LuaNativePostprocess::RetireCompletedFrame(nativeResult.completedPostprocessSerial);
 			LuaNativeVolumetricClouds::RetireCompletedFrame(nativeResult.sourceDrawFrame);
 		}
+		// Keep the exceptional fence through all throwing world/screen/result
+		// work, including queued DrawWorld returns. This is not GPU retirement.
+		rendering::scene::DismissCaptureRollbackFence();
 	} catch (...) {
+		// A CPU-settled stable capture may retain the predecessor GPU ticket.
+		// Complete its real retirement before the first Lua/source rollback.
+		rendering::scene::FinishCaptureBeforeRollback();
 		rendering::scene::FinishCPUReadPreparation();
 		LuaNativePostprocess::AbortFrame();
 		LuaNativeVolumetricClouds::AbortFrame();

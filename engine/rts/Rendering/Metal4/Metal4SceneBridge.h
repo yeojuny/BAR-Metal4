@@ -65,6 +65,10 @@ ui::NativeUIFrameRasterMapping GetUIFrameRasterMapping(const ScreenViewport& def
 // Complete a queued presentation before recorder reuse or scene teardown.
 // Join immutable CPU preparation before source aborts; does not submit or drain GPU work.
 void FinishCPUReadPreparation();
+// Conditional full retirement before source rollback on a failed capture.
+void FinishCaptureBeforeRollback();
+// Successful source transaction; does not retire a GPU receipt or credit.
+void DismissCaptureRollbackFence();
 void FinishPendingFrame();
 // Source-thread external GPU control boundary: settle CPU/Begin, then retire GPU
 // and apply exact scene receipts before taking a new Runtime lease/source mutation.

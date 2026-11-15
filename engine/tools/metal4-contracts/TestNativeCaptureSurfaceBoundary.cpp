@@ -1,11 +1,88 @@
 #include "Rendering/Metal4/Metal4CaptureSurfaceBoundary.h"
 #include <cassert>
 #include "Rendering/Backend/NativeDeferredParticleCapture.h"
+#include "Rendering/Backend/NativeFrameCompletionMailbox.h"
+#include "Rendering/Backend/NativeSourceFrameCredits.h"
 #include <limits>
 #include <string>
 #include <stdexcept>
 using namespace rendering;
 int main(){
+ // A surface can change after stable capture but before dispatch. Do not write
+ // CAMetalLayer properties under a retained predecessor, even on that edge.
+ {
+  NativeCaptureRollbackFence fence;std::string order;int observed=1,applied=0;
+  auto refresh=[&]{order+='R';applied=observed;};
+  auto drain=[&]{order+='D';observed=2;};
+  fence.RefreshForDispatch([&]{order+='O';return true;},drain,refresh);assert(order=="R");
+  fence.Arm();order.clear();
+  fence.RefreshForDispatch([&]{order+='O';return true;},drain,refresh);assert(order=="O");
+  order.clear();fence.RefreshForDispatch([&]{order+='O';return false;},drain,refresh);
+  assert(order=="ODR"&&applied==2);
+  order.clear();fence.RefreshForDispatch([&]()->bool{order+='O';throw std::runtime_error("unknown");},drain,refresh);assert(order=="ODR");
+  order.clear();try{fence.RefreshForDispatch([&]{order+='O';return false;},[&]{order+='D';throw std::runtime_error("drain");},refresh);assert(false);}catch(const std::runtime_error&){}assert(order=="OD");
+ }
+ // Exceptions after the surface helper returned (alpha/Lua/publication or
+ // later DrawWorld preparation) must fence before ANY source rollback.
+ {
+  NativeCaptureRollbackFence fence;bool gpuPending=true,rolledBack=false;int drains=0;
+  auto drain=[&]{++drains;gpuPending=false;};
+  fence.BeforeRollback(drain);assert(drains==0); // OFF/fallback unchanged.
+  const bool retained=CaptureAtNativeSurfaceBoundary(true,[]{return true;},drain,[]{},[]{},[]{return true;});
+  assert(retained&&gpuPending);fence.Arm();
+  try{throw std::runtime_error("later alpha callback");}
+  catch(...){fence.BeforeRollback(drain);assert(!gpuPending);rolledBack=true;}
+  assert(rolledBack&&drains==1);fence.BeforeRollback(drain);assert(drains==1);
+  fence.Arm();gpuPending=true;
+  try{fence.BeforeRollback([]{throw std::runtime_error("GPU quarantine");});assert(false);}catch(const std::runtime_error&){}
+  assert(gpuPending);fence.BeforeRollback(drain);assert(drains==2&&!gpuPending);
+  fence.Arm();gpuPending=true;fence.Dismiss();fence.BeforeRollback(drain);
+  assert(gpuPending&&drains==2); // Successful source end doesn't claim GPU done.
+ }
+ // A stable, CPU-settled suffix must retain the exact older GPU source lease.
+ // CPU acceptance alone cannot pop a GPU notice or admit unbounded captures.
+ {
+  NativeSourceFrameCredits credits(3);NativeFrameCompletionMailbox mailbox(7);
+  auto old=credits.Acquire(10);credits.Hold(old);
+  const auto ticket=mailbox.Prepare(7,10,110);
+  auto current=credits.Acquire(11);
+  bool cpuPending=true,gpuPending=true;unsigned drains=0;
+  const auto drain=[&]{++drains;gpuPending=false;mailbox.Publish(ticket,{true,10,110});};
+  const bool deferred=CaptureAtNativeSurfaceBoundary(true,[]{return true;},drain,[]{assert(false);},
+   [&]{cpuPending=false;mailbox.Accept(ticket);},[&]{assert(!cpuPending);return true;});
+  assert(deferred&&gpuPending&&drains==0&&!mailbox.Pop());credits.ValidateHeld(10);
+  auto third=credits.Acquire(12);assert(!credits.HasCapacity());
+  try{credits.Acquire(13);assert(false);}catch(const std::logic_error&){}
+  old.reset();assert(!credits.HasCapacity()); // GPU-held even without caller alias.
+  drain();const auto notice=mailbox.Pop();assert(notice&&notice->sourceDrawFrame==10);
+  credits.ReleaseHeld(notice->sourceDrawFrame);assert(credits.HasCapacity());
+  credits.Validate(current,11);credits.Validate(third,12); // Never retire N+1.
+  try{mailbox.Publish(ticket,{true,10,110});assert(false);}catch(const std::logic_error&){}
+  mailbox.Close();NativeFrameCompletionMailbox replacement(8);
+  try{replacement.Publish(ticket,{true,10,110});assert(false);}catch(const std::logic_error&){}
+  try{mailbox.Publish(ticket,{true,10,110});assert(false);}catch(const std::logic_error&){}
+ }
+ // Readiness is a post-capture proof. Required GPU consumers, unknown policy,
+ // changed/unknown surface, failing join/capture and failed drain all preserve
+ // the full conservative boundary. No readiness claim survives failure.
+ for(unsigned scenario=0;scenario<8;++scenario){
+  std::string order;bool readyCalled=false;bool threw=false;
+  const auto observe=[&](){order+='O';if(scenario==3)throw std::runtime_error("observation");return scenario!=2;};
+  const auto drain=[&]{order+='D';if(scenario==7)throw std::runtime_error("quarantine");};
+  try{
+   bool retained=CaptureAtNativeSurfaceBoundary(true,observe,drain,[&]{order+='R';},[&]{
+    order+='C';if(scenario==4||scenario==7)throw std::runtime_error("join");
+    if(scenario==5)throw std::runtime_error("capture");
+   },[&]{readyCalled=true;order+='P';if(scenario==6)throw std::runtime_error("proof");return scenario!=1;});
+   assert(retained==(scenario==0));
+  }catch(const std::runtime_error& e){threw=true;if(scenario==7)assert(std::string(e.what())=="quarantine");}
+  assert(threw==(scenario>=4));
+  if(scenario==0)assert(order=="OCP");
+  if(scenario==1)assert(order=="OCPD");
+  if(scenario==2||scenario==3)assert(order=="ODRCD"&&!readyCalled);
+  if(scenario==4||scenario==5||scenario==7)assert(order=="OCD"&&!readyCalled);
+  if(scenario==6)assert(order=="OCPD");
+ }
  {
   NativeDeferredParticleCapture state;state.RequireComplete();int writes=0;
   try{state.Complete([&]{++writes;});assert(false);}catch(const std::logic_error&){}assert(writes==0);

@@ -252,6 +252,7 @@ struct ScenePendingAdmission;
 struct Session {
  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
  NativeSourceFrameCredits sourceCredits{PrepareReadyPilotRequested()?3u:2u};
+ NativeCaptureRollbackFence captureRollbackFence;
  std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
  std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
  uint64_t cpuReadJobs220=0;
@@ -956,6 +957,12 @@ void RequireRetiredGPUWork()
 } // namespace
 
 void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
+void FinishCaptureBeforeRollback() {
+ if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork();});
+}
+void DismissCaptureRollbackFence() {
+ if(session)session->captureRollbackFence.Dismiss();
+}
 void FinishPendingFrame() { RequireRetiredGPUWork(); }
 void FinishRuntimeControl() { RequireRetiredGPUWork(); }
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
@@ -1647,8 +1654,9 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 		return;
 	if (session->preparedFrame)
 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
- // Only an exactly unchanged surface permits this value-snapshot capture to
- // overlap N's admitted prepare/encode work. Drain before later alpha/water/Lua work.
+ // An unchanged surface permits value capture to overlap N's CPU work. After
+ // joining that job, the proved PREPARE suffix may use the ordinary OFF state:
+ // source CPU settled, immutable predecessors still owned by the GPU ticket.
  const bool deferredParticles=BeginReadyPilotRequested()||PrepareReadyPilotRequested();
  const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
  std::unique_ptr<CPUReadReceipt220> cpuReceipt220;
@@ -1680,7 +1688,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  };
  // END EARLY_CPU_READ_LAUNCH220
 
- CaptureAtNativeSurfaceBoundary(deferredParticles,
+ const bool retainedPredecessorGPU=CaptureAtNativeSurfaceBoundary(deferredParticles,
   [&]{return session->surface.CaptureRefreshUnchanged();},
   []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
    {metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
@@ -1694,13 +1702,30 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
    if(deferredParticles){
     // Particle writers require the prior CPU/source job to settle, not its GPU
     // completion. They produce fresh CPU geometry and retain immutable sources.
-    // Keep the boundary's full GPU drain after this tail, before shield/water/
-    // alpha callbacks. A throwing tail still drains before source rollback.
+    // A throwing join/tail still takes the boundary's full GPU drain before
+    // source rollback. Successful CPU settlement does not retire GPU credits.
     session->renderer->FinishCPUWork();
     session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
    }
+  },[&]{
+   static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_CAPTURE_READY_BOUNDARY");return !value||std::string_view(value)=="1";}();
+   // Unknown/special paths preserve the old tail drain. Evaluate only AFTER
+   // FinishCPUWork and particle capture succeed; no admission or notice is
+   // fabricated here. Source receipts/credits remain held until real GPU
+   // completion is published and delivered at the existing retirement site.
+   return enabled&&PrepareReadyPilotRequested()&&!BeginReadyPilotRequested()&&
+    session->renderer&&!session->renderer->HasScreenContinuation()&&
+    !session->dynamicWaterCapture.Initialized()&&!session->legacyWaterCapture.Initialized()&&
+    !session->sourceSettlement&&!session->admissionSettlement&&
+    session->preparedFrame&&session->preparedFrame->simulationFrame>0&&
+    session->preparedFrame->sourceDrawFrame==globalRendering->drawFrame&&
+    session->preparedFrame->opaqueModelFrame&&session->ModelSourceOwnersConnected()&&
+    session->preparedFrame->unsupported.empty()&&session->surface.Snapshot().CanPresent();
   });
+ if(retainedPredecessorGPU){session->captureRollbackFence.Arm();static bool reported=false;if(!reported){reported=true;
+  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3");}}
 
+ try {
  auto& frame=*session->preparedFrame;
  frame.mainSampling=session->renderer->ActualMainSampling();
  frame.minSampleShadingRate=globalRendering->minSampleShadingRate;
@@ -1853,6 +1878,13 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
  if(earlyCPURead220&&cpuReceipt220)cpuJoin220.TransferTo(cpuReceipt220->pending);
  else cpuJoin220.Finish();
  session->cpuReadReceipt220=std::move(cpuReceipt220);
+ }catch(...){
+  // New CPU-only suffix failures must observe real GPU retirement before the
+  // outer source rollback. Never cancel an old ticket or release its credits
+  // merely because the source worker joined. A failed drain keeps quarantine.
+  if(retainedPredecessorGPU){cpuJoin220.Finish();FinishCaptureBeforeRollback();}
+  throw;
+ }
 }
 
 void AbortPreparedWorld()
@@ -2039,7 +2071,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  // Refresh writes CAMetalLayer properties, not just an immutable observation.
  // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
  if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();
-	session->surface.Refresh();
+ session->captureRollbackFence.RefreshForDispatch(
+  [&]{return session->surface.CaptureRefreshUnchanged();},
+  []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();});
  const auto pbrDeclarations=session->renderer?session->renderer->CapturePBRSource():NativePBRDeclarationReceipt{};
 	const auto submitTargets = [&]() -> DrawResult {
 		const auto independent=screenUI?std::count_if(screenUI->targetPasses.begin(),screenUI->targetPasses.end(),[](const auto& pass){return !pass.sourceDependent && pass.sourceStage==NativePostprocessStage::Screen;}):0;
