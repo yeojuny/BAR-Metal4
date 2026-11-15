@@ -1,0 +1,18 @@
+{
+  "status": "PASS_SOURCE_REVIEW_ONLY",
+  "reviewer": "contract_review",
+  "scope": "Single-file invocation-local screen render-state setter elision",
+  "default": "OFF unless BAR_NATIVE_SCREEN_STATE_ELISION exact1",
+  "preserved": [
+    "original entry barriers/defaults",
+    "all callback restores",
+    "per-draw readable/line checks",
+    "mutable argument-table semantics and unconditional bind",
+    "draw order and GPU ownership/lifetimes"
+  ],
+  "invalidation": "All eight foreign branches including sensorLOS and panelShader before callback; never publishes their state",
+  "viewport": "six component exact bits, nonfinite never skipped, signed zero distinct",
+  "counters": "Existing H5_COUNTERS bounded receipts only; OFF in clean FPS",
+  "runtime": "NOT_RUN",
+  "build": "PENDING"
+}

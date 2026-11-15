@@ -1,0 +1,196 @@
+{
+  "status": "CLOSED_ADOPTED_PRIVATE_BASELINE",
+  "utc": "2026-11-15T20:06:10.100634+00:00",
+  "sequence": [
+    "Q: generated GLSL/Lua to MSL Sepia uniform testbed PASS with limits",
+    "R/P2: valid all-thread profiler selected existing OriginalModelImage CPU type-dispatch cost",
+    "S: shared positive backing facts contract plus active provider adapter, one coherent build, same-binary OFF/ON work/visual/Metal validation and clean ABBA",
+    "S adopted ON for next private experiments only"
+  ],
+  "commonContract": "NativePositiveBackingFacts.h: unforgeable actual dynamic-cast proof, weak exact-owner identity, lease/context/submission scope, fixed 128 entry table",
+  "activeConsumer": "WorldRenderer OriginalModelImage through synchronous sourceImages; positive final Model type skips 9 impossible preceding casts plus original model cast; original GPU operations and guards unchanged",
+  "sourceBaseIncludesPrivateQ": true,
+  "changedFiles": [
+    {
+      "path": "rts/Rendering/Backend/NativeCPUPhaseTrace.h",
+      "beforeSHA256": "a7e7f0bd08201786cd084c31f12b75ff00803adbded13b88f7a3bd6f55343b2e",
+      "afterSHA256": "6fa3e8385aa68a670e49266cf3037384b4a82132e340d17e8ba8126a2b0f5388"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePositiveBackingFacts.h",
+      "beforeSHA256": null,
+      "afterSHA256": "e945e758d02d80b844f35d48c791fe40d0d080e47a7887a02ef333492695b2f5"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4ModelTypeFacts.inc",
+      "beforeSHA256": null,
+      "afterSHA256": "dcbe73a58c9ab0e0c7024acd3734bc62f6510b01d99cda90b9eab7302c312da1"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "beforeSHA256": "1ce655a505a4e31fe73b79cff6b44d47ee2da531f9bf06e42934a0f203974d3b",
+      "afterSHA256": "c053325b88eac66bba2cf00fee9a5ad2f690f0164c6f7bc7f9fbddc0d8dbd86f"
+    },
+    {
+      "path": "tools/model-type-facts/test_facts.cpp",
+      "beforeSHA256": null,
+      "afterSHA256": "6d71e3325db8050c08a1a4295eef68c4c3fbe9c4485b6d35a52f2faa737cdd4e"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "$Q/RESULT.json",
+      "sha256": "23a56174a28346497e7fe5aaf1de4fe6477cbc68f17b6d923e75865d9a89af3a"
+    },
+    {
+      "path": "$R/outputs/offline-profile-p2/ANALYSIS.json",
+      "sha256": "9181636c6227d99259b9ff97619a53575a66ecec9684df68dce8edfb79eefb9b"
+    },
+    {
+      "path": "$R/outputs/offline-profile-p2/analyze.py",
+      "sha256": "5a5fe3fc45457e18dc73470e1cbe809cbb06ce96909e0ca1982abcb49a1131e7"
+    },
+    {
+      "path": "$R/outputs/offline-profile/EXPORT-RECOVERY.json",
+      "sha256": "f26d5783cc0f090edacc2a8b6f813fb439dd4bf1985850e6d4e04cae2629212a"
+    },
+    {
+      "path": "$S/SOURCE-CLOSURE.json",
+      "sha256": "588d080d7132efbe115d19a558e477e5da857969b8f62ff4f8bcfe0f3fdbc838"
+    },
+    {
+      "path": "$S/SOURCE.patch",
+      "sha256": "1029a05cc09c3c3b059e067483c8683605fbe8e1fccdcf5b2a2ed4f5a37f45c9"
+    },
+    {
+      "path": "$S/SOURCE-REVIEW.json",
+      "sha256": "34b61ebbd76a26eea147f92065863d8c614c2f5055b69474a932b0641451669b"
+    },
+    {
+      "path": "$S/BUILD-RECEIPT.json",
+      "sha256": "3c1ce498cc82544e7bb118e0b21e9c87e1719c9723b11bc9fdacc569c5dbab55"
+    },
+    {
+      "path": "$S/CANDIDATE.json",
+      "sha256": "13d2162ea08f5f195d91c251e75458271e8001033f44aa840c3c26fa0a48213d"
+    },
+    {
+      "path": "$S/checks/host-run.log",
+      "sha256": "b6899b29be7624a0e3b343bd0962425d818cb0d8f234b3ab59dfa9b3e0e5bfbd"
+    },
+    {
+      "path": "$S/measurement/DIAGNOSTIC-GATE.json",
+      "sha256": "1d73453fe102d3f09b20322757020247a6943ce2a0907fa09e38fd846f1c55be"
+    },
+    {
+      "path": "$S/measurement/clean_paced/RUNS.json",
+      "sha256": "5474851035a5938c236e87d1ef17911831fcb39e17c4684fa7d33b618a651a66"
+    },
+    {
+      "path": "$S/measurement/clean_paced/COMPLETION.json",
+      "sha256": "6db696cc2f525e2978cd74c1c08259309e65e3708a3d1ea9e041437de07c4535"
+    },
+    {
+      "path": "$S/measurement/diagnostic_paced/PREFLIGHT-POWER-STOP.json",
+      "sha256": "9993c4b722cce93c77da83baf97a3808551b32222769f1568652fcce32fa5284"
+    },
+    {
+      "path": "$S/RESULT.before-local-adoption.json",
+      "sha256": "c82e0bee1d8b17d4c12f814df3a10182471cd6f6a05bc88196aca2f15bf1b1b5"
+    },
+    {
+      "path": "$S/CANDIDATE.before-local-adoption.json",
+      "sha256": "92f326f07e5f6b97819b9c7ba2a8a414fbed4452eb3e97481f7baa2f40feb018"
+    },
+    {
+      "path": "$S/RESULT.json",
+      "sha256": "aa84fa5d764e5a43646f5685605ddf1624975103596352860f4e22e8b76b09b5"
+    },
+    {
+      "path": "$S/ADOPTED-LOCAL-BASELINE.json",
+      "sha256": "13ae86378764ab84ebf78d078b44717841abb7319a51630a9f052c525d91b768"
+    }
+  ],
+  "rawCleanRuns": [
+    {
+      "run": "A1_OFF",
+      "directory": "$S/measurement/clean_paced/preparation/runs/A1_OFF",
+      "csvFiles": [
+        "$S/measurement/clean_paced/preparation/runs/A1_OFF/TERRAIN211-FRAMES.csv"
+      ]
+    },
+    {
+      "run": "B1_ON",
+      "directory": "$S/measurement/clean_paced/preparation/runs/B1_ON",
+      "csvFiles": [
+        "$S/measurement/clean_paced/preparation/runs/B1_ON/TERRAIN211-FRAMES.csv"
+      ]
+    },
+    {
+      "run": "B2_ON",
+      "directory": "$S/measurement/clean_paced/preparation/runs/B2_ON",
+      "csvFiles": [
+        "$S/measurement/clean_paced/preparation/runs/B2_ON/TERRAIN211-FRAMES.csv"
+      ]
+    },
+    {
+      "run": "A2_OFF",
+      "directory": "$S/measurement/clean_paced/preparation/runs/A2_OFF",
+      "csvFiles": [
+        "$S/measurement/clean_paced/preparation/runs/A2_OFF/TERRAIN211-FRAMES.csv"
+      ]
+    }
+  ],
+  "work": {
+    "offSampledJobs": 23,
+    "onSampledJobs": 22,
+    "requestsPerJobOFF": 218.0,
+    "requestsPerJobON": 218.0,
+    "onHits": 902,
+    "omittedCasts": 9020,
+    "omittedCastsPerJob": 410.0,
+    "positiveCastsPerJobOFF": 59.0,
+    "positiveCastsPerJobON": 18.0,
+    "cachedPositiveEntriesPerJob": 18.0
+  },
+  "performance": {
+    "meanFPS": {
+      "OFF": 184.90231401544514,
+      "ON": 184.61802292632655
+    },
+    "durationWeightedFPS": {
+      "OFF": 184.9023100076717,
+      "ON": 184.61807182146467
+    },
+    "onVsOffPercent": -0.15375204503652595,
+    "nPerMode": 2,
+    "pairs": [
+      {
+        "OFF": "A1_OFF",
+        "ON": "B1_ON",
+        "onMinusOffFPS": -0.9500474762712656
+      },
+      {
+        "OFF": "A2_OFF",
+        "ON": "B2_ON",
+        "onMinusOffFPS": 0.3814652980341009
+      }
+    ],
+    "gainEstablished": false,
+    "equivalenceEstablished": false
+  },
+  "limits": [
+    "No stable FPS benefit established; paired differences have opposite signs",
+    "Statistical equivalence and absence of regression are not established with n=2 per mode",
+    "Observed negative 0.153752% mean difference is preserved, not rounded to equality",
+    "S includes private Q V2 testbed code; A/B isolates the S type-facts flag, not whole-S versus public v1.11.3 or P",
+    "Provider wall time unavailable; diagnostic CPU comparison invalid after D0 power-mode transition",
+    "No GPU binding, readiness or resource reuse claim"
+  ],
+  "handoff": "Source/evidence information only. No Git, release, Homebrew or production promotion. Further work requires separate task direction.",
+  "runtime": "CLOSED; all owned processes terminated; AWAKE released",
+  "finalIntegrity": {
+    "frozenChangedSourceHashes": 5,
+    "signedBinarySHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7"
+  }
+}

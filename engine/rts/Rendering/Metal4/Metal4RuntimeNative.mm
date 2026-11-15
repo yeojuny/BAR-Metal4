@@ -755,6 +755,17 @@ std::string RuntimeLease::CommandBufferClass() const { return NSStringFromClass(
 
 #include "Metal4MemoryLedger.inc"
 
+void RuntimeLease::ValidatePreparationMutation() const
+{
+ Require(!frame->recording&&!frame->pending&&!frame->residencyCommit.Active(),
+  "Shared binding preparation is outside its actual writable lease");
+}
+void RuntimeLease::BindCUSSharedPreparation(std::shared_ptr<CUSSharedPreparationScope> scope)
+{
+ ValidatePreparationMutation();Require(scope&&!cusSharedPreparation,"Shared CUS preparation scope repeated or absent");
+ cusSharedPreparation=std::move(scope);
+}
+
 void RuntimeLease::AddAllocation(id<MTLAllocation> allocation)
 {
 	Require(allocation != nil && !frame->recording && !frame->pending && !frame->residencyCommit.Active(), "Cannot add invalid allocation during Metal4 execution");

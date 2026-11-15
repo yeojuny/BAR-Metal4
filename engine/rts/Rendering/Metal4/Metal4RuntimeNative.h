@@ -84,6 +84,7 @@ class TerrainShadingLeaseReceipts;
 class CompletedCubeLeaseReceipts;
 class CubeLeaseSamplers;
 class WorldTexturePreparationJournal;
+class CUSSharedPreparationScope;
 class ParticleAtlasPreparationJournal;
 struct ScreenMipOwnerIdentity;
 class ScreenMipPreparationJournal;
@@ -183,6 +184,10 @@ public:
  CompletedCubeLeaseReceipts* CompletedCubeReads() noexcept;
  CubeLeaseSamplers* CubeSamplers() noexcept;
  std::shared_ptr<WorldTexturePreparationJournal> WorldTexturePreparation();
+ // Owned by this exact DrawPrepared lease; shared by all child CUS Prepare calls.
+ void BindCUSSharedPreparation(std::shared_ptr<CUSSharedPreparationScope> scope);
+ const std::shared_ptr<CUSSharedPreparationScope>& CUSSharedPreparation() const noexcept {return cusSharedPreparation;}
+ void ValidatePreparationMutation() const;
  std::shared_ptr<ParticleAtlasPreparationJournal> ParticleAtlasPreparation();
  std::shared_ptr<ScreenMipPreparationJournal> ScreenMipPreparation(const std::shared_ptr<const ScreenMipOwnerIdentity>&);
 	// Per-submission original shading rate. Output count still belongs to each
@@ -238,6 +243,7 @@ private:
  std::shared_ptr<CompletedCubeLeaseReceipts> completedCubeReads;
  std::shared_ptr<CubeLeaseSamplers> cubeSamplers;
  std::shared_ptr<WorldTexturePreparationJournal> worldTexturePreparation;
+ std::shared_ptr<CUSSharedPreparationScope> cusSharedPreparation;
  std::shared_ptr<ParticleAtlasPreparationJournal> particleAtlasPreparation;
  // Declared after lock: capsule marks abandoned queues inactive before unlock.
  std::shared_ptr<ScreenMipLeaseJournals> screenMipJournals;

@@ -1,0 +1,67 @@
+{
+  "status": "SIGNED_PRIVATE_TESTBED",
+  "adopted": false,
+  "rawSHA256": "91ea08e1b803c68249214e64918bbffbe2b1ec886bbb78ea4558a3b9e3646ba6",
+  "signedSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "parentSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "sourceClosure": "SOURCE-CLOSURE.json",
+  "sourceReview": "SOURCE-REVIEW.json",
+  "relocations": [
+    [
+      "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "@loader_path/../lib/libIL.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "@loader_path/../lib/libminizip.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "@loader_path/../lib/libfreetype.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "@loader_path/../lib/libfontconfig.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "@loader_path/../lib/libvorbisfile.3.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "@loader_path/../lib/libvorbis.0.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "@loader_path/../lib/libogg.0.8.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "@loader_path/../lib/libopenal.1.25.2.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "@loader_path/../lib/libSDL3.0.dylib"
+    ]
+  ],
+  "wrapperSHA512": "2a2746ca8b7e213e1651c324db58ea466f5640c9110055a49f0025c43f840193088b580bec9e4524395904a62555e5bfc745bba828f66ecd7222ee0031c486fd",
+  "variantIdentity": "d23a8b75086bf172418574044d1c5c2d8497ed4d6da7223b6b9c2ac3d5c2d0c7",
+  "uniformBytes": 160,
+  "commonEnvironment": {
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+    "BAR_METAL4_SHARED_CUS_PILOT": "0",
+    "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+    "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+    "BAR_NATIVE_FINAL_COLOR_STAGE": "1"
+  },
+  "product": {
+    "variant": "private-shared-program-v2-testbed",
+    "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "$Q/runtime/native/bin/spring-metal4-scene",
+    "native": "$Q/runtime/native",
+    "sha256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+    "publishedPackageReadOnly": true
+  },
+  "runtime": "PASS_SEPIA_GENERATED_UNIFORM_TESTBED_WITH_LIMITATIONS",
+  "result": "RESULT.json"
+}

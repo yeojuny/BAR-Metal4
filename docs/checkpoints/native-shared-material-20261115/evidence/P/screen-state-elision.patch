@@ -1,0 +1,75 @@
+--- a/rts/Rendering/Metal4/Metal4ScreenNative.mm
++++ b/rts/Rendering/Metal4/Metal4ScreenNative.mm
+@@ -967,12 +967,36 @@
+  if(impl->mutableTables220[0]||impl->mutableTables220[1])mutableLock220.lock();
+  std::array<std::array<uint64_t,9>,2> previous220{};std::array<bool,2> havePrevious220{};
+  std::array<uint64_t,2> setters220{},draws220{},eligible220{};uint64_t encoded220=0;
++ // This state belongs only to this invocation and this encoder. A borrowed
++ // Draw is immutable and already retained by the prepared frame; no GPU
++ // resource, argument table, or state crosses an EncodeRange boundary.
++ static const bool elideState=[](){const char* v=std::getenv("BAR_NATIVE_SCREEN_STATE_ELISION");return v&&std::strcmp(v,"1")==0;}();
++ const Impl::Draw* previousState=nullptr;
++ std::array<uint64_t,7> stateOmitted{};uint64_t stateAttempts=0;
++ const auto issueState=[&](unsigned field,bool same){
++  const bool issue=!same;
++  if(impl->counters220){++stateAttempts;if(!issue)++stateOmitted[field];}
++  return issue;
++ };
++ const auto sameViewport=[](const MTLViewport& a,const MTLViewport& b){
++  const auto equal=[](double x,double y){return std::isfinite(x)&&std::isfinite(y)&&std::bit_cast<uint64_t>(x)==std::bit_cast<uint64_t>(y);};
++  return equal(a.originX,b.originX)&&equal(a.originY,b.originY)&&equal(a.width,b.width)&&
++   equal(a.height,b.height)&&equal(a.znear,b.znear)&&equal(a.zfar,b.zfar);
++ };
++ const auto sameScissor=[](const MTLScissorRect& a,const MTLScissorRect& b){
++  return a.x==b.x&&a.y==b.y&&a.width==b.width&&a.height==b.height;
++ };
+  const auto reportRange220=[&]{
+  if(impl->counters220){
+   static std::atomic<unsigned> rangeReceipts220{0};
+-  if(rangeReceipts220.fetch_add(1)<256)LOG("[NativeScreenTableH5V2] stage=encode receipt=%llu frame=%llu mode=%u range_first=%u range_end=%u encoded=%llu eligible_ordinary=%llu eligible_packed=%llu mutable_ordinary=%llu mutable_packed=%llu setters_ordinary=%llu setters_packed=%llu fresh_range_baseline=1",
++  if(rangeReceipts220.fetch_add(1)<256){LOG("[NativeScreenTableH5V2] stage=encode receipt=%llu frame=%llu mode=%u range_first=%u range_end=%u encoded=%llu eligible_ordinary=%llu eligible_packed=%llu mutable_ordinary=%llu mutable_packed=%llu setters_ordinary=%llu setters_packed=%llu fresh_range_baseline=1",
+    (unsigned long long)impl->receipt220,(unsigned long long)impl->sourceFrame220,unsigned(impl->mode220),first,end,(unsigned long long)encoded220,
+    (unsigned long long)eligible220[0],(unsigned long long)eligible220[1],(unsigned long long)draws220[0],(unsigned long long)draws220[1],(unsigned long long)setters220[0],(unsigned long long)setters220[1]);
++   LOG("[NativeScreenStateElision] frame=%llu enabled=%u range_first=%u range_end=%u prior_setters=%llu omitted_cull=%llu omitted_depth=%llu omitted_stencil=%llu omitted_viewport=%llu omitted_scissor=%llu omitted_depthclip=%llu omitted_pipeline=%llu argument_binds_unchanged=1 fresh_range=1",
++    (unsigned long long)impl->sourceFrame220,unsigned(elideState),first,end,(unsigned long long)stateAttempts,
++    (unsigned long long)stateOmitted[0],(unsigned long long)stateOmitted[1],(unsigned long long)stateOmitted[2],
++    (unsigned long long)stateOmitted[3],(unsigned long long)stateOmitted[4],(unsigned long long)stateOmitted[5],(unsigned long long)stateOmitted[6]);
++  }
+  }
+  };
+  if(impl->draws.empty()){reportRange220();return;}
+@@ -981,6 +1005,10 @@
+ 	[encoder setDepthBias:0 slopeScale:0 clamp:0];
+ 	for(const auto& draw:impl->draws) {
+ 		if(draw.originalCommand<first || draw.originalCommand>=end)continue;
++  // Foreign encoders may change any tracked field. Invalidate before their
++  // call, retain all original restores, and never publish their state below.
++  if(draw.unitIcons||draw.sensorLOS||draw.sensorPreview||draw.buildSquare||
++   draw.weaponRange||draw.startBox||draw.pip||draw.panelShader)previousState=nullptr;
+   if(impl->counters220){++encoded220;if(draw.eligibility220==1||draw.eligibility220==2)++eligible220[draw.eligibility220-1];}
+   if(draw.unitIcons){
+    for(std::size_t i=0;i<draw.unitIcons->DrawCount();++i)draw.unitIcons->EncodeDraw(i,encoder);
+@@ -1022,15 +1050,17 @@
+ 			[encoder setFrontFacingWinding:MTLWindingCounterClockwise];continue;
+ 		}
+ 		for(const auto& image:draw.externalImages)image.requireReadable();
+-		[encoder setCullMode:draw.cull==ScreenCull::Front?MTLCullModeFront:draw.cull==ScreenCull::Back?MTLCullModeBack:MTLCullModeNone];
+-		[encoder setDepthStencilState:draw.depth];
+-		[encoder setStencilFrontReferenceValue:draw.frontReference backReferenceValue:draw.backReference];
+-		[encoder setViewport:draw.viewport];[encoder setScissorRect:draw.scissor];
++		if(issueState(0,previousState&&previousState->cull==draw.cull))[encoder setCullMode:draw.cull==ScreenCull::Front?MTLCullModeFront:draw.cull==ScreenCull::Back?MTLCullModeBack:MTLCullModeNone];
++		if(issueState(1,previousState&&previousState->depth==draw.depth))[encoder setDepthStencilState:draw.depth];
++		if(issueState(2,previousState&&previousState->frontReference==draw.frontReference&&previousState->backReference==draw.backReference))[encoder setStencilFrontReferenceValue:draw.frontReference backReferenceValue:draw.backReference];
++		if(issueState(3,previousState&&sameViewport(previousState->viewport,draw.viewport)))[encoder setViewport:draw.viewport];
++  if(issueState(4,previousState&&sameScissor(previousState->scissor,draw.scissor)))[encoder setScissorRect:draw.scissor];
+ 		if(draw.panelShader){draw.panelShader->Encode(encoder);continue;}
+-  [encoder setDepthClipMode:draw.sourceLines?MTLDepthClipModeClamp:MTLDepthClipModeClip];
++  if(issueState(5,previousState&&bool(previousState->sourceLines)==bool(draw.sourceLines)))[encoder setDepthClipMode:draw.sourceLines?MTLDepthClipModeClamp:MTLDepthClipModeClip];
+   if(draw.sourceLines)draw.sourceLines->RequireReady();
+   if(draw.exactLine)Require(draw.exactLine->encoded,"Exact screen line draw precedes its producer");
+-		[encoder setRenderPipelineState:draw.pipeline];
++		if(issueState(6,previousState&&previousState->pipeline==draw.pipeline))[encoder setRenderPipelineState:draw.pipeline];
++  previousState=elideState?&draw:nullptr;
+   if(draw.mutableLayout220){
+    const unsigned layout=draw.mutableLayout220-1;const auto& next=draw.bindings220;
+    for(unsigned slot=0;slot<9;++slot){

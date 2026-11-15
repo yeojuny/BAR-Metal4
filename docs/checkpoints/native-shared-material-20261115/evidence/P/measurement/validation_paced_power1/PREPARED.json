@@ -1,0 +1,13 @@
+{
+  "status": "READY",
+  "utc": "2026-11-15T17:53:38.067400+00:00",
+  "productSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "arms": [
+    {
+      "arm": "V_POWER1_ELISION1_IMAGE",
+      "mode": "ELISION1",
+      "data": "$P/measurement/validation_paced_power1/preparation/private/V_POWER1_ELISION1_IMAGE/state/data",
+      "out": "$P/measurement/validation_paced_power1/preparation/runs/V_POWER1_ELISION1_IMAGE"
+    }
+  ]
+}

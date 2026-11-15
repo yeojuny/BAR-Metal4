@@ -1,0 +1,12 @@
+{
+  "status": "COMPLETE",
+  "runs": 4,
+  "means": {
+    "OFF": 184.90231401544514,
+    "ON": 184.61802292632655
+  },
+  "onVsOffPercent": -0.15375204503652595,
+  "priorSamplesPooled": false,
+  "validSlowRunsRetained": true,
+  "utc": "2026-11-15T20:00:30.301381+00:00"
+}

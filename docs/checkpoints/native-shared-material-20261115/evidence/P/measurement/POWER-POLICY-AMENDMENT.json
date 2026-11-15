@@ -1,0 +1,20 @@
+{
+  "status": "AMENDED_BEFORE_ANY_NEW_GAME",
+  "recordedUTC": "2026-11-15T17:53:28.691451+00:00",
+  "reason": "Previous validation campaign stopped before engine spawn because observed AC powermode=1 while old gate required 0. User authorized proceeding with FPS idle/offscreen limiter OFF; compare only fresh same-condition AC powermode 1 arms.",
+  "previousRunner": "$P/measurement/run_ac0_prelaunch.py",
+  "previousRunnerSHA256": "fcbca08dab7fabaacfbfd37d951923dbb988c56f8c9ba6cf1a3b78623410ba2c",
+  "amendedRunner": "$P/measurement/run.py",
+  "amendedRunnerSHA256": "5cc82f716f1e8b1ae2722c3e094fb9aa64e9e658f566c73018de8c519f0ab6b3",
+  "preservedPrelaunchFailure": "$P/measurement/validation_paced/COMPLETION.json",
+  "expectedACPowerMode": 1,
+  "sourceAndBinaryUnchanged": true,
+  "powerSettingsChanged": false,
+  "historicalPowermode0BaselineSeparate": true,
+  "newCampaigns": [
+    "validation_paced_power1",
+    "clean_paced_power1"
+  ],
+  "gameLaunchedAfterAmendment": false,
+  "remainingGates": "AC attached; AC powermode 1 checked repeatedly; thermal no warning; actual child flags; runtime LimitIdleFps0/offscreen false; original scene/pacing/camera/count; first fault stops."
+}

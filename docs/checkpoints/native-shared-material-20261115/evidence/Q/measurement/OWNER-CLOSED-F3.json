@@ -1,0 +1,51 @@
+{
+  "status": "CLOSED_F3_SHARED_INITIAL_VARIANT_CAPTURED",
+  "utc": "2026-11-15T19:01:57.791607+00:00",
+  "result": "$Q/measurement/functional_recovery/preparation/runs/F3_SHARED_SEPIA/RESULT.json",
+  "rawLog": "$Q/measurement/functional_recovery/preparation/runs/F3_SHARED_SEPIA/engine.log",
+  "image": {
+    "kind": "shared-variant",
+    "path": "$Q/measurement/functional_recovery/preparation/runs/F3_SHARED_SEPIA/v2-shared-variant.png",
+    "bytes": 2206367,
+    "sha256": "1fc95a86be9f2bed729eb4f3d5d96b91a9a46f47251e2701334a8b7af7fddf70"
+  },
+  "generatedUniforms": [
+    {
+      "exposure": "1.250",
+      "bias": "0.100,0.200,0.300",
+      "source": "private_generated_module"
+    }
+  ],
+  "actualChild": {
+    "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+    "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+    "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+    "BAR_NATIVE_FRAME_OVERLAP": "1",
+    "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+    "BAR_NATIVE_PREPARE_OVERLAP": "1",
+    "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+    "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+    "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+    "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+    "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": "0",
+    "BAR_NATIVE_FRAME_TRACE": "0",
+    "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "0",
+    "BAR_METAL4_SEPIA_PATH": "shared",
+    "BAR_METAL4_SHARED_CUS_PILOT": "0"
+  },
+  "metalValidationEnabled": true,
+  "metalValidationErrors": [],
+  "pausedCamera": "dist=5000.000000000;dx=0.000000026;dy=-0.835686207;dz=-0.549207270;fov=45.000000000;mode=2.000000000;name=spring;px=5149.000000000;py=204.180068970;pz=596.000000000;rx=2.560177326;ry=0.471238941;rz=0.000000000;view=1512,950,0,0",
+  "pausedSimulation": 1500,
+  "normalExit": true,
+  "ownedGroupGone": true,
+  "awakeStatus": "RELEASED",
+  "ownCaffeinateAlive": false,
+  "matchingEngineProcesses": [],
+  "performanceAccepted": false,
+  "relinkTested": false,
+  "F1F2Preserved": true
+}

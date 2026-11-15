@@ -18,7 +18,8 @@ enum class NativeCPUPhaseKind : unsigned {
  RetirementNotice=16, CPUNotice=17, RuntimeRetire=18, EventWait=19,
  FeedbackWait=20, AllocatorReset=21, GPUCallback=22, ResidencyCleanup=23,
  ResourceCommit=24, Submit=25, CompletedOwnerRelease=26, WorkerJob=27,
- CaptureInvocation=28, ReadChecks=29, Count=30
+ CaptureInvocation=28, ReadChecks=29, ModelFactsRequests=30, ModelFactsPositive=31,
+ ModelFactsCasts=32, ModelFactsCapacity=33, ModelFactsProviderTime=34, ModelFactsCPUValidity=35, Count=36
 };
 enum class NativeCPUFinishReason : unsigned {Control=1, CapturePrefix=2, Credit=3, FullDrain=4, DispatchPrior=5, JoinedFallback=6, NonPresent=7, Rollback=8, SurfaceBoundary=9};
 // A copied identity is diagnostic data, never an owner or an admission token.

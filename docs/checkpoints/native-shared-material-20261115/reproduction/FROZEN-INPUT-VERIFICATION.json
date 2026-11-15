@@ -1,0 +1,297 @@
+{
+  "status": "PASS",
+  "profiles": [
+    {
+      "profile": "S-clean",
+      "prelaunchHashChecks": 9,
+      "checks": [
+        {
+          "path": "LuaUI/Widgets/zzz_native_short_run.lua",
+          "sha256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+          "prelaunchExact": true
+        },
+        {
+          "path": "games/bar-commander-control-213c1.sdz",
+          "sha256": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+          "prelaunchExact": true
+        },
+        {
+          "path": "script.txt",
+          "sha256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "springsettings.cfg",
+          "sha256": "e95d62c800193c5fc7cb05cc777d02f1efd5c4908416a6dfc45a02983633b579",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BYAR.lua",
+          "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BC213.lua",
+          "sha256": "a18192ce6281848da803b3beeff061cb3a3b3d54ed5ccfb4472f9db65e35f4dd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_backend_common_status.lua",
+          "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/Include/native_warmup_pacing.lua",
+          "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+          "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+          "prelaunchExact": true
+        }
+      ],
+      "method": "Existing stage_arm MSAA/VSync normalization + original fps_power_policy.apply + recorded pacing/fixture amendments; no launch.",
+      "localPathManifestExcluded": true
+    },
+    {
+      "profile": "S-diagnostic",
+      "prelaunchHashChecks": 9,
+      "checks": [
+        {
+          "path": "LuaUI/Widgets/zzz_native_short_run.lua",
+          "sha256": "608b511afcb6ff0d01527bbdeca37620b2924d437aa483a710eafa5834032dae",
+          "prelaunchExact": true
+        },
+        {
+          "path": "games/bar-commander-control-213c1.sdz",
+          "sha256": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+          "prelaunchExact": true
+        },
+        {
+          "path": "script.txt",
+          "sha256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "springsettings.cfg",
+          "sha256": "e95d62c800193c5fc7cb05cc777d02f1efd5c4908416a6dfc45a02983633b579",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BYAR.lua",
+          "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BC213.lua",
+          "sha256": "a18192ce6281848da803b3beeff061cb3a3b3d54ed5ccfb4472f9db65e35f4dd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_backend_common_status.lua",
+          "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/Include/native_warmup_pacing.lua",
+          "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+          "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+          "prelaunchExact": true
+        }
+      ],
+      "method": "Existing stage_arm MSAA/VSync normalization + original fps_power_policy.apply + recorded pacing/fixture amendments; no launch.",
+      "localPathManifestExcluded": true
+    },
+    {
+      "profile": "Q-F1-old",
+      "prelaunchHashChecks": 10,
+      "checks": [
+        {
+          "path": "LuaUI/Widgets/zzz_native_short_run.lua",
+          "sha256": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "games/bar-commander-control-213c1.sdz",
+          "sha256": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+          "prelaunchExact": true
+        },
+        {
+          "path": "script.txt",
+          "sha256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "springsettings.cfg",
+          "sha256": "ea93d2fd7005073f7da337a8d938a7c0e7b08e9584941b8ae05f5492fe65ac29",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BYAR.lua",
+          "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BC213.lua",
+          "sha256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_backend_common_status.lua",
+          "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/Include/native_warmup_pacing.lua",
+          "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+          "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_v2_functional_probe.lua",
+          "sha256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+          "prelaunchExact": true
+        }
+      ],
+      "method": "Existing stage_arm MSAA/VSync normalization + original fps_power_policy.apply + recorded pacing/fixture amendments; no launch.",
+      "localPathManifestExcluded": true
+    },
+    {
+      "profile": "Q-F2-shared",
+      "prelaunchHashChecks": 11,
+      "checks": [
+        {
+          "path": "LuaUI/Widgets/zzz_native_short_run.lua",
+          "sha256": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "games/bar-commander-control-213c1.sdz",
+          "sha256": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+          "prelaunchExact": true
+        },
+        {
+          "path": "script.txt",
+          "sha256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "springsettings.cfg",
+          "sha256": "b24c185672b506e3c8854fd139512eb8282051de6cd494b5ab951fee37e45944",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BYAR.lua",
+          "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BC213.lua",
+          "sha256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_backend_common_status.lua",
+          "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/Include/native_warmup_pacing.lua",
+          "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+          "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_v2_functional_probe.lua",
+          "sha256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/NativeWidgets/sepia_pilot_program.lua",
+          "sha256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212",
+          "prelaunchExact": true
+        }
+      ],
+      "method": "Existing stage_arm MSAA/VSync normalization + original fps_power_policy.apply + recorded pacing/fixture amendments; no launch.",
+      "localPathManifestExcluded": true
+    },
+    {
+      "profile": "Q-F3-variant",
+      "prelaunchHashChecks": 11,
+      "checks": [
+        {
+          "path": "LuaUI/Widgets/zzz_native_short_run.lua",
+          "sha256": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "games/bar-commander-control-213c1.sdz",
+          "sha256": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+          "prelaunchExact": true
+        },
+        {
+          "path": "script.txt",
+          "sha256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "springsettings.cfg",
+          "sha256": "50a8f736cf28d407e509793b490b6afbf12e765c4c19c3b3f67a6854a2ad0ea3",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BYAR.lua",
+          "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Config/BC213.lua",
+          "sha256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_backend_common_status.lua",
+          "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/Include/native_warmup_pacing.lua",
+          "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+          "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/Widgets/zzz_v2_functional_probe.lua",
+          "sha256": "03821516270837d096561862a03a277a1d7499c1280a257b5312705064dbba01",
+          "prelaunchExact": true
+        },
+        {
+          "path": "LuaUI/NativeWidgets/sepia_pilot_program.lua",
+          "sha256": "6da4c76513ec0603c28fd3e4cb78d542107d1a45366cf5a4d5242375be69b212",
+          "prelaunchExact": true
+        }
+      ],
+      "method": "Existing stage_arm MSAA/VSync normalization + original fps_power_policy.apply + recorded pacing/fixture amendments; no launch.",
+      "localPathManifestExcluded": true
+    }
+  ],
+  "engineExecutions": 0,
+  "builds": 0
+}

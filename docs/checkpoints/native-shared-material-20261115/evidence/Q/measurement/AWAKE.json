@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "functional_recovery",
+  "pid": 21473,
+  "startUTC": "2026-11-15T19:00:27.686892+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-15T19:01:42.226596+00:00",
+  "ownCaffeinateAlive": false
+}

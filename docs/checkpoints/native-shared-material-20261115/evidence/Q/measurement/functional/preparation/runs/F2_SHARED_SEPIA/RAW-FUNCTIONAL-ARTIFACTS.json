@@ -1,0 +1,33 @@
+{
+  "mode": "shared",
+  "images": [
+    {
+      "kind": "shared-identity",
+      "path": "$Q/measurement/functional/preparation/runs/F2_SHARED_SEPIA/v2-shared-identity.png",
+      "bytes": 1972501,
+      "sha256": "264183a34de30c2bd4ea14fa90c1d8328dab2c126a846452caf6d8a19e4b70aa"
+    }
+  ],
+  "functionalLines": [
+    "[t=00:00:14.218834][f=-000001] [V2Functional] event=initialized mode=shared",
+    "[t=00:00:14.833461][f=-000001] [V2Functional] event=sepia_active mode=shared sim=0 level=0.500 shade_ui=0",
+    "[t=00:01:13.208399][f=0001500] [V2Functional] event=pause_ack mode=shared sim=1500 camera=dist=5000.000000000;dx=0.000000026;dy=-0.835686207;dz=-0.549207270;fov=45.000000000;mode=2.000000000;name=spring;px=5149.000000000;py=204.180068970;pz=596.000000000;rx=2.560177326;ry=0.471238941;rz=0.000000000;view=1512,950,0,0",
+    "[t=00:01:13.841638][f=0001500] [V2Functional] event=image mode=shared kind=shared-identity ok=true sim=1500 draw=4958 width=1512 height=950 camera=dist=5000.000000000;dx=0.000000026;dy=-0.835686207;dz=-0.549207270;fov=45.000000000;mode=2.000000000;name=spring;px=5149.000000000;py=204.180068970;pz=596.000000000;rx=2.560177326;ry=0.471238941;rz=0.000000000;view=1512,950,0,0",
+    "[t=00:01:13.850730][f=0001500] [V2Functional] event=config_update mode=shared sim=1500 exposure=1.250 bias=0.100,0.200,0.300",
+    "[t=00:01:13.853927][f=0001500] [V2Functional] event=widget_disable_requested mode=shared sim=1500 returned=nil",
+    "[t=00:02:13.217791][f=0001500] [V2Functional] FAILED_PAUSED_TIMEOUT mode=shared state=await_disabled sim=1500"
+  ],
+  "generatedUniformLines": [
+    "[t=00:00:12.820043][f=-000001] [V2GeneratedUniforms] exposure=1.000 bias=0.000,0.000,0.000 source=private_generated_module"
+  ],
+  "warmupLines": [
+    "[t=00:00:19.193699][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting",
+    "[t=00:00:24.758710][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=5.565000057 state=pause_requested",
+    "[t=00:00:24.759196][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=5.565000057 state=held",
+    "[t=00:00:29.194446][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.000000000 state=resume_requested held_seconds=4.434999943 held_draws=329",
+    "[t=00:00:29.204532][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.010000229 state=resumed",
+    "[t=00:00:29.204545][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.010000229",
+    "[t=00:00:33.163062][f=0000300] [V2FunctionalWarmup] observed_seconds=13.970000267 gate=observational"
+  ],
+  "scope": "Copied before functional/timing classification, including on failure"
+}

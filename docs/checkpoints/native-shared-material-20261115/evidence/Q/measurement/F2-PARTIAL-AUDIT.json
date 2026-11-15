@@ -1,0 +1,50 @@
+{
+  "status": "PARTIAL_SHARED_IDENTITY_PROVEN_VARIANT_UNPROVEN",
+  "utc": "2026-11-15T18:55:32.699892+00:00",
+  "rawLog": "$Q/measurement/functional/preparation/runs/F2_SHARED_SEPIA/engine.log",
+  "actualChildReceipt": "$Q/measurement/functional/preparation/runs/F2_SHARED_SEPIA/CHILD-MODE.json",
+  "actualChild": {
+    "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+    "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+    "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+    "BAR_NATIVE_FRAME_OVERLAP": "1",
+    "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+    "BAR_NATIVE_PREPARE_OVERLAP": "1",
+    "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+    "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+    "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+    "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+    "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+    "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": "0",
+    "BAR_NATIVE_FRAME_TRACE": "0",
+    "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "0",
+    "BAR_METAL4_SEPIA_PATH": "shared",
+    "BAR_METAL4_SHARED_CUS_PILOT": "0"
+  },
+  "metalValidationEnabled": true,
+  "targetedMetalErrorLines": [],
+  "generatedIdentityModuleLoads": [
+    "[t=00:00:12.820043][f=-000001] [V2GeneratedUniforms] exposure=1.000 bias=0.000,0.000,0.000 source=private_generated_module"
+  ],
+  "sharedIdentityImages": [
+    {
+      "kind": "shared-identity",
+      "path": "$Q/measurement/functional/preparation/runs/F2_SHARED_SEPIA/v2-shared-identity.png",
+      "bytes": 1972501,
+      "sha256": "264183a34de30c2bd4ea14fa90c1d8328dab2c126a846452caf6d8a19e4b70aa"
+    }
+  ],
+  "sepiaWidgetLoaded": true,
+  "WGsepiaActivated": true,
+  "configUpdateObserved": true,
+  "proxyWarning": "[t=00:01:13.853910][f=0001500] [barwidgets.lua] Warning: V2 Sepia Functional Probe: widgetHandler.DisableWidget is not available to user widgets",
+  "disableReturnedNil": true,
+  "secondGeneratedModuleLoadObserved": false,
+  "variantImageObserved": false,
+  "nativePerCallTraceAvailable": false,
+  "normalExit": true,
+  "ownedGroupGone": true,
+  "classification": "Fixture attempted an unavailable user-widget proxy method; shared default rendered, relink and changed uniforms not tested."
+}

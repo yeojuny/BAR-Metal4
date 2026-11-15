@@ -1,0 +1,8 @@
+{
+  "variant": "screen-state-elision-private-test",
+  "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "$P/runtime/native/bin/spring-metal4-scene",
+  "native": "$P/runtime/native",
+  "sha256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "publishedPackageReadOnly": true
+}

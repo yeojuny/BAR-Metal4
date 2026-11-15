@@ -5,6 +5,7 @@
 #include "Rendering/Backend/NativeCUSTextureHistory.h"
 #include <functional>
 namespace rendering::metal4 {
+class CUSCompletedModelImageProof;
 struct CUSSourceImage {
  __strong id<MTLTexture> texture=nil;
  __strong id<MTLSamplerState> sampler=nil;
@@ -23,6 +24,8 @@ struct CUSSourceImage {
  // Appended to preserve existing aggregate field order. A present callback
  // without an explicit producer query remains Unknown.
  SourceDependencyQuery160 dependencyQuery160;
+ // Private pilot: only the actual completed S3O upload owner can supply this.
+ std::shared_ptr<const CUSCompletedModelImageProof> completedModelProof;
 };
 inline id<MTLTexture> SourceTextureRoot160(id<MTLTexture> image) {
  while(image.parentTexture)image=image.parentTexture;

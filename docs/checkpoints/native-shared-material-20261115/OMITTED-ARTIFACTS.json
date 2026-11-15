@@ -1,0 +1,1247 @@
+{
+  "traces": [
+    {
+      "originalLocation": "$R/measurement/cus_terrain_profile/preparation/runs/P1_Q_CUS0/time-profiler.trace",
+      "files": [
+        {
+          "path": "Trace1.run/RunIssues.storedata",
+          "bytes": 40960,
+          "sha256": "db8d7699baaed72b62ba7b06bca0802dfff03f6d86a203857ffd3cb24315ac5f"
+        },
+        {
+          "path": "Trace1.run/Attachments/trace-data.atrc",
+          "bytes": 50702920,
+          "sha256": "c841c9faf44c4fb071febb4bd928b34cc75f65bcb7f4ef29843b95e729c1dcd5"
+        }
+      ],
+      "totalBytes": 50743880,
+      "published": false,
+      "reason": "Closed trace container retained at original source; public lossless normalized XML export, analysis and parser are supplied."
+    },
+    {
+      "originalLocation": "$R/measurement/p2/cus_terrain_profile_p2/preparation/runs/P2_Q_CUS0/time-profiler.trace",
+      "files": [
+        {
+          "path": "UI_state_metadata.bin",
+          "bytes": 490,
+          "sha256": "ab86b4497f73a017e867f861a90f31a11b2da1a4fc0bd732f53713b66f827702"
+        },
+        {
+          "path": "open.creq",
+          "bytes": 10632,
+          "sha256": "dabe8448b5f6a615130e96accbf90c326af90998189ee890cacf44c91ea950a2"
+        },
+        {
+          "path": "form.template",
+          "bytes": 19173608,
+          "sha256": "4e99ae6ca2b2d20515eae15fd4d36274c18dced496e6d17148c3fbc837ceeb50"
+        },
+        {
+          "path": "instrument_data/F699FDD9-48BF-43EC-B29E-E19BADC473E6/run_data/1.run.zip",
+          "bytes": 1323,
+          "sha256": "129647b0bdccb8a246c4af60b831b883043902e359377bf20c450d7f5e82cdeb"
+        },
+        {
+          "path": "instrument_data/20202640-0B46-4698-ADAD-DF54B3ABE816/run_data/1.run.zip",
+          "bytes": 1545,
+          "sha256": "a51f967b1dfc7c47f68d304e4c25545a485c0da84c8634f3b07620596df5c09b"
+        },
+        {
+          "path": "instrument_data/193EC53B-8B26-4F00-9165-EB2F319E1578/run_data/1.run.zip",
+          "bytes": 875,
+          "sha256": "d7a560af3ffa8e0662f545bf909afba38eec9bf61e20a957d40e45630dd97472"
+        },
+        {
+          "path": "instrument_data/917DB702-FF74-487D-9F51-7CB34DDFDC2C/run_data/1.run.zip",
+          "bytes": 706,
+          "sha256": "a939d1180acd1c31cc3133bfa51891a4bd0a595ebd97df06c8bef4b7bb722d13"
+        },
+        {
+          "path": "symbols/MANIFEST.plist",
+          "bytes": 290,
+          "sha256": "35365bc545a73b5662fa33a5933919dc76c024b737002465a1449b9ac30a94fb"
+        },
+        {
+          "path": "symbols/stores/55FB1298-5B8A-3E19-B389-653CE5C32167.symbolsarchive",
+          "bytes": 3911,
+          "sha256": "4b763330dd62ae9deee73a1de921eea6155eb8520462c79da5c6d74fed658815"
+        },
+        {
+          "path": "symbols/stores/780A6C1F-BE02-34CC-84DD-00E05F61C89B.symbolsarchive",
+          "bytes": 2991,
+          "sha256": "39022656277d635e05d061eed6d0f59efbbeeb01648336a9c49b74329a2ca655"
+        },
+        {
+          "path": "symbols/stores/A2C24029-A7B7-361B-A17F-A5C15B26F4A9.symbolsarchive",
+          "bytes": 885,
+          "sha256": "bc856c8ead2e6cf54c6846e78f760767c50bd4b63122efc077cff7502b278866"
+        },
+        {
+          "path": "symbols/stores/E78B127D-E417-3D97-A0B2-D6B24B14A812.symbolsarchive",
+          "bytes": 6885,
+          "sha256": "e152e5ab9309069a27938c2775dfdd797303c211a8e28503502686f0fdd20f73"
+        },
+        {
+          "path": "symbols/stores/06488301-92DD-3D8C-A936-A4C51BCC5CAF.symbolsarchive",
+          "bytes": 3239,
+          "sha256": "4102f483960adca55645a25a85cdec6f8c9ef10147ed15efba02d3685f63faf2"
+        },
+        {
+          "path": "symbols/stores/251FFF3D-E78E-3A76-8B5C-C6C7CDD1593F.symbolsarchive",
+          "bytes": 2572,
+          "sha256": "a8efeb004999dba4c820acdffabfdefb39df50f1a65ddb2b92b4bda058d4a223"
+        },
+        {
+          "path": "symbols/stores/6A02246A-2BDA-3723-AFEF-FFF5CB9F8471.symbolsarchive",
+          "bytes": 668,
+          "sha256": "3a55dcf8d83117181c9fd12f5a052abb6fcc22f53118f7e1e9f94525289d0491"
+        },
+        {
+          "path": "symbols/stores/300744BD-E757-3041-AC85-E8A13E9278F9.symbolsarchive",
+          "bytes": 3401,
+          "sha256": "dbdb0f4f8e49a6bbd90bf111bc9255627ebf5538153da5e3ae8ae7fa9c825b8d"
+        },
+        {
+          "path": "symbols/stores/3D77A93F-C7F5-367C-9234-35D19BC44944.symbolsarchive",
+          "bytes": 5712,
+          "sha256": "b0d9f9a6b8a49bb6aa0efcf38b2359002c92c5f753543dd98d8f049cd6c1d712"
+        },
+        {
+          "path": "symbols/stores/0EE51097-5C1E-31A1-B3DD-57B2D8C769E7.symbolsarchive",
+          "bytes": 446,
+          "sha256": "8c40739f9398558a5b1f812fbb29dc011a43e08cfbeeab7659a1979af7c10ae7"
+        },
+        {
+          "path": "symbols/stores/49C68D37-8E08-33A6-AB6D-64C0E3DC5A03.symbolsarchive",
+          "bytes": 2477,
+          "sha256": "a782cfaf91f5b9e6e2811beaf8112bfeebde6d131fdf92797a25886a4d7611d2"
+        },
+        {
+          "path": "symbols/stores/6DF50241-F0E9-3589-B1C8-92034D5B0D56.symbolsarchive",
+          "bytes": 10645,
+          "sha256": "7fdeb8d104897a33a3b028789e76f9e5558802c397b4a9213bd42ea673ba6265"
+        },
+        {
+          "path": "symbols/stores/0C79731C-7EC2-340A-8FC3-E2B46BD8B1E1.symbolsarchive",
+          "bytes": 1677,
+          "sha256": "cab783cfedcd6fe48a896ec5eafb534430e43de353e1d15643d76e5fabf7b996"
+        },
+        {
+          "path": "symbols/stores/561B78E3-594F-303F-A5D5-267CB6443B55.symbolsarchive",
+          "bytes": 521,
+          "sha256": "bdcae3eaebd038aff9864605567fb58986418e212734692bbda6afa3926e3435"
+        },
+        {
+          "path": "symbols/stores/8ADB5FEA-7656-3077-A66B-F9D94487C752.symbolsarchive",
+          "bytes": 600,
+          "sha256": "45629ecc3ea1f8d1a1eef976ccbac26be74b0eaa7181cc73ba36d1dac10d1e34"
+        },
+        {
+          "path": "symbols/stores/BDA70249-60E3-3CA8-982D-A3437E382882.symbolsarchive",
+          "bytes": 2114,
+          "sha256": "98b07d571dbdab569339770230b7bf7c58656113421dda047f1e0c3775679fea"
+        },
+        {
+          "path": "symbols/stores/5B880B56-69B9-3F14-81B7-F9593B141CD0.symbolsarchive",
+          "bytes": 1648,
+          "sha256": "85b5aacc1ac97d0de6babefbb35eff8fc2324fcb2e6a9fc1b8ddd488f6dcdf88"
+        },
+        {
+          "path": "symbols/stores/B61128D2-65C8-3440-AC00-2CB8D24AE729.symbolsarchive",
+          "bytes": 2609,
+          "sha256": "cd0736ba1e6aae0427618512cd0d7fdb5572b72bfe6c7f43095d8eae6697096f"
+        },
+        {
+          "path": "symbols/stores/82BE1DE5-91C4-3152-B63B-81DB4C5E7992.symbolsarchive",
+          "bytes": 1998,
+          "sha256": "568b5635c0320a5dab8011cdae3e1512b0af5b5312af4964a0958af93755c4c3"
+        },
+        {
+          "path": "symbols/stores/6A8E6A95-2996-37E0-82FC-8E6863AEA116.symbolsarchive",
+          "bytes": 1985,
+          "sha256": "13702e43f346e7da4f3c09dc3cdb7567b54e200903ffddc906e7bdd6ee959dbd"
+        },
+        {
+          "path": "symbols/stores/1AE74883-929A-3F1D-98D4-5864FC5B12A9.symbolsarchive",
+          "bytes": 1456,
+          "sha256": "13421da7fbb46f306be6b9c9406bffaccf911dfe36edd1a63e92fcec05dd5b59"
+        },
+        {
+          "path": "symbols/stores/F2CB022F-0AEF-3DFB-8BFB-B8AFC55735E9.symbolsarchive",
+          "bytes": 49901,
+          "sha256": "21e83dab148aaffced71b087d6089ce13cccb8ef9da957b159d52433ad52d8bf"
+        },
+        {
+          "path": "symbols/stores/89265D97-89CF-39B6-84DD-143F4FF14088.symbolsarchive",
+          "bytes": 1316,
+          "sha256": "7508ffb771f3e5f446b2cba7a6a77202d77584fa375abd7216cea29ff5b2e37c"
+        },
+        {
+          "path": "symbols/stores/C5D084EE-FD27-3F94-811A-6E8F516DAC58.symbolsarchive",
+          "bytes": 5606,
+          "sha256": "d109ad6883623b8e057937b69635934188a0eb2255084ddf397b5a860160fb47"
+        },
+        {
+          "path": "symbols/stores/2F196697-8722-3295-9466-97D0E8BB3CAC.symbolsarchive",
+          "bytes": 544,
+          "sha256": "7310cf034437d1fb9a9da309003e6304adcd3bfb337514c4a8f44ef7123554af"
+        },
+        {
+          "path": "symbols/stores/EA3A6D72-7BC6-3845-ADDF-BC602DA8C7EC.symbolsarchive",
+          "bytes": 446,
+          "sha256": "8fb631dd765d7fa8ba44a00c9c369a508415ef21344e2cc2bc70df57c9ccc18f"
+        },
+        {
+          "path": "symbols/stores/14DB37B1-11F1-31AD-9C07-74BED59A8036.symbolsarchive",
+          "bytes": 8550,
+          "sha256": "23d4bed931fe4eb06829f0162d13f4592e0ee885c0c8a5d19825832e26dec3a9"
+        },
+        {
+          "path": "symbols/stores/62A7AA51-D7E6-35CA-9EE5-070F24E66A60.symbolsarchive",
+          "bytes": 12059,
+          "sha256": "db851c540ae846463e0c7b9f8950b0c0cbb92eba946c1732a3d05b930298cab8"
+        },
+        {
+          "path": "symbols/stores/94E40B03-44C5-3636-AA1A-C64A5D6B6BBB.symbolsarchive",
+          "bytes": 1629,
+          "sha256": "728237d78e23d5998c4bbf5cf77482e4b74ce6307c506829790d1c3328fc26da"
+        },
+        {
+          "path": "symbols/stores/43555E80-9122-3171-A7A6-4D2FD6BD5F44.symbolsarchive",
+          "bytes": 2213,
+          "sha256": "e4688c31d0a980a32267e780463be437405f3838f1a28102b51973c4ab029344"
+        },
+        {
+          "path": "symbols/stores/C0ACE601-FF55-371C-93F5-CC10EB8BFF10.symbolsarchive",
+          "bytes": 6080,
+          "sha256": "55146209c82ca6371a9d9e5a516be13c2cf6390813e5225bc2102259f037dbbb"
+        },
+        {
+          "path": "symbols/stores/52CC8BFF-D431-3D4D-BAF8-5208A43311E6.symbolsarchive",
+          "bytes": 4242,
+          "sha256": "b8a12a6c8be6fd9b384f9ac2cc9acc8aacb2e857657b757f263a5f36a4dcb1b4"
+        },
+        {
+          "path": "symbols/stores/37F8FD20-72D4-385D-8D3C-D21CDA4DD94B.symbolsarchive",
+          "bytes": 2129,
+          "sha256": "3f03084deac8a0d932b78f16321cda4ce17e3a1766567db09df6e29b65cb6739"
+        },
+        {
+          "path": "symbols/stores/988CB63B-B03C-318E-A135-19764AFF636F.symbolsarchive",
+          "bytes": 5085,
+          "sha256": "4ae67aac035c079e2358819867b11752b4ec7a50f5ae5f6c5c279a1a040567ec"
+        },
+        {
+          "path": "symbols/stores/1F8CBDC2-CFFE-3D3F-9410-7A836B0E312E.symbolsarchive",
+          "bytes": 951,
+          "sha256": "a60486d84373a921cd1ba83f623db6097c70b48d35f41c61729d0aace8e44396"
+        },
+        {
+          "path": "symbols/stores/9CAA9E55-A3FD-39AA-8F70-7C1BE6A3D5AB.symbolsarchive",
+          "bytes": 1598,
+          "sha256": "f63610e6a206280b5536c8a563f00995d38177d4c211c4e2d6066a45a932245c"
+        },
+        {
+          "path": "symbols/stores/B8F58E87-4E1E-3F8F-85F6-F09D52A7AC61.symbolsarchive",
+          "bytes": 883,
+          "sha256": "425f174897541ffe1b274f2dcd5a41cae5209f5ca7b393d8e89edc86b955741c"
+        },
+        {
+          "path": "symbols/stores/F4F1377A-EC8D-3A2D-8FF1-586823D6C92D.symbolsarchive",
+          "bytes": 11360,
+          "sha256": "3b2ff37356a878c33d7d4499c9135a9e35783c3629a636795f4b35fbc3d5e589"
+        },
+        {
+          "path": "symbols/stores/FDE3B9F9-39C2-38EE-9343-F2B2194525AC.symbolsarchive",
+          "bytes": 1147,
+          "sha256": "8aad0c4c4ac99d9045de8af8510e2e53df8ba30a91338322554705a83d102840"
+        },
+        {
+          "path": "symbols/stores/91353918-D84B-3952-BDFF-6772E54F8615.symbolsarchive",
+          "bytes": 766,
+          "sha256": "8b8139b8d2080091260335352fd45cc8815774f5633c30a716adae2319a130f0"
+        },
+        {
+          "path": "symbols/stores/7B782E5A-14D4-386E-8A82-477552AAF159.symbolsarchive",
+          "bytes": 924,
+          "sha256": "88ce06902a45d7d7dd312a6722f53821e01f5507d7f3b967dd9598294de744ed"
+        },
+        {
+          "path": "symbols/stores/FDC380EE-7FEA-37CE-AC99-E16C0C4664CA.symbolsarchive",
+          "bytes": 2742,
+          "sha256": "37cd4d76be72ad3e122fdd9a8bb63cd8b8467dc38450d8c78c54fe3a1b08395f"
+        },
+        {
+          "path": "symbols/stores/2AF0C4F4-064E-3CF1-8B25-FAFE9C712B6A.symbolsarchive",
+          "bytes": 19504168,
+          "sha256": "e9a3a6141e5fc192545c8e5f945817a8e8ecd096c869c983c146be70d1a0d272"
+        },
+        {
+          "path": "symbols/stores/435A06F9-1BC8-3282-8663-B6418C44A05E.symbolsarchive",
+          "bytes": 5871,
+          "sha256": "f10637ddaf0eeb6ddd2857cdf64bbdd67c6b3c90669ae0338b0046213893cb9e"
+        },
+        {
+          "path": "symbols/stores/93495E72-6A23-3440-ACC0-68EF9BB76ED8.symbolsarchive",
+          "bytes": 8543,
+          "sha256": "f3203108cfaed605e7581d40894bb86bb0c618f39a2256a0b5cf6ef43e249846"
+        },
+        {
+          "path": "symbols/stores/0193AAF0-854D-3C20-AFA3-22DC41BC436A.symbolsarchive",
+          "bytes": 3031,
+          "sha256": "9e41dbfba8400886f57efd236251bbd5a2080a10b832ce1c1638267d685b90ff"
+        },
+        {
+          "path": "Trace1.run/RunIssues.storedata",
+          "bytes": 40960,
+          "sha256": "adbb54e53c050dc19cae137307c56d13095dd8575d7a21f15534e5f88f65b161"
+        },
+        {
+          "path": "corespace/MANIFEST.plist",
+          "bytes": 4883,
+          "sha256": "5c6b194755dd23f57788ce9aed45fe8df9b94e852613f71f1905d046ab40c793"
+        },
+        {
+          "path": "corespace/currentRun/core/uniquing/typedArrayUniquer/integeruniquer.index",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "corespace/currentRun/core/uniquing/typedArrayUniquer/integeruniquer.data",
+          "bytes": 101947,
+          "sha256": "7ec09fb365c9a3c7455ab6cf59fb45b1ebf7d6dc9962114d87341f38700af6d6"
+        },
+        {
+          "path": "corespace/currentRun/core/uniquing/arrayUniquer/integeruniquer.index",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "corespace/currentRun/core/uniquing/arrayUniquer/integeruniquer.data",
+          "bytes": 101947,
+          "sha256": "7ec09fb365c9a3c7455ab6cf59fb45b1ebf7d6dc9962114d87341f38700af6d6"
+        },
+        {
+          "path": "corespace/run1/core/uniquing/TOC",
+          "bytes": 344,
+          "sha256": "28bb5344b4c59bce7a3535796580fa23c79eb51ac6edbbbc6576069075596ee9"
+        },
+        {
+          "path": "corespace/run1/core/uniquing/strings",
+          "bytes": 57500,
+          "sha256": "a6b26f7db3dacfd875d5166c67dc176ca5f3183811640f68e1864eeaee03d0b2"
+        },
+        {
+          "path": "corespace/run1/core/uniquing/EngineeringTypes.etypes",
+          "bytes": 7769,
+          "sha256": "11b4fedc3bbdd1d9ee4537a94acc8fd3d891d7e8f94737ad5dc867dc9cca3139"
+        },
+        {
+          "path": "corespace/run1/core/uniquing/typedArrayUniquer/integeruniquer.index",
+          "bytes": 36,
+          "sha256": "c427916bfc5953a03b1ad579f39dd0e8f42e7d6c3c4cf1ec650db0ff498ae5f7"
+        },
+        {
+          "path": "corespace/run1/core/uniquing/typedArrayUniquer/integeruniquer.data",
+          "bytes": 1090,
+          "sha256": "62a96815aa382cd10fc0af8cc499a62b45875e4df9d9e37f67501bb9ba44810c"
+        },
+        {
+          "path": "corespace/run1/core/uniquing/arrayUniquer/integeruniquer.index",
+          "bytes": 89905,
+          "sha256": "24d0bfc1526450cb4a3c1185e1b318118dd8a953e1f114494b987d76a03ee170"
+        },
+        {
+          "path": "corespace/run1/core/uniquing/arrayUniquer/integeruniquer.data",
+          "bytes": 454891,
+          "sha256": "d3c8c102039bea193216a0b18fb13f3c247cf81eadb1e0544c2f47c9c31d3be4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-25/spec.plist",
+          "bytes": 390,
+          "sha256": "70516c68fae18cace10236faa456c1175658858c72889c184432c9479d2eecfe"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-25/bulkstore",
+          "bytes": 8088,
+          "sha256": "f5093edf0aa15a7dd12094be730e38f5b43e64c84de221a03a688c8150c994db"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-25/spindex.0",
+          "bytes": 8265,
+          "sha256": "973b274a46155176c75f41ec78158c75dba027974caf80e36e5eff1740d8781a"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-25/bulkstore_descriptor",
+          "bytes": 1287,
+          "sha256": "af80541b4ba20fcdaafe0f14584519d4bfca8bff9de95e7f80f7ea141945e994"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-25/schema.xml",
+          "bytes": 315,
+          "sha256": "571aac4a2d180181e01ba213cca4342deaacab1ee1ff39bfd50b62a1d746297d"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-22/spec.plist",
+          "bytes": 581,
+          "sha256": "1ae653d16345b8d55d58fceaa8d6afea6ad098d44ac69d11e342042e221b8079"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-22/bulkstore",
+          "bytes": 50,
+          "sha256": "be3f9541e9f3c5d70efd91b6233e6f13da13bb844ecea553d3632bcd792a6f3c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-22/bulkstore_descriptor",
+          "bytes": 1979,
+          "sha256": "9d94d35bfd6a40433b4eb87fe29102ccc5449f1f5d94de26e287411a78e5dc96"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-22/schema.xml",
+          "bytes": 494,
+          "sha256": "8682483bd7bc569bc1829fdf222cd726071949f8bf40564b83bf817efe80cbe8"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-14/spec.plist",
+          "bytes": 542,
+          "sha256": "2c6afcc57726ecc5d8d868a64eea9d9eb91155a92f66a0485906a2711f83e4f1"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-14/bulkstore",
+          "bytes": 203176,
+          "sha256": "fb431a937c17da5e4a50f87ba809f396a3a96d56498dad65e3b9271324678a8e"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-14/spindex.0",
+          "bytes": 354872,
+          "sha256": "4f878ca223a20d52205f0cf89e9584701e3e2d0d39f3b980c294d2eb76b4e6b4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-14/bulkstore_descriptor",
+          "bytes": 1423,
+          "sha256": "db9b48984192a7828068b4619b8eb7092e92e6aeddce24147263a7f8f65bebed"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-14/schema.xml",
+          "bytes": 1276,
+          "sha256": "83f224fd92de9e0967165ab1d8ad43b6c2d37253914aa37c495e96fa8f68150b"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-13/spec.plist",
+          "bytes": 448,
+          "sha256": "f7214f1c3ed3487ba7048bbe605cb7ece9fce905b75a0a9b08242c2c0c402bc6"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-13/bulkstore",
+          "bytes": 1171,
+          "sha256": "a2e3562e8275b54bcc65587e2006c816150e60a66cd10f406033998f59b2ec3f"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-13/spindex.0",
+          "bytes": 307,
+          "sha256": "05f0dffca80ef7dcadcd6247992b488f8804ae9f27524f104cb0e3694fcd7bfd"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-13/bulkstore_descriptor",
+          "bytes": 1078,
+          "sha256": "3588aff20c660dff49be4cbf24391344af3a042767b7e92c3c7e3fb9108ac99a"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-13/schema.xml",
+          "bytes": 351,
+          "sha256": "014009df985a50a5a1f44a440177f98bb1d36b584aa99e29ba47e35ec033a642"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-12/spec.plist",
+          "bytes": 449,
+          "sha256": "c68eef08df91c78a525036fa210bc398e58db400e0447b3b78e4dffa8ee7da15"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-12/bulkstore",
+          "bytes": 8292,
+          "sha256": "0c078512fa311063377f2ec96b8c025b24f54631a96295820f6e32412be24a79"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-12/spindex.0",
+          "bytes": 16401,
+          "sha256": "0a011b529744aea27333852c2f146c44064996fa7035e94de80e89cc0d9be542"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-12/bulkstore_descriptor",
+          "bytes": 1079,
+          "sha256": "fc640f6751404f7b69e891069b19a0c7b31f631f1fac512b97daf38a3ab6353c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-12/schema.xml",
+          "bytes": 351,
+          "sha256": "014009df985a50a5a1f44a440177f98bb1d36b584aa99e29ba47e35ec033a642"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-15/spec.plist",
+          "bytes": 713,
+          "sha256": "846981afa5cf1b471ad141c044eff6e8ae84934ae285acd6edf404109dbe173f"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-15/bulkstore",
+          "bytes": 79134,
+          "sha256": "506687e359adbf7eb7504b0eb9ea9026b7e1f170dc96e9c0adfc581285db26cc"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-15/spindex.0",
+          "bytes": 266159,
+          "sha256": "dc92c23c367d09a29c0ac43a4612737760faa25d542905c1d3ef6d301350b99a"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-15/bulkstore_descriptor",
+          "bytes": 1226,
+          "sha256": "e1684e63adede75a58ecd215575a3bc94a5dc79a690bce2e5b2ea01ebe9bc508"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-15/schema.xml",
+          "bytes": 289,
+          "sha256": "e306706a7a954c501fde1ba3c685b6782ef79f25e2f0f5d1c6a6f7f655caace7"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-23/spec.plist",
+          "bytes": 534,
+          "sha256": "b3ec79bbeb958d4a8a417fb4ae88a6b8a81583afc371bd36bbee3f290f605ccb"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-23/bulkstore",
+          "bytes": 50,
+          "sha256": "be3f9541e9f3c5d70efd91b6233e6f13da13bb844ecea553d3632bcd792a6f3c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-23/bulkstore_descriptor",
+          "bytes": 1979,
+          "sha256": "9d94d35bfd6a40433b4eb87fe29102ccc5449f1f5d94de26e287411a78e5dc96"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-23/schema.xml",
+          "bytes": 494,
+          "sha256": "8682483bd7bc569bc1829fdf222cd726071949f8bf40564b83bf817efe80cbe8"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-24/spec.plist",
+          "bytes": 459,
+          "sha256": "a1457180d0120d2f54a4114c138eacfb91f1f68904dbb03b5962ee9af6925a5f"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-24/bulkstore",
+          "bytes": 49,
+          "sha256": "4431ec7c1ea8adee8113815385eb755cf3e873e86cdad904ba8f001dffa0de66"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-24/bulkstore_descriptor",
+          "bytes": 1415,
+          "sha256": "f9fcf77b5090fccc4f0c4adffb4db84e78fb19e0a99ad3acfd1a56b5c6a3465f"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-24/schema.xml",
+          "bytes": 334,
+          "sha256": "2531ef61a5ec02c79b8508e353dc42091b9296557cca003419edfe4194ad8cf9"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-5/spec.plist",
+          "bytes": 527,
+          "sha256": "051309c4f916fa5d460ad6da6f3ae92a2e1c6757eb5f97d0a6b3e84786375311"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-5/bulkstore",
+          "bytes": 50,
+          "sha256": "c4b2bc95c3d700934461bc3a4d2c7498d500c003c4cc91c0fec69eea148083d5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-5/bulkstore_descriptor",
+          "bytes": 2028,
+          "sha256": "5c887b851a393e8a963486d8b55a90c3bea4d255691fe1d559a4a7c7ea50762c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-5/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-2/spec.plist",
+          "bytes": 527,
+          "sha256": "c7fda7082f002ca7f140676b6d3b8f6acdfc9d33fdfdbc42d6877e382776f7d5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-2/bulkstore",
+          "bytes": 50,
+          "sha256": "c4b2bc95c3d700934461bc3a4d2c7498d500c003c4cc91c0fec69eea148083d5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-2/bulkstore_descriptor",
+          "bytes": 2028,
+          "sha256": "5c887b851a393e8a963486d8b55a90c3bea4d255691fe1d559a4a7c7ea50762c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-2/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-3/spec.plist",
+          "bytes": 527,
+          "sha256": "276b16537a2408d9e7b5872d36da569d7bfdf5fa7b5c2d382f0192b0ee41a528"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-3/bulkstore",
+          "bytes": 50,
+          "sha256": "c4b2bc95c3d700934461bc3a4d2c7498d500c003c4cc91c0fec69eea148083d5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-3/bulkstore_descriptor",
+          "bytes": 2028,
+          "sha256": "5c887b851a393e8a963486d8b55a90c3bea4d255691fe1d559a4a7c7ea50762c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-3/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-4/spec.plist",
+          "bytes": 527,
+          "sha256": "9284367074bbf4305a0df6dc050e53d4bb8c2aac0e30582456eb70dcae621029"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-4/bulkstore",
+          "bytes": 50,
+          "sha256": "c4b2bc95c3d700934461bc3a4d2c7498d500c003c4cc91c0fec69eea148083d5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-4/bulkstore_descriptor",
+          "bytes": 2028,
+          "sha256": "5c887b851a393e8a963486d8b55a90c3bea4d255691fe1d559a4a7c7ea50762c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-4/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-37/spec.plist",
+          "bytes": 603,
+          "sha256": "0fa9f35c876aeb66ae734b9bf60cf1ac3998f0f44e7b2f70b86af40fadd50585"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-37/bulkstore",
+          "bytes": 198487,
+          "sha256": "ec150df6457d7d631d3bef86190d1d94ba976aafab30f9431f7a4957f7024940"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-37/spindex.0",
+          "bytes": 355248,
+          "sha256": "8a2e38d3d8caf649fdb2912ceaef0c9785fd041a26df997270ec783da5dda57e"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-37/bulkstore_descriptor",
+          "bytes": 1440,
+          "sha256": "d60d3cc26d694128e76e258058c23407431a573676741cf357b56c9f3080b534"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-37/schema.xml",
+          "bytes": 355,
+          "sha256": "7dcc8bd1c0b9b0369f78ed9729cd1d3fd05950c33f841ab611aec7b33dbec9f5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-30/spec.plist",
+          "bytes": 530,
+          "sha256": "d7842c36da2b37cb4b59a7f596e566973c8046227a66fc4ef73d2f5436fe9579"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-30/bulkstore",
+          "bytes": 47,
+          "sha256": "de61dc3d74ec1b31a40c8e634ead79efb5d65421536daa1888686d6ac56cf0e5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-30/bulkstore_descriptor",
+          "bytes": 1757,
+          "sha256": "697d2bab1edb9030f8b1d691dc4ff1e4a55071196445c9d8366e6ece66f58d46"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-30/schema.xml",
+          "bytes": 433,
+          "sha256": "964add3b9b2c78c1517e781d5b2a220e72e7709960744e2235c66d40956f032c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-31/spec.plist",
+          "bytes": 738,
+          "sha256": "dbf36f8ab4b7fe25d71cdbb929f780c6b99cfff3b279bd7b36d7c1d18e81557f"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-31/bulkstore",
+          "bytes": 47,
+          "sha256": "de61dc3d74ec1b31a40c8e634ead79efb5d65421536daa1888686d6ac56cf0e5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-31/bulkstore_descriptor",
+          "bytes": 1757,
+          "sha256": "697d2bab1edb9030f8b1d691dc4ff1e4a55071196445c9d8366e6ece66f58d46"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-31/schema.xml",
+          "bytes": 433,
+          "sha256": "964add3b9b2c78c1517e781d5b2a220e72e7709960744e2235c66d40956f032c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-36/spec.plist",
+          "bytes": 429,
+          "sha256": "8d419db660c4ee59e058e27156627f172d7b3ecb5a82af69708446ae49e9d9a0"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-36/bulkstore",
+          "bytes": 50,
+          "sha256": "1c634713f7ecf6c91ed0ff0c71f397f9ed71935eefdc96149fd8fcc6eaf43b32"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-36/bulkstore_descriptor",
+          "bytes": 1840,
+          "sha256": "7ac545558bc63730814473631af35793434fd230fcaa0e867e220bffcb28e743"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-36/schema.xml",
+          "bytes": 404,
+          "sha256": "ea18d628c2b8185f0457a430df841b416f727ec0b3cfe0410aadf2fcc061f70b"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-38/spec.plist",
+          "bytes": 409,
+          "sha256": "21526240d6c3e3a907910b03e55b93f899149726faac16897a3e5bfb2503118b"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-38/bulkstore",
+          "bytes": 3122,
+          "sha256": "831a87c31196b0b2c84a695bffa9eb330f34dfd2fe569306dfab2fef8f768d6b"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-38/spindex.0",
+          "bytes": 87,
+          "sha256": "b24b608fd3b8202ff6f1fa6d62b645d6898321e092ffdc213040a8baa14269e6"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-38/bulkstore_descriptor",
+          "bytes": 1439,
+          "sha256": "8f149d634d5f9a196b0639be15888e527283dea820f2198531c0eec50b3f00ee"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-38/schema.xml",
+          "bytes": 355,
+          "sha256": "ad87176bda621672716d9c2c79e782d57b7c3bae48206467bc823522f8e27ad4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-21/spec.plist",
+          "bytes": 614,
+          "sha256": "1208ffa91e524ba3bcaa4658605b7098ad4a1d24832321079c9af7d680844169"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-21/bulkstore",
+          "bytes": 50,
+          "sha256": "be3f9541e9f3c5d70efd91b6233e6f13da13bb844ecea553d3632bcd792a6f3c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-21/bulkstore_descriptor",
+          "bytes": 1979,
+          "sha256": "9d94d35bfd6a40433b4eb87fe29102ccc5449f1f5d94de26e287411a78e5dc96"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-21/schema.xml",
+          "bytes": 494,
+          "sha256": "8682483bd7bc569bc1829fdf222cd726071949f8bf40564b83bf817efe80cbe8"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-26/spec.plist",
+          "bytes": 572,
+          "sha256": "e18cddc2050efd1871b03878bcea8bfd01aedebdb75a8f99104fa21c277a30bf"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-26/bulkstore",
+          "bytes": 49,
+          "sha256": "48836cee49c33f15ac3c31cd707f6cc63b75b484eb95b25039964d6dea429f61"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-26/bulkstore_descriptor",
+          "bytes": 1614,
+          "sha256": "77445bd9bff9dc3607050c663d748e547e96edd6370a6128c14a344ce9e31a61"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-26/schema.xml",
+          "bytes": 351,
+          "sha256": "da1c1bd97c1a6b732b53aaa5007919fe7bb84a997bbde40d19b6366ab3075234"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-19/spec.plist",
+          "bytes": 601,
+          "sha256": "2ccfa1c99965f8858e9b1b1894c3dcc48df40b74bc21bcae5fb8fe830c5fc938"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-19/bulkstore",
+          "bytes": 50,
+          "sha256": "fad053ab9be24f150fffd04f9f9c10e3753c256b7f2d5f9ef9cdd5e68812dbe9"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-19/bulkstore_descriptor",
+          "bytes": 2215,
+          "sha256": "2d491c0cfa222d54bc9cbf0905f9560fa4f3b05b5d4ddce2214a672584af6655"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-19/schema.xml",
+          "bytes": 488,
+          "sha256": "f2df8f8753d6b2dd048e74a1fdc2750544257d39b3f86c712360eff6eb2cd328"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-10/spec.plist",
+          "bytes": 525,
+          "sha256": "671f3c9160400c8262e734e322fc150f68a667bbff7c01f1cc8c99423b6a6daf"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-10/bulkstore",
+          "bytes": 220677,
+          "sha256": "399503fcebff3051415042a615e1aefa4ea68bb6efa55bd34dffebfcf84350cd"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-10/spindex.0",
+          "bytes": 468393,
+          "sha256": "c4c3c08aefb0bd0d9c007a1333a8924f520ffe54d5e6fd00de34128accd6c7dd"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-10/bulkstore_descriptor",
+          "bytes": 2035,
+          "sha256": "ef1502b2a3e304b8d71595376e52175ffc5aa9158346493a1f8ecb178d1c1a54"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-10/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-17/spec.plist",
+          "bytes": 530,
+          "sha256": "4a40ff3087881f86c0525ea6689ff2931767ae65efb09408025ebb9b494a5f46"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-17/bulkstore",
+          "bytes": 49,
+          "sha256": "806d3adc6fc56e7e2e2180005d69f403856e29fab08c1fbecd0854bc0432d505"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-17/bulkstore_descriptor",
+          "bytes": 1674,
+          "sha256": "3bbd6ca14554859bb4a8967e95baae80f3116257d55065e28a2e0f16f2b27c85"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-17/schema.xml",
+          "bytes": 399,
+          "sha256": "73dd276d35a85fabcd46f2ef6838d035ef328df6f598d4f8e9b905855f2b731f"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-28/spec.plist",
+          "bytes": 539,
+          "sha256": "367e7305960989c4f42944f9b86434460b88137e8f836a7d7aee4c49dcb591b6"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-28/bulkstore",
+          "bytes": 49,
+          "sha256": "18c5730fe4721c6cb38510d0245dc43fc525032f012cd32cb8971883ef518d81"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-28/bulkstore_descriptor",
+          "bytes": 1792,
+          "sha256": "75053eadba0d97412399eca4648c0e6780feff3b9b65c270ac4f76c6d81d1ae8"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-28/schema.xml",
+          "bytes": 532,
+          "sha256": "54d2549d12439638de9b2b23c3a0dab677a08d156621b149f26498a9b0e28b37"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-16/spec.plist",
+          "bytes": 531,
+          "sha256": "421b3a9c4a9c01b740de2837d2b74c996c95c006115c50e1aa67ddb04e0ae0a0"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-16/bulkstore",
+          "bytes": 49,
+          "sha256": "806d3adc6fc56e7e2e2180005d69f403856e29fab08c1fbecd0854bc0432d505"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-16/bulkstore_descriptor",
+          "bytes": 1674,
+          "sha256": "3bbd6ca14554859bb4a8967e95baae80f3116257d55065e28a2e0f16f2b27c85"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-16/schema.xml",
+          "bytes": 399,
+          "sha256": "73dd276d35a85fabcd46f2ef6838d035ef328df6f598d4f8e9b905855f2b731f"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-29/spec.plist",
+          "bytes": 505,
+          "sha256": "b7849c5dce925187258a87f412f8dcb1331cf53815c05e35b05ad1fc971f5e67"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-29/bulkstore",
+          "bytes": 47,
+          "sha256": "de61dc3d74ec1b31a40c8e634ead79efb5d65421536daa1888686d6ac56cf0e5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-29/bulkstore_descriptor",
+          "bytes": 1749,
+          "sha256": "e9be5f2a8fa07f9312d6328a7907298c196cacbd1b8d68d2b5f23f3f0d07e267"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-29/schema.xml",
+          "bytes": 436,
+          "sha256": "56851457678caa0d4c659cf7045ef72eb112d55610dd54d0ac1e597a823b81fb"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-11/spec.plist",
+          "bytes": 449,
+          "sha256": "044d5005ebfbcfc92eb5c373306ec4ad20d4a32727ecc5ddd1ea744f98a0b04a"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-11/bulkstore",
+          "bytes": 1844,
+          "sha256": "c4ca5fa2d24bed904fe4cb52e803a35d3f4161a302ab1ad1dd956c56daf662ad"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-11/spindex.0",
+          "bytes": 1863,
+          "sha256": "f1aed4e659ea563834d0adcdefe8565acd3ad2bfe5f245045da9f1b13fe3555b"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-11/bulkstore_descriptor",
+          "bytes": 1078,
+          "sha256": "2f81fda907e2cd4712385cbf88f9df6160177b559f881f67efc02755457d2607"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-11/schema.xml",
+          "bytes": 351,
+          "sha256": "014009df985a50a5a1f44a440177f98bb1d36b584aa99e29ba47e35ec033a642"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-27/spec.plist",
+          "bytes": 455,
+          "sha256": "eab3131398f9be423e51ef028e9d3e76a324a3bfd291d8b822f29ebe81122f31"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-27/bulkstore",
+          "bytes": 49,
+          "sha256": "4431ec7c1ea8adee8113815385eb755cf3e873e86cdad904ba8f001dffa0de66"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-27/bulkstore_descriptor",
+          "bytes": 1285,
+          "sha256": "7671fb90207eb0c760fe6b5eff5d5950399e4d26a100319a6f4c9a92b61b2cc1"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-27/schema.xml",
+          "bytes": 268,
+          "sha256": "d29291c260b62086190d778555d3dee1bc4b46688bfef73a46ea2cf9a96d3afb"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-18/spec.plist",
+          "bytes": 460,
+          "sha256": "18fbb47bc7cf8d1e71a645d11b6fd9565ac027c9f442542df48d96112f15d8f2"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-18/bulkstore",
+          "bytes": 328166,
+          "sha256": "932132c27efcc97d4b4e1eb198e98a8c928204c73a68146cf996ecf282e1c7df"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-18/spindex.0",
+          "bytes": 475993,
+          "sha256": "3df2d6e07bc021e478eb3fa8e80ce4b6b989987237ad21eec48c970cee7916dc"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-18/bulkstore_descriptor",
+          "bytes": 2001,
+          "sha256": "e494929870c4911b19d9ee6f326f2ac9f342c8b065e19f3d1f2c76df9bc8529d"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-18/schema.xml",
+          "bytes": 905,
+          "sha256": "532cf8080f73e2458242b43682b20d2af4d71db0e503c6b5bacc0d91a6f8ad33"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-20/spec.plist",
+          "bytes": 516,
+          "sha256": "35136420628b8cab81ecae181e0d5f6a46833426608f07adb938bfec3ee52960"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-20/bulkstore",
+          "bytes": 50,
+          "sha256": "be3f9541e9f3c5d70efd91b6233e6f13da13bb844ecea553d3632bcd792a6f3c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-20/bulkstore_descriptor",
+          "bytes": 1979,
+          "sha256": "9d94d35bfd6a40433b4eb87fe29102ccc5449f1f5d94de26e287411a78e5dc96"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-20/schema.xml",
+          "bytes": 494,
+          "sha256": "8682483bd7bc569bc1829fdf222cd726071949f8bf40564b83bf817efe80cbe8"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-8/spec.plist",
+          "bytes": 524,
+          "sha256": "c51d2d19ab7aa5f8af56981cdf3ad0207b72cd2109955e8ba2e03e7d1bb78c0e"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-8/bulkstore",
+          "bytes": 5368,
+          "sha256": "0b12e929038f0d29eca1983a59a869078146e935fa4c9939ae03f24a710c0f51"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-8/spindex.0",
+          "bytes": 259,
+          "sha256": "554efebcf78a5d7d160fb0c48de21bc3853df903e356927db6d85fbb24d15214"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-8/bulkstore_descriptor",
+          "bytes": 2032,
+          "sha256": "66bc7df672e05788a1baa88a91be8802773f53a33fd000f583ba7a11eaaef9f8"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-8/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-1/spec.plist",
+          "bytes": 503,
+          "sha256": "c09912cee959e3591987d244fe1215d839b428ee0538372ad086fff229ad2bd4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-1/bulkstore",
+          "bytes": 6367,
+          "sha256": "6cfb6398fc79bfc06f735118c4b1a9cda61216731086c08a3dbff016a01eb7bb"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-1/spindex.0",
+          "bytes": 2369,
+          "sha256": "8c33f9c055becac9029f1cc9f980deb524a8ca3b93e4afb602ab1ee41eaa6072"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-1/bulkstore_descriptor",
+          "bytes": 2033,
+          "sha256": "35e02c62bab6d1eb92d42dd664b2cbd5d08aa951ef9a3e14cc69beb8279d9d8b"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-1/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-6/spec.plist",
+          "bytes": 526,
+          "sha256": "22edb868d06788a28763bab9c3340c4c48a9c6b43a17b5dd2c82d3cf6a1f9245"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-6/bulkstore",
+          "bytes": 156557,
+          "sha256": "3721fd0a8f253ebec9a35cbb212c8c35414e3c0a6fad0be2303ee86065a7fc42"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-6/spindex.0",
+          "bytes": 186777,
+          "sha256": "cb15b4bcefc31ffcd6c6be7d56cc92b6cf7360c295de6e2a683a317f9bf44ba3"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-6/bulkstore_descriptor",
+          "bytes": 2035,
+          "sha256": "c637725fe8aa0fe33119812a4c9df8a4b3da4e15f7243487aad734b498ccbbd2"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-6/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-7/spec.plist",
+          "bytes": 557,
+          "sha256": "8fafedcd1541a47e6f373226171b5f2dbdc9a01102f817c042f5ec1587e5be62"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-7/bulkstore",
+          "bytes": 50,
+          "sha256": "c4b2bc95c3d700934461bc3a4d2c7498d500c003c4cc91c0fec69eea148083d5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-7/bulkstore_descriptor",
+          "bytes": 2028,
+          "sha256": "5c887b851a393e8a963486d8b55a90c3bea4d255691fe1d559a4a7c7ea50762c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-7/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-0/spec.plist",
+          "bytes": 543,
+          "sha256": "ba53365edb448193a64fb9100755603682852664921961c5e71e3e1738765849"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-0/bulkstore",
+          "bytes": 5368,
+          "sha256": "0b12e929038f0d29eca1983a59a869078146e935fa4c9939ae03f24a710c0f51"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-0/spindex.0",
+          "bytes": 259,
+          "sha256": "554efebcf78a5d7d160fb0c48de21bc3853df903e356927db6d85fbb24d15214"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-0/bulkstore_descriptor",
+          "bytes": 2032,
+          "sha256": "66bc7df672e05788a1baa88a91be8802773f53a33fd000f583ba7a11eaaef9f8"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-0/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-9/spec.plist",
+          "bytes": 527,
+          "sha256": "4e3413755cd9b65dc9c375877023a3316b53399ffcba34088298609959b258d7"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-9/bulkstore",
+          "bytes": 50,
+          "sha256": "c4b2bc95c3d700934461bc3a4d2c7498d500c003c4cc91c0fec69eea148083d5"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-9/bulkstore_descriptor",
+          "bytes": 2028,
+          "sha256": "5c887b851a393e8a963486d8b55a90c3bea4d255691fe1d559a4a7c7ea50762c"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-9/schema.xml",
+          "bytes": 452,
+          "sha256": "14870cd7b81332ec77c5a020f778385213f49af57215d008c3d94aa1b1feeca4"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-33/spec.plist",
+          "bytes": 715,
+          "sha256": "4ef085e867aab17b36444bd21eaca99205aa18599c5474d6b3459244d9a77b62"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-33/bulkstore",
+          "bytes": 12009,
+          "sha256": "5ae33d11e486a3c8a614807651ef47f79aee3187802a1b0d45e1fad064931642"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-33/spindex.0",
+          "bytes": 16563,
+          "sha256": "7e377be9c145ae3a1180afb40cef8f2a76c5ab4f25a7980ff9fbf09a767e74dd"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-33/bulkstore_descriptor",
+          "bytes": 1159,
+          "sha256": "ec8249fafc253e723071c4f36d73437b6a6201aa69c57647903f05913d605407"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-33/schema.xml",
+          "bytes": 251,
+          "sha256": "0015842f4317bb3bf5f7a9f4e1fde5dfc319f928e6377299f1384bbafda0f695"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-34/spec.plist",
+          "bytes": 428,
+          "sha256": "f4ba27cdfc5df7391c096154bbceec55c462b47baa47255b304159902e2907f0"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-34/bulkstore",
+          "bytes": 2362,
+          "sha256": "13572f4b743e15d09e85c4721ec178fd9caa5081d96746e79a0f0b4c2b309de1"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-34/spindex.0",
+          "bytes": 90,
+          "sha256": "d388c544bdd2b484f92e7da6735a44f41ad17db734ed3de92e3f55b9f12da8d1"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-34/bulkstore_descriptor",
+          "bytes": 1290,
+          "sha256": "78d5a95db3da8547c614237f9d45266b0393509a75e2145152bc593a9bad8b3a"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-34/schema.xml",
+          "bytes": 367,
+          "sha256": "2f0f03af20d4a2fb194b532fa887941ef2f3855451c1d0ed3c4b087b200d1d16"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-35/spec.plist",
+          "bytes": 717,
+          "sha256": "8e94c064b2cc4ebe464b1698aa66ca4db6dad6d25042e7d9bb2fc91f10d3384a"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-35/bulkstore",
+          "bytes": 11737,
+          "sha256": "e20d15b815a4a1512c7d8c96f25af7a9ed073144c48588ca1a669077d87ef495"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-35/spindex.0",
+          "bytes": 16065,
+          "sha256": "de6e748876bfa308a70389c3a576a2b3604206a1c9bf3910329e3783476deca7"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-35/bulkstore_descriptor",
+          "bytes": 1159,
+          "sha256": "1312462caaf255cabc0ccfd56e5d29147ee3aad0ab4b6221669221b9a939ab0b"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-35/schema.xml",
+          "bytes": 275,
+          "sha256": "dbe4769cb7740e1de73d43be146c2cbcadfb92dcb06e703cea73bd0ce8441ae3"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-32/spec.plist",
+          "bytes": 391,
+          "sha256": "e1603925a708bb07ed70ba45f5264bc8c0f6481fffcf220d2acf7c10a813e0cb"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-32/bulkstore",
+          "bytes": 46632,
+          "sha256": "bd78bd77b2ae2af07503ea8bce19d195e4bbbdcf12f0c55f057942b658bd1d81"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-32/spindex.0",
+          "bytes": 45355,
+          "sha256": "bb7ca153514a1ed4ef7318018ba57a51625522968509904c64fa7be030d81707"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-32/bulkstore_descriptor",
+          "bytes": 1414,
+          "sha256": "4019963b550201da0939e80d5dd41cd21c384e49f0ceb8abcc692a058709f358"
+        },
+        {
+          "path": "corespace/run1/core/stores/indexed-store-32/schema.xml",
+          "bytes": 330,
+          "sha256": "927ffbca235a8d8cfcf9beac4a8ea8875a9a7c51ddbc9eb21a90abfef909d715"
+        },
+        {
+          "path": "corespace/run1/core/core-config/exposedTableInfo.plist",
+          "bytes": 4285,
+          "sha256": "94ae487e0c05c09665ad9c2869e9d71b63e2081d541124898cfa60e3b1d1fe3c"
+        },
+        {
+          "path": "corespace/run1/core/table-manager/tables.plist",
+          "bytes": 10896,
+          "sha256": "4fbbc45cbe155f5bd693e99d20acab513abdc98e01d65b2f089db28873110dae"
+        }
+      ],
+      "totalBytes": 43385016,
+      "published": false,
+      "reason": "Closed trace container retained at original source; public lossless normalized XML export, analysis and parser are supplied."
+    }
+  ],
+  "other": [],
+  "policy": "No game pools, engine binaries, object/debug files, app bundles, full profiles, or raw conversations published."
+}

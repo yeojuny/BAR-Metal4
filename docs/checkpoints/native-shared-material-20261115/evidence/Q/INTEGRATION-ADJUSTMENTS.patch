@@ -1,0 +1,344 @@
+--- a/rts/Rendering/Backend/NativeSharedProgramPilot.h
++++ b/rts/Rendering/Backend/NativeSharedProgramPilot.h
+@@ -18,12 +18,14 @@
+  uint32_t offset=0,components=1,count=1,stride=4;
+  uint8_t stages=Fragment;
+  uint32_t blockSlot=0;
++ bool operator==(const UniformField&) const = default;
+ };
+-struct UniformBlock {uint32_t slot=0,bytes=0;uint8_t stages=Fragment;};
++struct UniformBlock {uint32_t slot=0,bytes=0;uint8_t stages=Fragment;bool operator==(const UniformBlock&) const = default;};
+ struct ResourceSlot {
+  std::string name; uint32_t logicalSlot=0,textureSlot=0,samplerSlot=0;
+  TextureKind kind=TextureKind::Image2D; uint8_t stages=Fragment;
+  int32_t containerBufferSlot=-1; // -1: direct stage binding; otherwise argument-buffer member IDs.
++ bool operator==(const ResourceSlot&) const = default;
+ };
+ struct ProgramInterface {
+  uint64_t generation=0;
+--- a/rts/Rendering/Backend/NativeSepiaPilot.h
++++ b/rts/Rendering/Backend/NativeSepiaPilot.h
+@@ -18,7 +18,20 @@
+  bool shared=true,deleted=false;
+ };
+ inline void Require(bool ok,const char* reason){if(!ok)throw std::runtime_error(reason);}
+-inline void Live(const Program& program){Require(IsNativeSepiaConsumerAvailable() && !program.deleted && program.interface && program.uniforms && program.interface->nativeOwner==AdmissionOwner(),"Sepia linked program is deleted or incomplete");}
++inline void ValidateInterface(const sharedpilot::ProgramInterface& program) {
++ // Generated values define the ABI; a matching byte count alone is not an
++ // interface proof. This immutable schema owns no native library or GPU data.
++ static const auto expected=sepiaGenerated::Link();
++ Require(program.generation && program.sourceIdentity==expected->sourceIdentity &&
++  program.uniformBytes==expected->uniformBytes && program.fields==expected->fields &&
++  program.blocks==expected->blocks && program.resources==expected->resources,
++  "Sepia interface differs from generated source/layout/slots");
++}
++inline void Live(const Program& program){
++ Require(IsNativeSepiaConsumerAvailable() && !program.deleted && program.interface && program.uniforms && program.interface->nativeOwner==AdmissionOwner(),"Sepia linked program is deleted or incomplete");
++ ValidateInterface(*program.interface);
++ Require(program.uniforms->size()==program.interface->uniformBytes,"Sepia uniform owner differs from linked layout");
++}
+ inline std::shared_ptr<Program> Link(bool shared) {
+  Require(IsNativeSepiaConsumerAvailable() && bool(AdmissionOwner()),"Sepia has no actual compiled consumer owner");
+  auto result=std::make_shared<Program>();auto interface=sepiaGenerated::Link();
+@@ -32,6 +45,8 @@
+  const auto found=std::find_if(fields.begin(),fields.end(),[&](const auto& field){return field.name==name;});
+  Require(found!=fields.end(),"Uniform is absent from linked generated interface");const auto& field=*found;
+  Require(field.count==1 && values.size()==field.components && integer==(field.scalar!=sharedpilot::Scalar::Float),"Uniform scalar kind/count differs from linked interface");
++ Require(field.offset<=program.uniforms->size() && field.components<=(program.uniforms->size()-field.offset)/4,
++  "Uniform write exceeds the linked immutable byte owner");
+  auto next=std::make_shared<std::vector<std::uint8_t>>(*program.uniforms);
+  for(size_t i=0;i<values.size();++i){const double value=values[i];Require(std::isfinite(value),"Uniform is not finite");
+   if(integer){Require(field.scalar==sharedpilot::Scalar::Int && value>=std::numeric_limits<std::int32_t>::min() && value<=std::numeric_limits<std::int32_t>::max() && std::trunc(value)==value,"Uniform integer outside exact int32 range");const auto typed=std::int32_t(value);std::memcpy(next->data()+field.offset+4*i,&typed,4);}
+@@ -41,6 +56,7 @@
+ }
+ inline void ValidateMaterial(const sharedpilot::MaterialContent& material) {
+  Require(IsNativeSepiaConsumerAvailable() && material.program && material.program->generation && material.program->nativeOwner && material.program->nativeOwner==AdmissionOwner(),"Sepia material has no matching compiled linked owner");
++ ValidateInterface(*material.program);
+  Require(material.uniformBytes && material.uniformBytes->size()==material.program->uniformBytes && material.program->uniformBytes==sepiaGenerated::UniformBytes,"Sepia immutable uniform block differs from generated interface");
+  Require(material.bindings.size()==1 && material.bindings[0].logicalSlot==0 && material.bindings[0].versionOwner,"Sepia immutable actual input missing");
+ }
+--- a/rts/Lua/NativeSepiaLuaContext.h
++++ b/rts/Lua/NativeSepiaLuaContext.h
+@@ -32,7 +32,8 @@
+  Bind(type,"Upload",[](Buffer& b,const sol::stack_table& values){Require(!b.deleted,"Sepia buffer was deleted");return b.value->Upload(values,sol::nullopt,sol::nullopt,sol::nullopt,sol::nullopt);});
+  Bind(type,"Delete",[](Buffer& b){b.value->Delete();b.deleted=true;});context.set("Buffer",sol::lua_nil);
+  Bind(context,"GetVBO",[L](GLenum target,bool frequent){Require(!frequent && (target==GL_ARRAY_BUFFER || target==GL_ELEMENT_ARRAY_BUFFER),"Sepia original placeholder buffer target/usage changed");auto b=std::make_shared<Buffer>();b->target=target;b->value=std::make_shared<LuaVBOImpl>(target,frequent);CLuaHandle::GetActiveVBOs(L).luaVBOs.emplace_back(b->value);return b;});
+- auto validate=[sharedPath](const sol::table& params,const std::string&){
++ auto validate=[sharedPath](const sol::table& params,const std::string& name){
++  Require(name==": Sepia","Original Sepia program name changed");
+   Require(IsNativeSepiaConsumerAvailable(),"Sepia native linked consumer unavailable");
+   unsigned count=0;for(const auto& item:params){const auto key=item.first.as<std::string>();Require(key=="vertex" || key=="fragment" || key=="uniformInt","Unsupported generated shader option/stage");++count;}Require(count==3,"Generated linked program source is incomplete");
+   const auto vertex=params["vertex"].get<std::string>(),fragment=params["fragment"].get<std::string>();
+--- a/tools/sepia-pilot/test_payload.cpp
++++ b/tools/sepia-pilot/test_payload.cpp
+@@ -32,6 +32,22 @@
+  const auto retained=material;material.bindings[0].versionOwner=bindingB;
+  assert(retained.bindings[0].versionOwner!=material.bindings[0].versionOwner);sepiaPilot::ValidateMaterial(material);
+  auto wrong=material;wrong.uniformBytes=std::make_shared<const std::vector<std::uint8_t>>(4);rejects([&]{sepiaPilot::ValidateMaterial(wrong);});
++ // Equal owner and byte size must not admit a mismatched generated ABI.
++ const auto mismatched=[&](auto mutate){
++  auto iface=std::make_shared<sharedpilot::ProgramInterface>(*material.program);mutate(*iface);
++  auto bad=material;bad.program=iface;rejects([&]{sepiaPilot::ValidateMaterial(bad);});
++  auto badProgram=*first;badProgram.interface=iface;rejects([&]{sepiaPilot::SetUniform(badProgram,"gamma",{1},false);});
++ };
++ mismatched([](auto& p){p.sourceIdentity+="wrong";});
++ mismatched([](auto& p){p.fields[0].offset=UINT32_MAX;});
++ mismatched([](auto& p){p.fields[0].scalar=sharedpilot::Scalar::Float;});
++ mismatched([](auto& p){p.fields[0].blockSlot=0;});
++ mismatched([](auto& p){p.blocks[0].slot=0;});
++ mismatched([](auto& p){p.resources[0].logicalSlot=1;});
++ mismatched([](auto& p){p.resources[0].textureSlot=1;});
++ mismatched([](auto& p){p.generation=0;});
++ auto shortProgram=*first;shortProgram.uniforms=std::make_shared<const std::vector<std::uint8_t>>(4);
++ rejects([&]{sepiaPilot::SetUniform(shortProgram,"gamma",{1},false);});
+  first->deleted=true;rejects([&]{sepiaPilot::SetUniform(*first,"gamma",{1},false);});sepiaPilot::ValidateMaterial(retained);
+  auto third=sepiaPilot::Link(true);assert(third->interface->generation!=first->interface->generation);
+  SetNativeSepiaConsumerAvailable(false);rejects([&]{sepiaPilot::ValidateMaterial(retained);});
+--- /dev/null
++++ b/tools/sepia-pilot/identity-exposure-bias.frag.glsl
+@@ -0,0 +1,18 @@
++#version 330
++
++uniform sampler2D screenCopyTex;
++uniform ivec2 viewPos;
++uniform float exposure = 1.0;
++uniform vec3 bias = vec3(0.0);
++uniform float gamma;
++// rows of the color matrix: contrast * saturation, blended toward sepia
++uniform vec3 colorR;
++uniform vec3 colorG;
++uniform vec3 colorB;
++
++out vec4 fragColor;
++
++void main() {
++	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma)) * exposure + bias;
++	fragColor = vec4(dot(colorR, color), dot(colorG, color), dot(colorB, color), 1.0);
++}
+--- a/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h
++++ b/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h
+@@ -15,6 +15,8 @@
+ 
+ uniform sampler2D screenCopyTex;
+ uniform ivec2 viewPos;
++uniform float exposure = 1.0;
++uniform vec3 bias = vec3(0.0);
+ uniform float gamma;
+ // rows of the color matrix: contrast * saturation, blended toward sepia
+ uniform vec3 colorR;
+@@ -24,47 +26,55 @@
+ out vec4 fragColor;
+ 
+ void main() {
+-	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma));
++	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma)) * exposure + bias;
+ 	fragColor = vec4(dot(colorR, color), dot(colorG, color), dot(colorB, color), 1.0);
+ }
+ )PILOTGLSL";
+-inline constexpr char Identity[]="f68e648c6dfbf4b4c056baeaa68cafae23a5ca5ad13ccfe17d9e7735dda3872f";
+-inline constexpr std::uint32_t UniformBytes=128;
++inline constexpr char Identity[]="d23a8b75086bf172418574044d1c5c2d8497ed4d6da7223b6b9c2ac3d5c2d0c7";
++inline constexpr std::uint32_t UniformBytes=160;
+ inline constexpr std::uint32_t ViewPosOffset=48;
+ inline std::shared_ptr<const sharedpilot::ProgramInterface> Link() {
+  auto p=std::make_shared<sharedpilot::ProgramInterface>();p->generation=sharedpilot::NextProgramGeneration();p->sourceIdentity=Identity;p->uniformBytes=UniformBytes;
+  p->blocks={{1,UniformBytes,std::uint8_t(sharedpilot::Vertex|sharedpilot::Fragment)}};
+- p->fields={{"viewPos", sharedpilot::Scalar::Int,48,2,1,16,sharedpilot::Fragment,1},{"gamma", sharedpilot::Scalar::Float,64,1,1,16,sharedpilot::Fragment,1},{"colorR", sharedpilot::Scalar::Float,80,3,1,16,sharedpilot::Fragment,1},{"colorG", sharedpilot::Scalar::Float,96,3,1,16,sharedpilot::Fragment,1},{"colorB", sharedpilot::Scalar::Float,112,3,1,16,sharedpilot::Fragment,1}};
++ p->fields={{"viewPos", sharedpilot::Scalar::Int,48,2,1,16,sharedpilot::Fragment,1},{"exposure", sharedpilot::Scalar::Float,64,1,1,16,sharedpilot::Fragment,1},{"bias", sharedpilot::Scalar::Float,80,3,1,16,sharedpilot::Fragment,1},{"gamma", sharedpilot::Scalar::Float,96,1,1,16,sharedpilot::Fragment,1},{"colorR", sharedpilot::Scalar::Float,112,3,1,16,sharedpilot::Fragment,1},{"colorG", sharedpilot::Scalar::Float,128,3,1,16,sharedpilot::Fragment,1},{"colorB", sharedpilot::Scalar::Float,144,3,1,16,sharedpilot::Fragment,1}};
+  p->resources={{"screenCopyTex",0,0,0,sharedpilot::TextureKind::Image2D,sharedpilot::Fragment}};
+  return p;
+ }
+ inline std::vector<std::uint8_t> Defaults(){std::vector<std::uint8_t> bytes(UniformBytes);
+  {const std::int32_t value=0;std::memcpy(bytes.data()+48,&value,4);}
+  {const std::int32_t value=0;std::memcpy(bytes.data()+52,&value,4);}
+- {const float value=0.0f;std::memcpy(bytes.data()+64,&value,4);}
++ {const float value=1.0f;std::memcpy(bytes.data()+64,&value,4);}
+  {const float value=0.0f;std::memcpy(bytes.data()+80,&value,4);}
+  {const float value=0.0f;std::memcpy(bytes.data()+84,&value,4);}
+  {const float value=0.0f;std::memcpy(bytes.data()+88,&value,4);}
+  {const float value=0.0f;std::memcpy(bytes.data()+96,&value,4);}
+- {const float value=0.0f;std::memcpy(bytes.data()+100,&value,4);}
+- {const float value=0.0f;std::memcpy(bytes.data()+104,&value,4);}
+  {const float value=0.0f;std::memcpy(bytes.data()+112,&value,4);}
+  {const float value=0.0f;std::memcpy(bytes.data()+116,&value,4);}
+  {const float value=0.0f;std::memcpy(bytes.data()+120,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+128,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+132,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+136,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+144,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+148,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+152,&value,4);}
+  return bytes;}
+ inline constexpr char MSL[]=R"PILOTMSL(struct SharedSepiaUniforms {float4 target;uint4 alpha;float4 raster;
+  int4 viewPos;
++ float4 exposure;
++ float4 bias;
+  float4 gamma;
+  float4 colorR;
+  float4 colorG;
+  float4 colorB;
+ };
+-static_assert(sizeof(SharedSepiaUniforms)==128);
++static_assert(sizeof(SharedSepiaUniforms)==160);
+ static_assert(__builtin_offsetof(SharedSepiaUniforms,viewPos)==48);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,gamma)==64);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,colorR)==80);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,colorG)==96);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,colorB)==112);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,exposure)==64);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,bias)==80);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,gamma)==96);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorR)==112);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorG)==128);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorB)==144);
+ struct SharedSepiaVarying {float4 position [[position]];};
+ vertex SharedSepiaVarying SharedSepiaVertex(uint id [[vertex_id]],constant SharedSepiaUniforms& u [[buffer(1)]]) {
+  const float2 vertices[3]={float2(-1,-1),float2(3,-1),float2(-1,3)};
+@@ -75,7 +85,7 @@
+  RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
+  float4 pilotFragCoord=float4(input.position.x*u.target.z,(u.target.y-input.position.y)*u.target.w,input.position.z,input.position.w);
+  float4 pilotResult;
+- float3 color=pow((pilotFetch(screenCopyTex,(int2((pilotFragCoord).xy)-u.viewPos.xy))).rgb,float3(u.gamma.x));
++ float3 color=((pow((pilotFetch(screenCopyTex,(int2((pilotFragCoord).xy)-u.viewPos.xy))).rgb,float3(u.gamma.x))*u.exposure.x)+u.bias.xyz);
+  pilotResult=float4(dot(u.colorR.xyz,color),dot(u.colorG.xyz,color),dot(u.colorB.xyz,color),1.0f);
+  if(u.alpha.x){float r=clamp(u.raster.x,0.0f,1.0f);bool pass=false;switch(u.alpha.y){case 0:break;case 1:pass=pilotResult.a<r;break;case 2:pass=pilotResult.a==r;break;case 3:pass=pilotResult.a<=r;break;case 4:pass=pilotResult.a>r;break;case 5:pass=pilotResult.a!=r;break;case 6:pass=pilotResult.a>=r;break;default:pass=true;}if(!pass)discard_fragment();}
+  return pilotResult;
+--- a/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.json
++++ b/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.json
+@@ -1,9 +1,9 @@
+ {
+   "revision": "sepia-subset-ast-1;MTL4LibraryDescriptor-default-options-frozenJ;sample-position-v1",
+-  "identity": "f68e648c6dfbf4b4c056baeaa68cafae23a5ca5ad13ccfe17d9e7735dda3872f",
++  "identity": "d23a8b75086bf172418574044d1c5c2d8497ed4d6da7223b6b9c2ac3d5c2d0c7",
+   "vertexHash": 16905188423406352921,
+-  "fragmentHash": 17382421314025316268,
+-  "uniformBytes": 128,
++  "fragmentHash": 4623502877096422297,
++  "uniformBytes": 160,
+   "fields": [
+     {
+       "name": "viewPos",
+@@ -20,10 +20,38 @@
+       "stages": 2
+     },
+     {
++      "name": "exposure",
++      "scalar": "float",
++      "components": 1,
++      "offset": 64,
++      "defaults": [
++        1.0
++      ],
++      "blockSlot": 1,
++      "count": 1,
++      "stride": 16,
++      "stages": 2
++    },
++    {
++      "name": "bias",
++      "scalar": "float",
++      "components": 3,
++      "offset": 80,
++      "defaults": [
++        0.0,
++        0.0,
++        0.0
++      ],
++      "blockSlot": 1,
++      "count": 1,
++      "stride": 16,
++      "stages": 2
++    },
++    {
+       "name": "gamma",
+       "scalar": "float",
+       "components": 1,
+-      "offset": 64,
++      "offset": 96,
+       "defaults": [
+         0
+       ],
+@@ -36,7 +64,7 @@
+       "name": "colorR",
+       "scalar": "float",
+       "components": 3,
+-      "offset": 80,
++      "offset": 112,
+       "defaults": [
+         0,
+         0,
+@@ -51,7 +79,7 @@
+       "name": "colorG",
+       "scalar": "float",
+       "components": 3,
+-      "offset": 96,
++      "offset": 128,
+       "defaults": [
+         0,
+         0,
+@@ -66,7 +94,7 @@
+       "name": "colorB",
+       "scalar": "float",
+       "components": 3,
+-      "offset": 112,
++      "offset": 144,
+       "defaults": [
+         0,
+         0,
+--- a/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.metal
++++ b/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.metal
+@@ -1,16 +1,20 @@
+ struct SharedSepiaUniforms {float4 target;uint4 alpha;float4 raster;
+  int4 viewPos;
++ float4 exposure;
++ float4 bias;
+  float4 gamma;
+  float4 colorR;
+  float4 colorG;
+  float4 colorB;
+ };
+-static_assert(sizeof(SharedSepiaUniforms)==128);
++static_assert(sizeof(SharedSepiaUniforms)==160);
+ static_assert(__builtin_offsetof(SharedSepiaUniforms,viewPos)==48);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,gamma)==64);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,colorR)==80);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,colorG)==96);
+-static_assert(__builtin_offsetof(SharedSepiaUniforms,colorB)==112);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,exposure)==64);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,bias)==80);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,gamma)==96);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorR)==112);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorG)==128);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorB)==144);
+ struct SharedSepiaVarying {float4 position [[position]];};
+ vertex SharedSepiaVarying SharedSepiaVertex(uint id [[vertex_id]],constant SharedSepiaUniforms& u [[buffer(1)]]) {
+  const float2 vertices[3]={float2(-1,-1),float2(3,-1),float2(-1,3)};
+@@ -21,7 +25,7 @@
+  RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
+  float4 pilotFragCoord=float4(input.position.x*u.target.z,(u.target.y-input.position.y)*u.target.w,input.position.z,input.position.w);
+  float4 pilotResult;
+- float3 color=pow((pilotFetch(screenCopyTex,(int2((pilotFragCoord).xy)-u.viewPos.xy))).rgb,float3(u.gamma.x));
++ float3 color=((pow((pilotFetch(screenCopyTex,(int2((pilotFragCoord).xy)-u.viewPos.xy))).rgb,float3(u.gamma.x))*u.exposure.x)+u.bias.xyz);
+  pilotResult=float4(dot(u.colorR.xyz,color),dot(u.colorG.xyz,color),dot(u.colorB.xyz,color),1.0f);
+  if(u.alpha.x){float r=clamp(u.raster.x,0.0f,1.0f);bool pass=false;switch(u.alpha.y){case 0:break;case 1:pass=pilotResult.a<r;break;case 2:pass=pilotResult.a==r;break;case 3:pass=pilotResult.a<=r;break;case 4:pass=pilotResult.a>r;break;case 5:pass=pilotResult.a!=r;break;case 6:pass=pilotResult.a>=r;break;default:pass=true;}if(!pass)discard_fragment();}
+  return pilotResult;
+--- a/data/LuaUI/NativeWidgets/sepia_pilot_program.lua
++++ b/data/LuaUI/NativeWidgets/sepia_pilot_program.lua
+@@ -10,6 +10,8 @@
+ 
+ uniform sampler2D screenCopyTex;
+ uniform ivec2 viewPos;
++uniform float exposure = 1.0;
++uniform vec3 bias = vec3(0.0);
+ uniform float gamma;
+ // rows of the color matrix: contrast * saturation, blended toward sepia
+ uniform vec3 colorR;
+@@ -19,7 +21,7 @@
+ out vec4 fragColor;
+ 
+ void main() {
+-	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma));
++	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma)) * exposure + bias;
+ 	fragColor = vec4(dot(colorR, color), dot(colorG, color), dot(colorB, color), 1.0);
+ }
+ ]=],uniformInt={["screenCopyTex"]=0}}

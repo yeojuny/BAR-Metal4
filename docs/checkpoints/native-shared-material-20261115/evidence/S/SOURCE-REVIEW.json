@@ -1,0 +1,9 @@
+{
+  "status": "PASS_FOR_BUILD",
+  "reviewer": "contract_review",
+  "scope": "Whole diff/exact ownership/type proof/guard order/provider noescape/lease lifetime",
+  "postReviewChange": "Removed unused diagnostic modelCalls scalar; derivable as positiveCasts+hits",
+  "hostTests": "Actual NativeModelTextureBacking class, ASan/UBSan PASS incl1000allocationfreehits",
+  "rendererSyntax": "PASS using real Q compile command/settings",
+  "risks": "6 trace count rows per sampled job; require drop-count0; measured netgain still unknown"
+}

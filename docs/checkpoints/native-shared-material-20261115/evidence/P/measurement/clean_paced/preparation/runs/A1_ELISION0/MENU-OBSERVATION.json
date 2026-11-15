@@ -1,0 +1,8 @@
+{
+  "samples": 157,
+  "foregroundPIDMatches": 157,
+  "gameCoversDisplay": 157,
+  "menuAboveGame": 0,
+  "errors": [],
+  "acceptance": "observed only; foreground and menu occlusion not required under locked/offscreen authorization"
+}

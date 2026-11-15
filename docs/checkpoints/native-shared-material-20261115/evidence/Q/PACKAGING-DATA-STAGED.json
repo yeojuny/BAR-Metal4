@@ -1,0 +1,18 @@
+{
+  "status": "LUA_STAGED_ENGINE_BINARY_PENDING",
+  "native": "$Q/runtime/native",
+  "sourceData": [
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+      "sha256": "3e43f742c2e69fa98df42564da6b085d71409327f727e4ab2041b21bdf073d37",
+      "sha512": "2a2746ca8b7e213e1651c324db58ea466f5640c9110055a49f0025c43f840193088b580bec9e4524395904a62555e5bfc745bba828f66ecd7222ee0031c486fd"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+      "sha256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9",
+      "sha512": "a7ebbe5115e275fc1d15b22ea181b8b45132d46817d0be3558b03ca43a207e2d2922513514e31de3e118254aa90644b9627b79369229d0c4a62e9874d2ff3e0a"
+    }
+  ],
+  "privateProfilesMayOverrideGeneratedModuleOnly": "Must record fixture filehash and prove identical stage strings; native wrapper remains exact loader hash",
+  "noPublicAppModification": true
+}

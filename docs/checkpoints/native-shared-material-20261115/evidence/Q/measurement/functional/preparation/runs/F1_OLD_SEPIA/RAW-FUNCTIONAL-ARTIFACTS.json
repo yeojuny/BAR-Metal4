@@ -1,0 +1,29 @@
+{
+  "mode": "old",
+  "images": [
+    {
+      "kind": "old-identity",
+      "path": "$Q/measurement/functional/preparation/runs/F1_OLD_SEPIA/v2-old-identity.png",
+      "bytes": 2008399,
+      "sha256": "8c02b5fcda91647a90c5c594d0b5ff0351f5e635da2b55db799a1c0fa8c01669"
+    }
+  ],
+  "functionalLines": [
+    "[t=00:00:40.793427][f=-000001] [V2Functional] event=initialized mode=old",
+    "[t=00:00:41.420359][f=-000001] [V2Functional] event=sepia_active mode=old sim=0 level=0.500 shade_ui=0",
+    "[t=00:01:44.485886][f=0001500] [V2Functional] event=pause_ack mode=old sim=1500 camera=dist=5000.000000000;dx=0.000000026;dy=-0.835686207;dz=-0.549207270;fov=45.000000000;mode=2.000000000;name=spring;px=5149.000000000;py=204.180068970;pz=596.000000000;rx=2.560177326;ry=0.471238941;rz=0.000000000;view=1512,950,0,0",
+    "[t=00:01:45.104470][f=0001500] [V2Functional] event=image mode=old kind=old-identity ok=true sim=1500 draw=8042 width=1512 height=950 camera=dist=5000.000000000;dx=0.000000026;dy=-0.835686207;dz=-0.549207270;fov=45.000000000;mode=2.000000000;name=spring;px=5149.000000000;py=204.180068970;pz=596.000000000;rx=2.560177326;ry=0.471238941;rz=0.000000000;view=1512,950,0,0",
+    "[t=00:01:45.104495][f=0001500] [V2Functional] event=done mode=old sim=1500"
+  ],
+  "generatedUniformLines": [],
+  "warmupLines": [
+    "[t=00:00:50.472445][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting",
+    "[t=00:01:00.399691][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=9.928000450 state=pause_requested",
+    "[t=00:01:00.415322][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=9.942999840 state=held",
+    "[t=00:01:00.474965][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.003000259 state=resume_requested held_seconds=0.059999999 held_draws=7",
+    "[t=00:01:00.484514][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.012000084 state=resumed",
+    "[t=00:01:00.484610][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.012999535",
+    "[t=00:01:04.443097][f=0000300] [V2FunctionalWarmup] observed_seconds=13.970999718 gate=observational"
+  ],
+  "scope": "Copied before functional/timing classification, including on failure"
+}

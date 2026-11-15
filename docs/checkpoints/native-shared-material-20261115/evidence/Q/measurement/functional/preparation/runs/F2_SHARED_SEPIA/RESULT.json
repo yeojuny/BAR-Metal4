@@ -1,0 +1,14 @@
+{
+  "run": "F2_SHARED_SEPIA",
+  "draws": 3822,
+  "seconds": 40.008998871,
+  "matchedFPSSampleCountObserved": 40,
+  "performanceAccepted": false,
+  "rawTimingOnly": true,
+  "audioRoute": {
+    "status": "AUDIO_GATE_SKIPPED_MATCHED_DIAGNOSTIC",
+    "checksPerformed": false,
+    "settingsChanged": false,
+    "reason": "Reuses the previous same-scene diagnostic policy"
+  }
+}

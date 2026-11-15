@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "supplemental_off_paced",
+  "pid": 8573,
+  "startUTC": "2026-11-15T18:09:06.652551+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-15T18:10:20.657252+00:00",
+  "ownCaffeinateAlive": false
+}

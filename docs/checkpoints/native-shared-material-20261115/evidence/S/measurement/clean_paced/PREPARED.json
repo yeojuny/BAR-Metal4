@@ -1,0 +1,31 @@
+{
+  "status": "READY",
+  "utc": "2026-11-15T19:54:08.686042+00:00",
+  "productSHA256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7",
+  "arms": [
+    {
+      "arm": "A1_OFF",
+      "mode": "ELISION1",
+      "data": "$S/measurement/clean_paced/preparation/private/A1_OFF/state/data",
+      "out": "$S/measurement/clean_paced/preparation/runs/A1_OFF"
+    },
+    {
+      "arm": "B1_ON",
+      "mode": "ELISION1",
+      "data": "$S/measurement/clean_paced/preparation/private/B1_ON/state/data",
+      "out": "$S/measurement/clean_paced/preparation/runs/B1_ON"
+    },
+    {
+      "arm": "B2_ON",
+      "mode": "ELISION1",
+      "data": "$S/measurement/clean_paced/preparation/private/B2_ON/state/data",
+      "out": "$S/measurement/clean_paced/preparation/runs/B2_ON"
+    },
+    {
+      "arm": "A2_OFF",
+      "mode": "ELISION1",
+      "data": "$S/measurement/clean_paced/preparation/private/A2_OFF/state/data",
+      "out": "$S/measurement/clean_paced/preparation/runs/A2_OFF"
+    }
+  ]
+}

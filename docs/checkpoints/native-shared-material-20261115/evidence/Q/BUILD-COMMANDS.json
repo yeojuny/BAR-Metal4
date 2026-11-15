@@ -1,0 +1,22 @@
+[
+  [
+    "cmake",
+    "-S",
+    "$Q/source/engine",
+    "-B",
+    "$Q/build",
+    "-G",
+    "Ninja",
+    "-C",
+    "$Q/initial-cache.cmake"
+  ],
+  [
+    "cmake",
+    "--build",
+    "$Q/build",
+    "--target",
+    "spring-metal4-scene",
+    "-j",
+    "8"
+  ]
+]

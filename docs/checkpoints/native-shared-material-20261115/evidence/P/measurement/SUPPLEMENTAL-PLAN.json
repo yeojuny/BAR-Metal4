@@ -1,0 +1,19 @@
+{
+  "status": "PLANNED_ONE_SUPPLEMENTAL_OFF_NO_GAME",
+  "recordedUTC": "2026-11-15T18:07:50.814821+00:00",
+  "runner": "$P/measurement/run_ac0_supplemental.py",
+  "runnerSHA256": "6d9b9c4959792c420614c4ae6266417c66c83d5070c8029f3ba4993749777529",
+  "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "campaign": "supplemental_off_paced",
+  "arm": "A3_ELISION0_SUPPLEMENTAL",
+  "sourceCampaignPreserved": "clean_paced",
+  "sourceRunnerPreserved": "$P/measurement/run_ac0_prelaunch.py",
+  "sameScenePresetPacingAnd40s": true,
+  "ACPowerModeRequired": 0,
+  "finalColorStage": 1,
+  "preparePilot": 1,
+  "elision": 0,
+  "traceCountersMetalDebug": 0,
+  "pooledWithOriginalABBA": false,
+  "gamesLaunched": 0
+}

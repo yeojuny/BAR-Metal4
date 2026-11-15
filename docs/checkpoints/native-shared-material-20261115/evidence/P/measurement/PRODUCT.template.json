@@ -1,0 +1,8 @@
+{
+  "status": "PENDING_SIGNED_CANDIDATE_HASH",
+  "variant": "screen-state-elision-standalone-test",
+  "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "native": "$P/runtime/native",
+  "binary": "$P/runtime/native/bin/spring-metal4-scene",
+  "sha256": null
+}

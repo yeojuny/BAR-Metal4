@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "freshBuildCount": 1,
+  "buildTarget": "spring-metal4-scene",
+  "archiveObjects": 1538,
+  "archiveCount": 35,
+  "archiveMismatches": 0,
+  "postBuildNoWork": true,
+  "sourceUnchangedAfterReview": true,
+  "sourceFiles": 10227,
+  "delta": [
+    "rts/Rendering/Metal4/Metal4ScreenNative.mm"
+  ],
+  "runtime": "NOT_RUN"
+}

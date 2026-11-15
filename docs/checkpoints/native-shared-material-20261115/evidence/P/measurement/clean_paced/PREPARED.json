@@ -1,0 +1,31 @@
+{
+  "status": "READY",
+  "utc": "2026-11-15T17:50:16.330777+00:00",
+  "productSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "arms": [
+    {
+      "arm": "A1_ELISION0",
+      "mode": "ELISION0",
+      "data": "$P/measurement/clean_paced/preparation/private/A1_ELISION0/state/data",
+      "out": "$P/measurement/clean_paced/preparation/runs/A1_ELISION0"
+    },
+    {
+      "arm": "B1_ELISION1",
+      "mode": "ELISION1",
+      "data": "$P/measurement/clean_paced/preparation/private/B1_ELISION1/state/data",
+      "out": "$P/measurement/clean_paced/preparation/runs/B1_ELISION1"
+    },
+    {
+      "arm": "B2_ELISION1",
+      "mode": "ELISION1",
+      "data": "$P/measurement/clean_paced/preparation/private/B2_ELISION1/state/data",
+      "out": "$P/measurement/clean_paced/preparation/runs/B2_ELISION1"
+    },
+    {
+      "arm": "A2_ELISION0",
+      "mode": "ELISION0",
+      "data": "$P/measurement/clean_paced/preparation/private/A2_ELISION0/state/data",
+      "out": "$P/measurement/clean_paced/preparation/runs/A2_ELISION0"
+    }
+  ]
+}

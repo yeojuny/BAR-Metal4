@@ -1,0 +1,75 @@
+{
+  "status": "STAGED_READY_NO_GAMES",
+  "recordedUTC": "2026-11-15T17:47:39.845967+00:00",
+  "runnerSHA256": "fcbca08dab7fabaacfbfd37d951923dbb988c56f8c9ba6cf1a3b78623410ba2c",
+  "baselineRunnerSHA256": "22e0346fd76d616b294dbc927d167ca2b30d962823d9676f35994c1ebfd3097b",
+  "pacingSHA256": {
+    "HOST-TEST.log": "691cbd375dce42493c335df5668b640618ae8a716bab952d7586668f76bd13bf",
+    "PACING.json": "8d6b4eddec5061af345272ba602528ed6a830464e8f2660647b58a779dc884f3",
+    "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "signedCandidateBinary": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "sameCandidateAllArms": true,
+  "validation": {
+    "campaign": "validation_paced",
+    "arm": "V_ELISION1_IMAGE",
+    "elision": 1,
+    "finalColor": 1,
+    "h5Mode": 0,
+    "h5Counters": 1,
+    "metalValidation": 1,
+    "frameTrace": 0,
+    "postwindowInternalImage": true,
+    "performanceAccepted": false
+  },
+  "clean": {
+    "campaign": "clean_paced",
+    "order": [
+      "A1_ELISION0",
+      "B1_ELISION1",
+      "B2_ELISION1",
+      "A2_ELISION0"
+    ],
+    "elision": [
+      0,
+      1,
+      1,
+      0
+    ],
+    "finalColor": 1,
+    "h5Mode": 0,
+    "h5Counters": 0,
+    "metalValidation": 0,
+    "frameTrace": 0,
+    "countedSeconds": 40,
+    "performanceAccepted": true,
+    "allValidRetained": true
+  },
+  "shared": {
+    "scene": "BC213",
+    "resolution": [
+      1512,
+      950
+    ],
+    "AA": 0,
+    "VSync": 0,
+    "VSyncGame": 0,
+    "LimitIdleFps": 0,
+    "option_limitoffscreenfps": false,
+    "warmup": "unchanged original >=9.8s wall gate with same pacing module/widget; 10s simulation before sim300",
+    "window": "sim300..1500/40s",
+    "pilot": "PREPARE1 BEGIN0",
+    "captureReadyBoundary": 1,
+    "worker": 1,
+    "frameOverlap": 1,
+    "captureOverlap": 1,
+    "prepareOverlap": 1,
+    "beginPrepareOverlapRaw": 1,
+    "baselineImage": "$PERFORMANCE_WORK/evidence/release-v1113-prepare-baseline-20261115-01/measurement/screen_paced/preparation/runs/S_RELEASE1113_PREPARE/scene.png",
+    "baselineFPSContextOnly": 184.12960071283905
+  },
+  "runPolicy": "Stage after signed PRODUCT/RELEASE-CONTRACT, validation+image only; CLOSED for visual/error review; clean ABBA only after separate GO/HQ OPEN. No reruns for slow valid results or known diagnostic 41-sample failure.",
+  "stagingReceipt": "$P/measurement/STAGING-READY.json",
+  "updatedUTC": "2026-11-15T17:50:46.592771+00:00"
+}

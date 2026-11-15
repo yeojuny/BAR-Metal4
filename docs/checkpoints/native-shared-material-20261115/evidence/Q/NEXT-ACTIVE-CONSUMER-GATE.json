@@ -1,0 +1,13 @@
+{
+  "status": "FOLLOWUP_CANDIDATE_NOT_IMPLEMENTATION_APPROVED",
+  "sequence": "Complete Sepia functional testbed first. Do not modify current Q freeze/build for this diagnosis.",
+  "candidate": "Main Ground/deferred terrain completed heightMapTex single binding repeated preparation",
+  "individualCostMeasured": false,
+  "repeatCountMeasured": false,
+  "currentEvidence": "Aggregate terrain/model activity and aggregate preparation wall time only; no individual height binding cost or repetition proof. CUS unit/pass0 activity also unproved.",
+  "existingCosts": "J main join exposed event/feedback about38%, encoding about26%; broad preparation phases have zero same-job join overlap in this trace. This candidate does not overturn that priority.",
+  "minimalFutureGate": "Reuse existing bounded scope where possible; otherwise one default-OFF main deferredTerrainPrepare scope sim300..306: squarecount, heightresolvecount, unique exact source+sampling versions, completed/pending, repeats, overall and height wall/threadCPU, disjoint sampler/provider/imageparameters-mipview/registration costs. Output after window.",
+  "reuseContract": "Only if measured repeats meaningful: one lease-owned completed height binding record with exact lease/context/device/target/program/source/physical/mip ownership; per-draw readability and producer order preserved, unknown/pending use original path.",
+  "exclude": "Do not redo existing packed uniforms/matrix memo/sampler object/mip view/geometry/owner roster/square source caches; do not transplant per-draw12-binding material/vector/slice/key allocation prototype. No quality/AA/deferred changes.",
+  "acceptance": "Report work reduction and mean FPS separately; zero or negligible repeats means defer."
+}

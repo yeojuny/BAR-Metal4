@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "cus_terrain_profile",
+  "pid": 27360,
+  "startUTC": "2026-11-15T19:12:28.298216+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-15T19:13:42.698981+00:00",
+  "ownCaffeinateAlive": false
+}

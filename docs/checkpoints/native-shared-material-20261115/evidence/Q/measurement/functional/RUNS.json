@@ -1,0 +1,164 @@
+[
+  {
+    "run": "F1_OLD_SEPIA",
+    "draws": 7311,
+    "seconds": 40.002998352,
+    "matchedFPSSampleCountObserved": 40,
+    "performanceAccepted": false,
+    "rawTimingOnly": true,
+    "audioRoute": {
+      "status": "AUDIO_GATE_SKIPPED_MATCHED_DIAGNOSTIC",
+      "checksPerformed": false,
+      "settingsChanged": false,
+      "reason": "Reuses the previous same-scene diagnostic policy"
+    },
+    "mode": "old",
+    "functionalWitness": {
+      "mode": "old",
+      "images": [
+        {
+          "kind": "old-identity",
+          "path": "$Q/measurement/functional/preparation/runs/F1_OLD_SEPIA/v2-old-identity.png",
+          "bytes": 2008399,
+          "sha256": "8c02b5fcda91647a90c5c594d0b5ff0351f5e635da2b55db799a1c0fa8c01669"
+        }
+      ],
+      "events": [
+        "initialized",
+        "sepia_active",
+        "pause_ack",
+        "image",
+        "done"
+      ],
+      "generatedUniforms": [],
+      "pausedCamera": "dist=5000.000000000;dx=0.000000026;dy=-0.835686207;dz=-0.549207270;fov=45.000000000;mode=2.000000000;name=spring;px=5149.000000000;py=204.180068970;pz=596.000000000;rx=2.560177326;ry=0.471238941;rz=0.000000000;view=1512,950,0,0",
+      "pausedSimulation": 1500,
+      "nativeRelease": {
+        "mode": "PREPARE",
+        "eligible": "1",
+        "queued": "1",
+        "simulation": "300",
+        "begin_submission": "0",
+        "begin_prepare_overlap": "0"
+      },
+      "backendStatus": [
+        {
+          "frame": "480",
+          "view": "1512,950,0,0",
+          "MSAA": "0",
+          "MSAALevel": "0",
+          "VSync": "0",
+          "VSyncGame": "0",
+          "Water": "4",
+          "option_ssao": "true",
+          "option_ssao_quality": "3",
+          "option_bloomdeferred": "true",
+          "option_bloomdeferred_quality": "2",
+          "option_cas_sharpness": "1",
+          "option_water": "2",
+          "option_msaa": "1",
+          "option_vsync": "1",
+          "widget_cas": "false",
+          "widget_bloom": "false",
+          "widget_ssao": "false"
+        },
+        {
+          "frame": "1500",
+          "view": "1512,950,0,0",
+          "MSAA": "0",
+          "MSAALevel": "0",
+          "VSync": "0",
+          "VSyncGame": "0",
+          "Water": "4",
+          "option_ssao": "true",
+          "option_ssao_quality": "3",
+          "option_bloomdeferred": "true",
+          "option_bloomdeferred_quality": "2",
+          "option_cas_sharpness": "1",
+          "option_water": "2",
+          "option_msaa": "1",
+          "option_vsync": "1",
+          "widget_cas": "false",
+          "widget_bloom": "false",
+          "widget_ssao": "false"
+        }
+      ],
+      "timingObservation": {
+        "matchedFPSSampleCount": 40,
+        "countedSecondsObserved": 40.002998352,
+        "drawsObserved": 7311,
+        "warmupGate": "OBSERVATIONAL_ONLY",
+        "pacing": {
+          "status": "PASS",
+          "events": [
+            {
+              "event": "start",
+              "fields": {
+                "simulation": "1",
+                "wall_seconds": "0.000000000",
+                "state": "waiting"
+              },
+              "raw": "[t=00:00:50.472445][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting"
+            },
+            {
+              "event": "pause_request",
+              "fields": {
+                "simulation": "180",
+                "wall_seconds": "9.928000450",
+                "state": "pause_requested"
+              },
+              "raw": "[t=00:01:00.399691][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=9.928000450 state=pause_requested"
+            },
+            {
+              "event": "pause_ack",
+              "fields": {
+                "simulation": "180",
+                "wall_seconds": "9.942999840",
+                "state": "held"
+              },
+              "raw": "[t=00:01:00.415322][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=9.942999840 state=held"
+            },
+            {
+              "event": "resume_request",
+              "fields": {
+                "simulation": "180",
+                "wall_seconds": "10.003000259",
+                "state": "resume_requested",
+                "held_seconds": "0.059999999",
+                "held_draws": "7"
+              },
+              "raw": "[t=00:01:00.474965][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.003000259 state=resume_requested held_seconds=0.059999999 held_draws=7"
+            },
+            {
+              "event": "resume_ack",
+              "fields": {
+                "simulation": "180",
+                "wall_seconds": "10.012000084",
+                "state": "resumed"
+              },
+              "raw": "[t=00:01:00.484514][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.012000084 state=resumed"
+            },
+            {
+              "event": "removed_before_count",
+              "fields": {
+                "simulation": "180",
+                "wall_seconds": "10.012999535"
+              },
+              "raw": "[t=00:01:00.484610][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.012999535"
+            }
+          ],
+          "originalWallGateSeconds": 13.970999718,
+          "moduleSHA256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+          "widgetSHA256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+        }
+      },
+      "nativeLinkUniformDeleteTrace": "ABSENT_IN_FROZEN_SOURCE; source-backed traversal plus rendered response only",
+      "metalValidationEnabled": false,
+      "metalValidationErrors": [],
+      "cusPilotEnabled": false,
+      "cusPerformanceClaim": false,
+      "performanceAccepted": false,
+      "resultStatus": "FUNCTIONAL_EVIDENCE_CAPTURED"
+    }
+  }
+]

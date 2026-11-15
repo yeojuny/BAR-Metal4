@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "diagnostic_paced",
+  "pid": 38994,
+  "startUTC": "2026-11-15T19:44:46.159052+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-15T19:44:46.527251+00:00",
+  "ownCaffeinateAlive": false
+}

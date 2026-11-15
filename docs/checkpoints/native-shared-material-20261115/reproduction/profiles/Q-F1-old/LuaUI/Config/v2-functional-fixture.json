@@ -1,0 +1,19 @@
+{
+  "mode": "old",
+  "privateData": "$Q/measurement/functional/preparation/private/F1_OLD_SEPIA/state/data",
+  "frozenControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+  "stagedControllerSHA256": "8d64740dbb426c750a4c92afee3de46950c323286e23c2e1492464276be9b1bd",
+  "originalWidgetName": "Sepia Tone",
+  "originalWidgetShaderControl": "WG.sepia.setSepia(0.5); shadeUI false",
+  "moduleSelection": "VFS.RAW_FIRST from private profile only in shared mode",
+  "generatedBaseSHA256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9",
+  "privateGeneratedModuleSHA256": null,
+  "privateFunctionalProbeSHA256": "dd7b961f8a8695b3c26cac98e7cf82829cfe3d02da2487ebafeade87ff78cc83",
+  "privateWidgetConfigSHA256": "978286fcdfb059f491800d3e35eab3581293f664b149de3633da3a2b2750ef72",
+  "privateSettingsSHA256": "ea93d2fd7005073f7da337a8d938a7c0e7b08e9584941b8ae05f5492fe65ac29",
+  "images": [
+    "v2-old-identity.png"
+  ],
+  "uniformControl": "Spring config overlay only; generated GLSL strings and native source unmodified",
+  "functionalWarmupWallGate": "OBSERVATIONAL_ONLY"
+}

@@ -1,0 +1,79 @@
+{
+  "status": "READY_NO_GAMES",
+  "campaign": "diagnostic_power1_paced",
+  "product": {
+    "variant": "screen-state-elision-standalone-test",
+    "binary": "$S/runtime/native/bin/spring-metal4-scene",
+    "native": "$S/runtime/native",
+    "package": "$MANAGEMENT_WORK/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "sha256": "5069655ce90fbd301dce953f277d264af7f15f18aeff5ca16dd9651681d884a7"
+  },
+  "order": [
+    {
+      "arm": "D0_POWER1_OFF",
+      "mode": "OFF",
+      "data": "$S/measurement/power1/diagnostic_power1_paced/preparation/private/D0_POWER1_OFF/state/data",
+      "out": "$S/measurement/power1/diagnostic_power1_paced/preparation/runs/D0_POWER1_OFF",
+      "controllerSHA256": "608b511afcb6ff0d01527bbdeca37620b2924d437aa483a710eafa5834032dae",
+      "childFlags": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": "0",
+        "BAR_NATIVE_FRAME_TRACE": "1",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "1",
+        "MTL_DEBUG_LAYER": "1",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "0",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": "300",
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": "306"
+      }
+    },
+    {
+      "arm": "D1_POWER1_ON",
+      "mode": "ON",
+      "data": "$S/measurement/power1/diagnostic_power1_paced/preparation/private/D1_POWER1_ON/state/data",
+      "out": "$S/measurement/power1/diagnostic_power1_paced/preparation/runs/D1_POWER1_ON",
+      "controllerSHA256": "608b511afcb6ff0d01527bbdeca37620b2924d437aa483a710eafa5834032dae",
+      "childFlags": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SCREEN_TABLE_H5": "0",
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": "0",
+        "BAR_NATIVE_FRAME_TRACE": "1",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "1",
+        "MTL_DEBUG_LAYER": "1",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": "300",
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": "306"
+      }
+    }
+  ],
+  "scene": "BC213, sim300..1500, AA0, VSync0, 1512x950, same paced warmup",
+  "diagnostics": "both Metal Validation 1; trace every loop sim300..306; image paused sim1500",
+  "clean": "Not offered in this power1 diagnostic runner; clean remains AC powermode0 in the separate runner",
+  "power": "AC powermode1 required by proven P validation preflight on both diagnostics; runtime LimitIdleFps0 and offscreenfalse required",
+  "allValidRunsRetained": true,
+  "priorSamplesPooled": false
+}

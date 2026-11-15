@@ -1,0 +1,275 @@
+--- a/rts/Rendering/Backend/NativeCPUPhaseTrace.h
++++ b/rts/Rendering/Backend/NativeCPUPhaseTrace.h
+@@ -18,7 +18,8 @@
+  RetirementNotice=16, CPUNotice=17, RuntimeRetire=18, EventWait=19,
+  FeedbackWait=20, AllocatorReset=21, GPUCallback=22, ResidencyCleanup=23,
+  ResourceCommit=24, Submit=25, CompletedOwnerRelease=26, WorkerJob=27,
+- CaptureInvocation=28, ReadChecks=29, Count=30
++ CaptureInvocation=28, ReadChecks=29, ModelFactsRequests=30, ModelFactsPositive=31,
++ ModelFactsCasts=32, ModelFactsCapacity=33, ModelFactsProviderTime=34, ModelFactsCPUValidity=35, Count=36
+ };
+ enum class NativeCPUFinishReason : unsigned {Control=1, CapturePrefix=2, Credit=3, FullDrain=4, DispatchPrior=5, JoinedFallback=6, NonPresent=7, Rollback=8, SurfaceBoundary=9};
+ // A copied identity is diagnostic data, never an owner or an admission token.
+--- a/rts/Rendering/Backend/NativePositiveBackingFacts.h
++++ b/rts/Rendering/Backend/NativePositiveBackingFacts.h
+@@ -0,0 +1,69 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++#include "NativeTextureBacking.h"
++#include <array>
++#include <memory>
++#include <type_traits>
++
++namespace rendering {
++// CPU type evidence only. No image, sampler, generation, completion or GPU
++// readiness is memoized. Entries never prolong the backing's lifetime.
++template<class Derived, std::size_t Capacity=128> class NativePositiveBackingFacts {
++ static_assert(std::is_final_v<Derived> && std::is_convertible_v<const Derived*,const NativeTextureBacking*>);
++ static_assert(Capacity && (Capacity & (Capacity-1))==0);
++public:
++ struct Scope {
++  const void* lease=nullptr; const void* context=nullptr; std::uint64_t submission=0;
++  bool operator==(const Scope&) const = default;
++ };
++ struct Stats {std::uint64_t probes=0,full=0;};
++ class Proof {
++  friend class NativePositiveBackingFacts;
++  std::shared_ptr<const NativeTextureBacking> backing;
++  std::shared_ptr<const Derived> typed;
++  explicit Proof(std::shared_ptr<const NativeTextureBacking> source)
++   :backing(std::move(source)),typed(std::dynamic_pointer_cast<const Derived>(backing)) {}
++ public:
++  const std::shared_ptr<const Derived>& Typed()const noexcept{return typed;}
++ };
++ explicit NativePositiveBackingFacts(Scope scope,bool count=false):scope(scope),count(count){}
++ NativePositiveBackingFacts(const NativePositiveBackingFacts&)=delete;
++ NativePositiveBackingFacts& operator=(const NativePositiveBackingFacts&)=delete;
++ static Proof Classify(const std::shared_ptr<const NativeTextureBacking>& backing){return Proof(backing);}
++ bool Matches(Scope actual)const noexcept{return scope.lease && scope.context && scope.submission && scope==actual;}
++ std::shared_ptr<const Derived> Find(Scope actual,const std::shared_ptr<const NativeTextureBacking>& backing)noexcept {
++  if(!Matches(actual)||!backing)return {};
++  const auto first=Bucket(backing.get());
++  for(std::size_t n=0;n<Capacity;++n){
++   const auto& entry=entries[(first+n)&(Capacity-1)];if(count)++stats.probes;
++   if(!entry.address)return {};
++   if(entry.address!=backing.get() || entry.typed.owner_before(backing) || backing.owner_before(entry.typed))continue;
++   auto typed=entry.typed.lock();
++   if(typed && static_cast<const NativeTextureBacking*>(typed.get())==backing.get())return typed;
++  }
++  return {};
++ }
++ // The caller validates its own payload before committing this unforgeable
++ // positive proof. Full tables and invalid scopes simply retain the old path.
++ bool Remember(Scope actual,const Proof& proof)noexcept {
++  if(!Matches(actual)||!proof.typed)return false;
++  const auto first=Bucket(proof.backing.get());
++  for(std::size_t n=0;n<Capacity;++n){
++   auto& entry=entries[(first+n)&(Capacity-1)];
++   if(entry.address==proof.backing.get() && !entry.typed.owner_before(proof.backing) && !proof.backing.owner_before(entry.typed))return true;
++   if(!entry.address){entry.address=proof.backing.get();entry.typed=proof.typed;++used;return true;}
++  }
++  if(count)++stats.full;return false;
++ }
++ std::size_t Size()const noexcept{return used;}
++ const Stats& Counts()const noexcept{return stats;}
++private:
++ struct Entry {const NativeTextureBacking* address=nullptr;std::weak_ptr<const Derived> typed;};
++ static std::size_t Bucket(const void* pointer)noexcept {
++  auto value=reinterpret_cast<std::uintptr_t>(pointer);value^=value>>17;value^=value>>9;
++  return (value>>3)&(Capacity-1);
++ }
++ Scope scope;bool count=false;Stats stats{};std::size_t used=0;
++ std::array<Entry,Capacity> entries{};
++};
++}
+--- a/rts/Rendering/Metal4/Metal4ModelTypeFacts.inc
++++ b/rts/Rendering/Metal4/Metal4ModelTypeFacts.inc
+@@ -0,0 +1,60 @@
++// Included in the renderer's private namespace. Only the synchronous
++// sourceImages callback borrows this local CPU fact scope.
++struct ModelTypeFactsScope {
++ using Facts=NativePositiveBackingFacts<NativeModelTextureBacking>;
++ static bool Enabled()noexcept {
++  static const bool enabled=[] {const char* v=std::getenv("BAR_NATIVE_MODEL_TYPE_FACTS");return v&&v[0]=='1'&&!v[1];}();return enabled;
++ }
++ static bool Diagnostic()noexcept {
++  const auto context=CaptureNativeCPUPhaseContext();return context.sampled&&context.buffer;
++ }
++ static bool Wanted()noexcept{return Enabled()||Diagnostic();}
++ static Facts::Scope Identity(RuntimeLease& lease,std::uint64_t submission)noexcept {
++  return {&lease,lease.ContextIdentity(),submission==lease.SourceSubmission()?submission:0};
++ }
++ Facts facts;
++ bool enabled,diagnostic;
++ std::uint64_t requests=0,hits=0,positiveCasts=0,fallbacks=0;
++ std::uint64_t providerWallNs=0,providerCPUNs=0,invalidCPU=0,scopeMismatch=0;
++ explicit ModelTypeFactsScope(RuntimeLease& lease,std::uint64_t submission)
++  :facts(Identity(lease,submission),Diagnostic()),enabled(Enabled()),diagnostic(Diagnostic()){}
++ ~ModelTypeFactsScope(){
++  if(!diagnostic)return;
++  // These count-only records use the existing sampled job buffer and are
++  // printed after Join. Their tiny emission duration is NOT provider time.
++  const auto record=[](NativeCPUPhaseKind kind,std::uint64_t a,std::uint64_t b){NativeCPUPhaseScope row(kind);row.Counts(a,b);};
++  record(NativeCPUPhaseKind::ModelFactsRequests,requests,hits);
++  record(NativeCPUPhaseKind::ModelFactsPositive,positiveCasts,fallbacks);
++  record(NativeCPUPhaseKind::ModelFactsCasts,hits*10,facts.Counts().probes);
++  record(NativeCPUPhaseKind::ModelFactsCapacity,facts.Size(),facts.Counts().full);
++  record(NativeCPUPhaseKind::ModelFactsProviderTime,providerWallNs,providerCPUNs);
++  record(NativeCPUPhaseKind::ModelFactsCPUValidity,invalidCPU,scopeMismatch);
++ }
++ struct ProviderCall {
++  ModelTypeFactsScope* scope;
++  Facts::Scope identity;
++  bool matches=false;
++  std::uint64_t wall=0;NativeThreadCPUStamp cpu{};
++  static std::uint64_t Now()noexcept{return std::chrono::duration_cast<std::chrono::nanoseconds>(Clock::now().time_since_epoch()).count();}
++  ProviderCall(ModelTypeFactsScope* owner,RuntimeLease& lease,std::uint64_t submission)
++   :scope(owner),identity(Identity(lease,submission)){
++   if(!scope)return;matches=scope->facts.Matches(identity);
++   if(scope->diagnostic){++scope->requests;if(!matches)++scope->scopeMismatch;wall=Now();cpu=ReadNativeThreadCPUTime();}
++  }
++  ~ProviderCall(){
++   if(!scope||!scope->diagnostic)return;
++   const auto endCPU=ReadNativeThreadCPUTime();const auto end=Now();scope->providerWallNs+=end-wall;
++   if(cpu.valid&&endCPU.valid&&endCPU.ns>=cpu.ns)scope->providerCPUNs+=endCPU.ns-cpu.ns;else ++scope->invalidCPU;
++  }
++  bool ReuseEnabled()const noexcept{return scope&&scope->enabled&&matches;}
++  std::shared_ptr<const NativeModelTextureBacking> Find(const std::shared_ptr<const NativeTextureBacking>& backing)noexcept {
++   auto model=ReuseEnabled()?scope->facts.Find(identity,backing):std::shared_ptr<const NativeModelTextureBacking>{};
++   if(scope&&scope->diagnostic){if(model)++scope->hits;else ++scope->fallbacks;}return model;
++  }
++  void Positive(const std::optional<Facts::Proof>& proof)noexcept {
++   if(!scope)return;
++   if(scope->diagnostic){if(!ReuseEnabled()||proof)++scope->positiveCasts;}
++   if(ReuseEnabled()&&proof)scope->facts.Remember(identity,*proof);
++  }
++ };
++};
+--- a/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -41,6 +41,7 @@
+ #include "Metal4WorldShaderSource.h"
+ #include "Rendering/Backend/NativeCUSMaterialControl.h"
+ #include "Rendering/Backend/NativeS3OTextureSource.h"
++#include "Rendering/Backend/NativePositiveBackingFacts.h"
+ #include "Rendering/Backend/NativeParticleAtlasSource.h"
+ #include "Metal4OpaqueModelSource.h"
+ #include "Metal4ShadowTextureNative.h"
+@@ -232,6 +233,7 @@
+ namespace rendering {
+ namespace {
+ using namespace metal4;
++#include "Metal4ModelTypeFacts.inc"
+ 
+ void MainThread() { Require([NSThread isMainThread]||Metal4WindowSurfaceNativeAccess::WorkerAccessActive(), "Metal4 world presentation requires main or pinned render worker"); }
+ void MatrixFinite(const WorldMatrix& matrix) { for (float value: matrix) Require(std::isfinite(value), "Non-finite world matrix"); }
+@@ -721,10 +723,13 @@
+ 		Require(sampling.magFilter==0x2600||sampling.magFilter==0x2601,"Original terrain input magnification filter is invalid");
+ 		return screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
+ 	}
+-	CUSSourceImage OriginalModelImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission,bool validation,double& shaderMs)
++	CUSSourceImage OriginalModelImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission,bool validation,double& shaderMs,ModelTypeFactsScope* typeFacts=nullptr)
+ 	{
+ 		Require(submission&&binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&(binding.object->backing||binding.object->image),
+ 			"Original model image lacks its retained source object/content/submission");
++  ModelTypeFactsScope::ProviderCall typeCall(typeFacts,lease,submission);
++  auto model=typeCall.Find(binding.object->backing);
++  if(!model){
+ 		if(std::dynamic_pointer_cast<const NativeLegacyRefractionBacking>(binding.object->backing))return legacyWaterGPU.ResolveCopy(lease,binding,submission);
+ 		if(auto mask=std::dynamic_pointer_cast<const NativeUnitStencilBacking>(binding.object->backing))
+ 			return unitStencilGPU.Resolve(lease,mask->version,submission);
+@@ -752,10 +757,17 @@
+ 			return pbrSource.Image(lease,binding,submission);
+ 		if(std::dynamic_pointer_cast<const NativeParticleAtlasBacking>(binding.object->backing))
+ 			return particlesGPU.AtlasImage(lease,binding,screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding)),submission);
++  } // A prior positive final-type proof skips only impossible type dispatch.
+ 		Require(binding.object->target==NativeCUSTextureTarget::Image2D,
+ 			"Original model image target has no actual paired source consumer");
+-		if(auto model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing)){
++  std::optional<ModelTypeFactsScope::Facts::Proof> modelProof;
++  if(!model){
++   if(typeCall.ReuseEnabled()){modelProof.emplace(ModelTypeFactsScope::Facts::Classify(binding.object->backing));model=modelProof->Typed();}
++   else model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing);
++  }
++		if(model){
+ 			Require(model->pixels!=nullptr,"Original model image has no actual retained upload bytes");
++   typeCall.Positive(modelProof);
+    // The pilot admits only completion observed BEFORE this provider invocation.
+    // Texture() may retire/register work; its successful return is not a proof.
+    bool previouslyComplete=false;
+@@ -3369,8 +3381,10 @@
+ 					buffers.push_back({piece.vertices,piece.indices,piece.count});
+ 				}return buffers;
+ 			};
++  std::optional<ModelTypeFactsScope> modelTypeFacts;
++  if(ModelTypeFactsScope::Wanted())modelTypeFacts.emplace(lease,sourceSubmission);
+ 			const auto sourceImages=[&](RuntimeLease& sourceLease,const NativeCUSTextureBinding& binding,unsigned){
+-				return impl->OriginalModelImage(sourceLease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);
++				return impl->OriginalModelImage(sourceLease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs,modelTypeFacts?&*modelTypeFacts:nullptr);
+ 			};
+   std::vector<NativeWorldAttachmentClear> shadowClears;
+   if(frame.luaWorldDrawFrame){
+--- a/tools/model-type-facts/test_facts.cpp
++++ b/tools/model-type-facts/test_facts.cpp
+@@ -0,0 +1,61 @@
++#include "Rendering/Backend/NativePositiveBackingFacts.h"
++#include "Rendering/Backend/NativeS3OTextureSource.h"
++#include <cassert>
++#include <cstdlib>
++#include <iostream>
++#include <new>
++
++static std::size_t allocations=0;
++void* operator new(std::size_t size){++allocations;if(auto p=std::malloc(size?size:1))return p;throw std::bad_alloc();}
++void operator delete(void* p)noexcept{std::free(p);}
++void* operator new[](std::size_t size){return ::operator new(size);}
++void operator delete[](void* p)noexcept{::operator delete(p);}
++
++using namespace rendering;
++using Cache=NativePositiveBackingFacts<NativeModelTextureBacking,2>;
++struct Other final:NativeTextureBacking {NativeTextureBackingKind Kind()const noexcept override{return NativeTextureBackingKind::ColorImage;}};
++int main(){
++ int lease=0,context=0,otherLease=0,otherContext=0;
++ Cache::Scope scope{&lease,&context,1};Cache cache(scope,true);
++ auto model=std::make_shared<NativeModelTextureBacking>();
++ std::shared_ptr<const NativeTextureBacking> base=model;
++ assert(!cache.Find(scope,base));
++ auto proof=Cache::Classify(base);assert(proof.Typed().get()==model.get());
++ assert(cache.Remember(scope,proof));assert(cache.Find(scope,base).get()==model.get());
++ const auto before=allocations;for(int i=0;i<1000;++i)assert(cache.Find(scope,base).get()==model.get());assert(allocations==before);
++ assert(!cache.Find({&otherLease,&context,1},base));assert(!cache.Find({&lease,&otherContext,1},base));
++ assert(!cache.Find({&lease,&context,2},base));assert(!cache.Find({&lease,&context,0},base));
++ std::shared_ptr<const NativeTextureBacking> differentControl(model.get(),[](const NativeTextureBacking*){});
++ assert(!cache.Find(scope,differentControl));
++ auto unknown=std::make_shared<Other>();auto negative=Cache::Classify(unknown);
++ assert(!negative.Typed()&&!cache.Remember(scope,negative));assert(!cache.Find(scope,unknown));
++ auto second=std::make_shared<NativeModelTextureBacking>();auto secondProof=Cache::Classify(second);
++ assert(cache.Remember(scope,secondProof));assert(cache.Size()==2);
++ auto third=std::make_shared<NativeModelTextureBacking>();auto thirdProof=Cache::Classify(third);
++ assert(!cache.Remember(scope,thirdProof));assert(!cache.Find(scope,third));assert(thirdProof.Typed().get()==third.get());
++ // A type fact never snapshots payload or readiness. The same typed object
++ // still exposes its current payload for the original provider to validate.
++ auto pixels=std::make_shared<WorldTexture>();model->pixels=pixels;
++ assert(cache.Find(scope,base)->pixels==pixels);model->pixels.reset();assert(!cache.Find(scope,base)->pixels);
++ struct Pair {NativeModelTextureBacking first,second;};auto pair=std::make_shared<Pair>();
++ Cache aliases(scope);std::shared_ptr<const NativeTextureBacking> a(pair,&pair->first),b(pair,&pair->second);
++ auto aliasProof=Cache::Classify(a);assert(aliases.Remember(scope,aliasProof));assert(!aliases.Find(scope,b));
++ // Destroy and reconstruct the actual class at the same address. Weak cache
++ // entries neither keep it alive nor mistake a new control block for a hit.
++ alignas(NativeModelTextureBacking) unsigned char storage[sizeof(NativeModelTextureBacking)];
++ Cache recycled(scope);std::weak_ptr<const NativeModelTextureBacking> weak;
++ {
++  auto* raw=std::construct_at(reinterpret_cast<NativeModelTextureBacking*>(storage));
++  auto owned=std::shared_ptr<NativeModelTextureBacking>(raw,[](auto* p){std::destroy_at(p);});weak=owned;
++  auto p=Cache::Classify(owned);assert(recycled.Remember(scope,p));
++ }
++ assert(weak.expired());
++ {
++  auto* raw=std::construct_at(reinterpret_cast<NativeModelTextureBacking*>(storage));
++  auto owned=std::shared_ptr<NativeModelTextureBacking>(raw,[](auto* p){std::destroy_at(p);});
++  assert(!recycled.Find(scope,owned));auto p=Cache::Classify(owned);assert(recycled.Remember(scope,p));assert(recycled.Find(scope,owned).get()==raw);
++ }
++ try {Cache unwind(scope);auto owner=std::make_shared<NativeModelTextureBacking>();weak=owner;auto p=Cache::Classify(owner);unwind.Remember(scope,p);throw 1;}catch(int){}
++ assert(weak.expired());
++ std::cout<<"PASS actual-model-class; ownership/scope/expiry/ABA/aliases/capacity/unknown/payload/unwind; 1000 allocation-free hits\n";
++}

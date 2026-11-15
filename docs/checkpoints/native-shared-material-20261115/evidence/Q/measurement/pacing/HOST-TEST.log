@@ -1,0 +1,1 @@
+PASS: fast/slow/catch-up; real pause/resume ack; >=10 real seconds; exact 300/1500; no counted pause; timeout/late/overshoot/invalid-speed rejection

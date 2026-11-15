@@ -1,0 +1,7 @@
+{
+  "utc": "2026-11-15T19:45:25.582704+00:00",
+  "status": "PREFLIGHT_STOP_NO_ENGINE",
+  "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t95%; AC attached; not charging present: true\n",
+  "acPowermode": 1,
+  "source": "pmset -g batt and pmset -g custom; no system change"
+}

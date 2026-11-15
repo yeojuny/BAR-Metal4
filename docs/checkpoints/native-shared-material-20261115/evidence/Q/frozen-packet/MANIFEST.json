@@ -1,0 +1,265 @@
+{
+  "state": "SOURCE_FROZEN_FOR_REVIEW_NOT_RUNTIME_ACCEPTED",
+  "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine",
+  "originalCopiesVerifiedAgainstFrozenJ": true,
+  "wrapperLoaderSHA512": "2a2746ca8b7e213e1651c324db58ea466f5640c9110055a49f0025c43f840193088b580bec9e4524395904a62555e5bfc745bba828f66ecd7222ee0031c486fd",
+  "originalWrapperLoaderSHA512": "85b2a744a1265b43b2773b735fddee2a10ee2ad3779341dc3ebfd520b72b70951ff99cc97d3d6b1f1bc563b4903bc5a612879a6f8d1828df84a395a60e6311ee",
+  "files": [
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+      "status": "modified",
+      "baseline": "$V2_PACKET/originals/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+      "originalSHA256": "dd0be8a6b9819aa3831dad04cbcc244ec597d265905343161784ef7636547a84",
+      "overlaySHA256": "3e43f742c2e69fa98df42564da6b085d71409327f727e4ab2041b21bdf073d37",
+      "bytes": 4585,
+      "category": "packaging-data"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "8eb2f0ef943e00d39556945f6173aaece0b8f7dbb307362be17269bbe32b583f",
+      "bytes": 803,
+      "category": "packaging-data"
+    },
+    {
+      "path": "rts/Lua/NativeSepiaLuaContext.h",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Lua/NativeSepiaLuaContext.h",
+      "originalSHA256": "1dba7f0719e53c0700f686e01e8fb26304e09e6a7f44a20c02b3ce4042454e21",
+      "overlaySHA256": "f18ce58bc9ecf45116b7bfcd7a8bd150f7f434b95d1596f4f9dda9bbe9d6d311",
+      "bytes": 8521,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Lua/NativeWidgetAdapters.h",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Lua/NativeWidgetAdapters.h",
+      "originalSHA256": "4df1c89d8ec11a47f6ac2b604dfc6fb90c4319f520be16bc03fd36c1637f4474",
+      "overlaySHA256": "da4ac543cddbf6fa433ae04b907e6dbc7ae33a5656a0e1ac8f8351f0615b572b",
+      "bytes": 18373,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePostprocessData.cpp",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Backend/NativePostprocessData.cpp",
+      "originalSHA256": "e572ebea2572842e65f514e40901f0f31fcd18921d625aaf4f26f7a928304e77",
+      "overlaySHA256": "600514fd46fda989af3aee891c9bd3a8a168ce3cdb6d69ba857d61beaf13a4d6",
+      "bytes": 31205,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePostprocessData.h",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Backend/NativePostprocessData.h",
+      "originalSHA256": "7327126d1ea6896a7b814caafbbfbec83322675ff681f251d762d45051a86598",
+      "overlaySHA256": "72f6e91959087031e8841a99b5e21ad372f342ca9407abf571590c874e699ff9",
+      "bytes": 13179,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativePostprocessRecorder.cpp",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Backend/NativePostprocessRecorder.cpp",
+      "originalSHA256": "f443fa4dfaa399dc5036493c5a5698694f5fed99c0de35a5f7c1aa3a8bddafc2",
+      "overlaySHA256": "37fb9e8d17ff7194c881caecdacb203bc5a316b0971557f513ce8a44ad0eb05e",
+      "bytes": 14490,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSepiaPilot.h",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "3643feda6cddf60c5297b5c7b074c1665c00058a563066e85141bbe49212627b",
+      "bytes": 3965,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Backend/NativeSharedProgramPilot.h",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "0e0896603d7eb32ffc28687f2eb1ad51a7ab57da567b7c5f47dbce72397eea9c",
+      "bytes": 2944,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4CUSSource.mm",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Metal4/Metal4CUSSource.mm",
+      "originalSHA256": "f417286320b6458f199daa8694e5da1da6be7f832e3a319dcea9da500475609e",
+      "overlaySHA256": "e5f31f4789798113507f9f89040425c66395f4f4a36f03f1b4b26c223e53b9f2",
+      "bytes": 43976,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "originalSHA256": "4c4bd941a8bd62b135f1b07cab153ae2ea2e5029053405b92397e64a9bdb89b8",
+      "overlaySHA256": "67223a9686d1fae4877c68a0a039d26a8fe05047e212a36f51f56e053e724415",
+      "bytes": 64728,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "originalSHA256": "2d3bdc2250d1450f880ef326fd65e35d094695df5c223b3fdd0b00df171937b8",
+      "overlaySHA256": "bf42e42224f1f88aa894ee59693437c6291a4f8f1cb8b464057e368e4512ae49",
+      "bytes": 13297,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "originalSHA256": "c3b6926fdc7bbbc69f67b354240c6b31648632c37c9eadf05a2147f2a061b933",
+      "overlaySHA256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521",
+      "bytes": 70976,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SharedProgramPilot.h",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "31266d86876d82c6b0f4fe0d6ce370c073b4001b90dd09b608b603c5b73b8ac2",
+      "bytes": 5815,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4SourceImage.h",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Metal4/Metal4SourceImage.h",
+      "originalSHA256": "5da4d74d748d6539bc786d860e54e21b93d75d85f714da176c058132c1d5fd77",
+      "overlaySHA256": "5c8d3467571f0e9aec4ce3527b5079857dca51bb095b4db57be33e1784b79226",
+      "bytes": 2102,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "status": "modified",
+      "baseline": "$PERFORMANCE_WORK/evidence/prepare-critical-path-diagnostic-20261114-01/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "originalSHA256": "cce8a2dbc3cde46d64250de5d58796f5daa19abe17547f456a407824b132d4dc",
+      "overlaySHA256": "1ce655a505a4e31fe73b79cff6b44d47ee2da531f9bf06e42934a0f203974d3b",
+      "bytes": 449084,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "140c259c102a7028c801a9ccfa54a359fd01e5d1d105a4ae6b39da93b4ab7d69",
+      "bytes": 4948,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.json",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "35aa9071dd4f25de712dd05719a0e9a1e70a33f95443cfbc1b7e9a349a3226e4",
+      "bytes": 1601,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSepiaGeneratedProgram.metal",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "57923ba5e2d3e5a7db12b393259f1154ed1c8eb7ccc412bd4717963f129dd76b",
+      "bytes": 2025,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/PROVENANCE.json",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "904115382d72cb6f8e324beaf2ea53d2076f921282a92512a6125fb39da3c430",
+      "bytes": 1165,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/README.md",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "aa14d4d6ffe6627df9a0356869460c581f8780e7b922213d2e3b6e7ddd6345fb",
+      "bytes": 5941,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/compile_subset.py",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "6ee1fb2d8fd380854d30de69b0010aea558a4ca9eafb780e8004ba1dfa3a006a",
+      "bytes": 14021,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/original-widget.lua",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "637d0c5d535b5c00335c0bcb6b634479513de7c2bdee33a29dc14077bb5fac64",
+      "bytes": 8310,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/sepia.frag.glsl",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "8d9ee3a1d195e1cfd2e8eecc9ab9814abaf123e24995bc33e51fb60c205642c7",
+      "bytes": 449,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/sepia.vert.glsl",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "120ff97ac3a0f06011c2f6c8010c04660d8de75f80d7ba54aa5040f738f67987",
+      "bytes": 194,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/test_lua_adapter.lua",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "f3c348142c77116ff7990c468c9ba161cf5e0748f9fcdc6d3009d1cfc02a434f",
+      "bytes": 2498,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/test_payload.cpp",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "2f3501bf80b1d27060a9b1d4c6a148c30e5bcdf14249aa931cb83584c8f9cf00",
+      "bytes": 3170,
+      "category": "engine-source-or-tools"
+    },
+    {
+      "path": "tools/sepia-pilot/test_subset.py",
+      "status": "new",
+      "baseline": null,
+      "originalSHA256": null,
+      "overlaySHA256": "e97b9e3635c0259c7fa349c4fe839d386439b3cb5d94f227c67e7d2c052919e2",
+      "bytes": 2930,
+      "category": "engine-source-or-tools"
+    }
+  ],
+  "patchSHA256": {
+    "ENGINE.patch": "38935f5d13017e0cc5598f402750e5738f7e8bab5b50a3c753ad305ca4ea4b12",
+    "PACKAGING-DATA.patch": "7e2c87a0d48e779df4f9555f37f4bfec69eef8d73a8cc743ed5a2dad0b2e8dac"
+  }
+}

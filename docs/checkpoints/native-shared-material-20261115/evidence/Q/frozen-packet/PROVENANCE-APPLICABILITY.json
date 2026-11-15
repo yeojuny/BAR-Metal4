@@ -1,0 +1,10 @@
+{
+  "baseline": "Frozen J; unchanged functional CUS/Terrain/postprocess from shipped H, diagnostics retained. No K or performance candidate imported.",
+  "authorship": "Existing engine/native work remains credited to its original authors including yeojuny. Sepia widget copyright Beherith 2023, GPL v2 or later. This private pilot introduces no external implementation imports.",
+  "records": {
+    "tomjn-recoil-3695-binding-index-178": "Inherited in frozen J. Not a new pilot change; preserve original contribution credit.",
+    "benbreen-yeojuny-sync-worker-qos-220-followup": "Not included in H/J or this pilot. Original record retained as historical scope only.",
+    "tomjn-recoil-3035-darwin-affinity-qos": "Not included in H/J or this pilot. Original record retained as historical scope only."
+  },
+  "sepia": "See source/engine/tools/sepia-pilot/PROVENANCE.json for exact pool, stage hashes and original adapter. Generator revision is embedded in generated outputs and compile_subset.py."
+}

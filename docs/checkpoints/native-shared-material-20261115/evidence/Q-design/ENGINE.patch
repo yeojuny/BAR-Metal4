@@ -1,0 +1,1760 @@
+--- a/rts/Lua/NativeSepiaLuaContext.h
++++ b/rts/Lua/NativeSepiaLuaContext.h
+@@ -1,6 +1,8 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #pragma once
+ #include "LuaNativeUI.h"
++#include "Rendering/Backend/NativeSepiaPilot.h"
++#include <cstdlib>
+ #include "LuaVBOImpl.h"
+ #include "Rendering/Backend/NativeSepiaProgram.h"
+ #include "Rendering/Backend/NativeCUSUniformCapture.h"
+@@ -20,19 +22,33 @@
+ {
+  Require(!CLuaHandle::GetHandleSynced(L) && IsNativeSepiaConsumerAvailable(),"Sepia requires the real compiled native consumer");
+  sol::state_view lua(L);auto context=lua.create_table();
++ const char* selected=std::getenv("BAR_METAL4_SEPIA_PATH");
++ Require(!selected || std::strcmp(selected,"old")==0 || std::strcmp(selected,"shared")==0,"BAR_METAL4_SEPIA_PATH must be old or shared");
++ const bool sharedPath=selected && std::strcmp(selected,"shared")==0;
++ context.set("SharedPath",sharedPath);
++ context.new_usertype<sepiaPilot::Program>("LinkedProgram",sol::no_constructor);context.set("LinkedProgram",sol::lua_nil);
+  auto type=context.new_usertype<Buffer>("Buffer",sol::no_constructor);
+  Bind(type,"Define",[](Buffer& b,int count,sol::optional<sol::object> layout){Require(!b.deleted,"Sepia buffer was deleted");b.value->Define(count,layout);});
+  Bind(type,"Upload",[](Buffer& b,const sol::stack_table& values){Require(!b.deleted,"Sepia buffer was deleted");return b.value->Upload(values,sol::nullopt,sol::nullopt,sol::nullopt,sol::nullopt);});
+  Bind(type,"Delete",[](Buffer& b){b.value->Delete();b.deleted=true;});context.set("Buffer",sol::lua_nil);
+  Bind(context,"GetVBO",[L](GLenum target,bool frequent){Require(!frequent && (target==GL_ARRAY_BUFFER || target==GL_ELEMENT_ARRAY_BUFFER),"Sepia original placeholder buffer target/usage changed");auto b=std::make_shared<Buffer>();b->target=target;b->value=std::make_shared<LuaVBOImpl>(target,frequent);CLuaHandle::GetActiveVBOs(L).luaVBOs.emplace_back(b->value);return b;});
+- Bind(context,"ValidateProgram",[](const sol::table& params,const std::string& name){
+-  Require(IsNativeSepiaConsumerAvailable() && name==": Sepia","Unknown Sepia paired program");
+-  unsigned count=0;for(const auto& item:params){const auto key=item.first.as<std::string>();Require(key=="vertex" || key=="fragment" || key=="uniformInt","Sepia has an unexpected shader option/stage");++count;}Require(count==3,"Sepia program source is incomplete");
+-  Require(casProgram::Hash(params["vertex"].get<std::string>())==sepiaProgram::VertexHash,"Sepia original vertex source changed");
+-  auto samplers=params["uniformInt"].get<sol::table>();count=0;for(const auto& item:samplers){Require(item.first.as<std::string>()=="screenCopyTex" && item.second.as<int>()==0,"Sepia original sampler changed");++count;}Require(count==1,"Sepia sampler declaration missing");
+-  Require(casProgram::Hash(params["fragment"].get<std::string>())==sepiaProgram::FragmentHash,"Sepia original fragment source changed");return true;
++ auto validate=[sharedPath](const sol::table& params,const std::string&){
++  Require(IsNativeSepiaConsumerAvailable(),"Sepia native linked consumer unavailable");
++  unsigned count=0;for(const auto& item:params){const auto key=item.first.as<std::string>();Require(key=="vertex" || key=="fragment" || key=="uniformInt","Unsupported generated shader option/stage");++count;}Require(count==3,"Generated linked program source is incomplete");
++  const auto vertex=params["vertex"].get<std::string>(),fragment=params["fragment"].get<std::string>();
++  if(sharedPath)Require(vertex==sepiaGenerated::VertexSource && fragment==sepiaGenerated::FragmentSource,"GLSL differs from offline generated linked program; regenerate first");
++  else Require(casProgram::Hash(vertex)==sepiaProgram::VertexHash && casProgram::Hash(fragment)==sepiaProgram::FragmentHash,"Old Sepia comparator requires unchanged original GLSL");
++  const auto expected=sepiaGenerated::Link();auto samplers=params["uniformInt"].get<sol::table>();count=0;
++  for(const auto& item:samplers){Require(expected->resources.size()==1 && item.first.as<std::string>()==expected->resources[0].name && item.second.as<int>()==0,"Generated linked logical sampler differs");++count;}
++  Require(count==1,"Generated linked sampler declaration missing");return true;
++ };
++ Bind(context,"ValidateProgram",validate);
++ Bind(context,"LinkProgram",[validate,sharedPath](const sol::table& params,const std::string& name){validate(params,name);return sepiaPilot::Link(sharedPath);});
++ Bind(context,"SetUniform",[](std::shared_ptr<sepiaPilot::Program> p,const std::string& name,const sol::table& values,bool integer){
++  Require(bool(p),"Linked uniform program missing");std::vector<double> typed;typed.reserve(values.size());for(size_t i=1;i<=values.size();++i)typed.push_back(values[i].get<double>());sepiaPilot::SetUniform(*p,name,typed,integer);
+  });
+- Bind(context,"Draw",[L,&recorder](const sol::table& values,const std::string& texture,std::shared_ptr<Buffer> vertex,std::shared_ptr<Buffer> index,std::shared_ptr<Buffer> instance){
++ Bind(context,"DeleteProgram",[](std::shared_ptr<sepiaPilot::Program> p){Require(bool(p),"Linked program missing");p->deleted=true;});
++ Bind(context,"Draw",[L,&recorder](std::shared_ptr<sepiaPilot::Program> program,const std::string& texture,std::shared_ptr<Buffer> vertex,std::shared_ptr<Buffer> index,std::shared_ptr<Buffer> instance){
+   Require(IsNativeSepiaConsumerAvailable(),"Sepia native consumer/program missing");
+   auto& ui=rendering::ui::GetRecorder();Require(ui.IsScreenStage() && !ui.IsWorldStage() && !ui.IsCompiling() && !ui.HasActiveTarget() && !ui.HasActiveTypedTarget(),"Sepia requires its original root screen stage");
+   // These real original VAO buffers are lifetime-checked although the pinned
+@@ -47,11 +63,20 @@
+   auto& shared=OriginalNativeTextureContext();Require(ui.TextureObserver()==&shared.UI(),"Sepia actual sampler observer missing");
+   const auto observed=shared.UI().BoundImage(0);
+   Require(observed.image && !observed.image->incomplete && observed.image->postprocessVersion,"Sepia actual sampler0 has no produced screen-copy version");
+-  NativeSepiaUniforms u;u.engine=OriginalCUSUniformCapture().Current();
++  Require(bool(program),"Linked draw program missing");sepiaPilot::Live(*program);
++  NativeSepiaUniforms u;u.sharedPath=program->shared;u.engine=OriginalCUSUniformCapture().Current();
+   auto raster=std::make_shared<NativeCASRaster>();raster->surface=state;raster->world=ui.CurrentWorldState();u.raster=raster;
+-  u.gamma=values["gamma"].get<float>();
+-  auto pos=values["viewPos"].get<sol::table>();Require(pos.size()==2,"Sepia viewPos differs");for(unsigned i=0;i<2;++i)u.viewPos[i]=pos[i+1].get<std::int32_t>();
+-  for(unsigned i=0;i<3;++i){auto row=values[std::array{"colorR","colorG","colorB"}[i]].get<sol::table>();Require(row.size()==3,"Sepia color row differs");for(unsigned j=0;j<3;++j)u.rows[i][j]=row[j+1].get<float>();}
++  auto material=std::make_shared<sharedpilot::MaterialContent>();material->program=program->interface;material->uniformBytes=program->uniforms;
++  sharedpilot::LogicalBinding binding;binding.logicalSlot=0;binding.versionOwner=observed.image->postprocessVersion;material->bindings.push_back(std::move(binding));u.material=std::move(material);
++  // The old comparator alone keeps its original handwritten marshaling.
++  if(!u.sharedPath){
++   const auto& bytes=*program->uniforms;
++   for(const auto& field:program->interface->fields){
++    if(field.name=="gamma")std::memcpy(&u.gamma,bytes.data()+field.offset,4);
++    else if(field.name=="viewPos")std::memcpy(u.viewPos.data(),bytes.data()+field.offset,8);
++    else for(unsigned row=0;row<3;++row)if(field.name==std::array{"colorR","colorG","colorB"}[row])std::memcpy(u.rows[row].data(),bytes.data()+field.offset,12);
++   }
++  }
+   Require(globalRendering,"Sepia needs actual view geometry");
+   NativePostprocessRect viewport{globalRendering->viewPosX,globalRendering->viewPosY,std::uint32_t(globalRendering->viewSizeX),std::uint32_t(globalRendering->viewSizeY)};
+   if(state.viewport){const auto& v=*state.viewport;viewport={v.x,v.y,v.width,v.height};}
+--- a/rts/Lua/NativeWidgetAdapters.h
++++ b/rts/Lua/NativeWidgetAdapters.h
+@@ -88,6 +88,6 @@
+     {"luaui/widgets/gui_cursor.lua", "LuaUI/NativeWidgets/gui_cursor.lua", "e01571707526e9cbd98d73b90f2b91cb10ba98935e5259443b3cbfad0d014e99e65fcd4068a1b7e77d33bd1ef6241cfa5598adf9a98462fe3c81d9a39d1d7b5e"},
+     {"luaui/widgets/gui_flowui.lua", "LuaUI/NativeWidgets/gui_flowui.lua", "1b78f71397824883b1e74691e9f64d8bac56b921adee21f60b46d6605a71a17f4f612da87e5b86ce4f79b37745e461a37f5f46d14af3e375d813a2128373d659"},
+     {"luaui/widgets/gui_enemy_spotter.lua", "LuaUI/NativeWidgets/gui_enemy_spotter.lua", "f2abf161a29d26aca31212ace4d9de3b5be4746bf6aae53294ccb4c288e9c227f8dfda74e3c2a0d671ae883c1baba5f09daf9f2707a9ae67c3c123bb9a17f3de"},
+-    {"luaui/widgets/gfx_sepia_tone.lua", "LuaUI/NativeWidgets/gfx_sepia_tone.lua", "85b2a744a1265b43b2773b735fddee2a10ee2ad3779341dc3ebfd520b72b70951ff99cc97d3d6b1f1bc563b4903bc5a612879a6f8d1828df84a395a60e6311ee"},
++    {"luaui/widgets/gfx_sepia_tone.lua", "LuaUI/NativeWidgets/gfx_sepia_tone.lua", "2a2746ca8b7e213e1651c324db58ea466f5640c9110055a49f0025c43f840193088b580bec9e4524395904a62555e5bfc745bba828f66ecd7222ee0031c486fd"},
+ };
+ }
+--- a/rts/Rendering/Backend/NativePostprocessData.cpp
++++ b/rts/Rendering/Backend/NativePostprocessData.cpp
+@@ -1,4 +1,5 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#include "NativeSepiaPilot.h"
+ #include "NativePostprocessData.h"
+ #include "ScreenDrawList.h"
+ #include "NativeCUSUniformData.h"
+@@ -104,10 +105,13 @@
+  if(op.kind==NativePostprocessOperationKind::Sepia) {
+ 	Check(op.stage==NativePostprocessStage::Screen&&!op.sequence&&op.screenOutput&&op.outputs.empty()&&op.viewport,"Sepia requires its original root screen stage");
+ 	const auto& u=op.sepia;Check(u.engine&&u.raster,"Sepia original uniforms/raster missing");ValidateNativeCUSUniformPublication(*u.engine);
+-	Finite(std::array{u.gamma});for(const auto& row:u.rows)Finite(row);
++	Check(!u.sharedPath || bool(u.material),"Shared Sepia linked material snapshot missing");
++ if(u.material){sepiaPilot::ValidateMaterial(*u.material);Check(u.material->bindings[0].versionOwner==op.inputs[0],"Sepia captured logical input differs from recorded input");}
++ if(!u.sharedPath){Finite(std::array{u.gamma});for(const auto& row:u.rows)Finite(row);}
+ 	Check(op.inputs[0]&&op.inputEnabled[0],"Sepia screen-copy input missing");Key(*op.inputs[0]);
+ 	const auto& image=*op.inputs[0]->image;Check(image.format==NativePostprocessFormat::RGBA8,"Sepia original screen-copy format differs");
+-	NativePostprocessRect copied{u.viewPos[0],u.viewPos[1],image.width,image.height};RectInside(copied,width,height);
++	const auto capturedViewPos=u.sharedPath?sepiaPilot::ViewPos(*u.material):u.viewPos;
++	NativePostprocessRect copied{capturedViewPos[0],capturedViewPos[1],image.width,image.height};RectInside(copied,width,height);
+ 	const auto& v=*op.viewport;Check(v.x>=copied.x&&v.y>=copied.y&&std::int64_t(v.x)+v.width<=std::int64_t(copied.x)+copied.width&&std::int64_t(v.y)+v.height<=std::int64_t(copied.y)+copied.height,"Sepia viewport fetch lies outside actual copied image");
+ 	const auto& surface=u.raster->surface;const auto& world=u.raster->world;
+ 	Check(!surface.blend.enabled&&!surface.attachmentClear&&!world.inheritedClipPlane&&world.frontPolygonMode==NativePolygonMode::Fill&&world.backPolygonMode==NativePolygonMode::Fill,"Sepia original triangle raster differs");
+--- a/rts/Rendering/Backend/NativePostprocessData.h
++++ b/rts/Rendering/Backend/NativePostprocessData.h
+@@ -9,9 +9,11 @@
+ #include <utility>
+ #include <optional>
+ #include <span>
++#include <stdexcept>
+ #include <vector>
+ 
+ namespace rendering {
++namespace sharedpilot {struct MaterialContent;}
+ struct ScreenTexture;
+ struct NativeCUSUniformPublication;
+ struct NativeCASRaster;
+@@ -102,6 +104,9 @@
+ 	std::array<std::int32_t,2> viewPos{};
+ 	std::array<std::array<float,3>,3> rows{};
+ 	float gamma=0;
++	// Appended so existing old-path aggregate payload callers stay compatible.
++	std::shared_ptr<const sharedpilot::MaterialContent> material;
++	bool sharedPath=false;
+ };
+ enum class NativePostprocessOperationKind : std::uint8_t { CopyColor, CopyDepth, DOF, CAS, Sepia };
+ enum class NativePostprocessStage : std::uint8_t { PreDecals, PreUnit, World, Screen };
+@@ -204,8 +209,13 @@
+ 	bool (*isRetired)(const NativePostprocessVersion&, void*), void* state);
+ 
+ inline std::atomic<bool> nativeSepiaConsumerAvailable{false};
++inline std::shared_ptr<const void> nativeSepiaCompiledOwner;
++inline std::shared_ptr<const void> NativeSepiaCompiledOwner() noexcept {return std::atomic_load_explicit(&nativeSepiaCompiledOwner,std::memory_order_acquire);}
+ inline bool IsNativeSepiaConsumerAvailable() noexcept {return nativeSepiaConsumerAvailable.load(std::memory_order_acquire);}
+-inline void SetNativeSepiaConsumerAvailable(bool value) noexcept {nativeSepiaConsumerAvailable.store(value,std::memory_order_release);}
++inline void SetNativeSepiaConsumerAvailable(bool value,std::shared_ptr<const void> compiledOwner={}) {
++ if(value){if(!compiledOwner)throw std::runtime_error("Sepia availability requires actual compiled library ownership");std::atomic_store_explicit(&nativeSepiaCompiledOwner,std::move(compiledOwner),std::memory_order_release);nativeSepiaConsumerAvailable.store(true,std::memory_order_release);}
++ else{nativeSepiaConsumerAvailable.store(false,std::memory_order_release);std::atomic_store_explicit(&nativeSepiaCompiledOwner,std::shared_ptr<const void>{},std::memory_order_release);}
++}
+ inline std::atomic<bool> nativeCASConsumerAvailable{false};
+ inline bool IsNativeCASConsumerAvailable() noexcept {return nativeCASConsumerAvailable.load(std::memory_order_acquire);}
+ inline void SetNativeCASConsumerAvailable(bool value) noexcept {nativeCASConsumerAvailable.store(value,std::memory_order_release);}
+--- a/rts/Rendering/Backend/NativePostprocessRecorder.cpp
++++ b/rts/Rendering/Backend/NativePostprocessRecorder.cpp
+@@ -1,4 +1,5 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#include "NativeSepiaPilot.h"
+ #include "NativePostprocessRecorder.h"
+ #include "NativeWorldDrawSequence.h"
+ #include "NativeCUSUniformData.h"
+@@ -195,7 +196,9 @@
+ 	Check(recording&&uniforms.engine&&uniforms.engine->matrices&&uniforms.engine->params&&
+ 		uniforms.engine->matrices->sourceDrawFrame<=recording->sourceDrawFrame&&uniforms.engine->params->sourceDrawFrame<=recording->sourceDrawFrame,
+ 		"Sepia engine publication does not belong to the current frame");
+-	NativePostprocessOperation op;op.kind=NativePostprocessOperationKind::Sepia;op.screenOutput=true;op.screenCommandOffset=offset;
++	Check(!uniforms.sharedPath || bool(uniforms.material),"Shared Sepia immutable material missing");
++ if(uniforms.material){Check(uniforms.material->bindings.size()==1 && uniforms.material->bindings[0].versionOwner==input,"Sepia immutable material/input snapshot mismatched");sepiaPilot::ValidateMaterial(*uniforms.material);}
++ NativePostprocessOperation op;op.kind=NativePostprocessOperationKind::Sepia;op.screenOutput=true;op.screenCommandOffset=offset;
+ 	op.inputs[0]=std::move(input);op.inputEnabled[0]=true;op.sepia=std::move(uniforms);op.viewport=viewport;Commit(std::move(op),{});
+ }
+ void NativePostprocessRecorder::DrawCAS(std::shared_ptr<const NativePostprocessVersion> input,NativeCASUniforms uniforms,
+--- /dev/null
++++ b/rts/Rendering/Backend/NativeSepiaPilot.h
+@@ -0,0 +1,50 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++#include "NativePostprocessData.h"
++#include "Rendering/Metal4/NativeSepiaGeneratedProgram.h"
++#include <algorithm>
++#include <array>
++#include <cmath>
++#include <limits>
++#include <stdexcept>
++
++namespace rendering::sepiaPilot {
++// Actual successfully compiled library ownership is published by the renderer.
++// Relinking creates a new interface generation; renderer reset replaces admission.
++inline std::shared_ptr<const void> AdmissionOwner() {return NativeSepiaCompiledOwner();}
++struct Program {
++ std::shared_ptr<const sharedpilot::ProgramInterface> interface;
++ std::shared_ptr<const std::vector<std::uint8_t>> uniforms;
++ bool shared=true,deleted=false;
++};
++inline void Require(bool ok,const char* reason){if(!ok)throw std::runtime_error(reason);}
++inline void Live(const Program& program){Require(IsNativeSepiaConsumerAvailable() && !program.deleted && program.interface && program.uniforms && program.interface->nativeOwner==AdmissionOwner(),"Sepia linked program is deleted or incomplete");}
++inline std::shared_ptr<Program> Link(bool shared) {
++ Require(IsNativeSepiaConsumerAvailable() && bool(AdmissionOwner()),"Sepia has no actual compiled consumer owner");
++ auto result=std::make_shared<Program>();auto interface=sepiaGenerated::Link();
++ // Only private link construction mutates this newly created, unpublished owner.
++ auto linked=std::make_shared<sharedpilot::ProgramInterface>(*interface);linked->nativeOwner=AdmissionOwner();
++ result->interface=std::move(linked);result->uniforms=std::make_shared<const std::vector<std::uint8_t>>(sepiaGenerated::Defaults());result->shared=shared;
++ return result;
++}
++inline void SetUniform(Program& program,const std::string& name,const std::vector<double>& values,bool integer) {
++ Live(program);const auto& fields=program.interface->fields;
++ const auto found=std::find_if(fields.begin(),fields.end(),[&](const auto& field){return field.name==name;});
++ Require(found!=fields.end(),"Uniform is absent from linked generated interface");const auto& field=*found;
++ Require(field.count==1 && values.size()==field.components && integer==(field.scalar!=sharedpilot::Scalar::Float),"Uniform scalar kind/count differs from linked interface");
++ auto next=std::make_shared<std::vector<std::uint8_t>>(*program.uniforms);
++ for(size_t i=0;i<values.size();++i){const double value=values[i];Require(std::isfinite(value),"Uniform is not finite");
++  if(integer){Require(field.scalar==sharedpilot::Scalar::Int && value>=std::numeric_limits<std::int32_t>::min() && value<=std::numeric_limits<std::int32_t>::max() && std::trunc(value)==value,"Uniform integer outside exact int32 range");const auto typed=std::int32_t(value);std::memcpy(next->data()+field.offset+4*i,&typed,4);}
++  else{Require(std::abs(value)<=std::numeric_limits<float>::max(),"Uniform outside float range");const auto typed=float(value);std::memcpy(next->data()+field.offset+4*i,&typed,4);}
++ }
++ program.uniforms=std::move(next);
++}
++inline void ValidateMaterial(const sharedpilot::MaterialContent& material) {
++ Require(IsNativeSepiaConsumerAvailable() && material.program && material.program->generation && material.program->nativeOwner && material.program->nativeOwner==AdmissionOwner(),"Sepia material has no matching compiled linked owner");
++ Require(material.uniformBytes && material.uniformBytes->size()==material.program->uniformBytes && material.program->uniformBytes==sepiaGenerated::UniformBytes,"Sepia immutable uniform block differs from generated interface");
++ Require(material.bindings.size()==1 && material.bindings[0].logicalSlot==0 && material.bindings[0].versionOwner,"Sepia immutable actual input missing");
++}
++inline std::array<std::int32_t,2> ViewPos(const sharedpilot::MaterialContent& material) {
++ ValidateMaterial(material);std::array<std::int32_t,2> result{};std::memcpy(result.data(),material.uniformBytes->data()+sepiaGenerated::ViewPosOffset,8);return result;
++}
++}
+--- /dev/null
++++ b/rts/Rendering/Backend/NativeSharedProgramPilot.h
+@@ -0,0 +1,80 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++#include "NativeCUSTextureHistory.h"
++#include <atomic>
++#include <memory>
++#include <limits>
++#include <string>
++#include <stdexcept>
++#include <vector>
++
++// Private two-consumer experiment. This is an admitted interface, not a GL driver.
++namespace rendering::sharedpilot {
++enum class Scalar : uint8_t { Float, Int, UInt };
++enum Stage : uint8_t { Vertex=1, Fragment=2 };
++enum class TextureKind : uint8_t { Image2D, Image3D, Cube };
++struct UniformField {
++ std::string name; Scalar scalar=Scalar::Float;
++ uint32_t offset=0,components=1,count=1,stride=4;
++ uint8_t stages=Fragment;
++ uint32_t blockSlot=0;
++};
++struct UniformBlock {uint32_t slot=0,bytes=0;uint8_t stages=Fragment;};
++struct ResourceSlot {
++ std::string name; uint32_t logicalSlot=0,textureSlot=0,samplerSlot=0;
++ TextureKind kind=TextureKind::Image2D; uint8_t stages=Fragment;
++ int32_t containerBufferSlot=-1; // -1: direct stage binding; otherwise argument-buffer member IDs.
++};
++struct ProgramInterface {
++ uint64_t generation=0;
++ std::string sourceIdentity; // Exact stages/defines/adaptation/options, created at link.
++ uint32_t uniformBytes=0;
++ std::vector<UniformField> fields;
++ std::vector<UniformBlock> blocks;
++ std::vector<ResourceSlot> resources;
++ std::shared_ptr<const void> nativeOwner;
++};
++namespace detail {
++inline uint64_t ReserveProgramGeneration(std::atomic<uint64_t>& next) {
++ auto value=next.load(std::memory_order_relaxed);
++ for(;;){
++  if(!value||value==std::numeric_limits<uint64_t>::max())
++   throw std::overflow_error("Shared pilot program generation exhausted");
++  if(next.compare_exchange_weak(value,value+1,std::memory_order_relaxed))return value;
++ }
++}
++}
++inline uint64_t NextProgramGeneration() {
++ static std::atomic<uint64_t> next{1};
++ return detail::ReserveProgramGeneration(next);
++}
++
++struct LogicalBinding {
++ uint32_t logicalSlot=0;
++ NativeCUSTextureBinding captured;
++ // Sepia may retain an exact postprocess version; CUS retains captured.object.
++ std::shared_ptr<const void> versionOwner;
++};
++struct MaterialContent {
++ std::shared_ptr<const ProgramInterface> program;
++ std::shared_ptr<const std::vector<uint8_t>> uniformBytes;
++ // Existing CUS immutable packing owner remains authoritative; do not repack it here.
++ std::shared_ptr<const void> originalUniformOwner;
++ std::vector<LogicalBinding> bindings;
++};
++struct ExecutionIdentity {
++ const void* context=nullptr;
++ const void* device=nullptr;
++ const void* lease=nullptr;
++ const void* journal=nullptr;
++ uint64_t submission=0;
++ std::vector<uint64_t> target; // Exact values, never a collision-prone digest alone.
++ bool operator==(const ExecutionIdentity&) const = default;
++};
++struct PreparedSlice {
++ ExecutionIdentity scope;
++ std::shared_ptr<const MaterialContent> material;
++ // Prepared native adapters own actual resources and callbacks; this retains source versions.
++ std::vector<std::shared_ptr<const void>> owners;
++};
++}
+--- a/rts/Rendering/Metal4/Metal4CUSSource.mm
++++ b/rts/Rendering/Metal4/Metal4CUSSource.mm
+@@ -1,3 +1,4 @@
++#include "Metal4SharedProgramPilot.h"
+ #include "Metal4PublishedRequestCache.h"
+ #include "Metal4RetiredArguments.h"
+ #include "Metal4ModelUpload146.h"
+@@ -42,6 +43,7 @@
+  std::shared_ptr<const NativeCUSProgramSource> source;
+  std::shared_ptr<const Libraries> libraries;
+  std::unique_ptr<NativeCUSProgramUniformPlan> vertexUniformPlan,fragmentUniformPlan;
++ std::shared_ptr<const sharedpilot::ProgramInterface> sharedInterface;
+ };
+ id<MTLBuffer> Allocate(RuntimeLease& lease,size_t bytes)
+ {
+@@ -159,6 +161,7 @@
+   std::vector<CUSSourceImage> images;
+   float shadowPolygonOffsetUnitsScale=1.f;
+   bool encoded=false;
++  std::shared_ptr<const sharedpilot::PreparedSlice> sharedSlice;
+  };
+  TerrainOwnerRoster firstOwners;
+  std::vector<const CUSSourceImage*> inspection160;std::vector<id<MTLTexture>> sampledRoots160;
+@@ -374,6 +377,29 @@
+  program->vertexUniformPlan=std::make_unique<NativeCUSProgramUniformPlan>(generated->vertex);
+  program->fragmentUniformPlan=std::make_unique<NativeCUSProgramUniformPlan>(generated->fragment);
+  program->libraries=impl->Library(lease,*generated,ms);
++ if(SharedCUSPilotEnabled()&&identity.family=="unit"&&identity.pass==0){
++  auto interface=std::make_shared<sharedpilot::ProgramInterface>();
++  interface->generation=sharedpilot::NextProgramGeneration();
++  interface->sourceIdentity=source->vertexSHA512+":"+source->fragmentSHA512+":CUS-existing-packed-ABI-v1";
++  interface->nativeOwner=program->libraries;
++  for(bool vertex:{true,false}){
++   const auto& stage=vertex?generated->vertex:generated->fragment;
++   const uint8_t stages=vertex?sharedpilot::Vertex:sharedpilot::Fragment;
++   const uint32_t block=vertex?6:7;
++   interface->blocks.push_back({block,uint32_t(NativeCUSProgramUniformBytes(stage)),stages});
++   for(const auto& field:stage.fields)if(field.active){
++    auto scalar=field.scalar==NativeCUSUniformScalar::Float?sharedpilot::Scalar::Float:field.scalar==NativeCUSUniformScalar::Int?sharedpilot::Scalar::Int:sharedpilot::Scalar::UInt;
++    interface->fields.push_back({field.name,scalar,field.offset,field.components,field.count,field.stride,stages,block});
++   }
++  }
++  for(unsigned slot=0;slot<12;++slot)
++   interface->resources.push_back({ModelMaterialNames156[slot],slot,slot,slot+12,
++    slot==7?sharedpilot::TextureKind::Cube:slot==10?sharedpilot::TextureKind::Image3D:sharedpilot::TextureKind::Image2D,
++    uint8_t(((generated->vertex.textureMask&(1u<<slot))?sharedpilot::Vertex:0)|
++            ((generated->fragment.textureMask&(1u<<slot))?sharedpilot::Fragment:0)),8});
++  program->sharedInterface=std::move(interface);
++ }
++
+  Require([program->libraries->vertex newFunctionWithName:@"NativeCUSVertex"]!=nil&&
+   [program->libraries->fragment newFunctionWithName:@"NativeCUSFragment"]!=nil,
+   "Original CUS compiled stages lack their exact native entrypoints");
+@@ -392,6 +418,17 @@
+  const CUSSourceTarget& target,const TextureProvider& images,bool validation,double& ms)
+ {
+  if(!source||source->draws.empty())return {};impl->argumentPool.BeginBatch(lease);impl->materials156.BeginBatch(lease);
++ const auto& sharedScope=lease.CUSSharedPreparation();
++ std::vector<uint64_t> sharedTarget;
++ if(sharedScope){
++  ++sharedScope->counts.prepares;
++  for(const auto format:target.colors)sharedTarget.push_back(uint64_t(format));
++  sharedTarget.insert(sharedTarget.end(),{uint64_t(target.combinedColor),uint64_t(target.depth),uint64_t(target.stencil),
++   target.samples,target.width,target.height,target.logicalWidth,target.logicalHeight,uint64_t(target.invertClipY),
++   uint64_t(std::bit_cast<uint32_t>(target.shadowPolygonOffsetUnitsScale)),uint64_t(lease.SampleShadingKey(target.samples))});
++  for(const auto value:target.camera.viewport)sharedTarget.push_back(uint64_t(value));
++ }
++
+  auto& trace=ModelTrace();trace.window=TraceFrame(*source);
+  struct TraceEnd {~TraceEnd(){ModelTrace().window=false;}} traceEnd;
+  const bool sampled=trace.window;const auto prepareStart=sampled?TraceClock::now():TraceClock::time_point{};
+@@ -445,10 +482,20 @@
+   NativeCUSSampleTransport transport;uint32_t caps;std::memcpy(&caps,u.params->bytes.data()+12,4);transport.clipFlags=uint32_t(!(caps&1u))|uint32_t(target.invertClipY)<<1|uint32_t(d.clipDistance0)<<2;
+   static constexpr const char* samplerNames[]={"texture1","texture2","normalTex","texture1w","texture2w","normalTexw","shadowTex","reflectTex","losMapTex","brdfLUT","noisetex3dcube","envLUT"};
+   bool canonicalPair219=ModelSamplerPair219(program->generated->fragment.textureMask);
++  std::shared_ptr<const sharedpilot::MaterialContent> sharedMaterial;
++  std::array<CUSSourceImage,2> sharedPair{};bool sharedPairHit=false;
++  if(sharedScope&&program->sharedInterface&&d.program->family=="unit"&&d.program->originalPass==0&&canonicalPair219){
++   auto material=std::make_shared<sharedpilot::MaterialContent>();material->program=program->sharedInterface;
++   material->originalUniformOwner=d.uniformValues;
++   for(unsigned slot=0;slot<12;++slot)material->bindings.push_back({slot,d.textures->samplers[slot],d.textures->samplers[slot].object});
++   sharedMaterial=std::move(material);
++   sharedPairHit=sharedScope->Find(lease,sharedMaterial,sharedTarget,sharedPair);
++  }
++
+   for(unsigned slot=0;slot<12;++slot){
+    if(!(program->generated->fragment.textureMask&(1u<<slot)))continue;
+    const auto& binding=d.textures->samplers[slot];transport.sampleCodes[slot]=NativeCUSSampleCode(Sampling(binding));
+-   const auto uniform=d.IntUniforms().find(samplerNames[slot]);Require(uniform!=d.IntUniforms().end()&&uniform->second.size()==1&&uniform->second[0]==slot,"CUS original sampler unit changed outside selected source contract");
++   const auto uniform=d.IntUniforms().find(sharedMaterial?sharedMaterial->program->resources[slot].name.c_str():samplerNames[slot]);Require(uniform!=d.IntUniforms().end()&&uniform->second.size()==1&&uniform->second[0]==slot,"CUS original sampler unit changed outside selected source contract");
+    if(Empty(binding)){
+     if(slot<2)canonicalPair219=false;
+     if(slot==6){
+@@ -458,14 +505,25 @@
+     }
+     transport.emptyMask|=1u<<slot;continue;
+    }
+-   auto image=images(lease,binding,slot);Require(image.texture!=nil&&image.sampler!=nil&&image.owner&&image.requireReadable,"CUS actual image has no paired resource/sampler/producer lifetime");
++   auto image=(sharedPairHit&&slot<2)?sharedPair[slot]:images(lease,binding,slot);Require(image.texture!=nil&&image.sampler!=nil&&image.owner&&image.requireReadable,"CUS actual image has no paired resource/sampler/producer lifetime");
+    const auto expected=slot==7?MTLTextureTypeCube:slot==10?MTLTextureType3D:MTLTextureType2D;Require(image.texture.textureType==expected,"CUS original texture target differs from its actual image");
+    if(slot<2)canonicalPair219=canonicalPair219&&CanonicalModelSampler219(binding,image);
+    if(image.flipV){Require(expected==MTLTextureType2D,"CUS cube/volume requires its original orientation producer");transport.flipMask|=1u<<slot;}
+    if(image.depthImage)transport.depthMask|=1u<<slot;
+    if(image.clampDepthCompare){Require(image.depthImage,"Fixed-depth compare semantics require the actual depth image");transport.clampDepthCompareMask|=1u<<slot;}
+    if(sampled)traceImages[slot]={image.texture.gpuResourceID._impl,image.sampler.gpuResourceID._impl,unsigned(image.texture.pixelFormat),unsigned(image.texture.width),unsigned(image.texture.height),unsigned(image.texture.mipmapLevelCount)};
+-   lease.AddAllocation(image.texture);lease.Retain(image.sampler);materialTextures156[slot]=image.texture;materialSamplers156[slot]=image.sampler;priorResourceSetters156+=2;draw.images.push_back(std::move(image));
++   // A hit retains the exact prepared image/owners and uses an existing lease
++   // registration receipt. All dynamic checks above and EncodeDraw readability remain.
++   if(!(sharedPairHit&&slot<2)){lease.AddAllocation(image.texture);lease.Retain(image.sampler);}
++   materialTextures156[slot]=image.texture;materialSamplers156[slot]=image.sampler;priorResourceSetters156+=2;
++   if(sharedMaterial&&slot<2)sharedPair[slot]=image;
++   draw.images.push_back(std::move(image));
++  }
++  if(sharedMaterial){
++   if(!sharedPairHit)sharedScope->Admit(lease,sharedMaterial,sharedTarget,sharedPair);
++   auto slice=std::make_shared<sharedpilot::PreparedSlice>();slice->scope=sharedScope->Execution(lease,sharedTarget);slice->material=std::move(sharedMaterial);
++   for(const auto& image:draw.images)slice->owners.push_back(image.owner);
++   draw.sharedSlice=std::move(slice);
+   }
+   if(program->generated->fragment.textureMask){draw.material156=impl->materials156.Get(lease,materialTextures156,materialSamplers156);[draw.table setAddress:draw.material156.gpuAddress atIndex:8];++materialBindings156;}
+   const auto uniforms=UploadCUSUniforms(lease,uniformArena,*program,d,transport);
+--- a/rts/Rendering/Metal4/Metal4PostprocessNative.mm
++++ b/rts/Rendering/Metal4/Metal4PostprocessNative.mm
+@@ -8,6 +8,7 @@
+ #include "Metal4DOFShaderSource.h"
+ #include "Metal4CASShaderSource.h"
+ #include "Metal4SepiaShaderSource.h"
++#include "Rendering/Backend/NativeSepiaPilot.h"
+ #include "Rendering/Backend/NativeCUSUniformData.h"
+ #include "Rendering/Backend/NativeCASProgram.h"
+ #include "Metal4NativeEffectState.h"
+@@ -24,6 +25,7 @@
+ #include <simd/simd.h>
+ 
+ namespace rendering::metal4 {
++struct SepiaCompiledLibraryOwner {__strong id<MTLLibrary> library=nil;};
+ struct PostprocessUniformStorage {
+ 	__strong id<MTLBuffer> buffer=nil;
+ };
+@@ -37,8 +39,8 @@
+ 	}
+ 	std::shared_ptr<PostprocessUniformStorage> Acquire(id<MTLDevice> device,const void* data,size_t length) {
+ 		Require(device==owner,"Postprocess uniform pool has no matching device batch");
+-		Require(length==112 || length==160 || length==288,"Postprocess uniform size differs from its three original layouts");
+-		auto& bucket=buckets[length==112?0:length==160?1:2];
++		Require(length==112 || length==160 || length==288 || length==sepiaGenerated::UniformBytes,"Postprocess uniform size differs from admitted original/generated layouts");
++		auto& bucket=buckets[length==112?0:length==160?1:length==288?2:3];
+ 		// Only a pool-owned slot is retired. Every prepared operation and its
+ 		// completion/poison graph retain the same immutable shared owner.
+ 		while(bucket.next<bucket.slots.size()) {
+@@ -69,9 +71,9 @@
+ 	size_t CachedCount() const {return entries;}
+ private:
+ 	struct Bucket {std::vector<std::shared_ptr<PostprocessUniformStorage>> slots;size_t next=0;};
+-	// Three exact uniform sizes keep both resource bytes and lookup storage
++	// Four admitted uniform sizes keep both resource bytes and lookup storage
+ 	// bounded. No weak tokens can acquire ownership after the retirement test.
+-	std::array<Bucket,3> buckets;
++	std::array<Bucket,4> buckets;
+ 	__strong id<MTLDevice> owner=nil;
+ 	size_t bytes=0,entries=0;
+ };
+@@ -174,7 +176,7 @@
+ 	auto buffer=[lease.Device()newBufferWithBytes:bytes length:length options:MTLResourceStorageModeShared];Require(buffer!=nil,"Cannot allocate actual DOF uniforms/quad");lease.AddAllocation(buffer);return buffer;
+ }
+ // Current original pass/FBO contract; copy pipeline IDs are kept outside0..7.
+-constexpr int COPY_COLOR_PIPELINE=8,COPY_DEPTH_PIPELINE=9,COPY_DEPTH24_PIPELINE=10,CAS_PIPELINE=11,SEPIA_PIPELINE=19;
++constexpr int COPY_COLOR_PIPELINE=8,COPY_DEPTH_PIPELINE=9,COPY_DEPTH24_PIPELINE=10,CAS_PIPELINE=11,SEPIA_PIPELINE=19,SHARED_SEPIA_PIPELINE=20;
+ unsigned Outputs(const NativeDOFUniforms& u) {return u.pass==0?2:u.pass==1?3:u.pass==3?4:1;}
+ unsigned RequiredInputs(const NativeDOFUniforms& u) {
+  switch(u.pass){case 0:return (1u<<0)|(1u<<1);case 1:case 3:return (1u<<0)|(1u<<5);
+@@ -213,6 +215,7 @@
+ 		MTLScissorRect scissor{};
+ 		bool noDraw=false;unsigned vertexCount=6;
+   std::shared_ptr<const NativeCASRaster> casRaster;
++  std::shared_ptr<const sharedpilot::PreparedSlice> sharedSlice;
+ 		std::vector<std::pair<std::shared_ptr<bool>,std::shared_ptr<bool>>> reads;
+ 		bool screenOutput=false;
+ 		unsigned resolveMain=0;
+@@ -427,13 +430,14 @@
+ 	void Compile(RuntimeLease& lease,MTLPixelFormat format,bool verify,double& compileMs)
+ 	{
+ 		const auto start=Clock::now();NSError* error=nil;
+-		auto source=std::string(NATIVE_DOF_SHADER)+COPY_SHADER+NATIVE_CAS_SHADER+NATIVE_SEPIA_SHADER;auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String(source);
++		auto source=std::string(NATIVE_DOF_SHADER)+COPY_SHADER+NATIVE_CAS_SHADER+NATIVE_SEPIA_SHADER+sepiaGenerated::MSL;auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String(source);
+ 		auto candidate=lease.NewLibrary(descriptor,&error);Require(candidate!=nil,"Original31657 eight-pass DOF shader compilation failed: "+Error(error));
+ 		library=candidate;validation=verify;screenFormat=format;
+ 		for(int pass=0;pass<=7;++pass)Pipeline(lease,pass,1,pass==5?format:pass==0||pass==1||pass==3?MTLPixelFormatRGBA16Float:MTLPixelFormatRGBA8Unorm);
+ 		Pipeline(lease,5,0,format);
+   for(int variant=0;variant<8;++variant)Pipeline(lease,CAS_PIPELINE+variant,0,format);
+   Pipeline(lease,SEPIA_PIPELINE,0,format);
++  Pipeline(lease,SHARED_SEPIA_PIPELINE,0,format);
+ 		Pipeline(lease,COPY_COLOR_PIPELINE,0,MTLPixelFormatRGBA8Unorm);Pipeline(lease,COPY_DEPTH_PIPELINE,0,MTLPixelFormatDepth32Float);Pipeline(lease,COPY_DEPTH24_PIPELINE,0,MTLPixelFormatDepth32Float);
+ 		auto depth=[MTLDepthStencilDescriptor new];depth.depthCompareFunction=MTLCompareFunctionAlways;depth.depthWriteEnabled=YES;copyDepth=[lease.Device()newDepthStencilStateWithDescriptor:depth];Require(copyDepth!=nil,"Cannot create original depth-copy write state");
+ 		compileMs+=Milliseconds(start);
+@@ -448,9 +452,10 @@
+ 		const bool coverage=raster && raster->world.alphaToCoverage;
+ 		const auto key=std::make_tuple(PipelineKey(pass,quality,format)|stateBits,lease.SampleShadingKey(samples),coverage);auto found=pipelines.find(key);if(found!=pipelines.end()){lease.Retain(found->second);return found->second;}
+ 		Require(library!=nil,"DOF native library is not initialized");
+-		auto descriptor=[MTL4RenderPipelineDescriptor new];auto vertex=[MTL4LibraryFunctionDescriptor new];vertex.library=library;vertex.name=pass==SEPIA_PIPELINE?@"SepiaVertex":pass>=CAS_PIPELINE?@"CASVertex":pass==0?@"DOFFilterVertex":@"DOFVertex";descriptor.vertexFunctionDescriptor=vertex;
++		auto descriptor=[MTL4RenderPipelineDescriptor new];auto vertex=[MTL4LibraryFunctionDescriptor new];vertex.library=library;vertex.name=pass==SHARED_SEPIA_PIPELINE?@"SharedSepiaVertex":pass==SEPIA_PIPELINE?@"SepiaVertex":pass>=CAS_PIPELINE?@"CASVertex":pass==0?@"DOFFilterVertex":@"DOFVertex";descriptor.vertexFunctionDescriptor=vertex;
+ 		auto fragment=[MTL4LibraryFunctionDescriptor new];fragment.library=library;
+-		if(pass==SEPIA_PIPELINE)fragment.name=@"SepiaFragment";
++		if(pass==SHARED_SEPIA_PIPELINE)fragment.name=@"SharedSepiaFragment";
++		else if(pass==SEPIA_PIPELINE)fragment.name=@"SepiaFragment";
+ 		else if(pass>=CAS_PIPELINE){Require(pass<CAS_PIPELINE+8,"Unknown CAS source variant");fragment.name=String("CASFragment"+std::to_string(pass-CAS_PIPELINE));}
+   else if(pass==COPY_COLOR_PIPELINE)fragment.name=@"DOFCopyColor";else if(pass==COPY_DEPTH_PIPELINE)fragment.name=@"DOFCopyDepth";else if(pass==COPY_DEPTH24_PIPELINE)fragment.name=@"DOFCopyDepth24";
+ 		else{Require(pass>=0&&pass<=7&&(quality==1||(pass==5&&quality==0)),"DOF pipeline differs from its original fixed-pass/quality program");fragment.name=String("DOFFragmentPass"+std::to_string(pass)+(quality?"HQ":"LQ"));}
+@@ -553,7 +558,7 @@
+ 	auto candidate=std::make_unique<Impl>();candidate->Compile(lease,format,validation,compileMs);
+ 	// Changing validation/paired PSOs must not erase retired immutable image
+ 	// generations that are still referenced by a later partial update.
+-	candidate->images=std::move(impl->images);candidate->texturePool181=std::move(impl->texturePool181);candidate->freshIneligible181=impl->freshIneligible181;candidate->ownerRequests181=impl->ownerRequests181;candidate->ownerRegistrations181=impl->ownerRegistrations181;candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->declaredPlan=std::move(impl->declaredPlan);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true);
++	candidate->images=std::move(impl->images);candidate->texturePool181=std::move(impl->texturePool181);candidate->freshIneligible181=impl->freshIneligible181;candidate->ownerRequests181=impl->ownerRequests181;candidate->ownerRegistrations181=impl->ownerRegistrations181;candidate->allocations=std::move(impl->allocations);candidate->declaredFrame=std::move(impl->declaredFrame);candidate->declaredPlan=std::move(impl->declaredPlan);candidate->cpuImages=std::move(impl->cpuImages);impl=std::move(candidate);SetNativeDOFConsumerAvailable(true);SetNativeCASConsumerAvailable(true);SetNativeSepiaConsumerAvailable(true,std::make_shared<const SepiaCompiledLibraryOwner>(SepiaCompiledLibraryOwner{impl->library}));
+ }
+ void PostprocessGPU::ClearResources(){impl->immutableQuads.clear();impl->argumentPool.Clear();impl->uniformPool.Clear();impl->declaredFrame.reset();impl->declaredPlan.reset();impl->images.clear();impl->texturePool181->Clear();impl->allocations.clear();}
+ void PostprocessGPU::SetCPUImageProvider(CPUImageProvider provider){impl->cpuImages=std::move(provider);}
+@@ -700,15 +705,32 @@
+ 			out.pass.depthAttachment.texture=depth;out.pass.depthAttachment.loadAction=MTLLoadActionLoad;out.pass.depthAttachment.storeAction=MTLStoreActionStore;
+ 			if(actualStencil){out.pass.stencilAttachment.texture=actualStencil;out.pass.stencilAttachment.loadAction=MTLLoadActionLoad;out.pass.stencilAttachment.storeAction=MTLStoreActionStore;}
+ 			out.depthState=effectstate::Depth(lease,state,actualStencil?actualStencil.pixelFormat:MTLPixelFormatInvalid);
++			ValidateNativeCUSUniformPublication(*u.engine);std::uint32_t caps=0;std::memcpy(&caps,u.engine->params->bytes.data()+12,4);
++   if(u.sharedPath){
++    Require(bool(u.material),"Shared Sepia immutable material missing");sepiaPilot::ValidateMaterial(*u.material);
++    auto slice=std::make_shared<sharedpilot::PreparedSlice>();slice->material=u.material;
++    slice->scope.context=impl.get();slice->scope.device=(__bridge const void*)lease.Device();slice->scope.lease=&lease;
++    slice->scope.journal=impl->declaredPlan.get();slice->scope.submission=lease.SourceSubmission();
++    slice->scope.target={std::uint64_t(color.pixelFormat),std::uint64_t(depth.pixelFormat),std::uint64_t(color.sampleCount),width,height,frame->logicalWidth,frame->logicalHeight};
++    slice->owners.push_back(operation.inputs[0]);out.sharedSlice=std::move(slice);
++    // Transport stays per use. Generated user fields are copied as an opaque,
++    // immutable typed block; adding fields does not change this native adapter.
++    auto bytes=*u.material->uniformBytes;
++    const auto target=simd_make_float4(float(width),float(height),float(frame->logicalWidth)/width,float(frame->logicalHeight)/height);
++    const auto alpha=simd_make_uint4(surface.alphaTest.enabled,unsigned(surface.alphaTest.compare),0,0);
++    const auto rasterParameters=simd_make_float4(surface.alphaTest.reference,(caps&1u)?0.f:.5f,0,0);
++    std::memcpy(bytes.data(),&target,16);std::memcpy(bytes.data()+16,&alpha,16);std::memcpy(bytes.data()+32,&rasterParameters,16);
++    auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,bytes.data(),bytes.size());[args setAddress:uniform.gpuAddress atIndex:1];
++   }else{
+ 			SepiaGPUUniforms gpu{};for(unsigned i=0;i<3;++i)gpu.rows[i]=simd_make_float4(u.rows[i][0],u.rows[i][1],u.rows[i][2],0);
+ 			gpu.target={float(width),float(height),float(frame->logicalWidth)/width,float(frame->logicalHeight)/height};
+ 			gpu.viewPos=simd_make_int4(u.viewPos[0],u.viewPos[1],0,0);gpu.alpha=simd_make_uint4(surface.alphaTest.enabled,unsigned(surface.alphaTest.compare),0,0);
+-			ValidateNativeCUSUniformPublication(*u.engine);std::uint32_t caps=0;std::memcpy(&caps,u.engine->params->bytes.data()+12,4);
+ 			gpu.parameters=simd_make_float4(u.gamma,surface.alphaTest.reference,(caps&1u)?0.f:.5f,0);
+ 			auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
++   }
+ 			const auto& version=operation.inputs[0];auto image=impl->ImageFor(lease,version,false,prepared->impl->completed);
+ 			const auto& entry=impl->images.at(version.get());out.reads.emplace_back(entry.completed,entry.encoded);[args setTexture:image.gpuResourceID atIndex:0];
+-			out.pipeline=impl->Pipeline(lease,SEPIA_PIPELINE,0,color.pixelFormat,out.casRaster.get(),std::uint32_t(color.sampleCount));out.vertexCount=3;
++			out.pipeline=impl->Pipeline(lease,u.sharedPath?SHARED_SEPIA_PIPELINE:SEPIA_PIPELINE,0,color.pixelFormat,out.casRaster.get(),std::uint32_t(color.sampleCount));out.vertexCount=3;
+ 		}else if(operation.kind==NativePostprocessOperationKind::CAS){
+    out.casRaster=operation.cas.raster;Require(bool(out.casRaster),"CAS captured raster missing");
+    const auto& state=out.casRaster->world;const auto& surface=out.casRaster->surface;
+--- a/rts/Rendering/Metal4/Metal4RuntimeNative.h
++++ b/rts/Rendering/Metal4/Metal4RuntimeNative.h
+@@ -84,6 +84,7 @@
+ class CompletedCubeLeaseReceipts;
+ class CubeLeaseSamplers;
+ class WorldTexturePreparationJournal;
++class CUSSharedPreparationScope;
+ class ParticleAtlasPreparationJournal;
+ struct ScreenMipOwnerIdentity;
+ class ScreenMipPreparationJournal;
+@@ -183,6 +184,10 @@
+  CompletedCubeLeaseReceipts* CompletedCubeReads() noexcept;
+  CubeLeaseSamplers* CubeSamplers() noexcept;
+  std::shared_ptr<WorldTexturePreparationJournal> WorldTexturePreparation();
++ // Owned by this exact DrawPrepared lease; shared by all child CUS Prepare calls.
++ void BindCUSSharedPreparation(std::shared_ptr<CUSSharedPreparationScope> scope);
++ const std::shared_ptr<CUSSharedPreparationScope>& CUSSharedPreparation() const noexcept {return cusSharedPreparation;}
++ void ValidatePreparationMutation() const;
+  std::shared_ptr<ParticleAtlasPreparationJournal> ParticleAtlasPreparation();
+  std::shared_ptr<ScreenMipPreparationJournal> ScreenMipPreparation(const std::shared_ptr<const ScreenMipOwnerIdentity>&);
+ 	// Per-submission original shading rate. Output count still belongs to each
+@@ -238,6 +243,7 @@
+  std::shared_ptr<CompletedCubeLeaseReceipts> completedCubeReads;
+  std::shared_ptr<CubeLeaseSamplers> cubeSamplers;
+  std::shared_ptr<WorldTexturePreparationJournal> worldTexturePreparation;
++ std::shared_ptr<CUSSharedPreparationScope> cusSharedPreparation;
+  std::shared_ptr<ParticleAtlasPreparationJournal> particleAtlasPreparation;
+  // Declared after lock: capsule marks abandoned queues inactive before unlock.
+  std::shared_ptr<ScreenMipLeaseJournals> screenMipJournals;
+--- a/rts/Rendering/Metal4/Metal4RuntimeNative.mm
++++ b/rts/Rendering/Metal4/Metal4RuntimeNative.mm
+@@ -754,6 +754,17 @@
+ std::string RuntimeLease::CommandBufferClass() const { return NSStringFromClass([frame->slot->command class]).UTF8String; }
+ 
+ #include "Metal4MemoryLedger.inc"
++
++void RuntimeLease::ValidatePreparationMutation() const
++{
++ Require(!frame->recording&&!frame->pending&&!frame->residencyCommit.Active(),
++  "Shared binding preparation is outside its actual writable lease");
++}
++void RuntimeLease::BindCUSSharedPreparation(std::shared_ptr<CUSSharedPreparationScope> scope)
++{
++ ValidatePreparationMutation();Require(scope&&!cusSharedPreparation,"Shared CUS preparation scope repeated or absent");
++ cusSharedPreparation=std::move(scope);
++}
+ 
+ void RuntimeLease::AddAllocation(id<MTLAllocation> allocation)
+ {
+--- /dev/null
++++ b/rts/Rendering/Metal4/Metal4SharedProgramPilot.h
+@@ -0,0 +1,97 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++#include "Metal4SourceImage.h"
++#include "Rendering/Backend/NativeSharedProgramPilot.h"
++#include <array>
++#include <cstdlib>
++#include <cstring>
++#include <map>
++#include <tuple>
++
++namespace rendering::metal4 {
++inline bool SharedCUSPilotEnabled() {
++ static const bool enabled=[] {const auto* value=std::getenv("BAR_METAL4_SHARED_CUS_PILOT");return value&&std::strcmp(value,"1")==0;}();
++ return enabled;
++}
++// Implemented only next to WorldTexturePreparationJournal's real completion state.
++class CUSCompletedModelImageProof {
++public:
++ virtual ~CUSCompletedModelImageProof()=default;
++ virtual bool ValidFor(RuntimeLease&,const NativeCUSTextureBinding&,const CUSSourceImage&) const=0;
++};
++// One lease's completed immutable sub-binding cache. Uniforms and every other
++// texture remain per-use. No argument tables or cached readability verdicts.
++class CUSSharedPreparationScope {
++ using Key=std::tuple<uint64_t,std::vector<uint64_t>,uintptr_t,uintptr_t>;
++ struct Entry {
++  sharedpilot::PreparedSlice slice;
++  std::array<CUSSourceImage,2> images;
++ };
++ RuntimeLease* lease;
++ const void* context;
++ __strong id<MTLDevice> device;
++ uint64_t submission;
++ uint64_t sourceContext;
++ std::map<Key,Entry> entries;
++ static constexpr size_t Capacity=128;
++ static bool SameOwner(const std::shared_ptr<const NativeCUSTextureObject>& a,
++                       const std::shared_ptr<const NativeCUSTextureObject>& b) {
++  return a&&b&&a.get()==b.get()&&!a.owner_before(b)&&!b.owner_before(a);
++ }
++ static Key MakeKey(const sharedpilot::MaterialContent& material,const std::vector<uint64_t>& target) {
++  return {material.program->generation,target,reinterpret_cast<uintptr_t>(material.bindings[0].captured.object.get()),
++   reinterpret_cast<uintptr_t>(material.bindings[1].captured.object.get())};
++ }
++ bool Identity(RuntimeLease& actual) const {
++  return &actual==lease&&actual.ContextIdentity()==context&&actual.Device()==device&&actual.SourceSubmission()==submission;
++ }
++ static bool Pair(const sharedpilot::MaterialContent& material) {
++  return material.program&&material.program->generation&&material.bindings.size()>=2&&
++   material.bindings[0].logicalSlot==0&&material.bindings[1].logicalSlot==1&&
++   material.bindings[0].captured.knowledge==NativeCUSBindingKnowledge::BoundObject&&
++   material.bindings[1].captured.knowledge==NativeCUSBindingKnowledge::BoundObject&&
++   material.bindings[0].captured.object&&material.bindings[1].captured.object;
++ }
++public:
++ struct Counts {uint64_t prepares=0,eligibleDraws=0,hits=0,misses=0,admissions=0,uncertified=0,omittedProviders=0,omittedRegistrations=0;} counts;
++ explicit CUSSharedPreparationScope(RuntimeLease& actual,uint64_t originalContext):lease(&actual),context(actual.ContextIdentity()),device(actual.Device()),submission(actual.SourceSubmission()),sourceContext(originalContext) {
++  actual.ValidatePreparationMutation();Require(submission!=0&&sourceContext!=0,"Shared CUS scope lacks actual source submission/context");
++ }
++ sharedpilot::ExecutionIdentity Execution(RuntimeLease& actual,const std::vector<uint64_t>& target) const {
++  Require(Identity(actual),"Shared CUS scope crossed lease/context/submission");
++  return {context,(__bridge const void*)device,lease,actual.WorldTexturePreparation().get(),submission,target};
++ }
++ bool Find(RuntimeLease& actual,const std::shared_ptr<const sharedpilot::MaterialContent>& material,
++           const std::vector<uint64_t>& target,std::array<CUSSourceImage,2>& images) {
++  actual.ValidatePreparationMutation();Require(Identity(actual),"Shared CUS lookup crossed actual lease");
++  if(!material||!Pair(*material)||material->bindings[0].captured.object->contextGeneration!=sourceContext||material->bindings[1].captured.object->contextGeneration!=sourceContext)return false;
++  ++counts.eligibleDraws;
++  auto found=entries.find(MakeKey(*material,target));
++  if(found==entries.end()){++counts.misses;return false;}
++  const auto& e=found->second;
++  if(e.slice.scope!=Execution(actual,target)||e.slice.material->program!=material->program){++counts.misses;return false;}
++  for(unsigned slot=0;slot<2;++slot){
++   const auto& current=material->bindings[slot].captured;
++   if(!SameOwner(current.object,e.slice.material->bindings[slot].captured.object)||
++      !e.images[slot].completedModelProof||!e.images[slot].completedModelProof->ValidFor(actual,current,e.images[slot])){
++    ++counts.misses;return false;
++   }
++  }
++  images=e.images;++counts.hits;counts.omittedProviders+=2;counts.omittedRegistrations+=4;return true;
++ }
++ // Called only after both original provider calls AND caller texture/sampler
++ // registrations completed. A failure never publishes a partially pinned pair.
++ void Admit(RuntimeLease& actual,const std::shared_ptr<const sharedpilot::MaterialContent>& material,
++            const std::vector<uint64_t>& target,const std::array<CUSSourceImage,2>& images) {
++  actual.ValidatePreparationMutation();Require(Identity(actual),"Shared CUS admission crossed actual lease");
++  if(!material||!Pair(*material)||material->bindings[0].captured.object->contextGeneration!=sourceContext||material->bindings[1].captured.object->contextGeneration!=sourceContext)return;
++  for(unsigned slot=0;slot<2;++slot)
++   if(!images[slot].completedModelProof||!images[slot].completedModelProof->ValidFor(actual,material->bindings[slot].captured,images[slot])){++counts.uncertified;return;}
++  if(entries.size()>=Capacity)return;
++  Entry candidate;candidate.slice.scope=Execution(actual,target);candidate.slice.material=material;candidate.images=images;
++  for(const auto& image:images)candidate.slice.owners.push_back(image.owner);
++  const auto inserted=entries.emplace(MakeKey(*material,target),std::move(candidate));
++  if(inserted.second)++counts.admissions;
++ }
++};
++}
+--- a/rts/Rendering/Metal4/Metal4SourceImage.h
++++ b/rts/Rendering/Metal4/Metal4SourceImage.h
+@@ -5,6 +5,7 @@
+ #include "Rendering/Backend/NativeCUSTextureHistory.h"
+ #include <functional>
+ namespace rendering::metal4 {
++class CUSCompletedModelImageProof;
+ struct CUSSourceImage {
+  __strong id<MTLTexture> texture=nil;
+  __strong id<MTLSamplerState> sampler=nil;
+@@ -23,6 +24,8 @@
+  // Appended to preserve existing aggregate field order. A present callback
+  // without an explicit producer query remains Unknown.
+  SourceDependencyQuery160 dependencyQuery160;
++ // Private pilot: only the actual completed S3O upload owner can supply this.
++ std::shared_ptr<const CUSCompletedModelImageProof> completedModelProof;
+ };
+ inline id<MTLTexture> SourceTextureRoot160(id<MTLTexture> image) {
+  while(image.parentTexture)image=image.parentTexture;
+--- a/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -1,3 +1,4 @@
++#include "Metal4SharedProgramPilot.h"
+ #include "Rendering/Backend/NativeClippedFillPrecompute.h"
+ #include "Rendering/Backend/NativeRenderDispatchReceipt.h"
+ #include "Rendering/Backend/NativeSubmissionReadScope.h"
+@@ -338,6 +339,42 @@
+ 		object->allocation.depth == 1 && object->allocation.samples == 1;
+ }
+ 
++// Real completion certificate. Its only construction site is the typed S3O
++// provider after a completed upload, original allocation pins and sampler prep.
++class CompletedS3OImageProof final : public CUSCompletedModelImageProof {
++ RuntimeLease* lease;
++ const Runtime* context;
++ __strong id<MTLDevice> device;
++ uint64_t submission;
++ std::shared_ptr<const NativeCUSTextureObject> object;
++ std::shared_ptr<const WorldTexture> pixels;
++ std::shared_ptr<WorldTexturePreparationJournal> journal;
++ std::shared_ptr<WorldTexturePreparationJournal::UploadState> status;
++ __strong id<MTLTexture> root,sampled;
++ __strong id<MTLSamplerState> sampler;
++public:
++ CompletedS3OImageProof(RuntimeLease& actual,std::shared_ptr<const NativeCUSTextureObject> source,
++  const WorldTexturePreparationJournal::Entry& entry,id<MTLSamplerState> actualSampler)
++ :lease(&actual),context(actual.ContextIdentity()),device(actual.Device()),submission(actual.SourceSubmission()),
++  object(std::move(source)),pixels(entry.owner),journal(actual.WorldTexturePreparation()),status(entry.status),
++  root(entry.texture),sampled(entry.sampled),sampler(actualSampler) {
++  actual.ValidatePreparationMutation();
++  Require(submission&&PrivateModelTexture(object.get(),pixels)&&journal->initialized&&status->ready&&status->uploadSource==nil&&root&&sampled&&sampler,
++   "Shared model proof requires actual completed pinned S3O storage");
++ }
++ bool ValidFor(RuntimeLease& actual,const NativeCUSTextureBinding& binding,const CUSSourceImage& image) const override {
++  // No saved readiness decision: inspect the real immutable storage's current
++  // completion state again. Original requireReadable still runs at EncodeDraw.
++  return &actual==lease&&actual.ContextIdentity()==context&&actual.Device()==device&&actual.SourceSubmission()==submission&&
++   actual.WorldTexturePreparation()==journal&&journal->initialized&&status->ready&&status->uploadSource==nil&&
++   binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object==object&&
++   !binding.object.owner_before(object)&&!object.owner_before(binding.object)&&
++   PrivateModelTexture(object.get(),pixels)&&image.owner.get()==object.get()&&
++   image.texture==sampled&&image.sampler==sampler&&root&&
++   !image.encodeDependencies&&!image.didComplete&&bool(image.requireReadable)&&!image.depthImage&&!image.clampDepthCompare;
++ }
++};
++
+ struct UploadedTexture {
+ 	__strong id<MTLTexture> texture = nil, uploadSource = nil;
+ };
+@@ -719,12 +756,22 @@
+ 			"Original model image target has no actual paired source consumer");
+ 		if(auto model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing)){
+ 			Require(model->pixels!=nullptr,"Original model image has no actual retained upload bytes");
++   // The pilot admits only completion observed BEFORE this provider invocation.
++   // Texture() may retire/register work; its successful return is not a proof.
++   bool previouslyComplete=false;
++   if(lease.CUSSharedPreparation()){
++    const auto prior=textures.find(model->pixels.get());
++    previouslyComplete=prior!=textures.end()&&prior->second.status->ready;
++   }
+ 			CUSSourceImage image;image.texture=Texture(lease,model->pixels,binding.object.get());
+ 			image.sampler=screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
+ 			image.owner=binding.object;image.flipV=model->pixels->flipV;
+ 			const auto status=textures.at(model->pixels.get()).status;
+ 			image.requireReadable=[status,submission]{Require(status->ready||status->encodedSubmission==submission,
+-				"Original model image sampled before its common upload/mip producer");};return image;
++				"Original model image sampled before its common upload/mip producer");};
++   if(lease.CUSSharedPreparation()&&previouslyComplete&&PrivateModelTexture(binding.object.get(),model->pixels)&&status->ready&&status->uploadSource==nil)
++    image.completedModelProof=std::make_shared<const CompletedS3OImageProof>(lease,binding.object,textures.at(model->pixels.get()),image.sampler);
++   return image;
+ 		}
+ 		if(auto map=std::dynamic_pointer_cast<const NativeMapTextureBacking>(binding.object->backing)){
+ 			auto resource=std::dynamic_pointer_cast<const MapImage>(map->Resource());
+@@ -2625,6 +2672,7 @@
+ 		Require(layer != nil && layer.device == lease.Device(), "World layer/device ownership mismatch");
+ 		const auto resourceStart = Clock::now();
+ 		impl->StartTexturePreparation(lease);
++  if(SharedCUSPilotEnabled())lease.BindCUSSharedPreparation(std::make_shared<CUSSharedPreparationScope>(lease,contextGeneration()));
+ 		const auto preparedMap=impl->Map(lease, frame.terrain);
+   const auto normalResource=preparedMap.normals;
+   const auto terrainMap=preparedMap.tiles; // Exact uploaded tile buffers retained for this request.
+@@ -4484,6 +4532,15 @@
+   impl->waterReflection=waterAttachments->reflection;impl->waterReflectionDepth=waterAttachments->reflectionDepth;
+   impl->waterRefraction=waterAttachments->refraction;impl->waterRefractionDepth=waterAttachments->refractionDepth;
+   impl->preWaterColor=waterAttachments->preColor;impl->preWaterDepth=waterAttachments->preDepth;
++  if(const auto& pilot=lease.CUSSharedPreparation();pilot&&frame.sourceDrawFrame>=512){
++   static unsigned reports=0;
++   if(reports<8){++reports;const auto& c=pilot->counts;
++    LOG("[NativeSharedCUSPilot] draw=%llu submission=%llu prepare_calls=%llu candidate_draws=%llu pair_hits=%llu pair_misses=%llu admitted_pairs=%llu uncertified=%llu omitted_provider_calls=%llu omitted_caller_registration_calls=%llu scope=DrawPrepared_lease readiness_per_draw=1 argument_tables_shared=0",
++     (unsigned long long)frame.sourceDrawFrame,(unsigned long long)sourceSubmission,(unsigned long long)c.prepares,(unsigned long long)c.eligibleDraws,
++     (unsigned long long)c.hits,(unsigned long long)c.misses,(unsigned long long)c.admissions,(unsigned long long)c.uncertified,
++     (unsigned long long)c.omittedProviders,(unsigned long long)c.omittedRegistrations);
++   }
++  }
+ 		lease.AddAllocation(sceneColor); if(drawable)lease.Retain(drawable); cpuPhase.Mark(8); preparationDetail.Mark(10); lease.CommitResourcesWhileEncoding();
+ 		cpuPhase.Mark(9);preparationDetail.Mark(11);
+ 		WorldEncodingProbe176 encodingProbe(frame.sourceDrawFrame,!offscreenSource && !continuation && frame.simulationFrame>0);
+--- /dev/null
++++ b/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h
+@@ -0,0 +1,84 @@
++// Generated by tools/sepia-pilot/compile_subset.py; DO NOT EDIT.
++#pragma once
++#include "Rendering/Backend/NativeSharedProgramPilot.h"
++#include <cstring>
++namespace rendering::sepiaGenerated {
++inline constexpr char VertexSource[]=R"PILOTGLSL(#version 330
++// full screen triangle
++const vec2 vertices[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
++
++void main() {
++	gl_Position = vec4(vertices[gl_VertexID], 0.0, 1.0);
++}
++)PILOTGLSL";
++inline constexpr char FragmentSource[]=R"PILOTGLSL(#version 330
++
++uniform sampler2D screenCopyTex;
++uniform ivec2 viewPos;
++uniform float gamma;
++// rows of the color matrix: contrast * saturation, blended toward sepia
++uniform vec3 colorR;
++uniform vec3 colorG;
++uniform vec3 colorB;
++
++out vec4 fragColor;
++
++void main() {
++	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma));
++	fragColor = vec4(dot(colorR, color), dot(colorG, color), dot(colorB, color), 1.0);
++}
++)PILOTGLSL";
++inline constexpr char Identity[]="f68e648c6dfbf4b4c056baeaa68cafae23a5ca5ad13ccfe17d9e7735dda3872f";
++inline constexpr std::uint32_t UniformBytes=128;
++inline constexpr std::uint32_t ViewPosOffset=48;
++inline std::shared_ptr<const sharedpilot::ProgramInterface> Link() {
++ auto p=std::make_shared<sharedpilot::ProgramInterface>();p->generation=sharedpilot::NextProgramGeneration();p->sourceIdentity=Identity;p->uniformBytes=UniformBytes;
++ p->blocks={{1,UniformBytes,std::uint8_t(sharedpilot::Vertex|sharedpilot::Fragment)}};
++ p->fields={{"viewPos", sharedpilot::Scalar::Int,48,2,1,16,sharedpilot::Fragment,1},{"gamma", sharedpilot::Scalar::Float,64,1,1,16,sharedpilot::Fragment,1},{"colorR", sharedpilot::Scalar::Float,80,3,1,16,sharedpilot::Fragment,1},{"colorG", sharedpilot::Scalar::Float,96,3,1,16,sharedpilot::Fragment,1},{"colorB", sharedpilot::Scalar::Float,112,3,1,16,sharedpilot::Fragment,1}};
++ p->resources={{"screenCopyTex",0,0,0,sharedpilot::TextureKind::Image2D,sharedpilot::Fragment}};
++ return p;
++}
++inline std::vector<std::uint8_t> Defaults(){std::vector<std::uint8_t> bytes(UniformBytes);
++ {const std::int32_t value=0;std::memcpy(bytes.data()+48,&value,4);}
++ {const std::int32_t value=0;std::memcpy(bytes.data()+52,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+64,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+80,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+84,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+88,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+96,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+100,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+104,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+112,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+116,&value,4);}
++ {const float value=0.0f;std::memcpy(bytes.data()+120,&value,4);}
++ return bytes;}
++inline constexpr char MSL[]=R"PILOTMSL(struct SharedSepiaUniforms {float4 target;uint4 alpha;float4 raster;
++ int4 viewPos;
++ float4 gamma;
++ float4 colorR;
++ float4 colorG;
++ float4 colorB;
++};
++static_assert(sizeof(SharedSepiaUniforms)==128);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,viewPos)==48);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,gamma)==64);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorR)==80);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorG)==96);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorB)==112);
++struct SharedSepiaVarying {float4 position [[position]];};
++vertex SharedSepiaVarying SharedSepiaVertex(uint id [[vertex_id]],constant SharedSepiaUniforms& u [[buffer(1)]]) {
++ const float2 vertices[3]={float2(-1,-1),float2(3,-1),float2(-1,3)};
++ return {float4(vertices[id],u.raster.y,1)};
++}
++float4 pilotFetch(texture2d<float,access::read> source,int2 p){return source.read(uint2(p.x,int(source.get_height())-1-p.y));}
++fragment float4 SharedSepiaFragment(SharedSepiaVarying input [[stage_in]],texture2d<float,access::read> screenCopyTex [[texture(0)]],constant SharedSepiaUniforms& u [[buffer(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
++ RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
++ float4 pilotFragCoord=float4(input.position.x*u.target.z,(u.target.y-input.position.y)*u.target.w,input.position.z,input.position.w);
++ float4 pilotResult;
++ float3 color=pow((pilotFetch(screenCopyTex,(int2((pilotFragCoord).xy)-u.viewPos.xy))).rgb,float3(u.gamma.x));
++ pilotResult=float4(dot(u.colorR.xyz,color),dot(u.colorG.xyz,color),dot(u.colorB.xyz,color),1.0f);
++ if(u.alpha.x){float r=clamp(u.raster.x,0.0f,1.0f);bool pass=false;switch(u.alpha.y){case 0:break;case 1:pass=pilotResult.a<r;break;case 2:pass=pilotResult.a==r;break;case 3:pass=pilotResult.a<=r;break;case 4:pass=pilotResult.a>r;break;case 5:pass=pilotResult.a!=r;break;case 6:pass=pilotResult.a>=r;break;default:pass=true;}if(!pass)discard_fragment();}
++ return pilotResult;
++}
++)PILOTMSL";
++}
+--- /dev/null
++++ b/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.json
+@@ -0,0 +1,84 @@
++{
++  "revision": "sepia-subset-ast-1;MTL4LibraryDescriptor-default-options-frozenJ;sample-position-v1",
++  "identity": "f68e648c6dfbf4b4c056baeaa68cafae23a5ca5ad13ccfe17d9e7735dda3872f",
++  "vertexHash": 16905188423406352921,
++  "fragmentHash": 17382421314025316268,
++  "uniformBytes": 128,
++  "fields": [
++    {
++      "name": "viewPos",
++      "scalar": "int",
++      "components": 2,
++      "offset": 48,
++      "defaults": [
++        0,
++        0
++      ],
++      "blockSlot": 1,
++      "count": 1,
++      "stride": 16,
++      "stages": 2
++    },
++    {
++      "name": "gamma",
++      "scalar": "float",
++      "components": 1,
++      "offset": 64,
++      "defaults": [
++        0
++      ],
++      "blockSlot": 1,
++      "count": 1,
++      "stride": 16,
++      "stages": 2
++    },
++    {
++      "name": "colorR",
++      "scalar": "float",
++      "components": 3,
++      "offset": 80,
++      "defaults": [
++        0,
++        0,
++        0
++      ],
++      "blockSlot": 1,
++      "count": 1,
++      "stride": 16,
++      "stages": 2
++    },
++    {
++      "name": "colorG",
++      "scalar": "float",
++      "components": 3,
++      "offset": 96,
++      "defaults": [
++        0,
++        0,
++        0
++      ],
++      "blockSlot": 1,
++      "count": 1,
++      "stride": 16,
++      "stages": 2
++    },
++    {
++      "name": "colorB",
++      "scalar": "float",
++      "components": 3,
++      "offset": 112,
++      "defaults": [
++        0,
++        0,
++        0
++      ],
++      "blockSlot": 1,
++      "count": 1,
++      "stride": 16,
++      "stages": 2
++    }
++  ],
++  "sampler": "screenCopyTex",
++  "vertexEntry": "SharedSepiaVertex",
++  "fragmentEntry": "SharedSepiaFragment"
++}
+--- /dev/null
++++ b/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.metal
+@@ -0,0 +1,28 @@
++struct SharedSepiaUniforms {float4 target;uint4 alpha;float4 raster;
++ int4 viewPos;
++ float4 gamma;
++ float4 colorR;
++ float4 colorG;
++ float4 colorB;
++};
++static_assert(sizeof(SharedSepiaUniforms)==128);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,viewPos)==48);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,gamma)==64);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorR)==80);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorG)==96);
++static_assert(__builtin_offsetof(SharedSepiaUniforms,colorB)==112);
++struct SharedSepiaVarying {float4 position [[position]];};
++vertex SharedSepiaVarying SharedSepiaVertex(uint id [[vertex_id]],constant SharedSepiaUniforms& u [[buffer(1)]]) {
++ const float2 vertices[3]={float2(-1,-1),float2(3,-1),float2(-1,3)};
++ return {float4(vertices[id],u.raster.y,1)};
++}
++float4 pilotFetch(texture2d<float,access::read> source,int2 p){return source.read(uint2(p.x,int(source.get_height())-1-p.y));}
++fragment float4 SharedSepiaFragment(SharedSepiaVarying input [[stage_in]],texture2d<float,access::read> screenCopyTex [[texture(0)]],constant SharedSepiaUniforms& u [[buffer(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
++ RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
++ float4 pilotFragCoord=float4(input.position.x*u.target.z,(u.target.y-input.position.y)*u.target.w,input.position.z,input.position.w);
++ float4 pilotResult;
++ float3 color=pow((pilotFetch(screenCopyTex,(int2((pilotFragCoord).xy)-u.viewPos.xy))).rgb,float3(u.gamma.x));
++ pilotResult=float4(dot(u.colorR.xyz,color),dot(u.colorG.xyz,color),dot(u.colorB.xyz,color),1.0f);
++ if(u.alpha.x){float r=clamp(u.raster.x,0.0f,1.0f);bool pass=false;switch(u.alpha.y){case 0:break;case 1:pass=pilotResult.a<r;break;case 2:pass=pilotResult.a==r;break;case 3:pass=pilotResult.a<=r;break;case 4:pass=pilotResult.a>r;break;case 5:pass=pilotResult.a!=r;break;case 6:pass=pilotResult.a>=r;break;default:pass=true;}if(!pass)discard_fragment();}
++ return pilotResult;
++}
+--- /dev/null
++++ b/tools/sepia-pilot/PROVENANCE.json
+@@ -0,0 +1,13 @@
++{
++  "widgetAuthor": "Beherith",
++  "widgetDate": "2023.01.05",
++  "license": "GNU GPL v2 or later",
++  "widgetPool": "$PERFORMANCE_WORK/evidence/release-v1113-prepare-baseline-20261115-01/measurement/screen_paced/preparation/private/S_RELEASE1113_PREPARE/assets/pool/94/695aa01dfa26a4a05f8decb718e2b5.gz",
++  "widgetMD5": "94695aa01dfa26a4a05f8decb718e2b5",
++  "widgetSHA512": "66ae2c235ef17f2da1e371d357996925c630631487b0dabf12caeb1704a5aeb023f924a3be20d8deca8fe99108026df642544294ec964b6fc73d0d5765074e52",
++  "extraction": "Lua long-string first newline removed, matching runtime semantics",
++  "vertexFNV": 16905188423406352921,
++  "fragmentFNV": 17382421314025316268,
++  "adapterOriginal": "<HOME>/Downloads/BAR-Integrated-Pilot-20261114/BAR Integrated Test.app/Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
++  "implementation": "Private v2 typed expression AST compiler, generated metadata, generic linked uniform ownership and Sepia shared binding integration; no external GLSL compiler or external contributor implementation imported"
++}
+--- /dev/null
++++ b/tools/sepia-pilot/README.md
+@@ -0,0 +1,27 @@
++# Private Sepia shared-program pilot
++
++The default selects the original Sepia MSL shader and legacy output packing, with the pilot’s new Lua linking/material capture front end shared by both modes. This is an old-shader/shared-shader comparator, not the unchanged deployed production path. `BAR_METAL4_SEPIA_PATH=shared` selects the same baseline effect through the generated program and immutable shared records. No game or GPU parity/performance result is claimed here.
++
++`sepia.vert.glsl` and `sepia.frag.glsl` are exact runtime strings extracted from Beherith's current widget (GPL v2 or later); Lua removes the initial newline of a long string. Their FNV hashes match the frozen old adapter: 16905188423406352921 and 17382421314025316268. See PROVENANCE.json for the verified current baseline pool object and complete widget hashes.
++
++Run `python3 tools/sepia-pilot/compile_subset.py` from the engine tree to regenerate the C++ admission/header, JSON layout, MSL, and `data/LuaUI/NativeWidgets/sepia_pilot_program.lua`. `--check` verifies reproducibility. A custom `--fragment` and `--output` produces isolated variant outputs. There is no installed general GLSL compiler in the checked locations; this implementation is a deterministic typed-expression AST subset compiler, with explicit fail-closed rejection. It pins the full-screen vertex transport and actually parses/translates fragment expressions, locals, typed uniforms/defaults, constructors, swizzles and supported functions. Its only texture intrinsic preserves the original lod-zero screen-copy coordinate expression. Unsupported stages, operations, types and texture addressing fail. The generated MSL asserts block size and all field offsets.
++
++The variant in `checks/sepia/variant` adds float `exposure=1.25`, vec3 `bias=vec3(0.1,0.2,0.3)` and evaluates `pow(...) * exposure + bias`. It moves gamma's offset and increases the block from 128 to 160 bytes. The actual generic C++ payload implementation compiles and accepts both new fields without a production C++ change. Actual Lua adapter execution with the variant's generated module forwards both new uniforms. Both sample modes pass Metal syntax including generated layout assertions. These are bounded host/compiler checks; the Lua binding is mocked in the host Lua check, and no actual Lua engine or renderer is launched.
++
++## Connected path and ownership
++
++The existing engine native-widget loader selects `LuaUI/NativeWidgets/gfx_sepia_tone.lua`; its exact updated wrapper SHA512 is included in this overlay’s rts/Lua/NativeWidgetAdapters.h. `LuaNativePostprocess.cpp` registers NativeSepiaLoadSource (archive ZIP read) and NativeSepiaContext (this changed native context). It has no additional whole-widget hash gate. The wrapper's fixed archive-widget hash remains strict for old mode; shared mode admits the generated source module instead, and NativeSepiaLuaContext compares its exact vertex/fragment strings against the generated linked program. A changed supported archive widget is therefore not rejected by the old whole-widget gate before shared stage admission.
++
++Generic SetUniform/SetUniformInt validate generated types/dimensions and publish immutable byte owners at updates. Draw retains the linked interface generation, uniform owner and the actual observed unit0 postprocess version in MaterialContent. Program deletion/relink and consumer reset invalidate future use. Already captured owners retain the actual successful MTLLibrary, not an integer admission marker. ProgramInterface block slot1, generated field blockSlot1, MSL buffer(1), the existing two-buffer argument descriptor and C++ setAddress index1 agree; texture0 stays a direct texture slot.
++
++Recorder and operation validation retain the snapshot and compare the exact captured input version. Shared Prepare constructs a PreparedSlice, copies generated user bytes without field names, patches only per-use target/alpha/depth transport, and uses the existing uniform pool, ImageFor resolver, read receipts, argument lifetime, raster helper and selected pipeline. Source order, attachments and completion ownership remain the original path. Old direct NativeSepiaUniforms callers may omit the new material; legacy fields and original aggregate order are preserved. Sepia introduces no cross-frame binding cache or cached readability verdict.
++
++## Bounded verification
++
++- Four Python tests cover exact stages/reproducibility, equation plus added float/vec3/default/layout changes, reordering, and unsupported-input rejection.
++- Actual C++ header payload tests pass ownership, relink, deletion, reset, immutable updates, wrong scalar/count/range and changed input-owner cases, against the final common header.
++- Host Lua adapter test passes generated source selection, edited-widget shared admission, strict old rejection, uniform forwarding, linked draw forwarding and deletion guards. It uses a mock native binding.
++- Baseline and variant old/shared combined MSL pass `xcrun metal -std=metal4.0 -fsyntax-only`, with sample shading both disabled and enabled; generated layout assertions pass.
++- Existing production TestNativePostprocessPlan fixture passes 38 checks under ASan/UBSan, linked to actual changed data implementation using the coordinator's VFS overlay. The frozen NativeWorldFontGeometry.h has an existing misleading-indentation warning; that one warning was kept visible and removed from Werror for this host fixture.
++
++The engine data directory here is an unapplied packaging overlay. A future private build owner must install both Lua files into the private app's native-engine data tree and apply the engine overlay, including the supplied loader hash change. No installed app, release, repository, frozen source, K candidate or performance candidate was changed. Full engine build, real Lua/native execution, rendered old/shared parity, readiness/order adversarial GPU checks and performance measurement remain unverified.
+--- /dev/null
++++ b/tools/sepia-pilot/compile_subset.py
+@@ -0,0 +1,226 @@
++#!/usr/bin/env python3
++"""Offline, fail-closed GLSL 330 expression subset -> MSL + interface.
++No external compiler. Admits the source-selected fullscreen vertex unchanged;
++fragment supports typed locals, uniforms/defaults, constructors, arithmetic,
++swizzles, dot/pow/min/max/clamp/mix and lod-zero texelFetch. No preprocessor,
++loops, functions, writes, other stages or hidden source rewriting.
++Original Sepia shader/widget by Beherith (GPL v2 or later).
++"""
++import argparse, hashlib, json, re, math
++from pathlib import Path
++REVISION='sepia-subset-ast-1;MTL4LibraryDescriptor-default-options-frozenJ;sample-position-v1'
++TYPES={'float':('float',1),'vec2':('float',2),'vec3':('float',3),'vec4':('float',4),'int':('int',1),'ivec2':('int',2),'ivec3':('int',3),'ivec4':('int',4)}
++MSL={t:base+(str(n) if n>1 else '') for t,(base,n) in TYPES.items()}
++def tokens(source):
++ source=re.sub(r'/\*.*?\*/|//[^\n]*','',source,flags=re.S)
++ source=re.sub(r'^\s*#version 330\s*$','',source,flags=re.M)
++ pattern=r'\s+|(?:\d+\.\d*|\.\d+|\d+)(?:[eE][+-]?\d+)?|[A-Za-z_]\w*|[-+*/=.,;(){}\[\]]'
++ out=[];pos=0
++ for m in re.finditer(pattern,source):
++  if m.start()!=pos:raise ValueError('unsupported GLSL token at '+source[pos:pos+30])
++  pos=m.end()
++  if not m[0].isspace():out.append(m[0])
++ if source[pos:].strip():raise ValueError('unsupported trailing input')
++ return out
++class Parser:
++ def __init__(self,source):self.ts=tokens(source)+['<eof>'];self.i=0;self.env={};self.fields=[];self.output=None
++ def take(self,w=None):
++  t=self.ts[self.i]
++  if w is not None and t!=w:raise ValueError(f'expected {w}, got {t}')
++  self.i+=1;return t
++ def peek(self):return self.ts[self.i]
++ def ident(self):
++  x=self.take()
++  if not re.fullmatch(r'[A-Za-z_]\w*',x) or x.startswith(('gl_','pilot','Shared')) or x in set(TYPES)|{'target','alpha','raster','auto','bool','thread','device','constant','vertex','fragment','texture2d','input','id','source','pass','return','const','uniform','out','void','main'}:raise ValueError('reserved/invalid identifier '+x)
++  return x
++ def expr(self,minimum=0):
++  t=self.take()
++  if t in ('+','-'):
++   a=self.expr(30)
++   if a[-1] not in TYPES:raise ValueError('non-arithmetic unary operand')
++   left=('unary',t,a,a[-1])
++  elif t=='(':
++   left=self.expr();self.take(')')
++  elif re.fullmatch(r'(?:\d+\.\d*|\.\d+|\d+)(?:[eE][+-]?\d+)?',t):left=('literal',t,'float' if any(c in t for c in '.eE') else 'int')
++  elif re.fullmatch(r'[A-Za-z_]\w*',t):
++   if self.peek()=='(':
++    self.take('(');args=[]
++    if self.peek()!=')':
++     while True:
++      args.append(self.expr())
++      if self.peek()!=',':break
++      self.take(',')
++    self.take(')');left=('call',t,args,self.calltype(t,args))
++   else:
++    if t not in self.env:raise ValueError('unknown identifier '+t)
++    left=('name',t,self.env[t])
++  else:raise ValueError('unsupported expression '+t)
++  while True:
++   if self.peek()=='.':
++    self.take('.');s=self.take();base,n=TYPES[left[-1]]
++    if not s or not (set(s)<=set('xyzw') or set(s)<=set('rgba')) or max(('xyzw' if set(s)<=set('xyzw') else 'rgba').index(c) for c in s)>=n:raise ValueError('invalid swizzle')
++    left=('swizzle',left,s,next(k for k,v in TYPES.items() if v==(base,len(s))));continue
++   op=self.peek();prec={'+':10,'-':10,'*':20,'/':20}.get(op,-1)
++   if prec<minimum:break
++   self.take();right=self.expr(prec+1);a,b=left[-1],right[-1]
++   if a not in TYPES or b not in TYPES or TYPES[a][0]!=TYPES[b][0]:raise ValueError('arithmetic type mismatch')
++   if a!=b and TYPES[a][1]!=1 and TYPES[b][1]!=1:raise ValueError('arithmetic dimension mismatch')
++   ty=a if TYPES[a][1]>=TYPES[b][1] else b;left=('binary',op,left,right,ty)
++  return left
++ def calltype(self,name,args):
++  ts=[x[-1] for x in args]
++  if name in TYPES:
++   if not ts or any(t not in TYPES for t in ts):raise ValueError('bad constructor')
++   total=sum(TYPES[t][1] for t in ts)
++   if total!=TYPES[name][1] and not(len(ts)==1 and TYPES[ts[0]][1]==1):raise ValueError('constructor dimensions')
++   return name
++  if name=='texelFetch':
++   if ts!=['sampler2D','ivec2','int'] or args[2][:2]!=('literal','0'):raise ValueError('only sampler2D lod-zero texelFetch admitted')
++   coord=args[1]
++   expected=('binary','-',('call','ivec2',[('swizzle',('name','gl_FragCoord','vec4'),'xy','vec2')],'ivec2'),('name','viewPos','ivec2'),'ivec2')
++   if coord!=expected:raise ValueError('texelFetch outside original screen-copy coordinate transport')
++   return 'vec4'
++  if name=='dot' and len(ts)==2 and ts[0]==ts[1] and ts[0] in TYPES and TYPES[ts[0]][0]=='float':return 'float'
++  if name in ('pow','min','max') and len(ts)==2 and ts[0]==ts[1] and TYPES.get(ts[0],('',))[0]=='float':return ts[0]
++  if name in ('clamp','mix') and len(ts)==3 and len(set(ts))==1 and TYPES.get(ts[0],('',))[0]=='float':return ts[0]
++  raise ValueError('unsupported function/signature '+name+str(ts))
++ def parse(self):
++  while self.peek()=='uniform':
++   self.take();ty=self.take()
++   if ty not in TYPES and ty!='sampler2D':raise ValueError('unsupported uniform type '+ty)
++   name=self.ident()
++   if name in self.env:raise ValueError('duplicate uniform')
++   default=None
++   if self.peek()=='=':self.take();default=self.expr()
++   if default is not None and default[-1]!=ty:raise ValueError('default type differs')
++   self.take(';');self.env[name]=ty;self.fields.append((name,ty,default))
++  self.take('out');self.take('vec4');self.output=self.ident();self.take(';')
++  self.env['gl_FragCoord']='vec4';self.env[self.output]='vec4'
++  self.take('void');self.take('main');self.take('(');self.take(')');self.take('{');body=[];written=False
++  while self.peek()!='}':
++   if self.peek() in TYPES:
++    ty=self.take();name=self.ident()
++    if name in self.env:raise ValueError('duplicate local')
++    self.take('=');expr=self.expr()
++    if ty!=expr[-1]:raise ValueError('local type differs')
++    self.take(';');self.env[name]=ty;body.append(('declare',name,ty,expr))
++   else:
++    name=self.take()
++    if name!=self.output or written:raise ValueError('only one output assignment admitted')
++    self.take('=');expr=self.expr();self.take(';')
++    if expr[-1]!='vec4':raise ValueError('output type differs')
++    body.append(('output',expr));written=True
++  self.take('}');self.take('<eof>')
++  if not written:raise ValueError('missing output')
++  return body
++ def emit(self,x):
++  tag=x[0]
++  if tag=='literal':return x[1]+('f' if x[-1]=='float' else '')
++  if tag=='name':
++   if x[1]=='gl_FragCoord':return 'pilotFragCoord'
++   if x[1]==self.output:return 'pilotResult'
++   if x[1] in {f[0] for f in self.fields}:
++    return x[1] if x[-1]=='sampler2D' else 'u.'+x[1]+'.'+'xyzw'[:TYPES[x[-1]][1]]
++   return x[1]
++  if tag=='unary':return '('+x[1]+self.emit(x[2])+')'
++  if tag=='binary':return '('+self.emit(x[2])+x[1]+self.emit(x[3])+')'
++  if tag=='swizzle':return '('+self.emit(x[1])+').'+x[2]
++  if tag=='call':
++   name=MSL.get(x[1],x[1]);args=[self.emit(a) for a in x[2]]
++   if name=='texelFetch':name='pilotFetch';args=args[:2]
++   return name+'('+','.join(args)+')'
++  raise ValueError('internal expression')
++def defaults(x):
++ if x is None:return None
++ if x[0]=='literal':return [float(x[1]) if x[-1]=='float' else int(x[1])]
++ if x[0]=='unary':return [(-v if x[1]=='-' else v) for v in defaults(x[2])]
++ if x[0]=='call' and x[1] in TYPES:
++  v=sum((defaults(a) for a in x[2]),[]);n=TYPES[x[1]][1]
++  return v*n if len(v)==1 else v
++ raise ValueError('only literal/constructor constant defaults admitted')
++def fnv(s):
++ h=14695981039346656037
++ for b in s.encode():h=((h^b)*1099511628211)&((1<<64)-1)
++ return h
++def compile_sources(vertex,fragment):
++ # Vertex transport is deliberately pinned, with all accepted input consumed.
++ admitted='''#version 330
++ const vec2 vertices[3] = vec2[3](vec2(-1.0,-1.0),vec2(3.0,-1.0),vec2(-1.0,3.0));
++ void main(){gl_Position=vec4(vertices[gl_VertexID],0.0,1.0);}'''
++ if tokens(vertex)!=tokens(admitted):raise ValueError('vertex outside pinned fullscreen transport subset')
++ p=Parser(fragment);body=p.parse();resources=[f for f in p.fields if f[1]=='sampler2D']
++ if len(resources)!=1 or resources[0][2] is not None:raise ValueError('exactly one read-only sampler2D required')
++ fields=[];struct=[];offset=48
++ for name,ty,default in p.fields:
++  if ty=='sampler2D':continue
++  base,n=TYPES[ty];value=defaults(default) or [0]*n
++  if any(not math.isfinite(x) or (abs(x)>3.402823466e38 if base=='float' else x<-2147483648 or x>2147483647) for x in value):raise ValueError('uniform default outside typed finite range')
++  fields.append(dict(name=name,scalar=base,components=n,offset=offset,defaults=value,blockSlot=1,count=1,stride=16,stages=2));offset+=16;struct.append(f' {base}4 {name};')
++ if offset>4096:raise ValueError('bounded uniform block exceeds 4096 bytes')
++ if not any(f['name']=='viewPos' and f['scalar']=='int' and f['components']==2 for f in fields):raise ValueError('screen-copy address bounds require ivec2 viewPos')
++ code='\n'.join((' '+MSL[s[2]]+' '+s[1]+'='+p.emit(s[3])+';' if s[0]=='declare' else ' pilotResult='+p.emit(s[1])+';') for s in body)
++ sampler=resources[0][0]
++ msl='''struct SharedSepiaUniforms {float4 target;uint4 alpha;float4 raster;\n'''+ '\n'.join(struct)+'''\n};
++struct SharedSepiaVarying {float4 position [[position]];};
++vertex SharedSepiaVarying SharedSepiaVertex(uint id [[vertex_id]],constant SharedSepiaUniforms& u [[buffer(1)]]) {
++ const float2 vertices[3]={float2(-1,-1),float2(3,-1),float2(-1,3)};
++ return {float4(vertices[id],u.raster.y,1)};
++}
++float4 pilotFetch(texture2d<float,access::read> source,int2 p){return source.read(uint2(p.x,int(source.get_height())-1-p.y));}
++fragment float4 SharedSepiaFragment(SharedSepiaVarying input [[stage_in]],texture2d<float,access::read> '''+sampler+''' [[texture(0)]],constant SharedSepiaUniforms& u [[buffer(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
++ RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
++ float4 pilotFragCoord=float4(input.position.x*u.target.z,(u.target.y-input.position.y)*u.target.w,input.position.z,input.position.w);
++ float4 pilotResult;
++'''+code+'''
++ if(u.alpha.x){float r=clamp(u.raster.x,0.0f,1.0f);bool pass=false;switch(u.alpha.y){case 0:break;case 1:pass=pilotResult.a<r;break;case 2:pass=pilotResult.a==r;break;case 3:pass=pilotResult.a<=r;break;case 4:pass=pilotResult.a>r;break;case 5:pass=pilotResult.a!=r;break;case 6:pass=pilotResult.a>=r;break;default:pass=true;}if(!pass)discard_fragment();}
++ return pilotResult;
++}
++'''
++ msl=msl.replace('struct SharedSepiaVarying', 'static_assert(sizeof(SharedSepiaUniforms)=='+str(offset)+');\n'+''.join('static_assert(__builtin_offsetof(SharedSepiaUniforms,'+f['name']+')=='+str(f['offset'])+');\n' for f in fields)+'struct SharedSepiaVarying')
++ identity=hashlib.sha256((REVISION+'\0'+vertex+'\0'+fragment).encode()).hexdigest()
++ manifest=dict(revision=REVISION,identity=identity,vertexHash=fnv(vertex),fragmentHash=fnv(fragment),uniformBytes=offset,fields=fields,sampler=sampler,vertexEntry='SharedSepiaVertex',fragmentEntry='SharedSepiaFragment')
++ return msl,manifest
++
++def header(vertex,fragment,msl,m):
++ fields=[];writes=[]
++ for f in m['fields']:
++  scalar='Float' if f['scalar']=='float' else 'Int'
++  fields.append('{"'+f['name']+'", sharedpilot::Scalar::'+scalar+','+str(f['offset'])+','+str(f['components'])+',1,16,sharedpilot::Fragment,1}')
++  for i,v in enumerate(f['defaults']):
++   ctype='float' if scalar=='Float' else 'std::int32_t';val=repr(float(v))+'f' if scalar=='Float' else str(int(v))
++   writes.append(f' {{const {ctype} value={val};std::memcpy(bytes.data()+{f["offset"]+i*4},&value,4);}}')
++ return '''// Generated by tools/sepia-pilot/compile_subset.py; DO NOT EDIT.
++#pragma once
++#include "Rendering/Backend/NativeSharedProgramPilot.h"
++#include <cstring>
++namespace rendering::sepiaGenerated {
++inline constexpr char VertexSource[]=R"PILOTGLSL('''+vertex+''')PILOTGLSL";
++inline constexpr char FragmentSource[]=R"PILOTGLSL('''+fragment+''')PILOTGLSL";
++inline constexpr char Identity[]="'''+m['identity']+'''";
++inline constexpr std::uint32_t UniformBytes='''+str(m['uniformBytes'])+''';
++inline constexpr std::uint32_t ViewPosOffset='''+str(next(f['offset'] for f in m['fields'] if f['name']=='viewPos'))+''';
++inline std::shared_ptr<const sharedpilot::ProgramInterface> Link() {
++ auto p=std::make_shared<sharedpilot::ProgramInterface>();p->generation=sharedpilot::NextProgramGeneration();p->sourceIdentity=Identity;p->uniformBytes=UniformBytes;
++ p->blocks={{1,UniformBytes,std::uint8_t(sharedpilot::Vertex|sharedpilot::Fragment)}};
++ p->fields={'''+','.join(fields)+'''};
++ p->resources={{"'''+m['sampler']+'''",0,0,0,sharedpilot::TextureKind::Image2D,sharedpilot::Fragment}};
++ return p;
++}
++inline std::vector<std::uint8_t> Defaults(){std::vector<std::uint8_t> bytes(UniformBytes);
++'''+ '\n'.join(writes)+'''
++ return bytes;}
++inline constexpr char MSL[]=R"PILOTMSL('''+msl+''')PILOTMSL";
++}
++'''
++def main():
++ ap=argparse.ArgumentParser();ap.add_argument('--vertex',type=Path);ap.add_argument('--fragment',type=Path);ap.add_argument('--output',type=Path);ap.add_argument('--check',action='store_true');a=ap.parse_args()
++ here=Path(__file__).resolve().parent;v=(a.vertex or here/'sepia.vert.glsl').read_text();f=(a.fragment or here/'sepia.frag.glsl').read_text();msl,m=compile_sources(v,f)
++ output=a.output or here.parents[1]/'rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h'
++ lua='-- Generated from GLSL by compile_subset.py; Beherith original shader, GPL v2 or later.\nreturn {vertex=[=['+v+']=],fragment=[=['+f+']=],uniformInt={['+json.dumps(m['sampler'])+']=0}}\n'
++ products={output:header(v,f,msl,m),output.with_suffix('.json'):json.dumps(m,indent=2)+'\n',output.with_suffix('.metal'):msl,output.parents[3]/'data/LuaUI/NativeWidgets/sepia_pilot_program.lua':lua}
++ for path,text in products.items():
++  if a.check:
++   if path.read_text()!=text:raise SystemExit('generated output differs: '+str(path))
++  else:path.parent.mkdir(parents=True,exist_ok=True);path.write_text(text)
++ print(('checked' if a.check else 'generated')+' '+m['identity'])
++if __name__=='__main__':main()
+--- /dev/null
++++ b/tools/sepia-pilot/original-widget.lua
+@@ -0,0 +1,297 @@
++local widget = widget ---@type Widget
++
++function widget:GetInfo()
++	return {
++		name = "Sepia Tone",
++		desc = "Gives that warm, urine like color we all love from 2000s era games.",
++		author = "Beherith",
++		date = "2023.01.05",
++		license = "GNU GPL, v2 or later",
++		layer = 200000,
++		enabled = false,
++	}
++end
++
++-- Localized Spring API for performance
++local spEcho = Spring.Echo
++
++local glTexture = gl.Texture
++local glBlending = gl.Blending
++local GL_TRIANGLES = GL.TRIANGLES
++
++---------------------------------------
++
++---@type { gamma: number, saturation: number, contrast: number, sepia: number, shadeUI: boolean }
++local params = { gamma = 0.5, saturation = 0.5, contrast = 0.5, sepia = 0, shadeUI = false }
++
++-- skip draw if this matches:
++local defaultParams = { gamma = 0.5, saturation = 0.5, contrast = 0.5, sepia = 0.0 }
++
++local LUMINANCE = { 0.3086, 0.6094, 0.0820 } ---@type table<integer, number>
++---@type table<integer, table<integer, number>>
++local SEPIA = { { 0.393, 0.769, 0.189 }, { 0.349, 0.686, 0.168 }, { 0.272, 0.534, 0.131 } }
++local COLOR_ROWS = { "colorR", "colorG", "colorB" } ---@type table<integer, string>
++
++-----------------------------------------------------------------
++-- Shader Sources
++-----------------------------------------------------------------
++
++local vsSepia = [[
++#version 330
++// full screen triangle
++const vec2 vertices[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
++
++void main() {
++	gl_Position = vec4(vertices[gl_VertexID], 0.0, 1.0);
++}
++]]
++
++local fsSepia = [[
++#version 330
++
++uniform sampler2D screenCopyTex;
++uniform ivec2 viewPos;
++uniform float gamma;
++// rows of the color matrix: contrast * saturation, blended toward sepia
++uniform vec3 colorR;
++uniform vec3 colorG;
++uniform vec3 colorB;
++
++out vec4 fragColor;
++
++void main() {
++	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma));
++	fragColor = vec4(dot(colorR, color), dot(colorG, color), dot(colorB, color), 1.0);
++}
++]]
++
++-----------------------------------------------------------------
++-- Global Variables
++-----------------------------------------------------------------
++
++local LuaShader = gl.LuaShader
++
++local sepiaShader ---@type LuaShader
++
++local fullTexQuad ---@type VAO
++local fullTexQuadBuffers = {}
++
++-- the triangle comes from gl_VertexID; the unused buffers are attached because engines without the
++-- LuaVAO keep-partial fix (RecoilEngine #3446) rebuild a VAO every draw unless it has all three kinds
++local function CreateTriangleVAO()
++	local vao = gl.GetVAO()
++	local vertexVBO = gl.GetVBO(GL.ARRAY_BUFFER, false)
++	local indexVBO = gl.GetVBO(GL.ELEMENT_ARRAY_BUFFER, false)
++	local instanceVBO = gl.GetVBO(GL.ARRAY_BUFFER, false)
++	if not (vao and vertexVBO and indexVBO and instanceVBO) then
++		return nil
++	end
++	vertexVBO:Define(3, { { id = 0, name = "unused", size = 1 } })
++	vertexVBO:Upload({ 0, 0, 0 })
++	indexVBO:Define(3)
++	indexVBO:Upload({ 0, 1, 2 })
++	instanceVBO:Define(1, { { id = 1, name = "unusedInstance", size = 1 } })
++	instanceVBO:Upload({ 0 })
++	vao:AttachVertexBuffer(vertexVBO)
++	vao:AttachIndexBuffer(indexVBO)
++	vao:AttachInstanceBuffer(instanceVBO)
++	fullTexQuadBuffers = { vertexVBO, indexVBO, instanceVBO }
++	return vao
++end
++
++-- set by the param setters, ViewResize and Initialize, none of which may touch GL; uploaded at the next draw
++local uniformsDirty = true
++
++local function UploadUniforms()
++	uniformsDirty = false
++	local _, _, vpx, vpy = Spring.GetViewGeometry()
++	-- the old shader's contrast offset was scaled by its unwritten output alpha (0 on NVIDIA), so contrast
++	-- scales from black
++	local contrast, saturation, sepia = params.contrast + 0.5, params.saturation + 0.5, params.sepia
++	local cs = {}
++	for i = 1, 3 do
++		cs[i] = {}
++		for j = 1, 3 do
++			cs[i][j] = contrast * (LUMINANCE[j] * (1 - saturation) + (i == j and saturation or 0))
++		end
++	end
++
++	sepiaShader:SetUniformInt("viewPos", vpx, vpy)
++	sepiaShader:SetUniform("gamma", params.gamma + 0.5)
++	for i = 1, 3 do
++		local row, s = {}, SEPIA[i]
++		for j = 1, 3 do
++			local toned = s[1] * cs[1][j] + s[2] * cs[2][j] + s[3] * cs[3][j]
++			row[j] = cs[i][j] + (toned - cs[i][j]) * sepia
++		end
++		sepiaShader:SetUniform(COLOR_ROWS[i], row[1], row[2], row[3])
++	end
++end
++
++-- only the callin that draws the effect stays registered, none while the params are at the default
++local function UpdateParams()
++	local active = false
++	for k, v in pairs(defaultParams) do
++		if math.abs(params[k] - v) > 0.001 then
++			active = true
++		end
++	end
++	if active and params.shadeUI == true then
++		widgetHandler:RemoveCallIn("DrawScreenEffects")
++		widgetHandler:UpdateCallIn("DrawScreenPost")
++	elseif active then
++		widgetHandler:UpdateCallIn("DrawScreenEffects")
++		widgetHandler:RemoveCallIn("DrawScreenPost")
++	else
++		widgetHandler:RemoveCallIn("DrawScreenEffects")
++		widgetHandler:RemoveCallIn("DrawScreenPost")
++	end
++	uniformsDirty = true
++end
++
++local function sepiatoneCmd(_, line)
++	local s = string.split(line or "", " ")
++	spEcho("/luaui sepiatone gamma saturation contrast sepia shadeUI")
++	spEcho("sepiatone " .. (line or ""))
++	params.gamma = tonumber(s[1]) or params.gamma
++	params.saturation = tonumber(s[2]) or params.saturation
++	params.contrast = tonumber(s[3]) or params.contrast
++	params.sepia = tonumber(s[4]) or params.sepia
++	if s[5] ~= nil then
++		params.shadeUI = s[5] == "true"
++	end
++	UpdateParams()
++	return true
++end
++
++function widget:Initialize()
++	if gl.CreateShader == nil then
++		spEcho("Sepia: createshader not supported, removing")
++		widgetHandler:RemoveWidget()
++		return
++	end
++
++	sepiaShader = LuaShader({
++		vertex = vsSepia,
++		fragment = fsSepia,
++		uniformInt = {
++			screenCopyTex = 0,
++		},
++	}, ": Sepia")
++
++	local shaderCompiled = sepiaShader:Initialize()
++	if not shaderCompiled then
++		spEcho("Failed to compile Sepia shader, removing widget")
++		widgetHandler:RemoveWidget()
++		return
++	end
++
++	local vao = CreateTriangleVAO()
++	if vao == nil then
++		widgetHandler:RemoveWidget() --no fallback for potatoes
++		return
++	end
++	fullTexQuad = vao
++
++	widgetHandler:AddAction("sepiatone", sepiatoneCmd, nil, "t")
++	UpdateParams()
++
++	WG.sepia = {}
++	WG.sepia.setGamma = function(value)
++		params.gamma = value
++		UpdateParams()
++	end
++	WG.sepia.getGamma = function()
++		return params.gamma
++	end
++	WG.sepia.setSaturation = function(value)
++		params.saturation = value
++		UpdateParams()
++	end
++	WG.sepia.getSaturation = function()
++		return params.saturation
++	end
++	WG.sepia.setContrast = function(value)
++		params.contrast = value
++		UpdateParams()
++	end
++	WG.sepia.getContrast = function()
++		return params.contrast
++	end
++	WG.sepia.setSepia = function(value)
++		params.sepia = value
++		UpdateParams()
++	end
++	WG.sepia.getSepia = function()
++		return params.sepia
++	end
++	WG.sepia.setShadeUI = function(value)
++		params.shadeUI = value
++		UpdateParams()
++	end
++	WG.sepia.getShadeUI = function()
++		return params.shadeUI
++	end
++end
++
++function widget:Shutdown()
++	widgetHandler:RemoveAction("sepiatone", "t")
++	WG.sepia = nil
++	if sepiaShader then
++		sepiaShader:Finalize()
++	end
++	if fullTexQuad then
++		fullTexQuad:Delete()
++	end
++	for _, vbo in ipairs(fullTexQuadBuffers) do
++		vbo:Delete()
++	end
++end
++
++function widget:ViewResize()
++	uniformsDirty = true
++end
++
++-- the shared screen copy instead of an own full-screen texture; the drawing has to invalidate it
++local function DoSepia(screenCopyManager)
++	local screenCopyTex = screenCopyManager.GetScreenCopy()
++	if screenCopyTex == nil then
++		return
++	end
++	glTexture(0, screenCopyTex)
++	glBlending(false) -- the shader writes alpha 1, blending would only read the screen back
++	sepiaShader:Activate()
++	if uniformsDirty then
++		UploadUniforms()
++	end
++	fullTexQuad:DrawArrays(GL_TRIANGLES, 3)
++	sepiaShader:Deactivate()
++	glBlending("alpha")
++	glTexture(0, false)
++	screenCopyManager.InvalidateScreenCopy() -- later readers (CAS, guishader) need the toned screen
++end
++
++function widget:DrawScreenEffects()
++	local screenCopyManager = WG.screencopymanager ---@type table?
++	if screenCopyManager then
++		DoSepia(screenCopyManager)
++	end
++end
++
++function widget:DrawScreenPost()
++	local screenCopyManager = WG.screencopymanager ---@type table?
++	if screenCopyManager then
++		screenCopyManager.InvalidateScreenCopy() -- this frame's copy was taken before the UI drew
++		DoSepia(screenCopyManager)
++	end
++end
++
++function widget:GetConfigData()
++	return params
++end
++
++function widget:SetConfigData(data)
++	for k, v in pairs(data) do
++		params[k] = data[k] or v
++	end
++end
+--- /dev/null
++++ b/tools/sepia-pilot/sepia.frag.glsl
+@@ -0,0 +1,16 @@
++#version 330
++
++uniform sampler2D screenCopyTex;
++uniform ivec2 viewPos;
++uniform float gamma;
++// rows of the color matrix: contrast * saturation, blended toward sepia
++uniform vec3 colorR;
++uniform vec3 colorG;
++uniform vec3 colorB;
++
++out vec4 fragColor;
++
++void main() {
++	vec3 color = pow(texelFetch(screenCopyTex, ivec2(gl_FragCoord.xy) - viewPos, 0).rgb, vec3(gamma));
++	fragColor = vec4(dot(colorR, color), dot(colorG, color), dot(colorB, color), 1.0);
++}
+--- /dev/null
++++ b/tools/sepia-pilot/sepia.vert.glsl
+@@ -0,0 +1,7 @@
++#version 330
++// full screen triangle
++const vec2 vertices[3] = vec2[3](vec2(-1.0, -1.0), vec2(3.0, -1.0), vec2(-1.0, 3.0));
++
++void main() {
++	gl_Position = vec4(vertices[gl_VertexID], 0.0, 1.0);
++}
+--- /dev/null
++++ b/tools/sepia-pilot/test_lua_adapter.lua
+@@ -0,0 +1,32 @@
++-- Pure-host Lua adapter wiring test; no engine or GPU is created.
++local root=assert(arg[1])
++local generated=assert(loadfile(arg[2] or root..'/data/LuaUI/NativeWidgets/sepia_pilot_program.lua'))()
++local calls={}
++getfenv=function() return _G end
++setfenv=function(fn,env)
++ for i=1,100 do local name=debug.getupvalue(fn,i);if not name then break end;if name=='_ENV' then debug.upvaluejoin(fn,i,function() return env end,1);break end end
++ return fn
++end
++Platform={renderBackend='Metal4'};GL={TRIANGLES=4}
++local original=[[
++local p=gl.LuaShader({vertex='archive vertex',fragment='archive fragment',uniformInt={screenCopyTex=0}},': Sepia')
++assert(p:Initialize());p:SetUniform('gamma',1.25);p:SetUniform('exposure',2.0);p:SetUniform('bias',0.1,0.2,0.3);p:SetUniformInt('viewPos',5,6)
++p:Activate();gl.Texture(0,'screen-version');gl.Blending(false)
++local vao=gl.GetVAO();vao:AttachVertexBuffer({});vao:AttachIndexBuffer({});vao:AttachInstanceBuffer({});vao:DrawArrays(GL.TRIANGLES,3)
++p:Finalize();assert(not pcall(function()p:SetUniform('gamma',2)end))
++]]
++local pair={SharedPath=true}
++pair.LinkProgram=function(params)assert(params.vertex==generated.vertex and params.fragment==generated.fragment);calls.link={};return calls.link end
++pair.SetUniform=function(p,name,values,integer)assert(p==calls.link);calls[name]={values=values,integer=integer} end
++pair.DeleteProgram=function(p)assert(p==calls.link);calls.deleted=true end
++pair.Draw=function(p,texture)assert(p==calls.link and texture=='screen-version');calls.draw=true end
++pair.ValidateProgram=function()return true end
++VFS={ZIP_ONLY=1,RAW_FIRST=2,LoadFile=function()return original end,Include=function()return generated end,CalculateHash=function()return 'edited-supported-widget-no-fixed-hash' end}
++gl={LuaShader={},NativeSepiaContext=function()return pair end,NativeSepiaLoadSource=function()return original end,Texture=function()return true end,Blending=function()return true end}
++assert(loadfile(root..'/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua'))()
++assert(calls.exposure.values[1]==2 and #calls.bias.values==3 and calls.viewPos.integer)
++assert(calls.deleted and calls.draw)
++pair.SharedPath=false
++local ok,failure=pcall(assert(loadfile(root..'/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua')))
++assert(not ok and failure:find('Original Sepia archive source identity changed',1,true))
++print('Lua shared loader accepts edited widget and generated stages; old loader retains strict widget identity; generic uniforms, linked draw and deletion passed')
+--- /dev/null
++++ b/tools/sepia-pilot/test_payload.cpp
+@@ -0,0 +1,42 @@
++// Private pure-host admission/payload test. No engine runtime or Metal device.
++#include "Rendering/Backend/NativeSepiaPilot.h"
++#include <cassert>
++#include <functional>
++#include <fstream>
++#include <iostream>
++#include "Rendering/Metal4/Metal4SepiaShaderSource.h"
++using namespace rendering;
++template<class F>void rejects(F fn){bool failed=false;try{fn();}catch(const std::runtime_error&){failed=true;}assert(failed);}
++int main(int argc,char** argv){
++ SetNativeSepiaConsumerAvailable(true,std::make_shared<const int>(1));
++ auto first=sepiaPilot::Link(true),second=sepiaPilot::Link(true);
++ assert(first->interface->generation!=second->interface->generation);
++ assert(first->interface->nativeOwner==second->interface->nativeOwner);
++ const auto initial=first->uniforms;
++ sepiaPilot::SetUniform(*first,"gamma",{1.25},false);
++ assert(first->uniforms!=initial);const auto frozen=first->uniforms;
++ sepiaPilot::SetUniform(*first,"gamma",{2.0},false);assert(first->uniforms!=frozen);
++ const auto& fields=first->interface->fields;
++ assert(first->interface->blocks.size()==1 && first->interface->blocks[0].slot==1 && first->interface->blocks[0].bytes==first->uniforms->size());
++ for(const auto& field:fields)assert(field.blockSlot==1);
++ auto gamma=std::find_if(fields.begin(),fields.end(),[](const auto& f){return f.name=="gamma";});
++ float before=0;std::memcpy(&before,frozen->data()+gamma->offset,4);assert(before==1.25f);
++ rejects([&]{sepiaPilot::SetUniform(*first,"gamma",{1,2},false);});
++ rejects([&]{sepiaPilot::SetUniform(*first,"gamma",{1},true);});
++ rejects([&]{sepiaPilot::SetUniform(*first,"undeclared",{1},false);});
++ rejects([&]{sepiaPilot::SetUniform(*first,"gamma",{std::numeric_limits<double>::infinity()},false);});
++ rejects([&]{sepiaPilot::SetUniform(*first,"viewPos",{0.5,1},true);});
++ auto bindingA=std::make_shared<const int>(1),bindingB=std::make_shared<const int>(2);
++ sharedpilot::MaterialContent material;material.program=first->interface;material.uniformBytes=frozen;
++ sharedpilot::LogicalBinding a;a.versionOwner=bindingA;material.bindings.push_back(a);sepiaPilot::ValidateMaterial(material);
++ const auto retained=material;material.bindings[0].versionOwner=bindingB;
++ assert(retained.bindings[0].versionOwner!=material.bindings[0].versionOwner);sepiaPilot::ValidateMaterial(material);
++ auto wrong=material;wrong.uniformBytes=std::make_shared<const std::vector<std::uint8_t>>(4);rejects([&]{sepiaPilot::ValidateMaterial(wrong);});
++ first->deleted=true;rejects([&]{sepiaPilot::SetUniform(*first,"gamma",{1},false);});sepiaPilot::ValidateMaterial(retained);
++ auto third=sepiaPilot::Link(true);assert(third->interface->generation!=first->interface->generation);
++ SetNativeSepiaConsumerAvailable(false);rejects([&]{sepiaPilot::ValidateMaterial(retained);});
++ SetNativeSepiaConsumerAvailable(true,std::make_shared<const int>(2));rejects([&]{sepiaPilot::Live(*third);});
++ assert(sepiaPilot::Link(true)->interface->nativeOwner!=third->interface->nativeOwner);
++ if(argc==2){std::ofstream out(argv[1]);out<<metal4::NATIVE_SEPIA_SHADER<<sepiaGenerated::MSL;}
++ std::cout<<"payload ownership, relink, deletion, typed updates and exact binding-version tests passed\n";
++}
+--- /dev/null
++++ b/tools/sepia-pilot/test_subset.py
+@@ -0,0 +1,45 @@
++#!/usr/bin/env python3
++"""Bounded offline subset acceptance/changes/rejection tests; no engine/device."""
++import copy, hashlib, json, tempfile, unittest
++from pathlib import Path
++from compile_subset import Parser, compile_sources, fnv, header
++HERE=Path(__file__).resolve().parent
++VERTEX=(HERE/'sepia.vert.glsl').read_text()
++FRAGMENT=(HERE/'sepia.frag.glsl').read_text()
++class SubsetTests(unittest.TestCase):
++ def test_exact_current_stages(self):
++  self.assertEqual(fnv(VERTEX),16905188423406352921)
++  self.assertEqual(fnv(FRAGMENT),17382421314025316268)
++  msl,m=compile_sources(VERTEX,FRAGMENT)
++  self.assertEqual(m['uniformBytes'],128)
++  self.assertIn('pow((pilotFetch(',msl)
++  self.assertEqual(compile_sources(VERTEX,FRAGMENT),(msl,m))
++ def test_equation_exposure_bias_and_layout_are_generated(self):
++  changed=FRAGMENT.replace('uniform float gamma;','uniform vec3 bias = vec3(0.1, 0.2, 0.3);\nuniform float exposure = 1.25;\nuniform float gamma;')
++  changed=changed.replace('vec3 color = pow(', 'vec3 color = pow(').replace('vec3(gamma));','vec3(gamma)) * exposure + bias;')
++  msl,m=compile_sources(VERTEX,changed)
++  self.assertIn('u.exposure.x',msl);self.assertIn('u.bias.xyz',msl)
++  fields={f['name']:f for f in m['fields']}
++  self.assertEqual(fields['bias']['defaults'],[0.1,0.2,0.3]);self.assertEqual(fields['exposure']['defaults'],[1.25])
++  self.assertEqual(fields['gamma']['offset'],96);self.assertEqual(m['uniformBytes'],160)
++  self.assertNotEqual(m['identity'],compile_sources(VERTEX,FRAGMENT)[1]['identity'])
++  self.assertIn('const float value=1.25f',header(VERTEX,changed,msl,m))
++ def test_supported_layout_reorder(self):
++  changed=FRAGMENT.replace('uniform float gamma;','').replace('uniform vec3 colorB;','uniform vec3 colorB;\nuniform float gamma = 1.0;')
++  _,m=compile_sources(VERTEX,changed)
++  self.assertEqual(m['fields'][-1]['name'],'gamma');self.assertEqual(m['fields'][-1]['offset'],112)
++ def test_fail_closed(self):
++  cases=[FRAGMENT.replace('uniform float gamma;','uniform mat4 gamma;'),
++   FRAGMENT.replace('vec3 color =','for (int i=0; i<3; ++i) {} vec3 color ='),
++   FRAGMENT.replace('viewPos, 0','viewPos, 1'),
++   FRAGMENT.replace('ivec2(gl_FragCoord.xy) - viewPos','ivec2(gl_FragCoord.xy) - viewPos + ivec2(1)'),
++   FRAGMENT.replace('dot(colorR, color)','unknown(colorR, color)'),
++   FRAGMENT.replace('uniform float gamma;','uniform float gamma = 1e40;'),
++   FRAGMENT.replace('uniform float gamma;','uniform float gamma[2];'),
++   FRAGMENT.replace('uniform float gamma;','uniform float target;\nuniform float gamma;'),
++   FRAGMENT+'\nvoid other() {}',FRAGMENT.replace('#version 330','#define SOMETHING 1')]
++  for source in cases:
++   with self.subTest(source=source):
++    with self.assertRaises((ValueError,KeyError,StopIteration)):compile_sources(VERTEX,source)
++  with self.assertRaises(ValueError):compile_sources(VERTEX.replace('0.0, 1.0','0.5, 1.0'),FRAGMENT)
++if __name__=='__main__':unittest.main()

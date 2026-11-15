@@ -1,3 +1,4 @@
+#include "Metal4SharedProgramPilot.h"
 #include "Rendering/Backend/NativeClippedFillPrecompute.h"
 #include "Rendering/Backend/NativeRenderDispatchReceipt.h"
 #include "Rendering/Backend/NativeSubmissionReadScope.h"
@@ -40,6 +41,7 @@
 #include "Metal4WorldShaderSource.h"
 #include "Rendering/Backend/NativeCUSMaterialControl.h"
 #include "Rendering/Backend/NativeS3OTextureSource.h"
+#include "Rendering/Backend/NativePositiveBackingFacts.h"
 #include "Rendering/Backend/NativeParticleAtlasSource.h"
 #include "Metal4OpaqueModelSource.h"
 #include "Metal4ShadowTextureNative.h"
@@ -231,6 +233,7 @@ std::shared_ptr<WorldTexturePreparationJournal> RuntimeLease::WorldTexturePrepar
 namespace rendering {
 namespace {
 using namespace metal4;
+#include "Metal4ModelTypeFacts.inc"
 
 void MainThread() { Require([NSThread isMainThread]||Metal4WindowSurfaceNativeAccess::WorkerAccessActive(), "Metal4 world presentation requires main or pinned render worker"); }
 void MatrixFinite(const WorldMatrix& matrix) { for (float value: matrix) Require(std::isfinite(value), "Non-finite world matrix"); }
@@ -337,6 +340,42 @@ bool PrivateModelTexture(const NativeCUSTextureObject* object, const std::shared
 		object->allocation.levels == levels && object->allocation.originalInternalFormat == owner->originalInternalFormat &&
 		object->allocation.depth == 1 && object->allocation.samples == 1;
 }
+
+// Real completion certificate. Its only construction site is the typed S3O
+// provider after a completed upload, original allocation pins and sampler prep.
+class CompletedS3OImageProof final : public CUSCompletedModelImageProof {
+ RuntimeLease* lease;
+ const Runtime* context;
+ __strong id<MTLDevice> device;
+ uint64_t submission;
+ std::shared_ptr<const NativeCUSTextureObject> object;
+ std::shared_ptr<const WorldTexture> pixels;
+ std::shared_ptr<WorldTexturePreparationJournal> journal;
+ std::shared_ptr<WorldTexturePreparationJournal::UploadState> status;
+ __strong id<MTLTexture> root,sampled;
+ __strong id<MTLSamplerState> sampler;
+public:
+ CompletedS3OImageProof(RuntimeLease& actual,std::shared_ptr<const NativeCUSTextureObject> source,
+  const WorldTexturePreparationJournal::Entry& entry,id<MTLSamplerState> actualSampler)
+ :lease(&actual),context(actual.ContextIdentity()),device(actual.Device()),submission(actual.SourceSubmission()),
+  object(std::move(source)),pixels(entry.owner),journal(actual.WorldTexturePreparation()),status(entry.status),
+  root(entry.texture),sampled(entry.sampled),sampler(actualSampler) {
+  actual.ValidatePreparationMutation();
+  Require(submission&&PrivateModelTexture(object.get(),pixels)&&journal->initialized&&status->ready&&status->uploadSource==nil&&root&&sampled&&sampler,
+   "Shared model proof requires actual completed pinned S3O storage");
+ }
+ bool ValidFor(RuntimeLease& actual,const NativeCUSTextureBinding& binding,const CUSSourceImage& image) const override {
+  // No saved readiness decision: inspect the real immutable storage's current
+  // completion state again. Original requireReadable still runs at EncodeDraw.
+  return &actual==lease&&actual.ContextIdentity()==context&&actual.Device()==device&&actual.SourceSubmission()==submission&&
+   actual.WorldTexturePreparation()==journal&&journal->initialized&&status->ready&&status->uploadSource==nil&&
+   binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object==object&&
+   !binding.object.owner_before(object)&&!object.owner_before(binding.object)&&
+   PrivateModelTexture(object.get(),pixels)&&image.owner.get()==object.get()&&
+   image.texture==sampled&&image.sampler==sampler&&root&&
+   !image.encodeDependencies&&!image.didComplete&&bool(image.requireReadable)&&!image.depthImage&&!image.clampDepthCompare;
+ }
+};
 
 struct UploadedTexture {
 	__strong id<MTLTexture> texture = nil, uploadSource = nil;
@@ -684,10 +723,13 @@ struct Metal4WorldRenderer::Impl {
 		Require(sampling.magFilter==0x2600||sampling.magFilter==0x2601,"Original terrain input magnification filter is invalid");
 		return screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 	}
-	CUSSourceImage OriginalModelImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission,bool validation,double& shaderMs)
+	CUSSourceImage OriginalModelImage(RuntimeLease& lease,const NativeCUSTextureBinding& binding,uint64_t submission,bool validation,double& shaderMs,ModelTypeFactsScope* typeFacts=nullptr)
 	{
 		Require(submission&&binding.knowledge==NativeCUSBindingKnowledge::BoundObject&&binding.object&&(binding.object->backing||binding.object->image),
 			"Original model image lacks its retained source object/content/submission");
+  ModelTypeFactsScope::ProviderCall typeCall(typeFacts,lease,submission);
+  auto model=typeCall.Find(binding.object->backing);
+  if(!model){
 		if(std::dynamic_pointer_cast<const NativeLegacyRefractionBacking>(binding.object->backing))return legacyWaterGPU.ResolveCopy(lease,binding,submission);
 		if(auto mask=std::dynamic_pointer_cast<const NativeUnitStencilBacking>(binding.object->backing))
 			return unitStencilGPU.Resolve(lease,mask->version,submission);
@@ -715,16 +757,33 @@ struct Metal4WorldRenderer::Impl {
 			return pbrSource.Image(lease,binding,submission);
 		if(std::dynamic_pointer_cast<const NativeParticleAtlasBacking>(binding.object->backing))
 			return particlesGPU.AtlasImage(lease,binding,screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding)),submission);
+  } // A prior positive final-type proof skips only impossible type dispatch.
 		Require(binding.object->target==NativeCUSTextureTarget::Image2D,
 			"Original model image target has no actual paired source consumer");
-		if(auto model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing)){
+  std::optional<ModelTypeFactsScope::Facts::Proof> modelProof;
+  if(!model){
+   if(typeCall.ReuseEnabled()){modelProof.emplace(ModelTypeFactsScope::Facts::Classify(binding.object->backing));model=modelProof->Typed();}
+   else model=std::dynamic_pointer_cast<const NativeModelTextureBacking>(binding.object->backing);
+  }
+		if(model){
 			Require(model->pixels!=nullptr,"Original model image has no actual retained upload bytes");
+   typeCall.Positive(modelProof);
+   // The pilot admits only completion observed BEFORE this provider invocation.
+   // Texture() may retire/register work; its successful return is not a proof.
+   bool previouslyComplete=false;
+   if(lease.CUSSharedPreparation()){
+    const auto prior=textures.find(model->pixels.get());
+    previouslyComplete=prior!=textures.end()&&prior->second.status->ready;
+   }
 			CUSSourceImage image;image.texture=Texture(lease,model->pixels,binding.object.get());
 			image.sampler=screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 			image.owner=binding.object;image.flipV=model->pixels->flipV;
 			const auto status=textures.at(model->pixels.get()).status;
 			image.requireReadable=[status,submission]{Require(status->ready||status->encodedSubmission==submission,
-				"Original model image sampled before its common upload/mip producer");};return image;
+				"Original model image sampled before its common upload/mip producer");};
+   if(lease.CUSSharedPreparation()&&previouslyComplete&&PrivateModelTexture(binding.object.get(),model->pixels)&&status->ready&&status->uploadSource==nil)
+    image.completedModelProof=std::make_shared<const CompletedS3OImageProof>(lease,binding.object,textures.at(model->pixels.get()),image.sampler);
+   return image;
 		}
 		if(auto map=std::dynamic_pointer_cast<const NativeMapTextureBacking>(binding.object->backing)){
 			auto resource=std::dynamic_pointer_cast<const MapImage>(map->Resource());
@@ -2625,6 +2684,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		Require(layer != nil && layer.device == lease.Device(), "World layer/device ownership mismatch");
 		const auto resourceStart = Clock::now();
 		impl->StartTexturePreparation(lease);
+  if(SharedCUSPilotEnabled())lease.BindCUSSharedPreparation(std::make_shared<CUSSharedPreparationScope>(lease,contextGeneration()));
 		const auto preparedMap=impl->Map(lease, frame.terrain);
   const auto normalResource=preparedMap.normals;
   const auto terrainMap=preparedMap.tiles; // Exact uploaded tile buffers retained for this request.
@@ -3321,8 +3381,10 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 					buffers.push_back({piece.vertices,piece.indices,piece.count});
 				}return buffers;
 			};
+  std::optional<ModelTypeFactsScope> modelTypeFacts;
+  if(ModelTypeFactsScope::Wanted())modelTypeFacts.emplace(lease,sourceSubmission);
 			const auto sourceImages=[&](RuntimeLease& sourceLease,const NativeCUSTextureBinding& binding,unsigned){
-				return impl->OriginalModelImage(sourceLease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);
+				return impl->OriginalModelImage(sourceLease,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs,modelTypeFacts?&*modelTypeFacts:nullptr);
 			};
   std::vector<NativeWorldAttachmentClear> shadowClears;
   if(frame.luaWorldDrawFrame){
@@ -4484,6 +4546,15 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   impl->waterReflection=waterAttachments->reflection;impl->waterReflectionDepth=waterAttachments->reflectionDepth;
   impl->waterRefraction=waterAttachments->refraction;impl->waterRefractionDepth=waterAttachments->refractionDepth;
   impl->preWaterColor=waterAttachments->preColor;impl->preWaterDepth=waterAttachments->preDepth;
+  if(const auto& pilot=lease.CUSSharedPreparation();pilot&&frame.sourceDrawFrame>=512){
+   static unsigned reports=0;
+   if(reports<8){++reports;const auto& c=pilot->counts;
+    LOG("[NativeSharedCUSPilot] draw=%llu submission=%llu prepare_calls=%llu candidate_draws=%llu pair_hits=%llu pair_misses=%llu admitted_pairs=%llu uncertified=%llu omitted_provider_calls=%llu omitted_caller_registration_calls=%llu scope=DrawPrepared_lease readiness_per_draw=1 argument_tables_shared=0",
+     (unsigned long long)frame.sourceDrawFrame,(unsigned long long)sourceSubmission,(unsigned long long)c.prepares,(unsigned long long)c.eligibleDraws,
+     (unsigned long long)c.hits,(unsigned long long)c.misses,(unsigned long long)c.admissions,(unsigned long long)c.uncertified,
+     (unsigned long long)c.omittedProviders,(unsigned long long)c.omittedRegistrations);
+   }
+  }
 		lease.AddAllocation(sceneColor); if(drawable)lease.Retain(drawable); cpuPhase.Mark(8); preparationDetail.Mark(10); lease.CommitResourcesWhileEncoding();
 		cpuPhase.Mark(9);preparationDetail.Mark(11);
 		WorldEncodingProbe176 encodingProbe(frame.sourceDrawFrame,!offscreenSource && !continuation && frame.simulationFrame>0);

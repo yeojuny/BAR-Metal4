@@ -1,0 +1,9 @@
+{
+  "status": "NO_DETECTED_VALIDATION_ERRORS",
+  "runs": 1,
+  "errors": {},
+  "image": "$P/measurement/validation_paced_power1/preparation/runs/V_POWER1_ELISION1_IMAGE/scene.png",
+  "performanceAccepted": false,
+  "comparisonLimits": "Compare fixed static regions against prior published 1.11.3 image; dynamic water, cloud and text may differ",
+  "utc": "2026-11-15T17:56:48.818115+00:00"
+}

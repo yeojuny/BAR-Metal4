@@ -1,0 +1,61 @@
+{
+  "imagePresent": false,
+  "image": "$S/measurement/diagnostic_paced/preparation/runs/D0_OFF/scene.png",
+  "frameReceipt": false,
+  "countedStart": false,
+  "countedEnd": false,
+  "trace": {
+    "kinds": {
+      "30": {
+        "records": 0,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [],
+        "statuses": []
+      },
+      "31": {
+        "records": 0,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [],
+        "statuses": []
+      },
+      "32": {
+        "records": 0,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [],
+        "statuses": []
+      },
+      "33": {
+        "records": 0,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [],
+        "statuses": []
+      },
+      "34": {
+        "records": 0,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [],
+        "statuses": []
+      },
+      "35": {
+        "records": 0,
+        "countA": 0,
+        "countB": 0,
+        "sampledFrames": [],
+        "statuses": []
+      }
+    },
+    "prepareSamples": 0,
+    "emission": [],
+    "buffers": [],
+    "dropped": 0,
+    "allRecords": 0,
+    "newKindsPresent": false
+  },
+  "validationEnabled": false,
+  "metalErrors": []
+}

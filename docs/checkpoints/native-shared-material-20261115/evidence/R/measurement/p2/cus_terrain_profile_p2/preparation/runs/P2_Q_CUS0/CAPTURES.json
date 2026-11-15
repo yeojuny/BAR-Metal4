@@ -1,0 +1,23 @@
+{
+  "markerMTimeNS": 1794770227588358653,
+  "command": [
+    "/usr/bin/xcrun",
+    "xctrace",
+    "record",
+    "--template",
+    "Time Profiler",
+    "--attach",
+    "28830",
+    "--time-limit",
+    "15s",
+    "--output",
+    "$R/measurement/p2/cus_terrain_profile_p2/preparation/runs/P2_Q_CUS0/time-profiler.trace",
+    "--no-prompt"
+  ],
+  "ownedPID": 28830,
+  "startAfterMarkerSeconds": 0.079954347,
+  "status": "CAPTURED",
+  "xctraceExit": 0,
+  "tracePresent": true,
+  "trace": "$R/measurement/p2/cus_terrain_profile_p2/preparation/runs/P2_Q_CUS0/time-profiler.trace"
+}

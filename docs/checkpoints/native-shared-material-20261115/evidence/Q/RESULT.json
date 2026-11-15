@@ -1,0 +1,57 @@
+{
+  "status": "PASS_SEPIA_GENERATED_UNIFORM_TESTBED_WITH_LIMITATIONS",
+  "utc": "2026-11-15T19:02:47.125511+00:00",
+  "signedSHA256": "a09c72ee31dfbc52682a5be2f20205db5c94022a8e88b3aedf5f634a97fa59f2",
+  "uniformBytes": 160,
+  "variantIdentity": "d23a8b75086bf172418574044d1c5c2d8497ed4d6da7223b6b9c2ac3d5c2d0c7",
+  "scope": "Private Sepia ON old/shared MSL plus shared generated float/vec3 initial values, same binary. Not everyday performance optimization.",
+  "runs": [
+    {
+      "arm": "F1_OLD_SEPIA",
+      "result": "Old MSL identity image captured"
+    },
+    {
+      "arm": "F2_SHARED_SEPIA",
+      "result": "Shared identity image captured; attempted same-session relink failed because private user widget called blocked handler API, preserved without retry"
+    },
+    {
+      "arm": "F3_SHARED_SEPIA",
+      "result": "Fresh private profile initial exposure1.25/bias.1,.2,.3 read, shared variant image captured"
+    }
+  ],
+  "visualReview": "Root opened all three images. Old/shared default terrain/effect appearance similar, not exact pixel equivalence. F3 displays clear scene-wide brightness and color shift consistent with changed uniforms. Prior dark rectangular/blur bands remain. Dynamic clouds/water/paused label differ across runs.",
+  "observedVariant": [
+    {
+      "exposure": "1.250",
+      "bias": "0.100,0.200,0.300",
+      "source": "private_generated_module"
+    }
+  ],
+  "variantImage": {
+    "kind": "shared-variant",
+    "path": "$Q/measurement/functional_recovery/preparation/runs/F3_SHARED_SEPIA/v2-shared-variant.png",
+    "bytes": 2206367,
+    "sha256": "1fc95a86be9f2bed729eb4f3d5d96b91a9a46f47251e2701334a8b7af7fddf70"
+  },
+  "identityReview": "IDENTITY-IMAGE-REVIEW.json",
+  "metalValidationErrors": [],
+  "runtimeRelinkTested": false,
+  "FPSComparison": false,
+  "CUSPilot": false,
+  "productionAdopted": false,
+  "engineRebuildsAfterFirstRun": 0,
+  "scene": {
+    "simulation": 1500,
+    "camera": "dist=5000.000000000;dx=0.000000026;dy=-0.835686207;dz=-0.549207270;fov=45.000000000;mode=2.000000000;name=spring;px=5149.000000000;py=204.180068970;pz=596.000000000;rx=2.560177326;ry=0.471238941;rz=0.000000000;view=1512,950,0,0"
+  },
+  "closed": {
+    "processes": 0,
+    "awake": "RELEASED"
+  },
+  "limitations": [
+    "Old/shared paths share new frontend; not unchanged production end-to-end comparison",
+    "No direct native per-call Link/SetUniform/Delete trace; source-backed traversal and rendered result",
+    "Initial-value update proven across fresh runs; same-session delete/relink unproven",
+    "No performance gain claim; Sepia remains default OFF in product"
+  ]
+}

@@ -1,4 +1,5 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#include "NativeSepiaPilot.h"
 #include "NativePostprocessData.h"
 #include "ScreenDrawList.h"
 #include "NativeCUSUniformData.h"
@@ -104,10 +105,13 @@ void ValidateNativePostprocessOperation(const NativePostprocessOperation& op, st
  if(op.kind==NativePostprocessOperationKind::Sepia) {
 	Check(op.stage==NativePostprocessStage::Screen&&!op.sequence&&op.screenOutput&&op.outputs.empty()&&op.viewport,"Sepia requires its original root screen stage");
 	const auto& u=op.sepia;Check(u.engine&&u.raster,"Sepia original uniforms/raster missing");ValidateNativeCUSUniformPublication(*u.engine);
-	Finite(std::array{u.gamma});for(const auto& row:u.rows)Finite(row);
+	Check(!u.sharedPath || bool(u.material),"Shared Sepia linked material snapshot missing");
+ if(u.material){sepiaPilot::ValidateMaterial(*u.material);Check(u.material->bindings[0].versionOwner==op.inputs[0],"Sepia captured logical input differs from recorded input");}
+ if(!u.sharedPath){Finite(std::array{u.gamma});for(const auto& row:u.rows)Finite(row);}
 	Check(op.inputs[0]&&op.inputEnabled[0],"Sepia screen-copy input missing");Key(*op.inputs[0]);
 	const auto& image=*op.inputs[0]->image;Check(image.format==NativePostprocessFormat::RGBA8,"Sepia original screen-copy format differs");
-	NativePostprocessRect copied{u.viewPos[0],u.viewPos[1],image.width,image.height};RectInside(copied,width,height);
+	const auto capturedViewPos=u.sharedPath?sepiaPilot::ViewPos(*u.material):u.viewPos;
+	NativePostprocessRect copied{capturedViewPos[0],capturedViewPos[1],image.width,image.height};RectInside(copied,width,height);
 	const auto& v=*op.viewport;Check(v.x>=copied.x&&v.y>=copied.y&&std::int64_t(v.x)+v.width<=std::int64_t(copied.x)+copied.width&&std::int64_t(v.y)+v.height<=std::int64_t(copied.y)+copied.height,"Sepia viewport fetch lies outside actual copied image");
 	const auto& surface=u.raster->surface;const auto& world=u.raster->world;
 	Check(!surface.blend.enabled&&!surface.attachmentClear&&!world.inheritedClipPlane&&world.frontPolygonMode==NativePolygonMode::Fill&&world.backPolygonMode==NativePolygonMode::Fill,"Sepia original triangle raster differs");

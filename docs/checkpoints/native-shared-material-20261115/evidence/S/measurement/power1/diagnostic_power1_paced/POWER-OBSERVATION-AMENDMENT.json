@@ -1,0 +1,11 @@
+{
+  "status": "AMENDED_BEFORE_ANY_GAME",
+  "utc": "2026-11-15T19:48:45.572040+00:00",
+  "reason": "HQ functional diagnostics observe actual AC mode; no AC0/AC1 acceptance assertion",
+  "runnerSHA256": "4b24b13ccad7db60a5b6b22affdc689a1c8dcc012cd5f1bf4e2bc53cf7abd241",
+  "preflightSource": "P proven power1 preflight with only power assertion replaced by observed AC mode and power source fields",
+  "originalStagePreserved": true,
+  "sourceAndBinaryUnchanged": true,
+  "systemPowerSettingsChanged": false,
+  "cleanAC0Unchanged": true
+}

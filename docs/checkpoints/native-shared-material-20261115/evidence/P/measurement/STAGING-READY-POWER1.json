@@ -1,0 +1,86 @@
+{
+  "status": "STAGED_READY_POWER1_NO_GAMES",
+  "recordedUTC": "2026-11-15T17:54:25.745428+00:00",
+  "runnerSHA256": "5cc82f716f1e8b1ae2722c3e094fb9aa64e9e658f566c73018de8c519f0ab6b3",
+  "originalAC0RunnerSHA256": "fcbca08dab7fabaacfbfd37d951923dbb988c56f8c9ba6cf1a3b78623410ba2c",
+  "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+  "actualPrestageBattery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t95%; AC attached; not charging present: true\n",
+  "actualPrestageACPowermode": 1,
+  "sameCommonProfileHashes": {
+    "script": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+    "settings": "e95d62c800193c5fc7cb05cc777d02f1efd5c4908416a6dfc45a02983633b579",
+    "preset": "a18192ce6281848da803b3beeff061cb3a3b3d54ed5ccfb4472f9db65e35f4dd",
+    "game": "9b396851a1020faa96d49d1eeddede675b01d1494664cfe2e07752d559d73a29",
+    "pacingModule": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "pacingWidget": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "arms": [
+    {
+      "campaign": "validation_paced_power1",
+      "arm": "V_POWER1_ELISION1_IMAGE",
+      "mode": "ELISION1",
+      "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+      "expectedACPowerMode": 1,
+      "elision": "1",
+      "metalValidation": "1",
+      "h5Counters": "1",
+      "frameTrace": "0",
+      "controllerSHA256": "608b511afcb6ff0d01527bbdeca37620b2924d437aa483a710eafa5834032dae",
+      "gameLaunched": false
+    },
+    {
+      "campaign": "clean_paced_power1",
+      "arm": "A1_ELISION0",
+      "mode": "ELISION0",
+      "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+      "expectedACPowerMode": 1,
+      "elision": "0",
+      "metalValidation": "0",
+      "h5Counters": "0",
+      "frameTrace": "0",
+      "controllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+      "gameLaunched": false
+    },
+    {
+      "campaign": "clean_paced_power1",
+      "arm": "B1_ELISION1",
+      "mode": "ELISION1",
+      "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+      "expectedACPowerMode": 1,
+      "elision": "1",
+      "metalValidation": "0",
+      "h5Counters": "0",
+      "frameTrace": "0",
+      "controllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+      "gameLaunched": false
+    },
+    {
+      "campaign": "clean_paced_power1",
+      "arm": "B2_ELISION1",
+      "mode": "ELISION1",
+      "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+      "expectedACPowerMode": 1,
+      "elision": "1",
+      "metalValidation": "0",
+      "h5Counters": "0",
+      "frameTrace": "0",
+      "controllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+      "gameLaunched": false
+    },
+    {
+      "campaign": "clean_paced_power1",
+      "arm": "A2_ELISION0",
+      "mode": "ELISION0",
+      "engineSHA256": "11d01dd2c759d3f0f42a6dda491a09884fd165005df8d479d7c5be0bfc6907ce",
+      "expectedACPowerMode": 1,
+      "elision": "0",
+      "metalValidation": "0",
+      "h5Counters": "0",
+      "frameTrace": "0",
+      "controllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+      "gameLaunched": false
+    }
+  ],
+  "previousFailedCampaignPreserved": true,
+  "cleanLaunchRequiresSeparateGO": true
+}
