@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <map>
+#include <functional>
 #include <tuple>
 
 namespace rendering::metal4 {
@@ -22,6 +23,11 @@ public:
 // One lease's completed immutable sub-binding cache. Uniforms and every other
 // texture remain per-use. No argument tables or cached readability verdicts.
 class CUSSharedPreparationScope {
+ static bool BorrowedLookupEnabled() noexcept {
+  static const bool enabled=[] {const char* v=std::getenv("BAR_NATIVE_SHARED_PAIR_KEY_VIEW");return v&&std::strcmp(v,"1")==0;}();
+  return enabled;
+ }
+ using KeyView=std::tuple<uint64_t,const std::vector<uint64_t>&,uintptr_t,uintptr_t>;
  using Key=std::tuple<uint64_t,std::vector<uint64_t>,uintptr_t,uintptr_t>;
  struct Entry {
   sharedpilot::PreparedSlice slice;
@@ -32,7 +38,9 @@ class CUSSharedPreparationScope {
  __strong id<MTLDevice> device;
  uint64_t submission;
  uint64_t sourceContext;
- std::map<Key,Entry> entries;
+ // The stored key always owns its target. Only a synchronous lookup borrows it.
+ std::map<Key,Entry,std::less<>> entries;
+ const bool borrowedLookup=BorrowedLookupEnabled();
  static constexpr size_t Capacity=128;
  static bool SameOwner(const std::shared_ptr<const NativeCUSTextureObject>& a,
                        const std::shared_ptr<const NativeCUSTextureObject>& b) {
@@ -41,6 +49,17 @@ class CUSSharedPreparationScope {
  static Key MakeKey(const sharedpilot::MaterialContent& material,const std::vector<uint64_t>& target) {
   return {material.program->generation,target,reinterpret_cast<uintptr_t>(material.bindings[0].captured.object.get()),
    reinterpret_cast<uintptr_t>(material.bindings[1].captured.object.get())};
+ }
+ static KeyView LookupKey(const sharedpilot::MaterialContent& material,const std::vector<uint64_t>& target) {
+  return {material.program->generation,target,reinterpret_cast<uintptr_t>(material.bindings[0].captured.object.get()),
+   reinterpret_cast<uintptr_t>(material.bindings[1].captured.object.get())};
+ }
+ bool MatchesExecution(RuntimeLease& actual,const sharedpilot::ExecutionIdentity& saved,
+                       const std::vector<uint64_t>& target) const {
+  Require(Identity(actual),"Shared CUS scope crossed lease/context/submission");
+  // Identical fields to Execution(), without copying the target vector on hits.
+  return saved.context==context&&saved.device==(__bridge const void*)device&&saved.lease==lease&&
+   saved.journal==actual.WorldTexturePreparation().get()&&saved.submission==submission&&saved.target==target;
  }
  bool Identity(RuntimeLease& actual) const {
   return &actual==lease&&actual.ContextIdentity()==context&&actual.Device()==device&&actual.SourceSubmission()==submission;
@@ -66,10 +85,11 @@ public:
   actual.ValidatePreparationMutation();Require(Identity(actual),"Shared CUS lookup crossed actual lease");
   if(!material||!Pair(*material)||material->bindings[0].captured.object->contextGeneration!=sourceContext||material->bindings[1].captured.object->contextGeneration!=sourceContext)return false;
   ++counts.eligibleDraws;
-  auto found=entries.find(MakeKey(*material,target));
+  auto found=borrowedLookup?entries.find(LookupKey(*material,target)):entries.find(MakeKey(*material,target));
   if(found==entries.end()){++counts.misses;return false;}
   const auto& e=found->second;
-  if(e.slice.scope!=Execution(actual,target)||e.slice.material->program!=material->program){++counts.misses;return false;}
+  const bool sameExecution=borrowedLookup?MatchesExecution(actual,e.slice.scope,target):e.slice.scope==Execution(actual,target);
+  if(!sameExecution||e.slice.material->program!=material->program){++counts.misses;return false;}
   for(unsigned slot=0;slot<2;++slot){
    const auto& current=material->bindings[slot].captured;
    if(!SameOwner(current.object,e.slice.material->bindings[slot].captured.object)||
