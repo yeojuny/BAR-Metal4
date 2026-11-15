@@ -4,6 +4,7 @@
 #include "Metal4DepthStateCache.h"
 #include "Metal4ResidencyCommit.h"
 #include <map>
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include <functional>
 #include <new>
 #include <vector>
@@ -34,6 +35,7 @@ struct RuntimeFrameSlot {
 struct RuntimeFrameResources {
 	explicit RuntimeFrameResources(std::shared_ptr<RuntimeFrameSlot> selected): slot(std::move(selected)) {}
 	const std::shared_ptr<RuntimeFrameSlot> slot;
+ NativeCPUTraceIdentity traceIdentity{}; // Scalars only; no extra completion/source owner.
 	__strong NSMutableArray* retained = nil;
 	__strong NSHashTable* requestedAllocations = nil;
 	// Published containers stay immutable even if a later prefix in this lease

@@ -1539,6 +1539,9 @@ bool CGame::Draw() {
 	const spring_time nativeDrawStart = spring_gettime();
 	if (globalRendering->viewSizeX <= 0 || globalRendering->viewSizeY <= 0)
 		return false;
+ rendering::metal4::NativeCPUCaptureTraceScope nativeCaptureIdentity(globalRendering->drawFrame,gs->frameNum);
+ rendering::metal4::NativeCPUPhaseScope nativeInvocation(rendering::metal4::NativeCPUPhaseKind::CaptureInvocation);
+ nativeInvocation.Draw(globalRendering->drawFrame);
 	auto nativeFrameCredit=rendering::scene::AcquireWorldFrameCredit(globalRendering->drawFrame);
  rendering::metal4::NativeCPUPhaseScope nativeCaptureTrace(5,gs->frameNum);
  nativeCaptureTrace.Draw(globalRendering->drawFrame);

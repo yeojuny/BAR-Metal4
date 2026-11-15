@@ -3,6 +3,9 @@
 #include "NativeSerialRenderWorker.h"
 #include "NativeRenderDispatchReceipt.h"
 #include <optional>
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "NativeCPUPhaseTrace.h"
+#endif
 namespace rendering {
 // Direct/readback compatibility path. Draw scopes must unwind before the source
 // notice; a notice failure is never replayed as a second failure notification.
@@ -58,19 +61,60 @@ public:
   try{target();}catch(...){failure=std::current_exception();Finish();}
   return true;
  }
+ bool WorkerCallableReleased() const noexcept {return !task;}
  void Finish(){
   Source();
   if(state==State::Failed)std::rethrow_exception(failure);
   if(state==State::Settled||state==State::Consumed)return;
   if(state!=State::Running)throw std::logic_error("CPU job settlement is absent or recursive");
   state=State::Settling;
-  try{result.emplace(task->Join());}catch(...){if(!failure)failure=std::current_exception();}
+  {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::TaskJoin);
+#endif
+   try{result.emplace(task->Join());}catch(...){
+#ifdef RECOIL_METAL4_LIVE_SCENE
+    trace.Status(2);
+#endif
+    if(!failure)failure=std::current_exception();}
+  }
   // Join has destroyed worker callable on source and released its credit even
   // on exception. Detach the ticket before invoking any source callback.
-  task.reset();receipt->ReleaseHandoff();
-  try{target();}catch(...){if(!failure)failure=std::current_exception();}
-  try{receipt->DeliverRetirement();}catch(...){if(!failure)failure=std::current_exception();}
-  Notify(); // Exact scene acceptance/quarantine precedes any later control.
+  {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::HandoffRelease);
+#endif
+   task.reset();receipt->ReleaseHandoff();
+  }
+  {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::TargetNotice);
+#endif
+   try{target();}catch(...){
+#ifdef RECOIL_METAL4_LIVE_SCENE
+    trace.Status(2);
+#endif
+    if(!failure)failure=std::current_exception();}
+  }
+  {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::RetirementNotice);
+#endif
+   try{receipt->DeliverRetirement();}catch(...){
+#ifdef RECOIL_METAL4_LIVE_SCENE
+    trace.Status(2);
+#endif
+    if(!failure)failure=std::current_exception();}
+  }
+  {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   metal4::NativeCPUPhaseScope trace(metal4::NativeCPUPhaseKind::CPUNotice);
+#endif
+   Notify(); // Exact scene acceptance/quarantine precedes any later control.
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   if(failure)trace.Status(2);
+#endif
+  }
   state=failure?State::Failed:State::Settled;
   if(failure)std::rethrow_exception(failure);
  }

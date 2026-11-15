@@ -13,7 +13,7 @@ assert 'impl->receipts.SetFinalized(source,out)' in capture
 scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 assert 'cloudAdmission,waterAdmission,' in scene
 assert '(session && session->dynamicWaterCapture.Initialized()))RequireRetiredGPUWork()' in scene
-apply=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
+apply=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork(',1)[0]
 assert 'result.dynamicWaterSourceDrawFrame!=result.sourceDrawFrame' in apply
 assert apply.index('dynamicWaterCapture.ValidateHeldFrame')<apply.index('dynamicWaterCapture.ValidateCompletion')
 assert apply.index('dynamicWaterCapture.ValidateCompletion')<apply.index('CompleteDynamicCapture(')

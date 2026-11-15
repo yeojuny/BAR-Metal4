@@ -174,60 +174,187 @@ struct CPUPhaseTraceState {
   return false;
 #endif
  }();
+ const std::int64_t first=[] {const auto* p=std::getenv("BAR_NATIVE_FRAME_TRACE_START_SIM");return p?std::strtoll(p,nullptr,10):0;}();
+ const std::int64_t last=[] {const auto* p=std::getenv("BAR_NATIVE_FRAME_TRACE_END_SIM");return p?std::strtoll(p,nullptr,10):std::numeric_limits<long long>::max();}();
+ const bool bufferedWindow=first>0&&last>=first&&last<std::numeric_limits<long long>::max();
+ std::atomic<bool> collectionClosed{false};
  std::atomic<bool> finished{false};
+ std::atomic<std::uint64_t> ids{0},requests{0},jobs{0},leases{0};
  std::mutex mutex;
  NativeSubmissionTraceBudget budget;
 };
 CPUPhaseTraceState& CPUPhaseTrace() {static CPUPhaseTraceState state;return state;}
-struct CPUPhaseSlot {const void* owner=nullptr;NativeCPUPhaseSample sample;};
+struct CPUPhaseSlot {const void* owner=nullptr;NativeCPUPhaseSample sample;NativeCPUPhaseBuffer* buffer=nullptr;};
 struct CPUPhaseStack {
- std::array<CPUPhaseSlot,10> slots{};
+ std::array<CPUPhaseSlot,16> slots{};
  std::uint64_t loopOrdinal=0;
  bool captureLoop=false;
  std::uint64_t inheritedParent=0;
- std::array<std::uint64_t,11> previous{};
+ std::array<std::uint64_t,unsigned(NativeCPUPhaseKind::Count)> previous{};
  unsigned depth=0;
+ NativeCPUPhaseContext context{};
+ std::array<std::shared_ptr<NativeCPUPhaseBuffer>,128> joined{};
 };
 thread_local CPUPhaseStack cpuPhaseStack;
+bool CPUPhaseEnabled(std::int64_t frame) noexcept {
+ auto& state=CPUPhaseTrace();
+ return state.enabled&&!state.collectionClosed.load(std::memory_order_relaxed)&&!state.finished.load(std::memory_order_relaxed)&&frame>0&&frame>=state.first&&frame<=state.last;
+}
+// The caller is outside request/cache locks. The shared budget includes buffer
+// manifests, so an incomplete chain is recognizable even if a cap cuts it off.
+bool EmitCPUPhaseText(CPUPhaseTraceState& state,std::uint64_t now,const char* text,std::size_t length,bool ticket=false) {
+ if(!length)return true;
+ if((!ticket&&!state.budget.TakeSample(now))||!state.budget.TakeRecord(now,length+160)){state.finished=true;return false;}
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ LOG("%s",text);
+#endif
+ return true;
+}
 } // namespace
 
 NativeCPUPhaseContext CaptureNativeCPUPhaseContext() noexcept {
- const auto& stack=cpuPhaseStack;
- return {stack.depth?stack.slots[stack.depth-1].sample.id:stack.inheritedParent,stack.captureLoop};
+ auto context=cpuPhaseStack.context;
+ context.parent=cpuPhaseStack.depth?cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.id:cpuPhaseStack.inheritedParent;
+ context.sampled=cpuPhaseStack.captureLoop;
+ return context;
 }
 NativeCPUPhaseContextScope::NativeCPUPhaseContextScope(NativeCPUPhaseContext context) noexcept {
  auto& stack=cpuPhaseStack;
- // A handoff cannot overwrite a locally active scope. Nested renderer calls
- // keep their local ancestry instead of impersonating a different frame.
  if(stack.depth)return;
- previous={stack.inheritedParent,stack.captureLoop};installed=true;
- stack.inheritedParent=context.parent;stack.captureLoop=context.sampled;
+ previous=CaptureNativeCPUPhaseContext();installed=true;
+ stack.context=context;stack.inheritedParent=context.parent;stack.captureLoop=context.sampled;
 }
 NativeCPUPhaseContextScope::~NativeCPUPhaseContextScope() {
  if(!installed)return;
  auto& stack=cpuPhaseStack;
- stack.inheritedParent=previous.parent;stack.captureLoop=previous.sampled;
+ stack.context=previous;stack.inheritedParent=previous.parent;stack.captureLoop=previous.sampled;
+}
+namespace {
+void EmitDeferredCPUPhaseBuffers() noexcept {
+ // Only the main CGame boundary calls this, after the bounded attribution
+ // window has closed. These owners contain diagnostic records only.
+ const auto start=SubmissionTraceNow();std::size_t buffers=0;
+ for(auto& joined:cpuPhaseStack.joined)if(joined){++buffers;FlushNativeCPUPhaseBuffer(*joined);joined.reset();}
+ if(!buffers)return;
+ auto& state=CPUPhaseTrace();
+ try {
+  std::lock_guard<std::mutex> lock(state.mutex);char text[256];
+  const auto end=SubmissionTraceNow();
+  const auto length=std::snprintf(text,sizeof(text),"[NativeCPUTraceEmission] buffers=%zu start_ns=%llu end_ns=%llu outside_window=%u",
+   buffers,(unsigned long long)start,(unsigned long long)end,unsigned(state.bufferedWindow));
+  if(!state.finished.load(std::memory_order_relaxed)&&length>0)EmitCPUPhaseText(state,end,text,std::size_t(length));
+ }catch(...){state.finished=true;}
+}
+}
+NativeCPUCaptureTraceScope::NativeCPUCaptureTraceScope(std::uint64_t draw,std::int64_t simulation) noexcept {
+ auto& state=CPUPhaseTrace();
+ if(state.enabled&&state.bufferedWindow&&(simulation>state.last||state.collectionClosed.load(std::memory_order_relaxed))){
+  state.collectionClosed=true;EmitDeferredCPUPhaseBuffers();
+ }
+ if(!CPUPhaseEnabled(simulation)||!cpuPhaseStack.captureLoop||cpuPhaseStack.context.buffer)return;
+ try {
+  buffer=std::make_shared<NativeCPUPhaseBuffer>();
+  previous=cpuPhaseStack.context;
+  buffer->identity={.request=state.requests.fetch_add(1,std::memory_order_relaxed)+1,.draw=draw,.simulation=simulation};
+  cpuPhaseStack.context.incoming=buffer->identity;cpuPhaseStack.context.job={};cpuPhaseStack.context.retired={};
+  cpuPhaseStack.context.buffer=buffer.get();cpuPhaseStack.context.reason=0;
+ }catch(...){state.finished=true;}
+}
+NativeCPUCaptureTraceScope::~NativeCPUCaptureTraceScope() {
+ if(!buffer)return;
+ cpuPhaseStack.context=previous;
+ QueueJoinedNativeCPUTrace(buffer);
+ if(!CPUPhaseTrace().bufferedWindow)EmitDeferredCPUPhaseBuffers();
+}
+void QueueJoinedNativeCPUTrace(std::shared_ptr<NativeCPUPhaseBuffer>& buffer) noexcept {
+ if(!buffer)return;
+ for(auto& slot:cpuPhaseStack.joined)if(!slot){slot=std::move(buffer);return;}
+ // No unbounded collection, emission under a caller lock, or source owner.
+ // The surviving final manifest marks loss explicitly.
+ if(cpuPhaseStack.joined.back())++cpuPhaseStack.joined.back()->dropped;
+ CPUPhaseTrace().collectionClosed=true;
+ buffer.reset();
+}
+std::shared_ptr<NativeCPUPhaseBuffer> MakeNativeCPUJobTrace(std::uint64_t draw,std::int64_t simulation) noexcept {
+ if(!CPUPhaseEnabled(simulation)||!cpuPhaseStack.context.buffer)return {};
+ try {
+  auto buffer=std::make_shared<NativeCPUPhaseBuffer>();
+  buffer->identity=cpuPhaseStack.context.incoming;
+  buffer->identity.job=CPUPhaseTrace().jobs.fetch_add(1,std::memory_order_relaxed)+1;
+  buffer->identity.draw=draw;buffer->identity.simulation=simulation;
+  return buffer;
+ }catch(...){CPUPhaseTrace().finished=true;return {};}
+}
+NativeCPUTraceIdentity NewNativeCPUTraceLease() noexcept {
+ if(!cpuPhaseStack.context.buffer)return {};
+ auto value=cpuPhaseStack.context.job;
+ if(!value.request)value=cpuPhaseStack.context.incoming;
+ value.lease=CPUPhaseTrace().leases.fetch_add(1,std::memory_order_relaxed)+1;
+ return value;
+}
+NativeCPUTraceRelationScope::NativeCPUTraceRelationScope(NativeCPUTraceIdentity value,NativeCPUFinishReason reason) noexcept {
+ previous=cpuPhaseStack.context;
+ if(!previous.buffer)return;
+ cpuPhaseStack.context.job=value;cpuPhaseStack.context.reason=unsigned(reason);
+}
+NativeCPUTraceRelationScope::NativeCPUTraceRelationScope(NativeCPUTraceIdentity retired) noexcept {
+ previous=cpuPhaseStack.context;
+ if(previous.buffer)cpuPhaseStack.context.retired=retired;
+}
+NativeCPUTraceRelationScope::~NativeCPUTraceRelationScope() {cpuPhaseStack.context=previous;}
+std::int64_t NativeCPUTraceFrame() noexcept {
+ const auto& context=cpuPhaseStack.context;
+ return context.buffer?(context.incoming.simulation?context.incoming.simulation:context.job.simulation):0;
+}
+void FlushNativeCPUPhaseBuffer(NativeCPUPhaseBuffer& buffer) noexcept {
+ if(buffer.emitted)return;
+ buffer.emitted=true;
+ auto& state=CPUPhaseTrace();if(!state.enabled||state.finished.load(std::memory_order_relaxed))return;
+ try {
+  std::lock_guard<std::mutex> lock(state.mutex);
+  const auto now=SubmissionTraceNow();char text[2048];
+  const auto length=std::snprintf(text,sizeof(text),"[NativeCPUTraceBuffer] request=%llu job=%llu records=%zu dropped=%zu",
+   (unsigned long long)buffer.identity.request,(unsigned long long)buffer.identity.job,buffer.size,buffer.dropped);
+  if(length<=0||!EmitCPUPhaseText(state,now,text,std::size_t(length)))return;
+  for(std::size_t i=0;i<buffer.size;++i){
+   const auto& record=buffer.records[i];
+   if(!EmitCPUPhaseText(state,now,text,FormatNativeCPUPhase(text,sizeof(text),record.sample,record.end)))return;
+  }
+ }catch(...){state.finished=true;}
 }
 
 bool BeginNativeCPUPhase(const void* owner,unsigned kind,std::int64_t frame) noexcept {
- if(frame<=0)return false; // Loading/pregame loops must not consume the gameplay budget.
- auto& state=CPUPhaseTrace();if(!state.enabled || state.finished.load(std::memory_order_relaxed))return false;
  auto& stack=cpuPhaseStack;
  if(kind==1)stack.captureLoop=false;
+ // An admitted worker finishes its bounded chain even when a younger main
+ // capture closes the collection window. No new buffer/job is admitted here.
+ const bool completingJob=stack.context.buffer&&stack.context.buffer->identity.job!=0;
+ if(!CPUPhaseEnabled(frame)&&!completingJob)return false;
+ auto& state=CPUPhaseTrace();
  if(!owner || kind==0 || kind>=stack.previous.size() || stack.depth>=stack.slots.size())return false;
  if(kind==1){
   static const bool everyLoop=[] {const char* v=std::getenv("BAR_NATIVE_FRAME_TRACE_EVERY_LOOP");return v&&v[0]=='1'&&v[1]=='\0';}();
   stack.captureLoop=everyLoop || (++stack.loopOrdinal%16==1);
  }
  if(!stack.captureLoop)return false;
+ // Bounded-window mode suppresses unsunk outer loops; capture/job rows have
+ // explicit identities and are all emitted after this window.
+ if(state.bufferedWindow&&!stack.context.buffer)return false;
+ // New critical-path scopes require a sink; this prevents a new logging call
+ // under runtime locks on maintenance/direct paths outside a capture.
+ if(kind>=unsigned(NativeCPUPhaseKind::MainFinish)&&!stack.context.buffer)return false;
  try {
-  const auto now=SubmissionTraceNow();std::lock_guard<std::mutex> lock(state.mutex);
-  if(!state.budget.TakeSample(now)){state.finished=true;return false;}
-  NativeCPUPhaseSample sample;sample.id=state.budget.tickets;sample.kind=kind;sample.frame=frame;
+  const auto now=SubmissionTraceNow();
+  if(!stack.context.buffer){
+   std::lock_guard<std::mutex> lock(state.mutex);
+   if(!state.budget.TakeSample(now)){state.finished=true;return false;}
+  }
+  NativeCPUPhaseSample sample;sample.id=state.ids.fetch_add(1,std::memory_order_relaxed)+1;sample.kind=kind;sample.frame=frame;
   sample.parent=stack.depth?stack.slots[stack.depth-1].sample.id:stack.inheritedParent;
+  sample.incoming=stack.context.incoming;sample.job=stack.context.job;sample.retired=stack.context.retired;sample.reason=stack.context.reason;
   sample.threadCPUStart=ReadNativeThreadCPUTime();
   sample.start=now;sample.previous=stack.previous[kind];stack.previous[kind]=now;
-  stack.slots[stack.depth++]={owner,sample};return true;
+  stack.slots[stack.depth++]={owner,sample,stack.context.buffer};return true;
  } catch(...) {state.finished=true;return false;}
 }
 void SetNativeCPUPhaseDraw(const void* owner,std::uint64_t draw) noexcept {
@@ -236,6 +363,14 @@ void SetNativeCPUPhaseDraw(const void* owner,std::uint64_t draw) noexcept {
  auto& sample=stack.slots[stack.depth-1].sample;
  if(sample.hasSourceDraw && sample.sourceDraw!=draw){sample.invalid=true;return;}
  sample.sourceDraw=draw;sample.hasSourceDraw=true;
+}
+void SetNativeCPUPhaseIdentity(const void* owner,NativeCPUTraceIdentity value) noexcept {
+ auto& stack=cpuPhaseStack;
+ if(stack.depth&&stack.slots[stack.depth-1].owner==owner)stack.slots[stack.depth-1].sample.job=value;
+}
+void SetNativeCPUPhaseStatus(const void* owner,unsigned value) noexcept {
+ auto& stack=cpuPhaseStack;
+ if(stack.depth&&stack.slots[stack.depth-1].owner==owner)stack.slots[stack.depth-1].sample.status=value;
 }
 void MarkNativeCPUPhase(const void* owner,unsigned phase) noexcept {
  auto& stack=cpuPhaseStack;
@@ -252,21 +387,20 @@ void CountNativeCPUPhase(const void* owner,std::uint64_t a,std::uint64_t b) noex
 void FinishNativeCPUPhase(const void* owner) noexcept {
  auto& stack=cpuPhaseStack;
  if(!stack.depth || stack.slots[stack.depth-1].owner!=owner)return;
- auto sample=stack.slots[--stack.depth].sample;
+ auto slot=stack.slots[--stack.depth];auto& sample=slot.sample;
  const auto cpuEnd=ReadNativeThreadCPUTime();
  sample.threadCPUValid=sample.threadCPUStart.valid&&cpuEnd.valid&&cpuEnd.ns>=sample.threadCPUStart.ns;
  if(sample.threadCPUValid)sample.threadCPUNs=cpuEnd.ns-sample.threadCPUStart.ns;
  if(sample.kind==1)stack.captureLoop=false;
- auto& state=CPUPhaseTrace();if(state.finished.load(std::memory_order_relaxed))return;
+ const auto now=SubmissionTraceNow();
+ // No shared mutex, formatting, logging, or callback here on the worker.
+ if(slot.buffer){slot.buffer->Append(sample,now);return;}
+ auto& state=CPUPhaseTrace();if(!state.enabled||state.finished.load(std::memory_order_relaxed))return;
  try {
-  const auto now=SubmissionTraceNow();char text[1536];
-  const auto length=FormatNativeCPUPhase(text,sizeof(text),sample,now);
+  char text[2048];const auto length=FormatNativeCPUPhase(text,sizeof(text),sample,now);
   if(!length)return;
   std::lock_guard<std::mutex> lock(state.mutex);
-  if(!state.budget.TakeRecord(now,length+160)){state.finished=true;return;}
-#ifdef RECOIL_METAL4_LIVE_SCENE
-  LOG("%s",text);
-#endif
+  EmitCPUPhaseText(state,now,text,length,true);
  } catch(...) {state.finished=true;}
 }
 // END NATIVE_CPU_PHASE_RUNTIME
@@ -302,6 +436,7 @@ struct RuntimePendingSubmission {
  explicit RuntimePendingSubmission(const std::shared_ptr<RuntimeFrameResources>& frame):
   resources(frame, RuntimeSubmissionResources::DeferredPresentation{}) {}
  RuntimeSubmissionResources resources;
+ NativeCPUTraceIdentity traceIdentity{};
  __strong NSHashTable* retirementTable220=nil;
  __strong M4TerrainUniformSources220* uniformSources220=nil;
  TerrainUniformReceipt220 uniformReceipt220;
@@ -579,6 +714,7 @@ RuntimeLease::RuntimeLease(std::function<void()> previousRetired, Runtime& selec
   Require(bool(selected),"Bounded native queue has no retired recording slot");
  }
 	frame = std::make_shared<RuntimeFrameResources>(std::move(selected));
+ frame->traceIdentity=NewNativeCPUTraceLease();
  frame->previousRetired=std::move(previousRetired);
 	frame->publications.context = &runtime;
 	frame->publications.device = runtime.device;
@@ -712,6 +848,7 @@ void RuntimeLease::RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmis
  const auto started=StartPreparationScope();
  runtime.DrainPendingLocked(completedOwner);
  EndPreparationScope(39,started);
+ NativeCPUPhaseScope trace(NativeCPUPhaseKind::ReadChecks);
  if(frame->previousRetired){auto receipt=std::exchange(frame->previousRetired,{});receipt();}
  auto checks=std::move(frame->priorReadChecks);frame->priorReadChecks.clear();
  for(const auto& [owner,check]:checks)check();
@@ -727,7 +864,7 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 	Require(!frame->recording && !frame->pending && !runtime.poisoned && !frame->residencyCommit.Active(), "Cannot update residency during Metal4 execution");
  if(runtime.persistentResidency){auto snapshot=runtime.persistentResidency->SnapshotForRecording();if(snapshot)Retain(snapshot);}
 	frame->keepResidency = false;
-	const bool census = cpuPhaseStack.depth && cpuPhaseStack.captureLoop && !CPUPhaseTrace().finished.load(std::memory_order_relaxed) && residencyCensusSamples.load(std::memory_order_relaxed)<128;
+	const bool census = !cpuPhaseStack.context.buffer && cpuPhaseStack.depth && cpuPhaseStack.captureLoop && !CPUPhaseTrace().finished.load(std::memory_order_relaxed) && residencyCensusSamples.load(std::memory_order_relaxed)<128;
 	if(census)residencyCensusSamples.fetch_add(1,std::memory_order_relaxed);
 	const auto censusStart = census ? SubmissionTraceNow() : 0;
 	const auto previousCount = census ? frame->slot->residentAllocations.count : 0;
@@ -800,7 +937,7 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 	// Bound additional between-lease residency; larger requests keep the
 	// original completed-lease clear behavior, with no omitted allocation.
 	frame->keepResidency = next.count <= 4096 && frame->slot->residency.allocatedSize <= (uint64_t{2} << 30);
-	if(cpuPhaseStack.depth)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
+	if(cpuPhaseStack.depth&&!cpuPhaseStack.context.buffer)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
 #ifdef RECOIL_METAL4_LIVE_SCENE
 	if(census){
 		const auto parent=cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.id;
@@ -821,6 +958,7 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 void RuntimeLease::FinishResourceCommit()
 {
 	if(!frame->residencyCommit.Active())return;
+ NativeCPUPhaseScope trace(NativeCPUPhaseKind::ResourceCommit);
 	try {
 		const auto timing=frame->residencyCommit.Finish();
 		CountPreparationTrace(42,timing.commitNs);CountPreparationTrace(43,timing.joinNs);
@@ -835,7 +973,7 @@ void RuntimeLease::FinishResourceCommit()
   }
 #endif
 		frame->keepResidency=frame->slot->residentAllocations.count<=4096 && frame->slot->residency.allocatedSize<=(uint64_t{2}<<30);
-		if(cpuPhaseStack.depth)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
+		if(cpuPhaseStack.depth&&!cpuPhaseStack.context.buffer)SnapshotResourceMemory(Device(),cpuPhaseStack.slots[cpuPhaseStack.depth-1].sample.frame,frame->slot->allocator);
 	} catch (...) { runtime.poisoned=true;runtime.failedFrame=frame;throw; }
 }
 uint64_t RuntimeLease::ResidentBytes() const {
@@ -899,6 +1037,8 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  [frame->WritableRetained() addObject:drawable];
  ReportAllocationPreparation148(*frame,frameIndex);
  auto pending=std::make_shared<RuntimePendingSubmission>(frame);
+ pending->traceIdentity=frame->traceIdentity;pending->traceIdentity.submission=SourceSubmission();
+ if(pending->traceIdentity.lease)pending->traceIdentity.runtimeIndex=frameIndex;
 #ifdef RECOIL_METAL4_LIVE_SCENE
  static std::atomic<bool> reported175{false};
  if (frameIndex>=300 && !reported175.load(std::memory_order_relaxed) &&
@@ -922,6 +1062,7 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  [frame->slot->command useResidencySet:frame->slot->residency];
  [frame->slot->command endCommandBuffer];frame->recording=false;
  pending->eventValue=++runtime.nextEventValue;
+ if(pending->traceIdentity.lease)pending->traceIdentity.event=pending->eventValue;
  pending->uniformSources220=TerrainUniformSources220(pending->resources.retained);
  pending->uniformReceipt220=StampTerrainUniform220(runtime.queue,pending->uniformSources220,pending->eventValue);
  if(ResidencyReleaseEnabled220()||ResidencyReleaseCounters220()){
@@ -938,6 +1079,7 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
    LOG("[NativeInterventionTwoInFlight] gpu_pending_limit=1 recording_slots=3 second_gpu_ticket=disabled pending_borrow_coverage=unproven");}
  }
 #endif
+ NativeCPUPhaseScope submitTrace(NativeCPUPhaseKind::Submit);submitTrace.Identity(pending->traceIdentity);
  id<MTL4CommandBuffer> commands[]={frame->slot->command};
  const auto submitted=Clock::now();
  if(pending->probe)pending->probe->submit=FrameOverlapHostTime();
@@ -945,6 +1087,7 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  [runtime.queue commit:commands count:1 options:options];
  [runtime.queue signalDrawable:drawable];[drawable present];
  [runtime.queue signalEvent:runtime.completionEvent value:pending->eventValue];
+ submitTrace.Finish();
  if constexpr(NativeCPUTimingInstrumentation)pending->metrics.cpuSubmissionMs=Milliseconds(submitted);
  // Release on this same serialized caller, before another preparation can
  // acquire pool slots. No extra pending GPU frame or deferred cleanup queue.
@@ -958,6 +1101,9 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
 #endif
  // Capture only proven pure-CPU leaves immediately before the original
  // caller-side graph destruction, after the successor has been committed.
+ NativeCPUTraceRelationScope releaseIdentity(completedPredecessor186?completedPredecessor186->traceIdentity:NativeCPUTraceIdentity{});
+ NativeCPUPhaseScope ownerReleaseTrace(NativeCPUPhaseKind::CompletedOwnerRelease);
+ if(!completedPredecessor186)ownerReleaseTrace.Status(3);
  TerrainUniformAttempt220 uniformAttempt220;
  __strong M4TerrainUniformJob220* uniformJob220=nil;
  if(completedPredecessor186)uniformJob220=PrepareTerrainUniformRelease220(runtime.queue,
@@ -966,6 +1112,7 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  completedPredecessor186.reset();
  DispatchTerrainUniformRelease220(runtime.queue,uniformJob220,uniformAttempt220);
  uniformJob220=nil;
+ ownerReleaseTrace.Finish();
 #ifdef RECOIL_METAL4_LIVE_SCENE
  if(report186)LOG("[NativeRetirement186] submission=%llu completed_graph_entries=%llu owner_references_at_release=%ld release_ns=%llu release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
   (unsigned long long)frameIndex,(unsigned long long)graphEntries186,
@@ -997,12 +1144,19 @@ void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* compl
 {
  if(pendingSubmissions.empty())return;
  Require(!poisoned,"Cannot retire a poisoned deferred Metal4 request");
+ auto identity=pendingSubmissions.front()->traceIdentity;
+ if(cpuPhaseStack.context.buffer)identity.event=pendingSubmissions.front()->eventValue;
+ NativeCPUTraceRelationScope retiredIdentity(identity);
+ NativeCPUPhaseScope retireTrace(NativeCPUPhaseKind::RuntimeRetire);
+ if(!identity.job)retireTrace.Status(4); // Exact event, unavailable boundary job.
  auto pending=pendingSubmissions.front();auto frame=pending->resources.owner;
  try {
   const auto start=Clock::now();
   if(pending->probe){pending->probe->drain=FrameOverlapHostTime();pending->probe->ready=completionEvent.signaledValue>=pending->eventValue;}
-  Require([completionEvent waitUntilSignaledValue:pending->eventValue timeoutMS:30000],"GPU completion shared-event timeout (30 seconds)");
-  Require(dispatch_semaphore_wait(pending->feedback,dispatch_time(DISPATCH_TIME_NOW,30*NSEC_PER_SEC))==0,"MTL4 commit feedback timeout (30 seconds)");
+  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::EventWait);
+   Require([completionEvent waitUntilSignaledValue:pending->eventValue timeoutMS:30000],"GPU completion shared-event timeout (30 seconds)");}
+  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::FeedbackWait);
+   Require(dispatch_semaphore_wait(pending->feedback,dispatch_time(DISPATCH_TIME_NOW,30*NSEC_PER_SEC))==0,"MTL4 commit feedback timeout (30 seconds)");}
   if constexpr(NativeCPUTimingInstrumentation)pending->metrics.cpuCompletionWaitMs=Milliseconds(start);
   frame->pending=false;
   if(pending->probe){pending->probe->done=FrameOverlapHostTime();pending->probe->complete.store(true,std::memory_order_release);}
@@ -1011,10 +1165,11 @@ void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* compl
    if(details.length>4096)details=[details substringToIndex:4096];
    throw std::runtime_error("GPU reported deferred failure: "+Error(pending->error)+"; userInfo="+(details.UTF8String?:""));
   }
-  [frame->slot->allocator reset];
+  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::AllocatorReset);[frame->slot->allocator reset];}
   // Same completion order as the synchronous renderer; no acknowledgment on
   // submission, event timeout, feedback timeout, or GPU execution failure.
-  pending->retire(pending->metrics);
+  {NativeCPUPhaseScope trace(NativeCPUPhaseKind::GPUCallback);pending->retire(pending->metrics);}
+  NativeCPUPhaseScope cleanupTrace(NativeCPUPhaseKind::ResidencyCleanup);
   if(!frame->keepResidency){[frame->slot->residency removeAllAllocations];[frame->slot->residency commit];frame->slot->residentAllocations=nil;}
   // Publish only after every successful retirement action. On failure the
   // original pending owner remains quarantined, with no completion handoff.

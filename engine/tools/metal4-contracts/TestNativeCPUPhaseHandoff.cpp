@@ -90,7 +90,7 @@ int main() {
   assert(parents[0]==ids[1]&&parents[1]==ids[2]&&parents[2]==ids[3]&&parents[3]==0);
   assert(ids[3]<ids[2]&&ids[2]<ids[1]&&ids[1]<ids[0]);
  }
- {char buffer[768];NativeCPUPhaseSample sample;sample.start=100;sample.kind=3;
+ {char buffer[2048];NativeCPUPhaseSample sample;sample.start=100;sample.kind=3;
   assert(FormatNativeCPUPhase(buffer,sizeof(buffer),sample,200)>0);
   assert(std::string(buffer).find("start_ns=100 end_ns=200")!=std::string::npos);
   sample.hasSourceDraw=true;sample.sourceDraw=0;
@@ -124,11 +124,11 @@ int main() {
  // with the existing FRAME_TRACE toggle. No independent logging channel.
  {
   const auto before=logs.size();NativeCPUPhaseContextScope context({4321,true});
-  for(unsigned kind=7;kind<=10;++kind){NativeCPUPhaseScope diagnostic(kind,1);
+  for(unsigned kind=7;kind<=11;++kind){NativeCPUPhaseScope diagnostic(kind,1);
    assert(diagnostic.active==traceEnabled);diagnostic.Draw(77);diagnostic.Counts(15,0);
    diagnostic.Mark(0);diagnostic.Mark(1);diagnostic.Mark(2);diagnostic.Mark(3);}
-  assert(logs.size()==before+(traceEnabled?4:0));
-  if(traceEnabled)for(unsigned kind=7;kind<=10;++kind)
+  assert(logs.size()==before+(traceEnabled?5:0));
+  if(traceEnabled)for(unsigned kind=7;kind<=11;++kind)
    assert(logs[before+kind-7].find("kind="+std::to_string(kind)+" ")!=std::string::npos);
  }
  // Diagnostic rejection mask must match unchanged eligibility for all inputs.

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include <exception>
 #include "Metal4SceneBeginRetirement.h"
 #include "Rendering/Backend/NativeSourceFrameCredits.h"
@@ -235,7 +236,7 @@ public:
 	// camera's actual subview maps proportionally to the explicit target.
 	Metal4WorldPresentationResult Draw(const WorldFrame& frame, const Metal4WorldRenderOptions& options = {});
  // Main only, before acquiring renderer or runtime locks. Does not claim GPU retirement.
- void FinishCPUWork() const;
+ void FinishCPUWork(metal4::NativeCPUFinishReason reason=metal4::NativeCPUFinishReason::Control) const;
  // Owned input is required for worker dispatch; this entry still joins.
  Metal4WorldPresentationResult DrawOwned(std::shared_ptr<const Metal4WorldSubmission>,std::function<void()> previousRetired = {},std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled = {});
  // Prepare independent immutable shared-buffer inputs while the preceding

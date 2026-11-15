@@ -47,7 +47,7 @@ for body in [unit.split(' const override {',1)[1].split('};',1)[0],unit.split('C
  assert body.index('scene::FinishRuntimeControl();')<body.index('RuntimeLease lease')
 scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 assert 'void FinishRuntimeControl() { RequireRetiredGPUWork(); }' in scene
-body=scene.split('void RequireRetiredGPUWork()',1)[1].split('} // namespace',1)[0]
+body=scene.split('void RequireRetiredGPUWork(',1)[1].split('} // namespace',1)[0]
 assert body.index('FinishCPUWork()')<body.index('Metal4RendererCanSafelyDetachSurface()')<body.index('ApplyDeferredFrameReceipts()')
 with tempfile.TemporaryDirectory(prefix='bar-runtime-control-') as out:
  p=Path(out);(p/'test.cpp').write_text(cpp)

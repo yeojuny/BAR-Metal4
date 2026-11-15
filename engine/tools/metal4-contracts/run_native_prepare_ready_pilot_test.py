@@ -17,7 +17,7 @@ release=job.split('bool ReleaseForPreparation(){',1)[1].split('\n }',1)[0]
 assert 'target()' not in release and 'Wait' not in release
 finish=job.split(' void Finish(){',1)[1]
 assert finish.index('task->Join()')<finish.index('target()')<finish.index('DeliverRetirement()')<finish.index('Notify()')
-retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
+retire=scene.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork(',1)[0]
 assert 'sourceSettlement.reset' not in retire and 'opaqueSourcePending' not in retire
 assert 'sourceCredits.ReleaseHeld(result.sourceDrawFrame)' in retire
 for script in ['run_native_source_frame_credits_test.py','run_native_render_job_settlement_test.py','run_native_scene_admission_record_test.py','run_native_begin_ready_pilot_test.py']:

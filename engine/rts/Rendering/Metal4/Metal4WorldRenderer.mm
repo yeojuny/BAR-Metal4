@@ -402,7 +402,22 @@ struct Metal4WorldRenderer::Impl {
  std::unique_ptr<NativeSerialRenderWorker> renderWorker;
  std::unique_ptr<NativeRenderJobSettlement<Metal4WorldPresentationResult>> cpuJob;
  bool settlingDirectCPU=false,detachedCPUJob=false;
- void FinishCPUWork(){Require([NSThread isMainThread]&&!settlingDirectCPU,"CPU settlement requires nonrecursive main");if(cpuJob){cpuJob->Finish();if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob=false;}}}
+ std::shared_ptr<NativeCPUPhaseBuffer> cpuTraceBuffer;
+ void FinishCPUWork(NativeCPUFinishReason reason=NativeCPUFinishReason::Control){
+  NativeCPUTraceRelationScope relation(cpuTraceBuffer?cpuTraceBuffer->identity:NativeCPUTraceIdentity{},reason);
+  NativeCPUPhaseScope trace(NativeCPUPhaseKind::MainFinish);
+  Require([NSThread isMainThread]&&!settlingDirectCPU,"CPU settlement requires nonrecursive main");
+  if(!cpuJob){trace.Status(1);return;}
+  if(!cpuTraceBuffer)trace.Status(4); // Job outside the sampled window: not attributable.
+  try {
+   cpuJob->Finish();
+   if(cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(cpuTraceBuffer);
+   if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob=false;}
+  }catch(...){
+   if(cpuJob&&cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(cpuTraceBuffer);
+   throw;
+  }
+ }
  metal4::InterventionShadowViews interventionShadowViews;
 	metal4::ScreenGPU screenGPU;
 	metal4::StartBoxGPU startBoxGPU;
@@ -2365,11 +2380,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::Draw(const WorldFrame& frame,
 {return DrawDispatch(frame,options,{});}
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawPreparingWhilePending(const WorldFrame& frame,const Metal4WorldRenderOptions& options,std::function<void()> previousRetired)
 {return DrawDispatch(frame,options,std::move(previousRetired));}
-void Metal4WorldRenderer::FinishCPUWork() const
+void Metal4WorldRenderer::FinishCPUWork(NativeCPUFinishReason reason) const
 {
  Require([NSThread isMainThread]&&impl!=nullptr,"CPU job drain requires its source renderer");
  // Must precede runtime/request locks and renderer ownership scopes.
- impl->FinishCPUWork();
+ impl->FinishCPUWork(reason);
 }
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void()> previousRetired,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
 {
@@ -2381,7 +2396,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<con
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
 {
  frame.deferredMainParticles.RequireComplete();
- FinishCPUWork();
+ FinishCPUWork(NativeCPUFinishReason::DispatchPrior);
  // Reject invalid callers before reading source policy, as preparation did.
  MainThread();Require(impl!=nullptr,"World renderer was moved from");
  std::optional<NativeRendererAccessGate::Scope> cacheAccess;cacheAccess.emplace(&impl->access);
@@ -2469,13 +2484,18 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  auto deferredReceipt=dispatchReceipt->NeedsRetirementNotice()?std::function<void()>([dispatchReceipt]{dispatchReceipt->MarkRetirementReady();}):std::function<void()>{};
  Require(!impl->cpuJob,"Previous CPU job has not been consumed");
  impl->cpuJob=std::make_unique<NativeRenderJobSettlement<Metal4WorldPresentationResult>>(dispatchReceipt,std::move(deliverTargetNotice),std::move(cpuSettled));
- const auto cpuTraceContext=CaptureNativeCPUPhaseContext();
+ impl->cpuTraceBuffer=MakeNativeCPUJobTrace(frame.sourceDrawFrame,frame.simulationFrame);
+ auto cpuTraceContext=CaptureNativeCPUPhaseContext();
+ cpuTraceContext.buffer=impl->cpuTraceBuffer.get(); // Never lend the main writer's sink to the worker.
+ cpuTraceContext.sampled=cpuTraceContext.sampled&&bool(impl->cpuTraceBuffer);
+ if(impl->cpuTraceBuffer){cpuTraceContext.buffer=impl->cpuTraceBuffer.get();cpuTraceContext.job=impl->cpuTraceBuffer->identity;cpuTraceContext.retired={};cpuTraceContext.reason=0;}
  try {
-  impl->cpuJob->Submit(worker,[this,owned,presentation,snapshot,sourceContext,cpuTraceContext,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable {@autoreleasepool {
+  impl->cpuJob->Submit(worker,[this,owned,presentation,snapshot,sourceContext,cpuTraceContext,traceOwner=impl->cpuTraceBuffer,shadowFallback,uiResolver=std::move(uiResolver),mrtFrontier=std::move(mrtFrontier),dispatchReceipt,deferredReceipt=std::move(deferredReceipt)]() mutable {@autoreleasepool {
+   NativeCPUPhaseContextScope traceContext(cpuTraceContext);
+   NativeCPUPhaseScope workerTrace(NativeCPUPhaseKind::WorkerJob);
    struct FinishDispatch {std::shared_ptr<NativeRenderDispatchReceipt> receipt;~FinishDispatch(){receipt->MarkWorkerFinished();}} finish{dispatchReceipt};
    NativeRendererAccessGate::Scope admittedAccess(dispatchReceipt->Handoff());
    Metal4SurfaceWorkerScope scope(snapshot);
-   NativeCPUPhaseContextScope traceContext(cpuTraceContext);
    return DrawPrepared(owned->Frame(),owned->Options(),presentation,std::move(deferredReceipt),[dispatchReceipt](std::uint64_t submission) noexcept {dispatchReceipt->MarkBegun(submission);dispatchReceipt->PublishBeginReady();},uiResolver,mrtFrontier,sourceContext,shadowFallback);
   }});
   if((prepareReady&&impl->cpuJob->ReleaseForPreparation())||(beginReady&&impl->cpuJob->ReleaseAfterBegin())){
@@ -2493,7 +2513,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
    Metal4WorldPresentationResult queued;queued.queued=true;queued.sourceDrawFrame=frame.sourceDrawFrame;
    return queued;
   }
-  FinishCPUWork();
+  FinishCPUWork(NativeCPUFinishReason::JoinedFallback);
   auto result=impl->cpuJob->Consume();
   impl->cpuJob.reset();
 #ifdef RECOIL_METAL4_LIVE_SCENE
@@ -2503,6 +2523,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
  }catch(...){
   // Enqueue failure has no ticket; normal/failed jobs have already joined.
   // Preserve terminal settlement failure for every subsequent drain.
+  if(impl->cpuJob&&impl->cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(impl->cpuTraceBuffer);
   dispatchReceipt->ReleaseHandoff();throw;
  }
 }

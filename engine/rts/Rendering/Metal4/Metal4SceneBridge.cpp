@@ -945,14 +945,14 @@ void ApplyDeferredFrameReceipts()
  }
 }
 
-void RequireRetiredGPUWork()
+void RequireRetiredGPUWork(metal4::NativeCPUFinishReason reason=metal4::NativeCPUFinishReason::FullDrain)
 {
  metal4::NativeCPUPhaseScope drainTrace(9,gs?gs->frameNum:0);
  if(globalRendering)drainTrace.Draw(globalRendering->drawFrame);
  if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
  drainTrace.Mark(0); // p0: optional CPU source-reader completion.
  if(!session || !session->renderer)return;
- session->renderer->FinishCPUWork();
+ session->renderer->FinishCPUWork(reason);
  drainTrace.Mark(1); // p1: render CPU Join/settlement wall interval (may include worker waits).
  const bool retired=Metal4RendererCanSafelyDetachSurface();
  drainTrace.Mark(2); // p2: runtime drain including GPU wait/retirement callbacks.
@@ -981,19 +981,19 @@ std::shared_ptr<const Metal4SceneBeginRetirement> MakeBeginPreparationRetirement
 
 void FinishCPUReadPreparation() { if(session&&session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish(); }
 void FinishCaptureBeforeRollback() {
- if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork();});
+ if(session)session->captureRollbackFence.BeforeRollback([]{RequireRetiredGPUWork(metal4::NativeCPUFinishReason::Rollback);});
 }
 void DismissCaptureRollbackFence() {
  if(session)session->captureRollbackFence.Dismiss();
 }
 void FinishPendingFrame() { RequireRetiredGPUWork(); }
-void FinishRuntimeControl() { RequireRetiredGPUWork(); }
+void FinishRuntimeControl() { RequireRetiredGPUWork(metal4::NativeCPUFinishReason::Control); }
 NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
  if(!session)throw std::logic_error("World capture has no source credit owner");
  return session->sourceCredits.AcquireWithCPUReclaim(draw,BeginPreparationOverlapRequested(),[&]{
   metal4::NativeCPUPhaseScope reclaimTrace(11,gs?gs->frameNum:0);reclaimTrace.Draw(draw);
   if(session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
-  session->renderer->FinishCPUWork(); // Join, release access, deliver old notice, accept current CPU.
+  session->renderer->FinishCPUWork(metal4::NativeCPUFinishReason::Credit); // Join, release access, deliver old notice, accept current CPU.
   reclaimTrace.Mark(0);
   ApplyDeferredFrameReceipts();reclaimTrace.Mark(1);
   const bool recovered=session->sourceCredits.HasCapacity();reclaimTrace.Counts(recovered,2);
@@ -1723,7 +1723,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 
  const bool retainedPredecessorGPU=CaptureAtNativeSurfaceBoundary(deferredParticles,
   [&]{return session->surface.CaptureRefreshUnchanged();},
-  []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork();},[&]{session->surface.Refresh();},[&]{
+  []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork(metal4::NativeCPUFinishReason::SurfaceBoundary);},[&]{session->surface.Refresh();},[&]{
    {metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
    // Publish only at the actual capture boundary, after any changed-surface drain.
    session->opaqueSourcePending=actualOpaqueModels;
@@ -1737,7 +1737,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
     // completion. They produce fresh CPU geometry and retain immutable sources.
     // A throwing join/tail still takes the boundary's full GPU drain before
     // source rollback. Successful CPU settlement does not retire GPU credits.
-    session->renderer->FinishCPUWork();
+    session->renderer->FinishCPUWork(metal4::NativeCPUFinishReason::CapturePrefix);
     session->capture.CompleteDeferredMainParticles(*session->preparedFrame);
    }
   },[&]{
@@ -2282,7 +2282,7 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  if(pendingAdmission&&pendingAdmission->cpuAccepted)admitted=false;
  try {
  // A hidden/unavailable surface may return before opening a runtime lease.
- if(!result.presented&&overlapPreparation)RequireRetiredGPUWork();
+ if(!result.presented&&overlapPreparation)RequireRetiredGPUWork(metal4::NativeCPUFinishReason::NonPresent);
  if(admitted && (!result.presented || result.sourceFrameCompleted)){
   // Synchronous completion returns ownership to the historical pending-retire
   // caller. No-Begin fallback returns pending publications for original rollback.

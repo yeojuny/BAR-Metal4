@@ -6,7 +6,7 @@ p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Pa
 out=a.output.resolve();out.mkdir(parents=True,exist_ok=True)
 root=Path(__file__).resolve().parents[2]
 bridge=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
-completion=bridge.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork()',1)[0]
+completion=bridge.split('void ApplyDeferredFrameReceipts()',1)[1].split('void RequireRetiredGPUWork(',1)[0]
 assert completion.index('LuaNativeVolumetricClouds::ValidateHeldFrame') < completion.index('CompleteDynamicCapture(')
 water_completion=bridge.split('void CompleteDynamicCapture(',1)[1].split('bool AbortDynamicCapture()',1)[0]
 assert water_completion.index('session->dynamicWaterCapture.DidComplete(generation,through,draw)') < water_completion.index('session->dynamicCaptureReceipt.reset()')
