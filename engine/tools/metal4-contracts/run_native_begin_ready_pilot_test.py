@@ -10,7 +10,10 @@ assert 'if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob
 scene=(root/'rts/Rendering/Metal4/Metal4SceneBridge.cpp').read_text()
 assert 'if(options.allowBeginReady)RequireRetiredGPUWork();' in scene
 assert '(overlapPreparation&&!options.allowBeginReady)?' in scene
-assert 'return value&&std::string_view(value)=="1";' in scene.split('BAR_NATIVE_BEGIN_READY_PILOT',1)[1]
+assert 'BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}' in scene
+assert 'SelectNativeRenderReleaseMode(requested("BAR_NATIVE_BEGIN_READY_PILOT"),requested("BAR_NATIVE_PREPARE_READY_PILOT"))' in scene
+assert 'if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();' in scene
+assert 'return enabled&&(PrepareReadyPilotRequested()||BeginReadyPilotRequested())&&' in scene
 queued=scene.split(' if(result.queued){',1)[1].split(' if(pendingAdmission',1)[0]
 assert 'sourceFrameCompleted' in queued and 'sourceDrawFrame!=frame.sourceDrawFrame' in queued
 assert 'return {false,false,false,0,frame.sourceDrawFrame,true,screenUI->postprocess->serial}' in queued

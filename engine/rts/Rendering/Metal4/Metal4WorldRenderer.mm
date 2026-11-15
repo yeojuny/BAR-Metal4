@@ -2470,6 +2470,15 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame
   }});
   if((prepareReady&&impl->cpuJob->ReleaseForPreparation())||(beginReady&&impl->cpuJob->ReleaseAfterBegin())){
    admissionTrace.Counts(admissionFlags|8u,rejectionMask);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   // A counted-window witness follows the actual successful release, never
+   // just the raw environment request. No timing instrumentation is enabled.
+   static bool beginReported=false,prepareReported=false;
+   bool& reported=beginReady?beginReported:prepareReported;
+   if(!reported&&frame.simulationFrame>=300&&frame.simulationFrame<=1500)try{
+    LOG("[NativeReleaseMode] mode=%s eligible=1 queued=1 simulation=%llu begin_submission=%llu",beginReady?"BEGIN":"PREPARE",(unsigned long long)frame.simulationFrame,(unsigned long long)options.beginReceipt->Submission());reported=true;
+   }catch(...){/* Diagnostic failure cannot unwind an active worker handoff. */}
+#endif
    impl->detachedCPUJob=true;
    Metal4WorldPresentationResult queued;queued.queued=true;queued.sourceDrawFrame=frame.sourceDrawFrame;
    return queued;

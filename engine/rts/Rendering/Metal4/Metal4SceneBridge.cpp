@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeBeginReadyPolicy.h"
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Rendering/Backend/NativeLegacyWaterProgramState.h"
@@ -244,10 +245,15 @@ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPURead
   (unsigned long long)(job?job->workerBeginNs:0),(unsigned long long)(job?job->workerEndNs:0),int(job&&job->threadCPUValid),(unsigned long long)(job?job->threadCPUNs:0));
 }
 
-bool PrepareReadyPilotRequested() {
- static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_PREPARE_READY_PILOT");return value&&std::string_view(value)=="1";}();
- return enabled;
+NativeRenderReleaseMode SelectedReleaseMode() {
+ static const auto mode=[] {
+  const auto requested=[](const char* name){const char* value=std::getenv(name);return value&&std::string_view(value)=="1";};
+  return SelectNativeRenderReleaseMode(requested("BAR_NATIVE_BEGIN_READY_PILOT"),requested("BAR_NATIVE_PREPARE_READY_PILOT"));
+ }();
+ return mode;
 }
+bool PrepareReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Prepare;}
+bool BeginReadyPilotRequested(){return SelectedReleaseMode()==NativeRenderReleaseMode::Begin;}
 struct ScenePendingAdmission;
 struct Session {
  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
@@ -932,10 +938,6 @@ void ApplyDeferredFrameReceipts()
  LuaNativeVolumetricClouds::RetireCompletedFrame(result.sourceDrawFrame);
  session->sourceCredits.ReleaseHeld(result.sourceDrawFrame);
  }
-}
-bool BeginReadyPilotRequested() {
- static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_BEGIN_READY_PILOT");return value&&std::string_view(value)=="1";}();
- return enabled;
 }
 
 void RequireRetiredGPUWork()
@@ -1655,7 +1657,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
 	if (session->preparedFrame)
 		throw std::logic_error("Native engine world was prepared twice without presentation or abort");
  // An unchanged surface permits value capture to overlap N's CPU work. After
- // joining that job, the proved PREPARE suffix may use the ordinary OFF state:
+ // joining that job, the proved selected-mode suffix may use the ordinary OFF state:
  // source CPU settled, immutable predecessors still owned by the GPU ticket.
  const bool deferredParticles=BeginReadyPilotRequested()||PrepareReadyPilotRequested();
  const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
@@ -1713,7 +1715,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
    // FinishCPUWork and particle capture succeed; no admission or notice is
    // fabricated here. Source receipts/credits remain held until real GPU
    // completion is published and delivered at the existing retirement site.
-   return enabled&&PrepareReadyPilotRequested()&&!BeginReadyPilotRequested()&&
+   return enabled&&(PrepareReadyPilotRequested()||BeginReadyPilotRequested())&&
     session->renderer&&!session->renderer->HasScreenContinuation()&&
     !session->dynamicWaterCapture.Initialized()&&!session->legacyWaterCapture.Initialized()&&
     !session->sourceSettlement&&!session->admissionSettlement&&
@@ -1723,7 +1725,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
     session->preparedFrame->unsupported.empty()&&session->surface.Snapshot().CanPresent();
   });
  if(retainedPredecessorGPU){session->captureRollbackFence.Arm();static bool reported=false;if(!reported){reported=true;
-  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3");}}
+  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=%u",PrepareReadyPilotRequested()?3u:2u);}}
 
  try {
  auto& frame=*session->preparedFrame;
@@ -2069,8 +2071,9 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
 	auto prepared = std::move(session->preparedFrame);
 	session->preparedFrame.reset();
  // Refresh writes CAMetalLayer properties, not just an immutable observation.
- // The pilot conservatively ends CPU overlap here; no surface revision proof yet.
- if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();
+ // Armed BEGIN has the same stable-surface proof as PREPARE. Keep the
+ // unarmed fallback; actual BEGIN still fully retires before dispatch below.
+ if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();
  session->captureRollbackFence.RefreshForDispatch(
   [&]{return session->surface.CaptureRefreshUnchanged();},
   []{RequireRetiredGPUWork();},[&]{session->surface.Refresh();});
@@ -2185,8 +2188,10 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
  if(admitted)options.heldSourceDraw=capturedFrame.sourceDrawFrame;
  // The prepare-ready experiment supersedes the narrower Begin-ready mode.
  options.allowPrepareReady=PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
- options.allowBeginReady=BeginReadyPilotRequested()&&!PrepareReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
- // Begin alone does NOT retire N-1. This pilot permits only N plus capture N+1.
+ options.allowBeginReady=BeginReadyPilotRequested()&&admitted&&!capturedFrame.dynamicWater&&!capturedFrame.legacyWater;
+ // Last safe BEGIN edge: stable capture/main CPU preparation may overlap N-1,
+ // but retire its real GPU ticket and deliver exact receipts BEFORE dispatch.
+ // Keep 2 source credits, empty previousRetired and runtime detach precondition.
  if(options.allowBeginReady)RequireRetiredGPUWork();
  const auto submission=std::make_shared<const Metal4WorldSubmission>(frameOwner,options);
  frameOwner.reset(); // No mutable owning alias remains after sealing.

@@ -8,6 +8,29 @@
 #include <stdexcept>
 using namespace rendering;
 int main(){
+ // BEGIN uses two credits: held N and captured N+1. Stable CPU capture keeps
+ // N pending until the existing full predispatch drain, not after Begin.
+ {
+  NativeSourceFrameCredits credits(2);NativeFrameCompletionMailbox mailbox(9);
+  auto old=credits.Acquire(20);credits.Hold(old);old.reset(); // Prior CPU owner settled; GPU-held credit remains.
+  auto next=credits.Acquire(21);
+  const auto ticket=mailbox.Prepare(9,20,120);mailbox.Accept(ticket);
+  bool gpuPending=true;unsigned drains=0;
+  const auto drain=[&]{++drains;gpuPending=false;mailbox.Publish(ticket,{true,20,120});
+   const auto notice=mailbox.Pop();assert(notice&&notice->sourceDrawFrame==20);credits.ReleaseHeld(20);};
+  NativeCaptureRollbackFence fence;
+  assert(CaptureAtNativeSurfaceBoundary(true,[]{return true;},drain,[]{assert(false);},[]{},[]{return true;}));
+  fence.Arm();assert(fence.Armed()&&gpuPending&&!credits.HasCapacity());
+  try{credits.Acquire(22);assert(false);}catch(const std::logic_error&){}
+  // The production guard skips early drain only when this exact fence is armed.
+  if(!fence.Armed())drain();
+  fence.RefreshForDispatch([]{return true;},drain,[]{assert(false);});assert(drains==0&&gpuPending);
+  drain(); // Preserved options.allowBeginReady predispatch requirement.
+  assert(!gpuPending&&drains==1);credits.Validate(next,21);credits.Hold(next);
+  auto future=credits.Acquire(22);assert(!credits.HasCapacity());
+  fence.Dismiss();assert(!fence.Armed());
+ }
+
  // A surface can change after stable capture but before dispatch. Do not write
  // CAMetalLayer properties under a retained predecessor, even on that edge.
  {

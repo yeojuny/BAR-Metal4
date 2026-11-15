@@ -15,10 +15,10 @@ assert prefix.index('Keep prefix timing separate')<prefix.index('renderer->Finis
 assert prefix.index('CaptureRefreshUnchanged()')<prefix.index('RequireRetiredGPUWork();')<prefix.index('surface.Refresh();')<prefix.index('capture.Capture(')
 assert 'CaptureWater' not in prefix and 'CaptureOriginalAlphaModels' not in prefix
 assert 'NativeWaterScenePass::Main' in prefix
-# The other refresh/control boundary is unchanged.
+# BEGIN retains its pre-Refresh drain unless the actual capture fence is armed.
 draw=s.split('DrawResult DrawWorld(',1)[1]
 pos=draw.index('session->surface.Refresh();')
-assert 'if(BeginReadyPilotRequested()&&!PrepareReadyPilotRequested())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
+assert 'if(BeginReadyPilotRequested()&&!session->captureRollbackFence.Armed())RequireRetiredGPUWork();' in draw[max(0,pos-360):pos]
 w=(root/'rts/Rendering/Metal4/Metal4WindowSurface.mm').read_text()
 probe=w.split('bool CaptureRefreshUnchanged() const',1)[1].split('bool Refresh()',1)[0]
 assert 'layer.drawableSize' in probe and 'layer.displaySyncEnabled' in probe and 'requested==displaySyncRequest' in probe

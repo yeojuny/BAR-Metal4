@@ -6,6 +6,11 @@
 using namespace rendering;
 template<class F>void Reject(F&& f){bool caught=false;try{f();}catch(...){caught=true;}assert(caught);}
 int main(){
+ static_assert(SelectNativeRenderReleaseMode(false,false)==NativeRenderReleaseMode::Joined);
+ static_assert(SelectNativeRenderReleaseMode(true,false)==NativeRenderReleaseMode::Begin);
+ static_assert(SelectNativeRenderReleaseMode(false,true)==NativeRenderReleaseMode::Prepare);
+ static_assert(SelectNativeRenderReleaseMode(true,true)==NativeRenderReleaseMode::Prepare);
+
  NativeBeginReadyPolicy valid{true,true,true,true,true,true,true,true,true};assert(valid.Eligible());
  for(auto flag:{&NativeBeginReadyPolicy::requested,&NativeBeginReadyPolicy::worker,&NativeBeginReadyPolicy::owned,&NativeBeginReadyPolicy::visible,&NativeBeginReadyPolicy::admitted,&NativeBeginReadyPolicy::sourceCredit,&NativeBeginReadyPolicy::deferred,&NativeBeginReadyPolicy::screen,&NativeBeginReadyPolicy::cpuSettlement}){auto bad=valid;bad.*flag=false;assert(!bad.Eligible());}
  for(auto flag:{&NativeBeginReadyPolicy::readback,&NativeBeginReadyPolicy::continuation,&NativeBeginReadyPolicy::dynamicWater,&NativeBeginReadyPolicy::legacyWater,&NativeBeginReadyPolicy::arbitraryCallback,&NativeBeginReadyPolicy::previousRetirement}){auto bad=valid;bad.*flag=true;assert(!bad.Eligible());}

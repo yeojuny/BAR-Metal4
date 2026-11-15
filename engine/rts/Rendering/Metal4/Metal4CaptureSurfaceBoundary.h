@@ -7,6 +7,7 @@ namespace rendering {
 class NativeCaptureRollbackFence {
  bool pending=false;
 public:
+ bool Armed()const noexcept{return pending;}
  void Arm()noexcept{pending=true;}
  void Dismiss()noexcept{pending=false;}
  template<class Drain>void BeforeRollback(Drain&& drain){
