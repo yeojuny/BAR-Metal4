@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "reviewer": "existing /root/contract_review Sol xhigh",
+  "scope": "entire H\u2192J diagnostic batch",
+  "remainingBlockers": [],
+  "limits": [
+    "Only complete manifest/three-identity chains attributable",
+    "Outside-window main joins not captured; final worker buffers flushed at subsequent CGame boundary",
+    "No GPU timestamps or hardware-active-time claim",
+    "Sampled legacy gaps explicitly status4; diagnostic requires everyloop1"
+  ],
+  "runtime": "NOT_YET_RUN"
+}

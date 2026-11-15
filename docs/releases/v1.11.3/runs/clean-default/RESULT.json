@@ -1,0 +1,114 @@
+{
+  "name": "clean-default",
+  "requestedMode": "prepare",
+  "validation": false,
+  "diagnostic": false,
+  "endSimulation": 1500,
+  "argv": [
+    "<RELEASE_WORK>/candidate/restored/BAR Metal4.app/Contents/MacOS/BAR-Metal4",
+    "--remote-debugging-port=49187",
+    "--remote-debugging-address=127.0.0.1"
+  ],
+  "smoke": [
+    "/opt/homebrew/bin/node",
+    "<RELEASE_WORK>/build-runtime/runtime-fixture/lobby-smoke.mjs",
+    "--port",
+    "49187",
+    "--out",
+    "<RELEASE_WORK>/build-runtime/clean-default/lobby",
+    "--expected-state",
+    "<RELEASE_WORK>/build-runtime/state",
+    "--game-version",
+    "Beyond All Reason test-31691-a617033-native220-defaults01",
+    "--timeout",
+    "120000",
+    "--launch-scenario",
+    "--scenario-only",
+    "--scenario-id",
+    "pinewoodvsbarb014",
+    "--download-scenario-map",
+    "--expect-original-barb"
+  ],
+  "initialNativeConfigPresent": false,
+  "status": "FAIL",
+  "ownedPid": 80647,
+  "installedContent": {
+    "packages/ea937c1fffe64761825a9d87af5c91f2.sdp": {
+      "inode": 192262707,
+      "changedNs": 1794725710774820367
+    },
+    "pool/09/6026c809dad512fc210020200dbc90.gz": {
+      "inode": 192262714,
+      "changedNs": 1794725710777235243
+    },
+    "pool/2d/bd1412710a0fe48853e7dad3b250ab.gz": {
+      "inode": 192262719,
+      "changedNs": 1794725710778428951
+    },
+    "pool/35/ea4028211f99b060bef7d85aa0ee0c.gz": {
+      "inode": 192262709,
+      "changedNs": 1794725710775510284
+    },
+    "pool/5e/5447d7e102e4bc340a55f7d1f9e8a0.gz": {
+      "inode": 192262716,
+      "changedNs": 1794725710777715368
+    },
+    "pool/6a/861ac1067dd21f990ac457b7205719.gz": {
+      "inode": 192262708,
+      "changedNs": 1794725710775065367
+    },
+    "pool/7d/c2180ac54860f98686e573524436e3.gz": {
+      "inode": 192262712,
+      "changedNs": 1794725710776522159
+    },
+    "pool/8a/ae3d69ed2fe59f83fae61f64601ad8.gz": {
+      "inode": 192262713,
+      "changedNs": 1794725710776741951
+    },
+    "pool/91/0426425a924e51de011113fceab919.gz": {
+      "inode": 192262715,
+      "changedNs": 1794725710777542451
+    },
+    "pool/99/6b75c836120b82a844af36df960d62.gz": {
+      "inode": 192262717,
+      "changedNs": 1794725710777913576
+    },
+    "pool/9c/5bc83e2d66f7dfeb743ab469a3a75a.gz": {
+      "inode": 192262710,
+      "changedNs": 1794725710775987992
+    },
+    "pool/a7/4cddba907db4ba90126f6d5a92ec23.gz": {
+      "inode": 192262718,
+      "changedNs": 1794725710778143118
+    },
+    "pool/e2/7d926f8bd70dc76611951fa73c8e97.gz": {
+      "inode": 192262711,
+      "changedNs": 1794725710776324367
+    }
+  },
+  "actualChild": {
+    "pid": 80671,
+    "values": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": null,
+      "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+      "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+      "MTL_DEBUG_LAYER": "0"
+    }
+  },
+  "actualRelease": {
+    "mode": "PREPARE",
+    "eligible": "1",
+    "queued": "1",
+    "simulation": "300",
+    "begin_submission": "0",
+    "begin_prepare_overlap": "0"
+  },
+  "defaultsLog": "[Release220] defaults health=2 health_option=2 height=2 height_option=2 vsync_game=0 vsync=0 vsync_option=1",
+  "traceback": "Traceback (most recent call last):\n  File \"<RELEASE_WORK>/build-runtime/runtime-fixture/run-release.py\", line 104, in check_case\n    aa=re.search(r'\\[Release220\\] aa msaa=0 level=-1',text);assert aa;result['aaLog']=aa[0]\n                                                                   ^^\nAssertionError\n",
+  "remainingMatchingChildren": []
+}

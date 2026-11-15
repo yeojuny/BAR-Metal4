@@ -1,0 +1,97 @@
+[
+  {
+    "path": "rts/Game/Game.cpp",
+    "sha256": "c550642dedc105478b1dc4e17610709b0b9e60ac1e3decb6421cdd50a01fe373",
+    "parentSHA256": "613c22743c5c9e2efacd12816c7775c5b6ddd2f09ba64d53b1937ea7a952c67a"
+  },
+  {
+    "path": "rts/Rendering/Backend/NativeCPUPhaseTrace.h",
+    "sha256": "a7e7f0bd08201786cd084c31f12b75ff00803adbded13b88f7a3bd6f55343b2e",
+    "parentSHA256": "f8c3ce7687ca0c7a45d4b3e7ac444b7bb85c5e56b19304674fcf52d031402874"
+  },
+  {
+    "path": "rts/Rendering/Backend/NativeRenderJobSettlement.h",
+    "sha256": "8c427f286b705fb5ad3c489be163c24e04abe570ce13615a0ff656b77d99c938",
+    "parentSHA256": "78cdd4d34734c485b54881d4d1ed9955f555028cfb074c4662724ffd06424472"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4FrameResources.h",
+    "sha256": "8f1536556496af67a42a5c95f40bdf2c1932cbbaf93877b16f9d92b88d9c936d",
+    "parentSHA256": "dee8898da8972fc6a0b1c80e96265865d9434d2bc674058770658b6fa0603393"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+    "sha256": "c3b6926fdc7bbbc69f67b354240c6b31648632c37c9eadf05a2147f2a061b933",
+    "parentSHA256": "0adc79d1991f2f425892cb0beb4f0ebae29ab0b89c30c68eb4b68b9edbebe6ef"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+    "sha256": "d3d2a43aa10e956744b643eb30bcc1a4c2370767641d8f46a9ba0298eb47be87",
+    "parentSHA256": "a49bae70f3c99d7e2e2038872fe10c70db5938a7b45719e0c324f494b5afd875"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4WorldRenderer.h",
+    "sha256": "e2f2a2bd9a185e464bc1708e63e95275ff8ca4f10d3e89a35ad307ba80d2489d",
+    "parentSHA256": "e12b49c6ec375b85313df5818a397673c2255157768358267a3597f51273bb76"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+    "sha256": "cce8a2dbc3cde46d64250de5d58796f5daa19abe17547f456a407824b132d4dc",
+    "parentSHA256": "f7564e1b46fc0e977da5ceef5bad72e3a297f2b0c6d3f991cbaba05f0da2438e"
+  },
+  {
+    "path": "tools/metal4-contracts/TestNativeCPUPhaseHandoff.cpp",
+    "sha256": "5cb8f57bd27c40567724ada9a5bec26e146f7806b1e366529c10b48daed76243",
+    "parentSHA256": "05fe7ea0bfdbc85b5b06e7a0e8b0f3f0d7b0894fec0b8b350c274d4b5bfad70c"
+  },
+  {
+    "path": "tools/metal4-contracts/TestNativeCriticalPathTrace.cpp",
+    "sha256": "054f5bdf51c5f299aba23755414ed990f785b842d1932414966148505b3501ff",
+    "parentSHA256": null
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_cpu_phase_handoff_test.py",
+    "sha256": "6b8ca16d0848a5051fa6b85568181600e90ed060d899970f6cbe32e02c720785",
+    "parentSHA256": "852b17f986f8181bdf85abde071be32dc367809941ca6117bf6d877d002fd7cb"
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_critical_path_trace_test.py",
+    "sha256": "b770427502597dd59e0c26e8cd8397ac7da1ec45b1f854734e12ce9f27f249f0",
+    "parentSHA256": null
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_dynamic_water_receipts_test.py",
+    "sha256": "dc51f80e2dbcebd613be30ce3388bac9216a884997315776bb48bc18280f56b1",
+    "parentSHA256": "fffd9c5dd07367b7147136e28a14e1762f1ef0cb605022e30852217b1f0a9bdc"
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_external_runtime_control_test.py",
+    "sha256": "29835fc9d17834449bea480a11361f5441d0fa6f99f373099bfe8be28b83b95b",
+    "parentSHA256": "958e681cbfc7b405920a797c4daa0ccdaedba10da32456dc3aa23c59b3814d06"
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_frame_journal_owners_test.py",
+    "sha256": "ea387d7a6c31bef197c0ea72e78a48463fb332771ceede2dc6436cb9c25e0bcf",
+    "parentSHA256": "4bcace3842ee6b2c669f2b9a48f9e927a17eca634d467270cbfecf592313109c"
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_prepare_ready_pilot_test.py",
+    "sha256": "cdfc8e48c76912bafbbe54e85d35f81c6a94c0efa301f26c138bfddaba5dd8c1",
+    "parentSHA256": "6012827678c2081540a0649b02d0c7a649f7db50dd6f5b6da853d57903d5c62a"
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_render_dispatch_receipt_test.py",
+    "sha256": "16d30a0df0c4fdd7dcec06898ae525c5ee97801dbf1e3b100fddd4b522c92a42",
+    "parentSHA256": "bf738c00914c357843e27714affe03b417306ffd54bcf82652dbba0adc709968"
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_render_job_settlement_test.py",
+    "sha256": "6149e1a453210e82ac79b47a83ce3956f78a818f47bcdbb410448ee9d3304d7b",
+    "parentSHA256": "cfff3b7feed173c675c145d13a373c1f5596c6c94ab273e21f5fe53a1e94d52c"
+  },
+  {
+    "path": "tools/metal4-contracts/run_native_source_frame_credits_test.py",
+    "sha256": "657af906ca11cc05e91b1ad2cb3ea7993ea2a1487a710a5f512951e9fce7bd00",
+    "parentSHA256": "b2c170036c2e67e5c7006e2a4e23cb7b87e6af030607aea3af5195b1b5b94f34"
+  }
+]

@@ -1,0 +1,10 @@
+[t=00:00:07.951311][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982
+[t=00:00:12.454431][f=0000003] [Release220] resumed_initial_briefing frame=3
+[t=00:00:14.333243][f=0000060] [Release220] frame=60 mode=prepare-validation ai=BARb:stable
+[t=00:00:14.333725][f=0000060] [Release220] display_auto render=1512x982 logical=1512x982 mode=1 resolution=1 configured=0x0
+[t=00:00:14.333748][f=0000060] [Release220] defaults health=2 health_option=2 height=2 height_option=2 vsync_game=0 vsync=0 vsync_option=1
+[t=00:00:14.333754][f=0000060] [Release220] aa msaa=0 level=0
+[t=00:00:22.328918][f=0000300] [Release220] scene map=Pinewood_Derby_V1 frame=300 camera=dist=5000,dx=0.00000002,dy=-0.8568887,dz=-0.5155014,fov=45,mode=2,px=500,py=198.984146,pz=851,rx=2.5999999,ry=0.47123894,rz=0
+[t=00:00:22.337366][f=0000300] [Release220] count_start simulation=300
+[t=00:00:22.337482][f=0000300] [NativeReleaseMode] mode=PREPARE eligible=1 queued=1 simulation=300 begin_submission=0 begin_prepare_overlap=0
+[t=00:00:23.329653][f=0000330] [Release220] complete frame=330 mode=prepare-validation draws=115 elapsed=0.99199998

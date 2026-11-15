@@ -1,5 +1,18 @@
 #!/bin/sh
 set -eu
+
+# Use the release's tested policy even when a launching shell has old pilot flags.
+for native_key in $(/usr/bin/env | /usr/bin/sed -n 's/^\(BAR_NATIVE_[A-Z0-9_]*\)=.*/\1/p'); do
+  unset "$native_key"
+done
+export BAR_NATIVE_INTERVENTION_RENDER_WORKER=1
+export BAR_NATIVE_CAPTURE_READY_BOUNDARY=1
+export BAR_NATIVE_BEGIN_PREPARE_OVERLAP=1
+case "${BAR_METAL4_HANDOFF_MODE:-prepare}" in
+  prepare) export BAR_NATIVE_PREPARE_READY_PILOT=1 BAR_NATIVE_BEGIN_READY_PILOT=0 ;;
+  begin) export BAR_NATIVE_PREPARE_READY_PILOT=0 BAR_NATIVE_BEGIN_READY_PILOT=1 ;;
+  *) echo "BAR_METAL4_HANDOFF_MODE must be prepare or begin" >&2; exit 2 ;;
+esac
 resources="$(CDPATH= cd -- "$(dirname -- "$0")/../Resources" && pwd)"
 state="${BAR_METAL4_STATE_DIRECTORY:-$HOME/Library/Application Support/BAR-Metal4}"
 export BAR_STATE_PATH="$state"
@@ -42,6 +55,28 @@ export BAR_NATIVE_PASS165='1'
 export BAR_NATIVE_PASS166='1'
 export BAR_NATIVE_RECORD158='1'
 export BAR_NATIVE_RETAINED_FONT170='1'
+
+# Diagnostic collection is an explicit launch option and is off by default.
+case "${BAR_METAL4_DIAGNOSTICS:-off}" in
+  off) ;;
+  critical-path)
+    export BAR_NATIVE_FRAME_TRACE=1
+    export BAR_NATIVE_FRAME_TRACE_EVERY_LOOP=1
+    export BAR_NATIVE_FRAME_TRACE_START_SIM=300
+    export BAR_NATIVE_FRAME_TRACE_END_SIM=306
+    ;;
+  *) echo "BAR_METAL4_DIAGNOSTICS must be off or critical-path" >&2; exit 2 ;;
+esac
+case "${BAR_METAL4_METAL_VALIDATION:-0}" in
+  0) ;;
+  1) export MTL_DEBUG_LAYER=1 ;;
+  *) echo "BAR_METAL4_METAL_VALIDATION must be 0 or 1" >&2; exit 2 ;;
+esac
+if [ "${1:-}" = "--print-native-environment" ]; then
+  /usr/bin/env | /usr/bin/sed -n '/^BAR_NATIVE_[A-Z0-9_]*=/p; /^MTL_DEBUG_LAYER=/p; /^MTL_SHADER_VALIDATION=/p; /^MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING=/p' | /usr/bin/sort
+  exit 0
+fi
+
 mkdir -p "$BAR_ASSETS_PATH/maps" "$state/data"
 content="${BAR_METAL4_CONTENT_DIRECTORY:-/opt/homebrew/opt/bar-metal4-content/share/bar-metal4-content}"
 if [ ! -f "$content/packages/7a0e6ff2ee6f899654edd8cc997b5386.sdp" ]; then
