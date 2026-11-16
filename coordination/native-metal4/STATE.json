@@ -2,7 +2,7 @@
   "status": "JINI_SOURCE_PREPARATION",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 8,
+  "revision": 9,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -10,10 +10,10 @@
   "local_connection_verified": false,
   "notification_connection_verified": false,
   "round_id": "r02-sensorlos-winding-20261116-01",
-  "source_commit": null,
-  "source_manifest_sha256": null,
+  "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+  "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
   "request": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/REQUEST.json",
-  "ready_path": null,
+  "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
   "result_path": null,
   "decision": null,
   "execution_status": "NOT_AUTHORIZED_SOURCE_PREPARATION_ONLY",
@@ -32,6 +32,17 @@
       "owner": "SUPER_JINI_MK2",
       "scope": "SOURCE_ONLY",
       "request_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/REQUEST.json"
+    },
+    {
+      "event": "SOURCE_CANDIDATE_RECORDED_NO_EXECUTION_GRANT",
+      "revision": 9,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "author": "SUPER_JINI_MK2",
+      "scope": "SOURCE_ONLY_READ_ONLY_HQ_REVIEW",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+      "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
+      "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
+      "note": "Source writes and child tasks finished. Status, owner, enabled scope, connection flags and execution authorization unchanged. HQ execution requires separate handoff and user approval."
     }
   ],
   "communication_test": {
