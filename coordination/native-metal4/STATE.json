@@ -1,14 +1,14 @@
 {
-  "status": "JINI_SOURCE_PREPARATION",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 9,
+  "revision": 10,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
-  "local_connection_verified": false,
-  "notification_connection_verified": false,
+  "local_connection_verified": true,
+  "notification_connection_verified": true,
   "round_id": "r02-sensorlos-winding-20261116-01",
   "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
   "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
   "result_path": null,
   "decision": null,
-  "execution_status": "NOT_AUTHORIZED_SOURCE_PREPARATION_ONLY",
+  "execution_status": "AUTHORIZED_FIXED_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -43,6 +43,21 @@
       "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
       "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
       "note": "Source writes and child tasks finished. Status, owner, enabled scope, connection flags and execution authorization unchanged. HQ execution requires separate handoff and user approval."
+    },
+    {
+      "event": "USER_APPROVED_FIXED_HELPER_ONLY_HANDOFF",
+      "revision": 10,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "from": "SUPER_JINI_MK2",
+      "to": "HQ",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+      "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+      "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
+      "approval_message_id": "Sentinel_8563c81084e48191aa31675bff31ab10",
+      "scope": "FIXED_R02_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY_NO_ENGINE_GAME_BENCH",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true,
+      "execution_started": false
     }
   ],
   "communication_test": {
@@ -103,7 +118,7 @@
     "no_reply_after_seconds": null,
     "no_reply_action": "5분 무응답 중단 제안은 폐기합니다. 응답이 없으면 다음10분 확인까지 대기하고, 시간초과로 작업권을 넘기거나 실험을 재실행하지 않습니다.",
     "timestamp_standard": "UTC",
-    "activation_rule": "사용자가 확인된 GitHub 교신 경로로 본 작업을 진행하라고 지시했습니다. 현재 소스 수정과 CPU 검사만 허용하며 게임·벤치·GPU helper·엔진 빌드는 별도 승인 전까지 실행하지 않습니다. 자동 깨우기 미검증은 이 소스 인계의 선행 조건이 아닙니다.",
+    "activation_rule": "User approved only fixed R02 helper compilation and GPU correctness checks via the recorded question/answer. Engine build, game and benchmark remain prohibited. HQ owns this round after verified handoff; JINI source/child/local work stopped.",
     "applies_to": [
       "HQ",
       "SUPER_JINI_MK2"
@@ -112,7 +127,32 @@
       "HQ": "현재 HQ 대화에10분 heartbeat ACTIVE 등록·조회 확인. 등록 사실이며 실제 첫 정기 실행은 아직 확인 전.",
       "SUPER_JINI_MK2": "10분 규칙 전달됨. 지니 측 실제 저장된 스케줄은 미확인"
     },
-    "event_wakeup": "GitHub 변경만으로 Dot을 깨우는 연결은 미설정·미검증. 지원되는 이벤트 구독과 수신 경로가 확인될 때만 추가 검토합니다."
+    "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "SOURCE_PREPARATION_ONLY_NO_BUILD_GPU_GAME_BENCH"
+  "enabled_scope": "FIXED_R02_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY_NO_ENGINE_GAME_BENCH",
+  "user_authorization": {
+    "question_message_id": "Sentinel_780debbf6ec88191886309fe534b64e0",
+    "question": "다음 단계로 HQ가 Mac에서 **고정된 테스트 helper만 컴파일하고 GPU 검사를 실행**해도 될까? 게임 실행·벤치마크·엔진 전체 빌드는 하지 않을게.",
+    "approval_message_id": "Sentinel_8563c81084e48191aa31675bff31ab10",
+    "approval": "그래 그럼 하고자 하는 걸 해. 지금 분석은 어떤 것들이 이쓴ㄴ지 알려줄래?",
+    "interpretation": "Approval of the immediately preceding helper-only question, not broader execution authority.",
+    "scope": "Compile the fixed R02 GPU test helper on Mac and execute its correctness checks for this round only.",
+    "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+    "constraints": [
+      "No full engine build",
+      "No game launch",
+      "No benchmark or performance experiment",
+      "No source edits or regenerated candidate",
+      "No main, release or Homebrew changes",
+      "Latest STATE must designate HQ and this fixed round/source before execution",
+      "Duplicate notification never authorizes rerun; unclear execution history requires BLOCKED",
+      "HQ must finish GPU work and clean owned processes/helpers/workers/awake keepers and evidence writes before DONE; record logs/results even on failure"
+    ]
+  },
+  "source_writers_stopped": true,
+  "connection_verification": {
+    "local": "Existing HQ task 01a1b3c1-c9e7-7b22-8cba-8055df762aab read/send path confirmed; HQ received JINI messages. HQ direct-to-cloud thread reply remains unsupported.",
+    "notification": "Coordinator and bar_hq report PR #11 event received at 2026-11-16T21:23:11Z for HQ communication marker commit a619cdb. Verification is this GitHub event path, not a claim of native HQ-to-Dot direct messaging.",
+    "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
+  }
 }
