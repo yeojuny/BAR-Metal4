@@ -1,0 +1,424 @@
+{
+  "request_id": "r02-engine-staging-20261116-03",
+  "author": "SUPER_JINI_MK2",
+  "attempt_id": "r02-isolated-build-01",
+  "phase": "BUILD_AND_STAGING_ONLY",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest": {
+    "kind": "DELTA_PLUS_PARENT_FULL",
+    "delta_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-RECOVERY-MANIFEST.json",
+    "delta_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+    "parent_full_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
+    "parent_full_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3"
+  },
+  "reviewed_plan_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/HQ-BENCHMARK-PLAN.json",
+  "reviewed_plan_blob_sha": "b755ed7118e6694d3c883f2f2e95f84cbc8a399e",
+  "purpose": "Produce the missing fixed R02 engine and frozen two-product runner so subsequent regression runs use genuinely different binaries. No game until JINI reviews resulting hashes and runner diff.",
+  "budget": {
+    "isolated_engine_builds": 1,
+    "configuration_attempts": 1,
+    "game_launches": 0,
+    "benchmarks": 0,
+    "gpu_helpers": 0,
+    "captures": 0,
+    "replay_profiles": 0
+  },
+  "authorized_steps": [
+    "Reserve new attempt and verify previous round cleanup; require fresh unique new root and no prior execution receipt.",
+    "Use reviewed isolated_build source staging, configure, build, archive audit and runtime relocation/signing procedures. Verify complete source against fixed full manifest before compiling; only already-fixed header substitution allowed.",
+    "Verify nineteen libraries against plan and preserve baseline source/runtime, accepted app and old attempts. Preserve compiler/SDK/options identity; mismatch or build failure => stop and log, no repair/retry.",
+    "In fresh measurement copy only, retarget existing runner product mappings/pins, output roots and labels; force S01=1 and G01=1 both arms. No instrumentation, metric, parser, pacing, controller, ownership or cleanup logic changes.",
+    "Publish raw/signed binary hashes, source/build/dependency closure, runner full text and minimal diff, hash-pinned PRODUCT/RELEASE-CONTRACT/LAUNCH inputs and exact proposed validation+six-run commands. Any unresolved condition => BLOCKED rather than game execution.",
+    "Close all owned processes and evidence writes before same-round DONE returning JINI. No game, capture or profile starts in this round."
+  ],
+  "isolated_build": {
+    "needed": true,
+    "reason": "Only the standalone helper exists. The production MSL string is embedded in the engine, so an isolated R02 engine build is necessary. The helper binary cannot serve as the game engine.",
+    "new_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01",
+    "source_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/engine",
+    "build_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build",
+    "runtime_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native",
+    "signed_engine_sha256": null,
+    "new_root_rule": "Require a fresh unique directory; never reset/overwrite an existing attempt or edit G01/source, G01/runtime, the accepted app or the source commit.",
+    "source_staging": "APFS-clone the frozen G01 source into the new source root; replace only NativeSensorLOSShaders.h with the already verified fixed R02 header from helper-execution-02. Verify complete source against parent R02 full manifest, excluding only the declared incidental Python cache, and verify the delta manifest. This reconstructs the pinned production source, not a new source edit.",
+    "source_stage_commands": [
+      [
+        "/bin/mkdir",
+        "-p",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime"
+      ],
+      [
+        "/bin/cp",
+        "-cR",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/source/engine",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/"
+      ],
+      [
+        "/bin/cp",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-sensorlos-winding-20261116-01/helper-execution-02/headers/NativeSensorLOSShaders.h",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h"
+      ],
+      [
+        "/bin/cp",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/initial-cache.cmake",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/initial-cache.cmake"
+      ]
+    ],
+    "initial_cache": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/initial-cache.cmake",
+      "exists": true,
+      "sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+      "bytes": 36970
+    },
+    "configuration_environment": {
+      "PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig"
+    },
+    "configure_command": [
+      "cmake",
+      "-S",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/engine",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build",
+      "-G",
+      "Ninja",
+      "-C",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/initial-cache.cmake",
+      "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+    ],
+    "build_command": [
+      "cmake",
+      "--build",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build",
+      "--target",
+      "spring-metal4-scene",
+      "--",
+      "-j",
+      "8"
+    ],
+    "raw_engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build/spring-metal4-scene",
+    "build_rules": "One fresh target build. Do not copy old object/archive caches. Preserve exact build options/SDK/compiler/dependencies and source/version identity; retain compile commands. Any failure is logged and returned, not silently fixed or retried.",
+    "archive_audit_template": {
+      "path": "/Users/yeojun/Documents/Codex/2026-11-14/bar-metal4-handoff-contract-20261114/work/audit_build_closure.py",
+      "exists": true,
+      "sha256": "10f40b042e8196ab0febb8c16b4abcb2bc357af073df89a60ff9d17200a0946a",
+      "bytes": 1853
+    },
+    "archive_audit_command": [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-11-14/bar-metal4-handoff-contract-20261114/work/audit_build_closure.py",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/ARCHIVE-CLOSURE.json"
+    ],
+    "baseline_archive_closure": {
+      "objects": 1538,
+      "archives": 35,
+      "mismatches": 0
+    },
+    "runtime_stage_commands": [
+      [
+        "/bin/cp",
+        "-cR",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/"
+      ],
+      [
+        "/bin/cp",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build/spring-metal4-scene",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene"
+      ],
+      [
+        "/bin/cp",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/measurement/relocate_sign.py",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/relocate_sign.py"
+      ],
+      [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/relocate_sign.py"
+      ]
+    ],
+    "relocation_rule": "The byte-identical existing relocation script resolves its new root by __file__, applies the same nine accepted loader mappings, ad-hoc signs/verifies and writes CANDIDATE.json. Verify all19 copied library hashes unchanged.",
+    "before_any_game": "Record raw and signed R02 binary SHA256, actual source/manifest closure, compiler/SDK/build option equivalence and nineteen-library closure. R02 signed hash is genuinely unknown before this build; no game-ready claim may substitute0382 source SHA or6e49 helper SHA."
+  },
+  "runner_template": {
+    "template": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/measurement/run.py",
+      "exists": true,
+      "sha256": "de05ddb7f6f1abde4833090f47a8a3e633a5e4ff517aa066dca434e3c2603720",
+      "bytes": 31866
+    },
+    "battle_module": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/material-storage-pr7-20261115-01/measurement/battle/run.py",
+      "exists": true,
+      "sha256": "110dd412da3bf40c93515650729a4ef5d128ec06a1c139abfbe2aca24f970898",
+      "bytes": 23559
+    },
+    "adaptation_required_before_ready": [
+      "Do not run frozen G01 run.py unchanged: products() selects the same962637 binary for both modes and stage() sets G01 from mode==candidate.",
+      "In a fresh R02 measurement copy, change only product mapping/pins, suite/output roots and arm labels; force S01=1/G01=1 in BOTH arms. Keep controller, parser, pacing, preflight, ownership, cleanup and metrics unchanged.",
+      "Baseline PRODUCT pins962637; candidate PRODUCT must pin the newly built signed R02 engine. Freeze the adapted runner and PRODUCT/RELEASE-CONTRACT/LAUNCH manifests before game execution.",
+      "Capture/replay templates also contain old9a44/path pins; retarget only to the new signed R02 engine, new trace/analysis paths and new arm. Never execute old hardcoded recipes as-is."
+    ],
+    "framework_change": "No new benchmark framework or instrumentation. This plan prepares no adapter code and executes no staging.",
+    "proposed_cli_after_reviewed_staging": [
+      [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+        "--suite",
+        "r02_validation01",
+        "--stage",
+        "validation_paced"
+      ],
+      [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+        "--suite",
+        "r02_validation01",
+        "--run",
+        "validation_paced"
+      ],
+      [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+        "--suite",
+        "r02_clean01",
+        "--stage",
+        "clean_paced"
+      ],
+      [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+        "--suite",
+        "r02_clean01",
+        "--run",
+        "clean_paced"
+      ]
+    ],
+    "command_readiness": "The CLI shape is established; the new retargeted copy and its pins do not yet exist. These are proposed commands after staging, not a claim of an already executable R02 campaign."
+  },
+  "conditions": {
+    "preset": "Ultra index4",
+    "viewport": [
+      1512,
+      950
+    ],
+    "drawable": [
+      1512,
+      982
+    ],
+    "viewport_origin": [
+      0,
+      32
+    ],
+    "MSAA": 0,
+    "requested_MSAALevel": -1,
+    "actual_main_samples_required": 1,
+    "VSync": 0,
+    "VSyncGame": 0,
+    "LimitIdleFps": 0,
+    "option_limitoffscreenfps": false,
+    "option_limitidlefps": false,
+    "display_rule": "These are this fixed fixture's required observed extents, not a product-wide notch assumption. If display/surface differs, stop and report instead of silently changing resolution.",
+    "prepare_ready": 1,
+    "begin_ready": 0,
+    "render_worker": 1,
+    "S01": 1,
+    "G01": 1,
+    "DQU_and_storage": 0,
+    "G02_G03_G04": "not enabled or resumed",
+    "sepia_and_shared_CUS_pilot": "OFF",
+    "preserved_clean_environment": {
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0",
+      "BAR_NATIVE_MODEL_TRACE": "0",
+      "BAR_NATIVE_SUBMISSION_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_MEMORY_CENSUS": "0",
+      "BAR_NATIVE_COMPILER_MEMORY": "0",
+      "BAR_NATIVE_HEAP_COLLECT": "0",
+      "BAR_NATIVE_HEAP_STATS": "0",
+      "BAR_NATIVE_LARGE_HEAP": "0",
+      "BAR_NATIVE_PREPARATION_TRACE": "0",
+      "BAR_NATIVE_HOST_COST_TRACE": "0",
+      "BAR_NATIVE_VBO_COPY_TRACE": "0",
+      "BAR_NATIVE_PUBLICATION_TRACE": "0",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+      "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+      "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+      "BAR_NATIVE_PASS_COST136_FILE": "",
+      "BAR_NATIVE_PASS160": "1",
+      "BAR_NATIVE_PASS165": "1",
+      "BAR_NATIVE_PASS166": "1",
+      "BAR_NATIVE_RECORD158": "1",
+      "BAR_NATIVE_RETAINED_FONT170": "1",
+      "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+      "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+      "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+      "BAR_METAL4_SHARED_CUS_PILOT": "0",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0"
+    },
+    "environment_rule": "Preserve production flags and nineteen libraries in both arms, normalize only per-arm private paths. All traces/probes/validation/capture off in clean. Actual child and effective runtime settings must match staged receipts.",
+    "host": "AC power, normal power mode, no concurrent build/game/capture/background test. Existing preflight checks, fullscreen ownership and sole-executor isolation remain in force; do not change security/power settings."
+  },
+  "baseline": {
+    "source_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/source/engine",
+    "public_base_commit": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+    "reconstruction": "R01 + S01-final + G01; no G02/G03/G04",
+    "local_manifest": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/SOURCE-MANIFEST.json",
+      "exists": true,
+      "sha256": "809c96f14a42c9fcc8292493b86466d6382e51990f6e54cbc4565b706880aab4",
+      "bytes": 1736288
+    },
+    "public_manifest": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/unexpected-load-scaling-audit-20261116-01/package/source-snapshots/G01-MANIFEST.json",
+      "exists": true,
+      "sha256": "0f13a618d97fcaf483e8da3d34be5fbe2957df10d59fc00e118681329c298469",
+      "bytes": 1233013
+    },
+    "signed_engine": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native/bin/spring-metal4-scene",
+      "exists": true,
+      "sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "bytes": 65304016
+    },
+    "raw_sha256": "d3df90ec4f40278a904e7b90ed1c89283d4a427223c3a69ac471372d2aced0b8",
+    "runtime_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native",
+    "library_count": 19,
+    "library_hashes": [
+      {
+        "name": "libIL.dylib",
+        "sha256": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e"
+      },
+      {
+        "name": "libSDL3.0.dylib",
+        "sha256": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f"
+      },
+      {
+        "name": "libbrotlicommon.1.2.0.dylib",
+        "sha256": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff"
+      },
+      {
+        "name": "libbrotlidec.1.2.0.dylib",
+        "sha256": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202"
+      },
+      {
+        "name": "libfontconfig.1.dylib",
+        "sha256": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec"
+      },
+      {
+        "name": "libfreetype.6.dylib",
+        "sha256": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827"
+      },
+      {
+        "name": "libintl.8.dylib",
+        "sha256": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8"
+      },
+      {
+        "name": "libjasper.7.0.0.dylib",
+        "sha256": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b"
+      },
+      {
+        "name": "libjpeg.8.3.2.dylib",
+        "sha256": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871"
+      },
+      {
+        "name": "liblcms2.2.dylib",
+        "sha256": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376"
+      },
+      {
+        "name": "liblzma.5.dylib",
+        "sha256": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe"
+      },
+      {
+        "name": "libminizip.1.dylib",
+        "sha256": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040"
+      },
+      {
+        "name": "libogg.0.8.6.dylib",
+        "sha256": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb"
+      },
+      {
+        "name": "libopenal.1.25.2.dylib",
+        "sha256": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c"
+      },
+      {
+        "name": "libpng16.16.dylib",
+        "sha256": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b"
+      },
+      {
+        "name": "libtiff.6.dylib",
+        "sha256": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820"
+      },
+      {
+        "name": "libvorbis.0.dylib",
+        "sha256": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388"
+      },
+      {
+        "name": "libvorbisfile.3.dylib",
+        "sha256": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7"
+      },
+      {
+        "name": "libzstd.1.5.7.dylib",
+        "sha256": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4"
+      }
+    ],
+    "local_binary_and_19_library_rehash": "PASS during read-only planning",
+    "comparison_mode": "G01 remains ON in both A and B. This is G01 binary versus R02 binary, not old G01 feature OFF/ON."
+  },
+  "suggested_followup": {
+    "validation_games": 1,
+    "clean_games": 6,
+    "order": [
+      "A1_G01",
+      "B1_R02",
+      "B2_R02",
+      "A2_G01",
+      "A3_G01",
+      "B3_R02"
+    ],
+    "capture_games": 0,
+    "replay_profiles": 0,
+    "status": "NOT_AUTHORIZED_UNTIL_NEXT_HANDOFF"
+  },
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "interpretation": "Necessary build preparation for requested autonomous benchmarking. This round excludes game execution."
+  },
+  "prohibited": [
+    "Production source modifications beyond exact frozen source staging",
+    "Retries or overwriting existing attempt",
+    "main/release/Homebrew changes",
+    "Changing system security or power settings",
+    "Installing dependencies",
+    "Unrelated cleanup or killing unrelated processes"
+  ]
+}
