@@ -1,0 +1,23 @@
+{
+  "request_id": "r02-engine-staging-20261116-03",
+  "author": "SUPER_JINI_MK2",
+  "phase": "READY",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-RECOVERY-MANIFEST.json",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "request_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/REQUEST.json",
+  "scope": "BUILD_AND_STAGING_ONLY",
+  "budget": {
+    "isolated_engine_builds": 1,
+    "configuration_attempts": 1,
+    "game_launches": 0,
+    "benchmarks": 0,
+    "gpu_helpers": 0,
+    "captures": 0,
+    "replay_profiles": 0
+  },
+  "attempt_id": "r02-isolated-build-01",
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "prior_cleanup_verified": true
+}
