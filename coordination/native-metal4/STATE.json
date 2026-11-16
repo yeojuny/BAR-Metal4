@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 13,
+  "revision": 14,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/READY.json",
   "result_path": null,
   "decision": "Previous compile failure reviewed; corrected helper new bounded attempt authorized.",
-  "execution_status": "READY_FIXED_CORRECTED_HELPER_NOT_STARTED",
+  "execution_status": "FIXED_CORRECTED_HELPER_ATTEMPT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -101,6 +101,15 @@
       "source_writers_stopped": true,
       "child_tasks_completed": true,
       "attempt_id": "r02-helper-execution-02"
+    },
+    {
+      "event": "HQ_EXECUTION_RESERVED",
+      "revision": 14,
+      "request_id": "r02-sensorlos-winding-20261116-02",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-helper-execution-02",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "scope": "ONE_FIXED_HELPER_COMPILE_AND_ONE_GPU_CHECK_IF_COMPILE_SUCCEEDS"
     }
   ],
   "communication_test": {
@@ -186,10 +195,11 @@
   },
   "execution": {
     "attempt_id": "r02-helper-execution-02",
-    "started": false,
+    "started": true,
     "completed": false,
     "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
     "helper_compile_attempts": 0,
-    "gpu_helper_runs": 0
+    "gpu_helper_runs": 0,
+    "reserved_at_utc": "2026-11-16 22:47:30 UTC"
   }
 }
