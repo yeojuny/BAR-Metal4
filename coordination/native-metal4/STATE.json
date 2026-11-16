@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 14,
+  "revision": 15,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
   "request": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DONE.json",
   "decision": "Previous compile failure reviewed; corrected helper new bounded attempt authorized.",
-  "execution_status": "FIXED_CORRECTED_HELPER_ATTEMPT_STARTED",
+  "execution_status": "PASSED_HELPER_GPU_CORRECTNESS_CLEANED",
   "blocked_reason": null,
   "history": [
     {
@@ -110,6 +110,22 @@
       "attempt_id": "r02-helper-execution-02",
       "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
       "scope": "ONE_FIXED_HELPER_COMPILE_AND_ONE_GPU_CHECK_IF_COMPILE_SUCCEEDS"
+    },
+    {
+      "event": "HQ_DONE_GPU_CORRECTNESS_PASS",
+      "revision": 15,
+      "request_id": "r02-sensorlos-winding-20261116-02",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-helper-execution-02",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DONE.json",
+      "helper_compile_attempts": 1,
+      "gpu_helper_runs": 1,
+      "metal_api_validation_observed": true,
+      "original_cases": 3600,
+      "asymmetric_cases": 1024,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -196,10 +212,14 @@
   "execution": {
     "attempt_id": "r02-helper-execution-02",
     "started": true,
-    "completed": false,
+    "completed": true,
     "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
-    "helper_compile_attempts": 0,
-    "gpu_helper_runs": 0,
-    "reserved_at_utc": "2026-11-16 22:47:30 UTC"
+    "helper_compile_attempts": 1,
+    "gpu_helper_runs": 1,
+    "reserved_at_utc": "2026-11-16 22:47:30 UTC",
+    "compile_exit_code": 0,
+    "gpu_exit_code": 0,
+    "cleanup_complete": true,
+    "binary_sha256": "6e49b804e7076ea5e96a3f88b00cb2e004c0c0a41a610c7c0a913a7203259c33"
   }
 }
