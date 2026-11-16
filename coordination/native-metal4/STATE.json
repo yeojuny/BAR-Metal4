@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 18,
+  "revision": 19,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
   "request": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/DONE.json",
   "decision": "Reviewed plan: minimal prerequisite build/staging only, game execution requires next pinned handoff.",
-  "execution_status": "ISOLATED_BUILD_AND_RUNNER_STAGING_ATTEMPT_STARTED",
+  "execution_status": "ISOLATED_BUILD_AND_STAGING_COMPLETE_GAMES_ZERO",
   "blocked_reason": null,
   "history": [
     {
@@ -149,6 +149,21 @@
       "attempt_id": "r02-isolated-build-01",
       "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
       "scope": "ONE_CONFIGURE_ONE_ENGINE_BUILD_AND_RUNNER_STAGING_GAMES_ZERO"
+    },
+    {
+      "event": "HQ_BUILD_STAGING_DONE_GAMES_ZERO",
+      "revision": 19,
+      "request_id": "r02-engine-staging-20261116-03",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-isolated-build-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "result_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/DONE.json",
+      "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+      "engine_builds": 1,
+      "games": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -235,10 +250,14 @@
   "execution": {
     "attempt_id": "r02-isolated-build-01",
     "started": true,
-    "completed": false,
-    "engine_builds": 0,
+    "completed": true,
+    "engine_builds": 1,
     "games": 0,
     "benchmarks": 0,
-    "reserved_at_utc": "2026-11-16 23:07:16 UTC"
+    "reserved_at_utc": "2026-11-16 23:07:16 UTC",
+    "configuration_attempts": 1,
+    "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+    "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+    "cleanup_complete": true
   }
 }
