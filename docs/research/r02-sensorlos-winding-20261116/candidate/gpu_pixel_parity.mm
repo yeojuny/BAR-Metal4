@@ -354,7 +354,7 @@ int main(){@autoreleasepool{
     asymmetric[profile]=[d newDepthStencilStateWithDescriptor:state];
     if(!asymmetric[profile])Fail("asymmetric depth stencil state");
   }
-  auto probeDesc=[pd copy];probeDesc.fragmentFunction=[lib newFunctionWithName:@"FacingProbeFragment"];
+  MTLRenderPipelineDescriptor* probeDesc=[pd copy];probeDesc.fragmentFunction=[lib newFunctionWithName:@"FacingProbeFragment"];
   auto probePipeline=[d newRenderPipelineStateWithDescriptor:probeDesc error:&error];
   if(!probePipeline)Fail("front facing probe pipeline",error);
   auto probeDepth=[MTLDepthStencilDescriptor new];
