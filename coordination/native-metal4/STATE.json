@@ -2,9 +2,9 @@
   "status": "WAITING_FOR_JINI_ACK",
   "owner": "SUPER_JINI_MK2",
   "enabled": false,
-  "revision": 0,
+  "revision": 1,
   "acknowledgements": {
-    "SUPER_JINI_MK2": false,
+    "SUPER_JINI_MK2": true,
     "HQ": false
   },
   "local_connection_verified": false,
