@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 19,
+  "revision": 20,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r02-engine-staging-20261116-03",
+  "round_id": "r02-g01-benchmark-20261116-04",
   "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
   "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
-  "request": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/DONE.json",
-  "decision": "Reviewed plan: minimal prerequisite build/staging only, game execution requires next pinned handoff.",
-  "execution_status": "ISOLATED_BUILD_AND_STAGING_COMPLETE_GAMES_ZERO",
+  "request": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/READY.json",
+  "result_path": null,
+  "decision": "Fixed engine and runner accepted for bounded regression measurement, not adoption.",
+  "execution_status": "READY_VALIDATION1_CLEAN6_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -164,6 +164,16 @@
       "games": 0,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "BUILD_AND_RUNNER_REVIEW_ACCEPTED",
+      "revision": 20,
+      "previous_round": "r02-engine-staging-20261116-03",
+      "previous_result_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/DONE.json",
+      "artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4",
+      "binary": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "runner": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+      "decision": "Isolated source/toolchain/dependency closure and seven staged arms verified. Proceed validation1 then clean6 only; no restage/retry/capture."
     }
   ],
   "communication_test": {
@@ -235,11 +245,11 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "BUILD_AND_STAGING_ONLY",
+  "enabled_scope": "ONE_R02_VALIDATION_THEN_SIX_MATCHED_CLEAN_GAMES",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
-    "interpretation": "Necessary build preparation for requested autonomous benchmarking. This round excludes game execution."
+    "scope": "Necessary bounded autonomous regression benchmarking; no release adoption."
   },
   "source_writers_stopped": true,
   "connection_verification": {
@@ -248,16 +258,14 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r02-isolated-build-01",
-    "started": true,
-    "completed": true,
-    "engine_builds": 1,
-    "games": 0,
-    "benchmarks": 0,
-    "reserved_at_utc": "2026-11-16 23:07:16 UTC",
-    "configuration_attempts": 1,
-    "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
-    "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
-    "cleanup_complete": true
-  }
+    "attempt_id": "r02-validation-and-clean-01",
+    "started": false,
+    "completed": false,
+    "validation_games": 0,
+    "clean_games": 0,
+    "builds": 0
+  },
+  "input_manifest_sha256": "4bc4742cc680b17ef1a97614b66d9ad958e71a66ac3dc593b7d9fb57a11a4ae4",
+  "input_manifest_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/STAGING-SUMMARY.json",
+  "input_artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4"
 }
