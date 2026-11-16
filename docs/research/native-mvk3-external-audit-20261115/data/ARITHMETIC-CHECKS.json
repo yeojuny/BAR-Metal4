@@ -1,0 +1,63 @@
+{
+  "checks": [
+    {
+      "AA": "4x",
+      "run": "A1_MVK3",
+      "intervals": 2734,
+      "low1Recomputed": 26.8714014353027,
+      "reported": 26.8714014353027
+    },
+    {
+      "AA": "4x",
+      "run": "B1_NATIVE",
+      "intervals": 1466,
+      "low1Recomputed": 30.92783383994053,
+      "reported": 30.92783383994053
+    },
+    {
+      "AA": "4x",
+      "run": "B2_NATIVE",
+      "intervals": 1465,
+      "low1Recomputed": 30.30302871135607,
+      "reported": 30.30302871135607
+    },
+    {
+      "AA": "4x",
+      "run": "A2_MVK3",
+      "intervals": 2754,
+      "low1Recomputed": 38.56749274108478,
+      "reported": 38.56749274108478
+    },
+    {
+      "AA": "0x",
+      "run": "A1_MVK3",
+      "intervals": 3770,
+      "low1Recomputed": 51.07526819935832,
+      "reported": 51.07526819935832
+    },
+    {
+      "AA": "0x",
+      "run": "B1_NATIVE",
+      "intervals": 1904,
+      "low1Recomputed": 39.37007874015748,
+      "reported": 39.37007874015748
+    },
+    {
+      "AA": "0x",
+      "run": "B2_NATIVE",
+      "intervals": 1904,
+      "low1Recomputed": 40.98360672534265,
+      "reported": 40.98360672534265
+    },
+    {
+      "AA": "0x",
+      "run": "A2_MVK3",
+      "intervals": 3738,
+      "low1Recomputed": 52.92478975954566,
+      "reported": 52.92478975954566
+    }
+  ],
+  "sameInitialAndCameraAll8": true,
+  "sameCreated600Destroyed433All8": true,
+  "meanFPSMethod": "GameFrame start/end draw counter divided by boundary timer difference; raw interval CSV can have one fewer interval and is used for tails."
+}

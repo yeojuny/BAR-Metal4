@@ -1,0 +1,109 @@
+{
+  "status": "COMPLETE",
+  "scene": "current local26 Seths official armbull combat",
+  "order": [
+    "A1_MVK3",
+    "B1_NATIVE",
+    "B2_NATIVE",
+    "A2_MVK3"
+  ],
+  "games": 4,
+  "countedWindow": "simulation 540..1740, 40 seconds; preceding combat warmup simulation 240..540",
+  "common": "fullscreen game safe view 1512x950; actual 4x samples; official Ultra preset index 4; spectator fullview; VSync 0; LimitIdleFps 0; offscreen FPS reduction false",
+  "rows": [
+    {
+      "arm": "A1_MVK3",
+      "backend": "MVK3",
+      "meanFPS": 68.37329160613328,
+      "low1PercentFPS": 26.8714014353027,
+      "draws": 2735,
+      "countedSeconds": 40.000999451,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/scene.png",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/RECOVERY-RESULT.json",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "safeView": [
+        1512,
+        950
+      ],
+      "actualSamples": 4,
+      "ultraPreset": "ultra",
+      "spectatorFullView": true
+    },
+    {
+      "arm": "B1_NATIVE",
+      "backend": "native",
+      "meanFPS": 36.661252589363095,
+      "low1PercentFPS": 30.92783383994053,
+      "draws": 1467,
+      "countedSeconds": 40.01499939,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/scene.png",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/RESULT.json",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "safeView": [
+        1512,
+        950
+      ],
+      "actualSamples": 4,
+      "ultraPreset": "ultra",
+      "spectatorFullView": true
+    },
+    {
+      "arm": "B2_NATIVE",
+      "backend": "native",
+      "meanFPS": 36.66374834650778,
+      "low1PercentFPS": 30.30302871135607,
+      "draws": 1466,
+      "countedSeconds": 39.98500061,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/scene.png",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/RESULT.json",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "safeView": [
+        1512,
+        950
+      ],
+      "actualSamples": 4,
+      "ultraPreset": "ultra",
+      "spectatorFullView": true
+    },
+    {
+      "arm": "A2_MVK3",
+      "backend": "MVK3",
+      "meanFPS": 68.89222016501262,
+      "low1PercentFPS": 38.56749274108478,
+      "draws": 2755,
+      "countedSeconds": 39.990001678,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/scene.png",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/RESULT.json",
+      "normalExit": true,
+      "ownedGroupGone": true,
+      "safeView": [
+        1512,
+        950
+      ],
+      "actualSamples": 4,
+      "ultraPreset": "ultra",
+      "spectatorFullView": true
+    }
+  ],
+  "meanFPS": {
+    "MVK3": 68.63275588557295,
+    "native": 36.66250046793544
+  },
+  "nativeVsMVK3Percent": -46.58162856076987,
+  "allValidSlowRunsRetained": true,
+  "historicalFPSPooled": false,
+  "firstA1PostprocessCorrection": "The first valid game had a postrun private parser assertion expecting spectator=0, while the authorized common startscript used spectator=1. Original FAILURE/COMPLETION are preserved; RECOVERY-RESULT.json reparses the unchanged raw game.",
+  "completionReceipt": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/COMPLETION-RECOVERY.json",
+  "ownerClosedReceipt": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/OWNER-CLOSED-RECOVERY.json"
+}

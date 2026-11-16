@@ -1,0 +1,79 @@
+{
+  "status": "COMPLETE_CLOSED",
+  "mode": "Ultra preset with MSAA 0x, 1512x950 spectator fullview official Seths combat",
+  "order": [
+    "A1_MVK3",
+    "B1_NATIVE",
+    "B2_NATIVE",
+    "A2_MVK3"
+  ],
+  "rows": [
+    {
+      "arm": "A1_MVK3",
+      "backend": "MVK3",
+      "meanFPS": 94.275,
+      "low1PercentFPS": 51.07526819935832,
+      "draws": 3771,
+      "seconds": 40.0,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "raw": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/RECOVERY-RESULT.json",
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/scene.png",
+      "normalExit": true
+    },
+    {
+      "arm": "B1_NATIVE",
+      "backend": "native",
+      "meanFPS": 47.61904634777799,
+      "low1PercentFPS": 39.37007874015748,
+      "draws": 1905,
+      "seconds": 40.005001068,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "raw": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/RESULT.json",
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/scene.png",
+      "normalExit": true
+    },
+    {
+      "arm": "B2_NATIVE",
+      "backend": "native",
+      "meanFPS": 47.625,
+      "low1PercentFPS": 40.98360672534265,
+      "draws": 1905,
+      "seconds": 40.0,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "raw": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/RESULT.json",
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/scene.png",
+      "normalExit": true
+    },
+    {
+      "arm": "A2_MVK3",
+      "backend": "MVK3",
+      "meanFPS": 93.45864480958878,
+      "low1PercentFPS": 52.92478975954566,
+      "draws": 3739,
+      "seconds": 40.006999969,
+      "officialCreated": 600,
+      "officialDestroyed": 433,
+      "raw": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3",
+      "result": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/RESULT.json",
+      "image": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/scene.png",
+      "normalExit": true
+    }
+  ],
+  "meansFPS": {
+    "MVK3": 93.86682240479439,
+    "native": 47.62202317388899
+  },
+  "nativeVsMVK3Percent": -49.26639471343538,
+  "allValidSlowRunsRetained": true,
+  "prior4xAndHistoricalAA0NotPooled": true,
+  "firstA1ParserCorrection": "MSAALevel input -1 was normalized to runtime 0; original parser failure/raw retained, same valid raw reparsed with no game rerun.",
+  "completionReceipt": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/COMPLETION-RECOVERY.json",
+  "ownerClosedReceipt": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/OWNER-CLOSED-RECOVERY.json",
+  "awakeReleased": true
+}
