@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 10,
+  "revision": 11,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
   "result_path": null,
   "decision": null,
-  "execution_status": "AUTHORIZED_FIXED_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY_NOT_STARTED",
+  "execution_status": "FIXED_HELPER_ATTEMPT_RESERVED_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -58,6 +58,15 @@
       "source_writers_stopped": true,
       "child_tasks_completed": true,
       "execution_started": false
+    },
+    {
+      "event": "HQ_EXECUTION_RESERVED",
+      "revision": 11,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "attempt_id": "r02-helper-execution-01",
+      "author": "LOCAL_CODEX_HQ",
+      "scope": "ONE_FIXED_HELPER_COMPILE_AND_ONE_GPU_CORRECTNESS_RUN",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334"
     }
   ],
   "communication_test": {
@@ -154,5 +163,14 @@
     "local": "Existing HQ task 01a1b3c1-c9e7-7b22-8cba-8055df762aab read/send path confirmed; HQ received JINI messages. HQ direct-to-cloud thread reply remains unsupported.",
     "notification": "Coordinator and bar_hq report PR #11 event received at 2026-11-16T21:23:11Z for HQ communication marker commit a619cdb. Verification is this GitHub event path, not a claim of native HQ-to-Dot direct messaging.",
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
+  },
+  "execution": {
+    "attempt_id": "r02-helper-execution-01",
+    "started": false,
+    "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+    "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+    "helper_compile_attempts": 0,
+    "gpu_helper_runs": 0,
+    "reserved_at_utc": "2026-11-16 22:11:17 UTC"
   }
 }
