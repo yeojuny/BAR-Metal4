@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 11,
+  "revision": 12,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
   "request": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/DONE.json",
   "decision": null,
-  "execution_status": "FIXED_HELPER_ATTEMPT_RESERVED_NOT_STARTED",
+  "execution_status": "FAILED_HELPER_COMPILE_GPU_NOT_STARTED_CLEANED",
   "blocked_reason": null,
   "history": [
     {
@@ -67,6 +67,19 @@
       "author": "LOCAL_CODEX_HQ",
       "scope": "ONE_FIXED_HELPER_COMPILE_AND_ONE_GPU_CORRECTNESS_RUN",
       "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334"
+    },
+    {
+      "event": "HQ_DONE_FAILED_COMPILE_NO_GPU",
+      "revision": 12,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-helper-execution-01",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+      "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/DONE.json",
+      "helper_compile_attempts": 1,
+      "gpu_helper_runs": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -166,11 +179,14 @@
   },
   "execution": {
     "attempt_id": "r02-helper-execution-01",
-    "started": false,
+    "started": true,
     "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
     "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
-    "helper_compile_attempts": 0,
+    "helper_compile_attempts": 1,
     "gpu_helper_runs": 0,
-    "reserved_at_utc": "2026-11-16 22:11:17 UTC"
+    "reserved_at_utc": "2026-11-16 22:11:17 UTC",
+    "completed": true,
+    "compile_exit_code": 1,
+    "cleanup_complete": true
   }
 }
