@@ -1,0 +1,81 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-01",
+  "author": "LOCAL_CODEX_HQ",
+  "kind": "DONE",
+  "attempt_id": "r02-helper-execution-01",
+  "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+  "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "result_status": "FAILED",
+  "failure_stage": "OBJCXX_HELPER_COMPILATION_BEFORE_GPU",
+  "result_summary": "The fixed helper failed host compilation at line357 because auto inferred id for [pd copy], so fragmentFunction dot-property access was rejected. No binary, MSL runtime compilation or GPU helper execution occurred. No retry or source modification.",
+  "counts": {
+    "helper_compile_attempts": 1,
+    "gpu_helper_runs": 0,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "source_edits": 0
+  },
+  "helper_sha256": "4e59f9c2309029790361501aa3708dfcdcb44a0fea802e2293403ee9b73d7208",
+  "header_sha256": {
+    "NativeSensorLOSShaders.h": "1fa2cf0b4f8a9cd01f9a3b6c4a3886b72297aa6de1481cf31505945cfc995b1c",
+    "NativeMultisampleLineShaders.h": "4e775c54e07e0c26fc21ca20b77635c7bbbb6efc55d026a4a010ca1c53c0b721",
+    "NativeSampleShadingShaders.h": "02c29319fb48b4ece77d1ed6c1cd7b3d4644dca1b81bce9f9f7423bfd12ef4bf"
+  },
+  "binary_sha256": null,
+  "compile": {
+    "command": [
+      "xcrun",
+      "clang++",
+      "-std=c++20",
+      "-fobjc-arc",
+      "-framework",
+      "Foundation",
+      "-framework",
+      "Metal",
+      "-I",
+      "<R02-EXECUTION>/headers",
+      "<R02-EXECUTION>/gpu_pixel_parity.mm",
+      "-o",
+      "<R02-EXECUTION>/gpu_pixel_parity"
+    ],
+    "exit_code": 1,
+    "wall_seconds": 1.1133907089824788,
+    "diagnostics": "<R02-EXECUTION>/gpu_pixel_parity.mm:357:3: warning: 'auto' deduced as 'id' in declaration of 'probeDesc' [-Wauto-var-id]\n  357 |   auto probeDesc=[pd copy];probeDesc.fragmentFunction=[lib newFunctionWithName:@\"FacingProbeFragment\"];\n      |   ^~~~~~~~~~~~~~\n<R02-EXECUTION>/gpu_pixel_parity.mm:357:38: error: property 'fragmentFunction' not found on object of type '__strong id'\n  357 |   auto probeDesc=[pd copy];probeDesc.fragmentFunction=[lib newFunctionWithName:@\"FacingProbeFragment\"];\n      |                                      ^\n1 warning and 1 error generated.\n",
+    "public_log_redaction": "Local execution directory replaced with <R02-EXECUTION>; original log retained locally and SHA pinned.",
+    "raw_log_sha256": "aeb434f89568a88c41a7bde5ed74375abf49aac4aea7e29855e6751ebcaaadc4"
+  },
+  "suggested_source_fix": {
+    "location": "docs/research/r02-sensorlos-winding-20261116/candidate/gpu_pixel_parity.mm:357",
+    "current": "auto probeDesc=[pd copy];",
+    "suggestion": "MTLRenderPipelineDescriptor* probeDesc=[pd copy];",
+    "status": "NOT_APPLIED_BY_HQ",
+    "scope": "Host helper type annotation only. Production shader change is not implicated by this compiler error."
+  },
+  "validation": {
+    "CPU_source_review": "Previously passed and preserved",
+    "Metal_API_Validation": "NOT_RUN",
+    "MSL_compilation": "NOT_RUN",
+    "GPU_color_depth_stencil_parity": "NOT_RUN",
+    "negative_controls": "NOT_RUN",
+    "performance": "NOT_MEASURED"
+  },
+  "cleanup": {
+    "results_complete": true,
+    "gpu_complete": true,
+    "gpu_complete_reason": "No helper process or GPU work started; compile failed before GPU attempt.",
+    "owned_pid_count": 0,
+    "helper_session_count": 0,
+    "awake_released": true,
+    "awake_reason": "No awake keeper created.",
+    "workers_quiescent": true,
+    "artifact_writes_closed": true
+  },
+  "evidence": {
+    "execution_receipt_sha256": "e417c470916b7b9e0368fc0eb959a07866015b54bd9857edec26400eebaf5a94",
+    "local_evidence_manifest_sha256": "379431903d8fdc5bcac503868931667bd34121f833dbec391273002501ae7ffe",
+    "original_source_commit_preserved": true,
+    "raw_logs_preserved": true
+  },
+  "next_step": "JINI reviews this failure and prepares any source correction. A new fixed candidate and valid explicit bounded handoff are required before any further execution. This DONE grants no retry or broader execution authority."
+}
