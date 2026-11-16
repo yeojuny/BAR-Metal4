@@ -75,6 +75,7 @@
 #include "Metal4ReclaimField.h"
 #include "Metal4ObjectSpotlight.h"
 #include "Metal4Grass.h"
+#include "Metal4GrassBoundaryPolicyS01.h"
 #include "Metal4ResourceSpots.h"
 #include "Metal4SensorLOSNative.h"
 #include "Rendering/Backend/NativeMissileThrusterRecorder.h"
@@ -810,6 +811,54 @@ struct Metal4WorldRenderer::Impl {
 		image.requireReadable=[external]{if(external->requireReadable)external->requireReadable();};return image;
 	}
 
+ GrassSourceImageS01 OriginalGrassImageS01(RuntimeLease& lease,const NativeCUSTextureBinding& binding,
+  unsigned slot,uint64_t submission,bool validation,double& shaderMs,bool enabled,
+  const std::shared_ptr<const NativeShadowTextureBacking>& currentShadow)
+ {
+  GrassSourceImageS01 out;
+  // Exactly one original resolution, with every existing callback/owner intact.
+  out.image=OriginalModelImage(lease,binding,submission,validation,shaderMs);
+  if(!enabled||slot==0||!binding.object)return out;
+  try{
+   const auto object=binding.object;const auto expected=out.image.texture;
+   if((slot==1||slot==2)&&object->image&&!object->backing){
+    const auto found=textures.find(object->image.get());
+    if(found!=textures.end()&&found->second.owner==object->image&&found->second.sampled==expected){
+     const auto cached=found->second;
+     out.beforeCheckpoint=[object,cached,expected]{return object->image==cached.owner&&
+      cached.sampled==expected&&cached.status&&cached.status->ready;};
+    }
+   }else if(slot==2){
+    const auto backing=std::dynamic_pointer_cast<const ui::NativeScreenTextureBacking>(object->backing);
+    if(backing&&backing->image&&backing->contentVersion&&backing->contentVersion<=object->version){
+     auto query=screenGPU.CaptureGrassCPUImageCheckpointS01(backing->image,expected);
+     if(query)out.beforeCheckpoint=[object,backing,query=std::move(query)]{return object->backing==backing&&query();};
+    }
+   }else if(slot==3){
+    const auto backing=std::dynamic_pointer_cast<const NativeShadowTextureBacking>(object->backing);
+    if(backing&&backing==currentShadow&&backing->request.kind==NativeShadowTextureKind::Depth&&
+     NativeShadowTextureImage(*backing)==expected){
+     const auto resource=backing->resource;
+     out.beforeCheckpoint=[object,backing,resource,expected,submission]{return object->backing==backing&&
+      backing->resource==resource&&NativeShadowTextureImage(*backing)==expected&&
+      GrassProducerRecordedS01(submission,backing->completed.load(),backing->encodedSubmission.load(),true);};
+    }
+   }else if(slot==4){
+    out.beforeCheckpoint=CaptureGrassInfoCheckpointS01(binding,expected,submission);
+   }else if(slot==5){
+    const auto backing=std::dynamic_pointer_cast<const NativeMapTextureBacking>(object->backing);
+    const auto resource=backing?std::dynamic_pointer_cast<const MapImage>(backing->Resource()):nullptr;
+    if(backing&&backing->role==NativeMapTextureRole::Height&&resource&&resource->heightOwner&&
+     resource->heightOwner->source==backing->heights&&resource->texture==expected&&resource->heightOwner->texture==expected){
+     const auto height=resource->heightOwner;
+     out.beforeCheckpoint=[object,backing,resource,height,expected]{return object->backing==backing&&
+      backing->Resource()==resource&&resource->heightOwner==height&&height->source==backing->heights&&
+      resource->texture==expected&&height->texture==expected&&resource->Completed();};
+    }
+   }
+  }catch(...){out.beforeCheckpoint={};} // Optional proof failure retains the original path.
+  return out;
+ }
 	PreparedSensorPreviewImage SensorPreviewImage(RuntimeLease& lease,const NativeSensorPreviewImageInput& input,
 		bool requireContents,NativePostprocessConsumer consumer,const PreparedScreenFrame* producers,bool validation,double& milliseconds)
 	{
@@ -4115,9 +4164,12 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,layer.pixelFormat,
    impl->depth.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);
 
+  static const bool grassBoundaryEnabledS01=[](){const char* v=std::getenv("BAR_NATIVE_GRASS_BOUNDARY_S01");return v&&std::strcmp(v,"1")==0;}();
+  const auto grassShadowS01=frame.originalShadow&&frame.originalShadow->textures?
+   frame.originalShadow->textures->depth.backing:std::shared_ptr<const NativeShadowTextureBacking>{};
   auto grass=impl->grassGPU.Prepare(lease,preparedWorld167.Family(NativeWorldFamily167::Grass),frame.sourceDrawFrame,frame.viewCamera,
    result.surface.renderWidth,result.surface.renderHeight,logicalWidth,logicalHeight,
-   [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned slot){return impl->OriginalModelImage(l,binding,sourceSubmission,options.shaderValidation,result.shaderCompileMs);},
+   [&](RuntimeLease& l,const NativeCUSTextureBinding& binding,unsigned slot){return impl->OriginalGrassImageS01(l,binding,slot,sourceSubmission,options.shaderValidation,result.shaderCompileMs,grassBoundaryEnabledS01,grassShadowS01);},
    layer.pixelFormat,impl->depth.pixelFormat,impl->stencil.pixelFormat,options.shaderValidation,result.shaderCompileMs,mainSamples);
 
   auto resourceSpots=impl->resourceSpotsGPU.Prepare(lease,preparedWorld167.Family(NativeWorldFamily167::ResourceSpots),frame.sourceDrawFrame,frame.viewCamera,
@@ -4800,6 +4852,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    id<MTL4RenderCommandEncoder> __strong& live;bool borrowed=false;
    ~BorrowedSceneFailure217(){if(borrowed&&live){[live endEncoding];live=nil;}}
   } borrowedScene217{encoder};
+  // Only the new Grass encoder is guarded; no ownership change for old passes.
+  // After partial encoding, close and let the existing lease poison/quarantine
+  // path retain all owners. Never replay/fall back after ending A.
+  struct GrassSplitFailureS01 {
+   id<MTL4RenderCommandEncoder> __strong& live;bool armed=false;
+   ~GrassSplitFailureS01(){if(armed&&live){[live endEncoding];live=nil;}}
+  } grassSplitFailureS01{encoder};
 #ifdef RECOIL_METAL4_LIVE_SCENE
   static bool reportedInitialLoad=false;
   if(!reportedInitialLoad){LOG("[NativeTBDR] initial_load_discard_mask=%u sourceDrawFrame=%llu",initialDiscard,
@@ -4958,6 +5017,49 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    (!modelGBuffer||!modelGBuffer->RequiresEncode())&&localDraws220(preDecalDraws)&&localDraws220(preUnitDraws)&&
    opaqueModels&&opaqueModels->CanScopeFirstPair220()&&opaquePostDeferredDraws.size()>=2&&opaquePostDeferredDraws[0].empty();
   if(scopedPair220){originalLifetime->combinedFence220=[lease.Device() newFence];if(!originalLifetime->combinedFence220)scopedPair220=false;}
+  const auto classifyGrassPrefixS01=[](const LuaDraw& draw){
+   switch(draw.kind){
+    case LuaDrawKind::Grass:return GrassBoundaryDrawS01::Grass;
+    // Fixed vertex/fragment programs only: sampled/constant inputs and scene
+    // attachment outputs, no shader storage write/atomic/indirect dispatch.
+    case LuaDrawKind::ResourceSpots:case LuaDrawKind::Commands:case LuaDrawKind::UnitPrimitive:
+     return GrassBoundaryDrawS01::AttachmentOnly;
+    default:return GrassBoundaryDrawS01::Unknown;
+   }
+  };
+  const size_t firstGrassS01=GrassSuffixS01(preUnitDraws,classifyGrassPrefixS01);
+  const std::array<id<MTLTexture>,3> grassAttachmentsS01{
+   mainAttachments->Color(),mainAttachments->Depth(),mainAttachments->Stencil()};
+  const GrassOpaqueEndS01 grassEndS01{bool(modelGBuffer),bool(opaqueModels),
+   opaqueModels?opaqueModels->PhaseCount():0,
+   opaqueModels&&opaqueModels->PhaseCount()&&opaqueModels->IsDeferredPhase(0),pass165Enabled};
+  const uint32_t grassEndRejectS01=GrassOpaqueEndRejectionsS01(grassEndS01);
+  // Reason bits are exactly the admission predicates, not a second, looser
+  // diagnostic gate. The producer/storage checks remain in PreparedGrass.
+  uint32_t grassPlanRejectS01=grassBoundaryEnabledS01?0u:1u;
+  if(grassBoundaryEnabledS01){
+   if(!grass)grassPlanRejectS01|=2;
+   if(!groundDecals)grassPlanRejectS01|=4;
+   if(firstGrassS01==NoGrassBoundaryS01)grassPlanRejectS01|=8;
+   if(grassEndRejectS01)grassPlanRejectS01|=16;
+   if(!mainGround.source->groundInvoked||terrainCopyCoordinates||!terrainSnapshot->SingleImage()||terrainSnapshot->SamplesImage())grassPlanRejectS01|=32;
+   if(scopedPair220)grassPlanRejectS01|=64;
+   if(offscreenSource||continuation)grassPlanRejectS01|=128;
+   if(borrowedScene217.borrowed||!loadedMainPass165())grassPlanRejectS01|=256;
+   if(!std::all_of(preDecalDraws.begin(),preDecalDraws.end(),[](const auto& draw){return draw.kind==LuaDrawKind::GameDecal;}))grassPlanRejectS01|=512;
+  }
+  const bool grassPlanS01=grassPlanRejectS01==0;
+  // Capture BEFORE the existing snapshot. The only subsequent A work admitted
+  // above is GameDecal, GroundDecal, fixed GroundFlashes/Sky and this prefix.
+  // All external writes stay in the exact three non-aliased main attachments.
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  static const bool grassProbeS01=[](){const char* v=std::getenv("BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE");return v&&std::strcmp(v,"1")==0;}();
+  static unsigned grassProbeMaskS01=0;
+  const unsigned grassProbeBitS01=grassProbeS01&&grassBoundaryEnabledS01?GrassDiagnosticSampleS01(frame.simulationFrame,grass&&grass->DrawCount()!=0):0;
+  if(grassProbeBitS01&&!(grassProbeMaskS01&grassProbeBitS01)&&grass)grass->EnableBoundaryDiagnosticsS01();
+#endif
+  const bool grassCheckpointS01=grassPlanS01&&grass->CaptureBoundaryCheckpointS01(sourceSubmission,grassAttachmentsS01);
+  bool grassSplitS01=false;
 		[encoder endEncoding];
   if(mainGround.source->groundInvoked){
    terrainSnapshot->EncodeScopedVertex220(command,scopedPair220,originalLifetime->combinedFence220);
@@ -4970,6 +5072,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   // Preserve the whole callback pass, including inherited non-snapshot reads.
   if(scopedPair220)[encoder waitForFence:originalLifetime->combinedFence220 beforeEncoderStages:MTLStageVertex];
   setupViewport();
+  id<MTL4RenderCommandEncoder> const grassPrefixEncoderS01=encoder;
 		auto encodeLuaDraws = [&](const std::vector<LuaDraw>& draws, bool preUnit, bool preDecals=false) {
 			WorldEncodingProbe176::Scope effectScope(encodingProbe,Family176::Effects);
    // Only the fixed main-world providers are admitted. Prepared packet indices
@@ -5018,6 +5121,24 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    uint64_t probeNext217=0;id<MTL4RenderCommandEncoder> __unsafe_unretained probeEncoder217=nil;
 #endif
 			for (const auto& draw: draws) {
+    if(grassCheckpointS01&&!grassSplitS01&& &draws==&preUnitDraws&&
+     &draw==&preUnitDraws[firstGrassS01]&&encoder==grassPrefixEncoderS01&&
+     !borrowedScene217.borrowed&&loadedMainPass165()&&
+     grass->CanSplitBoundaryS01(sourceSubmission,grassAttachmentsS01)){
+     // Preserve attachment load/blend/depth/stencil order. Earlier producer
+     // F|Dispatch|Blit -> snapshot Blit -> all subsequent Vertex remains intact.
+     // Do not route this through the generic F|Blit -> V|F resume below.
+     [encoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+     [encoder endEncoding];encoder=nil;
+     encoder=[command renderCommandEncoderWithDescriptor:pass];
+     grassSplitFailureS01.armed=true;
+     Require(encoder!=nil,"Cannot open preserved Grass S01 attachments");
+     [encoder barrierAfterQueueStages:MTLStageFragment beforeStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+     // Every Grass draw below rebinds raster, PSO, depth and argument table.
+     // Model consumer coverage belongs to a particular encoder identity.
+     coveredConsumerEncoder196=nil;coveredConsumerQueueStages196=0;
+     grassSplitS01=true;
+    }
     const bool commandLevel=(draw.kind==LuaDrawKind::Blockout&&blockout->IsDepthPass(draw.index))||draw.kind==LuaDrawKind::ScreenTarget||draw.kind==LuaDrawKind::Bloom||draw.kind==LuaDrawKind::Distortion||draw.kind==LuaDrawKind::SourceCopy||draw.kind==LuaDrawKind::VolumetricCloud||draw.kind==LuaDrawKind::SensorPreviewTarget;
     if(!commandLevel&&encoder==nil){encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot resume actual scene for ordered Lua draw");[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];}
     if(!commandLevel)setupViewport();
@@ -5182,6 +5303,26 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 		setupViewport();environment->EncodeSky(encoder,false);if(environmentFrame.drawSky&&environmentFrame.sky->kind!=NativeSkyKind::OriginalNull)++result.skyDraws;
 
 		encodeLuaDraws(preUnitDraws,true);
+  if(grassSplitS01)Require(!modelGBuffer&&opaqueModels&&opaqueModels->PhaseCount()&&
+   opaqueModels->IsDeferredPhase(0)&&!pass165Enabled,"Grass S01 lost its existing first opaque MRT boundary");
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  static bool grassReportedS01=false,grassFallbackReportedS01=false;
+  if(grassBoundaryEnabledS01&&frame.sourceDrawFrame>=300&&
+   ((grassSplitS01&&!grassReportedS01)||(!grassSplitS01&&!grassFallbackReportedS01))){
+   LOG("[NativeGrassBoundaryS01] source_frame=%llu submission=%llu plan=%u checkpoint=%u split=%u grass_draws=%zu preserved_order=1 producer_waits_unchanged=1",
+    static_cast<unsigned long long>(frame.sourceDrawFrame),static_cast<unsigned long long>(sourceSubmission),
+    unsigned(grassPlanS01),unsigned(grassCheckpointS01),unsigned(grassSplitS01),grass?grass->DrawCount():0);
+   if(grassSplitS01)grassReportedS01=true;else grassFallbackReportedS01=true;
+  }
+  if(grassProbeBitS01&&!(grassProbeMaskS01&grassProbeBitS01)){
+   grassProbeMaskS01|=grassProbeBitS01;
+   const auto read=grass?grass->BoundaryDiagnosticS01():GrassReadDiagnosticS01{};
+   LOG("[NativeGrassBoundaryS01ROI] simulation=%llu source_frame=%llu submission=%llu plan=%u checkpoint=%u split=%u plan_reject_bits=%u end_reject_bits=%u read_reject_bits=%u read_draw=%zu read_slot=%u grass_draws=%zu grass_visible=%zu model_depth=%u opaque=%u opaque_phases=%zu first_deferred=%u pass165=%u",
+    static_cast<unsigned long long>(frame.simulationFrame),static_cast<unsigned long long>(frame.sourceDrawFrame),static_cast<unsigned long long>(sourceSubmission),
+    unsigned(grassPlanS01),unsigned(grassCheckpointS01),unsigned(grassSplitS01),grassPlanRejectS01,grassEndRejectS01,read.reasonBits,read.drawIndex,read.slot,
+    grass?grass->DrawCount():0,grass?grass->VisibleDrawCountS01():0,unsigned(grassEndS01.modelDepth),unsigned(grassEndS01.opaque),grassEndS01.phases,unsigned(grassEndS01.firstDeferred),unsigned(grassEndS01.pass165));
+  }
+#endif
 		encodingProbe.Select(Family176::Model);
 		if(modelGBuffer&&modelGBuffer->RequiresEncode()){
 			[encoder endEncoding];modelGBuffer->Encode(command);result.modelGBufferDepthPasses=uint32_t(std::count_if(frame.shieldDepthFrame->modelPlan.phases.begin(),frame.shieldDepthFrame->modelPlan.phases.end(),[](const auto& phase){return phase.clearBefore;}));result.modelGBufferDepthPieces=uint32_t(modelGBuffer->PieceCount());
@@ -5218,7 +5359,13 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			if(opaqueModels->IsDeferredPhase(n)){
     const bool keep=nextMRTKeep220.has_value()?*nextMRTKeep220:keepMRTBoundary165(n);
     nextMRTKeep220.reset();
-				if(!keep&&encoder){[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;}
+				if(!keep&&encoder){[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;
+     // This is the existing phase0 close certified before A. nextMRTKeep220
+     // was empty, and the same local !pass165Enabled forced keep=false.
+     // No GPU draw/dependency call occurs between the Grass suffix and here.
+     if(grassSplitS01&&n==0)grassSplitFailureS01.armed=false;
+    }
+    if(grassSplitS01&&n==0)Require(!keep&&!encoder&&!grassSplitFailureS01.armed,"Grass S01 first MRT close did not consume its encoder");
 				// Always execute the actual phase once. In the proven readonly case
 				// this retains prior-readability checks, empty consumer transitions,
 				// the distinct producer publication and the source ordinal advance.

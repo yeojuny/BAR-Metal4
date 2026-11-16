@@ -2,13 +2,18 @@
 #include "Metal4GroundDecal.h"
 #include "Metal4InterventionMath.h"
 #include "NativeGroundDecalShaders.h"
+#include "Metal4GroundDecalIndexPolicyG01.h"
+#include "System/Log/ILog.h"
+#include <atomic>
+#include <cstdlib>
+#include <cstring>
 #include <map>
 #include <tuple>
 #include <utility>
 
 namespace rendering::metal4 {
 namespace {
-id<MTLBuffer> Buffer(RuntimeLease& l,const void* p,size_t n,const char* label){Require(p&&n,"Original decal buffer empty");auto b=[l.Device() newBufferWithBytes:p length:n options:MTLResourceStorageModeShared];Require(b!=nil,"Cannot allocate original decal buffer");b.label=String(label);l.AddAllocation(b);return b;}
+id<MTLBuffer> Buffer(RuntimeLease& l,const void* p,size_t n,const char* label,bool optional=false){Require(p&&n,"Original decal buffer empty");auto b=[l.Device() newBufferWithBytes:p length:n options:MTLResourceStorageModeShared];if(optional&&!b)return nil;Require(b!=nil,"Cannot allocate original decal buffer");b.label=String(label);l.AddAllocation(b);return b;}
 MTLPixelFormat Format(WorldTextureFormat f){switch(f){case WorldTextureFormat::RGBA8Unorm:return MTLPixelFormatRGBA8Unorm;case WorldTextureFormat::BGRA8Unorm:return MTLPixelFormatBGRA8Unorm;case WorldTextureFormat::BC1RGBA:return MTLPixelFormatBC1_RGBA;case WorldTextureFormat::BC2RGBA:return MTLPixelFormatBC2_RGBA;case WorldTextureFormat::BC3RGBA:return MTLPixelFormatBC3_RGBA;case WorldTextureFormat::BC4Unorm:return MTLPixelFormatBC4_RUnorm;case WorldTextureFormat::BC5Unorm:return MTLPixelFormatBC5_RGUnorm;case WorldTextureFormat::BC7RGBA:return MTLPixelFormatBC7_RGBAUnorm;case WorldTextureFormat::BC7RGBASRGB:return MTLPixelFormatBC7_RGBAUnorm_sRGB;}throw std::invalid_argument("Original decal source format unknown");}
 id<MTL4ArgumentTable> Arguments(RuntimeLease& l,uint32_t buffers,uint32_t textures,uint32_t samplers){auto d=[MTL4ArgumentTableDescriptor new];d.maxBufferBindCount=buffers;d.maxTextureBindCount=textures;d.maxSamplerStateBindCount=samplers;d.initializeBindings=YES;auto a=[l.Device() newArgumentTableWithDescriptor:d error:nil];Require(a!=nil,"Cannot allocate original decal argument table");l.Retain(a);return a;}
 struct AtlasResources {
@@ -30,6 +35,11 @@ struct PreparedGroundDecal::Impl {
 	__strong id<MTLRenderPipelineState> surfacePipeline=nil,atlasPipeline=nil;
 	__strong id<MTLDepthStencilState> depth=nil;
 	__strong id<MTL4ArgumentTable> arguments=nil;
+	// Immutable per-preparation upload, retained by this packet AND the lease.
+	// Never mutated or cached; normal and failed-submission owners are unchanged.
+	__strong id<MTLBuffer> indicesG01=nil;
+	bool probeG01=false;
+	unsigned probeReasonG01=0;
 	std::vector<AtlasPassDraw> atlasDraws;
 	bool dependenciesEncoded=false,encoded=false;
 };
@@ -59,7 +69,29 @@ void PreparedGroundDecal::Encode(id<MTL4RenderCommandEncoder> e)
 	Require(impl->dependenciesEncoded&&!impl->encoded,"Original ground decal pass order differs");
 	[e setRenderPipelineState:impl->surfacePipeline];[e setDepthStencilState:impl->depth];[e setFrontFacingWinding:MTLWindingCounterClockwise];[e setCullMode:MTLCullModeBack];[e setDepthClipMode:MTLDepthClipModeClip];[e setTriangleFillMode:MTLTriangleFillModeFill];[e setDepthBias:0 slopeScale:0 clamp:0];
 	[e setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-	if(!impl->frame->instances->values.empty())[e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:36 instanceCount:impl->frame->instances->values.size()];impl->encoded=true;
+	const auto count=impl->frame->instances->values.size();
+	const bool indexed=impl->indicesG01&&[e respondsToSelector:@selector(drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferLength:instanceCount:baseVertex:baseInstance:)];
+	if(count){
+		if(indexed){
+			// GPU address includes byte offset zero; count is in UInt16 elements,
+			// length is in bytes. Preserve original vertex and instance origins.
+			[e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:GroundDecalIndicesG01.size() indexType:MTLIndexTypeUInt16 indexBuffer:impl->indicesG01.gpuAddress indexBufferLength:impl->indicesG01.length instanceCount:count baseVertex:0 baseInstance:0];
+		}else{
+			[e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:36 instanceCount:count];
+		}
+	}
+	impl->encoded=true;
+	// At most one nonempty indexed and one nonempty fallback receipt. Clean
+	// runs leave PROBE off: no counters, reason updates, or log formatting.
+	if(impl->probeG01&&count){
+		static std::atomic_flag reportedIndexed=ATOMIC_FLAG_INIT,reportedFallback=ATOMIC_FLAG_INIT;
+		auto& reported=indexed?reportedIndexed:reportedFallback;
+		if(!reported.test_and_set(std::memory_order_relaxed)){
+			const unsigned reason=impl->indicesG01&&!indexed?5u:impl->probeReasonG01;
+			LOG("[NativeGroundDecalIndexG01] source_frame=%llu indexed=%u index_count=%u unique_ids=%u index_bytes=%zu instances=%zu samples=%u reason=%u base_vertex=0 base_instance=0",
+			 static_cast<unsigned long long>(impl->frame->sourceDrawFrame),unsigned(indexed),indexed?36u:0u,indexed?8u:36u,indexed?GroundDecalIndexBytesG01:0,count,impl->frame->sampleCount,reason);
+		}
+	}
 }
 void PreparedGroundDecal::DidComplete(){Require(impl->dependenciesEncoded&&impl->encoded,"Original ground decal cannot retire unencoded resources");impl->atlas->ready=true;}
 struct GroundDecalGPU::Impl {
@@ -131,6 +163,17 @@ std::unique_ptr<PreparedGroundDecal> GroundDecalGPU::Prepare(RuntimeLease& l,std
 	for(size_t i=0;i<sources.size();++i){flips|=uint32_t(sources[i].flipV)<<i;if(sources[i].texture)l.AddAllocation(sources[i].texture);}
 	const auto uniforms=MakeNativeGroundDecalUniforms(*frame,images.fragmentToLogical,flips);auto ub=Buffer(l,&uniforms,sizeof(uniforms),"Original ground decal matrices and material");p->arguments=Arguments(l,2,7,6);[p->arguments setAddress:p->instances->buffer.gpuAddress atIndex:0];[p->arguments setAddress:ub.gpuAddress atIndex:1];
 	for(size_t i=0;i<sources.size();++i)if(sources[i].texture)[p->arguments setTexture:sources[i].texture.gpuResourceID atIndex:i];[p->arguments setTexture:p->atlas->texture.gpuResourceID atIndex:6];for(size_t i=0;i<impl->samplers.size();++i)[p->arguments setSamplerState:impl->samplers[i].gpuResourceID atIndex:i];
+	static const bool indexG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01");return v&&std::strcmp(v,"1")==0;}();
+	static const bool probeG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE");return v&&std::strcmp(v,"1")==0;}();
+	p->probeG01=probeG01;
+	if(probeG01)p->probeReasonG01=!indexG01?1u:frame->sampleCount!=1?2u:frame->instances->values.empty()?3u:0u;
+	if(GroundDecalIndexEligibleG01(indexG01,frame->sampleCount,frame->instances->values.size())){
+		// Allocation nil is an optional optimization miss before encoding.
+		// Lease/state failures still propagate: never hide a residency error.
+		auto indices=Buffer(l,GroundDecalIndicesG01.data(),GroundDecalIndexBytesG01,"Ground decal G01 immutable cube indices",true);
+		if(indices&&GroundDecalIndexBufferValidG01(indices.gpuAddress,indices.length))p->indicesG01=indices;
+		else if(probeG01)p->probeReasonG01=4;
+	}
 	return std::unique_ptr<PreparedGroundDecal>(new PreparedGroundDecal(std::move(p)));
 }
 }

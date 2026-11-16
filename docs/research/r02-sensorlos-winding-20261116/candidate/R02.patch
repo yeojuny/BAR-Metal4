@@ -1,0 +1,14 @@
+--- a/rts/Rendering/Metal4/NativeSensorLOSShaders.h
++++ b/rts/Rendering/Metal4/NativeSensorLOSShaders.h
+@@ -98,7 +98,10 @@
+   !isfinite(oldArea)||!isfinite(newArea)||!(newArea<oldArea))return false;
+  constexpr uint indices[6]={0,1,2,0,2,3};
+  constexpr float2 corners[4]={float2(0,0),float2(1,0),float2(1,1),float2(0,1)};
+- const float2 c=corners[indices[corner]];
++ // Swapping major/minor axes reverses orientation. Reverse Y-major
++ // triangle order only, preserving the old AABB front/back stencil contract.
++ constexpr uint indicesYMajor[6]={0,2,1,0,3,2};
++ const float2 c=corners[(xMajor?indices:indicesYMajor)[corner]];
+  const float major=mix(majorLow,majorHigh,c.x);
+  const float minor=mix(minorLow,minorHigh,c.x)+(2.f*c.y-1.f)*halfBand;
+  pixel=xMajor?float2(major,minor):float2(minor,major);return true;

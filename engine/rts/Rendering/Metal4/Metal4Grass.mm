@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4Grass.h"
+#include "Metal4GrassBoundaryPolicyS01.h"
 #include "Metal4TerrainOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "NativeGrassShaders.h"
@@ -27,8 +28,18 @@ struct PreparedGrass::Impl {
 		__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;
 		__strong id<MTL4ArgumentTable> arguments=nil;__strong id<MTLBuffer> indices=nil;
 		std::vector<CUSSourceImage> images;bool visible=false,encoded=false;
+  std::array<std::function<bool()>,6> checkpointQueries;
+  std::array<id<MTLTexture>,6> vertexImages{};
+  std::array<id<MTLBuffer>,5> immutableBuffers{}; // vertex, instance, uniform, bend, index
+
 	};
 	std::vector<Draw> draws;TerrainOwnerRoster firstOwners;bool dependencies=false,completed=false;
+ uint64_t checkpointSubmission=0;
+ mutable GrassReadDiagnosticS01 boundaryDiagnostic;
+ bool recordBoundaryDiagnostic=false;
+ std::array<id<MTLTexture>,3> checkpointAttachments{};
+ bool InspectBoundaryS01(const std::array<id<MTLTexture>,3>& attachments) const;
+
 };
 PreparedGrass::PreparedGrass():impl(std::make_unique<Impl>()){}
 PreparedGrass::~PreparedGrass()=default;
@@ -51,6 +62,72 @@ void PreparedGrass::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder){
 void PreparedGrass::DidComplete(){
 	Require(impl->dependencies&&!impl->completed&&std::all_of(impl->draws.begin(),impl->draws.end(),[](const auto& d){return d.encoded;}),"Original Grass retirement preceded its actual cull runs");
 	for(const auto& [draw,imageIndex]:impl->firstOwners){const auto& image=impl->draws[draw].images[imageIndex];if(image.didComplete)image.didComplete();}impl->completed=true;
+}
+namespace {
+GrassStorageS01 GrassStorage(id<MTLTexture> image) {
+ if(!image)return {};
+ auto root=SourceTextureRoot160(image);
+ // Independently allocated, retained resources cannot overlap each other.
+ // Reject imported, heap/aliasable and buffer-backed storage instead of
+ // inferring allocation identity from the texture/view object's address.
+ const bool standalone=root&&!root.parentTexture&&!root.heap&&!root.buffer&&
+  !root.iosurface&&!root.shareable&&![root isAliasable]&&root.storageMode!=MTLStorageModeMemoryless;
+ return {reinterpret_cast<uintptr_t>((__bridge void*)root),standalone};
+}
+}
+bool PreparedGrass::Impl::InspectBoundaryS01(const std::array<id<MTLTexture>,3>& attachments) const {
+ if(recordBoundaryDiagnostic)boundaryDiagnostic={0,0,0};
+ const auto reject=[&](uint32_t reason){if(recordBoundaryDiagnostic)boundaryDiagnostic.reasonBits=reason;return false;};
+ if(!dependencies||completed)return reject(GrassReadLifecycleS01);
+ std::array<GrassStorageS01,3> writes;
+ for(size_t n=0;n<writes.size();++n)writes[n]=GrassStorage(attachments[n]);
+ size_t visible=0;
+ for(size_t drawIndex=0;drawIndex<draws.size();++drawIndex){
+  const auto& d=draws[drawIndex];if(recordBoundaryDiagnostic)boundaryDiagnostic.drawIndex=drawIndex;
+  if(!d.visible)continue;
+  if(d.encoded)return reject(GrassReadAlreadyEncodedS01);
+  ++visible;
+  for(unsigned slot=1;slot<6;++slot){
+   if(slot==3&&d.source->defines[9]!=1)continue;
+   if(recordBoundaryDiagnostic)boundaryDiagnostic.slot=slot;
+   auto texture=d.vertexImages[slot];
+   if(!texture||texture.device!=attachments[0].device||texture.textureType!=MTLTextureType2D||
+    texture.sampleCount!=1)return reject(GrassReadTextureS01);
+   if(!GrassReadDisjointS01(GrassStorage(texture),writes))return reject(GrassReadStorageS01);
+   if(!d.checkpointQueries[slot])return reject(GrassReadUnknownProviderS01);
+   if(!d.checkpointQueries[slot]())return reject(GrassReadProducerS01);
+  }
+  // All five buffers originate from immutable NativeBufferSnapshot uploads
+  // or this draw's 656-byte constants, never a GPU writable source. The source
+  // snapshots, buffer objects and full ranges survive the common GPU ticket.
+  for(unsigned n=0;n<d.immutableBuffers.size();++n){
+   if(n==3&&d.source->defines[13]!=1)continue;
+   if(recordBoundaryDiagnostic)boundaryDiagnostic.slot=n;auto buffer=d.immutableBuffers[n];
+   if(!buffer||buffer.device!=attachments[0].device||buffer.heap||[buffer isAliasable]||
+    !buffer.gpuAddress||!buffer.length||buffer.gpuAddress>UINT64_MAX-buffer.length)return reject(GrassReadBufferS01);
+  }
+ }
+ if(!visible)return reject(GrassReadNoVisibleS01);
+ if(recordBoundaryDiagnostic)boundaryDiagnostic={0,0,0};return true;
+}
+void PreparedGrass::EnableBoundaryDiagnosticsS01() noexcept {impl->recordBoundaryDiagnostic=true;}
+GrassReadDiagnosticS01 PreparedGrass::BoundaryDiagnosticS01() const noexcept {return impl->boundaryDiagnostic;}
+size_t PreparedGrass::VisibleDrawCountS01() const noexcept {
+ return std::count_if(impl->draws.begin(),impl->draws.end(),[](const auto& draw){return draw.visible;});
+}
+bool PreparedGrass::CaptureBoundaryCheckpointS01(uint64_t submission,
+ const std::array<id<MTLTexture>,3>& attachments) noexcept {
+ if(!submission||impl->checkpointSubmission){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadSubmissionS01;return false;}
+ try{
+  if(!impl->InspectBoundaryS01(attachments))return false;
+  impl->checkpointSubmission=submission;impl->checkpointAttachments=attachments;return true;
+ }catch(...){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadExceptionS01;return false;} // Optional proof failure retains the original draw.
+}
+bool PreparedGrass::CanSplitBoundaryS01(uint64_t submission,
+ const std::array<id<MTLTexture>,3>& attachments) const noexcept {
+ if(!submission||impl->checkpointSubmission!=submission){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadSubmissionS01;return false;}
+ if(impl->checkpointAttachments!=attachments){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadAttachmentsS01;return false;}
+ try{return impl->InspectBoundaryS01(attachments);}catch(...){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadExceptionS01;return false;}
 }
 struct GrassGPU::Impl {
 	struct Cached {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> buffer=nil;};
@@ -76,7 +153,7 @@ void GrassGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,bool validati
 	ScreenBlendState blend;for(unsigned variant=0;variant<4;++variant)impl->Pipeline(lease,color,variant,validation,blend,{true,true,true,true},ms,samples,false);SetNativeGrassConsumerAvailable(true);
 }
 void GrassGPU::ClearResources(){impl->buffers.clear();}
-std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& selected,uint64_t sourceDrawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,const CUSSourceImageProvider& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
+std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& selected,uint64_t sourceDrawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,const GrassSourceImageProviderS01& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
 	selected.RequireFamily(NativeWorldFamily167::Grass,sourceDrawFrame);if(selected.empty())return {};
 	Require(images&&(depth==MTLPixelFormatDepth32Float||depth==MTLPixelFormatDepth32Float_Stencil8),"Original Grass has no shared scene/image consumer");std::erase_if(impl->buffers,[](const auto& b){return b.second.source.expired();});
 	auto out=std::shared_ptr<PreparedGrass>(new PreparedGrass);
@@ -92,17 +169,20 @@ std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const Nativ
 		uint32_t caps;std::memcpy(&caps,s.original->params->bytes.data()+12,4);u.options=simd_make_uint4(caps&1u,0,unsigned(c.surface.alphaTest.enabled),unsigned(c.surface.alphaTest.compare));u.alpha=simd_make_float4(c.surface.alphaTest.reference,0,0,0);
 		auto desc=[MTL4ArgumentTableDescriptor new];desc.maxBufferBindCount=4;desc.maxTextureBindCount=6;desc.maxSamplerStateBindCount=6;desc.initializeBindings=YES;NSError* error=nil;d.arguments=[lease.Device()newArgumentTableWithDescriptor:desc error:&error];Require(d.arguments!=nil,"Cannot allocate original Grass arguments: "+Error(error));lease.Retain(d.arguments);
 		auto vertices=impl->Buffer(lease,s.vertices),instances=impl->Buffer(lease,s.instances);d.indices=impl->Buffer(lease,s.indices);
+  d.immutableBuffers[0]=vertices;d.immutableBuffers[1]=instances;d.immutableBuffers[4]=d.indices;
 		[d.arguments setAddress:vertices.gpuAddress atIndex:0];[d.arguments setAddress:instances.gpuAddress atIndex:1];
-		if(s.defines[13]==1){auto bend=impl->Buffer(lease,s.bend.snapshot);[d.arguments setAddress:bend.gpuAddress+s.bend.offset atIndex:3];}
-		for(unsigned slot=0;slot<6;++slot){if(slot==3&&s.defines[9]!=1)continue;const auto& binding=s.images[slot];const auto& sampling=binding.object->sampling;auto image=images(lease,binding,slot);
+		if(s.defines[13]==1){auto bend=impl->Buffer(lease,s.bend.snapshot);d.immutableBuffers[3]=bend;[d.arguments setAddress:bend.gpuAddress+s.bend.offset atIndex:3];}
+		for(unsigned slot=0;slot<6;++slot){if(slot==3&&s.defines[9]!=1)continue;const auto& binding=s.images[slot];const auto& sampling=binding.object->sampling;auto resolved=images(lease,binding,slot);auto image=std::move(resolved.image);
 			Require(image.texture&&image.sampler&&image.owner&&image.requireReadable,"Original Grass active image lacks its actual storage/sampling/producer");Require(slot==3?image.depthImage:!image.depthImage,"Original Grass physical texture type differs from its shader sampler");
 			for(unsigned k=0;k<4;++k){const unsigned sw=sampling.swizzle[k];Require(sw==0||sw==1||(sw>=0x1903&&sw<=0x1906),"Original Grass texture swizzle differs");u.swizzle[slot][k]=sw;}
 			if(slot==3)Require(sampling.swizzle==std::array<unsigned,4>{0x1903,0x1904,0x1905,0x1906},"Original Grass comparison sampler requires its original identity swizzle");
 			u.imageFlags[slot]=simd_make_uint4(image.flipV,sampling.depthMode,0,image.clampDepthCompare);const bool mips=sampling.minFilter>=0x2700&&sampling.minFilter<=0x2703;
 			u.imageLod[slot]=simd_make_float4(mips?sampling.minLod:0.f,mips?sampling.maxLod:0.f,sampling.lodBias,0);
-			[d.arguments setTexture:image.texture.gpuResourceID atIndex:slot];[d.arguments setSamplerState:image.sampler.gpuResourceID atIndex:slot];lease.AddAllocation(image.texture);lease.Retain(image.sampler);d.images.push_back(std::move(image));
+			[d.arguments setTexture:image.texture.gpuResourceID atIndex:slot];[d.arguments setSamplerState:image.sampler.gpuResourceID atIndex:slot];lease.AddAllocation(image.texture);lease.Retain(image.sampler);
+   if(slot){d.vertexImages[slot]=image.texture;d.checkpointQueries[slot]=std::move(resolved.beforeCheckpoint);}
+   d.images.push_back(std::move(image));
 		}
-		auto constants=Upload(lease,&u,sizeof(u));[d.arguments setAddress:constants.gpuAddress atIndex:2];
+		auto constants=Upload(lease,&u,sizeof(u));d.immutableBuffers[2]=constants;[d.arguments setAddress:constants.gpuAddress atIndex:2];
 		const unsigned variant=unsigned(s.defines[9]==1)|(unsigned(s.defines[13]==1)<<1);d.pipeline=impl->Pipeline(lease,color,variant,validation,c.surface.blend,c.world.colorWrite,ms,samples,c.world.alphaToCoverage);d.depth=effectstate::Depth(lease,c.world,stencil);lease.Retain(d.pipeline);lease.Retain(impl->libraries.at(variant));out->impl->draws.push_back(std::move(d));
 	}
 	out->impl->firstOwners=BuildTerrainOwnerRoster(out->impl->draws);return out;

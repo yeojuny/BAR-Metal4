@@ -71,6 +71,41 @@ struct SensorLOSVarying {
 	float4 position [[position]];
 	float4 dataA [[flat]],dataB [[flat]],lineA [[flat]],lineB [[flat]],lineNDC [[flat]],color [[flat]];float2 halfWidths [[flat]];
 };
+// AA0 only: bound the unchanged fixed-point coverage in its quantized major axis.
+// A covered sample's major coordinate is within endpoint +/- 0.5 pixels;
+// its minor coordinate is within roundedWidth/2 (+ fixed-point epsilon) of
+// that axis line. Four pixels also contain adjacent 2x2 derivative helpers
+// and float/raster rounding under the guarded coordinate limits below.
+// Extra pixels beyond the old AABB still fail the unchanged coverage test.
+inline bool SensorLOSTightPixel(float2 originalA,float2 originalB,float width,
+ float4 viewport,uint samples,float2 low,float2 high,uint corner,thread float2& pixel) {
+ if(samples!=1||!all(isfinite(originalA))||!all(isfinite(originalB))||
+  !all(isfinite(viewport))||!isfinite(width)||width<=0.f||width>64.f||
+  any(abs(originalA)>16384.f)||any(abs(originalB)>16384.f)||
+  any(abs(viewport.xy)>16384.f)||any(viewport.zw<1.f)||any(viewport.zw>16384.f))return false;
+ // Match SensorLineCovered's rounding and major-axis tie rule exactly.
+ const int2 a=int2(floor(originalA*256.f+0.5f)),b=int2(floor(originalB*256.f+0.5f));
+ const int2 delta=b-a;const bool xMajor=abs(delta.x)>=abs(delta.y);
+ const int dm=xMajor?delta.x:delta.y,di=xMajor?delta.y:delta.x;
+ if(abs(dm)<256)return false;
+ const float ma=float(xMajor?a.x:a.y)*(1.f/256.f),mb=float(xMajor?b.x:b.y)*(1.f/256.f);
+ const float mi=float(xMajor?a.y:a.x)*(1.f/256.f),slope=float(di)/float(dm);
+ const float count=max(1.f,floor(width+0.5f)),halfBand=count*0.5f+4.f;
+ const float majorLow=min(ma,mb)-4.f,majorHigh=max(ma,mb)+4.f;
+ const float minorLow=mi+(majorLow-ma)*slope,minorHigh=mi+(majorHigh-ma)*slope;
+ const float oldArea=(high.x-low.x)*(high.y-low.y),newArea=(majorHigh-majorLow)*(2.f*halfBand);
+ if(!isfinite(slope)||abs(slope)>1.f||!isfinite(minorLow)||!isfinite(minorHigh)||
+  !isfinite(oldArea)||!isfinite(newArea)||!(newArea<oldArea))return false;
+ constexpr uint indices[6]={0,1,2,0,2,3};
+ constexpr float2 corners[4]={float2(0,0),float2(1,0),float2(1,1),float2(0,1)};
+ // Swapping major/minor axes reverses orientation. Reverse Y-major
+ // triangle order only, preserving the old AABB front/back stencil contract.
+ constexpr uint indicesYMajor[6]={0,2,1,0,3,2};
+ const float2 c=corners[(xMajor?indices:indicesYMajor)[corner]];
+ const float major=mix(majorLow,majorHigh,c.x);
+ const float minor=mix(minorLow,minorHigh,c.x)+(2.f*c.y-1.f)*halfBand;
+ pixel=xMajor?float2(major,minor):float2(minor,major);return true;
+}
 vertex SensorLOSVarying OriginalSensorLOSVertex(uint vertexIndex [[vertex_id]],uint instanceIndex [[instance_id]],
 	const device float4* vertices [[buffer(0)]],const device SensorLOSInstance* instances [[buffer(1)]],
 	const device float4* positions [[buffer(2)]],constant SensorLOSUniform& u [[buffer(3)]],
@@ -90,7 +125,8 @@ vertex SensorLOSVarying OriginalSensorLOSVertex(uint vertexIndex [[vertex_id]],u
 	const float extent=max(1.0f,floor(u.parameters.x+0.5f))*0.5f+2.0f;
 	const float2 low=min(out.lineA.xy,out.lineB.xy)-extent,high=max(out.lineA.xy,out.lineB.xy)+extent;
 	constexpr uint indices[6]={0,1,2,0,2,3};constexpr float2 corners[4]={float2(0,0),float2(1,0),float2(1,1),float2(0,1)};
-	const float2 pixel=mix(low,high,corners[indices[corner]]);
+	float2 pixel=mix(low,high,corners[indices[corner]]);
+	SensorLOSTightPixel(out.lineA.xy,out.lineB.xy,u.parameters.x,u.viewport,u.counts.w,low,high,corner,pixel);
 	out.position=float4((pixel.x-u.viewport.x)/u.viewport.z*2.0f-1.0f,1.0f+2.0f*(pixel.y+u.viewport.y)/u.viewport.w,0.5f,1.0f);return out;
 }
 // Existing original GL wide-line/diamond-exit raster functions follow here.

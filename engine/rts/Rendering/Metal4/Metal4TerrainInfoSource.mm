@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4TerrainInfoSource.h"
+#include "Metal4GrassBoundaryPolicyS01.h"
 #include "Metal4WorldInfo.h"
 #include "Rendering/EngineBridge/NativeTerrainImagePublication.h"
 #include <algorithm>
@@ -226,5 +227,26 @@ CUSSourceImage ResolveNativeTerrainInfoImage(RuntimeLease& lease,const NativeCUS
 	out.didComplete=[owner,submission]{owner->resource->Complete(submission);};
  if(receipts)receipts->Remember(key,out);
 	return out;
+}
+std::function<bool()> CaptureGrassInfoCheckpointS01(const NativeCUSTextureBinding& binding,
+ id<MTLTexture> expected,uint64_t submission)
+{
+ const auto object=binding.object;
+ const auto backing=object?std::dynamic_pointer_cast<const NativeTerrainInfoBacking>(object->backing):nullptr;
+ const auto resource=backing?std::dynamic_pointer_cast<const InfoResource>(backing->resource):nullptr;
+ if(!submission||!resource||!resource->plan||!resource->source||
+  resource->source->mode==NativeWorldInfoMode::Metal||resource->plan->Info()!=expected||
+  (!resource->completed&&resource->encodingSubmission&&resource->encodingSubmission!=submission))return {};
+ const auto plan=resource->plan;
+ return [object,backing,resource,plan,expected,submission]{
+  return backing->resource==resource&&resource->plan==plan&&plan->Info()==expected&&
+   resource->source==backing->source&&resource->context==object->contextGeneration&&
+   resource->objectIdentity==object->identity&&resource->name==object->name&&
+   backing->storageGeneration==object->identity&&backing->contentVersion&&
+   backing->contentVersion<=object->version&&resource->contentVersion==backing->contentVersion&&
+   plan->MapIdentity()==resource->source->mapIdentity&&plan->CompletionSerial()==resource->source->serial&&
+   GrassProducerRecordedS01(submission,resource->completed,resource->encodingSubmission,
+    resource->registeredSubmission==submission&&resource->dependenciesEncoded);
+ };
 }
 } // namespace rendering::metal4

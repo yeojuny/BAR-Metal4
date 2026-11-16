@@ -152,6 +152,10 @@ public:
 		std::optional<NativePostprocessConsumer> consumer = std::nullopt,
 		std::function<void(PreparedScreenExternalImage)> retainExternal = {},
 		id<MTLSamplerState> actualSampler = nil);
+ // S01 admits only a retained CPU image whose optional mip producer has
+ // actually completed. RTT, external and merely queued/encoded images fail.
+ std::function<bool()> CaptureGrassCPUImageCheckpointS01(const std::shared_ptr<const ScreenTexture>&,
+  id<MTLTexture> expected) const;
 	// The image is an actual retained attachment/resolve with an encode-time
 	// readability receipt, never a prior presented frame or synthetic bitmap.
 	std::shared_ptr<PreparedScreenReadback> PrepareReadback(RuntimeLease&,

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "scope": "CPU geometry and exact source-diff checks; not Metal/GPU execution",
+  "counts": {
+    "cases": 16294,
+    "tight": 11516,
+    "x_major": 5993,
+    "y_major": 5523,
+    "legacy_negative_controls": 5523,
+    "fallback": 4778,
+    "aa4_fallback": 3137,
+    "clipped": 8
+  }
+}

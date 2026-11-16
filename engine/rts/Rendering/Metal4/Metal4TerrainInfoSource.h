@@ -11,4 +11,8 @@ namespace rendering::metal4 {
 // completion, including the existing poison-and-retain path after Begin failure.
 CUSSourceImage ResolveNativeTerrainInfoImage(RuntimeLease&,const NativeCUSTextureBinding&,
 	uint64_t submission,id<MTLSamplerState> actualSampler,bool validation,double& shaderMs);
+// Optional S01 proof for the exact already-resolved info image. No registration,
+// encoding, callback omission, retirement, or new producer authority.
+std::function<bool()> CaptureGrassInfoCheckpointS01(const NativeCUSTextureBinding&,
+ id<MTLTexture> expected,uint64_t submission);
 } // namespace rendering::metal4

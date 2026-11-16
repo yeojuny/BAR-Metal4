@@ -1797,6 +1797,23 @@ PreparedScreenImage ScreenGPU::PrepareImage(RuntimeLease& lease,const std::share
 	if(actualSampler){Require(actualSampler.device==lease.Device(),"Shared screen image sampler belongs to another actual device");lease.Retain(actualSampler);}
 	return {impl->Image(lease,source,uploads,available,consumer,std::move(retainExternal)),actualSampler?actualSampler:impl->Sampler(lease,sampler)};
 }
+std::function<bool()> ScreenGPU::CaptureGrassCPUImageCheckpointS01(
+ const std::shared_ptr<const ScreenTexture>& source,id<MTLTexture> expected) const
+{
+ if(!source||source->incomplete||source->renderTarget||source->sourceTexture||
+  source->postprocessVersion||source->sourceDependent||
+  (source->bytes.empty()&&source->mips.empty()))return {};
+ for(const auto& mip:source->mips)if(mip.allocatedUndefined||mip.bytes.empty())return {};
+ const auto found=impl->textures.find(source.get());
+ if(found==impl->textures.end())return {};
+ const auto& cached=found->second;
+ if(cached.owner.lock()!=source||cached.image!=expected||cached.allocationOnly||
+  cached.sourceDependent||cached.coveragePool220)return {};
+ // These immutable CPU versions are allocated once with newTexture; this
+ // strong source excludes cache sweeping. No admitted RTT/external writer.
+ const auto state=cached.mipState;
+ return [source,expected,state]{return expected&&(!state||state->initialized);};
+}
 std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareColorAttachmentClear(RuntimeLease& lease,ScreenColor color,
 	uint32_t width,uint32_t height,std::optional<ScreenScissor> scissor,std::array<bool,4> colorWrite,
 	MTLPixelFormat format,bool validation,double& shaderMilliseconds,std::uint32_t samples)

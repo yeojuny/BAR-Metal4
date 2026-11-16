@@ -167,7 +167,8 @@ std::unique_ptr<PreparedSensorLOSDraw> SensorLOSGPU::Prepare(RuntimeLease& lease
 	uniform.parameters={draw.raster.lineWidth,draw.surface.alphaTest.reference,float(out.mask.flipV),0};
 	uniform.options={uint32_t(!(source.renderCaps&1)),uint32_t(out.height.flipV),uint32_t(defines.stencilPass),
 		uint32_t(draw.surface.alphaTest.compare)|(uint32_t(draw.surface.alphaTest.enabled)<<8)};
-	uniform.counts={draw.count,draw.first,draw.firstInstance,0};
+	// The shared outline VS only tightens the proven single-sample coverage path.
+	uniform.counts={draw.count,draw.first,draw.firstInstance,samples};
 	const auto positions=ReadNativeSensorLOSInstances(draw);
 	std::erase_if(impl->buffers,[](const auto& value){return value.second.source.expired();});
 	std::array<id<MTLBuffer>,5> buffers{impl->Snapshot(lease,draw.vertices),impl->Snapshot(lease,draw.instances),
