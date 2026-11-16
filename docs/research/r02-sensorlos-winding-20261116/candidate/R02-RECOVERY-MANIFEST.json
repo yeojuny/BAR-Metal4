@@ -1,0 +1,27 @@
+{
+  "round_id": "r02-sensorlos-winding-20261116-02",
+  "kind": "DELTA_MANIFEST",
+  "parent_source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+  "parent_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
+  "parent_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "source_change": "Exactly one host Objective-C++ helper type annotation: auto probeDesc -> MTLRenderPipelineDescriptor* probeDesc. Production source and all GPU assertions unchanged.",
+  "files": {
+    "docs/research/r02-sensorlos-winding-20261116/candidate/gpu_pixel_parity.mm": "e02f036d416e29ddefdbb4245ab9464fe3c303595e1d8f6382cdad23e3cd34f8",
+    "engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h": "1fa2cf0b4f8a9cd01f9a3b6c4a3886b72297aa6de1481cf31505945cfc995b1c",
+    "engine/rts/Rendering/Metal4/NativeMultisampleLineShaders.h": "4e775c54e07e0c26fc21ca20b77635c7bbbb6efc55d026a4a010ca1c53c0b721",
+    "engine/rts/Rendering/Metal4/NativeSampleShadingShaders.h": "02c29319fb48b4ece77d1ed6c1cd7b3d4644dca1b81bce9f9f7423bfd12ef4bf"
+  },
+  "checks": {
+    "cpu_geometry": "PASS 16294 cases; 5523 old-Y negative witnesses; 3137 AA4 guard fallbacks",
+    "objcxx_compilation": "NOT_RUN: Linux workspace has no Apple SDK/compiler",
+    "gpu": "NOT_RUN; requires HQ bounded new attempt",
+    "performance": "NOT_MEASURED"
+  },
+  "previous_failure": {
+    "round_id": "r02-sensorlos-winding-20261116-01",
+    "attempt_id": "r02-helper-execution-01",
+    "stage": "OBJCXX_HELPER_COMPILATION_BEFORE_GPU",
+    "gpu_runs": 0,
+    "cleanup_complete": true
+  }
+}
