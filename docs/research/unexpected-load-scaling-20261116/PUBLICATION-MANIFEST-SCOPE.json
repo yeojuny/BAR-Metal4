@@ -1,0 +1,23 @@
+{
+  "status": "FINAL_INTEGRATED_PUBLICATION_FREEZE",
+  "manifest": "PUBLICATION-MANIFEST.sha256",
+  "coverage": "Every regular file in this package, including README.md, AUDIT-QUESTIONS.md, SUMMARY.json, this scope file, the original technical manifest/scope, all evidence, source snapshots, patches, licenses and reproduction documents.",
+  "selfExcluded": [
+    "PUBLICATION-MANIFEST.sha256"
+  ],
+  "preservedTechnicalManifest": {
+    "file": "MANIFEST.sha256",
+    "scopeFile": "MANIFEST-SCOPE.json",
+    "sha256": "c05db6f13243ab1e08da9ffc3465d1de3b93845c97261d793d013ae0d93523b8",
+    "coveredFiles": 900,
+    "status": "UNCHANGED; historical technical freeze excludes the later editorial/integration additions. Its exclusions do not limit the integrated publication manifest."
+  },
+  "editorialSHA256": {
+    "README.md": "3f347626f896fda254939292faeb3e8e613d84b4a816f47fc663439e4e288ca9",
+    "AUDIT-QUESTIONS.md": "de55e0bb6f8e3b12ae6f4788ae11886925879bfd90570ec5b7ee92bbfa5a6a3e",
+    "SUMMARY.json": "702e57e9573ead7204fd8b419c62dc9f3b6080db0a2898a568122092ee62d9bf"
+  },
+  "externalLocalMaterial": "Files outside package/, including internal task handoff instructions, are excluded.",
+  "publicationOwner": "Dedicated repository publisher; this freeze does not itself create a Git commit or PR.",
+  "mutationRule": "Do not change covered files after freezing; any publication-tree change requires a new explicitly identified integration manifest."
+}
