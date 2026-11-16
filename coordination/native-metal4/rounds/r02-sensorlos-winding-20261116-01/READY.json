@@ -1,0 +1,40 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-01",
+  "author": "SUPER_JINI_MK2",
+  "phase": "SOURCE_CANDIDATE_COMPLETE_REVIEW_ONLY",
+  "scope": "SOURCE_ONLY_NO_EXECUTION_AUTHORITY",
+  "source_branch": "fix/sensorlos-winding-r02-20261116",
+  "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+  "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
+  "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "artifacts": {
+    "readme": "docs/research/r02-sensorlos-winding-20261116/candidate/README.md",
+    "production_diff": "docs/research/r02-sensorlos-winding-20261116/candidate/R02.patch",
+    "cpu_test": "docs/research/r02-sensorlos-winding-20261116/candidate/test_winding.py",
+    "cpu_results": "docs/research/r02-sensorlos-winding-20261116/candidate/cpu-results.json",
+    "gpu_regression_source": "docs/research/r02-sensorlos-winding-20261116/candidate/gpu_pixel_parity.mm"
+  },
+  "change": "G01 baseline retained; reverse only Y-major tight triangle order to preserve original AABB winding/front-back stencil semantics. No G02/G03/G04 or new pool/cache/queue/encoder changes.",
+  "validation": {
+    "cpu_geometry_cases": 16294,
+    "cpu_result": "PASS",
+    "cpu_scope": "Python float32 geometry/source oracle, not compiled MSL or raster proof",
+    "g01_reconstruction": "All 10270 expected G01 manifest paths matched before R02; complete source manifest has 10269 source paths excluding incidental __pycache__",
+    "remote_verification": "Fixed branch commit and all 24 published file blob hashes verified",
+    "review": "Helper author and separate read-only winding/stencil reviewer completed; all source writes and child work finished"
+  },
+  "pending": [
+    "Mac source/helper compilation",
+    "Metal GPU asymmetric front/back stencil, front_facing, depth pass/fail, stencil compare pass/fail and negative-control parity",
+    "Screen correctness and performance evidence; no claim of FPS improvement"
+  ],
+  "execution_authorization": {
+    "engine_builds": 0,
+    "gpu_helper_runs": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "main_release_homebrew_changes": false
+  },
+  "handoff_rule": "This READY artifact records completed source preparation for HQ read-only review only. It does not transfer ownership, change STATE status, grant execution, or satisfy missing connection gates. HQ execution requires a separate explicit handoff and user execution approval. Read latest STATE before action; no duplicate experiment.",
+  "source_writers_stopped": true
+}
