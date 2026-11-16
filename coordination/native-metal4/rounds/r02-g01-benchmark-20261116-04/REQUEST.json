@@ -1,0 +1,201 @@
+{
+  "request_id": "r02-g01-benchmark-20261116-04",
+  "attempt_id": "r02-validation-and-clean-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "ONE_R02_VALIDATION_THEN_SIX_MATCHED_CLEAN_GAMES",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "input_artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4",
+  "input_manifest_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/STAGING-SUMMARY.json",
+  "input_manifest_sha256": "4bc4742cc680b17ef1a97614b66d9ad958e71a66ac3dc593b7d9fb57a11a4ae4",
+  "binary": {
+    "baseline_signed_sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+    "R02_raw_sha256": "f7d6ded574aca635709090a37e1d6835aefbe3780be6455c5f2ee793bcb77442",
+    "R02_signed_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+    "library_count": 19,
+    "same_library_hashes": true,
+    "codesign_verified": true,
+    "remaining_homebrew_dependencies": 0
+  },
+  "runner": {
+    "sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+    "full_text_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/run.py",
+    "minimal_diff_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/RUNNER.diff",
+    "review_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/RUNNER-REVIEW.json",
+    "unchanged": "Controller/settings/pacing/preflight/parser/measurement/cleanup functions preserved. Only product mapping/hash pins, arm/output labels, G01 both1 and informational descriptions changed.",
+    "both_S01_and_G01_on": true
+  },
+  "budget": {
+    "validation_games": 1,
+    "clean_games": 6,
+    "total_game_launches_max": 7,
+    "builds": 0,
+    "helper_runs": 0,
+    "captures": 0,
+    "replay_profiles": 0,
+    "retries": 0
+  },
+  "commands": [
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+      "--suite",
+      "r02_validation01",
+      "--run",
+      "validation_paced"
+    ],
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+      "--suite",
+      "r02_clean01",
+      "--run",
+      "clean_paced"
+    ]
+  ],
+  "order": [
+    "A1_G01",
+    "B1_R02",
+    "B2_R02",
+    "A2_G01",
+    "A3_G01",
+    "B3_R02"
+  ],
+  "conditions": {
+    "preset": "Ultra index4",
+    "viewport": [
+      1512,
+      950
+    ],
+    "drawable": [
+      1512,
+      982
+    ],
+    "viewport_origin": [
+      0,
+      32
+    ],
+    "MSAA": 0,
+    "requested_MSAALevel": -1,
+    "actual_main_samples_required": 1,
+    "VSync": 0,
+    "VSyncGame": 0,
+    "LimitIdleFps": 0,
+    "option_limitoffscreenfps": false,
+    "option_limitidlefps": false,
+    "display_rule": "These are this fixed fixture's required observed extents, not a product-wide notch assumption. If display/surface differs, stop and report instead of silently changing resolution.",
+    "prepare_ready": 1,
+    "begin_ready": 0,
+    "render_worker": 1,
+    "S01": 1,
+    "G01": 1,
+    "DQU_and_storage": 0,
+    "G02_G03_G04": "not enabled or resumed",
+    "sepia_and_shared_CUS_pilot": "OFF",
+    "preserved_clean_environment": {
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0",
+      "BAR_NATIVE_MODEL_TRACE": "0",
+      "BAR_NATIVE_SUBMISSION_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_MEMORY_CENSUS": "0",
+      "BAR_NATIVE_COMPILER_MEMORY": "0",
+      "BAR_NATIVE_HEAP_COLLECT": "0",
+      "BAR_NATIVE_HEAP_STATS": "0",
+      "BAR_NATIVE_LARGE_HEAP": "0",
+      "BAR_NATIVE_PREPARATION_TRACE": "0",
+      "BAR_NATIVE_HOST_COST_TRACE": "0",
+      "BAR_NATIVE_VBO_COPY_TRACE": "0",
+      "BAR_NATIVE_PUBLICATION_TRACE": "0",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+      "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+      "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+      "BAR_NATIVE_PASS_COST136_FILE": "",
+      "BAR_NATIVE_PASS160": "1",
+      "BAR_NATIVE_PASS165": "1",
+      "BAR_NATIVE_PASS166": "1",
+      "BAR_NATIVE_RECORD158": "1",
+      "BAR_NATIVE_RETAINED_FONT170": "1",
+      "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+      "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+      "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+      "BAR_METAL4_SHARED_CUS_PILOT": "0",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0"
+    },
+    "environment_rule": "Preserve production flags and nineteen libraries in both arms, normalize only per-arm private paths. All traces/probes/validation/capture off in clean. Actual child and effective runtime settings must match staged receipts.",
+    "host": "AC power, normal power mode, no concurrent build/game/capture/background test. Existing preflight checks, fullscreen ownership and sole-executor isolation remain in force; do not change security/power settings."
+  },
+  "timing_and_analysis": {
+    "warmup": "Existing pacing unchanged; at least10 seconds wall warmup and ten nominal combat simulation seconds240..540. Record actual warmup/loading separately; do not promise total process time is exactly50s.",
+    "counted_simulation": [
+      540,
+      1740
+    ],
+    "nominal_count_seconds": 40,
+    "expected_bins": 40,
+    "metadata_correction": "Historical LAUNCH planned600..1800 is stale. All real accepted G01 samples and controller use540..1740. New records must use observed540..1740 and retain full raw samples.",
+    "order": [
+      "A1_G01",
+      "B1_R02",
+      "B2_R02",
+      "A2_G01",
+      "A3_G01",
+      "B3_R02"
+    ],
+    "fresh_profiles_each_run": true,
+    "mean_FPS_primary": true,
+    "metric": "CPU-observed DrawScreen frames divided by measured wall seconds. 1% low and slow-frame counts are supporting metrics, not GPU/present FPS.",
+    "retain": "Keep every valid slow run. Report each run and arithmetic mean of three runs per arm; no historical pooling, trimming or unchanged retries.",
+    "world_validation": "Compare all40 unit/camera/speed/pause/simulation rows plus seeds, initial units, command and created/destroyed counts. A fixed seed alone does not prove identical rendering work.",
+    "image_validation": "Use existing post-count screenshot procedure. Inspect fixed geometry, stencil-dependent lines and omissions; document natural animated water/cloud/particle differences rather than treating them as automatic parity failures."
+  },
+  "review": {
+    "result": "PASS_BUILD_AND_STAGED_INPUT_REVIEW",
+    "verified": "Read runner full text and minimal diff, toolchain closure, products, staging summary, window contract and all seven LAUNCH records. Their blobs match DONE pins; S01/G01=1 both sides; clean debug/probe=0; controller identical.",
+    "previous_cleanup_complete": true,
+    "game_claims_reported_absent": true
+  },
+  "gates": [
+    "Read latest STATE; require HQ owner and exact round/source/input manifest. Verify all local runner, binary, nineteen library, LAUNCH and fresh fixture hashes before starting. Verify no consumed launch/receipt: ambiguity => BLOCKED, never restage or overwrite.",
+    "Reserve new attempt by CAS before first launch. Run existing validation command exactly once.",
+    "Before clean command, inspect validation raw log, Metal enabled/no errors, image, actual sample count/display/extents/flags, positive S01/G01 witnesses, normal retirement and all cleanup. If failed or ambiguous, stop and report; no clean launch.",
+    "Only if validation passes, run existing clean command exactly once for six ordered arms A B B A A B. No source/runner edits or additional telemetry in counted windows.",
+    "Retain all valid slow runs. Compare all40 world/camera/speed/pause/simulation rows and settings. If unmatched, report invalid comparison rather than FPS regression/improvement. Diagnose from existing logs only; no re-run.",
+    "Return per-arm FPS/frame metrics, three-per-arm arithmetic means, relative difference, raw samples/world checks and post-count images. Validation timing excluded; historical results not pooled.",
+    "Finish GPU/owned PIDs/helpers/workers/awake keeper and evidence writes before same-round DONE. Failure is also DONE only with cleanup; uncertainty => retain owner HQ/BLOCKED."
+  ],
+  "prohibited": [
+    "Extra build/helper/game retry",
+    "Capture/profile/MST",
+    "Source or runner changes",
+    "main/release/Homebrew",
+    "Unrelated processes or security/power-setting changes"
+  ],
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "Necessary bounded autonomous regression benchmarking; no release adoption."
+  }
+}
