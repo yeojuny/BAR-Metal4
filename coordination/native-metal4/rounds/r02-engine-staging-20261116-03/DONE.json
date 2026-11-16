@@ -1,0 +1,252 @@
+{
+  "request_id": "r02-engine-staging-20261116-03",
+  "attempt_id": "r02-isolated-build-01",
+  "author": "LOCAL_CODEX_HQ",
+  "kind": "DONE",
+  "result_status": "COMPLETED_BUILD_AND_STAGING_ONLY",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "parent_full_source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "counts": {
+    "configuration_attempts": 1,
+    "isolated_engine_builds": 1,
+    "games": 0,
+    "benchmarks": 0,
+    "gpu_helpers": 0,
+    "captures": 0,
+    "replay_profiles": 0,
+    "production_logic_edits": 0
+  },
+  "binary": {
+    "baseline_signed_sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+    "R02_raw_sha256": "f7d6ded574aca635709090a37e1d6835aefbe3780be6455c5f2ee793bcb77442",
+    "R02_signed_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+    "library_count": 19,
+    "same_library_hashes": true,
+    "codesign_verified": true,
+    "remaining_homebrew_dependencies": 0
+  },
+  "build": {
+    "source_hashes_verified_before_and_after": 10269,
+    "objects": 1538,
+    "archives": 35,
+    "archive_member_mismatches": 0,
+    "normalized_compile_commands_equal": 3142,
+    "SDK": "27.2 matches baseline Mach-O SDK27.2",
+    "configuration_and_build_exit_codes": [
+      0,
+      0
+    ],
+    "retry_performed": false,
+    "initial_readonly_inspector_correction": "Object-library target selector corrected before the first engine build. Initial diagnostic receipt retained; no second configure/build or source repair."
+  },
+  "runner": {
+    "sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+    "full_text_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/run.py",
+    "minimal_diff_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/RUNNER.diff",
+    "review_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/RUNNER-REVIEW.json",
+    "unchanged": "Controller/settings/pacing/preflight/parser/measurement/cleanup functions preserved. Only product mapping/hash pins, arm/output labels, G01 both1 and informational descriptions changed.",
+    "both_S01_and_G01_on": true
+  },
+  "inputs": {
+    "staged_arms": [
+      "V_R02",
+      "A1_G01",
+      "B1_R02",
+      "B2_R02",
+      "A2_G01",
+      "A3_G01",
+      "B3_R02"
+    ],
+    "all_fixture_hashes_match_frozen_G01": true,
+    "all_clean_envs_match_except_private_runtime_paths": true,
+    "launch_claims_absent": true,
+    "summary_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/STAGING-SUMMARY.json",
+    "window_contract_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/WINDOW-CONTRACT.json",
+    "window_note": "Actual unchanged controller contract540..1740 supersedes legacy LAUNCH planning metadata600..1800. Separate pinned clarification records this; no measurement logic was edited."
+  },
+  "artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4",
+  "artifact_root": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/",
+  "artifacts": [
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/BUILD-RESULT.json",
+      "sha256": "7e09b4caad0e85c16012118d2f9cca93f8051451b10e1255dc8409feff89692c",
+      "git_blob_sha": "d58b839415f18ebbd9d0dcd4b94d4caed99e98b9",
+      "bytes": 8665
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/CANDIDATE.json",
+      "sha256": "7148133540c840299a29e911a511af877f35d384b6a7b2982bf406688f2fa1d7",
+      "git_blob_sha": "db9551c73a4a0af98c03ac69c2f20a9c65ef762a",
+      "bytes": 4076
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/SOURCE-CLOSURE.json",
+      "sha256": "7cc548a0e74717f0213114bb474019e71ef19c97645490f6107ed8e213731dc1",
+      "git_blob_sha": "af7ac06d9169607bb12dc449095d8f7826b85b41",
+      "bytes": 249
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/SOURCE-CLOSURE-AFTER-BUILD.json",
+      "sha256": "ee6b0191efbfbffe7266907f98bd082743d8dc59608177b30be1fe3e2297bccb",
+      "git_blob_sha": "474d052c328db00ba07af6bf8c04fbe501d6702b",
+      "bytes": 93
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/TOOLCHAIN-CLOSURE.json",
+      "sha256": "ba785eb36118da513635b1b453c32006066a448fe9a28138867df5efdff66c51",
+      "git_blob_sha": "70e5720241d1ea766cc86a1458c8ee79c362800b",
+      "bytes": 528
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/EXECUTION.json",
+      "sha256": "16a9497f322f93e9f99b188f66a23d2b82511279d8ef4470d6391f4be7db0011",
+      "git_blob_sha": "edac7964e4397feb6e520db00553c5d7224f457e",
+      "bytes": 3941
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/run.py",
+      "sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+      "git_blob_sha": "f7e5196fc5728e7f0191e81dea26b12321940aea",
+      "bytes": 31871
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/RUNNER.diff",
+      "sha256": "5fed69f35c83190b43aab4ce66bbbbee2e779f2486ac3114866005e1b67a37c6",
+      "git_blob_sha": "e13496c036bb6620348688c857cd8959d8faa847",
+      "bytes": 4327
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/RUNNER-REVIEW.json",
+      "sha256": "cfe94ce6e2b976d0a3dd9dbc0010ec1b33de31e84c7e7ccdd9d5c211c053b3c9",
+      "git_blob_sha": "46121622ba9d7207ef319603c1b99d03bf3d5747",
+      "bytes": 744
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/BASELINE-PRODUCT.json",
+      "sha256": "5f74e6b1edab40b0721c83386f7dce5c52f52ddae45172176c0fa37c66115919",
+      "git_blob_sha": "4848e4b7296817ab4854a423a89e3f8693ae9c9e",
+      "bytes": 612
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/PRODUCT.json",
+      "sha256": "4ab048eccc40a931c440d108a6d6b7c202594582cc0cfaeab40152d1cbd0288a",
+      "git_blob_sha": "6270f1141500d44d0caa7c0815ac82d5fb4104e0",
+      "bytes": 603
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/RELEASE-CONTRACT.json",
+      "sha256": "f816c79b747a38a744bfc6b91f88ed951f857febb2452240851da829de4ea957",
+      "git_blob_sha": "782efe89411a986e81866f929b9fc7bf999b888d",
+      "bytes": 874
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/STAGING-SUMMARY.json",
+      "sha256": "4bc4742cc680b17ef1a97614b66d9ad958e71a66ac3dc593b7d9fb57a11a4ae4",
+      "git_blob_sha": "f9790db45502a34a38cb20940819e9abff2d0edb",
+      "bytes": 14960
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/WINDOW-CONTRACT.json",
+      "sha256": "ce23c69876f5a6b76d58ed003c0591b8eab30b482b18e92b56d2ddf169d1ad8a",
+      "git_blob_sha": "7c2b2f5f6e657c84f15f97c13b25edb9d56e216b",
+      "bytes": 553
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_validation01/validation_paced/PREPARED.json",
+      "sha256": "6012dd079e5ad5a6d8aa1b74bf2e1d06309942c2629bbe77172747808fd52d5d",
+      "git_blob_sha": "80ed7a49ec40e68e70fefd46643488d87fc6449a",
+      "bytes": 2019
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/LAUNCH.json",
+      "sha256": "9e86d5bdae26e556b9011e4b3b1123decfd87253098a6ec1d433d927f39af05f",
+      "git_blob_sha": "8fa6d7adc5cfdc7f162caf9ad539e5ace7d9e44a",
+      "bytes": 11020
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_clean01/clean_paced/PREPARED.json",
+      "sha256": "1b93d054bf5b66e78009af76bba472763b9434f6261a360bdc911d43f06e1eee",
+      "git_blob_sha": "a70fb25777c9f9892ea752386256e5e2d4b23b5e",
+      "bytes": 7509
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/LAUNCH.json",
+      "sha256": "fb29c149f4806a5756ade26d32e38cf63478fa912027deaf28d90e20081777c1",
+      "git_blob_sha": "6a1c9d3b791e200c7636802cadac6d24f703f5df",
+      "bytes": 10827
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/LAUNCH.json",
+      "sha256": "ccd5619f727a16c329cb444911b74db8d88fd7db081639135f6aa28ace34fdbd",
+      "git_blob_sha": "471ed67987b5bf3e6f89688ef49490e0989f51fe",
+      "bytes": 10811
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/LAUNCH.json",
+      "sha256": "7f0b1739d503c28eb6ec9fe895cfba78dbb3a9c8f2da1d5cc6cf32f476f8e111",
+      "git_blob_sha": "bd1a5aaa3351f56c4f7df0c2dbb7f71442b1bced",
+      "bytes": 10811
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/LAUNCH.json",
+      "sha256": "809574011cfa1ca024b9ccaa7c691c3a90d0967049d25aa8b4f87b86efbb14a0",
+      "git_blob_sha": "5a45eb766849d81f3e0c970e768a8c1a60dcf23c",
+      "bytes": 10827
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/LAUNCH.json",
+      "sha256": "ceffe1fca68bc8939ea8b841899ef737ac47ad84a6021e8dca2954b388e9e26b",
+      "git_blob_sha": "b439c68ad5300bf4058a37233b16c801d5096f3d",
+      "bytes": 10827
+    },
+    {
+      "path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/LAUNCH.json",
+      "sha256": "cc92dc653e74cb69cd8a80468fccb9da5ee922d4b183a8c9d4524bed941831e6",
+      "git_blob_sha": "28c308d56070044fe612b3142449b0561e9492f7",
+      "bytes": 10811
+    }
+  ],
+  "remote_verification": "All23 committed artifact paths/blob SHAs match local files; exact runner/STAGING-SUMMARY/CANDIDATE content readback verified. No engine binaries, apps, assets or personal profiles uploaded.",
+  "cleanup": {
+    "results_complete": true,
+    "gpu_complete": true,
+    "gpu_work_started": false,
+    "owned_pid_count": 0,
+    "helper_session_count": 0,
+    "awake_created": false,
+    "awake_released": true,
+    "workers_quiescent": true,
+    "artifact_writes_closed": true,
+    "baseline_engine_and_19_libraries_preserved": true,
+    "baseline_source_header_preserved": true,
+    "frozen_runner_preserved": true
+  },
+  "next_commands_NOT_AUTHORIZED_THIS_ROUND": [
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+      "--suite",
+      "r02_validation01",
+      "--run",
+      "validation_paced"
+    ],
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+      "--suite",
+      "r02_clean01",
+      "--run",
+      "clean_paced"
+    ]
+  ],
+  "next_handoff": "JINI must review signed binary, full runner/diff, input pins and window clarification before a new explicit validation1+clean6 handoff. Both suites are already staged and unconsumed: do not restage/overwrite. No capture/profile or game execution is authorized by this DONE.",
+  "remaining_unverified": [
+    "Full engine runtime/UI/Metal validation",
+    "Actual game retirement and effective display/graphics/flags",
+    "G01 versus R02 mean FPS and supporting slow-frame metrics"
+  ],
+  "limitations": "Build/staging success is not game visual parity, performance acceptance or release approval. No main/release/Homebrew update."
+}
