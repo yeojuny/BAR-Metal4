@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 20,
+  "revision": 21,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/READY.json",
   "result_path": null,
   "decision": "Fixed engine and runner accepted for bounded regression measurement, not adoption.",
-  "execution_status": "READY_VALIDATION1_CLEAN6_NOT_STARTED",
+  "execution_status": "VALIDATION1_THEN_CLEAN6_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -174,6 +174,16 @@
       "binary": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
       "runner": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
       "decision": "Isolated source/toolchain/dependency closure and seven staged arms verified. Proceed validation1 then clean6 only; no restage/retry/capture."
+    },
+    {
+      "event": "HQ_EXECUTION_RESERVED_AND_USER_ROUTING_POLICY_RELAYED",
+      "revision": 21,
+      "round_id": "r02-g01-benchmark-20261116-04",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-validation-and-clean-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "scope": "ONE_R02_VALIDATION_THEN_SIX_MATCHED_CLEAN_GAMES",
+      "heartbeat": "PAUSED_FOR_MEASUREMENT"
     }
   ],
   "communication_test": {
@@ -259,13 +269,21 @@
   },
   "execution": {
     "attempt_id": "r02-validation-and-clean-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "validation_games": 0,
     "clean_games": 0,
-    "builds": 0
+    "builds": 0,
+    "started_at_utc": "2026-11-16T23:37:35Z"
   },
   "input_manifest_sha256": "4bc4742cc680b17ef1a97614b66d9ad958e71a66ac3dc593b7d9fb57a11a4ae4",
   "input_manifest_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/STAGING-SUMMARY.json",
-  "input_artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4"
+  "input_artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4",
+  "model_and_context_policy": {
+    "author": "USER_VIA_LOCAL_CODEX_HQ",
+    "instruction": "섹션이 많이 쌓여 무거워지면 핵심 인계를 남기고 새 섹션으로 분기할 것. SUPER JINI MK2가 HQ의 모델과 추론강도도 작업에 맞춰 조절할 것.",
+    "task_routing": "지니가 각 지시 묶음에 HQ 및 위임 에이전트의 모델·추론강도를 명시한다. 반복 빌드·실행·기록과 복잡한 진단·수명 계약 검토를 구분하고 불필요한 모델 왕복은 피한다. 실행 중인 측정에는 설정 변경이나 새 병렬 작업을 끼워 넣지 않는다.",
+    "branching": "대화가 무거워지면 역할·미완료 목표·고정 source/manifest·현재 STATE/round/attempt·결과 경로·금지사항·다음 한 단계만 인계한다. 이전 실행이 종료되고 정리된 뒤 새 담당자가 최신 STATE를 확인해 이어받는다. 진행 중 실행을 새 섹션에서 중복 시작하지 않는다.",
+    "confirmation": "이 정책은 HQ가 사용자 지시를 전달한 기록이다. 지니의 실제 수신·설정 변경은 지니가 읽은 뒤 별도로 확인한다."
+  }
 }
