@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 15,
+  "revision": 16,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/READY.json",
   "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DONE.json",
-  "decision": "Previous compile failure reviewed; corrected helper new bounded attempt authorized.",
-  "execution_status": "PASSED_HELPER_GPU_CORRECTNESS_CLEANED",
+  "decision": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DECISION.json",
+  "execution_status": "R02_CORRECTNESS_ACCEPTED_AWAITING_PINNED_BENCHMARK_PLAN",
   "blocked_reason": null,
   "history": [
     {
@@ -126,6 +126,13 @@
       "asymmetric_cases": 1024,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_REVIEWED_GPU_PASS",
+      "revision": 16,
+      "round_id": "r02-sensorlos-winding-20261116-02",
+      "decision_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DECISION.json",
+      "next": "Read-only HQ benchmark plan; no execution authorized by this transition"
     }
   ],
   "communication_test": {
