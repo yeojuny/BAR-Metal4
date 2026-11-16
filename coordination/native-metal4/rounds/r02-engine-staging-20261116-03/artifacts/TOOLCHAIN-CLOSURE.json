@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "cache_mismatches": {},
+  "baseline_compile_commands": 3142,
+  "candidate_compile_commands": 3142,
+  "missing_commands": [],
+  "extra_commands": [],
+  "changed_commands": [],
+  "SDK_comparison": "Baseline LC_BUILD_VERSION SDK27.2 equals current xcrun SDK27.2",
+  "preflight_parser_note": "Initial selector assumed spring-metal4-scene.dir; actual frozen TU belongs to recoil-metal4-world-renderer.dir. Read-only inspection corrected selection. Configure succeeded once; no source/build retry occurred."
+}

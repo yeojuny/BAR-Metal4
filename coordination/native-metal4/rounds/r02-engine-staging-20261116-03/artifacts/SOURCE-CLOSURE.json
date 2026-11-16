@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "expected": 10269,
+  "observed": 10269,
+  "missing": [],
+  "extra": [],
+  "mismatched": [],
+  "ignored_incidental_cache": true,
+  "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3"
+}

@@ -1,0 +1,110 @@
+{
+  "round_id": "r02-engine-staging-20261116-03",
+  "attempt_id": "r02-isolated-build-01",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "claimed_revision": 18,
+  "claimed_state_blob_sha": "b6fba2a96b3a1adda7562dc636c808d271b6fa58",
+  "started_at_utc": "2026-11-16T23:11:05.371423+00:00",
+  "stage": "COMPLETED_BUILD_AND_STAGING_CLEANED",
+  "configuration_attempts": 1,
+  "engine_builds": 1,
+  "games": 0,
+  "benchmarks": 0,
+  "gpu_helpers": 0,
+  "captures": 0,
+  "replay_profiles": 0,
+  "owned_pids": [
+    88226,
+    90796
+  ],
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "log": "CONFIGURE.log",
+      "exit_code": 0,
+      "wall_seconds": 9.010102582979016,
+      "pid": 88226
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "log": "BUILD.log",
+      "exit_code": 0,
+      "wall_seconds": 221.78582745796302,
+      "pid": 90796
+    }
+  ],
+  "configure_exit_code": 0,
+  "controller_finished_at_utc": "2026-11-16T23:16:15.601463+00:00",
+  "preflight_issue_resolved": "Initial selector assumed spring-metal4-scene.dir; actual frozen TU belongs to recoil-metal4-world-renderer.dir. Read-only inspection corrected selection. Configure succeeded once; no source/build retry occurred.",
+  "build_exit_code": 0,
+  "raw_engine_sha256": "f7d6ded574aca635709090a37e1d6835aefbe3780be6455c5f2ee793bcb77442",
+  "prebuild_inspection_correction": {
+    "initial_error": null,
+    "preserved_receipt": "PREBUILD-PREFLIGHT-INITIAL.json",
+    "resolution": "Initial readonly selector assumed direct spring target; actual unique TU belongs to recoil-metal4-world-renderer object library. Readonly inspection corrected the selector; all3142 normalized commands match. Configure stayed1, build stayed1. SDK27.2 equals baseline Mach-O sdk27.2."
+  },
+  "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "staging_commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+        "--suite",
+        "r02_validation01",
+        "--stage",
+        "validation_paced"
+      ],
+      "exit_code": 0,
+      "log": "STAGE-r02_validation01.log",
+      "wall_seconds": 4.2031750829773955
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+        "--suite",
+        "r02_clean01",
+        "--stage",
+        "clean_paced"
+      ],
+      "exit_code": 0,
+      "log": "STAGE-r02_clean01.log",
+      "wall_seconds": 24.19121845799964
+    }
+  ],
+  "staging_finished_at_utc": "2026-11-16T23:20:30.893209+00:00",
+  "cleanup": {
+    "owned_pid_count": 0,
+    "helper_session_count": 0,
+    "gpu_work_started": false,
+    "gpu_complete": true,
+    "awake_created": false,
+    "awake_released": true,
+    "workers_quiescent": true,
+    "build_staging_writers_closed": true
+  },
+  "completed_at_utc": "2026-11-16T23:26:05.755372+00:00"
+}
