@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 12,
+  "revision": 13,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r02-sensorlos-winding-20261116-01",
-  "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
-  "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
-  "request": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/DONE.json",
-  "decision": null,
-  "execution_status": "FAILED_HELPER_COMPILE_GPU_NOT_STARTED_CLEANED",
+  "round_id": "r02-sensorlos-winding-20261116-02",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "request": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/READY.json",
+  "result_path": null,
+  "decision": "Previous compile failure reviewed; corrected helper new bounded attempt authorized.",
+  "execution_status": "READY_FIXED_CORRECTED_HELPER_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -80,6 +80,27 @@
       "gpu_helper_runs": 0,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_REVIEWED_DONE_AND_FIXED_HELPER",
+      "revision": 13,
+      "previous_round": "r02-sensorlos-winding-20261116-01",
+      "previous_result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/DONE.json",
+      "decision": "Compile failure is host helper static typing, not shader failure. One-line type correction prepared and CPU source checks passed; retry only via new fixed round.",
+      "previous_attempt_id": "r02-helper-execution-01",
+      "previous_cleanup_complete": true,
+      "new_source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0"
+    },
+    {
+      "event": "CORRECTED_HELPER_READY_HANDOFF",
+      "revision": 13,
+      "round_id": "r02-sensorlos-winding-20261116-02",
+      "from": "SUPER_JINI_MK2",
+      "to": "HQ",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true,
+      "attempt_id": "r02-helper-execution-02"
     }
   ],
   "communication_test": {
@@ -153,23 +174,9 @@
   },
   "enabled_scope": "FIXED_R02_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY_NO_ENGINE_GAME_BENCH",
   "user_authorization": {
-    "question_message_id": "Sentinel_780debbf6ec88191886309fe534b64e0",
-    "question": "다음 단계로 HQ가 Mac에서 **고정된 테스트 helper만 컴파일하고 GPU 검사를 실행**해도 될까? 게임 실행·벤치마크·엔진 전체 빌드는 하지 않을게.",
-    "approval_message_id": "Sentinel_8563c81084e48191aa31675bff31ab10",
-    "approval": "그래 그럼 하고자 하는 걸 해. 지금 분석은 어떤 것들이 이쓴ㄴ지 알려줄래?",
-    "interpretation": "Approval of the immediately preceding helper-only question, not broader execution authority.",
-    "scope": "Compile the fixed R02 GPU test helper on Mac and execute its correctness checks for this round only.",
-    "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
-    "constraints": [
-      "No full engine build",
-      "No game launch",
-      "No benchmark or performance experiment",
-      "No source edits or regenerated candidate",
-      "No main, release or Homebrew changes",
-      "Latest STATE must designate HQ and this fixed round/source before execution",
-      "Duplicate notification never authorizes rerun; unclear execution history requires BLOCKED",
-      "HQ must finish GPU work and clean owned processes/helpers/workers/awake keepers and evidence writes before DONE; record logs/results even on failure"
-    ]
+    "approval_message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "approval": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "Necessary autonomous testing authorized; this handoff deliberately limited to one corrected fixed helper compile and, if successful, one GPU correctness run. No engine build, game, benchmark, main, release or Homebrew changes."
   },
   "source_writers_stopped": true,
   "connection_verification": {
@@ -178,15 +185,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r02-helper-execution-01",
-    "started": true,
-    "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
-    "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
-    "helper_compile_attempts": 1,
-    "gpu_helper_runs": 0,
-    "reserved_at_utc": "2026-11-16 22:11:17 UTC",
-    "completed": true,
-    "compile_exit_code": 1,
-    "cleanup_complete": true
+    "attempt_id": "r02-helper-execution-02",
+    "started": false,
+    "completed": false,
+    "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+    "helper_compile_attempts": 0,
+    "gpu_helper_runs": 0
   }
 }
