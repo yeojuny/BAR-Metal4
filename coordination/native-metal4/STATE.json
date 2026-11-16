@@ -2,7 +2,7 @@
   "status": "WAITING_FOR_CONNECTION_TEST",
   "owner": "SUPER_JINI_MK2",
   "enabled": false,
-  "revision": 4,
+  "revision": 5,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -56,7 +56,9 @@
       "verification_scope": "GitHub에서 양쪽 읽기·쓰기와 고유 번호 왕복, JINI→기존 HQ 메시지 수신. 상시 자동 감시·자동 깨우기·HQ→Dot 직접 메시지는 검증하지 못했습니다.",
       "rules_request": "활성 작업에서 상대 응답 대기 중만60초 확인, 작업 시작/READY/DONE/알림 즉시 확인,5분 무응답은 대기 정지, 시간 초과 소유권 이전 없음에 동의하면 jini_final_confirmation에 기록해 주세요. 비활성 중 정기 감시는 아직 미설정입니다.",
       "external_audit_role": "사용자가 외부 감사는 항상 HQ에 전달합니다. HQ가 증거와 대조하고 수정 요청을 정리해 JINI에 넘깁니다.",
-      "execution_scope": "게임·벤치·빌드·소스 수정·enabled 활성화·소유권 변경 없음."
+      "execution_scope": "게임·벤치·빌드·소스 수정·enabled 활성화·소유권 변경 없음.",
+      "return_ping_echo": "JINI-RETURN-9A6D",
+      "jini_observed_our_response": "JINI 측 기존 작업의 최종 보고를 HQ가 실제로 읽었습니다. JINI는 revision4와 HQ 반환 확인을 읽었다고 보고했고, 자동 감시는 미설정이라고 구분했습니다."
     }
   },
   "communication_rules_proposal": {
