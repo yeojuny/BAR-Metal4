@@ -1,0 +1,244 @@
+{
+  "round_id": "r02-current-gpu-profile-20261117-05",
+  "attempt_id": "r02-current-capture-profile-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "ONE_CURRENT_R02_CAPTURE_GAME_AND_ONE_OWNED_REPLAY_PROFILE",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+  "purpose": "Select largest current SensorLOS/ground-decal GPU cost; not another FPS comparison.",
+  "prior_decision": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DECISION.json",
+  "budget": {
+    "capture_games": 1,
+    "captured_frames": 1,
+    "owned_replay_profiles": 1,
+    "clean_benchmarks": 0,
+    "builds": 0,
+    "helper_runs": 0,
+    "retries": 0
+  },
+  "capture_and_replay": {
+    "old_trace": {
+      "item": "native-frame.gputrace",
+      "originalLocator": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+      "bytes": 2764747623,
+      "files": 1233,
+      "treeSHA256": "134b121aa1dd2f5a7e2fa5f486440d01c77ab743c0f5f5f68b940dc7e8c19898",
+      "treeHashDefinition": "SHA256 of sorted UTF-8 relativePath + NUL + fileSHA256 + newline; individual local file pins retained separately, not published",
+      "reason": "Large raw GPU capture; archive API/pipeline/shader/timeline extracts supplied instead. No new capture or replay was performed.",
+      "signedCapturedEngineSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+      "byteMeasure": "sum of logical file lengths; not allocated-disk usage",
+      "localPath": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+      "exists": true,
+      "fresh_full_tree_rehash_performed": false
+    },
+    "old_trace_rule": "Directory bundle tree SHA, not a single-file SHA. Existing exported S01 profile is already sufficient as historical context; do not rerun that profile. No fresh full2.76GB tree rehash was performed in this read-only plan.",
+    "capture_template": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/capture_s01.py",
+      "exists": true,
+      "sha256": "7243f3c2ca07c5c4ac195091d67de0cfb2368d491206c0e978a98a23014bd02e",
+      "bytes": 10392
+    },
+    "replay_template": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/run_replay_profile.py",
+      "exists": true,
+      "sha256": "ad1cd2d004c67bd74cb550e4db6499c5750bd890c299841369ae0302a296fe3d",
+      "bytes": 8380
+    },
+    "current_trace_target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace",
+    "actual_capture_gate": "Controller ready marker sim1500; start marker1590. Discover one actual Layer boundary dynamically. Require capture count1, trace exists, expected indexed GroundDecal and SensorLOS entrypoints, actual scene/world/source identities; never reuse old boundary IDs.",
+    "capture_commands": [
+      [
+        "/usr/bin/gpucapture",
+        "boundaries",
+        "--pid",
+        "<owned engine PID>"
+      ],
+      [
+        "/usr/bin/gpucapture",
+        "start",
+        "--pid",
+        "<owned engine PID>",
+        "--boundary",
+        "<unique discovered Layer ID>",
+        "--count",
+        "1",
+        "--output",
+        "<fresh R02 native-frame.gputrace>"
+      ]
+    ],
+    "capture_timeouts_seconds": {
+      "boundaries": 8,
+      "capture": 180
+    },
+    "diagnostic_environment": "MTL_CAPTURE_ENABLED=1 only for this arm; Metal/shader validation0 and minimal existing S01/G01 probes as needed. No parallel MST. Diagnostic FPS excluded.",
+    "replay_commands": [
+      [
+        "/usr/bin/gpudebug",
+        "--list-sessions"
+      ],
+      [
+        "/usr/bin/gpudebug",
+        "-t",
+        "<fresh R02 trace>",
+        "--timeout",
+        "600",
+        "--json",
+        "-c",
+        "status"
+      ],
+      [
+        "/usr/bin/gpudebug",
+        "-s",
+        "<new owned session>",
+        "--json",
+        "-c",
+        "status"
+      ],
+      [
+        "/usr/bin/gpudebug",
+        "-s",
+        "<new owned session>",
+        "--json",
+        "-c",
+        "profile run --gpu-state default --exec overlapping"
+      ],
+      [
+        "/usr/bin/gpudebug",
+        "-s",
+        "<new owned session>",
+        "--json",
+        "-c",
+        "go <export node>",
+        "-c",
+        "list --all"
+      ],
+      [
+        "/usr/bin/gpudebug",
+        "--terminate",
+        "<new owned session>"
+      ]
+    ],
+    "export_nodes": [
+      "/commands",
+      "/commands/cb0",
+      "/api_calls",
+      "/resources",
+      "/resources/render_pipelines",
+      "/performance/encoders",
+      "/performance/shaders",
+      "/performance/timeline/encoders",
+      "/performance/timeline/shaders"
+    ],
+    "replay_gates": "Game normal exit, GPU/engine/capture helper closed and awake released before replay. Require no prior session, obtain a new owned session ID, wait ready, profile once <=180s, export with UNKNOWN on missing nodes, terminate only that owned session and verify it disappears.",
+    "analysis": "Map actual OriginalSensorLOSFragment and GroundDecalVertex/Fragment to their current pipelines, draw/instance counts and stage intervals. Preserve Unknown metrics. Relative replay shares are not whole-frame milliseconds, runtime GPU duration or predicted FPS; do not add overlapping intervals."
+  },
+  "conditions": {
+    "preset": "Ultra index4",
+    "viewport": [
+      1512,
+      950
+    ],
+    "drawable": [
+      1512,
+      982
+    ],
+    "viewport_origin": [
+      0,
+      32
+    ],
+    "MSAA": 0,
+    "requested_MSAALevel": -1,
+    "actual_main_samples_required": 1,
+    "VSync": 0,
+    "VSyncGame": 0,
+    "LimitIdleFps": 0,
+    "option_limitoffscreenfps": false,
+    "option_limitidlefps": false,
+    "display_rule": "These are this fixed fixture's required observed extents, not a product-wide notch assumption. If display/surface differs, stop and report instead of silently changing resolution.",
+    "prepare_ready": 1,
+    "begin_ready": 0,
+    "render_worker": 1,
+    "S01": 1,
+    "G01": 1,
+    "DQU_and_storage": 0,
+    "G02_G03_G04": "not enabled or resumed",
+    "sepia_and_shared_CUS_pilot": "OFF",
+    "preserved_clean_environment": {
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0",
+      "BAR_NATIVE_MODEL_TRACE": "0",
+      "BAR_NATIVE_SUBMISSION_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_MEMORY_CENSUS": "0",
+      "BAR_NATIVE_COMPILER_MEMORY": "0",
+      "BAR_NATIVE_HEAP_COLLECT": "0",
+      "BAR_NATIVE_HEAP_STATS": "0",
+      "BAR_NATIVE_LARGE_HEAP": "0",
+      "BAR_NATIVE_PREPARATION_TRACE": "0",
+      "BAR_NATIVE_HOST_COST_TRACE": "0",
+      "BAR_NATIVE_VBO_COPY_TRACE": "0",
+      "BAR_NATIVE_PUBLICATION_TRACE": "0",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+      "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+      "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+      "BAR_NATIVE_PASS_COST136_FILE": "",
+      "BAR_NATIVE_PASS160": "1",
+      "BAR_NATIVE_PASS165": "1",
+      "BAR_NATIVE_PASS166": "1",
+      "BAR_NATIVE_RECORD158": "1",
+      "BAR_NATIVE_RETAINED_FONT170": "1",
+      "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+      "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+      "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+      "BAR_METAL4_SHARED_CUS_PILOT": "0",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0"
+    },
+    "environment_rule": "Preserve production flags and nineteen libraries in both arms, normalize only per-arm private paths. All traces/probes/validation/capture off in clean. Actual child and effective runtime settings must match staged receipts.",
+    "host": "AC power, normal power mode, no concurrent build/game/capture/background test. Existing preflight checks, fullscreen ownership and sole-executor isolation remain in force; do not change security/power settings."
+  },
+  "steps": [
+    "Reserve new attempt using latest STATE CAS; previous cleanup required. No earlier R02 capture/profile receipt or ambiguous history allowed.",
+    "Verify fixed binary/source/19 library hashes; preserve original scripts, accepted app and consumed profiles. Fresh capture-specific profile/output only.",
+    "Reuse pinned capture/replay templates, adapting only binary/hash/path/arm/output references and S01/G01=1. No instrumentation/controller/parser/pacing/ownership/cleanup changes. Record minimal diff and freeze script/input hashes in EXECUTION-MANIFEST.json before game. Semantic changes or unresolved old pins => BLOCKED.",
+    "One capture game, dynamic Layer boundary, one frame, existing fixture/gates. Normal game exit and cleanup before replay. Diagnostic timings excluded from FPS means.",
+    "One newly owned gpudebug session and one default/overlapping profile; export listed nodes. Missing metrics UNKNOWN; no baseline capture or old S01 profiling.",
+    "Map SensorLOS/GroundDecal actual shaders/pipelines/draw counts/stage intervals and recommend one source hypothesis. Do not implement source changes, add overlapping intervals or predict FPS from shares.",
+    "Terminate only own session and verify disappearance; all GPU/process/awake/worker/writers closed before DONE. Record trace tree hash, manifests, raw exports, analysis and cleanup. No retry."
+  ],
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "One necessary bounded current GPU diagnostic."
+  },
+  "prohibited": [
+    "Source changes",
+    "Repeat clean cohort",
+    "Builds",
+    "New framework",
+    "main/release/Homebrew",
+    "Security/power settings",
+    "Unrelated session termination"
+  ]
+}
