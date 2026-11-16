@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 17,
+  "revision": 18,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/READY.json",
   "result_path": null,
   "decision": "Reviewed plan: minimal prerequisite build/staging only, game execution requires next pinned handoff.",
-  "execution_status": "READY_R02_ISOLATED_BUILD_STAGING_NOT_STARTED",
+  "execution_status": "ISOLATED_BUILD_AND_RUNNER_STAGING_ATTEMPT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -140,6 +140,15 @@
       "previous_round": "r02-sensorlos-winding-20261116-02",
       "previous_result": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DONE.json",
       "decision": "No R02 engine exists. Frozen G01 runner would compare identical binaries unless retargeted. Authorize one isolated engine build and pin-only runner staging; defer all games and omit capture/profile."
+    },
+    {
+      "event": "HQ_BUILD_STAGING_RESERVED",
+      "revision": 18,
+      "request_id": "r02-engine-staging-20261116-03",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-isolated-build-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "scope": "ONE_CONFIGURE_ONE_ENGINE_BUILD_AND_RUNNER_STAGING_GAMES_ZERO"
     }
   ],
   "communication_test": {
@@ -225,10 +234,11 @@
   },
   "execution": {
     "attempt_id": "r02-isolated-build-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "engine_builds": 0,
     "games": 0,
-    "benchmarks": 0
+    "benchmarks": 0,
+    "reserved_at_utc": "2026-11-16 23:07:16 UTC"
   }
 }
