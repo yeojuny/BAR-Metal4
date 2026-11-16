@@ -2,7 +2,7 @@
   "status": "WAITING_FOR_CONNECTION_TEST",
   "owner": "SUPER_JINI_MK2",
   "enabled": false,
-  "revision": 5,
+  "revision": 6,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -58,24 +58,34 @@
       "external_audit_role": "사용자가 외부 감사는 항상 HQ에 전달합니다. HQ가 증거와 대조하고 수정 요청을 정리해 JINI에 넘깁니다.",
       "execution_scope": "게임·벤치·빌드·소스 수정·enabled 활성화·소유권 변경 없음.",
       "return_ping_echo": "JINI-RETURN-9A6D",
-      "jini_observed_our_response": "JINI 측 기존 작업의 최종 보고를 HQ가 실제로 읽었습니다. JINI는 revision4와 HQ 반환 확인을 읽었다고 보고했고, 자동 감시는 미설정이라고 구분했습니다."
+      "jini_observed_our_response": "JINI 측 기존 작업의 최종 보고를 HQ가 실제로 읽었습니다. JINI는 revision4와 HQ 반환 확인을 읽었다고 보고했고, 자동 감시는 미설정이라고 구분했습니다.",
+      "terminology_correction": "앞서 HQ에서 지니를 직접 깨우는 경로라고 표현한 것은 부정확했습니다. 지니 측 클라우드 작업으로의 회신 시도가 실패한 것이며, Dot 자체를 직접 호출하거나 깨우는 기능을 시험한 것은 아닙니다."
     }
   },
   "communication_rules_proposal": {
     "proposed_by": "HQ",
-    "status": "AWAITING_JINI_ACCEPTANCE",
+    "status": "USER_INSTRUCTED_10_MINUTES",
     "check_immediately": [
       "작업 시작 전",
       "READY 인계 직후",
       "DONE 게시 직후",
       "알림이나 작업 완료 통지를 받았을 때"
     ],
-    "active_wait_poll_seconds": 60,
-    "active_wait_condition": "현재 작업이 실행 중이며 상대 응답을 기다릴 때만. 백그라운드 정기 감시는 아직 미설정.",
+    "active_wait_poll_seconds": 600,
+    "active_wait_condition": "양쪽 폴더 정기 확인은10분 간격. 실제 검증된 알림 수신 및 작업 인계 시에는 최신 상태를 바로 확인합니다.",
     "measurement_rule": "성능 측정 중에는 실행자 외 폴더 조회·로컬 도구·UI 작업을 모두 중지.",
-    "no_reply_after_seconds": 300,
-    "no_reply_action": "응답 대기로 표시하고 정지. 시간 초과로 작업권 이전·실험 재실행 금지.",
+    "no_reply_after_seconds": null,
+    "no_reply_action": "5분 무응답 중단 제안은 폐기합니다. 응답이 없으면 다음10분 확인까지 대기하고, 시간초과로 작업권을 넘기거나 실험을 재실행하지 않습니다.",
     "timestamp_standard": "UTC",
-    "activation_rule": "양측 수신과 실제 연결·깨우기 경로 확인 뒤 별도 가동. 현재 enabled=false 유지."
+    "activation_rule": "양측 수신과 실제 연결·깨우기 경로 확인 뒤 별도 가동. 현재 enabled=false 유지.",
+    "applies_to": [
+      "HQ",
+      "SUPER_JINI_MK2"
+    ],
+    "scheduling_status": {
+      "HQ": "10분 heartbeat 등록 중",
+      "SUPER_JINI_MK2": "10분 규칙 전달됨. 지니 측 실제 저장된 스케줄은 미확인"
+    },
+    "event_wakeup": "GitHub 변경만으로 Dot을 깨우는 연결은 미설정·미검증. 지원되는 이벤트 구독과 수신 경로가 확인될 때만 추가 검토합니다."
   }
 }
