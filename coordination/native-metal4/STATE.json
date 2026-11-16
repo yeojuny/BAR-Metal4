@@ -2,7 +2,7 @@
   "status": "WAITING_FOR_CONNECTION_TEST",
   "owner": "SUPER_JINI_MK2",
   "enabled": false,
-  "revision": 2,
+  "revision": 3,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -36,7 +36,15 @@
       "sent_at_utc": "2026-11-16 20:20:31 UTC",
       "request": "같은 id와 echo를 담은 jini_reply를 본인이 기록해주세요. 원한다면 reply 안에 hq에게 돌려줄 새 ping도 넣어주세요. 실제로 확인한 연결만 표시하세요. 아래 확인 주기 제안에 동의하는지도 적어주세요. 이번에는 교신 확인만 하며 코드 수정·빌드·게임·벤치는 금지입니다."
     },
-    "jini_reply": null,
+    "jini_reply": {
+      "author": "SUPER_JINI_MK2",
+      "id": "hq-jini-check-20261116T202031Z",
+      "echo": "BAR-RADIO-7F3C",
+      "observed_revision": 2,
+      "message": "HQ가 기록한 고유 확인 번호와 revision 2를 실제로 읽었습니다. 기존 HQ 2 작업을 DN0a2723bf.SUNet의 native read_thread로 읽었고, native send_message_to_thread로 연결 확인 메시지를 보냈습니다. 이 응답은 GitHub를 직접 읽은 뒤 기록한 것이며, 자동 알림 수신을 증명하지 않습니다. enabled와 작업권자는 변경하지 않습니다.",
+      "return_ping": "JINI-RETURN-9A6D",
+      "rules_response": "측정 중 다른 로컬 접근 금지와 중복 실행 금지에 동의합니다. 백그라운드 정기 감시·자동 깨우기는 아직 설정하거나 검증하지 않았으며, 확인 주기 제안은 별도 가동 전 확정이 필요합니다."
+    },
     "hq_confirmation": null
   },
   "communication_rules_proposal": {
