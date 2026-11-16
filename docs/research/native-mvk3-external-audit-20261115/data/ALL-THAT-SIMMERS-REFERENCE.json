@@ -1,0 +1,45 @@
+{
+  "currentNativePR7": {
+    "meanFPS": 184.95693335311606,
+    "pool": "OFF",
+    "sourceHead": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+    "binarySHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+    "window": [
+      300,
+      1500
+    ],
+    "pairedMVK3Remeasured": false
+  },
+  "olderPairedRecord": {
+    "MVK3": {
+      "FPS": 226.01935261830016,
+      "samples": 18080,
+      "p99Ms": 7.0,
+      "slow1PercentFPS": 118.06914546640574,
+      "maximumMs": 34.000002,
+      "over16_667ms": 11,
+      "over33_333ms": 1,
+      "interpolation": false,
+      "excluded": 0
+    },
+    "native220": {
+      "FPS": 161.22944295561578,
+      "samples": 12897,
+      "p99Ms": 8.0,
+      "slow1PercentFPS": 105.73770491803279,
+      "maximumMs": 21.0,
+      "over16_667ms": 1,
+      "over33_333ms": 0,
+      "interpolation": false,
+      "excluded": 0
+    },
+    "nativeBinarySHA256": "4a53fbd8bad898dace64545c47f80acfd806ead6aece2a801da23c5daa83ae2f",
+    "map": "All That Simmers v1.1.1",
+    "AA": "0x",
+    "window": [
+      600,
+      1800
+    ]
+  },
+  "limits": "Current 184.96 is the present native construction result. Historical 226.02 MVK3 is reference only, not a newly matched pair; old161.23 is not the current native result."
+}

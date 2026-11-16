@@ -1,0 +1,368 @@
+[
+  {
+    "role": "original overall result",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/RESULT.json",
+    "bytes": 4987,
+    "sha256": "d432466be0e00cbdf6d1af79281844ae8de9f7423b1d0fe7340dc0a3ebbfd43c"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/TERRAIN211-FRAMES.csv",
+    "bytes": 46491,
+    "sha256": "1eeec2551f04ea560b3521651ec0bdd6e9e7b0a4dd78f73ebb350ecde6cfa80a"
+  },
+  {
+    "role": "representative original screenshot",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/scene.png",
+    "bytes": 2966414,
+    "sha256": "daab8650148e872e293d9b4dd553590f1f0af4c34be59a2a5ec3795326405e48"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/RECOVERY-RESULT.json",
+    "bytes": 28805,
+    "sha256": "ccab7cb3870ae1a0b136fe54c7bd56ee0873fa48a3f8b7e438ae72fe19fb5c5a"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/ULTRA-EVIDENCE.json",
+    "bytes": 1620,
+    "sha256": "490e5411922c4782a5538042ef38cc8eb9628c7eba464f4a1826851a5494e0a1"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/CHILD-MODE.json",
+    "bytes": 2383,
+    "sha256": "c9363291bf94f03dd3c86bca6d3d8f0776f58c7bec5da27fc79566226161f07c"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/LAUNCH.json",
+    "bytes": 11598,
+    "sha256": "090f985d2b3ae565babec23497776084c0a483798df5ad74fdc173d063c0edb0"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_01/clean_paced/preparation/runs/A1_MVK3/infolog.txt",
+    "bytes": 277705,
+    "sha256": "b21244fe6eb0561d6497d70e10d4e04e11274632d607500da2ddddc17a9f6efa"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/TERRAIN211-FRAMES.csv",
+    "bytes": 24935,
+    "sha256": "92c68da0a2e02c454e9a3aec2eaea423967bdbf611d701e6e0e065215876134c"
+  },
+  {
+    "role": "representative original screenshot",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/scene.png",
+    "bytes": 2959164,
+    "sha256": "1e3ac77eb5fc202bb7088f1ec7301fe7dc4bf4d60c6949bf3a6ce92d862efb27"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/RESULT.json",
+    "bytes": 29096,
+    "sha256": "1cc94b8c6164a9d64116688d931d9ab8d0fdbd9b4f86535f4f2996037e572303"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/ULTRA-EVIDENCE.json",
+    "bytes": 1693,
+    "sha256": "e00c5f2c4debabf024888470a60072c51e23f0a2a2b7149ee4ce5b98c3c04813"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/CHILD-MODE.json",
+    "bytes": 2343,
+    "sha256": "11bf87a8351e85127b2c750e181f14a3e722a6d6f56fe4f5a7c51a3fe8577995"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/LAUNCH.json",
+    "bytes": 10976,
+    "sha256": "49ff3d4d5db3372e7db4e21f6b1e06c5a5a60992c56ffe2a708e18e4b3043e42"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B1_NATIVE/infolog.txt",
+    "bytes": 290165,
+    "sha256": "bffcd046e4387066e25fbed2cf88b07b1242bd7889c09eb1a881d6f8f2f3987a"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/TERRAIN211-FRAMES.csv",
+    "bytes": 24918,
+    "sha256": "912dd29b604b9b0fdbc30950400e4cc6ffc1d2b2a7b03905b260291042bdd531"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/RESULT.json",
+    "bytes": 29103,
+    "sha256": "33472b1e1b79e25dea8c82db14041ae07c93c2f2630f75e461b9994d74ad07c8"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/ULTRA-EVIDENCE.json",
+    "bytes": 1693,
+    "sha256": "a40883f6b7f6de30cdbb6d0dcc771805119fd02feff0054490593513246a21ce"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/CHILD-MODE.json",
+    "bytes": 2343,
+    "sha256": "31bc3e06ecba477dd144d6cf1aa3d62a270c1b954975ce50981db60b2ebec8ef"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/LAUNCH.json",
+    "bytes": 10976,
+    "sha256": "d83f1957606e495ed6f214afb2384d01fa4f59bc4f2511d052defcc0bd76c749"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/B2_NATIVE/infolog.txt",
+    "bytes": 290096,
+    "sha256": "1f0e9f65c2a76d0c8a856a0d86e8ad250e6a4a30c0ed7710d58b8025c720abb8"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/TERRAIN211-FRAMES.csv",
+    "bytes": 46831,
+    "sha256": "8e9dd1fa38ca032f68c506e387f7e8d354705b72ac53873d33c608d291e95c1a"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/RESULT.json",
+    "bytes": 29009,
+    "sha256": "b3aafc47dbfdd619cae63f109a9d42643e573eb4cc38603764237e410c9e8900"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/ULTRA-EVIDENCE.json",
+    "bytes": 1628,
+    "sha256": "c35839fa51f3bc17f60a9a24b409528e933a845fce475622d8683f0f818dbc38"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/CHILD-MODE.json",
+    "bytes": 2383,
+    "sha256": "a615f5c63276a09a4d9c9aa9eb8c4a16b419f4fe9d78a0702bcef8d6f6041195"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/LAUNCH.json",
+    "bytes": 11758,
+    "sha256": "f590c5d00dadea728cc10ce5d6f0756d959cab1e153f4b0b0b2bc42ecaf075ae"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/spectator950_recovery01/clean_paced/preparation/runs/A2_MVK3/infolog.txt",
+    "bytes": 277961,
+    "sha256": "3ca0dcf08a8c2be7802b1548ab5ecb984f3bf921e2a765fe73041a260232c278"
+  },
+  {
+    "role": "original overall result",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/RESULT.json",
+    "bytes": 4673,
+    "sha256": "30d7fcdf5e5ba956612dc13a865247e4320d95485fd81a5f304620d5ca5e178a"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/TERRAIN211-FRAMES.csv",
+    "bytes": 64103,
+    "sha256": "7eca1a86074422bcd421b8126c97fc2ae3b34e491b5c1852f70f5ec1b5044830"
+  },
+  {
+    "role": "representative original screenshot",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/scene.png",
+    "bytes": 2979391,
+    "sha256": "cb7da7cad23dd4bf2aeddce39adfdb0d3e56e4336258d3c4da764b1e6e893c5e"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/RECOVERY-RESULT.json",
+    "bytes": 28837,
+    "sha256": "e6b2048d7af2b7d2842eebb3c7663053769b82f3059a158e0c945828d81ade46"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/ULTRA-EVIDENCE.json",
+    "bytes": 1648,
+    "sha256": "f3e2cfcec6bf73260f8e0e68c54acc988c6e54a88e243dec1cf135c2a1b8cdc7"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/CHILD-MODE.json",
+    "bytes": 2383,
+    "sha256": "8f36ed732456e0627b6a0e266e7cd57c88abcc86fdfd649db0565fbdd6349a77"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/LAUNCH.json",
+    "bytes": 11659,
+    "sha256": "61a8542f51c966426977d0702443f038e4dbac304fb5b4e598237668216e9eb6"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A1_MVK3/infolog.txt",
+    "bytes": 277860,
+    "sha256": "fe69354e60fcf11eab5ca5e9cc848166c44d37c9bd8458dd334d51ad7445d5ab"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/TERRAIN211-FRAMES.csv",
+    "bytes": 32381,
+    "sha256": "df3d9a947ed51273ee7fc13d0ee16679bee2908c0065aef934d2ba3e9529603b"
+  },
+  {
+    "role": "representative original screenshot",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/scene.png",
+    "bytes": 2970599,
+    "sha256": "87b5a109089a8042bac489056400586855800b8741e181d0f748dc60c245b30f"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/RESULT.json",
+    "bytes": 29113,
+    "sha256": "9b24fe520a578c9f4e4f5db2f4fc195605a2c9b14bbc078a2e7f1d324f5beea6"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/ULTRA-EVIDENCE.json",
+    "bytes": 1713,
+    "sha256": "40f1d6f5a5b09adbcd4fe710630991faf876b547a5fe991b4350184debe64abd"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/CHILD-MODE.json",
+    "bytes": 2343,
+    "sha256": "494e7f13a25aaf258ca97e2c1ec476f635eaa3935a6a23dfee23d41d7f46cacf"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/LAUNCH.json",
+    "bytes": 10877,
+    "sha256": "87108cbbec5c7774812247597094f5b51c6a9e83dbae5e82aa595fe35eafe0ec"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B1_NATIVE/infolog.txt",
+    "bytes": 289942,
+    "sha256": "59ace1e2ad93fcc016a4bba5cf26111e5018a5bdc22294a70da2a53800d748ef"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/TERRAIN211-FRAMES.csv",
+    "bytes": 32381,
+    "sha256": "90779379afecf84db4ddf307291501fa6d4923c14080abc687e3cd77023d55ff"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/RESULT.json",
+    "bytes": 29094,
+    "sha256": "87c4c691286d0674b2f43cd9225677d5545f178981d43a3c7967f32eed84b317"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/ULTRA-EVIDENCE.json",
+    "bytes": 1713,
+    "sha256": "9f2dea73fdb732ebe851b4f764d4624e44893d982fa4b95d2ce62a4169e0fb8e"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/CHILD-MODE.json",
+    "bytes": 2343,
+    "sha256": "990b03ab5ac041b8122eae674ccde010525136c4ec2f6e7af74e95fe80edbcd7"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/LAUNCH.json",
+    "bytes": 10877,
+    "sha256": "b079159f893833a230cb2861c912ca0d3fc4d749c5221adfba8b81a98b09e84b"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/B2_NATIVE/infolog.txt",
+    "bytes": 290004,
+    "sha256": "d61576b96b8fb1b9276e67699079847711ec8864d8f829f6135c97930fe72df2"
+  },
+  {
+    "role": "raw DrawScreen intervals",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/TERRAIN211-FRAMES.csv",
+    "bytes": 63559,
+    "sha256": "339c1d0639091540f226d79ca5e6df147044f463498667dcda6ebb1dcb440418"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/RESULT.json",
+    "bytes": 29059,
+    "sha256": "b9c3aab0a24cc500a438171e7a7a19292b89ac5f952a6f6c31b1c8010b591764"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/ULTRA-EVIDENCE.json",
+    "bytes": 1648,
+    "sha256": "adccd5dea1ab1506b53f0a5bc1a15502f5d557ceb2b35cb72593b8c91de11c7e"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/CHILD-MODE.json",
+    "bytes": 2383,
+    "sha256": "13c5d453c26e5060c05a0c3610b464de4f7cd22278da09dfe61505c3e77a3aa9"
+  },
+  {
+    "role": "original runtime metadata",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/LAUNCH.json",
+    "bytes": 11659,
+    "sha256": "9029a9bf51741b37a2d1d91f3188214f339a29f311151d138da2491dc213eda0"
+  },
+  {
+    "role": "original full engine log; selected lines only in bundle",
+    "reference": "<LOCAL_PR7_EVIDENCE>/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/infolog.txt",
+    "bytes": 277856,
+    "sha256": "d6dea3286aca7288d83d607503ed90ddc8882d17757f5df05cfa6ceb57104721"
+  },
+  {
+    "role": "native build/source receipt",
+    "reference": "<LOCAL_PR7_EVIDENCE>/CANDIDATE.json",
+    "bytes": 478865,
+    "sha256": "261273e89e7ffb130150e4719936a0de8b376f2f602bbe6e17f07c6eeffff778"
+  },
+  {
+    "role": "native build/source receipt",
+    "reference": "<LOCAL_PR7_EVIDENCE>/SOURCE-PIN.json",
+    "bytes": 346,
+    "sha256": "1518e399239f0de23f51383359d034de9d04ffa036fd956eb1ba71bc26888345"
+  },
+  {
+    "role": "source provenance",
+    "reference": "<LOCAL_PR7_EVIDENCE>/source/UPSTREAM-CONTRIBUTIONS.json",
+    "bytes": 3798,
+    "sha256": "7630941237350fe2be5dec854f55296375c387ed2e6aea5cb709eaa5e6a99c0c"
+  },
+  {
+    "role": "historical All That Simmers paired comparison",
+    "reference": "<LOCAL_WORKSPACE>/evidence/pure220-vs-mvk01/COMPARISON-THREE.json",
+    "bytes": 16378,
+    "sha256": "20f28fc709b6ea893eff6b20659845b3c44352aa514e953e250e9bd253575052"
+  },
+  {
+    "role": "separate PR7 pool test",
+    "reference": "<LOCAL_PR7_EVIDENCE>/RESULT.json",
+    "bytes": 15451,
+    "sha256": "cd01f367a69c5e4e62eb71fe1a9f2f7fef3196f21133c4393a23cbb1ae659064"
+  },
+  {
+    "role": "PR7 allocation gate",
+    "reference": "<LOCAL_PR7_EVIDENCE>/measurement/construction/DIAGNOSTIC-GATE.json",
+    "bytes": 2406,
+    "sha256": "d11629553c84bdee7f5a98d644cf9531869b369a787187c2f8239c72c53f43ff"
+  },
+  {
+    "role": "PR7 allocation gate",
+    "reference": "<LOCAL_PR7_EVIDENCE>/measurement/battle/DIAGNOSTIC-GATE.json",
+    "bytes": 2040,
+    "sha256": "d1523e8f48c769f0ead963861cd4a02c06405466857556e98f3ecfc5f6eb6142"
+  }
+]

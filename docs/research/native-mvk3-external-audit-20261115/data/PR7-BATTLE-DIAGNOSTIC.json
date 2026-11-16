@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "productSHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+  "scene": "Seths Ravine Remake 1.3.1 official armbull benchmark seed7654321 sim240 start; 10s combat warmup then sim540..1740 count",
+  "power": "Actual AC powermode0 in both accepted preflights",
+  "offRun": "evidence/material-storage-pr7-20261115-01/measurement/battle/diagnostic_paced/preparation/runs/D0_BATTLE_STORAGE_OFF",
+  "onRun": "evidence/material-storage-pr7-20261115-01/measurement/battle/diagnostic_paced/preparation/runs/D1_BATTLE_STORAGE_ON",
+  "analyzer": "evidence/material-storage-pr7-20261115-01/measurement/battle/DIAGNOSTIC-PAIR.json",
+  "sampledStorageWork": {
+    "OFF": {
+      "gets": 168,
+      "hits": 152,
+      "encodes": 16,
+      "encoded_bytes": 3072,
+      "new_buffers": 16,
+      "reused_buffers": 0,
+      "new_allocated_bytes": 3072,
+      "groups": 42,
+      "max_observed_pool_slots": 0,
+      "max_observed_pool_bytes": 0
+    },
+    "ON": {
+      "gets": 168,
+      "hits": 144,
+      "encodes": 24,
+      "encoded_bytes": 4608,
+      "new_buffers": 0,
+      "reused_buffers": 24,
+      "new_allocated_bytes": 0,
+      "groups": 42,
+      "max_observed_pool_slots": 132,
+      "max_observed_pool_bytes": 25344
+    }
+  },
+  "core": "Both actual counted windows, internal images, Metal API Validation zero errors, storage groups complete/drop zero, normal engine exit, sparse memory receipts.",
+  "imageReview": "Root directly viewed OFF and ON: same terrain, units and render state without new visual anomaly; UI decoration/numerical differences, no exact-pixel parity claim.",
+  "diagnosticFPS": "Excluded. Parser strict 39.9..40.1s rejected diagnostic durations 40.244s OFF and 40.207s ON, each with 41 interval records under Metal Validation. Raw preserved; clean strict gate remains unchanged.",
+  "performance": "Clean ABBA 40s each pending; sparse counter work and memory do not prove FPS or RAM benefit.",
+  "priorSamplesPooled": false,
+  "utc": "2026-11-16T01:52:12.116833+00:00"
+}

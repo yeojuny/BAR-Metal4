@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "compiler": "clang version 17.0.0 (https://github.com/swiftlang/llvm-project.git 10999b6d034fe318f3d56c83bddb6572593a8bb0)",
+  "platform": "Linux",
+  "native_preparation_test": false,
+  "full_engine_build": false,
+  "gpu_execution": false,
+  "fps_measured": false,
+  "outputs": [
+    "modeled_material_churn batches=1000 encodes=8000 pins=16000 allocations_off=8000 allocations_on=137 reuses=7863 retained_pool_slots=137 byte_results_equal=1 quarantine_unchanged=1 PASS\npool boundaries: cache/prepared/feedback pins, capacity spill, layout, clear, failure, nil-slot rewrite PASS",
+    "..\n----------------------------------------------------------------------\nRan 2 tests in 0.004s\n\nOK",
+    "actual material header ARC syntax=PASS; Apple SDK=False",
+    "negative_control_assertion=PASS"
+  ]
+}

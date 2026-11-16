@@ -158,7 +158,8 @@ struct PreparedCUSSource::Impl {
  struct Draw {
   uint64_t sequence=0;__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;__strong id<MTL4ArgumentTable> table=nil;
   NativeWorldDrawState state;effectstate::Raster raster;std::vector<Object> objects;
-  __strong id<MTLBuffer> material156=nil;
+  // Kept by this prepared owner through successful completion or quarantine.
+  ModelMaterialBinding156 material156;
   std::vector<CUSSourceImage> images;
   float shadowPolygonOffsetUnitsScale=1.f;
   bool encoded=false;
@@ -526,7 +527,7 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
    for(const auto& image:draw.images)slice->owners.push_back(image.owner);
    draw.sharedSlice=std::move(slice);
   }
-  if(program->generated->fragment.textureMask){draw.material156=impl->materials156.Get(lease,materialTextures156,materialSamplers156);[draw.table setAddress:draw.material156.gpuAddress atIndex:8];++materialBindings156;}
+  if(program->generated->fragment.textureMask){draw.material156=impl->materials156.Get(lease,materialTextures156,materialSamplers156);[draw.table setAddress:draw.material156.buffer.gpuAddress atIndex:8];++materialBindings156;}
   const auto uniforms=UploadCUSUniforms(lease,uniformArena,*program,d,transport);
   const auto vertex=uniforms.vertex.Bytes(),fragment=uniforms.fragment.Bytes();
   [draw.table setAddress:uniforms.vertex.Address() atIndex:6];[draw.table setAddress:uniforms.fragment.Address() atIndex:7];
@@ -549,10 +550,16 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
  // Private D validation: one bounded aggregate per completed material batch.
  // The existing sampled job buffer is emitted only after Join, never per Get.
  static const bool identityDiagnostic=[] {const char* v=std::getenv("BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS");return v&&std::strcmp(v,"1")==0;}();
- if(identityDiagnostic&&materialBindings156){
+ static const bool storageDiagnostic=[] {const char* v=std::getenv("BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS");return v&&std::strcmp(v,"1")==0;}();
+ if((identityDiagnostic||storageDiagnostic)&&materialBindings156){
   const auto context=CaptureNativeCPUPhaseContext();
   if(context.sampled&&context.buffer){
    const auto& material=impl->materials156.Stats();
+   std::optional<NativeCPUPhaseScope> storageSummary;
+   if(storageDiagnostic){
+    storageSummary.emplace(NativeCPUPhaseKind::MaterialStorageSummary);
+    storageSummary->Counts(materialBindings156,impl->materials156.UsesStoragePool());
+   }
    const bool memoActive=material.identityHits+material.identityMisses!=0;
    const auto record=[](NativeCPUPhaseKind kind,uint64_t a,uint64_t b){NativeCPUPhaseScope row(kind);row.Counts(a,b);};
    record(NativeCPUPhaseKind::MaterialIdentityLookup,material.identityHits,material.identityMisses);
@@ -562,11 +569,16 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
    record(NativeCPUPhaseKind::MaterialIdentityReads,memoActive?material.resourceIDReads:materialBindings156*24,material.omittedResourceIDReads);
    record(NativeCPUPhaseKind::MaterialIdentityGets,materialBindings156,material.hits);
    record(NativeCPUPhaseKind::MaterialIdentityAllocation,material.created,material.encodedBytes);
+   if(storageDiagnostic){
+    record(NativeCPUPhaseKind::MaterialStorageAllocations,material.newBuffers,material.reusedBuffers);
+    record(NativeCPUPhaseKind::MaterialStorageBytes,material.newAllocatedBytes,impl->materials156.StoragePoolAllocatedBytes());
+    record(NativeCPUPhaseKind::MaterialStorageState,impl->materials156.StoragePoolCount(),256);
+   }
   }
  }
  if(!impl->reportedMaterial156&&source->sourceDrawFrame>=512&&preparedRuns147){
   const auto& material=impl->materials156.Stats();
-  LOG("[NativeModel156Material] prior_resource_setters=%zu material_address_bindings=%zu cache_hits=%zu new_buffers=%zu encoded_resource_slots=%zu encoded_bytes=%zu cache_entries=%zu cache_bytes=%zu cache_allocated_bytes=%zu direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1",priorResourceSetters156,materialBindings156,material.hits,material.created,material.created*24,material.encodedBytes,impl->materials156.Entries(),impl->materials156.Bytes(),impl->materials156.AllocatedBytes());
+  LOG("[NativeModel156Material] prior_resource_setters=%zu material_address_bindings=%zu cache_hits=%zu new_buffers=%zu encoded_resource_slots=%zu encoded_bytes=%zu cache_entries=%zu cache_bytes=%zu cache_allocated_bytes=%zu direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1",priorResourceSetters156,materialBindings156,material.hits,material.newBuffers,material.created*24,material.encodedBytes,impl->materials156.Entries(),impl->materials156.Bytes(),impl->materials156.AllocatedBytes());
   impl->reportedMaterial156=true;
  }
  // Seal exact first-owner order only after all image vectors are stable.

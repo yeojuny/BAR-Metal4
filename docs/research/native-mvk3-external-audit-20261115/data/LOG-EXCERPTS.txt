@@ -1,0 +1,224 @@
+
+## 4x A1_MVK3 (original line numbers)
+128: [t=00:00:00.003338]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+129: [t=00:00:00.003347]         Hardware Config: Apple M4 Pro; 24576MB RAM
+173: [t=00:00:00.281892] [MacSDL3EGL::TryChooseExactConfig] configured=4 requested=4 selected=4 sampleBuffers=1 depth=24 stencil=8
+181: [t=00:00:00.288218] 	GL renderer : zink Vulkan 1.4(Apple M4 Pro (MOLTENVK))
+233: [t=00:00:00.294022] [VSync::SetInterval] interval=0 (disabled)
+2249: [t=00:00:12.885611][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2251: [t=00:00:14.276322][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=1 MSAALevel=4 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=4
+2265: [t=00:00:27.964375][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2266: [t=00:00:27.964445][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2267: [t=00:00:27.964454][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2277: [t=00:00:27.972871][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2284: [t=00:00:35.970890][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2286: [t=00:00:35.970988][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2287: [t=00:00:37.963205][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2288: [t=00:00:37.963266][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=9.998999596
+2291: [t=00:00:37.963644][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=3333 simulation=540 callback=GameFrame warmup_seconds=21.968999863
+2292: [t=00:01:09.968989][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2300: [t=00:01:17.965164][f=0001740] [MatchedAnchor] boundary=end seconds=40.000999451 draw=6068 simulation=1740 callback=GameFrame
+2341: [t=00:01:17.965490][f=0001740] [NativeShortRun] total draws=2735 seconds=40.000999451
+2344: [t=00:01:17.966832][f=0001740] [Terrain211FrameObserver] samples=2734 overflow=0 phase=after_measurement source=DrawScreen_timer
+2348: [t=00:01:18.524104][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740
+
+## 4x B1_NATIVE (original line numbers)
+127: [t=00:00:00.004188]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+128: [t=00:00:00.004200]         Hardware Config: 24576MB RAM
+2184: [t=00:00:15.547395][f=-000001] [NativeMRT145] discard_mask=95 omitted_copies=6 source_bytes=34473600 width=1512 height=950 original_clear_retained=1
+2185: [t=00:00:15.860795][f=-000001] [NativeFinalColorStage] active=0 samples=4 present_order_original=1 width=1512 height=982
+2220: [t=00:00:15.987282][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2232: [t=00:00:16.995943][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=1 MSAALevel=4 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0
+2256: [t=00:00:24.126671][f=0000170] [NativeModel156Material] prior_resource_setters=4 material_address_bindings=2 cache_hits=2 new_buffers=0 encoded_resource_slots=0 encoded_bytes=0 cache_entries=67 cache_bytes=12864 cache_allocated_bytes=12864 direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1
+2274: [t=00:00:30.486495][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2275: [t=00:00:30.486565][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2276: [t=00:00:30.486581][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2286: [t=00:00:30.492478][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2296: [t=00:00:38.499541][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2298: [t=00:00:38.499638][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2299: [t=00:00:40.496814][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2300: [t=00:00:40.496873][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.010999680
+2303: [t=00:00:40.497212][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=2080 simulation=540 callback=GameFrame warmup_seconds=21.983999252
+2304: [t=00:01:12.494036][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2311: [t=00:01:20.512851][f=0001740] [MatchedAnchor] boundary=end seconds=40.014999390 draw=3547 simulation=1740 callback=GameFrame
+2352: [t=00:01:20.513237][f=0001740] [NativeShortRun] total draws=1467 seconds=40.014999390
+2355: [t=00:01:20.514166][f=0001740] [Terrain211FrameObserver] samples=1466 overflow=0 phase=after_measurement source=DrawScreen_timer
+2359: [t=00:01:21.243520][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740
+2409: [t=00:01:21.615200][f=0001740] [NativeTransientUpload177] family=minimap requests=6837 reused=6833 created=4 fallback=0 uploaded_bytes=492096 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=1024 scope=owner_lifetime
+2410: [t=00:01:21.621995][f=0001740] [NativeTransientUpload177] family=unit_primitive requests=5162 reused=5146 created=16 fallback=0 uploaded_bytes=32316032 cached_count=16 cached_bytes=128512 peak_cached_count=16 peak_cached_bytes=128512 scope=owner_lifetime
+2411: [t=00:01:21.622103][f=0001740] [NativeTransientUpload177] family=weapon_range requests=7192 reused=7176 created=16 fallback=0 uploaded_bytes=2128832 cached_count=16 cached_bytes=10240 peak_cached_count=16 peak_cached_bytes=10240 scope=owner_lifetime
+2413: [t=00:01:21.622236][f=0001740] [NativeTransientUpload177] family=minimap requests=2 reused=0 created=2 fallback=0 uploaded_bytes=256 cached_count=2 cached_bytes=512 peak_cached_count=2 peak_cached_bytes=512 scope=owner_lifetime
+2470: [t=00:01:21.669546] [NativeTransientUpload177] family=unit_primitive requests=3606 reused=3592 created=14 fallback=0 uploaded_bytes=7177440 cached_count=0 cached_bytes=0 peak_cached_count=14 peak_cached_bytes=32768 scope=owner_lifetime
+2471: [t=00:01:21.669763] [NativeTransientUpload177] family=unit_stencil requests=24606 reused=24588 created=18 fallback=0 uploaded_bytes=127607344 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime
+2472: [t=00:01:21.669846] [NativeTransientUpload177] family=bloom requests=84596 reused=84548 created=48 fallback=0 uploaded_bytes=10828288 cached_count=0 cached_bytes=0 peak_cached_count=48 peak_cached_bytes=12288 scope=owner_lifetime
+2473: [t=00:01:21.669884] [NativeTransientUpload177] family=ssao requests=31725 reused=31707 created=18 fallback=0 uploaded_bytes=142804800 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=112128 scope=owner_lifetime
+2474: [t=00:01:21.676119] [NativeTransientUpload177] family=resource_spots requests=7050 reused=7046 created=4 fallback=0 uploaded_bytes=2143200 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=2048 scope=owner_lifetime
+2475: [t=00:01:21.676462] [NativeTransientUpload177] family=weapon_range requests=4495 reused=4485 created=10 fallback=0 uploaded_bytes=1582240 cached_count=0 cached_bytes=0 peak_cached_count=10 peak_cached_bytes=7168 scope=owner_lifetime
+
+## 4x B2_NATIVE (original line numbers)
+127: [t=00:00:00.003859]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+128: [t=00:00:00.003869]         Hardware Config: 24576MB RAM
+2184: [t=00:00:13.867630][f=-000001] [NativeMRT145] discard_mask=95 omitted_copies=6 source_bytes=34473600 width=1512 height=950 original_clear_retained=1
+2185: [t=00:00:13.881576][f=-000001] [NativeFinalColorStage] active=0 samples=4 present_order_original=1 width=1512 height=982
+2220: [t=00:00:13.969751][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2233: [t=00:00:15.000928][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=1 MSAALevel=4 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0
+2256: [t=00:00:20.468741][f=0000110] [NativeModel156Material] prior_resource_setters=4 material_address_bindings=2 cache_hits=2 new_buffers=0 encoded_resource_slots=0 encoded_bytes=0 cache_entries=69 cache_bytes=13248 cache_allocated_bytes=13248 direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1
+2274: [t=00:00:28.793414][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2275: [t=00:00:28.793478][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2276: [t=00:00:28.793498][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2286: [t=00:00:28.805733][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2296: [t=00:00:36.809683][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2298: [t=00:00:36.809781][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2299: [t=00:00:38.811306][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2300: [t=00:00:38.811362][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.017999649
+2303: [t=00:00:38.811663][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=2297 simulation=540 callback=GameFrame warmup_seconds=21.989999771
+2304: [t=00:01:10.808965][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2311: [t=00:01:18.797436][f=0001740] [MatchedAnchor] boundary=end seconds=39.985000610 draw=3763 simulation=1740 callback=GameFrame
+2352: [t=00:01:18.797817][f=0001740] [NativeShortRun] total draws=1466 seconds=39.985000610
+2355: [t=00:01:18.798703][f=0001740] [Terrain211FrameObserver] samples=1465 overflow=0 phase=after_measurement source=DrawScreen_timer
+2359: [t=00:01:19.527603][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740
+2409: [t=00:01:19.894931][f=0001740] [NativeTransientUpload177] family=minimap requests=6865 reused=6861 created=4 fallback=0 uploaded_bytes=494112 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=1024 scope=owner_lifetime
+2410: [t=00:01:19.898134][f=0001740] [NativeTransientUpload177] family=unit_primitive requests=5174 reused=5158 created=16 fallback=0 uploaded_bytes=32335040 cached_count=16 cached_bytes=128512 peak_cached_count=16 peak_cached_bytes=128512 scope=owner_lifetime
+2411: [t=00:01:19.898199][f=0001740] [NativeTransientUpload177] family=weapon_range requests=7216 reused=7200 created=16 fallback=0 uploaded_bytes=2135936 cached_count=16 cached_bytes=10240 peak_cached_count=16 peak_cached_bytes=10240 scope=owner_lifetime
+2413: [t=00:01:19.898278][f=0001740] [NativeTransientUpload177] family=minimap requests=2 reused=0 created=2 fallback=0 uploaded_bytes=256 cached_count=2 cached_bytes=512 peak_cached_count=2 peak_cached_bytes=512 scope=owner_lifetime
+2470: [t=00:01:19.958808] [NativeTransientUpload177] family=unit_primitive requests=3604 reused=3590 created=14 fallback=0 uploaded_bytes=7173952 cached_count=0 cached_bytes=0 peak_cached_count=14 peak_cached_bytes=32768 scope=owner_lifetime
+2471: [t=00:01:19.959034] [NativeTransientUpload177] family=unit_stencil requests=26088 reused=26070 created=18 fallback=0 uploaded_bytes=134267760 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime
+2472: [t=00:01:19.959117] [NativeTransientUpload177] family=bloom requests=89780 reused=89732 created=48 fallback=0 uploaded_bytes=11491840 cached_count=0 cached_bytes=0 peak_cached_count=48 peak_cached_bytes=12288 scope=owner_lifetime
+2473: [t=00:01:19.959151] [NativeTransientUpload177] family=ssao requests=33669 reused=33651 created=18 fallback=0 uploaded_bytes=151555392 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=112128 scope=owner_lifetime
+2474: [t=00:01:19.968540] [NativeTransientUpload177] family=resource_spots requests=7482 reused=7478 created=4 fallback=0 uploaded_bytes=2274528 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=2048 scope=owner_lifetime
+2475: [t=00:01:19.968923] [NativeTransientUpload177] family=weapon_range requests=4510 reused=4500 created=10 fallback=0 uploaded_bytes=1587520 cached_count=0 cached_bytes=0 peak_cached_count=10 peak_cached_bytes=7168 scope=owner_lifetime
+
+## 4x A2_MVK3 (original line numbers)
+128: [t=00:00:00.003048]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+129: [t=00:00:00.003058]         Hardware Config: Apple M4 Pro; 24576MB RAM
+173: [t=00:00:00.254233] [MacSDL3EGL::TryChooseExactConfig] configured=4 requested=4 selected=4 sampleBuffers=1 depth=24 stencil=8
+181: [t=00:00:00.261284] 	GL renderer : zink Vulkan 1.4(Apple M4 Pro (MOLTENVK))
+233: [t=00:00:00.268059] [VSync::SetInterval] interval=0 (disabled)
+2249: [t=00:00:13.075710][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2251: [t=00:00:14.429154][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=1 MSAALevel=4 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=4
+2265: [t=00:00:28.153304][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2266: [t=00:00:28.153392][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2267: [t=00:00:28.153404][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2277: [t=00:00:28.161715][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2284: [t=00:00:36.162296][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2286: [t=00:00:36.162384][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2287: [t=00:00:38.164568][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2288: [t=00:00:38.164629][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.010999680
+2291: [t=00:00:38.164982][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=3531 simulation=540 callback=GameFrame warmup_seconds=21.981000900
+2292: [t=00:01:10.156990][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=1 MSAALevel=4 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=3 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2300: [t=00:01:18.155714][f=0001740] [MatchedAnchor] boundary=end seconds=39.990001678 draw=6286 simulation=1740 callback=GameFrame
+2341: [t=00:01:18.156060][f=0001740] [NativeShortRun] total draws=2755 seconds=39.990001678
+2344: [t=00:01:18.157603][f=0001740] [Terrain211FrameObserver] samples=2754 overflow=0 phase=after_measurement source=DrawScreen_timer
+2348: [t=00:01:18.724310][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740
+
+## 0x A1_MVK3 (original line numbers)
+128: [t=00:00:00.002870]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+129: [t=00:00:00.002879]         Hardware Config: Apple M4 Pro; 24576MB RAM
+173: [t=00:00:00.158414] [MacSDL3EGL::TryChooseExactConfig] configured=0 requested=0 selected=0 sampleBuffers=0 depth=24 stencil=8
+181: [t=00:00:00.165190] 	GL renderer : zink Vulkan 1.4(Apple M4 Pro (MOLTENVK))
+233: [t=00:00:00.165722] [VSync::SetInterval] interval=0 (disabled)
+2249: [t=00:00:12.984470][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2251: [t=00:00:14.363295][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0
+2265: [t=00:00:28.057755][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2266: [t=00:00:28.057836][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2267: [t=00:00:28.057845][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2277: [t=00:00:28.065702][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2284: [t=00:00:36.061580][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2286: [t=00:00:36.061669][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2287: [t=00:00:38.068247][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2288: [t=00:00:38.068313][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.010000229
+2291: [t=00:00:38.068663][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=3855 simulation=540 callback=GameFrame warmup_seconds=21.982000351
+2292: [t=00:01:10.065520][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2300: [t=00:01:18.069092][f=0001740] [MatchedAnchor] boundary=end seconds=40.000000000 draw=7626 simulation=1740 callback=GameFrame
+2341: [t=00:01:18.069398][f=0001740] [NativeShortRun] total draws=3771 seconds=40.000000000
+2344: [t=00:01:18.071194][f=0001740] [Terrain211FrameObserver] samples=3770 overflow=0 phase=after_measurement source=DrawScreen_timer
+2348: [t=00:01:18.571228][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740
+
+## 0x B1_NATIVE (original line numbers)
+127: [t=00:00:00.004004]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+128: [t=00:00:00.004015]         Hardware Config: 24576MB RAM
+2184: [t=00:00:13.880885][f=-000001] [NativeMRT145] discard_mask=95 omitted_copies=6 source_bytes=34473600 width=1512 height=950 original_clear_retained=1
+2185: [t=00:00:13.897634][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982
+2220: [t=00:00:13.984590][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2233: [t=00:00:14.988031][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0
+2255: [t=00:00:19.277350][f=0000074] [NativeModel156Material] prior_resource_setters=4 material_address_bindings=2 cache_hits=2 new_buffers=0 encoded_resource_slots=0 encoded_bytes=0 cache_entries=59 cache_bytes=11328 cache_allocated_bytes=11328 direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1
+2274: [t=00:00:28.814067][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2275: [t=00:00:28.814137][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2276: [t=00:00:28.814160][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2286: [t=00:00:28.822824][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2296: [t=00:00:36.827479][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2298: [t=00:00:36.827585][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2299: [t=00:00:38.815803][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2300: [t=00:00:38.815863][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.001999855
+2303: [t=00:00:38.816204][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=2971 simulation=540 callback=GameFrame warmup_seconds=21.972999573
+2304: [t=00:01:10.829490][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2311: [t=00:01:18.821851][f=0001740] [MatchedAnchor] boundary=end seconds=40.005001068 draw=4876 simulation=1740 callback=GameFrame
+2352: [t=00:01:18.822209][f=0001740] [NativeShortRun] total draws=1905 seconds=40.005001068
+2355: [t=00:01:18.823286][f=0001740] [Terrain211FrameObserver] samples=1904 overflow=0 phase=after_measurement source=DrawScreen_timer
+2359: [t=00:01:19.476945][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740
+2409: [t=00:01:19.807386][f=0001740] [NativeTransientUpload177] family=minimap requests=8865 reused=8861 created=4 fallback=0 uploaded_bytes=638112 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=1024 scope=owner_lifetime
+2410: [t=00:01:19.811110][f=0001740] [NativeTransientUpload177] family=unit_primitive requests=6582 reused=6566 created=16 fallback=0 uploaded_bytes=40707072 cached_count=16 cached_bytes=128512 peak_cached_count=16 peak_cached_bytes=128512 scope=owner_lifetime
+2411: [t=00:01:19.811221][f=0001740] [NativeTransientUpload177] family=weapon_range requests=8832 reused=8816 created=16 fallback=0 uploaded_bytes=2614272 cached_count=16 cached_bytes=10240 peak_cached_count=16 peak_cached_bytes=10240 scope=owner_lifetime
+2413: [t=00:01:19.811344][f=0001740] [NativeTransientUpload177] family=minimap requests=2 reused=0 created=2 fallback=0 uploaded_bytes=256 cached_count=2 cached_bytes=512 peak_cached_count=2 peak_cached_bytes=512 scope=owner_lifetime
+2470: [t=00:01:19.867011] [NativeTransientUpload177] family=unit_primitive requests=4588 reused=4574 created=14 fallback=0 uploaded_bytes=9250336 cached_count=0 cached_bytes=0 peak_cached_count=14 peak_cached_bytes=32768 scope=owner_lifetime
+2471: [t=00:01:19.867224] [NativeTransientUpload177] family=unit_stencil requests=33879 reused=33861 created=18 fallback=0 uploaded_bytes=173554752 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime
+2472: [t=00:01:19.867308] [NativeTransientUpload177] family=bloom requests=116492 reused=116444 created=48 fallback=0 uploaded_bytes=14910976 cached_count=0 cached_bytes=0 peak_cached_count=48 peak_cached_bytes=12288 scope=owner_lifetime
+2473: [t=00:01:19.867342] [NativeTransientUpload177] family=ssao requests=43686 reused=43668 created=18 fallback=0 uploaded_bytes=196645248 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=112128 scope=owner_lifetime
+2474: [t=00:01:19.876199] [NativeTransientUpload177] family=resource_spots requests=9708 reused=9704 created=4 fallback=0 uploaded_bytes=2951232 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=2048 scope=owner_lifetime
+2475: [t=00:01:19.876657] [NativeTransientUpload177] family=weapon_range requests=5520 reused=5510 created=10 fallback=0 uploaded_bytes=1943040 cached_count=0 cached_bytes=0 peak_cached_count=10 peak_cached_bytes=7168 scope=owner_lifetime
+
+## 0x B2_NATIVE (original line numbers)
+127: [t=00:00:00.003943]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+128: [t=00:00:00.003953]         Hardware Config: 24576MB RAM
+2184: [t=00:00:13.756549][f=-000001] [NativeMRT145] discard_mask=95 omitted_copies=6 source_bytes=34473600 width=1512 height=950 original_clear_retained=1
+2185: [t=00:00:13.770631][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982
+2220: [t=00:00:13.858120][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2233: [t=00:00:14.920048][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0
+2256: [t=00:00:19.593674][f=0000087] [NativeModel156Material] prior_resource_setters=4 material_address_bindings=2 cache_hits=2 new_buffers=0 encoded_resource_slots=0 encoded_bytes=0 cache_entries=62 cache_bytes=11904 cache_allocated_bytes=11904 direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1
+2274: [t=00:00:28.673001][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2275: [t=00:00:28.673065][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2276: [t=00:00:28.673080][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2286: [t=00:00:28.677197][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2296: [t=00:00:36.685766][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2298: [t=00:00:36.685875][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2299: [t=00:00:38.674938][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2300: [t=00:00:38.674999][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.001999855
+2303: [t=00:00:38.675370][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=2934 simulation=540 callback=GameFrame warmup_seconds=21.975000381
+2304: [t=00:01:10.684498][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=2 option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2311: [t=00:01:18.675092][f=0001740] [MatchedAnchor] boundary=end seconds=40.000000000 draw=4839 simulation=1740 callback=GameFrame
+2352: [t=00:01:18.675450][f=0001740] [NativeShortRun] total draws=1905 seconds=40.000000000
+2355: [t=00:01:18.676520][f=0001740] [Terrain211FrameObserver] samples=1904 overflow=0 phase=after_measurement source=DrawScreen_timer
+2359: [t=00:01:19.325133][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740
+2409: [t=00:01:19.669360][f=0001740] [NativeTransientUpload177] family=minimap requests=8877 reused=8873 created=4 fallback=0 uploaded_bytes=638976 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=1024 scope=owner_lifetime
+2410: [t=00:01:19.672166][f=0001740] [NativeTransientUpload177] family=unit_primitive requests=6586 reused=6570 created=16 fallback=0 uploaded_bytes=40726912 cached_count=16 cached_bytes=128512 peak_cached_count=16 peak_cached_bytes=128512 scope=owner_lifetime
+2411: [t=00:01:19.672223][f=0001740] [NativeTransientUpload177] family=weapon_range requests=8840 reused=8824 created=16 fallback=0 uploaded_bytes=2616640 cached_count=16 cached_bytes=10240 peak_cached_count=16 peak_cached_bytes=10240 scope=owner_lifetime
+2413: [t=00:01:19.672280][f=0001740] [NativeTransientUpload177] family=minimap requests=2 reused=0 created=2 fallback=0 uploaded_bytes=256 cached_count=2 cached_bytes=512 peak_cached_count=2 peak_cached_bytes=512 scope=owner_lifetime
+2470: [t=00:01:19.718594] [NativeTransientUpload177] family=unit_primitive requests=4590 reused=4576 created=14 fallback=0 uploaded_bytes=9250560 cached_count=0 cached_bytes=0 peak_cached_count=14 peak_cached_bytes=32768 scope=owner_lifetime
+2471: [t=00:01:19.718802] [NativeTransientUpload177] family=unit_stencil requests=33623 reused=33605 created=18 fallback=0 uploaded_bytes=172419664 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime
+2472: [t=00:01:19.718890] [NativeTransientUpload177] family=bloom requests=115604 reused=115556 created=48 fallback=0 uploaded_bytes=14797312 cached_count=0 cached_bytes=0 peak_cached_count=48 peak_cached_bytes=12288 scope=owner_lifetime
+2473: [t=00:01:19.718927] [NativeTransientUpload177] family=ssao requests=43353 reused=43335 created=18 fallback=0 uploaded_bytes=195146304 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=112128 scope=owner_lifetime
+2474: [t=00:01:19.724752] [NativeTransientUpload177] family=resource_spots requests=9634 reused=9630 created=4 fallback=0 uploaded_bytes=2928736 cached_count=0 cached_bytes=0 peak_cached_count=4 peak_cached_bytes=2048 scope=owner_lifetime
+2475: [t=00:01:19.725109] [NativeTransientUpload177] family=weapon_range requests=5525 reused=5515 created=10 fallback=0 uploaded_bytes=1944800 cached_count=0 cached_bytes=0 peak_cached_count=10 peak_cached_bytes=7168 scope=owner_lifetime
+
+## 0x A2_MVK3 (original line numbers)
+128: [t=00:00:00.003668]        Operating System: Darwin 27.3.0 Darwin Kernel Version 27.3.0: Fri Oct 30 02:03:07 PDT 2026; root:xnu-13432.60.57~99/RELEASE_ARM64_T6041 (arm64)
+129: [t=00:00:00.003678]         Hardware Config: Apple M4 Pro; 24576MB RAM
+173: [t=00:00:00.222029] [MacSDL3EGL::TryChooseExactConfig] configured=0 requested=0 selected=0 sampleBuffers=0 depth=24 stencil=8
+181: [t=00:00:00.228998] 	GL renderer : zink Vulkan 1.4(Apple M4 Pro (MOLTENVK))
+233: [t=00:00:00.229468] [VSync::SetInterval] interval=0 (disabled)
+2249: [t=00:00:13.148994][f=-000001] [UltraPreset] requested_index=4 initial_index=4
+2251: [t=00:00:14.486195][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0
+2265: [t=00:00:28.221281][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2
+2266: [t=00:00:28.221361][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000
+2267: [t=00:00:28.221371][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400
+2277: [t=00:00:28.225479][f=0000240] Starting benchmark armbull vs armbull with 80 maxunits and 8 units per step in a 1400 radius, features live 150 frames
+2284: [t=00:00:36.228589][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false
+2286: [t=00:00:36.228674][f=0000480] [BackendCommonStatus] frame=480 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2287: [t=00:00:38.222060][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168
+2288: [t=00:00:38.222127][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.000000000
+2291: [t=00:00:38.222489][f=0000540] [MatchedAnchor] boundary=start seconds=0 draw=3906 simulation=540 callback=GameFrame warmup_seconds=21.971000671
+2292: [t=00:01:10.227125][f=0001500] [BackendCommonStatus] frame=1500 view=1512,950,0,0 MSAA=0 MSAALevel=0 VSync=0 VSyncGame=0 Water=4 option_ssao=true option_ssao_quality=3 option_bloomdeferred=true option_bloomdeferred_quality=3 option_cas_sharpness=1 option_water=nil option_msaa=1 option_vsync=1 widget_cas=false widget_bloom=false widget_ssao=false
+2300: [t=00:01:18.229836][f=0001740] [MatchedAnchor] boundary=end seconds=40.006999969 draw=7645 simulation=1740 callback=GameFrame
+2341: [t=00:01:18.230138][f=0001740] [NativeShortRun] total draws=3739 seconds=40.006999969
+2344: [t=00:01:18.231972][f=0001740] [Terrain211FrameObserver] samples=3738 overflow=0 phase=after_measurement source=DrawScreen_timer
+2348: [t=00:01:18.751029][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740

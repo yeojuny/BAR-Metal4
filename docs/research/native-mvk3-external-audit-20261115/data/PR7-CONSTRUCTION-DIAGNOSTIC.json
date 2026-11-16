@@ -1,0 +1,46 @@
+{
+  "status": "PASS",
+  "productSHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+  "scene": "All That Simmers v1.1.1 BC213 same candidate and AA0/VSync0",
+  "power": "Actual AC powermode0 in both accepted preflights",
+  "offRun": "evidence/material-storage-pr7-20261115-01/measurement/construction-ac0-recovery/diagnostic_paced/preparation/runs/D0_STORAGE_OFF",
+  "onRun": "evidence/material-storage-pr7-20261115-01/measurement/construction-on-recovery/diagnostic_paced/preparation/runs/D1_STORAGE_ON_RECOVERY",
+  "analyzer": "evidence/material-storage-pr7-20261115-01/measurement/construction/DIAGNOSTIC-PAIR.json",
+  "sampledStorageWork": {
+    "OFF": {
+      "gets": 736,
+      "hits": 368,
+      "encodes": 368,
+      "encoded_bytes": 70656,
+      "new_buffers": 368,
+      "reused_buffers": 0,
+      "new_allocated_bytes": 70656,
+      "groups": 92,
+      "max_observed_pool_slots": 0,
+      "max_observed_pool_bytes": 0
+    },
+    "ON": {
+      "gets": 704,
+      "hits": 352,
+      "encodes": 352,
+      "encoded_bytes": 67584,
+      "new_buffers": 0,
+      "reused_buffers": 352,
+      "new_allocated_bytes": 0,
+      "groups": 88,
+      "max_observed_pool_slots": 135,
+      "max_observed_pool_bytes": 25920
+    }
+  },
+  "core": "Both actual counted windows, internal images, Metal API Validation zero errors, storage groups complete and dropped zero, normal engine exit, sparse memory receipts.",
+  "imageReview": "Root directly viewed OFF and ON: no new terrain/building/UI regression; water and paused animation timing differs, no exact-pixel equality claim.",
+  "lifecycle": {
+    "OFF": "UNVERIFIED: first fixture expected requested height; OS clamped it; resize changed but restore/reload not reached. Original failure retained.",
+    "ON": "VERIFIED_POSTPROCESS_ONLY: resize/restore/fullscreen/reload and draws confirmed; initial parser false due Lua local reset on reload. Original classification retained.",
+    "onPostprocessReceipt": "evidence/material-storage-pr7-20261115-01/measurement/construction-on-recovery/diagnostic_paced/preparation/runs/D1_STORAGE_ON_RECOVERY/LIFECYCLE-POSTPROCESS.json"
+  },
+  "performance": "Diagnostic FPS excluded. Neither sparse memory nor sampled counter work proves FPS/RAM benefit. Matched clean ABBA remains pending.",
+  "priorSamplesPooled": false,
+  "actualGamesSoFar": 2,
+  "utc": "2026-11-16T01:47:18.594956+00:00"
+}
