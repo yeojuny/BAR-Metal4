@@ -1,0 +1,22 @@
+{
+  "status": "WAITING_FOR_JINI_ACK",
+  "owner": "SUPER_JINI_MK2",
+  "enabled": false,
+  "revision": 0,
+  "acknowledgements": {
+    "SUPER_JINI_MK2": false,
+    "HQ": false
+  },
+  "local_connection_verified": false,
+  "notification_connection_verified": false,
+  "round_id": null,
+  "source_commit": null,
+  "source_manifest_sha256": null,
+  "request": null,
+  "ready_path": null,
+  "result_path": null,
+  "decision": null,
+  "execution_status": null,
+  "blocked_reason": null,
+  "history": []
+}
