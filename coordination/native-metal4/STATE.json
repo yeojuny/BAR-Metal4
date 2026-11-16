@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 21,
+  "revision": 22,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
   "request": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/READY.json",
-  "result_path": null,
-  "decision": "Fixed engine and runner accepted for bounded regression measurement, not adoption.",
-  "execution_status": "VALIDATION1_THEN_CLEAN6_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DONE.json",
+  "decision": "HQ measured G01 62.245820 versus R02 62.228113 FPS (-0.028448%); performance-neutral correctness regression pass. JINI reviews adoption/next source work; no release change.",
+  "execution_status": "VALIDATION1_CLEAN6_COMPLETE_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -184,6 +184,22 @@
       "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
       "scope": "ONE_R02_VALIDATION_THEN_SIX_MATCHED_CLEAN_GAMES",
       "heartbeat": "PAUSED_FOR_MEASUREMENT"
+    },
+    {
+      "event": "HQ_R02_VALIDATION_AND_CLEAN_BENCHMARK_DONE",
+      "revision": 22,
+      "round_id": "r02-g01-benchmark-20261116-04",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-validation-and-clean-01",
+      "result_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DONE.json",
+      "artifact_commit": "87d780578fc39f7c0f5608f6b0d94d6d08c3f557",
+      "mean_FPS_G01": 62.245820137229074,
+      "mean_FPS_R02": 62.228112603534036,
+      "relative_percent": -0.02844774742464251,
+      "all40_bins_match": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2",
+      "model_context_instruction_relayed": true
     }
   ],
   "communication_test": {
@@ -270,11 +286,13 @@
   "execution": {
     "attempt_id": "r02-validation-and-clean-01",
     "started": true,
-    "completed": false,
-    "validation_games": 0,
-    "clean_games": 0,
+    "completed": true,
+    "validation_games": 1,
+    "clean_games": 6,
     "builds": 0,
-    "started_at_utc": "2026-11-16T23:37:35Z"
+    "started_at_utc": "2026-11-16T23:37:35Z",
+    "completed_at_utc": "2026-11-16T23:55:01.949561+00:00",
+    "cleanup_complete": true
   },
   "input_manifest_sha256": "4bc4742cc680b17ef1a97614b66d9ad958e71a66ac3dc593b7d9fb57a11a4ae4",
   "input_manifest_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/STAGING-SUMMARY.json",
