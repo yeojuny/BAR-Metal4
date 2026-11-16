@@ -1,0 +1,46 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-01",
+  "author": "LOCAL_CODEX_HQ",
+  "kind": "READ_ONLY_SOURCE_REVIEW",
+  "reviewed_at_utc": "2026-11-16 21:51:03 UTC",
+  "verdict": "SOURCE_REVIEW_PASS_RUNTIME_VALIDATION_PENDING",
+  "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+  "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
+  "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "observed_state_revision": 9,
+  "observed_state_blob_sha": "02a7cc0e0e7aae92dba7dc177d2f90af41f4cbfd",
+  "reviewed_ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
+  "reviewed_ready_blob_sha": "642d91c0329bceb14f2224c6f2c8f73c6e3d51ac",
+  "independently_verified": {
+    "manifest_byte_sha256": "PASS: fixed-commit raw manifest, 1233085 bytes, exact requested SHA256.",
+    "baseline_manifest_comparison": "R02 10269 paths versus G01 10270 paths. Only omitted path is the previously declared incidental Python __pycache__. Only changed source hash is rts/Rendering/Metal4/NativeSensorLOSShaders.h.",
+    "committed_engine_changes": "All 13 other engine paths changed from the pinned a3 parent match their frozen G01 Git blob hashes. The R02 production shader blob matches its documentation copy and manifest SHA256.",
+    "source_boundary": "Original shader matches frozen G01. The only R02 delta is Y-major index order {0,2,1,0,3,2}; Fragment code, guard/fallback, AA gate, resource registration and lifetime remain byte-identical.",
+    "geometry": "50 independent exact rational arithmetic cases passed, including positive/negative slopes, reversed major direction and X-major ties. Each original tight triangle keeps its vertex set; fixed orientation is positive. 40 legacy Y-major reversed-triangle witnesses reproduced.",
+    "negative_control": "Helper undoY permutation composes with the actual R02 indices to recover the exact R01 index order; X-major and failed guards remain unchanged.",
+    "helper_static_review": "Prepared helper independently exposes front/back operations, compare and masks, separate references, both winding conventions, depth pass/fail, stencil fail, front_facing output and mandatory nonblank/negative witnesses. No source-level blocker identified.",
+    "provenance": "Existing source copyright/license headers are preserved. This change does not modify the separately recorded tomjn/benbreen adaptations."
+  },
+  "author_reported_not_rerun_by_hq": {
+    "cpu_geometry_cases": 16294,
+    "old_y_major_negative_controls": 5523,
+    "sample_count_4_fallback_cases": 3137,
+    "scope": "Inspected test source and published PASS record. HQ did not execute the candidate Python/numpy script or compiled MSL."
+  },
+  "remaining_validation": [
+    "Compile the fixed-source helper on Mac; MSL array selection and Objective-C++ helper/API compatibility remain unverified.",
+    "Run the prepared GPU checks only after execution authorization, preserving all assertions. Require actual asymmetric stencil/depth/front_facing and legacy-negative witnesses.",
+    "The sample-count4 helper case tests the tight guard with rasterSampleCount1; it is not actual AA4 GPU parity.",
+    "Engine build, production lifetime, complete game image parity and FPS remain unverified. No speedup or release-adoption claim follows from this source review."
+  ],
+  "executed": {
+    "engine_compilations": 0,
+    "helper_compilations": 0,
+    "gpu_helper_runs": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "source_edits": 0
+  },
+  "authority": "Review evidence only. STATE owner/status/enablement and execution permission are not changed. SUPER JINI MK2 retains ownership and decides the next handoff within the user's authorization.",
+  "next_action": "JINI may consume this review and record its decision. Mac execution remains held; no additional communication test is needed."
+}
