@@ -1,0 +1,43 @@
+{
+  "status": "STOP_NO_POSITIVE_GATE_STRUCTURAL_CAUSE_FOUND",
+  "candidate": "814ab5de159cd3c8ea93e1b897f24583e7d7537eacffdb7052395b51880855f6",
+  "syntheticGPU": {
+    "cases": 128,
+    "fullColorDepthStencilParity": "PASS",
+    "actualFragmentBlitAndGrassOnlyWitness": "PASS",
+    "scope": "syntheticprotocol,notactualgamewholeframeparityoroverlap"
+  },
+  "game": {
+    "runs": 1,
+    "normalExit": true,
+    "actualS01Flag": 1,
+    "MetalValidationEnabled": true,
+    "rawMatchedMetalErrors": 0,
+    "positiveSplit": false,
+    "firstFallback": "source_frame300 submission267 plan0checkpoint0split0grass0; notanallframesGrasscount",
+    "rawReceipt": "measurement/runs/s01_valid01/validation_paced/preparation/runs/V_S01/RAW-VALIDATION-RECEIPT.json",
+    "scene": "measurement/runs/s01_valid01/validation_paced/preparation/runs/V_S01/scene.png",
+    "PID0": true,
+    "awakeReleased": true
+  },
+  "cause": {
+    "confirmed": "modelGBuffer is constructed onlywhen opaqueModelFrame isabsent. ObservedgamehasmodelMRT1,whichmeans opaqueModelFrame existswithwriters. The S01modelGBuffer gatecannotpassonthatroute.",
+    "designError": "Confused separateShieldmodel-depthproducer withactualopaqueModels MRTboundary.",
+    "fixture": "Sameoldcapturedfixture confirmed; map/config/camera changeunsupported.",
+    "terrain": "AA0validgrounddecalrejectshighQuality; needsSamplesfalse follows,notanunknownblocker."
+  },
+  "proposedNarrowRevision": [
+    "RequireactualopaqueModels phase0Deferred andpass165Enabledfalse, guaranteeingexistingencoderclose",
+    "NointerveningdrawfromGrasssuffix tothatclose;movefailureguarddisarmtoactualclose",
+    "Preserveallprovider/alias/producerchecks/shaders/order/checkpoint/genericbarriers",
+    "AddboundedROI fallbackreason toavoidinferringfullrunfrominitialsource300"
+  ],
+  "notExecuted": [
+    "rebuild",
+    "rerungame",
+    "capture",
+    "GPUprofile",
+    "clean6"
+  ],
+  "next": "HQcoordinationofboundedfix;runtimefreshGOstillrequired"
+}

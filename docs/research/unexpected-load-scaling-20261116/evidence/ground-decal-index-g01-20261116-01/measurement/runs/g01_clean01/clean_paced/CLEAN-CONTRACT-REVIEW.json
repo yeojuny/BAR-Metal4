@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "status": "CLEAN_SIX_RUN_CONTRACT_PASS_WITH_WINDOW_METADATA_CLARIFICATION",
+  "reviewed": [
+    "measurement/CLEAN-READY.json",
+    "measurement/runs/g01_clean01/clean_paced/RUNS.json",
+    "measurement/runs/g01_clean01/clean_paced/COMPLETION.json",
+    "each run's CHILD-MODE, LAUNCH, OBSERVERS, RESULT, LIFECYCLE, CLEANUP and engine.log retirement marker"
+  ],
+  "sameEngineSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "order": ["A1_OFF", "B1_ON", "B2_ON", "A2_OFF", "A3_OFF", "B3_ON"],
+  "runFPS": {
+    "A1_OFF": 58.60146423230071,
+    "B1_ON": 62.76715243006328,
+    "B2_ON": 62.82957962010259,
+    "A2_OFF": 58.560362366015696,
+    "A3_OFF": 58.60732748075073,
+    "B3_ON": 62.8
+  },
+  "comparison": {
+    "baselineMeanFPS": 58.58971802635571,
+    "candidateMeanFPS": 62.79891068338862,
+    "candidateVsBaselinePercent": 7.1841831618637775,
+    "allSixRetained": true,
+    "historicalSamplesPooled": false
+  },
+  "verifiedConditions": [
+    "Every RUNS row is exactly equal to its per-run RESULT.json, and each reported FPS equals its draws divided by its observed seconds. All six have 40 bins covering actual simulation 540..1740 and counted durations about 40 seconds.",
+    "Every LAUNCH product, engine source hash, controller, configuration, game archive and map hash matches the clean preflight. After normalizing private per-run HOME/state/assets/cache paths, launch and child environments differ only BAR_NATIVE_GROUND_DECAL_INDEX_G01=0/1. All CHILD-MODE actual values equal expected values before the counted window.",
+    "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE=0, BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE=0, frame trace=0, Metal debug/validation=0, and no nonzero trace/probe/validation/census environment value is present. Capture overlap is a common production flag, not a capture diagnostic.",
+    "All six OBSERVERS report image present, no issue and no parser/launch error. CLEANUP reports normal exit and owned process group gone; each engine.log contains the Metal4Scene retired-world marker. These establish normal retirement at exit, not frame-by-frame GPU feedback proof.",
+    "All six are runtime Ultra with actual main samples=1, VSync=0, VSyncGame=0, offscreen and idle FPS limit options false. All 40 bins per run have pause=0, speed=1 and a constant camera within that run."
+  ],
+  "metadataClarification": "Each LAUNCH.measurementWindow records planned simulation 600..1800, whereas CLEAN-READY.countedWindow and all observed RUNS/RESULT samples cover 540..1740. The observed window is identical across all six and has 40 bins; report the observed 540..1740 window. Treat the LAUNCH field as stale planning metadata, not as evidence that 600..1800 was measured.",
+  "limits": [
+    "The clean run has diagnostics disabled, so per-frame indexed draw counts are not available from these clean artifacts; the separate validation game supplied the positive indexed witness.",
+    "This review verifies measurement conditions and arithmetic, not causal attribution of the FPS difference to a particular GPU stage or quality equivalence beyond the separate bounded parity and visual smoke gates."
+  ],
+  "reviewerActions": ["read-only JSON/log inspection and arithmetic", "no runs, build, GPU capture or source changes"]
+}

@@ -1,0 +1,90 @@
+{
+  "status": "PLANNING_ONLY_NO_NEW_EXECUTION",
+  "baseline": "LOCAL-EXPERIMENT-BASELINE.json; signed962637 + S01ON/G01ON, defaults unchanged",
+  "orderedRemaining": [
+    {
+      "order": 1,
+      "area": "현재 관측된 GPU 작업",
+      "status": "G01 정점 경로 완료; GroundDecal/GameDecal fragment는 변경하지 않음",
+      "remaining": "실제 남은 픽셀 계산·텍스처 읽기 중 원본 의미를 유지하며 제거할 수 있는 독립 후보 좁히기",
+      "candidate": "Ground FS의 miniMapTex 읽기는 현재도 무조건 수행하고 explosion에만 결과 반영. 조건부 읽기는 후보일 뿐 승인·성능근거 없음. GameDecal FS도 별도 경로로 미변경.",
+      "preconditions": "이전9a44 상대비용을 새962637의 현재 비중으로 간주하지 않음. 유형/coverage 분포, NaN/선택 의미, 출력 동일성 먼저 확인. 실제 GPU vertex reuse는 미측정.",
+      "evidence": [
+        "../decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/COMPARISON-GROUND-SCOPE.json",
+        "source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:730-737",
+        "report/RESULT.json"
+      ]
+    },
+    {
+      "order": 2,
+      "area": "상위 소유권·수명 잔여",
+      "status": "기존 제출/준비 겹치기·완료수명 및 material identity/storage 기반은 이미 존재; 전면 재구현 대상 아님",
+      "remaining": "쓰기 있는 MRT의 이전 버전 읽기·덮어쓰기 계약, A19 모델 공통 저장소 및 장시간/resize/종료 검증의 미완 범위를 최신 소스와 다시 대조",
+      "preconditions": "과거 통합 작업표의 조건부 항목이며 현재 큰 병목 확정 아님. 실제 소비자·비용과 아직 바뀌지 않은 계약이 확인된 부분만 선정.",
+      "queue": "BEGIN repair는 이미9게임/6clean으로 검증된 선택지. PREPARE와 대안 관계이며 현재PREPARE1/BEGIN0 유지. GPU 큐 깊이를 늘리는 새 실험은 계획 확정 아님.",
+      "evidence": [
+        "../../WORK-ORDER-INTEGRATED.md:139-149",
+        "../begin-prepare-overlap-fix-20261114-01/STATUS.json",
+        "../begin-prepare-overlap-fix-20261114-01/REPORT.md"
+      ],
+      "MRTObservationLimit": "과거 대표64프레임 쓰기MRT 보존복사0회. 전역 exact-version/읽기수명 잔여와 현재 실제 GPU 복사비용을 혼동하지 않음."
+    },
+    {
+      "order": 3,
+      "area": "조건부 GS/큐 구조 연구",
+      "status": "최신 전체 완료·미구현 어느 쪽도 단정할 권위기록 없음; 조건부 연구",
+      "remaining": "실제 활성 GS 의존 기능 또는 큐 대기가 현재 비용으로 입증될 때 기존 대응을 대조해 미해결 부분만 좁히기",
+      "preconditions": "Asahi/범용GS/새큐를 즉시 구현 대상으로 정하지 않음. 효과군별 기존GS대체와 검증된BEGIN/PREPARE 기반 재작업 금지. 기존완료·GPU수명·시각의미 유지.",
+      "executionAuthorized": false
+    },
+    {
+      "order": 4,
+      "area": "공통 GLSL/Lua 지원 확대",
+      "status": "CUS source/material/uniform 연결과 Sepia generated shared-program 기반은 이미 소스에 존재",
+      "remaining": "Sepia/공통CUS 기반을 재사용해 실제 활성 효과군·Lua 경로를 넓히고 반복준비 비용과 동일성 검증. 기존 구현의 존재와 범용 지원 완료를 구분.",
+      "preconditions": "CUS CreateShader는 exact original pipeline identity를 요구하고 geometry/tcs/tes/compute는 별도 원본 소비자를 요구. Sepia subset 기반을 범용 GLSL 지원 완료로 부르지 않음. 기존 효과군별 GS 대체 구현을 다시 시작하지 않음.",
+      "scopeCaution": "Sepia README는 역사기록일 수 있으므로 후속완료를 부정하지 않음. 범용 GLSL/Lua 지원 완료 주장은 하지 않음.",
+      "evidence": [
+        "source/engine/rts/Lua/LuaNativeCUSSource.cpp:155-170",
+        "source/engine/tools/sepia-pilot/README.md",
+        "source/engine/rts/Rendering/Metal4/NativeCUSGeneratedPrograms.h",
+        "source/engine/rts/Rendering/Metal4/NativeSepiaGeneratedProgram.h"
+      ]
+    },
+    {
+      "order": 5,
+      "area": "확정 개선 인계",
+      "status": "R01 SensorLOS, S01, G01의 소스·검증·실험기준 보존; G01은HQ 독립검토 및 local experiment baseline 채택",
+      "remaining": "재현 가능한 변경/실행설정/검증한계/기여출처를 통합 인계하고 향후 제품 적용 범위를 결정",
+      "preconditions": "기본OFF와 설치앱/Git/main/배포는 그대로. 이번 요청은 새 코드나 제품배포가 아님.",
+      "evidence": [
+        "LOCAL-EXPERIMENT-BASELINE.json",
+        "IMPLEMENTATION-FILES.json",
+        "report/RESULT.json",
+        "measurement/ordinary_once01/COMPARISON.json"
+      ]
+    }
+  ],
+  "completedOrHeldExcludedFromNewQueue": [
+    {
+      "area": "PR7 material storage",
+      "state": "건설/교전8clean+4진단 완료",
+      "finding": "할당 재사용 관측. 평균−0.0645778%/+0.1382272%, 실질 FPS개선 미입증. 정확 RAM peak 감소 미입증.",
+      "evidence": "../material-storage-pr7-20261115-01/RESULT.json"
+    },
+    {
+      "area": "R02 WeaponRange / range-raster233",
+      "state": "중복 후보 보류·재작업하지 않음",
+      "finding": "동일방식 과거−0.068744% 및 fragment233−0.238733%; 저장9a44 캡처 해당호출0.",
+      "evidence": "../decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/R02-CONTRACT-SCOPE.json"
+    },
+    {
+      "area": "R01 / S01 / G01",
+      "state": "해당 범위 구현·검증 완료",
+      "finding": "G01 Seths fresh6 +7.18418%, Simmers latest단회183FPS는 별도 관측. 과거 퍼센트 합산 금지."
+    }
+  ],
+  "historicalPlanPolicy": "기존 CURRENT-WORK-ORDER/WORKING-CURRENT는199/220 시점 기록으로 최신962637 기준을 대신하지 않음",
+  "nextExperimentAuthorized": false,
+  "HQConcurrence": "HQ agrees to five categories and ordering; no new experiment/code/GPU/Git authorized."
+}

@@ -1,0 +1,63 @@
+{
+  "status": "PASS",
+  "events": [
+    {
+      "event": "start",
+      "fields": {
+        "simulation": "1",
+        "wall_seconds": "0.000000000",
+        "state": "waiting"
+      },
+      "raw": "[t=00:00:16.924173][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting"
+    },
+    {
+      "event": "pause_request",
+      "fields": {
+        "simulation": "180",
+        "wall_seconds": "5.969999790",
+        "state": "pause_requested"
+      },
+      "raw": "[t=00:00:22.894554][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=5.969999790 state=pause_requested"
+    },
+    {
+      "event": "pause_ack",
+      "fields": {
+        "simulation": "180",
+        "wall_seconds": "5.973999977",
+        "state": "held"
+      },
+      "raw": "[t=00:00:22.898910][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=5.973999977 state=held"
+    },
+    {
+      "event": "resume_request",
+      "fields": {
+        "simulation": "180",
+        "wall_seconds": "10.003999710",
+        "state": "resume_requested",
+        "held_seconds": "4.030000210",
+        "held_draws": "899"
+      },
+      "raw": "[t=00:00:26.928701][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.003999710 state=resume_requested held_seconds=4.030000210 held_draws=899"
+    },
+    {
+      "event": "resume_ack",
+      "fields": {
+        "simulation": "180",
+        "wall_seconds": "10.008000374",
+        "state": "resumed"
+      },
+      "raw": "[t=00:00:26.932925][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.008000374 state=resumed"
+    },
+    {
+      "event": "removed_before_count",
+      "fields": {
+        "simulation": "180",
+        "wall_seconds": "10.008999825"
+      },
+      "raw": "[t=00:00:26.932937][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.008999825"
+    }
+  ],
+  "originalWallGateSeconds": 21.982999802,
+  "moduleSHA256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+  "widgetSHA256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+}

@@ -1,0 +1,56 @@
+{
+  "status": "COMPLETE_ONE_HISTORICAL_REFERENCE_COMPARISON",
+  "current": {
+    "meanFPS": 183.0,
+    "onePercentLowFPS": 87.67772428741493,
+    "draws": 7320,
+    "seconds": 40.0,
+    "source": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_G01/RESULT.json"
+  },
+  "priorS01": {
+    "meanFPS": 185.46390215154858,
+    "onePercentLowFPS": 140.4494382022472,
+    "source": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_S01/RESULT.json"
+  },
+  "priorPreS01": {
+    "meanFPS": 185.15462632441086,
+    "onePercentLowFPS": 129.08777969018934
+  },
+  "changeVsPriorS01Percent": -1.3285076626583847,
+  "changeVsPriorPreS01Percent": -1.1636902448420194,
+  "raw40RowsMatchPriorS01": true,
+  "comparedFields": [
+    "start_simulation",
+    "end_simulation",
+    "units",
+    "camera",
+    "speed_a",
+    "speed_b",
+    "paused"
+  ],
+  "actualSimulation": [
+    300,
+    1500
+  ],
+  "actualChildFlags": {
+    "S01": 1,
+    "G01": 1,
+    "PROBE": 0,
+    "MetalValidation": 0,
+    "ShaderValidation": 0
+  },
+  "actualIndexedDrawWitness": "UNKNOWN; no diagnostic marker with PROBE0",
+  "actualOffscreenFPSReduction": false,
+  "actualIdleFPSLimit": 0,
+  "normalExit": true,
+  "ownedProcesses": "CLOSED PID52840/awake52832 absent; awake released",
+  "visualReview": "Root viewed actual PNG; terrain, units, range rings present; HQ independently compared current/prior and reported no gross new missing/corrupt image",
+  "limits": [
+    "Historical single runs with time gap; no causal improvement or regression conclusion",
+    "Low 1% result retained without exclusion or retry",
+    "Seths clean6 +7.184% is a different scene and separate experiment",
+    "FPS from CPU-observed DrawScreen intervals, not GPU time or presentation latency"
+  ],
+  "historicalSamplesPooled": false,
+  "extraRuns": 0
+}

@@ -1,0 +1,13 @@
+{
+  "status": "READY",
+  "utc": "2026-11-16T07:40:54.305580+00:00",
+  "productSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "arms": [
+    {
+      "arm": "O1_SENSOR",
+      "mode": "ELISION1",
+      "data": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/private/O1_SENSOR/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR"
+    }
+  ]
+}

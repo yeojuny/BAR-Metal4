@@ -1,0 +1,8 @@
+{
+  "variant": "private-ground-decal-index-g01",
+  "package": "${AUDIT_USER_HOME}/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/runtime/native/bin/spring-metal4-scene",
+  "native": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/runtime/native",
+  "sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "publishedPackageReadOnly": true
+}

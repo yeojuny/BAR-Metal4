@@ -1,0 +1,11 @@
+{
+  "status": "NO_MATCHED_METAL_ERRORS",
+  "enabledByChildEnv": true,
+  "errors": [],
+  "normalExit": true,
+  "candidateSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_valid01/validation_paced/preparation/runs/V_SENSOR/scene.png",
+  "enabledByEngineLog": true,
+  "engineLogMarker": "Metal API Validation Enabled",
+  "note": "Actual Metal API Validation marker observed; zero matched validation error lines, normal exit. Standalone GPU parity is separate."
+}

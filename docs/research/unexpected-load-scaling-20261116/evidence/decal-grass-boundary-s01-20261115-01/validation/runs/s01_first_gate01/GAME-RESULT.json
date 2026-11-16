@@ -1,0 +1,31 @@
+{
+  "status": "STOP_REVIEW_REQUIRED",
+  "gates": {
+    "controllerExitZero": false,
+    "engineNormalExit": true,
+    "childModeVerified": true,
+    "childFlag1": true,
+    "actualMetalValidationEnabled": true,
+    "noMatchedMetalErrors": false,
+    "positiveGrassSplit": false,
+    "nativeRetirement": true,
+    "imagePresent": true,
+    "awakeReleased": true
+  },
+  "command": [
+    "/opt/homebrew/opt/python@3.15/bin/python3.15",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/run.py",
+    "--run",
+    "validation_paced",
+    "--suite",
+    "s01_valid01"
+  ],
+  "controllerExitCode": 1,
+  "engineSHA256": "814ab5de159cd3c8ea93e1b897f24583e7d7537eacffdb7052395b51880855f6",
+  "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_valid01/validation_paced/preparation/runs/V_S01/scene.png",
+  "output": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_valid01/validation_paced/preparation/runs/V_S01",
+  "controllerStdout": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/validation/runs/s01_first_gate01/game-controller.stdout.log",
+  "controllerStderr": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/validation/runs/s01_first_gate01/game-controller.stderr.log",
+  "diagnosticFPSExcluded": true,
+  "captureAndCleanNotAuthorized": true
+}

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "status": "READ_ONLY_SCOPE_COMPLETE_DUPLICATE_CANDIDATE_NO_CURRENT_COST_BASIS",
+  "acceptedBaseline": {
+    "engineSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+    "S01": 1
+  },
+  "source": {
+    "shader": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/NativeWeaponRangeShaders.h",
+    "shaderSHA256": "562adf302e9f58dae6f2e5364962f60cb24bf47e3927283f9fd95a700b8b1863",
+    "setup": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/Metal4WeaponRangeNative.mm",
+    "setupSHA256": "5db65af3113e7e54fffb437059248a9adc72aacb77e1e01c8ceda56ac3f4f01c"
+  },
+  "currentContract": [
+    "OriginalWeaponRangeLine clips finite clip-space endpoints, transforms to window coordinates, then emits six vertices for two triangles spanning endpoint AABB plus extent=max(1,round(width))/2+2 (shader:437-458). Color is flat from vb; line endpoints/depth remain flat (shader:414-417,443-457).",
+    "Single-sample fragment quantizes endpoints to signed 8-bit subpixels, uses exact symbolic-epsilon diamond acceptance and major-axis wide-line replication, then writes interpolated line depth only for accepted fragments (shader:459-517,529-534,560-565). Alpha, mask, and stencil/depth pipeline semantics must remain unchanged (shader:519-565; setup:125-146,202-209,232).",
+    "MSAA uses distinct actual-sample rectangle coverage and depth at each sample (shader:579-596; NativeMultisampleLineShaders.h:9-31), so the single-sample diamond bound cannot be reused. Fill, mask, minimap composite use different vertices/fragments (shader:426-435,523-527,550-574; setup:125-139,179-195).",
+    "Line setup preserves captured scissor but expands raster viewport to full attachment; the source viewport and target output viewport can differ (setup:171-175,205-214). Preserve this and RANGE199 indices (setup:16-39,228-233), RANGE_DIVISION233 corrected integer division (shader:481-499), and OriginalRangeVertex/world-line math (shader:125-392)."
+  ],
+  "proofRequirementsForAnyDistinctFutureCandidate": [
+    "Restrict to validated finite, positive <=64 line width, single-sample LineLoop and explicitly demonstrated subtypes; preserve original fallback for degenerate/zero-quantized segments, nonfinite/large transformed coordinates, clip-edge or precision uncertainty, unsupported sample counts, fill/composite and unproved minimap/masked paths (NativeWeaponRangeData.cpp:100-125; shader:448-457; setup:167-180).",
+    "Prove every originally accepted pixel center and any needed 2x2 helper lanes lie inside candidate raster geometry after the exact same float32 clip, viewport conversion, signed 8-bit quantization, major-axis tie rule, triangle winding, and target projection. Verify both old/new accepted sets and no added accepted pixels outside the old AABB, including near endpoints, negative coordinates, width-rounding boundaries, scissor edges, and clipped line ends (shader:419-424,449-517).",
+    "Preserve flat provoking color, two-triangle seam/winding, original alpha/depth/stencil and mask read order, MSAA sample and alpha-to-coverage states; require GPU pixel/depth/stencil parity for any materially distinct geometry because rational coverage proof alone does not establish float32 rasterized containment (shader:414-417,519-596; setup:125-146,202-214). No line FS explicit derivatives are visible in this source, but a changed transport must still maintain required helper coverage and not rely on that observation as a global shader contract."
+  ],
+  "historicalDuplicate": {
+    "design": "${AUDIT_WORKSPACE}/evidence/range-raster233-candidate01/DESIGN.json",
+    "patch": "${AUDIT_WORKSPACE}/evidence/range-raster233-candidate01/CHANGE.patch",
+    "review": "${AUDIT_WORKSPACE}/evidence/gpu233-range-audit01/RANGE-RASTER-POSTREVIEW.json",
+    "measuredDisposition": "${AUDIT_WORKSPACE}/evidence/gpu233-range-audit01/FINAL-EVIDENCE-REVIEW.json",
+    "finding": "The same quantized major-axis conservative transport parallelogram was already implemented under BAR_NATIVE_RANGE_RASTER233 for line && samples==1, preserving the fragment path. Prior clean six-game comparison was -0.068744% pooled mean FPS, without repeatable mean gain; prior fragment-strip candidate was -0.238733%. These historical results are from a different binary/workload and do not quantify the current 9a44 build."
+  },
+  "currentActivity": {
+    "basis": "Parent's stored 9a44 profile inspection: shader139 complete rows and timeline135 contained zero WeaponRange entries.",
+    "inference": "This observed scene provides no current WeaponRange cost basis. Absence in this capture does not prove zero cost in other scenes."
+  },
+  "recommendation": "Do not recreate the prior RangeRaster233 patch or run a timing campaign from this scope. Reopen only with an actual current WeaponRange line witness/cost and a technically distinct bound or workload-specific reason; then apply the listed parity proof. No source/build/game/GPU action was performed by this reviewer.",
+  "currentVersusPriorBound": {
+    "current9a44": "Every eligible line segment uses raw clipped window endpoint min/max, expanded on both axes by roundedWidth/2+2, then the unchanged exact fragment discards noncovered pixels (NativeWeaponRangeShaders.h:437-457,500-517).",
+    "priorRangeRaster233": "The rejected patch replaced only the transport corner coordinates with a sheared parallelogram: major endpoints retained the same raw-endpoint extent; the minor centerline followed the quantized endpoint slope, with the same extent as half-band. It was gated to single-sample lines and kept the same FS, depth, mask, alpha and RANGE199 indexing (range-raster233-candidate01/CHANGE.patch:7-33,49-52).",
+    "acceptedSensorLOSDifference": "SensorLOS uses separate AA0 guards for finite/bounded endpoints and viewport, width <=64, sample count1, quantized major span >=1 pixel, finite slope/area and candidate area < old AABB; it uses a 4-pixel half-band and major margin (NativeSensorLOSShaders.h:74-104). Those SensorLOS guards and measured gain do not retrofit the earlier WeaponRange candidate or provide a new R02 mechanism."
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "status": "READY_NO_GPU_OR_GAME",
+  "binarySHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "arm": "P_S01_CAPTURE",
+  "campaign": "clean_paced",
+  "controllerSHA256": "d8de93042672c89610fdcc8bd3aa17aea4ea954be9f2192e20f73dab47e7458d",
+  "capture": {
+    "kind": "one native Layer boundary",
+    "readySim": 1500,
+    "requestSim": 1590,
+    "count": 1,
+    "output": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+    "tool": "/usr/bin/gpucapture",
+    "timeoutSeconds": 180,
+    "diagnosticFPSOnly": true,
+    "parallelMST": false
+  },
+  "runtimeGate": "actual Layer boundary required; no Device/Queue fallback",
+  "childEnv": {
+    "MTL_CAPTURE_ENABLED": "1",
+    "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+    "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "1",
+    "MTL_DEBUG_LAYER": "0",
+    "MTL_SHADER_VALIDATION": "0"
+  },
+  "priorValidationImage": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_valid02/validation_paced/preparation/runs/V_S01/scene.png",
+  "previousCleanPoolsUnchanged": true,
+  "recordedUTC": "2026-11-16T09:15:39.249322+00:00",
+  "captureScript": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/capture_s01.py",
+  "captureScriptSHA256": "7243f3c2ca07c5c4ac195091d67de0cfb2368d491206c0e978a98a23014bd02e",
+  "replayScript": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/run_replay_profile.py",
+  "replayScriptSHA256": "ad1cd2d004c67bd74cb550e4db6499c5750bd890c299841369ae0302a296fe3d",
+  "commands": [
+    "python3 ${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/capture_s01.py --run",
+    "python3 ${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/run_replay_profile.py --run"
+  ],
+  "gates": [
+    "fresh HQ/root/trace/contract PAUSE ACK and GO_ALL_ACK already received",
+    "gpudebug --list-sessions shows No active sessions before game",
+    "one actual Layer boundary; sim1500 ready / sim1590 capture1; no Device/Queue fallback",
+    "captureExit0/native-frame.gputrace present, engine normalExit/ownedGroupGone, child S01=1 PROBE=1 and capture1/debug0",
+    "capture owner CLOSED and AWAKE RELEASED before trace open; diagnostic FPS excluded",
+    "gpudebug dynamic owned session open from new trace, wait ready, one default/overlapping profile \u2264180s, no embed",
+    "export command/API/resource/encoder/shader intervals with UNKNOWN on unsupported/failed export, do not confuse with profile failure",
+    "terminate only owned session; list sessions; owned PID0 and awake released"
+  ],
+  "replayOpen": [
+    "/usr/bin/gpudebug",
+    "-t",
+    "<new trace>",
+    "--timeout",
+    "600",
+    "--json",
+    "-c",
+    "status"
+  ],
+  "replayProfile": [
+    "/usr/bin/gpudebug",
+    "-s",
+    "<dynamic owned session>",
+    "--json",
+    "-c",
+    "profile run --gpu-state default --exec overlapping"
+  ],
+  "replayExportNodes": [
+    "/commands",
+    "/commands/cb0",
+    "/api_calls",
+    "/resources",
+    "/resources/render_pipelines",
+    "/performance/encoders",
+    "/performance/shaders",
+    "/performance/timeline/encoders",
+    "/performance/timeline/shaders"
+  ],
+  "replayTerminate": [
+    "/usr/bin/gpudebug",
+    "--terminate",
+    "<dynamic owned session>"
+  ],
+  "traceOutput": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+  "replayOutput": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/REPLAY-RESULT.json",
+  "priorSuccessfulTraceFootprintGiB": 2.3,
+  "privateProfileLogicalGiB": 2.4,
+  "captureTimeoutSeconds": 180,
+  "replayProfileTimeoutSeconds": 180,
+  "replaySessionIdleTimeoutSeconds": 600,
+  "captureAndProfilePerformanceAccepted": false,
+  "noExtraGameOrBuild": true
+}

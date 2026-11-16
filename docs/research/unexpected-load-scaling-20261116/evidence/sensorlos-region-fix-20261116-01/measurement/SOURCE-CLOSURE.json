@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "sourceCloneFileCount": 10266,
+  "missing": [],
+  "added": [],
+  "changed": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+      "baselineSHA256": "ac2d15d41a3245e96024e8e3db3ced84363504bb7065ce8e10ef47eef51dbf50",
+      "candidateSHA256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+      "baselineSHA256": "86477eb39c19081a76d65f5693224f90c35e7e5215d820e38961db606ddfec58",
+      "candidateSHA256": "b11a26584e84abca5c6addb19267637f400b92ee671f9e3d71786b5ae04e1ac8"
+    }
+  ],
+  "approvedChangedPaths": [
+    "rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+    "rts/Rendering/Metal4/NativeSensorLOSShaders.h"
+  ],
+  "baselineSourceHead": "a3c7c6bfa93d09dac25755534195932d12fff41a"
+}

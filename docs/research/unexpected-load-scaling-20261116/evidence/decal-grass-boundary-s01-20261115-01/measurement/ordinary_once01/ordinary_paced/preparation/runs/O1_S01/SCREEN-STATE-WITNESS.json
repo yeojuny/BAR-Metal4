@@ -1,0 +1,9 @@
+{
+  "requestedElision": 1,
+  "finalColorStageActive": true,
+  "h5Mode": 0,
+  "countersEnabled": false,
+  "boundedRecords": 0,
+  "omittedSetters": null,
+  "scope": "bounded value-only receipts; validation run excluded from FPS"
+}

@@ -1,0 +1,12 @@
+{
+  "status": "FINAL_SOURCE_WITNESS",
+  "candidateSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+  "boundaryMarkers": {
+    "BEGIN": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=2",
+    "PREPARE": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3"
+  },
+  "releaseLog": "[NativeReleaseMode] mode=BEGIN/PREPARE eligible=1 queued=1 simulation=300..1500 begin_submission=N begin_prepare_overlap=0/1",
+  "pendingLog": "[NativeBeginPrepareOverlap] pending_at_prepare=1 simulation=300..1500 source_draw>0 for FIXED_BEGIN",
+  "reclaimLog": "[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=2 simulation=300..1500, optional",
+  "sourceScope": "G02 frozen GroundDecal combined upload candidate over G01 indexed; source manifest 12ac78ad3d0b908bef156dbd170bfe41bc1d1ed34005f7a89f7bdc9ab69ceb01"
+}

@@ -1,0 +1,33 @@
+{
+  "status": "READY_PENDING_FRESH_HQ_PAUSE_GO",
+  "candidateSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "candidate": "CANDIDATE-R2.json",
+  "baseline": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "scope": "exactly1existingUltraAA0combatAPIvalidationrun",
+  "suite": "s01_valid02",
+  "flags": {
+    "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+    "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "1",
+    "MTL_DEBUG_LAYER": "1",
+    "capture": "OFF",
+    "trace": "OFF"
+  },
+  "fixture": "unchangedR01andattempt1preset/map/game/camera/seeds/10scombatwarmup+40sROI/1512x950/AA0/limiterOFF",
+  "required": [
+    "Actualchild9a44signed+S01/PROBE1",
+    "Positivelegacy plan/checkpoint/split1 marker",
+    "BoundedROIactualfirstOpaqueMRTfacts andreadrejectslot/stage diagnostics",
+    "MetalAPIvalidationenabled,rawerrors0 (evaluatebeforepositiveassert)",
+    "normalexit/retirement/scene",
+    "CLOSED/PID0/awakeReleased"
+  ],
+  "failure": "PreserveallrawandSTOP.Noautomaticallyrepeat/capture/clean/rebuild. IfmissingMETALreceipt classifyNOT_EVALUATED/null,notMetalerror.",
+  "helper": "previoussynthetic128PASSretained;protocol/sourceunchangedverified,no rerun",
+  "notAuthorized": [
+    "GPUcapture",
+    "GPUreplayprofile",
+    "clean6runs",
+    "otherhypotheses"
+  ],
+  "isolation": "HQ/root/trace/contractPAUSE;measurement_owneraloneexecutesafterfreshGO"
+}

@@ -1,0 +1,83 @@
+{
+  "status": "READY_NO_GAME",
+  "sameSignedEngine": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "order": [
+    {
+      "arm": "A1_OFF",
+      "feature": "0",
+      "output": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A1_OFF",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/private/A1_OFF/state/data",
+      "binarySHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "controllerSHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    },
+    {
+      "arm": "B1_ON",
+      "feature": "1",
+      "output": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B1_ON",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/private/B1_ON/state/data",
+      "binarySHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "controllerSHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    },
+    {
+      "arm": "B2_ON",
+      "feature": "1",
+      "output": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B2_ON",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/private/B2_ON/state/data",
+      "binarySHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "controllerSHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    },
+    {
+      "arm": "A2_OFF",
+      "feature": "0",
+      "output": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A2_OFF",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/private/A2_OFF/state/data",
+      "binarySHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "controllerSHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    },
+    {
+      "arm": "A3_OFF",
+      "feature": "0",
+      "output": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A3_OFF",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/private/A3_OFF/state/data",
+      "binarySHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "controllerSHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    },
+    {
+      "arm": "B3_ON",
+      "feature": "1",
+      "output": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B3_ON",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/private/B3_ON/state/data",
+      "binarySHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "controllerSHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    }
+  ],
+  "sourceChecksumsIdenticalAcrossSix": true,
+  "commonChildFlagsExceptG01Identical": true,
+  "commonConfigAndSettingsIdentical": true,
+  "pacingHashes": {
+    "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+    "test_warmup_pacing.lua": "85a1607728105dafd8030e8bef4544693a4a688b66e97c0443456a2d88f4d5c9"
+  },
+  "intendedDifference": "BAR_NATIVE_GROUND_DECAL_INDEX_G01=0/1 only; run IDs, profile and output paths are private",
+  "countedWindow": "sim540..1740, 40s after sim240..540 combat warmup",
+  "noGamesYet": true
+}

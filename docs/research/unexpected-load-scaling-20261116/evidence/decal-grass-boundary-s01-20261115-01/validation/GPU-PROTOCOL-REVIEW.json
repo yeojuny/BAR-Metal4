@@ -1,0 +1,45 @@
+{
+  "review": "S01 synthetic Metal4 GPU boundary protocol harness, static read-only review",
+  "reviewed_at_utc": "2026-11-16T08:27:00.002236+00:00",
+  "status": "PASS_STATIC_NO_BLOCKER",
+  "source": {
+    "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/validation/gpu_boundary_parity.mm",
+    "bytes": 14833,
+    "sha256": "4cc76cd75c42bf530e2ce819080ed17d02e88da648f51f4ca1b0995caccc5633"
+  },
+  "execution": "Reviewer did not compile or run the helper. Parent reports compiled-only; GPU run remains pending.",
+  "coverage": [
+    {
+      "result": "PASS",
+      "detail": "An actual PlainVS/BoundaryFS one-pixel Fragment draw writes input0 before the checkpoint. A separate Blit writes input1. Only the eight G Vertex draws sample the five inputs; the four A draws use PlainVS and have no reads of them.",
+      "lines": "16-33,74-96,111-133"
+    },
+    {
+      "result": "PASS",
+      "detail": "The checkpoint repeats the production Fragment|Dispatch|Blit to Blit and Blit to Vertex|Fragment|Dispatch stage masks. The split route ends A after Fragment-to-queue-Fragment, reopens the same Load/Store color/depth/stencil attachments, then waits queue-Fragment-to-Fragment; the one-pass route omits this split.",
+      "lines": "98-124"
+    },
+    {
+      "result": "PASS",
+      "detail": "Each of 128 deterministic seeds compares complete BGRA8, Depth32Float, and Stencil8 byte arrays for one-pass versus split. Nonzero attachment changes, a Grass-only stencil value, and a final center-pixel stencil 12 witness reject no-draw outcomes.",
+      "lines": "134-165"
+    },
+    {
+      "result": "PASS",
+      "detail": "The last G draw is opaque white at depth 0.01 and covers the center. Its BGRA channels must equal the CPU-calculated average of the five Vertex reads within one byte; that average includes both the Fragment-produced texel and Blit-produced texel. Snapshot readback must equal pre-scene initial depth, proving its Blit occurred before A/G scene writes.",
+      "lines": "69-71,80-96,128-152"
+    },
+    {
+      "result": "PASS",
+      "detail": "Textures, buffers, argument tables, allocator, residency set, command, event and queue remain retained through event and feedback waits before readback. Each command submission registers all image and constant-buffer allocations.",
+      "lines": "38-112,125-145"
+    }
+  ],
+  "limits": [
+    "This is a synthetic one-sample 64x64 protocol test, not byte parity for the actual GameDecal/GroundDecal/particle/sky/Grass shaders or a proof of S01 runtime gate eligibility.",
+    "The snapshot image is read back to verify timing but is not a Grass Vertex input; the GPU test exercises the checkpoint ordering masks and the separate Fragment and Blit source inputs, not a Grass read from the snapshot itself.",
+    "Byte equality does not measure whether Grass Vertex work actually overlaps A Fragment work or whether the optimization improves frame time.",
+    "The helper does not test production source-owner callbacks, resource alias rejection, cancellation, failure quarantine, surface changes, or multisampling; those remain covered by source review and owner-run engine validation."
+  ],
+  "remaining": "Owner may run the bounded GPU protocol helper under the fresh isolation gate, then validate the actual signed engine candidate separately."
+}

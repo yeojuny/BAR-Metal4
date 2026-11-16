@@ -1,0 +1,292 @@
+{
+  "version": "1.11.2",
+  "recoilCommit": "01efdf43121dfd40d105649ef7eb89a8804662d9",
+  "barbCommit": "f4a6ca3ae096631894e194cfa9b4e8e53f4fb78c",
+  "engineSHA256": "2e85cbe7ccb1609c81d7d868fbefd3e12de0daa8d28ba56d45509120b82fc24c",
+  "lobbyASARSHA256": "a2d9f08845067b7753eb3be52d79a707dd2fd05d59a022c29a963cab53d3f317",
+  "barbModuleSHA256": "f94118947e1f86c07460ab8a9bb8cb6ce04cf4528cd1f734693ad9ab0b1304f9",
+  "archiveSHA256": "a3696fed2b20bc5dfa2bf77f9980dcfdd47da0f06028581d92ec14da3b53bdef",
+  "game": "Beyond All Reason test-31691-a617033-native220-defaults01",
+  "gamePackageId": "ea937c1fffe64761825a9d87af5c91f2",
+  "gameSDPSHA256": "d3b229ba8b86462dcbbcf9d9c9f4b7a328189a7c4994ee661c99a86cb1f13466",
+  "contentChangesFromPreviousPackage": [
+    {
+      "path": "luaintro/springconfig.lua",
+      "action": "defaultsAndUniqueVersion",
+      "before": {
+        "name": "luaintro/springconfig.lua",
+        "md5": "9b3f178c1412292e66f59d0832b3c0e4",
+        "crc32": 1550034168,
+        "size": 9958
+      },
+      "after": {
+        "name": "luaintro/springconfig.lua",
+        "md5": "35ea4028211f99b060bef7d85aa0ee0c",
+        "crc32": 116797727,
+        "size": 10319
+      },
+      "sourceSHA256": "6ec1e084c7bb1216f0e0751366d9bbc4b80eb81decbe928946beb2ea52472aa5"
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard/behaviour.json",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard/behaviour.json",
+        "md5": "3487db006e9fb3a56cd967d9e0ebb612",
+        "crc32": 2396821639,
+        "size": 43059
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/config/hard/behaviour.json",
+        "md5": "a74cddba907db4ba90126f6d5a92ec23",
+        "crc32": 2710452939,
+        "size": 42768
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard/build_chain_leg.json",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard/build_chain_leg.json",
+        "md5": "3b387e7aa50d7a51d0ec759b4ee8a0d7",
+        "crc32": 2808383747,
+        "size": 7991
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/config/hard/build_chain_leg.json",
+        "md5": "8aae3d69ed2fe59f83fae61f64601ad8",
+        "crc32": 174281284,
+        "size": 7984
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard/factory.json",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard/factory.json",
+        "md5": "5df3cf49cf23377e9562102dd33c2bf8",
+        "crc32": 1151052839,
+        "size": 28862
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/config/hard/factory.json",
+        "md5": "2dbd1412710a0fe48853e7dad3b250ab",
+        "crc32": 3701528824,
+        "size": 29063
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard/factory_scav_units.json",
+      "action": "removeLocalAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard/factory_scav_units.json",
+        "md5": "50197763882313e16c5a2ad5a7a8fa7a",
+        "crc32": 948590991,
+        "size": 238
+      },
+      "after": null
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard_aggressive/behaviour.json",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/behaviour.json",
+        "md5": "127e3edbf24f75681bb7731cf998563d",
+        "crc32": 3925493074,
+        "size": 43058
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/behaviour.json",
+        "md5": "5e5447d7e102e4bc340a55f7d1f9e8a0",
+        "crc32": 1213097379,
+        "size": 42767
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard_aggressive/build_chain_leg.json",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/build_chain_leg.json",
+        "md5": "3b387e7aa50d7a51d0ec759b4ee8a0d7",
+        "crc32": 2808383747,
+        "size": 7991
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/build_chain_leg.json",
+        "md5": "8aae3d69ed2fe59f83fae61f64601ad8",
+        "crc32": 174281284,
+        "size": 7984
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard_aggressive/factory.json",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/factory.json",
+        "md5": "94df177b453cdaa02a833148484ecce5",
+        "crc32": 3768136088,
+        "size": 28860
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/factory.json",
+        "md5": "7dc2180ac54860f98686e573524436e3",
+        "crc32": 1468745043,
+        "size": 29061
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard_aggressive/factory_scav_units.json",
+      "action": "removeLocalAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/factory_scav_units.json",
+        "md5": "50197763882313e16c5a2ad5a7a8fa7a",
+        "crc32": 948590991,
+        "size": 238
+      },
+      "after": null
+    },
+    {
+      "path": "luarules/configs/barb/stable/script/common.as",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/script/common.as",
+        "md5": "1a6d861c058958e4c8bb5d18db09bc4f",
+        "crc32": 3776665040,
+        "size": 7518
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/script/common.as",
+        "md5": "996b75c836120b82a844af36df960d62",
+        "crc32": 990763102,
+        "size": 7519
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/script/easy/init.as",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/script/easy/init.as",
+        "md5": "f94cd318203c8dbe7d3e571cfdfa3fd1",
+        "crc32": 669537123,
+        "size": 1414
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/script/easy/init.as",
+        "md5": "6a861ac1067dd21f990ac457b7205719",
+        "crc32": 1274665702,
+        "size": 1258
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/script/hard/init.as",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/script/hard/init.as",
+        "md5": "5521bf060d3826b51324e6277edca3b9",
+        "crc32": 1451278376,
+        "size": 1600
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/script/hard/init.as",
+        "md5": "910426425a924e51de011113fceab919",
+        "crc32": 761252761,
+        "size": 1259
+      }
+    },
+    {
+      "path": "luarules/configs/barb/stable/script/hard_aggressive/init.as",
+      "action": "restoreOfficialAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/script/hard_aggressive/init.as",
+        "md5": "871939aa06c049c6e9422e24d1ca67e5",
+        "crc32": 1545620690,
+        "size": 1611
+      },
+      "after": {
+        "name": "luarules/configs/barb/stable/script/hard_aggressive/init.as",
+        "md5": "9c5bc83e2d66f7dfeb743ab469a3a75a",
+        "crc32": 637027541,
+        "size": 1270
+      }
+    },
+    {
+      "path": "luaui/widgets/gfx_limit_idle_fps.lua",
+      "action": "defaultsAndUniqueVersion",
+      "before": {
+        "name": "luaui/widgets/gfx_limit_idle_fps.lua",
+        "md5": "4cea4ab010d6022f65c362cae3c22607",
+        "crc32": 2661809558,
+        "size": 3628
+      },
+      "after": {
+        "name": "luaui/widgets/gfx_limit_idle_fps.lua",
+        "md5": "e27d926f8bd70dc76611951fa73c8e97",
+        "crc32": 3159401051,
+        "size": 4297
+      },
+      "sourceSHA256": "47cd4084d0335129aa89dbf964f3840d6f531940e7c41f44267fb6add195f0bf"
+    },
+    {
+      "path": "modinfo.lua",
+      "action": "defaultsAndUniqueVersion",
+      "before": {
+        "name": "modinfo.lua",
+        "md5": "a9fd1e911ee58f32f33df4a4193d5331",
+        "crc32": 784803841,
+        "size": 349
+      },
+      "after": {
+        "name": "modinfo.lua",
+        "md5": "096026c809dad512fc210020200dbc90",
+        "crc32": 3708081653,
+        "size": 362
+      },
+      "sourceSHA256": "b37a3bd7921da227e2cf9b3f5702399958f22758a9dd4000912f78038bb6b171"
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/build_chain_leg_naval_balance.json",
+      "action": "removeLocalAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/build_chain_leg_naval_balance.json",
+        "md5": "4478b330cc87244149f2b7d97e2c08db",
+        "crc32": 3355479648,
+        "size": 1308
+      },
+      "after": null
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/build_chain_naval_balance.json",
+      "action": "removeLocalAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/build_chain_naval_balance.json",
+        "md5": "0c9acc055cb36999b0474c946d1571ac",
+        "crc32": 2197345128,
+        "size": 1003
+      },
+      "after": null
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard/build_chain_naval_balance.json",
+      "action": "removeLocalAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard/build_chain_naval_balance.json",
+        "md5": "6a117ee80df12bc634064cc53769b255",
+        "crc32": 2398706546,
+        "size": 11804
+      },
+      "after": null
+    },
+    {
+      "path": "luarules/configs/barb/stable/config/hard_aggressive/build_chain_naval_balance.json",
+      "action": "removeLocalAI",
+      "before": {
+        "name": "luarules/configs/barb/stable/config/hard_aggressive/build_chain_naval_balance.json",
+        "md5": "6a117ee80df12bc634064cc53769b255",
+        "crc32": 2398706546,
+        "size": 11804
+      },
+      "after": null
+    }
+  ],
+  "scope": "Engine and launcher source, text lobby source, display adapters, upstream BARb with generated wrappers, and the changed game data. Existing content supplied through the pinned Homebrew formula."
+}

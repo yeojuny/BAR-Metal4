@@ -1,0 +1,34 @@
+{
+  "status": "PREPARE_ZERO",
+  "ownerCreatedRows": 1,
+  "ownerLifetimeRows": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      2
+    ]
+  ],
+  "totals": {
+    "prepare": 0,
+    "nonempty": 0,
+    "eligible": 0,
+    "packed": 0,
+    "separate": 0,
+    "nonindexed": 0,
+    "buffer_creates": 0,
+    "uniform_buffer_creates": 0,
+    "index_buffer_creates": 0,
+    "combined_buffer_creates": 0,
+    "clear_resources": 2
+  },
+  "source": "raw engine.log; physical allocations, not encoded draws",
+  "missingIsFailureNotZero": false
+}

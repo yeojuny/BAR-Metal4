@@ -1,0 +1,6 @@
+{
+  "status": "CLOSED",
+  "utc": "2026-11-16T15:51:14.827763+00:00",
+  "helperResult": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/validation/runs/g01_first_gate01/HELPER-RESULT.json",
+  "gameResult": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/validation/runs/g01_first_gate01/GAME-RESULT.json"
+}

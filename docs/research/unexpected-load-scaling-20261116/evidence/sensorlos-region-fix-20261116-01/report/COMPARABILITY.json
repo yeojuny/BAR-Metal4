@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "sameActualChildFlagsAllSix": true,
+  "sameSimulationUnitCountSeriesAllSix": true,
+  "sameBattleStateCameraSeedsCommandMapCreatedDestroyed": true,
+  "validationOffInAllCleanChildren": true,
+  "visibleWorldEvidence": "Saved actual battle images plus Native final-color/MRT/retirement/work rows; no maintenance-only or empty-frame result observed.",
+  "rows": [
+    {
+      "run": "A1_BASE",
+      "nativeWorldWitnesses": {
+        "finalColor": "[t=00:00:13.434009][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982",
+        "mrt": "[t=00:00:13.437210][f=-000001] [NativeMRT164] source_frame=34 submission=1 width=1512 height=950 omitted_copies=6 logical_source_bytes=34473600 distinct_producer=1 engine_draws=0 lua_draws=0 prepared_events=0 borrowed_owner=1 encoded=1",
+        "prepare": "[t=00:00:30.515823][f=0000300] [NativeReleaseMode] mode=PREPARE eligible=1 queued=1 simulation=300 begin_submission=0 begin_prepare_overlap=0",
+        "retire": "[t=00:00:20.703535][f=0000129] [NativeRetirement186] submission=600 completed_graph_entries=4784 owner_references_at_release=1 release_ns=155666 release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
+        "power": "[t=00:00:36.517979][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+        "done": "[t=00:01:18.524950][f=0001740] [NativeShortRun] total draws=1901 seconds=40.019001007"
+      },
+      "childMode": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A1_BASE/CHILD-MODE.json",
+      "cleanDiagnosticsOff": true,
+      "unitsSeriesSHA256": "0e415b95eb4f7a8a11a21316b09b54b31099960d37264560d7cfa8a338904423",
+      "rawImageSHA256": "3f91a542ba64513461d63df0bca5f94aa1fb9143e75725f6286df4eb3801a060",
+      "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A1_BASE/scene.png"
+    },
+    {
+      "run": "B1_SENSOR",
+      "nativeWorldWitnesses": {
+        "finalColor": "[t=00:00:14.025900][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982",
+        "mrt": "[t=00:00:14.029231][f=-000001] [NativeMRT164] source_frame=34 submission=1 width=1512 height=950 omitted_copies=6 logical_source_bytes=34473600 distinct_producer=1 engine_draws=0 lua_draws=0 prepared_events=0 borrowed_owner=1 encoded=1",
+        "prepare": "[t=00:00:30.921055][f=0000300] [NativeReleaseMode] mode=PREPARE eligible=1 queued=1 simulation=300 begin_submission=0 begin_prepare_overlap=0",
+        "retire": "[t=00:00:20.600830][f=0000111] [NativeRetirement186] submission=600 completed_graph_entries=4631 owner_references_at_release=1 release_ns=162333 release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
+        "power": "[t=00:00:36.902929][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+        "done": "[t=00:01:18.908756][f=0001740] [NativeShortRun] total draws=2130 seconds=40.000999451"
+      },
+      "childMode": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B1_SENSOR/CHILD-MODE.json",
+      "cleanDiagnosticsOff": true,
+      "unitsSeriesSHA256": "0e415b95eb4f7a8a11a21316b09b54b31099960d37264560d7cfa8a338904423",
+      "rawImageSHA256": "9824762ef86f2348c8f4746e9b8c775a3c07b3d47ff5de567d7ee3ac6d939853",
+      "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B1_SENSOR/scene.png"
+    },
+    {
+      "run": "B2_SENSOR",
+      "nativeWorldWitnesses": {
+        "finalColor": "[t=00:00:13.930281][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982",
+        "mrt": "[t=00:00:13.933452][f=-000001] [NativeMRT164] source_frame=34 submission=1 width=1512 height=950 omitted_copies=6 logical_source_bytes=34473600 distinct_producer=1 engine_draws=0 lua_draws=0 prepared_events=0 borrowed_owner=1 encoded=1",
+        "prepare": "[t=00:00:30.965522][f=0000300] [NativeReleaseMode] mode=PREPARE eligible=1 queued=1 simulation=300 begin_submission=0 begin_prepare_overlap=0",
+        "retire": "[t=00:00:20.564747][f=0000111] [NativeRetirement186] submission=600 completed_graph_entries=4631 owner_references_at_release=1 release_ns=131333 release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
+        "power": "[t=00:00:36.952558][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+        "done": "[t=00:01:18.951480][f=0001740] [NativeShortRun] total draws=2130 seconds=39.999000549"
+      },
+      "childMode": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B2_SENSOR/CHILD-MODE.json",
+      "cleanDiagnosticsOff": true,
+      "unitsSeriesSHA256": "0e415b95eb4f7a8a11a21316b09b54b31099960d37264560d7cfa8a338904423",
+      "rawImageSHA256": "247398ff7c2c2cfb15842671c12672c3422224a598e1af8d10f1fb99951d6d74",
+      "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B2_SENSOR/scene.png"
+    },
+    {
+      "run": "A2_BASE",
+      "nativeWorldWitnesses": {
+        "finalColor": "[t=00:00:14.077878][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982",
+        "mrt": "[t=00:00:14.081241][f=-000001] [NativeMRT164] source_frame=34 submission=1 width=1512 height=950 omitted_copies=6 logical_source_bytes=34473600 distinct_producer=1 engine_draws=0 lua_draws=0 prepared_events=0 borrowed_owner=1 encoded=1",
+        "prepare": "[t=00:00:31.021519][f=0000300] [NativeReleaseMode] mode=PREPARE eligible=1 queued=1 simulation=300 begin_submission=0 begin_prepare_overlap=0",
+        "retire": "[t=00:00:20.649927][f=0000110] [NativeRetirement186] submission=600 completed_graph_entries=4631 owner_references_at_release=1 release_ns=159334 release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
+        "power": "[t=00:00:36.998675][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+        "done": "[t=00:01:19.002391][f=0001740] [NativeShortRun] total draws=1899 seconds=39.994998932"
+      },
+      "childMode": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A2_BASE/CHILD-MODE.json",
+      "cleanDiagnosticsOff": true,
+      "unitsSeriesSHA256": "0e415b95eb4f7a8a11a21316b09b54b31099960d37264560d7cfa8a338904423",
+      "rawImageSHA256": "7a051af61423ace5e59594f7f8fe250b4f54628c6e0ba11814fe39eae5c4c3e8",
+      "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A2_BASE/scene.png"
+    },
+    {
+      "run": "A3_BASE",
+      "nativeWorldWitnesses": {
+        "finalColor": "[t=00:00:13.854718][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982",
+        "mrt": "[t=00:00:13.857885][f=-000001] [NativeMRT164] source_frame=34 submission=1 width=1512 height=950 omitted_copies=6 logical_source_bytes=34473600 distinct_producer=1 engine_draws=0 lua_draws=0 prepared_events=0 borrowed_owner=1 encoded=1",
+        "prepare": "[t=00:00:30.809685][f=0000300] [NativeReleaseMode] mode=PREPARE eligible=1 queued=1 simulation=300 begin_submission=0 begin_prepare_overlap=0",
+        "retire": "[t=00:00:20.466944][f=0000110] [NativeRetirement186] submission=600 completed_graph_entries=4631 owner_references_at_release=1 release_ns=135958 release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
+        "power": "[t=00:00:36.810818][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+        "done": "[t=00:01:18.800944][f=0001740] [NativeShortRun] total draws=1896 seconds=39.997001648"
+      },
+      "childMode": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A3_BASE/CHILD-MODE.json",
+      "cleanDiagnosticsOff": true,
+      "unitsSeriesSHA256": "0e415b95eb4f7a8a11a21316b09b54b31099960d37264560d7cfa8a338904423",
+      "rawImageSHA256": "8fef30e3d4bcc210950757f9cc1df492f1582931d0c68e5e7b5cae998d073ccf",
+      "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A3_BASE/scene.png"
+    },
+    {
+      "run": "B3_SENSOR",
+      "nativeWorldWitnesses": {
+        "finalColor": "[t=00:00:13.825345][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982",
+        "mrt": "[t=00:00:13.828667][f=-000001] [NativeMRT164] source_frame=34 submission=1 width=1512 height=950 omitted_copies=6 logical_source_bytes=34473600 distinct_producer=1 engine_draws=0 lua_draws=0 prepared_events=0 borrowed_owner=1 encoded=1",
+        "prepare": "[t=00:00:30.855821][f=0000300] [NativeReleaseMode] mode=PREPARE eligible=1 queued=1 simulation=300 begin_submission=0 begin_prepare_overlap=0",
+        "retire": "[t=00:00:20.617420][f=0000116] [NativeRetirement186] submission=600 completed_graph_entries=4631 owner_references_at_release=1 release_ns=161125 release_after_submit=1 same_thread=1 pending_gpu_limit=1 early_drains_unchanged=1 gain=unknown",
+        "power": "[t=00:00:36.842533][f=0000480] [FPSPowerStatus] frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+        "done": "[t=00:01:18.859433][f=0001740] [NativeShortRun] total draws=2129 seconds=40.009998322"
+      },
+      "childMode": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B3_SENSOR/CHILD-MODE.json",
+      "cleanDiagnosticsOff": true,
+      "unitsSeriesSHA256": "0e415b95eb4f7a8a11a21316b09b54b31099960d37264560d7cfa8a338904423",
+      "rawImageSHA256": "5e57354ab90fb9cf582d8d106c3b97d8a6c896a9a7b608e04b0d8cd03bcf947c",
+      "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B3_SENSOR/scene.png"
+    }
+  ]
+}

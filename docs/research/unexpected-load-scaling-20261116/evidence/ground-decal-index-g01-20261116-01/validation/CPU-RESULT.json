@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "program": "validation/TestGroundDecalIndexG01",
+  "compiler": "/usr/bin/c++ -std=c++20 -Wall -Wextra -Werror",
+  "shader": "source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+  "actualOrderedCorners": 36,
+  "orderedTriangles": 12,
+  "uniqueOriginalVertexIDs": 8,
+  "wrongCornerOrOutOfDomainMutationsRejected": 72,
+  "eligibilityCases": 36,
+  "bufferBoundaryCases": 7,
+  "actualShaderHash": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+  "resultText": "PASS actual shader36corners/12triangles/8IDs; mutations rejected=72; eligibility36cases; buffer7cases",
+  "limits": [
+    "Source/domain proof only, not actualGPU pixel/depth/stencil parity",
+    "Actual GPU vertex-cache reuse and FPS effect UNKNOWN"
+  ],
+  "engineBuilds": 0,
+  "GPUExecutions": 0
+}

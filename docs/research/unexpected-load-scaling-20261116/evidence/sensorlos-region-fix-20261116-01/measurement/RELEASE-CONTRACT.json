@@ -1,0 +1,11 @@
+{
+  "status": "SIGNED_PRIVATE_CANDIDATE_NO_GAME",
+  "candidateSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "parentSHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+  "actualNativeSource": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine",
+  "approvedSourceChangeCount": 2,
+  "gpuParity": "PASS_SAMPLE1_STANDALONE",
+  "validationGame": "PENDING_HQ_GO",
+  "cleanSixGameComparison": "PENDING_HQ_GO",
+  "runtimeGate": "candidate-only Metal API Validation game using actual OriginalSensorLOSVertex/Fragment and MTL4 renderer"
+}

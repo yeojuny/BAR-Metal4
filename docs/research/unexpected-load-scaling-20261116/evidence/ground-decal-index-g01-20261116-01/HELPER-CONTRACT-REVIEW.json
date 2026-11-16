@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "status": "SOURCE_AND_RECEIPT_REVIEW_PASS_WITH_BOUNDED_LIMITS",
+  "helper": "validation/gpu_index_parity.mm",
+  "helperSHA256": "e3b5bf211351dca2203cecf084f83d2659f9d0bc9cad5762d1d81b0d554461d7",
+  "receipt": "validation/runs/g01_first_gate01/HELPER-RESULT.json",
+  "receiptStatus": "PASS; exit 0; source SHA matches reviewed helper; stdout records 32/32 color, depth and stencil byte equality, visible 30, depth changed 15, stencil changed 15; stderr records Metal API and GPU validation enabled and no error line.",
+  "frozenShader": "The helper includes the candidate's NativeGroundDecalShaders.h and builds NativeGroundDecalShaderSource(false,false), selecting the production GroundDecalVertex and GroundDecalFragment entrypoints for both paths (helper:12,163-182). The shader header is unchanged from S01, SHA256 1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6. It does not use a simplified shader.",
+  "protocol": [
+    "Each paired case renders the same three instances, uniforms, textures, pipeline, 64x64 attachments, scissor, back-face cull, depth clip, blending and raster state. Only drawPrimitives vertexCount36 versus drawIndexedPrimitives indexCount36 UInt16, baseVertex0/baseInstance0 differs (helper:48-147).",
+    "Color BGRA8, depth Depth32Float and stencil Stencil8 are Shared textures prefilled from CPU arrays, loaded and stored in the render pass. After each queue commit, the helper waits for a signaled event and feedback semaphore, rejects GPU error, then gets the entire 64x64 bytes from each attachment. Full vectors are compared for each old/new pair (helper:52-84,124-159,187-191).",
+    "Seeds 0..15 across default no-depth-write and test-only depth/stencil-write states give 32 comparisons. The test requires 30 visibly changed color cases, 15 changed-depth and 15 changed-stencil cases, and includes ten partial/all degenerate case counts. These witnesses prevent a false PASS from both routes discarding everything (helper:85-103,118-123,183-201).",
+    "Argument, texture and index buffers plus all textures are added to the test residency set before commit and remain local through event, feedback and readback. No test resource is released before completion (helper:104-129,148-161)."
+  ],
+  "limits": [
+    "This is a synthetic 64x64 single-sample low-quality/no-shadow shader variant, not whole-game pixel parity or every material/attachment configuration. The test normal image is RG32Float while the production GroundDecal Prepare requires RG16Float; index equivalence is independent of that precision but this fixture does not cover the exact production normal format.",
+    "The alternate depth/stencil-write state is a witness for geometry parity, while production GroundDecal sets depthWriteEnabled=NO. The helper does not prove production lease rollback, failed submission, retirement quarantine or mean-FPS improvement.",
+    "Equal full-byte outputs demonstrate these 32 exercised cases only. They do not prove every possible vertex-cache reuse amount, every perspective sample pattern, or MSAA behavior."
+  ],
+  "gameReceipt": "validation/runs/g01_first_gate01/GAME-RESULT.json reports one normal validation game, positive indexed and Grass witnesses, and no matched Metal errors; scene PNG inspection is visual smoke only and not pixel-exact parity.",
+  "reviewerActions": ["read-only helper and receipt inspection", "source hash check", "no execution, build, GPU run, game or engine source change"]
+}

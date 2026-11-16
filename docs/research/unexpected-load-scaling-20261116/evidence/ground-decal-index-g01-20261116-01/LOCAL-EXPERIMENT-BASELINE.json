@@ -1,0 +1,13 @@
+{
+  "status": "HQ_ACCEPTED_LOCAL_EXPERIMENT_BASELINE",
+  "signedSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "S01": 1,
+  "G01": 1,
+  "PROBE": 0,
+  "evidence": "report/RESULT.json",
+  "SethsClean6GainPercent": 7.1841831618637775,
+  "ordinarySimmersObservation": "measurement/ordinary_once01/COMPARISON.json",
+  "featureDefaultStillOFF": true,
+  "installedAppChanged": false,
+  "GitMainReleaseChanged": false
+}

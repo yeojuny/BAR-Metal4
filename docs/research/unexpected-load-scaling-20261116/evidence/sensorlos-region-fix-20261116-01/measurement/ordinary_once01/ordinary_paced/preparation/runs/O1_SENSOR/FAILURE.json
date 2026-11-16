@@ -1,0 +1,4 @@
+{
+  "error": "Traceback (most recent call last):\n  File \"${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once.py\", line 109, in run\n    release=base.release_evidence(out,plan,info,'PREPARE')\n  File \"${AUDIT_WORKSPACE}/evidence/screen-state-elision-20261115-01/measurement/run_ac0_prelaunch.py\", line 372, in release_evidence\n    expected = contract['boundaryMarkers'][actual_mode]\n               ~~~~~~~~^^^^^^^^^^^^^^^^^^^\nKeyError: 'boundaryMarkers'\n",
+  "utc": "2026-11-16T07:42:37.565122+00:00"
+}

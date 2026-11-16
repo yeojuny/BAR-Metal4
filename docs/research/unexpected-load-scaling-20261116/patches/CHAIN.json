@@ -1,0 +1,125 @@
+{
+  "status": "PASS_COMPLETE_SOURCE_CHAIN_REPLAY_EXCLUDING_INCIDENTAL_CACHE",
+  "repository": "https://github.com/yeojuny/BAR-Metal4",
+  "baseCommit": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+  "archiveSHA256": "8781e1804e113261e10cf927e9b880c8e96bd561e6e30b6600fb455d8a293be8",
+  "archiveBytes": 103933382,
+  "archiveIncluded": false,
+  "chain": [
+    {
+      "from": "a3-public",
+      "to": "pre-R01-local",
+      "patch": "patches/00-a3-public-to-pre-R01-local.patch",
+      "changedFiles": [],
+      "binaryOverlayFiles": [],
+      "omittedNonSourceCachePaths": [
+        "tools/material-storage-pool/__pycache__/analyze.cpython-315.pyc"
+      ],
+      "fromFileCount": 10265,
+      "toFileCount": 10266,
+      "scope": "complete actual frozen engine source delta excluding explicitly listed incidental Python cache; G02 is a preserved branch candidate, not accepted baseline"
+    },
+    {
+      "from": "pre-R01-local",
+      "to": "R01",
+      "patch": "patches/01-pre-R01-local-to-R01.patch",
+      "changedFiles": [
+        "rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+        "rts/Rendering/Metal4/NativeSensorLOSShaders.h"
+      ],
+      "binaryOverlayFiles": [],
+      "omittedNonSourceCachePaths": [],
+      "fromFileCount": 10266,
+      "toFileCount": 10266,
+      "scope": "complete actual frozen engine source delta excluding explicitly listed incidental Python cache; G02 is a preserved branch candidate, not accepted baseline"
+    },
+    {
+      "from": "R01",
+      "to": "S01-final",
+      "patch": "patches/02-R01-to-S01-final.patch",
+      "changedFiles": [
+        "rts/Rendering/Metal4/Metal4Grass.h",
+        "rts/Rendering/Metal4/Metal4Grass.mm",
+        "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h",
+        "rts/Rendering/Metal4/Metal4ScreenNative.h",
+        "rts/Rendering/Metal4/Metal4ScreenNative.mm",
+        "rts/Rendering/Metal4/Metal4TerrainInfoSource.h",
+        "rts/Rendering/Metal4/Metal4TerrainInfoSource.mm",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+        "tools/metal4-contracts/TestGrassBoundaryS01.cpp"
+      ],
+      "binaryOverlayFiles": [],
+      "omittedNonSourceCachePaths": [],
+      "fromFileCount": 10266,
+      "toFileCount": 10268,
+      "scope": "complete actual frozen engine source delta excluding explicitly listed incidental Python cache; G02 is a preserved branch candidate, not accepted baseline"
+    },
+    {
+      "from": "S01-final",
+      "to": "G01",
+      "patch": "patches/03-S01-final-to-G01.patch",
+      "changedFiles": [
+        "rts/Rendering/Metal4/Metal4GroundDecal.mm",
+        "rts/Rendering/Metal4/Metal4GroundDecalIndexPolicyG01.h",
+        "tools/metal4-contracts/TestGroundDecalIndexG01.cpp"
+      ],
+      "binaryOverlayFiles": [],
+      "omittedNonSourceCachePaths": [],
+      "fromFileCount": 10268,
+      "toFileCount": 10270,
+      "scope": "complete actual frozen engine source delta excluding explicitly listed incidental Python cache; G02 is a preserved branch candidate, not accepted baseline"
+    },
+    {
+      "from": "G01",
+      "to": "G02",
+      "patch": "patches/04-G01-to-G02.patch",
+      "changedFiles": [
+        "rts/Rendering/Metal4/Metal4GroundDecal.mm",
+        "rts/Rendering/Metal4/Metal4GroundDecalUploadPolicyG02.h",
+        "tools/metal4-contracts/TestGroundDecalUploadG02.cpp"
+      ],
+      "binaryOverlayFiles": [],
+      "omittedNonSourceCachePaths": [],
+      "fromFileCount": 10270,
+      "toFileCount": 10272,
+      "scope": "complete actual frozen engine source delta excluding explicitly listed incidental Python cache; G02 is a preserved branch candidate, not accepted baseline"
+    }
+  ],
+  "replayChecks": [
+    {
+      "stage": "pre-R01-local",
+      "fileCount": 10265,
+      "mismatchCount": 0,
+      "mismatches": [],
+      "patchApplyExit": 0
+    },
+    {
+      "stage": "R01",
+      "fileCount": 10265,
+      "mismatchCount": 0,
+      "mismatches": [],
+      "patchApplyExit": 0
+    },
+    {
+      "stage": "S01-final",
+      "fileCount": 10267,
+      "mismatchCount": 0,
+      "mismatches": [],
+      "patchApplyExit": 0
+    },
+    {
+      "stage": "G01",
+      "fileCount": 10269,
+      "mismatchCount": 0,
+      "mismatches": [],
+      "patchApplyExit": 0
+    },
+    {
+      "stage": "G02",
+      "fileCount": 10271,
+      "mismatchCount": 0,
+      "mismatches": [],
+      "patchApplyExit": 0
+    }
+  ]
+}

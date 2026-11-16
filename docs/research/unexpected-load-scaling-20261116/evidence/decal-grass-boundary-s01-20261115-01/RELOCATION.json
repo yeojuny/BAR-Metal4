@@ -1,0 +1,59 @@
+{
+  "rawSHA256": "5c396d6ada63f2c79409d65de09ebfc9d43580cc7ccd557c6442bdd5a1e6d63a",
+  "changes": [
+    {
+      "old": "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "new": "@loader_path/../lib/libIL.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "new": "@loader_path/../lib/libminizip.1.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "new": "@loader_path/../lib/libfreetype.6.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "new": "@loader_path/../lib/libfontconfig.1.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "new": "@loader_path/../lib/libvorbisfile.3.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "new": "@loader_path/../lib/libvorbis.0.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "new": "@loader_path/../lib/libogg.0.8.6.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "new": "@loader_path/../lib/libopenal.1.25.2.dylib",
+      "exit": 0,
+      "stderr": ""
+    },
+    {
+      "old": "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "new": "@loader_path/../lib/libSDL3.0.dylib",
+      "exit": 0,
+      "stderr": ""
+    }
+  ]
+}

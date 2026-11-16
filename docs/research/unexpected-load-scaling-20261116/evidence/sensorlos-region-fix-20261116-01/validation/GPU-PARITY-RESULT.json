@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "scope": "standalone offscreen Metal sample1 SensorLOS geometry/fragment byte parity only",
+  "timeUTC": "2026-11-16T06:46:44.110112+00:00",
+  "helperSourceSHA256": "f5e6de729848d880ccbe953e331d0f6a95333ba96affb290509c474fe46a035a",
+  "helperBinarySHA256": "b090180af75e9bceddab6a7798c360f4e43bd48297015e34b9bd53f692f23eda",
+  "buildLogSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "runLogSHA256": "e9164582938cf4727f9798c2bde60337c73f195e26d7b552992af64017a69c3f",
+  "compileExit": 0,
+  "runExit": 0,
+  "cases": 3600,
+  "optimized": 2234,
+  "visibleOptimized": 1869,
+  "depthOptimized": 427,
+  "clippedOptimized": 29,
+  "seamOptimized": 12,
+  "xMajorVisibleOptimized": 1199,
+  "yMajorVisibleOptimized": 629,
+  "colorDepthStencilByteIdentical": true,
+  "sampleCount": 1,
+  "engineBuilds": 0,
+  "games": 0,
+  "ownedProcessesRemaining": 0,
+  "awakeReleased": true,
+  "limits": [
+    "test-only VS supplies geometry; actual OriginalSensorLOSFragment reused",
+    "sample count >1 and engine lifetime not covered"
+  ]
+}

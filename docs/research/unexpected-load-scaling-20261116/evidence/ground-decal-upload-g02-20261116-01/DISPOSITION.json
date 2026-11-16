@@ -1,0 +1,25 @@
+{
+  "status": "PRESERVED_COST_REDUCTION_CANDIDATE_NOT_ADOPTED_AS_PERFORMANCE_BASELINE",
+  "candidateSignedSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+  "performanceBaselineRetained": {
+    "signedSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+    "S01": 1,
+    "G01": 1,
+    "record": "../ground-decal-index-g01-20261116-01/LOCAL-EXPERIMENT-BASELINE.json"
+  },
+  "meanFPS": {
+    "G02_OFF": 62.94113892965613,
+    "G02_ON": 62.88799475506419,
+    "percentDelta": -0.08443472027306331
+  },
+  "validatedResourceChange": "Eligible successful uniform/index upload uses1physicalbuffer instead of2, eliminating1separateallocationrequest; not measured CPUtime/RAMpeak/FPS saving",
+  "allSixValidRowsRetained": true,
+  "lowCleanRuns": 0,
+  "lowScope": "Not selected before clean based on prior diagnostic ownerPrepare0. No historical result excluded; low-load regression cause remains UNKNOWN.",
+  "report": "report/REPORT.html",
+  "raw": "measurement/runs/g02_high_clean01/clean_paced/RUNS.json",
+  "finalReview": "measurement/runs/g02_high_clean01/clean_paced/CLEAN-CONTRACT-REVIEW.json",
+  "additionalRetests": 0,
+  "nextFSScope": "Await separate instruction; no new source work or execution",
+  "defaultAppGitReleaseChanged": false
+}

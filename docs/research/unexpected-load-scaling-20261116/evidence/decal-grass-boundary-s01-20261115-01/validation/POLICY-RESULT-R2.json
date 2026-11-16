@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "drawSequences": 9841,
+  "physicalRootUnknownCases": 12,
+  "producerTransitions": 6,
+  "successorCases": 48,
+  "boundedROISamples": [
+    540,
+    900,
+    1590
+  ],
+  "GPURerun": false,
+  "sourceSHA256": "9def058ec2580f9f51bbaf805d490ad90a4a108c8f9dc8eaf952142ca19dedfb",
+  "diagnosticCases": {
+    "allGrass": [
+      540,
+      900,
+      1590
+    ],
+    "zeroGrass": [
+      1740
+    ],
+    "delayedGrass": [
+      560,
+      920,
+      1600
+    ]
+  }
+}

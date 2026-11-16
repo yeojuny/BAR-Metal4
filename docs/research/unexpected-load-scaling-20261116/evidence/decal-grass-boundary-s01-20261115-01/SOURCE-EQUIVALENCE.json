@@ -1,0 +1,57 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "file": "Metal4WorldRenderer.mm",
+      "function": "CUSSourceImage OriginalModelImage(",
+      "byteIdentical": true,
+      "sha256": "70209655eac1d76e8929e800079e823f5ff4b4119e945c2805c841d0eaf4e660"
+    },
+    {
+      "file": "Metal4Grass.mm",
+      "function": "void PreparedGrass::EncodeDependencies(",
+      "byteIdentical": true,
+      "sha256": "0983c80b13931bd03cd4a3c25f9397157e16e4fd51dc4fda64a66c93437531cf"
+    },
+    {
+      "file": "Metal4Grass.mm",
+      "function": "void PreparedGrass::EncodeDraw(",
+      "byteIdentical": true,
+      "sha256": "f30647786b0c9acb379ca4bc7a50464cfb601d641f16b447bb82776c06cd698c"
+    },
+    {
+      "file": "Metal4Grass.mm",
+      "function": "void PreparedGrass::DidComplete(",
+      "byteIdentical": true,
+      "sha256": "9ea9d7e52c10ae966c116ed1567152c404108ef9086dbbfabd8b9a51c301b30f"
+    },
+    {
+      "file": "Metal4MainAttachments.h",
+      "wholeFileByteIdentical": true,
+      "sha256": "d03ac19e0bd166d235fbfe631de266ea5c421083553b7e4b52b940479511c059"
+    },
+    {
+      "file": "Metal4SourceImage.h",
+      "wholeFileByteIdentical": true,
+      "sha256": "5c8d3467571f0e9aec4ce3527b5079857dca51bb095b4db57be33e1784b79226"
+    },
+    {
+      "file": "NativeGrassShaders.h",
+      "wholeFileByteIdentical": true,
+      "sha256": "6b9066b93fe185b370731b000810ccb122cd2a1cf34bac6ee604011648155e0f"
+    },
+    {
+      "file": "NativeSensorLOSShaders.h",
+      "wholeFileByteIdentical": true,
+      "sha256": "b11a26584e84abca5c6addb19267637f400b92ee671f9e3d71786b5ae04e1ac8"
+    },
+    {
+      "file": "Metal4SensorLOSNative.mm",
+      "wholeFileByteIdentical": true,
+      "sha256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6"
+    },
+    {
+      "genericResume5022_5174": "both exact original lines preserved"
+    }
+  ]
+}

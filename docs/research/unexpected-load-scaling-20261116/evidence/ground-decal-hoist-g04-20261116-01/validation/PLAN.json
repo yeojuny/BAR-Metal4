@@ -1,0 +1,106 @@
+{
+  "status": "CPU_PREPARED_GPU_NOT_RUN",
+  "candidate": "G04 shader invariant hoist over frozen G01",
+  "sourceFiles": {
+    "helper": {
+      "path": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/gpu_hoist_parity.mm",
+      "sha256": "a60abf3d1da7ee77af5b087f4d095ed8f88a754458b483813d7c07ff0d80628e"
+    },
+    "helperBinary": {
+      "path": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/gpu_hoist_parity",
+      "sha256": "ebd97af605c5fac2f8b8d1fc4c1a78d47519d7e91384bfdab299e60335577f72"
+    },
+    "frozenG01Header": {
+      "path": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/NativeGroundDecalShadersG01.h",
+      "sha256": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6"
+    },
+    "candidateHeader": {
+      "path": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+      "sha256": "755bd1ac4dfbd0c9a921ecdeddf70a8cb4adb61ee16303b8b3e5955fe1e0023c"
+    }
+  },
+  "cpuCompile": {
+    "status": "PASS",
+    "command": "xcrun clang++ -std=c++20 -fobjc-arc -O2 -Wall -Wextra -Werror -framework Foundation -framework Metal -I validation -I source/engine/rts -I source/engine/rts/Rendering/Metal4 validation/gpu_hoist_parity.mm -o validation/gpu_hoist_parity",
+    "log": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/CPU-COMPILE.log"
+  },
+  "futureSingleGpuCommand": {
+    "command": [
+      "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/gpu_hoist_parity",
+      "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/runs/g04_parity01/payload"
+    ],
+    "environment": {
+      "MTL_DEBUG_LAYER": "1",
+      "MTL_SHADER_VALIDATION": "1",
+      "MTL_LOG_TO_STDERR": "1"
+    },
+    "timeoutSeconds": 180,
+    "freshOutputRequired": true
+  },
+  "shaderSourceMatrix": {
+    "actualFactoryVariants": [
+      "G01 old",
+      "G04 OFF",
+      "G04 ON"
+    ],
+    "high": [
+      false,
+      true
+    ],
+    "shadows": [
+      false,
+      true
+    ],
+    "compilationOnly": true,
+    "pipelineSampleCount": "1 low quality; 4 high quality only when device supports 4",
+    "pureSourceLibrariesExpected": 12,
+    "pureSourcePipelinesExpected": "12 if sample4 supported, otherwise 6",
+    "testOnlyLibrariesSeparate": 3
+  },
+  "executedImageScope": "ONLY low quality, no shadow, 1 sample; G01 indexed36/separate uniform and index buffers, real GroundDecalVertex+Fragment",
+  "cases": {
+    "actualRealVS": 32,
+    "indexedInstances": 3,
+    "BGRA8ColorDepthStencilByteComparison": 32,
+    "actualFSRGBA32Float": 32,
+    "directMovedConstantsRealVS": [
+      "g04Dots0.xyz+wrapRatio",
+      "g04Dots1.xyz+73.25 marker"
+    ],
+    "syntheticFixedRasterFixtures": 12,
+    "syntheticDirectOutputsPerFixture": 2,
+    "syntheticExceptions": [
+      "positive and negative zero input",
+      "subnormal",
+      "large finite overflow",
+      "zero denominator/corners",
+      "NaN corner",
+      "Inf corner",
+      "wrapDist zero",
+      "wrapDist negative",
+      "wrapDist NaN",
+      "wrapDist positive Inf",
+      "wrapDist subnormal",
+      "positive finite wrap"
+    ],
+    "syntheticNotGeometryParity": true
+  },
+  "comparison": "All finite output components exact uint32 bits including zero sign; NaN class and Inf sign for nonfinite. Moved-component coverage counts only pixels/components changed from finite sentinel12345; test-only second direct output writes exact interior 73.25 marker. Shader compile/link matrix is separate from rendered low/no-shadow parity.",
+  "firstMismatch": "Preserve G01/G04 OFF/G04 ON raw color/depth/stencil payloads and FIRST-MISMATCH.txt case/mode/flavor/byteOffset/component/raw bits/class before nonzero exit.",
+  "knownLimits": [
+    "synthetic shader fixture is not actual game geometry or workload",
+    "high/shadow variants compile/link only, not pixel parity",
+    "AA4 fallback not rendered",
+    "nonfinite classes tested only with fixed-raster synthetic VS; finite real VS separately"
+  ],
+  "cpuProductionSyntax": {
+    "status": "PASS",
+    "exitCode": 0,
+    "source": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm",
+    "sourceSHA256": "3cc4d5be3e76024006dda607d0842f80f654629539205ba9f5f338f2dbbc7934",
+    "inheritedCompileDatabase": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/build/compile_commands.json",
+    "generatedHeadersReadOnlyFrom": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/build",
+    "sideEffects": "-fsyntax-only; -o/-MF/-MT/-MD/-MMD/-c removed",
+    "log": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/CPU-PRODUCTION-SYNTAX.log"
+  }
+}

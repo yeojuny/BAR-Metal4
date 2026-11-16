@@ -1,0 +1,19 @@
+{
+  "status": "HOST_TEST_PASS_PENDING_REVIEW_RUNTIME",
+  "pauseRequestSimulation": 180,
+  "ackDeadlineSimulation": 240,
+  "resumeMinimumWallSeconds": 10,
+  "countStart": 300,
+  "countEnd": 1500,
+  "originalWallGate": 9.8,
+  "sharedControllerEdits": 0,
+  "removeOnAuthoritativeResumeAck": true,
+  "expectedRealWarmupSeconds": 14,
+  "hashes": {
+    "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+    "test_warmup_pacing.lua": "85a1607728105dafd8030e8bef4544693a4a688b66e97c0443456a2d88f4d5c9"
+  },
+  "originalControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+  "originalControllerGateLiteral": "assert(warm and Spring.DiffTimers(now,warm)>=9.8,'[MatchedGameplay] FAILED_WARMUP_BEFORE_SIM300')"
+}

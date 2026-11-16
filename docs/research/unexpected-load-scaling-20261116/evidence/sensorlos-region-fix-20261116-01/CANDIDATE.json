@@ -1,0 +1,79 @@
+{
+  "status": "SIGNED_PRIVATE_CANDIDATE",
+  "createdUTC": "2026-11-16T06:54:28.684070+00:00",
+  "sourceHead": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+  "sourceChangedPaths": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+      "baselineSHA256": "ac2d15d41a3245e96024e8e3db3ced84363504bb7065ce8e10ef47eef51dbf50",
+      "candidateSHA256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6"
+    },
+    {
+      "path": "rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+      "baselineSHA256": "86477eb39c19081a76d65f5693224f90c35e7e5215d820e38961db606ddfec58",
+      "candidateSHA256": "b11a26584e84abca5c6addb19267637f400b92ee671f9e3d71786b5ae04e1ac8"
+    }
+  ],
+  "sourceClosure": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/SOURCE-CLOSURE.json",
+  "rawSHA256": "e28da20cc6d567e0cc82701e4a174e5e5c59dbeaa55f5910661eb735dad47e59",
+  "signedSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "binary": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/runtime/native/bin/spring-metal4-scene",
+  "native": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/runtime/native",
+  "parentCandidateSHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+  "relocations": [
+    [
+      "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "@loader_path/../lib/libIL.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "@loader_path/../lib/libminizip.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "@loader_path/../lib/libfreetype.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "@loader_path/../lib/libfontconfig.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "@loader_path/../lib/libvorbisfile.3.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "@loader_path/../lib/libvorbis.0.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "@loader_path/../lib/libogg.0.8.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "@loader_path/../lib/libopenal.1.25.2.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "@loader_path/../lib/libSDL3.0.dylib"
+    ]
+  ],
+  "relocationCount": 9,
+  "codesignVerifyExit": 0,
+  "build": {
+    "fullTargetBuildCount": 1,
+    "fullTargetBuildLog": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/BUILD.log",
+    "finalNoWork": true,
+    "initialCacheSHA256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "archiveClosureStatus": "PASS",
+    "objectCount": 1538,
+    "archiveCount": 35,
+    "archiveMismatchCount": 0
+  },
+  "standaloneGpuParity": {
+    "status": "PASS",
+    "result": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/validation/GPU-PARITY-RESULT.json",
+    "engineBuildCountForHelper": 0
+  },
+  "gamesRun": 0
+}

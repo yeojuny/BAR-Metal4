@@ -1,0 +1,26 @@
+{
+  "status": "PASS_RUNTIME_ULTRA_AA",
+  "backend": "baseline",
+  "qualityRun": false,
+  "actualView": [
+    1512,
+    950
+  ],
+  "requestedAA": 0,
+  "actualMainSamples": 1,
+  "ultraRequest": "[UltraPreset] requested_index=4 initial_index=4",
+  "ultraWitness": "[UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0",
+  "nativeFinalColorExtents": null,
+  "powerWitness": "frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+  "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+  "initialState": "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000",
+  "visibility": [
+    "spectating=true fullview=true fullselect=false visible_units=2",
+    "spectating=true fullview=true fullselect=false visible_units=168"
+  ],
+  "officialCreated": 600,
+  "officialDestroyed": 433,
+  "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A1_BASE/scene.png",
+  "engineSHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+  "scopedGLSamplesIsNotSoleMainTargetProof": true
+}

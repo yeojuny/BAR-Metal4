@@ -1,0 +1,83 @@
+{
+  "status": "CLEAN6_COMPLETE",
+  "baseline": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "candidate": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "meanFPS": {
+    "before": 53.69239266564326,
+    "after": 58.621092854933394,
+    "percent": 9.179513045698018
+  },
+  "meanRunLow1FPS": {
+    "before": 46.35345584862203,
+    "after": 48.71666044470037,
+    "percent": 5.098227419754697,
+    "aggregation": "arithmetic mean of three run low1 values, not pooled frame intervals"
+  },
+  "runs": [
+    {
+      "run": "A1_BASE",
+      "fps": 53.69060418587769,
+      "low1FPS": 47.008547008547005,
+      "seconds": 40.006999969,
+      "draws": 2148,
+      "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A1_BASE/scene.png"
+    },
+    {
+      "run": "B1_S01",
+      "fps": 58.65,
+      "low1FPS": 48.78048790402538,
+      "seconds": 40.0,
+      "draws": 2346,
+      "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B1_S01/scene.png"
+    },
+    {
+      "run": "B2_S01",
+      "fps": 58.61620680843345,
+      "low1FPS": 49.07975490232978,
+      "seconds": 40.006000519,
+      "draws": 2345,
+      "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B2_S01/scene.png"
+    },
+    {
+      "run": "A2_BASE",
+      "fps": 53.69328690552605,
+      "low1FPS": 46.21848739495798,
+      "seconds": 40.005001068,
+      "draws": 2148,
+      "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A2_BASE/scene.png"
+    },
+    {
+      "run": "A3_BASE",
+      "fps": 53.69328690552605,
+      "low1FPS": 45.833333142361106,
+      "seconds": 40.005001068,
+      "draws": 2148,
+      "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A3_BASE/scene.png"
+    },
+    {
+      "run": "B3_S01",
+      "fps": 58.59707175636673,
+      "low1FPS": 48.28973852774595,
+      "seconds": 40.001998901,
+      "draws": 2344,
+      "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B3_S01/scene.png"
+    }
+  ],
+  "conditions": "Seths Ravine combat, Ultra AA0,1512x950,warm10s,count40s,3each,ABBAAB,limiterOFF",
+  "validRuns": 6,
+  "discardedRuns": 0,
+  "additionalRuns": 0,
+  "actualGPUOverlapExists": true,
+  "activeOverlapDuration": "NOT_MEASURED",
+  "isolatedStoreLoadCost": "NOT_MEASURED",
+  "visualReview": "Root inspected A1 and B3 full PNG and prior capture PNG: same camera/terrain/units/effect families, no obvious omission or corruption. Dynamic effects/overlay differ; not byte parity.",
+  "measurementMetric": "DrawScreen throughput and CPU-observed DrawScreen-to-DrawScreen wall intervals; not display-present latency or isolated GPU duration",
+  "sourceAndCaptureLimits": "Attachment/root/version proof remains frozen-source-gated and validated; not independently exported in new capture",
+  "comparability": "COMPARABILITY.json",
+  "scope": "Local opt-in AA0 candidate; not a release or general map/backend benchmark",
+  "observedSimulationWindow": [
+    540,
+    1740
+  ],
+  "metadataCaveat": "LAUNCH.measurementWindow retains stale600..1800; actual matched40simulation bins540..1740 identical across6. Raw metadata preserved."
+}

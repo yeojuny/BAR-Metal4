@@ -1,0 +1,23 @@
+{
+  "status": "PASS_SOURCE_CPU_ONLY_NO_BLOCKER",
+  "baseline": "Frozen signed G01 962637; source-only G04 opt-in. No engine build or GPU test by reviewer.",
+  "reviewedFiles": {
+    "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h": "sha256 755bd1ac4dfbd0c9a921ecdeddf70a8cb4adb61ee16303b8b3e5955fe1e0023c",
+    "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm": "sha256 3cc4d5be3e76024006dda607d0842f80f654629539205ba9f5f338f2dbbc7934"
+  },
+  "generatedSourceCheck": "review/GENERATED-SOURCE-CHECK.json; tiny clang++ C++ source-output tool -Wall -Wextra -Werror, four high/shadow variants. G04 OFF byte-identical to G01 and ON anchors all construct.",
+  "findings": [
+    "ON g04Dots0 maps exactly BL/TL/TR and g04Dots1 maps TR/BR/BL from the current vertex Run outputs; the new fields are [[flat]] and copy through the same DecalVarying first-provoking vertex as existing flat corner data. Original G01 cyclic vid rotation is unchanged.",
+    "The new dot helper preserves v0=p2-p0, v1=p1-p0, and dot00/dot01/dot11 operand order. Fragment still computes depth-dependent v2, dot02/dot12, original denominator reciprocal, s/t/q, both triangle checks, and UV/fract.",
+    "g04WrapRatio initializes to 1.0; successful Run performs the same >0 guard and midpoint/distance/divide expression. Three new outputs initialize before original early-cull return; no new read of existing uninitialized fields.",
+    "OFF overload returns the original two-argument generator directly. ON source transforms only unique known anchors; failure throws before library creation. Original atlas shader suffix and argument count are unchanged in generated outputs.",
+    "hoistG04 and probeG04 are owner-const env values, so owner-private library/pipeline cache keys cannot mix ON/OFF within one owner. No new uniform, GPU allocation, registration, draw hook, or math-mode change.",
+    "PROBE=1 log occurs after successful library creation/cache insertion but before pipeline creation/draw. It proves library compilation, not actual draw or output parity. PROBE=0 bypasses logging and formatting."
+  ],
+  "remainingRequiredProof": [
+    "Actual MSL compilation for all used high/shadow variants and pipeline interface/linking is outside this CPU source check.",
+    "Source equivalence does not prove cross-stage floating-point bit identity near zero/nonfinite denominators, signed zero, NaN/Inf, wrap boundaries or exact barycentric acceptance edges; GPU color/depth/stencil parity remains required.",
+    "New seven flat scalar components plus vertex arithmetic can outweigh fragment savings; no performance claim before measured same-engine work."
+  ],
+  "disposition": "No source contract blocker to the bounded helper/production syntax stage; do not treat CPU check as GPU parity."
+}

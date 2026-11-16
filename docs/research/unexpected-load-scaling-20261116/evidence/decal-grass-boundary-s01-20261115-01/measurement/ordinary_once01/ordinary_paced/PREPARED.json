@@ -1,0 +1,13 @@
+{
+  "status": "READY",
+  "utc": "2026-11-16T15:05:50.993861+00:00",
+  "productSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "arms": [
+    {
+      "arm": "O1_S01",
+      "mode": "ELISION1",
+      "data": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/ordinary_paced/preparation/private/O1_S01/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_S01"
+    }
+  ]
+}

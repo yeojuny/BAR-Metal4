@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "unchanged": [
+    {
+      "path": "rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+      "baselineSHA256": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+      "candidateSHA256": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+      "equal": true
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "baselineSHA256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51",
+      "candidateSHA256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51",
+      "equal": true
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "baselineSHA256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521",
+      "candidateSHA256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521",
+      "equal": true
+    }
+  ],
+  "claims": [
+    "All 36 ordered cube corners and 12 ordered triangles preserved through unchanged shader rotation",
+    "Only eight existing vertex IDs referenced; no vertex or fragment shader edits",
+    "No pass boundary, state, barrier, runtime lease or GameDecal edits"
+  ],
+  "limits": [
+    "GPU parity UNKNOWN",
+    "Actual GPU vertex reuse UNKNOWN",
+    "FPS effect UNKNOWN"
+  ]
+}

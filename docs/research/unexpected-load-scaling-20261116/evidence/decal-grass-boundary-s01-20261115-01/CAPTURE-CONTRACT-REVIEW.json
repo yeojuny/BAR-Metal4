@@ -1,0 +1,114 @@
+{
+  "review": "S01 signed 9a44 candidate captured command and ordering contract",
+  "reviewed_at_utc": "2026-11-16T09:25:05.327085+00:00",
+  "status": "CAPTURED_STAGE_ORDER_CONFIRMED_ATTACHMENT_AND_ALIAS_METADATA_UNKNOWN",
+  "runtime": "Offline inspection only of already exported capture. No GPU replay, game, profile, or new capture by reviewer.",
+  "signed_binary_sha256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "capture": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+  "evidence_versions": [
+    {
+      "path": "measurement/capture_s01_01/analysis/command-tree.jsonl",
+      "bytes": 416,
+      "sha256": "1cc214cdd10796b3b689691ca47e656fdb26bc2a94ed1eb9e5db314eeeebc516"
+    },
+    {
+      "path": "measurement/capture_s01_01/analysis/command-buffer.jsonl",
+      "bytes": 9881,
+      "sha256": "45ef40543a957e007d08cf23ca9f28e0b1a336ad3e098370153204af767d9c7e"
+    },
+    {
+      "path": "measurement/capture_s01_01/analysis/api-calls.jsonl",
+      "bytes": 1504163,
+      "sha256": "840f561d6f63001aa90e215d4aeae116f7141b242764a690c5105ffb39f0172a"
+    },
+    {
+      "path": "measurement/capture_s01_01/analysis/resources.jsonl",
+      "bytes": 1660,
+      "sha256": "4cc46921a7bd3194a071393312c67c3bca57720eb201e7e7f1f3fbd3d2bfbd4a"
+    },
+    {
+      "path": "measurement/capture_s01_01/analysis/render-pipelines.jsonl",
+      "bytes": 39853,
+      "sha256": "6ac2aa1c0fd0ef19f02400a3ef1b750627034d6881feb8d0376dfe2a5901f6ac"
+    },
+    {
+      "path": "measurement/capture_s01_01/analysis/shader-stage-intervals.jsonl",
+      "bytes": 42200,
+      "sha256": "92d2ab3c293f7d95a06fd4f8484f9c9d9c1adb33eb662905165e72e9a19d1d4b"
+    },
+    {
+      "path": "measurement/capture_s01_01/analysis/shader-costs.jsonl",
+      "bytes": 38381,
+      "sha256": "a6cdc96b6486e66dae267fbcfcccf0eac4e4373ab112b2c245f112cb7a3ff1d8"
+    }
+  ],
+  "source_versions": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "bytes": 460355,
+      "sha256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4Grass.mm",
+      "bytes": 18675,
+      "sha256": "894fd301c532f94bdb9163e522d67173e236b9c22a3c19c66e47d20db9145117"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4MainAttachments.h",
+      "bytes": 16633,
+      "sha256": "d03ac19e0bd166d235fbfe631de266ea5c421083553b7e4b52b940479511c059"
+    }
+  ],
+  "evidence": [
+    {
+      "finding": "One captured command buffer cb0 has the snapshot ce12 immediately before A re13, G re14 and next render encoder re15.",
+      "export": "analysis/command-buffer.jsonl second JSON record: ce12=1 blit, re13=233 draws, re14=8 draws, re15=62 draws; API encoder creations api5020/5025/7934/8242.",
+      "grade": "DIRECT_CAPTURE"
+    },
+    {
+      "finding": "The pre-A snapshot retains its original stage edges: prior queue Fragment|Dispatch|Blit to snapshot Blit, depth crop @tex158 mip0/slice0 origin(0,32) 1512x950 to @tex160 mip0/slice0, then snapshot Blit to later queue Vertex|Fragment|Dispatch.",
+      "export": "api5021=afterQueueStages 402653186 beforeStages Blit Device; api5022=copy; api5023=afterStages Blit beforeQueueStages 134217731 Device; api5024=end.",
+      "grade": "DIRECT_CAPTURE_STAGE_MASKS; binding-specific last-writer membership unknown"
+    },
+    {
+      "finding": "A re13 ends after 233 draws with Fragment to queue Fragment producer barrier; G re14 begins immediately and installs queue Fragment to Fragment consumer barrier. No G-side queue Fragment to Vertex barrier is present. This is the intended narrow A.Fragment→G.Fragment order without a new A.Fragment→G.Vertex wait.",
+      "export": "api7931=last A draw; api7932=F→queueF Device; api7933=end A; api7934=create G; api7935=queueF→F Device.",
+      "grade": "DIRECT_CAPTURE"
+    },
+    {
+      "finding": "G re14 contains exactly eight indexed Grass draws. All eight bind @rps12 and the same six argument texture resource IDs (slots 0:351,1:155,2:352,3:17,4:43,5:47). Shader-stage-intervals and shader-costs directly identify @rps12 as GrassVertex/GrassFragment; the unchanged shader reads slots 1-5 in Vertex and slot0 in Fragment.",
+      "export": "API draw calls api7973,8011,8049,8087,8125,8163,8201,8239 plus preceding setTexture groups; shader-stage-intervals vert23/frag22 and shader-costs vert3/frag30 name GrassVertex/GrassFragment @rps12.",
+      "grade": "DIRECT_CROSS_EXPORT_PIPELINE_AND_SHADER_IDENTITY plus SOURCE_SHADER_SLOT_MAPPING"
+    },
+    {
+      "finding": "G closes at the existing first successor boundary: Vertex|Fragment to queue Fragment|Blit Device barrier, endEncoding, then next render encoder re15 begins with prior queue Fragment|Dispatch|Blit to Vertex|Fragment Device barrier. No GPU API call intervenes between end G and creation of re15.",
+      "export": "api8240=afterStages 3 beforeQueueStages 268435458 Device; api8241=end G; api8242=create re15; api8243=afterQueueStages 402653186 beforeStages 3 Device.",
+      "grade": "DIRECT_CAPTURE_STAGE_MASKS; source maps re15 to first opaque MRT under positive gate"
+    },
+    {
+      "finding": "The captured process logged a positive S01 split and later ROI rows at simulation 540/900/1590 have plan=checkpoint=split=1, eight Grass draws/visible8, zero rejection bits, opaque_phases4, first_deferred1 and pass165=0.",
+      "export": "capture run infolog lines containing [NativeGrassBoundaryS01] and [NativeGrassBoundaryS01ROI].",
+      "grade": "PROCESS_LOG; exported cb0 has no source-frame scalar for an exact log-to-capture draw ID join"
+    },
+    {
+      "finding": "The captured A stage includes named GameDecalFragment @rps16 and GroundDecalFragment @rps71; shader-stage-intervals identifies their fragments directly, and their pipeline IDs occur in A re13 API calls.",
+      "export": "shader-stage-intervals frag16/frag17; shader-costs frag2/frag1; A re13 API setRenderPipelineState @rps16/@rps71.",
+      "grade": "DIRECT_CROSS_EXPORT_SHADER_IDENTITY"
+    }
+  ],
+  "source_crosscheck": {
+    "checkpoint": "Metal4MainAttachments.h:288-310 has the same stage masks and depth crop.",
+    "split": "Metal4WorldRenderer.mm:5118-5134 emits the F→F split; :5354-5370 closes G before first opaque MRT.",
+    "attachments": "Metal4WorldRenderer.mm:4945-4964 loadedMainPass165 checks exact color/depth/stencil texture identities, single sample, Load/Store, no resolve/extra color; :5033-5055 and :5120-5122 require the gate at admission and split. The same pass descriptor is reused for G.",
+    "reads": "Metal4Grass.mm:65-132 checks active V texture root disjointness and standalone storage, exact read callbacks, device/type/sample and immutable buffers. Source check was required by the positive split; the capture export does not expose physical owner/alias identity.",
+    "shader_identity": "shader-stage-intervals.jsonl and shader-costs.jsonl directly map @rps12 to GrassVertex/GrassFragment and @rps16/@rps71 to GameDecalFragment/GroundDecalFragment. The render-pipelines listing alone lacks entrypoint names, but the combined exports provide direct identity."
+  },
+  "unknown_from_exports": [
+    "The API export omits render-pass descriptor attachment texture IDs, load/store actions, resolve attachments and source-level roots. Therefore it cannot independently establish A/G attachment equality or exact Load/Store; that conclusion is conditional on the frozen source gate.",
+    "The resources export lists categories and counts, not individual texture parent/root/heap/IOSurface/shareable properties or allocation IDs. The six argument-table resource IDs do not prove physical non-aliasing with A outputs.",
+    "The export does not give exact source-generation, last-writer stage/version or GPU completion for Grass slots 1-5. The checkpoint mask proves ordering for qualifying prior Fragment/Dispatch/Blit writers, while runtime provider/alias gate is the source-level proof of qualification.",
+    "The API order and barriers show permitted stage overlap, not actual overlap duration, performance gain or whole-frame visual parity. Shader interval attribution belongs to the separate trace analysis."
+  ],
+  "sdk_stage_basis": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLCommandEncoder.h:45-66 defines V=1,F=2,Dispatch=1<<27,Blit=1<<28; MTL4CommandEncoder.h:48-93 defines queue barrier scope and Device visibility.",
+  "conclusion": "The captured API sequence confirms the intended checkpoint, one A→G Fragment-only split, eight directly identified Grass G draws and preserved G→next-render boundary. Combined shader exports identify A GameDecal/GroundDecal Fragment and G Grass Vertex/Fragment. Attachment/root, physical alias and exact producer-version claims remain source-gated and are not independently certified by these exports."
+}

@@ -1,0 +1,19 @@
+{
+  "status": "STATIC_PASS_PENDING_GPU_RUN",
+  "scope": "Final test-only GPU pixel parity helper; previous static blockers and requested guards only",
+  "helper": "validation/gpu_pixel_parity.mm",
+  "sha256": "f5e6de729848d880ccbe953e331d0f6a95333ba96affb290509c474fe46a035a",
+  "blocking_findings": [],
+  "verified": [
+    "A no-draw render supplies the exact prefill comparison; an optimized case must itself change both color and stencil, and a depth-write optimized case must change depth.",
+    "The normal mask path uses BGRA8 color, source-alpha blending, and a nonmipmapped sampler; mip sampling is a separate stress variant.",
+    "The test VS invokes the actual clipping helper for clipped cases, records clipped tight vertices, and requires a clipped optimized case with visible color and stencil changes.",
+    "A shared seam requires visible output in the same optimized case; subpixel cases explicitly require the fallback geometry.",
+    "Both x-major and y-major optimized paths require visible output, with non-diagonal positive and negative directions. Four atomic counters have a four-word buffer and are initialized for each render.",
+    "Each baseline and tight run compares complete color, depth, and stencil readbacks byte for byte."
+  ],
+  "limitations": [
+    "This is a static helper review. The helper has not been compiled or run by this reviewer.",
+    "GPU parity results and full engine behavior remain pending the owner's bounded run."
+  ]
+}

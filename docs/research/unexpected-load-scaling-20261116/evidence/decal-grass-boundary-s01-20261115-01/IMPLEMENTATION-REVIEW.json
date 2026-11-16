@@ -1,0 +1,123 @@
+{
+  "review": "S01 decal-to-Grass boundary source and policy test",
+  "reviewed_at_utc": "2026-11-16T08:15:44.336049+00:00",
+  "status": "PASS_NO_SOURCE_BLOCKER",
+  "scope": "Read-only review of eight production files and one policy test at the byte versions below; no engine build, game, profile, or GPU validation by reviewer.",
+  "engine_root": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine",
+  "reviewed_files": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h",
+      "bytes": 1727,
+      "sha256": "789e2ea21a816c2dff2d22a06b0c23c0f989913af740bfa8101373786c3a871b"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4Grass.h",
+      "bytes": 1878,
+      "sha256": "7b149c0e7c6438a0787c24e64f35f48c3cacad53e36e9c0aba4fa43a4cd79e4d"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4Grass.mm",
+      "bytes": 16974,
+      "sha256": "d09e2c202b8ee57129f5a020f2c3b8a3deb16a258fc6ddd393cb01b018b3ad63"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "bytes": 457643,
+      "sha256": "dca2cf42c2be16517a52053975192cf20969069a519f68da9595354e68988618"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4TerrainInfoSource.h",
+      "bytes": 1139,
+      "sha256": "bbf5f98b15af0aeb56b6835f6da4d472f75b55e267f603447a5eb2294c291750"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4TerrainInfoSource.mm",
+      "bytes": 14456,
+      "sha256": "388761d94971c07cb58d44a97896fdbef18a61ea77f7d13eb4a96b594b543bd2"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4ScreenNative.h",
+      "bytes": 10875,
+      "sha256": "35ddc56c59b0797ea9c27d2f0b62e6c63a83ae764db335288167d0a6f381e458"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "bytes": 179237,
+      "sha256": "97caea719c49b05f6fbfee30a9a0bffb5fdce81482333900fc04dd83985acd07"
+    },
+    {
+      "path": "tools/metal4-contracts/TestGrassBoundaryS01.cpp",
+      "bytes": 2666,
+      "sha256": "c49d5532cb0bbd6e02b39acb999ccd9b39ed04d1240af04632db3b19444bc94a"
+    }
+  ],
+  "addressed_findings": [
+    {
+      "finding": "Optional Grass provenance proof could introduce a new exception after original provider resolution.",
+      "disposition": "OriginalGrassImageS01 now catches every optional proof exception and clears beforeCheckpoint; original image and callback result remain intact.",
+      "source": "rts/Rendering/Metal4/Metal4WorldRenderer.mm:814,859"
+    },
+    {
+      "finding": "Distinct root objects could alias via a shareable/imported texture handle.",
+      "disposition": "GrassStorage now rejects shareable roots in addition to parent, heap, buffer, IOSurface, aliasable and memoryless resources; all active Grass Vertex image roots must be disjoint from the exact three main attachment roots.",
+      "source": "rts/Rendering/Metal4/Metal4Grass.mm:65-91"
+    }
+  ],
+  "findings": {
+    "prefix_order_and_writes": {
+      "result": "PASS_UNDER_EXACT_GATE",
+      "details": "The preDecal list admits only GameDecal. The preUnit list admits an AttachmentOnly prefix of ResourceSpots, Commands and UnitPrimitive followed by a contiguous Grass suffix. GroundDecal, GroundFlashes and Sky occur between the unchanged terrain snapshot and that prefix. Their reviewed fixed Vertex entry points use const device or constant inputs and perform no storage/atomic writes; their render Fragment results write the existing main color/depth/stencil attachments. No unknown callback, command-level draw, or later ordinary draw is admitted.",
+      "sources": [
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5020-5042",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5278-5286",
+        "rts/Rendering/Metal4/NativeGameDecalShaders.h:84-103",
+        "rts/Rendering/Metal4/NativeGroundDecalShaders.h:372,882",
+        "rts/Rendering/Metal4/Metal4WorldParticles.mm:52",
+        "rts/Rendering/Metal4/Metal4WorldEnvironmentShader.h:20",
+        "rts/Rendering/Metal4/NativeResourceSpotsShaders.h:22",
+        "rts/Rendering/Metal4/NativeCommandsShaders.h:14",
+        "rts/Rendering/Metal4/NativeUnitPrimitiveShaders.h:84"
+      ]
+    },
+    "producer_checkpoint_and_recording": {
+      "result": "PASS_UNDER_EXACT_GATE",
+      "details": "The existing single-depth snapshot keeps prior queue Fragment|Dispatch|Blit to snapshot Blit and snapshot Blit to later queue Vertex|Fragment|Dispatch barriers. S01 records only completed or exact current-submission encoded producers; GrassProducerRecordedS01 does not assert completion. Terrain info also requires registered exact submission and dependenciesEncoded; shadow uses the exact current-frame depth backing after EndEncoding. The new split adds only A Fragment to Grass Fragment ordering.",
+      "sources": [
+        "rts/Rendering/Metal4/Metal4MainAttachments.h:288-310",
+        "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h:23-28",
+        "rts/Rendering/Metal4/Metal4TerrainInfoSource.mm:231-251",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:838-847",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5105-5121"
+      ]
+    },
+    "grass_reads_and_retention": {
+      "result": "PASS_UNDER_EXACT_GATE",
+      "details": "Every active Grass Vertex image in slots 1-5 retains the original resolved texture/sampler, owner, swizzle, flip, depth comparison, LOD and requireReadable callback. Slot 1 plain WorldTexture requires ready; slot 2 immutable CPU ScreenTexture requires actual mip initialization; slot 3 is current-frame shadow depth; slot 4 is exact terrain-info resource/plan; slot 5 is completed height. All five Grass Vertex/index/uniform/bend buffers have immutable, retained device allocations. PreparedGrass keeps source images, proof closures and buffer/texture handles through the existing common ticket and DidComplete; no CUSSourceImage or OriginalModelImage implementation was changed. Fragment slot 0 remains an original read behind Fragment-to-Fragment ordering.",
+      "sources": [
+        "rts/Rendering/Metal4/Metal4Grass.mm:25-63",
+        "rts/Rendering/Metal4/Metal4Grass.mm:76-101",
+        "rts/Rendering/Metal4/Metal4Grass.mm:150-177",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:814-861",
+        "rts/Rendering/Metal4/Metal4ScreenNative.mm:1800-1817",
+        "rts/Rendering/Metal4/Metal4TerrainInfoSource.mm:231-251"
+      ]
+    },
+    "attachment_order_and_failure": {
+      "result": "PASS_UNDER_EXACT_GATE",
+      "details": "The gate requires the same loaded single-sample main attachment identities, no continuation/offscreen/scoped pair, actual ground and snapshot, and a subsequent model GBuffer pass. It rechecks proof at the exact first Grass draw and requires original A encoder identity. Ending A is followed by a new Load/Store encoder, fresh original per-draw state binds, and the existing model pass closure. If any operation fails after A ends, GrassSplitFailure closes the new encoder and the existing lease poison/quarantine path handles the failed submission; no replay/fallback occurs after A ends.",
+      "sources": [
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:4945-4964",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5030-5042",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5105-5121",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5299-5303",
+        "rts/Rendering/Metal4/Metal4WorldRenderer.mm:4855-4861"
+      ]
+    },
+    "policy_test": {
+      "result": "SOURCE_REVIEW_PASS; execution reported by parent, not repeated by reviewer",
+      "details": "The fixture exhausts 9,841 A*G+ sequence cases, checks 12 physical-root/unknown cases, and checks six producer transitions: unregistered, incomplete same-submission, recorded same-submission without completion, mismatched predecessor, completed predecessor, and zero submission.",
+      "source": "tools/metal4-contracts/TestGrassBoundaryS01.cpp:1-58"
+    }
+  },
+  "remaining_validation": "The owner must confirm the opt-in candidate actually reaches the positive split gate in the target scene and perform the planned build, Metal API validation, visual parity, and clean benchmark under isolation. Source proof does not establish actual hit rate or performance."
+}

@@ -1,0 +1,47 @@
+{
+  "status": "READY_NO_GAME",
+  "candidateSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "arm": "O1_SENSOR",
+  "fixedChildFlags": {
+    "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+    "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+    "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": "0",
+    "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+    "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+    "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+    "BAR_METAL4_SHARED_CUS_PILOT": "0",
+    "MTL_DEBUG_LAYER": "0",
+    "MTL_SHADER_VALIDATION": "0"
+  },
+  "controllerSHA256": "608b511afcb6ff0d01527bbdeca37620b2924d437aa483a710eafa5834032dae",
+  "pacing": {
+    "contract": {
+      "status": "HOST_TEST_PASS_PENDING_REVIEW_RUNTIME",
+      "pauseRequestSimulation": 180,
+      "ackDeadlineSimulation": 240,
+      "resumeMinimumWallSeconds": 10,
+      "countStart": 300,
+      "countEnd": 1500,
+      "originalWallGate": 9.8,
+      "sharedControllerEdits": 0,
+      "removeOnAuthoritativeResumeAck": true,
+      "expectedRealWarmupSeconds": 14,
+      "hashes": {
+        "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+        "test_warmup_pacing.lua": "85a1607728105dafd8030e8bef4544693a4a688b66e97c0443456a2d88f4d5c9"
+      },
+      "originalControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+      "originalControllerGateLiteral": "assert(warm and Spring.DiffTimers(now,warm)>=9.8,'[MatchedGameplay] FAILED_WARMUP_BEFORE_SIM300')"
+    },
+    "originalWidgetConfigSHA256": "8378d14c8c5c601e7475b30c4b0cc851c74e98ec06585d43d4b1f19f5d692f7d",
+    "effectiveWidgetConfigSHA256": "a18192ce6281848da803b3beeff061cb3a3b3d54ed5ccfb4472f9db65e35f4dd",
+    "widgetEnabledByOrder": true
+  },
+  "map": "All That Simmers v1.1.1",
+  "countSimulation": [
+    300,
+    1500
+  ],
+  "independentSingleRun": true
+}

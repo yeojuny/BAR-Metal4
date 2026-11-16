@@ -1,0 +1,74 @@
+{
+  "status": "READY_NO_GAME",
+  "selectedBeforeExecution": "HIGH_SETHS_CLEAN6_ONLY",
+  "lowCleanNotSelectedBeforeExecution": "Low diagnostic owner prepare=0, nonempty=0, eligible=0, physical buffer creates=0; causal effect unknown",
+  "suite": "g02_high_clean01",
+  "order": [
+    {
+      "arm": "A1_OFF",
+      "G02": "0",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/private/A1_OFF/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/A1_OFF"
+    },
+    {
+      "arm": "B1_ON",
+      "G02": "1",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/private/B1_ON/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/B1_ON"
+    },
+    {
+      "arm": "B2_ON",
+      "G02": "1",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/private/B2_ON/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/B2_ON"
+    },
+    {
+      "arm": "A2_OFF",
+      "G02": "0",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/private/A2_OFF/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/A2_OFF"
+    },
+    {
+      "arm": "A3_OFF",
+      "G02": "0",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/private/A3_OFF/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/A3_OFF"
+    },
+    {
+      "arm": "B3_ON",
+      "G02": "1",
+      "profile": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/private/B3_ON/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/B3_ON"
+    }
+  ],
+  "signedEngineSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+  "sameInitialHashes": {
+    "controllerSHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+    "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+    "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+    "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+    "privateFontSHA256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "ultraProbeSHA256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9"
+  },
+  "samePacingHashes": {
+    "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+    "test_warmup_pacing.lua": "85a1607728105dafd8030e8bef4544693a4a688b66e97c0443456a2d88f4d5c9"
+  },
+  "soleNonPathChildEnvDifference": "BAR_NATIVE_GROUND_DECAL_UPLOAD_G02=0/1",
+  "runScriptSHA256": "7edb8a99381e835a6829e08e1488fd55ad616767b27b172041ad18de37b812da",
+  "countSimulation": [
+    540,
+    1740
+  ],
+  "combatWarmSimulation": [
+    240,
+    540
+  ],
+  "warmupSeconds": 10,
+  "countedSeconds": 40,
+  "captureAfterCount": true,
+  "validationTraceCaptureProfiler": "OFF",
+  "allValidSlowRunsRetained": true,
+  "historicalPooling": false
+}
