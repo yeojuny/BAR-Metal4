@@ -1,0 +1,1 @@
+PASS cases=3600 optimized=2234 visible=1869 depth=427 clipped=29 seam=12 xMajor=1199 yMajor=629; color/depth/stencil byte-identical, sampleCount=1

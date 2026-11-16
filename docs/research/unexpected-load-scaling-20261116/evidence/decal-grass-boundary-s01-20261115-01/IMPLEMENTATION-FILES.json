@@ -1,0 +1,47 @@
+[
+  {
+    "path": "rts/Rendering/Metal4/Metal4Grass.h",
+    "before": "33cc1889827660ecae127296a6e5487a49022ef8143e473aae01962978e9f1ec",
+    "after": "936d704e174bdba72970835f787d643b953c6ba44a5804e45489e3d8c826aaf6"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4Grass.mm",
+    "before": "d33ba0e576483749015a15974ba33e38007d803a5127a0a2772b3749b9f0cf4d",
+    "after": "894fd301c532f94bdb9163e522d67173e236b9c22a3c19c66e47d20db9145117"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h",
+    "before": null,
+    "after": "92d7bc6574ec9206cab5280adec51ea03bda5fec0c42dabf138c9cf70be7a796"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+    "before": "c053325b88eac66bba2cf00fee9a5ad2f690f0164c6f7bc7f9fbddc0d8dbd86f",
+    "after": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4TerrainInfoSource.h",
+    "before": "4e831a76fda2e9a18c283e3ef31c6236dd902a50aab4a8aadebbfb1dda463155",
+    "after": "bbf5f98b15af0aeb56b6835f6da4d472f75b55e267f603447a5eb2294c291750"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4TerrainInfoSource.mm",
+    "before": "2479024a1bae8bc0574f0e91dcc9955f966ae00b23ac7bf66ab6952161a31465",
+    "after": "388761d94971c07cb58d44a97896fdbef18a61ea77f7d13eb4a96b594b543bd2"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4ScreenNative.h",
+    "before": "13921d7c9a21933186e8d48719b776e00e262bca06b0bbf58e56a72462e50433",
+    "after": "35ddc56c59b0797ea9c27d2f0b62e6c63a83ae764db335288167d0a6f381e458"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4ScreenNative.mm",
+    "before": "85e3d88e1cdc1936b6d14a7de426c2bb88f43b0c384949a7d746e687ffe15763",
+    "after": "97caea719c49b05f6fbfee30a9a0bffb5fdce81482333900fc04dd83985acd07"
+  },
+  {
+    "path": "tools/metal4-contracts/TestGrassBoundaryS01.cpp",
+    "before": null,
+    "after": "9def058ec2580f9f51bbaf805d490ad90a4a108c8f9dc8eaf952142ca19dedfb"
+  }
+]

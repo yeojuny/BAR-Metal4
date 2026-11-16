@@ -1,0 +1,27 @@
+{
+  "excluded": [
+    {
+      "item": "native-frame.gputrace",
+      "originalLocator": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+      "bytes": 2764747623,
+      "files": 1233,
+      "treeSHA256": "134b121aa1dd2f5a7e2fa5f486440d01c77ab743c0f5f5f68b940dc7e8c19898",
+      "treeHashDefinition": "SHA256 of sorted UTF-8 relativePath + NUL + fileSHA256 + newline; individual local file pins retained separately, not published",
+      "reason": "Large raw GPU capture; archive API/pipeline/shader/timeline extracts supplied instead. No new capture or replay was performed.",
+      "signedCapturedEngineSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+      "byteMeasure": "sum of logical file lengths; not allocated-disk usage"
+    },
+    {
+      "item": "full app, engines, dependency dylibs, SDK and game/map/font archives",
+      "reason": "Not needed to audit source/math/conditions; binary, map, content and 19-library identities retained. Rebuilding/rerunning requires separately obtained compatible dependencies/content."
+    },
+    {
+      "item": "personal profiles, complete process environment, GUI application inventories, browser state, authentication, caches and active logs",
+      "reason": "Not authorized for publication and not needed for this audit."
+    },
+    {
+      "item": "incidental source Python __pycache__/analyze.cpython-315.pyc",
+      "reason": "Only pre-R01 difference from public a3 engine tree; not production source; hash appears in complete local source manifests but bytes are omitted."
+    }
+  ]
+}

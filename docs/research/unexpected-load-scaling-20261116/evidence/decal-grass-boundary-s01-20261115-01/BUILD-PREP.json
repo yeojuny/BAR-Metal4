@@ -1,0 +1,50 @@
+{
+  "status": "PREPARED_NO_BUILD",
+  "createdUTC": "2026-11-16T07:59:57.861166+00:00",
+  "source": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine",
+  "acceptedBaselineSource": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine",
+  "acceptedBaselineBinarySHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "initialCache": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/initial-cache.cmake",
+  "initialCacheSHA256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "configureCommand": [
+    "cmake",
+    "-S",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine",
+    "-B",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/build",
+    "-G",
+    "Ninja",
+    "-C",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/initial-cache.cmake",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+  ],
+  "configureEnvironment": {
+    "PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig"
+  },
+  "buildCommand": [
+    "cmake",
+    "--build",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/build",
+    "--target",
+    "spring-metal4-scene",
+    "--",
+    "-j",
+    "8"
+  ],
+  "postBuild": [
+    "Ninja no-work check",
+    "archive-to-object closure audit via ${AUDIT_USER_HOME}/Documents/Codex/2026-11-14/bar-metal4-handoff-contract-20261114/work/audit_build_closure.py; expected 1538 objects/35 archives/0 mismatch",
+    "source-content delta audit versus accepted E clone; only reviewed S01 changes",
+    "private runtime copy from accepted E/runtime/native, replace with new raw binary, apply E/CANDIDATE.json nine loader relocations, ad-hoc sign/verify/hash"
+  ],
+  "priorObjectBuildReuse": "NONE: E/build has absolute E/source paths; copying its object/archive cache could preserve stale members. Reuse only byte-identical initial CMake settings cache. Fresh S01/build is the single cohesive full target build after source freeze.",
+  "compilerIdentityExpected": {
+    "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+    "CMAKE_CXX_COMPILER": "/usr/bin/c++",
+    "CMAKE_GENERATOR": "Ninja",
+    "PKG_CONFIG_EXECUTABLE": "/opt/homebrew/bin/pkg-config"
+  },
+  "engineBuilds": 0,
+  "games": 0,
+  "profilerRuns": 0
+}

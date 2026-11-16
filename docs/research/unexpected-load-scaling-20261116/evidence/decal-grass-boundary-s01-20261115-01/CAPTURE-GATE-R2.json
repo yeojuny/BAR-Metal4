@@ -1,0 +1,16 @@
+{
+  "status": "PASS_TO_CLEAN_COMPARISON_WITH_EXPLICIT_EVIDENCE_LIMITS",
+  "candidateSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "overlap": "measurement/capture_s01_01/analysis/CAPTURE-OVERLAP-ANALYSIS.json",
+  "contract": "CAPTURE-CONTRACT-REVIEW.json",
+  "closure": "measurement/capture_s01_01/analysis/REPLAY-CLOSED-CORRECTION.json",
+  "actualOverlapExists": true,
+  "activeOverlapDuration": "NOT_MEASURED",
+  "captureAttachmentsAndPhysicalRoots": "NOT_INDEPENDENTLY_EXPORTED; supported by frozen positive source gate and prior actual Metal validation",
+  "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/private/P_S01_CAPTURE/state/data/LuaUI/Config/h1-scene.png",
+  "visual": "Root inspected1512x950: no obvious omission/corruption; dynamic effects differ, not wholeframe byte parity",
+  "cleanPlan": "measurement/runs/s01_clean01/clean_paced/CLEAN-PLAN.json",
+  "cleanExecuted": false,
+  "fpsEffect": "NOT_MEASURED",
+  "isolatedStoreLoadCost": "NOT_MEASURED"
+}

@@ -1,0 +1,100 @@
+{
+  "status": "SCOPE_ONLY_PENDING_CHANGE_AUTHORIZATION",
+  "baseline": "signed9a44+S01ON; immutable",
+  "selectedCandidate": "GroundDecal fixed indexed cube corners",
+  "evidenceTable": [
+    {
+      "path": "GroundDecalVertex",
+      "observedCostPercent": 9.324211351297802,
+      "actualWork": "api5102 Triangle vertexCount36 instanceCount32364; rps71",
+      "proposal": "fixed36uint16indices reference8existingvertexIDs; shader code unchanged",
+      "unknown": "actual GPU vertex reuse and net speedup; exact full-image GPU parity",
+      "dependency": "original cyclic provoking mapping, existingBuffer/Lease retirement; geometry184 GameDecal and RANGE199 remain unchanged"
+    },
+    {
+      "path": "GroundDecalFragment",
+      "observedCostPercent": 16.701899127726964,
+      "actualWork": "atlas/normal/minimap/shadow/depth reconstruction",
+      "proposal": "No fragment change in selected candidate",
+      "unknown": "type distribution and potential skipped reads; no backend-specific inefficiency proven",
+      "dependency": "original GLSL math/derivatives/resources maintained"
+    },
+    {
+      "path": "GameDecalFragment",
+      "observedCostPercent": 9.257967639463034,
+      "actualWork": "api5070 96vertices x3549instances rps16",
+      "proposal": "No change; existing geometry184-related behavior preserved",
+      "unknown": "new independent fragment reduction not established",
+      "dependency": "original shading/alpha/coverage preserved"
+    }
+  ],
+  "mapping": {
+    "uniqueOriginalVertexIDs": [
+      0,
+      1,
+      2,
+      5,
+      6,
+      7,
+      8,
+      11
+    ],
+    "indexSequence": [
+      0,
+      1,
+      2,
+      1,
+      0,
+      5,
+      6,
+      7,
+      8,
+      7,
+      6,
+      11,
+      0,
+      6,
+      5,
+      6,
+      0,
+      11,
+      1,
+      8,
+      7,
+      2,
+      1,
+      7,
+      0,
+      7,
+      11,
+      7,
+      0,
+      2,
+      1,
+      6,
+      8,
+      6,
+      1,
+      5
+    ],
+    "indexBytes": 72,
+    "all36EffectiveCornerPositionsEqual": true,
+    "shaderChangesRequired": false
+  },
+  "smallChangeBoundary": [
+    "Only GroundDecal draw becomes indexed; fixed index bytes allocated and retained through existing per-draw lease, no newcache/pool",
+    "Same36indices/12orderedtriangles/instance order, same originalVS/FS and arguments",
+    "No pass/barrier/queue/math/coverage/depth/stencil changes"
+  ],
+  "requiredValidation": [
+    "Full varying equivalence for each mapped originalvertexID including flat provoking color",
+    "Use valid full index-buffer length and correct address, retain across submission through completion/failed submission",
+    "Meaningful GPU color/depth/stencil parity then actual matched performance only after separateGO"
+  ],
+  "relativeCostWarning": "Replay-relative shadercost only; not ms or predictedFPS; Native/MVK differentframes cannot be divided",
+  "R02Closed": "R02-CONTRACT-SCOPE.json; historicalrange-raster233 mean\u22120.068744% duplicate and current no WeaponRange entry",
+  "sourceComparison": "COMPARISON-GROUND-SCOPE.json",
+  "newSourceBuildGameGPUCount": 0,
+  "contractReview": "GROUND-INDEX-SCOPE-REVIEW.json",
+  "sourceContractConclusion": "All36effectivepositions/12provoking inputs match; onlyvertexID dependence is CUBE_VERT. No source-level lifetime blocker under existingLease retention. GPUparity/reuse UNKNOWN."
+}

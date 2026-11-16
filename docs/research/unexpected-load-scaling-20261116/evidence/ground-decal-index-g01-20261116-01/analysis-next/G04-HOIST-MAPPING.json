@@ -1,0 +1,58 @@
+{
+  "status": "READ_ONLY_SOURCE_AND_SAVED_CAPTURE_MAPPING",
+  "scope": "G04 hypothetical GroundDecal fragment invariant hoist; no shader compilation, GPU execution, source edit, or timing claim",
+  "saved9a44Observation": {
+    "source": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis",
+    "pipeline": "rps71 GroundDecalVertex/GroundDecalFragment",
+    "draw": "api5102 drawPrimitives Triangle 36 vertices x 32364 instances",
+    "fragmentShaderCostSharePercentOfSavedReplay": 16.701899127726964,
+    "limits": "The replay reports shader cost and stage intervals, not per-operation ISA, hoisting status, or costs under current 962637/G01. HIGH_QUALITY/shadow compile defines are not decoded from rps71 in these saved tables."
+  },
+  "originalGLSL": {
+    "file": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/cont/base/springcontent/shaders/GLSL/GroundDecalsFragProg.glsl",
+    "flatCorners": "line44 flat in vTranformedPos[5]",
+    "barycentric": "lines91-108: v0=p2-p0, v1=p1-p0, v2=p-p0, dot00/dot01/dot11, reciprocal denominator, dot02/dot12, then s/t/q",
+    "projection": "lines299-316: tests BL/TL/TR then TR/BR/BL; second call only after first fails",
+    "distanceU": "lines377-380: if vUVWrapDist>0 compute corner-midpoint distance / vUVWrapDist"
+  },
+  "currentNative": {
+    "file": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+    "flatCorners": "line11 p0-p4, data2, data3 are flat; GroundDecalVertex line382 exports p0-p4 from vertex-computed transformed corners",
+    "barycentric": "lines433-450 same dot/reciprocal formula",
+    "projection": "lines638-655 first triangle, conditional second",
+    "distanceU": "lines706-710 only when wrap distance>0",
+    "sourceCorrespondence": "Current native mirrors original formulas; source visibly leaves Gram terms and u in fragment code. This alone does not establish final compiled instruction placement."
+  },
+  "invariantSplit": {
+    "fragmentInvariantForOneInstance": [
+      "p0-p4 transformed corners are flat",
+      "vUVWrapDist is flat data2.y",
+      "for each fixed projection triangle, v0, v1, dot00, dot01, dot11, and invDenom depend only on flat corners",
+      "distance u uses only flat corners and vUVWrapDist when positive"
+    ],
+    "fragmentDependent": [
+      "worldPos and projected p depend on terrain depth and fragment position",
+      "v2=p-p0, dot02, dot12, barycentric s/t/q and first/second triangle acceptance remain per fragment",
+      "UV wrap offset/fract after projection remains dependent on relUV"
+    ],
+    "callMultiplicity": "A projected fragment calls GetTriangleBarycentric once; it calls a second time only if the first triangle rejects. u distance is evaluated only when vUVWrapDist>0. Actual branch/fragment counts were not saved."
+  },
+  "hoistOptions": [
+    {
+      "name": "two-triangle Gram terms",
+      "proposedFlatPayload": "4 float32 values per triangle (dot00,dot01,dot11,invDenom) = 8 floats/32 bytes per vertex output; fragment still computes v0/v1 for dot02/dot12 unless more vectors are carried",
+      "tradeoff": "Moves three dot3 products and denominator reciprocal per triangle from each fragment path to vertex work repeated per vertex invocation. G01 indexed mode presents eight distinct corner values rather than 36 submitted vertices, but hardware vertex-cache behavior and actual extra varying/register cost are unmeasured."
+    },
+    {
+      "name": "UV-wrap distance u",
+      "proposedFlatPayload": "one float32/4 bytes per vertex output; compute only under the original vUVWrapDist>0 condition",
+      "tradeoff": "Moves midpoint distance (including square root) and divide out of the fragment path for wrapping decals, but adds vertex work and a flat varying; captured wrap-positive prevalence is unknown."
+    }
+  ],
+  "notEstablished": [
+    "No saved Native compiled ISA/disassembly or operation-level profile proves compiler already hoisted or did not hoist these invariants.",
+    "No actual shader invocation, branch, wrap-positive, or register/varying occupancy counts support a speedup estimate.",
+    "Stage transfer and floating-point evaluation can change boundary tests; contract/parity analysis is separate."
+  ],
+  "comparisonToHeldMinimap": "Minimap conditioning skips one explicit-LOD0 fetch only for non-explosion fragments and requires a known eligible texture domain. Gram hoist targets calculation on every projected fragment (one or two triangle calls), whereas u hoist only targets wrap-positive cases. The saved data cannot rank their actual benefit or prove either completed; choose one future gated scope rather than combine them."
+}

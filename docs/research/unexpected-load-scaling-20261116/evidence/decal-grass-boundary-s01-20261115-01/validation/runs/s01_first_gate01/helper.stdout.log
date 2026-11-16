@@ -1,0 +1,1 @@
+PASS cases=128 color_depth_stencil_byte_identical=128 visible_color_depth_stencil_writes=128 Metal4_checkpoint_and_split=1 actual_fragment_producer=1 grass_only_producer_value_witness=128 snapshot_copy_witness=128 synthetic_protocol_not_full_game=1

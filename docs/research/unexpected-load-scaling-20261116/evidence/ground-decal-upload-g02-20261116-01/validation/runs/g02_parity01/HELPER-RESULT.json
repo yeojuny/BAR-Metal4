@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "passLineObserved": true,
+  "metalErrorLines": [],
+  "elapsedSeconds": 0.8330852080252953,
+  "helperPID": 61451,
+  "sourceSHA256": "d46561400ea53aee6f88613cf0cd89d64c2de3c648943e8fab74931da594b916",
+  "helperSHA256": "00d8233a2c1d0235f3d39e92fe678a8d1f3ff7ca82217d9bbd7e8285234b684b",
+  "environment": {
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "1",
+    "MTL_LOG_TO_STDERR": "1"
+  },
+  "stdout": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/validation/runs/g02_parity01/helper.stdout.log",
+  "stderr": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/validation/runs/g02_parity01/helper.stderr.log"
+}

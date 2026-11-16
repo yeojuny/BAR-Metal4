@@ -1,0 +1,98 @@
+{
+  "status": "PASS_ALL_6_MATCH_40_ROWS",
+  "comparedRowFields": [
+    "start_simulation",
+    "end_simulation",
+    "units",
+    "camera",
+    "speed_a",
+    "speed_b",
+    "paused"
+  ],
+  "comparedBattleFields": [
+    "battleInitialState",
+    "battleCameraOpen",
+    "officialCreated",
+    "officialDestroyed",
+    "battleCommand",
+    "gameSeed",
+    "benchmarkSeed",
+    "battleMap"
+  ],
+  "results": [
+    {
+      "run": "A1_OFF",
+      "rows": 40,
+      "rowsMatchA1": true,
+      "sharedBattleFieldsMatchA1": true,
+      "simulation": [
+        540,
+        1740
+      ],
+      "rawFrameSHA256": "0b12eebbef20b0f41bd31ee0649bb60f9c4795314b3572e911a8c1fa25da8dc2",
+      "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A1_OFF/scene.png"
+    },
+    {
+      "run": "B1_ON",
+      "rows": 40,
+      "rowsMatchA1": true,
+      "sharedBattleFieldsMatchA1": true,
+      "simulation": [
+        540,
+        1740
+      ],
+      "rawFrameSHA256": "01b5a35ca8a9994493698e1520feb3a2670e885522ab83f96aff4eac8ea8cc08",
+      "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B1_ON/scene.png"
+    },
+    {
+      "run": "B2_ON",
+      "rows": 40,
+      "rowsMatchA1": true,
+      "sharedBattleFieldsMatchA1": true,
+      "simulation": [
+        540,
+        1740
+      ],
+      "rawFrameSHA256": "d31078c18cae2a592c8b17b3136b17b3458396c5d71bf56cc442e2c5ffc30e0a",
+      "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B2_ON/scene.png"
+    },
+    {
+      "run": "A2_OFF",
+      "rows": 40,
+      "rowsMatchA1": true,
+      "sharedBattleFieldsMatchA1": true,
+      "simulation": [
+        540,
+        1740
+      ],
+      "rawFrameSHA256": "c34eac38b7a6b5f8005cf509532cd5aef20273afb7af741870a41eeb529ee437",
+      "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A2_OFF/scene.png"
+    },
+    {
+      "run": "A3_OFF",
+      "rows": 40,
+      "rowsMatchA1": true,
+      "sharedBattleFieldsMatchA1": true,
+      "simulation": [
+        540,
+        1740
+      ],
+      "rawFrameSHA256": "53c6f501a6248db60c4212800b137f4d16bce1d1678f8129ee3c1ff47c8e2ccb",
+      "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A3_OFF/scene.png"
+    },
+    {
+      "run": "B3_ON",
+      "rows": 40,
+      "rowsMatchA1": true,
+      "sharedBattleFieldsMatchA1": true,
+      "simulation": [
+        540,
+        1740
+      ],
+      "rawFrameSHA256": "65e367f8ea624c45b5d66e9756bd2c204db380c1cacb13d5a4fa5a80198b2727",
+      "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B3_ON/scene.png"
+    }
+  ],
+  "rawRunsSHA256": "b405dfa3f0a48034aef3d88767b1f634f76e0fab33281dde034d90ab4f1680f2",
+  "measurementWindowMetadataClarification": "LAUNCH.measurementWindow retains stale planned sim600..1800 metadata; actual RUNS/RESULT 40 bins and CLEAN-READY are sim540..1740 for all six. Raw launch files retained unchanged."
+}

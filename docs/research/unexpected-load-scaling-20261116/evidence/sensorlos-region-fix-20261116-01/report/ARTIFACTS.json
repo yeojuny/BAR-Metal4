@@ -1,0 +1,30 @@
+{
+  "REPORT.html": {
+    "bytes": 17123,
+    "sha256": "769746eaf2f7076a77f889e482ecfee784614e7208e0ab34f1afebe2bbc9d68f"
+  },
+  "RESULT.json": {
+    "bytes": 19181,
+    "sha256": "e3555a9502c906779b683ceece48dd817213c7e6349c466da545b9f3b13a9290"
+  },
+  "COMPARABILITY.json": {
+    "bytes": 11441,
+    "sha256": "9c1187e8735e48bcd2094d29f4fba6fcd88c96b4bc3378bed479f8640c2b3f5a"
+  },
+  "FPS.png": {
+    "bytes": 43521,
+    "sha256": "74a645cf10937db199a22e926e56dfe52f624ca8fdea9d92df61736a52c3e1ba"
+  },
+  "FPS.svg": {
+    "bytes": 39913,
+    "sha256": "ca585d18397d7f13f68a4a02326d847f2765866d8a55cb6ddb005eb65bc63bda"
+  },
+  "SCENES.png": {
+    "bytes": 10586156,
+    "sha256": "98e4be3465aa7e72274031e27f06596653b7384e3c1dce2320baf5e486b745ee"
+  },
+  "SCENES-preview.jpg": {
+    "bytes": 780202,
+    "sha256": "f37d21c32213ba193d4eb4acf4f6bc1b069c4b02cd58bd8921ee8b5e0143ae46"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "status": "STOP_REVIEW_REQUIRED",
+  "games": 1,
+  "helperResult": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/validation/runs/s01_first_gate01/HELPER-RESULT.json",
+  "gameResult": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/validation/runs/s01_first_gate01/GAME-RESULT.json"
+}

@@ -1,0 +1,451 @@
+{
+  "status": "PASS",
+  "independentComparisons": {
+    "R01": {
+      "before": 47.46230828189746,
+      "after": 53.237233124631125,
+      "percent": 12.167391456045706,
+      "separateFreshComparison": true
+    },
+    "S01": {
+      "before": 53.69239266564326,
+      "after": 58.621092854933394,
+      "percent": 9.179513045698018,
+      "separateFreshComparison": true
+    },
+    "G01": {
+      "before": 58.58971802635571,
+      "after": 62.79891068338862,
+      "percent": 7.1841831618637775,
+      "separateFreshComparison": true
+    },
+    "G02": {
+      "before": 62.94113892965613,
+      "after": 62.88799475506419,
+      "percent": -0.08443472027306331,
+      "separateFreshComparison": true
+    }
+  },
+  "rawIntervalFiles": [
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2278,
+      "originalAndPublishedSHA256": "58beb28651633c108c00e722577abc88e9faa5ed6b6d6e9c7f757cf39bc03aed",
+      "role": "diagnostic-excluded-from-FPS"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_S01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 7417,
+      "originalAndPublishedSHA256": "fe2be8d0a0a4ebe18e2650ec8c40af438a5f01c57b71220b1df04f909fe1ba1d",
+      "role": "historical-single-run"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A1_BASE/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2147,
+      "originalAndPublishedSHA256": "9a89ad159e658dffbe90936731df9ef268b17add44660e3cb9266be86a94c814",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A2_BASE/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2147,
+      "originalAndPublishedSHA256": "6f50a25833e0c06ccba236b3da213d52782dd3123410ee32af185427ccf4d08c",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A3_BASE/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2147,
+      "originalAndPublishedSHA256": "2535007deb60b908ca43c87b18af8d9178019da081527e1a117c34d5794ad345",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B1_S01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2345,
+      "originalAndPublishedSHA256": "039c18421b1b7a75ab50701a62a8f6569942a4e467600f3c37672d8e0c558266",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B2_S01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2344,
+      "originalAndPublishedSHA256": "c933fc143e0ac0ad554dd8910ff75874e3ac0cee76a406007d710577174e2345",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B3_S01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2343,
+      "originalAndPublishedSHA256": "40e26c4c9856a20a63cf61087230a48948c2acea0e4d3fff66c55923f8382f3e",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_valid01/validation_paced/preparation/runs/V_S01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2152,
+      "originalAndPublishedSHA256": "4213338c02989c09566bc009ddcba9bf645df41fc3451da9c06448f18184e009",
+      "role": "diagnostic-excluded-from-FPS"
+    },
+    {
+      "file": "evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_valid02/validation_paced/preparation/runs/V_S01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2335,
+      "originalAndPublishedSHA256": "95a60d7d2b74e5e5448dc4338aa9f2b10e76b9b83834199261bd7aea0d87ccb7",
+      "role": "diagnostic-excluded-from-FPS"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_G01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 7319,
+      "originalAndPublishedSHA256": "0953ab04a6a64e72bb83b6e4c28975ad5f36bc3de801a4394393adadc4da46b7",
+      "role": "historical-single-run"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A1_OFF/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2343,
+      "originalAndPublishedSHA256": "0b12eebbef20b0f41bd31ee0649bb60f9c4795314b3572e911a8c1fa25da8dc2",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A2_OFF/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2342,
+      "originalAndPublishedSHA256": "c34eac38b7a6b5f8005cf509532cd5aef20273afb7af741870a41eeb529ee437",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/A3_OFF/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2343,
+      "originalAndPublishedSHA256": "53c6f501a6248db60c4212800b137f4d16bce1d1678f8129ee3c1ff47c8e2ccb",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B1_ON/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2510,
+      "originalAndPublishedSHA256": "01b5a35ca8a9994493698e1520feb3a2670e885522ab83f96aff4eac8ea8cc08",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B2_ON/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2513,
+      "originalAndPublishedSHA256": "d31078c18cae2a592c8b17b3136b17b3458396c5d71bf56cc442e2c5ffc30e0a",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_clean01/clean_paced/preparation/runs/B3_ON/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2511,
+      "originalAndPublishedSHA256": "65e367f8ea624c45b5d66e9756bd2c204db380c1cacb13d5a4fa5a80198b2727",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_valid01/validation_paced/preparation/runs/V_G01/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2491,
+      "originalAndPublishedSHA256": "de7a18bf5724f66de2426b25fd5030f32b8e8e2ce907c6046e54e2ec4b0e63ca",
+      "role": "diagnostic-excluded-from-FPS"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/low_diagnostic01/ordinary_paced/preparation/runs/O1_G02/TERRAIN211-FRAMES.csv",
+      "intervalRows": 7394,
+      "originalAndPublishedSHA256": "ec47646003e311d59081d4349ff5b675d73f4f1a886a68d04d4699f7345d006e",
+      "role": "diagnostic-excluded-from-FPS"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/A1_OFF/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2518,
+      "originalAndPublishedSHA256": "7115d04f653f1fb08e3e39a448eac6d925226dfc3769f74bc6bd1934ebc29340",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/A2_OFF/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2515,
+      "originalAndPublishedSHA256": "ee05e78f88a99b1bb5c72e92f0b7e9b61d21b2a3b2ce10557c2e89775f3ab642",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/A3_OFF/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2517,
+      "originalAndPublishedSHA256": "c825ebd5a87e963d8401618156c3bf66928fd0d2a4883e7c8b1bddb39c842b8f",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/B1_ON/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2513,
+      "originalAndPublishedSHA256": "6c940079503f8ece90d17bba07145146708c84279d898149b3c15d49be4b6df7",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/B2_ON/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2516,
+      "originalAndPublishedSHA256": "ab9df36ebf9aab54c5a028a722abab3e2f61a08ea029e424057d74f2c54980d1",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_clean01/clean_paced/preparation/runs/B3_ON/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2515,
+      "originalAndPublishedSHA256": "90a8d2df27c9645015638884e7ea2cba3e3607f1afa9dfc5a46594d641a9f168",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_valid01/validation_paced/preparation/runs/V_G02/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2473,
+      "originalAndPublishedSHA256": "7e3158c646e2456ea8de7b2a5af2465a07cf573aba6cd38b7ba96d22129e8173",
+      "role": "diagnostic-excluded-from-FPS"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR/TERRAIN211-FRAMES.csv",
+      "intervalRows": 7405,
+      "originalAndPublishedSHA256": "39c76e76c5807d1fb52c0ef5aaddae8043dbe7d23309d7d951bed552ae4f0867",
+      "role": "historical-single-run"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A1_BASE/TERRAIN211-FRAMES.csv",
+      "intervalRows": 1900,
+      "originalAndPublishedSHA256": "ee8e50178e1b40d6c7c305ec67e46abf66670038ffa8eea9240183a34a61b0dd",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A2_BASE/TERRAIN211-FRAMES.csv",
+      "intervalRows": 1898,
+      "originalAndPublishedSHA256": "8206c1ac9500a6319787016bbf8ee959d9890f444bf01db0df3e40b6e36f9683",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A3_BASE/TERRAIN211-FRAMES.csv",
+      "intervalRows": 1895,
+      "originalAndPublishedSHA256": "99807225da6dca3f1c3911d4a4068e7eec67efc216785f62b90a6e07da80c477",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B1_SENSOR/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2129,
+      "originalAndPublishedSHA256": "9a407495adce42edc62a1b8c1a3bbe9eeb7abd226f134c4cd9b45f5fa6ef4794",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B2_SENSOR/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2129,
+      "originalAndPublishedSHA256": "be781305302567da057f738dd64a819f9dfaaee28ec8689df42dcd6bdf33d85d",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B3_SENSOR/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2128,
+      "originalAndPublishedSHA256": "2fd35f002f43e1159cce51d05ea6dad603c53e31a0b41810908d608ee9b401d8",
+      "role": "clean-performance"
+    },
+    {
+      "file": "evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_valid01/validation_paced/preparation/runs/V_SENSOR/TERRAIN211-FRAMES.csv",
+      "intervalRows": 2145,
+      "originalAndPublishedSHA256": "6ed9f1c34d0737c9f7ad395beba189e44680ea1ec627ed550ee4ad01878ded7e",
+      "role": "diagnostic-excluded-from-FPS"
+    }
+  ],
+  "intervalFileCount": 34,
+  "allIntervalFilesByteIdentical": true,
+  "note": "This checks archival arithmetic/integrity only. No new game, GPU execution or measurement.",
+  "cleanRunChecks": [
+    {
+      "stage": "R01",
+      "run": "A1_BASE",
+      "sampleRows": 40,
+      "FPS": 47.502435147431164,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "R01",
+      "run": "A2_BASE",
+      "sampleRows": 40,
+      "FPS": 47.480936384789096,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "R01",
+      "run": "A3_BASE",
+      "sampleRows": 40,
+      "FPS": 47.40355331347211,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "R01",
+      "run": "B1_SENSOR",
+      "sampleRows": 40,
+      "FPS": 53.248669514100136,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "R01",
+      "run": "B2_SENSOR",
+      "sampleRows": 40,
+      "FPS": 53.2513305523893,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "R01",
+      "run": "B3_SENSOR",
+      "sampleRows": 40,
+      "FPS": 53.21169930740393,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "S01",
+      "run": "A1_BASE",
+      "sampleRows": 40,
+      "FPS": 53.69060418587769,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "S01",
+      "run": "A2_BASE",
+      "sampleRows": 40,
+      "FPS": 53.69328690552605,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "S01",
+      "run": "A3_BASE",
+      "sampleRows": 40,
+      "FPS": 53.69328690552605,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "S01",
+      "run": "B1_S01",
+      "sampleRows": 40,
+      "FPS": 58.65,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "S01",
+      "run": "B2_S01",
+      "sampleRows": 40,
+      "FPS": 58.61620680843345,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "S01",
+      "run": "B3_S01",
+      "sampleRows": 40,
+      "FPS": 58.59707175636673,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G01",
+      "run": "A1_OFF",
+      "sampleRows": 40,
+      "FPS": 58.60146423230071,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G01",
+      "run": "A2_OFF",
+      "sampleRows": 40,
+      "FPS": 58.560362366015696,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G01",
+      "run": "A3_OFF",
+      "sampleRows": 40,
+      "FPS": 58.60732748075073,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G01",
+      "run": "B1_ON",
+      "sampleRows": 40,
+      "FPS": 62.76715243006328,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G01",
+      "run": "B2_ON",
+      "sampleRows": 40,
+      "FPS": 62.82957962010259,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G01",
+      "run": "B3_ON",
+      "sampleRows": 40,
+      "FPS": 62.8,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G02",
+      "run": "A1_OFF",
+      "sampleRows": 40,
+      "FPS": 62.96555434986946,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G02",
+      "run": "A2_OFF",
+      "sampleRows": 40,
+      "FPS": 62.90314342890758,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G02",
+      "run": "A3_OFF",
+      "sampleRows": 40,
+      "FPS": 62.95471901019134,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G02",
+      "run": "B1_ON",
+      "sampleRows": 40,
+      "FPS": 62.86100062639234,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G02",
+      "run": "B2_ON",
+      "sampleRows": 40,
+      "FPS": 62.91084683512074,
+      "frameIntervalSHA256MatchesResult": true
+    },
+    {
+      "stage": "G02",
+      "run": "B3_ON",
+      "sampleRows": 40,
+      "FPS": 62.89213680367949,
+      "frameIntervalSHA256MatchesResult": true
+    }
+  ],
+  "cleanValidRuns": 24,
+  "cleanSampleRows": 960,
+  "ordinaryRuns": [
+    {
+      "run": "O1_SENSOR",
+      "FPS": 185.15462632441086,
+      "draws": 7406,
+      "seconds": 39.999000549,
+      "sampleRows": 40,
+      "intervalIntegrity": true
+    },
+    {
+      "run": "O1_S01",
+      "FPS": 185.46390215154858,
+      "draws": 7418,
+      "seconds": 39.997001648,
+      "sampleRows": 40,
+      "intervalIntegrity": true
+    },
+    {
+      "run": "O1_G01",
+      "FPS": 183.0,
+      "draws": 7320,
+      "seconds": 40.0,
+      "sampleRows": 40,
+      "intervalIntegrity": true
+    }
+  ],
+  "ordinarySampleRows": 120,
+  "simmersS01ToG01": {
+    "all40RowDeltaDraws": -98,
+    "selectedPosthocSeconds": [
+      17,
+      23
+    ],
+    "selectedSimulation": [
+      810,
+      990
+    ],
+    "selectedSixRowsDeltaDraws": -86,
+    "remaining34RowsDeltaDraws": -12,
+    "interpretation": "Descriptive concentration only, not cause attribution or a sample exclusion rule."
+  }
+}

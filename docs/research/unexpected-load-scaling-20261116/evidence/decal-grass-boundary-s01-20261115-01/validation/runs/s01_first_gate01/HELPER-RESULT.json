@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "passLineObserved": true,
+  "metalErrorLines": [],
+  "elapsedSeconds": 1.0914738330175169,
+  "helperPID": 28777,
+  "sourceSHA256": "4cc76cd75c42bf530e2ce819080ed17d02e88da648f51f4ca1b0995caccc5633",
+  "helperSHA256": "5d77046a6573851988a376ea6aa357b4d89108536577beb4652a1cb37c2d8195",
+  "environment": {
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "1",
+    "MTL_LOG_TO_STDERR": "1"
+  },
+  "stdout": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/validation/runs/s01_first_gate01/helper.stdout.log",
+  "stderr": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/validation/runs/s01_first_gate01/helper.stderr.log"
+}

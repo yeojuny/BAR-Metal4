@@ -1,0 +1,12 @@
+{
+  "status": "CAPTURED",
+  "arm": "P_S01_CAPTURE",
+  "capture": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+  "engineNormalExit": true,
+  "diagnosticFPS": null,
+  "diagnosticParserError": true,
+  "performanceAccepted": false,
+  "actualChildS01Flag": "1",
+  "actualChildProbeFlag": "1",
+  "previousCleanPoolsUnchanged": true
+}

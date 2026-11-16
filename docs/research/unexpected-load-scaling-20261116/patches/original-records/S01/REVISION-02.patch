@@ -1,0 +1,267 @@
+--- attempt01/rts/Rendering/Metal4/Metal4Grass.h
++++ r2/rts/Rendering/Metal4/Metal4Grass.h
+@@ -3,6 +3,7 @@
+ #include "Rendering/Backend/NativeWorldDrawPlan167.h"
+ #include "Metal4NativeEffectState.h"
+ #include "Metal4SourceImage.h"
++#include "Metal4GrassBoundaryPolicyS01.h"
+ #include "Rendering/Backend/NativeGrassData.h"
+ namespace rendering::metal4 {
+ // Optional S01 proof: the exact retained producer is complete or encoded
+@@ -20,6 +21,9 @@
+ 	void EncodeDependencies(id<MTL4CommandBuffer>);
+ 	void EncodeDraw(size_t,id<MTL4RenderCommandEncoder>);
+ 	void DidComplete();
++ void EnableBoundaryDiagnosticsS01() noexcept;
++ GrassReadDiagnosticS01 BoundaryDiagnosticS01() const noexcept;
++ size_t VisibleDrawCountS01() const noexcept;
+  bool CaptureBoundaryCheckpointS01(uint64_t submission,const std::array<id<MTLTexture>,3>& attachments) noexcept;
+  bool CanSplitBoundaryS01(uint64_t submission,const std::array<id<MTLTexture>,3>& attachments) const noexcept;
+ private:
+--- attempt01/rts/Rendering/Metal4/Metal4Grass.mm
++++ r2/rts/Rendering/Metal4/Metal4Grass.mm
+@@ -35,6 +35,8 @@
+ 	};
+ 	std::vector<Draw> draws;TerrainOwnerRoster firstOwners;bool dependencies=false,completed=false;
+  uint64_t checkpointSubmission=0;
++ mutable GrassReadDiagnosticS01 boundaryDiagnostic;
++ bool recordBoundaryDiagnostic=false;
+  std::array<id<MTLTexture>,3> checkpointAttachments{};
+  bool InspectBoundaryS01(const std::array<id<MTLTexture>,3>& attachments) const;
+ 
+@@ -74,45 +76,58 @@
+ }
+ }
+ bool PreparedGrass::Impl::InspectBoundaryS01(const std::array<id<MTLTexture>,3>& attachments) const {
+- if(!dependencies||completed)return false;
++ if(recordBoundaryDiagnostic)boundaryDiagnostic={0,0,0};
++ const auto reject=[&](uint32_t reason){if(recordBoundaryDiagnostic)boundaryDiagnostic.reasonBits=reason;return false;};
++ if(!dependencies||completed)return reject(GrassReadLifecycleS01);
+  std::array<GrassStorageS01,3> writes;
+  for(size_t n=0;n<writes.size();++n)writes[n]=GrassStorage(attachments[n]);
+  size_t visible=0;
+- for(const auto& d:draws){
++ for(size_t drawIndex=0;drawIndex<draws.size();++drawIndex){
++  const auto& d=draws[drawIndex];if(recordBoundaryDiagnostic)boundaryDiagnostic.drawIndex=drawIndex;
+   if(!d.visible)continue;
+-  if(d.encoded)return false;
++  if(d.encoded)return reject(GrassReadAlreadyEncodedS01);
+   ++visible;
+   for(unsigned slot=1;slot<6;++slot){
+    if(slot==3&&d.source->defines[9]!=1)continue;
++   if(recordBoundaryDiagnostic)boundaryDiagnostic.slot=slot;
+    auto texture=d.vertexImages[slot];
+    if(!texture||texture.device!=attachments[0].device||texture.textureType!=MTLTextureType2D||
+-    texture.sampleCount!=1||!GrassReadDisjointS01(GrassStorage(texture),writes)||
+-    !d.checkpointQueries[slot]||!d.checkpointQueries[slot]())return false;
++    texture.sampleCount!=1)return reject(GrassReadTextureS01);
++   if(!GrassReadDisjointS01(GrassStorage(texture),writes))return reject(GrassReadStorageS01);
++   if(!d.checkpointQueries[slot])return reject(GrassReadUnknownProviderS01);
++   if(!d.checkpointQueries[slot]())return reject(GrassReadProducerS01);
+   }
+   // All five buffers originate from immutable NativeBufferSnapshot uploads
+   // or this draw's 656-byte constants, never a GPU writable source. The source
+   // snapshots, buffer objects and full ranges survive the common GPU ticket.
+   for(unsigned n=0;n<d.immutableBuffers.size();++n){
+    if(n==3&&d.source->defines[13]!=1)continue;
+-   auto buffer=d.immutableBuffers[n];
++   if(recordBoundaryDiagnostic)boundaryDiagnostic.slot=n;auto buffer=d.immutableBuffers[n];
+    if(!buffer||buffer.device!=attachments[0].device||buffer.heap||[buffer isAliasable]||
+-    !buffer.gpuAddress||!buffer.length||buffer.gpuAddress>UINT64_MAX-buffer.length)return false;
++    !buffer.gpuAddress||!buffer.length||buffer.gpuAddress>UINT64_MAX-buffer.length)return reject(GrassReadBufferS01);
+   }
+  }
+- return visible!=0;
++ if(!visible)return reject(GrassReadNoVisibleS01);
++ if(recordBoundaryDiagnostic)boundaryDiagnostic={0,0,0};return true;
++}
++void PreparedGrass::EnableBoundaryDiagnosticsS01() noexcept {impl->recordBoundaryDiagnostic=true;}
++GrassReadDiagnosticS01 PreparedGrass::BoundaryDiagnosticS01() const noexcept {return impl->boundaryDiagnostic;}
++size_t PreparedGrass::VisibleDrawCountS01() const noexcept {
++ return std::count_if(impl->draws.begin(),impl->draws.end(),[](const auto& draw){return draw.visible;});
+ }
+ bool PreparedGrass::CaptureBoundaryCheckpointS01(uint64_t submission,
+  const std::array<id<MTLTexture>,3>& attachments) noexcept {
+- if(!submission||impl->checkpointSubmission)return false;
++ if(!submission||impl->checkpointSubmission){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadSubmissionS01;return false;}
+  try{
+   if(!impl->InspectBoundaryS01(attachments))return false;
+   impl->checkpointSubmission=submission;impl->checkpointAttachments=attachments;return true;
+- }catch(...){return false;} // Optional proof failure cannot change the original draw.
++ }catch(...){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadExceptionS01;return false;} // Optional proof failure retains the original draw.
+ }
+ bool PreparedGrass::CanSplitBoundaryS01(uint64_t submission,
+  const std::array<id<MTLTexture>,3>& attachments) const noexcept {
+- if(!submission||impl->checkpointSubmission!=submission||impl->checkpointAttachments!=attachments)return false;
+- try{return impl->InspectBoundaryS01(attachments);}catch(...){return false;}
++ if(!submission||impl->checkpointSubmission!=submission){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadSubmissionS01;return false;}
++ if(impl->checkpointAttachments!=attachments){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadAttachmentsS01;return false;}
++ try{return impl->InspectBoundaryS01(attachments);}catch(...){if(impl->recordBoundaryDiagnostic)impl->boundaryDiagnostic.reasonBits=GrassReadExceptionS01;return false;}
+ }
+ struct GrassGPU::Impl {
+ 	struct Cached {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> buffer=nil;};
+--- attempt01/rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h
++++ r2/rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h
+@@ -26,6 +26,32 @@
+  uint64_t encodedSubmission,bool producerEncodingFinished) noexcept {
+  return submission&&(completed||(encodedSubmission==submission&&producerEncodingFinished));
+ }
++// Exact NEXT boundary, not the distinct Shield model-depth producer. The same
++// local Pass165 decision controls keepMRTBoundary165(0); nextMRTKeep220 is empty
++// at entry and no GPU call intervenes after the Grass suffix.
++struct GrassOpaqueEndS01 {
++ bool modelDepth=false,opaque=false;
++ size_t phases=0;
++ bool firstDeferred=false,pass165=false;
++};
++inline uint32_t GrassOpaqueEndRejectionsS01(const GrassOpaqueEndS01& end) noexcept {
++ return (end.modelDepth?1u:0u)|(!end.opaque?2u:0u)|(!end.phases?4u:0u)|
++  (!end.firstDeferred?8u:0u)|(end.pass165?16u:0u);
++}
++// At most one diagnostic per combat band, and never outside the measured
++// simulation interval. Prefer the first actual Grass packet in each band; a
++// final frame with no Grass may still report zero. Clean mode is off.
++inline unsigned GrassDiagnosticSampleS01(uint64_t simulation,bool hasGrass) noexcept {
++ if(simulation<540||simulation>1740||(!hasGrass&&simulation!=1740))return 0;
++ return simulation<900?1u:simulation<1590?2u:4u;
++}
++enum GrassReadRejectionS01 : uint32_t {
++ GrassReadNotInspectedS01=1,GrassReadLifecycleS01=2,GrassReadAlreadyEncodedS01=4,
++ GrassReadTextureS01=8,GrassReadStorageS01=16,GrassReadUnknownProviderS01=32,
++ GrassReadProducerS01=64,GrassReadBufferS01=128,GrassReadNoVisibleS01=256,
++ GrassReadExceptionS01=512,GrassReadSubmissionS01=1024,GrassReadAttachmentsS01=2048
++};
++struct GrassReadDiagnosticS01 {uint32_t reasonBits=GrassReadNotInspectedS01;size_t drawIndex=0;unsigned slot=0;};
+ struct GrassStorageS01 {uintptr_t root=0;bool independentlyOwned=false;};
+ inline bool GrassReadDisjointS01(const GrassStorageS01& read,
+  const std::array<GrassStorageS01,3>& writes) noexcept {
+--- attempt01/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ r2/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -5030,15 +5030,34 @@
+   const size_t firstGrassS01=GrassSuffixS01(preUnitDraws,classifyGrassPrefixS01);
+   const std::array<id<MTLTexture>,3> grassAttachmentsS01{
+    mainAttachments->Color(),mainAttachments->Depth(),mainAttachments->Stencil()};
+-  const bool grassPlanS01=grassBoundaryEnabledS01&&grass&&groundDecals&&
+-   firstGrassS01!=NoGrassBoundaryS01&&modelGBuffer&&modelGBuffer->RequiresEncode()&&
+-   mainGround.source->groundInvoked&&!terrainCopyCoordinates&&terrainSnapshot->SingleImage()&&
+-   !terrainSnapshot->SamplesImage()&&!scopedPair220&&!offscreenSource&&!continuation&&
+-   !borrowedScene217.borrowed&&loadedMainPass165()&&
+-   std::all_of(preDecalDraws.begin(),preDecalDraws.end(),[](const auto& draw){return draw.kind==LuaDrawKind::GameDecal;});
++  const GrassOpaqueEndS01 grassEndS01{bool(modelGBuffer),bool(opaqueModels),
++   opaqueModels?opaqueModels->PhaseCount():0,
++   opaqueModels&&opaqueModels->PhaseCount()&&opaqueModels->IsDeferredPhase(0),pass165Enabled};
++  const uint32_t grassEndRejectS01=GrassOpaqueEndRejectionsS01(grassEndS01);
++  // Reason bits are exactly the admission predicates, not a second, looser
++  // diagnostic gate. The producer/storage checks remain in PreparedGrass.
++  uint32_t grassPlanRejectS01=grassBoundaryEnabledS01?0u:1u;
++  if(grassBoundaryEnabledS01){
++   if(!grass)grassPlanRejectS01|=2;
++   if(!groundDecals)grassPlanRejectS01|=4;
++   if(firstGrassS01==NoGrassBoundaryS01)grassPlanRejectS01|=8;
++   if(grassEndRejectS01)grassPlanRejectS01|=16;
++   if(!mainGround.source->groundInvoked||terrainCopyCoordinates||!terrainSnapshot->SingleImage()||terrainSnapshot->SamplesImage())grassPlanRejectS01|=32;
++   if(scopedPair220)grassPlanRejectS01|=64;
++   if(offscreenSource||continuation)grassPlanRejectS01|=128;
++   if(borrowedScene217.borrowed||!loadedMainPass165())grassPlanRejectS01|=256;
++   if(!std::all_of(preDecalDraws.begin(),preDecalDraws.end(),[](const auto& draw){return draw.kind==LuaDrawKind::GameDecal;}))grassPlanRejectS01|=512;
++  }
++  const bool grassPlanS01=grassPlanRejectS01==0;
+   // Capture BEFORE the existing snapshot. The only subsequent A work admitted
+   // above is GameDecal, GroundDecal, fixed GroundFlashes/Sky and this prefix.
+   // All external writes stay in the exact three non-aliased main attachments.
++#ifdef RECOIL_METAL4_LIVE_SCENE
++  static const bool grassProbeS01=[](){const char* v=std::getenv("BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE");return v&&std::strcmp(v,"1")==0;}();
++  static unsigned grassProbeMaskS01=0;
++  const unsigned grassProbeBitS01=grassProbeS01&&grassBoundaryEnabledS01?GrassDiagnosticSampleS01(frame.simulationFrame,grass&&grass->DrawCount()!=0):0;
++  if(grassProbeBitS01&&!(grassProbeMaskS01&grassProbeBitS01)&&grass)grass->EnableBoundaryDiagnosticsS01();
++#endif
+   const bool grassCheckpointS01=grassPlanS01&&grass->CaptureBoundaryCheckpointS01(sourceSubmission,grassAttachmentsS01);
+   bool grassSplitS01=false;
+ 		[encoder endEncoding];
+@@ -5284,7 +5303,8 @@
+ 		setupViewport();environment->EncodeSky(encoder,false);if(environmentFrame.drawSky&&environmentFrame.sky->kind!=NativeSkyKind::OriginalNull)++result.skyDraws;
+ 
+ 		encodeLuaDraws(preUnitDraws,true);
+-  if(grassSplitS01)Require(modelGBuffer&&modelGBuffer->RequiresEncode(),"Grass S01 lost its existing model boundary");
++  if(grassSplitS01)Require(!modelGBuffer&&opaqueModels&&opaqueModels->PhaseCount()&&
++   opaqueModels->IsDeferredPhase(0)&&!pass165Enabled,"Grass S01 lost its existing first opaque MRT boundary");
+ #ifdef RECOIL_METAL4_LIVE_SCENE
+   static bool grassReportedS01=false,grassFallbackReportedS01=false;
+   if(grassBoundaryEnabledS01&&frame.sourceDrawFrame>=300&&
+@@ -5294,12 +5314,18 @@
+     unsigned(grassPlanS01),unsigned(grassCheckpointS01),unsigned(grassSplitS01),grass?grass->DrawCount():0);
+    if(grassSplitS01)grassReportedS01=true;else grassFallbackReportedS01=true;
+   }
++  if(grassProbeBitS01&&!(grassProbeMaskS01&grassProbeBitS01)){
++   grassProbeMaskS01|=grassProbeBitS01;
++   const auto read=grass?grass->BoundaryDiagnosticS01():GrassReadDiagnosticS01{};
++   LOG("[NativeGrassBoundaryS01ROI] simulation=%llu source_frame=%llu submission=%llu plan=%u checkpoint=%u split=%u plan_reject_bits=%u end_reject_bits=%u read_reject_bits=%u read_draw=%zu read_slot=%u grass_draws=%zu grass_visible=%zu model_depth=%u opaque=%u opaque_phases=%zu first_deferred=%u pass165=%u",
++    static_cast<unsigned long long>(frame.simulationFrame),static_cast<unsigned long long>(frame.sourceDrawFrame),static_cast<unsigned long long>(sourceSubmission),
++    unsigned(grassPlanS01),unsigned(grassCheckpointS01),unsigned(grassSplitS01),grassPlanRejectS01,grassEndRejectS01,read.reasonBits,read.drawIndex,read.slot,
++    grass?grass->DrawCount():0,grass?grass->VisibleDrawCountS01():0,unsigned(grassEndS01.modelDepth),unsigned(grassEndS01.opaque),grassEndS01.phases,unsigned(grassEndS01.firstDeferred),unsigned(grassEndS01.pass165));
++  }
+ #endif
+ 		encodingProbe.Select(Family176::Model);
+ 		if(modelGBuffer&&modelGBuffer->RequiresEncode()){
+-			[encoder endEncoding];
+-   if(grassSplitS01){encoder=nil;grassSplitFailureS01.armed=false;}
+-   modelGBuffer->Encode(command);result.modelGBufferDepthPasses=uint32_t(std::count_if(frame.shieldDepthFrame->modelPlan.phases.begin(),frame.shieldDepthFrame->modelPlan.phases.end(),[](const auto& phase){return phase.clearBefore;}));result.modelGBufferDepthPieces=uint32_t(modelGBuffer->PieceCount());
++			[encoder endEncoding];modelGBuffer->Encode(command);result.modelGBufferDepthPasses=uint32_t(std::count_if(frame.shieldDepthFrame->modelPlan.phases.begin(),frame.shieldDepthFrame->modelPlan.phases.end(),[](const auto& phase){return phase.clearBefore;}));result.modelGBufferDepthPieces=uint32_t(modelGBuffer->PieceCount());
+ 			encoder=[command renderCommandEncoderWithDescriptor:pass];Require(encoder!=nil,"Cannot restore world attachments after original model GBuffer depth");setupViewport();
+ 		}
+ 
+@@ -5333,7 +5359,13 @@
+ 			if(opaqueModels->IsDeferredPhase(n)){
+     const bool keep=nextMRTKeep220.has_value()?*nextMRTKeep220:keepMRTBoundary165(n);
+     nextMRTKeep220.reset();
+-				if(!keep&&encoder){[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;}
++				if(!keep&&encoder){[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];encoder=nil;
++     // This is the existing phase0 close certified before A. nextMRTKeep220
++     // was empty, and the same local !pass165Enabled forced keep=false.
++     // No GPU draw/dependency call occurs between the Grass suffix and here.
++     if(grassSplitS01&&n==0)grassSplitFailureS01.armed=false;
++    }
++    if(grassSplitS01&&n==0)Require(!keep&&!encoder&&!grassSplitFailureS01.armed,"Grass S01 first MRT close did not consume its encoder");
+ 				// Always execute the actual phase once. In the proven readonly case
+ 				// this retains prior-readability checks, empty consumer transitions,
+ 				// the distinct producer publication and the source ordinal advance.
+--- attempt01/tools/metal4-contracts/TestGrassBoundaryS01.cpp
++++ r2/tools/metal4-contracts/TestGrassBoundaryS01.cpp
+@@ -46,5 +46,36 @@
+  completed=true;
+  assert( GrassProducerRecordedS01(8,completed,7,true));
+  assert(!GrassProducerRecordedS01(0,completed,7,true));
+- std::cout<<"PASS "<<cases<<" exhaustive draw sequences and 12 physical-root/unknown cases; 6 producer-transition checks\n";
++ // The old Shield-depth route is a different successor. Exercise every
++ // combination of the five actual end facts, including an absent/empty list,
++ // a forward first phase and the Pass165 encoder-keep route.
++ size_t endCases=0;
++ for(unsigned mask=0;mask<16;++mask)for(size_t phases:{size_t{0},size_t{1},size_t{2}}){
++  const GrassOpaqueEndS01 facts{bool(mask&1),bool(mask&2),phases,bool(mask&4),bool(mask&8)};
++  const bool expected=(mask==6&&phases!=0);
++  assert((GrassOpaqueEndRejectionsS01(facts)==0)==expected);++endCases;
++ }
++ assert(GrassOpaqueEndRejectionsS01({true,true,2,true,false})&1u);
++ assert(GrassOpaqueEndRejectionsS01({false,false,0,false,false})==14u);
++ assert(GrassOpaqueEndRejectionsS01({false,true,2,true,true})==16u);
++ // Repeated frames and the entire game timeline cannot produce more than
++ // three ROI samples; startup/after-ROI frames emit none.
++ unsigned emittedMask=0;std::vector<unsigned> samples;
++ for(unsigned sim=0;sim<=2000;++sim)for(unsigned repeat=0;repeat<3;++repeat){
++  const auto bit=GrassDiagnosticSampleS01(sim,true);
++  if(bit&&!(emittedMask&bit)){emittedMask|=bit;samples.push_back(sim);}
++ }
++ assert((samples==std::vector<unsigned>{540,900,1590}));assert(emittedMask==7);
++ assert(GrassDiagnosticSampleS01(1740,true)==4&&GrassDiagnosticSampleS01(1741,true)==0);
++ unsigned emptyMask=0,delayedMask=0;std::vector<unsigned> emptySamples,delayedSamples;
++ for(unsigned sim=0;sim<=2000;++sim){
++  auto bit=GrassDiagnosticSampleS01(sim,false);
++  if(bit&&!(emptyMask&bit)){emptyMask|=bit;emptySamples.push_back(sim);}
++  const bool hasGrass=(sim>=560&&sim<900)||(sim>=920&&sim<1590)||sim>=1600;
++  bit=GrassDiagnosticSampleS01(sim,hasGrass);
++  if(bit&&!(delayedMask&bit)){delayedMask|=bit;delayedSamples.push_back(sim);}
++ }
++ assert((emptySamples==std::vector<unsigned>{1740}));
++ assert((delayedSamples==std::vector<unsigned>{560,920,1600}));
++ std::cout<<"PASS "<<cases<<" exhaustive draw sequences and 12 physical-root/unknown cases; 6 producer-transition checks; "<<endCases<<" successor cases; bounded ROI populated/empty/delayed timelines\n";
+ }

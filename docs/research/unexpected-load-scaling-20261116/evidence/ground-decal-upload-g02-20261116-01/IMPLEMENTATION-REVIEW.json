@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "status": "FINAL_SOURCE_REVIEW_PASS_NO_BLOCKERS",
+  "baseline": "G01 signed engine SHA256 962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "changedFiles": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4GroundDecal.mm",
+      "sha256": "a1d4636454303b3386e0a7ce3008e42cb3b2884ebfc5892b743dfe077472fee1"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4GroundDecalUploadPolicyG02.h",
+      "sha256": "32889ddd1398eada65007b4585a0fa9c8068906921119f756c97f89206d62f9a"
+    },
+    {
+      "path": "tools/metal4-contracts/TestGroundDecalUploadG02.cpp",
+      "sha256": "b829ffa1d32b6d661ea8f8f1fee2089d29264f373f01c9d09d71ead657d17f21"
+    }
+  ],
+  "unchangedProductionReferences": [
+    {
+      "path": "rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+      "sha256": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "sha256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521"
+    }
+  ],
+  "proof": [
+    "NativeGroundDecalUniforms is 368 bytes; the standard-layout/trivially-copyable G02 aggregate places indices exactly at offset 368. The logical upload is 440 bytes; Buffer copies that length, excluding the host structure's 448-byte tail padding. Direct aggregate initialization preserves the 368-byte uniform prefix and initializes the exact existing 36 UInt16 words (NativeGroundDecalUploadPolicyG02.h:9-24; Metal4GroundDecal.mm:183-189).",
+    "The packed validity predicate checks nonzero 16-byte-aligned base address, actual length >=440, and full-range overflow before adding 368. The encoder binds the uniform at the original base and uses base+368 only for packed indices, with indexCount36, UInt16 type, indexBufferLength72, baseVertex0 and baseInstance0. The installed MTL4 SDK declaration accepts these units and alignment (NativeGroundDecalUploadPolicyG02.h:25-32; Metal4GroundDecal.mm:72-85; MTL4RenderCommandEncoder.h:383-425).",
+    "G02 is exact-string-1 opt-in and also requires the existing G01 eligibility. When G02 is off, G01 is off, sampleCount differs from one, or instances are empty, the original uniform upload and applicable old draw/index path remain. No shader, fragment, pipeline, world renderer or runtime change is present (Metal4GroundDecal.mm:169-205).",
+    "Optional packed newBufferWithBytes returning nil or an invalid tail resumes mandatory 368-byte uniform Buffer followed by the existing optional G01 72-byte index Buffer, all before Encode. Buffer/AddAllocation, mandatory uniform and argument-table exceptions are not caught or converted into a fallback. A failed optional allocation does not publish an index address (Metal4GroundDecal.mm:16,183-208).",
+    "A successful packed buffer is held strongly by the prepared packet as indicesG01 and once by the existing RuntimeLease::AddAllocation; the uniform argument table points into the same immutable object. Existing event/feedback retirement or failure quarantine owns the allocation through the frame, with no new reuse token or cross-frame owner (Metal4GroundDecal.mm:38-46,183-208; Metal4RuntimeNative.mm:769-782,1154-1196; Metal4WorldRenderer.mm:5783-5807).",
+    "The PROBE path counts successful uniform/index Buffer calls, records same-object identity and offset, and now has three atomic one-shot categories: packed indexed, separate indexed, nonindexed. Clean PROBE=0 bypasses counter writes, atomics and LOG (Metal4GroundDecal.mm:89-99,173-180,207)."
+  ],
+  "ownerTestEvidence": [
+    "Owner reports CPU fixture PASS: 27,450 checks including 4,096 byte patterns, 368-byte prefix, 72-byte index tail, logical 440 versus host 448, eligibility and address/length/overflow boundaries. Reviewer did not execute it.",
+    "Owner reports installed SDK syntax check with -Werror PASS and empty log. Reviewer read validation/SDK-API-CHECK.mm: it exercises the same indexed selector and offset/length expression; this is not an engine compilation.",
+    "Owner reports full Metal4GroundDecal.mm syntax-only pass with exact remapped G01 compile flags and unchanged generated headers; no object/link/build/GPU execution. Existing signed/unsigned warnings are from unchanged source. See validation/OWNER-DIAGNOSTIC-SYNTAX.json."
+  ],
+  "remainingValidation": [
+    "CPU fixture covers policy bytes and bounds, not Objective-C allocation nil, AddAllocation throw or Arguments throw injected into production Prepare; those flows are source-proven but not fault-injection tested here.",
+    "Actual Metal API validation and packed-buffer GPU parity remain to be run by the owner before product adoption. G01 parity covers separate index buffer geometry, not this new sub-buffer address.",
+    "No measured FPS or memory improvement follows from this source review."
+  ],
+  "reviewerActions": [
+    "read-only source, fixture and SDK declaration inspection",
+    "source SHA-256 identity checks",
+    "no engine build, GPU, game, capture, profile or source edit"
+  ],
+  "ownerDiagnosticReview": {
+    "status": "PASS_NO_BLOCKER",
+    "source": "Metal4GroundDecal.mm:17-33,102-153,161-166,184-205,229-239",
+    "summary": "Only BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE=1 constructs the unique_ptr counter in GroundDecalGPU::Impl. A normal Session constructs the renderer and Impl even with zero GroundDecal Prepare calls. ClearResources increments its own count and does not reset totals. GroundDecalGPU destructor emits one owner-lifetime summary if the probe exists, including prepare=0; no packet references the counter.",
+    "countMeaning": "Prepare is attempted calls, nonempty is post-validation nonempty frames, eligible is G01 eligibility reached at index stage, packed/separate/nonindexed are prepared routes before final packet allocation/Encode; actual draw is proved separately by the existing bounded Encode marker. Buffer creations count nonnil MTLBuffers before label/AddAllocation; registration exceptions still propagate. allBuffers includes this GroundDecal helper’s atlas/instance buffers but excludes textures and other renderer families.",
+    "normalExitProof": "SceneBridge::Shutdown calls RequireRetiredGPUWork, then ClearStaticResources, then session.reset() (Metal4SceneBridge.cpp:2427-2476); WorldRenderer destructor joins CPU and CanSafelyDetach before Impl destruction (Metal4WorldRenderer.mm:1280-1284). Existing G01 normal engine.log has NativeTransientUpload177 destructor LOG records after the Metal4Scene retirement log, supporting logger availability at normal teardown. Forced process termination or abnormal shutdown does not guarantee a summary.",
+    "serializationAndClean": "DrawPrepared and ClearStaticResources use the same renderer access gate; external renderer destruction is serialized by contract (Metal4WorldRenderer.mm:1385-1396,2638-2640; NativeRendererAccessGate.h:8-14,41-81). PROBE=0 has no allocated counter, counter updates, summary LOG or atomics; null-pointer/boolean checks remain.",
+    "limits": "Owner-lifetime totals are not a counted-window sample. If a session replaces its renderer, each constructed owner produces its own summary; inspect every summary before claiming zero. The summary alone does not prove successful GPU drawing."
+  }
+}

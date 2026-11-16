@@ -1,0 +1,92 @@
+{
+  "status": "READ_ONLY_SCOPED_FINDING",
+  "provenance": {
+    "currentSource": "G01 signed 962637 source snapshot",
+    "savedCapture": "S01 9a44 native saved replay, prior binary; shader source files NativeGroundDecalShaders.h and NativeGameDecalShaders.h are byte-identical across S01 and G01 snapshots",
+    "tableCounts": {
+      "shaderCostRows": 139,
+      "shaderStageTimelineRows": 135,
+      "apiCalls": 10569
+    },
+    "rule": "Prior S01 replay shares are not current G01 measurements or GPU durations."
+  },
+  "savedNativeDrawAndResources": {
+    "ground": {
+      "pipeline": "rps71",
+      "api": "api5102",
+      "verticesPerInstance": 36,
+      "instances": 32364,
+      "fragmentInputTextureSlots": {
+        "0": "height, vertex stage",
+        "1": "terrain normal",
+        "2": "minimap",
+        "3": "shadow depth",
+        "4": "shadow color",
+        "5": "terrain depth",
+        "6": "decal atlas"
+      },
+      "capturedSlot2": "setTexture:155 atIndex:2, api5091",
+      "fragmentCostSharePercentOfS01Replay": 16.701899127726964
+    },
+    "game": {
+      "pipeline": "rps16",
+      "api": "api5070",
+      "verticesPerInstance": 96,
+      "instances": 3549,
+      "fragmentInputs": [
+        "minimap",
+        "info LOS",
+        "shadow depth",
+        "map normals",
+        "atlas color/alpha",
+        "atlas normals"
+      ],
+      "fragmentCostSharePercentOfS01Replay": 9.25796763946
+    }
+  },
+  "sourceMap": {
+    "groundOriginalGLSL": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/cont/base/springcontent/shaders/GLSL/GroundDecalsFragProg.glsl:248-256,370-422,445-476",
+    "groundCurrentNative": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:199-209,699-812,844-871",
+    "groundCurrentBindings": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:136-166",
+    "gamePinnedProgram": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Backend/NativeGameDecalPrograms.h:8-13,245-248",
+    "gameCurrentNative": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGameDecalShaders.h:193-305,326-338",
+    "savedMVKCorrespondence": "${AUDIT_WORKSPACE}/evidence/material-storage-pr7-20261115-01/ultra-compare/mvk3-focus-prep01/analysis/ground-decal-FS.metal:177-181; ${AUDIT_WORKSPACE}/evidence/material-storage-pr7-20261115-01/ultra-compare/mvk3-focus-prep01/analysis/game-decal-FS.metal:111-174",
+    "originalGameGLSL": "The pinned widget/fragment source hashes and fixed defines are stored in NativeGameDecalPrograms.h; a separate original widget GLSL file is not present in this frozen engine source snapshot, so original-game-line equivalence is not asserted."
+  },
+  "operationEvidence": {
+    "groundRequired": "Depth sample reconstructs terrain world position; two atlas fetches obtain color and normal; ground-normal, shadow comparison and shadow-color values feed output. Current low/high shadow paths are compile variants, not removable without changing appearance.",
+    "groundAvoidableForNonExplosion": "Original GLSL:400 samples minimap at explicit LOD0; :407 selects contribution only when vDecalType == DECAL_EXPLOSION. Native:730 samples minimap at explicit LOD0; :736 selects contribution only for same type. Ground VS:209 copies instance decalType into varying, constant across a primitive; no other native Ground FS use of mapDiffuse. Preserved MVK-generated Ground FS:179-181 also samples before type select, so this is common source work, not a proven native-only regression.",
+    "gameNoSupportedSingleRemoval": "Current Game FS samples atlas color before early alpha discard, then uses minimap and map normal for color, atlas normal for lighting, info for LOS, shadow compare for final color. Optional biased atlas-color resample is guarded by bias; PARALLAX and AO pinned off, USEGLOW pinned on. Saved MVK-generated Game FS contains corresponding samples. No unconditional sampled input with a source-proven unused result was identified."
+  },
+  "singleIndependentFSCandidate": {
+    "name": "Ground explosion-only minimap fetch",
+    "scope": "Only GroundDecalFragment after projection succeeds; for non-explosion type skip minimap texture read and mapDecalMix work; retain exact explosion path, depth/atlas/normal/shadow and all draw/queue/raster settings. No GameDecal or S01/G01 geometry change.",
+    "support": "The existing sample result is consumed only by the explosion color selection in both original GLSL and current Native shader. The fetch uses explicit LOD0, so moving it into a condition does not require implicit texture derivatives.",
+    "qualification": "Not ready to claim a speedup: captured instance-type distribution, non-explosion fragment coverage and compiled ISA are unavailable. A divergent condition can erase the benefit, and the compiler may already avoid some work.",
+    "parityRisk": "For defined finite raw-SMF minimap and RGBA8 atlas sampling, the original float mix at selector 0 has the real-arithmetic endpoint mainCol, with bounded mainCol [0,2] and mapDecalMix [0,4]. NaN is not an observed blocker. A branch still changes evaluation/scheduling, and the saved capture does not resolve minimap Lua-override format or prove all sample domains. Verify actual compiled behavior and full color/depth/stencil byte parity before adoption.",
+    "recommendedDecision": "Keep FS edit deferred pending a separate approval; this source-supported candidate has no measured type/coverage distribution, speedup, or byte-parity result."
+  },
+  "excluded": [
+    "RANGE199/233",
+    "geometry184",
+    "SensorLOS",
+    "G01 indexed Ground VS",
+    "GameDecal geometry",
+    "S01 pass split",
+    "cache/pool/queue/raster-quality changes"
+  ],
+  "evidence": [
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/shader-costs.jsonl",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/shader-stage-intervals.jsonl",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/api-calls.jsonl",
+    "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/CAPTURE-BASELINE.json"
+  ],
+  "boundedNumericDomain": {
+    "tint": "NativeGroundDecalShaders.h:95-101 unpacks four uint8 components divided by 255; vTintColor is assigned at :300 and carried as flat data3 (:11,382), so each fragment sees finite components in [0,1] without perspective interpolation.",
+    "atlas": "Metal4GroundDecal.mm:149 creates the output atlas as MTLPixelFormatRGBA8Unorm; GetColorByRelUV samples it at NativeGroundDecalShaders.h:658-667. For defined atlas sampling, components are finite in [0,1], independent of the source atlas file encoding.",
+    "mainColor": "NativeGroundDecalShaders.h:728 multiplies atlas color by 2*vTintColor, bounding each RGB component to [0,2] for defined sampling; large/negative tint and overflow in this step are not supported by this source contract.",
+    "minimap": "WorldRenderer.mm:4538-4539 uses the actual MiniMap ScreenTexture published through SMFReadMap::GetNativeMiniMapImage. NativeTerrainImagePublication.cpp:105-120 fixes the raw embedded SMF image to BC1_RGBA, 1024x1024, nine mips, so its defined sample is normalized finite in [0,1] and mapDecalMix is [0,4]. SMFReadMap.cpp:177-194 allows minimapTex.HasLuaTex() and the saved 9a44 API shows binding slot2 @tex155 but no resolved texture format or Lua-override state; the raw path cannot be asserted for that frame.",
+    "type": "NativeGroundDecalShaders.h:11 declares data2 flat; :209 copies packed decal type (0..15) into data2.w, so Ground FS explosion comparison does not depend on interpolating type across fragments.",
+    "uvAndUndefined": "Atlas UVs are built from flat per-instance UVs and a successful projected-quad barycentric test (NativeGroundDecalShaders.h:638-666). Snapshot validation checks atlas entry UV finiteness and frame-uniform finiteness but does not establish every instance UV/sample result as defined. No nonfinite sample was observed in saved data."
+  }
+}

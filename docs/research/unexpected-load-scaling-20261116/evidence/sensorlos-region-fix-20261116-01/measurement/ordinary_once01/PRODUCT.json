@@ -1,0 +1,8 @@
+{
+  "variant": "private-sensorlos-region-fix",
+  "package": "${AUDIT_USER_HOME}/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/runtime/native/bin/spring-metal4-scene",
+  "native": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/runtime/native",
+  "sha256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "publishedPackageReadOnly": true
+}

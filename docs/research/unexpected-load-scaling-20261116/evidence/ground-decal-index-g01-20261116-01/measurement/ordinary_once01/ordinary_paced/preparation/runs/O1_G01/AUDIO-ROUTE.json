@@ -1,0 +1,6 @@
+{
+  "status": "AUDIO_GATE_SKIPPED_MATCHED_DIAGNOSTIC",
+  "checksPerformed": false,
+  "settingsChanged": false,
+  "reason": "Reuses the previous same-scene diagnostic policy"
+}

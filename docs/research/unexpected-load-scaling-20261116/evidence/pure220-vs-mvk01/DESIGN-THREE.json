@@ -1,0 +1,99 @@
+{
+  "order": [
+    [
+      "M1_MVK3",
+      "MVK3"
+    ],
+    [
+      "M1_MVK4",
+      "MVK4"
+    ],
+    [
+      "N1_220",
+      "220"
+    ],
+    [
+      "N2_220",
+      "220"
+    ],
+    [
+      "M2_MVK4",
+      "MVK4"
+    ],
+    [
+      "M2_MVK3",
+      "MVK3"
+    ]
+  ],
+  "products": {
+    "MVK3": {
+      "variant": "preserved-small-requested-metal3",
+      "binary": "${AUDIT_USER_HOME}/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring",
+      "sha256": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa",
+      "native": "${AUDIT_USER_HOME}/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master",
+      "package": "${AUDIT_USER_HOME}/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app",
+      "check": "${AUDIT_WORKSPACE}/evidence/pass192/retry01/runs/m_product/BACKEND-LOADED.json",
+      "checkSHA256": "1285afab914e7b94e50d78d435c2571f023e53776bbf60a52539d07ff980ebdb"
+    },
+    "MVK4": {
+      "variant": "preserved-small-requested-metal4",
+      "binary": "${AUDIT_USER_HOME}/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring",
+      "sha256": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa",
+      "native": "${AUDIT_USER_HOME}/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master",
+      "package": "${AUDIT_USER_HOME}/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app",
+      "check": "${AUDIT_WORKSPACE}/evidence/pass192/retry01/runs/m_product/BACKEND-LOADED.json",
+      "checkSHA256": "1285afab914e7b94e50d78d435c2571f023e53776bbf60a52539d07ff980ebdb"
+    },
+    "220": {
+      "variant": "pure220",
+      "binary": "${AUDIT_WORKSPACE}/evidence/gpu-next219-01/do-no-harm02/integration220/build-layout-private-sampler/packages/integration220-layout-private-sampler-checkpoint/app-build/mac-arm64/BAR.app/Contents/Resources/native-engines/development/bin/spring-metal4-scene",
+      "sha256": "4a53fbd8bad898dace64545c47f80acfd806ead6aece2a801da23c5daa83ae2f",
+      "native": "${AUDIT_WORKSPACE}/evidence/gpu-next219-01/do-no-harm02/integration220/build-layout-private-sampler/packages/integration220-layout-private-sampler-checkpoint/app-build/mac-arm64/BAR.app/Contents/Resources/native-engines/development",
+      "package": "${AUDIT_WORKSPACE}/evidence/gpu-next219-01/do-no-harm02/integration220/build-layout-private-sampler/packages/integration220-layout-private-sampler-checkpoint",
+      "check": "${AUDIT_WORKSPACE}/evidence/gpu-next219-01/do-no-harm02/integration220/build-layout-private-sampler/packages/integration220-layout-private-sampler-checkpoint/PACKAGE-RESULT.json",
+      "checkSHA256": "8e3d55229b666987ff74655e00f204b2917671f560a87f8bc48de44bb5dae148"
+    }
+  },
+  "builds": 0,
+  "commonParserEdits": [
+    [
+      "    assert 'safe view 1512x950' in log and '1512x982' in log",
+      "    if 'MVK' not in arm: assert 'safe view 1512x950' in log and '1512x982' in log\n    else: assert 'view=<0,0 1512x950>' in log and 'vsx=1512.000000, vsy=950.000000' in log"
+    ],
+    [
+      "    assert '[Metal4Scene] First presented simulation frame' in log",
+      "    if 'MVK' not in arm: assert '[Metal4Scene] First presented simulation frame' in log\n    else: assert re.search(r'GL renderer\\s*:\\s*zink Vulkan .*MOLTENVK',log)"
+    ],
+    [
+      "    assert len(samples)==40 and 39.9<seconds<41 and draws==sum(int(s['draws']) for s in samples)",
+      "    assert samples and seconds>0 and draws==sum(int(s['draws']) for s in samples)"
+    ],
+    [
+      "    assert first_sim<=480 and 511<=last_sim<=2250, 'Required sim anchors must be inside the measured interval'",
+      "    assert first_sim==600 and last_sim==1800, 'Measured simulation boundaries must be exactly600..1800'"
+    ],
+    [
+      "    assert 39.8<(since['end']-since['start'])/1e9<41",
+      "    assert (since['end']-since['start'])/1e9+0.05>=seconds>0"
+    ]
+  ],
+  "toolPins": {
+    "${AUDIT_WORKSPACE}/evidence/pure220-vs-mvk01/compare_three.py": "c66b4716b102a65fd6613f28ce5c7eada276ec5cddc97f2fed2e3fc96e625819",
+    "${AUDIT_WORKSPACE}/evidence/pure220-vs-mvk01/backend-status.lua": "c6f3c05db4833132f398a05864ccf936b17ae5ae9f75759598135d1d11c157c6",
+    "${AUDIT_WORKSPACE}/evidence/gpu-next219-01/measurement-aligned01/control.lua": "fbb3dcd00f5f981f025dd57dc540356473917c92ff8241d3b40d99451e74ac56",
+    "${AUDIT_WORKSPACE}/evidence/gpu-next219-01/measurement-aligned01/aligned.py": "f838cde74d463e6c73eb97a49cf508835f43e0c314e93add793e60ad32c56f27",
+    "${AUDIT_WORKSPACE}/evidence/bloom217-boundary02/build-recovery01/run/campaign.py": "00b92f890f77bb297a1a30475c9fc3c371cbebbfff11afbff21f75c1139c5a91",
+    "${AUDIT_WORKSPACE}/evidence/bloom217-boundary02/build-recovery01/run/validate.py": "ad93ee5e5c2eb661136c14faa1c877e59a30e6d29f915fc74483c9193ee669da",
+    "${AUDIT_WORKSPACE}/evidence/bloom217-boundary02/build-recovery01/run/metrics.py": "1bfb3ea8f4e40501f931b55043d25fb1c2a57687136e396a0aac4c905c3d9ea4",
+    "${AUDIT_WORKSPACE}/evidence/bloom217-boundary02/build-recovery01/run/audio.py": "246769c2d3f7c0a82b7284427bf4a4005967d808e72eefa592e901d13f616048",
+    "${AUDIT_WORKSPACE}/evidence/gpu-next219-01/hq_preflight.py": "467804ef1043c2359927b41ea72b306402fc839a18ea42cf7c88c8b7efb4b4e9"
+  },
+  "priorTimingSamplesReused": 0,
+  "releaseFlags": "Preserved distribution candidate binaries pinned; compiler optimization flags not independently verified",
+  "launchDifference": "Controlled direct-engine in both arms; historical Small app-first receipt retained",
+  "measurement": [
+    600,
+    1800
+  ],
+  "commonStatusWidget": "Read-only at480/2250 only; original controller/DrawScreen/camera byte-identical"
+}

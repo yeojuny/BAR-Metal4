@@ -1,0 +1,84 @@
+{
+  "status": "PREPARED_NOT_RUN_FRESH_HQ_PAUSE_GO_REQUIRED",
+  "beforeSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "candidateSHA256": "814ab5de159cd3c8ea93e1b897f24583e7d7537eacffdb7052395b51880855f6",
+  "feature": "BAR_NATIVE_GRASS_BOUNDARY_S01=1; defaultOFF; actualchildreceipt required",
+  "isolation": "measurement_owner sole GPU/game executor; HQ/root/trace_analysis/contract_review PAUSE before GO; source reads/hashes stopped until CLOSED/PID0/awake released",
+  "first_requested_scope": [
+    {
+      "step": 1,
+      "kind": "offscreen synthetic Metal4 protocol test",
+      "program": "validation/gpu_boundary_parity",
+      "cases": 128,
+      "GPUExecuted": false,
+      "checks": [
+        "ActualFragmentdraw writes one Vertex input; separateBlit writes another before exactexistingcheckpoint",
+        "A Vertex shader does not read Grass textures; G readsfive",
+        "Unsplit reference vs exactS01 split fullBGRA8/Depth32/Stencil8 byteequal",
+        "Everycase requires visiblecolor/depth/stencil and Grass-onlystencil>=5",
+        "FinalGrassprobe centerRGB equals expected GPU-produced input combination, notstale equal inputs",
+        "Snapshot readback exactlyequals initialdepth beforeA writes",
+        "ActualMTL4 feedback/event completion and allresources retained"
+      ],
+      "limits": [
+        "Syntheticshaders, not actualgameGrass or wholeframe byteparity",
+        "NoGPUoverlap duration claim from validation/instrumented test",
+        "Noengine synchronization changes; helperwaits onlyfor diagnosticreadback"
+      ]
+    },
+    {
+      "step": 2,
+      "kind": "one candidate API-validation combat run",
+      "runner": "measurement/run.py --run validation_paced --suite s01_valid01",
+      "condition": "onlyafterhelperPASS",
+      "fixture": "same existingUltraAA0 officialcombat recipe usedforR01,1512x950,10swarmup+40sROI; diagnosticFPSexcluded",
+      "checks": [
+        "Actualsigned814ab child and S01flag1",
+        "[NativeGrassBoundaryS01] plan=1 checkpoint=1 split=1 (actualpositivegate)",
+        "NativeMRT/finalcolor/PREPARE1 BEGIN0/witnesses preserved",
+        "LimitIdleFps0,offscreenFPSoptionfalse,VSync0,AA0",
+        "MetalAPIvalidation enabled, noMetalerror, normalexit andpostROI scene",
+        "Rootvisualcomparison against retained87df R01 screenshots; dynamic-effect differences disclosed",
+        "Original retirement/witness completion, PID0 andawake released"
+      ],
+      "stop": "Ifno positive split, imageproblem, APIerror orclosurefailure, preserveallraw andSTOP beforecapture/clean runs; noautomaticretry"
+    }
+  ],
+  "second_scope_after_first_gates_and_separate_GO": {
+    "kind": "onecandidateframecaptureandoneGPUreplayprofile",
+    "recipe": "reuse existing targetcapture fixture; APIvalidationOFF forprofile trace, notcleanFPS",
+    "checks": [
+      "Join actualcommandencoder IDs toprofileIDs; identifyA prefix thenGrass-onlyGencoder",
+      "Verify same loadedcolor/depth/stencilattachments andsubresources, F->F boundary andunchangedpreA producercheckpoint",
+      "DecodefiveGrassV images/immutablebuffers andactualrootrelations; noaliases toA targets",
+      "Confirm drawsequence/family counts and existingfollowingmodelboundary",
+      "InspectGrassVS andGroundDecalFS activeinterval intersection; explicit actualoverlap vs0",
+      "Readsource/lifetimereview plus actualsuccessfulcompletion; noearlyowners",
+      "Extraoneencoder andthreeattachmentStore/Load arestructurallycounted; isolatedGPUcost notinferred frombyteestimates"
+    ],
+    "limitations": [
+      "Oldb25 capture remains hypothesis evidence; newS01 before is87df",
+      "Candidate-only overlap observation is not a before/afterGPUcost delta",
+      "To quantify isolatedStore/Loadcost would need a separatelyapprovedmatched87df diagnostic; otherwise reportNOT_MEASURED"
+    ]
+  },
+  "clean_after_correctness_and_fresh_GO": {
+    "before": "87df",
+    "after": "814ab S01enabled",
+    "runs": "3before+3after, sameofficialUltraAA0combat,10swarmup+40sROI",
+    "flags": "sameactualchildflags inboth inclS01=1 (beforebinarydoesnotimplementit); noAPIvalidation/trace/capture/profile",
+    "record": [
+      "all validruns including slowones",
+      "meanFPS,1%low,frametimes,normalexit,postROIimage",
+      "contents/seeds/camera/resolution/actualsim-unitsequence equivalence",
+      "overallFPS effect includesS01 CPUproof+extraStoreLoadcost; do not equate overlap withnetbenefit"
+    ],
+    "ordinary185FPS": "preserved separateone-off observation, not pooled orcausalbaseline"
+  },
+  "no_further_scope": [
+    "SensorLOS changes",
+    "global barriers",
+    "queue depth",
+    "Git/public baseline/deployment"
+  ]
+}

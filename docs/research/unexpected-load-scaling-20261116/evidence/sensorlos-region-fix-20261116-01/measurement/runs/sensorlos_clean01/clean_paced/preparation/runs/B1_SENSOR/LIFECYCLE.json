@@ -1,0 +1,14 @@
+{
+  "processLaunchEpochNs": 1794812703131798000,
+  "processExitObservedEpochNs": 1794812783830044000,
+  "firstPositiveSimulationEpochNs": 1794812720171668464,
+  "windowStartEpochNs": 1794812742154541943,
+  "windowEndEpochNs": 1794812782155826109,
+  "loadingSeconds": 17.039870464,
+  "warmupObservedSeconds": 21.982873479,
+  "countedWindowSeconds": 40.001284166,
+  "gameplayObservedSeconds": 61.984157645,
+  "teardownObservedSeconds": 1.674217891,
+  "processObservedSeconds": 80.6981895,
+  "limit": "Exit is polled every0.5s; teardown/process duration may include up to0.5s observation delay. Simulation marker is frame1, nominal1/30s after frame0. Loading and teardown excluded from FPS."
+}

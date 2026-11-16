@@ -1,0 +1,8 @@
+OPEN V_S01
+{
+  "recordedUTC": "2026-11-16T08:30:41.497518+00:00",
+  "label": "bloom217-V_S01",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}

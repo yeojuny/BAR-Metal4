@@ -1,0 +1,102 @@
+{
+  "status": "SIGNED_PRIVATE_R2_CANDIDATE_NO_RUNTIME",
+  "createdUTC": "2026-11-16T08:58:59.382448+00:00",
+  "acceptedParentSource": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine",
+  "acceptedParentBinarySHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "sourceHead": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+  "sourceChangedPaths": [
+    "rts/Rendering/Metal4/Metal4Grass.h",
+    "rts/Rendering/Metal4/Metal4Grass.mm",
+    "rts/Rendering/Metal4/Metal4ScreenNative.h",
+    "rts/Rendering/Metal4/Metal4ScreenNative.mm",
+    "rts/Rendering/Metal4/Metal4TerrainInfoSource.h",
+    "rts/Rendering/Metal4/Metal4TerrainInfoSource.mm",
+    "rts/Rendering/Metal4/Metal4WorldRenderer.mm"
+  ],
+  "sourceAddedPaths": [
+    "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h",
+    "tools/metal4-contracts/TestGrassBoundaryS01.cpp"
+  ],
+  "sourceClosure": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/SOURCE-CLOSURE-R2.json",
+  "rawSHA256": "3e09aaa0d8acb02461897788e3b664670b4214116598cc99600522f241eaddbc",
+  "signedSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "binary": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/runtime/native/bin/spring-metal4-scene",
+  "native": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/runtime/native",
+  "relocations": [
+    [
+      "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "@loader_path/../lib/libIL.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "@loader_path/../lib/libminizip.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "@loader_path/../lib/libfreetype.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "@loader_path/../lib/libfontconfig.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "@loader_path/../lib/libvorbisfile.3.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "@loader_path/../lib/libvorbis.0.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "@loader_path/../lib/libogg.0.8.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "@loader_path/../lib/libopenal.1.25.2.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "@loader_path/../lib/libSDL3.0.dylib"
+    ]
+  ],
+  "relocationCount": 9,
+  "codesignVerifyExit": 0,
+  "build": {
+    "fullTargetBuildCount": 1,
+    "target": "spring-metal4-scene",
+    "configureLog": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/CONFIGURE.log",
+    "buildLog": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/BUILD.log",
+    "finalNoWork": true,
+    "archiveClosureStatus": "PASS",
+    "objectCount": 1538,
+    "archiveCount": 35,
+    "archiveMismatchCount": 0,
+    "initialCacheSHA256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "initialFullBuildCount": 1,
+    "r2IncrementalTargetBuildCount": 1,
+    "r2BuildLog": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/BUILD-R2.log",
+    "r2FinalNoWork": true,
+    "r2ArchiveClosure": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/ARCHIVE-CLOSURE-R2.json"
+  },
+  "feature": {
+    "env": "BAR_NATIVE_GRASS_BOUNDARY_S01",
+    "default": "0",
+    "candidateValidation": "1 required on actual child",
+    "diagnosticProbeEnv": "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE",
+    "diagnosticProbeValue": "1",
+    "cleanProbeValue": "0"
+  },
+  "gamesRun": 0,
+  "profilesRun": 0,
+  "attempt1Archive": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/attempts/01/ARCHIVE.json",
+  "changedVsAttempt1": [
+    "rts/Rendering/Metal4/Metal4Grass.h",
+    "rts/Rendering/Metal4/Metal4Grass.mm",
+    "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h",
+    "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+    "tools/metal4-contracts/TestGrassBoundaryS01.cpp"
+  ],
+  "gamesRunR2": 0,
+  "profilesRunR2": 0
+}

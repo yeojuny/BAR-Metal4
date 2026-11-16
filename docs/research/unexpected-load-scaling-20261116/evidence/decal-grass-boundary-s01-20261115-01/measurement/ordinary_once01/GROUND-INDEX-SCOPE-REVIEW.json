@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "status": "SOURCE_SCOPE_PASS_GPU_PARITY_AND_REUSE_UNKNOWN",
+  "baseline": {
+    "engineSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+    "S01": 1
+  },
+  "scope": "GroundDecal surface cube only; no shader math, fragment, atlas, GameDecal, Geometry184, cache, pool, build, game or GPU changes.",
+  "source": {
+    "shader": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+    "shaderSHA256": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+    "consumer": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm",
+    "consumerSHA256": "4e65ad573ba113ad7468b24c21c3785bc7ff84a45b804b06b324274344977da9"
+  },
+  "sourceProof": {
+    "original": "GroundDecalVertex calls p.Run((vid/3)*3+(vid%3+2)%3), which cyclically rotates each original triangle to preserve first-vertex flat provoking semantics. Run uses sourceVertex only to index CUBE_VERT, then all shader input depends on that cube coordinate, unchanged instance data, uniform and textures (shader:197-321,372-382).",
+    "candidateIndices": [
+      0,
+      1,
+      2,
+      1,
+      0,
+      5,
+      6,
+      7,
+      8,
+      7,
+      6,
+      11,
+      0,
+      6,
+      5,
+      6,
+      0,
+      11,
+      1,
+      8,
+      7,
+      2,
+      1,
+      7,
+      0,
+      7,
+      11,
+      7,
+      0,
+      2,
+      1,
+      6,
+      8,
+      6,
+      1,
+      5
+    ],
+    "representativeVertexIDs": [
+      0,
+      1,
+      2,
+      5,
+      6,
+      7,
+      8,
+      11
+    ],
+    "cpuCheck": "Parsed all 36 CUBE_VERT constants; for every output vertex j, CUBE_VERT[rotate(j)] == CUBE_VERT[rotate(candidateIndex[j])]. Mismatches 0/36. Each of 12 ordered triangle first vertices also matches. Triangle order and three corner positions stay identical.",
+    "varyings": "Visible-path gl_Position, every flat p0-p4/uv/data2-data4/r0-r2 and perspective data1 depend on the same cube coordinate and the same iid/uniform/texture inputs, so ordered per-triangle outputs and first-vertex flat values are source-equivalent (shader:11,197-321,372-382). The alpha-cull early return sets the same off-clip position; its otherwise unused varyings remain undefined as in the original (shader:210-220).",
+    "independentDraw": "The atlas still uses its own six-vertex draw and surface pipeline remains GroundDecalVertex/GroundDecalFragment; only the surface cube's draw call is in scope (consumer:40-64,73-87). GameDecal has separate prepared geometry and indexed/96-vertex branches (Metal4GameDecal.mm:65-75,160-176), so this does not change that path or establish Geometry184 overlap."
+  },
+  "requiredImplementationContract": [
+    "Use the same triangle pipeline, 36 UInt16 indices (72 bytes), same instance count and zero base vertex/instance. Metal indexed vertex_id must be the index-buffer value; preserve the shader's internal cyclic rotation and do not pre-rotate indices a second time. Keep all existing argument-table bindings, depth/cull/blend/raster state and GroundDecalFragment byte-identical (consumer:57-62,73-87).",
+    "Allocate the fixed index payload under the current RuntimeLease only when the surface cube is drawn; retain the MTLBuffer in the current PreparedGroundDecal until Encode accesses gpuAddress, call lease.AddAllocation on that buffer, use its full 72-byte indexBufferLength, and rely on existing submission retirement/quarantine to hold it through event/feedback completion. No global cache/pool or cross-frame owner (consumer:11,26-35,57-64,100-134; WorldRenderer.mm:5783-5807,5840-5864).",
+    "On allocation, validation, encoding, submission or retirement failure, preserve current exception/rollback/quarantine flow. No new readiness publication or DidComplete call before actual completion; atlas ready remains set only at existing DidComplete (consumer:40-64). Empty instance path remains a no-draw with encoded flag set (consumer:62)."
+  ],
+  "evidenceLimits": {
+    "ownerReportedCurrentCapture": "Current API capture reports 36 vertices x 32,364 GroundDecal instances and GroundVS 9.3242% relative shader cost; this establishes activity, not a predicted gain.",
+    "reuse": "Indexed submission allows the eight representative IDs per instance, but source proof does not guarantee post-transform cache hits or an eight-invocation GPU count. The new 72-byte allocation and index fetch can offset any VS reduction.",
+    "parity": "Actual Metal color/depth/stencil and per-sample parity, including alpha, backface culling, MSAA and clipping, remains UNKNOWN. No GPU validation or timing was run in this review.",
+    "comparison": "GroundDecal surface cube is a separate draw family from GameDecal. This scope does not attribute shared Geometry184 or S01 overlap benefit."
+  },
+  "disposition": "Coherent bounded source candidate with no source-level mapping or ownership blocker. It is not yet an accepted optimization without owner-run GPU parity and measured reuse/cost."
+}

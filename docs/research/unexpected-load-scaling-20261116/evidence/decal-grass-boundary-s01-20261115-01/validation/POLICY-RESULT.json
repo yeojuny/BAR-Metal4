@@ -1,0 +1,7 @@
+{
+  "drawSequences": 9841,
+  "physicalRootUnknownCases": 12,
+  "producerTransitions": 6,
+  "result": "PASS",
+  "command": "/usr/bin/c++ -std=c++20 -Wall -Wextra -Werror -I source/engine/rts source/engine/tools/metal4-contracts/TestGrassBoundaryS01.cpp -o validation/TestGrassBoundaryS01 && ./validation/TestGrassBoundaryS01"
+}

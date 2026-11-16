@@ -1,0 +1,5 @@
+{
+  "pid": 50111,
+  "pgid": 50111,
+  "engine": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/runtime/native/bin/spring-metal4-scene"
+}

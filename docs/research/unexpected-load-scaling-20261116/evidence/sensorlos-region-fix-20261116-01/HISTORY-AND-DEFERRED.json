@@ -1,0 +1,30 @@
+{
+  "currentGeometryChange": "Quantized major-axis sheared quad; current baseline already has per-segment axis-aligned bbox. This reduces the diagonal empty area and is not the previously completed AABB construction.",
+  "previousSourceLines133": "Separate CommonVertexMain133/CommonFragmentMain133 path. Its oriented quad is not used by OriginalSensorLOSVertex.",
+  "previousSensorLOSShortCircuit": {
+    "patch": "${AUDIT_WORKSPACE}/evidence/sensorlos220-shortcircuit01/CHANGE.patch",
+    "review": "${AUDIT_WORKSPACE}/evidence/sensorlos220-shortcircuit01/REVIEW.json",
+    "cleanCompletion": "${AUDIT_WORKSPACE}/evidence/sensorlos220-runtime01/clean/COMPLETION.json",
+    "oldMeanFPS": 161.13064588273468,
+    "thenCandidateMeanFPS": 161.3424723078879,
+    "changePercent": 0.13146253091256277,
+    "scope": "Earlier independent post-mask early rejection before integer coverage; exact pure predicate reordering, not geometric bounds.",
+    "presentInCurrentBaseline": false,
+    "reasonNotPresent": "Not established; do not label omission, regression or mistake without adoption evidence.",
+    "includedInThisCandidate": false
+  },
+  "otherCandidatesDeferred": [
+    {
+      "candidate": "SensorLOS post-mask short circuit",
+      "evidence": "Previous predicate/sampling review and six-run record above; current baseline does not contain it.",
+      "risk": "Needs current-source GPU parity and isolated new measurement; previous +0.13% is not current expected gain.",
+      "linkedScope": "Single-sample FS only; unchanged source/resource lifetime."
+    },
+    {
+      "candidate": "Decal/grass encoder separation",
+      "evidence": "Saved new MVK replay shows GroundDecal FS/Grass VS overlap2.366506ms; Native same encoder has0.",
+      "risk": "Store/load overhead and wider dependency changes.",
+      "linkedScope": "Render-pass partition, stage barriers, attachment lifetime. Not part of SensorLOS work."
+    }
+  ]
+}

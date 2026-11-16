@@ -1,0 +1,10 @@
+{
+  "status": "NO_MATCHED_METAL_ERRORS",
+  "enabledByChildEnv": true,
+  "enabledByEngineLog": true,
+  "errors": [],
+  "normalExit": true,
+  "candidateSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_valid01/validation_paced/preparation/runs/V_G01/scene.png",
+  "source": "raw engine.log; same original error regex"
+}

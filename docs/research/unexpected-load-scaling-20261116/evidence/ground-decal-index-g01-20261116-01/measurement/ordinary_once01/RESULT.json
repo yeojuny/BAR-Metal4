@@ -1,0 +1,11 @@
+{
+  "status": "COMPLETE_ONE_ORDINARY_RUN",
+  "meanFPS": 183.0,
+  "slow1PercentFPS": 87.67772428741493,
+  "countedSeconds": 40.0,
+  "draws": 7320,
+  "normalExit": true,
+  "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_G01/scene.png",
+  "candidateSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "historicalComparisonsPooled": false
+}

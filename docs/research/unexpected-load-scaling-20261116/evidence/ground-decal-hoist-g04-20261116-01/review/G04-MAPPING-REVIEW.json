@@ -1,0 +1,73 @@
+{
+  "status": "SOURCE_READY_IMPLEMENTATION_MAPPING_PASS_SOURCE_LEVEL_ONLY",
+  "baseline": "G01 source snapshot 962637; original GLSL and NativeGroundDecalShaders.h inspected. Candidate implementation is owned by root and was not changed by this review.",
+  "originalGLSL": {
+    "vertex": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/cont/base/springcontent/shaders/GLSL/GroundDecalsVertProg.glsl:23,283-295,329-330",
+    "fragment": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/cont/base/springcontent/shaders/GLSL/GroundDecalsFragProg.glsl:44,91-108,299-316,377-389",
+    "finding": "Vertex emits transformed corners as flat vTranformedPos[5], but does not precompute barycentric dot terms or the UV-wrap distance u. Fragment computes three corner-only dots per triangle plus reciprocal denominator, tests first triangle then second on rejection, and computes u only when wrap distance is positive."
+  },
+  "nativeSource": {
+    "file": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+    "flatOutput": "lines11,382: p0-p4 and data2 are flat. Vertex Run computes transformed corners at lines263-281 and stores vUVWrapDist at line313.",
+    "firstTriangle": {
+      "corners": [
+        "BL",
+        "TL",
+        "TR"
+      ],
+      "v0": "TR-BL",
+      "v1": "TL-BL",
+      "threeDots": [
+        "dot(v0,v0)",
+        "dot(v0,v1)",
+        "dot(v1,v1)"
+      ]
+    },
+    "secondTriangle": {
+      "corners": [
+        "TR",
+        "BR",
+        "BL"
+      ],
+      "v0": "BL-TR",
+      "v1": "BR-TR",
+      "threeDots": [
+        "dot(v0,v0)",
+        "dot(v0,v1)",
+        "dot(v1,v1)"
+      ]
+    },
+    "fragment": "lines433-450 and638-655: six corner-only dot values are now calculated inside each relevant FS barycentric call. Reciprocal denom, v2, dot02/dot12, s/t/q and first/second acceptance are FS work. Lines706-710 compute u under vUVWrapDist>0.",
+    "priorHoist": "No source-level dot or u hoist found in the original GLSL vertex source or frozen Native Ground vertex function. Original/Native FS call structure matches. This does not prove final compiler instruction placement."
+  },
+  "requestedG04Scope": {
+    "move": "Exactly six separate corner dot scalars, three for each triangle, into flat VS output. Compute u from transformed corners only under original positive-wrap condition and carry a flat value.",
+    "remainFragment": "Compute invDenom separately per selected triangle from the passed dots using original arithmetic order; retain v2/dot02/dot12, s/t/q, first-then-optional-second triangle tests, UV wrap correction, and all texture/color/depth operations.",
+    "payload": "Six float32 corner dots + one float32 u = 28 bytes of logical flat varying values per VS output before platform packing; do not treat as measured bandwidth/register cost.",
+    "duplicateCaution": "Both dot00 terms use the shared BL-TR diagonal in opposite directions and are mathematically equal for ordinary finite values. Keep separately evaluated values to preserve source-order/exceptional behavior; do not fold to five scalars under this scope."
+  },
+  "earlyCullCaution": "Resolved in current candidate source: new outputs initialize at Run entry before early return; corner/u computations occur after original gl_Position only on the non-cull path. No uninitialized p.vData2.y read is introduced by the G04 ON transformation.",
+  "captureBoundary": "Saved 9a44 native cb0/re13 @rps71 api5102 drew 36 vertices x32364 instances. Saved shader cost table gives GroundDecalFragment 16.7018991277% relative replay cost. Neither table identifies compiled ISA, driver hoisting, actual G04 shader cost, varying packing, or speedup.",
+  "evidence": [
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/api-calls.jsonl",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/shader-costs.jsonl"
+  ],
+  "reviewOutcome": "Current SOURCE_READY candidate passes narrow source mapping and early-cull placement review. Runtime parity and performance remain separate gates.",
+  "implementedCandidate": {
+    "sourceSnapshot": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/source/engine",
+    "sha256": {
+      "NativeGroundDecalShaders.h": "755bd1ac4dfbd0c9a921ecdeddf70a8cb4adb61ee16303b8b3e5955fe1e0023c",
+      "Metal4GroundDecal.mm": "3cc4d5be3e76024006dda607d0842f80f654629539205ba9f5f338f2dbbc7934"
+    },
+    "baselineSha256": {
+      "NativeGroundDecalShaders.h": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+      "Metal4GroundDecal.mm": "4b62d9bceec4eb1e16b7ec00826f729da86e5935f10e32effe224ab410ed3dec"
+    },
+    "literalPreservation": "Diff shows existing NativeGroundDecalShaders raw MSL literal and existing two-argument source factory unchanged; candidate only inserts <stdexcept> and appends the three-argument ON transformation factory at NativeGroundDecalShaders.h:898-966. Three-argument factory returns exact two-argument source when hoistG04=false.",
+    "onSourceMapping": "G04 ON source transform adds flat g04Dots0/g04Dots1 float3 and g04WrapRatio float to DecalVarying, computes first dots from p1,p2,p3 (BL,TL,TR) and second from p3,p4,p1 (TR,BR,BL), then replaces only FS corner dot reads with these values. FS invDenom expression, v2/dot02/dot12, barycentric arithmetic and second-triangle branch remain in the original literal and are not transformed.",
+    "guardedWrap": "At ON source insertion, g04WrapRatio starts at 1.0 at Run entry (before the alpha/type early return), then after the original vUVWrapDist assignment and gl_Position writes is recomputed only when vUVWrapDist>0 using the original distance/division expression. No new post-return read of p.vData2.y occurs on the early-cull path.",
+    "variantSelection": "Metal4GroundDecal.mm:100-101 reads BAR_NATIVE_GROUND_DECAL_HOIST_G04 and probe once per process; line114 passes fixed bool to three-argument factory. Default OFF returns unchanged generated shader source. No dynamic in-process toggle is exposed in this code.",
+    "diffScope": "NativeGroundDecalShaders.h only #include and appended factory; Metal4GroundDecal.mm only fixed env/probe declarations and modified library source call/log in inspected diff.",
+    "reviewResult": "Expression/branch mapping matches frozen original. This is source-level review only; no build, shader compile, GPU parity, variant runtime evidence, varying packing, ISA, or speedup assessed."
+  }
+}

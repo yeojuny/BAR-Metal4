@@ -1,0 +1,18 @@
+{
+  "status": "SOURCE_CPU_PROOF_INCOMPLETE_HOLD_G03",
+  "sourceOnlyEstablished": [
+    "GroundDecalVertex writes packed uint8 tint divided by 255 to flat data3, so tint channels are finite [0,1]; type is flat data2.w and explosion is 2.0. NativeGroundDecalShaders.h:11,95-101,209,300,382.",
+    "The atlas output is MTLPixelFormatRGBA8Unorm. For defined atlas sampling its channels are finite [0,1], hence mainCol=sample*2*tint is finite [0,2]. Metal4GroundDecal.mm:149; NativeGroundDecalShaders.h:658-667,728.",
+    "ProjectOntoPlane returns true only when each barycentric component satisfies >=0 and <=1; a NaN or infinite barycentric component cannot pass both comparisons. NativeGroundDecalShaders.h:638-655.",
+    "The raw SMF minimap image is BC1_RGBA with nine original mip levels; its defined sample is normalized [0,1], so mapDecalMix=2*mainCol*mapDiffuse is [0,4]. NativeTerrainImagePublication.cpp:105-120.",
+    "The minimap read is explicit LOD0 and its value influences Ground FS color only for explosion type in current Native and original GLSL. NativeGroundDecalShaders.h:730-737; GroundDecalsFragProg.glsl:400-407."
+  ],
+  "notEstablished": [
+    "Successful ProjectOntoPlane does not itself prove every worldPos or UV calculation finite: GetWorldPos divides by pos.w, and per-instance UV/position values are not all covered by ValidateNativeGroundDecalFrame. NativeGroundDecalShaders.h:571-595; NativeGroundDecalData.cpp:52-59.",
+    "The saved 9a44 API binds minimap slot2 to texture155 but has no resolved format or Lua override state. SMFReadMap.cpp:177-194 may select minimapTex.HasLuaTex(), which is not restricted to raw BC1 by that call.",
+    "Moving mix(t=0) to control flow may alter GPU floating-point evaluation in exceptional/undefined domains; source proof does not replace color/depth/stencil byte parity or compiled shader work evidence.",
+    "Non-explosion fragment coverage and benefit remain unmeasured."
+  ],
+  "narrowCpuGatePossible": "Check actual prepared minimap.texture.pixelFormat against explicit normalized formats before selecting an opt-in fragment variant, keeping exact original shader for other formats; this bounds the minimap value for defined sampling but does not by itself close full byte parity.",
+  "decision": "Do not implement G03 in the pending G02 build on this source-only proof; retain independent FS candidate for a separately gated parity experiment."
+}

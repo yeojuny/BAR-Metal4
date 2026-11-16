@@ -1,0 +1,70 @@
+{
+  "status": "SOURCE_SCOPE_COMPLETE_TWO_INDEPENDENT_HYPOTHESES_NOT_IMPLEMENTED",
+  "baseline": "signed962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559; S01/G01 ON",
+  "G01FixedCost": {
+    "frequency": "Once for each eligible GroundDecalGPU::Prepare, not unconditionally every game frame",
+    "eligibility": "G01 exact env1 AND sampleCount1 AND instanceCount>0; absent frame skips Prepare entirely",
+    "normalAddedWork": [
+      "newBufferWithBytes 72 bytes Shared storage; CPU index upload",
+      "Objective-C label creation/assignment",
+      "RuntimeLease::AddAllocation writable-state guards and allocationRequests148 increment",
+      "Exact object lookup, one unique strong request and Retain/writable owner insertion",
+      "TrackResourceMemory call and one extra allocation identity in residency publication/diff",
+      "Prepared packet strong reference; encode checks selector and reads GPU address/length"
+    ],
+    "emptyOrDisabledIndexAllocation": false,
+    "cleanProbeCosts": "PROBE0 skips diagnostic atomic/test/log/reason updates",
+    "timingOrAllocationCostMeasured": false,
+    "sourceRefs": [
+      "source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:16,73,160-175",
+      "source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:4531-4547",
+      "source/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm:769-782,813-817,873-925"
+    ],
+    "SimmersEvidence": "Actual childON; actual indexed draw UNKNOWN; existing log only GroundDecals setting, no actual count marker. Single historical -1.3285% does not isolate allocation overhead."
+  },
+  "G02Alternatives": [
+    {
+      "name": "Pack indices into existing per-Prepare uniform upload",
+      "logicalLayout": "368 uniform bytes at offset0 +72 index bytes at offset368 =440 bytes; UInt16 aligned",
+      "normalRemovedWork": "One separate Metal buffer creation/label/upload call/AddAllocation/unique request/Retain/TrackResourceMemory/residency object per eligible Prepare",
+      "remainingCost": "72 index bytes still copied per Prepare; possible extra368B CPU packing copy depending implementation/compiler; one combined buffer retained by existing packet/lease",
+      "lifetime": "No cross-frame shared owner; existing per-Prepare buffer lifetime only",
+      "guard": "Validate base+368 overflow, tail alignment, actual length>=440; draw index count36, indexBufferLength72; uniformbase unchanged",
+      "fallback": "Optional packed nil/invalid tail before encoding -> exact existing mandatory368B uniform + optional72B G01 index path; AddAllocation/state errors propagate",
+      "review": "G02-UNIFORM-TAIL-SCOPE-REVIEW.json"
+    },
+    {
+      "name": "One immutable owner-held 72B geometry buffer",
+      "normalRemovedWork": "Repeated newBufferWithBytes/label/index upload after first successful allocation",
+      "remainingCost": "Per-Prepare AddAllocation/request lookup/retain/memory tracking and extra residency member remain; unchanged pointer can avoid residency add/remove churn",
+      "lifetime": "Existing GroundDecalGPU::Impl owner plus each packet and actual lease; immutable shared reads only",
+      "guard": "Exact MTLDevice identity; publish slot only after successful AddAllocation; ClearResources releases owner reference; old packets/leases retain through normal or failed retirement; no buffer overwrite",
+      "fallback": "Optional initial/replacement allocation failure chooses existing fallback before draw; lease/state exceptions propagate",
+      "review": "G02-OWNER-CONSTANT-ALTERNATIVE-REVIEW.json"
+    }
+  ],
+  "recommendedFirstScope": "Packed uniform/index upload has the smaller lifetime change and also removes a separate per-frame allocation request. Owner-constant is valid alternative, not rejected as a generic cache. Select one for a single hypothesis; do not combine alternatives or FS changes in a timed candidate.",
+  "independentFragmentScope": {
+    "name": "F01 Ground explosion-only minimap read",
+    "status": "Source semantic domain under review; no shader edits",
+    "basis": "Current Ground and Game shader headers byte-identical to stored9a44; Ground unconditional explicitLOD0 minimap sample only enters explosion RGB mix",
+    "GameDecal": "No equally clear unused fetch found; all sampled atlas/normal/minimap/LOS/shadow values participate in output",
+    "evidence": "FS-SCOPE.json",
+    "unknowns": [
+      "Current962637 relative GPU cost",
+      "Nonexplosion type/fragment coverage distribution",
+      "Branch/compiler cost and tested GPU output parity"
+    ],
+    "preserve": "Original triangle/draw/order/state/pass/inputs/lease and all unrelated shader math; no RANGE199/233/184 change"
+  },
+  "otherRemainingStatus": "See ../REMAINING-PLAN.json; PR7 already8clean+4diagnostics complete; R02 duplicate held; S01/G01/R01 scoped work preserved; no new queue/GLSL/GS rewrite selected",
+  "newActions": {
+    "engineBuilds": 0,
+    "games": 0,
+    "GPUHelpers": 0,
+    "profiles": 0,
+    "captures": 0,
+    "sourceEdits": 0,
+    "GitChanges": 0
+  }
+}

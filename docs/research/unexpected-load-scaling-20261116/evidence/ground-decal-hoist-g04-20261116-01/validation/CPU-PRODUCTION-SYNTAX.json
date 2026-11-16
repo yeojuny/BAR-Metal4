@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "exitCode": 0,
+  "source": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm",
+  "sourceSHA256": "3cc4d5be3e76024006dda607d0842f80f654629539205ba9f5f338f2dbbc7934",
+  "inheritedCompileDatabase": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/build/compile_commands.json",
+  "generatedHeadersReadOnlyFrom": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/build",
+  "sideEffects": "-fsyntax-only; -o/-MF/-MT/-MD/-MMD/-c removed",
+  "log": "${AUDIT_WORKSPACE}/evidence/ground-decal-hoist-g04-20261116-01/validation/CPU-PRODUCTION-SYNTAX.log"
+}

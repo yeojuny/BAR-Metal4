@@ -1,0 +1,19 @@
+{
+  "status": "ANALYTICAL_CPU_AND_SCOPED_GPU_PARITY_PASS_ENGINE_VALIDATION_PENDING",
+  "scope": "OriginalSensorLOSVertex geometry only, AA0; actual sample count passed in previously unused counts.w. Existing exact single-sample coverage, both fragment paths, fan geometry and resources/lifetimes remain unchanged.",
+  "quantization": "qa=int2(floor(A.xy*256+0.5)), qb identically to SensorLineCovered. Major tie chooses X for abs(dx)>=abs(dy); all geometric centerline calculations use this same quantized line.",
+  "majorContainment": "SensorDiamond accepts only when a point of the quantized segment intersects a unit pixel diamond. Thus an accepted pixel center major coordinate lies within [min(qaMajor,qbMajor)/256-0.5, max(...)/256+0.5]. The candidate extends by4.",
+  "minorContainment": "At major pixel center, let L=numerator/denominator be exact minor centerline and c=max(1,floor(width+0.5)). lower=floor(L-(c-1)/2-1/(2*denominator)). Accepted integer actual lies in [lower,lower+c-1], so minor center actual+0.5 lies within L +/- c/2 plus the fixed-point epsilon (<1/512 for |dm|>=256). Candidate uses +/- (c/2+4).",
+  "helpers": "For a neighboring helper center displacement |dMajor|<=1 and |dMinor|<=1, |slope|<=1 increases minor residual by at most2. Padding4 includes all3x3 neighboring centers, a superset of any adjacent2x2 quad, plus quantization/float/raster margin.",
+  "oldCoverage": "The accepted major span overhang is at most0.5 and |slope|<=1. Therefore an accepted center lies within each unquantized endpoint coordinate extrema expanded by c/2+0.5+small quantization error. The old c/2+2 AABB contains all such centers with margin. Any new fragment outside the old AABB fails unchanged coverage; no extra visible/depth/stencil sample is introduced.",
+  "floatingPointBounds": "Finite coordinates and viewport origins <=16384 in magnitude, viewport size1..16384, finite width0<width<=64, quantized |major delta|>=256. Quantized endpoint arithmetic fits int32, exact coverage products remain in guarded range of existing int64. New slope<=1, endpoint extensions4, and small FP32 centerline/raster conversion roundoff are much smaller than the remaining helper margin. No fastmath/precision changes.",
+  "triangles": "Existing six vertices and {0,1,2,0,2,3} topology remain. Both triangles carry identical flat line/data/color/halfwidth values. xMajor/yMajor may swap winding; existing cull-none applies. GPU byte-comparison must check seam and winding rather than relying only on convex-quad containment.",
+  "shading": "Fragment source unchanged byte-for-byte: same screen-position-derived affine mask UV and implicit sample before discard, same line/data arithmetic, same alpha and explicit depth(any). Helpers are retained; no interpolation changes to flat varyings. Geometry position z=.5,w=1 remains. Color/depth/stencil equality must be checked on actual Metal.",
+  "fallback": "samples!=1, nonfinite/oversized coordinate or viewport, nonpositive/large width, quantized major length<1 pixel, invalid slope/area or no smaller geometric area all retain the original AABB pixel. Fan VS unchanged. MSAA VS receives samples>1 and returns fallback before new calculations.",
+  "validation": {
+    "staticReview": "REVIEW.json",
+    "cpuExactCoverage": "validation/CONTAINMENT-RESULT.json",
+    "gpu": "validation/GPU-PARITY-RESULT.json: 3600 cases all BGRA8/depth/stencil byte-identical; test-only VS and actual OriginalSensorLOSFragment, not full engine/MSAA/lifetime coverage."
+  },
+  "noPerformanceClaim": "The synthetic test-set area ratio is not a runtime work reduction or FPS prediction. Only six clean runs determine measured mean FPS."
+}

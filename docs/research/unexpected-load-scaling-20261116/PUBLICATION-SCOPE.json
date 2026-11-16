@@ -1,0 +1,13 @@
+{
+  "technicalManifest": {
+    "path": "MANIFEST.sha256",
+    "sha256": "c05db6f13243ab1e08da9ffc3465d1de3b93845c97261d793d013ae0d93523b8",
+    "coverage": "Original 900 frozen technical files; editorial README.md and AUDIT-QUESTIONS.md excluded, original scope retained in MANIFEST-SCOPE.json."
+  },
+  "integratedManifest": {
+    "path": "PUBLICATION-MANIFEST.sha256",
+    "coverage": "Every published package file including original technical manifest, the two HQ-reviewed editorial files and this scope record. Only PUBLICATION-MANIFEST.sha256 itself is excluded."
+  },
+  "actualEngineSourcePatched": false,
+  "publicationPath": "docs/research/unexpected-load-scaling-20261116/"
+}

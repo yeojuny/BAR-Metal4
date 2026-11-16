@@ -1,0 +1,57 @@
+{
+  "status": "HIGH_CLEAN6_SELECTED_LOW_CLEAN6_NOT_SELECTED_BEFORE_EXECUTION",
+  "decisionBasis": "G02 low Simmers diagnostic has one terminal owner summary with owner_created1 Prepare0 and all physical Ground buffer creations0; no G02 upload opportunity",
+  "G02CleanRunsCompletedAtDecision": 0,
+  "high": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "signedSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+    "order": [
+      "A1_OFF",
+      "B1_ON",
+      "B2_ON",
+      "A2_OFF",
+      "A3_OFF",
+      "B3_ON"
+    ],
+    "constants": {
+      "S01": 1,
+      "G01": 1,
+      "G01_PROBE": 0,
+      "MetalAPIValidation": 0,
+      "ShaderValidation": 0,
+      "frameTrace": 0,
+      "capture": 0,
+      "MSAA": 0,
+      "view": [
+        1512,
+        950
+      ]
+    },
+    "onlyVariant": "G02 A0/B1",
+    "warmSimulation": [
+      240,
+      540
+    ],
+    "countSimulation": [
+      540,
+      1740
+    ],
+    "warmSeconds": 10,
+    "countSeconds": 40,
+    "freshIdenticalProfiles": true,
+    "allValidSlowRunsRetained": true,
+    "additionalRuns": 0,
+    "historicalSamplesPooled": false
+  },
+  "low": {
+    "status": "NOT_SELECTED_BEFORE_ANY_G02_CLEAN_RUN",
+    "plannedAdditionalRuns": 0,
+    "notPosthocExclusion": true,
+    "reason": "No candidate work in this fixed scene; a clean comparison cannot assess the targeted upload cost",
+    "previousSimmersResults": "Preserved including183FPS/87.677724low and historical185.46; no interval/run discarded",
+    "causeOfPreviousSimmersLoss": "UNKNOWN",
+    "futureResearch": "Investigate actual active low-load work under a separately defined scope; no new experiment authorized here"
+  },
+  "currentAuthorization": "CPU plan/profile preparation only; high6 awaits fresh HQ PAUSE/GO",
+  "noNewEngineBuildHelperCaptureProfileGit": true
+}

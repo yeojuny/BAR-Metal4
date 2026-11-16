@@ -1,0 +1,60 @@
+{
+  "status": "PASS_CPU_GENERATED_SOURCE_CHECK",
+  "compiler": "clang++ -std=c++20 -Wall -Wextra -Werror; G01 and G04 tiny source-output tool compiled and exited 0",
+  "scope": "Generated MSL text only; not an MSL compiler, GPU parity, or performance result.",
+  "variants": [
+    {
+      "high": false,
+      "shadows": false,
+      "offByteEqualG01": true,
+      "offSHA256": "d405b97ae4aac697dfb13863553a6c17fbe4f1962ea5791a630d558b344f8221",
+      "onSHA256": "570561920b32fc94312393b6f2b1d0fec42ef49698cdf3f3293cb93803cccecb",
+      "onSourceConstructed": true,
+      "earlyCullFieldsDefined": true,
+      "triangleCornerOrderCorrect": true,
+      "reciprocalStillFragment": true,
+      "atlasSuffixByteEqual": true,
+      "bufferArgumentCountUnchanged": true
+    },
+    {
+      "high": false,
+      "shadows": true,
+      "offByteEqualG01": true,
+      "offSHA256": "a5efcc6c95f46e73a7718cf387ad481aab1d2c980ed512063bea8407ed606487",
+      "onSHA256": "c6a77d377cbce0f85ec834ee5cde1fd4179ebf2b882eb8b03d703a0923180f1c",
+      "onSourceConstructed": true,
+      "earlyCullFieldsDefined": true,
+      "triangleCornerOrderCorrect": true,
+      "reciprocalStillFragment": true,
+      "atlasSuffixByteEqual": true,
+      "bufferArgumentCountUnchanged": true
+    },
+    {
+      "high": true,
+      "shadows": false,
+      "offByteEqualG01": true,
+      "offSHA256": "f49b2c03a9c2a7016a3419cf2e98a67ba0ba7e49514495968244092b513eea51",
+      "onSHA256": "cc72770db6f33daf8f1187e2d8052ba3fefaf319b708707fc8415c95fbd48267",
+      "onSourceConstructed": true,
+      "earlyCullFieldsDefined": true,
+      "triangleCornerOrderCorrect": true,
+      "reciprocalStillFragment": true,
+      "atlasSuffixByteEqual": true,
+      "bufferArgumentCountUnchanged": true
+    },
+    {
+      "high": true,
+      "shadows": true,
+      "offByteEqualG01": true,
+      "offSHA256": "39f4ecfc984ac68b08400a4849382926f859555cf9cd6bfd034dd296b2d9422e",
+      "onSHA256": "da5bb0249ed9e5465be5b6b4856dae30cec5943b5c69561c49b1e75cb1e72965",
+      "onSourceConstructed": true,
+      "earlyCullFieldsDefined": true,
+      "triangleCornerOrderCorrect": true,
+      "reciprocalStillFragment": true,
+      "atlasSuffixByteEqual": true,
+      "bufferArgumentCountUnchanged": true
+    }
+  ],
+  "checks": "Original G01 vs G04 OFF exact bytes; ON anchor construct, flat fields, early-cull initialization, triangle corner order, guarded ratio replacement, original reciprocal and fract, atlas suffix, buffer argument count."
+}

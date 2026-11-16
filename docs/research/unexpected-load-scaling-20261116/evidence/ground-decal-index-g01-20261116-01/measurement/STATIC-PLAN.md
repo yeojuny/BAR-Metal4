@@ -1,0 +1,28 @@
+# G01 static build and validation plan
+
+Status: preparation only. No G01 configure, build, GPU helper, game, capture, or profiler has been run under this plan. Root owns the source edit and freeze; measurement owner owns a later expressly approved build and runtime window.
+
+## Identity and build choice
+
+- Parent: accepted S01 R2 signed engine `9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0`, source at `../decal-grass-boundary-s01-20261115-01/source/engine` relative to the evidence root. Preserve its binary, source, runtime, and raw results.
+- G01 source: `G01/source/engine` copied from that exact parent; freeze requires a whole source manifest and a bounded reviewed delta. Expected feature: `BAR_NATIVE_GROUND_DECAL_INDEX_G01`, default 0; diagnostic probe 1 only in validation and 0 in clean. Actual flag names and positive witness must be verified against frozen source before staging.
+- Build once in a **fresh G01/build**, using a G01-remapped copy of S01 `initial-cache.cmake`, Ninja, `RelWithDebInfo`, `/usr/bin/c++`, and `PKG_CONFIG_PATH=/opt/homebrew/opt/openal-soft/lib/pkgconfig`. Reuse settings and dependencies; do not copy S01 object files or archives, which contain source-path-specific provenance and risk stale archive members. Target `spring-metal4-scene`, normal `-j 8`. A final no-work build is an audit, not a second candidate build.
+- Audit exact source delta, compile commands, all target objects and every archive member against the G01 source/build tree (S01 precedent: 1538 objects, 35 archives, zero mismatches). These are expected counts to check, not assumed PASS. Clone the S01 private native runtime, replace only its engine with G01 raw output, apply exactly the nine loader relocations recorded in `S01/CANDIDATE-R2.json`, sign and verify the private engine, and record raw/signed SHA, dependent library hashes, and effective child executable path. Do not modify the accepted S01 runtime.
+
+## Ordered diagnostic gates after separate GO
+
+1. CPU source contract: verify the 36-index sequence preserves all twelve triangles, primitive order, cyclic rotation and provoking-vertex/flat-data semantics, instance order, fallback behavior, and default-off path. Root/reviewer own the source assessment.
+2. Standalone Metal parity helper, if approved separately: compile the **actual frozen G01 vertex and fragment shader source** with old nonindexed versus new indexed submission. Keep all instance/resource/uniform inputs, blend, sampler, depth and stencil state identical. Compare full color, depth, and stencil bytes after nontrivial draws, including transparent atlas patterns, clipped/degenerate cases and flat-data/provoking-vertex cases. Check positive changed pixels as well as equality so clear-only output cannot pass. This proves the tested shader path, not complete in-game equivalence. No helper execution is authorized yet.
+3. One actual G01-on official Seths combat validation game, with Metal API Validation on, G01 probe on, S01 on, all other established flags unchanged. Require the signed child identity and runtime flag receipt, actual indexed GroundDecal draw positive witness from the frozen source, no matched Metal validation errors, native World draw/submit/retire, normal exit, internal PNG after the count window, and actual `LimitIdleFps=0`/`option_limitoffscreenfps=false`. Preserve raw output before parser classification. A failure stops the sequence; no unchanged retry. Diagnostic FPS is excluded from the clean comparison.
+4. Root reviews the actual PNG against the accepted S01 same-scene reference, recognizing animated content may differ; failure stops clean runs. Capture/profiler are outside this plan.
+
+## Future clean comparison after separate gate and GO
+
+- Primary causal comparison: **same newly signed G01 binary** with G01=0 (A) versus G01=1 (B), both S01=1 and G01 probe=0. Order `A1 B1 B2 A2 A3 B3`, with six fresh private profiles and outputs. Historical signed 9a44 S01 results remain contextual, outside the primary six-run pool.
+- Reuse the accepted Ultra AA0 official Seths fixture, current local26 content/map/font and seed, spectator/fullview, identical camera and 1512×950 actual view, official command at sim240, ten seconds of combat warmup sim240..540, then forty counted seconds sim540..1740. Keep VSync0, AA0, PREPARE1/BEGIN0, S01=1, pool0, DQU0 and all other accepted child flags and libraries constant. Confirm effective settings, offscreen FPS reduction off, actual World rendering, image, normal exit, scene state and equal input hashes each arm.
+- Metal/shader validation, probe, frame trace, capture and profiler are all off during clean runs. Preserve every valid slow run and full raw frame intervals; mean FPS is primary, 1% low supporting. Do not select runs by outcome or pool old 9a44 FPS into the six-run estimate. If power/display state changes, record it and assess comparability; screen lock alone does not stop a rendering run.
+- One execution owner holds the host window. On each game, release its owned process and wake assertion. End with PID 0, awake released and no owned GPU debug session. Stop at first actual crash/invariant failure and preserve its artifacts.
+
+## Pending before execution
+
+Source freeze and final review are complete; see ../TASK-STATE.json, ../SOURCE-MANIFEST.json and ../IMPLEMENTATION-REVIEW.json. Still pending: exact G01 signed hash and runtime library closure after authorized build; approved parity helper contract; distinct HQ PAUSE/GO for engine build, GPU helper, validation and any clean campaign. No execution is authorized by this document.

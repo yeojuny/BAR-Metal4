@@ -1,0 +1,108 @@
+{
+  "review": "S01 R2 first opaque MRT successor source review",
+  "reviewed_at_utc": "2026-11-16T08:55:15.240858+00:00",
+  "status": "PASS_NO_SOURCE_BLOCKER",
+  "scope": "Read-only five-file R2 diff against archived attempt01; no source edits, builds, GPU helper, or game by reviewer.",
+  "source_root": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine",
+  "changed_file_versions": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "attempt01": {
+        "bytes": 457643,
+        "sha256": "dca2cf42c2be16517a52053975192cf20969069a519f68da9595354e68988618"
+      },
+      "r2": {
+        "bytes": 460355,
+        "sha256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51"
+      }
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4Grass.h",
+      "attempt01": {
+        "bytes": 1878,
+        "sha256": "7b149c0e7c6438a0787c24e64f35f48c3cacad53e36e9c0aba4fa43a4cd79e4d"
+      },
+      "r2": {
+        "bytes": 2077,
+        "sha256": "936d704e174bdba72970835f787d643b953c6ba44a5804e45489e3d8c826aaf6"
+      }
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4Grass.mm",
+      "attempt01": {
+        "bytes": 16974,
+        "sha256": "d09e2c202b8ee57129f5a020f2c3b8a3deb16a258fc6ddd393cb01b018b3ad63"
+      },
+      "r2": {
+        "bytes": 18675,
+        "sha256": "894fd301c532f94bdb9163e522d67173e236b9c22a3c19c66e47d20db9145117"
+      }
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h",
+      "attempt01": {
+        "bytes": 1727,
+        "sha256": "789e2ea21a816c2dff2d22a06b0c23c0f989913af740bfa8101373786c3a871b"
+      },
+      "r2": {
+        "bytes": 3200,
+        "sha256": "92d7bc6574ec9206cab5280adec51ea03bda5fec0c42dabf138c9cf70be7a796"
+      }
+    },
+    {
+      "path": "tools/metal4-contracts/TestGrassBoundaryS01.cpp",
+      "attempt01": {
+        "bytes": 2666,
+        "sha256": "c49d5532cb0bbd6e02b39acb999ccd9b39ed04d1240af04632db3b19444bc94a"
+      },
+      "r2": {
+        "bytes": 4616,
+        "sha256": "9def058ec2580f9f51bbaf805d490ad90a4a108c8f9dc8eaf952142ca19dedfb"
+      }
+    }
+  ],
+  "checked_unchanged_provider_files": [
+    "rts/Rendering/Metal4/Metal4TerrainInfoSource.h",
+    "rts/Rendering/Metal4/Metal4TerrainInfoSource.mm",
+    "rts/Rendering/Metal4/Metal4ScreenNative.h",
+    "rts/Rendering/Metal4/Metal4ScreenNative.mm"
+  ],
+  "successor_contract": {
+    "admission": "GrassOpaqueEndRejectionsS01 accepts only no modelDepth, a nonnull opaque owner, at least one phase, deferred phase0, and the same local pass165Enabled false. The policy test covers 48 combinations of the four booleans and 0/1/2 phases, including absent, empty, forward-first, conflicting modelDepth and Pass165 keep.",
+    "callchain": "Between the all-Grass suffix and opaque phase0 are only host checks/logging/probe selection, the inactive modelGBuffer branch, a lambda definition and nextMRTKeep220 initialization. No draw or GPU dependency command is inserted. At n0, nextMRTKeep220 is empty; !pass165Enabled forces keepMRTBoundary165(0) false before phase inspection. The original Vertex|Fragment to queue Fragment|Blit barrier then ends the live G encoder, sets encoder nil, and only then disarms GrassSplitFailureS01. An explicit Require checks the expected close before EncodeMRTPhase(0).",
+    "failure": "An error before the successful n0 end leaves the guard armed, so the new G encoder is closed during unwind and the existing lease poison/quarantine path applies. There is no after-A fallback or replay. The distinct old modelDepth branch remains its original encode/close sequence and is excluded from S01.",
+    "sources": [
+      "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h:29-40",
+      "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5033-5055",
+      "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5297-5326",
+      "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5354-5370"
+    ]
+  },
+  "protocol_unchanged": {
+    "result": "PASS",
+    "detail": "The pre-A snapshot barrier, A-to-G Fragment-only split barriers, loaded attachment predicate, Grass source image/sampler/owner/callback preparation, five Vertex input provenance and physical alias tests, original generic resume paths, and CUS/OriginalModelImage implementations are not modified by R2. The original standalone modelDepth branch is restored; R2 changes only which already-existing successor can prove closure. The read-rejection refactor preserves its prior short-circuit check order and false-on-exception behavior.",
+    "sources": [
+      "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5033-5055",
+      "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5118-5134",
+      "rts/Rendering/Metal4/Metal4Grass.mm:76-132"
+    ]
+  },
+  "diagnostics": {
+    "result": "BOUNDED_WITH_LIMITS",
+    "detail": "PROBE exact-1 selects at most the first actual Grass packet in each simulation band 540-899, 900-1589 and 1590-1740; simulation 1740 may emit one final zero-Grass receipt. The three-bit mask limits rows. WorldRenderer selects the bounded ROI and enables PreparedGrass diagnostics before CaptureBoundaryCheckpointS01; only a selected PreparedGrass records scalar rejection fields. The existing positive parser line is unchanged.",
+    "limits": [
+      "A band without any Grass has no ROI row, except the possible final zero-Grass receipt at simulation 1740. Do not infer positive eligibility from an absent row.",
+      "The pure 48-case policy fixture does not exercise ObjC encoder failure, actual Metal closure, or runtime source classes. The updated fixture exercises populated, empty, and delayed-Grass ROI timelines; parent reports it passed, reviewer did not rerun it."
+    ],
+    "sources": [
+      "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h:40-49",
+      "rts/Rendering/Metal4/Metal4Grass.h:23-29",
+      "rts/Rendering/Metal4/Metal4Grass.mm:76-132",
+      "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5049-5063",
+      "rts/Rendering/Metal4/Metal4WorldRenderer.mm:5311-5323",
+      "tools/metal4-contracts/TestGrassBoundaryS01.cpp:48-85"
+    ],
+    "revision": "Final bounded-mode change reviewed: PreparedGrass recordBoundaryDiagnostic defaults false; every diagnostic field write in InspectBoundaryS01, CaptureBoundaryCheckpointS01 and CanSplitBoundaryS01 is conditional. WorldRenderer enables diagnostics only on the selected ROI Grass object before the capture query and logs the same selected bit later. With PROBE=0 there are no rejection-field writes or extra per-draw logs. Core boolean predicates, callback order, barriers, resource owners and guard disposition are unchanged."
+  },
+  "remaining_validation": "The owner must build R2, confirm a positive Grass-bearing split receipt under actual source provenance, then validate Metal API behavior and visual parity before any clean performance comparison. Attempt01 source300 grass_draws=0 says nothing about later provider or prefix rejection."
+}

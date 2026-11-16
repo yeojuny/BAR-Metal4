@@ -1,0 +1,13 @@
+{
+  "status": "READY",
+  "utc": "2026-11-16T16:15:18.294231+00:00",
+  "productSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "arms": [
+    {
+      "arm": "O1_G01",
+      "mode": "ELISION1",
+      "data": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/private/O1_G01/state/data",
+      "out": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_G01"
+    }
+  ]
+}

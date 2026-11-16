@@ -1,0 +1,48 @@
+{
+  "status": "ACCEPTED_LOCAL_OPT_IN_AA0_EXPERIMENTAL_BASELINE",
+  "candidateSHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "beforeSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "featureEnvironment": "BAR_NATIVE_GRASS_BOUNDARY_S01=1",
+  "probeEnvironment": "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE=0",
+  "defaultRemains": "opt-in; source defaultOFF",
+  "evidence": [
+    "IMPLEMENTATION-REVIEW-R2.json",
+    "SOURCE-EQUIVALENCE-R2.json",
+    "GAME-VALIDATION-GATE-R2.json",
+    "CAPTURE-GATE-R2.json",
+    "CAPTURE-CONTRACT-REVIEW.json",
+    "report/RESULT.json",
+    "report/COMPARABILITY.json",
+    "measurement/runs/s01_clean01/clean_paced/OWNER-CLOSED.json"
+  ],
+  "freshPairedEffect": {
+    "before": 53.69239266564326,
+    "after": 58.621092854933394,
+    "percent": 9.179513045698018
+  },
+  "low1Mean": {
+    "before": 46.35345584862203,
+    "after": 48.71666044470037,
+    "percent": 5.098227419754697,
+    "aggregation": "arithmetic mean of three run low1 values, not pooled frame intervals"
+  },
+  "actualGPUOverlapExists": true,
+  "activeOverlapDuration": "NOT_MEASURED; individual40GrassVSintervals not exported",
+  "captureAttachmentRootIndependence": "UNKNOWN_FROM_CAPTURE; frozen source gate plus API validation are supporting evidence",
+  "wholeGameByteParity": "NOT_CLAIMED",
+  "extraStoreLoadCost": "NOT_ISOLATED; net cleanFPS includes full change",
+  "runtime": "CLOSED owned games/sessions/caffeinate absent, awake released",
+  "changesNotMade": [
+    "Git",
+    "GitHub",
+    "release",
+    "existing app",
+    "Homebrew",
+    "baseline87df binary"
+  ],
+  "nextCandidatesNotExecuted": [
+    "R02 WeaponRange scope remains pending",
+    "R03 Sensor31657 reuse remains pending"
+  ],
+  "historicalSensorGain": "not summed with this fresh +9.179513% result"
+}

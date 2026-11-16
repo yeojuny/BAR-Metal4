@@ -1,0 +1,23 @@
+{
+  "status": "PASS_EXACT_THREE_PATH_SCOPE",
+  "baselineFiles": 10270,
+  "candidateFiles": 10272,
+  "changed": [
+    "rts/Rendering/Metal4/Metal4GroundDecal.mm"
+  ],
+  "added": [
+    "rts/Rendering/Metal4/Metal4GroundDecalUploadPolicyG02.h",
+    "tools/metal4-contracts/TestGroundDecalUploadG02.cpp"
+  ],
+  "missing": [],
+  "baselineRoot": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine",
+  "candidateRoot": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/source/engine",
+  "sourceManifestSHA256": "12ac78ad3d0b908bef156dbd170bfe41bc1d1ed34005f7a89f7bdc9ab69ceb01",
+  "unchanged": [
+    "NativeGroundDecalShaders.h",
+    "NativeGameDecalShaders.h",
+    "Metal4WorldRenderer.mm",
+    "Metal4RuntimeNative.mm"
+  ],
+  "G03included": false
+}

@@ -1,0 +1,5 @@
+{
+  "arm": "V_S01",
+  "error": "Traceback (most recent call last):\n  File \"${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/run.py\", line 428, in run\n    grass_boundary_evidence(out, mode == 'candidate')\n    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/run.py\", line 377, in grass_boundary_evidence\n    assert positive, 'S01 positive grass split absent; preserve raw and stop before clean'\n           ^^^^^^^^\nAssertionError: S01 positive grass split absent; preserve raw and stop before clean\n",
+  "utc": "2026-11-16T08:32:31.540660+00:00"
+}

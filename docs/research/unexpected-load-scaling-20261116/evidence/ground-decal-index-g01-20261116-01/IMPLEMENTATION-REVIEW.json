@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "status": "SOURCE_REVIEW_PASS_NO_BLOCKERS_GPU_PARITY_AND_REUSE_UNKNOWN",
+  "reviewedFiles": [
+    {
+      "path": "rts/Rendering/Metal4/Metal4GroundDecal.mm",
+      "sha256": "4b62d9bceec4eb1e16b7ec00826f729da86e5935f10e32effe224ab410ed3dec",
+      "baselineSHA256": "4e65ad573ba113ad7468b24c21c3785bc7ff84a45b804b06b324274344977da9"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4GroundDecalIndexPolicyG01.h",
+      "sha256": "1d5959efeead958cf3e53696742927a325271f0a881c21d2194329985bd56b55"
+    },
+    {
+      "path": "tools/metal4-contracts/TestGroundDecalIndexG01.cpp",
+      "sha256": "97b19a8921e08cd8a96458ad058e7fe3f8e2169d5f6ab4ec96fe2f55bfa6694b"
+    }
+  ],
+  "unchangedReferences": [
+    {
+      "path": "rts/Rendering/Metal4/NativeGroundDecalShaders.h",
+      "sha256": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6"
+    },
+    {
+      "path": "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51"
+    }
+  ],
+  "sourceProof": [
+    "The 36 UInt16 indices name eight existing vertex IDs. Every output slot reaches the same CUBE_VERT after the unchanged per-triangle cyclic rotation; all 12 ordered triangles retain their first-vertex flat value and all per-corner smooth inputs. Run reads sourceVertex only for CUBE_VERT (NativeGroundDecalShaders.h:12-55,197-321,372-382).",
+    "Vertex and fragment shaders, arguments, depth/cull/blend state and atlas draw are unchanged. The indexed path changes only the GroundDecal surface cube submission (Metal4GroundDecal.mm:49-80).",
+    "The local MTL4 SDK header MTL4RenderCommandEncoder.h:383-425 specifies count in elements, length in bytes, UInt16 two-byte alignment, and zero baseVertex/baseInstance semantics. Policy checks address/length; the draw uses 36 indices, actual buffer length and both bases zero.",
+    "The fixed 72-byte upload uses existing Buffer and RuntimeLease::AddAllocation, which retains the exact allocation for the frame (Metal4GroundDecal.mm:11,163-179; Metal4RuntimeNative.mm:769-782). PreparedGroundDecal also keeps a strong buffer handle until Encode. No cache or producer write is added.",
+    "Optional nil allocation and invalid index address/length use the old draw; lease/state errors propagate. Selector check happens before either draw and there is no catch/retry after submission. Existing completion packet owns PreparedGroundDecal through normal retirement (Metal4GroundDecal.mm:68-80,163-179; Metal4WorldRenderer.mm:5783-5807,5840-5864).",
+    "OFF performs no index allocation and the old draw. PROBE=0 avoids reason updates, counters and logging; the remaining additions are gate initialization and a branch."
+  ],
+  "evidenceLimits": [
+    "Owner reports CPU contract fixture PASS; reviewer did not run it.",
+    "GPU color/depth/stencil/sample parity and actual post-transform vertex reuse are not yet demonstrated. Indexed input can reduce unique IDs without guaranteeing eight VS invocations per instance or a mean-FPS gain.",
+    "GameDecal is a separate prepared draw family (Metal4GameDecal.mm:65-75,160-176); this review makes no Geometry184 or S01 overlap attribution."
+  ],
+  "reviewerActions": [
+    "read-only source and SDK inspection",
+    "source SHA-256 identity checks",
+    "no engine build, GPU run, game or source edit"
+  ],
+  "diagnosticRaceDisposition": "Resolved: Metal4GroundDecal.mm:7,87-89 uses two function-static atomic_flag values initialized with ATOMIC_FLAG_INIT. test_and_set(memory_order_relaxed) gives a race-free one-shot receipt without introducing order-dependent functional state. PROBE=0 bypasses both atomics and LOG.",
+  "sdkSyntaxEvidence": "Owner reports syntax-only SDK-API-CHECK.mm succeeded with -Wall -Wextra -Werror and empty log. Reviewer inspected installed MTL4RenderCommandEncoder.h:383-425; no engine build was performed by reviewer."
+}

@@ -1,0 +1,1 @@
+PASS cases=32 actual_GroundDecalVertex_Fragment=1 old36_indexed36=1 multiinstance=3 visible=30 depthChanged=15 stencilChanged=15 degenerateCase=10 color_depth_stencil_byte_equal=32

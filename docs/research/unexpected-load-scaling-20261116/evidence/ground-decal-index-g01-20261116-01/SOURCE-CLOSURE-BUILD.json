@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "manifestSHA256": "809c96f14a42c9fcc8292493b86466d6382e51990f6e54cbc4565b706880aab4",
+  "expectedFiles": 10270,
+  "observedFiles": 10270,
+  "missing": [],
+  "extra": [],
+  "mismatched": [],
+  "missingCount": 0,
+  "extraCount": 0,
+  "mismatchedCount": 0
+}

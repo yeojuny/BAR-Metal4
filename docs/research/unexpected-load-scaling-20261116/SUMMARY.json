@@ -1,0 +1,450 @@
+{
+  "schemaVersion": 1,
+  "reportDate": "2026-11-16",
+  "reportTimeZone": "America/Los_Angeles",
+  "purpose": "External audit of differing heavy/light workload observations and work-count versus FPS results",
+  "baseGitCommit": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+  "sourceReconstruction": "Technical owner compared exact public a3c7c6bf engine subtree to pre-R01: zero production source modifications; one Python cache excluded. Apply complete ordered R01/S01-R2/G01 patch chain; G02 is a separate held candidate. See PROVENANCE.json and REPRODUCING.md.",
+  "measurement": {
+    "metric": "CPU-observed DrawScreen draw-count/wall-time FPS, not GPU duration or display present rate",
+    "low1Metric": "Reciprocal of mean worst 1 percent CPU-observed frame intervals; multi-run low figures are arithmetic run means, not pooled-frame low",
+    "counterpartInterference": "Other local agents and work paused during native measurements",
+    "nominalWarmupSeconds": 10,
+    "measurementSeconds": 40,
+    "ordinaryActualGateNote": "Original simulation-300 gate and wall pacing make observed pre-count wall gate approximately 13.97 seconds; retained identically, not subtracted into the 40-second ROI",
+    "battleSimulationRange": [
+      540,
+      1740
+    ],
+    "ordinarySimulationRange": [
+      300,
+      1500
+    ],
+    "staleMetadataNote": "Some original LAUNCH measurementWindow values say planned 600..1800; actual battle receipt/sample rows are 540..1740. Raw files preserved.",
+    "drawCounterMeaning": "Raw draws fields in clean FPS records count DrawScreen callbacks/observed frames over elapsed time; they are NOT Metal draw-call, primitive or unit counts."
+  },
+  "fixedBattle": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game": "Beyond All Reason test-31691-a617033-local26",
+    "command": "luarules benchmark armbull armbull 80 8 1400",
+    "gameSeed": 154658555,
+    "benchmarkSeed": 7654321,
+    "preset": "Ultra index 4",
+    "AA": 0,
+    "nativeSamples": 1,
+    "viewport": [
+      1512,
+      950
+    ],
+    "recordedDrawable": [
+      1512,
+      982
+    ],
+    "recordedViewportOrigin": [
+      0,
+      32
+    ],
+    "VSync": 0,
+    "VSyncGame": 0,
+    "LimitIdleFps": 0,
+    "option_limitoffscreenfps": false,
+    "createdUnits": 600,
+    "destroyedUnits": 433,
+    "worldSimulationRowsIdenticalWithinCohorts": true,
+    "comparabilityLimit": "Recorded simulation/unit/camera/speed/pause rows match; this does not imply identical render interpolation, dynamic FX or full-frame pixel bytes."
+  },
+  "cohorts": [
+    {
+      "id": "R01",
+      "description": "SensorLOS conservative raster region, exact fragment rule retained",
+      "binaryA": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+      "binaryB": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+      "changed": "AA0 SensorLOS geometry bound",
+      "scene": "Seths Ravine Remake 1.3.1 / Ultra / AA0 battle",
+      "freshPaired": true,
+      "order": [
+        "A1_BASE",
+        "B1_SENSOR",
+        "B2_SENSOR",
+        "A2_BASE",
+        "A3_BASE",
+        "B3_SENSOR"
+      ],
+      "allValidRunsRetained": true,
+      "historicalSamplesPooled": false,
+      "meansFPS": {
+        "A": 47.46230828189746,
+        "B": 53.237233124631125
+      },
+      "changePercent": 12.167391456045706,
+      "rows": [
+        {
+          "run": "A1_BASE",
+          "meanFPS": 47.502435147431164,
+          "draws": 1901,
+          "seconds": 40.019001007,
+          "low1FPS": 39.175257731958766
+        },
+        {
+          "run": "B1_SENSOR",
+          "meanFPS": 53.248669514100136,
+          "draws": 2130,
+          "seconds": 40.000999451,
+          "low1FPS": 45.64315343227561
+        },
+        {
+          "run": "B2_SENSOR",
+          "meanFPS": 53.2513305523893,
+          "draws": 2130,
+          "seconds": 39.999000549,
+          "low1FPS": 45.92901869325883
+        },
+        {
+          "run": "A2_BASE",
+          "meanFPS": 47.480936384789096,
+          "draws": 1899,
+          "seconds": 39.994998932,
+          "low1FPS": 39.74895389173859
+        },
+        {
+          "run": "A3_BASE",
+          "meanFPS": 47.40355331347211,
+          "draws": 1896,
+          "seconds": 39.997001648,
+          "low1FPS": 37.54940711462451
+        },
+        {
+          "run": "B3_SENSOR",
+          "meanFPS": 53.21169930740393,
+          "draws": 2129,
+          "seconds": 40.009998322,
+          "low1FPS": 44.989775051124745
+        }
+      ]
+    },
+    {
+      "id": "S01",
+      "description": "Decal/grass stage overlap with retained dependencies",
+      "binaryA": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+      "binaryB": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+      "changed": "S01 extra pass boundary",
+      "scene": "Seths Ravine Remake 1.3.1 / Ultra / AA0 battle",
+      "freshPaired": true,
+      "order": [
+        "A1_BASE",
+        "B1_S01",
+        "B2_S01",
+        "A2_BASE",
+        "A3_BASE",
+        "B3_S01"
+      ],
+      "allValidRunsRetained": true,
+      "historicalSamplesPooled": false,
+      "meansFPS": {
+        "A": 53.69239266564326,
+        "B": 58.621092854933394
+      },
+      "changePercent": 9.179513045698018,
+      "rows": [
+        {
+          "run": "A1_BASE",
+          "meanFPS": 53.69060418587769,
+          "draws": 2148,
+          "seconds": 40.006999969,
+          "low1FPS": 47.008547008547005
+        },
+        {
+          "run": "B1_S01",
+          "meanFPS": 58.65,
+          "draws": 2346,
+          "seconds": 40.0,
+          "low1FPS": 48.78048790402538
+        },
+        {
+          "run": "B2_S01",
+          "meanFPS": 58.61620680843345,
+          "draws": 2345,
+          "seconds": 40.006000519,
+          "low1FPS": 49.07975490232978
+        },
+        {
+          "run": "A2_BASE",
+          "meanFPS": 53.69328690552605,
+          "draws": 2148,
+          "seconds": 40.005001068,
+          "low1FPS": 46.21848739495798
+        },
+        {
+          "run": "A3_BASE",
+          "meanFPS": 53.69328690552605,
+          "draws": 2148,
+          "seconds": 40.005001068,
+          "low1FPS": 45.833333142361106
+        },
+        {
+          "run": "B3_S01",
+          "meanFPS": 58.59707175636673,
+          "draws": 2344,
+          "seconds": 40.001998901,
+          "low1FPS": 48.28973852774595
+        }
+      ]
+    },
+    {
+      "id": "G01",
+      "description": "Original ordered cube triangles via 36 indices referencing 8 representative IDs",
+      "binaryA": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "binaryB": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "changed": "G01 OFF versus ON; S01 ON in both",
+      "scene": "Seths Ravine Remake 1.3.1 / Ultra / AA0 battle",
+      "freshPaired": true,
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF",
+        "A3_OFF",
+        "B3_ON"
+      ],
+      "allValidRunsRetained": true,
+      "historicalSamplesPooled": false,
+      "meansFPS": {
+        "A": 58.58971802635571,
+        "B": 62.79891068338862
+      },
+      "changePercent": 7.1841831618637775,
+      "rows": [
+        {
+          "run": "A1_OFF",
+          "meanFPS": 58.60146423230071,
+          "draws": 2344,
+          "seconds": 39.999000549,
+          "low1FPS": 47.524752475247524
+        },
+        {
+          "run": "B1_ON",
+          "meanFPS": 62.76715243006328,
+          "draws": 2511,
+          "seconds": 40.005001068,
+          "low1FPS": 54.62185160829053
+        },
+        {
+          "run": "B2_ON",
+          "meanFPS": 62.82957962010259,
+          "draws": 2514,
+          "seconds": 40.013000488,
+          "low1FPS": 54.85232368388274
+        },
+        {
+          "run": "A2_OFF",
+          "meanFPS": 58.560362366015696,
+          "draws": 2343,
+          "seconds": 40.009998322,
+          "low1FPS": 48.582995853070855
+        },
+        {
+          "run": "A3_OFF",
+          "meanFPS": 58.60732748075073,
+          "draws": 2344,
+          "seconds": 39.994998932,
+          "low1FPS": 46.87500009155273
+        },
+        {
+          "run": "B3_ON",
+          "meanFPS": 62.8,
+          "draws": 2512,
+          "seconds": 40.0,
+          "low1FPS": 52.953159518999975
+        }
+      ]
+    },
+    {
+      "id": "G02",
+      "description": "368-byte uniforms and 72-byte indices share one allocation",
+      "binaryA": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+      "binaryB": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+      "changed": "G02 OFF versus ON; S01 and G01 ON in both",
+      "scene": "Seths Ravine Remake 1.3.1 / Ultra / AA0 battle",
+      "freshPaired": true,
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF",
+        "A3_OFF",
+        "B3_ON"
+      ],
+      "allValidRunsRetained": true,
+      "historicalSamplesPooled": false,
+      "meansFPS": {
+        "A": 62.94113892965613,
+        "B": 62.88799475506419
+      },
+      "changePercent": -0.08443472027306331,
+      "rows": [
+        {
+          "run": "A1_OFF",
+          "meanFPS": 62.96555434986946,
+          "draws": 2519,
+          "seconds": 40.006000519,
+          "low1FPS": 53.49794491862703
+        },
+        {
+          "run": "B1_ON",
+          "meanFPS": 62.86100062639234,
+          "draws": 2514,
+          "seconds": 39.993000031,
+          "low1FPS": 53.60825018599228
+        },
+        {
+          "run": "B2_ON",
+          "meanFPS": 62.91084683512074,
+          "draws": 2517,
+          "seconds": 40.008998871,
+          "low1FPS": 55.201701561028116
+        },
+        {
+          "run": "A2_OFF",
+          "meanFPS": 62.90314342890758,
+          "draws": 2516,
+          "seconds": 39.998001099,
+          "low1FPS": 52.738339174405276
+        },
+        {
+          "run": "A3_OFF",
+          "meanFPS": 62.95471901019134,
+          "draws": 2518,
+          "seconds": 39.997001648,
+          "low1FPS": 54.05405663875947
+        },
+        {
+          "run": "B3_ON",
+          "meanFPS": 62.89213680367949,
+          "draws": 2516,
+          "seconds": 40.005001068,
+          "low1FPS": 52.84553081829609
+        }
+      ]
+    }
+  ],
+  "ordinaryHistoricalSingles": [
+    {
+      "id": "simmers-r01",
+      "binary": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+      "meanFPS": 185.15462632441086,
+      "low1FPS": 129.08777969018934,
+      "runs": 1,
+      "S01": false,
+      "G01": false
+    },
+    {
+      "id": "simmers-s01",
+      "binary": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+      "meanFPS": 185.46390215154858,
+      "low1FPS": 140.4494382022472,
+      "runs": 1,
+      "S01": true,
+      "G01": false
+    },
+    {
+      "id": "simmers-g01",
+      "binary": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "meanFPS": 183.0,
+      "low1FPS": 87.67772428741493,
+      "runs": 1,
+      "S01": true,
+      "G01": true,
+      "actualIndexedDraw": "UNKNOWN; probe disabled",
+      "actualChildFlagsVerified": true
+    }
+  ],
+  "ordinaryComparison": {
+    "freshPaired": false,
+    "oldS01ToG01Percent": -1.3285076626583847,
+    "causalConclusion": "UNRESOLVED",
+    "drawDifference": -98,
+    "concentratedSimulationRange": [
+      810,
+      990
+    ],
+    "concentratedMeasuredSeconds": [
+      17,
+      23
+    ],
+    "drawDifferenceInThoseSixBins": -86,
+    "remaining34BinsDrawDifference": -12,
+    "noBinsExcluded": true,
+    "countMeaning": "The 98/86 differences are fewer completed observed frames, not missing geometry or fewer GPU draw commands."
+  },
+  "applicability": {
+    "S01Ordinary": {
+      "evidence": "Original game grass height cull",
+      "cameraY": 4382.61110397,
+      "maximumTerrainHeight": 700,
+      "minimumHeightAboveGround": 3682.61110397,
+      "cutoff": 3599.99992,
+      "conclusion": "This fixed ordinary view suppresses original grass draw; map has grass assets"
+    },
+    "G02OrdinaryDiagnostic": {
+      "scope": "Owner lifetime including warmup, not just 40-second ROI",
+      "ownerCreated": 1,
+      "prepare": 0,
+      "eligible": 0,
+      "bufferCreates": 0,
+      "clearResources": 2,
+      "summaryPresent": true,
+      "conclusion": "No GroundDecal preparation work in this diagnostic; does not retroactively prove a cause for historical single-run FPS differences"
+    }
+  },
+  "G02WorkCount": {
+    "scope": "High-load diagnostic owner lifetime, not clean timed ROI",
+    "prepare": 3174,
+    "packed": 3174,
+    "combinedBufferCreates": 3174,
+    "separateIndexBufferCreates": 0,
+    "uniformOnlyBufferCreates": 0,
+    "allGroundHelperBufferCreates": 4449,
+    "normalUniformIndexAllocationsPerPrepareBefore": 2,
+    "normalUniformIndexAllocationsPerPrepareAfter": 1,
+    "uniformPrefixBytes": 368,
+    "indexOffsetBytes": 368,
+    "indexBytes": 72,
+    "logicalUploadBytes": 440,
+    "hostAggregateSizeBytes": 448,
+    "netCPUTimeSavings": "NOT_MEASURED",
+    "physicalRAMPeakSavings": "NOT_MEASURED"
+  },
+  "validation": {
+    "G01": {
+      "syntheticCases": 32,
+      "sameColorDepthStencil": true,
+      "actualGameMetalErrors": 0
+    },
+    "G02": {
+      "syntheticCases": 32,
+      "oldG01SeparateAndG02CombinedSameColorDepthStencil": true,
+      "actualGameMetalErrors": 0
+    },
+    "syntheticLimit": "64x64, sample1, no-shadow low-quality variant, normalRG32 versus productionRG16; does not prove full Ultra whole-game byte parity or production lifetime equivalence by itself",
+    "screenshots": "Representative images visually reviewed; dynamic differences exist, full-game byte equality not claimed",
+    "captureLimits": "Individual GrassVS 40 active intervals were not exported; aggregate envelope is not active overlap duration. Capture independent attachment/root details were not fully exported. Store/load isolated cost not measured."
+  },
+  "disposition": {
+    "performanceBaseline": {
+      "binary": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "S01": true,
+      "G01": true
+    },
+    "G02": "Preserved resource-work reduction candidate; not adopted as performance baseline",
+    "G03": "Conditional minimap sample skip deferred; generic Lua/float texture input contract unresolved; known-UNORM alternative retained",
+    "G04": "Source/CPU preparation only; GPU stage-move output/constant parity, engine build, gameplay and FPS unvalidated; paused for publication",
+    "repositoryScope": "Audit documents/evidence/source snapshots only; no engine patch application/main merge/release/Homebrew update"
+  },
+  "questions": [
+    "What explains the historical ordinary single-run loss concentrated in six seconds?",
+    "Does actual active-path CPU/GPU data identify any causal G01 overhead, given later GroundDecal Prepare=0?",
+    "Why does removing an upload object and registration not improve mean FPS? Distinguish bottleneck masking from new packing/check costs.",
+    "Which Ground/GameDecal fragment work is actually worth reducing next without parity loss?",
+    "Are source, binary, sample, lifetime and rendering comparisons sufficient to support each stated conclusion?"
+  ]
+}

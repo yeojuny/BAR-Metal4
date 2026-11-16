@@ -1,0 +1,209 @@
+{
+  "status": "POSTPROCESS_RECOVERY_VALID_GAME_NO_RERUN",
+  "reason": "Private release contract omitted unchanged boundaryMarkers key; original FAILURE preserved",
+  "originalFailure": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR/FAILURE.json",
+  "rawParserRow": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR/RESULT.json",
+  "candidateSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "meanFPS": 185.15462632441086,
+  "slow1PercentFPS": 129.08777969018934,
+  "draws": 7406,
+  "countedSeconds": 39.999000549,
+  "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR/scene.png",
+  "normalExit": true,
+  "powerWitness": "frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+  "backendEvidence": {
+    "backend": "PREPARE",
+    "commonStatus": [
+      {
+        "frame": "480",
+        "view": "1512,950,0,0",
+        "MSAA": "0",
+        "MSAALevel": "0",
+        "VSync": "0",
+        "VSyncGame": "0",
+        "Water": "4",
+        "option_ssao": "true",
+        "option_ssao_quality": "3",
+        "option_bloomdeferred": "true",
+        "option_bloomdeferred_quality": "2",
+        "option_cas_sharpness": "1",
+        "option_water": "2",
+        "option_msaa": "1",
+        "option_vsync": "1",
+        "widget_cas": "false",
+        "widget_bloom": "false",
+        "widget_ssao": "false"
+      },
+      {
+        "frame": "1500",
+        "view": "1512,950,0,0",
+        "MSAA": "0",
+        "MSAALevel": "0",
+        "VSync": "0",
+        "VSyncGame": "0",
+        "Water": "4",
+        "option_ssao": "true",
+        "option_ssao_quality": "3",
+        "option_bloomdeferred": "true",
+        "option_bloomdeferred_quality": "2",
+        "option_cas_sharpness": "1",
+        "option_water": "2",
+        "option_msaa": "1",
+        "option_vsync": "1",
+        "widget_cas": "false",
+        "widget_bloom": "false",
+        "widget_ssao": "false"
+      }
+    ],
+    "effectStartupEvidence": [
+      "[t=00:00:00.175020] [GR::UpdateScreenMatrices] vpx=0.000000, vpy=0.000000, vsx=1512.000000, vsy=950.000000, ssx=1512.000000, ssy=982.000000, screenPosX=0, screenPosY=0",
+      "[t=00:00:00.211340] [GR::UpdateScreenMatrices] vpx=0.000000, vpy=0.000000, vsx=1512.000000, vsy=950.000000, ssx=1512.000000, ssy=982.000000, screenPosX=0, screenPosY=0",
+      "[t=00:00:00.524767][f=-000001] [GR::UpdateScreenMatrices] vpx=0.000000, vpy=0.000000, vsx=1512.000000, vsy=950.000000, ssx=1512.000000, ssy=982.000000, screenPosX=0, screenPosY=0",
+      "[t=00:00:00.524818][f=-000001] [GR::UpdateScreenMatrices] vpx=0.000000, vpy=0.000000, vsx=1512.000000, vsy=950.000000, ssx=1512.000000, ssy=982.000000, screenPosX=0, screenPosY=0",
+      "[t=00:00:00.524855][f=-000001] [GR::UpdateScreenMatrices] vpx=0.000000, vpy=0.000000, vsx=1512.000000, vsy=950.000000, ssx=1512.000000, ssy=982.000000, screenPosX=0, screenPosY=0",
+      "[t=00:00:00.524882][f=-000001] [GR::UpdateScreenMatrices] vpx=0.000000, vpy=0.000000, vsx=1512.000000, vsy=950.000000, ssx=1512.000000, ssy=982.000000, screenPosX=0, screenPosY=0",
+      "[t=00:00:09.217358][f=-000001] [LoadScreen::SetLoadMessage] text=\"Creating Water\"",
+      "[t=00:00:11.264320][f=-000001] [BAR Metal4] Source-verified original SSAO: actual GBuffer inputs, original sampling/blur/composite and lifecycle",
+      "[t=00:00:12.521363][f=-000001] Loading widget from mod:   Contrast Adaptive Sharpen  <gfx_cas.lua> ...",
+      "[t=00:00:12.532627][f=-000001] Loading widget from mod:   Bloom Shader Deferred  <gfx_bloom_shader_deferred.lua> ...",
+      "[t=00:00:12.534727][f=-000001] Loading widget from mod:   SSAO                <gfx_ssao.lua> ...",
+      "[t=00:00:14.524643][f=-000001] [Metal4Scene] Completed frame with original source paths at frame 0: mapMRT=1 modelMRT=1 capturedSSAODrawCommands=3; this frame only, full visual parity pending",
+      "[t=00:00:17.351663][f=0000012] [NativeSSAO149] frame=60 draws=5 omitted_copies=2 omitted_logical_source_bytes=11491200 omitted_prior_resolves=2",
+      "[t=00:00:21.245783][f=0000128] [NativeSSAO150] frame=600 draws=5 attachment_clears=2 omitted_clear_draws=2 seeded_draws=2 omitted_copies=2 omitted_logical_source_bytes=11491200 omitted_argument_tables=2 omitted_upload_buffers=4 omitted_upload_bytes=3968"
+    ],
+    "viewport": [
+      1512,
+      950
+    ],
+    "fullEffectPixelParity": false,
+    "nativeOnlyRoute": {
+      "features": [
+        {
+          "boundary": "before",
+          "feature_id": "0",
+          "definition_known": "0",
+          "definition": "-1",
+          "name_hex": "616273656e74",
+          "x": "0.000000000",
+          "y": "0.000000000",
+          "z": "0.000000000",
+          "draw_flag": "-1",
+          "engine_mask": "-1",
+          "writes": "0"
+        },
+        {
+          "boundary": "after",
+          "feature_id": "0",
+          "definition_known": "0",
+          "definition": "-1",
+          "name_hex": "616273656e74",
+          "x": "0.000000000",
+          "y": "0.000000000",
+          "z": "0.000000000",
+          "draw_flag": "-1",
+          "engine_mask": "-1",
+          "writes": "0"
+        }
+      ],
+      "nativeMRT164": true,
+      "modelFamilies": [
+        "CUS"
+      ]
+    }
+  },
+  "pacingWitness": {
+    "status": "PASS",
+    "events": [
+      {
+        "event": "start",
+        "fields": {
+          "simulation": "1",
+          "wall_seconds": "0.000000000",
+          "state": "waiting"
+        },
+        "raw": "[t=00:00:17.007577][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting"
+      },
+      {
+        "event": "pause_request",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "5.947000027",
+          "state": "pause_requested"
+        },
+        "raw": "[t=00:00:22.954799][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=5.947000027 state=pause_requested"
+      },
+      {
+        "event": "pause_ack",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "5.952000141",
+          "state": "held"
+        },
+        "raw": "[t=00:00:22.960313][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=5.952000141 state=held"
+      },
+      {
+        "event": "resume_request",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.003000259",
+          "state": "resume_requested",
+          "held_seconds": "4.051000118",
+          "held_draws": "737"
+        },
+        "raw": "[t=00:00:27.011455][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.003000259 state=resume_requested held_seconds=4.051000118 held_draws=737"
+      },
+      {
+        "event": "resume_ack",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.008999825",
+          "state": "resumed"
+        },
+        "raw": "[t=00:00:27.016680][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.008999825 state=resumed"
+      },
+      {
+        "event": "removed_before_count",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.008999825"
+        },
+        "raw": "[t=00:00:27.016693][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.008999825"
+      }
+    ],
+    "originalWallGateSeconds": 13.972999573,
+    "moduleSHA256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "widgetSHA256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "releaseWitness": {
+    "mode": "PREPARE",
+    "actualReleaseMode": "PREPARE",
+    "queuedReleaseCount": 1,
+    "release": {
+      "mode": "PREPARE",
+      "eligible": "1",
+      "queued": "1",
+      "simulation": "300",
+      "begin_submission": "0",
+      "begin_prepare_overlap": "0"
+    },
+    "boundaryCount": 1,
+    "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3",
+    "pendingAtPrepareWitness": null,
+    "cpuCreditReclaimWitness": null,
+    "cpuCreditReclaimStatus": "NOT_OBSERVED",
+    "effectiveModeFromActualRelease": true
+  },
+  "screenStateWitness": {
+    "requestedElision": 1,
+    "finalColorStageActive": true,
+    "h5Mode": 0,
+    "countersEnabled": false,
+    "boundedRecords": 0,
+    "omittedSetters": null,
+    "scope": "bounded value-only receipts; validation run excluded from FPS"
+  },
+  "actualChildMode": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR/CHILD-MODE.json",
+  "ownerClosed": true,
+  "awakeReleased": true,
+  "historicalSingleRunNotPooled": true
+}
