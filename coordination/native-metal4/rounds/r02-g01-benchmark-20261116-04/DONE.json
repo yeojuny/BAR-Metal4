@@ -1,0 +1,152 @@
+{
+  "round_id": "r02-g01-benchmark-20261116-04",
+  "attempt_id": "r02-validation-and-clean-01",
+  "phase": "DONE",
+  "author": "LOCAL_CODEX_HQ",
+  "return_to": "SUPER_JINI_MK2",
+  "status": "PASS_CORRECTNESS_REGRESSION_NO_MEANINGFUL_FPS_DELTA",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "artifact_commit": "87d780578fc39f7c0f5608f6b0d94d6d08c3f557",
+  "artifact_root": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/artifacts",
+  "files": 78,
+  "all_remote_paths_and_blob_shas_verified": true,
+  "validation": {
+    "games": 1,
+    "actual_metal_api_validation_enabled": true,
+    "matched_metal_errors": 0,
+    "S01_positive": true,
+    "G01_positive": true,
+    "normal_exit": true,
+    "timing_excluded": true
+  },
+  "clean": {
+    "games": 6,
+    "order": [
+      "A1_G01",
+      "B1_R02",
+      "B2_R02",
+      "A2_G01",
+      "A3_G01",
+      "B3_R02"
+    ],
+    "baseline_FPS": [
+      62.148447141808894,
+      62.3,
+      62.289013269878325
+    ],
+    "R02_FPS": [
+      62.24066309296346,
+      62.2,
+      62.243674717638655
+    ],
+    "baseline_mean_FPS": 62.245820137229074,
+    "R02_mean_FPS": 62.228112603534036,
+    "relative_percent": -0.02844774742464251,
+    "baseline_mean_1percent_low": 52.96753081327809,
+    "R02_mean_1percent_low": 52.27486018422022,
+    "metric": "CPU-observed DrawScreen FPS, not GPU/present FPS",
+    "all_valid_slow_runs_retained": true,
+    "historical_samples_pooled": false,
+    "all40_world_camera_speed_pause_simulation_rows_match": true,
+    "created": 600,
+    "destroyed": 433,
+    "observed_simulation": [
+      540,
+      1740
+    ],
+    "actual_count_seconds_range": [
+      39.987998962,
+      40.006000519
+    ]
+  },
+  "images": {
+    "all7_actual_PNGs_viewed": true,
+    "observation": "No obvious new geometry/line omissions or corruption; animated effects and timing overlays vary. No exhaustive pixel-equivalence claim.",
+    "preserved_local_paths_and_hashes": "artifacts/EVIDENCE-INDEX.json",
+    "PNGs_uploaded": false
+  },
+  "limitations": [
+    "Ultra AA0 heavy battle only; no Simmers or true AA4 run.",
+    "No new copy/allocation/RAM/GPU timing telemetry. MRT frame-wise reuse/COW/copy counts remain unmeasured.",
+    "Runner nativeFinalColorExtents receipt null for baseline/candidate labels; actual raw sample1 and1512x982 verified in all7 runs. Runner unchanged.",
+    "Performance-neutral observation; JINI judges correctness adoption and next work."
+  ],
+  "cleanup": {
+    "status": "CLOSED",
+    "utc": "2026-11-16T23:55:01.949561+00:00",
+    "allOwnedPIDsGone": true,
+    "checks": [
+      {
+        "kind": "game",
+        "pid": 95010,
+        "alive": false,
+        "normalExit": true
+      },
+      {
+        "kind": "awake",
+        "pid": 95002,
+        "alive": false,
+        "released": true
+      },
+      {
+        "kind": "game",
+        "pid": 96157,
+        "alive": false,
+        "normalExit": true
+      },
+      {
+        "kind": "game",
+        "pid": 95831,
+        "alive": false,
+        "normalExit": true
+      },
+      {
+        "kind": "game",
+        "pid": 95713,
+        "alive": false,
+        "normalExit": true
+      },
+      {
+        "kind": "game",
+        "pid": 95519,
+        "alive": false,
+        "normalExit": true
+      },
+      {
+        "kind": "game",
+        "pid": 95264,
+        "alive": false,
+        "normalExit": true
+      },
+      {
+        "kind": "game",
+        "pid": 95381,
+        "alive": false,
+        "normalExit": true
+      },
+      {
+        "kind": "awake",
+        "pid": 95256,
+        "alive": false,
+        "released": true
+      }
+    ],
+    "sourceBuildCaptureHelpersStarted": false,
+    "ownedWorkersGoneWithProcesses": true,
+    "localArtifactGenerationComplete": true,
+    "remoteEvidenceCommit": "87d780578fc39f7c0f5608f6b0d94d6d08c3f557"
+  },
+  "budget_used": {
+    "validation_games": 1,
+    "clean_games": 6,
+    "builds": 0,
+    "helper_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "original_app_main_release_homebrew_changed": false,
+  "user_instruction_for_JINI": "대화가 무거우면 최소 인계를 남겨 새 섹션으로 분기하세요. HQ의 모델과 추론강도를 지니가 작업에 맞게 지정·조절하세요. 각 지시 덩어리에 명시하고 불필요한 왕복을 피하세요. 진행 중 실행의 중복이나 모델 변경은 피하고 다음 작업 경계에서 적용하세요. 실제 설정 변경/수신은 지니가 별도로 확인하세요.",
+  "utc": "2026-11-16T23:55:01.949561+00:00"
+}
