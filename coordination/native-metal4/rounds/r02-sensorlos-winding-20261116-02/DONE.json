@@ -1,0 +1,83 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-02",
+  "author": "LOCAL_CODEX_HQ",
+  "kind": "DONE",
+  "attempt_id": "r02-helper-execution-02",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "parent_source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+  "parent_full_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "result_status": "COMPLETED_PASS",
+  "result_summary": "Corrected fixed helper compiled once and ran once on Mac with observed Metal API Validation Enabled. Original3600 and R02 asymmetric1024 cases passed. Legacy winding negative controls were detected. No source edits, engine build, game or benchmark.",
+  "counts": {
+    "helper_compile_attempts": 1,
+    "gpu_helper_runs": 1,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "source_edits": 0
+  },
+  "compile": {
+    "exit_code": 0,
+    "wall_seconds": 1.0545092910178937,
+    "log": "",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "gpu": {
+    "exit_code": 0,
+    "wall_seconds": 16.30653970799176,
+    "metal_api_validation_observed": true,
+    "log": "2026-11-16 14:48:01.800 gpu_pixel_parity[87354:5420846] Metal API Validation Enabled\nPASS cases=3600 optimized=2234 visible=1869 depth=427 clipped=29 seam=12 xMajor=1199 yMajor=629; color/depth/stencil byte-identical, sampleCount=1\nPASS R02 asymmetric=1024 negativeStencil=96 negativeFacing=24 x=48 y=24 clipped=24 guardFallback=512; AA4 guard-only, GPU execution required\n",
+    "log_sha256": "6b1945f4a6cba1b90c93fc8942bf35133520f82dee3eee4ac0c26b7611385736",
+    "original_parity_cases": 3600,
+    "original_optimized": 2234,
+    "original_visible": 1869,
+    "original_depth": 427,
+    "original_clipped": 29,
+    "original_shared_seam": 12,
+    "original_x_major": 1199,
+    "original_y_major": 629,
+    "asymmetric_cases": 1024,
+    "legacy_stencil_negative_controls_detected": 96,
+    "legacy_front_facing_negative_controls_detected": 24,
+    "asymmetric_x_optimized": 48,
+    "asymmetric_y_optimized": 24,
+    "asymmetric_clipped_optimized": 24,
+    "guard_fallback_cases": 512,
+    "output_comparison": "Color/depth/stencil byte-identical against AABB for fixed path; prior R01 Y-major orientation error detected by deliberately restored old-order controls.",
+    "raster_sample_count": 1,
+    "AA4_scope": "Guard-only cases with production sampleCount4 and rasterSampleCount1. Actual MSAA4 GPU parity not tested.",
+    "validation_errors_observed": 0
+  },
+  "binary_sha256": "6e49b804e7076ea5e96a3f88b00cb2e004c0c0a41a610c7c0a913a7203259c33",
+  "helper_sha256": "e02f036d416e29ddefdbb4245ab9464fe3c303595e1d8f6382cdad23e3cd34f8",
+  "header_sha256": {
+    "NativeMultisampleLineShaders.h": "4e775c54e07e0c26fc21ca20b77635c7bbbb6efc55d026a4a010ca1c53c0b721",
+    "NativeSampleShadingShaders.h": "02c29319fb48b4ece77d1ed6c1cd7b3d4644dca1b81bce9f9f7423bfd12ef4bf",
+    "NativeSensorLOSShaders.h": "1fa2cf0b4f8a9cd01f9a3b6c4a3886b72297aa6de1481cf31505945cfc995b1c"
+  },
+  "cleanup": {
+    "results_complete": true,
+    "gpu_complete": true,
+    "gpu_complete_evidence": "All helper Render calls waitUntilCompleted before readback; successful helper process exit0; no outstanding subprocess. This does not validate native runtime frame-slot retirement.",
+    "owned_pid_count": 0,
+    "helper_session_count": 0,
+    "awake_released": true,
+    "awake_reason": "No awake keeper created",
+    "workers_quiescent": true,
+    "artifact_writes_closed": true
+  },
+  "evidence": {
+    "execution_receipt_sha256": "4e3dc607b125a67e48638171be72378e77987ccb3f4fc1916825216bf65040cb",
+    "evidence_manifest_sha256": "95dd2fa9bec9b9fe0a273011f9a48c2e5cea267c1d747ad322a64c915aa57064",
+    "input_files_rehashed_after_execution": true,
+    "raw_logs_preserved": true,
+    "previous_failed_attempt_preserved": true
+  },
+  "limitations": [
+    "Helper fixture correctness only; no full-game pixel parity or current engine runtime retirement proof.",
+    "No whole-engine compile, app build, screen validation, FPS, memory or performance claim.",
+    "No candidate adoption, main merge, release or Homebrew change."
+  ],
+  "next_action": "JINI consumes the successful fixed-helper result and determines the next bounded handoff. This DONE does not authorize any additional execution."
+}
