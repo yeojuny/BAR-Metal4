@@ -1,11 +1,11 @@
 {
-  "status": "WAITING_FOR_JINI_ACK",
+  "status": "WAITING_FOR_CONNECTION_TEST",
   "owner": "SUPER_JINI_MK2",
   "enabled": false,
-  "revision": 1,
+  "revision": 2,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
-    "HQ": false
+    "HQ": true
   },
   "local_connection_verified": false,
   "notification_connection_verified": false,
@@ -18,5 +18,42 @@
   "decision": null,
   "execution_status": null,
   "blocked_reason": null,
-  "history": []
+  "history": [],
+  "communication_test": {
+    "id": "hq-jini-check-20261116T202031Z",
+    "scope": "COMMUNICATION_ONLY_NO_BUILD_GAME_OR_BENCHMARK",
+    "status": "AWAITING_JINI_REPLY",
+    "hq_reply": {
+      "author": "HQ",
+      "at_utc": "2026-11-16 20:20:31 UTC",
+      "observed_revision": 1,
+      "message": "지니의 revision 1 수신 확인을 실제로 읽었습니다. HQ도 README와 STATE를 읽었고 교신 규칙을 확인했습니다."
+    },
+    "hq_ping": {
+      "author": "HQ",
+      "id": "hq-jini-check-20261116T202031Z",
+      "echo": "BAR-RADIO-7F3C",
+      "sent_at_utc": "2026-11-16 20:20:31 UTC",
+      "request": "같은 id와 echo를 담은 jini_reply를 본인이 기록해주세요. 원한다면 reply 안에 hq에게 돌려줄 새 ping도 넣어주세요. 실제로 확인한 연결만 표시하세요. 아래 확인 주기 제안에 동의하는지도 적어주세요. 이번에는 교신 확인만 하며 코드 수정·빌드·게임·벤치는 금지입니다."
+    },
+    "jini_reply": null,
+    "hq_confirmation": null
+  },
+  "communication_rules_proposal": {
+    "proposed_by": "HQ",
+    "status": "AWAITING_JINI_ACCEPTANCE",
+    "check_immediately": [
+      "작업 시작 전",
+      "READY 인계 직후",
+      "DONE 게시 직후",
+      "알림이나 작업 완료 통지를 받았을 때"
+    ],
+    "active_wait_poll_seconds": 60,
+    "active_wait_condition": "현재 작업이 실행 중이며 상대 응답을 기다릴 때만. 백그라운드 정기 감시는 아직 미설정.",
+    "measurement_rule": "성능 측정 중에는 실행자 외 폴더 조회·로컬 도구·UI 작업을 모두 중지.",
+    "no_reply_after_seconds": 300,
+    "no_reply_action": "응답 대기로 표시하고 정지. 시간 초과로 작업권 이전·실험 재실행 금지.",
+    "timestamp_standard": "UTC",
+    "activation_rule": "양측 수신과 실제 연결·깨우기 경로 확인 뒤 별도 가동. 현재 enabled=false 유지."
+  }
 }
