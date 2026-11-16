@@ -35,7 +35,7 @@
 
 ## 2. 현재 확인된 사실과 아직 모르는 것
 
-아래는 외부 감사 인계서가 보고한 값이다. 이 계획의 새 측정값이 아니다. [S1][S2]
+아래는 외부 감사 인계서가 보고한 값이다. 이 계획의 새 측정값이 아니다. [S1], [S2]
 
 | 비교 | MVK3 평균 FPS | Native 평균 FPS | 해석 |
 |---|---:|---:|---|
@@ -45,7 +45,7 @@
 
 AA0의 평균 FPS 역수는 약 10.65ms와 21.00ms다. 약 10.35ms 차이는 **CPU 관찰 처리 주기의 차이**이지, GPU 독점 실행 시간이나 그대로 제거 가능한 시간 예산이 아니다.
 
-PR7의 별도 풀 실험은 건설 약 −0.065%, 전투 약 +0.138%로 FPS 향상을 확인하지 못했다. 표본 구간의 새 버퍼 생성 감소는 별도 성과이며, 더 큰 풀이나 비슷한 캐시를 다음 주력 과제로 선택할 근거는 아니다. Ultra 직접 비교에서는 해당 풀이 OFF였다. [S1][S3]
+PR7의 별도 풀 실험은 건설 약 −0.065%, 전투 약 +0.138%로 FPS 향상을 확인하지 못했다. 표본 구간의 새 버퍼 생성 감소는 별도 성과이며, 더 큰 풀이나 비슷한 캐시를 다음 주력 과제로 선택할 근거는 아니다. Ultra 직접 비교에서는 해당 풀이 OFF였다. [S1], [S3]
 
 현재 부족한 것은 다음이다. [S1]
 
@@ -65,7 +65,7 @@ PR7의 별도 풀 실험은 건설 약 −0.065%, 전투 약 +0.138%로 FPS 향�
 - Native 시험 소스: `a3c7c6bfa93d09dac25755534195932d12fff41a`의 전체 엔진. [S4]
 - Native 시험 binary SHA256: `b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942`.
 - MVK3 시험 binary SHA256: `d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa`.
-- 맵: Seths Ravine Remake 1.3.1. 콘텐츠·라이브러리·설정의 상세 identity는 기존 자료를 사용한다. [S5][S6]
+- 맵: Seths Ravine Remake 1.3.1. 콘텐츠·라이브러리·설정의 상세 identity는 기존 자료를 사용한다. [S5], [S6]
 - Ultra, AA0, 관전자 전체 시야, 동일 카메라, 같은 초기 상태·seed·예열·측정 구간을 우선 기준으로 삼는다.
 - Native는 PREPARE1/BEGIN0, worker1, FINAL_COLOR1, MODEL_TYPE_FACTS1, SCREEN_STATE_ELISION1을 유지한다. STORAGE_POOL0 및 D/Q/U0, Sepia OFF도 유지한다. 나머지는 실제 child environment 기록을 따른다.
 - 화면은 전면·잠금 해제 상태를 확인한다. 전원 조건과 백그라운드 부하를 기록하고, clean 성능 측정과 프로파일/Validation 실행을 분리한다.
@@ -221,7 +221,7 @@ MVK3의 최신 소스를 시험한 번들의 소스라고 가정하지 않는다
 [S5]: https://github.com/yeojuny/BAR-Metal4/blob/910fa9cdf60c9f2c566722493356fe3a99027e3d/docs/research/native-mvk3-external-audit-20261115/data/SOURCE-IDENTITY.json
 [S6]: https://github.com/yeojuny/BAR-Metal4/blob/910fa9cdf60c9f2c566722493356fe3a99027e3d/docs/research/native-mvk3-external-audit-20261115/data/RUN-EVIDENCE.json
 
-- [S1 — 外部 감사 인계서][S1]
+- [S1 — 외부 감사 인계서][S1]
 - [S2 — 직접 비교 8회 요약][S2]
 - [S3 — PR7 별도 실험 결과][S3]
 - [S4 — 직접 비교에 사용한 Native 소스][S4]
