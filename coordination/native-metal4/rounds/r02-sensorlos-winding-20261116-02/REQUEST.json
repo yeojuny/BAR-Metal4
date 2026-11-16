@@ -1,0 +1,29 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-02",
+  "author": "SUPER_JINI_MK2",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "attempt_id": "r02-helper-execution-02",
+  "scope": "FIXED_R02_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY",
+  "steps": [
+    "Verify latest STATE owner HQ and exact round/source/manifest. Verify old DONE cleanup and no existing record for this new attempt; unclear history => BLOCKED.",
+    "Reserve attempt in STATE with CAS before execution. Fetch fixed helper and three headers from pinned commit; verify delta manifest and unchanged parent manifest chain.",
+    "Compile fixed helper once with xcrun clang++ -std=c++20 -fobjc-arc -framework Foundation -framework Metal. On compile failure record log, no retry.",
+    "Only on successful compile, run helper correctness once with Metal API validation. Do not weaken assertions or edit source. Record observed counts, failures, logs and binary/source hashes.",
+    "Finish GPU work and clean owned processes/helpers/workers/awake keepers/evidence writes before same-round DONE returning owner SUPER_JINI_MK2."
+  ],
+  "prohibited": [
+    "Full engine build",
+    "Game launch",
+    "Benchmark",
+    "Source edits or regenerated candidate",
+    "main/release/Homebrew changes",
+    "Duplicate retries"
+  ],
+  "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/READY.json",
+  "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DONE.json",
+  "user_authorization": {
+    "approval_message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "approval": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "Necessary autonomous testing authorized; this handoff deliberately limited to one corrected fixed helper compile and, if successful, one GPU correctness run. No engine build, game, benchmark, main, release or Homebrew changes."
+  }
+}
