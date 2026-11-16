@@ -1,0 +1,224 @@
+{
+  "status": "PASS_CORRECTNESS_REGRESSION_NO_MEANINGFUL_FPS_DELTA",
+  "round_id": "r02-g01-benchmark-20261116-04",
+  "attempt_id": "r02-validation-and-clean-01",
+  "utc": "2026-11-16T23:51:16.742300+00:00",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+  "order": [
+    "A1_G01",
+    "B1_R02",
+    "B2_R02",
+    "A2_G01",
+    "A3_G01",
+    "B3_R02"
+  ],
+  "runs": [
+    {
+      "run": "A1_G01",
+      "arm": "baseline",
+      "FPS": 62.148447141808894,
+      "onePercentLow": 52.63158127423833,
+      "draws": 2486,
+      "countSeconds": 40.000999451,
+      "over16_667ms": 1095,
+      "over33_333ms": 1,
+      "maxFrameMs": 34.000002,
+      "lifecycle": {
+        "processLaunchEpochNs": 1794872431992904000,
+        "processExitObservedEpochNs": 1794872512683313000,
+        "firstPositiveSimulationEpochNs": 1794872448956974303,
+        "windowStartEpochNs": 1794872470938597406,
+        "windowEndEpochNs": 1794872510940098656,
+        "loadingSeconds": 16.964070303,
+        "warmupObservedSeconds": 21.981623103,
+        "countedWindowSeconds": 40.00150125,
+        "gameplayObservedSeconds": 61.983124353,
+        "teardownObservedSeconds": 1.743214344,
+        "processObservedSeconds": 80.690426292,
+        "limit": "Exit is polled every0.5s; teardown/process duration may include up to0.5s observation delay. Simulation marker is frame1, nominal1/30s after frame0. Loading and teardown excluded from FPS."
+      }
+    },
+    {
+      "run": "B1_R02",
+      "arm": "candidate",
+      "FPS": 62.24066309296346,
+      "onePercentLow": 51.75983672612093,
+      "draws": 2490,
+      "countSeconds": 40.006000519,
+      "over16_667ms": 1043,
+      "over33_333ms": 1,
+      "maxFrameMs": 35.0,
+      "lifecycle": {
+        "processLaunchEpochNs": 1794872513061143000,
+        "processExitObservedEpochNs": 1794872593728914000,
+        "firstPositiveSimulationEpochNs": 1794872529758234927,
+        "windowStartEpochNs": 1794872551733274739,
+        "windowEndEpochNs": 1794872591739587947,
+        "loadingSeconds": 16.697091927,
+        "warmupObservedSeconds": 21.975039812,
+        "countedWindowSeconds": 40.006313208,
+        "gameplayObservedSeconds": 61.98135302,
+        "teardownObservedSeconds": 1.989326053,
+        "processObservedSeconds": 80.667784416,
+        "limit": "Exit is polled every0.5s; teardown/process duration may include up to0.5s observation delay. Simulation marker is frame1, nominal1/30s after frame0. Loading and teardown excluded from FPS."
+      }
+    },
+    {
+      "run": "B2_R02",
+      "arm": "candidate",
+      "FPS": 62.2,
+      "onePercentLow": 51.75983704761062,
+      "draws": 2488,
+      "countSeconds": 40.0,
+      "over16_667ms": 1050,
+      "over33_333ms": 1,
+      "maxFrameMs": 35.999998,
+      "lifecycle": {
+        "processLaunchEpochNs": 1794872594095369000,
+        "processExitObservedEpochNs": 1794872674739040000,
+        "firstPositiveSimulationEpochNs": 1794872610866220486,
+        "windowStartEpochNs": 1794872632842283881,
+        "windowEndEpochNs": 1794872672843186506,
+        "loadingSeconds": 16.770851486,
+        "warmupObservedSeconds": 21.976063395,
+        "countedWindowSeconds": 40.000902625,
+        "gameplayObservedSeconds": 61.97696602,
+        "teardownObservedSeconds": 1.895853494,
+        "processObservedSeconds": 80.64369,
+        "limit": "Exit is polled every0.5s; teardown/process duration may include up to0.5s observation delay. Simulation marker is frame1, nominal1/30s after frame0. Loading and teardown excluded from FPS."
+      }
+    },
+    {
+      "run": "A2_G01",
+      "arm": "baseline",
+      "FPS": 62.3,
+      "onePercentLow": 53.30490666527261,
+      "draws": 2492,
+      "countSeconds": 40.0,
+      "over16_667ms": 1072,
+      "over33_333ms": 0,
+      "maxFrameMs": 29.999999,
+      "lifecycle": {
+        "processLaunchEpochNs": 1794872675108112000,
+        "processExitObservedEpochNs": 1794872755817449000,
+        "firstPositiveSimulationEpochNs": 1794872691976543002,
+        "windowStartEpochNs": 1794872713954238647,
+        "windowEndEpochNs": 1794872753954595023,
+        "loadingSeconds": 16.868431002,
+        "warmupObservedSeconds": 21.977695645,
+        "countedWindowSeconds": 40.000356376,
+        "gameplayObservedSeconds": 61.978052021,
+        "teardownObservedSeconds": 1.862853977,
+        "processObservedSeconds": 80.709357208,
+        "limit": "Exit is polled every0.5s; teardown/process duration may include up to0.5s observation delay. Simulation marker is frame1, nominal1/30s after frame0. Loading and teardown excluded from FPS."
+      }
+    },
+    {
+      "run": "A3_G01",
+      "arm": "baseline",
+      "FPS": 62.289013269878325,
+      "onePercentLow": 52.96610450032333,
+      "draws": 2491,
+      "countSeconds": 39.991001129,
+      "over16_667ms": 1042,
+      "over33_333ms": 0,
+      "maxFrameMs": 29.999999,
+      "lifecycle": {
+        "processLaunchEpochNs": 1794872756170940000,
+        "processExitObservedEpochNs": 1794872836995903000,
+        "firstPositiveSimulationEpochNs": 1794872773124004511,
+        "windowStartEpochNs": 1794872795105911655,
+        "windowEndEpochNs": 1794872835097675574,
+        "loadingSeconds": 16.953064511,
+        "warmupObservedSeconds": 21.981907144,
+        "countedWindowSeconds": 39.991763919,
+        "gameplayObservedSeconds": 61.973671063,
+        "teardownObservedSeconds": 1.898227426,
+        "processObservedSeconds": 80.82498175,
+        "limit": "Exit is polled every0.5s; teardown/process duration may include up to0.5s observation delay. Simulation marker is frame1, nominal1/30s after frame0. Loading and teardown excluded from FPS."
+      }
+    },
+    {
+      "run": "B3_R02",
+      "arm": "candidate",
+      "FPS": 62.243674717638655,
+      "onePercentLow": 53.30490677892913,
+      "draws": 2489,
+      "countSeconds": 39.987998962,
+      "over16_667ms": 1057,
+      "over33_333ms": 0,
+      "maxFrameMs": 33.0,
+      "lifecycle": {
+        "processLaunchEpochNs": 1794872837372671000,
+        "processExitObservedEpochNs": 1794872918199943000,
+        "firstPositiveSimulationEpochNs": 1794872854096243765,
+        "windowStartEpochNs": 1794872876077705534,
+        "windowEndEpochNs": 1794872916066656162,
+        "loadingSeconds": 16.723572765,
+        "warmupObservedSeconds": 21.981461769,
+        "countedWindowSeconds": 39.988950628,
+        "gameplayObservedSeconds": 61.970412397,
+        "teardownObservedSeconds": 2.133286838,
+        "processObservedSeconds": 80.827292625,
+        "limit": "Exit is polled every0.5s; teardown/process duration may include up to0.5s observation delay. Simulation marker is frame1, nominal1/30s after frame0. Loading and teardown excluded from FPS."
+      }
+    }
+  ],
+  "arithmeticMeans": {
+    "baseline": {
+      "FPS": 62.245820137229074,
+      "onePercentLow": 52.96753081327809,
+      "over33_333msTotal": 1
+    },
+    "candidate": {
+      "FPS": 62.228112603534036,
+      "onePercentLow": 52.27486018422022,
+      "over33_333msTotal": 2
+    }
+  },
+  "candidateVsBaselinePercent": -0.02844774742464251,
+  "metric": "CPU-observed DrawScreen frames divided by measured wall seconds; not GPU execution/presentation FPS. 1% low is supporting evidence, not the adoption criterion.",
+  "worldChecks": "All40 bins per run match units/camera/speed/pause/start/end simulation, seeds/initial state/command/created600/destroyed433. No historical pooling or excluded valid slow runs.",
+  "display": {
+    "viewport": [
+      1512,
+      950
+    ],
+    "drawable": [
+      1512,
+      982
+    ],
+    "viewportOrigin": [
+      0,
+      32
+    ],
+    "actualMainSamples": 1,
+    "fixtureSpecificNotGeneralNotchPolicy": true
+  },
+  "flags": "PREPARE1 BEGIN0 worker1 frame/capture/prepare overlap1; S01/G01=1 both; D/Q/U/storage/sharedCUS/Sepia OFF; clean diagnostic/validation probes OFF.",
+  "validation": "One R02 game, MTL_DEBUG_LAYER1 actually enabled, no matched Metal errors; normal exit, S01/G01 positive; timing excluded.",
+  "imageReview": {
+    "all7ActualPNGsViewed": true,
+    "result": "No obvious new geometry/line omissions or corruption. Static world and lines visually consistent. Animated particles/smoke/projectiles/cloud effects and displayed timing text vary. No exhaustive pixel-equivalence claim.",
+    "asymmetricStencil": "Dedicated R02 helper had previously passed1024 asymmetric-stencil cases; this round did not repeat helper or probe stencil internals."
+  },
+  "knownReceiptLimitation": "ULTRA-EVIDENCE nativeFinalColorExtents null because baseline/candidate labels bypass native-specific receipt branch. Raw NativeFinalColorStage marker manually verified in all7 runs; actual1 sample and1512x982; runner not edited.",
+  "limitations": [
+    "This is the fixed Ultra AA0 heavy battle only; no low-load/Simmers or true AA4 test.",
+    "No new allocation/copy/residency/RAM/GPU timing telemetry, so those gains not measured.",
+    "MRT164 first-encoded marker exists; no complete frame-wise MRT reuse/COW/copy census, so not inferred.",
+    "Difference -0.02845% does not establish performance improvement or regression. Correctness adoption is for JINI judgment."
+  ],
+  "budgetUsed": {
+    "validationGames": 1,
+    "cleanGames": 6,
+    "builds": 0,
+    "helperRuns": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "originalAppMainReleaseHomebrewChanged": false,
+  "next": "JINI review correctness fix and performance-neutral result; do not start another game automatically."
+}

@@ -1,0 +1,11 @@
+{
+  "status": "CLOSED",
+  "validationNormalExit": true,
+  "all6CleanNormalExit": true,
+  "allOwnedProcessGroupsGone": true,
+  "bothCampaignAwakeReleased": true,
+  "gameWorkersTerminatedWithOwnedProcesses": true,
+  "captureAndBuildHelpersNeverStartedThisRound": true,
+  "remainingEngineProcessSnapshotEmpty": true,
+  "artifactWritesClosedAtDONEOnly": true
+}
