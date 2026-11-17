@@ -1,0 +1,21 @@
+{
+  "round_id": "r03-engine-staging-20261117-07",
+  "phase": "READY",
+  "author": "SUPER_JINI_MK2",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "source_manifest_path": "docs/research/r03-minor-reject-20261117/MANIFEST.json",
+  "request_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/REQUEST.json",
+  "attempt_id": "r03-isolated-build-01",
+  "budget": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "games": 0,
+    "benchmarks": 0,
+    "helpers": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "source_writers_stopped": true,
+  "child_tasks_completed": true
+}
