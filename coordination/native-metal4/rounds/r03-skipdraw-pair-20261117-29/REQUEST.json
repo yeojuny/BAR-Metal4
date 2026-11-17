@@ -1,0 +1,34 @@
+{
+  "round_id": "r03-skipdraw-pair-20261117-29",
+  "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+  "scope": "ONE_R03_GAME_MAIN_DECAL_ON_OFF_GPU_CONTROL",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "execution_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29",
+  "binary_pins": {
+    "R03": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9"
+  },
+  "original_widget_sha256": "09fcd576cece82dbca98991c56bb5c92c1c5c26d8672c6d5b8c2a3c324fd3adb",
+  "budget": {
+    "games_max": 1,
+    "captures_max": 2,
+    "inspection_sessions_max": 2,
+    "profiles_max": 2,
+    "profiles_per_capture": 1,
+    "retries": 0,
+    "builds": 0
+  },
+  "profile_semantics": "profile run --gpu-state default --exec overlapping, once per capture only after bound-tick, main-draw removal and non-target input gates pass",
+  "sequence": [
+    "Stage one R03 game after atomic reservation and reread",
+    "Same PID and Layer: normal then one original skipdraw action and next-render skip capture at paused sim1590",
+    "Inspect bound tick, main game decal removal and other inputs. Stop if unknown or mismatch.",
+    "Profile each trace once only when all comparison gates pass. Close and report."
+  ],
+  "reuse": "Round28 code copied with exactly one acknowledgement regex change; previous attempt and budget closed",
+  "authorization": {
+    "standing_benchmark": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "hq_routing": "Sentinel_8563c81084e48191aa31675bff31ab10"
+  },
+  "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/DONE.json"
+}

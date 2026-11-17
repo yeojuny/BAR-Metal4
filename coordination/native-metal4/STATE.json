@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 111,
+  "revision": 112,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r03-skipdraw-pair-20261117-28",
+  "round_id": "r03-skipdraw-pair-20261117-29",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
-  "request": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/DONE.json",
-  "decision": "UNKNOWN_SKIP_CAPTURE_NOT_STARTED_FALSE_NEGATIVE_ACK",
-  "execution_status": "HQ3_ROUND28_CLOSED_FALSE_NEGATIVE_ACTION_ACK_SINGLE_CAPTURE_NO_PROFILE",
+  "request": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/READY.json",
+  "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/DONE.json",
+  "decision": "REVIEWED_MINIMAL_ACK_FORMAT_FIX",
+  "execution_status": "HQ3_ROUND29_RESERVED_ONCE",
   "blocked_reason": null,
   "history": [
     {
@@ -1607,6 +1607,26 @@
       "cleanup_complete": true,
       "bar": "PAUSED",
       "utc": "2026-11-17T20:34:45.171445+00:00"
+    },
+    {
+      "event": "HQ3_ROUND29_RESERVED_ONCE",
+      "revision": 112,
+      "round_id": "r03-skipdraw-pair-20261117-29",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+      "runner_sha256": "8d8cf7e5c6d1ad75e6aaf9a97d93ccde682e24c99028bd5ca5003a5c573c87ec",
+      "controller_sha256": "fe0a9b9a16d545f4a43cea168bea6dfbb6782c05a27492c123a6735bfc5e2925",
+      "budget": {
+        "games_max": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profiles_max": 2,
+        "profiles_per_capture": 1,
+        "retries": 0,
+        "builds": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "bar": "PAUSED",
+      "utc": "2026-11-17 20:38:03 UTC"
     }
   ],
   "communication_test": {
@@ -1690,9 +1710,9 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+    "attempt_id": "r03-onegame-main-decal-skipdraw-02",
     "started": true,
-    "completed": true,
+    "completed": false,
     "budget": {
       "games_max": 1,
       "captures_max": 2,
@@ -1703,25 +1723,9 @@
       "builds": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 20:30:05 UTC",
+    "reserved_at_utc": "2026-11-17 20:38:03 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false,
-    "ended_at_utc": "2026-11-17T20:34:45.171445+00:00",
-    "counts": {
-      "games": 1,
-      "capture_commands": 1,
-      "captured_frames": 1,
-      "skip_capture_commands": 0,
-      "inspection_sessions": 0,
-      "profile_commands": 0,
-      "retries": 0,
-      "builds": 0,
-      "engine_source_edits": 0
-    },
-    "diagnostic_outcome": "UNKNOWN_SKIP_CAPTURE_NOT_STARTED_FALSE_NEGATIVE_ACK",
-    "cleanup_complete": true,
-    "artifact_commit": "0f1fedbfd5def3302de2f23cf4cbce8dac129f51",
-    "retry_authorized": false
+    "previous_budget_reused": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1787,5 +1791,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "SUPER_JINI_MK2 review round28 DONE. The attempt ended after a false-negative host acknowledgement check. No retry or additional execution is authorized."
+  "next_action": "HQ3 stage and run the one approved R03 game, capture normal and skipped on same layer and inspect before any profile. Stop on failure."
 }
