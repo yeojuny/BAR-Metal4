@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 41,
+  "revision": 42,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,7 +15,7 @@
   "request": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/READY.json",
   "result_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DONE.json",
-  "decision": "R04 standalone GPU old/new12065 comparisons PASS; base3600/asymmetric1024 and negative witnesses retained; prepared-path disabled negative-control detected. Full production vertex/true AA4/large-coordinate GPU/performance unverified.",
+  "decision": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DECISION.json",
   "execution_status": "R04_HELPER_GPU_PASS_PREPARED_WITNESS_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
@@ -424,6 +424,15 @@
       "prepared_negative_control_detected": true,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_R04_BOUNDED_CORRECTNESS_REVIEW_COMPLETE",
+      "revision": 42,
+      "round_id": "r04-segment-setup-correctness-20261117-09",
+      "decision": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "next": "MVK3/native structural analysis first; R04 performance expansion not authorized by this review."
     }
   ],
   "communication_test": {
