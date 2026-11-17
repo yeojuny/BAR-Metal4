@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 121,
+  "revision": 122,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/READY.json",
   "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/DONE.json",
-  "decision": "PINNED_PREPARE_DECODE_BATCH_SDK_ONLY",
-  "execution_status": "HQ3_ROUND34_RESERVED_ONCE",
+  "decision": "PASS_EXACT_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_AND_LINK",
+  "execution_status": "HQ3_ROUND34_CLOSED_PREPARE_LOCAL_MAC_SDK_COMPILE_LINK_PASS",
   "blocked_reason": null,
   "history": [
     {
@@ -1857,6 +1857,33 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17 22:05:57 UTC"
+    },
+    {
+      "event": "HQ3_ROUND34_CLOSED_PREPARE_LOCAL_MAC_SDK_COMPILE_LINK_PASS",
+      "revision": 122,
+      "round_id": "prepare-decode-batch-sdk-20261117-34",
+      "attempt_id": "clean-sdk-only-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "afcee01f8bea51bab364ec13364036825572a413",
+      "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/DONE.json",
+      "decision": "PASS_EXACT_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_AND_LINK",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "games": 0,
+        "gpu_invocations": 0,
+        "helpers": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "candidate_binary_sha256": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d",
+      "production_compile_and_link_verified": 12,
+      "protected_hashes_verified": 134,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T22:12:28.041490+00:00"
     }
   ],
   "communication_test": {
@@ -1942,7 +1969,7 @@
   "execution": {
     "attempt_id": "clean-sdk-only-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "configure_attempts": 1,
       "engine_builds": 1,
@@ -1956,7 +1983,27 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17 22:05:57 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false
+    "previous_budget_reused": false,
+    "ended_at_utc": "2026-11-17T22:12:28.041490+00:00",
+    "counts": {
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "games": 0,
+      "gpu_invocations": 0,
+      "helpers": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "diagnostic_outcome": "PASS_EXACT_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_AND_LINK",
+    "cleanup_complete": true,
+    "artifact_commit": "afcee01f8bea51bab364ec13364036825572a413",
+    "retry_authorized": false,
+    "candidate_binary_sha256": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d",
+    "production_compile_and_link_verified": 12,
+    "runtime_parity": "UNTESTED",
+    "runtime_performance": "UNMEASURED",
+    "authorization_message_id": "Sentinel_ea580c1496288191adb1e9aaf169fe45"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2022,7 +2069,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 configure and make one clean Mac SDK engine build for exact R03 plus the prepare/decode batch. No runtime execution.",
+  "next_action": "SUPER_JINI_MK2 review round 34 DONE and source-to-executable evidence. The SDK build scope is closed.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
