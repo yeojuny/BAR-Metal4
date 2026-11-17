@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 109,
+  "revision": 110,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/DONE.json",
   "decision": "STOP_LIFETIME_TOOLING_COMPARE_ACTUAL_GPU_MAIN_DRAW_COST",
-  "execution_status": "READY_ONE_EVIDENCE_BACKED_HANDOFF_RETRY",
+  "execution_status": "HQ3_ROUND28_RESERVED_ONCE",
   "blocked_reason": null,
   "history": [
     {
@@ -1561,6 +1561,24 @@
       "HQ_routing_message": "Sentinel_8563c81084e48191aa31675bff31ab10",
       "execution_started": false,
       "retry_limit": 1
+    },
+    {
+      "event": "HQ3_ROUND28_RESERVED_ONCE",
+      "revision": 110,
+      "round_id": "r03-skipdraw-pair-20261117-28",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "budget": {
+        "games_max": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profiles_max": 2,
+        "profiles_per_capture": 1,
+        "retries": 0,
+        "builds": 0
+      },
+      "bar": "PAUSED",
+      "utc": "2026-11-17 20:30:05 UTC"
     }
   ],
   "communication_test": {
@@ -1645,7 +1663,7 @@
   },
   "execution": {
     "attempt_id": "r03-onegame-main-decal-skipdraw-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "budget": {
       "games_max": 1,
@@ -1656,7 +1674,10 @@
       "retries": 0,
       "builds": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "reserved_at_utc": "2026-11-17 20:30:05 UTC",
+    "bar": "PAUSED",
+    "previous_budget_reused": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1722,5 +1743,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "One handoff retry backed by direct user standing authorization; no duplicate execution."
+  "next_action": "HQ3 stage and run the one approved R03 capture pair. Inspect bound witnesses before any profile. Close on failure without retry."
 }
