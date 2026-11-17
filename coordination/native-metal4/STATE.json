@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 50,
+  "revision": 51,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
   "request": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DONE.json",
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/DECISION.json",
-  "execution_status": "GROUND_DECAL_TWO_ARM_VALIDATION_RESERVED",
+  "execution_status": "GROUND_DECAL_VALIDATION_NO_METAL_ERRORS_WORLD_BIN_REVIEW_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -509,6 +509,42 @@
       "attempt_id": "ground-decal-pages-validation-01",
       "games_budget": 2,
       "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a"
+    },
+    {
+      "event": "HQ_GROUND_DECAL_TWO_VALIDATION_GAMES_DONE_WORLD_BIN_REVIEW_REQUIRED",
+      "revision": 51,
+      "round_id": "ground-decal-pages-validation-20261117-12",
+      "attempt_id": "ground-decal-pages-validation-01",
+      "artifact_commit": "cfe365c17915473bdcd72c2dafc5e59bb8ecc27a",
+      "games": 2,
+      "Metal_errors": 0,
+      "world_rows_exact_match": 38,
+      "world_differences": [
+        {
+          "row_zero_based": 0,
+          "fields": {
+            "end_simulation": [
+              "577",
+              "570"
+            ],
+            "units": [
+              "171",
+              "172"
+            ]
+          }
+        },
+        {
+          "row_zero_based": 1,
+          "fields": {
+            "start_simulation": [
+              "577",
+              "570"
+            ]
+          }
+        }
+      ],
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -595,9 +631,18 @@
   "execution": {
     "attempt_id": "ground-decal-pages-validation-01",
     "started": true,
-    "completed": false,
-    "games": 0,
-    "builds": 0
+    "completed": true,
+    "games": 2,
+    "builds": 0,
+    "baseline_games": 1,
+    "candidate_games": 1,
+    "normal_exits": 2,
+    "Metal_errors": 0,
+    "world_rows_exact_match": 38,
+    "world_rows_per_arm": 40,
+    "world_bin_review_required": true,
+    "cleanup_complete": true,
+    "artifact_commit": "cfe365c17915473bdcd72c2dafc5e59bb8ecc27a"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
