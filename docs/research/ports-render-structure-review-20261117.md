@@ -1,6 +1,6 @@
 # D2R·Zelda 렌더 구조: BAR R03 대응 심층 1차 검토
 
-> 최신 기록: round21 CPU tail 진단 완료(STATE84). 평균 0.032586 ms는 GPU idle/성능 이득이 아니다. R04 helper 통과와 게임 성능 미측정을 구분하며 마지막 절을 참조한다.
+> 최신 기록: round24 R04/R03 비교 완료(STATE94). 각 3회 평균 R04 −7.42556%, Metal Validation 오류0. 원인 미확정이며 R04 미채택. 마지막 절 참조.
 
 > 최신 운영 상태는 문서 끝의 **round18 종료·제한적 동등성 통과** 갱신을 참조한다. revision72/RUNNING 내용은 과거 스냅샷이다.
 
@@ -428,3 +428,30 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 - [ ] 다음 비교 대상은 R03 `0780bd7c530b0696067b717428b49a416eda556a` 대 고정 R04. 별도 결정/인계에서 고정 source·manifest·바이너리와 동일 장면·품질 조건을 확정하고, 화면/Metal 검증 후 성능 비교한다. 이것은 계획이지 실행 완료나 이 문서 자체의 실행 허가가 아니다.
 - [ ] full production/경계/자원 수명/다른 장면 미검증 항목은 남긴다. HQ 소유 중 JINI·보조 작업이 로컬 실행에 간섭하지 않는다.
 - MVK3/BAR가 메인, 포팅 분석은 보조. FSR/frame generation 제외, main·release·Homebrew 보호 유지. 이 갱신은 별도 docs branch와 클라우드 로컬 Markdown만 변경한다.
+
+
+## round24: R04 게임 검증 완료, 성능 회귀로 미채택 (2026-11-17)
+
+### 실제 읽은 근거와 완료 상태
+- [x] STATE revision **94**, round `r04-r03-validation-clean-20261117-24`의 완료 기록과 [고정 REPORT](https://github.com/yeojuny/BAR-Metal4/blob/c47add111fee80fba87b41cfbae012743033b163/coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/REPORT.md)를 읽었다. artifact `c47add111fee80fba87b41cfbae012743033b163`.
+- 이 절은 앞선 “R04 게임 성능 미측정/비교 예정”을 갱신한다. 과거 helper·round21 기록은 당시 상태로 보존한다.
+- 고정 R04 source `5d20bd842b3c881166abb58f361482a5d7bb19e7`, R03 `0780bd7c530b0696067b717428b49a416eda556a`. 두 네이티브 후보 간 비교이며 **MVK3 비교가 아니다**.
+
+### 성능: 3회씩 비교한 제한된 회귀 증거
+- [x] R04 validation 1회 통과 후 clean 6회, 순서 **R03, R04, R04, R03, R03, R04**. 각 arm 3회의 산술평균 R03 **63.81081856**, R04 **59.07250632**, R04 상대 변화 **−7.42556254%**.
+- R04 세 결과 모두 R03 세 결과보다 낮았다. 유효한 느린 실행·프레임 모두 유지, 재실행/제외/역사 표본 합산 없음. validation FPS 제외.
+- 단위는 **CPU 관측 DrawScreen 프레임 수÷측정 wall 시간**이며 GPU 실행률이나 display-present FPS가 아니다. 측정 observer의 오버헤드도 별도 정량화하지 않았다.
+- 동일 장면/품질 조건에서 40개 simulation·unit·camera·speed·pause 행이 clean6 전체에서 일치. 이는 bounded fixture 비교 근거이지 모든 장면·모든 렌더 상태의 동등성 증명은 아니다.
+- **실제 회귀 원인은 미확정**. 추가 varying/vertex 계산, 자원 압박, shader 실행 변화 등은 분리 측정 전 가설일 뿐이다. replay 비중이나 이전 aggregate bounds로 원인을 확정하지 않는다.
+
+### 검증·화면과 한계
+- [x] 실제 R04 production validation에서 Metal API Validation 오류 **0**, shader/pipeline 실패 행 없음, 정상 종료 후 clean 시작. clean에서는 validation/trace/diagnostic probes OFF.
+- [x] HQ 원본 REPORT의 실제 PNG 7장 검토에 따르면 지형·구조물·차량·그림자·표식 등에 명백한 R04 전용 결손/고정 지오메트리 손상 없음. 이 문서 갱신 담당은 REPORT를 읽었으며 PNG를 별도로 전수 재감사한 것은 아니다.
+- smoke/particles/water/cloud/overlay 변화가 있으며 pixel·depth·stencil 완전 동등성이나 counted 전 구간 unsynced UI 일치를 주장하지 않는다. 현재 range circle은 R03 3/3, R04 3/3; 역사적 출현 차이 원인은 여전히 미확정.
+- [x] 게임 총7, build/helper/capture/replay/retry/source edit 모두0. HQ 기록상 process groups/controller/awake 정리 완료, 기존 입력·증거 불변, bar PAUSED 유지.
+
+### 결정과 다음 판단 경계
+- **R04를 성능 개선으로 채택하지 않는다.** R03 기준판을 보존하고 R04는 실패/회귀 실험 증거로 남긴다. main·release·Homebrew 승격 없음.
+- [ ] 회귀의 실제 원인 분리는 별도 고정 계획/예산/실행권 아래에서만 진행. 이 기록이 추가 프로파일·벤치·소스 변경을 허가하지 않는다.
+- MVK3/BAR 비교가 메인이고 포팅 사례는 보조. 한 프레임 내부 의존성 검토, aggregate bounds≠active overlap, 미확보 resource lineage 등의 한계도 유지한다. FSR/frame generation 제외.
+- [x] 본 갱신은 docs 전용 branch와 클라우드 로컬 Markdown 두 사본만 수정하며 STATE·coord branch·소스·사용자 Mac은 변경하지 않는다.
