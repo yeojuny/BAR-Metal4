@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 98,
+  "revision": 99,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r03-mvk3-matched-frame-20261117-25",
+  "round_id": "r03-mvk3-matched-frame-20261117-26",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
-  "request": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/DONE.json",
+  "request": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/READY.json",
+  "result_path": null,
   "decision": null,
-  "execution_status": "R03_BOUNDARY_QUERY_TIMEOUT_STOPPED_NO_CAPTURE_OR_PROFILE",
+  "execution_status": "READY_FOR_RECOVERED_MATCHED_FRAME_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -1330,6 +1330,45 @@
       "bar_status": "PAUSED",
       "to": "SUPER_JINI_MK2",
       "completed_at_utc": "2026-11-17 10:56:20 UTC"
+    },
+    {
+      "event": "JINI_SERVICE_RESPONSE_RESTORED_REBOOT_CANCELLED_NEW_FRAMEPAIR_READY",
+      "revision": 99,
+      "previous_round": "r03-mvk3-matched-frame-20261117-25",
+      "previous_result": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/DONE.json",
+      "round_id": "r03-mvk3-matched-frame-20261117-26",
+      "attempt_id": "r03-mvk3-framepair-02",
+      "HQ_recovery_turn_completed": true,
+      "recovery": {
+        "status": "REBOOT_CANCELLED_SERVICE_LIST_RESPONSIVE",
+        "reboot_requests": 0,
+        "service_restart_requests_this_step": 0,
+        "service_query_exit": 0,
+        "service_query_elapsed_seconds": 0.012305,
+        "active_sessions": 0,
+        "source": "evidence/capture-tool-reboot-20261117-01/RESULT.json",
+        "HQ_turn_completed": true,
+        "protected_files_unchanged": 110,
+        "bar": "PAUSED",
+        "capture_path_tested": false,
+        "scope": "User corrected reboot interpretation; no reboot authorized. User reports approving GPU diagnostic prompt; causal mechanism not established."
+      },
+      "budget": {
+        "games_max": 2,
+        "captured_frames_per_arm": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profile_commands_per_arm": 1,
+        "profile_commands_max": 2,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      },
+      "service_restart_approval_message": "Sentinel_5b819f1a943c8191af9e8531392ecf1b",
+      "reboot_instruction": "Explicitly corrected and cancelled before any request or schedule; prohibited"
     }
   ],
   "communication_test": {
@@ -1413,10 +1452,10 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r03-mvk3-framepair-01",
-    "started": true,
-    "completed": true,
-    "games": 1,
+    "attempt_id": "r03-mvk3-framepair-02",
+    "started": false,
+    "completed": false,
+    "games": 0,
     "captures": 0,
     "profiles": 0,
     "budget": {
@@ -1433,28 +1472,7 @@
       "extra_counter_replays": 0,
       "FPS_AB": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 10:41:20 UTC",
-    "counts": {
-      "games": 1,
-      "R03_games": 1,
-      "MVK3_games": 0,
-      "capture_boundary_queries": 1,
-      "capture_start_commands": 0,
-      "captured_frames": 0,
-      "inspection_sessions": 0,
-      "profile_commands": 0,
-      "engine_builds": 0,
-      "engine_source_edits": 0,
-      "R04_captures": 0,
-      "retries": 0,
-      "extra_counter_replays": 0,
-      "FPS_AB": 0
-    },
-    "cleanup_complete": true,
-    "global_session_list": "UNKNOWN_FINAL_LIST_TIMEOUT_15S",
-    "completed_at_utc": "2026-11-17 10:56:20 UTC",
-    "artifact_commit": "52194039c9e18b1da8b3e808c3a2a02f28a5f381"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1520,5 +1538,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "JINI review of insufficient frame-pair evidence; no automatic execution."
+  "next_action": "HQ3 reserve new round26 once and execute fixed diagnostic budget; no reboot/service restart."
 }
