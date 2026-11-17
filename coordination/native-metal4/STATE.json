@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 44,
+  "revision": 45,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
   "request": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/DONE.json",
   "decision": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DECISION.json",
-  "execution_status": "GROUND_DECAL_CPU_AND_ENGINE_COMPILE_RESERVED",
+  "execution_status": "GROUND_DECAL_CPU_AND_PRODUCTION_COMPILE_PASS_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -452,6 +452,20 @@
       "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
       "author": "LOCAL_CODEX_HQ",
       "games": 0
+    },
+    {
+      "event": "HQ_GROUND_DECAL_FIXED_CPU_AND_ENGINE_COMPILE_PASS",
+      "revision": 45,
+      "round_id": "ground-decal-pages-compile-20261117-10",
+      "attempt_id": "ground-decal-pages-compile-01",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "artifact_commit": "18ce3fa6ca17e85eebdfac5cfd9987fdb25d72d9",
+      "CPU_checks": 10680,
+      "randomized_revisions": 2000,
+      "archive_mismatches": 0,
+      "games": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -538,13 +552,16 @@
   "execution": {
     "attempt_id": "ground-decal-pages-compile-01",
     "started": true,
-    "completed": false,
-    "CPU_contract_compiles": 0,
-    "CPU_contract_runs": 0,
-    "configures": 0,
-    "engine_builds": 0,
+    "completed": true,
+    "CPU_contract_compiles": 1,
+    "CPU_contract_runs": 1,
+    "configures": 1,
+    "engine_builds": 1,
     "games": 0,
-    "reserved_by": "LOCAL_CODEX_HQ"
+    "reserved_by": "LOCAL_CODEX_HQ",
+    "cleanup_complete": true,
+    "raw_engine_sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+    "artifact_commit": "18ce3fa6ca17e85eebdfac5cfd9987fdb25d72d9"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
