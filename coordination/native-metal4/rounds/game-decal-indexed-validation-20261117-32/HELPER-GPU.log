@@ -1,0 +1,12 @@
+2026-11-17 13:08:22.238 game_decal_index_parity[15032:144972] Metal API Validation Enabled
+2026-11-17 13:08:22.238 game_decal_index_parity[15032:144972] Metal GPU Validation Enabled
+PASS tiny modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=1 samples=1 covered=22
+PASS regular modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=1 samples=1 covered=328
+PASS overlap_blend modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=2 samples=1 covered=486
+PASS left_control modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=1 samples=1 covered=330
+PASS right_control modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=1 samples=1 covered=329
+PASS partial_clip modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=1 samples=1 covered=196
+PASS sphere_reject modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=1 samples=1 covered=0
+PASS alpha_reject modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=0 count=1 samples=1 covered=0
+PASS nonzero_first modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=1 count=1 samples=1 covered=328
+PASS GameDecal shader fixture, sample1, overlap_pixels=173

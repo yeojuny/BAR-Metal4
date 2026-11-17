@@ -1,0 +1,42 @@
+{
+  "status": "DONE",
+  "round_id": "game-decal-indexed-validation-20261117-32",
+  "attempt_id": "indexed-native-off-on-02",
+  "reserved_revision": 117,
+  "decision": "PASS_SDK_AND_METAL_FIXTURE_CLEAN_PAIR_BLOCKED_UNPROVED_WORKLOAD",
+  "counts": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "parity_helper_compiles": 1,
+    "parity_helper_gpu_invocations": 1,
+    "parity_games": 0,
+    "clean_games": 0,
+    "games": 0,
+    "captures": 0,
+    "trace_inspections": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+  "parity_fixture": "PASS_9_CASES_SINGLE_SAMPLE_ON_METAL",
+  "production_indexed_game_path": "UNTESTED",
+  "finish_reason": "No existing runtime proof of actual flag route and matching ordered Lua decal rows/UBOs for the clean pair",
+  "performance": "UNMEASURED",
+  "protected_hashes_verified": 132,
+  "base_source_entries_verified": 10270,
+  "cleanup_complete": true,
+  "bar": "PAUSED",
+  "retry_authorized": false,
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32",
+  "artifactSHA256": {
+    "REPORT.md": "34a78b3f5969ea2beb647f11a69cf020bf4f20e1d238e42171b520cbb7ab4af4",
+    "SDK-EVIDENCE.txt": "0b13a768232df6d1d3e0e66310c6f937831e4b221f45e40a304f9f8240d57e1c",
+    "BUILD-EVIDENCE.json": "3f48c0d9040f1f6101c35a5920c13d888ecd2d6a117896b99ece393fe0c917af",
+    "HELPER-GPU.log": "01fdaa04016dea8adc97761a2bd6f2c8c61461c69ad22c7bfeec1b0bdc79bbb5",
+    "PARITY-EVIDENCE.json": "cd5080c081e6696a8614ba8740ee388f54083eb6c89bc305b449367cc8d82494",
+    "PROTECTED-HASHES.json": "5313f18a16922742a42d504636ac85ffa67fe4481a2b1dec253ed8df6f6fcdd8",
+    "CLEANUP-EVIDENCE.json": "dbf52335e5bfcd47265f080ddc7d5d7b49268222dfef87359ab540c28ee5338a",
+    "game_decal_index_parity.mm": "65e5acb257ac692764befec2c16b667cb95cdf3f95b6a40728ee2b88ce9bea54"
+  },
+  "utc": "2026-11-17T21:10:00.636153+00:00"
+}
