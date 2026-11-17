@@ -1,0 +1,19 @@
+{
+  "r04_prepared": {
+    "prepared_nonzero": 16131,
+    "fallback": 13667,
+    "zero_delta": 3,
+    "sentinel_checks": 12
+  },
+  "status": "PASS",
+  "scope": "CPU exact coverage/order identity and bounded integer arithmetic; no MSL/GPU/performance proof",
+  "counts": {
+    "cases": 32406,
+    "guarded": 17035,
+    "fallback": 15371,
+    "early_reject": 10629,
+    "covered": 7827,
+    "diamonds_old": 67611,
+    "diamonds_new": 45188
+  }
+}

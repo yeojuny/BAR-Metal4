@@ -1,0 +1,69 @@
+{
+  "status": "PASS_BOUNDED_GPU_CORRECTNESS_WITH_PREPARED_WITNESS",
+  "round_id": "r04-segment-setup-correctness-20261117-09",
+  "attempt_id": "r04-helper-correctness-01",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "header_sha256": "722565c5c1ff15bfa7801615fe3bbbf9acb7de83cb5deab61aa323e20455e73f",
+  "helper_sha256": "73a541821a23830511d97a220c2334ca908f76c9be0193b7704be34823b2129e",
+  "binary_sha256": "76cd2e9c098867d384a064328fec1802baa5b386fcc0c5e9fcdf1583eca7baeb",
+  "compile_attempts": 1,
+  "GPU_invocations": 1,
+  "gpu_wall_seconds": 31.857348625024315,
+  "metalValidationActuallyEnabled": true,
+  "matchedErrors": [],
+  "original": {
+    "cases": 3600,
+    "optimized": 2234,
+    "visible": 1869,
+    "depth": 427,
+    "clipped": 29,
+    "seam": 12,
+    "xMajor": 1199,
+    "yMajor": 629
+  },
+  "asymmetric": {
+    "cases": 1024,
+    "negativeStencil": 96,
+    "negativeFacing": 24,
+    "x": 48,
+    "y": 24,
+    "clipped": 24,
+    "guardFallback": 512
+  },
+  "R04": {
+    "oldVsNewColorDepthStencilComparisons": 12065,
+    "preparedPathNegativeControlDetected": true,
+    "candidateR03ReferenceAndDisabledPreparedLibraries": "Internal helper behavior in one standalone process invocation; not separate runs.",
+    "preparedWitnessMeaning": "At least one actual color/depth/stencil result differs when prepared count is disabled, so helper did not pass using only fallback."
+  },
+  "sourceReview": "Fixed8 named manifest files and3 production headers verified, candidate header byte-identical to production header. No source edit or assertion weakening.",
+  "limitations": [
+    "Synthetic ParityVS sets flat int4 fields using the new setup function. Entire production OriginalSensorLOSVertex path not exhaustively GPU validated.",
+    "Actual MSAA4 is not tested; guard checks still use sampleCount1. Large coordinate GPU parity remains untested/CPU-only source evidence.",
+    "No full engine build/game/FPS or other performance claim. Extra32-byte varying and vertex computation may offset fragment savings.",
+    "CPU tests from source packet not rerun by HQ in this round.",
+    "Helper waitUntilCompleted/readback and successful exit prove owned helper work closed; native runtime retirement architecture was unchanged."
+  ],
+  "orangeOverlayNote": "JINI relayed user interpretation of prior orange circle as range indicator and likely ignorable. Identification remains user interpretation, not independently proved cause; no source modification/retry/block for it. Future matched conditions remain required.",
+  "budgetUsed": {
+    "compile": 1,
+    "GPU_invocation": 1,
+    "engineBuilds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "cleanup": {
+    "allOwnedPIDsGone": true,
+    "allChildrenReaped": true,
+    "GPUCompleteBeforeReadback": true,
+    "awakeCreated": false,
+    "awakeReleased": true,
+    "workersQuiescent": true,
+    "artifactWritesCompleteAtDONEOnly": true
+  },
+  "originalAppMainReleaseHomebrewChanged": false,
+  "utc": "2026-11-17T03:31:10.470928+00:00"
+}

@@ -1,0 +1,72 @@
+--- a/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h
++++ b/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h
+@@ -67,8 +67,23 @@
+ 	for(uint i=0;i<6;++i){if(av[i]<0.0f&&bv[i]<0.0f)return false;if(av[i]<0.0f)enter=max(enter,av[i]/(av[i]-bv[i]));if(bv[i]<0.0f)leave=min(leave,av[i]/(av[i]-bv[i]));}
+ 	if(enter>leave)return false;a=start+enter*delta;b=start+leave*delta;return a.w>0.0f&&b.w>0.0f;
+ }
++// R04: shared, exact segment setup. Only bounded AA0 inputs populate it.
++// Count zero means use the unchanged R03 path. Integer flat varyings avoid
++// interpolation and do not turn rational/epsilon coverage into float tests.
++inline void SensorLOSPrepareCoverage(float3 originalA,float3 originalB,float width,uint samples,
++ thread int4& endpoints,thread int4& setup) {
++ endpoints=int4(0);setup=int4(0);
++ if(samples!=1||!all(isfinite(originalA))||!all(isfinite(originalB))||
++  !isfinite(width)||width<=0.f||width>64.f||
++  any(abs(originalA.xy)>16384.f)||any(abs(originalB.xy)>16384.f))return;
++ const int2 a=int2(floor(originalA.xy*256.0f+0.5f)),b=int2(floor(originalB.xy*256.0f+0.5f));
++ const int2 delta=b-a;
++ endpoints=int4(a,b);
++ setup=int4(delta,max(1,int(floor(width+0.5f))),abs(delta.x)>=abs(delta.y)?1:0);
++}
+ struct SensorLOSVarying {
+ 	float4 position [[position]];
++	int4 coverageEndpoints [[flat]],coverageSetup [[flat]];
+ 	float4 dataA [[flat]],dataB [[flat]],lineA [[flat]],lineB [[flat]],lineNDC [[flat]],color [[flat]];float2 halfWidths [[flat]];
+ };
+ // AA0 only: bound the unchanged fixed-point coverage in its quantized major axis.
+@@ -122,6 +137,7 @@
+ 	const float3 av=a.xyz/a.w,bv=b.xyz/b.w;out.lineNDC=float4(av.xy,bv.xy);
+ 	out.lineA=float4(u.viewport.x+(av.x+1.0f)*0.5f*u.viewport.z,-u.viewport.y-(1.0f-av.y)*0.5f*u.viewport.w,av.z,1.0f/a.w);
+ 	out.lineB=float4(u.viewport.x+(bv.x+1.0f)*0.5f*u.viewport.z,-u.viewport.y-(1.0f-bv.y)*0.5f*u.viewport.w,bv.z,1.0f/b.w);
++	SensorLOSPrepareCoverage(out.lineA.xyz,out.lineB.xyz,u.parameters.x,u.counts.w,out.coverageEndpoints,out.coverageSetup);
+ 	const float extent=max(1.0f,floor(u.parameters.x+0.5f))*0.5f+2.0f;
+ 	const float2 low=min(out.lineA.xy,out.lineB.xy)-extent,high=max(out.lineA.xy,out.lineB.xy)+extent;
+ 	constexpr uint indices[6]={0,1,2,0,2,3};constexpr float2 corners[4]={float2(0,0),float2(1,0),float2(1,1),float2(0,1)};
+@@ -195,6 +211,28 @@
+  const float t=xMajor?(fragmentPosition.x-originalA.x)/d.x:(fragmentPosition.y-originalA.y)/d.y;
+  depth=originalA.z+(originalB.z-originalA.z)*t;return depth>=0.0f&&depth<=1.0f;
+ }
++inline bool SensorLineCoveredPrepared(float3 originalA,float3 originalB,float2 fragmentPosition,float width,uint samples,
++ int4 endpoints,int4 setup,thread float& depth) {
++ if(setup.z==0||!all(isfinite(fragmentPosition))||any(abs(fragmentPosition)>32768.f))
++  return SensorLineCoveredEarly(originalA,originalB,fragmentPosition,width,samples,depth);
++ const int2 a=endpoints.xy,b=endpoints.zw,delta=setup.xy;
++ if(all(delta==0))return false;const bool xMajor=setup.w!=0;
++ const int2 pixel=int2(floor(fragmentPosition));const int major=xMajor?pixel.x:pixel.y;
++ const long ma=xMajor?a.x:a.y,mi=xMajor?a.y:a.x,dm=xMajor?delta.x:delta.y,di=xMajor?delta.y:delta.x;
++ long numerator=mi*dm+(long(major)*256+128-ma)*di,denominator=dm*256;
++ if(denominator<0){denominator=-denominator;numerator=-numerator;}
++ const int count=setup.z;
++ // minor+(1-count)/2-epsilon, exactly as NativeScreenLine's GL wide-line
++ // replication. Unit-width major coverage is retained for every width.
++ const int lower=int(FloorDivide(2*numerator-long(count-1)*denominator-1,2*denominator));
++ const int actual=xMajor?pixel.y:pixel.x;if(actual<lower||actual>=lower+count)return false;
++ const int center=int(FloorDivide(numerator,denominator));bool covered=false;
++ for(int minor=center-1;minor<=center+1;++minor)if(SensorDiamond(a,b,xMajor?int2(major,minor):int2(minor,major))){covered=true;break;}
++ if(!covered)return false;
++ const float2 d=originalB.xy-originalA.xy;
++ const float t=xMajor?(fragmentPosition.x-originalA.x)/d.x:(fragmentPosition.y-originalA.y)/d.y;
++ depth=originalA.z+(originalB.z-originalA.z)*t;return depth>=0.0f&&depth<=1.0f;
++}
+ inline bool SensorAlpha(float a,float reference,uint packed) {
+  if(!(packed&256))return true;
+  switch(packed&255){case 0:return false;case 1:return a<reference;case 2:return a==reference;case 3:return a<=reference;case 4:return a>reference;case 5:return a!=reference;case 6:return a>=reference;default:return true;}
+@@ -206,7 +244,7 @@
+ 	const float2 p=in.position.xy;float coverageDepth;
+ 	const bool viewportCovered=p.x>=u.viewport.x&&p.x<u.viewport.x+u.viewport.z&&p.y>=u.viewport.y&&p.y<u.viewport.y+u.viewport.w;
+ 	const float2 glPixel=float2(p.x,-p.y);
+-	const bool lineCovered=SensorLineCoveredEarly(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,u.counts.w,coverageDepth);
++	const bool lineCovered=SensorLineCoveredPrepared(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,u.counts.w,in.coverageEndpoints,in.coverageSetup,coverageDepth);
+ 	const float2 delta=in.lineB.xy-in.lineA.xy;const float t=dot(glPixel-in.lineA.xy,delta)/dot(delta,delta);
+ 	const float reciprocalW=mix(in.lineA.w,in.lineB.w,t);
+ 	const float4 data=mix(in.dataA*in.lineA.w,in.dataB*in.lineB.w,t)/reciprocalW;

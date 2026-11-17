@@ -1,0 +1,49 @@
+{
+  "round_id": "r04-segment-setup-correctness-20261117-09",
+  "attempt_id": "r04-helper-correctness-01",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "claimed_revision": 40,
+  "compile_attempts": 1,
+  "GPU_invocations": 1,
+  "engine_builds": 0,
+  "games": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "retries": 0,
+  "owned_pids": [
+    22733,
+    22736
+  ],
+  "awake_created": false,
+  "startedUTC": "2026-11-17T03:29:25.574990+00:00",
+  "compile_command": [
+    "xcrun",
+    "clang++",
+    "-std=c++20",
+    "-fobjc-arc",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "-I",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-segment-setup-20261117-01/helper-execution-01/headers",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-segment-setup-20261117-01/helper-execution-01/gpu_pixel_parity.mm",
+    "-o",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-segment-setup-20261117-01/helper-execution-01/gpu_pixel_parity"
+  ],
+  "stage": "GPU_RUN_CLOSED_PASS",
+  "active_pid": null,
+  "compile_exit_code": 0,
+  "compile_wall_seconds": 1.3008524589822628,
+  "binary_sha256": "76cd2e9c098867d384a064328fec1802baa5b386fcc0c5e9fcdf1583eca7baeb",
+  "metal_validation_requested": {
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "0"
+  },
+  "gpu_exit_code": 0,
+  "gpu_wall_seconds": 31.857348625024315,
+  "metal_validation_observed": true,
+  "finishedUTC": "2026-11-17T03:29:58.734383+00:00",
+  "all_owned_children_reaped": true
+}
