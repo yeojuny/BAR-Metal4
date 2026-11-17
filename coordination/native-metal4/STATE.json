@@ -1,23 +1,23 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 120,
+  "revision": 121,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "game-decal-indexed-timing-20261117-33",
+  "round_id": "prepare-decode-batch-sdk-20261117-34",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
-  "request": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/READY.json",
-  "result_path": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/DONE.json",
-  "decision": "PASS_GPU_FIXTURE_TIMING_SMOKE_BLOCKED_DUPLICATE_BASE_CONTENT",
-  "execution_status": "HQ3_ROUND33_CLOSED_FIXTURE_TIMING_PASS_SMOKE_STARTUP_FAIL",
-  "blocked_reason": "The raw build directory and runtime data both exposed bitmaps.sdz, preventing sole smoke launch from reaching the indexed renderer.",
+  "source_manifest_sha256": "81e910aee0bcfc65528e1bae7bb5e9a8fa0dcfe21725bc42541287816510563b",
+  "request": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/READY.json",
+  "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/DONE.json",
+  "decision": "PINNED_PREPARE_DECODE_BATCH_SDK_ONLY",
+  "execution_status": "HQ3_ROUND34_RESERVED_ONCE",
+  "blocked_reason": null,
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
@@ -1837,6 +1837,26 @@
       "cleanup_complete": true,
       "bar": "PAUSED",
       "utc": "2026-11-17T21:22:42.810095+00:00"
+    },
+    {
+      "event": "HQ3_ROUND34_RESERVED_ONCE",
+      "revision": 121,
+      "round_id": "prepare-decode-batch-sdk-20261117-34",
+      "attempt_id": "clean-sdk-only-01",
+      "candidate_commit": "f7faa7afb134b56dd673180f660df6add5600cae",
+      "manifest_sha256": "81e910aee0bcfc65528e1bae7bb5e9a8fa0dcfe21725bc42541287816510563b",
+      "budget": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "games": 0,
+        "gpu_invocations": 0,
+        "helpers": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17 22:05:57 UTC"
     }
   ],
   "communication_test": {
@@ -1908,7 +1928,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "SAME_INPUT_GPU_TIMING_AND_ONE_INDEXED_NATIVE_SMOKE",
+  "enabled_scope": "PINNED_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_LINK_ONLY",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -1920,40 +1940,23 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "indexed-helper-and-smoke-01",
+    "attempt_id": "clean-sdk-only-01",
     "started": true,
-    "completed": true,
+    "completed": false,
     "budget": {
-      "helper_compiles": 1,
-      "helper_gpu_invocations": 1,
-      "games": 1,
-      "engine_builds": 0,
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "games": 0,
+      "gpu_invocations": 0,
+      "helpers": 0,
       "captures": 0,
       "profiles": 0,
-      "trace_inspections": 0,
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 21:17:53 UTC",
+    "reserved_at_utc": "2026-11-17 22:05:57 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false,
-    "ended_at_utc": "2026-11-17T21:22:42.810095+00:00",
-    "counts": {
-      "helper_compiles": 1,
-      "helper_gpu_invocations": 1,
-      "game_launches": 1,
-      "games_completed": 0,
-      "engine_builds": 0,
-      "captures": 0,
-      "profiles": 0,
-      "trace_inspections": 0,
-      "retries": 0
-    },
-    "diagnostic_outcome": "PASS_GPU_FIXTURE_TIMING_SMOKE_BLOCKED_DUPLICATE_BASE_CONTENT",
-    "cleanup_complete": true,
-    "artifact_commit": "474173699c0925afa47e53109f5a760c31375dce",
-    "retry_authorized": false,
-    "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b"
+    "previous_budget_reused": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2019,7 +2022,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "SUPER_JINI_MK2 review round33 DONE. Fixed-input GPU timing completed. Candidate ON game path remains untested. Round33 launch budget is closed.",
+  "next_action": "HQ3 configure and make one clean Mac SDK engine build for exact R03 plus the prepare/decode batch. No runtime execution.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
