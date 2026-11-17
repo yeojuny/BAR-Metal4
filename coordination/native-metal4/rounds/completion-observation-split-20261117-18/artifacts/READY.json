@@ -1,0 +1,23 @@
+{
+  "round_id": "completion-observation-split-20261117-18",
+  "attempt_id": "completion-observation-split-01",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "request": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/REQUEST.json",
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "previous_HQ_turn_completed": true,
+  "previous_cleanup_verified": true,
+  "budget": {
+    "CPU_contract_script": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "relocation_sign": 1,
+    "fixture_staging": 1,
+    "validation_games": 1,
+    "benchmarks": 0,
+    "GPU_helpers": 0,
+    "captures": 0,
+    "retries": 0
+  }
+}

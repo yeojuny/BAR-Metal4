@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/run.py",
+    "--suite",
+    "completion_split01",
+    "--stage",
+    "validation_paced"
+  ],
+  "pid": 58236,
+  "exit": 0,
+  "seconds": 4.313969666000048,
+  "attempts": 1
+}

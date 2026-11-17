@@ -1,0 +1,10 @@
+{
+  "candidate_image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/scene.png",
+  "candidate_SHA256": "c1a364a433247aa4371bfe61c14e9f6238fcd99dab77a1f538897cc984103cf8",
+  "candidate_bytes": 2986848,
+  "preserved_R03_image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_R03_BASELINE/scene.png",
+  "actual_both_pixels_viewed": true,
+  "uploaded": false,
+  "observed": "No obvious new missing/corrupted static terrain, buildings, ground decals or occlusion relative to R03. Animated smoke/explosions/illumination/range arcs/debug timing text differ.",
+  "limits": "RGB review not exact pixel/depth/stencil equality."
+}

@@ -1,0 +1,67 @@
+{
+  "round_id": "completion-observation-split-20261117-18",
+  "attempt_id": "completion-observation-split-01",
+  "commands": [
+    {
+      "stage": "CPU-CONTRACT",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/source/docs/research/completion-observation-split-20261117/candidate/test_source_and_contract.py"
+      ],
+      "pid": 53420,
+      "startedUTC": "2026-11-17T06:33:03.635009+00:00",
+      "exit_code": 0,
+      "wall_seconds": 0.7089207079989137
+    },
+    {
+      "stage": "CONFIGURE",
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "pid": 53425,
+      "startedUTC": "2026-11-17T06:33:04.347068+00:00",
+      "exit_code": 0,
+      "wall_seconds": 9.371510416000092
+    },
+    {
+      "stage": "BUILD",
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "pid": 54677,
+      "startedUTC": "2026-11-17T06:33:13.731551+00:00",
+      "exit_code": 0,
+      "wall_seconds": 220.4482594580004
+    }
+  ],
+  "active_pid": null,
+  "stage": "COMPILE_PASS",
+  "games": 0,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "retries": 0,
+  "CPU_receipt_binary_sha256": null,
+  "CPU_binary_note": "Fixed script uses TemporaryDirectory and removes receipt binary; no additional compile performed.",
+  "raw_engine_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/build/spring-metal4-scene",
+  "raw_engine_sha256": "8165b84381ff654f16dfa547bf58535f53016bc9d42918936b93607f99b8e822",
+  "source_unchanged_after_build": true,
+  "controller_finishedUTC": "2026-11-17T06:36:55.179755+00:00"
+}

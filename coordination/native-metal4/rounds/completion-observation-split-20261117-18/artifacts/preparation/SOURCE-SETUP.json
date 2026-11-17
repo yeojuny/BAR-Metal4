@@ -1,0 +1,54 @@
+[
+  {
+    "argv": [
+      "git",
+      "init",
+      "evidence/completion-observation-split-20261117-01/source"
+    ],
+    "pid": 53356,
+    "exit": 0,
+    "seconds": 0.03502695899987884
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "evidence/completion-observation-split-20261117-01/source",
+      "remote",
+      "add",
+      "origin",
+      "https://github.com/yeojuny/BAR-Metal4.git"
+    ],
+    "pid": 53357,
+    "exit": 0,
+    "seconds": 0.02431849999993574
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "evidence/completion-observation-split-20261117-01/source",
+      "fetch",
+      "--depth",
+      "2",
+      "origin",
+      "c34129af9158bbdef1321d17825f1f60721b74ec"
+    ],
+    "pid": 53358,
+    "exit": 0,
+    "seconds": 13.755410458999904
+  },
+  {
+    "argv": [
+      "git",
+      "-C",
+      "evidence/completion-observation-split-20261117-01/source",
+      "checkout",
+      "--detach",
+      "FETCH_HEAD"
+    ],
+    "pid": 53365,
+    "exit": 0,
+    "seconds": 1.6745630000004894
+  }
+]

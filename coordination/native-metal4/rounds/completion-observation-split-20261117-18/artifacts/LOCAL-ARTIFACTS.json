@@ -1,0 +1,20 @@
+[
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/SOURCE-HASHES.json",
+    "bytes": 1284566,
+    "sha256": "0ead5d30b1e6b6a687c03cd35d5565f97714f85b1e52b141c38231d629c5606b",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/build/spring-metal4-scene",
+    "bytes": 65702976,
+    "sha256": "8165b84381ff654f16dfa547bf58535f53016bc9d42918936b93607f99b8e822",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/bin/spring-metal4-scene",
+    "bytes": 65321152,
+    "sha256": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+    "uploaded": false
+  }
+]

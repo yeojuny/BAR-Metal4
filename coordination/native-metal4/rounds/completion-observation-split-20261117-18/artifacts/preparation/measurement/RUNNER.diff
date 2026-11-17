@@ -1,0 +1,75 @@
+--- Existing single validation runner
++++ Completion observation split validation
+@@ -1,4 +1,4 @@
+-'Texture ordered-input ON+TRACE single validation; explicit stage/run only.'
++'Completion observation split single validation; explicit stage/run only.'
+ 
+ import argparse
+ import datetime
+@@ -35,7 +35,7 @@
+ FONT_SOURCE = P / 'runtime/native/data/fonts/FreeSansBold.otf'
+ FONT_SHA256 = '8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242'
+ ORDER = {
+-    'validation_paced': [('V_TEXTURE_ON_TRACE', 'candidate')],
++    'validation_paced': [('V_COMPLETION_SPLIT', 'candidate')],
+ }
+ 
+ 
+@@ -112,8 +112,8 @@
+     candidate = common.read(HERE / 'PRODUCT.json')
+     assert sha(baseline['binary']) == baseline['sha256']
+     assert sha(candidate['binary']) == candidate['sha256']
+-    assert baseline['sha256'] == 'f72528f6322627c32fe63548aeb126ccbb43fd723a8e22dd58bd689662118331'
+-    assert candidate['sha256'] == 'f72528f6322627c32fe63548aeb126ccbb43fd723a8e22dd58bd689662118331'
++    assert baseline['sha256'] == 'a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962'
++    assert candidate['sha256'] == 'a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962'
+     return {'baseline': baseline, 'candidate': candidate}
+ 
+ 
+@@ -242,8 +242,8 @@
+             env = {k: v for k, v in os.environ.items() if not k.startswith(base.STRIP_PREFIXES)}
+             env.update(plan['env'])
+             env.update(shipped)
+-            env.update(BAR_NATIVE_TEXTURE_ORDERED_TRACE='1',
+-                       BAR_NATIVE_TEXTURE_ORDERED_INPUT=str(int(mode == 'candidate')),
++            env.update(BAR_NATIVE_TEXTURE_ORDERED_TRACE='0',
++                       BAR_NATIVE_TEXTURE_ORDERED_INPUT='0',
+                        BAR_NATIVE_PREPARE_READY_PILOT='1', BAR_NATIVE_BEGIN_READY_PILOT='0',
+                        BAR_NATIVE_BEGIN_PREPARE_OVERLAP='1', BAR_NATIVE_FINAL_COLOR_STAGE='1',
+                        BAR_NATIVE_SCREEN_STATE_ELISION='1', BAR_NATIVE_MODEL_TYPE_FACTS='1',
+@@ -292,7 +292,7 @@
+     save(RUN_ROOT / campaign / 'PREPARED.json', dict(status='READY_NO_GAME', order=rows,
+         campaign=campaign, sourceController=str(BATTLE / 'battle_control.lua'),
+         sourceProbe=str(U / 'ultra_quality.lua'),
+-        pacingHashes=pace['hashes'], comparisonDecision='Texture ON+TRACE one validation only; S01/G01 both1; images after count',
++        pacingHashes=pace['hashes'], comparisonDecision='Completion split one validation only; traces OFF; S01/G01 both1; images after count',
+         actualUltraRuntime='pending'))
+     print('READY ' + campaign + ': static staged, games 0', flush=True)
+ 
+@@ -501,7 +501,7 @@
+                         assert sha(target) == plan['checksums'][str(target)]
+                         target.unlink()
+         if campaign == 'validation_paced':
+-            completion = dict(status='SINGLE_TRACE_VALIDATION_REVIEW_REQUIRED', runs=len(rows),
++            completion = dict(status='COMPLETION_SPLIT_VALIDATION_REVIEW_REQUIRED', runs=len(rows),
+                 images=[r['ultra']['image'] for r in rows],
+                 metalValidation=[r['metalValidation'] for r in rows], utc=base.utc())
+         else:
+@@ -537,7 +537,7 @@
+     args = parser.parse_args()
+     global RUN_ROOT
+     if args.list:
+-        print('validation_paced: one Texture ON_TRACE arm Metal API validation+image; S01/G01 both1; Ultra AA0 1512x950; no clean suite')
++        print('validation_paced: one completion-split Metal API validation+image; all traces OFF; Ultra AA0 1512x950; no clean suite')
+         return
+     if args.stage and not args.suite:
+         args.suite = 'ground_decal_' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
+@@ -553,7 +553,7 @@
+         run(args.run)
+     else:
+         print(json.dumps({'status':'STATIC_PINS_ONLY','products':products(),
+-            'sourceComparison':'Fixed Texture trace binary; INPUT1 TRACE1; S01/G01 ON','games':0}, indent=2))
++            'sourceComparison':'Fixed completion-split binary; INPUT0 TRACE0; S01/G01 ON','games':0}, indent=2))
+ 
+ 
+ if __name__ == '__main__':
