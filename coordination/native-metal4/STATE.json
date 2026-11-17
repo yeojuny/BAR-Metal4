@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 61,
+  "revision": 62,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
   "request": "coordination/native-metal4/rounds/texture-ordered-compile-20261117-15/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/texture-ordered-compile-20261117-15/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/texture-ordered-compile-20261117-15/DONE.json",
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/DECISION.json",
-  "execution_status": "TEXTURE_ORDERED_CPU_AND_ENGINE_COMPILE_RESERVED",
+  "execution_status": "TEXTURE_ORDERED_CPU_AND_ARC_COMPILE_PASS_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -644,6 +644,20 @@
       "attempt_id": "texture-ordered-compile-01",
       "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
       "games": 0
+    },
+    {
+      "event": "HQ_TEXTURE_ORDERED_FIXED_CPU_AND_ENGINE_COMPILE_PASS",
+      "revision": 62,
+      "round_id": "texture-ordered-compile-20261117-15",
+      "attempt_id": "texture-ordered-compile-01",
+      "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+      "artifact_commit": "544c23c4214af99efe67c98f047e6325fe6fc9c2",
+      "CPU_contract_script_invocations": 1,
+      "engine_builds": 1,
+      "games": 0,
+      "raw_engine_sha256": "aaf18800be5a917972a298c6ffd9077f287fb9382f362f218189d84cb5c76e2a",
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -730,9 +744,15 @@
   "execution": {
     "attempt_id": "texture-ordered-compile-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "games": 0,
-    "builds": 0
+    "builds": 1,
+    "CPU_contract_script_invocations": 1,
+    "configures": 1,
+    "raw_engine_sha256": "aaf18800be5a917972a298c6ffd9077f287fb9382f362f218189d84cb5c76e2a",
+    "archive_mismatches": 0,
+    "cleanup_complete": true,
+    "artifact_commit": "544c23c4214af99efe67c98f047e6325fe6fc9c2"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
