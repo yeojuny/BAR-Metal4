@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 89,
+  "revision": 90,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/READY.json",
   "result_path": null,
   "decision": null,
-  "execution_status": "AUTHORIZED_ONE_R04_BUILD_WITH_EXISTING_OPENAL_DISCOVERY_PATH",
+  "execution_status": "HQ3_FIXED_R04_BUILD_ENVFIX_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -1065,6 +1065,37 @@
         "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
         "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
       }
+    },
+    {
+      "event": "HQ3_R04_BUILD_ENVFIX_RESERVED",
+      "revision": 90,
+      "round_id": "r04-engine-build-envfix-20261117-23",
+      "attempt_id": "r04-isolated-build-02",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 09:38:14 UTC",
+      "budget": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "relocation_sign": 1,
+        "games": 0,
+        "benchmarks": 0,
+        "helpers": 0,
+        "captures": 0,
+        "replays": 0,
+        "retries": 0,
+        "source_edits": 0
+      },
+      "environment_correction": {
+        "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+        "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
+        "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+      },
+      "prior_attempt_preserved": true,
+      "prior_cleanup_verified": true,
+      "source_writers_stopped": true,
+      "bar_status": "PAUSED"
     }
   ],
   "communication_test": {
@@ -1150,7 +1181,7 @@
   },
   "execution": {
     "attempt_id": "r04-isolated-build-02",
-    "started": false,
+    "started": true,
     "completed": false,
     "budget": {
       "configure_attempts": 1,
@@ -1166,7 +1197,20 @@
     },
     "games": 0,
     "builds": 0,
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "reserved_at_utc": "2026-11-17 09:38:14 UTC",
+    "configure_attempts": 0,
+    "relocation_sign": 0,
+    "retries": 0,
+    "source_edits": 0,
+    "cleanup_complete": false,
+    "heartbeat": "bar PAUSED; unchanged",
+    "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02",
+    "environment_correction": {
+      "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+      "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
+      "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+    }
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
