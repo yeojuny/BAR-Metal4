@@ -1,0 +1,23 @@
+{
+  "round_id": "ground-decal-pages-validation-20261117-12",
+  "attempt_id": "ground-decal-pages-validation-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/REQUEST.json",
+  "from": "SUPER_JINI_MK2",
+  "to": "HQ",
+  "budget": {
+    "validation_games": 2,
+    "baseline_games": 1,
+    "candidate_games": 1,
+    "builds": 0,
+    "restaging": 0,
+    "helpers": 0,
+    "clean_games": 0,
+    "benchmarks": 0,
+    "GPU_captures": 0,
+    "retries": 0
+  },
+  "previous_cleanup_verified": true,
+  "HQ_turn_completed": true
+}
