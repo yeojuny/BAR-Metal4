@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 123,
+  "revision": 124,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/READY.json",
   "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/DONE.json",
-  "decision": "RUN_MATCHED_SMOKE_PAIR_RUNTIME_VISUAL_ONLY",
-  "execution_status": "HQ3_ROUND35_RESERVED_ORIGINAL_AND_PREPARE_BATCH_SMOKE",
+  "decision": "PASS_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
+  "execution_status": "HQ3_ROUND35_CLOSED_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
   "blocked_reason": null,
   "history": [
     {
@@ -1907,6 +1907,45 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17T22:18:40.946Z"
+    },
+    {
+      "event": "HQ3_ROUND35_CLOSED_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
+      "revision": 124,
+      "round_id": "prepare-decode-batch-runtime-20261117-35",
+      "attempt_id": "batch-original-smoke-pair-01",
+      "decision": "PASS_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "cd5f22f0638b8e70fcd9c1867f4d3529ec4e65c0",
+      "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/DONE.json",
+      "counts": {
+        "games": 2,
+        "original_games": 1,
+        "batch_games": 1,
+        "normal_exits": 2,
+        "screenshots": 2,
+        "screenshots_per_game": {
+          "R03_ORIGINAL": 1,
+          "PREPARE_BATCH": 1
+        },
+        "builds": 0,
+        "helpers": 0,
+        "gputrace_captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "path_coverage": {
+        "BuildSquare": "UNVERIFIED",
+        "Commands FX": "DRAW_COMPLETED",
+        "Sensor31657Circle (radar/sonar)": "UNVERIFIED",
+        "StartBox": "UNVERIFIED",
+        "WeaponRange": "PREPARE_EXERCISED",
+        "EnergyExplosion": "UNVERIFIED",
+        "LuaNano": "UNVERIFIED"
+      },
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T22:25:22.199983+00:00"
     }
   ],
   "communication_test": {
@@ -1992,7 +2031,7 @@
   "execution": {
     "attempt_id": "batch-original-smoke-pair-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "games_max": 2,
       "original_games_max": 1,
@@ -2012,7 +2051,40 @@
     "reserved_at_utc": "2026-11-17T22:18:40.946Z",
     "bar": "PAUSED",
     "prior_sdk_round_closed": true,
-    "previous_budget_reused": false
+    "previous_budget_reused": false,
+    "ended_at_utc": "2026-11-17T22:25:22.199983+00:00",
+    "counts": {
+      "games": 2,
+      "original_games": 1,
+      "batch_games": 1,
+      "normal_exits": 2,
+      "screenshots": 2,
+      "screenshots_per_game": {
+        "R03_ORIGINAL": 1,
+        "PREPARE_BATCH": 1
+      },
+      "builds": 0,
+      "helpers": 0,
+      "gputrace_captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "cd5f22f0638b8e70fcd9c1867f4d3529ec4e65c0",
+    "diagnostic_outcome": "PASS_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
+    "retry_authorized": false,
+    "readback_tick": 1740,
+    "path_coverage": {
+      "BuildSquare": "UNVERIFIED",
+      "Commands FX": "DRAW_COMPLETED",
+      "Sensor31657Circle (radar/sonar)": "UNVERIFIED",
+      "StartBox": "UNVERIFIED",
+      "WeaponRange": "PREPARE_EXERCISED",
+      "EnergyExplosion": "UNVERIFIED",
+      "LuaNano": "UNVERIFIED"
+    },
+    "performance": "NOT_MEASURED",
+    "indexed_game_authorization": "SEPARATE_PENDING"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2078,7 +2150,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 run the existing validation scene once per pinned binary and record observed coverage.",
+  "next_action": "SUPER_JINI_MK2 review round 35 smoke, tick 1740 screenshots and per-path coverage. The indexed GameDecal scope remains separate.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
