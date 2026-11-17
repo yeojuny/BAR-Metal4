@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 56,
+  "revision": 57,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-pages-performance-20261117-13",
+  "round_id": "ground-decal-pages-ordercheck-20261117-14",
   "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
   "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
-  "request": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/READY.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DONE.json",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/READY.json",
+  "result_path": null,
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DECISION.json",
-  "execution_status": "GROUND_DECAL_SIX_CLEAN_RUNS_COMPLETE_CAUSAL_GAIN_UNCERTAIN_CLEANUP_CLOSED",
+  "execution_status": "READY_REVERSED_ORDER_FOUR_CLEAN_GAMES_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -592,6 +592,19 @@
       "cleanup_verified": true,
       "observed_relative_percent": 4.035963323595371,
       "causal_gain_uncertain": true
+    },
+    {
+      "event": "SEPARATE_REVERSED_ORDER_COHORT_READY",
+      "revision": 57,
+      "round_id": "ground-decal-pages-ordercheck-20261117-14",
+      "order": [
+        "B1_GDP",
+        "A1_R03",
+        "A2_R03",
+        "B2_GDP"
+      ],
+      "previous_cohort_not_pooled": true,
+      "source_and_binary_unchanged": true
     }
   ],
   "communication_test": {
@@ -663,7 +676,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "PIN_ONLY_STAGING_AND_SIX_CLEAN_GAMES",
+  "enabled_scope": "SEPARATE_BAAB_FOUR_CLEAN_GAMES",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
@@ -676,22 +689,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-pages-clean-01",
-    "started": true,
-    "completed": true,
-    "games": 6,
-    "builds": 0,
-    "baseline_games": 3,
-    "candidate_games": 3,
-    "normal_exits": 6,
-    "staging_attempts": 1,
-    "cleanup_complete": true,
-    "artifact_commit": "800374df16d704cc3bc9cc400f50e43a8777226f",
-    "baseline_mean_FPS": 61.645348153000675,
-    "candidate_mean_FPS": 64.13333179515845,
-    "observed_relative_percent": 4.035963323595371,
-    "all40_world_rows_match_all_six": true,
-    "causal_gain_uncertain": true
+    "attempt_id": "ground-decal-pages-ordercheck-01",
+    "started": false,
+    "completed": false,
+    "games": 0,
+    "builds": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
