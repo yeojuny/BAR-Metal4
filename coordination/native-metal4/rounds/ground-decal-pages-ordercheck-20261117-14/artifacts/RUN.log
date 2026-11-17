@@ -1,0 +1,48 @@
+OPEN B1_GDP
+{
+  "recordedUTC": "2026-11-17T05:11:12.095591+00:00",
+  "label": "bloom217-B1_GDP",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE B1_GDP: 64.145 FPS; 1% low 55.437
+OPEN A1_R03
+{
+  "recordedUTC": "2026-11-17T05:12:32.205365+00:00",
+  "label": "bloom217-A1_R03",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE A1_R03: 64.152 FPS; 1% low 55.437
+OPEN A2_R03
+{
+  "recordedUTC": "2026-11-17T05:13:53.344395+00:00",
+  "label": "bloom217-A2_R03",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE A2_R03: 64.077 FPS; 1% low 52.525
+OPEN B2_GDP
+{
+  "recordedUTC": "2026-11-17T05:15:14.483355+00:00",
+  "label": "bloom217-B2_GDP",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE B2_GDP: 64.064 FPS; 1% low 53.942
+{
+  "status": "COMPLETE",
+  "runs": 6,
+  "means": {
+    "baseline": 64.11410197258326,
+    "candidate": 64.10449031999734
+  },
+  "candidateVsBaselinePercent": -0.014991479706016886,
+  "allValidSlowRunsRetained": true,
+  "historicalSamplesPooled": false,
+  "utc": "2026-11-17T05:16:35.467543+00:00"
+}

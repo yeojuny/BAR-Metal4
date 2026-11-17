@@ -1,0 +1,150 @@
+{
+  "status": "ORDER_CHECK_COMPLETE_NO_MEAN_FPS_ADVANTAGE_ESTABLISHED",
+  "round_id": "ground-decal-pages-ordercheck-20261117-14",
+  "attempt_id": "ground-decal-pages-ordercheck-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "runner_sha256": "dca8bb665c698901cecbdf60cbba1dda52686465a9687707f9f2323dcb5ed0ea",
+  "baseline_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "candidate_signed_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "metric": "CPU-observed DrawScreen frames / wall duration; not GPU or displayed FPS",
+  "order": [
+    "B1_GDP",
+    "A1_R03",
+    "A2_R03",
+    "B2_GDP"
+  ],
+  "individual": [
+    {
+      "arm": "B1_GDP",
+      "backend": "candidate",
+      "mean_FPS": 64.1451917534004,
+      "one_percent_low": 55.43710328649187,
+      "counted_seconds": 40.002998352,
+      "bins": 40,
+      "bin_min_FPS": 59.47580719,
+      "bin_max_FPS": 72.927070618,
+      "first10_bin_FPS_mean": 70.8493591309,
+      "last10_bin_FPS_mean": 60.6051437377,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "A1_R03",
+      "backend": "baseline",
+      "mean_FPS": 64.15160290959199,
+      "one_percent_low": 55.43710328649187,
+      "counted_seconds": 39.999000549,
+      "bins": 40,
+      "bin_min_FPS": 59.59595871,
+      "bin_max_FPS": 72.70916748,
+      "first10_bin_FPS_mean": 70.7498725891,
+      "last10_bin_FPS_mean": 60.6049468994,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "A2_R03",
+      "backend": "baseline",
+      "mean_FPS": 64.07660103557454,
+      "one_percent_low": 52.52525507193156,
+      "counted_seconds": 39.999000549,
+      "bins": 40,
+      "bin_min_FPS": 58.648109436,
+      "bin_max_FPS": 72.854293823,
+      "first10_bin_FPS_mean": 70.7470306397,
+      "last10_bin_FPS_mean": 60.6257129669,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "B2_GDP",
+      "backend": "candidate",
+      "mean_FPS": 64.06378888659428,
+      "one_percent_low": 53.94191162342262,
+      "counted_seconds": 40.006999969,
+      "bins": 40,
+      "bin_min_FPS": 59.535823822,
+      "bin_max_FPS": 72.636817932,
+      "first10_bin_FPS_mean": 70.5560302734,
+      "last10_bin_FPS_mean": 60.5556243893,
+      "valid_and_retained": true
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "n": 2,
+      "arithmetic_mean_FPS": 64.11410197258326,
+      "sample_stdev_FPS": 0.05303433371943477,
+      "min_FPS": 64.07660103557454,
+      "max_FPS": 64.15160290959199,
+      "arithmetic_mean_one_percent_low": 53.981179179211715,
+      "individual_FPS": [
+        64.15160290959199,
+        64.07660103557454
+      ],
+      "individual_one_percent_low": [
+        55.43710328649187,
+        52.52525507193156
+      ]
+    },
+    "candidate": {
+      "n": 2,
+      "arithmetic_mean_FPS": 64.10449031999734,
+      "sample_stdev_FPS": 0.05756051912662961,
+      "min_FPS": 64.06378888659428,
+      "max_FPS": 64.1451917534004,
+      "arithmetic_mean_one_percent_low": 54.689507454957244,
+      "individual_FPS": [
+        64.1451917534004,
+        64.06378888659428
+      ],
+      "individual_one_percent_low": [
+        55.43710328649187,
+        53.94191162342262
+      ]
+    }
+  },
+  "candidate_vs_baseline_percent": -0.014991479706016886,
+  "all_valid_slow_runs_retained": true,
+  "historical_or_validation_samples_pooled": false,
+  "interpretation": "Separate BAAB cohort only: R03 mean64.11410 versus GDP64.10449 (-0.01499%). No marked first-execution deficit in this cohort. Does not corroborate a reproducible +4% patch gain, and cannot identify cache/thermal/background cause. Original six runs retained separately; no pooling, trimming or retry.",
+  "world_rows_per_run": 40,
+  "all_40_rows_match_all_four": true,
+  "fixed_tick_initial_camera_seed_visibility_and_end_state_match": true,
+  "images_viewed": 4,
+  "normal_exits": 4,
+  "games": 4,
+  "staging_attempts": 1,
+  "builds": 0,
+  "validation_games": 0,
+  "helpers": 0,
+  "GPU_captures": 0,
+  "retries": 0,
+  "source_or_controller_or_execution_logic_changes": 0,
+  "cleanup": {
+    "owned_pids_checked_absent": [
+      26117,
+      26234,
+      26351,
+      26465,
+      26106,
+      26107
+    ],
+    "groups_gone": true,
+    "image_workers_joined": true,
+    "awake_released": true,
+    "evidence_writers_closed_after_packet": true
+  },
+  "unmeasured": [
+    "Actual copy bytes",
+    "Physical allocation reduction",
+    "RAM",
+    "GPU FPS/time",
+    "Exhaustive resource lifetime/failure/quarantine/revision/context paths"
+  ],
+  "provenance": "Existing engine GPL, Beherith MIT and tomjn/benbreen contribution records preserved. No new contribution adopted.",
+  "cohort": "SEPARATE_BAAB_FOUR_RUNS_TWO_PER_ARM",
+  "cohorts_pooled": false,
+  "legacy_completion_runs_field": 6,
+  "actual_RUNS_and_OWNER_count": 4,
+  "completion_metadata_note": "Frozen execution AST preserves old runs=6 summary constant; actual ORDER/RUNS/OWNER count is4. No extra games occurred.",
+  "first_execution_marked_deficit_observed": false
+}
