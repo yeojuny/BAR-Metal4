@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 69,
+  "revision": 70,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/READY.json",
   "result_path": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DONE.json",
-  "decision": "coordination/native-metal4/rounds/texture-ordered-validation-20261117-16/DECISION.json",
-  "execution_status": "TEXTURE_TRACE_ADMISSION_ENCODE_PRODUCER_RETIRE_OBSERVED_CLEANUP_CLOSED",
+  "decision": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DECISION.json",
+  "execution_status": "TEXTURE_TRACE_INDEPENDENT_REVIEW_COMPLETE_NO_NEW_EXECUTION",
   "blocked_reason": null,
   "history": [
     {
@@ -737,6 +737,17 @@
       "consumer_GPU_completion_not_proved": true,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_TEXTURE_TRACE_REVIEW_COMPLETE",
+      "revision": 70,
+      "round_id": "texture-ordered-trace-20261117-17",
+      "decision": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DECISION.json",
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "path_admission_observed": true,
+      "observed_before_counted_window": true,
+      "performance_accepted": false
     }
   ],
   "communication_test": {
