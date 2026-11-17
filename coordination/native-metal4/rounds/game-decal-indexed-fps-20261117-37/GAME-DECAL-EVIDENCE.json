@@ -1,0 +1,27 @@
+{
+  "family_draw_completed_both": true,
+  "family_draw_logs": {
+    "INDEXED_OFF": [
+      {
+        "line": 3588,
+        "text": "[t=00:00:47.210725][f=0000064] [Metal4Scene] First completed original Lua game Decals GL4 at simulation frame 64: draws=1, instances=2; strict pixel parity pending"
+      }
+    ],
+    "INDEXED_ON": [
+      {
+        "line": 3591,
+        "text": "[t=00:00:49.417217][f=0000063] [Metal4Scene] First completed original Lua game Decals GL4 at simulation frame 62: draws=1, instances=2; strict pixel parity pending"
+      }
+    ]
+  },
+  "verified_child_flags": {
+    "INDEXED_OFF": "0",
+    "INDEXED_ON": "1"
+  },
+  "indexed_specific_text_matches": {
+    "INDEXED_OFF": [],
+    "INDEXED_ON": []
+  },
+  "indexed_draw_api": "UNVERIFIED_BY_EXISTING_LOG",
+  "source_condition": "In the pinned candidate the opt-in flag selects the UInt16 template for GameDecal Geometry packets. The existing first-completed family log does not identify the packet type or index count."
+}
