@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 37,
+  "revision": 38,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
-  "decision": "Matched Ultra AA0 cohort: R02 mean62.679156 -> R03 mean64.446243 FPS (+2.819258%); all40 world rows match, validation passed. Endpoint orange-circle overlay varies2/3 in each arm, cause unknown; review note preserved. JINI adoption decision pending.",
-  "execution_status": "R03_VALIDATION1_CLEAN6_COMPLETE_CLEANUP_CLOSED",
+  "decision": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DECISION.json",
+  "execution_status": "R03_RESULT_REVIEWED_AWAIT_HQ_TURN_CLOSURE",
   "blocked_reason": null,
   "history": [
     {
@@ -377,6 +377,15 @@
       "image_overlay_note": "Orange circle present2/3 each arm; cause/count-window effect unknown",
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_R03_MATCHED_BENCHMARK_REVIEW_COMPLETE",
+      "revision": 38,
+      "round_id": "r03-r02-benchmark-20261117-08",
+      "decision": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DECISION.json",
+      "relative_percent": 2.819258194632779,
+      "cleanup_verified": true,
+      "next": "Source-only SensorLOS shared exact work candidate after HQ turn closes; no new local execution."
     }
   ],
   "communication_test": {
