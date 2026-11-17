@@ -1,0 +1,59 @@
+{
+  "status": "PASS_BOUNDED_GPU_CORRECTNESS",
+  "round_id": "r03-minor-reject-correctness-20261117-06",
+  "attempt_id": "r03-helper-correctness-01",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "helper_sha256": "6595ea4c537a7a83e124e909b20e8b9a5e8f22a627dbec5bc74ddf9587d5ace1",
+  "header_sha256": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+  "binary_sha256": "659e8e3dcbbd5ee0f2375b98df9380955944bcc42099f2dbeddce7d580daf998",
+  "compile_attempts": 1,
+  "gpu_runs": 1,
+  "compile_exit": 0,
+  "gpu_exit": 0,
+  "gpu_wall_seconds": 30.33471266599372,
+  "metalValidationActuallyEnabled": true,
+  "matchedErrors": [],
+  "original": {
+    "cases": 3600,
+    "optimized": 2234,
+    "visible": 1869,
+    "depth": 427,
+    "clipped": 29,
+    "seam": 12,
+    "xMajor": 1199,
+    "yMajor": 629
+  },
+  "R02": {
+    "asymmetric": 1024,
+    "negativeStencil": 96,
+    "negativeFacing": 24,
+    "x": 48,
+    "y": 24,
+    "clipped": 24,
+    "guardFallback": 512
+  },
+  "R03": {
+    "oldVsNewColorDepthStencilComparisons": 12065,
+    "separateOriginalAndCandidateFragmentPipelines": true
+  },
+  "limitations": [
+    "Standalone small GPU render fixture, not exhaustive scene or full native runtime validation.",
+    "Large coordinate guard boundaries are CPU-only evidence supplied by JINI; this round did not rerun CPU tests.",
+    "Real MSAA4 execution not tested: sampleCount1 and AA4 guard-only checks.",
+    "No full engine build/game/FPS/latency/RAM/performance result.",
+    "Helper uses waitUntilCompleted on every submitted readback; does not prove native frame-slot retirement changes, which were not modified."
+  ],
+  "originalAppMainReleaseHomebrewChanged": false,
+  "cleanup": {
+    "ownedPIDsGone": true,
+    "allChildrenReaped": true,
+    "GPUCompleteEvidence": "Each RenderOne waitUntilCompleted before readback and successful helper exit0",
+    "awakeCreated": false,
+    "awakeReleased": true,
+    "workersQuiescent": true,
+    "localWritersClosedAtDONE": true
+  },
+  "nextSectionRequest": "HQ history heavy: next execution should be routed to a fresh section with minimal fixed handoff. JINI should explicitly select HQ model/reasoning at task boundary; current settings unchanged this round.",
+  "utc": "2026-11-17T00:26:28.421890+00:00"
+}
