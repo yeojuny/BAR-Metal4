@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 78,
+  "revision": 79,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/DECISION.json",
-  "execution_status": "EXISTING_R02_CAPTURE_READ_ONLY_EXPORT_READY",
+  "execution_status": "EXISTING_R02_TRACE_READ_ONLY_EXPORT_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -838,6 +838,13 @@
       "previous_HQ_turn_completed": true,
       "previous_cleanup_verified": true,
       "game_capture_replay_profile_budget": 0
+    },
+    {
+      "event": "HQ_EXISTING_R02_READ_ONLY_EXPORT_RESERVED",
+      "revision": 79,
+      "round_id": "r02-existing-trace-export-20261117-20",
+      "attempt_id": "r02-existing-trace-export-01",
+      "new_GPU_execution_budget": 0
     }
   ],
   "communication_test": {
@@ -923,7 +930,7 @@
   },
   "execution": {
     "attempt_id": "r02-existing-trace-export-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "games": 0,
     "builds": 0
