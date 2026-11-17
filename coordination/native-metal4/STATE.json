@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 27,
+  "revision": 28,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/READY.json",
   "result_path": null,
   "decision": "R03 bounded source and float32 CPU proof reviewed; fixed GPU original-versus-candidate gate required before performance.",
-  "execution_status": "READY_R03_HELPER_CORRECTNESS_NOT_STARTED",
+  "execution_status": "R03_HELPER_COMPILE_AND_GPU_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -255,6 +255,19 @@
       "cpu_cases": 32406,
       "child_tasks_completed": true,
       "source_writers_stopped": true
+    },
+    {
+      "event": "HQ_R03_CORRECTNESS_RESERVED",
+      "revision": 28,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-minor-reject-correctness-20261117-06",
+      "attempt_id": "r03-helper-correctness-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "budget": {
+        "helper_compile_attempts": 1,
+        "gpu_helper_runs": 1,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -340,10 +353,11 @@
   },
   "execution": {
     "attempt_id": "r03-helper-correctness-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "helper_compile_attempts": 0,
-    "gpu_helper_runs": 0
+    "gpu_helper_runs": 0,
+    "started_at_utc": "2026-11-17 00:24:05 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
