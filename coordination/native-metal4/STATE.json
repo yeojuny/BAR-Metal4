@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 97,
+  "revision": 98,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
   "request": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/DONE.json",
   "decision": null,
-  "execution_status": "HQ3_MATCHED_FRAME_PAIR_RESERVED",
+  "execution_status": "R03_BOUNDARY_QUERY_TIMEOUT_STOPPED_NO_CAPTURE_OR_PROFILE",
   "blocked_reason": null,
   "history": [
     {
@@ -1294,6 +1294,42 @@
       },
       "bar_status": "PAUSED",
       "source_writers_stopped": true
+    },
+    {
+      "event": "HQ3_MATCHED_FRAME_ATTEMPT_STOPPED_BEFORE_CAPTURE_DONE",
+      "revision": 98,
+      "round_id": "r03-mvk3-matched-frame-20261117-25",
+      "attempt_id": "r03-mvk3-framepair-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+      "artifact_commit": "52194039c9e18b1da8b3e808c3a2a02f28a5f381",
+      "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/DONE.json",
+      "report_sha256": "e1aa047e7cda6d90a804496a9fdb0c9ccc56e48576d482437a1dee3dc1da50c6",
+      "counts": {
+        "games": 1,
+        "R03_games": 1,
+        "MVK3_games": 0,
+        "capture_boundary_queries": 1,
+        "capture_start_commands": 0,
+        "captured_frames": 0,
+        "inspection_sessions": 0,
+        "profile_commands": 0,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      },
+      "stop_reason": "R03 gpucapture Layer boundary enumeration timed out at 8 seconds; capture start never invoked.",
+      "actual_capture_bound_timeInfo_x": "UNKNOWN",
+      "pair_comparison_complete": false,
+      "owned_cleanup_complete": true,
+      "global_session_listing": "UNKNOWN_FINAL_LIST_TIMEOUT_15S",
+      "bar_status": "PAUSED",
+      "to": "SUPER_JINI_MK2",
+      "completed_at_utc": "2026-11-17 10:56:20 UTC"
     }
   ],
   "communication_test": {
@@ -1379,8 +1415,8 @@
   "execution": {
     "attempt_id": "r03-mvk3-framepair-01",
     "started": true,
-    "completed": false,
-    "games": 0,
+    "completed": true,
+    "games": 1,
     "captures": 0,
     "profiles": 0,
     "budget": {
@@ -1398,7 +1434,27 @@
       "FPS_AB": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 10:41:20 UTC"
+    "reserved_at_utc": "2026-11-17 10:41:20 UTC",
+    "counts": {
+      "games": 1,
+      "R03_games": 1,
+      "MVK3_games": 0,
+      "capture_boundary_queries": 1,
+      "capture_start_commands": 0,
+      "captured_frames": 0,
+      "inspection_sessions": 0,
+      "profile_commands": 0,
+      "engine_builds": 0,
+      "engine_source_edits": 0,
+      "R04_captures": 0,
+      "retries": 0,
+      "extra_counter_replays": 0,
+      "FPS_AB": 0
+    },
+    "cleanup_complete": true,
+    "global_session_list": "UNKNOWN_FINAL_LIST_TIMEOUT_15S",
+    "completed_at_utc": "2026-11-17 10:56:20 UTC",
+    "artifact_commit": "52194039c9e18b1da8b3e808c3a2a02f28a5f381"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1464,5 +1520,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Exact tick/workload gated frame-component diagnosis only"
+  "next_action": "JINI review of insufficient frame-pair evidence; no automatic execution."
 }
