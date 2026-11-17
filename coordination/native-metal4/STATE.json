@@ -1,8 +1,8 @@
 {
-  "status": "READY",
-  "owner": "HQ",
-  "enabled": true,
-  "revision": 99,
+  "status": "HOLD",
+  "owner": "SUPER_JINI_MK2",
+  "enabled": false,
+  "revision": 100,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,8 +16,8 @@
   "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/READY.json",
   "result_path": null,
   "decision": null,
-  "execution_status": "READY_FOR_RECOVERED_MATCHED_FRAME_PAIR",
-  "blocked_reason": null,
+  "execution_status": "HANDOFF_DENIED_NO_EXECUTION",
+  "blocked_reason": "Authorization review denied execution handoff; verify user instruction or obtain required approval before new execution.",
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
@@ -1369,6 +1369,13 @@
       },
       "service_restart_approval_message": "Sentinel_5b819f1a943c8191af9e8531392ecf1b",
       "reboot_instruction": "Explicitly corrected and cancelled before any request or schedule; prohibited"
+    },
+    {
+      "event": "ROUND26_HANDOFF_DENIED_HOLD_NO_EXECUTION",
+      "revision": 100,
+      "reason": "Messaging approval review rejected follow-up that would initiate new capture/game/profile round. No retry or indirect execution.",
+      "previous_revision": 99,
+      "execution_started": false
     }
   ],
   "communication_test": {
@@ -1538,5 +1545,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 reserve new round26 once and execute fixed diagnostic budget; no reboot/service restart."
+  "next_action": "No HQ execution. Coordinator to resolve approval boundary; reboot and service restart remain prohibited."
 }
