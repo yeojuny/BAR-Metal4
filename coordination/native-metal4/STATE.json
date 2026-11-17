@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 94,
+  "revision": 95,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,7 +15,7 @@
   "request": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/READY.json",
   "result_path": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DONE.json",
-  "decision": null,
+  "decision": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DECISION.json",
   "execution_status": "HQ3_R04_VALIDATION_PASS_CLEAN6_OBSERVED_REGRESSION_DONE",
   "blocked_reason": null,
   "history": [
@@ -1231,6 +1231,18 @@
       "bar_status": "PAUSED_UNCHANGED",
       "to": "SUPER_JINI_MK2",
       "completed_at_utc": "2026-11-17 10:21:20 UTC"
+    },
+    {
+      "event": "JINI_R04_REGRESSION_VERIFIED_NOT_ADOPTED_R03_RETAINED",
+      "revision": 95,
+      "round_id": "r04-r03-validation-clean-20261117-24",
+      "decision": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DECISION.json",
+      "R04_percent": -7.425562541522835,
+      "each_R04_slower_than_every_R03": true,
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "retained_source": "0780bd7c530b0696067b717428b49a416eda556a",
+      "new_execution_authorized": false
     }
   ],
   "communication_test": {
@@ -1452,5 +1464,6 @@
     "requested_result": "Latest outcomes, largest remaining causes, GPU lifetime risks and upstream-first safe implementation order; choose one next decisive experiment.",
     "previous_audit_preserved": true,
     "local_access_complete": true
-  }
+  },
+  "next_action": "Read-only matched-frame MVK3/R03 component diagnostic planning only; no new round or execution authorization."
 }
