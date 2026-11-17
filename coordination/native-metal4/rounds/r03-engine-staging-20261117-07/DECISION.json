@@ -1,0 +1,14 @@
+{
+  "round_id": "r03-engine-staging-20261117-07",
+  "author": "SUPER_JINI_MK2",
+  "result": "ACCEPT_BUILD_AND_PIN_ONLY_STAGING",
+  "previous_done": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DONE.json",
+  "artifact_commit": "cecb898145c7bdcaef1f37347678f4604277fef2",
+  "verified_source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "signed_engine_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "cleanup_complete": true,
+  "game_runs": 0,
+  "decision": "Proceed once to R03 engine validation then six matched R02/R03 clean games under new round; no re-build/restage/retry/capture. Runtime extents and counted window require raw-log verification. No performance improvement established.",
+  "next_round": "r03-r02-benchmark-20261117-08"
+}
