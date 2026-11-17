@@ -1,0 +1,50 @@
+{
+  "round_id": "r04-r03-validation-clean-20261117-24",
+  "attempt_id": "r04-validation-and-clean-01",
+  "claimed_revision": 93,
+  "stage_calls": 2,
+  "validation_games": 0,
+  "clean_games": 0,
+  "builds": 0,
+  "helpers": 0,
+  "captures": 0,
+  "replays": 0,
+  "retries": 0,
+  "utc": "2026-11-17T09:56:28.979285+00:00",
+  "stage_commands": [
+    {
+      "suite": "r04_validation01",
+      "campaign": "validation_paced",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/run.py",
+        "--suite",
+        "r04_validation01",
+        "--stage",
+        "validation_paced"
+      ],
+      "started_utc": "2026-11-17T09:57:07.669698+00:00",
+      "pid": 84759,
+      "exit": 0,
+      "finished_utc": "2026-11-17T09:57:12.057637+00:00"
+    },
+    {
+      "suite": "r04_clean01",
+      "campaign": "clean_paced",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/run.py",
+        "--suite",
+        "r04_clean01",
+        "--stage",
+        "clean_paced"
+      ],
+      "started_utc": "2026-11-17T09:57:12.057929+00:00",
+      "pid": 84781,
+      "exit": 0,
+      "finished_utc": "2026-11-17T09:57:36.365166+00:00"
+    }
+  ]
+}

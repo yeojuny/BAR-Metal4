@@ -1,0 +1,27 @@
+OPEN V_R04
+{
+  "recordedUTC": "2026-11-17T09:59:42.737476+00:00",
+  "label": "bloom217-V_R04",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE V_R04: candidate validation and image; diagnostic FPS excluded
+{
+  "status": "CANDIDATE_VALIDATION_REVIEW_REQUIRED",
+  "runs": 1,
+  "images": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_validation01/validation_paced/preparation/runs/V_R04/scene.png"
+  ],
+  "metalValidation": {
+    "status": "NO_MATCHED_METAL_ERRORS",
+    "enabledByChildEnv": true,
+    "enabledByEngineLog": true,
+    "errors": [],
+    "normalExit": true,
+    "candidateSHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+    "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_validation01/validation_paced/preparation/runs/V_R04/scene.png",
+    "source": "raw engine.log; same original error regex"
+  },
+  "utc": "2026-11-17T10:01:07.012062+00:00"
+}
