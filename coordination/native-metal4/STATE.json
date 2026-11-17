@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 23,
+  "revision": 24,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DECISION.json",
-  "execution_status": "READY_SINGLE_CURRENT_R02_GPU_PROFILE_NOT_STARTED",
+  "execution_status": "CAPTURE_REPLAY_STAGING_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -209,6 +209,20 @@
       "decision": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DECISION.json",
       "relative_percent": -0.028447747424620307,
       "cleanup_verified": true
+    },
+    {
+      "event": "HQ_CURRENT_R02_GPU_DIAGNOSTIC_RESERVED",
+      "revision": 24,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r02-current-gpu-profile-20261117-05",
+      "attempt_id": "r02-current-capture-profile-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "budget": {
+        "capture_games": 1,
+        "captured_frames": 1,
+        "replay_profiles": 1,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -294,11 +308,12 @@
   },
   "execution": {
     "attempt_id": "r02-current-capture-profile-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "capture_games": 0,
     "captured_frames": 0,
-    "replay_profiles": 0
+    "replay_profiles": 0,
+    "started_at_utc": "2026-11-17 00:01:44 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
