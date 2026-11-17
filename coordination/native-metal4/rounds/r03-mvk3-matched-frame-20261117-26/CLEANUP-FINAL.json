@@ -1,0 +1,57 @@
+{
+  "status": "PASS_ALL_OWNED_RESOURCES_CLOSED",
+  "utc": "2026-11-17T17:01:18.087348+00:00",
+  "sessions": {
+    "R03": {
+      "session": "9",
+      "terminateExit": 0,
+      "stdout": "Session 9 terminated.\n",
+      "stderr": ""
+    },
+    "MVK3": {
+      "session": "14",
+      "terminateExit": 0,
+      "stdout": "Session 14 terminated.\n",
+      "stderr": ""
+    }
+  },
+  "awake": {
+    "R03": {
+      "pid": 12999,
+      "beforeCommand": "/usr/bin/caffeinate -disu -t 1200",
+      "action": "SIGTERM_OWN_AWAKE",
+      "afterExit": 1,
+      "after": "",
+      "alive": false
+    },
+    "MVK3": {
+      "pid": 14049,
+      "beforeCommand": "/usr/bin/caffeinate -disu -t 1200",
+      "action": "SIGTERM_OWN_AWAKE",
+      "afterExit": 1,
+      "after": "",
+      "alive": false
+    }
+  },
+  "games": {
+    "R03": {
+      "normalExit": true,
+      "pid": 12856,
+      "ownedGroupGone": true,
+      "privateWidgetRemoved": true,
+      "privateGameOverlayRemoved": true
+    },
+    "MVK3": {
+      "normalExit": true,
+      "pid": 13725,
+      "ownedGroupGone": true,
+      "privateWidgetRemoved": true,
+      "privateGameOverlayRemoved": true
+    }
+  },
+  "finalSessionList": {
+    "exit": 0,
+    "stdout": "No active sessions.\n",
+    "stderr": ""
+  }
+}

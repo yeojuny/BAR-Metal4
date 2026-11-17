@@ -1,0 +1,7 @@
+{
+  "status": "PARTIAL_EXPORT",
+  "MVK3_command_tree": "Saved /commands/cb3 and encoder children through /commands/cb3/re142. The next query for /commands/cb3/be143 returned nonzero; stderr was empty in the invoking assertion. Raw failing stdout was not saved. No retry was made. cb3 tail and cb5 child expansion remain unexported. Subsequent specific world/decal queries in the same session succeeded.",
+  "profile_commands": 0,
+  "not_a_capture_retry": true,
+  "pair_gate": "Independent failure from actual bound decal input rows; no timing claim relies on partial command coverage."
+}
