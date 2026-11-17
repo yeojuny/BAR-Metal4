@@ -1,0 +1,23 @@
+{
+  "round_id": "postprocess-producer-20261117-19",
+  "attempt_id": "postprocess-producer-01",
+  "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+  "source_manifest_sha256": "f758b34fced26318ed7f8497db93a350dc06f8db5d3c670852484ec450fd5221",
+  "request": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/REQUEST.json",
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "previous_HQ_turn_completed": true,
+  "previous_cleanup_verified": true,
+  "budget": {
+    "CPU_contract_script": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "relocation_sign": 1,
+    "fixture_staging": 1,
+    "validation_games": 1,
+    "benchmarks": 0,
+    "GPU_helpers": 0,
+    "captures": 0,
+    "retries": 0
+  }
+}
