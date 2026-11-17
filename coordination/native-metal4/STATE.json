@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 47,
+  "revision": 48,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
   "request": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/DONE.json",
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/DECISION.json",
-  "execution_status": "GROUND_DECAL_VALIDATION_STAGING_RESERVED",
+  "execution_status": "GROUND_DECAL_TWO_ARM_VALIDATION_STAGED_NO_EXECUTION",
   "blocked_reason": null,
   "history": [
     {
@@ -482,6 +482,17 @@
       "attempt_id": "ground-decal-pages-staging-01",
       "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
       "games": 0
+    },
+    {
+      "event": "HQ_GROUND_DECAL_VALIDATION_STAGING_DONE_GAMES_ZERO",
+      "revision": 48,
+      "round_id": "ground-decal-pages-staging-20261117-11",
+      "attempt_id": "ground-decal-pages-staging-01",
+      "artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+      "signed_candidate_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+      "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -568,9 +579,15 @@
   "execution": {
     "attempt_id": "ground-decal-pages-staging-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "games": 0,
-    "builds": 0
+    "builds": 0,
+    "signing_attempts": 1,
+    "fixture_staging_attempts": 1,
+    "cleanup_complete": true,
+    "artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+    "signed_candidate_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+    "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
