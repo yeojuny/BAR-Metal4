@@ -1,0 +1,47 @@
+{
+  "round_id": "r02-existing-trace-export-20261117-20",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_PARTIAL_READ_ONLY_EXPORT_WITH_EXPLICIT_PROOF_GAPS",
+  "artifact_commit": "9d9c34e19c137857540fb3133a8452523e74074e",
+  "execution_turn": "01a1e864-7763-73f3-a531-84a76d6c4437",
+  "execution_turn_completed": true,
+  "cleanup_verified": true,
+  "latest_HQ_context": "Subsequent turn01a1e887-619a-7710-b872-45a5fea732f7 is an explicitly read-only diagnostic planning request, not a new execution. Its prompt prohibits source/STATE writes.",
+  "reviewed": [
+    "DONE",
+    "REPORT",
+    "RESULT",
+    "BARRIERS",
+    "TEXTURE-COPY-LINEAGE",
+    "CLEANUP",
+    "original local api-calls saved export for api9754/9766/9776/9786/10982"
+  ],
+  "findings": [
+    "Decal label9 to grass10 already uses Fragment-to-Fragment barrier; removing a supposed Vertex wait there would duplicate prior work.",
+    "Broader Vertex|Fragment waits exist at11/12/33; attachment and last-writer proof absent, so no safe-narrowing conclusion.",
+    "Original API shows dss15 then378-vertex165-instance draw; following dss12 precedes a separate3-vertex draw.",
+    "Explicit ce51 api10982 tex99-to-tex2 copy verified. Upstream attachment writer and exact drawable texture association remain unknown.",
+    "Saved stage bounds lack constituent active intervals and retained units; no continuous overlap duration or runtime GPU fraction derivable."
+  ],
+  "limitations": [
+    "R02 capture, not current R03/later candidate evidence",
+    "missing attachments/load/store/resolve and complete read/write/last-writer graph",
+    "missing dss12/dss15 descriptors",
+    "missing shader instruction/register counters",
+    "API segments associated by order/type/draw-count rather than receiver handles on every row"
+  ],
+  "execution_counts": {
+    "games": 0,
+    "builds": 0,
+    "captures": 0,
+    "replays": 0,
+    "profiles": 0,
+    "new_inspection_sessions": 0
+  },
+  "trace_unchanged": true,
+  "performance_claim": false,
+  "new_execution_authorized": false,
+  "ongoing_read_only_audit": "01a1e87e-0748-7293-9316-f5c1bfed92bc",
+  "next": "Respect ongoing read-only audit and diagnostic planning. Establish exact producer/consumer attachment proof for one consequential boundary before proposing narrowing; do not repeat decal9-to-grass10 change. Missing inspection data needs separately supported/authorized path, not implicit replay permission.",
+  "main_release_homebrew_unchanged": true
+}
