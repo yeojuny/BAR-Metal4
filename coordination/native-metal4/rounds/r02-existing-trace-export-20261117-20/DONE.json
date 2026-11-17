@@ -1,0 +1,38 @@
+{
+  "round_id": "r02-existing-trace-export-20261117-20",
+  "attempt_id": "r02-existing-trace-export-01",
+  "author": "LOCAL_CODEX_HQ",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "status": "DONE_PARTIAL_EXPORT_AVAILABLE_DATA_ONLY",
+  "artifact_commit": "9d9c34e19c137857540fb3133a8452523e74074e",
+  "result_path": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/artifacts/RESULT.json",
+  "report_path": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/artifacts/REPORT.md",
+  "remote_files_verified": 52,
+  "raw_saved_exports_verified": 9,
+  "encoder_nodes": 52,
+  "selected_encoders": 14,
+  "render_draw_checks": 42,
+  "unavailable": [
+    "attachment descriptors/load/store/resolve",
+    "complete resource read/write/last writer",
+    "individual active stage intervals and retained unit schema",
+    "dss12/dss15 full descriptors",
+    "shader instruction/register counters"
+  ],
+  "budget_actual": {
+    "game": 0,
+    "build": 0,
+    "capture": 0,
+    "GPU_execution": 0,
+    "replay": 0,
+    "profile": 0,
+    "source_edits": 0,
+    "new_inspection_sessions": 0
+  },
+  "trace_unchanged": true,
+  "cleanup_complete": true,
+  "owned_sessions_opened": 0,
+  "remaining_owned_workers": 0,
+  "new_performance_claim": false,
+  "notes": "No documented zero-GPU-execution gputrace load mode; reused existing saved exports and no session was opened. Broader masks alone do not prove avoidable hazards. Separate user-authorized Astra ultra audit is read-only and has no execution authority."
+}
