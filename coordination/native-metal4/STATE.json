@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 105,
+  "revision": 106,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/DONE.json",
-  "decision": "REVIEWED_FRAME_ZERO_FIX_CPU_SCALAR_DIAGNOSTIC_ONLY",
-  "execution_status": "HQ3_ROUND27_LIFETIME_RESERVED_ONCE",
+  "decision": "PARTIAL_FIRST_FRAME_SCALARS_DIFFER_MVK3_SIM1590_UNKNOWN",
+  "execution_status": "HQ3_ROUND27_CLOSED_R03_PASS_MVK3_WARMUP_FAILURE_NO_RETRY",
   "blocked_reason": null,
   "history": [
     {
@@ -1490,6 +1490,45 @@
         "builds": 0
       },
       "previous_round_budget_reused": false
+    },
+    {
+      "event": "HQ3_ROUND27_DONE_FIRST_FRAME_LIFETIME_DIFFERENCE_MVK3_FRAME180_STOP",
+      "revision": 106,
+      "round_id": "r03-mvk3-lifetime-20261117-27",
+      "attempt_id": "lifetime-raw-two-arm-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "d0a7ee775c2a50f54bcb1474fbbb60734c59dfd0",
+      "result_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/DONE.json",
+      "decision": "PARTIAL_FIRST_FRAME_SCALARS_DIFFER_MVK3_SIM1590_UNKNOWN",
+      "counts": {
+        "stages": 1,
+        "games": 2,
+        "R03": 1,
+        "MVK3": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0,
+        "FPS_AB": 0,
+        "engineSourceEdits": 0,
+        "RNGOrLifetimeOverrides": 0
+      },
+      "observed_ticks": {
+        "R03": [
+          0,
+          1590
+        ],
+        "MVK3": [
+          0
+        ]
+      },
+      "mvk3_failure": "FAILED_PAUSE_REQUEST_STATE at frame 180",
+      "mvk3_sim1590": "UNKNOWN",
+      "protected_hashes_verified": 132,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T20:19:05.831443+00:00"
     }
   ],
   "communication_test": {
@@ -1575,7 +1614,7 @@
   "execution": {
     "attempt_id": "lifetime-raw-two-arm-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "games_max": 2,
       "games_per_arm": 1,
@@ -1588,7 +1627,30 @@
     "reserved_at_utc": "2026-11-17 20:06:49 UTC",
     "previous_budget_reused": false,
     "bar": "PAUSED",
-    "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3"
+    "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+    "ended_at_utc": "2026-11-17T20:19:05.831443+00:00",
+    "counts": {
+      "stages": 1,
+      "games": 2,
+      "R03": 1,
+      "MVK3": 1,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0,
+      "builds": 0,
+      "FPS_AB": 0,
+      "engineSourceEdits": 0,
+      "RNGOrLifetimeOverrides": 0
+    },
+    "diagnostic_outcome": "PARTIAL_FIRST_FRAME_SCALARS_DIFFER_MVK3_SIM1590_UNKNOWN",
+    "paired_protocol_passed": false,
+    "arm_status": {
+      "R03": "PASS_TWO_RAW_RECORDS",
+      "MVK3": "FAIL_WARMUP_PACING_FRAME180"
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "d0a7ee775c2a50f54bcb1474fbbb60734c59dfd0",
+    "retry_authorized": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1654,5 +1716,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 stage once, run R03 once; MVK3 only after R03 records, normal exit and owned cleanup pass. Report and close even on failure."
+  "next_action": "SUPER_JINI_MK2 review round27 DONE. MVK3 frame1590 UNKNOWN. Budget closed, no retry or additional execution."
 }
