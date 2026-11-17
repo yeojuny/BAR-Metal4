@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 70,
+  "revision": 71,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "texture-ordered-trace-20261117-17",
-  "source_commit": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
-  "source_manifest_sha256": "262cefbd639de63e833a7847b868a99de0aa2045e74b9d46691535e68bfe759f",
-  "request": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/READY.json",
-  "result_path": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DONE.json",
+  "round_id": "completion-observation-split-20261117-18",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "request": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/READY.json",
+  "result_path": null,
   "decision": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DECISION.json",
-  "execution_status": "TEXTURE_TRACE_INDEPENDENT_REVIEW_COMPLETE_NO_NEW_EXECUTION",
+  "execution_status": "COMPLETION_SPLIT_FIXED_BUILD_ONE_VALIDATION_READY",
   "blocked_reason": null,
   "history": [
     {
@@ -748,6 +748,16 @@
       "path_admission_observed": true,
       "observed_before_counted_window": true,
       "performance_accepted": false
+    },
+    {
+      "event": "COMPLETION_SPLIT_SOURCE_REVIEWED_READY",
+      "revision": 71,
+      "round_id": "completion-observation-split-20261117-18",
+      "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "parent_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "source_writers_stopped": true,
+      "HQ_previous_turn_completed": true,
+      "performance_authorized": false
     }
   ],
   "communication_test": {
@@ -819,7 +829,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "FIXED_DIAGNOSTIC_BUILD_ONE_TRACE_VALIDATION_GAME",
+  "enabled_scope": "FIXED_PENDING_ONE_EQUIVALENCE_BUILD_AND_ONE_VALIDATION_GAME",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
@@ -832,28 +842,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "texture-ordered-trace-01",
-    "started": true,
-    "completed": true,
-    "games": 1,
-    "builds": 1,
-    "normal_exits": 1,
-    "CPU_contract_scripts": 1,
-    "live_scene_define_confirmed": true,
-    "trace_logged_counts": {
-      "armed": 1,
-      "admitted": 6,
-      "encode_permit_check": 4,
-      "producer_retired_check": 4
-    },
-    "observed_event_log_frames": [
-      91,
-      103
-    ],
-    "eligible_path_admission": "OBSERVED",
-    "performance_accepted": false,
-    "cleanup_complete": true,
-    "artifact_commit": "f2263e446ef07e0515bac259be882378dac506fa"
+    "attempt_id": "completion-observation-split-01",
+    "started": false,
+    "completed": false,
+    "games": 0,
+    "builds": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
