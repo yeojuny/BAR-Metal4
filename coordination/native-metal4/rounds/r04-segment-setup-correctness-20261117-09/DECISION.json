@@ -26,8 +26,9 @@
   },
   "cleanup": {
     "DONE_reports_owned_processes_children_GPU_workers_and_raw_evidence_writes_closed": true,
-    "native_HQ_turn_last_observed": "inProgress",
-    "native_turn_completion_verified": false
+    "native_HQ_turn_last_observed": "completed",
+    "native_turn_completion_verified": true,
+    "native_turn_id": "01a1e74a-dc6b-7383-9cfd-c720d3aeeb1a"
   },
   "limitations": [
     "Synthetic helper does not exhaustively validate production vertex, height and clipping path.",
