@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 39,
+  "revision": 40,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DECISION.json",
-  "execution_status": "READY_R04_HELPER_CORRECTNESS_NOT_STARTED",
+  "execution_status": "R04_HELPER_CORRECTNESS_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -397,6 +397,19 @@
       "source_writers_stopped": true,
       "child_tasks_completed": true,
       "HQ_previous_turn_completed": true
+    },
+    {
+      "event": "HQ_R04_HELPER_CORRECTNESS_RESERVED",
+      "revision": 40,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r04-segment-setup-correctness-20261117-09",
+      "attempt_id": "r04-helper-correctness-01",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "budget": {
+        "compile": 1,
+        "GPU_invocation": 1,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -482,11 +495,12 @@
   },
   "execution": {
     "attempt_id": "r04-helper-correctness-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "helper_compiles": 0,
     "gpu_helper_runs": 0,
-    "games": 0
+    "games": 0,
+    "started_at_utc": "2026-11-17 03:26:51 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
