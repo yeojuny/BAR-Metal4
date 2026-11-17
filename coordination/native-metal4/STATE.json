@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 125,
+  "revision": 126,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/prepare-decode-fps-20261117-36/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/prepare-decode-fps-20261117-36/READY.json",
   "result_path": "coordination/native-metal4/rounds/prepare-decode-fps-20261117-36/DONE.json",
-  "decision": "RUN_ONE_MATCHED_CLEAN_FPS_PAIR",
-  "execution_status": "HQ3_ROUND36_RESERVED_CLEAN_ORIGINAL_PREPARE_BATCH_FPS",
+  "decision": "DONE_MATCHED_CLEAN_FPS_PAIR",
+  "execution_status": "HQ3_ROUND36_CLOSED_CLEAN_FPS_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -1969,6 +1969,37 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17T22:30:50.776Z"
+    },
+    {
+      "event": "HQ3_ROUND36_CLOSED_CLEAN_FPS_PAIR",
+      "revision": 126,
+      "round_id": "prepare-decode-fps-20261117-36",
+      "attempt_id": "clean-original-batch-fps-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "3395c9b0de96a01b38900dd9891dd67cf5c3a18d",
+      "result_path": "coordination/native-metal4/rounds/prepare-decode-fps-20261117-36/DONE.json",
+      "decision": "DONE_MATCHED_CLEAN_FPS_PAIR",
+      "counts": {
+        "games": 2,
+        "original_games": 1,
+        "batch_games": 1,
+        "normal_exits": 2,
+        "builds": 0,
+        "helpers": 0,
+        "retries": 0,
+        "screenshots": 0,
+        "metal_traces": 0,
+        "profiles": 0
+      },
+      "clean_fps": {
+        "R03_ORIGINAL": 64.01379763502456,
+        "PREPARE_BATCH": 64.113780138164
+      },
+      "clean_relative_percent": 0.15618898867630904,
+      "same_loaded_non_system_dylibs": true,
+      "cleanup_complete": true,
+      "utc": "2026-11-17T22:35:46.769102+00:00"
     }
   ],
   "communication_test": {
@@ -2054,7 +2085,7 @@
   "execution": {
     "attempt_id": "clean-original-batch-fps-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "games_max": 2,
       "original_games_max": 1,
@@ -2072,7 +2103,31 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17T22:30:50.776Z",
-    "bar": "PAUSED"
+    "bar": "PAUSED",
+    "ended_at_utc": "2026-11-17T22:35:46.769102+00:00",
+    "counts": {
+      "games": 2,
+      "original_games": 1,
+      "batch_games": 1,
+      "normal_exits": 2,
+      "builds": 0,
+      "helpers": 0,
+      "retries": 0,
+      "screenshots": 0,
+      "metal_traces": 0,
+      "profiles": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "3395c9b0de96a01b38900dd9891dd67cf5c3a18d",
+    "diagnostic_outcome": "DONE_MATCHED_CLEAN_FPS_PAIR",
+    "clean_fps": {
+      "R03_ORIGINAL": 64.01379763502456,
+      "PREPARE_BATCH": 64.113780138164
+    },
+    "clean_relative_percent": 0.15618898867630904,
+    "same_loaded_non_system_dylibs": true,
+    "indexed_game_authorization": "SEPARATE_PENDING",
+    "retry_authorized": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2138,7 +2193,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the original and batch sequentially once each using the existing clean paced scenario.",
+  "next_action": "SUPER_JINI_MK2 review the one clean FPS pair and the diagnostic Round 35 timings.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
