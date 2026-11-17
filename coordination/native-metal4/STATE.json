@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 33,
+  "revision": 34,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
   "request": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/READY.json",
-  "result_path": null,
-  "decision": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DECISION.json",
-  "execution_status": "R03_ISOLATED_BUILD_STAGING_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DONE.json",
+  "decision": "Fixed R03 isolated configure1/build1 and seven pin-only comparison profiles complete. Runtime images/validation/FPS remain unrun pending JINI review.",
+  "execution_status": "R03_BUILD_STAGING_COMPLETE_GAMES_ZERO",
   "blocked_reason": null,
   "history": [
     {
@@ -320,6 +320,23 @@
       "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
       "scope": "ONE_ISOLATED_BUILD_AND_PIN_ONLY_RUNNER_STAGING",
       "independent_audit_closed": true
+    },
+    {
+      "event": "HQ_R03_BUILD_AND_STAGING_DONE_GAMES_ZERO",
+      "revision": 34,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-engine-staging-20261117-07",
+      "attempt_id": "r03-isolated-build-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "result_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DONE.json",
+      "artifact_commit": "cecb898145c7bdcaef1f37347678f4604277fef2",
+      "signed_engine_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "games": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -406,11 +423,13 @@
   "execution": {
     "attempt_id": "r03-isolated-build-01",
     "started": true,
-    "completed": false,
-    "configure_attempts": 0,
-    "engine_builds": 0,
+    "completed": true,
+    "configure_attempts": 1,
+    "engine_builds": 1,
     "games": 0,
-    "started_at_utc": "2026-11-17 01:16:23 UTC"
+    "started_at_utc": "2026-11-17 01:16:23 UTC",
+    "cleanup_complete": true,
+    "completed_at_utc": "2026-11-17 01:35:40 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
