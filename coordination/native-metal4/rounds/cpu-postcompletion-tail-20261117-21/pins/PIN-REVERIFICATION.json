@@ -1,0 +1,22 @@
+{
+  "MANIFEST.json": {
+    "actual": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+    "expected": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/MANIFEST.json"
+  },
+  "audit": {
+    "actual": "f7da71db9bcb88891d93f300481bae504bc51be3f0c728d5ba7dd438b3cd2f73",
+    "expected": "f7da71db9bcb88891d93f300481bae504bc51be3f0c728d5ba7dd438b3cd2f73",
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/independent-architecture-audit-20261117-02/AUDIT.md"
+  },
+  "measurement/run.py": {
+    "actual": "3ab8f0c8f3e26676d545d6b7f22ef27139723730a3f0990f5f4d2c2a75d71c9d",
+    "expected": "3ab8f0c8f3e26676d545d6b7f22ef27139723730a3f0990f5f4d2c2a75d71c9d",
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/run.py"
+  },
+  "runtime/native/bin/spring-metal4-scene": {
+    "actual": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+    "expected": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/bin/spring-metal4-scene"
+  }
+}

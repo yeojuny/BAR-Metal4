@@ -1,0 +1,52 @@
+{
+  "head": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "manifest_files": {
+    "Metal4RuntimeNative.h": {
+      "actual": "f4b11f5a3243c9aa7326bdf6e8843cb7e361a8e015e3f2eaf1548d12e00b0462",
+      "expected": "f4b11f5a3243c9aa7326bdf6e8843cb7e361a8e015e3f2eaf1548d12e00b0462"
+    },
+    "Metal4RuntimeNative.mm": {
+      "actual": "6862989c2619335b3180db6086977a9468985910706e3f22d5929f64c1d29179",
+      "expected": "6862989c2619335b3180db6086977a9468985910706e3f22d5929f64c1d29179"
+    },
+    "REPORT.md": {
+      "actual": "cf54e51aebc5a20c169d0aba62e17178812a6d860eb68785344c3dd42bf28b65",
+      "expected": "cf54e51aebc5a20c169d0aba62e17178812a6d860eb68785344c3dd42bf28b65"
+    },
+    "completion-split.patch": {
+      "actual": "de7c5443f9769d44f24ef459a423b69b6d030ae85bb0163993624f806ec5837c",
+      "expected": "de7c5443f9769d44f24ef459a423b69b6d030ae85bb0163993624f806ec5837c"
+    },
+    "cpu-results.json": {
+      "actual": "69877e8f930894f2e44ac53d2baec11047b520534b2f9ba9f22bcf6268d68f8c",
+      "expected": "69877e8f930894f2e44ac53d2baec11047b520534b2f9ba9f22bcf6268d68f8c"
+    },
+    "reference/Metal4RuntimeNative.h": {
+      "actual": "bf42e42224f1f88aa894ee59693437c6291a4f8f1cb8b464057e368e4512ae49",
+      "expected": "bf42e42224f1f88aa894ee59693437c6291a4f8f1cb8b464057e368e4512ae49"
+    },
+    "reference/Metal4RuntimeNative.mm": {
+      "actual": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521",
+      "expected": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521"
+    },
+    "test_source_and_contract.py": {
+      "actual": "0029e5f7485a9c0808bc2fcd1c310f1d310c6b56fd68349f275b3bd3e31e764e",
+      "expected": "0029e5f7485a9c0808bc2fcd1c310f1d310c6b56fd68349f275b3bd3e31e764e"
+    }
+  },
+  "manifest_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/source/docs/research/completion-observation-split-20261117/candidate/MANIFEST.json",
+  "manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "method": "git ls-tree -rz HEAD engine; SHA1(blob header + raw bytes) versus committed blob ID; SHA256(raw bytes) versus original SOURCE-HASHES. Symlink targets hashed as bytes. No attribute normalization. No git status/index refresh.",
+  "parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "parent_reference_bytes_match": true,
+  "prior_sha256_mismatches": [],
+  "production_delta": [
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm"
+  ],
+  "raw_committed_files": 10273,
+  "raw_git_blob_mismatches": [],
+  "scope": "Tracked engine blobs only, identical to original execute.py:26-35; .git and non-engine docs/provenance excluded from this closure; manifest/provenance separately pinned.",
+  "source_hashes_sha256": "3fecb509b4b90ab3db9c35e6f1ab65dd7168d5ae1bfb23af655566ea5150503f",
+  "status": "PASS_ACTUAL_BYTES"
+}
