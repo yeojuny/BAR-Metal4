@@ -1,6 +1,6 @@
 # D2R·Zelda 렌더 구조: BAR R03 대응 심층 1차 검토
 
-> 최신 상태: round20 저장 export 검토 완료(STATE80). 한 프레임 내부 의존성 분석은 계속하되 aggregate bounds는 실제 active overlap이 아니다. 마지막 정정 절 참조.
+> 최신 기록: round21 CPU tail 진단 완료(STATE84). 평균 0.032586 ms는 GPU idle/성능 이득이 아니다. R04 helper 통과와 게임 성능 미측정을 구분하며 마지막 절을 참조한다.
 
 > 최신 운영 상태는 문서 끝의 **round18 종료·제한적 동등성 통과** 갱신을 참조한다. revision72/RUNNING 내용은 과거 스냅샷이다.
 
@@ -403,3 +403,28 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 - REPORT에는 별도 사용자 요청 Astra ultra follow-up 감사가 시작됐다고 기록한다. 읽기+자기 감사 문서만 허용하며 게임/빌드/GPU/저장소 수정 권한은 없다. 이번 체크포인트 작성에서 감사 결과를 수신·검증했다고 주장하지 않는다.
 
 [고정 round20 REPORT](https://github.com/yeojuny/BAR-Metal4/blob/9d9c34e19c137857540fb3133a8452523e74074e/coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/artifacts/REPORT.md)
+
+
+## round21 CPU tail 원본 결과와 R04 다음 비교 (2026-11-17)
+
+### 확인한 스냅샷과 출처
+- [x] 실제 원격 STATE revision **84**, DONE/JINI, round `cpu-postcompletion-tail-20261117-21`를 읽었다. 문서 작성 시점 스냅샷이며 이후 실행권은 최신 STATE로 판단한다.
+- [x] [round21 고정 REPORT](https://github.com/yeojuny/BAR-Metal4/blob/1145a599c051b24071472d131f73d793498df49d/coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/REPORT.md) 원문을 읽었다. 실행 source는 `c34129af9158bbdef1321d17825f1f60721b74ec`, artifact는 `1145a599c051b24071472d131f73d793498df49d`.
+- [x] [기존 R04 helper DONE](https://github.com/yeojuny/BAR-Metal4/blob/coord/native-metal4/coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DONE.json)을 읽어 아래 검증 범위와 한계를 대조했다. R04 source `5d20bd842b3c881166abb58f361482a5d7bb19e7`, helper artifact `45d0ada23c259df5e13ff8d68c9158932a84e065`.
+
+### round21: 작은 CPU tail, GPU idle·성능 향상 증거 아님
+- 진단 게임 1회의 simulation 900–915 짧은 구간에서 정확한 내부 predecessor→successor 체인 **33개**. FeedbackWait(N).end→Submit(N+1).start 평균 **0.032586 ms**, 중앙값 0.032458 ms, p95 0.046417 ms, 최대 0.047958 ms.
+- 별도 submit 호출 평균 0.029876 ms. tail 내부 callback 평균 0.017798 ms, 네 하위 구간 합집합 0.021861 ms, 나머지 0.010725 ms. RuntimeRetire와 자식 시간을 중복 합산하지 않는다.
+- 시작점은 **호스트 feedback wait가 끝난 시점**이지 실제 GPU 완료 시점이 아니다. 약 0.210% cadence 비율은 문맥 정보일 뿐 제거 가능한 GPU idle이나 FPS 예상 이득이 아니다. EventWait/FeedbackWait도 절감 가능 시간으로 계산하지 않는다.
+- 첫 predecessor는 창 밖이라 boundary-censored 1개, 마지막 submission의 미래 successor는 미수집. 마지막 job34 tail은 출력 emission과 겹치며 그대로 포함했다. 인위적 보정·제외·재실행 없음.
+- trace 1,496행/68 buffers, dropped0/identity errors0. 내부 체인 정합성은 확인됐으나 전체 경계·장시간 전투·다른 장면으로 일반화하지 않는다. Early-drain 사례는 이 deferred 표본에 포함되지 않았다.
+- 게임 정상 종료/정리 완료, 기존 증거 불변. 빌드·capture·replay·helper·FPS A/B·retry·source edit는 모두 0. 진단 FPS는 계산하거나 성능 증거로 채택하지 않았다.
+- 판단: 이 관측만으로 CPU settlement 이동을 큰 현재 병목이라고 주장할 수 없다. 한 프레임 내부 의존성/자원 lineage 검토는 계속하되, round20 aggregate bounds≠실제 active overlap 정정은 유지한다.
+
+### R04: 검증된 helper와 미측정 게임 성능을 분리
+- R04 SensorLOS segment setup 공유 후보는 **제한된 helper GPU 정확성 통과**. color/depth/stencil old/new 비교 12,065개, prepared 경로를 끄면 차이를 감지하는 negative control 통과, 실제 Metal Validation 오류 0.
+- 그러나 synthetic ParityVS helper이며 production OriginalSensorLOSVertex 전체 경로의 전수 검증이 아니다. 실제 MSAA4 미검증, 큰 좌표 GPU 동등성 미검증. 추가 32-byte varying 및 vertex 계산 비용이 fragment 절약을 상쇄할 수 있다.
+- **R04의 실제 게임 성능은 아직 미측정**이다. helper 통과나 replay SensorLOS 비율만으로 향상률·승격을 말하지 않는다.
+- [ ] 다음 비교 대상은 R03 `0780bd7c530b0696067b717428b49a416eda556a` 대 고정 R04. 별도 결정/인계에서 고정 source·manifest·바이너리와 동일 장면·품질 조건을 확정하고, 화면/Metal 검증 후 성능 비교한다. 이것은 계획이지 실행 완료나 이 문서 자체의 실행 허가가 아니다.
+- [ ] full production/경계/자원 수명/다른 장면 미검증 항목은 남긴다. HQ 소유 중 JINI·보조 작업이 로컬 실행에 간섭하지 않는다.
+- MVK3/BAR가 메인, 포팅 분석은 보조. FSR/frame generation 제외, main·release·Homebrew 보호 유지. 이 갱신은 별도 docs branch와 클라우드 로컬 Markdown만 변경한다.
