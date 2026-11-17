@@ -1,0 +1,26 @@
+{
+  "status": "PASS_EXISTING_BOUND_FIXTURES",
+  "fixtures": {
+    "SENSORLOS": {
+      "status": "PASS",
+      "metal_api_validation": true,
+      "fixture_sha256": "ac3538dc8a8fabf1ac84fd75101e6178eda22e3ba0767a990567bf8cc2618cf3",
+      "gpu_log_sha256": "3d6f9a98174c7d405dcd9aecfc266314fdf14874a6e480477d0337e1df3889ff",
+      "color_depth_stencil_comparisons": 12065,
+      "ordinary_cases": 3600,
+      "asymmetric_cases": 1024,
+      "scope": "Same R03 shader and existing synthetic geometry matrix. Indexed production outline table versus original triangle list, including the winding and mip cases."
+    },
+    "RANGE199": {
+      "status": "PASS",
+      "metal_api_validation": true,
+      "fixture_sha256": "25d6111b3050099359618eede500b4d85f9498b9b04ea606ef13e2f3cecb0209",
+      "gpu_log_sha256": "d7155cbb5c53b6c69012902a183aa0ed7da485f3b68ef35e96a1dd98de1d93b1",
+      "metal4_submissions": 7,
+      "indexed_submissions": 2,
+      "direct_submissions": 5,
+      "index_cache_tables_checked": 5,
+      "scope": "Original Range199 Metal4 draw fixture with the matching radar/sonar table and exact production cache logic. Allocation length, address, registration and reset checked for all five tables."
+    }
+  }
+}

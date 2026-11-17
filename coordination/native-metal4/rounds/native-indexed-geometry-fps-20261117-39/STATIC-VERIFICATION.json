@@ -1,0 +1,47 @@
+{
+  "status": "PASS_EXISTING_CPU_CONTRACT_AND_STATIC_CHECKS",
+  "syntax_only": {
+    "Metal4ScreenNative.mm": {
+      "exit": 0,
+      "log_sha256": "ee77f5dc8b69db91322c1cf87111ec32094fe55fd3a51fd5983cf410ad93a5c8"
+    },
+    "Metal4Sensor31657CircleNative.mm": {
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Metal4SensorLOSNative.mm": {
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "Metal4UnitStencil.mm": {
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "ordered_vertex_slot_checks": {
+    "radar_sonar": 6144,
+    "sensor_los_aabb_and_x_major": 6144,
+    "sensor_los_y_major": 6144,
+    "sensor_los_r8_fan": 3072,
+    "healthbars": 78,
+    "unit_stencil": 18,
+    "shader_input_hashes": {
+      "NativeSensor31657CircleShaders.h": "879f80efc8320a8a157b2a96b61e06946ce2a9a00a15c1874ec7c4f114825eda",
+      "NativeSensorLOSShaders.h": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+      "Metal4HealthBarsShaders.h": "2802a505737184d05f1624957067329a74dd32b055751e71ccb181bf5974711d",
+      "NativeUnitStencilShaders.h": "2aa0f80a15a85bd277da01f9584d65a6bd825b700578c20e900d2e7039d5bad9"
+    }
+  },
+  "existing_ground_decal_cpu": {
+    "source_sha256": "97b19a8921e08cd8a96458ad058e7fe3f8e2169d5f6ab4ec96fe2f55bfa6694b",
+    "shader_sha256": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+    "result": "PASS actual shader36corners/12triangles/8IDs; mutations rejected=72; eligibility36cases; buffer7cases"
+  },
+  "new_engine_builds": 0,
+  "gpu_invocations": 0,
+  "games": 0,
+  "scope": "Original shaders and new arrays were checked per vertex slot. Objective-C++ candidate units were checked with the existing SDK and build flags using -fsyntax-only.",
+  "all_indexed_triangles_have_distinct_ids_within_each_primitive": true,
+  "original_shader_bytes_preserved": true,
+  "forward_and_reverse_patch_checks": true
+}

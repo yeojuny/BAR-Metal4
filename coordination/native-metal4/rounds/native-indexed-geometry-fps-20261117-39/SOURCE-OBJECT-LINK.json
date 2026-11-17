@@ -1,0 +1,79 @@
+{
+  "status": "PASS_ALL_FOUR_PRODUCTION_UNITS_LINKED",
+  "binary_sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+  "build_sdk": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/build/spring-metal4-scene:",
+    "Load command 11",
+    "      cmd LC_BUILD_VERSION",
+    "  cmdsize 32",
+    " platform MACOS",
+    "    minos 27.2",
+    "      sdk 27.2",
+    "   ntools 1",
+    "     tool LD",
+    "  version 27106.1"
+  ],
+  "sources": [
+    {
+      "source": "Metal4ScreenNative.mm",
+      "object": "rts/builds/metal4-scene/metal4-renderer/CMakeFiles/recoil-metal4-renderer.dir/Metal4ScreenNative.mm.o",
+      "object_sha256": "88368303c7a1e4a62504716d0ce8407a1ee503aaffbe795d14ebce3772a267b4",
+      "archive": "rts/builds/metal4-scene/metal4-renderer/librecoil-metal4-renderer.a",
+      "both_new_header_dependencies": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h"
+      ],
+      "compile": {
+        "line": 703,
+        "text": "[526/1578] Building OBJCXX object rts/builds/metal4-scene/metal4-renderer/CMakeFiles/recoil-metal4-renderer.dir/Metal4ScreenNative.mm.o"
+      }
+    },
+    {
+      "source": "Metal4Sensor31657CircleNative.mm",
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Sensor31657CircleNative.mm.o",
+      "object_sha256": "6172b692cdd2bee9cdce074550c9e94dfd28faac5c9b09a6d72a36e9f946d020",
+      "archive": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "both_new_header_dependencies": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h"
+      ],
+      "compile": {
+        "line": 2566,
+        "text": "[895/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Sensor31657CircleNative.mm.o"
+      }
+    },
+    {
+      "source": "Metal4SensorLOSNative.mm",
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4SensorLOSNative.mm.o",
+      "object_sha256": "360fa570e7dd8fad706d3c63a920e3c207bc346ea7cf5a686acabd2343425a58",
+      "archive": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "both_new_header_dependencies": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h"
+      ],
+      "compile": {
+        "line": 2559,
+        "text": "[888/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4SensorLOSNative.mm.o"
+      }
+    },
+    {
+      "source": "Metal4UnitStencil.mm",
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4UnitStencil.mm.o",
+      "object_sha256": "215f7aa2f6c0052085331499bd123c1f737bf3e97b6e9b1df6f2666fe9c65126",
+      "archive": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "both_new_header_dependencies": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h"
+      ],
+      "compile": {
+        "line": 2544,
+        "text": "[873/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4UnitStencil.mm.o"
+      }
+    }
+  ],
+  "literal_flag_in_executable": true,
+  "link": {
+    "line": 5580,
+    "text": "[1577/1578] Linking CXX executable spring-metal4-scene"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "label": "CONFIGURE",
+  "argv": [
+    "cmake",
+    "-S",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/build",
+    "-G",
+    "Ninja",
+    "-C",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/initial-cache.cmake",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-17T23:43:44.693442+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39",
+  "pid": 65161,
+  "exit": 0,
+  "ended_at_utc": "2026-11-17T23:43:54.139448+00:00",
+  "stopped_by_runner": false
+}

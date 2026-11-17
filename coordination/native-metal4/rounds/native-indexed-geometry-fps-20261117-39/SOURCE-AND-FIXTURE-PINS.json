@@ -1,0 +1,51 @@
+{
+  "source_candidate_commit": "855197fe4c2439ee169db22d58a647d3241e08b5",
+  "manifest_sha256": "f1cf3c1d3c15ed1b6a675689510c780ce04d2e38ed68d44be71f1c16bc47292d",
+  "patch_sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b",
+  "source_paths_verified": 10272,
+  "verified_production_files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h",
+      "original_sha256": null,
+      "candidate_sha256": "150a2ec2efc51ce5f1ce9e4137891bb4aec289a6a3054608583b402f3573109c"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "original_sha256": "97caea719c49b05f6fbfee30a9a0bffb5fdce81482333900fc04dd83985acd07",
+      "candidate_sha256": "f09fe14a45ad24d60f351796899d9c098ca6387226693a7d076401b351028b02"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm",
+      "original_sha256": "6d4a47c6f2da8250882282c87d69f5e829fd6e412fef8e83e558e38a4e7671fd",
+      "candidate_sha256": "42672ddf7a95f38714fc11adb0b239c9a73b375eda79f0e7d22e7dc5207b0a65"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+      "original_sha256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6",
+      "candidate_sha256": "55c0ea967e30f552f19c112e7102cea371ab13ff9ec078188c04b5cb09f132fa"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4UnitStencil.mm",
+      "original_sha256": "911fa940ebb7f60bd126e8adef9997a5bf7ca60ad94e2d6af805331ab459a837",
+      "candidate_sha256": "33cbb5fc166bd324daf583e86f023747200e85217ac05a355a193b8124823be7"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h",
+      "original_sha256": null,
+      "candidate_sha256": "7b6ec28b48022e58a42a18558de72c2c0db32066f2313f54532adb6003796101"
+    }
+  ],
+  "fixture_sources": {
+    "sensor_los": {
+      "baseline_sha256": "6595ea4c537a7a83e124e909b20e8b9a5e8f22a627dbec5bc74ddf9587d5ace1",
+      "bound_sha256": "60df8d813842c11225d842b0ce788f59ec419afc9bd02d803ce6ea5e612d6e4c"
+    },
+    "range199": {
+      "baseline_sha256": "6b3ceaeb0e779694a8463458b597f9c1499370db598a0f2858ee3e0b5ce5edd0",
+      "bound_sha256": "906e12a6db7d0a8e12512a443a4b1a127a2baabfc8552ba614209e9671348dc6",
+      "cache_extract_sha256": "4161f10a5cb099dace0454d3293bc894a837fab482b1454760e06c76bdd018c9"
+    }
+  },
+  "validation_scope": "Existing LOS render matrix compares the new production outline index table with the original draw. Existing Range199 Metal4 draw fixture checks the matching radar/sonar index pattern and production cache allocation, replacement and clearing for all five templates.",
+  "utc": "2026-11-17T23:37:11.895010+00:00"
+}

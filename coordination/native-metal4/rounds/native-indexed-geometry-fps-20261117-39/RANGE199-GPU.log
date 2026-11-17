@@ -1,0 +1,2 @@
+2026-11-17 15:48:13.325 range-gpu[69834:391851] Metal API Validation Enabled
+PASS R39 range199 programs=6 submissions=7 indexed=2 direct=5 nil_fallback=1 production_cache_tables=5 readback=0

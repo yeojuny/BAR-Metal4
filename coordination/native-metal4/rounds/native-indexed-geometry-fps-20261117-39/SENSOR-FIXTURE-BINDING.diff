@@ -1,0 +1,73 @@
+--- a/gpu_pixel_parity.mm
++++ b/gpu_pixel_parity.mm
+@@ -13,6 +13,7 @@
+ #include <vector>
+ // Compile with -I <fixed R03 engine>/rts/Rendering/Metal4. No fallback header.
+ #include "NativeSensorLOSShaders.h"
++#include "NativeTriangleReuseIndices.h"
+ 
+ using namespace simd;
+ static constexpr unsigned W=128,H=128;
+@@ -114,7 +115,7 @@
+ };
+ static Output RenderOne(id<MTLDevice> d,id<MTLCommandQueue> q,id<MTLRenderPipelineState> p,
+                      id<MTLDepthStencilState> ds,id<MTLTexture> mask,id<MTLSamplerState> sampler,
+-                     const Uniform& u,const std::vector<Line>& lines,const RenderOptions& setup=RenderOptions{}) {
++                     const Uniform& u,const std::vector<Line>& lines,const RenderOptions& setup=RenderOptions{},bool indexed=false) {
+   auto color=Texture(d,MTLPixelFormatBGRA8Unorm,MTLTextureUsageRenderTarget);
+   auto depth=Texture(d,MTLPixelFormatDepth32Float,MTLTextureUsageRenderTarget);
+   auto stencil=Texture(d,MTLPixelFormatStencil8,MTLTextureUsageRenderTarget);
+@@ -149,7 +150,16 @@
+   [enc setVertexBuffer:hit offset:0 atIndex:6];
+   [enc setFragmentTexture:mask atIndex:1];[enc setFragmentSamplerState:sampler atIndex:1];
+   [enc setStencilFrontReferenceValue:setup.frontReference backReferenceValue:setup.backReference];
+-  if(!lines.empty())[enc drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:lines.size()*6];
++  if (!lines.empty()) {
++    if (indexed) {
++      const auto& ids=rendering::metal4::triangleReuse::sensorLOS;
++      static id<MTLBuffer> indices=[d newBufferWithBytes:ids.data() length:ids.size()*sizeof(ids[0]) options:MTLResourceStorageModeShared];
++      if(!indices || lines.size()*6>ids.size()) Fail("indexed LOS fixture bounds");
++      [enc drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:lines.size()*6 indexType:MTLIndexTypeUInt16 indexBuffer:indices indexBufferOffset:0];
++    } else {
++      [enc drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:lines.size()*6];
++    }
++  }
+   [enc endEncoding];[cb commit];[cb waitUntilCompleted];
+   if(cb.status!=MTLCommandBufferStatusCompleted)Fail("command completion",cb.error);
+   Output out;
+@@ -192,8 +202,8 @@
+   id<MTLRenderPipelineState> reference=(p==r03Pipeline)?r03ReferencePipeline:(p==r03Probe)?r03ReferenceProbe:nil;
+   if(!reference)Fail("R03 reference pipeline missing");
+   auto before=RenderOne(d,q,reference,ds,mask,sampler,u,lines,setup);
+-  auto after=RenderOne(d,q,p,ds,mask,sampler,u,lines,setup);
+-  if(!Equal(before,after,"R03 exact old-vs-new coverage",r03Comparisons))Fail("R03 pixel parity");
++  auto after=RenderOne(d,q,p,ds,mask,sampler,u,lines,setup,true);
++  if(!Equal(before,after,"R39 indexed LOS output",r03Comparisons))Fail("R03 pixel parity");
+   ++r03Comparisons;return after;
+ }
+ static float4 ClipPoint(float2 screen,float w,float depth){
+@@ -226,14 +236,8 @@
+   auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
+   options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+   auto lib=[d newLibraryWithSource:source options:options error:&error];if(!lib)Fail("shader compilation",error);
+-  // Use the byte-identical retained original coverage function, not the candidate
+-  // on both sides. Both ordinary and facing-probe fragments contain this call.
+-  NSString* candidateCall=@"SensorLineCoveredEarly(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,u.counts.w,coverageDepth)";
+-  NSString* originalCall=@"SensorLineCovered(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,coverageDepth)";
+-  if([[source componentsSeparatedByString:candidateCall] count]!=3)Fail("R03 two exact reference call markers");
+-  NSString* referenceSource=[source stringByReplacingOccurrencesOfString:candidateCall withString:originalCall];
+-  auto referenceLib=[d newLibraryWithSource:referenceSource options:options error:&error];
+-  if(!referenceLib)Fail("R03 original reference shader compilation",error);
++  // Both draws use exact R03. The candidate selects only the production index table.
++  auto referenceLib=lib;
+   auto vs=[lib newFunctionWithName:@"ParityVS"],fs=[lib newFunctionWithName:@"OriginalSensorLOSFragment"];
+   if(!vs||!fs)Fail("exact fragment or test vertex missing");
+   auto pd=[MTLRenderPipelineDescriptor new];pd.vertexFunction=vs;pd.fragmentFunction=fs;
+@@ -470,6 +474,6 @@
+   if(!xOptimized||!yOptimized||!clippedOptimized||!fallbackCases)Fail("R02 geometry/guard coverage missing");
+   printf("PASS R02 asymmetric=%u negativeStencil=%u negativeFacing=%u x=%u y=%u clipped=%u guardFallback=%u; AA4 guard-only, GPU execution required\n",
+          asymmetricCases,negativeStencil,negativeFacing,xOptimized,yOptimized,clippedOptimized,fallbackCases);
+-  printf("PASS R03 old-vs-new pixel comparisons=%u; actual Metal execution required\n",r03Comparisons);
++  printf("PASS R39 indexed LOS pixel comparisons=%u; actual Metal execution required\n",r03Comparisons);
+   return 0;
+ }}

@@ -1,0 +1,57 @@
+--- a/range-gpu.mm
++++ b/range-gpu.mm
+@@ -3,11 +3,13 @@
+ #import <Metal/Metal.h>
+ #include "Rendering/Backend/NativeWeaponRangeData.h"
+ #include "Rendering/Metal4/NativeWeaponRangeShaders.h"
++#include "Rendering/Metal4/NativeTriangleReuseIndices.h"
+ #include <algorithm>
+ #include <array>
+ #include <cassert>
+ #include <cmath>
+ #include <cstdlib>
++#include <cstring>
+ #include <iostream>
+ #include <set>
+ #include <stdexcept>
+@@ -28,8 +30,10 @@
+     const Runtime* ContextIdentity()const{return context;}
+     void AddAllocation(id<MTLAllocation> allocation){assert(allocation);[residency addAllocation:allocation];++allocations;}
+ };
++#include "production-index-cache.inc"
+ struct Cache {
+-#include "cache.inc"
++    FixedTriangleIndexBuffer<triangleReuse::sensorCircle> indices;
++    id<MTLBuffer> LineIndices(RuntimeLease& lease){return indices.Prepare(lease);}
+ };
+ struct DrawFields { id<MTLBuffer> lineIndices; uint32_t count,instances; };
+ void Issue(DrawFields* impl,id<MTL4RenderCommandEncoder> encoder){
+@@ -87,6 +91,21 @@
+     auto initial=cache.LineIndices(lease);assert(initial&&cache.LineIndices(lease)==initial);
+     lease.context=&second;auto next=cache.LineIndices(lease);assert(next&&next!=initial&&initial.device==device);
+     lease.context=&first;assert(lease.allocations==3);
++    const auto validateTable=[&]<const auto& Table>() {
++        FixedTriangleIndexBuffer<Table> cache;
++        auto before=cache.Prepare(lease);
++        assert(before&&before.length==Table.size()*sizeof(Table[0]));
++        assert(before.gpuAddress && !(before.gpuAddress & 1));
++        assert(cache.Prepare(lease)==before);
++        cache.Clear();
++        auto after=cache.Prepare(lease);
++        assert(after&&after!=before);
++    };
++    validateTable.template operator()<triangleReuse::sensorCircle>();
++    validateTable.template operator()<triangleReuse::sensorLOS>();
++    validateTable.template operator()<triangleReuse::sensorLOSFan>();
++    validateTable.template operator()<triangleReuse::healthBars>();
++    validateTable.template operator()<triangleReuse::unitStencil>();
+     const auto height=Texture(device,MTLPixelFormatR32Float,MTLTextureUsageShaderRead,MTLStorageModeShared);
+     const auto mask=Texture(device,MTLPixelFormatR8Unorm,MTLTextureUsageShaderRead,MTLStorageModeShared);
+     std::array<float,1024> heights{};std::array<uint8_t,1024> masks{};masks.fill(255);
+@@ -135,5 +154,5 @@
+         [allocator reset];[queue removeResidencySet:residency];
+     }}
+     assert(submissions==7&&indexed==2&&direct==5);
+-    std::cout<<"PASS clean199 programs=6 submissions=7 indexed=2 direct=5 nil_fallback=1 readback=0\n";
++    std::cout<<"PASS R39 range199 programs=6 submissions=7 indexed=2 direct=5 nil_fallback=1 production_cache_tables=5 readback=0\n";
+ }}

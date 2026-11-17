@@ -1,0 +1,99 @@
+{
+  "status": "DONE",
+  "decision": "DONE_MATCHED_FIXED_INDEXED_GEOMETRY_OFF_ON_FPS_PAIR",
+  "round_id": "native-indexed-geometry-fps-20261117-39",
+  "attempt_id": "indexed-batch-off-on-01",
+  "reserved_revision": 131,
+  "counts": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "helper_compiles": 2,
+    "helper_gpu_invocations": 2,
+    "games": 2,
+    "off_games": 1,
+    "on_games": 1,
+    "normal_exits": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "binary_sha256": {
+    "INDEXED_OFF": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+    "INDEXED_ON": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f"
+  },
+  "patch_sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b",
+  "fps_by_arm": {
+    "INDEXED_OFF": 64.31607632102086,
+    "INDEXED_ON": 64.73632880737064
+  },
+  "relative_percent": 0.6534174818939142,
+  "child_clean_settings_verified": true,
+  "workload_match": {
+    "same_scene": true,
+    "same_camera": true,
+    "same_simulation_window": true,
+    "same_combat_seed": true,
+    "same_synced_create_destroy_counts": true,
+    "bin_boundaries_and_visible_units_match": true,
+    "both_bins_contiguous": true
+  },
+  "same_loaded_non_system_dylibs": true,
+  "sensorlos_draw_in_counted_window_both": false,
+  "helper_color_depth_stencil_comparisons": 12065,
+  "game_path_activation": {
+    "INDEXED_OFF": {
+      "sensorlos_outline": "DRAW_ENCODED",
+      "sensorlos_r8_fan": "UNVERIFIED",
+      "radar_sonar_circle": "UNVERIFIED",
+      "healthbars": "UNVERIFIED",
+      "unit_stencil": "PREPARED"
+    },
+    "INDEXED_ON": {
+      "sensorlos_outline": "DRAW_ENCODED",
+      "sensorlos_r8_fan": "UNVERIFIED",
+      "radar_sonar_circle": "UNVERIFIED",
+      "healthbars": "UNVERIFIED",
+      "unit_stencil": "PREPARED"
+    }
+  },
+  "cleanup_complete": true,
+  "protected_hashes_verified": true,
+  "retry_authorized": false,
+  "artifactSHA256": {
+    "REPORT.md": "601db75856958b1b19b9431d9389d845976796a3121759bb512dceecc50270d4",
+    "FPS-EVIDENCE.json": "a39b1a7bdc6a9fd19ca1296548b1acefd26c4d013be48d968d0beddb4098679d",
+    "FPS-BINS.csv": "f60662bfc9fafa2672bd8c6fd0f5ee9fb71d6442f97d2e755c93b6e44c0b4ea3",
+    "DEPENDENCY-EVIDENCE.json": "32b0560253309d7b218bf8e7c390131e07350397202fa395b6680dc9c2e57ccd",
+    "DYLD-PINS.json": "fb95095d60de1953adce891f41876cec66c361cabe441c764490d77fde81860d",
+    "PROTECTED-HASHES.json": "eb6dc21945e3b29f63de104b814e01f8fdb8040275c964752ea88ee55f722022",
+    "CLEANUP-EVIDENCE.json": "88e115723777770dcce6bd2eaf099cfdd2fd71411eb9949f5707122fdfae9571",
+    "PATH-ACTIVATION.json": "93c4f0bbcfc01bdf2a85648734d5c7d5ff6716906b24b0a504a09d961ae5b92d",
+    "SENSORLOS-ACTIVATION-CONTRACT.json": "1ae24dfe44fc13cb549661bc3ba4606196ed73eaf5973db40b084d2a59167b03",
+    "SENSORLOS-ACTIVATION-EVIDENCE.json": "683801adb8a9cf63c6aa048853d639c151804d4a247e43e9ea50f550d245043b",
+    "SOURCE-AND-FIXTURE-PINS.json": "6a78b7167683c0f5daed43c18fbb15f0c9803d8c2ae87c75a29afe3a7584e03e",
+    "INDEXED-GEOMETRY.patch": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b",
+    "CANDIDATE-MANIFEST.json": "f1cf3c1d3c15ed1b6a675689510c780ce04d2e38ed68d44be71f1c16bc47292d",
+    "STATIC-VERIFICATION.json": "02d81293fb721f6740205b1890923653c3231886ae579c90d60b221d63e11405",
+    "SENSOR-FIXTURE-BINDING.diff": "7d443f0508a2a87840598b0abaf0d76a762329549e67f53226d81de3b6c54a33",
+    "RANGE-FIXTURE-BINDING.diff": "dae74e9e61e163ad92fc4e7880513ad3bd5e1a1bc8dd6c8a2005a08fbaf8a621",
+    "UPSTREAM-CONTRIBUTIONS.json": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "FIXTURE-GATE.json": "07254cda7e5e4b4bdad3dd24b51635e3d6e7c85c41ee9b99f9498bad9cdd08de",
+    "SENSORLOS-COMPILE-RECEIPT.json": "f0f32ba60ab4bf4c38d485764e29023ae18b1524e7da1197dcf730f3edd0fa80",
+    "SENSORLOS-GPU-RECEIPT.json": "af287aaaf3c565da904cd64e476a027bbeb42dd20e79799352901ca3b94369c2",
+    "SENSORLOS-GPU.log": "3d6f9a98174c7d405dcd9aecfc266314fdf14874a6e480477d0337e1df3889ff",
+    "RANGE199-COMPILE-RECEIPT.json": "c57f6b6305816f30e92da79f873993101ae89617348547903836386880b32c14",
+    "RANGE199-GPU-RECEIPT.json": "f062ba32fc8e8da41d655d1c9c1cab97421abd1694a283fcb4c3e6dd6533b448",
+    "RANGE199-GPU.log": "d7155cbb5c53b6c69012902a183aa0ed7da485f3b68ef35e96a1dd98de1d93b1",
+    "BUILD-INPUTS.json": "b53f7178383610b215dc984e5cb8bb8130200151f2250aa9bdceb0c1f9e79c33",
+    "CONFIGURE-RECEIPT.json": "bb034aca60946c96ed9035111a2e332e554e19ac0a2835aee16471b6c8c3d93c",
+    "BUILD-RECEIPT.json": "d682970e30b063e5e4b714ee65596eb8ea356cca0350993fdef7041d50260668",
+    "BUILD-RESULT.json": "163448deb9bac16979b2edeb967760511b1146930808fad5f7e44680db799ac5",
+    "SOURCE-OBJECT-LINK.json": "c9d4fafed11ea201e8e34518afb6a26d2f4720e280696d4cdc3de05bab9ab188",
+    "STAGING-EVIDENCE.json": "1f0e0a7fd95cc19cbb99da2bc9a460ee4dea686b3a84e0eab85206f1f16d128d",
+    "INDEXED_OFF-FRAME-TIMES.csv": "fad9771b0d3dcb1f8b2bf30734f1f879edcf555f92693fa1c54df65c0fb36a52",
+    "INDEXED_ON-FRAME-TIMES.csv": "98b1394e8577c4874d216175d7ffb01e551fec339edc8e86b23c40ead7402b08"
+  },
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39",
+  "utc": "2026-11-17T23:52:32.960864+00:00"
+}
