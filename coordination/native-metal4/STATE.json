@@ -2,7 +2,7 @@
   "status": "READY",
   "owner": "HQ",
   "enabled": true,
-  "revision": 31,
+  "revision": 32,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -300,6 +300,16 @@
       "reasoning_effort": "ultra",
       "current_execution_unstarted": true,
       "current_round_unchanged": "r03-engine-staging-20261117-07"
+    },
+    {
+      "event": "INDEPENDENT_ASTRA_ULTRA_AUDIT_REVIEWED_DELIVERED_TO_JINI",
+      "revision": 32,
+      "author": "LOCAL_CODEX_HQ",
+      "artifact_commit": "1702b1e4298210de9e92fd9d5deba76460412878",
+      "audit_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/AUDIT.md",
+      "review_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/HQ-REVIEW.md",
+      "current_round_preserved": "r03-engine-staging-20261117-07",
+      "audit_local_reads_complete": true
     }
   ],
   "communication_test": {
@@ -414,7 +424,7 @@
   },
   "independent_audit": {
     "id": "independent-architecture-audit-20261117-01",
-    "status": "ACTIVE_READ_ONLY",
+    "status": "COMPLETE_REVIEWED_BY_HQ",
     "requested_by": "USER_VIA_HQ",
     "thread_id": "01a1e6ed-8d9a-7981-8332-3ce78c9a0af0",
     "host_id": "local",
@@ -426,6 +436,16 @@
     "isolation": "R03 build/staging handoff received and remains unstarted. HQ will finish this audit setup without starting it; do not run local measurements concurrently. Audit pauses tools if a separate owned execution starts.",
     "requested_result": "Largest proved causes, mandatory/avoidable wait map, upstream contract order, top3 substantial candidates, one first experiment; preserve UNKNOWN, no FPS estimates from replay shares.",
     "authority": "Independent audit does not change current round/attempt/source/owner or grant execution. Results return to HQ for evidence review and then JINI.",
-    "model_change_this_HQ_thread": false
+    "model_change_this_HQ_thread": false,
+    "artifact_commit": "1702b1e4298210de9e92fd9d5deba76460412878",
+    "result_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/AUDIT.md",
+    "HQ_review_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/HQ-REVIEW.md",
+    "report_sha256": "2e39269952a18af792a6477bbb809c4941ac680d805bb5370c062c766ff6f1a7",
+    "reference_files_verified": 44,
+    "local_access_complete": true,
+    "source_changes": 0,
+    "new_gpu_executions": 0,
+    "next": "Keep fixed R03 comparison as first bounded experiment; substantial independent candidates are exact SensorLOS work sharing, revision-correct GroundDecal dirty publication, and resource-proof-based retirement separation.",
+    "HQ_critical_findings_verified": true
   }
 }
