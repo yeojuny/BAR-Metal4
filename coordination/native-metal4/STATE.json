@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 57,
+  "revision": 58,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DECISION.json",
-  "execution_status": "READY_REVERSED_ORDER_FOUR_CLEAN_GAMES_NOT_STARTED",
+  "execution_status": "GROUND_DECAL_BAAB_ORDER_CHECK_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -605,6 +605,13 @@
       ],
       "previous_cohort_not_pooled": true,
       "source_and_binary_unchanged": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_BAAB_RESERVED",
+      "revision": 58,
+      "round_id": "ground-decal-pages-ordercheck-20261117-14",
+      "attempt_id": "ground-decal-pages-ordercheck-01",
+      "games_budget": 4
     }
   ],
   "communication_test": {
@@ -690,7 +697,7 @@
   },
   "execution": {
     "attempt_id": "ground-decal-pages-ordercheck-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "games": 0,
     "builds": 0
