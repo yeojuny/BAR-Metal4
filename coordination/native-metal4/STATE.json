@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 95,
+  "revision": 96,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r04-r03-validation-clean-20261117-24",
-  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
-  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
-  "request": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DONE.json",
-  "decision": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DECISION.json",
-  "execution_status": "HQ3_R04_VALIDATION_PASS_CLEAN6_OBSERVED_REGRESSION_DONE",
+  "round_id": "r03-mvk3-matched-frame-20261117-25",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "request": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/READY.json",
+  "result_path": null,
+  "decision": null,
+  "execution_status": "AUTHORIZED_ONE_MATCHED_R03_MVK3_CAPTURE_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -1243,6 +1243,31 @@
       "cleanup_verified": true,
       "retained_source": "0780bd7c530b0696067b717428b49a416eda556a",
       "new_execution_authorized": false
+    },
+    {
+      "event": "JINI_MATCHED_FRAME_PAIR_READY_R03_RETAINED",
+      "revision": 96,
+      "previous_round": "r04-r03-validation-clean-20261117-24",
+      "previous_result": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DONE.json",
+      "previous_decision": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DECISION.json",
+      "round_id": "r03-mvk3-matched-frame-20261117-25",
+      "attempt_id": "r03-mvk3-framepair-01",
+      "HQ_plan_turn_completed": true,
+      "cleanup_verified": true,
+      "budget": {
+        "games_max": 2,
+        "captured_frames_per_arm": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profile_commands_per_arm": 1,
+        "profile_commands_max": 2,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      }
     }
   ],
   "communication_test": {
@@ -1314,11 +1339,10 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_R04_PRODUCTION_VALIDATION_THEN_IF_PASS_SIX_MATCHED_CLEAN_GAMES",
+  "enabled_scope": "ONE_MATCHED_SIM1590_R03_MVK3_CAPTURE_PAIR_COMPONENT_DIAGNOSTIC",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
-    "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
-    "scope": "Necessary bounded autonomous regression benchmarking; no release adoption."
+    "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
   },
   "source_writers_stopped": true,
   "connection_verification": {
@@ -1327,79 +1351,27 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r04-validation-and-clean-01",
-    "started": true,
-    "completed": true,
-    "games": 7,
-    "builds": 0,
-    "budget": {
-      "validation_games": 1,
-      "clean_games": 6,
-      "total_game_launches_max": 7,
-      "builds": 0,
-      "helper_runs": 0,
-      "captures": 0,
-      "replay_profiles": 0,
-      "retries": 0
-    },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 09:53:23 UTC",
-    "validation_games": 1,
-    "clean_games": 6,
-    "clean_authorized_only_after_validation_pass": true,
-    "validation_gate": "PASS_RECORDED_BEFORE_CLEAN",
-    "retries": 0,
-    "source_edits": 0,
-    "cleanup_complete": true,
-    "heartbeat": "bar PAUSED; unchanged; not retargeted",
-    "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01",
-    "binary_pins": {
-      "baseline_R03_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
-      "R04_signed_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
-      "library_count": 19
-    },
-    "baseline_runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
-    "helpers": 0,
+    "attempt_id": "r03-mvk3-framepair-01",
+    "started": false,
+    "completed": false,
+    "games": 0,
     "captures": 0,
-    "replays": 0,
-    "validation_pass": true,
-    "Metal_validation_errors": 0,
-    "cleanup": {
-      "status": "PASS",
-      "games": 7,
-      "validation_games": 1,
-      "clean_games": 6,
-      "owned_game_process_groups_gone": true,
-      "runner_campaigns_closed": true,
-      "awake_assertions_released": true,
-      "source_and_runner_changes_after_stage": 0,
-      "fixed_binary_and_runtime_inputs_unchanged": true,
-      "prior_evidence_preserved": true,
-      "profile_cleanup_recorded_all7": true,
-      "bar": "PAUSED_UNCHANGED",
-      "utc": "2026-11-17T10:15:00.471940+00:00"
+    "profiles": 0,
+    "budget": {
+      "games_max": 2,
+      "captured_frames_per_arm": 1,
+      "captures_max": 2,
+      "inspection_sessions_max": 2,
+      "profile_commands_per_arm": 1,
+      "profile_commands_max": 2,
+      "engine_builds": 0,
+      "engine_source_edits": 0,
+      "R04_captures": 0,
+      "retries": 0,
+      "extra_counter_replays": 0,
+      "FPS_AB": 0
     },
-    "completed_at_utc": "2026-11-17 10:21:20 UTC",
-    "artifact_commit": "c47add111fee80fba87b41cfbae012743033b163",
-    "result_path": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DONE.json",
-    "result_sha256": "987f622d87d838cafcc0f2c45b1a2ff0e2af5b2a21186cd77d6e9c2b8ae8e8b3",
-    "runner_sha256": "d1c4467a2dd4fd8bf1650a812111ae99d643fc8e8677a4beec359317e6f8fb74",
-    "outcome": "VALIDATION_PASS_CLEAN6_R04_LOWER_OBSERVED_THROUGHPUT",
-    "arithmetic_means_FPS": {
-      "R03": 63.81081856021591,
-      "R04": 59.07250631976942
-    },
-    "R04_vs_R03_percent": -7.425562541522835,
-    "world_check": "PASS_ALL40_ALL6",
-    "all_valid_slow_runs_retained": true,
-    "validation_FPS_excluded": true,
-    "historical_samples_pooled": false,
-    "images_published": 7,
-    "performance_comparison_valid": true,
-    "performance_improvement_accepted": false,
-    "release_adoption": false,
-    "original_evidence_unchanged": true,
-    "local_execution_complete": true
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1465,5 +1437,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Read-only matched-frame MVK3/R03 component diagnostic planning only; no new round or execution authorization."
+  "next_action": "Exact tick/workload gated frame-component diagnosis only"
 }
