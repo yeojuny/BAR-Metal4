@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 75,
+  "revision": 76,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json",
-  "execution_status": "POSTPROCESS_PRODUCER_FIXED_BUILD_ONE_VALIDATION_READY",
+  "execution_status": "POSTPROCESS_PRODUCER_BUILD_AND_ONE_VALIDATION_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -806,6 +806,14 @@
       "HQ_previous_turn_completed": true,
       "source_writers_stopped": true,
       "performance_authorized": false
+    },
+    {
+      "event": "HQ_POSTPROCESS_PRODUCER_RESERVED",
+      "revision": 76,
+      "round_id": "postprocess-producer-20261117-19",
+      "attempt_id": "postprocess-producer-01",
+      "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+      "game_budget": 1
     }
   ],
   "communication_test": {
@@ -891,7 +899,7 @@
   },
   "execution": {
     "attempt_id": "postprocess-producer-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "games": 0,
     "builds": 0
