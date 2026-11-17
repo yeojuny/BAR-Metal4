@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 119,
+  "revision": 120,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,9 +15,9 @@
   "request": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/READY.json",
   "result_path": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/DONE.json",
-  "decision": "USER_APPROVED_FIXED_INPUT_TIMING_AND_ONE_SMOKE",
-  "execution_status": "HQ3_ROUND33_RESERVED_ONCE",
-  "blocked_reason": null,
+  "decision": "PASS_GPU_FIXTURE_TIMING_SMOKE_BLOCKED_DUPLICATE_BASE_CONTENT",
+  "execution_status": "HQ3_ROUND33_CLOSED_FIXTURE_TIMING_PASS_SMOKE_STARTUP_FAIL",
+  "blocked_reason": "The raw build directory and runtime data both exposed bitmaps.sdz, preventing sole smoke launch from reaching the indexed renderer.",
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
@@ -1803,6 +1803,40 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17 21:17:53 UTC"
+    },
+    {
+      "event": "HQ3_ROUND33_CLOSED_FIXTURE_TIMING_PASS_SMOKE_STARTUP_FAIL",
+      "revision": 120,
+      "round_id": "game-decal-indexed-timing-20261117-33",
+      "attempt_id": "indexed-helper-and-smoke-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "474173699c0925afa47e53109f5a760c31375dce",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/DONE.json",
+      "decision": "PASS_GPU_FIXTURE_TIMING_SMOKE_BLOCKED_DUPLICATE_BASE_CONTENT",
+      "counts": {
+        "helper_compiles": 1,
+        "helper_gpu_invocations": 1,
+        "game_launches": 1,
+        "games_completed": 0,
+        "engine_builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "trace_inspections": 0,
+        "retries": 0
+      },
+      "timing": {
+        "pairs": 24,
+        "off_gpu_median_ms": 0.2076250005,
+        "on_gpu_median_ms": 0.1484791665,
+        "median_change_percent": -28.48685556053736,
+        "on_faster_pairs": 24
+      },
+      "production_runtime_route": "NOT_REACHED",
+      "protected_hashes_verified": 134,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T21:22:42.810095+00:00"
     }
   ],
   "communication_test": {
@@ -1888,7 +1922,7 @@
   "execution": {
     "attempt_id": "indexed-helper-and-smoke-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "helper_compiles": 1,
       "helper_gpu_invocations": 1,
@@ -1902,7 +1936,24 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17 21:17:53 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false
+    "previous_budget_reused": false,
+    "ended_at_utc": "2026-11-17T21:22:42.810095+00:00",
+    "counts": {
+      "helper_compiles": 1,
+      "helper_gpu_invocations": 1,
+      "game_launches": 1,
+      "games_completed": 0,
+      "engine_builds": 0,
+      "captures": 0,
+      "profiles": 0,
+      "trace_inspections": 0,
+      "retries": 0
+    },
+    "diagnostic_outcome": "PASS_GPU_FIXTURE_TIMING_SMOKE_BLOCKED_DUPLICATE_BASE_CONTENT",
+    "cleanup_complete": true,
+    "artifact_commit": "474173699c0925afa47e53109f5a760c31375dce",
+    "retry_authorized": false,
+    "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1968,7 +2019,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 compare Metal 4 GPU feedback times for exact paired inputs and run one candidate ON smoke within the confirmed scope.",
+  "next_action": "SUPER_JINI_MK2 review round33 DONE. Fixed-input GPU timing completed. Candidate ON game path remains untested. Round33 launch budget is closed.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
