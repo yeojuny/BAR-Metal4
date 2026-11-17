@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 71,
+  "revision": 72,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DECISION.json",
-  "execution_status": "COMPLETION_SPLIT_FIXED_BUILD_ONE_VALIDATION_READY",
+  "execution_status": "COMPLETION_OBSERVATION_SPLIT_BUILD_AND_ONE_VALIDATION_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -758,6 +758,14 @@
       "source_writers_stopped": true,
       "HQ_previous_turn_completed": true,
       "performance_authorized": false
+    },
+    {
+      "event": "HQ_COMPLETION_OBSERVATION_SPLIT_RESERVED",
+      "revision": 72,
+      "round_id": "completion-observation-split-20261117-18",
+      "attempt_id": "completion-observation-split-01",
+      "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "game_budget": 1
     }
   ],
   "communication_test": {
@@ -843,7 +851,7 @@
   },
   "execution": {
     "attempt_id": "completion-observation-split-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "games": 0,
     "builds": 0
