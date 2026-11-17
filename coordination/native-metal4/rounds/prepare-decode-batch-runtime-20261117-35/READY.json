@@ -1,0 +1,19 @@
+{
+  "status": "READY_PRIVATE_MATCHED_SCENE",
+  "source_owner": "SUPER_JINI_MK2",
+  "executor": "HQ3",
+  "round_id": "prepare-decode-batch-runtime-20261117-35",
+  "attempt_id": "batch-original-smoke-pair-01",
+  "binary_sha256": {
+    "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+  },
+  "round34_done_revision": 122,
+  "staged_scene_inputs_match": 13,
+  "shared_runtime_data_file_hashes": 142,
+  "games_started": 0,
+  "source_writers_stopped": true,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
+}

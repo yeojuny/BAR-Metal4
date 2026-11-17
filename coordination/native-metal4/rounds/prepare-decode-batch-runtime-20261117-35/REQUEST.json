@@ -1,0 +1,51 @@
+{
+  "round_id": "prepare-decode-batch-runtime-20261117-35",
+  "attempt_id": "batch-original-smoke-pair-01",
+  "scope": "ONE_ORIGINAL_ONE_PREPARE_BATCH_MATCHED_GAME_SMOKE_AND_VISUAL",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "candidate_commit": "f7faa7afb134b56dd673180f660df6add5600cae",
+  "source_manifest_sha256": "81e910aee0bcfc65528e1bae7bb5e9a8fa0dcfe21725bc42541287816510563b",
+  "prior_sdk_done_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/DONE.json",
+  "binary_sha256": {
+    "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+  },
+  "budget": {
+    "games_max": 2,
+    "original_games_max": 1,
+    "batch_games_max": 1,
+    "screenshots_per_game_max": 3,
+    "builds": 0,
+    "helpers": 0,
+    "gputrace_captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "seed": 7654321,
+    "existing_controller": true,
+    "aa": 0,
+    "view": [
+      1512,
+      950
+    ],
+    "drawable": [
+      1512,
+      982
+    ],
+    "screenshot_simulation_tick": 1740,
+    "metal_api_validation": true
+  },
+  "execution_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35",
+  "authorizations": [
+    "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "Sentinel_f6a06836251081918786c97e3ed6d80d",
+    "Sentinel_8563c81084e48191aa31675bff31ab10"
+  ],
+  "delegation_source": "6afc6d41-ce38-8191-8d63-474468312011",
+  "indexed_game_scope": "SEPARATE_PENDING",
+  "runtime_mode": "FUNCTIONAL_AND_VISUAL_ONLY",
+  "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/DONE.json"
+}

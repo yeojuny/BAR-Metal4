@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 122,
+  "revision": 123,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "prepare-decode-batch-sdk-20261117-34",
+  "round_id": "prepare-decode-batch-runtime-20261117-35",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "81e910aee0bcfc65528e1bae7bb5e9a8fa0dcfe21725bc42541287816510563b",
-  "request": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/READY.json",
-  "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/DONE.json",
-  "decision": "PASS_EXACT_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_AND_LINK",
-  "execution_status": "HQ3_ROUND34_CLOSED_PREPARE_LOCAL_MAC_SDK_COMPILE_LINK_PASS",
+  "request": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/READY.json",
+  "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/DONE.json",
+  "decision": "RUN_MATCHED_SMOKE_PAIR_RUNTIME_VISUAL_ONLY",
+  "execution_status": "HQ3_ROUND35_RESERVED_ORIGINAL_AND_PREPARE_BATCH_SMOKE",
   "blocked_reason": null,
   "history": [
     {
@@ -1884,6 +1884,29 @@
       "cleanup_complete": true,
       "bar": "PAUSED",
       "utc": "2026-11-17T22:12:28.041490+00:00"
+    },
+    {
+      "event": "HQ3_ROUND35_RESERVED_ORIGINAL_AND_PREPARE_BATCH_SMOKE",
+      "revision": 123,
+      "round_id": "prepare-decode-batch-runtime-20261117-35",
+      "attempt_id": "batch-original-smoke-pair-01",
+      "binary_sha256": {
+        "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+        "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+      },
+      "budget": {
+        "games_max": 2,
+        "original_games_max": 1,
+        "batch_games_max": 1,
+        "screenshots_per_game_max": 3,
+        "builds": 0,
+        "helpers": 0,
+        "gputrace_captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17T22:18:40.946Z"
     }
   ],
   "communication_test": {
@@ -1955,7 +1978,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "PINNED_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_LINK_ONLY",
+  "enabled_scope": "ONE_ORIGINAL_ONE_PREPARE_BATCH_MATCHED_GAME_SMOKE_AND_VISUAL",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -1967,43 +1990,29 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "clean-sdk-only-01",
+    "attempt_id": "batch-original-smoke-pair-01",
     "started": true,
-    "completed": true,
+    "completed": false,
     "budget": {
-      "configure_attempts": 1,
-      "engine_builds": 1,
-      "games": 0,
-      "gpu_invocations": 0,
+      "games_max": 2,
+      "original_games_max": 1,
+      "batch_games_max": 1,
+      "screenshots_per_game_max": 3,
+      "builds": 0,
       "helpers": 0,
-      "captures": 0,
+      "gputrace_captures": 0,
       "profiles": 0,
       "retries": 0
+    },
+    "binary_sha256": {
+      "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 22:05:57 UTC",
+    "reserved_at_utc": "2026-11-17T22:18:40.946Z",
     "bar": "PAUSED",
-    "previous_budget_reused": false,
-    "ended_at_utc": "2026-11-17T22:12:28.041490+00:00",
-    "counts": {
-      "configure_attempts": 1,
-      "engine_builds": 1,
-      "games": 0,
-      "gpu_invocations": 0,
-      "helpers": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "diagnostic_outcome": "PASS_EXACT_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_AND_LINK",
-    "cleanup_complete": true,
-    "artifact_commit": "afcee01f8bea51bab364ec13364036825572a413",
-    "retry_authorized": false,
-    "candidate_binary_sha256": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d",
-    "production_compile_and_link_verified": 12,
-    "runtime_parity": "UNTESTED",
-    "runtime_performance": "UNMEASURED",
-    "authorization_message_id": "Sentinel_ea580c1496288191adb1e9aaf169fe45"
+    "prior_sdk_round_closed": true,
+    "previous_budget_reused": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2069,7 +2078,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "SUPER_JINI_MK2 review round 34 DONE and source-to-executable evidence. The SDK build scope is closed.",
+  "next_action": "HQ3 run the existing validation scene once per pinned binary and record observed coverage.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
