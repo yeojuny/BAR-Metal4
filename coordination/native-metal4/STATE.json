@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 22,
+  "revision": 23,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r02-g01-benchmark-20261116-04",
+  "round_id": "r02-current-gpu-profile-20261117-05",
   "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
   "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
-  "request": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DONE.json",
-  "decision": "HQ measured G01 62.245820 versus R02 62.228113 FPS (-0.028448%); performance-neutral correctness regression pass. JINI reviews adoption/next source work; no release change.",
-  "execution_status": "VALIDATION1_CLEAN6_COMPLETE_CLEANUP_CLOSED",
+  "request": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/READY.json",
+  "result_path": null,
+  "decision": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DECISION.json",
+  "execution_status": "READY_SINGLE_CURRENT_R02_GPU_PROFILE_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -200,6 +200,15 @@
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2",
       "model_context_instruction_relayed": true
+    },
+    {
+      "event": "JINI_INDEPENDENT_BENCHMARK_REVIEW",
+      "revision": 23,
+      "previous_round": "r02-g01-benchmark-20261116-04",
+      "previous_result": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DONE.json",
+      "decision": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DECISION.json",
+      "relative_percent": -0.028447747424620307,
+      "cleanup_verified": true
     }
   ],
   "communication_test": {
@@ -271,11 +280,11 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_R02_VALIDATION_THEN_SIX_MATCHED_CLEAN_GAMES",
+  "enabled_scope": "ONE_CURRENT_R02_CAPTURE_GAME_AND_ONE_OWNED_REPLAY_PROFILE",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
-    "scope": "Necessary bounded autonomous regression benchmarking; no release adoption."
+    "scope": "One necessary bounded current GPU diagnostic."
   },
   "source_writers_stopped": true,
   "connection_verification": {
@@ -284,19 +293,13 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r02-validation-and-clean-01",
-    "started": true,
-    "completed": true,
-    "validation_games": 1,
-    "clean_games": 6,
-    "builds": 0,
-    "started_at_utc": "2026-11-16T23:37:35Z",
-    "completed_at_utc": "2026-11-16T23:55:01.949561+00:00",
-    "cleanup_complete": true
+    "attempt_id": "r02-current-capture-profile-01",
+    "started": false,
+    "completed": false,
+    "capture_games": 0,
+    "captured_frames": 0,
+    "replay_profiles": 0
   },
-  "input_manifest_sha256": "4bc4742cc680b17ef1a97614b66d9ad958e71a66ac3dc593b7d9fb57a11a4ae4",
-  "input_manifest_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/artifacts/measurement/STAGING-SUMMARY.json",
-  "input_artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4",
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
     "instruction": "섹션이 많이 쌓여 무거워지면 핵심 인계를 남기고 새 섹션으로 분기할 것. SUPER JINI MK2가 HQ의 모델과 추론강도도 작업에 맞춰 조절할 것.",
