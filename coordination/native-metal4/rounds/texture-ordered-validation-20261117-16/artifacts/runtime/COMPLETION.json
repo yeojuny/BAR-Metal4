@@ -1,0 +1,31 @@
+{
+  "status": "TWO_ARM_VALIDATION_REVIEW_REQUIRED",
+  "runs": 2,
+  "images": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/scene.png",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/scene.png"
+  ],
+  "metalValidation": [
+    {
+      "status": "NO_MATCHED_METAL_ERRORS",
+      "enabledByChildEnv": true,
+      "enabledByEngineLog": true,
+      "errors": [],
+      "normalExit": true,
+      "candidateSHA256": "ad32896dab1e403f7e007e1fa51d4c8532b095049d86d672ace756337a1829d3",
+      "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/scene.png",
+      "source": "raw engine.log; same original error regex"
+    },
+    {
+      "status": "NO_MATCHED_METAL_ERRORS",
+      "enabledByChildEnv": true,
+      "enabledByEngineLog": true,
+      "errors": [],
+      "normalExit": true,
+      "candidateSHA256": "ad32896dab1e403f7e007e1fa51d4c8532b095049d86d672ace756337a1829d3",
+      "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/scene.png",
+      "source": "raw engine.log; same original error regex"
+    }
+  ],
+  "utc": "2026-11-17T05:46:25.467597+00:00"
+}

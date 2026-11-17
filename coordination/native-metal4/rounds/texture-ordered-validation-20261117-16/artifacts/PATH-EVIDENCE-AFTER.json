@@ -1,0 +1,40 @@
+{
+  "ON_path_classification": "UNKNOWN",
+  "OFF_flag": "DISABLED",
+  "positive_texture_admission_witness": false,
+  "comprehensive_proof_unused": false,
+  "do_not_classify_NOT_EXERCISED_from_absent_marker": true,
+  "source_before_review": {
+    "classification": "UNKNOWN",
+    "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+    "producer_consumer_site": "Metal4WorldRenderer.mm:664-675",
+    "admission_site": "Metal4RuntimeNative.mm:851-857",
+    "static_requirements": [
+      "not ready; producer encoded; PreparingWhilePending",
+      "flag exactly1; consumer nonzero and distinct",
+      "PendingProducerMatches exact sole producer/context; independent slot and not poisoned",
+      "Borrow receipt then OrderAfterPreviousSubmission success; final completion check retained"
+    ],
+    "positive_texture_specific_success_marker_in_fixed_sites": false,
+    "generic_prior_read_or_env_not_sufficient": true,
+    "why_not_NOT_EXERCISED": "No positive or comprehensive negative runtime admission witness. Absence of a marker cannot prove unused.",
+    "new_instrumentation": false
+  },
+  "existing_generic_logs": [
+    {
+      "arm": "V_TEXTURE_OFF",
+      "generic_world_borrow_lines": [
+        "[t=00:00:52.139142][f=0000180] [NativeWorldBorrow168] source_frame=300 serial=267 selected_commands=13 first_validations=13 borrow_candidates=6 eliminated_full_validations=6 typed_revalidations=0 source_vertex_elements=24 source_index_elements=36 source_payload_extent_bytes=1296 scope_bytes=16 metrics_bytes=56 owner_gate_calls=6 scope_heap_allocations=0 preparation_only=1 cross_frame_reuse=0 target_checks_retained=1 timing=0"
+      ],
+      "why_insufficient": "Existing WorldOverlayRenderer.mm:737 preparation-only overlay command validation marker; not texture producer/context/consumer or OrderAfterPreviousSubmission admission."
+    },
+    {
+      "arm": "V_TEXTURE_ON",
+      "generic_world_borrow_lines": [
+        "[t=00:00:19.105519][f=0000077] [NativeWorldBorrow168] source_frame=300 serial=267 selected_commands=14 first_validations=14 borrow_candidates=6 eliminated_full_validations=6 typed_revalidations=0 source_vertex_elements=24 source_index_elements=36 source_payload_extent_bytes=1296 scope_bytes=16 metrics_bytes=56 owner_gate_calls=6 scope_heap_allocations=0 preparation_only=1 cross_frame_reuse=0 target_checks_retained=1 timing=0"
+      ],
+      "why_insufficient": "Existing WorldOverlayRenderer.mm:737 preparation-only overlay command validation marker; not texture producer/context/consumer or OrderAfterPreviousSubmission admission."
+    }
+  ],
+  "new_instrumentation": false
+}

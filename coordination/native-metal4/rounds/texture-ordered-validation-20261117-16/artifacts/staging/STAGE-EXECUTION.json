@@ -1,0 +1,15 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/run.py",
+    "--suite",
+    "texture_validation01",
+    "--stage",
+    "validation_paced"
+  ],
+  "pid": 40188,
+  "exit": 0,
+  "seconds": 8.369811083000059,
+  "attempts": 1
+}

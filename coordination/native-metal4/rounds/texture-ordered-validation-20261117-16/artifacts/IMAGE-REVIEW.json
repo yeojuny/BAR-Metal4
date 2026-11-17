@@ -1,0 +1,22 @@
+{
+  "images": [
+    {
+      "arm": "V_TEXTURE_OFF",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/scene.png",
+      "sha256": "bfd592a771dd01478cc83551ad84f018c1c3e7fb28cd2efd96b9ecc6df487e12",
+      "bytes": 2967972,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    },
+    {
+      "arm": "V_TEXTURE_ON",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/scene.png",
+      "sha256": "d7fd383cb707467b64f3a26d73ed5d1f68496b6b5a27b071e5f0c02bca36d379",
+      "bytes": 2968402,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    }
+  ],
+  "observed": "Both actual images viewed. No obvious new missing/corrupt static terrain, buildings or ground-decal pattern. Occlusion appearance similar. Explosions/smoke/illumination and diagnostic numbers differ. Green range/sensor arcs visible in both; no candidate-only orange ring observed.",
+  "limits": "RGB screenshots do not prove exact pixel or depth/stencil attachment equality; dynamic differences not causally isolated."
+}

@@ -1,0 +1,8 @@
+{
+  "variant": "private-texture-ordered-ON",
+  "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/runtime/native/bin/spring-metal4-scene",
+  "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/runtime/native",
+  "sha256": "ad32896dab1e403f7e007e1fa51d4c8532b095049d86d672ace756337a1829d3",
+  "publishedPackageReadOnly": true
+}
