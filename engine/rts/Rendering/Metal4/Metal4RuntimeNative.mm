@@ -849,6 +849,12 @@ bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<
  if(!PreparingWhilePending()||frame->slot==runtime.pendingSubmission->resources.owner->slot)return false;
  frame->priorReadChecks.try_emplace(owner,std::move(check));return true;
 }
+bool RuntimeLease::OrderAfterSourceSubmission(const void* owner,uint64_t producer,std::function<void()> check)
+{
+ if(!producer || !runtime.pendingSubmission ||
+  runtime.pendingSubmission->traceIdentity.submission!=producer)return false;
+ return OrderAfterPreviousSubmission(owner,std::move(check));
+}
 void RuntimeLease::RetirePreviousSubmission()
 {
  RetirePreviousSubmission(nullptr);

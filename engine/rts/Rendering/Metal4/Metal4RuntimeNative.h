@@ -170,6 +170,9 @@ public:
  // Admit only a pinned, already encoded predecessor. The supplied check must
  // establish its actual completion before this lease can submit GPU work.
  bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check);
+ // Typed predecessor registration: an encoded producer must be the actual
+ // outstanding submission, not merely any completed/encoded cache entry.
+ bool OrderAfterSourceSubmission(const void* owner,uint64_t producer,std::function<void()> check);
 	~RuntimeLease();
 	RuntimeLease(const RuntimeLease&) = delete;
 	RuntimeLease& operator=(const RuntimeLease&) = delete;
@@ -181,6 +184,7 @@ public:
 	id<MTL4Compiler> Compiler() const { return runtime.compiler; }
 	DeviceCapabilities Capabilities() const { return runtime.capabilities; }
 	const Runtime* ContextIdentity() const noexcept { return &runtime; }
+ id<MTL4CommandQueue> QueueIdentity() const noexcept { return runtime.queue; }
 	// Cache and independent write-exclusion pins belong to this frame owner.
 	PublishedRequestState& Publications();
  TerrainInfoLeaseReceipts* TerrainInfoReads() noexcept;

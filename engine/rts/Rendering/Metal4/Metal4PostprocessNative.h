@@ -54,11 +54,12 @@ public:
  id<MTLTexture> ResolveAllocation(RuntimeLease& lease,std::shared_ptr<const NativePostprocessImage> actualAllocation);
 	id<MTLTexture> ResolveImage(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version,
 		std::optional<NativePostprocessConsumer> consumer = std::nullopt);
-	// Encode-time proof for a captured immutable version; ordering validation alone does not mean its producer ran.
-	void RequireReadable(const std::shared_ptr<const NativePostprocessVersion>& version) const;
- // Capture exact owner/flags during preparation; invocation stays at the
+	// Immediate preparation-time check; may register/retire a predecessor.
+	// Encode paths must capture below during preparation, then invoke that receipt.
+	void RequireReadable(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version) const;
+ // Capture exact owner/producer/flags during preparation; invocation stays at the
  // original encode/read boundary without revisiting this mutable GPU cache.
- std::function<void()> CaptureReadability(const std::shared_ptr<const NativePostprocessVersion>& version) const;
+ std::function<void()> CaptureReadability(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version) const;
 	// Opt in only for the audited WorldRenderer root providers: render shaders
 	// read separate resources (including view backings), write only attachments,
 	// and never sample the live main C/D/S. Custom providers keep the default.

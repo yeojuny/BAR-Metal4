@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4PostprocessNative.h"
+#include "NativePostprocessReadContract.h"
 #include "Metal4PostprocessTexturePool181.h"
 #include "Rendering/Backend/NativeRetiredResourcePool.h"
 #include "Rendering/Backend/NativePostprocessOverwrite157.h"
@@ -216,7 +217,7 @@ struct PreparedPostprocessFrame::Impl {
 		bool noDraw=false;unsigned vertexCount=6;
   std::shared_ptr<const NativeCASRaster> casRaster;
   std::shared_ptr<const sharedpilot::PreparedSlice> sharedSlice;
-		std::vector<std::pair<std::shared_ptr<bool>,std::shared_ptr<bool>>> reads;
+		std::vector<std::function<void()>> reads;
 		bool screenOutput=false;
 		unsigned resolveMain=0;
 		std::vector<std::pair<id<MTLTexture>,id<MTLTexture>>> previous;
@@ -286,7 +287,7 @@ bool PreparedPostprocessFrame::Impl::EncodeOperation(id<MTL4CommandBuffer> comma
 	auto found=std::find_if(operations.begin(),operations.end(),[&](const auto& op){return op.sourceIndex==operationIndex;});
 	Require(command!=nil && found!=operations.end(),"Missing actual source-copy/effect operation");const auto& op=*found;
 	Require(!*op.encoded,"Source-copy/effect operation encoded more than once");
-	for(const auto& read:op.reads)Require(*read.first||*read.second,"Original DOF read/copy precedes actual producer encode or retirement");
+	for(const auto& read:op.reads)read();
 	for(const auto& image:op.priorScreen)image.requireReadable();
 	// Source snapshots are refreshed at this operation, after preceding root/world writes.
 	if(op.resolveMain)main->EncodeResolve(command,static_cast<MainReadImages>(op.resolveMain));
@@ -383,7 +384,7 @@ struct PostprocessGPU::Impl {
 		if(immutableQuads.size()>=64)immutableQuads.erase(immutableQuads.begin());
 		immutableQuads.insert_or_assign(key,value);return value;
 	}
-	struct Image { std::weak_ptr<const NativePostprocessVersion> owner;__strong id<MTLTexture> image=nil;std::shared_ptr<PostprocessTextureStorage181> storage181;std::shared_ptr<bool> completed=std::make_shared<bool>(false);std::shared_ptr<bool> encoded=std::make_shared<bool>(false); };
+	struct Image { std::weak_ptr<const NativePostprocessVersion> owner;std::shared_ptr<NativePostprocessProducerIdentity> producer=std::make_shared<NativePostprocessProducerIdentity>();__strong id<MTL4CommandQueue> producerQueue=nil;__strong id<MTLTexture> image=nil;std::shared_ptr<PostprocessTextureStorage181> storage181;std::shared_ptr<bool> completed=std::make_shared<bool>(false);std::shared_ptr<bool> encoded=std::make_shared<bool>(false); };
 	std::map<const NativePostprocessVersion*,Image> images;
  // Allocation-only dimension queries belong to this SAME GPU resource owner.
  // They have no contents-version status and cannot satisfy Retired/ImageFor.
@@ -492,16 +493,43 @@ struct PostprocessGPU::Impl {
   auto i=images.find(&version);if(i==images.end())return false;
   auto owner=i->second.owner.lock();
   if(owner.get()!=&version || !*i->second.encoded)return false;
-  // Pin the exact logical version and its immutable allocation's completion
-  // flag, not this mutable cache or a later lookup by reused raw address.
-  // ImageFor separately pins the physical texture in this lease's GPU graph.
-  // Encoding is preparation permission only; event+feedback retirement must
-  // publish this exact producer completion before the consumer can submit.
+  const auto identity=i->second.producer;
+  const auto expected=*identity;
+  const auto consumer=ConsumerIdentity(lease);
+  if(expected==consumer)return false; // Current-frame reads use their plan order.
   const auto completed=i->second.completed;
-  const auto* key=owner.get();
-  return lease.OrderAfterPreviousSubmission(key,[owner=std::move(owner),completed]{
-   Require(bool(owner)&&*completed,"Pending postprocess input did not complete before consumer submission");
-  });
+  const auto producerQueue=i->second.producerQueue;
+  if(expected.context==consumer.context && expected.queue==consumer.queue &&
+   lease.OrderAfterSourceSubmission(owner.get(),expected.submission,[owner,identity,expected,completed,producerQueue]{
+    (void)producerQueue; // Keep exact queue identity alive with the receipt.
+    Require(bool(owner)&&*identity==expected&&*completed,
+     "Pending postprocess producer identity/completion changed before consumer submission");
+   }))return true;
+  // A different/unidentified predecessor is not permission for GPU overlap.
+  // Preserve the safe pending=1 boundary, then recheck actual completion.
+  lease.RetirePreviousSubmission();
+  return *identity==expected && *completed;
+ }
+ static NativePostprocessProducerIdentity ConsumerIdentity(RuntimeLease& lease) {
+  return {lease.ContextIdentity(),(__bridge const void*)lease.QueueIdentity(),lease.SourceSubmission()};
+ }
+ std::function<void()> CaptureRead(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version) const {
+  Require(version&&version->image,"Missing actual postprocess read version");
+  if(HasNativePostprocessCPUContents(*version))return [version]{};
+  auto i=images.find(version.get());
+  Require(i!=images.end()&&i->second.owner.lock()==version,"Postprocess read lost its exact version owner");
+  const auto identity=i->second.producer;const auto expected=*identity;
+  const auto consumer=ConsumerIdentity(lease);
+  const auto completed=i->second.completed,encoded=i->second.encoded;
+  const auto producerQueue=i->second.producerQueue;
+  bool ordered=false;
+  if(!*completed && expected!=consumer)ordered=PreparationInput(*version,lease);
+  Require(expected.Valid()&&consumer.Valid(),"Postprocess read lacks an actual source submission identity");
+  return [version,identity,expected,consumer,completed,encoded,ordered,producerQueue]{
+   (void)producerQueue;
+   Require(*identity==expected&&NativePostprocessReadAllowed(expected,consumer,*encoded,*completed,ordered),
+    "Postprocess read precedes its exact same-submission, ordered predecessor or retired producer");
+  };
  }
  struct PreparationContext {Impl* cache;RuntimeLease* lease;};
  static bool PreparationInputCallback(const NativePostprocessVersion& v,void* raw){
@@ -523,6 +551,12 @@ struct PostprocessGPU::Impl {
 			Require(found->second.owner.lock()==version,"Postprocess image address lifetime changed");
 			Require(found->second.image.device==lease.Device(),"Postprocess image version belongs to another Metal device");
 			Require(!output||!*found->second.completed,"Already-completed postprocess packet cannot be resubmitted");
+   if(output){
+    const auto producer=ConsumerIdentity(lease);
+    Require(producer.Valid(),"Postprocess output lacks its actual source submission");
+    Require(!*found->second.encoded||*found->second.producer==producer,"Encoded postprocess output belongs to another producer");
+    *found->second.producer=producer;found->second.producerQueue=lease.QueueIdentity();
+   }
 			if(found->second.storage181)PinTexture181(lease,found->second.storage181);
 			lease.AddAllocation(found->second.image);if(output)completed.push_back(found->second.completed);return found->second.image;
 		}
@@ -533,6 +567,8 @@ struct PostprocessGPU::Impl {
 			auto native=[lease.Device()newTextureWithDescriptor:descriptor];Require(native!=nil,"Cannot allocate original DOF immutable attachment");return native;
 		};
 		Image entry;entry.owner=version;
+  *entry.producer=ConsumerIdentity(lease);entry.producerQueue=lease.QueueIdentity();
+  Require(entry.producer->Valid(),"Postprocess output lacks its actual source submission");
 		if(reusableCopy181) {
 			entry.storage181=texturePool181->Acquire(lease.Device(),{Format(image.format),image.width,image.height},version,create);
 			entry.image=entry.storage181->texture;PinTexture181(lease,entry.storage181);
@@ -600,25 +636,13 @@ id<MTLTexture> PostprocessGPU::ResolveImage(RuntimeLease& lease,const std::share
 	}
 	std::vector<std::shared_ptr<bool>> ignored;return impl->ImageFor(lease,version,false,ignored);
 }
-void PostprocessGPU::RequireReadable(const std::shared_ptr<const NativePostprocessVersion>& version) const
+void PostprocessGPU::RequireReadable(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version) const
 {
-	Require(version&&version->image,"Missing actual postprocess read version");
-	if(HasNativePostprocessCPUContents(*version))return;
-	const auto found=impl->images.find(version.get());
-	Require(found!=impl->images.end()&&found->second.owner.lock()==version&&
-		(*found->second.completed||*found->second.encoded),"Original postprocess image read precedes its actual producer encoding/retirement");
+ impl->CaptureRead(lease,version)();
 }
-std::function<void()> PostprocessGPU::CaptureReadability(const std::shared_ptr<const NativePostprocessVersion>& version) const
+std::function<void()> PostprocessGPU::CaptureReadability(RuntimeLease& lease,const std::shared_ptr<const NativePostprocessVersion>& version) const
 {
- Require(version&&version->image,"Missing actual postprocess read version");
- if(HasNativePostprocessCPUContents(*version))return [version]{};
- const auto found=impl->images.find(version.get());
- Require(found!=impl->images.end()&&found->second.owner.lock()==version,
-  "Postprocess readability receipt lacks its exact prepared allocation");
- const auto completed=found->second.completed,encoded=found->second.encoded;
- return [version,completed,encoded]{
-  Require(*completed||*encoded,"Original postprocess image read precedes its actual producer encoding/retirement");
- };
+ return impl->CaptureRead(lease,version);
 }
 std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativePostprocessFrame> frame,
 	id<MTLTexture> color,id<MTLTexture> depth,const PreparedScreenFrame& originalScreen,bool validation,double& compileMs,id<MTLTexture> actualStencil,std::shared_ptr<const MainFrameAttachments> main,bool independentRootShaderResources)
@@ -662,7 +686,7 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			// Source history remains owned and validated. Only the old-pixel GPU
 			// dependency is absent when this fixed copy overwrites every pixel.
 			const bool preserve=!overwrite157&&(operation.previous[i]||operation.priorScreen);
-			if(operation.previous[i]&&!overwrite157){auto previous=impl->ImageFor(lease,operation.previous[i],false,prepared->impl->completed);out.previous.emplace_back(previous,image);}
+			if(operation.previous[i]&&!overwrite157){auto previous=impl->ImageFor(lease,operation.previous[i],false,prepared->impl->completed);out.previous.emplace_back(previous,image);out.reads.push_back(impl->CaptureRead(lease,operation.previous[i]));}
 			if(overwrite157&&(operation.previous[i]||operation.priorScreen)){++omittedCopies157;omittedBytes157+=uint64_t(width)*height*4;}
 			if(preserve)++retainedCopies157;
 			if(operation.kind==NativePostprocessOperationKind::CopyDepth){out.pass.depthAttachment.texture=image;out.pass.depthAttachment.loadAction=preserve?MTLLoadActionLoad:MTLLoadActionDontCare;out.pass.depthAttachment.storeAction=MTLStoreActionStore;}
@@ -729,7 +753,7 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
    }
 			const auto& version=operation.inputs[0];auto image=impl->ImageFor(lease,version,false,prepared->impl->completed);
-			const auto& entry=impl->images.at(version.get());out.reads.emplace_back(entry.completed,entry.encoded);[args setTexture:image.gpuResourceID atIndex:0];
+			out.reads.push_back(impl->CaptureRead(lease,version));[args setTexture:image.gpuResourceID atIndex:0];
 			out.pipeline=impl->Pipeline(lease,u.sharedPath?SHARED_SEPIA_PIPELINE:SEPIA_PIPELINE,0,color.pixelFormat,out.casRaster.get(),std::uint32_t(color.sampleCount));out.vertexCount=3;
 		}else if(operation.kind==NativePostprocessOperationKind::CAS){
    out.casRaster=operation.cas.raster;Require(bool(out.casRaster),"CAS captured raster missing");
@@ -757,7 +781,7 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
    auto uniform=impl->UniformBuffer(lease,prepared->impl->argumentLifetime,&gpu,sizeof(gpu));[args setAddress:uniform.gpuAddress atIndex:1];
    const auto& version=operation.inputs[0];auto image=impl->ImageFor(lease,version,false,prepared->impl->completed);
    Require(image.width==std::uint32_t(u.viewRect[2]+1) && image.height==std::uint32_t(u.viewRect[3]+1) && image.pixelFormat==MTLPixelFormatRGBA8Unorm,"CAS actual screen-copy image differs");
-   const auto& entry=impl->images.at(version.get());out.reads.emplace_back(entry.completed,entry.encoded);
+   out.reads.push_back(impl->CaptureRead(lease,version));
    [args setTexture:image.gpuResourceID atIndex:0];out.pipeline=impl->Pipeline(lease,CAS_PIPELINE+int(u.variant),0,color.pixelFormat,out.casRaster.get(),std::uint32_t(color.sampleCount));out.vertexCount=3;
   }else if(operation.kind!=NativePostprocessOperationKind::DOF){
 			const auto& src=operation.source;const auto& dst=operation.destination;
@@ -775,8 +799,7 @@ std::unique_ptr<PreparedPostprocessFrame> PostprocessGPU::Prepare(RuntimeLease& 
 			Require(u.quality==1||(u.pass==5&&u.quality==0),"Original31657 non-composition DOF program has HIGH_QUALITY1");
 			Require(operation.screenOutput==(u.pass==5)&&operation.outputs.size()==(operation.screenOutput?0:Outputs(u)),"Original31657 DOF pass/FBO output contract differs");
 			for(size_t i=0;i<operation.outputs.size();++i)Require(Format(operation.outputs[i]->image->format)==AttachmentFormat(u.pass,unsigned(i),operation.screenOutput?color.pixelFormat:Format(operation.outputs[0]->image->format)),"Original31657 DOF MRT format/quantization differs");
-			const auto retainRead=[&](const std::shared_ptr<const NativePostprocessVersion>& version){if(HasNativePostprocessCPUContents(*version))return;const auto& entry=impl->images.at(version.get());out.reads.emplace_back(entry.completed,entry.encoded);};
-			for(const auto& previous:operation.previous)if(previous)retainRead(previous);
+			const auto retainRead=[&](const std::shared_ptr<const NativePostprocessVersion>& version){if(HasNativePostprocessCPUContents(*version))return;out.reads.push_back(impl->CaptureRead(lease,version));};
 			for(unsigned i=0;i<6;++i){
 			 // Each actually sampled original slot requires its own real immutable
 			 // source. Only inactive static declarations reuse real origTex storage.

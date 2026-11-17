@@ -1,0 +1,40 @@
+{
+  "candidate": "postprocess-producer-20261117",
+  "base_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "branch": "experiment/postprocess-producer-20261117",
+  "production_files": {
+    "engine/rts/Rendering/Metal4/Metal4PostprocessNative.h": {
+      "sha256": "8fdce6aa656bdf01cabdbb30a20f070865ffcb0cd564838df14c7e1fcbfe87bf",
+      "blob_sha": "88975859d3c6aa231eeaf0d7c3020900731a1aa7"
+    },
+    "engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm": {
+      "sha256": "7ebfaa93b8a3a6290f211ac7b362e0a90d5c13de0b4786e6ec307afd4955dc01",
+      "blob_sha": "a1e265c5dcddd61833e73163d2550ca5255472f9"
+    },
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h": {
+      "sha256": "37a161a4f46707cb74c4384c5b411ecf4d84051eb630495c6fc080d80143abd7",
+      "blob_sha": "c6e21a41fdff220e88c956377ee969f6e4015a20"
+    },
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm": {
+      "sha256": "280011745f86e6d78ea17e8b872a05418c1cf0d09ee638db9e1d4d396919767e",
+      "blob_sha": "f2d6690221c637f69a801a62593f4100f30e6edb"
+    },
+    "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm": {
+      "sha256": "5209cd208374f473d78c6a702bdaa691d43b7f8c68d79bdd413e0e7a49c99d53",
+      "blob_sha": "ba66a861193c1730dc18071241f7db11d04fadb6"
+    },
+    "engine/rts/Rendering/Metal4/NativePostprocessReadContract.h": {
+      "sha256": "21695d9d6c0e145c7f97aaf9fad73e97a8777a6fb9fefd76aa57f8f0630ce8b2",
+      "blob_sha": "ff0f0b2e619b3331299485a64845fbf27c892b2f"
+    }
+  },
+  "artifacts": {
+    "REPORT.md": "7be219fbb7dc8e329672d42731b739081edcc78d509362da2203a55968bda6b2",
+    "test_contract.py": "ea6015f4c7391c3ae757b3382a5592a7e67b912b91abd37e886fb3205b263c85",
+    "cpu-results.json": "e5e4ad08aceeedb7b9446e8cffe15b5e4b2e649a1d60b234473727f4be4a5da4",
+    "postprocess-producer.patch": "135bf3663d3b5cd58bb3cb8ffcfaa9a8bd6d02034f868259701eb9490959e2e3"
+  },
+  "validation": "CPU only; no Apple Objective-C++ compile or GPU validation",
+  "pending_limit": 1,
+  "performance_claim": false
+}
