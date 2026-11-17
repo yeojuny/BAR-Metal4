@@ -1,0 +1,26 @@
+[
+  {
+    "path": "engine/rts/Rendering/Backend/NativeTextureProducerReceipt.h",
+    "candidate_sha256": "b85adad748b6a4682ecd402cab890008021523de7ba1825d357fbcb5ab3a9d5f",
+    "packet_matches_production": true,
+    "base_matches_true_R03_parent": false
+  },
+  {
+    "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+    "candidate_sha256": "06e3f13af96dd9982affe8de2ab924e5741d3b145d76e79ca9ca7b37b4625e5f",
+    "packet_matches_production": true,
+    "base_matches_true_R03_parent": true
+  },
+  {
+    "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+    "candidate_sha256": "85289fa6559d4e3b6f3ae370bf8d7a983a75041e45e356498f6eb248caede864",
+    "packet_matches_production": true,
+    "base_matches_true_R03_parent": true
+  },
+  {
+    "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+    "candidate_sha256": "8c62d2155834957e7af7d29556a209cc27f5d9bfcb16d242b22c665d1c33f0bc",
+    "packet_matches_production": true,
+    "base_matches_true_R03_parent": true
+  }
+]

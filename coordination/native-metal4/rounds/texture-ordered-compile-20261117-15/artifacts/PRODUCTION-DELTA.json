@@ -1,0 +1,9 @@
+{
+  "status": "EXACTLY_DECLARED_FOUR_FILES",
+  "paths": [
+    "engine/rts/Rendering/Backend/NativeTextureProducerReceipt.h",
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+    "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm"
+  ]
+}

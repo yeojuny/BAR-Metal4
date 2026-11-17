@@ -1,0 +1,66 @@
+{
+  "round_id": "texture-ordered-compile-20261117-15",
+  "attempt_id": "texture-ordered-compile-01",
+  "commands": [
+    {
+      "stage": "CPU-CONTRACT",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests/run.py"
+      ],
+      "pid": 32605,
+      "startedUTC": "2026-11-17T05:27:09.059007+00:00",
+      "exit_code": 0,
+      "wall_seconds": 1.2035441250000076
+    },
+    {
+      "stage": "CONFIGURE",
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "pid": 32610,
+      "startedUTC": "2026-11-17T05:27:10.265864+00:00",
+      "exit_code": 0,
+      "wall_seconds": 9.29830470900015
+    },
+    {
+      "stage": "BUILD",
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "pid": 33859,
+      "startedUTC": "2026-11-17T05:27:19.562689+00:00",
+      "exit_code": 0,
+      "wall_seconds": 220.59370483400016
+    }
+  ],
+  "active_pid": null,
+  "stage": "COMPILE_PASS",
+  "games": 0,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "retries": 0,
+  "CPU_binary_sha256": "d416e888ee1acbccca40e6bdc45783a119516a7aaa3297fb927eafac27be3f2c",
+  "raw_engine_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/build/spring-metal4-scene",
+  "raw_engine_sha256": "aaf18800be5a917972a298c6ffd9077f287fb9382f362f218189d84cb5c76e2a",
+  "source_unchanged_after_build": true,
+  "controller_finishedUTC": "2026-11-17T05:31:01.068142+00:00"
+}

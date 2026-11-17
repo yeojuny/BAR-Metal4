@@ -1,0 +1,25 @@
+{
+  "script": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests/run.py",
+  "script_sha256": "4d7a3c1adc207f386f8d86e8094452f61a0a6cb476c2a4a456e813c93ae63419",
+  "compiler_path": "/usr/bin/c++",
+  "exact_compile_argv_from_fixed_script": [
+    "c++",
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-I/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/candidate/engine/rts/Rendering/Backend",
+    "-I/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests/test.cpp",
+    "-o",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests/test"
+  ],
+  "executable_invocations": 1,
+  "script_invocations": 1,
+  "ASAN_UBSAN_enabled": true,
+  "actual_Metal_ARC_GPU_test": false,
+  "generated_journal_sha256": "409bbff4c01b31a3b1f86bedef7933ca85d814e374114e8be8cd79bcb7b4a6db",
+  "test_cpp_sha256": "60a47d96cd4cbda56c13d1497d66f77802578b6325f031f0c93e066135bb41dc"
+}
