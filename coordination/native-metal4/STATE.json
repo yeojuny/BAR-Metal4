@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 104,
+  "revision": 105,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/DONE.json",
   "decision": "REVIEWED_FRAME_ZERO_FIX_CPU_SCALAR_DIAGNOSTIC_ONLY",
-  "execution_status": "READY_NEW_LIFETIME_ONLY_ROUND_NO_GAME_YET",
+  "execution_status": "HQ3_ROUND27_LIFETIME_RESERVED_ONCE",
   "blocked_reason": null,
   "history": [
     {
@@ -1472,6 +1472,24 @@
       "previous_budget_reused": false,
       "frame_zero_gate_corrected": true,
       "execution_started": false
+    },
+    {
+      "event": "HQ3_ROUND27_LIFETIME_RESERVED_ONCE",
+      "revision": 105,
+      "round_id": "r03-mvk3-lifetime-20261117-27",
+      "attempt_id": "lifetime-raw-two-arm-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 20:06:49 UTC",
+      "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+      "budget": {
+        "games_max": 2,
+        "games_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0
+      },
+      "previous_round_budget_reused": false
     }
   ],
   "communication_test": {
@@ -1556,7 +1574,7 @@
   },
   "execution": {
     "attempt_id": "lifetime-raw-two-arm-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "budget": {
       "games_max": 2,
@@ -1566,7 +1584,11 @@
       "retries": 0,
       "builds": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "reserved_at_utc": "2026-11-17 20:06:49 UTC",
+    "previous_budget_reused": false,
+    "bar": "PAUSED",
+    "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1632,5 +1654,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 reserve once and reread STATE, verify no competing work, fresh stage then at most R03 one game and MVK3 one only after first passes. Captures/profiles/retries/builds0; preserve user caffeinate."
+  "next_action": "HQ3 stage once, run R03 once; MVK3 only after R03 records, normal exit and owned cleanup pass. Report and close even on failure."
 }
