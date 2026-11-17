@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 38,
+  "revision": 39,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r03-r02-benchmark-20261117-08",
-  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
-  "request": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
+  "round_id": "r04-segment-setup-correctness-20261117-09",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "request": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/READY.json",
+  "result_path": null,
   "decision": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DECISION.json",
-  "execution_status": "R03_RESULT_REVIEWED_AWAIT_HQ_TURN_CLOSURE",
+  "execution_status": "READY_R04_HELPER_CORRECTNESS_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -386,6 +386,17 @@
       "relative_percent": 2.819258194632779,
       "cleanup_verified": true,
       "next": "Source-only SensorLOS shared exact work candidate after HQ turn closes; no new local execution."
+    },
+    {
+      "event": "R04_SOURCE_MANIFEST_AND_CPU_REVIEW_COMPLETE",
+      "revision": 39,
+      "previous_round": "r03-r02-benchmark-20261117-08",
+      "previous_result": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true,
+      "HQ_previous_turn_completed": true
     }
   ],
   "communication_test": {
@@ -457,11 +468,11 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_R03_VALIDATION_THEN_SIX_MATCHED_CLEAN_GAMES",
+  "enabled_scope": "FIXED_HELPER_COMPILE1_GPU_CORRECTNESS1",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
-    "scope": "Necessary bounded autonomous regression benchmarking; no release adoption."
+    "scope": "Necessary bounded correctness test before any performance experiment."
   },
   "source_writers_stopped": true,
   "connection_verification": {
@@ -470,19 +481,12 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r03-validation-and-clean-01",
-    "started": true,
-    "completed": true,
-    "validation_games": 1,
-    "clean_games": 6,
-    "games": 7,
-    "started_at_utc": "2026-11-17 01:40:47 UTC",
-    "builds": 0,
-    "helpers": 0,
-    "captures": 0,
-    "retries": 0,
-    "cleanup_complete": true,
-    "completed_at_utc": "2026-11-17 02:05:57 UTC"
+    "attempt_id": "r04-helper-correctness-01",
+    "started": false,
+    "completed": false,
+    "helper_compiles": 0,
+    "gpu_helper_runs": 0,
+    "games": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
