@@ -1,0 +1,94 @@
+{
+  "status": "PASS",
+  "source": "MTL4CommitFeedback GPUEndTime minus GPUStartTime, one render command buffer per mode and pair",
+  "scope": "Whole fixture render batch and its attachment operations; two identical overlapping rows per draw, 64 draws per batch. Not an isolated draw counter or in-game FPS.",
+  "units": "milliseconds per batch",
+  "sample_count": 1,
+  "warmup_pairs": 4,
+  "retained_pairs": 24,
+  "draws_per_batch": 64,
+  "rows_per_draw": 2,
+  "same_fixture_inputs": true,
+  "all_attachment_parity_checks_passed": true,
+  "off": {
+    "median": 0.2076250005,
+    "q1": 0.20722916675,
+    "q3": 0.20962499975,
+    "minimum": 0.206041667,
+    "maximum": 0.444458334
+  },
+  "on": {
+    "median": 0.1484791665,
+    "q1": 0.1478333335,
+    "q3": 0.14912500025,
+    "minimum": 0.1465,
+    "maximum": 0.15
+  },
+  "paired_on_minus_off": {
+    "median": -0.059291666,
+    "q1": -0.06096875025,
+    "q3": -0.0585729165,
+    "minimum": -0.297708335,
+    "maximum": -0.057
+  },
+  "median_time_change_pct": -28.48685556053736,
+  "on_faster_pairs": 24,
+  "delta_by_order": {
+    "OFF_ON": {
+      "median": -0.059437501,
+      "q1": -0.06228125,
+      "q3": -0.05843749975,
+      "minimum": -0.067791666,
+      "maximum": -0.057
+    },
+    "ON_OFF": {
+      "median": -0.0592708335,
+      "q1": -0.06029166625,
+      "q3": -0.05894791725,
+      "minimum": -0.297708335,
+      "maximum": -0.057291667
+    }
+  },
+  "outliers_excluded": 0,
+  "helper_compile": {
+    "argv": [
+      "xcrun",
+      "--sdk",
+      "macosx",
+      "clang++",
+      "-std=c++23",
+      "-O2",
+      "-fobjc-arc",
+      "-I",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31/source/engine/rts/Rendering/Metal4",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-timing-20261117-33/game_decal_index_timing.mm",
+      "-framework",
+      "Foundation",
+      "-framework",
+      "Metal",
+      "-o",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-timing-20261117-33/game_decal_index_timing"
+    ],
+    "startedUTC": "2026-11-17T21:18:12.051000+00:00",
+    "count": 1,
+    "pid": 15418,
+    "exit": 0,
+    "endedUTC": "2026-11-17T21:18:12.856527+00:00"
+  },
+  "helper_gpu": {
+    "startedUTC": "2026-11-17T21:18:24.201658+00:00",
+    "count": 1,
+    "argv": [
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-timing-20261117-33/game_decal_index_timing"
+    ],
+    "child_metal_flags": {
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0",
+      "MTL_CAPTURE_ENABLED": "0"
+    },
+    "pid": 15437,
+    "endedUTC": "2026-11-17T21:18:24.861969+00:00",
+    "exit": 0
+  }
+}

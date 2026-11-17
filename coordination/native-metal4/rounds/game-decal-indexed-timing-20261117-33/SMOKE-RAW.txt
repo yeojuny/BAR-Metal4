@@ -1,0 +1,20 @@
+2026-11-17 13:19:58.207 spring-metal4-scene[15521:155362] Metal API Validation Enabled
+2026-11-17 13:19:58.207 spring-metal4-scene[15521:155362] Metal GPU Validation Enabled
+[t=00:00:15.298830] [BufferedArchiveCache127][name=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build/base/spring/bitmaps.sdz] retained=0 peak=0 files=0 limit=18446744073709551615 hits=0 misses=1 evictions=0
+[t=00:00:15.300819] Error: [AS::CheckCachedData] found a "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/data/base/spring/bitmaps.sdz" already in "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build/base/spring/bitmaps.sdz", ignoring.
+[t=00:00:15.301001] Fatal: [ExitSpringProcess] errorMsg="duplicate base content detected:
+	/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build/base/spring/
+	/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/data/base/spring/
+Please fix your configuration/installation as this can cause desyncs!" msgCaption="Spring: caught std::exception" mainThread=0
+[t=00:00:15.301142] [WatchDog::DeregisterThread] deregistering controls for thread [vfsi]
+[t=00:00:15.301340] [Threading] Optimal thread count is 5
+[t=00:00:15.301357] [ThreadPool::SetThreadCount][1] wanted=5 current=1 maximum=14 (init=1)
+[t=00:00:15.301425] [ThreadPool::SetThreadCount][2] workers=4
+[t=00:00:15.301431] CPU Affinity Mask Details detected:
+[t=00:00:15.301436] -- Performance Core Mask:      0x000003ff
+[t=00:00:15.301439] -- Efficiency  Core Mask:      0x00003c00
+[t=00:00:15.301443] -- Hyper Thread/SMT Low Mask:  0x00000000
+[t=00:00:15.301446] -- Hyper Thread/SMT High Mask: 0x00000000
+[t=00:00:15.301449] -- Optimal Cache Mask:         0x0000001f
+[t=00:00:15.301457] [ThreadPool] Main thread affinity requested as 0x00000000
+[t=00:00:15.301468] [Threading] Worker 4 thread CPU affinity not set

@@ -1,0 +1,128 @@
+--- round32/game_decal_index_parity.mm
++++ round33/game_decal_index_timing.mm
+@@ -5,6 +5,7 @@
+ #include <simd/simd.h>
+ #include <algorithm>
+ #include <array>
++#include <cmath>
+ #include <cstdio>
+ #include <cstdlib>
+ #include <cstring>
+@@ -62,9 +63,12 @@
+     }
+ };
+ 
++struct GpuTimes { double start, end; };
++
+ Result render(id<MTLDevice> device, id<MTL4CommandQueue> queue, id<MTLRenderPipelineState> pipeline,
+               id<MTL4ArgumentTable> arguments, id<MTLResidencySet> inputs,
+-              id<MTLBuffer> indices, unsigned count) {
++              id<MTLBuffer> indices, unsigned count, unsigned batchDraws = 1,
++              GpuTimes* times = nullptr) {
+     NSError* error = nil;
+     auto color = texture(device, MTLPixelFormatBGRA8Unorm, W, H, true);
+     auto depth = texture(device, MTLPixelFormatDepth32Float, W, H, true);
+@@ -112,14 +116,16 @@
+     [e setDepthClipMode:MTLDepthClipModeClip];
+     [e setStencilFrontReferenceValue:7 backReferenceValue:7];
+     [e setArgumentTable:arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+-    if (indices) {
+-        check(indices.length == 192 && indices.gpuAddress != 0 && (indices.gpuAddress & 1) == 0, "index buffer");
+-        [e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:gameDecalGeometry::Indices.size()
+-                       indexType:MTLIndexTypeUInt16 indexBuffer:indices.gpuAddress
+-                indexBufferLength:indices.length instanceCount:count];
+-    } else {
+-        [e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0
+-              vertexCount:gameDecalGeometry::VertexSlots instanceCount:count];
++    for (unsigned i = 0; i < batchDraws; ++i) {
++        if (indices) {
++            check(indices.length == 192 && indices.gpuAddress != 0 && (indices.gpuAddress & 1) == 0, "index buffer");
++            [e drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:gameDecalGeometry::Indices.size()
++                           indexType:MTLIndexTypeUInt16 indexBuffer:indices.gpuAddress
++                    indexBufferLength:indices.length instanceCount:count];
++        } else {
++            [e drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0
++                  vertexCount:gameDecalGeometry::VertexSlots instanceCount:count];
++        }
+     }
+     [e endEncoding];
+     [commands useResidencySet:inputs];
+@@ -129,8 +135,10 @@
+     auto options = [MTL4CommitOptions new];
+     auto done = dispatch_semaphore_create(0);
+     __block NSError* feedbackError = nil;
++    __block GpuTimes gpuTimes{};
+     [options addFeedbackHandler:^(id<MTL4CommitFeedback> feedback) {
+         feedbackError = feedback.error;
++        gpuTimes = {feedback.GPUStartTime, feedback.GPUEndTime};
+         dispatch_semaphore_signal(done);
+     }];
+     id<MTL4CommandBuffer> batch[] = {commands};
+@@ -138,7 +146,12 @@
+     [queue signalEvent:event value:1];
+     check([event waitUntilSignaledValue:1 timeoutMS:30000], "GPU event");
+     check(dispatch_semaphore_wait(done, dispatch_time(DISPATCH_TIME_NOW, 30*NSEC_PER_SEC)) == 0, "GPU feedback");
+-    check(feedbackError == nil, "Metal 4 validation/feedback", feedbackError);
++    check(feedbackError == nil, "Metal 4 command feedback", feedbackError);
++    if (times) {
++        check(std::isfinite(gpuTimes.start) && std::isfinite(gpuTimes.end) &&
++              gpuTimes.start > 0 && gpuTimes.end > gpuTimes.start, "GPU timestamp interval unavailable");
++        *times = gpuTimes;
++    }
+     Result result;
+     const auto region = MTLRegionMake2D(0, 0, W, H);
+     [color getBytes:result.color.data() bytesPerRow:W*4 fromRegion:region mipmapLevel:0];
+@@ -186,7 +199,7 @@
+         a.sourceRGBBlendFactor = a.sourceAlphaBlendFactor = MTLBlendFactorSourceAlpha;
+         a.destinationRGBBlendFactor = a.destinationAlphaBlendFactor = MTLBlendFactorOneMinusSourceAlpha;
+         auto validation = [MTL4PipelineOptions new];
+-        validation.shaderValidation = MTLShaderValidationEnabled;
++        validation.shaderValidation = MTLShaderValidationDisabled;
+         pd.options = validation;
+         auto pipeline = [compiler newRenderPipelineStateWithDescriptor:pd compilerTaskOptions:nil error:&error];
+         check(pipeline != nil, "GameDecal pipeline", error);
+@@ -223,7 +236,7 @@
+         const Row tiny = row(20,19,128,128), regular = row(80,66,128,128);
+         const Row left = row(80,66,110,128,0,.45f), right = row(80,66,145,128,.55f,1);
+         auto compare = [&](const char* name, const std::vector<Row>& rows, unsigned first, unsigned count,
+-                           bool visible) {
++                           bool visible, bool timing = false) {
+             check(first+count <= rows.size() && count > 0, "fixture row range");
+             Uniform u{};
+             u.viewProjection.columns[0] = {1.f/128,0,0,0};
+@@ -269,6 +282,28 @@
+             check((coverage > 0) == visible, "expected visible/rejected fixture");
+             std::printf("PASS %s modeOFF=96vertices modeON=96UInt16 indexBytes=192 first=%u count=%u samples=1 covered=%u\n",
+                         name, first, count, coverage);
++            if (timing) {
++                constexpr unsigned draws = 64, warmup = 4, pairs = 24;
++                for (unsigned i = 0; i < warmup + pairs; ++i) {
++                    GpuTimes offTimes{}, onTimes{};
++                    Result timedOff, timedOn;
++                    const bool offFirst = i % 2 == 0;
++                    if (offFirst) {
++                        timedOff = render(device, queue, pipeline, args, inputs, nil, count, draws, &offTimes);
++                        timedOn = render(device, queue, pipeline, args, inputs, index, count, draws, &onTimes);
++                    } else {
++                        timedOn = render(device, queue, pipeline, args, inputs, index, count, draws, &onTimes);
++                        timedOff = render(device, queue, pipeline, args, inputs, nil, count, draws, &offTimes);
++                    }
++                    check(timedOff == timedOn, "timed batch attachment parity");
++                    if (i >= warmup)
++                        std::printf("GPU_PAIR %u %s %.12f %.12f %.12f %.12f\n",
++                                    i-warmup+1, offFirst ? "OFF_ON" : "ON_OFF",
++                                    offTimes.start, offTimes.end, onTimes.start, onTimes.end);
++                }
++                std::printf("GPU_TIMING cases=overlap_blend warmup=%u pairs=%u draws_per_batch=%u rows_per_draw=%u samples=1 source=MTL4CommitFeedback\n",
++                            warmup, pairs, draws, count);
++            }
+             return off;
+         };
+         compare("tiny", {tiny}, 0, 1, true);
+@@ -291,5 +326,6 @@
+         const auto offset = compare("nonzero_first", {tiny,regular,left}, 1, 1, true);
+         check(offset == regularOutput, "nonzero-first selected the original row");
+         std::printf("PASS GameDecal shader fixture, sample1, overlap_pixels=%u\n", blended);
++        compare("timed_overlap", {left,right}, 0, 2, true, true);
+     }
+ }
