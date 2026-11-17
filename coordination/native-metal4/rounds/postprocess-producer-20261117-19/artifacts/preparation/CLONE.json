@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "git",
+    "clone",
+    "--no-checkout",
+    "--single-branch",
+    "--depth",
+    "2",
+    "--branch",
+    "experiment/postprocess-producer-20261117",
+    "https://github.com/yeojuny/BAR-Metal4.git",
+    "evidence/postprocess-producer-20261117-01/source"
+  ],
+  "pid": 62906,
+  "exit": 0,
+  "seconds": 17.62301995800044
+}

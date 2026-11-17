@@ -1,0 +1,7 @@
+{
+  "initial_verifier_error": "Assumed optional flat source copies in candidate directory; actual packet uses direct engine source via fixed script fallback.",
+  "wrapper_start_attempt": "execute.py not yet created; Python exited2 before any CPU contract/configure/build.",
+  "authorized_CPU_script_invocations_before_corrected_preflight": 0,
+  "builds_before_corrected_preflight": 0,
+  "source_and_fixed_test_edits": 0
+}

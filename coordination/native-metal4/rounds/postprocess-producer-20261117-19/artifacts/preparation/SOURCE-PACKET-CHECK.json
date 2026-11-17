@@ -1,0 +1,16 @@
+{
+  "production_six_hashes_and_blobs_verified": true,
+  "production_source_used_directly_by_CPU_script": true,
+  "packet_has_manifest_patch_tests_reference_not_duplicate_production_copies": true,
+  "artifact_hashes_verified": 4,
+  "reference_runtime_matches_true_parent": true,
+  "production_delta": [
+    "engine/rts/Rendering/Metal4/Metal4PostprocessNative.h",
+    "engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+    "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+    "engine/rts/Rendering/Metal4/NativePostprocessReadContract.h"
+  ],
+  "cpu_results_before_sha256": "e5e4ad08aceeedb7b9446e8cffe15b5e4b2e649a1d60b234473727f4be4a5da4"
+}

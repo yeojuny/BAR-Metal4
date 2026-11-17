@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "predicate_matrix": 64,
+  "invalid_identity_cases": 6,
+  "compiled_scenarios": 14,
+  "source_wiring": "PASS",
+  "runtime_nonregistration_source_identity": "PASS",
+  "gpu_validated": false
+}
