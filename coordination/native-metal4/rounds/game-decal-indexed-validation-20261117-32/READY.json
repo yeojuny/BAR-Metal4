@@ -1,0 +1,11 @@
+{
+  "round_id": "game-decal-indexed-validation-20261117-32",
+  "attempt_id": "indexed-native-off-on-02",
+  "status": "READY_PINNED_EXISTING_SOURCE_CHILD_OPENAL_PATH",
+  "candidate_hashes_verified": true,
+  "parent_hashes_verified": true,
+  "existing_source_reused": true,
+  "openal_child_lookup_version": "1.25.2",
+  "sdk": "27.2",
+  "execution_started": false
+}
