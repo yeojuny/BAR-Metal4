@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 131,
+  "revision": 132,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/READY.json",
   "result_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/DONE.json",
-  "decision": "BUILD_VERIFY_THEN_ONE_FIXED_INDEXED_OFF_ON_PAIR",
-  "execution_status": "HQ3_ROUND39_RESERVED_FIXED_GEOMETRY_OFF_ON_PAIR",
+  "decision": "DONE_MATCHED_FIXED_INDEXED_GEOMETRY_OFF_ON_FPS_PAIR",
+  "execution_status": "HQ3_ROUND39_CLOSED_SAME_BINARY_FIXED_GEOMETRY_OFF_ON_FPS",
   "blocked_reason": null,
   "history": [
     {
@@ -2136,6 +2136,38 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17T23:43:34.932Z"
+    },
+    {
+      "event": "HQ3_ROUND39_CLOSED_SAME_BINARY_FIXED_GEOMETRY_OFF_ON_FPS",
+      "revision": 132,
+      "round_id": "native-indexed-geometry-fps-20261117-39",
+      "attempt_id": "indexed-batch-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "c64667df9aa6596b73b0ad7783887f71a7f92f31",
+      "result_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/DONE.json",
+      "decision": "DONE_MATCHED_FIXED_INDEXED_GEOMETRY_OFF_ON_FPS_PAIR",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "helper_compiles": 2,
+        "helper_gpu_invocations": 2,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps_by_arm": {
+        "INDEXED_OFF": 64.31607632102086,
+        "INDEXED_ON": 64.73632880737064
+      },
+      "relative_percent": 0.6534174818939142,
+      "cleanup_complete": true,
+      "utc": "2026-11-17T23:52:32.960864+00:00"
     }
   ],
   "communication_test": {
@@ -2221,7 +2253,7 @@
   "execution": {
     "attempt_id": "indexed-batch-off-on-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "configure_attempts_max": 1,
       "engine_builds_max": 1,
@@ -2243,7 +2275,52 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17T23:43:34.932Z",
-    "bar": "PAUSED"
+    "bar": "PAUSED",
+    "ended_at_utc": "2026-11-17T23:52:32.960864+00:00",
+    "counts": {
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "helper_compiles": 2,
+      "helper_gpu_invocations": 2,
+      "games": 2,
+      "off_games": 1,
+      "on_games": 1,
+      "normal_exits": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "c64667df9aa6596b73b0ad7783887f71a7f92f31",
+    "diagnostic_outcome": "DONE_MATCHED_FIXED_INDEXED_GEOMETRY_OFF_ON_FPS_PAIR",
+    "binary_sha256": {
+      "INDEXED_OFF": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+      "INDEXED_ON": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f"
+    },
+    "fps_by_arm": {
+      "INDEXED_OFF": 64.31607632102086,
+      "INDEXED_ON": 64.73632880737064
+    },
+    "relative_percent": 0.6534174818939142,
+    "game_path_activation": {
+      "INDEXED_OFF": {
+        "sensorlos_outline": "DRAW_ENCODED",
+        "sensorlos_r8_fan": "UNVERIFIED",
+        "radar_sonar_circle": "UNVERIFIED",
+        "healthbars": "UNVERIFIED",
+        "unit_stencil": "PREPARED"
+      },
+      "INDEXED_ON": {
+        "sensorlos_outline": "DRAW_ENCODED",
+        "sensorlos_r8_fan": "UNVERIFIED",
+        "radar_sonar_circle": "UNVERIFIED",
+        "healthbars": "UNVERIFIED",
+        "unit_stencil": "PREPARED"
+      }
+    },
+    "sensorlos_draw_in_counted_window_both": false,
+    "retry_authorized": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2309,7 +2386,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Build the pinned candidate once, run the existing bound fixtures, and compare one OFF/ON pair after success.",
+  "next_action": "Review the fixed geometry FPS pair, retained OFF frame-time outlier, and per-path evidence limits.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
