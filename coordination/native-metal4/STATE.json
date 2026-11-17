@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 101,
+  "revision": 102,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/READY.json",
   "result_path": null,
   "decision": null,
-  "execution_status": "READY_AUTHORIZATION_EVIDENCE_REVERIFIED",
+  "execution_status": "HQ3_NEW_MATCHED_FRAME_PAIR_RESERVED_ONCE",
   "blocked_reason": null,
   "history": [
     {
@@ -1385,6 +1385,32 @@
       "HQ_routing_approval": "Sentinel_8563c81084e48191aa31675bff31ab10",
       "latest_limit": "No reboot, logout, service restart, security changes; GPU diagnostic prompt approval reported by user.",
       "retry_limit": 1
+    },
+    {
+      "event": "HQ3_ROUND26_MATCHED_FRAME_PAIR_RESERVED_ONCE",
+      "revision": 102,
+      "round_id": "r03-mvk3-matched-frame-20261117-26",
+      "attempt_id": "r03-mvk3-framepair-02",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 16:44:41 UTC",
+      "budget": {
+        "games_max": 2,
+        "captured_frames_per_arm": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profile_commands_per_arm": 1,
+        "profile_commands_max": 2,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      },
+      "previous_round_budget_reused": false,
+      "reboot_or_service_restart_authorized": false,
+      "bar": "PAUSED"
     }
   ],
   "communication_test": {
@@ -1469,7 +1495,7 @@
   },
   "execution": {
     "attempt_id": "r03-mvk3-framepair-02",
-    "started": false,
+    "started": true,
     "completed": false,
     "games": 0,
     "captures": 0,
@@ -1488,7 +1514,8 @@
       "extra_counter_replays": 0,
       "FPS_AB": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "reserved_at_utc": "2026-11-17 16:44:41 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1554,5 +1581,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "One HQ3 handoff retry with verified original user authorization evidence. Execute only after accepted handoff and reserve once."
+  "next_action": "Execute only round26 bounded framepair; no reboot or service restart."
 }
