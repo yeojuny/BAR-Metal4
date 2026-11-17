@@ -11,6 +11,16 @@
 #include <tuple>
 #include <utility>
 
+// Retain the mutable slot, not just its MTLBuffer, across lease failures and
+// deferred retirement. Same lifetime wrapper pattern as SSAO/CUS storage.
+@interface M4GroundDecalSlotLifetime : NSObject {
+@public
+ std::shared_ptr<const void> owner;
+}
+@end
+@implementation M4GroundDecalSlotLifetime
+@end
+
 namespace rendering::metal4 {
 namespace {
 id<MTLBuffer> Buffer(RuntimeLease& l,const void* p,size_t n,const char* label,bool optional=false){Require(p&&n,"Original decal buffer empty");auto b=[l.Device() newBufferWithBytes:p length:n options:MTLResourceStorageModeShared];if(optional&&!b)return nil;Require(b!=nil,"Cannot allocate original decal buffer");b.label=String(label);l.AddAllocation(b);return b;}
@@ -24,14 +34,15 @@ struct AtlasResources {
 	std::vector<NativeGroundDecalAtlasDraw> draws;
 	bool ready=false;
 };
-struct InstanceResources {std::shared_ptr<const NativeGroundDecalInstances> source;__strong id<MTLBuffer> buffer=nil;};
+struct InstanceBuffer { __strong id<MTLBuffer> buffer=nil; };
+using InstancePool = NativeGroundDecalBufferPool<NativeGroundDecalInstance, InstanceBuffer>;
 struct AtlasPassDraw {uint32_t page=0,level=0;__strong id<MTL4ArgumentTable> arguments=nil;};
 struct alignas(16) AtlasUniforms {std::array<float,4> clamp{};std::array<uint32_t,4> flags{};};
 }
 struct PreparedGroundDecal::Impl {
 	std::shared_ptr<const NativeGroundDecalFrame> frame;
 	std::shared_ptr<AtlasResources> atlas;
-	std::shared_ptr<InstanceResources> instances;
+	InstancePool::Pin instances;
 	__strong id<MTLRenderPipelineState> surfacePipeline=nil,atlasPipeline=nil;
 	__strong id<MTLDepthStencilState> depth=nil;
 	__strong id<MTL4ArgumentTable> arguments=nil;
@@ -69,7 +80,7 @@ void PreparedGroundDecal::Encode(id<MTL4RenderCommandEncoder> e)
 	Require(impl->dependenciesEncoded&&!impl->encoded,"Original ground decal pass order differs");
 	[e setRenderPipelineState:impl->surfacePipeline];[e setDepthStencilState:impl->depth];[e setFrontFacingWinding:MTLWindingCounterClockwise];[e setCullMode:MTLCullModeBack];[e setDepthClipMode:MTLDepthClipModeClip];[e setTriangleFillMode:MTLTriangleFillModeFill];[e setDepthBias:0 slopeScale:0 clamp:0];
 	[e setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-	const auto count=impl->frame->instances->values.size();
+	const auto count=impl->frame->instances->Size();
 	const bool indexed=impl->indicesG01&&[e respondsToSelector:@selector(drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferLength:instanceCount:baseVertex:baseInstance:)];
 	if(count){
 		if(indexed){
@@ -101,7 +112,7 @@ struct GroundDecalGPU::Impl {
 	std::array<id<MTLSamplerState>,6> samplers{};
 	__strong id<MTLDepthStencilState> depth=nil;
 	std::shared_ptr<AtlasResources> atlas;
-	std::shared_ptr<InstanceResources> instances;
+	InstancePool instances;
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool atlas,bool high,uint32_t samples,bool validation,double& milliseconds,bool shadows=false){
 		const std::pair<bool,bool> libraryKey{high,shadows};
 		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
@@ -121,7 +132,7 @@ struct GroundDecalGPU::Impl {
 };
 GroundDecalGPU::GroundDecalGPU():impl(std::make_unique<Impl>()){}
 GroundDecalGPU::~GroundDecalGPU()=default;
-void GroundDecalGPU::ClearResources(){impl->atlas.reset();impl->instances.reset();}
+void GroundDecalGPU::ClearResources(){impl->atlas.reset();impl->instances.Clear();}
 void GroundDecalGPU::Initialize(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,uint32_t samples,bool validation,double& milliseconds)
 {
  Require(samples&&samples<=32&&(samples&(samples-1))==0&&[l.Device() supportsTextureSampleCount:samples],"Original ground decal initialization sample count invalid");
@@ -157,17 +168,28 @@ std::unique_ptr<PreparedGroundDecal> GroundDecalGPU::Prepare(RuntimeLease& l,std
 		for(size_t i=0;i<p->atlas->draws.size();++i){const auto& draw=p->atlas->draws[i];const auto& src=*p->atlas->source->sources[draw.source];AtlasUniforms u{draw.sourceClamp,{src.flipV,0,0,0}};
 			auto b=Buffer(l,&u,sizeof(u),"Original decal atlas source clamp");auto args=Arguments(l,2,1,1);[args setAddress:p->atlas->vertices.gpuAddress+i*6*sizeof(NativeGroundDecalAtlasVertex) atIndex:0];[args setAddress:b.gpuAddress atIndex:1];[args setTexture:p->atlas->inputs[draw.source].gpuResourceID atIndex:0];[args setSamplerState:impl->samplers[2].gpuResourceID atIndex:0];p->atlasDraws.push_back({draw.page,draw.level,args});}
 	}
-	if(!impl->instances||impl->instances->source!=frame->instances){auto r=std::make_shared<InstanceResources>();r->source=frame->instances;NativeGroundDecalInstance empty{};const auto& v=frame->instances->values;r->buffer=Buffer(l,v.empty()?&empty:v.data(),v.empty()?sizeof(empty):v.size()*sizeof(v[0]),"Original ground decal immutable instance revision");impl->instances=r;}
-	p->instances=impl->instances;l.AddAllocation(p->instances->buffer);
+	p->instances=impl->instances.Acquire(frame->instances,l.ContextIdentity(),
+		[&](size_t bytes) {
+			InstanceBuffer value;
+			value.buffer=[l.Device() newBufferWithLength:bytes options:MTLResourceStorageModeShared];
+			Require(value.buffer&&value.buffer.contents,"Cannot allocate original ground decal instance pages");
+			value.buffer.label=@"Original ground decal paged instance slot";
+			return value;
+		},
+		[](InstanceBuffer& value,size_t offset,const NativeGroundDecalInstance* rows,size_t bytes) {
+			std::memcpy(static_cast<std::byte*>(value.buffer.contents)+offset,rows,bytes);
+		});
+	auto instanceLifetime=[M4GroundDecalSlotLifetime new];instanceLifetime->owner=p->instances;l.Retain(instanceLifetime);
+	l.AddAllocation(p->instances->value.buffer);
 	const std::array<GroundDecalSceneImage,6> sources={h,n,m,images.shadowDepth,images.shadowColor,d};uint32_t flips=0;
 	for(size_t i=0;i<sources.size();++i){flips|=uint32_t(sources[i].flipV)<<i;if(sources[i].texture)l.AddAllocation(sources[i].texture);}
-	const auto uniforms=MakeNativeGroundDecalUniforms(*frame,images.fragmentToLogical,flips);auto ub=Buffer(l,&uniforms,sizeof(uniforms),"Original ground decal matrices and material");p->arguments=Arguments(l,2,7,6);[p->arguments setAddress:p->instances->buffer.gpuAddress atIndex:0];[p->arguments setAddress:ub.gpuAddress atIndex:1];
+	const auto uniforms=MakeNativeGroundDecalUniforms(*frame,images.fragmentToLogical,flips);auto ub=Buffer(l,&uniforms,sizeof(uniforms),"Original ground decal matrices and material");p->arguments=Arguments(l,2,7,6);[p->arguments setAddress:p->instances->value.buffer.gpuAddress atIndex:0];[p->arguments setAddress:ub.gpuAddress atIndex:1];
 	for(size_t i=0;i<sources.size();++i)if(sources[i].texture)[p->arguments setTexture:sources[i].texture.gpuResourceID atIndex:i];[p->arguments setTexture:p->atlas->texture.gpuResourceID atIndex:6];for(size_t i=0;i<impl->samplers.size();++i)[p->arguments setSamplerState:impl->samplers[i].gpuResourceID atIndex:i];
 	static const bool indexG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01");return v&&std::strcmp(v,"1")==0;}();
 	static const bool probeG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE");return v&&std::strcmp(v,"1")==0;}();
 	p->probeG01=probeG01;
-	if(probeG01)p->probeReasonG01=!indexG01?1u:frame->sampleCount!=1?2u:frame->instances->values.empty()?3u:0u;
-	if(GroundDecalIndexEligibleG01(indexG01,frame->sampleCount,frame->instances->values.size())){
+	if(probeG01)p->probeReasonG01=!indexG01?1u:frame->sampleCount!=1?2u:(frame->instances->Size()==0)?3u:0u;
+	if(GroundDecalIndexEligibleG01(indexG01,frame->sampleCount,frame->instances->Size())){
 		// Allocation nil is an optional optimization miss before encoding.
 		// Lease/state failures still propagate: never hide a residency error.
 		auto indices=Buffer(l,GroundDecalIndicesG01.data(),GroundDecalIndexBytesG01,"Ground decal G01 immutable cube indices",true);

@@ -1,0 +1,418 @@
+diff --git a/engine/rts/Rendering/Backend/NativeGroundDecalData.cpp b/engine/rts/Rendering/Backend/NativeGroundDecalData.cpp
+index 656b756..08785fd 100644
+--- a/engine/rts/Rendering/Backend/NativeGroundDecalData.cpp
++++ b/engine/rts/Rendering/Backend/NativeGroundDecalData.cpp
+@@ -52,7 +52,7 @@ std::vector<NativeGroundDecalAtlasDraw> MakeNativeGroundDecalAtlasDraws(const Na
+ void ValidateNativeGroundDecalFrame(const NativeGroundDecalFrame& f)
+ {
+ 	Check(f.atlas&&f.atlas->generation&&f.instances&&f.instances->revision,"Original ground decal immutable resources unavailable");
+-	Check(f.instances->values.size()<=1'000'000,"Original ground decal instance count invalid");
++	f.instances->Validate();
+ 	Finite(f.viewProjection);Finite(f.inverseViewProjection);Finite(f.shadow);Finite(f.mapDims);Finite(f.mapDimsPO2);Finite(f.groundAmbient);Finite(f.groundDiffuse);Finite(f.sunDirection);Finite(f.waterMin);Finite(f.waterBase);Finite(f.waterAbsorb);
+ 	Check(f.mapDims[0]>0&&f.mapDims[1]>0&&f.viewport[2]>0&&f.viewport[3]>0&&std::isfinite(f.adjustedFrame),"Original ground decal frame extent invalid");
+ 	Check(f.sampleCount&&std::has_single_bit(f.sampleCount)&&f.sampleCount<=32&&(!f.highQuality||f.sampleCount>1),"Original ground decal sample-shading contract invalid");
+diff --git a/engine/rts/Rendering/Backend/NativeGroundDecalData.h b/engine/rts/Rendering/Backend/NativeGroundDecalData.h
+index ed328db..ee5b11f 100644
+--- a/engine/rts/Rendering/Backend/NativeGroundDecalData.h
++++ b/engine/rts/Rendering/Backend/NativeGroundDecalData.h
+@@ -3,6 +3,7 @@
+ #include "Rendering/Backend/WorldFrameData.h"
+ #include <atomic>
+ #include <span>
++#include "NativeGroundDecalPages.h"
+ 
+ namespace rendering {
+ // Byte-for-byte GroundDecal attribute stream, including original unused user
+@@ -15,10 +16,7 @@ struct NativeGroundDecalInstance {
+ 	std::array<std::array<float,4>,2> userDefined{};
+ };
+ static_assert(sizeof(NativeGroundDecalInstance)==192);
+-struct NativeGroundDecalInstances {
+-	uint64_t revision=0;
+-	std::vector<NativeGroundDecalInstance> values;
+-};
++using NativeGroundDecalInstances = NativeGroundDecalSnapshot<NativeGroundDecalInstance>;
+ struct NativeGroundDecalAtlasEntry {
+ 	uint32_t source=0, page=0;
+ 	std::array<int32_t,4> rectangle{}; // Original inclusive allocator pixels.
+diff --git a/engine/rts/Rendering/Backend/NativeGroundDecalPages.h b/engine/rts/Rendering/Backend/NativeGroundDecalPages.h
+new file mode 100644
+index 0000000..54a6a68
+--- /dev/null
++++ b/engine/rts/Rendering/Backend/NativeGroundDecalPages.h
+@@ -0,0 +1,118 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++#include <algorithm>
++#include <array>
++#include <cstddef>
++#include <cstdint>
++#include <cstring>
++#include <memory>
++#include <span>
++#include <stdexcept>
++#include <type_traits>
++#include <vector>
++#include <utility>
++
++namespace rendering {
++struct NativeGroundDecalRange { size_t first, count; };
++// Immutable CPU pages preserve every version without copying the whole row
++// vector. 64 rows is a bounded copy granularity, not a performance-tuned value.
++template<class Row> struct NativeGroundDecalSnapshot {
++ static_assert(std::is_trivially_copyable_v<Row>);
++ static constexpr size_t RowsPerPage = 64;
++ using Page = std::array<Row, RowsPerPage>;
++ uint64_t revision = 0;
++ size_t rowCount = 0;
++ std::vector<std::shared_ptr<const Page>> pages;
++ size_t Size() const { return rowCount; }
++ void Validate() const {
++  if (!revision || rowCount > 1'000'000 || pages.size() != (rowCount + RowsPerPage - 1) / RowsPerPage)
++   throw std::invalid_argument("Ground decal page extent/revision differs");
++  for (const auto& page : pages) if (!page) throw std::invalid_argument("Ground decal page missing");
++ }
++};
++
++// rows is the original byte-compatible GroundDecal stream. Dirty flags are
++// cleared by the producer only after this complete immutable result exists.
++template<class Row>
++std::shared_ptr<const NativeGroundDecalSnapshot<Row>> CaptureNativeGroundDecalPages(
++ const std::shared_ptr<const NativeGroundDecalSnapshot<Row>>& previous,
++ std::span<const std::byte> rows, std::span<const NativeGroundDecalRange> dirty, uint64_t revision)
++{
++ using Snapshot = NativeGroundDecalSnapshot<Row>;
++ if (!revision || rows.size() % sizeof(Row) || rows.size() / sizeof(Row) > 1'000'000)
++  throw std::invalid_argument("Ground decal capture extent/revision differs");
++ const size_t count = rows.size() / sizeof(Row), pageSize = Snapshot::RowsPerPage;
++ for (const auto& r : dirty) if (r.first > count || r.count > count - r.first)
++  throw std::invalid_argument("Ground decal dirty range exceeds rows");
++ const bool replace = !previous || previous->Size() != count;
++ if (previous) previous->Validate();
++ auto output = std::make_shared<Snapshot>();
++ output->revision = revision; output->rowCount = count;
++ if (replace) output->pages.resize((count + pageSize - 1) / pageSize);
++ else output->pages = previous->pages;
++ // Mutable owners exist only while building this version. Non-dirty bytes
++ // come from the old page, exactly as in the original snapshot contract.
++ std::vector<std::shared_ptr<typename Snapshot::Page>> writable(output->pages.size());
++ auto write = [&](size_t first, size_t n) {
++  while (n) {
++   const size_t p = first / pageSize, within = first % pageSize;
++   const size_t take = std::min(n, pageSize - within);
++   if (!writable[p]) {
++    writable[p] = replace ? std::make_shared<typename Snapshot::Page>() :
++     std::make_shared<typename Snapshot::Page>(*previous->pages[p]);
++    output->pages[p] = writable[p];
++   }
++   std::memcpy(writable[p]->data() + within, rows.data() + first * sizeof(Row), take * sizeof(Row));
++   first += take; n -= take;
++  }
++ };
++ if (replace) write(0, count);
++ else for (const auto& r : dirty) write(r.first, r.count);
++ return output;
++}
++
++// Caller serializes access, as for the owning GroundDecalGPU cache. A packet
++// AND its RuntimeLease pin the returned Slot until actual submission retirement.
++// Extra simultaneous generations are transient; pinned storage is never written.
++template<class Row, class Value> class NativeGroundDecalBufferPool {
++public:
++ using Snapshot = NativeGroundDecalSnapshot<Row>;
++ struct Slot { std::shared_ptr<const Snapshot> source; const void* context; size_t rows; Value value; };
++ using Pin = std::shared_ptr<Slot>;
++ template<class Allocate, class Copy>
++ Pin Acquire(const std::shared_ptr<const Snapshot>& source, const void* context, Allocate&& allocate, Copy&& copy) {
++  if (!source) throw std::invalid_argument("Ground decal pool source absent");
++  source->Validate();
++  for (const auto& slot : slots)
++   if (slot && slot->context == context && slot->source == source) return slot;
++  size_t reuse = slots.size(), free = slots.size();
++  for (size_t i = 0; i < slots.size(); ++i) {
++   if (!slots[i]) { if (free == slots.size()) free = i; continue; }
++   if (slots[i].use_count() != 1) continue;
++   if (free == slots.size()) free = i;
++   if (slots[i]->context == context && slots[i]->rows == source->Size()) { reuse = i; break; }
++  }
++  Pin slot;
++  if (reuse != slots.size()) slot = slots[reuse];
++  else {
++   // Finish allocation before constructing a slot or touching cache state.
++   auto value = allocate(std::max(size_t{1}, source->Size()) * sizeof(Row));
++   slot = std::make_shared<Slot>(Slot{{}, context, source->Size(), std::move(value)});
++  }
++  // Keep the old page identities for arbitrary skipped/reordered revisions.
++  // Invalidate before writing: a failed copy cannot masquerade as old bytes.
++  auto previous = std::move(slot->source);
++  for (size_t p = 0; p < source->pages.size(); ++p) {
++   if (previous && previous->pages[p] == source->pages[p]) continue;
++   const size_t first = p * Snapshot::RowsPerPage;
++   copy(slot->value, first * sizeof(Row), source->pages[p]->data(), std::min(Snapshot::RowsPerPage, source->Size() - first) * sizeof(Row));
++  }
++  slot->source = source;
++  if (reuse == slots.size() && free != slots.size()) slots[free] = slot;
++  return slot;
++ }
++ void Clear() { slots = {}; }
++private:
++ std::array<Pin, 2> slots{};
++};
++}
+diff --git a/engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp b/engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp
+index 5e8711f..bb238ed 100644
+--- a/engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp
++++ b/engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp
+@@ -72,23 +72,17 @@ CHECK_ATTRIBUTE(forcedNormal, createParams4); CHECK_ATTRIBUTE(infoRep, createPar
+ std::shared_ptr<const NativeGroundDecalInstances> NativeGroundDecalInstanceCapture::Capture(std::span<const GroundDecal> rows, UpdateList& updates)
+ {
+ 	Check(rows.size() == updates.Size(), "Original ground decal dirty flags differ from instance count");
+-	const bool replace = !snapshot || snapshot->values.size() != rows.size();
++	const bool replace = !snapshot || snapshot->Size() != rows.size();
+ 	if (!replace && !updates.NeedUpdate()) return snapshot;
+-	auto output = std::make_shared<NativeGroundDecalInstances>();
+-	if (replace) {
+-		output->values.resize(rows.size());
+-		if (!rows.empty()) std::memcpy(output->values.data(), rows.data(), rows.size_bytes());
+-	} else {
+-		output->values = snapshot->values;
+-		for (auto range = updates.GetNext(); range; range = updates.GetNext(range)) {
+-			const auto [offset, count] = updates.GetOffsetAndSize(*range);
+-			Check(offset <= rows.size() && count <= rows.size() - offset, "Original ground decal dirty range exceeds instances");
+-			if (count) std::memcpy(output->values.data() + offset, rows.data() + offset, count * sizeof(GroundDecal));
+-		}
++	std::vector<NativeGroundDecalRange> dirty;
++	for (auto range = updates.GetNext(); range; range = updates.GetNext(range)) {
++		const auto [offset, count] = updates.GetOffsetAndSize(*range);
++		dirty.push_back({offset, count});
+ 	}
+-	output->revision = NextNativeGroundDecalResourceRevision();
+-	snapshot = output;
+-	updates.ResetNeedUpdateAll(); // The immutable upload revision now owns every dirty byte.
++	auto output = CaptureNativeGroundDecalPages<NativeGroundDecalInstance>(snapshot,
++		std::as_bytes(rows), dirty, NextNativeGroundDecalResourceRevision());
++	snapshot = std::move(output);
++	updates.ResetNeedUpdateAll(); // Every dirty page now belongs to this immutable revision.
+ 	return snapshot;
+ }
+ 
+diff --git a/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm b/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm
+index c3d7b02..e97ad84 100644
+--- a/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm
++++ b/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm
+@@ -11,6 +11,16 @@
+ #include <tuple>
+ #include <utility>
+ 
++// Retain the mutable slot, not just its MTLBuffer, across lease failures and
++// deferred retirement. Same lifetime wrapper pattern as SSAO/CUS storage.
++@interface M4GroundDecalSlotLifetime : NSObject {
++@public
++ std::shared_ptr<const void> owner;
++}
++@end
++@implementation M4GroundDecalSlotLifetime
++@end
++
+ namespace rendering::metal4 {
+ namespace {
+ id<MTLBuffer> Buffer(RuntimeLease& l,const void* p,size_t n,const char* label,bool optional=false){Require(p&&n,"Original decal buffer empty");auto b=[l.Device() newBufferWithBytes:p length:n options:MTLResourceStorageModeShared];if(optional&&!b)return nil;Require(b!=nil,"Cannot allocate original decal buffer");b.label=String(label);l.AddAllocation(b);return b;}
+@@ -24,14 +34,15 @@ struct AtlasResources {
+ 	std::vector<NativeGroundDecalAtlasDraw> draws;
+ 	bool ready=false;
+ };
+-struct InstanceResources {std::shared_ptr<const NativeGroundDecalInstances> source;__strong id<MTLBuffer> buffer=nil;};
++struct InstanceBuffer { __strong id<MTLBuffer> buffer=nil; };
++using InstancePool = NativeGroundDecalBufferPool<NativeGroundDecalInstance, InstanceBuffer>;
+ struct AtlasPassDraw {uint32_t page=0,level=0;__strong id<MTL4ArgumentTable> arguments=nil;};
+ struct alignas(16) AtlasUniforms {std::array<float,4> clamp{};std::array<uint32_t,4> flags{};};
+ }
+ struct PreparedGroundDecal::Impl {
+ 	std::shared_ptr<const NativeGroundDecalFrame> frame;
+ 	std::shared_ptr<AtlasResources> atlas;
+-	std::shared_ptr<InstanceResources> instances;
++	InstancePool::Pin instances;
+ 	__strong id<MTLRenderPipelineState> surfacePipeline=nil,atlasPipeline=nil;
+ 	__strong id<MTLDepthStencilState> depth=nil;
+ 	__strong id<MTL4ArgumentTable> arguments=nil;
+@@ -69,7 +80,7 @@ void PreparedGroundDecal::Encode(id<MTL4RenderCommandEncoder> e)
+ 	Require(impl->dependenciesEncoded&&!impl->encoded,"Original ground decal pass order differs");
+ 	[e setRenderPipelineState:impl->surfacePipeline];[e setDepthStencilState:impl->depth];[e setFrontFacingWinding:MTLWindingCounterClockwise];[e setCullMode:MTLCullModeBack];[e setDepthClipMode:MTLDepthClipModeClip];[e setTriangleFillMode:MTLTriangleFillModeFill];[e setDepthBias:0 slopeScale:0 clamp:0];
+ 	[e setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+-	const auto count=impl->frame->instances->values.size();
++	const auto count=impl->frame->instances->Size();
+ 	const bool indexed=impl->indicesG01&&[e respondsToSelector:@selector(drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferLength:instanceCount:baseVertex:baseInstance:)];
+ 	if(count){
+ 		if(indexed){
+@@ -101,7 +112,7 @@ struct GroundDecalGPU::Impl {
+ 	std::array<id<MTLSamplerState>,6> samplers{};
+ 	__strong id<MTLDepthStencilState> depth=nil;
+ 	std::shared_ptr<AtlasResources> atlas;
+-	std::shared_ptr<InstanceResources> instances;
++	InstancePool instances;
+ 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool atlas,bool high,uint32_t samples,bool validation,double& milliseconds,bool shadows=false){
+ 		const std::pair<bool,bool> libraryKey{high,shadows};
+ 		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
+@@ -121,7 +132,7 @@ struct GroundDecalGPU::Impl {
+ };
+ GroundDecalGPU::GroundDecalGPU():impl(std::make_unique<Impl>()){}
+ GroundDecalGPU::~GroundDecalGPU()=default;
+-void GroundDecalGPU::ClearResources(){impl->atlas.reset();impl->instances.reset();}
++void GroundDecalGPU::ClearResources(){impl->atlas.reset();impl->instances.Clear();}
+ void GroundDecalGPU::Initialize(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,uint32_t samples,bool validation,double& milliseconds)
+ {
+  Require(samples&&samples<=32&&(samples&(samples-1))==0&&[l.Device() supportsTextureSampleCount:samples],"Original ground decal initialization sample count invalid");
+@@ -157,17 +168,28 @@ std::unique_ptr<PreparedGroundDecal> GroundDecalGPU::Prepare(RuntimeLease& l,std
+ 		for(size_t i=0;i<p->atlas->draws.size();++i){const auto& draw=p->atlas->draws[i];const auto& src=*p->atlas->source->sources[draw.source];AtlasUniforms u{draw.sourceClamp,{src.flipV,0,0,0}};
+ 			auto b=Buffer(l,&u,sizeof(u),"Original decal atlas source clamp");auto args=Arguments(l,2,1,1);[args setAddress:p->atlas->vertices.gpuAddress+i*6*sizeof(NativeGroundDecalAtlasVertex) atIndex:0];[args setAddress:b.gpuAddress atIndex:1];[args setTexture:p->atlas->inputs[draw.source].gpuResourceID atIndex:0];[args setSamplerState:impl->samplers[2].gpuResourceID atIndex:0];p->atlasDraws.push_back({draw.page,draw.level,args});}
+ 	}
+-	if(!impl->instances||impl->instances->source!=frame->instances){auto r=std::make_shared<InstanceResources>();r->source=frame->instances;NativeGroundDecalInstance empty{};const auto& v=frame->instances->values;r->buffer=Buffer(l,v.empty()?&empty:v.data(),v.empty()?sizeof(empty):v.size()*sizeof(v[0]),"Original ground decal immutable instance revision");impl->instances=r;}
+-	p->instances=impl->instances;l.AddAllocation(p->instances->buffer);
++	p->instances=impl->instances.Acquire(frame->instances,l.ContextIdentity(),
++		[&](size_t bytes) {
++			InstanceBuffer value;
++			value.buffer=[l.Device() newBufferWithLength:bytes options:MTLResourceStorageModeShared];
++			Require(value.buffer&&value.buffer.contents,"Cannot allocate original ground decal instance pages");
++			value.buffer.label=@"Original ground decal paged instance slot";
++			return value;
++		},
++		[](InstanceBuffer& value,size_t offset,const NativeGroundDecalInstance* rows,size_t bytes) {
++			std::memcpy(static_cast<std::byte*>(value.buffer.contents)+offset,rows,bytes);
++		});
++	auto instanceLifetime=[M4GroundDecalSlotLifetime new];instanceLifetime->owner=p->instances;l.Retain(instanceLifetime);
++	l.AddAllocation(p->instances->value.buffer);
+ 	const std::array<GroundDecalSceneImage,6> sources={h,n,m,images.shadowDepth,images.shadowColor,d};uint32_t flips=0;
+ 	for(size_t i=0;i<sources.size();++i){flips|=uint32_t(sources[i].flipV)<<i;if(sources[i].texture)l.AddAllocation(sources[i].texture);}
+-	const auto uniforms=MakeNativeGroundDecalUniforms(*frame,images.fragmentToLogical,flips);auto ub=Buffer(l,&uniforms,sizeof(uniforms),"Original ground decal matrices and material");p->arguments=Arguments(l,2,7,6);[p->arguments setAddress:p->instances->buffer.gpuAddress atIndex:0];[p->arguments setAddress:ub.gpuAddress atIndex:1];
++	const auto uniforms=MakeNativeGroundDecalUniforms(*frame,images.fragmentToLogical,flips);auto ub=Buffer(l,&uniforms,sizeof(uniforms),"Original ground decal matrices and material");p->arguments=Arguments(l,2,7,6);[p->arguments setAddress:p->instances->value.buffer.gpuAddress atIndex:0];[p->arguments setAddress:ub.gpuAddress atIndex:1];
+ 	for(size_t i=0;i<sources.size();++i)if(sources[i].texture)[p->arguments setTexture:sources[i].texture.gpuResourceID atIndex:i];[p->arguments setTexture:p->atlas->texture.gpuResourceID atIndex:6];for(size_t i=0;i<impl->samplers.size();++i)[p->arguments setSamplerState:impl->samplers[i].gpuResourceID atIndex:i];
+ 	static const bool indexG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01");return v&&std::strcmp(v,"1")==0;}();
+ 	static const bool probeG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE");return v&&std::strcmp(v,"1")==0;}();
+ 	p->probeG01=probeG01;
+-	if(probeG01)p->probeReasonG01=!indexG01?1u:frame->sampleCount!=1?2u:frame->instances->values.empty()?3u:0u;
+-	if(GroundDecalIndexEligibleG01(indexG01,frame->sampleCount,frame->instances->values.size())){
++	if(probeG01)p->probeReasonG01=!indexG01?1u:frame->sampleCount!=1?2u:(frame->instances->Size()==0)?3u:0u;
++	if(GroundDecalIndexEligibleG01(indexG01,frame->sampleCount,frame->instances->Size())){
+ 		// Allocation nil is an optional optimization miss before encoding.
+ 		// Lease/state failures still propagate: never hide a residency error.
+ 		auto indices=Buffer(l,GroundDecalIndicesG01.data(),GroundDecalIndexBytesG01,"Ground decal G01 immutable cube indices",true);
+diff --git a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm b/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+index b129b34..29b2d97 100644
+--- a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -4543,7 +4543,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
+    images.fragmentToLogical={float(logicalWidth)/result.surface.renderWidth,-float(logicalHeight)/result.surface.renderHeight,0,float(logicalHeight)};
+    groundDecals=impl->groundDecalGPU.Prepare(lease,frame.groundDecals,images,layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,
+     [&](RuntimeLease& lease,std::shared_ptr<const WorldTexture> source){return impl->Texture(lease,source);});
+-   result.groundDecalInstances=uint32_t(decals.instances->values.size());result.groundDecalAtlasDraws=groundDecals->AtlasDrawCount();
++   result.groundDecalInstances=uint32_t(decals.instances->Size());result.groundDecalAtlasDraws=groundDecals->AtlasDrawCount();
+   }
+   // World overlays and screen/RTT preparation share this named-image
+ 		// cache. Collect only after every family has prepared its images.
+diff --git a/engine/tools/metal4-contracts/TestGroundDecalPages.cpp b/engine/tools/metal4-contracts/TestGroundDecalPages.cpp
+new file mode 100644
+index 0000000..201df8f
+--- /dev/null
++++ b/engine/tools/metal4-contracts/TestGroundDecalPages.cpp
+@@ -0,0 +1,101 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#include "Rendering/Backend/NativeGroundDecalPages.h"
++#include <cassert>
++#include <iostream>
++#include <random>
++#include <functional>
++using namespace rendering;
++struct Row { std::array<unsigned char,192> bytes{}; };
++using Snapshot=NativeGroundDecalSnapshot<Row>;
++using Source=std::shared_ptr<const Snapshot>;
++using Buffer=std::vector<std::byte>;
++using Pool=NativeGroundDecalBufferPool<Row,Buffer>;
++size_t checks=0, allocations=0, copied=0;
++int contextA,contextB;
++auto allocate=[](size_t bytes){ ++allocations; return Buffer(bytes,std::byte{0xCD}); };
++auto copy=[](Buffer& target,size_t offset,const Row* rows,size_t bytes){ copied+=bytes; std::memcpy(target.data()+offset,rows,bytes); };
++Source capture(Source old,const std::vector<Row>& rows,std::vector<NativeGroundDecalRange> ranges,uint64_t revision) {
++ return CaptureNativeGroundDecalPages<Row>(old,std::as_bytes(std::span(rows)),ranges,revision);
++}
++void verify(const Pool::Pin& pin,const std::vector<Row>& rows) {
++ assert(pin->source->Size()==rows.size());
++ if(!rows.empty()) assert(std::memcmp(pin->value.data(),rows.data(),rows.size()*sizeof(Row))==0);
++ ++checks;
++}
++void throws(const std::function<void()>& fn) {bool caught=false;try{fn();}catch(const std::exception&){caught=true;}assert(caught);++checks;}
++int main() {
++ Pool pool; std::vector<Row> rows(193); for(size_t i=0;i<rows.size();++i) rows[i].bytes.fill(i%251);
++ auto r1=capture({},rows,{},7); assert(r1->pages.size()==4); auto a=pool.Acquire(r1,&contextA,allocate,copy);verify(a,rows);
++ auto baseline=rows;auto saved=a->value;
++ auto exact=pool.Acquire(r1,&contextA,allocate,copy);assert(exact==a);exact.reset();
++ // R2 changes page zero. R3 changes page one. R1 remains pinned and immutable.
++ rows[0].bytes.fill(33);auto r2=capture(r1,rows,{{0,1}},11);auto rows2=rows;
++ rows[64].bytes.fill(77);auto r3=capture(r2,rows,{{64,1}},19);
++ assert(r1->pages[0]!=r2->pages[0]&&r1->pages[1]==r2->pages[1]);
++ assert(r2->pages[0]==r3->pages[0]&&r2->pages[1]!=r3->pages[1]);
++ auto b=pool.Acquire(r3,&contextA,allocate,copy);verify(b,rows);assert(a->value==saved);
++ // Both retained slots pinned: older R2 receives transient storage, not overwrite.
++ auto transient=pool.Acquire(r2,&contextA,allocate,copy);verify(transient,rows2);assert(transient!=a&&transient!=b);assert(a->value==saved);
++ transient.reset();a.reset();b.reset();
++ // Slot containing R1 is now sole-owned: arbitrary R1 -> R3 comparison copies
++ // BOTH changed pages (24,576 bytes), not merely R3's latest dirty page.
++ copied=0;auto c=pool.Acquire(r3,&contextA,allocate,copy); // exact R3 retained
++ verify(c,rows);assert(copied==0);c.reset();
++ rows[130].bytes.fill(99);auto r4=capture(r3,rows,{{130,1}},31);
++ copied=0;auto d=pool.Acquire(r4,&contextA,allocate,copy);verify(d,rows);
++ assert(copied==3*64*sizeof(Row));d.reset();
++ // Reordered old revision restores original rows, including all later changes.
++ auto old=pool.Acquire(r1,&contextA,allocate,copy);verify(old,baseline);old.reset();
++ // Single changed page reuses compatible free slot; no buffer allocation.
++ Pool single;auto p=single.Acquire(r1,&contextA,allocate,copy);p.reset();copied=0;auto n=allocations;
++ p=single.Acquire(r2,&contextA,allocate,copy);verify(p,rows2);assert(allocations==n&&copied==64*sizeof(Row));p.reset();
++ // Preserve unmarked rows even inside a dirty page, matching old capture.
++ auto unmarked=baseline;unmarked[0].bytes.fill(1);unmarked[1].bytes.fill(2);
++ auto markedOnly=capture(r1,unmarked,{{0,1}},37);auto expected=baseline;expected[0]=unmarked[0];
++ Pool marked;auto mp=marked.Acquire(markedOnly,&contextA,allocate,copy);verify(mp,expected);mp.reset();
++ // Range crossing a page boundary and final partial-page row.
++ unmarked=baseline;unmarked[63].bytes.fill(4);unmarked[64].bytes.fill(5);unmarked[192].bytes.fill(6);
++ auto crossing=capture(r1,unmarked,{{63,2},{192,1}},39);
++ mp=marked.Acquire(crossing,&contextA,allocate,copy);verify(mp,unmarked);mp.reset();
++ // A lease's opaque pin must prevent reuse after the prepared packet dies.
++ Pool leasePool;auto packet=leasePool.Acquire(r1,&contextA,allocate,copy);
++ std::shared_ptr<const void> leasePin=packet;auto* pinnedAddress=packet.get();packet.reset();
++ auto nextPacket=leasePool.Acquire(r2,&contextA,allocate,copy);assert(nextPacket.get()!=pinnedAddress);
++ auto restored=std::static_pointer_cast<const Pool::Slot>(leasePin);
++ assert(std::memcmp(restored->value.data(),baseline.data(),baseline.size()*sizeof(Row))==0);++checks;
++ leasePool.Clear();assert(restored->source==r1);restored.reset();leasePin.reset();nextPacket.reset();
++ // Context changes never mutate the old context's storage.
++ auto oldContext=single.Acquire(r2,&contextA,allocate,copy);auto other=single.Acquire(r2,&contextB,allocate,copy);
++ assert(oldContext!=other);verify(oldContext,rows2);verify(other,rows2);single.Clear();verify(oldContext,rows2);other.reset();oldContext.reset();
++ // Failed partial copy invalidates source; subsequent acquire must fully repair.
++ Pool failed;auto f=failed.Acquire(r1,&contextA,allocate,copy);f.reset();
++ throws([&]{failed.Acquire(r3,&contextA,allocate,[](Buffer& v,size_t off,const Row* src,size_t bytes){std::memcpy(v.data()+off,src,bytes);throw std::runtime_error("copy injection");});});
++ copied=0;f=failed.Acquire(r1,&contextA,allocate,copy);verify(f,baseline);assert(copied==baseline.size()*sizeof(Row));f.reset();
++ // Allocation failure changes neither cache nor its pinned bytes.
++ f=failed.Acquire(r1,&contextA,allocate,copy);
++ throws([&]{failed.Acquire(r2,&contextA,[](size_t)->Buffer{throw std::bad_alloc();},copy);});verify(f,baseline);f.reset();
++ // Bad ranges/revision fail before modifying original snapshot.
++ throws([&]{capture(r1,baseline,{{baseline.size(),1}},41);});throws([&]{capture(r1,baseline,{{0,1}},0);});
++ auto malformed=std::make_shared<Snapshot>(*r1);malformed->pages[0].reset();throws([&]{pool.Acquire(malformed,&contextA,allocate,copy);});
++ // Growth, compaction/reordering, shrink and same-count replacement.
++ auto changed=baseline;changed.push_back(Row{});auto grown=capture(r1,changed,{{193,1}},51);
++ auto growPin=pool.Acquire(grown,&contextA,allocate,copy);verify(growPin,changed);growPin.reset();
++ changed.erase(changed.begin()+3);std::reverse(changed.begin(),changed.end());auto compact=capture(grown,changed,{{0,changed.size()}},57);
++ auto compactPin=pool.Acquire(compact,&contextA,allocate,copy);verify(compactPin,changed);compactPin.reset();
++ auto reset=capture({},baseline,{},63);auto resetPin=pool.Acquire(reset,&contextA,allocate,copy);verify(resetPin,baseline);resetPin.reset();
++ auto empty=capture(reset,{}, {},71);auto emptyPin=pool.Acquire(empty,&contextA,allocate,copy);verify(emptyPin,{});assert(emptyPin->value.size()==sizeof(Row));emptyPin.reset();
++ auto afterEmpty=capture(empty,baseline,{},73);auto afterPin=pool.Acquire(afterEmpty,&contextA,allocate,copy);verify(afterPin,baseline);afterPin.reset();
++ // Random capture/skip/reordered submissions with pinned historical snapshots.
++ struct Saved {Source source;std::vector<Row> rows;};std::vector<Saved> history;std::vector<std::pair<Pool::Pin,std::vector<Row>>> pending;
++ std::mt19937 rng(0xDECA);Source current;std::vector<Row> currentRows(257);Pool random;
++ for(uint64_t i=1;i<=2000;++i) {
++  std::vector<NativeGroundDecalRange> dirty;
++  if(i%17==0) {currentRows.resize(rng()%350);for(auto& row:currentRows)row.bytes.fill(rng());dirty.push_back({0,currentRows.size()});}
++  else if(!currentRows.empty()) {size_t at=rng()%currentRows.size();currentRows[at].bytes.fill(rng());dirty.push_back({at,1});}
++  current=capture(current,currentRows,dirty,i*3);history.push_back({current,currentRows});
++  if(i%3) {size_t pick=(i%5==0)?rng()%history.size():history.size()-1;const auto& src=history[pick];auto pin=random.Acquire(src.source,&contextA,allocate,copy);verify(pin,src.rows);pending.push_back({std::move(pin),src.rows});}
++  for(const auto& [pin,expected]:pending)verify(pin,expected);
++  if(pending.size()>5)pending.erase(pending.begin(),pending.begin()+3);
++ }
++ std::cout<<"PASS GroundDecalPages checks="<<checks<<" randomized_revisions=2000\n";
++}

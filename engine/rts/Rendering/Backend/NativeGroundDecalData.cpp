@@ -52,7 +52,7 @@ std::vector<NativeGroundDecalAtlasDraw> MakeNativeGroundDecalAtlasDraws(const Na
 void ValidateNativeGroundDecalFrame(const NativeGroundDecalFrame& f)
 {
 	Check(f.atlas&&f.atlas->generation&&f.instances&&f.instances->revision,"Original ground decal immutable resources unavailable");
-	Check(f.instances->values.size()<=1'000'000,"Original ground decal instance count invalid");
+	f.instances->Validate();
 	Finite(f.viewProjection);Finite(f.inverseViewProjection);Finite(f.shadow);Finite(f.mapDims);Finite(f.mapDimsPO2);Finite(f.groundAmbient);Finite(f.groundDiffuse);Finite(f.sunDirection);Finite(f.waterMin);Finite(f.waterBase);Finite(f.waterAbsorb);
 	Check(f.mapDims[0]>0&&f.mapDims[1]>0&&f.viewport[2]>0&&f.viewport[3]>0&&std::isfinite(f.adjustedFrame),"Original ground decal frame extent invalid");
 	Check(f.sampleCount&&std::has_single_bit(f.sampleCount)&&f.sampleCount<=32&&(!f.highQuality||f.sampleCount>1),"Original ground decal sample-shading contract invalid");

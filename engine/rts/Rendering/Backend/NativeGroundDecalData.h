@@ -3,6 +3,7 @@
 #include "Rendering/Backend/WorldFrameData.h"
 #include <atomic>
 #include <span>
+#include "NativeGroundDecalPages.h"
 
 namespace rendering {
 // Byte-for-byte GroundDecal attribute stream, including original unused user
@@ -15,10 +16,7 @@ struct NativeGroundDecalInstance {
 	std::array<std::array<float,4>,2> userDefined{};
 };
 static_assert(sizeof(NativeGroundDecalInstance)==192);
-struct NativeGroundDecalInstances {
-	uint64_t revision=0;
-	std::vector<NativeGroundDecalInstance> values;
-};
+using NativeGroundDecalInstances = NativeGroundDecalSnapshot<NativeGroundDecalInstance>;
 struct NativeGroundDecalAtlasEntry {
 	uint32_t source=0, page=0;
 	std::array<int32_t,4> rectangle{}; // Original inclusive allocator pixels.

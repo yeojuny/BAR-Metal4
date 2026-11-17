@@ -4543,7 +4543,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    images.fragmentToLogical={float(logicalWidth)/result.surface.renderWidth,-float(logicalHeight)/result.surface.renderHeight,0,float(logicalHeight)};
    groundDecals=impl->groundDecalGPU.Prepare(lease,frame.groundDecals,images,layer.pixelFormat,MTLPixelFormatDepth32Float,MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,
     [&](RuntimeLease& lease,std::shared_ptr<const WorldTexture> source){return impl->Texture(lease,source);});
-   result.groundDecalInstances=uint32_t(decals.instances->values.size());result.groundDecalAtlasDraws=groundDecals->AtlasDrawCount();
+   result.groundDecalInstances=uint32_t(decals.instances->Size());result.groundDecalAtlasDraws=groundDecals->AtlasDrawCount();
   }
   // World overlays and screen/RTT preparation share this named-image
 		// cache. Collect only after every family has prepared its images.

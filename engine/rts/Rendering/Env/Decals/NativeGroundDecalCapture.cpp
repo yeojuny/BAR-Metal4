@@ -72,23 +72,17 @@ CHECK_ATTRIBUTE(forcedNormal, createParams4); CHECK_ATTRIBUTE(infoRep, createPar
 std::shared_ptr<const NativeGroundDecalInstances> NativeGroundDecalInstanceCapture::Capture(std::span<const GroundDecal> rows, UpdateList& updates)
 {
 	Check(rows.size() == updates.Size(), "Original ground decal dirty flags differ from instance count");
-	const bool replace = !snapshot || snapshot->values.size() != rows.size();
+	const bool replace = !snapshot || snapshot->Size() != rows.size();
 	if (!replace && !updates.NeedUpdate()) return snapshot;
-	auto output = std::make_shared<NativeGroundDecalInstances>();
-	if (replace) {
-		output->values.resize(rows.size());
-		if (!rows.empty()) std::memcpy(output->values.data(), rows.data(), rows.size_bytes());
-	} else {
-		output->values = snapshot->values;
-		for (auto range = updates.GetNext(); range; range = updates.GetNext(range)) {
-			const auto [offset, count] = updates.GetOffsetAndSize(*range);
-			Check(offset <= rows.size() && count <= rows.size() - offset, "Original ground decal dirty range exceeds instances");
-			if (count) std::memcpy(output->values.data() + offset, rows.data() + offset, count * sizeof(GroundDecal));
-		}
+	std::vector<NativeGroundDecalRange> dirty;
+	for (auto range = updates.GetNext(); range; range = updates.GetNext(range)) {
+		const auto [offset, count] = updates.GetOffsetAndSize(*range);
+		dirty.push_back({offset, count});
 	}
-	output->revision = NextNativeGroundDecalResourceRevision();
-	snapshot = output;
-	updates.ResetNeedUpdateAll(); // The immutable upload revision now owns every dirty byte.
+	auto output = CaptureNativeGroundDecalPages<NativeGroundDecalInstance>(snapshot,
+		std::as_bytes(rows), dirty, NextNativeGroundDecalResourceRevision());
+	snapshot = std::move(output);
+	updates.ResetNeedUpdateAll(); // Every dirty page now belongs to this immutable revision.
 	return snapshot;
 }
 
