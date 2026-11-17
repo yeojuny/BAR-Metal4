@@ -1,0 +1,22 @@
+{
+  "round_id": "ground-decal-pages-staging-20261117-11",
+  "attempt_id": "ground-decal-pages-staging-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/REQUEST.json",
+  "from": "SUPER_JINI_MK2",
+  "to": "HQ",
+  "budget": {
+    "candidate_relocation_and_local_adhoc_signing": 1,
+    "runner_fixture_staging": 1,
+    "builds": 0,
+    "CPU_tests": 0,
+    "games": 0,
+    "GPU_helpers": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "source_writers_stopped": true,
+  "previous_HQ_turn_completed": true
+}
