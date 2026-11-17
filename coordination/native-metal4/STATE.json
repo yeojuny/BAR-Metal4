@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 77,
+  "revision": 78,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "postprocess-producer-20261117-19",
-  "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
-  "source_manifest_sha256": "f758b34fced26318ed7f8497db93a350dc06f8db5d3c670852484ec450fd5221",
-  "request": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/READY.json",
-  "result_path": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/DONE.json",
-  "decision": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json",
-  "execution_status": "POSTPROCESS_CPU_FIXTURE_CPP_COMPILE_FAILED_NO_ENGINE_GAME_CLEANUP_CLOSED",
+  "round_id": "r02-existing-trace-export-20261117-20",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "request": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/READY.json",
+  "result_path": null,
+  "decision": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/DECISION.json",
+  "execution_status": "EXISTING_R02_CAPTURE_READ_ONLY_EXPORT_READY",
   "blocked_reason": null,
   "history": [
     {
@@ -830,6 +830,14 @@
       "retries": 0,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "ROUND19_FIXTURE_FAILURE_REVIEWED_R02_EXISTING_TRACE_EXPORT_READY",
+      "revision": 78,
+      "round_id": "r02-existing-trace-export-20261117-20",
+      "previous_HQ_turn_completed": true,
+      "previous_cleanup_verified": true,
+      "game_capture_replay_profile_budget": 0
     }
   ],
   "communication_test": {
@@ -901,7 +909,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "FIXED_PENDING_ONE_PROVENANCE_BUILD_AND_ONE_VALIDATION_GAME",
+  "enabled_scope": "EXISTING_CAPTURE_READ_ONLY_INSPECTION_AND_EXPORT_NO_REPLAY",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
@@ -914,17 +922,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "postprocess-producer-01",
-    "started": true,
-    "completed": true,
+    "attempt_id": "r02-existing-trace-export-01",
+    "started": false,
+    "completed": false,
     "games": 0,
-    "builds": 0,
-    "CPU_contract_scripts": 1,
-    "CXX_compile_exit": 1,
-    "CPU_executable_runs": 0,
-    "failure_layer": "Fixed portable CPU test fixture compilation under Apple clang21 / -Werror, not production ObjC++ or live provenance assertion.",
-    "cleanup_complete": true,
-    "artifact_commit": "0716f745fe5f37f62f04cacd8eef096c79c58f11"
+    "builds": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
