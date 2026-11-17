@@ -1,0 +1,26 @@
+[infolog.txt]
+[t=00:01:12.856886][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401
+[t=00:01:15.183195][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401
+[t=00:01:15.183237][f=0001590] Decals GL4 skipdraw set to, true
+[t=00:01:15.199447][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401
+[t=00:01:17.271980][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401
+
+[engine.log]
+[t=00:01:12.856887][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401
+[t=00:01:15.183196][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401
+[t=00:01:15.183238][f=0001590] Decals GL4 skipdraw set to, true
+[t=00:01:15.199448][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401
+[t=00:01:17.271995][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401
+
+[normal status-00.log]
+{"device":"Apple M4 Pro","profileState":0,"replayer":{"state":"loading"},"summary":"1 command buffers, 54 encoders, 734 draw calls, 1 dispatches","trace":"\/Users\/yeojun\/Documents\/Codex\/2026-10-23\/bar-rae-native-performance\/evidence\/r03-skipdraw-pair-20261117-29\/clean_paced\/preparation\/runs\/R03\/frame.gputrace"}
+
+[normal status-02.log]
+{"device":"Apple M4 Pro","profileState":0,"replayer":{"state":"ready"},"summary":"1 command buffers, 54 encoders, 734 draw calls, 1 dispatches","trace":"\/Users\/yeojun\/Documents\/Codex\/2026-10-23\/bar-rae-native-performance\/evidence\/r03-skipdraw-pair-20261117-29\/clean_paced\/preparation\/runs\/R03\/frame.gputrace"}
+
+[skip status-00.log]
+{"device":"Apple M4 Pro","profileState":0,"replayer":{"state":"loading"},"summary":"1 command buffers, 58 encoders, 742 draw calls, 1 dispatches","trace":"\/Users\/yeojun\/Documents\/Codex\/2026-10-23\/bar-rae-native-performance\/evidence\/r03-skipdraw-pair-20261117-29\/clean_paced\/preparation\/runs\/R03\/frame-skip.gputrace"}
+
+[skip status-23.log]
+{"device":"Apple M4 Pro","profileState":0,"replayer":{"state":"loading"},"summary":"1 command buffers, 58 encoders, 742 draw calls, 1 dispatches","trace":"\/Users\/yeojun\/Documents\/Codex\/2026-10-23\/bar-rae-native-performance\/evidence\/r03-skipdraw-pair-20261117-29\/clean_paced\/preparation\/runs\/R03\/frame-skip.gputrace"}
+

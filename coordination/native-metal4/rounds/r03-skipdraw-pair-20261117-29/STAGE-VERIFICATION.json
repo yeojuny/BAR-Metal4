@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "checksums": 13,
+  "one_arm": "R03",
+  "libraries": 23,
+  "initialBC213": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+  "controller": "fe0a9b9a16d545f4a43cea168bea6dfbb6782c05a27492c123a6735bfc5e2925",
+  "runner": "8d8cf7e5c6d1ad75e6aaf9a97d93ccde682e24c99028bd5ca5003a5c573c87ec",
+  "archive": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+  "gpuSessionsBefore": "No active sessions.",
+  "userWakeProcesses": [
+    "6618 caffeinate -d"
+  ]
+}

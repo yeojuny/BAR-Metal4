@@ -1,0 +1,67 @@
+{
+  "status": "DONE",
+  "round_id": "r03-skipdraw-pair-20261117-29",
+  "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+  "decision": "UNKNOWN_SKIP_GPU_INSPECTION_NOT_READY",
+  "reserved_revision": 112,
+  "budget": {
+    "games_max": 1,
+    "captures_max": 2,
+    "inspection_sessions_max": 2,
+    "profiles_max": 2,
+    "profiles_per_capture": 1,
+    "retries": 0,
+    "builds": 0
+  },
+  "counts": {
+    "games": 1,
+    "capture_commands": 2,
+    "captured_frames": 2,
+    "inspection_sessions": 2,
+    "profile_commands": 0,
+    "retries": 0,
+    "builds": 0,
+    "engine_source_edits": 0
+  },
+  "acknowledgement": "[t=00:01:15.183237][f=0001590] Decals GL4 skipdraw set to, true",
+  "cpu_pause_tick": 1590,
+  "capture_pid": 7809,
+  "capture_layer": 12,
+  "actual_bound_gpu_ticks": "UNKNOWN",
+  "gpu_main_draw_removal": "UNKNOWN",
+  "non_target_gpu_input_comparability": "UNKNOWN",
+  "gpu_cost": "UNKNOWN",
+  "fps": "NOT_MEASURED",
+  "skip_ready_poll_count": 24,
+  "skip_first_to_last_poll_seconds": 14.316,
+  "protected_hashes_verified": 132,
+  "cleanup_complete": true,
+  "bar": "PAUSED",
+  "retry_authorized": false,
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29",
+  "trace_manifests": {
+    "normal": {
+      "manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/TRACE-MANIFEST-NORMAL.json",
+      "sha256": "bbc97b15cc5a68176ea71c9989d8d0fccf0656f425a837b7ff8bbe935211e189",
+      "files": 1215,
+      "bytes": 2773421277
+    },
+    "skip": {
+      "manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/TRACE-MANIFEST-SKIP.json",
+      "sha256": "503ff14d59095c344c07cea27525c8dc00d47f171a8e1b4507739557b84badb0",
+      "files": 1220,
+      "bytes": 2744849275
+    }
+  },
+  "artifactSHA256": {
+    "REPORT.md": "e59b6a8ba03a9222e5a6f26f98f74461fdeb487752784759f2571124af2f520e",
+    "RAW-OBSERVATIONS.txt": "8f4fffd4da245c6f009df07e06a544d53d2b4ba92a417fc6a4b4e82e8385d4c5",
+    "RUNTIME-EVIDENCE.json": "1cbf6ac9f26c65b4c4d77068f875afa4303cd3cf254131c20999ca4d579871d8",
+    "CLEANUP-EVIDENCE.json": "2ddac457f1d3539a42dc1868b52f73c334aafd61a4240f662b4a5357f7ea86ab",
+    "PROTECTED-HASHES.json": "ba99aee4c031af8aad47f0860120f893203a0c2faf35029dd005dc3e041ce826",
+    "RUNNER-DELTA.diff": "686375e6bc52f315d5020079e2f2adbe035212be0e464b88601c89393f63862e",
+    "HOST-CHECK.json": "e9b3e2425530e07df5e372e3d0752639a97a4e6b6ea4e8f037d5b62d61409f46",
+    "STAGE-VERIFICATION.json": "314e38e2bdc652423c84aae2715b408088d059a1103ddc1bf7ede4f6b02827c1"
+  },
+  "utc": "2026-11-17T20:42:23.196452+00:00"
+}
