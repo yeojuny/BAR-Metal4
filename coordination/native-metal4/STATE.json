@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 25,
+  "revision": 26,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/READY.json",
   "result_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DONE.json",
-  "decision": "Current R02 replay: SensorLOS Fragment26.342153%, GroundDecal Fragment14.741725%; exact minor-range rejection order is one unimplemented hypothesis. No FPS prediction.",
-  "execution_status": "CAPTURE1_PROFILE1_COMPLETE_CLEANUP_CLOSED",
+  "decision": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DECISION.json",
+  "execution_status": "PROFILE_REVIEWED_SENSORLOS_SOURCE_PROOF_IN_PROGRESS",
   "blocked_reason": null,
   "history": [
     {
@@ -238,6 +238,12 @@
       "cleanup_complete": true,
       "next_section_requested": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_PROFILE_REVIEW_COMPLETE",
+      "revision": 26,
+      "decision": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DECISION.json",
+      "next": "Cloud-only guarded SensorLOS source experiment; HQ idle, no duplicate profile."
     }
   ],
   "communication_test": {
@@ -315,7 +321,7 @@
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
     "scope": "One necessary bounded current GPU diagnostic."
   },
-  "source_writers_stopped": true,
+  "source_writers_stopped": false,
   "connection_verification": {
     "local": "Existing HQ task 01a1b3c1-c9e7-7b22-8cba-8055df762aab read/send path confirmed; HQ received JINI messages. HQ direct-to-cloud thread reply remains unsupported.",
     "notification": "Coordinator and bar_hq report PR #11 event received at 2026-11-16T21:23:11Z for HQ communication marker commit a619cdb. Verification is this GitHub event path, not a claim of native HQ-to-Dot direct messaging.",
