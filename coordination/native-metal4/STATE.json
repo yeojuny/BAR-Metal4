@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 36,
+  "revision": 37,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
   "request": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/READY.json",
-  "result_path": null,
-  "decision": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DECISION.json",
-  "execution_status": "R03_VALIDATION1_THEN_CLEAN6_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
+  "decision": "Matched Ultra AA0 cohort: R02 mean62.679156 -> R03 mean64.446243 FPS (+2.819258%); all40 world rows match, validation passed. Endpoint orange-circle overlay varies2/3 in each arm, cause unknown; review note preserved. JINI adoption decision pending.",
+  "execution_status": "R03_VALIDATION1_CLEAN6_COMPLETE_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -360,6 +360,23 @@
         "clean_games": 6,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ_R03_MATCHED_BENCHMARK_DONE",
+      "revision": 37,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-r02-benchmark-20261117-08",
+      "attempt_id": "r03-validation-and-clean-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "result_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
+      "artifact_commit": "d27392eb77a5056d28b86286dc4a9757ed3b7e55",
+      "meanFPS_R02": 62.679155526246866,
+      "meanFPS_R03": 64.4462427547472,
+      "relative_percent": 2.819258194632779,
+      "all40_rows_match": true,
+      "image_overlay_note": "Orange circle present2/3 each arm; cause/count-window effect unknown",
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -446,11 +463,17 @@
   "execution": {
     "attempt_id": "r03-validation-and-clean-01",
     "started": true,
-    "completed": false,
-    "validation_games": 0,
-    "clean_games": 0,
-    "games": 0,
-    "started_at_utc": "2026-11-17 01:40:47 UTC"
+    "completed": true,
+    "validation_games": 1,
+    "clean_games": 6,
+    "games": 7,
+    "started_at_utc": "2026-11-17 01:40:47 UTC",
+    "builds": 0,
+    "helpers": 0,
+    "captures": 0,
+    "retries": 0,
+    "cleanup_complete": true,
+    "completed_at_utc": "2026-11-17 02:05:57 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
