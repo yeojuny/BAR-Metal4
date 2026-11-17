@@ -176,3 +176,93 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 근거:
 - [revision74 STATE 고정본](https://github.com/yeojuny/BAR-Metal4/blob/852d42ce4dd31f85c99102aea8817513f922d1e1/coordination/native-metal4/STATE.json)
 - [round18 DECISION 고정본](https://github.com/yeojuny/BAR-Metal4/blob/852d42ce4dd31f85c99102aea8817513f922d1e1/coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json)
+
+## 심층 후속: D2R Metal의 실제 렌더 최적화만 검토 (2026-11-17)
+
+### 사용자 범위와 고정 입력
+- **Frame generation과 FSR은 이번 분석/실험 범위에서 제외한다.** 업스케일·동적 해상도·효과 생략으로 숫자를 높이는 방식도 동등 출력 기준 성능 후보로 채택하지 않는다. FSR은 후순위로 보존하되 현재 구현하지 않는다.
+- 메인은 MVK3/BAR의 원래 렌더 비용·제출·대기·중복 작업이다. 아래는 코드 읽기 기반 후보이며 HQ 실행 허가가 아니다.
+- D2R Metal `602db5fc30d4ce50683435cb0745cb171fce2064`; BAR R03 `0780bd7c530b0696067b717428b49a416eda556a`.
+- D2R 파일: `dm/gfx/nvn/hle_nvn.c`(H), `dm/gfx/nvn/nvn_mtl.m`(M).
+- BAR 파일: `engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm`(W), `Metal4RuntimeNative.mm`(R).
+- 숫자로 된 BAR FPS 예상은 제시하지 않는다. D2R 저자 측정은 다른 게임·장면이며 전이 가능한 이득이 아니다.
+
+### P1. 중복 상태를 기록하기 전 제거하고 실제 encoder state도 재사용
+**블록별 실제 동작**
+1. H504–526: command buffer별 shadow에 blend/color/channel mask/MSAA/polygon/depth-stencil/program/vertex layout의 마지막 값을 기록한다. 전역 마지막 값이 아니다.
+2. H527–539: valid bit가 있고 bytes가 동일할 때만 생략한다. BeginRecording과 CopyCommands 뒤에는 invalidate한다. OFF→ON에서도 shadow를 버리므로 중간에 추적하지 않은 상태를 재사용하지 않는다.
+3. H541–574: uniform/vertex buffer와 sampler는 slot별 identity를 비교한다. mode2는 생략하지 않고 would-skip 기록을 남겨 replay 시 현재 slot과 비교한다. texture는 replay가 바꾸므로 이 recorder filter에서 **제외**한다.
+4. M4294–4333: recording 검사만 믿지 않고 replay에서 index/stage 범위 검사를 다시 한다. 값이 달라질 때만 pso/dss/args dirty를 올리고 texture/SSBO generation도 갱신한다.
+5. M5998–6013: PSO lookup은 program/pass/dirty 조건 변화 때만; 실제 encoder의 PSO·depth-state가 다를 때만 set 호출한다. fixed state도 valid bit+value 비교로 처리한다.
+
+**BAR 대응**
+- W5332–5348의 legacy model loop는 piece마다 pipeline/argument texture/address/setArgumentTable을 수행한다. adjacent piece의 pipeline/material이 같은 경우 원리는 적용 가능하지만 해당 legacy 경로가 실제 counted workload에서 얼마나 쓰이는지는 미확인이다.
+- CPU encoding/command memory/lookup 절약 후보이지 GPU shader 연산 감소는 아니다. GPU-bound라면 FPS 효과는 작거나0일 수 있다.
+- 초기 안전 단위: 같은 encoder·같은 family에서 PSO/depth/cull/winding 등 불변 state만. encoder 재생성, 외부 family callback, Lua command, pass 변환 뒤 반드시 invalidation.
+- texture ID/포인터 동일만으로 내용이나 residency 계약까지 건너뛰지 않는다. argument table mutation과 setArgumentTable의 API 관측 의미를 별도 확인한다. snapshot/dirty publication은 계속 수행한다.
+- **첫 gate:** OFF / would-skip verify / ON. skipped bind 종류·수, family별 CPU encode시간, command bytes, lookup hit/miss를 함께 기록. 상태 trace mismatch0 및 Metal/화면 검증 뒤에만 clean timing. 매 draw 로그는 금지하고 진단/성능 창 분리.
+- D2R README의 bind records57%/replay instructions13% 감소는 참고 맥락일 뿐 BAR 예상치가 아니다.
+
+### P2. generation·수명 경계를 포함한 준비 결과/argument block 재사용
+**블록별 실제 동작**
+1. M3862–3871: resource registration generation이나 dirty epoch가 변하면 argument cache 전체를 invalidate한다. 바인딩 목록만 같아도 외부 registry 변화가 있으면 다시 만든다.
+2. M3918–3946: shader driver table은 매번0xA00 bytes를 채우던 작업을 stage/bank별로 관리한다. bank2는 texture/sampler tables, bank0는 storage buffer table이므로 key가 의미 있는 데이터에 결합된다.
+3. M3948–3959: 재사용 조건은 **동일 submission serial + source table generation + 유효 arena주소**. mode2는 fresh bytes를 다시 만들어 cached bytes와 비교한다. arena가 submission GPU 완료까지 살아 있어야 한다.
+4. M3961–3968: shader argument block은 동일 pass serial·dirty 없음·buffer 있음일 때 재사용한다. compute stage는 이 경로에서 제외한다.
+5. M4655–4704: shader별 read-slot 목록을 사전 계산하고 동일 texture bind는 registry generation까지 같을 때 생략한다. mode2는 reference scan과 결과 전체를 비교한다.
+
+**BAR 대응**
+- 준비/encoding에서 같은 metadata를 다시 계산하는 곳만 선택한다. D2R의 NVN shader driver table 자체는 BAR에 없는 번역 비용이므로 그대로 이식할 대상이 아니다.
+- BAR W642–663의 immutable texture storage/borrow, R1038–1046의 pending1 및 R1154–1197의 quarantine 계약을 유지한다. cache hit가 producer 완료나 consumer GPU 완료를 의미하지 않는다.
+- 성립 조건: immutable payload 또는 완전한 revision key, source identity+generation+view/range+shader/pass/slot lifetime, 모든 mutation 경로의 invalidation. 누락된 generation은 stale GPU pointer/오래된 constant를 만든다.
+- 기대 효과: CPU 준비·할당·복사 byte 감소. 캐시 hit가 counted battle window에서 실제 발생하고 절약 비용이 key 비교비용보다 클 때만 이득.
+- gate: reference 재생성과 byte/semantic 비교, hash collision에 의존하지 않는 equality, allocate/reuse/invalidated 원인·bytes, hit frame 범위를 기록. 초기 loading hit만 있으면 성능 후보 미커버로 판정.
+
+### P3. render pass 간 fragment→다음 vertex 불필요 대기만 축소
+**블록별 실제 동작**
+1. M770–787: encoder 종류를 class별 원자적 cache로 분류하고, render이며 안전한 경우만 end barrier의 다음 vertex/object/mesh stages를 제외한다. compute/blit와 memory writer는 full publication을 유지한다.
+2. M804–812: level0는 full consumer barrier. level1은 consumer vertex를 열어 앞 pass fragment와 뒤 vertex/binning 겹침을 허용한다. 게임 barrier 미처리 항목은 카운트되며 이것이 완전한 의존성 구현이라는 뜻은 아니다.
+3. M818–824: pass가 shader memory write를 했으면 모든 다음 stage를 막는 producer barrier를 유지한다. 단순 render와 write render를 구분한다.
+4. M5750–5759: vertex texture read 또는 memory write가 있는 draw에는 늦은 vertex barrier를 추가한다. 다른 shader의 memory write도 pass 종료조건에 반영한다.
+5. 한계: M726/732–747의 encoder 내부 draw 간 barrier 미구현 및 NVN 일부 counting-only. t_bar.m은 actual encoder/counter test이나 draw0이며 race negative control을 제공하지 않는다.
+
+**BAR 대응과 중복 도입 방지**
+- W4974–5005에는 empty Load/Store pass 제거가 **이미 있다**.
+- W5387에는 scoped pair220의 fragment-only consumer, W5400–5410에는 snapshot visibility 및 미래 encoder용 producer/consumer publication이 **이미 있다**. BAR가 무조건 전부 serial barrier라는 전제는 틀리다.
+- 후보는 남은 특정 boundary의 실제 producer/consumer resource access를 증명한 경우뿐. 기존220 경계를 넓히거나 full barrier를 일괄 삭제하지 않는다.
+- vertex texture/SSBO reads, UAV writes, alias, indirect/index/uniform access, attachment load/store, snapshot copy와 외부 callback까지 hazard map에 포함한다. Device visibility가 alias를 모두 해결한다고 가정하지 않는다.
+- 기대 효과: 실제 dependency가 없는 stage overlap의 GPU idle 감소. D2R 저자 약0.54ms/8.5%는 별도 workload 수치이며 BAR 미예측.
+- gate: 위험 boundary 하나만, resource/subresource/access graph와 producer stage 증명 → 정/부정 대조를 포함한 correctness fixture → 실제 scene Metal/화면/depth/stencil 비교 → GPU critical path/idle+frame time. pass 시간은 서로 겹치므로 합산 금지.
+
+### P4. 제출 allocator pool과 대기 분리: 큰 구조 후보이나 지금은 보류
+- M647–678: completed fence 슬롯 선택, 없으면 max8까지 성장, cap일 때 oldest wait. 고정3 ring의 중간 대기를 피하려는 구조이다. GPU lost일 때 stuck allocator를 reset하지 않고 별도 allocator를 고른다.
+- M680–695: visibility buffer는 fence 완료뿐 아니라 이전 query가 아직 참조하는지까지 검사한다. allocator 여유가 있다고 query storage를 재사용할 수는 없다.
+- BAR R1038–1046은 pending-borrow 수명 증명이 불완전해 GPU pending1을 의도적으로 유지한다. round18은 관측 추출 동등성만 통과했다. **pool8=안전한 pending8이 아니다.**
+- 선행 조건: 자원별 producer/borrower ownership, CPU readback 공개, shutdown/detach/실패 quarantine, residency/allocator retirement 및 bounded backpressure.
+- 기대 효과는 upload/CPU preparation과 GPU work 사이의 실제 강제 idle이 남아 있을 때뿐. 메모리·latency 증가와 실패 복구 위험이 크므로 P1/P2보다 늦춘다.
+- 필요한 측정: wait 원인별 duration·resource family·simulation window, queue idle와 CPU runnable/work량, peak retained bytes. sleep 감소만으로 개선을 선언하지 않는다.
+
+### P5. presentation 경로는 원인 확인용, 별도 queue 복사는 비추천
+- M136–141 및 release2.0.4는 Mac separate present queue의 GPU hang과 shared queue 복귀를 기록한다.
+- M8120–8121은 game lock 안 nextDrawable 동기 대기가 loading thread를 굶길 수 있어 별도 CPU presentation thread로 queueing한다는 설계 이유를 설명한다. **CPU thread 분리와 GPU queue 분리는 서로 다른 선택**이다.
+- BAR에서 drawable acquire/present가 critical path인지 아직 이 비교만으로 확인하지 못했다. present 불필요 지연이 확인되더라도 event dependency·swap texture reuse·background/shutdown을 증명해야 한다.
+- FG/displayed frames 수치는 전부 제외. 실제 rendered frame 완료와 present latency를 따로 측정한다.
+
+### 이번에 채택하지 않는 가지
+- M3445–3453의 async PSO effect draw 생략: shader 준비 지연을 없애도 같은 화면이 아니므로 제외. 대신 정확한 prewarm/PSO cache는 cold-stall이 입증되면 별도 검토.
+- M5761–5769 quad-run batching은 같은 state/vertex bytes/triangle order를 검증하는 좋은 패턴이나 D2R automap 특화 workload. BAR 실제 UI draw 병목 확인 전 후순위.
+- D2R ray-tracing denoise fusion, downsample/bloom 변경, FG, FSR, MetalFX upscale, render-scale 감소는 현재 BAR 구조 병목 후보와 혼합하지 않는다.
+
+### 실행 없는 우선순위 결론
+1. P1: 동일 encoder/family 중복 state의 **실제 빈도와 비용부터** 확인. 성능 예측 대신 would-skip 검증 설계.
+2. P2: 반복 준비 비용이 큰 immutable/revision-correct block을 선택, fresh reference와 비교 가능한 cache.
+3. P3: 이미 있는 BAR220 최적화를 존중하면서 남은 boundary 한 개의 증명 기반 stage overlap.
+4. P4: pending-borrow/실패 quarantine 계약이 완성된 뒤 bounded submission lookahead.
+5. P5: drawable/present wait가 실제 원인일 때만. Mac GPU queue 추가는 기본 선택 아님.
+- [x] 고정 D2R Metal H/M 코드 블록 및 BAR R03 관련 블록 대조.
+- [x] 사용자 FG/FSR 제외와 동일 출력 원칙 기록.
+- [ ] BAR counted workload의 P1/P2 hit·CPU critical path 증거 확보. 이번 분석에서는 실행하지 않음.
+- [ ] correctness와 성능 창을 분리한 새 bounded round 필요 여부는 JINI가 최신 STATE와 HQ 정리를 확인한 뒤 결정.
+- HQ/Mac 접근, 코드 수정, 빌드·게임·GPU helper·벤치마크는 이번 분석에서 수행하지 않았다.
+
+고정 출처: [D2R recorder](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/nvn/hle_nvn.c#L504-L574), [D2R Metal backend](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/nvn/nvn_mtl.m), [BAR R03 WorldRenderer](https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm), [BAR R03 RuntimeNative](https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm).
