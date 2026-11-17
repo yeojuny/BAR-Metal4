@@ -1,0 +1,67 @@
+{
+  "round_id": "r04-engine-build-envfix-20261117-23",
+  "attempt_id": "r04-isolated-build-02",
+  "author": "SUPER_JINI_MK2",
+  "scope": "ONE_ISOLATED_R04_ENGINE_BUILD_AND_EXISTING_R03_BINARY_RUNNER_PIN_VERIFICATION_ONLY",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_path": "docs/research/r04-segment-setup-20261117/candidate/MANIFEST.json",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "header_sha256": "722565c5c1ff15bfa7801615fe3bbbf9acb7de83cb5deab61aa323e20455e73f",
+  "baseline": {
+    "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+    "signed_engine_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+    "evidence_root": "evidence/r03-r02-regression-20261117-01",
+    "closure": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DONE.json"
+  },
+  "new_root": "evidence/r04-engine-staging-20261117-02",
+  "budget": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "relocation_sign": 1,
+    "games": 0,
+    "benchmarks": 0,
+    "helpers": 0,
+    "captures": 0,
+    "replays": 0,
+    "retries": 0,
+    "source_edits": 0
+  },
+  "steps": [
+    "Read latest STATE explicit HQ/round/attempt/source, verify prior cleanup and no consumed attempt, reserve RUNNING with latest SHA CAS and reread.",
+    "Verify fixed R04 manifest/header and frozen R03 source closure. Use fresh isolated root/object dir; reproduce only declared fixed R04 header delta on R03. Preserve original files, licenses/provenance. No source repairs or integration of completion/GDP/texture candidates.",
+    "Verify existing R03 binary and runner actual byte hashes. Do not launch engine, wrapper or runner, do not reuse consumed profiles or stage games.",
+    "Reuse successful R03 initial cache/toolchain/SDK/dependencies procedure with explicit process-local PKG_CONFIG_PATH correction; configure once/build spring-metal4-scene once at -j8. No dependency installation. Failure or mismatch stops with logs, no retry/fix.",
+    "Relocate/sign using unchanged known procedure and same19 dylibs. Verify loader and signing statically, record actual raw/signed binary hashes and complete source/build/dependency closure. No engine --version or GPU execution.",
+    "Publish concise build result, hashes/closure and raw failure/success logs to this round. No unnecessary new framework, massive profile staging or performance work. Clean all build processes/workers/awake and evidence writes before same-round DONE and HQ turn completion."
+  ],
+  "prior_evidence": {
+    "R04_helper": "12065 comparisons PASS; bounded correctness only; no full-engine game or performance proof",
+    "round21": "CPU tail33 exact chains mean32585.818ns,max47958ns; cleanup and completed HQ turn independently checked",
+    "decision": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DECISION.json"
+  },
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "Necessary fixed candidate build preparation; this round grants no games or benchmark."
+  },
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "prohibited": [
+    "game/benchmark",
+    "source edits",
+    "automatic retry",
+    "capture/replay/helper",
+    "main/release/Homebrew",
+    "security/power changes",
+    "new dependency installation"
+  ],
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "environment_correction": {
+    "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+    "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
+    "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+  },
+  "previous_attempt": "r04-isolated-build-01 consumed configure1 exit1, engine builds0; preserve failed root and logs",
+  "preflight": "Before sole configure, verify pkg-config openal>=1.18.2 finds exact1.25.2 at known existing .pc/library; compare other dependencies to R03 recorded cache without running a trial configure."
+}
