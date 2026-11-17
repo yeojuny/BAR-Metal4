@@ -1,0 +1,11 @@
+{
+  "source": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTLCommandEncoder.h",
+  "source_sha256": "3b074115dd01ec1d33155ef8d68ede4373ea471ea0a2be660344845d6c36f35b",
+  "verified_definitions": {
+    "Vertex": 1,
+    "Fragment": 2,
+    "Dispatch": 134217728,
+    "Blit": 268435456
+  },
+  "scope": "Only these four flags decoded; unknown bits remain explicit."
+}

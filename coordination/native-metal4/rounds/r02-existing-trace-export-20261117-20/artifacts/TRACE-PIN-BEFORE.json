@@ -1,0 +1,8 @@
+{
+  "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace",
+  "files": 1223,
+  "logical_bytes": 2788204457,
+  "tree_sha256": "5ae339d460ddb46089783227ba115d37ae4a0e3c4327d81e99c665741a8ea228",
+  "definition": "SHA256(sorted UTF8 relativePath + NUL + fileSHA256 + newline)",
+  "hash_seconds": 1.4496490000001359
+}

@@ -1,0 +1,39 @@
+{
+  "descriptor_state": "UNAVAILABLE",
+  "reason": "Resource root only lists19 objects; no depth-stencil children/info export. Saved API has only bindings, no creation descriptor. No new inspection session with unproved zero-GPU-execution semantics.",
+  "bindings": [
+    {
+      "api": "api9754",
+      "command_node": "re41",
+      "label": "MTL4RenderCommandEncoder 33",
+      "state": "dss15",
+      "raw": "[MTL4RenderCommandEncoder setDepthStencilState:@dss15]"
+    },
+    {
+      "api": "api9776",
+      "command_node": "re41",
+      "label": "MTL4RenderCommandEncoder 33",
+      "state": "dss12",
+      "raw": "[MTL4RenderCommandEncoder setDepthStencilState:@dss12]"
+    }
+  ],
+  "draws_using_states": [
+    {
+      "api": "api9766",
+      "command_node": "re41",
+      "label": "MTL4RenderCommandEncoder 33",
+      "pipeline": "rps61",
+      "depth_stencil_state": "dss15",
+      "raw": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:378 instanceCount:165]"
+    },
+    {
+      "api": "api9786",
+      "command_node": "re41",
+      "label": "MTL4RenderCommandEncoder 33",
+      "pipeline": "rps15",
+      "depth_stencil_state": "dss12",
+      "raw": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:3]"
+    }
+  ],
+  "do_not_infer_compare_write_mask_ops_from_reference_value": true
+}

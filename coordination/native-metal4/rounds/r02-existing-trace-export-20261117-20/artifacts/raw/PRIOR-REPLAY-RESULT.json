@@ -1,0 +1,89 @@
+{
+  "status": "PROFILE_AND_EXPORTS_COMPLETE",
+  "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace",
+  "signedBinarySHA256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "profile": "default GPU state; overlapping execution; one pass; no embed",
+  "profileTimeoutSeconds": 180,
+  "sessionIdleTimeoutSeconds": 600,
+  "awakePID": 99341,
+  "startedUTC": "2026-11-17T00:05:58.297555+00:00",
+  "performanceAccepted": false,
+  "exportCommands": {
+    "command-tree": "/commands",
+    "command-buffer": "/commands/cb0",
+    "api-calls": "/api_calls",
+    "resources": "/resources",
+    "render-pipelines": "/resources/render_pipelines",
+    "encoder-costs": "/performance/encoders",
+    "shader-costs": "/performance/shaders",
+    "encoder-intervals": "/performance/timeline/encoders",
+    "shader-stage-intervals": "/performance/timeline/shaders"
+  },
+  "openExit": 0,
+  "ownedSession": "120",
+  "replayerReadyStatus": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/status-01.log",
+  "profileExit": 0,
+  "exports": {
+    "command-tree": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/command-tree.jsonl",
+      "bytes": 416
+    },
+    "command-buffer": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/command-buffer.jsonl",
+      "bytes": 9881
+    },
+    "api-calls": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/api-calls.jsonl",
+      "bytes": 1559854
+    },
+    "resources": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/resources.jsonl",
+      "bytes": 1660
+    },
+    "render-pipelines": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/render-pipelines.jsonl",
+      "bytes": 39853
+    },
+    "encoder-costs": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/encoder-costs.jsonl",
+      "bytes": 16176
+    },
+    "shader-costs": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/shader-costs.jsonl",
+      "bytes": 38336
+    },
+    "encoder-intervals": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/encoder-intervals.jsonl",
+      "bytes": 15481
+    },
+    "shader-stage-intervals": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/shader-stage-intervals.jsonl",
+      "bytes": 42468
+    }
+  },
+  "profileCompleted": true,
+  "terminateExit": 0,
+  "sessionListExit": 0,
+  "ownedSessionAbsent": true,
+  "allSessionsAbsent": false,
+  "awakeReleased": true,
+  "closedUTC": "2026-11-17T00:06:26.480150+00:00"
+}

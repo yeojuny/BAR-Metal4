@@ -1,0 +1,17 @@
+gpudebug - GPU Debugger (v1.0)
+
+options                                                                
+  -t       --gputrace                   path to a .gputrace file
+  -s        --session       connect to an existing session by ID
+  -l  --list-sessions        list active debug sessions and exit
+  -d         --device                   target device for replay
+       --list-devices     list available replay devices and exit
+          --terminate        terminate a session by ID, or 'all'
+            --oneshot  terminate session after commands complete
+  -o         --output     output directory for fetched resources
+  -q          --quiet                    suppress startup banner
+               --json                      output in JSON format
+            --timeout      idle timeout in seconds (0 = disable)
+            --version                               show version
+  -h           --help                             show this help
+

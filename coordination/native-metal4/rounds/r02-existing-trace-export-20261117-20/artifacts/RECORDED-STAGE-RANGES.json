@@ -1,0 +1,2861 @@
+{
+  "source": "Previously saved profile session120 default/overlapping, no embed. This turn performs no profiling.",
+  "records": [
+    {
+      "saved_stage_node": "vert16",
+      "shader_name": "GameDecalGeometryVertex",
+      "pipeline": "rps16",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 3825099,
+      "saved_end_raw": 4083291,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert16",
+        "values": [
+          {
+            "type": "string",
+            "value": "GameDecalGeometryVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps16 \"MTLRenderPipelineState 17\""
+          },
+          {
+            "type": "duration",
+            "value": 3825099
+          },
+          {
+            "type": "duration",
+            "value": 4083291
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert17",
+      "shader_name": "GroundDecalVertex",
+      "pipeline": "rps71",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4057869,
+      "saved_end_raw": 4712625,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert17",
+        "values": [
+          {
+            "type": "string",
+            "value": "GroundDecalVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps71 \"MTLRenderPipelineState 72\""
+          },
+          {
+            "type": "duration",
+            "value": 4057869
+          },
+          {
+            "type": "duration",
+            "value": 4712625
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert18",
+      "shader_name": "ParticleVertexMain",
+      "pipeline": "rps54",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4542717,
+      "saved_end_raw": 4565990,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "vert18",
+        "values": [
+          {
+            "type": "string",
+            "value": "ParticleVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps54 \"MTLRenderPipelineState 55\""
+          },
+          {
+            "type": "duration",
+            "value": 4542717
+          },
+          {
+            "type": "duration",
+            "value": 4565990
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert19",
+      "shader_name": "ResourceSpotsVertex",
+      "pipeline": "rps14",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4565990,
+      "saved_end_raw": 4583403,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert19",
+        "values": [
+          {
+            "type": "string",
+            "value": "ResourceSpotsVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps14 \"MTLRenderPipelineState 15\""
+          },
+          {
+            "type": "duration",
+            "value": 4565990
+          },
+          {
+            "type": "duration",
+            "value": 4583403
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert20",
+      "shader_name": "OriginalSkyVertex",
+      "pipeline": "rps22",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4567899,
+      "saved_end_raw": 4568625,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert20",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalSkyVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps22 \"MTLRenderPipelineState 23\""
+          },
+          {
+            "type": "duration",
+            "value": 4567899
+          },
+          {
+            "type": "duration",
+            "value": 4568625
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert21",
+      "shader_name": "OriginalCommandsVertex",
+      "pipeline": "rps9",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4581958,
+      "saved_end_raw": 4584625,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert21",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalCommandsVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps9 \"MTLRenderPipelineState 10\""
+          },
+          {
+            "type": "duration",
+            "value": 4581958
+          },
+          {
+            "type": "duration",
+            "value": 4584625
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert22",
+      "shader_name": "UnitPrimitiveVertex",
+      "pipeline": "rps17",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4585342,
+      "saved_end_raw": 4591161,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert22",
+        "values": [
+          {
+            "type": "string",
+            "value": "UnitPrimitiveVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps17 \"MTLRenderPipelineState 18\""
+          },
+          {
+            "type": "duration",
+            "value": 4585342
+          },
+          {
+            "type": "duration",
+            "value": 4591161
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag16",
+      "shader_name": "GameDecalFragment",
+      "pipeline": "rps16",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4723291,
+      "saved_end_raw": 10884535,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag16",
+        "values": [
+          {
+            "type": "string",
+            "value": "GameDecalFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps16 \"MTLRenderPipelineState 17\""
+          },
+          {
+            "type": "duration",
+            "value": 4723291
+          },
+          {
+            "type": "duration",
+            "value": 10884535
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert23",
+      "shader_name": "GrassVertex",
+      "pipeline": "rps12",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 10"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4725958,
+      "saved_end_raw": 8510676,
+      "saved_trailing_field_uninterpreted": "29",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert23",
+        "values": [
+          {
+            "type": "string",
+            "value": "GrassVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps12 \"MTLRenderPipelineState 13\""
+          },
+          {
+            "type": "duration",
+            "value": 4725958
+          },
+          {
+            "type": "duration",
+            "value": 8510676
+          },
+          {
+            "type": "string",
+            "value": "29"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag17",
+      "shader_name": "GroundDecalFragment",
+      "pipeline": "rps71",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4806433,
+      "saved_end_raw": 11084292,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag17",
+        "values": [
+          {
+            "type": "string",
+            "value": "GroundDecalFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps71 \"MTLRenderPipelineState 72\""
+          },
+          {
+            "type": "duration",
+            "value": 4806433
+          },
+          {
+            "type": "duration",
+            "value": 11084292
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag18",
+      "shader_name": "ParticleFragmentMain",
+      "pipeline": "rps54",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4946070,
+      "saved_end_raw": 10595291,
+      "saved_trailing_field_uninterpreted": "115",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "frag18",
+        "values": [
+          {
+            "type": "string",
+            "value": "ParticleFragmentMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps54 \"MTLRenderPipelineState 55\""
+          },
+          {
+            "type": "duration",
+            "value": 4946070
+          },
+          {
+            "type": "duration",
+            "value": 10595291
+          },
+          {
+            "type": "string",
+            "value": "115"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag19",
+      "shader_name": "UnitPrimitiveAtlasFragment",
+      "pipeline": "rps17",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 4967445,
+      "saved_end_raw": 10836050,
+      "saved_trailing_field_uninterpreted": "182",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag19",
+        "values": [
+          {
+            "type": "string",
+            "value": "UnitPrimitiveAtlasFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps17 \"MTLRenderPipelineState 18\""
+          },
+          {
+            "type": "duration",
+            "value": 4967445
+          },
+          {
+            "type": "duration",
+            "value": 10836050
+          },
+          {
+            "type": "string",
+            "value": "182"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag20",
+      "shader_name": "ResourceSpotsFragment",
+      "pipeline": "rps14",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 5376658,
+      "saved_end_raw": 10692493,
+      "saved_trailing_field_uninterpreted": "35",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag20",
+        "values": [
+          {
+            "type": "string",
+            "value": "ResourceSpotsFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps14 \"MTLRenderPipelineState 15\""
+          },
+          {
+            "type": "duration",
+            "value": 5376658
+          },
+          {
+            "type": "duration",
+            "value": 10692493
+          },
+          {
+            "type": "string",
+            "value": "35"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag21",
+      "shader_name": "OriginalCommandsFragment",
+      "pipeline": "rps9",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 9"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 6301958,
+      "saved_end_raw": 8894717,
+      "saved_trailing_field_uninterpreted": "46",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag21",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalCommandsFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps9 \"MTLRenderPipelineState 10\""
+          },
+          {
+            "type": "duration",
+            "value": 6301958
+          },
+          {
+            "type": "duration",
+            "value": 8894717
+          },
+          {
+            "type": "string",
+            "value": "46"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag22",
+      "shader_name": "GrassFragment",
+      "pipeline": "rps12",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 10"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 11105625,
+      "saved_end_raw": 11163808,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag22",
+        "values": [
+          {
+            "type": "string",
+            "value": "GrassFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps12 \"MTLRenderPipelineState 13\""
+          },
+          {
+            "type": "duration",
+            "value": 11105625
+          },
+          {
+            "type": "duration",
+            "value": 11163808
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert24",
+      "shader_name": "NativeCUSVertex",
+      "pipeline": "rps27",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 11"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 11177383,
+      "saved_end_raw": 11340292,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert24",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps27 \"MTLRenderPipelineState 28\""
+          },
+          {
+            "type": "duration",
+            "value": 11177383
+          },
+          {
+            "type": "duration",
+            "value": 11340292
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert25",
+      "shader_name": "NativeCUSVertex",
+      "pipeline": "rps26",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 11"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 11177384,
+      "saved_end_raw": 11272625,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert25",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps26 \"MTLRenderPipelineState 27\""
+          },
+          {
+            "type": "duration",
+            "value": 11177384
+          },
+          {
+            "type": "duration",
+            "value": 11272625
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert26",
+      "shader_name": "NativeCUSVertex",
+      "pipeline": "rps66",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 11"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 11332536,
+      "saved_end_raw": 11774716,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert26",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps66 \"MTLRenderPipelineState 67\""
+          },
+          {
+            "type": "duration",
+            "value": 11332536
+          },
+          {
+            "type": "duration",
+            "value": 11774716
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag23",
+      "shader_name": "NativeCUSFragment",
+      "pipeline": "rps26",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 11"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 11784625,
+      "saved_end_raw": 12185869,
+      "saved_trailing_field_uninterpreted": "4",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag23",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps26 \"MTLRenderPipelineState 27\""
+          },
+          {
+            "type": "duration",
+            "value": 11784625
+          },
+          {
+            "type": "duration",
+            "value": 12185869
+          },
+          {
+            "type": "string",
+            "value": "4"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag24",
+      "shader_name": "NativeCUSFragment",
+      "pipeline": "rps66",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 11"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 11784625,
+      "saved_end_raw": 12216857,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag24",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps66 \"MTLRenderPipelineState 67\""
+          },
+          {
+            "type": "duration",
+            "value": 11784625
+          },
+          {
+            "type": "duration",
+            "value": 12216857
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag25",
+      "shader_name": "NativeCUSFragment",
+      "pipeline": "rps27",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 11"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 11784625,
+      "saved_end_raw": 12209100,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag25",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps27 \"MTLRenderPipelineState 28\""
+          },
+          {
+            "type": "duration",
+            "value": 11784625
+          },
+          {
+            "type": "duration",
+            "value": 12209100
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert27",
+      "shader_name": "NativeCUSVertex",
+      "pipeline": "rps28",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 12"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 12232625,
+      "saved_end_raw": 12325958,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert27",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps28 \"MTLRenderPipelineState 29\""
+          },
+          {
+            "type": "duration",
+            "value": 12232625
+          },
+          {
+            "type": "duration",
+            "value": 12325958
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert28",
+      "shader_name": "NativeCUSVertex",
+      "pipeline": "rps29",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 12"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 12232625,
+      "saved_end_raw": 12389504,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert28",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps29 \"MTLRenderPipelineState 30\""
+          },
+          {
+            "type": "duration",
+            "value": 12232625
+          },
+          {
+            "type": "duration",
+            "value": 12389504
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert29",
+      "shader_name": "NativeCUSVertex",
+      "pipeline": "rps67",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 12"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 12384625,
+      "saved_end_raw": 12818110,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert29",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps67 \"MTLRenderPipelineState 68\""
+          },
+          {
+            "type": "duration",
+            "value": 12384625
+          },
+          {
+            "type": "duration",
+            "value": 12818110
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag26",
+      "shader_name": "NativeCUSFragment",
+      "pipeline": "rps67",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 12"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 12829747,
+      "saved_end_raw": 13408625,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag26",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps67 \"MTLRenderPipelineState 68\""
+          },
+          {
+            "type": "duration",
+            "value": 12829747
+          },
+          {
+            "type": "duration",
+            "value": 13408625
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag27",
+      "shader_name": "NativeCUSFragment",
+      "pipeline": "rps29",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 12"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 12829958,
+      "saved_end_raw": 13325958,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag27",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps29 \"MTLRenderPipelineState 30\""
+          },
+          {
+            "type": "duration",
+            "value": 12829958
+          },
+          {
+            "type": "duration",
+            "value": 13325958
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag28",
+      "shader_name": "NativeCUSFragment",
+      "pipeline": "rps28",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 12"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 12875291,
+      "saved_end_raw": 13440656,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag28",
+        "values": [
+          {
+            "type": "string",
+            "value": "NativeCUSFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps28 \"MTLRenderPipelineState 29\""
+          },
+          {
+            "type": "duration",
+            "value": 12875291
+          },
+          {
+            "type": "duration",
+            "value": 13440656
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert44",
+      "shader_name": "BloomVertex",
+      "pipeline": "rps52",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15613958,
+      "saved_end_raw": 15614717,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert44",
+        "values": [
+          {
+            "type": "string",
+            "value": "BloomVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps52 \"MTLRenderPipelineState 53\""
+          },
+          {
+            "type": "duration",
+            "value": 15613958
+          },
+          {
+            "type": "duration",
+            "value": 15614717
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert45",
+      "shader_name": "OriginalSensorLOSVertex",
+      "pipeline": "rps61",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15614716,
+      "saved_end_raw": 15835808,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert45",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalSensorLOSVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps61 \"MTLRenderPipelineState 62\""
+          },
+          {
+            "type": "duration",
+            "value": 15614716
+          },
+          {
+            "type": "duration",
+            "value": 15835808
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert46",
+      "shader_name": "BlueprintStencilClearVertex",
+      "pipeline": "rps15",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15680656,
+      "saved_end_raw": 15680656,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert46",
+        "values": [
+          {
+            "type": "string",
+            "value": "BlueprintStencilClearVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps15 \"MTLRenderPipelineState 16\""
+          },
+          {
+            "type": "duration",
+            "value": 15680656
+          },
+          {
+            "type": "duration",
+            "value": 15680656
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert47",
+      "shader_name": "OriginalSensor31657CircleVertex",
+      "pipeline": "rps60",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15682596,
+      "saved_end_raw": 15694232,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert47",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalSensor31657CircleVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps60 \"MTLRenderPipelineState 61\""
+          },
+          {
+            "type": "duration",
+            "value": 15682596
+          },
+          {
+            "type": "duration",
+            "value": 15694232
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert48",
+      "shader_name": "ResourceSpotsVertex",
+      "pipeline": "rps13",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15684535,
+      "saved_end_raw": 15690353,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert48",
+        "values": [
+          {
+            "type": "string",
+            "value": "ResourceSpotsVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps13 \"MTLRenderPipelineState 14\""
+          },
+          {
+            "type": "duration",
+            "value": 15684535
+          },
+          {
+            "type": "duration",
+            "value": 15690353
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert49",
+      "shader_name": "CommanderWreckVertex",
+      "pipeline": "rps11",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15688625,
+      "saved_end_raw": 15690353,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert49",
+        "values": [
+          {
+            "type": "string",
+            "value": "CommanderWreckVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps11 \"MTLRenderPipelineState 12\""
+          },
+          {
+            "type": "duration",
+            "value": 15688625
+          },
+          {
+            "type": "duration",
+            "value": 15690353
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert50",
+      "shader_name": "DeferredLightVertex",
+      "pipeline": "rps58",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15692292,
+      "saved_end_raw": 15731291,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert50",
+        "values": [
+          {
+            "type": "string",
+            "value": "DeferredLightVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps58 \"MTLRenderPipelineState 59\""
+          },
+          {
+            "type": "duration",
+            "value": 15692292
+          },
+          {
+            "type": "duration",
+            "value": 15731291
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert51",
+      "shader_name": "DeferredLightVertex",
+      "pipeline": "rps59",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15729141,
+      "saved_end_raw": 15985142,
+      "saved_trailing_field_uninterpreted": "3",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert51",
+        "values": [
+          {
+            "type": "string",
+            "value": "DeferredLightVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps59 \"MTLRenderPipelineState 60\""
+          },
+          {
+            "type": "duration",
+            "value": 15729141
+          },
+          {
+            "type": "duration",
+            "value": 15985142
+          },
+          {
+            "type": "string",
+            "value": "3"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag43",
+      "shader_name": "BloomCombine",
+      "pipeline": "rps52",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15995291,
+      "saved_end_raw": 24318759,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag43",
+        "values": [
+          {
+            "type": "string",
+            "value": "BloomCombine"
+          },
+          {
+            "type": "string",
+            "value": "@rps52 \"MTLRenderPipelineState 53\""
+          },
+          {
+            "type": "duration",
+            "value": 15995291
+          },
+          {
+            "type": "duration",
+            "value": 24318759
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag44",
+      "shader_name": "OriginalSensorLOSFragment",
+      "pipeline": "rps61",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 15997958,
+      "saved_end_raw": 24334274,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag44",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalSensorLOSFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps61 \"MTLRenderPipelineState 62\""
+          },
+          {
+            "type": "duration",
+            "value": 15997958
+          },
+          {
+            "type": "duration",
+            "value": 24334274
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag45",
+      "shader_name": "BlueprintStencilClearFragment",
+      "pipeline": "rps15",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 16139291,
+      "saved_end_raw": 24334274,
+      "saved_trailing_field_uninterpreted": "1002",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag45",
+        "values": [
+          {
+            "type": "string",
+            "value": "BlueprintStencilClearFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps15 \"MTLRenderPipelineState 16\""
+          },
+          {
+            "type": "duration",
+            "value": 16139291
+          },
+          {
+            "type": "duration",
+            "value": 24334274
+          },
+          {
+            "type": "string",
+            "value": "1002"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag46",
+      "shader_name": "DeferredLightFragment",
+      "pipeline": "rps58",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 16142232,
+      "saved_end_raw": 24316820,
+      "saved_trailing_field_uninterpreted": "23",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag46",
+        "values": [
+          {
+            "type": "string",
+            "value": "DeferredLightFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps58 \"MTLRenderPipelineState 59\""
+          },
+          {
+            "type": "duration",
+            "value": 16142232
+          },
+          {
+            "type": "duration",
+            "value": 24316820
+          },
+          {
+            "type": "string",
+            "value": "23"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag47",
+      "shader_name": "DeferredLightFragment",
+      "pipeline": "rps59",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 16171323,
+      "saved_end_raw": 24206232,
+      "saved_trailing_field_uninterpreted": "112",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag47",
+        "values": [
+          {
+            "type": "string",
+            "value": "DeferredLightFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps59 \"MTLRenderPipelineState 60\""
+          },
+          {
+            "type": "duration",
+            "value": 16171323
+          },
+          {
+            "type": "duration",
+            "value": 24206232
+          },
+          {
+            "type": "string",
+            "value": "112"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag48",
+      "shader_name": "OriginalSensor31657CircleFragment",
+      "pipeline": "rps60",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 16445958,
+      "saved_end_raw": 24272666,
+      "saved_trailing_field_uninterpreted": "27",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag48",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalSensor31657CircleFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps60 \"MTLRenderPipelineState 61\""
+          },
+          {
+            "type": "duration",
+            "value": 16445958
+          },
+          {
+            "type": "duration",
+            "value": 24272666
+          },
+          {
+            "type": "string",
+            "value": "27"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag49",
+      "shader_name": "CommanderWreckFragment",
+      "pipeline": "rps11",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 33"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 21399928,
+      "saved_end_raw": 22187333,
+      "saved_trailing_field_uninterpreted": "10",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag49",
+        "values": [
+          {
+            "type": "string",
+            "value": "CommanderWreckFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps11 \"MTLRenderPipelineState 12\""
+          },
+          {
+            "type": "duration",
+            "value": 21399928
+          },
+          {
+            "type": "duration",
+            "value": 22187333
+          },
+          {
+            "type": "string",
+            "value": "10"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert52",
+      "shader_name": "DistortionTransferVertex",
+      "pipeline": "rps62",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 34"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24344666,
+      "saved_end_raw": 24344666,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "vert52",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionTransferVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps62 \"MTLRenderPipelineState 63\""
+          },
+          {
+            "type": "duration",
+            "value": 24344666
+          },
+          {
+            "type": "duration",
+            "value": 24344666
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag50",
+      "shader_name": "DistortionClearFragment",
+      "pipeline": "rps62",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 34"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24350000,
+      "saved_end_raw": 24353626,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag50",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionClearFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps62 \"MTLRenderPipelineState 63\""
+          },
+          {
+            "type": "duration",
+            "value": 24350000
+          },
+          {
+            "type": "duration",
+            "value": 24353626
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert53",
+      "shader_name": "DistortionVertex",
+      "pipeline": "rps63",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 35",
+        "MTL4RenderCommandEncoder 36"
+      ],
+      "attribution_ambiguous_multiple_encoders": true,
+      "saved_start_raw": 24361383,
+      "saved_end_raw": 24437062,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert53",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps63 \"MTLRenderPipelineState 64\""
+          },
+          {
+            "type": "duration",
+            "value": 24361383
+          },
+          {
+            "type": "duration",
+            "value": 24437062
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag51",
+      "shader_name": "DistortionFragment",
+      "pipeline": "rps63",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 35",
+        "MTL4RenderCommandEncoder 36"
+      ],
+      "attribution_ambiguous_multiple_encoders": true,
+      "saved_start_raw": 24375000,
+      "saved_end_raw": 24520666,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag51",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps63 \"MTLRenderPipelineState 64\""
+          },
+          {
+            "type": "duration",
+            "value": 24375000
+          },
+          {
+            "type": "duration",
+            "value": 24520666
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert54",
+      "shader_name": "DistortionTransferVertex",
+      "pipeline": "rps64",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 37"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24524335,
+      "saved_end_raw": 24524335,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert54",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionTransferVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps64 \"MTLRenderPipelineState 65\""
+          },
+          {
+            "type": "duration",
+            "value": 24524335
+          },
+          {
+            "type": "duration",
+            "value": 24524335
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag52",
+      "shader_name": "DistortionCopyFragment",
+      "pipeline": "rps64",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 37"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24530152,
+      "saved_end_raw": 24552666,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag52",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionCopyFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps64 \"MTLRenderPipelineState 65\""
+          },
+          {
+            "type": "duration",
+            "value": 24530152
+          },
+          {
+            "type": "duration",
+            "value": 24552666
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert55",
+      "shader_name": "DistortionCombineVertex",
+      "pipeline": "rps65",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 38"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24558000,
+      "saved_end_raw": 24559202,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert55",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionCombineVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps65 \"MTLRenderPipelineState 66\""
+          },
+          {
+            "type": "duration",
+            "value": 24558000
+          },
+          {
+            "type": "duration",
+            "value": 24559202
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag53",
+      "shader_name": "DistortionCombineFragment",
+      "pipeline": "rps65",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 38"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24566000,
+      "saved_end_raw": 24614000,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag53",
+        "values": [
+          {
+            "type": "string",
+            "value": "DistortionCombineFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps65 \"MTLRenderPipelineState 66\""
+          },
+          {
+            "type": "duration",
+            "value": 24566000
+          },
+          {
+            "type": "duration",
+            "value": 24614000
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert56",
+      "shader_name": "DOFVertex",
+      "pipeline": "rps3",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 40"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24622000,
+      "saved_end_raw": 24622000,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert56",
+        "values": [
+          {
+            "type": "string",
+            "value": "DOFVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps3 \"MTLRenderPipelineState 4\""
+          },
+          {
+            "type": "duration",
+            "value": 24622000
+          },
+          {
+            "type": "duration",
+            "value": 24622000
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag54",
+      "shader_name": "DOFCopyColor",
+      "pipeline": "rps3",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 40"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24630959,
+      "saved_end_raw": 24648666,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag54",
+        "values": [
+          {
+            "type": "string",
+            "value": "DOFCopyColor"
+          },
+          {
+            "type": "string",
+            "value": "@rps3 \"MTLRenderPipelineState 4\""
+          },
+          {
+            "type": "duration",
+            "value": 24630959
+          },
+          {
+            "type": "duration",
+            "value": 24648666
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert57",
+      "shader_name": "CASVertex",
+      "pipeline": "rps2",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24660092,
+      "saved_end_raw": 24660092,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert57",
+        "values": [
+          {
+            "type": "string",
+            "value": "CASVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps2 \"MTLRenderPipelineState 3\""
+          },
+          {
+            "type": "duration",
+            "value": 24660092
+          },
+          {
+            "type": "duration",
+            "value": 24660092
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert58",
+      "shader_name": "HealthBarsVertexMain",
+      "pipeline": "rps57",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24662031,
+      "saved_end_raw": 24671729,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert58",
+        "values": [
+          {
+            "type": "string",
+            "value": "HealthBarsVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps57 \"MTLRenderPipelineState 58\""
+          },
+          {
+            "type": "duration",
+            "value": 24662031
+          },
+          {
+            "type": "duration",
+            "value": 24671729
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert59",
+      "shader_name": "ScreenGeometryVertexMain",
+      "pipeline": "rps31",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24662032,
+      "saved_end_raw": 24683364,
+      "saved_trailing_field_uninterpreted": "3",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "vert59",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenGeometryVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps31 \"MTLRenderPipelineState 32\""
+          },
+          {
+            "type": "duration",
+            "value": 24662032
+          },
+          {
+            "type": "duration",
+            "value": 24683364
+          },
+          {
+            "type": "string",
+            "value": "3"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert60",
+      "shader_name": "UnitPrimitiveVertex",
+      "pipeline": "rps70",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24662032,
+      "saved_end_raw": 24663971,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "vert60",
+        "values": [
+          {
+            "type": "string",
+            "value": "UnitPrimitiveVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps70 \"MTLRenderPipelineState 71\""
+          },
+          {
+            "type": "duration",
+            "value": 24662032
+          },
+          {
+            "type": "duration",
+            "value": 24663971
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert61",
+      "shader_name": "UnitPrimitiveVertex",
+      "pipeline": "rps69",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24664666,
+      "saved_end_raw": 24681425,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert61",
+        "values": [
+          {
+            "type": "string",
+            "value": "UnitPrimitiveVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps69 \"MTLRenderPipelineState 70\""
+          },
+          {
+            "type": "duration",
+            "value": 24664666
+          },
+          {
+            "type": "duration",
+            "value": 24681425
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert62",
+      "shader_name": "PanelVertex",
+      "pipeline": "rps30",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24667849,
+      "saved_end_raw": 24680666,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert62",
+        "values": [
+          {
+            "type": "string",
+            "value": "PanelVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps30 \"MTLRenderPipelineState 31\""
+          },
+          {
+            "type": "duration",
+            "value": 24667849
+          },
+          {
+            "type": "duration",
+            "value": 24680666
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert63",
+      "shader_name": "ScreenGeometryVertexMain",
+      "pipeline": "rps32",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24678000,
+      "saved_end_raw": 24683364,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "vert63",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenGeometryVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps32 \"MTLRenderPipelineState 33\""
+          },
+          {
+            "type": "duration",
+            "value": 24678000
+          },
+          {
+            "type": "duration",
+            "value": 24683364
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert64",
+      "shader_name": "ScreenGeometryVertexMain",
+      "pipeline": "rps33",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24679485,
+      "saved_end_raw": 24681425,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "vert64",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenGeometryVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps33 \"MTLRenderPipelineState 34\""
+          },
+          {
+            "type": "duration",
+            "value": 24679485
+          },
+          {
+            "type": "duration",
+            "value": 24681425
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert65",
+      "shader_name": "ScreenVertexMain",
+      "pipeline": "rps34",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24681425,
+      "saved_end_raw": 24683364,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "vert65",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps34 \"MTLRenderPipelineState 35\""
+          },
+          {
+            "type": "duration",
+            "value": 24681425
+          },
+          {
+            "type": "duration",
+            "value": 24683364
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert66",
+      "shader_name": "ScreenGeometryVertexMain",
+      "pipeline": "rps35",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24681425,
+      "saved_end_raw": 24681425,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert66",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenGeometryVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps35 \"MTLRenderPipelineState 36\""
+          },
+          {
+            "type": "duration",
+            "value": 24681425
+          },
+          {
+            "type": "duration",
+            "value": 24681425
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert67",
+      "shader_name": "OriginalPreviewMinimapVertex",
+      "pipeline": "rps36",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24683364,
+      "saved_end_raw": 24683364,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert67",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalPreviewMinimapVertex"
+          },
+          {
+            "type": "string",
+            "value": "@rps36 \"MTLRenderPipelineState 37\""
+          },
+          {
+            "type": "duration",
+            "value": 24683364
+          },
+          {
+            "type": "duration",
+            "value": 24683364
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag55",
+      "shader_name": "CASFragment5",
+      "pipeline": "rps2",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24700819,
+      "saved_end_raw": 24865669,
+      "saved_trailing_field_uninterpreted": "2",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag55",
+        "values": [
+          {
+            "type": "string",
+            "value": "CASFragment5"
+          },
+          {
+            "type": "string",
+            "value": "@rps2 \"MTLRenderPipelineState 3\""
+          },
+          {
+            "type": "duration",
+            "value": 24700819
+          },
+          {
+            "type": "duration",
+            "value": 24865669
+          },
+          {
+            "type": "string",
+            "value": "2"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag56",
+      "shader_name": "ScreenFragmentMain",
+      "pipeline": "rps34",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24702000,
+      "saved_end_raw": 24815243,
+      "saved_trailing_field_uninterpreted": "13",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "frag56",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenFragmentMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps34 \"MTLRenderPipelineState 35\""
+          },
+          {
+            "type": "duration",
+            "value": 24702000
+          },
+          {
+            "type": "duration",
+            "value": 24815243
+          },
+          {
+            "type": "string",
+            "value": "13"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag57",
+      "shader_name": "ScreenFilledFragment184",
+      "pipeline": "rps32",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24704697,
+      "saved_end_raw": 24819333,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "frag57",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenFilledFragment184"
+          },
+          {
+            "type": "string",
+            "value": "@rps32 \"MTLRenderPipelineState 33\""
+          },
+          {
+            "type": "duration",
+            "value": 24704697
+          },
+          {
+            "type": "duration",
+            "value": 24819333
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag58",
+      "shader_name": "PanelFragment",
+      "pipeline": "rps30",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24704697,
+      "saved_end_raw": 24811364,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag58",
+        "values": [
+          {
+            "type": "string",
+            "value": "PanelFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps30 \"MTLRenderPipelineState 31\""
+          },
+          {
+            "type": "duration",
+            "value": 24704697
+          },
+          {
+            "type": "duration",
+            "value": 24811364
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag59",
+      "shader_name": "ScreenFilledFragment184",
+      "pipeline": "rps35",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24714353,
+      "saved_end_raw": 24815243,
+      "saved_trailing_field_uninterpreted": "17",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "frag59",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenFilledFragment184"
+          },
+          {
+            "type": "string",
+            "value": "@rps35 \"MTLRenderPipelineState 36\""
+          },
+          {
+            "type": "duration",
+            "value": 24714353
+          },
+          {
+            "type": "duration",
+            "value": 24815243
+          },
+          {
+            "type": "string",
+            "value": "17"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag60",
+      "shader_name": "ScreenFilledFragment184",
+      "pipeline": "rps31",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24715333,
+      "saved_end_raw": 24834638,
+      "saved_trailing_field_uninterpreted": "5",
+      "raw_record": {
+        "actions": "info, fetch",
+        "name": "frag60",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenFilledFragment184"
+          },
+          {
+            "type": "string",
+            "value": "@rps31 \"MTLRenderPipelineState 32\""
+          },
+          {
+            "type": "duration",
+            "value": 24715333
+          },
+          {
+            "type": "duration",
+            "value": 24834638
+          },
+          {
+            "type": "string",
+            "value": "5"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag61",
+      "shader_name": "OriginalPreviewMinimapFragment",
+      "pipeline": "rps36",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24718232,
+      "saved_end_raw": 24819333,
+      "saved_trailing_field_uninterpreted": "3",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag61",
+        "values": [
+          {
+            "type": "string",
+            "value": "OriginalPreviewMinimapFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps36 \"MTLRenderPipelineState 37\""
+          },
+          {
+            "type": "duration",
+            "value": 24718232
+          },
+          {
+            "type": "duration",
+            "value": 24819333
+          },
+          {
+            "type": "string",
+            "value": "3"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag62",
+      "shader_name": "UnitPrimitiveIconFragment",
+      "pipeline": "rps69",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24739569,
+      "saved_end_raw": 24856666,
+      "saved_trailing_field_uninterpreted": "4",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag62",
+        "values": [
+          {
+            "type": "string",
+            "value": "UnitPrimitiveIconFragment"
+          },
+          {
+            "type": "string",
+            "value": "@rps69 \"MTLRenderPipelineState 70\""
+          },
+          {
+            "type": "duration",
+            "value": 24739569
+          },
+          {
+            "type": "duration",
+            "value": 24856666
+          },
+          {
+            "type": "string",
+            "value": "4"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag63",
+      "shader_name": "HealthBarsFragmentMain",
+      "pipeline": "rps57",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24742000,
+      "saved_end_raw": 24857910,
+      "saved_trailing_field_uninterpreted": "5",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag63",
+        "values": [
+          {
+            "type": "string",
+            "value": "HealthBarsFragmentMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps57 \"MTLRenderPipelineState 58\""
+          },
+          {
+            "type": "duration",
+            "value": 24742000
+          },
+          {
+            "type": "duration",
+            "value": 24857910
+          },
+          {
+            "type": "string",
+            "value": "5"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag64",
+      "shader_name": "ScreenFilledFragment184",
+      "pipeline": "rps33",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 41"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24753182,
+      "saved_end_raw": 24798000,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag64",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenFilledFragment184"
+          },
+          {
+            "type": "string",
+            "value": "@rps33 \"MTLRenderPipelineState 34\""
+          },
+          {
+            "type": "duration",
+            "value": 24753182
+          },
+          {
+            "type": "duration",
+            "value": 24798000
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "vert68",
+      "shader_name": "ScreenVertexMain",
+      "pipeline": "rps40",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 42"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24872666,
+      "saved_end_raw": 24873426,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "vert68",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenVertexMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps40 \"MTLRenderPipelineState 41\""
+          },
+          {
+            "type": "duration",
+            "value": 24872666
+          },
+          {
+            "type": "duration",
+            "value": 24873426
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    },
+    {
+      "saved_stage_node": "frag65",
+      "shader_name": "ScreenFragmentMain",
+      "pipeline": "rps40",
+      "possible_encoder_labels": [
+        "MTL4RenderCommandEncoder 42"
+      ],
+      "attribution_ambiguous_multiple_encoders": false,
+      "saved_start_raw": 24880666,
+      "saved_end_raw": 24883333,
+      "saved_trailing_field_uninterpreted": "1",
+      "raw_record": {
+        "actions": "go, info, fetch",
+        "name": "frag65",
+        "values": [
+          {
+            "type": "string",
+            "value": "ScreenFragmentMain"
+          },
+          {
+            "type": "string",
+            "value": "@rps40 \"MTLRenderPipelineState 41\""
+          },
+          {
+            "type": "duration",
+            "value": 24880666
+          },
+          {
+            "type": "duration",
+            "value": 24883333
+          },
+          {
+            "type": "string",
+            "value": "1"
+          }
+        ]
+      }
+    }
+  ],
+  "unit_status": "Saved JSON says type=duration but omits explicit unit/column schema. Preserve unscaled raw values; prior notes interpreted ns, not independently established by a supported schema this turn.",
+  "interval_semantics": "One bounds pair and trailing field per shader record; individual constituent active intervals are not exported. Do not treat bounds intersection as measured continuous overlap or sum bounds.",
+  "individual_active_intervals": "UNAVAILABLE",
+  "last_field_semantics": "UNAVAILABLE in saved export; not treated as draw count."
+}

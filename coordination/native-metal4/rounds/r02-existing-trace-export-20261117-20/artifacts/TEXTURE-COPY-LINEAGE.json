@@ -1,0 +1,694 @@
+{
+  "explicit_texture_copies": [
+    {
+      "api": "api3058",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:1024x1024x1 toTexture:@tex4 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3059",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:1 sourceOrigin:0, 0, 0 sourceSize:512x512x1 toTexture:@tex4 destinationSlice:0 destinationLevel:1 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3060",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:2 sourceOrigin:0, 0, 0 sourceSize:256x256x1 toTexture:@tex4 destinationSlice:0 destinationLevel:2 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3061",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:3 sourceOrigin:0, 0, 0 sourceSize:128x128x1 toTexture:@tex4 destinationSlice:0 destinationLevel:3 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3062",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:4 sourceOrigin:0, 0, 0 sourceSize:64x64x1 toTexture:@tex4 destinationSlice:0 destinationLevel:4 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3063",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:5 sourceOrigin:0, 0, 0 sourceSize:32x32x1 toTexture:@tex4 destinationSlice:0 destinationLevel:5 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3064",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:6 sourceOrigin:0, 0, 0 sourceSize:16x16x1 toTexture:@tex4 destinationSlice:0 destinationLevel:6 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3065",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:7 sourceOrigin:0, 0, 0 sourceSize:8x8x1 toTexture:@tex4 destinationSlice:0 destinationLevel:7 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3066",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:8 sourceOrigin:0, 0, 0 sourceSize:4x4x1 toTexture:@tex4 destinationSlice:0 destinationLevel:8 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3067",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:9 sourceOrigin:0, 0, 0 sourceSize:2x2x1 toTexture:@tex4 destinationSlice:0 destinationLevel:9 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3068",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:0 sourceLevel:10 sourceOrigin:0, 0, 0 sourceSize:1x1x1 toTexture:@tex4 destinationSlice:0 destinationLevel:10 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3069",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:1024x1024x1 toTexture:@tex4 destinationSlice:1 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3070",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:1 sourceOrigin:0, 0, 0 sourceSize:512x512x1 toTexture:@tex4 destinationSlice:1 destinationLevel:1 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3071",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:2 sourceOrigin:0, 0, 0 sourceSize:256x256x1 toTexture:@tex4 destinationSlice:1 destinationLevel:2 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3072",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:3 sourceOrigin:0, 0, 0 sourceSize:128x128x1 toTexture:@tex4 destinationSlice:1 destinationLevel:3 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3073",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:4 sourceOrigin:0, 0, 0 sourceSize:64x64x1 toTexture:@tex4 destinationSlice:1 destinationLevel:4 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3074",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:5 sourceOrigin:0, 0, 0 sourceSize:32x32x1 toTexture:@tex4 destinationSlice:1 destinationLevel:5 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3075",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:6 sourceOrigin:0, 0, 0 sourceSize:16x16x1 toTexture:@tex4 destinationSlice:1 destinationLevel:6 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3076",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:7 sourceOrigin:0, 0, 0 sourceSize:8x8x1 toTexture:@tex4 destinationSlice:1 destinationLevel:7 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3077",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:8 sourceOrigin:0, 0, 0 sourceSize:4x4x1 toTexture:@tex4 destinationSlice:1 destinationLevel:8 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3078",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:9 sourceOrigin:0, 0, 0 sourceSize:2x2x1 toTexture:@tex4 destinationSlice:1 destinationLevel:9 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3079",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:1 sourceLevel:10 sourceOrigin:0, 0, 0 sourceSize:1x1x1 toTexture:@tex4 destinationSlice:1 destinationLevel:10 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3080",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:1024x1024x1 toTexture:@tex4 destinationSlice:2 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3081",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:1 sourceOrigin:0, 0, 0 sourceSize:512x512x1 toTexture:@tex4 destinationSlice:2 destinationLevel:1 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3082",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:2 sourceOrigin:0, 0, 0 sourceSize:256x256x1 toTexture:@tex4 destinationSlice:2 destinationLevel:2 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3083",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:3 sourceOrigin:0, 0, 0 sourceSize:128x128x1 toTexture:@tex4 destinationSlice:2 destinationLevel:3 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3084",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:4 sourceOrigin:0, 0, 0 sourceSize:64x64x1 toTexture:@tex4 destinationSlice:2 destinationLevel:4 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3085",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:5 sourceOrigin:0, 0, 0 sourceSize:32x32x1 toTexture:@tex4 destinationSlice:2 destinationLevel:5 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3086",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:6 sourceOrigin:0, 0, 0 sourceSize:16x16x1 toTexture:@tex4 destinationSlice:2 destinationLevel:6 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3087",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:7 sourceOrigin:0, 0, 0 sourceSize:8x8x1 toTexture:@tex4 destinationSlice:2 destinationLevel:7 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3088",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:8 sourceOrigin:0, 0, 0 sourceSize:4x4x1 toTexture:@tex4 destinationSlice:2 destinationLevel:8 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3089",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:9 sourceOrigin:0, 0, 0 sourceSize:2x2x1 toTexture:@tex4 destinationSlice:2 destinationLevel:9 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3090",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:2 sourceLevel:10 sourceOrigin:0, 0, 0 sourceSize:1x1x1 toTexture:@tex4 destinationSlice:2 destinationLevel:10 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3091",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:1 sourceOrigin:0, 0, 0 sourceSize:512x512x1 toTexture:@tex4 destinationSlice:3 destinationLevel:1 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3092",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:2 sourceOrigin:0, 0, 0 sourceSize:256x256x1 toTexture:@tex4 destinationSlice:3 destinationLevel:2 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3093",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:3 sourceOrigin:0, 0, 0 sourceSize:128x128x1 toTexture:@tex4 destinationSlice:3 destinationLevel:3 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3094",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:4 sourceOrigin:0, 0, 0 sourceSize:64x64x1 toTexture:@tex4 destinationSlice:3 destinationLevel:4 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3095",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:5 sourceOrigin:0, 0, 0 sourceSize:32x32x1 toTexture:@tex4 destinationSlice:3 destinationLevel:5 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3096",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:6 sourceOrigin:0, 0, 0 sourceSize:16x16x1 toTexture:@tex4 destinationSlice:3 destinationLevel:6 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3097",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:7 sourceOrigin:0, 0, 0 sourceSize:8x8x1 toTexture:@tex4 destinationSlice:3 destinationLevel:7 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3098",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:8 sourceOrigin:0, 0, 0 sourceSize:4x4x1 toTexture:@tex4 destinationSlice:3 destinationLevel:8 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3099",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:9 sourceOrigin:0, 0, 0 sourceSize:2x2x1 toTexture:@tex4 destinationSlice:3 destinationLevel:9 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3100",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:3 sourceLevel:10 sourceOrigin:0, 0, 0 sourceSize:1x1x1 toTexture:@tex4 destinationSlice:3 destinationLevel:10 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3101",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:1024x1024x1 toTexture:@tex4 destinationSlice:4 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3102",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:1 sourceOrigin:0, 0, 0 sourceSize:512x512x1 toTexture:@tex4 destinationSlice:4 destinationLevel:1 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3103",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:2 sourceOrigin:0, 0, 0 sourceSize:256x256x1 toTexture:@tex4 destinationSlice:4 destinationLevel:2 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3104",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:3 sourceOrigin:0, 0, 0 sourceSize:128x128x1 toTexture:@tex4 destinationSlice:4 destinationLevel:3 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3105",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:4 sourceOrigin:0, 0, 0 sourceSize:64x64x1 toTexture:@tex4 destinationSlice:4 destinationLevel:4 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3106",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:5 sourceOrigin:0, 0, 0 sourceSize:32x32x1 toTexture:@tex4 destinationSlice:4 destinationLevel:5 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3107",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:6 sourceOrigin:0, 0, 0 sourceSize:16x16x1 toTexture:@tex4 destinationSlice:4 destinationLevel:6 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3108",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:7 sourceOrigin:0, 0, 0 sourceSize:8x8x1 toTexture:@tex4 destinationSlice:4 destinationLevel:7 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3109",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:8 sourceOrigin:0, 0, 0 sourceSize:4x4x1 toTexture:@tex4 destinationSlice:4 destinationLevel:8 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3110",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:9 sourceOrigin:0, 0, 0 sourceSize:2x2x1 toTexture:@tex4 destinationSlice:4 destinationLevel:9 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3111",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:4 sourceLevel:10 sourceOrigin:0, 0, 0 sourceSize:1x1x1 toTexture:@tex4 destinationSlice:4 destinationLevel:10 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3112",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:1024x1024x1 toTexture:@tex4 destinationSlice:5 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3113",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:1 sourceOrigin:0, 0, 0 sourceSize:512x512x1 toTexture:@tex4 destinationSlice:5 destinationLevel:1 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3114",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:2 sourceOrigin:0, 0, 0 sourceSize:256x256x1 toTexture:@tex4 destinationSlice:5 destinationLevel:2 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3115",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:3 sourceOrigin:0, 0, 0 sourceSize:128x128x1 toTexture:@tex4 destinationSlice:5 destinationLevel:3 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3116",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:4 sourceOrigin:0, 0, 0 sourceSize:64x64x1 toTexture:@tex4 destinationSlice:5 destinationLevel:4 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3117",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:5 sourceOrigin:0, 0, 0 sourceSize:32x32x1 toTexture:@tex4 destinationSlice:5 destinationLevel:5 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3118",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:6 sourceOrigin:0, 0, 0 sourceSize:16x16x1 toTexture:@tex4 destinationSlice:5 destinationLevel:6 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3119",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:7 sourceOrigin:0, 0, 0 sourceSize:8x8x1 toTexture:@tex4 destinationSlice:5 destinationLevel:7 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3120",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:8 sourceOrigin:0, 0, 0 sourceSize:4x4x1 toTexture:@tex4 destinationSlice:5 destinationLevel:8 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3121",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:9 sourceOrigin:0, 0, 0 sourceSize:2x2x1 toTexture:@tex4 destinationSlice:5 destinationLevel:9 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3122",
+      "command_node": "ce2",
+      "label": "MTL4ComputeCommandEncoder 1",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex175 sourceSlice:5 sourceLevel:10 sourceOrigin:0, 0, 0 sourceSize:1x1x1 toTexture:@tex4 destinationSlice:5 destinationLevel:10 destinationOrigin:0, 0, 0]",
+      "source": "tex175",
+      "destination": "tex4",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api3137",
+      "command_node": "ce4",
+      "label": "MTL4ComputeCommandEncoder 3",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex259 toTexture:@tex418]",
+      "source": "tex259",
+      "destination": "tex418",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api5450",
+      "command_node": "ce12",
+      "label": "MTL4ComputeCommandEncoder 5",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex0 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 32, 0 sourceSize:1512x950x1 toTexture:@tex56 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex0",
+      "destination": "tex56",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api9588",
+      "command_node": "ce32",
+      "label": "MTL4ComputeCommandEncoder 6",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex104 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:95x60x1 toTexture:@tex127 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex104",
+      "destination": "tex127",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api9614",
+      "command_node": "ce34",
+      "label": "MTL4ComputeCommandEncoder 7",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex105 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:189x119x1 toTexture:@tex128 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex105",
+      "destination": "tex128",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api9640",
+      "command_node": "ce36",
+      "label": "MTL4ComputeCommandEncoder 8",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex106 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:378x238x1 toTexture:@tex129 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex106",
+      "destination": "tex129",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api9666",
+      "command_node": "ce38",
+      "label": "MTL4ComputeCommandEncoder 9",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex102 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:756x475x1 toTexture:@tex107 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]",
+      "source": "tex102",
+      "destination": "tex107",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    },
+    {
+      "api": "api10982",
+      "command_node": "ce51",
+      "label": "MTL4ComputeCommandEncoder 10",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex99 toTexture:@tex2]",
+      "source": "tex99",
+      "destination": "tex2",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    }
+  ],
+  "captured_texture_views": [
+    {
+      "api": "api8",
+      "command_node": null,
+      "label": null,
+      "raw": "[@tex10 newTextureViewWithPixelFormat:RGBA8Unorm textureType:2D levels:0 slices:0 swizzle:17040130]",
+      "parent": "tex10",
+      "view": "tex416"
+    }
+  ],
+  "tex99_to_tex2": [
+    {
+      "api": "api10982",
+      "command_node": "ce51",
+      "label": "MTL4ComputeCommandEncoder 10",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex99 toTexture:@tex2]",
+      "source": "tex99",
+      "destination": "tex2",
+      "access": "command-semantic source read/destination write; no inferred attachments or physical access counter"
+    }
+  ],
+  "tex99_or_tex2_API_mentions": [
+    {
+      "api": "api1384",
+      "raw": "[@rset0 addAllocation:@tex2]"
+    },
+    {
+      "api": "api1666",
+      "raw": "[@tex99 isAliasable]"
+    },
+    {
+      "api": "api1749",
+      "raw": "[@tex99 isAliasable]"
+    },
+    {
+      "api": "api10982",
+      "raw": "[MTL4ComputeCommandEncoder copyFromTexture:@tex99 toTexture:@tex2]"
+    }
+  ],
+  "tex99_upstream_full_last_writer": "UNAVAILABLE: render attachment descriptors not saved.",
+  "tex2_last_explicit_copy_writer": "api10982, final compute command node ce51; full aliased resource history unavailable.",
+  "presentation_association": "Commit/signalDrawable/present follow final copy; exact drawable texture identity not exposed."
+}
