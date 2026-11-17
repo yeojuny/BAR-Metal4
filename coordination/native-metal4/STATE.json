@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 115,
+  "revision": 116,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,9 +15,9 @@
   "request": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/READY.json",
   "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/DONE.json",
-  "decision": "PINNED_INDEXED_SMALL_GAME_DECAL_VALIDATION",
-  "execution_status": "HQ3_ROUND31_RESERVED_ONCE",
-  "blocked_reason": null,
+  "decision": "BLOCKED_CONFIGURE_OPENAL_PACKAGE_SEARCH_PATH",
+  "execution_status": "HQ3_ROUND31_CLOSED_CONFIGURE_OPENAL_LOOKUP_BLOCKED_NO_GPU_OR_BUILD",
+  "blocked_reason": "The first configure process could not discover the installed OpenAL Soft pkg-config module; engine compilation was not reached.",
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
@@ -1700,6 +1700,35 @@
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "bar": "PAUSED",
       "utc": "2026-11-17 20:57:23 UTC"
+    },
+    {
+      "event": "HQ3_ROUND31_CLOSED_CONFIGURE_OPENAL_LOOKUP_BLOCKED_NO_GPU_OR_BUILD",
+      "revision": 116,
+      "round_id": "game-decal-indexed-validation-20261117-31",
+      "attempt_id": "indexed-native-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "ae113722ccdd36be5564d08552e68aea9f7ad5bd",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/DONE.json",
+      "decision": "BLOCKED_CONFIGURE_OPENAL_PACKAGE_SEARCH_PATH",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 0,
+        "parity_helper_compiles": 0,
+        "parity_helper_gpu_invocations": 0,
+        "parity_games": 0,
+        "clean_games": 0,
+        "games": 0,
+        "captures": 0,
+        "trace_inspections": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "protected_hashes_verified": 132,
+      "base_source_entries_verified": 10270,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T21:00:03.769031+00:00"
     }
   ],
   "communication_test": {
@@ -1785,7 +1814,7 @@
   "execution": {
     "attempt_id": "indexed-native-off-on-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "engine_builds": 1,
       "parity_helper_compiles_max": 1,
@@ -1801,7 +1830,25 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17 20:57:23 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false
+    "previous_budget_reused": false,
+    "ended_at_utc": "2026-11-17T21:00:03.769031+00:00",
+    "counts": {
+      "configure_attempts": 1,
+      "engine_builds": 0,
+      "parity_helper_compiles": 0,
+      "parity_helper_gpu_invocations": 0,
+      "parity_games": 0,
+      "clean_games": 0,
+      "games": 0,
+      "captures": 0,
+      "trace_inspections": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "diagnostic_outcome": "BLOCKED_CONFIGURE_OPENAL_PACKAGE_SEARCH_PATH",
+    "cleanup_complete": true,
+    "artifact_commit": "ae113722ccdd36be5564d08552e68aea9f7ad5bd",
+    "retry_authorized": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1867,7 +1914,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Isolated HQ3 candidate validation. No clean games unless all parity gates pass. No capture, existing trace inspection, profiling or retries.",
+  "next_action": "SUPER_JINI_MK2 review round31 DONE. Configure blocked before any SDK compilation. No retry or additional execution is authorized for round31.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
