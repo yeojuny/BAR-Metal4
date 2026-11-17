@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 127,
+  "revision": 128,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/game-decal-indexed-fps-20261117-37/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/game-decal-indexed-fps-20261117-37/READY.json",
   "result_path": "coordination/native-metal4/rounds/game-decal-indexed-fps-20261117-37/DONE.json",
-  "decision": "RUN_ONE_CLEAN_INDEXED_FLAG_PAIR",
-  "execution_status": "HQ3_ROUND37_RESERVED_GAME_DECAL_SAME_BINARY_OFF_ON_FPS",
+  "decision": "DONE_MATCHED_SAME_BINARY_GAME_DECAL_FLAG_FPS_PAIR",
+  "execution_status": "HQ3_ROUND37_CLOSED_SAME_BINARY_INDEXED_OFF_ON_FPS",
   "blocked_reason": null,
   "history": [
     {
@@ -2023,6 +2023,37 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17T22:46:22.752Z"
+    },
+    {
+      "event": "HQ3_ROUND37_CLOSED_SAME_BINARY_INDEXED_OFF_ON_FPS",
+      "revision": 128,
+      "round_id": "game-decal-indexed-fps-20261117-37",
+      "attempt_id": "indexed-clean-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "5875da033603118a146677f370f3359c8482160d",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-fps-20261117-37/DONE.json",
+      "decision": "DONE_MATCHED_SAME_BINARY_GAME_DECAL_FLAG_FPS_PAIR",
+      "counts": {
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "builds": 0,
+        "helpers": 0,
+        "retries": 0,
+        "screenshots": 0,
+        "metal_traces": 0,
+        "profiles": 0
+      },
+      "fps_by_arm": {
+        "INDEXED_OFF": 64.87891356156975,
+        "INDEXED_ON": 65.71149946147935
+      },
+      "relative_percent": 1.2832919884200544,
+      "indexed_draw_api": "UNVERIFIED_BY_EXISTING_LOG",
+      "cleanup_complete": true,
+      "utc": "2026-11-17T22:50:28.939618+00:00"
     }
   ],
   "communication_test": {
@@ -2108,7 +2139,7 @@
   "execution": {
     "attempt_id": "indexed-clean-off-on-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "games_max": 2,
       "off_games_max": 1,
@@ -2131,7 +2162,31 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17T22:46:22.752Z",
-    "bar": "PAUSED"
+    "bar": "PAUSED",
+    "ended_at_utc": "2026-11-17T22:50:28.939618+00:00",
+    "counts": {
+      "games": 2,
+      "off_games": 1,
+      "on_games": 1,
+      "normal_exits": 2,
+      "builds": 0,
+      "helpers": 0,
+      "retries": 0,
+      "screenshots": 0,
+      "metal_traces": 0,
+      "profiles": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "5875da033603118a146677f370f3359c8482160d",
+    "diagnostic_outcome": "DONE_MATCHED_SAME_BINARY_GAME_DECAL_FLAG_FPS_PAIR",
+    "fps_by_arm": {
+      "INDEXED_OFF": 64.87891356156975,
+      "INDEXED_ON": 65.71149946147935
+    },
+    "relative_percent": 1.2832919884200544,
+    "same_loaded_non_system_dylibs": true,
+    "indexed_draw_api": "UNVERIFIED_BY_EXISTING_LOG",
+    "retry_authorized": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2197,7 +2252,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the pinned indexed GameDecal candidate once with the flag off and once with it on.",
+  "next_action": "Review the round 37 same-binary OFF/ON FPS result and the indexed submission evidence limit.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
