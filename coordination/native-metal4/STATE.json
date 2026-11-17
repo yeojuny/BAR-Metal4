@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 48,
+  "revision": 49,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-pages-staging-20261117-11",
+  "round_id": "ground-decal-pages-validation-20261117-12",
   "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
   "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
-  "request": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/READY.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/DONE.json",
-  "decision": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/DECISION.json",
-  "execution_status": "GROUND_DECAL_TWO_ARM_VALIDATION_STAGED_NO_EXECUTION",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/READY.json",
+  "result_path": null,
+  "decision": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/DECISION.json",
+  "execution_status": "READY_GROUND_DECAL_TWO_ARM_VALIDATION_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -493,6 +493,14 @@
       "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_GROUND_DECAL_STAGING_REVIEW_VALIDATION_READY",
+      "revision": 49,
+      "round_id": "ground-decal-pages-validation-20261117-12",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true
     }
   ],
   "communication_test": {
@@ -564,7 +572,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ISOLATED_BINARY_AND_VALIDATION_FIXTURE_STAGING_ONLY_GAMES_ZERO",
+  "enabled_scope": "TWO_SEQUENTIAL_CORRECTNESS_GAMES_NO_PERFORMANCE",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
@@ -577,17 +585,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-pages-staging-01",
-    "started": true,
-    "completed": true,
+    "attempt_id": "ground-decal-pages-validation-01",
+    "started": false,
+    "completed": false,
     "games": 0,
-    "builds": 0,
-    "signing_attempts": 1,
-    "fixture_staging_attempts": 1,
-    "cleanup_complete": true,
-    "artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
-    "signed_candidate_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
-    "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637"
+    "builds": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
