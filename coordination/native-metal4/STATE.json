@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 55,
+  "revision": 56,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,7 +15,7 @@
   "request": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DONE.json",
-  "decision": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DECISION.json",
+  "decision": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DECISION.json",
   "execution_status": "GROUND_DECAL_SIX_CLEAN_RUNS_COMPLETE_CAUSAL_GAIN_UNCERTAIN_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
@@ -583,6 +583,15 @@
       "causal_gain_uncertain": true,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_GROUND_DECAL_PERFORMANCE_REVIEW",
+      "revision": 56,
+      "round_id": "ground-decal-pages-performance-20261117-13",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DECISION.json",
+      "cleanup_verified": true,
+      "observed_relative_percent": 4.035963323595371,
+      "causal_gain_uncertain": true
     }
   ],
   "communication_test": {
