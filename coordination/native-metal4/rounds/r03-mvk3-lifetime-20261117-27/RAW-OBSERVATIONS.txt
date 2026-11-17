@@ -1,0 +1,7 @@
+[R03 infolog.txt]
+[t=00:00:16.894472][f=0000000] [DecalLifetime] status=OBSERVED phase=FIRST simulation=0 gpuMemoryRaw=number:0.000000000000000 shortNameRaw=stringhex:4243323133 lifeTimeMult=number:0.699999988079071 scope=POST_INITIALIZE_LIFETIME_ONLY
+[t=00:01:13.961522][f=0001590] [DecalLifetime] status=OBSERVED phase=SIM1590 simulation=1590 gpuMemoryRaw=number:0.000000000000000 shortNameRaw=stringhex:4243323133 lifeTimeMult=number:0.699999988079071 scope=POST_INITIALIZE_LIFETIME_ONLY
+
+[MVK3 infolog.txt]
+[t=00:00:17.044751][f=0000000] [DecalLifetime] status=OBSERVED phase=FIRST simulation=0 gpuMemoryRaw=number:18622720.000000000000000 shortNameRaw=stringhex:4243323133 lifeTimeMult=number:3.000000000000000 scope=POST_INITIALIZE_LIFETIME_ONLY
+[t=00:00:25.782766][f=0000180] [WarmupPacing] event=FAILED_PAUSE_REQUEST_STATE simulation=180 wall_seconds=8.736000061 state=failed

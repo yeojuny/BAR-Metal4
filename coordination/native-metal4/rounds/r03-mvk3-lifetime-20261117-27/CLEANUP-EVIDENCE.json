@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "arms": {
+    "R03": {
+      "owned": {
+        "pid": 6026,
+        "pgid": 6026,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      },
+      "cleanup": {
+        "normalExit": true,
+        "pid": 6026,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "ownerClosed": {
+        "status": "CLOSED",
+        "arm": "R03",
+        "cleanupComplete": true,
+        "diagnosticStatus": "PASS_TWO_RAW_RECORDS",
+        "awakeReleased": true,
+        "utc": "2026-11-17T20:09:15.439553+00:00"
+      },
+      "wakeRelease": {
+        "status": "RELEASED",
+        "campaign": "clean_paced",
+        "pid": 6014,
+        "startUTC": "2026-11-17T20:07:58.031488+00:00",
+        "maximumSeconds": 900,
+        "securitySettingsChanged": false,
+        "endUTC": "2026-11-17T20:09:15.439197+00:00",
+        "ownCaffeinateAlive": false
+      },
+      "gameProcessGroupGoneAfterReturn": true,
+      "ownedWakeGoneAfterReturn": true,
+      "ultraWidgetRemoved": true
+    },
+    "MVK3": {
+      "owned": {
+        "pid": 6177,
+        "pgid": 6177,
+        "engine": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring"
+      },
+      "cleanup": {
+        "normalExit": true,
+        "pid": 6177,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "ownerClosed": {
+        "status": "CLOSED",
+        "arm": "MVK3",
+        "cleanupComplete": true,
+        "diagnosticStatus": "FAIL",
+        "awakeReleased": true,
+        "utc": "2026-11-17T20:10:35.905033+00:00"
+      },
+      "wakeRelease": {
+        "status": "RELEASED",
+        "campaign": "clean_paced",
+        "pid": 6169,
+        "startUTC": "2026-11-17T20:10:09.011214+00:00",
+        "maximumSeconds": 900,
+        "securitySettingsChanged": false,
+        "endUTC": "2026-11-17T20:10:35.904559+00:00",
+        "ownCaffeinateAlive": false
+      },
+      "gameProcessGroupGoneAfterReturn": true,
+      "ownedWakeGoneAfterReturn": true,
+      "ultraWidgetRemoved": true
+    }
+  },
+  "sharedAwake": {
+    "status": "RELEASED",
+    "campaign": "clean_paced",
+    "pid": 6169,
+    "startUTC": "2026-11-17T20:10:09.011214+00:00",
+    "maximumSeconds": 900,
+    "securitySettingsChanged": false,
+    "endUTC": "2026-11-17T20:10:35.904559+00:00",
+    "ownCaffeinateAlive": false
+  },
+  "bar": "PAUSED",
+  "userCaffeinate": {
+    "pid": 5247,
+    "window": 103,
+    "windowSource": "user handoff",
+    "before": "caffeinate -d",
+    "after": "caffeinate -d",
+    "signalOrUIOperationsDirectedToUserProcess": 0
+  },
+  "systemChanges": {
+    "reboots": 0,
+    "logouts": 0,
+    "serviceRestarts": 0,
+    "securityChanges": 0
+  }
+}
