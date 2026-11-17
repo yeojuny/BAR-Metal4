@@ -1,6 +1,6 @@
 # D2R·Zelda 렌더 구조: BAR R03 대응 심층 1차 검토
 
-> 최신 분석 우선순위: 한 프레임 내부 의존성·병렬 실행. HQ19 종료 후 기존 gputrace read-only export가 다음 순서이며, 자세한 한계는 마지막 갱신 절 참조.
+> 최신 상태: round20 저장 export 검토 완료(STATE80). 한 프레임 내부 의존성 분석은 계속하되 aggregate bounds는 실제 active overlap이 아니다. 마지막 정정 절 참조.
 
 > 최신 운영 상태는 문서 끝의 **round18 종료·제한적 동등성 통과** 갱신을 참조한다. revision72/RUNNING 내용은 과거 스냅샷이다.
 
@@ -379,3 +379,27 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 - [MetalCraft 고정 backend](https://github.com/Im-Fran/MetalCraft/blob/a2cc82780d01a51d00a297f75cf07c221d7c8700/src/main/native/metalcraft.mm)
 - [Blender 공식 compatibility](https://developer.blender.org/docs/release_notes/compatibility/), [Godot4.7 architecture](https://docs.godotengine.org/en/4.7/engine_details/architecture/internal_rendering_architecture.html)
 - [MGL 고정 README](https://github.com/openglonmetal/MGL/blob/de0ded04ec7dc99182e27e555a17775523b26911/README.md), [Zink](https://docs.mesa3d.org/drivers/zink.html), [KosmicKrisp](https://docs.mesa3d.org/drivers/kosmickrisp.html)
+
+## 최신 정정: round20 저장 export 검토 완료, bounds는 실제 overlap 시간이 아님
+
+- 실제 원격 STATE 재조회: **revision80 / DONE / SUPER_JINI_MK2**, round `r02-existing-trace-export-20261117-20`.
+- artifact `9d9c34e19c137857540fb3133a8452523e74074e`의 REPORT를 직접 읽었다. capture source는 **R02 `0382d0f3833d63b3ff1a78c46b108c99539656d0`**이며 R03·후속 후보 성능을 대표하지 않는다.
+- 이전 절의 “GroundDecal FS와 Grass VS가 겹친다”는 표현은 **저장된 aggregate bounds상 교차 관찰**로 한정·정정한다. 원자료의 개별 active intervals와 단위/column schema가 없으므로 실제 동시 실행 길이·연속 overlap·GPU 독점 시간을 입증하지 않는다. Grass FS의 bounds 순서도 정확한 모든 constituent interval의 순서를 뜻하지 않는다.
+- label9 exit **Fragment→queue Fragment**, label10 entry **queue Fragment→Fragment**는 실제 API slice에서 확인됐다. 이 명시적 wait는 Vertex를 포함하지 않으므로 “decal→grass에서 Vertex wait를 없애자”는 제안은 이미 적용된 변경의 반복이다. 이것이 모든 hidden hazard나 overlap duration의 증명은 아니다.
+- labels11/12 및33 이후 broad stage waits는 존재하지만 attachment bindings와 last-writer가 없어 안전하게 줄일 수 있는지 미확정이다.
+- SensorLOS label33: api9754 dss15, api9766 rps61 draw(378 vertices×165 instances). api9776의 dss12는 api9786 rps15 draw에 적용하며 **또 다른 SensorLOS draw로 추정하지 않는다**. dss12/15 전체 compare/write/mask/op는 UNAVAILABLE.
+- 과거 replay shader-cost shares SensorLOS26.34215%, GroundDecal14.74173%, GameDecal8.59926%는 runtime frame fraction도 예상 절약률도 아니다. SensorLOS 구간의 다른 작업 공유 관찰 역시 단독 독점 시간으로 바꾸지 않는다.
+- api10982/ce51의 **tex99→tex2 copy edge**는 명시적이다. tex99 upstream attachment writer와 정확 drawable texture identity는 미확보. residency 등록/isAliasable query는 read/write/alias 증거가 아니며 argument-table 숫자를 trace @tex 번호와 같다고 두지 않는다.
+- shader rows의 bounds pair와 문서화되지 않은 trailing field만으로 active duration을 계산하지 않는다. **zero-draw label39도 whole-frame처럼 보이는 range**를 가지므로 범위를 GPU occupation으로 읽으면 틀린다. bounds intersection을 합산하거나 measured overlap으로 보고하지 않는다.
+
+### 이번에 확보한 것과 남은 것
+- [x] encoder52개 creation order 매핑, render draw counts42개 확인, 지정 label14개의 API slices.
+- [x] SDK stage constants에 따른 barrier decode, pipeline/DSS 실제 bind, copy edge, raw export9개 provenance/hashes.
+- [x] 원 trace before/after 동일:1,223 files,2,788,204,457 logical bytes, tree SHA256 `5ae339d460ddb46089783227ba115d37ae4a0e3c4327d81e99c665741a8ea228`.
+- [ ] attachment descriptors, complete resource hazards/last writers, full dss12/dss15 state, individual active stage intervals는 **UNAVAILABLE**. 소스 추정으로 메우지 않는다.
+- HQ는 새 inspection session을 열지 않았다. gpudebug help에 zero-GPU load 보장이 없고 과거 loading 상태는 실행 여부를 확정하지 않으므로 이번 제한을 충족할 보장이 없었다. session checks2회 모두 no active sessions, games/builds/captures/replay/profiling0.
+- export 검토는 pass/API map을 개선했지만 barrier/in-place-write 변경의 수명·의존성 증명을 끝내지 못했다. 지원되는 별도 inspection 경로와 필요한 권한을 확인하기 전 replay 금지.
+- **소스 수정·FPS 개선·예상 timing·새 benchmark 권한 없음.** 문서 이전의 HQ19 이후 export 대기는 이 round20 완료 기록으로 갱신한다.
+- REPORT에는 별도 사용자 요청 Astra ultra follow-up 감사가 시작됐다고 기록한다. 읽기+자기 감사 문서만 허용하며 게임/빌드/GPU/저장소 수정 권한은 없다. 이번 체크포인트 작성에서 감사 결과를 수신·검증했다고 주장하지 않는다.
+
+[고정 round20 REPORT](https://github.com/yeojuny/BAR-Metal4/blob/9d9c34e19c137857540fb3133a8452523e74074e/coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/artifacts/REPORT.md)
