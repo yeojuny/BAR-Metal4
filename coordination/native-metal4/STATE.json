@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 32,
+  "revision": 33,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DECISION.json",
-  "execution_status": "READY_R03_ISOLATED_BUILD_STAGING_NOT_STARTED",
+  "execution_status": "R03_ISOLATED_BUILD_STAGING_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -310,6 +310,16 @@
       "review_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/HQ-REVIEW.md",
       "current_round_preserved": "r03-engine-staging-20261117-07",
       "audit_local_reads_complete": true
+    },
+    {
+      "event": "HQ_R03_BUILD_STAGING_RESERVED",
+      "revision": 33,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-engine-staging-20261117-07",
+      "attempt_id": "r03-isolated-build-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "scope": "ONE_ISOLATED_BUILD_AND_PIN_ONLY_RUNNER_STAGING",
+      "independent_audit_closed": true
     }
   ],
   "communication_test": {
@@ -395,11 +405,12 @@
   },
   "execution": {
     "attempt_id": "r03-isolated-build-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "configure_attempts": 0,
     "engine_builds": 0,
-    "games": 0
+    "games": 0,
+    "started_at_utc": "2026-11-17 01:16:23 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
