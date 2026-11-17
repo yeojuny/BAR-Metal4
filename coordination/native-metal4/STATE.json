@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 24,
+  "revision": 25,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
   "request": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/READY.json",
-  "result_path": null,
-  "decision": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DECISION.json",
-  "execution_status": "CAPTURE_REPLAY_STAGING_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DONE.json",
+  "decision": "Current R02 replay: SensorLOS Fragment26.342153%, GroundDecal Fragment14.741725%; exact minor-range rejection order is one unimplemented hypothesis. No FPS prediction.",
+  "execution_status": "CAPTURE1_PROFILE1_COMPLETE_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -223,6 +223,21 @@
         "replay_profiles": 1,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ_CURRENT_R02_GPU_PROFILE_DONE",
+      "revision": 25,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r02-current-gpu-profile-20261117-05",
+      "attempt_id": "r02-current-capture-profile-01",
+      "result_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DONE.json",
+      "artifact_commit": "aa558a5c5b1858db54fa31470909d1aa25411ff6",
+      "capture_games": 1,
+      "captured_frames": 1,
+      "replay_profiles": 1,
+      "cleanup_complete": true,
+      "next_section_requested": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -309,11 +324,13 @@
   "execution": {
     "attempt_id": "r02-current-capture-profile-01",
     "started": true,
-    "completed": false,
-    "capture_games": 0,
-    "captured_frames": 0,
-    "replay_profiles": 0,
-    "started_at_utc": "2026-11-17 00:01:44 UTC"
+    "completed": true,
+    "capture_games": 1,
+    "captured_frames": 1,
+    "replay_profiles": 1,
+    "started_at_utc": "2026-11-17 00:01:44 UTC",
+    "cleanup_complete": true,
+    "completed_at_utc": "2026-11-17 00:14:59 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -321,5 +338,13 @@
     "task_routing": "지니가 각 지시 묶음에 HQ 및 위임 에이전트의 모델·추론강도를 명시한다. 반복 빌드·실행·기록과 복잡한 진단·수명 계약 검토를 구분하고 불필요한 모델 왕복은 피한다. 실행 중인 측정에는 설정 변경이나 새 병렬 작업을 끼워 넣지 않는다.",
     "branching": "대화가 무거워지면 역할·미완료 목표·고정 source/manifest·현재 STATE/round/attempt·결과 경로·금지사항·다음 한 단계만 인계한다. 이전 실행이 종료되고 정리된 뒤 새 담당자가 최신 STATE를 확인해 이어받는다. 진행 중 실행을 새 섹션에서 중복 시작하지 않는다.",
     "confirmation": "이 정책은 HQ가 사용자 지시를 전달한 기록이다. 지니의 실제 수신·설정 변경은 지니가 읽은 뒤 별도로 확인한다."
+  },
+  "context_branch_request": {
+    "requested_by": "LOCAL_CODEX_HQ",
+    "reason": "Accumulated HQ history is heavy",
+    "when": "Next bounded execution only; current game/profile and cleanup are closed",
+    "handoff": "Latest STATE, new round/attempt, source+manifest+binary pins, prior DONE/report/artifact paths, strict budget and prohibitions",
+    "duplicate_attempts_prohibited": true,
+    "model_effort": "JINI selects and explicitly specifies HQ model/reasoning at next task boundary. No settings change claimed this round."
   }
 }
