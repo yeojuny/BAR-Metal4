@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 46,
+  "revision": 47,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/DECISION.json",
-  "execution_status": "READY_GROUND_DECAL_STAGING_NOT_STARTED",
+  "execution_status": "GROUND_DECAL_VALIDATION_STAGING_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -474,6 +474,14 @@
       "decision": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/DECISION.json",
       "cleanup_verified": true,
       "HQ_turn_completed": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_STAGING_RESERVED",
+      "revision": 47,
+      "round_id": "ground-decal-pages-staging-20261117-11",
+      "attempt_id": "ground-decal-pages-staging-01",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "games": 0
     }
   ],
   "communication_test": {
@@ -559,7 +567,7 @@
   },
   "execution": {
     "attempt_id": "ground-decal-pages-staging-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "games": 0,
     "builds": 0
