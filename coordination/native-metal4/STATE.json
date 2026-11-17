@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 60,
+  "revision": 61,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/texture-ordered-compile-20261117-15/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/DECISION.json",
-  "execution_status": "READY_TEXTURE_ORDERED_CPU_METAL_COMPILE_NOT_STARTED",
+  "execution_status": "TEXTURE_ORDERED_CPU_AND_ENGINE_COMPILE_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -636,6 +636,14 @@
       "cleanup_verified": true,
       "HQ_turn_completed": true,
       "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230"
+    },
+    {
+      "event": "HQ_TEXTURE_ORDERED_COMPILE_RESERVED",
+      "revision": 61,
+      "round_id": "texture-ordered-compile-20261117-15",
+      "attempt_id": "texture-ordered-compile-01",
+      "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+      "games": 0
     }
   ],
   "communication_test": {
@@ -721,7 +729,7 @@
   },
   "execution": {
     "attempt_id": "texture-ordered-compile-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "games": 0,
     "builds": 0
