@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "scope": "CPU exact coverage/order identity and bounded integer arithmetic; no MSL/GPU/performance proof",
+  "counts": {
+    "cases": 32406,
+    "guarded": 17035,
+    "fallback": 15371,
+    "early_reject": 10629,
+    "covered": 7827,
+    "diamonds_old": 67611,
+    "diamonds_new": 45188
+  }
+}
