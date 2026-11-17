@@ -1,0 +1,185 @@
+{
+  "status": "PASS",
+  "objectCount": 1538,
+  "archiveCount": 35,
+  "mismatchCount": 0,
+  "fullReceipt": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/ARCHIVE-CLOSURE.json",
+  "fullReceiptSHA256": "64ac0b3ec2112c057d462ff996412910ac694f4929d764f4224e0028e8b14c1d",
+  "archives": [
+    {
+      "path": "librmlui_debugger.a",
+      "sha256": "e16318f262305757ecfba7f27f57c74d9e46590be7a5bacf32baf1ac2e21bb4d",
+      "members": 9
+    },
+    {
+      "path": "librmlui.a",
+      "sha256": "b112072772c8a86ec703d20cdd820a15475ee217cf1930d6b4a00ba490dd7c9b",
+      "members": 190
+    },
+    {
+      "path": "rts/lib/libmonocypher.a",
+      "sha256": "fceff8c5ebae815b526d418160ebf72a68e69cd235379cf7840b73978fce7e44",
+      "members": 2
+    },
+    {
+      "path": "rts/Sim/libengineSim.a",
+      "sha256": "d1b51dbc0bb6ab80f65fa4200842e7a27f41ebfd2c19801e5a402db214f46a06",
+      "members": 154
+    },
+    {
+      "path": "rts/lib/nowide/libnowide.a",
+      "sha256": "8df4ecd441c36cf3f76f22c57f1a0bb98a03db394e34bc65c0cec6db9f99a0a1",
+      "members": 6
+    },
+    {
+      "path": "rts/lib/smmalloc/libsmmalloc.a",
+      "sha256": "fef1ad3480d06bcaf82e22fc0fd2b7781ca7ae5c46bc72720745d4375df0f57c",
+      "members": 3
+    },
+    {
+      "path": "rts/lib/headlessStubs/libheadlessGLStubs.a",
+      "sha256": "8aa70f715fa4a7b68a487b0bf58b6123dc1a1423b84ffbe00de38f7aa31468ef",
+      "members": 1
+    },
+    {
+      "path": "rts/lib/simdjson/libsimdjson.a",
+      "sha256": "a96081a70c31b3cb580bc95dc94c2c590b87e0e02c884a5ba1dd14e081e1da10",
+      "members": 1
+    },
+    {
+      "path": "rts/lib/streflop/libstreflop.a",
+      "sha256": "f820edeee6e0ed396c6ddf7e618e9a0cf1f1ce3cb82561191a8ae0a08633fafa",
+      "members": 147
+    },
+    {
+      "path": "rts/lib/tracy/libTracyClient.a",
+      "sha256": "8e0c0076ed9aa073947d4f685208739b5b11674a5ab1532ea4c99c9112901b90",
+      "members": 1
+    },
+    {
+      "path": "rts/lib/fmt/libfmt.a",
+      "sha256": "a05a4bc576b67ede972662d8de1588306eed93e4353197eaef19eb9b00241f6d",
+      "members": 2
+    },
+    {
+      "path": "rts/lib/mimalloc/libmimalloc.a",
+      "sha256": "a3c14e87c05bfb9689eb5a5f19250e320073f36da2f90e4f07a432be964d1cdb",
+      "members": 18
+    },
+    {
+      "path": "rts/lib/lua/liblua.a",
+      "sha256": "38c8e3dab16f3d5fc6157d9b50349dda6734af0f3dda1025438289d2269e3a8c",
+      "members": 32
+    },
+    {
+      "path": "rts/lib/gflags/libgflags_nothreads.a",
+      "sha256": "3eebfa9f9c2198b51207a325c72d9b18c6292c317e712e03e5317b8fff9c3056",
+      "members": 3
+    },
+    {
+      "path": "rts/lib/lunasvg/liblunasvg.a",
+      "sha256": "c7d7a77a881382f761f5e0d9bbc2ce4ce46600836dd1da1d24c3fd0aec4db095",
+      "members": 10
+    },
+    {
+      "path": "rts/lib/squish/libsquish.a",
+      "sha256": "7e7032d810702094ca17b4300021c2de2d987f184d0ef540d9214937eda2a86f",
+      "members": 9
+    },
+    {
+      "path": "rts/lib/luasocket/libluasocket.a",
+      "sha256": "853993fdf75e6baf2388953bda8fba2fe465a0f74442e9a1a3a61b049c1dd2ce",
+      "members": 15
+    },
+    {
+      "path": "rts/lib/fastgltf/libfastgltf.a",
+      "sha256": "535a6cfa2ee53bb629a8d603fa9223e06264d2b5c2c3e5155f2e5fab7ce2c3c7",
+      "members": 3
+    },
+    {
+      "path": "rts/lib/lunasvg/plutovg/libplutovg.a",
+      "sha256": "8d006c888eee17bad3a115fe651cdd717db7292b271bd28a6b535afa4d254c35",
+      "members": 11
+    },
+    {
+      "path": "rts/lib/assimp/code/libassimp.a",
+      "sha256": "453a5b306e8dcf8b4930aa1a2288ae2259dfdefc3af2ccd17b4eafa5c9f1c2c7",
+      "members": 68
+    },
+    {
+      "path": "rts/lib/assimp/contrib/irrXML/libIrrXML.a",
+      "sha256": "5061459f3ab6a6c4c09f1886b21d6d02f39ad677e40b7ac14002321759e3a34a",
+      "members": 1
+    },
+    {
+      "path": "rts/System/Net/libengineSystemNet.a",
+      "sha256": "a95afae1ff6ef8257308df23d495ef4cf0df388d783cf5bc00133b805319bfe0",
+      "members": 9
+    },
+    {
+      "path": "rts/System/Sound/libsound.a",
+      "sha256": "35592b29717ad98c677c41a66259caa4b611024d39dc2256b912e9a024871f0e",
+      "members": 17
+    },
+    {
+      "path": "rts/System/FileSystem/Archives/libarchives.a",
+      "sha256": "38e505e9989b77b64d0f4aa1f6cfe0ed1d3bdf8557838cb96a9c6f717d19b2ad",
+      "members": 16
+    },
+    {
+      "path": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "sha256": "5ec3f15161cba8b934ed47730dddd27b498729e045aabcfd611176c16f6c6ec8",
+      "members": 91
+    },
+    {
+      "path": "rts/builds/metal4-scene/libGameMetal4Scene.a",
+      "sha256": "6bd9afd4212be330faf7661202ec4b42860b624bb1c09ea279227224f2e4b83b",
+      "members": 75
+    },
+    {
+      "path": "rts/builds/metal4-scene/metal4-renderer/librecoil-metal4-surface.a",
+      "sha256": "fd02adc9205831dae43869b2d09fc80738318f489724e5f01b7cd949532ac7d0",
+      "members": 2
+    },
+    {
+      "path": "rts/builds/metal4-scene/metal4-renderer/librecoil-metal4-renderer.a",
+      "sha256": "2dea874df281bf136fa7626bf4f848b8d2f800647e204da5251fce5be76f1a4a",
+      "members": 17
+    },
+    {
+      "path": "rts/builds/metal4-scene/metal4-renderer/CMakeFiles/_CMakeLTOTest-CXX/bin/libfoo.a",
+      "sha256": "398143ddba3debd1a79e9cf5ee9d401c677b3bbd3b7ec456c6cd8b965f7bbf76",
+      "members": 1
+    },
+    {
+      "path": "tools/pr-downloader/src/libpr-downloader.a",
+      "sha256": "e531d82c57d6ca7c442b84c95f52a6ffcd605053ccabf69c88a8ac9192a96fce",
+      "members": 24
+    },
+    {
+      "path": "tools/pr-downloader/src/lib/md5/libpr-md5.a",
+      "sha256": "7b94ed9716ae6beb318068526437bd5a5b0cdad1a43ea132d6aa360f4ff506f8",
+      "members": 1
+    },
+    {
+      "path": "tools/pr-downloader/src/lib/jsoncpp/libpr-jsoncpp.a",
+      "sha256": "66df7230c550bc8c7460cdaf5bd0ea8d0986574487f66942d7832106e5f0fab4",
+      "members": 3
+    },
+    {
+      "path": "tools/pr-downloader/src/lib/base64/libpr-base64.a",
+      "sha256": "c2280a3e610c76a65248803a11fb37f4441b9e5b9bef41246f26597fc5b37f0c",
+      "members": 1
+    },
+    {
+      "path": "tools/pr-downloader/src/lib/sha1/libpr-sha1.a",
+      "sha256": "ecb2c022ecd2e1be6f2d3a5fac9317df55b514ad6971c1fc349b734378ef6901",
+      "members": 1
+    },
+    {
+      "path": "tools/pr-downloader/src/lib/7z/lib7zip.a",
+      "sha256": "86c13829a4391fe4fd91279a63ffcd4e4d0c58ef6697342a1591d502f777b93e",
+      "members": 46
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "expected": 10269,
+  "observed": 10269,
+  "missing": [],
+  "extra": [],
+  "changedUnexpectedly": [],
+  "allowedProductionDelta": "rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+  "oldHeaderSHA256": "1fa2cf0b4f8a9cd01f9a3b6c4a3886b72297aa6de1481cf31505945cfc995b1c",
+  "newHeaderSHA256": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+  "parentFullManifestSHA256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "R03ManifestSHA256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "ignoredIncidentalCache": true
+}
