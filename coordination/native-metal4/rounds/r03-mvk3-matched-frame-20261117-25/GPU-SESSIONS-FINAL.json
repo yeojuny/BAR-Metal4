@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/usr/bin/gpudebug",
+    "--list-sessions"
+  ],
+  "purpose": "cleanup metadata only; no trace open or profile",
+  "utc": "2026-11-17T10:51:25.970633+00:00",
+  "status": "TIMEOUT_15S",
+  "stdout": null,
+  "stderr": null
+}

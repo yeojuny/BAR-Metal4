@@ -1,0 +1,41 @@
+{
+  "status": "READY_NO_GAME",
+  "order": [
+    {
+      "arm": "R03",
+      "backend": "candidate",
+      "data": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/R03/state/data",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "controllerSHA256": "148b6396a413cd6c8f310b1a7afc10cc1e5ef659a516f15e224c6157a508058d",
+      "ultraProbeSHA256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "privateFontSHA256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    },
+    {
+      "arm": "MVK3",
+      "backend": "MVK3",
+      "data": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/MVK3",
+      "binarySHA256": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa",
+      "controllerSHA256": "148b6396a413cd6c8f310b1a7afc10cc1e5ef659a516f15e224c6157a508058d",
+      "ultraProbeSHA256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+      "configSHA256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "privateFontSHA256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "mapSHA256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887"
+    }
+  ],
+  "campaign": "clean_paced",
+  "sourceController": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/material-storage-pr7-20261115-01/measurement/battle/battle_control.lua",
+  "sourceProbe": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/material-storage-pr7-20261115-01/ultra-compare/ultra_quality.lua",
+  "pacingHashes": {
+    "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+    "test_warmup_pacing.lua": "85a1607728105dafd8030e8bef4544693a4a688b66e97c0443456a2d88f4d5c9"
+  },
+  "comparisonDecision": "Frozen R02 versus fixed R03 A B B A A B; S01/G01 both1; all valid rows retained; images after count",
+  "actualUltraRuntime": "pending"
+}

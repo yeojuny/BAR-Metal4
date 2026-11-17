@@ -1,0 +1,10 @@
+{
+  "status": "INITIAL_POSTQUERY_RESULT_NOT_RETAINED",
+  "command": [
+    "/usr/bin/gpudebug",
+    "--list-sessions"
+  ],
+  "timeoutSeconds": 15,
+  "observedFinalQuery": "GPU-SESSIONS-FINAL.json",
+  "note": "Initial command yielded before completion and its session result was not retained; no exit or timeout result asserted for that call."
+}

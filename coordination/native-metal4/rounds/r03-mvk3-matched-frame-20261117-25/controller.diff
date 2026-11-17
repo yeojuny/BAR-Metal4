@@ -1,0 +1,85 @@
+--- original-controller
++++ framepair-controller
+@@ -1,3 +1,4 @@
++local framePairRequested,framePairReady,framePairHoldDraw
+ function widget:GetInfo()return{name='Explicit Matched Product Gameplay',desc='Start only, fixed excluded-warmup view, observe, normal exit',author='Codex',layer=100000,enabled=true}end
+ local opened,warm,started,last,firstDraw,lastDraw,lastSim,nextSample= nil,nil,nil,nil,nil,nil,nil,1
+ local rows,requests,cameraRestored={},0,false
+@@ -49,6 +50,32 @@
+  for _,k in ipairs(keys)do local v=s[k];if type(v)=='number'then out[#out+1]=k..'='..string.format('%.9g',v)elseif type(v)=='string'then out[#out+1]=k..'='..v end end
+  local w,h,x,y=Spring.GetViewGeometry();out[#out+1]=string.format('view=%d,%d,%d,%d',w,h,x,y)
+  return table.concat(out,';')
++end
++
++
++local function framePairSnapshot(which)
++ local f=assert(io.open('LuaUI/Config/framepair-'..which..'.txt','w'))
++ local a,b,paused=Spring.GetGameSpeed()
++ f:write(string.format('tick=%d\ndraw=%d\npaused=%s\nspeed=%.9g,%.9g\ncamera=%s\n',Spring.GetGameFrame(),draw(),tostring(paused),a,b,camera()))
++ local selected=Spring.GetSelectedUnits();table.sort(selected)
++ f:write('selected='..table.concat(selected,',')..'\n')
++ local visible=Spring.GetVisibleUnits();table.sort(visible)
++ f:write('visible='..table.concat(visible,',')..'\n')
++ local units=Spring.GetAllUnits();table.sort(units)
++ for _,id in ipairs(units)do
++  local x,y,z=Spring.GetUnitPosition(id)
++  local dx,dy,dz=Spring.GetUnitDirection(id)
++  local vx,vy,vz=Spring.GetUnitVelocity(id)
++  local hp,maxhp,paralyze,capture,build=Spring.GetUnitHealth(id)
++  f:write(string.format('unit=%d,%d,%d,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g,%.9g\n',id,Spring.GetUnitDefID(id) or -1,Spring.GetUnitTeam(id) or -1,x or 0,y or 0,z or 0,dx or 0,dy or 0,dz or 0,vx or 0,vy or 0,vz or 0,hp or 0,maxhp or 0,paralyze or 0,capture or 0,build or 0))
++ end
++ local features=Spring.GetAllFeatures();table.sort(features)
++ for _,id in ipairs(features)do
++  local x,y,z=Spring.GetFeaturePosition(id)
++  f:write(string.format('feature=%d,%d,%.9g,%.9g,%.9g\n',id,Spring.GetFeatureDefID(id) or -1,x or 0,y or 0,z or 0))
++ end
++ f:close()
++ Spring.Echo('[FramePair] snapshot='..which..' simulation='..Spring.GetGameFrame()..' units='..#units..' features='..#features)
+ end
+ 
+ --208 read-only route witness. Both snapshots and all formatting are outside
+@@ -169,11 +196,43 @@
+  end
+  if externalProfiles and started and not frameStopped and f==600 then budgetMark("time-profiler") end
+  if externalProfiles and started and not frameStopped and f==1740 then budgetMark("metal-trace") end
+- if f==1740 then endMeasurement(f) end
++ if f==1500 then budgetMark("capture-boundary") end
++ if f==1590 then
++  frameStopped=true;framePairRequested=true;budgetMark("end")
++  Spring.SendCommands('pause 1')
++ end
+ end
+ function widget:Initialize()for i=1,30000 do frameTimes[i]=0;frameDraws[i]=0 end;opened=Spring.GetTimer();Spring.Echo('[MatchedGameplay] control_initialized warmup=10 measured=40 positive_total=58 combat_total=50 idle_limiter_disabled=1 window_mode=simulation start_simulation=540 end_simulation=1740 benchmark_command_frame=240')end
+ function widget:Update()
+  local now=Spring.GetTimer();local game=Spring.GetGameFrame()
++
++ if framePairRequested then
++  local _,_,paused=Spring.GetGameSpeed()
++  if paused and game~=1590 then
++   framePairSnapshot('invalid-tick')
++   Spring.Echo('[FramePair] FAILED_PAUSE_TICK actual='..game)
++   budgetMark('capture-stop');Spring.Quit();widgetHandler:RemoveWidget(self);return
++  end
++  if paused and not framePairReady then
++   if not framePairHoldDraw then framePairHoldDraw=draw() end
++   if draw()>=framePairHoldDraw+8 then
++    assert(cameraStillFixed(),'[FramePair] FAILED_CAMERA')
++    framePairSnapshot('before')
++    budgetMark('capture-start');framePairReady=true
++   end
++  end
++  local finished=io.open('LuaUI/Config/framepair-finished','r')
++  if finished then
++   finished:close();framePairSnapshot('after')
++   budgetMark('capture-done');Spring.Quit();widgetHandler:RemoveWidget(self);return
++  end
++  if Spring.DiffTimers(now,opened)>=200 then
++   Spring.Echo('[FramePair] FAILED_CAPTURE_DEADLINE')
++   Spring.Quit();widgetHandler:RemoveWidget(self)
++  end
++  return
++ end
++
+  if game<=0 and not warm and Spring.DiffTimers(now,opened)>2 and requests<3 then
+   if not last or Spring.DiffTimers(now,last)>=5 then last=now;requests=requests+1;Spring.SendCommands('forcestart')end
+  end

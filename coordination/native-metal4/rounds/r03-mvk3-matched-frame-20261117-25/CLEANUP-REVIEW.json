@@ -1,0 +1,40 @@
+{
+  "status": "PASS_OWNED_CLEANUP_GLOBAL_SESSION_QUERY_UNAVAILABLE",
+  "known_pid_alive": {
+    "game87421": false,
+    "awake87413": false
+  },
+  "game_group_alive": false,
+  "relevant_process_snapshot": [
+    " 1685     1  1685 /usr/libexec/gputoolsserviced",
+    " 4355  4235  4355 caffeinate"
+  ],
+  "no_game_capture_debugger_replayer_processes": true,
+  "post_session_query": {
+    "command": [
+      "/usr/bin/gpudebug",
+      "--list-sessions"
+    ],
+    "purpose": "cleanup metadata only; no trace open or profile",
+    "utc": "2026-11-17T10:51:25.970633+00:00",
+    "status": "TIMEOUT_15S",
+    "stdout": null,
+    "stderr": null
+  },
+  "checks": {
+    "binary_pins_match": true,
+    "runtime_libraries_match": true,
+    "runner_unchanged": true,
+    "inherited_runner_unchanged": true,
+    "frozen_controller_match": true
+  },
+  "game_normal_exit": true,
+  "worker_joined": true,
+  "inspection_sessions_opened": 0,
+  "capture_start_commands": 0,
+  "unrelated_processes_not_terminated": true,
+  "bar": "PAUSED",
+  "utc": "2026-11-17T10:50:56.584132+00:00",
+  "global_session_list": "UNKNOWN",
+  "owned_cleanup_complete": true
+}
