@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 103,
+  "revision": 104,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r03-mvk3-matched-frame-20261117-26",
+  "round_id": "r03-mvk3-lifetime-20261117-27",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
-  "request": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/DONE.json",
-  "decision": "INSUFFICIENT_NO_PROFILE_GAME_DECAL_SEMANTIC_INPUT_MISMATCH",
-  "execution_status": "HQ3_ROUND26_CLOSED_BOTH_TICKS1590_DECAL_MISMATCH_NO_PROFILE",
+  "request": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/READY.json",
+  "result_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/DONE.json",
+  "decision": "REVIEWED_FRAME_ZERO_FIX_CPU_SCALAR_DIAGNOSTIC_ONLY",
+  "execution_status": "READY_NEW_LIFETIME_ONLY_ROUND_NO_GAME_YET",
   "blocked_reason": null,
   "history": [
     {
@@ -1453,6 +1453,25 @@
       "bar": "PAUSED",
       "retry_authorized": false,
       "utc": "2026-11-17T17:07:48.165Z"
+    },
+    {
+      "event": "JINI_LIFETIME_ONLY_CANDIDATE_REVIEW_READY",
+      "revision": 104,
+      "previous_round": "r03-mvk3-matched-frame-20261117-26",
+      "round_id": "r03-mvk3-lifetime-20261117-27",
+      "attempt_id": "lifetime-raw-two-arm-01",
+      "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+      "budget": {
+        "games_max": 2,
+        "games_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0
+      },
+      "previous_budget_reused": false,
+      "frame_zero_gate_corrected": true,
+      "execution_started": false
     }
   ],
   "communication_test": {
@@ -1524,7 +1543,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_MATCHED_SIM1590_R03_MVK3_CAPTURE_PAIR_COMPONENT_DIAGNOSTIC",
+  "enabled_scope": "LIFETIME_ONLY_TWO_GAME_DIAGNOSTIC",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -1536,77 +1555,18 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r03-mvk3-framepair-02",
-    "started": true,
-    "completed": true,
-    "games": 2,
-    "captures": 2,
-    "profiles": 0,
+    "attempt_id": "lifetime-raw-two-arm-01",
+    "started": false,
+    "completed": false,
     "budget": {
       "games_max": 2,
-      "captured_frames_per_arm": 1,
-      "captures_max": 2,
-      "inspection_sessions_max": 2,
-      "profile_commands_per_arm": 1,
-      "profile_commands_max": 2,
-      "engine_builds": 0,
-      "engine_source_edits": 0,
-      "R04_captures": 0,
+      "games_per_arm": 1,
+      "captures": 0,
+      "profiles": 0,
       "retries": 0,
-      "extra_counter_replays": 0,
-      "FPS_AB": 0
+      "builds": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 16:44:41 UTC",
-    "completed_at_utc": "2026-11-17T17:07:48.165Z",
-    "captured_frames": 2,
-    "profile_commands": 0,
-    "inspection_sessions": 2,
-    "counts": {
-      "games": 2,
-      "capture_command_invocations": 2,
-      "captured_frames": 2,
-      "inspection_sessions": 2,
-      "profile_commands": 0,
-      "extra_counter_replays": 0,
-      "engine_builds": 0,
-      "engine_source_edits": 0,
-      "R04_captures": 0,
-      "retries": 0,
-      "FPS_AB": 0,
-      "reboots": 0,
-      "logouts": 0,
-      "service_restarts": 0,
-      "security_changes": 0
-    },
-    "per_arm": {
-      "R03": {
-        "games": 1,
-        "capture_commands": 1,
-        "captured_frames": 1,
-        "inspection_sessions": 1,
-        "session": "9",
-        "profile_commands": 0,
-        "bound_timeInfo_x": 1590,
-        "normal_game_exit": true,
-        "session_closed": true
-      },
-      "MVK3": {
-        "games": 1,
-        "capture_commands": 1,
-        "captured_frames": 1,
-        "inspection_sessions": 1,
-        "session": "14",
-        "profile_commands": 0,
-        "bound_timeInfo_x": 1590,
-        "normal_game_exit": true,
-        "session_closed": true
-      }
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "aa7a6ada2538d237604ce483e1ba7687998463af",
-    "matched_frame_pair": false,
-    "outcome": "INSUFFICIENT_FAIL_MANDATORY_GAME_DECAL_SEMANTIC_WORKLOAD"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1672,5 +1632,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "SUPER_JINI_MK2 review closed round26. No implicit retry, new game/profile, source repair, reboot, logout, service restart or security change."
+  "next_action": "HQ3 reserve once and reread STATE, verify no competing work, fresh stage then at most R03 one game and MVK3 one only after first passes. Captures/profiles/retries/builds0; preserve user caffeinate."
 }
