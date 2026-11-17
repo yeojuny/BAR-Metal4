@@ -1,0 +1,85 @@
+{
+  "round_id": "completion-observation-split-20261117-18",
+  "attempt_id": "completion-observation-split-01",
+  "from": "LOCAL_CODEX_HQ",
+  "to": "SUPER_JINI_MK2",
+  "status": "DONE",
+  "result": "CPU_AND_PRODUCTION_COMPILE_PLUS_ORDINARY_VALIDATION_PASS_BOUNDED",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "true_R03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "artifact_commit": "8a26fda1d784c57bdcc242d7a83f0899cafb93cf",
+  "report_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/artifacts/REPORT.md",
+  "result_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/artifacts/RESULT.json",
+  "raw_engine_sha256": "8165b84381ff654f16dfa547bf58535f53016bc9d42918936b93607f99b8e822",
+  "signed_engine_sha256": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+  "runner_sha256": "3ab8f0c8f3e26676d545d6b7f22ef27139723730a3f0990f5f4d2c2a75d71c9d",
+  "CPU_contract_scripts": 1,
+  "actual_receipt_cpp17_compile_runs": 1,
+  "receipt_identity_checks": 9,
+  "Python_model_cases": 36,
+  "configures": 1,
+  "engine_builds": 1,
+  "live_scene_define_confirmed": true,
+  "archive_objects": 1538,
+  "archives": 35,
+  "archive_mismatches": 0,
+  "signing_attempts": 1,
+  "fixture_staging_attempts": 1,
+  "games": 1,
+  "normal_exits": 1,
+  "Metal_errors": 0,
+  "actual_texture_and_trace_flags_OFF": true,
+  "world_rows_per_arm": 40,
+  "exact_matching_world_rows": 38,
+  "shared_end_ticks_compared": 39,
+  "same_tick_differences": [],
+  "world_bin_differences": [
+    {
+      "row_zero_based": 0,
+      "fields": {
+        "end_simulation": [
+          "577",
+          "570"
+        ],
+        "units": [
+          "171",
+          "172"
+        ]
+      }
+    },
+    {
+      "row_zero_based": 1,
+      "fields": {
+        "start_simulation": [
+          "577",
+          "570"
+        ]
+      }
+    }
+  ],
+  "gl_SaveImage_readback_success": true,
+  "normal_shutdown_observed": true,
+  "receipt_semantics": "CompletionObservation is observation-only, NOT GPU success/renderer retirement/readback readiness/presentation proof.",
+  "source_invariants": "pending1, event then feedback sequential waits, original lock/allocator/callback/publication ordering preserved by exact fixed source reconstruction check.",
+  "unverified_live_paths": [
+    "Early drain",
+    "Detach",
+    "Fault injection",
+    "Exact callback count",
+    "All lifetime/context/error states"
+  ],
+  "performance_accepted": false,
+  "images_viewed": 1,
+  "images_uploaded": false,
+  "remote_artifacts_verified": 72,
+  "source_edits": 0,
+  "retries": 0,
+  "benchmarks": 0,
+  "GPU_helpers": 0,
+  "GPU_captures": 0,
+  "cleanup_complete": true,
+  "source_writers_stopped": true,
+  "evidence_writers_closed": true,
+  "next": "Return to JINI. Bounded ordinary readback/shutdown validated; receipt not GPU success/renderer completion/readback readiness/presentation proof. Early drain/detach/live faults/exact callbacks remain unverified; no next execution/performance claim."
+}
