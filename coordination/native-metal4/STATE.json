@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 117,
+  "revision": 118,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,9 +15,9 @@
   "request": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-32/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-32/READY.json",
   "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-32/DONE.json",
-  "decision": "PINNED_INDEXED_SMALL_GAME_DECAL_VALIDATION_CHILD_OPENAL_PATH",
-  "execution_status": "HQ3_ROUND32_RESERVED_ONCE",
-  "blocked_reason": null,
+  "decision": "PASS_SDK_AND_METAL_FIXTURE_CLEAN_PAIR_BLOCKED_UNPROVED_WORKLOAD",
+  "execution_status": "HQ3_ROUND32_CLOSED_SDK_AND_SINGLE_SAMPLE_FIXTURE_PASS_NO_CLEAN_GAME",
+  "blocked_reason": "Existing game verification does not establish the actual indexed flag path with matching ordered Lua decal rows and UBOs across clean games.",
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
@@ -1752,6 +1752,38 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17 21:03:14 UTC"
+    },
+    {
+      "event": "HQ3_ROUND32_CLOSED_SDK_AND_SINGLE_SAMPLE_FIXTURE_PASS_NO_CLEAN_GAME",
+      "revision": 118,
+      "round_id": "game-decal-indexed-validation-20261117-32",
+      "attempt_id": "indexed-native-off-on-02",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "2ce020559b5d3fdcc35eb493d8fe2092cc4513a8",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-32/DONE.json",
+      "decision": "PASS_SDK_AND_METAL_FIXTURE_CLEAN_PAIR_BLOCKED_UNPROVED_WORKLOAD",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "parity_helper_compiles": 1,
+        "parity_helper_gpu_invocations": 1,
+        "parity_games": 0,
+        "clean_games": 0,
+        "games": 0,
+        "captures": 0,
+        "trace_inspections": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "parity_fixture_cases": 9,
+      "fixture_samples": 1,
+      "production_runtime_route": "UNTESTED",
+      "protected_hashes_verified": 132,
+      "base_source_entries_verified": 10270,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T21:10:00.636153+00:00"
     }
   ],
   "communication_test": {
@@ -1837,7 +1869,7 @@
   "execution": {
     "attempt_id": "indexed-native-off-on-02",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "configure_attempts": 1,
       "engine_builds": 1,
@@ -1854,7 +1886,26 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17 21:03:14 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false
+    "previous_budget_reused": false,
+    "ended_at_utc": "2026-11-17T21:10:00.636153+00:00",
+    "counts": {
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "parity_helper_compiles": 1,
+      "parity_helper_gpu_invocations": 1,
+      "parity_games": 0,
+      "clean_games": 0,
+      "games": 0,
+      "captures": 0,
+      "trace_inspections": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "diagnostic_outcome": "PASS_SDK_AND_METAL_FIXTURE_CLEAN_PAIR_BLOCKED_UNPROVED_WORKLOAD",
+    "cleanup_complete": true,
+    "artifact_commit": "2ce020559b5d3fdcc35eb493d8fe2092cc4513a8",
+    "retry_authorized": false,
+    "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1920,7 +1971,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Isolated HQ3 build using validated child OpenAL path. Continue only with supported matched parity witness.",
+  "next_action": "SUPER_JINI_MK2 review round32 DONE. SDK and isolated Metal parity passed. Production workload and performance evidence remain unmeasured. No additional execution authorized by round32.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
