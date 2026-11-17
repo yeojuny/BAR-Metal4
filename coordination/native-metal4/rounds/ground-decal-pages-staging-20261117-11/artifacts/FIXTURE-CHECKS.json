@@ -1,0 +1,180 @@
+{
+  "plans": [
+    {
+      "arm": "V_R03_BASELINE",
+      "LAUNCH_SHA256": "0a7386e39f96d30d6ab02a6b93636702ccc61f569004b268dd0b55f36e2f07ee",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "input_files": 13,
+      "all_hashes_match_R03_validation": true,
+      "fresh_unconsumed": true
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "LAUNCH_SHA256": "0255da48b6daef0d749af8457e1cb9aacb6263ee31f343f4e973b7a6d6e9adb3",
+      "binarySHA256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+      "input_files": 13,
+      "all_hashes_match_R03_validation": true,
+      "fresh_unconsumed": true
+    }
+  ],
+  "inputs": [
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/LuaUI/Widgets/zzz_native_short_run.lua",
+      "sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "bytes": 11899
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/script.txt",
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "bytes": 707
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/springsettings.cfg",
+      "sha256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "bytes": 3063
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/LuaUI/Config/BYAR.lua",
+      "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+      "bytes": 88052
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/LuaUI/Config/BC213.lua",
+      "sha256": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+      "bytes": 215
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/fonts/FreeSansBold.otf",
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "bytes": 297416
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/FreeSansBold.otf",
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "bytes": 297416
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/LuaUI/Widgets/zzz_backend_common_status.lua",
+      "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+      "bytes": 1970
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/LuaUI/Widgets/zzz_ultra_quality.lua",
+      "sha256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+      "bytes": 2184
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/games/bar-official-combat-pr6.sdz",
+      "sha256": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+      "bytes": 262
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/assets/maps/seths_ravine_remake_1.3.1.sd7",
+      "sha256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+      "bytes": 83559046
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua",
+      "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+      "bytes": 3482
+    },
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_R03_BASELINE/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+      "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+      "bytes": 1016
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/LuaUI/Widgets/zzz_native_short_run.lua",
+      "sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "bytes": 11899
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/script.txt",
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "bytes": 707
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/springsettings.cfg",
+      "sha256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "bytes": 3063
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/LuaUI/Config/BYAR.lua",
+      "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+      "bytes": 88052
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/LuaUI/Config/BC213.lua",
+      "sha256": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+      "bytes": 215
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/fonts/FreeSansBold.otf",
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "bytes": 297416
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/FreeSansBold.otf",
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "bytes": 297416
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/LuaUI/Widgets/zzz_backend_common_status.lua",
+      "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+      "bytes": 1970
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/LuaUI/Widgets/zzz_ultra_quality.lua",
+      "sha256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+      "bytes": 2184
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/games/bar-official-combat-pr6.sdz",
+      "sha256": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+      "bytes": 262
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/assets/maps/seths_ravine_remake_1.3.1.sd7",
+      "sha256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+      "bytes": 83559046
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua",
+      "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+      "bytes": 3482
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/private/V_GDP_CANDIDATE/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+      "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+      "bytes": 1016
+    }
+  ],
+  "actual_runtime_not_observed": true,
+  "fresh_claims_absent": true
+}

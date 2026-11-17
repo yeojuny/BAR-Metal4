@@ -1,0 +1,25 @@
+{
+  "status": "REVIEWED_STAGING_ONLY",
+  "unchanged_AST_functions": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw"
+  ],
+  "changed_functions": [
+    "products",
+    "stage",
+    "run",
+    "main"
+  ],
+  "allowed_changes": "Binary pins, arm/validation selection, descriptions, two-arm completion metadata only. Launch, parser, error gates, image, cleanup, controller code retained. Clean code remains unreachable because ORDER has validation only.",
+  "old_SHA256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "new_SHA256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+  "new_options_default_execution": false,
+  "controller_changed": false
+}

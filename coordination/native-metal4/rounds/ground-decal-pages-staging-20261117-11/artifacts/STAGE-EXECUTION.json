@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/run.py",
+    "--suite",
+    "gdp_validation01",
+    "--stage",
+    "validation_paced"
+  ],
+  "pid": 11785,
+  "exit": 0,
+  "seconds": 8.512916708000148,
+  "attempts": 1,
+  "games": 0
+}
