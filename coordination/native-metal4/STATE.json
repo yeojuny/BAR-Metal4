@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 91,
+  "revision": 92,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r04-engine-build-envfix-20261117-23",
+  "round_id": "r04-r03-validation-clean-20261117-24",
   "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
   "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
-  "request": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/DONE.json",
+  "request": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/READY.json",
+  "result_path": null,
   "decision": null,
-  "execution_status": "HQ3_R04_BUILD_ENVFIX_STATIC_CLOSURE_DONE_RUNTIME_NOT_RUN",
+  "execution_status": "AUTHORIZED_R04_VALIDATION1_THEN_PASS_ONLY_MATCHED_CLEAN6",
   "blocked_reason": null,
   "history": [
     {
@@ -1140,6 +1140,27 @@
       "performance_accepted": false,
       "to": "SUPER_JINI_MK2",
       "completed_at_utc": "2026-11-17 09:48:25 UTC"
+    },
+    {
+      "event": "JINI_ACCEPTED_R04_BUILD_READY_VALIDATION_THEN_CONDITIONAL_CLEAN",
+      "revision": 92,
+      "previous_round": "r04-engine-build-envfix-20261117-23",
+      "previous_result": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/DONE.json",
+      "previous_decision": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/DECISION.json",
+      "round_id": "r04-r03-validation-clean-20261117-24",
+      "attempt_id": "r04-validation-and-clean-01",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "budget": {
+        "validation_games": 1,
+        "clean_games": 6,
+        "total_game_launches_max": 7,
+        "builds": 0,
+        "helper_runs": 0,
+        "captures": 0,
+        "replay_profiles": 0,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -1211,11 +1232,11 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_ISOLATED_R04_ENGINE_BUILD_AND_EXISTING_R03_BINARY_RUNNER_PIN_VERIFICATION_ONLY",
+  "enabled_scope": "ONE_R04_PRODUCTION_VALIDATION_THEN_IF_PASS_SIX_MATCHED_CLEAN_GAMES",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
-    "scope": "Necessary fixed candidate build preparation; this round grants no games or benchmark."
+    "scope": "Necessary bounded autonomous regression benchmarking; no release adoption."
   },
   "source_writers_stopped": true,
   "connection_verification": {
@@ -1224,73 +1245,22 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r04-isolated-build-02",
-    "started": true,
-    "completed": true,
-    "budget": {
-      "configure_attempts": 1,
-      "engine_builds": 1,
-      "relocation_sign": 1,
-      "games": 0,
-      "benchmarks": 0,
-      "helpers": 0,
-      "captures": 0,
-      "replays": 0,
-      "retries": 0,
-      "source_edits": 0
-    },
+    "attempt_id": "r04-validation-and-clean-01",
+    "started": false,
+    "completed": false,
     "games": 0,
-    "builds": 1,
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 09:38:14 UTC",
-    "configure_attempts": 1,
-    "relocation_sign": 1,
-    "retries": 0,
-    "source_edits": 0,
-    "cleanup_complete": true,
-    "heartbeat": "bar PAUSED; unchanged; not retargeted",
-    "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02",
-    "environment_correction": {
-      "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
-      "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
-      "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+    "builds": 0,
+    "budget": {
+      "validation_games": 1,
+      "clean_games": 6,
+      "total_game_launches_max": 7,
+      "builds": 0,
+      "helper_runs": 0,
+      "captures": 0,
+      "replay_profiles": 0,
+      "retries": 0
     },
-    "configure_exit": 0,
-    "engine_builds": 1,
-    "build_exit": 0,
-    "benchmarks": 0,
-    "helpers": 0,
-    "captures": 0,
-    "replays": 0,
-    "source_repairs": 0,
-    "cleanup": {
-      "ownedPIDsGone": true,
-      "workerChildrenReaped": true,
-      "ownedProcessGroupsEmpty": true,
-      "awakeCreated": false,
-      "awakeReleased": true,
-      "GPUOrGameProcessesStarted": false,
-      "originalEvidenceUnchanged": true,
-      "priorFailedAttemptUnchanged": true,
-      "sourceUnchangedAfterBuild": true,
-      "environmentCorrectionProcessLocalOnly": true,
-      "buildAndPackagingControllersExited": true,
-      "bar": "PAUSED_UNCHANGED",
-      "utc": "2026-11-17T09:45:27.091684+00:00"
-    },
-    "completed_at_utc": "2026-11-17 09:48:25 UTC",
-    "artifact_commit": "dd2e03c26ca6824a096cff460500a269fb452885",
-    "result_path": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/DONE.json",
-    "result_sha256": "4103f991e157ce07e851a24eb4e1ffed826f01a77e644140217413fbfd0674bc",
-    "outcome": "PASS_BUILD_AND_STATIC_CLOSURE_RUNTIME_NOT_RUN",
-    "raw_engine_sha256": "853083e4ba5490a40ede292c88d95b213166fbbc8db70af5336707657af997d1",
-    "signed_engine_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
-    "signed_engine_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/runtime/native/bin/spring-metal4-scene",
-    "process_local_PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
-    "original_evidence_unchanged": true,
-    "prior_failed_attempt_unchanged": true,
-    "performance_accepted": false,
-    "local_execution_complete": true
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
