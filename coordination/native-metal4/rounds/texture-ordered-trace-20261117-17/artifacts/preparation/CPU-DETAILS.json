@@ -1,0 +1,28 @@
+{
+  "fixed_script_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/docs/research/texture-trace-20261117/tests/run.py",
+  "script_sha256": "9d0e8ccf9c709bd5417e0c256578a7d5d1eea66d5e68013f7df7d26034a2fb28",
+  "script_invocations": 1,
+  "compiler_invocations": 2,
+  "flag_live_subruns": 8,
+  "flags": [
+    "",
+    "0",
+    "1",
+    "true"
+  ],
+  "live_modes": [
+    false,
+    true
+  ],
+  "live_define": "RECOIL_METAL4_LIVE_SCENE",
+  "compiler_flags": [
+    "-std=c++20",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-pthread"
+  ],
+  "ASAN_UBSAN_requested_by_this_script": false,
+  "generated_wrapper_sha256": "ffc3b755ffe1c6ae2bec1a32a82f47c13a7d871a174d2c797a0b6f3648dc17f4",
+  "CPU_scope": "Fixed budget/wrapper concurrency, exception, flag-off/nonlive and exact source wiring; no actual GPU."
+}

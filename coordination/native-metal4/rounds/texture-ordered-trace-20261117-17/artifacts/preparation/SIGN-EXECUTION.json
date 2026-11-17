@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/relocate_sign.py"
+  ],
+  "pid": 48946,
+  "exit": 0,
+  "seconds": 1.2599492909994296,
+  "attempts": 1
+}

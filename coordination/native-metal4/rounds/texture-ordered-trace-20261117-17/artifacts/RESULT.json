@@ -1,0 +1,97 @@
+{
+  "status": "TRACE_ADMISSION_ENCODE_AND_PRODUCER_RETIRE_OBSERVED_ORDINARY_VALIDATION_PASS",
+  "round_id": "texture-ordered-trace-20261117-17",
+  "attempt_id": "texture-ordered-trace-01",
+  "source_commit": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
+  "parent_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "source_manifest_sha256": "262cefbd639de63e833a7847b868a99de0aa2045e74b9d46691535e68bfe759f",
+  "raw_engine_sha256": "2cd2f5c67223009333c630c8dacdc70f0fe16275f511a8539768f42a561733b0",
+  "signed_engine_sha256": "f72528f6322627c32fe63548aeb126ccbb43fd723a8e22dd58bd689662118331",
+  "runner_sha256": "2e3a727f86a5c239b0633583049fcd3c942b4bc6c8108be7c992e888f8078260",
+  "CPU_contract_scripts": 1,
+  "CPU_compiler_invocations": 2,
+  "CPU_flag_live_subruns": 8,
+  "configures": 1,
+  "engine_builds": 1,
+  "live_scene_define_confirmed": true,
+  "archive_objects": 1538,
+  "archives": 35,
+  "archive_mismatches": 0,
+  "signing_attempts": 1,
+  "fixture_staging_attempts": 1,
+  "games": 1,
+  "normal_exits": 1,
+  "Metal_errors": 0,
+  "actual_child_INPUT1_TRACE1": true,
+  "trace_logged_counts": {
+    "armed": 1,
+    "admitted": 6,
+    "encode_permit_check": 4,
+    "producer_retired_check": 4
+  },
+  "printed_producer_consumer_pairs": [
+    "64->65"
+  ],
+  "event_semantics": {
+    "armed": "Tracer enabled and Texture entry reached, not eligible/admitted. Cap1.",
+    "admitted": "Exact pending producer and independent slot admission passed. Not unique resource.",
+    "encode_permit_check": "Borrower readability passed and duplicate upload/mips branch skipped. Not consumer draw/GPU execution.",
+    "producer_retired_check": "Producer completed check passed in final prior-read callback. NOT consumer GPU completion."
+  },
+  "observed_event_log_frames": [
+    91,
+    103
+  ],
+  "counted_simulation_window": [
+    540,
+    1740
+  ],
+  "eligible_path_admission": "OBSERVED",
+  "consumer_GPU_completion_proved_by_producer_retired_event": false,
+  "world_rows": 40,
+  "world_comparisons": [
+    {
+      "previous_arm": "V_TEXTURE_OFF",
+      "row_count": 40,
+      "all40_rows_identical": true,
+      "bin_differences": [],
+      "same_tick_differences": []
+    },
+    {
+      "previous_arm": "V_TEXTURE_ON",
+      "row_count": 40,
+      "all40_rows_identical": true,
+      "bin_differences": [],
+      "same_tick_differences": []
+    }
+  ],
+  "images_viewed": 1,
+  "performance_accepted": false,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "GPU_captures": 0,
+  "retries": 0,
+  "source_edits": 0,
+  "cleanup": {
+    "owned_pids_absent": [
+      49043,
+      49035,
+      49034,
+      44212,
+      44227,
+      45478,
+      48946,
+      48994
+    ],
+    "groups_gone": true,
+    "image_worker_joined": true,
+    "awake_released": true,
+    "evidence_writers_closed_after_packet": true
+  },
+  "limitations": [
+    "Logged event occurrences are not unique resources or total event rates; same pair can repeat, independent caps and swallowed log exceptions apply.",
+    "Observed nonarmed events precede counted battle window; no performance/timing-gain claim from trace.",
+    "Producer retirement check does not prove consumer GPU completion.",
+    "Ordinary validation does not cover every failed submission/quarantine/context/revision/lifetime path."
+  ]
+}

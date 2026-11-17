@@ -1,0 +1,25 @@
+{
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Backend/NativeTextureOrderedTrace.h",
+      "base_sha256": null,
+      "base_git_blob": null,
+      "candidate_sha256": "445621fb4ac492bfc198b776290ff4ae4b7c9f0c9f8778753001de6a22ff44de"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "base_sha256": "8c62d2155834957e7af7d29556a209cc27f5d9bfcb16d242b22c665d1c33f0bc",
+      "base_git_blob": "02137a3c07712830ab35849ba88188a952234629",
+      "candidate_sha256": "f2f5b2f9be57a3cc02d217da5a54666a53451c6cb5c96357031851fbe37c81f2"
+    }
+  ],
+  "production_delta": [
+    "engine/rts/Rendering/Backend/NativeTextureOrderedTrace.h",
+    "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm"
+  ],
+  "matching_patch": [
+    "docs/research/texture-trace-20261117/candidate.patch"
+  ],
+  "packet_equals_production": true,
+  "base_matches_actual_parent": true
+}

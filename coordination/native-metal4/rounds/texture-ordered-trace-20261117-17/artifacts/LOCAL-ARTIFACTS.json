@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/SOURCE-HASHES.json",
+    "bytes": 1284829,
+    "sha256": "90b096ba3e4eee2d5581f9bf1d69a505d0b5edbd2922296d5581ee415a4b9ede",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/build/spring-metal4-scene",
+    "bytes": 65690560,
+    "sha256": "2cd2f5c67223009333c630c8dacdc70f0fe16275f511a8539768f42a561733b0",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/runtime/native/bin/spring-metal4-scene",
+    "bytes": 65308800,
+    "sha256": "f72528f6322627c32fe63548aeb126ccbb43fd723a8e22dd58bd689662118331",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/docs/research/texture-trace-20261117/tests/live",
+    "bytes": 90232,
+    "sha256": "175b8d5c0e42bba903f4d79ce24759c6a0ddaa13919052edf8b60e1d0ddb635b",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/docs/research/texture-trace-20261117/tests/nonlive",
+    "bytes": 71352,
+    "sha256": "46e92941acceef4c6cb624696dd0242037fd34b790086979b13776dc3469902a",
+    "uploaded": false
+  }
+]

@@ -1,0 +1,69 @@
+{
+  "round_id": "texture-ordered-trace-20261117-17",
+  "attempt_id": "texture-ordered-trace-01",
+  "commands": [
+    {
+      "stage": "CPU-CONTRACT",
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/docs/research/texture-trace-20261117/tests/run.py"
+      ],
+      "pid": 44212,
+      "startedUTC": "2026-11-17T06:02:49.496029+00:00",
+      "exit_code": 0,
+      "wall_seconds": 1.6111586249999164
+    },
+    {
+      "stage": "CONFIGURE",
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "pid": 44227,
+      "startedUTC": "2026-11-17T06:02:51.110241+00:00",
+      "exit_code": 0,
+      "wall_seconds": 9.241906624999501
+    },
+    {
+      "stage": "BUILD",
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "pid": 45478,
+      "startedUTC": "2026-11-17T06:03:00.365933+00:00",
+      "exit_code": 0,
+      "wall_seconds": 220.01369824999983
+    }
+  ],
+  "active_pid": null,
+  "stage": "COMPILE_PASS",
+  "games": 0,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "retries": 0,
+  "CPU_binary_SHA256s": {
+    "live": "175b8d5c0e42bba903f4d79ce24759c6a0ddaa13919052edf8b60e1d0ddb635b",
+    "nonlive": "46e92941acceef4c6cb624696dd0242037fd34b790086979b13776dc3469902a"
+  },
+  "raw_engine_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/build/spring-metal4-scene",
+  "raw_engine_sha256": "2cd2f5c67223009333c630c8dacdc70f0fe16275f511a8539768f42a561733b0",
+  "source_unchanged_after_build": true,
+  "controller_finishedUTC": "2026-11-17T06:06:41.257806+00:00"
+}

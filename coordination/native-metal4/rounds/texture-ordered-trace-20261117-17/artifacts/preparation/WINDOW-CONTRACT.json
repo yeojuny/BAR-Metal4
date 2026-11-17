@@ -1,0 +1,15 @@
+{
+  "authoritative_controller_SHA256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+  "actual_controller_simulation_window": [
+    540,
+    1740
+  ],
+  "nominal_seconds": 40,
+  "warmup": "Existing frozen pacing, minimum10 seconds; historical observed approx21.98sec, not exactly10.",
+  "inherited_launch_measurementWindow": [
+    600,
+    1800
+  ],
+  "inherited_launch_controller_metadata": "fbb3dcd00f5f981f025dd57dc540356473917c92ff8241d3b40d99451e74ac56",
+  "note": "Inherited planning metadata remains unchanged. Actual staged controller bytes/window are authoritative. Diagnostic FPS excluded."
+}
