@@ -1,0 +1,59 @@
+{
+  "round_id": "cpu-postcompletion-tail-20261117-21",
+  "attempt_id": "cpu-postcompletion-tail-01",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "signed_engine_sha256": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+  "request": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/REQUEST.json",
+  "executor": {
+    "role": "HQ",
+    "thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "title": "HQ 3 · 완료 후 CPU 정산 진단 · 준비 전용"
+  },
+  "prepared_artifacts_root": "evidence/cpu-postcompletion-tail-20261117-01",
+  "prepared_hashes": {
+    "measurement/diagnostic_runner.py": "8cb00271072305a1dfa1e04052c37634723bf979bd1ffef36f9d09f784c04f60",
+    "measurement/preflight.py": "31c79a22a5d9251c67cde0030911f48214195a89cd6431d2d82e903b40a4d7e1",
+    "staging/runs/D_CPU_POSTCOMPLETION_TAIL/LAUNCH.json": "101ef7cf4897f03090debb66ed571e1de967295d5585a191f57e50f40efef032",
+    "staging/runs/D_CPU_POSTCOMPLETION_TAIL/ENV.json": "70690ce101f1e7f8a4a6c086956b95b95932d8f4e414f8eede219f8d75ae7d86",
+    "RUNNER-INPUTS.json": "9bd7e2de00f50fd1d8a32187ebe099e2ce85b323020ace4daae7d85ff3305ca0",
+    "PARSER-SPEC.md": "3e7cdb1efa4fde1503d5745997a2d5b40f6d3b06bd416b271f55bae369819a3a"
+  },
+  "preparation_verification": {
+    "source_files": 10273,
+    "dylibs": 19,
+    "content_files": 17947,
+    "profile_inputs_byte_identical": 13,
+    "originals_preserved": true,
+    "planned_child_env_verified": true,
+    "actual_child_env_observed": false,
+    "HQ3_preparation_turn_completed": true,
+    "independent_audit_turn_completed": true,
+    "runner_hashes_independently_reread": true
+  },
+  "final_env": {
+    "BAR_NATIVE_FRAME_TRACE": "1",
+    "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "1",
+    "BAR_NATIVE_FRAME_TRACE_START_SIM": "900",
+    "BAR_NATIVE_FRAME_TRACE_END_SIM": "915",
+    "MTL_DEBUG_LAYER": "0",
+    "MTL_SHADER_VALIDATION": "0",
+    "HOST_VERTEX": "UNSET",
+    "COMBINED_OVERLAP220": "UNSET"
+  },
+  "budget": {
+    "diagnostic_games": 1,
+    "engine_builds": 0,
+    "captures": 0,
+    "replays": 0,
+    "helpers": 0,
+    "FPS_AB": 0,
+    "retries": 0,
+    "source_edits": 0
+  },
+  "wall_limit_seconds": 210,
+  "log_limit_bytes": 33554432,
+  "source_writers_stopped": true,
+  "execution_gate": "Latest STATE must explicitly authorize HQ3 for this exact round/attempt; old HQ turn and heartbeat must be quiescent before launch. Reserve attempt once, verify actual child env after launch; mismatch stops without retry.",
+  "cleanup": "Finish GPU, owned process/helper/awake/worker/session and evidence writes before DONE for same round/source; record attempt, artifacts, hashes and cleanup; latest STATE CAS reread then close HQ turn."
+}
