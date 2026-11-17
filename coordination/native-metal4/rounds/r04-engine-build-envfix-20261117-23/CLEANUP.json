@@ -1,0 +1,15 @@
+{
+  "ownedPIDsGone": true,
+  "workerChildrenReaped": true,
+  "ownedProcessGroupsEmpty": true,
+  "awakeCreated": false,
+  "awakeReleased": true,
+  "GPUOrGameProcessesStarted": false,
+  "originalEvidenceUnchanged": true,
+  "priorFailedAttemptUnchanged": true,
+  "sourceUnchangedAfterBuild": true,
+  "environmentCorrectionProcessLocalOnly": true,
+  "buildAndPackagingControllersExited": true,
+  "bar": "PAUSED_UNCHANGED",
+  "utc": "2026-11-17T09:45:27.091684+00:00"
+}

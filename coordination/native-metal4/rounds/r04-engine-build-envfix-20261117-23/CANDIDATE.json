@@ -1,0 +1,126 @@
+{
+  "status": "PASS",
+  "rawSHA256": "853083e4ba5490a40ede292c88d95b213166fbbc8db70af5336707657af997d1",
+  "signedSHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+  "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/runtime/native/bin/spring-metal4-scene",
+  "relocations": [
+    [
+      "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "@loader_path/../lib/libIL.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "@loader_path/../lib/libminizip.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "@loader_path/../lib/libfreetype.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "@loader_path/../lib/libfontconfig.1.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "@loader_path/../lib/libvorbisfile.3.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "@loader_path/../lib/libvorbis.0.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "@loader_path/../lib/libogg.0.8.6.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "@loader_path/../lib/libopenal.1.25.2.dylib"
+    ],
+    [
+      "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "@loader_path/../lib/libSDL3.0.dylib"
+    ]
+  ],
+  "relocationCount": 9,
+  "libraries": [
+    {
+      "name": "libIL.dylib",
+      "sha256": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e"
+    },
+    {
+      "name": "libSDL3.0.dylib",
+      "sha256": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f"
+    },
+    {
+      "name": "libbrotlicommon.1.2.0.dylib",
+      "sha256": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff"
+    },
+    {
+      "name": "libbrotlidec.1.2.0.dylib",
+      "sha256": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202"
+    },
+    {
+      "name": "libfontconfig.1.dylib",
+      "sha256": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec"
+    },
+    {
+      "name": "libfreetype.6.dylib",
+      "sha256": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827"
+    },
+    {
+      "name": "libintl.8.dylib",
+      "sha256": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8"
+    },
+    {
+      "name": "libjasper.7.0.0.dylib",
+      "sha256": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b"
+    },
+    {
+      "name": "libjpeg.8.3.2.dylib",
+      "sha256": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871"
+    },
+    {
+      "name": "liblcms2.2.dylib",
+      "sha256": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376"
+    },
+    {
+      "name": "liblzma.5.dylib",
+      "sha256": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe"
+    },
+    {
+      "name": "libminizip.1.dylib",
+      "sha256": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040"
+    },
+    {
+      "name": "libogg.0.8.6.dylib",
+      "sha256": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb"
+    },
+    {
+      "name": "libopenal.1.25.2.dylib",
+      "sha256": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c"
+    },
+    {
+      "name": "libpng16.16.dylib",
+      "sha256": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b"
+    },
+    {
+      "name": "libtiff.6.dylib",
+      "sha256": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820"
+    },
+    {
+      "name": "libvorbis.0.dylib",
+      "sha256": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388"
+    },
+    {
+      "name": "libvorbisfile.3.dylib",
+      "sha256": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7"
+    },
+    {
+      "name": "libzstd.1.5.7.dylib",
+      "sha256": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4"
+    }
+  ],
+  "libraryCount": 19,
+  "codesignVerify": "PASS",
+  "homebrewDependencies": 0
+}

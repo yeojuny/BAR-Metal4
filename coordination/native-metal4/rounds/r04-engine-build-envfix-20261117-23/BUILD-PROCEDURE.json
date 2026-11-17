@@ -1,0 +1,15 @@
+{
+  "base_driver_sha256": "34223610a3f1e4ca59f574b9b0b53d5130c8a27e5a31ac73f8a43ae4a77e80fa",
+  "new_driver_sha256": "bd8331438a8666ea43e950bf208311952fd97e821e1786f690f06ea0248e643e",
+  "changes": [
+    "Read and require passing dependency preflight",
+    "Copy ambient environment and prepend exactly authorized OpenAL path for child processes only",
+    "Record process-local PKG_CONFIG_PATH"
+  ],
+  "configure_command_and_build_command_unchanged_except_fresh_root": true,
+  "original_R03_initial_cache_sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "copied_initial_cache_sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "relocate_sign_script_sha256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+  "source_repairs": 0,
+  "old_attempt_modified": false
+}

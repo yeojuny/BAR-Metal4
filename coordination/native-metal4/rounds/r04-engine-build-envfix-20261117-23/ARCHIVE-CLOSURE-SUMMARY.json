@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "scope": "Archive-to-loose-object identity only; fresh build and source receipts establish source closure separately",
+  "objectCount": 1538,
+  "archiveCount": 35,
+  "mismatchCount": 0,
+  "mismatches": []
+}
