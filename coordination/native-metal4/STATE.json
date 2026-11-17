@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 51,
+  "revision": 52,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,7 +15,7 @@
   "request": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DONE.json",
-  "decision": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/DECISION.json",
+  "decision": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DECISION.json",
   "execution_status": "GROUND_DECAL_VALIDATION_NO_METAL_ERRORS_WORLD_BIN_REVIEW_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
@@ -545,6 +545,15 @@
       ],
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_GROUND_DECAL_VALIDATION_REVIEW",
+      "revision": 52,
+      "round_id": "ground-decal-pages-validation-20261117-12",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "performance_authorized_by_this_transition": false
     }
   ],
   "communication_test": {
