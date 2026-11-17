@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "bar": "PAUSED",
+  "owned_game_pids": [
+    23064,
+    23244
+  ],
+  "remaining_game_groups": [],
+  "shared_awake": "RELEASED",
+  "owned_awake_pid": 23056,
+  "owned_awake_alive": false,
+  "user_awake": "6618 caffeinate -d",
+  "user_awake_operations": 0,
+  "gpu_sessions_after": "No active sessions.",
+  "system_restarts": 0,
+  "services_restarted": 0,
+  "security_changes": 0
+}

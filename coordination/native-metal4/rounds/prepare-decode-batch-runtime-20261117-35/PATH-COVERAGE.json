@@ -1,0 +1,197 @@
+{
+  "paths": {
+    "BuildSquare": {
+      "status": "UNVERIFIED",
+      "observation": "The build widget loaded. The spectator workload did not establish a rendered building-placement square.",
+      "log_witnesses": {
+        "R03_ORIGINAL": [
+          {
+            "line": 2022,
+            "text": "[t=00:00:31.193845][f=-000001] Loading widget from mod:   BuildSquare GL4     <gui_buildsquare_gl4.lua> ..."
+          }
+        ],
+        "PREPARE_BATCH": [
+          {
+            "line": 2026,
+            "text": "[t=00:00:32.680339][f=-000001] Loading widget from mod:   BuildSquare GL4     <gui_buildsquare_gl4.lua> ..."
+          }
+        ]
+      }
+    },
+    "Commands FX": {
+      "status": "DRAW_COMPLETED",
+      "observation": "The engine reported a completed PreUnit line draw at tick 255 in both arms. The tick-1740 images do not isolate queue-line and ghost variants.",
+      "log_witnesses": {
+        "R03_ORIGINAL": [
+          {
+            "line": 2291,
+            "text": "[t=00:00:55.907027][f=0000255] [Metal4Scene] First completed original Commands FX at simulation frame 255: PreUnit line draws=1; full visual parity pending"
+          }
+        ],
+        "PREPARE_BATCH": [
+          {
+            "line": 2290,
+            "text": "[t=00:00:57.677837][f=0000255] [Metal4Scene] First completed original Commands FX at simulation frame 255: PreUnit line draws=1; full visual parity pending"
+          }
+        ]
+      }
+    },
+    "Sensor31657Circle (radar/sonar)": {
+      "status": "UNVERIFIED",
+      "observation": "Radar and sonar widgets loaded. Existing logs do not identify a completed native radar or sonar circle draw.",
+      "log_witnesses": {
+        "R03_ORIGINAL": [
+          {
+            "line": 2083,
+            "text": "[t=00:00:31.259389][f=-000001] Loading widget from mod:   Sensor Ranges Jammer Preview  <gui_sensor_ranges_jammer_preview.lua> ..."
+          },
+          {
+            "line": 2090,
+            "text": "[t=00:00:33.905290][f=-000001] Loading widget from mod:   Sensor Ranges Radar Preview  <gui_sensor_ranges_radar_preview.lua> ..."
+          },
+          {
+            "line": 2148,
+            "text": "[t=00:00:35.289578][f=-000001] Loading widget from mod:   Sensor Ranges Sonar  <gui_sensor_ranges_sonar.lua> ..."
+          },
+          {
+            "line": 2149,
+            "text": "[t=00:00:35.290580][f=-000001] Loading widget from mod:   Sensor Ranges Radar  <gui_sensor_ranges_radar.lua> ..."
+          },
+          {
+            "line": 2151,
+            "text": "[t=00:00:35.291346][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ],
+        "PREPARE_BATCH": [
+          {
+            "line": 2087,
+            "text": "[t=00:00:32.747107][f=-000001] Loading widget from mod:   Sensor Ranges Jammer Preview  <gui_sensor_ranges_jammer_preview.lua> ..."
+          },
+          {
+            "line": 2094,
+            "text": "[t=00:00:35.427119][f=-000001] Loading widget from mod:   Sensor Ranges Radar Preview  <gui_sensor_ranges_radar_preview.lua> ..."
+          },
+          {
+            "line": 2152,
+            "text": "[t=00:00:36.856853][f=-000001] Loading widget from mod:   Sensor Ranges Sonar  <gui_sensor_ranges_sonar.lua> ..."
+          },
+          {
+            "line": 2153,
+            "text": "[t=00:00:36.857937][f=-000001] Loading widget from mod:   Sensor Ranges Radar  <gui_sensor_ranges_radar.lua> ..."
+          },
+          {
+            "line": 2155,
+            "text": "[t=00:00:36.858718][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ]
+      }
+    },
+    "StartBox": {
+      "status": "UNVERIFIED",
+      "observation": "The start-box gadget loaded and the native family initialized. There was no completed world or minimap StartBox draw witness.",
+      "log_witnesses": {
+        "R03_ORIGINAL": [
+          {
+            "line": 582,
+            "text": "[t=00:00:22.257260][f=-000001] Loaded synced gadget:  Startbox Config     <game_startbox_config.lua>"
+          },
+          {
+            "line": 1852,
+            "text": "[t=00:00:28.240601][f=-000001] [BAR Metal4] Source-verified original StartBoxes: original31657 SDF bake, world/minimap and actual images"
+          }
+        ],
+        "PREPARE_BATCH": [
+          {
+            "line": 586,
+            "text": "[t=00:00:23.500526][f=-000001] Loaded synced gadget:  Startbox Config     <game_startbox_config.lua>"
+          },
+          {
+            "line": 1856,
+            "text": "[t=00:00:29.659758][f=-000001] [BAR Metal4] Source-verified original StartBoxes: original31657 SDF bake, world/minimap and actual images"
+          }
+        ]
+      }
+    },
+    "WeaponRange": {
+      "status": "PREPARE_EXERCISED",
+      "observation": "Both arms recorded nonzero uploads from the WeaponRangeGPU::Prepare pool. Range-like overlays are visible; the images do not identify each line, mask and composite variant.",
+      "log_witnesses": {
+        "R03_ORIGINAL": [
+          {
+            "line": 2418,
+            "text": "[t=00:01:46.358128][f=0001740] [NativeTransientUpload177] family=weapon_range requests=10208 reused=10192 created=16 fallback=0 uploaded_bytes=3021568 cached_count=16 cached_bytes=10240 peak_cached_count=16 peak_cached_bytes=10240 scope=owner_lifetime"
+          },
+          {
+            "line": 2482,
+            "text": "[t=00:01:46.422068] [NativeTransientUpload177] family=weapon_range requests=6380 reused=6370 created=10 fallback=0 uploaded_bytes=2245760 cached_count=0 cached_bytes=0 peak_cached_count=10 peak_cached_bytes=7168 scope=owner_lifetime"
+          }
+        ],
+        "PREPARE_BATCH": [
+          {
+            "line": 2421,
+            "text": "[t=00:01:48.089239][f=0001740] [NativeTransientUpload177] family=weapon_range requests=10168 reused=10152 created=16 fallback=0 uploaded_bytes=3009728 cached_count=16 cached_bytes=10240 peak_cached_count=16 peak_cached_bytes=10240 scope=owner_lifetime"
+          },
+          {
+            "line": 2485,
+            "text": "[t=00:01:48.140709] [NativeTransientUpload177] family=weapon_range requests=6355 reused=6345 created=10 fallback=0 uploaded_bytes=2236960 cached_count=0 cached_bytes=0 peak_cached_count=10 peak_cached_bytes=7168 scope=owner_lifetime"
+          }
+        ]
+      }
+    },
+    "EnergyExplosion": {
+      "status": "UNVERIFIED",
+      "observation": "The gadget and native NoGS family initialized. Visible combat explosions have no route-specific draw witness.",
+      "log_witnesses": {
+        "R03_ORIGINAL": [
+          {
+            "line": 655,
+            "text": "[t=00:00:22.300649][f=-000001] Loaded synced gadget:  Energy Explosion Particles GL4  <gfx_energy_explosion_particles_gl4.lua>"
+          },
+          {
+            "line": 849,
+            "text": "[t=00:00:22.395323][f=-000001] [BAR Metal4] Original energy explosion family: verified original NoGS program and owned buffers"
+          },
+          {
+            "line": 932,
+            "text": "[t=00:00:27.228132][f=-000001] Loaded unsynced gadget:  Energy Explosion Particles GL4  <gfx_energy_explosion_particles_gl4.lua>"
+          }
+        ],
+        "PREPARE_BATCH": [
+          {
+            "line": 659,
+            "text": "[t=00:00:23.545294][f=-000001] Loaded synced gadget:  Energy Explosion Particles GL4  <gfx_energy_explosion_particles_gl4.lua>"
+          },
+          {
+            "line": 853,
+            "text": "[t=00:00:23.652218][f=-000001] [BAR Metal4] Original energy explosion family: verified original NoGS program and owned buffers"
+          },
+          {
+            "line": 936,
+            "text": "[t=00:00:28.649010][f=-000001] Loaded unsynced gadget:  Energy Explosion Particles GL4  <gfx_energy_explosion_particles_gl4.lua>"
+          }
+        ]
+      }
+    },
+    "LuaNano": {
+      "status": "UNVERIFIED",
+      "observation": "The synced nano gadget loaded. Neither arm reported a presented Lua nano stream.",
+      "log_witnesses": {
+        "R03_ORIGINAL": [
+          {
+            "line": 691,
+            "text": "[t=00:00:22.308638][f=-000001] Loaded synced gadget:  Nano Particles GL4  <gfx_nano_particles_gl4.lua>"
+          }
+        ],
+        "PREPARE_BATCH": [
+          {
+            "line": 695,
+            "text": "[t=00:00:23.554208][f=-000001] Loaded synced gadget:  Nano Particles GL4  <gfx_nano_particles_gl4.lua>"
+          }
+        ]
+      }
+    }
+  },
+  "coverage_count": 2,
+  "unverified_count": 5,
+  "qualification": "Coverage is limited to the individual observed operations. No path-specific pixel-parity assertion."
+}

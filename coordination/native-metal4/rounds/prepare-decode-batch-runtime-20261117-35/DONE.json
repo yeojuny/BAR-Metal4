@@ -1,0 +1,68 @@
+{
+  "round_id": "prepare-decode-batch-runtime-20261117-35",
+  "attempt_id": "batch-original-smoke-pair-01",
+  "status": "DONE",
+  "reserved_revision": 123,
+  "decision": "PASS_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
+  "binary_sha256": {
+    "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+  },
+  "script_sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+  "counts": {
+    "games": 2,
+    "original_games": 1,
+    "batch_games": 1,
+    "normal_exits": 2,
+    "screenshots": 2,
+    "screenshots_per_game": {
+      "R03_ORIGINAL": 1,
+      "PREPARE_BATCH": 1
+    },
+    "builds": 0,
+    "helpers": 0,
+    "gputrace_captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "matched_runtime_conditions": {
+    "same_initial_scene": true,
+    "same_camera": true,
+    "same_seed": true,
+    "same_synced_created_destroyed": true,
+    "same_image_tick": true,
+    "same_sample_and_view": true,
+    "both_actual_child_verified": true,
+    "both_normal_exit": true,
+    "both_metal_validation_enabled_with_no_error_matches": true,
+    "no_crash_or_matching_fatal_logs": true
+  },
+  "scene_tick": 1740,
+  "path_coverage": {
+    "BuildSquare": "UNVERIFIED",
+    "Commands FX": "DRAW_COMPLETED",
+    "Sensor31657Circle (radar/sonar)": "UNVERIFIED",
+    "StartBox": "UNVERIFIED",
+    "WeaponRange": "PREPARE_EXERCISED",
+    "EnergyExplosion": "UNVERIFIED",
+    "LuaNano": "UNVERIFIED"
+  },
+  "whole_frame_visual_parity": "UNVERIFIED",
+  "performance": "NOT_MEASURED",
+  "indexed_game_authorization": "SEPARATE_PENDING",
+  "protected_hashes_verified": 134,
+  "cleanup_complete": true,
+  "bar": "PAUSED",
+  "artifactSHA256": {
+    "REPORT.md": "fd9f4f1de9f307a139175c1006a39d090692bb56c17edd3b56ac04947a148335",
+    "STAGING-EVIDENCE.json": "a92f6e61e60201fcdafe56683747079968259994e023220cb23e75fc803f45a0",
+    "SCENE-EVIDENCE.json": "2cb444b3c0efce566beb6bf7ef8408eda354d212ef7efbae7120cdf3f0084ebd",
+    "PATH-COVERAGE.json": "019a4958c09bbc6ab9f0d19a1b0d7e3e9141e5f85f96196fb5a2c7312c0a012f",
+    "PROTECTED-HASHES.json": "1a97bb73e174827eae08d8c90c1a605049231b9663f113bb9d9bd1dda207f0e8",
+    "CLEANUP-EVIDENCE.json": "6d7cff45f3d53f0fcd9189447cf6b24ea150c2d1e53221d40fa9d4a16514a971",
+    "R03-1740.png": "0bc3d85f12875db3ca0ee8bd021ed08b89bf051c510826a08dfb047637eee467",
+    "PREPARE-1740.png": "e070b39f1db63a2288d6aac8afae3936a335e92284c2a76ab21f50d8fb31ecde"
+  },
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35",
+  "utc": "2026-11-17T22:25:22.199983+00:00"
+}
