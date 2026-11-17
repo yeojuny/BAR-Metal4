@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 72,
+  "revision": 73,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
   "request": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DONE.json",
   "decision": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DECISION.json",
-  "execution_status": "COMPLETION_OBSERVATION_SPLIT_BUILD_AND_ONE_VALIDATION_RESERVED",
+  "execution_status": "COMPLETION_OBSERVATION_SPLIT_CPU_BUILD_READBACK_NORMAL_SHUTDOWN_PASS_BOUNDED",
   "blocked_reason": null,
   "history": [
     {
@@ -766,6 +766,26 @@
       "attempt_id": "completion-observation-split-01",
       "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
       "game_budget": 1
+    },
+    {
+      "event": "HQ_COMPLETION_OBSERVATION_SPLIT_BOUNDED_VALIDATION_DONE",
+      "revision": 73,
+      "round_id": "completion-observation-split-20261117-18",
+      "attempt_id": "completion-observation-split-01",
+      "artifact_commit": "8a26fda1d784c57bdcc242d7a83f0899cafb93cf",
+      "games": 1,
+      "Metal_errors": 0,
+      "gl_SaveImage_readback_success": true,
+      "unverified_live_paths": [
+        "Early drain",
+        "Detach",
+        "Fault injection",
+        "Exact callback count",
+        "All lifetime/context/error states"
+      ],
+      "performance_accepted": false,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -852,9 +872,19 @@
   "execution": {
     "attempt_id": "completion-observation-split-01",
     "started": true,
-    "completed": false,
-    "games": 0,
-    "builds": 0
+    "completed": true,
+    "games": 1,
+    "builds": 1,
+    "normal_exits": 1,
+    "CPU_contract_scripts": 1,
+    "receipt_identity_checks": 9,
+    "Python_model_cases": 36,
+    "gl_SaveImage_readback_success": true,
+    "shared_end_ticks_compared": 39,
+    "same_tick_differences": 0,
+    "performance_accepted": false,
+    "cleanup_complete": true,
+    "artifact_commit": "8a26fda1d784c57bdcc242d7a83f0899cafb93cf"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
