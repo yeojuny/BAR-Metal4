@@ -1,0 +1,59 @@
+{
+  "status": "CLOSED",
+  "checks": [
+    {
+      "run": "V_R03",
+      "pid": 13603,
+      "normalExit": true,
+      "ownedGroupGone": true
+    },
+    {
+      "kind": "awake",
+      "pid": 13595,
+      "released": true
+    },
+    {
+      "run": "A1_R02",
+      "pid": 14063,
+      "normalExit": true,
+      "ownedGroupGone": true
+    },
+    {
+      "run": "A3_R02",
+      "pid": 14568,
+      "normalExit": true,
+      "ownedGroupGone": true
+    },
+    {
+      "run": "A2_R02",
+      "pid": 14444,
+      "normalExit": true,
+      "ownedGroupGone": true
+    },
+    {
+      "run": "B1_R03",
+      "pid": 14183,
+      "normalExit": true,
+      "ownedGroupGone": true
+    },
+    {
+      "run": "B3_R03",
+      "pid": 14697,
+      "normalExit": true,
+      "ownedGroupGone": true
+    },
+    {
+      "run": "B2_R03",
+      "pid": 14300,
+      "normalExit": true,
+      "ownedGroupGone": true
+    },
+    {
+      "kind": "awake",
+      "pid": 14055,
+      "released": true
+    }
+  ],
+  "helpersBuildsCapturesStarted": false,
+  "localWritersClosedAtDONEOnly": true
+}
