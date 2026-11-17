@@ -188,6 +188,7 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 - 숫자로 된 BAR FPS 예상은 제시하지 않는다. D2R 저자 측정은 다른 게임·장면이며 전이 가능한 이득이 아니다.
 
 ### P1. 중복 상태를 기록하기 전 제거하고 실제 encoder state도 재사용
+> 정정: R03 Screen UI의 7개 state elision은 이미 ON이다. 새 후보는 별도 typed model raster이며 actual battle 빈도 미측정. 문서 끝 정정 절 참조.
 **블록별 실제 동작**
 1. H504–526: command buffer별 shadow에 blend/color/channel mask/MSAA/polygon/depth-stencil/program/vertex layout의 마지막 값을 기록한다. 전역 마지막 값이 아니다.
 2. H527–539: valid bit가 있고 bytes가 동일할 때만 생략한다. BeginRecording과 CopyCommands 뒤에는 invalidate한다. OFF→ON에서도 shadow를 버리므로 중간에 추적하지 않은 상태를 재사용하지 않는다.
@@ -266,3 +267,16 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 - HQ/Mac 접근, 코드 수정, 빌드·게임·GPU helper·벤치마크는 이번 분석에서 수행하지 않았다.
 
 고정 출처: [D2R recorder](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/nvn/hle_nvn.c#L504-L574), [D2R Metal backend](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/nvn/nvn_mtl.m), [BAR R03 WorldRenderer](https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm), [BAR R03 RuntimeNative](https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm).
+
+## 정정 체크포인트: R03 Screen state elision은 이미 존재·사용 중
+
+- 앞선 P1을 **UI Screen에 처음 state elision을 넣자는 제안으로 읽으면 안 된다**. 고정 R03 benchmark에서 `BAR_NATIVE_SCREEN_STATE_ELISION=1`이 이미 ON임을 총괄 측 benchmark 확인 결과로 전달받았다. 이번 문서 작업에서는 benchmark를 재실행하지 않았다.
+- 고정 R03 `Metal4ScreenNative.mm`을 직접 재조회했다. L971–975는 EncodeRange마다 fresh previousState와7개 상태 카운터를 만들며, resource/argument table/state를 range 경계 너머 재사용하지 않는다고 명시한다.
+- L981–987은 viewport finite+bitwise equality 및 scissor equality; L995–998은 **cull/depth/stencil/viewport/scissor/depthclip/pipeline** 7개 생략 카운터와 argument binds unchanged를 기록한다.
+- L1008–1011은 unitIcons/sensorLOS/sensorPreview/buildSquare/weaponRange/startBox/PiP/panelShader 등 foreign encoder 호출 전에 previousState를 invalidate한다. 기존 restore를 유지하며 foreign state를 캐시에 공개하지 않는다.
+- 따라서 일반적인 Screen UI state-elision 또는 foreign encoder invalidation을 **새 최적화/새 이득으로 계산하지 않는다**. 기존 ON 기준판을 OFF로 만들어 얻은 차이는 추가 개선이 아니다.
+- 남은 후보는 **별도 typed model raster 경로의 인접 draw 중복**이다. 기존 Screen 범위와 구분하고, 실제 battle에서 연속 동일 state의 빈도·CPU critical-path 기여는 아직 미측정이다. 앞선 W5332–5348 legacy 예시는 코드 관찰이지 실제 hot typed path 확인이 아니다.
+- 수정된 P1 다음 단계: 정확한 typed model family/raster boundary 식별 → 기존 cache와 중복 여부 확인 → actual battle would-skip 빈도·비용 증거 확보 → 수명·foreign callback invalidation 검증. 이 절 자체는 새 계측/실행 허가가 아니다.
+- 기존 이력·revision74/round18 기록은 보존한다. FG/FSR 제외, HQ 독점, main/release/Homebrew 보호는 변함없다.
+
+[고정 R03 ScreenNative 근거](https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm#L971-L1011)
