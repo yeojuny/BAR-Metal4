@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 102,
+  "revision": 103,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
   "request": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/READY.json",
-  "result_path": null,
-  "decision": null,
-  "execution_status": "HQ3_NEW_MATCHED_FRAME_PAIR_RESERVED_ONCE",
+  "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/DONE.json",
+  "decision": "INSUFFICIENT_NO_PROFILE_GAME_DECAL_SEMANTIC_INPUT_MISMATCH",
+  "execution_status": "HQ3_ROUND26_CLOSED_BOTH_TICKS1590_DECAL_MISMATCH_NO_PROFILE",
   "blocked_reason": null,
   "history": [
     {
@@ -1411,6 +1411,48 @@
       "previous_round_budget_reused": false,
       "reboot_or_service_restart_authorized": false,
       "bar": "PAUSED"
+    },
+    {
+      "event": "HQ3_ROUND26_DONE_BOUND_TICKS1590_DECAL_INPUT_MISMATCH",
+      "revision": 103,
+      "round_id": "r03-mvk3-matched-frame-20261117-26",
+      "attempt_id": "r03-mvk3-framepair-02",
+      "author": "LOCAL_CODEX_HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "aa7a6ada2538d237604ce483e1ba7687998463af",
+      "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/DONE.json",
+      "counts": {
+        "games": 2,
+        "capture_command_invocations": 2,
+        "captured_frames": 2,
+        "inspection_sessions": 2,
+        "profile_commands": 0,
+        "extra_counter_replays": 0,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "FPS_AB": 0,
+        "reboots": 0,
+        "logouts": 0,
+        "service_restarts": 0,
+        "security_changes": 0
+      },
+      "bound_ticks": {
+        "R03": 1590,
+        "MVK3": 1590
+      },
+      "mandatory_gate": "FAIL_MANDATORY_GAME_DECAL_SEMANTIC_WORKLOAD",
+      "game_decal_instances": {
+        "R03": 3541,
+        "MVK3": 4511
+      },
+      "exact_80byte_row_overlap": 0,
+      "cleanup_complete": true,
+      "global_gpu_sessions_after": 0,
+      "bar": "PAUSED",
+      "retry_authorized": false,
+      "utc": "2026-11-17T17:07:48.165Z"
     }
   ],
   "communication_test": {
@@ -1496,9 +1538,9 @@
   "execution": {
     "attempt_id": "r03-mvk3-framepair-02",
     "started": true,
-    "completed": false,
-    "games": 0,
-    "captures": 0,
+    "completed": true,
+    "games": 2,
+    "captures": 2,
     "profiles": 0,
     "budget": {
       "games_max": 2,
@@ -1515,7 +1557,56 @@
       "FPS_AB": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 16:44:41 UTC"
+    "reserved_at_utc": "2026-11-17 16:44:41 UTC",
+    "completed_at_utc": "2026-11-17T17:07:48.165Z",
+    "captured_frames": 2,
+    "profile_commands": 0,
+    "inspection_sessions": 2,
+    "counts": {
+      "games": 2,
+      "capture_command_invocations": 2,
+      "captured_frames": 2,
+      "inspection_sessions": 2,
+      "profile_commands": 0,
+      "extra_counter_replays": 0,
+      "engine_builds": 0,
+      "engine_source_edits": 0,
+      "R04_captures": 0,
+      "retries": 0,
+      "FPS_AB": 0,
+      "reboots": 0,
+      "logouts": 0,
+      "service_restarts": 0,
+      "security_changes": 0
+    },
+    "per_arm": {
+      "R03": {
+        "games": 1,
+        "capture_commands": 1,
+        "captured_frames": 1,
+        "inspection_sessions": 1,
+        "session": "9",
+        "profile_commands": 0,
+        "bound_timeInfo_x": 1590,
+        "normal_game_exit": true,
+        "session_closed": true
+      },
+      "MVK3": {
+        "games": 1,
+        "capture_commands": 1,
+        "captured_frames": 1,
+        "inspection_sessions": 1,
+        "session": "14",
+        "profile_commands": 0,
+        "bound_timeInfo_x": 1590,
+        "normal_game_exit": true,
+        "session_closed": true
+      }
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "aa7a6ada2538d237604ce483e1ba7687998463af",
+    "matched_frame_pair": false,
+    "outcome": "INSUFFICIENT_FAIL_MANDATORY_GAME_DECAL_SEMANTIC_WORKLOAD"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1581,5 +1672,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Execute only round26 bounded framepair; no reboot or service restart."
+  "next_action": "SUPER_JINI_MK2 review closed round26. No implicit retry, new game/profile, source repair, reboot, logout, service restart or security change."
 }
