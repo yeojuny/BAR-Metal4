@@ -1,8 +1,8 @@
 {
-  "status": "DONE",
+  "status": "HOLD",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 113,
+  "revision": 114,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/DONE.json",
-  "decision": "UNKNOWN_SKIP_GPU_INSPECTION_NOT_READY",
-  "execution_status": "HQ3_ROUND29_CLOSED_TWO_CAPTURES_SKIP_INSPECTION_NOT_READY",
+  "decision": "USER_STOPPED_ROUND30_BEFORE_START",
+  "execution_status": "ROUND30_CANCELLED_UNSTARTED_PRIOR_ROUND29_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -1655,6 +1655,27 @@
       "cleanup_complete": true,
       "bar": "PAUSED",
       "utc": "2026-11-17T20:42:23.196452+00:00"
+    },
+    {
+      "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
+      "revision": 114,
+      "cancelled_round_id": "r03-skipdraw-inspection-20261117-30",
+      "cancelled_attempt_id": "preserved-round29-inspection-01",
+      "execution_started": false,
+      "reservation_created": false,
+      "counts": {
+        "games": 0,
+        "captures": 0,
+        "inspection_sessions": 0,
+        "profiles": 0,
+        "builds": 0,
+        "retries": 0
+      },
+      "owned_cleanup_required": false,
+      "observed_active_gpu_sessions": 0,
+      "user_wake_operations": 0,
+      "prior_round29_execution_preserved": true,
+      "utc": "2026-11-17 20:45:24 UTC"
     }
   ],
   "communication_test": {
@@ -1834,5 +1855,26 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "SUPER_JINI_MK2 review round29 DONE. Both traces are retained locally. No retry or additional inspection or execution is authorized by this attempt."
+  "next_action": "User cancelled preserved round29 trace inspection before reservation. Hold further execution pending new direction; prior round29 DONE and original traces retained.",
+  "cancelled_handoff": {
+    "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
+    "revision": 114,
+    "cancelled_round_id": "r03-skipdraw-inspection-20261117-30",
+    "cancelled_attempt_id": "preserved-round29-inspection-01",
+    "execution_started": false,
+    "reservation_created": false,
+    "counts": {
+      "games": 0,
+      "captures": 0,
+      "inspection_sessions": 0,
+      "profiles": 0,
+      "builds": 0,
+      "retries": 0
+    },
+    "owned_cleanup_required": false,
+    "observed_active_gpu_sessions": 0,
+    "user_wake_operations": 0,
+    "prior_round29_execution_preserved": true,
+    "utc": "2026-11-17 20:45:24 UTC"
+  }
 }
