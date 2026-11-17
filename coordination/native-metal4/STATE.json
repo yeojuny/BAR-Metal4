@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 68,
+  "revision": 69,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "262cefbd639de63e833a7847b868a99de0aa2045e74b9d46691535e68bfe759f",
   "request": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DONE.json",
   "decision": "coordination/native-metal4/rounds/texture-ordered-validation-20261117-16/DECISION.json",
-  "execution_status": "TEXTURE_TRACE_FIXED_BUILD_AND_ONE_VALIDATION_RESERVED",
+  "execution_status": "TEXTURE_TRACE_ADMISSION_ENCODE_PRODUCER_RETIRE_OBSERVED_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -714,6 +714,29 @@
       "attempt_id": "texture-ordered-trace-01",
       "source_commit": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
       "game_budget": 1
+    },
+    {
+      "event": "HQ_TEXTURE_TRACE_ONE_GAME_POSITIVE_CPU_ADMISSION_EVIDENCE",
+      "revision": 69,
+      "round_id": "texture-ordered-trace-20261117-17",
+      "attempt_id": "texture-ordered-trace-01",
+      "artifact_commit": "f2263e446ef07e0515bac259be882378dac506fa",
+      "games": 1,
+      "Metal_errors": 0,
+      "trace_logged_counts": {
+        "armed": 1,
+        "admitted": 6,
+        "encode_permit_check": 4,
+        "producer_retired_check": 4
+      },
+      "observed_event_log_frames": [
+        91,
+        103
+      ],
+      "performance_accepted": false,
+      "consumer_GPU_completion_not_proved": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -800,9 +823,26 @@
   "execution": {
     "attempt_id": "texture-ordered-trace-01",
     "started": true,
-    "completed": false,
-    "games": 0,
-    "builds": 0
+    "completed": true,
+    "games": 1,
+    "builds": 1,
+    "normal_exits": 1,
+    "CPU_contract_scripts": 1,
+    "live_scene_define_confirmed": true,
+    "trace_logged_counts": {
+      "armed": 1,
+      "admitted": 6,
+      "encode_permit_check": 4,
+      "producer_retired_check": 4
+    },
+    "observed_event_log_frames": [
+      91,
+      103
+    ],
+    "eligible_path_admission": "OBSERVED",
+    "performance_accepted": false,
+    "cleanup_complete": true,
+    "artifact_commit": "f2263e446ef07e0515bac259be882378dac506fa"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
