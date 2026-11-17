@@ -1,0 +1,31 @@
+{
+  "status": "PASS",
+  "checks": {
+    "original_r03_source": {
+      "count": 10270,
+      "mismatches": [],
+      "unexpected_paths": []
+    },
+    "isolated_patched_source": {
+      "count": 10271,
+      "mismatches": [],
+      "unexpected_paths": []
+    },
+    "prior_protected_artifacts": {
+      "count": 134,
+      "mismatches": []
+    },
+    "prior_launcher_copy": {
+      "count": 1,
+      "mismatches": []
+    },
+    "prior_launcher_data": {
+      "count": 142,
+      "mismatches": []
+    },
+    "pinned_sdk_inputs": {
+      "count": 4,
+      "mismatches": []
+    }
+  }
+}

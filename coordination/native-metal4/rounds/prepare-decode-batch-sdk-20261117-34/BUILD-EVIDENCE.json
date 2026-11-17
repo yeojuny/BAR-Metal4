@@ -1,0 +1,81 @@
+{
+  "round_id": "prepare-decode-batch-sdk-20261117-34",
+  "attempt_id": "clean-sdk-only-01",
+  "verified_at_utc": "2026-11-17T22:11:34.844820+00:00",
+  "receipts": {
+    "configure": {
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "child_PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig:/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+      "startedUTC": "2026-11-17T22:06:28.228791+00:00",
+      "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34",
+      "attempt": 1,
+      "pid": 17237,
+      "exit": 0,
+      "endedUTC": "2026-11-17T22:06:37.067631+00:00"
+    },
+    "build": {
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "child_PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig:/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+      "startedUTC": "2026-11-17T22:06:37.082260+00:00",
+      "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34",
+      "attempt": 1,
+      "pid": 18537,
+      "exit": 0,
+      "endedUTC": "2026-11-17T22:10:23.359910+00:00"
+    }
+  },
+  "binary": {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34/build/spring-metal4-scene",
+    "sha256": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d",
+    "bytes": 65693504,
+    "file": "Mach-O 64-bit executable arm64",
+    "mach_o_build_version": [
+      "Load command 11",
+      "      cmd LC_BUILD_VERSION",
+      "  cmdsize 32",
+      " platform MACOS",
+      "    minos 27.2",
+      "      sdk 27.2",
+      "   ntools 1",
+      "     tool LD",
+      "  version 27106.1"
+    ],
+    "active_xcode_sdk_path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.2.sdk"
+  },
+  "link_verified": true,
+  "protected_verified": true,
+  "sdk": "27.2",
+  "apple_clang": "21.0.0.21000401",
+  "openal": "1.25.2",
+  "logs": {
+    "CONFIGURE.log": {
+      "lines": 450,
+      "sha256": "6d11b4b3c90c15baa69432eef464377acd733c5e04999caa374de98127bc3fef"
+    },
+    "BUILD.log": {
+      "lines": 5581,
+      "sha256": "3d2e83b73ba9e96dca21f2a95b6df944a323642dd229d6f4f064aee1dc8d22ef"
+    }
+  },
+  "compile_plan_sha256": "312a2ea8846e6094e2267e78cf0b174f7ddff181fce77a3657f2ff6187931920"
+}

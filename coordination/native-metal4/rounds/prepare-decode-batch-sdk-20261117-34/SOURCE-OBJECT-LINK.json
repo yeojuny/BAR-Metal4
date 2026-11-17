@@ -1,0 +1,196 @@
+{
+  "status": "PASS",
+  "translation_units": [
+    {
+      "source": "engine/rts/Rendering/Backend/NativeBuildSquareData.cpp",
+      "source_sha256": "334240ae41bf81d65f5f6da35100fa37a2ca75803852a683962bcd79d2e109d9",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Backend/NativeBuildSquareData.cpp.o",
+      "object_sha256": "2f8bcb5a1ffc0ee27518a18c5fef5fbb761f5db8fd952fb555cfe88f66d169ee",
+      "compile_log": {
+        "line": 2872,
+        "text": "[919/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Backend/NativeBuildSquareData.cpp.o"
+      },
+      "link_input": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "archive_member": "NativeBuildSquareData.cpp.o",
+      "archive_member_sha256": "2f8bcb5a1ffc0ee27518a18c5fef5fbb761f5db8fd952fb555cfe88f66d169ee",
+      "defined_symbol_found_in_binary": "__ZN9rendering36ValidateAndReadNativeBuildSquareDrawERKNS_21NativeBuildSquareDrawE"
+    },
+    {
+      "source": "engine/rts/Rendering/Backend/NativeCommandsData.cpp",
+      "source_sha256": "80d1b4752c3f54c06fe55fe0d1adee75d5d480c9ef27a7fa29bcf9b075870a42",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeCommandsData.cpp.o",
+      "object_sha256": "ec88bb454f274dcc7eaf02893ecf7c2c9df57a05a4a618d0689c8e3eac56a1e5",
+      "compile_log": {
+        "line": 5209,
+        "text": "[1497/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeCommandsData.cpp.o"
+      },
+      "link_input": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeCommandsData.cpp.o",
+      "defined_symbol_found_in_binary": "__ZN9rendering33ValidateAndReadNativeCommandsDrawERKNS_18NativeCommandsDrawE"
+    },
+    {
+      "source": "engine/rts/Rendering/Backend/NativeEnergyExplosionRecorder.cpp",
+      "source_sha256": "3d75848674cd84dc14e0b647b4c5426220ef8e6feccf3a7ff5917844207ba84e",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeEnergyExplosionRecorder.cpp.o",
+      "object_sha256": "5f34b4faf791be560b7051d826ca52b4d9084147edcc075dfdf22b8fb07909c1",
+      "compile_log": {
+        "line": 5415,
+        "text": "[1552/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeEnergyExplosionRecorder.cpp.o"
+      },
+      "link_input": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeEnergyExplosionRecorder.cpp.o",
+      "defined_symbol_found_in_binary": "__ZN9rendering33ValidateNativeEnergyExplosionDrawERKNS_25NativeEnergyExplosionDrawE"
+    },
+    {
+      "source": "engine/rts/Rendering/Backend/NativeLuaNanoRecorder.cpp",
+      "source_sha256": "3d9bf8a7754e581e769bf7d79dbc27d9f4a28f6aab2540395895eefd9981d7df",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeLuaNanoRecorder.cpp.o",
+      "object_sha256": "35f5f881d37b7ca4ddbefc2fe9f9f3575f8ef58cc5d22c8f1f0f62dd1cd49c5e",
+      "compile_log": {
+        "line": 5412,
+        "text": "[1549/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeLuaNanoRecorder.cpp.o"
+      },
+      "link_input": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeLuaNanoRecorder.cpp.o",
+      "defined_symbol_found_in_binary": "__ZN9rendering25ValidateNativeLuaNanoDrawERKNS_17NativeLuaNanoDrawE"
+    },
+    {
+      "source": "engine/rts/Rendering/Backend/NativeSensor31657CircleData.cpp",
+      "source_sha256": "3a74253e36f89447fbd2bc15ded83716beebc20a097097189ce0fbdea869373a",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeSensor31657CircleData.cpp.o",
+      "object_sha256": "6ce163d7bb81b3698651c538fc6327d1258d2b2c52bf5d401f7a9fc242626bc7",
+      "compile_log": {
+        "line": 5276,
+        "text": "[1508/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeSensor31657CircleData.cpp.o"
+      },
+      "link_input": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeSensor31657CircleData.cpp.o",
+      "defined_symbol_found_in_binary": "__ZN9rendering42ValidateAndReadNativeSensor31657CircleDrawERKNS_27NativeSensor31657CircleDrawE"
+    },
+    {
+      "source": "engine/rts/Rendering/Backend/NativeStartBoxData.cpp",
+      "source_sha256": "17144aa0c47553c7eeb611df67c8751603188738ec285b87d886ac3b831eb51b",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeStartBoxData.cpp.o",
+      "object_sha256": "88d9e72d94a643266ec515624534a29bcf0ba17ea42f52583f75f93f27cfba08",
+      "compile_log": {
+        "line": 5247,
+        "text": "[1503/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeStartBoxData.cpp.o"
+      },
+      "link_input": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeStartBoxData.cpp.o",
+      "defined_symbol_found_in_binary": "__ZN9rendering33ValidateAndReadNativeStartBoxDrawERKNS_18NativeStartBoxDrawE"
+    },
+    {
+      "source": "engine/rts/Rendering/Backend/NativeWeaponRangeData.cpp",
+      "source_sha256": "71b301d18d83bd8c9fd55188d70100998532ecf32124bcbac08753bba06d98aa",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeWeaponRangeData.cpp.o",
+      "object_sha256": "48b0224ec6f2bc50c5a91857542bc231a995dc80ff0ebe8922024db285c0431f",
+      "compile_log": {
+        "line": 5266,
+        "text": "[1506/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeWeaponRangeData.cpp.o"
+      },
+      "link_input": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeWeaponRangeData.cpp.o",
+      "defined_symbol_found_in_binary": "__ZN9rendering36ValidateAndReadNativeWeaponRangeDrawERKNS_21NativeWeaponRangeDrawE"
+    },
+    {
+      "source": "engine/rts/Rendering/Metal4/Metal4BuildSquareNative.mm",
+      "source_sha256": "492aac7ec3157b0fcb34c83c2a7e7b500df7645fa48aaa9d53ccb046ceade447",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4BuildSquareNative.mm.o",
+      "object_sha256": "4dc2826d3bea052a6c484690ec6c9f9897e664495ac737c4b2876ec8a07ce1db",
+      "compile_log": {
+        "line": 2769,
+        "text": "[908/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4BuildSquareNative.mm.o"
+      },
+      "link_input": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "archive_member": "Metal4BuildSquareNative.mm.o",
+      "archive_member_sha256": "4dc2826d3bea052a6c484690ec6c9f9897e664495ac737c4b2876ec8a07ce1db",
+      "defined_symbol_found_in_binary": "__ZN9rendering6metal414BuildSquareGPU7PrepareERNS0_12RuntimeLeaseERKNS_21NativeBuildSquareDrawERKNSt3__18functionIFNS0_21PreparedStartBoxImageES3_RKNS_23NativeCUSTextureBindingENS7_8optionalINS_25NativePostprocessConsumerEEEEEE11MTLViewport14MTLScissorRect14MTLPixelFormatSM_SM_jbRdSF_"
+    },
+    {
+      "source": "engine/rts/Rendering/Metal4/Metal4CommandsNative.mm",
+      "source_sha256": "5b97f5e1f59d842de4e9a8dafe40e58d80825324837d1755a251584aac285e98",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4CommandsNative.mm.o",
+      "object_sha256": "a58f4ee20f32e79eb8aeb9623c0e8d8f4eb9678e6162f2b734e6f071f8035441",
+      "compile_log": {
+        "line": 2549,
+        "text": "[878/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4CommandsNative.mm.o"
+      },
+      "link_input": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "archive_member": "Metal4CommandsNative.mm.o",
+      "archive_member_sha256": "a58f4ee20f32e79eb8aeb9623c0e8d8f4eb9678e6162f2b734e6f071f8035441",
+      "defined_symbol_found_in_binary": "__ZN9rendering6metal411CommandsGPU7PrepareERNS0_12RuntimeLeaseENSt3__110shared_ptrIKNS_19NativeCommandsFrameEEERKNS4_8functionIFNS0_21PreparedStartBoxImageES3_RKNS_23NativeCUSTextureBindingENS4_8optionalINS_25NativePostprocessConsumerEEEEEERKNS_11WorldCameraEjjjj14MTLPixelFormatSO_SO_jbRd"
+    },
+    {
+      "source": "engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm",
+      "source_sha256": "64e61fe68847e2606bb2359595b0d37ef3b5c616fa39365a2cee2ef9fe928960",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Sensor31657CircleNative.mm.o",
+      "object_sha256": "aee374380aa0970aa61268c737dd69f36bcfcae9699ace54d9ef7ff8aec492af",
+      "compile_log": {
+        "line": 2566,
+        "text": "[895/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Sensor31657CircleNative.mm.o"
+      },
+      "link_input": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "archive_member": "Metal4Sensor31657CircleNative.mm.o",
+      "archive_member_sha256": "aee374380aa0970aa61268c737dd69f36bcfcae9699ace54d9ef7ff8aec492af",
+      "defined_symbol_found_in_binary": "__ZN9rendering6metal420Sensor31657CircleGPU7PrepareERNS0_12RuntimeLeaseERKNS_27NativeSensor31657CircleDrawERKNSt3__18functionIFNS0_21PreparedStartBoxImageES3_RKNS_23NativeCUSTextureBindingENS7_8optionalINS_25NativePostprocessConsumerEEEEEERKNS_11WorldCameraEjjjj14MTLPixelFormatSN_SN_jbRdSF_"
+    },
+    {
+      "source": "engine/rts/Rendering/Metal4/Metal4StartBoxNative.mm",
+      "source_sha256": "4937ba89733915168823cad9ccd94c6830e01407c709ee906d92ef1c9374052e",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4StartBoxNative.mm.o",
+      "object_sha256": "36cd5a126df0e056b868687bab4fdf16fa71d43cfc791e3e3fdda13410fe63b7",
+      "compile_log": {
+        "line": 2564,
+        "text": "[893/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4StartBoxNative.mm.o"
+      },
+      "link_input": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "archive_member": "Metal4StartBoxNative.mm.o",
+      "archive_member_sha256": "36cd5a126df0e056b868687bab4fdf16fa71d43cfc791e3e3fdda13410fe63b7",
+      "defined_symbol_found_in_binary": "__ZN9rendering6metal411StartBoxGPU7PrepareERNS0_12RuntimeLeaseERKNS_18NativeStartBoxDrawERKNSt3__18functionIFNS0_21PreparedStartBoxImageES3_RKNS_23NativeCUSTextureBindingENS7_8optionalINS_25NativePostprocessConsumerEEEEEE11MTLViewport14MTLScissorRect14MTLPixelFormatSM_SM_jbRdSF_"
+    },
+    {
+      "source": "engine/rts/Rendering/Metal4/Metal4WeaponRangeNative.mm",
+      "source_sha256": "6308bd39a00fa4e0e139979f0577f54082e81f5fa91a4e261230de37d0caf2aa",
+      "explicit_sdk_sysroot": null,
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4WeaponRangeNative.mm.o",
+      "object_sha256": "2df82988dbbf87a7d0d8c03012ddb07e2ef13518a990b4761b863e8e58abb46a",
+      "compile_log": {
+        "line": 2567,
+        "text": "[896/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4WeaponRangeNative.mm.o"
+      },
+      "link_input": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "archive_member": "Metal4WeaponRangeNative.mm.o",
+      "archive_member_sha256": "2df82988dbbf87a7d0d8c03012ddb07e2ef13518a990b4761b863e8e58abb46a",
+      "defined_symbol_found_in_binary": "__ZN9rendering6metal414WeaponRangeGPU7PrepareERNS0_12RuntimeLeaseERKNS_21NativeWeaponRangeDrawERKNSt3__18functionIFNS0_21PreparedStartBoxImageES3_RKNS_23NativeCUSTextureBindingENS7_8optionalINS_25NativePostprocessConsumerEEEEEE11MTLViewport14MTLScissorRectNS7_5arrayIjLm2EEE14MTLPixelFormatSO_SO_jbRdSF_"
+    }
+  ],
+  "link": {
+    "archive": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+    "archive_sha256": "ecc09bf82b6f2964a0c2e5ae23d548b97b99caccecf7450f756fafa3b26df0ff",
+    "archive_ninja_rule": {
+      "line": 35262,
+      "rule": "CXX_STATIC_LIBRARY_LINKER__recoil-metal4-world-renderer_RelWithDebInfo"
+    },
+    "archive_log": {
+      "line": 3311,
+      "text": "[1025/1578] Linking CXX static library rts/builds/metal4-scene/librecoil-metal4-world-renderer.a"
+    },
+    "executable_ninja_rule": {
+      "line": 42784,
+      "rule": "CXX_EXECUTABLE_LINKER__engine-metal4-scene_RelWithDebInfo"
+    },
+    "archive_in_final_link_libraries": true,
+    "executable_log": {
+      "line": 5580,
+      "text": "[1577/1578] Linking CXX executable spring-metal4-scene"
+    }
+  },
+  "test_translation_unit_compiled": false,
+  "failure": null
+}

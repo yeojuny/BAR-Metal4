@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "checked_at_utc": "2026-11-17T22:12:28.041490+00:00",
+  "configure_pid": 17237,
+  "owned_configure_group_gone": true,
+  "engine_build_pid": 18537,
+  "owned_build_group_gone": true,
+  "engine_processes_after": [],
+  "gpu_sessions_after": "No active sessions.",
+  "bar": "PAUSED",
+  "shared_awake_before": "RELEASED",
+  "shared_awake_after": "RELEASED",
+  "owned_awake_started": false,
+  "caffeinate_processes_after": [
+    [
+      "6618",
+      "6618",
+      "caffeinate"
+    ]
+  ],
+  "user_wake_after": "6618 caffeinate -d",
+  "user_wake_operations": 0,
+  "system_restarts": 0,
+  "services_restarted": 0,
+  "security_changes": 0
+}
