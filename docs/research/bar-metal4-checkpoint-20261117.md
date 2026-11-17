@@ -1,5 +1,7 @@
 # BAR-Metal4 작업 기억 체크포인트
 
+> 최신 분석 우선순위: 한 프레임 내부 의존성·병렬 실행. HQ19 종료 후 기존 gputrace read-only export가 다음 순서이며, 자세한 한계는 마지막 갱신 절 참조.
+
 > 최신 운영 상태는 문서 끝의 **round18 종료·제한적 동등성 통과** 갱신을 참조한다. revision72/RUNNING 내용은 과거 스냅샷이다.
 
 - 작성일: 2026-11-17 UTC
@@ -280,3 +282,40 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 - 기존 이력·revision74/round18 기록은 보존한다. FG/FSR 제외, HQ 독점, main/release/Homebrew 보호는 변함없다.
 
 [고정 R03 ScreenNative 근거](https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm#L971-L1011)
+
+## 최신 방향: 한 프레임 내부 의존성·병렬 실행 중심 (2026-11-17)
+
+### 방향 전환과 R02 trace 해석
+- 최신 사용자 방향은 **한 프레임 내부 pass/stage 간 의존성과 병렬 실행**을 본 작업으로 삼는 것이다. 앞선 P1/P2 목록은 비교 후보 이력이며 현재 최우선 순서를 대체하지 않는다.
+- 총괄이 확인한 **R02 원본 export**에서 GroundDecal fragment stage(FS)와 Grass vertex stage(VS)가 겹치고, Grass FS는 그 뒤에 온다. 따라서 전체 pass 박스가 인접한다는 이유로 전부 직렬이라고 판단하지 않는다.
+- SensorLOS로 표시된 구간에는 Bloom/DeferredLight 등 다른 작업도 공유되어 있다. 그 영역의 시간 폭을 **SensorLOS 단독 GPU 독점 비용**으로 계산하거나 제거 가능한 시간으로 환산하지 않는다.
+- 위 두 관찰의 출처는 총괄의 R02 원본 export 확인 결과이다. 이번 문서 작성자가 별도 GPU capture를 실행하거나 그 export 전체를 재검증한 것은 아니다.
+- 아직 **개별 자원의 producer→consumer lineage와 실제 active intervals**를 확보하지 못했다. 이름표·외곽 span만으로 진짜 dependency/대기 원인을 확정하지 않는다.
+- 다음 순서는 **HQ19가 종료·정리된 뒤 기존 gputrace의 read-only export 확보/검토**가 우선이다. HQ19의 현재 진행/완료 상태는 이번 문서 작업에서 조회·확정하지 않았다.
+- 기존 trace를 먼저 읽고 resource/subresource, producer/consumer stage, active interval, barrier와 wait 원인을 연결한다. 그 전 신규 capture·benchmark·pending2 확대를 이 문서로 승인하지 않는다.
+- FG/FSR 제외와 원래 출력 보존, HQ 실행 중 Mac 접근 금지, 최신 STATE 실행권 원칙, main/release/Homebrew 별도 승인은 유지한다.
+
+### 사례 조사 분류: OpenGL4.3+ → Metal4라고 말할 때의 기준
+- 원래 GL 버전/실제 사용 기능, native Metal API 세대, visible-frame owner, shader translation과 runtime API translation, 안정판/실험판을 따로 확인한다. native ARM 프로세스라는 사실은 직접 Metal4 renderer 증거가 아니다.
+- **Minecraft vanilla:** 공식1.17 기록은 GL3.2 core이다. Sodium의 GL4.5 드라이버 공식지원 조건은 vanilla4.3 요구나 모든 draw의4.5 기능 사용 증거가 아니다. Minecraft native Metal mod 전체를 GL4.3+→Metal4 성공 사례로 묶지 않는다.
+- **Complemetal** `81defd5285bc84e0022d25221d82e8541dec5655`: 실제 MTL4 queue/allocator/graph 코드가 있으나0.4.1 안정판 Iris visible frame은 **OpenGL** 유지. +13.29% paired run도 양측 GL이며 Metal4 uplift 증거가 아니다. 실험적 MTL4 graph의 parity/lifecycle/ownership gate가 BAR 참고 대상이다.
+- **MetalCraft** `a2cc82780d01a51d00a297f75cf07c221d7c8700`: Blaze3D→JNI→직접 Metal. 확인한 `src/main/native/metalcraft.mm`은 MTLCommandBuffer/MTLRenderCommandEncoder/newCommandQueue이며 MTL4 출현0. 전체 Metal4 이식으로 분류하지 않는다. 한 장치·한 고정 장면의 early prerelease이고 logic-op 무시/직접 GL mod 미지원.
+- **Blender:** 공식 GL4.3급 요구와 macOS Metal-only 전환의 대형 엔진 사례. 이번 조사에서 Metal4 직접 제출 경로는 확인하지 못했다. 게임도 아니므로 동일 workload 성능 근거가 아니다.
+- **Godot:**4.7 공식 문서는 지원 환경 Metal4를 명시하지만 GL Compatibility와 RenderingDevice Metal은 별도 renderer 계통이다. 조사한 master `203bf0a23fd7d90a860917e66de08e20d2596244`에는 MTL4 참조와 Metal3 context 경로가 함께 보여 실제 선택 조건/source closure는 미완료. GL4.3 renderer의 동일구현 직접 이식이라고 말하지 않는다.
+- **MGL** `de0ded04ec7dc99182e27e555a17775523b26911`: GL4.6/ES3.x→Metal 호환층. incomplete/nonconformant 및 functional-not-coverage tests를 자인하며 Metal4는 미확인.
+- **Zink+KosmicKrisp:** GL→Vulkan→Metal4 번역 경로. 직접 엔진 이식 아님. Mesa 공식 구현은 확인했으나 특정 게임 조합의 실행·성능을 이번에 검증하지 않았다.
+- 결론: 조사한 범위에서는 **GL4.3+ 원게임/엔진→직접 Metal4 전체 화면→안정화·동일출력 성능 입증** 조건을 모두 만족하는 공개 사례를 확정하지 못했다. 없다는 전세계 부재 증명이 아니다.
+
+### 이번 인계 체크
+- [x] 프레임 내부 overlap 중심 최신 방향, R02 관찰의 출처와 한계 기록.
+- [x] Minecraft/GL4.3+/Metal4 사례의 경로·성숙도 구분.
+- [ ] HQ19 종료·정리 및 최신 STATE를 총괄이 확인한 뒤 기존 gputrace read-only export.
+- [ ] 실제 자원 lineage·active intervals 확보 후 필요한 dependency만 재평가.
+- [ ] 개별 pass 외곽시간 합산이나 일부 병렬구간 제거만으로 FPS 예상 금지.
+
+출처:
+- [Minecraft 공식1.17 GL 변경](https://feedback.minecraft.net/hc/en-us/articles/4402626897165-Minecraft-Caves-Cliffs-Part-1-1-17-Java), [Sodium README](https://github.com/CaffeineMC/sodium/blob/dev/README.md)
+- [Complemetal 고정 README](https://github.com/daniiarkg/complemetal-mc/blob/81defd5285bc84e0022d25221d82e8541dec5655/README.md), [Metal4 상태](https://github.com/daniiarkg/complemetal-mc/blob/81defd5285bc84e0022d25221d82e8541dec5655/docs/METAL4_STATUS.md)
+- [MetalCraft 고정 backend](https://github.com/Im-Fran/MetalCraft/blob/a2cc82780d01a51d00a297f75cf07c221d7c8700/src/main/native/metalcraft.mm)
+- [Blender 공식 compatibility](https://developer.blender.org/docs/release_notes/compatibility/), [Godot4.7 architecture](https://docs.godotengine.org/en/4.7/engine_details/architecture/internal_rendering_architecture.html)
+- [MGL 고정 README](https://github.com/openglonmetal/MGL/blob/de0ded04ec7dc99182e27e555a17775523b26911/README.md), [Zink](https://docs.mesa3d.org/drivers/zink.html), [KosmicKrisp](https://docs.mesa3d.org/drivers/kosmickrisp.html)
