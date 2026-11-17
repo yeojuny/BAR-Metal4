@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "archiveParent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "basis": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/source",
+  "originalFiles": 10270,
+  "changedPaths": [
+    "engine/rts/Rendering/Metal4/Metal4GameDecal.mm",
+    "engine/rts/Rendering/Metal4/Metal4GameDecalGeometryIndices.h",
+    "engine/tools/metal4-contracts/TestGameDecalGeometryIndices.cpp"
+  ],
+  "patchResultHashes": {
+    "engine/rts/Rendering/Metal4/Metal4GameDecal.mm": "f9d0650f7c3fdb6c2594270ac75a03e8ab5d78f115647d3211cf6d0af8e7a27f",
+    "engine/rts/Rendering/Metal4/Metal4GameDecalGeometryIndices.h": "c473fd7758a9a2897accf483800cf0b564f5669f4f51306175aae8a4ba1d3b21",
+    "engine/tools/metal4-contracts/TestGameDecalGeometryIndices.cpp": "5a9085d9d8f3f5106e9141bc919f4fd07a46be1ea413902507c41d0a71655971"
+  }
+}
