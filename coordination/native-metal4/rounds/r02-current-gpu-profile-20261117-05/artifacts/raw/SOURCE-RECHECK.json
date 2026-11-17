@@ -1,0 +1,10 @@
+{
+  "status": "PASS",
+  "files": 10269,
+  "missing": [],
+  "extra": [],
+  "changed": [],
+  "sourceRoot": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/engine",
+  "parentManifestSHA256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "utc": "2026-11-17T00:03:09.742895+00:00"
+}

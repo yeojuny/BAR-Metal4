@@ -1,0 +1,260 @@
+{
+  "status": "CURRENT_CAPTURE_TARGETS_MAPPED",
+  "top18ReplayShaderCosts": [
+    {
+      "id": "frag0",
+      "shader": "OriginalSensorLOSFragment",
+      "pipeline": "@rps61 \"MTLRenderPipelineState 62\"",
+      "relativeReplayCostPercent": 26.342152889597596,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag1",
+      "shader": "GroundDecalFragment",
+      "pipeline": "@rps71 \"MTLRenderPipelineState 72\"",
+      "relativeReplayCostPercent": 14.741725494684372,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag2",
+      "shader": "GameDecalFragment",
+      "pipeline": "@rps16 \"MTLRenderPipelineState 17\"",
+      "relativeReplayCostPercent": 8.59926084461986,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag3",
+      "shader": "NativeSMFTerrainFragment",
+      "pipeline": "@rps38 \"MTLRenderPipelineState 39\"",
+      "relativeReplayCostPercent": 4.518660930639539,
+      "exportedCountField": "14"
+    },
+    {
+      "id": "frag4",
+      "shader": "NativeSMFTerrainFragment",
+      "pipeline": "@rps47 \"MTLRenderPipelineState 48\"",
+      "relativeReplayCostPercent": 4.082212317215817,
+      "exportedCountField": "24"
+    },
+    {
+      "id": "frag5",
+      "shader": "DeferredLightFragment",
+      "pipeline": "@rps58 \"MTLRenderPipelineState 59\"",
+      "relativeReplayCostPercent": 3.8516833115089,
+      "exportedCountField": "3"
+    },
+    {
+      "id": "vert0",
+      "shader": "GroundDecalVertex",
+      "pipeline": "@rps71 \"MTLRenderPipelineState 72\"",
+      "relativeReplayCostPercent": 2.928512565812574,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag6",
+      "shader": "OriginalColorFragmentMain",
+      "pipeline": "@rps55 \"MTLRenderPipelineState 56\"",
+      "relativeReplayCostPercent": 2.2326037952973663,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "vert1",
+      "shader": "NativeCUSVertex",
+      "pipeline": "@rps66 \"MTLRenderPipelineState 67\"",
+      "relativeReplayCostPercent": 2.170112431512211,
+      "exportedCountField": "3"
+    },
+    {
+      "id": "vert2",
+      "shader": "NativeCUSVertex",
+      "pipeline": "@rps67 \"MTLRenderPipelineState 68\"",
+      "relativeReplayCostPercent": 2.1632286911271494,
+      "exportedCountField": "3"
+    },
+    {
+      "id": "frag7",
+      "shader": "SSAOSample",
+      "pipeline": "@rps41 \"MTLRenderPipelineState 42\"",
+      "relativeReplayCostPercent": 1.9636354510012555,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag8",
+      "shader": "BloomCombine",
+      "pipeline": "@rps52 \"MTLRenderPipelineState 53\"",
+      "relativeReplayCostPercent": 1.742419938639158,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "vert3",
+      "shader": "GrassVertex",
+      "pipeline": "@rps12 \"MTLRenderPipelineState 13\"",
+      "relativeReplayCostPercent": 1.6522172612484114,
+      "exportedCountField": "8"
+    },
+    {
+      "id": "frag9",
+      "shader": "ParticleFragmentMain",
+      "pipeline": "@rps53 \"MTLRenderPipelineState 54\"",
+      "relativeReplayCostPercent": 1.3423794997530043,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag10",
+      "shader": "NativeCUSFragment",
+      "pipeline": "@rps67 \"MTLRenderPipelineState 68\"",
+      "relativeReplayCostPercent": 1.2064765225033178,
+      "exportedCountField": "3"
+    },
+    {
+      "id": "frag11",
+      "shader": "NativeSMFTerrainFragment",
+      "pipeline": "@rps24 \"MTLRenderPipelineState 25\"",
+      "relativeReplayCostPercent": 1.1504129087838555,
+      "exportedCountField": "14"
+    },
+    {
+      "id": "vert4",
+      "shader": "GameDecalGeometryVertex",
+      "pipeline": "@rps16 \"MTLRenderPipelineState 17\"",
+      "relativeReplayCostPercent": 1.1306293541475192,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag12",
+      "shader": "NativeCUSFragment",
+      "pipeline": "@rps66 \"MTLRenderPipelineState 67\"",
+      "relativeReplayCostPercent": 1.0055933134921546,
+      "exportedCountField": "3"
+    }
+  ],
+  "targetStageBounds": [
+    {
+      "id": "vert8",
+      "shader": "OriginalSensorLOSFanVertex",
+      "pipeline": "@rps56 \"MTLRenderPipelineState 57\"",
+      "startNs": 1278676,
+      "endNs": 1291250,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag9",
+      "shader": "OriginalSensorLOSFanFragment",
+      "pipeline": "@rps56 \"MTLRenderPipelineState 57\"",
+      "startNs": 1305826,
+      "endNs": 1371807,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "vert17",
+      "shader": "GroundDecalVertex",
+      "pipeline": "@rps71 \"MTLRenderPipelineState 72\"",
+      "startNs": 4057869,
+      "endNs": 4712625,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag17",
+      "shader": "GroundDecalFragment",
+      "pipeline": "@rps71 \"MTLRenderPipelineState 72\"",
+      "startNs": 4806433,
+      "endNs": 11084292,
+      "exportedCountField": "2"
+    },
+    {
+      "id": "vert45",
+      "shader": "OriginalSensorLOSVertex",
+      "pipeline": "@rps61 \"MTLRenderPipelineState 62\"",
+      "startNs": 15614716,
+      "endNs": 15835808,
+      "exportedCountField": "1"
+    },
+    {
+      "id": "frag44",
+      "shader": "OriginalSensorLOSFragment",
+      "pipeline": "@rps61 \"MTLRenderPipelineState 62\"",
+      "startNs": 15997958,
+      "endNs": 24334274,
+      "exportedCountField": "1"
+    }
+  ],
+  "targetDrawAPIs": [
+    {
+      "api": "api5530",
+      "performanceEncoderOrdinal": "re8",
+      "pipeline": "rps71",
+      "call": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:36 indexType:UInt16 indexBuffer:@buf2832 indexBufferLength:72 instanceCount:32364 baseVertex:0 baseInstance:0]"
+    },
+    {
+      "api": "api9766",
+      "performanceEncoderOrdinal": "re32",
+      "pipeline": "rps61",
+      "call": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:378 instanceCount:165]"
+    }
+  ],
+  "targetEncoderCosts": [
+    {
+      "performanceNode": "re32",
+      "values": [
+        "\"MTL4RenderCommandEncoder 33\"",
+        36.05467087705856,
+        "0.3748 ms",
+        "8.2428 ms"
+      ]
+    },
+    {
+      "performanceNode": "re8",
+      "values": [
+        "\"MTL4RenderCommandEncoder 9\"",
+        27.92923757820096,
+        "0.8906 ms",
+        "5.6376 ms"
+      ]
+    }
+  ],
+  "targetEncoderBounds": [
+    {
+      "performanceNode": "re8",
+      "values": [
+        "\"MTL4RenderCommandEncoder 9\"",
+        3822458,
+        11101083,
+        7278625
+      ]
+    },
+    {
+      "performanceNode": "re32",
+      "values": [
+        "\"MTL4RenderCommandEncoder 33\"",
+        15612416,
+        24339208,
+        8726792
+      ]
+    }
+  ],
+  "commandNodes": [
+    {
+      "commandNode": "re13",
+      "values": [
+        "\"MTL4RenderCommandEncoder 9\"",
+        "233 draws"
+      ]
+    },
+    {
+      "commandNode": "ce38",
+      "values": [
+        "\"MTL4ComputeCommandEncoder 9\"",
+        "1 blit"
+      ]
+    },
+    {
+      "commandNode": "re41",
+      "values": [
+        "\"MTL4RenderCommandEncoder 33\"",
+        "13 draws"
+      ]
+    }
+  ],
+  "namespaceCaution": "Performance re8/re32 and command-tree re13/re41 use different node IDs; link via labels MTL4RenderCommandEncoder9/33, not identical node strings. API ordinal mapping agrees.",
+  "durationCaution": "Stage bounds are replay-local start/end outer bounds. Do not sum overlapping intervals or treat outer span as pure execution/runtime frame latency. Exported count fields are retained verbatim, not interpreted as API draw counts."
+}

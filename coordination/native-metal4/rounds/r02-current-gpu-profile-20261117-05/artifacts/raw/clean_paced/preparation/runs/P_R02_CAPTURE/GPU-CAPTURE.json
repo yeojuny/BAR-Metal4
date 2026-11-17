@@ -1,0 +1,26 @@
+{
+  "pid": 99181,
+  "boundaryExit": 0,
+  "boundaryStdout": "boundaries for 99181 (spring-metal4-scene)\n  ID    Type                              Label  GPU(ms)  Count\n   1  Device                       Apple M4 Pro    16.76   4326\n   3   Queue                             (null)    16.76   4326\n  12   Layer  CAMetalLayer: SDL3_cocoametalview    17.14   4326\n",
+  "boundaryStderr": "",
+  "layerBoundaryID": 12,
+  "command": [
+    "/usr/bin/gpucapture",
+    "start",
+    "--pid",
+    "99181",
+    "--boundary",
+    "12",
+    "--count",
+    "1",
+    "--output",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace"
+  ],
+  "startMarkerMTimeNS": 1794873913050316050,
+  "startDelaySeconds": 0.02941395,
+  "capturePID": 99285,
+  "captureExit": 0,
+  "tracePresent": true,
+  "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace",
+  "status": "CAPTURED"
+}

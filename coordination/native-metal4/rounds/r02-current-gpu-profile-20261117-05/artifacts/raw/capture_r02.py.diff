@@ -1,0 +1,46 @@
+--- /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/capture_s01.py
++++ /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/capture_r02.py
+@@ -1,4 +1,4 @@
+-"""One signed S01 R2 Ultra AA0 GPU frame capture; explicit --stage/--run only."""
++"""One signed R02 Ultra AA0 GPU frame capture; explicit --stage/--run only."""
+ import importlib.util
+ import json
+ import os
+@@ -18,7 +18,7 @@
+ base = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(base)
+ base.RUN_ROOT = HERE
+-base.ORDER['clean_paced'] = [('P_S01_CAPTURE', 'candidate')]
++base.ORDER['clean_paced'] = [('P_R02_CAPTURE', 'candidate')]
+ base.base.PACED = ('clean_paced',)
+ base.base.CHILD_KEYS += ('MTL_CAPTURE_ENABLED',)
+ 
+@@ -36,8 +36,8 @@
+         # The first static staging attempt stopped before changing any staged input.
+     summary = base.common.read(prepared_path)
+     item = summary['order'][0]
+-    assert item['arm'] == 'P_S01_CAPTURE'
+-    assert item['binarySHA256'] == '9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0'
++    assert item['arm'] == 'P_R02_CAPTURE'
++    assert item['binarySHA256'] == '21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da'
+     data, out = Path(item['data']), Path(item['out'])
+     controller = data / 'LuaUI/Widgets/zzz_native_short_run.lua'
+     body = controller.read_text()
+@@ -70,7 +70,7 @@
+         childEnv={key:plan['env'][key] for key in ('MTL_CAPTURE_ENABLED',
+             'BAR_NATIVE_GRASS_BOUNDARY_S01', 'BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE',
+             'MTL_DEBUG_LAYER', 'MTL_SHADER_VALIDATION')},
+-        priorValidationImage=str((HERE.parent / 'runs/s01_valid02/validation_paced/preparation/runs/V_S01/scene.png').resolve()),
++        priorValidationImage=str((HERE.parent / 'runs/r02_validation01/validation_paced/preparation/runs/V_R02/scene.png').resolve()),
+         previousCleanPoolsUnchanged=True))
+     print('READY one native capture; games 0', flush=True)
+ 
+@@ -135,7 +135,7 @@
+ def run():
+     assert base.common.read(HERE / 'PLAN.json')['status'] == 'READY_NO_GAME'
+     prepared = base.restore('clean_paced')
+-    arm = 'P_S01_CAPTURE'
++    arm = 'P_R02_CAPTURE'
+     data, out, env, plan = prepared[arm]
+     assert env['MTL_CAPTURE_ENABLED'] == '1' and plan['env']['MTL_CAPTURE_ENABLED'] == '1'
+     assert env['BAR_NATIVE_GRASS_BOUNDARY_S01'] == env['BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE'] == '1'

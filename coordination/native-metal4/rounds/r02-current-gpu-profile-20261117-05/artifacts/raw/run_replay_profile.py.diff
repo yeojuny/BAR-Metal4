@@ -1,0 +1,22 @@
+--- /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/run_replay_profile.py
++++ /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/run_replay_profile.py
+@@ -1,4 +1,4 @@
+-"""Open the one owned S01 trace, profile once, export summaries, terminate it."""
++"""Open the one owned R02 trace, profile once, export summaries, terminate it."""
+ 
+ import argparse
+ import datetime
+@@ -12,11 +12,11 @@
+ import time
+ 
+ HERE = Path(__file__).resolve().parent
+-ARM = HERE / 'clean_paced/preparation/runs/P_S01_CAPTURE'
++ARM = HERE / 'clean_paced/preparation/runs/P_R02_CAPTURE'
+ TRACE = ARM / 'native-frame.gputrace'
+ ANALYSIS = HERE / 'analysis'
+ GPUDEBUG = '/usr/bin/gpudebug'
+-EXPECTED_SHA = '9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0'
++EXPECTED_SHA = '21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da'
+ EXPORTS = {
+     'command-tree': '/commands',
+     'command-buffer': '/commands/cb0',
