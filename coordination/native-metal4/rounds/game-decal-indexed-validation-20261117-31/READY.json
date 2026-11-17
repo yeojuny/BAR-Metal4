@@ -1,0 +1,11 @@
+{
+  "round_id": "game-decal-indexed-validation-20261117-31",
+  "attempt_id": "indexed-native-off-on-01",
+  "status": "READY_PINNED_CANDIDATE_LOCAL_VALIDATION",
+  "candidate_files_verified": 9,
+  "manifest_sha256": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
+  "patch_sha256": "79871e8ae1aa4ad91cecba23798e2e1fcbfb3b2f90644a9e717550accd26391d",
+  "cpu_checks_per_mode": 56643,
+  "metal_sdk_validated": false,
+  "execution_started": false
+}

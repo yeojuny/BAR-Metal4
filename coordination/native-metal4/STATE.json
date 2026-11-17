@@ -1,22 +1,22 @@
 {
-  "status": "HOLD",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 114,
+  "revision": 115,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r03-skipdraw-pair-20261117-29",
+  "round_id": "game-decal-indexed-validation-20261117-31",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
-  "request": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/DONE.json",
-  "decision": "USER_STOPPED_ROUND30_BEFORE_START",
-  "execution_status": "ROUND30_CANCELLED_UNSTARTED_PRIOR_ROUND29_CLOSED",
+  "source_manifest_sha256": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
+  "request": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/READY.json",
+  "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/DONE.json",
+  "decision": "PINNED_INDEXED_SMALL_GAME_DECAL_VALIDATION",
+  "execution_status": "HQ3_ROUND31_RESERVED_ONCE",
   "blocked_reason": null,
   "history": [
     {
@@ -1676,6 +1676,30 @@
       "user_wake_operations": 0,
       "prior_round29_execution_preserved": true,
       "utc": "2026-11-17 20:45:24 UTC"
+    },
+    {
+      "event": "HQ3_ROUND31_RESERVED_ONCE",
+      "revision": 115,
+      "round_id": "game-decal-indexed-validation-20261117-31",
+      "attempt_id": "indexed-native-off-on-01",
+      "candidate_commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+      "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+      "manifest_sha256": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
+      "budget": {
+        "engine_builds": 1,
+        "parity_helper_compiles_max": 1,
+        "parity_helper_gpu_invocations_max": 1,
+        "parity_games_max": 2,
+        "clean_games_max": 2,
+        "games_max": 4,
+        "captures": 0,
+        "trace_inspections": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "bar": "PAUSED",
+      "utc": "2026-11-17 20:57:23 UTC"
     }
   ],
   "communication_test": {
@@ -1747,7 +1771,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_R03_GAME_MAIN_DECAL_ON_OFF_GPU_CONTROL",
+  "enabled_scope": "PINNED_OPT_IN_SMALL_LUA_GAME_DECAL_NATIVE_VALIDATION",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -1759,37 +1783,25 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+    "attempt_id": "indexed-native-off-on-01",
     "started": true,
-    "completed": true,
+    "completed": false,
     "budget": {
-      "games_max": 1,
-      "captures_max": 2,
-      "inspection_sessions_max": 2,
-      "profiles_max": 2,
-      "profiles_per_capture": 1,
-      "retries": 0,
-      "builds": 0
+      "engine_builds": 1,
+      "parity_helper_compiles_max": 1,
+      "parity_helper_gpu_invocations_max": 1,
+      "parity_games_max": 2,
+      "clean_games_max": 2,
+      "games_max": 4,
+      "captures": 0,
+      "trace_inspections": 0,
+      "profiles": 0,
+      "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 20:38:03 UTC",
+    "reserved_at_utc": "2026-11-17 20:57:23 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false,
-    "ended_at_utc": "2026-11-17T20:42:23.196452+00:00",
-    "counts": {
-      "games": 1,
-      "capture_commands": 2,
-      "captured_frames": 2,
-      "inspection_sessions": 2,
-      "profile_commands": 0,
-      "retries": 0,
-      "builds": 0,
-      "engine_source_edits": 0
-    },
-    "diagnostic_outcome": "UNKNOWN_SKIP_GPU_INSPECTION_NOT_READY",
-    "cleanup_complete": true,
-    "artifact_commit": "2b94556d628b18a828ca1c2c9dcade66971e42a0",
-    "retry_authorized": false
+    "previous_budget_reused": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1855,7 +1867,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "User cancelled preserved round29 trace inspection before reservation. Hold further execution pending new direction; prior round29 DONE and original traces retained.",
+  "next_action": "Isolated HQ3 candidate validation. No clean games unless all parity gates pass. No capture, existing trace inspection, profiling or retries.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
