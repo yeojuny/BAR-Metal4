@@ -1,0 +1,21 @@
+{
+  "round_id": "r04-segment-setup-correctness-20261117-09",
+  "phase": "READY",
+  "author": "SUPER_JINI_MK2",
+  "request_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/REQUEST.json",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "attempt_id": "r04-helper-correctness-01",
+  "budget": {
+    "helper_compiles": 1,
+    "gpu_helper_runs": 1,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "previous_cleanup_complete": true
+}
