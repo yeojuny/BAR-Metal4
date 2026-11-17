@@ -1,0 +1,61 @@
+{
+  "status": "DONE",
+  "decision": "DONE_MATCHED_CLEAN_FPS_PAIR",
+  "round_id": "prepare-decode-fps-20261117-36",
+  "attempt_id": "clean-original-batch-fps-01",
+  "reserved_revision": 125,
+  "binary_sha256": {
+    "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+  },
+  "counts": {
+    "games": 2,
+    "original_games": 1,
+    "batch_games": 1,
+    "normal_exits": 2,
+    "builds": 0,
+    "helpers": 0,
+    "retries": 0,
+    "screenshots": 0,
+    "metal_traces": 0,
+    "profiles": 0
+  },
+  "clean_fps": {
+    "R03_ORIGINAL": 64.01379763502456,
+    "PREPARE_BATCH": 64.113780138164
+  },
+  "clean_relative_percent": 0.15618898867630904,
+  "diagnostic_round35_fps": {
+    "R03_ORIGINAL": 63.42938467614176,
+    "PREPARE_BATCH": 63.36866057226467
+  },
+  "diagnostic_round35_relative_percent": -0.0957349723430756,
+  "workload_match": {
+    "same_scene": true,
+    "same_camera": true,
+    "same_simulation_window": true,
+    "same_combat_seed": true,
+    "same_synced_create_destroy_counts": true,
+    "bin_boundaries_and_visible_units_match": true,
+    "both_bins_contiguous": true
+  },
+  "child_clean_settings_verified": true,
+  "same_loaded_non_system_dylibs": true,
+  "cleanup_complete": true,
+  "protected_hashes_verified": true,
+  "indexed_game_authorization": "SEPARATE_PENDING",
+  "retry_authorized": false,
+  "artifactSHA256": {
+    "REPORT.md": "2702866c5a1cf872f7939b857341b5e60400396854280b2de98f1cf8b91c8828",
+    "FPS-EVIDENCE.json": "2b8c03a1cdb9a042d5b890d0ac5badf943d38aaf470f56bfaf0d74b377758951",
+    "FPS-BINS.csv": "dc380478a19a9a5cb4f71013f206845680046ce7157d80b8444d2161659d0dce",
+    "DEPENDENCY-EVIDENCE.json": "38d6934820d3adf4481acf0c80f331a466e52f2c61acfb8355799ead6033c9b1",
+    "DYLD-PINS.json": "fb95095d60de1953adce891f41876cec66c361cabe441c764490d77fde81860d",
+    "PROTECTED-HASHES.json": "a48bc8c1b3a9600bf1de5a3a007ffff043943e43dd44ec3bca3e9745ac150904",
+    "CLEANUP-EVIDENCE.json": "724314ac2f06c0eb1a6ecb954d47106efd8cacf3564c667b2879fae16161e39a",
+    "R03_ORIGINAL-FRAME-TIMES.csv": "23345691f13bf2cf98f7e9733ecb2fa2fa03e2c52dd1be2fb4d3fcfaed40c346",
+    "PREPARE_BATCH-FRAME-TIMES.csv": "f47c5e15d142693cc18b025f3d144fba71489325d1c5daa6e6a77171a0ab9695"
+  },
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36",
+  "utc": "2026-11-17T22:35:46.769102+00:00"
+}
