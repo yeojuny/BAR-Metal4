@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeTextureOrderedTrace.h"
 #include "Rendering/Backend/NativeTextureProducerReceipt.h"
 #include "Metal4SharedProgramPilot.h"
 #include "Rendering/Backend/NativeClippedFillPrecompute.h"
@@ -194,6 +195,20 @@ struct M4WaterAttachments {
 @end
 
 namespace rendering::metal4 {
+// Opt-in correctness evidence only. Keep disabled for performance measurements.
+static void TraceTextureOrdered(NativeTextureOrderedTraceEvent event,uint64_t producer=0,uint64_t consumer=0) noexcept {
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ static const bool enabled=[] {const auto* value=std::getenv("BAR_NATIVE_TEXTURE_ORDERED_TRACE");return value&&std::string_view(value)=="1";}();
+ if(!enabled)return;
+ static NativeTextureOrderedTraceBudget budget;
+ if(!budget.Take(event))return;
+ static const char* names[]={"armed","admitted","encode_permit_check","producer_retired_check"};
+ try {LOG("[NativeTextureOrderedTrace] event=%s producer=%llu consumer=%llu gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=%u",
+  names[unsigned(event)],(unsigned long long)producer,(unsigned long long)consumer,event==NativeTextureOrderedTraceEvent::Armed?1u:64u);}catch(...){/* Diagnostics must not affect receipt or submission semantics. */}
+#else
+ (void)event;(void)producer;(void)consumer;
+#endif
+}
 // BEGIN WORLD_TEXTURE_PREPARATION_JOURNAL
 class WorldTexturePreparationJournal {
 public:
@@ -637,6 +652,7 @@ struct Metal4WorldRenderer::Impl {
 		const NativeCUSTextureObject* modelSource = nullptr)
 	{
 		Require(owner != nullptr, "World unit is missing an original texture resource");
+  TraceTextureOrdered(NativeTextureOrderedTraceEvent::Armed);
 		auto it = textures.find(owner.get());
 		if (it == textures.end()) {
 			Require(textures.size() < 512, "World texture cache diagnostic limit exceeded");
@@ -668,8 +684,9 @@ struct Metal4WorldRenderer::Impl {
     entry.borrow=entry.status->Borrow(lease.ContextIdentity(),producer,consumer,lease.PreparationIdentity());
     // The callback pins both the logical receipt and exact physical allocations.
     // It is a CPU-encoding permit only: the unchanged final drain must retire N.
-    const bool admitted=lease.OrderAfterPreviousSubmission(entry.status.get(),[entry,producer]{entry.status->RequireCompleted(producer);});
+    const bool admitted=lease.OrderAfterPreviousSubmission(entry.status.get(),[entry,producer,consumer]{entry.status->RequireCompleted(producer);TraceTextureOrdered(NativeTextureOrderedTraceEvent::ProducerRetiredCheck,producer,consumer);});
     Require(admitted,"Texture borrow lost independent pending-producer ordering");
+    TraceTextureOrdered(NativeTextureOrderedTraceEvent::Admitted,producer,consumer);
    } else lease.RetirePreviousSubmission();
   }
   RetainTextureAllocations(lease, entry);
@@ -685,7 +702,7 @@ struct Metal4WorldRenderer::Impl {
 		for (const auto& entry: lease.WorldTexturePreparation()->entries) {
    const auto* cached=&entry;
    if(cached->status->ready)continue; // N retired after N+1 prepared this list.
-   if(cached->borrow){Require(cached->status->Readable(submission),"Borrowed texture lost its exact encoding permit");continue;}
+   if(cached->borrow){Require(cached->status->Readable(submission),"Borrowed texture lost its exact encoding permit");TraceTextureOrdered(NativeTextureOrderedTraceEvent::EncodePermitCheck,cached->borrow->producer,submission);continue;}
 			Require(!cached->status->ready && (!cached->status->encodedSubmission || cached->status->encodedSubmission == submission),
 				"Original texture mips retain an unretired different submission");
 			auto mip = [command computeCommandEncoder]; Require(mip != nil, "Cannot encode original world texture first-use producer");
