@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 76,
+  "revision": 77,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "f758b34fced26318ed7f8497db93a350dc06f8db5d3c670852484ec450fd5221",
   "request": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/DONE.json",
   "decision": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json",
-  "execution_status": "POSTPROCESS_PRODUCER_BUILD_AND_ONE_VALIDATION_RESERVED",
+  "execution_status": "POSTPROCESS_CPU_FIXTURE_CPP_COMPILE_FAILED_NO_ENGINE_GAME_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -814,6 +814,22 @@
       "attempt_id": "postprocess-producer-01",
       "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
       "game_budget": 1
+    },
+    {
+      "event": "HQ_POSTPROCESS_FIXED_CPU_FIXTURE_COMPILE_FAILED_STOPPED",
+      "revision": 77,
+      "round_id": "postprocess-producer-20261117-19",
+      "attempt_id": "postprocess-producer-01",
+      "artifact_commit": "0716f745fe5f37f62f04cacd8eef096c79c58f11",
+      "CPU_contract_scripts": 1,
+      "CXX_compile_exit": 1,
+      "warning_as_error": "-Werror,-Wuninitialized-const-pointer",
+      "engine_builds": 0,
+      "games": 0,
+      "source_edits": 0,
+      "retries": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -900,9 +916,15 @@
   "execution": {
     "attempt_id": "postprocess-producer-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "games": 0,
-    "builds": 0
+    "builds": 0,
+    "CPU_contract_scripts": 1,
+    "CXX_compile_exit": 1,
+    "CPU_executable_runs": 0,
+    "failure_layer": "Fixed portable CPU test fixture compilation under Apple clang21 / -Werror, not production ObjC++ or live provenance assertion.",
+    "cleanup_complete": true,
+    "artifact_commit": "0716f745fe5f37f62f04cacd8eef096c79c58f11"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
