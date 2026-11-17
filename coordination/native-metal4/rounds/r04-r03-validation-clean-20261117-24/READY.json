@@ -1,0 +1,28 @@
+{
+  "round_id": "r04-r03-validation-clean-20261117-24",
+  "attempt_id": "r04-validation-and-clean-01",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "binary": {
+    "baseline_R03_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "R04_signed_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+    "library_count": 19
+  },
+  "request": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/REQUEST.json",
+  "budget": {
+    "validation_games": 1,
+    "clean_games": 6,
+    "total_game_launches_max": 7,
+    "builds": 0,
+    "helper_runs": 0,
+    "captures": 0,
+    "replay_profiles": 0,
+    "retries": 0
+  },
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "previous_HQ_turn_completed": true,
+  "previous_cleanup_verified": true,
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "prelaunch_stage_gate": "New runner/7 LAUNCH/env hashes must be frozen and verified by HQ before first game using only allowed literal pin/label changes. Validation PASS gates all6 clean runs."
+}
