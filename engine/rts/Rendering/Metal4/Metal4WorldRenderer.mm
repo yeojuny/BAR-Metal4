@@ -1,3 +1,4 @@
+#include "Rendering/Backend/NativeTextureProducerReceipt.h"
 #include "Metal4SharedProgramPilot.h"
 #include "Rendering/Backend/NativeClippedFillPrecompute.h"
 #include "Rendering/Backend/NativeRenderDispatchReceipt.h"
@@ -196,11 +197,12 @@ namespace rendering::metal4 {
 // BEGIN WORLD_TEXTURE_PREPARATION_JOURNAL
 class WorldTexturePreparationJournal {
 public:
- struct UploadState {bool ready=false;uint64_t encodedSubmission=0;__strong id<MTLTexture> uploadSource=nil;};
+ struct UploadState : NativeTextureProducerReceipt {__strong id<MTLTexture> uploadSource=nil;};
  struct Entry {
   std::shared_ptr<const WorldTexture> owner;
   __strong id<MTLTexture> texture=nil,sampled=nil;
   std::shared_ptr<UploadState> status=std::make_shared<UploadState>();
+  std::shared_ptr<const NativeTextureProducerReceipt::OrderedInput> borrow;
  };
  std::vector<Entry> entries;
  bool initialized=false;
@@ -208,19 +210,23 @@ public:
   if(entry.status->ready)return;
   if(std::none_of(entries.begin(),entries.end(),[&](const auto& existing){return existing.owner.get()==entry.owner.get();}))entries.push_back(entry);
  }
- void Recover(const WorldTexturePreparationJournal& interrupted) {entries=interrupted.entries;}
+ void Recover(const WorldTexturePreparationJournal& interrupted) {
+  entries.clear();
+  // Recovery preserves unfinished producers, never a prior consumer permit.
+  for(const auto& entry:interrupted.entries)if(!entry.borrow)entries.push_back(entry);
+ }
  std::function<void()> TakeCompletion(uint64_t submission) {
   std::vector<std::shared_ptr<UploadState>> states;
-  for(const auto& cached:entries)if(!cached.status->ready)states.push_back(cached.status);
+  for(const auto& cached:entries)if(!cached.borrow&&!cached.status->ready)states.push_back(cached.status);
   entries.clear();
   return [states=std::move(states),submission]{
    for(const auto& state:states)Require(submission&&state->encodedSubmission==submission,"Texture mip completion lost its submitting owner");
-   for(const auto& state:states){state->ready=true;state->uploadSource=nil;}
+   for(const auto& state:states){state->Complete(submission);state->uploadSource=nil;}
   };
  }
  void Complete(uint64_t submission) {
-  for(const auto& cached:entries)Require(submission&&cached.status->encodedSubmission==submission,"Cannot complete original texture mips before their actual producer retires");
-  for(const auto& cached:entries){cached.status->ready=true;cached.status->uploadSource=nil;}
+  for(const auto& cached:entries)if(!cached.borrow)Require(submission&&cached.status->encodedSubmission==submission,"Cannot complete original texture mips before their actual producer retires");
+  for(const auto& cached:entries)if(!cached.borrow){cached.status->Complete(submission);cached.status->uploadSource=nil;}
   entries.clear();
  }
 };
@@ -654,12 +660,22 @@ struct Metal4WorldRenderer::Impl {
 			}
 			it = textures.emplace(owner.get(), std::move(cache)).first;
 		}
-		if(!it->second.status->ready&&it->second.status->encodedSubmission&&lease.PreparingWhilePending())
-   lease.RetirePreviousSubmission(); // First-use texture producer still owns its receipt.
-		RetainTextureAllocations(lease, it->second);
-		auto journal=lease.WorldTexturePreparation();
+  auto entry=it->second; // Exact immutable storage/status owner, not a cache pointer.
+  if(!entry.status->ready&&entry.status->encodedSubmission&&lease.PreparingWhilePending()) {
+   static const bool ordered=[] {const auto* value=std::getenv("BAR_NATIVE_TEXTURE_ORDERED_INPUT");return value&&std::string_view(value)=="1";}();
+   const auto producer=entry.status->encodedSubmission,consumer=lease.SourceSubmission();
+   if(ordered&&consumer&&consumer!=producer&&lease.PendingProducerMatches(producer)) {
+    entry.borrow=entry.status->Borrow(lease.ContextIdentity(),producer,consumer,lease.PreparationIdentity());
+    // The callback pins both the logical receipt and exact physical allocations.
+    // It is a CPU-encoding permit only: the unchanged final drain must retire N.
+    const bool admitted=lease.OrderAfterPreviousSubmission(entry.status.get(),[entry,producer]{entry.status->RequireCompleted(producer);});
+    Require(admitted,"Texture borrow lost independent pending-producer ordering");
+   } else lease.RetirePreviousSubmission();
+  }
+  RetainTextureAllocations(lease, entry);
+  auto journal=lease.WorldTexturePreparation();
   if(!journal->initialized)StartTexturePreparation(lease,true);
-  journal->Register(it->second);
+  journal->Register(entry);
 		return it->second.sampled;
 	}
 
@@ -669,6 +685,7 @@ struct Metal4WorldRenderer::Impl {
 		for (const auto& entry: lease.WorldTexturePreparation()->entries) {
    const auto* cached=&entry;
    if(cached->status->ready)continue; // N retired after N+1 prepared this list.
+   if(cached->borrow){Require(cached->status->Readable(submission),"Borrowed texture lost its exact encoding permit");continue;}
 			Require(!cached->status->ready && (!cached->status->encodedSubmission || cached->status->encodedSubmission == submission),
 				"Original texture mips retain an unretired different submission");
 			auto mip = [command computeCommandEncoder]; Require(mip != nil, "Cannot encode original world texture first-use producer");
@@ -688,7 +705,7 @@ struct Metal4WorldRenderer::Impl {
 			[mip optimizeContentsForGPUAccess:cached->texture];
 			[mip barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
 			[mip endEncoding];
-			cached->status->encodedSubmission = submission;
+			cached->status->Record(lease.ContextIdentity(),submission);
 		}
 	}
 
@@ -741,7 +758,7 @@ struct Metal4WorldRenderer::Impl {
 			CUSSourceImage image;image.texture=Texture(lease,binding.object->image);
 			image.sampler=TerrainSourceSampler(lease,binding);image.owner=binding.object;image.flipV=source.flipV;
 			const auto status=textures.at(binding.object->image.get()).status;
-			image.requireReadable=[status,submission]{Require(status->ready||status->encodedSubmission==submission,
+			image.requireReadable=[status,submission]{Require(status->Readable(submission),
 				"Original world image sampled before its common upload/mip producer");};return image;
 		}
 		if(std::dynamic_pointer_cast<const NativeTerrainInfoBacking>(binding.object->backing))
@@ -780,7 +797,7 @@ struct Metal4WorldRenderer::Impl {
 			image.sampler=screenGPU.PrepareSampler(lease,ui::NativeUITextureHistory::DescribeSampler(binding));
 			image.owner=binding.object;image.flipV=model->pixels->flipV;
 			const auto status=textures.at(model->pixels.get()).status;
-			image.requireReadable=[status,submission]{Require(status->ready||status->encodedSubmission==submission,
+			image.requireReadable=[status,submission]{Require(status->Readable(submission),
 				"Original model image sampled before its common upload/mip producer");};
    if(lease.CUSSharedPreparation()&&previouslyComplete&&PrivateModelTexture(binding.object.get(),model->pixels)&&status->ready&&status->uploadSource==nil)
     image.completedModelProof=std::make_shared<const CompletedS3OImageProof>(lease,binding.object,textures.at(model->pixels.get()),image.sampler);
@@ -946,7 +963,7 @@ struct Metal4WorldRenderer::Impl {
 			Texture(lease,pixels,binding.object.get());const auto& cached=textures.at(pixels.get());
 			CUSSourceImage image;image.texture=cached.sampled;image.sampler=actualSampler;image.owner=binding.object;image.flipV=pixels->flipV;
 			const auto status=cached.status;
-			image.requireReadable=[status,submission]{Require(status->ready||status->encodedSubmission==submission,
+			image.requireReadable=[status,submission]{Require(status->Readable(submission),
 				"Original SMF bitmap sampled before its common upload/mip producer");};
 			lease.Retain(actualSampler);return image;
 		}
@@ -2014,7 +2031,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 		if(object->image&&!object->backing){
 			PublishedWorldTexture(*object);auto image=owner->Texture(lease,object->image);
 			const auto status=owner->textures.at(object->image.get()).status;const auto submission=lease.SourceSubmission();
-			return {image,object,[status,submission]{Require(status->ready||(submission&&status->encodedSubmission==submission),
+			return {image,object,[status,submission]{Require(status->Readable(submission),
 				"Original UI world image sampled before its common upload/mip producer");}};
 		}
 		if(std::dynamic_pointer_cast<const NativeParticleAtlasBacking>(object->backing)){
@@ -2028,7 +2045,7 @@ void Metal4WorldRenderer::ConnectShieldTextureContext(bool connected)
 			const auto status = owner->textures.at(model->pixels.get()).status;
 			const auto submission = lease.SourceSubmission();
 			return {image,model,[status,submission] {
-				Require(status->ready || (submission && status->encodedSubmission == submission),
+				Require(status->Readable(submission),
 					"Original S3O mip producer has not executed before this consumer");
 			}};
 		}
@@ -2849,7 +2866,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 				const size_t shadowOffset = uniforms.size() * sizeof(WorldUniform); uniforms.push_back(u);
 				pieces.push_back({&geometry,color,other,normal,offset,shadowOffset,feature,fading,castsShadow,visible,material->family==WorldMaterialFamily::EngineModel,projectile,material->engineStandardGL4,view,objectId,uint32_t(i)});
     auto& piece=pieces.back();piece.legacyDiagnostics=legacyDiagnostics;piece.colorSampler=imageSamplers[0];piece.otherSampler=imageSamplers[1];piece.sourceTextures=sourceTextures;
-    piece.requireTextures=[imageStatus](uint64_t submission){for(const auto& status:imageStatus)Require(status&&(status->ready||(submission&&status->encodedSubmission==submission)),"Original S3O model mip producer has not executed before its consumer");};
+    piece.requireTextures=[imageStatus](uint64_t submission){for(const auto& status:imageStatus)Require(status&&(status->Readable(submission)),"Original S3O model mip producer has not executed before its consumer");};
 				drawn |= visible;
 			}
 			return drawn;
@@ -3110,7 +3127,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 			const auto status=impl->textures.at(owner.get()).status;
 			// The frame's shared mip producer runs before all world draws. Keep
 			// its completion contract instead of adding a private upload/submit.
-			image.requireReadable=[status,sourceSubmission]{Require(status&&(status->ready||status->encodedSubmission==sourceSubmission),
+			image.requireReadable=[status,sourceSubmission]{Require(status&&(status->Readable(sourceSubmission)),
 				"Map-edge original mip producer has not executed before its consumer");};
 			return image;
 		};

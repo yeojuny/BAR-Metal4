@@ -163,6 +163,8 @@ public:
  explicit RuntimeLease(std::function<void()> previousRetired, Runtime& runtime = SharedRuntime());
  void RetirePreviousSubmission();
  bool PreparingWhilePending() const;
+ bool PendingProducerMatches(uint64_t submission) const;
+ std::weak_ptr<const void> PreparationIdentity() const {return frame;}
  // Admit only a pinned, already encoded predecessor. The supplied check must
  // establish its actual completion before this lease can submit GPU work.
  bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check);

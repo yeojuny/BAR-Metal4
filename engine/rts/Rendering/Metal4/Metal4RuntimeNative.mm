@@ -842,6 +842,12 @@ id<MTLDepthStencilState> RuntimeLease::CachedDepthState(MTLDepthStencilDescripto
 namespace { std::atomic<unsigned> residencyCensusSamples{0}; }
 
 bool RuntimeLease::PreparingWhilePending() const {return bool(frame->previousRetired)&&bool(runtime.pendingSubmission);}
+bool RuntimeLease::PendingProducerMatches(uint64_t submission) const {
+ return submission && PreparingWhilePending() && runtime.pendingSubmissions.size()==1 &&
+  runtime.pendingSubmission==runtime.pendingSubmissions.front() &&
+  runtime.pendingSubmission->traceIdentity.submission==submission &&
+  !runtime.poisoned && !runtime.SlotPending(frame->slot);
+}
 bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<void()> check)
 {
  Require(owner&&bool(check)&&!frame->recording&&!frame->pending&&!runtime.poisoned,
