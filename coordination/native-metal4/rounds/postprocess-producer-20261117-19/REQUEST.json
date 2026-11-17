@@ -1,0 +1,52 @@
+{
+  "round_id": "postprocess-producer-20261117-19",
+  "attempt_id": "postprocess-producer-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "FIXED_PENDING_ONE_PROVENANCE_BUILD_AND_ONE_VALIDATION_GAME",
+  "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+  "parent_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "source_branch": "experiment/postprocess-producer-20261117",
+  "source_manifest_path": "docs/research/postprocess-producer-20261117/candidate/MANIFEST.json",
+  "source_manifest_sha256": "f758b34fced26318ed7f8497db93a350dc06f8db5d3c670852484ec450fd5221",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "budget": {
+    "CPU_contract_script": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "relocation_sign": 1,
+    "fixture_staging": 1,
+    "validation_games": 1,
+    "benchmarks": 0,
+    "GPU_helpers": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "review": {
+    "parent_remote_verified": true,
+    "production_six_manifest_blobs_verified": true,
+    "reference_runtime_matches_parent": true,
+    "manifest_SHA_verified": true,
+    "actual_patch_and_CPU_test_reviewed": true,
+    "worker_result": "64 predicate combinations,6 invalid identities,14 compiled scenario blocks; source wiring and runtime reconstruction PASS; no Metal tested",
+    "scope": "Exact context/queue/source-submission producer with retained queue and immutable snapshot; exact predecessor registration or conservative drain; same-frame encode proof and completion gating retained; pending1",
+    "source_and_review_workers_stopped": true
+  },
+  "execution_contract": [
+    "Reserve only matching latest READY/HQ round/attempt using current STATE contents SHA. Any prior/unclear execution blocks duplication.",
+    "Verify manifest all production/artifact hashes and exact parent/reference. Run fixed candidate/test_contract.py once; one C++20 compile/run. Script rewrites cpu-results.json deterministically: verify unchanged hash after, do not hand edit source.",
+    "Isolated proven toolchain configure/build once each. Actual Objective-C++/ARC and live-scene compile required. Failure means stop with raw compiler/assertion path, never weaken to encoded-only permission.",
+    "After successful build only, relocate/sign isolated runtime once, preserve19 dylibs. Stage one candidate fixture from proven round18 controller. Pin raw/signed/runner/13 inputs before game.",
+    "Same scene Ultra4 AA0 actualsample1 view1512x950 drawable1512x982, PREPARE1 BEGIN0 worker1 S01/G01, Metal API validation1 shader validation0, trace/texture-input flags OFF. Candidate one game only, no baseline rerun. Compare preserved round18 world/tick/images and readback/shutdown; distinguish sampled bins from same-tick state.",
+    "On new provenance assertion failure record full message/source stack and exact identities if existing evidence exposes them; stop, no retry or source adjustment.",
+    "Cloud-depth ResolveImage still lacks captured encode-time receipt; do not claim all postprocess consumers or pending2 safety. Failure/detach/early-drain, exact counts, ARC lifetime breadth and multi-frame cache sequence only covered insofar as actual evidence proves. CPU stub tests are not Metal coverage.",
+    "HQ owns all local execution, pause heartbeat/other Mac work while game. Cleanup GPU/PID groups/children/imageworkers/awake/evidence writers before same-round DONE. No performance claim or main/release/Homebrew/original-app changes."
+  ],
+  "reference": {
+    "round": "completion-observation-split-20261117-18",
+    "artifact_commit": "8a26fda1d784c57bdcc242d7a83f0899cafb93cf",
+    "signed_engine_sha256": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+    "runner_sha256": "3ab8f0c8f3e26676d545d6b7f22ef27139723730a3f0990f5f4d2c2a75d71c9d"
+  },
+  "performance_authorized": false
+}
