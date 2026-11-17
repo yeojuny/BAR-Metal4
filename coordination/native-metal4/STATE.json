@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 80,
+  "revision": 81,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/READY.json",
   "result_path": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/DONE.json",
-  "decision": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/DECISION.json",
-  "execution_status": "EXISTING_R02_SAVED_EXPORT_COMPLETE_NO_NEW_GPU_EXECUTION",
+  "decision": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/DECISION.json",
+  "execution_status": "R02_EXISTING_TRACE_EXPORT_INDEPENDENT_REVIEW_COMPLETE",
   "blocked_reason": null,
   "history": [
     {
@@ -857,6 +857,16 @@
       "cleanup_complete": true,
       "new_audit_thread_id": "01a1e87e-0748-7293-9316-f5c1bfed92bc",
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_R02_EXISTING_TRACE_EXPORT_REVIEW_COMPLETE",
+      "revision": 81,
+      "round_id": "r02-existing-trace-export-20261117-20",
+      "decision": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/DECISION.json",
+      "execution_turn_completed": true,
+      "cleanup_verified": true,
+      "new_execution_authorized": false,
+      "read_only_audit_ongoing": true
     }
   ],
   "communication_test": {
