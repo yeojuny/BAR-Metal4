@@ -1,8 +1,8 @@
 {
-  "status": "READY",
-  "owner": "HQ3",
-  "enabled": true,
-  "revision": 107,
+  "status": "HOLD",
+  "owner": "SUPER_JINI_MK2",
+  "enabled": false,
+  "revision": 108,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/DONE.json",
   "decision": "STOP_LIFETIME_TOOLING_COMPARE_ACTUAL_GPU_MAIN_DRAW_COST",
-  "execution_status": "READY_MAIN_DECAL_ONE_GAME_CONTROL_PAIR",
+  "execution_status": "HANDOFF_DENIED_NO_EXECUTION",
   "blocked_reason": null,
   "history": [
     {
@@ -1547,6 +1547,11 @@
       },
       "previous_budget_reused": false,
       "source_preserved": true
+    },
+    {
+      "event": "ROUND28_HANDOFF_DENIED_HOLD",
+      "revision": 108,
+      "execution_started": false
     }
   ],
   "communication_test": {
@@ -1708,5 +1713,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 reserve once, existing R03 path only; one game two captures, conditional profiles2; no retry. Preserve user caffeinate."
+  "next_action": "Verify direct user authorization before any retry. Do not execute from event."
 }
