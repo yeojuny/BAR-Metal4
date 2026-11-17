@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 40,
+  "revision": 41,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
   "request": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/READY.json",
-  "result_path": null,
-  "decision": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DECISION.json",
-  "execution_status": "R04_HELPER_CORRECTNESS_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DONE.json",
+  "decision": "R04 standalone GPU old/new12065 comparisons PASS; base3600/asymmetric1024 and negative witnesses retained; prepared-path disabled negative-control detected. Full production vertex/true AA4/large-coordinate GPU/performance unverified.",
+  "execution_status": "R04_HELPER_GPU_PASS_PREPARED_WITNESS_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -410,6 +410,20 @@
         "GPU_invocation": 1,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ_R04_GPU_CORRECTNESS_PASS_WITH_PREPARED_WITNESS",
+      "revision": 41,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r04-segment-setup-correctness-20261117-09",
+      "attempt_id": "r04-helper-correctness-01",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "result_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DONE.json",
+      "artifact_commit": "45d0ada23c259df5e13ff8d68c9158932a84e065",
+      "old_new_comparisons": 12065,
+      "prepared_negative_control_detected": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -496,11 +510,17 @@
   "execution": {
     "attempt_id": "r04-helper-correctness-01",
     "started": true,
-    "completed": false,
-    "helper_compiles": 0,
-    "gpu_helper_runs": 0,
+    "completed": true,
+    "helper_compiles": 1,
+    "gpu_helper_runs": 1,
     "games": 0,
-    "started_at_utc": "2026-11-17 03:26:51 UTC"
+    "started_at_utc": "2026-11-17 03:26:51 UTC",
+    "engine_builds": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0,
+    "cleanup_complete": true,
+    "completed_at_utc": "2026-11-17 03:34:50 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
