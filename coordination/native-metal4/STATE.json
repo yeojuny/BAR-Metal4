@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 54,
+  "revision": 55,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
   "request": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DONE.json",
   "decision": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DECISION.json",
-  "execution_status": "GROUND_DECAL_CLEAN_STAGING_AND_SIX_RUNS_RESERVED",
+  "execution_status": "GROUND_DECAL_SIX_CLEAN_RUNS_COMPLETE_CAUSAL_GAIN_UNCERTAIN_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -569,6 +569,20 @@
       "round_id": "ground-decal-pages-performance-20261117-13",
       "attempt_id": "ground-decal-pages-clean-01",
       "games_budget": 6
+    },
+    {
+      "event": "HQ_GROUND_DECAL_SIX_CLEAN_GAMES_DONE_ALL_VALID_RETAINED",
+      "revision": 55,
+      "round_id": "ground-decal-pages-performance-20261117-13",
+      "attempt_id": "ground-decal-pages-clean-01",
+      "artifact_commit": "800374df16d704cc3bc9cc400f50e43a8777226f",
+      "baseline_mean_FPS": 61.645348153000675,
+      "candidate_mean_FPS": 64.13333179515845,
+      "observed_relative_percent": 4.035963323595371,
+      "first_baseline_FPS": 56.84147304152566,
+      "causal_gain_uncertain": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -655,9 +669,20 @@
   "execution": {
     "attempt_id": "ground-decal-pages-clean-01",
     "started": true,
-    "completed": false,
-    "games": 0,
-    "builds": 0
+    "completed": true,
+    "games": 6,
+    "builds": 0,
+    "baseline_games": 3,
+    "candidate_games": 3,
+    "normal_exits": 6,
+    "staging_attempts": 1,
+    "cleanup_complete": true,
+    "artifact_commit": "800374df16d704cc3bc9cc400f50e43a8777226f",
+    "baseline_mean_FPS": 61.645348153000675,
+    "candidate_mean_FPS": 64.13333179515845,
+    "observed_relative_percent": 4.035963323595371,
+    "all40_world_rows_match_all_six": true,
+    "causal_gain_uncertain": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
