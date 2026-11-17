@@ -1,0 +1,66 @@
+OPEN A1_R03
+{
+  "recordedUTC": "2026-11-17T04:47:53.527439+00:00",
+  "label": "bloom217-A1_R03",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE A1_R03: 56.841 FPS; 1% low 32.303
+OPEN B1_GDP
+{
+  "recordedUTC": "2026-11-17T04:49:13.714960+00:00",
+  "label": "bloom217-B1_GDP",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE B1_GDP: 64.140 FPS; 1% low 53.170
+OPEN B2_GDP
+{
+  "recordedUTC": "2026-11-17T04:50:34.888112+00:00",
+  "label": "bloom217-B2_GDP",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE B2_GDP: 64.110 FPS; 1% low 53.498
+OPEN A2_R03
+{
+  "recordedUTC": "2026-11-17T04:51:56.076623+00:00",
+  "label": "bloom217-A2_R03",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE A2_R03: 64.107 FPS; 1% low 53.830
+OPEN A3_R03
+{
+  "recordedUTC": "2026-11-17T04:53:17.235726+00:00",
+  "label": "bloom217-A3_R03",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE A3_R03: 63.987 FPS; 1% low 48.148
+OPEN B3_GDP
+{
+  "recordedUTC": "2026-11-17T04:54:38.360450+00:00",
+  "label": "bloom217-B3_GDP",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE B3_GDP: 64.150 FPS; 1% low 55.437
+{
+  "status": "COMPLETE",
+  "runs": 6,
+  "means": {
+    "baseline": 61.645348153000675,
+    "candidate": 64.13333179515845
+  },
+  "candidateVsBaselinePercent": 4.035963323595371,
+  "allValidSlowRunsRetained": true,
+  "historicalSamplesPooled": false,
+  "utc": "2026-11-17T04:55:59.368582+00:00"
+}

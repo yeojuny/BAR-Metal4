@@ -1,0 +1,178 @@
+{
+  "status": "COMPLETE_CLEAN_COMPARISON_CAUSAL_GAIN_UNCERTAIN",
+  "round_id": "ground-decal-pages-performance-20261117-13",
+  "attempt_id": "ground-decal-pages-clean-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "runner_sha256": "e2d2b24c0a975a6a74276c87b48dd9e33a1ff76628ece05f1687e9241a074945",
+  "baseline_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "candidate_signed_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "metric": "CPU-observed DrawScreen frames / wall duration; not GPU or displayed FPS",
+  "order": [
+    "A1_R03",
+    "B1_GDP",
+    "B2_GDP",
+    "A2_R03",
+    "A3_R03",
+    "B3_GDP"
+  ],
+  "individual": [
+    {
+      "arm": "A1_R03",
+      "backend": "baseline",
+      "mean_FPS": 56.84147304152566,
+      "one_percent_low": 32.303370332817835,
+      "counted_seconds": 40.006000519,
+      "bins": 40,
+      "bin_min_FPS": 50.796813965,
+      "bin_max_FPS": 70.646766663,
+      "first10_bin_FPS_mean": 65.7610263824,
+      "last10_bin_FPS_mean": 52.4297409058,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "B1_GDP",
+      "backend": "candidate",
+      "mean_FPS": 64.14037811106193,
+      "one_percent_low": 53.16973676088688,
+      "counted_seconds": 40.006000519,
+      "bins": 40,
+      "bin_min_FPS": 59.59595871,
+      "bin_max_FPS": 73.073074341,
+      "first10_bin_FPS_mean": 70.7764045715,
+      "last10_bin_FPS_mean": 60.6995326995,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "B2_GDP",
+      "backend": "candidate",
+      "mean_FPS": 64.10961727441344,
+      "one_percent_low": 53.49794513878319,
+      "counted_seconds": 39.993999481,
+      "bins": 40,
+      "bin_min_FPS": 59.535823822,
+      "bin_max_FPS": 72.927070618,
+      "first10_bin_FPS_mean": 70.7564033508,
+      "last10_bin_FPS_mean": 60.5898815156,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "A2_R03",
+      "backend": "baseline",
+      "mean_FPS": 64.10736793035933,
+      "one_percent_low": 53.830230306615526,
+      "counted_seconds": 40.011001587,
+      "bins": 40,
+      "bin_min_FPS": 59.64214325,
+      "bin_max_FPS": 72.781654358,
+      "first10_bin_FPS_mean": 70.6246604919,
+      "last10_bin_FPS_mean": 60.6057460785,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "A3_R03",
+      "backend": "baseline",
+      "mean_FPS": 63.98720348711703,
+      "one_percent_low": 48.148149842249715,
+      "counted_seconds": 40.00799942,
+      "bins": 40,
+      "bin_min_FPS": 56.829509735,
+      "bin_max_FPS": 72.70916748,
+      "first10_bin_FPS_mean": 70.67040557840001,
+      "last10_bin_FPS_mean": 60.184154892,
+      "valid_and_retained": true
+    },
+    {
+      "arm": "B3_GDP",
+      "backend": "candidate",
+      "mean_FPS": 64.15,
+      "one_percent_low": 55.43710328649187,
+      "counted_seconds": 40.0,
+      "bins": 40,
+      "bin_min_FPS": 59.523807526,
+      "bin_max_FPS": 73.0,
+      "first10_bin_FPS_mean": 70.8903366088,
+      "last10_bin_FPS_mean": 60.5794761656,
+      "valid_and_retained": true
+    }
+  ],
+  "summary": {
+    "baseline": {
+      "n": 3,
+      "arithmetic_mean_FPS": 61.645348153000675,
+      "sample_stdev_FPS": 4.160711710554065,
+      "min_FPS": 56.84147304152566,
+      "max_FPS": 64.10736793035933,
+      "arithmetic_mean_one_percent_low": 44.76058349389436,
+      "individual_FPS": [
+        56.84147304152566,
+        64.10736793035933,
+        63.98720348711703
+      ],
+      "individual_one_percent_low": [
+        32.303370332817835,
+        53.830230306615526,
+        48.148149842249715
+      ]
+    },
+    "candidate": {
+      "n": 3,
+      "arithmetic_mean_FPS": 64.13333179515845,
+      "sample_stdev_FPS": 0.021093341539658635,
+      "min_FPS": 64.10961727441344,
+      "max_FPS": 64.15,
+      "arithmetic_mean_one_percent_low": 54.03492839538731,
+      "individual_FPS": [
+        64.14037811106193,
+        64.10961727441344,
+        64.15
+      ],
+      "individual_one_percent_low": [
+        53.16973676088688,
+        53.49794513878319,
+        55.43710328649187
+      ]
+    }
+  },
+  "candidate_vs_baseline_percent": 4.035963323595371,
+  "all_valid_slow_runs_retained": true,
+  "historical_or_validation_samples_pooled": false,
+  "interpretation": "Observed three-run mean favors candidate +4.03596%, driven by low first baseline56.84147. Later baseline63.98720..64.10737 overlaps candidate64.10962..64.15 closely. Cause of A1 slowdown unknown. This cohort does not isolate a reproducible +4% causal patch gain; no row/run removed and no retry.",
+  "world_rows_per_run": 40,
+  "all_40_rows_match_all_six": true,
+  "fixed_tick_initial_camera_seed_visibility_and_end_state_match": true,
+  "images_viewed": 6,
+  "normal_exits": 6,
+  "games": 6,
+  "staging_attempts": 1,
+  "builds": 0,
+  "validation_games": 0,
+  "helpers": 0,
+  "GPU_captures": 0,
+  "retries": 0,
+  "source_or_controller_or_execution_logic_changes": 0,
+  "cleanup": {
+    "owned_pids_checked_absent": [
+      16861,
+      16995,
+      17113,
+      17231,
+      17345,
+      17462,
+      16849,
+      16851
+    ],
+    "groups_gone": true,
+    "image_workers_joined": true,
+    "awake_released": true,
+    "evidence_writers_closed_after_packet": true
+  },
+  "unmeasured": [
+    "Actual copy bytes",
+    "Physical allocation reduction",
+    "RAM",
+    "GPU FPS/time",
+    "Exhaustive resource lifetime/failure/quarantine/revision/context paths"
+  ],
+  "provenance": "Existing engine GPL, Beherith MIT and tomjn/benbreen contribution records preserved. No new contribution adopted."
+}

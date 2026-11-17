@@ -1,0 +1,54 @@
+{
+  "images": [
+    {
+      "arm": "A1_R03",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/scene.png",
+      "sha256": "5beccdcce2e82f3bb4e288f1a0d420909705af5e15f57709f7e23efd6ffe839e",
+      "bytes": 2987620,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    },
+    {
+      "arm": "B1_GDP",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/scene.png",
+      "sha256": "8745cbad7ea0972fbe3c3137e17fc1f272b357898dc7f8899a4f4ac608063af2",
+      "bytes": 2965688,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    },
+    {
+      "arm": "B2_GDP",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/scene.png",
+      "sha256": "0a546e5e4920ec935f131eddd53b8966193748f6747e419ce4613b722e066192",
+      "bytes": 2965195,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    },
+    {
+      "arm": "A2_R03",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/scene.png",
+      "sha256": "ef488c09269950d7afe5a43ebf64d0cc5b3c8ac262a8dc9528ef9436f5c6e69a",
+      "bytes": 2966699,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    },
+    {
+      "arm": "A3_R03",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/scene.png",
+      "sha256": "f1bbf5be18e25031c727ff92acc9bfee7f8c47305cb4eadd6aead2f7c36b4cb8",
+      "bytes": 2969960,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    },
+    {
+      "arm": "B3_GDP",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/scene.png",
+      "sha256": "62cf003ed79286aa1312d98abf8e19650f7370a87522b03f45056e1546037a33",
+      "bytes": 2966182,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    }
+  ],
+  "observed": "All six actual RGB images viewed. No obvious candidate-only missing/corrupt static terrain/buildings/ground decal pattern; occlusion appearance similar. Animated smoke, explosions, illumination, green range arcs and diagnostic text vary. No candidate-only orange circle observed.",
+  "limits": "Not exact pixel equality or depth/stencil attachment comparison; animation causes not individually traced."
+}
