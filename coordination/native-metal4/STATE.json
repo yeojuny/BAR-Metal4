@@ -1,8 +1,8 @@
 {
-  "status": "HOLD",
-  "owner": "SUPER_JINI_MK2",
-  "enabled": false,
-  "revision": 108,
+  "status": "READY",
+  "owner": "HQ3",
+  "enabled": true,
+  "revision": 109,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/DONE.json",
   "decision": "STOP_LIFETIME_TOOLING_COMPARE_ACTUAL_GPU_MAIN_DRAW_COST",
-  "execution_status": "HANDOFF_DENIED_NO_EXECUTION",
+  "execution_status": "READY_ONE_EVIDENCE_BACKED_HANDOFF_RETRY",
   "blocked_reason": null,
   "history": [
     {
@@ -1552,6 +1552,15 @@
       "event": "ROUND28_HANDOFF_DENIED_HOLD",
       "revision": 108,
       "execution_started": false
+    },
+    {
+      "event": "DIRECT_USER_AUTHORIZATION_REVERIFIED_FOR_ONE_RETRY",
+      "revision": 109,
+      "user_quote": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+      "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+      "HQ_routing_message": "Sentinel_8563c81084e48191aa31675bff31ab10",
+      "execution_started": false,
+      "retry_limit": 1
     }
   ],
   "communication_test": {
@@ -1713,5 +1722,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Verify direct user authorization before any retry. Do not execute from event."
+  "next_action": "One handoff retry backed by direct user standing authorization; no duplicate execution."
 }
