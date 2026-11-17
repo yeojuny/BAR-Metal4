@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 43,
+  "revision": 44,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DECISION.json",
-  "execution_status": "READY_GROUND_DECAL_CORRECTNESS_COMPILE_NOT_STARTED",
+  "execution_status": "GROUND_DECAL_CPU_AND_ENGINE_COMPILE_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -443,6 +443,15 @@
       "HQ_idle_evidence": "coordination/native-metal4/status/hq-status-20261117T041111Z.json",
       "source_writers_stopped": true,
       "child_tasks_completed": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_COMPILE_RESERVED",
+      "revision": 44,
+      "round_id": "ground-decal-pages-compile-20261117-10",
+      "attempt_id": "ground-decal-pages-compile-01",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "author": "LOCAL_CODEX_HQ",
+      "games": 0
     }
   ],
   "communication_test": {
@@ -528,13 +537,14 @@
   },
   "execution": {
     "attempt_id": "ground-decal-pages-compile-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "CPU_contract_compiles": 0,
     "CPU_contract_runs": 0,
     "configures": 0,
     "engine_builds": 0,
-    "games": 0
+    "games": 0,
+    "reserved_by": "LOCAL_CODEX_HQ"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
