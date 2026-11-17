@@ -2,7 +2,7 @@
   "status": "READY",
   "owner": "HQ",
   "enabled": true,
-  "revision": 30,
+  "revision": 31,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -290,6 +290,16 @@
       "decision": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DECISION.json",
       "old_new_comparisons": 12065,
       "cleanup_verified": true
+    },
+    {
+      "event": "USER_REQUESTED_NEW_ASTRA_ULTRA_INDEPENDENT_AUDIT",
+      "revision": 31,
+      "author": "LOCAL_CODEX_HQ",
+      "audit_thread_id": "01a1e6ed-8d9a-7981-8332-3ce78c9a0af0",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "ultra",
+      "current_execution_unstarted": true,
+      "current_round_unchanged": "r03-engine-staging-20261117-07"
     }
   ],
   "communication_test": {
@@ -401,5 +411,21 @@
     "heartbeat_id": "bar",
     "heartbeat_migration_rule": "Inspect existing bar automation; retarget if needed instead of creating duplicate polling. Keep10min interval and pause during execution.",
     "instruction": "사용자가 요청한 섹션 분기를 다음 실행 인계에 적용해 주세요. 현 HQ 이력이 무거워졌습니다. 새 HQ에는 현재 STATE와 새 round/attempt, 고정 source/manifest/binary, 이번 DONE/REPORT, 예산·금지사항만 전달하고 기존 attempt를 다시 실행하지 마세요. HQ 모델·추론강도도 지니가 새 지시 묶음에 명시해 주세요. 현재 회차 설정 변경은 없었습니다."
+  },
+  "independent_audit": {
+    "id": "independent-architecture-audit-20261117-01",
+    "status": "ACTIVE_READ_ONLY",
+    "requested_by": "USER_VIA_HQ",
+    "thread_id": "01a1e6ed-8d9a-7981-8332-3ce78c9a0af0",
+    "host_id": "local",
+    "title": "독립 감사 · Metal4 구조 병목 · Astra ultra",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra",
+    "scope": "Fixed source and existing raw evidence only; structural CPU/GPU/parity/lifetime audit. No builds/helpers/games/benchmarks/captures/replay/source changes.",
+    "output": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/independent-architecture-audit-20261117-01/AUDIT.md",
+    "isolation": "R03 build/staging handoff received and remains unstarted. HQ will finish this audit setup without starting it; do not run local measurements concurrently. Audit pauses tools if a separate owned execution starts.",
+    "requested_result": "Largest proved causes, mandatory/avoidable wait map, upstream contract order, top3 substantial candidates, one first experiment; preserve UNKNOWN, no FPS estimates from replay shares.",
+    "authority": "Independent audit does not change current round/attempt/source/owner or grant execution. Results return to HQ for evidence review and then JINI.",
+    "model_change_this_HQ_thread": false
   }
 }
