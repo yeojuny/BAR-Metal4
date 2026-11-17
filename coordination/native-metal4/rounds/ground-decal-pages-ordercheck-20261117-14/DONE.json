@@ -1,0 +1,83 @@
+{
+  "round_id": "ground-decal-pages-ordercheck-20261117-14",
+  "attempt_id": "ground-decal-pages-ordercheck-01",
+  "from": "LOCAL_CODEX_HQ",
+  "to": "SUPER_JINI_MK2",
+  "status": "DONE",
+  "result": "ORDER_CHECK_COMPLETE_NO_MEAN_FPS_ADVANTAGE_ESTABLISHED",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "artifact_commit": "1f56d77b0dec09a814339ddfc08b2efd71be3da9",
+  "report_path": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/artifacts/REPORT.md",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/artifacts/RESULT.json",
+  "runner_sha256": "dca8bb665c698901cecbdf60cbba1dda52686465a9687707f9f2323dcb5ed0ea",
+  "baseline_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "candidate_signed_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "actual_games": 4,
+  "baseline_games": 2,
+  "candidate_games": 2,
+  "normal_exits": 4,
+  "summary": {
+    "baseline": {
+      "n": 2,
+      "arithmetic_mean_FPS": 64.11410197258326,
+      "sample_stdev_FPS": 0.05303433371943477,
+      "min_FPS": 64.07660103557454,
+      "max_FPS": 64.15160290959199,
+      "arithmetic_mean_one_percent_low": 53.981179179211715,
+      "individual_FPS": [
+        64.15160290959199,
+        64.07660103557454
+      ],
+      "individual_one_percent_low": [
+        55.43710328649187,
+        52.52525507193156
+      ]
+    },
+    "candidate": {
+      "n": 2,
+      "arithmetic_mean_FPS": 64.10449031999734,
+      "sample_stdev_FPS": 0.05756051912662961,
+      "min_FPS": 64.06378888659428,
+      "max_FPS": 64.1451917534004,
+      "arithmetic_mean_one_percent_low": 54.689507454957244,
+      "individual_FPS": [
+        64.1451917534004,
+        64.06378888659428
+      ],
+      "individual_one_percent_low": [
+        55.43710328649187,
+        53.94191162342262
+      ]
+    }
+  },
+  "candidate_vs_baseline_percent": -0.014991479706016886,
+  "interpretation": "Separate BAAB cohort only: R03 mean64.11410 versus GDP64.10449 (-0.01499%). No marked first-execution deficit in this cohort. Does not corroborate a reproducible +4% patch gain, and cannot identify cache/thermal/background cause. Original six runs retained separately; no pooling, trimming or retry.",
+  "first_execution_marked_deficit_observed": false,
+  "cohorts_pooled": false,
+  "prior_six_runs_preserved": true,
+  "all_40_world_rows_match_all_four": true,
+  "images_viewed": 4,
+  "images_uploaded": false,
+  "legacy_completion_runs_field": 6,
+  "legacy_metadata_note": "Actual ORDER/RUNS/OWNER-CLOSED verify4 games; inherited summary6 preserved to avoid execution AST changes.",
+  "remote_artifacts_verified": 114,
+  "verification_method": "Remote artifact tree verifies all blob SHAs; RESULT/WORLD/INDIVIDUAL exact readback.",
+  "source_changes": 0,
+  "builds": 0,
+  "validation_games": 0,
+  "helpers": 0,
+  "GPU_captures": 0,
+  "retries": 0,
+  "cleanup_complete": true,
+  "source_writers_stopped": true,
+  "evidence_writers_closed": true,
+  "unmeasured": [
+    "Actual copy bytes",
+    "Physical allocation reduction",
+    "RAM",
+    "GPU FPS/time",
+    "Exhaustive resource lifetime/failure/quarantine/revision/context paths"
+  ],
+  "next": "Return to JINI; four-run order check finished. No further execution or automatic repeat. Neither cache/thermal/background cause nor a reproducible performance gain established."
+}
