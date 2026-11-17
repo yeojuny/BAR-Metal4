@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 26,
+  "revision": 27,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r02-current-gpu-profile-20261117-05",
-  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
-  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
-  "request": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DONE.json",
-  "decision": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DECISION.json",
-  "execution_status": "PROFILE_REVIEWED_SENSORLOS_SOURCE_PROOF_IN_PROGRESS",
+  "round_id": "r03-minor-reject-correctness-20261117-06",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "request": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/READY.json",
+  "result_path": null,
+  "decision": "R03 bounded source and float32 CPU proof reviewed; fixed GPU original-versus-candidate gate required before performance.",
+  "execution_status": "READY_R03_HELPER_CORRECTNESS_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -244,6 +244,17 @@
       "revision": 26,
       "decision": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DECISION.json",
       "next": "Cloud-only guarded SensorLOS source experiment; HQ idle, no duplicate profile."
+    },
+    {
+      "event": "R03_SOURCE_FIXED_CPU_REVIEW_COMPLETE",
+      "revision": 27,
+      "previous_round": "r02-current-gpu-profile-20261117-05",
+      "previous_result": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DONE.json",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+      "cpu_cases": 32406,
+      "child_tasks_completed": true,
+      "source_writers_stopped": true
     }
   ],
   "communication_test": {
@@ -315,28 +326,24 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_CURRENT_R02_CAPTURE_GAME_AND_ONE_OWNED_REPLAY_PROFILE",
+  "enabled_scope": "FIXED_HELPER_COMPILE1_GPU_CORRECTNESS1",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
-    "scope": "One necessary bounded current GPU diagnostic."
+    "scope": "Necessary bounded correctness test before any performance experiment."
   },
-  "source_writers_stopped": false,
+  "source_writers_stopped": true,
   "connection_verification": {
     "local": "Existing HQ task 01a1b3c1-c9e7-7b22-8cba-8055df762aab read/send path confirmed; HQ received JINI messages. HQ direct-to-cloud thread reply remains unsupported.",
     "notification": "Coordinator and bar_hq report PR #11 event received at 2026-11-16T21:23:11Z for HQ communication marker commit a619cdb. Verification is this GitHub event path, not a claim of native HQ-to-Dot direct messaging.",
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r02-current-capture-profile-01",
-    "started": true,
-    "completed": true,
-    "capture_games": 1,
-    "captured_frames": 1,
-    "replay_profiles": 1,
-    "started_at_utc": "2026-11-17 00:01:44 UTC",
-    "cleanup_complete": true,
-    "completed_at_utc": "2026-11-17 00:14:59 UTC"
+    "attempt_id": "r03-helper-correctness-01",
+    "started": false,
+    "completed": false,
+    "helper_compile_attempts": 0,
+    "gpu_helper_runs": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
