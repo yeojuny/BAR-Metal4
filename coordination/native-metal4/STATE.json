@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 112,
+  "revision": 113,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/READY.json",
   "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/DONE.json",
-  "decision": "REVIEWED_MINIMAL_ACK_FORMAT_FIX",
-  "execution_status": "HQ3_ROUND29_RESERVED_ONCE",
+  "decision": "UNKNOWN_SKIP_GPU_INSPECTION_NOT_READY",
+  "execution_status": "HQ3_ROUND29_CLOSED_TWO_CAPTURES_SKIP_INSPECTION_NOT_READY",
   "blocked_reason": null,
   "history": [
     {
@@ -1627,6 +1627,34 @@
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "bar": "PAUSED",
       "utc": "2026-11-17 20:38:03 UTC"
+    },
+    {
+      "event": "HQ3_ROUND29_CLOSED_TWO_CAPTURES_SKIP_INSPECTION_NOT_READY",
+      "revision": 113,
+      "round_id": "r03-skipdraw-pair-20261117-29",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "2b94556d628b18a828ca1c2c9dcade66971e42a0",
+      "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/DONE.json",
+      "decision": "UNKNOWN_SKIP_GPU_INSPECTION_NOT_READY",
+      "counts": {
+        "games": 1,
+        "capture_commands": 2,
+        "captured_frames": 2,
+        "inspection_sessions": 2,
+        "profile_commands": 0,
+        "retries": 0,
+        "builds": 0,
+        "engine_source_edits": 0
+      },
+      "original_action_true_confirmed": true,
+      "actual_bound_gpu_ticks": "UNKNOWN",
+      "skip_replayer_final_state": "loading",
+      "protected_hashes_verified": 132,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T20:42:23.196452+00:00"
     }
   ],
   "communication_test": {
@@ -1712,7 +1740,7 @@
   "execution": {
     "attempt_id": "r03-onegame-main-decal-skipdraw-02",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "games_max": 1,
       "captures_max": 2,
@@ -1725,7 +1753,22 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17 20:38:03 UTC",
     "bar": "PAUSED",
-    "previous_budget_reused": false
+    "previous_budget_reused": false,
+    "ended_at_utc": "2026-11-17T20:42:23.196452+00:00",
+    "counts": {
+      "games": 1,
+      "capture_commands": 2,
+      "captured_frames": 2,
+      "inspection_sessions": 2,
+      "profile_commands": 0,
+      "retries": 0,
+      "builds": 0,
+      "engine_source_edits": 0
+    },
+    "diagnostic_outcome": "UNKNOWN_SKIP_GPU_INSPECTION_NOT_READY",
+    "cleanup_complete": true,
+    "artifact_commit": "2b94556d628b18a828ca1c2c9dcade66971e42a0",
+    "retry_authorized": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1791,5 +1834,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 stage and run the one approved R03 game, capture normal and skipped on same layer and inspect before any profile. Stop on failure."
+  "next_action": "SUPER_JINI_MK2 review round29 DONE. Both traces are retained locally. No retry or additional inspection or execution is authorized by this attempt."
 }
