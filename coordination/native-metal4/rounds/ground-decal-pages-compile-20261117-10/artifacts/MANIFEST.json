@@ -1,0 +1,67 @@
+{
+  "candidate": "ground-decal-pages-source-only",
+  "base_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "remote_source_commit": null,
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Backend/NativeGroundDecalData.cpp",
+      "sha256": "fbcf09ab03f663c351298a417cdb009a3590199d69f5ca05b11a16607275e5c4",
+      "bytes": 5696,
+      "git_blob_sha": "08785fd05cae33f18d421bdb8ccb5642629743c8",
+      "base_blob_sha": "656b756015aa71003bc5d0a7a848f61a18bd991f"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeGroundDecalData.h",
+      "sha256": "8caca683caffafac2164d2e79d53d4c4b99a99093c3b767c6cb11b8d4eb8f06d",
+      "bytes": 3597,
+      "git_blob_sha": "ee5b11fe52d5434614487b34690fa147741beebc",
+      "base_blob_sha": "ed328dbd7e1daa5b5b2fae27bba3d5a2da717c19"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeGroundDecalPages.h",
+      "sha256": "eaeb34e9ceb3e333f1319a3ce064f91a36903fd073cea4aadcc9c093a205d91e",
+      "bytes": 5490,
+      "git_blob_sha": "54a6a6829a9561f8a6effdabba63162b0a76370c",
+      "base_blob_sha": null
+    },
+    {
+      "path": "engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp",
+      "sha256": "8700841303d0666387d23d852b110992511004c257d05eb8b083279ae199cd40",
+      "bytes": 7379,
+      "git_blob_sha": "bb238edbec6ac6aa284620560898c72726445945",
+      "base_blob_sha": "5e8711fb55e582f189283fab21d09b6e3dc0dceb"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4GroundDecal.mm",
+      "sha256": "4bcaa927c1dadce9f7db4bffb66a555cce8cd7a54dee48df84360a9c556379cd",
+      "bytes": 19413,
+      "git_blob_sha": "e97ad846b1af5be8717a872b69c1cf237fbb5e85",
+      "base_blob_sha": "c3d7b0226558f9a96b214029b3a01360da026e92"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "88000e2e050e76ef9936971632d3d2da4411fdf1934521561811d378d0f25b83",
+      "bytes": 460348,
+      "git_blob_sha": "29b2d97c20dab7498f7db3c9d81fa62a1eb43988",
+      "base_blob_sha": "b129b34111611257639604fa437a88a68f2f841e"
+    },
+    {
+      "path": "engine/tools/metal4-contracts/TestGroundDecalPages.cpp",
+      "sha256": "ce542ce3d78d16673708f2348db195033075246b5858fb9027e551dd59eaf753",
+      "bytes": 8139,
+      "git_blob_sha": "201df8f405886b1bbc55f160ca1b4adc5cf54fc3",
+      "base_blob_sha": null
+    }
+  ],
+  "patch_sha256": "3517a2b81ffe83a165ff7859adb9f292a06b84004a410fcb3bb446cc2013f6cb",
+  "validation": {
+    "cpu_checks": 10680,
+    "randomized_revisions": 2000,
+    "optimized": "PASS",
+    "asan_ubsan": "PASS; detect_leaks=0 due environment ptrace limit",
+    "metal_sdk_compile": "NOT RUN",
+    "gpu": "NOT RUN",
+    "benchmark": "NOT RUN"
+  },
+  "report_sha256": "21d449811b1ada393fd414c71d2be9e32ac5048baf83d7431ba42befc13cb233"
+}

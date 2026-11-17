@@ -1,0 +1,83 @@
+{
+  "round_id": "ground-decal-pages-compile-20261117-10",
+  "attempt_id": "ground-decal-pages-compile-01",
+  "commands": [
+    {
+      "stage": "CPU-COMPILE",
+      "argv": [
+        "xcrun",
+        "clang++",
+        "-std=c++20",
+        "-O2",
+        "-UNDEBUG",
+        "-I",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/source/engine/rts",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/source/engine/tools/metal4-contracts/TestGroundDecalPages.cpp",
+        "-o",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/TestGroundDecalPages"
+      ],
+      "pid": 4831,
+      "startedUTC": "2026-11-17T04:15:57.850140+00:00",
+      "exit_code": 0,
+      "wall_seconds": 1.137294249999968
+    },
+    {
+      "stage": "CPU-RUN",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/TestGroundDecalPages"
+      ],
+      "pid": 4834,
+      "startedUTC": "2026-11-17T04:15:58.987789+00:00",
+      "exit_code": 0,
+      "wall_seconds": 0.3341968330000782
+    },
+    {
+      "stage": "CONFIGURE",
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "pid": 4837,
+      "startedUTC": "2026-11-17T04:15:59.323431+00:00",
+      "exit_code": 0,
+      "wall_seconds": 10.815781917000095
+    },
+    {
+      "stage": "BUILD",
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "pid": 6094,
+      "startedUTC": "2026-11-17T04:16:10.139271+00:00",
+      "exit_code": 0,
+      "wall_seconds": 219.8094618330001
+    }
+  ],
+  "active_pid": null,
+  "stage": "COMPILE_PASS",
+  "games": 0,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "retries": 0,
+  "CPU_binary_sha256": "e33a8eac02c4551a0b6f7d4c2940fb9241a6dfcd6324925a1f7a986a35127588",
+  "raw_engine_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/build/spring-metal4-scene",
+  "raw_engine_sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+  "source_unchanged_after_build": true,
+  "controller_finishedUTC": "2026-11-17T04:19:51.006626+00:00"
+}

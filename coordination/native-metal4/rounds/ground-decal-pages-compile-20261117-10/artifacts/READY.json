@@ -1,0 +1,25 @@
+{
+  "round_id": "ground-decal-pages-compile-20261117-10",
+  "attempt_id": "ground-decal-pages-compile-01",
+  "from": "SUPER_JINI_MK2",
+  "to": "HQ",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/REQUEST.json",
+  "budget": {
+    "CPU_contract_compile": 1,
+    "CPU_contract_run": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "games": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "GPU_helper_runs": 0,
+    "retries": 0
+  },
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "prior_HQ_turn_completed": true,
+  "HQ_idle_evidence": "coordination/native-metal4/status/hq-status-20261117T041111Z.json",
+  "scope": "Correctness-only CPU contract and isolated production engine/Metal SDK compile. No gameplay, performance or GPU harness runs."
+}

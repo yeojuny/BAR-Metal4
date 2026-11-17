@@ -1,0 +1,60 @@
+{
+  "round_id": "ground-decal-pages-compile-20261117-10",
+  "attempt_id": "ground-decal-pages-compile-01",
+  "phase": "READY",
+  "execution_authorization": true,
+  "author": "SUPER_JINI_MK2",
+  "reason": "HQ status-only reply confirms idle/no execution lease, current native turn completed; user requested resumption.",
+  "source_branch": "candidate/ground-decal-pages-20261117",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "parent_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_path": "docs/research/ground-decal-pages-20261117/MANIFEST.json",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "patch_sha256": "3517a2b81ffe83a165ff7859adb9f292a06b84004a410fcb3bb446cc2013f6cb",
+  "independent_verification": {
+    "source_files": 7,
+    "source_SHA256_and_git_blob_SHA": true,
+    "five_existing_R03_base_blobs_match_remote": true,
+    "real_single_R03_parent_verified": true,
+    "source_packet_files_added": 5,
+    "CPU_release_binary_rerun": "PASS GroundDecalPages checks=10680 randomized_revisions=2000",
+    "ASAN_UBSAN": "Source worker reports PASS; raw logs preserved, not rerun by coordinator",
+    "source_writers_and_children_finished": "Confirmed by source coordinator"
+  },
+  "scope_when_activated": "Correctness-only CPU contract and isolated production engine/Metal SDK compile. No gameplay, performance or GPU harness runs.",
+  "instructions": [
+    "Verify latest STATE exact round/source/manifest and CAS reserve this one attempt before any execution. READY plus matching STATE grants only the bounded budget.",
+    "Use a fresh isolated R03-based source/build; do not reuse R04 modified source, faux staging history, production app or another experiment. Pin toolchain and dependency closure.",
+    "Compile/run engine/tools/metal4-contracts/TestGroundDecalPages.cpp using assertions enabled; record exact flags, exit and count.",
+    "One isolated configure and engine build using prior verified R03 build procedure/dependency pins; compile changed Objective-C++ integration. Preserve source unchanged.",
+    "On any failure record logs and stop; no source changes, weakening checks, new audit or retries.",
+    "On completion close all owned children/workers/awake holders and evidence writers, then same-round DONE. Do not stage performance runner or launch games."
+  ],
+  "limitations": [
+    "CPU mock correctness does not establish Metal GPU lifetime/residency safety or visual equality.",
+    "RuntimeLease opaque pin, failed-submission quarantine and packet retirement unchanged by intent but actual Metal integration still untested.",
+    "Full pixel equality and matched performance require a separate bounded handoff after compile results."
+  ],
+  "priority": "User requests structural MVK3/native differences corrected and validated independently, not a sequence of shader micro-patches. Preserve R04 correctness result without automatic performance expansion.",
+  "protected": [
+    "main",
+    "releases",
+    "Homebrew",
+    "original application"
+  ],
+  "activation_gate": "Matching READY STATE and one CAS reservation required. Duplicate or ambiguous execution history means BLOCKED.",
+  "budget": {
+    "CPU_contract_compile": 1,
+    "CPU_contract_run": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "games": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "GPU_helper_runs": 0,
+    "retries": 0
+  },
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "HQ_idle_evidence": "coordination/native-metal4/status/hq-status-20261117T041111Z.json"
+}

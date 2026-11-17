@@ -1,0 +1,448 @@
+loading initial cache file /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/initial-cache.cmake
+-- The C compiler identification is AppleClang 21.0.0.21000401
+-- The CXX compiler identification is AppleClang 21.0.0.21000401
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Checking to see if CXX compiler accepts flag -fvisibility-inlines-hidden
+-- Checking to see if CXX compiler accepts flag -fvisibility-inlines-hidden - yes
+-- Clang detected, skipping -mieee-fp (not supported)
+-- Checking to see if CXX compiler accepts flag -ffp-contract=off
+-- Checking to see if CXX compiler accepts flag -ffp-contract=off - yes
+-- ARM64: enabling -ffp-contract=off to prevent FMA desync
+-- Checking to see if CXX compiler accepts flag -std=c++17
+-- Checking to see if CXX compiler accepts flag -std=c++17 - yes
+-- Checking to see if CXX compiler accepts flag -flto
+-- Checking to see if CXX compiler accepts flag -flto - yes
+-- ARM64 detected, skipping x86 march detection
+-- Checking to see if CXX compiler accepts flag -mno-tls-direct-seg-refs
+-- Checking to see if CXX compiler accepts flag -mno-tls-direct-seg-refs - yes
+-- Detected ARM64 architecture: arm64
+-- Building Spring on a 64-bit environment
+-- Found DevIL: /opt/homebrew/lib/libIL.dylib (Required is at least version "1.8.0")
+-- Looking for strnlen
+-- Looking for strnlen - found
+-- Looking for getexecpath
+-- Looking for getexecpath - not found
+CMake Warning at CMakeLists.txt:405 (message):
+  You are using ld.bfd, it's much slower than ld.gold.
+
+
+-- Checking to see if CXX compiler accepts flag -frounding-math
+-- Checking to see if CXX compiler accepts flag -frounding-math - yes
+-- Using CMAKE_CXX_FLAGS: -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread
+-- {fmt} version: 12.1.0
+-- Build type: RelWithDebInfo
+-- Performing Test HAS_NULLPTR_WARNING
+-- Performing Test HAS_NULLPTR_WARNING - Success
+CMake Warning (deprecated) at rts/lib/glad/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- 
+-- Architecture: arm64
+-- Architecture specific optimization is enabled (with -march=armv8.1-a) (MI_OPT_ARCH=ON)
+-- Performing Test mi_has_libpthread
+-- Performing Test mi_has_libpthread - Success
+-- Performing Test mi_has_librt
+-- Performing Test mi_has_librt - Failed
+-- Performing Test mi_has_libatomic
+-- Performing Test mi_has_libatomic - Failed
+-- 
+-- Library name     : mimalloc
+-- Version          : 3.2.8
+-- Build type       : relwithdebinfo
+-- C Compiler       : /usr/bin/cc
+-- Compiler flags   : -Wall;-Wextra;-Wpedantic;-Wno-deprecated;-Wno-unknown-pragmas;-fvisibility=hidden;-Wstrict-prototypes;-Wno-static-in-inline;-ftls-model=initial-exec;-march=armv8.1-a
+-- Compiler defines : MI_CMAKE_BUILD_TYPE=relwithdebinfo;MI_BUILD_RELEASE
+-- Link libraries   : pthread
+-- Build targets    : static;object
+-- 
+-- Found MiniZip: /opt/homebrew/lib/libminizip.dylib
+-- Using minizip library: /opt/homebrew/lib/libminizip.dylib
+CMake Warning (deprecated) at rts/lib/nowide/CMakeLists.txt:16 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Performing Test NOWIDE_HAS_LFS
+-- Performing Test NOWIDE_HAS_LFS - Success
+-- Performing Test NOWIDE_HAS_INIT_PRIORITY
+-- Performing Test NOWIDE_HAS_INIT_PRIORITY - Success
+-- Performing Test _NOWIDE_SUGGEST_OVERRIDE_SUPPORTED
+-- Performing Test _NOWIDE_SUGGEST_OVERRIDE_SUPPORTED - Success
+-- Looking for C++ include unistd.h
+-- Looking for C++ include unistd.h - found
+-- Looking for C++ include stdint.h
+-- Looking for C++ include stdint.h - found
+-- Looking for C++ include inttypes.h
+-- Looking for C++ include inttypes.h - found
+-- Looking for C++ include sys/types.h
+-- Looking for C++ include sys/types.h - found
+-- Looking for C++ include sys/stat.h
+-- Looking for C++ include sys/stat.h - found
+-- Looking for C++ include fnmatch.h
+-- Looking for C++ include fnmatch.h - found
+-- Looking for C++ include stddef.h
+-- Looking for C++ include stddef.h - found
+-- Check size of uint32_t
+-- Check size of uint32_t - done
+-- Looking for strtoll
+-- Looking for strtoll - found
+-- Forcing assimp option ASSIMP_BUILD_STATIC_LIB to on
+-- Forcing assimp option ASSIMP_NO_EXPORT to on
+CMake Warning (deprecated) at rts/lib/assimp/CMakeLists.txt:36 (CMAKE_MINIMUM_REQUIRED):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Shared libraries disabled
+-- Build an import-only version of Assimp.
+CMake Warning (deprecated) at rts/lib/assimp/code/CMakeLists.txt:46 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+INFO RT-extension not found. glTF import/export will be built without Open3DGC-compression.
+-- Enabled formats: 3DS COLLADA LWO OBJ BLEND
+-- Disabled formats: AMF AC ASE ASSBIN ASSXML B3D BVH DXF CSM HMP IRRMESH IRR LWS MD2 MD3 MD5 MDC MDL NFF NDO OFF OGRE OPENGEX PLY MS3D COB IFC XGL FBX Q3D Q3BSP RAW SIB SMD STL TERRAGEN 3D X X3D GLTF 3MF MMD
+CMake Warning (deprecated) at rts/lib/simdjson/CMakeLists.txt:2 (cmake_policy):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+-- Excluding implementation fallback due to SIMDJSON_IMPLEMENTATION=arm64
+-- Excluding implementation westmere due to SIMDJSON_IMPLEMENTATION=arm64
+-- Excluding implementation haswell due to SIMDJSON_IMPLEMENTATION=arm64
+-- Excluding implementation icelake due to SIMDJSON_IMPLEMENTATION=arm64
+-- Including implementation arm64 due to SIMDJSON_IMPLEMENTATION=arm64
+-- Excluding implementation ppc64 due to SIMDJSON_IMPLEMENTATION=arm64
+-- Selected implementation arm64 as builtin implementation based on arm64
+-- AVX-512 instructions are not allowed.
+-- Looking for fork
+-- Looking for fork - found
+-- Looking for wait
+-- Looking for wait - found
+-- Adding -Og to compile flag
+Parsing public/common/TracyVersion.hpp file
+VERSION 0.11.1
+-- TRACY_ENABLE: OFF
+-- TRACY_ON_DEMAND: ON
+-- TRACY_CALLSTACK: OFF
+-- TRACY_NO_CALLSTACK: OFF
+-- TRACY_NO_CALLSTACK_INLINES: OFF
+-- TRACY_ONLY_LOCALHOST: OFF
+-- TRACY_NO_BROADCAST: OFF
+-- TRACY_ONLY_IPV4: OFF
+-- TRACY_NO_CODE_TRANSFER: OFF
+-- TRACY_NO_CONTEXT_SWITCH: OFF
+-- TRACY_NO_EXIT: OFF
+-- TRACY_NO_SAMPLING: OFF
+-- TRACY_NO_VERIFY: OFF
+-- TRACY_NO_VSYNC_CAPTURE: OFF
+-- TRACY_NO_FRAME_IMAGE: OFF
+-- TRACY_NO_SYSTEM_TRACING: OFF
+-- TRACY_PATCHABLE_NOPSLEDS: OFF
+-- TRACY_DELAYED_INIT: OFF
+-- TRACY_MANUAL_LIFETIME: OFF
+-- TRACY_FIBERS: OFF
+-- TRACY_NO_CRASH_HANDLER: OFF
+-- TRACY_TIMER_FALLBACK: OFF
+-- TRACY_LIBUNWIND_BACKTRACE: OFF
+-- TRACY_SYMBOL_OFFLINE_RESOLVE: OFF
+-- TRACY_LIBBACKTRACE_ELF_DYNLOAD_SUPPORT: OFF
+-- TRACY_VERBOSE: OFF
+-- TRACY_DEMANGLE: OFF
+-- Found Freetype: /opt/homebrew/lib/libfreetype.dylib (found suitable version "2.15.0", minimum required is "2.8.1")
+-- Found Freetype: /opt/homebrew/lib/libfreetype.dylib (found version "2.15.0")
+-- Found Freetype::Freetype v2.15.0 - Freetype font engine enabled
+-- Found AI Wrapper: CUtils (sources only wrapper)
+-- Found AI Interface: C-AIInterface 0.1
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:122 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:123 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:125 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found AI Wrapper: Cpp-AIWrapper
+-- Found AI Wrapper: LegacyCpp-AIWrapper
+-- Found AI Wrapper: LegacyCpp-Creg-AIWrapper
+-- The ASM compiler identification is AppleClang
+-- Found assembler: /usr/bin/cc
+-- Found Skirmish AI: BARb stable
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:58 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/BARb/CMakeLists.txt:93 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:59 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/BARb/CMakeLists.txt:93 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:61 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/BARb/CMakeLists.txt:93 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found Skirmish AI: CircuitAI stable
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:58 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/CircuitAI/CMakeLists.txt:50 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:59 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/CircuitAI/CMakeLists.txt:50 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:61 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/CircuitAI/CMakeLists.txt:50 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found Skirmish AI: CppTestAI 0.1
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:58 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/CppTestAI/CMakeLists.txt:12 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:59 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/CppTestAI/CMakeLists.txt:12 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:61 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/CppTestAI/CMakeLists.txt:12 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found Skirmish AI: NullAI 0.1
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:58 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/NullAI/CMakeLists.txt:9 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:59 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/NullAI/CMakeLists.txt:9 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at AI/Interfaces/C/CMakeLists.txt:61 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  AI/Skirmish/NullAI/CMakeLists.txt:9 (configure_native_skirmish_ai)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found ZLIB: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libz.tbd (found suitable version "1.2.12", minimum required is "1.2.7")
+-- Found ZLIB: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libz.tbd (found version "1.2.12")
+-- PR-Downloader version: ef4d8af
+-- Found PkgConfig: /opt/homebrew/bin/pkg-config (found version "3.0.11")
+-- Checking for module 'libcurl>=7.84'
+--   Found libcurl, version 8.7.1
+-- Checking for module 'jsoncpp'
+--   Package 'jsoncpp' not found
+-- Not found jsoncpp in system, using integrated version
+-- Checking for module 'minizip'
+--   Found minizip, version 1.4
+CMake Warning (deprecated) at tools/pr-downloader/src/lib/readerwriterqueue/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+CMake Warning (policy) at cont/base/CMakeLists.txt:35 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  cont/base/bitmaps/CMakeLists.txt:137 (create_base_content_archive)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at cont/base/CMakeLists.txt:35 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  cont/base/springcontent/CMakeLists.txt:147 (create_base_content_archive)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at cont/base/CMakeLists.txt:35 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  cont/base/maphelper/CMakeLists.txt:13 (create_base_content_archive)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at cont/base/CMakeLists.txt:35 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+Call Stack (most recent call first):
+  cont/base/cursors/CMakeLists.txt:115 (create_base_content_archive)
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+CMake Warning (policy) at cont/base/CMakeLists.txt:47 (install):
+  Policy CMP0177 is not set: install() DESTINATION paths are normalized.  Run
+  "cmake --help-policy CMP0177" for policy details.  Use the cmake_policy
+  command to set the policy and suppress this warning.
+This warning is for project developers.  Use -Wno-author or -Wno-policy to
+suppress it.
+
+-- Found DevIL: /opt/homebrew/lib/libIL.dylib
+-- Checking for module 'openal>=1.18.2'
+--   Found openal, version 1.25.2
+-- Looking for vorbis_bitrate_addblock in vorbis
+-- Looking for vorbis_bitrate_addblock in vorbis - not found
+-- Found OggVorbis: /opt/homebrew/lib/libvorbis.dylib (Required is at least version "1.3.4")
+-- Found ZLIB: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libz.tbd (found suitable version "1.2.12", minimum required is "1.2.7")
+-- Using mimalloc
+-- Found Libunwind: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.2.sdk/usr/lib/system/libunwind.tbd (Required is at least version "1.4.0")
+-- The OBJCXX compiler identification is AppleClang 21.0.0.21000401
+-- Detecting OBJCXX compiler ABI info
+-- Detecting OBJCXX compiler ABI info - done
+-- Check for working OBJCXX compiler: /usr/bin/clang++ - skipped
+-- Found SDL2: /opt/homebrew/include;/opt/homebrew/include/SDL2
+-- Found OpenGL: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework (Required is at least version "3.0")
+-- Found Fontconfig: /opt/homebrew/lib/libfontconfig.dylib (found suitable version "2.18.3", minimum required is "2.11")
+-- Found EXPAT: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libexpat.tbd (found suitable version "2.7.4", minimum required is "2.2.5")
+-- Found Freetype: /opt/homebrew/lib/libfreetype.dylib (found suitable version "2.15.0", minimum required is "2.8.1")
+CMake Warning (author) in rts/builds/legacy/CMakeLists.txt:
+  A logical block opening on the line
+
+    /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/source/engine/rts/builds/legacy/CMakeLists.txt:52 (if)
+
+  closes on the line
+
+    /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/source/engine/rts/builds/legacy/CMakeLists.txt:56 (endif)
+
+  with mis-matching arguments.
+This warning is for project developers.  Use -Wno-author to suppress it.
+
+-- Using legacy as default engine
+CMake Warning (deprecated) at test/lib/catch2/CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+This warning is for project developers.  Use -Wno-author or -Wno-deprecated
+to suppress it.
+
+PING6(56=40+8+8 bytes) ::1 --> ::1
+16 bytes from ::1, icmp_seq=0 hlim=64 time=0.093 ms
+
+--- ::1 ping6 statistics ---
+1 packets transmitted, 1 packets received, 0.0% packet loss
+round-trip min/avg/max/std-dev = 0.093/0.093/0.093/0.000 ms
+-- Configuring done (9.6s)
+-- Generating done (1.0s)
+-- Build files have been written to: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/build
