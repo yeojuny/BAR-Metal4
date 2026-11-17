@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 64,
+  "revision": 65,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
   "request": "coordination/native-metal4/rounds/texture-ordered-validation-20261117-16/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/texture-ordered-validation-20261117-16/READY.json",
-  "result_path": null,
+  "result_path": "coordination/native-metal4/rounds/texture-ordered-validation-20261117-16/DONE.json",
   "decision": "coordination/native-metal4/rounds/texture-ordered-compile-20261117-15/DECISION.json",
-  "execution_status": "TEXTURE_ORDERED_SAME_BINARY_OFF_ON_RESERVED",
+  "execution_status": "TEXTURE_OFF_ON_ORDINARY_VALIDATION_PASS_PATH_UNKNOWN_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -674,6 +674,20 @@
       "round_id": "texture-ordered-validation-20261117-16",
       "attempt_id": "texture-ordered-validation-01",
       "games_budget": 2
+    },
+    {
+      "event": "HQ_TEXTURE_OFF_ON_CONFIGURATIONS_VALIDATED_ACTUAL_PATH_UNKNOWN",
+      "revision": 65,
+      "round_id": "texture-ordered-validation-20261117-16",
+      "attempt_id": "texture-ordered-validation-01",
+      "artifact_commit": "47f476e2d207d7d0f7386d613233355a4d862117",
+      "games": 2,
+      "Metal_errors": 0,
+      "actual_child_OFF0_ON1": true,
+      "ON_path_classification": "UNKNOWN",
+      "performance_accepted": false,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
     }
   ],
   "communication_test": {
@@ -760,9 +774,16 @@
   "execution": {
     "attempt_id": "texture-ordered-validation-01",
     "started": true,
-    "completed": false,
-    "games": 0,
-    "builds": 0
+    "completed": true,
+    "games": 2,
+    "builds": 0,
+    "normal_exits": 2,
+    "Metal_errors": 0,
+    "actual_child_OFF0_ON1": true,
+    "ON_path_classification": "UNKNOWN",
+    "all40_world_rows_match": true,
+    "cleanup_complete": true,
+    "artifact_commit": "47f476e2d207d7d0f7386d613233355a4d862117"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
