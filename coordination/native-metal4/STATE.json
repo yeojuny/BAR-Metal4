@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 73,
+  "revision": 74,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/READY.json",
   "result_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DONE.json",
-  "decision": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DECISION.json",
-  "execution_status": "COMPLETION_OBSERVATION_SPLIT_CPU_BUILD_READBACK_NORMAL_SHUTDOWN_PASS_BOUNDED",
+  "decision": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json",
+  "execution_status": "COMPLETION_SPLIT_INDEPENDENT_BOUNDED_REVIEW_COMPLETE",
   "blocked_reason": null,
   "history": [
     {
@@ -786,6 +786,16 @@
       "performance_accepted": false,
       "cleanup_complete": true,
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_COMPLETION_SPLIT_REVIEW_COMPLETE",
+      "revision": 74,
+      "round_id": "completion-observation-split-20261117-18",
+      "decision": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json",
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "shared_tick_states": 39,
+      "performance_accepted": false
     }
   ],
   "communication_test": {
