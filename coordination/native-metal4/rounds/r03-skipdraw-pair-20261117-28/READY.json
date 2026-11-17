@@ -1,0 +1,8 @@
+{
+  "round_id": "r03-skipdraw-pair-20261117-28",
+  "status": "READY_MINIMAL_EXISTING_ROUTE",
+  "original_action_source_reviewed": true,
+  "previous_round27_closed": true,
+  "execution_started": false,
+  "request": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/REQUEST.json"
+}
