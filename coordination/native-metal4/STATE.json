@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 74,
+  "revision": 75,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "completion-observation-split-20261117-18",
-  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
-  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
-  "request": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/READY.json",
-  "result_path": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DONE.json",
+  "round_id": "postprocess-producer-20261117-19",
+  "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+  "source_manifest_sha256": "f758b34fced26318ed7f8497db93a350dc06f8db5d3c670852484ec450fd5221",
+  "request": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/postprocess-producer-20261117-19/READY.json",
+  "result_path": null,
   "decision": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json",
-  "execution_status": "COMPLETION_SPLIT_INDEPENDENT_BOUNDED_REVIEW_COMPLETE",
+  "execution_status": "POSTPROCESS_PRODUCER_FIXED_BUILD_ONE_VALIDATION_READY",
   "blocked_reason": null,
   "history": [
     {
@@ -796,6 +796,16 @@
       "cleanup_verified": true,
       "shared_tick_states": 39,
       "performance_accepted": false
+    },
+    {
+      "event": "POSTPROCESS_PRODUCER_SOURCE_REVIEWED_READY",
+      "revision": 75,
+      "round_id": "postprocess-producer-20261117-19",
+      "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+      "parent_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "HQ_previous_turn_completed": true,
+      "source_writers_stopped": true,
+      "performance_authorized": false
     }
   ],
   "communication_test": {
@@ -867,7 +877,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "FIXED_PENDING_ONE_EQUIVALENCE_BUILD_AND_ONE_VALIDATION_GAME",
+  "enabled_scope": "FIXED_PENDING_ONE_PROVENANCE_BUILD_AND_ONE_VALIDATION_GAME",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
@@ -880,21 +890,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "completion-observation-split-01",
-    "started": true,
-    "completed": true,
-    "games": 1,
-    "builds": 1,
-    "normal_exits": 1,
-    "CPU_contract_scripts": 1,
-    "receipt_identity_checks": 9,
-    "Python_model_cases": 36,
-    "gl_SaveImage_readback_success": true,
-    "shared_end_ticks_compared": 39,
-    "same_tick_differences": 0,
-    "performance_accepted": false,
-    "cleanup_complete": true,
-    "artifact_commit": "8a26fda1d784c57bdcc242d7a83f0899cafb93cf"
+    "attempt_id": "postprocess-producer-01",
+    "started": false,
+    "completed": false,
+    "games": 0,
+    "builds": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
