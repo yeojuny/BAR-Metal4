@@ -1,8 +1,8 @@
 {
-  "status": "READY",
+  "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 35,
+  "revision": 36,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/READY.json",
   "result_path": null,
   "decision": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DECISION.json",
-  "execution_status": "READY_R03_VALIDATION_AND_MATCHED_CLEAN_NOT_STARTED",
+  "execution_status": "R03_VALIDATION1_THEN_CLEAN6_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -347,6 +347,19 @@
       "decision": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DECISION.json",
       "cleanup_verified": true,
       "next_round": "r03-r02-benchmark-20261117-08"
+    },
+    {
+      "event": "HQ_R03_VALIDATION_AND_CLEAN_RESERVED",
+      "revision": 36,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-r02-benchmark-20261117-08",
+      "attempt_id": "r03-validation-and-clean-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "budget": {
+        "validation_games": 1,
+        "clean_games": 6,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -432,11 +445,12 @@
   },
   "execution": {
     "attempt_id": "r03-validation-and-clean-01",
-    "started": false,
+    "started": true,
     "completed": false,
     "validation_games": 0,
     "clean_games": 0,
-    "games": 0
+    "games": 0,
+    "started_at_utc": "2026-11-17 01:40:47 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
