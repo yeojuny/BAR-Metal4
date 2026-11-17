@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 129,
+  "revision": 130,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/sensorlos-fragment-reject-20261117-38/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/sensorlos-fragment-reject-20261117-38/READY.json",
   "result_path": "coordination/native-metal4/rounds/sensorlos-fragment-reject-20261117-38/DONE.json",
-  "decision": "CHECK_R03_FRAGMENT_DISCARD_THEN_BUILD_AND_COMPARE",
-  "execution_status": "HQ3_ROUND38_RESERVED_SENSORLOS_FRAGMENT_REJECT_SINGLE_ATTEMPT",
+  "decision": "DONE_MATCHED_FPS_PAIR_SENSORLOS_SUBMISSION_UNVERIFIED",
+  "execution_status": "HQ3_ROUND38_CLOSED_SENSORLOS_FRAGMENT_PARITY_AND_FPS",
   "blocked_reason": null,
   "history": [
     {
@@ -2078,6 +2078,39 @@
       },
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-17T22:57:44.015Z"
+    },
+    {
+      "event": "HQ3_ROUND38_CLOSED_SENSORLOS_FRAGMENT_PARITY_AND_FPS",
+      "revision": 130,
+      "round_id": "sensorlos-fragment-reject-20261117-38",
+      "attempt_id": "fragment-reject-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "b30f6f32ff3615209013dc792540b1adcc146b08",
+      "result_path": "coordination/native-metal4/rounds/sensorlos-fragment-reject-20261117-38/DONE.json",
+      "decision": "DONE_MATCHED_FPS_PAIR_SENSORLOS_SUBMISSION_UNVERIFIED",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "helper_compiles": 1,
+        "helper_gpu_invocations": 1,
+        "games": 2,
+        "original_games": 1,
+        "candidate_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps_by_arm": {
+        "R03_ORIGINAL": 64.73309336504423,
+        "FRAGMENT_REJECT": 64.72014865532098
+      },
+      "relative_percent": -0.019997051045039793,
+      "sensorlos_draw_in_counted_window_both": false,
+      "cleanup_complete": true,
+      "utc": "2026-11-17T23:17:52.790632+00:00"
     }
   ],
   "communication_test": {
@@ -2163,7 +2196,7 @@
   "execution": {
     "attempt_id": "fragment-reject-01",
     "started": true,
-    "completed": false,
+    "completed": true,
     "budget": {
       "configure_attempts_max": 1,
       "engine_builds_max": 1,
@@ -2179,7 +2212,37 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-17T22:57:44.015Z",
-    "bar": "PAUSED"
+    "bar": "PAUSED",
+    "ended_at_utc": "2026-11-17T23:17:52.790632+00:00",
+    "counts": {
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "helper_compiles": 1,
+      "helper_gpu_invocations": 1,
+      "games": 2,
+      "original_games": 1,
+      "candidate_games": 1,
+      "normal_exits": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "b30f6f32ff3615209013dc792540b1adcc146b08",
+    "diagnostic_outcome": "DONE_MATCHED_FPS_PAIR_SENSORLOS_SUBMISSION_UNVERIFIED",
+    "binary_sha256": {
+      "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "FRAGMENT_REJECT": "4df93fbda60c3c1d0fc930db951c120adf5341976963846b79846dc8a096ce75"
+    },
+    "fps_by_arm": {
+      "R03_ORIGINAL": 64.73309336504423,
+      "FRAGMENT_REJECT": 64.72014865532098
+    },
+    "relative_percent": -0.019997051045039793,
+    "helper_color_depth_stencil_comparisons": 12065,
+    "sensorlos_draw_in_counted_window_both": false,
+    "retry_authorized": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2245,7 +2308,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the existing fixture with exact R03 and candidate shaders. Build and compare FPS only after parity passes.",
+  "next_action": "Review the exact fragment patch, passing GPU fixture and one matched FPS pair. Candidate SensorLOS submissions were directly observed before the counted window.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
