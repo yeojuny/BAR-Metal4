@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 28,
+  "revision": 29,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
   "request": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/READY.json",
-  "result_path": null,
-  "decision": "R03 bounded source and float32 CPU proof reviewed; fixed GPU original-versus-candidate gate required before performance.",
-  "execution_status": "R03_HELPER_COMPILE_AND_GPU_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DONE.json",
+  "decision": "R03 standalone GPU parity PASS12065 old/new comparisons; existing3600+asymmetric1024 and negative witnesses retained. Performance not measured; JINI review next stage.",
+  "execution_status": "R03_HELPER_GPU_PASS_CLEANUP_CLOSED",
   "blocked_reason": null,
   "history": [
     {
@@ -268,6 +268,19 @@
         "gpu_helper_runs": 1,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ_R03_GPU_CORRECTNESS_PASS_DONE",
+      "revision": 29,
+      "round_id": "r03-minor-reject-correctness-20261117-06",
+      "attempt_id": "r03-helper-correctness-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "result_path": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DONE.json",
+      "artifact_commit": "6f5ebf7d8ea5ed111dbdee4aa3f00802a5241896",
+      "old_new_pixel_comparisons": 12065,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2",
+      "fresh_next_section_requested": true
     }
   ],
   "communication_test": {
@@ -354,10 +367,12 @@
   "execution": {
     "attempt_id": "r03-helper-correctness-01",
     "started": true,
-    "completed": false,
-    "helper_compile_attempts": 0,
-    "gpu_helper_runs": 0,
-    "started_at_utc": "2026-11-17 00:24:05 UTC"
+    "completed": true,
+    "helper_compile_attempts": 1,
+    "gpu_helper_runs": 1,
+    "started_at_utc": "2026-11-17 00:24:05 UTC",
+    "cleanup_complete": true,
+    "completed_at_utc": "2026-11-17 00:28:08 UTC"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -369,9 +384,15 @@
   "context_branch_request": {
     "requested_by": "LOCAL_CODEX_HQ",
     "reason": "Accumulated HQ history is heavy",
-    "when": "Next bounded execution only; current game/profile and cleanup are closed",
+    "when": "Next execution handoff, after this closed correctness round",
     "handoff": "Latest STATE, new round/attempt, source+manifest+binary pins, prior DONE/report/artifact paths, strict budget and prohibitions",
     "duplicate_attempts_prohibited": true,
-    "model_effort": "JINI selects and explicitly specifies HQ model/reasoning at next task boundary. No settings change claimed this round."
+    "model_effort": "JINI selects and explicitly specifies HQ model/reasoning at next task boundary. No settings change claimed this round.",
+    "renewed_by": "LOCAL_CODEX_HQ",
+    "current_section_heavy": true,
+    "current_HQ_thread_id": "01a1b3c1-c9e7-7b22-8cba-8055df762aab",
+    "heartbeat_id": "bar",
+    "heartbeat_migration_rule": "Inspect existing bar automation; retarget if needed instead of creating duplicate polling. Keep10min interval and pause during execution.",
+    "instruction": "사용자가 요청한 섹션 분기를 다음 실행 인계에 적용해 주세요. 현 HQ 이력이 무거워졌습니다. 새 HQ에는 현재 STATE와 새 round/attempt, 고정 source/manifest/binary, 이번 DONE/REPORT, 예산·금지사항만 전달하고 기존 attempt를 다시 실행하지 마세요. HQ 모델·추론강도도 지니가 새 지시 묶음에 명시해 주세요. 현재 회차 설정 변경은 없었습니다."
   }
 }
