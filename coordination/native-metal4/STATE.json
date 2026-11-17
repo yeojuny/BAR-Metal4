@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 84,
+  "revision": 85,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/READY.json",
   "result_path": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DONE.json",
-  "decision": null,
-  "execution_status": "HQ3_CPU_TAIL_DIAGNOSTIC_DONE_WITH_BOUNDARY_LIMITS",
+  "decision": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DECISION.json",
+  "execution_status": "CPU_POSTCOMPLETION_TAIL_INDEPENDENT_REVIEW_COMPLETE",
   "blocked_reason": null,
   "history": [
     {
@@ -953,6 +953,19 @@
       "bar_status": "PAUSED_UNCHANGED",
       "completed_at_utc": "2026-11-17 09:16:34 UTC",
       "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_CPU_TAIL_INDEPENDENT_REVIEW_COMPLETE",
+      "revision": 85,
+      "round_id": "cpu-postcompletion-tail-20261117-21",
+      "decision": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DECISION.json",
+      "HQ3_turn_completed": true,
+      "cleanup_verified": true,
+      "exact_chains": 33,
+      "tail_mean_ns": 32585.81818181818,
+      "performance_accepted": false,
+      "GPU_idle_claim": false,
+      "next_execution_requires_separate_round": true
     }
   ],
   "communication_test": {
