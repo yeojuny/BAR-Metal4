@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 106,
+  "revision": 107,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r03-mvk3-lifetime-20261117-27",
+  "round_id": "r03-skipdraw-pair-20261117-28",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
-  "request": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/DONE.json",
-  "decision": "PARTIAL_FIRST_FRAME_SCALARS_DIFFER_MVK3_SIM1590_UNKNOWN",
-  "execution_status": "HQ3_ROUND27_CLOSED_R03_PASS_MVK3_WARMUP_FAILURE_NO_RETRY",
+  "request": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/READY.json",
+  "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/DONE.json",
+  "decision": "STOP_LIFETIME_TOOLING_COMPARE_ACTUAL_GPU_MAIN_DRAW_COST",
+  "execution_status": "READY_MAIN_DECAL_ONE_GAME_CONTROL_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -1529,6 +1529,24 @@
       "cleanup_complete": true,
       "bar": "PAUSED",
       "utc": "2026-11-17T20:19:05.831443+00:00"
+    },
+    {
+      "event": "JINI_READY_MAIN_DECAL_NEGATIVE_CONTROL",
+      "revision": 107,
+      "previous_round": "r03-mvk3-lifetime-20261117-27",
+      "round_id": "r03-skipdraw-pair-20261117-28",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+      "budget": {
+        "games_max": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profiles_max": 2,
+        "profiles_per_capture": 1,
+        "retries": 0,
+        "builds": 0
+      },
+      "previous_budget_reused": false,
+      "source_preserved": true
     }
   ],
   "communication_test": {
@@ -1600,7 +1618,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "LIFETIME_ONLY_TWO_GAME_DIAGNOSTIC",
+  "enabled_scope": "ONE_R03_GAME_MAIN_DECAL_ON_OFF_GPU_CONTROL",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -1612,45 +1630,19 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "lifetime-raw-two-arm-01",
-    "started": true,
-    "completed": true,
+    "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+    "started": false,
+    "completed": false,
     "budget": {
-      "games_max": 2,
-      "games_per_arm": 1,
-      "captures": 0,
-      "profiles": 0,
+      "games_max": 1,
+      "captures_max": 2,
+      "inspection_sessions_max": 2,
+      "profiles_max": 2,
+      "profiles_per_capture": 1,
       "retries": 0,
       "builds": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17 20:06:49 UTC",
-    "previous_budget_reused": false,
-    "bar": "PAUSED",
-    "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
-    "ended_at_utc": "2026-11-17T20:19:05.831443+00:00",
-    "counts": {
-      "stages": 1,
-      "games": 2,
-      "R03": 1,
-      "MVK3": 1,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0,
-      "builds": 0,
-      "FPS_AB": 0,
-      "engineSourceEdits": 0,
-      "RNGOrLifetimeOverrides": 0
-    },
-    "diagnostic_outcome": "PARTIAL_FIRST_FRAME_SCALARS_DIFFER_MVK3_SIM1590_UNKNOWN",
-    "paired_protocol_passed": false,
-    "arm_status": {
-      "R03": "PASS_TWO_RAW_RECORDS",
-      "MVK3": "FAIL_WARMUP_PACING_FRAME180"
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "d0a7ee775c2a50f54bcb1474fbbb60734c59dfd0",
-    "retry_authorized": false
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -1716,5 +1708,5 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "SUPER_JINI_MK2 review round27 DONE. MVK3 frame1590 UNKNOWN. Budget closed, no retry or additional execution."
+  "next_action": "HQ3 reserve once, existing R03 path only; one game two captures, conditional profiles2; no retry. Preserve user caffeinate."
 }
