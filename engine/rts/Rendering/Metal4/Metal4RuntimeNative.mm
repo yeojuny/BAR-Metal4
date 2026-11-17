@@ -1151,17 +1151,30 @@ bool Runtime::SlotPending(const std::shared_ptr<RuntimeFrameSlot>& slot) const
  for(const auto& pending:pendingSubmissions)if(pending->resources.owner->slot==slot)return true;
  return false;
 }
-void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner)
+// Completion observation is not renderer retirement or display presentation.
+// This private, caller-local receipt cannot release owners or enable reuse.
+// Existing caller serialization is unchanged; normal paths retain requestMutex
+// across both phases. Shutdown keeps its existing exclusive-use assumption.
+// The GPU pending limit remains one.
+struct Runtime::CompletionObservation {
+ CompletionObservation(const Runtime* runtime,const RuntimePendingSubmission* ticket,
+  const void* queue,const void* event,std::uint64_t value):
+  runtime(runtime),ticket(ticket),queue(queue),event(event),value(value) {}
+ CompletionObservation(const CompletionObservation&)=delete;
+ CompletionObservation& operator=(const CompletionObservation&)=delete;
+ const Runtime* const runtime;
+ const RuntimePendingSubmission* const ticket;
+ const void* const queue;
+ const void* const event;
+ const std::uint64_t value;
+ bool consumed=false;
+};
+
+Runtime::CompletionObservation Runtime::AwaitCompletionLocked(
+ const std::shared_ptr<RuntimePendingSubmission>& pending)
 {
- if(pendingSubmissions.empty())return;
- Require(!poisoned,"Cannot retire a poisoned deferred Metal4 request");
- auto identity=pendingSubmissions.front()->traceIdentity;
- if(cpuPhaseStack.context.buffer)identity.event=pendingSubmissions.front()->eventValue;
- NativeCPUTraceRelationScope retiredIdentity(identity);
- NativeCPUPhaseScope retireTrace(NativeCPUPhaseKind::RuntimeRetire);
- if(!identity.job)retireTrace.Status(4); // Exact event, unavailable boundary job.
- auto pending=pendingSubmissions.front();auto frame=pending->resources.owner;
- try {
+ // Both waits are required. The feedback semaphore is consumed exactly once,
+ // so this is deliberately not a polling API or a re-entrant observation.
   const auto start=Clock::now();
   if(pending->probe){pending->probe->drain=FrameOverlapHostTime();pending->probe->ready=completionEvent.signaledValue>=pending->eventValue;}
   {NativeCPUPhaseScope trace(NativeCPUPhaseKind::EventWait);
@@ -1169,6 +1182,19 @@ void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* compl
   {NativeCPUPhaseScope trace(NativeCPUPhaseKind::FeedbackWait);
    Require(dispatch_semaphore_wait(pending->feedback,dispatch_time(DISPATCH_TIME_NOW,30*NSEC_PER_SEC))==0,"MTL4 commit feedback timeout (30 seconds)");}
   if constexpr(NativeCPUTimingInstrumentation)pending->metrics.cpuCompletionWaitMs=Milliseconds(start);
+ return CompletionObservation(this,pending.get(),(__bridge const void*)queue,
+  (__bridge const void*)completionEvent,pending->eventValue);
+}
+
+void Runtime::SettleCompletedLocked(const std::shared_ptr<RuntimePendingSubmission>& pending,
+ CompletionObservation& observed,std::shared_ptr<RuntimePendingSubmission>* completedOwner)
+{
+ Require(!observed.consumed && observed.runtime==this && observed.ticket==pending.get() &&
+  observed.queue==(__bridge const void*)queue && observed.event==(__bridge const void*)completionEvent &&
+  observed.value==pending->eventValue && !pendingSubmissions.empty() && pendingSubmissions.front()==pending,
+  "Metal4 settlement requires its exact unconsumed completion observation");
+ observed.consumed=true; // Never retry partially executed renderer retirement.
+ const auto& frame=pending->resources.owner;
   frame->pending=false;
   if(pending->probe){pending->probe->done=FrameOverlapHostTime();pending->probe->complete.store(true,std::memory_order_release);}
   if(pending->error!=nil) {
@@ -1189,6 +1215,21 @@ void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* compl
   if(completedOwner)*completedOwner=pending;
   pendingSubmissions.pop_front();
   pendingSubmission=pendingSubmissions.empty()?nullptr:pendingSubmissions.back();
+}
+
+void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner)
+{
+ if(pendingSubmissions.empty())return;
+ Require(!poisoned,"Cannot retire a poisoned deferred Metal4 request");
+ auto identity=pendingSubmissions.front()->traceIdentity;
+ if(cpuPhaseStack.context.buffer)identity.event=pendingSubmissions.front()->eventValue;
+ NativeCPUTraceRelationScope retiredIdentity(identity);
+ NativeCPUPhaseScope retireTrace(NativeCPUPhaseKind::RuntimeRetire);
+ if(!identity.job)retireTrace.Status(4); // Exact event, unavailable boundary job.
+ auto pending=pendingSubmissions.front();auto frame=pending->resources.owner;
+ try {
+  auto observed=AwaitCompletionLocked(pending);
+  SettleCompletedLocked(pending,observed,completedOwner);
  } catch(...) {
   poisoned=true;failedFrame=frame;unsafePendingWork=frame->pending;
   for(const auto& ticket:pendingSubmissions)unsafePendingWork=unsafePendingWork||ticket->resources.owner->pending;

@@ -128,6 +128,10 @@ private:
 	std::shared_ptr<RuntimeFrameResources> failedFrame;
 	std::shared_ptr<RuntimePendingSubmission> pendingSubmission; // newest, for predecessor contracts
 	std::deque<std::shared_ptr<RuntimePendingSubmission>> pendingSubmissions;
+ struct CompletionObservation;
+ CompletionObservation AwaitCompletionLocked(const std::shared_ptr<RuntimePendingSubmission>&);
+ void SettleCompletedLocked(const std::shared_ptr<RuntimePendingSubmission>&,CompletionObservation&,
+  std::shared_ptr<RuntimePendingSubmission>* completedOwner);
 	void DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner = nullptr);
 	bool SlotPending(const std::shared_ptr<RuntimeFrameSlot>&) const;
 	void DrainPendingLocked();

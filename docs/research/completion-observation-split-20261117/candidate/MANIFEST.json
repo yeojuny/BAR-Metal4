@@ -1,0 +1,19 @@
+{
+  "parent_source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "status": "SOURCE_AND_CPU_VERIFIED_METAL_NOT_COMPILED_OR_RUN",
+  "gpu_pending_limit": 1,
+  "production_paths": [
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h"
+  ],
+  "files": {
+    "Metal4RuntimeNative.h": "f4b11f5a3243c9aa7326bdf6e8843cb7e361a8e015e3f2eaf1548d12e00b0462",
+    "Metal4RuntimeNative.mm": "6862989c2619335b3180db6086977a9468985910706e3f22d5929f64c1d29179",
+    "REPORT.md": "cf54e51aebc5a20c169d0aba62e17178812a6d860eb68785344c3dd42bf28b65",
+    "completion-split.patch": "de7c5443f9769d44f24ef459a423b69b6d030ae85bb0163993624f806ec5837c",
+    "cpu-results.json": "69877e8f930894f2e44ac53d2baec11047b520534b2f9ba9f22bcf6268d68f8c",
+    "reference/Metal4RuntimeNative.h": "bf42e42224f1f88aa894ee59693437c6291a4f8f1cb8b464057e368e4512ae49",
+    "reference/Metal4RuntimeNative.mm": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521",
+    "test_source_and_contract.py": "0029e5f7485a9c0808bc2fcd1c310f1d310c6b56fd68349f275b3bd3e31e764e"
+  }
+}
