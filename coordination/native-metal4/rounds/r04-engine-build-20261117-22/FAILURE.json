@@ -1,0 +1,28 @@
+{
+  "configure_exit": 1,
+  "failed_requirement": "openal>=1.18.2",
+  "reported_by": "CMake FindPkgConfig via rts/System/Sound/CMakeLists.txt:52",
+  "excerpt_start_line": 402,
+  "excerpt": "-- Checking for module 'openal>=1.18.2'\n--   Package 'openal' not found\nCMake Error at /opt/homebrew/share/cmake/Modules/FindPkgConfig.cmake:1243 (message):\n  The following required packages were not found:\n\n   - openal>=1.18.2\n\nCall Stack (most recent call first):\n  /opt/homebrew/share/cmake/Modules/FindPkgConfig.cmake:1295 (_pkg_check_modules_internal)\n  rts/System/Sound/CMakeLists.txt:52 (pkg_check_modules)\n\n\n-- Configuring incomplete, errors occurred!",
+  "configure_attempts": 1,
+  "engine_builds": 0,
+  "relocation_sign": 0,
+  "source_repairs": 0,
+  "retries": 0,
+  "classification": "Configuration dependency discovery failure; R04 source compilation not reached; cause of differing discovery environment not established",
+  "logs": {
+    "CONFIGURE.log": {
+      "sha256": "94552e39a8f03827fb7ea01e51c8552386fe5471439f4373fa2ca772e90ea837",
+      "bytes": 20618
+    }
+  },
+  "diagnostic_environment": {
+    "PKG_CONFIG_PATH": null,
+    "PKG_CONFIG_LIBDIR": null,
+    "CMAKE_PREFIX_PATH": null,
+    "SDKROOT": null,
+    "DEVELOPER_DIR": null,
+    "CC": null,
+    "CXX": null
+  }
+}

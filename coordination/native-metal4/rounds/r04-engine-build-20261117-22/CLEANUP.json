@@ -1,0 +1,16 @@
+{
+  "ownedPIDsGone": true,
+  "workerChildrenReaped": true,
+  "ownedProcessGroupsEmpty": true,
+  "awakeCreated": false,
+  "awakeReleased": true,
+  "GPUOrGameProcessesStarted": false,
+  "originalEvidenceUnchanged": true,
+  "candidateSourceUnchangedAfterConfigure": true,
+  "baselineSourceFilesRehashed": 10269,
+  "candidateSourceFilesRehashed": 10269,
+  "baselineAndCopiedDylibsVerified": 19,
+  "buildControllerExited": true,
+  "bar": "PAUSED_UNCHANGED",
+  "utc": "2026-11-17T09:30:24.045938+00:00"
+}

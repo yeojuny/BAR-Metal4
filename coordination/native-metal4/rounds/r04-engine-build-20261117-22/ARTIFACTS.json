@@ -1,0 +1,82 @@
+{
+  "REPORT.md": {
+    "sha256": "25b50827a2e8bee07a354db0ce8233cbda92bf8af934dfc2afb5d9d6b506bd39",
+    "bytes": 3564
+  },
+  "BUILD-RESULT.json": {
+    "sha256": "6e5628e7bd921e76d87b20c40fb917885f0e4e397ca1a38f34ddc92fd994e892",
+    "bytes": 3286
+  },
+  "FAILURE.json": {
+    "sha256": "49f2ec9caa747360f49b36d2e0247c15aa8dfc4d915f76007d4f21dd52764404",
+    "bytes": 1293
+  },
+  "EXECUTION.json": {
+    "sha256": "845c79f7580309d255e9c8044c9ac02563e546e43b6b4e96f5c8ea37402ad091",
+    "bytes": 2194
+  },
+  "CLEANUP.json": {
+    "sha256": "d74da728463b72a6d6c6517c9546b2d6ed883b6d2bbc8db727fb45ff7f029583",
+    "bytes": 499
+  },
+  "CONFIGURE.log": {
+    "sha256": "94552e39a8f03827fb7ea01e51c8552386fe5471439f4373fa2ca772e90ea837",
+    "bytes": 20618
+  },
+  "TOOLCHAIN-PREFLIGHT.json": {
+    "sha256": "ac7054b6763bba344dc5ac106923e70dea9bea1f09ceedf69053c9f2b735dce3",
+    "bytes": 642
+  },
+  "SOURCE-CLOSURE.json": {
+    "sha256": "0440f75656670f8ef0e25fd4a6c66806097f42c0d2270f3da43a819a35222348",
+    "bytes": 876
+  },
+  "SOURCE-HASHES.json": {
+    "sha256": "54249480de86859031f6bd36874c59f387ad12356e1284259ffb951db2c4b911",
+    "bytes": 4005400
+  },
+  "SOURCE-COMMIT-DELTA.json": {
+    "sha256": "62eebdfe34c9e8dcb9b21beeb081b1ae25cf754b69fe4c8703de8f35a99a7f0a",
+    "bytes": 3118
+  },
+  "POSTRUN-PRESERVATION.json": {
+    "sha256": "820ba65ff780a24043d5b694c11d302a9cf0e454663805939bdf4de8f8ca292a",
+    "bytes": 605
+  },
+  "BASELINE-PRESERVATION-BEFORE.json": {
+    "sha256": "99a0857ce5d3ce36d9d29fa4b93159cc76c46f01b9b5f9e88ef2db3408373f64",
+    "bytes": 4233
+  },
+  "initial-cache.cmake": {
+    "sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "bytes": 36970
+  },
+  "R04-MANIFEST.json": {
+    "sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+    "bytes": 1034
+  },
+  "UPSTREAM-CONTRIBUTIONS.json": {
+    "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "bytes": 4103
+  },
+  "measurement/build_once.py": {
+    "sha256": "34223610a3f1e4ca59f574b9b0b53d5130c8a27e5a31ac73f8a43ae4a77e80fa",
+    "bytes": 4004
+  },
+  "measurement/relocate_sign.py": {
+    "sha256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+    "bytes": 1676
+  },
+  "ATTEMPT-CLAIM.json": {
+    "sha256": "f0730a8fa60ab499b91ae956dc78c16ed888e83c2e357a3b6c637e1b407f77c3",
+    "bytes": 353
+  },
+  "build/CMakeCache.txt": {
+    "sha256": "97dabb7c5eac6468756659a1516d293dcb86b57fa5c87574354631ddd52b5d72",
+    "bytes": 68181
+  },
+  "build/CMakeFiles/CMakeConfigureLog.yaml": {
+    "sha256": "5e2ab8fc6c7d6f3e198326fee5901136cbfad9b315443d44b67e53544edff147",
+    "bytes": 142387
+  }
+}
