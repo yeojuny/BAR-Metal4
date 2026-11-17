@@ -1,5 +1,7 @@
 # BAR-Metal4 작업 기억 체크포인트
 
+> 최신 운영 상태는 문서 끝의 **round18 종료·제한적 동등성 통과** 갱신을 참조한다. revision72/RUNNING 내용은 과거 스냅샷이다.
+
 - 작성일: 2026-11-17 UTC
 - 목적: 대화가 바뀌어도 선택 이유와 검증 한계를 복구하기 위한 문서. 실행 지시나 실행권이 아니다.
 - 읽은 원격 스냅샷: coord/native-metal4, commit `14a4a6d5ca8b9df722bc25432ce211105a3676dd`, STATE revision **72**, contents blob `1f28827e00cd89523466edbb1242af11b605f68b`.
@@ -147,3 +149,30 @@ Zelda는 기존 줄별 분석의 `31aa41b4101a413f69113985120ba095e1c9586f`에�
 - [D2R Metal README](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/README.md), [nvn_mtl.m](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/nvn/nvn_mtl.m), [t_bar.m](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/tests/t_bar.m), [t_gpu_lost.m](https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/tests/t_gpu_lost.m), [release v2.0.4](https://github.com/PowerBeef/d2r-metal/releases/tag/v2.0.4)
 - [Zelda performance followups](https://github.com/ly05010419/MacNativeGames/blob/80a5f47b9e508460c87f9dbcaa85d635ccbdbffb/docs/performance-followups.md), [test records](https://github.com/ly05010419/MacNativeGames/blob/80a5f47b9e508460c87f9dbcaa85d635ccbdbffb/docs/test-records.md), [third-party notices](https://github.com/ly05010419/MacNativeGames/blob/80a5f47b9e508460c87f9dbcaa85d635ccbdbffb/THIRD_PARTY_NOTICES.md)
 - [OJZen README](https://github.com/OJZen/totk-mobile/blob/6d4c1d36c67c71fa303404c475c4c7ba4a7f2823/README.md)
+
+## 최신 상태 갱신: round18 종료·제한적 동등성 통과 (2026-11-17)
+
+이 절은 위 revision72/RUNNING 스냅샷을 **현재 상태에 한해 대체**한다. 이전 판단과 기록은 역사 보존이며 새 실행 허가가 아니다.
+
+- 실제 재조회: `coord/native-metal4`, STATE **revision74**, status **DONE**, owner **SUPER_JINI_MK2**. STATE blob `8fab9dac48488c966574deefc4cf58cfad72a7be`.
+- round `completion-observation-split-20261117-18`; source `c34129af9158bbdef1321d17825f1f60721b74ec`; artifact `8a26fda1d784c57bdcc242d7a83f0899cafb93cf`.
+- 결정: **ACCEPT_BOUNDED_STRUCTURAL_EQUIVALENCE_GATE_NOT_FULL_LIFETIME_PROOF**. HQ turn 종료와 cleanup 검증이 DECISION에 기록됐다.
+- CPU receipt9/model36 PASS, production build exit0. 모델 테스트는 live Metal fault injection이 아니다.
+- 실제 child Metal API validation1, texture input/trace0, 기록된 Metal 오류0, 정상 종료 및 owned group 종료 확인.
+- readback: raw H1NativeImage success=true, simulation1740. 후보와 기존 R03 화면을 직접 비교한 결정 기록: 뚜렷한 새 정적 지형/건물 손상 없음. 동적 연기·조명·발사체 차이 있음. pixel/depth/stencil 동등성은 주장하지 않는다.
+- world 각40행 중 **38행 완전 동일**, shared end ticks39에서 same-tick state differences0. 첫 bin은 R03 end577/units171, 후보 end570/units172이며 다음 행 start에도 영향. wall-time 표본 경계 차이이므로 **40행 전부 일치라고 쓰지 않는다**.
+- 검증된 범위: pending1을 유지한 추출의 실제 엔진 compile 및 ordinary scene/readback/shutdown 한 회.
+- 미검증: **early drain live coverage, detach, live fault injection, exact callback counts, 전체 lifetime/context/error 경로**.
+- receipt는 event+feedback 관측을 기록할 뿐 GPU 성공, renderer retirement, readback readiness, presentation과 동의어가 아니다.
+- **FPS 개선, pending2 안전성, 새 실행 권한은 없음.** 무조건 재실행/승격 금지. main·release·Homebrew 보호 유지.
+
+### 다음 한 단계와 완료 체크
+- [x] STATE revision74 및 round18 DECISION 원격 읽음.
+- [x] 제한적 동등성 통과와 미검증 경계를 분리해 보존.
+- [ ] scheduling/release boundary 변경 전 정확한 resource ownership 및 실패/quarantine 계약을 소스로 증명.
+- [ ] 필요한 경우 별도 고정 source·manifest·새 round·제한 예산으로 gate 정의. 알림이나 이 문서만으로 실행하지 않기.
+- [ ] 이어받는 시점에는 최신 STATE를 다시 읽어 중복 실행·소유권 충돌 방지.
+
+근거:
+- [revision74 STATE 고정본](https://github.com/yeojuny/BAR-Metal4/blob/852d42ce4dd31f85c99102aea8817513f922d1e1/coordination/native-metal4/STATE.json)
+- [round18 DECISION 고정본](https://github.com/yeojuny/BAR-Metal4/blob/852d42ce4dd31f85c99102aea8817513f922d1e1/coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json)
