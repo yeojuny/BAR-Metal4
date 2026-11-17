@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "READY",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 42,
+  "revision": 43,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r04-segment-setup-correctness-20261117-09",
-  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
-  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
-  "request": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DONE.json",
+  "round_id": "ground-decal-pages-compile-20261117-10",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/READY.json",
+  "result_path": null,
   "decision": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DECISION.json",
-  "execution_status": "R04_HELPER_GPU_PASS_PREPARED_WITNESS_CLEANUP_CLOSED",
+  "execution_status": "READY_GROUND_DECAL_CORRECTNESS_COMPILE_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -433,6 +433,16 @@
       "cleanup_verified": true,
       "HQ_turn_completed": true,
       "next": "MVK3/native structural analysis first; R04 performance expansion not authorized by this review."
+    },
+    {
+      "event": "GROUND_DECAL_INDEPENDENT_SOURCE_VERIFIED_READY",
+      "revision": 43,
+      "round_id": "ground-decal-pages-compile-20261117-10",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "parent_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "HQ_idle_evidence": "coordination/native-metal4/status/hq-status-20261117T041111Z.json",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true
     }
   ],
   "communication_test": {
@@ -504,7 +514,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "FIXED_HELPER_COMPILE1_GPU_CORRECTNESS1",
+  "enabled_scope": "CPU_CONTRACT1_ISOLATED_CONFIGURE1_ENGINE_BUILD1_GAMES_ZERO",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
@@ -517,19 +527,14 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r04-helper-correctness-01",
-    "started": true,
-    "completed": true,
-    "helper_compiles": 1,
-    "gpu_helper_runs": 1,
-    "games": 0,
-    "started_at_utc": "2026-11-17 03:26:51 UTC",
+    "attempt_id": "ground-decal-pages-compile-01",
+    "started": false,
+    "completed": false,
+    "CPU_contract_compiles": 0,
+    "CPU_contract_runs": 0,
+    "configures": 0,
     "engine_builds": 0,
-    "benchmarks": 0,
-    "captures": 0,
-    "retries": 0,
-    "cleanup_complete": true,
-    "completed_at_utc": "2026-11-17 03:34:50 UTC"
+    "games": 0
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
