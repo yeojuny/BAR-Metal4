@@ -1,0 +1,139 @@
+{
+  "contract": {
+    "environment": {
+      "BAR_NATIVE_BLOOM217_PROBE": "1"
+    },
+    "sensor_los_lua_draw_kind": 34,
+    "expected_witness": "Join NativeBloom217Inspect with the same source frame and next_sequence in NativeBloom217Successor. Require kind, next_nonempty 1, emitted 1, and simulation tick in counted window for direct witness.",
+    "bound": "At most four existing probe samples per game. Both arms use the same logger and normal scheduling."
+  },
+  "arms": {
+    "R03_ORIGINAL": {
+      "witnesses": [
+        {
+          "simulation_tick": 666,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3647,
+            "text": "[t=00:01:09.538377][f=0000666] [NativeBloom217Inspect] source_frame=2048 sim=666 bloom_sequence=455109 bloom_index=11 next_sequence=455110 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3649,
+            "text": "[t=00:01:09.538455][f=0000666] [NativeBloom217Successor] source_frame=2048 sequence=455110 kind=34 index=0 encoder=0x75e17fa680 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2048",
+          "sequence": "455110"
+        },
+        {
+          "simulation_tick": 666,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3650,
+            "text": "[t=00:01:09.551799][f=0000667] [NativeBloom217Inspect] source_frame=2049 sim=666 bloom_sequence=455309 bloom_index=11 next_sequence=455310 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3652,
+            "text": "[t=00:01:09.551884][f=0000667] [NativeBloom217Successor] source_frame=2049 sequence=455310 kind=34 index=0 encoder=0x75e17f8620 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2049",
+          "sequence": "455310"
+        },
+        {
+          "simulation_tick": 667,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3653,
+            "text": "[t=00:01:09.565782][f=0000667] [NativeBloom217Inspect] source_frame=2050 sim=667 bloom_sequence=455508 bloom_index=11 next_sequence=455509 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3655,
+            "text": "[t=00:01:09.565860][f=0000667] [NativeBloom217Successor] source_frame=2050 sequence=455509 kind=34 index=0 encoder=0x75e17f9880 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2050",
+          "sequence": "455509"
+        },
+        {
+          "simulation_tick": 667,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3656,
+            "text": "[t=00:01:09.579890][f=0000668] [NativeBloom217Inspect] source_frame=2051 sim=667 bloom_sequence=455707 bloom_index=11 next_sequence=455708 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3658,
+            "text": "[t=00:01:09.579929][f=0000668] [NativeBloom217Successor] source_frame=2051 sequence=455708 kind=34 index=0 encoder=0x75e17f9b20 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2051",
+          "sequence": "455708"
+        }
+      ],
+      "counted_witnesses": 4,
+      "widget_loaded": true,
+      "existing_probe_log_count": 8
+    },
+    "FRAGMENT_REJECT": {
+      "witnesses": [
+        {
+          "simulation_tick": 450,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3639,
+            "text": "[t=00:00:35.731769][f=0000450] [NativeBloom217Inspect] source_frame=2863 sim=450 bloom_sequence=677975 bloom_index=11 next_sequence=677976 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3641,
+            "text": "[t=00:00:35.731817][f=0000450] [NativeBloom217Successor] source_frame=2863 sequence=677976 kind=34 index=0 encoder=0x7ab2851c00 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2863",
+          "sequence": "677976"
+        },
+        {
+          "simulation_tick": 450,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3642,
+            "text": "[t=00:00:35.745542][f=0000450] [NativeBloom217Inspect] source_frame=2864 sim=450 bloom_sequence=678168 bloom_index=11 next_sequence=678169 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3644,
+            "text": "[t=00:00:35.745609][f=0000450] [NativeBloom217Successor] source_frame=2864 sequence=678169 kind=34 index=0 encoder=0x7ab28531e0 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2864",
+          "sequence": "678169"
+        },
+        {
+          "simulation_tick": 450,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3645,
+            "text": "[t=00:00:35.759222][f=0000451] [NativeBloom217Inspect] source_frame=2865 sim=450 bloom_sequence=678377 bloom_index=11 next_sequence=678378 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3647,
+            "text": "[t=00:00:35.759263][f=0000451] [NativeBloom217Successor] source_frame=2865 sequence=678378 kind=34 index=0 encoder=0x7ab2850460 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2865",
+          "sequence": "678378"
+        },
+        {
+          "simulation_tick": 451,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3648,
+            "text": "[t=00:00:35.772454][f=0000451] [NativeBloom217Inspect] source_frame=2866 sim=451 bloom_sequence=678585 bloom_index=11 next_sequence=678586 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3650,
+            "text": "[t=00:00:35.772547][f=0000451] [NativeBloom217Successor] source_frame=2866 sequence=678586 kind=34 index=0 encoder=0x7ab2852680 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2866",
+          "sequence": "678586"
+        }
+      ],
+      "counted_witnesses": 0,
+      "widget_loaded": true,
+      "existing_probe_log_count": 8
+    }
+  },
+  "counted_nonempty_submission_proved_both": false
+}

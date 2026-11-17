@@ -1,0 +1,27 @@
+{
+  "label": "HELPER-COMPILE",
+  "argv": [
+    "xcrun",
+    "--sdk",
+    "macosx",
+    "clang++",
+    "-std=c++20",
+    "-fobjc-arc",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "-I",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/source/engine/rts/Rendering/Metal4",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/fixture/gpu_pixel_parity.mm",
+    "-o",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/fixture/gpu_pixel_parity"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-17T22:58:33.537607+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38",
+  "pid": 27440,
+  "exit": 0,
+  "ended_at_utc": "2026-11-17T22:58:34.800084+00:00",
+  "stopped_by_runner": false
+}

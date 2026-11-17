@@ -1,0 +1,31 @@
+--- a/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h
++++ b/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h
+@@ -207,21 +207,22 @@
+ 	const bool viewportCovered=p.x>=u.viewport.x&&p.x<u.viewport.x+u.viewport.z&&p.y>=u.viewport.y&&p.y<u.viewport.y+u.viewport.w;
+ 	const float2 glPixel=float2(p.x,-p.y);
+ 	const bool lineCovered=SensorLineCoveredEarly(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,u.counts.w,coverageDepth);
++	const float2 sourceFragment=float2(p.x*u.fragmentToLogical.x,u.fragmentToLogical.y-p.y*u.fragmentToLogical.z);
++
++ float2 maskUV=sourceFragment/u.values.xy;if(u.parameters.z>.5f)maskUV.y=1.f-maskUV.y;
++ const float maskValue=mask.sample(maskSampler,maskUV).r;
++	// Sample with implicit derivatives before rejecting individual fragments.
++	if(!viewportCovered||!lineCovered)discard_fragment();
+ 	const float2 delta=in.lineB.xy-in.lineA.xy;const float t=dot(glPixel-in.lineA.xy,delta)/dot(delta,delta);
+ 	const float reciprocalW=mix(in.lineA.w,in.lineB.w,t);
+ 	const float4 data=mix(in.dataA*in.lineA.w,in.dataB*in.lineB.w,t)/reciprocalW;
+-	const float2 sourceFragment=float2(p.x*u.fragmentToLogical.x,u.fragmentToLogical.y-p.y*u.fragmentToLogical.z);
+-
+- float2 maskUV=sourceFragment/u.values.xy;if(u.parameters.z>.5f)maskUV.y=1.f-maskUV.y;
+- const float maskValue=mask.sample(maskSampler,maskUV).r;
+  const float outside=1.f-smoothstep(.49f,.51f,maskValue);
+  float4 color=float4(in.color.rgb,in.color.a*outside*data.w);
+  const float halfWidth=mix(in.halfWidths.x*in.lineA.w,in.halfWidths.y*in.lineB.w,t)/reciprocalW;
+  const float2 centre=(mix(in.lineNDC.xy,in.lineNDC.zw,t)*.5f+.5f)*u.values.xy;
+  const float thinCoverage=clamp(halfWidth+.5f-distance(sourceFragment,centre),0.f,1.f);
+  color.a*=thinCoverage;
+-	// Keep texture implicit derivatives before coverage/alpha discard; do not mark hidden lines in stencil.
+-	if(!viewportCovered||!lineCovered||color.a<=0.0f||!SensorAlpha(color.a,u.parameters.y,u.options.w))discard_fragment();
++	if(color.a<=0.0f||!SensorAlpha(color.a,u.parameters.y,u.options.w))discard_fragment();
+ 	return {color,mix(in.lineA.z,in.lineB.z,t)};
+ }
+ 

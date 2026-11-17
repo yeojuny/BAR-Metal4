@@ -1,0 +1,8 @@
+{
+  "environment": {
+    "BAR_NATIVE_BLOOM217_PROBE": "1"
+  },
+  "sensor_los_lua_draw_kind": 34,
+  "expected_witness": "Join NativeBloom217Inspect with the same source frame and next_sequence in NativeBloom217Successor. Require kind, next_nonempty 1, emitted 1, and simulation tick in counted window for direct witness.",
+  "bound": "At most four existing probe samples per game. Both arms use the same logger and normal scheduling."
+}

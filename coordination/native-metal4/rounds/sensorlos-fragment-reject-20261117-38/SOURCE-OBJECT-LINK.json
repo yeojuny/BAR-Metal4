@@ -1,0 +1,31 @@
+{
+  "status": "PASS_CANDIDATE_SHADER_BYTES_IN_LINKED_ARM64_EXECUTABLE",
+  "header": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+  "header_sha256": "c5995deba68cda82fe882e4f37743282f95fa481772a1a0f2fb51d9d0ffbe4dd",
+  "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4SensorLOSNative.mm.o",
+  "object_sha256": "a2e2de2d1e948e6fc5dc474d0cd4693f0a7409ea6eeafbd6d3c5975381bcd449",
+  "archive": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+  "compile_log": {
+    "line": 2560,
+    "text": "[889/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4SensorLOSNative.mm.o"
+  },
+  "link_log": {
+    "line": 5580,
+    "text": "[1577/1578] Linking CXX executable spring-metal4-scene"
+  },
+  "binary_sha256": "4df93fbda60c3c1d0fc930db951c120adf5341976963846b79846dc8a096ce75",
+  "arm64_sdk": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/build/spring-metal4-scene:",
+    "Load command 11",
+    "      cmd LC_BUILD_VERSION",
+    "  cmdsize 32",
+    " platform MACOS",
+    "    minos 27.2",
+    "      sdk 27.2",
+    "   ntools 1",
+    "     tool LD",
+    "  version 27106.1"
+  ],
+  "original_fragment_bytes_found_in_pinned_r03": true,
+  "modified_fragment_bytes_found_in_candidate": true
+}

@@ -1,0 +1,13 @@
+{
+  "label": "HELPER-GPU",
+  "argv": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/fixture/gpu_pixel_parity"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-17T22:58:34.800318+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38",
+  "pid": 27443,
+  "exit": 0,
+  "ended_at_utc": "2026-11-17T22:59:05.950571+00:00",
+  "stopped_by_runner": false
+}
