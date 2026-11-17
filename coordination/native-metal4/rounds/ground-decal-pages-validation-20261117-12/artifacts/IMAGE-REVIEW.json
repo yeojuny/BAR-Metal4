@@ -1,0 +1,22 @@
+{
+  "images": [
+    {
+      "arm": "V_R03_BASELINE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_R03_BASELINE/scene.png",
+      "sha256": "0dcd27abfd0704efbcd683ddfb90cfe68f81c96bcd4cc55ed0f4957b60ae8183",
+      "bytes": 2988392,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_GDP_CANDIDATE/scene.png",
+      "sha256": "28b130f6ad203a0bfbcf0a8c73fb26736d28c36f8e04b0396561f591934521d2",
+      "bytes": 2990779,
+      "actual_pixels_viewed": true,
+      "uploaded": false
+    }
+  ],
+  "observed": "Both actual images viewed. No obvious new missing/corrupt static terrain, buildings or ground-decal pattern. Occlusion appearance similar. Explosions/smoke/illumination and diagnostic numbers differ. Green range/sensor arcs visible in both; no candidate-only orange ring observed.",
+  "limits": "RGB screenshots do not prove exact pixel or depth/stencil attachment equality; dynamic differences not causally isolated."
+}
