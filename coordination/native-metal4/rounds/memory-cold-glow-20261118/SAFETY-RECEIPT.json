@@ -1,0 +1,26 @@
+{
+  "status": "PASS_MEMORY_SMOKE_AND_COLD_GLOW_METAL_PARITY",
+  "new_fixture_log_sha256": "a3c7212b00ba7f801e3a3e8f0f5a388a99eb260c96a5e05fe0bc30f4721cd4cd",
+  "original_fixture_sha256": "005c03cdf1b230b1bfe7195521853d818121901a19b6c45720b2f458ed020d34",
+  "previous_proof": {
+    "status": "PASS_GROUND_COLD_GLOW_METAL",
+    "indexed_BGRA8_depth_stencil_cases": 72,
+    "RGBA32F_cases": 72,
+    "cold_branch_positive": [
+      7,
+      7
+    ],
+    "fallback_control": [
+      12,
+      12
+    ],
+    "shadows": [
+      false,
+      true
+    ],
+    "pixel_scope": "AA0 only; test-only marker never compiled in engine",
+    "log_sha256": "43f9849356e0b88ade2ec5676036b0aa3b34c78143452abaa9954dca1c3e8087"
+  },
+  "smoke_sha256": "8632e22f286e695756e6aae2723950ccd14bf1827580ead33c063ddc3e57b3ff",
+  "cold_object_sha256": "639ccb95bd5c718df111883152197c94f165b50a3a24867ac41b7843e1feeb35"
+}

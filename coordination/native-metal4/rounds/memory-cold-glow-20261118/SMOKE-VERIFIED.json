@@ -1,0 +1,122 @@
+{
+  "status": "PASS_REAL_METAL_LUA_MEMORY_SMOKE",
+  "games": 2,
+  "native_on": {
+    "rows": [
+      {
+        "frame": 60,
+        "KiB": 18622720.0,
+        "kind": "recommendedWorkingSet",
+        "allocated_MiB": 1673.84375,
+        "recommended_MiB": 18186.25,
+        "effective_decal_lifetime": 3.0,
+        "device_registry": 4294968405,
+        "recommended_bytes": 19069665280,
+        "allocated_bytes": 1755152384
+      },
+      {
+        "frame": 540,
+        "KiB": 18622720.0,
+        "kind": "recommendedWorkingSet",
+        "allocated_MiB": 2652.203125,
+        "recommended_MiB": 18186.25,
+        "effective_decal_lifetime": 3.0,
+        "device_registry": 4294968405,
+        "recommended_bytes": 19069665280,
+        "allocated_bytes": 2781036544
+      },
+      {
+        "frame": 1590,
+        "KiB": 18622720.0,
+        "kind": "recommendedWorkingSet",
+        "allocated_MiB": 2694.59375,
+        "recommended_MiB": 18186.25,
+        "effective_decal_lifetime": 3.0,
+        "device_registry": 4294968405,
+        "recommended_bytes": 19069665280,
+        "allocated_bytes": 2825486336
+      }
+    ],
+    "decal_stats": [
+      [
+        "2",
+        "0",
+        "0",
+        "64"
+      ],
+      [
+        "793",
+        "0",
+        "0",
+        "25376"
+      ],
+      [
+        "3405",
+        "0",
+        "0",
+        "108960"
+      ]
+    ],
+    "hud": {
+      "native_query_observed": 36,
+      "screenshot_path": "smoke/clean_paced/preparation/private/SMOKE_MEM_ON/state/data/screenshots/screen_2026-11-18_21-54-17-325.png",
+      "screenshot_sha256": "f636efd2ffaca5032cf529db052638909961d8c3994e46d186e1910ef7933696",
+      "visual_comparison": "UNAVAILABLE_BLACK_CAPTURE",
+      "memory_query_route_verified": true
+    }
+  },
+  "native_off": {
+    "rows": [
+      {
+        "frame": 60,
+        "KiB": 0.0,
+        "kind": "nil",
+        "allocated_MiB": 0.0,
+        "recommended_MiB": 0.0,
+        "effective_decal_lifetime": 0.699999988079071
+      },
+      {
+        "frame": 540,
+        "KiB": 0.0,
+        "kind": "nil",
+        "allocated_MiB": 0.0,
+        "recommended_MiB": 0.0,
+        "effective_decal_lifetime": 0.699999988079071
+      },
+      {
+        "frame": 1590,
+        "KiB": 0.0,
+        "kind": "nil",
+        "allocated_MiB": 0.0,
+        "recommended_MiB": 0.0,
+        "effective_decal_lifetime": 0.699999988079071
+      }
+    ],
+    "decal_stats": [
+      [
+        "2",
+        "0",
+        "0",
+        "64"
+      ],
+      [
+        "797",
+        "0",
+        "0",
+        "25504"
+      ],
+      [
+        "3511",
+        "0",
+        "0",
+        "112352"
+      ]
+    ]
+  },
+  "only_smoke_hud_enabled": true,
+  "cpu_contract_sha256": "0af165248c926598d869a8214a0256608849e8887935692d27bd80ed5acfc573",
+  "saved_lifetime": null,
+  "decal_stats_equal": false,
+  "dynamic_samples_same_initialized_device": true,
+  "optional_game_telemetry_applied": false
+}
