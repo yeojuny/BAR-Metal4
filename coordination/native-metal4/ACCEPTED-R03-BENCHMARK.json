@@ -1,13 +1,13 @@
 {
   "status": "ACCEPTED_USER_DIRECTED_ACTIVE_R03_BASELINE",
   "scope": "r03-local-paced-battle",
-  "accepted_utc": "2026-11-18T06:31:50.957295+00:00",
-  "user_direction": "그렇지 on 받아들여. 다음 진행해.",
-  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-downsample-identity-fps-20261118-50/build/spring-metal4-scene",
-  "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
-  "source_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-downsample-identity-fps-20261118-50/source",
-  "source_manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-downsample-identity-fps-20261118-50/CANDIDATE-MANIFEST.json",
-  "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
+  "accepted_utc": "2026-11-18T06:55:29.891291+00:00",
+  "user_direction": "Bloom 설정 재사용도 ON으로 받아들이고 다음 개선 진행계획을 짜보자",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/build/spring-metal4-scene",
+  "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+  "source_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/source",
+  "source_manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/CANDIDATE-MANIFEST.json",
+  "source_manifest_sha256": "d1146946b94f9655b26f96b95bc04887358e073387839446213ac3440153b250",
   "launch_environment_normalized": {
     "HOME": "<arm>/home",
     "BAR_STATE_PATH": "<arm>/state",
@@ -74,7 +74,8 @@
     "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": "0",
     "BAR_NATIVE_FRESH_EFFECT_UPLOAD_BUNDLE": "0",
     "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "0",
-    "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1"
+    "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+    "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1"
   },
   "feature": {
     "setting": "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA",
@@ -82,8 +83,8 @@
     "rollback": "0 on the same binary"
   },
   "launch_contract": "Existing R03 paced combat scene and 540–1740 controller, with the optional screenshot adapter omitted",
-  "reference_arm": "BLOOM_ON",
-  "reference_launch_manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-downsample-identity-reverse-20261118-51/clean_paced/preparation/runs/BLOOM_ON/LAUNCH.json",
+  "reference_arm": "DEFINES_ON",
+  "reference_launch_manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-reverse-20261118-53/clean_paced/preparation/runs/DEFINES_ON/LAUNCH.json",
   "evidence": {
     "first_pair": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-downsample-identity-fps-20261118-50/FPS-EVIDENCE.json",
     "second_pair": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-downsample-identity-reverse-20261118-51/FPS-EVIDENCE.json",
@@ -98,5 +99,32 @@
     "reproduced_average_FPS_gain": false,
     "identity_route_observed": true
   },
-  "next_preparation": "Reuse exactly matching Bloom shader define text within one prepared frame."
+  "next_preparation": "Recheck the existing Screen EncodeRange candidate against this baseline. Rank the larger SensorLOS, decal shader, and GPU submission-boundary opportunities using matched evidence.",
+  "accepted_settings": {
+    "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+    "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1"
+  },
+  "adopted_feature": {
+    "setting": "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE",
+    "value": "1",
+    "rollback": "0 on the same binary"
+  },
+  "previous_benchmark": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-adoption-20261118/PREVIOUS-BENCHMARK.json",
+  "define_reuse_evidence": {
+    "matched_pairs": [
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/FPS-EVIDENCE.json",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-reverse-20261118-53/FPS-EVIDENCE.json"
+    ],
+    "average_FPS_deltas_percent": [
+      -0.07119690385208877,
+      0.2514728817257561
+    ],
+    "repeat_one_percent_low": {
+      "DEFINES_ON": 56.13305811696879,
+      "DEFINES_OFF": 52.22437298953573
+    },
+    "reuse_observed_both_times": true,
+    "reproduced_average_FPS_gain": false,
+    "validation": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/BLOOM-DEFINE-VERIFICATION.json"
+  }
 }
