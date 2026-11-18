@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 234,
+  "revision": 235,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/RESULT.json",
-  "decision": "KEEP_DEFAULT_CAP1_AND_R85_OFF",
-  "execution_status": "RESERVED_AND_STAGED_FOR_SINGLE_DIAGNOSTIC_GAME",
+  "decision": "PRESERVE_DEFAULT_CAP1_AND_R85_OFF; USE_EXACT_R86_CASE_TO_NARROW_SCREEN_PREPARATION",
+  "execution_status": "CASE_MATCHED_WITH_WINDOW_EDGE_MISSING",
   "blocked_reason": null,
   "history": [
     {
@@ -4182,6 +4182,26 @@
         "retries": 0,
         "new_instrumentation": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND86_EXISTING_PHASE_TRACE_COMPLETED",
+      "revision": 235,
+      "round_id": "pending2-prepareworld-join-window-20261118-86",
+      "result": "CASE_MATCHED_WITH_WINDOW_EDGE_MISSING",
+      "attempt_id": "prepareworld-capture-prefix-existing-trace-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "target_sim": 1125,
+      "task_join_ms": 13.213,
+      "event_overlap_ms": 10.348333,
+      "utc": "2026-11-18T16:03:41Z"
     }
   ],
   "communication_test": {
@@ -4278,11 +4298,22 @@
       "new_instrumentation": 0
     },
     "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
-    "started": false,
-    "completed": false,
-    "games_started": false,
+    "started": true,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T15:57:19Z",
-    "default_changed": false
+    "default_changed": false,
+    "counts": {
+      "configure": 0,
+      "engine_build": 0,
+      "games": 1,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0,
+      "new_instrumentation": 0
+    },
+    "finished_at_utc": "2026-11-18T16:03:41Z",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4348,7 +4379,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 only: run the sealed same-binary R71 diagnostic once; all other local work pauses until cleanup. No builds, new probes, profiles, captures or retries.",
+  "next_action": "The sim 1125 case matched exact worker and predecessor GPU-event identities inside ScreenGPU::Prepare. Inspect the exact external-image reader/producer and ordering contract before selecting any patch. The first detail-window draw is missing; preserve the full-window gate and raw results. Single-game budget consumed.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
