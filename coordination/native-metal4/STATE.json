@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 194,
+  "revision": 195,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -3438,6 +3438,22 @@
       "trace_drops": 0,
       "worker_moved": false,
       "utc": "2026-11-18T10:49:52.764356+00:00"
+    },
+    {
+      "event": "HQ3_ROUND68_EXISTING_QUEUE_EVIDENCE_REVIEW_COMPLETE",
+      "revision": 195,
+      "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "default_changed": false,
+      "utc": "2026-11-18T10:57:09.354Z"
     }
   ],
   "communication_test": {
@@ -3613,7 +3629,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review recorded queue and reclaim boundaries with existing GPU evidence; preserve default cap1 and defer worker movement",
+  "next_action": "Offline review complete. Preserve cap1 and await a separately authorized exact-event GPU clock diagnostic before testing a scheduling change.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
@@ -3650,5 +3666,6 @@
   "archived_rounds_after_r64": {
     "offline_tail_review": "coordination/native-metal4/rounds/cap2-frame-tail-review-20261118-65/SHARED-DONE.json",
     "completed_legacy_simmers": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-66/SHARED-DONE.json"
-  }
+  },
+  "queue_review_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/QUEUE-REVIEW.json"
 }
