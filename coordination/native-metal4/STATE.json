@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 209,
+  "revision": 210,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/READY.json",
   "result_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/DONE.json",
   "decision": "ONE_SENSORLOS_OFF_ON_PAIR_AFTER_EXACT_SCENE_AND_METAL_PARITY",
-  "execution_status": "GPU_PARITY_AND_BUILD_RESERVED",
+  "execution_status": "FIXED_OFF_ON_GAMES_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3687,6 +3687,24 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T12:25:33.573Z"
+    },
+    {
+      "event": "HQ3_ROUND76_METAL_PARITY_PASSED_AND_BINARY_SEALED",
+      "revision": 210,
+      "round_id": "sensorlos-exact-interior-fps-20261118-76",
+      "attempt_id": "sensorlos-exact-interior-off-on-01",
+      "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 0,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T12:30:49.085Z"
     }
   ],
   "communication_test": {
@@ -3785,21 +3803,23 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
+    "started": true,
     "games_started": false,
     "completed": false,
     "counts": {
-      "configure": 0,
-      "engine_build": 0,
+      "configure": 1,
+      "engine_build": 1,
       "games": 0,
-      "parity_helper_compile": 0,
-      "parity_helper_gpu_runs": 0,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
     "reserved_at_utc": "2026-11-18T12:25:33.573Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
+    "metal_pixel_parity_cases": 12065
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3865,7 +3885,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run one fixed Metal parity fixture using the sealed source. Build once and run the sealed OFF then ON pair if parity succeeds.",
+  "next_action": "Run one OFF and one ON game in the sealed order using the same signed binary.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
