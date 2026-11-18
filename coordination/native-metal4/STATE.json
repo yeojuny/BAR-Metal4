@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 151,
+  "revision": 152,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "fresh-upload-slot-contract-20261118-48",
+  "round_id": "screen-encode-range-fps-20261118-49",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
-  "request": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/READY.json",
-  "result_path": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/DONE.json",
-  "decision": "PASS_SLOT_BYTES_AND_FORCED_FALLBACK_SINGLE_SAMPLE_FIXTURE",
-  "execution_status": "HQ3_ROUND48_CLOSED_VERIFY_UPLOAD_SLOTS_FALLBACK",
+  "source_manifest_sha256": "30ed544bd95d923df50addf2857413261d77fc4014fd1baff9a92fbb38a773b0",
+  "request": "coordination/native-metal4/rounds/screen-encode-range-fps-20261118-49/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/screen-encode-range-fps-20261118-49/READY.json",
+  "result_path": null,
+  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
+  "execution_status": "HQ3_ROUND49_SCREEN_ENCODE_RANGE_OFF_ON_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -2855,6 +2855,13 @@
       "cleanup_complete": true,
       "words_compared": 9976,
       "utc": "2026-11-18T04:13:37.747Z"
+    },
+    {
+      "event": "HQ3_ROUND49_SCREEN_ENCODE_RANGE_OFF_ON_RESERVED",
+      "revision": 152,
+      "round_id": "screen-encode-range-fps-20261118-49",
+      "attempt_id": "encode-range-off-on-01",
+      "utc": "2026-11-18T05:13:04.023141+00:00"
     }
   ],
   "communication_test": {
@@ -2938,44 +2945,24 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "metal4-slot-readback-and-fallback-02-sdk-selector",
+    "attempt_id": "encode-range-off-on-01",
     "budget": {
-      "compile": 1,
-      "fixture_gpu_runs": 1,
-      "max_submissions": 1,
-      "games": 0,
-      "engine_builds": 0,
+      "configure_attempts_max": 1,
+      "engine_builds_max": 1,
+      "static_syntax_checks_max": 1,
+      "gpu_helpers": 0,
+      "games_max": 2,
+      "off_games_max": 1,
+      "on_games_max": 1,
       "captures": 0,
       "profiles": 0,
+      "screenshots": 0,
       "retries": 0
     },
-    "fixture_sha256": "3109389e6b32b24a28d1ee580725b741eeaadbdd8973e94173682df8dfd82e41",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T04:11:58.726Z",
-    "started": true,
-    "completed": true,
-    "amendment": {
-      "prior_attempt": "metal4-slot-readback-and-fallback-01",
-      "prior_commit": "7b4fe37930347b4d2d0dc68894008e39b45b4586",
-      "compile_exit": 1,
-      "gpu_attempts": 0,
-      "scope": "Fixture only: add the SDK-required compilerTaskOptions argument to pipeline construction."
-    },
-    "ended_at_utc": "2026-11-18T04:13:37.747Z",
-    "counts": {
-      "compile_attempts": 2,
-      "first_compile_failures": 1,
-      "gpu_invocations": 1,
-      "metal4_submissions": 1,
-      "games": 0,
-      "builds": 0,
-      "captures": 0,
-      "profiles": 0
-    },
-    "words_compared": 9976,
-    "cleanup_complete": true,
-    "artifact_commit": "11eab950bdd07e52d46159d818e118df58d0e2ec",
-    "default_changed": false
+    "reserved_at_utc": "2026-11-18T05:13:04.023141+00:00",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3041,7 +3028,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Prepare only further fresh upload paths with preserved ordering, limits, and resource ownership.",
+  "next_action": "One engine build, then the user-authorized same-binary EncodeRange OFF/ON pair with all counted frames retained.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
