@@ -1,0 +1,18 @@
+{
+  "round_id": "native-indexed-geometry-fps-20261117-40",
+  "attempt_id": "indexed-batch-on-off-01",
+  "status": "READY_SAME_PRIOR_BINARY_AND_MATCHED_SCENE",
+  "binary_sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+  "order": [
+    "INDEXED_ON",
+    "INDEXED_OFF"
+  ],
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "f1cf3c1d3c15ed1b6a675689510c780ce04d2e38ed68d44be71f1c16bc47292d",
+  "previous_artifact_commit": "c64667df9aa6596b73b0ad7783887f71a7f92f31",
+  "scene_checksums_verified": 13,
+  "runtime_data_files_verified": 142,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

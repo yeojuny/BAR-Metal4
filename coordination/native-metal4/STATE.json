@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 132,
+  "revision": 133,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "native-indexed-geometry-fps-20261117-39",
+  "round_id": "native-indexed-geometry-fps-20261117-40",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "f1cf3c1d3c15ed1b6a675689510c780ce04d2e38ed68d44be71f1c16bc47292d",
-  "request": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/READY.json",
-  "result_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/DONE.json",
-  "decision": "DONE_MATCHED_FIXED_INDEXED_GEOMETRY_OFF_ON_FPS_PAIR",
-  "execution_status": "HQ3_ROUND39_CLOSED_SAME_BINARY_FIXED_GEOMETRY_OFF_ON_FPS",
+  "request": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-40/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-40/READY.json",
+  "result_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-40/DONE.json",
+  "decision": "USER_APPROVED_ONE_REVERSE_ORDER_FPS_PAIR",
+  "execution_status": "HQ3_ROUND40_RESERVED_SAME_BINARY_ON_OFF",
   "blocked_reason": null,
   "history": [
     {
@@ -2168,6 +2168,31 @@
       "relative_percent": 0.6534174818939142,
       "cleanup_complete": true,
       "utc": "2026-11-17T23:52:32.960864+00:00"
+    },
+    {
+      "event": "HQ3_ROUND40_RESERVED_SAME_BINARY_ON_OFF",
+      "revision": 133,
+      "round_id": "native-indexed-geometry-fps-20261117-40",
+      "attempt_id": "indexed-batch-on-off-01",
+      "order": [
+        "INDEXED_ON",
+        "INDEXED_OFF"
+      ],
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "binary_sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+      "budget": {
+        "configure_attempts_max": 0,
+        "engine_builds_max": 0,
+        "helper_gpu_invocations_max": 0,
+        "games_max": 2,
+        "on_games_max": 1,
+        "off_games_max": 1,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "utc": "2026-11-18T00:05:24.608Z"
     }
   ],
   "communication_test": {
@@ -2239,7 +2264,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "FIXED_FIVE_INDEXED_GEOMETRY_PATHS_SAME_BINARY_OFF_ON",
+  "enabled_scope": "REVERSE_ORDER_SAME_ROUND39_BINARY_ON_OFF_FULL_FPS",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -2251,18 +2276,19 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "indexed-batch-off-on-01",
-    "started": true,
-    "completed": true,
+    "attempt_id": "indexed-batch-on-off-01",
+    "binary_sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+    "order": [
+      "INDEXED_ON",
+      "INDEXED_OFF"
+    ],
     "budget": {
-      "configure_attempts_max": 1,
-      "engine_builds_max": 1,
-      "helper_fixtures_max": 2,
-      "helper_compiles_per_fixture_max": 1,
-      "helper_gpu_invocations_per_fixture_max": 1,
+      "configure_attempts_max": 0,
+      "engine_builds_max": 0,
+      "helper_gpu_invocations_max": 0,
       "games_max": 2,
-      "off_games_max": 1,
       "on_games_max": 1,
+      "off_games_max": 1,
       "retries": 0,
       "captures": 0,
       "profiles": 0,
@@ -2274,53 +2300,9 @@
       "INDEXED_ON": "1"
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-17T23:43:34.932Z",
-    "bar": "PAUSED",
-    "ended_at_utc": "2026-11-17T23:52:32.960864+00:00",
-    "counts": {
-      "configure_attempts": 1,
-      "engine_builds": 1,
-      "helper_compiles": 2,
-      "helper_gpu_invocations": 2,
-      "games": 2,
-      "off_games": 1,
-      "on_games": 1,
-      "normal_exits": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "c64667df9aa6596b73b0ad7783887f71a7f92f31",
-    "diagnostic_outcome": "DONE_MATCHED_FIXED_INDEXED_GEOMETRY_OFF_ON_FPS_PAIR",
-    "binary_sha256": {
-      "INDEXED_OFF": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
-      "INDEXED_ON": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f"
-    },
-    "fps_by_arm": {
-      "INDEXED_OFF": 64.31607632102086,
-      "INDEXED_ON": 64.73632880737064
-    },
-    "relative_percent": 0.6534174818939142,
-    "game_path_activation": {
-      "INDEXED_OFF": {
-        "sensorlos_outline": "DRAW_ENCODED",
-        "sensorlos_r8_fan": "UNVERIFIED",
-        "radar_sonar_circle": "UNVERIFIED",
-        "healthbars": "UNVERIFIED",
-        "unit_stencil": "PREPARED"
-      },
-      "INDEXED_ON": {
-        "sensorlos_outline": "DRAW_ENCODED",
-        "sensorlos_r8_fan": "UNVERIFIED",
-        "radar_sonar_circle": "UNVERIFIED",
-        "healthbars": "UNVERIFIED",
-        "unit_stencil": "PREPARED"
-      }
-    },
-    "sensorlos_draw_in_counted_window_both": false,
-    "retry_authorized": false
+    "reserved_at_utc": "2026-11-18T00:05:24.608Z",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2386,7 +2368,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review the fixed geometry FPS pair, retained OFF frame-time outlier, and per-path evidence limits.",
+  "next_action": "Run one ON game and one OFF game. Retain every counted frame.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
