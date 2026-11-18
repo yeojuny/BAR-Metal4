@@ -1,0 +1,173 @@
+{
+  "status": "DONE",
+  "decision": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
+  "round_id": "combined-indexed-fps-repeat-20261118-42",
+  "attempt_id": "combined-off-on-repeat-01",
+  "order": [
+    "INDEXED_OFF",
+    "INDEXED_ON"
+  ],
+  "previous": {
+    "round_id": "combined-indexed-fps-20261118-41",
+    "artifact_commit": "ce6dc43f108abc9eb7464022236e070a4baf9803",
+    "result_path": "coordination/native-metal4/rounds/combined-indexed-fps-20261118-41/DONE.json",
+    "fps_by_arm": {
+      "INDEXED_OFF": 63.99040060963311,
+      "INDEXED_ON": 64.94350302435646
+    },
+    "relative_percent": 1.4894459257063453
+  },
+  "source_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "counts": {
+    "configure_attempts": 0,
+    "engine_builds": 0,
+    "helper_compiles": 0,
+    "helper_gpu_invocations": 0,
+    "games": 2,
+    "off_games": 1,
+    "on_games": 1,
+    "normal_exits": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "fps_by_arm": {
+    "INDEXED_OFF": 64.35408413753547,
+    "INDEXED_ON": 65.30489517657657
+  },
+  "relative_percent": 1.4774680609377588,
+  "difference_percentage_points": -0.011977864768586421,
+  "all_counted_frames_retained": true,
+  "workload_match": {
+    "INDEXED_OFF": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "INDEXED_ON": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    }
+  },
+  "frame_time": {
+    "INDEXED_OFF": {
+      "count": 2574,
+      "mean_ms": 15.539627536130537,
+      "median_ms": 16.000001,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.999999,
+      "frames_over_100_ms": [],
+      "all_interval_rows_kept": true,
+      "max_ms": 18.999999,
+      "slowest_1_percent_mean_ms": 18.03846053846154,
+      "one_percent_low_fps": 55.43710328649186
+    },
+    "INDEXED_ON": {
+      "count": 2611,
+      "mean_ms": 15.314056365760246,
+      "median_ms": 15.0,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.000001,
+      "frames_over_100_ms": [],
+      "all_interval_rows_kept": true,
+      "max_ms": 30.999999,
+      "slowest_1_percent_mean_ms": 18.29629574074074,
+      "one_percent_low_fps": 54.65587210493539
+    }
+  },
+  "game_path_activation": {
+    "INDEXED_OFF": {
+      "gamedecal_small": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      }
+    },
+    "INDEXED_ON": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    }
+  },
+  "cleanup_complete": true,
+  "artifactSHA256": {
+    "REPORT.md": "5464b3c5b79640266a28bfb5ffda6363b442c1ca912e11d27c100d32b88e0b57",
+    "FPS-EVIDENCE.json": "e993a8cf40ce08d1c80634b53eceb54b40343bd2775ecb4a9557291945ec726e",
+    "FPS-BINS.csv": "686288d6eadbea5c3488f845231e894049c1d1371acec0f539ad05299c710917",
+    "PATH-ACTIVATION.json": "34163fc230defde349a1a086172d66421430e8c73fff90b872b9bd988147c4be",
+    "STAGING-EVIDENCE.json": "7e55f2307bf630e36a0969c4acdc35418eb7b53b5e60966d99092778b4b6f603",
+    "DEPENDENCY-EVIDENCE.json": "32b0560253309d7b218bf8e7c390131e07350397202fa395b6680dc9c2e57ccd",
+    "PROTECTED-HASHES.json": "f0c83398a4e58f0c0f44aa3b4a8a48708e23606b3ad9227630b25ced1e9819b7",
+    "CLEANUP-EVIDENCE.json": "03891b2f1a8269b60430da5450457cacd1e5dbf7db4693f23d45dfa8d75e94a8",
+    "RUNNER-CLOSED.json": "86630d6341771251fb65268436b3af0693d33dffbad8d597a26fa1d903be6da3",
+    "INDEXED_OFF-FRAME-TIMES.csv": "bb21ace48f464da1ae1bef7ccb570f364ec9c871db0b061f5cd7ca9cd639f8bb",
+    "INDEXED_OFF-CHILD-MODE.json": "6cb28a9404cdc5de63d6a1fbfac0c4cd50501062ebd5206e29dbf927dd9cb116",
+    "INDEXED_OFF-CLEANUP.json": "f2b7fa5ebb5ee5688ce26a2cd5bafe2b4ad7e561ae84aad4e468361fa6db7441",
+    "INDEXED_ON-FRAME-TIMES.csv": "2c2ce5289f8b7ea36d0917729138c7f39b80a1933249c4fdf159b1ddcef10c59",
+    "INDEXED_ON-CHILD-MODE.json": "7446506c76c25d9485809e686022974ceee8ec8400e2d6b8b0822da99dd2fe60",
+    "INDEXED_ON-CLEANUP.json": "9d99147033c411e227b0c24b2ab7694e552bf9ed7b3d97c10198e7c882f70eea"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "prior_artifacts_verified": 3,
+  "prior_artifact_mismatches": [],
+  "candidate_source_mismatches": [],
+  "binary_sha256": {
+    "build": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+    "INDEXED_OFF": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+    "INDEXED_ON": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037"
+  }
+}
