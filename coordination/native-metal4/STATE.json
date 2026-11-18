@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 226,
+  "revision": 227,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/ground-decal-parity-witness-recovery-20261118-83/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-parity-witness-recovery-20261118-83/REQUEST.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-parity-witness-recovery-20261118-83/DONE.json",
-  "decision": null,
-  "execution_status": "GROUND_DECAL_FIXTURE_ONLY_RECOVERY_RESERVED",
+  "decision": "GPU_EQUIVALENCE_PASSED_KEEP_DEFAULT_OFF_PERFORMANCE_UNMEASURED",
+  "execution_status": "PASS_GROUND_DECAL_GPU_PARITY_WITNESS_RECOVERY",
   "blocked_reason": null,
   "history": [
     {
@@ -4019,6 +4019,26 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T14:16:06.103Z"
+    },
+    {
+      "event": "HQ3_ROUND83_GROUND_DECAL_GPU_PARITY_RECOVERY_DONE",
+      "revision": 227,
+      "round_id": "ground-decal-parity-witness-recovery-20261118-83",
+      "attempt_id": "ground-decal-aa0-parity-witness-02",
+      "indexed_cases": 72,
+      "float_cases": 45,
+      "counts": {
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:17:07.312Z"
     }
   ],
   "communication_test": {
@@ -4116,12 +4136,12 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "games_started": false,
     "counts": {
-      "parity_helper_compile": 0,
-      "parity_helper_gpu_runs": 0,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "configure": 0,
       "engine_build": 0,
       "games": 0,
@@ -4131,7 +4151,8 @@
       "new_instrumentation": 0
     },
     "reserved_at_utc": "2026-11-18T14:16:06.103Z",
-    "default_changed": false
+    "default_changed": false,
+    "finished_at_utc": "2026-11-18T14:17:07.312Z"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4197,7 +4218,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "One fixture-only GPU equivalence attempt with independent attachment and explosion witnesses. No benchmark or engine build.",
+  "next_action": "Witness recovery complete. Any FPS measurement requires its own fixed round; no builds or games were included here.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
