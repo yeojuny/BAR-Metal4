@@ -1,0 +1,9 @@
+{
+  "utc": "2026-11-18T16:22:47.014770+00:00",
+  "initial_status": "PRECOMPILATION_PATH_NORMALIZATION_ASSERTION",
+  "compile_started": 0,
+  "link_started": 0,
+  "previous_script_sha256": "1a2634a4a4346217bffd69a25ca873f3bee05060f86bbbc2e039a4f0f28967a3",
+  "active_script_sha256": "a0ef7b040f5591a870e5a9d3cf36c8b6a7f1440289a6b4a09c57a2b68b81ff91",
+  "corrected_plan_status": "PASS_EXACT_TWO_TU_COMMANDS_AND_SINGLE_LINK"
+}

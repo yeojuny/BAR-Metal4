@@ -1,0 +1,17 @@
+{
+  "status": "SIGNED_BUILD_COMPLETE",
+  "finished_utc": "2026-11-18T16:23:00.886635+00:00",
+  "binary_sha256": "46cddd8e2677952bfa7a1e46baa1e4f2dd8da852d5117e694ee9ad9669103681",
+  "original_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+  "archive_member_order_unchanged": true,
+  "translation_units": [
+    "Metal4WorldRenderer.mm",
+    "Metal4WorldParticles.mm"
+  ],
+  "configure": 0,
+  "builds": 1,
+  "links": 1,
+  "retries": 0,
+  "source_patch_sha256": "c94018fa154d04793771715c12850049541f9abe855f0d6d9dfa4531426e4041",
+  "matched_install_names": true
+}

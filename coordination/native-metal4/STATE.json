@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 236,
+  "revision": 237,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/RESULT.json",
   "decision": "PRESERVE_DEFAULT_CAP1_AND_R85_OFF; USE_EXACT_R86_CASE_TO_NARROW_SCREEN_PREPARATION",
-  "execution_status": "RESERVED_TWO_TU_DIAGNOSTIC_BUILD_AND_ONE_GAME",
+  "execution_status": "SEALED_SINGLE_GAME_DIAGNOSTIC",
   "blocked_reason": null,
   "history": [
     {
@@ -4219,6 +4219,16 @@
         "retries": 0,
         "new_trace_frameworks": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND87_DIAGNOSTIC_BUILT_AND_SEALED",
+      "revision": 237,
+      "round_id": "pending2-screen-first-use-image-20261118-87",
+      "utc": "2026-11-18T16:24:57Z",
+      "binary_sha256": "46cddd8e2677952bfa7a1e46baa1e4f2dd8da852d5117e694ee9ad9669103681",
+      "configure": 0,
+      "translation_units": 2,
+      "links": 1
     }
   ],
   "communication_test": {
@@ -4316,11 +4326,15 @@
       "retries": 0,
       "new_trace_frameworks": 0
     },
-    "started": false,
+    "started": true,
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-18T16:22:09Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "46cddd8e2677952bfa7a1e46baa1e4f2dd8da852d5117e694ee9ad9669103681",
+    "builds_completed": 1,
+    "game_budget": 1,
+    "sealed_utc": "2026-11-18T16:24:57Z"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4386,7 +4400,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 only. Compile exactly two isolated diagnostic translation units against preserved R71. Seal and run one game only after build, hash, input and ownership checks succeed.",
+  "next_action": "HQ3 only owns the sealed finished-build runtime attempt. No other native work during the window. No additional game, retry, capture, or profile.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
