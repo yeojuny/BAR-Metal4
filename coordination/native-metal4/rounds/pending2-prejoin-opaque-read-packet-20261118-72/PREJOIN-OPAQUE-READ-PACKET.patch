@@ -1,0 +1,110 @@
+--- a/rts/Rendering/Metal4/Metal4SceneBridge.cpp
++++ b/rts/Rendering/Metal4/Metal4SceneBridge.cpp
+@@ -146,6 +146,16 @@
+  static const int mode=[] {const char* p=std::getenv("BAR_NATIVE_CPU_READ_PACKET220");return p&&p[0]>='1'&&p[0]<='3'&&!p[1]?p[0]-'0':0;}();
+  return mode; // 0 original, 1 early synchronous, 2 worker, 3 worker + exact comparison.
+ }
++bool PrejoinOpaqueReadPacketRequested()
++{
++ static const bool enabled=[] {
++  const char* requested=std::getenv("BAR_NATIVE_PREJOIN_OPAQUE_READ_PACKET");
++  const char* cap2=std::getenv("BAR_NATIVE_INTERVENTION_TWO_INFLIGHT");
++  return requested&&std::string_view(requested)=="1"&&cap2&&std::string_view(cap2)=="1";
++ }();
++ return enabled;
++}
++
+ bool CPUReadPacketMeasure220(){
+  static const bool value=[] {const char* p=std::getenv("BAR_NATIVE_CPU_READ_PACKET220_FILE");return p&&p[0]=='/';}();
+  return value;
+@@ -224,6 +234,40 @@
+ 
+  }
+ };
++void AppendOpaqueCPUReadSources(CPUReadReceipt220& receipt)
++{
++ for(const auto& pass:receipt.models->passes){
++  receipt.job.sources.push_back(pass.lua);
++  if(pass.mrt)receipt.job.sources.push_back(pass.mrt->lua);
++ }
++}
++
++// Speculation owns only the current sealed opaque inputs. Build runs inline
++// using the calling thread's existing weak geometry cache. It never accepts a
++// scene receipt, launches a worker or invokes a source callback.
++std::unique_ptr<CPUReadReceipt220> TryPreparePrejoinOpaqueReads(const WorldFrame& frame) noexcept
++{
++ if(!frame.sourceDrawFrame||!frame.simulationFrame||!frame.opaqueModelFrame||
++    frame.opaqueModelFrame->sourceDrawFrame!=frame.sourceDrawFrame||!frame.unsupported.empty())return {};
++ const auto isCurrent=[draw=frame.sourceDrawFrame](const auto& source){
++  return !source||source->sourceDrawFrame==draw;
++ };
++ for(const auto& pass:frame.opaqueModelFrame->passes)
++  if(!isCurrent(pass.lua)||(pass.mrt&&!isCurrent(pass.mrt->lua)))return {};
++ try{
++  auto receipt=std::make_unique<CPUReadReceipt220>();
++  receipt->frame=frame.sourceDrawFrame;
++  receipt->models=frame.opaqueModelFrame;
++  AppendOpaqueCPUReadSources(*receipt);
++  NativeCUSCPUReadWorker220::Build(receipt->job);
++  if(receipt->job.error||!receipt->job.packet.Count())return {};
++  return receipt;
++ }catch(...){
++  // Leave the original DrawWorld priming and error boundary in charge.
++  return {};
++ }
++}
++
+ void TraceCPUReadPacket220(uint64_t frame,uint64_t simulationFrame,const CPUReadReceipt220* receipt,bool accepted,bool verified,int fallback,size_t count,size_t bytes,uint64_t consumeNs,uint64_t consumeBeginNs,uint64_t digest){
+  if(!CPUReadPacketMeasure220())return;
+  struct Output {
+@@ -1710,6 +1754,9 @@
+  // source CPU settled, immutable predecessors still owned by the GPU ticket.
+  const bool deferredParticles=BeginReadyPilotRequested()||PrepareReadyPilotRequested();
+  const bool earlyCPURead220=deferredParticles&&CPUReadPacketMode220()>=2;
++ const bool prejoinOpaqueReads=PrepareReadyPilotRequested()&&!BeginReadyPilotRequested()&&
++  CPUReadPacketMode220()==0&&PrejoinOpaqueReadPacketRequested();
++ bool surfaceUnchanged=false;
+  std::unique_ptr<CPUReadReceipt220> cpuReceipt220;
+  NativeCUSCPUReadWorker220::Join cpuJoin220; // Join before main-owned receipt destruction on every exit.
+  int cpuReadFallback220=session->cpuReadDisabled220?2:0;
+@@ -1721,7 +1768,7 @@
+   cpuReceipt220->ordinal=session->cpuReadJobs220+1;
+   auto& job=cpuReceipt220->job;job.measure=CPUReadPacketMeasure220();
+   if(earlyCPURead220)job.ExpectTail();
+-  for(const auto& pass:frame.opaqueModelFrame->passes){job.sources.push_back(pass.lua);if(pass.mrt)job.sources.push_back(pass.mrt->lua);}
++  AppendOpaqueCPUReadSources(*cpuReceipt220);
+   if(CPUReadPacketMode220()>=2&&!session->cpuReadWorker220){
+    const auto start=job.measure?NativeCUSCPUReadWorker220::Clock::now():NativeCUSCPUReadWorker220::Clock::time_point{};
+    session->cpuReadWorker220=std::make_unique<NativeCUSCPUReadWorker220>();
+@@ -1740,7 +1787,7 @@
+  // END EARLY_CPU_READ_LAUNCH220
+ 
+  const bool retainedPredecessorGPU=CaptureAtNativeSurfaceBoundary(deferredParticles,
+-  [&]{return session->surface.CaptureRefreshUnchanged();},
++  [&]{return surfaceUnchanged=session->surface.CaptureRefreshUnchanged();},
+   []{metal4::NativeCPUPhaseScope boundaryTrace(10,gs?gs->frameNum:0);if(globalRendering)boundaryTrace.Draw(globalRendering->drawFrame);RequireRetiredGPUWork(metal4::NativeCPUFinishReason::SurfaceBoundary);},[&]{session->surface.Refresh();},[&]{
+    {metal4::NativeCPUPhaseScope prefixTrace(8,gs?gs->frameNum:0);if(globalRendering)prefixTrace.Draw(globalRendering->drawFrame);
+    // Publish only at the actual capture boundary, after any changed-surface drain.
+@@ -1749,6 +1796,8 @@
+    session->preparedFrame=session->capture.Capture(NativeWaterScenePass::Main,session->actualShadowSourcePending,actualOpaqueModels,deferredParticles);
+    // No producer callback or GPU access: only retained opaque read rows.
+    if(earlyCPURead220)launchCPURead220(*session->preparedFrame);
++   if(prejoinOpaqueReads&&surfaceUnchanged)
++    cpuReceipt220=TryPreparePrejoinOpaqueReads(*session->preparedFrame);
+    } // Keep prefix timing separate from CPU settlement and particle tail.
+    if(deferredParticles){
+     // Particle writers require the prior CPU/source job to settle, not its GPU
+@@ -1790,7 +1839,11 @@
+  // Reset only after the old render job has settled. It may still retain its
+  // own immutable packet, which is never replaced by this new local receipt.
+  session->cpuReadReceipt220.reset();
+- if(!earlyCPURead220)launchCPURead220(frame);
++ if(prejoinOpaqueReads&&cpuReceipt220){
++  if(!retainedPredecessorGPU||!cpuReceipt220->Matches(frame))cpuReceipt220.reset();
++  else cpuReceipt220->ordinal=++session->cpuReadJobs220;
++ }
++ if(!earlyCPURead220&&!cpuReceipt220)launchCPURead220(frame);
+  session->cpuReadFallback220=cpuReadFallback220;
+  if(cpuReceipt220&&cpuReceipt220->job.measure)cpuReceipt220->mainBeginNs=NativeCUSCPUReadWorker220::Timestamp(NativeCUSCPUReadWorker220::Clock::now());
+ 	if (frame.opaqueModelFrame) {

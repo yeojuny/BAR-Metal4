@@ -1,0 +1,9 @@
+{
+  "parent_artifact": "26daf06778b692a18a41b3edcf92c1f77744bf26",
+  "candidate_relative_source": "rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+  "reference_source_sha256": "73f45a51f9a84051acf9008eb0fcf1e4964ee57d28cc6d73aba3232c0d5b40d0",
+  "candidate_source_sha256": "c8bd58c57e7e06cfa7b0a9a8be01a35c4c50eb67c80d614783e120b75b46de25",
+  "diagnostic_r71_source_sha256": "c15b1dadab4a7df93c949ed69054c379db3373765ef46e154a2fad1d7dfb8513",
+  "patch_sha256": "3205408ed2aa3153acc5368ecbd006553896492e52ad7f56e1bcb5677e2d40b8",
+  "cpu_validation_file_sha256": "007d32df2e8c3118a5f0217455612b958a5816edd1c277e8206ef82282816f2c"
+}
