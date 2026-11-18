@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 145,
+  "revision": 146,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/READY.json",
   "result_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/DONE.json",
-  "decision": "USER_AUTHORIZED_SINGLE_GROUND_FLASH_COALESCING_TEST",
-  "execution_status": "HQ3_ROUND46_RESERVED_GROUND_FLASH_DEPTH_RUNS",
+  "decision": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
+  "execution_status": "HQ3_ROUND46_CLOSED_GROUND_FLASH_COALESCING",
   "blocked_reason": null,
   "history": [
     {
@@ -2676,6 +2676,45 @@
       "manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-18T01:49:27.301Z"
+    },
+    {
+      "event": "HQ3_ROUND46_CLOSED_GROUND_FLASH_COALESCING",
+      "revision": 146,
+      "round_id": "groundflash-depth-run-fps-20261118-46",
+      "attempt_id": "groundflash-runs-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/DONE.json",
+      "decision": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
+      "utc": "2026-11-18T01:58:48.721Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T01:58:48.721Z",
+      "counts": {
+        "configures": 1,
+        "builds": 1,
+        "existing_cpu_fixture_invocations": 1,
+        "gpu_helpers": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "aae3bdc5e06276e800deb2b2b4005a1a40b74caa",
+      "diagnostic_outcome": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
+      "binary_sha256": "399c40bce292fae17b781c2846e5616391a0f7139e7b9158efecfb86811a0d79",
+      "fps_by_arm": {
+        "FLASH_OFF": 65.03536887762581,
+        "FLASH_ON": 64.98150077695486
+      },
+      "relative_percent": -0.08282893078120912,
+      "ground_flash_coalesced_before_window": true,
+      "all_counted_frames_retained": true
     }
   ],
   "communication_test": {
@@ -2785,8 +2824,34 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T01:49:27.301Z",
-    "started": false,
-    "completed": false
+    "started": true,
+    "completed": true,
+    "ended_at_utc": "2026-11-18T01:58:48.721Z",
+    "counts": {
+      "configures": 1,
+      "builds": 1,
+      "existing_cpu_fixture_invocations": 1,
+      "gpu_helpers": 0,
+      "games": 2,
+      "off_games": 1,
+      "on_games": 1,
+      "normal_exits": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "aae3bdc5e06276e800deb2b2b4005a1a40b74caa",
+    "diagnostic_outcome": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
+    "binary_sha256": "399c40bce292fae17b781c2846e5616391a0f7139e7b9158efecfb86811a0d79",
+    "fps_by_arm": {
+      "FLASH_OFF": 65.03536887762581,
+      "FLASH_ON": 64.98150077695486
+    },
+    "relative_percent": -0.08282893078120912,
+    "ground_flash_coalesced_before_window": true,
+    "all_counted_frames_retained": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2852,7 +2917,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the existing bounded particle contract fixture, build once and compare one GroundFlash OFF game to one ON game.",
+  "next_action": "Keep GroundFlash and SensorLOS alternatives out of the independently flagged fresh upload bundle.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
