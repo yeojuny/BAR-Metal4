@@ -1,27 +1,27 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 268,
+  "revision": 269,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-g01-cache-20261118-99",
+  "round_id": "lua-game-decal-early-vertex-20261118-100",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "ground-decal-g01-cache-20261118-99",
-    "switch": "BAR_NATIVE_GROUND_DECAL_CACHE_G01_INDEX",
+    "round_id": "lua-game-decal-early-vertex-20261118-100",
+    "switch": "BAR_NATIVE_GAME_DECAL_DEAD_VERTEX",
     "order": [
-      "R99_OFF",
-      "R99_ON"
+      "R100_OFF",
+      "R100_ON"
     ],
     "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
-    "patch_sha256": "9b66181180932a71a9238cd20e44f85f774fe2bb02f52fb70a48753dad75f952",
-    "original_patch_sha256": "9b66181180932a71a9238cd20e44f85f774fe2bb02f52fb70a48753dad75f952",
+    "patch_sha256": "39bd9afe60df6b92389e9909d93bc044d5cc0402a12262b2600a62766fde4158",
+    "original_patch_sha256": "0aa02c855ef478ce8f598b5420260a3f800100bd3a274d57d82de5bb012ac85e",
     "budget": {
       "translation_units": 1,
       "engine_builds": 1,
@@ -33,10 +33,10 @@
       "retries": 0
     }
   },
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-g01-cache-20261118-99/READY.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-g01-cache-20261118-99/RESULT.json",
-  "decision": "KEEP_G01_CACHE_OFF_NEUTRAL_MEAN",
-  "execution_status": "MATCHED_PAIR",
+  "ready_path": "coordination/native-metal4/rounds/lua-game-decal-early-vertex-20261118-100/READY.json",
+  "result_path": "coordination/native-metal4/rounds/lua-game-decal-early-vertex-20261118-100/RESULT.json",
+  "decision": null,
+  "execution_status": "PARITY_ONLY_BEFORE_SEAL",
   "blocked_reason": null,
   "history": [
     {
@@ -4527,6 +4527,12 @@
       "status": "DONE",
       "round_id": "ground-decal-g01-cache-20261118-99",
       "action": "closed"
+    },
+    {
+      "revision": 269,
+      "status": "RUNNING",
+      "round_id": "lua-game-decal-early-vertex-20261118-100",
+      "action": "build"
     }
   ],
   "communication_test": {
@@ -4610,7 +4616,7 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-g01-cache-20261118-99-01",
+    "attempt_id": "lua-game-decal-early-vertex-20261118-100-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
@@ -4624,22 +4630,10 @@
       "retries": 0
     },
     "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T19:48:54.730052+00:00",
-    "default_changed": false,
-    "binary_sha256": "9a44b1b3c03f5b7f3e0e1878c38f5af646058ab75d46005146e01e056ad7d71f",
-    "game_seal_utc": "2026-11-18T19:50:49.314505+00:00",
-    "finished_at_utc": "2026-11-18T19:54:11.271706+00:00",
-    "counts": {
-      "games": 2,
-      "engine_builds": 1,
-      "fixture_runs": 1,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T19:54:17.011406+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",

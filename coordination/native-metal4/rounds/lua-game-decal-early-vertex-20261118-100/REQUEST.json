@@ -1,0 +1,21 @@
+{
+  "round_id": "lua-game-decal-early-vertex-20261118-100",
+  "switch": "BAR_NATIVE_GAME_DECAL_DEAD_VERTEX",
+  "order": [
+    "R100_OFF",
+    "R100_ON"
+  ],
+  "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "patch_sha256": "39bd9afe60df6b92389e9909d93bc044d5cc0402a12262b2600a62766fde4158",
+  "original_patch_sha256": "0aa02c855ef478ce8f598b5420260a3f800100bd3a274d57d82de5bb012ac85e",
+  "budget": {
+    "translation_units": 1,
+    "engine_builds": 1,
+    "fixture_compiles": 1,
+    "fixture_runs": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}
