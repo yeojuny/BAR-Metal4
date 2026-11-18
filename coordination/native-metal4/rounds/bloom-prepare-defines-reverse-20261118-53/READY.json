@@ -1,0 +1,14 @@
+{
+  "round_id": "bloom-prepare-defines-reverse-20261118-53",
+  "attempt_id": "bloom-prepare-defines-on-off-02",
+  "status": "READY_IDENTICAL_BINARY_REVERSE_PAIR",
+  "source_manifest_sha256": "d1146946b94f9655b26f96b95bc04887358e073387839446213ac3440153b250",
+  "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+  "order": [
+    "DEFINES_ON",
+    "DEFINES_OFF"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}
