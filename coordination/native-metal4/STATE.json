@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 212,
+  "revision": 213,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/sensorlos-exact-interior-reverse-20261118-77/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-reverse-20261118-77/READY.json",
   "result_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-reverse-20261118-77/DONE.json",
-  "decision": "ONE_REVERSE_PAIR_REUSING_R76_SIGNED_BINARY",
-  "execution_status": "FIXED_ON_OFF_GAMES_RESERVED",
+  "decision": "REPRODUCED_WHOLE_GAME_FPS_GAIN_WITH_SAMPLED_ACTIVATION_LIMIT",
+  "execution_status": "COMPLETE_SENSORLOS_REVERSE_ON_OFF_REUSED_BINARY",
   "blocked_reason": null,
   "history": [
     {
@@ -3745,6 +3745,27 @@
       },
       "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
       "utc": "2026-11-18T12:38:13.558Z"
+    },
+    {
+      "event": "HQ3_ROUND77_SENSORLOS_REVERSE_PAIR_DONE",
+      "revision": 213,
+      "round_id": "sensorlos-exact-interior-reverse-20261118-77",
+      "attempt_id": "sensorlos-exact-interior-on-off-01",
+      "average_fps_change_percent": 16.97499641018656,
+      "forward_average_fps_change_percent": 17.469130126260012,
+      "current_counted_witness_both": false,
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T12:42:47.177Z"
     }
   ],
   "communication_test": {
@@ -3843,23 +3864,25 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
-    "games_started": false,
-    "completed": false,
+    "started": true,
+    "games_started": true,
+    "completed": true,
     "counts": {
       "configure": 0,
       "engine_build": 0,
-      "games": 0,
       "parity_helper_compile": 0,
       "parity_helper_gpu_runs": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
-      "retries": 0
+      "retries": 0,
+      "new_instrumentation": 0
     },
     "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
     "reused_binary_round": "sensorlos-exact-interior-fps-20261118-76",
     "reserved_at_utc": "2026-11-18T12:38:13.558Z",
-    "default_changed": false
+    "default_changed": false,
+    "finished_at_utc": "2026-11-18T12:41:03.934078+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3925,7 +3948,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the fixed ON then OFF pair once each using the R76 binary.",
+  "next_action": "Both fixed orders are closed. The whole-game gain reproduced. Default settings are preserved and counted-window fragment performance remains unmeasured.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

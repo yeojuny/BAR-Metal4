@@ -1,0 +1,40 @@
+{
+  "status": "PASS",
+  "verified_r76_and_r77_arms": 4,
+  "matching_scene_inputs": 13,
+  "matching_library_paths": 22,
+  "matched_simulation_bins": 40,
+  "simulation_units_camera_speed_bins_sha256": "8374ae61643eb78159187e6b6be3b4295e0b9108f348ca98d85d4c4869bb17c6",
+  "benchmark_event_signature_sha256": "cb247aa21ebe2cfa8ebef0e7b4de707020b260a5a194b991c4711e9c9d29611c",
+  "archive_checksums_match": true,
+  "pathfinder_checksum_match": true,
+  "game_seed": 154658555,
+  "benchmark_seed": 7654321,
+  "official_units_created": 600,
+  "official_units_destroyed": 433,
+  "archived_event_rows": [
+    [
+      "BattleVisibility",
+      "frame=240 spectating=true fullview=true fullselect=false visible_units=2"
+    ],
+    [
+      "BattleBenchmark",
+      "command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400"
+    ],
+    [
+      "BattleVisibility",
+      "frame=540 spectating=true fullview=true fullselect=false visible_units=168"
+    ],
+    [
+      "BattleBenchmark",
+      "stop_after_count=1 frame=1740"
+    ]
+  ],
+  "native_single_sample_and_mrt_verified": true,
+  "time_bins_faster_on": 40,
+  "time_bins_compared": 40,
+  "minimum_bin_on_minus_off_fps": 9.160392761999994,
+  "maximum_bin_on_minus_off_fps": 14.112899779999992,
+  "only_actual_child_delta": "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR",
+  "per_tick_simulation_checksum_recorded": false
+}
