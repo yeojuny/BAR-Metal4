@@ -1,0 +1,142 @@
+{
+  "status": "COMPLETE_CAPTURE_ROI_PREPARE_WORLD_OFF_MAIN_CPU",
+  "round_id": "pending2-capture-roi-cpu-20261118-71",
+  "attempt_id": "pending2-capture-roi-cpu-wall-01",
+  "parent": "pending2-ticket-timeline-20261118-69",
+  "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+  "patch_sha256": "7802d17419a671c83793a0f20b95a25a1058c668a046428b3853b6fc18654cd5",
+  "scene_inputs_verified": 13,
+  "diagnostic_only": true,
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "gpu_helper_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "matched_rois": [
+    {
+      "bounds": [
+        1005,
+        1019
+      ],
+      "sim_ticks": 15,
+      "n": 33,
+      "prep_median_wall_ms": 2.646042,
+      "prep_median_thread_ms": 1.26525,
+      "repeated": [
+        {
+          "draw": 3344,
+          "simulation": 1012,
+          "interval_ns": 21000000,
+          "capture": {
+            "wall_ns": 12053000,
+            "thread_cpu_ns": 3517250,
+            "wall_minus_thread_ns": 8535750,
+            "thread_time_order_inconsistent": false
+          },
+          "prepare_world": {
+            "wall_ns": 10057709,
+            "thread_cpu_ns": 1522584,
+            "wall_minus_thread_ns": 8535125,
+            "thread_time_order_inconsistent": false
+          }
+        }
+      ]
+    },
+    {
+      "bounds": [
+        1118,
+        1132
+      ],
+      "sim_ticks": 15,
+      "n": 31,
+      "prep_median_wall_ms": 3.109917,
+      "prep_median_thread_ms": 1.320542,
+      "repeated": [
+        {
+          "draw": 3590,
+          "simulation": 1125,
+          "interval_ns": 28999999,
+          "capture": {
+            "wall_ns": 16446792,
+            "thread_cpu_ns": 3510208,
+            "wall_minus_thread_ns": 12936584,
+            "thread_time_order_inconsistent": false
+          },
+          "prepare_world": {
+            "wall_ns": 14323792,
+            "thread_cpu_ns": 1390458,
+            "wall_minus_thread_ns": 12933334,
+            "thread_time_order_inconsistent": false
+          }
+        }
+      ]
+    },
+    {
+      "bounds": [
+        1410,
+        1424
+      ],
+      "sim_ticks": 15,
+      "n": 31,
+      "prep_median_wall_ms": 2.251834,
+      "prep_median_thread_ms": 1.280042,
+      "repeated": [
+        {
+          "draw": 4206,
+          "simulation": 1417,
+          "interval_ns": 27000001,
+          "capture": {
+            "wall_ns": 17745833,
+            "thread_cpu_ns": 4080458,
+            "wall_minus_thread_ns": 13665375,
+            "thread_time_order_inconsistent": false
+          },
+          "prepare_world": {
+            "wall_ns": 15370708,
+            "thread_cpu_ns": 1705625,
+            "wall_minus_thread_ns": 13665083,
+            "thread_time_order_inconsistent": false
+          }
+        }
+      ]
+    }
+  ],
+  "roi_draws": 95,
+  "all_draw_intervals": 2645,
+  "raw_trace_sha256": "6a76a4863f5cb0b5a0578f145a60d1f6de89814a57133ab32a678ad419f2cd20",
+  "raw_frame_sha256": "ce4bcb68f2c2e81af07a8d05d35d465f59f0863cdbeb3c0a4b1bfea98bc582ce",
+  "raw_trace_drops": 0,
+  "cpu_wall_bracket_width": {
+    "n": 1235,
+    "mean_ms": 0.00041682995951417,
+    "p50_ms": 0.000292,
+    "p95_ms": 0.000833,
+    "max_ms": 0.0075
+  },
+  "longest_raw_interval": {
+    "draw": 3268,
+    "interval_ns": 57000000,
+    "estimated_end_s": 14.622000507000037,
+    "roi_recorded": false,
+    "attribution": "Outside the three fixed ROIs."
+  },
+  "actual_two_pending": 2644,
+  "joined": 2645,
+  "off_main_cpu_time_limit": "Per-phase wall minus main thread CPU includes blocking and descheduling. Exact inner wait and worker CPU time were not measured.",
+  "candidate": "Prove an immutable current-frame source packet can be prepared before the previous renderer job joins, while preserving production calls, receipts, FIFO, and failure fallback.",
+  "normal_exit": true,
+  "cleanup_complete": true,
+  "owned_group_gone": true,
+  "temporary_display_assertion_released": true,
+  "display_locked_and_asleep": true,
+  "outliers_removed": 0,
+  "default_cap": 1,
+  "default_changed": false,
+  "exit_utc": "2026-11-18T11:32:25.044824+00:00",
+  "local_report": "REPORT.md",
+  "no_further_diagnostic_reserved": true
+}

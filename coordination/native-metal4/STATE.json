@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 201,
+  "revision": 202,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-capture-roi-cpu-20261118-71/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-capture-roi-cpu-20261118-71/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-capture-roi-cpu-20261118-71/DONE.json",
-  "decision": "ONE_BOUNDED_CAPTURE_CPU_DIAGNOSTIC",
-  "execution_status": "ONE_DIAGNOSTIC_GAME_RESERVED",
+  "decision": "PREPARE_WORLD_OFF_MAIN_CPU_TIME_ON_ALL_THREE_REPEATS",
+  "execution_status": "HQ3_ROUND71_CAPTURE_ROI_DIAGNOSTIC_COMPLETE",
   "blocked_reason": null,
   "history": [
     {
@@ -3545,6 +3545,28 @@
       "input_hashes": 13,
       "games": 0,
       "utc": "2026-11-18T11:30:53.092Z"
+    },
+    {
+      "event": "HQ3_ROUND71_BOUNDED_CAPTURE_CPU_ROIS_COMPLETE",
+      "revision": 202,
+      "round_id": "pending2-capture-roi-cpu-20261118-71",
+      "attempt_id": "pending2-capture-roi-cpu-wall-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "gpu_helper_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "roi_draws": 95,
+      "coincident_prepare_world_repeats": 3,
+      "default_changed": false,
+      "utc": "2026-11-18T11:32:25.044824+00:00"
     }
   ],
   "communication_test": {
@@ -3640,18 +3662,21 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
     "started": true,
-    "completed": false,
+    "completed": true,
     "reserved_at_utc": "2026-11-18T11:26:22.685Z",
     "default_changed": false,
     "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
     "counts": {
       "configure": 1,
       "engine_build": 1,
-      "games": 0,
+      "games": 1,
+      "gpu_helper_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    }
+    },
+    "ended_at_utc": "2026-11-18T11:32:25.044824+00:00",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3717,7 +3742,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the sealed fixed three-ROI cap2 diagnostic once; close with observed counts and phase attribution.",
+  "next_action": "Use the ownership audit to assess a bounded immutable pre-join capture packet. No further measurement is reserved.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
