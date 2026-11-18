@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 137,
+  "revision": 138,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/READY.json",
   "result_path": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/DONE.json",
-  "decision": "USER_APPROVED_REPEAT_ONE_MATCHED_COMBINED_PAIR",
-  "execution_status": "HQ3_ROUND42_RESERVED_IDENTICAL_COMBINED_BINARY",
+  "decision": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
+  "execution_status": "HQ3_ROUND42_CLOSED_SAME_BINARY_COMBINED_REPEAT",
   "blocked_reason": null,
   "history": [
     {
@@ -2400,6 +2400,49 @@
       "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-18T00:38:50.817Z"
+    },
+    {
+      "event": "HQ3_ROUND42_CLOSED_SAME_BINARY_COMBINED_REPEAT",
+      "revision": 138,
+      "round_id": "combined-indexed-fps-repeat-20261118-42",
+      "attempt_id": "combined-off-on-repeat-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/DONE.json",
+      "decision": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
+      "order": [
+        "INDEXED_OFF",
+        "INDEXED_ON"
+      ],
+      "utc": "2026-11-18T00:43:32.017Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T00:43:32.017Z",
+      "counts": {
+        "configure_attempts": 0,
+        "engine_builds": 0,
+        "helper_compiles": 0,
+        "helper_gpu_invocations": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "b997b81a1802b6f40d00324a7526d880464fd4ac",
+      "diagnostic_outcome": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
+      "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+      "fps_by_arm": {
+        "INDEXED_OFF": 64.35408413753547,
+        "INDEXED_ON": 65.30489517657657
+      },
+      "relative_percent": 1.4774680609377588,
+      "all_counted_frames_retained": true,
+      "previous_relative_percent": 1.4894459257063453
     }
   ],
   "communication_test": {
@@ -2514,8 +2557,33 @@
     "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T00:38:50.817Z",
-    "started": false,
-    "completed": false
+    "started": true,
+    "completed": true,
+    "ended_at_utc": "2026-11-18T00:43:32.017Z",
+    "counts": {
+      "configure_attempts": 0,
+      "engine_builds": 0,
+      "helper_compiles": 0,
+      "helper_gpu_invocations": 0,
+      "games": 2,
+      "off_games": 1,
+      "on_games": 1,
+      "normal_exits": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "b997b81a1802b6f40d00324a7526d880464fd4ac",
+    "diagnostic_outcome": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
+    "fps_by_arm": {
+      "INDEXED_OFF": 64.35408413753547,
+      "INDEXED_ON": 65.30489517657657
+    },
+    "relative_percent": 1.4774680609377588,
+    "all_counted_frames_retained": true,
+    "previous_relative_percent": 1.4894459257063453
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2581,7 +2649,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Repeat one combined OFF game and one combined ON game with the pinned round 41 binary.",
+  "next_action": "Review the repeated combined +1.48% FPS and frame-time tail against previous +1.49%.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
