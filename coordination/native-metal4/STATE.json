@@ -1,42 +1,42 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 262,
+  "revision": 263,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "particle-single-cell-sample-20261118-97",
+  "round_id": "ground-decal-cold-glow-20261118-98",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "particle-single-cell-sample-20261118-97",
-    "scope": "One independent single-cell particle texture-sample reuse comparison on the R88 parent. Existing indexed draw validation selects only whole eligible AA0 world particle draws.",
-    "switch": "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL",
+    "round_id": "ground-decal-cold-glow-20261118-98",
+    "switch": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
     "order": [
-      "R97_OFF",
-      "R97_ON"
+      "R98_OFF",
+      "R98_ON"
     ],
     "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
-    "patch_sha256": "965dcf10f7e6a7f0d235ab59eab0fa0a899526c211770d05c77a749f9046aa1c",
+    "patch_sha256": "1ca8d06ef4965a6e5f82dcf1b4143d1a42edc3de40ab9939607ec0ef49d04452",
+    "original_patch_sha256": "795b01e5af4ffb505eed5b6276a2f31d3d2373cc8063c5100f19607d1a2addb1",
     "budget": {
       "translation_units": 1,
       "engine_builds": 1,
       "fixture_compiles": 1,
       "fixture_runs": 1,
       "games": 2,
-      "profiles": 0,
       "captures": 0,
-      "game_retries": 0
+      "profiles": 0,
+      "retries": 0
     }
   },
-  "ready_path": "coordination/native-metal4/rounds/particle-single-cell-sample-20261118-97/READY.json",
-  "result_path": "coordination/native-metal4/rounds/particle-single-cell-sample-20261118-97/RESULT.json",
-  "decision": "PRESERVE_PARTICLE_OPT_IN_AND_DEFAULTS_SINGLE_PAIR",
-  "execution_status": "MATCHED_PAIR_COMPLETE_OPT_IN",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-cold-glow-20261118-98/READY.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-cold-glow-20261118-98/RESULT.json",
+  "decision": null,
+  "execution_status": "PARITY_ONLY_BEFORE_SEAL",
   "blocked_reason": null,
   "history": [
     {
@@ -4491,6 +4491,12 @@
       "status": "DONE",
       "round_id": "particle-single-cell-sample-20261118-97",
       "action": "One independently matched particle pair finished. Existing default OFF, cap1 and distribution preserved."
+    },
+    {
+      "revision": 263,
+      "status": "RUNNING",
+      "round_id": "ground-decal-cold-glow-20261118-98",
+      "action": "build"
     }
   ],
   "communication_test": {
@@ -4574,7 +4580,7 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "particle-single-cell-seths-AA0-cap2-01",
+    "attempt_id": "ground-decal-cold-glow-20261118-98-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
@@ -4583,27 +4589,15 @@
       "fixture_compiles": 1,
       "fixture_runs": 1,
       "games": 2,
-      "profiles": 0,
       "captures": 0,
-      "game_retries": 0
+      "profiles": 0,
+      "retries": 0
     },
     "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T18:57:27.295131+00:00",
-    "default_changed": false,
-    "binary_sha256": "bb058d639fbbac8537c25e38fc44a9bc1a6ab1f483984d4200903ee1b59deb77",
-    "game_seal_utc": "2026-11-18T18:58:36.793086+00:00",
-    "finished_at_utc": "2026-11-18T19:02:21.847572+00:00",
-    "counts": {
-      "games": 2,
-      "engine_builds": 1,
-      "fixture_runs": 1,
-      "captures": 0,
-      "profiles": 0,
-      "game_retries": 0
-    },
-    "cleanup_complete": true
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T19:42:18.517573+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
