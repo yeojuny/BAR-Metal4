@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 157,
+  "revision": 158,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/READY.json",
   "result_path": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/DONE.json",
-  "decision": "DONE",
-  "execution_status": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_BLOOM_OFF_ON",
+  "decision": "BLOOM_IDENTITY_RGBA_ACCEPTED_BY_USER",
+  "execution_status": "HQ3_USER_ACCEPTED_BLOOM_RGBA_R03_BENCHMARK",
   "blocked_reason": null,
   "history": [
     {
@@ -2948,6 +2948,16 @@
       },
       "cleanup_complete": true,
       "utc": "2026-11-18T06:08:08.041048+00:00"
+    },
+    {
+      "event": "HQ3_USER_ACCEPTED_BLOOM_RGBA_R03_BENCHMARK",
+      "revision": 158,
+      "round_id": "bloom-downsample-identity-reverse-20261118-51",
+      "utc": "2026-11-18T06:31:50.957295+00:00",
+      "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+      "result": "User-directed local benchmark adoption",
+      "artifact_commit": "116f5a41a1aba63f4b0a9ca3485990d4323993b5",
+      "previous_execution_label_note": "The last execution_status label inherited the Round 49 prefix. The result and linked artifact are for Round 51 reversed Bloom."
     }
   ],
   "communication_test": {
@@ -3132,7 +3142,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review the single matched BloomDownsample pair and its exact path witness.",
+  "next_action": "Prepare per-frame Bloom shader define text reuse with identity RGBA fixed on.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
@@ -3153,5 +3163,12 @@
     "user_wake_operations": 0,
     "prior_round29_execution_preserved": true,
     "utc": "2026-11-17 20:45:24 UTC"
+  },
+  "accepted_benchmark": {
+    "path": "coordination/native-metal4/ACCEPTED-R03-BENCHMARK.json",
+    "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+    "feature_flag": "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA",
+    "feature_value": "1",
+    "scope": "r03-local-paced-battle"
   }
 }
