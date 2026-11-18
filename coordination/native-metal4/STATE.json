@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 235,
+  "revision": 236,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-prepareworld-join-window-20261118-86",
+  "round_id": "pending2-screen-first-use-image-20261118-87",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/RESULT.json",
+  "request": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/RESULT.json",
   "decision": "PRESERVE_DEFAULT_CAP1_AND_R85_OFF; USE_EXACT_R86_CASE_TO_NARROW_SCREEN_PREPARATION",
-  "execution_status": "CASE_MATCHED_WITH_WINDOW_EDGE_MISSING",
+  "execution_status": "RESERVED_TWO_TU_DIAGNOSTIC_BUILD_AND_ONE_GAME",
   "blocked_reason": null,
   "history": [
     {
@@ -4202,6 +4202,23 @@
       "task_join_ms": 13.213,
       "event_overlap_ms": 10.348333,
       "utc": "2026-11-18T16:03:41Z"
+    },
+    {
+      "event": "HQ3_ROUND87_BOUNDED_FIRST_USE_IDENTITY_RESERVED",
+      "revision": 236,
+      "round_id": "pending2-screen-first-use-image-20261118-87",
+      "utc": "2026-11-18T16:22:09Z",
+      "budget": {
+        "configure": 0,
+        "engine_build": 1,
+        "translation_units": 2,
+        "link": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_trace_frameworks": 0
+      }
     }
   ],
   "communication_test": {
@@ -4273,7 +4290,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_EXISTING_TRACE_ONLY_CAP2_PREPAREWORLD_DIAGNOSTIC",
+  "enabled_scope": "ONE_BOUNDED_SCREEN_FIRST_USE_IDENTITY_DIAGNOSTIC",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -4285,35 +4302,25 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "prepareworld-capture-prefix-existing-trace-01",
+    "attempt_id": "first-use-exact-image-producer-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
       "configure": 0,
-      "engine_build": 0,
+      "engine_build": 1,
+      "translation_units": 2,
+      "link": 1,
       "games": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
-      "new_instrumentation": 0
+      "new_trace_frameworks": 0
     },
-    "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
-    "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T15:57:19Z",
-    "default_changed": false,
-    "counts": {
-      "configure": 0,
-      "engine_build": 0,
-      "games": 1,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0,
-      "new_instrumentation": 0
-    },
-    "finished_at_utc": "2026-11-18T16:03:41Z",
-    "cleanup_complete": true
+    "started": false,
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T16:22:09Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4379,7 +4386,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "The sim 1125 case matched exact worker and predecessor GPU-event identities inside ScreenGPU::Prepare. Inspect the exact external-image reader/producer and ordering contract before selecting any patch. The first detail-window draw is missing; preserve the full-window gate and raw results. Single-game budget consumed.",
+  "next_action": "HQ3 only. Compile exactly two isolated diagnostic translation units against preserved R71. Seal and run one game only after build, hash, input and ownership checks succeed.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
