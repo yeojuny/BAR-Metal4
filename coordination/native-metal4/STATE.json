@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 182,
+  "revision": 183,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-classified-prior-reads-20261118-62",
+  "round_id": "pending2-classified-prior-reads-fps-20261118-63",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/pending2-classified-prior-reads-20261118-62/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-20261118-62/CANDIDATE-MANIFEST.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-20261118-62/DONE.json",
-  "decision": "SOURCE_VERIFIED_ALL_PRIOR_READS_CLASSIFIED",
-  "execution_status": "HQ3_ROUND62_ALL_PRIOR_READ_FAMILIES_CLASSIFIED_SOURCE_VERIFIED",
+  "request": "coordination/native-metal4/rounds/pending2-classified-prior-reads-fps-20261118-63/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-fps-20261118-63/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-fps-20261118-63/DONE.json",
+  "decision": null,
+  "execution_status": "HQ3_ROUND63_CLASSIFIED_PRIOR_READS_PAIR_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3273,6 +3273,23 @@
       "utc": "2026-11-18T09:41:52.046288+00:00",
       "games": 0,
       "gpu_runs": 0
+    },
+    {
+      "event": "HQ3_ROUND63_CLASSIFIED_PRIOR_READS_PAIR_RESERVED",
+      "revision": 183,
+      "round_id": "pending2-classified-prior-reads-fps-20261118-63",
+      "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
+      "source_artifact": "26daf06778b692a18a41b3edcf92c1f77744bf26",
+      "utc": "2026-11-18T09:43:39.957326+00:00",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -3356,34 +3373,28 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-classified-prior-reads-source-01",
+    "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
     "budget": {
-      "targeted_syntax_checks": 8,
-      "bounded_cpu_contracts": 3,
-      "engine_builds": 0,
-      "games": 0,
-      "gpu_runs": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "games": 2,
+      "max_per_arm": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T09:41:52.046288+00:00",
+    "started": false,
+    "completed": false,
+    "reserved_at_utc": "2026-11-18T09:43:39.957326+00:00",
     "counts": {
-      "targeted_syntax_checks": 8,
-      "cpu_contracts": 3,
-      "engine_builds": 0,
+      "configure": 0,
+      "engine_build": 0,
       "games": 0,
-      "gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "26daf06778b692a18a41b3edcf92c1f77744bf26",
-    "default_changed": false
+    }
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3449,7 +3460,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Wait for a separately authorized matched pair; verify unclassified, joined and actual pending counts in one summary.",
+  "next_action": "Build the frozen Round62 source and launch one counted test per cap.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

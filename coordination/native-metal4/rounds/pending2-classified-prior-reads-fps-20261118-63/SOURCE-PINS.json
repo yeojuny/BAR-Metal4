@@ -1,0 +1,9 @@
+{
+  "source_artifact": "26daf06778b692a18a41b3edcf92c1f77744bf26",
+  "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
+  "patch_sha256": "24622462bce0e95cae7f6b546da2a2e3330ea6438332e4bdf745e5f344f2f310",
+  "tracked_source_files_verified": 12,
+  "source_parent_binary": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+  "runner_sha256": "82decf246267bdc2fd78d0b84ed7616cf7182b17cec0748af65163aa7c0396f6",
+  "source_mutations": 0
+}
