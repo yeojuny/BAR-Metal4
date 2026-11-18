@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 168,
+  "revision": 169,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-final-color-ownership-20261118-55",
+  "round_id": "pending2-postprocess-dependency-20261118-56",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "990206409cba6e1cc4ef80a8d4fe1bc2c3479df235e204610c9914e1fed06b29",
-  "request": "coordination/native-metal4/rounds/pending2-final-color-ownership-20261118-55/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-final-color-ownership-20261118-55/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-final-color-ownership-20261118-55/DONE.json",
-  "decision": "PREREQUISITE_VERIFIED_CAP2_ADMISSION_BLOCKED",
-  "execution_status": "HQ3_ROUND55_FINAL_COLOR_OWNERSHIP_VERIFIED_PENDING2_BLOCKED",
+  "source_manifest_sha256": "4c5224c4aa7069907cce3f6d8cc19d655209ec0eee627351151301debf9507a0",
+  "request": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/READY.json",
+  "result_path": null,
+  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
+  "execution_status": "HQ3_ROUND56_PENDING2_EXACT_POSTPROCESS_FIXTURE_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3109,6 +3109,13 @@
         "retries": 0
       },
       "utc": "2026-11-18T07:47:56.522746+00:00"
+    },
+    {
+      "event": "HQ3_ROUND56_PENDING2_EXACT_POSTPROCESS_FIXTURE_RESERVED",
+      "revision": 169,
+      "round_id": "pending2-postprocess-dependency-20261118-56",
+      "attempt_id": "pending2-exact-postprocess-transfer-01",
+      "utc": "2026-11-18T08:00:56.833568+00:00"
     }
   ],
   "communication_test": {
@@ -3192,34 +3199,22 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-final-color-safety-01",
+    "attempt_id": "pending2-exact-postprocess-transfer-01",
     "budget": {
-      "syntax_checks": 1,
-      "cpu_fixture": 1,
+      "syntax_checks": 2,
+      "metal_fixture_builds": 1,
+      "fixture_invocations": 1,
+      "maximum_fixture_submissions": 2,
       "engine_builds": 0,
       "games": 0,
-      "captures": 0,
       "profiles": 0,
+      "captures": 0,
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T07:44:13.099053+00:00",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T07:47:56.522746+00:00",
-    "counts": {
-      "syntax_checks": 1,
-      "cpu_fixtures": 1,
-      "engine_builds": 0,
-      "games": 0,
-      "gpu_invocations": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "80258772b731a4a7d05aadb07d6d86119f03ef75",
-    "default_changed": false
+    "reserved_at_utc": "2026-11-18T08:00:56.833568+00:00",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3285,7 +3280,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Prove exact cross-frame producer ordering and failure-safe drawable presentation for cap2 before any game comparison.",
+  "next_action": "Verify exact native postprocess receipt and two real isolated Metal4 submissions. Do not treat offscreen proof as live game admission.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
