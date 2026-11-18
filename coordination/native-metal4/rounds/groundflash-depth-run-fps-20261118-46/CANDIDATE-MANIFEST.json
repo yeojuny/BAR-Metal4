@@ -1,0 +1,48 @@
+{
+  "status": "READY_GROUND_FLASH_SOURCE_DEPTH_RUNS",
+  "combined_parent_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_paths_verified": 10274,
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Backend/NativeWorldParticleData.h",
+      "parent_sha256": "c12a9981db2a0afb341ac5e7aaa553973ccb20ce6d53c6c78077fa47cfc4111c",
+      "candidate_sha256": "c2487235d906cbe0447d3b2da9dec8bdcde189db795b823969990e043221cfa8"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeWorldParticleGeometry.h",
+      "parent_sha256": "ed7c4115acbc66ce3dca53b23df008b5e81c0c70fb7d1f49d32739a64b77d125",
+      "candidate_sha256": "c0dd3de4b4baaf4b53dc5c5fd2582936bee8f3b378ec36b24cc4ca7fc13dcd35"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeWorldParticleGeometry.cpp",
+      "parent_sha256": "5445f713f045f9717d99b2092ef850c5f876eac128fc00dc99adcc1b5399f3b6",
+      "candidate_sha256": "233ed5df33b3a10c21b5979d637387b066425a07a0e0682873220fb1d9abcaeb"
+    },
+    {
+      "path": "engine/rts/Rendering/Backend/NativeWorldParticleCapture.cpp",
+      "parent_sha256": "1c19e89e34c51886180f8e7a0cf95320d2cf8b447101f252e2bc28160b764db2",
+      "candidate_sha256": "108a990bb6cd37ba7666fe51935b748ec06c7ee41177d3e77287a9edb96f6b95"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldParticles.mm",
+      "parent_sha256": "cd19bf84a1bf18a3ebcc2ac4b5868c33434722c0cfbfc403c0eef04e03a7b9ba",
+      "candidate_sha256": "a32fd56af5a2228b1c3111e953845aefbb9f29751471387d18b201973921fecb"
+    },
+    {
+      "path": "engine/tools/metal4-contracts/NativeWorldParticleHarness.cpp",
+      "parent_sha256": "6385378ac05562a1dc0d2054fa128e2e64f79e3d97f11f78bd1c0b6227748c02",
+      "candidate_sha256": "ebf405b83796a244f784779873d7ebb7b734c08354acf1f784fcf9a53dec6b1a"
+    }
+  ],
+  "patch_sha256": "102e2cf2d2445ca214fbd77a892ae422ae045a8984983d724b2db7cbd333d5ea",
+  "flag": "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS",
+  "producer": "After original per-flash draw and validated append, combine only contiguous equal GroundFlash state ranges.",
+  "verified_contract": {
+    "matrix_camera_fog_soften": "frame common plus bit-exact range thresholds",
+    "atlas_depth": "same frame ground atlas and terrain depth plus identical depth test/write",
+    "order": "Main capture and GroundFlashes only. Same index buffer, ordered triangles and instance 1. Fresh opacity/visibility/class effects execute before original append validation.",
+    "capacity": "Keep original per-append validation and reserves. Coalescer checks contiguous uint32 logical prefix and performs no allocation or byte mutation."
+  },
+  "utc": "2026-11-18T01:48:36.798479+00:00"
+}

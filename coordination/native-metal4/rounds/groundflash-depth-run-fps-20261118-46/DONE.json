@@ -1,0 +1,86 @@
+{
+  "status": "DONE",
+  "decision": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
+  "round_id": "groundflash-depth-run-fps-20261118-46",
+  "attempt_id": "groundflash-runs-off-on-01",
+  "counts": {
+    "configures": 1,
+    "builds": 1,
+    "existing_cpu_fixture_invocations": 1,
+    "gpu_helpers": 0,
+    "games": 2,
+    "off_games": 1,
+    "on_games": 1,
+    "normal_exits": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "fps_by_arm": {
+    "FLASH_OFF": 65.03536887762581,
+    "FLASH_ON": 64.98150077695486
+  },
+  "relative_percent": -0.08282893078120912,
+  "source_manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
+  "binary_sha256": "399c40bce292fae17b781c2846e5616391a0f7139e7b9158efecfb86811a0d79",
+  "first_encode": {
+    "receipts": {
+      "FLASH_OFF": [
+        {
+          "line": 2253,
+          "text": "[t=00:00:49.624569][f=0000080] [NativeGroundFlashRuns] mode=separate source_ranges=4 encoded_ranges=4 collapsed=0",
+          "mode": "separate",
+          "source_ranges": 4,
+          "encoded_ranges": 4,
+          "collapsed": 0,
+          "logged_during_measurement": false,
+          "log_simulation_tick": 80
+        }
+      ],
+      "FLASH_ON": [
+        {
+          "line": 2268,
+          "text": "[t=00:00:19.447933][f=0000080] [NativeGroundFlashRuns] mode=coalesced source_ranges=4 encoded_ranges=1 collapsed=3",
+          "mode": "coalesced",
+          "source_ranges": 4,
+          "encoded_ranges": 1,
+          "collapsed": 3,
+          "logged_during_measurement": false,
+          "log_simulation_tick": 80
+        }
+      ]
+    },
+    "coalesced_encode_observed": true,
+    "scope": "One first successful encode per mode. Counts refer to the actual GroundFlashes stage of that frame. No frame-wide optimization timing added."
+  },
+  "cleanup_complete": true,
+  "counts_all_frames": true,
+  "artifactSHA256": {
+    "REPORT.md": "67285296bad9ec512144c543e0fcbd982566fbcc8adebfa14bb0ba056269d661",
+    "FPS-EVIDENCE.json": "8db02823ccd513a89a869c5dfb8cec9088c8fe180a3402e6c65ff2aaada0e89e",
+    "FPS-BINS.csv": "5e60d67d8a440d6e583ede161c88c5f15ca9df5712d5df3605e9beeb7cf7ad2e",
+    "GROUND-FLASH-ACTIVATION.json": "eb4985a6210d523568bde4f223833044095061d4184f641b8810695468eeaa9e",
+    "HISTORICAL-WORKLOAD.json": "0d9e97fc884a1f1ef1201f2d063ab3cded39124dc0248110eb1e382f4179d787",
+    "GROUND-FLASH-DEPTH-RUNS.patch": "102e2cf2d2445ca214fbd77a892ae422ae045a8984983d724b2db7cbd333d5ea",
+    "CANDIDATE-MANIFEST.json": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
+    "STAGING-EVIDENCE.json": "880ed4cdb68715a3b2c6a7197f8f6903280f02f25846de57b6714d9dd6e10bc9",
+    "DEPENDENCY-EVIDENCE.json": "f301eb51ff937cbc5d334bcc24562dfc79620127c32d8983f01024f864b56c72",
+    "CLEANUP-EVIDENCE.json": "57ecf4a7d4eb247b659a33a9b26cab99c81d938e7ac9e4b65c30c43751893324",
+    "PROTECTED-HASHES.json": "c2513660496afd4c99c5cf6dee35f13b702bdf72c9291ee2dfd9f4a00ab071aa",
+    "RUNNER-CLOSED.json": "72b0e82db0c95209e2c9b619eed4672d855049ea210d464c11229f4ecd9f470e",
+    "CONFIGURE-RECEIPT.json": "86bd2a1b6471d014a8b773ff89d60e09bca08a9098d656a150278c0b1b890c08",
+    "BUILD-RECEIPT.json": "7f32e0de32e888518227c56ea1d3ecb4ffb75e0cec46c78fe4277b5e1f9ec3e1",
+    "BUILD-RESULT.json": "d9b45192e5e7cfd425c8d0e7b0981e418000c3ee98d924cf8bfa153bf585a331",
+    "SOURCE-OBJECT-LINK.json": "f9c044f10b54f20c5ff7f93abde4c63c72172f22580e940470bf1d4939047a28",
+    "PARTICLE-CPU-FIXTURE-RECEIPT.json": "79420782341ff3f0e86e8ffc850c72197bed121545482ea9b3f065da0ed1e1ee",
+    "UPSTREAM-CONTRIBUTIONS.json": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "FIXTURE-RESULT.json": "a453ae19952db0f43ee07deae8169f495586243ccb1577563c3d20f573cd40e8",
+    "FLASH_OFF-FRAME-TIMES.csv": "14bf4dfa49b63c49752e88646a5a01ab69fada8306438c4669e6081712801094",
+    "FLASH_OFF-CHILD-MODE.json": "0768c6f2e8d988810fdff209c595f3aac0d8ea0a32da4fe1aeac5d5030ea3d14",
+    "FLASH_OFF-CLEANUP.json": "1e32a642c0e1f3ea621d015a03258045f1dba25bc9b7f1aa86cd381fb272e716",
+    "FLASH_ON-FRAME-TIMES.csv": "67a27d77f17cff3e0a68b7df3b1c85ac72c34e2efe8c466e047a158c56af69a6",
+    "FLASH_ON-CHILD-MODE.json": "58b60f716e53af0aa3fdabe6f80ac09b79e9db236748d9b702fffef437889f72",
+    "FLASH_ON-CLEANUP.json": "99833916af3674e69064ebc4425e2580b17552cf307bff6275823a4787b8ed08"
+  }
+}

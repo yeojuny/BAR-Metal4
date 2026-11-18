@@ -1,0 +1,21 @@
+{
+  "reference": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/api-calls.jsonl",
+  "sha256": "2448d5a7b54b0f5e7539c61af941111abe9f417c54907c13e86b99062a136928",
+  "historical_draws": 227,
+  "first": [
+    5549,
+    "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:6 indexType:UInt32 indexBuffer:@buf2499 indexBufferLength:170640 instanceCount:1]"
+  ],
+  "last": [
+    8261,
+    "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:6 indexType:UInt32 indexBuffer:@buf2499 offset=5424 indexBufferLength:165216 instanceCount:1]"
+  ],
+  "index_step_bytes": 24,
+  "unique_ubo_addresses": 227,
+  "ubo_contents_from_capture": "unobserved",
+  "particle_relative_shader_percent": {
+    "fragment_approx": 0.157,
+    "vertex_approx": 0.03383
+  },
+  "current_frequency": "unverified until the native runtime witnesses a matching repeated range"
+}
