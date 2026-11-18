@@ -2,21 +2,21 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 177,
+  "revision": 178,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
+  "round_id": "pending2-exact-ui-rtt-20261118-60",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "dca8ad362c7655618782615d82412ca82c4b7d97dd2a2920a2695c4aa22b5bb1",
-  "request": "coordination/native-metal4/rounds/pending2-ordinary-reclaim-cube-20261118-59/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-ordinary-reclaim-cube-20261118-59/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-ordinary-reclaim-cube-20261118-59/DONE.json",
-  "decision": "EXACT_SERIAL_RTT_BLOCKER_OBSERVED",
-  "execution_status": "HQ3_ROUND59_TWO_GAMES_SERIAL_RTT_BOUNDARY_CONFIRMED",
+  "source_manifest_sha256": "45092f303431777ec5b46be2e1f1f103eebb9eb3bfdedbc86e311156cea5a857",
+  "request": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-20261118-60/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-20261118-60/CANDIDATE-MANIFEST.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-20261118-60/DONE.json",
+  "decision": "SOURCE_READY_EXACT_RTT_RECEIPT_GAME_UNVERIFIED",
+  "execution_status": "HQ3_ROUND60_EXACT_UI_RTT_SOURCE_READY_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -3218,6 +3218,15 @@
       "games": 2,
       "cap2_joined": 0,
       "rtt_cpu_gate": 2616
+    },
+    {
+      "event": "HQ3_ROUND60_EXACT_UI_RTT_SOURCE_READY_ONLY",
+      "revision": 178,
+      "round_id": "pending2-exact-ui-rtt-20261118-60",
+      "attempt_id": "pending2-exact-ui-rtt-source-01",
+      "utc": "2026-11-18T09:17:30.938120+00:00",
+      "games": 0,
+      "gpu_runs": 0
     }
   ],
   "communication_test": {
@@ -3301,32 +3310,33 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
+    "attempt_id": "pending2-exact-ui-rtt-source-01",
     "budget": {
-      "configure": 1,
-      "engine_build": 1,
-      "bounded_cpu_contracts": true,
-      "games": 2,
-      "max_per_arm": 1,
+      "targeted_syntax_check": 1,
+      "bounded_cpu_contracts": 2,
+      "engine_builds": 0,
+      "games": 0,
+      "gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "started": true,
     "completed": true,
-    "reserved_at_utc": "2026-11-18T08:58:51.337829+00:00",
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "ended_at_utc": "2026-11-18T09:17:30.938120+00:00",
     "counts": {
-      "configure": 1,
-      "engine_build": 1,
-      "games": 2,
+      "targeted_syntax_checks": 1,
+      "cpu_contracts": 2,
+      "engine_builds": 0,
+      "games": 0,
+      "gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
-    "ended_at_utc": "2026-11-18T09:14:37.454679+00:00",
     "cleanup_complete": true,
-    "artifact_commit": "d9e2b78c7c728f9f81f5ca1324bde3656f06c3cb",
+    "artifact_commit": "b3e65b62692a0f741027862ec1fcae2ae77462e4",
     "default_changed": false
   },
   "model_and_context_policy": {
@@ -3393,7 +3403,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Prepare exact private screen RTT producer receipt as a targeted source candidate.",
+  "next_action": "The exact RTT source is ready for a future authorized same-binary game pair. No default promotion.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
