@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "clean_sensorlos_outline_slab_abba_baab_r45",
+  "pid": 19811,
+  "startUTC": "2026-11-18T01:29:10.793160+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-18T01:29:10.982282+00:00",
+  "ownCaffeinateAlive": false
+}

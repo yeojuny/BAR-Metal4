@@ -1,0 +1,374 @@
+{
+  "status": "DONE",
+  "decision": "DONE_COMPLETE_ABBA_BAAB_SLAB_REPEAT",
+  "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+  "attempt_id": "slab-abba-baab-two-sessions-01",
+  "counts": {
+    "configure_attempts": 0,
+    "engine_builds": 0,
+    "fixtures": 0,
+    "games": 8,
+    "off_games": 4,
+    "on_games": 4,
+    "normal_exits": 8,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0,
+    "earlier_prelaunch_attempts_without_games": 1
+  },
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2",
+    "B3",
+    "A3",
+    "A4",
+    "B4"
+  ],
+  "session_evidence": {
+    "order": [
+      "A1",
+      "B1",
+      "B2",
+      "A2",
+      "B3",
+      "A3",
+      "A4",
+      "B4"
+    ],
+    "sessions": [
+      [
+        "A1",
+        "B1",
+        "B2",
+        "A2"
+      ],
+      [
+        "B3",
+        "A3",
+        "A4",
+        "B4"
+      ]
+    ],
+    "sessions_closed": [
+      {
+        "session": 1,
+        "completed": 4,
+        "status": "RELEASED",
+        "campaign": "SLAB-R45-SESSION-1",
+        "pid": 20015,
+        "startUTC": "2026-11-18T01:32:09.005653+00:00",
+        "maximumSeconds": 2400,
+        "securitySettingsChanged": false,
+        "endUTC": "2026-11-18T01:37:31.955570+00:00",
+        "ownCaffeinateAlive": false
+      },
+      {
+        "session": 2,
+        "completed": 4,
+        "status": "RELEASED",
+        "campaign": "SLAB-R45-SESSION-2",
+        "pid": 20487,
+        "startUTC": "2026-11-18T01:37:31.958028+00:00",
+        "maximumSeconds": 2400,
+        "securitySettingsChanged": false,
+        "endUTC": "2026-11-18T01:42:54.403558+00:00",
+        "ownCaffeinateAlive": false
+      }
+    ],
+    "boundary_seconds": 0.002458,
+    "previous_prelaunch_actual_games": 0,
+    "previous_prelaunch_awake_released": true,
+    "unchanged_maximum_seconds": 2400,
+    "original_guard": true,
+    "scheduled_extra_cooldown_seconds": 0
+  },
+  "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+  "overall": {
+    "arms": {
+      "A": {
+        "games": 4,
+        "mean_fps": 65.38545667930205,
+        "sample_sd_fps": 0.029893138664206887,
+        "min_fps": 65.35539168652163,
+        "max_fps": 65.42009618809386,
+        "mean_1_percent_low_fps": 55.08115970494944,
+        "sample_sd_1_percent_low_fps": 0.7258004091595784,
+        "min_1_percent_low_fps": 54.10821730033214,
+        "max_1_percent_low_fps": 55.785126041595596,
+        "frames_drawn": 10462,
+        "seconds": 160.005001068,
+        "max_frame_ms": 37.0,
+        "frames_over_100_ms": 0
+      },
+      "B": {
+        "games": 4,
+        "mean_fps": 65.37406093162569,
+        "sample_sd_fps": 0.04518435674796446,
+        "min_fps": 65.30979731699216,
+        "max_fps": 65.41144695252282,
+        "mean_1_percent_low_fps": 55.94808008669201,
+        "sample_sd_1_percent_low_fps": 1.186035337436665,
+        "min_1_percent_low_fps": 55.10204284048321,
+        "max_1_percent_low_fps": 57.69230658284025,
+        "frames_drawn": 10459,
+        "seconds": 159.986999512,
+        "max_frame_ms": 34.000002,
+        "frames_over_100_ms": 0
+      }
+    },
+    "delta_fps": -0.011395747676360202,
+    "relative_percent": -0.017428566312926996
+  },
+  "prior_separate_result": {
+    "round_id": "sensorlos-outline-upload-slab-20261118-44",
+    "artifact_commit": "4eba3ac202676b1c33c6e9d7a68226fb038b7175",
+    "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/DONE.json",
+    "fps_by_arm": {
+      "SLAB_OFF": 65.39134509310635,
+      "SLAB_ON": 65.1668524034946
+    },
+    "relative_percent": -0.3433064257848062
+  },
+  "per_run": {
+    "A1": {
+      "fps": 65.36633884259274,
+      "frame_time": {
+        "count": 2613,
+        "mean_ms": 15.29927334902411,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 34.000002,
+        "slowest_1_percent_mean_ms": 18.18518511111111,
+        "one_percent_low_fps": 54.98981692460211
+      }
+    },
+    "B1": {
+      "fps": 65.37663351854367,
+      "frame_time": {
+        "count": 2614,
+        "mean_ms": 15.297246086074981,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 30.999999,
+        "slowest_1_percent_mean_ms": 17.962963,
+        "one_percent_low_fps": 55.67010297799979
+      }
+    },
+    "B2": {
+      "fps": 65.39836593844412,
+      "frame_time": {
+        "count": 2615,
+        "mean_ms": 15.291396261185469,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 34.000002,
+        "slowest_1_percent_mean_ms": 18.074074370370372,
+        "one_percent_low_fps": 55.32786794544478
+      }
+    },
+    "A2": {
+      "fps": 65.35539168652163,
+      "frame_time": {
+        "count": 2614,
+        "mean_ms": 15.301836737949504,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 20.0,
+        "slowest_1_percent_mean_ms": 17.92592525925926,
+        "one_percent_low_fps": 55.785126041595596
+      }
+    },
+    "B3": {
+      "fps": 65.30979731699216,
+      "frame_time": {
+        "count": 2611,
+        "mean_ms": 15.312524409421679,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 25.0,
+        "slowest_1_percent_mean_ms": 18.14814748148148,
+        "one_percent_low_fps": 55.10204284048321
+      }
+    },
+    "A3": {
+      "fps": 65.42009618809386,
+      "frame_time": {
+        "count": 2616,
+        "mean_ms": 15.286315455657492,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 30.999999,
+        "slowest_1_percent_mean_ms": 18.037037,
+        "one_percent_low_fps": 55.44147855326792
+      }
+    },
+    "A4": {
+      "fps": 65.4,
+      "frame_time": {
+        "count": 2615,
+        "mean_ms": 15.291778671892926,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 37.0,
+        "slowest_1_percent_mean_ms": 18.481481185185185,
+        "one_percent_low_fps": 54.10821730033214
+      }
+    },
+    "B4": {
+      "fps": 65.41144695252282,
+      "frame_time": {
+        "count": 2615,
+        "mean_ms": 15.288719410325049,
+        "median_ms": 15.0,
+        "p95_ms": 17.000001,
+        "p99_ms": 17.000001,
+        "frames_over_100_ms": [],
+        "all_interval_rows_kept": true,
+        "max_ms": 17.999999,
+        "slowest_1_percent_mean_ms": 17.333333666666668,
+        "one_percent_low_fps": 57.69230658284025
+      }
+    }
+  },
+  "all_counted_frames_retained": true,
+  "all_slab_modes_witnessed": true,
+  "workload_match": {
+    "A1": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "B1": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "B2": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "A2": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "B3": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "A3": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "A4": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "B4": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    }
+  },
+  "cleanup_complete": true,
+  "protected_hashes_verified": true,
+  "artifactSHA256": {
+    "REPORT.md": "ed47db735d925be50f05913e774a300036cf840fc0760852e250dac2ef4a01d6",
+    "FPS-EVIDENCE.json": "a4044797a8509cb036aa0c4e356ceda4f49a899a444b2162e78fffb1c79c389a",
+    "FPS-BINS.csv": "6b376cd4fce804d8949c2494503594978241f832d428778a657c671930021e33",
+    "STAGING-EVIDENCE.json": "a559cc87dbed97d97e8d08149d77878e2f89c8948aea39d09241c50d875ba3bd",
+    "SLAB-ACTIVATION.json": "27e8131f87353aa2da14f40fd93baf56467f837d1c8a65e2405cabe3a78e8cf1",
+    "DEPENDENCY-EVIDENCE.json": "e61118a810548a9b4987d2817f24f1b73cf34a0794a18b9494022f48d6ad31af",
+    "PROTECTED-HASHES.json": "bc7f8e76b512f629bf12675edf2881b10a9eedb62b4c20f7d6d5a45632d65e7c",
+    "CLEANUP-EVIDENCE.json": "f541aa0b94081538df91d31c32133b2c28c236b8ffe1e28ad8b25fe14f4f5bcd",
+    "RUNNER-CLOSED.json": "abf27772f0138996465a35253b3f01146b639840a44e3fb02c3adac1e5415f3f",
+    "SESSION-EVIDENCE.json": "3c9755ea0ee7e94ed4c70e4d4ac82e8d68a87a8389f472885b3d8bece7251607",
+    "PRELAUNCH-RUNNER-CLOSED.json": "a9f69db158d7224fe8bb3bf93fa8279cbd0c42ed3f82416012a0510695d71408",
+    "PRELAUNCH-AWAKE-RELEASED.json": "baa3f1cd60ae58720388eb42980fdbb38aef1ff0a82990c34ce8213556a12915",
+    "PRELAUNCH-ERROR.json": "3c23dc8f705c6aab1ad444bd48f7066a39c3fbd9c60534befac7dbc32a75cc06",
+    "A1-FRAME-TIMES.csv": "562c61efc3ff57992085f3aceed2f1dc326594202319427e0a913e2d16ac2263",
+    "A1-CHILD-MODE.json": "6541454097254b256e08d966a1b72d522ce511f5e1f3f00667572630980ee22f",
+    "A1-CLEANUP.json": "19c3c1ab53f86b7a3f3a18909f6f1ce9910cdc8271e4a289824d4f0190a94ded",
+    "B1-FRAME-TIMES.csv": "a6ff83fe3c64a2c3db1fec14b4ba1fecc7492c9b552000ac9ec68c2180e07996",
+    "B1-CHILD-MODE.json": "2410440477a9b14fd81573797c27b53ef900c56b5a0b67f419edf18d1921841c",
+    "B1-CLEANUP.json": "9ebbe33c077fe335feaf047b3c0e6e6665206388653a00e687ec8385d56291dc",
+    "B2-FRAME-TIMES.csv": "88c594d124550cd2330e0fba600ed26fb86d51325981c7a517d382328a30e35d",
+    "B2-CHILD-MODE.json": "1ed4c620b0b48cb1e71ac809ebe3811a8a39cbe1ef573728860e6f9f12afc08e",
+    "B2-CLEANUP.json": "033b22bde0e27b5ea8ade596a7bea41fb3c7c55ba45e7acd09727df05673256f",
+    "A2-FRAME-TIMES.csv": "0c095d42f4ce5f5f6f2dd438c3172e561d1f8d452c7135bb2214bf5bc1cbeed3",
+    "A2-CHILD-MODE.json": "f9bd4cfe0c59e4c9d8e83944845c99e17c9e68271bb710fb8b831fcc3d5a1dfd",
+    "A2-CLEANUP.json": "01ea11dbc48848ded76c4fb83c26fc450f87413fa1929e6fe777e4d497568136",
+    "B3-FRAME-TIMES.csv": "9efc3b38124a2781ba76d9b2db9ddb699926d0cc9817a5a0e2026af12d64c7be",
+    "B3-CHILD-MODE.json": "0a316b650db216a9306dc5e7542fa98dafd176d5f3a74aa6ab569f694f2ce986",
+    "B3-CLEANUP.json": "2444c3738362e56287c13b0fa154d0e682f4122a1da70f188b8da199421020b2",
+    "A3-FRAME-TIMES.csv": "1d744747eb4a06f27a242d78043c40e5cdf3f66d549c9bcada72d14ba58fb183",
+    "A3-CHILD-MODE.json": "257f3accccdd34ada360ea95bd16dc1bc6dadf95485d05eef3871a1aa30a2d3a",
+    "A3-CLEANUP.json": "3f2848df2a0537b6bce8a2c48c9a874664c420d5556b91153db7b5bf170ecdd6",
+    "A4-FRAME-TIMES.csv": "6931d957b79a4fe04d1b5cf2203700e70ad89186d1668b6da1502d50bbccb505",
+    "A4-CHILD-MODE.json": "83813cedadaae85bbe25d952f3abd8f3d7936c66fef561ec37d27a2dd138c5f6",
+    "A4-CLEANUP.json": "51c96962ab31a1379a35300d261eab2ad3c51b37f45278cb3263a9728203541e",
+    "B4-FRAME-TIMES.csv": "5349b8c83bb251b6949717a247a55a2345803cf57fc4a3fc43a2b6f01cad0e79",
+    "B4-CHILD-MODE.json": "812b361f0b3cdded64f747fbb2872fc3152d5393acd036c37db520cc90984be7",
+    "B4-CLEANUP.json": "1a49d455b949dd0640ea5acc30e210c94038f5ac3d4749ffeaf33cf7c7acf707"
+  }
+}
