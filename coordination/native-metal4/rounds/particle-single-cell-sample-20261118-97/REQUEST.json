@@ -1,0 +1,21 @@
+{
+  "round_id": "particle-single-cell-sample-20261118-97",
+  "scope": "One independent single-cell particle texture-sample reuse comparison on the R88 parent. Existing indexed draw validation selects only whole eligible AA0 world particle draws.",
+  "switch": "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL",
+  "order": [
+    "R97_OFF",
+    "R97_ON"
+  ],
+  "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "patch_sha256": "965dcf10f7e6a7f0d235ab59eab0fa0a899526c211770d05c77a749f9046aa1c",
+  "budget": {
+    "translation_units": 1,
+    "engine_builds": 1,
+    "fixture_compiles": 1,
+    "fixture_runs": 1,
+    "games": 2,
+    "profiles": 0,
+    "captures": 0,
+    "game_retries": 0
+  }
+}
