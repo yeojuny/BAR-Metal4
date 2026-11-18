@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 170,
+  "revision": 171,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-postprocess-dependency-20261118-56",
+  "round_id": "pending2-ordinary-game-fps-20261118-57",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "4c5224c4aa7069907cce3f6d8cc19d655209ec0eee627351151301debf9507a0",
-  "request": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/DONE.json",
-  "decision": "ISOLATED_PENDING2_GPU_PROOF_GAME_ADMISSION_UNVERIFIED",
-  "execution_status": "HQ3_ROUND56_EXACT_POSTPROCESS_AND_TWO_GPU_TICKETS_VERIFIED_ISOLATED",
+  "source_manifest_sha256": "4b6e70f8dc466f92fc8a0fb7c49ebec389c3ad90a41721999e143e0e601f695f",
+  "request": "coordination/native-metal4/rounds/pending2-ordinary-game-fps-20261118-57/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-ordinary-game-fps-20261118-57/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-ordinary-game-fps-20261118-57/DONE.json",
+  "decision": null,
+  "execution_status": "HQ3_ROUND57_RESERVED_PACED_CAP1_CAP2",
   "blocked_reason": null,
   "history": [
     {
@@ -3135,6 +3135,23 @@
         "retries": 0
       },
       "utc": "2026-11-18T08:05:09.315426+00:00"
+    },
+    {
+      "event": "HQ3_ROUND57_RESERVED",
+      "revision": 171,
+      "round_id": "pending2-ordinary-game-fps-20261118-57",
+      "attempt_id": "pending2-cap1-cap2-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "helpers": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T08:24:08.969337+00:00"
     }
   ],
   "communication_test": {
@@ -3314,7 +3331,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review ordinary renderer dependency coverage, failure drain, and FIFO successful presentation before enabling live cap2.",
+  "next_action": "Run exactly one game per cap against the same candidate binary",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
