@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 171,
+  "revision": 172,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -3152,6 +3152,14 @@
         "retries": 0
       },
       "utc": "2026-11-18T08:24:08.969337+00:00"
+    },
+    {
+      "event": "HQ3_ROUND57_EXECUTION_METADATA_ALIGNED",
+      "revision": 172,
+      "round_id": "pending2-ordinary-game-fps-20261118-57",
+      "attempt_id": "pending2-cap1-cap2-01",
+      "games": 0,
+      "utc": "2026-11-18T08:26:26.278755+00:00"
     }
   ],
   "communication_test": {
@@ -3235,37 +3243,30 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-exact-postprocess-transfer-01",
+    "attempt_id": "pending2-cap1-cap2-01",
     "budget": {
-      "syntax_checks": 2,
-      "metal_fixture_builds": 1,
-      "fixture_invocations": 1,
-      "maximum_fixture_submissions": 2,
-      "engine_builds": 0,
-      "games": 0,
-      "profiles": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "games": 2,
+      "max_per_arm": 1,
+      "helpers": 0,
       "captures": 0,
+      "profiles": 0,
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T08:00:56.833568+00:00",
+    "reserved_at_utc": "2026-11-18T08:26:26.278755+00:00",
     "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T08:05:09.315426+00:00",
+    "completed": false,
     "counts": {
-      "syntax_checks": 2,
-      "fixture_builds": 1,
-      "gpu_invocations": 1,
-      "gpu_submissions": 2,
+      "configure": 1,
+      "engine_build": 1,
       "games": 0,
-      "engine_builds": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
-    "cleanup_complete": true,
-    "artifact_commit": "e658e16d82ecbff9388ecd9d316ebc6e495ace19",
-    "default_changed": false
+    "prelaunch_recovery": "Removed a duplicate claim writer before any engine process started."
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
