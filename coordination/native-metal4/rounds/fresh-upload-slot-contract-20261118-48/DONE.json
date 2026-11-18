@@ -1,0 +1,71 @@
+{
+  "status": "DONE",
+  "decision": "PASS_SLOT_BYTES_AND_FORCED_FALLBACK_SINGLE_SAMPLE_FIXTURE",
+  "round_id": "fresh-upload-slot-contract-20261118-48",
+  "attempt_id": "metal4-slot-readback-and-fallback-02-sdk-selector",
+  "cases": [
+    {
+      "case": "sensor_slab",
+      "words": 1412,
+      "lease_registered_input_allocations": 1
+    },
+    {
+      "case": "sensor_nil",
+      "words": 1412,
+      "lease_registered_input_allocations": 3
+    },
+    {
+      "case": "sensor_capacity",
+      "words": 1412,
+      "lease_registered_input_allocations": 3
+    },
+    {
+      "case": "sensor_fan_bypass",
+      "words": 1412,
+      "lease_registered_input_allocations": 3
+    },
+    {
+      "case": "common_circle_slab",
+      "words": 1412,
+      "lease_registered_input_allocations": 1
+    },
+    {
+      "case": "common_circle_capacity",
+      "words": 1412,
+      "lease_registered_input_allocations": 3
+    },
+    {
+      "case": "common_pair_slab",
+      "words": 752,
+      "lease_registered_input_allocations": 1
+    },
+    {
+      "case": "common_pair_nil",
+      "words": 752,
+      "lease_registered_input_allocations": 2
+    }
+  ],
+  "words_compared": 9976,
+  "counts": {
+    "compile_attempts": 2,
+    "first_compile_failures": 1,
+    "gpu_invocations": 1,
+    "metal4_submissions": 1,
+    "games": 0,
+    "builds": 0,
+    "captures": 0,
+    "profiles": 0
+  },
+  "default_recommendation": "Eligible as a guarded AA0 candidate. Existing default stays OFF pending explicit adoption; actual MSAA unverified.",
+  "cleanup_complete": true,
+  "artifact_sha256": {
+    "REPORT.md": "2c05498ec4708d224595cb9371ab1b525a725297396360780fa7a0001cb12fac",
+    "FreshUploadSlotFixture.mm": "3109389e6b32b24a28d1ee580725b741eeaadbdd8973e94173682df8dfd82e41",
+    "SOURCE-PINS.json": "ee2f698f27ed12b44b0f72a7cb72228dd8109a8658ee658b6c7d99d6b6f55e38",
+    "GPU.log": "cd832573ee958eebcca9756f65ef9972570487c46ab2c23e45df3f5d55a57553",
+    "GPU-RECEIPT.json": "1e860695b0a759451f5ee26c5a1123e1b235ac37ae9b66f166e35db32cc683f3",
+    "COMPILE-RECEIPT.json": "4cb2dc3bbd1334c74c775f21f7eec7adbf6f34492dd6a08539a0f7676af8698e",
+    "FIRST-COMPILE.log": "887a9b86cdb62d6cb33e49dcd3f29daf42e53438449e95bb0127ec638deec4de",
+    "FIRST-COMPILE-RECEIPT.json": "74590cb158c8f1a6aeb7d2f0ee271f4e79185b95bd1f3c4b52dbacf8ba4c8e92"
+  }
+}

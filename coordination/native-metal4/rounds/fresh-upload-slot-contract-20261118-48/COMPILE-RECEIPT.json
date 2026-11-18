@@ -1,0 +1,27 @@
+{
+  "label": "COMPILE",
+  "argv": [
+    "xcrun",
+    "--sdk",
+    "macosx",
+    "clang++",
+    "-std=c++23",
+    "-O1",
+    "-fobjc-arc",
+    "-fobjc-arc-exceptions",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "FreshUploadSlotFixture.mm",
+    "-o",
+    "fixture"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-18T04:12:03.716444+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/fresh-upload-slot-contract-20261118-48",
+  "pid": 49187,
+  "exit": 0,
+  "ended_at_utc": "2026-11-18T04:12:04.971856+00:00",
+  "stopped_by_runner": false
+}
