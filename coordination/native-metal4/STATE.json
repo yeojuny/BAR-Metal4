@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 211,
+  "revision": 212,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "sensorlos-exact-interior-fps-20261118-76",
+  "round_id": "sensorlos-exact-interior-reverse-20261118-77",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/READY.json",
-  "result_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/DONE.json",
-  "decision": "OBSERVED_FPS_GAIN_ONE_FIXED_PAIR_SAMPLED_ACTIVATION_LIMIT",
-  "execution_status": "COMPLETE_SENSORLOS_CAP2_AA0_ONE_OFF_ON_PAIR",
+  "request": "coordination/native-metal4/rounds/sensorlos-exact-interior-reverse-20261118-77/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-reverse-20261118-77/READY.json",
+  "result_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-reverse-20261118-77/DONE.json",
+  "decision": "ONE_REVERSE_PAIR_REUSING_R76_SIGNED_BINARY",
+  "execution_status": "FIXED_ON_OFF_GAMES_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3725,6 +3725,26 @@
       },
       "current_counted_witness_both": false,
       "utc": "2026-11-18T12:35:24.325Z"
+    },
+    {
+      "event": "HQ3_ROUND77_SAME_SIGNED_BINARY_REVERSE_PAIR_RESERVED",
+      "revision": 212,
+      "round_id": "sensorlos-exact-interior-reverse-20261118-77",
+      "attempt_id": "sensorlos-exact-interior-on-off-01",
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
+      "utc": "2026-11-18T12:38:13.558Z"
     }
   ],
   "communication_test": {
@@ -3808,14 +3828,14 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "sensorlos-exact-interior-off-on-01",
+    "attempt_id": "sensorlos-exact-interior-on-off-01",
     "budget": {
-      "configure": 1,
-      "engine_build": 1,
+      "configure": 0,
+      "engine_build": 0,
       "games": 2,
       "max_per_arm": 1,
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
+      "parity_helper_compile": 0,
+      "parity_helper_gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
@@ -3823,25 +3843,23 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": true,
-    "games_started": true,
-    "completed": true,
+    "started": false,
+    "games_started": false,
+    "completed": false,
     "counts": {
-      "configure": 1,
-      "engine_build": 1,
-      "games": 2,
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
+      "configure": 0,
+      "engine_build": 0,
+      "games": 0,
+      "parity_helper_compile": 0,
+      "parity_helper_gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
-      "retries": 0,
-      "new_instrumentation": 0
+      "retries": 0
     },
-    "reserved_at_utc": "2026-11-18T12:25:33.573Z",
-    "default_changed": false,
     "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
-    "metal_pixel_parity_cases": 12065,
-    "finished_at_utc": "2026-11-18T12:33:43.584230+00:00"
+    "reused_binary_round": "sensorlos-exact-interior-fps-20261118-76",
+    "reserved_at_utc": "2026-11-18T12:38:13.558Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3907,7 +3925,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Fixed comparison closed. The observed gain has a single-pair and current outline witness limitation. Keep the candidate OFF by default.",
+  "next_action": "Run the fixed ON then OFF pair once each using the R76 binary.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
