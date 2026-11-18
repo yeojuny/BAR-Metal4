@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 280,
+  "revision": 281,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -43,8 +43,8 @@
   },
   "ready_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/RESULT.json",
-  "decision": null,
-  "execution_status": "OWNED_COOLED_DEFERRED_ABBA_ONLY",
+  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
+  "execution_status": "THERMAL_HOLD_NO_MORE_GAMES",
   "blocked_reason": null,
   "history": [
     {
@@ -4607,6 +4607,12 @@
       "status": "RUNNING",
       "round_id": "mvk-parity-deferred-20261118",
       "action": "game"
+    },
+    {
+      "revision": 281,
+      "status": "DONE",
+      "round_id": "mvk-parity-deferred-20261118",
+      "action": "closed"
     }
   ],
   "communication_test": {
@@ -4703,12 +4709,23 @@
       "retries": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T22:21:51.703925+00:00",
     "default_changed": false,
     "ready_sha256": "9eb51847015f6a761d6572af000f65422f160a20373827bf634c44900edd50a3",
-    "game_seal_utc": "2026-11-18T22:23:41.878192+00:00"
+    "game_seal_utc": "2026-11-18T22:23:41.878192+00:00",
+    "finished_at_utc": "2026-11-18T22:31:33.474711+00:00",
+    "counts": {
+      "games": 1,
+      "mvk3_games": 0,
+      "links": 1,
+      "compiles": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
