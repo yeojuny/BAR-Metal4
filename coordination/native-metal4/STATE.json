@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 144,
+  "revision": 145,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+  "round_id": "groundflash-depth-run-fps-20261118-46",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
-  "request": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-abba-baab-20261118-45/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-abba-baab-20261118-45/READY.json",
-  "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-abba-baab-20261118-45/DONE.json",
-  "decision": "DONE_COMPLETE_ABBA_BAAB_SLAB_REPEAT",
-  "execution_status": "HQ3_ROUND45_CLOSED_COMPLETE_ABBA_BAAB_SLAB_REPEAT",
+  "source_manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
+  "request": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/READY.json",
+  "result_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/DONE.json",
+  "decision": "USER_AUTHORIZED_SINGLE_GROUND_FLASH_COALESCING_TEST",
+  "execution_status": "HQ3_ROUND46_RESERVED_GROUND_FLASH_DEPTH_RUNS",
   "blocked_reason": null,
   "history": [
     {
@@ -2650,6 +2650,32 @@
       "all_counted_frames_retained": true,
       "all_slab_modes_witnessed": true,
       "prior_prelaunch_actual_games": 0
+    },
+    {
+      "event": "HQ3_ROUND46_RESERVED_GROUND_FLASH_DEPTH_RUNS",
+      "revision": 145,
+      "round_id": "groundflash-depth-run-fps-20261118-46",
+      "attempt_id": "groundflash-runs-off-on-01",
+      "order": [
+        "FLASH_OFF",
+        "FLASH_ON"
+      ],
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "existing_cpu_fixture_invocations_max": 1,
+        "gpu_helper_invocations_max": 0,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T01:49:27.301Z"
     }
   ],
   "communication_test": {
@@ -2721,7 +2747,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "SENSORLOS_UPLOAD_SLAB_ABBA_BAAB_SAME_ROUND44_BINARY",
+  "enabled_scope": "GROUND_FLASH_POST_VALIDATION_DEPTH_RUN_COALESCING_SAME_BINARY_OFF_ON",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -2733,102 +2759,34 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "slab-abba-baab-two-sessions-01",
+    "attempt_id": "groundflash-runs-off-on-01",
     "order": [
-      "A1",
-      "B1",
-      "B2",
-      "A2",
-      "B3",
-      "A3",
-      "A4",
-      "B4"
+      "FLASH_OFF",
+      "FLASH_ON"
     ],
     "budget": {
-      "configures": 0,
-      "engine_builds": 0,
-      "helpers": 0,
-      "max_games": 8,
-      "max_a": 4,
-      "max_b": 4,
-      "retries": 0,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0
-    },
-    "flag": {
-      "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": {
-        "A1": "0",
-        "B1": "1",
-        "B2": "1",
-        "A2": "0",
-        "B3": "1",
-        "A3": "0",
-        "A4": "0",
-        "B4": "1"
-      }
-    },
-    "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T01:31:29.854Z",
-    "started": true,
-    "completed": true,
-    "session_plan": {
-      "sessions": [
-        [
-          "A1",
-          "B1",
-          "B2",
-          "A2"
-        ],
-        [
-          "B3",
-          "A3",
-          "A4",
-          "B4"
-        ]
-      ],
-      "per_session_awake_seconds": 2400,
-      "seconds_reserved_per_remaining_game": 330,
-      "original_preflight": true,
-      "scheduled_extra_cooldown_seconds": 0,
-      "prior_attempt": {
-        "id": "slab-abba-baab-01",
-        "revision": 142,
-        "commit": "8db416eed6ec11436a19d8633629f207233037f9",
-        "actual_games": 0,
-        "reason": "2400-second process limit failed the intact eight-game prelaunch check (2640 seconds required)",
-        "own_awake_released": true,
-        "prior_caffeinate_pid": 19811,
-        "results": []
-      }
-    },
-    "ended_at_utc": "2026-11-18T01:46:00.113Z",
-    "counts": {
-      "configure_attempts": 0,
-      "engine_builds": 0,
-      "fixtures": 0,
-      "games": 8,
-      "off_games": 4,
-      "on_games": 4,
-      "normal_exits": 8,
+      "configure_attempts_max": 1,
+      "engine_builds_max": 1,
+      "existing_cpu_fixture_invocations_max": 1,
+      "gpu_helper_invocations_max": 0,
+      "games_max": 2,
+      "off_games_max": 1,
+      "on_games_max": 1,
       "captures": 0,
       "profiles": 0,
       "screenshots": 0,
-      "retries": 0,
-      "earlier_prelaunch_attempts_without_games": 1
+      "retries": 0
     },
-    "cleanup_complete": true,
-    "artifact_commit": "336935605d80cc2354870d8c309eddde4bbb5090",
-    "diagnostic_outcome": "DONE_COMPLETE_ABBA_BAAB_SLAB_REPEAT",
-    "mean_fps_by_arm": {
-      "A": 65.38545667930205,
-      "B": 65.37406093162569
+    "flag": {
+      "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": {
+        "FLASH_OFF": "0",
+        "FLASH_ON": "1"
+      }
     },
-    "relative_percent": -0.017428566312926996,
-    "all_counted_frames_retained": true,
-    "all_slab_modes_witnessed": true,
-    "prior_prelaunch_actual_games": 0
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "reserved_at_utc": "2026-11-18T01:49:27.301Z",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2894,7 +2852,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Preserve slab evidence and keep it OFF for other candidates. Resume GroundFlash source review first.",
+  "next_action": "Run the existing bounded particle contract fixture, build once and compare one GroundFlash OFF game to one ON game.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

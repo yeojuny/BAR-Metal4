@@ -1,0 +1,60 @@
+{
+  "round_id": "groundflash-depth-run-fps-20261118-46",
+  "attempt_id": "groundflash-runs-off-on-01",
+  "scope": "GROUND_FLASH_POST_VALIDATION_DEPTH_RUN_COALESCING_SAME_BINARY_OFF_ON",
+  "authorized_by": "User via SUPER_JINI_MK2 after slab campaign",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
+  "patch_sha256": "102e2cf2d2445ca214fbd77a892ae422ae045a8984983d724b2db7cbd333d5ea",
+  "order": [
+    "FLASH_OFF",
+    "FLASH_ON"
+  ],
+  "flag": {
+    "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": {
+      "FLASH_OFF": "0",
+      "FLASH_ON": "1"
+    }
+  },
+  "budget": {
+    "configure_attempts_max": 1,
+    "engine_builds_max": 1,
+    "existing_cpu_fixture_invocations_max": 1,
+    "gpu_helper_invocations_max": 0,
+    "games_max": 2,
+    "off_games_max": 1,
+    "on_games_max": 1,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "fixed_flags": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+    "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0"
+  },
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "previous": {
+    "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+    "slab_policy": "disabled in both; no slab code carried into the Round41-based candidate",
+    "artifact_commit": "336935605d80cc2354870d8c309eddde4bbb5090"
+  },
+  "retain_all_counted_frames": true
+}
