@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+  "prior_order": [
+    "DEFINES_OFF",
+    "DEFINES_ON"
+  ],
+  "new_order": [
+    "DEFINES_ON",
+    "DEFINES_OFF"
+  ],
+  "matched_environment_per_arm": true,
+  "matched_scene_per_arm": true,
+  "matched_runner": true
+}
