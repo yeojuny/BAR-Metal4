@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 227,
+  "revision": 228,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-parity-witness-recovery-20261118-83",
+  "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
-  "request": "coordination/native-metal4/rounds/ground-decal-parity-witness-recovery-20261118-83/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-parity-witness-recovery-20261118-83/REQUEST.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-parity-witness-recovery-20261118-83/DONE.json",
-  "decision": "GPU_EQUIVALENCE_PASSED_KEEP_DEFAULT_OFF_PERFORMANCE_UNMEASURED",
-  "execution_status": "PASS_GROUND_DECAL_GPU_PARITY_WITNESS_RECOVERY",
+  "request": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/READY.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/DONE.json",
+  "decision": null,
+  "execution_status": "GROUND_DECAL_BUILD_AND_FIXED_PAIR_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -4039,6 +4039,27 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T14:17:07.312Z"
+    },
+    {
+      "event": "HQ3_ROUND84_GROUND_DECAL_FIXED_PAIR_RESERVED",
+      "revision": 228,
+      "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
+      "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
+      "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+      "prior_parity_round": "ground-decal-parity-witness-recovery-20261118-83",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:23:24.568Z"
     }
   ],
   "communication_test": {
@@ -4122,13 +4143,14 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-aa0-parity-witness-02",
+    "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
     "budget": {
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
-      "configure": 0,
-      "engine_build": 0,
-      "games": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "parity_helper_compile": 0,
+      "parity_helper_gpu_runs": 0,
+      "games": 2,
+      "max_per_arm": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
@@ -4136,23 +4158,22 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": true,
-    "completed": true,
+    "started": false,
+    "completed": false,
     "games_started": false,
     "counts": {
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
       "configure": 0,
       "engine_build": 0,
+      "parity_helper_compile": 0,
+      "parity_helper_gpu_runs": 0,
       "games": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
       "new_instrumentation": 0
     },
-    "reserved_at_utc": "2026-11-18T14:16:06.103Z",
-    "default_changed": false,
-    "finished_at_utc": "2026-11-18T14:17:07.312Z"
+    "reserved_at_utc": "2026-11-18T14:23:24.568Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4218,7 +4239,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Witness recovery complete. Any FPS measurement requires its own fixed round; no builds or games were included here.",
+  "next_action": "Configure and build once, seal the signed binary and exact A/B inputs, then run the locked OFF-to-ON pair. Existing GPU parity is preserved.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
