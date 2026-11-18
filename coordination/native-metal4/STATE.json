@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 233,
+  "revision": 234,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-expired-prefix-20261118-85",
+  "round_id": "pending2-prepareworld-join-window-20261118-86",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "47ccf8f7b28ca3b28c795f8fa31840458de9df733d03831bbaa9d67c31638ed3",
-  "request": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/READY.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/DONE.json",
-  "decision": "KEEP_CANDIDATE_OFF_MEASURED_PAIR_INCONCLUSIVE",
-  "execution_status": "COMPLETE_TWO_GAMES_INCONCLUSIVE_BIN_BOUNDARIES",
+  "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
+  "request": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-prepareworld-join-window-20261118-86/RESULT.json",
+  "decision": "KEEP_DEFAULT_CAP1_AND_R85_OFF",
+  "execution_status": "RESERVED_AND_STAGED_FOR_SINGLE_DIAGNOSTIC_GAME",
   "blocked_reason": null,
   "history": [
     {
@@ -4162,6 +4162,26 @@
       "matched_bins": 36,
       "observed_average_fps_change_percent": -0.14115727915372522,
       "utc": "2026-11-18T15:32:12.997Z"
+    },
+    {
+      "event": "HQ3_ROUND86_EXISTING_PHASE_TRACE_RESERVED",
+      "revision": 234,
+      "round_id": "pending2-prepareworld-join-window-20261118-86",
+      "attempt_id": "prepareworld-capture-prefix-existing-trace-01",
+      "utc": "2026-11-18T15:57:19Z",
+      "window": [
+        1122,
+        1128
+      ],
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      }
     }
   ],
   "communication_test": {
@@ -4233,7 +4253,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "ONE_TARGETED_EXISTING_SLAB_SLOT_CONTRACT_FIXTURE",
+  "enabled_scope": "ONE_EXISTING_TRACE_ONLY_CAP2_PREPAREWORLD_DIAGNOSTIC",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -4245,39 +4265,24 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
-    "budget": {
-      "configure": 1,
-      "engine_build": 1,
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
-      "games": 2,
-      "max_per_arm": 1,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0,
-      "new_instrumentation": 0
-    },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "attempt_id": "prepareworld-capture-prefix-existing-trace-01",
     "owner": "HQ3",
-    "started": true,
-    "completed": true,
-    "games_started": true,
-    "counts": {
-      "configure": 1,
-      "engine_build": 1,
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
-      "games": 2,
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "budget": {
+      "configure": 0,
+      "engine_build": 0,
+      "games": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
       "new_instrumentation": 0
     },
-    "reserved_at_utc": "2026-11-18T15:22:39.163Z",
-    "default_changed": false,
-    "binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea",
-    "finished_at_utc": "2026-11-18T15:32:12.997Z"
+    "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+    "started": false,
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T15:57:19Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4343,7 +4348,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Preserve all raw results and defaults. The fixed observation pair is inconclusive under the exact-bin match and does not support candidate adoption.",
+  "next_action": "HQ3 only: run the sealed same-binary R71 diagnostic once; all other local work pauses until cleanup. No builds, new probes, profiles, captures or retries.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
@@ -4384,5 +4389,5 @@
   "queue_review_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/QUEUE-REVIEW.json",
   "previous_runtime_result": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/DONE.json",
   "r69_raw_archive": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/raw/RAW-INDEX.json",
-  "candidate_patch_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/EXPIRED-TRACK-PREFIX.patch"
+  "candidate_patch_path": null
 }

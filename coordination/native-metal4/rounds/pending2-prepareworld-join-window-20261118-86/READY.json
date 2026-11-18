@@ -1,0 +1,28 @@
+{
+  "status": "STAGED_NO_GAME",
+  "plan_sha256": "d6de0e16e30f2d97f912da0115fc71961c6ef3738a81ca60a69e4ece4978225d",
+  "parent_plan_sha256": "068fb4c2c61bd57dc943887ee887e3060aed5b8e9cee06df3f68bdc79568de20",
+  "request_sha256": "d13d4f677b2429975c08d0a90fd1d190f18c54d97a685a58c236aaea7bbe8477",
+  "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+  "input_hashes_match": 13,
+  "trace_window_inclusive": [
+    1122,
+    1128
+  ],
+  "runtime_changes": [
+    "BAR_NATIVE_CAPTURE_ROI_TIMING_FILE",
+    "BAR_NATIVE_FRAME_TRACE",
+    "BAR_NATIVE_FRAME_TRACE_END_SIM",
+    "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP",
+    "BAR_NATIVE_FRAME_TRACE_START_SIM"
+  ],
+  "budget": {
+    "configure": 0,
+    "engine_build": 0,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  }
+}
