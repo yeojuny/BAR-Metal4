@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 172,
+  "revision": 173,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-ordinary-game-fps-20261118-57/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-ordinary-game-fps-20261118-57/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-ordinary-game-fps-20261118-57/DONE.json",
-  "decision": null,
-  "execution_status": "HQ3_ROUND57_RESERVED_PACED_CAP1_CAP2",
+  "decision": "FPS_PAIR_COMPLETE_NO_TWO_PENDING_WITNESS",
+  "execution_status": "HQ3_ROUND57_COMPLETE_BOTH_GAMES_NO_TWO_PENDING_WITNESS",
   "blocked_reason": null,
   "history": [
     {
@@ -3160,6 +3160,15 @@
       "attempt_id": "pending2-cap1-cap2-01",
       "games": 0,
       "utc": "2026-11-18T08:26:26.278755+00:00"
+    },
+    {
+      "event": "HQ3_ROUND57_COMPLETE_BOTH_GAMES_NO_TWO_PENDING_WITNESS",
+      "revision": 173,
+      "round_id": "pending2-ordinary-game-fps-20261118-57",
+      "attempt_id": "pending2-cap1-cap2-01",
+      "games": 2,
+      "actual_two_pending_witness": false,
+      "utc": "2026-11-18T08:35:10.692669+00:00"
     }
   ],
   "communication_test": {
@@ -3257,16 +3266,20 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T08:26:26.278755+00:00",
     "started": true,
-    "completed": false,
+    "completed": true,
     "counts": {
-      "configure": 1,
       "engine_build": 1,
-      "games": 0,
+      "configure": 1,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
-    "prelaunch_recovery": "Removed a duplicate claim writer before any engine process started."
+    "prelaunch_recovery": "Removed a duplicate claim writer before any engine process started.",
+    "ended_at_utc": "2026-11-18T08:35:10.692669+00:00",
+    "cleanup_complete": true,
+    "artifact_commit": "6259ceed3a45bf86bf453bbb11c1734ac9181f3c",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3332,7 +3345,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run exactly one game per cap against the same candidate binary",
+  "next_action": "User requests the previous All That Simmers scene at cap1 as a separate one-game run.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
