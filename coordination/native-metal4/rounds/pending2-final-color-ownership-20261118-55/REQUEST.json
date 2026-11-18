@@ -1,0 +1,17 @@
+{
+  "round_id": "pending2-final-color-ownership-20261118-55",
+  "attempt_id": "pending2-final-color-safety-01",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "990206409cba6e1cc4ef80a8d4fe1bc2c3479df235e204610c9914e1fed06b29",
+  "patch_sha256": "094a3518cc744e86a97b3007df7b092a4203855373b720c5b91b5aa96560b684",
+  "budget": {
+    "syntax_checks": 1,
+    "cpu_fixture": 1,
+    "engine_builds": 0,
+    "games": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "scope": "First native pending-2 prerequisite: independent final color through existing frame owner. One syntax check and existing pool fixture. Full game comparison gated on producer/lifetime proof."
+}
