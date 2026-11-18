@@ -1,27 +1,27 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 265,
+  "revision": 266,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-cold-glow-20261118-98",
+  "round_id": "ground-decal-g01-cache-20261118-99",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "ground-decal-cold-glow-20261118-98",
-    "switch": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
+    "round_id": "ground-decal-g01-cache-20261118-99",
+    "switch": "BAR_NATIVE_GROUND_DECAL_CACHE_G01_INDEX",
     "order": [
-      "R98_OFF",
-      "R98_ON"
+      "R99_OFF",
+      "R99_ON"
     ],
     "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
-    "patch_sha256": "1ca8d06ef4965a6e5f82dcf1b4143d1a42edc3de40ab9939607ec0ef49d04452",
-    "original_patch_sha256": "795b01e5af4ffb505eed5b6276a2f31d3d2373cc8063c5100f19607d1a2addb1",
+    "patch_sha256": "9b66181180932a71a9238cd20e44f85f774fe2bb02f52fb70a48753dad75f952",
+    "original_patch_sha256": "9b66181180932a71a9238cd20e44f85f774fe2bb02f52fb70a48753dad75f952",
     "budget": {
       "translation_units": 1,
       "engine_builds": 1,
@@ -33,10 +33,10 @@
       "retries": 0
     }
   },
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-cold-glow-20261118-98/READY.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-cold-glow-20261118-98/RESULT.json",
-  "decision": "KEEP_COLD_GLOW_OPT_IN_ONLY",
-  "execution_status": "MATCHED_PAIR",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-g01-cache-20261118-99/READY.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-g01-cache-20261118-99/RESULT.json",
+  "decision": null,
+  "execution_status": "PARITY_ONLY_BEFORE_SEAL",
   "blocked_reason": null,
   "history": [
     {
@@ -4509,6 +4509,12 @@
       "status": "DONE",
       "round_id": "ground-decal-cold-glow-20261118-98",
       "action": "closed"
+    },
+    {
+      "revision": 266,
+      "status": "RUNNING",
+      "round_id": "ground-decal-g01-cache-20261118-99",
+      "action": "build"
     }
   ],
   "communication_test": {
@@ -4592,7 +4598,7 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-cold-glow-20261118-98-01",
+    "attempt_id": "ground-decal-g01-cache-20261118-99-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
@@ -4606,22 +4612,10 @@
       "retries": 0
     },
     "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T19:42:18.517573+00:00",
-    "default_changed": false,
-    "binary_sha256": "d3899678fef6201e350e86d593cf7ba9bb13d75381f6115c1edc1094d4e5b5ea",
-    "game_seal_utc": "2026-11-18T19:43:27.716212+00:00",
-    "finished_at_utc": "2026-11-18T19:47:16.994800+00:00",
-    "counts": {
-      "games": 2,
-      "engine_builds": 1,
-      "fixture_runs": 1,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T19:48:54.730052+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
