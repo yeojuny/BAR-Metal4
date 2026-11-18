@@ -1,0 +1,79 @@
+{
+  "status": "SOURCE_VERIFIED_ALL_PRIOR_READS_CLASSIFIED",
+  "source_parent_artifact": "3e592d9920efb3dc8b45f4afffa6c8765cee61b0",
+  "source_parent_binary": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "parent_sha256": "a69ba6bc56d9db152619a884f34a2bc66d3f05801cacced3687348eac6e9c0ba",
+      "candidate_sha256": "65913b4546d5f64affbd4c8431d3b2fbbcbaa27ce71a02fad38881d317c81ba5"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "parent_sha256": "2e2b6fc5fdc7f0a5aaef58a7ddc4804dc34ec3ca69492aafba00f5a6f61fbf09",
+      "candidate_sha256": "cb0fc44490ad66f4075b56788c87d075a31f58591991e92fd2d3f0e948744783"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4Bloom.mm",
+      "parent_sha256": "6c72b76a993af836d97e9acdb10b4a5a0d885a07bfc33cb69e039063b791067c",
+      "candidate_sha256": "d6040e0014f642e3a88cdb86e12cbbabcd0247ffb5e15a5b5dd3b2d64bba8fca"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "parent_sha256": "8dce8209190cfd480224914b2b07d0180f12275d7ad1d8476d91295ad1fb43d2",
+      "candidate_sha256": "45fb3e2406fd9c5d98b99f7ae3d2ff437ec7fd63dc2b22009216f3b03fd44046"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4BumpWater.mm",
+      "parent_sha256": "039afcd948dad0a8008fb5c62e36bda0a5ac616fcb93617431e4b1eea943f4e3",
+      "candidate_sha256": "d48778d27dc4536fa615686a3c6e6bf1d6ddfbba3dd76168a8d8a82ab772db79"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4TerrainInfoSource.mm",
+      "parent_sha256": "388761d94971c07cb58d44a97896fdbef18a61ea77f7d13eb4a96b594b543bd2",
+      "candidate_sha256": "c067d0508bde34be6db79d129c9580c3121a447e58a795f844274bc4f07fb44d"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldInfo.h",
+      "parent_sha256": "95091a68e7a24d964d6dbbc5d144cc235b559e74f7c7c35ba493189094360b18",
+      "candidate_sha256": "7389896f7bae61e16c3fb41191d0c0b053ac81080b62d11587439875a6eb9e31"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldInfo.mm",
+      "parent_sha256": "4462d5cd7fcfe77faa57ba89a1dea522cd8db765fcabfdffe3c6f8ad24d041cd",
+      "candidate_sha256": "f5982ee1ea9c4ee33a2a0a2b100cdab44ba42c11b935f6cf4ad111fe595557bc"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4MiniMapNative.mm",
+      "parent_sha256": "2cf3703a91134cd459c64ed328b05bc25ed14ac832c290eb8d577985b167b42c",
+      "candidate_sha256": "98e8b6e220bf3a5655b118e776cfcbc690b567fe001fe0326255cb74351952ba"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "parent_sha256": "de946fee92f93703470289ccca28ae98cabc43e8e5be327b95783e100f277f79",
+      "candidate_sha256": "60a55e91458407ec48e9aeeeb8f5077de50c830c36e34a59179d27c800751e10"
+    },
+    {
+      "path": "engine/tools/metal4-contracts/TestTerrainInfoLeaseReceipts.cpp",
+      "parent_sha256": "d7843a990c0a0f5fff27a75f66aee8ab0fb3f3327b11ac077bc4f16561a7bbd2",
+      "candidate_sha256": "f2a4ea16715750cc0a0649faed4d5b6b72b965025c53236d8ca7f640f770ab8c"
+    },
+    {
+      "path": "engine/tools/metal4-contracts/run_postprocess_pending_input_receipt_test.py",
+      "parent_sha256": "e0b9487f08509e16c54e0f6d0b6f202d8ad2c59d48e7518024ffdca878867fba",
+      "candidate_sha256": "ec126f92dc46cd5ae4d5739fd769954c2be254b2048e0e4da7ed3d4ff42a5943"
+    }
+  ],
+  "patch_sha256": "24622462bce0e95cae7f6b546da2a2e3330ea6438332e4bdf745e5f344f2f310",
+  "prior_read_families": [
+    "cube",
+    "world_info",
+    "screen_rtt",
+    "bloom",
+    "postprocess",
+    "terrain_info",
+    "bump_water"
+  ],
+  "proof_scope": "live-scene syntax and production-extracted CPU contracts. Actual GPU activation requires a game.",
+  "external_code_imported": false
+}

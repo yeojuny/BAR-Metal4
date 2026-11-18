@@ -1,0 +1,439 @@
+--- a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h
++++ b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h
+@@ -97,7 +97,9 @@
+ struct RuntimePendingSubmission;
+ struct PublishedRequestState;
+ class InterventionPersistentResidency;
+-enum class NativePriorRead : unsigned { Other=1, Cube=2, WorldInfo=4, ScreenTarget=8 };
++enum class NativePriorRead : unsigned {
++ Unclassified=1, Cube=2, WorldInfo=4, ScreenTarget=8, Bloom=16, Postprocess=32, TerrainInfo=64, BumpWater=128
++};
+ 
+ // One actual native context for both asset and screen passes. All requests hold
+ // a serialized lease; the monotonically increasing shared event spans requests.
+@@ -134,6 +136,7 @@
+ 	struct PendingGameStats {
+ 		unsigned long long submitted=0, eligible=0, adjacentEligible=0, joined=0, twoPending=0;
+ 		unsigned long long noPredecessor=0, blockedReads=0, blockedCube=0, blockedInfo=0, blockedRTT=0;
++		unsigned long long blockedBloom=0, blockedPostprocess=0, blockedTerrainInfo=0, blockedBumpWater=0, unclassified=0;
+ 		unsigned long long capacityReclaims=0, orderedCube=0;
+ 	} pendingGameStats;
+ 	void DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner = nullptr);
+@@ -173,11 +176,11 @@
+  bool PreparingWhilePending() const;
+  uint64_t PendingEventForSource(uint64_t sourceSubmission) const noexcept;
+  bool OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,std::function<void()> check,
+-  NativePriorRead kind=NativePriorRead::Other);
++  NativePriorRead kind);
+  void PrepareDeferredDrawable(bool orderedGameFrame,uint64_t simulationFrame);
+  // Admit only a pinned, already encoded predecessor. The supplied check must
+  // establish its actual completion before this lease can submit GPU work.
+- bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind=NativePriorRead::Other);
++ bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind);
+ 	~RuntimeLease();
+ 	RuntimeLease(const RuntimeLease&) = delete;
+ 	RuntimeLease& operator=(const RuntimeLease&) = delete;
+--- a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm
+@@ -589,10 +589,11 @@
+  const auto totals=std::exchange(pendingGameStats,{});
+ #ifdef RECOIL_METAL4_LIVE_SCENE
+  if(totals.submitted)
+-  LOG("[NativePendingGameSummary] cap=%u first_sim=540 last_sim_exclusive=1740 submitted=%llu eligible=%llu adjacent_eligible=%llu joined=%llu two_pending=%llu no_predecessor=%llu serial_reads=%llu cube=%llu world_info=%llu screen_rtt=%llu ordered_cube=%llu scene_reclaims_all_frames=%llu",
++  LOG("[NativePendingGameSummary] cap=%u first_sim=540 last_sim_exclusive=1740 submitted=%llu eligible=%llu adjacent_eligible=%llu joined=%llu two_pending=%llu no_predecessor=%llu serial_reads=%llu cube=%llu world_info=%llu screen_rtt=%llu bloom=%llu postprocess=%llu terrain_info=%llu bump_water=%llu unclassified=%llu ordered_cube=%llu scene_reclaims_all_frames=%llu",
+    InterventionTwoInFlight()?2u:1u,totals.submitted,totals.eligible,totals.adjacentEligible,
+    totals.joined,totals.twoPending,totals.noPredecessor,totals.blockedReads,totals.blockedCube,
+-   totals.blockedInfo,totals.blockedRTT,totals.orderedCube,totals.capacityReclaims);
++   totals.blockedInfo,totals.blockedRTT,totals.blockedBloom,totals.blockedPostprocess,totals.blockedTerrainInfo,
++   totals.blockedBumpWater,totals.unclassified,totals.orderedCube,totals.capacityReclaims);
+ #endif
+ }
+ 
+@@ -1120,6 +1121,11 @@
+    stats.blockedCube+=bool(frame->priorReadClasses&unsigned(NativePriorRead::Cube));
+    stats.blockedInfo+=bool(frame->priorReadClasses&unsigned(NativePriorRead::WorldInfo));
+    stats.blockedRTT+=bool(frame->priorReadClasses&unsigned(NativePriorRead::ScreenTarget));
++   stats.blockedBloom+=bool(frame->priorReadClasses&unsigned(NativePriorRead::Bloom));
++   stats.blockedPostprocess+=bool(frame->priorReadClasses&unsigned(NativePriorRead::Postprocess));
++   stats.blockedTerrainInfo+=bool(frame->priorReadClasses&unsigned(NativePriorRead::TerrainInfo));
++   stats.blockedBumpWater+=bool(frame->priorReadClasses&unsigned(NativePriorRead::BumpWater));
++   stats.unclassified+=!frame->priorReadClasses||bool(frame->priorReadClasses&unsigned(NativePriorRead::Unclassified));
+   }
+  }
+  if(!queueBehind)RetirePreviousSubmission(&completedPredecessor186);
+--- a/engine/rts/Rendering/Metal4/Metal4Bloom.mm
++++ b/engine/rts/Rendering/Metal4/Metal4Bloom.mm
+@@ -58,7 +58,22 @@
+  if(!p.completed&&p.submissionIdentity&&p.submissionIdentity!=submission){
+   Require(submission&&p.encoded,"Bloom predecessor lacks a current consumer or complete encode attempt");
+   auto ordered=read;ordered.predecessor=p.submissionIdentity;
+-  if(lease.OrderAfterPreviousSubmission(read.version.get(),[ordered]{ordered.RequirePreviousComplete();}))
++  const auto event=lease.PendingEventForSource(ordered.predecessor);
++  const auto texture=ordered.image->texture;
++  const auto& logical=*ordered.version->image;
++  // Local Bloom versions hold their private root until every consumer retires.
++  // Imported or ambiguous storage retains the CPU completion boundary.
++  if(event&&submission==lease.SourceSubmission()&&texture&&texture.device==lease.Device()&&
++     texture.storageMode==MTLStorageModePrivate&&texture.textureType==MTLTextureType2D&&
++     texture.width==logical.width&&texture.height==logical.height&&texture.sampleCount==1&&
++     texture.arrayLength==1&&texture.mipmapLevelCount==1&&!texture.parentTexture&&
++     !texture.iosurface&&!texture.buffer&&!texture.heap&&
++     lease.OrderGPUReadAfterSubmission(read.version.get(),ordered.predecessor,event,[ordered,texture]{
++      Require(ordered.image->texture==texture,"Ordered Bloom read lost its physical allocation");
++      ordered.RequirePreviousComplete();
++     },NativePriorRead::Bloom))
++   return ordered;
++  if(lease.OrderAfterPreviousSubmission(read.version.get(),[ordered]{ordered.RequirePreviousComplete();},NativePriorRead::Bloom))
+    return ordered;
+   // A single recording slot still retires N at StageResources before Begin.
+   // No early wait is added here; unregistered reads retain the strict check.
+--- a/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm
+@@ -483,9 +483,8 @@
+ 		auto i=images.find(&version);return i!=images.end()&&!i->second.owner.expired()&&*i->second.completed;
+ 	}
+  // CPU preparation may pin an already encoded immutable input from N.
+- // This is NOT retirement/readability publication: N's real event+feedback
+- // still precede N+1 GPU submission, and original per-version read checks stay.
+- // CPU encoding may refer to the pinned image; it never publishes completion.
++ // CPU encoding may refer to a pinned producer. Queue ordering protects exact
++ // GPU reads, and the original successful retirement precedes publication.
+  bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease) const
+  {
+   if(Retired(version))return true;
+@@ -496,8 +495,6 @@
+   // Pin the exact logical version and its immutable allocation's completion
+   // flag, not this mutable cache or a later lookup by reused raw address.
+   // ImageFor separately pins the physical texture in this lease's GPU graph.
+-  // Encoding is preparation permission only; event+feedback retirement must
+-  // publish this exact producer completion before the consumer can submit.
+   const auto completed=i->second.completed;
+   const auto* key=owner.get();
+   auto texture=i->second.image;
+@@ -512,17 +509,16 @@
+     IsNativePostprocessDepth(owner->image->format)
+      ? NativePostprocessTextureAspect::Depth : NativePostprocessTextureAspect::Color
+    };
+-   if (receipt.Valid())
+-    return lease.OrderGPUReadAfterSubmission(key,producer,event,[owner=std::move(owner),texture,completed,receipt]{
++   if (receipt.Valid()&&lease.OrderGPUReadAfterSubmission(key,producer,event,[owner,texture,completed,receipt]{
+      Require(owner.get()==receipt.version && (__bridge const void*)texture==receipt.storage &&
+       owner->image->object==receipt.object && owner->generation==receipt.generation && *completed,
+       "Exact pending postprocess texture did not retire successfully before consumer publication");
+-    });
++    },NativePriorRead::Postprocess))return true;
+   }
+   // Existing serialized submission still handles sources with no exact GPU receipt.
+   return lease.OrderAfterPreviousSubmission(key,[owner=std::move(owner),completed]{
+    Require(bool(owner)&&*completed,"Pending postprocess input did not complete before consumer submission");
+-  });
++  },NativePriorRead::Postprocess);
+  }
+  struct PreparationContext {Impl* cache;RuntimeLease* lease;};
+  static bool PreparationInputCallback(const NativePostprocessVersion& v,void* raw){
+--- a/engine/rts/Rendering/Metal4/Metal4BumpWater.mm
++++ b/engine/rts/Rendering/Metal4/Metal4BumpWater.mm
+@@ -219,7 +219,7 @@
+  bool coastInitialized=generation.coastInitialized;
+  if(auto prior=generation.pending.lock();prior&&!prior->completed){
+   Require(prior->encoded&&prior->completion.generation==f.generation,"Water predecessor lost its original encoded generation");
+-  if(lease.OrderAfterPreviousSubmission(prior.get(),[prior]{Require(prior->completed,"Water predecessor did not actually complete before successor submission");})){
++  if(lease.OrderAfterPreviousSubmission(prior.get(),[prior]{Require(prior->completed,"Water predecessor did not actually complete before successor submission");},NativePriorRead::BumpWater)){
+    base=prior->completion;coastInitialized=prior->coastInitialized;
+   }else{
+    lease.RetirePreviousSubmission();Require(prior->completed,"Water preparation cannot overwrite an unretired predecessor");
+--- a/engine/rts/Rendering/Metal4/Metal4TerrainInfoSource.mm
++++ b/engine/rts/Rendering/Metal4/Metal4TerrainInfoSource.mm
+@@ -62,8 +62,8 @@
+ 	{
+   if(!completed&&encodingSubmission&&encodingSubmission!=submission&&lease.PreparingWhilePending()){
+    Require(dependenciesEncoded,"Previous info plan has an incomplete encode attempt");
+-   // Pin the already submitted immutable image. Do not overwrite N's receipt
+-   // identity; N must actually retire before N+1 GPU submission.
++   // Pin the submitted image without changing its writer. The caller checks
++   // the exact pending plan or preserves the CPU retirement boundary.
+    plan->RegisterResources(lease);return;
+   }
+ 		Require(completed||!encodingSubmission||encodingSubmission==submission,
+@@ -84,7 +84,7 @@
+ 			return;
+ 		}
+ 		encodingSubmission=submission;
+-		plan->EncodeDependencies(command);
++		plan->EncodeDependencies(command,submission);
+ 		dependenciesEncoded=true;
+ 	}
+ 	void Readable(uint64_t submission) const
+@@ -207,11 +207,30 @@
+   return InspectTerrainInfoDependencies161(*static_cast<const ImageOwner*>(context));
+  }};
+  const auto priorSubmission=resource->encodingSubmission;
+- const bool orderedPrior=!resource->completed&&priorSubmission&&priorSubmission!=submission&&
+-  lease.OrderAfterPreviousSubmission(resource.get(),[owner,priorSubmission]{
++ bool orderedPrior=false;
++ if(!resource->completed&&priorSubmission&&priorSubmission!=submission){
++  const auto plan=resource->plan;
++  const auto texture=out.texture;
++  const auto event=lease.PendingEventForSource(priorSubmission);
++  const auto complete=[owner,priorSubmission]{
+    Require(owner->resource->completed&&owner->resource->encodingSubmission==priorSubmission,
+     "Borrowed terrain info did not complete its original submitting owner");
+-  });
++  };
++  // The wrapper's encoding stamp can identify a borrower of an already
++  // encoded plan. Only the plan's own base/mip writer can authorize queue ordering.
++  if(event&&submission==lease.SourceSubmission()&&resource->dependenciesEncoded&&
++     plan->EncodedFullMipProducerOn(priorSubmission)&&texture.storageMode==MTLStorageModePrivate&&
++     !texture.parentTexture&&!texture.iosurface&&!texture.buffer&&!texture.heap)
++   orderedPrior=lease.OrderGPUReadAfterSubmission(resource.get(),priorSubmission,event,
++    [owner,plan,texture,priorSubmission,complete]{
++     Require(owner->backing->resource==owner->resource&&owner->resource->plan==plan&&plan->Info()==texture&&
++      owner->resource->contentVersion==owner->backing->contentVersion&&plan->EncodedFullMipProducerOn(priorSubmission),
++      "Ordered terrain-info read lost its actual version or full mip writer");
++     complete();
++    },NativePriorRead::TerrainInfo);
++  if(!orderedPrior)
++   orderedPrior=lease.OrderAfterPreviousSubmission(resource.get(),complete,NativePriorRead::TerrainInfo);
++ }
+  if(orderedPrior){
+   owner->priorSubmission=priorSubmission;
+   auto readable=[owner,priorSubmission]{Require(owner->resource->completed||
+--- a/engine/rts/Rendering/Metal4/Metal4WorldInfo.h
++++ b/engine/rts/Rendering/Metal4/Metal4WorldInfo.h
+@@ -14,8 +14,9 @@
+ 	std::uint64_t MapIdentity()const;
+ 	std::uint64_t CompletionSerial()const;
+ 	bool HasUpdates()const;
++	bool EncodedFullMipProducerOn(uint64_t sourceSubmission)const;
+ 	void RegisterResources(RuntimeLease&)const; // Reuse the retained pre-unit image across runtime leases.
+-	void EncodeDependencies(id<MTL4CommandBuffer>)const; // before any info consumer; idempotent same plan
++	void EncodeDependencies(id<MTL4CommandBuffer>,uint64_t sourceSubmission)const;
+ 	void DidComplete()const; // publish only after feedback+event retirement
+ private:
+ 	PreparedWorldInfo();struct Impl;std::unique_ptr<Impl> impl;friend class WorldInfoGPU;
+--- a/engine/rts/Rendering/Metal4/Metal4WorldInfo.mm
++++ b/engine/rts/Rendering/Metal4/Metal4WorldInfo.mm
+@@ -19,6 +19,7 @@
+ 	std::shared_ptr<PreparedMetalInfo> metal;
+  std::shared_ptr<PreparedWorldInfo> predecessor;
+ 	mutable bool encoded=false,completed=false;
++	mutable uint64_t encodedSubmission=0;
+  bool predecessorOrdered=false;
+ };
+ PreparedWorldInfo::PreparedWorldInfo():impl(std::make_unique<Impl>()){}
+@@ -29,13 +30,20 @@
+ uint64_t PreparedWorldInfo::MapIdentity()const{return impl->frame->mapIdentity;}
+ uint64_t PreparedWorldInfo::CompletionSerial()const{return impl->frame->serial;}
+ bool PreparedWorldInfo::HasUpdates()const{return !impl->completed&&(!impl->updates.empty()||(impl->metal&&impl->metal->HasUpdates()));}
++bool PreparedWorldInfo::EncodedFullMipProducerOn(uint64_t sourceSubmission)const
++{
++ // Non-Metal updates store the private RGB10_A2 base and generate its full mip
++ // chain. Cached Metal info and wrapper-only encode callbacks cannot claim it.
++ return sourceSubmission&&impl->encoded&&impl->encodedSubmission==sourceSubmission&&
++  !impl->metal&&!impl->updates.empty();
++}
+ void PreparedWorldInfo::RegisterResources(RuntimeLease& lease)const
+ {
+ 	lease.AddAllocation(impl->image);if(impl->previous!=nil)lease.AddAllocation(impl->previous);
+ 	if(impl->metal)lease.AddAllocation(impl->metal->Info());
+ 	for(const auto& update:impl->updates)update->RegisterInfoResources(lease);
+ }
+-void PreparedWorldInfo::EncodeDependencies(id<MTL4CommandBuffer> command)const
++void PreparedWorldInfo::EncodeDependencies(id<MTL4CommandBuffer> command,uint64_t sourceSubmission)const
+ {
+ 	if(impl->encoded||impl->completed)return;
+  if(impl->predecessor)Require(impl->predecessor->impl->completed||
+@@ -47,6 +55,7 @@
+ 		[e copyFromTexture:impl->previous sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:MTLSizeMake(impl->image.width,impl->image.height,1) toTexture:impl->image destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];
+ 		[e barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[e endEncoding];}
+ 	for(const auto& update:impl->updates)update->EncodeDependencies(command);
++	impl->encodedSubmission=sourceSubmission;
+ 	impl->encoded=true;
+ }
+ void PreparedWorldInfo::DidComplete()const
+--- a/engine/rts/Rendering/Metal4/Metal4MiniMapNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4MiniMapNative.mm
+@@ -156,6 +156,7 @@
+ 	__strong NSMutableArray* infoAllocations=nil;
+ 	std::shared_ptr<PreparedMetalInfo> metal;
+ 	std::shared_ptr<PreparedWorldInfo> globalInfo;
++	uint64_t globalInfoSubmission=0;
+ 	__strong id<MTLTexture> shade=nil,info=nil,height=nil,groundLos=nil,radar=nil;
+ 	__strong id<MTLBuffer> uniforms=nil;
+ 	__strong MTL4RenderPassDescriptor* infoPass=nil;
+@@ -174,7 +175,7 @@
+ id<MTLBuffer> PreparedMiniMap::Uniforms()const{return impl->uniforms;}
+ void PreparedMiniMap::EncodeDependencies(id<MTL4CommandBuffer> command)const {
+ 	if(impl->metal)impl->metal->EncodeDependencies(command);
+-	if(impl->globalInfo)impl->globalInfo->EncodeDependencies(command);
++	if(impl->globalInfo)impl->globalInfo->EncodeDependencies(command,impl->globalInfoSubmission);
+ 	for(const auto& work:impl->before) {
+ 		auto encoder=[command computeCommandEncoder];Require(encoder!=nil,"Cannot create native minimap compute encoder");
+ 		[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];
+@@ -305,6 +306,7 @@
+ 		const auto& info=*source->info;
+ 		if(info.worldInfo&&!individualImagesOnly){
+ 			result->impl->globalInfo=SharedWorldInfoGPU().Prepare(lease,info.worldInfo,validation,shaderMs);result->impl->info=result->impl->globalInfo->Info();
++			result->impl->globalInfoSubmission=lease.SourceSubmission();
+ 		}else if(info.mode==NativeMiniMapInfoMode::Metal){
+ 			result->impl->metal=SharedMetalInfoGPU().Prepare(lease,info.metal,validation,shaderMs);result->impl->info=result->impl->metal->Info();
+ 			impl->info=nil;impl->infoReady.reset();impl->lastInfo.reset();
+--- a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -1623,7 +1623,7 @@
+ 			impl->EncodePendingTextureMipmaps(lease,command,sourceSubmission);
+ 		impl->particlesGPU.EncodeAtlasImages(lease,command,sourceSubmission);
+ 			if(pbrBRDF)pbrBRDF->Encode(command,sourceSubmission);
+-			if (worldInfo) worldInfo->EncodeDependencies(command);
++			if (worldInfo) worldInfo->EncodeDependencies(command,sourceSubmission);
+ 			if (namedImageMipmaps) namedImageMipmaps->EncodeDependencies(command);
+ 			// The original Genesis mask precedes every later consumer, even without a drawable.
+ 			if(unitStencil)for(size_t n=0;n<unitStencil->PassCount();++n)unitStencil->EncodePass(n,command);
+@@ -4765,7 +4765,7 @@
+    originalShadow->EndEncoding(command,shadowEncoder);shadowEncoder=nil;
+   }
+ 		encodingProbe.Select(Family176::Other);
+-		if(reflectionWorldInfo)reflectionWorldInfo->EncodeDependencies(command);
++		if(reflectionWorldInfo)reflectionWorldInfo->EncodeDependencies(command,sourceSubmission);
+ 		environment->EncodeDependencies(command);
+ 		if (standardShade) standardShade->EncodeDependencies(command);
+ 		if (!normalResource->Completed()) {
+@@ -4785,7 +4785,7 @@
+   encodingProbe.Select(Family176::Shadow);
+   if(shadowColor){shadowColor->EncodeDependencies(command);shadowLua.Dependencies(command);}
+   encodingProbe.Select(Family176::Other);
+-  if(worldInfo)worldInfo->EncodeDependencies(command);
++  if(worldInfo)worldInfo->EncodeDependencies(command,sourceSubmission);
+   encodingProbe.Select(Family176::Effects);
+   if(grass)grass->EncodeDependencies(command);
+   if(resourceSpots)resourceSpots->EncodeDependencies(command);
+--- a/engine/tools/metal4-contracts/TestTerrainInfoLeaseReceipts.cpp
++++ b/engine/tools/metal4-contracts/TestTerrainInfoLeaseReceipts.cpp
+@@ -13,8 +13,9 @@
+ void Require(bool ok,const char* why){if(!ok)throw std::runtime_error(why);}
+ struct PreparedWorldInfo{
+  int registered=0,encoded=0,completed=0;bool fail=false;
++ uint64_t encodedSubmission=0;
+  void RegisterResources(RuntimeLease&){++registered;}
+- void EncodeDependencies(void*){++encoded;if(fail)throw std::runtime_error("encode");}
++ void EncodeDependencies(void*,uint64_t submission){++encoded;if(fail)throw std::runtime_error("encode");encodedSubmission=submission;}
+  void DidComplete(){++completed;}
+ };
+ #include "terrain-info-resource.inc"
+@@ -50,7 +51,7 @@
+   resource.Register(lease,1);
+   try{resource.Readable(1);assert(false);}catch(const std::runtime_error&){}
+   resource.Encode(reinterpret_cast<void*>(1),1);resource.Encode(reinterpret_cast<void*>(1),1);
+-  resource.Readable(1);assert(resource.plan->encoded==1);
++  resource.Readable(1);assert(resource.plan->encoded==1&&resource.plan->encodedSubmission==1);
+   lease.pending=true;resource.Register(lease,2);assert(resource.registeredSubmission==1);
+   try{resource.Readable(2);assert(false);}catch(const std::runtime_error&){}
+   try{resource.Complete(2);assert(false);}catch(const std::runtime_error&){}
+--- a/engine/tools/metal4-contracts/run_postprocess_pending_input_receipt_test.py
++++ b/engine/tools/metal4-contracts/run_postprocess_pending_input_receipt_test.py
+@@ -12,6 +12,8 @@
+         depth+=(source[i]=='{')-(source[i]=='}')
+         if depth==0:return source[start:i]
+     raise AssertionError('unclosed function')
++preparation=body(post,'bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease) const')
++preparation=preparation.replace('texture.','texture->').replace('(__bridge const void*)texture','static_cast<const void*>(texture.get())')
+ source=r'''
+ #include <cassert>
+ #include <functional>
+@@ -19,28 +21,58 @@
+ #include <memory>
+ #include <stdexcept>
+ #include <utility>
++#include "Rendering/Backend/NativePostprocessTextureReceipt.h"
++using rendering::NativePostprocessTextureAspect;
++using rendering::NativePostprocessTextureReceipt;
+ void Require(bool x,const char* why){if(!x)throw std::runtime_error(why);}
+-struct NativePostprocessVersion {};
+-struct Frame {bool recording=false,pending=false;int slot=1;bool previousRetired=true;std::map<const void*,std::function<void()>> priorReadChecks;};
++enum class NativePriorRead : unsigned {Postprocess=32};
++constexpr int MTLTextureType2D=2,MTLStorageModePrivate=1;
++struct MockTexture {
++ int device=1,storageMode=MTLStorageModePrivate,textureType=MTLTextureType2D;
++ int sampleCount=1,mipmapLevelCount=1,arrayLength=1;
++ bool parentTexture=false,iosurface=false,buffer=false,heap=false;
++};
++struct NativePostprocessVersion {
++ struct Image {uint64_t object=17;int format=0;};
++ std::shared_ptr<Image> image=std::make_shared<Image>();
++ uint64_t generation=1;
++};
++bool IsNativePostprocessDepth(int format){return format!=0;}
++struct Frame {bool recording=false,pending=false;int slot=1;bool previousRetired=true;unsigned priorReadClasses=0;std::map<const void*,std::function<void()>> priorReadChecks;};
+ struct Pending {struct {std::shared_ptr<Frame> owner=std::make_shared<Frame>();} resources;};
+ struct Runtime {bool poisoned=false;std::shared_ptr<Pending> pendingSubmission=std::make_shared<Pending>();};
+ struct RuntimeLease {
+  std::shared_ptr<Frame> frame=std::make_shared<Frame>();Runtime runtime;
++ bool rejectGPU=false;
++ uint64_t pendingSource=3;
++ std::function<void()> gpuCheck;
+  RuntimeLease(){runtime.pendingSubmission->resources.owner->slot=2;}
+  bool PreparingWhilePending()const {return bool(frame->previousRetired)&&bool(runtime.pendingSubmission);}
+- bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check){
++ int Device()const{return 1;}
++ uint64_t PendingEventForSource(uint64_t source)const{return source&&source==pendingSource?7:0;}
++ bool OrderGPUReadAfterSubmission(const void*,uint64_t source,uint64_t event,std::function<void()> check,NativePriorRead kind){
++  assert(event==PendingEventForSource(source)&&kind==NativePriorRead::Postprocess);
++  if(rejectGPU)return false;
++  gpuCheck=std::move(check);return true;
++ }
++ bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind){
+ '''+body(runtime,'bool RuntimeLease::OrderAfterPreviousSubmission(')+r'''
+  }
+  void Check(){auto checks=std::move(frame->priorReadChecks);frame->priorReadChecks.clear();for(auto& [key,check]:checks)check();}
+ };
+ struct Cache {
+- struct Image {std::weak_ptr<const NativePostprocessVersion> owner;std::shared_ptr<bool> encoded=std::make_shared<bool>(false),completed=std::make_shared<bool>(false);};
++ struct Image {
++  std::weak_ptr<const NativePostprocessVersion> owner;
++  std::shared_ptr<MockTexture> image=std::make_shared<MockTexture>();
++  uint64_t producerSubmission=0;
++  std::shared_ptr<bool> encoded=std::make_shared<bool>(false),completed=std::make_shared<bool>(false);
++ };
+  std::map<const NativePostprocessVersion*,Image> images;
+  bool Retired(const NativePostprocessVersion& version)const {
+ '''+body(post,'bool Retired(const NativePostprocessVersion& version) const')+r'''
+  }
+  bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease)const {
+-'''+body(post,'bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease) const')+r'''
++'''+preparation+r'''
+  }
+ };
+ template<class F>bool Throws(F f){try{f();return false;}catch(const std::runtime_error&){return true;}}
+@@ -84,10 +116,30 @@
+   if(invalid==0)lease.frame->recording=true;if(invalid==1)lease.frame->pending=true;if(invalid==2)lease.runtime.poisoned=true;
+   assert(Throws([&]{c.PreparationInput(*p,lease);}));assert(lease.frame->priorReadChecks.empty());
+  }
++ // A valid exact read keeps its own completion even after cache eviction.
++ // Rejected ordering and incompatible storage retain the named CPU check.
++ for(int scenario=0;scenario<4;++scenario){
++  Cache c;RuntimeLease lease;auto p=std::make_shared<const NativePostprocessVersion>();
++  auto& i=c.images[p.get()];i.owner=p;*i.encoded=true;i.producerSubmission=3;
++  if(scenario==1)lease.rejectGPU=true;
++  if(scenario==2)i.image->parentTexture=true;
++  if(scenario==3)i.producerSubmission=4;
++  auto exact=i.completed;
++  assert(c.PreparationInput(*p,lease));
++  assert(bool(lease.gpuCheck)==(scenario==0));
++  if(scenario==0){
++   assert(lease.frame->priorReadChecks.empty());
++   c.images.clear();p.reset();assert(Throws(lease.gpuCheck));*exact=true;lease.gpuCheck();
++  }else{
++   assert(lease.frame->priorReadChecks.size()==1);
++   assert(lease.frame->priorReadClasses==unsigned(NativePriorRead::Postprocess));
++   *exact=true;lease.Check();
++  }
++ }
+ }
+ '''
+ with tempfile.TemporaryDirectory(prefix='bar-post-pending-') as d:
+  p=Path(d);(p/'test.cpp').write_text(source)
+- subprocess.run(['g++','-std=c++23','-O1','-g','-fsanitize=address,undefined','-fno-pie','-no-pie',str(p/'test.cpp'),'-o',str(p/'test')],check=True)
++ subprocess.run(['g++','-std=c++23','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),str(p/'test.cpp'),'-o',str(p/'test')],check=True)
+  subprocess.run([str(p/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},check=True,timeout=40)
+-print('PASS: 13 production-extracted pending-input/registration scenarios with ASan/UBSan; mocked native resources, no Metal execution')
++print('PASS: production-extracted exact and serialized postprocess receipts with ASan/UBSan; mocked textures, no Metal execution')
