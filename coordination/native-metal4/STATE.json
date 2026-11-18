@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 263,
+  "revision": 264,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -36,7 +36,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-cold-glow-20261118-98/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-cold-glow-20261118-98/RESULT.json",
   "decision": null,
-  "execution_status": "PARITY_ONLY_BEFORE_SEAL",
+  "execution_status": "TWO_OWNED_SETHS_GAMES_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4497,6 +4497,12 @@
       "status": "RUNNING",
       "round_id": "ground-decal-cold-glow-20261118-98",
       "action": "build"
+    },
+    {
+      "revision": 264,
+      "status": "RUNNING",
+      "round_id": "ground-decal-cold-glow-20261118-98",
+      "action": "game"
     }
   ],
   "communication_test": {
@@ -4597,7 +4603,9 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-18T19:42:18.517573+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "d3899678fef6201e350e86d593cf7ba9bb13d75381f6115c1edc1094d4e5b5ea",
+    "game_seal_utc": "2026-11-18T19:43:27.716212+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
