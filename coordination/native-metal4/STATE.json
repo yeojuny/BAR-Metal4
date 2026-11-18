@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 156,
+  "revision": 157,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
   "request": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/READY.json",
-  "result_path": null,
-  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
-  "execution_status": "HQ3_ROUND51_BLOOM_DOWNSAMPLE_IDENTICAL_BINARY_REVERSE_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/DONE.json",
+  "decision": "DONE",
+  "execution_status": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_BLOOM_OFF_ON",
   "blocked_reason": null,
   "history": [
     {
@@ -2924,6 +2924,30 @@
       "round_id": "bloom-downsample-identity-reverse-20261118-51",
       "attempt_id": "bloom-identity-on-off-02",
       "utc": "2026-11-18T06:00:46.138296+00:00"
+    },
+    {
+      "event": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_BLOOM_OFF_ON",
+      "revision": 157,
+      "round_id": "bloom-downsample-identity-reverse-20261118-51",
+      "attempt_id": "bloom-identity-on-off-02",
+      "artifact_commit": "3583ace356fa73ee21db9b8cdaebe2e6a21c6ed5",
+      "counts": {
+        "configure": 0,
+        "engine_builds": 0,
+        "offline_metal_compiles": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 65.00650327821572,
+        "ON": 64.94513179085511,
+        "relative_percent": -0.09440822727834197
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T06:08:08.041048+00:00"
     }
   ],
   "communication_test": {
@@ -3022,8 +3046,27 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T06:00:46.138296+00:00",
-    "started": false,
-    "completed": false
+    "started": true,
+    "completed": true,
+    "ended_at_utc": "2026-11-18T06:08:08.041048+00:00",
+    "counts": {
+      "configure": 0,
+      "engine_builds": 0,
+      "offline_metal_compiles": 0,
+      "games": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "3583ace356fa73ee21db9b8cdaebe2e6a21c6ed5",
+    "default_changed": false,
+    "fps": {
+      "OFF": 65.00650327821572,
+      "ON": 64.94513179085511,
+      "relative_percent": -0.09440822727834197
+    }
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3089,7 +3132,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Reuse the exact Round 50 executable for one ON and then one OFF game. Retain all counted frames. No configure or rebuild.",
+  "next_action": "Review the single matched BloomDownsample pair and its exact path witness.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
