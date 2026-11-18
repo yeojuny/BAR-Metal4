@@ -1,0 +1,13 @@
+{
+  "status": "STAGED_NO_GAME",
+  "order": [
+    "R74_OFF",
+    "R74_ON"
+  ],
+  "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
+  "cap": 2,
+  "cpu_read_mode": 0,
+  "matching_scene_inputs": 13,
+  "single_ab_delta": "BAR_NATIVE_PREJOIN_OPAQUE_READ_PACKET",
+  "patch_sha256": "3205408ed2aa3153acc5368ecbd006553896492e52ad7f56e1bcb5677e2d40b8"
+}

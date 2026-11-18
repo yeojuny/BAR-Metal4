@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 205,
+  "revision": 206,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-prejoin-opaque-read-fps-20261118-73",
+  "round_id": "pending2-prejoin-opaque-read-fps-20261118-74",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/REQUEST.json",
-  "ready_path": null,
-  "result_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/DONE.json",
-  "decision": "STAGING_FAILED_AFTER_CONFIGURE_BUILD_GAMES_ZERO",
-  "execution_status": "CLOSED_STAGING_FAILED_GAMES_NOT_STARTED",
+  "request": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/DONE.json",
+  "decision": "ONE_FIXED_OFF_ON_CAP2_PAIR_REUSING_EXISTING_BINARY",
+  "execution_status": "FIXED_OFF_ON_GAMES_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3616,6 +3616,24 @@
         "retries": 0
       },
       "utc": "2026-11-18T12:04:41.425Z"
+    },
+    {
+      "event": "HQ3_ROUND74_EXISTING_BINARY_SEALED_OFF_ON_PAIR_RESERVED",
+      "revision": 206,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-74",
+      "attempt_id": "pending2-prejoin-opaque-read-sealed-off-on-01",
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
+      "reused_binary_round": "pending2-prejoin-opaque-read-fps-20261118-73",
+      "utc": "2026-11-18T12:05:10.777Z"
     }
   ],
   "communication_test": {
@@ -3699,10 +3717,10 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-prejoin-opaque-read-off-on-01",
+    "attempt_id": "pending2-prejoin-opaque-read-sealed-off-on-01",
     "budget": {
-      "configure": 1,
-      "engine_build": 1,
+      "configure": 0,
+      "engine_build": 0,
       "games": 2,
       "max_per_arm": 1,
       "captures": 0,
@@ -3711,21 +3729,21 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": true,
-    "completed": true,
-    "reserved_at_utc": "2026-11-18T11:52:28.544Z",
-    "default_changed": false,
+    "started": false,
     "games_started": false,
+    "completed": false,
     "counts": {
-      "configure": 1,
-      "engine_build": 1,
+      "configure": 0,
+      "engine_build": 0,
       "games": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
     "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
-    "finished_at_utc": "2026-11-18T12:04:41.425Z"
+    "reused_binary_round": "pending2-prejoin-opaque-read-fps-20261118-73",
+    "reserved_at_utc": "2026-11-18T12:05:10.777Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3791,7 +3809,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "A separate round may use the already built binary to stage and run the fixed cap2 pair.",
+  "next_action": "HQ3 to run the sealed OFF then ON pair once each.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
