@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 242,
+  "revision": 243,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/simmers-rank-atlas-on-20261118-89/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/simmers-rank-atlas-on-20261118-89/READY.json",
   "result_path": "coordination/native-metal4/rounds/simmers-rank-atlas-on-20261118-89/RESULT.json",
-  "decision": "KEEP_DEFAULT_CAP1_AND_CANDIDATE_OFF",
-  "execution_status": "SEALED_SINGLE_SIMMERS_ON_REFERENCE",
+  "decision": "PRESERVE_DEFAULT_CAP1_PRODUCT_AND_RANK_ATLAS_OFF",
+  "execution_status": "SINGLE_SIMMERS_ON_COMPLETED_ZERO_ELIGIBLE_ATLAS_BORROWS",
   "blocked_reason": null,
   "history": [
     {
@@ -4306,6 +4306,22 @@
         "profiles": 0,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND89_SIMMERS_ON_REFERENCE_CLOSED",
+      "revision": 243,
+      "round_id": "simmers-rank-atlas-on-20261118-89",
+      "utc": "2026-11-18T17:08:01Z",
+      "average_fps": 188.1452989498205,
+      "low_1_fps": 131.03448230677765,
+      "atlas_queued": 0,
+      "counts": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -4401,10 +4417,19 @@
     },
     "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T17:05:04Z",
-    "default_changed": false
+    "default_changed": false,
+    "counts": {
+      "games": 1,
+      "builds": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "finished_at_utc": "2026-11-18T17:08:01Z",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4470,7 +4495,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 only. Run the independently authorized All That Simmers ON game once using the verified R88 binary. Preserve product and default cap1. No capture, profile or retry.",
+  "next_action": "All approved games are complete. Preserve matched Seths pair and the single Simmers reference.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
