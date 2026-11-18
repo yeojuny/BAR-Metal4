@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 159,
+  "revision": 160,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "d1146946b94f9655b26f96b95bc04887358e073387839446213ac3440153b250",
   "request": "coordination/native-metal4/rounds/bloom-prepare-defines-fps-20261118-52/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/bloom-prepare-defines-fps-20261118-52/READY.json",
-  "result_path": null,
-  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
-  "execution_status": "HQ3_ROUND52_BLOOM_PREPARE_DEFINES_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/bloom-prepare-defines-fps-20261118-52/DONE.json",
+  "decision": "DONE",
+  "execution_status": "HQ3_ROUND52_CLOSED_BLOOM_PREPARE_DEFINE_REUSE_OFF_ON",
   "blocked_reason": null,
   "history": [
     {
@@ -2965,6 +2965,30 @@
       "round_id": "bloom-prepare-defines-fps-20261118-52",
       "attempt_id": "bloom-prepare-defines-off-on-01",
       "utc": "2026-11-18T06:34:29.691343+00:00"
+    },
+    {
+      "event": "HQ3_ROUND52_CLOSED_BLOOM_PREPARE_DEFINE_REUSE_OFF_ON",
+      "revision": 160,
+      "round_id": "bloom-prepare-defines-fps-20261118-52",
+      "attempt_id": "bloom-prepare-defines-off-on-01",
+      "artifact_commit": "43381c388b065eb920be04d5ad5b514e68b0245e",
+      "counts": {
+        "configure": 1,
+        "engine_builds": 1,
+        "cpu_define_fixtures": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 65.6233603166727,
+        "ON": 65.57663851592353,
+        "relative_percent": -0.07119690385208877
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T06:43:35.402191+00:00"
     }
   ],
   "communication_test": {
@@ -3064,8 +3088,27 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T06:34:29.691343+00:00",
-    "started": false,
-    "completed": false
+    "started": true,
+    "completed": true,
+    "ended_at_utc": "2026-11-18T06:43:35.402191+00:00",
+    "counts": {
+      "configure": 1,
+      "engine_builds": 1,
+      "cpu_define_fixtures": 1,
+      "games": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "43381c388b065eb920be04d5ad5b514e68b0245e",
+    "default_changed": false,
+    "fps": {
+      "OFF": 65.6233603166727,
+      "ON": 65.57663851592353,
+      "relative_percent": -0.07119690385208877
+    }
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3131,7 +3174,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Build one define-reuse candidate, then compare OFF and ON. Keep accepted identity RGBA ON in both.",
+  "next_action": "Review the single matched BloomDownsample pair and its exact path witness.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
