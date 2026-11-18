@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 229,
+  "revision": 230,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/DONE.json",
-  "decision": null,
-  "execution_status": "GROUND_DECAL_SIGNED_BINARY_AND_FIXED_PAIR_SEALED",
+  "decision": "NO_SPEEDUP_IN_FIXED_PAIR_KEEP_OFF",
+  "execution_status": "COMPLETE_GROUND_DECAL_AA0_CAP2_FIXED_OFF_ON_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -4080,6 +4080,25 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T14:27:46.100Z"
+    },
+    {
+      "event": "HQ3_ROUND84_GROUND_DECAL_FIXED_PAIR_DONE",
+      "revision": 230,
+      "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
+      "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "average_fps_change_percent": -0.15205491820921013,
+      "utc": "2026-11-18T14:31:39.690Z"
     }
   ],
   "communication_test": {
@@ -4179,14 +4198,14 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "counts": {
       "configure": 1,
       "engine_build": 1,
       "parity_helper_compile": 0,
       "parity_helper_gpu_runs": 0,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
@@ -4194,7 +4213,8 @@
     },
     "reserved_at_utc": "2026-11-18T14:23:24.568Z",
     "default_changed": false,
-    "binary_sha256": "c90e3d997c771ff0d802c0b6d837f771149fa692b1c6b9c873a2b7632b908879"
+    "binary_sha256": "c90e3d997c771ff0d802c0b6d837f771149fa692b1c6b9c873a2b7632b908879",
+    "finished_at_utc": "2026-11-18T14:31:39.690Z"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4260,7 +4280,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run exactly one OFF arm followed by one ON arm with the sealed binary and the same simulation protocol.",
+  "next_action": "Keep defaults. This fixed OFF-to-ON pair did not demonstrate a speedup.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

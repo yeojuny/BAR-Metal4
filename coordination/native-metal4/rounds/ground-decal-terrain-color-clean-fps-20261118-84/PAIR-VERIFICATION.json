@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "matching_start_input_pins": 13,
+  "actual_child_keys_observed": 43,
+  "actual_child_delta": "BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR",
+  "match_40_simulation_unit_camera_speed_bins": true,
+  "match_archives_pathfinder_checksums": {
+    "game": "3f2d4d28f276bfd659a7b0961fd3fc67f822760f093315051bbf58f2b9f9b4f8bb2b90a6b6c73b75dcaf389db2577e1c29f084d95e2dd0d7c5ade206ca123721",
+    "map": "eca9a75faf0ee5f0d083b19531566d054f2df810f22c64ca121ffe3e49a5e09d25f586d5e8b57479f56f5737d8a8dad900189c360443e5d428bd09c2043e475e",
+    "pathfinder": "c01e7a00"
+  },
+  "match_game_and_pacing_events": true,
+  "matched_non_system_library_paths": 19,
+  "game_seed": 154658555,
+  "benchmark_seed": 7654321,
+  "created_units": 600,
+  "destroyed_units": 433,
+  "route": {
+    "decal_setting": 2,
+    "drawer_loaded": true,
+    "ground_decal_rendering_enabled": true,
+    "present_requested": true
+  },
+  "native_aa0_and_main_mrt_verified": true,
+  "on_faster_bins": 15,
+  "equal_fps_bins": 7,
+  "bin_fps_delta_range": [
+    -2.4884948730000076,
+    0.6368942260000097
+  ],
+  "median_bin_fps_delta": 0.0,
+  "both_windows_raw_frame_intervals_retained": true,
+  "per_tick_state_checksum_measured": false,
+  "live_ground_decal_type_frequency_measured": false,
+  "display_scanout_measured": false
+}
