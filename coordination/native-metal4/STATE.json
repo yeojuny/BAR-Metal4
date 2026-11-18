@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 147,
+  "revision": 148,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/READY.json",
   "result_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/DONE.json",
-  "decision": "USER_AUTHORIZED_ONE_FRESH_UPLOAD_BUNDLE_BENCHMARK",
-  "execution_status": "HQ3_ROUND47_RESERVED_INDEPENDENT_FRESH_UPLOAD_BUNDLE",
+  "decision": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
+  "execution_status": "HQ3_ROUND47_CLOSED_FRESH_UPLOAD_BUNDLE",
   "blocked_reason": null,
   "history": [
     {
@@ -2741,6 +2741,68 @@
       "manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-18T02:03:53.772Z"
+    },
+    {
+      "event": "HQ3_ROUND47_CLOSED_FRESH_UPLOAD_BUNDLE",
+      "revision": 148,
+      "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+      "attempt_id": "fresh-draw-upload-bundle-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/DONE.json",
+      "decision": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
+      "order": [
+        "BUNDLE_OFF",
+        "BUNDLE_ON"
+      ],
+      "utc": "2026-11-18T02:13:36.222Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T02:13:36.222Z",
+      "counts": {
+        "configures": 1,
+        "builds": 1,
+        "static_syntax_checks": 1,
+        "gpu_helpers": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "8beb938226a2a588a7851c168661a67096f606a6",
+      "diagnostic_outcome": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
+      "binary_sha256": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+      "fps_by_arm": {
+        "BUNDLE_OFF": 63.931395723999074,
+        "BUNDLE_ON": 63.94680441671761
+      },
+      "relative_percent": 0.02410191822661556,
+      "first_encode_coverage": {
+        "radar_sonar_circle": {
+          "separate_witnessed": true,
+          "slab_witnessed": true
+        },
+        "map_edge_forward": {
+          "separate_witnessed": false,
+          "slab_witnessed": false
+        },
+        "blueprint_model": {
+          "separate_witnessed": true,
+          "slab_witnessed": true
+        },
+        "blockout_model": {
+          "separate_witnessed": false,
+          "slab_witnessed": false
+        }
+      },
+      "all_counted_frames_retained": true,
+      "ground_flash_default": "OFF; no observed phase counts beyond warmup",
+      "sensorlos_slab_default": "OFF; structural allocation reduction witnessed, production default pending targeted fallback/address/route checks"
     }
   ],
   "communication_test": {
@@ -2850,8 +2912,53 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T02:03:53.772Z",
-    "started": false,
-    "completed": false
+    "started": true,
+    "completed": true,
+    "ended_at_utc": "2026-11-18T02:13:36.222Z",
+    "counts": {
+      "configures": 1,
+      "builds": 1,
+      "static_syntax_checks": 1,
+      "gpu_helpers": 0,
+      "games": 2,
+      "off_games": 1,
+      "on_games": 1,
+      "normal_exits": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "8beb938226a2a588a7851c168661a67096f606a6",
+    "diagnostic_outcome": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
+    "binary_sha256": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+    "fps_by_arm": {
+      "BUNDLE_OFF": 63.931395723999074,
+      "BUNDLE_ON": 63.94680441671761
+    },
+    "relative_percent": 0.02410191822661556,
+    "first_encode_coverage": {
+      "radar_sonar_circle": {
+        "separate_witnessed": true,
+        "slab_witnessed": true
+      },
+      "map_edge_forward": {
+        "separate_witnessed": false,
+        "slab_witnessed": false
+      },
+      "blueprint_model": {
+        "separate_witnessed": true,
+        "slab_witnessed": true
+      },
+      "blockout_model": {
+        "separate_witnessed": false,
+        "slab_witnessed": false
+      }
+    },
+    "all_counted_frames_retained": true,
+    "ground_flash_default": "OFF; no observed phase counts beyond warmup",
+    "sensorlos_slab_default": "OFF; structural allocation reduction witnessed, production default pending targeted fallback/address/route checks"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2917,7 +3024,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Check the layout boundaries, build the four-route bundle once, and measure one OFF and one ON game with fixed baseline toggles.",
+  "next_action": "Preserve the four-route patch and two witnessed routes. Keep GroundFlash and SensorLOS slab defaults OFF pending their scoped evidence.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
