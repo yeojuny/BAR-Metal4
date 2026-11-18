@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 204,
+  "revision": 205,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -13,10 +13,10 @@
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
   "request": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/READY.json",
+  "ready_path": null,
   "result_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/DONE.json",
-  "decision": "ONE_FIXED_OFF_ON_CAP2_PREJOIN_PACKET_PAIR",
-  "execution_status": "CONFIGURE_BUILD_RESERVED",
+  "decision": "STAGING_FAILED_AFTER_CONFIGURE_BUILD_GAMES_ZERO",
+  "execution_status": "CLOSED_STAGING_FAILED_GAMES_NOT_STARTED",
   "blocked_reason": null,
   "history": [
     {
@@ -3601,6 +3601,21 @@
         "retries": 0
       },
       "utc": "2026-11-18T11:52:28.544Z"
+    },
+    {
+      "event": "HQ3_ROUND73_CLOSED_STAGING_FAILED_GAMES_ZERO",
+      "revision": 205,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-73",
+      "attempt_id": "pending2-prejoin-opaque-read-off-on-01",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T12:04:41.425Z"
     }
   ],
   "communication_test": {
@@ -3696,10 +3711,21 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "reserved_at_utc": "2026-11-18T11:52:28.544Z",
-    "default_changed": false
+    "default_changed": false,
+    "games_started": false,
+    "counts": {
+      "configure": 1,
+      "engine_build": 1,
+      "games": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
+    "finished_at_utc": "2026-11-18T12:04:41.425Z"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3765,7 +3791,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 to configure/build once using the known OpenAL path and verify the signed paired binary.",
+  "next_action": "A separate round may use the already built binary to stage and run the fixed cap2 pair.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
