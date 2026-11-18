@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 224,
+  "revision": 225,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/ground-decal-terrain-color-fps-20261118-82/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-fps-20261118-82/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-fps-20261118-82/DONE.json",
-  "decision": null,
-  "execution_status": "GROUND_DECAL_PARITY_BUILD_RESERVED",
+  "decision": "HOLD_PENDING_INDEPENDENT_POSITIVE_WITNESSES_AND_FLOAT_PARITY",
+  "execution_status": "STOPPED_GROUND_DECAL_GPU_WITNESS_GATE",
   "blocked_reason": null,
   "history": [
     {
@@ -3981,6 +3981,24 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T14:09:47.441Z"
+    },
+    {
+      "event": "HQ3_ROUND82_GROUND_DECAL_PARITY_WITNESS_STOP_GAMES_ZERO",
+      "revision": 225,
+      "round_id": "ground-decal-terrain-color-fps-20261118-82",
+      "attempt_id": "ground-decal-aa0-terrain-color-off-on-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:12:10.409Z"
     }
   ],
   "communication_test": {
@@ -4079,14 +4097,14 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "games_started": false,
     "counts": {
       "configure": 0,
       "engine_build": 0,
-      "parity_helper_compile": 0,
-      "parity_helper_gpu_runs": 0,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "games": 0,
       "captures": 0,
       "profiles": 0,
@@ -4094,7 +4112,8 @@
       "new_instrumentation": 0
     },
     "reserved_at_utc": "2026-11-18T14:09:47.441Z",
-    "default_changed": false
+    "default_changed": false,
+    "finished_at_utc": "2026-11-18T14:12:10.409Z"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4160,7 +4179,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "One AA0 GroundDecal Metal parity helper, one isolated build if it passes, followed by at most one OFF and one ON game with fixed inputs.",
+  "next_action": "Keep the candidate off. Follow-up correctness work would require independently observable depth/stencil and explosion minimap witnesses and successful float/NaN parity.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
