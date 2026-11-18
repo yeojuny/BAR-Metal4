@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 241,
+  "revision": 242,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
+  "round_id": "simmers-rank-atlas-on-20261118-89",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/RESULT.json",
+  "request": "coordination/native-metal4/rounds/simmers-rank-atlas-on-20261118-89/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/simmers-rank-atlas-on-20261118-89/READY.json",
+  "result_path": "coordination/native-metal4/rounds/simmers-rank-atlas-on-20261118-89/RESULT.json",
   "decision": "KEEP_DEFAULT_CAP1_AND_CANDIDATE_OFF",
-  "execution_status": "MATCHED_PAIR_AVERAGE_REGRESSION_KEEP_OFF",
+  "execution_status": "SEALED_SINGLE_SIMMERS_ON_REFERENCE",
   "blocked_reason": null,
   "history": [
     {
@@ -4293,6 +4293,19 @@
         "retries": 0
       },
       "paired_fps_change_percent": -3.6991349351184533
+    },
+    {
+      "event": "HQ3_ROUND89_SIMMERS_ON_RESERVED",
+      "revision": 242,
+      "round_id": "simmers-rank-atlas-on-20261118-89",
+      "utc": "2026-11-18T17:05:04Z",
+      "budget": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -4376,45 +4389,22 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "rank-screen-borrow-off-on-01",
+    "attempt_id": "simmers-rank-atlas-on-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
-      "configure": 0,
-      "engine_build": 1,
-      "translation_units": 4,
-      "link": 1,
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
-      "games": 2,
-      "max_per_arm": 1,
+      "games": 1,
+      "builds": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
-    "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T16:56:36Z",
-    "default_changed": false,
     "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
-    "safety_gate": "PASS_REAL_METAL4_MIP8_AND_POLICY",
-    "sealed_utc": "2026-11-18T17:00:14Z",
-    "builds_completed": 1,
-    "counts": {
-      "configure": 0,
-      "engine_build": 1,
-      "translation_units": 4,
-      "link": 1,
-      "parity_helper_compile": 1,
-      "parity_helper_gpu_runs": 1,
-      "games": 2,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "finished_at_utc": "2026-11-18T17:04:33Z",
-    "cleanup_complete": true
+    "started": true,
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T17:05:04Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4480,7 +4470,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the independently authorized Simmers ON observation with the sealed R88 diagnostic candidate. Keep defaults and product unchanged.",
+  "next_action": "HQ3 only. Run the independently authorized All That Simmers ON game once using the verified R88 binary. Preserve product and default cap1. No capture, profile or retry.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
