@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 277,
+  "revision": 278,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -43,8 +43,8 @@
   },
   "ready_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/RESULT.json",
-  "decision": null,
-  "execution_status": "OWNED_MEMORY_BASELINE_COLD_GLOW_ABBA",
+  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
+  "execution_status": "MATCHED_MEMORY_BASELINE_COLD_GLOW_ABBA",
   "blocked_reason": null,
   "history": [
     {
@@ -4589,6 +4589,12 @@
       "status": "RUNNING",
       "round_id": "memory-cold-glow-20261118",
       "action": "game"
+    },
+    {
+      "revision": 278,
+      "status": "DONE",
+      "round_id": "memory-cold-glow-20261118",
+      "action": "closed"
     }
   ],
   "communication_test": {
@@ -4684,13 +4690,22 @@
       "gpu_profiles": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T21:45:54.058311+00:00",
     "default_changed": false,
     "smoke_sha256": "2b46d7ab73c3ca310b0e64d7a8d717cc31b570c58bd69ce1f4f32d4211f7268b",
     "ready_sha256": "f5bb552a44bc58e2c28a52d64561ebead781ef792e8676211d693feb9f7a1da8",
-    "game_seal_utc": "2026-11-18T21:56:20.095527+00:00"
+    "game_seal_utc": "2026-11-18T21:56:20.095527+00:00",
+    "finished_at_utc": "2026-11-18T22:08:57.231302+00:00",
+    "counts": {
+      "games": 6,
+      "timed_games": 4,
+      "smoke_games": 2,
+      "fixtures": 1,
+      "retries": 0
+    },
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
