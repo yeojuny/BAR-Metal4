@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 169,
+  "revision": 170,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -14,9 +14,9 @@
   "source_manifest_sha256": "4c5224c4aa7069907cce3f6d8cc19d655209ec0eee627351151301debf9507a0",
   "request": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/READY.json",
-  "result_path": null,
-  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
-  "execution_status": "HQ3_ROUND56_PENDING2_EXACT_POSTPROCESS_FIXTURE_RESERVED",
+  "result_path": "coordination/native-metal4/rounds/pending2-postprocess-dependency-20261118-56/DONE.json",
+  "decision": "ISOLATED_PENDING2_GPU_PROOF_GAME_ADMISSION_UNVERIFIED",
+  "execution_status": "HQ3_ROUND56_EXACT_POSTPROCESS_AND_TWO_GPU_TICKETS_VERIFIED_ISOLATED",
   "blocked_reason": null,
   "history": [
     {
@@ -3116,6 +3116,25 @@
       "round_id": "pending2-postprocess-dependency-20261118-56",
       "attempt_id": "pending2-exact-postprocess-transfer-01",
       "utc": "2026-11-18T08:00:56.833568+00:00"
+    },
+    {
+      "event": "HQ3_ROUND56_EXACT_POSTPROCESS_AND_TWO_GPU_TICKETS_VERIFIED_ISOLATED",
+      "revision": 170,
+      "round_id": "pending2-postprocess-dependency-20261118-56",
+      "attempt_id": "pending2-exact-postprocess-transfer-01",
+      "artifact_commit": "e658e16d82ecbff9388ecd9d316ebc6e495ace19",
+      "counts": {
+        "syntax_checks": 2,
+        "fixture_builds": 1,
+        "gpu_invocations": 1,
+        "gpu_submissions": 2,
+        "games": 0,
+        "engine_builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T08:05:09.315426+00:00"
     }
   ],
   "communication_test": {
@@ -3213,8 +3232,23 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T08:00:56.833568+00:00",
-    "started": false,
-    "completed": false
+    "started": true,
+    "completed": true,
+    "ended_at_utc": "2026-11-18T08:05:09.315426+00:00",
+    "counts": {
+      "syntax_checks": 2,
+      "fixture_builds": 1,
+      "gpu_invocations": 1,
+      "gpu_submissions": 2,
+      "games": 0,
+      "engine_builds": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "e658e16d82ecbff9388ecd9d316ebc6e495ace19",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3280,7 +3314,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Verify exact native postprocess receipt and two real isolated Metal4 submissions. Do not treat offscreen proof as live game admission.",
+  "next_action": "Review ordinary renderer dependency coverage, failure drain, and FIFO successful presentation before enabling live cap2.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
