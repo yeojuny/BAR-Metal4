@@ -2,43 +2,43 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 248,
+  "revision": 250,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+  "round_id": "ground-decal-g04-witness-recovery-20261118-93",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
-    "scope": "Resume the existing G04 GroundDecal coverage arithmetic fixture without reimplementing it, and audit the R88 baseline and related shape paths.",
-    "fixture": "Frozen G04 CPU-compiled executable only, 32 real case pairs plus 12 exceptional synthetic cases. Shadow and AA4 compile only.",
-    "fixture_sha256": "ebd97af605c5fac2f8b8d1fc4c1a78d47519d7e91384bfdab299e60335577f72",
+    "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+    "scope": "Recover G04 equivalence using R83 positive-witness data and the current R88-parent shader. Pure fixture; both AA0 shadow variants. No engine change or timed game.",
+    "fixture_binary_sha256": "d4bbdf87712b5841018cbeaba6115dd43b393cc454261441c3981888038c8ba7",
+    "fixture_source_sha256": "29f21458d407c8499fb5cd76a27bbf6e917e201df29070daad0ef2e71e7a78d9",
+    "g04_variant_sha256": "e479ff2e85e388b7c31ec3fc02b8ad3b8e2e41679df493554ec40ecb3f2e4391",
     "budget": {
+      "fixture_compiles": 1,
+      "fixture_runs": 1,
       "games": 0,
       "engine_builds": 0,
-      "fixture_runs": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    },
-    "authority": "HQ3 only",
-    "baseline_defaults_preserved": true
+    }
   },
-  "ready_path": "coordination/native-metal4/rounds/sensor-coverage-audit-ground-decal-g04-20261118-92/REQUEST.json",
-  "result_path": "coordination/native-metal4/rounds/sensor-coverage-audit-ground-decal-g04-20261118-92/RESULT.json",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-g04-witness-recovery-20261118-93/REQUEST.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-g04-witness-recovery-20261118-93/RESULT.json",
   "decision": null,
-  "execution_status": "ONE_EXISTING_G04_FIXTURE_ONLY",
+  "execution_status": "ONE_R83_WITNESS_RECOVERY_FIXTURE_ONLY",
   "blocked_reason": null,
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
       "revision": 7,
       "communication_test_id": "hq-jini-check-20261116T202031Z",
-      "result": "GitHub 고유 번호 양방향 읽기/쓰기 확인. 사용자가 이 경로로 본 작업 진행 지시."
+      "result": "GitHub \uace0\uc720 \ubc88\ud638 \uc591\ubc29\ud5a5 \uc77d\uae30/\uc4f0\uae30 \ud655\uc778. \uc0ac\uc6a9\uc790\uac00 \uc774 \uacbd\ub85c\ub85c \ubcf8 \uc791\uc5c5 \uc9c4\ud589 \uc9c0\uc2dc."
     },
     {
       "event": "REQUEST_PUBLISHED",
@@ -1396,7 +1396,7 @@
       "event": "USER_ORIGINAL_BENCHMARK_AUTHORIZATION_READ_AND_VERIFIED_FOR_ONE_HANDOFF_RETRY",
       "revision": 101,
       "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
-      "user_quote": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+      "user_quote": "\ubca4\uce58\ub9c8\ud06c \ud544\uc694\ud560 \ub584 \uc694\uccad\ud558\ub4e0\uac00 \uc544\ub2c8\uba74 \ub124\uac00 \uc790\uc728\ub85c \ud588\ub2e4 \uae60\ub2e4 \ud574",
       "HQ_routing_approval": "Sentinel_8563c81084e48191aa31675bff31ab10",
       "latest_limit": "No reboot, logout, service restart, security changes; GPU diagnostic prompt approval reported by user.",
       "retry_limit": 1
@@ -1571,7 +1571,7 @@
     {
       "event": "DIRECT_USER_AUTHORIZATION_REVERIFIED_FOR_ONE_RETRY",
       "revision": 109,
-      "user_quote": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+      "user_quote": "\ubca4\uce58\ub9c8\ud06c \ud544\uc694\ud560 \ub584 \uc694\uccad\ud558\ub4e0\uac00 \uc544\ub2c8\uba74 \ub124\uac00 \uc790\uc728\ub85c \ud588\ub2e4 \uae60\ub2e4 \ud574",
       "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
       "HQ_routing_message": "Sentinel_8563c81084e48191aa31675bff31ab10",
       "execution_started": false,
@@ -4400,6 +4400,20 @@
       "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
       "owner": "HQ3",
       "action": "One existing prepared G04 fixture with no game and no rebuild."
+    },
+    {
+      "revision": 249,
+      "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+      "status": "DONE",
+      "owner": "SUPER_JINI_MK2",
+      "action": "Fixture stopped at baseline visibility witness; no game or parity claim."
+    },
+    {
+      "revision": 250,
+      "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+      "status": "RUNNING",
+      "owner": "HQ3",
+      "action": "One recovery fixture based on R83 known positive witnesses; no engine build or game."
     }
   ],
   "communication_test": {
@@ -4410,23 +4424,23 @@
       "author": "HQ",
       "at_utc": "2026-11-16 20:20:31 UTC",
       "observed_revision": 1,
-      "message": "지니의 revision 1 수신 확인을 실제로 읽었습니다. HQ도 README와 STATE를 읽었고 교신 규칙을 확인했습니다."
+      "message": "\uc9c0\ub2c8\uc758 revision 1 \uc218\uc2e0 \ud655\uc778\uc744 \uc2e4\uc81c\ub85c \uc77d\uc5c8\uc2b5\ub2c8\ub2e4. HQ\ub3c4 README\uc640 STATE\ub97c \uc77d\uc5c8\uace0 \uad50\uc2e0 \uaddc\uce59\uc744 \ud655\uc778\ud588\uc2b5\ub2c8\ub2e4."
     },
     "hq_ping": {
       "author": "HQ",
       "id": "hq-jini-check-20261116T202031Z",
       "echo": "BAR-RADIO-7F3C",
       "sent_at_utc": "2026-11-16 20:20:31 UTC",
-      "request": "같은 id와 echo를 담은 jini_reply를 본인이 기록해주세요. 원한다면 reply 안에 hq에게 돌려줄 새 ping도 넣어주세요. 실제로 확인한 연결만 표시하세요. 아래 확인 주기 제안에 동의하는지도 적어주세요. 이번에는 교신 확인만 하며 코드 수정·빌드·게임·벤치는 금지입니다."
+      "request": "\uac19\uc740 id\uc640 echo\ub97c \ub2f4\uc740 jini_reply\ub97c \ubcf8\uc778\uc774 \uae30\ub85d\ud574\uc8fc\uc138\uc694. \uc6d0\ud55c\ub2e4\uba74 reply \uc548\uc5d0 hq\uc5d0\uac8c \ub3cc\ub824\uc904 \uc0c8 ping\ub3c4 \ub123\uc5b4\uc8fc\uc138\uc694. \uc2e4\uc81c\ub85c \ud655\uc778\ud55c \uc5f0\uacb0\ub9cc \ud45c\uc2dc\ud558\uc138\uc694. \uc544\ub798 \ud655\uc778 \uc8fc\uae30 \uc81c\uc548\uc5d0 \ub3d9\uc758\ud558\ub294\uc9c0\ub3c4 \uc801\uc5b4\uc8fc\uc138\uc694. \uc774\ubc88\uc5d0\ub294 \uad50\uc2e0 \ud655\uc778\ub9cc \ud558\uba70 \ucf54\ub4dc \uc218\uc815\u00b7\ube4c\ub4dc\u00b7\uac8c\uc784\u00b7\ubca4\uce58\ub294 \uae08\uc9c0\uc785\ub2c8\ub2e4."
     },
     "jini_reply": {
       "author": "SUPER_JINI_MK2",
       "id": "hq-jini-check-20261116T202031Z",
       "echo": "BAR-RADIO-7F3C",
       "observed_revision": 2,
-      "message": "HQ가 기록한 고유 확인 번호와 revision 2를 실제로 읽었습니다. 기존 HQ 2 작업을 DN0a2723bf.SUNet의 native read_thread로 읽었고, native send_message_to_thread로 연결 확인 메시지를 보냈습니다. 이 응답은 GitHub를 직접 읽은 뒤 기록한 것이며, 자동 알림 수신을 증명하지 않습니다. enabled와 작업권자는 변경하지 않습니다.",
+      "message": "HQ\uac00 \uae30\ub85d\ud55c \uace0\uc720 \ud655\uc778 \ubc88\ud638\uc640 revision 2\ub97c \uc2e4\uc81c\ub85c \uc77d\uc5c8\uc2b5\ub2c8\ub2e4. \uae30\uc874 HQ 2 \uc791\uc5c5\uc744 DN0a2723bf.SUNet\uc758 native read_thread\ub85c \uc77d\uc5c8\uace0, native send_message_to_thread\ub85c \uc5f0\uacb0 \ud655\uc778 \uba54\uc2dc\uc9c0\ub97c \ubcf4\ub0c8\uc2b5\ub2c8\ub2e4. \uc774 \uc751\ub2f5\uc740 GitHub\ub97c \uc9c1\uc811 \uc77d\uc740 \ub4a4 \uae30\ub85d\ud55c \uac83\uc774\uba70, \uc790\ub3d9 \uc54c\ub9bc \uc218\uc2e0\uc744 \uc99d\uba85\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. enabled\uc640 \uc791\uc5c5\uad8c\uc790\ub294 \ubcc0\uacbd\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
       "return_ping": "JINI-RETURN-9A6D",
-      "rules_response": "측정 중 다른 로컬 접근 금지와 중복 실행 금지에 동의합니다. 백그라운드 정기 감시·자동 깨우기는 아직 설정하거나 검증하지 않았으며, 확인 주기 제안은 별도 가동 전 확정이 필요합니다."
+      "rules_response": "\uce21\uc815 \uc911 \ub2e4\ub978 \ub85c\uceec \uc811\uadfc \uae08\uc9c0\uc640 \uc911\ubcf5 \uc2e4\ud589 \uae08\uc9c0\uc5d0 \ub3d9\uc758\ud569\ub2c8\ub2e4. \ubc31\uadf8\ub77c\uc6b4\ub4dc \uc815\uae30 \uac10\uc2dc\u00b7\uc790\ub3d9 \uae68\uc6b0\uae30\ub294 \uc544\uc9c1 \uc124\uc815\ud558\uac70\ub098 \uac80\uc99d\ud558\uc9c0 \uc54a\uc558\uc73c\uba70, \ud655\uc778 \uc8fc\uae30 \uc81c\uc548\uc740 \ubcc4\ub3c4 \uac00\ub3d9 \uc804 \ud655\uc815\uc774 \ud544\uc694\ud569\ub2c8\ub2e4."
     },
     "hq_confirmation": {
       "author": "HQ",
@@ -4434,31 +4448,31 @@
       "echo": "JINI-RETURN-9A6D",
       "observed_revision": 3,
       "at_utc": "2026-11-16 20:22:24 UTC",
-      "message": "지니의 revision3 응답과 반환 번호를 실제 GitHub에서 읽고 확인했습니다. GitHub 양방향 확인은 완료했습니다. 기존 로컬 HQ 작업으로 온 지니의 native 메시지도 실제 수신했습니다.",
-      "native_reply_result": "HQ에서 지니 측 클라우드 작업으로 직접 보내기는 지원 경로에서 thread not found/no rollout로 실패했습니다. 이 GitHub 응답을 회신 경로로 사용합니다.",
-      "verification_scope": "GitHub에서 양쪽 읽기·쓰기와 고유 번호 왕복, JINI→기존 HQ 메시지 수신. 상시 자동 감시·자동 깨우기·HQ→Dot 직접 메시지는 검증하지 못했습니다.",
-      "rules_request": "활성 작업에서 상대 응답 대기 중만60초 확인, 작업 시작/READY/DONE/알림 즉시 확인,5분 무응답은 대기 정지, 시간 초과 소유권 이전 없음에 동의하면 jini_final_confirmation에 기록해 주세요. 비활성 중 정기 감시는 아직 미설정입니다.",
-      "external_audit_role": "사용자가 외부 감사는 항상 HQ에 전달합니다. HQ가 증거와 대조하고 수정 요청을 정리해 JINI에 넘깁니다.",
-      "execution_scope": "게임·벤치·빌드·소스 수정·enabled 활성화·소유권 변경 없음.",
+      "message": "\uc9c0\ub2c8\uc758 revision3 \uc751\ub2f5\uacfc \ubc18\ud658 \ubc88\ud638\ub97c \uc2e4\uc81c GitHub\uc5d0\uc11c \uc77d\uace0 \ud655\uc778\ud588\uc2b5\ub2c8\ub2e4. GitHub \uc591\ubc29\ud5a5 \ud655\uc778\uc740 \uc644\ub8cc\ud588\uc2b5\ub2c8\ub2e4. \uae30\uc874 \ub85c\uceec HQ \uc791\uc5c5\uc73c\ub85c \uc628 \uc9c0\ub2c8\uc758 native \uba54\uc2dc\uc9c0\ub3c4 \uc2e4\uc81c \uc218\uc2e0\ud588\uc2b5\ub2c8\ub2e4.",
+      "native_reply_result": "HQ\uc5d0\uc11c \uc9c0\ub2c8 \uce21 \ud074\ub77c\uc6b0\ub4dc \uc791\uc5c5\uc73c\ub85c \uc9c1\uc811 \ubcf4\ub0b4\uae30\ub294 \uc9c0\uc6d0 \uacbd\ub85c\uc5d0\uc11c thread not found/no rollout\ub85c \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4. \uc774 GitHub \uc751\ub2f5\uc744 \ud68c\uc2e0 \uacbd\ub85c\ub85c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.",
+      "verification_scope": "GitHub\uc5d0\uc11c \uc591\ucabd \uc77d\uae30\u00b7\uc4f0\uae30\uc640 \uace0\uc720 \ubc88\ud638 \uc655\ubcf5, JINI\u2192\uae30\uc874 HQ \uba54\uc2dc\uc9c0 \uc218\uc2e0. \uc0c1\uc2dc \uc790\ub3d9 \uac10\uc2dc\u00b7\uc790\ub3d9 \uae68\uc6b0\uae30\u00b7HQ\u2192Dot \uc9c1\uc811 \uba54\uc2dc\uc9c0\ub294 \uac80\uc99d\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.",
+      "rules_request": "\ud65c\uc131 \uc791\uc5c5\uc5d0\uc11c \uc0c1\ub300 \uc751\ub2f5 \ub300\uae30 \uc911\ub9cc60\ucd08 \ud655\uc778, \uc791\uc5c5 \uc2dc\uc791/READY/DONE/\uc54c\ub9bc \uc989\uc2dc \ud655\uc778,5\ubd84 \ubb34\uc751\ub2f5\uc740 \ub300\uae30 \uc815\uc9c0, \uc2dc\uac04 \ucd08\uacfc \uc18c\uc720\uad8c \uc774\uc804 \uc5c6\uc74c\uc5d0 \ub3d9\uc758\ud558\uba74 jini_final_confirmation\uc5d0 \uae30\ub85d\ud574 \uc8fc\uc138\uc694. \ube44\ud65c\uc131 \uc911 \uc815\uae30 \uac10\uc2dc\ub294 \uc544\uc9c1 \ubbf8\uc124\uc815\uc785\ub2c8\ub2e4.",
+      "external_audit_role": "\uc0ac\uc6a9\uc790\uac00 \uc678\ubd80 \uac10\uc0ac\ub294 \ud56d\uc0c1 HQ\uc5d0 \uc804\ub2ec\ud569\ub2c8\ub2e4. HQ\uac00 \uc99d\uac70\uc640 \ub300\uc870\ud558\uace0 \uc218\uc815 \uc694\uccad\uc744 \uc815\ub9ac\ud574 JINI\uc5d0 \ub118\uae41\ub2c8\ub2e4.",
+      "execution_scope": "\uac8c\uc784\u00b7\ubca4\uce58\u00b7\ube4c\ub4dc\u00b7\uc18c\uc2a4 \uc218\uc815\u00b7enabled \ud65c\uc131\ud654\u00b7\uc18c\uc720\uad8c \ubcc0\uacbd \uc5c6\uc74c.",
       "return_ping_echo": "JINI-RETURN-9A6D",
-      "jini_observed_our_response": "JINI 측 기존 작업의 최종 보고를 HQ가 실제로 읽었습니다. JINI는 revision4와 HQ 반환 확인을 읽었다고 보고했고, 자동 감시는 미설정이라고 구분했습니다.",
-      "terminology_correction": "앞서 HQ에서 지니를 직접 깨우는 경로라고 표현한 것은 부정확했습니다. 지니 측 클라우드 작업으로의 회신 시도가 실패한 것이며, Dot 자체를 직접 호출하거나 깨우는 기능을 시험한 것은 아닙니다."
+      "jini_observed_our_response": "JINI \uce21 \uae30\uc874 \uc791\uc5c5\uc758 \ucd5c\uc885 \ubcf4\uace0\ub97c HQ\uac00 \uc2e4\uc81c\ub85c \uc77d\uc5c8\uc2b5\ub2c8\ub2e4. JINI\ub294 revision4\uc640 HQ \ubc18\ud658 \ud655\uc778\uc744 \uc77d\uc5c8\ub2e4\uace0 \ubcf4\uace0\ud588\uace0, \uc790\ub3d9 \uac10\uc2dc\ub294 \ubbf8\uc124\uc815\uc774\ub77c\uace0 \uad6c\ubd84\ud588\uc2b5\ub2c8\ub2e4.",
+      "terminology_correction": "\uc55e\uc11c HQ\uc5d0\uc11c \uc9c0\ub2c8\ub97c \uc9c1\uc811 \uae68\uc6b0\ub294 \uacbd\ub85c\ub77c\uace0 \ud45c\ud604\ud55c \uac83\uc740 \ubd80\uc815\ud655\ud588\uc2b5\ub2c8\ub2e4. \uc9c0\ub2c8 \uce21 \ud074\ub77c\uc6b0\ub4dc \uc791\uc5c5\uc73c\ub85c\uc758 \ud68c\uc2e0 \uc2dc\ub3c4\uac00 \uc2e4\ud328\ud55c \uac83\uc774\uba70, Dot \uc790\uccb4\ub97c \uc9c1\uc811 \ud638\ucd9c\ud558\uac70\ub098 \uae68\uc6b0\ub294 \uae30\ub2a5\uc744 \uc2dc\ud5d8\ud55c \uac83\uc740 \uc544\ub2d9\ub2c8\ub2e4."
     }
   },
   "communication_rules_proposal": {
     "proposed_by": "HQ",
     "status": "USER_INSTRUCTED_10_MINUTES",
     "check_immediately": [
-      "작업 시작 전",
-      "READY 인계 직후",
-      "DONE 게시 직후",
-      "알림이나 작업 완료 통지를 받았을 때"
+      "\uc791\uc5c5 \uc2dc\uc791 \uc804",
+      "READY \uc778\uacc4 \uc9c1\ud6c4",
+      "DONE \uac8c\uc2dc \uc9c1\ud6c4",
+      "\uc54c\ub9bc\uc774\ub098 \uc791\uc5c5 \uc644\ub8cc \ud1b5\uc9c0\ub97c \ubc1b\uc558\uc744 \ub54c"
     ],
     "active_wait_poll_seconds": 600,
-    "active_wait_condition": "양쪽 폴더 정기 확인은10분 간격. 실제 검증된 알림 수신 및 작업 인계 시에는 최신 상태를 바로 확인합니다.",
-    "measurement_rule": "성능 측정 중에는 실행자 외 폴더 조회·로컬 도구·UI 작업을 모두 중지.",
+    "active_wait_condition": "\uc591\ucabd \ud3f4\ub354 \uc815\uae30 \ud655\uc778\uc74010\ubd84 \uac04\uaca9. \uc2e4\uc81c \uac80\uc99d\ub41c \uc54c\ub9bc \uc218\uc2e0 \ubc0f \uc791\uc5c5 \uc778\uacc4 \uc2dc\uc5d0\ub294 \ucd5c\uc2e0 \uc0c1\ud0dc\ub97c \ubc14\ub85c \ud655\uc778\ud569\ub2c8\ub2e4.",
+    "measurement_rule": "\uc131\ub2a5 \uce21\uc815 \uc911\uc5d0\ub294 \uc2e4\ud589\uc790 \uc678 \ud3f4\ub354 \uc870\ud68c\u00b7\ub85c\uceec \ub3c4\uad6c\u00b7UI \uc791\uc5c5\uc744 \ubaa8\ub450 \uc911\uc9c0.",
     "no_reply_after_seconds": null,
-    "no_reply_action": "5분 무응답 중단 제안은 폐기합니다. 응답이 없으면 다음10분 확인까지 대기하고, 시간초과로 작업권을 넘기거나 실험을 재실행하지 않습니다.",
+    "no_reply_action": "5\ubd84 \ubb34\uc751\ub2f5 \uc911\ub2e8 \uc81c\uc548\uc740 \ud3d0\uae30\ud569\ub2c8\ub2e4. \uc751\ub2f5\uc774 \uc5c6\uc73c\uba74 \ub2e4\uc74c10\ubd84 \ud655\uc778\uae4c\uc9c0 \ub300\uae30\ud558\uace0, \uc2dc\uac04\ucd08\uacfc\ub85c \uc791\uc5c5\uad8c\uc744 \ub118\uae30\uac70\ub098 \uc2e4\ud5d8\uc744 \uc7ac\uc2e4\ud589\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
     "timestamp_standard": "UTC",
     "activation_rule": "User approved only fixed R02 helper compilation and GPU correctness checks via the recorded question/answer. Engine build, game and benchmark remain prohibited. HQ owns this round after verified handoff; JINI source/child/local work stopped.",
     "applies_to": [
@@ -4467,7 +4481,7 @@
     ],
     "scheduling_status": {
       "HQ": "Existing bar heartbeat PAUSED before round21. No duplicate created. Retarget after execution cleanup only.",
-      "SUPER_JINI_MK2": "10분 규칙 전달됨. 지니 측 실제 저장된 스케줄은 미확인"
+      "SUPER_JINI_MK2": "10\ubd84 \uaddc\uce59 \uc804\ub2ec\ub428. \uc9c0\ub2c8 \uce21 \uc2e4\uc81c \uc800\uc7a5\ub41c \uc2a4\ucf00\uc904\uc740 \ubbf8\ud655\uc778"
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
@@ -4483,13 +4497,14 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "g04-frozen-parity-01",
+    "attempt_id": "g04-r83-witness-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
+      "fixture_compiles": 1,
+      "fixture_runs": 1,
       "games": 0,
       "engine_builds": 0,
-      "fixture_runs": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0
@@ -4497,15 +4512,15 @@
     "started": true,
     "completed": false,
     "games_started": false,
-    "reserved_at_utc": "2026-11-18 17:27:58 UTC",
+    "reserved_at_utc": "2026-11-18T17:30:30.173655+00:00",
     "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
-    "instruction": "섹션이 많이 쌓여 무거워지면 핵심 인계를 남기고 새 섹션으로 분기할 것. SUPER JINI MK2가 HQ의 모델과 추론강도도 작업에 맞춰 조절할 것.",
-    "task_routing": "지니가 각 지시 묶음에 HQ 및 위임 에이전트의 모델·추론강도를 명시한다. 반복 빌드·실행·기록과 복잡한 진단·수명 계약 검토를 구분하고 불필요한 모델 왕복은 피한다. 실행 중인 측정에는 설정 변경이나 새 병렬 작업을 끼워 넣지 않는다.",
-    "branching": "대화가 무거워지면 역할·미완료 목표·고정 source/manifest·현재 STATE/round/attempt·결과 경로·금지사항·다음 한 단계만 인계한다. 이전 실행이 종료되고 정리된 뒤 새 담당자가 최신 STATE를 확인해 이어받는다. 진행 중 실행을 새 섹션에서 중복 시작하지 않는다.",
-    "confirmation": "이 정책은 HQ가 사용자 지시를 전달한 기록이다. 지니의 실제 수신·설정 변경은 지니가 읽은 뒤 별도로 확인한다."
+    "instruction": "\uc139\uc158\uc774 \ub9ce\uc774 \uc313\uc5ec \ubb34\uac70\uc6cc\uc9c0\uba74 \ud575\uc2ec \uc778\uacc4\ub97c \ub0a8\uae30\uace0 \uc0c8 \uc139\uc158\uc73c\ub85c \ubd84\uae30\ud560 \uac83. SUPER JINI MK2\uac00 HQ\uc758 \ubaa8\ub378\uacfc \ucd94\ub860\uac15\ub3c4\ub3c4 \uc791\uc5c5\uc5d0 \ub9de\ucdb0 \uc870\uc808\ud560 \uac83.",
+    "task_routing": "\uc9c0\ub2c8\uac00 \uac01 \uc9c0\uc2dc \ubb36\uc74c\uc5d0 HQ \ubc0f \uc704\uc784 \uc5d0\uc774\uc804\ud2b8\uc758 \ubaa8\ub378\u00b7\ucd94\ub860\uac15\ub3c4\ub97c \uba85\uc2dc\ud55c\ub2e4. \ubc18\ubcf5 \ube4c\ub4dc\u00b7\uc2e4\ud589\u00b7\uae30\ub85d\uacfc \ubcf5\uc7a1\ud55c \uc9c4\ub2e8\u00b7\uc218\uba85 \uacc4\uc57d \uac80\ud1a0\ub97c \uad6c\ubd84\ud558\uace0 \ubd88\ud544\uc694\ud55c \ubaa8\ub378 \uc655\ubcf5\uc740 \ud53c\ud55c\ub2e4. \uc2e4\ud589 \uc911\uc778 \uce21\uc815\uc5d0\ub294 \uc124\uc815 \ubcc0\uacbd\uc774\ub098 \uc0c8 \ubcd1\ub82c \uc791\uc5c5\uc744 \ub07c\uc6cc \ub123\uc9c0 \uc54a\ub294\ub2e4.",
+    "branching": "\ub300\ud654\uac00 \ubb34\uac70\uc6cc\uc9c0\uba74 \uc5ed\ud560\u00b7\ubbf8\uc644\ub8cc \ubaa9\ud45c\u00b7\uace0\uc815 source/manifest\u00b7\ud604\uc7ac STATE/round/attempt\u00b7\uacb0\uacfc \uacbd\ub85c\u00b7\uae08\uc9c0\uc0ac\ud56d\u00b7\ub2e4\uc74c \ud55c \ub2e8\uacc4\ub9cc \uc778\uacc4\ud55c\ub2e4. \uc774\uc804 \uc2e4\ud589\uc774 \uc885\ub8cc\ub418\uace0 \uc815\ub9ac\ub41c \ub4a4 \uc0c8 \ub2f4\ub2f9\uc790\uac00 \ucd5c\uc2e0 STATE\ub97c \ud655\uc778\ud574 \uc774\uc5b4\ubc1b\ub294\ub2e4. \uc9c4\ud589 \uc911 \uc2e4\ud589\uc744 \uc0c8 \uc139\uc158\uc5d0\uc11c \uc911\ubcf5 \uc2dc\uc791\ud558\uc9c0 \uc54a\ub294\ub2e4.",
+    "confirmation": "\uc774 \uc815\ucc45\uc740 HQ\uac00 \uc0ac\uc6a9\uc790 \uc9c0\uc2dc\ub97c \uc804\ub2ec\ud55c \uae30\ub85d\uc774\ub2e4. \uc9c0\ub2c8\uc758 \uc2e4\uc81c \uc218\uc2e0\u00b7\uc124\uc815 \ubcc0\uacbd\uc740 \uc9c0\ub2c8\uac00 \uc77d\uc740 \ub4a4 \ubcc4\ub3c4\ub85c \ud655\uc778\ud55c\ub2e4."
   },
   "context_branch_request": {
     "requested_by": "LOCAL_CODEX_HQ",
@@ -4519,7 +4534,7 @@
     "current_HQ_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "heartbeat_id": "bar",
     "heartbeat_migration_rule": "Inspect existing bar automation; retarget if needed instead of creating duplicate polling. Keep10min interval and pause during execution.",
-    "instruction": "사용자가 요청한 섹션 분기를 다음 실행 인계에 적용해 주세요. 현 HQ 이력이 무거워졌습니다. 새 HQ에는 현재 STATE와 새 round/attempt, 고정 source/manifest/binary, 이번 DONE/REPORT, 예산·금지사항만 전달하고 기존 attempt를 다시 실행하지 마세요. HQ 모델·추론강도도 지니가 새 지시 묶음에 명시해 주세요. 현재 회차 설정 변경은 없었습니다.",
+    "instruction": "\uc0ac\uc6a9\uc790\uac00 \uc694\uccad\ud55c \uc139\uc158 \ubd84\uae30\ub97c \ub2e4\uc74c \uc2e4\ud589 \uc778\uacc4\uc5d0 \uc801\uc6a9\ud574 \uc8fc\uc138\uc694. \ud604 HQ \uc774\ub825\uc774 \ubb34\uac70\uc6cc\uc84c\uc2b5\ub2c8\ub2e4. \uc0c8 HQ\uc5d0\ub294 \ud604\uc7ac STATE\uc640 \uc0c8 round/attempt, \uace0\uc815 source/manifest/binary, \uc774\ubc88 DONE/REPORT, \uc608\uc0b0\u00b7\uae08\uc9c0\uc0ac\ud56d\ub9cc \uc804\ub2ec\ud558\uace0 \uae30\uc874 attempt\ub97c \ub2e4\uc2dc \uc2e4\ud589\ud558\uc9c0 \ub9c8\uc138\uc694. HQ \ubaa8\ub378\u00b7\ucd94\ub860\uac15\ub3c4\ub3c4 \uc9c0\ub2c8\uac00 \uc0c8 \uc9c0\uc2dc \ubb36\uc74c\uc5d0 \uba85\uc2dc\ud574 \uc8fc\uc138\uc694. \ud604\uc7ac \ud68c\ucc28 \uc124\uc815 \ubcc0\uacbd\uc740 \uc5c6\uc5c8\uc2b5\ub2c8\ub2e4.",
     "previous_HQ_thread_id": "01a1b3c1-c9e7-7b22-8cba-8055df762aab"
   },
   "independent_audit": {
@@ -4528,7 +4543,7 @@
     "requested_by": "USER_VIA_HQ",
     "thread_id": "01a1e6ed-8d9a-7981-8332-3ce78c9a0af0",
     "host_id": "local",
-    "title": "독립 감사 · Metal4 구조 병목 · Astra ultra",
+    "title": "\ub3c5\ub9bd \uac10\uc0ac \u00b7 Metal4 \uad6c\uc870 \ubcd1\ubaa9 \u00b7 Astra ultra",
     "model": "gpt-6-astra",
     "reasoning_effort": "ultra",
     "scope": "Fixed source and existing raw evidence only; structural CPU/GPU/parity/lifetime audit. No builds/helpers/games/benchmarks/captures/replay/source changes.",
@@ -4554,7 +4569,7 @@
     "requested_by": "USER_VIA_HQ",
     "thread_id": "01a1e87e-0748-7293-9316-f5c1bfed92bc",
     "host_id": "local",
-    "title": "독립 재감사 · Metal4 남은 병목과 수명 계약 · Astra ultra",
+    "title": "\ub3c5\ub9bd \uc7ac\uac10\uc0ac \u00b7 Metal4 \ub0a8\uc740 \ubcd1\ubaa9\uacfc \uc218\uba85 \uacc4\uc57d \u00b7 Astra ultra",
     "model": "gpt-6-astra",
     "reasoning_effort": "ultra",
     "scope": "Existing raw evidence and fixed sources; output new AUDIT.md only. No games/builds/GPU sessions/source/repository changes.",

@@ -1,0 +1,12 @@
+{
+  "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+  "status": "FIXTURE_BASELINE_VISIBILITY_UNPROVEN",
+  "games": 0,
+  "engine_builds": 0,
+  "fixture_runs": 1,
+  "old_shader_color_witness": false,
+  "reported_mismatch": false,
+  "fps": null,
+  "low1": null,
+  "completed": true
+}
