@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 222,
+  "revision": 223,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/weapon-range-exact-interior-recovery-20261118-81/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/weapon-range-exact-interior-recovery-20261118-81/READY.json",
   "result_path": "coordination/native-metal4/rounds/weapon-range-exact-interior-recovery-20261118-81/DONE.json",
-  "decision": "ONE_TYPED_FIXTURE_RECOVERY_AND_CONDITIONAL_WEAPON_RANGE_PAIR",
-  "execution_status": "FIXED_OFF_ON_GAMES_RESERVED",
+  "decision": "NO_CLEAR_BENEFIT_IN_ONE_FIXED_PAIR_KEEP_OFF",
+  "execution_status": "COMPLETE_WEAPON_RANGE_AA0_CAP2_ONE_OFF_ON_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -3940,6 +3940,25 @@
         "retries": 0
       },
       "utc": "2026-11-18T13:43:15.880Z"
+    },
+    {
+      "event": "HQ3_ROUND81_WEAPON_RANGE_AA0_CAP2_PAIR_DONE",
+      "revision": 223,
+      "round_id": "weapon-range-exact-interior-recovery-20261118-81",
+      "attempt_id": "weapon-range-exact-interior-typed-fixture-off-on-01",
+      "average_fps_change_percent": 0.06295565045146834,
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:47:34.444Z"
     }
   ],
   "communication_test": {
@@ -4039,22 +4058,24 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "counts": {
       "configure": 1,
       "engine_build": 1,
       "parity_helper_compile": 1,
       "parity_helper_gpu_runs": 1,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
-      "retries": 0
+      "retries": 0,
+      "new_instrumentation": 0
     },
     "reserved_at_utc": "2026-11-18T13:38:13.218Z",
     "default_changed": false,
     "binary_sha256": "ffabb50bf82881d0a1e3e12a14e72dbf0515ed3e604815bd0664369a269e9337",
-    "metal_pixel_parity_cases": 1152
+    "metal_pixel_parity_cases": 1152,
+    "finished_at_utc": "2026-11-18T13:46:07.940506+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4120,7 +4141,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run one fixed weapon-range OFF then ON pair on the new signed binary.",
+  "next_action": "The fixed pair is closed. No clear performance benefit was established. Preserve all defaults.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
