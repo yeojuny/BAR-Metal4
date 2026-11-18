@@ -1,22 +1,37 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 247,
+  "revision": 248,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "seths-rank-atlas-on-cap1-20261118-91",
-  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/seths-rank-atlas-on-cap1-20261118-91/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/seths-rank-atlas-on-cap1-20261118-91/READY.json",
-  "result_path": "coordination/native-metal4/rounds/seths-rank-atlas-on-cap1-20261118-91/RESULT.json",
-  "decision": "PRESERVE_DEFAULTS_AND_SAME_BINARY_SETHS_REFERENCE",
-  "execution_status": "SAME_BINARY_SETHS_CAP1_COMPLETE",
+  "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+  "source_commit": null,
+  "source_manifest_sha256": null,
+  "request": {
+    "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+    "scope": "Resume the existing G04 GroundDecal coverage arithmetic fixture without reimplementing it, and audit the R88 baseline and related shape paths.",
+    "fixture": "Frozen G04 CPU-compiled executable only, 32 real case pairs plus 12 exceptional synthetic cases. Shadow and AA4 compile only.",
+    "fixture_sha256": "ebd97af605c5fac2f8b8d1fc4c1a78d47519d7e91384bfdab299e60335577f72",
+    "budget": {
+      "games": 0,
+      "engine_builds": 0,
+      "fixture_runs": 1,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "authority": "HQ3 only",
+    "baseline_defaults_preserved": true
+  },
+  "ready_path": "coordination/native-metal4/rounds/sensor-coverage-audit-ground-decal-g04-20261118-92/REQUEST.json",
+  "result_path": "coordination/native-metal4/rounds/sensor-coverage-audit-ground-decal-g04-20261118-92/RESULT.json",
+  "decision": null,
+  "execution_status": "ONE_EXISTING_G04_FIXTURE_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4378,6 +4393,13 @@
       },
       "average_fps": 77.09427033347873,
       "low_1_fps": 56.46630164797066
+    },
+    {
+      "revision": 248,
+      "status": "RUNNING",
+      "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+      "owner": "HQ3",
+      "action": "One existing prepared G04 fixture with no game and no rebuild."
     }
   ],
   "communication_test": {
@@ -4461,31 +4483,22 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "same-binary-seths-cap1-atlas-on-01",
+    "attempt_id": "g04-frozen-parity-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
-      "games": 1,
-      "builds": 0,
+      "games": 0,
+      "engine_builds": 0,
+      "fixture_runs": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
-    "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
     "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T17:16:48Z",
-    "default_changed": false,
-    "counts": {
-      "games": 1,
-      "builds": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "finished_at_utc": "2026-11-18T17:19:20Z",
-    "cleanup_complete": true
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18 17:27:58 UTC",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
