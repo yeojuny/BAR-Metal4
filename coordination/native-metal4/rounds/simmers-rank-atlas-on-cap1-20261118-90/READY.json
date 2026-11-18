@@ -1,0 +1,35 @@
+{
+  "round_id": "simmers-rank-atlas-on-cap1-20261118-90",
+  "attempt_id": "simmers-rank-atlas-cap1-on-01",
+  "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "map": "All That Simmers v1.1.1",
+  "map_sha256": "9f5da2ac4546f5b9eea134b779e564f99bd5b6f273236c4082d860842b7e2825",
+  "game_sha256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+  "controller_sha256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+  "start_script_sha256": "961a1cc15a61c33274104a7ad75d5973b38dcfecedaad66170683f8d269f434e",
+  "simulation_window": [
+    300,
+    1500
+  ],
+  "view": [
+    1512,
+    950
+  ],
+  "cap": 1,
+  "candidate_enabled": true,
+  "warmup_pacing": "Before the counted window only",
+  "budget": {
+    "games": 1,
+    "builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "staged": true,
+  "reference_round": "simmers-rank-atlas-on-20261118-89",
+  "launch_sha256": "834b4e14d18a721133da8f6a38d97205a47a50ee276dbe112fbd5582b12515f4",
+  "reference_launch_sha256": "e27d8c876d10883d6b9a368397bc8f4cff3dcdd3dbdefc03cfaa4f89f8fbb5b9",
+  "input_hashes_match": 11,
+  "sole_runtime_delta": "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT",
+  "status": "STAGED_NO_GAME"
+}
