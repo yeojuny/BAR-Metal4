@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 272,
+  "revision": 273,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -50,7 +50,7 @@
   "ready_path": "coordination/native-metal4/rounds/r96-decal-abba-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/r96-decal-abba-20261118/RESULT.json",
   "decision": null,
-  "execution_status": "PINNED_ABBA_BEFORE_GAME_SEAL",
+  "execution_status": "OWNED_ABBA_GAMES_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4565,6 +4565,12 @@
       "status": "RUNNING",
       "round_id": "r96-decal-abba-20261118",
       "action": "reserve"
+    },
+    {
+      "revision": 273,
+      "status": "RUNNING",
+      "round_id": "r96-decal-abba-20261118",
+      "action": "game"
     }
   ],
   "communication_test": {
@@ -4662,7 +4668,9 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-18T20:11:29.631538+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "ready_sha256": "f52e2e1f481805fc799f1e6abbdb0cf67ebd90776a78b9b210be55c5e6bebc97",
+    "game_seal_utc": "2026-11-18T20:11:34.458942+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
