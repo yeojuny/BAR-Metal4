@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 218,
+  "revision": 219,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "sensor31657-exact-interior-reverse-20261118-79",
+  "round_id": "weapon-range-exact-interior-fps-20261118-80",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/sensor31657-exact-interior-reverse-20261118-79/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-reverse-20261118-79/READY.json",
-  "result_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-reverse-20261118-79/DONE.json",
-  "decision": "MODEST_GAIN_REPRODUCED_BOTH_ORDERS_DEFAULTS_PRESERVED",
-  "execution_status": "COMPLETE_RADAR_SONAR_REVERSE_ON_OFF_REUSED_BINARY",
+  "request": "coordination/native-metal4/rounds/weapon-range-exact-interior-fps-20261118-80/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/weapon-range-exact-interior-fps-20261118-80/READY.json",
+  "result_path": "coordination/native-metal4/rounds/weapon-range-exact-interior-fps-20261118-80/DONE.json",
+  "decision": "ONE_WEAPON_RANGE_AA0_OFF_ON_PAIR_AFTER_EXACT_PARITY",
+  "execution_status": "GPU_PARITY_AND_BUILD_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3863,6 +3863,26 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T13:27:39.320Z"
+    },
+    {
+      "event": "HQ3_ROUND80_WEAPON_RANGE_PARITY_AND_PAIR_RESERVED",
+      "revision": 219,
+      "round_id": "weapon-range-exact-interior-fps-20261118-80",
+      "attempt_id": "weapon-range-exact-interior-off-on-01",
+      "patch_sha256": "58b492de023d1876846c823d014bdc0706d9f55f1b71676bcd552f6089ca8fda",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:33:39.930Z"
     }
   ],
   "communication_test": {
@@ -3946,12 +3966,12 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "sensor31657-exact-interior-on-off-01",
+    "attempt_id": "weapon-range-exact-interior-off-on-01",
     "budget": {
-      "configure": 0,
-      "engine_build": 0,
-      "parity_helper_compile": 0,
-      "parity_helper_gpu_runs": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "games": 2,
       "max_per_arm": 1,
       "captures": 0,
@@ -3961,25 +3981,21 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": true,
-    "games_started": true,
-    "completed": true,
+    "started": false,
+    "completed": false,
+    "games_started": false,
     "counts": {
       "configure": 0,
       "engine_build": 0,
       "parity_helper_compile": 0,
       "parity_helper_gpu_runs": 0,
-      "games": 2,
+      "games": 0,
       "captures": 0,
       "profiles": 0,
-      "retries": 0,
-      "new_instrumentation": 0
+      "retries": 0
     },
-    "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
-    "reused_binary_round": "sensor31657-exact-interior-fps-20261118-78",
-    "reserved_at_utc": "2026-11-18T13:23:27.334Z",
-    "default_changed": false,
-    "finished_at_utc": "2026-11-18T13:26:17.977148+00:00"
+    "reserved_at_utc": "2026-11-18T13:33:39.930Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4045,7 +4061,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "The fixed reverse comparison is closed. The modest whole-game increase reproduced in both orders. Defaults are preserved.",
+  "next_action": "Validate the existing adapted fragment fixture once. One build and one OFF then ON game each if parity passes.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
@@ -4086,5 +4102,5 @@
   "queue_review_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/QUEUE-REVIEW.json",
   "previous_runtime_result": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/DONE.json",
   "r69_raw_archive": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/raw/RAW-INDEX.json",
-  "candidate_patch_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-fps-20261118-78/SENSOR31657-EXACT-INTERIOR.patch"
+  "candidate_patch_path": "coordination/native-metal4/rounds/weapon-range-exact-interior-fps-20261118-80/WEAPON-RANGE-EXACT-INTERIOR.patch"
 }
