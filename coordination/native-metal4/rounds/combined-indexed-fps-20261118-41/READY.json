@@ -1,0 +1,17 @@
+{
+  "round_id": "combined-indexed-fps-20261118-41",
+  "attempt_id": "combined-off-on-01",
+  "status": "READY_DISJOINT_EXACT_R03_PATCH_UNION",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "source_paths_verified": 10274,
+  "disjoint_paths": 9,
+  "log_only_files": 5,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0,
+  "order": [
+    "INDEXED_OFF",
+    "INDEXED_ON"
+  ]
+}
