@@ -1,0 +1,27 @@
+{
+  "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+  "attempt_id": "slab-abba-baab-01",
+  "status": "READY_SAME_ROUND44_BINARY_EIGHT_PRIVATE_STATES",
+  "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+  "source_manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2",
+    "B3",
+    "A3",
+    "A4",
+    "B4"
+  ],
+  "scene_checksums_verified": 13,
+  "runtime_data_files_verified": 142,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0,
+  "ground_flash": {
+    "source_review_only": true,
+    "builds": 0,
+    "games": 0
+  }
+}

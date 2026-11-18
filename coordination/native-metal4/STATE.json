@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 141,
+  "revision": 142,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "sensorlos-outline-upload-slab-20261118-44",
+  "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
-  "request": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/READY.json",
-  "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/DONE.json",
-  "decision": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
-  "execution_status": "HQ3_ROUND44_CLOSED_SENSORLOS_UPLOAD_SLAB",
+  "request": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-abba-baab-20261118-45/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-abba-baab-20261118-45/READY.json",
+  "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-abba-baab-20261118-45/DONE.json",
+  "decision": "USER_APPROVED_EXACT_ABBA_BAAB_SLAB_REPEAT",
+  "execution_status": "HQ3_ROUND45_RESERVED_EIGHT_GAME_SLAB_ORDER",
   "blocked_reason": null,
   "history": [
     {
@@ -2531,6 +2531,37 @@
       "relative_percent": -0.3433064257848062,
       "all_counted_frames_retained": true,
       "slab_modes_verified": true
+    },
+    {
+      "event": "HQ3_ROUND45_RESERVED_EIGHT_GAME_SLAB_ORDER",
+      "revision": 142,
+      "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+      "attempt_id": "slab-abba-baab-01",
+      "order": [
+        "A1",
+        "B1",
+        "B2",
+        "A2",
+        "B3",
+        "A3",
+        "A4",
+        "B4"
+      ],
+      "budget": {
+        "configures": 0,
+        "engine_builds": 0,
+        "helpers": 0,
+        "max_games": 8,
+        "max_a": 4,
+        "max_b": 4,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T01:28:47.036Z"
     }
   ],
   "communication_test": {
@@ -2602,7 +2633,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "FRESH_SENSORLOS_OUTLINE_UPLOAD_SLAB_SAME_BINARY_OFF_ON",
+  "enabled_scope": "SENSORLOS_UPLOAD_SLAB_ABBA_BAAB_SAME_ROUND44_BINARY",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -2614,59 +2645,46 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "outline-upload-slab-off-on-01",
+    "attempt_id": "slab-abba-baab-01",
     "order": [
-      "SLAB_OFF",
-      "SLAB_ON"
+      "A1",
+      "B1",
+      "B2",
+      "A2",
+      "B3",
+      "A3",
+      "A4",
+      "B4"
     ],
-    "flag": {
-      "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": {
-        "SLAB_OFF": "0",
-        "SLAB_ON": "1"
-      }
-    },
     "budget": {
-      "configure_attempts_max": 1,
-      "engine_builds_max": 1,
-      "gpu_fixture_runs_max": 0,
-      "games_max": 2,
-      "off_games_max": 1,
-      "on_games_max": 1,
+      "configures": 0,
+      "engine_builds": 0,
+      "helpers": 0,
+      "max_games": 8,
+      "max_a": 4,
+      "max_b": 4,
       "retries": 0,
       "captures": 0,
       "profiles": 0,
       "screenshots": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T01:15:17.046Z",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T01:25:09.693Z",
-    "counts": {
-      "configure_attempts": 1,
-      "engine_builds": 1,
-      "helper_compiles": 0,
-      "helper_gpu_invocations": 0,
-      "games": 2,
-      "off_games": 1,
-      "on_games": 1,
-      "normal_exits": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
+    "flag": {
+      "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": {
+        "A1": "0",
+        "B1": "1",
+        "B2": "1",
+        "A2": "0",
+        "B3": "1",
+        "A3": "0",
+        "A4": "0",
+        "B4": "1"
+      }
     },
-    "cleanup_complete": true,
-    "artifact_commit": "4eba3ac202676b1c33c6e9d7a68226fb038b7175",
-    "diagnostic_outcome": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
     "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
-    "fps_by_arm": {
-      "SLAB_OFF": 65.39134509310635,
-      "SLAB_ON": 65.1668524034946
-    },
-    "relative_percent": -0.3433064257848062,
-    "all_counted_frames_retained": true,
-    "slab_modes_verified": true
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "reserved_at_utc": "2026-11-18T01:28:47.036Z",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2732,7 +2750,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Keep slab disabled for the separate GroundFlash source/prepare coalescing candidate. Retain the counted ON 266ms frame.",
+  "next_action": "Execute the eight fixed A B B A B A A B launches on the round44 binary.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

@@ -1,0 +1,87 @@
+{
+  "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+  "attempt_id": "slab-abba-baab-01",
+  "scope": "SENSORLOS_UPLOAD_SLAB_ABBA_BAAB_SAME_ROUND44_BINARY",
+  "authorized_by": "Direct user request via SUPER_JINI_MK2",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
+  "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2",
+    "B3",
+    "A3",
+    "A4",
+    "B4"
+  ],
+  "arm_sequence": [
+    "A",
+    "B",
+    "B",
+    "A",
+    "B",
+    "A",
+    "A",
+    "B"
+  ],
+  "a": "slab off, original three uploads",
+  "b": "slab on, aligned fresh buffer",
+  "previous": {
+    "round_id": "sensorlos-outline-upload-slab-20261118-44",
+    "artifact_commit": "4eba3ac202676b1c33c6e9d7a68226fb038b7175",
+    "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/DONE.json",
+    "fps_by_arm": {
+      "SLAB_OFF": 65.39134509310635,
+      "SLAB_ON": 65.1668524034946
+    },
+    "relative_percent": -0.3433064257848062
+  },
+  "flag": {
+    "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": {
+      "A1": "0",
+      "B1": "1",
+      "B2": "1",
+      "A2": "0",
+      "B3": "1",
+      "A3": "0",
+      "A4": "0",
+      "B4": "1"
+    }
+  },
+  "fixed_flags": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1"
+  },
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "budget": {
+    "configures": 0,
+    "engine_builds": 0,
+    "helpers": 0,
+    "max_games": 8,
+    "max_a": 4,
+    "max_b": 4,
+    "retries": 0,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0
+  },
+  "retain_all_counted_frames": true
+}
