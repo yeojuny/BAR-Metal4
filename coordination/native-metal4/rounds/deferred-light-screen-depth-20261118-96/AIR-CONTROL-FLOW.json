@@ -1,0 +1,19 @@
+{
+  "OFF": {
+    "sample_line": 2377,
+    "comparison_lines": {
+      "lower": 2378,
+      "upper": 2384,
+      "depth_clamp": 2393
+    }
+  },
+  "ON": {
+    "sample_line": 2387,
+    "comparison_lines": {
+      "lower": 2377,
+      "upper": 2382,
+      "depth_clamp": 2393
+    }
+  },
+  "observed": "Apple offline AIR preserves an explicit control-flow branch around the ray sample; native hardware instruction execution and in-game offscreen fraction unmeasured"
+}

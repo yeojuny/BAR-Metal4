@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 257,
+  "revision": 258,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -36,7 +36,7 @@
   "ready_path": "coordination/native-metal4/rounds/deferred-light-screen-depth-20261118-96/READY.json",
   "result_path": "coordination/native-metal4/rounds/deferred-light-screen-depth-20261118-96/RESULT.json",
   "decision": null,
-  "execution_status": "DEFERRED_PARITY_AND_BUILD_AWAIT_GAME_SEAL",
+  "execution_status": "TWO_DEFERRED_SETHS_GAMES_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4461,6 +4461,12 @@
       "round_id": "deferred-light-screen-depth-20261118-96",
       "status": "RUNNING",
       "action": "One independent DeferredLight CPU/GPU fixture and conditional same-binary pair."
+    },
+    {
+      "revision": 258,
+      "round_id": "deferred-light-screen-depth-20261118-96",
+      "status": "RUNNING",
+      "action": "CPU and GPU parity and conditional AIR ray fetch confirmed. Two owned Seths games only."
     }
   ],
   "communication_test": {
@@ -4561,7 +4567,9 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-18T18:07:05.392506+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "bb0e50b0fcba0fe994767c7792ac9f2c65dd299cdd269b8d2c81d4fbef6cb423",
+    "game_seal_utc": "2026-11-18T18:45:57.592313+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
