@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 206,
+  "revision": 207,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/DONE.json",
-  "decision": "ONE_FIXED_OFF_ON_CAP2_PAIR_REUSING_EXISTING_BINARY",
-  "execution_status": "FIXED_OFF_ON_GAMES_RESERVED",
+  "decision": "NO_IMPROVEMENT_IN_FIXED_SINGLE_PAIR",
+  "execution_status": "COMPLETE_CAP2_OFF_ON_REUSED_BINARY",
   "blocked_reason": null,
   "history": [
     {
@@ -3634,6 +3634,23 @@
       "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
       "reused_binary_round": "pending2-prejoin-opaque-read-fps-20261118-73",
       "utc": "2026-11-18T12:05:10.777Z"
+    },
+    {
+      "event": "HQ3_ROUND74_EXISTING_BINARY_CAP2_OFF_ON_PAIR_DONE",
+      "revision": 207,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-74",
+      "attempt_id": "pending2-prejoin-opaque-read-sealed-off-on-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_diagnostic_timing": 0
+      },
+      "average_fps_change_percent": -0.13809547904188868,
+      "utc": "2026-11-18T12:08:57.975Z"
     }
   ],
   "communication_test": {
@@ -3729,21 +3746,23 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
-    "games_started": false,
-    "completed": false,
+    "started": true,
+    "games_started": true,
+    "completed": true,
     "counts": {
       "configure": 0,
       "engine_build": 0,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
-      "retries": 0
+      "retries": 0,
+      "new_diagnostic_timing": 0
     },
     "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
     "reused_binary_round": "pending2-prejoin-opaque-read-fps-20261118-73",
     "reserved_at_utc": "2026-11-18T12:05:10.777Z",
-    "default_changed": false
+    "default_changed": false,
+    "finished_at_utc": "2026-11-18T12:08:03.695982+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3809,7 +3828,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 to run the sealed OFF then ON pair once each.",
+  "next_action": "The fixed comparison is closed. Preserve cap1 and the candidate flag OFF by default.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
