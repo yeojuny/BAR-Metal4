@@ -1,0 +1,35 @@
+{
+  "historical_source_round": "r03-mvk3-matched-frame-20261117-02",
+  "bound_simulation_frame": 1590,
+  "raw_buffer": "MTLBuffer-3195333-0",
+  "sha256": "4bc341a1c12b7d7a9a69ffa2b4beef710676bc32b740f4dc3c4df20da2cd9c4d",
+  "encoded_rows": 32279,
+  "prefix_rows": 9401,
+  "prefix_bytes_on_new_revision": 1804992,
+  "conservative_threshold_cases": {
+    "1588": {
+      "count": 9401,
+      "lastRowBirth": 652.0,
+      "firstRemainingRowBirth": 700.0,
+      "strictTrackPredicateRows": 10209
+    },
+    "1590": {
+      "count": 9401,
+      "lastRowBirth": 652.0,
+      "firstRemainingRowBirth": 700.0,
+      "strictTrackPredicateRows": 10308
+    },
+    "1592": {
+      "count": 9401,
+      "lastRowBirth": 652.0,
+      "firstRemainingRowBirth": 700.0,
+      "strictTrackPredicateRows": 10308
+    }
+  },
+  "producer_sha256": {
+    "source/engine/rts/Rendering/Env/Decals/GroundDecalHandler.cpp": "d9702d9ec3ef43d25c094bee9798c37fb6dfc0809308c4a7b9c3b981be2b2e1b",
+    "source/engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp": "f64e608b2a7884f4693a6ba3c7f40bb38f8d99e93b1780215a2fa8fd431ac3d9"
+  },
+  "live_count_known": false,
+  "historical_scope": "same workspace input workload and immutable producer; no current rows instrumented"
+}

@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 230,
+  "revision": 231,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
+  "round_id": "ground-decal-expired-prefix-20261118-85",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
-  "request": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/READY.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/DONE.json",
-  "decision": "NO_SPEEDUP_IN_FIXED_PAIR_KEEP_OFF",
-  "execution_status": "COMPLETE_GROUND_DECAL_AA0_CAP2_FIXED_OFF_ON_PAIR",
+  "source_manifest_sha256": "47ccf8f7b28ca3b28c795f8fa31840458de9df733d03831bbaa9d67c31638ed3",
+  "request": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/READY.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/DONE.json",
+  "decision": null,
+  "execution_status": "GROUND_DECAL_EXPIRED_PREFIX_PARITY_AND_BUILD_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -4099,6 +4099,28 @@
       },
       "average_fps_change_percent": -0.15205491820921013,
       "utc": "2026-11-18T14:31:39.690Z"
+    },
+    {
+      "event": "HQ3_ROUND85_GROUND_DECAL_EXPIRED_TRACK_PREFIX_RESERVED",
+      "revision": 231,
+      "round_id": "ground-decal-expired-prefix-20261118-85",
+      "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
+      "patch_sha256": "47ccf8f7b28ca3b28c795f8fa31840458de9df733d03831bbaa9d67c31638ed3",
+      "expiry_proof_sha256": "e004e23c7f2963782f1d0fc211fde1cbda463e0a6e4be208c4e625a6fc5d466e",
+      "fixture_sha256": "78bb375b8c24fb3d490b9a0f9d5a54e0909d103a0c94b5d659a5b4ca85a2859e",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T15:22:39.163Z"
     }
   ],
   "communication_test": {
@@ -4182,12 +4204,12 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
+    "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
     "budget": {
       "configure": 1,
       "engine_build": 1,
-      "parity_helper_compile": 0,
-      "parity_helper_gpu_runs": 0,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "games": 2,
       "max_per_arm": 1,
       "captures": 0,
@@ -4197,24 +4219,22 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": true,
-    "completed": true,
-    "games_started": true,
+    "started": false,
+    "completed": false,
+    "games_started": false,
     "counts": {
-      "configure": 1,
-      "engine_build": 1,
+      "configure": 0,
+      "engine_build": 0,
       "parity_helper_compile": 0,
       "parity_helper_gpu_runs": 0,
-      "games": 2,
+      "games": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
       "new_instrumentation": 0
     },
-    "reserved_at_utc": "2026-11-18T14:23:24.568Z",
-    "default_changed": false,
-    "binary_sha256": "c90e3d997c771ff0d802c0b6d837f771149fa692b1c6b9c873a2b7632b908879",
-    "finished_at_utc": "2026-11-18T14:31:39.690Z"
+    "reserved_at_utc": "2026-11-18T15:22:39.163Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4280,7 +4300,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Keep defaults. This fixed OFF-to-ON pair did not demonstrate a speedup.",
+  "next_action": "One CPU/GPU equivalence helper attempt, then one configure/build and the same-binary pair only after passing equivalence.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
@@ -4321,5 +4341,5 @@
   "queue_review_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/QUEUE-REVIEW.json",
   "previous_runtime_result": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/DONE.json",
   "r69_raw_archive": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/raw/RAW-INDEX.json",
-  "candidate_patch_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-fps-20261118-82/GROUND-DECAL-TERRAIN-COLOR.patch"
+  "candidate_patch_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/EXPIRED-TRACK-PREFIX.patch"
 }
