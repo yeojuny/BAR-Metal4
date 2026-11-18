@@ -2,21 +2,21 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 207,
+  "revision": 208,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-prejoin-opaque-read-fps-20261118-74",
+  "round_id": "sensorlos-exact-interior-coverage-20261118-75",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-74/DONE.json",
-  "decision": "NO_IMPROVEMENT_IN_FIXED_SINGLE_PAIR",
-  "execution_status": "COMPLETE_CAP2_OFF_ON_REUSED_BINARY",
+  "request": null,
+  "ready_path": null,
+  "result_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-coverage-20261118-75/DONE.json",
+  "decision": "HOLD_R74_OFF_PREPARE_INDEPENDENT_SENSORLOS_EXACT_INTERIOR",
+  "execution_status": "SOURCE_CANDIDATE_READY_CPU_VERIFIED",
   "blocked_reason": null,
   "history": [
     {
@@ -3651,6 +3651,23 @@
       },
       "average_fps_change_percent": -0.13809547904188868,
       "utc": "2026-11-18T12:08:57.975Z"
+    },
+    {
+      "event": "HQ3_ROUND75_SENSORLOS_EXACT_INTERIOR_SOURCE_CPU_READY",
+      "revision": 208,
+      "round_id": "sensorlos-exact-interior-coverage-20261118-75",
+      "attempt_id": "sensorlos-exact-interior-source-01",
+      "patch_sha256": "12844f4263c107d190161d9e585540f2fc3e45814a4d015f8ede147a28bad1b1",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T12:17:32.015Z"
     }
   ],
   "communication_test": {
@@ -3734,35 +3751,31 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-prejoin-opaque-read-sealed-off-on-01",
+    "attempt_id": "sensorlos-exact-interior-source-01",
+    "owner": "HQ3",
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "started": true,
+    "completed": true,
     "budget": {
       "configure": 0,
       "engine_build": 0,
-      "games": 2,
-      "max_per_arm": 1,
+      "games": 0,
+      "gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
-      "retries": 0
+      "new_instrumentation": 0
     },
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "owner": "HQ3",
-    "started": true,
-    "games_started": true,
-    "completed": true,
     "counts": {
       "configure": 0,
       "engine_build": 0,
-      "games": 2,
+      "games": 0,
+      "gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
-      "retries": 0,
-      "new_diagnostic_timing": 0
+      "new_instrumentation": 0
     },
-    "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
-    "reused_binary_round": "pending2-prejoin-opaque-read-fps-20261118-73",
-    "reserved_at_utc": "2026-11-18T12:05:10.777Z",
-    "default_changed": false,
-    "finished_at_utc": "2026-11-18T12:08:03.695982+00:00"
+    "finished_at_utc": "2026-11-18T12:17:32.015Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3828,7 +3841,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "The fixed comparison is closed. Preserve cap1 and the candidate flag OFF by default.",
+  "next_action": "Preserve OFF defaults. A separately authorized same-binary AA0 comparison may use this candidate after scene activation and shader parity are established.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
@@ -3869,5 +3882,5 @@
   "queue_review_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/QUEUE-REVIEW.json",
   "previous_runtime_result": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/DONE.json",
   "r69_raw_archive": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/raw/RAW-INDEX.json",
-  "candidate_patch_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-packet-20261118-72/PREJOIN-OPAQUE-READ-PACKET.patch"
+  "candidate_patch_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-coverage-20261118-75/SENSORLOS-EXACT-INTERIOR.patch"
 }

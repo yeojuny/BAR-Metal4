@@ -1,0 +1,73 @@
+diff --git a/rts/Rendering/Metal4/NativeSensorLOSShaders.h b/rts/Rendering/Metal4/NativeSensorLOSShaders.h
+--- a/rts/Rendering/Metal4/NativeSensorLOSShaders.h
++++ b/rts/Rendering/Metal4/NativeSensorLOSShaders.h
+@@ -181,6 +181,27 @@
+  const int2 delta=b-a;if(all(delta==0))return false;const bool xMajor=abs(delta.x)>=abs(delta.y);
+  const int2 pixel=int2(floor(fragmentPosition));const int major=xMajor?pixel.x:pixel.y;
+  const long ma=xMajor?a.x:a.y,mi=xMajor?a.y:a.x,dm=xMajor?delta.x:delta.y,di=xMajor?delta.y:delta.x;
++#ifdef RECOIL_SENSORLOS_EXACT_INTERIOR
++ const long crossing=long(major)*256+128;
++ long numerator=mi*dm+(crossing-ma)*di,denominator=dm*256;
++ if(denominator<0){denominator=-denominator;numerator=-numerator;}
++ long quotient=numerator/denominator;
++ long remainder=numerator-quotient*denominator;
++ if(remainder<0){--quotient;remainder+=denominator;}
++ const int center=int(quotient);
++ const int count=max(1,int(floor(width+0.5f)));
++ // The same rational crossing gives both the unit diamond and the wide-line
++ // band. Keep the original negative epsilon on exact integer and half ties.
++ const int bias=(count&1)?-int(remainder==0):int(2*remainder>denominator);
++ const int lower=center-count/2+bias;
++ const int actual=xMajor?pixel.y:pixel.x;if(actual<lower||actual>=lower+count)return false;
++ const long mb=ma+dm,first=dm>0?ma:mb,last=dm>0?mb:ma;
++ // A nonintegral minor crossing at the major pixel center lies strictly
++ // inside the diamond at floor(crossingMinor). Endpoints more than half a
++ // pixel away on the major axis guarantee entry and exit before the end.
++ // Keep the exact predicate for endpoints, tangencies and subpixel segments.
++ bool covered=remainder!=0&&crossing>first+128&&crossing<last-128;
++#else
+  long numerator=mi*dm+(long(major)*256+128-ma)*di,denominator=dm*256;
+  if(denominator<0){denominator=-denominator;numerator=-numerator;}
+  const int count=max(1,int(floor(width+0.5f)));
+@@ -189,7 +210,11 @@
+  const int lower=int(FloorDivide(2*numerator-long(count-1)*denominator-1,2*denominator));
+  const int actual=xMajor?pixel.y:pixel.x;if(actual<lower||actual>=lower+count)return false;
+  const int center=int(FloorDivide(numerator,denominator));bool covered=false;
+- for(int minor=center-1;minor<=center+1;++minor)if(SensorDiamond(a,b,xMajor?int2(major,minor):int2(minor,major))){covered=true;break;}
++#endif
++ if(!covered){
++  for(int minor=center-1;minor<=center+1;++minor)
++   if(SensorDiamond(a,b,xMajor?int2(major,minor):int2(minor,major))){covered=true;break;}
++ }
+  if(!covered)return false;
+  const float2 d=originalB.xy-originalA.xy;
+  const float t=xMajor?(fragmentPosition.x-originalA.x)/d.x:(fragmentPosition.y-originalA.y)/d.y;
+diff --git a/rts/Rendering/Metal4/Metal4SensorLOSNative.mm b/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
+--- a/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
++++ b/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
+@@ -4,7 +4,10 @@
+ #include "Metal4NativeEffectState.h"
+ #include "Metal4FixedTriangleIndexBuffer.h"
+ #include "System/Log/ILog.h"
++#include <cstdlib>
+ #include <map>
++#include <string>
++#include <string_view>
+ #include <tuple>
+ #include <unordered_map>
+ namespace rendering::metal4 {
+@@ -109,7 +112,13 @@
+ 		if(library){lease.Retain(library);return;}
+ 		const auto start=Clock::now();NSError* error=nil;
+ 		auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original31657 LOS R8 fan and thinned outline";
+-		descriptor.source=String(NativeSensorLOSShaderSource);
++		static const bool exactInterior=[] {
++			const char* value=std::getenv("BAR_NATIVE_SENSORLOS_EXACT_INTERIOR");
++			return value&&std::string_view(value)=="1";
++		}();
++		descriptor.source=exactInterior
++			?String(std::string("#define RECOIL_SENSORLOS_EXACT_INTERIOR 1\n")+NativeSensorLOSShaderSource)
++			:String(NativeSensorLOSShaderSource);
+ 		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
+ 		options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
+ 		auto compiled=lease.NewLibrary(descriptor,&error);

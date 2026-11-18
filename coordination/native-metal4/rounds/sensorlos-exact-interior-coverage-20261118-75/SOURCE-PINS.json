@@ -1,0 +1,15 @@
+{
+  "parent_artifact": "26daf06778b692a18a41b3edcf92c1f77744bf26",
+  "files": {
+    "rts/Rendering/Metal4/NativeSensorLOSShaders.h": {
+      "before_sha256": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+      "after_sha256": "f6ea9922147e5680cf6eaf5e4663d175594d6353f9fb819f6660cc9d736c17f0"
+    },
+    "rts/Rendering/Metal4/Metal4SensorLOSNative.mm": {
+      "before_sha256": "3ca8523331c8bcfd97b72973da7e3781ed33c6ab8c764f84c9d6f802ec2564f5",
+      "after_sha256": "b1d0fca991624633a0946282c3490ecd323ef96ce516aa4789e3dbec3235ec93"
+    }
+  },
+  "patch_sha256": "12844f4263c107d190161d9e585540f2fc3e45814a4d015f8ede147a28bad1b1",
+  "cpu_validation_sha256": "61048f2344b665191a61c30f5f302a149766e4f000ee866024cdde2f938af14f"
+}

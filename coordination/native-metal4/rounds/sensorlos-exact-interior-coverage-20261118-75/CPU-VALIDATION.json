@@ -1,0 +1,18 @@
+{
+  "status": "PASS",
+  "parity": {
+    "cases": 380886,
+    "same_coverage": 380886,
+    "same_depth_bits": 380886,
+    "reference_diamond_calls": 418941,
+    "on_diamond_calls": 390769,
+    "fast_path_hits": 14086,
+    "on_fallback_cases": 139111
+  },
+  "objcxx_syntax_only": {
+    "exit_code": 0,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "reference_corpus_sha256": "ce02c91dc8d550a22ef00334a82f281c0001db617f853e64d76deca89acf5267",
+  "scope": "CPU coverage and reference depth only"
+}
