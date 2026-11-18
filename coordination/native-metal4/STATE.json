@@ -1,42 +1,56 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 271,
+  "revision": 272,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "lua-game-decal-early-vertex-20261118-100",
+  "round_id": "r96-decal-abba-20261118",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "lua-game-decal-early-vertex-20261118-100",
-    "switch": "BAR_NATIVE_GAME_DECAL_DEAD_VERTEX",
+    "round_id": "r96-decal-abba-20261118",
     "order": [
-      "R100_OFF",
-      "R100_ON"
+      "A1_OFF",
+      "B1_ON",
+      "B2_ON",
+      "A2_OFF"
     ],
-    "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
-    "patch_sha256": "39bd9afe60df6b92389e9909d93bc044d5cc0402a12262b2600a62766fde4158",
-    "original_patch_sha256": "0aa02c855ef478ce8f598b5420260a3f800100bd3a274d57d82de5bb012ac85e",
+    "groups": [
+      "R96-seths",
+      "R99-seths",
+      "R99-simmers",
+      "R98-seths",
+      "R98-simmers",
+      "R100-seths",
+      "R100-simmers"
+    ],
+    "skips": [
+      {
+        "candidate": 96,
+        "scene": "simmers",
+        "status": "ACTIVATION_UNPROVEN",
+        "reason": "Historic shader link exists; eligible offscreen ray work is unverified."
+      }
+    ],
     "budget": {
-      "translation_units": 1,
-      "engine_builds": 1,
-      "fixture_compiles": 1,
-      "fixture_runs": 1,
-      "games": 2,
+      "games": 28,
+      "engine_builds": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    }
+    },
+    "approval_message_id": "Sentinel_e26586c906988191acaed155b28ffb21",
+    "default_changed": false
   },
-  "ready_path": "coordination/native-metal4/rounds/lua-game-decal-early-vertex-20261118-100/READY.json",
-  "result_path": "coordination/native-metal4/rounds/lua-game-decal-early-vertex-20261118-100/RESULT.json",
-  "decision": "KEEP_LUA_EARLY_OFF_NO_MEASURED_GAIN",
-  "execution_status": "MATCHED_PAIR",
+  "ready_path": "coordination/native-metal4/rounds/r96-decal-abba-20261118/READY.json",
+  "result_path": "coordination/native-metal4/rounds/r96-decal-abba-20261118/RESULT.json",
+  "decision": null,
+  "execution_status": "PINNED_ABBA_BEFORE_GAME_SEAL",
   "blocked_reason": null,
   "history": [
     {
@@ -4545,6 +4559,12 @@
       "status": "DONE",
       "round_id": "lua-game-decal-early-vertex-20261118-100",
       "action": "closed"
+    },
+    {
+      "revision": 272,
+      "status": "RUNNING",
+      "round_id": "r96-decal-abba-20261118",
+      "action": "reserve"
     }
   ],
   "communication_test": {
@@ -4628,36 +4648,21 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "lua-game-decal-early-vertex-20261118-100-01",
+    "attempt_id": "r96-decal-abba-20261118-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
-      "translation_units": 1,
-      "engine_builds": 1,
-      "fixture_compiles": 1,
-      "fixture_runs": 1,
-      "games": 2,
+      "games": 28,
+      "engine_builds": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
     "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T19:54:17.011406+00:00",
-    "default_changed": false,
-    "binary_sha256": "f6d5431dcf545b83c1ffea61e20d398c087aef58583d4b300e5acfffb936368a",
-    "game_seal_utc": "2026-11-18T19:55:09.024964+00:00",
-    "finished_at_utc": "2026-11-18T19:58:50.833584+00:00",
-    "counts": {
-      "games": 2,
-      "engine_builds": 1,
-      "fixture_runs": 1,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T20:11:29.631538+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
