@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "previous_arm_order": [
+    "BLOOM_OFF",
+    "BLOOM_ON"
+  ],
+  "repeated_arm_order": [
+    "BLOOM_ON",
+    "BLOOM_OFF"
+  ],
+  "matched_fields": [
+    "binary_sha256",
+    "mutable_env",
+    "scene_checksums",
+    "base_archive_names",
+    "startup_script_sha256",
+    "window_simulation_ticks",
+    "aa",
+    "view",
+    "drawable",
+    "content_sha256",
+    "map_sha256",
+    "linked_libraries",
+    "base_data_files_verified"
+  ],
+  "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638"
+}
