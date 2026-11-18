@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 163,
+  "revision": 164,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "bloom-prepare-defines-reverse-20261118-53",
+  "round_id": "screen-encode-range-accepted-baseline-reverse-20261118-54",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "d1146946b94f9655b26f96b95bc04887358e073387839446213ac3440153b250",
-  "request": "coordination/native-metal4/rounds/bloom-prepare-defines-reverse-20261118-53/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/bloom-prepare-defines-reverse-20261118-53/READY.json",
-  "result_path": "coordination/native-metal4/rounds/bloom-prepare-defines-reverse-20261118-53/DONE.json",
-  "decision": "BLOOM_DEFINE_REUSE_ACCEPTED_BY_USER",
-  "execution_status": "HQ3_USER_ACCEPTED_BLOOM_DEFINE_REUSE_R03_BENCHMARK",
+  "source_manifest_sha256": "182b599f4b4f983a03c0b8d50733915d04c2f89657897ed5ab461126e7390620",
+  "request": "coordination/native-metal4/rounds/screen-encode-range-accepted-baseline-reverse-20261118-54/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/screen-encode-range-accepted-baseline-reverse-20261118-54/READY.json",
+  "result_path": null,
+  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
+  "execution_status": "HQ3_ROUND54_SCREEN_ENCODE_RANGE_ACCEPTED_BASELINE_REVERSE_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3032,6 +3032,13 @@
         "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1"
       },
       "artifact_commit": "44e3c30461c818c164bf5b2c5784fe7cef1ee30c"
+    },
+    {
+      "event": "HQ3_ROUND54_SCREEN_ENCODE_RANGE_ACCEPTED_BASELINE_REVERSE_RESERVED",
+      "revision": 164,
+      "round_id": "screen-encode-range-accepted-baseline-reverse-20261118-54",
+      "attempt_id": "encode-range-accepted-baseline-on-off-02",
+      "utc": "2026-11-18T06:59:38.301140+00:00"
     }
   ],
   "communication_test": {
@@ -3115,42 +3122,23 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "bloom-prepare-defines-on-off-02",
+    "attempt_id": "encode-range-accepted-baseline-on-off-02",
     "budget": {
       "configure_attempts_max": 0,
       "engine_builds_max": 0,
       "gpu_helpers": 0,
       "games_max": 2,
-      "off_games_max": 1,
       "on_games_max": 1,
+      "off_games_max": 1,
       "captures": 0,
       "profiles": 0,
       "screenshots": 0,
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T06:46:02.290777+00:00",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T06:51:05.711094+00:00",
-    "counts": {
-      "configure": 0,
-      "engine_builds": 0,
-      "cpu_define_fixtures": 0,
-      "games": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "44e3c30461c818c164bf5b2c5784fe7cef1ee30c",
-    "default_changed": false,
-    "fps": {
-      "OFF": 65.52172571392371,
-      "ON": 65.68649508573297,
-      "relative_percent": 0.2514728817257561
-    }
+    "reserved_at_utc": "2026-11-18T06:59:38.301140+00:00",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3216,7 +3204,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Recheck the existing Screen EncodeRange candidate against this baseline. Rank the larger SensorLOS, decal shader, and GPU submission-boundary opportunities using matched evidence.",
+  "next_action": "Use the exact accepted R03 executable for one EncodeRange ON game then one OFF game. Both Bloom settings fixed ON.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
