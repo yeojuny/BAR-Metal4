@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 261,
+  "revision": 262,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -35,8 +35,8 @@
   },
   "ready_path": "coordination/native-metal4/rounds/particle-single-cell-sample-20261118-97/READY.json",
   "result_path": "coordination/native-metal4/rounds/particle-single-cell-sample-20261118-97/RESULT.json",
-  "decision": null,
-  "execution_status": "TWO_PARTICLE_SETHS_GAMES_ONLY",
+  "decision": "PRESERVE_PARTICLE_OPT_IN_AND_DEFAULTS_SINGLE_PAIR",
+  "execution_status": "MATCHED_PAIR_COMPLETE_OPT_IN",
   "blocked_reason": null,
   "history": [
     {
@@ -4485,6 +4485,12 @@
       "round_id": "particle-single-cell-sample-20261118-97",
       "status": "RUNNING",
       "action": "Parity and captured GroundFlash eligibility plus AIR two-to-one checked; one fixed same-binary pair."
+    },
+    {
+      "revision": 262,
+      "status": "DONE",
+      "round_id": "particle-single-cell-sample-20261118-97",
+      "action": "One independently matched particle pair finished. Existing default OFF, cap1 and distribution preserved."
     }
   ],
   "communication_test": {
@@ -4582,12 +4588,22 @@
       "game_retries": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T18:57:27.295131+00:00",
     "default_changed": false,
     "binary_sha256": "bb058d639fbbac8537c25e38fc44a9bc1a6ab1f483984d4200903ee1b59deb77",
-    "game_seal_utc": "2026-11-18T18:58:36.793086+00:00"
+    "game_seal_utc": "2026-11-18T18:58:36.793086+00:00",
+    "finished_at_utc": "2026-11-18T19:02:21.847572+00:00",
+    "counts": {
+      "games": 2,
+      "engine_builds": 1,
+      "fixture_runs": 1,
+      "captures": 0,
+      "profiles": 0,
+      "game_retries": 0
+    },
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",

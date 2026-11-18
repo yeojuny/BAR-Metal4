@@ -1,0 +1,124 @@
+{
+  "status": "MATCHED_PAIR",
+  "binary_sha256": "bb058d639fbbac8537c25e38fc44a9bc1a6ab1f483984d4200903ee1b59deb77",
+  "same_13_inputs": true,
+  "actual_child_only_difference": "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL",
+  "exact_bin_count": 40,
+  "nominal_edges": [
+    true,
+    true
+  ],
+  "bin_differences": [],
+  "same_checks": {
+    "events": true,
+    "checks": true,
+    "pacing_ticks": true,
+    "libraries": true,
+    "start_script_sha256": true,
+    "route": true,
+    "battleMap": true,
+    "battleCameraOpen": true,
+    "battleInitialState": true,
+    "battleCommand": true,
+    "gameSeed": true,
+    "benchmarkSeed": true,
+    "officialCreated": true,
+    "officialDestroyed": true
+  },
+  "arms": [
+    {
+      "arm": "R97_OFF",
+      "average_fps": 78.84802988144217,
+      "low_1_fps": 40.76433084668749,
+      "p99_ms": 20.0,
+      "maximum_ms": 37.999999,
+      "frame_intervals": 3153,
+      "particle_single_cell_witness": [],
+      "longest_draw": 5568,
+      "rank_atlas": {
+        "enabled": 0,
+        "queued": 0,
+        "first_sim": 0
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 24.0,
+        "frames": 77,
+        "average_fps": 76.388885498
+      },
+      "over_16_667_ms": 56,
+      "over_33_333_ms": 1
+    },
+    {
+      "arm": "R97_ON",
+      "average_fps": 79.34206258633849,
+      "low_1_fps": 50.000000078125,
+      "p99_ms": 17.000001,
+      "maximum_ms": 29.999999,
+      "frame_intervals": 3173,
+      "particle_single_cell_witness": [
+        [
+          43,
+          1,
+          48
+        ]
+      ],
+      "longest_draw": 4611,
+      "rank_atlas": {
+        "enabled": 0,
+        "queued": 0,
+        "first_sim": 0
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 24.0,
+        "frames": 76,
+        "average_fps": 76.458747864
+      },
+      "over_16_667_ms": 32,
+      "over_33_333_ms": 0
+    }
+  ],
+  "fps_percent": 0.6265631565419705,
+  "low_percent": 22.656251285400387,
+  "frame_intervals_excluded": 0,
+  "round_id": "particle-single-cell-sample-20261118-97",
+  "decision": "PRESERVE_PARTICLE_OPT_IN_AND_DEFAULTS_SINGLE_PAIR",
+  "counts": {
+    "games": 2,
+    "engine_builds": 1,
+    "fixture_runs": 1,
+    "captures": 0,
+    "profiles": 0,
+    "game_retries": 0
+  },
+  "cleanup_complete": true,
+  "existing_display_assertion_preserved": true,
+  "shadow_mixed_unchanged": true
+}
