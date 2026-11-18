@@ -2,21 +2,21 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 138,
+  "revision": 139,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "combined-indexed-fps-repeat-20261118-42",
+  "round_id": "sensorlos-major-coverage-20261118-43",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
-  "request": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/READY.json",
-  "result_path": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/DONE.json",
-  "decision": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
-  "execution_status": "HQ3_ROUND42_CLOSED_SAME_BINARY_COMBINED_REPEAT",
+  "request": null,
+  "ready_path": null,
+  "result_path": "coordination/native-metal4/rounds/sensorlos-major-coverage-20261118-43/DONE.json",
+  "decision": "CLOSED_FEASIBILITY_NO_BOUNDED_COVERAGE_SHARING_PATH",
+  "execution_status": "HQ3_ROUND43_CLOSED_COVERAGE_SHARING_FEASIBILITY",
   "blocked_reason": null,
   "history": [
     {
@@ -2443,6 +2443,25 @@
       "relative_percent": 1.4774680609377588,
       "all_counted_frames_retained": true,
       "previous_relative_percent": 1.4894459257063453
+    },
+    {
+      "event": "HQ3_ROUND43_CLOSED_COVERAGE_SHARING_FEASIBILITY",
+      "revision": 139,
+      "round_id": "sensorlos-major-coverage-20261118-43",
+      "attempt_id": "sensorlos-coverage-off-on-01",
+      "result_path": "coordination/native-metal4/rounds/sensorlos-major-coverage-20261118-43/DONE.json",
+      "decision": "CLOSED_FEASIBILITY_NO_BOUNDED_COVERAGE_SHARING_PATH",
+      "counts": {
+        "configures": 0,
+        "builds": 0,
+        "fixtures": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "execution_started": false,
+      "utc": "2026-11-18T01:00:37.543Z"
     }
   ],
   "communication_test": {
@@ -2514,7 +2533,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "COMBINED_INDEXED_FIXED_BINARY_OFF_ON_REPEAT",
+  "enabled_scope": "SOURCE_FEASIBILITY_ONLY",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -2526,64 +2545,20 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "combined-off-on-repeat-01",
-    "order": [
-      "INDEXED_OFF",
-      "INDEXED_ON"
-    ],
-    "budget": {
-      "configure_attempts_max": 0,
-      "engine_builds_max": 0,
-      "helper_compiles_max": 0,
-      "helper_gpu_invocations_max": 0,
-      "games_max": 2,
-      "off_games_max": 1,
-      "on_games_max": 1,
-      "retries": 0,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0
-    },
-    "flag": {
-      "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": {
-        "INDEXED_OFF": "0",
-        "INDEXED_ON": "1"
-      },
-      "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": {
-        "INDEXED_OFF": "0",
-        "INDEXED_ON": "1"
-      }
-    },
-    "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T00:38:50.817Z",
-    "started": true,
+    "attempt_id": "sensorlos-coverage-off-on-01",
+    "started": false,
     "completed": true,
-    "ended_at_utc": "2026-11-18T00:43:32.017Z",
     "counts": {
-      "configure_attempts": 0,
-      "engine_builds": 0,
-      "helper_compiles": 0,
-      "helper_gpu_invocations": 0,
-      "games": 2,
-      "off_games": 1,
-      "on_games": 1,
-      "normal_exits": 2,
+      "configures": 0,
+      "builds": 0,
+      "fixtures": 0,
+      "games": 0,
       "captures": 0,
       "profiles": 0,
-      "screenshots": 0,
       "retries": 0
     },
     "cleanup_complete": true,
-    "artifact_commit": "b997b81a1802b6f40d00324a7526d880464fd4ac",
-    "diagnostic_outcome": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
-    "fps_by_arm": {
-      "INDEXED_OFF": 64.35408413753547,
-      "INDEXED_ON": 65.30489517657657
-    },
-    "relative_percent": 1.4774680609377588,
-    "all_counted_frames_retained": true,
-    "previous_relative_percent": 1.4894459257063453
+    "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2649,7 +2624,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review the repeated combined +1.48% FPS and frame-time tail against previous +1.49%.",
+  "next_action": "Review independent Metal upload allocation and encoder state candidates without changing the R03 SensorLOS coverage shader.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
