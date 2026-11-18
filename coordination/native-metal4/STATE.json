@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 183,
+  "revision": 184,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-fps-20261118-63/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-fps-20261118-63/DONE.json",
   "decision": null,
-  "execution_status": "HQ3_ROUND63_CLASSIFIED_PRIOR_READS_PAIR_RESERVED",
+  "execution_status": "HQ3_ROUND63_CONFIGURED_ENGINE_BUILD_IN_PROGRESS",
   "blocked_reason": null,
   "history": [
     {
@@ -3290,6 +3290,14 @@
         "profiles": 0,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND63_CONFIGURED_ENGINE_BUILD_IN_PROGRESS",
+      "revision": 184,
+      "round_id": "pending2-classified-prior-reads-fps-20261118-63",
+      "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
+      "utc": "2026-11-18T09:46:09.133805+00:00",
+      "games": 0
     }
   ],
   "communication_test": {
@@ -3384,17 +3392,19 @@
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "started": false,
+    "started": true,
     "completed": false,
     "reserved_at_utc": "2026-11-18T09:43:39.957326+00:00",
     "counts": {
-      "configure": 0,
+      "configure": 1,
       "engine_build": 0,
       "games": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    }
+    },
+    "configure_completed": true,
+    "build_started": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
