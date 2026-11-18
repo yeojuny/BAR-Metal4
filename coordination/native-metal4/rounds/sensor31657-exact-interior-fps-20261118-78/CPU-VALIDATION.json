@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "cases": 380886,
+  "exact_tested_sensorlos_integer_and_depth_body_identical": true,
+  "counts": {
+    "eligible": 361707,
+    "legacy_fallback": 13667,
+    "shortcut": 14086,
+    "bounded_fallback": 347621
+  }
+}

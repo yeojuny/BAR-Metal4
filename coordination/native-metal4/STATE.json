@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 214,
+  "revision": 215,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-fps-20261118-78/READY.json",
   "result_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-fps-20261118-78/DONE.json",
   "decision": "ONE_RADAR_SONAR_AA0_OFF_ON_PAIR_AFTER_EXACT_PARITY",
-  "execution_status": "GPU_PARITY_AND_BUILD_RESERVED",
+  "execution_status": "FIXED_OFF_ON_GAMES_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3786,6 +3786,24 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T13:11:53.629Z"
+    },
+    {
+      "event": "HQ3_ROUND78_RADAR_SONAR_METAL_PARITY_AND_BINARY_READY",
+      "revision": 215,
+      "round_id": "sensor31657-exact-interior-fps-20261118-78",
+      "attempt_id": "sensor31657-exact-interior-off-on-01",
+      "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T13:16:55.284Z"
     }
   ],
   "communication_test": {
@@ -3884,21 +3902,23 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
+    "started": true,
     "completed": false,
     "games_started": false,
     "counts": {
-      "configure": 0,
-      "engine_build": 0,
-      "parity_helper_compile": 0,
-      "parity_helper_gpu_runs": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "games": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
     "reserved_at_utc": "2026-11-18T13:11:53.629Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
+    "metal_pixel_parity_cases": 4624
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3964,7 +3984,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run one existing adapted AA0 Metal parity fixture. Build and run exactly one OFF and one ON game when parity passes.",
+  "next_action": "Run one fixed radar/sonar OFF then ON on the same binary with SensorLOS held ON.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
