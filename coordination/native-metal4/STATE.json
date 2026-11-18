@@ -1,30 +1,24 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 278,
+  "revision": 279,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "memory-cold-glow-20261118",
+  "round_id": "mvk-parity-deferred-20261118",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "memory-cold-glow-20261118",
-    "approval_message_id": "Sentinel_73b59f3bda748191aedaa40b1b61b703",
-    "source": "R88 signed native lineage, R85 compile db and actual R88 layered source",
-    "zip_sha256": "652343159d834da18d6f0b94432029ff6f8e7ffd68ccc1938c6ae948bb1ea199",
-    "memory_patch_sha256": "b5054e09f9a24c341dabbd5f8fdb59ba141b862ffeb8acee7d689f74162cdff1",
-    "previous_abba_sha256": "6fa4dc677d54d5b3e6be5f418bdbbf181cf80f6f0b4795955da2bbf4a762101d",
-    "prior_raw_frame_hashes_verified": 22,
-    "fixed_lifetime": "preserve 13 exact Seths input hashes; verify effective saved lifetime in live smoke",
-    "smoke": [
-      "SMOKE_MEM_OFF",
-      "SMOKE_MEM_ON"
-    ],
+    "round_id": "mvk-parity-deferred-20261118",
+    "approval_message_id": "Sentinel_a084b10b25108191850c111053144472",
+    "source_binary_sha256": "81c581e3345018881eb70ffd23a1f3d5ea9c06c63f0f4284d0fa0570087c6299",
+    "mvk3_status": "HELD_UNMATCHED_INPUTS",
+    "mvk3_audit_sha256": "c138650db4948ce100c8b685ff1452f451630730ad55e89e48a24a213ea4b0ff",
+    "cooled_preparation_sha256": "0189a4c3a8f514dc1e6861ce0873fb01c43af9bfdde8cfa5c8c1c0c3fe5a2e2d",
     "abba": [
       "A1_OFF",
       "B1_ON",
@@ -32,19 +26,25 @@
       "A2_OFF"
     ],
     "budget": {
-      "smoke_games": 2,
-      "timed_games": 4,
-      "games": 6,
-      "game_retries": 0,
-      "engine_configures": 0,
-      "gpu_profiles": 0
+      "games": 4,
+      "mvk3_games": 0,
+      "engine_compiles": 0,
+      "links": 1,
+      "profiles": 0,
+      "captures": 0,
+      "retries": 0
     },
-    "scope": "Local memory reporting on Apple, native Lua and optional HUD smoke, then cold-glow alone on new baseline. No product defaults or release changes."
+    "subjects": {
+      "memory_reporting": "ON",
+      "ground_decal_cold_glow": "ON",
+      "deferred": "ONLY_TOGGLE"
+    },
+    "default_changed": false
   },
-  "ready_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/READY.json",
-  "result_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/RESULT.json",
-  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
-  "execution_status": "MATCHED_MEMORY_BASELINE_COLD_GLOW_ABBA",
+  "ready_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/READY.json",
+  "result_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/RESULT.json",
+  "decision": null,
+  "execution_status": "COOLED_DEFERRED_RELINK_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4595,6 +4595,12 @@
       "status": "DONE",
       "round_id": "memory-cold-glow-20261118",
       "action": "closed"
+    },
+    {
+      "revision": 279,
+      "status": "RUNNING",
+      "round_id": "mvk-parity-deferred-20261118",
+      "action": "reserve"
     }
   ],
   "communication_test": {
@@ -4678,34 +4684,23 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "memory-cold-glow-20261118-01",
+    "attempt_id": "mvk-parity-deferred-20261118-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
-      "smoke_games": 2,
-      "timed_games": 4,
-      "games": 6,
-      "game_retries": 0,
-      "engine_configures": 0,
-      "gpu_profiles": 0
-    },
-    "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T21:45:54.058311+00:00",
-    "default_changed": false,
-    "smoke_sha256": "2b46d7ab73c3ca310b0e64d7a8d717cc31b570c58bd69ce1f4f32d4211f7268b",
-    "ready_sha256": "f5bb552a44bc58e2c28a52d64561ebead781ef792e8676211d693feb9f7a1da8",
-    "game_seal_utc": "2026-11-18T21:56:20.095527+00:00",
-    "finished_at_utc": "2026-11-18T22:08:57.231302+00:00",
-    "counts": {
-      "games": 6,
-      "timed_games": 4,
-      "smoke_games": 2,
-      "fixtures": 1,
+      "games": 4,
+      "mvk3_games": 0,
+      "engine_compiles": 0,
+      "links": 1,
+      "profiles": 0,
+      "captures": 0,
       "retries": 0
     },
-    "cleanup_complete": true
+    "started": true,
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T22:21:51.703925+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",

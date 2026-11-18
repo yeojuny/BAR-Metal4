@@ -1,0 +1,29 @@
+{
+  "round_id": "mvk-parity-deferred-20261118",
+  "approval_message_id": "Sentinel_a084b10b25108191850c111053144472",
+  "source_binary_sha256": "81c581e3345018881eb70ffd23a1f3d5ea9c06c63f0f4284d0fa0570087c6299",
+  "mvk3_status": "HELD_UNMATCHED_INPUTS",
+  "mvk3_audit_sha256": "c138650db4948ce100c8b685ff1452f451630730ad55e89e48a24a213ea4b0ff",
+  "cooled_preparation_sha256": "0189a4c3a8f514dc1e6861ce0873fb01c43af9bfdde8cfa5c8c1c0c3fe5a2e2d",
+  "abba": [
+    "A1_OFF",
+    "B1_ON",
+    "B2_ON",
+    "A2_OFF"
+  ],
+  "budget": {
+    "games": 4,
+    "mvk3_games": 0,
+    "engine_compiles": 0,
+    "links": 1,
+    "profiles": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "subjects": {
+    "memory_reporting": "ON",
+    "ground_decal_cold_glow": "ON",
+    "deferred": "ONLY_TOGGLE"
+  },
+  "default_changed": false
+}
