@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 246,
+  "revision": 247,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/seths-rank-atlas-on-cap1-20261118-91/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/seths-rank-atlas-on-cap1-20261118-91/READY.json",
   "result_path": "coordination/native-metal4/rounds/seths-rank-atlas-on-cap1-20261118-91/RESULT.json",
-  "decision": "PRESERVE_DEFAULTS_AND_BOTH_SAME_BINARY_SIMMERS_RESULTS",
-  "execution_status": "SEALED_ONE_SETHS_CAP1_GAME_ATLAS_ON",
+  "decision": "PRESERVE_DEFAULTS_AND_SAME_BINARY_SETHS_REFERENCE",
+  "execution_status": "SAME_BINARY_SETHS_CAP1_COMPLETE",
   "blocked_reason": null,
   "history": [
     {
@@ -4363,6 +4363,21 @@
         "profiles": 0,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND91_SETHS_CAP1_ATLAS_ON_COMPLETE",
+      "revision": 247,
+      "round_id": "seths-rank-atlas-on-cap1-20261118-91",
+      "utc": "2026-11-18T17:19:20Z",
+      "counts": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "average_fps": 77.09427033347873,
+      "low_1_fps": 56.46630164797066
     }
   ],
   "communication_test": {
@@ -4458,10 +4473,19 @@
     },
     "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T17:16:48Z",
-    "default_changed": false
+    "default_changed": false,
+    "counts": {
+      "games": 1,
+      "builds": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "finished_at_utc": "2026-11-18T17:19:20Z",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4527,7 +4551,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 only. One display-active Seths cap1 game using the same R88 ON binary, settings and inputs. Preserve the R88 cap2 reference and all raw intervals.",
+  "next_action": "The single matching cap1 Seths observation is complete. Preserve both raw intervals and default cap1.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
