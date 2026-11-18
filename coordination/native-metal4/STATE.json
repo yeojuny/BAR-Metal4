@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 203,
+  "revision": 204,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-prejoin-opaque-read-packet-20261118-72",
+  "round_id": "pending2-prejoin-opaque-read-fps-20261118-73",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": null,
-  "ready_path": null,
-  "result_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-packet-20261118-72/DONE.json",
-  "decision": "PREJOIN_IMMUTABLE_OPAQUE_PACKET_SOURCE_AND_CPU_CHECKS_COMPLETE",
-  "execution_status": "HQ3_ROUND72_SOURCE_CANDIDATE_NOT_RUNTIME_READY",
+  "request": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-prejoin-opaque-read-fps-20261118-73/DONE.json",
+  "decision": "ONE_FIXED_OFF_ON_CAP2_PREJOIN_PACKET_PAIR",
+  "execution_status": "CONFIGURE_BUILD_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3585,6 +3585,22 @@
       },
       "default_changed": false,
       "utc": "2026-11-18T11:49:58.791876+00:00"
+    },
+    {
+      "event": "HQ3_ROUND73_PREJOIN_OPAQUE_READ_OFF_ON_RESERVED",
+      "revision": 204,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-73",
+      "attempt_id": "pending2-prejoin-opaque-read-off-on-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T11:52:28.544Z"
     }
   ],
   "communication_test": {
@@ -3668,21 +3684,22 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-prejoin-opaque-read-packet-source-01",
-    "scope": "SOURCE_REVIEW_AND_CPU_FIXTURES",
-    "completed": true,
-    "cleanup_complete": true,
-    "default_changed": false,
-    "counts": {
-      "configure": 0,
-      "engine_build": 0,
-      "games": 0,
-      "gpu_runs": 0,
+    "attempt_id": "pending2-prejoin-opaque-read-off-on-01",
+    "budget": {
+      "configure": 1,
+      "engine_build": 1,
+      "games": 2,
+      "max_per_arm": 1,
       "captures": 0,
       "profiles": 0,
-      "diagnostic_timing_added": 0
+      "retries": 0
     },
-    "ended_at_utc": "2026-11-18T11:49:58.791876+00:00"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "owner": "HQ3",
+    "started": false,
+    "completed": false,
+    "reserved_at_utc": "2026-11-18T11:52:28.544Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3748,7 +3765,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Source and CPU checks complete. Any same-binary cap2 OFF/ON experiment requires a separate execution scope.",
+  "next_action": "HQ3 to configure/build once using the known OpenAL path and verify the signed paired binary.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
