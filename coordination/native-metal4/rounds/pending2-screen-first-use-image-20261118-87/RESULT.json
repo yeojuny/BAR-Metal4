@@ -1,0 +1,74 @@
+{
+  "status": "EXACT_RANK_ATLAS_IDENTIFIED_NO_CANDIDATE_SAFETY_GATE",
+  "binary_sha256": "46cddd8e2677952bfa7a1e46baa1e4f2dd8da852d5117e694ee9ad9669103681",
+  "diagnostics": {
+    "average_fps": 64.5798408273726,
+    "slow1_percent_fps": 17.21854293232753,
+    "max_ms": 929.0000200000001,
+    "retained_frame_intervals": 2582,
+    "excluded": 0,
+    "display": "locked_and_asleep_engine_present_request_only"
+  },
+  "primary": {
+    "simulation": 1125,
+    "draw": 3523,
+    "frame_ms": 29,
+    "task_join_ms": 13.766791,
+    "event_overlap_ms": 11.015458,
+    "prepare_world_wall_ms": 15.258083,
+    "prepare_world_main_cpu_ms": 1.499166,
+    "consumer": {
+      "draw": 3522,
+      "job": 7,
+      "submission": 3489,
+      "stage": "Screen",
+      "command_offset": 0
+    },
+    "producer": {
+      "draw": 3521,
+      "job": 6,
+      "submission": 3488,
+      "event": 3520
+    },
+    "image": {
+      "kind": "Rank Icons GL4 Lua atlas",
+      "name": "CTextureAtlas: *0",
+      "context": 1,
+      "object": 232,
+      "storage_generation": 232,
+      "version": 5,
+      "content_version": 5,
+      "storage": "Shared",
+      "root": 337,
+      "view": 341,
+      "mips": [
+        0,
+        8
+      ],
+      "slices": [
+        0
+      ]
+    },
+    "trace": {
+      "first_missing_draw": 3515,
+      "confirmed_target": true,
+      "rows": 662,
+      "receipts": 1,
+      "receipt_drops": 0
+    }
+  },
+  "prereq": "No atlas-specific borrowed-reader validation for separate producer journal, CPU/access closure and failure quarantine. Hold optimization and FPS pair.",
+  "counts": {
+    "configure": 0,
+    "engine_build": 1,
+    "translation_units": 2,
+    "link": 1,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_trace_frameworks": 0
+  },
+  "cap1_default": true,
+  "cleanup_verified": true
+}

@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 237,
+  "revision": 238,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-screen-first-use-image-20261118-87/RESULT.json",
-  "decision": "PRESERVE_DEFAULT_CAP1_AND_R85_OFF; USE_EXACT_R86_CASE_TO_NARROW_SCREEN_PREPARATION",
-  "execution_status": "SEALED_SINGLE_GAME_DIAGNOSTIC",
+  "decision": "KEEP_CAP1_DEFAULT_AND_EXISTING_WAIT",
+  "execution_status": "EXACT_RANK_ATLAS_IDENTIFIED_NO_CANDIDATE_SAFETY_GATE",
   "blocked_reason": null,
   "history": [
     {
@@ -4229,6 +4229,25 @@
       "configure": 0,
       "translation_units": 2,
       "links": 1
+    },
+    {
+      "event": "HQ3_ROUND87_EXACT_RANK_ATLAS_IDENTIFIED_AND_CLOSED",
+      "revision": 238,
+      "round_id": "pending2-screen-first-use-image-20261118-87",
+      "attempt_id": "first-use-exact-image-producer-01",
+      "utc": "2026-11-18T16:31:53Z",
+      "result": "EXACT_RANK_ATLAS_IDENTIFIED_NO_CANDIDATE_SAFETY_GATE",
+      "counts": {
+        "configure": 0,
+        "engine_build": 1,
+        "translation_units": 2,
+        "link": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_trace_frameworks": 0
+      }
     }
   ],
   "communication_test": {
@@ -4327,14 +4346,27 @@
       "new_trace_frameworks": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T16:22:09Z",
     "default_changed": false,
     "binary_sha256": "46cddd8e2677952bfa7a1e46baa1e4f2dd8da852d5117e694ee9ad9669103681",
     "builds_completed": 1,
     "game_budget": 1,
-    "sealed_utc": "2026-11-18T16:24:57Z"
+    "sealed_utc": "2026-11-18T16:24:57Z",
+    "counts": {
+      "configure": 0,
+      "engine_build": 1,
+      "translation_units": 2,
+      "link": 1,
+      "games": 1,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0,
+      "new_trace_frameworks": 0
+    },
+    "finished_at_utc": "2026-11-18T16:31:53Z",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4400,7 +4432,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 only owns the sealed finished-build runtime attempt. No other native work during the window. No additional game, retry, capture, or profile.",
+  "next_action": "The exact shared single-page Rank Icons UI atlas mip producer was identified. Preserve producer-journal separation, CPU/access closure and failure quarantine; no atlas wait-removal or performance round started.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
