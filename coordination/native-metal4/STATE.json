@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 255,
+  "revision": 256,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -36,8 +36,8 @@
   },
   "ready_path": "coordination/native-metal4/rounds/ground-decal-g04-fps-20261118-95/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-g04-fps-20261118-95/RESULT.json",
-  "decision": null,
-  "execution_status": "TWO_SETHS_GAMES_ONLY",
+  "decision": "KEEP_G04_DEFAULT_OFF",
+  "execution_status": "MATCHED_PAIR_COMPLETE_DEFAULT_OFF",
   "blocked_reason": null,
   "history": [
     {
@@ -4450,6 +4450,12 @@
       "round_id": "ground-decal-g04-fps-20261118-95",
       "status": "RUNNING",
       "action": "Own exactly two display-on Seths games. G04 is sole child environment delta."
+    },
+    {
+      "revision": 256,
+      "status": "DONE",
+      "round_id": "ground-decal-g04-fps-20261118-95",
+      "action": "G04 passed bounded parity, same-binary matched OFF/ON pair slower on both metrics. Keep default OFF."
     }
   ],
   "communication_test": {
@@ -4546,8 +4552,8 @@
       "retries": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T17:34:42.070635+00:00",
     "default_changed": false,
     "binary_sha256": "01a11b688ffe662225af153e3b1557e356ce3bf3336a068b15904f6730738001",
@@ -4559,7 +4565,16 @@
       "sensorlos": 1,
       "sensor31657": 1
     },
-    "existing_G01_probe_in_both": true
+    "existing_G01_probe_in_both": true,
+    "finished_at_utc": "2026-11-18T17:41:40.003436+00:00",
+    "counts": {
+      "games": 2,
+      "engine_builds": 1,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
