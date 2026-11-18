@@ -1,0 +1,116 @@
+{
+  "status": "DONE",
+  "decision": "DONE_REVERSE_ORDER_SAME_BINARY_FPS_PAIR",
+  "round_id": "native-indexed-geometry-fps-20261117-40",
+  "attempt_id": "indexed-batch-on-off-01",
+  "order": [
+    "INDEXED_ON",
+    "INDEXED_OFF"
+  ],
+  "binary_sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+  "previous": {
+    "round_id": "native-indexed-geometry-fps-20261117-39",
+    "result_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/DONE.json",
+    "artifact_commit": "c64667df9aa6596b73b0ad7783887f71a7f92f31",
+    "fps_by_arm": {
+      "INDEXED_OFF": 64.31607632102086,
+      "INDEXED_ON": 64.73632880737064
+    },
+    "relative_percent": 0.6534174818939142
+  },
+  "counts": {
+    "configure_attempts": 0,
+    "engine_builds": 0,
+    "helper_compiles": 0,
+    "helper_gpu_invocations": 0,
+    "games": 2,
+    "on_games": 1,
+    "off_games": 1,
+    "normal_exits": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "fps_by_arm": {
+    "INDEXED_ON": 64.28464353062284,
+    "INDEXED_OFF": 64.03399418767914
+  },
+  "relative_percent": 0.3914316858153022,
+  "same_direction": true,
+  "difference_percentage_points": -0.26198579607861205,
+  "frame_time": {
+    "INDEXED_ON": {
+      "count": 2570,
+      "mean_ms": 15.556420746692607,
+      "median_ms": 16.000001,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.999999,
+      "frames_over_100_ms": [],
+      "all_interval_rows_kept": true,
+      "max_ms": 18.999999,
+      "slowest_1_percent_mean_ms": 18.03846053846154,
+      "one_percent_low_fps": 55.43710328649186
+    },
+    "INDEXED_OFF": {
+      "count": 2561,
+      "mean_ms": 15.618508917219836,
+      "median_ms": 16.000001,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.999999,
+      "frames_over_100_ms": [],
+      "all_interval_rows_kept": true,
+      "max_ms": 41.999999,
+      "slowest_1_percent_mean_ms": 18.999999,
+      "one_percent_low_fps": 52.631581717451674
+    }
+  },
+  "all_counted_frames_retained": true,
+  "workload_match": {
+    "same_scene": true,
+    "same_camera": true,
+    "same_simulation_window": true,
+    "same_combat_seed": true,
+    "same_synced_create_destroy_counts": true,
+    "bin_boundaries_and_visible_units_match": true,
+    "both_bins_contiguous": true
+  },
+  "workload_match_across_rounds": {
+    "INDEXED_ON": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    },
+    "INDEXED_OFF": {
+      "same_scene": true,
+      "same_camera": true,
+      "same_simulation_window": true,
+      "same_combat_seed": true,
+      "same_synced_create_destroy_counts": true,
+      "bin_boundaries_and_visible_units_match": true,
+      "both_bins_contiguous": true
+    }
+  },
+  "only_indexed_flag_varied": true,
+  "cleanup_complete": true,
+  "artifactSHA256": {
+    "REPORT.md": "206a040763131505de9244603cb673f85f7dbb50879013f742d34e6a1f23cd87",
+    "FPS-EVIDENCE.json": "2133a88ca6b82d13e4e03419f1be2558e2e7873afd9cdfa8b58f2829230fb258",
+    "FPS-BINS.csv": "9e78cfa59582be09534d5ea17472d8a9d4fdb0a78ae182443dcb552875059949",
+    "STAGING-EVIDENCE.json": "d9ae86a15f0608ed8c1de3964e0d2e2196335d1c49c44958f9a8787e3be6c018",
+    "BINARY-EVIDENCE.json": "483def6f09b536ab196a83d93fb4944265e4dd003d9be134ec27e8086f3bd7fb",
+    "DEPENDENCY-EVIDENCE.json": "c7ca21a14e73703dc7701a580be60d9aea7c3436575285d502a1fca9435915d2",
+    "CLEANUP-EVIDENCE.json": "fe6304a614a6857e6f1928e404548d9ef2a1f261b6dd8336151e57d2d1935bbc",
+    "RUNNER-CLOSED.json": "48b33678b2f4c2b3aa86baf980ee78ad0a116227d106fff30dc51707feb4dd48",
+    "INDEXED_ON-FRAME-TIMES.csv": "55cdd167321820aaa2c279c38dd4aec16ff0fdec42925cdb438d675cfeca3a71",
+    "INDEXED_ON-CHILD-MODE.json": "0e6cc63b8b27efe50141011dcfe5ec2901f1a9900087d41e4fc2a4987254d423",
+    "INDEXED_ON-CLEANUP.json": "9230643e0153ffe297127ef32d568b9e722dc3a60086b27964dda8ea0ae02068",
+    "INDEXED_OFF-FRAME-TIMES.csv": "953e06150b81ea6bb28af77bafc238249c65b6e994de0849668427966ea374d3",
+    "INDEXED_OFF-CHILD-MODE.json": "5f42200ca9f4f48ca130ea0d4c88c2d0e66afa3c6fb2911cbdd486e59681803b",
+    "INDEXED_OFF-CLEANUP.json": "2faf8f6abc89c10a57ea2da84e0171b01a6ba313636a7f21d95744f425b3e6f8"
+  }
+}
