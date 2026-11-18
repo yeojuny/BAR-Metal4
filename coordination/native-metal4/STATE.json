@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 158,
+  "revision": 159,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "bloom-downsample-identity-reverse-20261118-51",
+  "round_id": "bloom-prepare-defines-fps-20261118-52",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
-  "request": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/READY.json",
-  "result_path": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/DONE.json",
-  "decision": "BLOOM_IDENTITY_RGBA_ACCEPTED_BY_USER",
-  "execution_status": "HQ3_USER_ACCEPTED_BLOOM_RGBA_R03_BENCHMARK",
+  "source_manifest_sha256": "d1146946b94f9655b26f96b95bc04887358e073387839446213ac3440153b250",
+  "request": "coordination/native-metal4/rounds/bloom-prepare-defines-fps-20261118-52/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/bloom-prepare-defines-fps-20261118-52/READY.json",
+  "result_path": null,
+  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
+  "execution_status": "HQ3_ROUND52_BLOOM_PREPARE_DEFINES_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -2958,6 +2958,13 @@
       "result": "User-directed local benchmark adoption",
       "artifact_commit": "116f5a41a1aba63f4b0a9ca3485990d4323993b5",
       "previous_execution_label_note": "The last execution_status label inherited the Round 49 prefix. The result and linked artifact are for Round 51 reversed Bloom."
+    },
+    {
+      "event": "HQ3_ROUND52_BLOOM_PREPARE_DEFINES_RESERVED",
+      "revision": 159,
+      "round_id": "bloom-prepare-defines-fps-20261118-52",
+      "attempt_id": "bloom-prepare-defines-off-on-01",
+      "utc": "2026-11-18T06:34:29.691343+00:00"
     }
   ],
   "communication_test": {
@@ -3041,10 +3048,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "bloom-identity-on-off-02",
+    "attempt_id": "bloom-prepare-defines-off-on-01",
     "budget": {
-      "configure_attempts_max": 0,
-      "engine_builds_max": 0,
+      "configure_attempts_max": 1,
+      "engine_builds_max": 1,
+      "static_syntax_checks_max": 1,
       "gpu_helpers": 0,
       "games_max": 2,
       "off_games_max": 1,
@@ -3055,28 +3063,9 @@
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T06:00:46.138296+00:00",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T06:08:08.041048+00:00",
-    "counts": {
-      "configure": 0,
-      "engine_builds": 0,
-      "offline_metal_compiles": 0,
-      "games": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "3583ace356fa73ee21db9b8cdaebe2e6a21c6ed5",
-    "default_changed": false,
-    "fps": {
-      "OFF": 65.00650327821572,
-      "ON": 64.94513179085511,
-      "relative_percent": -0.09440822727834197
-    }
+    "reserved_at_utc": "2026-11-18T06:34:29.691343+00:00",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3142,7 +3131,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Prepare per-frame Bloom shader define text reuse with identity RGBA fixed on.",
+  "next_action": "Build one define-reuse candidate, then compare OFF and ON. Keep accepted identity RGBA ON in both.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
