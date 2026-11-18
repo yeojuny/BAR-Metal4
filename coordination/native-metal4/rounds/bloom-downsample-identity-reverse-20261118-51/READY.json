@@ -1,0 +1,14 @@
+{
+  "round_id": "bloom-downsample-identity-reverse-20261118-51",
+  "attempt_id": "bloom-identity-on-off-02",
+  "status": "READY_IDENTICAL_BINARY_REVERSE_PAIR",
+  "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
+  "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+  "order": [
+    "BLOOM_ON",
+    "BLOOM_OFF"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

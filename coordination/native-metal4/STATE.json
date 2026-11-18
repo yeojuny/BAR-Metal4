@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 155,
+  "revision": 156,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "bloom-downsample-identity-fps-20261118-50",
+  "round_id": "bloom-downsample-identity-reverse-20261118-51",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
-  "request": "coordination/native-metal4/rounds/bloom-downsample-identity-fps-20261118-50/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/bloom-downsample-identity-fps-20261118-50/READY.json",
-  "result_path": "coordination/native-metal4/rounds/bloom-downsample-identity-fps-20261118-50/DONE.json",
-  "decision": "DONE",
-  "execution_status": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_BLOOM_OFF_ON",
+  "request": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/bloom-downsample-identity-reverse-20261118-51/READY.json",
+  "result_path": null,
+  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
+  "execution_status": "HQ3_ROUND51_BLOOM_DOWNSAMPLE_IDENTICAL_BINARY_REVERSE_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -2917,6 +2917,13 @@
       },
       "cleanup_complete": true,
       "utc": "2026-11-18T05:57:20.412244+00:00"
+    },
+    {
+      "event": "HQ3_ROUND51_BLOOM_DOWNSAMPLE_IDENTICAL_BINARY_REVERSE_RESERVED",
+      "revision": 156,
+      "round_id": "bloom-downsample-identity-reverse-20261118-51",
+      "attempt_id": "bloom-identity-on-off-02",
+      "utc": "2026-11-18T06:00:46.138296+00:00"
     }
   ],
   "communication_test": {
@@ -3000,11 +3007,10 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "bloom-identity-off-on-01",
+    "attempt_id": "bloom-identity-on-off-02",
     "budget": {
-      "configure_attempts_max": 1,
-      "engine_builds_max": 1,
-      "static_syntax_checks_max": 3,
+      "configure_attempts_max": 0,
+      "engine_builds_max": 0,
       "gpu_helpers": 0,
       "games_max": 2,
       "off_games_max": 1,
@@ -3015,28 +3021,9 @@
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T05:40:53.314948+00:00",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T05:57:20.412244+00:00",
-    "counts": {
-      "configure": 1,
-      "engine_builds": 1,
-      "offline_metal_compiles_before_reservation": 5,
-      "games": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "116f5a41a1aba63f4b0a9ca3485990d4323993b5",
-    "default_changed": false,
-    "fps": {
-      "OFF": 65.63851331104041,
-      "ON": 64.86688990681569,
-      "relative_percent": -1.1755650231872972
-    }
+    "reserved_at_utc": "2026-11-18T06:00:46.138296+00:00",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3102,7 +3089,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review the single matched BloomDownsample pair and its exact path witness.",
+  "next_action": "Reuse the exact Round 50 executable for one ON and then one OFF game. Retain all counted frames. No configure or rebuild.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
