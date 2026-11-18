@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 217,
+  "revision": 218,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/sensor31657-exact-interior-reverse-20261118-79/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-reverse-20261118-79/READY.json",
   "result_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-reverse-20261118-79/DONE.json",
-  "decision": "ONE_RADAR_SONAR_REVERSE_PAIR_REUSING_R78_BINARY",
-  "execution_status": "FIXED_ON_OFF_GAMES_RESERVED",
+  "decision": "MODEST_GAIN_REPRODUCED_BOTH_ORDERS_DEFAULTS_PRESERVED",
+  "execution_status": "COMPLETE_RADAR_SONAR_REVERSE_ON_OFF_REUSED_BINARY",
   "blocked_reason": null,
   "history": [
     {
@@ -3843,6 +3843,26 @@
       },
       "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
       "utc": "2026-11-18T13:23:27.334Z"
+    },
+    {
+      "event": "HQ3_ROUND79_RADAR_SONAR_REVERSE_DONE",
+      "revision": 218,
+      "round_id": "sensor31657-exact-interior-reverse-20261118-79",
+      "attempt_id": "sensor31657-exact-interior-on-off-01",
+      "average_fps_change_percent": 1.2316572391220193,
+      "forward_average_fps_change_percent": 0.9797428369604066,
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:27:39.320Z"
     }
   ],
   "communication_test": {
@@ -3941,23 +3961,25 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
-    "games_started": false,
-    "completed": false,
+    "started": true,
+    "games_started": true,
+    "completed": true,
     "counts": {
       "configure": 0,
       "engine_build": 0,
       "parity_helper_compile": 0,
       "parity_helper_gpu_runs": 0,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
-      "retries": 0
+      "retries": 0,
+      "new_instrumentation": 0
     },
     "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
     "reused_binary_round": "sensor31657-exact-interior-fps-20261118-78",
     "reserved_at_utc": "2026-11-18T13:23:27.334Z",
-    "default_changed": false
+    "default_changed": false,
+    "finished_at_utc": "2026-11-18T13:26:17.977148+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4023,7 +4045,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the fixed radar/sonar ON then OFF pair once each using the R78 binary and keep SensorLOS ON.",
+  "next_action": "The fixed reverse comparison is closed. The modest whole-game increase reproduced in both orders. Defaults are preserved.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
