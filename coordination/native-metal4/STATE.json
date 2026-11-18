@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
+  "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 190,
+  "revision": 191,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -13,11 +13,11 @@
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
   "request": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-20261118-67/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-20261118-67/READY.json",
+  "ready_path": null,
   "result_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-20261118-67/DONE.json",
-  "decision": "RUN_ONE_CAP2_OLDEST_RETIRE_DIAGNOSTIC",
-  "execution_status": "CONFIGURE_BUILD_RESERVED",
-  "blocked_reason": null,
+  "decision": "BLOCKED_CONFIGURE_OPENAL_PACKAGE_SEARCH_PATH",
+  "execution_status": "HQ3_ROUND67_CONFIGURE_FAILED_CLOSED",
+  "blocked_reason": "CMake pkg-config could not resolve openal>=1.18.2; known process-local OpenAL pkg-config path was omitted from the launcher",
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
@@ -3371,6 +3371,26 @@
         "retries": 0
       },
       "utc": "2026-11-18T10:41:30.156Z"
+    },
+    {
+      "event": "HQ3_ROUND67_CONFIGURE_FAILED_CLOSED_NO_RETRY",
+      "revision": 191,
+      "round_id": "pending2-oldest-retire-diag-20261118-67",
+      "attempt_id": "pending2-oldest-retire-timing-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "counts": {
+        "configure": 1,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "reason": "CMake pkg-config could not resolve openal>=1.18.2; known process-local OpenAL pkg-config path was omitted from the launcher",
+      "cleanup_complete": true,
+      "utc": "2026-11-18T10:41:52.634695+00:00"
     }
   ],
   "communication_test": {
@@ -3464,10 +3484,23 @@
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "reserved_at_utc": "2026-11-18T10:41:30.156Z",
-    "default_changed": false
+    "default_changed": false,
+    "owner": "HQ3",
+    "counts": {
+      "configure": 1,
+      "engine_build": 0,
+      "games": 0,
+      "gpu_runs": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "configure_exit": 1,
+    "ended_at_utc": "2026-11-18T10:41:52.634695+00:00",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3533,7 +3566,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Preserve both completed orders. No additional run or default promotion.",
+  "next_action": "Only a new authorized attempt with the previously proven process-local PKG_CONFIG_PATH; preserve this failed attempt",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
