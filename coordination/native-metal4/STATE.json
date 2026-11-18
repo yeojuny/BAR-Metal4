@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 150,
+  "revision": 151,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/READY.json",
   "result_path": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/DONE.json",
-  "decision": "FIX_FIXTURE_SDK_SELECTOR_BEFORE_ANY_GPU_RUN",
-  "execution_status": "HQ3_ROUND48_AMENDED_COMPILE_ONLY_FIXTURE",
+  "decision": "PASS_SLOT_BYTES_AND_FORCED_FALLBACK_SINGLE_SAMPLE_FIXTURE",
+  "execution_status": "HQ3_ROUND48_CLOSED_VERIFY_UPLOAD_SLOTS_FALLBACK",
   "blocked_reason": null,
   "history": [
     {
@@ -2835,6 +2835,26 @@
         "scope": "Fixture only: add the SDK-required compilerTaskOptions argument to pipeline construction."
       },
       "utc": "2026-11-18T04:11:58.726Z"
+    },
+    {
+      "event": "HQ3_ROUND48_CLOSED_VERIFY_UPLOAD_SLOTS_FALLBACK",
+      "revision": 151,
+      "round_id": "fresh-upload-slot-contract-20261118-48",
+      "attempt_id": "metal4-slot-readback-and-fallback-02-sdk-selector",
+      "artifact_commit": "11eab950bdd07e52d46159d818e118df58d0e2ec",
+      "counts": {
+        "compile_attempts": 2,
+        "first_compile_failures": 1,
+        "gpu_invocations": 1,
+        "metal4_submissions": 1,
+        "games": 0,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0
+      },
+      "cleanup_complete": true,
+      "words_compared": 9976,
+      "utc": "2026-11-18T04:13:37.747Z"
     }
   ],
   "communication_test": {
@@ -2932,15 +2952,30 @@
     "fixture_sha256": "3109389e6b32b24a28d1ee580725b741eeaadbdd8973e94173682df8dfd82e41",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T04:11:58.726Z",
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "amendment": {
       "prior_attempt": "metal4-slot-readback-and-fallback-01",
       "prior_commit": "7b4fe37930347b4d2d0dc68894008e39b45b4586",
       "compile_exit": 1,
       "gpu_attempts": 0,
       "scope": "Fixture only: add the SDK-required compilerTaskOptions argument to pipeline construction."
-    }
+    },
+    "ended_at_utc": "2026-11-18T04:13:37.747Z",
+    "counts": {
+      "compile_attempts": 2,
+      "first_compile_failures": 1,
+      "gpu_invocations": 1,
+      "metal4_submissions": 1,
+      "games": 0,
+      "builds": 0,
+      "captures": 0,
+      "profiles": 0
+    },
+    "words_compared": 9976,
+    "cleanup_complete": true,
+    "artifact_commit": "11eab950bdd07e52d46159d818e118df58d0e2ec",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3006,7 +3041,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Compile and run the Metal4 slot and fallback fixture once.",
+  "next_action": "Prepare only further fresh upload paths with preserved ordering, limits, and resource ownership.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
