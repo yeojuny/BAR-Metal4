@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 188,
+  "revision": 189,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -3346,6 +3346,16 @@
       "joined": 2646,
       "actual_pending_two": 2644,
       "unclassified": 0
+    },
+    {
+      "event": "HQ3_RECONCILED_COMPLETED_R65_R66_AGAINST_R64_DONE",
+      "revision": 189,
+      "round65_games": 0,
+      "round66_games": 1,
+      "round66_pre_reserved": false,
+      "cleanup_complete": true,
+      "execution_reserved": false,
+      "utc": "2026-11-18 10:39:28 UTC"
     }
   ],
   "communication_test": {
@@ -3554,5 +3564,9 @@
       "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
       "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1"
     }
+  },
+  "archived_rounds_after_r64": {
+    "offline_tail_review": "coordination/native-metal4/rounds/cap2-frame-tail-review-20261118-65/SHARED-DONE.json",
+    "completed_legacy_simmers": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-66/SHARED-DONE.json"
   }
 }

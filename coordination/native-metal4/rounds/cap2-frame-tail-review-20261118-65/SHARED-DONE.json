@@ -1,0 +1,24 @@
+{
+  "status": "DONE_OFFLINE",
+  "games": 0,
+  "configure": 0,
+  "builds": 0,
+  "gpu_runs": 0,
+  "captures": 0,
+  "profiles": 0,
+  "retries": 0,
+  "intervals": 10466,
+  "excluded": 0,
+  "cleanup_complete": true,
+  "comparison": {
+    "average_fps_percent": [
+      2.3167,
+      2.2377
+    ],
+    "low_1_pct_percent": [
+      -3.3731,
+      -18.0616
+    ]
+  },
+  "default_cap": 1
+}
