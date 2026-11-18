@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 208,
+  "revision": 209,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "sensorlos-exact-interior-coverage-20261118-75",
+  "round_id": "sensorlos-exact-interior-fps-20261118-76",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": null,
-  "ready_path": null,
-  "result_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-coverage-20261118-75/DONE.json",
-  "decision": "HOLD_R74_OFF_PREPARE_INDEPENDENT_SENSORLOS_EXACT_INTERIOR",
-  "execution_status": "SOURCE_CANDIDATE_READY_CPU_VERIFIED",
+  "request": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/READY.json",
+  "result_path": "coordination/native-metal4/rounds/sensorlos-exact-interior-fps-20261118-76/DONE.json",
+  "decision": "ONE_SENSORLOS_OFF_ON_PAIR_AFTER_EXACT_SCENE_AND_METAL_PARITY",
+  "execution_status": "GPU_PARITY_AND_BUILD_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3668,6 +3668,25 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T12:17:32.015Z"
+    },
+    {
+      "event": "HQ3_ROUND76_SENSORLOS_PARITY_AND_ONE_OFF_ON_RESERVED",
+      "revision": 209,
+      "round_id": "sensorlos-exact-interior-fps-20261118-76",
+      "attempt_id": "sensorlos-exact-interior-off-on-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T12:25:33.573Z"
     }
   ],
   "communication_test": {
@@ -3751,30 +3770,35 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "sensorlos-exact-interior-source-01",
-    "owner": "HQ3",
-    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "started": true,
-    "completed": true,
+    "attempt_id": "sensorlos-exact-interior-off-on-01",
     "budget": {
-      "configure": 0,
-      "engine_build": 0,
-      "games": 0,
-      "gpu_runs": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "games": 2,
+      "max_per_arm": 1,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "captures": 0,
       "profiles": 0,
+      "retries": 0,
       "new_instrumentation": 0
     },
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "owner": "HQ3",
+    "started": false,
+    "games_started": false,
+    "completed": false,
     "counts": {
       "configure": 0,
       "engine_build": 0,
       "games": 0,
-      "gpu_runs": 0,
+      "parity_helper_compile": 0,
+      "parity_helper_gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
-      "new_instrumentation": 0
+      "retries": 0
     },
-    "finished_at_utc": "2026-11-18T12:17:32.015Z",
+    "reserved_at_utc": "2026-11-18T12:25:33.573Z",
     "default_changed": false
   },
   "model_and_context_policy": {
@@ -3841,7 +3865,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Preserve OFF defaults. A separately authorized same-binary AA0 comparison may use this candidate after scene activation and shader parity are established.",
+  "next_action": "Run one fixed Metal parity fixture using the sealed source. Build once and run the sealed OFF then ON pair if parity succeeds.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

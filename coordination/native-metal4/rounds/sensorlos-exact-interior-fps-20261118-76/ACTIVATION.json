@@ -1,0 +1,41 @@
+{
+  "status": "PASS_EXISTING_EXACT_SCENE_COUNTED_WITNESS",
+  "reference_round": "pending2-ticket-timeline-20261118-69",
+  "reference_arm": "R69_CAP2",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "matching_scene_inputs": 13,
+  "cap": 2,
+  "matches": [
+    {
+      "draw": 2048,
+      "sequence": 440250,
+      "sim": 786,
+      "inspect_line": 2314,
+      "emitted_line": 2316
+    },
+    {
+      "draw": 2049,
+      "sequence": 440456,
+      "sim": 786,
+      "inspect_line": 2317,
+      "emitted_line": 2319
+    },
+    {
+      "draw": 2050,
+      "sequence": 440664,
+      "sim": 787,
+      "inspect_line": 2320,
+      "emitted_line": 2322
+    },
+    {
+      "draw": 2051,
+      "sequence": 440868,
+      "sim": 787,
+      "inspect_line": 2323,
+      "emitted_line": 2325
+    }
+  ]
+}
