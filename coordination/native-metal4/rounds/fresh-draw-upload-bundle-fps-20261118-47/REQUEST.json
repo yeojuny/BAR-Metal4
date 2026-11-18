@@ -1,0 +1,61 @@
+{
+  "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+  "attempt_id": "fresh-draw-upload-bundle-off-on-01",
+  "scope": "FOUR_INDEPENDENT_FRESH_UPLOAD_COMBINATIONS_SAME_BINARY",
+  "authorized_by": "User requested an actual low-risk patch bundle via SUPER_JINI_MK2",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
+  "patch_sha256": "16dc2f43bf4cf61cb3dbce1284f3f965c9695895747d1f9b100cfd4d397cfbd5",
+  "order": [
+    "BUNDLE_OFF",
+    "BUNDLE_ON"
+  ],
+  "flag": {
+    "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": {
+      "BUNDLE_OFF": "0",
+      "BUNDLE_ON": "1"
+    }
+  },
+  "budget": {
+    "configure_attempts_max": 1,
+    "engine_builds_max": 1,
+    "static_syntax_checks_max": 1,
+    "gpu_helpers": 0,
+    "games_max": 2,
+    "off_games_max": 1,
+    "on_games_max": 1,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "fixed_flags": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+    "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0",
+    "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": "0"
+  },
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "retain_all_counted_frames": true,
+  "previous": {
+    "round_id": "groundflash-depth-run-fps-20261118-46",
+    "artifact_commit": "aae3bdc5e06276e800deb2b2b4005a1a40b74caa",
+    "scope": "GroundFlash is separate; absent from bundle source"
+  }
+}

@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 146,
+  "revision": 147,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "groundflash-depth-run-fps-20261118-46",
+  "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
-  "request": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/READY.json",
-  "result_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/DONE.json",
-  "decision": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
-  "execution_status": "HQ3_ROUND46_CLOSED_GROUND_FLASH_COALESCING",
+  "source_manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
+  "request": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/READY.json",
+  "result_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/DONE.json",
+  "decision": "USER_AUTHORIZED_ONE_FRESH_UPLOAD_BUNDLE_BENCHMARK",
+  "execution_status": "HQ3_ROUND47_RESERVED_INDEPENDENT_FRESH_UPLOAD_BUNDLE",
   "blocked_reason": null,
   "history": [
     {
@@ -2715,6 +2715,32 @@
       "relative_percent": -0.08282893078120912,
       "ground_flash_coalesced_before_window": true,
       "all_counted_frames_retained": true
+    },
+    {
+      "event": "HQ3_ROUND47_RESERVED_INDEPENDENT_FRESH_UPLOAD_BUNDLE",
+      "revision": 147,
+      "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+      "attempt_id": "fresh-draw-upload-bundle-off-on-01",
+      "order": [
+        "BUNDLE_OFF",
+        "BUNDLE_ON"
+      ],
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "static_syntax_checks_max": 1,
+        "gpu_helpers": 0,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T02:03:53.772Z"
     }
   ],
   "communication_test": {
@@ -2786,7 +2812,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "GROUND_FLASH_POST_VALIDATION_DEPTH_RUN_COALESCING_SAME_BINARY_OFF_ON",
+  "enabled_scope": "FOUR_INDEPENDENT_FRESH_UPLOAD_COMBINATIONS_SAME_BINARY",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -2798,16 +2824,16 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "groundflash-runs-off-on-01",
+    "attempt_id": "fresh-draw-upload-bundle-off-on-01",
     "order": [
-      "FLASH_OFF",
-      "FLASH_ON"
+      "BUNDLE_OFF",
+      "BUNDLE_ON"
     ],
     "budget": {
       "configure_attempts_max": 1,
       "engine_builds_max": 1,
-      "existing_cpu_fixture_invocations_max": 1,
-      "gpu_helper_invocations_max": 0,
+      "static_syntax_checks_max": 1,
+      "gpu_helpers": 0,
       "games_max": 2,
       "off_games_max": 1,
       "on_games_max": 1,
@@ -2817,41 +2843,15 @@
       "retries": 0
     },
     "flag": {
-      "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": {
-        "FLASH_OFF": "0",
-        "FLASH_ON": "1"
+      "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": {
+        "BUNDLE_OFF": "0",
+        "BUNDLE_ON": "1"
       }
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T01:49:27.301Z",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T01:58:48.721Z",
-    "counts": {
-      "configures": 1,
-      "builds": 1,
-      "existing_cpu_fixture_invocations": 1,
-      "gpu_helpers": 0,
-      "games": 2,
-      "off_games": 1,
-      "on_games": 1,
-      "normal_exits": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "aae3bdc5e06276e800deb2b2b4005a1a40b74caa",
-    "diagnostic_outcome": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
-    "binary_sha256": "399c40bce292fae17b781c2846e5616391a0f7139e7b9158efecfb86811a0d79",
-    "fps_by_arm": {
-      "FLASH_OFF": 65.03536887762581,
-      "FLASH_ON": 64.98150077695486
-    },
-    "relative_percent": -0.08282893078120912,
-    "ground_flash_coalesced_before_window": true,
-    "all_counted_frames_retained": true
+    "reserved_at_utc": "2026-11-18T02:03:53.772Z",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2917,7 +2917,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Keep GroundFlash and SensorLOS alternatives out of the independently flagged fresh upload bundle.",
+  "next_action": "Check the layout boundaries, build the four-route bundle once, and measure one OFF and one ON game with fixed baseline toggles.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
