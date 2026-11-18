@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 148,
+  "revision": 149,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+  "round_id": "fresh-upload-slot-contract-20261118-48",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
-  "request": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/READY.json",
-  "result_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/DONE.json",
-  "decision": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
-  "execution_status": "HQ3_ROUND47_CLOSED_FRESH_UPLOAD_BUNDLE",
+  "request": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/READY.json",
+  "result_path": "coordination/native-metal4/rounds/fresh-upload-slot-contract-20261118-48/DONE.json",
+  "decision": "USER_AUTHORIZED_TARGETED_BUFFER_CONTRACT_CHECK",
+  "execution_status": "HQ3_ROUND48_RESERVED_UPLOAD_CONTRACT_FIXTURE",
   "blocked_reason": null,
   "history": [
     {
@@ -2803,6 +2803,24 @@
       "all_counted_frames_retained": true,
       "ground_flash_default": "OFF; no observed phase counts beyond warmup",
       "sensorlos_slab_default": "OFF; structural allocation reduction witnessed, production default pending targeted fallback/address/route checks"
+    },
+    {
+      "event": "HQ3_ROUND48_RESERVED_UPLOAD_CONTRACT_FIXTURE",
+      "revision": 149,
+      "round_id": "fresh-upload-slot-contract-20261118-48",
+      "attempt_id": "metal4-slot-readback-and-fallback-01",
+      "budget": {
+        "compile": 1,
+        "fixture_gpu_runs": 1,
+        "max_submissions": 1,
+        "games": 0,
+        "engine_builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "fixture_sha256": "84a5b46f1dc731e23d5b94c574651b52d76b6989aa02fc1a7fd21f10ad4a9257",
+      "utc": "2026-11-18T04:11:04.274Z"
     }
   ],
   "communication_test": {
@@ -2874,7 +2892,7 @@
     },
     "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
   },
-  "enabled_scope": "FOUR_INDEPENDENT_FRESH_UPLOAD_COMBINATIONS_SAME_BINARY",
+  "enabled_scope": "ONE_TARGETED_EXISTING_SLAB_SLOT_CONTRACT_FIXTURE",
   "user_authorization": {
     "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
     "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
@@ -2886,79 +2904,22 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "fresh-draw-upload-bundle-off-on-01",
-    "order": [
-      "BUNDLE_OFF",
-      "BUNDLE_ON"
-    ],
+    "attempt_id": "metal4-slot-readback-and-fallback-01",
     "budget": {
-      "configure_attempts_max": 1,
-      "engine_builds_max": 1,
-      "static_syntax_checks_max": 1,
-      "gpu_helpers": 0,
-      "games_max": 2,
-      "off_games_max": 1,
-      "on_games_max": 1,
+      "compile": 1,
+      "fixture_gpu_runs": 1,
+      "max_submissions": 1,
+      "games": 0,
+      "engine_builds": 0,
       "captures": 0,
       "profiles": 0,
-      "screenshots": 0,
       "retries": 0
     },
-    "flag": {
-      "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": {
-        "BUNDLE_OFF": "0",
-        "BUNDLE_ON": "1"
-      }
-    },
+    "fixture_sha256": "84a5b46f1dc731e23d5b94c574651b52d76b6989aa02fc1a7fd21f10ad4a9257",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T02:03:53.772Z",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T02:13:36.222Z",
-    "counts": {
-      "configures": 1,
-      "builds": 1,
-      "static_syntax_checks": 1,
-      "gpu_helpers": 0,
-      "games": 2,
-      "off_games": 1,
-      "on_games": 1,
-      "normal_exits": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "8beb938226a2a588a7851c168661a67096f606a6",
-    "diagnostic_outcome": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
-    "binary_sha256": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
-    "fps_by_arm": {
-      "BUNDLE_OFF": 63.931395723999074,
-      "BUNDLE_ON": 63.94680441671761
-    },
-    "relative_percent": 0.02410191822661556,
-    "first_encode_coverage": {
-      "radar_sonar_circle": {
-        "separate_witnessed": true,
-        "slab_witnessed": true
-      },
-      "map_edge_forward": {
-        "separate_witnessed": false,
-        "slab_witnessed": false
-      },
-      "blueprint_model": {
-        "separate_witnessed": true,
-        "slab_witnessed": true
-      },
-      "blockout_model": {
-        "separate_witnessed": false,
-        "slab_witnessed": false
-      }
-    },
-    "all_counted_frames_retained": true,
-    "ground_flash_default": "OFF; no observed phase counts beyond warmup",
-    "sensorlos_slab_default": "OFF; structural allocation reduction witnessed, production default pending targeted fallback/address/route checks"
+    "reserved_at_utc": "2026-11-18T04:11:04.274Z",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3024,7 +2985,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Preserve the four-route patch and two witnessed routes. Keep GroundFlash and SensorLOS slab defaults OFF pending their scoped evidence.",
+  "next_action": "Compile and run the Metal4 slot and fallback fixture once.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

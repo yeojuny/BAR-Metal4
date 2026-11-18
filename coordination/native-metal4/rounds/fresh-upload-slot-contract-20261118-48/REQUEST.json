@@ -1,0 +1,18 @@
+{
+  "round_id": "fresh-upload-slot-contract-20261118-48",
+  "attempt_id": "metal4-slot-readback-and-fallback-01",
+  "scope": "ONE_TARGETED_EXISTING_SLAB_SLOT_CONTRACT_FIXTURE",
+  "fixture_sha256": "84a5b46f1dc731e23d5b94c574651b52d76b6989aa02fc1a7fd21f10ad4a9257",
+  "budget": {
+    "compile": 1,
+    "fixture_gpu_runs": 1,
+    "max_submissions": 1,
+    "games": 0,
+    "engine_builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "materials": "Pinned R44 wrapper and R47 generic helper",
+  "default_changes_authorized": false
+}
