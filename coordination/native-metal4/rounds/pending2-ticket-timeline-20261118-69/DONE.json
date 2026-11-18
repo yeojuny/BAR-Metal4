@@ -1,0 +1,153 @@
+{
+  "status": "COMPLETE_CAP2_EXACT_TICKET_DIAGNOSTIC",
+  "round_id": "pending2-ticket-timeline-20261118-69",
+  "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+  "binary_sha256": "d6535a238760590c7c7e0495ae15060b57c6b7400acb14e6c4799487a081934e",
+  "patch_sha256": "aaff24a9a2aee70a2b5622cd5c91e86e89e91a57fa536af11ee110018410a7e2",
+  "scene_inputs_verified": 13,
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "gpu_helper_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "diagnostic_only": true,
+  "clock_reference_ok": true,
+  "ticket_gpu_availability": {
+    "valid": 2666
+  },
+  "draw_rows": 2666,
+  "ticket_rows": 2666,
+  "reclaim_rows": 2665,
+  "drops": 0,
+  "two_pending": 2657,
+  "joined": 2658,
+  "all_intervals": {
+    "intervals": 2658,
+    "host_coverage": {
+      "valid": 2658
+    },
+    "gpu_wait_coverage": {
+      "valid": 2657
+    },
+    "mean_event_wait_ms": 7.118329053820098,
+    "mean_before_gpu_ms": 0,
+    "mean_in_gpu_envelope_ms": 7.004452937147158,
+    "mean_after_gpu_ms": 0.1138761166729394,
+    "mean_feedback_wait_ms": 0.08831706059465563,
+    "mean_owner_release_ms": 0.23585268611215657
+  },
+  "slowest_one_percent": {
+    "intervals": 27,
+    "host_coverage": {
+      "valid": 27
+    },
+    "gpu_wait_coverage": {
+      "valid": 27
+    },
+    "mean_event_wait_ms": 7.981910407407407,
+    "mean_before_gpu_ms": 0,
+    "mean_in_gpu_envelope_ms": 7.869418592592592,
+    "mean_after_gpu_ms": 0.11249181481481482,
+    "mean_feedback_wait_ms": 0.08735651851851853,
+    "mean_owner_release_ms": 0.24492903703703706
+  },
+  "predecessor_queue": {
+    "exact_pairs": 2664,
+    "predecessor_overlap_violations": 0,
+    "durations": {
+      "commit_to_gpu_start_ns": {
+        "n": 2664,
+        "mean_ms": 11.015575752252253,
+        "p50_ms": 11.212,
+        "p95_ms": 12.310084,
+        "max_ms": 13.097042
+      },
+      "predecessor_envelope_overlap_ns": {
+        "n": 2664,
+        "mean_ms": 10.924206644894895,
+        "p50_ms": 11.123709,
+        "p95_ms": 12.216209,
+        "max_ms": 13.007709
+      },
+      "predecessor_end_to_gpu_start_ns": {
+        "n": 2664,
+        "mean_ms": 0.0983664635885886,
+        "p50_ms": 0.088625,
+        "p95_ms": 0.103875,
+        "max_ms": 15.87475
+      },
+      "after_commit_and_predecessor_end_ns": {
+        "n": 2664,
+        "mean_ms": 0.09136910735735736,
+        "p50_ms": 0.088625,
+        "p95_ms": 0.103875,
+        "max_ms": 0.559834
+      }
+    }
+  },
+  "gpu_envelope_ms": {
+    "n": 2666,
+    "mean_ms": 14.952406848462116,
+    "p50_ms": 15.18775,
+    "p95_ms": 16.235958,
+    "max_ms": 17.360375
+  },
+  "host_next_drawable_ms": {
+    "n": 2666,
+    "mean_ms": 0.01678039647411853,
+    "p50_ms": 0.015958,
+    "p95_ms": 0.021083,
+    "max_ms": 1.502083
+  },
+  "longest_intervals": [
+    {
+      "ending_draw": 2550,
+      "reclaim_events": [
+        2546
+      ],
+      "bin": 16,
+      "interval_ms": 37.999999,
+      "reclaim_ms": 8.713542,
+      "outside_reclaim_ms": 29.286457,
+      "between_draw_calls_ms": 23.604584,
+      "capture_before_drawscreen_ms": 3.130083
+    },
+    {
+      "ending_draw": 2808,
+      "reclaim_events": [
+        2804
+      ],
+      "bin": 20,
+      "interval_ms": 28.000001,
+      "reclaim_ms": 6.881292,
+      "outside_reclaim_ms": 21.118709,
+      "between_draw_calls_ms": 2.587667,
+      "capture_before_drawscreen_ms": 16.927708
+    },
+    {
+      "ending_draw": 3427,
+      "reclaim_events": [
+        3423
+      ],
+      "bin": 30,
+      "interval_ms": 25,
+      "reclaim_ms": 6.547,
+      "outside_reclaim_ms": 18.453,
+      "between_draw_calls_ms": 0.061125,
+      "capture_before_drawscreen_ms": 16.70225
+    }
+  ],
+  "original_r68_49ms_event_reproduced": false,
+  "scopes": "GPU start-to-end envelope includes possible internal gaps; sleep/lock, no physical scanout/input latency evidence; host nextDrawable cannot isolate queue waitForDrawable.",
+  "outliers_removed": 0,
+  "normal_exit": true,
+  "cleanup_complete": true,
+  "default_cap": 1,
+  "default_changed": false,
+  "trace_sha256": "40507ac38dbf6e2e4d4a81c77f739cfff3c47eacbe0a2cc6570bcb4c091fc24b",
+  "exit_utc": "2026-11-18T11:10:38.027653+00:00"
+}
