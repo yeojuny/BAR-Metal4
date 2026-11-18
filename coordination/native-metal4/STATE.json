@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 267,
+  "revision": 268,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -35,8 +35,8 @@
   },
   "ready_path": "coordination/native-metal4/rounds/ground-decal-g01-cache-20261118-99/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-g01-cache-20261118-99/RESULT.json",
-  "decision": null,
-  "execution_status": "TWO_OWNED_SETHS_GAMES_ONLY",
+  "decision": "KEEP_G01_CACHE_OFF_NEUTRAL_MEAN",
+  "execution_status": "MATCHED_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -4521,6 +4521,12 @@
       "status": "RUNNING",
       "round_id": "ground-decal-g01-cache-20261118-99",
       "action": "game"
+    },
+    {
+      "revision": 268,
+      "status": "DONE",
+      "round_id": "ground-decal-g01-cache-20261118-99",
+      "action": "closed"
     }
   ],
   "communication_test": {
@@ -4618,12 +4624,22 @@
       "retries": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T19:48:54.730052+00:00",
     "default_changed": false,
     "binary_sha256": "9a44b1b3c03f5b7f3e0e1878c38f5af646058ab75d46005146e01e056ad7d71f",
-    "game_seal_utc": "2026-11-18T19:50:49.314505+00:00"
+    "game_seal_utc": "2026-11-18T19:50:49.314505+00:00",
+    "finished_at_utc": "2026-11-18T19:54:11.271706+00:00",
+    "counts": {
+      "games": 2,
+      "engine_builds": 1,
+      "fixture_runs": 1,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
