@@ -1,0 +1,83 @@
+{
+  "status": "DONE",
+  "decision": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
+  "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+  "attempt_id": "fresh-draw-upload-bundle-off-on-01",
+  "counts": {
+    "configures": 1,
+    "builds": 1,
+    "static_syntax_checks": 1,
+    "gpu_helpers": 0,
+    "games": 2,
+    "off_games": 1,
+    "on_games": 1,
+    "normal_exits": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "order": [
+    "BUNDLE_OFF",
+    "BUNDLE_ON"
+  ],
+  "fps_by_arm": {
+    "BUNDLE_OFF": 63.931395723999074,
+    "BUNDLE_ON": 63.94680441671761
+  },
+  "relative_percent": 0.02410191822661556,
+  "binary_sha256": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+  "candidate_manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
+  "first_encode_coverage": {
+    "radar_sonar_circle": {
+      "separate_witnessed": true,
+      "slab_witnessed": true
+    },
+    "map_edge_forward": {
+      "separate_witnessed": false,
+      "slab_witnessed": false
+    },
+    "blueprint_model": {
+      "separate_witnessed": true,
+      "slab_witnessed": true
+    },
+    "blockout_model": {
+      "separate_witnessed": false,
+      "slab_witnessed": false
+    }
+  },
+  "single_pair": true,
+  "all_counted_frames_retained": true,
+  "cleanup_complete": true,
+  "ground_flash_default": "OFF; no observed phase counts beyond warmup",
+  "sensorlos_slab_default": "OFF; structural allocation reduction witnessed, production default pending targeted fallback/address/route checks",
+  "artifactSHA256": {
+    "REPORT.md": "9883c7f95d83f7cef9a22923476a1a64406e7eb6632986a12f9e72ac041b889f",
+    "FPS-EVIDENCE.json": "e2363caeda80df2c3d543922e2dc355fcd092202d0304cd2dc8f736a86a57894",
+    "FPS-BINS.csv": "231cbed246c2a5149025a9b18888cfda86f02cd9a9a1346b60105ef1a30ac269",
+    "UPLOAD-ACTIVATION.json": "1970f3f639255fa0a83b70f58809e0c26c1493e708c53b7cf2cac7ec7e4c4468",
+    "FRESH-DRAW-UPLOAD-BUNDLE.patch": "16dc2f43bf4cf61cb3dbce1284f3f965c9695895747d1f9b100cfd4d397cfbd5",
+    "CANDIDATE-MANIFEST.json": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
+    "STAGING-EVIDENCE.json": "60cf3a157d7c1d8598c26dd0ca987ee91407300469704af8cb835126d6fea7a3",
+    "DEPENDENCY-EVIDENCE.json": "94ee3eb473eea38d9c20fede1c6efd0610708d4da71a3c8b33e0688d7f649867",
+    "CLEANUP-EVIDENCE.json": "067183c68b432a490b2000e22ad40e04dc452a9756fff5cd860e173bd391fa29",
+    "PROTECTED-HASHES.json": "d18cc0ee8f795a18bf8dddaa6313ba90f0708e311aa7a6d74e50eee6642199e7",
+    "RUNNER-CLOSED.json": "5224a729548bd93032fc4688cd8410b6998f437478f561703a73dbec7ae18738",
+    "CONFIGURE-RECEIPT.json": "4b53c7b638edf754b0b03cf1178c5e213de0125c2a2fdd49130331aa2876d976",
+    "BUILD-RECEIPT.json": "3dab73877b3cfdb1915f0b7c1ee8b5194eb745f1b950628ef478e3982f6ccccf",
+    "BUILD-RESULT.json": "1a2ed23226b852dd299513481ca31e94f357e2e9a3b56ee77ec20214189791e1",
+    "SOURCE-OBJECT-LINK.json": "e50da09cb641cc1a717eddeceedc3ed7f49e5a1c8b6e0e7118e47a3fa837e7ef",
+    "STATIC-LAYOUT-RESULT.json": "da5fc7199ba1aeb36e817e143eb3437613a1e078d8b156ad42fa541f3137159d",
+    "UPSTREAM-CONTRIBUTIONS.json": "1229a59cea188db92ad0fac4fbd62997b36c69ee08e00ac42bacf1c01c41db85",
+    "CANDIDATE-CLASSIFICATION.md": "81b45ddfb61497bd488f82c24a29f3dbc0d6a57ac690fd9f5f449c3b719440b5",
+    "SENSORLOS-SLAB-ADOPTION.md": "1eed47b3e10d0a18054b7265349710969bff1dd656451059af291e4a57e08de8",
+    "GROUND-FLASH-ADOPTION.md": "3e4eb86bb30535d1153807e8fd0aa30b2b29a653eb5aadbd36fb97a62d2d3011",
+    "GROUND-FLASH-EXISTING-LOGS.json": "4a1e3174a7dc2dac92196de6751cea52d9bd42449bb68e37eff7c98796b54973",
+    "BUNDLE_OFF-FRAME-TIMES.csv": "1399e11ae766f728e1230a32a594b02424e9807295dd02cc8ca538976e84d6a0",
+    "BUNDLE_OFF-CHILD-MODE.json": "b7e57a72e663e664169c20fe8f93b4fc3bf0aa0fe4ed46d90108c0d6cfe1ac41",
+    "BUNDLE_OFF-CLEANUP.json": "c320893117ea30e8e4d44b072967bd3a5873f1abbfe323c5bd4f10baa5eebf50",
+    "BUNDLE_ON-FRAME-TIMES.csv": "4f3de85914440750deb4167a507e431c9248abf2fc9d925cf0b071fa75fcaa9c",
+    "BUNDLE_ON-CHILD-MODE.json": "972ad212f90b6d512ac362b2f1f7ce79a7bd3569ea318416a0c82b426b935d0e",
+    "BUNDLE_ON-CLEANUP.json": "7df52e19a4509cd1cc500ba8db3d015bf78b1ae2b0f1a724ba29665c8841c6c9"
+  }
+}

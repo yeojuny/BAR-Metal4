@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "source_header_sha256": "fd063e1b214f93292c74d9adbbf1867551006960e3165d9e87eff2ba0837f2a9",
+  "extracted_layout_sha256": "df3401fe4789da4b1e6a669be35ae2b353bc2ee9145c24dc0f06f44d15cbcd63",
+  "six_cases": [
+    "aligned two slices and exact fit",
+    "aligned three slices and exact fit",
+    "one byte too small",
+    "zero payload",
+    "padding does not fit",
+    "size_t maximum cannot wrap"
+  ]
+}

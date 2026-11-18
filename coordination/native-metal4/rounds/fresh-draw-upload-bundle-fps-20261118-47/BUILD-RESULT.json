@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/fresh-draw-upload-bundle-fps-20261118-47/build/spring-metal4-scene",
+  "binary_sha256": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+  "bytes": 65740704,
+  "config_log_sha256": "d40045b7faccc72fe4d21709712a01be532a45afc99c10a25c3f1a00629dda1e",
+  "build_log_sha256": "83e87c25c9b2a9cfcbd889258e135b1eea9c9040b278d18b67fbffa2c1c48150"
+}

@@ -1,0 +1,71 @@
+{
+  "receipts": {
+    "BUNDLE_OFF": {
+      "radar_sonar_circle": [
+        {
+          "line": 2239,
+          "text": "[t=00:00:16.394601][f=0000000] [NativeIndexedRoute] family=radar_sonar_circle mode=indexed upload=separate",
+          "upload": "separate",
+          "index_mode": "indexed",
+          "logged_during_measurement": false,
+          "log_simulation_tick": 0
+        }
+      ],
+      "map_edge_forward": [],
+      "blueprint_model": [
+        {
+          "line": 2222,
+          "text": "[t=00:00:13.479567][f=-000001] [NativeFreshDrawUpload] family=blueprint_model mode=separate",
+          "upload": "separate",
+          "index_mode": null,
+          "logged_during_measurement": false,
+          "log_simulation_tick": -1
+        }
+      ],
+      "blockout_model": []
+    },
+    "BUNDLE_ON": {
+      "radar_sonar_circle": [
+        {
+          "line": 2239,
+          "text": "[t=00:00:16.796342][f=0000000] [NativeIndexedRoute] family=radar_sonar_circle mode=indexed upload=slab",
+          "upload": "slab",
+          "index_mode": "indexed",
+          "logged_during_measurement": false,
+          "log_simulation_tick": 0
+        }
+      ],
+      "map_edge_forward": [],
+      "blueprint_model": [
+        {
+          "line": 2222,
+          "text": "[t=00:00:13.865018][f=-000001] [NativeFreshDrawUpload] family=blueprint_model mode=slab",
+          "upload": "slab",
+          "index_mode": null,
+          "logged_during_measurement": false,
+          "log_simulation_tick": -1
+        }
+      ],
+      "blockout_model": []
+    }
+  },
+  "coverage": {
+    "radar_sonar_circle": {
+      "separate_witnessed": true,
+      "slab_witnessed": true
+    },
+    "map_edge_forward": {
+      "separate_witnessed": false,
+      "slab_witnessed": false
+    },
+    "blueprint_model": {
+      "separate_witnessed": true,
+      "slab_witnessed": true
+    },
+    "blockout_model": {
+      "separate_witnessed": false,
+      "slab_witnessed": false
+    }
+  },
+  "scope": "First actual encode per family/mode. Absence means unverified in this scene."
+}
