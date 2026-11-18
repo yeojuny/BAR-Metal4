@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "cases": 380886,
+  "same_validated_integer_and_coverage_depth_body": true,
+  "counts": {
+    "shortcut": 14086,
+    "bounded": 361707
+  },
+  "separate_division233": true,
+  "only_plain_and_masked_aa0_callers": true
+}

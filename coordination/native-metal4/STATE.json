@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 219,
+  "revision": 220,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -13,11 +13,11 @@
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
   "request": "coordination/native-metal4/rounds/weapon-range-exact-interior-fps-20261118-80/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/weapon-range-exact-interior-fps-20261118-80/READY.json",
+  "ready_path": null,
   "result_path": "coordination/native-metal4/rounds/weapon-range-exact-interior-fps-20261118-80/DONE.json",
-  "decision": "ONE_WEAPON_RANGE_AA0_OFF_ON_PAIR_AFTER_EXACT_PARITY",
-  "execution_status": "GPU_PARITY_AND_BUILD_RESERVED",
-  "blocked_reason": null,
+  "decision": "CLOSE_WITH_ZERO_GAMES_AFTER_ONE_PARITY_COMPILE_FAILURE",
+  "execution_status": "CLOSED_AFTER_PARITY_HELPER_HOST_COMPILE_FAILURE",
+  "blocked_reason": "The host parity fixture did not compile because two braced arguments needed explicit simd_float2 construction.",
   "history": [
     {
       "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
@@ -3883,6 +3883,24 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T13:33:39.930Z"
+    },
+    {
+      "event": "HQ3_ROUND80_PARITY_HOST_COMPILE_FAILED_GAMES_ZERO",
+      "revision": 220,
+      "round_id": "weapon-range-exact-interior-fps-20261118-80",
+      "attempt_id": "weapon-range-exact-interior-off-on-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:35:21.327Z"
     }
   ],
   "communication_test": {
@@ -3981,21 +3999,23 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "games_started": false,
     "counts": {
       "configure": 0,
       "engine_build": 0,
-      "parity_helper_compile": 0,
+      "parity_helper_compile": 1,
       "parity_helper_gpu_runs": 0,
       "games": 0,
       "captures": 0,
       "profiles": 0,
-      "retries": 0
+      "retries": 0,
+      "new_instrumentation": 0
     },
     "reserved_at_utc": "2026-11-18T13:33:39.930Z",
-    "default_changed": false
+    "default_changed": false,
+    "finished_at_utc": "2026-11-18T13:35:21.327Z"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4061,7 +4081,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Validate the existing adapted fragment fixture once. One build and one OFF then ON game each if parity passes.",
+  "next_action": "Preserve the source candidate and corrected uncompiled fixture. The R80 attempt is closed with zero runtime games.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
