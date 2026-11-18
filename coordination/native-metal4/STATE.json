@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 239,
+  "revision": 240,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/RESULT.json",
   "decision": "KEEP_CAP1_DEFAULT_AND_EXISTING_WAIT",
-  "execution_status": "RESERVED_ATLAS_SAFETY_GATE_AND_TWO_SETHS_GAMES",
+  "execution_status": "PASS_SAFETY_AND_SEALED_SETHS_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -4267,6 +4267,13 @@
         "profiles": 0,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND88_SAFETY_AND_BUILD_PASSED",
+      "revision": 240,
+      "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
+      "utc": "2026-11-18T17:00:14Z",
+      "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b"
     }
   ],
   "communication_test": {
@@ -4366,11 +4373,15 @@
       "profiles": 0,
       "retries": 0
     },
-    "started": false,
+    "started": true,
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-18T16:56:36Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+    "safety_gate": "PASS_REAL_METAL4_MIP8_AND_POLICY",
+    "sealed_utc": "2026-11-18T17:00:14Z",
+    "builds_completed": 1
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4436,7 +4447,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 only. Run one existing-style CPU/Metal gate, followed only on success by the sealed same-binary OFF/ON Seths pair. All That Simmers is independently reserved later.",
+  "next_action": "HQ3 only owns the two sealed games, OFF then ON. No other local work until the owner closes this pair.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
