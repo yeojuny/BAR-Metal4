@@ -1,0 +1,47 @@
+{
+  "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
+  "attempt_id": "rank-screen-borrow-off-on-01",
+  "source_round": "ground-decal-expired-prefix-20261118-85",
+  "source_binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea",
+  "switch": "BAR_NATIVE_RANK_ATLAS_GPU_BORROW",
+  "default_cap": 1,
+  "cap": 2,
+  "aa": 0,
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "order": [
+    "R88_OFF",
+    "R88_ON"
+  ],
+  "budget": {
+    "configure": 0,
+    "engine_build": 1,
+    "translation_units": 4,
+    "link": 1,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "games": 2,
+    "max_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "followup": {
+    "round_id": "simmers-rank-atlas-on-20261118-89",
+    "cap": 2,
+    "aa": 0,
+    "simulation_window": [
+      300,
+      1500
+    ],
+    "budget": {
+      "games": 1,
+      "builds": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    }
+  }
+}
