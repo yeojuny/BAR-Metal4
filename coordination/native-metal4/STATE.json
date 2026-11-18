@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 232,
+  "revision": 233,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/DONE.json",
-  "decision": null,
-  "execution_status": "GROUND_DECAL_EXPIRED_PREFIX_PARITY_AND_SIGNED_BINARY_SEALED",
+  "decision": "KEEP_CANDIDATE_OFF_MEASURED_PAIR_INCONCLUSIVE",
+  "execution_status": "COMPLETE_TWO_GAMES_INCONCLUSIVE_BIN_BOUNDARIES",
   "blocked_reason": null,
   "history": [
     {
@@ -4141,6 +4141,27 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T15:26:55.323Z"
+    },
+    {
+      "event": "HQ3_ROUND85_EXPIRED_TRACK_PREFIX_OBSERVATIONS_CLOSED",
+      "revision": 233,
+      "round_id": "ground-decal-expired-prefix-20261118-85",
+      "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "result": "KEEP_CANDIDATE_OFF_MEASURED_PAIR_INCONCLUSIVE",
+      "matched_bins": 36,
+      "observed_average_fps_change_percent": -0.14115727915372522,
+      "utc": "2026-11-18T15:32:12.997Z"
     }
   ],
   "communication_test": {
@@ -4240,14 +4261,14 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "counts": {
       "configure": 1,
       "engine_build": 1,
       "parity_helper_compile": 1,
       "parity_helper_gpu_runs": 1,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
       "retries": 0,
@@ -4255,7 +4276,8 @@
     },
     "reserved_at_utc": "2026-11-18T15:22:39.163Z",
     "default_changed": false,
-    "binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea"
+    "binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea",
+    "finished_at_utc": "2026-11-18T15:32:12.997Z"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4321,7 +4343,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run one OFF game and one ON game on the sealed same binary and fixed inputs, with original telemetry.",
+  "next_action": "Preserve all raw results and defaults. The fixed observation pair is inconclusive under the exact-bin match and does not support candidate adoption.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
