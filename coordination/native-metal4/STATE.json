@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 199,
+  "revision": 200,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-host-tail-review-20261118-70",
+  "round_id": "pending2-capture-roi-cpu-20261118-71",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": null,
-  "ready_path": null,
-  "result_path": "coordination/native-metal4/rounds/pending2-host-tail-review-20261118-70/DONE.json",
-  "decision": "PRE_DRAWSCREEN_CAPTURE_REPEATS_INTERDRAW_CAUSE_UNVERIFIED",
-  "execution_status": "HQ3_ROUND70_EXISTING_HOST_TRACE_REVIEW_COMPLETE",
+  "request": "coordination/native-metal4/rounds/pending2-capture-roi-cpu-20261118-71/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-capture-roi-cpu-20261118-71/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-capture-roi-cpu-20261118-71/DONE.json",
+  "decision": "ONE_BOUNDED_CAPTURE_CPU_DIAGNOSTIC",
+  "execution_status": "CONFIGURE_BUILD_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3519,6 +3519,21 @@
       "previous_runtime": "pending2-ticket-timeline-20261118-69",
       "default_changed": false,
       "utc": "2026-11-18T11:22:11.163087+00:00"
+    },
+    {
+      "event": "HQ3_ROUND71_CAPTURE_ROI_CPU_DIAGNOSTIC_RESERVED",
+      "revision": 200,
+      "round_id": "pending2-capture-roi-cpu-20261118-71",
+      "attempt_id": "pending2-capture-roi-cpu-wall-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T11:26:22.685Z"
     }
   ],
   "communication_test": {
@@ -3602,32 +3617,21 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-existing-host-tail-review-01",
-    "scope": "OFFLINE_EXISTING_TRACE_REVIEW",
-    "counts": {
-      "configure": 0,
-      "engine_build": 0,
-      "games": 0,
-      "gpu_runs": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0,
-      "source_edits": 0
-    },
+    "attempt_id": "pending2-capture-roi-cpu-wall-01",
     "budget": {
-      "configure": 0,
-      "engine_build": 0,
-      "games": 0,
-      "gpu_runs": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "games": 1,
       "captures": 0,
       "profiles": 0,
-      "retries": 0,
-      "source_edits": 0
+      "retries": 0
     },
-    "completed": true,
-    "cleanup_complete": true,
-    "default_changed": false,
-    "ended_at_utc": "2026-11-18T11:22:11.163087+00:00"
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "owner": "HQ3",
+    "started": false,
+    "completed": false,
+    "reserved_at_utc": "2026-11-18T11:26:22.685Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3693,7 +3697,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Preserve cap1. Any future diagnostic needs separately scoped capture or loop attribution before an optimization.",
+  "next_action": "HQ3 to configure and build once, then launch one cap2 diagnostic only after validation.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
