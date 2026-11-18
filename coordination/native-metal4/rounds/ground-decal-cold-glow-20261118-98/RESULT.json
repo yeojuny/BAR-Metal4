@@ -1,0 +1,125 @@
+{
+  "status": "MATCHED_PAIR",
+  "binary_sha256": "d3899678fef6201e350e86d593cf7ba9bb13d75381f6115c1edc1094d4e5b5ea",
+  "same_13_inputs": true,
+  "actual_child_only_difference": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
+  "exact_bin_count": 40,
+  "nominal_edges": [
+    true,
+    true
+  ],
+  "bin_differences": [],
+  "same_checks": {
+    "events": true,
+    "checks": true,
+    "pacing_ticks": true,
+    "libraries": true,
+    "start_script_sha256": true,
+    "route": true,
+    "battleMap": true,
+    "battleCameraOpen": true,
+    "battleInitialState": true,
+    "battleCommand": true,
+    "gameSeed": true,
+    "benchmarkSeed": true,
+    "officialCreated": true,
+    "officialDestroyed": true
+  },
+  "arms": [
+    {
+      "arm": "R98_OFF",
+      "average_fps": 79.13417431258301,
+      "low_1_fps": 52.20228282801404,
+      "p99_ms": 16.000001,
+      "maximum_ms": 32.000002,
+      "frame_intervals": 3165,
+      "ground_decal_witness": {
+        "source_draw": 1166,
+        "instances": 13,
+        "samples": 1
+      },
+      "longest_draw": 4462,
+      "rank_atlas": {
+        "enabled": 0,
+        "queued": 0,
+        "first_sim": 0
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 22.0,
+        "frames": 75,
+        "average_fps": 75.075073242
+      },
+      "over_16_667_ms": 31,
+      "over_33_333_ms": 0
+    },
+    {
+      "arm": "R98_ON",
+      "average_fps": 80.04599989926888,
+      "low_1_fps": 48.4581492816343,
+      "p99_ms": 16.000001,
+      "maximum_ms": 34.000002,
+      "frame_intervals": 3201,
+      "ground_decal_witness": {
+        "source_draw": 2509,
+        "instances": 13,
+        "samples": 1
+      },
+      "longest_draw": 5592,
+      "rank_atlas": {
+        "enabled": 0,
+        "queued": 0,
+        "first_sim": 0
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 24.0,
+        "frames": 78,
+        "average_fps": 77.689247131
+      },
+      "over_16_667_ms": 30,
+      "over_33_333_ms": 1
+    }
+  ],
+  "fps_percent": 1.152252607178439,
+  "low_percent": -7.172355965188704,
+  "frame_intervals_excluded": 0,
+  "round_id": "ground-decal-cold-glow-20261118-98",
+  "decision": "KEEP_COLD_GLOW_OPT_IN_ONLY",
+  "counts": {
+    "games": 2,
+    "engine_builds": 1,
+    "fixture_runs": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cleanup_complete": true,
+  "switch_default": "OFF"
+}
