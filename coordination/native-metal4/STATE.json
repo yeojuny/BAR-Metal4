@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 240,
+  "revision": 241,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-rank-atlas-readonly-borrow-20261118-88/RESULT.json",
-  "decision": "KEEP_CAP1_DEFAULT_AND_EXISTING_WAIT",
-  "execution_status": "PASS_SAFETY_AND_SEALED_SETHS_PAIR",
+  "decision": "KEEP_DEFAULT_CAP1_AND_CANDIDATE_OFF",
+  "execution_status": "MATCHED_PAIR_AVERAGE_REGRESSION_KEEP_OFF",
   "blocked_reason": null,
   "history": [
     {
@@ -4274,6 +4274,25 @@
       "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
       "utc": "2026-11-18T17:00:14Z",
       "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b"
+    },
+    {
+      "event": "HQ3_ROUND88_EXACT_PAIR_CLOSED",
+      "revision": 241,
+      "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
+      "utc": "2026-11-18T17:04:33Z",
+      "counts": {
+        "configure": 0,
+        "engine_build": 1,
+        "translation_units": 4,
+        "link": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "paired_fps_change_percent": -3.6991349351184533
     }
   ],
   "communication_test": {
@@ -4374,14 +4393,28 @@
       "retries": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T16:56:36Z",
     "default_changed": false,
     "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
     "safety_gate": "PASS_REAL_METAL4_MIP8_AND_POLICY",
     "sealed_utc": "2026-11-18T17:00:14Z",
-    "builds_completed": 1
+    "builds_completed": 1,
+    "counts": {
+      "configure": 0,
+      "engine_build": 1,
+      "translation_units": 4,
+      "link": 1,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
+      "games": 2,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "finished_at_utc": "2026-11-18T17:04:33Z",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4447,7 +4480,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 only owns the two sealed games, OFF then ON. No other local work until the owner closes this pair.",
+  "next_action": "Run the independently authorized Simmers ON observation with the sealed R88 diagnostic candidate. Keep defaults and product unchanged.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

@@ -1,0 +1,91 @@
+{
+  "status": "MATCHED_PAIR",
+  "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "exact_bin_count": 40,
+  "arms": [
+    {
+      "arm": "R88_OFF",
+      "average_fps": 78.5539255380078,
+      "low_1_fps": 34.15154658080185,
+      "p99_ms": 16.000001,
+      "maximum_ms": 284.000009,
+      "frame_intervals": 3141,
+      "longest_draw": 4525,
+      "rank_atlas": {
+        "enabled": 0,
+        "queued": 0,
+        "first_sim": 0
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 25,
+        "frames": 74,
+        "average_fps": 74.074073792
+      }
+    },
+    {
+      "arm": "R88_ON",
+      "average_fps": 75.64810983552442,
+      "low_1_fps": 35.46910669925487,
+      "p99_ms": 26.000000999999997,
+      "maximum_ms": 41.999999,
+      "frame_intervals": 3025,
+      "longest_draw": 5598,
+      "rank_atlas": {
+        "enabled": 1,
+        "queued": 1,
+        "first_sim": 1124
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 17.000001,
+        "frames": 75,
+        "average_fps": 74.552680969
+      }
+    }
+  ],
+  "fps_percent": -3.6991349351184533,
+  "low_percent": 3.8579808247796388,
+  "frame_intervals_excluded": 0,
+  "decision": "KEEP_DEFAULT_CAP1_AND_CANDIDATE_OFF",
+  "caveat": "Single matched pair; target-bin maximum improved but total average and p99 worsened. No adoption.",
+  "counts": {
+    "configure": 0,
+    "engine_build": 1,
+    "translation_units": 4,
+    "link": 1,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cleanup_complete": true
+}
