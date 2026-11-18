@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 140,
+  "revision": 141,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/READY.json",
   "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/DONE.json",
-  "decision": "USER_AUTHORIZED_POWERBEEF_SUBMISSION_SLICE_ADAPTATION",
-  "execution_status": "HQ3_ROUND44_RESERVED_SENSORLOS_UPLOAD_SLAB",
+  "decision": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
+  "execution_status": "HQ3_ROUND44_CLOSED_SENSORLOS_UPLOAD_SLAB",
   "blocked_reason": null,
   "history": [
     {
@@ -2488,6 +2488,49 @@
       "external_commit": "602db5fc30d4ce50683435cb0745cb171fce2064",
       "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
       "utc": "2026-11-18T01:15:17.046Z"
+    },
+    {
+      "event": "HQ3_ROUND44_CLOSED_SENSORLOS_UPLOAD_SLAB",
+      "revision": 141,
+      "round_id": "sensorlos-outline-upload-slab-20261118-44",
+      "attempt_id": "outline-upload-slab-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/DONE.json",
+      "decision": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
+      "order": [
+        "SLAB_OFF",
+        "SLAB_ON"
+      ],
+      "utc": "2026-11-18T01:25:09.693Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T01:25:09.693Z",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "helper_compiles": 0,
+        "helper_gpu_invocations": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "4eba3ac202676b1c33c6e9d7a68226fb038b7175",
+      "diagnostic_outcome": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
+      "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+      "fps_by_arm": {
+        "SLAB_OFF": 65.39134509310635,
+        "SLAB_ON": 65.1668524034946
+      },
+      "relative_percent": -0.3433064257848062,
+      "all_counted_frames_retained": true,
+      "slab_modes_verified": true
     }
   ],
   "communication_test": {
@@ -2596,8 +2639,34 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "reserved_at_utc": "2026-11-18T01:15:17.046Z",
-    "started": false,
-    "completed": false
+    "started": true,
+    "completed": true,
+    "ended_at_utc": "2026-11-18T01:25:09.693Z",
+    "counts": {
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "helper_compiles": 0,
+      "helper_gpu_invocations": 0,
+      "games": 2,
+      "off_games": 1,
+      "on_games": 1,
+      "normal_exits": 2,
+      "captures": 0,
+      "profiles": 0,
+      "screenshots": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true,
+    "artifact_commit": "4eba3ac202676b1c33c6e9d7a68226fb038b7175",
+    "diagnostic_outcome": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
+    "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+    "fps_by_arm": {
+      "SLAB_OFF": 65.39134509310635,
+      "SLAB_ON": 65.1668524034946
+    },
+    "relative_percent": -0.3433064257848062,
+    "all_counted_frames_retained": true,
+    "slab_modes_verified": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -2663,7 +2732,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Build the independently adapted fresh upload slab once, then run one OFF and one ON game on the same binary.",
+  "next_action": "Keep slab disabled for the separate GroundFlash source/prepare coalescing candidate. Retain the counted ON 266ms frame.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
