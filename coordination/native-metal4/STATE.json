@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 193,
+  "revision": 194,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/DONE.json",
-  "decision": "ONE_CAP2_DIAGNOSTIC_WITH_PROCESS_LOCAL_OPENAL_PATH",
-  "execution_status": "ONE_DIAGNOSTIC_GAME_RESERVED",
+  "decision": "CAP2_DIAGNOSTIC_COMPLETE_CPU_OWNER_RELEASE_SMALL",
+  "execution_status": "HQ3_ROUND68_DIAGNOSTIC_COMPLETE",
   "blocked_reason": null,
   "history": [
     {
@@ -3416,6 +3416,28 @@
       "input_hashes": 13,
       "games": 0,
       "utc": "2026-11-18T10:48:20.400Z"
+    },
+    {
+      "event": "HQ3_ROUND68_CAP2_OLDEST_RECLAIM_DIAGNOSTIC_COMPLETE",
+      "revision": 194,
+      "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+      "attempt_id": "pending2-oldest-retire-timing-02",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "gpu_helper_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "trace_rows": 2651,
+      "trace_drops": 0,
+      "worker_moved": false,
+      "utc": "2026-11-18T10:49:52.764356+00:00"
     }
   ],
   "communication_test": {
@@ -3511,19 +3533,21 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
     "started": true,
-    "completed": false,
+    "completed": true,
     "reserved_at_utc": "2026-11-18T10:43:55.566Z",
     "default_changed": false,
     "binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
     "counts": {
       "configure": 1,
       "engine_build": 1,
-      "games": 0,
-      "gpu_runs": 0,
+      "games": 1,
+      "gpu_helper_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    }
+    },
+    "ended_at_utc": "2026-11-18T10:49:52.764356+00:00",
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3589,7 +3613,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 to run the sealed cap2 diagnostic once and close from observed receipts",
+  "next_action": "Review recorded queue and reclaim boundaries with existing GPU evidence; preserve default cap1 and defer worker movement",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
