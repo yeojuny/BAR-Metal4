@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 270,
+  "revision": 271,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -35,8 +35,8 @@
   },
   "ready_path": "coordination/native-metal4/rounds/lua-game-decal-early-vertex-20261118-100/READY.json",
   "result_path": "coordination/native-metal4/rounds/lua-game-decal-early-vertex-20261118-100/RESULT.json",
-  "decision": null,
-  "execution_status": "TWO_OWNED_SETHS_GAMES_ONLY",
+  "decision": "KEEP_LUA_EARLY_OFF_NO_MEASURED_GAIN",
+  "execution_status": "MATCHED_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -4539,6 +4539,12 @@
       "status": "RUNNING",
       "round_id": "lua-game-decal-early-vertex-20261118-100",
       "action": "game"
+    },
+    {
+      "revision": 271,
+      "status": "DONE",
+      "round_id": "lua-game-decal-early-vertex-20261118-100",
+      "action": "closed"
     }
   ],
   "communication_test": {
@@ -4636,12 +4642,22 @@
       "retries": 0
     },
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "reserved_at_utc": "2026-11-18T19:54:17.011406+00:00",
     "default_changed": false,
     "binary_sha256": "f6d5431dcf545b83c1ffea61e20d398c087aef58583d4b300e5acfffb936368a",
-    "game_seal_utc": "2026-11-18T19:55:09.024964+00:00"
+    "game_seal_utc": "2026-11-18T19:55:09.024964+00:00",
+    "finished_at_utc": "2026-11-18T19:58:50.833584+00:00",
+    "counts": {
+      "games": 2,
+      "engine_builds": 1,
+      "fixture_runs": 1,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    },
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
