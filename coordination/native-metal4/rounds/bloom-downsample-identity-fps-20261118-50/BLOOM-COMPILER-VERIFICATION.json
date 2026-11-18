@@ -1,0 +1,38 @@
+{
+  "status": "PASS",
+  "scope": "Metal 27.2 offline LLVM AIR, not final GPU machine code or pixel validation",
+  "generic_rgba_body_unchanged_after_removing_metadata_ids_and_comments": true,
+  "generic_color_reader_unchanged_after_removing_metadata_ids_and_comments": true,
+  "baseline_and_candidate_generic": {
+    "read_color_calls": 13,
+    "uniform_swizzle_lookup": true
+  },
+  "candidate_identity_rgba": {
+    "direct_texture_sample_calls": 13,
+    "uniform_swizzle_lookup": false,
+    "generic_read_color_calls": 0
+  },
+  "candidate_depth": {
+    "generic_read_color_calls": 13,
+    "identity_entry_present": false
+  },
+  "source_and_air_sha256": {
+    "baseline-color.ll": "5cd7403668f1daf9badf5459d249534e1393c335e1cf4592f210a9f3bcf29e89",
+    "baseline-color.metal": "a6b79f3a492ad8f0d77e25c6f8df48d0875052a3c7ae03c2e2ffa2d0a155e19a",
+    "candidate-color-initial.ll": "f140b625dd5888675892a3977ca556124ed93bd053ae714bfa7e465b0df8cdef",
+    "candidate-color-initial.metal": "eb5dfc3b8eab58064d765d56e79c23688e7ac994c08052a17035c5fe34285b30",
+    "candidate-color.ll": "618408e46c1b18157f941477eadd309aff0a928eddeb316377adb69c350834b2",
+    "candidate-color.metal": "ddba558a52c9017b595eee040a3809d4e234e1e1a404f68cf5b430f75e0ebb27",
+    "candidate-depth-initial.ll": "47b8bb368e6dd0433798742f5f06eb522ea1391530e6688663fed9162d590f16",
+    "candidate-depth-initial.metal": "6fa07200650017bff734079e304257cf4bdf7ef31f7a54ebb26993d00511cbd0",
+    "candidate-depth.ll": "010d07863c8d96b552a237361d3da59d6f575fa5ac2b5bc335ed8c75c76585a9",
+    "candidate-depth.metal": "fbf6224fe05404cf098579d4fd47719e2209848b3a38e2702af47602ea1cafb2"
+  },
+  "compiler_flags": [
+    "-S",
+    "-emit-llvm",
+    "-O2",
+    "-fmetal-math-mode=safe",
+    "-fmetal-math-fp32-functions=precise"
+  ]
+}
