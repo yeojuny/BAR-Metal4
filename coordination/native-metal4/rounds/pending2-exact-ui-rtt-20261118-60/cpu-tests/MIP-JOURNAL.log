@@ -1,0 +1,2 @@
+1000 active-rejection/inactive ordered recovery, allocation failure, multi-GPU/dedup, whole-plan count and drop/requeue cases; capsule-before-unlock and strong owner lifetimes PASS
+all six standalone/world plan routes preserve lease; both texture queue sites; unchanged GPU producer/retirement body and capsule-before-lock destruction order PASS
