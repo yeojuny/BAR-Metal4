@@ -2,7 +2,7 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 165,
+  "revision": 166,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/screen-encode-range-accepted-baseline-reverse-20261118-54/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/screen-encode-range-accepted-baseline-reverse-20261118-54/READY.json",
   "result_path": "coordination/native-metal4/rounds/screen-encode-range-accepted-baseline-reverse-20261118-54/DONE.json",
-  "decision": "DONE",
-  "execution_status": "HQ3_ROUND54_CLOSED_SCREEN_ENCODE_RANGE_ACCEPTED_BASELINE_REVERSE",
+  "decision": "ENCODE_RANGE_ACCEPTED_SUBMISSION_RETIMING_DEPRIORITIZED",
+  "execution_status": "HQ3_ACCEPTED_ENCODE_RANGE_REVIEWED_SUBMISSION_PRIORITY",
   "blocked_reason": null,
   "history": [
     {
@@ -3063,6 +3063,27 @@
       },
       "cleanup_complete": true,
       "utc": "2026-11-18T07:05:45.063995+00:00"
+    },
+    {
+      "event": "HQ3_ACCEPTED_ENCODE_RANGE_REVIEWED_SUBMISSION_PRIORITY",
+      "revision": 166,
+      "round_id": "screen-encode-range-accepted-baseline-reverse-20261118-54",
+      "utc": "2026-11-18T07:11:51.962231+00:00",
+      "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+      "accepted_settings": {
+        "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+        "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+        "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1"
+      },
+      "artifact_commit": "25d793507fdc65657e0c7e0066394aea4e989fc7",
+      "review_execution": {
+        "builds": 0,
+        "games": 0,
+        "gpu_captures": 0,
+        "profiles": 0,
+        "benchmarks": 0,
+        "renderer_edits": 0
+      }
     }
   ],
   "communication_test": {
@@ -3247,7 +3268,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review the single matched EncodeRange pair and its exact path witness.",
+  "next_action": "Check GroundDecal shader work first. Preserve existing completion/successor-submit ordering; reopen only on new current evidence of a recurring movable tail.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
@@ -3272,12 +3293,13 @@
   "accepted_benchmark": {
     "path": "coordination/native-metal4/ACCEPTED-R03-BENCHMARK.json",
     "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
-    "feature_flag": "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE",
+    "feature_flag": "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP",
     "feature_value": "1",
     "scope": "r03-local-paced-battle",
     "accepted_settings": {
       "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
-      "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1"
+      "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+      "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1"
     }
   }
 }
