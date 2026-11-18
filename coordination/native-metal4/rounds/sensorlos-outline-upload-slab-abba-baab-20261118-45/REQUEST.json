@@ -1,6 +1,6 @@
 {
   "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
-  "attempt_id": "slab-abba-baab-01",
+  "attempt_id": "slab-abba-baab-two-sessions-01",
   "scope": "SENSORLOS_UPLOAD_SLAB_ABBA_BAAB_SAME_ROUND44_BINARY",
   "authorized_by": "Direct user request via SUPER_JINI_MK2",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
@@ -83,5 +83,35 @@
     "profiles": 0,
     "screenshots": 0
   },
-  "retain_all_counted_frames": true
+  "retain_all_counted_frames": true,
+  "session_plan": {
+    "sessions": [
+      [
+        "A1",
+        "B1",
+        "B2",
+        "A2"
+      ],
+      [
+        "B3",
+        "A3",
+        "A4",
+        "B4"
+      ]
+    ],
+    "per_session_awake_seconds": 2400,
+    "seconds_reserved_per_remaining_game": 330,
+    "original_preflight": true,
+    "scheduled_extra_cooldown_seconds": 0,
+    "prior_attempt": {
+      "id": "slab-abba-baab-01",
+      "revision": 142,
+      "commit": "8db416eed6ec11436a19d8633629f207233037f9",
+      "actual_games": 0,
+      "reason": "2400-second process limit failed the intact eight-game prelaunch check (2640 seconds required)",
+      "own_awake_released": true,
+      "prior_caffeinate_pid": 19811,
+      "results": []
+    }
+  }
 }

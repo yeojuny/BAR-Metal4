@@ -1,0 +1,30 @@
+{
+  "sessions": [
+    [
+      "A1",
+      "B1",
+      "B2",
+      "A2"
+    ],
+    [
+      "B3",
+      "A3",
+      "A4",
+      "B4"
+    ]
+  ],
+  "per_session_awake_seconds": 2400,
+  "seconds_reserved_per_remaining_game": 330,
+  "original_preflight": true,
+  "scheduled_extra_cooldown_seconds": 0,
+  "prior_attempt": {
+    "id": "slab-abba-baab-01",
+    "revision": 142,
+    "commit": "8db416eed6ec11436a19d8633629f207233037f9",
+    "actual_games": 0,
+    "reason": "2400-second process limit failed the intact eight-game prelaunch check (2640 seconds required)",
+    "own_awake_released": true,
+    "prior_caffeinate_pid": 19811,
+    "results": []
+  }
+}
