@@ -1,0 +1,18 @@
+{
+  "status": "STAGED_NO_GAME",
+  "binary_sha256": "bb058d639fbbac8537c25e38fc44a9bc1a6ab1f483984d4200903ee1b59deb77",
+  "order": [
+    "R97_OFF",
+    "R97_ON"
+  ],
+  "launch_sha256": {
+    "R97_OFF": "710a0e59caeaf00a65b33274e882ff5005deeda2893ae94db43204a014f43ac1",
+    "R97_ON": "bfc23ce5d471ce88bbb5c438ee9ad5da6dfb95666b4c63b566d79f0259049b03"
+  },
+  "cap": 2,
+  "aa": 0,
+  "scene_hashes": 13,
+  "only_switch": "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL",
+  "patch_sha256": "965dcf10f7e6a7f0d235ab59eab0fa0a899526c211770d05c77a749f9046aa1c",
+  "safety_sha256": "47b6d129d62cec491400c46834b43f0808fa274dc9b06b36700d9eaf784aab90"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "PASS_PARTICLE_SINGLE_CELL_CPU_AND_GPU",
+  "cpu_cases": 27,
+  "gpu_cases": 72,
+  "depth_witnesses": 36,
+  "stencil_witnesses": 36,
+  "animated_wrong_variant_negative_witnesses": 8,
+  "soft_and_no_depth": true,
+  "independent_mip_and_slices": true,
+  "formats": [
+    "BGRA8 blended",
+    "RGBA32F unblended"
+  ],
+  "air_world_sample_calls": [
+    2,
+    1
+  ],
+  "log_sha256": "4c14815c84155d8110acdadac5cf6c4077c46ab759f7df3a87e0d73ac7b6f526"
+}

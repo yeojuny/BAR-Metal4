@@ -1,0 +1,88 @@
+{
+  "frame": "historical R02 capture, not current benchmark frequency",
+  "runtime_gpu_sessions": 0,
+  "bindings": {
+    "main_draw": "api9156",
+    "main_vertex": "api9152",
+    "shadow_draw": "api3053",
+    "shadow_vertex": "api3049",
+    "first_ground_flash": "api5549"
+  },
+  "routes": [
+    {
+      "route": "world",
+      "index_payload": {
+        "path": "FF9F689327F1E748",
+        "bytes": 170640,
+        "sha256": "e9ee7a1c9744220ca93bc6bf04629793d4b398027403d348866a9712c63f9303"
+      },
+      "vertex_payload": {
+        "path": "6A1BECDCD16FAEE2",
+        "bytes": 1592640,
+        "sha256": "887d56bbb50ae9b135c41a92576832d6bbf6545b9c67e0cedf8072a4d2ca540b"
+      },
+      "bindings_for_offsets": "buf2499",
+      "draws": [
+        {
+          "pipeline": "rps53",
+          "all_referenced_vertices_eligible": false,
+          "count": 1
+        },
+        {
+          "pipeline": "rps54",
+          "all_referenced_vertices_eligible": true,
+          "count": 227
+        }
+      ],
+      "mixed": [
+        {
+          "api": "api9156",
+          "pipeline": "rps53",
+          "vertices": 27532,
+          "eligible_vertices": 24228,
+          "cell_counts": {
+            "(1.0, 1.0)": 24228,
+            "(16.0, 6.0)": 1904,
+            "(8.0, 12.0)": 216,
+            "(8.0, 8.0)": 1184
+          }
+        }
+      ]
+    },
+    {
+      "route": "shadow",
+      "index_payload": {
+        "path": "CF0F7BE393A03C41",
+        "bytes": 81840,
+        "sha256": "769960634bd779c9a6ea3ab4409ab16002f3f82fcf5f025bdd97c9558db8fd41"
+      },
+      "vertex_payload": {
+        "path": "2C9364BE0D29DA39",
+        "bytes": 763840,
+        "sha256": "1c797b5cb6161ef4f70b84d3988c4f2f030915786a112dda232ab777287ea17a"
+      },
+      "bindings_for_offsets": "buf2732",
+      "draws": [
+        {
+          "pipeline": "rps55",
+          "all_referenced_vertices_eligible": false,
+          "count": 1
+        }
+      ],
+      "mixed": [
+        {
+          "api": "api3053",
+          "pipeline": "rps55",
+          "vertices": 13640,
+          "eligible_vertices": 11208,
+          "cell_counts": {
+            "(1.0, 1.0)": 11208,
+            "(8.0, 8.0)": 1184,
+            "(16.0, 6.0)": 1248
+          }
+        }
+      ]
+    }
+  ],
+  "mapping": "Unique pinned payload lengths, complete referenced index regions/offsets, source 56-byte layout and original consecutive quad-index pattern. Resource binding identifiers came from saved API export."
+}
