@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 279,
+  "revision": 280,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -44,7 +44,7 @@
   "ready_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/RESULT.json",
   "decision": null,
-  "execution_status": "COOLED_DEFERRED_RELINK_ONLY",
+  "execution_status": "OWNED_COOLED_DEFERRED_ABBA_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4601,6 +4601,12 @@
       "status": "RUNNING",
       "round_id": "mvk-parity-deferred-20261118",
       "action": "reserve"
+    },
+    {
+      "revision": 280,
+      "status": "RUNNING",
+      "round_id": "mvk-parity-deferred-20261118",
+      "action": "game"
     }
   ],
   "communication_test": {
@@ -4700,7 +4706,9 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-18T22:21:51.703925+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "ready_sha256": "9eb51847015f6a761d6572af000f65422f160a20373827bf634c44900edd50a3",
+    "game_seal_utc": "2026-11-18T22:23:41.878192+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
