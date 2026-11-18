@@ -1,0 +1,13 @@
+{
+  "round_id": "ground-decal-g04-exceptional-20261118-94",
+  "status": "PASS_G04_EXCEPTIONAL_STAGE_PARITY",
+  "games": 0,
+  "engine_builds": 0,
+  "fixture_runs": 1,
+  "synthetic_cases": 24,
+  "finite": 236132,
+  "nan": 19530,
+  "inf": 22924,
+  "negative_zero": 3844,
+  "completed": true
+}
