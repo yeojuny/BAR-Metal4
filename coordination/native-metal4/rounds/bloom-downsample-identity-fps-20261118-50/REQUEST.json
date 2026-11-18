@@ -1,0 +1,64 @@
+{
+  "round_id": "bloom-downsample-identity-fps-20261118-50",
+  "attempt_id": "bloom-identity-off-on-01",
+  "scope": "BLOOM_DOWNSAMPLE_SAME_BINARY_IDENTITY_RGBA",
+  "authorized_by": "User requested the BloomDownsample identity-RGBA patch and a single same-binary OFF/ON game pair with all frames included.",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
+  "patch_sha256": "819284a5649355d2b2b51493993f699d8f286daf49d8ce52a52272376101e906",
+  "order": [
+    "BLOOM_OFF",
+    "BLOOM_ON"
+  ],
+  "flag": {
+    "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": {
+      "BLOOM_OFF": "0",
+      "BLOOM_ON": "1"
+    }
+  },
+  "budget": {
+    "configure_attempts_max": 1,
+    "engine_builds_max": 1,
+    "static_syntax_checks_max": 3,
+    "gpu_helpers": 0,
+    "games_max": 2,
+    "off_games_max": 1,
+    "on_games_max": 1,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "fixed_flags": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+    "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0",
+    "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": "0",
+    "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "0",
+    "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": "0",
+    "BAR_NATIVE_FRESH_EFFECT_UPLOAD_BUNDLE": "0"
+  },
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "retain_all_counted_frames": true,
+  "previous": {
+    "round_id": "screen-encode-range-fps-20261118-49",
+    "artifact_commit": "20d0939cbaf9fe83a7ccf3b49cadce190b26171e",
+    "scope": "Round 49 source baseline. EncodeRange is held at its default OFF in both arms."
+  }
+}

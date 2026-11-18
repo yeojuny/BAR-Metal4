@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 153,
+  "revision": 154,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "screen-encode-range-fps-20261118-49",
+  "round_id": "bloom-downsample-identity-fps-20261118-50",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "30ed544bd95d923df50addf2857413261d77fc4014fd1baff9a92fbb38a773b0",
-  "request": "coordination/native-metal4/rounds/screen-encode-range-fps-20261118-49/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/screen-encode-range-fps-20261118-49/READY.json",
-  "result_path": "coordination/native-metal4/rounds/screen-encode-range-fps-20261118-49/DONE.json",
-  "decision": "DONE",
-  "execution_status": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_RANGE_OFF_ON",
+  "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
+  "request": "coordination/native-metal4/rounds/bloom-downsample-identity-fps-20261118-50/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/bloom-downsample-identity-fps-20261118-50/READY.json",
+  "result_path": null,
+  "decision": "RUN_USER_AUTHORIZED_SAME_BINARY_PAIR",
+  "execution_status": "HQ3_ROUND50_BLOOM_DOWNSAMPLE_IDENTITY_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -2886,6 +2886,13 @@
       },
       "cleanup_complete": true,
       "utc": "2026-11-18T05:20:58.994178+00:00"
+    },
+    {
+      "event": "HQ3_ROUND50_BLOOM_DOWNSAMPLE_IDENTITY_RESERVED",
+      "revision": 154,
+      "round_id": "bloom-downsample-identity-fps-20261118-50",
+      "attempt_id": "bloom-identity-off-on-01",
+      "utc": "2026-11-18T05:40:53.314948+00:00"
     }
   ],
   "communication_test": {
@@ -2969,11 +2976,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "encode-range-off-on-01",
+    "attempt_id": "bloom-identity-off-on-01",
     "budget": {
       "configure_attempts_max": 1,
       "engine_builds_max": 1,
-      "static_syntax_checks_max": 1,
+      "static_syntax_checks_max": 3,
       "gpu_helpers": 0,
       "games_max": 2,
       "off_games_max": 1,
@@ -2984,28 +2991,9 @@
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "reserved_at_utc": "2026-11-18T05:13:04.023141+00:00",
-    "started": true,
-    "completed": true,
-    "ended_at_utc": "2026-11-18T05:20:58.994178+00:00",
-    "counts": {
-      "configure": 1,
-      "engine_builds": 1,
-      "cpu_fixtures": 1,
-      "games": 2,
-      "captures": 0,
-      "profiles": 0,
-      "screenshots": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true,
-    "artifact_commit": "20d0939cbaf9fe83a7ccf3b49cadce190b26171e",
-    "default_changed": false,
-    "fps": {
-      "OFF": 64.71044197700739,
-      "ON": 65.61515687511208,
-      "relative_percent": 1.3980972320141838
-    }
+    "reserved_at_utc": "2026-11-18T05:40:53.314948+00:00",
+    "started": false,
+    "completed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3071,7 +3059,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Review the single matched EncodeRange pair and its exact path witness.",
+  "next_action": "One engine build, then the user-authorized same-binary BloomDownsample OFF/ON pair with all counted frames retained.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
