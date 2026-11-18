@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 215,
+  "revision": 216,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/sensor31657-exact-interior-fps-20261118-78/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-fps-20261118-78/READY.json",
   "result_path": "coordination/native-metal4/rounds/sensor31657-exact-interior-fps-20261118-78/DONE.json",
-  "decision": "ONE_RADAR_SONAR_AA0_OFF_ON_PAIR_AFTER_EXACT_PARITY",
-  "execution_status": "FIXED_OFF_ON_GAMES_RESERVED",
+  "decision": "MODEST_ONE_PAIR_GAIN_KEEP_DEFAULT_OFF",
+  "execution_status": "COMPLETE_RADAR_SONAR_AA0_CAP2_ONE_OFF_ON_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -3804,6 +3804,25 @@
         "retries": 0
       },
       "utc": "2026-11-18T13:16:55.284Z"
+    },
+    {
+      "event": "HQ3_ROUND78_RADAR_SONAR_AA0_CAP2_PAIR_DONE",
+      "revision": 216,
+      "round_id": "sensor31657-exact-interior-fps-20261118-78",
+      "attempt_id": "sensor31657-exact-interior-off-on-01",
+      "average_fps_change_percent": 0.9797428369604066,
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:21:22.944Z"
     }
   ],
   "communication_test": {
@@ -3903,22 +3922,24 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
     "started": true,
-    "completed": false,
-    "games_started": false,
+    "completed": true,
+    "games_started": true,
     "counts": {
       "configure": 1,
       "engine_build": 1,
       "parity_helper_compile": 1,
       "parity_helper_gpu_runs": 1,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
-      "retries": 0
+      "retries": 0,
+      "new_instrumentation": 0
     },
     "reserved_at_utc": "2026-11-18T13:11:53.629Z",
     "default_changed": false,
     "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
-    "metal_pixel_parity_cases": 4624
+    "metal_pixel_parity_cases": 4624,
+    "finished_at_utc": "2026-11-18T13:19:51.013549+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3984,7 +4005,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run one fixed radar/sonar OFF then ON on the same binary with SensorLOS held ON.",
+  "next_action": "Fixed pair closed. Preserve both defaults.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
