@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 196,
+  "revision": 197,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/DONE.json",
   "decision": "ONE_FIXED_CAP2_TICKET_TIMELINE_DIAGNOSTIC",
-  "execution_status": "CONFIGURE_BUILD_RESERVED",
+  "execution_status": "ONE_DIAGNOSTIC_GAME_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3469,6 +3469,17 @@
         "retries": 0
       },
       "utc": "2026-11-18T11:04:00.598Z"
+    },
+    {
+      "event": "HQ3_ROUND69_TICKET_TIMELINE_BINARY_SEALED_GAME_RESERVED",
+      "revision": 197,
+      "round_id": "pending2-ticket-timeline-20261118-69",
+      "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+      "binary_sha256": "d6535a238760590c7c7e0495ae15060b57c6b7400acb14e6c4799487a081934e",
+      "patch_sha256": "aaff24a9a2aee70a2b5622cd5c91e86e89e91a57fa536af11ee110018410a7e2",
+      "input_hashes": 13,
+      "games": 0,
+      "utc": "2026-11-18T11:08:39.845Z"
     }
   ],
   "communication_test": {
@@ -3563,10 +3574,19 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
+    "started": true,
     "completed": false,
     "reserved_at_utc": "2026-11-18T11:04:00.598Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "d6535a238760590c7c7e0495ae15060b57c6b7400acb14e6c4799487a081934e",
+    "counts": {
+      "configure": 1,
+      "engine_build": 1,
+      "games": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    }
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3632,7 +3652,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 to perform one isolated configure and build, seal the timeline diagnostic, and launch once after preflight.",
+  "next_action": "Run the sealed fixed cap2 timeline diagnostic once, then close with observed counts and clock evidence.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
