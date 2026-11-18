@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 231,
+  "revision": 232,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-expired-prefix-20261118-85/DONE.json",
   "decision": null,
-  "execution_status": "GROUND_DECAL_EXPIRED_PREFIX_PARITY_AND_BUILD_RESERVED",
+  "execution_status": "GROUND_DECAL_EXPIRED_PREFIX_PARITY_AND_SIGNED_BINARY_SEALED",
   "blocked_reason": null,
   "history": [
     {
@@ -4121,6 +4121,26 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T15:22:39.163Z"
+    },
+    {
+      "event": "HQ3_ROUND85_GROUND_DECAL_EXPIRED_PREFIX_PAIR_SEALED",
+      "revision": 232,
+      "round_id": "ground-decal-expired-prefix-20261118-85",
+      "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
+      "binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea",
+      "patch_sha256": "47ccf8f7b28ca3b28c795f8fa31840458de9df733d03831bbaa9d67c31638ed3",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T15:26:55.323Z"
     }
   ],
   "communication_test": {
@@ -4219,14 +4239,14 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
+    "started": true,
     "completed": false,
     "games_started": false,
     "counts": {
-      "configure": 0,
-      "engine_build": 0,
-      "parity_helper_compile": 0,
-      "parity_helper_gpu_runs": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "parity_helper_compile": 1,
+      "parity_helper_gpu_runs": 1,
       "games": 0,
       "captures": 0,
       "profiles": 0,
@@ -4234,7 +4254,8 @@
       "new_instrumentation": 0
     },
     "reserved_at_utc": "2026-11-18T15:22:39.163Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4300,7 +4321,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "One CPU/GPU equivalence helper attempt, then one configure/build and the same-binary pair only after passing equivalence.",
+  "next_action": "Run one OFF game and one ON game on the sealed same binary and fixed inputs, with original telemetry.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
