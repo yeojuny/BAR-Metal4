@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 275,
+  "revision": 276,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -44,7 +44,7 @@
   "ready_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/RESULT.json",
   "decision": null,
-  "execution_status": "MEMORY_SOURCE_AND_BUILD_ONLY",
+  "execution_status": "OWNED_MEMORY_SMOKE_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4577,6 +4577,12 @@
       "status": "RUNNING",
       "round_id": "memory-cold-glow-20261118",
       "action": "reserve"
+    },
+    {
+      "revision": 276,
+      "status": "RUNNING",
+      "round_id": "memory-cold-glow-20261118",
+      "action": "smoke"
     }
   ],
   "communication_test": {
@@ -4675,7 +4681,8 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-18T21:45:54.058311+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "smoke_sha256": "2b46d7ab73c3ca310b0e64d7a8d717cc31b570c58bd69ce1f4f32d4211f7268b"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
