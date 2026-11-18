@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
+  "status": "RUNNING",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 189,
+  "revision": 190,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-classified-prior-reads-reverse-20261118-64",
+  "round_id": "pending2-oldest-retire-diag-20261118-67",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/pending2-classified-prior-reads-reverse-20261118-64/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-reverse-20261118-64/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-reverse-20261118-64/DONE.json",
-  "decision": "REVERSE_ORDER_CAP2_ACTIVATION_AND_FPS_VERIFIED",
-  "execution_status": "HQ3_ROUND64_REVERSE_PAIR_COMPLETE_ACTUAL_CAP2_REPRODUCED",
+  "request": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-20261118-67/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-20261118-67/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-20261118-67/DONE.json",
+  "decision": "RUN_ONE_CAP2_OLDEST_RETIRE_DIAGNOSTIC",
+  "execution_status": "CONFIGURE_BUILD_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3356,6 +3356,21 @@
       "cleanup_complete": true,
       "execution_reserved": false,
       "utc": "2026-11-18 10:39:28 UTC"
+    },
+    {
+      "event": "HQ3_ROUND67_CAP2_DIAGNOSTIC_RESERVED",
+      "revision": 190,
+      "round_id": "pending2-oldest-retire-diag-20261118-67",
+      "attempt_id": "pending2-oldest-retire-timing-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T10:41:30.156Z"
     }
   ],
   "communication_test": {
@@ -3439,32 +3454,19 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-classified-prior-reads-cap2-cap1-01",
+    "attempt_id": "pending2-oldest-retire-timing-01",
     "budget": {
-      "configure": 0,
-      "engine_build": 0,
-      "games": 2,
-      "max_per_arm": 1,
+      "configure": 1,
+      "engine_build": 1,
+      "games": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "started": true,
-    "completed": true,
-    "reserved_at_utc": "2026-11-18T09:55:49.617913+00:00",
-    "binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
-    "counts": {
-      "configure": 0,
-      "engine_build": 0,
-      "games": 2,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "ended_at_utc": "2026-11-18T10:00:11.287899+00:00",
-    "cleanup_complete": true,
-    "artifact_commit": "8f609c678ec2b7da2185001eebd1050f6e9848e6",
+    "started": false,
+    "completed": false,
+    "reserved_at_utc": "2026-11-18T10:41:30.156Z",
     "default_changed": false
   },
   "model_and_context_policy": {
