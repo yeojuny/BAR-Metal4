@@ -1,0 +1,27 @@
+{
+  "round_id": "pending2-ticket-timeline-20261118-69",
+  "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+  "normal_exit": true,
+  "owned_process_group_gone": true,
+  "private_widget_and_overlay_removed": true,
+  "temporary_display_assertion_released": true,
+  "release_utc": "2026-11-18T11:10:38.027653+00:00",
+  "idle_check": "PASS",
+  "idle_check_utc": "2026-11-18T11:10:45.726505+00:00",
+  "remaining_blocking_processes": 0,
+  "actual_counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "gpu_helper_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "default_cap": 1,
+  "receipt_sha256": {
+    "game_cleanup": "90f32368f213ab5f4576154ccf82515594554a6ce9033b48883f0fa1e17c078b",
+    "awake_release": "31c25d3108c807681e47f6b297c1a009b42df789d5d18e5871ed09ca578bc517",
+    "idle_after_game": "792476d58549df1d233caece0ba74a891353fc6c471fd732468346e8ba80843d"
+  }
+}

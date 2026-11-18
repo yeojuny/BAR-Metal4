@@ -1,0 +1,255 @@
+{
+  "status": "COMPLETE_EXISTING_HOST_TRACE_REVIEW",
+  "round_id": "pending2-host-tail-review-20261118-70",
+  "attempt_id": "pending2-existing-host-tail-review-01",
+  "source_round": "pending2-ticket-timeline-20261118-69",
+  "counts": {
+    "configure": 0,
+    "engine_build": 0,
+    "games": 0,
+    "gpu_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "source_edits": 0
+  },
+  "default_cap": 1,
+  "default_changed": false,
+  "cleanup_complete": true,
+  "analyzed_intervals": 2658,
+  "excluded": 0,
+  "advance_counts": {
+    "0": 1460,
+    "1": 1197,
+    "2": 1
+  },
+  "largest_intervals": [
+    {
+      "draw": 2550,
+      "simulation": 1008,
+      "simulation_advance": 2,
+      "interval_ms": 37.999999,
+      "capture_before_screen_ms": 3.130083,
+      "between_draw_calls_ms": 23.604584,
+      "reclaim_event": "2546",
+      "t_end_mid_s": 15.602999704500007
+    },
+    {
+      "draw": 2808,
+      "simulation": 1125,
+      "simulation_advance": 1,
+      "interval_ms": 28.000001,
+      "capture_before_screen_ms": 16.927708,
+      "between_draw_calls_ms": 2.587667,
+      "reclaim_event": "2804",
+      "t_end_mid_s": 19.51999979749992
+    },
+    {
+      "draw": 3427,
+      "simulation": 1417,
+      "simulation_advance": 0,
+      "interval_ms": 25.0,
+      "capture_before_screen_ms": 16.70225,
+      "between_draw_calls_ms": 0.061125,
+      "reclaim_event": "3423",
+      "t_end_mid_s": 29.274000096499574
+    },
+    {
+      "draw": 3878,
+      "simulation": 1633,
+      "simulation_advance": 0,
+      "interval_ms": 21.0,
+      "capture_before_screen_ms": 10.640792,
+      "between_draw_calls_ms": 0.042583,
+      "reclaim_event": "3874",
+      "t_end_mid_s": 36.462000303499714
+    }
+  ],
+  "host_stage_distribution": {
+    "capture_before_screen": {
+      "n": 2658,
+      "mean_ms": 4.294474856282922,
+      "median_ms": 4.530875,
+      "p95_ms": 5.928375,
+      "p99_ms": 6.863583,
+      "max_ms": 16.927708
+    },
+    "between_draw_calls": {
+      "n": 2658,
+      "mean_ms": 1.2211364717832953,
+      "median_ms": 0.054833,
+      "p95_ms": 3.565083,
+      "p99_ms": 4.49275,
+      "max_ms": 23.604584
+    },
+    "update_unsynced": {
+      "n": 2658,
+      "mean_ms": 1.2515885218209175,
+      "median_ms": 1.2565,
+      "p95_ms": 1.597625,
+      "p99_ms": 1.789917,
+      "max_ms": 7.109042
+    },
+    "world_call_excluding_reclaim": {
+      "n": 2658,
+      "mean_ms": 0.2664986704288941,
+      "median_ms": 0.266916,
+      "p95_ms": 0.296208,
+      "p99_ms": 0.309084,
+      "max_ms": 0.372958
+    },
+    "reclaim": {
+      "n": 2658,
+      "mean_ms": 7.479953524830706,
+      "median_ms": 7.5865,
+      "p95_ms": 8.983958,
+      "p99_ms": 9.541542,
+      "max_ms": 10.144208
+    }
+  },
+  "recurring_comparison": [
+    {
+      "simulation_span": [
+        990,
+        1020
+      ],
+      "historical_cap2_ms": [
+        23.0,
+        20.0
+      ],
+      "r69_max": {
+        "draw": 2550,
+        "simulation": 1008,
+        "simulation_advance": 2,
+        "interval_ms": 37.999999,
+        "capture_before_screen_ms": 3.130083,
+        "between_draw_calls_ms": 23.604584,
+        "reclaim_event": "2546",
+        "t_end_mid_s": 15.602999704500007
+      },
+      "r69_within_100ms_of_both_at_least_20ms": [
+        {
+          "draw": 2561,
+          "simulation": 1012,
+          "simulation_advance": 0,
+          "interval_ms": 21.0,
+          "capture_before_screen_ms": 11.324167,
+          "between_draw_calls_ms": 0.036833,
+          "reclaim_event": "2557",
+          "t_end_mid_s": 15.758999705500006
+        }
+      ]
+    },
+    {
+      "simulation_span": [
+        1110,
+        1140
+      ],
+      "historical_cap2_ms": [
+        28.999999,
+        29.999999
+      ],
+      "r69_max": {
+        "draw": 2808,
+        "simulation": 1125,
+        "simulation_advance": 1,
+        "interval_ms": 28.000001,
+        "capture_before_screen_ms": 16.927708,
+        "between_draw_calls_ms": 2.587667,
+        "reclaim_event": "2804",
+        "t_end_mid_s": 19.51999979749992
+      },
+      "r69_within_100ms_of_both_at_least_20ms": [
+        {
+          "draw": 2808,
+          "simulation": 1125,
+          "simulation_advance": 1,
+          "interval_ms": 28.000001,
+          "capture_before_screen_ms": 16.927708,
+          "between_draw_calls_ms": 2.587667,
+          "reclaim_event": "2804",
+          "t_end_mid_s": 19.51999979749992
+        }
+      ]
+    },
+    {
+      "simulation_span": [
+        1410,
+        1440
+      ],
+      "historical_cap2_ms": [
+        24.0,
+        24.0
+      ],
+      "r69_max": {
+        "draw": 3427,
+        "simulation": 1417,
+        "simulation_advance": 0,
+        "interval_ms": 25.0,
+        "capture_before_screen_ms": 16.70225,
+        "between_draw_calls_ms": 0.061125,
+        "reclaim_event": "3423",
+        "t_end_mid_s": 29.274000096499574
+      },
+      "r69_within_100ms_of_both_at_least_20ms": [
+        {
+          "draw": 3427,
+          "simulation": 1417,
+          "simulation_advance": 0,
+          "interval_ms": 25.0,
+          "capture_before_screen_ms": 16.70225,
+          "between_draw_calls_ms": 0.061125,
+          "reclaim_event": "3423",
+          "t_end_mid_s": 29.274000096499574
+        }
+      ]
+    },
+    {
+      "simulation_span": [
+        1440,
+        1470
+      ],
+      "historical_cap2_ms": [
+        20.0,
+        20.0
+      ],
+      "r69_max": {
+        "draw": 3511,
+        "simulation": 1458,
+        "simulation_advance": 1,
+        "interval_ms": 18.999999,
+        "capture_before_screen_ms": 3.485084,
+        "between_draw_calls_ms": 4.136166,
+        "reclaim_event": "3507",
+        "t_end_mid_s": 30.607000126499532
+      },
+      "r69_within_100ms_of_both_at_least_20ms": []
+    },
+    {
+      "simulation_span": [
+        1620,
+        1650
+      ],
+      "historical_cap2_ms": [
+        21.0,
+        20.0
+      ],
+      "r69_max": {
+        "draw": 3878,
+        "simulation": 1633,
+        "simulation_advance": 0,
+        "interval_ms": 21.0,
+        "capture_before_screen_ms": 10.640792,
+        "between_draw_calls_ms": 0.042583,
+        "reclaim_event": "3874",
+        "t_end_mid_s": 36.462000303499714
+      },
+      "r69_within_100ms_of_both_at_least_20ms": []
+    }
+  ],
+  "finding": "The R69 late intervals group into one unique two-simulation-tick inter-draw gap and repeatable pre-DrawScreen capture tails. Current records do not show an exact redundant CPU operation or establish historical event identity.",
+  "next_validation": "If separately authorized, observe main-thread CPU and wall time across existing capture boundaries in one narrow matching simulation range; isolate input, game update and load lock if the inter-draw gap recurs. Do not alter renderer scheduling or default.",
+  "r69_raw_shared_index": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/raw/RAW-INDEX.json",
+  "local_full_report_sha256": "f2c0863c397bc5624d6fe7e3d0a1b4b55ddc686a9695b3df45fb04f477b82744",
+  "recorded_utc": "2026-11-18T11:22:11.163087+00:00"
+}
