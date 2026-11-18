@@ -1,0 +1,31 @@
+{
+  "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
+  "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
+  "scope": "FIFO scene-capacity reclaim and exact private environment cube predecessor; same-binary cap1/cap2 on the existing Seths battle",
+  "round57_parent": "6259ceed3a45bf86bf453bbb11c1734ac9181f3c",
+  "order": [
+    "CAP1",
+    "CAP2"
+  ],
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "bounded_cpu_contracts": true,
+    "games": 2,
+    "max_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "preserve_all_counted_frames": true,
+  "game_scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "simulation_ticks": [
+      540,
+      1740
+    ]
+  },
+  "utc": "2026-11-18T08:50:53.617579+00:00"
+}

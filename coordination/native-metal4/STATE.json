@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 175,
+  "revision": 176,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "simmers-legacy-cap1-20261118-58",
+  "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "4b6e70f8dc466f92fc8a0fb7c49ebec389c3ad90a41721999e143e0e601f695f",
-  "request": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-58/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-58/READY.json",
-  "result_path": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-58/DONE.json",
-  "decision": "COMPLETE_SIMMERS_CAP1",
-  "execution_status": "HQ3_ROUND58_SIMMERS_CAP1_DONE",
+  "source_manifest_sha256": "dca8ad362c7655618782615d82412ca82c4b7d97dd2a2920a2695c4aa22b5bb1",
+  "request": "coordination/native-metal4/rounds/pending2-ordinary-reclaim-cube-20261118-59/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-ordinary-reclaim-cube-20261118-59/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-ordinary-reclaim-cube-20261118-59/DONE.json",
+  "decision": null,
+  "execution_status": "HQ3_ROUND59_RESERVED_RECLAIM_CUBE_PACED_PAIR",
   "blocked_reason": null,
   "history": [
     {
@@ -3191,6 +3191,23 @@
       "attempt_id": "simmers-cap1-01",
       "utc": "2026-11-18T08:41:27.945698+00:00",
       "games": 1
+    },
+    {
+      "event": "HQ3_ROUND59_RESERVED_RECLAIM_CUBE_PACED_PAIR",
+      "revision": 176,
+      "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
+      "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
+      "utc": "2026-11-18T08:58:51.337829+00:00",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "bounded_cpu_contracts": true,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
     }
   ],
   "communication_test": {
@@ -3274,29 +3291,29 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "simmers-cap1-01",
+    "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
     "budget": {
-      "games": 1,
-      "builds": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "bounded_cpu_contracts": true,
+      "games": 2,
+      "max_per_arm": 1,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
     "started": true,
-    "completed": true,
-    "reserved_at_utc": "2026-11-18T08:38:53.781593+00:00",
+    "completed": false,
+    "reserved_at_utc": "2026-11-18T08:58:51.337829+00:00",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "counts": {
-      "games": 1,
-      "builds": 0,
-      "captures": 0,
+      "configure": 1,
+      "engine_build": 1,
+      "games": 0,
       "profiles": 0,
+      "captures": 0,
       "retries": 0
-    },
-    "ended_at_utc": "2026-11-18T08:41:27.945698+00:00",
-    "cleanup_complete": true,
-    "artifact_commit": "72ad9a15d84ddf1a2396b9dc375fdb0c38cd2e4b",
-    "default_changed": false
+    }
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3362,7 +3379,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Single cap1 Simmers game complete.",
+  "next_action": "Run one Seths battle per cap using the fixed binary and record genuine GPU pending evidence.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

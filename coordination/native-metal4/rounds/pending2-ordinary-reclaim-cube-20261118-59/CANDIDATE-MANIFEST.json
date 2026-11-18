@@ -1,0 +1,54 @@
+{
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "parent_sha256": "5b2a876983646f47f950860df86546eb108d17bbe7cfc0d53c932afd363e6a79",
+      "candidate_sha256": "a69ba6bc56d9db152619a884f34a2bc66d3f05801cacced3687348eac6e9c0ba"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "parent_sha256": "e5e7844b8572d29f7045b9e6d350bec5c7cb6e2e165c0d281b44b869d7eb1f52",
+      "candidate_sha256": "2e2b6fc5fdc7f0a5aaef58a7ddc4804dc34ec3ca69492aafba00f5a6f61fbf09"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4FrameResources.h",
+      "parent_sha256": "9e6ccce5e767632ed9353cc2e88412b85fa916ebbfdfa9b5bcc7cb6d3b7eb7eb",
+      "candidate_sha256": "0f416ffc24af3cb6e3dfe8498057e499fa893be6ebb018cce1d611cda293fc7e"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.h",
+      "parent_sha256": "e2f2a2bd9a185e464bc1708e63e95275ff8ca4f10d3e89a35ad307ba80d2489d",
+      "candidate_sha256": "256034034c88454349ca4956362d49f86db31c685532c2546349a590ce4ea811"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "parent_sha256": "043555571c12917740165eebfea3c294326e6d82603fcdba9b95f241231edfa5",
+      "candidate_sha256": "de946fee92f93703470289ccca28ae98cabc43e8e5be327b95783e100f277f79"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "parent_sha256": "d3d2a43aa10e956744b643eb30bcc1a4c2370767641d8f46a9ba0298eb47be87",
+      "candidate_sha256": "73f45a51f9a84051acf9008eb0fcf1e4964ee57d28cc6d73aba3232c0d5b40d0"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4CubeTextureSource.mm",
+      "parent_sha256": "13d8aa8b95b6afae28a1095b512220052b2bf220f74edbdadc97bbbc715203bd",
+      "candidate_sha256": "c14917dda8c47c31c0a39a3a4b9a4cf091b82aa26cae35bbbb7fb977db28427b"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "parent_sha256": "9da6921dca3da09b03bff5be1ec046ffcb0ce60bec3de7722bf7aebf80ee9a36",
+      "candidate_sha256": "cb281d0ad29438698851a3dde215eb27153891c229b26603b984aaa6f077155d"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldInfo.mm",
+      "parent_sha256": "df7e4c35ab6168c72381beef546497926883fd17ed7d218a042d115283109a21",
+      "candidate_sha256": "4462d5cd7fcfe77faa57ba89a1dea522cd8db765fcabfdffe3c6f8ad24d041cd"
+    }
+  ],
+  "parent_artifact": "6259ceed3a45bf86bf453bbb11c1734ac9181f3c",
+  "patch_sha256": "87055409626f86544df6086e1dea6dab7b46b43b7cdf7d4772f23504bb5825f9",
+  "engine_sha256": "fea30e1f4aecb69fcf88e82cc80f0b1273f43c9c24d85abb5d312b2ecd82fe52",
+  "measurement": "Seths, 540-inclusive to 1740-exclusive; summary logged once after gameplay",
+  "review_provenance": "Astra independent audit identified the scene ledger capacity/full-drain and exact cube CPU prior-read boundary. Unknown historical RTT and WorldInfo stay CPU-serialized. No cloud patch applied."
+}
