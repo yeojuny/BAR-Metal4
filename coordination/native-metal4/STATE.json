@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 179,
+  "revision": 180,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/DONE.json",
   "decision": null,
-  "execution_status": "HQ3_ROUND61_FIXED_EXACT_RTT_GAME_PAIR_RESERVED",
+  "execution_status": "HQ3_ROUND61_SIGNED_EXACT_RTT_READY_FOR_TWO_GAMES",
   "blocked_reason": null,
   "history": [
     {
@@ -3244,6 +3244,15 @@
         "profiles": 0,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND61_SIGNED_EXACT_RTT_READY_FOR_TWO_GAMES",
+      "revision": 180,
+      "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+      "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+      "utc": "2026-11-18T09:24:57.235132+00:00",
+      "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+      "games": 0
     }
   ],
   "communication_test": {
@@ -3338,17 +3347,18 @@
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "started": false,
+    "started": true,
     "completed": false,
     "reserved_at_utc": "2026-11-18T09:19:47.549491+00:00",
     "counts": {
-      "configure": 0,
-      "engine_build": 0,
+      "configure": 1,
+      "engine_build": 1,
       "games": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    }
+    },
+    "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
