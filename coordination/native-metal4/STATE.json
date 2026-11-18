@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 228,
+  "revision": 229,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-terrain-color-clean-fps-20261118-84/DONE.json",
   "decision": null,
-  "execution_status": "GROUND_DECAL_BUILD_AND_FIXED_PAIR_RESERVED",
+  "execution_status": "GROUND_DECAL_SIGNED_BINARY_AND_FIXED_PAIR_SEALED",
   "blocked_reason": null,
   "history": [
     {
@@ -4060,6 +4060,26 @@
         "new_instrumentation": 0
       },
       "utc": "2026-11-18T14:23:24.568Z"
+    },
+    {
+      "event": "HQ3_ROUND84_GROUND_DECAL_SIGNED_PAIR_SEALED",
+      "revision": 229,
+      "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
+      "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
+      "binary_sha256": "c90e3d997c771ff0d802c0b6d837f771149fa692b1c6b9c873a2b7632b908879",
+      "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:27:46.100Z"
     }
   ],
   "communication_test": {
@@ -4158,12 +4178,12 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
+    "started": true,
     "completed": false,
     "games_started": false,
     "counts": {
-      "configure": 0,
-      "engine_build": 0,
+      "configure": 1,
+      "engine_build": 1,
       "parity_helper_compile": 0,
       "parity_helper_gpu_runs": 0,
       "games": 0,
@@ -4173,7 +4193,8 @@
       "new_instrumentation": 0
     },
     "reserved_at_utc": "2026-11-18T14:23:24.568Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "c90e3d997c771ff0d802c0b6d837f771149fa692b1c6b9c873a2b7632b908879"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -4239,7 +4260,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Configure and build once, seal the signed binary and exact A/B inputs, then run the locked OFF-to-ON pair. Existing GPU parity is preserved.",
+  "next_action": "Run exactly one OFF arm followed by one ON arm with the sealed binary and the same simulation protocol.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
