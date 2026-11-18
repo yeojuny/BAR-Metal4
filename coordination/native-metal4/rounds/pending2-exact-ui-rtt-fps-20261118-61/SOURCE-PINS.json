@@ -1,0 +1,10 @@
+{
+  "candidate_sha256": "7cd372689f449850952c872487b6597a732996723bbf3dd156aa2cee24838dad",
+  "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+  "source_manifest_sha256": "45092f303431777ec5b46be2e1f1f103eebb9eb3bfdedbc86e311156cea5a857",
+  "source_artifact": "b3e65b62692a0f741027862ec1fcae2ae77462e4",
+  "round59_parent_files_verified": 8,
+  "source_mutations": 0,
+  "parent_engine_sha256": "fea30e1f4aecb69fcf88e82cc80f0b1273f43c9c24d85abb5d312b2ecd82fe52",
+  "runner_sha256": "e38d69034aa90b2a5cdee7b57895529aedb1e7ecc4c8c448ce92aa116a368bd9"
+}
