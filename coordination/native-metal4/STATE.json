@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ",
   "enabled": true,
-  "revision": 192,
+  "revision": 193,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -16,7 +16,7 @@
   "ready_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/DONE.json",
   "decision": "ONE_CAP2_DIAGNOSTIC_WITH_PROCESS_LOCAL_OPENAL_PATH",
-  "execution_status": "CONFIGURE_BUILD_RESERVED",
+  "execution_status": "ONE_DIAGNOSTIC_GAME_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3406,6 +3406,16 @@
         "retries": 0
       },
       "utc": "2026-11-18T10:43:55.566Z"
+    },
+    {
+      "event": "HQ3_ROUND68_DIAGNOSTIC_BINARY_SEALED_GAME_RESERVED",
+      "revision": 193,
+      "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+      "attempt_id": "pending2-oldest-retire-timing-02",
+      "binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
+      "input_hashes": 13,
+      "games": 0,
+      "utc": "2026-11-18T10:48:20.400Z"
     }
   ],
   "communication_test": {
@@ -3500,10 +3510,20 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": false,
+    "started": true,
     "completed": false,
     "reserved_at_utc": "2026-11-18T10:43:55.566Z",
-    "default_changed": false
+    "default_changed": false,
+    "binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
+    "counts": {
+      "configure": 1,
+      "engine_build": 1,
+      "games": 0,
+      "gpu_runs": 0,
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0
+    }
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3569,7 +3589,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "HQ3 to run one isolated configure/build with the known OpenAL path, then one diagnostic game after static and runtime preflights",
+  "next_action": "HQ3 to run the sealed cap2 diagnostic once and close from observed receipts",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,

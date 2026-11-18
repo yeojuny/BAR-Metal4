@@ -1,0 +1,22 @@
+{
+  "status": "STAGED_NO_GAME",
+  "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+  "arm": "R68_CAP2",
+  "cap": 2,
+  "binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
+  "original_binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
+  "input_hashes_match": 13,
+  "measure_simulation": [
+    540,
+    1740
+  ],
+  "diagnostic_only": true,
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}
