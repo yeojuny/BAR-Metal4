@@ -2,24 +2,23 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 250,
+  "revision": 252,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+  "round_id": "ground-decal-g04-exceptional-20261118-94",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "ground-decal-g04-witness-recovery-20261118-93",
-    "scope": "Recover G04 equivalence using R83 positive-witness data and the current R88-parent shader. Pure fixture; both AA0 shadow variants. No engine change or timed game.",
-    "fixture_binary_sha256": "d4bbdf87712b5841018cbeaba6115dd43b393cc454261441c3981888038c8ba7",
-    "fixture_source_sha256": "29f21458d407c8499fb5cd76a27bbf6e917e201df29070daad0ef2e71e7a78d9",
-    "g04_variant_sha256": "e479ff2e85e388b7c31ec3fc02b8ad3b8e2e41679df493554ec40ecb3f2e4391",
+    "round_id": "ground-decal-g04-exceptional-20261118-94",
+    "scope": "Use the saved G04 exceptional inputs on GPU with the current source variant. No timed game.",
+    "fixture_binary_sha256": "3d3493ec1c2252c5273d824e30fc6a4f1a922921c1e10c5b5270d766974ba661",
+    "fixture_source_sha256": "6c4782f16ce676331cf96ea4fb695e42d0b97aacac94f6472eaa19203fe220de",
     "budget": {
-      "fixture_compiles": 1,
+      "fixture_compiles": 2,
       "fixture_runs": 1,
       "games": 0,
       "engine_builds": 0,
@@ -28,10 +27,10 @@
       "retries": 0
     }
   },
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-g04-witness-recovery-20261118-93/REQUEST.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-g04-witness-recovery-20261118-93/RESULT.json",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-g04-exceptional-20261118-94/REQUEST.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-g04-exceptional-20261118-94/RESULT.json",
   "decision": null,
-  "execution_status": "ONE_R83_WITNESS_RECOVERY_FIXTURE_ONLY",
+  "execution_status": "ONE_G04_EXCEPTIONAL_FIXTURE_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4414,6 +4413,18 @@
       "status": "RUNNING",
       "owner": "HQ3",
       "action": "One recovery fixture based on R83 known positive witnesses; no engine build or game."
+    },
+    {
+      "revision": 251,
+      "status": "DONE",
+      "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+      "action": "Both actual AA0 shadow variants passed 72 indexed and 72 unblended float cases."
+    },
+    {
+      "revision": 252,
+      "status": "RUNNING",
+      "round_id": "ground-decal-g04-exceptional-20261118-94",
+      "action": "Run exceptional-input stage comparison once following real-shader parity."
     }
   ],
   "communication_test": {
@@ -4497,11 +4508,11 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "g04-r83-witness-01",
+    "attempt_id": "g04-exceptional-fixture-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
-      "fixture_compiles": 1,
+      "fixture_compiles": 2,
       "fixture_runs": 1,
       "games": 0,
       "engine_builds": 0,
@@ -4512,7 +4523,7 @@
     "started": true,
     "completed": false,
     "games_started": false,
-    "reserved_at_utc": "2026-11-18T17:30:30.173655+00:00",
+    "reserved_at_utc": "2026-11-18T17:32:30.262567+00:00",
     "default_changed": false
   },
   "model_and_context_policy": {

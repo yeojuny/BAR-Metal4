@@ -1,0 +1,15 @@
+{
+  "round_id": "ground-decal-g04-exceptional-20261118-94",
+  "scope": "Use the saved G04 exceptional inputs on GPU with the current source variant. No timed game.",
+  "fixture_binary_sha256": "3d3493ec1c2252c5273d824e30fc6a4f1a922921c1e10c5b5270d766974ba661",
+  "fixture_source_sha256": "6c4782f16ce676331cf96ea4fb695e42d0b97aacac94f6472eaa19203fe220de",
+  "budget": {
+    "fixture_compiles": 2,
+    "fixture_runs": 1,
+    "games": 0,
+    "engine_builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}
