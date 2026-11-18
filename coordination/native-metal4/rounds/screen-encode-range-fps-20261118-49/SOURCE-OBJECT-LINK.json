@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "binary_sha256": "52a15450c649fd5e17bf6f9db48fc473691c11ff01f476c658d265fe5fa0fe4b",
+  "architecture": "arm64",
+  "link": "[1577/1578] Linking CXX executable spring-metal4-scene",
+  "sources": {
+    "Metal4ScreenNative.mm": {
+      "object": "rts/builds/metal4-scene/metal4-renderer/CMakeFiles/recoil-metal4-renderer.dir/Metal4ScreenNative.mm.o",
+      "sha256": "7da1d193b06fb327963b470f287f01f7d90a83eed3c29e72d76ee72584c2d567",
+      "link_binding": "rts/builds/metal4-scene/metal4-renderer/librecoil-metal4-renderer.a"
+    }
+  },
+  "archive_members_match_objects": true,
+  "literals_present": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": true,
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": true,
+    "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": true,
+    "[NativeScreenEncodeRange] indexed=%u first=%u end=%u total_draws=%zu visited_draws=%zu": true
+  }
+}

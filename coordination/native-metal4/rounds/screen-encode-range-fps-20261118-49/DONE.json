@@ -1,0 +1,59 @@
+{
+  "round_id": "screen-encode-range-fps-20261118-49",
+  "attempt_id": "encode-range-off-on-01",
+  "status": "DONE",
+  "reservation_commit": "97068a4714e7f90bd890dae210157fea683dd413",
+  "binary_sha256": "52a15450c649fd5e17bf6f9db48fc473691c11ff01f476c658d265fe5fa0fe4b",
+  "fps": {
+    "OFF": 64.71044197700739,
+    "ON": 65.61515687511208,
+    "relative_percent": 1.3980972320141838
+  },
+  "valid_matched_pair": true,
+  "all_counted_frames_retained": true,
+  "counts": {
+    "configure": 1,
+    "engine_builds": 1,
+    "cpu_fixtures": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "cleanup_complete": true,
+  "activation": {
+    "first_nonempty_partial_range_by_arm": {
+      "RANGE_OFF": [
+        {
+          "line": 2239,
+          "text": "[t=00:00:16.618789][f=0000000] [NativeScreenEncodeRange] indexed=0 first=0 end=1 total_draws=70 visited_draws=70",
+          "indexed": 0,
+          "first": 0,
+          "end": 1,
+          "total_draws": 70,
+          "visited_draws": 70,
+          "within_timed_window": false,
+          "simulation_tick": 0
+        }
+      ],
+      "RANGE_ON": [
+        {
+          "line": 2256,
+          "text": "[t=00:00:17.646083][f=0000030] [NativeScreenEncodeRange] indexed=1 first=0 end=1 total_draws=76 visited_draws=1",
+          "indexed": 1,
+          "first": 0,
+          "end": 1,
+          "total_draws": 76,
+          "visited_draws": 1,
+          "within_timed_window": false,
+          "simulation_tick": 30
+        }
+      ]
+    },
+    "witness_limit": "One receipt per game from the real EncodeRange function. Counts describe this invocation only.",
+    "on_visited_fewer_draws": true
+  },
+  "default": "OFF",
+  "report_sha256": "bff04f36087a98f00ba070e6608a2932bc87d02114c7d04ab9e67c6cd775809d"
+}

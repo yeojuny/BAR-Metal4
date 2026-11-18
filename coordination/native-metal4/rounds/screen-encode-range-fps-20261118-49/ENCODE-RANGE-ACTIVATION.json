@@ -1,0 +1,32 @@
+{
+  "first_nonempty_partial_range_by_arm": {
+    "RANGE_OFF": [
+      {
+        "line": 2239,
+        "text": "[t=00:00:16.618789][f=0000000] [NativeScreenEncodeRange] indexed=0 first=0 end=1 total_draws=70 visited_draws=70",
+        "indexed": 0,
+        "first": 0,
+        "end": 1,
+        "total_draws": 70,
+        "visited_draws": 70,
+        "within_timed_window": false,
+        "simulation_tick": 0
+      }
+    ],
+    "RANGE_ON": [
+      {
+        "line": 2256,
+        "text": "[t=00:00:17.646083][f=0000030] [NativeScreenEncodeRange] indexed=1 first=0 end=1 total_draws=76 visited_draws=1",
+        "indexed": 1,
+        "first": 0,
+        "end": 1,
+        "total_draws": 76,
+        "visited_draws": 1,
+        "within_timed_window": false,
+        "simulation_tick": 30
+      }
+    ]
+  },
+  "witness_limit": "One receipt per game from the real EncodeRange function. Counts describe this invocation only.",
+  "on_visited_fewer_draws": true
+}
