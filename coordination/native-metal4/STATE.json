@@ -1,56 +1,50 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 274,
+  "revision": 275,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "r96-decal-abba-20261118",
+  "round_id": "memory-cold-glow-20261118",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "r96-decal-abba-20261118",
-    "order": [
+    "round_id": "memory-cold-glow-20261118",
+    "approval_message_id": "Sentinel_73b59f3bda748191aedaa40b1b61b703",
+    "source": "R88 signed native lineage, R85 compile db and actual R88 layered source",
+    "zip_sha256": "652343159d834da18d6f0b94432029ff6f8e7ffd68ccc1938c6ae948bb1ea199",
+    "memory_patch_sha256": "b5054e09f9a24c341dabbd5f8fdb59ba141b862ffeb8acee7d689f74162cdff1",
+    "previous_abba_sha256": "6fa4dc677d54d5b3e6be5f418bdbbf181cf80f6f0b4795955da2bbf4a762101d",
+    "prior_raw_frame_hashes_verified": 22,
+    "fixed_lifetime": "preserve 13 exact Seths input hashes; verify effective saved lifetime in live smoke",
+    "smoke": [
+      "SMOKE_MEM_OFF",
+      "SMOKE_MEM_ON"
+    ],
+    "abba": [
       "A1_OFF",
       "B1_ON",
       "B2_ON",
       "A2_OFF"
     ],
-    "groups": [
-      "R96-seths",
-      "R99-seths",
-      "R99-simmers",
-      "R98-seths",
-      "R98-simmers",
-      "R100-seths",
-      "R100-simmers"
-    ],
-    "skips": [
-      {
-        "candidate": 96,
-        "scene": "simmers",
-        "status": "ACTIVATION_UNPROVEN",
-        "reason": "Historic shader link exists; eligible offscreen ray work is unverified."
-      }
-    ],
     "budget": {
-      "games": 28,
-      "engine_builds": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
+      "smoke_games": 2,
+      "timed_games": 4,
+      "games": 6,
+      "game_retries": 0,
+      "engine_configures": 0,
+      "gpu_profiles": 0
     },
-    "approval_message_id": "Sentinel_e26586c906988191acaed155b28ffb21",
-    "default_changed": false
+    "scope": "Local memory reporting on Apple, native Lua and optional HUD smoke, then cold-glow alone on new baseline. No product defaults or release changes."
   },
-  "ready_path": "coordination/native-metal4/rounds/r96-decal-abba-20261118/READY.json",
-  "result_path": "coordination/native-metal4/rounds/r96-decal-abba-20261118/RESULT.json",
-  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
-  "execution_status": "ABBA_PARTIAL",
+  "ready_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/READY.json",
+  "result_path": "coordination/native-metal4/rounds/memory-cold-glow-20261118/RESULT.json",
+  "decision": null,
+  "execution_status": "MEMORY_SOURCE_AND_BUILD_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4577,6 +4571,12 @@
       "status": "DONE",
       "round_id": "r96-decal-abba-20261118",
       "action": "closed"
+    },
+    {
+      "revision": 275,
+      "status": "RUNNING",
+      "round_id": "memory-cold-glow-20261118",
+      "action": "reserve"
     }
   ],
   "communication_test": {
@@ -4660,33 +4660,22 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "r96-decal-abba-20261118-01",
+    "attempt_id": "memory-cold-glow-20261118-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
-      "games": 28,
-      "engine_builds": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
+      "smoke_games": 2,
+      "timed_games": 4,
+      "games": 6,
+      "game_retries": 0,
+      "engine_configures": 0,
+      "gpu_profiles": 0
     },
     "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T20:11:29.631538+00:00",
-    "default_changed": false,
-    "ready_sha256": "f52e2e1f481805fc799f1e6abbdb0cf67ebd90776a78b9b210be55c5e6bebc97",
-    "game_seal_utc": "2026-11-18T20:11:34.458942+00:00",
-    "finished_at_utc": "2026-11-18T21:34:19.174251+00:00",
-    "counts": {
-      "games": 22,
-      "completed_groups": 5,
-      "builds": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-18T21:45:54.058311+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
