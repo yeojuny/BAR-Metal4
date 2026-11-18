@@ -1,0 +1,27 @@
+{
+  "round_id": "pending2-ticket-timeline-20261118-69",
+  "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "counted_simulation": [
+    540,
+    1740
+  ],
+  "cap": 2,
+  "default_cap": 1,
+  "parent_round": "pending2-oldest-retire-diag-envfix-20261118-68",
+  "parent_binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
+  "diagnostic_patch_sha256": "aaff24a9a2aee70a2b5622cd5c91e86e89e91a57fa536af11ee110018410a7e2",
+  "child_PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+  "openal_version": "1.25.2",
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "diagnostic_only": true,
+  "source_timing_api": "MTL4CommitFeedback GPUStartTime/GPUEndTime, host seconds; check actual values against commit/feedback and an uptime/Core Animation reference",
+  "output": "Bounded draw, ticket and reclaim records in one game-end export"
+}

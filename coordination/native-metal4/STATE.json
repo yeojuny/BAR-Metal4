@@ -1,22 +1,22 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ",
   "enabled": true,
-  "revision": 195,
+  "revision": 196,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+  "round_id": "pending2-ticket-timeline-20261118-69",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
   "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
-  "request": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/DONE.json",
-  "decision": "CAP2_DIAGNOSTIC_COMPLETE_CPU_OWNER_RELEASE_SMALL",
-  "execution_status": "HQ3_ROUND68_DIAGNOSTIC_COMPLETE",
+  "request": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/READY.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/DONE.json",
+  "decision": "ONE_FIXED_CAP2_TICKET_TIMELINE_DIAGNOSTIC",
+  "execution_status": "CONFIGURE_BUILD_RESERVED",
   "blocked_reason": null,
   "history": [
     {
@@ -3454,6 +3454,21 @@
       },
       "default_changed": false,
       "utc": "2026-11-18T10:57:09.354Z"
+    },
+    {
+      "event": "HQ3_ROUND69_EXACT_EVENT_GPU_TIMELINE_RESERVED",
+      "revision": 196,
+      "round_id": "pending2-ticket-timeline-20261118-69",
+      "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T11:04:00.598Z"
     }
   ],
   "communication_test": {
@@ -3537,7 +3552,7 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-oldest-retire-timing-02",
+    "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
     "budget": {
       "configure": 1,
       "engine_build": 1,
@@ -3548,22 +3563,10 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "owner": "HQ3",
-    "started": true,
-    "completed": true,
-    "reserved_at_utc": "2026-11-18T10:43:55.566Z",
-    "default_changed": false,
-    "binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
-    "counts": {
-      "configure": 1,
-      "engine_build": 1,
-      "games": 1,
-      "gpu_helper_runs": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "ended_at_utc": "2026-11-18T10:49:52.764356+00:00",
-    "cleanup_complete": true
+    "started": false,
+    "completed": false,
+    "reserved_at_utc": "2026-11-18T11:04:00.598Z",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3629,7 +3632,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Offline review complete. Preserve cap1 and await a separately authorized exact-event GPU clock diagnostic before testing a scheduling change.",
+  "next_action": "HQ3 to perform one isolated configure and build, seal the timeline diagnostic, and launch once after preflight.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
