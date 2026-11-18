@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+  "architecture": "arm64",
+  "link": "[1577/1578] Linking CXX executable spring-metal4-scene",
+  "sources": {
+    "Metal4SensorLOSNative.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4SensorLOSNative.mm.o",
+      "sha256": "262f1482df7075a993a7812e2a1a8910cfebb002af68440a0e4aebe73a63389b",
+      "archive": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/build/rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "verified_header_dependencies": [
+        "Metal4FixedTriangleIndexBuffer.h",
+        "NativeTriangleReuseIndices.h"
+      ]
+    }
+  },
+  "archive_members_match_objects": true,
+  "literals_present": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": true,
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": true,
+    "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": true,
+    "[NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=%s": true
+  }
+}

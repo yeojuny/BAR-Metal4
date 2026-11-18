@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/build/spring-metal4-scene",
+  "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+  "bytes": 65742400,
+  "config_log_sha256": "b4ababc1bf6b9bf6a9acfc13db241748830b7f9e6b19469fb6c78add2bca9f32",
+  "build_log_sha256": "f00ad3df47b4164842df4857b472b385b0e8d22b182b432730921c09b633e17d"
+}

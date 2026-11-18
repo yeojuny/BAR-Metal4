@@ -1,0 +1,219 @@
+{
+  "arms": {
+    "SLAB_OFF": {
+      "gamedecal_small": {
+        "indexed": [
+          {
+            "line": 2260,
+            "text": "[t=00:00:18.190471][f=0000060] [NativeIndexedRoute] family=gamedecal_small mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 60,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "sensorlos_outline": {
+        "indexed": [
+          {
+            "line": 2243,
+            "text": "[t=00:00:16.289924][f=0000001] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+            "outline_upload": "separate",
+            "log_simulation_tick": 1,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "sensorlos_r8_fan": {
+        "indexed": [
+          {
+            "line": 2241,
+            "text": "[t=00:00:16.289562][f=0000001] [NativeIndexedRoute] family=sensorlos_r8_fan mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 1,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "radar_sonar_circle": {
+        "indexed": [
+          {
+            "line": 2244,
+            "text": "[t=00:00:16.289946][f=0000001] [NativeIndexedRoute] family=radar_sonar_circle mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 1,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "healthbars": {
+        "indexed": [
+          {
+            "line": 2245,
+            "text": "[t=00:00:16.290032][f=0000001] [NativeIndexedRoute] family=healthbars mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 1,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "unit_stencil": {
+        "indexed": [
+          {
+            "line": 2186,
+            "text": "[t=00:00:13.245875][f=-000001] [NativeIndexedRoute] family=unit_stencil mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": -1,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      }
+    },
+    "SLAB_ON": {
+      "gamedecal_small": {
+        "indexed": [
+          {
+            "line": 2248,
+            "text": "[t=00:00:49.240320][f=0000064] [NativeIndexedRoute] family=gamedecal_small mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 64,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "sensorlos_outline": {
+        "indexed": [
+          {
+            "line": 2230,
+            "text": "[t=00:00:49.003587][f=0000029] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+            "outline_upload": "slab",
+            "log_simulation_tick": 29,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "sensorlos_r8_fan": {
+        "indexed": [
+          {
+            "line": 2228,
+            "text": "[t=00:00:49.003113][f=0000029] [NativeIndexedRoute] family=sensorlos_r8_fan mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 29,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "radar_sonar_circle": {
+        "indexed": [
+          {
+            "line": 2231,
+            "text": "[t=00:00:49.003608][f=0000029] [NativeIndexedRoute] family=radar_sonar_circle mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 29,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "healthbars": {
+        "indexed": [
+          {
+            "line": 2232,
+            "text": "[t=00:00:49.003693][f=0000029] [NativeIndexedRoute] family=healthbars mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": 29,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "unit_stencil": {
+        "indexed": [
+          {
+            "line": 2186,
+            "text": "[t=00:00:44.846391][f=-000001] [NativeIndexedRoute] family=unit_stencil mode=indexed",
+            "outline_upload": null,
+            "log_simulation_tick": -1,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      }
+    }
+  },
+  "summary": {
+    "SLAB_OFF": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    },
+    "SLAB_ON": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    }
+  },
+  "scope": "After an actual encode, once per process for each family and route. GameDecal witness is restricted to the small-geometry path. Unit Stencil clear excluded. Timestamp can show that first encode lies inside the measurement window; it does not provide later counts."
+}

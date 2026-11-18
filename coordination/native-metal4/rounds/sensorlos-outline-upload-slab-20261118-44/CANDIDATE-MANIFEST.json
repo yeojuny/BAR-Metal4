@@ -1,0 +1,38 @@
+{
+  "status": "READY_FRESH_SENSORLOS_OUTLINE_SLAB",
+  "baseline_source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "combined_parent_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "combined_parent_binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "source_paths_verified": 10274,
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+      "previous_sha256": "3ca8523331c8bcfd97b72973da7e3781ed33c6ab8c764f84c9d6f802ec2564f5",
+      "candidate_sha256": "518a9592b19dc6cda2c4f4b9e29b618a3b01433eb481ce73d72d3f509569a43f"
+    }
+  ],
+  "patch_sha256": "375b3fb86b1b0edcccadea63f7c7a8e769daf30054d6cb0990a194dc3ce263d5",
+  "flag": {
+    "name": "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB",
+    "off": "0",
+    "on": "1",
+    "default": "off"
+  },
+  "fixed_environment": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1"
+  },
+  "lifetime": "Fresh shared MTLBuffer registered once with RuntimeLease::AddAllocation before binding, strongly owned until pending submission retirement.",
+  "external_idea": {
+    "contributor": "Patrice Déry (PowerBeef)",
+    "repository": "PowerBeef/d2r-metal",
+    "commit": "602db5fc30d4ce50683435cb0745cb171fce2064",
+    "source_sha256": "49966e39832c68b0ad7b9d81f3eb2dca3b4801e82e57e31a3a745e17ec934fe5",
+    "source_path": "dm/gfx/nvn/nvn_mtl.m",
+    "url": "https://github.com/PowerBeef/d2r-metal/blob/602db5fc30d4ce50683435cb0745cb171fce2064/dm/gfx/nvn/nvn_mtl.m#L3948-L3959",
+    "source_scope": "Submission-owned arena slice and GPU base plus offset. The D2R code also caches by table generation.",
+    "adaptation_scope": "Independent BAR implementation for fresh per-outline staging, using the existing BAR lease. No external code, generation cache or reused arena is introduced.",
+    "requiredPublicCredit": "Fresh SensorLOS upload packing takes the submission-owned slice idea from Patrice Déry (PowerBeef), d2r-metal commit 602db5fc30d4ce50683435cb0745cb171fce2064."
+  },
+  "utc": "2026-11-18T01:03:47.026288+00:00"
+}

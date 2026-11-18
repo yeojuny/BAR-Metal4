@@ -1,0 +1,128 @@
+{
+  "status": "DONE",
+  "decision": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
+  "round_id": "sensorlos-outline-upload-slab-20261118-44",
+  "attempt_id": "outline-upload-slab-off-on-01",
+  "order": [
+    "SLAB_OFF",
+    "SLAB_ON"
+  ],
+  "counts": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "helper_compiles": 0,
+    "helper_gpu_invocations": 0,
+    "games": 2,
+    "off_games": 1,
+    "on_games": 1,
+    "normal_exits": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "source_manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
+  "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+  "single_pair": true,
+  "fps_by_arm": {
+    "SLAB_OFF": 65.39134509310635,
+    "SLAB_ON": 65.1668524034946
+  },
+  "relative_percent": -0.3433064257848062,
+  "first_outline_encode": {
+    "receipts": {
+      "SLAB_OFF": {
+        "line": 2243,
+        "text": "[t=00:00:16.289924][f=0000001] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+        "outline_upload": "separate",
+        "log_simulation_tick": 1,
+        "logged_within_timed_window": false
+      },
+      "SLAB_ON": {
+        "line": 2230,
+        "text": "[t=00:00:49.003587][f=0000029] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+        "outline_upload": "slab",
+        "log_simulation_tick": 29,
+        "logged_within_timed_window": false
+      }
+    },
+    "both_upload_modes_witnessed": true,
+    "allocation_delta_per_admitted_outline": {
+      "off": 3,
+      "on": 1
+    },
+    "scope": "First actual indexed outline encode only. Allocation count follows the verified branches; later frame-wide totals were not instrumented."
+  },
+  "all_counted_frames_retained": true,
+  "workload_match": {
+    "same_scene": true,
+    "same_camera": true,
+    "same_simulation_window": true,
+    "same_combat_seed": true,
+    "same_synced_create_destroy_counts": true,
+    "bin_boundaries_and_visible_units_match": true,
+    "both_bins_contiguous": true
+  },
+  "frame_time": {
+    "SLAB_OFF": {
+      "count": 2614,
+      "mean_ms": 15.293420519892885,
+      "median_ms": 15.0,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.000001,
+      "frames_over_100_ms": [],
+      "all_interval_rows_kept": true,
+      "max_ms": 28.999999,
+      "slowest_1_percent_mean_ms": 18.11111077777778,
+      "one_percent_low_fps": 55.214724942602295
+    },
+    "SLAB_ON": {
+      "count": 2606,
+      "mean_ms": 15.346124797390637,
+      "median_ms": 15.0,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.000001,
+      "frames_over_100_ms": [
+        {
+          "draw": 2972,
+          "ms": 266.000003
+        }
+      ],
+      "all_interval_rows_kept": true,
+      "max_ms": 266.000003,
+      "slowest_1_percent_mean_ms": 27.518518703703702,
+      "one_percent_low_fps": 36.339165300543975
+    }
+  },
+  "cleanup_complete": true,
+  "protected_hashes_verified": true,
+  "artifactSHA256": {
+    "REPORT.md": "0ff14acff2dee9888b4ecfbb2a9667061f11e8d9d72b7990bd30b81c0c24388b",
+    "FPS-EVIDENCE.json": "13bfa74faa350bf113607573a5e36db3942a56eccec6c48531019e682eb74ddf",
+    "FPS-BINS.csv": "8063657a1a32abca93fb626ecdcbf4d4cb7389089d2ec2deeda36a235af24830",
+    "STAGING-EVIDENCE.json": "dc025da2514c3416619e17b1cb13f89d1157d3645096561b27171359e498fc39",
+    "PATH-ACTIVATION.json": "c42858a03f8b3e498d62257e5dac39fe8bea7ba67bb3927f713a71981908176b",
+    "SLAB-ACTIVATION.json": "7c4da251ffa8692458e10c22d5fc26070c25e53ab4ef4838f8e7d1d45beee457",
+    "DEPENDENCY-EVIDENCE.json": "98cc46053ca2358e9efe1973c08f9d2c0d8230c8eb69ac264ca350c8bb17fe93",
+    "CLEANUP-EVIDENCE.json": "84688c05ef5a8249a74cd058b62feb36ecbd1d17ff132acc41bac332ea2b3fee",
+    "PROTECTED-HASHES.json": "aaa5af4eb7ecaa9178996de1cfa06cb093b9dbe558b00f68117bb383c5df945e",
+    "RUNNER-CLOSED.json": "590c6f153ceacd9ecb840ff6c08e53ef50b459fc8573625b14b3e573c3fb9cc6",
+    "TIMING-NOTES.json": "c819350db523d0de9db77eb09104caacd34651fbf2dce98db945d81cc5882350",
+    "BUILD-INPUTS.json": "b53f7178383610b215dc984e5cb8bb8130200151f2250aa9bdceb0c1f9e79c33",
+    "CONFIGURE-RECEIPT.json": "22eccec4e6811e7f73cd92031070005b3367b2db895f9ad1f2cf64d4d9a854aa",
+    "BUILD-RECEIPT.json": "96db00ebc3043bb0fcf766fb7674a07d9c889ebdb42f4d9e0df8390af654f7d1",
+    "BUILD-RESULT.json": "282ed28ec1ff22a3bea9089a891fcbf52fe628aad8435546324cdefefd582ed8",
+    "SOURCE-OBJECT-LINK.json": "9a68a87f79ef2506e41374e6527bd155ae247ea79dfdbeccdec555dcbbc5bca0",
+    "CANDIDATE-MANIFEST.json": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
+    "SENSORLOS-OUTLINE-UPLOAD-SLAB.patch": "375b3fb86b1b0edcccadea63f7c7a8e769daf30054d6cb0990a194dc3ce263d5",
+    "UPSTREAM-CONTRIBUTIONS.json": "7f662af2421edb26623fdd19ab38c784936425b7d6f7694bc20e0662bc4a95cf",
+    "WORK-RECORD.json": "f31f0090c6f0289277da33d3f0faec69d4cc722bd09ee710d73284541cad80a8",
+    "FOLLOWUP-CANDIDATES.md": "8e5c5c257154c3e02aa5ddb18353135127f7f3852eba8fb9e34b46b7ed6d75de",
+    "SLAB_OFF-FRAME-TIMES.csv": "4a54b201e931096e0888baf4d62b0fcd4fd4d2b47b78544748af4d2cd724c228",
+    "SLAB_OFF-CHILD-MODE.json": "9a61eb6d3f5bf6471fe19265bed83653a752e7a0a7be5e758c24c3b4cad8a288",
+    "SLAB_OFF-CLEANUP.json": "f5962c61569108c0d2a0b7b96d5bf3c8b91d1dca716f6dad9c453b1b5661e8b8",
+    "SLAB_ON-FRAME-TIMES.csv": "3bf34867de99599c7e9647939dc95c34842a0d6b9c5fe5075851d7c1c5d8ca60",
+    "SLAB_ON-CHILD-MODE.json": "25a38d607d5d72cc5aeef00d1ab3cc78abafaf53605ad709ab92b3cdfc05f6f1",
+    "SLAB_ON-CLEANUP.json": "251617b8b291e5a971c94a5666d26f6490a54f794d28f9b11d7813962a63a228"
+  }
+}
