@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 180,
+  "revision": 181,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/DONE.json",
-  "decision": null,
-  "execution_status": "HQ3_ROUND61_SIGNED_EXACT_RTT_READY_FOR_TWO_GAMES",
+  "decision": "EXACT_RTT_GATE_REMOVED_UNCLASSIFIED_CPU_PRIOR_READS_BLOCK_CAP2",
+  "execution_status": "HQ3_ROUND61_COMPLETED_TWO_GAMES_OTHER_CPU_PRIOR_READS_BLOCK_CAP2",
   "blocked_reason": null,
   "history": [
     {
@@ -3253,6 +3253,17 @@
       "utc": "2026-11-18T09:24:57.235132+00:00",
       "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
       "games": 0
+    },
+    {
+      "event": "HQ3_ROUND61_COMPLETED_TWO_GAMES_OTHER_CPU_PRIOR_READS_BLOCK_CAP2",
+      "revision": 181,
+      "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+      "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+      "utc": "2026-11-18T09:30:12.059261+00:00",
+      "games": 2,
+      "cap2_actual_pending_pairs": 0,
+      "cap2_unclassified_cpu_prior_read_frames": 2555,
+      "cap2_screen_rtt_gate_frames": 0
     }
   ],
   "communication_test": {
@@ -3348,17 +3359,21 @@
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "started": true,
-    "completed": false,
+    "completed": true,
     "reserved_at_utc": "2026-11-18T09:19:47.549491+00:00",
     "counts": {
       "configure": 1,
       "engine_build": 1,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
-    "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3"
+    "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+    "ended_at_utc": "2026-11-18T09:30:12.059261+00:00",
+    "cleanup_complete": true,
+    "artifact_commit": "3e592d9920efb3dc8b45f4afffa6c8765cee61b0",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3424,7 +3439,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Build the exact RTT source and run one timed game per cap.",
+  "next_action": "Classify the remaining CPU prior-read gate before any further authorized experiment. No default promotion.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
