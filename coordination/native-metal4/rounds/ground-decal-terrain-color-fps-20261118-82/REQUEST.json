@@ -1,0 +1,41 @@
+{
+  "round_id": "ground-decal-terrain-color-fps-20261118-82",
+  "attempt_id": "ground-decal-aa0-terrain-color-off-on-01",
+  "source_round": "weapon-range-exact-interior-recovery-20261118-81",
+  "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+  "type_proof_sha256": "a8fa37d9a7079f72769e4bacafe5dc85fd5e0eec7eb48198f936157c7e8dc46f",
+  "fixture_sha256": "f70659825fc0bd79b1fba9ef052ee2e5a245c2d5743cd194dfa0ea5b0671d7db",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "order": [
+    "OFF",
+    "ON"
+  ],
+  "switch": "BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR",
+  "cap": 2,
+  "aa": 0,
+  "matching_scene_inputs": 13,
+  "prejoin": "OFF",
+  "cpu_read_mode": 0,
+  "fixed_sensorlos": "ON",
+  "fixed_sensor31657": "ON",
+  "fixed_weapon_range": "OFF",
+  "fixed_range_division233": "OFF",
+  "default_cap": 1,
+  "default_switch": "OFF",
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "games": 2,
+    "max_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  }
+}
