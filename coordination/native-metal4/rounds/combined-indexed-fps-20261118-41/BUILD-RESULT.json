@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build/spring-metal4-scene",
+  "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "bytes": 65717840,
+  "config_log_sha256": "d6f386fa93549b7778691ff03b600713f5faf756073fca60d7c5fafe88dc5f3e",
+  "build_log_sha256": "20b35508ad167507a9b91e186f2272c9007f1399e603a37de19de8987d4c6432"
+}

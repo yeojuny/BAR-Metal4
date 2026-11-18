@@ -1,0 +1,289 @@
+diff --git a/engine/rts/Rendering/Metal4/Metal4GameDecal.mm b/engine/rts/Rendering/Metal4/Metal4GameDecal.mm
+index 4105fd4..6b9ad1c 100644
+--- a/engine/rts/Rendering/Metal4/Metal4GameDecal.mm
++++ b/engine/rts/Rendering/Metal4/Metal4GameDecal.mm
+@@ -1,9 +1,11 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "Metal4GameDecal.h"
++#include "Metal4GameDecalGeometryIndices.h"
+ #include "Metal4InterventionMath.h"
+ #include "NativeGameDecalShaders.h"
+ #include "Rendering/Metal4/Metal4NativeEffectState.h"
+ #import <simd/simd.h>
++#include <cstdlib>
+ #include <cstring>
+ #include <map>
+ #include <tuple>
+@@ -19,6 +21,14 @@ struct Uniform {
+ 	simd_float4 alpha;
+ };
+ static_assert(sizeof(Uniform)==352);
++bool IndexedSmallGeometryEnabled()
++{
++	static const bool enabled=[] {
++		const char* value=std::getenv("BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY");
++		return value && std::strcmp(value,"1")==0;
++	}();
++	return enabled;
++}
+ id<MTLBuffer> Upload(RuntimeLease& lease,const void* bytes,std::size_t size)
+ {
+ 	Require(size && size<=lease.Device().maxBufferLength,"Original game decal buffer exceeds actual device capacity");
+@@ -72,16 +82,32 @@ void PreparedGameDecal::EncodeDraw(std::size_t index,id<MTL4RenderCommandEncoder
+ 	if(draw.indices){
+ 		const auto offset=std::size_t(draw.first)*draw.indexStride;
+ 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:draw.indexType indexBuffer:draw.indices.gpuAddress+offset indexBufferLength:draw.indices.length-offset instanceCount:draw.instances];
+-	}else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:96 instanceCount:draw.instances];
++	}else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:gameDecalGeometry::VertexSlots instanceCount:draw.instances];
+ }
+ struct GameDecalGPU::Impl {
+ 	__strong id<MTLLibrary> library=nil;
++	__strong id<MTLBuffer> smallGeometryIndices=nil;
+ 	using Key=std::tuple<unsigned,MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,unsigned,bool,std::uint64_t,bool>;
+ 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
+ 	struct CachedBuffer{std::weak_ptr<const NativeBufferSnapshot> owner;__strong id<MTLBuffer> buffer=nil;};
+ 	std::unordered_map<const NativeBufferSnapshot*,CachedBuffer> buffers;
+ 	struct CachedSampler{ScreenSampler source;bool shadow=false;__strong id<MTLSamplerState> sampler=nil;};
+ 	std::vector<CachedSampler> samplers;
++	id<MTLBuffer> SmallGeometryIndexBuffer(RuntimeLease& lease)
++	{
++		if (!smallGeometryIndices || smallGeometryIndices.device != lease.Device()) {
++			constexpr auto bytes=gameDecalGeometry::Indices.size()*sizeof(std::uint16_t);
++			auto buffer=Upload(lease,gameDecalGeometry::Indices.data(),bytes);
++			const auto address=buffer.gpuAddress;
++			Require(buffer.length==bytes && address!=0 && (address & 1u)==0,
++				"Indexed small GameDecal requires the exact aligned UInt16 template");
++			buffer.label=@"BAR indexed small GameDecal geometry";
++			smallGeometryIndices=buffer;
++		} else {
++			lease.AddAllocation(smallGeometryIndices);
++		}
++		return smallGeometryIndices;
++	}
+ 	id<MTLBuffer> Buffer(RuntimeLease& lease,const NativeBufferSnapshotRef& source,std::size_t used)
+ 	{
+ 		Require(used && used<=source->bytes.size(),"Original game decal GPU read exceeds immutable buffer");
+@@ -126,7 +152,7 @@ struct GameDecalGPU::Impl {
+ };
+ GameDecalGPU::GameDecalGPU():impl(std::make_unique<Impl>()){}
+ GameDecalGPU::~GameDecalGPU()=default;
+-void GameDecalGPU::ClearResources(){impl->buffers.clear();impl->samplers.clear();}
++void GameDecalGPU::ClearResources(){impl->buffers.clear();impl->samplers.clear();impl->smallGeometryIndices=nil;}
+ void GameDecalGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,double& milliseconds)
+ {
+ 	ScreenBlendState blend;
+@@ -158,9 +184,11 @@ std::unique_ptr<PreparedGameDecal> GameDecalGPU::Prepare(RuntimeLease& lease,con
+ 		if(scissor && !scissor->windowCoordinates){scissor->x+=originalCamera.viewport[0];scissor->y+=originalCamera.viewport[1];scissor->windowCoordinates=true;}
+ 		auto raster=effectstate::Viewport(rasterCamera,width,height,logicalWidth,logicalHeight,scissor);if(!raster)continue;
+ 		const bool small=draw.program==NativeGameDecalProgram::Geometry;
++		const bool indexedSmall=small && IndexedSmallGeometryEnabled();
+ 		auto vertices=impl->Buffer(lease,draw.vertices,small?std::size_t(draw.first+draw.count)*80:draw.vertices->bytes.size());
+ 		auto instances=small?nil:impl->Buffer(lease,draw.instances,std::size_t(draw.firstInstance+draw.instanceCount)*80);
+-		auto indices=small?nil:impl->Buffer(lease,draw.indices,std::size_t(draw.first+draw.count)*draw.indices->layout.stride);
++		auto indices=indexedSmall?impl->SmallGeometryIndexBuffer(lease):
++			(small?nil:impl->Buffer(lease,draw.indices,std::size_t(draw.first+draw.count)*draw.indices->layout.stride));
+ 		Uniform u{};std::memcpy(&u.viewProjection,uniforms.cameraViewProjection.data(),64);std::memcpy(&u.viewInverse,uniforms.cameraViewInverse.data(),64);std::memcpy(&u.shadowView,uniforms.shadowView.data(),64);
+ 		std::memcpy(&u.time,uniforms.timeInfo.data(),16);std::memcpy(&u.mapSize,uniforms.mapSize.data(),16);std::memcpy(&u.sunDirection,uniforms.sunDirection.data(),16);std::memcpy(&u.sunAmbient,uniforms.sunAmbient.data(),16);std::memcpy(&u.sunDiffuse,uniforms.sunDiffuse.data(),16);
+ 		std::memcpy(&u.waterAbsorb,draw.water.absorb.data(),12);std::memcpy(&u.waterMinimum,draw.water.minimum.data(),12);std::memcpy(&u.waterBase,draw.water.base.data(),12);
+@@ -173,7 +201,12 @@ std::unique_ptr<PreparedGameDecal> GameDecalGPU::Prepare(RuntimeLease& lease,con
+ 		for(unsigned n=0;n<2;++n){auto image=sharedImages.PrepareImage(lease,draw.atlases[n].image,draw.atlases[n].sampler,producers);[arguments setTexture:image.texture.gpuResourceID atIndex:n+5];[arguments setSamplerState:image.sampler.gpuResourceID atIndex:n+5];}
+ 		auto pipeline=impl->Pipeline(lease,draw.program,color,depth,stencil,samples,validation,draw.surface.blend,draw.world.colorWrite,milliseconds,draw.world.alphaToCoverage);lease.Retain(pipeline);
+ 		PreparedGameDecal::Impl::Draw packet;packet.sequence=draw.sequence;packet.pipeline=pipeline;packet.depth=effectstate::Depth(lease,draw.world,stencil);packet.arguments=arguments;packet.indices=indices;packet.count=draw.count;packet.first=draw.first;packet.instances=small?draw.count:draw.instanceCount;
+-		if(!small){packet.indexStride=draw.indices->layout.stride;packet.indexType=packet.indexStride==2?MTLIndexTypeUInt16:MTLIndexTypeUInt32;}
++		if(indexedSmall){
++			// The source row range remains in u.options.z and packet.instances.
++			// These fields describe the constant topology, not a row offset.
++			packet.count=gameDecalGeometry::Indices.size();packet.first=0;
++			packet.indexStride=sizeof(std::uint16_t);packet.indexType=MTLIndexTypeUInt16;
++		}else if(!small){packet.indexStride=draw.indices->layout.stride;packet.indexType=packet.indexStride==2?MTLIndexTypeUInt16:MTLIndexTypeUInt32;}
+ 		packet.raster=*raster;packet.state=draw.world;result->impl->draws.push_back(std::move(packet));
+ 	}
+ 	return result;
+diff --git a/engine/rts/Rendering/Metal4/Metal4GameDecalGeometryIndices.h b/engine/rts/Rendering/Metal4/Metal4GameDecalGeometryIndices.h
+new file mode 100644
+index 0000000..555d1b2
+--- /dev/null
++++ b/engine/rts/Rendering/Metal4/Metal4GameDecalGeometryIndices.h
+@@ -0,0 +1,40 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++
++#include <array>
++#include <cstddef>
++#include <cstdint>
++
++namespace rendering::metal4::gameDecalGeometry {
++inline constexpr std::size_t VertexSlots = 96;
++
++// Keep this in sync with the vertex-ID decoding in NativeGameDecalShaders.h.
++// Index values are original GameDecalGeometryVertex vertex IDs, not dense IDs.
++// A key describes both outputs of the old shader: regular grid location and
++// tiny-quad corner (or the shared clip-out sentinel for all slots >= 6).
++// Grid UVs and local coordinates are exact dyadics determined by this location.
++constexpr std::array<unsigned, 3> VertexKey(unsigned slot) noexcept
++{
++	const unsigned strip = slot / 24;
++	const unsigned triangle = (slot % 24) / 3;
++	const unsigned corner = slot % 3;
++	const unsigned emitted = triangle + (corner == 2 ? 2 : ((triangle & 1) ? 1 - corner : corner));
++	return {emitted / 2, strip + (1 - (emitted & 1)), slot < 6 ? emitted : 4};
++}
++
++constexpr auto MakeIndices() noexcept
++{
++	std::array<std::uint16_t, VertexSlots> indices{};
++	for (std::uint16_t slot = 0; slot < VertexSlots; ++slot) {
++		const auto key = VertexKey(slot);
++		std::uint16_t representative = 0;
++		while (representative < slot && VertexKey(representative) != key)
++			++representative;
++		indices[slot] = representative;
++	}
++	return indices;
++}
++
++inline constexpr auto Indices = MakeIndices();
++static_assert(Indices.size() == VertexSlots);
++}
+diff --git a/engine/tools/metal4-contracts/TestGameDecalGeometryIndices.cpp b/engine/tools/metal4-contracts/TestGameDecalGeometryIndices.cpp
+new file mode 100644
+index 0000000..51fd892
+--- /dev/null
++++ b/engine/tools/metal4-contracts/TestGameDecalGeometryIndices.cpp
+@@ -0,0 +1,136 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#include "Rendering/Metal4/Metal4GameDecalGeometryIndices.h"
++
++#include <array>
++#include <bit>
++#include <cmath>
++#include <cstdlib>
++#include <cstdio>
++#include <limits>
++
++namespace {
++namespace topology = rendering::metal4::gameDecalGeometry;
++using Values = std::array<float, 4>;
++using Stream = std::array<Values, 96>;
++constexpr Values Clipped{2.f, 2.f, 2.f, 1.f};
++unsigned checks = 0;
++
++void Check(bool condition, const char* message)
++{
++	++checks;
++	if (!condition) {
++		std::fprintf(stderr, "FAIL %s (check %u)\n", message, checks);
++		std::exit(1);
++	}
++}
++
++bool Identical(const Values& a, const Values& b)
++{
++	using Bits = std::array<std::uint32_t, 4>;
++	return std::bit_cast<Bits>(a) == std::bit_cast<Bits>(b);
++}
++
++// Independent oracle: construct four 10-vertex strips and turn them into
++// ordered triangles; does not call VertexKey or use its integer coordinate key.
++Stream GridOracle()
++{
++	Stream stream{};
++	unsigned out = 0;
++	for (unsigned strip = 0; strip < 4; ++strip) {
++		std::array<Values, 10> points{};
++		for (unsigned column = 0; column < 5; ++column) {
++			const float u = 1.f - .25f * float(column);
++			const float vl = .25f * float(strip);
++			const float vh = .25f * float(strip + 1);
++			points[2 * column] = {2.f * u - 1.f, 2.f * vh - 1.f, u, vh};
++			points[2 * column + 1] = {2.f * u - 1.f, 2.f * vl - 1.f, u, vl};
++		}
++		for (unsigned tri = 0; tri < 8; ++tri) {
++			stream[out++] = points[tri + (tri & 1)];
++			stream[out++] = points[tri + ((tri & 1) ? 0 : 1)];
++			stream[out++] = points[tri + 2];
++		}
++	}
++	return stream;
++}
++
++Stream TinyOracle()
++{
++	Stream stream;
++	stream.fill(Clipped);
++	const Values upperLeft{1.f, 1.f, 1.f, 1.f}, lowerLeft{1.f, -1.f, 1.f, 0.f};
++	const Values upperRight{-1.f, 1.f, 0.f, 1.f}, lowerRight{-1.f, -1.f, 0.f, 0.f};
++	stream[0] = upperLeft;
++	stream[1] = lowerLeft;
++	stream[2] = upperRight;
++	stream[3] = upperRight;
++	stream[4] = lowerLeft;
++	stream[5] = lowerRight;
++	return stream;
++}
++
++// CPU transcription of the existing shader's vertex-ID logic, separate
++// from the independently generated strips above. Alpha and sphere inputs
++// here are the shader's post-calculation values, not a GPU math emulation.
++Values OldShader(float width, float length, bool outside, float alpha, unsigned slot)
++{
++	unsigned skip = 0;
++	if (width < 24.f && length < 24.f) skip = 2;
++	if (outside) skip = 1;
++	if (alpha < .01f) skip = 1;
++	if (skip == 1 || (skip == 2 && slot >= 6)) return Clipped;
++	const unsigned strip = slot / 24, triangle = (slot % 24) / 3, corner = slot % 3;
++	const unsigned emitted = triangle + (corner == 2 ? 2 : ((triangle & 1) ? 1 - corner : corner));
++	const unsigned column = emitted / 2;
++	const bool bottom = emitted & 1;
++	if (skip == 2) return {1.f - 2.f * float(column), bottom ? -1.f : 1.f, 1.f - float(column), bottom ? 0.f : 1.f};
++	const float v = float(strip) * .25f;
++	return {1.f - .5f * float(column), 2.f * v - (bottom ? 1.f : .5f),
++		1.f - .25f * float(column), v + (bottom ? 0.f : .25f)};
++}
++}
++
++int main()
++{
++	const auto grid = GridOracle();
++	const auto tiny = TinyOracle();
++	std::array<bool, 96> used{};
++	Check(topology::Indices.size() == 96, "exactly 32 triangles");
++	for (unsigned slot = 0; slot < 96; ++slot) {
++		const unsigned index = topology::Indices[slot];
++		Check(index <= slot && index < 96, "original vertex ID in range");
++		Check(topology::Indices[index] == index, "representative is a fixed point");
++		Check(Identical(grid[slot], grid[index]), "regular primitive slot (sequence, winding, local, UV)");
++		Check(Identical(tiny[slot], tiny[index]), "tiny primitive slot (sequence, winding, local, UV, clip-out)");
++		used[index] = true;
++		for (unsigned other = 0; other < 96; ++other) {
++			const bool equivalent = Identical(grid[slot], grid[other]) && Identical(tiny[slot], tiny[other]);
++			Check((index == topology::Indices[other]) == equivalent, "partition is exact and fully deduplicated");
++		}
++	}
++	unsigned unique = 0;
++	for (const bool selected : used) unique += selected;
++	Check(unique == 28, "28 exact normal/tiny equivalence classes");
++
++	unsigned wrongTinySlots = 0;
++	for (unsigned slot = 0; slot < 96; ++slot) {
++		unsigned gridOnly = 0;
++		while (!Identical(grid[gridOnly], grid[slot])) ++gridOnly;
++		wrongTinySlots += !Identical(tiny[gridOnly], tiny[slot]);
++	}
++	Check(wrongTinySlots == 8, "negative control: merging by grid alone revives eight clipped tiny slots");
++
++	const auto dimensions = std::array{
++		0.f, 1.f, std::nextafter(24.f, 0.f), 24.f, std::nextafter(24.f, 100.f), 128.f,
++		std::numeric_limits<float>::quiet_NaN()
++	};
++	const auto alphas = std::array{0.f, std::nextafter(.01f, 0.f), .01f, 1.f, std::numeric_limits<float>::quiet_NaN()};
++	for (const auto width : dimensions)
++		for (const auto length : dimensions)
++			for (const bool outside : {false, true})
++				for (const auto alpha : alphas)
++					for (unsigned slot = 0; slot < 96; ++slot)
++						Check(Identical(OldShader(width, length, outside, alpha, slot),
++							OldShader(width, length, outside, alpha, topology::Indices[slot])), "all shader branch outcomes and threshold boundaries");
++	std::printf("PASS GameDecalGeometryIndices checks=%u index_count=96 triangles=32 representatives=%u\n", checks, unique);
++}
