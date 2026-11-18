@@ -1,0 +1,117 @@
+diff --git a/engine/rts/Rendering/Backend/NativePostprocessTextureReceipt.h b/engine/rts/Rendering/Backend/NativePostprocessTextureReceipt.h
+new file mode 100644
+--- /dev/null
++++ b/engine/rts/Rendering/Backend/NativePostprocessTextureReceipt.h
+@@ -0,0 +1,30 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++
++#include <cstdint>
++
++namespace rendering {
++enum class NativePostprocessTextureAspect : std::uint8_t { Color, Depth };
++
++// Identity for one immutable postprocess image. Only root, single-sample 2D
++// images at slice and mip zero have a receipt on this path.
++struct NativePostprocessTextureReceipt {
++	const void* version = nullptr;
++	const void* storage = nullptr;
++	std::uint64_t object = 0;
++	std::uint64_t generation = 0;
++	std::uint64_t producer = 0;
++	std::uint64_t event = 0;
++	NativePostprocessTextureAspect aspect = NativePostprocessTextureAspect::Color;
++	unsigned slice = 0;
++	unsigned level = 0;
++
++	bool Valid() const noexcept
++	{
++		return version && storage && object && generation && producer && event &&
++			slice == 0 && level == 0;
++	}
++
++	bool operator==(const NativePostprocessTextureReceipt&) const = default;
++};
++}
+diff --git a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h
+--- a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h
++++ b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h
+@@ -163,6 +163,7 @@
+  explicit RuntimeLease(std::function<void()> previousRetired, Runtime& runtime = SharedRuntime());
+  void RetirePreviousSubmission();
+  bool PreparingWhilePending() const;
++ uint64_t PendingEventForSource(uint64_t sourceSubmission) const noexcept;
+  // Admit only a pinned, already encoded predecessor. The supplied check must
+  // establish its actual completion before this lease can submit GPU work.
+  bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check);
+diff --git a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm
+@@ -842,6 +842,12 @@
+ namespace { std::atomic<unsigned> residencyCensusSamples{0}; }
+ 
+ bool RuntimeLease::PreparingWhilePending() const {return bool(frame->previousRetired)&&bool(runtime.pendingSubmission);}
++uint64_t RuntimeLease::PendingEventForSource(uint64_t sourceSubmission) const noexcept
++{
++ const auto& producer = runtime.pendingSubmission;
++ return sourceSubmission && producer && producer->traceIdentity.submission == sourceSubmission
++  ? producer->eventValue : 0;
++}
+ bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<void()> check)
+ {
+  Require(owner&&bool(check)&&!frame->recording&&!frame->pending&&!runtime.poisoned,
+diff --git a/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm b/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm
+@@ -1,5 +1,6 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "Metal4PostprocessNative.h"
++#include "Rendering/Backend/NativePostprocessTextureReceipt.h"
+ #include "Metal4PostprocessTexturePool181.h"
+ #include "Rendering/Backend/NativeRetiredResourcePool.h"
+ #include "Rendering/Backend/NativePostprocessOverwrite157.h"
+@@ -383,7 +384,7 @@
+ 		if(immutableQuads.size()>=64)immutableQuads.erase(immutableQuads.begin());
+ 		immutableQuads.insert_or_assign(key,value);return value;
+ 	}
+-	struct Image { std::weak_ptr<const NativePostprocessVersion> owner;__strong id<MTLTexture> image=nil;std::shared_ptr<PostprocessTextureStorage181> storage181;std::shared_ptr<bool> completed=std::make_shared<bool>(false);std::shared_ptr<bool> encoded=std::make_shared<bool>(false); };
++	struct Image { std::weak_ptr<const NativePostprocessVersion> owner;__strong id<MTLTexture> image=nil;std::shared_ptr<PostprocessTextureStorage181> storage181;uint64_t producerSubmission=0;std::shared_ptr<bool> completed=std::make_shared<bool>(false);std::shared_ptr<bool> encoded=std::make_shared<bool>(false); };
+ 	std::map<const NativePostprocessVersion*,Image> images;
+  // Allocation-only dimension queries belong to this SAME GPU resource owner.
+  // They have no contents-version status and cannot satisfy Retired/ImageFor.
+@@ -499,6 +500,26 @@
+   // publish this exact producer completion before the consumer can submit.
+   const auto completed=i->second.completed;
+   const auto* key=owner.get();
++  auto texture=i->second.image;
++  const auto producer=i->second.producerSubmission;
++  const auto event=lease.PendingEventForSource(producer);
++  if (event && owner->image && texture && texture.device==lease.Device() &&
++      texture.textureType==MTLTextureType2D && texture.sampleCount==1 &&
++      texture.mipmapLevelCount==1 && texture.arrayLength==1 && !texture.parentTexture &&
++      !texture.iosurface && !texture.buffer && !texture.heap) {
++   const NativePostprocessTextureReceipt receipt{
++    key, (__bridge const void*)texture, owner->image->object, owner->generation, producer, event,
++    IsNativePostprocessDepth(owner->image->format)
++     ? NativePostprocessTextureAspect::Depth : NativePostprocessTextureAspect::Color
++   };
++   if (receipt.Valid())
++    return lease.OrderAfterPreviousSubmission(key,[owner=std::move(owner),texture,completed,receipt]{
++     Require(owner.get()==receipt.version && (__bridge const void*)texture==receipt.storage &&
++      owner->image->object==receipt.object && owner->generation==receipt.generation && *completed,
++      "Exact pending postprocess texture did not retire successfully before consumer submission");
++    });
++  }
++  // Existing serialized submission still handles sources with no exact GPU receipt.
+   return lease.OrderAfterPreviousSubmission(key,[owner=std::move(owner),completed]{
+    Require(bool(owner)&&*completed,"Pending postprocess input did not complete before consumer submission");
+   });
+@@ -532,7 +553,7 @@
+ 			auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:Format(image.format) width:image.width height:image.height mipmapped:NO];descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
+ 			auto native=[lease.Device()newTextureWithDescriptor:descriptor];Require(native!=nil,"Cannot allocate original DOF immutable attachment");return native;
+ 		};
+-		Image entry;entry.owner=version;
++		Image entry;entry.owner=version;entry.producerSubmission=lease.SourceSubmission();
+ 		if(reusableCopy181) {
+ 			entry.storage181=texturePool181->Acquire(lease.Device(),{Format(image.format),image.width,image.height},version,create);
+ 			entry.image=entry.storage181->texture;PinTexture181(lease,entry.storage181);

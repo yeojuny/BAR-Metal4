@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "exit": 0,
+  "pid": 29290,
+  "observed_pending_2": true,
+  "launches": 1,
+  "confirmed_submissions": 2,
+  "live_game_path": false,
+  "games": 0,
+  "engine_builds": 0,
+  "validation_requested": true,
+  "timestamp": "2026-11-18T08:03:20.686009+00:00",
+  "log_sha256": "8a874d6663f35d1bb66bcff66977382e4aa26f4df6e4d0f938b80f5e563f7731"
+}

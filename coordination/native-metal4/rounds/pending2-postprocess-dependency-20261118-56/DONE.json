@@ -1,0 +1,47 @@
+{
+  "round_id": "pending2-postprocess-dependency-20261118-56",
+  "attempt_id": "pending2-exact-postprocess-transfer-01",
+  "status": "ISOLATED_PENDING2_GPU_PROOF_GAME_ADMISSION_UNVERIFIED",
+  "gpu_fixture": {
+    "status": "PASS",
+    "exit": 0,
+    "pid": 29290,
+    "observed_pending_2": true,
+    "launches": 1,
+    "confirmed_submissions": 2,
+    "live_game_path": false,
+    "games": 0,
+    "engine_builds": 0,
+    "validation_requested": true,
+    "timestamp": "2026-11-18T08:03:20.686009+00:00",
+    "log_sha256": "8a874d6663f35d1bb66bcff66977382e4aa26f4df6e4d0f938b80f5e563f7731"
+  },
+  "api_validation_observed": true,
+  "compile_checks": {
+    "Metal4RuntimeNative.mm": 0,
+    "Metal4PostprocessNative.mm": 0,
+    "ExactTexturePendingPair": 0
+  },
+  "live_gpu_pending_limit": 1,
+  "fps": null,
+  "input_latency": null,
+  "present": null,
+  "counts": {
+    "syntax_checks": 2,
+    "fixture_builds": 1,
+    "gpu_invocations": 1,
+    "gpu_submissions": 2,
+    "games": 0,
+    "engine_builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cleanup": {
+    "debug_sessions": 0,
+    "bar": "PAUSED",
+    "user_caffeinate": 6618,
+    "shared_awake": "RELEASED",
+    "owned_fixture_exited": true
+  }
+}
