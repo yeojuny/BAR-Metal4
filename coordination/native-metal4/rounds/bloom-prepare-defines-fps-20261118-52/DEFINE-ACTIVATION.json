@@ -1,0 +1,35 @@
+{
+  "first_encoded_downsample_by_arm": {
+    "DEFINES_OFF": [
+      {
+        "line": 2190,
+        "text": "[t=00:00:14.985336][f=-000001] [NativeBloomDownsampleSwizzle] route=identity_rgba sequence=547",
+        "route": "identity_rgba",
+        "sequence": 547,
+        "within_timed_window": false,
+        "simulation_tick": -1
+      }
+    ],
+    "DEFINES_ON": [
+      {
+        "line": 2191,
+        "text": "[t=00:00:45.024506][f=-000001] [NativeBloomDownsampleSwizzle] route=identity_rgba sequence=547",
+        "route": "identity_rgba",
+        "sequence": 547,
+        "within_timed_window": false,
+        "simulation_tick": -1
+      }
+    ]
+  },
+  "witness_limit": "First real downsample encode per game. Neither GPU pixel output nor path frequency was measured.",
+  "identity_path_selected_both": true,
+  "define_text_cache_reuse_by_arm": {
+    "DEFINES_OFF": [],
+    "DEFINES_ON": [
+      {
+        "line": 2186,
+        "text": "[t=00:00:44.813821][f=-000001] [NativeBloomPrepareDefineReuse] reused=1 depth_mask=0 combine=0"
+      }
+    ]
+  }
+}
