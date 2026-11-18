@@ -2,21 +2,21 @@
   "status": "DONE",
   "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 181,
+  "revision": 182,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+  "round_id": "pending2-classified-prior-reads-20261118-62",
   "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
-  "source_manifest_sha256": "45092f303431777ec5b46be2e1f1f103eebb9eb3bfdedbc86e311156cea5a857",
-  "request": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/REQUEST.json",
-  "ready_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/READY.json",
-  "result_path": "coordination/native-metal4/rounds/pending2-exact-ui-rtt-fps-20261118-61/DONE.json",
-  "decision": "EXACT_RTT_GATE_REMOVED_UNCLASSIFIED_CPU_PRIOR_READS_BLOCK_CAP2",
-  "execution_status": "HQ3_ROUND61_COMPLETED_TWO_GAMES_OTHER_CPU_PRIOR_READS_BLOCK_CAP2",
+  "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
+  "request": "coordination/native-metal4/rounds/pending2-classified-prior-reads-20261118-62/REQUEST.json",
+  "ready_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-20261118-62/CANDIDATE-MANIFEST.json",
+  "result_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-20261118-62/DONE.json",
+  "decision": "SOURCE_VERIFIED_ALL_PRIOR_READS_CLASSIFIED",
+  "execution_status": "HQ3_ROUND62_ALL_PRIOR_READ_FAMILIES_CLASSIFIED_SOURCE_VERIFIED",
   "blocked_reason": null,
   "history": [
     {
@@ -3264,6 +3264,15 @@
       "cap2_actual_pending_pairs": 0,
       "cap2_unclassified_cpu_prior_read_frames": 2555,
       "cap2_screen_rtt_gate_frames": 0
+    },
+    {
+      "event": "HQ3_ROUND62_ALL_PRIOR_READ_FAMILIES_CLASSIFIED_SOURCE_VERIFIED",
+      "revision": 182,
+      "round_id": "pending2-classified-prior-reads-20261118-62",
+      "attempt_id": "pending2-classified-prior-reads-source-01",
+      "utc": "2026-11-18T09:41:52.046288+00:00",
+      "games": 0,
+      "gpu_runs": 0
     }
   ],
   "communication_test": {
@@ -3347,12 +3356,13 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+    "attempt_id": "pending2-classified-prior-reads-source-01",
     "budget": {
-      "configure": 1,
-      "engine_build": 1,
-      "games": 2,
-      "max_per_arm": 1,
+      "targeted_syntax_checks": 8,
+      "bounded_cpu_contracts": 3,
+      "engine_builds": 0,
+      "games": 0,
+      "gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
@@ -3360,19 +3370,19 @@
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "started": true,
     "completed": true,
-    "reserved_at_utc": "2026-11-18T09:19:47.549491+00:00",
+    "ended_at_utc": "2026-11-18T09:41:52.046288+00:00",
     "counts": {
-      "configure": 1,
-      "engine_build": 1,
-      "games": 2,
+      "targeted_syntax_checks": 8,
+      "cpu_contracts": 3,
+      "engine_builds": 0,
+      "games": 0,
+      "gpu_runs": 0,
       "captures": 0,
       "profiles": 0,
       "retries": 0
     },
-    "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
-    "ended_at_utc": "2026-11-18T09:30:12.059261+00:00",
     "cleanup_complete": true,
-    "artifact_commit": "3e592d9920efb3dc8b45f4afffa6c8765cee61b0",
+    "artifact_commit": "26daf06778b692a18a41b3edcf92c1f77744bf26",
     "default_changed": false
   },
   "model_and_context_policy": {
@@ -3439,7 +3449,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Classify the remaining CPU prior-read gate before any further authorized experiment. No default promotion.",
+  "next_action": "Wait for a separately authorized matched pair; verify unclassified, joined and actual pending counts in one summary.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
