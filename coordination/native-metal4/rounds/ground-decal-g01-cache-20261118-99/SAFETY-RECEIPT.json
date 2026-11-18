@@ -1,0 +1,10 @@
+{
+  "status": "PASS_G01_CACHE_METAL",
+  "indexed_BGRA8_depth_stencil_cases": 72,
+  "RGBA32F_cases": 72,
+  "real_Metal_buffer_hits": 144,
+  "attachment_writes": 36,
+  "cache_clear_retention": true,
+  "nil_and_residency_failure_injected": true,
+  "log_sha256": "c5df56b11cd251272c004c5647ea8a2045e50a473c7586ea99764df7df403581"
+}
