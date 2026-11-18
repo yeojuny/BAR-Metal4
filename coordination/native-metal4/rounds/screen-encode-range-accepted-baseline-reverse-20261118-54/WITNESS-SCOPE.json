@@ -1,0 +1,6 @@
+{
+  "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/source/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+  "direct_visit_logging": "First nonempty partial range once per process",
+  "built_in_h5_diagnostic": "Restricted to first 32 prepared frames from sourceDrawFrame 600 and requires separate counter flag. Its encoded counter is not a visited-draw counter.",
+  "plan": "Preserve accepted match settings and inspect actual timestamps. Only claim a timed-window lookup witness if a direct in-window log exists."
+}
