@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 187,
+  "revision": 188,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/pending2-classified-prior-reads-reverse-20261118-64/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-reverse-20261118-64/READY.json",
   "result_path": "coordination/native-metal4/rounds/pending2-classified-prior-reads-reverse-20261118-64/DONE.json",
-  "decision": null,
-  "execution_status": "HQ3_ROUND64_REVERSE_ORDER_SAME_BINARY_READY",
+  "decision": "REVERSE_ORDER_CAP2_ACTIVATION_AND_FPS_VERIFIED",
+  "execution_status": "HQ3_ROUND64_REVERSE_PAIR_COMPLETE_ACTUAL_CAP2_REPRODUCED",
   "blocked_reason": null,
   "history": [
     {
@@ -3335,6 +3335,17 @@
         "profiles": 0,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND64_REVERSE_PAIR_COMPLETE_ACTUAL_CAP2_REPRODUCED",
+      "revision": 188,
+      "round_id": "pending2-classified-prior-reads-reverse-20261118-64",
+      "attempt_id": "pending2-classified-prior-reads-cap2-cap1-01",
+      "utc": "2026-11-18T10:00:11.287899+00:00",
+      "games": 2,
+      "joined": 2646,
+      "actual_pending_two": 2644,
+      "unclassified": 0
     }
   ],
   "communication_test": {
@@ -3429,18 +3440,22 @@
       "retries": 0
     },
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "reserved_at_utc": "2026-11-18T09:55:49.617913+00:00",
     "binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
     "counts": {
       "configure": 0,
       "engine_build": 0,
-      "games": 0,
+      "games": 2,
       "captures": 0,
       "profiles": 0,
       "retries": 0
-    }
+    },
+    "ended_at_utc": "2026-11-18T10:00:11.287899+00:00",
+    "cleanup_complete": true,
+    "artifact_commit": "8f609c678ec2b7da2185001eebd1050f6e9848e6",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3506,7 +3521,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run one cap2 then one cap1 on the exact Round63 binary.",
+  "next_action": "Preserve both completed orders. No additional run or default promotion.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
