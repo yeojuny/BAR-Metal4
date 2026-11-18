@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 174,
+  "revision": 175,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -15,8 +15,8 @@
   "request": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-58/REQUEST.json",
   "ready_path": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-58/READY.json",
   "result_path": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-58/DONE.json",
-  "decision": null,
-  "execution_status": "HQ3_ROUND58_SIMMERS_CAP1_RESERVED",
+  "decision": "COMPLETE_SIMMERS_CAP1",
+  "execution_status": "HQ3_ROUND58_SIMMERS_CAP1_DONE",
   "blocked_reason": null,
   "history": [
     {
@@ -3183,6 +3183,14 @@
         "profiles": 0,
         "retries": 0
       }
+    },
+    {
+      "event": "HQ3_ROUND58_SIMMERS_CAP1_DONE",
+      "revision": 175,
+      "round_id": "simmers-legacy-cap1-20261118-58",
+      "attempt_id": "simmers-cap1-01",
+      "utc": "2026-11-18T08:41:27.945698+00:00",
+      "games": 1
     }
   ],
   "communication_test": {
@@ -3274,17 +3282,21 @@
       "profiles": 0,
       "retries": 0
     },
-    "started": false,
-    "completed": false,
+    "started": true,
+    "completed": true,
     "reserved_at_utc": "2026-11-18T08:38:53.781593+00:00",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "counts": {
-      "games": 0,
+      "games": 1,
       "builds": 0,
-      "profiles": 0,
       "captures": 0,
+      "profiles": 0,
       "retries": 0
-    }
+    },
+    "ended_at_utc": "2026-11-18T08:41:27.945698+00:00",
+    "cleanup_complete": true,
+    "artifact_commit": "72ad9a15d84ddf1a2396b9dc375fdb0c38cd2e4b",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
@@ -3350,7 +3362,7 @@
     "previous_audit_preserved": true,
     "local_access_complete": true
   },
-  "next_action": "Run the preserved All That Simmers v1.1.1 single commander scene once at cap1.",
+  "next_action": "Single cap1 Simmers game complete.",
   "cancelled_handoff": {
     "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
     "revision": 114,
