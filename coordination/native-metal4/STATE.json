@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 292,
+  "revision": 293,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -68,7 +68,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-shadow-witness-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-shadow-witness-20261118/RESULT.json",
   "decision": null,
-  "execution_status": "FIXTURE_STAGING_ONLY",
+  "execution_status": "OWNED_GROUND_WRAP_FIXTURE",
   "blocked_reason": null,
   "history": [
     {
@@ -4703,6 +4703,12 @@
       "status": "RUNNING",
       "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
       "action": "reserve"
+    },
+    {
+      "revision": 293,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
+      "action": "fixture"
     }
   ],
   "communication_test": {
@@ -4802,7 +4808,9 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-19T02:37:31.832823+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "ready_sha256": "9afe7067cc44a5c4f80a326ad3df5f090955031c0c5f7ef39688c4d04e56be01",
+    "gpu_seal_utc": "2026-11-19T02:37:36.371885+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
