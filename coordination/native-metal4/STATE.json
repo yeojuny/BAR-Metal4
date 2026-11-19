@@ -1,24 +1,29 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 281,
+  "revision": 282,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "mvk-parity-deferred-20261118",
+  "round_id": "deferred-abba-restart-20261118",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "mvk-parity-deferred-20261118",
-    "approval_message_id": "Sentinel_a084b10b25108191850c111053144472",
+    "round_id": "deferred-abba-restart-20261118",
+    "authorization": "\uc774\uc81c \ud560 \uac70 \ud558\uc790 \ub2e4\uc2dc",
     "source_binary_sha256": "81c581e3345018881eb70ffd23a1f3d5ea9c06c63f0f4284d0fa0570087c6299",
-    "mvk3_status": "HELD_UNMATCHED_INPUTS",
-    "mvk3_audit_sha256": "c138650db4948ce100c8b685ff1452f451630730ad55e89e48a24a213ea4b0ff",
-    "cooled_preparation_sha256": "0189a4c3a8f514dc1e6861ce0873fb01c43af9bfdde8cfa5c8c1c0c3fe5a2e2d",
+    "reused_executable_sha256": "3c369eaff6b2ee8f14030c09cc8ebe9d74fb5f69b68c602204b03abd4f319857",
+    "prior_revision": 281,
+    "order": [
+      "A1_OFF",
+      "B1_ON",
+      "B2_ON",
+      "A2_OFF"
+    ],
     "abba": [
       "A1_OFF",
       "B1_ON",
@@ -29,22 +34,18 @@
       "games": 4,
       "mvk3_games": 0,
       "engine_compiles": 0,
-      "links": 1,
+      "links": 0,
       "profiles": 0,
       "captures": 0,
       "retries": 0
     },
-    "subjects": {
-      "memory_reporting": "ON",
-      "ground_decal_cold_glow": "ON",
-      "deferred": "ONLY_TOGGLE"
-    },
+    "thermal_policy_sha256": "be299395e1871d3f123e3159a66625b8e350bb24bd587f796657638a6dbba540",
     "default_changed": false
   },
-  "ready_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/READY.json",
-  "result_path": "coordination/native-metal4/rounds/mvk-parity-deferred-20261118/RESULT.json",
-  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
-  "execution_status": "THERMAL_HOLD_NO_MORE_GAMES",
+  "ready_path": "coordination/native-metal4/rounds/deferred-abba-restart-20261118/READY.json",
+  "result_path": "coordination/native-metal4/rounds/deferred-abba-restart-20261118/RESULT.json",
+  "decision": null,
+  "execution_status": "REUSED_DEFERRED_STAGING_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4613,6 +4614,12 @@
       "status": "DONE",
       "round_id": "mvk-parity-deferred-20261118",
       "action": "closed"
+    },
+    {
+      "revision": 282,
+      "status": "RUNNING",
+      "round_id": "deferred-abba-restart-20261118",
+      "action": "reserve"
     }
   ],
   "communication_test": {
@@ -4696,36 +4703,23 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "mvk-parity-deferred-20261118-01",
+    "attempt_id": "deferred-abba-restart-20261118-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
       "games": 4,
       "mvk3_games": 0,
       "engine_compiles": 0,
-      "links": 1,
+      "links": 0,
       "profiles": 0,
       "captures": 0,
       "retries": 0
     },
     "started": true,
-    "completed": true,
-    "games_started": true,
-    "reserved_at_utc": "2026-11-18T22:21:51.703925+00:00",
-    "default_changed": false,
-    "ready_sha256": "9eb51847015f6a761d6572af000f65422f160a20373827bf634c44900edd50a3",
-    "game_seal_utc": "2026-11-18T22:23:41.878192+00:00",
-    "finished_at_utc": "2026-11-18T22:31:33.474711+00:00",
-    "counts": {
-      "games": 1,
-      "mvk3_games": 0,
-      "links": 1,
-      "compiles": 0,
-      "captures": 0,
-      "profiles": 0,
-      "retries": 0
-    },
-    "cleanup_complete": true
+    "completed": false,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-19T00:31:07.955503+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
