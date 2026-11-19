@@ -1,0 +1,20 @@
+DEVICE Apple M4 Pro
+CASE seam shadows=0 uv=8496 seam=613/508 alpha=2133/6363 exact=1
+CASE phase shadows=0 uv=8496 seam=636/615 alpha=0/8496 exact=1
+CASE thin shadows=0 uv=160 seam=11/10 alpha=0/160 exact=1
+CASE no_wrap_zero shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative_zero shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_nan shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE exception_infinity shadows=0 uv=8496 seam=8496/0 alpha=0/8496 exact=1
+CASE dead_vertex shadows=0 uv=0 seam=0/0 alpha=0/0 exact=1
+CASE seam shadows=1 uv=8496 seam=613/508 alpha=2133/6363 exact=1
+CASE phase shadows=1 uv=8496 seam=636/615 alpha=0/8496 exact=1
+CASE thin shadows=1 uv=160 seam=11/10 alpha=0/160 exact=1
+CASE no_wrap_zero shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative_zero shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_nan shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE exception_infinity shadows=1 uv=8496 seam=8496/0 alpha=0/8496 exact=1
+CASE dead_vertex shadows=1 uv=0 seam=0/0 alpha=0/0 exact=1
+FAIL shadow control materially changes color 
