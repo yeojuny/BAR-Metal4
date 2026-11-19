@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 289,
+  "revision": 290,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -61,7 +61,7 @@
   "ready_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-coverage-fix-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-coverage-fix-20261118/RESULT.json",
   "decision": null,
-  "execution_status": "FIXTURE_STAGING_ONLY",
+  "execution_status": "OWNED_GROUND_WRAP_FIXTURE",
   "blocked_reason": null,
   "history": [
     {
@@ -4678,6 +4678,12 @@
       "status": "RUNNING",
       "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
       "action": "reserve"
+    },
+    {
+      "revision": 290,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
+      "action": "fixture"
     }
   ],
   "communication_test": {
@@ -4777,7 +4783,9 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-19T02:31:10.690060+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "ready_sha256": "e447464f21321a9c7faa2bf30979fc05222297376ad7ade814f131210b2a87d5",
+    "gpu_seal_utc": "2026-11-19T02:31:15.714842+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
