@@ -1,0 +1,31 @@
+DEVICE Apple M4 Pro
+CASE seam shadows=0 uv=8496 seam=613/508 alpha=2133/6363 exact=1
+CASE phase shadows=0 uv=8496 seam=636/615 alpha=0/8496 exact=1
+CASE thin shadows=0 uv=160 seam=11/10 alpha=0/160 exact=1
+CASE no_wrap_zero shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative_zero shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_nan shadows=0 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE exception_infinity shadows=0 uv=8496 seam=8496/0 alpha=0/8496 exact=1
+CASE dead_vertex shadows=0 uv=0 seam=0/0 alpha=0/0 exact=1
+SHADOW_MODE 0 production_visible=1 wrap_exact=1
+CASE seam shadows=1 uv=8496 seam=613/508 alpha=2133/6363 exact=1
+CASE phase shadows=1 uv=8496 seam=636/615 alpha=0/8496 exact=1
+CASE thin shadows=1 uv=160 seam=11/10 alpha=0/160 exact=1
+CASE no_wrap_zero shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative_zero shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_negative shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE no_wrap_nan shadows=1 uv=8496 seam=568/584 alpha=0/8496 exact=1
+CASE exception_infinity shadows=1 uv=8496 seam=8496/0 alpha=0/8496 exact=1
+CASE dead_vertex shadows=1 uv=0 seam=0/0 alpha=0/0 exact=1
+SHADOW_MODE 1 production_visible=1 wrap_exact=1
+SHADOW_WITNESS changed_pixels=8493
+CHECK_PASS cases=18 shadow_positive=1 depth_stencil_exact=1
+TIME 1 OFF draws=96 start=26387.983622541669 end=26387.988896750001 ms=5.274208332
+TIME 2 ON draws=96 start=26411.804610166670 end=26411.809595625000 ms=4.985458330
+TIME 3 ON draws=96 start=26435.615433875002 end=26435.620403000001 ms=4.969124999
+TIME 4 OFF draws=96 start=26474.667178625001 end=26474.672459000001 ms=5.280375000
+TIME 5 ON draws=96 start=26498.475484250001 end=26498.480470375001 ms=4.986125001
+TIME 6 OFF draws=96 start=26522.276675375000 end=26522.281950625002 ms=5.275250001
+TIME 7 OFF draws=96 start=26546.093233375002 end=26546.098508875002 ms=5.275500000
+TIME 8 ON draws=96 start=26569.929284916667 end=26569.934277875003 ms=4.992958337
