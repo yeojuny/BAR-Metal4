@@ -1,21 +1,21 @@
 {
-  "status": "DONE",
-  "owner": "SUPER_JINI_MK2",
+  "status": "RUNNING",
+  "owner": "HQ3",
   "enabled": true,
-  "revision": 291,
+  "revision": 292,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
   },
   "local_connection_verified": true,
   "notification_connection_verified": true,
-  "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
+  "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
   "source_commit": null,
   "source_manifest_sha256": null,
   "request": {
-    "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
+    "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
     "approval_message_id": "Sentinel_bb4c7250d06481919936c625bb7b5fa7",
-    "scope": "One fixed-draw fixture process with only the infinity production-color expectation corrected",
+    "scope": "One fixed-draw fixture with distinct phase shadow witness; original 18 cases and 8 possible timing slots unchanged",
     "received": {
       "archive_sha256": "b78555b88bc13b84254461822488a4e5ae79fd95c79fc95e7b810eead5b699b0",
       "archive_bytes": 18395,
@@ -44,24 +44,31 @@
       "mvk3": 0
     },
     "default_changed": false,
-    "parent_revision": 288,
+    "parent_revision": 291,
     "source_receipt": {
-      "parent_revision": 288,
-      "from_sha256": "afbbeffdfcac1364d3c9eb9abef63ea83b51ff100912016e9f1f2448b5851e6f",
-      "to_sha256": "c97d2e0aa77a85d78a9bf71438bcef5f8b6cdaa76f135c6fb374908bdade2f4c",
-      "modified_line": 487,
-      "expected_zero_color": [
-        "exception_infinity",
-        "Dead"
+      "parent_revision": 291,
+      "fixture_sha256_before": "c97d2e0aa77a85d78a9bf71438bcef5f8b6cdaa76f135c6fb374908bdade2f4c",
+      "fixture_sha256_after": "0f627e9b441b2c4662b416e8a1421a9f08ad52415455aa1a90a03cdbec3468a2",
+      "shader_inputs_unchanged": true,
+      "standalone_shadow_witness_only": true,
+      "normal_slice": 1,
+      "normal_RGBA": [
+        128,
+        128,
+        255,
+        220
       ],
-      "runner_sha256": "279d5c5985591d33d7981ca94a0180c58d7180f95fd44de9de6a06b49f70219e",
-      "shader_inputs_unchanged": true
+      "normal_uv_fields_changed": [
+        "x"
+      ],
+      "unchanged_base_cases": 18,
+      "timing_input_unchanged": true
     }
   },
-  "ready_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-coverage-fix-20261118/READY.json",
-  "result_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-coverage-fix-20261118/RESULT.json",
-  "decision": "FIXTURE_ONLY_DEFAULTS_PRESERVED",
-  "execution_status": "GPU_CORRECTNESS_FAILED_TIMING_SKIPPED",
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-shadow-witness-20261118/READY.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-shadow-witness-20261118/RESULT.json",
+  "decision": null,
+  "execution_status": "FIXTURE_STAGING_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4690,6 +4697,12 @@
       "status": "DONE",
       "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
       "action": "closed"
+    },
+    {
+      "revision": 292,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
+      "action": "reserve"
     }
   ],
   "communication_test": {
@@ -4773,7 +4786,7 @@
     "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
   },
   "execution": {
-    "attempt_id": "ground-decal-flat-wrap-coverage-fix-20261118-01",
+    "attempt_id": "ground-decal-flat-wrap-shadow-witness-20261118-01",
     "owner": "HQ3",
     "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
     "budget": {
@@ -4786,23 +4799,10 @@
       "mvk3": 0
     },
     "started": true,
-    "completed": true,
+    "completed": false,
     "games_started": false,
-    "reserved_at_utc": "2026-11-19T02:31:10.690060+00:00",
-    "default_changed": false,
-    "ready_sha256": "e447464f21321a9c7faa2bf30979fc05222297376ad7ade814f131210b2a87d5",
-    "gpu_seal_utc": "2026-11-19T02:31:15.714842+00:00",
-    "finished_at_utc": "2026-11-19T02:32:08.243745+00:00",
-    "counts": {
-      "games": 0,
-      "engine_builds": 0,
-      "fixture_processes": 1,
-      "timing_samples": 0,
-      "retries": 0,
-      "captures": 0,
-      "mvk3": 0
-    },
-    "cleanup_complete": true
+    "reserved_at_utc": "2026-11-19T02:37:31.832823+00:00",
+    "default_changed": false
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
