@@ -40,8 +40,8 @@
   "reference_launch_sha256": "30e4afe4b1cfef9d7d05608229adf4bba14da8034a0570fc6b8ece3175adcd18",
   "thermal": {
     "reference_c": {
-      "cpu_temp_avg": 36.369663,
-      "gpu_temp_avg": 32.711807
+      "cpu_temp_avg": 40.0880775,
+      "gpu_temp_avg": 38.5050315
     },
     "tolerance_c": 2.0,
     "min_stable_samples": 5,
