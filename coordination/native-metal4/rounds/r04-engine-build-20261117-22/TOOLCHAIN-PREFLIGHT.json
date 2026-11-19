@@ -1,0 +1,14 @@
+{
+  "SDK": "27.2",
+  "SDK_path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.2.sdk",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+  "cmake": "4.5.0",
+  "ninja": "1.13.2",
+  "initial_cache_sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "R03_initial_cache_byte_identical": true,
+  "R03_relocation_script_byte_identical": true,
+  "dependency_configuration_result": "FAIL_OPENAL_PKG_CONFIG_DISCOVERY",
+  "normalized_compile_commands_comparison": "NOT_REACHED_CONFIGURE_FAILED",
+  "engine_build": "NOT_STARTED",
+  "relocate_sign": "NOT_STARTED"
+}

@@ -1,0 +1,27 @@
+{
+  "status": "CANDIDATE_FINAL_COLOR_OWNERSHIP_ONLY",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4MainAttachments.h",
+      "parent_sha256": "d03ac19e0bd166d235fbfe631de266ea5c421083553b7e4b52b940479511c059",
+      "candidate_sha256": "dd4ed7503221ff7cfea75ba4057254fc01d79c450632e81e673c0487604e4263"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "parent_sha256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51",
+      "candidate_sha256": "dc53c5588a1cbd8929c3760d59589568b142995e8d97b17c09b8f3d0800b4715"
+    },
+    {
+      "path": "engine/tools/metal4-contracts/run_native_idle_resource_pool_test.py",
+      "parent_sha256": "71a2c97c81d85876246929f3c7d216964ec1a3729150e5a999d7a99f69bc3534",
+      "candidate_sha256": "5a4714946364f97eabcdba7b84ce2105ae58726b3645b3a18fa1cbeafee6b4cf"
+    }
+  ],
+  "base_binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+  "new_flag": "BAR_NATIVE_EXPERIMENT_OWNED_FINAL_COLOR",
+  "source_paths_verified": 10274,
+  "patch_sha256": "094a3518cc744e86a97b3007df7b092a4203855373b720c5b91b5aa96560b684",
+  "gpu_pending_limit": 1,
+  "remaining_gate": "Cross-frame producer successful completion and GPU ordering. Candidate does not change Runtime queue admission."
+}

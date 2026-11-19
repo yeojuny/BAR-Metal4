@@ -1,0 +1,101 @@
+{
+  "status": "READY_NO_GAME",
+  "round_id": "r03-mvk3-matched-frame-20261117-26",
+  "attempt_id": "r03-mvk3-framepair-02",
+  "arms": [
+    {
+      "arm": "R03",
+      "launch": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/runs/R03/LAUNCH.json",
+      "launchSHA256": "7b869b70e67695a5b935de8f36cd2217f6481a49cf4ab9e3ad26928e15d79c0c",
+      "binary": {
+        "variant": "private-r03-minor-reject",
+        "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+        "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+        "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native",
+        "sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+        "publishedPackageReadOnly": true
+      },
+      "controllerSHA256": "b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a",
+      "inputs": {
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/LuaUI/Widgets/zzz_native_short_run.lua": "b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/LuaUI/Config/BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/fonts/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/LuaUI/Widgets/zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/games/bar-official-combat-pr6.sdz": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/assets/maps/seths_ravine_remake_1.3.1.sd7": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/R03/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      }
+    },
+    {
+      "arm": "MVK3",
+      "launch": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/runs/MVK3/LAUNCH.json",
+      "launchSHA256": "afbb4f88780bf1ccafc74354e05c9e65abff8a24d7604cb07583a41c1f23bf03",
+      "binary": {
+        "variant": "preserved-small-requested-metal3",
+        "binary": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring",
+        "sha256": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa",
+        "native": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master",
+        "package": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app",
+        "check": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pass192/retry01/runs/m_product/BACKEND-LOADED.json",
+        "checkSHA256": "1285afab914e7b94e50d78d435c2571f023e53776bbf60a52539d07ff980ebdb"
+      },
+      "controllerSHA256": "b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a",
+      "inputs": {
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_native_short_run.lua": "b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/LuaUI/Config/BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/fonts/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/games/bar-official-combat-pr6.sdz": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/assets/maps/seths_ravine_remake_1.3.1.sd7": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      }
+    }
+  ],
+  "libraries": {
+    "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libEGL.1.dylib": "62adb20871cf6985bde4b20c78ffabd37a590fa9023cf362f87ce16739a3f533",
+    "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libgallium-26.3.0-devel.dylib": "ca4f3ddd7a0bf20c7f39636ea58d04ba42bc8b9170f871eac62a53c068ad9c30",
+    "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/vulkan-loader/lib/libvulkan.1.4.365.dylib": "b2b4bb1c9db72ff8639958e3137b308c67c15fe35cb846ffd5b1f7703cc0f7cd",
+    "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/moltenvk-pr2746/lib/libMoltenVK.1.4.3.dylib": "abf4fb1bad831b6295d90dd5a9ffa6af8b25308e99c8724153716e480a0275a2",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libIL.dylib": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libSDL3.0.dylib": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libbrotlicommon.1.2.0.dylib": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libbrotlidec.1.2.0.dylib": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libfontconfig.1.dylib": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libfreetype.6.dylib": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libintl.8.dylib": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libjasper.7.0.0.dylib": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libjpeg.8.3.2.dylib": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/liblcms2.2.dylib": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/liblzma.5.dylib": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libminizip.1.dylib": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libogg.0.8.6.dylib": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libopenal.1.25.2.dylib": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libpng16.16.dylib": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libtiff.6.dylib": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libvorbis.0.dylib": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libvorbisfile.3.dylib": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libzstd.1.5.7.dylib": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4"
+  },
+  "runnerSHA256": "c747c42b3fc980a57a00559191aa626989e8645633652e56b9e6fd337e0ea16c",
+  "inheritedRunnerSHA256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "controllerSHA256": "b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a",
+  "captureOrder": [
+    "R03",
+    "MVK3"
+  ],
+  "engineSourceEdits": 0,
+  "profileSemantics": "profile run --gpu-state default --exec overlapping, once per accepted arm; tool may internally replay multiple times, command count not single GPU replay. No additional profiling or counter invocation.",
+  "bar": "PAUSED"
+}

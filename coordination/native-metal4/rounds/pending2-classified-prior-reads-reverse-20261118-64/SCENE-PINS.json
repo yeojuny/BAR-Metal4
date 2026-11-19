@@ -1,0 +1,27 @@
+{
+  "previous_round": "pending2-classified-prior-reads-fps-20261118-63",
+  "arms": [
+    {
+      "arm": "CAP2",
+      "same_environment": true,
+      "verified_input_hashes": 13,
+      "exact_previous_binary_path": true,
+      "window": {
+        "startSimulation": 540,
+        "endSimulation": 1740,
+        "screenshot": false
+      }
+    },
+    {
+      "arm": "CAP1",
+      "same_environment": true,
+      "verified_input_hashes": 13,
+      "exact_previous_binary_path": true,
+      "window": {
+        "startSimulation": 540,
+        "endSimulation": 1740,
+        "screenshot": false
+      }
+    }
+  ]
+}

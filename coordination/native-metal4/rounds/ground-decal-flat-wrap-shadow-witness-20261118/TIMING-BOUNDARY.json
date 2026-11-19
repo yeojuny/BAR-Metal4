@@ -1,0 +1,119 @@
+{
+  "parity_gate": "CHECK_PASS cases=18 shadow_positive=1 depth_stencil_exact=1",
+  "measured_order": [
+    "OFF",
+    "ON",
+    "ON",
+    "OFF",
+    "ON",
+    "OFF",
+    "OFF",
+    "ON"
+  ],
+  "reserved_order": [
+    "OFF",
+    "ON",
+    "ON",
+    "OFF",
+    "ON",
+    "OFF",
+    "OFF",
+    "ON"
+  ],
+  "draws_per_command": 96,
+  "timestamp_source": "MTL4CommitFeedback.GPUStartTime and GPUEndTime for one render command buffer",
+  "inside_gpu_timestamps": "Render pass load, 96 production draws, and attachment store",
+  "readback_inside_boundary": false,
+  "thermal_sampling_inside_boundary": false,
+  "windows": [
+    {
+      "slot": 1,
+      "arm": "OFF",
+      "host_pre_thermal_end": "2026-11-19T02:38:27.058907+00:00",
+      "raw_gpu_start_seconds": 26387.98362254167,
+      "raw_gpu_end_seconds": 26387.98889675,
+      "gpu_ms": 5.274208332,
+      "host_post_thermal_begin": "2026-11-19T02:38:28.312611+00:00",
+      "pre_thermal_sha256": "29f796f4a939b84c0b39d7ef6d37f8d54c99ab72ce03c329d651be23deffc499",
+      "post_thermal_sha256": "d2df1230fb94bc547fa2f160d5e6dfc803bfc748663d8eca32685da94fffee5b"
+    },
+    {
+      "slot": 2,
+      "arm": "ON",
+      "host_pre_thermal_end": "2026-11-19T02:38:50.879426+00:00",
+      "raw_gpu_start_seconds": 26411.80461016667,
+      "raw_gpu_end_seconds": 26411.809595625,
+      "gpu_ms": 4.98545833,
+      "host_post_thermal_begin": "2026-11-19T02:38:52.134802+00:00",
+      "pre_thermal_sha256": "5211f52e23d2f7a5776fb2d9cabcf1336ce7483d1171b3c409e668a3754815a3",
+      "post_thermal_sha256": "f0606bd2acb10aadc80705595161fbb0769d3bd746938618fa544eb0ec2d0095"
+    },
+    {
+      "slot": 3,
+      "arm": "ON",
+      "host_pre_thermal_end": "2026-11-19T02:39:14.688992+00:00",
+      "raw_gpu_start_seconds": 26435.615433875002,
+      "raw_gpu_end_seconds": 26435.620403,
+      "gpu_ms": 4.969124999,
+      "host_post_thermal_begin": "2026-11-19T02:39:15.944710+00:00",
+      "pre_thermal_sha256": "247286f880499e0bffbb7db526d4ed16a9c13dfa107162b497025b47ad9228a5",
+      "post_thermal_sha256": "749e8edfd1b81659b1727e844c114a29669621f75878a1ba74ca8b2e6d759cf8"
+    },
+    {
+      "slot": 4,
+      "arm": "OFF",
+      "host_pre_thermal_end": "2026-11-19T02:39:53.741049+00:00",
+      "raw_gpu_start_seconds": 26474.667178625,
+      "raw_gpu_end_seconds": 26474.672459,
+      "gpu_ms": 5.280375,
+      "host_post_thermal_begin": "2026-11-19T02:39:54.987811+00:00",
+      "pre_thermal_sha256": "cce19efa43bcf9b54219219b1d558a42e5162a8dd77e72331a716d483d56038f",
+      "post_thermal_sha256": "5f3a548c2e0bc78a6b847c48939046f271a402dea46da1927eedd716bf7275dc"
+    },
+    {
+      "slot": 5,
+      "arm": "ON",
+      "host_pre_thermal_end": "2026-11-19T02:40:17.549512+00:00",
+      "raw_gpu_start_seconds": 26498.47548425,
+      "raw_gpu_end_seconds": 26498.480470375,
+      "gpu_ms": 4.986125001,
+      "host_post_thermal_begin": "2026-11-19T02:40:18.806641+00:00",
+      "pre_thermal_sha256": "f1f95443ce1d67c54667d332b8a7fd6ec9698ac7e03306e5a0d25db99776ea21",
+      "post_thermal_sha256": "0c8408a2948f613c5cbc737913db2c558b66b3e7356ded31b51ebc411349afa3"
+    },
+    {
+      "slot": 6,
+      "arm": "OFF",
+      "host_pre_thermal_end": "2026-11-19T02:40:41.353007+00:00",
+      "raw_gpu_start_seconds": 26522.276675375,
+      "raw_gpu_end_seconds": 26522.281950625,
+      "gpu_ms": 5.275250001,
+      "host_post_thermal_begin": "2026-11-19T02:40:42.590060+00:00",
+      "pre_thermal_sha256": "c9366f725a759c1d37f09bf5ad064c8af8ed04d63de049c066da325366007df0",
+      "post_thermal_sha256": "3c37bc9ee5f79e130f2b903e3a1648324e44374c27434dd16b65512a6ebed67a"
+    },
+    {
+      "slot": 7,
+      "arm": "OFF",
+      "host_pre_thermal_end": "2026-11-19T02:41:05.167054+00:00",
+      "raw_gpu_start_seconds": 26546.093233375002,
+      "raw_gpu_end_seconds": 26546.098508875002,
+      "gpu_ms": 5.2755,
+      "host_post_thermal_begin": "2026-11-19T02:41:06.426540+00:00",
+      "pre_thermal_sha256": "9937bdf90f1c0298d81639e9b0ef9bad2aa531be4ec1ce9394d9501747a063dc",
+      "post_thermal_sha256": "19bcac7040f2ede5119e22efca80798a0323ed3c88b36a9d6fab0eaf54fe9acc"
+    },
+    {
+      "slot": 8,
+      "arm": "ON",
+      "host_pre_thermal_end": "2026-11-19T02:41:29.003226+00:00",
+      "raw_gpu_start_seconds": 26569.929284916667,
+      "raw_gpu_end_seconds": 26569.934277875003,
+      "gpu_ms": 4.992958337,
+      "host_post_thermal_begin": "2026-11-19T02:41:30.242231+00:00",
+      "pre_thermal_sha256": "ea873d80bea3ab076aa9494931428a6b12886f6f34be9e5e30dd438b61f9c63f",
+      "post_thermal_sha256": "59fb1734bd3352de6ec97751a0368950db3291f3eee593f58ecda6af789b4485"
+    }
+  ],
+  "log_sha256": "b381e24d180bd8d92446715077fefaa7376671b22e88f60088fe2c69efaae4f1"
+}

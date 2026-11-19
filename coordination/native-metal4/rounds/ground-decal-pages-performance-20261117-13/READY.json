@@ -1,0 +1,22 @@
+{
+  "round_id": "ground-decal-pages-performance-20261117-13",
+  "attempt_id": "ground-decal-pages-clean-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "from": "SUPER_JINI_MK2",
+  "to": "HQ",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/REQUEST.json",
+  "budget": {
+    "pin_only_runner_and_fixture_staging": 1,
+    "clean_games": 6,
+    "validation_games": 0,
+    "builds": 0,
+    "helpers": 0,
+    "captures": 0,
+    "replay": 0,
+    "retries": 0
+  },
+  "source_writers_stopped": true,
+  "previous_cleanup_verified": true,
+  "HQ_turn_completed": true
+}

@@ -1,0 +1,20 @@
+{
+  "round_id": "ground-decal-pages-ordercheck-20261117-14",
+  "author": "SUPER_JINI_MK2",
+  "decision": "NO_REPRODUCIBLE_GROUND_DECAL_FPS_GAIN_ESTABLISHED",
+  "artifact_commit": "1f56d77b0dec09a814339ddfc08b2efd71be3da9",
+  "independent_raw_recalculation": {
+    "a": 64.11410197258326,
+    "b": 64.10449031999734,
+    "percent": -0.014991479706016886
+  },
+  "all40_world_rows_match_all_four": true,
+  "actual_games": 4,
+  "legacy_summary_says6": "Stale metadata only; four raw game logs and actual execution establish4.",
+  "cohorts_pooled": false,
+  "prior_six_runs_retained": true,
+  "interpretation": "No marked first-run deficit in reversed BAAB cohort. Previous+4.04% mean not reproduced; original A1 cause remains UNKNOWN. Do not infer cache/thermal/background cause or measured copy/RAM gains.",
+  "cleanup_verified": true,
+  "HQ_turn_completed": "01a1e7e8-d6c8-7c31-8562-c5efcd2be7ae",
+  "next": "Preserve independent GroundDecal structural candidate and evidence without release adoption or more FPS repetition. Prioritize fixed default-off texture ordered-input candidate independently from R03; first CPU/Metal production compilation, then runtime OFF/ON correctness gate before performance."
+}

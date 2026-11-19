@@ -1,0 +1,15 @@
+{
+  "status": "CLOSED",
+  "results": [
+    {
+      "arm": "FLASH_OFF",
+      "status": "PARSED",
+      "FPS": 65.03536887762581
+    },
+    {
+      "arm": "FLASH_ON",
+      "status": "PARSED",
+      "FPS": 64.98150077695486
+    }
+  ]
+}

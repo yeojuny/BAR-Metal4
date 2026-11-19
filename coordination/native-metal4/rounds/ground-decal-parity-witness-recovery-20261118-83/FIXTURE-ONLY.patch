@@ -1,0 +1,98 @@
+--- a/fixture/gpu_pixel_parity.mm
++++ b/fixture/gpu_pixel_parity.mm
+@@ -176,7 +176,8 @@
+                  default:break;}
+   float r=(degenerateMode==2||(degenerateMode==1&&j==2))?0.f:(.34f+float(seed%3)*.02f);
+   v.posT=float4{cx-r,-r+cy,cx+r,-r+cy};v.posB=float4{cx+r,r+cy,cx-r,r+cy};
+-  v.uvMain=v.uvNorm=(seed%4==3)?float4{-.25f,-.12f,1.25f,1.12f}:float4{0,0,1,1};
++  // The integer part of the first U selects the sole atlas layer.
++  v.uvMain=v.uvNorm=(seed%4==3)?float4{0,-.12f,1.25f,1.12f}:float4{0,0,1,1};
+   v.createParams1=float4{.9f,.003f,.1f,0};
+   const float rotation=(seed%8>=5)?(.19f+.27f*float(seed%3)):(float(j)*.10f);
+   v.createParams2=float4{rotation,.25f,0,1};
+@@ -188,11 +189,14 @@
+   constexpr std::uint32_t types[]={3,2,1,4,6,3};
+   const auto type=(seed/6==5&&j==1)?2u:types[(seed/6)%6];
+   const auto tint=seed%7==0?0xff00ffffu:0xffffffffu;
+-  v.createParams5=uint4{type,tint,0xff103080u,0xffb09020u};
++  // A glow alpha of one replaces the lit color before attachment blending.
++  // Partial glow leaves the explosion terrain-color term observable.
++  v.createParams5=uint4{type,tint,0x80103080u,0x80b09020u};
+  }
+  Uniform u{};u.viewProjection=matrix_identity_float4x4;
+  u.inverseViewProjection=matrix_identity_float4x4;u.shadow=matrix_identity_float4x4;
+- u.mapDims=float4{2,2,.5f,.5f};u.mapDimsPO2=u.mapDims;
++ // HeightAtWorldPos clamps between 8 and map size minus 8.
++ u.mapDims=float4{32,32,1.f/32,1.f/32};u.mapDimsPO2=u.mapDims;
+  u.groundAmbient=float4{.3f,.3f,.3f,1};u.groundDiffuse=float4{.6f,.6f,.6f,1};
+  u.sunDirection=float4{0,1,0,0};u.frameScreen=float4{80,1.f/W,1.f/H,0};
+  u.fragmentToLogical=float4{1,1,0,0};u.flags=uint4{0,shadows?1u:0u,seed%2,(seed%2)<<2u};
+@@ -364,7 +368,8 @@
+  NSError* error=nil;
+  auto compiler=[device newCompilerWithDescriptor:[MTL4CompilerDescriptor new] error:&error];
+  Check(compiler!=nil,"Metal4 compiler",error);
+- unsigned draws=0,depthWrites=0,stencilWrites=0,explosionResponses=0;
++ unsigned draws=0,depthWrites=0,stencilWrites=0,depthUnexpected=0,stencilUnexpected=0;
++ std::array<unsigned,3> explosionResponses{};
+  std::array<unsigned,6> visible{};
+  for(unsigned shadows=0;shadows<2;++shadows){
+   const std::array<std::string,3> sources{
+@@ -385,16 +390,27 @@
+    MatchDraw(images,seed,shadows);++draws;
+    const auto& ref=images[0];
+    if(ref.color!=ref.initialColor)++visible[seed/6];
+-   if(ref.depth!=ref.initialDepth)++depthWrites;
+-   if(ref.stencil!=ref.initialStencil)++stencilWrites;
++   if(ref.depth!=ref.initialDepth){
++    if(attachmentWrites)++depthWrites;
++    else ++depthUnexpected;
++   }
++   if(ref.stencil!=ref.initialStencil){
++    const bool replaced=std::find(ref.stencil.begin(),ref.stencil.end(),uint8_t(7))!=ref.stencil.end();
++    if(attachmentWrites&&replaced)++stencilWrites;
++    else ++stencilUnexpected;
++   }
+    if(seed>=6&&seed<12){
+     const auto alternate=Render(device,queue,pipelines[0],seed,Flavor::Color8,attachmentWrites,degenerate,nullptr,shadows,true);
+-    if(ref.color!=alternate.color)++explosionResponses;
++    if(ref.color!=alternate.color)++explosionResponses[seed%3];
+    }
+   }
+  }
+- for(const auto count:visible) Check(count>0,"actual color witness for each type domain");
+- Check(depthWrites>0&&stencilWrites>0&&explosionResponses>0,"actual attachment and explosion minimap witnesses");
++ std::printf("INDEXED matched=%u depth_writes=%u stencil_writes=%u depth_unexpected=%u stencil_unexpected=%u "
++             "explosion_BC1=%u explosion_RGBA8=%u explosion_BGRA8=%u visible=%u,%u,%u,%u,%u,%u\n",
++             draws,depthWrites,stencilWrites,depthUnexpected,stencilUnexpected,
++             explosionResponses[0],explosionResponses[1],explosionResponses[2],
++             visible[0],visible[1],visible[2],visible[3],visible[4],visible[5]);
++ std::fflush(stdout);
+ 
+  std::array<id<MTLRenderPipelineState>,3> direct{};
+  const std::array<std::string,3> sources{
+@@ -418,16 +434,22 @@
+    Check(images[0].color!=images[0].initialColor,"direct fragment wrote color");
+    for(unsigned v=1;v<3;++v){
+     size_t at=0;
+-    if(!FloatParity(images[0],images[v],v==2?&stats:nullptr,at)){
++    if(!FloatParity(images[0],images[v],v==2?&stats:nullptr,at,true)){
+      PreserveMismatch("direct_float",directCases,format,domain+1,images,at);
+      Check(false,"terrain-color float bits or exceptional class");
+     }
+    }
+    ++directCases;
+   }
++ std::printf("FLOAT matched=%u finite_components=%u nan_components=%u infinite_components=%u\n",
++             directCases,stats.finite,stats.nan,stats.inf);
++ std::fflush(stdout);
++ for(const auto count:visible) Check(count>0,"actual color witness for each type domain");
++ Check(depthWrites>0&&depthUnexpected==0,"depth writes follow fixture state");
++ Check(stencilWrites>0&&stencilUnexpected==0,"stencil writes follow fixture state");
++ for(const auto count:explosionResponses) Check(count>0,"explosion minimap witness in each format");
+  Check(stats.finite>0&&stats.nan>0,"direct finite and NaN witnesses");
+- std::printf("PASS indexed_draw_cases=%u float_cases=%u depth_write_witnesses=%u stencil_write_witnesses=%u explosion_texture_witnesses=%u finite_components=%u nan_components=%u infinite_components=%u\n",
+-             draws,directCases,depthWrites,stencilWrites,explosionResponses,stats.finite,stats.nan,stats.inf);
++ std::printf("PASS indexed_draw_cases=%u float_cases=%u\n",draws,directCases);
+ }}
+ 
+ 

@@ -1,0 +1,58 @@
+{
+  "round_id": "ground-decal-pages-performance-20261117-13",
+  "attempt_id": "ground-decal-pages-clean-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "PIN_ONLY_CLEAN_FIXTURE_STAGING_THEN_SIX_SEQUENTIAL_MATCHED_CLEAN_GAMES",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "baseline_R03_source": "0780bd7c530b0696067b717428b49a416eda556a",
+  "candidate_signed_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "baseline_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "runtime_product_artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+  "clean_runner_reference": {
+    "artifact_commit": "cecb898145c7bdcaef1f37347678f4604277fef2",
+    "path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/artifacts/measurement/run.py",
+    "sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8"
+  },
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "budget": {
+    "pin_only_runner_and_fixture_staging": 1,
+    "clean_games": 6,
+    "validation_games": 0,
+    "builds": 0,
+    "helpers": 0,
+    "captures": 0,
+    "replay": 0,
+    "retries": 0
+  },
+  "order": [
+    "A1_R03",
+    "B1_GDP",
+    "B2_GDP",
+    "A2_R03",
+    "A3_R03",
+    "B3_GDP"
+  ],
+  "gates": [
+    "Verify latest STATE exact round and reserve attempt once by CAS. Ambiguous executed history => BLOCKED; do not repeat validation.",
+    "Use existing two verified signed products and19 matching libraries. Adapt original six-arm clean runner only for product pins, labels, paths and suite selection; no controller/parser/pacing/error/cleanup changes or new instrumentation. Keep validation suite unreachable for this round.",
+    "Before games, freeze and record runner full text/diff/hash, products/library hashes, all six fresh unconsumed fixture hashes/LAUNCH files and isolated paths. Review AST or equivalent to confirm execution logic unchanged. If beyond pins/labels adaptation required, stop and report instead of redesigning.",
+    "Run exactly six clean arms A B B A A B sequentially. Both Metal API/shader validation OFF, all benchmark probes/traces OFF as prior clean contract. No extra validation or retries. Existing error/preflight gate must stop on failure.",
+    "Fixed Ultra4 AA0 actual sample1, drawable1512x982/safeview1512x950, PREPARE1 BEGIN0 worker1, S01/G01 ON, same seed/world/camera/controller/initial state, sample window GameFrame540..1740. AC normal, no other Mac work, unchanged library/toolchain conditions.",
+    "Use existing fixed-tick witnesses: frame240 initial state and exact seed/command, frame540 visible count/camera, frame1740 image/camera/created-destroyed totals. Compare same-tick world rows where present. Do not call wall-clock sample-bin boundary jitter alone gameplay divergence; do not fabricate missing fixed-tick values or claim complete intermediate world equality.",
+    "Preserve every raw row and every valid slow run. Differences at identical ticks, seed/camera/speed/pause mismatches, unexplained scene regression or errors block acceptance; do not discard rows or retry. Report first-bin timing jitter and any run imbalance explicitly.",
+    "Use original after-count image procedure. Performance metric is CPU-observed DrawScreen frames/wall duration, not GPU/display FPS. Report all six results, per-arm three-run arithmetic means and variability, 1% low supporting data; exclude all validation FPS and do not pool historical samples.",
+    "No full lifetime or copy-byte/allocation/RAM claims. Prior normal validation passed Metal/image checks but sampling mismatch limits workload proof. Treat result as bounded same-fixture comparison, not universal gain.",
+    "Before same-round DONE close GPU/game groups/image workers/awake holders and all evidence writes. No source/build changes, Texture/R04, main/releases/Homebrew/original app changes."
+  ],
+  "correctness_basis": {
+    "decision": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DECISION.json",
+    "Metal_errors": 0,
+    "images_independently_viewed": 2,
+    "fixed_tick_markers_match": true,
+    "cleanup_verified": true,
+    "HQ_turn_completed": true,
+    "performance_direction": "User explicitly requested performance after the two correctness checks. Existing fixed seed/tick endpoints and scene evidence permit bounded clean comparison; no new observer development required."
+  }
+}

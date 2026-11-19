@@ -1,0 +1,81 @@
+{
+  "status": "REVIEW_REQUIRED_WORLD_BIN_MISMATCH_NO_METAL_ERRORS",
+  "round_id": "ground-decal-pages-validation-20261117-12",
+  "attempt_id": "ground-decal-pages-validation-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "input_artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+  "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+  "baseline_R03_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "candidate_signed_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "games": 2,
+  "baseline_games": 1,
+  "candidate_games": 1,
+  "Metal_API_Validation_observed_both": true,
+  "matched_Metal_errors": 0,
+  "normal_exits": 2,
+  "actual_main_samples": 1,
+  "actual_safe_view": [
+    1512,
+    950
+  ],
+  "actual_drawable": [
+    1512,
+    982
+  ],
+  "world_rows_per_arm": 40,
+  "exactly_matching_world_rows": 38,
+  "world_differences": [
+    {
+      "row_zero_based": 0,
+      "fields": {
+        "end_simulation": [
+          "577",
+          "570"
+        ],
+        "units": [
+          "171",
+          "172"
+        ]
+      }
+    },
+    {
+      "row_zero_based": 1,
+      "fields": {
+        "start_simulation": [
+          "577",
+          "570"
+        ]
+      }
+    }
+  ],
+  "created": 600,
+  "destroyed": 433,
+  "performance_accepted": false,
+  "images_viewed": 2,
+  "source_or_runner_changes": 0,
+  "retries": 0,
+  "builds": 0,
+  "helpers": 0,
+  "clean_games": 0,
+  "GPU_captures": 0,
+  "cleanup": {
+    "owned_pids_checked_absent": [
+      13486,
+      13635,
+      13474,
+      13473
+    ],
+    "owned_groups_gone": true,
+    "image_workers_joined": true,
+    "awake_released": true,
+    "writers_closed_after_packet": true
+  },
+  "limits": [
+    "First two sample bin boundaries differ; cause unknown. Preserve all rows, no retry or FPS decision.",
+    "Ordinary API Validation/normal exit is not proof of all skipped/reversed revision, failed submission, quarantine, context-change or shutdown-error paths.",
+    "No per-resource event completion tracing added.",
+    "Actual RGB screenshots viewed without obvious static regression; no exact pixel/depth/stencil equivalence claim.",
+    "No actual page-reuse/copy/alloc/RAM benefit measured."
+  ]
+}

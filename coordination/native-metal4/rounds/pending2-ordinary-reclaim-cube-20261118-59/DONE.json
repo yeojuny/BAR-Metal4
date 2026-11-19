@@ -1,0 +1,81 @@
+{
+  "status": "EXACT_SERIAL_RTT_BLOCKER_OBSERVED",
+  "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
+  "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
+  "binary_sha256": "fea30e1f4aecb69fcf88e82cc80f0b1273f43c9c24d85abb5d312b2ecd82fe52",
+  "rows": [
+    {
+      "cap": 1,
+      "fps": 65.20488768013463,
+      "low_1pct": 35.85657346708783,
+      "max_ms": 263.999999,
+      "normal_exit": true,
+      "present_request": true,
+      "draws": 2608,
+      "frame_intervals": 2607,
+      "gpu": {
+        "cap": 1,
+        "first_sim": 540,
+        "last_sim_exclusive": 1740,
+        "submitted": 2608,
+        "eligible": 2608,
+        "adjacent_eligible": 2607,
+        "joined": 0,
+        "two_pending": 0,
+        "no_predecessor": 1,
+        "serial_reads": 2607,
+        "cube": 2607,
+        "world_info": 0,
+        "screen_rtt": 2607,
+        "ordered_cube": 0,
+        "scene_reclaims_all_frames": 0
+      }
+    },
+    {
+      "cap": 2,
+      "fps": 65.42009618809386,
+      "low_1pct": 56.36743132657198,
+      "max_ms": 23.0,
+      "normal_exit": true,
+      "present_request": true,
+      "draws": 2617,
+      "frame_intervals": 2616,
+      "gpu": {
+        "cap": 2,
+        "first_sim": 540,
+        "last_sim_exclusive": 1740,
+        "submitted": 2617,
+        "eligible": 2617,
+        "adjacent_eligible": 2616,
+        "joined": 0,
+        "two_pending": 0,
+        "no_predecessor": 1,
+        "serial_reads": 2616,
+        "cube": 0,
+        "world_info": 0,
+        "screen_rtt": 2616,
+        "ordered_cube": 0,
+        "scene_reclaims_all_frames": 0
+      }
+    }
+  ],
+  "fps_delta_percent": 0.33004965672964737,
+  "low_1_percent_delta": 57.20250396572539,
+  "outliers_removed": 0,
+  "activation_evidence": "Cap2 recorded 2616 adjacent eligible frames, all 2616 gated by historical screen RTT CPU checks; the cube gate was zero. No joined submits, no actual GPU depth two.",
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "caffeinate": {
+    "pid": 46852,
+    "ownership": "round59",
+    "released": true
+  },
+  "input_latency_measured": false,
+  "utc": "2026-11-18T09:14:29.851296+00:00"
+}

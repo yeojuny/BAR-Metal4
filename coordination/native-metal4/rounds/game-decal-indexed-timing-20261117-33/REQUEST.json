@@ -1,0 +1,36 @@
+{
+  "round_id": "game-decal-indexed-timing-20261117-33",
+  "attempt_id": "indexed-helper-and-smoke-01",
+  "scope": "SAME_INPUT_GPU_TIMING_AND_ONE_INDEXED_NATIVE_SMOKE",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "candidate_commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+  "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+  "original_helper_sha256": "65e5acb257ac692764befec2c16b667cb95cdf3f95b6a40728ee2b88ce9bea54",
+  "timing_helper_sha256": "21fd0230bd4da494c5f945af31e605d252fa2db1ea3b98370ab4628b8eb72aef",
+  "opt_in": "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY=1",
+  "execution_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-timing-20261117-33",
+  "aa": "OFF",
+  "required_attachment_samples": 1,
+  "budget": {
+    "helper_compiles": 1,
+    "helper_gpu_invocations": 1,
+    "games": 1,
+    "engine_builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "trace_inspections": 0,
+    "retries": 0
+  },
+  "timing": {
+    "source": "MTL4CommitFeedback GPUEndTime - GPUStartTime",
+    "warmup_pairs": 4,
+    "retained_pairs": 24,
+    "draws_per_batch": 64,
+    "rows_per_draw": 2,
+    "order": "alternating within pairs",
+    "metal_validation": false
+  },
+  "smoke": "Candidate ON, isolated existing AA0 scene / normal quit, no FPS interpretation",
+  "authorization": "Sentinel_1e85f6024a3c8191b68c9d235134b147",
+  "result_path": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/DONE.json"
+}

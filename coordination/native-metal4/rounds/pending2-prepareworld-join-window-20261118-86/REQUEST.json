@@ -1,0 +1,42 @@
+{
+  "round_id": "pending2-prepareworld-join-window-20261118-86",
+  "attempt_id": "prepareworld-capture-prefix-existing-trace-01",
+  "diagnostic_only": true,
+  "source_parent": "pending2-capture-roi-cpu-20261118-71",
+  "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+  "map": "Seths Ravine Remake 1.3.1",
+  "aa": 0,
+  "view": [
+    1512,
+    950
+  ],
+  "cap": 2,
+  "default_cap": 1,
+  "trace_window_inclusive": [
+    1122,
+    1128
+  ],
+  "primary_sim": 1125,
+  "measure_simulation": [
+    540,
+    1740
+  ],
+  "trace_policy": {
+    "wall": "steady_clock for exact interthread matching",
+    "thread_cpu": "per-thread delta",
+    "same_as_prior_binary": true,
+    "max_rows_per_buffer": 128,
+    "max_buffers": 128,
+    "max_records": 8192,
+    "max_bytes": 4194304
+  },
+  "budget": {
+    "configure": 0,
+    "engine_build": 0,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  }
+}

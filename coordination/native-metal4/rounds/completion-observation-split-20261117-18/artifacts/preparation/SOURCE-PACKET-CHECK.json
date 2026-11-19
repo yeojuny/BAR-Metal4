@@ -1,0 +1,9 @@
+{
+  "all_manifest_files_verified": 8,
+  "packet_equals_production": true,
+  "reference_equals_true_R03_parent": true,
+  "production_delta": [
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+    "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm"
+  ]
+}

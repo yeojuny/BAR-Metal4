@@ -1,0 +1,33 @@
+{
+  "round_id": "ground-decal-flat-wrap-fixture-20261118",
+  "approval_message_id": "Sentinel_169f42f22eb88191a1007133f7746a37",
+  "scope": "One standalone GroundDecal paired VS/FS fixture; timing gated on exact parity and positive controls",
+  "received": {
+    "archive_sha256": "b78555b88bc13b84254461822488a4e5ae79fd95c79fc95e7b810eead5b699b0",
+    "archive_bytes": 18395,
+    "patch_sha256": "bcc8de27467c6fb2424523b02e6908463c00b470dea41e01ba6cc1e1e21d1ae2",
+    "coord_source_blob": "c8cb120b24a3b5c9fbf16f5c0924c5f516f9e4f9",
+    "include_source_blob": "fa0bc42662295099ba301caffc10a7cc334bd198",
+    "patched_header_sha256": "f1559a0a06831f8123b3c8b0887f17da4724ba1a51dc861afa63dd9a80cef761"
+  },
+  "order": [
+    "OFF",
+    "ON",
+    "ON",
+    "OFF",
+    "ON",
+    "OFF",
+    "OFF",
+    "ON"
+  ],
+  "budget": {
+    "games": 0,
+    "engine_builds": 0,
+    "fixture_processes": 1,
+    "gpu_timing_samples": 8,
+    "retries": 0,
+    "captures": 0,
+    "mvk3": 0
+  },
+  "default_changed": false
+}

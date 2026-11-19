@@ -1,0 +1,38 @@
+diff --git a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm b/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
+@@ -1005,8 +1005,32 @@
+ 	if (!impl->targets.empty() || !impl->minimaps.empty()) [encoder barrierAfterQueueStages:MTLStageVertex | MTLStageFragment | MTLStageBlit | MTLStageDispatch beforeStages:MTLStageVertex | MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+ 	[encoder setDepthClipMode:MTLDepthClipModeClip];[encoder setCullMode:MTLCullModeNone];[encoder setFrontFacingWinding:MTLWindingCounterClockwise];
+ 	[encoder setDepthBias:0 slopeScale:0 clamp:0];
+-	for(const auto& draw:impl->draws) {
+-		if(draw.originalCommand<first || draw.originalCommand>=end)continue;
++	const auto& allDraws = impl->draws;
++	auto firstDraw = allDraws.cbegin();
++	auto endDraw = allDraws.cend();
++	static const bool indexedRange = [] {
++		const char* value = std::getenv("BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP");
++		return value && std::strcmp(value, "1") == 0;
++	}();
++	const bool partialRange = first != 0 || end != impl->sourceCommandCount;
++	if (indexedRange && partialRange) {
++		// Preparation appends draws in original command order, skipping commands with no draw.
++		const auto beforeCommand = [](const auto& draw, std::uint32_t command) {
++			return draw.originalCommand < command;
++		};
++		firstDraw = std::lower_bound(firstDraw, endDraw, first, beforeCommand);
++		endDraw = std::lower_bound(firstDraw, endDraw, end, beforeCommand);
++	}
++	if (partialRange && first < end) {
++		[[maybe_unused]] static const bool reported = [&] {
++			LOG("[NativeScreenEncodeRange] indexed=%u first=%u end=%u total_draws=%zu visited_draws=%zu",
++				unsigned(indexedRange), first, end, allDraws.size(), std::size_t(endDraw - firstDraw));
++			return true;
++		}();
++	}
++	for (auto iter = firstDraw; iter != endDraw; ++iter) {
++		const auto& draw = *iter;
++		if (!indexedRange && (draw.originalCommand < first || draw.originalCommand >= end)) continue;
+   // Foreign encoders may change any tracked field. Invalidate before their
+   // call, retain all original restores, and never publish their state below.
+   if(draw.unitIcons||draw.sensorLOS||draw.sensorPreview||draw.buildSquare||

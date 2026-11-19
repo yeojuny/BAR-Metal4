@@ -1,0 +1,61 @@
+{
+  "round_id": "texture-ordered-trace-20261117-17",
+  "attempt_id": "texture-ordered-trace-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "FIXED_DIAGNOSTIC_BUILD_AND_ONE_ON_TRACE_VALIDATION_GAME",
+  "source_commit": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
+  "source_branch": "candidate/texture-ordered-trace-20261117",
+  "parent_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "source_manifest_path": "docs/research/texture-trace-20261117/MANIFEST.json",
+  "source_manifest_sha256": "262cefbd639de63e833a7847b868a99de0aa2045e74b9d46691535e68bfe759f",
+  "patch_sha256": "8133b28526547de793bafb2e7c297043c7ee7e3b5bd066313ea0b576f061ebae",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "budget": {
+    "CPU_contract_script": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "relocation_sign": 1,
+    "fixture_staging": 1,
+    "validation_games": 1,
+    "helpers": 0,
+    "benchmarks": 0,
+    "GPU_captures": 0,
+    "retries": 0
+  },
+  "flags": {
+    "BAR_NATIVE_TEXTURE_ORDERED_INPUT": "1",
+    "BAR_NATIVE_TEXTURE_ORDERED_TRACE": "1",
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "0"
+  },
+  "event_semantics": {
+    "armed": "Once per process cap1: tracer enabled and Texture reached, NOT eligible/admitted.",
+    "admitted": "After existing exact pending producer/independent slot admission passed; may duplicate same producer/consumer, NOT unique resource count.",
+    "encode_permit_check": "Borrower branch passed readability and skipped duplicate upload/mips. NOT consumer draw/GPU execution.",
+    "producer_retired_check": "Exact producer completed check in final prior-read callback. NOT consumer GPU completion.",
+    "caps": "Each nonarmed event independent cap64. Capped logs cannot establish total rates or one-to-one resource identities."
+  },
+  "review": {
+    "remote_base_blob_verified": "02137a3c07712830ab35849ba88188a952234629",
+    "all_candidate_manifest_blob_hashes_verified": true,
+    "patch_reviewed": true,
+    "changes": "Diagnostic-only after existing checks; scalar consumer capture; no extra resource owners; default trace OFF; exceptions swallowed; GPU pending1/final drain untouched.",
+    "CPU_validation": "Worker production tests PASS; existing live/nonlive flag0 binaries independently exit0, script not recompiled by reviewer due read-only cloud sandbox."
+  },
+  "gates": [
+    "Verify latest STATE/attempt, current blob CAS reserve once. Ambiguous history => BLOCKED.",
+    "Fresh isolated checkout from fixed source with exact parent, manifest and2 source hashes. No GroundDecal/R04 mixed. Run existing docs/research/texture-trace-20261117/tests/run.py once; record its2 compiler invocations and8 flag/live-mode subruns as one predefined script.",
+    "One configure/build with validated prior texture/R03 toolchain/dependency closure. On any failure stop preserving logs; no source fixes/retry. Check production live-scene compile define present so tracer is not compiled out.",
+    "Copy isolated raw product, relocate/sign with existing19 libraries. Freeze raw/signed/library/runner/fixture hashes and exact command before launch. Keep original app/build/source untouched.",
+    "Adapt previous two-arm validation runner to one fresh ON_TRACE arm only, product pins/labels/paths and INPUT1 TRACE1 environment. Controller/pacing/parser/error/cleanup unchanged. Record minimal diff. No unstated additional games.",
+    "Before count verify actual child INPUT1 TRACE1 and Metal API validation. Run existing fixed same-scene Ultra4 AA0 sample1/view1512x950/drawable1512x982 PREPARE1 BEGIN0 worker1 S01/G01 validation once.",
+    "Collect full raw event lines and match producer/consumer within this process, preserving caps/duplicates. armed alone is successful logging but no admission observed; missing events under cap/exception limits not a fabricated proof. Report each event's exact meaning, never consumer GPU completion from producer_retired_check.",
+    "Inspect actual scene PNG and raw world/fixed tick/camera/seed/Metal hazards/normal retirement relative to preserved previous ON/OFF ordinary fixtures. Timing differences are diagnostic only, no FPS effect claim.",
+    "If admitted is absent, stop after this single run and report unexercised/unknown scope; do not alter workload or retry autonomously. If admitted observed, classify encode/retire evidence separately and retain all error paths not tested.",
+    "No debugger/security changes/new tooling beyond fixed source build. Trace invalidates performance: no benchmark or timing gain inference. No two-GPU-inflight claim.",
+    "HQ sole executor; pause heartbeat/local readers during game. Close all owned GPU/PID/child/worker/image/awake/evidence writes then same-round DONE. Protect main/releases/Homebrew/original app."
+  ],
+  "source_writers_stopped": true,
+  "child_tasks_completed": true
+}

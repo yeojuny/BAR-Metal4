@@ -1,0 +1,8 @@
+{
+  "variant": "private-ground-decal-index-g01",
+  "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native/bin/spring-metal4-scene",
+  "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native",
+  "sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "publishedPackageReadOnly": true
+}

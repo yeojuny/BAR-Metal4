@@ -1,0 +1,49 @@
+OPEN V_R03_BASELINE
+{
+  "recordedUTC": "2026-11-17T04:33:14.805568+00:00",
+  "label": "bloom217-V_R03_BASELINE",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE V_R03_BASELINE: validation and image; diagnostic FPS excluded
+OPEN V_GDP_CANDIDATE
+{
+  "recordedUTC": "2026-11-17T04:35:08.332142+00:00",
+  "label": "bloom217-V_GDP_CANDIDATE",
+  "status": "IDLE_CHECK_PASS",
+  "blockingProcesses": [],
+  "scope": "Read-only process snapshot. No app input, termination, screenshot, or capture."
+}
+DONE V_GDP_CANDIDATE: validation and image; diagnostic FPS excluded
+{
+  "status": "TWO_ARM_VALIDATION_REVIEW_REQUIRED",
+  "runs": 2,
+  "images": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_R03_BASELINE/scene.png",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_GDP_CANDIDATE/scene.png"
+  ],
+  "metalValidation": [
+    {
+      "status": "NO_MATCHED_METAL_ERRORS",
+      "enabledByChildEnv": true,
+      "enabledByEngineLog": true,
+      "errors": [],
+      "normalExit": true,
+      "candidateSHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_R03_BASELINE/scene.png",
+      "source": "raw engine.log; same original error regex"
+    },
+    {
+      "status": "NO_MATCHED_METAL_ERRORS",
+      "enabledByChildEnv": true,
+      "enabledByEngineLog": true,
+      "errors": [],
+      "normalExit": true,
+      "candidateSHA256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+      "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_GDP_CANDIDATE/scene.png",
+      "source": "raw engine.log; same original error regex"
+    }
+  ],
+  "utc": "2026-11-17T04:36:59.488514+00:00"
+}

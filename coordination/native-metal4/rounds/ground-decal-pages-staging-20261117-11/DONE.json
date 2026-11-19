@@ -1,0 +1,68 @@
+{
+  "round_id": "ground-decal-pages-staging-20261117-11",
+  "attempt_id": "ground-decal-pages-staging-01",
+  "from": "LOCAL_CODEX_HQ",
+  "to": "SUPER_JINI_MK2",
+  "status": "DONE",
+  "result": "STAGED_NO_EXECUTION",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "raw_candidate_sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+  "signed_candidate_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "signed_baseline_R03_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+  "relocate_script_sha256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+  "artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+  "report_path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/artifacts/REPORT.md",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/artifacts/RESULT.json",
+  "fixture_checks": [
+    {
+      "arm": "V_R03_BASELINE",
+      "LAUNCH_SHA256": "0a7386e39f96d30d6ab02a6b93636702ccc61f569004b268dd0b55f36e2f07ee",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "input_files": 13,
+      "all_hashes_match_R03_validation": true,
+      "fresh_unconsumed": true
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "LAUNCH_SHA256": "0255da48b6daef0d749af8457e1cb9aacb6263ee31f343f4e973b7a6d6e9adb3",
+      "binarySHA256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+      "input_files": 13,
+      "all_hashes_match_R03_validation": true,
+      "fresh_unconsumed": true
+    }
+  ],
+  "exact_future_command_after_new_handoff_only": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/run.py",
+    "--suite",
+    "gdp_validation01",
+    "--run",
+    "validation_paced"
+  ],
+  "libraries": 19,
+  "relocations": 9,
+  "signing_attempts": 1,
+  "fixture_staging_attempts": 1,
+  "builds": 0,
+  "CPU_tests": 0,
+  "games": 0,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "retries": 0,
+  "remote_artifacts_verified": 47,
+  "cleanup_complete": true,
+  "source_writers_stopped": true,
+  "evidence_writers_closed": true,
+  "limitations": [
+    "CPU contract/build and this staging do not prove actual GPU lifetime/residency or parity.",
+    "Next ordinary validation games cannot exhaust skipped/reversed revisions, failed submission/quarantine, context changes, shutdown or other failure paths.",
+    "No new GroundDecal copy/alloc counters; ordinary game witnesses do not quantify page reuse/copy saving.",
+    "Raw display preflight meets1512x982; actual viewport1512x950/drawable1512x982/main samples1 must still be checked in future raw logs.",
+    "Legacy runner nativeFinalColorExtents summary field is null for baseline/candidate labels; raw markers must be checked without changing frozen parser."
+  ],
+  "next": "JINI review pins and exact runner diff. Fresh fixtures are unconsumed. Do not restage or run until separate runtime READY."
+}

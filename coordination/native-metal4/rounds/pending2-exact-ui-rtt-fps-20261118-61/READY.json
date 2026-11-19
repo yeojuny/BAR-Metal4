@@ -1,0 +1,18 @@
+{
+  "status": "STAGED_NO_GAME",
+  "order": [
+    "R61_CAP1",
+    "R61_CAP2"
+  ],
+  "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+  "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+  "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+  "source_artifact": "b3e65b62692a0f741027862ec1fcae2ae77462e4",
+  "source_manifest_sha256": "45092f303431777ec5b46be2e1f1f103eebb9eb3bfdedbc86e311156cea5a857",
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 0
+  },
+  "options_matching_round59": true
+}

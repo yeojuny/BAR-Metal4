@@ -1,0 +1,4938 @@
+{
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
+  "enabled": true,
+  "revision": 294,
+  "acknowledgements": {
+    "SUPER_JINI_MK2": true,
+    "HQ": true
+  },
+  "local_connection_verified": true,
+  "notification_connection_verified": true,
+  "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
+  "source_commit": null,
+  "source_manifest_sha256": null,
+  "request": {
+    "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
+    "approval_message_id": "Sentinel_bb4c7250d06481919936c625bb7b5fa7",
+    "scope": "One fixed-draw fixture with distinct phase shadow witness; original 18 cases and 8 possible timing slots unchanged",
+    "received": {
+      "archive_sha256": "b78555b88bc13b84254461822488a4e5ae79fd95c79fc95e7b810eead5b699b0",
+      "archive_bytes": 18395,
+      "patch_sha256": "bcc8de27467c6fb2424523b02e6908463c00b470dea41e01ba6cc1e1e21d1ae2",
+      "coord_source_blob": "c8cb120b24a3b5c9fbf16f5c0924c5f516f9e4f9",
+      "include_source_blob": "fa0bc42662295099ba301caffc10a7cc334bd198",
+      "patched_header_sha256": "f1559a0a06831f8123b3c8b0887f17da4724ba1a51dc861afa63dd9a80cef761"
+    },
+    "order": [
+      "OFF",
+      "ON",
+      "ON",
+      "OFF",
+      "ON",
+      "OFF",
+      "OFF",
+      "ON"
+    ],
+    "budget": {
+      "games": 0,
+      "engine_builds": 0,
+      "fixture_processes": 1,
+      "gpu_timing_samples": 8,
+      "retries": 0,
+      "captures": 0,
+      "mvk3": 0
+    },
+    "default_changed": false,
+    "parent_revision": 291,
+    "source_receipt": {
+      "parent_revision": 291,
+      "fixture_sha256_before": "c97d2e0aa77a85d78a9bf71438bcef5f8b6cdaa76f135c6fb374908bdade2f4c",
+      "fixture_sha256_after": "0f627e9b441b2c4662b416e8a1421a9f08ad52415455aa1a90a03cdbec3468a2",
+      "shader_inputs_unchanged": true,
+      "standalone_shadow_witness_only": true,
+      "normal_slice": 1,
+      "normal_RGBA": [
+        128,
+        128,
+        255,
+        220
+      ],
+      "normal_uv_fields_changed": [
+        "x"
+      ],
+      "unchanged_base_cases": 18,
+      "timing_input_unchanged": true
+    }
+  },
+  "ready_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-shadow-witness-20261118/READY.json",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-shadow-witness-20261118/RESULT.json",
+  "decision": "FIXTURE_ONLY_DEFAULTS_PRESERVED",
+  "execution_status": "EXACT_GPU_PARITY_AND_TIMING_COMPLETE",
+  "blocked_reason": null,
+  "history": [
+    {
+      "event": "COMMUNICATION_BOOTSTRAP_CLOSED",
+      "revision": 7,
+      "communication_test_id": "hq-jini-check-20261116T202031Z",
+      "result": "GitHub \uace0\uc720 \ubc88\ud638 \uc591\ubc29\ud5a5 \uc77d\uae30/\uc4f0\uae30 \ud655\uc778. \uc0ac\uc6a9\uc790\uac00 \uc774 \uacbd\ub85c\ub85c \ubcf8 \uc791\uc5c5 \uc9c4\ud589 \uc9c0\uc2dc."
+    },
+    {
+      "event": "REQUEST_PUBLISHED",
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "author": "HQ",
+      "owner": "SUPER_JINI_MK2",
+      "scope": "SOURCE_ONLY",
+      "request_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/REQUEST.json"
+    },
+    {
+      "event": "SOURCE_CANDIDATE_RECORDED_NO_EXECUTION_GRANT",
+      "revision": 9,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "author": "SUPER_JINI_MK2",
+      "scope": "SOURCE_ONLY_READ_ONLY_HQ_REVIEW",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+      "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
+      "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
+      "note": "Source writes and child tasks finished. Status, owner, enabled scope, connection flags and execution authorization unchanged. HQ execution requires separate handoff and user approval."
+    },
+    {
+      "event": "USER_APPROVED_FIXED_HELPER_ONLY_HANDOFF",
+      "revision": 10,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "from": "SUPER_JINI_MK2",
+      "to": "HQ",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+      "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+      "ready_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/READY.json",
+      "approval_message_id": "Sentinel_8563c81084e48191aa31675bff31ab10",
+      "scope": "FIXED_R02_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY_NO_ENGINE_GAME_BENCH",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true,
+      "execution_started": false
+    },
+    {
+      "event": "HQ_EXECUTION_RESERVED",
+      "revision": 11,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "attempt_id": "r02-helper-execution-01",
+      "author": "LOCAL_CODEX_HQ",
+      "scope": "ONE_FIXED_HELPER_COMPILE_AND_ONE_GPU_CORRECTNESS_RUN",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334"
+    },
+    {
+      "event": "HQ_DONE_FAILED_COMPILE_NO_GPU",
+      "revision": 12,
+      "request_id": "r02-sensorlos-winding-20261116-01",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-helper-execution-01",
+      "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+      "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/DONE.json",
+      "helper_compile_attempts": 1,
+      "gpu_helper_runs": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_REVIEWED_DONE_AND_FIXED_HELPER",
+      "revision": 13,
+      "previous_round": "r02-sensorlos-winding-20261116-01",
+      "previous_result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/DONE.json",
+      "decision": "Compile failure is host helper static typing, not shader failure. One-line type correction prepared and CPU source checks passed; retry only via new fixed round.",
+      "previous_attempt_id": "r02-helper-execution-01",
+      "previous_cleanup_complete": true,
+      "new_source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0"
+    },
+    {
+      "event": "CORRECTED_HELPER_READY_HANDOFF",
+      "revision": 13,
+      "round_id": "r02-sensorlos-winding-20261116-02",
+      "from": "SUPER_JINI_MK2",
+      "to": "HQ",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true,
+      "attempt_id": "r02-helper-execution-02"
+    },
+    {
+      "event": "HQ_EXECUTION_RESERVED",
+      "revision": 14,
+      "request_id": "r02-sensorlos-winding-20261116-02",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-helper-execution-02",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "scope": "ONE_FIXED_HELPER_COMPILE_AND_ONE_GPU_CHECK_IF_COMPILE_SUCCEEDS"
+    },
+    {
+      "event": "HQ_DONE_GPU_CORRECTNESS_PASS",
+      "revision": 15,
+      "request_id": "r02-sensorlos-winding-20261116-02",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-helper-execution-02",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DONE.json",
+      "helper_compile_attempts": 1,
+      "gpu_helper_runs": 1,
+      "metal_api_validation_observed": true,
+      "original_cases": 3600,
+      "asymmetric_cases": 1024,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_REVIEWED_GPU_PASS",
+      "revision": 16,
+      "round_id": "r02-sensorlos-winding-20261116-02",
+      "decision_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DECISION.json",
+      "next": "Read-only HQ benchmark plan; no execution authorized by this transition"
+    },
+    {
+      "event": "BENCHMARK_PLAN_REVIEWED_BUILD_REQUIRED",
+      "revision": 17,
+      "previous_round": "r02-sensorlos-winding-20261116-02",
+      "previous_result": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-02/DONE.json",
+      "decision": "No R02 engine exists. Frozen G01 runner would compare identical binaries unless retargeted. Authorize one isolated engine build and pin-only runner staging; defer all games and omit capture/profile."
+    },
+    {
+      "event": "HQ_BUILD_STAGING_RESERVED",
+      "revision": 18,
+      "request_id": "r02-engine-staging-20261116-03",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-isolated-build-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "scope": "ONE_CONFIGURE_ONE_ENGINE_BUILD_AND_RUNNER_STAGING_GAMES_ZERO"
+    },
+    {
+      "event": "HQ_BUILD_STAGING_DONE_GAMES_ZERO",
+      "revision": 19,
+      "request_id": "r02-engine-staging-20261116-03",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-isolated-build-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "result_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/DONE.json",
+      "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+      "engine_builds": 1,
+      "games": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "BUILD_AND_RUNNER_REVIEW_ACCEPTED",
+      "revision": 20,
+      "previous_round": "r02-engine-staging-20261116-03",
+      "previous_result_path": "coordination/native-metal4/rounds/r02-engine-staging-20261116-03/DONE.json",
+      "artifact_commit": "db62724eed3b32b3af77a0a51badfe78ec428cc4",
+      "binary": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "runner": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+      "decision": "Isolated source/toolchain/dependency closure and seven staged arms verified. Proceed validation1 then clean6 only; no restage/retry/capture."
+    },
+    {
+      "event": "HQ_EXECUTION_RESERVED_AND_USER_ROUTING_POLICY_RELAYED",
+      "revision": 21,
+      "round_id": "r02-g01-benchmark-20261116-04",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-validation-and-clean-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "scope": "ONE_R02_VALIDATION_THEN_SIX_MATCHED_CLEAN_GAMES",
+      "heartbeat": "PAUSED_FOR_MEASUREMENT"
+    },
+    {
+      "event": "HQ_R02_VALIDATION_AND_CLEAN_BENCHMARK_DONE",
+      "revision": 22,
+      "round_id": "r02-g01-benchmark-20261116-04",
+      "author": "LOCAL_CODEX_HQ",
+      "attempt_id": "r02-validation-and-clean-01",
+      "result_path": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DONE.json",
+      "artifact_commit": "87d780578fc39f7c0f5608f6b0d94d6d08c3f557",
+      "mean_FPS_G01": 62.245820137229074,
+      "mean_FPS_R02": 62.228112603534036,
+      "relative_percent": -0.02844774742464251,
+      "all40_bins_match": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2",
+      "model_context_instruction_relayed": true
+    },
+    {
+      "event": "JINI_INDEPENDENT_BENCHMARK_REVIEW",
+      "revision": 23,
+      "previous_round": "r02-g01-benchmark-20261116-04",
+      "previous_result": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DONE.json",
+      "decision": "coordination/native-metal4/rounds/r02-g01-benchmark-20261116-04/DECISION.json",
+      "relative_percent": -0.028447747424620307,
+      "cleanup_verified": true
+    },
+    {
+      "event": "HQ_CURRENT_R02_GPU_DIAGNOSTIC_RESERVED",
+      "revision": 24,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r02-current-gpu-profile-20261117-05",
+      "attempt_id": "r02-current-capture-profile-01",
+      "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+      "budget": {
+        "capture_games": 1,
+        "captured_frames": 1,
+        "replay_profiles": 1,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ_CURRENT_R02_GPU_PROFILE_DONE",
+      "revision": 25,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r02-current-gpu-profile-20261117-05",
+      "attempt_id": "r02-current-capture-profile-01",
+      "result_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DONE.json",
+      "artifact_commit": "aa558a5c5b1858db54fa31470909d1aa25411ff6",
+      "capture_games": 1,
+      "captured_frames": 1,
+      "replay_profiles": 1,
+      "cleanup_complete": true,
+      "next_section_requested": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_PROFILE_REVIEW_COMPLETE",
+      "revision": 26,
+      "decision": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DECISION.json",
+      "next": "Cloud-only guarded SensorLOS source experiment; HQ idle, no duplicate profile."
+    },
+    {
+      "event": "R03_SOURCE_FIXED_CPU_REVIEW_COMPLETE",
+      "revision": 27,
+      "previous_round": "r02-current-gpu-profile-20261117-05",
+      "previous_result": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/DONE.json",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+      "cpu_cases": 32406,
+      "child_tasks_completed": true,
+      "source_writers_stopped": true
+    },
+    {
+      "event": "HQ_R03_CORRECTNESS_RESERVED",
+      "revision": 28,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-minor-reject-correctness-20261117-06",
+      "attempt_id": "r03-helper-correctness-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "budget": {
+        "helper_compile_attempts": 1,
+        "gpu_helper_runs": 1,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ_R03_GPU_CORRECTNESS_PASS_DONE",
+      "revision": 29,
+      "round_id": "r03-minor-reject-correctness-20261117-06",
+      "attempt_id": "r03-helper-correctness-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "result_path": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DONE.json",
+      "artifact_commit": "6f5ebf7d8ea5ed111dbdee4aa3f00802a5241896",
+      "old_new_pixel_comparisons": 12065,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2",
+      "fresh_next_section_requested": true
+    },
+    {
+      "event": "R03_HELPER_REVIEW_ACCEPTED",
+      "revision": 30,
+      "previous_round": "r03-minor-reject-correctness-20261117-06",
+      "previous_result": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DONE.json",
+      "decision": "coordination/native-metal4/rounds/r03-minor-reject-correctness-20261117-06/DECISION.json",
+      "old_new_comparisons": 12065,
+      "cleanup_verified": true
+    },
+    {
+      "event": "USER_REQUESTED_NEW_ASTRA_ULTRA_INDEPENDENT_AUDIT",
+      "revision": 31,
+      "author": "LOCAL_CODEX_HQ",
+      "audit_thread_id": "01a1e6ed-8d9a-7981-8332-3ce78c9a0af0",
+      "model": "gpt-6-astra",
+      "reasoning_effort": "ultra",
+      "current_execution_unstarted": true,
+      "current_round_unchanged": "r03-engine-staging-20261117-07"
+    },
+    {
+      "event": "INDEPENDENT_ASTRA_ULTRA_AUDIT_REVIEWED_DELIVERED_TO_JINI",
+      "revision": 32,
+      "author": "LOCAL_CODEX_HQ",
+      "artifact_commit": "1702b1e4298210de9e92fd9d5deba76460412878",
+      "audit_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/AUDIT.md",
+      "review_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/HQ-REVIEW.md",
+      "current_round_preserved": "r03-engine-staging-20261117-07",
+      "audit_local_reads_complete": true
+    },
+    {
+      "event": "HQ_R03_BUILD_STAGING_RESERVED",
+      "revision": 33,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-engine-staging-20261117-07",
+      "attempt_id": "r03-isolated-build-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "scope": "ONE_ISOLATED_BUILD_AND_PIN_ONLY_RUNNER_STAGING",
+      "independent_audit_closed": true
+    },
+    {
+      "event": "HQ_R03_BUILD_AND_STAGING_DONE_GAMES_ZERO",
+      "revision": 34,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-engine-staging-20261117-07",
+      "attempt_id": "r03-isolated-build-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "result_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DONE.json",
+      "artifact_commit": "cecb898145c7bdcaef1f37347678f4604277fef2",
+      "signed_engine_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+      "configure_attempts": 1,
+      "engine_builds": 1,
+      "games": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_R03_BUILD_AND_STAGING_REVIEW_ACCEPTED",
+      "revision": 35,
+      "previous_round": "r03-engine-staging-20261117-07",
+      "previous_result_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DONE.json",
+      "artifact_commit": "cecb898145c7bdcaef1f37347678f4604277fef2",
+      "decision": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DECISION.json",
+      "cleanup_verified": true,
+      "next_round": "r03-r02-benchmark-20261117-08"
+    },
+    {
+      "event": "HQ_R03_VALIDATION_AND_CLEAN_RESERVED",
+      "revision": 36,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-r02-benchmark-20261117-08",
+      "attempt_id": "r03-validation-and-clean-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "budget": {
+        "validation_games": 1,
+        "clean_games": 6,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ_R03_MATCHED_BENCHMARK_DONE",
+      "revision": 37,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r03-r02-benchmark-20261117-08",
+      "attempt_id": "r03-validation-and-clean-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "result_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
+      "artifact_commit": "d27392eb77a5056d28b86286dc4a9757ed3b7e55",
+      "meanFPS_R02": 62.679155526246866,
+      "meanFPS_R03": 64.4462427547472,
+      "relative_percent": 2.819258194632779,
+      "all40_rows_match": true,
+      "image_overlay_note": "Orange circle present2/3 each arm; cause/count-window effect unknown",
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_R03_MATCHED_BENCHMARK_REVIEW_COMPLETE",
+      "revision": 38,
+      "round_id": "r03-r02-benchmark-20261117-08",
+      "decision": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DECISION.json",
+      "relative_percent": 2.819258194632779,
+      "cleanup_verified": true,
+      "next": "Source-only SensorLOS shared exact work candidate after HQ turn closes; no new local execution."
+    },
+    {
+      "event": "R04_SOURCE_MANIFEST_AND_CPU_REVIEW_COMPLETE",
+      "revision": 39,
+      "previous_round": "r03-r02-benchmark-20261117-08",
+      "previous_result": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true,
+      "HQ_previous_turn_completed": true
+    },
+    {
+      "event": "HQ_R04_HELPER_CORRECTNESS_RESERVED",
+      "revision": 40,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r04-segment-setup-correctness-20261117-09",
+      "attempt_id": "r04-helper-correctness-01",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "budget": {
+        "compile": 1,
+        "GPU_invocation": 1,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ_R04_GPU_CORRECTNESS_PASS_WITH_PREPARED_WITNESS",
+      "revision": 41,
+      "author": "LOCAL_CODEX_HQ",
+      "round_id": "r04-segment-setup-correctness-20261117-09",
+      "attempt_id": "r04-helper-correctness-01",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "result_path": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DONE.json",
+      "artifact_commit": "45d0ada23c259df5e13ff8d68c9158932a84e065",
+      "old_new_comparisons": 12065,
+      "prepared_negative_control_detected": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_R04_BOUNDED_CORRECTNESS_REVIEW_COMPLETE",
+      "revision": 42,
+      "round_id": "r04-segment-setup-correctness-20261117-09",
+      "decision": "coordination/native-metal4/rounds/r04-segment-setup-correctness-20261117-09/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "next": "MVK3/native structural analysis first; R04 performance expansion not authorized by this review."
+    },
+    {
+      "event": "GROUND_DECAL_INDEPENDENT_SOURCE_VERIFIED_READY",
+      "revision": 43,
+      "round_id": "ground-decal-pages-compile-20261117-10",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "parent_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "HQ_idle_evidence": "coordination/native-metal4/status/hq-status-20261117T041111Z.json",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_COMPILE_RESERVED",
+      "revision": 44,
+      "round_id": "ground-decal-pages-compile-20261117-10",
+      "attempt_id": "ground-decal-pages-compile-01",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "author": "LOCAL_CODEX_HQ",
+      "games": 0
+    },
+    {
+      "event": "HQ_GROUND_DECAL_FIXED_CPU_AND_ENGINE_COMPILE_PASS",
+      "revision": 45,
+      "round_id": "ground-decal-pages-compile-20261117-10",
+      "attempt_id": "ground-decal-pages-compile-01",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "artifact_commit": "18ce3fa6ca17e85eebdfac5cfd9987fdb25d72d9",
+      "CPU_checks": 10680,
+      "randomized_revisions": 2000,
+      "archive_mismatches": 0,
+      "games": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_GROUND_DECAL_COMPILE_REVIEW_AND_STAGING_READY",
+      "revision": 46,
+      "round_id": "ground-decal-pages-staging-20261117-11",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-compile-20261117-10/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_STAGING_RESERVED",
+      "revision": 47,
+      "round_id": "ground-decal-pages-staging-20261117-11",
+      "attempt_id": "ground-decal-pages-staging-01",
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+      "games": 0
+    },
+    {
+      "event": "HQ_GROUND_DECAL_VALIDATION_STAGING_DONE_GAMES_ZERO",
+      "revision": 48,
+      "round_id": "ground-decal-pages-staging-20261117-11",
+      "attempt_id": "ground-decal-pages-staging-01",
+      "artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+      "signed_candidate_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+      "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_GROUND_DECAL_STAGING_REVIEW_VALIDATION_READY",
+      "revision": 49,
+      "round_id": "ground-decal-pages-validation-20261117-12",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_VALIDATION_RESERVED",
+      "revision": 50,
+      "round_id": "ground-decal-pages-validation-20261117-12",
+      "attempt_id": "ground-decal-pages-validation-01",
+      "games_budget": 2,
+      "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a"
+    },
+    {
+      "event": "HQ_GROUND_DECAL_TWO_VALIDATION_GAMES_DONE_WORLD_BIN_REVIEW_REQUIRED",
+      "revision": 51,
+      "round_id": "ground-decal-pages-validation-20261117-12",
+      "attempt_id": "ground-decal-pages-validation-01",
+      "artifact_commit": "cfe365c17915473bdcd72c2dafc5e59bb8ecc27a",
+      "games": 2,
+      "Metal_errors": 0,
+      "world_rows_exact_match": 38,
+      "world_differences": [
+        {
+          "row_zero_based": 0,
+          "fields": {
+            "end_simulation": [
+              "577",
+              "570"
+            ],
+            "units": [
+              "171",
+              "172"
+            ]
+          }
+        },
+        {
+          "row_zero_based": 1,
+          "fields": {
+            "start_simulation": [
+              "577",
+              "570"
+            ]
+          }
+        }
+      ],
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_GROUND_DECAL_VALIDATION_REVIEW",
+      "revision": 52,
+      "round_id": "ground-decal-pages-validation-20261117-12",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "performance_authorized_by_this_transition": false
+    },
+    {
+      "event": "BOUNDED_CLEAN_COMPARISON_READY_USING_EXISTING_FIXED_TICK_WITNESSES",
+      "revision": 53,
+      "round_id": "ground-decal-pages-performance-20261117-13",
+      "correctness_decision": "coordination/native-metal4/rounds/ground-decal-pages-validation-20261117-12/DECISION.json",
+      "wall_clock_bin_jitter_not_full_world_equality": true,
+      "validation_FPS_excluded": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_CLEAN_RESERVED",
+      "revision": 54,
+      "round_id": "ground-decal-pages-performance-20261117-13",
+      "attempt_id": "ground-decal-pages-clean-01",
+      "games_budget": 6
+    },
+    {
+      "event": "HQ_GROUND_DECAL_SIX_CLEAN_GAMES_DONE_ALL_VALID_RETAINED",
+      "revision": 55,
+      "round_id": "ground-decal-pages-performance-20261117-13",
+      "attempt_id": "ground-decal-pages-clean-01",
+      "artifact_commit": "800374df16d704cc3bc9cc400f50e43a8777226f",
+      "baseline_mean_FPS": 61.645348153000675,
+      "candidate_mean_FPS": 64.13333179515845,
+      "observed_relative_percent": 4.035963323595371,
+      "first_baseline_FPS": 56.84147304152566,
+      "causal_gain_uncertain": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_GROUND_DECAL_PERFORMANCE_REVIEW",
+      "revision": 56,
+      "round_id": "ground-decal-pages-performance-20261117-13",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/DECISION.json",
+      "cleanup_verified": true,
+      "observed_relative_percent": 4.035963323595371,
+      "causal_gain_uncertain": true
+    },
+    {
+      "event": "SEPARATE_REVERSED_ORDER_COHORT_READY",
+      "revision": 57,
+      "round_id": "ground-decal-pages-ordercheck-20261117-14",
+      "order": [
+        "B1_GDP",
+        "A1_R03",
+        "A2_R03",
+        "B2_GDP"
+      ],
+      "previous_cohort_not_pooled": true,
+      "source_and_binary_unchanged": true
+    },
+    {
+      "event": "HQ_GROUND_DECAL_BAAB_RESERVED",
+      "revision": 58,
+      "round_id": "ground-decal-pages-ordercheck-20261117-14",
+      "attempt_id": "ground-decal-pages-ordercheck-01",
+      "games_budget": 4
+    },
+    {
+      "event": "HQ_GROUND_DECAL_SEPARATE_BAAB_FOUR_RUNS_DONE",
+      "revision": 59,
+      "round_id": "ground-decal-pages-ordercheck-20261117-14",
+      "attempt_id": "ground-decal-pages-ordercheck-01",
+      "artifact_commit": "1f56d77b0dec09a814339ddfc08b2efd71be3da9",
+      "actual_games": 4,
+      "baseline_mean_FPS": 64.11410197258326,
+      "candidate_mean_FPS": 64.10449031999734,
+      "observed_relative_percent": -0.014991479706016886,
+      "first_execution_marked_deficit_observed": false,
+      "cohorts_pooled": false,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "BAAB_REVIEW_COMPLETE_INDEPENDENT_TEXTURE_COMPILE_READY",
+      "revision": 60,
+      "round_id": "texture-ordered-compile-20261117-15",
+      "decision": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230"
+    },
+    {
+      "event": "HQ_TEXTURE_ORDERED_COMPILE_RESERVED",
+      "revision": 61,
+      "round_id": "texture-ordered-compile-20261117-15",
+      "attempt_id": "texture-ordered-compile-01",
+      "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+      "games": 0
+    },
+    {
+      "event": "HQ_TEXTURE_ORDERED_FIXED_CPU_AND_ENGINE_COMPILE_PASS",
+      "revision": 62,
+      "round_id": "texture-ordered-compile-20261117-15",
+      "attempt_id": "texture-ordered-compile-01",
+      "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+      "artifact_commit": "544c23c4214af99efe67c98f047e6325fe6fc9c2",
+      "CPU_contract_script_invocations": 1,
+      "engine_builds": 1,
+      "games": 0,
+      "raw_engine_sha256": "aaf18800be5a917972a298c6ffd9077f287fb9382f362f218189d84cb5c76e2a",
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "TEXTURE_COMPILE_REVIEW_OFF_ON_VALIDATION_READY",
+      "revision": 63,
+      "round_id": "texture-ordered-validation-20261117-16",
+      "decision": "coordination/native-metal4/rounds/texture-ordered-compile-20261117-15/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "path_witness_separate_from_env_ON": true
+    },
+    {
+      "event": "HQ_TEXTURE_OFF_ON_VALIDATION_RESERVED",
+      "revision": 64,
+      "round_id": "texture-ordered-validation-20261117-16",
+      "attempt_id": "texture-ordered-validation-01",
+      "games_budget": 2
+    },
+    {
+      "event": "HQ_TEXTURE_OFF_ON_CONFIGURATIONS_VALIDATED_ACTUAL_PATH_UNKNOWN",
+      "revision": 65,
+      "round_id": "texture-ordered-validation-20261117-16",
+      "attempt_id": "texture-ordered-validation-01",
+      "artifact_commit": "47f476e2d207d7d0f7386d613233355a4d862117",
+      "games": 2,
+      "Metal_errors": 0,
+      "actual_child_OFF0_ON1": true,
+      "ON_path_classification": "UNKNOWN",
+      "performance_accepted": false,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_TEXTURE_VALIDATION_REVIEW_PATH_UNKNOWN",
+      "revision": 66,
+      "round_id": "texture-ordered-validation-20261117-16",
+      "decision": "coordination/native-metal4/rounds/texture-ordered-validation-20261117-16/DECISION.json",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "performance_authorized": false
+    },
+    {
+      "event": "TEXTURE_TRACE_SOURCE_INDEPENDENTLY_VERIFIED_READY",
+      "revision": 67,
+      "round_id": "texture-ordered-trace-20261117-17",
+      "source_commit": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
+      "parent_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+      "source_writers_stopped": true,
+      "child_tasks_completed": true
+    },
+    {
+      "event": "HQ_TEXTURE_TRACE_RESERVED",
+      "revision": 68,
+      "round_id": "texture-ordered-trace-20261117-17",
+      "attempt_id": "texture-ordered-trace-01",
+      "source_commit": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
+      "game_budget": 1
+    },
+    {
+      "event": "HQ_TEXTURE_TRACE_ONE_GAME_POSITIVE_CPU_ADMISSION_EVIDENCE",
+      "revision": 69,
+      "round_id": "texture-ordered-trace-20261117-17",
+      "attempt_id": "texture-ordered-trace-01",
+      "artifact_commit": "f2263e446ef07e0515bac259be882378dac506fa",
+      "games": 1,
+      "Metal_errors": 0,
+      "trace_logged_counts": {
+        "armed": 1,
+        "admitted": 6,
+        "encode_permit_check": 4,
+        "producer_retired_check": 4
+      },
+      "observed_event_log_frames": [
+        91,
+        103
+      ],
+      "performance_accepted": false,
+      "consumer_GPU_completion_not_proved": true,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_TEXTURE_TRACE_REVIEW_COMPLETE",
+      "revision": 70,
+      "round_id": "texture-ordered-trace-20261117-17",
+      "decision": "coordination/native-metal4/rounds/texture-ordered-trace-20261117-17/DECISION.json",
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "path_admission_observed": true,
+      "observed_before_counted_window": true,
+      "performance_accepted": false
+    },
+    {
+      "event": "COMPLETION_SPLIT_SOURCE_REVIEWED_READY",
+      "revision": 71,
+      "round_id": "completion-observation-split-20261117-18",
+      "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "parent_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "source_writers_stopped": true,
+      "HQ_previous_turn_completed": true,
+      "performance_authorized": false
+    },
+    {
+      "event": "HQ_COMPLETION_OBSERVATION_SPLIT_RESERVED",
+      "revision": 72,
+      "round_id": "completion-observation-split-20261117-18",
+      "attempt_id": "completion-observation-split-01",
+      "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "game_budget": 1
+    },
+    {
+      "event": "HQ_COMPLETION_OBSERVATION_SPLIT_BOUNDED_VALIDATION_DONE",
+      "revision": 73,
+      "round_id": "completion-observation-split-20261117-18",
+      "attempt_id": "completion-observation-split-01",
+      "artifact_commit": "8a26fda1d784c57bdcc242d7a83f0899cafb93cf",
+      "games": 1,
+      "Metal_errors": 0,
+      "gl_SaveImage_readback_success": true,
+      "unverified_live_paths": [
+        "Early drain",
+        "Detach",
+        "Fault injection",
+        "Exact callback count",
+        "All lifetime/context/error states"
+      ],
+      "performance_accepted": false,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_COMPLETION_SPLIT_REVIEW_COMPLETE",
+      "revision": 74,
+      "round_id": "completion-observation-split-20261117-18",
+      "decision": "coordination/native-metal4/rounds/completion-observation-split-20261117-18/DECISION.json",
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "shared_tick_states": 39,
+      "performance_accepted": false
+    },
+    {
+      "event": "POSTPROCESS_PRODUCER_SOURCE_REVIEWED_READY",
+      "revision": 75,
+      "round_id": "postprocess-producer-20261117-19",
+      "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+      "parent_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "HQ_previous_turn_completed": true,
+      "source_writers_stopped": true,
+      "performance_authorized": false
+    },
+    {
+      "event": "HQ_POSTPROCESS_PRODUCER_RESERVED",
+      "revision": 76,
+      "round_id": "postprocess-producer-20261117-19",
+      "attempt_id": "postprocess-producer-01",
+      "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+      "game_budget": 1
+    },
+    {
+      "event": "HQ_POSTPROCESS_FIXED_CPU_FIXTURE_COMPILE_FAILED_STOPPED",
+      "revision": 77,
+      "round_id": "postprocess-producer-20261117-19",
+      "attempt_id": "postprocess-producer-01",
+      "artifact_commit": "0716f745fe5f37f62f04cacd8eef096c79c58f11",
+      "CPU_contract_scripts": 1,
+      "CXX_compile_exit": 1,
+      "warning_as_error": "-Werror,-Wuninitialized-const-pointer",
+      "engine_builds": 0,
+      "games": 0,
+      "source_edits": 0,
+      "retries": 0,
+      "cleanup_complete": true,
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "ROUND19_FIXTURE_FAILURE_REVIEWED_R02_EXISTING_TRACE_EXPORT_READY",
+      "revision": 78,
+      "round_id": "r02-existing-trace-export-20261117-20",
+      "previous_HQ_turn_completed": true,
+      "previous_cleanup_verified": true,
+      "game_capture_replay_profile_budget": 0
+    },
+    {
+      "event": "HQ_EXISTING_R02_READ_ONLY_EXPORT_RESERVED",
+      "revision": 79,
+      "round_id": "r02-existing-trace-export-20261117-20",
+      "attempt_id": "r02-existing-trace-export-01",
+      "new_GPU_execution_budget": 0
+    },
+    {
+      "event": "HQ_EXISTING_R02_EXPORT_DONE_AND_USER_REQUESTED_ASTRA_ULTRA_FOLLOWUP_DISPATCHED",
+      "revision": 80,
+      "round_id": "r02-existing-trace-export-20261117-20",
+      "attempt_id": "r02-existing-trace-export-01",
+      "artifact_commit": "9d9c34e19c137857540fb3133a8452523e74074e",
+      "selected_encoders": 14,
+      "GPU_execution": 0,
+      "cleanup_complete": true,
+      "new_audit_thread_id": "01a1e87e-0748-7293-9316-f5c1bfed92bc",
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_R02_EXISTING_TRACE_EXPORT_REVIEW_COMPLETE",
+      "revision": 81,
+      "round_id": "r02-existing-trace-export-20261117-20",
+      "decision": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/DECISION.json",
+      "execution_turn_completed": true,
+      "cleanup_verified": true,
+      "new_execution_authorized": false,
+      "read_only_audit_ongoing": true
+    },
+    {
+      "event": "JINI_REVIEWED_ROUND20_AND_AUDIT2_CPU_TAIL_READY",
+      "revision": 82,
+      "previous_round": "r02-existing-trace-export-20261117-20",
+      "previous_result_path": "coordination/native-metal4/rounds/r02-existing-trace-export-20261117-20/DONE.json",
+      "new_round": "cpu-postcompletion-tail-20261117-21",
+      "attempt_id": "cpu-postcompletion-tail-01",
+      "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "previous_cleanup_verified": true,
+      "old_HQ_turn_completed": true,
+      "HQ3_preparation_turn_completed": true,
+      "independent_audit_completed": true,
+      "heartbeat": "bar PAUSED by old HQ",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "budget": {
+        "diagnostic_games": 1,
+        "engine_builds": 0,
+        "captures": 0,
+        "replays": 0,
+        "helpers": 0,
+        "FPS_AB": 0,
+        "retries": 0,
+        "source_edits": 0
+      },
+      "source_writers_stopped": true,
+      "approval_message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b"
+    },
+    {
+      "event": "HQ3_CPU_POSTCOMPLETION_TAIL_RESERVED",
+      "revision": 83,
+      "author": "LOCAL_CODEX_HQ3",
+      "round_id": "cpu-postcompletion-tail-20261117-21",
+      "attempt_id": "cpu-postcompletion-tail-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+      "budget": {
+        "diagnostic_games": 1,
+        "engine_builds": 0,
+        "captures": 0,
+        "replays": 0,
+        "helpers": 0,
+        "FPS_AB": 0,
+        "retries": 0,
+        "source_edits": 0
+      },
+      "reserved_at_utc": "2026-11-17 08:55:05 UTC",
+      "old_HQ_and_audit_completed": true,
+      "bar_status": "PAUSED",
+      "source_writers_stopped": true
+    },
+    {
+      "event": "HQ3_CPU_POSTCOMPLETION_TAIL_DIAGNOSTIC_DONE",
+      "revision": 84,
+      "author": "LOCAL_CODEX_HQ3",
+      "round_id": "cpu-postcompletion-tail-20261117-21",
+      "attempt_id": "cpu-postcompletion-tail-01",
+      "artifact_commit": "1145a599c051b24071472d131f73d793498df49d",
+      "result_path": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DONE.json",
+      "result_sha256": "e0c6c9c34cb67c01fc670703a69bd35c039601fc5de5554735c177452af40e94",
+      "games": 1,
+      "engine_builds": 0,
+      "captures": 0,
+      "replays": 0,
+      "helpers": 0,
+      "FPS_AB": 0,
+      "retries": 0,
+      "source_edits": 0,
+      "exact_chains": 33,
+      "boundary_censored": 1,
+      "trace_rows": 1496,
+      "buffers": 68,
+      "dropped": 0,
+      "identity_errors": 0,
+      "tail_mean_ns": 32585.81818181818,
+      "tail_median_ns": 32458,
+      "tail_p95_ns": 46417,
+      "tail_max_ns": 47958,
+      "boundary_limits": "Pre-window predecessor unavailable; future successor outside ROI; final-job emission overlap retained without correction",
+      "cleanup_complete": true,
+      "original_evidence_unchanged": true,
+      "full_child_environment_local_only": true,
+      "performance_accepted": false,
+      "bar_status": "PAUSED_UNCHANGED",
+      "completed_at_utc": "2026-11-17 09:16:34 UTC",
+      "to": "SUPER_JINI_MK2"
+    },
+    {
+      "event": "JINI_CPU_TAIL_INDEPENDENT_REVIEW_COMPLETE",
+      "revision": 85,
+      "round_id": "cpu-postcompletion-tail-20261117-21",
+      "decision": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DECISION.json",
+      "HQ3_turn_completed": true,
+      "cleanup_verified": true,
+      "exact_chains": 33,
+      "tail_mean_ns": 32585.81818181818,
+      "performance_accepted": false,
+      "GPU_idle_claim": false,
+      "next_execution_requires_separate_round": true
+    },
+    {
+      "event": "JINI_ROUND21_REVIEWED_R04_FIXED_BUILD_READY",
+      "revision": 86,
+      "previous_round": "cpu-postcompletion-tail-20261117-21",
+      "previous_result": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DONE.json",
+      "previous_decision": "coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/DECISION.json",
+      "round_id": "r04-engine-build-20261117-22",
+      "attempt_id": "r04-isolated-build-01",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "budget": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "relocation_sign": 1,
+        "games": 0,
+        "benchmarks": 0,
+        "helpers": 0,
+        "captures": 0,
+        "replays": 0,
+        "retries": 0,
+        "source_edits": 0
+      }
+    },
+    {
+      "event": "HQ3_R04_ISOLATED_BUILD_RESERVED",
+      "revision": 87,
+      "round_id": "r04-engine-build-20261117-22",
+      "attempt_id": "r04-isolated-build-01",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 09:24:34 UTC",
+      "budget": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "relocation_sign": 1,
+        "games": 0,
+        "benchmarks": 0,
+        "helpers": 0,
+        "captures": 0,
+        "replays": 0,
+        "retries": 0,
+        "source_edits": 0
+      },
+      "prior_cleanup_verified": true,
+      "source_writers_stopped": true,
+      "bar_status": "PAUSED"
+    },
+    {
+      "event": "HQ3_R04_CONFIGURE_FAILED_STOPPED_NO_RETRY",
+      "revision": 88,
+      "round_id": "r04-engine-build-20261117-22",
+      "attempt_id": "r04-isolated-build-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "artifact_commit": "aee6f9aa051d53bc366c01079c1110417ccbad7d",
+      "result_path": "coordination/native-metal4/rounds/r04-engine-build-20261117-22/DONE.json",
+      "result_sha256": "97a747888a3d675eceb1d403b902e7156e84b5d539f8a82425e085a10376c4de",
+      "configure_attempts": 1,
+      "configure_exit": 1,
+      "engine_builds": 0,
+      "relocation_sign": 0,
+      "games": 0,
+      "benchmarks": 0,
+      "helpers": 0,
+      "captures": 0,
+      "replays": 0,
+      "retries": 0,
+      "source_edits": 0,
+      "failed_requirement": "openal>=1.18.2",
+      "failure_stage": "CMake dependency discovery before engine compilation",
+      "R03_binary_and_runner_actual_hash_match": true,
+      "baseline_and_candidate_source_files_verified": 10269,
+      "runtime_dylibs_unchanged": 19,
+      "cleanup_complete": true,
+      "original_evidence_unchanged": true,
+      "bar_status": "PAUSED_UNCHANGED",
+      "performance_accepted": false,
+      "to": "SUPER_JINI_MK2",
+      "completed_at_utc": "2026-11-17 09:33:16 UTC"
+    },
+    {
+      "event": "JINI_CONFIGURE_FAILURE_REVIEWED_OPENAL_PATH_PROVED_NEW_ROUND",
+      "revision": 89,
+      "previous_round": "r04-engine-build-20261117-22",
+      "previous_result": "coordination/native-metal4/rounds/r04-engine-build-20261117-22/DONE.json",
+      "previous_decision": "coordination/native-metal4/rounds/r04-engine-build-20261117-22/DECISION.json",
+      "round_id": "r04-engine-build-envfix-20261117-23",
+      "attempt_id": "r04-isolated-build-02",
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "source_unchanged": true,
+      "environment_correction": {
+        "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+        "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
+        "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+      }
+    },
+    {
+      "event": "HQ3_R04_BUILD_ENVFIX_RESERVED",
+      "revision": 90,
+      "round_id": "r04-engine-build-envfix-20261117-23",
+      "attempt_id": "r04-isolated-build-02",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 09:38:14 UTC",
+      "budget": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "relocation_sign": 1,
+        "games": 0,
+        "benchmarks": 0,
+        "helpers": 0,
+        "captures": 0,
+        "replays": 0,
+        "retries": 0,
+        "source_edits": 0
+      },
+      "environment_correction": {
+        "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+        "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
+        "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+      },
+      "prior_attempt_preserved": true,
+      "prior_cleanup_verified": true,
+      "source_writers_stopped": true,
+      "bar_status": "PAUSED"
+    },
+    {
+      "event": "HQ3_R04_BUILD_ENVFIX_STATIC_CLOSURE_DONE",
+      "revision": 91,
+      "round_id": "r04-engine-build-envfix-20261117-23",
+      "attempt_id": "r04-isolated-build-02",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "artifact_commit": "dd2e03c26ca6824a096cff460500a269fb452885",
+      "result_path": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/DONE.json",
+      "result_sha256": "4103f991e157ce07e851a24eb4e1ffed826f01a77e644140217413fbfd0674bc",
+      "configure_attempts": 1,
+      "configure_exit": 0,
+      "engine_builds": 1,
+      "build_exit": 0,
+      "relocation_sign": 1,
+      "games": 0,
+      "benchmarks": 0,
+      "helpers": 0,
+      "captures": 0,
+      "replays": 0,
+      "retries": 0,
+      "source_edits": 0,
+      "raw_engine_sha256": "853083e4ba5490a40ede292c88d95b213166fbbc8db70af5336707657af997d1",
+      "signed_engine_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "R03_binary_and_runner_actual_hash_match": true,
+      "baseline_and_candidate_source_files_verified": 10269,
+      "normalized_compile_commands_identical_to_R03": 3142,
+      "archive_objects": 1538,
+      "archives": 35,
+      "archive_mismatches": 0,
+      "runtime_dylibs_unchanged": 19,
+      "loader_files_checked": 20,
+      "codesign": "PASS",
+      "environment_correction": "Process-local OpenAL1.25.2 pkg-config path only",
+      "cleanup_complete": true,
+      "original_evidence_unchanged": true,
+      "prior_failed_attempt_unchanged": true,
+      "bar_status": "PAUSED_UNCHANGED",
+      "runtime_validation": "NOT_RUN",
+      "performance_accepted": false,
+      "to": "SUPER_JINI_MK2",
+      "completed_at_utc": "2026-11-17 09:48:25 UTC"
+    },
+    {
+      "event": "JINI_ACCEPTED_R04_BUILD_READY_VALIDATION_THEN_CONDITIONAL_CLEAN",
+      "revision": 92,
+      "previous_round": "r04-engine-build-envfix-20261117-23",
+      "previous_result": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/DONE.json",
+      "previous_decision": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/DECISION.json",
+      "round_id": "r04-r03-validation-clean-20261117-24",
+      "attempt_id": "r04-validation-and-clean-01",
+      "cleanup_verified": true,
+      "HQ_turn_completed": true,
+      "budget": {
+        "validation_games": 1,
+        "clean_games": 6,
+        "total_game_launches_max": 7,
+        "builds": 0,
+        "helper_runs": 0,
+        "captures": 0,
+        "replay_profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_R04_VALIDATION_CONDITIONAL_CLEAN_RESERVED",
+      "revision": 93,
+      "round_id": "r04-r03-validation-clean-20261117-24",
+      "attempt_id": "r04-validation-and-clean-01",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 09:53:23 UTC",
+      "budget": {
+        "validation_games": 1,
+        "clean_games": 6,
+        "total_game_launches_max": 7,
+        "builds": 0,
+        "helper_runs": 0,
+        "captures": 0,
+        "replay_profiles": 0,
+        "retries": 0
+      },
+      "validation_gate_required_before_clean": true,
+      "source_writers_stopped": true,
+      "bar_status": "PAUSED"
+    },
+    {
+      "event": "HQ3_R04_VALIDATION_PASS_SIX_CLEAN_OBSERVED_REGRESSION_DONE",
+      "revision": 94,
+      "round_id": "r04-r03-validation-clean-20261117-24",
+      "attempt_id": "r04-validation-and-clean-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+      "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+      "artifact_commit": "c47add111fee80fba87b41cfbae012743033b163",
+      "result_path": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DONE.json",
+      "result_sha256": "987f622d87d838cafcc0f2c45b1a2ff0e2af5b2a21186cd77d6e9c2b8ae8e8b3",
+      "runner_sha256": "d1c4467a2dd4fd8bf1650a812111ae99d643fc8e8677a4beec359317e6f8fb74",
+      "validation_games": 1,
+      "clean_games": 6,
+      "games": 7,
+      "builds": 0,
+      "helpers": 0,
+      "captures": 0,
+      "replays": 0,
+      "retries": 0,
+      "source_edits": 0,
+      "Metal_validation_errors": 0,
+      "validation_gate_before_clean": true,
+      "world_check": "PASS_ALL40_ALL6",
+      "arithmetic_means_FPS": {
+        "R03": 63.81081856021591,
+        "R04": 59.07250631976942
+      },
+      "R04_vs_R03_percent": -7.425562541522835,
+      "metric": "CPU-observed DrawScreen frames / measured wall seconds; not GPU or present FPS",
+      "all_valid_slow_runs_retained": true,
+      "validation_FPS_excluded": true,
+      "historical_samples_pooled": false,
+      "images_published": 7,
+      "orange_range_circle_current_clean_presence": {
+        "R03": "3/3",
+        "R04": "3/3"
+      },
+      "pixel_or_unsynced_UI_equivalence_claimed": false,
+      "performance_improvement_accepted": false,
+      "release_adoption": false,
+      "cleanup_complete": true,
+      "original_evidence_unchanged": true,
+      "bar_status": "PAUSED_UNCHANGED",
+      "to": "SUPER_JINI_MK2",
+      "completed_at_utc": "2026-11-17 10:21:20 UTC"
+    },
+    {
+      "event": "JINI_R04_REGRESSION_VERIFIED_NOT_ADOPTED_R03_RETAINED",
+      "revision": 95,
+      "round_id": "r04-r03-validation-clean-20261117-24",
+      "decision": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DECISION.json",
+      "R04_percent": -7.425562541522835,
+      "each_R04_slower_than_every_R03": true,
+      "HQ_turn_completed": true,
+      "cleanup_verified": true,
+      "retained_source": "0780bd7c530b0696067b717428b49a416eda556a",
+      "new_execution_authorized": false
+    },
+    {
+      "event": "JINI_MATCHED_FRAME_PAIR_READY_R03_RETAINED",
+      "revision": 96,
+      "previous_round": "r04-r03-validation-clean-20261117-24",
+      "previous_result": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DONE.json",
+      "previous_decision": "coordination/native-metal4/rounds/r04-r03-validation-clean-20261117-24/DECISION.json",
+      "round_id": "r03-mvk3-matched-frame-20261117-25",
+      "attempt_id": "r03-mvk3-framepair-01",
+      "HQ_plan_turn_completed": true,
+      "cleanup_verified": true,
+      "budget": {
+        "games_max": 2,
+        "captured_frames_per_arm": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profile_commands_per_arm": 1,
+        "profile_commands_max": 2,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      }
+    },
+    {
+      "event": "HQ3_R03_MVK3_MATCHED_FRAME_PAIR_RESERVED",
+      "revision": 97,
+      "round_id": "r03-mvk3-matched-frame-20261117-25",
+      "attempt_id": "r03-mvk3-framepair-01",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 10:41:20 UTC",
+      "budget": {
+        "games_max": 2,
+        "captured_frames_per_arm": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profile_commands_per_arm": 1,
+        "profile_commands_max": 2,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      },
+      "bar_status": "PAUSED",
+      "source_writers_stopped": true
+    },
+    {
+      "event": "HQ3_MATCHED_FRAME_ATTEMPT_STOPPED_BEFORE_CAPTURE_DONE",
+      "revision": 98,
+      "round_id": "r03-mvk3-matched-frame-20261117-25",
+      "attempt_id": "r03-mvk3-framepair-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+      "artifact_commit": "52194039c9e18b1da8b3e808c3a2a02f28a5f381",
+      "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/DONE.json",
+      "report_sha256": "e1aa047e7cda6d90a804496a9fdb0c9ccc56e48576d482437a1dee3dc1da50c6",
+      "counts": {
+        "games": 1,
+        "R03_games": 1,
+        "MVK3_games": 0,
+        "capture_boundary_queries": 1,
+        "capture_start_commands": 0,
+        "captured_frames": 0,
+        "inspection_sessions": 0,
+        "profile_commands": 0,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      },
+      "stop_reason": "R03 gpucapture Layer boundary enumeration timed out at 8 seconds; capture start never invoked.",
+      "actual_capture_bound_timeInfo_x": "UNKNOWN",
+      "pair_comparison_complete": false,
+      "owned_cleanup_complete": true,
+      "global_session_listing": "UNKNOWN_FINAL_LIST_TIMEOUT_15S",
+      "bar_status": "PAUSED",
+      "to": "SUPER_JINI_MK2",
+      "completed_at_utc": "2026-11-17 10:56:20 UTC"
+    },
+    {
+      "event": "JINI_SERVICE_RESPONSE_RESTORED_REBOOT_CANCELLED_NEW_FRAMEPAIR_READY",
+      "revision": 99,
+      "previous_round": "r03-mvk3-matched-frame-20261117-25",
+      "previous_result": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-25/DONE.json",
+      "round_id": "r03-mvk3-matched-frame-20261117-26",
+      "attempt_id": "r03-mvk3-framepair-02",
+      "HQ_recovery_turn_completed": true,
+      "recovery": {
+        "status": "REBOOT_CANCELLED_SERVICE_LIST_RESPONSIVE",
+        "reboot_requests": 0,
+        "service_restart_requests_this_step": 0,
+        "service_query_exit": 0,
+        "service_query_elapsed_seconds": 0.012305,
+        "active_sessions": 0,
+        "source": "evidence/capture-tool-reboot-20261117-01/RESULT.json",
+        "HQ_turn_completed": true,
+        "protected_files_unchanged": 110,
+        "bar": "PAUSED",
+        "capture_path_tested": false,
+        "scope": "User corrected reboot interpretation; no reboot authorized. User reports approving GPU diagnostic prompt; causal mechanism not established."
+      },
+      "budget": {
+        "games_max": 2,
+        "captured_frames_per_arm": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profile_commands_per_arm": 1,
+        "profile_commands_max": 2,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      },
+      "service_restart_approval_message": "Sentinel_5b819f1a943c8191af9e8531392ecf1b",
+      "reboot_instruction": "Explicitly corrected and cancelled before any request or schedule; prohibited"
+    },
+    {
+      "event": "ROUND26_HANDOFF_DENIED_HOLD_NO_EXECUTION",
+      "revision": 100,
+      "reason": "Messaging approval review rejected follow-up that would initiate new capture/game/profile round. No retry or indirect execution.",
+      "previous_revision": 99,
+      "execution_started": false
+    },
+    {
+      "event": "USER_ORIGINAL_BENCHMARK_AUTHORIZATION_READ_AND_VERIFIED_FOR_ONE_HANDOFF_RETRY",
+      "revision": 101,
+      "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+      "user_quote": "\ubca4\uce58\ub9c8\ud06c \ud544\uc694\ud560 \ub584 \uc694\uccad\ud558\ub4e0\uac00 \uc544\ub2c8\uba74 \ub124\uac00 \uc790\uc728\ub85c \ud588\ub2e4 \uae60\ub2e4 \ud574",
+      "HQ_routing_approval": "Sentinel_8563c81084e48191aa31675bff31ab10",
+      "latest_limit": "No reboot, logout, service restart, security changes; GPU diagnostic prompt approval reported by user.",
+      "retry_limit": 1
+    },
+    {
+      "event": "HQ3_ROUND26_MATCHED_FRAME_PAIR_RESERVED_ONCE",
+      "revision": 102,
+      "round_id": "r03-mvk3-matched-frame-20261117-26",
+      "attempt_id": "r03-mvk3-framepair-02",
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 16:44:41 UTC",
+      "budget": {
+        "games_max": 2,
+        "captured_frames_per_arm": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profile_commands_per_arm": 1,
+        "profile_commands_max": 2,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "extra_counter_replays": 0,
+        "FPS_AB": 0
+      },
+      "previous_round_budget_reused": false,
+      "reboot_or_service_restart_authorized": false,
+      "bar": "PAUSED"
+    },
+    {
+      "event": "HQ3_ROUND26_DONE_BOUND_TICKS1590_DECAL_INPUT_MISMATCH",
+      "revision": 103,
+      "round_id": "r03-mvk3-matched-frame-20261117-26",
+      "attempt_id": "r03-mvk3-framepair-02",
+      "author": "LOCAL_CODEX_HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "aa7a6ada2538d237604ce483e1ba7687998463af",
+      "result_path": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/DONE.json",
+      "counts": {
+        "games": 2,
+        "capture_command_invocations": 2,
+        "captured_frames": 2,
+        "inspection_sessions": 2,
+        "profile_commands": 0,
+        "extra_counter_replays": 0,
+        "engine_builds": 0,
+        "engine_source_edits": 0,
+        "R04_captures": 0,
+        "retries": 0,
+        "FPS_AB": 0,
+        "reboots": 0,
+        "logouts": 0,
+        "service_restarts": 0,
+        "security_changes": 0
+      },
+      "bound_ticks": {
+        "R03": 1590,
+        "MVK3": 1590
+      },
+      "mandatory_gate": "FAIL_MANDATORY_GAME_DECAL_SEMANTIC_WORKLOAD",
+      "game_decal_instances": {
+        "R03": 3541,
+        "MVK3": 4511
+      },
+      "exact_80byte_row_overlap": 0,
+      "cleanup_complete": true,
+      "global_gpu_sessions_after": 0,
+      "bar": "PAUSED",
+      "retry_authorized": false,
+      "utc": "2026-11-17T17:07:48.165Z"
+    },
+    {
+      "event": "JINI_LIFETIME_ONLY_CANDIDATE_REVIEW_READY",
+      "revision": 104,
+      "previous_round": "r03-mvk3-matched-frame-20261117-26",
+      "round_id": "r03-mvk3-lifetime-20261117-27",
+      "attempt_id": "lifetime-raw-two-arm-01",
+      "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+      "budget": {
+        "games_max": 2,
+        "games_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0
+      },
+      "previous_budget_reused": false,
+      "frame_zero_gate_corrected": true,
+      "execution_started": false
+    },
+    {
+      "event": "HQ3_ROUND27_LIFETIME_RESERVED_ONCE",
+      "revision": 105,
+      "round_id": "r03-mvk3-lifetime-20261117-27",
+      "attempt_id": "lifetime-raw-two-arm-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "reserved_at_utc": "2026-11-17 20:06:49 UTC",
+      "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+      "budget": {
+        "games_max": 2,
+        "games_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0
+      },
+      "previous_round_budget_reused": false
+    },
+    {
+      "event": "HQ3_ROUND27_DONE_FIRST_FRAME_LIFETIME_DIFFERENCE_MVK3_FRAME180_STOP",
+      "revision": 106,
+      "round_id": "r03-mvk3-lifetime-20261117-27",
+      "attempt_id": "lifetime-raw-two-arm-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "d0a7ee775c2a50f54bcb1474fbbb60734c59dfd0",
+      "result_path": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/DONE.json",
+      "decision": "PARTIAL_FIRST_FRAME_SCALARS_DIFFER_MVK3_SIM1590_UNKNOWN",
+      "counts": {
+        "stages": 1,
+        "games": 2,
+        "R03": 1,
+        "MVK3": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0,
+        "FPS_AB": 0,
+        "engineSourceEdits": 0,
+        "RNGOrLifetimeOverrides": 0
+      },
+      "observed_ticks": {
+        "R03": [
+          0,
+          1590
+        ],
+        "MVK3": [
+          0
+        ]
+      },
+      "mvk3_failure": "FAILED_PAUSE_REQUEST_STATE at frame 180",
+      "mvk3_sim1590": "UNKNOWN",
+      "protected_hashes_verified": 132,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T20:19:05.831443+00:00"
+    },
+    {
+      "event": "JINI_READY_MAIN_DECAL_NEGATIVE_CONTROL",
+      "revision": 107,
+      "previous_round": "r03-mvk3-lifetime-20261117-27",
+      "round_id": "r03-skipdraw-pair-20261117-28",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+      "budget": {
+        "games_max": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profiles_max": 2,
+        "profiles_per_capture": 1,
+        "retries": 0,
+        "builds": 0
+      },
+      "previous_budget_reused": false,
+      "source_preserved": true
+    },
+    {
+      "event": "ROUND28_HANDOFF_DENIED_HOLD",
+      "revision": 108,
+      "execution_started": false
+    },
+    {
+      "event": "DIRECT_USER_AUTHORIZATION_REVERIFIED_FOR_ONE_RETRY",
+      "revision": 109,
+      "user_quote": "\ubca4\uce58\ub9c8\ud06c \ud544\uc694\ud560 \ub584 \uc694\uccad\ud558\ub4e0\uac00 \uc544\ub2c8\uba74 \ub124\uac00 \uc790\uc728\ub85c \ud588\ub2e4 \uae60\ub2e4 \ud574",
+      "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+      "HQ_routing_message": "Sentinel_8563c81084e48191aa31675bff31ab10",
+      "execution_started": false,
+      "retry_limit": 1
+    },
+    {
+      "event": "HQ3_ROUND28_RESERVED_ONCE",
+      "revision": 110,
+      "round_id": "r03-skipdraw-pair-20261117-28",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "budget": {
+        "games_max": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profiles_max": 2,
+        "profiles_per_capture": 1,
+        "retries": 0,
+        "builds": 0
+      },
+      "bar": "PAUSED",
+      "utc": "2026-11-17 20:30:05 UTC"
+    },
+    {
+      "event": "HQ3_ROUND28_CLOSED_FALSE_NEGATIVE_ACTION_ACK_SINGLE_CAPTURE_NO_PROFILE",
+      "revision": 111,
+      "round_id": "r03-skipdraw-pair-20261117-28",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "0f1fedbfd5def3302de2f23cf4cbce8dac129f51",
+      "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/DONE.json",
+      "decision": "UNKNOWN_SKIP_CAPTURE_NOT_STARTED_FALSE_NEGATIVE_ACK",
+      "counts": {
+        "games": 1,
+        "capture_commands": 1,
+        "captured_frames": 1,
+        "skip_capture_commands": 0,
+        "inspection_sessions": 0,
+        "profile_commands": 0,
+        "retries": 0,
+        "builds": 0,
+        "engine_source_edits": 0
+      },
+      "original_action_true_confirmed_from_verbatim_log": true,
+      "actual_bound_gpu_ticks": "UNKNOWN",
+      "protected_hashes_verified": 132,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T20:34:45.171445+00:00"
+    },
+    {
+      "event": "HQ3_ROUND29_RESERVED_ONCE",
+      "revision": 112,
+      "round_id": "r03-skipdraw-pair-20261117-29",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+      "runner_sha256": "8d8cf7e5c6d1ad75e6aaf9a97d93ccde682e24c99028bd5ca5003a5c573c87ec",
+      "controller_sha256": "fe0a9b9a16d545f4a43cea168bea6dfbb6782c05a27492c123a6735bfc5e2925",
+      "budget": {
+        "games_max": 1,
+        "captures_max": 2,
+        "inspection_sessions_max": 2,
+        "profiles_max": 2,
+        "profiles_per_capture": 1,
+        "retries": 0,
+        "builds": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "bar": "PAUSED",
+      "utc": "2026-11-17 20:38:03 UTC"
+    },
+    {
+      "event": "HQ3_ROUND29_CLOSED_TWO_CAPTURES_SKIP_INSPECTION_NOT_READY",
+      "revision": 113,
+      "round_id": "r03-skipdraw-pair-20261117-29",
+      "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "2b94556d628b18a828ca1c2c9dcade66971e42a0",
+      "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-29/DONE.json",
+      "decision": "UNKNOWN_SKIP_GPU_INSPECTION_NOT_READY",
+      "counts": {
+        "games": 1,
+        "capture_commands": 2,
+        "captured_frames": 2,
+        "inspection_sessions": 2,
+        "profile_commands": 0,
+        "retries": 0,
+        "builds": 0,
+        "engine_source_edits": 0
+      },
+      "original_action_true_confirmed": true,
+      "actual_bound_gpu_ticks": "UNKNOWN",
+      "skip_replayer_final_state": "loading",
+      "protected_hashes_verified": 132,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T20:42:23.196452+00:00"
+    },
+    {
+      "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
+      "revision": 114,
+      "cancelled_round_id": "r03-skipdraw-inspection-20261117-30",
+      "cancelled_attempt_id": "preserved-round29-inspection-01",
+      "execution_started": false,
+      "reservation_created": false,
+      "counts": {
+        "games": 0,
+        "captures": 0,
+        "inspection_sessions": 0,
+        "profiles": 0,
+        "builds": 0,
+        "retries": 0
+      },
+      "owned_cleanup_required": false,
+      "observed_active_gpu_sessions": 0,
+      "user_wake_operations": 0,
+      "prior_round29_execution_preserved": true,
+      "utc": "2026-11-17 20:45:24 UTC"
+    },
+    {
+      "event": "HQ3_ROUND31_RESERVED_ONCE",
+      "revision": 115,
+      "round_id": "game-decal-indexed-validation-20261117-31",
+      "attempt_id": "indexed-native-off-on-01",
+      "candidate_commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+      "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+      "manifest_sha256": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
+      "budget": {
+        "engine_builds": 1,
+        "parity_helper_compiles_max": 1,
+        "parity_helper_gpu_invocations_max": 1,
+        "parity_games_max": 2,
+        "clean_games_max": 2,
+        "games_max": 4,
+        "captures": 0,
+        "trace_inspections": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "bar": "PAUSED",
+      "utc": "2026-11-17 20:57:23 UTC"
+    },
+    {
+      "event": "HQ3_ROUND31_CLOSED_CONFIGURE_OPENAL_LOOKUP_BLOCKED_NO_GPU_OR_BUILD",
+      "revision": 116,
+      "round_id": "game-decal-indexed-validation-20261117-31",
+      "attempt_id": "indexed-native-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "ae113722ccdd36be5564d08552e68aea9f7ad5bd",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/DONE.json",
+      "decision": "BLOCKED_CONFIGURE_OPENAL_PACKAGE_SEARCH_PATH",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 0,
+        "parity_helper_compiles": 0,
+        "parity_helper_gpu_invocations": 0,
+        "parity_games": 0,
+        "clean_games": 0,
+        "games": 0,
+        "captures": 0,
+        "trace_inspections": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "protected_hashes_verified": 132,
+      "base_source_entries_verified": 10270,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T21:00:03.769031+00:00"
+    },
+    {
+      "event": "HQ3_ROUND32_RESERVED_ONCE",
+      "revision": 117,
+      "round_id": "game-decal-indexed-validation-20261117-32",
+      "attempt_id": "indexed-native-off-on-02",
+      "candidate_commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+      "manifest_sha256": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
+      "budget": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "parity_helper_compiles_max": 1,
+        "parity_helper_gpu_invocations_max": 1,
+        "parity_games_max": 2,
+        "clean_games_max": 2,
+        "games_max": 4,
+        "captures": 0,
+        "trace_inspections": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17 21:03:14 UTC"
+    },
+    {
+      "event": "HQ3_ROUND32_CLOSED_SDK_AND_SINGLE_SAMPLE_FIXTURE_PASS_NO_CLEAN_GAME",
+      "revision": 118,
+      "round_id": "game-decal-indexed-validation-20261117-32",
+      "attempt_id": "indexed-native-off-on-02",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "2ce020559b5d3fdcc35eb493d8fe2092cc4513a8",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-32/DONE.json",
+      "decision": "PASS_SDK_AND_METAL_FIXTURE_CLEAN_PAIR_BLOCKED_UNPROVED_WORKLOAD",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "parity_helper_compiles": 1,
+        "parity_helper_gpu_invocations": 1,
+        "parity_games": 0,
+        "clean_games": 0,
+        "games": 0,
+        "captures": 0,
+        "trace_inspections": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "parity_fixture_cases": 9,
+      "fixture_samples": 1,
+      "production_runtime_route": "UNTESTED",
+      "protected_hashes_verified": 132,
+      "base_source_entries_verified": 10270,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T21:10:00.636153+00:00"
+    },
+    {
+      "event": "HQ3_ROUND33_RESERVED_ONCE",
+      "revision": 119,
+      "round_id": "game-decal-indexed-timing-20261117-33",
+      "attempt_id": "indexed-helper-and-smoke-01",
+      "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+      "budget": {
+        "helper_compiles": 1,
+        "helper_gpu_invocations": 1,
+        "games": 1,
+        "engine_builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "trace_inspections": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17 21:17:53 UTC"
+    },
+    {
+      "event": "HQ3_ROUND33_CLOSED_FIXTURE_TIMING_PASS_SMOKE_STARTUP_FAIL",
+      "revision": 120,
+      "round_id": "game-decal-indexed-timing-20261117-33",
+      "attempt_id": "indexed-helper-and-smoke-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "474173699c0925afa47e53109f5a760c31375dce",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-timing-20261117-33/DONE.json",
+      "decision": "PASS_GPU_FIXTURE_TIMING_SMOKE_BLOCKED_DUPLICATE_BASE_CONTENT",
+      "counts": {
+        "helper_compiles": 1,
+        "helper_gpu_invocations": 1,
+        "game_launches": 1,
+        "games_completed": 0,
+        "engine_builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "trace_inspections": 0,
+        "retries": 0
+      },
+      "timing": {
+        "pairs": 24,
+        "off_gpu_median_ms": 0.2076250005,
+        "on_gpu_median_ms": 0.1484791665,
+        "median_change_percent": -28.48685556053736,
+        "on_faster_pairs": 24
+      },
+      "production_runtime_route": "NOT_REACHED",
+      "protected_hashes_verified": 134,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T21:22:42.810095+00:00"
+    },
+    {
+      "event": "HQ3_ROUND34_RESERVED_ONCE",
+      "revision": 121,
+      "round_id": "prepare-decode-batch-sdk-20261117-34",
+      "attempt_id": "clean-sdk-only-01",
+      "candidate_commit": "f7faa7afb134b56dd673180f660df6add5600cae",
+      "manifest_sha256": "81e910aee0bcfc65528e1bae7bb5e9a8fa0dcfe21725bc42541287816510563b",
+      "budget": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "games": 0,
+        "gpu_invocations": 0,
+        "helpers": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17 22:05:57 UTC"
+    },
+    {
+      "event": "HQ3_ROUND34_CLOSED_PREPARE_LOCAL_MAC_SDK_COMPILE_LINK_PASS",
+      "revision": 122,
+      "round_id": "prepare-decode-batch-sdk-20261117-34",
+      "attempt_id": "clean-sdk-only-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "afcee01f8bea51bab364ec13364036825572a413",
+      "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/DONE.json",
+      "decision": "PASS_EXACT_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_AND_LINK",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "games": 0,
+        "gpu_invocations": 0,
+        "helpers": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "candidate_binary_sha256": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d",
+      "production_compile_and_link_verified": 12,
+      "protected_hashes_verified": 134,
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T22:12:28.041490+00:00"
+    },
+    {
+      "event": "HQ3_ROUND35_RESERVED_ORIGINAL_AND_PREPARE_BATCH_SMOKE",
+      "revision": 123,
+      "round_id": "prepare-decode-batch-runtime-20261117-35",
+      "attempt_id": "batch-original-smoke-pair-01",
+      "binary_sha256": {
+        "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+        "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+      },
+      "budget": {
+        "games_max": 2,
+        "original_games_max": 1,
+        "batch_games_max": 1,
+        "screenshots_per_game_max": 3,
+        "builds": 0,
+        "helpers": 0,
+        "gputrace_captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17T22:18:40.946Z"
+    },
+    {
+      "event": "HQ3_ROUND35_CLOSED_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
+      "revision": 124,
+      "round_id": "prepare-decode-batch-runtime-20261117-35",
+      "attempt_id": "batch-original-smoke-pair-01",
+      "decision": "PASS_MATCHED_RUNTIME_SMOKE_LIMITED_PATH_COVERAGE",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "cd5f22f0638b8e70fcd9c1867f4d3529ec4e65c0",
+      "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/DONE.json",
+      "counts": {
+        "games": 2,
+        "original_games": 1,
+        "batch_games": 1,
+        "normal_exits": 2,
+        "screenshots": 2,
+        "screenshots_per_game": {
+          "R03_ORIGINAL": 1,
+          "PREPARE_BATCH": 1
+        },
+        "builds": 0,
+        "helpers": 0,
+        "gputrace_captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "path_coverage": {
+        "BuildSquare": "UNVERIFIED",
+        "Commands FX": "DRAW_COMPLETED",
+        "Sensor31657Circle (radar/sonar)": "UNVERIFIED",
+        "StartBox": "UNVERIFIED",
+        "WeaponRange": "PREPARE_EXERCISED",
+        "EnergyExplosion": "UNVERIFIED",
+        "LuaNano": "UNVERIFIED"
+      },
+      "cleanup_complete": true,
+      "bar": "PAUSED",
+      "utc": "2026-11-17T22:25:22.199983+00:00"
+    },
+    {
+      "event": "HQ3_ROUND36_RESERVED_CLEAN_ORIGINAL_PREPARE_BATCH_FPS",
+      "revision": 125,
+      "round_id": "prepare-decode-fps-20261117-36",
+      "attempt_id": "clean-original-batch-fps-01",
+      "binary_sha256": {
+        "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+        "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+      },
+      "budget": {
+        "games_max": 2,
+        "original_games_max": 1,
+        "batch_games_max": 1,
+        "builds": 0,
+        "helpers": 0,
+        "retries": 0,
+        "metal_traces": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17T22:30:50.776Z"
+    },
+    {
+      "event": "HQ3_ROUND36_CLOSED_CLEAN_FPS_PAIR",
+      "revision": 126,
+      "round_id": "prepare-decode-fps-20261117-36",
+      "attempt_id": "clean-original-batch-fps-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "3395c9b0de96a01b38900dd9891dd67cf5c3a18d",
+      "result_path": "coordination/native-metal4/rounds/prepare-decode-fps-20261117-36/DONE.json",
+      "decision": "DONE_MATCHED_CLEAN_FPS_PAIR",
+      "counts": {
+        "games": 2,
+        "original_games": 1,
+        "batch_games": 1,
+        "normal_exits": 2,
+        "builds": 0,
+        "helpers": 0,
+        "retries": 0,
+        "screenshots": 0,
+        "metal_traces": 0,
+        "profiles": 0
+      },
+      "clean_fps": {
+        "R03_ORIGINAL": 64.01379763502456,
+        "PREPARE_BATCH": 64.113780138164
+      },
+      "clean_relative_percent": 0.15618898867630904,
+      "same_loaded_non_system_dylibs": true,
+      "cleanup_complete": true,
+      "utc": "2026-11-17T22:35:46.769102+00:00"
+    },
+    {
+      "event": "HQ3_ROUND37_RESERVED_GAME_DECAL_SAME_BINARY_OFF_ON_FPS",
+      "revision": 127,
+      "round_id": "game-decal-indexed-fps-20261117-37",
+      "attempt_id": "indexed-clean-off-on-01",
+      "binary_sha256": {
+        "INDEXED_OFF": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+        "INDEXED_ON": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b"
+      },
+      "budget": {
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "builds": 0,
+        "helpers": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17T22:46:22.752Z"
+    },
+    {
+      "event": "HQ3_ROUND37_CLOSED_SAME_BINARY_INDEXED_OFF_ON_FPS",
+      "revision": 128,
+      "round_id": "game-decal-indexed-fps-20261117-37",
+      "attempt_id": "indexed-clean-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "5875da033603118a146677f370f3359c8482160d",
+      "result_path": "coordination/native-metal4/rounds/game-decal-indexed-fps-20261117-37/DONE.json",
+      "decision": "DONE_MATCHED_SAME_BINARY_GAME_DECAL_FLAG_FPS_PAIR",
+      "counts": {
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "builds": 0,
+        "helpers": 0,
+        "retries": 0,
+        "screenshots": 0,
+        "metal_traces": 0,
+        "profiles": 0
+      },
+      "fps_by_arm": {
+        "INDEXED_OFF": 64.87891356156975,
+        "INDEXED_ON": 65.71149946147935
+      },
+      "relative_percent": 1.2832919884200544,
+      "indexed_draw_api": "UNVERIFIED_BY_EXISTING_LOG",
+      "cleanup_complete": true,
+      "utc": "2026-11-17T22:50:28.939618+00:00"
+    },
+    {
+      "event": "HQ3_ROUND38_RESERVED_SENSORLOS_FRAGMENT_REJECT_SINGLE_ATTEMPT",
+      "revision": 129,
+      "round_id": "sensorlos-fragment-reject-20261117-38",
+      "attempt_id": "fragment-reject-01",
+      "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+      "manifest_sha256": "57464dc8e4373a949bb9c286291566d76eb84025ea14f2d31f4e2de394e7b786",
+      "patch_sha256": "a0da16109fd1062a8a43dbe97a2fe80f263d637d3782a16324ec981a3fcd871c",
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "helper_compiles_max": 1,
+        "helper_gpu_invocations_max": 1,
+        "games_max": 2,
+        "original_games_max": 1,
+        "candidate_games_max": 1,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17T22:57:44.015Z"
+    },
+    {
+      "event": "HQ3_ROUND38_CLOSED_SENSORLOS_FRAGMENT_PARITY_AND_FPS",
+      "revision": 130,
+      "round_id": "sensorlos-fragment-reject-20261117-38",
+      "attempt_id": "fragment-reject-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "b30f6f32ff3615209013dc792540b1adcc146b08",
+      "result_path": "coordination/native-metal4/rounds/sensorlos-fragment-reject-20261117-38/DONE.json",
+      "decision": "DONE_MATCHED_FPS_PAIR_SENSORLOS_SUBMISSION_UNVERIFIED",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "helper_compiles": 1,
+        "helper_gpu_invocations": 1,
+        "games": 2,
+        "original_games": 1,
+        "candidate_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps_by_arm": {
+        "R03_ORIGINAL": 64.73309336504423,
+        "FRAGMENT_REJECT": 64.72014865532098
+      },
+      "relative_percent": -0.019997051045039793,
+      "sensorlos_draw_in_counted_window_both": false,
+      "cleanup_complete": true,
+      "utc": "2026-11-17T23:17:52.790632+00:00"
+    },
+    {
+      "event": "HQ3_ROUND39_RESERVED_FIXED_GEOMETRY_OFF_ON_PAIR",
+      "revision": 131,
+      "round_id": "native-indexed-geometry-fps-20261117-39",
+      "attempt_id": "indexed-batch-off-on-01",
+      "source_candidate_commit": "855197fe4c2439ee169db22d58a647d3241e08b5",
+      "manifest_sha256": "f1cf3c1d3c15ed1b6a675689510c780ce04d2e38ed68d44be71f1c16bc47292d",
+      "patch_sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b",
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "helper_fixtures_max": 2,
+        "helper_compiles_per_fixture_max": 1,
+        "helper_gpu_invocations_per_fixture_max": 1,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-17T23:43:34.932Z"
+    },
+    {
+      "event": "HQ3_ROUND39_CLOSED_SAME_BINARY_FIXED_GEOMETRY_OFF_ON_FPS",
+      "revision": 132,
+      "round_id": "native-indexed-geometry-fps-20261117-39",
+      "attempt_id": "indexed-batch-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "c64667df9aa6596b73b0ad7783887f71a7f92f31",
+      "result_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-39/DONE.json",
+      "decision": "DONE_MATCHED_FIXED_INDEXED_GEOMETRY_OFF_ON_FPS_PAIR",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "helper_compiles": 2,
+        "helper_gpu_invocations": 2,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps_by_arm": {
+        "INDEXED_OFF": 64.31607632102086,
+        "INDEXED_ON": 64.73632880737064
+      },
+      "relative_percent": 0.6534174818939142,
+      "cleanup_complete": true,
+      "utc": "2026-11-17T23:52:32.960864+00:00"
+    },
+    {
+      "event": "HQ3_ROUND40_RESERVED_SAME_BINARY_ON_OFF",
+      "revision": 133,
+      "round_id": "native-indexed-geometry-fps-20261117-40",
+      "attempt_id": "indexed-batch-on-off-01",
+      "order": [
+        "INDEXED_ON",
+        "INDEXED_OFF"
+      ],
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "binary_sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+      "budget": {
+        "configure_attempts_max": 0,
+        "engine_builds_max": 0,
+        "helper_gpu_invocations_max": 0,
+        "games_max": 2,
+        "on_games_max": 1,
+        "off_games_max": 1,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "utc": "2026-11-18T00:05:24.608Z"
+    },
+    {
+      "event": "HQ3_ROUND40_CLOSED_SAME_BINARY_ON_OFF_FPS",
+      "revision": 134,
+      "round_id": "native-indexed-geometry-fps-20261117-40",
+      "attempt_id": "indexed-batch-on-off-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "artifact_commit": "658847b67f2bba2fc34efacda24bee74a6b706be",
+      "result_path": "coordination/native-metal4/rounds/native-indexed-geometry-fps-20261117-40/DONE.json",
+      "decision": "DONE_REVERSE_ORDER_SAME_BINARY_FPS_PAIR",
+      "order": [
+        "INDEXED_ON",
+        "INDEXED_OFF"
+      ],
+      "counts": {
+        "configure_attempts": 0,
+        "engine_builds": 0,
+        "helper_compiles": 0,
+        "helper_gpu_invocations": 0,
+        "games": 2,
+        "on_games": 1,
+        "off_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps_by_arm": {
+        "INDEXED_ON": 64.28464353062284,
+        "INDEXED_OFF": 64.03399418767914
+      },
+      "relative_percent": 0.3914316858153022,
+      "cleanup_complete": true,
+      "utc": "2026-11-18T00:10:47.620Z"
+    },
+    {
+      "event": "HQ3_ROUND41_RESERVED_COMBINED_OFF_ON",
+      "revision": 135,
+      "round_id": "combined-indexed-fps-20261118-41",
+      "attempt_id": "combined-off-on-01",
+      "manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+      "order": [
+        "INDEXED_OFF",
+        "INDEXED_ON"
+      ],
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "helper_compiles_max": 0,
+        "helper_gpu_invocations_max": 0,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+      "patches": {
+        "gamedecal": {
+          "commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+          "sha256": "79871e8ae1aa4ad91cecba23798e2e1fcbfb3b2f90644a9e717550accd26391d"
+        },
+        "geometry": {
+          "commit": "855197fe4c2439ee169db22d58a647d3241e08b5",
+          "sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b"
+        }
+      },
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T00:28:28.388Z"
+    },
+    {
+      "event": "HQ3_ROUND41_CLOSED_COMBINED_OFF_ON_FPS",
+      "revision": 136,
+      "round_id": "combined-indexed-fps-20261118-41",
+      "attempt_id": "combined-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/combined-indexed-fps-20261118-41/DONE.json",
+      "decision": "DONE_MATCHED_COMBINED_INDEXED_OFF_ON_FPS_PAIR",
+      "order": [
+        "INDEXED_OFF",
+        "INDEXED_ON"
+      ],
+      "utc": "2026-11-18T00:37:03.443Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T00:37:03.443Z",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "helper_compiles": 0,
+        "helper_gpu_invocations": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "ce6dc43f108abc9eb7464022236e070a4baf9803",
+      "diagnostic_outcome": "DONE_MATCHED_COMBINED_INDEXED_OFF_ON_FPS_PAIR",
+      "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+      "fps_by_arm": {
+        "INDEXED_OFF": 63.99040060963311,
+        "INDEXED_ON": 64.94350302435646
+      },
+      "relative_percent": 1.4894459257063453,
+      "all_counted_frames_retained": true,
+      "game_path_activation": {
+        "INDEXED_OFF": {
+          "gamedecal_small": {
+            "indexed": false,
+            "direct": true,
+            "indexed_witness_in_window": false
+          },
+          "sensorlos_outline": {
+            "indexed": false,
+            "direct": true,
+            "indexed_witness_in_window": false
+          },
+          "sensorlos_r8_fan": {
+            "indexed": false,
+            "direct": true,
+            "indexed_witness_in_window": false
+          },
+          "radar_sonar_circle": {
+            "indexed": false,
+            "direct": true,
+            "indexed_witness_in_window": false
+          },
+          "healthbars": {
+            "indexed": false,
+            "direct": true,
+            "indexed_witness_in_window": false
+          },
+          "unit_stencil": {
+            "indexed": false,
+            "direct": true,
+            "indexed_witness_in_window": false
+          }
+        },
+        "INDEXED_ON": {
+          "gamedecal_small": {
+            "indexed": true,
+            "direct": false,
+            "indexed_witness_in_window": false
+          },
+          "sensorlos_outline": {
+            "indexed": true,
+            "direct": false,
+            "indexed_witness_in_window": false
+          },
+          "sensorlos_r8_fan": {
+            "indexed": true,
+            "direct": false,
+            "indexed_witness_in_window": false
+          },
+          "radar_sonar_circle": {
+            "indexed": true,
+            "direct": false,
+            "indexed_witness_in_window": false
+          },
+          "healthbars": {
+            "indexed": true,
+            "direct": false,
+            "indexed_witness_in_window": false
+          },
+          "unit_stencil": {
+            "indexed": true,
+            "direct": false,
+            "indexed_witness_in_window": false
+          }
+        }
+      }
+    },
+    {
+      "event": "HQ3_ROUND42_RESERVED_IDENTICAL_COMBINED_BINARY",
+      "revision": 137,
+      "round_id": "combined-indexed-fps-repeat-20261118-42",
+      "attempt_id": "combined-off-on-repeat-01",
+      "order": [
+        "INDEXED_OFF",
+        "INDEXED_ON"
+      ],
+      "budget": {
+        "configure_attempts_max": 0,
+        "engine_builds_max": 0,
+        "helper_compiles_max": 0,
+        "helper_gpu_invocations_max": 0,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T00:38:50.817Z"
+    },
+    {
+      "event": "HQ3_ROUND42_CLOSED_SAME_BINARY_COMBINED_REPEAT",
+      "revision": 138,
+      "round_id": "combined-indexed-fps-repeat-20261118-42",
+      "attempt_id": "combined-off-on-repeat-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/combined-indexed-fps-repeat-20261118-42/DONE.json",
+      "decision": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
+      "order": [
+        "INDEXED_OFF",
+        "INDEXED_ON"
+      ],
+      "utc": "2026-11-18T00:43:32.017Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T00:43:32.017Z",
+      "counts": {
+        "configure_attempts": 0,
+        "engine_builds": 0,
+        "helper_compiles": 0,
+        "helper_gpu_invocations": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "b997b81a1802b6f40d00324a7526d880464fd4ac",
+      "diagnostic_outcome": "DONE_REPEAT_COMBINED_OFF_ON_FPS_PAIR",
+      "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+      "fps_by_arm": {
+        "INDEXED_OFF": 64.35408413753547,
+        "INDEXED_ON": 65.30489517657657
+      },
+      "relative_percent": 1.4774680609377588,
+      "all_counted_frames_retained": true,
+      "previous_relative_percent": 1.4894459257063453
+    },
+    {
+      "event": "HQ3_ROUND43_CLOSED_COVERAGE_SHARING_FEASIBILITY",
+      "revision": 139,
+      "round_id": "sensorlos-major-coverage-20261118-43",
+      "attempt_id": "sensorlos-coverage-off-on-01",
+      "result_path": "coordination/native-metal4/rounds/sensorlos-major-coverage-20261118-43/DONE.json",
+      "decision": "CLOSED_FEASIBILITY_NO_BOUNDED_COVERAGE_SHARING_PATH",
+      "counts": {
+        "configures": 0,
+        "builds": 0,
+        "fixtures": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "execution_started": false,
+      "utc": "2026-11-18T01:00:37.543Z"
+    },
+    {
+      "event": "HQ3_ROUND44_RESERVED_SENSORLOS_UPLOAD_SLAB",
+      "revision": 140,
+      "round_id": "sensorlos-outline-upload-slab-20261118-44",
+      "attempt_id": "outline-upload-slab-off-on-01",
+      "order": [
+        "SLAB_OFF",
+        "SLAB_ON"
+      ],
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "gpu_fixture_runs_max": 0,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
+      "external_commit": "602db5fc30d4ce50683435cb0745cb171fce2064",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T01:15:17.046Z"
+    },
+    {
+      "event": "HQ3_ROUND44_CLOSED_SENSORLOS_UPLOAD_SLAB",
+      "revision": 141,
+      "round_id": "sensorlos-outline-upload-slab-20261118-44",
+      "attempt_id": "outline-upload-slab-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-20261118-44/DONE.json",
+      "decision": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
+      "order": [
+        "SLAB_OFF",
+        "SLAB_ON"
+      ],
+      "utc": "2026-11-18T01:25:09.693Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T01:25:09.693Z",
+      "counts": {
+        "configure_attempts": 1,
+        "engine_builds": 1,
+        "helper_compiles": 0,
+        "helper_gpu_invocations": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "4eba3ac202676b1c33c6e9d7a68226fb038b7175",
+      "diagnostic_outcome": "DONE_MATCHED_SENSORLOS_SLAB_OFF_ON_FPS_PAIR",
+      "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+      "fps_by_arm": {
+        "SLAB_OFF": 65.39134509310635,
+        "SLAB_ON": 65.1668524034946
+      },
+      "relative_percent": -0.3433064257848062,
+      "all_counted_frames_retained": true,
+      "slab_modes_verified": true
+    },
+    {
+      "event": "HQ3_ROUND45_RESERVED_EIGHT_GAME_SLAB_ORDER",
+      "revision": 142,
+      "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+      "attempt_id": "slab-abba-baab-01",
+      "order": [
+        "A1",
+        "B1",
+        "B2",
+        "A2",
+        "B3",
+        "A3",
+        "A4",
+        "B4"
+      ],
+      "budget": {
+        "configures": 0,
+        "engine_builds": 0,
+        "helpers": 0,
+        "max_games": 8,
+        "max_a": 4,
+        "max_b": 4,
+        "retries": 0,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0
+      },
+      "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T01:28:47.036Z"
+    },
+    {
+      "event": "HQ3_ROUND45_AMENDED_TWO_SEQUENTIAL_AWAKE_SESSIONS",
+      "revision": 143,
+      "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+      "attempt_id": "slab-abba-baab-two-sessions-01",
+      "session_plan": {
+        "sessions": [
+          [
+            "A1",
+            "B1",
+            "B2",
+            "A2"
+          ],
+          [
+            "B3",
+            "A3",
+            "A4",
+            "B4"
+          ]
+        ],
+        "per_session_awake_seconds": 2400,
+        "seconds_reserved_per_remaining_game": 330,
+        "original_preflight": true,
+        "scheduled_extra_cooldown_seconds": 0,
+        "prior_attempt": {
+          "id": "slab-abba-baab-01",
+          "revision": 142,
+          "commit": "8db416eed6ec11436a19d8633629f207233037f9",
+          "actual_games": 0,
+          "reason": "2400-second process limit failed the intact eight-game prelaunch check (2640 seconds required)",
+          "own_awake_released": true,
+          "prior_caffeinate_pid": 19811,
+          "results": []
+        }
+      },
+      "source_manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
+      "utc": "2026-11-18T01:31:29.854Z"
+    },
+    {
+      "event": "HQ3_ROUND45_CLOSED_COMPLETE_ABBA_BAAB_SLAB_REPEAT",
+      "revision": 144,
+      "round_id": "sensorlos-outline-upload-slab-abba-baab-20261118-45",
+      "attempt_id": "slab-abba-baab-two-sessions-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/sensorlos-outline-upload-slab-abba-baab-20261118-45/DONE.json",
+      "decision": "DONE_COMPLETE_ABBA_BAAB_SLAB_REPEAT",
+      "order": [
+        "A1",
+        "B1",
+        "B2",
+        "A2",
+        "B3",
+        "A3",
+        "A4",
+        "B4"
+      ],
+      "utc": "2026-11-18T01:46:00.113Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T01:46:00.113Z",
+      "counts": {
+        "configure_attempts": 0,
+        "engine_builds": 0,
+        "fixtures": 0,
+        "games": 8,
+        "off_games": 4,
+        "on_games": 4,
+        "normal_exits": 8,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0,
+        "earlier_prelaunch_attempts_without_games": 1
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "336935605d80cc2354870d8c309eddde4bbb5090",
+      "diagnostic_outcome": "DONE_COMPLETE_ABBA_BAAB_SLAB_REPEAT",
+      "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+      "mean_fps_by_arm": {
+        "A": 65.38545667930205,
+        "B": 65.37406093162569
+      },
+      "relative_percent": -0.017428566312926996,
+      "all_counted_frames_retained": true,
+      "all_slab_modes_witnessed": true,
+      "prior_prelaunch_actual_games": 0
+    },
+    {
+      "event": "HQ3_ROUND46_RESERVED_GROUND_FLASH_DEPTH_RUNS",
+      "revision": 145,
+      "round_id": "groundflash-depth-run-fps-20261118-46",
+      "attempt_id": "groundflash-runs-off-on-01",
+      "order": [
+        "FLASH_OFF",
+        "FLASH_ON"
+      ],
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "existing_cpu_fixture_invocations_max": 1,
+        "gpu_helper_invocations_max": 0,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T01:49:27.301Z"
+    },
+    {
+      "event": "HQ3_ROUND46_CLOSED_GROUND_FLASH_COALESCING",
+      "revision": 146,
+      "round_id": "groundflash-depth-run-fps-20261118-46",
+      "attempt_id": "groundflash-runs-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/groundflash-depth-run-fps-20261118-46/DONE.json",
+      "decision": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
+      "utc": "2026-11-18T01:58:48.721Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T01:58:48.721Z",
+      "counts": {
+        "configures": 1,
+        "builds": 1,
+        "existing_cpu_fixture_invocations": 1,
+        "gpu_helpers": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "aae3bdc5e06276e800deb2b2b4005a1a40b74caa",
+      "diagnostic_outcome": "DONE_GROUND_FLASH_COALESCING_OBSERVED_FPS_PAIR",
+      "binary_sha256": "399c40bce292fae17b781c2846e5616391a0f7139e7b9158efecfb86811a0d79",
+      "fps_by_arm": {
+        "FLASH_OFF": 65.03536887762581,
+        "FLASH_ON": 64.98150077695486
+      },
+      "relative_percent": -0.08282893078120912,
+      "ground_flash_coalesced_before_window": true,
+      "all_counted_frames_retained": true
+    },
+    {
+      "event": "HQ3_ROUND47_RESERVED_INDEPENDENT_FRESH_UPLOAD_BUNDLE",
+      "revision": 147,
+      "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+      "attempt_id": "fresh-draw-upload-bundle-off-on-01",
+      "order": [
+        "BUNDLE_OFF",
+        "BUNDLE_ON"
+      ],
+      "budget": {
+        "configure_attempts_max": 1,
+        "engine_builds_max": 1,
+        "static_syntax_checks_max": 1,
+        "gpu_helpers": 0,
+        "games_max": 2,
+        "off_games_max": 1,
+        "on_games_max": 1,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
+      "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+      "utc": "2026-11-18T02:03:53.772Z"
+    },
+    {
+      "event": "HQ3_ROUND47_CLOSED_FRESH_UPLOAD_BUNDLE",
+      "revision": 148,
+      "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+      "attempt_id": "fresh-draw-upload-bundle-off-on-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "result_path": "coordination/native-metal4/rounds/fresh-draw-upload-bundle-fps-20261118-47/DONE.json",
+      "decision": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
+      "order": [
+        "BUNDLE_OFF",
+        "BUNDLE_ON"
+      ],
+      "utc": "2026-11-18T02:13:36.222Z",
+      "started": true,
+      "completed": true,
+      "ended_at_utc": "2026-11-18T02:13:36.222Z",
+      "counts": {
+        "configures": 1,
+        "builds": 1,
+        "static_syntax_checks": 1,
+        "gpu_helpers": 0,
+        "games": 2,
+        "off_games": 1,
+        "on_games": 1,
+        "normal_exits": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "artifact_commit": "8beb938226a2a588a7851c168661a67096f606a6",
+      "diagnostic_outcome": "DONE_FRESH_UPLOAD_BUNDLE_SINGLE_PAIR_PARTIAL_ROUTE_COVERAGE",
+      "binary_sha256": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+      "fps_by_arm": {
+        "BUNDLE_OFF": 63.931395723999074,
+        "BUNDLE_ON": 63.94680441671761
+      },
+      "relative_percent": 0.02410191822661556,
+      "first_encode_coverage": {
+        "radar_sonar_circle": {
+          "separate_witnessed": true,
+          "slab_witnessed": true
+        },
+        "map_edge_forward": {
+          "separate_witnessed": false,
+          "slab_witnessed": false
+        },
+        "blueprint_model": {
+          "separate_witnessed": true,
+          "slab_witnessed": true
+        },
+        "blockout_model": {
+          "separate_witnessed": false,
+          "slab_witnessed": false
+        }
+      },
+      "all_counted_frames_retained": true,
+      "ground_flash_default": "OFF; no observed phase counts beyond warmup",
+      "sensorlos_slab_default": "OFF; structural allocation reduction witnessed, production default pending targeted fallback/address/route checks"
+    },
+    {
+      "event": "HQ3_ROUND48_RESERVED_UPLOAD_CONTRACT_FIXTURE",
+      "revision": 149,
+      "round_id": "fresh-upload-slot-contract-20261118-48",
+      "attempt_id": "metal4-slot-readback-and-fallback-01",
+      "budget": {
+        "compile": 1,
+        "fixture_gpu_runs": 1,
+        "max_submissions": 1,
+        "games": 0,
+        "engine_builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "fixture_sha256": "84a5b46f1dc731e23d5b94c574651b52d76b6989aa02fc1a7fd21f10ad4a9257",
+      "utc": "2026-11-18T04:11:04.274Z"
+    },
+    {
+      "event": "HQ3_ROUND48_AMENDED_COMPILE_ONLY_FIXTURE",
+      "revision": 150,
+      "round_id": "fresh-upload-slot-contract-20261118-48",
+      "attempt_id": "metal4-slot-readback-and-fallback-02-sdk-selector",
+      "amendment": {
+        "prior_attempt": "metal4-slot-readback-and-fallback-01",
+        "prior_commit": "7b4fe37930347b4d2d0dc68894008e39b45b4586",
+        "compile_exit": 1,
+        "gpu_attempts": 0,
+        "scope": "Fixture only: add the SDK-required compilerTaskOptions argument to pipeline construction."
+      },
+      "utc": "2026-11-18T04:11:58.726Z"
+    },
+    {
+      "event": "HQ3_ROUND48_CLOSED_VERIFY_UPLOAD_SLOTS_FALLBACK",
+      "revision": 151,
+      "round_id": "fresh-upload-slot-contract-20261118-48",
+      "attempt_id": "metal4-slot-readback-and-fallback-02-sdk-selector",
+      "artifact_commit": "11eab950bdd07e52d46159d818e118df58d0e2ec",
+      "counts": {
+        "compile_attempts": 2,
+        "first_compile_failures": 1,
+        "gpu_invocations": 1,
+        "metal4_submissions": 1,
+        "games": 0,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0
+      },
+      "cleanup_complete": true,
+      "words_compared": 9976,
+      "utc": "2026-11-18T04:13:37.747Z"
+    },
+    {
+      "event": "HQ3_ROUND49_SCREEN_ENCODE_RANGE_OFF_ON_RESERVED",
+      "revision": 152,
+      "round_id": "screen-encode-range-fps-20261118-49",
+      "attempt_id": "encode-range-off-on-01",
+      "utc": "2026-11-18T05:13:04.023141+00:00"
+    },
+    {
+      "event": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_RANGE_OFF_ON",
+      "revision": 153,
+      "round_id": "screen-encode-range-fps-20261118-49",
+      "attempt_id": "encode-range-off-on-01",
+      "artifact_commit": "20d0939cbaf9fe83a7ccf3b49cadce190b26171e",
+      "counts": {
+        "configure": 1,
+        "engine_builds": 1,
+        "cpu_fixtures": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 64.71044197700739,
+        "ON": 65.61515687511208,
+        "relative_percent": 1.3980972320141838
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T05:20:58.994178+00:00"
+    },
+    {
+      "event": "HQ3_ROUND50_BLOOM_DOWNSAMPLE_IDENTITY_RESERVED",
+      "revision": 154,
+      "round_id": "bloom-downsample-identity-fps-20261118-50",
+      "attempt_id": "bloom-identity-off-on-01",
+      "utc": "2026-11-18T05:40:53.314948+00:00"
+    },
+    {
+      "event": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_BLOOM_OFF_ON",
+      "revision": 155,
+      "round_id": "bloom-downsample-identity-fps-20261118-50",
+      "attempt_id": "bloom-identity-off-on-01",
+      "artifact_commit": "116f5a41a1aba63f4b0a9ca3485990d4323993b5",
+      "counts": {
+        "configure": 1,
+        "engine_builds": 1,
+        "offline_metal_compiles_before_reservation": 5,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 65.63851331104041,
+        "ON": 64.86688990681569,
+        "relative_percent": -1.1755650231872972
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T05:57:20.412244+00:00"
+    },
+    {
+      "event": "HQ3_ROUND51_BLOOM_DOWNSAMPLE_IDENTICAL_BINARY_REVERSE_RESERVED",
+      "revision": 156,
+      "round_id": "bloom-downsample-identity-reverse-20261118-51",
+      "attempt_id": "bloom-identity-on-off-02",
+      "utc": "2026-11-18T06:00:46.138296+00:00"
+    },
+    {
+      "event": "HQ3_ROUND49_CLOSED_SCREEN_ENCODE_BLOOM_OFF_ON",
+      "revision": 157,
+      "round_id": "bloom-downsample-identity-reverse-20261118-51",
+      "attempt_id": "bloom-identity-on-off-02",
+      "artifact_commit": "3583ace356fa73ee21db9b8cdaebe2e6a21c6ed5",
+      "counts": {
+        "configure": 0,
+        "engine_builds": 0,
+        "offline_metal_compiles": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 65.00650327821572,
+        "ON": 64.94513179085511,
+        "relative_percent": -0.09440822727834197
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T06:08:08.041048+00:00"
+    },
+    {
+      "event": "HQ3_USER_ACCEPTED_BLOOM_RGBA_R03_BENCHMARK",
+      "revision": 158,
+      "round_id": "bloom-downsample-identity-reverse-20261118-51",
+      "utc": "2026-11-18T06:31:50.957295+00:00",
+      "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+      "result": "User-directed local benchmark adoption",
+      "artifact_commit": "116f5a41a1aba63f4b0a9ca3485990d4323993b5",
+      "previous_execution_label_note": "The last execution_status label inherited the Round 49 prefix. The result and linked artifact are for Round 51 reversed Bloom."
+    },
+    {
+      "event": "HQ3_ROUND52_BLOOM_PREPARE_DEFINES_RESERVED",
+      "revision": 159,
+      "round_id": "bloom-prepare-defines-fps-20261118-52",
+      "attempt_id": "bloom-prepare-defines-off-on-01",
+      "utc": "2026-11-18T06:34:29.691343+00:00"
+    },
+    {
+      "event": "HQ3_ROUND52_CLOSED_BLOOM_PREPARE_DEFINE_REUSE_OFF_ON",
+      "revision": 160,
+      "round_id": "bloom-prepare-defines-fps-20261118-52",
+      "attempt_id": "bloom-prepare-defines-off-on-01",
+      "artifact_commit": "43381c388b065eb920be04d5ad5b514e68b0245e",
+      "counts": {
+        "configure": 1,
+        "engine_builds": 1,
+        "cpu_define_fixtures": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 65.6233603166727,
+        "ON": 65.57663851592353,
+        "relative_percent": -0.07119690385208877
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T06:43:35.402191+00:00"
+    },
+    {
+      "event": "HQ3_ROUND53_BLOOM_PREPARE_DEFINES_REVERSE_RESERVED",
+      "revision": 161,
+      "round_id": "bloom-prepare-defines-reverse-20261118-53",
+      "attempt_id": "bloom-prepare-defines-on-off-02",
+      "utc": "2026-11-18T06:46:02.290777+00:00"
+    },
+    {
+      "event": "HQ3_ROUND53_CLOSED_BLOOM_PREPARE_DEFINES_REVERSE",
+      "revision": 162,
+      "round_id": "bloom-prepare-defines-reverse-20261118-53",
+      "attempt_id": "bloom-prepare-defines-on-off-02",
+      "artifact_commit": "44e3c30461c818c164bf5b2c5784fe7cef1ee30c",
+      "counts": {
+        "configure": 0,
+        "engine_builds": 0,
+        "cpu_define_fixtures": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 65.52172571392371,
+        "ON": 65.68649508573297,
+        "relative_percent": 0.2514728817257561
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T06:51:05.711094+00:00"
+    },
+    {
+      "event": "HQ3_USER_ACCEPTED_BLOOM_DEFINE_REUSE_R03_BENCHMARK",
+      "revision": 163,
+      "round_id": "bloom-prepare-defines-reverse-20261118-53",
+      "utc": "2026-11-18T06:55:29.891291+00:00",
+      "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+      "accepted_settings": {
+        "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+        "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1"
+      },
+      "artifact_commit": "44e3c30461c818c164bf5b2c5784fe7cef1ee30c"
+    },
+    {
+      "event": "HQ3_ROUND54_SCREEN_ENCODE_RANGE_ACCEPTED_BASELINE_REVERSE_RESERVED",
+      "revision": 164,
+      "round_id": "screen-encode-range-accepted-baseline-reverse-20261118-54",
+      "attempt_id": "encode-range-accepted-baseline-on-off-02",
+      "utc": "2026-11-18T06:59:38.301140+00:00"
+    },
+    {
+      "event": "HQ3_ROUND54_CLOSED_SCREEN_ENCODE_RANGE_ACCEPTED_BASELINE_REVERSE",
+      "revision": 165,
+      "round_id": "screen-encode-range-accepted-baseline-reverse-20261118-54",
+      "attempt_id": "encode-range-accepted-baseline-on-off-02",
+      "artifact_commit": "25d793507fdc65657e0c7e0066394aea4e989fc7",
+      "counts": {
+        "configure": 0,
+        "engine_builds": 0,
+        "cpu_fixtures": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "screenshots": 0,
+        "retries": 0
+      },
+      "fps": {
+        "OFF": 65.41191856475987,
+        "ON": 65.425,
+        "relative_percent": 0.019998549999988846
+      },
+      "cleanup_complete": true,
+      "utc": "2026-11-18T07:05:45.063995+00:00"
+    },
+    {
+      "event": "HQ3_ACCEPTED_ENCODE_RANGE_REVIEWED_SUBMISSION_PRIORITY",
+      "revision": 166,
+      "round_id": "screen-encode-range-accepted-baseline-reverse-20261118-54",
+      "utc": "2026-11-18T07:11:51.962231+00:00",
+      "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+      "accepted_settings": {
+        "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+        "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+        "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1"
+      },
+      "artifact_commit": "25d793507fdc65657e0c7e0066394aea4e989fc7",
+      "review_execution": {
+        "builds": 0,
+        "games": 0,
+        "gpu_captures": 0,
+        "profiles": 0,
+        "benchmarks": 0,
+        "renderer_edits": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND55_PENDING2_FINAL_COLOR_OWNERSHIP_CPU_RESERVED",
+      "revision": 167,
+      "round_id": "pending2-final-color-ownership-20261118-55",
+      "attempt_id": "pending2-final-color-safety-01",
+      "utc": "2026-11-18T07:44:13.099053+00:00"
+    },
+    {
+      "event": "HQ3_ROUND55_FINAL_COLOR_OWNERSHIP_VERIFIED_PENDING2_BLOCKED",
+      "revision": 168,
+      "round_id": "pending2-final-color-ownership-20261118-55",
+      "attempt_id": "pending2-final-color-safety-01",
+      "artifact_commit": "80258772b731a4a7d05aadb07d6d86119f03ef75",
+      "counts": {
+        "syntax_checks": 1,
+        "cpu_fixtures": 1,
+        "engine_builds": 0,
+        "games": 0,
+        "gpu_invocations": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T07:47:56.522746+00:00"
+    },
+    {
+      "event": "HQ3_ROUND56_PENDING2_EXACT_POSTPROCESS_FIXTURE_RESERVED",
+      "revision": 169,
+      "round_id": "pending2-postprocess-dependency-20261118-56",
+      "attempt_id": "pending2-exact-postprocess-transfer-01",
+      "utc": "2026-11-18T08:00:56.833568+00:00"
+    },
+    {
+      "event": "HQ3_ROUND56_EXACT_POSTPROCESS_AND_TWO_GPU_TICKETS_VERIFIED_ISOLATED",
+      "revision": 170,
+      "round_id": "pending2-postprocess-dependency-20261118-56",
+      "attempt_id": "pending2-exact-postprocess-transfer-01",
+      "artifact_commit": "e658e16d82ecbff9388ecd9d316ebc6e495ace19",
+      "counts": {
+        "syntax_checks": 2,
+        "fixture_builds": 1,
+        "gpu_invocations": 1,
+        "gpu_submissions": 2,
+        "games": 0,
+        "engine_builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T08:05:09.315426+00:00"
+    },
+    {
+      "event": "HQ3_ROUND57_RESERVED",
+      "revision": 171,
+      "round_id": "pending2-ordinary-game-fps-20261118-57",
+      "attempt_id": "pending2-cap1-cap2-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "helpers": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T08:24:08.969337+00:00"
+    },
+    {
+      "event": "HQ3_ROUND57_EXECUTION_METADATA_ALIGNED",
+      "revision": 172,
+      "round_id": "pending2-ordinary-game-fps-20261118-57",
+      "attempt_id": "pending2-cap1-cap2-01",
+      "games": 0,
+      "utc": "2026-11-18T08:26:26.278755+00:00"
+    },
+    {
+      "event": "HQ3_ROUND57_COMPLETE_BOTH_GAMES_NO_TWO_PENDING_WITNESS",
+      "revision": 173,
+      "round_id": "pending2-ordinary-game-fps-20261118-57",
+      "attempt_id": "pending2-cap1-cap2-01",
+      "games": 2,
+      "actual_two_pending_witness": false,
+      "utc": "2026-11-18T08:35:10.692669+00:00"
+    },
+    {
+      "event": "HQ3_ROUND58_SIMMERS_CAP1_RESERVED",
+      "revision": 174,
+      "round_id": "simmers-legacy-cap1-20261118-58",
+      "attempt_id": "simmers-cap1-01",
+      "utc": "2026-11-18T08:38:53.781593+00:00",
+      "budget": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND58_SIMMERS_CAP1_DONE",
+      "revision": 175,
+      "round_id": "simmers-legacy-cap1-20261118-58",
+      "attempt_id": "simmers-cap1-01",
+      "utc": "2026-11-18T08:41:27.945698+00:00",
+      "games": 1
+    },
+    {
+      "event": "HQ3_ROUND59_RESERVED_RECLAIM_CUBE_PACED_PAIR",
+      "revision": 176,
+      "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
+      "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
+      "utc": "2026-11-18T08:58:51.337829+00:00",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "bounded_cpu_contracts": true,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND59_TWO_GAMES_SERIAL_RTT_BOUNDARY_CONFIRMED",
+      "revision": 177,
+      "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
+      "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
+      "utc": "2026-11-18T09:14:37.454679+00:00",
+      "games": 2,
+      "cap2_joined": 0,
+      "rtt_cpu_gate": 2616
+    },
+    {
+      "event": "HQ3_ROUND60_EXACT_UI_RTT_SOURCE_READY_ONLY",
+      "revision": 178,
+      "round_id": "pending2-exact-ui-rtt-20261118-60",
+      "attempt_id": "pending2-exact-ui-rtt-source-01",
+      "utc": "2026-11-18T09:17:30.938120+00:00",
+      "games": 0,
+      "gpu_runs": 0
+    },
+    {
+      "event": "HQ3_ROUND61_FIXED_EXACT_RTT_GAME_PAIR_RESERVED",
+      "revision": 179,
+      "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+      "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+      "source_artifact": "b3e65b62692a0f741027862ec1fcae2ae77462e4",
+      "utc": "2026-11-18T09:19:47.549491+00:00",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND61_SIGNED_EXACT_RTT_READY_FOR_TWO_GAMES",
+      "revision": 180,
+      "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+      "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+      "utc": "2026-11-18T09:24:57.235132+00:00",
+      "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+      "games": 0
+    },
+    {
+      "event": "HQ3_ROUND61_COMPLETED_TWO_GAMES_OTHER_CPU_PRIOR_READS_BLOCK_CAP2",
+      "revision": 181,
+      "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+      "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+      "utc": "2026-11-18T09:30:12.059261+00:00",
+      "games": 2,
+      "cap2_actual_pending_pairs": 0,
+      "cap2_unclassified_cpu_prior_read_frames": 2555,
+      "cap2_screen_rtt_gate_frames": 0
+    },
+    {
+      "event": "HQ3_ROUND62_ALL_PRIOR_READ_FAMILIES_CLASSIFIED_SOURCE_VERIFIED",
+      "revision": 182,
+      "round_id": "pending2-classified-prior-reads-20261118-62",
+      "attempt_id": "pending2-classified-prior-reads-source-01",
+      "utc": "2026-11-18T09:41:52.046288+00:00",
+      "games": 0,
+      "gpu_runs": 0
+    },
+    {
+      "event": "HQ3_ROUND63_CLASSIFIED_PRIOR_READS_PAIR_RESERVED",
+      "revision": 183,
+      "round_id": "pending2-classified-prior-reads-fps-20261118-63",
+      "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
+      "source_artifact": "26daf06778b692a18a41b3edcf92c1f77744bf26",
+      "utc": "2026-11-18T09:43:39.957326+00:00",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND63_CONFIGURED_ENGINE_BUILD_IN_PROGRESS",
+      "revision": 184,
+      "round_id": "pending2-classified-prior-reads-fps-20261118-63",
+      "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
+      "utc": "2026-11-18T09:46:09.133805+00:00",
+      "games": 0
+    },
+    {
+      "event": "HQ3_ROUND63_CLASSIFIED_READS_SIGNED_BENCH_READY",
+      "revision": 185,
+      "round_id": "pending2-classified-prior-reads-fps-20261118-63",
+      "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
+      "utc": "2026-11-18T09:48:29.409376+00:00",
+      "binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
+      "games": 0
+    },
+    {
+      "event": "HQ3_ROUND63_GENUINE_CAP2_ACTIVATION_AND_MATCHED_PAIR_COMPLETE",
+      "revision": 186,
+      "round_id": "pending2-classified-prior-reads-fps-20261118-63",
+      "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
+      "utc": "2026-11-18T09:52:43.194942+00:00",
+      "games": 2,
+      "actual_pending_two": 2645,
+      "joined": 2646,
+      "unclassified": 0
+    },
+    {
+      "event": "HQ3_ROUND64_REVERSE_ORDER_SAME_BINARY_READY",
+      "revision": 187,
+      "round_id": "pending2-classified-prior-reads-reverse-20261118-64",
+      "attempt_id": "pending2-classified-prior-reads-cap2-cap1-01",
+      "binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
+      "utc": "2026-11-18T09:55:49.617913+00:00",
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND64_REVERSE_PAIR_COMPLETE_ACTUAL_CAP2_REPRODUCED",
+      "revision": 188,
+      "round_id": "pending2-classified-prior-reads-reverse-20261118-64",
+      "attempt_id": "pending2-classified-prior-reads-cap2-cap1-01",
+      "utc": "2026-11-18T10:00:11.287899+00:00",
+      "games": 2,
+      "joined": 2646,
+      "actual_pending_two": 2644,
+      "unclassified": 0
+    },
+    {
+      "event": "HQ3_RECONCILED_COMPLETED_R65_R66_AGAINST_R64_DONE",
+      "revision": 189,
+      "round65_games": 0,
+      "round66_games": 1,
+      "round66_pre_reserved": false,
+      "cleanup_complete": true,
+      "execution_reserved": false,
+      "utc": "2026-11-18 10:39:28 UTC"
+    },
+    {
+      "event": "HQ3_ROUND67_CAP2_DIAGNOSTIC_RESERVED",
+      "revision": 190,
+      "round_id": "pending2-oldest-retire-diag-20261118-67",
+      "attempt_id": "pending2-oldest-retire-timing-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T10:41:30.156Z"
+    },
+    {
+      "event": "HQ3_ROUND67_CONFIGURE_FAILED_CLOSED_NO_RETRY",
+      "revision": 191,
+      "round_id": "pending2-oldest-retire-diag-20261118-67",
+      "attempt_id": "pending2-oldest-retire-timing-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "counts": {
+        "configure": 1,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "reason": "CMake pkg-config could not resolve openal>=1.18.2; known process-local OpenAL pkg-config path was omitted from the launcher",
+      "cleanup_complete": true,
+      "utc": "2026-11-18T10:41:52.634695+00:00"
+    },
+    {
+      "event": "HQ3_ROUND68_OPENAL_ENVFIX_DIAGNOSTIC_RESERVED",
+      "revision": 192,
+      "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+      "attempt_id": "pending2-oldest-retire-timing-02",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T10:43:55.566Z"
+    },
+    {
+      "event": "HQ3_ROUND68_DIAGNOSTIC_BINARY_SEALED_GAME_RESERVED",
+      "revision": 193,
+      "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+      "attempt_id": "pending2-oldest-retire-timing-02",
+      "binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
+      "input_hashes": 13,
+      "games": 0,
+      "utc": "2026-11-18T10:48:20.400Z"
+    },
+    {
+      "event": "HQ3_ROUND68_CAP2_OLDEST_RECLAIM_DIAGNOSTIC_COMPLETE",
+      "revision": 194,
+      "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+      "attempt_id": "pending2-oldest-retire-timing-02",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "gpu_helper_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "trace_rows": 2651,
+      "trace_drops": 0,
+      "worker_moved": false,
+      "utc": "2026-11-18T10:49:52.764356+00:00"
+    },
+    {
+      "event": "HQ3_ROUND68_EXISTING_QUEUE_EVIDENCE_REVIEW_COMPLETE",
+      "revision": 195,
+      "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "default_changed": false,
+      "utc": "2026-11-18T10:57:09.354Z"
+    },
+    {
+      "event": "HQ3_ROUND69_EXACT_EVENT_GPU_TIMELINE_RESERVED",
+      "revision": 196,
+      "round_id": "pending2-ticket-timeline-20261118-69",
+      "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T11:04:00.598Z"
+    },
+    {
+      "event": "HQ3_ROUND69_TICKET_TIMELINE_BINARY_SEALED_GAME_RESERVED",
+      "revision": 197,
+      "round_id": "pending2-ticket-timeline-20261118-69",
+      "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+      "binary_sha256": "d6535a238760590c7c7e0495ae15060b57c6b7400acb14e6c4799487a081934e",
+      "patch_sha256": "aaff24a9a2aee70a2b5622cd5c91e86e89e91a57fa536af11ee110018410a7e2",
+      "input_hashes": 13,
+      "games": 0,
+      "utc": "2026-11-18T11:08:39.845Z"
+    },
+    {
+      "event": "HQ3_ROUND69_EXACT_EVENT_GPU_TIMELINE_COMPLETE",
+      "revision": 198,
+      "round_id": "pending2-ticket-timeline-20261118-69",
+      "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "gpu_helper_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "valid_gpu_tickets": 2666,
+      "default_changed": false,
+      "utc": "2026-11-18T11:10:38.027653+00:00"
+    },
+    {
+      "event": "HQ3_ROUND70_OFFLINE_HOST_TAIL_REVIEW_AND_R69_RAW_ARCHIVE_COMPLETE",
+      "revision": 199,
+      "round_id": "pending2-host-tail-review-20261118-70",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "source_edits": 0
+      },
+      "previous_runtime": "pending2-ticket-timeline-20261118-69",
+      "default_changed": false,
+      "utc": "2026-11-18T11:22:11.163087+00:00"
+    },
+    {
+      "event": "HQ3_ROUND71_CAPTURE_ROI_CPU_DIAGNOSTIC_RESERVED",
+      "revision": 200,
+      "round_id": "pending2-capture-roi-cpu-20261118-71",
+      "attempt_id": "pending2-capture-roi-cpu-wall-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T11:26:22.685Z"
+    },
+    {
+      "event": "HQ3_ROUND71_DIAGNOSTIC_BINARY_SEALED_GAME_RESERVED",
+      "revision": 201,
+      "round_id": "pending2-capture-roi-cpu-20261118-71",
+      "attempt_id": "pending2-capture-roi-cpu-wall-01",
+      "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+      "patch_sha256": "7802d17419a671c83793a0f20b95a25a1058c668a046428b3853b6fc18654cd5",
+      "input_hashes": 13,
+      "games": 0,
+      "utc": "2026-11-18T11:30:53.092Z"
+    },
+    {
+      "event": "HQ3_ROUND71_BOUNDED_CAPTURE_CPU_ROIS_COMPLETE",
+      "revision": 202,
+      "round_id": "pending2-capture-roi-cpu-20261118-71",
+      "attempt_id": "pending2-capture-roi-cpu-wall-01",
+      "from": "HQ3",
+      "to": "SUPER_JINI_MK2",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 1,
+        "gpu_helper_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "cleanup_complete": true,
+      "roi_draws": 95,
+      "coincident_prepare_world_repeats": 3,
+      "default_changed": false,
+      "utc": "2026-11-18T11:32:25.044824+00:00"
+    },
+    {
+      "event": "HQ3_ROUND72_PREJOIN_OPAQUE_READ_PACKET_PREPARED",
+      "revision": 203,
+      "round_id": "pending2-prejoin-opaque-read-packet-20261118-72",
+      "attempt_id": "pending2-prejoin-opaque-read-packet-source-01",
+      "patch_sha256": "3205408ed2aa3153acc5368ecbd006553896492e52ad7f56e1bcb5677e2d40b8",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "diagnostic_timing_added": 0
+      },
+      "default_changed": false,
+      "utc": "2026-11-18T11:49:58.791876+00:00"
+    },
+    {
+      "event": "HQ3_ROUND73_PREJOIN_OPAQUE_READ_OFF_ON_RESERVED",
+      "revision": 204,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-73",
+      "attempt_id": "pending2-prejoin-opaque-read-off-on-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T11:52:28.544Z"
+    },
+    {
+      "event": "HQ3_ROUND73_CLOSED_STAGING_FAILED_GAMES_ZERO",
+      "revision": 205,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-73",
+      "attempt_id": "pending2-prejoin-opaque-read-off-on-01",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T12:04:41.425Z"
+    },
+    {
+      "event": "HQ3_ROUND74_EXISTING_BINARY_SEALED_OFF_ON_PAIR_RESERVED",
+      "revision": 206,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-74",
+      "attempt_id": "pending2-prejoin-opaque-read-sealed-off-on-01",
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
+      "reused_binary_round": "pending2-prejoin-opaque-read-fps-20261118-73",
+      "utc": "2026-11-18T12:05:10.777Z"
+    },
+    {
+      "event": "HQ3_ROUND74_EXISTING_BINARY_CAP2_OFF_ON_PAIR_DONE",
+      "revision": 207,
+      "round_id": "pending2-prejoin-opaque-read-fps-20261118-74",
+      "attempt_id": "pending2-prejoin-opaque-read-sealed-off-on-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_diagnostic_timing": 0
+      },
+      "average_fps_change_percent": -0.13809547904188868,
+      "utc": "2026-11-18T12:08:57.975Z"
+    },
+    {
+      "event": "HQ3_ROUND75_SENSORLOS_EXACT_INTERIOR_SOURCE_CPU_READY",
+      "revision": 208,
+      "round_id": "sensorlos-exact-interior-coverage-20261118-75",
+      "attempt_id": "sensorlos-exact-interior-source-01",
+      "patch_sha256": "12844f4263c107d190161d9e585540f2fc3e45814a4d015f8ede147a28bad1b1",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T12:17:32.015Z"
+    },
+    {
+      "event": "HQ3_ROUND76_SENSORLOS_PARITY_AND_ONE_OFF_ON_RESERVED",
+      "revision": 209,
+      "round_id": "sensorlos-exact-interior-fps-20261118-76",
+      "attempt_id": "sensorlos-exact-interior-off-on-01",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T12:25:33.573Z"
+    },
+    {
+      "event": "HQ3_ROUND76_METAL_PARITY_PASSED_AND_BINARY_SEALED",
+      "revision": 210,
+      "round_id": "sensorlos-exact-interior-fps-20261118-76",
+      "attempt_id": "sensorlos-exact-interior-off-on-01",
+      "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 0,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T12:30:49.085Z"
+    },
+    {
+      "event": "HQ3_ROUND76_SENSORLOS_AA0_CAP2_PAIR_DONE",
+      "revision": 211,
+      "round_id": "sensorlos-exact-interior-fps-20261118-76",
+      "attempt_id": "sensorlos-exact-interior-off-on-01",
+      "average_fps_change_percent": 17.469130126260012,
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "games": 2,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "current_counted_witness_both": false,
+      "utc": "2026-11-18T12:35:24.325Z"
+    },
+    {
+      "event": "HQ3_ROUND77_SAME_SIGNED_BINARY_REVERSE_PAIR_RESERVED",
+      "revision": 212,
+      "round_id": "sensorlos-exact-interior-reverse-20261118-77",
+      "attempt_id": "sensorlos-exact-interior-on-off-01",
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
+      "utc": "2026-11-18T12:38:13.558Z"
+    },
+    {
+      "event": "HQ3_ROUND77_SENSORLOS_REVERSE_PAIR_DONE",
+      "revision": 213,
+      "round_id": "sensorlos-exact-interior-reverse-20261118-77",
+      "attempt_id": "sensorlos-exact-interior-on-off-01",
+      "average_fps_change_percent": 16.97499641018656,
+      "forward_average_fps_change_percent": 17.469130126260012,
+      "current_counted_witness_both": false,
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T12:42:47.177Z"
+    },
+    {
+      "event": "HQ3_ROUND78_RADAR_SONAR_PARITY_AND_PAIR_RESERVED",
+      "revision": 214,
+      "round_id": "sensor31657-exact-interior-fps-20261118-78",
+      "attempt_id": "sensor31657-exact-interior-off-on-01",
+      "patch_sha256": "bdbcc095a827ffdb9a2c9bc382b21904fd1c97f259770393f04fda88b84221ef",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:11:53.629Z"
+    },
+    {
+      "event": "HQ3_ROUND78_RADAR_SONAR_METAL_PARITY_AND_BINARY_READY",
+      "revision": 215,
+      "round_id": "sensor31657-exact-interior-fps-20261118-78",
+      "attempt_id": "sensor31657-exact-interior-off-on-01",
+      "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T13:16:55.284Z"
+    },
+    {
+      "event": "HQ3_ROUND78_RADAR_SONAR_AA0_CAP2_PAIR_DONE",
+      "revision": 216,
+      "round_id": "sensor31657-exact-interior-fps-20261118-78",
+      "attempt_id": "sensor31657-exact-interior-off-on-01",
+      "average_fps_change_percent": 0.9797428369604066,
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:21:22.944Z"
+    },
+    {
+      "event": "HQ3_ROUND79_SAME_RADAR_SONAR_BINARY_REVERSE_PAIR_RESERVED",
+      "revision": 217,
+      "round_id": "sensor31657-exact-interior-reverse-20261118-79",
+      "attempt_id": "sensor31657-exact-interior-on-off-01",
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
+      "utc": "2026-11-18T13:23:27.334Z"
+    },
+    {
+      "event": "HQ3_ROUND79_RADAR_SONAR_REVERSE_DONE",
+      "revision": 218,
+      "round_id": "sensor31657-exact-interior-reverse-20261118-79",
+      "attempt_id": "sensor31657-exact-interior-on-off-01",
+      "average_fps_change_percent": 1.2316572391220193,
+      "forward_average_fps_change_percent": 0.9797428369604066,
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:27:39.320Z"
+    },
+    {
+      "event": "HQ3_ROUND80_WEAPON_RANGE_PARITY_AND_PAIR_RESERVED",
+      "revision": 219,
+      "round_id": "weapon-range-exact-interior-fps-20261118-80",
+      "attempt_id": "weapon-range-exact-interior-off-on-01",
+      "patch_sha256": "58b492de023d1876846c823d014bdc0706d9f55f1b71676bcd552f6089ca8fda",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:33:39.930Z"
+    },
+    {
+      "event": "HQ3_ROUND80_PARITY_HOST_COMPILE_FAILED_GAMES_ZERO",
+      "revision": 220,
+      "round_id": "weapon-range-exact-interior-fps-20261118-80",
+      "attempt_id": "weapon-range-exact-interior-off-on-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:35:21.327Z"
+    },
+    {
+      "event": "HQ3_ROUND81_CORRECTED_WEAPON_RANGE_FIXTURE_RESERVED",
+      "revision": 221,
+      "round_id": "weapon-range-exact-interior-recovery-20261118-81",
+      "attempt_id": "weapon-range-exact-interior-typed-fixture-off-on-01",
+      "patch_sha256": "58b492de023d1876846c823d014bdc0706d9f55f1b71676bcd552f6089ca8fda",
+      "fixture_sha256": "e2b822443b066b898a218b749bbcc9f054ea9d3df8feae74526f85850463b10d",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:38:13.218Z"
+    },
+    {
+      "event": "HQ3_ROUND81_WEAPON_RANGE_PARITY_AND_BINARY_SEALED",
+      "revision": 222,
+      "round_id": "weapon-range-exact-interior-recovery-20261118-81",
+      "attempt_id": "weapon-range-exact-interior-typed-fixture-off-on-01",
+      "binary_sha256": "ffabb50bf82881d0a1e3e12a14e72dbf0515ed3e604815bd0664369a269e9337",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "utc": "2026-11-18T13:43:15.880Z"
+    },
+    {
+      "event": "HQ3_ROUND81_WEAPON_RANGE_AA0_CAP2_PAIR_DONE",
+      "revision": 223,
+      "round_id": "weapon-range-exact-interior-recovery-20261118-81",
+      "attempt_id": "weapon-range-exact-interior-typed-fixture-off-on-01",
+      "average_fps_change_percent": 0.06295565045146834,
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T13:47:34.444Z"
+    },
+    {
+      "event": "HQ3_ROUND82_GROUND_DECAL_PARITY_RESERVED",
+      "revision": 224,
+      "round_id": "ground-decal-terrain-color-fps-20261118-82",
+      "attempt_id": "ground-decal-aa0-terrain-color-off-on-01",
+      "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+      "fixture_sha256": "f70659825fc0bd79b1fba9ef052ee2e5a245c2d5743cd194dfa0ea5b0671d7db",
+      "type_proof_sha256": "a8fa37d9a7079f72769e4bacafe5dc85fd5e0eec7eb48198f936157c7e8dc46f",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:09:47.441Z"
+    },
+    {
+      "event": "HQ3_ROUND82_GROUND_DECAL_PARITY_WITNESS_STOP_GAMES_ZERO",
+      "revision": 225,
+      "round_id": "ground-decal-terrain-color-fps-20261118-82",
+      "attempt_id": "ground-decal-aa0-terrain-color-off-on-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:12:10.409Z"
+    },
+    {
+      "event": "HQ3_ROUND83_GROUND_DECAL_FIXTURE_ONLY_RESERVED",
+      "revision": 226,
+      "round_id": "ground-decal-parity-witness-recovery-20261118-83",
+      "attempt_id": "ground-decal-aa0-parity-witness-02",
+      "fixture_sha256": "04a6fd95c907beea944561b3ab3d063da49dbe6ef14bc4fc6b622bd1db4c74e1",
+      "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+      "budget": {
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:16:06.103Z"
+    },
+    {
+      "event": "HQ3_ROUND83_GROUND_DECAL_GPU_PARITY_RECOVERY_DONE",
+      "revision": 227,
+      "round_id": "ground-decal-parity-witness-recovery-20261118-83",
+      "attempt_id": "ground-decal-aa0-parity-witness-02",
+      "indexed_cases": 72,
+      "float_cases": 45,
+      "counts": {
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "configure": 0,
+        "engine_build": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:17:07.312Z"
+    },
+    {
+      "event": "HQ3_ROUND84_GROUND_DECAL_FIXED_PAIR_RESERVED",
+      "revision": 228,
+      "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
+      "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
+      "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+      "prior_parity_round": "ground-decal-parity-witness-recovery-20261118-83",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:23:24.568Z"
+    },
+    {
+      "event": "HQ3_ROUND84_GROUND_DECAL_SIGNED_PAIR_SEALED",
+      "revision": 229,
+      "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
+      "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
+      "binary_sha256": "c90e3d997c771ff0d802c0b6d837f771149fa692b1c6b9c873a2b7632b908879",
+      "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T14:27:46.100Z"
+    },
+    {
+      "event": "HQ3_ROUND84_GROUND_DECAL_FIXED_PAIR_DONE",
+      "revision": 230,
+      "round_id": "ground-decal-terrain-color-clean-fps-20261118-84",
+      "attempt_id": "ground-decal-aa0-cap2-clean-off-on-01",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 0,
+        "parity_helper_gpu_runs": 0,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "average_fps_change_percent": -0.15205491820921013,
+      "utc": "2026-11-18T14:31:39.690Z"
+    },
+    {
+      "event": "HQ3_ROUND85_GROUND_DECAL_EXPIRED_TRACK_PREFIX_RESERVED",
+      "revision": 231,
+      "round_id": "ground-decal-expired-prefix-20261118-85",
+      "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
+      "patch_sha256": "47ccf8f7b28ca3b28c795f8fa31840458de9df733d03831bbaa9d67c31638ed3",
+      "expiry_proof_sha256": "e004e23c7f2963782f1d0fc211fde1cbda463e0a6e4be208c4e625a6fc5d466e",
+      "fixture_sha256": "78bb375b8c24fb3d490b9a0f9d5a54e0909d103a0c94b5d659a5b4ca85a2859e",
+      "budget": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T15:22:39.163Z"
+    },
+    {
+      "event": "HQ3_ROUND85_GROUND_DECAL_EXPIRED_PREFIX_PAIR_SEALED",
+      "revision": 232,
+      "round_id": "ground-decal-expired-prefix-20261118-85",
+      "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
+      "binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea",
+      "patch_sha256": "47ccf8f7b28ca3b28c795f8fa31840458de9df733d03831bbaa9d67c31638ed3",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "utc": "2026-11-18T15:26:55.323Z"
+    },
+    {
+      "event": "HQ3_ROUND85_EXPIRED_TRACK_PREFIX_OBSERVATIONS_CLOSED",
+      "revision": 233,
+      "round_id": "ground-decal-expired-prefix-20261118-85",
+      "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
+      "counts": {
+        "configure": 1,
+        "engine_build": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "result": "KEEP_CANDIDATE_OFF_MEASURED_PAIR_INCONCLUSIVE",
+      "matched_bins": 36,
+      "observed_average_fps_change_percent": -0.14115727915372522,
+      "utc": "2026-11-18T15:32:12.997Z"
+    },
+    {
+      "event": "HQ3_ROUND86_EXISTING_PHASE_TRACE_RESERVED",
+      "revision": 234,
+      "round_id": "pending2-prepareworld-join-window-20261118-86",
+      "attempt_id": "prepareworld-capture-prefix-existing-trace-01",
+      "utc": "2026-11-18T15:57:19Z",
+      "window": [
+        1122,
+        1128
+      ],
+      "budget": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND86_EXISTING_PHASE_TRACE_COMPLETED",
+      "revision": 235,
+      "round_id": "pending2-prepareworld-join-window-20261118-86",
+      "result": "CASE_MATCHED_WITH_WINDOW_EDGE_MISSING",
+      "attempt_id": "prepareworld-capture-prefix-existing-trace-01",
+      "counts": {
+        "configure": 0,
+        "engine_build": 0,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_instrumentation": 0
+      },
+      "target_sim": 1125,
+      "task_join_ms": 13.213,
+      "event_overlap_ms": 10.348333,
+      "utc": "2026-11-18T16:03:41Z"
+    },
+    {
+      "event": "HQ3_ROUND87_BOUNDED_FIRST_USE_IDENTITY_RESERVED",
+      "revision": 236,
+      "round_id": "pending2-screen-first-use-image-20261118-87",
+      "utc": "2026-11-18T16:22:09Z",
+      "budget": {
+        "configure": 0,
+        "engine_build": 1,
+        "translation_units": 2,
+        "link": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_trace_frameworks": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND87_DIAGNOSTIC_BUILT_AND_SEALED",
+      "revision": 237,
+      "round_id": "pending2-screen-first-use-image-20261118-87",
+      "utc": "2026-11-18T16:24:57Z",
+      "binary_sha256": "46cddd8e2677952bfa7a1e46baa1e4f2dd8da852d5117e694ee9ad9669103681",
+      "configure": 0,
+      "translation_units": 2,
+      "links": 1
+    },
+    {
+      "event": "HQ3_ROUND87_EXACT_RANK_ATLAS_IDENTIFIED_AND_CLOSED",
+      "revision": 238,
+      "round_id": "pending2-screen-first-use-image-20261118-87",
+      "attempt_id": "first-use-exact-image-producer-01",
+      "utc": "2026-11-18T16:31:53Z",
+      "result": "EXACT_RANK_ATLAS_IDENTIFIED_NO_CANDIDATE_SAFETY_GATE",
+      "counts": {
+        "configure": 0,
+        "engine_build": 1,
+        "translation_units": 2,
+        "link": 1,
+        "games": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "new_trace_frameworks": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND88_RANK_ATLAS_CANDIDATE_RESERVED",
+      "revision": 239,
+      "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
+      "utc": "2026-11-18T16:56:36Z",
+      "budget": {
+        "configure": 0,
+        "engine_build": 1,
+        "translation_units": 4,
+        "link": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "max_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND88_SAFETY_AND_BUILD_PASSED",
+      "revision": 240,
+      "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
+      "utc": "2026-11-18T17:00:14Z",
+      "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b"
+    },
+    {
+      "event": "HQ3_ROUND88_EXACT_PAIR_CLOSED",
+      "revision": 241,
+      "round_id": "pending2-rank-atlas-readonly-borrow-20261118-88",
+      "utc": "2026-11-18T17:04:33Z",
+      "counts": {
+        "configure": 0,
+        "engine_build": 1,
+        "translation_units": 4,
+        "link": 1,
+        "parity_helper_compile": 1,
+        "parity_helper_gpu_runs": 1,
+        "games": 2,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "paired_fps_change_percent": -3.6991349351184533
+    },
+    {
+      "event": "HQ3_ROUND89_SIMMERS_ON_RESERVED",
+      "revision": 242,
+      "round_id": "simmers-rank-atlas-on-20261118-89",
+      "utc": "2026-11-18T17:05:04Z",
+      "budget": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND89_SIMMERS_ON_REFERENCE_CLOSED",
+      "revision": 243,
+      "round_id": "simmers-rank-atlas-on-20261118-89",
+      "utc": "2026-11-18T17:08:01Z",
+      "average_fps": 188.1452989498205,
+      "low_1_fps": 131.03448230677765,
+      "atlas_queued": 0,
+      "counts": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND90_SINGLE_SIMMERS_CAP1_ATLAS_ON_RESERVED",
+      "revision": 244,
+      "round_id": "simmers-rank-atlas-on-cap1-20261118-90",
+      "utc": "2026-11-18T17:10:32Z",
+      "budget": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND90_SIMMERS_CAP1_ATLAS_ON_COMPLETE",
+      "revision": 245,
+      "round_id": "simmers-rank-atlas-on-cap1-20261118-90",
+      "utc": "2026-11-18T17:12:50Z",
+      "count": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "average_fps": 187.97969691240147,
+      "low_1_fps": 126.87813064066152
+    },
+    {
+      "event": "HQ3_ROUND91_SINGLE_SETHS_CAP1_RESERVED",
+      "revision": 246,
+      "round_id": "seths-rank-atlas-on-cap1-20261118-91",
+      "utc": "2026-11-18T17:16:48Z",
+      "budget": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      }
+    },
+    {
+      "event": "HQ3_ROUND91_SETHS_CAP1_ATLAS_ON_COMPLETE",
+      "revision": 247,
+      "round_id": "seths-rank-atlas-on-cap1-20261118-91",
+      "utc": "2026-11-18T17:19:20Z",
+      "counts": {
+        "games": 1,
+        "builds": 0,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0
+      },
+      "average_fps": 77.09427033347873,
+      "low_1_fps": 56.46630164797066
+    },
+    {
+      "revision": 248,
+      "status": "RUNNING",
+      "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+      "owner": "HQ3",
+      "action": "One existing prepared G04 fixture with no game and no rebuild."
+    },
+    {
+      "revision": 249,
+      "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+      "status": "DONE",
+      "owner": "SUPER_JINI_MK2",
+      "action": "Fixture stopped at baseline visibility witness; no game or parity claim."
+    },
+    {
+      "revision": 250,
+      "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+      "status": "RUNNING",
+      "owner": "HQ3",
+      "action": "One recovery fixture based on R83 known positive witnesses; no engine build or game."
+    },
+    {
+      "revision": 251,
+      "status": "DONE",
+      "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+      "action": "Both actual AA0 shadow variants passed 72 indexed and 72 unblended float cases."
+    },
+    {
+      "revision": 252,
+      "status": "RUNNING",
+      "round_id": "ground-decal-g04-exceptional-20261118-94",
+      "action": "Run exceptional-input stage comparison once following real-shader parity."
+    },
+    {
+      "revision": 253,
+      "round_id": "ground-decal-g04-exceptional-20261118-94",
+      "status": "DONE",
+      "action": "24 exceptional stage cases preserve finite bits, NaN class, Inf sign and negative zero."
+    },
+    {
+      "revision": 254,
+      "round_id": "ground-decal-g04-fps-20261118-95",
+      "status": "RUNNING",
+      "action": "R88 descendant one translation unit, then one same-binary Seths AA0 pair after stage verification."
+    },
+    {
+      "revision": 255,
+      "round_id": "ground-decal-g04-fps-20261118-95",
+      "status": "RUNNING",
+      "action": "Own exactly two display-on Seths games. G04 is sole child environment delta."
+    },
+    {
+      "revision": 256,
+      "status": "DONE",
+      "round_id": "ground-decal-g04-fps-20261118-95",
+      "action": "G04 passed bounded parity, same-binary matched OFF/ON pair slower on both metrics. Keep default OFF."
+    },
+    {
+      "revision": 257,
+      "round_id": "deferred-light-screen-depth-20261118-96",
+      "status": "RUNNING",
+      "action": "One independent DeferredLight CPU/GPU fixture and conditional same-binary pair."
+    },
+    {
+      "revision": 258,
+      "round_id": "deferred-light-screen-depth-20261118-96",
+      "status": "RUNNING",
+      "action": "CPU and GPU parity and conditional AIR ray fetch confirmed. Two owned Seths games only."
+    },
+    {
+      "revision": 259,
+      "status": "DONE",
+      "round_id": "deferred-light-screen-depth-20261118-96",
+      "action": "CPU/GPU fixture, AIR and matched DeferredLight pair completed. Existing default-off experiment and product preserved."
+    },
+    {
+      "revision": 260,
+      "round_id": "particle-single-cell-sample-20261118-97",
+      "status": "RUNNING",
+      "action": "Verify a whole-draw-only AA0 particle variant; historical captured positive GroundFlash range and mixed fallback recorded."
+    },
+    {
+      "revision": 261,
+      "round_id": "particle-single-cell-sample-20261118-97",
+      "status": "RUNNING",
+      "action": "Parity and captured GroundFlash eligibility plus AIR two-to-one checked; one fixed same-binary pair."
+    },
+    {
+      "revision": 262,
+      "status": "DONE",
+      "round_id": "particle-single-cell-sample-20261118-97",
+      "action": "One independently matched particle pair finished. Existing default OFF, cap1 and distribution preserved."
+    },
+    {
+      "revision": 263,
+      "status": "RUNNING",
+      "round_id": "ground-decal-cold-glow-20261118-98",
+      "action": "build"
+    },
+    {
+      "revision": 264,
+      "status": "RUNNING",
+      "round_id": "ground-decal-cold-glow-20261118-98",
+      "action": "game"
+    },
+    {
+      "revision": 265,
+      "status": "DONE",
+      "round_id": "ground-decal-cold-glow-20261118-98",
+      "action": "closed"
+    },
+    {
+      "revision": 266,
+      "status": "RUNNING",
+      "round_id": "ground-decal-g01-cache-20261118-99",
+      "action": "build"
+    },
+    {
+      "revision": 267,
+      "status": "RUNNING",
+      "round_id": "ground-decal-g01-cache-20261118-99",
+      "action": "game"
+    },
+    {
+      "revision": 268,
+      "status": "DONE",
+      "round_id": "ground-decal-g01-cache-20261118-99",
+      "action": "closed"
+    },
+    {
+      "revision": 269,
+      "status": "RUNNING",
+      "round_id": "lua-game-decal-early-vertex-20261118-100",
+      "action": "build"
+    },
+    {
+      "revision": 270,
+      "status": "RUNNING",
+      "round_id": "lua-game-decal-early-vertex-20261118-100",
+      "action": "game"
+    },
+    {
+      "revision": 271,
+      "status": "DONE",
+      "round_id": "lua-game-decal-early-vertex-20261118-100",
+      "action": "closed"
+    },
+    {
+      "revision": 272,
+      "status": "RUNNING",
+      "round_id": "r96-decal-abba-20261118",
+      "action": "reserve"
+    },
+    {
+      "revision": 273,
+      "status": "RUNNING",
+      "round_id": "r96-decal-abba-20261118",
+      "action": "game"
+    },
+    {
+      "revision": 274,
+      "status": "DONE",
+      "round_id": "r96-decal-abba-20261118",
+      "action": "closed"
+    },
+    {
+      "revision": 275,
+      "status": "RUNNING",
+      "round_id": "memory-cold-glow-20261118",
+      "action": "reserve"
+    },
+    {
+      "revision": 276,
+      "status": "RUNNING",
+      "round_id": "memory-cold-glow-20261118",
+      "action": "smoke"
+    },
+    {
+      "revision": 277,
+      "status": "RUNNING",
+      "round_id": "memory-cold-glow-20261118",
+      "action": "game"
+    },
+    {
+      "revision": 278,
+      "status": "DONE",
+      "round_id": "memory-cold-glow-20261118",
+      "action": "closed"
+    },
+    {
+      "revision": 279,
+      "status": "RUNNING",
+      "round_id": "mvk-parity-deferred-20261118",
+      "action": "reserve"
+    },
+    {
+      "revision": 280,
+      "status": "RUNNING",
+      "round_id": "mvk-parity-deferred-20261118",
+      "action": "game"
+    },
+    {
+      "revision": 281,
+      "status": "DONE",
+      "round_id": "mvk-parity-deferred-20261118",
+      "action": "closed"
+    },
+    {
+      "revision": 282,
+      "status": "RUNNING",
+      "round_id": "deferred-abba-restart-20261118",
+      "action": "reserve"
+    },
+    {
+      "revision": 283,
+      "status": "RUNNING",
+      "round_id": "deferred-abba-restart-20261118",
+      "action": "game"
+    },
+    {
+      "revision": 284,
+      "status": "RUNNING",
+      "round_id": "deferred-abba-restart-20261118",
+      "action": "game"
+    },
+    {
+      "revision": 285,
+      "status": "DONE",
+      "round_id": "deferred-abba-restart-20261118",
+      "action": "closed"
+    },
+    {
+      "revision": 286,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-fixture-20261118",
+      "action": "reserve"
+    },
+    {
+      "revision": 287,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-fixture-20261118",
+      "action": "fixture"
+    },
+    {
+      "revision": 288,
+      "status": "DONE",
+      "round_id": "ground-decal-flat-wrap-fixture-20261118",
+      "action": "closed"
+    },
+    {
+      "revision": 289,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
+      "action": "reserve"
+    },
+    {
+      "revision": 290,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
+      "action": "fixture"
+    },
+    {
+      "revision": 291,
+      "status": "DONE",
+      "round_id": "ground-decal-flat-wrap-coverage-fix-20261118",
+      "action": "closed"
+    },
+    {
+      "revision": 292,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
+      "action": "reserve"
+    },
+    {
+      "revision": 293,
+      "status": "RUNNING",
+      "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
+      "action": "fixture"
+    },
+    {
+      "revision": 294,
+      "status": "DONE",
+      "round_id": "ground-decal-flat-wrap-shadow-witness-20261118",
+      "action": "closed"
+    }
+  ],
+  "communication_test": {
+    "id": "hq-jini-check-20261116T202031Z",
+    "scope": "COMMUNICATION_ONLY_NO_BUILD_GAME_OR_BENCHMARK",
+    "status": "GITHUB_ROUND_TRIP_CONFIRMED",
+    "hq_reply": {
+      "author": "HQ",
+      "at_utc": "2026-11-16 20:20:31 UTC",
+      "observed_revision": 1,
+      "message": "\uc9c0\ub2c8\uc758 revision 1 \uc218\uc2e0 \ud655\uc778\uc744 \uc2e4\uc81c\ub85c \uc77d\uc5c8\uc2b5\ub2c8\ub2e4. HQ\ub3c4 README\uc640 STATE\ub97c \uc77d\uc5c8\uace0 \uad50\uc2e0 \uaddc\uce59\uc744 \ud655\uc778\ud588\uc2b5\ub2c8\ub2e4."
+    },
+    "hq_ping": {
+      "author": "HQ",
+      "id": "hq-jini-check-20261116T202031Z",
+      "echo": "BAR-RADIO-7F3C",
+      "sent_at_utc": "2026-11-16 20:20:31 UTC",
+      "request": "\uac19\uc740 id\uc640 echo\ub97c \ub2f4\uc740 jini_reply\ub97c \ubcf8\uc778\uc774 \uae30\ub85d\ud574\uc8fc\uc138\uc694. \uc6d0\ud55c\ub2e4\uba74 reply \uc548\uc5d0 hq\uc5d0\uac8c \ub3cc\ub824\uc904 \uc0c8 ping\ub3c4 \ub123\uc5b4\uc8fc\uc138\uc694. \uc2e4\uc81c\ub85c \ud655\uc778\ud55c \uc5f0\uacb0\ub9cc \ud45c\uc2dc\ud558\uc138\uc694. \uc544\ub798 \ud655\uc778 \uc8fc\uae30 \uc81c\uc548\uc5d0 \ub3d9\uc758\ud558\ub294\uc9c0\ub3c4 \uc801\uc5b4\uc8fc\uc138\uc694. \uc774\ubc88\uc5d0\ub294 \uad50\uc2e0 \ud655\uc778\ub9cc \ud558\uba70 \ucf54\ub4dc \uc218\uc815\u00b7\ube4c\ub4dc\u00b7\uac8c\uc784\u00b7\ubca4\uce58\ub294 \uae08\uc9c0\uc785\ub2c8\ub2e4."
+    },
+    "jini_reply": {
+      "author": "SUPER_JINI_MK2",
+      "id": "hq-jini-check-20261116T202031Z",
+      "echo": "BAR-RADIO-7F3C",
+      "observed_revision": 2,
+      "message": "HQ\uac00 \uae30\ub85d\ud55c \uace0\uc720 \ud655\uc778 \ubc88\ud638\uc640 revision 2\ub97c \uc2e4\uc81c\ub85c \uc77d\uc5c8\uc2b5\ub2c8\ub2e4. \uae30\uc874 HQ 2 \uc791\uc5c5\uc744 DN0a2723bf.SUNet\uc758 native read_thread\ub85c \uc77d\uc5c8\uace0, native send_message_to_thread\ub85c \uc5f0\uacb0 \ud655\uc778 \uba54\uc2dc\uc9c0\ub97c \ubcf4\ub0c8\uc2b5\ub2c8\ub2e4. \uc774 \uc751\ub2f5\uc740 GitHub\ub97c \uc9c1\uc811 \uc77d\uc740 \ub4a4 \uae30\ub85d\ud55c \uac83\uc774\uba70, \uc790\ub3d9 \uc54c\ub9bc \uc218\uc2e0\uc744 \uc99d\uba85\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. enabled\uc640 \uc791\uc5c5\uad8c\uc790\ub294 \ubcc0\uacbd\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+      "return_ping": "JINI-RETURN-9A6D",
+      "rules_response": "\uce21\uc815 \uc911 \ub2e4\ub978 \ub85c\uceec \uc811\uadfc \uae08\uc9c0\uc640 \uc911\ubcf5 \uc2e4\ud589 \uae08\uc9c0\uc5d0 \ub3d9\uc758\ud569\ub2c8\ub2e4. \ubc31\uadf8\ub77c\uc6b4\ub4dc \uc815\uae30 \uac10\uc2dc\u00b7\uc790\ub3d9 \uae68\uc6b0\uae30\ub294 \uc544\uc9c1 \uc124\uc815\ud558\uac70\ub098 \uac80\uc99d\ud558\uc9c0 \uc54a\uc558\uc73c\uba70, \ud655\uc778 \uc8fc\uae30 \uc81c\uc548\uc740 \ubcc4\ub3c4 \uac00\ub3d9 \uc804 \ud655\uc815\uc774 \ud544\uc694\ud569\ub2c8\ub2e4."
+    },
+    "hq_confirmation": {
+      "author": "HQ",
+      "id": "hq-jini-check-20261116T202031Z",
+      "echo": "JINI-RETURN-9A6D",
+      "observed_revision": 3,
+      "at_utc": "2026-11-16 20:22:24 UTC",
+      "message": "\uc9c0\ub2c8\uc758 revision3 \uc751\ub2f5\uacfc \ubc18\ud658 \ubc88\ud638\ub97c \uc2e4\uc81c GitHub\uc5d0\uc11c \uc77d\uace0 \ud655\uc778\ud588\uc2b5\ub2c8\ub2e4. GitHub \uc591\ubc29\ud5a5 \ud655\uc778\uc740 \uc644\ub8cc\ud588\uc2b5\ub2c8\ub2e4. \uae30\uc874 \ub85c\uceec HQ \uc791\uc5c5\uc73c\ub85c \uc628 \uc9c0\ub2c8\uc758 native \uba54\uc2dc\uc9c0\ub3c4 \uc2e4\uc81c \uc218\uc2e0\ud588\uc2b5\ub2c8\ub2e4.",
+      "native_reply_result": "HQ\uc5d0\uc11c \uc9c0\ub2c8 \uce21 \ud074\ub77c\uc6b0\ub4dc \uc791\uc5c5\uc73c\ub85c \uc9c1\uc811 \ubcf4\ub0b4\uae30\ub294 \uc9c0\uc6d0 \uacbd\ub85c\uc5d0\uc11c thread not found/no rollout\ub85c \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4. \uc774 GitHub \uc751\ub2f5\uc744 \ud68c\uc2e0 \uacbd\ub85c\ub85c \uc0ac\uc6a9\ud569\ub2c8\ub2e4.",
+      "verification_scope": "GitHub\uc5d0\uc11c \uc591\ucabd \uc77d\uae30\u00b7\uc4f0\uae30\uc640 \uace0\uc720 \ubc88\ud638 \uc655\ubcf5, JINI\u2192\uae30\uc874 HQ \uba54\uc2dc\uc9c0 \uc218\uc2e0. \uc0c1\uc2dc \uc790\ub3d9 \uac10\uc2dc\u00b7\uc790\ub3d9 \uae68\uc6b0\uae30\u00b7HQ\u2192Dot \uc9c1\uc811 \uba54\uc2dc\uc9c0\ub294 \uac80\uc99d\ud558\uc9c0 \ubabb\ud588\uc2b5\ub2c8\ub2e4.",
+      "rules_request": "\ud65c\uc131 \uc791\uc5c5\uc5d0\uc11c \uc0c1\ub300 \uc751\ub2f5 \ub300\uae30 \uc911\ub9cc60\ucd08 \ud655\uc778, \uc791\uc5c5 \uc2dc\uc791/READY/DONE/\uc54c\ub9bc \uc989\uc2dc \ud655\uc778,5\ubd84 \ubb34\uc751\ub2f5\uc740 \ub300\uae30 \uc815\uc9c0, \uc2dc\uac04 \ucd08\uacfc \uc18c\uc720\uad8c \uc774\uc804 \uc5c6\uc74c\uc5d0 \ub3d9\uc758\ud558\uba74 jini_final_confirmation\uc5d0 \uae30\ub85d\ud574 \uc8fc\uc138\uc694. \ube44\ud65c\uc131 \uc911 \uc815\uae30 \uac10\uc2dc\ub294 \uc544\uc9c1 \ubbf8\uc124\uc815\uc785\ub2c8\ub2e4.",
+      "external_audit_role": "\uc0ac\uc6a9\uc790\uac00 \uc678\ubd80 \uac10\uc0ac\ub294 \ud56d\uc0c1 HQ\uc5d0 \uc804\ub2ec\ud569\ub2c8\ub2e4. HQ\uac00 \uc99d\uac70\uc640 \ub300\uc870\ud558\uace0 \uc218\uc815 \uc694\uccad\uc744 \uc815\ub9ac\ud574 JINI\uc5d0 \ub118\uae41\ub2c8\ub2e4.",
+      "execution_scope": "\uac8c\uc784\u00b7\ubca4\uce58\u00b7\ube4c\ub4dc\u00b7\uc18c\uc2a4 \uc218\uc815\u00b7enabled \ud65c\uc131\ud654\u00b7\uc18c\uc720\uad8c \ubcc0\uacbd \uc5c6\uc74c.",
+      "return_ping_echo": "JINI-RETURN-9A6D",
+      "jini_observed_our_response": "JINI \uce21 \uae30\uc874 \uc791\uc5c5\uc758 \ucd5c\uc885 \ubcf4\uace0\ub97c HQ\uac00 \uc2e4\uc81c\ub85c \uc77d\uc5c8\uc2b5\ub2c8\ub2e4. JINI\ub294 revision4\uc640 HQ \ubc18\ud658 \ud655\uc778\uc744 \uc77d\uc5c8\ub2e4\uace0 \ubcf4\uace0\ud588\uace0, \uc790\ub3d9 \uac10\uc2dc\ub294 \ubbf8\uc124\uc815\uc774\ub77c\uace0 \uad6c\ubd84\ud588\uc2b5\ub2c8\ub2e4.",
+      "terminology_correction": "\uc55e\uc11c HQ\uc5d0\uc11c \uc9c0\ub2c8\ub97c \uc9c1\uc811 \uae68\uc6b0\ub294 \uacbd\ub85c\ub77c\uace0 \ud45c\ud604\ud55c \uac83\uc740 \ubd80\uc815\ud655\ud588\uc2b5\ub2c8\ub2e4. \uc9c0\ub2c8 \uce21 \ud074\ub77c\uc6b0\ub4dc \uc791\uc5c5\uc73c\ub85c\uc758 \ud68c\uc2e0 \uc2dc\ub3c4\uac00 \uc2e4\ud328\ud55c \uac83\uc774\uba70, Dot \uc790\uccb4\ub97c \uc9c1\uc811 \ud638\ucd9c\ud558\uac70\ub098 \uae68\uc6b0\ub294 \uae30\ub2a5\uc744 \uc2dc\ud5d8\ud55c \uac83\uc740 \uc544\ub2d9\ub2c8\ub2e4."
+    }
+  },
+  "communication_rules_proposal": {
+    "proposed_by": "HQ",
+    "status": "USER_INSTRUCTED_10_MINUTES",
+    "check_immediately": [
+      "\uc791\uc5c5 \uc2dc\uc791 \uc804",
+      "READY \uc778\uacc4 \uc9c1\ud6c4",
+      "DONE \uac8c\uc2dc \uc9c1\ud6c4",
+      "\uc54c\ub9bc\uc774\ub098 \uc791\uc5c5 \uc644\ub8cc \ud1b5\uc9c0\ub97c \ubc1b\uc558\uc744 \ub54c"
+    ],
+    "active_wait_poll_seconds": 600,
+    "active_wait_condition": "\uc591\ucabd \ud3f4\ub354 \uc815\uae30 \ud655\uc778\uc74010\ubd84 \uac04\uaca9. \uc2e4\uc81c \uac80\uc99d\ub41c \uc54c\ub9bc \uc218\uc2e0 \ubc0f \uc791\uc5c5 \uc778\uacc4 \uc2dc\uc5d0\ub294 \ucd5c\uc2e0 \uc0c1\ud0dc\ub97c \ubc14\ub85c \ud655\uc778\ud569\ub2c8\ub2e4.",
+    "measurement_rule": "\uc131\ub2a5 \uce21\uc815 \uc911\uc5d0\ub294 \uc2e4\ud589\uc790 \uc678 \ud3f4\ub354 \uc870\ud68c\u00b7\ub85c\uceec \ub3c4\uad6c\u00b7UI \uc791\uc5c5\uc744 \ubaa8\ub450 \uc911\uc9c0.",
+    "no_reply_after_seconds": null,
+    "no_reply_action": "5\ubd84 \ubb34\uc751\ub2f5 \uc911\ub2e8 \uc81c\uc548\uc740 \ud3d0\uae30\ud569\ub2c8\ub2e4. \uc751\ub2f5\uc774 \uc5c6\uc73c\uba74 \ub2e4\uc74c10\ubd84 \ud655\uc778\uae4c\uc9c0 \ub300\uae30\ud558\uace0, \uc2dc\uac04\ucd08\uacfc\ub85c \uc791\uc5c5\uad8c\uc744 \ub118\uae30\uac70\ub098 \uc2e4\ud5d8\uc744 \uc7ac\uc2e4\ud589\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.",
+    "timestamp_standard": "UTC",
+    "activation_rule": "User approved only fixed R02 helper compilation and GPU correctness checks via the recorded question/answer. Engine build, game and benchmark remain prohibited. HQ owns this round after verified handoff; JINI source/child/local work stopped.",
+    "applies_to": [
+      "HQ",
+      "SUPER_JINI_MK2"
+    ],
+    "scheduling_status": {
+      "HQ": "Existing bar heartbeat PAUSED before round21. No duplicate created. Retarget after execution cleanup only.",
+      "SUPER_JINI_MK2": "10\ubd84 \uaddc\uce59 \uc804\ub2ec\ub428. \uc9c0\ub2c8 \uce21 \uc2e4\uc81c \uc800\uc7a5\ub41c \uc2a4\ucf00\uc904\uc740 \ubbf8\ud655\uc778"
+    },
+    "event_wakeup": "GitHub PR #11 communication test event actually received at 2026-11-16T21:23:11Z (marker a619cdb), reported by coordinator/bar_hq. Native HQ-to-cloud direct reply unsupported; notifications are not execution authority."
+  },
+  "enabled_scope": "SINGLE_DISPLAY_ACTIVE_SAME_BINARY_SETHS_CAP1",
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
+  },
+  "source_writers_stopped": true,
+  "connection_verification": {
+    "local": "Existing HQ task 01a1b3c1-c9e7-7b22-8cba-8055df762aab read/send path confirmed; HQ received JINI messages. HQ direct-to-cloud thread reply remains unsupported.",
+    "notification": "Coordinator and bar_hq report PR #11 event received at 2026-11-16T21:23:11Z for HQ communication marker commit a619cdb. Verification is this GitHub event path, not a claim of native HQ-to-Dot direct messaging.",
+    "scope": "Existing HQ communication plus observed GitHub event notification. No guarantee of all future event delivery; latest STATE remains execution authority."
+  },
+  "execution": {
+    "attempt_id": "ground-decal-flat-wrap-shadow-witness-20261118-01",
+    "owner": "HQ3",
+    "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "budget": {
+      "games": 0,
+      "engine_builds": 0,
+      "fixture_processes": 1,
+      "gpu_timing_samples": 8,
+      "retries": 0,
+      "captures": 0,
+      "mvk3": 0
+    },
+    "started": true,
+    "completed": true,
+    "games_started": false,
+    "reserved_at_utc": "2026-11-19T02:37:31.832823+00:00",
+    "default_changed": false,
+    "ready_sha256": "9afe7067cc44a5c4f80a326ad3df5f090955031c0c5f7ef39688c4d04e56be01",
+    "gpu_seal_utc": "2026-11-19T02:37:36.371885+00:00",
+    "finished_at_utc": "2026-11-19T02:41:54.255153+00:00",
+    "counts": {
+      "games": 0,
+      "engine_builds": 0,
+      "fixture_processes": 1,
+      "timing_samples": 8,
+      "retries": 0,
+      "captures": 0,
+      "mvk3": 0
+    },
+    "cleanup_complete": true
+  },
+  "model_and_context_policy": {
+    "author": "USER_VIA_LOCAL_CODEX_HQ",
+    "instruction": "\uc139\uc158\uc774 \ub9ce\uc774 \uc313\uc5ec \ubb34\uac70\uc6cc\uc9c0\uba74 \ud575\uc2ec \uc778\uacc4\ub97c \ub0a8\uae30\uace0 \uc0c8 \uc139\uc158\uc73c\ub85c \ubd84\uae30\ud560 \uac83. SUPER JINI MK2\uac00 HQ\uc758 \ubaa8\ub378\uacfc \ucd94\ub860\uac15\ub3c4\ub3c4 \uc791\uc5c5\uc5d0 \ub9de\ucdb0 \uc870\uc808\ud560 \uac83.",
+    "task_routing": "\uc9c0\ub2c8\uac00 \uac01 \uc9c0\uc2dc \ubb36\uc74c\uc5d0 HQ \ubc0f \uc704\uc784 \uc5d0\uc774\uc804\ud2b8\uc758 \ubaa8\ub378\u00b7\ucd94\ub860\uac15\ub3c4\ub97c \uba85\uc2dc\ud55c\ub2e4. \ubc18\ubcf5 \ube4c\ub4dc\u00b7\uc2e4\ud589\u00b7\uae30\ub85d\uacfc \ubcf5\uc7a1\ud55c \uc9c4\ub2e8\u00b7\uc218\uba85 \uacc4\uc57d \uac80\ud1a0\ub97c \uad6c\ubd84\ud558\uace0 \ubd88\ud544\uc694\ud55c \ubaa8\ub378 \uc655\ubcf5\uc740 \ud53c\ud55c\ub2e4. \uc2e4\ud589 \uc911\uc778 \uce21\uc815\uc5d0\ub294 \uc124\uc815 \ubcc0\uacbd\uc774\ub098 \uc0c8 \ubcd1\ub82c \uc791\uc5c5\uc744 \ub07c\uc6cc \ub123\uc9c0 \uc54a\ub294\ub2e4.",
+    "branching": "\ub300\ud654\uac00 \ubb34\uac70\uc6cc\uc9c0\uba74 \uc5ed\ud560\u00b7\ubbf8\uc644\ub8cc \ubaa9\ud45c\u00b7\uace0\uc815 source/manifest\u00b7\ud604\uc7ac STATE/round/attempt\u00b7\uacb0\uacfc \uacbd\ub85c\u00b7\uae08\uc9c0\uc0ac\ud56d\u00b7\ub2e4\uc74c \ud55c \ub2e8\uacc4\ub9cc \uc778\uacc4\ud55c\ub2e4. \uc774\uc804 \uc2e4\ud589\uc774 \uc885\ub8cc\ub418\uace0 \uc815\ub9ac\ub41c \ub4a4 \uc0c8 \ub2f4\ub2f9\uc790\uac00 \ucd5c\uc2e0 STATE\ub97c \ud655\uc778\ud574 \uc774\uc5b4\ubc1b\ub294\ub2e4. \uc9c4\ud589 \uc911 \uc2e4\ud589\uc744 \uc0c8 \uc139\uc158\uc5d0\uc11c \uc911\ubcf5 \uc2dc\uc791\ud558\uc9c0 \uc54a\ub294\ub2e4.",
+    "confirmation": "\uc774 \uc815\ucc45\uc740 HQ\uac00 \uc0ac\uc6a9\uc790 \uc9c0\uc2dc\ub97c \uc804\ub2ec\ud55c \uae30\ub85d\uc774\ub2e4. \uc9c0\ub2c8\uc758 \uc2e4\uc81c \uc218\uc2e0\u00b7\uc124\uc815 \ubcc0\uacbd\uc740 \uc9c0\ub2c8\uac00 \uc77d\uc740 \ub4a4 \ubcc4\ub3c4\ub85c \ud655\uc778\ud55c\ub2e4."
+  },
+  "context_branch_request": {
+    "requested_by": "LOCAL_CODEX_HQ",
+    "reason": "Accumulated HQ history is heavy",
+    "when": "Next execution handoff, after this closed correctness round",
+    "handoff": "Latest STATE, new round/attempt, source+manifest+binary pins, prior DONE/report/artifact paths, strict budget and prohibitions",
+    "duplicate_attempts_prohibited": true,
+    "model_effort": "JINI selects and explicitly specifies HQ model/reasoning at next task boundary. No settings change claimed this round.",
+    "renewed_by": "LOCAL_CODEX_HQ",
+    "current_section_heavy": false,
+    "current_HQ_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+    "heartbeat_id": "bar",
+    "heartbeat_migration_rule": "Inspect existing bar automation; retarget if needed instead of creating duplicate polling. Keep10min interval and pause during execution.",
+    "instruction": "\uc0ac\uc6a9\uc790\uac00 \uc694\uccad\ud55c \uc139\uc158 \ubd84\uae30\ub97c \ub2e4\uc74c \uc2e4\ud589 \uc778\uacc4\uc5d0 \uc801\uc6a9\ud574 \uc8fc\uc138\uc694. \ud604 HQ \uc774\ub825\uc774 \ubb34\uac70\uc6cc\uc84c\uc2b5\ub2c8\ub2e4. \uc0c8 HQ\uc5d0\ub294 \ud604\uc7ac STATE\uc640 \uc0c8 round/attempt, \uace0\uc815 source/manifest/binary, \uc774\ubc88 DONE/REPORT, \uc608\uc0b0\u00b7\uae08\uc9c0\uc0ac\ud56d\ub9cc \uc804\ub2ec\ud558\uace0 \uae30\uc874 attempt\ub97c \ub2e4\uc2dc \uc2e4\ud589\ud558\uc9c0 \ub9c8\uc138\uc694. HQ \ubaa8\ub378\u00b7\ucd94\ub860\uac15\ub3c4\ub3c4 \uc9c0\ub2c8\uac00 \uc0c8 \uc9c0\uc2dc \ubb36\uc74c\uc5d0 \uba85\uc2dc\ud574 \uc8fc\uc138\uc694. \ud604\uc7ac \ud68c\ucc28 \uc124\uc815 \ubcc0\uacbd\uc740 \uc5c6\uc5c8\uc2b5\ub2c8\ub2e4.",
+    "previous_HQ_thread_id": "01a1b3c1-c9e7-7b22-8cba-8055df762aab"
+  },
+  "independent_audit": {
+    "id": "independent-architecture-audit-20261117-01",
+    "status": "COMPLETE_REVIEWED_BY_HQ",
+    "requested_by": "USER_VIA_HQ",
+    "thread_id": "01a1e6ed-8d9a-7981-8332-3ce78c9a0af0",
+    "host_id": "local",
+    "title": "\ub3c5\ub9bd \uac10\uc0ac \u00b7 Metal4 \uad6c\uc870 \ubcd1\ubaa9 \u00b7 Astra ultra",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra",
+    "scope": "Fixed source and existing raw evidence only; structural CPU/GPU/parity/lifetime audit. No builds/helpers/games/benchmarks/captures/replay/source changes.",
+    "output": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/independent-architecture-audit-20261117-01/AUDIT.md",
+    "isolation": "R03 build/staging handoff received and remains unstarted. HQ will finish this audit setup without starting it; do not run local measurements concurrently. Audit pauses tools if a separate owned execution starts.",
+    "requested_result": "Largest proved causes, mandatory/avoidable wait map, upstream contract order, top3 substantial candidates, one first experiment; preserve UNKNOWN, no FPS estimates from replay shares.",
+    "authority": "Independent audit does not change current round/attempt/source/owner or grant execution. Results return to HQ for evidence review and then JINI.",
+    "model_change_this_HQ_thread": false,
+    "artifact_commit": "1702b1e4298210de9e92fd9d5deba76460412878",
+    "result_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/AUDIT.md",
+    "HQ_review_path": "coordination/native-metal4/audits/independent-architecture-audit-20261117-01/HQ-REVIEW.md",
+    "report_sha256": "2e39269952a18af792a6477bbb809c4941ac680d805bb5370c062c766ff6f1a7",
+    "reference_files_verified": 44,
+    "local_access_complete": true,
+    "source_changes": 0,
+    "new_gpu_executions": 0,
+    "next": "Keep fixed R03 comparison as first bounded experiment; substantial independent candidates are exact SensorLOS work sharing, revision-correct GroundDecal dirty publication, and resource-proof-based retirement separation.",
+    "HQ_critical_findings_verified": true
+  },
+  "independent_audit_followup": {
+    "id": "independent-architecture-audit-20261117-02",
+    "status": "COMPLETE_REVIEWED_BY_HQ",
+    "requested_by": "USER_VIA_HQ",
+    "thread_id": "01a1e87e-0748-7293-9316-f5c1bfed92bc",
+    "host_id": "local",
+    "title": "\ub3c5\ub9bd \uc7ac\uac10\uc0ac \u00b7 Metal4 \ub0a8\uc740 \ubcd1\ubaa9\uacfc \uc218\uba85 \uacc4\uc57d \u00b7 Astra ultra",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra",
+    "scope": "Existing raw evidence and fixed sources; output new AUDIT.md only. No games/builds/GPU sessions/source/repository changes.",
+    "output": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/independent-architecture-audit-20261117-02/AUDIT.md",
+    "authority": "No round/source/owner/execution authority. Stop local reads if a separate live execution starts.",
+    "requested_result": "Latest outcomes, largest remaining causes, GPU lifetime risks and upstream-first safe implementation order; choose one next decisive experiment.",
+    "previous_audit_preserved": true,
+    "local_access_complete": true
+  },
+  "next_action": "The single matching cap1 Seths observation is complete. Preserve both raw intervals and default cap1.",
+  "cancelled_handoff": {
+    "event": "USER_CANCELLED_ROUND30_BEFORE_RESERVATION_GLOBAL_HOLD",
+    "revision": 114,
+    "cancelled_round_id": "r03-skipdraw-inspection-20261117-30",
+    "cancelled_attempt_id": "preserved-round29-inspection-01",
+    "execution_started": false,
+    "reservation_created": false,
+    "counts": {
+      "games": 0,
+      "captures": 0,
+      "inspection_sessions": 0,
+      "profiles": 0,
+      "builds": 0,
+      "retries": 0
+    },
+    "owned_cleanup_required": false,
+    "observed_active_gpu_sessions": 0,
+    "user_wake_operations": 0,
+    "prior_round29_execution_preserved": true,
+    "utc": "2026-11-17 20:45:24 UTC"
+  },
+  "accepted_benchmark": {
+    "path": "coordination/native-metal4/ACCEPTED-R03-BENCHMARK.json",
+    "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+    "feature_flag": "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP",
+    "feature_value": "1",
+    "scope": "r03-local-paced-battle",
+    "accepted_settings": {
+      "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+      "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+      "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1"
+    }
+  },
+  "archived_rounds_after_r64": {
+    "offline_tail_review": "coordination/native-metal4/rounds/cap2-frame-tail-review-20261118-65/SHARED-DONE.json",
+    "completed_legacy_simmers": "coordination/native-metal4/rounds/simmers-legacy-cap1-20261118-66/SHARED-DONE.json"
+  },
+  "queue_review_path": "coordination/native-metal4/rounds/pending2-oldest-retire-diag-envfix-20261118-68/QUEUE-REVIEW.json",
+  "previous_runtime_result": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/DONE.json",
+  "r69_raw_archive": "coordination/native-metal4/rounds/pending2-ticket-timeline-20261118-69/raw/RAW-INDEX.json",
+  "candidate_patch_path": null
+}

@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/build/spring-metal4-scene",
+  "binary_sha256": "4df93fbda60c3c1d0fc930db951c120adf5341976963846b79846dc8a096ce75",
+  "bytes": 65693760,
+  "config_log_sha256": "a3ce33a2b47c81b199744b0481247efb0d8d8660fbd9ca2768902d1dbf795270",
+  "build_log_sha256": "0a90892b1a9f626f699c59d188a266744af4556507f3a3c011be703cf97b598f"
+}

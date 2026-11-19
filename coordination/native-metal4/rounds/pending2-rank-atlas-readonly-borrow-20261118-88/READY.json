@@ -1,0 +1,18 @@
+{
+  "status": "STAGED_NO_GAME",
+  "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "order": [
+    "R88_OFF",
+    "R88_ON"
+  ],
+  "launch_sha256": {
+    "R88_OFF": "5c1e763ca4fc4a1e025692aee5ab824d8de4dc31270bf4df9091b3affd8a69ae",
+    "R88_ON": "f572d7fefe4c3e815651a8504453d7edd72d3fae3435909636fce6e8ee7498bb"
+  },
+  "cap": 2,
+  "aa": 0,
+  "scene_hashes": 13,
+  "only_switch": "BAR_NATIVE_RANK_ATLAS_GPU_BORROW",
+  "patch_sha256": "86f03c162967e67e288c57cd145a29ad8fb3f37ea94a4bc7dd9b7cfdfbb2958e",
+  "safety_sha256": "ad46643f2b2f3bea9a75264138e1e90513c87e75ddcb09f884f41817a19c0430"
+}

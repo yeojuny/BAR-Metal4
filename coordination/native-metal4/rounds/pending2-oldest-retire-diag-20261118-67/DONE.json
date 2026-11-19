@@ -1,0 +1,25 @@
+{
+  "status": "CONFIGURE_FAILED_CLOSED",
+  "round_id": "pending2-oldest-retire-diag-20261118-67",
+  "attempt_id": "pending2-oldest-retire-timing-01",
+  "executor": "HQ3",
+  "returned_to": "SUPER_JINI_MK2",
+  "counts": {
+    "configure": 1,
+    "engine_build": 0,
+    "games": 0,
+    "gpu_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "configure_exit": 1,
+  "configure_started_utc": "2026-11-18T10:41:45.615861+00:00",
+  "configure_ended_utc": "2026-11-18T10:41:52.634695+00:00",
+  "failure": "CMake pkg-config could not resolve openal>=1.18.2; known process-local OpenAL pkg-config path was omitted from the launcher",
+  "diagnostic_binary_built": false,
+  "timing_observations": 0,
+  "cleanup_complete": true,
+  "default_cap": 1,
+  "next_action": "Only a new authorized attempt with the previously proven process-local PKG_CONFIG_PATH; preserve this failed attempt"
+}

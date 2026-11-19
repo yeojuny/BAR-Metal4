@@ -1,0 +1,60 @@
+{
+  "round_id": "texture-ordered-validation-20261117-16",
+  "attempt_id": "texture-ordered-validation-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "ISOLATED_STAGING_THEN_TWO_SAME_BINARY_OFF_ON_CORRECTNESS_GAMES",
+  "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "source_manifest_sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
+  "input_artifact_commit": "544c23c4214af99efe67c98f047e6325fe6fc9c2",
+  "raw_engine_sha256": "aaf18800be5a917972a298c6ffd9077f287fb9382f362f218189d84cb5c76e2a",
+  "raw_engine_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/build/spring-metal4-scene",
+  "runner_reference": {
+    "artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+    "path": "coordination/native-metal4/rounds/ground-decal-pages-staging-20261117-11/artifacts/measurement/run.py",
+    "sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637"
+  },
+  "feature_flag": "BAR_NATIVE_TEXTURE_ORDERED_INPUT",
+  "order": [
+    {
+      "arm": "V_TEXTURE_OFF",
+      "value": "0"
+    },
+    {
+      "arm": "V_TEXTURE_ON",
+      "value": "1"
+    }
+  ],
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "budget": {
+    "isolated_relocation_sign": 1,
+    "fixture_staging": 1,
+    "validation_games": 2,
+    "builds": 0,
+    "CPU_tests": 0,
+    "helpers": 0,
+    "benchmarks": 0,
+    "GPU_captures": 0,
+    "retries": 0
+  },
+  "gates": [
+    "Latest STATE exact HQ/round/attempt, current blob SHA CAS once. Consumed/unclear attempt history => BLOCKED.",
+    "Verify fixed raw engine/source/manifest. Copy isolated runtime, relocate/sign only copy using previous verified procedure and19 dependencies. Both arms use exactly the same resulting signed binary. GroundDecal/R04 changes absent.",
+    "Use existing two-arm validation runner. Allowed changes: source/product pins, private labels/paths, and explicit arm-specific BAR_NATIVE_TEXTURE_ORDERED_INPUT=0/1 only. Preserve controller/pacing/error/cleanup. Record runner full text/diff/hash and same signed binary19 dylib/13 fixture hashes and exact command before games.",
+    "Check actual child launch environment, not only parent shell: OFF0 and ON1. No global settings changes. All other flags identical, Metal API Validation1 shader validation0, Ultra4 AA0 main sample1, drawable1512x982 safeview1512x950, PREPARE1 BEGIN0 worker1 and S01/G01. GPU pending1/final drain unchanged.",
+    "Run OFF then ON once each, stop on existing error/hazard/residency/assertion gate or source/pin/display mismatch. No extra games or retries.",
+    "Actual-path check: inspect existing source/receipts/logs for exact eligible texture producer/context/consumer and ordered-input admission. A generic dependency/order receipt, environment ON or successful FPS is insufficient. Do not infer path execution from absence of errors.",
+    "Before game identify whether fixed binary exposes a texture-specific witness. Do not patch source/build or attach debugger/add intrusive instrumentation. If unavailable, still execute authorized ordinary OFF/ON safety/screens, classify path activation UNKNOWN; if proven unused report NOT_EXERCISED. No optimization correctness/performance approval from either case.",
+    "Review actual two scene images and raw runtime sample/display/world/camera/seed/fixed tick markers and normal submission retirement. Compare equivalent ticks; wall bin jitter alone not divergence. Keep every raw row and explain dynamic differences. No exact pixel/depth/stencil proof from RGB alone.",
+    "Retain all logs and explicit source/pins/child env evidence, image review, normal exits, path witness or its exact absence, GPU hazards and cleanup. Validation FPS excluded; no performance suite or gain claim regardless of apparent FPS.",
+    "Pause heartbeat and all competing Mac access. Close GPU/owned PIDs/children/image workers/awake holders/evidence writes before same-round DONE. On uncertain cleanup HQ/BLOCKED.",
+    "No source changes, build, extra audit, Texture+GroundDecal merge, R04/main/releases/Homebrew/original app changes. No security/debug-entitlement changes."
+  ],
+  "limitations": [
+    "Without positive actual-path witness, ON launch validates ordinary configuration only, not exercised ordered texture borrow.",
+    "No exhaustive failed-submission/quarantine/ARC lifetime proof; no two-GPU-inflight claim.",
+    "No performance comparison before actual optimization path and correctness are demonstrated."
+  ],
+  "source_writers_stopped": true,
+  "child_tasks_completed": true
+}

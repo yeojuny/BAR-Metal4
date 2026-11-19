@@ -1,0 +1,25 @@
+{
+  "status": "SOURCE_VERIFIED_ALL_PRIOR_READS_CLASSIFIED",
+  "round_id": "pending2-classified-prior-reads-20261118-62",
+  "attempt_id": "pending2-classified-prior-reads-source-01",
+  "counts": {
+    "targeted_syntax_checks": 8,
+    "cpu_contracts": 3,
+    "engine_builds": 0,
+    "games": 0,
+    "gpu_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cpu_results": {
+    "COMPLETE-READ-CONTRACT.log": "PASS: all seven prior-read caller families named, actual source Bloom and terrain-info exact/fallback paths, full mip writer and FIFO success",
+    "POSTPROCESS.log": "PASS: production-extracted exact and serialized postprocess receipts with ASan/UBSan; mocked textures, no Metal execution",
+    "TERRAIN-CACHE.log": "Actual bounded typed receipt cache: 1000 cycles, all10 key changes, lease isolation, dynamic readability and capacity PASS; production validation/order preserved"
+  },
+  "gpu_pending_pairs": null,
+  "unclassified_live_frames": null,
+  "fps": null,
+  "input_latency": null,
+  "utc": "2026-11-18T09:41:41.755144+00:00"
+}

@@ -1,0 +1,28 @@
+{
+  "status": "STAGED_NO_GAME",
+  "budget": {
+    "configure": 0,
+    "engine_build": 1,
+    "translation_units": 2,
+    "link": 1,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_trace_frameworks": 0
+  },
+  "binary_sha256": "46cddd8e2677952bfa7a1e46baa1e4f2dd8da852d5117e694ee9ad9669103681",
+  "input_hashes_match": 13,
+  "launch_sha256": "22496013a502bd5e11ce6f501e15849add621a7e5d2ba51ac3a2fde139eb7691",
+  "request_sha256": "0e936072091a94dccc61c81d85a7286fc4d88524c7d797bf385d3c08211ec303",
+  "source_patch_sha256": "c94018fa154d04793771715c12850049541f9abe855f0d6d9dfa4531426e4041",
+  "launcher_sha256": "493a006612cf460f455f5a9c589d2daaca9124a0380e0d54b8c3e7ae421783b8",
+  "phase_window_inclusive": [
+    1121,
+    1128
+  ],
+  "receipt_window_inclusive": [
+    1122,
+    1127
+  ]
+}

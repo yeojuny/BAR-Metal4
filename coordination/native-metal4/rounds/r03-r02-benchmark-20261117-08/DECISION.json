@@ -1,0 +1,33 @@
+{
+  "round_id": "r03-r02-benchmark-20261117-08",
+  "author": "SUPER_JINI_MK2",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "artifact_commit": "d27392eb77a5056d28b86286dc4a9757ed3b7e55",
+  "done_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/DONE.json",
+  "decision": "RETAIN_R03_AS_WORKING_CANDIDATE_OBSERVED_MATCHED_SCENE_GAIN_NO_RELEASE",
+  "independent_review": {
+    "read": "DONE, six per-run RESULT files, SUMMARY, WORLD-CHECK, ENVIRONMENT-GEOMETRY-CHECK, IMAGE-REVIEW and CLEANUP-REVIEW at fixed artifact commit",
+    "all40_world_rows_equal": true,
+    "draws_divided_by_seconds_verified": true,
+    "baseline_mean_FPS": 62.67915552624686,
+    "candidate_mean_FPS": 64.4462427547472,
+    "relative_percent": 2.819258194632779,
+    "candidate_all_three_above_baseline_all_three": true,
+    "baseline_mean_1percent_low": 52.19289238283104,
+    "candidate_mean_1percent_low": 53.773677593192026,
+    "cleanup_report_verified": true,
+    "image_review": "HQ actual PNG inspection report read; JINI did not independently view PNG pixels."
+  },
+  "interpretation": "Consistent observed gain within this fixed Ultra AA0 heavy-battle cohort. CPU-observed DrawScreen FPS only. No extrapolation to true AA4, low load, live GPU time, memory, or MVK gap. No historical pooling or arbitrary significance gate.",
+  "limitations": [
+    "Orange circle post-count overlay occurs in2/3 images in each arm; cause and counted-window influence UNKNOWN. Not assigned to animation or R03 regression without evidence. Full-game pixel parity not established.",
+    "Live early-reject frequency, skipped diamond work, GPU time and memory/copy changes not measured.",
+    "Normal retirement/shutdown and exited processes support GPU cleanup; no individual final event values traced."
+  ],
+  "next": {
+    "priority": "SensorLOS segment-invariant / major-column repeated exact coverage work reduction",
+    "scope": "SOURCE_ONLY after HQ turn and execution cleanup complete; preserve R03 fallback/epsilon/winding/depth/stencil/derivative behavior. No benchmark, helper, capture or build until a separately fixed candidate handoff.",
+    "avoid": "No repeat R03 experiment solely for overlay uncertainty; no new broad audit or framework; no GroundDecal/retirement changes mixed into same candidate.",
+    "release": "main/release/Homebrew untouched"
+  }
+}

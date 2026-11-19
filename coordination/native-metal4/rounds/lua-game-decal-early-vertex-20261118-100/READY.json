@@ -1,0 +1,18 @@
+{
+  "status": "STAGED_NO_GAME",
+  "binary_sha256": "f6d5431dcf545b83c1ffea61e20d398c087aef58583d4b300e5acfffb936368a",
+  "order": [
+    "R100_OFF",
+    "R100_ON"
+  ],
+  "launch_sha256": {
+    "R100_OFF": "1f300765846936b17c6493538a6a90ee6e447f0a306a7a2c4c2072a6ee95e5d9",
+    "R100_ON": "06673e7745d69e94fab95bcc217dac789a1d547c7e2cb258ade90d7907b5fdf4"
+  },
+  "cap": 2,
+  "aa": 0,
+  "scene_hashes": 13,
+  "only_switch": "BAR_NATIVE_GAME_DECAL_DEAD_VERTEX",
+  "patch_sha256": "39bd9afe60df6b92389e9909d93bc044d5cc0402a12262b2600a62766fde4158",
+  "safety_sha256": "a3d3c1cc9ae4d59f8f88d8d26aad05fcf630d3b9848f75d4a8ce28c11766a7a4"
+}

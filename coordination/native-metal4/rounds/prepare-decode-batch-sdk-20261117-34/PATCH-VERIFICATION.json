@@ -1,0 +1,31 @@
+{
+  "status": "PASS_EXACT_R03_PATCH_18_PATHS",
+  "parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "parent_source_entries": 10270,
+  "original_git_blobs_verified": 17,
+  "changed_file_sha256": {
+    "engine/rts/Rendering/Backend/NativeBuildSquareData.cpp": "334240ae41bf81d65f5f6da35100fa37a2ca75803852a683962bcd79d2e109d9",
+    "engine/rts/Rendering/Backend/NativeBuildSquareData.h": "e50a1f33af4798c145c6f79dd4ab20018d7a499cf85e497edd73ddfe7cb68259",
+    "engine/rts/Rendering/Backend/NativeCommandsData.cpp": "80d1b4752c3f54c06fe55fe0d1adee75d5d480c9ef27a7fa29bcf9b075870a42",
+    "engine/rts/Rendering/Backend/NativeCommandsData.h": "c222dd7e7f24abcf4347793433304029aec28eaac22b2ec7641a10354d53e901",
+    "engine/rts/Rendering/Backend/NativeEnergyExplosionRecorder.cpp": "3d75848674cd84dc14e0b647b4c5426220ef8e6feccf3a7ff5917844207ba84e",
+    "engine/rts/Rendering/Backend/NativeLuaNanoRecorder.cpp": "3d9bf8a7754e581e769bf7d79dbc27d9f4a28f6aab2540395895eefd9981d7df",
+    "engine/rts/Rendering/Backend/NativeSensor31657CircleData.cpp": "3a74253e36f89447fbd2bc15ded83716beebc20a097097189ce0fbdea869373a",
+    "engine/rts/Rendering/Backend/NativeSensor31657CircleData.h": "226ba0aa35891981de08855580a6d1101d45c1f048337be9c8c58c407f759c1f",
+    "engine/rts/Rendering/Backend/NativeStartBoxData.cpp": "17144aa0c47553c7eeb611df67c8751603188738ec285b87d886ac3b831eb51b",
+    "engine/rts/Rendering/Backend/NativeStartBoxData.h": "8844616075ed9b0a1bff528c09924d405571226dc6ed63e57a439d3d9f016649",
+    "engine/rts/Rendering/Backend/NativeWeaponRangeData.cpp": "71b301d18d83bd8c9fd55188d70100998532ecf32124bcbac08753bba06d98aa",
+    "engine/rts/Rendering/Backend/NativeWeaponRangeData.h": "b4d921a4adee8840442ccd40ad636e56333dd945392e81d985170917782436b1",
+    "engine/rts/Rendering/Metal4/Metal4BuildSquareNative.mm": "492aac7ec3157b0fcb34c83c2a7e7b500df7645fa48aaa9d53ccb046ceade447",
+    "engine/rts/Rendering/Metal4/Metal4CommandsNative.mm": "5b97f5e1f59d842de4e9a8dafe40e58d80825324837d1755a251584aac285e98",
+    "engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm": "64e61fe68847e2606bb2359595b0d37ef3b5c616fa39365a2cee2ef9fe928960",
+    "engine/rts/Rendering/Metal4/Metal4StartBoxNative.mm": "4937ba89733915168823cad9ccd94c6830e01407c709ee906d92ef1c9374052e",
+    "engine/rts/Rendering/Metal4/Metal4WeaponRangeNative.mm": "6308bd39a00fa4e0e139979f0577f54082e81f5fa91a4e261230de37d0caf2aa",
+    "engine/tools/metal4-contracts/TestPrepareLocalDecode.cpp": "1013f35c3877915051bfb472321c9f75fffc692020b2cd7b5cd7462f1a601705"
+  },
+  "manifest_sha256": "81e910aee0bcfc65528e1bae7bb5e9a8fa0dcfe21725bc42541287816510563b",
+  "patch_sha256": "3724395ace67036d2717c832f69654b7d452e8d8614a4d697b1e1deda7b530cc",
+  "original_binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "existing_protected_hashes": 134,
+  "prepared_indexed_runtime_data_preserved": 142
+}

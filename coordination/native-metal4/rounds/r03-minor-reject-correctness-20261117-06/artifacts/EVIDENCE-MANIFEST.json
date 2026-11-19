@@ -1,0 +1,72 @@
+{
+  "files": [
+    {
+      "path": "EXECUTION.json",
+      "bytes": 1670,
+      "sha256": "9a6e470be9a90e797c6dcdbea9721b24400b12307cfcf605397e3dfda7e5288d",
+      "gitBlob": "3225e109a281c7b1173c60baccf27eae04496f85"
+    },
+    {
+      "path": "INPUTS-VERIFIED.json",
+      "bytes": 511,
+      "sha256": "2b54f4a15fea8fccd3f65fca4b5825086f9d1d757802db893e8772f98ea86a8b",
+      "gitBlob": "f4a569b4e3ce54b3abd83af3df8c75bd06ad30f7"
+    },
+    {
+      "path": "MANIFEST.json",
+      "bytes": 876,
+      "sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+      "gitBlob": "fa4a807ccad46bf5029019f5b23aa18063cb8bbb"
+    },
+    {
+      "path": "REPORT.md",
+      "bytes": 1826,
+      "sha256": "de4c23b199a19366a7d0d5cc437eba34cfc70564264259069412ef3f6c19903e",
+      "gitBlob": "3eb100cff8f2301246515e42ab5397c81753a2f7"
+    },
+    {
+      "path": "RESULT.json",
+      "bytes": 2385,
+      "sha256": "ea1c16b53557d031132a82b4d315363047d6ad9b99fca88f5c7333fbf3307760",
+      "gitBlob": "3a61b40c88271350d908fbd4a753e66cb4f69f01"
+    },
+    {
+      "path": "compile.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gitBlob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "gpu.log",
+      "bytes": 449,
+      "sha256": "73418dd2d5d488cf935ccabf463e53c7ca9ac8b87ca6caff3ca691b56e3b5549",
+      "gitBlob": "4cef77e1db3cd7aec950aaa7595f79d5b761316a"
+    },
+    {
+      "path": "gpu_pixel_parity.mm",
+      "bytes": 30708,
+      "sha256": "6595ea4c537a7a83e124e909b20e8b9a5e8f22a627dbec5bc74ddf9587d5ace1",
+      "gitBlob": "aa20d039c363bd2b7ea09097e7cea98aae275348"
+    },
+    {
+      "path": "headers/NativeMultisampleLineShaders.h",
+      "bytes": 1668,
+      "sha256": "4e775c54e07e0c26fc21ca20b77635c7bbbb6efc55d026a4a010ca1c53c0b721",
+      "gitBlob": "af91715a60805f51d02a91d6d51c53e97e2db24d"
+    },
+    {
+      "path": "headers/NativeSampleShadingShaders.h",
+      "bytes": 1794,
+      "sha256": "02c29319fb48b4ece77d1ed6c1cd7b3d4644dca1b81bce9f9f7423bfd12ef4bf",
+      "gitBlob": "fa0bc42662295099ba301caffc10a7cc334bd198"
+    },
+    {
+      "path": "headers/NativeSensorLOSShaders.h",
+      "bytes": 19390,
+      "sha256": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+      "gitBlob": "5916daf3b3e025ba85c3520a2215a2629b418a9b"
+    }
+  ],
+  "binaryPreservedLocal": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-minor-reject-20261117-01/helper-execution-01/gpu_pixel_parity",
+  "binarySHA256": "659e8e3dcbbd5ee0f2375b98df9380955944bcc42099f2dbeddce7d580daf998"
+}

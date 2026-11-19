@@ -1,0 +1,36 @@
+{
+  "round_id": "pending2-final-color-ownership-20261118-55",
+  "attempt_id": "pending2-final-color-safety-01",
+  "status": "PREREQUISITE_VERIFIED_CAP2_ADMISSION_BLOCKED",
+  "proof": {
+    "status": "PASS",
+    "syntax_exit": 0,
+    "cpu_fixture_exit": 0,
+    "syntax": "Actual Metal4WorldRenderer variant with existing SDK and compile entry; no object or linked binary",
+    "cpu_fixture": "Existing idle pool fixture under ASan/UBSan and updated production source pin checks",
+    "cap2_enabled": false,
+    "engine_builds": 0,
+    "games": 0,
+    "gpu_invocations": 0
+  },
+  "current_gpu_pending_limit": 1,
+  "peak_2_measured": false,
+  "fps": null,
+  "inputs_timing": null,
+  "actual_blocker": {
+    "postprocess": "PreparationInput registers a CPU closure requiring the exact prior version's completed bit after successful retirement. An encoded or signaled producer alone is not success. Other reads lack a unified dependency ledger.",
+    "runtime": "SubmitAndDefer forces RetirePreviousSubmission and empty queue. BAR publishes producer and scene results from successful retire callbacks, so a dependent successor must not publish or present after predecessor failure.",
+    "present": "Fix drawable pool size, allow retirement before exhaustion and retain allocator, descriptors and mutable upload owners through their final use.",
+    "minimum_next_change": "Track exact producer submission and physical storage/version/subresource for ordinary-present reads. Prove required GPU ordering and gate dependent publication/present on success, including failed predecessors. Keep unknown paths at cap1 before benchmarking the cap2 candidate."
+  },
+  "counts": {
+    "syntax_checks": 1,
+    "cpu_fixtures": 1,
+    "engine_builds": 0,
+    "games": 0,
+    "gpu_invocations": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

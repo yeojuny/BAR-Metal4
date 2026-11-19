@@ -1,0 +1,634 @@
+[
+  {
+    "name": "CHILD-ENV-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/CHILD-ENV-CHECK.json",
+    "characters": 403,
+    "bytes": 403,
+    "sha256": "fd37a4c68e8fbb5aee5ec908e21bb41acbb42d2602287f2f74501711633ef19f",
+    "git_blob_sha": "55c1843779a161f904a3c3df34404e03f361e2f2"
+  },
+  {
+    "name": "EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/EXECUTION.json",
+    "characters": 724,
+    "bytes": 724,
+    "sha256": "9f821cf7111b2e42558a773ff0dc318ba07e0db2ef78470b63156d4d82ddf595",
+    "git_blob_sha": "a2120186e2a4289e901a7289a9a5e2afeb592b6d"
+  },
+  {
+    "name": "IMAGE-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/IMAGE-REVIEW.json",
+    "characters": 1334,
+    "bytes": 1334,
+    "sha256": "75b8046bf1493ee5ecadf0218381207bb03dbd30dbe4a11591bae31431feb826",
+    "git_blob_sha": "2e17668a7890165ef76c49c4e4743f2cee8e729c"
+  },
+  {
+    "name": "PATH-EVIDENCE-AFTER.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/PATH-EVIDENCE-AFTER.json",
+    "characters": 2621,
+    "bytes": 2621,
+    "sha256": "14df153dfe6660d38af61f77c6a06fb222ce7c2ed3a3fdceba88b9ddae8961b3",
+    "git_blob_sha": "8d706844c2213f15cc07215047dfd9ac2bc2814f"
+  },
+  {
+    "name": "RAW-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/RAW-CHECK.json",
+    "characters": 7588,
+    "bytes": 7588,
+    "sha256": "00962bb7e327e3d5dd32c24932c32afb2a80879009cd003889e9c27bebeecd9a",
+    "git_blob_sha": "be5802d7425ea0f07dc9678b6262d4fb2fe4ce15"
+  },
+  {
+    "name": "READY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/READY.json",
+    "characters": 697,
+    "bytes": 697,
+    "sha256": "801c25a3b87fef33bfe38f11ed1b20547700ec5adeedee624486b1a04228a4ce",
+    "git_blob_sha": "5ef39ecabcb5e134ff8fc56eb1a755b9395fc054"
+  },
+  {
+    "name": "REPORT.md",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/REPORT.md",
+    "characters": 3350,
+    "bytes": 3350,
+    "sha256": "c2725c150834b02a1b14a9e4764bf6830bdce365f880750b7fba497f3dbdd352",
+    "git_blob_sha": "5b9b64083ef6201983ea0873e46e5b5f81465ca8"
+  },
+  {
+    "name": "REQUEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/REQUEST.json",
+    "characters": 4594,
+    "bytes": 4594,
+    "sha256": "74ed707cd990d4abee38f3fa8c7d537fd52b4c62569763def089fe6d9743f0bc",
+    "git_blob_sha": "4d0c4ca389f1b10cb5b14b6a7ae6d8e859b1f286"
+  },
+  {
+    "name": "RESERVED-STATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/RESERVED-STATE.json",
+    "characters": 37103,
+    "bytes": 39829,
+    "sha256": "aad4b50eeadc35b850ac9b5e3756afeb9cf5aa650562b3d175080340b73ee10a",
+    "git_blob_sha": "ea7a77e812e738c9b87a48df7b11fbf66ad74331"
+  },
+  {
+    "name": "RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/RESULT.json",
+    "characters": 2432,
+    "bytes": 2432,
+    "sha256": "fb263db791dea226bbe37f577bb6eaeb5397dd17450032bd131f3510f70932e4",
+    "git_blob_sha": "e0992fa5405db25347fde538821d162391214203"
+  },
+  {
+    "name": "RUN.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/RUN.log",
+    "characters": 2351,
+    "bytes": 2351,
+    "sha256": "41e7a9b093c513eb24ea7c277486824e0472e82e18f80ce8fac4b8e1a49486e0",
+    "git_blob_sha": "9292ac7b695e3e02c97e4184b88dd50791e92dff"
+  },
+  {
+    "name": "WORLD-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/WORLD-CHECK.json",
+    "characters": 34881,
+    "bytes": 34881,
+    "sha256": "22bc23d9d618c82d726170497474a290a19f34b762dd83656f1d578896f8b9a7",
+    "git_blob_sha": "ac40ed3366e11034bde1ecd034ecd9affdad3d9b"
+  },
+  {
+    "name": "execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/execute.py",
+    "characters": 1267,
+    "bytes": 1267,
+    "sha256": "074a6ef022db50abcc7f0ae10238c14977724e1cf896b1b5bb2484a0586dde76",
+    "git_blob_sha": "a1f171f3ddf4d4d74f9bc4fb898b46f60bd6984c"
+  },
+  {
+    "name": "review.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/execution/texture-ordered-validation-01/review.py",
+    "characters": 7983,
+    "bytes": 7983,
+    "sha256": "f3ecc60853d6ccd65ca5254e94043db86ae3178177a132387a2e7fa443d4fd18",
+    "git_blob_sha": "9a5080458d0f87e5574c3218e762173afe89e24c"
+  },
+  {
+    "name": "staging/FROZEN-BEFORE-RUN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/FROZEN-BEFORE-RUN.json",
+    "characters": 16609,
+    "bytes": 16609,
+    "sha256": "7afc3dd1e2e50188bdf9452fba2ce973acf8d543a861a7e87f3160d1e03e752f",
+    "git_blob_sha": "bab4c7e9a4fa7c47c4cb80b29912ab6b16a42373"
+  },
+  {
+    "name": "staging/PATH-EVIDENCE-BEFORE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/PATH-EVIDENCE-BEFORE.json",
+    "characters": 832,
+    "bytes": 832,
+    "sha256": "fa082f1dfffe2db7f850310b26ac303f792ed19e0c8addf5faa87c82697b1455",
+    "git_blob_sha": "6f9f19a251ee72e0527a9d54b1c4693ea9a58b24"
+  },
+  {
+    "name": "staging/SIGN.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/SIGN.log",
+    "characters": 995,
+    "bytes": 995,
+    "sha256": "71b0d7eb4fffeb0e8233981d5d1e0d7f0f3d750160df5cf1c363c29012f65f9c",
+    "git_blob_sha": "a8050673a77f2a8f331932f8fc5d5e55e7e2ced4"
+  },
+  {
+    "name": "staging/SIGN-EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/SIGN-EXECUTION.json",
+    "characters": 274,
+    "bytes": 274,
+    "sha256": "5c16e7680bbff4c9da512104df024e28531e4649cb1498936dc8f923c521a24e",
+    "git_blob_sha": "2293ecb9854f79e27539678fef4509f183feb71c"
+  },
+  {
+    "name": "staging/STAGE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/STAGE.log",
+    "characters": 74,
+    "bytes": 74,
+    "sha256": "b067c479ee2861e66ff65bd39974dcaa23dcf451723718cce4d430734d02d16a",
+    "git_blob_sha": "4f1703503d94c0b25f69334e588fd00dca4f2775"
+  },
+  {
+    "name": "staging/STAGE-EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/STAGE-EXECUTION.json",
+    "characters": 345,
+    "bytes": 345,
+    "sha256": "1bd6f2ae7adf6d26f56a3cd662a816d466ca9c2021af6d8385a1197dce1c7a06",
+    "git_blob_sha": "9b3a45f9a858ba7c8f962b4464925d16310abb90"
+  },
+  {
+    "name": "staging/CANDIDATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/CANDIDATE.json",
+    "characters": 4084,
+    "bytes": 4084,
+    "sha256": "d66e6bc86960f0d79a2eac0532af00fc88b129169ac9f32571d27c340571797a",
+    "git_blob_sha": "f0f11f4520bdcb410715311296c3f6028888e9c8"
+  },
+  {
+    "name": "staging/DISPLAY-PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/DISPLAY-PREFLIGHT.json",
+    "characters": 96,
+    "bytes": 96,
+    "sha256": "30a20761367bfb9ae2ecbd5ab93aa755ca9a873d115b07e4f82cf66c19416810",
+    "git_blob_sha": "7ffa801c8421dd842233fe0a713ce7348b2c398d"
+  },
+  {
+    "name": "staging/MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/MANIFEST.json",
+    "characters": 1412,
+    "bytes": 1412,
+    "sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
+    "git_blob_sha": "48235036db386861eefe99dad9b3691498e2e325"
+  },
+  {
+    "name": "staging/TOOLCHAIN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/TOOLCHAIN.json",
+    "characters": 241,
+    "bytes": 241,
+    "sha256": "8c6a4a604b9d7e20256d91633aa73a440b91771d821c7c94b2ad6ea428ed0fd8",
+    "git_blob_sha": "23c91a79623435253593e1f9443cfc4b30af2777"
+  },
+  {
+    "name": "staging/DEPENDENCY-MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/DEPENDENCY-MANIFEST.json",
+    "characters": 3967,
+    "bytes": 3967,
+    "sha256": "55b5ad550e27c6490dac9e5d074686fcfc40c726f6db8857d102a3d6a4fbe0cb",
+    "git_blob_sha": "ab8522d36d398066dd784e5c1982d445685ad733"
+  },
+  {
+    "name": "staging/measurement/run.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/run.py",
+    "characters": 31774,
+    "bytes": 31774,
+    "sha256": "9302c2c8715b1f1dad92a8d67822501ee0136807191591b2c8de1521f7fbe0d8",
+    "git_blob_sha": "9ecf3fb9b0f00a7892c670acb50742fe2497ecf4"
+  },
+  {
+    "name": "staging/measurement/relocate_sign.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/relocate_sign.py",
+    "characters": 1676,
+    "bytes": 1676,
+    "sha256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+    "git_blob_sha": "acfc5fa19bcbf009b4b861a84af73dc4a063833f"
+  },
+  {
+    "name": "staging/measurement/RUNNER.diff",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/RUNNER.diff",
+    "characters": 4383,
+    "bytes": 4383,
+    "sha256": "482d8d7f766715c53722b52db252ec50f03d2ec9c13181f6d80d9b7e3236788d",
+    "git_blob_sha": "4609428b28692dd9e5cddeeb65a7dc45048eee1d"
+  },
+  {
+    "name": "staging/measurement/RUNNER-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/RUNNER-REVIEW.json",
+    "characters": 802,
+    "bytes": 802,
+    "sha256": "f1428de63120567d136b59c86b16f343b39a02064d5480463f2368a701872ce7",
+    "git_blob_sha": "3ce154a5f45e81b40cc238d049e323498810152a"
+  },
+  {
+    "name": "staging/measurement/BASELINE-PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/BASELINE-PRODUCT.json",
+    "characters": 617,
+    "bytes": 617,
+    "sha256": "a38e2464cf3e058159fa1021c58973f359f9044620354e5099b4095b4ff02e7d",
+    "git_blob_sha": "b0b9ddbe8bcbfbc8dd1b00ff95c658c0a64b3767"
+  },
+  {
+    "name": "staging/measurement/PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/PRODUCT.json",
+    "characters": 616,
+    "bytes": 616,
+    "sha256": "43b8b20aa634605c2bbfd08f5fa60bf15b382edffdd5a3aa15cdbe789b4c13ca",
+    "git_blob_sha": "36868715a0c2486febf9fdcc488345dbacc95397"
+  },
+  {
+    "name": "runtime/AWAKE-RELEASED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/AWAKE-RELEASED.json",
+    "characters": 268,
+    "bytes": 268,
+    "sha256": "b168d37aa196b8796deb2055af0a20e8387e79e7161b7654dd8de39b5680bee2",
+    "git_blob_sha": "4ba9bfcae4b74836e327e973ae3fc5cc551c55ac"
+  },
+  {
+    "name": "runtime/AWAKE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/AWAKE.json",
+    "characters": 187,
+    "bytes": 187,
+    "sha256": "dccbe1037e14f999c0fd650b6453a5fdf5fbd17742c592e9ed9b0195bfee256a",
+    "git_blob_sha": "3955f146a0955c24854c1e0098ee8e3655ec2c9c"
+  },
+  {
+    "name": "runtime/COMPLETION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/COMPLETION.json",
+    "characters": 1696,
+    "bytes": 1696,
+    "sha256": "cd55e139b5d04c028770c21b856e1cdbefb9feee3818c83720e4ff90e2cb7ce5",
+    "git_blob_sha": "ad9f5db82942596535e24ee10bf9f51690e7cd97"
+  },
+  {
+    "name": "runtime/OWNER-CLOSED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/OWNER-CLOSED.json",
+    "characters": 113,
+    "bytes": 113,
+    "sha256": "8ed6fe9e805c56465cf2d55faf28f75a9e1d5037e464646dd30622c8b9e5f7c0",
+    "git_blob_sha": "51e163546975cafdc7a3b34270855e2b2e6304d1"
+  },
+  {
+    "name": "runtime/PREPARED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/PREPARED.json",
+    "characters": 3209,
+    "bytes": 3209,
+    "sha256": "74f21fa92b04fa54934453776708101618d8726817ddd579f13fc6b41ae8542e",
+    "git_blob_sha": "8a3669a5b8d2f48403efbe570575f99db086729f"
+  },
+  {
+    "name": "runtime/RUNS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/RUNS.json",
+    "characters": 4941,
+    "bytes": 4941,
+    "sha256": "dfb2f35819d337228272593a5e0af8ad349bfe64eb8c0fac9ca6fc087c744745",
+    "git_blob_sha": "e682c7b4ef6d22c6dd5f531cc0f99306ffc23803"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/CHILD-MODE.json",
+    "characters": 2809,
+    "bytes": 2809,
+    "sha256": "f2b84f4099ec5e99516be18b9ccad9677c5acfabce3d95cfa62f3c964f62dbea",
+    "git_blob_sha": "3244be8e622a58e0754cfb3aa40497e50d16b6a0"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "325a818f1166058f85f9461c01245c32f6904a6d103c6fa81f76602a5760360f",
+    "git_blob_sha": "229d6a598198b5703a9d750de0c18e2ecd22f5da"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/GAME-LAUNCH-CLAIM.json",
+    "characters": 93,
+    "bytes": 93,
+    "sha256": "f91f55ae481fa5f98b2bf8a492efed490fa88815ff329fd4c05ceeb10dea7ab6",
+    "git_blob_sha": "0de66d87795b0a74de0385e82b885dd8b292e872"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/GRASS-BOUNDARY.json",
+    "characters": 341,
+    "bytes": 341,
+    "sha256": "2c392ce01d8fa328072ad8f47cd4ee83eac1e025a1e5f09ceada70096dea8edf",
+    "git_blob_sha": "a77c6dd3e1e8f54e00aeda7942f7a75d2e7e9bc9"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/GROUND-INDEX.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/GROUND-INDEX.json",
+    "characters": 382,
+    "bytes": 382,
+    "sha256": "00cd48a78f34df16532bb5891438b824c1a3c8a2fde4702fdec8d1f3ffe9b37d",
+    "git_blob_sha": "52dff6285c6afa1a4e8b5e489ea318f20e7ce224"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/LAUNCH.json",
+    "characters": 11494,
+    "bytes": 11494,
+    "sha256": "c6ac0be5205bfa6533479334a53dd68ddc5921a63aaebbf39384d1fc037e8718",
+    "git_blob_sha": "76fa1c10641ca3d301b29bc16c794d18ecdfb93a"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/LIFECYCLE.json",
+    "characters": 692,
+    "bytes": 692,
+    "sha256": "069ba0c9cfa1c4b14b0be516dbd9c2c75623c83574e52e70d16f520d54bbd559",
+    "git_blob_sha": "8b833574b151a1b0d646bffdb306999b42ddb5dd"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/METAL-VALIDATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/METAL-VALIDATION.json",
+    "characters": 511,
+    "bytes": 511,
+    "sha256": "8c8f6a66fbce88bf0b51167587d16905ae64871266c3c991c0a5918942e97d70",
+    "git_blob_sha": "d84c9201df892a41902428d07f65be2c8a9691b6"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/OWNED.json",
+    "characters": 206,
+    "bytes": 206,
+    "sha256": "e832979536881456fc3cb996ca918445a1c3866dee8aff58ddcced5c2e469b24",
+    "git_blob_sha": "0c6bb7907a7a589bdce7c59594712827d3299206"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1039,
+    "bytes": 1039,
+    "sha256": "03e4208533babff4f6b6c28239f3b6b990ebdfae0a58abfd9a8a63a2446dc35f",
+    "git_blob_sha": "5cbc04e15c6ac3479b589c78239e452ad64804c9"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1039,
+    "bytes": 1039,
+    "sha256": "4f881853cccf06e6900a29907c9750e84f5b1acac956e355c0bb48f3599ef067",
+    "git_blob_sha": "c3f2b2dacf6a477e0a07f2ba14425c042a6b9b05"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/PREFLIGHT.json",
+    "characters": 822,
+    "bytes": 822,
+    "sha256": "28668cd67f91aeaeea98da927900bd9ba926d794bf377f4f1d45b134e1bbf71a",
+    "git_blob_sha": "1bee0a05917bb6450c1dfa3df1997ac74aaa2cf4"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/RESULT.json",
+    "characters": 2387,
+    "bytes": 2387,
+    "sha256": "ec00fea586caa8e18b7fee48b3824a5d7ebcaf2ec524d970dbb4c01da9d758a7",
+    "git_blob_sha": "c9e16909e8890f8271a9921fa057692822228fbc"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/TERRAIN211-FRAMES.csv",
+    "characters": 43057,
+    "bytes": 43057,
+    "sha256": "bc7c970f46b69fc63188e66c3781a338280522585bcf893997956dba9ff8f3ca",
+    "git_blob_sha": "bf2747db133b5d3440fb84b5d034af948a92701d"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/ULTRA-EVIDENCE.json",
+    "characters": 1668,
+    "bytes": 1668,
+    "sha256": "37ffb716d8faee93829717776b0bcb0f99d008c9bf94c5e9198dec41dfc77fbd",
+    "git_blob_sha": "f0e5bfc9d9a6b9a95d5a04117ea0b5d8e5c8c44e"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "3b6d4610485cd854b34d9fd505b1e0263c48b9ef21736bb6e0aa3c4e3fc444ab",
+    "git_blob_sha": "dda7b20dbf069886e7ae7bcee51b6c1cd0278a33"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/engine.log",
+    "characters": 292429,
+    "bytes": 292429,
+    "sha256": "5db499f459e985780df27563c8537f3dffe662afe95c4de00026b71bbacfd073",
+    "git_blob_sha": "6de5c9b8c6d74cde62f2f289f97880a6c0b1c278"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_OFF/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_OFF/infolog.txt",
+    "characters": 291155,
+    "bytes": 291157,
+    "sha256": "fef26f0e7794daa4a34bc8a521d5ca9b28f877804e6149a53678e1cdd01428a0",
+    "git_blob_sha": "0573bdc87b3f8e7974be956e08fcc0a3989d5177"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/CHILD-MODE.json",
+    "characters": 2809,
+    "bytes": 2809,
+    "sha256": "7793d23ef3287053bb9ff2d36ef400cc7db630f374c9def87d4b51be11ff2268",
+    "git_blob_sha": "8a93980df9863156bbf133199b5fb290b3606db3"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "a77ecbead1d8c1ab6e1dfda197404308bb2eaf8c9291714b8355a4ba09bc3d8d",
+    "git_blob_sha": "ec324bfa16f1fdf4510c8568a8fc95740b6675c8"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/GAME-LAUNCH-CLAIM.json",
+    "characters": 92,
+    "bytes": 92,
+    "sha256": "2a9f1fa19d8fb9f7ed1806d717cb1a458d3bf707062094c7f81579cb0b170fbf",
+    "git_blob_sha": "0ae85dacd40ff4df996d789f1693525c5ab88e7e"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/GRASS-BOUNDARY.json",
+    "characters": 343,
+    "bytes": 343,
+    "sha256": "f904c3c003401bb671d28de5a741d46d1dcf428f8cf2dc316e998f9da500336a",
+    "git_blob_sha": "fe6336d3135ac221d574a2626c16cb61ff4cdbed"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/GROUND-INDEX.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/GROUND-INDEX.json",
+    "characters": 384,
+    "bytes": 384,
+    "sha256": "7860f86ec6a38909910954bd14314cb547d62f39983b835967e65ba00c851cac",
+    "git_blob_sha": "89eeb118a2857adcd05fa7f10396da7adca69fb4"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/LAUNCH.json",
+    "characters": 11474,
+    "bytes": 11474,
+    "sha256": "068d2b67819ae872f35510bca391e18ba208048cac0425a04d3f8a5010ec5fec",
+    "git_blob_sha": "dbe745b409e278fc6c5a225ed3b271cb1949aacc"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/LIFECYCLE.json",
+    "characters": 690,
+    "bytes": 690,
+    "sha256": "652efbd5b45cfb828d5ad67aacbd38c676182983f4c72e9dbcab54ce21b26980",
+    "git_blob_sha": "1b484a81239b570d73618118a4f3f7c8577d6b96"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/METAL-VALIDATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/METAL-VALIDATION.json",
+    "characters": 510,
+    "bytes": 510,
+    "sha256": "15a22737b10a7d5ba514d262eb78511b884c854c0c7effbebf9a21fdab12643e",
+    "git_blob_sha": "0405ab87feb40016e936b36e805844fe0b9d5f25"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/OWNED.json",
+    "characters": 206,
+    "bytes": 206,
+    "sha256": "375cd6435c01b7a73e4c0e19220c3e4ed1f705cd6bd8c957a56168b9a3dc8354",
+    "git_blob_sha": "330d1fa985725819952b34cfb3401959e34d6ff7"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "9986a95afbc4421e50c6e18113ff8c811d0452039102aaebffc5f0ca8c56a965",
+    "git_blob_sha": "b517ef8d906d6121a5c295c2e1544807435efec2"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "94cddecb00fe13b63ab36ea2c5a91617d434536847ffed08179e70cdf980a126",
+    "git_blob_sha": "6dfa3a7670e3339171c82e2bffffa8558451dcea"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "be6e075c6cec97a77536834051167e0f59acd15efde1fb59c3db7ad40bbc90f0",
+    "git_blob_sha": "4f27258ce5ac41e236b7530a76dbd63d0213766c"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/RESULT.json",
+    "characters": 2385,
+    "bytes": 2385,
+    "sha256": "894804cf873eb553d278d15f78ba670821b7f7bcb313bafa0d1567121c782c01",
+    "git_blob_sha": "533e6e21c2e341f0153cf64392f43727d09c6e94"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/TERRAIN211-FRAMES.csv",
+    "characters": 43023,
+    "bytes": 43023,
+    "sha256": "e24dc24ae1d2334b66e54b7eb30f1481887c0471845dbf756a7a429bbb00fa17",
+    "git_blob_sha": "89961d22128651bc2f92a2459972f1463b937628"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/ULTRA-EVIDENCE.json",
+    "characters": 1668,
+    "bytes": 1668,
+    "sha256": "7eb25b33a3e8b67106229ec84759826759623adbbbe7b9851d8600b324389975",
+    "git_blob_sha": "0e293e909dbaed747f674d2c906cc36d01becc20"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "0931f0fd657cf7c4869cc4c6f17f07d461ebc051701f24af618a2666efec198a",
+    "git_blob_sha": "a238dbc2ac8ffb452eb84f3b77509f1886f72f02"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/engine.log",
+    "characters": 292354,
+    "bytes": 292354,
+    "sha256": "2e61e8061ab9e33d00097f31c1e0e8e403454b9fa393f92e0d0815941e0bd6b7",
+    "git_blob_sha": "ba5b2327915c1a4274ba59231ef5bed725402b91"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/infolog.txt",
+    "characters": 291081,
+    "bytes": 291083,
+    "sha256": "95de59ef0888b4cfaedb5ac09fb996afc6944b56e5c1c06d3e89f73eb57abe1b",
+    "git_blob_sha": "cdee1e47e18c738742bb79ba45c265054bcd62cb"
+  }
+]

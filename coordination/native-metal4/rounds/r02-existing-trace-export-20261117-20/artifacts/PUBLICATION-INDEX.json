@@ -1,0 +1,500 @@
+[
+  {
+    "name": "AVAILABILITY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/AVAILABILITY.json",
+    "characters": 1069,
+    "bytes": 1069,
+    "sha256": "4743ed8e45fcbbc60f3fb515b9903ddf2fc8d4287a2e2a00badac88b9c810ea7",
+    "git_blob_sha": "c32f5c0006c2994691fcdf7dda95a9f078c02cdb",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "BARRIERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/BARRIERS.json",
+    "characters": 39906,
+    "bytes": 39906,
+    "sha256": "9ed23d55bf6ef7fcd5ef49cd1d697490567cb83d47987183c20a2766424b3e01",
+    "git_blob_sha": "22a318d1e4277166dfae2f3b4d8be4fe14793712",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "CAPTURE-METADATA.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/CAPTURE-METADATA.json",
+    "characters": 1143,
+    "bytes": 1143,
+    "sha256": "de49161b147e5625cde4835a70b01bbd51c6cd001d8ee6fca6f9dd3059a3eca5",
+    "git_blob_sha": "9cbba2d312dbaeb64c611fc8a4e1af86364d6803",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/CLEANUP.json",
+    "characters": 465,
+    "bytes": 465,
+    "sha256": "c6a2e0988486d0807b716d05be1985c91c8262f812597207738ef051af979a2c",
+    "git_blob_sha": "913ed235454f8f17f85a74bd45d467cc0503551f",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "COMMAND-RESOURCE-TIMELINE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/COMMAND-RESOURCE-TIMELINE.json",
+    "characters": 662078,
+    "bytes": 662078,
+    "sha256": "25cd43c89a538e6fa3006640d4f7728320f364cd66b6771293e2eaa10a775c45",
+    "git_blob_sha": "fa5e39ffccc82881ed4535909eb45965d817f72b",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "COMMANDS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/COMMANDS.json",
+    "characters": 554,
+    "bytes": 554,
+    "sha256": "f506894d41b9f475530dd13e3bc1879fad53b4c45f366b1e454bed1682aff3fa",
+    "git_blob_sha": "7ce95bd1fba89e779304ff8946de59a2169f0765",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "DEPTH-STENCIL-12-15.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/DEPTH-STENCIL-12-15.json",
+    "characters": 1349,
+    "bytes": 1349,
+    "sha256": "829488d00c2bb76dc2d2b6253c7b849d2605d70c630b34df6fe61e40e6dcee71",
+    "git_blob_sha": "ec092bbabd84f6de54aedc9792ea0bd87dd74fa7",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "DERIVED-EXPORT-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/DERIVED-EXPORT-CHECK.json",
+    "characters": 481,
+    "bytes": 481,
+    "sha256": "d7dafa020d8e37e8db6bfa377f64cfe6b28a436aec7083553fa437d2cc9ff7ca",
+    "git_blob_sha": "5e71e99c8f07285b5cfbdcbe9c5a0bad6d898fad",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "DRAW-PIPELINE-DSS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/DRAW-PIPELINE-DSS.json",
+    "characters": 232758,
+    "bytes": 232758,
+    "sha256": "c4bb93ed610fcf3bb482121730c0186b1579f4ee066ede07ec8dae82f6a59a70",
+    "git_blob_sha": "9ed761184680297e451aeaa16666c425ce16411e",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "ENCODER-ID-MAP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/ENCODER-ID-MAP.json",
+    "characters": 29359,
+    "bytes": 29359,
+    "sha256": "a4663be8de8398128d4997c6860455cdf7d785b4d141f10bf44569c0d014e02b",
+    "git_blob_sha": "0e501773bf2d28e2257e697715b10790b87aa696",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "READY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/READY.json",
+    "characters": 760,
+    "bytes": 760,
+    "sha256": "e5764a36b164c2fe7930987cc8d761dd5d8f71e574fc58aa66cf23304edcd736",
+    "git_blob_sha": "7abaa6a1f58d6bc59ecc2f668dd8cdc23f0e5254",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "RECORDED-ENCODER-RANGES.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/RECORDED-ENCODER-RANGES.json",
+    "characters": 22681,
+    "bytes": 22681,
+    "sha256": "3b508a8b56a1db975b4397b288ec22608c81c81b63cf37c0172e93f74ee0bb93",
+    "git_blob_sha": "4a01b9694db9b6c67da136be34558b0dd55379a6",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "RECORDED-STAGE-RANGES.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/RECORDED-STAGE-RANGES.json",
+    "characters": 73150,
+    "bytes": 73150,
+    "sha256": "3c8113f0520c04bab7497ac098528dc414c720d59657aa7ea2cb50371ec585b3",
+    "git_blob_sha": "602a5a1bc068453ac896a123c99402720128cf2d",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "REPORT.md",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/REPORT.md",
+    "characters": 6656,
+    "bytes": 6699,
+    "sha256": "56b03072aa2b85d70b93cf2520255ff36313a99674e9dfb531837ba9cbf826cf",
+    "git_blob_sha": "ce8dd81293088885a3ee27dcdf63facb7234de44",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "REQUEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/REQUEST.json",
+    "characters": 3038,
+    "bytes": 3044,
+    "sha256": "4ab71e898b251c53a66b34162abf4b6a8717ba40fa110c9b5518a7dcfb338007",
+    "git_blob_sha": "a4dec6429273640c4a163515274e26a00edeca5e",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "RESERVED-STATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/RESERVED-STATE.json",
+    "characters": 43325,
+    "bytes": 46051,
+    "sha256": "09fc4e031cafc807ddf7bcc50a7f8edcfe2c3a249c554efcbf4f76f72c5fb4f2",
+    "git_blob_sha": "d2a7fefd2e30b98e073e76789dc658d8333c21b9",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/RESULT.json",
+    "characters": 2127,
+    "bytes": 2127,
+    "sha256": "c7a384e2169fcaf7337d604c3a80f9b163d622f484b3e4e7b08604a3372d3911",
+    "git_blob_sha": "c766ffeef81a87715eb7e93e4b0c997e5cfdedc9",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "SAVED-EXPORT-INDEX.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/SAVED-EXPORT-INDEX.json",
+    "characters": 4555,
+    "bytes": 4555,
+    "sha256": "b69221a033e828a31552895dc774c5214979ef91968159e5ad73d8ed6c9c6d03",
+    "git_blob_sha": "47318feadf46826b816f25ab9c20cfa0a744513b",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "SDK-STAGE-MASKS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/SDK-STAGE-MASKS.json",
+    "characters": 463,
+    "bytes": 463,
+    "sha256": "0a69665cc63500dea3f356d17c874a937efc8a957aff68a567de6b63807b16ee",
+    "git_blob_sha": "52b41dbad3e83c45c56ebecc6294cff1e1003b99",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "TEXTURE-COPY-LINEAGE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/TEXTURE-COPY-LINEAGE.json",
+    "characters": 37234,
+    "bytes": 37234,
+    "sha256": "992caaba434e32ae451f022c2db40896249ac7b25bb1e7f0c11a9626b45eacbb",
+    "git_blob_sha": "41a85dbc695f37ca95e857ee2b276b8329711485",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "TRACE-FILES.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/TRACE-FILES.json",
+    "characters": 188463,
+    "bytes": 188463,
+    "sha256": "7ad9cb401f77c4f1153e95027272df7522e928a1134d2e9c9abf7a717b3e2d73",
+    "git_blob_sha": "2f40e19e7c0b27de4f2d6681276dd99834e704b2",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "TRACE-PIN-AFTER.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/TRACE-PIN-AFTER.json",
+    "characters": 490,
+    "bytes": 490,
+    "sha256": "d7c0575676286cbdc7b477d44435c7aec9bfe12c52a9f2ab78df658697ccf42e",
+    "git_blob_sha": "81ef92f7cb51113048c926607f2b6b84131dd35f",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "TRACE-PIN-BEFORE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/TRACE-PIN-BEFORE.json",
+    "characters": 469,
+    "bytes": 469,
+    "sha256": "71b53e166bb6654b9f13ae9bf28ede4d9be59f3b5e303ef3aaa9861ee0405816",
+    "git_blob_sha": "4199053ad232152de22d7c472255f6b7a648c884",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "analyze_saved.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/analyze_saved.py",
+    "characters": 10885,
+    "bytes": 10885,
+    "sha256": "a41f772e99bc7bf6ae1482e0c39526e319a3abeb107967a97397f90aa53bc48c",
+    "git_blob_sha": "06f257841b1cb0048f3c572542f745e1622291ec",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_10.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_10.json",
+    "characters": 70823,
+    "bytes": 70823,
+    "sha256": "405512b7d7634a75e0cc0fb8e0069cbca04d5f03934db36ea29bbb1ad11ad0bc",
+    "git_blob_sha": "d32137ffc8f159e6c9ccbb8c2573a721c7e3d723",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_11.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_11.json",
+    "characters": 49266,
+    "bytes": 49266,
+    "sha256": "86037aba78cc04295c4059bf80cc75d46f874cd6fb884b6d64abd9ff4618b75c",
+    "git_blob_sha": "8b9e4c54de6baeb810bf7e1e7913283e3887c4ba",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_12.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_12.json",
+    "characters": 48832,
+    "bytes": 48832,
+    "sha256": "52ff7156e5e432162fb1d118559e178326e900d918d6dce41f4d63b50d619aad",
+    "git_blob_sha": "074d7572ca56ed27c4b72f32dd15af7bcf62c65f",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_33.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_33.json",
+    "characters": 104885,
+    "bytes": 104885,
+    "sha256": "fe8ee3378aaff56c690ff224a8d25c7b327964471435ecffee4a9f24cccaae4c",
+    "git_blob_sha": "7aedeacefa0ba9fcac353d16059d4960f757d3ef",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_34.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_34.json",
+    "characters": 5530,
+    "bytes": 5530,
+    "sha256": "67b7b61f14f32474dc0c1f2f9518dc68baf9b175784b2bfee79e8e89e33cdbe2",
+    "git_blob_sha": "cf2416500b96b515becf2b7a4f8f8420b5a73466",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_35.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_35.json",
+    "characters": 8279,
+    "bytes": 8279,
+    "sha256": "c273ff9da4bc9f7a401bffc8728951d7d74fee84107f03cf4fccec53f1e26aea",
+    "git_blob_sha": "38cd0c9c9f5def26b565aa1c06a55aff802d5f32",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_36.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_36.json",
+    "characters": 8280,
+    "bytes": 8280,
+    "sha256": "c266a6355bb5b5b3e78690d6fd9faaeef558918182105fff3c3a8f65e70ecf70",
+    "git_blob_sha": "e326e761c46ff67a8c169045699d455a4c564889",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_37.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_37.json",
+    "characters": 5970,
+    "bytes": 5970,
+    "sha256": "19bec1c73aaa0fac796971ed2ab4a935981d6c775e47507ac2dcbdd8de31e41a",
+    "git_blob_sha": "4edc6dd20d249c19c12f76d6414d4c0cfaed5097",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_38.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_38.json",
+    "characters": 6662,
+    "bytes": 6662,
+    "sha256": "12457fd4441e12b977e218179ad13d3b94239e5334499863e808f38155c85985",
+    "git_blob_sha": "bf9611d5f25cb2bb5fcfc73e5b629413a403e1b1",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_39.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_39.json",
+    "characters": 1585,
+    "bytes": 1585,
+    "sha256": "592161842568ef5f400471c5c5c0efc3f8bf60f088e023678884189a7522f3ff",
+    "git_blob_sha": "8899f4af4a17f825204736bfce62064ecab14d44",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_40.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_40.json",
+    "characters": 5036,
+    "bytes": 5036,
+    "sha256": "11152b164da2b882d6644b4c8f7547aa0ff65265950617e02dd28a8a87b14bbd",
+    "git_blob_sha": "b93f5b6772779fdedffc22b235396ceedd204898",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_41.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_41.json",
+    "characters": 151961,
+    "bytes": 151961,
+    "sha256": "9900a2f3821c5b239002f10486c96480b978b890153595df6d49a5950a9bfe26",
+    "git_blob_sha": "fe1e84e331fcf6ed05d9f4c98d14c49e9779719b",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_42.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_42.json",
+    "characters": 6201,
+    "bytes": 6201,
+    "sha256": "0f77ed82be25c328bc74e5b5168759cc373284ceae750bd3f187f0b486427853",
+    "git_blob_sha": "de2539350d4a832a5ecdceb2ae0c59ef40aec137",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "encoder-api/MTL4RenderCommandEncoder_9.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/encoder-api/MTL4RenderCommandEncoder_9.json",
+    "characters": 683636,
+    "bytes": 683636,
+    "sha256": "361913ef156c61b04d5b8308579f7bab18a3a2af079312e10475087ff7cae470",
+    "git_blob_sha": "8a01c5bda2278d3510f64fb85d96ee5e33e214b4",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "raw/PRIOR-REPLAY-RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/PRIOR-REPLAY-RESULT.json",
+    "characters": 4012,
+    "bytes": 4012,
+    "sha256": "1ee3a0dca2255442af9b45230276d352ef5ccae26d9a87bb154e4f7a47ceb486",
+    "git_blob_sha": "8b045d29c02d3f5dab1a124f229caebe81221060",
+    "reuse": true
+  },
+  {
+    "name": "raw/gpudebug-help.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/gpudebug-help.log",
+    "characters": 950,
+    "bytes": 950,
+    "sha256": "9b8513e6ee9c787126e1008847f2bcdf29712f1ad22416e0d7adf94ba73c2c0b",
+    "git_blob_sha": "b7b12fcf481e818acf9fd7778512178502ec68e2",
+    "reuse": false,
+    "uploaded": true
+  },
+  {
+    "name": "raw/saved-export/api-calls.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/api-calls.jsonl",
+    "characters": 1559854,
+    "bytes": 1559854,
+    "sha256": "2448d5a7b54b0f5e7539c61af941111abe9f417c54907c13e86b99062a136928",
+    "git_blob_sha": "de3182195f56d7f250053bd7b16d37fb56e44f8d",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/command-buffer.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/command-buffer.jsonl",
+    "characters": 9881,
+    "bytes": 9881,
+    "sha256": "edc9b70cb401caaf8f21e66b5b1b7a3fd55847d178a749a6fc66433271b70779",
+    "git_blob_sha": "ee5fb5794c6e89f859d4e2c462492fd8d7b7070b",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/command-tree.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/command-tree.jsonl",
+    "characters": 416,
+    "bytes": 416,
+    "sha256": "1cc214cdd10796b3b689691ca47e656fdb26bc2a94ed1eb9e5db314eeeebc516",
+    "git_blob_sha": "15508b135587c578bc5b8ae6e9bb1bc580af7fff",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/encoder-costs.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/encoder-costs.jsonl",
+    "characters": 16176,
+    "bytes": 16176,
+    "sha256": "60bf56f4105b32a89deeb086f5e781f29dd03f57dffec4a587c3dfdcbef8794d",
+    "git_blob_sha": "262121bded2059b54344a9d27166ce090777afc5",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/encoder-intervals.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/encoder-intervals.jsonl",
+    "characters": 15481,
+    "bytes": 15481,
+    "sha256": "4f0e0c3771ad3571d45a30aa07d34a0e8204dca9c2c06aa0fc72599f0e31eb50",
+    "git_blob_sha": "30838382ed47e9c40a6ed4aefa46a4ef02f193ad",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/render-pipelines.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/render-pipelines.jsonl",
+    "characters": 39853,
+    "bytes": 39853,
+    "sha256": "6ac2aa1c0fd0ef19f02400a3ef1b750627034d6881feb8d0376dfe2a5901f6ac",
+    "git_blob_sha": "6d1d4a553d92901abf0bf424f14f5d2880360ab1",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/resources.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/resources.jsonl",
+    "characters": 1660,
+    "bytes": 1660,
+    "sha256": "7d396e6d171209aad7b3dec4c7feba1e41939f1a1a19dc927755224c7dda5329",
+    "git_blob_sha": "0ca0e4ebb5b43112ed5784a575efd428c3d3592e",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/shader-costs.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/shader-costs.jsonl",
+    "characters": 38336,
+    "bytes": 38336,
+    "sha256": "9810810a955c021f5d8a295680e46a03c01f17c4daa62d59bcd33488c01c42cb",
+    "git_blob_sha": "c16b2595732c6b558a9fcb464eef2e54a46fea3a",
+    "reuse": true
+  },
+  {
+    "name": "raw/saved-export/shader-stage-intervals.jsonl",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/shader-stage-intervals.jsonl",
+    "characters": 42468,
+    "bytes": 42468,
+    "sha256": "de5ffb5beca54b0642d944ff970c59f0486bf3ef30a98b8e7d26d7ef13448a12",
+    "git_blob_sha": "c7621808d5351d23b73c5233fc6981b696ab5153",
+    "reuse": true
+  },
+  {
+    "name": "raw/sessions-after.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/sessions-after.log",
+    "characters": 20,
+    "bytes": 20,
+    "sha256": "1f31f219e14f77093adb3b17e9a7c5ed65058612ae2540a3f1b8f3d8164c720d",
+    "git_blob_sha": "68128cdfd61225d08a3d54375a7c5bc6cc07f4e2",
+    "reuse": true
+  },
+  {
+    "name": "raw/sessions-before.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/sessions-before.log",
+    "characters": 20,
+    "bytes": 20,
+    "sha256": "1f31f219e14f77093adb3b17e9a7c5ed65058612ae2540a3f1b8f3d8164c720d",
+    "git_blob_sha": "68128cdfd61225d08a3d54375a7c5bc6cc07f4e2",
+    "reuse": true
+  }
+]

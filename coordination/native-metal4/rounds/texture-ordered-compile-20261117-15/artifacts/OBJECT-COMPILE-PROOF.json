@@ -1,0 +1,15 @@
+{
+  "compiled_objects": [
+    {
+      "object": "rts/builds/metal4-scene/metal4-renderer/CMakeFiles/recoil-metal4-renderer.dir/Metal4RuntimeNative.mm.o",
+      "receipt_header_dependencies": []
+    },
+    {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4WorldRenderer.mm.o",
+      "receipt_header_dependencies": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/engine/rts/Rendering/Backend/NativeTextureProducerReceipt.h"
+      ]
+    }
+  ],
+  "note": "New receipt header is consumed by WorldRenderer. Runtime mm compiled separately; do not infer a direct header include where none exists."
+}

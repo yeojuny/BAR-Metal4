@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "baseline_files_verified": 10269,
+  "candidate_files_verified": 10269,
+  "candidate_file_set_unchanged": true,
+  "source_hashes_sha256": "54249480de86859031f6bd36874c59f387ad12356e1284259ffb951db2c4b911",
+  "original_pins": {
+    "runtime/native/bin/spring-metal4-scene": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "measurement/run.py": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+    "initial-cache.cmake": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "measurement/relocate_sign.py": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa"
+  },
+  "unchanged_dylibs": 19,
+  "prior_attempt_files_verified": 22,
+  "changed": [],
+  "source_repairs": 0
+}

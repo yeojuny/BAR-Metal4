@@ -1,0 +1,14 @@
+{
+  "round_id": "screen-encode-range-fps-20261118-49",
+  "attempt_id": "encode-range-off-on-01",
+  "status": "READY_SINGLE_SCREEN_RANGE_CHANGE",
+  "source_manifest_sha256": "30ed544bd95d923df50addf2857413261d77fc4014fd1baff9a92fbb38a773b0",
+  "modified_files": 1,
+  "order": [
+    "RANGE_OFF",
+    "RANGE_ON"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

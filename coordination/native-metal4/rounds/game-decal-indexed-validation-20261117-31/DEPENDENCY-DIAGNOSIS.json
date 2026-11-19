@@ -1,0 +1,40 @@
+{
+  "status": "CONFIRMED_CMAKE_PROCESS_PACKAGE_SEARCH_PATH",
+  "candidate_source_diagnostic_emitted": false,
+  "sdk_configuration": {
+    "argv": [
+      "cmake",
+      "-S",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31/source/engine",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31/build",
+      "-G",
+      "Ninja",
+      "-C",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31/initial-cache.cmake",
+      "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+    ],
+    "startedUTC": "2026-11-17T20:58:06.014852+00:00",
+    "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31",
+    "attempt": 1,
+    "pid": 8578,
+    "exit": 1,
+    "endedUTC": "2026-11-17T20:58:14.199950+00:00"
+  },
+  "full_configure_log_sha256": "e7c4e421ab4acf7533623dad0ef2777b164894b404850d1129dcf469b627809b",
+  "error_excerpt": "CONFIGURE-FAILURE.txt",
+  "pkg_config_default": {
+    "exit": 1,
+    "stdout": "",
+    "stderr": "Package openal was not found in the pkg-config search path.\nPerhaps you should add the directory containing `openal.pc'\nto the PKG_CONFIG_PATH environment variable\nPackage 'openal' not found\n"
+  },
+  "openal_pc": "/opt/homebrew/opt/openal-soft/lib/pkgconfig/openal.pc",
+  "openal_pc_sha256": "a81e723552dc4ff720e44de736b6998bf91ab7cf5e40ccd1e4a592dea1febef1",
+  "lookup_with_process_local_pkg_config_path": {
+    "exit": 0,
+    "stdout": "1.25.2\n",
+    "stderr": ""
+  },
+  "second_configure_invoked": false,
+  "environment_install_or_global_change": false
+}

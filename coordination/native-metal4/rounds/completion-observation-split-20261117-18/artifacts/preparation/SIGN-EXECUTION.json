@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/relocate_sign.py"
+  ],
+  "pid": 58099,
+  "exit": 0,
+  "seconds": 1.391775833999418,
+  "attempts": 1
+}

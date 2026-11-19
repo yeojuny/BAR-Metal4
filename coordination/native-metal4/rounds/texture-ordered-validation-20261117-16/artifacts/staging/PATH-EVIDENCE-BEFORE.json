@@ -1,0 +1,16 @@
+{
+  "classification": "UNKNOWN",
+  "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "producer_consumer_site": "Metal4WorldRenderer.mm:664-675",
+  "admission_site": "Metal4RuntimeNative.mm:851-857",
+  "static_requirements": [
+    "not ready; producer encoded; PreparingWhilePending",
+    "flag exactly1; consumer nonzero and distinct",
+    "PendingProducerMatches exact sole producer/context; independent slot and not poisoned",
+    "Borrow receipt then OrderAfterPreviousSubmission success; final completion check retained"
+  ],
+  "positive_texture_specific_success_marker_in_fixed_sites": false,
+  "generic_prior_read_or_env_not_sufficient": true,
+  "why_not_NOT_EXERCISED": "No positive or comprehensive negative runtime admission witness. Absence of a marker cannot prove unused.",
+  "new_instrumentation": false
+}

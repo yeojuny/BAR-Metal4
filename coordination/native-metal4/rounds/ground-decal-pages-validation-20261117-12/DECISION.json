@@ -1,0 +1,39 @@
+{
+  "round_id": "ground-decal-pages-validation-20261117-12",
+  "author": "SUPER_JINI_MK2",
+  "decision": "BOUNDED_METAL_AND_VISUAL_CHECK_PASS_WORLD_OBSERVER_REVIEW_REQUIRED",
+  "artifact_commit": "cfe365c17915473bdcd72c2dafc5e59bb8ecc27a",
+  "review": {
+    "Metal_errors": 0,
+    "normal_exits": 2,
+    "actual_images_independently_viewed": true,
+    "visual": "No obvious candidate-only terrain/building/decal pattern corruption; dynamic smoke/lighting/debug text differs. Not exact pixel/depth/stencil parity.",
+    "fixed_tick_markers_equal": [
+      "frame240 initial state",
+      "frame240 seed/command",
+      "frame540 visible_units168/fullview",
+      "start camera",
+      "frame1740 screenshot camera and success"
+    ],
+    "world_rows_equal": 38,
+    "world_rows_total": 40,
+    "all_rows_preserved": true,
+    "baseline_first_wall_sample_seconds": 1.261000037,
+    "candidate_first_wall_sample_seconds": 1.003000021,
+    "baseline_first_sample_simulation": 577,
+    "candidate_first_sample_simulation": 570
+  },
+  "diagnosis": {
+    "proved": "Controller opens/closes in GameFrame540/1740 but intermediate rows sample in Update when wall seconds>=nextSample. Unit values are sampled at those unequal simulation ticks. Thus first-bin differences do not by themselves prove simulation divergence.",
+    "unknown": "Specific cause of baseline's delayed first Update observation; complete intermediate simulation state equivalence not logged.",
+    "no_claims": [
+      "38/40 is not full world equality",
+      "No validation FPS comparison",
+      "No exhaustive GPU lifetime proof"
+    ]
+  },
+  "cleanup_verified": true,
+  "HQ_turn_completed": "01a1e7c7-0b09-7472-afbb-b9fa289ecd7e",
+  "next": "Preserve validation evidence. Before performance comparison, separate fixed GameFrame workload witnesses from wall-clock FPS samples; review minimal observer change and fixed fresh clean fixtures. No blind retry of these validation arms.",
+  "execution_authorization": false
+}

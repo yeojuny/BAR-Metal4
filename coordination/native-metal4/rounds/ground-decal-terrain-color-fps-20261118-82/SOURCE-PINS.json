@@ -1,0 +1,13 @@
+{
+  "parent_round": "weapon-range-exact-interior-recovery-20261118-81",
+  "candidate_files": {
+    "source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h": {
+      "before": "1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+      "after": "61098536a2f01f78f6a676ee842f9bebdb7e6c2fef05cedb1fc4be165f584fff"
+    },
+    "source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm": {
+      "before": "4b62d9bceec4eb1e16b7ec00826f729da86e5935f10e32effe224ab410ed3dec",
+      "after": "f120904a3520932ab555438eab30f877af4aeb6ed008f9b13e3bdff3db9af2fd"
+    }
+  }
+}

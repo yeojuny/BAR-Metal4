@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "time_bins_faster_on": 40,
+  "time_bins_compared": 40,
+  "minimum_bin_fps_gain": 9.990009308000005,
+  "maximum_bin_fps_gain": 15.662433624000002,
+  "loaded_non_system_library_paths_matched": 22,
+  "normalized_environment_deltas": {
+    "LAUNCH.json": {
+      "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR": [
+        "0",
+        "1"
+      ]
+    },
+    "CHILD-MODE.json": {
+      "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR": [
+        "0",
+        "1"
+      ]
+    }
+  }
+}

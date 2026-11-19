@@ -1,0 +1,179 @@
+--- round26/framepair.py
++++ round28/framepair.py
+@@ -23,7 +23,7 @@
+ base = importlib.util.module_from_spec(spec)
+ spec.loader.exec_module(base)
+ base.RUN_ROOT = HERE
+-base.ORDER['clean_paced'] = [('R03', 'candidate'), ('MVK3', 'MVK3')]
++base.ORDER['clean_paced'] = [('R03', 'candidate')]
+ base.base.PACED = ('clean_paced',)
+ base.base.CHILD_KEYS += ('MTL_CAPTURE_ENABLED',)
+ # No additional image-readback draw: the captured frame is the visual evidence.
+@@ -34,10 +34,8 @@
+ 
+ def products():
+     r03 = read(SOURCE.parent / 'PRODUCT.json')
+-    mvk = read(C / REQUEST['MVK3_reference'])['product']
+-    for name, product in [('R03', r03), ('MVK3', mvk)]:
+-        assert sha(product['binary']) == product['sha256'] == REQUEST['binary_pins'][name]
+-    return {'candidate': r03, 'MVK3': mvk}
++    assert sha(r03['binary']) == r03['sha256'] == REQUEST['binary_pins']['R03']
++    return {'candidate': r03}
+ 
+ 
+ base.products = products
+@@ -101,20 +99,10 @@
+ 
+ def amend_controller(path):
+     before = path.read_text()
+-    marker = '--208 read-only route witness.'
+-    assert before.count(marker) == 1
+-    body = before.replace(marker, SNAPSHOT + '\n' + marker, 1)
+-    body = 'local framePairRequested,framePairReady,framePairHoldDraw\n' + body
+-    needle = ' if f==1740 then endMeasurement(f) end'
+-    assert body.count(needle) == 1
+-    body = body.replace(needle, ''' if f==1200 then budgetMark("capture-boundary") end
+- if f==1590 then
+-  frameStopped=true;framePairRequested=true;budgetMark("end")
+-  Spring.SendCommands('pause 1')
+- end''', 1)
+-    needle = ' local now=Spring.GetTimer();local game=Spring.GetGameFrame()'
+-    assert body.count(needle) == 1
+-    body = body.replace(needle, needle + '\n' + HOLD, 1)
++    prior = HERE.parent / 'r03-mvk3-matched-frame-20261117-02'
++    assert before == (prior / 'controller-before.lua').read_text()
++    assert sha(prior / 'controller.lua') == 'b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a'
++    body = (HERE / 'controller-candidate.lua').read_text()
+     path.write_text(body)
+     return before, body
+ 
+@@ -158,9 +146,9 @@
+     shutil.copyfile(C/'UPSTREAM-CONTRIBUTIONS.json', HERE/'UPSTREAM-CONTRIBUTIONS.json')
+     save(HERE / 'FREEZE.json', dict(status='READY_NO_GAME', round_id=REQUEST['round_id'], attempt_id=REQUEST['attempt_id'],
+         arms=frozen, libraries=libraries, runnerSHA256=sha(__file__), inheritedRunnerSHA256=sha(SOURCE),
+-        controllerSHA256=sha(HERE/'controller.lua'), captureOrder=['R03','MVK3'], engineSourceEdits=0,
++        controllerSHA256=sha(HERE/'controller.lua'), captureOrder=['normal','skip'], engineSourceEdits=0,
+         profileSemantics=REQUEST['profile_semantics'], bar='PAUSED'))
+-    print('FROZEN both arms; games 0', flush=True)
++    print('FROZEN one R03 game; games 0', flush=True)
+ 
+ 
+ def layer_id(output):
+@@ -203,26 +191,62 @@
+                 receipt['layerBoundaryID']=boundary
+         marker_state=(cfg/'framepair-before.txt').read_text()
+         assert 'tick=1590\n' in marker_state and 'paused=true\n' in marker_state
+-        target=out/'frame.gputrace';assert not target.exists()
+-        cmd=['/usr/bin/gpucapture','start','--pid',str(pid),'--boundary',str(boundary),'--count','1','--output',str(target)]
+-        receipt.update(command=cmd,captureCommandInvocations=1,markerIsNotActualCaptureTickProof=True)
+-        save(out/'GPU-CAPTURE-STARTED.json',receipt)
+-        with (out/'gpucapture.log').open('xb') as stream:
+-            child=subprocess.Popen(cmd,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
+-            receipt['capturePID']=child.pid
+-            try: code=child.wait(timeout=180)
+-            except subprocess.TimeoutExpired:
+-                os.killpg(child.pid,signal.SIGTERM)
+-                try:child.wait(timeout=3)
+-                except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait()
+-                code='TIMEOUT_180S'
+-        receipt.update(captureExit=code,trace=str(target),tracePresent=target.is_dir(),
+-                       status='CAPTURED' if code==0 and target.is_dir() else 'CAPTURE_FAILED')
++        normal = dict(pid=pid, layerBoundaryID=boundary)
++        capture_one(pid, boundary, out, 'frame', normal, 60)
++        save(out/'GPU-CAPTURE-NORMAL.json', normal)
++        receipt.update(normal=normal, status=normal['status'])
++        if normal['status'] != 'CAPTURED':
++            return
++        write_marker(cfg/'framepair-finished', 'CAPTURED')
++        deadline = time.monotonic() + 12
++        while not (cfg/'budget192.capture-skip-ready').exists():
++            if stop.wait(0.05) or (cfg/'budget192.capture-stop').exists() or time.monotonic() >= deadline:
++                raise RuntimeError('SKIP_READY_NOT_REACHED')
++        before = (cfg/'framepair-before.txt').read_text()
++        skipped = (cfg/'framepair-skip-before.txt').read_text()
++        strip_draw = lambda value: re.sub(r'^draw=\d+\n', '', value, flags=re.M)
++        assert strip_draw(before) == strip_draw(skipped), 'CPU_SCENE_CHANGED_BEFORE_SKIP'
++        assert int(re.search(r'^draw=(\d+)', skipped, re.M)[1]) > int(re.search(r'^draw=(\d+)', before, re.M)[1])
++        assert (cfg/'budget192.capture-skip-ready').is_file() and read(out/'OWNED.json')['pid']==pid
++        responses = re.findall(r'Decals GL4 skipdraw set to\s+(true|false)\b', (out/'engine.log').read_text())
++        assert responses == ['true'], ('ORIGINAL_SKIP_ACTION_UNCONFIRMED', responses)
++        if stop.is_set() or (cfg/'budget192.capture-stop').exists():
++            raise RuntimeError('GAME_STOPPED_BEFORE_SKIP_CAPTURE')
++        skip = dict(pid=pid, layerBoundaryID=boundary)
++        capture_one(pid, boundary, out, 'frame-skip', skip, 40)
++        save(out/'GPU-CAPTURE-SKIP.json', skip)
++        receipt.update(skip=skip, status=skip['status'], trace=normal['trace'], skipTrace=skip['trace'])
+     except BaseException:
+-        receipt.update(status='CAPTURE_EXCEPTION',error=traceback.format_exc())
++        receipt.update(status='CAPTURE_EXCEPTION', error=traceback.format_exc())
+     finally:
+-        save(out/'GPU-CAPTURE.json',receipt)
+-        (data/'LuaUI/Config/framepair-finished').write_text(receipt.get('status','UNKNOWN'))
++        save(out/'GPU-CAPTURE.json', receipt)
++        if not (cfg/'framepair-finished').is_file():
++            write_marker(cfg/'framepair-finished', receipt.get('status', 'UNKNOWN'))
++        write_marker(cfg/'framepair-skip-finished', receipt.get('status', 'UNKNOWN'))
++
++
++def write_marker(path, status):
++    temp = path.with_suffix('.tmp')
++    temp.write_text(status)
++    temp.replace(path)
++
++
++def capture_one(pid, boundary, out, stem, receipt, timeout):
++    target=out/(stem+'.gputrace');assert not target.exists()
++    cmd=['/usr/bin/gpucapture','start','--pid',str(pid),'--boundary',str(boundary),'--count','1','--output',str(target)]
++    receipt.update(command=cmd,captureCommandInvocations=1,markerIsNotActualCaptureTickProof=True)
++    save(out/(stem+'-STARTED.json'),receipt)
++    with (out/(stem+'.log')).open('xb') as stream:
++        child=subprocess.Popen(cmd,stdout=stream,stderr=subprocess.STDOUT,start_new_session=True)
++        receipt['capturePID']=child.pid
++        try: code=child.wait(timeout=timeout)
++        except subprocess.TimeoutExpired:
++            os.killpg(child.pid,signal.SIGTERM)
++            try:child.wait(timeout=3)
++            except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait()
++            code='CAPTURE_TIMEOUT'
++    receipt.update(captureExit=code,trace=str(target),tracePresent=target.is_dir(),
++                   status='CAPTURED' if code==0 and target.is_dir() else 'CAPTURE_FAILED')
+ 
+ 
+ def diagnostic_parse(out,data,arm,stage_name):
+@@ -235,8 +259,7 @@
+     assert all(sha(p)==h for p,h in frozen['libraries'].items())
+     row=next(r for r in frozen['arms'] if r['arm']==arm)
+     assert sha(row['launch'])==row['launchSHA256']
+-    if arm=='MVK3':
+-        assert read(HERE/'R03-TICK-GATE.json')['status']=='PASS_CAPTURE_BOUND_SIM1590'
++    assert arm=='R03'
+     with (HERE/(arm+'-GAME-CLAIM.json')).open('x') as f:
+         json.dump(dict(arm=arm,attempt_id=REQUEST['attempt_id'],utc=base.base.utc(),retry=False),f)
+     prepared=base.restore('clean_paced',tuple(a for a in ['R03','MVK3'] if a!=arm))
+@@ -262,13 +285,15 @@
+         assert receipt.get('status')=='CAPTURED',receipt.get('status')
+         assert read(out/'CHILD-MODE.json')['status']=='PASS_ACTUAL_CHILD_ENVIRONMENT'
+         assert not error, 'RUNNER_OR_RUNTIME_GATE_FAILED'
+-        save(out/'CAPTURE-RESULT.json',dict(status='CAPTURED_PENDING_BOUND_TICK_GATE',arm=arm,capture=receipt['trace'],actualCaptureTick='UNKNOWN',profileCommands=0))
++        save(out/'CAPTURE-RESULT.json',dict(status='CAPTURED_PENDING_BOUND_TICK_GATE',arm=arm,capture=receipt['trace'],skipCapture=receipt['skipTrace'],actualCaptureTick='UNKNOWN',profileCommands=0))
+         print('CAPTURED '+arm+'; actual bound tick still pending',flush=True)
+     finally:
+         stop.set()
+         if worker.is_alive():worker.join()
+-        base.base.cleanup('clean_paced',prepared)
+-        if awake_process.poll() is None:awake_process.terminate();awake_process.wait(timeout=5)
++        try:
++            base.base.cleanup('clean_paced',prepared)
++        finally:
++            if awake_process.poll() is None:awake_process.terminate();awake_process.wait(timeout=5)
+         awake.update(status='RELEASED',endUTC=base.base.utc(),ownCaffeinateAlive=False)
+         save(base.base.SHARED_AWAKE,awake);save(out/'AWAKE-RELEASED.json',awake)
+         save(out/'OWNER-CLOSED.json',dict(status='CLOSED',arm=arm,captureStatus=receipt.get('status'),awakeReleased=True,workerJoined=True,utc=base.base.utc()))
+@@ -278,6 +303,6 @@
+ if __name__=='__main__':
+     p=argparse.ArgumentParser(description=__doc__)
+     g=p.add_mutually_exclusive_group(required=True)
+-    g.add_argument('--stage',action='store_true');g.add_argument('--game',choices=['R03','MVK3'])
++    g.add_argument('--stage',action='store_true');g.add_argument('--game',choices=['R03'])
+     a=p.parse_args()
+     stage() if a.stage else game(a.game)

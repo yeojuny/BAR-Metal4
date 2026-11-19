@@ -1,0 +1,378 @@
+--- a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h
++++ b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.h
+@@ -97,6 +97,7 @@
+ struct RuntimePendingSubmission;
+ struct PublishedRequestState;
+ class InterventionPersistentResidency;
++enum class NativePriorRead : unsigned { Other=1, Cube=2, WorldInfo=4, ScreenTarget=8 };
+ 
+ // One actual native context for both asset and screen passes. All requests hold
+ // a serialized lease; the monotonically increasing shared event spans requests.
+@@ -108,6 +109,8 @@
+ 	DeviceCapabilities Capabilities() const { return capabilities; }
+ 	id<MTLDevice> Device() const { return device; }
+ 	bool CanSafelyDetach();
++	bool ReclaimOldestForSceneCapacity();
++	void ReportPendingGameStats();
+ private:
+ 	struct ShaderSource {
+ 		__weak id<MTLLibrary> original=nil;
+@@ -128,6 +131,11 @@
+ 	std::shared_ptr<RuntimeFrameResources> failedFrame;
+ 	std::shared_ptr<RuntimePendingSubmission> pendingSubmission; // newest, for predecessor contracts
+ 	std::deque<std::shared_ptr<RuntimePendingSubmission>> pendingSubmissions;
++	struct PendingGameStats {
++		unsigned long long submitted=0, eligible=0, adjacentEligible=0, joined=0, twoPending=0;
++		unsigned long long noPredecessor=0, blockedReads=0, blockedCube=0, blockedInfo=0, blockedRTT=0;
++		unsigned long long capacityReclaims=0, orderedCube=0;
++	} pendingGameStats;
+ 	void DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner = nullptr);
+ 	bool SlotPending(const std::shared_ptr<RuntimeFrameSlot>&) const;
+ 	void DrainPendingLocked();
+@@ -164,11 +172,12 @@
+  void RetirePreviousSubmission();
+  bool PreparingWhilePending() const;
+  uint64_t PendingEventForSource(uint64_t sourceSubmission) const noexcept;
+- bool OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,std::function<void()> check);
+- void PrepareDeferredDrawable(bool orderedGameFrame);
++ bool OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,std::function<void()> check,
++  NativePriorRead kind=NativePriorRead::Other);
++ void PrepareDeferredDrawable(bool orderedGameFrame,uint64_t simulationFrame);
+  // Admit only a pinned, already encoded predecessor. The supplied check must
+  // establish its actual completion before this lease can submit GPU work.
+- bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check);
++ bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind=NativePriorRead::Other);
+ 	~RuntimeLease();
+ 	RuntimeLease(const RuntimeLease&) = delete;
+ 	RuntimeLease& operator=(const RuntimeLease&) = delete;
+--- a/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm
+@@ -572,6 +572,30 @@
+ 	return !unsafePendingWork;
+ }
+ 
++bool Runtime::ReclaimOldestForSceneCapacity()
++{
++ if(!InterventionTwoInFlight())return false;
++ const std::lock_guard lock(requestMutex);
++ Require(!poisoned,"Cannot reclaim scene admission capacity from a poisoned runtime");
++ if(pendingSubmissions.size()!=2)return false;
++ DrainOldestLocked();
++ ++pendingGameStats.capacityReclaims;
++ return true;
++}
++
++void Runtime::ReportPendingGameStats()
++{
++ const std::lock_guard lock(requestMutex);
++ const auto totals=std::exchange(pendingGameStats,{});
++#ifdef RECOIL_METAL4_LIVE_SCENE
++ if(totals.submitted)
++  LOG("[NativePendingGameSummary] cap=%u first_sim=540 last_sim_exclusive=1740 submitted=%llu eligible=%llu adjacent_eligible=%llu joined=%llu two_pending=%llu no_predecessor=%llu serial_reads=%llu cube=%llu world_info=%llu screen_rtt=%llu ordered_cube=%llu scene_reclaims_all_frames=%llu",
++   InterventionTwoInFlight()?2u:1u,totals.submitted,totals.eligible,totals.adjacentEligible,
++   totals.joined,totals.twoPending,totals.noPredecessor,totals.blockedReads,totals.blockedCube,
++   totals.blockedInfo,totals.blockedRTT,totals.orderedCube,totals.capacityReclaims);
++#endif
++}
++
+ RuntimeCleanupLease::RuntimeCleanupLease(Runtime& runtime,Retirement retirement): lock(runtime.requestMutex)
+ {
+  if(retirement==Retirement::RequireAlreadyRetired)
+@@ -868,26 +892,32 @@
+  }
+  return event;
+ }
+-bool RuntimeLease::OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,std::function<void()> check)
++bool RuntimeLease::OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,
++ std::function<void()> check,NativePriorRead kind)
+ {
+  Require(owner&&bool(check)&&!frame->recording&&!frame->pending&&!runtime.poisoned,
+   "GPU read ordering requires owned preparation");
+  if(!event||PendingEventForSource(source)!=event)return false;
+- if(!InterventionTwoInFlight())return OrderAfterPreviousSubmission(owner,std::move(check));
++ if(!InterventionTwoInFlight())return OrderAfterPreviousSubmission(owner,std::move(check),kind);
+  if(!PreparingWhilePending()||runtime.SlotPending(frame->slot))return false;
+- frame->orderedGPUReadChecks.try_emplace(owner,std::move(check));return true;
+-}
+-void RuntimeLease::PrepareDeferredDrawable(bool orderedGameFrame)
++ frame->orderedGPUReadChecks.try_emplace(owner,std::move(check));
++ frame->orderedCubeRead|=kind==NativePriorRead::Cube;
++ return true;
++}
++void RuntimeLease::PrepareDeferredDrawable(bool orderedGameFrame,uint64_t simulationFrame)
+ {
+  frame->orderedGameFrame=orderedGameFrame;
++ frame->simulationFrame=simulationFrame;
+  Require(runtime.pendingSubmissions.size()<=1,"Drawable acquisition requires a reclaimed native slot");
+ }
+-bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<void()> check)
++bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind)
+ {
+  Require(owner&&bool(check)&&!frame->recording&&!frame->pending&&!runtime.poisoned,
+   "Prior producer ordering requires owned preparation");
+  if(!PreparingWhilePending()||frame->slot==runtime.pendingSubmission->resources.owner->slot)return false;
+- frame->priorReadChecks.try_emplace(owner,std::move(check));return true;
++ frame->priorReadChecks.try_emplace(owner,std::move(check));
++ frame->priorReadClasses|=unsigned(kind);
++ return true;
+ }
+ void RuntimeLease::RetirePreviousSubmission()
+ {
+@@ -902,6 +932,7 @@
+  NativeCPUPhaseScope trace(NativeCPUPhaseKind::ReadChecks);
+  if(frame->previousRetired){auto receipt=std::exchange(frame->previousRetired,{});receipt();}
+  auto checks=std::move(frame->priorReadChecks);frame->priorReadChecks.clear();
++ frame->priorReadClasses=0;
+  for(const auto& [owner,check]:checks)check();
+  auto gpuChecks=std::move(frame->orderedGPUReadChecks);frame->orderedGPUReadChecks.clear();
+  for(const auto& [owner,check]:gpuChecks)check();
+@@ -1074,8 +1105,23 @@
+ {
+  FinishResourceCommit();
+  std::shared_ptr<RuntimePendingSubmission> completedPredecessor186;
+- const bool queueBehind=InterventionTwoInFlight()&&frame->orderedGameFrame&&
+-  runtime.pendingSubmission&&runtime.pendingSubmission->orderedGameFrame&&frame->priorReadChecks.empty();
++ const bool adjacentEligible=frame->orderedGameFrame&&runtime.pendingSubmission&&runtime.pendingSubmission->orderedGameFrame;
++ const bool queueBehind=InterventionTwoInFlight()&&adjacentEligible&&frame->priorReadChecks.empty();
++ const bool counted=DeferredPresentAtRetirement()&&frame->simulationFrame>=540&&frame->simulationFrame<1740;
++ if(counted){
++  auto& stats=runtime.pendingGameStats;
++  ++stats.submitted;
++  stats.eligible+=frame->orderedGameFrame;
++  stats.adjacentEligible+=adjacentEligible;
++  stats.noPredecessor+=!runtime.pendingSubmission;
++  stats.orderedCube+=queueBehind&&frame->orderedCubeRead;
++  if(adjacentEligible&&!frame->priorReadChecks.empty()){
++   ++stats.blockedReads;
++   stats.blockedCube+=bool(frame->priorReadClasses&unsigned(NativePriorRead::Cube));
++   stats.blockedInfo+=bool(frame->priorReadClasses&unsigned(NativePriorRead::WorldInfo));
++   stats.blockedRTT+=bool(frame->priorReadClasses&unsigned(NativePriorRead::ScreenTarget));
++  }
++ }
+  if(!queueBehind)RetirePreviousSubmission(&completedPredecessor186);
+  else if(frame->previousRetired){
+   auto receipt=std::exchange(frame->previousRetired,{});
+@@ -1140,14 +1186,11 @@
+  [runtime.queue signalDrawable:drawable];
+  if(!pending->drawableToPresent)[drawable present];
+  [runtime.queue signalEvent:runtime.completionEvent value:pending->eventValue];
+-#ifdef RECOIL_METAL4_LIVE_SCENE
+- static bool reportedOverlap=false;
+- if(predecessorEvent&&!reportedOverlap&&runtime.completionEvent.signaledValue<predecessorEvent){
+-  LOG("[NativePendingGame] pending_after_second_commit=2 first_event=%llu second_event=%llu",
+-   (unsigned long long)predecessorEvent,(unsigned long long)pending->eventValue);
+-  reportedOverlap=true;
++ if(counted&&predecessorEvent){
++  auto& stats=runtime.pendingGameStats;
++  ++stats.joined;
++  stats.twoPending+=runtime.completionEvent.signaledValue<predecessorEvent;
+  }
+-#endif
+  submitTrace.Finish();
+  if constexpr(NativeCPUTimingInstrumentation)pending->metrics.cpuSubmissionMs=Milliseconds(submitted);
+  // Release on this same serialized caller, before another preparation can
+--- a/engine/rts/Rendering/Metal4/Metal4FrameResources.h
++++ b/engine/rts/Rendering/Metal4/Metal4FrameResources.h
+@@ -81,6 +81,9 @@
+  // producer success checks still precede the consumer's retirement receipt.
+  std::map<const void*,std::function<void()>,std::less<const void*>> orderedGPUReadChecks;
+  bool orderedGameFrame = false;
++ unsigned priorReadClasses = 0;
++ bool orderedCubeRead = false;
++ uint64_t simulationFrame = 0;
+  bool recordedWhilePending = false;
+  bool keepResidency = false;
+ 	bool recording = false;
+--- a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.h
++++ b/engine/rts/Rendering/Metal4/Metal4WorldRenderer.h
+@@ -66,6 +66,8 @@
+ // forbids normal renderer/surface/window teardown and requires process restart.
+ // A shader/setup error or completed GPU error can still detach safely.
+ bool Metal4RendererCanSafelyDetachSurface();
++bool Metal4RendererReclaimOldestForSceneCapacity();
++void Metal4RendererReportPendingGameStats();
+ 
+ enum class Metal4PresentationStatus {
+ 	Presented, Detached, CloseRequested, Hidden, Minimized, ZeroExtent, DrawableUnavailable, OffscreenSourceCompleted,
+--- a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -1187,6 +1187,16 @@
+ bool Metal4RendererCanSafelyDetachSurface()
+ {
+ 	return SharedRuntime().CanSafelyDetach();
++}
++bool Metal4RendererReclaimOldestForSceneCapacity()
++{
++ MainThread();
++ return SharedRuntime().ReclaimOldestForSceneCapacity();
++}
++void Metal4RendererReportPendingGameStats()
++{
++ MainThread();
++ SharedRuntime().ReportPendingGameStats();
+ }
+ 
+ Metal4WorldRenderer::Metal4WorldRenderer(Metal4WindowSurface& surface,int requestedSamples): impl(std::make_unique<Impl>(surface))
+@@ -4323,7 +4333,7 @@
+ 			// their original submit/retire boundary.
+ 			lease.PrepareDeferredDrawable(options.heldSourceDraw&&options.deferredCompleted&&
+ 				!options.readback&&!impl->screenContinuation&&mainSamples==1&&frame.unsupported.empty()&&
+-				!bumpWaterActive&&!dynamicWaterActive&&!legacyWaterActive&&!cloudDraw);
++				!bumpWaterActive&&!dynamicWaterActive&&!legacyWaterActive&&!cloudDraw,frame.simulationFrame);
+ 			{NativeSubmissionTraceDrawableScope trace(&lease);
+ 			 drawable=[layer nextDrawable];}
+ 			if(drawable==nil){result.status=Metal4PresentationStatus::DrawableUnavailable;if(!requiresSource)return result;offscreenSource=true;}
+--- a/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp
++++ b/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp
+@@ -945,6 +945,21 @@
+  }
+ }
+ 
++// The scene owns acceptance. Join the CPU result before reclaiming the FIFO
++// GPU ticket, then apply its exact notices before reusing any held slot.
++void ReclaimDeferredSceneCapacity()
++{
++ static const bool cap2=[] {
++  const char* value=std::getenv("BAR_NATIVE_INTERVENTION_TWO_INFLIGHT");
++  return value&&std::string_view(value)=="1";
++ }();
++ if(!cap2||!session||!session->renderer)return;
++ if(session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
++ session->renderer->FinishCPUWork(metal4::NativeCPUFinishReason::Credit);
++ ApplyDeferredFrameReceipts();
++ if(Metal4RendererReclaimOldestForSceneCapacity())ApplyDeferredFrameReceipts();
++}
++
+ void RequireRetiredGPUWork(metal4::NativeCPUFinishReason reason=metal4::NativeCPUFinishReason::FullDrain)
+ {
+  metal4::NativeCPUPhaseScope drainTrace(9,gs?gs->frameNum:0);
+@@ -1001,7 +1016,10 @@
+   if(recovered&&!reported&&gs&&gs->frameNum>=300&&gs->frameNum<=1500)try{
+    LOG("[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=2 simulation=%d",gs->frameNum);reported=true;
+   }catch(...){/* Optional evidence must not change settlement. */}
+- },[]{RequireRetiredGPUWork();});
++ },[]{
++  ReclaimDeferredSceneCapacity();
++  if(!session->sourceCredits.HasCapacity())RequireRetiredGPUWork();
++ });
+ }
+ 
+ void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
+@@ -2199,9 +2217,13 @@
+   const auto mailbox=session->completionMailbox;
+   // Preserve the prior renderer boundary's ability to drain full held ledgers.
+   // Do not reject a capturedFrame solely because its predecessors have not retired yet.
+-  if(!ui::GetRecorder().HasSubmittedCapacity(expectedDraw) ||
+-     !LuaNativePostprocess::GetRecorder().HasSubmittedCapacity(expectedPost) ||
+-     !LuaNativeVolumetricClouds::HasSubmittedCapacity(expectedDraw) || !mailbox->HasCapacity())RequireRetiredGPUWork();
++  const auto hasCapacity=[&]{
++   return ui::GetRecorder().HasSubmittedCapacity(expectedDraw)&&
++    LuaNativePostprocess::GetRecorder().HasSubmittedCapacity(expectedPost)&&
++    LuaNativeVolumetricClouds::HasSubmittedCapacity(expectedDraw)&&mailbox->HasCapacity();
++  };
++  if(!hasCapacity())ReclaimDeferredSceneCapacity();
++  if(!hasCapacity())RequireRetiredGPUWork();
+   // Main remains blocked through Draw: these checks cannot race another capture.
+   admission.Validate();
+   options.beginReceipt=std::make_shared<NativeFrameBeginReceipt>(expectedDraw,expectedPost);
+@@ -2318,6 +2340,7 @@
+ 	if (!session)
+ 		return;
+ 	RequireRetiredGPUWork();
++ Metal4RendererReportPendingGameStats();
+  if(session->renderer)session->renderer->AbortShieldPublications(session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,session->environmentStage,&session->shieldCapture);
+ 	if (session->presentedFrames > 0)
+ 		LOG("[Metal4Scene] Retired world after %llu presented frames; last simulation frame %llu",
+--- a/engine/rts/Rendering/Metal4/Metal4CubeTextureSource.mm
++++ b/engine/rts/Rendering/Metal4/Metal4CubeTextureSource.mm
+@@ -81,7 +81,7 @@
+ std::shared_ptr<const Resource> Storage(const NativeCubeTextureBacking& image){auto r=std::dynamic_pointer_cast<const Resource>(image.resource);Require(r&&r->storage&&r->storage->texture,"Original cube lacks its actual native allocation");return r;}
+ // An ordered predecessor is this immutable version's exact successful producer,
+ // not permission to consume any encoded cube. The runtime verifies its actual
+-// retirement after N's event, feedback and receipt, before submitting N+1.
++// retirement after N's event, feedback and receipt, before publishing N+1.
+ void Readable(const NativeCubeTextureBacking& image,uint64_t submission,uint64_t predecessor=0){
+  if(predecessor){
+   Require(predecessor!=submission&&image.content==NativeTextureContent::ProducerVersion&&
+@@ -109,9 +109,28 @@
+   Require(image->content==NativeTextureContent::ProducerVersion&&dependencies&&dependencies==encoded&&
+    image->resource&&image->storageGeneration&&image->contentVersion,
+    "Cube predecessor has no complete encoded version/storage identity");
++  const auto resource=Storage(*image);
++  const auto texture=resource->storage->texture;
++  const auto event=lease.PendingEventForSource(encoded);
++  // The source is the immutable whole cube, including every face and mip it
++  // publishes. Shared TexSubImage allocations and texture views stay serial.
++  if(event&&image->kind!=NativeCubeTextureKind::Specular&&texture.device==lease.Device()&&
++     texture.storageMode==MTLStorageModePrivate&&texture.textureType==MTLTextureTypeCube&&
++     texture.sampleCount==1&&texture.arrayLength==1&&texture.width==image->size&&
++     texture.height==image->size&&texture.mipmapLevelCount==image->levels&&
++     !texture.parentTexture&&!texture.iosurface&&!texture.buffer&&!texture.heap){
++   const auto generation=image->storageGeneration,version=image->contentVersion;
++   if(lease.OrderGPUReadAfterSubmission(image.get(),encoded,event,
++       [image,resource,texture,generation,version,submission,encoded]{
++        Require(image->resource==resource&&resource->storage->texture==texture&&
++         image->storageGeneration==generation&&image->contentVersion==version,
++         "Ordered cube read lost its physical allocation or version");
++        RequireCubePredecessorComplete158(*image,submission,encoded);
++       },NativePriorRead::Cube))return encoded;
++  }
+   if(lease.OrderAfterPreviousSubmission(image.get(),[image,submission,encoded]{
+    RequireCubePredecessorComplete158(*image,submission,encoded);
+-  }))return encoded;
++  },NativePriorRead::Cube))return encoded;
+   // With recording overlap disabled, StageResources still retires N before
+   // Begin. Keep the original strict read checks instead of an early CPU wait.
+  }
+--- a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
+@@ -1311,14 +1311,18 @@
+ 			retainExternal(std::move(resolved));lease.AddAllocation(image);return image;
+ 		}
+ 		const auto found=textures.find(source.get());if(found!=textures.end()&&!found->second.owner.expired()){
+-   // Pin N's immutable submitted RTT without publishing completion. N retires
+-   // before Begin for this request; current-frame producer ordering stays exact.
++   // A historical RTT in this cache has a completion bit, but no exact pending
++   // event. Keep its immutable allocation and the CPU retirement boundary.
+    const bool previousSubmission=lease.PreparingWhilePending()&&found->second.encodedVersion&&*found->second.encodedVersion;
+ 			Require(!source->renderTarget || found->second.allocationOnly || (found->second.initialized && *found->second.initialized) ||
+ 				previousSubmission || std::find(available.begin(),available.end(),source.get())!=available.end(),"Native UI RTT version has no retired or earlier ordered producer");
+ 			const auto& entry=found->second;
+    PinCoverage220(lease,source,entry);
+ 			if(source->renderTarget && source->generation){
++				if(previousSubmission&&entry.initialized&&!*entry.initialized)
++					lease.OrderAfterPreviousSubmission(source.get(),[source,completed=entry.initialized]{
++						Require(*completed,"Historical RTT producer did not retire before submission");
++					},NativePriorRead::ScreenTarget);
+ 				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized))
+ 					Require(consumer && consumer->stage==NativePostprocessStage::Screen &&
+ 						(consumer->screenCommandOffset>entry.sourceOffset ||
+--- a/engine/rts/Rendering/Metal4/Metal4WorldInfo.mm
++++ b/engine/rts/Rendering/Metal4/Metal4WorldInfo.mm
+@@ -65,7 +65,16 @@
+ {
+ 	Require(frame!=nullptr,"Original global info frame unavailable");ValidateNativeWorldInfoFrame(*frame);
+ 	Require(frame->paddedSquaresX<=lease.Capabilities().maxTextureDimension2D&&frame->paddedSquaresZ<=lease.Capabilities().maxTextureDimension2D,"Original global info exceeds actual device extent");
+-	if(auto planned=impl->planned.lock();planned&&planned->MatchesFrame(*frame)){lease.AddAllocation(planned->Info());if(planned->impl->previous!=nil)lease.AddAllocation(planned->impl->previous);if(planned->HasUpdates())for(const auto& update:planned->impl->updates)update->RegisterInfoResources(lease);return planned;}
++	if(auto planned=impl->planned.lock();planned&&planned->MatchesFrame(*frame)){
++		if(planned->impl->encoded&&!planned->impl->completed&&lease.PreparingWhilePending())
++			lease.OrderAfterPreviousSubmission(planned.get(),[planned]{
++				Require(planned->impl->completed,"Reused global info producer did not retire before submission");
++			},NativePriorRead::WorldInfo);
++		lease.AddAllocation(planned->Info());
++		if(planned->impl->previous!=nil)lease.AddAllocation(planned->impl->previous);
++		if(planned->HasUpdates())for(const auto& update:planned->impl->updates)update->RegisterInfoResources(lease);
++		return planned;
++	}
+ 	auto result=std::shared_ptr<PreparedWorldInfo>(new PreparedWorldInfo);result->impl->state=impl;result->impl->frame=frame;
+ 	auto baseImage=impl->completed;auto baseSerial=impl->serial;
+  bool same=impl->completed!=nil&&impl->map==frame->mapIdentity&&impl->generation==frame->modeGeneration&&impl->mode==frame->mode;
+@@ -75,7 +84,7 @@
+   result->impl->predecessor=prior;
+   result->impl->predecessorOrdered=lease.OrderAfterPreviousSubmission(prior.get(),[prior]{
+    Require(prior->impl->completed,"Info predecessor did not actually complete before successor submission");
+-  });
++  },NativePriorRead::WorldInfo);
+   baseImage=prior->Info();baseSerial=prior->CompletionSerial();same=true;
+  }
+ 	Require(!same||frame->serial>=baseSerial,"Original global info cannot reconstruct an older unretained generation");

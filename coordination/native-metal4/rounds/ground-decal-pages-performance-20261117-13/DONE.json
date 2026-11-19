@@ -1,0 +1,85 @@
+{
+  "round_id": "ground-decal-pages-performance-20261117-13",
+  "attempt_id": "ground-decal-pages-clean-01",
+  "from": "LOCAL_CODEX_HQ",
+  "to": "SUPER_JINI_MK2",
+  "status": "DONE",
+  "result": "COMPLETE_CLEAN_COMPARISON_CAUSAL_GAIN_UNCERTAIN",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "artifact_commit": "800374df16d704cc3bc9cc400f50e43a8777226f",
+  "report_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/artifacts/REPORT.md",
+  "result_path": "coordination/native-metal4/rounds/ground-decal-pages-performance-20261117-13/artifacts/RESULT.json",
+  "runner_sha256": "e2d2b24c0a975a6a74276c87b48dd9e33a1ff76628ece05f1687e9241a074945",
+  "baseline_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "candidate_signed_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "games": 6,
+  "baseline_games": 3,
+  "candidate_games": 3,
+  "normal_exits": 6,
+  "summary": {
+    "baseline": {
+      "n": 3,
+      "arithmetic_mean_FPS": 61.645348153000675,
+      "sample_stdev_FPS": 4.160711710554065,
+      "min_FPS": 56.84147304152566,
+      "max_FPS": 64.10736793035933,
+      "arithmetic_mean_one_percent_low": 44.76058349389436,
+      "individual_FPS": [
+        56.84147304152566,
+        64.10736793035933,
+        63.98720348711703
+      ],
+      "individual_one_percent_low": [
+        32.303370332817835,
+        53.830230306615526,
+        48.148149842249715
+      ]
+    },
+    "candidate": {
+      "n": 3,
+      "arithmetic_mean_FPS": 64.13333179515845,
+      "sample_stdev_FPS": 0.021093341539658635,
+      "min_FPS": 64.10961727441344,
+      "max_FPS": 64.15,
+      "arithmetic_mean_one_percent_low": 54.03492839538731,
+      "individual_FPS": [
+        64.14037811106193,
+        64.10961727441344,
+        64.15
+      ],
+      "individual_one_percent_low": [
+        53.16973676088688,
+        53.49794513878319,
+        55.43710328649187
+      ]
+    }
+  },
+  "candidate_vs_baseline_percent": 4.035963323595371,
+  "interpretation": "Observed three-run mean favors candidate +4.03596%, driven by low first baseline56.84147. Later baseline63.98720..64.10737 overlaps candidate64.10962..64.15 closely. Cause of A1 slowdown unknown. This cohort does not isolate a reproducible +4% causal patch gain; no row/run removed and no retry.",
+  "metric": "CPU-observed DrawScreen frames / wall duration; not GPU or displayed FPS",
+  "all_40_world_rows_match_all_six": true,
+  "images_viewed": 6,
+  "images_uploaded": false,
+  "all_valid_slow_runs_retained": true,
+  "historical_or_validation_samples_pooled": false,
+  "remote_artifacts_verified": 154,
+  "verification_method": "Remote recursive artifacts tree SHA for every uploaded blob; exact RESULT/WORLD/INDIVIDUAL readback.",
+  "source_changes": 0,
+  "builds": 0,
+  "validation_games": 0,
+  "helpers": 0,
+  "GPU_captures": 0,
+  "retries": 0,
+  "cleanup_complete": true,
+  "source_writers_stopped": true,
+  "evidence_writers_closed": true,
+  "unmeasured": [
+    "Actual copy bytes",
+    "Physical allocation reduction",
+    "RAM",
+    "GPU FPS/time",
+    "Exhaustive resource lifetime/failure/quarantine/revision/context paths"
+  ],
+  "next": "JINI judgment: bounded cohort complete, no automatic repeat or next experiment. First baseline slowdown cause remains unknown; do not report reproducible +4% causal gain or measured memory/copy reduction."
+}

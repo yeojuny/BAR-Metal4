@@ -1,0 +1,53 @@
+{
+  "status": "COMPLETE_CAP2_CAPACITY_RECLAIM_DIAGNOSTIC",
+  "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+  "attempt_id": "pending2-oldest-retire-timing-02",
+  "binary_sha256": "18bbb8f055cccce94c7894681896d73eeb15ee61fe306bfffcf7b50c4e259a4b",
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "gpu_helper_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "sample_count": 2648,
+  "linked": 2647,
+  "linked_slowest_one_percent": 27,
+  "trace_rows": 2651,
+  "trace_drops": 0,
+  "matched_by_draw_order": true,
+  "raw_intervals_sha256": "1f5cce3fe3c433be31e4143079451c58d90c33217cf68467bc7aa820b37d2e44",
+  "timing_sha256": "46af4bbdaeddb8610d4c5f59ea206361d97e2fc16b673909e1bc18f1e1c43051",
+  "all_means": {
+    "draw_ms": 15.102719327794562,
+    "total_scene_reclaim_ms": 7.5015795864803625,
+    "event_wait_ms": 7.13347595581571,
+    "feedback_wait_ms": 0.08903473413897281,
+    "owner_release_ms": 0.2389350479607251
+  },
+  "slowest_one_percent_means": {
+    "draw_ms": 21.22222162962963,
+    "total_scene_reclaim_ms": 8.702876555555555,
+    "event_wait_ms": 8.31321448148148,
+    "feedback_wait_ms": 0.08771755555555556,
+    "owner_release_ms": 0.2571142592592593
+  },
+  "longest_frame_ms": 48.999999,
+  "longest_frame_scene_reclaim_ms": 8.044458,
+  "actual_two_pending": 2646,
+  "joined": 2648,
+  "outliers_removed": 0,
+  "phase_scope_overlap_counted": false,
+  "normal_exit": true,
+  "cleanup_complete": true,
+  "display": "locked and asleep during first and last observation",
+  "display_present_request_verified": true,
+  "scanout_or_input_latency_measured": false,
+  "promoted": false,
+  "default_cap": 1,
+  "worker_movement": "DEFERRED",
+  "diagnostic_only": true,
+  "results_note": "Host event wait is not per-submission GPU execution time. Time outside measured capacity reclaim is not attributed."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "ACTIVE",
+  "campaign": "clean_paced",
+  "pid": 16851,
+  "startUTC": "2026-11-17T04:47:53.374182+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false
+}

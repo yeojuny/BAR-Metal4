@@ -1,0 +1,18 @@
+{
+  "status": "PASS_LUA_GAMEDECAL_METAL",
+  "GPU_cases": 13,
+  "paired_routes": [
+    "direct",
+    "indexed"
+  ],
+  "exact": [
+    "BGRA8",
+    "depth",
+    "stencil"
+  ],
+  "tiny_positive_pixels": 946,
+  "alpha_reject_positive_pixels": 946,
+  "overlap_pixels": 173,
+  "samples": 1,
+  "log_sha256": "f9328d191fb0a39a683a3817545cdc213a7dbd1d4720b8d6f4480bb5179499b3"
+}

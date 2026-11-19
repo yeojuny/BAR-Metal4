@@ -1,0 +1,244 @@
+{
+  "status": "COMPLETE_TWO_GAMES_INCONCLUSIVE_BIN_BOUNDARIES",
+  "round_id": "ground-decal-expired-prefix-20261118-85",
+  "attempt_id": "ground-decal-expired-track-prefix-off-on-01",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "order": [
+    "OFF",
+    "ON"
+  ],
+  "binary_sha256": "876cd8bf08c14583d9118758262025f832ba0cdc965a38776cd2b523546dbfea",
+  "patch_sha256": "47ccf8f7b28ca3b28c795f8fa31840458de9df733d03831bbaa9d67c31638ed3",
+  "cap": 2,
+  "aa": 0,
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "outliers_removed": 0,
+  "simulation_verification": {
+    "status": "INCONCLUSIVE_BIN_BOUNDARIES",
+    "matching_start_input_pins": 13,
+    "actual_child_keys_observed": 44,
+    "actual_child_delta": "BAR_NATIVE_GROUND_DECAL_EXPIRED_TRACK_PREFIX",
+    "match_40_simulation_unit_camera_speed_bins": false,
+    "matched_bins": 36,
+    "bin_discrepancies": [
+      {
+        "bin_number": 10,
+        "fields": {
+          "end_simulation": {
+            "off": "839",
+            "on": "840"
+          },
+          "units": {
+            "off": "167",
+            "on": "166"
+          }
+        }
+      },
+      {
+        "bin_number": 11,
+        "fields": {
+          "start_simulation": {
+            "off": "839",
+            "on": "840"
+          }
+        }
+      },
+      {
+        "bin_number": 37,
+        "fields": {
+          "end_simulation": {
+            "off": "1649",
+            "on": "1650"
+          }
+        }
+      },
+      {
+        "bin_number": 38,
+        "fields": {
+          "start_simulation": {
+            "off": "1649",
+            "on": "1650"
+          }
+        }
+      }
+    ],
+    "exact_nominal_tick_edges": [
+      false,
+      true
+    ],
+    "match_archives_pathfinder_checksums": {
+      "game": "3f2d4d28f276bfd659a7b0961fd3fc67f822760f093315051bbf58f2b9f9b4f8bb2b90a6b6c73b75dcaf389db2577e1c29f084d95e2dd0d7c5ade206ca123721",
+      "map": "eca9a75faf0ee5f0d083b19531566d054f2df810f22c64ca121ffe3e49a5e09d25f586d5e8b57479f56f5737d8a8dad900189c360443e5d428bd09c2043e475e",
+      "pathfinder": "c01e7a00"
+    },
+    "match_game_and_pacing_events": true,
+    "matched_non_system_library_paths": 19,
+    "game_seed": 154658555,
+    "benchmark_seed": 7654321,
+    "created_units": 600,
+    "destroyed_units": 433,
+    "route": {
+      "decal_setting": 2,
+      "drawer_loaded": true,
+      "ground_decal_rendering_enabled": true,
+      "present_requested": true
+    },
+    "native_aa0_and_main_mrt_verified": true,
+    "matched_only_on_faster_bins": 12,
+    "both_windows_raw_frame_intervals_retained": true,
+    "per_tick_state_checksum_measured": false,
+    "live_ground_decal_type_frequency_measured": false,
+    "display_scanout_measured": false
+  },
+  "observed_average_fps_change_percent": -0.14115727915372522,
+  "observed_low_1_percent_change_percent": 2.317289388061239,
+  "parity": {
+    "cpu_fused_vs_separate_cases": 14,
+    "color_depth_stencil_cases": 144,
+    "witness_visible": 60,
+    "depth_writes": 32,
+    "stencil_writes": 32,
+    "all_expired_cases": 24,
+    "direct_order_witnesses": 10,
+    "indexed_order_witnesses": 10,
+    "source_owner_protection_review": true,
+    "injected_pending_gpu_fault": false
+  },
+  "arms": [
+    {
+      "arm": "R85_OFF",
+      "flag": "0",
+      "average_fps": 78.78621247387639,
+      "low_1_percent_fps": 55.749127268754066,
+      "p95_ms": 15,
+      "p99_ms": 16.000001,
+      "maximum_frame_ms": 37.999999,
+      "intervals": 3151,
+      "draws": 3152,
+      "seconds": 40.006999969,
+      "bins": 40,
+      "raw_sha256": "97e0dcc98c49f688b6ef267569dfab5d6339d217299d2bf1e7321d37a6db0826",
+      "actual_two_pending": 3149,
+      "joined": 3151,
+      "unclassified": 0,
+      "normal_exit": true,
+      "process_group_gone": true,
+      "present_request_observed": true,
+      "ground_decal_context": {
+        "ground_decals_log_value": 2,
+        "standard_drawer_initialized": true,
+        "archived_native_track_frame": 1590,
+        "live_draw_or_shortcut_directly_observed": false
+      },
+      "over_16_667_ms": 19,
+      "over_33_333_ms": 1,
+      "pending_summary": {
+        "cap": 2,
+        "first_sim": 540,
+        "last_sim_exclusive": 1740,
+        "submitted": 3152,
+        "eligible": 3152,
+        "adjacent_eligible": 3151,
+        "joined": 3151,
+        "two_pending": 3149,
+        "no_predecessor": 1,
+        "serial_reads": 0,
+        "cube": 0,
+        "world_info": 0,
+        "screen_rtt": 0,
+        "bloom": 0,
+        "postprocess": 0,
+        "terrain_info": 0,
+        "bump_water": 0,
+        "unclassified": 0,
+        "ordered_cube": 3151,
+        "scene_reclaims_all_frames": 4690
+      },
+      "loading_seconds": 45.209856642
+    },
+    {
+      "arm": "R85_ON",
+      "flag": "1",
+      "average_fps": 78.675,
+      "low_1_percent_fps": 57.04099587888965,
+      "p95_ms": 15,
+      "p99_ms": 16.000001,
+      "maximum_frame_ms": 33,
+      "intervals": 3146,
+      "draws": 3147,
+      "seconds": 40,
+      "bins": 40,
+      "raw_sha256": "3ae18f1e92fa4b72cb2e95b42eaff38251399fd8e65397d588d1309ecaf415a1",
+      "actual_two_pending": 3144,
+      "joined": 3146,
+      "unclassified": 0,
+      "normal_exit": true,
+      "process_group_gone": true,
+      "present_request_observed": true,
+      "ground_decal_context": {
+        "ground_decals_log_value": 2,
+        "standard_drawer_initialized": true,
+        "archived_native_track_frame": 1590,
+        "live_draw_or_shortcut_directly_observed": false
+      },
+      "over_16_667_ms": 15,
+      "over_33_333_ms": 0,
+      "pending_summary": {
+        "cap": 2,
+        "first_sim": 540,
+        "last_sim_exclusive": 1740,
+        "submitted": 3147,
+        "eligible": 3147,
+        "adjacent_eligible": 3146,
+        "joined": 3146,
+        "two_pending": 3144,
+        "no_predecessor": 1,
+        "serial_reads": 0,
+        "cube": 0,
+        "world_info": 0,
+        "screen_rtt": 0,
+        "bloom": 0,
+        "postprocess": 0,
+        "terrain_info": 0,
+        "bump_water": 0,
+        "unclassified": 0,
+        "ordered_cube": 3146,
+        "scene_reclaims_all_frames": 5436
+      },
+      "loading_seconds": 16.617443911
+    }
+  ],
+  "historical_expired_prefix": {
+    "simulation": 1590,
+    "encoded_rows": 32279,
+    "trim_eligible_prefix_rows": 9401,
+    "bytes_of_revision": 1804992
+  },
+  "current_live_prefix_size_measured": false,
+  "current_live_skipped_bytes_measured": false,
+  "display": {
+    "locked_asleep_in_each_arm": true,
+    "onscreen_scanout_verified": false,
+    "own_temporary_caffeinate_released": true,
+    "active_gpu_debug_sessions_after": 0
+  },
+  "decision": "KEEP_CANDIDATE_OFF_MEASURED_PAIR_INCONCLUSIVE",
+  "default_cap": 1,
+  "default_switch": "OFF",
+  "defaults_changed": false,
+  "finished_utc": "2026-11-18T15:32:12.997Z"
+}

@@ -1,0 +1,38 @@
+{
+  "status": "PASS_PIN_LABEL_ONLY_AST_EQUIVALENCE",
+  "oldRunnerSHA256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+  "newRunnerSHA256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "literalMapping": {
+    "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+    "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "V_R02": "V_R03",
+    "A1_G01": "A1_R02",
+    "A2_G01": "A2_R02",
+    "A3_G01": "A3_R02",
+    "B1_R02": "B1_R03",
+    "B2_R02": "B2_R03",
+    "B3_R02": "B3_R03",
+    "r02_": "r03_",
+    "Frozen G01 versus R02 Ultra AA0 comparison; explicit stage/run only.": "Frozen R02 versus R03 Ultra AA0 comparison; explicit stage/run only.",
+    "Fixed R02 winding candidate versus frozen G01; S01/G01 ON in both": "Fixed R03 minor-reject candidate versus frozen R02; S01/G01 ON in both",
+    "Frozen G01 versus fixed R02 A B B A A B; S01/G01 both1; all valid rows retained; images after count": "Frozen R02 versus fixed R03 A B B A A B; S01/G01 both1; all valid rows retained; images after count",
+    "validation_paced: fixed R02 Metal API validation+image; clean_paced: G01 R02 R02 G01 G01 R02, S01/G01 both1; Ultra AA0 1512x950, official Seths combat, 10s warmup + 40s counted": "validation_paced: fixed R03 Metal API validation+image; clean_paced: R02 R03 R03 R02 R02 R03, S01/G01 both1; Ultra AA0 1512x950, official Seths combat, 10s warmup + 40s counted"
+  },
+  "changedStringTokens": 14,
+  "entireASTEqualAfterDeclaredLiteralMapping": true,
+  "unchangedFunctions": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw",
+    "run"
+  ],
+  "unchangedFlagValues": "S01/G01=1 both, PREPARE1 BEGIN0 worker1; original parser/controller/pacing/preflight/metric/ownership/cleanup preserved.",
+  "baselineSignedSHA256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "candidateSignedSHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9"
+}

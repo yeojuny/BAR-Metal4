@@ -1,0 +1,16 @@
+{
+  "round_id": "r04-engine-build-envfix-20261117-23",
+  "attempt_id": "r04-isolated-build-02",
+  "claimed_revision": 90,
+  "configure_attempts": 0,
+  "engine_builds": 0,
+  "relocation_sign": 0,
+  "games": 0,
+  "benchmarks": 0,
+  "helpers": 0,
+  "captures": 0,
+  "replays": 0,
+  "source_edits": 0,
+  "retries": 0,
+  "utc": "2026-11-17T09:39:50.207063+00:00"
+}

@@ -1,0 +1,63 @@
+{
+  "status": "PASS_CPU_WORLD_SIDECARS",
+  "all_four_equal_excluding_draw_counter": true,
+  "normalizedSHA256": {
+    "R03-before": "02ff4bf08af32dbc3fcba9214925cabcf4f1ae07115f016832a01fd8c1ed4b85",
+    "R03-after": "02ff4bf08af32dbc3fcba9214925cabcf4f1ae07115f016832a01fd8c1ed4b85",
+    "MVK3-before": "02ff4bf08af32dbc3fcba9214925cabcf4f1ae07115f016832a01fd8c1ed4b85",
+    "MVK3-after": "02ff4bf08af32dbc3fcba9214925cabcf4f1ae07115f016832a01fd8c1ed4b85"
+  },
+  "drawCounters": {
+    "R03-before": "draw=5017",
+    "R03-after": "draw=5089",
+    "MVK3-before": "draw=5163",
+    "MVK3-after": "draw=5348"
+  },
+  "lineTypeCounts": {
+    "R03-before": {
+      "tick": 1,
+      "draw": 1,
+      "paused": 1,
+      "speed": 1,
+      "camera": 1,
+      "selected": 1,
+      "visible": 1,
+      "unit": 168,
+      "feature": 401
+    },
+    "R03-after": {
+      "tick": 1,
+      "draw": 1,
+      "paused": 1,
+      "speed": 1,
+      "camera": 1,
+      "selected": 1,
+      "visible": 1,
+      "unit": 168,
+      "feature": 401
+    },
+    "MVK3-before": {
+      "tick": 1,
+      "draw": 1,
+      "paused": 1,
+      "speed": 1,
+      "camera": 1,
+      "selected": 1,
+      "visible": 1,
+      "unit": 168,
+      "feature": 401
+    },
+    "MVK3-after": {
+      "tick": 1,
+      "draw": 1,
+      "paused": 1,
+      "speed": 1,
+      "camera": 1,
+      "selected": 1,
+      "visible": 1,
+      "unit": 168,
+      "feature": 401
+    }
+  },
+  "scope": "CPU capture-bracketing witness only; captured GPU binding tick/camera and SensorLOS/decal semantic workload still require independent proof"
+}

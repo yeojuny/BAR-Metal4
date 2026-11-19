@@ -1,0 +1,18 @@
+{
+  "status": "STAGED_NO_GAME",
+  "binary_sha256": "d3899678fef6201e350e86d593cf7ba9bb13d75381f6115c1edc1094d4e5b5ea",
+  "order": [
+    "R98_OFF",
+    "R98_ON"
+  ],
+  "launch_sha256": {
+    "R98_OFF": "9bdb52428e87ec02db099d71cb5a07a9e8efe73dcc97f6fce057983bb2557ef1",
+    "R98_ON": "af7687c4edeeeec4c4f32a8956ceb1952dd2f0c47b47ec1532e7e71e05d7bd59"
+  },
+  "cap": 2,
+  "aa": 0,
+  "scene_hashes": 13,
+  "only_switch": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
+  "patch_sha256": "1ca8d06ef4965a6e5f82dcf1b4143d1a42edc3de40ab9939607ec0ef49d04452",
+  "safety_sha256": "542f7f4e2c517df53c6cf083cc2dde7cbf3b0ee9e146970267a4c269e0ccc231"
+}

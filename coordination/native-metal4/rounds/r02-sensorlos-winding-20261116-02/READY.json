@@ -1,0 +1,53 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-02",
+  "author": "SUPER_JINI_MK2",
+  "phase": "READY",
+  "scope": "FIXED_R02_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY",
+  "source_branch": "fix/r02-helper-type-20261116",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-RECOVERY-MANIFEST.json",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "artifacts": {
+    "readme": "docs/research/r02-sensorlos-winding-20261116/candidate/README.md",
+    "production_diff": "docs/research/r02-sensorlos-winding-20261116/candidate/R02.patch",
+    "cpu_test": "docs/research/r02-sensorlos-winding-20261116/candidate/test_winding.py",
+    "cpu_results": "docs/research/r02-sensorlos-winding-20261116/candidate/cpu-results.json",
+    "gpu_regression_source": "docs/research/r02-sensorlos-winding-20261116/candidate/gpu_pixel_parity.mm"
+  },
+  "change": "Previous failed compile fixed by one host helper type annotation (auto to MTLRenderPipelineDescriptor*). Production shader and all assertions unchanged.",
+  "validation": {
+    "cpu_geometry_cases": 16294,
+    "cpu_result": "PASS",
+    "remote_verification": "Both changed files read back exactly at fixed commit; GitHub compare confirms one helper line and added delta manifest only.",
+    "compile": "NOT_RUN",
+    "gpu": "NOT_RUN"
+  },
+  "pending": [
+    "Mac source/helper compilation",
+    "Metal GPU asymmetric front/back stencil, front_facing, depth pass/fail, stencil compare pass/fail and negative-control parity",
+    "Screen correctness and performance evidence; no claim of FPS improvement"
+  ],
+  "execution_authorization": {
+    "helper_compile": true,
+    "gpu_helper_correctness_checks": true,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "main_release_homebrew_changes": false
+  },
+  "handoff_rule": "This READY supersedes the earlier source-review-only restriction solely for the approved fixed helper compilation and GPU correctness checks. Execution is gated on latest STATE owner HQ, this round and fixed source/manifest, and READY authorization. JINI source writers and all children are stopped; no other local access during HQ execution. HQ records execution history, then cleans all owned work and evidence writes before same-round DONE.",
+  "source_writers_stopped": true,
+  "user_authorization": {
+    "approval_message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "approval": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "Necessary autonomous testing authorized; this handoff deliberately limited to one corrected fixed helper compile and, if successful, one GPU correctness run. No engine build, game, benchmark, main, release or Homebrew changes."
+  },
+  "attempt_id": "r02-helper-execution-02",
+  "previous_round": {
+    "round_id": "r02-sensorlos-winding-20261116-01",
+    "result_path": "coordination/native-metal4/rounds/r02-sensorlos-winding-20261116-01/DONE.json",
+    "result": "FAILED_HELPER_COMPILE_BEFORE_GPU",
+    "cleanup_complete": true,
+    "gpu_runs": 0
+  }
+}

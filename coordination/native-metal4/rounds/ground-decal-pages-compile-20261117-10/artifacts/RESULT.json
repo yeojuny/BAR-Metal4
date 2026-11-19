@@ -1,0 +1,48 @@
+{
+  "status": "PASS_CPU_CONTRACT_AND_ENGINE_COMPILE_ONLY",
+  "round_id": "ground-decal-pages-compile-20261117-10",
+  "attempt_id": "ground-decal-pages-compile-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "single_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "CPU_contract_compile": 1,
+  "CPU_contract_run": 1,
+  "CPU_checks": 10680,
+  "randomized_revisions": 2000,
+  "assertions_enabled": true,
+  "CPU_binary_sha256": "e33a8eac02c4551a0b6f7d4c2940fb9241a6dfcd6324925a1f7a986a35127588",
+  "isolated_configures": 1,
+  "engine_builds": 1,
+  "raw_engine_sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+  "raw_engine_local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/build/spring-metal4-scene",
+  "raw_engine_bytes": 65680528,
+  "source_unchanged_after_build": true,
+  "archive_objects": 1538,
+  "archives": 35,
+  "archive_mismatches": 0,
+  "production_ObjCXX_changed_files_compiled": [
+    "Metal4GroundDecal.mm",
+    "Metal4WorldRenderer.mm"
+  ],
+  "games": 0,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "runner_staging": 0,
+  "retries": 0,
+  "cleanup": {
+    "owned_command_PIDs_absent": true,
+    "worker_children_reaped": true,
+    "awake_created": false,
+    "GPU_work_created": false,
+    "source_writers_active": false,
+    "evidence_writers_closed_after_packet": true
+  },
+  "limitations": [
+    "CPU mock and SDK compile do not prove actual GPU lifetime/residency or pixel parity.",
+    "No runtime MSL/GPU execution or FPS measurement.",
+    "Real Git checkout changes only downloader version define versus R03 exported build; no renderer compiler flag changes.",
+    "Nine CRLF vendor files appear dirty due attributes but all tracked engine bytes match committed blobs.",
+    "Binary remains local, unrelocated and not signed as an app."
+  ]
+}

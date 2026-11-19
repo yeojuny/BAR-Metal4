@@ -1,0 +1,18 @@
+{
+  "status": "STAGED_NO_GAME",
+  "order": [
+    "R81_OFF",
+    "R81_ON"
+  ],
+  "binary_sha256": "ffabb50bf82881d0a1e3e12a14e72dbf0515ed3e604815bd0664369a269e9337",
+  "cap": 2,
+  "cpu_read_mode": 0,
+  "matching_scene_inputs": 13,
+  "single_ab_delta": "BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR",
+  "fixed_sensorlos": "ON",
+  "fixed_sensor31657": "ON",
+  "fixed_range_division233": "OFF",
+  "prejoin": "OFF",
+  "aa": 0,
+  "patch_sha256": "58b492de023d1876846c823d014bdc0706d9f55f1b71676bcd552f6089ca8fda"
+}

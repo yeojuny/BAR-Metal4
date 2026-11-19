@@ -1,0 +1,148 @@
+{
+  "round_id": "r04-r03-validation-clean-20261117-24",
+  "attempt_id": "r04-validation-and-clean-01",
+  "claimed_revision": 93,
+  "status": "COMPLETE_VALIDATION_PASS_CLEAN6_REGRESSION",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "runner_sha256": "d1c4467a2dd4fd8bf1650a812111ae99d643fc8e8677a4beec359317e6f8fb74",
+  "validation_games": 1,
+  "clean_games": 6,
+  "games": 7,
+  "stage_commands": 2,
+  "profiles_staged_once": 7,
+  "builds": 0,
+  "helpers": 0,
+  "captures": 0,
+  "replays": 0,
+  "retries": 0,
+  "source_edits": 0,
+  "validation_command_exit": 0,
+  "clean_command_exit": 0,
+  "validation_gate": "VALIDATION-GATE.json",
+  "runs": [
+    {
+      "run": "V_R04",
+      "pid": 84925,
+      "binary_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "cleanup": {
+        "normalExit": true,
+        "pid": 84925,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "owned": {
+        "pid": 84925,
+        "pgid": 84925,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      }
+    },
+    {
+      "run": "A1_R03",
+      "pid": 85189,
+      "binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "cleanup": {
+        "normalExit": true,
+        "pid": 85189,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "owned": {
+        "pid": 85189,
+        "pgid": 85189,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      }
+    },
+    {
+      "run": "B1_R04",
+      "pid": 85302,
+      "binary_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "cleanup": {
+        "normalExit": true,
+        "pid": 85302,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "owned": {
+        "pid": 85302,
+        "pgid": 85302,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      }
+    },
+    {
+      "run": "B2_R04",
+      "pid": 85415,
+      "binary_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "cleanup": {
+        "normalExit": true,
+        "pid": 85415,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "owned": {
+        "pid": 85415,
+        "pgid": 85415,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      }
+    },
+    {
+      "run": "A2_R03",
+      "pid": 85527,
+      "binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "cleanup": {
+        "normalExit": true,
+        "pid": 85527,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "owned": {
+        "pid": 85527,
+        "pgid": 85527,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      }
+    },
+    {
+      "run": "A3_R03",
+      "pid": 85642,
+      "binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "cleanup": {
+        "normalExit": true,
+        "pid": 85642,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "owned": {
+        "pid": 85642,
+        "pgid": 85642,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      }
+    },
+    {
+      "run": "B3_R04",
+      "pid": 85753,
+      "binary_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "cleanup": {
+        "normalExit": true,
+        "pid": 85753,
+        "ownedGroupGone": true,
+        "privateWidgetRemoved": true,
+        "privateGameOverlayRemoved": true
+      },
+      "owned": {
+        "pid": 85753,
+        "pgid": 85753,
+        "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene"
+      }
+    }
+  ],
+  "all_campaigns_closed": true,
+  "cleanup_complete": true,
+  "bar": "PAUSED_UNCHANGED",
+  "utc": "2026-11-17T10:17:17.496287+00:00"
+}

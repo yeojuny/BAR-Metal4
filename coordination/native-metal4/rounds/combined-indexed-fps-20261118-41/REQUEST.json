@@ -1,0 +1,81 @@
+{
+  "round_id": "combined-indexed-fps-20261118-41",
+  "attempt_id": "combined-off-on-01",
+  "authorization_message_id": "Sentinel_5d9eafbcbb848191a492e50a2c425aa0",
+  "scope": "COMBINED_GAMEDECAL_AND_FIVE_INDEXED_GEOMETRY_SAME_BINARY_OFF_ON",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "witness_patch_sha256": "2f31b79cb2dc90d316946299b99554ae3cabd3fa079e0ea34009cd357e359a41",
+  "patches": {
+    "gamedecal": {
+      "commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+      "sha256": "79871e8ae1aa4ad91cecba23798e2e1fcbfb3b2f90644a9e717550accd26391d"
+    },
+    "geometry": {
+      "commit": "855197fe4c2439ee169db22d58a647d3241e08b5",
+      "sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b"
+    }
+  },
+  "order": [
+    "INDEXED_OFF",
+    "INDEXED_ON"
+  ],
+  "flag": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": {
+      "INDEXED_OFF": "0",
+      "INDEXED_ON": "1"
+    },
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": {
+      "INDEXED_OFF": "0",
+      "INDEXED_ON": "1"
+    }
+  },
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "budget": {
+    "configure_attempts_max": 1,
+    "engine_builds_max": 1,
+    "helper_compiles_max": 0,
+    "helper_gpu_invocations_max": 0,
+    "games_max": 2,
+    "off_games_max": 1,
+    "on_games_max": 1,
+    "retries": 0,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0
+  },
+  "retain_all_counted_frames": true,
+  "previous": {
+    "round37": {
+      "off": 64.88,
+      "on": 65.71,
+      "reported_percent": 1.28
+    },
+    "round39": {
+      "off": 64.31607632102086,
+      "on": 64.73632880737064,
+      "relative_percent": 0.6534174818939142
+    },
+    "round40": {
+      "off": 64.03399418767914,
+      "on": 64.28464353062284,
+      "relative_percent": 0.3914316858153022
+    }
+  }
+}

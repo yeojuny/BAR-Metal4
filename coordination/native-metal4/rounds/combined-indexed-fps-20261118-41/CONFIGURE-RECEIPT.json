@@ -1,0 +1,22 @@
+{
+  "label": "CONFIGURE",
+  "argv": [
+    "cmake",
+    "-S",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/source/engine",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build",
+    "-G",
+    "Ninja",
+    "-C",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/initial-cache.cmake",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-18T00:28:44.675924+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41",
+  "pid": 72090,
+  "exit": 0,
+  "ended_at_utc": "2026-11-18T00:28:53.585111+00:00",
+  "stopped_by_runner": false
+}

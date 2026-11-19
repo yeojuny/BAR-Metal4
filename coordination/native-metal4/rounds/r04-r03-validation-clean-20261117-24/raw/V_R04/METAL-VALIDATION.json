@@ -1,0 +1,10 @@
+{
+  "status": "NO_MATCHED_METAL_ERRORS",
+  "enabledByChildEnv": true,
+  "enabledByEngineLog": true,
+  "errors": [],
+  "normalExit": true,
+  "candidateSHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+  "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_validation01/validation_paced/preparation/runs/V_R04/scene.png",
+  "source": "raw engine.log; same original error regex"
+}

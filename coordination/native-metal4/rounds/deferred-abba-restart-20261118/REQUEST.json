@@ -1,0 +1,30 @@
+{
+  "round_id": "deferred-abba-restart-20261118",
+  "authorization": "\uc774\uc81c \ud560 \uac70 \ud558\uc790 \ub2e4\uc2dc",
+  "source_binary_sha256": "81c581e3345018881eb70ffd23a1f3d5ea9c06c63f0f4284d0fa0570087c6299",
+  "reused_executable_sha256": "3c369eaff6b2ee8f14030c09cc8ebe9d74fb5f69b68c602204b03abd4f319857",
+  "prior_revision": 281,
+  "order": [
+    "A1_OFF",
+    "B1_ON",
+    "B2_ON",
+    "A2_OFF"
+  ],
+  "abba": [
+    "A1_OFF",
+    "B1_ON",
+    "B2_ON",
+    "A2_OFF"
+  ],
+  "budget": {
+    "games": 4,
+    "mvk3_games": 0,
+    "engine_compiles": 0,
+    "links": 0,
+    "profiles": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "thermal_policy_sha256": "be299395e1871d3f123e3159a66625b8e350bb24bd587f796657638a6dbba540",
+  "default_changed": false
+}

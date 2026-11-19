@@ -1,0 +1,195 @@
+diff --git a/engine/rts/Rendering/Backend/NativeWorldParticleData.h b/engine/rts/Rendering/Backend/NativeWorldParticleData.h
+--- a/engine/rts/Rendering/Backend/NativeWorldParticleData.h
++++ b/engine/rts/Rendering/Backend/NativeWorldParticleData.h
+@@ -137,6 +137,7 @@
+ 	std::vector<NativeWorldParticleVertex> vertices;
+ 	std::vector<std::uint32_t> indices;
+ 	std::vector<NativeWorldParticleRange> ranges;
++	std::uint32_t collapsedGroundFlashRanges = 0;
+ 	std::vector<NativeWorldProjectileModel> models;
+ 	std::vector<NativeEngineNanoInstance> engineNano;
+ 	std::vector<NativeEngineNanoTemplateVertex> engineNanoTemplate;
+diff --git a/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.h b/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.h
+--- a/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.h
++++ b/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.h
+@@ -9,4 +9,7 @@
+ void AppendNativeParticleGeometry(NativeWorldParticleFrame& frame,
+ 	std::span<const NativeWorldParticleVertex> vertices,
+ 	std::span<const std::uint32_t> indices, NativeWorldParticleRange range);
++
++// After a validated GroundFlash append, combine adjacent equal-state ranges.
++bool CoalesceLastGroundFlashRanges(NativeWorldParticleFrame& frame);
+ }
+diff --git a/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.cpp b/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.cpp
+--- a/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.cpp
++++ b/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.cpp
+@@ -1,5 +1,6 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "NativeWorldParticleGeometry.h"
++#include <bit>
+ #include <cmath>
+ #include <limits>
+ #include <stdexcept>
+@@ -49,4 +50,33 @@
+ 	for (const auto index : indices) frame.indices.push_back(base+index);
+ 	frame.ranges.push_back(range);
+ }
++
++bool CoalesceLastGroundFlashRanges(NativeWorldParticleFrame& frame)
++{
++	if (frame.ranges.size() < 2)
++		return false;
++
++	auto& previous = frame.ranges[frame.ranges.size() - 2];
++	const auto& next = frame.ranges.back();
++	if (previous.stage != NativeWorldParticleStage::GroundFlashes ||
++		next.stage != NativeWorldParticleStage::GroundFlashes ||
++		!previous.groundAtlas || !next.groundAtlas ||
++		previous.depthTest != next.depthTest || previous.depthWrite != next.depthWrite ||
++		std::bit_cast<std::uint32_t>(previous.alphaThreshold) != std::bit_cast<std::uint32_t>(next.alphaThreshold) ||
++		std::bit_cast<std::uint32_t>(previous.softenThreshold) != std::bit_cast<std::uint32_t>(next.softenThreshold))
++		return false;
++
++	const std::uint64_t previousEnd = std::uint64_t(previous.firstIndex) + previous.indexCount;
++	const std::uint64_t nextEnd = std::uint64_t(next.firstIndex) + next.indexCount;
++	if (!previous.indexCount || !next.indexCount || previous.indexCount % 3 || next.indexCount % 3 ||
++		previousEnd != next.firstIndex || nextEnd != frame.indices.size() ||
++		nextEnd > std::numeric_limits<std::uint32_t>::max())
++		return false;
++
++	// Geometry, triangle order, and per-flash validation have already been published.
++	previous.indexCount = static_cast<std::uint32_t>(nextEnd - previous.firstIndex);
++	frame.ranges.pop_back();
++	++frame.collapsedGroundFlashRanges;
++	return true;
+ }
++}
+diff --git a/engine/rts/Rendering/Backend/NativeWorldParticleCapture.cpp b/engine/rts/Rendering/Backend/NativeWorldParticleCapture.cpp
+--- a/engine/rts/Rendering/Backend/NativeWorldParticleCapture.cpp
++++ b/engine/rts/Rendering/Backend/NativeWorldParticleCapture.cpp
+@@ -30,6 +30,7 @@
+ #include "System/Exceptions.h"
+ #include <algorithm>
+ #include <cstddef>
++#include <cstdlib>
+ #include <cstring>
+ 
+ namespace rendering {
+@@ -108,6 +109,10 @@
+ 
+ 	// Original terrain/groundflash stage, including each class's own geometry,
+ 	// viewer air-LOS, camera culling and per-flash depth parameter changes.
++	static const bool groundFlashDepthRuns = [] {
++		const char* value = std::getenv("BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS");
++		return value && std::strcmp(value, "1") == 0;
++	}();
+ 	if (pass==NativeWaterScenePass::Main) for (CGroundFlash* flash:projectileHandler.groundFlashes) {
+ 		if (!(flash->alwaysVisible||gu->spectatingFullView||losHandler->InAirLos(flash,gu->myAllyTeam)) || !viewCamera.InView(flash->pos,flash->size)) continue;
+ 		impl->geometry.Clear();
+@@ -115,7 +120,10 @@
+ 		NativeWorldParticleRange range;range.stage=NativeWorldParticleStage::GroundFlashes;range.groundAtlas=true;
+ 		range.depthTest=frame->softenRequested?false:flash->depthTest;range.depthWrite=flash->depthMask;
+ 		range.alphaThreshold=.01f;range.softenThreshold=-350;
++		const auto previousRangeCount = frame->ranges.size();
+ 		Append(*frame,impl->geometry,range);
++		if (groundFlashDepthRuns && frame->ranges.size() != previousRangeCount)
++			CoalesceLastGroundFlashRanges(*frame);
+ 	}
+ 
+ 	// Actual CProjectileDrawer::DrawOpaque entry, including both water passes.
+diff --git a/engine/rts/Rendering/Metal4/Metal4WorldParticles.mm b/engine/rts/Rendering/Metal4/Metal4WorldParticles.mm
+--- a/engine/rts/Rendering/Metal4/Metal4WorldParticles.mm
++++ b/engine/rts/Rendering/Metal4/Metal4WorldParticles.mm
+@@ -211,6 +211,7 @@
+  return particleAtlasPreparation;
+ }
+ struct PreparedWorldParticles::Impl {
++	uint32_t collapsedGroundFlashRanges = 0;
+  __strong M4TransientUploadLifetime177* worldUpload220=nil;
+  RetiredArgumentOwners argumentOwners;
+ 	struct Draw {
+@@ -271,7 +272,33 @@
+ }
+ void PreparedWorldParticles::Encode(NativeWorldParticleStage stage,id<MTL4RenderCommandEncoder> encoder,id<MTLDepthStencilState> inheritedAlphaDepth) const
+ {
+-	for(std::size_t n=0;n<impl->draws.size();++n)if(impl->draws[n].range.stage==stage)EncodeDraw(n,encoder,inheritedAlphaDepth);
++	if (stage != NativeWorldParticleStage::GroundFlashes) {
++		for (std::size_t n = 0; n < impl->draws.size(); ++n)
++			if (impl->draws[n].range.stage == stage)
++				EncodeDraw(n,encoder,inheritedAlphaDepth);
++		return;
++	}
++
++	size_t encoded = 0;
++	for (std::size_t n = 0; n < impl->draws.size(); ++n) {
++		if (impl->draws[n].range.stage == stage) {
++			EncodeDraw(n,encoder,inheritedAlphaDepth);
++			++encoded;
++		}
++	}
++	const auto collapsed = impl->collapsedGroundFlashRanges;
++	if (encoded && collapsed) {
++		[[maybe_unused]] static const bool logged = [encoded,collapsed] {
++			LOG("[NativeGroundFlashRuns] mode=coalesced source_ranges=%zu encoded_ranges=%zu collapsed=%u",
++				encoded + collapsed,encoded,collapsed);
++			return true;
++		}();
++	} else if (encoded > 1) {
++		[[maybe_unused]] static const bool logged = [encoded] {
++			LOG("[NativeGroundFlashRuns] mode=separate source_ranges=%zu encoded_ranges=%zu collapsed=0",encoded,encoded);
++			return true;
++		}();
++	}
+ }
+ void PreparedWorldParticles::EncodeDraw(std::size_t index,id<MTL4RenderCommandEncoder> encoder,id<MTLDepthStencilState> inheritedAlphaDepth) const
+ {
+@@ -457,6 +484,7 @@
+ 	}
+ 	lease.Retain(particleProgram.library);lease.Retain(particleProgram.alpha);lease.Retain(particleProgram.groundPipeline);
+ 	auto result=std::unique_ptr<PreparedWorldParticles>(new PreparedWorldParticles);result->impl->submission=submission;
++	result->impl->collapsedGroundFlashRanges=frame.collapsedGroundFlashRanges;
+  static const bool upload220=[]{const char* v=std::getenv("BAR_NATIVE_WORLD_PARTICLE_UPLOAD220");return v&&std::strcmp(v,"1")==0;}();
+  static const bool counters220=[]{const char* v=std::getenv("BAR_NATIVE_WORLD_PARTICLE_UPLOAD220_COUNTERS");return v&&std::strcmp(v,"1")==0;}();
+  const auto beforeRequests220=impl->worldUpload220.requests,beforeReused220=impl->worldUpload220.reused,
+diff --git a/engine/tools/metal4-contracts/NativeWorldParticleHarness.cpp b/engine/tools/metal4-contracts/NativeWorldParticleHarness.cpp
+--- a/engine/tools/metal4-contracts/NativeWorldParticleHarness.cpp
++++ b/engine/tools/metal4-contracts/NativeWorldParticleHarness.cpp
+@@ -109,6 +109,38 @@
+ 			const auto old=frame.indices;auto invalid=first.GetIndcs();invalid.back()=99;Reject([&]{AppendNativeParticleGeometry(frame,std::span(frame.vertices).first(4),invalid,{});});Check(frame.indices==old&&frame.vertices.size()==8&&frame.ranges.size()==2,"invalid geometry has no partial append");
+ 			AppendNativeParticleGeometry(frame,std::span(frame.vertices).first(4),std::span(frame.indices).first(6),{});Check(frame.vertices.size()==12&&frame.indices.back()==10&&frame.indices[12]==11,"aliased append stages source before relocation");
+ 		}
++		NativeWorldParticleRange flash;
++		flash.stage = NativeWorldParticleStage::GroundFlashes;
++		flash.groundAtlas = true;
++		flash.alphaThreshold = 0.01f;
++		flash.softenThreshold = -350.f;
++		NativeWorldParticleFrame joined;
++		Append(joined,first,flash);
++		Append(joined,first,flash);
++		const auto originalIndices = joined.indices;
++		const auto originalVertices = Bytes(joined.vertices);
++		Check(CoalesceLastGroundFlashRanges(joined),"adjacent equal GroundFlash ranges");
++		Check(joined.ranges.size()==1 && joined.ranges[0].firstIndex==0 &&
++			joined.ranges[0].indexCount==12 && joined.indices==originalIndices &&
++			Bytes(joined.vertices)==originalVertices && joined.collapsedGroundFlashRanges==1,
++			"coalescing preserves exact geometry and triangle order");
++
++		const auto mustStaySeparate = [&](NativeWorldParticleRange b) {
++			NativeWorldParticleFrame frame;
++			Append(frame,first,flash);
++			Append(frame,first,b);
++			Check(!CoalesceLastGroundFlashRanges(frame) && frame.ranges.size()==2 &&
++				frame.collapsedGroundFlashRanges==0,"different GroundFlash state stays separate");
++		};
++		auto different = flash; different.depthTest = !flash.depthTest; mustStaySeparate(different);
++		different = flash; different.depthWrite = !flash.depthWrite; mustStaySeparate(different);
++		different = flash; different.softenThreshold = 0; mustStaySeparate(different);
++		different = flash; different.alphaThreshold = 0; mustStaySeparate(different);
++		different = flash; different.groundAtlas = false; mustStaySeparate(different);
++		different = flash; different.stage = NativeWorldParticleStage::AlphaAll; mustStaySeparate(different);
++		Append(joined,first,flash);
++		--joined.ranges.back().firstIndex;
++		Check(!CoalesceLastGroundFlashRanges(joined),"overlapping GroundFlash index spans stay separate");
+ 		std::vector<CProjectile> particles{{-1,1},{0,5},{0,25},{0,25},{1,100}};std::vector<std::pair<uint64_t,unsigned>> order;
+ 		for(unsigned n=0;n<particles.size();++n)order.push_back({ParticleSortKey(&particles[n],0,true),n});std::vector<std::pair<uint64_t,unsigned>> scratch;
+ 		RadixSortByKey(order,scratch,[](const auto& p){return p.first;});Check(order[0].second==0&&order[1].second==2&&order[2].second==3&&order[3].second==1&&order[4].second==4,"original signed draw order and stable far-to-near ties");

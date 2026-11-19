@@ -1,0 +1,9 @@
+{
+  "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/scene.png",
+  "bytes": 2965118,
+  "sha256": "6697e784a0c72edefa5bcf22ccc2b74382bebdfad5f540d07b9e2cd049ca9896",
+  "actual_pixels_viewed": true,
+  "uploaded": false,
+  "observed": "Compared to preserved previous OFF/ON images viewed earlier: no obvious new static terrain/building/decal/occlusion damage. Animated smoke/explosions/illumination/range arcs/debug text differ.",
+  "limits": "RGB review not exact pixel/depth/stencil equality or exhaustive lifetime proof."
+}

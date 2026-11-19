@@ -1,0 +1,170 @@
+[
+  {
+    "name": "REPORT.md",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/execution/postprocess-producer-01/REPORT.md",
+    "characters": 2406,
+    "bytes": 2406,
+    "sha256": "dbc9dcc8437544c2ca12348d036ff9d4898cf4ea4636af2807b4af68a5422f5d",
+    "git_blob_sha": "b48a10f8a1190c68ff3555418dbe914dacfc30d5"
+  },
+  {
+    "name": "RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/execution/postprocess-producer-01/RESULT.json",
+    "characters": 3045,
+    "bytes": 3045,
+    "sha256": "0ed4cd8636d5c26cec5068e17e71e799b2cdcd1526560a899ff3953b2f24f82a",
+    "git_blob_sha": "36aea06eb24f1918f746e4c7b6160ae28dc7d9de"
+  },
+  {
+    "name": "UPSTREAM-CONTRIBUTIONS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/execution/postprocess-producer-01/UPSTREAM-CONTRIBUTIONS.json",
+    "characters": 4097,
+    "bytes": 4103,
+    "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "git_blob_sha": "32b34021ab58412322e7a81af74d3ba8354da82c"
+  },
+  {
+    "name": "preparation/execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/execute.py",
+    "characters": 5162,
+    "bytes": 5162,
+    "sha256": "02bacf073d9c314f243d563aaf89ca2ed34c10eb772121c8ce49c481b8977d42",
+    "git_blob_sha": "a1965fc5aa5d9fa0c5ba6b7317f486f347cf18b6"
+  },
+  {
+    "name": "preparation/EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/EXECUTION.json",
+    "characters": 818,
+    "bytes": 818,
+    "sha256": "87f3479de474699f937744f617b5879d5485f057fe0bcbbbdd78f414e14e0ce1",
+    "git_blob_sha": "5240a82eac4d5d8a886d43e2f37264ccd09e7532"
+  },
+  {
+    "name": "preparation/REQUEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/REQUEST.json",
+    "characters": 3826,
+    "bytes": 3826,
+    "sha256": "8ad7b0a92def36839b8bf5b8b9d66f56312e20ddaa546aad6f06808bcaf28c4c",
+    "git_blob_sha": "6d646b04e7c436a0935a29fe56e89172a23b5202"
+  },
+  {
+    "name": "preparation/READY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/READY.json",
+    "characters": 752,
+    "bytes": 752,
+    "sha256": "ab7319acdb9f607d9eb119e01d0dabd5876a59d0c7b42e2952acfb7ea297e92a",
+    "git_blob_sha": "105f0b696c1cac62f49b24d80841754b2fc24777"
+  },
+  {
+    "name": "preparation/RESERVED-STATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/RESERVED-STATE.json",
+    "characters": 42217,
+    "bytes": 44943,
+    "sha256": "cebc303bd66fd70a36f5e6fe06d8315ff087d385f0f6bb4d956e218164f881ea",
+    "git_blob_sha": "53609465c7721c59df989aae3d9f7bc4ae1a0c07"
+  },
+  {
+    "name": "preparation/PREFLIGHT-PATH-NOTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/PREFLIGHT-PATH-NOTE.json",
+    "characters": 422,
+    "bytes": 422,
+    "sha256": "a8e973d491c62ffa3882dfbc6cf145a0805671a52d50d269b5f5e9b8a71541e9",
+    "git_blob_sha": "5986c5efb5bf869274b3d86928826423e8076b67"
+  },
+  {
+    "name": "preparation/CLONE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/CLONE.log",
+    "characters": 67,
+    "bytes": 67,
+    "sha256": "d75da3894a971d5dd237ca293ec015fbcfd2e3133d830b335a9bdcbfebcf7f3c",
+    "git_blob_sha": "6c0a940aa674fc53e96c418982d272dd9eb80936"
+  },
+  {
+    "name": "preparation/CLONE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/CLONE.json",
+    "characters": 340,
+    "bytes": 340,
+    "sha256": "a7a4432e0e2dc39d5ab0696329e1d139693bef1f25acaa98399a47832d2bf8a3",
+    "git_blob_sha": "7a58aaaeb18fd95d61c292e8e14ff6bb7a2f08dd"
+  },
+  {
+    "name": "preparation/CHECKOUT.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/CHECKOUT.log",
+    "characters": 91,
+    "bytes": 91,
+    "sha256": "546217fe4f3e88097785ba6ecd8121c0014339f4d1873da4d0e4224df063d9a8",
+    "git_blob_sha": "3d8a1248943e75c76a5d0df9a382f2fa035cc4d2"
+  },
+  {
+    "name": "preparation/SOURCE-PACKET-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/SOURCE-PACKET-CHECK.json",
+    "characters": 769,
+    "bytes": 769,
+    "sha256": "6ba865322841c2c5ab5375cda9794d83418d62af00d45803f3c6fd6b5bb3f2df",
+    "git_blob_sha": "e9fe28f32e6c038249d6e4be45003e5c245963cd"
+  },
+  {
+    "name": "preparation/SOURCE-VERIFICATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/SOURCE-VERIFICATION.json",
+    "characters": 1043,
+    "bytes": 1043,
+    "sha256": "62d3a10f70c5c5404c0405aaa33e9dc825f5163132bede3a0292d37ac1c08909",
+    "git_blob_sha": "a03acd484749b349bc713222bd761f238802b48e"
+  },
+  {
+    "name": "preparation/MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/MANIFEST.json",
+    "characters": 2005,
+    "bytes": 2005,
+    "sha256": "f758b34fced26318ed7f8497db93a350dc06f8db5d3c670852484ec450fd5221",
+    "git_blob_sha": "b10b67f0ea567ae4b043f5be79346b8b9f042d36"
+  },
+  {
+    "name": "preparation/TOOLCHAIN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/TOOLCHAIN.json",
+    "characters": 241,
+    "bytes": 241,
+    "sha256": "8c6a4a604b9d7e20256d91633aa73a440b91771d821c7c94b2ad6ea428ed0fd8",
+    "git_blob_sha": "23c91a79623435253593e1f9443cfc4b30af2777"
+  },
+  {
+    "name": "preparation/CPU-CONTRACT.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/CPU-CONTRACT.log",
+    "characters": 1605,
+    "bytes": 1605,
+    "sha256": "8868d6961f8fcd69ccee656af980c68482626270fb019c051024f57426c38cf6",
+    "git_blob_sha": "6950312a39a6e810db5dab0d3f79d7141d753e07"
+  },
+  {
+    "name": "preparation/initial-cache.cmake",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/initial-cache.cmake",
+    "characters": 36970,
+    "bytes": 36970,
+    "sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "git_blob_sha": "ecbb8aa90921944c15310d4a970dbf0f88e96800"
+  },
+  {
+    "name": "fixed-packet/test_contract.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/source/docs/research/postprocess-producer-20261117/candidate/test_contract.py",
+    "characters": 9023,
+    "bytes": 9023,
+    "sha256": "ea6015f4c7391c3ae757b3382a5592a7e67b912b91abd37e886fb3205b263c85",
+    "git_blob_sha": "fb205c23b708ea7b68c0728744f3e092fa98ad9c"
+  },
+  {
+    "name": "fixed-packet/cpu-results.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/source/docs/research/postprocess-producer-20261117/candidate/cpu-results.json",
+    "characters": 214,
+    "bytes": 214,
+    "sha256": "e5e4ad08aceeedb7b9446e8cffe15b5e4b2e649a1d60b234473727f4be4a5da4",
+    "git_blob_sha": "a035ab8edda8f91354aafa10006c2f8671d1f1b2"
+  },
+  {
+    "name": "preparation/SOURCE-HASHES.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/SOURCE-HASHES.json",
+    "characters": 1284699,
+    "bytes": 1284699,
+    "sha256": "33913eb48a80be4f8913a30ce7c0b481882bb9f650e671559931c9d0c48de774",
+    "git_blob_sha": "8476bcf066d8a013852d7fa827b23a64e00f6dba"
+  }
+]

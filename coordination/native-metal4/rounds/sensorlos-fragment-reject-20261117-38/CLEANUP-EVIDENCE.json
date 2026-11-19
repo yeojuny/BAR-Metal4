@@ -1,0 +1,23 @@
+{
+  "clean": true,
+  "bar": "PAUSED",
+  "owned_game_groups": [
+    32712,
+    32853
+  ],
+  "remaining_games": [],
+  "shared_awake": "RELEASED",
+  "owned_awake_pid": 32704,
+  "user_awake_process": "6618 caffeinate -d",
+  "active_gpu_sessions": "No active sessions.",
+  "system_restarts": 0,
+  "service_restarts": 0,
+  "owned_screenshot_count": 0,
+  "earlier_owned_groups": {
+    "HELPER-COMPILE": 27440,
+    "HELPER-GPU": 27443,
+    "CONFIGURE": 27456,
+    "BUILD": 28707
+  },
+  "earlier_groups_gone": true
+}

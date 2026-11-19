@@ -1,0 +1,488 @@
+{
+  "failure": "SKIP_INSPECTION_NOT_READY_WITHIN_BOUNDED_WAIT",
+  "captureReceipt": {
+    "pid": 7809,
+    "boundaryCommand": [
+      "/usr/bin/gpucapture",
+      "boundaries",
+      "--pid",
+      "7809"
+    ],
+    "boundaryStartedUTC": "2026-11-17T20:39:51.962218+00:00",
+    "boundaryTimeoutSeconds": 8,
+    "boundaryElapsedSeconds": 0.03695487500044692,
+    "boundaryExit": 0,
+    "boundaryStdout": "boundaries for 7809 (spring-metal4-scene)\n  ID    Type                              Label  GPU(ms)  Count\n   1  Device                       Apple M4 Pro    15.79   4131\n   3   Queue                             (null)    15.79   4131\n  12   Layer  CAMetalLayer: SDL3_cocoametalview    16.17   4131\n",
+    "boundaryStderr": "",
+    "layerBoundaryID": 12,
+    "normal": {
+      "pid": 7809,
+      "layerBoundaryID": 12,
+      "command": [
+        "/usr/bin/gpucapture",
+        "start",
+        "--pid",
+        "7809",
+        "--boundary",
+        "12",
+        "--count",
+        "1",
+        "--output",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame.gputrace"
+      ],
+      "captureCommandInvocations": 1,
+      "markerIsNotActualCaptureTickProof": true,
+      "capturePID": 7922,
+      "captureExit": 0,
+      "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame.gputrace",
+      "tracePresent": true,
+      "status": "CAPTURED"
+    },
+    "status": "CAPTURED",
+    "skip": {
+      "pid": 7809,
+      "layerBoundaryID": 12,
+      "command": [
+        "/usr/bin/gpucapture",
+        "start",
+        "--pid",
+        "7809",
+        "--boundary",
+        "12",
+        "--count",
+        "1",
+        "--output",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+      ],
+      "captureCommandInvocations": 1,
+      "markerIsNotActualCaptureTickProof": true,
+      "capturePID": 7923,
+      "captureExit": 0,
+      "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace",
+      "tracePresent": true,
+      "status": "CAPTURED"
+    },
+    "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame.gputrace",
+    "skipTrace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+  },
+  "rawLogExcerpts": {
+    "infolog.txt": [
+      "[t=00:01:12.856886][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401",
+      "[t=00:01:15.183195][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401",
+      "[t=00:01:15.183237][f=0001590] Decals GL4 skipdraw set to, true",
+      "[t=00:01:15.199447][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401",
+      "[t=00:01:17.271980][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401"
+    ],
+    "engine.log": [
+      "[t=00:01:12.856887][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401",
+      "[t=00:01:15.183196][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401",
+      "[t=00:01:15.183238][f=0001590] Decals GL4 skipdraw set to, true",
+      "[t=00:01:15.199448][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401",
+      "[t=00:01:17.271995][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401"
+    ]
+  },
+  "cpuWitnesses": {
+    "framepair-before.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 4930,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "862e8d7f6be22a9b6ae84d56305f73a6a1314d5746152b580bce56dd303cf11d"
+    },
+    "framepair-after.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 4972,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "bc50ae4924d7a45b1e82288cb0697a1153876eedb6f826edb33857034018bb05"
+    },
+    "framepair-skip-before.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 4973,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "2d2d3994aa7cecdf02b6c8a67c8b7d8496dde1fe3b76261e7cd4eb3d8545951e"
+    },
+    "framepair-skip-after.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 5017,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "53008408154bf4134ee718645af85e20c377ac5ce677baeeff86fb8e11e291e5"
+    }
+  },
+  "cpuWitnessesEqualExceptDrawCounter": true,
+  "inspection": {
+    "normal": {
+      "session": "11",
+      "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame.gputrace",
+      "openLog": "Session 11 created.\ngpudebug -s 11 -c <command> to send commands.\ngpudebug> ",
+      "statusLog": [
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 54 encoders, 734 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 54 encoders, 734 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "ready"
+          },
+          "summary": "1 command buffers, 54 encoders, 734 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame.gputrace"
+        }
+      ],
+      "polls": 3,
+      "firstToLastPollSeconds": 1.247,
+      "finalState": "ready",
+      "closed": true
+    },
+    "skip": {
+      "session": "14",
+      "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace",
+      "openLog": "Session 14 created.\n1 other session active.\ngpudebug -s 14 -c <command> to send commands.\ngpudebug> ",
+      "statusLog": [
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        },
+        {
+          "device": "Apple M4 Pro",
+          "profileState": 0,
+          "replayer": {
+            "state": "loading"
+          },
+          "summary": "1 command buffers, 58 encoders, 742 draw calls, 1 dispatches",
+          "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/runs/R03/frame-skip.gputrace"
+        }
+      ],
+      "polls": 24,
+      "firstToLastPollSeconds": 14.316,
+      "finalState": "loading",
+      "closed": true
+    }
+  },
+  "traceManifests": {
+    "normal": {
+      "manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/TRACE-MANIFEST-NORMAL.json",
+      "sha256": "bbc97b15cc5a68176ea71c9989d8d0fccf0656f425a837b7ff8bbe935211e189",
+      "files": 1215,
+      "bytes": 2773421277
+    },
+    "skip": {
+      "manifest": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/TRACE-MANIFEST-SKIP.json",
+      "sha256": "503ff14d59095c344c07cea27525c8dc00d47f171a8e1b4507739557b84badb0",
+      "files": 1220,
+      "bytes": 2744849275
+    }
+  },
+  "rawLocalFileHashes": {
+    "infolog.txt": "89271c837c2c3d63ed27a1bedb9616b284141090fd94b4fa1bad44739c5d2e06",
+    "engine.log": "a319f5fb3214b0f354c5754ef9310c9fd9d5426ce61132e8bac9b98ea8dbec05",
+    "frame.log": "11ec8b7e11ccc9278661c6f4569de6302b2ccb4cba12c11249f85cf24506743b",
+    "frame-skip.log": "f24d33667597a3e4decbc67761f7cb5f143b8bda35ff8fdb2c83aac32223690d",
+    "GPU-CAPTURE.json": "8a58ee2c08bde168e1912b0f6e5e23f152929dfc3cb1dd179692f19672480d1a",
+    "GPU-CAPTURE-NORMAL.json": "4f2500ed3e0f41b0f18b9fe4b9f01123b3f6ccea625201737014012adbd23238",
+    "GPU-CAPTURE-SKIP.json": "15516f14fc31125f8cc554bca8c79d67cfc852cfb2edf5d680b2838d5e12fc8d",
+    "GAME-LAUNCH-CLAIM.json": "6e0f1908dc0045913fa9b3ff015f7f86a5734fd6208e73c28c8f84c5b4e22f1b",
+    "CHILD-MODE.json": "e6dd93f6eb65e3575e042cda12a2763fb7de4dfd4bf2f065ec24b6e5c2ac1dc5",
+    "CLEANUP.json": "a3c4bc31ac3cd5103cbb53628035be557143d4ce6c9eae886e9c6fddfea340c4",
+    "OWNER-CLOSED.json": "e89bb9e638b08f874b22804bcc29eb8c6cd18ba111101c1653da0a918b630706",
+    "framepair-before.txt": "862e8d7f6be22a9b6ae84d56305f73a6a1314d5746152b580bce56dd303cf11d",
+    "framepair-after.txt": "bc50ae4924d7a45b1e82288cb0697a1153876eedb6f826edb33857034018bb05",
+    "framepair-skip-before.txt": "2d2d3994aa7cecdf02b6c8a67c8b7d8496dde1fe3b76261e7cd4eb3d8545951e",
+    "framepair-skip-after.txt": "53008408154bf4134ee718645af85e20c377ac5ce677baeeff86fb8e11e291e5"
+  },
+  "childEnvironment": {
+    "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+    "pid": 7809,
+    "actual": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_SCREEN_TABLE_H5": null,
+      "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+      "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+      "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+      "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+      "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+      "BAR_METAL4_SHARED_CUS_PILOT": "0",
+      "BAR_METAL4_SEPIA_PATH": null,
+      "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+      "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+      "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+      "MTL_CAPTURE_ENABLED": "1"
+    },
+    "expected": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_SCREEN_TABLE_H5": null,
+      "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+      "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+      "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+      "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+      "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+      "BAR_METAL4_SHARED_CUS_PILOT": "0",
+      "BAR_METAL4_SEPIA_PATH": null,
+      "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+      "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+      "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+      "MTL_CAPTURE_ENABLED": "1"
+    },
+    "beforeCountedWindow": true
+  }
+}

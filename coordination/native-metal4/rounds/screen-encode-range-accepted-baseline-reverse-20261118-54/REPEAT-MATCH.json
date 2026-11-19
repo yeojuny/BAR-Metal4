@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "same_accepted_binary": true,
+  "current_order": [
+    "RANGE_ON",
+    "RANGE_OFF"
+  ],
+  "changed_setting": "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP"
+}

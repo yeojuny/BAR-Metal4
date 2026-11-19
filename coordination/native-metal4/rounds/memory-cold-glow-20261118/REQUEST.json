@@ -1,0 +1,29 @@
+{
+  "round_id": "memory-cold-glow-20261118",
+  "approval_message_id": "Sentinel_73b59f3bda748191aedaa40b1b61b703",
+  "source": "R88 signed native lineage, R85 compile db and actual R88 layered source",
+  "zip_sha256": "652343159d834da18d6f0b94432029ff6f8e7ffd68ccc1938c6ae948bb1ea199",
+  "memory_patch_sha256": "b5054e09f9a24c341dabbd5f8fdb59ba141b862ffeb8acee7d689f74162cdff1",
+  "previous_abba_sha256": "6fa4dc677d54d5b3e6be5f418bdbbf181cf80f6f0b4795955da2bbf4a762101d",
+  "prior_raw_frame_hashes_verified": 22,
+  "fixed_lifetime": "preserve 13 exact Seths input hashes; verify effective saved lifetime in live smoke",
+  "smoke": [
+    "SMOKE_MEM_OFF",
+    "SMOKE_MEM_ON"
+  ],
+  "abba": [
+    "A1_OFF",
+    "B1_ON",
+    "B2_ON",
+    "A2_OFF"
+  ],
+  "budget": {
+    "smoke_games": 2,
+    "timed_games": 4,
+    "games": 6,
+    "game_retries": 0,
+    "engine_configures": 0,
+    "gpu_profiles": 0
+  },
+  "scope": "Local memory reporting on Apple, native Lua and optional HUD smoke, then cold-glow alone on new baseline. No product defaults or release changes."
+}

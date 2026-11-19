@@ -1,0 +1,295 @@
+{
+  "mapping": {
+    "command_ordinal": 46,
+    "command_node": "re46",
+    "label": "MTL4RenderCommandEncoder 38",
+    "type": "render",
+    "performance_node": "re37",
+    "timeline_node": "re37",
+    "API_begin": 10279,
+    "API_end": 10303,
+    "render_draw_count": 1,
+    "command_tree_render_draw_count": 1,
+    "selected": true,
+    "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+  },
+  "raw_API_rows": [
+    {
+      "actions": "info",
+      "name": "api10279",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4CommandBuffer renderCommandEncoderWithDescriptor:]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10280",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10281",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10282",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10283",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10284",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10285",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10286",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10287",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10288",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10289",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10290",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10291",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10292",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps65]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10293",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10294",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10295",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf92 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10296",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2829 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10297",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:255 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10298",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:254 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10299",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:11 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10300",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:11 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api10301",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:6 instanceCount:1 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10302",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10303",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder endEncoding]"
+        }
+      ]
+    }
+  ],
+  "attachments_load_store_resolve": "UNAVAILABLE: descriptor arguments omitted by saved API listing.",
+  "actual_resource_read_write_and_last_writer": "UNAVAILABLE beyond explicit copies/draw index buffers; argument table receiver unresolved and numeric texture IDs not mapped to trace objects."
+}

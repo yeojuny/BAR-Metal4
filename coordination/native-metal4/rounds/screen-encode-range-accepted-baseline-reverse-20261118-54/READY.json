@@ -1,0 +1,12 @@
+{
+  "round_id": "screen-encode-range-accepted-baseline-reverse-20261118-54",
+  "attempt_id": "encode-range-accepted-baseline-on-off-02",
+  "status": "READY_SAME_ADOPTED_BINARY_REVERSE_PAIR",
+  "source_manifest_sha256": "182b599f4b4f983a03c0b8d50733915d04c2f89657897ed5ab461126e7390620",
+  "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+  "order": [
+    "RANGE_ON",
+    "RANGE_OFF"
+  ],
+  "games_started": 0
+}

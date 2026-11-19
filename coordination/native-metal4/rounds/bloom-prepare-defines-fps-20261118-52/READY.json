@@ -1,0 +1,14 @@
+{
+  "round_id": "bloom-prepare-defines-fps-20261118-52",
+  "attempt_id": "bloom-prepare-defines-off-on-01",
+  "status": "READY_BLOOM_DEFINE_REUSE",
+  "source_manifest_sha256": "d1146946b94f9655b26f96b95bc04887358e073387839446213ac3440153b250",
+  "modified_files": 1,
+  "order": [
+    "DEFINES_OFF",
+    "DEFINES_ON"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

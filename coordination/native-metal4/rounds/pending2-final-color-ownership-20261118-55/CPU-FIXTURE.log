@@ -1,0 +1,3 @@
+Idle pool:1000 alternating frames stabilize at2 cached allocations;3000 factory/retention failures;copied/continuation pins,fallback,compatibility,clear passed
+Native backing/descriptor pin and continuation structural checks PASS; no Objective-C++ execution
+Cropped terrain depth exact pair ownership/native selection structural PASS

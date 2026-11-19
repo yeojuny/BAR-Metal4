@@ -1,0 +1,20 @@
+{
+  "label": "BUILD",
+  "argv": [
+    "cmake",
+    "--build",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/build",
+    "--target",
+    "spring-metal4-scene",
+    "--",
+    "-j",
+    "8"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-17T22:59:14.934232+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38",
+  "pid": 28707,
+  "exit": 0,
+  "ended_at_utc": "2026-11-17T23:02:54.680855+00:00",
+  "stopped_by_runner": false
+}

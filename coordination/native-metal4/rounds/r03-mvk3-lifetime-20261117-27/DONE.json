@@ -1,0 +1,90 @@
+{
+  "round_id": "r03-mvk3-lifetime-20261117-27",
+  "attempt_id": "lifetime-raw-two-arm-01",
+  "status": "DONE",
+  "diagnosticOutcome": "PARTIAL_FIRST_FRAME_SCALARS_DIFFER_MVK3_SIM1590_UNKNOWN",
+  "pairedProtocolPassed": false,
+  "reservedStateRevision": 105,
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "sourceCommit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "sourceManifestSHA256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "candidateManifestSHA256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+  "budget": {
+    "games_max": 2,
+    "games_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "builds": 0
+  },
+  "counts": {
+    "stages": 1,
+    "games": 2,
+    "R03": 1,
+    "MVK3": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "builds": 0,
+    "FPS_AB": 0,
+    "engineSourceEdits": 0,
+    "RNGOrLifetimeOverrides": 0
+  },
+  "observedRawRecords": {
+    "R03": [
+      {
+        "status": "OBSERVED",
+        "phase": "FIRST",
+        "simulation": "0",
+        "gpuMemoryRaw": "number:0.000000000000000",
+        "shortNameRaw": "stringhex:4243323133",
+        "lifeTimeMult": "number:0.699999988079071",
+        "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+      },
+      {
+        "status": "OBSERVED",
+        "phase": "SIM1590",
+        "simulation": "1590",
+        "gpuMemoryRaw": "number:0.000000000000000",
+        "shortNameRaw": "stringhex:4243323133",
+        "lifeTimeMult": "number:0.699999988079071",
+        "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+      }
+    ],
+    "MVK3": [
+      {
+        "status": "OBSERVED",
+        "phase": "FIRST",
+        "simulation": "0",
+        "gpuMemoryRaw": "number:18622720.000000000000000",
+        "shortNameRaw": "stringhex:4243323133",
+        "lifeTimeMult": "number:3.000000000000000",
+        "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+      }
+    ]
+  },
+  "R03": "PASS_TWO_RAW_RECORDS",
+  "MVK3": "FAIL_WARMUP_PACING_FRAME180",
+  "mvk3Sim1590": "UNKNOWN",
+  "failureLines": [
+    "[t=00:00:25.782766][f=0000180] [WarmupPacing] event=FAILED_PAUSE_REQUEST_STATE simulation=180 wall_seconds=8.736000061 state=failed"
+  ],
+  "matchedGpuWorkload": "UNKNOWN",
+  "fps": "NOT_MEASURED",
+  "causality": "NOT_ESTABLISHED",
+  "protectedHashes": "PASS",
+  "cleanupComplete": true,
+  "bar": "PAUSED",
+  "userCaffeinateAfter": "caffeinate -d",
+  "retryAuthorized": false,
+  "localEvidenceRoot": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-lifetime-20261117-27",
+  "closedAtUTC": "2026-11-17T20:19:05.831443+00:00",
+  "artifactSHA256": {
+    "REPORT.md": "db1535fe0f5d6554d789e4f24123503d373175546bfea4f48885bf4c95d3263f",
+    "RAW-OBSERVATIONS.txt": "c13e5ebe33b4f6c6fdd7aa3d76385bb476e68342b15105993d0299f248774f52",
+    "RUNTIME-EVIDENCE.json": "b6398190d080fe48d60475c99fd544b30b00fa5d85afa95a14e532262726ad07",
+    "CLEANUP-EVIDENCE.json": "fa68f5b10806a8ac4ee872b4af654d857ae5248df82cbca04a447157719d661d",
+    "PROTECTED-HASHES.json": "af8839c06a674fc1b8205cf00a6c10839122f178e617cfdd3c17ae3d146733d4",
+    "STAGE-VERIFICATION.json": "64a52a483e558e7aff1634aad4fb3352bdf9456a0ba81b19cba0d18387477e07"
+  }
+}

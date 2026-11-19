@@ -1,0 +1,21 @@
+{
+  "status": "READY_SAME_BINARY_FLAG_PAIR",
+  "round_id": "game-decal-indexed-fps-20261117-37",
+  "attempt_id": "indexed-clean-off-on-01",
+  "owner": "HQ3",
+  "binary_sha256": {
+    "INDEXED_OFF": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+    "INDEXED_ON": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b"
+  },
+  "flags": {
+    "name": "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY",
+    "INDEXED_OFF": "0",
+    "INDEXED_ON": "1"
+  },
+  "matched_scene_inputs": 13,
+  "runtime_data_files_each": 142,
+  "baseline_previous_revision": 126,
+  "games_started": 0,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED"
+}

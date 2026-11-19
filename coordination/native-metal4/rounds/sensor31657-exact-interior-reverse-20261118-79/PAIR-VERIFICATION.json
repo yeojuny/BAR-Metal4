@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "verified_r78_r79_arms": 4,
+  "matching_scene_pins": 13,
+  "matching_non_system_library_paths": 22,
+  "matched_simulation_units_camera_speed_bins": 40,
+  "simulation_bins_sha256": "8374ae61643eb78159187e6b6be3b4295e0b9108f348ca98d85d4c4869bb17c6",
+  "event_signature_sha256": "cb247aa21ebe2cfa8ebef0e7b4de707020b260a5a194b991c4711e9c9d29611c",
+  "archive_checksums_match": true,
+  "pathfinder_checksum_match": true,
+  "game_seed": 154658555,
+  "benchmark_seed": 7654321,
+  "units_created": 600,
+  "units_destroyed": 433,
+  "archived_events": [
+    [
+      "BattleVisibility",
+      "frame=240 spectating=true fullview=true fullselect=false visible_units=2"
+    ],
+    [
+      "BattleBenchmark",
+      "command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400"
+    ],
+    [
+      "BattleVisibility",
+      "frame=540 spectating=true fullview=true fullselect=false visible_units=168"
+    ],
+    [
+      "BattleBenchmark",
+      "stop_after_count=1 frame=1740"
+    ]
+  ],
+  "time_bins_compared": 40,
+  "bins_faster_on": 39,
+  "bins_equal": 0,
+  "minimum_bin_fps_difference": -0.29083251999999504,
+  "maximum_bin_fps_difference": 3.740745543999992,
+  "fixed_sensorlos": "ON",
+  "only_actual_child_difference": "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR",
+  "per_tick_state_checksum_measured": false
+}

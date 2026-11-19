@@ -1,0 +1,328 @@
+{
+  "R03": {
+    "diagnosticStatus": "PASS_TWO_RAW_RECORDS",
+    "gameLaunchClaim": {
+      "status": "ONE_ARM_LAUNCH_CONSUMED",
+      "epochNs": 1794946079256050000,
+      "arm": "R03"
+    },
+    "rawFrom": "infolog.txt",
+    "rawObservationLines": [
+      "[t=00:00:16.894472][f=0000000] [DecalLifetime] status=OBSERVED phase=FIRST simulation=0 gpuMemoryRaw=number:0.000000000000000 shortNameRaw=stringhex:4243323133 lifeTimeMult=number:0.699999988079071 scope=POST_INITIALIZE_LIFETIME_ONLY",
+      "[t=00:01:13.961522][f=0001590] [DecalLifetime] status=OBSERVED phase=SIM1590 simulation=1590 gpuMemoryRaw=number:0.000000000000000 shortNameRaw=stringhex:4243323133 lifeTimeMult=number:0.699999988079071 scope=POST_INITIALIZE_LIFETIME_ONLY"
+    ],
+    "failureLines": [],
+    "recordsFromRawLog": [
+      {
+        "status": "OBSERVED",
+        "phase": "FIRST",
+        "simulation": "0",
+        "gpuMemoryRaw": "number:0.000000000000000",
+        "shortNameRaw": "stringhex:4243323133",
+        "lifeTimeMult": "number:0.699999988079071",
+        "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+      },
+      {
+        "status": "OBSERVED",
+        "phase": "SIM1590",
+        "simulation": "1590",
+        "gpuMemoryRaw": "number:0.000000000000000",
+        "shortNameRaw": "stringhex:4243323133",
+        "lifeTimeMult": "number:0.699999988079071",
+        "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+      }
+    ],
+    "runnerResult": {
+      "status": "PASS_TWO_RAW_RECORDS",
+      "arm": "R03",
+      "records": [
+        {
+          "status": "OBSERVED",
+          "phase": "FIRST",
+          "simulation": "0",
+          "gpuMemoryRaw": "number:0.000000000000000",
+          "shortNameRaw": "stringhex:4243323133",
+          "lifeTimeMult": "number:0.699999988079071",
+          "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+        },
+        {
+          "status": "OBSERVED",
+          "phase": "SIM1590",
+          "simulation": "1590",
+          "gpuMemoryRaw": "number:0.000000000000000",
+          "shortNameRaw": "stringhex:4243323133",
+          "lifeTimeMult": "number:0.699999988079071",
+          "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+        }
+      ],
+      "diagnosticOnly": true,
+      "FPSAccepted": false,
+      "capturedGPUTickProof": false,
+      "errors": [],
+      "cleanupComplete": true,
+      "budget": {
+        "games_max": 2,
+        "games_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0
+      },
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0,
+      "builds": 0
+    },
+    "childEnvironment": {
+      "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+      "pid": 6026,
+      "actual": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SCREEN_TABLE_H5": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "MTL_CAPTURE_ENABLED": "0"
+      },
+      "expected": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SCREEN_TABLE_H5": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "MTL_CAPTURE_ENABLED": "0"
+      },
+      "beforeCountedWindow": true
+    },
+    "mappedMVK3Stack": null,
+    "evidenceFileSHA256": {
+      "AUDIO-ROUTE.json": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "AWAKE-RELEASED.json": "1887dd3fb94bcab6a97962893eaff1c4ce239682efafa5e6f88b48c9df439338",
+      "AWAKE.json": "9df2f7293d16cea97744448b303299c06dfcfd5712fbfddf2b2c7a5fd835fdc8",
+      "CHILD-MODE.json": "d65d7c597d78449b4432f27edc729b12cdf8b5293590e6b05ff48040105aff1f",
+      "CLEANUP.json": "20f520218e48fa21bf4049b58d249258c0e3000089055825c61d2fe3cc568533",
+      "GAME-LAUNCH-CLAIM.json": "96d63121ae2fd5937864ab25a7bb5fd8dcb54a1009434794fbd6b2b1781b8c0f",
+      "LAUNCH.json": "f4095eb336743870c61fd98d37bd6ac53641b8a2cf40bc7be094e06e942c2530",
+      "LIFECYCLE.json": "1caac067816465bb6629fb71fe88c54513c76fd239af554861c402c27e6b86f8",
+      "LIFETIME-RESULT.json": "cae2ad0d08b3bcc92c177a4f6c1d392d62f8823a04eafe362614c2952b03598c",
+      "OWNED.json": "1ba40738fdc0fdb1394439a5804049896e479c80052d3f56980789da46115b7c",
+      "OWNER-CLOSED.json": "6e77eb71b5f09ee63779c58079ad544e107c1e998e03bc9b12c6fc3dae2312a9",
+      "PREFLIGHT-OBSERVED-FIRST.json": "4779e4b7f9764d8241bdb63c19912304a33d34f6b9bf84daab897c858e81c394",
+      "PREFLIGHT-OBSERVED-LAST.json": "fdfa500beea711ed6b003715df5014e2c10c3234f9cb018cf616307c5be1aabc",
+      "PREFLIGHT.json": "f7c40641ec61f3d20112a9f1c0b6e52b0e4c6345d31db2f51a64969645be742f",
+      "RESULT.json": "cae2ad0d08b3bcc92c177a4f6c1d392d62f8823a04eafe362614c2952b03598c",
+      "WINDOW.json": "ae7eaa13ee79779b0cc10abc775e2f2a1be1ab6c292051bf01cbd84252a910bf",
+      "actual-start-script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "engine.log": "387c15b3bcda780dbf1d3f2e1c8494d1faa17da4aa94b4f5d5cf62e6fcfa5da7",
+      "infolog.txt": "98571c78b16d46143ff618bea93359075552fd122d25e90de5b2b5131f36258c"
+    }
+  },
+  "MVK3": {
+    "diagnosticStatus": "FAIL",
+    "gameLaunchClaim": {
+      "status": "ONE_ARM_LAUNCH_CONSUMED",
+      "epochNs": 1794946209289679000,
+      "arm": "MVK3"
+    },
+    "rawFrom": "infolog.txt",
+    "rawObservationLines": [
+      "[t=00:00:17.044751][f=0000000] [DecalLifetime] status=OBSERVED phase=FIRST simulation=0 gpuMemoryRaw=number:18622720.000000000000000 shortNameRaw=stringhex:4243323133 lifeTimeMult=number:3.000000000000000 scope=POST_INITIALIZE_LIFETIME_ONLY"
+    ],
+    "failureLines": [
+      "[t=00:00:25.782766][f=0000180] [WarmupPacing] event=FAILED_PAUSE_REQUEST_STATE simulation=180 wall_seconds=8.736000061 state=failed"
+    ],
+    "recordsFromRawLog": [
+      {
+        "status": "OBSERVED",
+        "phase": "FIRST",
+        "simulation": "0",
+        "gpuMemoryRaw": "number:18622720.000000000000000",
+        "shortNameRaw": "stringhex:4243323133",
+        "lifeTimeMult": "number:3.000000000000000",
+        "scope": "POST_INITIALIZE_LIFETIME_ONLY"
+      }
+    ],
+    "runnerResult": {
+      "status": "FAIL",
+      "arm": "MVK3",
+      "FPSAccepted": false,
+      "records": [],
+      "errors": [
+        "Traceback (most recent call last):\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-lifetime-integration-20261117-02/staged/runner.py\", line 176, in execute_arm\n    base.base.harness.launch(root / 'clean_paced/preparation', arm, prepared[arm], 1)\n    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/campaign.py\", line 40, in launch\n    assert sha(packdir/'SOURCE-MANIFEST.json')==pack['sourceManifestSHA256']==receipt['sourceManifestSHA256']\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/pathlib/__init__.py\", line 853, in stat\n    return os.stat(self, follow_symlinks=follow_symlinks)\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-lifetime-20261117-27/clean_paced/preparation/private/MVK3/state/data/LuaUI/Config/budget192.start'\n",
+        "Traceback (most recent call last):\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-lifetime-integration-20261117-02/staged/runner.py\", line 182, in execute_arm\n    result = diagnostic_parse(out, data, arm, 'clean_paced')\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-lifetime-integration-20261117-02/staged/runner.py\", line 145, in diagnostic_parse\n    records = parse_records((Path(out) / 'infolog.txt').read_text())\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/decal-lifetime-integration-20261117-02/staged/runner.py\", line 122, in parse_records\n    assert not re.search(r'Error in (?:Initialize|GameFrame|Update)\\(\\)|\\[WarmupPacing\\] event=FAILED_', text)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      ],
+      "cleanupComplete": true,
+      "budget": {
+        "games_max": 2,
+        "games_per_arm": 1,
+        "captures": 0,
+        "profiles": 0,
+        "retries": 0,
+        "builds": 0
+      },
+      "captures": 0,
+      "profiles": 0,
+      "retries": 0,
+      "builds": 0
+    },
+    "childEnvironment": {
+      "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+      "pid": 6177,
+      "actual": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": null,
+        "BAR_NATIVE_BEGIN_READY_PILOT": null,
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": null,
+        "BAR_NATIVE_FRAME_OVERLAP": null,
+        "BAR_NATIVE_CAPTURE_OVERLAP": null,
+        "BAR_NATIVE_PREPARE_OVERLAP": null,
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": null,
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": null,
+        "BAR_NATIVE_FINAL_COLOR_STAGE": null,
+        "BAR_NATIVE_SCREEN_STATE_ELISION": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+        "BAR_NATIVE_FRAME_TRACE": null,
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": null,
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": null,
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": null,
+        "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": null,
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": null,
+        "BAR_METAL4_SHARED_CUS_PILOT": null,
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": null,
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": null,
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": null,
+        "MTL_CAPTURE_ENABLED": "0"
+      },
+      "expected": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": null,
+        "BAR_NATIVE_BEGIN_READY_PILOT": null,
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": null,
+        "BAR_NATIVE_FRAME_OVERLAP": null,
+        "BAR_NATIVE_CAPTURE_OVERLAP": null,
+        "BAR_NATIVE_PREPARE_OVERLAP": null,
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": null,
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": null,
+        "BAR_NATIVE_FINAL_COLOR_STAGE": null,
+        "BAR_NATIVE_SCREEN_STATE_ELISION": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+        "BAR_NATIVE_FRAME_TRACE": null,
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": null,
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": null,
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": null,
+        "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": null,
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": null,
+        "BAR_METAL4_SHARED_CUS_PILOT": null,
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": null,
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": null,
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": null,
+        "MTL_CAPTURE_ENABLED": "0"
+      },
+      "beforeCountedWindow": true
+    },
+    "mappedMVK3Stack": {
+      "status": "PASS_PRECOUNT_MVK3_STACK",
+      "pid": 6177,
+      "mappedRuntimeLibraries": [
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libEGL.1.dylib",
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libgallium-26.3.0-devel.dylib",
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/vulkan-loader/lib/libvulkan.1.4.365.dylib",
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/moltenvk-pr2746/lib/libMoltenVK.1.4.3.dylib"
+      ],
+      "exactLibrariesSHA256": {
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libEGL.1.dylib": "62adb20871cf6985bde4b20c78ffabd37a590fa9023cf362f87ce16739a3f533",
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libgallium-26.3.0-devel.dylib": "ca4f3ddd7a0bf20c7f39636ea58d04ba42bc8b9170f871eac62a53c068ad9c30",
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/vulkan-loader/lib/libvulkan.1.4.365.dylib": "b2b4bb1c9db72ff8639958e3137b308c67c15fe35cb846ffd5b1f7703cc0f7cd",
+        "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/moltenvk-pr2746/lib/libMoltenVK.1.4.3.dylib": "abf4fb1bad831b6295d90dd5a9ffa6af8b25308e99c8724153716e480a0275a2"
+      },
+      "binary": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring",
+      "duringCountedWindow": false,
+      "queries": 1
+    },
+    "evidenceFileSHA256": {
+      "AWAKE-RELEASED.json": "3b489a3beb4c0a1525b41d5feae738dbc0a02f40d1b2e390a05d667a2dc3e81a",
+      "AWAKE.json": "dd62e088f1a641c00b1a5ac8eef2832453fa1b591b30622c4d245216ca87ab30",
+      "BACKEND-LOADED.json": "d21ac53e1e9634ffbe4b16352bda9c7153b81d8dc9c69dcb4627124706c89289",
+      "CHILD-MODE.json": "1f2fa062a6a7563a265eef30f3a196e4ab3f480330505ca2c4da1132d87ba6c3",
+      "CLEANUP.json": "c713a6e904cba50fd5c4db3c00b15ed3fe21f5bdb6c166e331ce0b93942157ca",
+      "GAME-LAUNCH-CLAIM.json": "28194842a505fe2e4963a2846b9d1a648278613dbe9baefbc64b6d80398d4b1b",
+      "LAUNCH.json": "df739b0fed4120b7fa27c37026d1ed6e7f4d8d8c7b6a4b6f827f8f8ba6dc5ee6",
+      "LIFETIME-RESULT.json": "027d8fe5643396c1e41ccff287fa5dd93358f82f524e79581d9063ac3a88f4a0",
+      "OWNED.json": "ab16f744d714fd1af6f49d2b21337666474ff22b8d770f8194eb4593595e1a2c",
+      "OWNER-CLOSED.json": "9e8463ace7b8f82d1cfe64941432e39ac007c380ed4b8fbfa2e778202f33dcdf",
+      "PREFLIGHT-OBSERVED-FIRST.json": "5573a6da23e83bebb99ba3edb702fa3780cd07a5b130d478c1b5e9a0d18048d9",
+      "PREFLIGHT-OBSERVED-LAST.json": "fe8955f352d69b35e2582cbf3e4011182aad720ac692d2c40abf3efa6cf9296e",
+      "PREFLIGHT.json": "1b6c4825208f99ad4b809b641cb4146230c6f5503c154b8e2b8f4a6de6bea9e4",
+      "RESULT.json": "027d8fe5643396c1e41ccff287fa5dd93358f82f524e79581d9063ac3a88f4a0",
+      "actual-start-script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "engine.log": "a7c6d2f1f1d2417ac0742e97df8e2f763d319dd51843318dd61a5b12ad239cea",
+      "infolog.txt": "32b67a20065d1993a89e458b104c1bb5ca6f09b1a0943e7a1a40d964c7ef84a3"
+    }
+  }
+}

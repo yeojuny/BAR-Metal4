@@ -1,0 +1,47 @@
+{
+  "round_id": "r02-existing-trace-export-20261117-20",
+  "attempt_id": "r02-existing-trace-export-01",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "result": "PARTIAL_EXPORT_COMPLETE_UNAVAILABLE_FIELDS_EXPLICIT",
+  "scope": "EXISTING_CAPTURE_READ_ONLY_INSPECTION_AND_EXPORT_NO_REPLAY",
+  "encoder_nodes": 52,
+  "selected_encoders": 14,
+  "render_draw_checks": 42,
+  "render_draw_mismatches": 0,
+  "explicit_texture_copy_commands": 72,
+  "availability": {
+    "encoder_ID_map": "EXPORTED52, selected14; exact label join and42 draw checks",
+    "selected_API_slices": "EXPORTED14",
+    "stage_bounds": "EXPORTED prior saved records only, not runtime",
+    "individual_active_stage_intervals": "UNAVAILABLE; prior no-embed profile session closed, only bounds saved",
+    "render_attachments_load_store_resolve": "UNAVAILABLE; saved creation arguments omitted",
+    "complete_resource_read_write_last_writer": "UNAVAILABLE; copy/index command semantics and raw bindings only",
+    "dss12_dss15_full_state": "UNAVAILABLE; binding and draw use exported",
+    "tex99_to_tex2_copy": "EXPORTED api10982 ce51; upstream attachment writer unknown",
+    "shader_instruction_register_counters": "UNAVAILABLE in saved exports; no new profiling",
+    "new_inspection_sessions": 0,
+    "session_decision": "gpudebug help exposes replay device/session but no documented no-GPU/read-only load option; prior open status showed replayer loading. No -t open issued under zero execution rule. Does not claim opening necessarily submits GPU; guarantee unavailable."
+  },
+  "trace_unchanged": true,
+  "original_saved_exports_unchanged": true,
+  "cleanup_complete": true,
+  "budget_actual": {
+    "game": 0,
+    "build": 0,
+    "capture": 0,
+    "GPU_execution": 0,
+    "replay": 0,
+    "profile": 0,
+    "source_edits": 0,
+    "new_inspection_sessions": 0
+  },
+  "FPS_claim": null,
+  "overlap_duration_claim": null,
+  "separate_audit": {
+    "thread_id": "01a1e87e-0748-7293-9316-f5c1bfed92bc",
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra",
+    "status": "STARTED_READ_ONLY",
+    "execution_authority": false
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "status": "COMPLETE_SENSORLOS_REVERSE_ON_OFF_REUSED_BINARY",
+  "round_id": "sensorlos-exact-interior-reverse-20261118-77",
+  "attempt_id": "sensorlos-exact-interior-on-off-01",
+  "binary_round": "sensorlos-exact-interior-fps-20261118-76",
+  "binary_sha256": "d9dd350caa35ce8f1d5a9894cc3b28cef60c686a7818fbba68915cb60800f450",
+  "patch_sha256": "12844f4263c107d190161d9e585540f2fc3e45814a4d015f8ede147a28bad1b1",
+  "execution_order": [
+    "ON",
+    "OFF"
+  ],
+  "scene": "Seths Ravine Remake 1.3.1",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "cap": 2,
+  "aa": 0,
+  "prejoin": "OFF",
+  "cpu_read_mode": 0,
+  "matching_scene_inputs": 13,
+  "counts": {
+    "configure": 0,
+    "engine_build": 0,
+    "parity_helper_compile": 0,
+    "parity_helper_gpu_runs": 0,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "all_raw_intervals_preserved": true,
+  "outliers_removed": 0,
+  "simulation_verification": {
+    "status": "PASS",
+    "verified_r76_and_r77_arms": 4,
+    "matching_scene_inputs": 13,
+    "matching_library_paths": 22,
+    "matched_simulation_bins": 40,
+    "simulation_units_camera_speed_bins_sha256": "8374ae61643eb78159187e6b6be3b4295e0b9108f348ca98d85d4c4869bb17c6",
+    "benchmark_event_signature_sha256": "cb247aa21ebe2cfa8ebef0e7b4de707020b260a5a194b991c4711e9c9d29611c",
+    "archive_checksums_match": true,
+    "pathfinder_checksum_match": true,
+    "game_seed": 154658555,
+    "benchmark_seed": 7654321,
+    "official_units_created": 600,
+    "official_units_destroyed": 433,
+    "archived_event_rows": [
+      [
+        "BattleVisibility",
+        "frame=240 spectating=true fullview=true fullselect=false visible_units=2"
+      ],
+      [
+        "BattleBenchmark",
+        "command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400"
+      ],
+      [
+        "BattleVisibility",
+        "frame=540 spectating=true fullview=true fullselect=false visible_units=168"
+      ],
+      [
+        "BattleBenchmark",
+        "stop_after_count=1 frame=1740"
+      ]
+    ],
+    "native_single_sample_and_mrt_verified": true,
+    "time_bins_faster_on": 40,
+    "time_bins_compared": 40,
+    "minimum_bin_on_minus_off_fps": 9.160392761999994,
+    "maximum_bin_on_minus_off_fps": 14.112899779999992,
+    "only_actual_child_delta": "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR",
+    "per_tick_simulation_checksum_recorded": false
+  },
+  "both_normal_exit": true,
+  "awake_released": true,
+  "display_locked_asleep_in_both": true,
+  "scanout_or_input_latency_verified": false,
+  "average_fps_change_percent": 16.97499641018656,
+  "low_1_percent_change_percent": 11.964794046428363,
+  "forward_pair_average_fps_change_percent": 17.469130126260012,
+  "mean_fps_gain_direction_reproduced": true,
+  "current_counted_witness_both": false,
+  "fragment_shortcut_count_measured": false,
+  "existing_metal_pixel_parity_cases": 12065,
+  "existing_exact_scene_counted_outline_witness_round": "pending2-ticket-timeline-20261118-69",
+  "arms": [
+    {
+      "arm": "R77_ON",
+      "flag": "1",
+      "average_fps": 77.50949922404294,
+      "low_1_percent_fps": 54.96453705799514,
+      "p95_ms": 15,
+      "p99_ms": 16.000001,
+      "maximum_frame_ms": 37.999999,
+      "intervals": 3100,
+      "draws": 3101,
+      "seconds": 40.00799942,
+      "bins": 40,
+      "raw_sha256": "8305887311619bd448b377ab3748f27de0ea757720530f8a5c077d4d520a855f",
+      "actual_two_pending": 3098,
+      "joined": 3100,
+      "unclassified": 0,
+      "normal_exit": true,
+      "process_group_gone": true,
+      "present_request_observed": true,
+      "outline_evidence": {
+        "emitted_any": [
+          450,
+          450,
+          450,
+          451
+        ],
+        "emitted_counted": [],
+        "outline_route_seen": true
+      },
+      "over_16_667_ms": 28,
+      "over_33_333_ms": 1
+    },
+    {
+      "arm": "R77_OFF",
+      "flag": "0",
+      "average_fps": 66.26159572789965,
+      "low_1_percent_fps": 49.09091069752071,
+      "p95_ms": 17.000001,
+      "p99_ms": 18.999999,
+      "maximum_frame_ms": 37,
+      "intervals": 2649,
+      "draws": 2650,
+      "seconds": 39.993000031,
+      "bins": 40,
+      "raw_sha256": "86634eda2a515e498142c9342a2b30b7005588cc0f4c4e45aa93625d4d0b4657",
+      "actual_two_pending": 2648,
+      "joined": 2649,
+      "unclassified": 0,
+      "normal_exit": true,
+      "process_group_gone": true,
+      "present_request_observed": true,
+      "outline_evidence": {
+        "emitted_any": [
+          465,
+          465,
+          465,
+          466
+        ],
+        "emitted_counted": [],
+        "outline_route_seen": true
+      },
+      "over_16_667_ms": 418,
+      "over_33_333_ms": 1
+    }
+  ],
+  "defaults_changed": false,
+  "default_cap": 1,
+  "default_switch": "OFF",
+  "decision": "REPRODUCED_WHOLE_GAME_FPS_GAIN_WITH_SAMPLED_ACTIVATION_LIMIT",
+  "finished_at_utc": "2026-11-18T12:41:03.934078+00:00"
+}

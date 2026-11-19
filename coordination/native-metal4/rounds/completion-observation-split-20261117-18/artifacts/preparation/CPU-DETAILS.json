@@ -1,0 +1,17 @@
+{
+  "script": "docs/research/completion-observation-split-20261117/candidate/test_source_and_contract.py",
+  "script_sha256": "0029e5f7485a9c0808bc2fcd1c310f1d310c6b56fd68349f275b3bd3e31e764e",
+  "invocations": 1,
+  "compiler_flags": [
+    "c++",
+    "-std=c++17",
+    "-Wall",
+    "-Wextra",
+    "-Werror"
+  ],
+  "receipt_identity_checks": 9,
+  "model_cases": 36,
+  "temporary_executable_removed_by_fixed_script": true,
+  "ASAN_UBSAN_not_in_this_fixed_script": true,
+  "scope": "Portable CPU receipt and Python failure model; not live GPU failure test."
+}

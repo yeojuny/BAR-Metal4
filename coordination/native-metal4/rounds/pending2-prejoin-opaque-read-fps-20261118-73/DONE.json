@@ -1,0 +1,26 @@
+{
+  "status": "CLOSED_STAGING_FAILED_GAMES_NOT_STARTED",
+  "round_id": "pending2-prejoin-opaque-read-fps-20261118-73",
+  "attempt_id": "pending2-prejoin-opaque-read-off-on-01",
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "configure_status": 0,
+  "build_status": 0,
+  "staging_exit_code": 1,
+  "staging_error": "The runtime destination parent directory was missing before the binary copy.",
+  "binary_sha256": "d3f24f7cd1e7ad405e032d2278b38e7a4a15f67124da70f980e9cfdc18db5a0f",
+  "patch_sha256": "3205408ed2aa3153acc5368ecbd006553896492e52ad7f56e1bcb5677e2d40b8",
+  "cap": 2,
+  "cpu_read_mode": 0,
+  "performance_result": null,
+  "default_changed": false,
+  "source_changed_after_build": false,
+  "followup_round": "pending2-prejoin-opaque-read-fps-20261118-74",
+  "closed_at_utc": "2026-11-18T12:04:41.425Z"
+}

@@ -1,0 +1,33 @@
+{
+  "status": "EXACT_NATIVE_POSTPROCESS_RECEIPT_AND_BOUNDED_GPU_PROOF",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Backend/NativePostprocessTextureReceipt.h",
+      "parent_sha256": null,
+      "candidate_sha256": "36aff38ebb1a6512bf754481746fe636f63aa100b952283a12add5c7b5327cee"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "parent_sha256": "bf42e42224f1f88aa894ee59693437c6291a4f8f1cb8b464057e368e4512ae49",
+      "candidate_sha256": "3a5fc34538dc0421f4d14ac0d28d7144e9ad329ec18dfd131d6a836be2525196"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "parent_sha256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521",
+      "candidate_sha256": "f221f2fc8488cf7f5a94b94f32ad581b63c1f8b8d05bc47fe119ecea5c8b35ed"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "parent_sha256": "67223a9686d1fae4877c68a0a039d26a8fe05047e212a36f51f56e053e724415",
+      "candidate_sha256": "e8f5f7993eff255725727da86de7c9f875461d34073ee7745a2c99ab3486cb47"
+    }
+  ],
+  "source_paths_verified": 10274,
+  "parent_round55_patch_sha256": "094a3518cc744e86a97b3007df7b092a4203855373b720c5b91b5aa96560b684",
+  "accepted_binary": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+  "patch_sha256": "5db5a679e97f6e565ead31cb7dfccdf7a46b467f6c16a63984d87fccb92aad2a",
+  "fixture_sha256": "3ed2c410251901baafab1d01b25d2cdc83d6d3478a8c0fe4d27d2147470ac0fb",
+  "live_cap2_admission": false,
+  "scope": "Attach exact physical producer receipt to the existing ordered native postprocess input when known. Prove the positive two-ticket dependency path on Metal4, separate from ordinary drawable and complete world-resource admission."
+}

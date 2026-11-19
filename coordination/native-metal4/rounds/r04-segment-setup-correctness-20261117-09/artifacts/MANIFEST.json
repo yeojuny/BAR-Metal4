@@ -1,0 +1,16 @@
+{
+  "parent_source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "base_header_blob": "5916daf3b3e025ba85c3520a2215a2629b418a9b",
+  "status": "CPU_PASS_GPU_PREPARED_NOT_COMPILED_OR_RUN",
+  "production_path": "engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+  "files": {
+    "NativeSensorLOSShaders.h": "722565c5c1ff15bfa7801615fe3bbbf9acb7de83cb5deab61aa323e20455e73f",
+    "R04.patch": "b5e6eecf962033e4e5ecb09f38841238d1082a38d62cf62a151c5c91f5d3564f",
+    "REPORT.md": "54d8e4db3f3a60faac7c3076bb79b6d45277033b51911528392d41129480ab06",
+    "cpu-results.json": "e1471413f9a3e6267c70c0629f020bb4cff28b1006ed1cd4da837347327566a8",
+    "gpu_pixel_parity.mm": "73a541821a23830511d97a220c2334ca908f76c9be0193b7704be34823b2129e",
+    "reference/R03.h": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+    "reference/coverage_corpus.py": "ce02c91dc8d550a22ef00334a82f281c0001db617f853e64d76deca89acf5267",
+    "test_prepared.py": "9bcd4408a1aef86ff86ac512bcd2ae0d2195e7049d53cb39b88e95eb29fda57c"
+  }
+}

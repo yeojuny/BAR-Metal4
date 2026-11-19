@@ -1,0 +1,21 @@
+{
+  "round_id": "ground-decal-cold-glow-20261118-98",
+  "switch": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
+  "order": [
+    "R98_OFF",
+    "R98_ON"
+  ],
+  "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "patch_sha256": "1ca8d06ef4965a6e5f82dcf1b4143d1a42edc3de40ab9939607ec0ef49d04452",
+  "original_patch_sha256": "795b01e5af4ffb505eed5b6276a2f31d3d2373cc8063c5100f19607d1a2addb1",
+  "budget": {
+    "translation_units": 1,
+    "engine_builds": 1,
+    "fixture_compiles": 1,
+    "fixture_runs": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

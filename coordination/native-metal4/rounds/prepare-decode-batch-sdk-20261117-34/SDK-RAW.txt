@@ -1,0 +1,28 @@
+# Mac SDK log excerpts. Full log hashes are in BUILD-EVIDENCE.json.
+
+## CONFIGURE.log
+2 | -- The C compiler identification is AppleClang 21.0.0.21000401
+3 | -- The CXX compiler identification is AppleClang 21.0.0.21000401
+221 | -- The ASM compiler identification is AppleClang
+403 | --   Found openal, version 1.25.2
+410 | -- The OBJCXX compiler identification is AppleClang 21.0.0.21000401
+448 | -- Configuring done (8.2s)
+449 | -- Generating done (0.6s)
+450 | -- Build files have been written to: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34/build
+
+## BUILD.log
+2549 | [878/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4CommandsNative.mm.o
+2564 | [893/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4StartBoxNative.mm.o
+2566 | [895/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Sensor31657CircleNative.mm.o
+2567 | [896/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4WeaponRangeNative.mm.o
+2769 | [908/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4BuildSquareNative.mm.o
+2872 | [919/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Backend/NativeBuildSquareData.cpp.o
+3311 | [1025/1578] Linking CXX static library rts/builds/metal4-scene/librecoil-metal4-world-renderer.a
+5209 | [1497/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeCommandsData.cpp.o
+5247 | [1503/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeStartBoxData.cpp.o
+5266 | [1506/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeWeaponRangeData.cpp.o
+5276 | [1508/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeSensor31657CircleData.cpp.o
+5412 | [1549/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeLuaNanoRecorder.cpp.o
+5415 | [1552/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeEnergyExplosionRecorder.cpp.o
+5580 | [1577/1578] Linking CXX executable spring-metal4-scene
+5581 | ld: warning: ignoring duplicate libraries: 'librmlui.a', 'rts/Sim/libengineSim.a', 'rts/System/Sound/libsound.a', 'rts/lib/nowide/libnowide.a', 'rts/lib/simdjson/libsimdjson.a', 'rts/lib/squish/libsquish.a', 'rts/lib/streflop/libstreflop.a', 'rts/lib/tracy/libTracyClient.a', 'tools/pr-downloader/src/lib/7z/lib7zip.a', 'tools/pr-downloader/src/lib/base64/libpr-base64.a', 'tools/pr-downloader/src/lib/jsoncpp/libpr-jsoncpp.a'

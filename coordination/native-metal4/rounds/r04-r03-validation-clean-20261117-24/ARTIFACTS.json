@@ -1,0 +1,706 @@
+{
+  "REPORT.md": {
+    "sha256": "b5f6718fd1cf007223b8c44cc88128abfa6f88c652da95fd1bc35eb41b150ead",
+    "bytes": 6307
+  },
+  "SUMMARY.json": {
+    "sha256": "1a3341b74c2616e48a4601f1a0d0e17551e1ac44d64b2a5b5238a7332705ffe7",
+    "bytes": 3183
+  },
+  "VALIDATION-GATE.json": {
+    "sha256": "8d438cc062cef73046c6d83c93474614b652b0e5c1175b6eea94f373e0131407",
+    "bytes": 2147
+  },
+  "WORLD-CHECK.json": {
+    "sha256": "0158610f3fd2acb743159dfe5257c0568fbff42f70565eaafdfc4db8fcbd4778",
+    "bytes": 117704
+  },
+  "ENVIRONMENT-GEOMETRY-CHECK.json": {
+    "sha256": "31e428aaaef62d1724c09392044c7d4466edea732653d8fb3dcc61976fddf639",
+    "bytes": 19598
+  },
+  "TIMING-CHECK.json": {
+    "sha256": "0d728c380c29fc8d532e9ab568fe4c7e9f0b46df45010df7f3a2069c2b3b7dde",
+    "bytes": 5253
+  },
+  "IMAGE-REVIEW.json": {
+    "sha256": "9ea3dfa90a64e908b548c12c1872f64d10961dee3d0421846607030abb1d5e0a",
+    "bytes": 4032
+  },
+  "CLEANUP-REVIEW.json": {
+    "sha256": "f3bb689682d9508c02dbf1f50e46254736d6efe6fd139cee75718b7453420477",
+    "bytes": 446
+  },
+  "EXECUTION.json": {
+    "sha256": "9185161b29161100f4f0af6f8345604528e7cd746a3477bc7b5a9ad1c08eb9a1",
+    "bytes": 4917
+  },
+  "VALIDATION-RUNNER.log": {
+    "sha256": "661110465de0498e08f9bb3e1d0bfb9c704b9f91d33fcf9716ac45f9dff75998",
+    "bytes": 1176
+  },
+  "CLEAN-RUNNER.log": {
+    "sha256": "cd79049b93bbac0b078a1864c3d2445f38fb81b492f4fab94c25b3b16259ed8d",
+    "bytes": 2025
+  },
+  "UPSTREAM-CONTRIBUTIONS.json": {
+    "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "bytes": 4103
+  },
+  "R04-MANIFEST.json": {
+    "sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+    "bytes": 1034
+  },
+  "RUNTIME-CLOSURE.json": {
+    "sha256": "be90283eb5c7b1c1995952da2fbfd171c0b5121b9510579157d48ed242480885",
+    "bytes": 27229
+  },
+  "ATTEMPT-CLAIM.json": {
+    "sha256": "f23d5945a1613e34f9d3ee44654dfabf424d5c13c45ff999026bd937d72c3d25",
+    "bytes": 1378
+  },
+  "STAGE-r04_validation01.log": {
+    "sha256": "2fcb3a75677f81a2d92ecf593562565b195c510cdf652e9df919b6ad0bdfba83",
+    "bytes": 70
+  },
+  "STAGE-r04_clean01.log": {
+    "sha256": "38c73c7de4a156cb8f16eb4c6783410657c85a74ac54d4f20fdcc3cde73c1e50",
+    "bytes": 60
+  },
+  "runner/run.py": {
+    "sha256": "d1c4467a2dd4fd8bf1650a812111ae99d643fc8e8677a4beec359317e6f8fb74",
+    "bytes": 31873
+  },
+  "runner/PRODUCT.json": {
+    "sha256": "a8244ed8f33bf911f046674eadd099ac2cb902b1c27587ea69b466edaad3464e",
+    "bytes": 599
+  },
+  "runner/BASELINE-PRODUCT.json": {
+    "sha256": "a784c3b358921faf0ba63451e939a63c3bbb4415778ae40cca6daf5aa732ba34",
+    "bytes": 598
+  },
+  "runner/RELEASE-CONTRACT.json": {
+    "sha256": "d4931e7230465041bfbea9ed67037fd3ded7e11ee9cadff5c346f5c318c1fa87",
+    "bytes": 888
+  },
+  "runner/RUNNER.diff": {
+    "sha256": "9e915c8f36bc774a6ad000c809ab8e506be36f5a627216cb9b0498a83279c56c",
+    "bytes": 3574
+  },
+  "runner/RUNNER-REVIEW.json": {
+    "sha256": "d98e708b5ecdb7a2825d2e6a87b5651fbdc9da0049abc731d62950e7d085ae6d",
+    "bytes": 1940
+  },
+  "runner/IMPORTED-SOURCE-HASHES.json": {
+    "sha256": "274c830c72ecedf550c034ca5b745e574bb675af993853925f0e817fdc307be0",
+    "bytes": 1620
+  },
+  "runner/STAGING-SUMMARY.json": {
+    "sha256": "ee4a82fa0a7e90373e21e2ef8f3e2a591bd0fe7ac11b686ec7fc56a9ebfa9598",
+    "bytes": 8356
+  },
+  "raw/V_R04/LAUNCH.json": {
+    "sha256": "6d2ba4853575679176a952f000fcf750222163abaab4b8bde334c5579ea5f9a2",
+    "bytes": 11498
+  },
+  "raw/V_R04/ENV.json": {
+    "sha256": "01acd397ce2dc65614c796a040dddd008d3f950c66bbbe059ddca807441f97ca",
+    "bytes": 3157
+  },
+  "raw/V_R04/OWNED.json": {
+    "sha256": "c6c25e80ca2fba45a0b0d1babccfbc9ff5998ec5bffdcc5f4ac7e25ffe21b2d6",
+    "bytes": 198
+  },
+  "raw/V_R04/GAME-LAUNCH-CLAIM.json": {
+    "sha256": "edff55b23af65538805c1942f5a358cace45b88d7ef91a0ac5ef4ec6bd7500d0",
+    "bytes": 85
+  },
+  "raw/V_R04/CHILD-MODE.json": {
+    "sha256": "cfbf1c3f5878c09cd8a229076fd23b345e4291a837bb02e0da036685a9333a5a",
+    "bytes": 2719
+  },
+  "raw/V_R04/CLEANUP.json": {
+    "sha256": "a099638954989b466867df19ca75175366eaf77b3ee27f8931537714cbbd729b",
+    "bytes": 136
+  },
+  "raw/V_R04/OBSERVERS.json": {
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "bytes": 75
+  },
+  "raw/V_R04/ULTRA-EVIDENCE.json": {
+    "sha256": "d1efa9d8c044f68953097d3b04275fe43aa799168db3928a17440f947d7692d0",
+    "bytes": 1649
+  },
+  "raw/V_R04/GRASS-BOUNDARY.json": {
+    "sha256": "35bdd27450950937e61cd67345f47f40d9c62c79367948a7c9544a6c9c8ecf93",
+    "bytes": 343
+  },
+  "raw/V_R04/GROUND-INDEX.json": {
+    "sha256": "877bcec6a5dc0cdd80db5421de1d6901bee420b3240937685d04837a97ea9ae8",
+    "bytes": 384
+  },
+  "raw/V_R04/METAL-VALIDATION.json": {
+    "sha256": "680302929eee4ef2c5f393ea78621997dc054245cabba86e97f5c418a1a33088",
+    "bytes": 491
+  },
+  "raw/V_R04/LIFECYCLE.json": {
+    "sha256": "f70f8ff69020a686d78be23e92b48ff8f350aade62693ca79d2323c69417472e",
+    "bytes": 691
+  },
+  "raw/V_R04/WINDOW.json": {
+    "sha256": "b0bb4375c6e798cf02953595e276775b696a9caff27ee3ed0e77b7c7cfa3987e",
+    "bytes": 65
+  },
+  "raw/V_R04/RESULT.json": {
+    "sha256": "f2ec01190a61865f6fa2ae80b44c2ee6c93960a8cd84cf14808eedbf1229b350",
+    "bytes": 2340
+  },
+  "raw/V_R04/engine.log": {
+    "sha256": "2fa72f39f79f82325fa4ed9919c733dbd6a1034a7cf4edc9f8266091dce27771",
+    "bytes": 291573
+  },
+  "raw/V_R04/infolog.txt": {
+    "sha256": "7ca524298848bdf445c495247101636070a764e6e7a3be0d3765c9462fe73fc0",
+    "bytes": 290306
+  },
+  "raw/V_R04/TERRAIN211-FRAMES.csv": {
+    "sha256": "8a4598e8657613307eea0138a9fe185a1354d7951d426a42cf76e324dd7490ee",
+    "bytes": 40082
+  },
+  "raw/V_R04/actual-start-script.txt": {
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "bytes": 707
+  },
+  "raw/V_R04/scene.png": {
+    "sha256": "3a1e5c8ce7f5cbc40e7df79d3953b50cd61afa45d4dd20ca52247393e3c028a1",
+    "bytes": 2971622
+  },
+  "raw/V_R04/PREFLIGHT-OBSERVED-FIRST.json": {
+    "sha256": "96417e966cfb433694e14921cbc33e0277142f7e7a333b493941290c3dc4b757",
+    "bytes": 1040
+  },
+  "raw/V_R04/PREFLIGHT-OBSERVED-LAST.json": {
+    "sha256": "3623b470b53bfabcc8479a2d1c175b67aff0fcea74441b880b610e8a140cc678",
+    "bytes": 1040
+  },
+  "raw/A1_R03/LAUNCH.json": {
+    "sha256": "228381491bd20092f1f878968bf74050b5be7ab158a60f72bd47afe0aafe67e5",
+    "bytes": 11287
+  },
+  "raw/A1_R03/ENV.json": {
+    "sha256": "1baba6182146b6e0703cd68509f5d2247c798a5a6536a57e48491500ab39d9dc",
+    "bytes": 3084
+  },
+  "raw/A1_R03/OWNED.json": {
+    "sha256": "9bbe77c6381f29786a9587a84814d367231984853863aaee6c829b6635eb666d",
+    "bytes": 198
+  },
+  "raw/A1_R03/GAME-LAUNCH-CLAIM.json": {
+    "sha256": "690fbad814429d231880eddd565421adc8a431511875601c6640e7a3e8a043db",
+    "bytes": 86
+  },
+  "raw/A1_R03/CHILD-MODE.json": {
+    "sha256": "581915d6dddacb04c1791c6ac3d50010975ccf405cf288eb926332b5c0c26518",
+    "bytes": 2719
+  },
+  "raw/A1_R03/CLEANUP.json": {
+    "sha256": "ae790f4bcb52fe5ff20c97e71bc3a5c0d611c11ed17dbbd9af9d24fcde40544b",
+    "bytes": 136
+  },
+  "raw/A1_R03/OBSERVERS.json": {
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "bytes": 75
+  },
+  "raw/A1_R03/ULTRA-EVIDENCE.json": {
+    "sha256": "dd08be475bc93a7ba6d2e1f5e34425fd765d123e39c3c222ea56aea3adecb5d7",
+    "bytes": 1640
+  },
+  "raw/A1_R03/GRASS-BOUNDARY.json": {
+    "sha256": "eb63e73a9fd499c4567793ad198f4be9df68bb99201f95157253cb549d73d277",
+    "bytes": 343
+  },
+  "raw/A1_R03/PACING-WITNESS.json": {
+    "sha256": "af7d05a5d34964154f041a56994d51222f33a9bef9378172d8900375a55eb87d",
+    "bytes": 2150
+  },
+  "raw/A1_R03/LIFECYCLE.json": {
+    "sha256": "ba18ddb20adad2599933bd7e3d80c869cc64be22d200622733ad48d99a1d745b",
+    "bytes": 693
+  },
+  "raw/A1_R03/WINDOW.json": {
+    "sha256": "abc1f186f2b4ebf5ab33b674495b909b6868f144a4b8280d2866414d02b6a548",
+    "bytes": 65
+  },
+  "raw/A1_R03/RESULT.json": {
+    "sha256": "b1cdf532039418b628bf8d620c91deb112564f4eba823dc4f2bc96e803a795d5",
+    "bytes": 29027
+  },
+  "raw/A1_R03/engine.log": {
+    "sha256": "4cc20389bdd6c9225ab6024330fdd004855b428de8b88b7fe13b6967cc1acb09",
+    "bytes": 291083
+  },
+  "raw/A1_R03/infolog.txt": {
+    "sha256": "61cb82ea98ca39171bbb5a6fcf3154fae6b126ced6d0c7f77025b78b5da58354",
+    "bytes": 289912
+  },
+  "raw/A1_R03/TERRAIN211-FRAMES.csv": {
+    "sha256": "baa608982fcf188cdc4174e7f2ea86fbc766dc31350df0d55f43ee6340ba1cd2",
+    "bytes": 43397
+  },
+  "raw/A1_R03/actual-start-script.txt": {
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "bytes": 707
+  },
+  "raw/A1_R03/scene.png": {
+    "sha256": "995207740d08eb891d5b67f26139a50eef77f92352ea4b115867decce555cea5",
+    "bytes": 2966739
+  },
+  "raw/A1_R03/PREFLIGHT-OBSERVED-FIRST.json": {
+    "sha256": "f9b604f685180dade3cd9b149ed87656abad2bc31f8b4d038006b7f3f2bf3240",
+    "bytes": 1040
+  },
+  "raw/A1_R03/PREFLIGHT-OBSERVED-LAST.json": {
+    "sha256": "147a74a67f42282b66e310a8641efa93d86c96f4639af2b3ec83b6749f172eee",
+    "bytes": 1040
+  },
+  "raw/B1_R04/LAUNCH.json": {
+    "sha256": "ee3a903b296308fa9407b7286a82e4fd21a7aae3e66d641683e58c17416ef745",
+    "bytes": 11289
+  },
+  "raw/B1_R04/ENV.json": {
+    "sha256": "f7a75e9a290339544068ca8d479f15f0132e6c6074370cd9ce84e98d9e21262e",
+    "bytes": 3084
+  },
+  "raw/B1_R04/OWNED.json": {
+    "sha256": "9c9490ba17f57a209e3f920961f6e003869a0f799b0fab8ef92f35d472f3ad9b",
+    "bytes": 198
+  },
+  "raw/B1_R04/GAME-LAUNCH-CLAIM.json": {
+    "sha256": "73fd62e07447144b31e215dc6d2bc04b0a8cdbbd83a2f7219e8bf41fdbaf9af9",
+    "bytes": 86
+  },
+  "raw/B1_R04/CHILD-MODE.json": {
+    "sha256": "1c76759761ef175854c83eccbbc25695027d4faa0d95d0b8f9978e795bf63f09",
+    "bytes": 2719
+  },
+  "raw/B1_R04/CLEANUP.json": {
+    "sha256": "59dd95bfdbcab08b912916263ec2bea7e0495d4db46fa759e7f76b73be1617d3",
+    "bytes": 136
+  },
+  "raw/B1_R04/OBSERVERS.json": {
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "bytes": 75
+  },
+  "raw/B1_R04/ULTRA-EVIDENCE.json": {
+    "sha256": "e6f503c18b6feba5ec82161f84d132dcaedca2c1e7d36643ed98c26763a29dc9",
+    "bytes": 1641
+  },
+  "raw/B1_R04/GRASS-BOUNDARY.json": {
+    "sha256": "3f91b2571b6ffc2d5e6b95536b1030a942cbd39b0543f807e306c91d58b32af4",
+    "bytes": 343
+  },
+  "raw/B1_R04/PACING-WITNESS.json": {
+    "sha256": "946e0d6ae32cbbe6213a52722d6a8ea2200157a5b637d18d0e42cef920ddb63e",
+    "bytes": 2150
+  },
+  "raw/B1_R04/LIFECYCLE.json": {
+    "sha256": "96d158ff0d4bc7ff2b653463fff8bcd43a43d7516b715f0e1e731c64701727a1",
+    "bytes": 690
+  },
+  "raw/B1_R04/WINDOW.json": {
+    "sha256": "36a3265cf62a16bdafebb92ad6cb968c6a3771e8572482454e16ec3d9fd519ae",
+    "bytes": 65
+  },
+  "raw/B1_R04/RESULT.json": {
+    "sha256": "2b96b7749ec4ba50638637177684efc2d869baa831c064ca61a159d58b8be8f4",
+    "bytes": 29024
+  },
+  "raw/B1_R04/engine.log": {
+    "sha256": "9c90d337bf855dbeea3cba44ac74f6e719025279fd3b294f0eb2b4b5092a230b",
+    "bytes": 291067
+  },
+  "raw/B1_R04/infolog.txt": {
+    "sha256": "2a1ed1f56fd880cf5450df618ea6485dbde8bb522dfff221e3f4de08c937223a",
+    "bytes": 289896
+  },
+  "raw/B1_R04/TERRAIN211-FRAMES.csv": {
+    "sha256": "6074dbd4bfa92ab37a506cb259d70dd943691f7ec8f7a4caa4e3d87b6bd7563a",
+    "bytes": 40184
+  },
+  "raw/B1_R04/actual-start-script.txt": {
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "bytes": 707
+  },
+  "raw/B1_R04/scene.png": {
+    "sha256": "591b891a5ea40695a93ddc3e0157c8a635164eb89a4b4999ca1b1902dc41f510",
+    "bytes": 2963883
+  },
+  "raw/B1_R04/PREFLIGHT-OBSERVED-FIRST.json": {
+    "sha256": "c1cf32a56545321276feaf5e91212c1d8a22d097a66cc15930d20107902c4b52",
+    "bytes": 1040
+  },
+  "raw/B1_R04/PREFLIGHT-OBSERVED-LAST.json": {
+    "sha256": "a0cc4da93b041e5cddc7e4dacc412d8c3b21454e3635881c1764ba7048a97bd8",
+    "bytes": 1040
+  },
+  "raw/B2_R04/LAUNCH.json": {
+    "sha256": "4d4ed6de3ee6e62d2a3dd95888fcec2a18a0146e92d794c77c26c03efc00f7c4",
+    "bytes": 11289
+  },
+  "raw/B2_R04/ENV.json": {
+    "sha256": "415310e7cad65ccce88a8bde0a327d6040453306a1be907846bcb34d140bbbf8",
+    "bytes": 3084
+  },
+  "raw/B2_R04/OWNED.json": {
+    "sha256": "2009169e72784ca91c89be7e4079e01e7602d35d4bd13c1dba8ecb8c18c20f6a",
+    "bytes": 198
+  },
+  "raw/B2_R04/GAME-LAUNCH-CLAIM.json": {
+    "sha256": "2778f68438d309011e769819c775e24b142273248c3e2891155c0291706b7f1c",
+    "bytes": 86
+  },
+  "raw/B2_R04/CHILD-MODE.json": {
+    "sha256": "30be54bb898f6fb4d3a1a9bbde58d36c45bcfb1a62be1553d48f807f0ad0813a",
+    "bytes": 2719
+  },
+  "raw/B2_R04/CLEANUP.json": {
+    "sha256": "572e72ba383d3f0a733e7dcefb36f5594b5c4d376d15b6a33f9de771fa1aa1ed",
+    "bytes": 136
+  },
+  "raw/B2_R04/OBSERVERS.json": {
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "bytes": 75
+  },
+  "raw/B2_R04/ULTRA-EVIDENCE.json": {
+    "sha256": "cd3fd27f74ba78af2f3cae60e4b10b81218ba0bef480c5d9fa1d4c3e2f9607e3",
+    "bytes": 1641
+  },
+  "raw/B2_R04/GRASS-BOUNDARY.json": {
+    "sha256": "622773299a983e969fb21365d69d8a4cbd89d94f1d1a8ce46a7648c16af08de9",
+    "bytes": 343
+  },
+  "raw/B2_R04/PACING-WITNESS.json": {
+    "sha256": "eac800db419284f2f6488d1d03f720791db2b8106fdb42b04dd84aac526b0da0",
+    "bytes": 2150
+  },
+  "raw/B2_R04/LIFECYCLE.json": {
+    "sha256": "864a23d94fd444363e39177e87dcde6ad9a8dbf2cf06568241bbc64c6a1fb670",
+    "bytes": 693
+  },
+  "raw/B2_R04/WINDOW.json": {
+    "sha256": "91d0b230c65ca3312e70ab12d9438ea1bf7478cdae85b46ccd0226956c98f7d3",
+    "bytes": 65
+  },
+  "raw/B2_R04/RESULT.json": {
+    "sha256": "33fbd8ddcee11194548f33218476d2e03c264302e64725bc8ddccddde13f1996",
+    "bytes": 29030
+  },
+  "raw/B2_R04/engine.log": {
+    "sha256": "4aa1a8da52fa8f494279d3b3ad010f763b80153400126d4ec16056313232b0c1",
+    "bytes": 291093
+  },
+  "raw/B2_R04/infolog.txt": {
+    "sha256": "e7fc785726149f8c5d6383e4864506ad9fc20f0391e773e7fe060d26caa233eb",
+    "bytes": 289922
+  },
+  "raw/B2_R04/TERRAIN211-FRAMES.csv": {
+    "sha256": "a5e07752340d912487fbd36f4ae79870a3674c41d4841e7a8b35d9b0689a1e22",
+    "bytes": 40201
+  },
+  "raw/B2_R04/actual-start-script.txt": {
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "bytes": 707
+  },
+  "raw/B2_R04/scene.png": {
+    "sha256": "ea098d77f344284bcb053011697361fa0afabfea103363e4419557e429a0fe7f",
+    "bytes": 2966073
+  },
+  "raw/B2_R04/PREFLIGHT-OBSERVED-FIRST.json": {
+    "sha256": "42d46d9e5f103e3ae9062b7a3ad89b09e622f2fdbc9e9f2e5c516d8c88d0fdba",
+    "bytes": 1040
+  },
+  "raw/B2_R04/PREFLIGHT-OBSERVED-LAST.json": {
+    "sha256": "adeec33122ee4a45e8ab67842760a8f1ef12c4a4f1c81960ecd1fb8ee64b964f",
+    "bytes": 1040
+  },
+  "raw/A2_R03/LAUNCH.json": {
+    "sha256": "c1fe90fbc3aae89f4405784c291c474f215ecef1ceaaa256d4954f4b62a8cd6c",
+    "bytes": 11287
+  },
+  "raw/A2_R03/ENV.json": {
+    "sha256": "3bd14870fdf01a9f36bf40d1e6dca182638fb7f82cbfbcf9830f55323d51e434",
+    "bytes": 3084
+  },
+  "raw/A2_R03/OWNED.json": {
+    "sha256": "3146ef8a4addadb3a9c4bce448723802d69ad189a9d7efb749c23c75d5ea8a34",
+    "bytes": 198
+  },
+  "raw/A2_R03/GAME-LAUNCH-CLAIM.json": {
+    "sha256": "c04cd8567b85bafec34972da32bbe8e9d451f95795835c1e091d6e24f840f65e",
+    "bytes": 86
+  },
+  "raw/A2_R03/CHILD-MODE.json": {
+    "sha256": "790e7ca5244924b5ef9b63e1310348bc5cb0662dfb28f3f068df5ff301f3d6d3",
+    "bytes": 2719
+  },
+  "raw/A2_R03/CLEANUP.json": {
+    "sha256": "84c823252b9e40863e6efddaa7d014327df070bdcbca23880051b22ae5dc0c0b",
+    "bytes": 136
+  },
+  "raw/A2_R03/OBSERVERS.json": {
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "bytes": 75
+  },
+  "raw/A2_R03/ULTRA-EVIDENCE.json": {
+    "sha256": "4c81b5c470f7e7a5e3bc582d7d2fac731eb09bf320b8c17cc40bff83c281bae8",
+    "bytes": 1640
+  },
+  "raw/A2_R03/GRASS-BOUNDARY.json": {
+    "sha256": "21bc137e5f5b9bc51600fab2f39c76fbccda97fbef9a3eda16f86995cf9c1380",
+    "bytes": 343
+  },
+  "raw/A2_R03/PACING-WITNESS.json": {
+    "sha256": "9bf8d78a90519874027d34c9f54b9c98245a3982e1cfe829e2dfe1411d2224f6",
+    "bytes": 2150
+  },
+  "raw/A2_R03/LIFECYCLE.json": {
+    "sha256": "f1539488a56c59dfe25ebf6552f9c5ddba96e5194ed76aed3ed0f39d8ba92229",
+    "bytes": 691
+  },
+  "raw/A2_R03/WINDOW.json": {
+    "sha256": "bf3be18bb3c5811276033b843ae52035de4196fef5fabe3cf7af0cca294a6f2a",
+    "bytes": 65
+  },
+  "raw/A2_R03/RESULT.json": {
+    "sha256": "203eb25e7efb7a07729eb83df15d7fec6cfaed4421c1b443616589d644b34572",
+    "bytes": 29036
+  },
+  "raw/A2_R03/engine.log": {
+    "sha256": "07e4d82bc826096dca39553f2aaa6e42e1c002d5c06963904b2da932121fbcf7",
+    "bytes": 291092
+  },
+  "raw/A2_R03/infolog.txt": {
+    "sha256": "0cf7af1c68735b118332fa733bad86c0ad677a4768454da931a02981287dfc1e",
+    "bytes": 289921
+  },
+  "raw/A2_R03/TERRAIN211-FRAMES.csv": {
+    "sha256": "2c9f432201f026c0e2b70205de0f63e98ce0cc24fa468e771084451aa8185979",
+    "bytes": 43380
+  },
+  "raw/A2_R03/actual-start-script.txt": {
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "bytes": 707
+  },
+  "raw/A2_R03/scene.png": {
+    "sha256": "d8c0f65a0f79551af08e3b2cf077668e38f37c0648cb15867a9d28c70967528e",
+    "bytes": 2971151
+  },
+  "raw/A2_R03/PREFLIGHT-OBSERVED-FIRST.json": {
+    "sha256": "abb2693280e0ea36de2a6efc6c5f37cadd6a906240478697aa82f7d89cf81922",
+    "bytes": 1039
+  },
+  "raw/A2_R03/PREFLIGHT-OBSERVED-LAST.json": {
+    "sha256": "2845d4d6ecba819d4ed90ed400f31054d19a7afd607c938e12f01ff8253fd370",
+    "bytes": 1040
+  },
+  "raw/A3_R03/LAUNCH.json": {
+    "sha256": "15d64cb98537c9755175ad2730a874145ec53bb40256b76eca3f03cdc64d716a",
+    "bytes": 11287
+  },
+  "raw/A3_R03/ENV.json": {
+    "sha256": "a16ef8653a7cf9e011596a661920e8206bb4831d5fa40118a76becfe87069a17",
+    "bytes": 3084
+  },
+  "raw/A3_R03/OWNED.json": {
+    "sha256": "eac0bf8db4373c4abed5a3a106feffbef6ff2883fe3ddb6b36411b6be315caa8",
+    "bytes": 198
+  },
+  "raw/A3_R03/GAME-LAUNCH-CLAIM.json": {
+    "sha256": "0d57562c5ab719ffd99106b4dc2ba562d0685671472594cd84da8388c4f28f35",
+    "bytes": 86
+  },
+  "raw/A3_R03/CHILD-MODE.json": {
+    "sha256": "f12280d9b9bf25111c18b78e0667039baa7a2079da2924ebbcb36855aedd8c8d",
+    "bytes": 2719
+  },
+  "raw/A3_R03/CLEANUP.json": {
+    "sha256": "b896467d9b5c073e6014f8ac115be07304a4be7053ced38086178711e8c0d8e3",
+    "bytes": 136
+  },
+  "raw/A3_R03/OBSERVERS.json": {
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "bytes": 75
+  },
+  "raw/A3_R03/ULTRA-EVIDENCE.json": {
+    "sha256": "9ad9768fc9839221ec6bf3cd2e8d542af210d978881ef3e468a29d37b0e4c7e9",
+    "bytes": 1640
+  },
+  "raw/A3_R03/GRASS-BOUNDARY.json": {
+    "sha256": "06b6c3186fcdf4ea062de5c0b40d05ae0d542427341844d88c2ea2d1059bc85d",
+    "bytes": 343
+  },
+  "raw/A3_R03/PACING-WITNESS.json": {
+    "sha256": "ae92a27b899e707cbce2583bf1f69836b8f64b0f6bda8aba35c27eb5df58b1af",
+    "bytes": 2150
+  },
+  "raw/A3_R03/LIFECYCLE.json": {
+    "sha256": "c87c41c235945d3ec20e2aaec8dd3417f01581e38130ae43c86eab412e1f0549",
+    "bytes": 693
+  },
+  "raw/A3_R03/WINDOW.json": {
+    "sha256": "53addf75ffd3aca007718c2dacef5214b15625336a81636ab72f6e27e9fe7028",
+    "bytes": 65
+  },
+  "raw/A3_R03/RESULT.json": {
+    "sha256": "f862ce6a7443ead5ab555168b20588c4e6639b91cb993e0df34873a9153c25b9",
+    "bytes": 29021
+  },
+  "raw/A3_R03/engine.log": {
+    "sha256": "55b99ce472acb1d3c9cd80a3cda0fc8c3e6f33419ad540e6a6192f66e800bb2f",
+    "bytes": 291093
+  },
+  "raw/A3_R03/infolog.txt": {
+    "sha256": "35baef3ad74a1322f708d69174958b4f34c2bb89131ecaf6012c6e8114c0a765",
+    "bytes": 289922
+  },
+  "raw/A3_R03/TERRAIN211-FRAMES.csv": {
+    "sha256": "dacb4e1008780fdab4c6fe78214bc4120028764e01131d728a76f9ea1aabf06f",
+    "bytes": 43397
+  },
+  "raw/A3_R03/actual-start-script.txt": {
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "bytes": 707
+  },
+  "raw/A3_R03/scene.png": {
+    "sha256": "3001f7664ffd463e5f28b36c55f7bffc39d36fcb45df937368dc6b571334e013",
+    "bytes": 2967838
+  },
+  "raw/A3_R03/PREFLIGHT-OBSERVED-FIRST.json": {
+    "sha256": "7882ca633839e0e57ec45fc66645a2cc3b8368316b19ebca486a45e1fdab5f05",
+    "bytes": 1040
+  },
+  "raw/A3_R03/PREFLIGHT-OBSERVED-LAST.json": {
+    "sha256": "529eeaae69724d92afefeab46655899fec5d63d695fda2f4be14ecb17a50dfcc",
+    "bytes": 1040
+  },
+  "raw/B3_R04/LAUNCH.json": {
+    "sha256": "75056cea6befd451fd0a2cd963d4f5b2e6cc2aea0dc77f4c0d36cc81d84f25ce",
+    "bytes": 11289
+  },
+  "raw/B3_R04/ENV.json": {
+    "sha256": "14ae0ccc99cc5e4acebe8e3bd9ec4a9b67b4931eb2bcabca7ae370e1f71a2350",
+    "bytes": 3084
+  },
+  "raw/B3_R04/OWNED.json": {
+    "sha256": "f57d9cfd255a580b87c246959b8ad8606f50911fb734ae504081058a920ac773",
+    "bytes": 198
+  },
+  "raw/B3_R04/GAME-LAUNCH-CLAIM.json": {
+    "sha256": "05f839eb3af9291ce4eed3bda0a7e6f5570627bea7d89ed2df3a5220f6aa88b8",
+    "bytes": 86
+  },
+  "raw/B3_R04/CHILD-MODE.json": {
+    "sha256": "6e9d7ee0873f3de1284a8023d67e3f5cee53be7eaa5b1e53aee012eccba54073",
+    "bytes": 2719
+  },
+  "raw/B3_R04/CLEANUP.json": {
+    "sha256": "5f815c9ed00d0636fa95dfdf72574984a4690948fc29630173b2e881474f9f2d",
+    "bytes": 136
+  },
+  "raw/B3_R04/OBSERVERS.json": {
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "bytes": 75
+  },
+  "raw/B3_R04/ULTRA-EVIDENCE.json": {
+    "sha256": "706884ca3e7559e4917b21c3a0377261781ecea42404340ea653f04e39642c8f",
+    "bytes": 1641
+  },
+  "raw/B3_R04/GRASS-BOUNDARY.json": {
+    "sha256": "42e1f571e6f3b905cbd05b398e15e7e8152ae5c7aa969a3c636a2177de5cf609",
+    "bytes": 343
+  },
+  "raw/B3_R04/PACING-WITNESS.json": {
+    "sha256": "dba569f3488b4c387a266503076535e573f13050147f631d49028c2b319bfa6f",
+    "bytes": 2150
+  },
+  "raw/B3_R04/LIFECYCLE.json": {
+    "sha256": "a692950739336bf93aa01cfd7a4258808e155f7cd1a6cf040f9326f49f966522",
+    "bytes": 690
+  },
+  "raw/B3_R04/WINDOW.json": {
+    "sha256": "e44bb4afca6963d2028fbb64e3b8a1d9a67a71451b36f4e947a65f0029571f72",
+    "bytes": 65
+  },
+  "raw/B3_R04/RESULT.json": {
+    "sha256": "db6f3cdb9826d4ecde5cd96c719ddab3ae919eed294eacc12b25195ae2844da6",
+    "bytes": 29024
+  },
+  "raw/B3_R04/engine.log": {
+    "sha256": "2e5095d95c2a18c5964e8005a39d54b6e9fbc7492840f41218fce869d079733c",
+    "bytes": 291093
+  },
+  "raw/B3_R04/infolog.txt": {
+    "sha256": "37998044e09f806c879b5dabb48ae4791dc8f35fa9de3dc58e566e0627698a2c",
+    "bytes": 289922
+  },
+  "raw/B3_R04/TERRAIN211-FRAMES.csv": {
+    "sha256": "7fe1024958759655c4cdf4ec47b4e6ab832d8ec28c354a5e11f09bc7ef64ec7f",
+    "bytes": 40133
+  },
+  "raw/B3_R04/actual-start-script.txt": {
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "bytes": 707
+  },
+  "raw/B3_R04/scene.png": {
+    "sha256": "e4209a90585b34f7944c87fcff2e04a8eb68063fa08acac8fb29c898e1662d38",
+    "bytes": 2968056
+  },
+  "raw/B3_R04/PREFLIGHT-OBSERVED-FIRST.json": {
+    "sha256": "114f0aaec65523973d04de0a93ab74275a87a37cbf00d63dc5bb21814c066f0f",
+    "bytes": 1037
+  },
+  "raw/B3_R04/PREFLIGHT-OBSERVED-LAST.json": {
+    "sha256": "3abc222cba4c75bf1dd6a020bc2ab4ef747f71c42264f188e2967c3399d2c608",
+    "bytes": 1040
+  },
+  "campaigns/validation_paced/PREPARED.json": {
+    "sha256": "dea2af51ce2b6f19501b2fcf12f18efb52ee6fc1d49a29f6ab2e8a74d14d4ec0",
+    "bytes": 2019
+  },
+  "campaigns/validation_paced/RUNS.json": {
+    "sha256": "dcd7b95cb0b1bd3d91f6d0e05ce66fdef4219d95abbfdd5e2f7be72d6d9f3c91",
+    "bytes": 2426
+  },
+  "campaigns/validation_paced/COMPLETION.json": {
+    "sha256": "d50b4fc5fa0e9c9935d8b705dead8d331571a7d5a0d0b6ec9b6dc266a5e44c40",
+    "bytes": 861
+  },
+  "campaigns/validation_paced/AWAKE-RELEASED.json": {
+    "sha256": "250f19eeadb27e67bb04c466daeee605c5f488d53d49c72a4c479cc639f17198",
+    "bytes": 268
+  },
+  "campaigns/validation_paced/OWNER-CLOSED.json": {
+    "sha256": "63622aa01c1f026d620c0064fa317ee6a38dee397da4741483609efa4e88e5d2",
+    "bytes": 113
+  },
+  "campaigns/clean_paced/PREPARED.json": {
+    "sha256": "2dbd1ef74dbfa520fdd2e17acd509bc03c3318e3dee279be5bd7dd468859ed18",
+    "bytes": 7509
+  },
+  "campaigns/clean_paced/RUNS.json": {
+    "sha256": "c104fe347c1e4b8aabaf3fd9cbe0da9d642edb74239610ed5689e4a2e94300d3",
+    "bytes": 182631
+  },
+  "campaigns/clean_paced/COMPLETION.json": {
+    "sha256": "b7a99b1e09c0448ac070cfcefbe145c953fbd8b075bed8269a7f3201dfc54c80",
+    "bytes": 297
+  },
+  "campaigns/clean_paced/AWAKE-RELEASED.json": {
+    "sha256": "c70748612859467e6ddde93c42317a377a9d9674ec075992ed1b72b6458a1f82",
+    "bytes": 263
+  },
+  "campaigns/clean_paced/OWNER-CLOSED.json": {
+    "sha256": "cb3f6e79a699760e4fb59299cc5235999f2a3be87bb5b905183178b0f7acc987",
+    "bytes": 113
+  }
+}

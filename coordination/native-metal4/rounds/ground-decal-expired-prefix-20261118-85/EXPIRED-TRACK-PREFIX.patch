@@ -1,0 +1,151 @@
+--- a/rts/Rendering/Metal4/Metal4GroundDecal.mm
++++ b/rts/Rendering/Metal4/Metal4GroundDecal.mm
+@@ -2,6 +2,7 @@
+ #include "Metal4GroundDecal.h"
+ #include "Metal4InterventionMath.h"
+ #include "NativeGroundDecalShaders.h"
++#include "NativeGroundDecalExpiredTrackPrefix.h"
+ #include "Metal4GroundDecalIndexPolicyG01.h"
+ #include "System/Log/ILog.h"
+ #include <atomic>
+@@ -24,7 +25,13 @@
+ 	std::vector<NativeGroundDecalAtlasDraw> draws;
+ 	bool ready=false;
+ };
+-struct InstanceResources {std::shared_ptr<const NativeGroundDecalInstances> source;__strong id<MTLBuffer> buffer=nil;};
++struct InstanceResources {
++	std::shared_ptr<const NativeGroundDecalInstances> source;
++	GroundDecalExpiredTrackPrefix prefix;
++	__strong id<MTLBuffer> buffer=nil;
++
++	size_t Count() const noexcept {return source->values.size()-prefix.rows;}
++};
+ struct AtlasPassDraw {uint32_t page=0,level=0;__strong id<MTL4ArgumentTable> arguments=nil;};
+ struct alignas(16) AtlasUniforms {std::array<float,4> clamp{};std::array<uint32_t,4> flags{};};
+ bool SkipUnusedTerrainColor(uint32_t samples,MTLPixelFormat minimapFormat)
+@@ -36,6 +43,14 @@
+ 	return enabled&&samples==1&&!InterventionFastMathEnabled()&&
+ 		(minimapFormat==MTLPixelFormatBC1_RGBA||minimapFormat==MTLPixelFormatRGBA8Unorm||
+ 		 minimapFormat==MTLPixelFormatBGRA8Unorm);
++}
++bool TrimExpiredTrackPrefix(uint32_t samples)
++{
++	static const bool enabled=[] {
++		const char* value=std::getenv("BAR_NATIVE_GROUND_DECAL_EXPIRED_TRACK_PREFIX");
++		return value&&std::strcmp(value,"1")==0;
++	}();
++	return enabled&&samples==1&&!InterventionFastMathEnabled();
+ }
+ }
+ struct PreparedGroundDecal::Impl {
+@@ -79,7 +94,7 @@
+ 	Require(impl->dependenciesEncoded&&!impl->encoded,"Original ground decal pass order differs");
+ 	[e setRenderPipelineState:impl->surfacePipeline];[e setDepthStencilState:impl->depth];[e setFrontFacingWinding:MTLWindingCounterClockwise];[e setCullMode:MTLCullModeBack];[e setDepthClipMode:MTLDepthClipModeClip];[e setTriangleFillMode:MTLTriangleFillModeFill];[e setDepthBias:0 slopeScale:0 clamp:0];
+ 	[e setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+-	const auto count=impl->frame->instances->values.size();
++	const auto count=impl->instances->Count();
+ 	const bool indexed=impl->indicesG01&&[e respondsToSelector:@selector(drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferLength:instanceCount:baseVertex:baseInstance:)];
+ 	if(count){
+ 		if(indexed){
+@@ -113,6 +128,7 @@
+ 	__strong id<MTLDepthStencilState> depth=nil;
+ 	std::shared_ptr<AtlasResources> atlas;
+ 	std::shared_ptr<InstanceResources> instances;
++	float lastInstanceAdjustedFrame=0.0f;
+ 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool atlas,bool high,uint32_t samples,bool validation,double& milliseconds,bool shadows=false,bool skipUnusedTerrainColor=false){
+ 		const LibraryKey libraryKey{high,shadows,skipUnusedTerrainColor};
+ 		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows,skipUnusedTerrainColor};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
+@@ -169,7 +185,29 @@
+ 		for(size_t i=0;i<p->atlas->draws.size();++i){const auto& draw=p->atlas->draws[i];const auto& src=*p->atlas->source->sources[draw.source];AtlasUniforms u{draw.sourceClamp,{src.flipV,0,0,0}};
+ 			auto b=Buffer(l,&u,sizeof(u),"Original decal atlas source clamp");auto args=Arguments(l,2,1,1);[args setAddress:p->atlas->vertices.gpuAddress+i*6*sizeof(NativeGroundDecalAtlasVertex) atIndex:0];[args setAddress:b.gpuAddress atIndex:1];[args setTexture:p->atlas->inputs[draw.source].gpuResourceID atIndex:0];[args setSamplerState:impl->samplers[2].gpuResourceID atIndex:0];p->atlasDraws.push_back({draw.page,draw.level,args});}
+ 	}
+-	if(!impl->instances||impl->instances->source!=frame->instances){auto r=std::make_shared<InstanceResources>();r->source=frame->instances;NativeGroundDecalInstance empty{};const auto& v=frame->instances->values;r->buffer=Buffer(l,v.empty()?&empty:v.data(),v.empty()?sizeof(empty):v.size()*sizeof(v[0]),"Original ground decal immutable instance revision");impl->instances=r;}
++	const bool trimTracks=TrimExpiredTrackPrefix(frame->sampleCount);
++	const bool matchingUpload=impl->instances&&impl->instances->source==frame->instances;
++	const bool rewound=matchingUpload&&frame->adjustedFrame<impl->lastInstanceAdjustedFrame;
++	const bool validUpload=matchingUpload&&(impl->instances->prefix.rows==0||
++		(trimTracks&&impl->instances->prefix.CanReuse(impl->lastInstanceAdjustedFrame,frame->adjustedFrame)));
++	if(!validUpload){
++		auto upload=std::make_shared<InstanceResources>();
++		upload->source=frame->instances;
++		const auto rows=std::span<const NativeGroundDecalInstance>(frame->instances->values);
++		const NativeGroundDecalInstance empty{};
++		const auto prefix=trimTracks&&!rewound?FindGroundDecalExpiredTrackPrefix(rows,frame->adjustedFrame):GroundDecalExpiredTrackPrefix{};
++		if(prefix.rows){
++			const auto suffix=rows.subspan(prefix.rows);
++			upload->buffer=Buffer(l,suffix.empty()?&empty:suffix.data(),suffix.empty()?sizeof(empty):suffix.size_bytes(),
++				"Original ground decal immutable instance revision",true);
++			if(upload->buffer)upload->prefix=prefix;
++		}
++		if(!upload->buffer)
++			upload->buffer=Buffer(l,rows.empty()?&empty:rows.data(),rows.empty()?sizeof(empty):rows.size_bytes(),
++				"Original ground decal immutable instance revision");
++		impl->instances=std::move(upload);
++	}
++	impl->lastInstanceAdjustedFrame=frame->adjustedFrame;
+ 	p->instances=impl->instances;l.AddAllocation(p->instances->buffer);
+ 	const std::array<GroundDecalSceneImage,6> sources={h,n,m,images.shadowDepth,images.shadowColor,d};uint32_t flips=0;
+ 	for(size_t i=0;i<sources.size();++i){flips|=uint32_t(sources[i].flipV)<<i;if(sources[i].texture)l.AddAllocation(sources[i].texture);}
+@@ -178,8 +216,8 @@
+ 	static const bool indexG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01");return v&&std::strcmp(v,"1")==0;}();
+ 	static const bool probeG01=[](){const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE");return v&&std::strcmp(v,"1")==0;}();
+ 	p->probeG01=probeG01;
+-	if(probeG01)p->probeReasonG01=!indexG01?1u:frame->sampleCount!=1?2u:frame->instances->values.empty()?3u:0u;
+-	if(GroundDecalIndexEligibleG01(indexG01,frame->sampleCount,frame->instances->values.size())){
++	if(probeG01)p->probeReasonG01=!indexG01?1u:frame->sampleCount!=1?2u:p->instances->Count()==0?3u:0u;
++	if(GroundDecalIndexEligibleG01(indexG01,frame->sampleCount,p->instances->Count())){
+ 		// Allocation nil is an optional optimization miss before encoding.
+ 		// Lease/state failures still propagate: never hide a residency error.
+ 		auto indices=Buffer(l,GroundDecalIndicesG01.data(),GroundDecalIndexBytesG01,"Ground decal G01 immutable cube indices",true);
+--- /dev/null
++++ b/rts/Rendering/Metal4/NativeGroundDecalExpiredTrackPrefix.h
+@@ -0,0 +1,49 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++
++#include "Rendering/Backend/NativeGroundDecalData.h"
++#include <algorithm>
++#include <cmath>
++
++namespace rendering::metal4 {
++
++struct GroundDecalExpiredTrackPrefix {
++	std::size_t rows = 0;
++	double validFrom = 0.0;
++
++	bool CanReuse(float previousAdjustedFrame, float adjustedFrame) const noexcept
++	{
++		return rows == 0 || (std::isfinite(adjustedFrame) &&
++			adjustedFrame >= previousAdjustedFrame && double(adjustedFrame) >= validFrom);
++	}
++};
++
++inline GroundDecalExpiredTrackPrefix FindGroundDecalExpiredTrackPrefix(
++	std::span<const NativeGroundDecalInstance> rows, float adjustedFrame) noexcept
++{
++	if (!std::isfinite(adjustedFrame))
++		return {};
++
++	constexpr uint32_t trackType = 3u;
++	constexpr float trackDecay = 1.0f / 900.0f;
++	constexpr float lastWholeFrame = 0x1p24f;
++	GroundDecalExpiredTrackPrefix prefix;
++	for (const auto& row: rows) {
++		const float lastCreated = row.createParams3[1];
++		if ((row.createParams5[0] & 0xFu) != trackType ||
++		    row.createParams1[0] != 1.0f || row.createParams1[1] != trackDecay ||
++		    row.createParams4[3] != 1.0f || !(lastCreated >= 0.0f && lastCreated <= lastWholeFrame))
++			break;
++
++		// One full frame of margin makes alphaMax strictly negative in the
++		// binary32 vertex expression, with or without contraction.
++		const double expires = double(lastCreated) + 901.0;
++		if (double(adjustedFrame) < expires)
++			break;
++		++prefix.rows;
++		prefix.validFrom = std::max(prefix.validFrom, expires);
++	}
++	return prefix;
++}
++
++}

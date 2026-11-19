@@ -1,0 +1,30 @@
+{
+  "DYCaptureSession.unusedFunctionCount": 0,
+  "DYCaptureSession.graphics_api": 1,
+  "DYCaptureSession.unusedCommandQueueCount": 0,
+  "(uuid)": "01C6842C-2CD8-4B80-9F83-4DDFEE120AA3",
+  "DYCaptureSession.boundaryLess": false,
+  "DYCaptureSession.capture_version": 0,
+  "DYCaptureSession.unusedRenderPipelineStateCount": 0,
+  "DYCaptureSession.deviceId": 1,
+  "DYCaptureEngine.launch_dictionary": {},
+  "DYCaptureSession.nativePointerSize": 8,
+  "DYCaptureSession.unusedBufferCount": 0,
+  "DYCaptureSession.unusedTextureCount": 0,
+  "DYCaptureEngine.linked_on_apex_or_later": 1,
+  "DYCaptureSession.unusedSamplerStateCount": 0,
+  "DYCaptureSession.library_link_time_versions": {
+    "AppKit": 181867653,
+    "UIKit": -1,
+    "Metal": 25100544,
+    "CoreFoundation": 329449736,
+    "System": 89073667,
+    "Foundation": 329449736
+  },
+  "DYCaptureSession.unusedLibraryCount": 0,
+  "DYCaptureSession.unusedComputePipelineStateCount": 0,
+  "DYCaptureEngine.captured_frames_count": 1,
+  "DYCaptureSession.unusedDepthStencilStateCount": 0,
+  "DYCaptureSession.interpose_feature_version": 65538,
+  "DYCaptureSession.interpose_patch_version": "0"
+}

@@ -1,0 +1,13 @@
+{
+  "encoder_ID_map": "EXPORTED52, selected14; exact label join and42 draw checks",
+  "selected_API_slices": "EXPORTED14",
+  "stage_bounds": "EXPORTED prior saved records only, not runtime",
+  "individual_active_stage_intervals": "UNAVAILABLE; prior no-embed profile session closed, only bounds saved",
+  "render_attachments_load_store_resolve": "UNAVAILABLE; saved creation arguments omitted",
+  "complete_resource_read_write_last_writer": "UNAVAILABLE; copy/index command semantics and raw bindings only",
+  "dss12_dss15_full_state": "UNAVAILABLE; binding and draw use exported",
+  "tex99_to_tex2_copy": "EXPORTED api10982 ce51; upstream attachment writer unknown",
+  "shader_instruction_register_counters": "UNAVAILABLE in saved exports; no new profiling",
+  "new_inspection_sessions": 0,
+  "session_decision": "gpudebug help exposes replay device/session but no documented no-GPU/read-only load option; prior open status showed replayer loading. No -t open issued under zero execution rule. Does not claim opening necessarily submits GPU; guarantee unavailable."
+}

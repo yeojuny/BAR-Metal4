@@ -1,0 +1,661 @@
+{
+  "conditions": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "round38": {
+    "arms": {
+      "R03_ORIGINAL": {
+        "timing": {
+          "fps": 64.73309336504423,
+          "frames_drawn": 2589,
+          "elapsed_seconds": 39.994998932,
+          "frame_time": {
+            "count": 2588,
+            "mean_ms": 15.448223076120557,
+            "median_ms": 16.000001,
+            "p95_ms": 17.000001,
+            "p99_ms": 17.999999,
+            "max_ms": 28.000001,
+            "slowest_1_percent_mean_ms": 18.499999115384615,
+            "one_percent_low_fps": 54.05405663875947
+          },
+          "bins_count": 40,
+          "start_simulation": 540,
+          "end_simulation": 1740,
+          "camera": [
+            "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          ],
+          "initial_state": [
+            "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          ],
+          "combat_seed": [
+            "7654321"
+          ],
+          "synced_combat": [
+            [
+              "600",
+              "433"
+            ]
+          ],
+          "fps_raw": [
+            {
+              "line": 2366,
+              "text": "[t=00:01:45.313446][f=0001740] [NativeShortRun] total draws=2589 seconds=39.994998932"
+            }
+          ],
+          "frame_csv": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/runs/R03_ORIGINAL/TERRAIN211-FRAMES.csv",
+          "frame_csv_sha256": "38e7076560c419ca2d26121deb5d14ece9f8e8d558af0b936f21112b1dd55111",
+          "infolog_sha256": "a27bc7d9f44fe9ed9a754b09a4bf4d404ecad7db541874f0352cec62bf95fadf",
+          "workload_bins_valid": true
+        },
+        "launch_claim": true,
+        "actual_binary": {
+          "pid": 32712,
+          "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/bin/spring-metal4-scene",
+          "sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+          "verified_while_child_was_alive": true
+        },
+        "normal_exit": true,
+        "owned": {
+          "pid": 32712,
+          "pgid": 32712,
+          "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/bin/spring-metal4-scene"
+        },
+        "child": {
+          "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+          "pid": 32712,
+          "actual": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/R03_ORIGINAL/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": null,
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1"
+          },
+          "expected": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/R03_ORIGINAL/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": null,
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1"
+          },
+          "beforeCountedWindow": true
+        },
+        "fatal_engine_lines": [],
+        "validation_on_lines": [],
+        "ultra_receipt": [
+          {
+            "line": 3523,
+            "text": "[t=00:00:41.833751][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          },
+          {
+            "line": 3567,
+            "text": "[t=00:00:45.356311][f=0000029] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0"
+          }
+        ],
+        "sensorlos_widget_loaded": [
+          {
+            "line": 3486,
+            "text": "[t=00:00:35.268660][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ],
+        "potential_sensorlos_route": [
+          {
+            "line": 3647,
+            "text": "[t=00:01:09.538377][f=0000666] [NativeBloom217Inspect] source_frame=2048 sim=666 bloom_sequence=455109 bloom_index=11 next_sequence=455110 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3649,
+            "text": "[t=00:01:09.538455][f=0000666] [NativeBloom217Successor] source_frame=2048 sequence=455110 kind=34 index=0 encoder=0x75e17fa680 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3650,
+            "text": "[t=00:01:09.551799][f=0000667] [NativeBloom217Inspect] source_frame=2049 sim=666 bloom_sequence=455309 bloom_index=11 next_sequence=455310 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3652,
+            "text": "[t=00:01:09.551884][f=0000667] [NativeBloom217Successor] source_frame=2049 sequence=455310 kind=34 index=0 encoder=0x75e17f8620 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3653,
+            "text": "[t=00:01:09.565782][f=0000667] [NativeBloom217Inspect] source_frame=2050 sim=667 bloom_sequence=455508 bloom_index=11 next_sequence=455509 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3655,
+            "text": "[t=00:01:09.565860][f=0000667] [NativeBloom217Successor] source_frame=2050 sequence=455509 kind=34 index=0 encoder=0x75e17f9880 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3656,
+            "text": "[t=00:01:09.579890][f=0000668] [NativeBloom217Inspect] source_frame=2051 sim=667 bloom_sequence=455707 bloom_index=11 next_sequence=455708 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3658,
+            "text": "[t=00:01:09.579929][f=0000668] [NativeBloom217Successor] source_frame=2051 sequence=455708 kind=34 index=0 encoder=0x75e17f9b20 same_encoder=1 emitted=1"
+          }
+        ],
+        "data_root_lines": [
+          {
+            "line": 1509,
+            "text": "[t=00:00:11.210183] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/R03_ORIGINAL/state/data/"
+          },
+          {
+            "line": 1510,
+            "text": "[t=00:00:11.210193] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/bin/"
+          },
+          {
+            "line": 1511,
+            "text": "[t=00:00:11.210203] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/data/"
+          },
+          {
+            "line": 1512,
+            "text": "[t=00:00:11.210213] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/R03_ORIGINAL/assets/"
+          },
+          {
+            "line": 1519,
+            "text": "[t=00:00:11.210920] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/data/base"
+          }
+        ],
+        "engine_log_sha256": "759fe54acf764df3caa2b088dd66b8f69dc67d49689b0641de233fee67f575e0",
+        "launch_error": {},
+        "runner_stats": {
+          "samples": 2588,
+          "coveredSeconds": 39.980001321,
+          "p99Ms": 17.999999,
+          "slow1PercentFPS": 54.05405663875947,
+          "maximumMs": 28.000001,
+          "over16_667ms": 483,
+          "over33_333ms": 0,
+          "rawSHA256": "38e7076560c419ca2d26121deb5d14ece9f8e8d558af0b936f21112b1dd55111",
+          "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+          "observerOverhead": "Identical observer in both arms; not independently quantified"
+        }
+      },
+      "FRAGMENT_REJECT": {
+        "timing": {
+          "fps": 64.72014865532098,
+          "frames_drawn": 2589,
+          "elapsed_seconds": 40.002998352,
+          "frame_time": {
+            "count": 2588,
+            "mean_ms": 15.452087071483772,
+            "median_ms": 16.000001,
+            "p95_ms": 17.000001,
+            "p99_ms": 17.999999,
+            "max_ms": 18.999999,
+            "slowest_1_percent_mean_ms": 18.03846053846154,
+            "one_percent_low_fps": 55.43710328649186
+          },
+          "bins_count": 40,
+          "start_simulation": 540,
+          "end_simulation": 1740,
+          "camera": [
+            "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          ],
+          "initial_state": [
+            "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          ],
+          "combat_seed": [
+            "7654321"
+          ],
+          "synced_combat": [
+            [
+              "600",
+              "433"
+            ]
+          ],
+          "fps_raw": [
+            {
+              "line": 2366,
+              "text": "[t=00:01:18.720359][f=0001740] [NativeShortRun] total draws=2589 seconds=40.002998352"
+            }
+          ],
+          "frame_csv": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/runs/FRAGMENT_REJECT/TERRAIN211-FRAMES.csv",
+          "frame_csv_sha256": "5c027f0f868e2a7ec00e45e7292c631586bdaa8716c9a8e45071021ae3a7975d",
+          "infolog_sha256": "3b640ddf37df0b1fd687bd544d2cd370822ea091d713916dddf3f571f5ea4e1c",
+          "workload_bins_valid": true
+        },
+        "launch_claim": true,
+        "actual_binary": {
+          "pid": 32853,
+          "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/bin/spring-metal4-scene",
+          "sha256": "4df93fbda60c3c1d0fc930db951c120adf5341976963846b79846dc8a096ce75",
+          "verified_while_child_was_alive": true
+        },
+        "normal_exit": true,
+        "owned": {
+          "pid": 32853,
+          "pgid": 32853,
+          "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/bin/spring-metal4-scene"
+        },
+        "child": {
+          "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+          "pid": 32853,
+          "actual": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/FRAGMENT_REJECT/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": null,
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1"
+          },
+          "expected": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/FRAGMENT_REJECT/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": null,
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1"
+          },
+          "beforeCountedWindow": true
+        },
+        "fatal_engine_lines": [],
+        "validation_on_lines": [],
+        "ultra_receipt": [
+          {
+            "line": 3523,
+            "text": "[t=00:00:13.774325][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          },
+          {
+            "line": 3574,
+            "text": "[t=00:00:14.876520][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0"
+          }
+        ],
+        "sensorlos_widget_loaded": [
+          {
+            "line": 3486,
+            "text": "[t=00:00:12.329533][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ],
+        "potential_sensorlos_route": [
+          {
+            "line": 3639,
+            "text": "[t=00:00:35.731769][f=0000450] [NativeBloom217Inspect] source_frame=2863 sim=450 bloom_sequence=677975 bloom_index=11 next_sequence=677976 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3641,
+            "text": "[t=00:00:35.731817][f=0000450] [NativeBloom217Successor] source_frame=2863 sequence=677976 kind=34 index=0 encoder=0x7ab2851c00 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3642,
+            "text": "[t=00:00:35.745542][f=0000450] [NativeBloom217Inspect] source_frame=2864 sim=450 bloom_sequence=678168 bloom_index=11 next_sequence=678169 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3644,
+            "text": "[t=00:00:35.745609][f=0000450] [NativeBloom217Successor] source_frame=2864 sequence=678169 kind=34 index=0 encoder=0x7ab28531e0 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3645,
+            "text": "[t=00:00:35.759222][f=0000451] [NativeBloom217Inspect] source_frame=2865 sim=450 bloom_sequence=678377 bloom_index=11 next_sequence=678378 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3647,
+            "text": "[t=00:00:35.759263][f=0000451] [NativeBloom217Successor] source_frame=2865 sequence=678378 kind=34 index=0 encoder=0x7ab2850460 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3648,
+            "text": "[t=00:00:35.772454][f=0000451] [NativeBloom217Inspect] source_frame=2866 sim=451 bloom_sequence=678585 bloom_index=11 next_sequence=678586 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3650,
+            "text": "[t=00:00:35.772547][f=0000451] [NativeBloom217Successor] source_frame=2866 sequence=678586 kind=34 index=0 encoder=0x7ab2852680 same_encoder=1 emitted=1"
+          }
+        ],
+        "data_root_lines": [
+          {
+            "line": 1509,
+            "text": "[t=00:00:00.610416] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/FRAGMENT_REJECT/state/data/"
+          },
+          {
+            "line": 1510,
+            "text": "[t=00:00:00.610427] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/bin/"
+          },
+          {
+            "line": 1511,
+            "text": "[t=00:00:00.610437] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/data/"
+          },
+          {
+            "line": 1512,
+            "text": "[t=00:00:00.610445] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/FRAGMENT_REJECT/assets/"
+          },
+          {
+            "line": 1519,
+            "text": "[t=00:00:00.611086] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/data/base"
+          }
+        ],
+        "engine_log_sha256": "5e326b044abac870f243a41e909304113ff56bf6feced55146a5fa1b37b0ab1f",
+        "launch_error": {},
+        "runner_stats": {
+          "samples": 2588,
+          "coveredSeconds": 39.990001341,
+          "p99Ms": 17.999999,
+          "slow1PercentFPS": 55.43710328649187,
+          "maximumMs": 18.999999,
+          "over16_667ms": 505,
+          "over33_333ms": 0,
+          "rawSHA256": "5c027f0f868e2a7ec00e45e7292c631586bdaa8716c9a8e45071021ae3a7975d",
+          "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+          "observerOverhead": "Identical observer in both arms; not independently quantified"
+        }
+      }
+    },
+    "comparison": {
+      "delta_fps": -0.012944709723242909,
+      "relative_percent": -0.019997051045039793,
+      "one_percent_low_relative_percent": 2.558636175958484,
+      "workload_match": {
+        "same_scene": true,
+        "same_camera": true,
+        "same_simulation_window": true,
+        "same_combat_seed": true,
+        "same_synced_create_destroy_counts": true,
+        "bin_boundaries_and_visible_units_match": true,
+        "both_bins_contiguous": true
+      }
+    }
+  },
+  "frame_time_quantiles": "Nearest-rank p95 and p99. One-percent low is reciprocal of the mean of the slowest ceil(0.01 × frame count) timings.",
+  "dependency_summary": {
+    "non_system_resolved_paths_arches_and_hashes_match": true,
+    "common_direct_expected_count": 9,
+    "direct_expected_loaded_by_arm": {
+      "R03_ORIGINAL": 9,
+      "FRAGMENT_REJECT": 9
+    },
+    "non_system_count_by_arm": {
+      "R03_ORIGINAL": 19,
+      "FRAGMENT_REJECT": 19
+    },
+    "system_dylib_paths_match": true,
+    "mode": "DYLD_PRINT_LIBRARIES in the existing child environment, plus post-run path, architecture and SHA-256 inspection",
+    "matches_round36_19_non_system_dylibs": true
+  },
+  "single_pair": true,
+  "sensor_los_counted_draw_witnesses": {
+    "R03_ORIGINAL": {
+      "witnesses": [
+        {
+          "simulation_tick": 666,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3647,
+            "text": "[t=00:01:09.538377][f=0000666] [NativeBloom217Inspect] source_frame=2048 sim=666 bloom_sequence=455109 bloom_index=11 next_sequence=455110 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3649,
+            "text": "[t=00:01:09.538455][f=0000666] [NativeBloom217Successor] source_frame=2048 sequence=455110 kind=34 index=0 encoder=0x75e17fa680 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2048",
+          "sequence": "455110"
+        },
+        {
+          "simulation_tick": 666,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3650,
+            "text": "[t=00:01:09.551799][f=0000667] [NativeBloom217Inspect] source_frame=2049 sim=666 bloom_sequence=455309 bloom_index=11 next_sequence=455310 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3652,
+            "text": "[t=00:01:09.551884][f=0000667] [NativeBloom217Successor] source_frame=2049 sequence=455310 kind=34 index=0 encoder=0x75e17f8620 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2049",
+          "sequence": "455310"
+        },
+        {
+          "simulation_tick": 667,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3653,
+            "text": "[t=00:01:09.565782][f=0000667] [NativeBloom217Inspect] source_frame=2050 sim=667 bloom_sequence=455508 bloom_index=11 next_sequence=455509 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3655,
+            "text": "[t=00:01:09.565860][f=0000667] [NativeBloom217Successor] source_frame=2050 sequence=455509 kind=34 index=0 encoder=0x75e17f9880 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2050",
+          "sequence": "455509"
+        },
+        {
+          "simulation_tick": 667,
+          "within_counted_window": true,
+          "prepare": {
+            "line": 3656,
+            "text": "[t=00:01:09.579890][f=0000668] [NativeBloom217Inspect] source_frame=2051 sim=667 bloom_sequence=455707 bloom_index=11 next_sequence=455708 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3658,
+            "text": "[t=00:01:09.579929][f=0000668] [NativeBloom217Successor] source_frame=2051 sequence=455708 kind=34 index=0 encoder=0x75e17f9b20 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2051",
+          "sequence": "455708"
+        }
+      ],
+      "counted_witnesses": 4,
+      "widget_loaded": true,
+      "existing_probe_log_count": 8
+    },
+    "FRAGMENT_REJECT": {
+      "witnesses": [
+        {
+          "simulation_tick": 450,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3639,
+            "text": "[t=00:00:35.731769][f=0000450] [NativeBloom217Inspect] source_frame=2863 sim=450 bloom_sequence=677975 bloom_index=11 next_sequence=677976 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3641,
+            "text": "[t=00:00:35.731817][f=0000450] [NativeBloom217Successor] source_frame=2863 sequence=677976 kind=34 index=0 encoder=0x7ab2851c00 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2863",
+          "sequence": "677976"
+        },
+        {
+          "simulation_tick": 450,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3642,
+            "text": "[t=00:00:35.745542][f=0000450] [NativeBloom217Inspect] source_frame=2864 sim=450 bloom_sequence=678168 bloom_index=11 next_sequence=678169 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3644,
+            "text": "[t=00:00:35.745609][f=0000450] [NativeBloom217Successor] source_frame=2864 sequence=678169 kind=34 index=0 encoder=0x7ab28531e0 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2864",
+          "sequence": "678169"
+        },
+        {
+          "simulation_tick": 450,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3645,
+            "text": "[t=00:00:35.759222][f=0000451] [NativeBloom217Inspect] source_frame=2865 sim=450 bloom_sequence=678377 bloom_index=11 next_sequence=678378 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3647,
+            "text": "[t=00:00:35.759263][f=0000451] [NativeBloom217Successor] source_frame=2865 sequence=678378 kind=34 index=0 encoder=0x7ab2850460 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2865",
+          "sequence": "678378"
+        },
+        {
+          "simulation_tick": 451,
+          "within_counted_window": false,
+          "prepare": {
+            "line": 3648,
+            "text": "[t=00:00:35.772454][f=0000451] [NativeBloom217Inspect] source_frame=2866 sim=451 bloom_sequence=678585 bloom_index=11 next_sequence=678586 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          "encode": {
+            "line": 3650,
+            "text": "[t=00:00:35.772547][f=0000451] [NativeBloom217Successor] source_frame=2866 sequence=678586 kind=34 index=0 encoder=0x7ab2852680 same_encoder=1 emitted=1"
+          },
+          "source_frame": "2866",
+          "sequence": "678586"
+        }
+      ],
+      "counted_witnesses": 0,
+      "widget_loaded": true,
+      "existing_probe_log_count": 8
+    }
+  },
+  "separate_helper_result": {
+    "status": "PASS_BIT_IDENTICAL_SAMPLE1",
+    "helper_binary_sha256": "8e023a784c3604f7deed3e559e9a55b96b695aa435b00aa2ff9cae0197bcc8c3",
+    "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gpu_log_sha256": "059a2e429b369521cc3431249f91fd6ad93169042b5adda9419c11108fa1ee9b",
+    "regular_cases": 3600,
+    "asymmetric_cases": 1024,
+    "color_depth_stencil_comparisons": 12065,
+    "metal_api_validation_observed": true,
+    "gpu_duration_seconds": 31.150253,
+    "mip_derivative_stress": "Existing mipmapped R8 texture fixtures and selected linear-mip sampler.",
+    "sample4": "Guard fallback cases used the single-sample pipeline. MSAA shader bytes unchanged."
+  }
+}

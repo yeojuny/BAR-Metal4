@@ -1,0 +1,14 @@
+{
+  "round_id": "r03-minor-reject-correctness-20261117-06",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_BOUNDED_HELPER_PARITY_PROCEED_ISOLATED_PERFORMANCE_CANDIDATE",
+  "reviewed_commit": "6f5ebf7d8ea5ed111dbdee4aa3f00802a5241896",
+  "actual_logs": {
+    "compile": "empty diagnostics, exit0, one attempt",
+    "gpu": "Metal API Validation Enabled; 12065 original-versus-candidate comparisons; original3600/asymmetric1024; negative stencil96/facing24",
+    "inputs": "All fixed manifest/helper/three-header hashes match request",
+    "cleanup": "All children reaped, readbacks waitUntilCompleted, successful helper exit; no awake keeper"
+  },
+  "scope": "Small render fixture coverage/color/depth/stencil parity, not full-game or exhaustive float-boundary proof. Large coordinates CPU-only; AA4 guard-only; no performance result.",
+  "next": "One isolated fixed R03 engine build and R02/R03 two-product runner staging. Same established fixture; no games until new binary and runner/input hashes reviewed. No repeated helper or capture."
+}

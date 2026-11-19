@@ -1,0 +1,20 @@
+{
+  "source_sha256": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/source/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm": "518a9592b19dc6cda2c4f4b9e29b618a3b01433eb481ce73d72d3f509569a43f",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/source/engine/rts/Rendering/Backend/NativeSensorLOSData.h": "62168c4f9ccab0903e87e38196dd7a1d8e771756ed1b14b760e2c95fb2bdd753",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/fresh-draw-upload-bundle-fps-20261118-47/source/engine/rts/Rendering/Metal4/Metal4FreshDrawUpload.h": "fd063e1b214f93292c74d9adbbf1867551006960e3165d9e87eff2ba0837f2a9",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/fresh-draw-upload-bundle-fps-20261118-47/source/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521"
+  },
+  "extraction_sha256": {
+    "uniform_and_sensor_functions": "6807bc3dce7604fcc2784aebc70c50ecfa1325d5662d4d3b83bf51e6316590f4",
+    "instance": "a14f877cecc55ced2415a2001844bd112642f30f1c694d9922acc097ac954cfb",
+    "sensor_allocate_fallback": "ced23c8839bd8add0a9ad3094b3e75f2f95b80b3946d3a01629b317f1104e0d5",
+    "sensor_bind": "efac68af524f82abc2c73e49c51e68fe264cd37319ddc69ff9ebf5a2c373439a",
+    "common": "1098c33d9274c3bd131fd735d56fb0417f1f5e6ebaea1805f8c5b1f78aa0262d"
+  },
+  "fixture_sha256": "3109389e6b32b24a28d1ee580725b741eeaadbdd8973e94173682df8dfd82e41",
+  "proof_scope": "Actual Metal4 slots bit-for-bit via diagnostic fragment; exact production allocation functions and SensorLOS choose/fallback/bind statements extracted.",
+  "fixture_boundaries": "Private device proxy injects nil or smaller capacity; actual Metal buffers, submission and residency are used. Production runtime ownership is read from source; no gameplay, production rendering parity or MSAA.",
+  "prior_fixture_sha256": "84a5b46f1dc731e23d5b94c574651b52d76b6989aa02fc1a7fd21f10ad4a9257",
+  "amendment": "Use the macOS SDK 27.2 Metal4 compiler selector with its explicit compilerTaskOptions argument; allocation and shader test inputs unchanged."
+}

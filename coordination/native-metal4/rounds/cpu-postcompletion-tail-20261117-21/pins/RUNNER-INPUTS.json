@@ -1,0 +1,14 @@
+{
+  "files": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/CONTENT-HASHES-RECOMPUTED.json": "75d2cf99f84434a8819f2c77ccec17cadbc0de816498e67da6bbc5bc39ff666e",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/DIAGNOSTIC-CONTROLS.json": "d0b2a8fd96679fe512e474abe6b057b7396b764a0073d6c929beb3d39875111a",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/RUNTIME-REVERIFICATION.json": "b149effefee044acd7e6e18a4b0a49c4d4dcde851c1698cd2fd60dd3355f56e0",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/measurement/diagnostic_runner.py": "8cb00271072305a1dfa1e04052c37634723bf979bd1ffef36f9d09f784c04f60",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/measurement/preflight.py": "31c79a22a5d9251c67cde0030911f48214195a89cd6431d2d82e903b40a4d7e1",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/runs/D_CPU_POSTCOMPLETION_TAIL/ENV.json": "70690ce101f1e7f8a4a6c086956b95b95932d8f4e414f8eede219f8d75ae7d86",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/runs/D_CPU_POSTCOMPLETION_TAIL/LAUNCH.json": "101ef7cf4897f03090debb66ed571e1de967295d5585a191f57e50f40efef032",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/watch_display110.py": "c6e6ffd87467b96628e81d70099462b5c4bb6b65dad0bcbea1acbc615b5ef786"
+  },
+  "latest_STATE_must_be_reverified_after_separate_handoff": true,
+  "source_pin_verified_in_preparation": true
+}

@@ -1,0 +1,12 @@
+{
+  "status": "COMPLETE",
+  "runs": 6,
+  "means": {
+    "baseline": 64.11410197258326,
+    "candidate": 64.10449031999734
+  },
+  "candidateVsBaselinePercent": -0.014991479706016886,
+  "allValidSlowRunsRetained": true,
+  "historicalSamplesPooled": false,
+  "utc": "2026-11-17T05:16:35.467543+00:00"
+}

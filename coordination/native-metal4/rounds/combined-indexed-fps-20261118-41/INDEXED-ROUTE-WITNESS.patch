@@ -1,0 +1,168 @@
+diff --git a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm b/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
+@@ -1081,8 +1081,16 @@
+ 				[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt16
+ 				                   indexBuffer:draw.healthBarsIndices.gpuAddress indexBufferLength:draw.healthBarsIndices.length
+ 				                 instanceCount:draw.healthBarsInstances];
++				[[maybe_unused]] static const bool logged = [] {
++					LOG("[NativeIndexedRoute] family=healthbars mode=indexed");
++					return true;
++				}();
+ 			} else {
+ 				[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.healthBarsInstances];
++				[[maybe_unused]] static const bool logged = [] {
++					LOG("[NativeIndexedRoute] family=healthbars mode=direct");
++					return true;
++				}();
+ 			}
+ 			continue;
+ 		}
+diff --git a/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm b/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
+@@ -3,6 +3,7 @@
+ #include "NativeSensorLOSShaders.h"
+ #include "Metal4NativeEffectState.h"
+ #include "Metal4FixedTriangleIndexBuffer.h"
++#include "System/Log/ILog.h"
+ #include <map>
+ #include <tuple>
+ #include <unordered_map>
+@@ -62,8 +63,30 @@
+ 	if (impl->indices) {
+ 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->vertices indexType:MTLIndexTypeUInt16
+ 		                   indexBuffer:impl->indices.gpuAddress indexBufferLength:impl->indices.length instanceCount:impl->instances];
++		if (impl->source.program.defines->stencilPass) {
++			[[maybe_unused]] static const bool logged = [] {
++				LOG("[NativeIndexedRoute] family=sensorlos_r8_fan mode=indexed");
++				return true;
++			}();
++		} else {
++			[[maybe_unused]] static const bool logged = [] {
++				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=indexed");
++				return true;
++			}();
++		}
+ 	} else {
+ 		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
++		if (impl->source.program.defines->stencilPass) {
++			[[maybe_unused]] static const bool logged = [] {
++				LOG("[NativeIndexedRoute] family=sensorlos_r8_fan mode=direct");
++				return true;
++			}();
++		} else {
++			[[maybe_unused]] static const bool logged = [] {
++				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=direct");
++				return true;
++			}();
++		}
+ 	}
+ }
+ struct SensorLOSGPU::Impl {
+diff --git a/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm b/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
+@@ -3,6 +3,7 @@
+ #include "NativeSensor31657CircleShaders.h"
+ #include "Metal4NativeEffectState.h"
+ #include "Metal4FixedTriangleIndexBuffer.h"
++#include "System/Log/ILog.h"
+ #include <map>
+ #include <tuple>
+ #include <unordered_map>
+@@ -61,8 +62,16 @@
+ 	if (impl->indices) {
+ 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->vertices indexType:MTLIndexTypeUInt16
+ 		                   indexBuffer:impl->indices.gpuAddress indexBufferLength:impl->indices.length instanceCount:impl->instances];
++		[[maybe_unused]] static const bool logged = [] {
++			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=indexed");
++			return true;
++		}();
+ 	} else {
+ 		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
++		[[maybe_unused]] static const bool logged = [] {
++			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=direct");
++			return true;
++		}();
+ 	}
+ }
+ struct Sensor31657CircleGPU::Impl {
+diff --git a/engine/rts/Rendering/Metal4/Metal4UnitStencil.mm b/engine/rts/Rendering/Metal4/Metal4UnitStencil.mm
+--- a/engine/rts/Rendering/Metal4/Metal4UnitStencil.mm
++++ b/engine/rts/Rendering/Metal4/Metal4UnitStencil.mm
+@@ -6,6 +6,7 @@
+ #include "NativeUnitStencilShaders.h"
+ #include "Metal4NativeEffectState.h"
+ #include "Metal4FixedTriangleIndexBuffer.h"
++#include "System/Log/ILog.h"
+ #include "Rendering/Backend/NativeCUSRenderInputs.h"
+ #import <simd/simd.h>
+ #include <algorithm>
+@@ -92,8 +93,18 @@
+ 		if (draw.indices) {
+ 			[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:triangleReuse::unitStencil.size() indexType:MTLIndexTypeUInt16
+ 			                   indexBuffer:draw.indices.gpuAddress indexBufferLength:draw.indices.length instanceCount:draw.instances];
++			[[maybe_unused]] static const bool logged = [] {
++				LOG("[NativeIndexedRoute] family=unit_stencil mode=indexed");
++				return true;
++			}();
+ 		} else {
+ 			[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.clear?3:18 instanceCount:draw.instances];
++			if (!draw.clear && draw.instances) {
++				[[maybe_unused]] static const bool logged = [] {
++					LOG("[NativeIndexedRoute] family=unit_stencil mode=direct");
++					return true;
++				}();
++			}
+ 		}
+ 	}
+ 	[encoder endEncoding];pass.output->producer->submissionIdentity=pass.submission;pass.output->producer->encoded=true;pass.encoded=true;
+diff --git a/engine/rts/Rendering/Metal4/Metal4GameDecal.mm b/engine/rts/Rendering/Metal4/Metal4GameDecal.mm
+--- a/engine/rts/Rendering/Metal4/Metal4GameDecal.mm
++++ b/engine/rts/Rendering/Metal4/Metal4GameDecal.mm
+@@ -4,6 +4,7 @@
+ #include "Metal4InterventionMath.h"
+ #include "NativeGameDecalShaders.h"
+ #include "Rendering/Metal4/Metal4NativeEffectState.h"
++#include "System/Log/ILog.h"
+ #import <simd/simd.h>
+ #include <cstdlib>
+ #include <cstring>
+@@ -64,6 +65,7 @@
+ 		std::size_t indexStride=0;
+ 		effectstate::Raster raster;
+ 		NativeWorldDrawState state;
++		bool indexedSmall=false;
+ 	};
+ 	std::vector<Draw> draws;
+ 	std::shared_ptr<const NativeCUSUniformPublication> originalUniforms;
+@@ -82,7 +84,19 @@
+ 	if(draw.indices){
+ 		const auto offset=std::size_t(draw.first)*draw.indexStride;
+ 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:draw.indexType indexBuffer:draw.indices.gpuAddress+offset indexBufferLength:draw.indices.length-offset instanceCount:draw.instances];
+-	}else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:gameDecalGeometry::VertexSlots instanceCount:draw.instances];
++		if (draw.indexedSmall) {
++			[[maybe_unused]] static const bool logged = [] {
++				LOG("[NativeIndexedRoute] family=gamedecal_small mode=indexed");
++				return true;
++			}();
++		}
++	} else {
++		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:gameDecalGeometry::VertexSlots instanceCount:draw.instances];
++		[[maybe_unused]] static const bool logged = [] {
++			LOG("[NativeIndexedRoute] family=gamedecal_small mode=direct");
++			return true;
++		}();
++	}
+ }
+ struct GameDecalGPU::Impl {
+ 	__strong id<MTLLibrary> library=nil;
+@@ -204,6 +218,7 @@
+ 		if(indexedSmall){
+ 			// The source row range remains in u.options.z and packet.instances.
+ 			// These fields describe the constant topology, not a row offset.
++			packet.indexedSmall=true;
+ 			packet.count=gameDecalGeometry::Indices.size();packet.first=0;
+ 			packet.indexStride=sizeof(std::uint16_t);packet.indexType=MTLIndexTypeUInt16;
+ 		}else if(!small){packet.indexStride=draw.indices->layout.stride;packet.indexType=packet.indexStride==2?MTLIndexTypeUInt16:MTLIndexTypeUInt32;}

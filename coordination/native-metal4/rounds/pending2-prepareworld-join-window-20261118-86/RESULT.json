@@ -1,0 +1,64 @@
+{
+  "status": "CASE_MATCHED_WITH_WINDOW_EDGE_MISSING",
+  "diagnostic_FPS": 64.86135068610253,
+  "slow1PercentFPS": 19.41747617770109,
+  "maximumMs": 783.9999789999999,
+  "raw_intervals": 2593,
+  "no_frames_removed": true,
+  "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+  "window_inclusive": [
+    1122,
+    1128
+  ],
+  "trace": {
+    "window_gate": "TRACE_INCOMPLETE",
+    "exact_target_complete": true,
+    "outer_roi_draws": 14,
+    "detailed_draws": 13,
+    "first_omitted_draw": 3610,
+    "dropped": 0,
+    "records": 574,
+    "buffers": 26,
+    "emissions": 2,
+    "all_game_roi_draws": 88
+  },
+  "case": {
+    "simulation": 1125,
+    "draw": 3616,
+    "frame_ms": 29,
+    "prepare_world_wall_ms": 14.68,
+    "prepare_world_main_cpu_ms": 1.475667,
+    "main_finish_ms": 13.237417,
+    "task_join_ms": 13.213,
+    "worker_overlap_ms": 13.203,
+    "join_post_worker_ms": 0.01,
+    "worker_job": 5,
+    "worker_draw": 3615,
+    "retired_job": 4,
+    "retired_source_draw": 3614,
+    "retired_event": 3613,
+    "worker_event_total_ms": 13.573666,
+    "worker_event_overlap_ms": 10.348333,
+    "worker_event_overlap_percent": 78.3193294,
+    "feedback_ms": 0.049833,
+    "worker_bracket": "ScreenGPU::Prepare before encoding",
+    "actual_image_and_read_site": "unknown"
+  },
+  "counts": {
+    "configure": 0,
+    "engine_build": 0,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "baseline_changed": false,
+  "cap1_default": true,
+  "cleanup_complete": true,
+  "raw_SHA256": {
+    "infolog": "209ca9794e008ae1dc7a80d9c6692e834aa6096e942671b1c8f978244d6eb7e9",
+    "capture_roi": "03793c4ef84c447c74f1dd7efaaf57539168d6cd38d4fd6d43c8eea5840ab070",
+    "frame_rows": "73305bb776c9422791f5fa19cc3f7cdeb6698261b678ea83db292c74db421fa5"
+  }
+}

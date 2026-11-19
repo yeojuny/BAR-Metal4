@@ -1,0 +1,39 @@
+{
+  "round_id": "game-decal-indexed-validation-20261117-31",
+  "attempt_id": "indexed-native-off-on-01",
+  "scope": "PINNED_OPT_IN_SMALL_LUA_GAME_DECAL_NATIVE_VALIDATION",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "candidate_commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+  "candidate_bundle": "docs/research/game-decal-indexed-20261117/CANDIDATE-BUNDLE.json",
+  "manifest_sha256": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
+  "patch_sha256": "79871e8ae1aa4ad91cecba23798e2e1fcbfb3b2f90644a9e717550accd26391d",
+  "base_binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "opt_in": "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY=1",
+  "aa": "OFF",
+  "required_attachment_samples": 1,
+  "budget": {
+    "engine_builds": 1,
+    "parity_helper_compiles_max": 1,
+    "parity_helper_gpu_invocations_max": 1,
+    "parity_games_max": 2,
+    "clean_games_max": 2,
+    "games_max": 4,
+    "captures": 0,
+    "trace_inspections": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "gates": [
+    "Pinned macOS SDK engine compile.",
+    "Identical fixture rows and UBO, actual 96 UInt16 / 192 byte indexed submission, source row first/count preserved, sample1, no Metal validation errors.",
+    "Verify tiny, regular, overlap/blend, clip/reject and nonzero-first color/depth/stencil/coverage parity.",
+    "Only after parity PASS: one clean native OFF and one ON, same candidate binary and verified comparable workload."
+  ],
+  "execution_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31",
+  "authorization": [
+    "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "Sentinel_8563c81084e48191aa31675bff31ab10"
+  ],
+  "result_path": "coordination/native-metal4/rounds/game-decal-indexed-validation-20261117-31/DONE.json"
+}

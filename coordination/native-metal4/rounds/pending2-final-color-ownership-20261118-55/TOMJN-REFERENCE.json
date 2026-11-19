@@ -1,0 +1,11 @@
+{
+  "author": "tomjn",
+  "pr": "https://github.com/beyond-all-reason/RecoilEngine/pull/3780",
+  "head": "d69c659d7de42365d03c2030952fe31c3c147243",
+  "file": "rts/Rendering/GL/MacEGLBridge.cpp",
+  "evidence": [
+    "NUM_SLOTS=3 at 114",
+    "Current glReadPixels, GL fence/flush then previous slot wait and SDL_RenderPresent at 725–776"
+  ],
+  "interpretation": "Three presentation transfer slots. PR reports two frames in hand on its GL/Zink/KosmicKrisp path. No direct-native Metal4 pending-3 claim or code imported."
+}

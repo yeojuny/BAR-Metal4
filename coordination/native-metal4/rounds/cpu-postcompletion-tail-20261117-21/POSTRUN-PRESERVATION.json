@@ -1,0 +1,18 @@
+{
+  "bar_status": "PAUSED",
+  "caffeinate_pid_gone": 76535,
+  "dylibs_unchanged": 19,
+  "engine_pid_gone": 76541,
+  "games": 1,
+  "mismatches": [],
+  "new_builds": 0,
+  "normal_exit": true,
+  "original_metadata_and_profile_files": 20,
+  "ready_artifacts_unchanged": 6,
+  "restages": 0,
+  "retries": 0,
+  "signed_engine_unchanged": true,
+  "source_edits": 0,
+  "source_files": 10273,
+  "status": "PASS"
+}

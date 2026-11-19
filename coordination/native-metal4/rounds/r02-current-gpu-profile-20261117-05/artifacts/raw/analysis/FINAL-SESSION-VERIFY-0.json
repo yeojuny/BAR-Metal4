@@ -1,0 +1,9 @@
+{
+  "command": [
+    "/usr/bin/gpudebug",
+    "--list-sessions"
+  ],
+  "exit": 0,
+  "stdout": "No active sessions.\n",
+  "stderr": ""
+}

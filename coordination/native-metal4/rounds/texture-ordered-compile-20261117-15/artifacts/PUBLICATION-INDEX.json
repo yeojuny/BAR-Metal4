@@ -1,0 +1,266 @@
+[
+  {
+    "name": "REPORT.md",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/REPORT.md",
+    "bytes": 2721,
+    "characters": 2721,
+    "sha256": "bfd4d72448c414e0e5e8d05f77503597789debaa8bc36b06e8d41a8b08d860a5",
+    "git_blob_sha": "f22b15052dec11d02d3da7f6bad8f95769b44043"
+  },
+  {
+    "name": "RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/RESULT.json",
+    "bytes": 2706,
+    "characters": 2706,
+    "sha256": "d54396ea0f38eea272c3eb90fe81f4165a4105847eb9bc36fb558f2561445780",
+    "git_blob_sha": "b6595816d10dfc7c9fd99c594609fdfcf6bccd74"
+  },
+  {
+    "name": "EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/EXECUTION.json",
+    "bytes": 2288,
+    "characters": 2288,
+    "sha256": "97a854a2046cfdff6d7b54bea101ebaf740fc7c6f8211c182f29d87daaa7c253",
+    "git_blob_sha": "190aa3f29c0d30828bf8f682032417b17cbbedb9"
+  },
+  {
+    "name": "execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/execute.py",
+    "bytes": 4489,
+    "characters": 4489,
+    "sha256": "83059be24fcf79b1c7cdd51f534afa7bf2a0e72ffa9f91938e06f997a3d4b71f",
+    "git_blob_sha": "c39e94c40f01b6171e97eeeae1a227c6e17e81cb"
+  },
+  {
+    "name": "REQUEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/REQUEST.json",
+    "bytes": 3141,
+    "characters": 3141,
+    "sha256": "abafe61f55277a46cd0f76600d7e47df395477e20ec38e0d398a25bdd6657a43",
+    "git_blob_sha": "be5e3fac28751293bb4586b81f5896ef888dd170"
+  },
+  {
+    "name": "READY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/READY.json",
+    "bytes": 661,
+    "characters": 661,
+    "sha256": "07195c0fe30cd1fb836b3afcca6ceb8b94277436f19190483b17a17e333913b7",
+    "git_blob_sha": "bd0b413fecd9fb95495534c92929b8329d97ea16"
+  },
+  {
+    "name": "RESERVED-STATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/RESERVED-STATE.json",
+    "bytes": 38638,
+    "characters": 35912,
+    "sha256": "9b9e9105f8c2feaee8feeec094547bf46f40679dd4e91c3295865beaf1697bad",
+    "git_blob_sha": "9db118aba12f6cadcc0a5abff39e30f0aa8f86a0"
+  },
+  {
+    "name": "CLONE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/CLONE.log",
+    "bytes": 62,
+    "characters": 62,
+    "sha256": "3eddb03a1b49614acf7a64237e85851e4b7c8a821b5b03ecd50c7b56ceafeeba",
+    "git_blob_sha": "d62d86f270f3e74ebd6893df927b6edec39d8783"
+  },
+  {
+    "name": "CLONE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/CLONE.json",
+    "bytes": 336,
+    "characters": 336,
+    "sha256": "5c030a53906d33cc043b48cf328d4ecaa3b5aa310a64c6b0b3f1c313909fd8e2",
+    "git_blob_sha": "8db5aaaf8c899ced9feb11cbaf1d4c2278fcc9ae"
+  },
+  {
+    "name": "CHECKOUT.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/CHECKOUT.log",
+    "bytes": 88,
+    "characters": 88,
+    "sha256": "ce7fbc9406fb4a65f4d026a35a885bd73253de7daccd941d4b6cbf3a22308077",
+    "git_blob_sha": "2b7ac0e94bb6442532cfde421443c067eaa0a661"
+  },
+  {
+    "name": "MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/MANIFEST.json",
+    "bytes": 1412,
+    "characters": 1412,
+    "sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
+    "git_blob_sha": "48235036db386861eefe99dad9b3691498e2e325"
+  },
+  {
+    "name": "CANDIDATE-PACKET-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/CANDIDATE-PACKET-CHECK.json",
+    "bytes": 999,
+    "characters": 999,
+    "sha256": "8f8459b9857908062f0265e196b08ab55b31aaac903832dd6a41104b7bbdff9a",
+    "git_blob_sha": "3f1fae49412a8184b93b2937008e9d21fbec3c15"
+  },
+  {
+    "name": "PRODUCTION-DELTA.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/PRODUCTION-DELTA.json",
+    "bytes": 303,
+    "characters": 303,
+    "sha256": "807e23d7cbb2495fdb85fd7120a6ff7688db56a4ad96cff0a722b726eb8768dd",
+    "git_blob_sha": "698c20fa7d1923255f6a76ee58975ab01b6837dd"
+  },
+  {
+    "name": "SOURCE-VERIFICATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/SOURCE-VERIFICATION.json",
+    "bytes": 1002,
+    "characters": 1002,
+    "sha256": "3387d71ca170cb4bab872e10a4cd698fa7d5cb363f1981971f84de700c26d78b",
+    "git_blob_sha": "2fc22a2e79d6ceef8f82ddbee07a1d37cee9922d"
+  },
+  {
+    "name": "TOOLCHAIN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/TOOLCHAIN.json",
+    "bytes": 241,
+    "characters": 241,
+    "sha256": "8c6a4a604b9d7e20256d91633aa73a440b91771d821c7c94b2ad6ea428ed0fd8",
+    "git_blob_sha": "23c91a79623435253593e1f9443cfc4b30af2777"
+  },
+  {
+    "name": "CPU-DETAILS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/CPU-DETAILS.json",
+    "bytes": 1521,
+    "characters": 1521,
+    "sha256": "e108db8aec5fac7288eac1b7a0e6fbf556ce75d61e91ef9abdf3c1e19a965e76",
+    "git_blob_sha": "3647da54c0286bcbe90908678d400140db270976"
+  },
+  {
+    "name": "CPU-CONTRACT.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/CPU-CONTRACT.log",
+    "bytes": 189,
+    "characters": 189,
+    "sha256": "c5ee06b4453c342fac6fd15bf1853b64a1bf66753f8b92a433ae424036ef13d5",
+    "git_blob_sha": "c77c60b58ba8ee649b29821beed7082aa3543706"
+  },
+  {
+    "name": "CONFIGURE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/CONFIGURE.log",
+    "bytes": 22900,
+    "characters": 22900,
+    "sha256": "0907dfb766c7c68613d2808dec3944bb74e03b9060b963e17c6443bbfc3a117a",
+    "git_blob_sha": "4aea84d2ce6434c361c2b7483bac3a8d2d6d2d38"
+  },
+  {
+    "name": "BUILD.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/BUILD.log",
+    "bytes": 729149,
+    "characters": 729149,
+    "sha256": "642a3f73a3223de6c1765fdb4a61b7890844be83ea8f476a0d2517006f347b02",
+    "git_blob_sha": "ea0e42de2d6752895e9012fe0b9aa8ee1beaaec3"
+  },
+  {
+    "name": "COMPILE-COMMAND-CLOSURE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/COMPILE-COMMAND-CLOSURE.json",
+    "bytes": 2828,
+    "characters": 2828,
+    "sha256": "a5cbcffc179121d7aca452b56cc12b3dd1bceb7b58fdd6c530eeab7fa7f2dd61",
+    "git_blob_sha": "60b9592db9f9b1b4b306113e70b1cf4154c5cd08"
+  },
+  {
+    "name": "OBJCXX-COMPILE-COMMANDS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/OBJCXX-COMPILE-COMMANDS.json",
+    "bytes": 6116,
+    "characters": 6116,
+    "sha256": "fc1c3d14c6e76ef7d7aec37f83dc3731cf6d00df34a2c91d3b22909d4844cea0",
+    "git_blob_sha": "964ae5e4fc6ea19a6902100b8b2bd4653363a0d1"
+  },
+  {
+    "name": "OBJECT-COMPILE-PROOF.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/OBJECT-COMPILE-PROOF.json",
+    "bytes": 733,
+    "characters": 733,
+    "sha256": "5094cdf6d6d84c9fd714f5461eb11dd0d3e64024d8da7c8d8b8bd4c1ec173294",
+    "git_blob_sha": "0068261dc119394557a28ea72bb1e039a22e4374"
+  },
+  {
+    "name": "OBJECT-DEPENDENCIES.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/OBJECT-DEPENDENCIES.log",
+    "bytes": 596285,
+    "characters": 596285,
+    "sha256": "efd7b16a64240bd0ef84dfc35a68b3f246f6bf429a8a93f1055270be997b657b",
+    "git_blob_sha": "0ca7d5fa4eedaa8304749f5ae0fc04866a4fbdf0"
+  },
+  {
+    "name": "DEPENDENCY-MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/DEPENDENCY-MANIFEST.json",
+    "bytes": 3967,
+    "characters": 3967,
+    "sha256": "55b5ad550e27c6490dac9e5d074686fcfc40c726f6db8857d102a3d6a4fbe0cb",
+    "git_blob_sha": "ab8522d36d398066dd784e5c1982d445685ad733"
+  },
+  {
+    "name": "LINKED-LIBRARIES.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/LINKED-LIBRARIES.log",
+    "bytes": 2520,
+    "characters": 2520,
+    "sha256": "23343c001c01bbec70b965a6eecc044c6784e1c0e7c92edc3bdf099f7350a560",
+    "git_blob_sha": "2909c32c5b19c55df3797ce7cf968ec6bf495132"
+  },
+  {
+    "name": "ARCHIVE-CLOSURE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/ARCHIVE-CLOSURE.json",
+    "bytes": 454582,
+    "characters": 454582,
+    "sha256": "4a544174b738f003bde1cafd2a7b2aee0afdacc5fcb86d0bef824d6127caebbe",
+    "git_blob_sha": "d283caac07ae274fd01b6d6c3ad9c9a35384fab2"
+  },
+  {
+    "name": "ARCHIVE-SUMMARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/ARCHIVE-SUMMARY.json",
+    "bytes": 90,
+    "characters": 90,
+    "sha256": "3774a190955ba897cd68ac3bbf300a8f9e8241dd113ee488733020f405e3597c",
+    "git_blob_sha": "11fd7d7c8f34f51131e6c2cafc97c9a3f1fc488c"
+  },
+  {
+    "name": "LOCAL-ARTIFACTS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/LOCAL-ARTIFACTS.json",
+    "bytes": 870,
+    "characters": 870,
+    "sha256": "1b4265a55555104c6f6a5a46b21c92413293016def8a47d36a17156d18f50b19",
+    "git_blob_sha": "399b2e76a74f9a1117019cff5e6c4d8c4cd8d12b"
+  },
+  {
+    "name": "initial-cache.cmake",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/initial-cache.cmake",
+    "bytes": 36970,
+    "characters": 36970,
+    "sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "git_blob_sha": "ecbb8aa90921944c15310d4a970dbf0f88e96800"
+  },
+  {
+    "name": "UPSTREAM-CONTRIBUTIONS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/UPSTREAM-CONTRIBUTIONS.json",
+    "bytes": 4103,
+    "characters": 4097,
+    "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "git_blob_sha": "32b34021ab58412322e7a81af74d3ba8354da82c"
+  },
+  {
+    "name": "CPU-source/run.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests/run.py",
+    "bytes": 1993,
+    "characters": 1993,
+    "sha256": "4d7a3c1adc207f386f8d86e8094452f61a0a6cb476c2a4a456e813c93ae63419",
+    "git_blob_sha": "90051b2f655131bc2c6e4f0cb6d5ade2591a2152"
+  },
+  {
+    "name": "CPU-source/test.cpp",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests/test.cpp",
+    "bytes": 4329,
+    "characters": 4329,
+    "sha256": "60a47d96cd4cbda56c13d1497d66f77802578b6325f031f0c93e066135bb41dc",
+    "git_blob_sha": "ef6e840075dcba3b59b8f73f846fc36d97092078"
+  },
+  {
+    "name": "CPU-source/extracted_journal.h",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-20261117-01/source/docs/research/texture-ordered-20261117/tests/extracted_journal.h",
+    "bytes": 2084,
+    "characters": 2084,
+    "sha256": "409bbff4c01b31a3b1f86bedef7933ca85d814e374114e8be8cd79bcb7b4a6db",
+    "git_blob_sha": "e7c60d57e354d7efa1f5e12830d139a40560978a"
+  }
+]

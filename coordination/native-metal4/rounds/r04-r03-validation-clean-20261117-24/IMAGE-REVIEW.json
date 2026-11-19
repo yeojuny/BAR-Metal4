@@ -1,0 +1,100 @@
+{
+  "status": "PASS_BOUNDED_VISUAL_REVIEW",
+  "all7ActualPNGsViewed": true,
+  "staticObservation": "Terrain, ravine geometry, structures, tanks, shadows, unit markings and visible green/red sensor/range lines present; no obvious R04-only fixed geometry corruption or omission. Not exhaustive pixel/stencil equivalence.",
+  "animatedDifferences": "Smoke, particles, water/cloud shading and timing overlays vary.",
+  "orangeCirclePresence": {
+    "V_R04": true,
+    "A1_R03": true,
+    "B1_R04": true,
+    "B2_R04": true,
+    "A2_R03": true,
+    "A3_R03": true,
+    "B3_R04": true
+  },
+  "perCleanArmFrequency": {
+    "R03": "3 of3",
+    "R04": "3 of3"
+  },
+  "orangeCircleCause": "UNKNOWN. Unlike the historical validation reference difference, all six current clean snapshots have the circle. No run excluded or repeated; post-count snapshots do not establish identical UI state throughout count.",
+  "images": [
+    {
+      "run": "V_R04",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_validation01/validation_paced/preparation/runs/V_R04/scene.png",
+      "sha256": "3a1e5c8ce7f5cbc40e7df79d3953b50cd61afa45d4dd20ca52247393e3c028a1",
+      "bytes": 2971622,
+      "dimensions": [
+        1512,
+        950
+      ],
+      "orangeRangeCirclePresent": true
+    },
+    {
+      "run": "A1_R03",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/A1_R03/scene.png",
+      "sha256": "995207740d08eb891d5b67f26139a50eef77f92352ea4b115867decce555cea5",
+      "bytes": 2966739,
+      "dimensions": [
+        1512,
+        950
+      ],
+      "orangeRangeCirclePresent": true
+    },
+    {
+      "run": "B1_R04",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/B1_R04/scene.png",
+      "sha256": "591b891a5ea40695a93ddc3e0157c8a635164eb89a4b4999ca1b1902dc41f510",
+      "bytes": 2963883,
+      "dimensions": [
+        1512,
+        950
+      ],
+      "orangeRangeCirclePresent": true
+    },
+    {
+      "run": "B2_R04",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/B2_R04/scene.png",
+      "sha256": "ea098d77f344284bcb053011697361fa0afabfea103363e4419557e429a0fe7f",
+      "bytes": 2966073,
+      "dimensions": [
+        1512,
+        950
+      ],
+      "orangeRangeCirclePresent": true
+    },
+    {
+      "run": "A2_R03",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/A2_R03/scene.png",
+      "sha256": "d8c0f65a0f79551af08e3b2cf077668e38f37c0648cb15867a9d28c70967528e",
+      "bytes": 2971151,
+      "dimensions": [
+        1512,
+        950
+      ],
+      "orangeRangeCirclePresent": true
+    },
+    {
+      "run": "A3_R03",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/A3_R03/scene.png",
+      "sha256": "3001f7664ffd463e5f28b36c55f7bffc39d36fcb45df937368dc6b571334e013",
+      "bytes": 2967838,
+      "dimensions": [
+        1512,
+        950
+      ],
+      "orangeRangeCirclePresent": true
+    },
+    {
+      "run": "B3_R04",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/B3_R04/scene.png",
+      "sha256": "e4209a90585b34f7944c87fcff2e04a8eb68063fa08acac8fb29c898e1662d38",
+      "bytes": 2968056,
+      "dimensions": [
+        1512,
+        950
+      ],
+      "orangeRangeCirclePresent": true
+    }
+  ],
+  "images_to_publish": 7
+}

@@ -1,0 +1,124 @@
+{
+  "files": {
+    "CHAINS.json": {
+      "bytes": 721565,
+      "sha256": "a4af6eb11d56375a3bdd7141baaba7c9fd4ee548a4812f7744f6e7a4ec8a3de2"
+    },
+    "CHILD-ENV-ALLOWLIST.json": {
+      "bytes": 7314,
+      "sha256": "fb8fb9303655208969ac94be4fd3bb6cfd2a916951d4ec8a8cc448d006d592f5"
+    },
+    "PARSER-SPEC.md": {
+      "bytes": 7142,
+      "sha256": "3e7cdb1efa4fde1503d5745997a2d5b40f6d3b06bd416b271f55bae369819a3a"
+    },
+    "POSTRUN-PRESERVATION.json": {
+      "bytes": 404,
+      "sha256": "cd768298b4d295fb285d30b87d0f07a42cdc452e5ca585821f2cb9b17c26e441"
+    },
+    "REPORT.md": {
+      "bytes": 6981,
+      "sha256": "90be2db4eb1252951d84b148172792bfa4bb30e11febc84d481983c1c4404538"
+    },
+    "SCENE-CHECKS.json": {
+      "bytes": 2151,
+      "sha256": "b1790badc07ae270a13c03ee2bb0bb2f2323a9b40c5044d10cccebe23c760b90"
+    },
+    "SUMMARY.json": {
+      "bytes": 3498,
+      "sha256": "5e6f9affb937420b5002120c83f839c820e90fb2ee4bb20b10a4f4af7097764f"
+    },
+    "TRACE-COMPLETENESS.json": {
+      "bytes": 36727,
+      "sha256": "35d03a3d9f8f3c9951a8eb12f942739d58d66c1dd8cb63d558dfa7b04fba589c"
+    },
+    "UPSTREAM-CONTRIBUTIONS.json": {
+      "bytes": 4103,
+      "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83"
+    },
+    "analyze.py": {
+      "bytes": 15205,
+      "sha256": "a942b5e65a78a692cb71c76cbfa9261582a1d00eb74e46d419b9b211d89a3189"
+    },
+    "pins/PIN-REVERIFICATION.json": {
+      "bytes": 1404,
+      "sha256": "5ee111cdaa97423dc7561198d93d833d55b73a5ce1cffc91e44ecb9dfc471035"
+    },
+    "pins/PROFILE-BYTE-PRESERVATION.json": {
+      "bytes": 20201,
+      "sha256": "bc7631f9ea4119314850e89985f51b2c6ffdb5c8cfb5c1cffa66182b5751036c"
+    },
+    "pins/RUNNER-INPUTS.json": {
+      "bytes": 1852,
+      "sha256": "9bd7e2de00f50fd1d8a32187ebe099e2ce85b323020ace4daae7d85ff3305ca0"
+    },
+    "pins/RUNTIME-REVERIFICATION.json": {
+      "bytes": 10762,
+      "sha256": "b149effefee044acd7e6e18a4b0a49c4d4dcde851c1698cd2fd60dd3355f56e0"
+    },
+    "pins/SOURCE-REVERIFICATION.json": {
+      "bytes": 2950,
+      "sha256": "3b36a76bedea2ac8579d74a6bd1a220c26ddfcb99f7c8ef57b13e854013caf40"
+    },
+    "raw/ATTEMPT-CLAIM.json": {
+      "bytes": 250,
+      "sha256": "848dabd8df95c888a9bf468fd9d473186c3f3a27b2d437a2fafb7867ac26d4bd"
+    },
+    "raw/AWAKE-RELEASED.json": {
+      "bytes": 234,
+      "sha256": "3df77d354c05c79299fb6b6cbb5b4004ed6f62df8b3e86f84d64171ff925d1be"
+    },
+    "raw/CLEANUP.json": {
+      "bytes": 263,
+      "sha256": "b29d5eb9e2973f679bfc31e97791782db664111ac081a136d96ef91eb78e6051"
+    },
+    "raw/EXECUTION-RECEIPT.json": {
+      "bytes": 235,
+      "sha256": "5082db7b114a5da02d35f7d089971f513ab7c11613117472363304533059fc7c"
+    },
+    "raw/OWNED.json": {
+      "bytes": 299,
+      "sha256": "920d26d1aab0e691876286caead5846b72a0e041684b8c182e502671ac7c6ee5"
+    },
+    "raw/TERRAIN211-FRAMES.csv": {
+      "bytes": 42258,
+      "sha256": "b0e829582cd3d4ae4883e14425eedfd30e3fee0175d5f888b5c60f30fe1fb132"
+    },
+    "raw/actual-start-script.txt": {
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    "raw/engine.log": {
+      "bytes": 1336187,
+      "sha256": "1110502fb04a5a1b2bc0022c29d71cfe554b2b97802db6e9d61da29d9d243654"
+    },
+    "raw/infolog.txt": {
+      "bytes": 1334987,
+      "sha256": "c00e94029ac13ebe9409e1d7d5dfb9af330952850b2a4f10891c52f288aafd3b"
+    },
+    "runner/diagnostic_runner.py": {
+      "bytes": 9533,
+      "sha256": "8cb00271072305a1dfa1e04052c37634723bf979bd1ffef36f9d09f784c04f60"
+    },
+    "runner/preflight.py": {
+      "bytes": 1863,
+      "sha256": "31c79a22a5d9251c67cde0030911f48214195a89cd6431d2d82e903b40a4d7e1"
+    }
+  },
+  "hash_algorithm": "SHA256",
+  "local_full_environment_not_published": true,
+  "local_only": {
+    "CHILD-ENV-OBSERVED.txt": {
+      "bytes": 4499,
+      "reason": "Raw process environment retained locally; public diagnostic allowlist only",
+      "sha256": "d8dc7ae6a3d8f14f2330924174c11d715797f414bf102265d8b9c12d5b779383"
+    },
+    "scene.png": {
+      "bytes": 2969405,
+      "reason": "Existing post-count image preserved locally; no GPU-tool capture",
+      "sha256": "4f714931f4dea5e42f5716eda723d76ea354caaf1282d6bc3e831ac5a30e6746"
+    }
+  },
+  "planned_ENV_sha256": "70690ce101f1e7f8a4a6c086956b95b95932d8f4e414f8eede219f8d75ae7d86",
+  "planned_LAUNCH_sha256": "101ef7cf4897f03090debb66ed571e1de967295d5585a191f57e50f40efef032"
+}

@@ -1,0 +1,12 @@
+{
+  "status": "RELEASED",
+  "campaign": "pending2-classified-prior-reads-reverse-20261118-64",
+  "pid": 59301,
+  "startUTC": "2026-11-18T09:56:01.586869+00:00",
+  "maximumSeconds": 1800,
+  "securitySettingsChanged": false,
+  "owner": "round64",
+  "endUTC": "2026-11-18T09:58:42.216224+00:00",
+  "ownCaffeinateAlive": false,
+  "existingCaffeinatePreserved": false
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "argv": [
+      "/usr/bin/gpudebug",
+      "--help"
+    ],
+    "pid": 65266,
+    "exit": 0,
+    "seconds": 0.1692595420008729,
+    "output": "gpudebug-help.log"
+  },
+  {
+    "argv": [
+      "/usr/bin/gpudebug",
+      "--list-sessions"
+    ],
+    "pid": 65267,
+    "exit": 0,
+    "seconds": 0.020600500000000466,
+    "output": "sessions-before.log"
+  },
+  {
+    "argv": [
+      "/usr/bin/gpudebug",
+      "--list-sessions"
+    ],
+    "pid": 66163,
+    "exit": 0,
+    "seconds": 0.018378292001216323,
+    "output": "raw/sessions-after.log"
+  }
+]

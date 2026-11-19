@@ -1,0 +1,116 @@
+{
+  "prior_artifact": "5ca24e2b637c9bdc860dbb9c2c680f20cde498ac",
+  "binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
+  "total_games": 2,
+  "original_cleanup_complete": true,
+  "arms": [
+    {
+      "arm": "R63_CAP1",
+      "raw_sha256": "6c63198a830db97b1be5b51de9cbae854a585e89b1d65ddfb9c4b34a95d6e3e5",
+      "raw_intervals": 2586,
+      "game_exit": true,
+      "launch_sha256": "484c2a868f073ab6466021f9c0d42ecfc380c5ae33d9e56ceb713951e18ee397",
+      "input_sha256": [
+        "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+        "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+        "7660944b729cf5b459bcc7c6cda7fc29e6c731a83cccc0ddceb31c894f871fb9",
+        "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+        "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+        "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9"
+      ],
+      "conditions": [
+        {
+          "display": {
+            "utc": "2026-11-18T09:48:40.593730+00:00",
+            "monotonic": 0.03923325,
+            "display": 1,
+            "asleep": true,
+            "active": false,
+            "online": true,
+            "locked": true,
+            "valid": false
+          },
+          "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t100%; finishing charge; 0:07 remaining present: true\n",
+          "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+        },
+        {
+          "display": {
+            "utc": "2026-11-18T09:49:58.493243+00:00",
+            "monotonic": 0.044211166,
+            "display": 1,
+            "asleep": true,
+            "active": false,
+            "online": true,
+            "locked": true,
+            "valid": false
+          },
+          "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t100%; finishing charge; 0:05 remaining present: true\n",
+          "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+        }
+      ],
+      "fps": 64.67015240298005,
+      "low_1_percent": 49.808431313398316
+    },
+    {
+      "arm": "R63_CAP2",
+      "raw_sha256": "94fcfcf77c09e5569a5e4f1219176bb5b2ab284f5bf8fdebe7ac8389fad25e89",
+      "raw_intervals": 2646,
+      "game_exit": true,
+      "launch_sha256": "4d3559686765e0f26884fdf8162a3a58418245d18e01bbc0779701440de22e5e",
+      "input_sha256": [
+        "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+        "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+        "7660944b729cf5b459bcc7c6cda7fc29e6c731a83cccc0ddceb31c894f871fb9",
+        "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+        "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+        "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9"
+      ],
+      "conditions": [
+        {
+          "display": {
+            "utc": "2026-11-18T09:50:02.546338+00:00",
+            "monotonic": 0.039581083,
+            "display": 1,
+            "asleep": true,
+            "active": false,
+            "online": true,
+            "locked": true,
+            "valid": false
+          },
+          "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t100%; finishing charge; 0:05 remaining present: true\n",
+          "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+        },
+        {
+          "display": {
+            "utc": "2026-11-18T09:51:20.345525+00:00",
+            "monotonic": 0.044022916,
+            "display": 1,
+            "asleep": true,
+            "active": false,
+            "online": true,
+            "locked": true,
+            "valid": false
+          },
+          "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t100%; finishing charge; 0:04 remaining present: true\n",
+          "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n"
+        }
+      ],
+      "fps": 66.16838048709451,
+      "low_1_percent": 48.1283439617948
+    }
+  ]
+}

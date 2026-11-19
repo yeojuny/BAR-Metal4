@@ -1,0 +1,10 @@
+{
+  "round_id": "prepare-decode-batch-sdk-20261117-34",
+  "attempt_id": "clean-sdk-only-01",
+  "status": "READY_EXACT_R03_PATCH_VERIFIED",
+  "source_paths_verified": 18,
+  "original_git_blobs_verified": 17,
+  "sdk": "27.2",
+  "openal_preflight": "1.25.2 in pinned child environment",
+  "execution_started": false
+}

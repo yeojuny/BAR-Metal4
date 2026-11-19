@@ -1,0 +1,92 @@
+{
+  "status": "CPU_AND_PRODUCTION_COMPILE_PLUS_ORDINARY_VALIDATION_PASS_BOUNDED",
+  "round_id": "completion-observation-split-20261117-18",
+  "attempt_id": "completion-observation-split-01",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "true_R03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "raw_engine_sha256": "8165b84381ff654f16dfa547bf58535f53016bc9d42918936b93607f99b8e822",
+  "signed_engine_sha256": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+  "runner_sha256": "3ab8f0c8f3e26676d545d6b7f22ef27139723730a3f0990f5f4d2c2a75d71c9d",
+  "CPU_contract_scripts": 1,
+  "actual_receipt_cpp17_compile_runs": 1,
+  "receipt_identity_checks": 9,
+  "Python_old_vs_split_model_cases": 36,
+  "CPU_receipt_binary_hash": null,
+  "CPU_binary_note": "Fixed script intentionally removes TemporaryDirectory executable; no extra compile.",
+  "configures": 1,
+  "engine_builds": 1,
+  "live_scene_define_confirmed": true,
+  "archive_objects": 1538,
+  "archives": 35,
+  "archive_mismatches": 0,
+  "signing_attempts": 1,
+  "fixture_staging_attempts": 1,
+  "games": 1,
+  "normal_exits": 1,
+  "Metal_errors": 0,
+  "all_traces_and_texture_flags_actual_OFF": true,
+  "world_rows_per_arm": 40,
+  "exact_matching_world_rows": 38,
+  "shared_end_ticks_compared": 39,
+  "same_tick_differences": [],
+  "world_bin_differences": [
+    {
+      "row_zero_based": 0,
+      "fields": {
+        "end_simulation": [
+          "577",
+          "570"
+        ],
+        "units": [
+          "171",
+          "172"
+        ]
+      }
+    },
+    {
+      "row_zero_based": 1,
+      "fields": {
+        "start_simulation": [
+          "577",
+          "570"
+        ]
+      }
+    }
+  ],
+  "fixed_initial_camera_seed_and_end_state_match": true,
+  "gl_SaveImage_readback_success": true,
+  "normal_shutdown_observed": true,
+  "images_viewed": 1,
+  "receipt_semantics": "CompletionObservation is observation-only, NOT GPU success/renderer retirement/readback readiness/presentation proof.",
+  "source_invariants": "pending1, event then feedback sequential waits, original lock/allocator/callback/publication ordering preserved by exact fixed source reconstruction check.",
+  "unverified_live_paths": [
+    "Early drain",
+    "Detach",
+    "Fault injection",
+    "Exact callback count",
+    "All lifetime/context/error states"
+  ],
+  "performance_accepted": false,
+  "benchmarks": 0,
+  "GPU_helpers": 0,
+  "GPU_captures": 0,
+  "retries": 0,
+  "source_edits": 0,
+  "cleanup": {
+    "owned_pids_absent": [
+      58292,
+      58281,
+      58282,
+      53420,
+      53425,
+      54677,
+      58099,
+      58236
+    ],
+    "groups_gone": true,
+    "image_worker_joined": true,
+    "awake_released": true,
+    "evidence_writers_closed_after_packet": true
+  }
+}

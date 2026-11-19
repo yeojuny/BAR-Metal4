@@ -1,0 +1,1967 @@
+{
+  "mapping": {
+    "command_ordinal": 15,
+    "command_node": "re15",
+    "label": "MTL4RenderCommandEncoder 11",
+    "type": "render",
+    "performance_node": "re10",
+    "timeline_node": "re10",
+    "API_begin": 8670,
+    "API_end": 8846,
+    "render_draw_count": 58,
+    "command_tree_render_draw_count": 58,
+    "selected": true,
+    "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+  },
+  "raw_API_rows": [
+    {
+      "actions": "info",
+      "name": "api8670",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4CommandBuffer renderCommandEncoderWithDescriptor:]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8671",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653186 beforeStages:3 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8672",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8673",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8674",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8675",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8676",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8677",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8678",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8679",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8680",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8681",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8682",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8683",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps26]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8684",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8685",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8686",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf27 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8687",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf265 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8688",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2728 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8689",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2729 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8690",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8691",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8692",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8693",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=256 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8694",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf94 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8695",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1159152 indexBufferLength:192 instanceCount:3 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8696",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1160112 indexBufferLength:192 instanceCount:1 baseVertex:160 baseInstance:3]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8697",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1159152 indexBufferLength:192 instanceCount:1 baseVertex:0 baseInstance:4]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8698",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1159920 indexBufferLength:192 instanceCount:1 baseVertex:128 baseInstance:5]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8699",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1159344 indexBufferLength:192 instanceCount:4 baseVertex:32 baseInstance:6]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8700",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1159920 indexBufferLength:192 instanceCount:3 baseVertex:128 baseInstance:10]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8701",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1160112 indexBufferLength:192 instanceCount:2 baseVertex:160 baseInstance:13]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8702",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1159920 indexBufferLength:192 instanceCount:1 baseVertex:128 baseInstance:15]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8703",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf27 offset=1160112 indexBufferLength:192 instanceCount:1 baseVertex:160 baseInstance:16]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8704",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8705",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8706",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8707",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8708",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8709",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8710",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8711",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8712",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8713",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps26]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8714",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8715",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8716",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf27 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8717",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf284 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8718",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2728 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8719",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2729 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8720",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8721",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8722",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=768 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8723",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=1024 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8724",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf96 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8725",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:2 baseVertex:7634 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8726",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1160496 indexBufferLength:2280 instanceCount:1 baseVertex:224 baseInstance:2]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8727",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1192224 indexBufferLength:2280 instanceCount:1 baseVertex:8156 baseInstance:3]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8728",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:2 baseVertex:7634 baseInstance:4]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8729",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1160496 indexBufferLength:2280 instanceCount:1 baseVertex:224 baseInstance:6]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8730",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:1 baseVertex:7634 baseInstance:7]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8731",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1185960 indexBufferLength:2088 instanceCount:1 baseVertex:6590 baseInstance:8]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8732",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:1 baseVertex:7634 baseInstance:9]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8733",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1192224 indexBufferLength:2280 instanceCount:1 baseVertex:8156 baseInstance:10]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8734",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:906 indexType:UInt32 indexBuffer:@buf27 offset=1172928 indexBufferLength:3624 instanceCount:1 baseVertex:3332 baseInstance:11]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8735",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:906 indexType:UInt32 indexBuffer:@buf27 offset=1176552 indexBufferLength:3624 instanceCount:1 baseVertex:4238 baseInstance:12]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8736",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1192224 indexBufferLength:2280 instanceCount:1 baseVertex:8156 baseInstance:13]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8737",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1162776 indexBufferLength:2280 instanceCount:2 baseVertex:794 baseInstance:14]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8738",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1192224 indexBufferLength:2280 instanceCount:1 baseVertex:8156 baseInstance:16]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8739",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:462 indexType:UInt32 indexBuffer:@buf27 offset=1182024 indexBufferLength:1848 instanceCount:1 baseVertex:5606 baseInstance:17]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8740",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1194504 indexBufferLength:2280 instanceCount:3 baseVertex:8726 baseInstance:18]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8741",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:462 indexType:UInt32 indexBuffer:@buf27 offset=1182024 indexBufferLength:1848 instanceCount:1 baseVertex:5606 baseInstance:21]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8742",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:906 indexType:UInt32 indexBuffer:@buf27 offset=1176552 indexBufferLength:3624 instanceCount:1 baseVertex:4238 baseInstance:22]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8743",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:984 indexType:UInt32 indexBuffer:@buf27 offset=1165056 indexBufferLength:3936 instanceCount:2 baseVertex:1364 baseInstance:23]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8744",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:906 indexType:UInt32 indexBuffer:@buf27 offset=1176552 indexBufferLength:3624 instanceCount:1 baseVertex:4238 baseInstance:25]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8745",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1162776 indexBufferLength:2280 instanceCount:1 baseVertex:794 baseInstance:26]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8746",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1185960 indexBufferLength:2088 instanceCount:1 baseVertex:6590 baseInstance:27]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8747",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:906 indexType:UInt32 indexBuffer:@buf27 offset=1176552 indexBufferLength:3624 instanceCount:1 baseVertex:4238 baseInstance:28]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8748",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:984 indexType:UInt32 indexBuffer:@buf27 offset=1168992 indexBufferLength:3936 instanceCount:1 baseVertex:2348 baseInstance:29]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8749",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:984 indexType:UInt32 indexBuffer:@buf27 offset=1165056 indexBufferLength:3936 instanceCount:2 baseVertex:1364 baseInstance:30]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8750",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1194504 indexBufferLength:2280 instanceCount:3 baseVertex:8726 baseInstance:32]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8751",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1185960 indexBufferLength:2088 instanceCount:1 baseVertex:6590 baseInstance:35]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8752",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1188048 indexBufferLength:2088 instanceCount:2 baseVertex:7112 baseInstance:36]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8753",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:906 indexType:UInt32 indexBuffer:@buf27 offset=1176552 indexBufferLength:3624 instanceCount:1 baseVertex:4238 baseInstance:38]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8754",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:984 indexType:UInt32 indexBuffer:@buf27 offset=1168992 indexBufferLength:3936 instanceCount:1 baseVertex:2348 baseInstance:39]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8755",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1194504 indexBufferLength:2280 instanceCount:1 baseVertex:8726 baseInstance:40]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8756",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:1 baseVertex:7634 baseInstance:41]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8757",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1183872 indexBufferLength:2088 instanceCount:1 baseVertex:6068 baseInstance:42]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8758",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1188048 indexBufferLength:2088 instanceCount:1 baseVertex:7112 baseInstance:43]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8759",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:984 indexType:UInt32 indexBuffer:@buf27 offset=1165056 indexBufferLength:3936 instanceCount:1 baseVertex:1364 baseInstance:44]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8760",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:1 baseVertex:7634 baseInstance:45]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8761",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:462 indexType:UInt32 indexBuffer:@buf27 offset=1182024 indexBufferLength:1848 instanceCount:1 baseVertex:5606 baseInstance:46]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8762",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:984 indexType:UInt32 indexBuffer:@buf27 offset=1168992 indexBufferLength:3936 instanceCount:3 baseVertex:2348 baseInstance:47]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8763",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:984 indexType:UInt32 indexBuffer:@buf27 offset=1165056 indexBufferLength:3936 instanceCount:1 baseVertex:1364 baseInstance:50]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8764",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:1 baseVertex:7634 baseInstance:51]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8765",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:570 indexType:UInt32 indexBuffer:@buf27 offset=1192224 indexBufferLength:2280 instanceCount:1 baseVertex:8156 baseInstance:52]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8766",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:522 indexType:UInt32 indexBuffer:@buf27 offset=1190136 indexBufferLength:2088 instanceCount:1 baseVertex:7634 baseInstance:53]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8767",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8768",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8769",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8770",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8771",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8772",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8773",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8774",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8775",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8776",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps27]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8777",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8778",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8779",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf271 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8780",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf270 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8781",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2728 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8782",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2729 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8783",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8784",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8785",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=1536 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8786",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=1792 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8787",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf277 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8788",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:4284 indexType:UInt32 indexBuffer:@buf271 offset=186048 indexBufferLength:17136 instanceCount:1 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8789",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8790",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8791",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8792",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8793",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8794",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8795",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8796",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8797",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8798",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps27]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8799",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8800",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8801",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf259 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8802",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2736 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8803",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2728 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8804",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2729 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8805",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8806",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8807",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=2304 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8808",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=2560 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8809",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf254 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8810",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:5148 indexType:UInt32 indexBuffer:@buf259 offset=191520 indexBufferLength:20592 instanceCount:40 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8811",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8812",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf279 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8813",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:9750 indexType:UInt32 indexBuffer:@buf279 offset=420508 indexBufferLength:39000 instanceCount:1 baseVertex:0 baseInstance:40]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8814",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8815",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf259 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8816",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:5148 indexType:UInt32 indexBuffer:@buf259 offset=191520 indexBufferLength:20592 instanceCount:20 baseVertex:0 baseInstance:41]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8817",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8818",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8819",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8820",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8821",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8822",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8823",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8824",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8825",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8826",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps66]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8827",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8828",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8829",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf162 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8830",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2737 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8831",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2728 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8832",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2729 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8833",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8834",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8835",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=3072 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8836",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf93 offset=3328 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8837",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf106 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8838",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:5532 indexType:UInt32 indexBuffer:@buf162 offset=200412 indexBufferLength:22128 instanceCount:1 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8839",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8840",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf105 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8841",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:15054 indexType:UInt32 indexBuffer:@buf105 offset=571672 indexBufferLength:60216 instanceCount:1 baseVertex:0 baseInstance:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8842",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8843",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf162 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8844",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:5532 indexType:UInt32 indexBuffer:@buf162 offset=200412 indexBufferLength:22128 instanceCount:164 baseVertex:0 baseInstance:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8845",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:402653186 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8846",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder endEncoding]"
+        }
+      ]
+    }
+  ],
+  "attachments_load_store_resolve": "UNAVAILABLE: descriptor arguments omitted by saved API listing.",
+  "actual_resource_read_write_and_last_writer": "UNAVAILABLE beyond explicit copies/draw index buffers; argument table receiver unresolved and numeric texture IDs not mapped to trace objects."
+}

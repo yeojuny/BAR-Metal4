@@ -1,0 +1,12 @@
+[CONFIGURE.log]
+-- The C compiler identification is AppleClang 21.0.0.21000401
+-- The CXX compiler identification is AppleClang 21.0.0.21000401
+-- The ASM compiler identification is AppleClang
+--   Found openal, version 1.25.2
+-- The OBJCXX compiler identification is AppleClang 21.0.0.21000401
+-- Build files have been written to: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build
+
+[BUILD.log]
+[903/1578] Building OBJCXX object rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4GameDecal.mm.o
+[1577/1578] Linking CXX executable spring-metal4-scene
+

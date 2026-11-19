@@ -1,0 +1,7 @@
+{
+  "initial_cache_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/initial-cache.cmake",
+  "initial_cache_sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "child_PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig:/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+  "sdk": "27.2",
+  "openal": "1.25.2"
+}

@@ -1,0 +1,25 @@
+{
+  "round_id": "r03-r02-benchmark-20261117-08",
+  "phase": "READY",
+  "author": "SUPER_JINI_MK2",
+  "request_path": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/REQUEST.json",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "input_artifact_commit": "cecb898145c7bdcaef1f37347678f4604277fef2",
+  "input_manifest_path": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/artifacts/measurement/STAGING-SUMMARY.json",
+  "input_manifest_sha256": "bdd4a25f069f35e0357c6fe8546085febf72314f81409b1f57014f1f8b032941",
+  "attempt_id": "r03-validation-and-clean-01",
+  "budget": {
+    "validation_games": 1,
+    "clean_games": 6,
+    "total_game_launches_max": 7,
+    "builds": 0,
+    "helper_runs": 0,
+    "captures": 0,
+    "replay_profiles": 0,
+    "retries": 0
+  },
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "prior_cleanup_complete": true
+}

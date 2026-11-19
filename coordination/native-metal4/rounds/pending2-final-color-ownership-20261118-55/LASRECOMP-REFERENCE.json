@@ -1,0 +1,5 @@
+{
+  "url": "https://github.com/peiikai/LASRecomp/blob/5165bfa5021c16df1b2c12f3636863a2b0839eab/runtime/nvn/renderer.m#L480-L509",
+  "scope": "Design reference only. Classic Metal MTLCommandBuffer history delays the newest fence wait by one, relying on input double buffering/snapshots and synchronous readbacks.",
+  "bar_difference": "BAR must prove producer-version and retirement success for all pending reads and guard dependent failure paths. No code imported."
+}

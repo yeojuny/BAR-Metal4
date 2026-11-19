@@ -1,0 +1,97 @@
+{
+  "round_id": "r02-current-gpu-profile-20261117-05",
+  "attempt_id": "r02-current-capture-profile-01",
+  "phase": "DONE",
+  "author": "LOCAL_CODEX_HQ",
+  "return_to": "SUPER_JINI_MK2",
+  "status": "CURRENT_R02_GPU_PROFILE_COMPLETE",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "artifact_commit": "aa558a5c5b1858db54fa31470909d1aa25411ff6",
+  "artifact_root": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/artifacts",
+  "files": 46,
+  "all_remote_paths_and_blob_shas_verified": true,
+  "critical_reports_exact_readback": true,
+  "budget_used": {
+    "capture_games": 1,
+    "captured_frames": 1,
+    "replay_profiles": 1,
+    "clean_benchmarks": 0,
+    "builds": 0,
+    "helper_runs": 0,
+    "retries": 0
+  },
+  "trace": {
+    "status": "CAPTURE_CLOSED_GATE_PASS",
+    "utc": "2026-11-17T00:05:48.170539+00:00",
+    "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace",
+    "files": 1223,
+    "logicalBytes": 2788204457,
+    "treeSHA256": "5ae339d460ddb46089783227ba115d37ae4a0e3c4327d81e99c665741a8ea228",
+    "treeHashDefinition": "SHA256(sorted UTF8 relativePath + NUL + fileSHA256 + newline)",
+    "normalExit": true,
+    "ownedCaptureEngineAwakePIDsGone": true,
+    "diagnosticFPSExcluded": true
+  },
+  "profile": {
+    "ownedSession": "120",
+    "profile": "default/overlapping once",
+    "profileSuccess": true,
+    "all9RequestedNodesExported": true,
+    "finalSessionAbsent": true,
+    "finalAllSessionsAbsent": true,
+    "initialAfterTerminationListWasTransient": "Header showed1 session but no ID row immediately after terminate. Later list says no active sessions and direct status120 says no such session. No second terminate or profile."
+  },
+  "largest_target": {
+    "shader": "OriginalSensorLOSFragment",
+    "pipeline": "rps61",
+    "relativeReplaySharePercent": 26.342152889597596,
+    "draw": "api9766,378 triangle vertices=63 segments,165 instances",
+    "encoder": "performance re32 labelMTL4RenderCommandEncoder33, command node re41"
+  },
+  "ground_decal_context": {
+    "shader": "GroundDecalFragment",
+    "vertex": "GroundDecalVertex",
+    "pipeline": "rps71",
+    "fragmentRelativeReplaySharePercent": 14.741725494684372,
+    "vertexRelativeReplaySharePercent": 2.928512565812574,
+    "draw": "api5530,36 UInt16 indices,72byte immutable G01 index buffer,32364 instances",
+    "encoder": "performance re8 labelMTL4RenderCommandEncoder9, command node re13"
+  },
+  "next_hypothesis": {
+    "name": "Exact minor-range rejection before SensorDiamond",
+    "source": "engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h:153-170",
+    "observation": "Existing SensorLineCovered runs up to3 SensorDiamond calls, then computes exact lower/count/actual pixel rejection.",
+    "candidate": "For input ranges with a proved arithmetic bound, perform existing exact actual<lower || actual>=lower+count rejection before the expensive diamond loop. Keep exact 64-bit rounding/coverage/depth/stencil/winding/resource and shader sampling contracts. Otherwise preserve original fallback.",
+    "notYetProved": "No implementation or correctness/performance claim. Must prove integer bounds, supported width/sample behavior, and preserve asymmetric stencil/winding plus all relevant source coverage tests. Hoisted divide may cost extra on pixels that formerly failed diamond, so net gain is unmeasured.",
+    "nonGoals": "No fast-math, line simplification, Metal Line replacement, depth(any) removal, mask sampling/discard reorder, encoder split or resource-lifetime change."
+  },
+  "limitations": [
+    "No current disassembly/instruction/register/fragment-invocation counters exported; do not reuse old S01 numbers as current.",
+    "Replay relative shares and stage bounds cannot establish runtime GPU milliseconds, predicted FPS gain, or before/after trend versus old capture.",
+    "Diagnostic battle FPS parser asserted after capture; raw failure preserved, diagnostic FPS null/excluded. Game normal exit/capture success and flags evaluated independently per unchanged template.",
+    "No fresh PNG or Metal Validation run this round; previous fixed-R02 validation and7 screenshot reviews are separate evidence."
+  ],
+  "diagnostic_FPS": null,
+  "performance_improvement_claimed": false,
+  "overlapping_intervals_added": false,
+  "predicted_FPS_gain": null,
+  "cleanup": {
+    "engine_normal_exit": true,
+    "owned_engine_and_capture_PIDs_gone": true,
+    "game_awake_released": true,
+    "replay_awake_released": true,
+    "owned_session_120_terminated": true,
+    "final_all_sessions_absent": true,
+    "status120_confirms_no_such_session": true,
+    "owned_workers_gone_with_processes": true,
+    "local_capture_and_artifact_writes_complete": true
+  },
+  "original_app_main_release_homebrew_changed": false,
+  "publication_note": "One artifact text-reader normalized CR bytes in gpucapture.log; corrected to raw UTF8 decode before publication. Every46 published blob matches original local bytes. No source/runner/capture/profile retry.",
+  "next_section_request": "Current HQ history is heavy. JINI should use a fresh HQ section for the next bounded execution if useful, carrying STATE/round/source/manifest/attempt/results and prohibitions. Specify HQ model/effort at the next task boundary; current task setting was preserved as instructed.",
+  "model_or_reasoning_changed_this_round": false,
+  "user_context_instruction": "사용자 요청대로 이력이 무거워지면 다음 작업은 최소 인계를 남겨 새 섹션으로 분기하세요. HQ 모델·추론강도도 지니가 다음 작업 경계에서 명시·조절하세요. 현재 회차는 모두 종료됐으며 새 섹션에서 이전 attempt를 재실행하면 안 됩니다.",
+  "utc": "2026-11-17 00:14:59 UTC"
+}

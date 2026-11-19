@@ -1,0 +1,51 @@
+{
+  "status": "PASS_FOR_AUTHORIZED_CLEAN_SIX",
+  "validation_run": "V_R04",
+  "validation_games": 1,
+  "clean_games_started": 0,
+  "Metal_API_Validation_enabled": true,
+  "Metal_errors": [],
+  "shader_or_pipeline_failure_lines": [],
+  "unchanged_inactive_widget_skip_messages": 35,
+  "actual_child_flags_match": true,
+  "view": [
+    1512,
+    950
+  ],
+  "drawable": [
+    1512,
+    982
+  ],
+  "main_samples": 1,
+  "viewport_origin": [
+    0,
+    32
+  ],
+  "viewport_origin_basis": "Observed native982 and safe-view950 at y0 with mouseTopOffset32; native coordinate contract, not a new GPU capture",
+  "S01": "POSITIVE_SPLIT",
+  "G01": "POSITIVE_INDEXED",
+  "normal_exit": true,
+  "owned_pids_gone": true,
+  "awake_released": true,
+  "image_review": {
+    "actual_R04_and_R03_reference_PNGs_viewed": true,
+    "observation": "Terrain, ravine, structures, tanks, shadows, unit marks and green/red sensor/range lines are present. No obvious candidate-only geometry corruption or missing fixed scene elements. Bounded visual review, not exhaustive pixel/stencil equivalence.",
+    "animated_differences": "Particles, smoke, water/cloud shading and timing text differ.",
+    "orange_range_circle": "Present in R04 validation; absent in R03 validation reference. R03 prior image review already recorded presence in both old arms (2/3 each). Cause remains UNKNOWN; not reclassified as natural animation or an R04-only regression. Preserve all new images and report distribution after clean.",
+    "prior_review": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/execution/r03-validation-and-clean-01/IMAGE-REVIEW.json"
+  },
+  "image_sha256": "3a1e5c8ce7f5cbc40e7df79d3953b50cd61afa45d4dd20ca52247393e3c028a1",
+  "prior_reference_image_sha256": "b295c7df792e7f2b7c8ea57588aa350cdb40e65586632ff30aad9c1936135589",
+  "validation_FPS_excluded": true,
+  "six_clean_frozen_profiles_unconsumed": true,
+  "clean_order": [
+    "A1_R03",
+    "B1_R04",
+    "B2_R04",
+    "A2_R03",
+    "A3_R03",
+    "B3_R04"
+  ],
+  "source_or_runner_changes_after_stage": 0,
+  "utc": "2026-11-17T10:03:31.118906+00:00"
+}

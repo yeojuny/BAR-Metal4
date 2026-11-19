@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "source_origin_round": "ground-decal-terrain-color-fps-20261118-82",
+  "closure": "Recursive regular-file checksum, symlink target and permissions comparison. Directory timestamps excluded.",
+  "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+  "parity_round": "ground-decal-parity-witness-recovery-20261118-83",
+  "parity_log_sha256": "2b385c7d732a45370d9e23b8a7b455d50d1fe82d33b728938c79d09df676f4d7",
+  "parity_done_sha256": "532fbc504c7b4a9980ec0f5838c80be0dc23debc250f554147daec70756acd89"
+}

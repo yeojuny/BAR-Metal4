@@ -1,0 +1,87 @@
+{
+  "status": "CLOSED",
+  "results": [
+    {
+      "arm": "A1",
+      "session": 1,
+      "status": "PARSED",
+      "FPS": 65.36633884259274,
+      "onePercentLowFPS": 54.98981692460211
+    },
+    {
+      "arm": "B1",
+      "session": 1,
+      "status": "PARSED",
+      "FPS": 65.37663351854367,
+      "onePercentLowFPS": 55.67010297799979
+    },
+    {
+      "arm": "B2",
+      "session": 1,
+      "status": "PARSED",
+      "FPS": 65.39836593844412,
+      "onePercentLowFPS": 55.32786794544479
+    },
+    {
+      "arm": "A2",
+      "session": 1,
+      "status": "PARSED",
+      "FPS": 65.35539168652163,
+      "onePercentLowFPS": 55.785126041595596
+    },
+    {
+      "arm": "B3",
+      "session": 2,
+      "status": "PARSED",
+      "FPS": 65.30979731699216,
+      "onePercentLowFPS": 55.10204284048321
+    },
+    {
+      "arm": "A3",
+      "session": 2,
+      "status": "PARSED",
+      "FPS": 65.42009618809386,
+      "onePercentLowFPS": 55.44147855326792
+    },
+    {
+      "arm": "A4",
+      "session": 2,
+      "status": "PARSED",
+      "FPS": 65.4,
+      "onePercentLowFPS": 54.10821730033214
+    },
+    {
+      "arm": "B4",
+      "session": 2,
+      "status": "PARSED",
+      "FPS": 65.41144695252282,
+      "onePercentLowFPS": 57.69230658284026
+    }
+  ],
+  "sessions": [
+    {
+      "session": 1,
+      "completed": 4,
+      "status": "RELEASED",
+      "campaign": "SLAB-R45-SESSION-1",
+      "pid": 20015,
+      "startUTC": "2026-11-18T01:32:09.005653+00:00",
+      "maximumSeconds": 2400,
+      "securitySettingsChanged": false,
+      "endUTC": "2026-11-18T01:37:31.955570+00:00",
+      "ownCaffeinateAlive": false
+    },
+    {
+      "session": 2,
+      "completed": 4,
+      "status": "RELEASED",
+      "campaign": "SLAB-R45-SESSION-2",
+      "pid": 20487,
+      "startUTC": "2026-11-18T01:37:31.958028+00:00",
+      "maximumSeconds": 2400,
+      "securitySettingsChanged": false,
+      "endUTC": "2026-11-18T01:42:54.403558+00:00",
+      "ownCaffeinateAlive": false
+    }
+  ]
+}

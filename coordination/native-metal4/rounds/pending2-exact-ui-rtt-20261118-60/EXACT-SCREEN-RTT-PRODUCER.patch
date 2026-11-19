@@ -1,0 +1,156 @@
+--- a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
+@@ -61,6 +61,10 @@
+ struct ScreenArgumentStorage {
+ 	__strong id<MTL4ArgumentTable> table = nil;
+ };
++struct ScreenTargetVersionEncoding {
++	uint64_t submission = 0;
++	bool stored = false;
++};
+ using ScreenArgumentLayout = std::array<NSUInteger,3>;
+ class ScreenArgumentPool {
+ public:
+@@ -830,11 +834,13 @@
+ 		bool stored = true;
+ 		bool sourceDependent=false;std::uint32_t offset=0;std::uint64_t sequence=0;mutable bool encoded=false;
+ 		NativePostprocessStage sourceStage=NativePostprocessStage::Screen;std::uint64_t sourceDrawFrame=0;
+-		std::shared_ptr<bool> encodedVersion;
++		std::shared_ptr<ScreenTargetVersionEncoding> encodedVersion;
+ 		std::function<void()> requirePreviousReadable;
+ 		__strong id<MTLTexture> previousDepth=nil;
+-		std::shared_ptr<bool> depthInitialized,depthEncoded;
++		std::shared_ptr<bool> depthInitialized;
++		std::shared_ptr<ScreenTargetVersionEncoding> depthEncoded;
+ 		std::function<void()> requirePreviousDepthReadable;
++		uint64_t submission=0;
+ 	};
+ 	std::vector<TargetPass> targets;
+ 	std::vector<std::shared_ptr<const ScreenTexture>> producedImages;
+@@ -943,8 +949,10 @@
+ 	try{target.frame->Encode(encoder);}catch(...){[encoder endEncoding];throw;}
+ 	[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];
+ 	target.encoded=true;
+-	Require(bool(target.encodedVersion),"RTT target lost its exact encoded-version state");*target.encodedVersion=target.stored;
+-	if(target.depthEncoded)*target.depthEncoded=target.stored;
++	Require(bool(target.encodedVersion),"RTT target lost its exact encoded-version state");
++	const ScreenTargetVersionEncoding encoded{target.submission,target.stored};
++	*target.encodedVersion=encoded;
++	if(target.depthEncoded)*target.depthEncoded=encoded;
+ }
+ void PreparedScreenFrame::DidComplete() const
+ {
+@@ -1186,7 +1194,7 @@
+ 		// write. Generation0 may be sampled; its initial pixels are undefined.
+ 		bool allocationOnly=false;
+ 		std::shared_ptr<ScreenMipState> mipState={};
+-		std::shared_ptr<bool> encodedVersion;
++		std::shared_ptr<ScreenTargetVersionEncoding> encodedVersion;
+ 		NativePostprocessStage sourceStage=NativePostprocessStage::Screen;
+ 		std::uint64_t sourceSequence=0;
+ 		std::uint32_t sourceOffset=0;
+@@ -1311,31 +1319,47 @@
+ 			retainExternal(std::move(resolved));lease.AddAllocation(image);return image;
+ 		}
+ 		const auto found=textures.find(source.get());if(found!=textures.end()&&!found->second.owner.expired()){
+-   // A historical RTT in this cache has a completion bit, but no exact pending
+-   // event. Keep its immutable allocation and the CPU retirement boundary.
+-   const bool previousSubmission=lease.PreparingWhilePending()&&found->second.encodedVersion&&*found->second.encodedVersion;
++			const auto& entry=found->second;
++			const bool initialized=entry.initialized&&*entry.initialized;
++			const bool previousSubmission=lease.PreparingWhilePending()&&!initialized&&
++				entry.encodedVersion&&entry.encodedVersion->stored&&
++				(!lease.SourceSubmission()||entry.encodedVersion->submission!=lease.SourceSubmission());
+ 			Require(!source->renderTarget || found->second.allocationOnly || (found->second.initialized && *found->second.initialized) ||
+ 				previousSubmission || std::find(available.begin(),available.end(),source.get())!=available.end(),"Native UI RTT version has no retired or earlier ordered producer");
+-			const auto& entry=found->second;
+    PinCoverage220(lease,source,entry);
+ 			if(source->renderTarget && source->generation){
+-				if(previousSubmission&&entry.initialized&&!*entry.initialized)
+-					lease.OrderAfterPreviousSubmission(source.get(),[source,completed=entry.initialized]{
+-						Require(*completed,"Historical RTT producer did not retire before submission");
+-					},NativePriorRead::ScreenTarget);
+-				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized))
++				Require(entry.initialized && entry.encodedVersion,"RTT version lost its immutable producer state");
++				if(previousSubmission){
++					const auto producer=entry.encodedVersion->submission;
++					const auto event=lease.PendingEventForSource(producer);
++					const auto generation=source->generation;
++					const auto resource=source->renderTarget->resourceId;
++					const auto texture=entry.image;
++					auto check=[source,texture,producer,generation,resource,completed=entry.initialized,encoded=entry.encodedVersion]{
++						Require(texture&&source->generation==generation&&source->renderTarget->resourceId==resource&&
++							encoded->stored&&encoded->submission==producer&&*completed,
++							"Historical RTT lost its exact allocation or successful producer");
++					};
++					const bool privateRoot=event&&resource&&texture&&texture.device==lease.Device()&&
++						texture.storageMode==MTLStorageModePrivate&&texture.textureType==MTLTextureType2D&&
++						texture.width==source->width&&texture.height==source->height&&texture.sampleCount==1&&
++						texture.arrayLength==1&&texture.mipmapLevelCount==1&&!texture.parentTexture&&
++						!texture.iosurface&&!texture.buffer&&!texture.heap;
++					if(!privateRoot||!lease.OrderGPUReadAfterSubmission(source.get(),producer,event,check,NativePriorRead::ScreenTarget))
++						lease.OrderAfterPreviousSubmission(source.get(),std::move(check),NativePriorRead::ScreenTarget);
++				}
++				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !previousSubmission && !initialized)
+ 					Require(consumer && consumer->stage==NativePostprocessStage::Screen &&
+ 						(consumer->screenCommandOffset>entry.sourceOffset ||
+ 						(consumer->screenCommandOffset==entry.sourceOffset && (!consumer->commandSequence || consumer->commandSequence>entry.sourceSequence))),
+ 						"Copied/sampled RTT version precedes its actual screen producer insertion");
+-				if(entry.sourceStage!=NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized)){
++				if(entry.sourceStage!=NativePostprocessStage::Screen && !previousSubmission && !initialized){
+ 					Require(consumer && (consumer->stage>entry.sourceStage ||
+ 						(consumer->stage==entry.sourceStage && consumer->sequence>entry.sourceSequence)),
+ 						"Actual world sampler precedes its pending PreUnit RTT producer");
+ 				}
+-				Require(entry.initialized && entry.encodedVersion,"RTT version lost its immutable producer state");
+ 				if(retainExternal)retainExternal({entry.image,source,[completed=entry.initialized,encoded=entry.encodedVersion,owner=source]{
+-					Require(*completed || *encoded,"RTT image sampled before its exact immutable version encoded");}});
++					Require(*completed || encoded->stored,"RTT image sampled before its exact immutable version encoded");}});
+ 			}
+ 			QueueMipmaps(lease,source,found->second);lease.AddAllocation(found->second.image);return found->second.image;
+ 		}
+@@ -1574,6 +1598,9 @@
+ 		if (found != impl->textures.end()) {
+ 			Require(found->second.initialized && !*found->second.initialized,
+ 				"Native UI RTT generation is immutable after successful retirement");
++			Require(found->second.encodedVersion&&(!found->second.encodedVersion->submission||
++				found->second.encodedVersion->submission==lease.SourceSubmission()),
++				"Native UI RTT generation belongs to another encoded submission");
+ 			continue;
+ 		}
+ 		Require(ScreenRenderTargetPixelBytes(source->format)!=0 &&
+@@ -1587,17 +1614,22 @@
+ 		id<MTLTexture> image = impl->AllocateCoverage220(lease,d,pool220,sourcePass.sourceDrawFrame);
+ 		Require(image != nil, "Cannot allocate original native UI RTT generation");
+ 		image.label = String(source->sourceName + " generation " + std::to_string(source->generation));
+-		impl->textures.emplace(source.get(), Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),sourcePass.sourceStage,sourcePass.commandSequence,sourcePass.screenCommandOffset,sourcePass.sourceDependent,pool220});
++		impl->textures.emplace(source.get(), Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<ScreenTargetVersionEncoding>(),sourcePass.sourceStage,sourcePass.commandSequence,sourcePass.screenCommandOffset,sourcePass.sourceDependent,pool220});
+ 	}
+ 	for(size_t index:order){const auto& pass=frame.targetPasses[index];const auto& source=pass.depthDestination;if(!source)continue;
+ 		auto found=impl->textures.find(source.get());if(found!=impl->textures.end()){
+-			Require(found->second.initialized && !*found->second.initialized,"Coverage depth generation is immutable after retirement");continue;}
++			Require(found->second.initialized && !*found->second.initialized,"Coverage depth generation is immutable after retirement");
++			Require(found->second.encodedVersion&&(!found->second.encodedVersion->submission||
++				found->second.encodedVersion->submission==lease.SourceSubmission()),
++				"Coverage depth generation belongs to another encoded submission");
++			continue;
++		}
+ 		Require(source->width<=lease.Capabilities().maxTextureDimension2D && source->height<=lease.Capabilities().maxTextureDimension2D,"Coverage depth extent exceeds actual device");
+ 		auto d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatDepth16Unorm width:source->width height:source->height mipmapped:NO];
+ 		d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
+   const bool pool220=CoveragePoolEligible220(pass);
+ 		auto image=impl->AllocateCoverage220(lease,d,pool220,pass.sourceDrawFrame);Require(image!=nil,"Cannot allocate actual coverage D16 version");
+-		impl->textures.emplace(source.get(),Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),pass.sourceStage,pass.commandSequence,pass.screenCommandOffset,pass.sourceDependent,pool220});
++		impl->textures.emplace(source.get(),Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<ScreenTargetVersionEncoding>(),pass.sourceStage,pass.commandSequence,pass.screenCommandOffset,pass.sourceDependent,pool220});
+ 	}
+ 	std::vector<const ScreenTexture*> available;
+ 	std::vector<PreparedScreenFrame::Impl::TargetPass> targets;
+@@ -1644,7 +1676,7 @@
+ 		d.colorAttachments[0].clearColor = MTLClearColorMake(source.clearColor[0],source.clearColor[1],source.clearColor[2],source.clearColor[3]);
+ 		if(depth){d.depthAttachment.texture=depth->image;d.depthAttachment.loadAction=source.previousDepth?MTLLoadActionLoad:MTLLoadActionDontCare;d.depthAttachment.storeAction=MTLStoreActionStore;}
+ 		d.renderTargetWidth = source.destination->width; d.renderTargetHeight = source.destination->height;
+-		targets.push_back({previous,d,std::move(target),destination.initialized,source.store == ScreenTargetStore::Store,source.sourceDependent,source.screenCommandOffset,source.commandSequence,false,source.sourceStage,source.sourceDrawFrame,destination.encodedVersion,std::move(requirePreviousReadable),previousDepth,depth?depth->initialized:nullptr,depth?depth->encodedVersion:nullptr,std::move(requirePreviousDepthReadable)});
++		targets.push_back({previous,d,std::move(target),destination.initialized,source.store == ScreenTargetStore::Store,source.sourceDependent,source.screenCommandOffset,source.commandSequence,false,source.sourceStage,source.sourceDrawFrame,destination.encodedVersion,std::move(requirePreviousReadable),previousDepth,depth?depth->initialized:nullptr,depth?depth->encodedVersion:nullptr,std::move(requirePreviousDepthReadable),lease.SourceSubmission()});
+ 		if (source.store == ScreenTargetStore::Store){available.push_back(source.destination.get());if(source.depthDestination)available.push_back(source.depthDestination.get());}
+ 	}
+ 	std::unique_ptr<PreparedScreenFrame> prepared;

@@ -1,0 +1,20 @@
+{
+  "status": "PINS_LABELS_TEXTURE_FLAGS_OFF_ONLY",
+  "reference_sha256": "2e3a727f86a5c239b0633583049fcd3c942b4bc6c8108be7c992e888f8078260",
+  "runner_sha256": "3ab8f0c8f3e26676d545d6b7f22ef27139723730a3f0990f5f4d2c2a75d71c9d",
+  "unchanged_AST_functions": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw",
+    "run"
+  ],
+  "new_controller_parser_error_cleanup_logic": false,
+  "completion_status_label": "COMPLETION_SPLIT_VALIDATION_REVIEW_REQUIRED (label change only)",
+  "run_AST_identical_after_completion_label_normalization": true
+}

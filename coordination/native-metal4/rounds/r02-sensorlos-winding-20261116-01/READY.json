@@ -1,0 +1,60 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-01",
+  "author": "SUPER_JINI_MK2",
+  "phase": "READY",
+  "scope": "FIXED_R02_HELPER_COMPILE_AND_GPU_CORRECTNESS_ONLY",
+  "source_branch": "fix/sensorlos-winding-r02-20261116",
+  "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+  "source_manifest_path": "docs/research/r02-sensorlos-winding-20261116/candidate/R02-MANIFEST.json",
+  "source_manifest_sha256": "3c6659b05c0353cd6a506f481d58a38a390afbd8773aca25aa7ebc2d6a36dca3",
+  "artifacts": {
+    "readme": "docs/research/r02-sensorlos-winding-20261116/candidate/README.md",
+    "production_diff": "docs/research/r02-sensorlos-winding-20261116/candidate/R02.patch",
+    "cpu_test": "docs/research/r02-sensorlos-winding-20261116/candidate/test_winding.py",
+    "cpu_results": "docs/research/r02-sensorlos-winding-20261116/candidate/cpu-results.json",
+    "gpu_regression_source": "docs/research/r02-sensorlos-winding-20261116/candidate/gpu_pixel_parity.mm"
+  },
+  "change": "G01 baseline retained; reverse only Y-major tight triangle order to preserve original AABB winding/front-back stencil semantics. No G02/G03/G04 or new pool/cache/queue/encoder changes.",
+  "validation": {
+    "cpu_geometry_cases": 16294,
+    "cpu_result": "PASS",
+    "cpu_scope": "Python float32 geometry/source oracle, not compiled MSL or raster proof",
+    "g01_reconstruction": "All 10270 expected G01 manifest paths matched before R02; complete source manifest has 10269 source paths excluding incidental __pycache__",
+    "remote_verification": "Fixed branch commit and all 24 published file blob hashes verified",
+    "review": "Helper author and separate read-only winding/stencil reviewer completed; all source writes and child work finished"
+  },
+  "pending": [
+    "Mac source/helper compilation",
+    "Metal GPU asymmetric front/back stencil, front_facing, depth pass/fail, stencil compare pass/fail and negative-control parity",
+    "Screen correctness and performance evidence; no claim of FPS improvement"
+  ],
+  "execution_authorization": {
+    "helper_compile": true,
+    "gpu_helper_correctness_checks": true,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "main_release_homebrew_changes": false
+  },
+  "handoff_rule": "This READY supersedes the earlier source-review-only restriction solely for the approved fixed helper compilation and GPU correctness checks. Execution is gated on latest STATE owner HQ, this round and fixed source/manifest, and READY authorization. JINI source writers and all children are stopped; no other local access during HQ execution. HQ records execution history, then cleans all owned work and evidence writes before same-round DONE.",
+  "source_writers_stopped": true,
+  "user_authorization": {
+    "question_message_id": "Sentinel_780debbf6ec88191886309fe534b64e0",
+    "question": "다음 단계로 HQ가 Mac에서 **고정된 테스트 helper만 컴파일하고 GPU 검사를 실행**해도 될까? 게임 실행·벤치마크·엔진 전체 빌드는 하지 않을게.",
+    "approval_message_id": "Sentinel_8563c81084e48191aa31675bff31ab10",
+    "approval": "그래 그럼 하고자 하는 걸 해. 지금 분석은 어떤 것들이 이쓴ㄴ지 알려줄래?",
+    "interpretation": "Approval of the immediately preceding helper-only question, not broader execution authority.",
+    "scope": "Compile the fixed R02 GPU test helper on Mac and execute its correctness checks for this round only.",
+    "source_commit": "0cd87c2ee2348a63dcb19a4b774a7df3d05a1334",
+    "constraints": [
+      "No full engine build",
+      "No game launch",
+      "No benchmark or performance experiment",
+      "No source edits or regenerated candidate",
+      "No main, release or Homebrew changes",
+      "Latest STATE must designate HQ and this fixed round/source before execution",
+      "Duplicate notification never authorizes rerun; unclear execution history requires BLOCKED",
+      "HQ must finish GPU work and clean owned processes/helpers/workers/awake keepers and evidence writes before DONE; record logs/results even on failure"
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "round_id": "r02-current-gpu-profile-20261117-05",
+  "phase": "READY",
+  "author": "SUPER_JINI_MK2",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "request_path": "coordination/native-metal4/rounds/r02-current-gpu-profile-20261117-05/REQUEST.json",
+  "attempt_id": "r02-current-capture-profile-01",
+  "budget": {
+    "capture_games": 1,
+    "captured_frames": 1,
+    "owned_replay_profiles": 1,
+    "clean_benchmarks": 0,
+    "builds": 0,
+    "helper_runs": 0,
+    "retries": 0
+  },
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "prior_cleanup_verified": true
+}

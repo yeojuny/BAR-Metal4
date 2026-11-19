@@ -1,0 +1,18 @@
+{
+  "status": "FROZEN_FUTURE_INPUT_CONTRACT_NOT_RUNTIME_OBSERVATION",
+  "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+  "start_simulation": 540,
+  "end_simulation": 1740,
+  "combat_warmup_simulation": [
+    240,
+    540
+  ],
+  "minimum_warmup_wall_seconds": 10,
+  "count_seconds": 40,
+  "bins": 40,
+  "inherited_LAUNCH_window": [
+    600,
+    1800
+  ],
+  "reason": "Preserve unchanged controller/measurement code; correct stale planning interpretation separately. Actual future samples must match540..1740."
+}

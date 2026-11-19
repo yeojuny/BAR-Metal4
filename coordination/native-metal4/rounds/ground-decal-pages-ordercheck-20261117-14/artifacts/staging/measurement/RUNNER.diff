@@ -1,0 +1,32 @@
+--- Frozen six-run clean runner
++++ Separate BAAB runner
+@@ -35,9 +35,8 @@
+ FONT_SOURCE = P / 'runtime/native/data/fonts/FreeSansBold.otf'
+ FONT_SHA256 = '8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242'
+ ORDER = {
+-    'clean_paced': [('A1_R03', 'baseline'), ('B1_GDP', 'candidate'),
+-                    ('B2_GDP', 'candidate'), ('A2_R03', 'baseline'),
+-                    ('A3_R03', 'baseline'), ('B3_GDP', 'candidate')],
++    'clean_paced': [('B1_GDP', 'candidate'), ('A1_R03', 'baseline'),
++                    ('A2_R03', 'baseline'), ('B2_GDP', 'candidate')],
+ }
+ 
+ 
+@@ -291,7 +290,7 @@
+     save(RUN_ROOT / campaign / 'PREPARED.json', dict(status='READY_NO_GAME', order=rows,
+         campaign=campaign, sourceController=str(BATTLE / 'battle_control.lua'),
+         sourceProbe=str(U / 'ultra_quality.lua'),
+-        pacingHashes=pace['hashes'], comparisonDecision='Frozen R03 versus GroundDecal pages A B B A A B; S01/G01 both1; all valid rows retained; images after count',
++        pacingHashes=pace['hashes'], comparisonDecision='Frozen R03 versus GroundDecal pages B A A B; S01/G01 both1; all valid rows retained; images after count',
+         actualUltraRuntime='pending'))
+     print('READY ' + campaign + ': static staged, games 0', flush=True)
+ 
+@@ -536,7 +535,7 @@
+     args = parser.parse_args()
+     global RUN_ROOT
+     if args.list:
+-        print('clean_paced: R03 GDP GDP R03 R03 GDP, S01/G01 both1; Ultra AA0 1512x950, official Seths combat, existing pacing +40s counted; validation unreachable')
++        print('clean_paced: GDP R03 R03 GDP, S01/G01 both1; Ultra AA0 1512x950, official Seths combat, existing pacing +40s counted; validation unreachable')
+         return
+     if args.stage and not args.suite:
+         args.suite = 'gdp_' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d_%H%M%S_%f')

@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "baselineCompileCommands": 3142,
+  "candidateCompileCommands": 3142,
+  "missingCommands": [],
+  "extraCommands": [],
+  "SDK": "27.2",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+  "initialCacheSHA256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "normalization": "Only each isolated root path is replaced with <FIXED_ROOT>; full directory/file/command/output fields and duplicate counts compared."
+}

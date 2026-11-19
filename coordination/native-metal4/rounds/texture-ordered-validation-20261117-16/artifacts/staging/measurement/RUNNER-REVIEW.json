@@ -1,0 +1,25 @@
+{
+  "status": "PINS_LABELS_ONE_ARM_ENV_BINDING_ONLY",
+  "reference_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+  "runner_sha256": "9302c2c8715b1f1dad92a8d67822501ee0136807191591b2c8de1521f7fbe0d8",
+  "unchanged_AST_functions": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw",
+    "run"
+  ],
+  "changed_functions": [
+    "products",
+    "stage",
+    "main"
+  ],
+  "run_AST_identical": true,
+  "extra_child_environment_receipt_key": "BAR_NATIVE_TEXTURE_ORDERED_INPUT added to existing CHILD_KEYS allowlist only; original inspector/gate unchanged.",
+  "new_observer_or_source_instrumentation": false
+}

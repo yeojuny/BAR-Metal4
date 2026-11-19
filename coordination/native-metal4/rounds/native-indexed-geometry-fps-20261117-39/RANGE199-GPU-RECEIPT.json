@@ -1,0 +1,13 @@
+{
+  "label": "RANGE199-GPU",
+  "argv": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/fixtures/range199/range-gpu"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-17T23:48:10.093226+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39",
+  "pid": 69834,
+  "exit": 0,
+  "ended_at_utc": "2026-11-17T23:48:13.776879+00:00",
+  "stopped_by_runner": false
+}

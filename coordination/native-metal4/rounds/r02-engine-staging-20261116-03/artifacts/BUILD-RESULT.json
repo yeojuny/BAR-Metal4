@@ -1,0 +1,149 @@
+{
+  "status": "PASS_BUILD_AND_STAGING_ONLY_RUNTIME_REVIEW_REQUIRED",
+  "round_id": "r02-engine-staging-20261116-03",
+  "attempt_id": "r02-isolated-build-01",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "source_manifest_sha256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "configuration_attempts": 1,
+  "engine_builds": 1,
+  "games": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "replay_profiles": 0,
+  "raw_engine_sha256": "f7d6ded574aca635709090a37e1d6835aefbe3780be6455c5f2ee793bcb77442",
+  "signed_engine_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "baseline_signed_sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+  "source_closure": "10269 hashes before/after PASS; declared incidental cache excluded",
+  "archive_closure": {
+    "objectCount": 1538,
+    "archiveCount": 35,
+    "mismatchCount": 0
+  },
+  "toolchain": "All3142 normalized compile commands equal to G01; SDK27.2/compiler21.0.0/config flags preserved. No dependency installation.",
+  "runtime_closure": "Nineteen libraries byte-identical to G01, nine existing loader relocations, ad-hoc codesign verify PASS, external Homebrew dependency0",
+  "runner_scope": "Products/pins/paths/arm labels plus G01 constant1 for both;10 other functions AST unchanged including controller/measurement/parser/pacing/preflight/cleanup. Full runner and exact diff attached.",
+  "fresh_input_arms": [
+    "V_R02",
+    "A1_G01",
+    "B1_R02",
+    "B2_R02",
+    "A2_G01",
+    "A3_G01",
+    "B3_R02"
+  ],
+  "all_fixture_hashes_match_G01": true,
+  "window_contract": "Unchanged controller540..1740. Legacy LAUNCH planning metadata600..1800 is explicitly superseded by separate WINDOW-CONTRACT.json; no measurement logic changed.",
+  "next_commands_AFTER_NEW_HANDOFF_ONLY": [
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+      "--suite",
+      "r02_validation01",
+      "--run",
+      "validation_paced"
+    ],
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/run.py",
+      "--suite",
+      "r02_clean01",
+      "--run",
+      "clean_paced"
+    ]
+  ],
+  "do_not_restage_existing_suites": "Both suites are already prepared and unconsumed. Do not run --stage again over them. Require their exact pins and a new HQ execution grant.",
+  "prebuild_inspection_note": "Initial readonly target-name selector was corrected after inspection of the unique recoil-metal4-world-renderer object-library entry. It did not cause a second configuration or engine build. Initial receipt preserved.",
+  "raw_log_records": {
+    "CONFIGURE.log": {
+      "bytes": 23253,
+      "sha256": "02159fc65153eeb60710a56f53f0eb93d123c1245d02afe7a4c497b7254a479d",
+      "tail": [
+        "  to tell CMake that the project requires at least <min> but has been updated",
+        "  to work with policies introduced by <max> or earlier.",
+        "This warning is for project developers.  Use -Wno-author or -Wno-deprecated",
+        "to suppress it.",
+        "",
+        "PING6(56=40+8+8 bytes) ::1 --> ::1",
+        "16 bytes from ::1, icmp_seq=0 hlim=64 time=0.088 ms",
+        "",
+        "--- ::1 ping6 statistics ---",
+        "1 packets transmitted, 1 packets received, 0.0% packet loss",
+        "round-trip min/avg/max/std-dev = 0.088/0.088/0.088/0.000 ms",
+        "-- Configuring done (8.3s)",
+        "-- Generating done (0.6s)",
+        "-- Build files have been written to: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/build"
+      ]
+    },
+    "BUILD.log": {
+      "bytes": 733709,
+      "sha256": "c1b47a16481ee9d5433ca76257a236841056df03bfeb5878673556dbeb1842f9",
+      "tail": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp:69:88: warning: 'offsetof' on non-standard-layout type 'GroundDecal' [-Winvalid-offsetof]",
+        "   69 | CHECK_ATTRIBUTE(forcedNormal, createParams4); CHECK_ATTRIBUTE(infoRep, createParams5); CHECK_ATTRIBUTE(userDefined, userDefined);",
+        "      |                                                                                        ^               ~~~~~~~~~~~",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/source/engine/rts/Rendering/Env/Decals/NativeGroundDecalCapture.cpp:65:55: note: expanded from macro 'CHECK_ATTRIBUTE'",
+        "   65 | #define CHECK_ATTRIBUTE(source, target) static_assert(offsetof(GroundDecal, source) == offsetof(NativeGroundDecalInstance, target))",
+        "      |                                                       ^                     ~~~~~~",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include/__stddef_offsetof.h:16:24: note: expanded from macro 'offsetof'",
+        "   16 | #define offsetof(t, d) __builtin_offsetof(t, d)",
+        "      |                        ^                     ~",
+        "11 warnings generated.",
+        "[1575/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/WorldFrameCapture.cpp.o",
+        "[1576/1578] Building CXX object rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Metal4/Metal4SceneBridge.cpp.o",
+        "[1577/1578] Linking CXX executable spring-metal4-scene",
+        "ld: warning: ignoring duplicate libraries: 'librmlui.a', 'rts/Sim/libengineSim.a', 'rts/System/Sound/libsound.a', 'rts/lib/nowide/libnowide.a', 'rts/lib/simdjson/libsimdjson.a', 'rts/lib/squish/libsquish.a', 'rts/lib/streflop/libstreflop.a', 'rts/lib/tracy/libTracyClient.a', 'tools/pr-downloader/src/lib/7z/lib7zip.a', 'tools/pr-downloader/src/lib/base64/libpr-base64.a', 'tools/pr-downloader/src/lib/jsoncpp/libpr-jsoncpp.a'"
+      ]
+    },
+    "ARCHIVE-AUDIT.log": {
+      "bytes": 80,
+      "sha256": "ac632fce6c7112d481e8c595b9458353974c6a561567fdb5ea82dcc6d095f1a8",
+      "tail": [
+        "{'status': 'PASS', 'objectCount': 1538, 'archiveCount': 35, 'mismatchCount': 0}"
+      ]
+    },
+    "PACKAGE.log": {
+      "bytes": 963,
+      "sha256": "8a78a8df72a5bc3418c7b7e3152ec8b92b4cf54682b421945b47e4d3162722a8",
+      "tail": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene: replacing existing signature",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene: valid on disk",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene: satisfies its Designated Requirement",
+        "{\"status\": \"PASS\", \"rawSHA256\": \"f7d6ded574aca635709090a37e1d6835aefbe3780be6455c5f2ee793bcb77442\", \"signedSHA256\": \"21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da\", \"engine\": \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene\", \"relocationCount\": 9, \"libraryCount\": 19, \"codesignVerify\": \"PASS\", \"homebrewDependencies\": 0}"
+      ]
+    },
+    "STAGE-r02_validation01.log": {
+      "bytes": 70,
+      "sha256": "162841405160e41bcb8c0e707af121bf40607f8d6630ae8206f9444e79bc301d",
+      "tail": [
+        "READY validation_paced: static staged, games 0",
+        "SUITE r02_validation01"
+      ]
+    },
+    "STAGE-r02_clean01.log": {
+      "bytes": 60,
+      "sha256": "eb396e9032c4582fbaea0fd8abde4c73c1c5ba949ee9235eae1d6c9612361d40",
+      "tail": [
+        "READY clean_paced: static staged, games 0",
+        "SUITE r02_clean01"
+      ]
+    }
+  },
+  "cleanup": {
+    "owned_pid_count": 0,
+    "helper_session_count": 0,
+    "gpu_work_started": false,
+    "gpu_complete": true,
+    "awake_created": false,
+    "awake_released": true,
+    "workers_quiescent": true,
+    "build_staging_writers_closed": true
+  },
+  "limitations": [
+    "No runtime game/actual UI/Metal engine validation or FPS result yet",
+    "No capture/profile prepared or executed",
+    "R02 engine is isolated, accepted app/G01 runtime/source/main/release/Homebrew preserved"
+  ]
+}

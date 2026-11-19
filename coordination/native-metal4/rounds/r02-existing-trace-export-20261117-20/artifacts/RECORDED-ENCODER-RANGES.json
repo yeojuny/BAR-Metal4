@@ -1,0 +1,844 @@
+{
+  "source": "Prior profile only, not live runtime",
+  "records": [
+    {
+      "mapping": {
+        "command_ordinal": 13,
+        "command_node": "re13",
+        "label": "MTL4RenderCommandEncoder 9",
+        "type": "render",
+        "performance_node": "re8",
+        "timeline_node": "re8",
+        "API_begin": 5453,
+        "API_end": 8361,
+        "render_draw_count": 233,
+        "command_tree_render_draw_count": 233,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re8",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 9\""
+          },
+          {
+            "type": "duration",
+            "value": 3822458
+          },
+          {
+            "type": "duration",
+            "value": 11101083
+          },
+          {
+            "type": "duration",
+            "value": 7278625
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re8",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 9\""
+          },
+          {
+            "type": "percentage",
+            "value": 27.92923757820096
+          },
+          {
+            "type": "string",
+            "value": "0.8906 ms"
+          },
+          {
+            "type": "string",
+            "value": "5.6376 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 14,
+        "command_node": "re14",
+        "label": "MTL4RenderCommandEncoder 10",
+        "type": "render",
+        "performance_node": "re9",
+        "timeline_node": "re9",
+        "API_begin": 8362,
+        "API_end": 8669,
+        "render_draw_count": 8,
+        "command_tree_render_draw_count": 8,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re9",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 10\""
+          },
+          {
+            "type": "duration",
+            "value": 4721099
+          },
+          {
+            "type": "duration",
+            "value": 11165500
+          },
+          {
+            "type": "duration",
+            "value": 6444401
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re9",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 10\""
+          },
+          {
+            "type": "percentage",
+            "value": 1.8248859357376888
+          },
+          {
+            "type": "string",
+            "value": "3.2932 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0636 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 15,
+        "command_node": "re15",
+        "label": "MTL4RenderCommandEncoder 11",
+        "type": "render",
+        "performance_node": "re10",
+        "timeline_node": "re10",
+        "API_begin": 8670,
+        "API_end": 8846,
+        "render_draw_count": 58,
+        "command_tree_render_draw_count": 58,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re10",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 11\""
+          },
+          {
+            "type": "duration",
+            "value": 11173416
+          },
+          {
+            "type": "duration",
+            "value": 12220333
+          },
+          {
+            "type": "duration",
+            "value": 1046917
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re10",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 11\""
+          },
+          {
+            "type": "percentage",
+            "value": 4.471945726335001
+          },
+          {
+            "type": "string",
+            "value": "0.6034 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.4175 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 16,
+        "command_node": "re16",
+        "label": "MTL4RenderCommandEncoder 12",
+        "type": "render",
+        "performance_node": "re11",
+        "timeline_node": "re11",
+        "API_begin": 8847,
+        "API_end": 9021,
+        "render_draw_count": 58,
+        "command_tree_render_draw_count": 58,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re11",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 12\""
+          },
+          {
+            "type": "duration",
+            "value": 12230541
+          },
+          {
+            "type": "duration",
+            "value": 13448916
+          },
+          {
+            "type": "duration",
+            "value": 1218375
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re11",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 12\""
+          },
+          {
+            "type": "percentage",
+            "value": 5.232238113565391
+          },
+          {
+            "type": "string",
+            "value": "0.5918 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.6104 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 41,
+        "command_node": "re41",
+        "label": "MTL4RenderCommandEncoder 33",
+        "type": "render",
+        "performance_node": "re32",
+        "timeline_node": "re32",
+        "API_begin": 9715,
+        "API_end": 10172,
+        "render_draw_count": 13,
+        "command_tree_render_draw_count": 13,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re32",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 33\""
+          },
+          {
+            "type": "duration",
+            "value": 15612416
+          },
+          {
+            "type": "duration",
+            "value": 24339208
+          },
+          {
+            "type": "duration",
+            "value": 8726792
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re32",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 33\""
+          },
+          {
+            "type": "percentage",
+            "value": 36.05467087705856
+          },
+          {
+            "type": "string",
+            "value": "0.3748 ms"
+          },
+          {
+            "type": "string",
+            "value": "8.2428 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 42,
+        "command_node": "re42",
+        "label": "MTL4RenderCommandEncoder 34",
+        "type": "render",
+        "performance_node": "re33",
+        "timeline_node": "re33",
+        "API_begin": 10173,
+        "API_end": 10192,
+        "render_draw_count": 1,
+        "command_tree_render_draw_count": 1,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re33",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 34\""
+          },
+          {
+            "type": "duration",
+            "value": 24339416
+          },
+          {
+            "type": "duration",
+            "value": 24355958
+          },
+          {
+            "type": "duration",
+            "value": 16542
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re33",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 34\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.009507795712562354
+          },
+          {
+            "type": "string",
+            "value": "0.0035 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0071 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 43,
+        "command_node": "re43",
+        "label": "MTL4RenderCommandEncoder 35",
+        "type": "render",
+        "performance_node": "re34",
+        "timeline_node": "re34",
+        "API_begin": 10193,
+        "API_end": 10224,
+        "render_draw_count": 1,
+        "command_tree_render_draw_count": 1,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re34",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 35\""
+          },
+          {
+            "type": "duration",
+            "value": 24358291
+          },
+          {
+            "type": "duration",
+            "value": 24421458
+          },
+          {
+            "type": "duration",
+            "value": 63167
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re34",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 35\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.1403260413014083
+          },
+          {
+            "type": "string",
+            "value": "0.0107 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0571 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 44,
+        "command_node": "re44",
+        "label": "MTL4RenderCommandEncoder 36",
+        "type": "render",
+        "performance_node": "re35",
+        "timeline_node": "re35",
+        "API_begin": 10225,
+        "API_end": 10256,
+        "render_draw_count": 1,
+        "command_tree_render_draw_count": 1,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re35",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 36\""
+          },
+          {
+            "type": "duration",
+            "value": 24424625
+          },
+          {
+            "type": "duration",
+            "value": 24523458
+          },
+          {
+            "type": "duration",
+            "value": 98833
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re35",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 36\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.4407202236086872
+          },
+          {
+            "type": "string",
+            "value": "0.0173 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0764 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 45,
+        "command_node": "re45",
+        "label": "MTL4RenderCommandEncoder 37",
+        "type": "render",
+        "performance_node": "re36",
+        "timeline_node": "re36",
+        "API_begin": 10257,
+        "API_end": 10278,
+        "render_draw_count": 1,
+        "command_tree_render_draw_count": 1,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re36",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 37\""
+          },
+          {
+            "type": "duration",
+            "value": 24523666
+          },
+          {
+            "type": "duration",
+            "value": 24554208
+          },
+          {
+            "type": "duration",
+            "value": 30542
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re36",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 37\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.10513475073736034
+          },
+          {
+            "type": "string",
+            "value": "0.0042 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0219 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 46,
+        "command_node": "re46",
+        "label": "MTL4RenderCommandEncoder 38",
+        "type": "render",
+        "performance_node": "re37",
+        "timeline_node": "re37",
+        "API_begin": 10279,
+        "API_end": 10303,
+        "render_draw_count": 1,
+        "command_tree_render_draw_count": 1,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re37",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 38\""
+          },
+          {
+            "type": "duration",
+            "value": 24553426
+          },
+          {
+            "type": "duration",
+            "value": 24616666
+          },
+          {
+            "type": "duration",
+            "value": 63240
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re37",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 38\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.20164397676931742
+          },
+          {
+            "type": "string",
+            "value": "0.0049 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0519 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 47,
+        "command_node": "re47",
+        "label": "MTL4RenderCommandEncoder 39",
+        "type": "render",
+        "performance_node": "re38",
+        "timeline_node": "re38",
+        "API_begin": 10304,
+        "API_end": 10306,
+        "render_draw_count": 0,
+        "command_tree_render_draw_count": 0,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re38",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 39\""
+          },
+          {
+            "type": "duration",
+            "value": 0
+          },
+          {
+            "type": "duration",
+            "value": 24919083
+          },
+          {
+            "type": "duration",
+            "value": 24919083
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re38",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 39\""
+          },
+          null,
+          {
+            "type": "string",
+            "value": "0.0015 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0027 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 48,
+        "command_node": "re48",
+        "label": "MTL4RenderCommandEncoder 40",
+        "type": "render",
+        "performance_node": "re39",
+        "timeline_node": "re39",
+        "API_begin": 10307,
+        "API_end": 10324,
+        "render_draw_count": 1,
+        "command_tree_render_draw_count": 1,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re39",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 40\""
+          },
+          {
+            "type": "duration",
+            "value": 24620833
+          },
+          {
+            "type": "duration",
+            "value": 24650916
+          },
+          {
+            "type": "duration",
+            "value": 30083
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re39",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 40\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.06362545496119507
+          },
+          {
+            "type": "string",
+            "value": "0.0049 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0209 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 49,
+        "command_node": "re49",
+        "label": "MTL4RenderCommandEncoder 41",
+        "type": "render",
+        "performance_node": "re40",
+        "timeline_node": "re40",
+        "API_begin": 10325,
+        "API_end": 10956,
+        "render_draw_count": 78,
+        "command_tree_render_draw_count": 78,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re40",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 41\""
+          },
+          {
+            "type": "duration",
+            "value": 24659333
+          },
+          {
+            "type": "duration",
+            "value": 24868250
+          },
+          {
+            "type": "duration",
+            "value": 208917
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re40",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 41\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.7515543275756094
+          },
+          {
+            "type": "string",
+            "value": "0.0315 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.1680 ms"
+          }
+        ]
+      }
+    },
+    {
+      "mapping": {
+        "command_ordinal": 50,
+        "command_node": "re50",
+        "label": "MTL4RenderCommandEncoder 42",
+        "type": "render",
+        "performance_node": "re41",
+        "timeline_node": "re41",
+        "API_begin": 10957,
+        "API_end": 10979,
+        "render_draw_count": 1,
+        "command_tree_render_draw_count": 1,
+        "selected": true,
+        "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+      },
+      "saved_timeline": {
+        "actions": "go, info",
+        "name": "re41",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 42\""
+          },
+          {
+            "type": "duration",
+            "value": 24868458
+          },
+          {
+            "type": "duration",
+            "value": 24887375
+          },
+          {
+            "type": "duration",
+            "value": 18917
+          }
+        ]
+      },
+      "saved_cost": {
+        "actions": "go, info",
+        "name": "re41",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"MTL4RenderCommandEncoder 42\""
+          },
+          {
+            "type": "percentage",
+            "value": 0.02142222104841622
+          },
+          {
+            "type": "string",
+            "value": "0.0051 ms"
+          },
+          {
+            "type": "string",
+            "value": "0.0101 ms"
+          }
+        ]
+      }
+    }
+  ],
+  "unit_status": "Raw duration values preserved; cost string suffixes ms explicit, individual metric column meanings not retained.",
+  "zero_start_full_extent_warning": "Label39 has zero draws and full0..24919083 bounds; do not interpret as actual full-frame GPU occupation."
+}

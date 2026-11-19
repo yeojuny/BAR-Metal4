@@ -1,0 +1,31 @@
+{
+  "status": "STAGED_NO_GAME",
+  "order": [
+    "R59_CAP1",
+    "R59_CAP2"
+  ],
+  "binary_sha256": "fea30e1f4aecb69fcf88e82cc80f0b1273f43c9c24d85abb5d312b2ecd82fe52",
+  "round_id": "pending2-ordinary-reclaim-cube-20261118-59",
+  "attempt_id": "pending2-reclaim-cube-cap1-cap2-01",
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "simulation_ticks": [
+      540,
+      1740
+    ]
+  },
+  "cpu_validation": "5 bounded sanitizer checks passed; entire engine built",
+  "manifest": "CANDIDATE-MANIFEST.json",
+  "authorized_fixed_budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "bounded_cpu_contracts": true,
+    "games": 2,
+    "max_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "status": "STAGED_NO_GAME",
+  "order": [
+    "R79_ON",
+    "R79_OFF"
+  ],
+  "binary_sha256": "45640810ffcba81d4190fb4557b086960773ae592b8ceb3261f7cf0b03b38d3a",
+  "cap": 2,
+  "cpu_read_mode": 0,
+  "matching_scene_inputs": 13,
+  "single_ab_delta": "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR",
+  "fixed_sensorlos": "ON",
+  "prejoin": "OFF",
+  "aa": 0,
+  "patch_sha256": "bdbcc095a827ffdb9a2c9bc382b21904fd1c97f259770393f04fda88b84221ef"
+}

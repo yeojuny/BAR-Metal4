@@ -1,0 +1,18 @@
+{
+  "round_id": "r03-skipdraw-pair-20261117-29",
+  "attempt_id": "r03-onegame-main-decal-skipdraw-02",
+  "status": "READY_MINIMAL_ACK_FIX",
+  "previous_round28_closed": true,
+  "previous_budget_reused": false,
+  "controller_sha256": "fe0a9b9a16d545f4a43cea168bea6dfbb6782c05a27492c123a6735bfc5e2925",
+  "runner_sha256": "8d8cf7e5c6d1ad75e6aaf9a97d93ccde682e24c99028bd5ca5003a5c573c87ec",
+  "host_checks": {
+    "verbatim_round28": "PASS",
+    "false": "PASS",
+    "duplicate": "PASS",
+    "missing": "PASS",
+    "mixed": "PASS",
+    "legacy_whitespace": "PASS"
+  },
+  "execution_started": false
+}

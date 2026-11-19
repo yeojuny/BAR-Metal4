@@ -1,0 +1,72 @@
+{
+  "receipts": {
+    "A1": {
+      "line": 2237,
+      "text": "[t=00:00:16.058122][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+      "outline_upload": "separate",
+      "log_simulation_tick": 0,
+      "logged_within_timed_window": false
+    },
+    "B1": {
+      "line": 2243,
+      "text": "[t=00:00:16.666394][f=0000001] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+      "outline_upload": "slab",
+      "log_simulation_tick": 1,
+      "logged_within_timed_window": false
+    },
+    "B2": {
+      "line": 2237,
+      "text": "[t=00:00:16.759562][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+      "outline_upload": "slab",
+      "log_simulation_tick": 0,
+      "logged_within_timed_window": false
+    },
+    "A2": {
+      "line": 2238,
+      "text": "[t=00:00:16.714707][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+      "outline_upload": "separate",
+      "log_simulation_tick": 0,
+      "logged_within_timed_window": false
+    },
+    "B3": {
+      "line": 2238,
+      "text": "[t=00:00:16.714295][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+      "outline_upload": "slab",
+      "log_simulation_tick": 0,
+      "logged_within_timed_window": false
+    },
+    "A3": {
+      "line": 2237,
+      "text": "[t=00:00:16.498604][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+      "outline_upload": "separate",
+      "log_simulation_tick": 0,
+      "logged_within_timed_window": false
+    },
+    "A4": {
+      "line": 2237,
+      "text": "[t=00:00:16.737342][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+      "outline_upload": "separate",
+      "log_simulation_tick": 0,
+      "logged_within_timed_window": false
+    },
+    "B4": {
+      "line": 2238,
+      "text": "[t=00:00:16.660535][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+      "outline_upload": "slab",
+      "log_simulation_tick": 0,
+      "logged_within_timed_window": false
+    }
+  },
+  "all_modes_witnessed": true,
+  "route_status": {
+    "A1": true,
+    "B1": true,
+    "B2": true,
+    "A2": true,
+    "B3": true,
+    "A3": true,
+    "A4": true,
+    "B4": true
+  },
+  "scope": "First actual indexed SensorLOS outline encode only"
+}

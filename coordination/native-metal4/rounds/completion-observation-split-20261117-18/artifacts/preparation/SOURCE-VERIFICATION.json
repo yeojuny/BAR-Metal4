@@ -1,0 +1,8 @@
+{
+  "head": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "raw_committed_files": 10273,
+  "raw_mismatches": [],
+  "git_status_raw": "",
+  "status_note": "Nine CRLF vendor files are raw-byte-identical to committed blobs; attribute normalization alone reports dirty."
+}

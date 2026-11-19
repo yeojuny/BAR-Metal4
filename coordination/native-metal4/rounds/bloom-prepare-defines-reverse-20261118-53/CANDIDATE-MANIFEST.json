@@ -1,0 +1,21 @@
+{
+  "status": "READY_EXACT_DEFINE_REUSE_PER_PREPARE",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4Bloom.mm",
+      "parent_sha256": "5ca01f2e11bec02e123ddb174f2708ab97f08d23039ade59518bb009c6aad3d4",
+      "candidate_sha256": "6c72b76a993af836d97e9acdb10b4a5a0d885a07bfc33cb69e039063b791067c"
+    }
+  ],
+  "source_paths_verified": 10274,
+  "patch_sha256": "604f55a402d93af4153ea81e9d06d8e2cad7ae7b14cc138bcb5ca48242f4dba4",
+  "accepted_bloom": {
+    "setting": "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA",
+    "value": "1",
+    "rollback": "0 on the same binary"
+  },
+  "parent_binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+  "flag": "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE",
+  "default": "OFF"
+}

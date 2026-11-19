@@ -1,0 +1,36 @@
+{
+  "parent_artifact": "e658e16d82ecbff9388ecd9d316ebc6e495ace19",
+  "parent_round56_patch_sha256": "5db5a679e97f6e565ead31cb7dfccdf7a46b467f6c16a63984d87fccb92aad2a",
+  "changed_files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "parent_sha256": "3a5fc34538dc0421f4d14ac0d28d7144e9ad329ec18dfd131d6a836be2525196",
+      "candidate_sha256": "5b2a876983646f47f950860df86546eb108d17bbe7cfc0d53c932afd363e6a79"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4FrameResources.h",
+      "parent_sha256": "8f1536556496af67a42a5c95f40bdf2c1932cbbaf93877b16f9d92b88d9c936d",
+      "candidate_sha256": "9e6ccce5e767632ed9353cc2e88412b85fa916ebbfdfa9b5bcc7cb6d3b7eb7eb"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "parent_sha256": "f221f2fc8488cf7f5a94b94f32ad581b63c1f8b8d05bc47fe119ecea5c8b35ed",
+      "candidate_sha256": "e5e7844b8572d29f7045b9e6d350bec5c7cb6e2e165c0d281b44b869d7eb1f52"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "parent_sha256": "dc53c5588a1cbd8929c3760d59589568b142995e8d97b17c09b8f3d0800b4715",
+      "candidate_sha256": "043555571c12917740165eebfea3c294326e6d82603fcdba9b95f241231edfa5"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "parent_sha256": "e8f5f7993eff255725727da86de7c9f875461d34073ee7745a2c99ab3486cb47",
+      "candidate_sha256": "8dce8209190cfd480224914b2b07d0180f12275d7ad1d8476d91295ad1fb43d2"
+    }
+  ],
+  "patch_sha256": "b0e7272b12ad39ea20cc3ed8168b3bef0d5aab8f3cc2f3f6b94e76858a9a86ca",
+  "build_command": "cmake --build build --target spring-metal4-scene -- -j 8",
+  "configuration": "RelWithDebInfo, exact R03 initial cache",
+  "same_binary_sha256": "b2b7313452f752d06f1291be4311f71d2e7b3012bf980f09f218f00ebd10f183",
+  "present_policy": "both cap1 and cap2 request present after oldest successful retirement"
+}

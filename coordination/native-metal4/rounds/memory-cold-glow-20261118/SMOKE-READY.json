@@ -1,0 +1,32 @@
+{
+  "status": "STAGED_NO_GAME",
+  "candidate": 98,
+  "scene": "seths",
+  "switch": "BAR_NATIVE_GPU_MEMORY_REPORT",
+  "binary_sha256": "c0a139c8f5cda5448a7e5a4ab21532d52d88aaecb40229689fbc2c01f37d5f3e",
+  "order": [
+    "SMOKE_MEM_OFF",
+    "SMOKE_MEM_ON"
+  ],
+  "initial_lifetime": null,
+  "launch_sha256": {
+    "SMOKE_MEM_OFF": "02f4afa858d626725476297775a8e005c7055f3c3c960b94472bf1e5574260c9",
+    "SMOKE_MEM_ON": "9fbd586f2b1034b962acc5006e082b26233d88149a5aeb9e5796a2e22a888154"
+  },
+  "input_hashes": 14,
+  "scope": {
+    "window": {
+      "startSimulation": 540,
+      "endSimulation": 1740,
+      "screenshot": false
+    },
+    "cap": 2,
+    "MSAA": 0,
+    "viewport": [
+      1512,
+      950
+    ]
+  },
+  "deferred": "0",
+  "hud": "SMOKE_ON_ONLY"
+}

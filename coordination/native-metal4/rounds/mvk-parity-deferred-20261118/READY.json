@@ -1,0 +1,65 @@
+{
+  "status": "STAGED_NO_GAME",
+  "candidate": 96,
+  "scene": "seths",
+  "switch": "BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH",
+  "binary_sha256": "3c369eaff6b2ee8f14030c09cc8ebe9d74fb5f69b68c602204b03abd4f319857",
+  "order": [
+    "A1_OFF",
+    "B1_ON",
+    "B2_ON",
+    "A2_OFF"
+  ],
+  "launch_sha256": {
+    "A1_OFF": "633fd81d5748c24a06f5bfdc551508ffd843376ffbab9b9c9a76a219e53114b1",
+    "B1_ON": "f12e19bf97536882c9e4e851e66ef6c1a1516229ec0d8606dc354be9b062bee2",
+    "B2_ON": "49b0215023b68a3ee6a7267329083382a9df6156469c4ca7c7800649c9bb863a",
+    "A2_OFF": "d801f4d132d4955bf7a7a9ccf97378e820c114a26215db2f195dc210848b6b68"
+  },
+  "input_hashes": 13,
+  "scope": {
+    "window": {
+      "startSimulation": 540,
+      "endSimulation": 1740,
+      "screenshot": false
+    },
+    "cap": 2,
+    "MSAA": 0,
+    "viewport": [
+      1512,
+      950
+    ]
+  },
+  "fixed_switches": {
+    "BAR_NATIVE_GPU_MEMORY_REPORT": "1",
+    "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW": "1"
+  },
+  "effective_lifetime": 3.0,
+  "hud": "OFF",
+  "profiling": "OFF",
+  "reference_launch_sha256": "30e4afe4b1cfef9d7d05608229adf4bba14da8034a0570fc6b8ece3175adcd18",
+  "thermal": {
+    "reference_c": {
+      "cpu_temp_avg": 40.0880775,
+      "gpu_temp_avg": 38.5050315
+    },
+    "tolerance_c": 2.0,
+    "min_stable_samples": 5,
+    "max_postrun_c": {
+      "cpu_temp_avg": 84.290245,
+      "gpu_temp_avg": 82.56115
+    },
+    "max_median_active": {
+      "cpu_active_ratio": 0.15,
+      "gpu_active_ratio": 0.25
+    },
+    "cool_clock_mhz": {
+      "ecpu_freq_mhz": 1490.0,
+      "pcpu_freq_mhz": 1260.0,
+      "gpu_freq_mhz": 338.0
+    },
+    "thermal_warning_allowed": false,
+    "recovery_deadline_seconds": 600,
+    "monitor_in_counted_window": false
+  }
+}

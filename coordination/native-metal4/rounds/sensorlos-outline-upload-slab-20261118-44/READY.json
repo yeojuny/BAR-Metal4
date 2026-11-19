@@ -1,0 +1,16 @@
+{
+  "round_id": "sensorlos-outline-upload-slab-20261118-44",
+  "attempt_id": "outline-upload-slab-off-on-01",
+  "status": "READY_FRESH_ALIGNED_UPLOAD_SLICES",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "3ddedb4ef33817651d0b03c4dbb5f07dca1096e3f064e497a5b3f26ade5ccdc4",
+  "source_paths_verified": 10274,
+  "modified_files": 1,
+  "order": [
+    "SLAB_OFF",
+    "SLAB_ON"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

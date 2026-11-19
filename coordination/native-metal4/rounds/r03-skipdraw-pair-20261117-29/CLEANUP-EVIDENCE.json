@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "engineCleanup": {
+    "normalExit": true,
+    "pid": 7809,
+    "ownedGroupGone": true,
+    "privateWidgetRemoved": true,
+    "privateGameOverlayRemoved": true
+  },
+  "ownerClosed": {
+    "status": "CLOSED",
+    "arm": "R03",
+    "captureStatus": "CAPTURED",
+    "awakeReleased": true,
+    "workerJoined": true,
+    "utc": "2026-11-17T20:40:10.646402+00:00"
+  },
+  "awakeReleased": {
+    "status": "RELEASED",
+    "campaign": "clean_paced",
+    "pid": 7799,
+    "startUTC": "2026-11-17T20:38:51.772845+00:00",
+    "maximumSeconds": 900,
+    "securitySettingsChanged": false,
+    "endUTC": "2026-11-17T20:40:10.646027+00:00",
+    "ownCaffeinateAlive": false
+  },
+  "ownedGameProcessGroupGone": true,
+  "captureClientsGone": [
+    7922,
+    7923
+  ],
+  "ownedWakeProcessGone": true,
+  "ownedUltraProbeCleanup": {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-29/clean_paced/preparation/private/R03/state/data/LuaUI/Widgets/zzz_ultra_quality.lua",
+    "verifiedSHA256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+    "removed": true
+  },
+  "inspectionSessionsClosed": [
+    "11",
+    "14"
+  ],
+  "gpuSessionsAfter": "No active sessions.",
+  "bar": "PAUSED",
+  "sharedAwake": "RELEASED",
+  "userWakeBefore": [
+    "6618 caffeinate -d"
+  ],
+  "userWakeAfter": [
+    "6618 caffeinate -d"
+  ],
+  "userWakeOperations": 0,
+  "reboots": 0,
+  "logouts": 0,
+  "serviceRestarts": 0
+}

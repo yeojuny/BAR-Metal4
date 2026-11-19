@@ -1,0 +1,360 @@
+{
+  "status": "STAGED_NO_GAME",
+  "groups": [
+    {
+      "candidate": 96,
+      "scene": "seths",
+      "switch": "BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH",
+      "binary_sha256": "bb0e50b0fcba0fe994767c7792ac9f2c65dd299cdd269b8d2c81d4fbef6cb423",
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF"
+      ],
+      "input_hashes": 13,
+      "launch_sha256": {
+        "A1_OFF": "55f0af5762a1dff4eae760dab20bf7a73c0d9c01c47cf1cb9d71b132a5c47235",
+        "B1_ON": "59e5d5e3cf084d360f9443fd09ac150799dd560940dcdd22ec28a8265d6d8edd",
+        "B2_ON": "21cf2b182cb0ba6627bda8041e04375c217e4e390796d571b4158b3526dbbbb0",
+        "A2_OFF": "e7455baf0fff913e54ba013bc3f14b752ca7ace90e16ba240e8fd3c774f9f846"
+      },
+      "scope": {
+        "window": {
+          "startSimulation": 540,
+          "endSimulation": 1740,
+          "screenshot": false
+        },
+        "cap": 2,
+        "MSAA": 0,
+        "viewport": [
+          1512,
+          950
+        ]
+      },
+      "safety_receipt": {
+        "status": "PASS_DEFERRED_DEPTH_CPU_AND_GPU",
+        "cpu_cases": 512,
+        "gpu_output_cases": 16384,
+        "full_library_compiles": 8,
+        "strict_edge_cases": true,
+        "infinities_and_nan_cpu": true,
+        "finite_gpu": true,
+        "real_D32F_mips": true,
+        "source": "Production ray depth block and downstream depth delta/occlusion; separate fragment readback",
+        "log_sha256": "85019ae9c0b1f9f6687ce7ba7345baf0a40313cc59469a98e221ad0b5a2d5d0c"
+      }
+    },
+    {
+      "candidate": 99,
+      "scene": "seths",
+      "switch": "BAR_NATIVE_GROUND_DECAL_CACHE_G01_INDEX",
+      "binary_sha256": "9a44b1b3c03f5b7f3e0e1878c38f5af646058ab75d46005146e01e056ad7d71f",
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF"
+      ],
+      "input_hashes": 13,
+      "launch_sha256": {
+        "A1_OFF": "fbe0b9c560d1ac5b96a1987b8a9fbeacf88bc20ef480334f2a5e2ed2e7f4f157",
+        "B1_ON": "1becb20b7cb3e188a5d122ddfef7ae6b37bae2b6912e0e00143735b7f19eb587",
+        "B2_ON": "5a4746ca593ba9652b3b433f832e91f3da4b34cb63a95d5e2ef278edc53f3cc5",
+        "A2_OFF": "be8719683dcf92699d5edbc606da12236882176261264e3295854928194c2586"
+      },
+      "scope": {
+        "window": {
+          "startSimulation": 540,
+          "endSimulation": 1740,
+          "screenshot": false
+        },
+        "cap": 2,
+        "MSAA": 0,
+        "viewport": [
+          1512,
+          950
+        ]
+      },
+      "safety_receipt": {
+        "status": "PASS_G01_CACHE_METAL",
+        "indexed_BGRA8_depth_stencil_cases": 72,
+        "RGBA32F_cases": 72,
+        "real_Metal_buffer_hits": 144,
+        "attachment_writes": 36,
+        "cache_clear_retention": true,
+        "nil_and_residency_failure_injected": true,
+        "log_sha256": "c5df56b11cd251272c004c5647ea8a2045e50a473c7586ea99764df7df403581"
+      }
+    },
+    {
+      "candidate": 99,
+      "scene": "simmers",
+      "switch": "BAR_NATIVE_GROUND_DECAL_CACHE_G01_INDEX",
+      "binary_sha256": "9a44b1b3c03f5b7f3e0e1878c38f5af646058ab75d46005146e01e056ad7d71f",
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF"
+      ],
+      "input_hashes": 11,
+      "launch_sha256": {
+        "A1_OFF": "74551e831cc8fb84beb1ad16ec44ae2b43c7670f66f604ebbdf72a5e6549228b",
+        "B1_ON": "96130154cb27e3b5df36e9a21513604c54c20159d05aeafe45445812d65b0f7e",
+        "B2_ON": "37ee13786561c50ff38116db6c32c78268fc6074625769d9bf03f64f5d129f9f",
+        "A2_OFF": "0cf9f8192e2432d1404f54db558960273eef2d2f00645e6b33ca46c9b44527f5"
+      },
+      "scope": {
+        "window": {
+          "startSimulation": 300,
+          "endSimulation": 1500,
+          "warmupSimulationSeconds": 10,
+          "countedSimulationSeconds": 40,
+          "totalGameplaySimulationSeconds": 50,
+          "controllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d"
+        },
+        "cap": 1,
+        "MSAA": 0,
+        "viewport": [
+          1512,
+          950
+        ]
+      },
+      "safety_receipt": {
+        "status": "PASS_G01_CACHE_METAL",
+        "indexed_BGRA8_depth_stencil_cases": 72,
+        "RGBA32F_cases": 72,
+        "real_Metal_buffer_hits": 144,
+        "attachment_writes": 36,
+        "cache_clear_retention": true,
+        "nil_and_residency_failure_injected": true,
+        "log_sha256": "c5df56b11cd251272c004c5647ea8a2045e50a473c7586ea99764df7df403581"
+      }
+    },
+    {
+      "candidate": 98,
+      "scene": "seths",
+      "switch": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
+      "binary_sha256": "d3899678fef6201e350e86d593cf7ba9bb13d75381f6115c1edc1094d4e5b5ea",
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF"
+      ],
+      "input_hashes": 13,
+      "launch_sha256": {
+        "A1_OFF": "f4bb1cfc15909550ed206acb0691e634543caf07f0a96ac43934113dee4976a4",
+        "B1_ON": "f980bae904ea523dbf7f6a6d16c49cf1f61511b5df5e1424fbdbec28f56c14c3",
+        "B2_ON": "8b93a07764fdb19c52c5d6cefead4d4fd4fe59eb90c60d69068044fe7e5065a7",
+        "A2_OFF": "01961e6644769ff4b4fcb246f181dbefb643bb25e665ad61ea38267fb4bc0596"
+      },
+      "scope": {
+        "window": {
+          "startSimulation": 540,
+          "endSimulation": 1740,
+          "screenshot": false
+        },
+        "cap": 2,
+        "MSAA": 0,
+        "viewport": [
+          1512,
+          950
+        ]
+      },
+      "safety_receipt": {
+        "status": "PASS_GROUND_COLD_GLOW_METAL",
+        "indexed_BGRA8_depth_stencil_cases": 72,
+        "RGBA32F_cases": 72,
+        "cold_branch_positive": [
+          7,
+          7
+        ],
+        "fallback_control": [
+          12,
+          12
+        ],
+        "shadows": [
+          false,
+          true
+        ],
+        "pixel_scope": "AA0 only; test-only marker never compiled in engine",
+        "log_sha256": "43f9849356e0b88ade2ec5676036b0aa3b34c78143452abaa9954dca1c3e8087"
+      }
+    },
+    {
+      "candidate": 98,
+      "scene": "simmers",
+      "switch": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
+      "binary_sha256": "d3899678fef6201e350e86d593cf7ba9bb13d75381f6115c1edc1094d4e5b5ea",
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF"
+      ],
+      "input_hashes": 11,
+      "launch_sha256": {
+        "A1_OFF": "f7e0d79b03388fb7aba3cda71accc389cd7c3ae8c5b76621e9a297119349bc8c",
+        "B1_ON": "99cf9febbb36c740f53621c3aa4fa3b624df14c5763d80f630c82e5d61d8c303",
+        "B2_ON": "8614c952c0b78eeb3dfb58d6ba9664fb2af47fcd5392fb2ac8b9392a4ebd79ad",
+        "A2_OFF": "4bd65a9744203a5629b478d13b281f96339a7bf0682177d75a7883614a7f9fb6"
+      },
+      "scope": {
+        "window": {
+          "startSimulation": 300,
+          "endSimulation": 1500,
+          "warmupSimulationSeconds": 10,
+          "countedSimulationSeconds": 40,
+          "totalGameplaySimulationSeconds": 50,
+          "controllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d"
+        },
+        "cap": 1,
+        "MSAA": 0,
+        "viewport": [
+          1512,
+          950
+        ]
+      },
+      "safety_receipt": {
+        "status": "PASS_GROUND_COLD_GLOW_METAL",
+        "indexed_BGRA8_depth_stencil_cases": 72,
+        "RGBA32F_cases": 72,
+        "cold_branch_positive": [
+          7,
+          7
+        ],
+        "fallback_control": [
+          12,
+          12
+        ],
+        "shadows": [
+          false,
+          true
+        ],
+        "pixel_scope": "AA0 only; test-only marker never compiled in engine",
+        "log_sha256": "43f9849356e0b88ade2ec5676036b0aa3b34c78143452abaa9954dca1c3e8087"
+      }
+    },
+    {
+      "candidate": 100,
+      "scene": "seths",
+      "switch": "BAR_NATIVE_GAME_DECAL_DEAD_VERTEX",
+      "binary_sha256": "f6d5431dcf545b83c1ffea61e20d398c087aef58583d4b300e5acfffb936368a",
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF"
+      ],
+      "input_hashes": 13,
+      "launch_sha256": {
+        "A1_OFF": "14e35dca78ceaff5f4a070831c593c9d31f9e534079e6ea3a53ab2dfa5a5d155",
+        "B1_ON": "653d8f1744ce2bc14cacad9d301500ee2dd1fc1e2ce0bbd973a5649c4244b471",
+        "B2_ON": "2ee0e7ea2b33239bd745bb630af0ec7e6ff90e5d841567ddafaf9ee7a42f12dc",
+        "A2_OFF": "c8e95167415d8ad06de20d4522aa7f696c91db3e6aa59f567527bfe557b96be7"
+      },
+      "scope": {
+        "window": {
+          "startSimulation": 540,
+          "endSimulation": 1740,
+          "screenshot": false
+        },
+        "cap": 2,
+        "MSAA": 0,
+        "viewport": [
+          1512,
+          950
+        ]
+      },
+      "safety_receipt": {
+        "status": "PASS_LUA_GAMEDECAL_METAL",
+        "GPU_cases": 13,
+        "paired_routes": [
+          "direct",
+          "indexed"
+        ],
+        "exact": [
+          "BGRA8",
+          "depth",
+          "stencil"
+        ],
+        "tiny_positive_pixels": 946,
+        "alpha_reject_positive_pixels": 946,
+        "overlap_pixels": 173,
+        "samples": 1,
+        "log_sha256": "f9328d191fb0a39a683a3817545cdc213a7dbd1d4720b8d6f4480bb5179499b3"
+      }
+    },
+    {
+      "candidate": 100,
+      "scene": "simmers",
+      "switch": "BAR_NATIVE_GAME_DECAL_DEAD_VERTEX",
+      "binary_sha256": "f6d5431dcf545b83c1ffea61e20d398c087aef58583d4b300e5acfffb936368a",
+      "order": [
+        "A1_OFF",
+        "B1_ON",
+        "B2_ON",
+        "A2_OFF"
+      ],
+      "input_hashes": 11,
+      "launch_sha256": {
+        "A1_OFF": "d92aab2ab845663a0dcd69076b0662bfa5288055a74f19c84d859c808a34f719",
+        "B1_ON": "0b54f4f903a023978555997eef066bcc2d926c3fca9e3646b08ec5ca9dbe8134",
+        "B2_ON": "b5f9420ff1425fd86a6bf6a1f768ceb838967ac5c9c9ab4359e73aa3aa17a878",
+        "A2_OFF": "773e60c4f8804cca5d0e2a78dcbba36b5cc11b4480e0a3dd378cfc5fc5033301"
+      },
+      "scope": {
+        "window": {
+          "startSimulation": 300,
+          "endSimulation": 1500,
+          "warmupSimulationSeconds": 10,
+          "countedSimulationSeconds": 40,
+          "totalGameplaySimulationSeconds": 50,
+          "controllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d"
+        },
+        "cap": 1,
+        "MSAA": 0,
+        "viewport": [
+          1512,
+          950
+        ]
+      },
+      "safety_receipt": {
+        "status": "PASS_LUA_GAMEDECAL_METAL",
+        "GPU_cases": 13,
+        "paired_routes": [
+          "direct",
+          "indexed"
+        ],
+        "exact": [
+          "BGRA8",
+          "depth",
+          "stencil"
+        ],
+        "tiny_positive_pixels": 946,
+        "alpha_reject_positive_pixels": 946,
+        "overlap_pixels": 173,
+        "samples": 1,
+        "log_sha256": "f9328d191fb0a39a683a3817545cdc213a7dbd1d4720b8d6f4480bb5179499b3"
+      }
+    }
+  ],
+  "skips": [
+    {
+      "candidate": 96,
+      "scene": "simmers",
+      "status": "ACTIVATION_UNPROVEN",
+      "reason": "Historic shader link exists; eligible offscreen ray work is unverified."
+    }
+  ],
+  "thermal": {
+    "sampler": "macmon 0.12.0 pipe",
+    "archive_sha256": "cd5a701f8537072aee93eba686bc582897bd00d826f62146b32c8a8d2654641a",
+    "cooldown_max_seconds": 600,
+    "tolerance_celsius": 2.0,
+    "stable_samples": 3,
+    "during_counted_window": false
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "request_id": "r02-sensorlos-winding-20261116-01",
+  "author": "HQ",
+  "assignee": "SUPER_JINI_MK2",
+  "phase": "SOURCE_PREPARATION",
+  "instruction": "R01 SensorLOS의 Y-major tight 삼각형이 기존 감김 방향을 뒤집는 계약 결함을 수정하고, 관련 비대칭 stencil 회귀 검증 코드를 함께 준비합니다. 교신 설계를 더 늘리지 말고 이 실제 수정부터 진행합니다.",
+  "human_authorization": "사용자가 교신 확인 뒤 본 작업을 진행하라고 지시했고, Dot 총괄·GitHub 인계·기존 HQ 실행 구조를 지정했습니다. 게임·벤치 실행 보류는 유지합니다.",
+  "roles": {
+    "SUPER_JINI_MK2": "분석·소스 수정·CPU 증명·고정 후보 인계",
+    "HQ": "외부 감사 대조·후보 검토·후속 Mac 빌드/검증/벤치와 증거 기록. 이번 요청에는 실행 승인 없음."
+  },
+  "model_policy": {
+    "analysis_and_contract": "Astra high 기본. 증명이 실제로 막힐 때만 xhigh로 높이고 이유와 실제 사용 설정을 기록합니다.",
+    "delegated_implementation": "Sol을 쓰면 high로 구현을 맡기고, 별도 읽기 전용 검수에 감김 방향·앞뒷면 stencil·fallback·AA 경계를 명시합니다. 작은 수정마다 새 에이전트/빌드/전면 감사를 만들지 않습니다.",
+    "hq_control": "사용자가 Dot에게 이 HQ의 모델·추론 강도 조절을 허용했습니다. 도구로 실제 변경한 설정만 변경했다고 보고합니다.",
+    "branching": "대화가 무거우면 새 섹션으로 분기하되 소스 커밋·manifest·가설·미완료 검증·권한 범위만 인계합니다. 기존 수정자/작업을 종료한 뒤 새 작업을 시작하고 기존 HQ를 중복 생성하지 않습니다."
+  },
+  "baseline": {
+    "upstream_source_commit": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+    "evidence_commit": "034339e00be3545316b056d44e470f03959bbc53",
+    "evidence_root": "docs/research/unexpected-load-scaling-20261116",
+    "reconstruction": "patches/CHAIN.json 기준 R01 → S01-final → G01까지만 적용. G02는 제외.",
+    "expected_manifest": "source-snapshots/G01-MANIFEST.json",
+    "preserve": "R01/S01/G01 기존 이득과 설정 유지. G02/G03/G04, 신규 풀·캐시·큐/인코더 변경은 섞지 않습니다."
+  },
+  "findings_confirmed_by_hq": [
+    "SensorLOSTightPixel이 X/Y major에 같은 corner 순서를 쓰면서 Y-major에서 float2(minor,major)로 축을 교환합니다.",
+    "기존 GPU helper가 frontFaceStencil과 backFaceStencil을 같은 객체로 설정하고 공통 reference1을 써서 감김 방향 반전을 검출하지 못합니다.",
+    "실제 벤치 화면 오류는 미확인입니다. 이번 수정은 일반 depth/stencil 계약의 누락을 바로잡는 것입니다."
+  ],
+  "required_change": [
+    "Y-major에서도 기존 AABB 삼각형 감김 방향을 보존하는 최소 변경을 구현합니다. 영역과 정확한 Fragment 판정, 샘플/버리기 순서, 깊이 계산, blend, GPU 수명은 유지합니다.",
+    "X/Y major, 끝점 역전, slope 양/음, major tie, clipping, guard fallback, AA0만 tight 적용을 검토합니다. AA4 기존 fallback은 유지합니다.",
+    "관련 회귀 검증을 한 묶음으로 준비합니다: 앞/뒤 서로 다른 stencil operation·compare/read/write mask·reference, depth pass/fail, front-facing 구분. 음성 대조에서 기존 결함이 잡히고 수정본은 원본 AABB 의미를 보존하도록 합니다.",
+    "기존 helper를 확장하고 새 검증 프레임워크는 만들지 않습니다. GPU 검증 코드는 준비만 하고 이번에는 실행하지 않습니다.",
+    "CPU 기하 검사와 필요한 소스 검토를 마친 뒤 고정 소스 commit, manifest, diff, 실제 CPU 결과, 남은 Mac 검증을 READY에 명시합니다. 미실행 GPU/화면/FPS 결과는 미확인으로 둡니다."
+  ],
+  "artifacts": {
+    "shader": "source-snapshots/R01/rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+    "previous_helper": "evidence/sensorlos-region-fix-20261116-01/validation/gpu_pixel_parity.mm",
+    "source_chain": "patches/CHAIN.json"
+  },
+  "execution_authorization": {
+    "source_edit": true,
+    "cpu_geometry_checks": true,
+    "prepare_gpu_regression_code": true,
+    "engine_builds": 0,
+    "gpu_helper_runs": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "main_release_homebrew_changes": false
+  },
+  "return_contract": "모든 소스 쓰기와 하위 작업 종료 후 같은 request_id를 지목한 READY 경로와 고정 commit/manifest를 STATE에 기록합니다. HQ 실행은 별도 인계와 사용자 실행 승인 뒤에만 진행합니다.",
+  "next_after_closure": "R02 정확성 후보를 검토한 뒤 최신 G01 기반 SensorLOS/지면 데칼의 큰 GPU 비용을 짧은 기존 진단으로 재확인하고 원인 하나를 고릅니다. G04는 현 동결 상태 유지.",
+  "communication": "정기 조회는 양쪽10분. 중복 알림은 재실행하지 않고, 지연으로 소유권을 넘기지 않습니다."
+}

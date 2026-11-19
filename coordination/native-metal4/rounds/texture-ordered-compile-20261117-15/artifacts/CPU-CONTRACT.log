@@ -1,0 +1,2 @@
+receipt identity, permit expiry, journal role/recovery, exact pins, failure and atomic completion PASS
+Production helper + extracted journal + consumer/proof/final-drain wiring checks PASS

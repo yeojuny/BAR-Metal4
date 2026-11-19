@@ -1,0 +1,46 @@
+{
+  "status": "EXISTING_SINGLE_SAMPLE_CIRCLE_ENCODE_SEEN",
+  "records": [
+    {
+      "round": "sensorlos-exact-interior-fps-20261118-76",
+      "arm": "R76_OFF",
+      "matches": [
+        {
+          "line": 2245,
+          "simulation_log_frame": 20
+        }
+      ]
+    },
+    {
+      "round": "sensorlos-exact-interior-fps-20261118-76",
+      "arm": "R76_ON",
+      "matches": [
+        {
+          "line": 2241,
+          "simulation_log_frame": 0
+        }
+      ]
+    },
+    {
+      "round": "sensorlos-exact-interior-reverse-20261118-77",
+      "arm": "R77_OFF",
+      "matches": [
+        {
+          "line": 2241,
+          "simulation_log_frame": 0
+        }
+      ]
+    },
+    {
+      "round": "sensorlos-exact-interior-reverse-20261118-77",
+      "arm": "R77_ON",
+      "matches": [
+        {
+          "line": 2241,
+          "simulation_log_frame": 0
+        }
+      ]
+    }
+  ],
+  "counted_window_direct_witness": false
+}

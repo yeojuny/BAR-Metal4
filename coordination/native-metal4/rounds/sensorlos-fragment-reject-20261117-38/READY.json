@@ -1,0 +1,12 @@
+{
+  "status": "READY_EXISTING_FIXTURE_FIRST",
+  "round_id": "sensorlos-fragment-reject-20261117-38",
+  "attempt_id": "fragment-reject-01",
+  "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "manifest_sha256": "57464dc8e4373a949bb9c286291566d76eb84025ea14f2d31f4e2de394e7b786",
+  "patch_sha256": "a0da16109fd1062a8a43dbe97a2fe80f263d637d3782a16324ec981a3fcd871c",
+  "fixture_bound_sha256": "6574dde789659b726d4da9feb7cdb29be7b634bb7e53396aa1ed73ee8afd23ba",
+  "source_path_count": 10270,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED"
+}

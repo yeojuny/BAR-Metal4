@@ -1,0 +1,23 @@
+{
+  "round_id": "texture-ordered-trace-20261117-17",
+  "attempt_id": "texture-ordered-trace-01",
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/run.py",
+    "--suite",
+    "texture_trace01",
+    "--run",
+    "validation_paced"
+  ],
+  "runner_sha256": "2e3a727f86a5c239b0633583049fcd3c942b4bc6c8108be7c992e888f8078260",
+  "startedUTC": "2026-11-17T06:09:33.291291+00:00",
+  "invocations": 1,
+  "games_budget": 1,
+  "retries": 0,
+  "runner_pid": 49034,
+  "exit_code": 0,
+  "wall_seconds": 111.510935332999,
+  "finishedUTC": "2026-11-17T06:11:24.802576+00:00",
+  "runner_reaped": true
+}

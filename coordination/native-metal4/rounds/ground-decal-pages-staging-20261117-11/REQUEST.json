@@ -1,0 +1,39 @@
+{
+  "round_id": "ground-decal-pages-staging-20261117-11",
+  "attempt_id": "ground-decal-pages-staging-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "STAGING_ONLY_FOR_TWO_SEQUENTIAL_CORRECTNESS_VALIDATION_ARMS_NO_EXECUTION",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "input_artifact_commit": "18ce3fa6ca17e85eebdfac5cfd9987fdb25d72d9",
+  "raw_candidate_sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+  "baseline_R03_source": "0780bd7c530b0696067b717428b49a416eda556a",
+  "baseline_R03_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "baseline_staging_artifact_commit": "cecb898145c7bdcaef1f37347678f4604277fef2",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "budget": {
+    "candidate_relocation_and_local_adhoc_signing": 1,
+    "runner_fixture_staging": 1,
+    "builds": 0,
+    "CPU_tests": 0,
+    "games": 0,
+    "GPU_helpers": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "instructions": [
+    "Reserve exact round/attempt once with latest STATE blob SHA. Any consumed or ambiguous execution => BLOCKED.",
+    "Verify fixed raw candidate/source manifest; make isolated copied runtime product only, relocate19 libraries and local adhoc sign as prior R03 procedure. Preserve original app and built raw binary.",
+    "Prepare fresh nonconsumed validation fixtures for sequential R03 baseline and GroundDecal candidate, one validation game per arm in a later round, Metal API Validation enabled in both. No game may launch now.",
+    "Reuse prior validated runner/controller and R03 fixture, changing only necessary arm/product/hash pins and validation suite selection. Supply exact runner diff, scripts, pins and all fresh launch files. Do not create clean/performance suite or add source instrumentation.",
+    "Require same Ultra AA0 actual sample1, viewport1512x950 drawable1512x982, world/camera/seed/controller and S01/G01 flags as verified R03. Preserve original gating, cleanup, raw logs and screenshot procedure. If current display cannot satisfy fixture, stop rather than silently modify.",
+    "Record scope gaps: ordinary gameplay validation does not exercise all skipped/reversed revisions, failed submissions, GPU quarantine, context changes or shutdown error paths. Do not claim exhaustive GPU lifetime proof.",
+    "Return raw/signed binary and all dylib hashes, source/toolchain/dependency provenance, runner diff/AST or equivalent review, staged fixture hashes, exact future commands, planned error/witness/image checks.",
+    "No rebuild, source changes, execution, retries, Texture or R04 changes, main/release/Homebrew. Close all staging/evidence writes then DONE."
+  ],
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "next": "JINI verifies staging pins before a separate runtime correctness handoff; performance only after correctness."
+}

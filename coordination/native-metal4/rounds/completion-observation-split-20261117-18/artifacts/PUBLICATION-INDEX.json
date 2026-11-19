@@ -1,0 +1,570 @@
+[
+  {
+    "name": "EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/EXECUTION.json",
+    "characters": 727,
+    "bytes": 727,
+    "sha256": "b4a3e250348f6595793bec873be2d4cdc2ff52ac18088cc82d697c0838f84fd0",
+    "git_blob_sha": "69dc58040ab09606db1657b49bef09681801665d"
+  },
+  {
+    "name": "FIXED-TICK-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/FIXED-TICK-EVIDENCE.json",
+    "characters": 1503,
+    "bytes": 1503,
+    "sha256": "913dcebbf1c4575768e669fe4ad152716da50d9cdce1e7bdbacf51661a6941d9",
+    "git_blob_sha": "1022ae80a547cfa534eba85f9b8dad8293799f66"
+  },
+  {
+    "name": "IMAGE-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/IMAGE-REVIEW.json",
+    "characters": 925,
+    "bytes": 925,
+    "sha256": "6fb76755bcfb532169d11aa492f29ac7c04ab71751bb1522855f0354c86e4711",
+    "git_blob_sha": "f99c01a46b0dc5dd1fbd9ded8a19c042b860cb43"
+  },
+  {
+    "name": "LOCAL-ARTIFACTS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/LOCAL-ARTIFACTS.json",
+    "characters": 893,
+    "bytes": 893,
+    "sha256": "1fcf4c088d9cf40b08099392454fc1ab1a9a3486d0ca745503b79fd75db34554",
+    "git_blob_sha": "e3c7d981d6a2e63c9abd1685561127237948709c"
+  },
+  {
+    "name": "READY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/READY.json",
+    "characters": 776,
+    "bytes": 776,
+    "sha256": "9da18948b01e796e66ad9fbf78fc86c8dc41f2b9de474e7aaa56dd599f95c7de",
+    "git_blob_sha": "afcf836192c7abcb768358bfa29d2bddad6f7457"
+  },
+  {
+    "name": "REPORT.md",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/REPORT.md",
+    "characters": 3632,
+    "bytes": 3632,
+    "sha256": "08232157954dc0cc132edd273e029cac4bc2a111aa0cd182c6757776880cb13a",
+    "git_blob_sha": "93fc6952e5057b7a8674e0e9596ebbedc3879bbb"
+  },
+  {
+    "name": "REQUEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/REQUEST.json",
+    "characters": 3514,
+    "bytes": 3514,
+    "sha256": "a88c1ffed227a15b4176da13b1ec14af3fd800d8aa6da0d133d578b0fd8ed9a2",
+    "git_blob_sha": "71eecf1ee1588c5f3f3d3201ea28c835910b761c"
+  },
+  {
+    "name": "RESERVED-STATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/RESERVED-STATE.json",
+    "characters": 40509,
+    "bytes": 43235,
+    "sha256": "6c70398c8a5eb3111a82c4e31ecaa7d17cc76377447e3109f90a1b17b6909d18",
+    "git_blob_sha": "1f28827e00cd89523466edbb1242af11b605f68b"
+  },
+  {
+    "name": "RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/RESULT.json",
+    "characters": 2855,
+    "bytes": 2855,
+    "sha256": "c43bc09d81aee41256422c4f5a6290feb1152bb0421a50d2560becafe00ccfbc",
+    "git_blob_sha": "3b71bf61832b4b7e675c6af8362583c5b6f8a26b"
+  },
+  {
+    "name": "RUN.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/RUN.log",
+    "characters": 1290,
+    "bytes": 1290,
+    "sha256": "60713c0fe850b9903c27bd842d2e13891ec2835ad0a4bd31502ffb767e6b94e8",
+    "git_blob_sha": "8f550b0fe4e173cc7cae6875296435903bda1dec"
+  },
+  {
+    "name": "RUNTIME-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/RUNTIME-EVIDENCE.json",
+    "characters": 5144,
+    "bytes": 5144,
+    "sha256": "f65b5690a9f6796927c4bf2a97d852e6f3239db66166d2d65df4030b497daba0",
+    "git_blob_sha": "4226b921dc6fe73a0174c2479a964e44a0b9238b"
+  },
+  {
+    "name": "UPSTREAM-CONTRIBUTIONS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/UPSTREAM-CONTRIBUTIONS.json",
+    "characters": 4097,
+    "bytes": 4103,
+    "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "git_blob_sha": "32b34021ab58412322e7a81af74d3ba8354da82c"
+  },
+  {
+    "name": "WORLD-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/WORLD-CHECK.json",
+    "characters": 35661,
+    "bytes": 35661,
+    "sha256": "23f2ae6d7f66be0daa3035dbbe7f5df5c6b7da17b2ee6b5ba36d7d0c7cd9b9f5",
+    "git_blob_sha": "1f78ef9cbe0c8c20e4b9c71276c0a1db52fd070c"
+  },
+  {
+    "name": "execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execution/completion-observation-split-01/execute.py",
+    "characters": 1269,
+    "bytes": 1269,
+    "sha256": "a86c65abc1e43e83e7023121da9a4192465c6b961236f74867416acd4c0543b5",
+    "git_blob_sha": "17dde20ab710f807b40b17dc6aaef6463fae4a1c"
+  },
+  {
+    "name": "preparation/execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/execute.py",
+    "characters": 4971,
+    "bytes": 4971,
+    "sha256": "a7f2718e5556da9ddecb456df056bc8724b3d0ddcb3ab9698eb77f484da05a32",
+    "git_blob_sha": "03226565864deaf4c6986501330d2deafe626286"
+  },
+  {
+    "name": "preparation/EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/EXECUTION.json",
+    "characters": 2482,
+    "bytes": 2482,
+    "sha256": "0027f3c58d71b2ac882698b20ff6c91bd2d17ab5e737f64187a3657b0dd04e30",
+    "git_blob_sha": "d07e87fcb3a7eb2298f44da33b65fd50ddff9b78"
+  },
+  {
+    "name": "preparation/SOURCE-SETUP.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/SOURCE-SETUP.log",
+    "characters": 395,
+    "bytes": 395,
+    "sha256": "2ca11b873d827c28820c6b729dd978f4a0227070f46f7247d17010d672f07597",
+    "git_blob_sha": "f8c33f37585bbb41b10de7e59f1708d493653ba6"
+  },
+  {
+    "name": "preparation/SOURCE-SETUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/SOURCE-SETUP.json",
+    "characters": 1015,
+    "bytes": 1015,
+    "sha256": "c8e5976970a51528e8c75b318928dda40dfdf5cecbd5029bffb259bd0b12fa12",
+    "git_blob_sha": "54eed3ce6817b981e0d150e6b62a130f3bb90440"
+  },
+  {
+    "name": "preparation/SOURCE-PACKET-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/SOURCE-PACKET-CHECK.json",
+    "characters": 262,
+    "bytes": 262,
+    "sha256": "705f567fe3a37b7f9698e37a742f09549bd6f5df120298796a6ba96662c7fa79",
+    "git_blob_sha": "5e9ec21ac464888ec85b5646a8e26d67a40b6afe"
+  },
+  {
+    "name": "preparation/SOURCE-VERIFICATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/SOURCE-VERIFICATION.json",
+    "characters": 323,
+    "bytes": 323,
+    "sha256": "68c412154bd6840bd1eb4b422045517db035bb3f69121feeeeb26edfa100ee1a",
+    "git_blob_sha": "7c314bbb572116a137718aef3462758739dd1705"
+  },
+  {
+    "name": "preparation/MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/MANIFEST.json",
+    "characters": 1112,
+    "bytes": 1112,
+    "sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+    "git_blob_sha": "1842f8cd218b055597f0a26a166cddfa6d0d3fcb"
+  },
+  {
+    "name": "preparation/TOOLCHAIN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/TOOLCHAIN.json",
+    "characters": 241,
+    "bytes": 241,
+    "sha256": "8c6a4a604b9d7e20256d91633aa73a440b91771d821c7c94b2ad6ea428ed0fd8",
+    "git_blob_sha": "23c91a79623435253593e1f9443cfc4b30af2777"
+  },
+  {
+    "name": "preparation/CPU-DETAILS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/CPU-DETAILS.json",
+    "characters": 557,
+    "bytes": 557,
+    "sha256": "75cf555427e579a32ed36d0e77139206f7308f93a63a115d7a16de1c09052739",
+    "git_blob_sha": "d36a4006d89bc92b6cc3b71ce11c3335d21a49d7"
+  },
+  {
+    "name": "preparation/CPU-CONTRACT.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/CPU-CONTRACT.log",
+    "characters": 308,
+    "bytes": 308,
+    "sha256": "69877e8f930894f2e44ac53d2baec11047b520534b2f9ba9f22bcf6268d68f8c",
+    "git_blob_sha": "3ed904cf58520223a7f4463d7f5237801b48d0fe"
+  },
+  {
+    "name": "preparation/CONFIGURE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/CONFIGURE.log",
+    "characters": 22954,
+    "bytes": 22954,
+    "sha256": "b3c034633ccbefa825b54bfbfd8b7c74670638b6b8980ce59763d5545a3e2811",
+    "git_blob_sha": "5f3c95163ae9244a7374abdaade83dadb35c3386"
+  },
+  {
+    "name": "preparation/BUILD.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/BUILD.log",
+    "characters": 748909,
+    "bytes": 748909,
+    "sha256": "848da82b5697673aff9d43fc38f0d6bf6b4a4beb6b192cbdb42b702d02e2d540",
+    "git_blob_sha": "be3483e2db542dd30827891df56fe0aef695f1c8"
+  },
+  {
+    "name": "preparation/COMPILE-COMMAND-CLOSURE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/COMPILE-COMMAND-CLOSURE.json",
+    "characters": 2666,
+    "bytes": 2666,
+    "sha256": "a9af4e1bfa9f40d2317c73c002048e4f4c5f631fe13409639a423d683be289c2",
+    "git_blob_sha": "d5b108a603c9dec1846bf04737ad36203ef42c1d"
+  },
+  {
+    "name": "preparation/LIVE-SCENE-COMPILE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/LIVE-SCENE-COMPILE.json",
+    "characters": 3219,
+    "bytes": 3219,
+    "sha256": "48de05d2138fc09dcaa6ddb90ab40845e6820d276d470a8307d0d92658e10aaf",
+    "git_blob_sha": "c17cdfb971bfc21cafc0e432ea1a338cd9c71c44"
+  },
+  {
+    "name": "preparation/ARCHIVE-CLOSURE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/ARCHIVE-CLOSURE.json",
+    "characters": 454582,
+    "bytes": 454582,
+    "sha256": "78754c1de422e2a7aa33739f1a884a4a089a28685c441a69bea2145501b41362",
+    "git_blob_sha": "5afa1c0c98c255ad03a53ee1bb59eb9149545035"
+  },
+  {
+    "name": "preparation/initial-cache.cmake",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/initial-cache.cmake",
+    "characters": 36970,
+    "bytes": 36970,
+    "sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "git_blob_sha": "ecbb8aa90921944c15310d4a970dbf0f88e96800"
+  },
+  {
+    "name": "preparation/SIGN.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/SIGN.log",
+    "characters": 1003,
+    "bytes": 1003,
+    "sha256": "3314f8d75caa47d04b6cfc900a3b136363dc48dee90836995889cde13faa7572",
+    "git_blob_sha": "387cfb3d810bc5adac52357b3be25358ab3945b7"
+  },
+  {
+    "name": "preparation/SIGN-EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/SIGN-EXECUTION.json",
+    "characters": 275,
+    "bytes": 275,
+    "sha256": "60f37fbdd41a17c4b2436c5c865cd7c825b337312cd38a931f6787713d5170b5",
+    "git_blob_sha": "875f7d9580466dce81b896b29875b97c5f1f4255"
+  },
+  {
+    "name": "preparation/STAGE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/STAGE.log",
+    "characters": 72,
+    "bytes": 72,
+    "sha256": "d2cc8681e89d75e631eb77a8bcb8448ede751f2a69adeeb54fcda9a31f167e78",
+    "git_blob_sha": "97b2b33d3c18d2dede1bdeda93adcefd2b578e2c"
+  },
+  {
+    "name": "preparation/STAGE-EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/STAGE-EXECUTION.json",
+    "characters": 345,
+    "bytes": 345,
+    "sha256": "5e3e30035837ec69f96b4e5265fdae2cd226a07e3094dbd8ea1a4436b5c6bf31",
+    "git_blob_sha": "0de1753c78de3428e9673f09a17edec9b0772aca"
+  },
+  {
+    "name": "preparation/CANDIDATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/CANDIDATE.json",
+    "characters": 4086,
+    "bytes": 4086,
+    "sha256": "9b252c230cdcdf0c9155f30b377d435eb9b47271c5d3e3b72b63945dac4143e0",
+    "git_blob_sha": "afaf6959aa33f6a3eacdf51f9d95296007c24a4f"
+  },
+  {
+    "name": "preparation/FROZEN-BEFORE-RUN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/FROZEN-BEFORE-RUN.json",
+    "characters": 10746,
+    "bytes": 10746,
+    "sha256": "3f27ecbc2554275edd15925d04c23cf9f9b88b47cc2d235d9cba25a674b81f48",
+    "git_blob_sha": "0a345d995a5b49368a1b752e8dfdf1b05c737ec5"
+  },
+  {
+    "name": "preparation/WINDOW-CONTRACT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/WINDOW-CONTRACT.json",
+    "characters": 625,
+    "bytes": 625,
+    "sha256": "efa3c70a8eb732072f9976406206ac0de437c0b78a0d5e6037334e8ef97d8e20",
+    "git_blob_sha": "bd22e9d6769efa0c7b8b4bb5202614c8046cf4db"
+  },
+  {
+    "name": "preparation/measurement/run.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/run.py",
+    "characters": 31830,
+    "bytes": 31830,
+    "sha256": "3ab8f0c8f3e26676d545d6b7f22ef27139723730a3f0990f5f4d2c2a75d71c9d",
+    "git_blob_sha": "f4a324b9730e14c95b13a6796ba73746c2baaf1f"
+  },
+  {
+    "name": "preparation/measurement/relocate_sign.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/relocate_sign.py",
+    "characters": 1676,
+    "bytes": 1676,
+    "sha256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+    "git_blob_sha": "acfc5fa19bcbf009b4b861a84af73dc4a063833f"
+  },
+  {
+    "name": "preparation/measurement/RUNNER.diff",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/RUNNER.diff",
+    "characters": 4105,
+    "bytes": 4105,
+    "sha256": "a206bd05bdb7f0a67b773dec5bed8796699605b808581d2df824ed7b14ff1ef3",
+    "git_blob_sha": "7ae1f34453a84e2fdb1ce0ca175a8f580d418153"
+  },
+  {
+    "name": "preparation/measurement/RUNNER-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/RUNNER-REVIEW.json",
+    "characters": 710,
+    "bytes": 710,
+    "sha256": "5a24f07c04be2c58aa7b4e403710f96eee4129133f03c3df76eb7bf738ca8a23",
+    "git_blob_sha": "4ca92d8ea5fabe2da2a48410965ab994e0de5e54"
+  },
+  {
+    "name": "preparation/measurement/BASELINE-PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/BASELINE-PRODUCT.json",
+    "characters": 630,
+    "bytes": 630,
+    "sha256": "72e4afb7b84321f11afe62322c32a13bf24372f009911de1aaf3b8b3003fe86c",
+    "git_blob_sha": "caa39ba845b23d39e97721d65bb7cb8688d780a5"
+  },
+  {
+    "name": "preparation/measurement/PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/PRODUCT.json",
+    "characters": 630,
+    "bytes": 630,
+    "sha256": "72e4afb7b84321f11afe62322c32a13bf24372f009911de1aaf3b8b3003fe86c",
+    "git_blob_sha": "caa39ba845b23d39e97721d65bb7cb8688d780a5"
+  },
+  {
+    "name": "CPU-source/test_source_and_contract.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/source/docs/research/completion-observation-split-20261117/candidate/test_source_and_contract.py",
+    "characters": 5495,
+    "bytes": 5495,
+    "sha256": "0029e5f7485a9c0808bc2fcd1c310f1d310c6b56fd68349f275b3bd3e31e764e",
+    "git_blob_sha": "8620bcf42c89741d8ffd4eb79647cfb805e926f6"
+  },
+  {
+    "name": "runtime/AWAKE-RELEASED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/AWAKE-RELEASED.json",
+    "characters": 268,
+    "bytes": 268,
+    "sha256": "48fb25d5da6917dc530ab642677d6cf7504b0f9c388007cb6c42f5bcae961e57",
+    "git_blob_sha": "c09be16a449c5ddaae944e167484d79a98aee7d6"
+  },
+  {
+    "name": "runtime/AWAKE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/AWAKE.json",
+    "characters": 187,
+    "bytes": 187,
+    "sha256": "550de41ccfb3528e5a079cca7d2c5cb16a8281b25b2b1b1d9ba4b751f7204716",
+    "git_blob_sha": "43ef928eca81b0de386948ade1a7fd7e70e8302f"
+  },
+  {
+    "name": "runtime/COMPLETION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/COMPLETION.json",
+    "characters": 946,
+    "bytes": 946,
+    "sha256": "65bf2b14fc1afc8d029d4dfd0e6302c64401532048007935960b911824e5d44a",
+    "git_blob_sha": "01691287762334f4633046da59affd7030232091"
+  },
+  {
+    "name": "runtime/OWNER-CLOSED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/OWNER-CLOSED.json",
+    "characters": 113,
+    "bytes": 113,
+    "sha256": "d92fdbad7b995c81b854df39093e8aa7a8ce02b36a18035f2cfb740ce5fe4027",
+    "git_blob_sha": "9cf68a245b24da4c90386f74a1bc63a41d30025a"
+  },
+  {
+    "name": "runtime/PREPARED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/PREPARED.json",
+    "characters": 2066,
+    "bytes": 2066,
+    "sha256": "76a0e67877028707db211f0b254a04cfbe2685eaf9b2c2d8b2208ded988a5555",
+    "git_blob_sha": "7f5881546f3a21e58bf1bbdcd025df023fad426d"
+  },
+  {
+    "name": "runtime/RUNS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/RUNS.json",
+    "characters": 2489,
+    "bytes": 2489,
+    "sha256": "b10070fb63543b8de08c8f76f7d1762c7bff9269c6f5e983c47996842eb97f9e",
+    "git_blob_sha": "86b536208abb9c678a682ce715474f09636162e0"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/CHILD-MODE.json",
+    "characters": 2899,
+    "bytes": 2899,
+    "sha256": "12f1a4e1c8fdb3e3f1ea9e6179d0f39ef9ed15d653a0d18b1ab526d5e83d584d",
+    "git_blob_sha": "70897b80da10dfe79fcd4a9959e18dc3b41d9fc0"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "f915992d7af1c7916ac256e159483ad0d6c880da015eb42fb0c93de4de7c76d2",
+    "git_blob_sha": "1aee7ef9312917093c67bccc3c9f0bcdfc5f6942"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/GAME-LAUNCH-CLAIM.json",
+    "characters": 98,
+    "bytes": 98,
+    "sha256": "2f223b3b6f232e541e3d319817e6ae5d41a5616fca8198ab6f7f65493615cdd7",
+    "git_blob_sha": "61f8f59a06bf8042fe03e17d10abaa0e8e80dc61"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/GRASS-BOUNDARY.json",
+    "characters": 341,
+    "bytes": 341,
+    "sha256": "46795d22f4d98551a96ec4ed5d481a0c641986e33aa2c27b9f4eab64e5d1a04d",
+    "git_blob_sha": "59740dccc579aa908f6694537cd6c4f5229af29f"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/GROUND-INDEX.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/GROUND-INDEX.json",
+    "characters": 382,
+    "bytes": 382,
+    "sha256": "da5b8036052d8fe2d4d8108d7253596bf838e8bd589661200b5dd4ce401ee244",
+    "git_blob_sha": "7fae72dc355e9dd74c881e2767cd271c6a14a580"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/LAUNCH.json",
+    "characters": 11657,
+    "bytes": 11657,
+    "sha256": "023bcca7c3a340058e4804eb449408b06eb4d293f23ba75b869b4917ae9236d6",
+    "git_blob_sha": "b672c5c1827e54b988d53920f854db3c43d91d65"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/LIFECYCLE.json",
+    "characters": 694,
+    "bytes": 694,
+    "sha256": "a3283acaa9d2cefb19412d05d45400573150f53d3da8f9f135962ab92ccc3889",
+    "git_blob_sha": "ea19bb4c2428d7c8b9efd0116c022c41d2690cda"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/METAL-VALIDATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/METAL-VALIDATION.json",
+    "characters": 516,
+    "bytes": 516,
+    "sha256": "401230028c27430d0dfa93c714a1316ae98d76d202aa48dafba3774f4cdc766b",
+    "git_blob_sha": "98f5295e9a695c80c114850fe184bcd79614aede"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/OWNED.json",
+    "characters": 208,
+    "bytes": 208,
+    "sha256": "a9f19f12d3ca7acacd14f2d11edd9b884b473bec8192ed0ea3cc537ea5eb1cc5",
+    "git_blob_sha": "a9936f2387c79fb6bfcf0652d36043bcccb350ca"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "8cf2475390e01e5a2d183614cd9a468a13d31f651a652cbaca4a189cd99763a4",
+    "git_blob_sha": "f7e388a369717ffac410f4823e6614631145c65a"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "978da543141b4ae7b58ed741143c942a244638393cf1cfb221e6bfa2924ba82d",
+    "git_blob_sha": "990fb30b85e6759fa59e6897465a520e1a73b7d1"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "98ecef185009a3772623be9affeb9ac62176aafe48f833ae4c618affef741cde",
+    "git_blob_sha": "e5a08eebf94ddb15f24ace0c869f14bdda246203"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/RESULT.json",
+    "characters": 2403,
+    "bytes": 2403,
+    "sha256": "edb201d48c248e35bc16b0a4c521b9abe88cfc24cd9a4719a64ddf9176b76b57",
+    "git_blob_sha": "ee969540e2d177e793c882f091103d4c5d8e091d"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/TERRAIN211-FRAMES.csv",
+    "characters": 43176,
+    "bytes": 43176,
+    "sha256": "51f6033de59211306ec017e350c1ab0d2cd020ec189ccca39648a606513cfaf2",
+    "git_blob_sha": "a27ec9c899aa6a6f44a8076c9607503543faa2c0"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/ULTRA-EVIDENCE.json",
+    "characters": 1674,
+    "bytes": 1674,
+    "sha256": "7e5abba09658928bd1882bda39c1e4cd97fe57d22f403fca6c8fabaab36fb647",
+    "git_blob_sha": "d0e6baec1818f25df37b8074befb4e3fdd3d7bce"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "4873a9c6f3bf112e8efc45e1e09df865c8a637f5a32adfad56907ca8e804ac07",
+    "git_blob_sha": "4ee2bd58dad86414677210233c23c5392e8e77f8"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/engine.log",
+    "characters": 292654,
+    "bytes": 292654,
+    "sha256": "bb596403e05f8fda33bcc74a9d58df43aeeeec8c674cda25d096b62abb279516",
+    "git_blob_sha": "59a984cae9b3ebe49d6a12910fb39bf4e7895512"
+  },
+  {
+    "name": "runtime/preparation/runs/V_COMPLETION_SPLIT/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/runs/V_COMPLETION_SPLIT/infolog.txt",
+    "characters": 291310,
+    "bytes": 291312,
+    "sha256": "468ea1a910c1cbcdf5ed6fd3890bfca1f6d60324b02f8488893f90445ea2d26f",
+    "git_blob_sha": "6101cc93e62e7f50b03576454db777d82f99380a"
+  }
+]

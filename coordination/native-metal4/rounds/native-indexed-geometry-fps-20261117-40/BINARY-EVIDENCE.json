@@ -1,0 +1,21 @@
+{
+  "sha256": {
+    "prior_binary": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+    "INDEXED_ON": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+    "INDEXED_OFF": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f"
+  },
+  "actual_binary": {
+    "INDEXED_ON": {
+      "pid": 70905,
+      "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-40/INDEXED_ON/runtime/native/bin/spring-metal4-scene",
+      "sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+      "verified_while_child_was_alive": true
+    },
+    "INDEXED_OFF": {
+      "pid": 71122,
+      "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-40/INDEXED_OFF/runtime/native/bin/spring-metal4-scene",
+      "sha256": "4021691207c675cd15af337979712a89016c3217921d189c322c9da7ad976f0f",
+      "verified_while_child_was_alive": true
+    }
+  }
+}

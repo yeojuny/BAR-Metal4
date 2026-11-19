@@ -1,0 +1,113 @@
+{
+  "status": "EXACT_GPU_PARITY_AND_TIMING_COMPLETE",
+  "decision": "FIXTURE_ONLY_DEFAULTS_PRESERVED",
+  "reason": null,
+  "parity_gate": "CHECK_PASS cases=18 shadow_positive=1 depth_stencil_exact=1",
+  "fixture_returncode": 0,
+  "final_idle": true,
+  "counts": {
+    "games": 0,
+    "engine_builds": 0,
+    "fixture_processes": 1,
+    "timing_samples": 8,
+    "retries": 0,
+    "captures": 0,
+    "mvk3": 0
+  },
+  "raw_timing": [
+    {
+      "slot": 1,
+      "arm": "OFF",
+      "ms": 5.274208332,
+      "gpu_start": 26387.98362254167,
+      "gpu_end": 26387.98889675
+    },
+    {
+      "slot": 2,
+      "arm": "ON",
+      "ms": 4.98545833,
+      "gpu_start": 26411.80461016667,
+      "gpu_end": 26411.809595625
+    },
+    {
+      "slot": 3,
+      "arm": "ON",
+      "ms": 4.969124999,
+      "gpu_start": 26435.615433875002,
+      "gpu_end": 26435.620403
+    },
+    {
+      "slot": 4,
+      "arm": "OFF",
+      "ms": 5.280375,
+      "gpu_start": 26474.667178625,
+      "gpu_end": 26474.672459
+    },
+    {
+      "slot": 5,
+      "arm": "ON",
+      "ms": 4.986125001,
+      "gpu_start": 26498.47548425,
+      "gpu_end": 26498.480470375
+    },
+    {
+      "slot": 6,
+      "arm": "OFF",
+      "ms": 5.275250001,
+      "gpu_start": 26522.276675375,
+      "gpu_end": 26522.281950625
+    },
+    {
+      "slot": 7,
+      "arm": "OFF",
+      "ms": 5.2755,
+      "gpu_start": 26546.093233375002,
+      "gpu_end": 26546.098508875002
+    },
+    {
+      "slot": 8,
+      "arm": "ON",
+      "ms": 4.992958337,
+      "gpu_start": 26569.929284916667,
+      "gpu_end": 26569.934277875003
+    }
+  ],
+  "summary": {
+    "off_median_ms": 5.2753750005,
+    "on_median_ms": 4.9857916655,
+    "median_change_percent": -5.489341231145728,
+    "pairs": [
+      {
+        "off_slot": 1,
+        "on_slot": 2,
+        "off_ms": 5.274208332,
+        "on_ms": 4.98545833,
+        "change_percent": -5.474755334332881
+      },
+      {
+        "off_slot": 4,
+        "on_slot": 3,
+        "off_ms": 5.280375,
+        "on_ms": 4.969124999,
+        "change_percent": -5.894467741400944
+      },
+      {
+        "off_slot": 6,
+        "on_slot": 5,
+        "off_ms": 5.275250001,
+        "on_ms": 4.986125001,
+        "change_percent": -5.48078290024534
+      },
+      {
+        "off_slot": 7,
+        "on_slot": 8,
+        "off_ms": 5.2755,
+        "on_ms": 4.992958337,
+        "change_percent": -5.355732404511415
+      }
+    ],
+    "all_four_same_direction": true
+  },
+  "raw_log_sha256": "b381e24d180bd8d92446715077fefaa7376671b22e88f60088fe2c69efaae4f1",
+  "cleanup_complete": true
+}

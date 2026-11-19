@@ -1,0 +1,128 @@
+{
+  "binary_will_use_original_location": true,
+  "codesign_not_invoked": true,
+  "engine": {
+    "actual": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+    "expected": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/bin/spring-metal4-scene"
+  },
+  "engine_not_invoked": true,
+  "libraries": [
+    {
+      "actual": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e",
+      "expected": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libIL.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libIL.dylib"
+    },
+    {
+      "actual": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f",
+      "expected": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libSDL3.0.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libSDL3.0.dylib"
+    },
+    {
+      "actual": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff",
+      "expected": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libbrotlicommon.1.2.0.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libbrotlicommon.1.2.0.dylib"
+    },
+    {
+      "actual": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202",
+      "expected": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libbrotlidec.1.2.0.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libbrotlidec.1.2.0.dylib"
+    },
+    {
+      "actual": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec",
+      "expected": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libfontconfig.1.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libfontconfig.1.dylib"
+    },
+    {
+      "actual": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827",
+      "expected": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libfreetype.6.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libfreetype.6.dylib"
+    },
+    {
+      "actual": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8",
+      "expected": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libintl.8.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libintl.8.dylib"
+    },
+    {
+      "actual": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b",
+      "expected": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libjasper.7.0.0.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libjasper.7.0.0.dylib"
+    },
+    {
+      "actual": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871",
+      "expected": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libjpeg.8.3.2.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libjpeg.8.3.2.dylib"
+    },
+    {
+      "actual": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376",
+      "expected": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/liblcms2.2.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/liblcms2.2.dylib"
+    },
+    {
+      "actual": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe",
+      "expected": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/liblzma.5.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/liblzma.5.dylib"
+    },
+    {
+      "actual": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040",
+      "expected": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libminizip.1.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libminizip.1.dylib"
+    },
+    {
+      "actual": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb",
+      "expected": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libogg.0.8.6.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libogg.0.8.6.dylib"
+    },
+    {
+      "actual": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c",
+      "expected": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libopenal.1.25.2.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libopenal.1.25.2.dylib"
+    },
+    {
+      "actual": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b",
+      "expected": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libpng16.16.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libpng16.16.dylib"
+    },
+    {
+      "actual": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820",
+      "expected": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libtiff.6.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libtiff.6.dylib"
+    },
+    {
+      "actual": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388",
+      "expected": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libvorbis.0.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libvorbis.0.dylib"
+    },
+    {
+      "actual": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7",
+      "expected": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libvorbisfile.3.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libvorbisfile.3.dylib"
+    },
+    {
+      "actual": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4",
+      "expected": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libzstd.1.5.7.dylib",
+      "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/runtime/native/lib/libzstd.1.5.7.dylib"
+    }
+  ],
+  "library_count": 19,
+  "status": "PASS_ACTUAL_BYTES"
+}

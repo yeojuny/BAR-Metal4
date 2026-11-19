@@ -1,0 +1,384 @@
+{
+  "round_id": "prepare-decode-batch-runtime-20261117-35",
+  "arms": {
+    "R03_ORIGINAL": {
+      "game_launch_claim": true,
+      "game_process_started": true,
+      "normal_exit": true,
+      "pid": 23064,
+      "owned_group_gone": true,
+      "actual_binary": {
+        "pid": 23064,
+        "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/R03_ORIGINAL/runtime/native/bin/spring-metal4-scene",
+        "sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+        "mapped_direct_libraries": [],
+        "verified_while_child_was_alive": true
+      },
+      "child_environment_snapshot_verified": true,
+      "child_environment": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SCREEN_TABLE_H5": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "MTL_DEBUG_LAYER": "1",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "1",
+        "MTL_CAPTURE_ENABLED": "0",
+        "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/R03_ORIGINAL/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/R03_ORIGINAL/assets",
+        "SPRING_WRITEDIR": null,
+        "SPRING_ISOLATED": null,
+        "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": null,
+        "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+        "MTL_LOG_TO_STDERR": "1"
+      },
+      "check_lines": {
+        "metal_enabled": [
+          {
+            "line": 162,
+            "text": "2026-11-17 14:19:46.722 spring-metal4-scene[23064:225903] Metal API Validation Enabled"
+          }
+        ],
+        "metal_errors": [],
+        "engine_failure": [],
+        "image_marker": [
+          {
+            "line": 2364,
+            "text": "[t=00:01:46.002872][f=0001740] [H1NativeImage] success=true simulation=1740"
+          }
+        ],
+        "pause_tick": [
+          {
+            "line": 2363,
+            "text": "[t=00:01:45.440478][f=0001740] [H1ValidationFrame] sim=1740 camera=dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          }
+        ],
+        "camera_open": [
+          {
+            "line": 2307,
+            "text": "[t=00:01:05.387953][f=0000540] [BattleCameraOpen] dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          }
+        ],
+        "scene": [
+          {
+            "line": 2272,
+            "text": "[t=00:00:55.393410][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2"
+          },
+          {
+            "line": 2273,
+            "text": "[t=00:00:55.393480][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          },
+          {
+            "line": 2274,
+            "text": "[t=00:00:55.393490][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400"
+          },
+          {
+            "line": 2305,
+            "text": "[t=00:01:05.387867][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168"
+          },
+          {
+            "line": 2306,
+            "text": "[t=00:01:05.387935][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=9.994000435"
+          },
+          {
+            "line": 2366,
+            "text": "[t=00:01:46.008606][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740"
+          },
+          {
+            "line": 2369,
+            "text": "[t=00:01:46.013383][f=0001740] Benchmark complete, #created = 600, #destroyed = 433"
+          }
+        ],
+        "sample": [
+          {
+            "line": 2188,
+            "text": "[t=00:00:41.858216][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          }
+        ],
+        "base_locations": [
+          {
+            "line": 186,
+            "text": "[t=00:00:11.138631] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/R03_ORIGINAL/state/data/"
+          },
+          {
+            "line": 187,
+            "text": "[t=00:00:11.138647] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/R03_ORIGINAL/runtime/native/bin/"
+          },
+          {
+            "line": 188,
+            "text": "[t=00:00:11.138658] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/R03_ORIGINAL/runtime/native/data/"
+          },
+          {
+            "line": 189,
+            "text": "[t=00:00:11.138668] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/R03_ORIGINAL/assets/"
+          },
+          {
+            "line": 194,
+            "text": "[t=00:00:11.139115] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/R03_ORIGINAL/assets/maps"
+          },
+          {
+            "line": 195,
+            "text": "[t=00:00:11.139297] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/R03_ORIGINAL/assets/packages"
+          },
+          {
+            "line": 196,
+            "text": "[t=00:00:11.139373] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/R03_ORIGINAL/runtime/native/data/base"
+          },
+          {
+            "line": 197,
+            "text": "[t=00:00:11.139532] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/R03_ORIGINAL/state/data/games"
+          }
+        ]
+      },
+      "metal_validation_receipt": "NO_MATCHED_METAL_ERRORS",
+      "scene_image": {
+        "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/runs/R03_ORIGINAL/scene.png",
+        "sha256": "0bc3d85f12875db3ca0ee8bd021ed08b89bf051c510826a08dfb047637eee467",
+        "bytes": 2962167,
+        "dimensions": [
+          1512,
+          950
+        ],
+        "published_filename": "R03-1740.png"
+      },
+      "raw_artifact_sha256": {
+        "engine.log": "2fc18c34b9bc646ae515684d2ec50c865eb93a599b91db5648efed1ac358cf2e",
+        "infolog.txt": "43b42a4bbbb8ab4b6c5d171f88ea098a04325b2b6868091179ab8268eca243a9",
+        "scene.png": "0bc3d85f12875db3ca0ee8bd021ed08b89bf051c510826a08dfb047637eee467",
+        "POSTRUN-ERROR.json": "1815a5fcd2d5bf4460f41fe4a6b18960305fe7fd65cc14017ed29bffa4677844"
+      },
+      "failure": null,
+      "postrun_error": {
+        "error": "Traceback (most recent call last):\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/run.py\", line 448, in run\n    row = base.harness.launch(RUN_ROOT / campaign / 'preparation', arm, prepared[arm],\n                              len(ORDER[campaign]) - index)\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/campaign.py\", line 58, in launch\n    text=re.sub(pat,f'{k} = {v}',text,flags=re.M) if re.search(pat,text,re.M) else text+f'\\n{k} = {v}\\n'\n                                   ^^^^^^^^^^^^^^^^^\nTypeError: 'NoneType' object does not support item assignment\n"
+      }
+    },
+    "PREPARE_BATCH": {
+      "game_launch_claim": true,
+      "game_process_started": true,
+      "normal_exit": true,
+      "pid": 23244,
+      "owned_group_gone": true,
+      "actual_binary": {
+        "pid": 23244,
+        "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/PREPARE_BATCH/runtime/native/bin/spring-metal4-scene",
+        "sha256": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d",
+        "mapped_direct_libraries": [],
+        "verified_while_child_was_alive": true
+      },
+      "child_environment_snapshot_verified": true,
+      "child_environment": {
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SCREEN_TABLE_H5": null,
+        "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "MTL_DEBUG_LAYER": "1",
+        "MTL_SHADER_VALIDATION": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_METAL4_SEPIA_PATH": null,
+        "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+        "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "1",
+        "MTL_CAPTURE_ENABLED": "0",
+        "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/PREPARE_BATCH/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/PREPARE_BATCH/assets",
+        "SPRING_WRITEDIR": null,
+        "SPRING_ISOLATED": null,
+        "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": null,
+        "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+        "MTL_LOG_TO_STDERR": "1"
+      },
+      "check_lines": {
+        "metal_enabled": [
+          {
+            "line": 162,
+            "text": "2026-11-17 14:21:35.615 spring-metal4-scene[23244:228274] Metal API Validation Enabled"
+          }
+        ],
+        "metal_errors": [],
+        "engine_failure": [],
+        "image_marker": [
+          {
+            "line": 2368,
+            "text": "[t=00:01:47.745906][f=0001740] [H1NativeImage] success=true simulation=1740"
+          }
+        ],
+        "pause_tick": [
+          {
+            "line": 2367,
+            "text": "[t=00:01:47.186164][f=0001740] [H1ValidationFrame] sim=1740 camera=dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          }
+        ],
+        "camera_open": [
+          {
+            "line": 2311,
+            "text": "[t=00:01:07.145412][f=0000540] [BattleCameraOpen] dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          }
+        ],
+        "scene": [
+          {
+            "line": 2271,
+            "text": "[t=00:00:57.143055][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2"
+          },
+          {
+            "line": 2272,
+            "text": "[t=00:00:57.143122][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          },
+          {
+            "line": 2273,
+            "text": "[t=00:00:57.143138][f=0000240] [BattleBenchmark] command_frame=240 seed=7654321 command=luarules_benchmark_armbull_armbull_80_8_1400"
+          },
+          {
+            "line": 2309,
+            "text": "[t=00:01:07.145320][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168"
+          },
+          {
+            "line": 2310,
+            "text": "[t=00:01:07.145391][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.001999855"
+          },
+          {
+            "line": 2370,
+            "text": "[t=00:01:47.751584][f=0001740] [BattleBenchmark] stop_after_count=1 frame=1740"
+          },
+          {
+            "line": 2373,
+            "text": "[t=00:01:47.756490][f=0001740] Benchmark complete, #created = 600, #destroyed = 433"
+          }
+        ],
+        "sample": [
+          {
+            "line": 2192,
+            "text": "[t=00:00:43.607658][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          }
+        ],
+        "base_locations": [
+          {
+            "line": 186,
+            "text": "[t=00:00:11.634534] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/PREPARE_BATCH/state/data/"
+          },
+          {
+            "line": 187,
+            "text": "[t=00:00:11.634550] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/PREPARE_BATCH/runtime/native/bin/"
+          },
+          {
+            "line": 188,
+            "text": "[t=00:00:11.634560] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/PREPARE_BATCH/runtime/native/data/"
+          },
+          {
+            "line": 189,
+            "text": "[t=00:00:11.634568] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/PREPARE_BATCH/assets/"
+          },
+          {
+            "line": 194,
+            "text": "[t=00:00:11.634997] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/PREPARE_BATCH/assets/maps"
+          },
+          {
+            "line": 195,
+            "text": "[t=00:00:11.635188] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/PREPARE_BATCH/assets/packages"
+          },
+          {
+            "line": 196,
+            "text": "[t=00:00:11.635265] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/PREPARE_BATCH/runtime/native/data/base"
+          },
+          {
+            "line": 197,
+            "text": "[t=00:00:11.635424] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/private/PREPARE_BATCH/state/data/games"
+          }
+        ]
+      },
+      "metal_validation_receipt": "NO_MATCHED_METAL_ERRORS",
+      "scene_image": {
+        "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-runtime-20261117-35/validation_paced/preparation/runs/PREPARE_BATCH/scene.png",
+        "sha256": "e070b39f1db63a2288d6aac8afae3936a335e92284c2a76ab21f50d8fb31ecde",
+        "bytes": 2968760,
+        "dimensions": [
+          1512,
+          950
+        ],
+        "published_filename": "PREPARE-1740.png"
+      },
+      "raw_artifact_sha256": {
+        "engine.log": "29d71d06ecf3be3a402cb478a01ce3725253371946129344901bd8e9e692210a",
+        "infolog.txt": "15c6c24dad10e4e8fa78599b19426b5dacbd0cb3c272b9ffe29304e412c09afc",
+        "scene.png": "e070b39f1db63a2288d6aac8afae3936a335e92284c2a76ab21f50d8fb31ecde",
+        "POSTRUN-ERROR.json": "1815a5fcd2d5bf4460f41fe4a6b18960305fe7fd65cc14017ed29bffa4677844"
+      },
+      "failure": null,
+      "postrun_error": {
+        "error": "Traceback (most recent call last):\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/run.py\", line 448, in run\n    row = base.harness.launch(RUN_ROOT / campaign / 'preparation', arm, prepared[arm],\n                              len(ORDER[campaign]) - index)\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/campaign.py\", line 58, in launch\n    text=re.sub(pat,f'{k} = {v}',text,flags=re.M) if re.search(pat,text,re.M) else text+f'\\n{k} = {v}\\n'\n                                   ^^^^^^^^^^^^^^^^^\nTypeError: 'NoneType' object does not support item assignment\n"
+      }
+    }
+  },
+  "fixed_inputs": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "seed": 7654321,
+    "aa": 0,
+    "view": [
+      1512,
+      950
+    ],
+    "drawable": [
+      1512,
+      982
+    ],
+    "image_tick": 1740
+  },
+  "matched_runtime_conditions": {
+    "same_initial_scene": true,
+    "same_camera": true,
+    "same_seed": true,
+    "same_synced_created_destroyed": true,
+    "same_image_tick": true,
+    "same_sample_and_view": true,
+    "both_actual_child_verified": true,
+    "both_normal_exit": true,
+    "both_metal_validation_enabled_with_no_error_matches": true,
+    "no_crash_or_matching_fatal_logs": true
+  },
+  "comparison": {
+    "visual_observation": "Terrain and unit layout match visually. The range-like overlays and combat remain visible in both images. Particles, trails, and the on-screen timing text differ. The comparison does not establish pixel parity or attribute those image differences to the patch.",
+    "pixel_identity": false,
+    "full_frame_ssim": 0.861912,
+    "ssim_tool": "/opt/homebrew/bin/ffmpeg ssim on the two original PNG files",
+    "path_specific_parity": "UNVERIFIED"
+  }
+}

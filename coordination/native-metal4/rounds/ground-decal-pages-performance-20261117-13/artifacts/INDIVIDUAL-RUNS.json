@@ -1,0 +1,80 @@
+[
+  {
+    "arm": "A1_R03",
+    "backend": "baseline",
+    "mean_FPS": 56.84147304152566,
+    "one_percent_low": 32.303370332817835,
+    "counted_seconds": 40.006000519,
+    "bins": 40,
+    "bin_min_FPS": 50.796813965,
+    "bin_max_FPS": 70.646766663,
+    "first10_bin_FPS_mean": 65.7610263824,
+    "last10_bin_FPS_mean": 52.4297409058,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "B1_GDP",
+    "backend": "candidate",
+    "mean_FPS": 64.14037811106193,
+    "one_percent_low": 53.16973676088688,
+    "counted_seconds": 40.006000519,
+    "bins": 40,
+    "bin_min_FPS": 59.59595871,
+    "bin_max_FPS": 73.073074341,
+    "first10_bin_FPS_mean": 70.7764045715,
+    "last10_bin_FPS_mean": 60.6995326995,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "B2_GDP",
+    "backend": "candidate",
+    "mean_FPS": 64.10961727441344,
+    "one_percent_low": 53.49794513878319,
+    "counted_seconds": 39.993999481,
+    "bins": 40,
+    "bin_min_FPS": 59.535823822,
+    "bin_max_FPS": 72.927070618,
+    "first10_bin_FPS_mean": 70.7564033508,
+    "last10_bin_FPS_mean": 60.5898815156,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "A2_R03",
+    "backend": "baseline",
+    "mean_FPS": 64.10736793035933,
+    "one_percent_low": 53.830230306615526,
+    "counted_seconds": 40.011001587,
+    "bins": 40,
+    "bin_min_FPS": 59.64214325,
+    "bin_max_FPS": 72.781654358,
+    "first10_bin_FPS_mean": 70.6246604919,
+    "last10_bin_FPS_mean": 60.6057460785,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "A3_R03",
+    "backend": "baseline",
+    "mean_FPS": 63.98720348711703,
+    "one_percent_low": 48.148149842249715,
+    "counted_seconds": 40.00799942,
+    "bins": 40,
+    "bin_min_FPS": 56.829509735,
+    "bin_max_FPS": 72.70916748,
+    "first10_bin_FPS_mean": 70.67040557840001,
+    "last10_bin_FPS_mean": 60.184154892,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "B3_GDP",
+    "backend": "candidate",
+    "mean_FPS": 64.15,
+    "one_percent_low": 55.43710328649187,
+    "counted_seconds": 40.0,
+    "bins": 40,
+    "bin_min_FPS": 59.523807526,
+    "bin_max_FPS": 73.0,
+    "first10_bin_FPS_mean": 70.8903366088,
+    "last10_bin_FPS_mean": 60.5794761656,
+    "valid_and_retained": true
+  }
+]

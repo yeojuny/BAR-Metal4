@@ -1,0 +1,331 @@
+{
+  "status": "PASS_CAPTURE_BOUND_SIM1590",
+  "arm": "R03",
+  "session": "9",
+  "capture": "clean_paced/preparation/runs/R03/frame.gputrace",
+  "world_draw": "/commands/cb0/re17/draw0",
+  "shader_source": "analysis/R03/world-vertex.metal",
+  "shader_signature": "vertex NativeCUSVertex_out NativeCUSVertex(NativeCUSVertex_in in [[stage_in]], constant UniformMatrixBuffer& _73 [[buffer(2)]], constant UniformParamsBuffer& _102 [[buffer(3)]], const device TransformBuffer& _473 [[buffer(4)]], const device UniformsBuffer& _297 [[buffer(5)]], constant NativeCUSDrawUniforms& _566 [[buffer(6)]])",
+  "params_binding": {
+    "stage": "vertex",
+    "slot": 3,
+    "resource": "@buf2610",
+    "binding_offset": 0,
+    "timeInfo_byte_offset": 16,
+    "binding_api": "api8957",
+    "draw_api": "api8963"
+  },
+  "timeInfo": [
+    1590.0,
+    73.53400421142578,
+    53.0,
+    0.0
+  ],
+  "world_viewGeometry": [
+    1512.0,
+    950.0,
+    0.0,
+    0.0
+  ],
+  "main_world_attachments": [
+    1512,
+    950
+  ],
+  "matrices_binding": {
+    "slot": 2,
+    "resource": "@buf2609",
+    "binding_offset": 0,
+    "byte_length": 1664
+  },
+  "camera_matrices": {
+    "cameraView": [
+      0.9999912977218628,
+      5.7084719173872145e-08,
+      -0.0,
+      0.0,
+      -2.1783449710710556e-08,
+      0.38159194588661194,
+      0.9243247509002686,
+      0.0,
+      5.276528369790867e-08,
+      -0.9243167042732239,
+      0.381595253944397,
+      0.0,
+      -4095.964599609375,
+      2742.438720703125,
+      -3662.511962890625,
+      1.0
+    ],
+    "cameraProj": [
+      1.5168670415878296,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.4142136573791504,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      -1.0020020008087158,
+      -1.0,
+      0.0,
+      0.0,
+      -21.8751163482666,
+      0.0
+    ],
+    "cameraViewProj": [
+      1.5168538093566895,
+      1.3781470897811232e-07,
+      0.0,
+      0.0,
+      -3.304259621472738e-08,
+      0.9212445020675659,
+      -0.9261752367019653,
+      -0.9243247509002686,
+      8.003792117960984e-08,
+      -2.2314980030059814,
+      -0.38235920667648315,
+      -0.381595253944397,
+      -6213.03369140625,
+      6620.8330078125,
+      3647.96923828125,
+      3662.511962890625
+    ],
+    "cameraBillboardView": [
+      0.9999825954437256,
+      -3.552713678800501e-15,
+      0.0,
+      0.0,
+      -3.552713678800501e-15,
+      0.9999737739562988,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.9999911785125732,
+      0.0,
+      -4095.964599609375,
+      2742.438720703125,
+      -3662.511962890625,
+      1.0
+    ],
+    "cameraViewInv": [
+      0.9999912977218628,
+      -2.1783449710710556e-08,
+      5.276528369790867e-08,
+      0.0,
+      5.7084719173872145e-08,
+      0.38159194588661194,
+      -0.9243167042732239,
+      0.0,
+      -0.0,
+      0.9243247509002686,
+      0.381595253944397,
+      0.0,
+      4095.9287109375,
+      2338.857666015625,
+      3932.479248046875,
+      1.0
+    ],
+    "cameraProjInv": [
+      0.6592535376548767,
+      0.0,
+      -0.0,
+      0.0,
+      0.0,
+      0.4142135679721832,
+      0.0,
+      -0.0,
+      -0.0,
+      0.0,
+      -0.0,
+      -0.04571404308080673,
+      0.0,
+      -0.0,
+      -1.0,
+      0.045805562287569046
+    ],
+    "cameraViewProjInv": [
+      0.6592592597007751,
+      -1.4360945321811869e-08,
+      3.4786157954158625e-08,
+      0.0,
+      0.0,
+      0.1580633521080017,
+      -0.38287287950515747,
+      -0.0,
+      -187.24375915527344,
+      -106.91822052001953,
+      -179.772216796875,
+      -0.04571380838751793,
+      187.61862182617188,
+      106.20793914794922,
+      179.7505340576172,
+      0.045805323868989944
+    ]
+  },
+  "sha256": {
+    "world-params.bin": "ceefbba25676d74808f09cd1180e1440a7b20ca796b3cabf03272cf2dff086ed",
+    "world-matrices.bin": "bd04263385b2cedb9fa656041972ddb3ac70295ce41c64277b7a53ed20160287",
+    "world-vertex.metal": "f6a26be34cf2f2ff7d876bbf81ad526a6c7830aba92270461d496665854a760a"
+  },
+  "binding_api_context": [
+    {
+      "actions": "info",
+      "name": "api8950",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8951",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps28]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8952",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8953",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8954",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf29 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8955",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf271 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8956",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2609 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8957",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2610 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8958",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf101 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8959",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8960",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf30 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8961",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf30 offset=256 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api8962",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf88 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api8963",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:48 indexType:UInt32 indexBuffer:@buf29 offset=1159152 indexBufferLength:192 instanceCount:3 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    }
+  ],
+  "pair_gate": "PENDING_MVK3",
+  "profile_commands": 0
+}

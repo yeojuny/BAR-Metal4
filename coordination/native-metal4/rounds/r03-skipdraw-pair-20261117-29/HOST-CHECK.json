@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "previousRound28LogVerbatim": "[t=00:01:15.419857][f=0001590] Decals GL4 skipdraw set to, true",
+  "baselineRejectedActual": true,
+  "cases": {
+    "verbatim_round28": "PASS",
+    "false": "PASS",
+    "duplicate": "PASS",
+    "missing": "PASS",
+    "mixed": "PASS",
+    "legacy_whitespace": "PASS"
+  },
+  "controllerSHA256": "fe0a9b9a16d545f4a43cea168bea6dfbb6782c05a27492c123a6735bfc5e2925",
+  "previousRunnerSHA256": "6c205c459d7e240a2f5df184478f9552face5cca2342d36207fa4cb4a2bfebc6",
+  "runnerSHA256": "8d8cf7e5c6d1ad75e6aaf9a97d93ccde682e24c99028bd5ca5003a5c573c87ec",
+  "protectedHashes": 132
+}

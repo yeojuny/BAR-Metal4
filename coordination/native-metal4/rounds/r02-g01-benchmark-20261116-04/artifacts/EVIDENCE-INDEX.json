@@ -1,0 +1,1134 @@
+{
+  "root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs",
+  "files": [
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/AWAKE-RELEASED.json",
+      "relativeToRuns": "r02_validation01/validation_paced/AWAKE-RELEASED.json",
+      "bytes": 268,
+      "sha256": "004ee44bfe57ba106fe9780e8236f826256db0dfa964c1b75a6ba531aed67f9f",
+      "gitBlob": "e95a8e259459817b078b45521f99f1664aa8fc49"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/AWAKE.json",
+      "relativeToRuns": "r02_validation01/validation_paced/AWAKE.json",
+      "bytes": 187,
+      "sha256": "56e194fc30281c5e35a64743513f33510ac0753610375b412a7abbbec7158550",
+      "gitBlob": "694233b954094cd21c9538c6cc1121fc1758e89d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/COMPLETION.json",
+      "relativeToRuns": "r02_validation01/validation_paced/COMPLETION.json",
+      "bytes": 861,
+      "sha256": "44dd69a27ef0cbeb485cb2d50b910973419481256e00721b180b25d0a6c138fb",
+      "gitBlob": "9ab61b466f171a0572ddfa033fc3797121d1035c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/HQ-VALIDATION-REVIEW.json",
+      "relativeToRuns": "r02_validation01/validation_paced/HQ-VALIDATION-REVIEW.json",
+      "bytes": 1848,
+      "sha256": "59bcb4aa9b92cc6d7dee6369ab703e109a2616b85973045d90dc12ca58ccfe93",
+      "gitBlob": "661d282c249fc38ca82055a73176599bbd8042bc"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/OWNER-CLOSED.json",
+      "relativeToRuns": "r02_validation01/validation_paced/OWNER-CLOSED.json",
+      "bytes": 113,
+      "sha256": "88fc47f4ea30f09496ff2c921f56258fd9c7453a5518d9ebbd2db27e6bfa86d4",
+      "gitBlob": "6c2dd6d22af2ea1bab89c3148de004939941082b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/PREPARED.json",
+      "relativeToRuns": "r02_validation01/validation_paced/PREPARED.json",
+      "bytes": 2019,
+      "sha256": "6012dd079e5ad5a6d8aa1b74bf2e1d06309942c2629bbe77172747808fd52d5d",
+      "gitBlob": "80ed7a49ec40e68e70fefd46643488d87fc6449a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/RUNS.json",
+      "relativeToRuns": "r02_validation01/validation_paced/RUNS.json",
+      "bytes": 2426,
+      "sha256": "e9a4e89f7b6f928d7b18b6624d94f5e41530442cdd5571fbf6abdb4e98b5f1e3",
+      "gitBlob": "d4385fba2c7227f093630fb582caf6080e1578ab"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/AUDIO-ROUTE.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "gitBlob": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/CHILD-MODE.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "0bb9824a5d68bba4a2893e5fa8b133b122cf2b01d8a44f3b2278b7214f3371a4",
+      "gitBlob": "ba68597f1870f4d0e36a94d26607b17b8419422a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/CLEANUP.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "a9290899ef9a9c2a70ea952b72de97e5542ab51a3523725ffeb0e30f8c4a4b29",
+      "gitBlob": "cdd5ea6710e3a05ad2c0c6976e94b932dbeb4eeb"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/GAME-LAUNCH-CLAIM.json",
+      "bytes": 85,
+      "sha256": "988248321cdf58550434a37b850f8def959d4aeb0bb227a6dd07bb9ad6fcfbd7",
+      "gitBlob": "4ff550edcf49b5204c93a78e0a4b2739712cd96e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/GRASS-BOUNDARY.json",
+      "bytes": 341,
+      "sha256": "12b27c498549c3403007504a424c28050fd3b2ca77d7dff5c5aefe016f5453d7",
+      "gitBlob": "cb66eb421cdcc7d03c1c97b7bb8b5c904f0791fe"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/GROUND-INDEX.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/GROUND-INDEX.json",
+      "bytes": 382,
+      "sha256": "d8d8a1b8f6fb52c49b7b5419b2a62d6051aff4424eb2c3255a614ada351c6a1e",
+      "gitBlob": "5b983491b03c9a9b12f618ff145776eafab33fd5"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/LAUNCH.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/LAUNCH.json",
+      "bytes": 11020,
+      "sha256": "9e86d5bdae26e556b9011e4b3b1123decfd87253098a6ec1d433d927f39af05f",
+      "gitBlob": "8fa6d7adc5cfdc7f162caf9ad539e5ace7d9e44a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/LIFECYCLE.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/LIFECYCLE.json",
+      "bytes": 693,
+      "sha256": "5dd18cb0299d2398940b833851441c13b66c69b0eec0d057a429653daa21298d",
+      "gitBlob": "7470d9a53cd26f2c7c4e789f07f75681ba88fd5b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/METAL-VALIDATION.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/METAL-VALIDATION.json",
+      "bytes": 491,
+      "sha256": "12e1fd54a87f78e53f0def13cede90e76491c1d650b6d36c606cd388deff4899",
+      "gitBlob": "c6a97a87deb36ae129ebed9ae70a8e02c7de1834"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/OBSERVERS.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+      "gitBlob": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/OWNED.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/OWNED.json",
+      "bytes": 198,
+      "sha256": "7cb4b52e136cbd12f3c5fe86aaa8495cc2c7872087c27232151233b01d9a63cc",
+      "gitBlob": "510faf68b9c46c98feb8165a293bc820d4a17ddf"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "60db946accc2d8f925d065df086af9f8f0b53034c8ef095a0858554531d41917",
+      "gitBlob": "2dcd9dbb0bc6431285ef846c54094c6b15351f7b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "9f45218835d2443a17790cd5860e8a258a1390913e89731ede032e8e19fd83a0",
+      "gitBlob": "9a14e5635945914369d2c9f519eeb7f340d82bf1"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/PREFLIGHT.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "88e8983aed86c853e8fd0be0b3fc854aa9821caf1a8df72b25ef9d951414acea",
+      "gitBlob": "00a9a6c1e70050eaefde0fbdef84681457e05bbe"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/RESULT.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/RESULT.json",
+      "bytes": 2340,
+      "sha256": "8aa1908abf88dbbd98c6e6f06d05e07a6fba8286617bd30e756ea0d32b2c554d",
+      "gitBlob": "c49170ffc42566d81d8574225cea028a26cd3d20"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/TERRAIN211-FRAMES.csv",
+      "bytes": 41986,
+      "sha256": "b421f2d931855815a1b8f2f79baf4a4eac2c82cc09e87394d5d7e153ba2032f1",
+      "gitBlob": "83512f4ab40e1ba0e8c88b0b20e52bba7035f580"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/ULTRA-EVIDENCE.json",
+      "bytes": 1649,
+      "sha256": "db1134a2d1eb47243c9ea5461f6ac1144fa97931f8ddaee41d978c43c219a28a",
+      "gitBlob": "c0162905d53ffa457b21348536a8a28673388a2f"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/WINDOW.json",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/WINDOW.json",
+      "bytes": 65,
+      "sha256": "5829a2ba8dd90316c55dda1cbd05245272700a52442980113ac4ac4b9c14c278",
+      "gitBlob": "2776c88375042d0f63a18279bc19eb97a7f9abb6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/actual-start-script.txt",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "gitBlob": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/engine.log",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/engine.log",
+      "bytes": 291706,
+      "sha256": "f812ba3cd91176feaea043beef9c2b369c19647465ea3be0be8fafe4ce39946e",
+      "gitBlob": "ce2ca99b19e1ad8e77e9b89dd3de4df19536b182"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/infolog.txt",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/infolog.txt",
+      "bytes": 290439,
+      "sha256": "990172a4fafdd7edecf4b2941a026814e356ec4cbeaa476f2d0197fe0bc6169e",
+      "gitBlob": "efa8f3b2a9c66b6fd97e54adcd1f58bf935fbf41"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/scene.png",
+      "relativeToRuns": "r02_validation01/validation_paced/preparation/runs/V_R02/scene.png",
+      "bytes": 2990505,
+      "sha256": "2e9ded9e69811770de1aaaef200b24d233570bf117e2e92092df63da9a7833e9",
+      "gitBlob": "efe0f2dd97c267bdb6e164e5e2fa19a948be16e5"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/AWAKE-RELEASED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/AWAKE-RELEASED.json",
+      "bytes": 263,
+      "sha256": "ea6168cc15a908c1977b88e58ccedc612a9094ce5ec5cf1b5cee2e4ca834454e",
+      "gitBlob": "2bc613f6114040eb181dfeec28b227f218b1b736"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/AWAKE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/AWAKE.json",
+      "bytes": 182,
+      "sha256": "4305d29bdf4f288f4bb6269d596aefdcc5466f8aa4d38d7798afd3a5307bb42a",
+      "gitBlob": "3f0bfea2659e766e6b7b8ddbea55c481d419927c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/COMPLETION.json",
+      "relativeToRuns": "r02_clean01/clean_paced/COMPLETION.json",
+      "bytes": 301,
+      "sha256": "65d7919f79064ac67874f408d4e665d8c1996702a44f2fd913b240d52cef7471",
+      "gitBlob": "22fc9d3f7c986b38de33822edb1dbea824abcb0b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/OWNER-CLOSED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/OWNER-CLOSED.json",
+      "bytes": 113,
+      "sha256": "012c6ae9ca0eb2a7f517c72e45a592aaee65c0d118a16b277683a9b50903222d",
+      "gitBlob": "61cb85e9faf569e48e0b745d560c8852e4ef8da8"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/PREPARED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/PREPARED.json",
+      "bytes": 7509,
+      "sha256": "1b93d054bf5b66e78009af76bba472763b9434f6261a360bdc911d43f06e1eee",
+      "gitBlob": "a70fb25777c9f9892ea752386256e5e2d4b23b5e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/RUNS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/RUNS.json",
+      "bytes": 182591,
+      "sha256": "4978e2a55c7a9181b9d87a416a4c72e3ec07177ab07ccc437e9657fb86386815",
+      "gitBlob": "9a237eb113889d87a0a5dff75980175d00cbb9d2"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/AUDIO-ROUTE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "gitBlob": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/CHILD-MODE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "c6aacffe56f210370513983edf5a06ff7bec8ab43355b67c1c870bf9c6a1026d",
+      "gitBlob": "af47ab9340acaa281cab42a27806dcc4eba3a5c9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/CLEANUP.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "9850d364137d0045744bff7ed0b92f28b7d1fde05666615f5d11e53a0b6ada40",
+      "gitBlob": "26b7084f577fcbd4b8f8b9af099af6e16f4e32b4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "dc26cb056b15ce24e00865f01db30b126547c349c2eb1a2429c8f3c3dcc2827b",
+      "gitBlob": "b43b3f42033136e33f44f2b1e6100e3601828b26"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "85c93c00a0217a1782a4e49457cd9c0c5ff8d6f3642f8298380ed9bbf453cc1d",
+      "gitBlob": "46366e190988bea9671dc3c36ae90d8b8f370403"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/LAUNCH.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/LAUNCH.json",
+      "bytes": 10827,
+      "sha256": "fb29c149f4806a5756ade26d32e38cf63478fa912027deaf28d90e20081777c1",
+      "gitBlob": "6a1c9d3b791e200c7636802cadac6d24f703f5df"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/LIFECYCLE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/LIFECYCLE.json",
+      "bytes": 692,
+      "sha256": "4f045a547c72b7f9150acdce32867c1a22e028a2ad5610ded32d98f232566747",
+      "gitBlob": "1318b00e4d5ad00a27d5909b9522f3c41c2d1f4b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/OBSERVERS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+      "gitBlob": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/OWNED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/OWNED.json",
+      "bytes": 202,
+      "sha256": "18a502a23ee24beee411d04892001a23c3f06f7186578350786113869a97e8e6",
+      "gitBlob": "93b69205cb9494f0fb9da140b57d8551e2452c11"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/PACING-WITNESS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "f33bc30a35ae7ef2375ee0680156a853cab35d3bd41e816f7621a2f89a4c6573",
+      "gitBlob": "e0eca2b716dd1208932bdfd3e88f5f0d63605ae6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "14136f7e3c6f4f55aef32c5bb26706dc934348e7ca071a9565130e7033543d55",
+      "gitBlob": "fe57f66439c9f571b9cb37e48624e9907fc1963c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "8d4aabd5ab304dcdd4b295386871d5556ef141fae91e5b7dd2f703ab3c6cc0ce",
+      "gitBlob": "ba5fc8dd76ae9a1e441ba2afafc0d508ffa79656"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/PREFLIGHT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "62e4c3429c8c1f376b400ef2e3e3a87dcb5cf86157fa6d4bfdf6e449c7ee0fd4",
+      "gitBlob": "6dc1d02501c68674ffce3328c8ce159cd6827c41"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/RESULT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/RESULT.json",
+      "bytes": 29029,
+      "sha256": "084d09bba1275f852fe0b6eb6dc19e8cd90ea177ddf89f620d0e6a473220c8e4",
+      "gitBlob": "fcd07ff421db71bfb18465ce66a90881d47cebb4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/TERRAIN211-FRAMES.csv",
+      "bytes": 42258,
+      "sha256": "4f07203e89d5f4a0cea05db2b21a6a24d54f9d0c88808fd7845e5d9e82d45e7f",
+      "gitBlob": "c5aec4c8c367e54ef006bd45b4dd0f1b039f3657"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/ULTRA-EVIDENCE.json",
+      "bytes": 1640,
+      "sha256": "0c55a16d34791e741975adb4248ec6f6d265f5e5ef859134400b6325bbd86343",
+      "gitBlob": "1b9b16818587ff5b0b4b74c92daa34e52003a192"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/WINDOW.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/WINDOW.json",
+      "bytes": 65,
+      "sha256": "345608234f47817450683d0ea08418aac168e650ddbe5b0f1709103acdd479e3",
+      "gitBlob": "427829029d29796fc6aff0a4020230a961f7b6c7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/actual-start-script.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "gitBlob": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/engine.log",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/engine.log",
+      "bytes": 291168,
+      "sha256": "5ba0d42b4c8212d0966895903c814bd6f2485269e823c0e5c8fcccb5cfcb68b5",
+      "gitBlob": "0a32dc403f28dbfdc509151a9964bbf8f3fc3018"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/infolog.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/infolog.txt",
+      "bytes": 289978,
+      "sha256": "d76ba90359fab80a375eab9ec3997946d97bfbd0795b3a5684e87bd73ff9fba7",
+      "gitBlob": "8e74902e685761715fb115d46a633dccc7ba72f8"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/scene.png",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A1_G01/scene.png",
+      "bytes": 2988245,
+      "sha256": "fea3fa1b92070a3785595ecc9b74be85c00ae2eea62883c50d9494d2fe9e244d",
+      "gitBlob": "354b63a6153e0d67f11be9d680be4f8b695bd0cf"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/AUDIO-ROUTE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "gitBlob": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/CHILD-MODE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "ad3d42262f7927eab2ec283345c7f105c12a9625160ca33fb607ce1b7d1a7754",
+      "gitBlob": "3ae1a1e6d87fab7376d4dc6187e931fbefbc46ec"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/CLEANUP.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "fd188ed39edee7926181fc08d00448cfde98ee8cf881b8ad69e12630f361af8c",
+      "gitBlob": "e21d9cb2d8cd70a20b483b8a9a8f2076f8006110"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "02bc81655012621272fd7670b02ca69d0fc443b31d2de65d21f0760a9f7fa5c9",
+      "gitBlob": "56c74b003a716a8d4ab543bec69a96b3ba4c4f52"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "e42b28b4f69ddeac5403c9f66124e3ae1b6dfad62956a8db39343f71999a77b0",
+      "gitBlob": "48ab172dfd16a416387768fbfee247fa4e0497ba"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/LAUNCH.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/LAUNCH.json",
+      "bytes": 10827,
+      "sha256": "809574011cfa1ca024b9ccaa7c691c3a90d0967049d25aa8b4f87b86efbb14a0",
+      "gitBlob": "5a45eb766849d81f3e0c970e768a8c1a60dcf23c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/LIFECYCLE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/LIFECYCLE.json",
+      "bytes": 693,
+      "sha256": "dcf716c67dfec7808ae074f7c3659c1581849187008d305332b872385c285ef8",
+      "gitBlob": "781f95c53844f2f0351d5309818754cbb8b5dab9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/OBSERVERS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+      "gitBlob": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/OWNED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/OWNED.json",
+      "bytes": 202,
+      "sha256": "21a422907a4fd646ca649758d22959dea73ac1d6b6f07ff1026b295e3833f5c4",
+      "gitBlob": "69c69119b7a82c3b319d3835e1816bdb98e6bdb2"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/PACING-WITNESS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "5e8a3f106c187436e39a0d2a8376ba33e840ba4c7097928a3f7224e2467fc37f",
+      "gitBlob": "ba327448533faec8418b324f4f31fdc9d757ece6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "60ef6c22edfa99f43dc5ed86599052299996b74b14067c5b06ae82df652366fd",
+      "gitBlob": "c645154c3b6cb3f7214945dd047944aa31355435"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "7dcccff92dbfb9218423b5e99c5c12f9f6f8afa5dff9938079c7cfcf6c4b125d",
+      "gitBlob": "d7f7ecce45ff3f21a489bfd97a6399ae9d18c1c1"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/PREFLIGHT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "29e70eec668fe23812b3a248d7b3fa53a838fc66b3ddbb7cb0a95d89160963dc",
+      "gitBlob": "e6d14bc28ee70f4617d3155e93ac06fa579ed701"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/RESULT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/RESULT.json",
+      "bytes": 29007,
+      "sha256": "084b6f53226c465f86463d8d465e0c9bca2dcf5a8c3f08ab7deddf4b20389ef2",
+      "gitBlob": "59d7b4ae8a8fa26216656030f856bc9537fd96e7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/TERRAIN211-FRAMES.csv",
+      "bytes": 42360,
+      "sha256": "2f2497cb76b2dc424248452e97e90939b39e424f256ab58634f5042b9761913e",
+      "gitBlob": "43fe541de4a458d09c398f66077f756dfe74b92b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/ULTRA-EVIDENCE.json",
+      "bytes": 1640,
+      "sha256": "eeb891cece1c0bef99bdb5120df9a0fb9dc559c556cfa5c6397c934a38bc7c18",
+      "gitBlob": "b55dccf995fbee3366d311c88e14143465120e4a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/WINDOW.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/WINDOW.json",
+      "bytes": 65,
+      "sha256": "6c86f4c97dfb400ebd05b92c52d09724bcfa2ca535cc47d5716773cbd1356322",
+      "gitBlob": "4a75b09f18ce79c0e487f7c3b57eb1a56929713c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/actual-start-script.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "gitBlob": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/engine.log",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/engine.log",
+      "bytes": 291175,
+      "sha256": "2dbe2388c67078e310e6340e0c83cd15a037e6fc7d0be9abae4e9c47bc3b4d13",
+      "gitBlob": "94224858ab117b4545d8403a9b472b54021be000"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/infolog.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/infolog.txt",
+      "bytes": 289985,
+      "sha256": "b57cc2302838232d2b08954acda81e4f7c485b3195a918a07d0716c817e2aaef",
+      "gitBlob": "4841fc33fd2332da34f2f54608ffef4e0cb99153"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/scene.png",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A2_G01/scene.png",
+      "bytes": 2990405,
+      "sha256": "e8e3477fd593c330dd4192900ea1bd6f0d7c136a272f0cb1f597e41e27176b32",
+      "gitBlob": "ed17a5e64976995b202ccb6dec0da1d132bb9b9e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/AUDIO-ROUTE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "gitBlob": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/CHILD-MODE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "2254eb98a294740bb5280fff53051147aa6fdc431931c4d0ce5bf989835eee8a",
+      "gitBlob": "7636cacdcb1b9b4cdf1f4f4e0aea18160c3bac4b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/CLEANUP.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "eba784f277916afc5319b39bcc6e37173ace93b2a60fc4d8e4c158e04e97675e",
+      "gitBlob": "ad80c0fd56056454368e714b2c710630db672699"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "18cd4ab92df8c1188e95c2a5419be29df58f05abe469d7992d2e14b29b36b846",
+      "gitBlob": "3c74d195f69d806c7d061861254ff1e7f0cf47f5"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "6c41a877331bfe52171d152cea6f122ad1d0bea8e9270f18bfe16a3bc18aab61",
+      "gitBlob": "47cb51a12f34b0bd8d745a720d20e3a0fa9c432c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/LAUNCH.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/LAUNCH.json",
+      "bytes": 10827,
+      "sha256": "ceffe1fca68bc8939ea8b841899ef737ac47ad84a6021e8dca2954b388e9e26b",
+      "gitBlob": "b439c68ad5300bf4058a37233b16c801d5096f3d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/LIFECYCLE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/LIFECYCLE.json",
+      "bytes": 692,
+      "sha256": "59afe15efcb5dde1abf5f781ad2d1bc84079694b49d2bb1afbcf42b9702e128b",
+      "gitBlob": "01d73b47d795e8e052cee4743249cc138def993c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/OBSERVERS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+      "gitBlob": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/OWNED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/OWNED.json",
+      "bytes": 202,
+      "sha256": "5c99c2b8a4e5be30e85ec4f0beb4d59372981323c946b4f9d94122ec9e586be5",
+      "gitBlob": "626a247b4712f811b3c8346374c3d82e2e9d26c3"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/PACING-WITNESS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "a3d4875986b43ca2390630836662392482c4f6c2a57d42491dfe91247ec6ac3a",
+      "gitBlob": "4a8683bb0431941a3607d0ca3cb426218464b63f"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "f89e859bb29e5d079d90d5a681abc33cda5cae68c63435841c9388bebdc3b065",
+      "gitBlob": "99e156c73c98c889d858693c95d4636a1c219efa"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "12218d46c54b005456fa23ea1dc13b5f393c88e5e0eecf51ca877d32736484c8",
+      "gitBlob": "b1b9629587e4b5c21d04881d1fb064d85399d914"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/PREFLIGHT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "805a3e518a095c4396e01d899cd2fc753fe879cdb02dad1070118a490e32fda0",
+      "gitBlob": "b41fdefd35dd437c34432ecaadcf217e33eaf1c6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/RESULT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/RESULT.json",
+      "bytes": 29029,
+      "sha256": "51c70ce6e3f72a9581e9380d2086c68b6efdac184886be75c34118c4df2aad8f",
+      "gitBlob": "61ff6016a3f1dca73d890e815db18d15cc0e23c1"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/TERRAIN211-FRAMES.csv",
+      "bytes": 42343,
+      "sha256": "d55e7a2a6b1e5e0b008bd0491858332ccacefc542613d12643edd51f22637923",
+      "gitBlob": "2a1e95879fde2f7955ada86f42b78f037d595014"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/ULTRA-EVIDENCE.json",
+      "bytes": 1640,
+      "sha256": "2f380091be921ca7b3bd1d95527575764f184a839314a75d2a6646c31db01792",
+      "gitBlob": "4b2e888abf2861031738674e475377f4465b664d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/WINDOW.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/WINDOW.json",
+      "bytes": 65,
+      "sha256": "c654dc010dbbdb2f772b5d4c5bc4ad1887c868e1e6815ee9655524b39fa089f0",
+      "gitBlob": "38e5d0e9e274d9fb1a53d3bdd2a00d0580adef0e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/actual-start-script.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "gitBlob": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/engine.log",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/engine.log",
+      "bytes": 291175,
+      "sha256": "147689f73e1f9eccc7d0b3e9ccf49110fbbc9b78583cbf771bc23fb3418152de",
+      "gitBlob": "163c09d2b48e94cf9971c6245884bf26e9a791cb"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/infolog.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/infolog.txt",
+      "bytes": 289985,
+      "sha256": "978eaee6151fac2b022bd5cbaf9f002b95dd5761e68f05c63793b4eba022d6f8",
+      "gitBlob": "8b92aa19fe2bf7f055d0b81c51e26ae0ba1f2993"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/scene.png",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/A3_G01/scene.png",
+      "bytes": 2985609,
+      "sha256": "779ef4e927a4ebc832e4c584b598aa8fa35f742f9f79f51d43908b7c565019d0",
+      "gitBlob": "450c86d3aa8625f7eb9102c21f7e8ee08e71a3f6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/AUDIO-ROUTE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "gitBlob": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/CHILD-MODE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "e3fbca3ad576ee74e94c6cb613d3dd6fcee1a4bf403ea76222904e87385e8d0d",
+      "gitBlob": "00eaaf8966ef36ba057dbf07bd17ca39fd0f1f38"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/CLEANUP.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "5e74a6005cd2e2824b9ac848d6ba743c5d5b78f9be2033a6ab4410ff0c2ad7b4",
+      "gitBlob": "7748252e00a7e9c68251d78cda80e09a63d649d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "6c622988eb84a009eefca68cff528727bb991a88b54f0ae33cd5cd0be26bb9ba",
+      "gitBlob": "a609cbaf9f23f22fcaac79798eace67bac767026"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "ba4b7758f7419e997ae87b073e7d0b13ac2c0692303ffc60466df46b9574f3ba",
+      "gitBlob": "9c7e4389b9da1bccdacc302aa62f8a786743c0a0"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/LAUNCH.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/LAUNCH.json",
+      "bytes": 10811,
+      "sha256": "ccd5619f727a16c329cb444911b74db8d88fd7db081639135f6aa28ace34fdbd",
+      "gitBlob": "471ed67987b5bf3e6f89688ef49490e0989f51fe"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/LIFECYCLE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/LIFECYCLE.json",
+      "bytes": 692,
+      "sha256": "025b456a6e3d2741f8f285da3b299f790923e3aec553f72ed7d85f2dc696ee36",
+      "gitBlob": "0dece04024750536384dafa650d52bc196475dca"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/OBSERVERS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+      "gitBlob": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/OWNED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/OWNED.json",
+      "bytes": 198,
+      "sha256": "323fb7c73fc74b954f043a572d6f9608d24fa0680776639b2a220c93a9abb766",
+      "gitBlob": "d6750155d8c77f842fc1017fe8ddd8c323d03efe"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/PACING-WITNESS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "d53bba87c4e6d2eb72ac322d03d84efa1a64db3b8500dac1456bd452a2311ac1",
+      "gitBlob": "edfdc996ef85fe9cdd18baa81c3f269b1280643c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "5d4b8cc8cad3ce210e9e62a6edef8e5f254030a76f8c1741f879babf90990aa9",
+      "gitBlob": "4faa0c96035538be44f1a9a7994ee77d758fda69"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "cdd93af4c0d47a2076051325300e52b4c2b473c9e0dbbe60268f1d016de6f3cb",
+      "gitBlob": "9d766a6316d59047be3c4f8c77e2a7ae14e452d3"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/PREFLIGHT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "df4c6eab17ee04673b2d22e5cf139323d380a6be53326d68231307163d79c6bf",
+      "gitBlob": "a80ec1511cd8e897f7c4b43bad76236d053a9fa1"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/RESULT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/RESULT.json",
+      "bytes": 29024,
+      "sha256": "24e0ad3f6a52a3892c158cc7221ad45ba036ee6c30f3e9ac2b2f3ff58936c739",
+      "gitBlob": "97d8c0d8f01997a5b64d44406089453407ce2690"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/TERRAIN211-FRAMES.csv",
+      "bytes": 42326,
+      "sha256": "6e5ba7e26e514fe4db062712c61bca4b396922716918a813505bef1e177357c2",
+      "gitBlob": "84af02e9e079ad3378ac801e958bb649fcaf851b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/ULTRA-EVIDENCE.json",
+      "bytes": 1641,
+      "sha256": "6bef80b6f491db3eff4eeca39a0bfcb4cc5814211a94b4c26c3995eec8617768",
+      "gitBlob": "9e62974e6a0e40a580c25facf31f2c6f9aeb2263"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/WINDOW.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/WINDOW.json",
+      "bytes": 65,
+      "sha256": "75a5ff7f1a7add3a18fc64381c63054b64150c0f4ba5da8e11a33c4e3f9c07b4",
+      "gitBlob": "ed4682288c092b114322255d31c5d828569b76e9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/actual-start-script.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "gitBlob": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/engine.log",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/engine.log",
+      "bytes": 291048,
+      "sha256": "b14f9c6a66029f24a7100283431d6a7ab74635707e48f50ee1d9e98d3339d469",
+      "gitBlob": "b0f3154a4a3d94daff602486c9de4f5086be7332"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/infolog.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/infolog.txt",
+      "bytes": 289878,
+      "sha256": "3060f3ca4a5f9834e94687f1c33a74bf73458640e809e09923d34c086bd550dc",
+      "gitBlob": "2966574f0c8e91acc3a7ee72fa4c8b240a97c547"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/scene.png",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B1_R02/scene.png",
+      "bytes": 2988103,
+      "sha256": "9172ce2b2293d7bd40563cec885737d08487a46775412f5b904e859361026427",
+      "gitBlob": "5c53b764d93a78fe348c88b12cafe7a00b75e89a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/AUDIO-ROUTE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "gitBlob": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/CHILD-MODE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "0d59d06befebfb61cff53bb1c8f9842de34d66852ba092282eed943732142aaf",
+      "gitBlob": "1e6517dd13e71ab9308222b17b4cc63a8467f3b0"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/CLEANUP.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "711b5feb87a8e8e363b9b1b45567ae35d2ac3dafc7f5b03d3270240fb81727eb",
+      "gitBlob": "f555d87a291c68cf81dd3f767db342ce278f6599"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "b7941a29580e9dc8e909b05e971042e978a8108f2335fa2abaff6ac1e27d0e75",
+      "gitBlob": "03ba2e54ec0c2eced1481d3c6240502fc18561b4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "9fc60b6264f0cd95b4768cba7873287def20997e9ea82f604f74165fd4b18cb6",
+      "gitBlob": "b8e028653bfee8e8a8426761bd8b779383846385"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/LAUNCH.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/LAUNCH.json",
+      "bytes": 10811,
+      "sha256": "7f0b1739d503c28eb6ec9fe895cfba78dbb3a9c8f2da1d5cc6cf32f476f8e111",
+      "gitBlob": "bd1a5aaa3351f56c4f7df0c2dbb7f71442b1bced"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/LIFECYCLE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/LIFECYCLE.json",
+      "bytes": 688,
+      "sha256": "06a087211f1037e188bc32e33c6671840765a9e75a7334a82072ef18271181af",
+      "gitBlob": "685339415ae15186ee0d7b5f33ceb9ffe96d527c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/OBSERVERS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+      "gitBlob": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/OWNED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/OWNED.json",
+      "bytes": 198,
+      "sha256": "80a8650668c9296d8838dfe3ca91377088b905d84a4dce316616badec0a25941",
+      "gitBlob": "1bb7a0fe3af978c0dd39ca76613b244e9e2357b4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/PACING-WITNESS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "88b04562a6e6126f51ce3379b8d3dad4fb5a084365758cd4399406b6c8229011",
+      "gitBlob": "34f477ecc97a5438e06cddf267980267ed05a013"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "88a2e73e2e3cfedcdbca52b43af7a026c2693e219d055dfff349ab8ea276002b",
+      "gitBlob": "7fc9de44f4a4545317da4bc74194b9a043cd1de7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "8c888d2eac2f653b8ad4b55e23849fb5bf67a1724028f73be2c937ea2cfe38ef",
+      "gitBlob": "96b14914a3e05cf2bbdc97bb7def96c047a9c5e9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/PREFLIGHT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "0295d8673507cebbfbe58da7c22e453aff0c2ff8e5f0cf521d479c21be60167b",
+      "gitBlob": "c9a0ea26f7b373eaffbc60ca975a2a9608c339b5"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/RESULT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/RESULT.json",
+      "bytes": 29008,
+      "sha256": "dfe33b5b7ee460bf670e2bf137dfdd27b359d152cc7a156ee7c8fccdcb3d3a85",
+      "gitBlob": "b79f4e1f1f917e1a1460109ddf4c98f240a4d5d9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/TERRAIN211-FRAMES.csv",
+      "bytes": 42292,
+      "sha256": "924bcee235a5741ca9df63e9fe6f9bcf914bcacddd84146d96c694b76dc84aaf",
+      "gitBlob": "c439eb3040749011d9387d0b49f10d3c58c0f1b9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/ULTRA-EVIDENCE.json",
+      "bytes": 1641,
+      "sha256": "870bc544c8c8884f05e67b2bfd9d3f557552fcc1e4ffb51c61ec3bc92c41be12",
+      "gitBlob": "282380bbccbaaa457e7675daba97aed9133760cb"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/WINDOW.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/WINDOW.json",
+      "bytes": 65,
+      "sha256": "6eeba8f917c88a956946b0cbfcae4a782a6bef79eeecce2a0fe5dc5bf41062c2",
+      "gitBlob": "70667cfe0aaf0db44d8c3d9d1d258a35f557be42"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/actual-start-script.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "gitBlob": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/engine.log",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/engine.log",
+      "bytes": 291079,
+      "sha256": "d0c0c6af5ddb5d6dd2a897a0afb5fef67a4267cd6d5b77d95c4082c5c28f05f5",
+      "gitBlob": "26f4e9810d965a82974cc734b328ce2db9a07814"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/infolog.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/infolog.txt",
+      "bytes": 289909,
+      "sha256": "a34e1f228e85345bf760911122e8eccc6fcc87ea13e8912a3665b3ac2e98cee2",
+      "gitBlob": "e72af4c62682b133f9a98fc9cf063c022d7f936a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/scene.png",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B2_R02/scene.png",
+      "bytes": 2987686,
+      "sha256": "5b764aaee3b22dbe7c6caef3edd2ca639207a303ac7fc1b82f6e0cfb196a244c",
+      "gitBlob": "1358fc551e5067d6bca52737e879c92cf210fbaa"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/AUDIO-ROUTE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "gitBlob": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/CHILD-MODE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "ef64cc1bbed9a00f3d1476435522fa4443c0e91bd8115b46e4877aaa2b6b9d7a",
+      "gitBlob": "0270da065b7b3c1f57048dbbff8d82117a7a5c7e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/CLEANUP.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "c1a59e5d08a24c2d3ae6f3851b7953275a84b4369c47e09162818817f3df3519",
+      "gitBlob": "d1bc17ff90ff0b5b3f3834329fd07bd84fdbee30"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "97431a249e57d449fe9de160309ab1ad495cbe54090e6e0ebc170f182d6dea49",
+      "gitBlob": "78de3b02f336f32b6aa4ac4519a23ae31b1d55be"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "4f4d9f5b5b08222e63b9da3368973cdf589bbd167dcd531fb37355807095b642",
+      "gitBlob": "6462e4166cb778e26b88ce8d47fad8bcd1de560c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/LAUNCH.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/LAUNCH.json",
+      "bytes": 10811,
+      "sha256": "cc92dc653e74cb69cd8a80468fccb9da5ee922d4b183a8c9d4524bed941831e6",
+      "gitBlob": "28c308d56070044fe612b3142449b0561e9492f7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/LIFECYCLE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/LIFECYCLE.json",
+      "bytes": 693,
+      "sha256": "b36216558f5b4908e996f47cbf9cac22e9295ba32b62e19b6d6090c785fa966b",
+      "gitBlob": "8e0f57c2d1abb51e4726470f01d8b63e72f97e2c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/OBSERVERS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+      "gitBlob": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/OWNED.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/OWNED.json",
+      "bytes": 198,
+      "sha256": "764ea2bd0ad1af40dd390e0443706c396943e67db33f419ce3feadd03c66c971",
+      "gitBlob": "281831a980703c95af88e420998168bd90f1b571"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/PACING-WITNESS.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "a971d1e5902a89e6886d8666f55a48b1c7ed37bae01177f2b22cc97a121e4db1",
+      "gitBlob": "00c73b6cf759ca0e1d5cd1cc132c5ad5c85e13e6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "25b34265e0324068d96fb6831d925a2200cc36a3e6ca21b95137a872f5cadff6",
+      "gitBlob": "62aac89e6f646e41ca6afae0d69c25592695a3d2"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1039,
+      "sha256": "6f90b0ecb0502af12d3f945b4a3085adea43c5638f151435e7a4030224bf6218",
+      "gitBlob": "450c30a90a0c7b6283d3365cf24fc0b12e9ecf30"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/PREFLIGHT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "f8b42039421d2bb11b042ffbec20b744b55bd85c27aa5cf79307785bea66ac72",
+      "gitBlob": "91c728cc643e2fc8eafbf15d6e1a3b386f30e532"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/RESULT.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/RESULT.json",
+      "bytes": 29025,
+      "sha256": "b692a52beebac76b835deb570c197164f19f80072b5863076338c253ed2a8e2e",
+      "gitBlob": "232a9384396f269fab3c34588d12797c3f20a879"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/TERRAIN211-FRAMES.csv",
+      "bytes": 42309,
+      "sha256": "184f0ce70d58ad739759391e745bcfb8a76410773b5bde454740c7ff3d3cdb8e",
+      "gitBlob": "e55a466e9483dbcad10f06f059d3856a38bb5061"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/ULTRA-EVIDENCE.json",
+      "bytes": 1641,
+      "sha256": "5703c7fd396dd5b7eba6494745ca76cf0ed2b77e8b9b4f070d0a7593998f1419",
+      "gitBlob": "1ca7de930bf958fdb4c7e055903da8a27db1464b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/WINDOW.json",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/WINDOW.json",
+      "bytes": 65,
+      "sha256": "90de671447fd0d8425f81f5d7c1c061796e63a99e54ccb6384d1cb13c95d6359",
+      "gitBlob": "f3ef3a5115d099a812c0188a990fd93927876463"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/actual-start-script.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "gitBlob": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/engine.log",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/engine.log",
+      "bytes": 291050,
+      "sha256": "91f5ae0b234049325573660b06134ac5337a0c1ce0cf40dcce7d7d53054faa98",
+      "gitBlob": "faaa747e7d70fbb0ed6fc6d39770159616a4fb71"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/infolog.txt",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/infolog.txt",
+      "bytes": 289880,
+      "sha256": "1d7fa73588e5abd677489c14bc36c9279d61f0f23c71ce738cf4570cb4511bb7",
+      "gitBlob": "6e23a845afd7b03b5772585098d4dae1660b61e8"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/scene.png",
+      "relativeToRuns": "r02_clean01/clean_paced/preparation/runs/B3_R02/scene.png",
+      "bytes": 2992443,
+      "sha256": "6761c2c8696c61a7eaf6a87b5cbc7031d6f056bad8271933e84e793099ba7012",
+      "gitBlob": "b3ef9db0e95f79ce69fd0d6420d0ff1a36915cd0"
+    }
+  ],
+  "rawLogsAndImagesPreservedLocal": true,
+  "uploadRule": "This index identifies all preserved local evidence. Selected text receipts and complete samples are published; PNGs and duplicate/full logs remain at the fixed shared-local paths, not claimed uploaded."
+}

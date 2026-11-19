@@ -1,0 +1,106 @@
+{
+  "round_id": "r03-mvk3-matched-frame-20261117-26",
+  "attempt_id": "r03-mvk3-framepair-02",
+  "author": "SUPER_JINI_MK2",
+  "scope": "ONE_MATCHED_SIM1590_R03_MVK3_CAPTURE_PAIR_COMPONENT_DIAGNOSTIC",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "binary_pins": {
+    "R03": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "MVK3": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa"
+  },
+  "MVK3_reference": "evidence/material-storage-pr7-20261115-01/ultra-compare/runs/ultra0_20261116_01/clean_paced/preparation/runs/A2_MVK3/LAUNCH.json",
+  "new_root": "evidence/r03-mvk3-matched-frame-20261117-02",
+  "budget": {
+    "games_max": 2,
+    "captured_frames_per_arm": 1,
+    "captures_max": 2,
+    "inspection_sessions_max": 2,
+    "profile_commands_per_arm": 1,
+    "profile_commands_max": 2,
+    "engine_builds": 0,
+    "engine_source_edits": 0,
+    "R04_captures": 0,
+    "retries": 0,
+    "extra_counter_replays": 0,
+    "FPS_AB": 0
+  },
+  "profile_semantics": "profile run --gpu-state default --exec overlapping, once per accepted arm; tool may internally replay multiple times, command count not single GPU replay. No additional profiling or counter invocation.",
+  "fixed_scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "benchmark_seed": 7654321,
+    "target_simulation_tick": 1590,
+    "preset": "Ultra4",
+    "AA": "OFF",
+    "viewport": [
+      1512,
+      950
+    ],
+    "drawable": [
+      1512,
+      982
+    ],
+    "camera_center": [
+      4096,
+      254.77063,
+      3072
+    ],
+    "camera_distance": 2254.77051,
+    "FOV": 45,
+    "VSync": 0,
+    "native": "R03 S01/G01 worker1 PREPARE1 BEGIN0; no R04/host vertex/other interventions"
+  },
+  "steps": [
+    "Read STATE exact owner/round/attempt and closed prior execution; reserve once CAS/reread, preserve all old evidence.",
+    "Verify exact R03/MVK3 engine/runtime/backend identities. Stage one isolated controller using previous frozen controller and only the stated controller_delta. Same game/content/start inputs, scene, commands. Freeze hashes/diff and actual env; no engine rebuild/source patch.",
+    "Use existing supported gpucapture Layer boundary single frame for each arm. One game per arm maximum, no retries. Capture tool state must be cleaned before next arm. If required first-arm capture/tick evidence cannot be obtained, stop without unnecessary second run.",
+    "Inspect actual bound world uniform buffer timeInfo.x from capture and prove it equals1590, not merely marker/pause log. Camera matrices/extents/units and SensorLOS/decal logical workload must match pair. Different renderer draw counts are comparison outputs, not assumed scene mismatch. Wall-time animation/particles must be recorded and gate relevant components; do not claim identical frame from seed alone.",
+    "Use same capture sessions to export /commands /api_calls pipelines and resource info --all/fetch, depth_stencil/draw state, attachment/load/store/resolve fields actually exposed, last-writer only from traced command/resource links, texture-copy lineage. Missing fields UNKNOWN; do not infer from ordinal or source.",
+    "Only with valid matched tick/scene evidence, invoke supported profile once per arm; export /performance/shaders and /performance/encoders and available timeline/schema/units. Hardware counters only if existing profile exposes them; no extra counter replay. Active intervals absent => UNKNOWN; bounds not occupancy.",
+    "Produce one component table terrain/units/ground decal/game decal/SensorLOS/postprocess/UI: logical work -> draws/vertices/instances -> resources/state/dependencies -> VS/FS cost and actually supported timing. Match by semantic draw/shader role not encoder number; preserve unmatched components.",
+    "Mismatch, failed capture/profile, missing mandatory tick/scene evidence or ambiguous run history => stop report insufficient; no retry/source repair/alternate scene. Relative costs not frame fractions/FPS savings. R04 cause not established by this R03/MVK3 pair.",
+    "Release all games/GPU sessions/replayers/processes/awake/workers and writers; same-round DONE with per-arm counts/status, pins and cleanup. Return JINI and close turn."
+  ],
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "scope": "Coordinator-directed bounded diagnostic toward user goal of MVK3 versus native frame-component bottleneck comparison; no release adoption."
+  },
+  "source_writers_stopped": true,
+  "previous_HQ_turn_completed": true,
+  "previous_cleanup_verified": true,
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "prohibited": [
+    "main/release/Homebrew",
+    "global settings/dependency installs",
+    "new audit/framework",
+    "extra captures/profiles/games",
+    "automatic retry",
+    "concurrent local measurement/readers"
+  ],
+  "previous_round": "r03-mvk3-matched-frame-20261117-25",
+  "previous_outcome": "Closed after boundary query timeout; no capture; unused arm not reused",
+  "recovery": {
+    "status": "REBOOT_CANCELLED_SERVICE_LIST_RESPONSIVE",
+    "reboot_requests": 0,
+    "service_restart_requests_this_step": 0,
+    "service_query_exit": 0,
+    "service_query_elapsed_seconds": 0.012305,
+    "active_sessions": 0,
+    "source": "evidence/capture-tool-reboot-20261117-01/RESULT.json",
+    "HQ_turn_completed": true,
+    "protected_files_unchanged": 110,
+    "bar": "PAUSED",
+    "capture_path_tested": false,
+    "scope": "User corrected reboot interpretation; no reboot authorized. User reports approving GPU diagnostic prompt; causal mechanism not established."
+  },
+  "additional_prohibited": [
+    "Mac reboot/logout",
+    "service restart",
+    "security settings changes",
+    "coverage-order candidate",
+    "automatic retries"
+  ],
+  "controller_delta": "Reuse exact frozen controller from previous round, with only boundary enumeration at sim1200 before sim1590 pause and explicit elapsed/partial-output receipt. Freeze hash/diff once before launch. Captured bound timeInfo.x must still be1590.",
+  "execution_authorization": "Fresh bounded coordinator-directed continuation after verified no active sessions and closed HQ turn. Not continuation of round25 budget."
+}

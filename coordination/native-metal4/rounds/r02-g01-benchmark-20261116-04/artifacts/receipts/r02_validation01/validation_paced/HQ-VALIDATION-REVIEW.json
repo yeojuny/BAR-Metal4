@@ -1,0 +1,37 @@
+{
+  "status": "PASS_VALIDATION_GATE",
+  "utc": "2026-11-16T23:40:31.180623+00:00",
+  "round_id": "r02-g01-benchmark-20261116-04",
+  "attempt_id": "r02-validation-and-clean-01",
+  "metal": {
+    "status": "NO_MATCHED_METAL_ERRORS",
+    "enabledByChildEnv": true,
+    "enabledByEngineLog": true,
+    "errors": [],
+    "normalExit": true,
+    "candidateSHA256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+    "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/scene.png",
+    "source": "raw engine.log; same original error regex"
+  },
+  "manualImageReview": {
+    "actualPNGViewed": true,
+    "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/scene.png",
+    "observation": "Units, ground, buildings, sensor/range lines and visible effects present; no obvious missing geometry or corruption. Single dynamic image is not exhaustive pixel or stencil proof. Asymmetric-stencil correctness is covered separately by the previously passed R02 GPU helper."
+  },
+  "actualNativeMainSamples": 1,
+  "actualFinalColorExtents": [
+    1512,
+    982
+  ],
+  "actualViewport": [
+    1512,
+    950
+  ],
+  "S01PositiveSplit": true,
+  "G01PositiveIndexedDraw": true,
+  "normalExitAndOwnedProcessCleanup": true,
+  "awakeReleased": true,
+  "performanceTimingExcluded": true,
+  "knownReceiptLimitation": "ULTRA-EVIDENCE nativeFinalColorExtents is null because arm labels baseline/candidate bypass the runner native-specific receipt branch. Actual sample/extent marker was checked directly in raw infolog; runner unchanged.",
+  "cleanLaunchAuthorizedByGate": true
+}

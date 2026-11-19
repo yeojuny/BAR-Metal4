@@ -1,0 +1,12 @@
+{
+  "status": "RELEASED",
+  "campaign": "pending2-exact-ui-rtt-fps-20261118-61",
+  "pid": 52856,
+  "startUTC": "2026-11-18T09:25:07.440295+00:00",
+  "maximumSeconds": 1800,
+  "securitySettingsChanged": false,
+  "owner": "round61",
+  "endUTC": "2026-11-18T09:28:16.493068+00:00",
+  "ownCaffeinateAlive": false,
+  "existingCaffeinatePreserved": false
+}

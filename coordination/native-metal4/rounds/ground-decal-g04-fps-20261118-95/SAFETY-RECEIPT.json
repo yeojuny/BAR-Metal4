@@ -1,0 +1,9 @@
+{
+  "status": "PASS_AA0_SHADOWS_AND_EXCEPTIONAL_G04",
+  "real_indexed_cases": 72,
+  "real_raw_float_cases": 72,
+  "synthetic_stage_cases": 24,
+  "scope": "AA0; precise math; original terrain color; existing raster state",
+  "fixture_log_sha256": "de36ce2dc8799fc40cc5d2b431b06bfb528f89b2bd4a0d20e9ee1fd783820471",
+  "exceptional_log_sha256": "53bb0478cf082248fc9680b9d18a3027696663bff11a1f94337911faf6e1500e"
+}

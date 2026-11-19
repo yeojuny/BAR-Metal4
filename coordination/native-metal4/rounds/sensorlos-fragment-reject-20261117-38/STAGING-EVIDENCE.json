@@ -1,0 +1,337 @@
+{
+  "status": "READY_PRIVATE_MATCHED_SCENE",
+  "runner": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/run.py",
+  "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "arms": {
+    "R03_ORIGINAL": {
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/bin/spring-metal4-scene",
+      "binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "launch_sha256": "99119409143e15ec280f527b4b1f4163535a7a2028e8c9513ac278b91a1b67ac",
+      "writes": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/R03_ORIGINAL/state/data",
+      "mutable_env": {
+        "HOME": "<arm>/home",
+        "BAR_STATE_PATH": "<arm>/state",
+        "BAR_ASSETS_PATH": "<arm>/assets",
+        "BAR_METAL4_EXPERIMENTAL_SINGLEPLAYER": "1",
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0",
+        "BAR_NATIVE_MODEL_TRACE": "0",
+        "BAR_NATIVE_SUBMISSION_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_MEMORY_CENSUS": "0",
+        "BAR_NATIVE_COMPILER_MEMORY": "0",
+        "BAR_NATIVE_HEAP_COLLECT": "0",
+        "BAR_NATIVE_HEAP_STATS": "0",
+        "BAR_NATIVE_LARGE_HEAP": "0",
+        "BAR_NATIVE_PREPARATION_TRACE": "0",
+        "BAR_NATIVE_HOST_COST_TRACE": "0",
+        "BAR_NATIVE_VBO_COPY_TRACE": "0",
+        "BAR_NATIVE_PUBLICATION_TRACE": "0",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+        "BAR_NATIVE_PASS_COST136_FILE": "",
+        "BAR_NATIVE_PASS160": "1",
+        "BAR_NATIVE_PASS165": "1",
+        "BAR_NATIVE_PASS166": "1",
+        "BAR_NATIVE_RECORD158": "1",
+        "BAR_NATIVE_RETAINED_FONT170": "1",
+        "SPRING_DATADIR": "<runtime>/data:<arm>/assets",
+        "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "XDG_CACHE_HOME": "<arm>/cache",
+        "MTL_CAPTURE_ENABLED": "0",
+        "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+        "DYLD_PRINT_LIBRARIES": "1",
+        "BAR_NATIVE_BLOOM217_PROBE": "1"
+      },
+      "scene_checksums": {
+        "state/data/LuaUI/Widgets/zzz_native_short_run.lua": "7660944b729cf5b459bcc7c6cda7fc29e6c731a83cccc0ddceb31c894f871fb9",
+        "state/data/script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "state/data/springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "state/data/LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "state/data/LuaUI/Config/BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "state/data/fonts/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "state/data/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "state/data/LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+        "state/data/LuaUI/Widgets/zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "state/data/games/bar-official-combat-pr6.sdz": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+        "assets/maps/seths_ravine_remake_1.3.1.sd7": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+        "state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "state_data_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/R03_ORIGINAL/state/data",
+      "assets_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/R03_ORIGINAL/assets",
+      "base_archive_names": [
+        "bitmaps.sdz",
+        "cursors.sdz",
+        "maphelper.sdz",
+        "springcontent.sdz"
+      ],
+      "startup_script_sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "window_simulation_ticks": [
+        540,
+        1740
+      ],
+      "aa": 0,
+      "view": [
+        1512,
+        950
+      ],
+      "drawable": [
+        1512,
+        982
+      ],
+      "content_sha256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "map_sha256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+      "linked_libraries": [
+        {
+          "install_name": "@loader_path/../lib/libIL.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libIL.dylib",
+          "version": "compatibility version 0.0.0, current version 0.0.0",
+          "sha256": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e"
+        },
+        {
+          "install_name": "@loader_path/../lib/libminizip.1.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libminizip.1.dylib",
+          "version": "compatibility version 2.0.0, current version 2.0.0",
+          "sha256": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040"
+        },
+        {
+          "install_name": "@loader_path/../lib/libfreetype.6.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libfreetype.6.dylib",
+          "version": "compatibility version 27.0.0, current version 27.7.0",
+          "sha256": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827"
+        },
+        {
+          "install_name": "@loader_path/../lib/libfontconfig.1.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libfontconfig.1.dylib",
+          "version": "compatibility version 18.0.0, current version 18.0.0",
+          "sha256": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec"
+        },
+        {
+          "install_name": "@loader_path/../lib/libvorbisfile.3.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libvorbisfile.3.dylib",
+          "version": "compatibility version 7.0.0, current version 7.8.0",
+          "sha256": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7"
+        },
+        {
+          "install_name": "@loader_path/../lib/libvorbis.0.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libvorbis.0.dylib",
+          "version": "compatibility version 5.0.0, current version 5.9.0",
+          "sha256": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388"
+        },
+        {
+          "install_name": "@loader_path/../lib/libogg.0.8.6.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libogg.0.8.6.dylib",
+          "version": "compatibility version 0.0.0, current version 0.8.6",
+          "sha256": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb"
+        },
+        {
+          "install_name": "@loader_path/../lib/libopenal.1.25.2.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libopenal.1.25.2.dylib",
+          "version": "compatibility version 1.0.0, current version 1.25.2",
+          "sha256": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c"
+        },
+        {
+          "install_name": "@loader_path/../lib/libSDL3.0.dylib",
+          "resolved_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/R03_ORIGINAL/runtime/native/lib/libSDL3.0.dylib",
+          "version": "compatibility version 401.0.0, current version 401.20.0",
+          "sha256": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f"
+        }
+      ],
+      "base_data_files_verified": 142
+    },
+    "FRAGMENT_REJECT": {
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/FRAGMENT_REJECT/runtime/native/bin/spring-metal4-scene",
+      "binary_sha256": "4df93fbda60c3c1d0fc930db951c120adf5341976963846b79846dc8a096ce75",
+      "launch_sha256": "4ae3e848a557053439d526a4514ec5e8ab952d32f8244c7e914cec306030f298",
+      "writes": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/FRAGMENT_REJECT/state/data",
+      "mutable_env": {
+        "HOME": "<arm>/home",
+        "BAR_STATE_PATH": "<arm>/state",
+        "BAR_ASSETS_PATH": "<arm>/assets",
+        "BAR_METAL4_EXPERIMENTAL_SINGLEPLAYER": "1",
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0",
+        "BAR_NATIVE_MODEL_TRACE": "0",
+        "BAR_NATIVE_SUBMISSION_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_MEMORY_CENSUS": "0",
+        "BAR_NATIVE_COMPILER_MEMORY": "0",
+        "BAR_NATIVE_HEAP_COLLECT": "0",
+        "BAR_NATIVE_HEAP_STATS": "0",
+        "BAR_NATIVE_LARGE_HEAP": "0",
+        "BAR_NATIVE_PREPARATION_TRACE": "0",
+        "BAR_NATIVE_HOST_COST_TRACE": "0",
+        "BAR_NATIVE_VBO_COPY_TRACE": "0",
+        "BAR_NATIVE_PUBLICATION_TRACE": "0",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+        "BAR_NATIVE_PASS_COST136_FILE": "",
+        "BAR_NATIVE_PASS160": "1",
+        "BAR_NATIVE_PASS165": "1",
+        "BAR_NATIVE_PASS166": "1",
+        "BAR_NATIVE_RECORD158": "1",
+        "BAR_NATIVE_RETAINED_FONT170": "1",
+        "SPRING_DATADIR": "<runtime>/data:<arm>/assets",
+        "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_METAL4_SHARED_CUS_PILOT": "0",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "XDG_CACHE_HOME": "<arm>/cache",
+        "MTL_CAPTURE_ENABLED": "0",
+        "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+        "DYLD_PRINT_LIBRARIES": "1",
+        "BAR_NATIVE_BLOOM217_PROBE": "1"
+      },
+      "scene_checksums": {
+        "state/data/LuaUI/Widgets/zzz_native_short_run.lua": "7660944b729cf5b459bcc7c6cda7fc29e6c731a83cccc0ddceb31c894f871fb9",
+        "state/data/script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "state/data/springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "state/data/LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "state/data/LuaUI/Config/BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "state/data/fonts/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "state/data/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+        "state/data/LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+        "state/data/LuaUI/Widgets/zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "state/data/games/bar-official-combat-pr6.sdz": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+        "assets/maps/seths_ravine_remake_1.3.1.sd7": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+        "state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "state_data_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/FRAGMENT_REJECT/state/data",
+      "assets_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/clean_paced/preparation/private/FRAGMENT_REJECT/assets",
+      "base_archive_names": [
+        "bitmaps.sdz",
+        "cursors.sdz",
+        "maphelper.sdz",
+        "springcontent.sdz"
+      ],
+      "startup_script_sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "window_simulation_ticks": [
+        540,
+        1740
+      ],
+      "aa": 0,
+      "view": [
+        1512,
+        950
+      ],
+      "drawable": [
+        1512,
+        982
+      ],
+      "content_sha256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "map_sha256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+      "linked_libraries": [
+        {
+          "install_name": "/opt/homebrew/opt/devil/lib/libIL.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/devil/1.8.0_6/lib/libIL.dylib",
+          "version": "compatibility version 0.0.0, current version 0.0.0",
+          "sha256": "97af4e58cf690d7e8f47e3ba0668dfb1e2127f50937e33f102304f4c843b34b9"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/minizip/1.4/lib/libminizip.1.dylib",
+          "version": "compatibility version 2.0.0, current version 2.0.0",
+          "sha256": "17664124140c81f3028d78a1c79b8af08e891026ee0e08c678eca9ea5ba042a3"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/freetype/2.15.0/lib/libfreetype.6.dylib",
+          "version": "compatibility version 27.0.0, current version 27.7.0",
+          "sha256": "1bf70387c4ef59accba8116c847cb87d2018ded2672db551686b95dce4c5d931"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/fontconfig/2.18.3/lib/libfontconfig.1.dylib",
+          "version": "compatibility version 18.0.0, current version 18.0.0",
+          "sha256": "e1f5e06e8339b42f0e1af11cc77979ef6a8f48ffa7588e4dc243e4bd69ea656d"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbisfile.3.dylib",
+          "version": "compatibility version 7.0.0, current version 7.8.0",
+          "sha256": "182caefbd3eec6f61e513900b5f9c4a796c83048aa0d1a882e30c232d248cb35"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbis.0.dylib",
+          "version": "compatibility version 5.0.0, current version 5.9.0",
+          "sha256": "38df2463cc776f5a4dd58331e0abb46dba0a143b65e345ece328ea61978dd795"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/libogg/1.3.6/lib/libogg.0.8.6.dylib",
+          "version": "compatibility version 0.0.0, current version 0.8.6",
+          "sha256": "57e31e257f6293a07a2fc1e25ec02534fa307f7d94653decd6a98c0b5f961352"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.1.25.2.dylib",
+          "version": "compatibility version 1.0.0, current version 1.25.2",
+          "sha256": "bda6121999127208e446a72f1be2c957bc3d618d3f7d66cd60fdfdc4a6702355"
+        },
+        {
+          "install_name": "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+          "resolved_path": "/opt/homebrew/Cellar/sdl3/3.4.20/lib/libSDL3.0.dylib",
+          "version": "compatibility version 401.0.0, current version 401.20.0",
+          "sha256": "10e099afe070ee62ff19cf990712b0df92e3e28a84116cc96756257d9dcdb892"
+        }
+      ],
+      "base_data_files_verified": 142
+    }
+  },
+  "unmodified_verified_runtime_data_files": 142,
+  "runtime_data_reference": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-launcher-prep-20261117-01/runtime/native/data",
+  "control": "Existing R03 paced combat scene and 540\u20131740 controller, with the optional screenshot adapter omitted",
+  "seed": 7654321,
+  "games_started": 0,
+  "timestamp_utc": "2026-11-17T23:03:11.571050+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "round_id": "r04-engine-build-20261117-22",
+  "author": "SUPER_JINI_MK2",
+  "decision": "CONFIGURE_DISCOVERY_ENVIRONMENT_MISSING_OPENAL_PKGCONFIG_PATH_NOT_SOURCE_DEFECT",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "previous_attempt_consumed": true,
+  "cleanup_verified": true,
+  "HQ_turn_completed": true,
+  "evidence": {
+    "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+    "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
+    "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+  },
+  "action": "New round23 single configure/build with process-local pkg-config search path restored; preserve failure and source; no dependency install, games or automatic retries."
+}

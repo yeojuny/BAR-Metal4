@@ -1,0 +1,29 @@
+{
+  "round_id": "r04-engine-build-envfix-20261117-23",
+  "attempt_id": "r04-isolated-build-02",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "request": "coordination/native-metal4/rounds/r04-engine-build-envfix-20261117-23/REQUEST.json",
+  "budget": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "relocation_sign": 1,
+    "games": 0,
+    "benchmarks": 0,
+    "helpers": 0,
+    "captures": 0,
+    "replays": 0,
+    "retries": 0,
+    "source_edits": 0
+  },
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "previous_HQ_turn_completed": true,
+  "previous_cleanup_verified": true,
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "environment_correction": {
+    "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+    "scope": "Process-local configure/build environment only, prepend to otherwise recorded environment; no global setting change.",
+    "evidence": "R03 successful CMakeCache pinned this exact OpenAL1.25.2. Default pkg-config cannot find openal, explicit path returns1.25.2. .pc and library exist; no install/source repair required."
+  }
+}

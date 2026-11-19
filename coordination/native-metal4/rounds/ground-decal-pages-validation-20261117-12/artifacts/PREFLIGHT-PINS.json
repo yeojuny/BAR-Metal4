@@ -1,0 +1,12 @@
+{
+  "status": "PASS_FRESH_FIXED_PINS",
+  "arms": [
+    "V_R03_BASELINE",
+    "V_GDP_CANDIDATE"
+  ],
+  "libraries": 19,
+  "fixture_files_per_arm": 13,
+  "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "games_started": 0
+}

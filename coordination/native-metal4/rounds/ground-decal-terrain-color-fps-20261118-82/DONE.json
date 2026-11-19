@@ -1,0 +1,55 @@
+{
+  "status": "STOPPED_GROUND_DECAL_GPU_WITNESS_GATE",
+  "round_id": "ground-decal-terrain-color-fps-20261118-82",
+  "attempt_id": "ground-decal-aa0-terrain-color-off-on-01",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "type_proof": {
+    "historical_sim": 1590,
+    "decoded_track_instances": 32279,
+    "stride_bytes": 192
+  },
+  "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+  "fixture_sha256": "f70659825fc0bd79b1fba9ef052ee2e5a245c2d5743cd194dfa0ea5b0671d7db",
+  "counts": {
+    "configure": 0,
+    "engine_build": 0,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "games": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "parity": {
+    "metal_validation": true,
+    "render_comparisons_reached": 72,
+    "bgra8_depth_stencil_comparisons_matched_before_gate": true,
+    "gate": "Positive attachment-write and explosion minimap-sensitivity witnesses",
+    "gate_passed": false,
+    "which_counter_failed": "Unrecorded. The fixture asserted on the combined condition without printing the three counters.",
+    "direct_float_cases_executed": 0,
+    "first_value_mismatch_artifacts_found": false
+  },
+  "fps": null,
+  "defaults_changed": false,
+  "default_cap": 1,
+  "default_switch": "OFF",
+  "timed_benchmarks_started": false,
+  "cleanup": {
+    "idle_check": "PASS",
+    "active_gpu_debug_sessions": 0,
+    "display_locked": true,
+    "display_asleep": true,
+    "display_active": false,
+    "display_valid": false,
+    "caffeinate_running": false,
+    "owned_display_assertion_started": false
+  },
+  "decision": "HOLD_PENDING_INDEPENDENT_POSITIVE_WITNESSES_AND_FLOAT_PARITY",
+  "finished_utc": "2026-11-18T14:12:10.409Z"
+}

@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "baselineCompileCommands": 3142,
+  "candidateCompileCommands": 3142,
+  "missingCommands": [],
+  "extraCommands": [],
+  "normalization": "Only the isolated root path; all fields and duplicate counts retained",
+  "SDK": "27.2",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.4.1.1)",
+  "initial_cache_sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "baseline_compile_commands_sha256": "67e69b478d36a0ddc6c45f2135de8e7dfa64990583b55a3ed41b75b0edcf58c6",
+  "candidate_compile_commands_sha256": "1e776a2bcbb83ff15a99fb501e4f343eb847bed4d474f447d3d69506084a2bf1",
+  "process_local_PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig"
+}

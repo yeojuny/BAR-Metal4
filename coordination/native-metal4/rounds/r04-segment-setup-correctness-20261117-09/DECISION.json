@@ -1,0 +1,45 @@
+{
+  "round_id": "r04-segment-setup-correctness-20261117-09",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_BOUNDED_HELPER_CORRECTNESS_ONLY_PRESERVE_CANDIDATE",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "artifact_commit": "45d0ada23c259df5e13ff8d68c9158932a84e065",
+  "reviewed": [
+    "DONE.json",
+    "artifacts/REPORT.md",
+    "artifacts/RESULT.json",
+    "artifacts/EXECUTION.json",
+    "artifacts/gpu.log"
+  ],
+  "evidence": {
+    "old_new_color_depth_stencil_comparisons": 12065,
+    "prepared_path_negative_control_detected": true,
+    "metal_API_validation_log_observed": true,
+    "compile_attempts": 1,
+    "GPU_invocations": 1,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "retries": 0,
+    "source_and_manifest_pins_match": true
+  },
+  "cleanup": {
+    "DONE_reports_owned_processes_children_GPU_workers_and_raw_evidence_writes_closed": true,
+    "native_HQ_turn_last_observed": "completed",
+    "native_turn_completion_verified": true,
+    "native_turn_id": "01a1e74a-dc6b-7383-9cfd-c720d3aeeb1a"
+  },
+  "limitations": [
+    "Synthetic helper does not exhaustively validate production vertex, height and clipping path.",
+    "Actual AA4 and large-coordinate GPU parity untested.",
+    "No performance claim; extra32-byte varying and vertex cost may offset fragment savings."
+  ],
+  "next": "Preserve R04 result. Prioritize cloud-only MVK3 versus current native structural analysis: matched workload work volume, CPU/GPU submission and waits. No automatic R04 build/benchmark, no new local execution before HQ turn closure and explicit bounded handoff. Coordinator already owns parallel source analysis; do not duplicate.",
+  "execution_authorization": false,
+  "protected": [
+    "main",
+    "release",
+    "Homebrew"
+  ]
+}

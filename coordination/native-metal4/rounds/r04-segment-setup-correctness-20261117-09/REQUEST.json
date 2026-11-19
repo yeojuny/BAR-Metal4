@@ -1,0 +1,57 @@
+{
+  "round_id": "r04-segment-setup-correctness-20261117-09",
+  "attempt_id": "r04-helper-correctness-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "FIXED_HELPER_COMPILE1_GPU_CORRECTNESS1",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_path": "docs/research/r04-segment-setup-20261117/candidate/MANIFEST.json",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "header_sha256": "722565c5c1ff15bfa7801615fe3bbbf9acb7de83cb5deab61aa323e20455e73f",
+  "helper_path": "docs/research/r04-segment-setup-20261117/candidate/gpu_pixel_parity.mm",
+  "helper_sha256": "73a541821a23830511d97a220c2334ca908f76c9be0193b7704be34823b2129e",
+  "change": "Move bounded endpoint quantization/delta/major-axis/width setup to vertex and flat int4 transport. Keep exact R03 per-fragment rational/diamond/depth behavior and fallback;32-byte added varying payload.",
+  "review": {
+    "cpu_cases": 32406,
+    "cpu_status": "Reported PASS and independent source/test review; not independently rerun",
+    "prepared_nonzero": 16131,
+    "fallback_nonzero": 13667,
+    "extra_zero_delta": 3,
+    "extra_sentinel_checks": 12,
+    "manifest": "Manifest SHA and all8 named file SHA256 verified independently against fetched exact commit; production header equals candidate copy.",
+    "source": "Old R03 function and MSAA fragment retained. New prepared body preserves integer arithmetic and ordering. All six vertices compute same segment setup; sample/finite/range guards and zero delta remain.",
+    "helper": "Synthetic VS initializes flat fields. Two exact fragment call sites replaced with retained R03 reference. Third test library disables prepared count and must yield visible attachment difference. No GPU/compile pass claimed.",
+    "limits": "Stage-dependent lowering and production vertex not exhaustively proved. Large coordinates CPU-only; sample count4 guard is not true AA4 parity. Extra varying/vertex costs may outweigh fragment savings."
+  },
+  "budget": {
+    "helper_compiles": 1,
+    "gpu_helper_runs": 1,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "steps": [
+    "Read latest coord/native-metal4 STATE; require exact HQ/round/source/manifest and prior cleanup. Verify no consumed attempt. CAS reserve once; ambiguous history => BLOCKED.",
+    "Fetch fixed helper and engine headers NativeSensorLOSShaders.h, NativeSampleShadingShaders.h, NativeMultisampleLineShaders.h at source commit; verify manifest and declared hashes. Use fresh isolated directory; do not overwrite prior evidence.",
+    "Compile helper once using xcrun clang++ -std=c++20 -fobjc-arc -framework Foundation -framework Metal -I <fixed headers> <helper> -o <fresh binary>. Failure stops with raw logs, no edit/retry.",
+    "On compile success run helper once with Metal API Validation. Require3600 base cases,1024 asymmetric cases, nonzero negative stencil/facing witnesses, old-vs-new comparisons and R04 prepared-path negative-control witness. The helper internally compiles candidate/reference/negative-control MSL libraries; this is one standalone invocation. Never weaken assertions.",
+    "Record raw compile/GPU logs, exact positive/negative counts, input/helper/binary hashes and validation enabled/errors. No engine/game/benchmark/capture or speed inference.",
+    "Finish all owned GPU work/PIDs/workers/awake/writers; same-round DONE returning JINI. Uncertain cleanup => retain HQ/BLOCKED."
+  ],
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "Necessary bounded correctness test before any performance experiment."
+  },
+  "prohibited": [
+    "Source edits",
+    "Full engine build",
+    "Game/benchmark",
+    "main/release/Homebrew",
+    "Duplicate attempts"
+  ],
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "orange_overlay_note": "User considers previous orange circle a range indicator and likely ignorable. Treat identification as user interpretation, not proved cause; do not block or rerun solely for it. Matched performance conditions remain mandatory for any future benchmark."
+}

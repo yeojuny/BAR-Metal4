@@ -1,0 +1,69 @@
+{
+  "format": 1,
+  "name": "indexed-small-lua-game-decal",
+  "upstreamParent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "upstreamChangedOriginalGitBlob": "4105fd4ce1ba9064d18f4972e3dcc121d99dff72",
+  "upstreamUnchangedShaderGitBlob": "73887fda9ca8898c40d09a8e2472cb68559ba041",
+  "flag": {
+    "name": "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY",
+    "on": "1",
+    "default": "off"
+  },
+  "topology": {
+    "indexCount": 96,
+    "triangleCount": 32,
+    "representativeVertexIds": 28,
+    "bufferBytes": 192
+  },
+  "patch": {
+    "path": "GameDecalGeometryIndices.patch",
+    "sha256": "79871e8ae1aa4ad91cecba23798e2e1fcbfb3b2f90644a9e717550accd26391d"
+  },
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4GameDecal.mm",
+      "sha256": "f9d0650f7c3fdb6c2594270ac75a03e8ab5d78f115647d3211cf6d0af8e7a27f"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4GameDecalGeometryIndices.h",
+      "sha256": "c473fd7758a9a2897accf483800cf0b564f5669f4f51306175aae8a4ba1d3b21"
+    },
+    {
+      "path": "engine/tools/metal4-contracts/TestGameDecalGeometryIndices.cpp",
+      "sha256": "5a9085d9d8f3f5106e9141bc919f4fd07a46be1ea413902507c41d0a71655971"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "REPORT.md",
+      "sha256": "7d5c38a9c2c54eb942dc55f8a7c24f5a789b7c8bbcefde5c74bf4780f007a845"
+    },
+    {
+      "path": "evidence/cpu-release.txt",
+      "sha256": "8b377dd32f72f417173415d689f7e8ae7675e15202284a25a48743bd0c30e7d8"
+    },
+    {
+      "path": "evidence/cpu-sanitizers.txt",
+      "sha256": "8b377dd32f72f417173415d689f7e8ae7675e15202284a25a48743bd0c30e7d8"
+    },
+    {
+      "path": "evidence/patch-check.txt",
+      "sha256": "5a76c842f34d887bc1558c5aed2533f0eee59aa034df7457e8e57254616a9fb9"
+    }
+  ],
+  "verification": {
+    "cpuChecksPerMode": 56643,
+    "compiler": "g++ (Debian 14.2.0-19) 14.2.0",
+    "asan": true,
+    "ubsan": true,
+    "macSDK": false,
+    "gpuRuntime": false,
+    "pixelParity": false,
+    "performanceMeasured": false
+  },
+  "firstGpuValidation": {
+    "AA": "off",
+    "attachmentSamples": 1,
+    "MSAA": "requires separate validation"
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "status": "PASS_FROZEN_SEVEN_FRESH_PROFILES_NO_GAME",
+  "round_id": "r04-r03-validation-clean-20261117-24",
+  "attempt_id": "r04-validation-and-clean-01",
+  "runner_sha256": "d1c4467a2dd4fd8bf1650a812111ae99d643fc8e8677a4beec359317e6f8fb74",
+  "baseline_runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "rows": [
+    {
+      "suite": "r04_validation01",
+      "campaign": "validation_paced",
+      "arm": "V_R04",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_validation01/validation_paced/preparation/runs/V_R04",
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "binarySHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "launch_sha256": "6d2ba4853575679176a952f000fcf750222163abaab4b8bde334c5579ea5f9a2",
+      "env_sha256": "01acd397ce2dc65614c796a040dddd008d3f950c66bbbe059ddca807441f97ca",
+      "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "profile_inputs_match_frozen_R03": true,
+      "profile_files": 13,
+      "measurement_window": [
+        540,
+        1740
+      ],
+      "legacy_measurement_window": [
+        600,
+        1800
+      ],
+      "owned_absent": true
+    },
+    {
+      "suite": "r04_clean01",
+      "campaign": "clean_paced",
+      "arm": "A1_R03",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/A1_R03",
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "launch_sha256": "228381491bd20092f1f878968bf74050b5be7ab158a60f72bd47afe0aafe67e5",
+      "env_sha256": "1baba6182146b6e0703cd68509f5d2247c798a5a6536a57e48491500ab39d9dc",
+      "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "profile_inputs_match_frozen_R03": true,
+      "profile_files": 13,
+      "measurement_window": [
+        540,
+        1740
+      ],
+      "legacy_measurement_window": [
+        600,
+        1800
+      ],
+      "owned_absent": true
+    },
+    {
+      "suite": "r04_clean01",
+      "campaign": "clean_paced",
+      "arm": "B1_R04",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/B1_R04",
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "binarySHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "launch_sha256": "ee3a903b296308fa9407b7286a82e4fd21a7aae3e66d641683e58c17416ef745",
+      "env_sha256": "f7a75e9a290339544068ca8d479f15f0132e6c6074370cd9ce84e98d9e21262e",
+      "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "profile_inputs_match_frozen_R03": true,
+      "profile_files": 13,
+      "measurement_window": [
+        540,
+        1740
+      ],
+      "legacy_measurement_window": [
+        600,
+        1800
+      ],
+      "owned_absent": true
+    },
+    {
+      "suite": "r04_clean01",
+      "campaign": "clean_paced",
+      "arm": "B2_R04",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/B2_R04",
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "binarySHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "launch_sha256": "4d4ed6de3ee6e62d2a3dd95888fcec2a18a0146e92d794c77c26c03efc00f7c4",
+      "env_sha256": "415310e7cad65ccce88a8bde0a327d6040453306a1be907846bcb34d140bbbf8",
+      "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "profile_inputs_match_frozen_R03": true,
+      "profile_files": 13,
+      "measurement_window": [
+        540,
+        1740
+      ],
+      "legacy_measurement_window": [
+        600,
+        1800
+      ],
+      "owned_absent": true
+    },
+    {
+      "suite": "r04_clean01",
+      "campaign": "clean_paced",
+      "arm": "A2_R03",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/A2_R03",
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "launch_sha256": "c1fe90fbc3aae89f4405784c291c474f215ecef1ceaaa256d4954f4b62a8cd6c",
+      "env_sha256": "3bd14870fdf01a9f36bf40d1e6dca182638fb7f82cbfbcf9830f55323d51e434",
+      "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "profile_inputs_match_frozen_R03": true,
+      "profile_files": 13,
+      "measurement_window": [
+        540,
+        1740
+      ],
+      "legacy_measurement_window": [
+        600,
+        1800
+      ],
+      "owned_absent": true
+    },
+    {
+      "suite": "r04_clean01",
+      "campaign": "clean_paced",
+      "arm": "A3_R03",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/A3_R03",
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "launch_sha256": "15d64cb98537c9755175ad2730a874145ec53bb40256b76eca3f03cdc64d716a",
+      "env_sha256": "a16ef8653a7cf9e011596a661920e8206bb4831d5fa40118a76becfe87069a17",
+      "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "profile_inputs_match_frozen_R03": true,
+      "profile_files": 13,
+      "measurement_window": [
+        540,
+        1740
+      ],
+      "legacy_measurement_window": [
+        600,
+        1800
+      ],
+      "owned_absent": true
+    },
+    {
+      "suite": "r04_clean01",
+      "campaign": "clean_paced",
+      "arm": "B3_R04",
+      "out": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/measurement/runs/r04_clean01/clean_paced/preparation/runs/B3_R04",
+      "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "binarySHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+      "launch_sha256": "75056cea6befd451fd0a2cd963d4f5b2e6cc2aea0dc77f4c0d36cc81d84f25ce",
+      "env_sha256": "14ae0ccc99cc5e4acebe8e3bd9ec4a9b67b4931eb2bcabca7ae370e1f71a2350",
+      "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "profile_inputs_match_frozen_R03": true,
+      "profile_files": 13,
+      "measurement_window": [
+        540,
+        1740
+      ],
+      "legacy_measurement_window": [
+        600,
+        1800
+      ],
+      "owned_absent": true
+    }
+  ],
+  "profiles": 7,
+  "stage_once_per_profile": true,
+  "stage_commands": 2,
+  "games": 0,
+  "shared_awake_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/gpu-next219-01/AWAKE.json",
+  "shared_awake_status": "RELEASED",
+  "imported_sources": 8,
+  "imported_sources_sha256": "274c830c72ecedf550c034ca5b745e574bb675af993853925f0e817fdc307be0",
+  "metadata_only_correction": "600..1800 planning metadata corrected to unchanged controller 540..1740; original preserved per LAUNCH; no runner/controller changes",
+  "utc": "2026-11-17T09:59:03.820395+00:00"
+}

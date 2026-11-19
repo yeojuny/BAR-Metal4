@@ -1,0 +1,43 @@
+{
+  "round_id": "r02-sensorlos-winding-20261116-02",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_HELPER_CORRECTNESS_ONLY",
+  "reviewed_state_revision": 15,
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "evidence_review": {
+    "source_and_manifest": "Match handoff",
+    "helper_and_three_headers": "Hashes match fixed candidate manifest",
+    "compile": "One attempt exit 0, empty diagnostics",
+    "gpu": "One run exit 0; Metal API Validation observed, no errors reported",
+    "parity_cases": 3600,
+    "asymmetric_cases": 1024,
+    "negative_stencil": 96,
+    "negative_facing": 24,
+    "cleanup": "All required cleanup fields complete"
+  },
+  "limitations": [
+    "AA4 guard-only, not MSAA4 rendering",
+    "No full engine/game parity, runtime retirement, memory or performance evidence",
+    "No adoption/main/release/Homebrew authorization"
+  ],
+  "next_plan": {
+    "purpose": "Matched G01 versus R02 replay regression check, then bounded existing SensorLOS/ground-decal cost diagnostic to choose one bottleneck.",
+    "candidate_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+    "baseline": "G01 reconstruction pinned by initial REQUEST and G01 manifest; must verify exact source/binary identity before run.",
+    "status": "HQ_READ_ONLY_PLAN_REQUESTED_NO_EXECUTION_YET",
+    "required_before_ready": [
+      "Existing exact replay path/hash and command",
+      "Existing benchmark settings and warmup/window/repetition protocol",
+      "G01 and R02 source/binary hashes; isolated build necessity",
+      "Proposed matched ordering and run budget",
+      "Existing timing log and capture paths; restoration/cleanup plan"
+    ],
+    "constraints": [
+      "No new source changes",
+      "No new benchmark framework",
+      "G02/G03/G04 frozen",
+      "No main/release/Homebrew update",
+      "No execution until new round STATE READY HQ with pinned manifest"
+    ]
+  }
+}

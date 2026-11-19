@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "clean_paced",
+  "pid": 99173,
+  "startUTC": "2026-11-17T00:03:58.743366+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-17T00:05:21.167204+00:00",
+  "ownCaffeinateAlive": false
+}

@@ -1,0 +1,11 @@
+--- round28/framepair.py
++++ round29/framepair.py
+@@ -208,7 +208,7 @@
+         assert strip_draw(before) == strip_draw(skipped), 'CPU_SCENE_CHANGED_BEFORE_SKIP'
+         assert int(re.search(r'^draw=(\d+)', skipped, re.M)[1]) > int(re.search(r'^draw=(\d+)', before, re.M)[1])
+         assert (cfg/'budget192.capture-skip-ready').is_file() and read(out/'OWNED.json')['pid']==pid
+-        responses = re.findall(r'Decals GL4 skipdraw set to\s+(true|false)\b', (out/'engine.log').read_text())
++        responses = re.findall(r'Decals GL4 skipdraw set to,?\s+(true|false)\b', (out/'engine.log').read_text())
+         assert responses == ['true'], ('ORIGINAL_SKIP_ACTION_UNCONFIRMED', responses)
+         if stop.is_set() or (cfg/'budget192.capture-stop').exists():
+             raise RuntimeError('GAME_STOPPED_BEFORE_SKIP_CAPTURE')

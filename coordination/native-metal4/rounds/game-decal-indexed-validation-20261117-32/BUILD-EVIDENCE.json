@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "sdk": "27.2",
+  "configure": {
+    "argv": [
+      "cmake",
+      "-S",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31/source/engine",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build",
+      "-G",
+      "Ninja",
+      "-C",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31/initial-cache.cmake",
+      "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+    ],
+    "child_PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig:/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+    "startedUTC": "2026-11-17T21:03:34.566178+00:00",
+    "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32",
+    "attempt": 1,
+    "pid": 10148,
+    "exit": 0,
+    "endedUTC": "2026-11-17T21:03:44.401661+00:00"
+  },
+  "build": {
+    "argv": [
+      "cmake",
+      "--build",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build",
+      "--target",
+      "spring-metal4-scene",
+      "--",
+      "-j",
+      "8"
+    ],
+    "child_PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig:/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+    "startedUTC": "2026-11-17T21:03:44.401885+00:00",
+    "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32",
+    "attempt": 1,
+    "pid": 11406,
+    "exit": 0,
+    "endedUTC": "2026-11-17T21:07:27.533545+00:00"
+  },
+  "openal": "1.25.2",
+  "candidate_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build/spring-metal4-scene",
+  "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+  "candidate_file": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build/spring-metal4-scene: Mach-O 64-bit executable arm64",
+  "runtime_packaged": false,
+  "candidate_binary_launched": false,
+  "dynamic_libraries": [
+    "\t/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit (compatibility version 1.0.0, current version 275.0.0)",
+    "\t/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation (compatibility version 150.0.0, current version 5027.1.8)",
+    "\t/opt/homebrew/opt/devil/lib/libIL.dylib (compatibility version 0.0.0, current version 0.0.0)",
+    "\t/opt/homebrew/opt/minizip/lib/libminizip.1.dylib (compatibility version 2.0.0, current version 2.0.0)",
+    "\t/usr/lib/libz.1.dylib (compatibility version 1.0.0, current version 1.2.12)",
+    "\t/usr/lib/system/libunwind.dylib (compatibility version 1.0.0, current version 2200.5.0)",
+    "\t/usr/lib/liblzma.5.dylib (compatibility version 6.0.0, current version 6.3.0)",
+    "\t/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib (compatibility version 27.0.0, current version 27.7.0)",
+    "\t/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib (compatibility version 18.0.0, current version 18.0.0)",
+    "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.40.3)",
+    "\t/usr/lib/libcurl.4.dylib (compatibility version 7.0.0, current version 9.0.0)",
+    "\t/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib (compatibility version 7.0.0, current version 7.8.0)",
+    "\t/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib (compatibility version 5.0.0, current version 5.9.0)",
+    "\t/opt/homebrew/opt/libogg/lib/libogg.0.dylib (compatibility version 0.0.0, current version 0.8.6)",
+    "\t/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib (compatibility version 1.0.0, current version 1.25.2)",
+    "\t/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib (compatibility version 401.0.0, current version 401.20.0)",
+    "\t/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation (compatibility version 300.0.0, current version 5027.1.8)",
+    "\t/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit (compatibility version 45.0.0, current version 2775.20.133)",
+    "\t/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics (compatibility version 64.0.0, current version 2050.1.6)",
+    "\t/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore (compatibility version 1.2.0, current version 1223.10.17)",
+    "\t/System/Library/Frameworks/Metal.framework/Versions/A/Metal (compatibility version 1.0.0, current version 383.1.0)",
+    "\t/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 2200.32.0)",
+    "\t/usr/lib/libobjc.A.dylib (compatibility version 1.0.0, current version 228.0.0)"
+  ],
+  "fullLogsSHA256": {
+    "CONFIGURE": "ed2ac4ad1110365cb6fbb9b737aa191cefd8173cbc92bf88564cf3023de2897e",
+    "BUILD": "e2ce661afaa2ef83ef694081edfc58fb23e8dc8f9583f6c765e6a410fa782cc8",
+    "HELPER-COMPILE": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "HELPER-GPU": "01fdaa04016dea8adc97761a2bd6f2c8c61461c69ad22c7bfeec1b0bdc79bbb5"
+  }
+}

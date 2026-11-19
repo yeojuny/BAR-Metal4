@@ -1,0 +1,23 @@
+{
+  "status": "STAGED_NO_GAME",
+  "round_id": "pending2-capture-roi-cpu-20261118-71",
+  "arm": "R71_CAP2",
+  "cap": 2,
+  "binary_sha256": "11a30bb63df44769bf3d70ff9875e1a28c5b8659a72aa436549232e0ed0bf008",
+  "original_binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
+  "input_hashes_match": 13,
+  "measure_simulation": [
+    540,
+    1740
+  ],
+  "diagnostic_only": true,
+  "patch_sha256": "7802d17419a671c83793a0f20b95a25a1058c668a046428b3853b6fc18654cd5",
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

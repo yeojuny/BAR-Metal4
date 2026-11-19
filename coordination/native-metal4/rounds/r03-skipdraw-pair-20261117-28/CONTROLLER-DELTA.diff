@@ -1,0 +1,45 @@
+--- round26/controller.lua
++++ round28/controller-candidate.lua
+@@ -1,4 +1,5 @@
+ local framePairRequested,framePairReady,framePairHoldDraw
++local skipToggleDraw,skipReady
+ function widget:GetInfo()return{name='Explicit Matched Product Gameplay',desc='Start only, fixed excluded-warmup view, observe, normal exit',author='Codex',layer=100000,enabled=true}end
+ local opened,warm,started,last,firstDraw,lastDraw,lastSim,nextSample= nil,nil,nil,nil,nil,nil,nil,1
+ local rows,requests,cameraRestored={},0,false
+@@ -221,10 +222,32 @@
+     budgetMark('capture-start');framePairReady=true
+    end
+   end
+-  local finished=io.open('LuaUI/Config/framepair-finished','r')
+-  if finished then
+-   finished:close();framePairSnapshot('after')
+-   budgetMark('capture-done');Spring.Quit();widgetHandler:RemoveWidget(self);return
++  if not skipToggleDraw then
++   local finished=io.open('LuaUI/Config/framepair-finished','r')
++   if finished then
++    local status=finished:read('*a');finished:close()
++    if status=='CAPTURED' and framePairReady and paused and game==1590 and cameraStillFixed() then
++     framePairSnapshot('after')
++     skipToggleDraw=draw()
++     Spring.SendCommands("luaui decalsgl4skipdraw")
++    else
++     budgetMark('capture-stop');Spring.Quit();widgetHandler:RemoveWidget(self);return
++    end
++   end
++  elseif not paused or game~=1590 or not cameraStillFixed() then
++   budgetMark('capture-stop');Spring.Quit();widgetHandler:RemoveWidget(self);return
++  else
++   if not skipReady and draw()>skipToggleDraw then
++    framePairSnapshot('skip-before')
++    budgetMark('capture-skip-ready');skipReady=true
++   end
++   local finished=io.open('LuaUI/Config/framepair-skip-finished','r')
++   if finished then
++    local status=finished:read('*a');finished:close()
++    framePairSnapshot('skip-after')
++    budgetMark(status=='CAPTURED' and 'capture-done' or 'capture-stop')
++    Spring.Quit();widgetHandler:RemoveWidget(self);return
++   end
+   end
+   if Spring.DiffTimers(now,opened)>=200 then
+    Spring.Echo('[FramePair] FAILED_CAPTURE_DEADLINE')

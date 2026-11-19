@@ -1,0 +1,586 @@
+[
+  {
+    "name": "EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/EXECUTION.json",
+    "characters": 702,
+    "bytes": 702,
+    "sha256": "1753a4b849167654b7451d3e58824537f1c52601ff9ddc1b91b22070edc2b59f",
+    "git_blob_sha": "fc241f4a1c90af8825ec819dc066d9c7e8fff56f"
+  },
+  {
+    "name": "IMAGE-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/IMAGE-REVIEW.json",
+    "characters": 681,
+    "bytes": 681,
+    "sha256": "e93429c4e1fdf3e476b3f8a8d72d783cb20cef3803d105b9a6044397ca831c0f",
+    "git_blob_sha": "5de54230d53ceb986e631fad7b185fa2d8e7a3e2"
+  },
+  {
+    "name": "LOCAL-ARTIFACTS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/LOCAL-ARTIFACTS.json",
+    "characters": 1503,
+    "bytes": 1503,
+    "sha256": "0bd17c2fe6a958cef9f47101ec32ff6424a6934f2871ed2ae17271bbfcc228be",
+    "git_blob_sha": "6edca635b0dcd43800a934398e9718fd1b2c3a0b"
+  },
+  {
+    "name": "READY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/READY.json",
+    "characters": 718,
+    "bytes": 718,
+    "sha256": "7a055f561cc25623750b3cb32e5b7f922035903a67a985e143239c0cb40fed98",
+    "git_blob_sha": "c1b203db2e9ffff07b89dcacb232a1b77bd981b8"
+  },
+  {
+    "name": "REPORT.md",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/REPORT.md",
+    "characters": 3640,
+    "bytes": 3640,
+    "sha256": "f7976f80f1591e60da83656ebd33683b6b203d7cd4f8848f08daf5bb263618e0",
+    "git_blob_sha": "ddb29c7534c2c322c0bc35fac372c917f123d70d"
+  },
+  {
+    "name": "REQUEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/REQUEST.json",
+    "characters": 4847,
+    "bytes": 4847,
+    "sha256": "5a4af930ab8d69c891f8147088f8cd5dd556b6ba7507b114820e9df99ff97e12",
+    "git_blob_sha": "b17d19ddce79fea4d6d6499abeb807f659894762"
+  },
+  {
+    "name": "RESERVED-STATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/RESERVED-STATE.json",
+    "characters": 38630,
+    "bytes": 41356,
+    "sha256": "4687bde5a3efceed6b8c12b46ebec202c6deb4f1033102908f498c0a6906feb9",
+    "git_blob_sha": "c484ab3d0c80be3c16f7023c12fdd2362c2a6be0"
+  },
+  {
+    "name": "RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/RESULT.json",
+    "characters": 3266,
+    "bytes": 3266,
+    "sha256": "e477b832594059ad3c0798b9600ab32b5538e59ffdcf47b176a64e412ecc919d",
+    "git_blob_sha": "58f1dd25dc8e7d0b6fa6b5568f0aacf920146bac"
+  },
+  {
+    "name": "RUN.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/RUN.log",
+    "characters": 1266,
+    "bytes": 1266,
+    "sha256": "3b21f20b4e153b1944d2fbe6ca6591c94b60a4c00db5f520e84dd3a49bcf9daf",
+    "git_blob_sha": "6e2c9b890c188b6614a723963f3a0a4eaff57075"
+  },
+  {
+    "name": "TRACE-EVENTS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/TRACE-EVENTS.json",
+    "characters": 11453,
+    "bytes": 11453,
+    "sha256": "0c992b4b66dc469d441ba06124eedf0469ea42b968706dc4a707513156c0bdcc",
+    "git_blob_sha": "1b97e94409461fd12d691f72c37b5908eae64a85"
+  },
+  {
+    "name": "UPSTREAM-CONTRIBUTIONS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/UPSTREAM-CONTRIBUTIONS.json",
+    "characters": 4097,
+    "bytes": 4103,
+    "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "git_blob_sha": "32b34021ab58412322e7a81af74d3ba8354da82c"
+  },
+  {
+    "name": "WORLD-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/WORLD-CHECK.json",
+    "characters": 18448,
+    "bytes": 18448,
+    "sha256": "bc17edd28130b69f9ce91301d3e814d5c13e302f38d07bd25dbf090b48d6d444",
+    "git_blob_sha": "81886aa03b375a38de33558e399cd56761dafe3b"
+  },
+  {
+    "name": "execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execution/texture-ordered-trace-01/execute.py",
+    "characters": 1252,
+    "bytes": 1252,
+    "sha256": "d3849fb80456d351d524f4063f9016081569ed93ab1e0ff88d653487860aac1a",
+    "git_blob_sha": "d3fe59d073064698865bac6fbbe516bb2dfb3940"
+  },
+  {
+    "name": "preparation/execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/execute.py",
+    "characters": 4832,
+    "bytes": 4832,
+    "sha256": "724917c36df41fe33dcf738c56ef3f92893e254ca6b92bfa0c124fe97115957b",
+    "git_blob_sha": "a75cc251eea7d3c4c388e2c3ca4fb683ec1d81df"
+  },
+  {
+    "name": "preparation/EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/EXECUTION.json",
+    "characters": 2421,
+    "bytes": 2421,
+    "sha256": "fc9f5bfb8840dc4350ad21577b1cb56118483234523bae3ef6c47549bc8ea095",
+    "git_blob_sha": "03f117094b3c3197a43434c49e7dbe04aaeefde3"
+  },
+  {
+    "name": "preparation/CLONE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/CLONE.log",
+    "characters": 68,
+    "bytes": 68,
+    "sha256": "be326a1a0f21c393dd12cebf25cd6e44e07b7acf43c5a94d68125cff75fd2c8a",
+    "git_blob_sha": "1a630d5293a64350e12bbf37c20bc6e73e9cd792"
+  },
+  {
+    "name": "preparation/CLONE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/CLONE.json",
+    "characters": 342,
+    "bytes": 342,
+    "sha256": "bcaecb41230d8ce5f41e4b5b0e78f1030925031607940e8adad92c03713496e1",
+    "git_blob_sha": "6071b28b43c50b1d6b63b30c18600941b0a36024"
+  },
+  {
+    "name": "preparation/CHECKOUT.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/CHECKOUT.log",
+    "characters": 82,
+    "bytes": 82,
+    "sha256": "0295ee46befaa543f3f81260af5cc7e2b9aaa5883cdcf74ecf6a0dffe53aeb6c",
+    "git_blob_sha": "15d5dd81b1bfcf3460d5076af392175d41d7025a"
+  },
+  {
+    "name": "preparation/SOURCE-PACKET-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/SOURCE-PACKET-CHECK.json",
+    "characters": 895,
+    "bytes": 895,
+    "sha256": "166e534efd8c4034f1347d35ebddbe4c92471640dad8e1474722dc440d6f359c",
+    "git_blob_sha": "06b93f17a499b8fccd7da21fd6ccc67ea71aa2b2"
+  },
+  {
+    "name": "preparation/SOURCE-VERIFICATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/SOURCE-VERIFICATION.json",
+    "characters": 1166,
+    "bytes": 1166,
+    "sha256": "967ec8e79ae6d7e3d2e9eef19fa764bc6e84a75dbffd6364f9f54e33a47a53a7",
+    "git_blob_sha": "946f2b0addcd8ffb5a30e8651a1b7a033e87c42a"
+  },
+  {
+    "name": "preparation/MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/MANIFEST.json",
+    "characters": 951,
+    "bytes": 951,
+    "sha256": "262cefbd639de63e833a7847b868a99de0aa2045e74b9d46691535e68bfe759f",
+    "git_blob_sha": "d8a3941ed4f8acb7a96906f818c65f70e12b5dcf"
+  },
+  {
+    "name": "preparation/TOOLCHAIN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/TOOLCHAIN.json",
+    "characters": 241,
+    "bytes": 241,
+    "sha256": "8c6a4a604b9d7e20256d91633aa73a440b91771d821c7c94b2ad6ea428ed0fd8",
+    "git_blob_sha": "23c91a79623435253593e1f9443cfc4b30af2777"
+  },
+  {
+    "name": "preparation/CPU-DETAILS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/CPU-DETAILS.json",
+    "characters": 878,
+    "bytes": 878,
+    "sha256": "406dd856bc3d69867a7cbcc61d4f3b52af77a46294352ddc2d876899d2cb04fd",
+    "git_blob_sha": "ce15759f0fccf47879a52a4f8d5c6668e1cf6bc9"
+  },
+  {
+    "name": "preparation/CPU-CONTRACT.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/CPU-CONTRACT.log",
+    "characters": 96,
+    "bytes": 96,
+    "sha256": "2ae177e588e1c9ed9a8dc204792b417184bc0cbe4e81020415fa24f73080e973",
+    "git_blob_sha": "189e882d5eacdceae8e005c5a2c99b733cd1e255"
+  },
+  {
+    "name": "preparation/CONFIGURE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/CONFIGURE.log",
+    "characters": 22924,
+    "bytes": 22924,
+    "sha256": "64ed54882ea60baecca8a9e55b4bb626ac2077ea79d7f623356e369f338c0601",
+    "git_blob_sha": "768e784b06f3021e4ec4db28be253a81dc62236e"
+  },
+  {
+    "name": "preparation/BUILD.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/BUILD.log",
+    "characters": 738269,
+    "bytes": 738269,
+    "sha256": "ef51e52c417ea7c705d1badb5c612ed3e5dc457e271e72e3b9ebf532657368bc",
+    "git_blob_sha": "beab1cb7bd287ed025bb807bb714373d70418877"
+  },
+  {
+    "name": "preparation/COMPILE-COMMAND-CLOSURE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/COMPILE-COMMAND-CLOSURE.json",
+    "characters": 2705,
+    "bytes": 2705,
+    "sha256": "b9486515a4f5e8fabbea7d5b281d043ab320e41733bb3f1f30da5bfbf6e98d2d",
+    "git_blob_sha": "7c37ba0ef97dbb073da7c7aaa537babd169b4442"
+  },
+  {
+    "name": "preparation/LIVE-SCENE-COMPILE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/LIVE-SCENE-COMPILE.json",
+    "characters": 3107,
+    "bytes": 3107,
+    "sha256": "f6ce8c0411f027c49e1633d5f9428675e18cea10286c6a96cc21729ce646d414",
+    "git_blob_sha": "421f6c88f6a3d1ccb3507f1b2f64587c41089e91"
+  },
+  {
+    "name": "preparation/ARCHIVE-CLOSURE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/ARCHIVE-CLOSURE.json",
+    "characters": 454582,
+    "bytes": 454582,
+    "sha256": "fff917dd35ef7e259b6323e9bce82c68490157314aedd36a853dd95de6bf4bf6",
+    "git_blob_sha": "0b1077e00618d56508d4f914204a370f70bc6b3d"
+  },
+  {
+    "name": "preparation/initial-cache.cmake",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/initial-cache.cmake",
+    "characters": 36970,
+    "bytes": 36970,
+    "sha256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+    "git_blob_sha": "ecbb8aa90921944c15310d4a970dbf0f88e96800"
+  },
+  {
+    "name": "preparation/SIGN.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/SIGN.log",
+    "characters": 975,
+    "bytes": 975,
+    "sha256": "3dfb75968b8121e7f67ae2182b21b24a98bb03e599e97a559022ce2d3a06e9b0",
+    "git_blob_sha": "9309d1d84579402d3f64fffbd0f14fc9abbc4b02"
+  },
+  {
+    "name": "preparation/SIGN-EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/SIGN-EXECUTION.json",
+    "characters": 269,
+    "bytes": 269,
+    "sha256": "695d9c361e5d2523f2c0ef6f6f6e305ef557d9bde5faa1d507ab142da84e1ca4",
+    "git_blob_sha": "34c85b5ae6aba2ab452da0eea6df00ac4fa6b4f3"
+  },
+  {
+    "name": "preparation/STAGE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/STAGE.log",
+    "characters": 69,
+    "bytes": 69,
+    "sha256": "f6a949140b179a72bac81ea48277bb1da56f871c4212dff4d4dc352112287723",
+    "git_blob_sha": "d876cb0d3bce1b2415c84a73eaf0ff97576858e6"
+  },
+  {
+    "name": "preparation/STAGE-EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/STAGE-EXECUTION.json",
+    "characters": 335,
+    "bytes": 335,
+    "sha256": "333ec8bb812fd3f0252518d1b2cbc3e2dea746d13d5a52955b41ee00ba78a955",
+    "git_blob_sha": "630d840a6bc8f547927d9ee95ac50881ffea3ff6"
+  },
+  {
+    "name": "preparation/CANDIDATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/CANDIDATE.json",
+    "characters": 4079,
+    "bytes": 4079,
+    "sha256": "19ca74da864aa21e109c76fbb0e8663ea700c97baa2102eb05d3b240a074212c",
+    "git_blob_sha": "bf4efa004cd5910727bd42e2d86819811e738cd5"
+  },
+  {
+    "name": "preparation/FROZEN-BEFORE-RUN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/FROZEN-BEFORE-RUN.json",
+    "characters": 10590,
+    "bytes": 10590,
+    "sha256": "0eabb7029941fb708b65943bf067556a34db063883b093c0f80f38f02ecf7647",
+    "git_blob_sha": "092193bfcf1791ceb2aa4555c65d286b34bd6760"
+  },
+  {
+    "name": "preparation/WINDOW-CONTRACT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/WINDOW-CONTRACT.json",
+    "characters": 625,
+    "bytes": 625,
+    "sha256": "efa3c70a8eb732072f9976406206ac0de437c0b78a0d5e6037334e8ef97d8e20",
+    "git_blob_sha": "bd22e9d6769efa0c7b8b4bb5202614c8046cf4db"
+  },
+  {
+    "name": "preparation/measurement/run.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/run.py",
+    "characters": 31842,
+    "bytes": 31842,
+    "sha256": "2e3a727f86a5c239b0633583049fcd3c942b4bc6c8108be7c992e888f8078260",
+    "git_blob_sha": "ac6738cd577ebd96feac983b17e2e43bd1d222e5"
+  },
+  {
+    "name": "preparation/measurement/relocate_sign.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/relocate_sign.py",
+    "characters": 1676,
+    "bytes": 1676,
+    "sha256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+    "git_blob_sha": "acfc5fa19bcbf009b4b861a84af73dc4a063833f"
+  },
+  {
+    "name": "preparation/measurement/RUNNER.diff",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/RUNNER.diff",
+    "characters": 4644,
+    "bytes": 4644,
+    "sha256": "44fabfd0fb3af4d317892b93b2e756c6264329c57202b7ea2621dad61cebaf09",
+    "git_blob_sha": "19da94aad32176bb5e4cb9a59f53e30b77b2e2c5"
+  },
+  {
+    "name": "preparation/measurement/RUNNER-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/RUNNER-REVIEW.json",
+    "characters": 785,
+    "bytes": 785,
+    "sha256": "fc73e58f29283088cd05f4fbb51ff933a3cf9c345c6200c9ff885ade21d4aa73",
+    "git_blob_sha": "8a5ae34dad16b9fa9095be67d4a43af2d2d37442"
+  },
+  {
+    "name": "preparation/measurement/BASELINE-PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/BASELINE-PRODUCT.json",
+    "characters": 612,
+    "bytes": 612,
+    "sha256": "b03a64e9bcec270a217ae3d3eab778e4db37bdfe6f1f261a7403d5b86eb01e94",
+    "git_blob_sha": "4ea30a02bcfbd418635ed36574f2864550b2dda1"
+  },
+  {
+    "name": "preparation/measurement/PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/PRODUCT.json",
+    "characters": 612,
+    "bytes": 612,
+    "sha256": "b03a64e9bcec270a217ae3d3eab778e4db37bdfe6f1f261a7403d5b86eb01e94",
+    "git_blob_sha": "4ea30a02bcfbd418635ed36574f2864550b2dda1"
+  },
+  {
+    "name": "CPU-source/run.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/docs/research/texture-trace-20261117/tests/run.py",
+    "characters": 2214,
+    "bytes": 2214,
+    "sha256": "9d0e8ccf9c709bd5417e0c256578a7d5d1eea66d5e68013f7df7d26034a2fb28",
+    "git_blob_sha": "d6ce1e4e8ec64bc617db3a04277c55043bb5a20a"
+  },
+  {
+    "name": "CPU-source/test.cpp",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/docs/research/texture-trace-20261117/tests/test.cpp",
+    "characters": 1553,
+    "bytes": 1553,
+    "sha256": "8497932b23f7a3b4f26bf99daa8b101869967a86cd75abf91ebbd62bbe8045e7",
+    "git_blob_sha": "90ac2380f89b399d55fd12620b20a1ca4e2320c4"
+  },
+  {
+    "name": "CPU-source/wrapper.h",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/source/docs/research/texture-trace-20261117/tests/wrapper.h",
+    "characters": 924,
+    "bytes": 924,
+    "sha256": "ffc3b755ffe1c6ae2bec1a32a82f47c13a7d871a174d2c797a0b6f3648dc17f4",
+    "git_blob_sha": "1e8da537dadfd003b107ec913843b95d0c8ad326"
+  },
+  {
+    "name": "runtime/AWAKE-RELEASED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/AWAKE-RELEASED.json",
+    "characters": 268,
+    "bytes": 268,
+    "sha256": "2db520ef4bcb7571633b31bef3f0e101aa3343fbd3a560a3b44dc73e819fe8d8",
+    "git_blob_sha": "c93017e6db461b294425df71f3d238934f450a3a"
+  },
+  {
+    "name": "runtime/AWAKE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/AWAKE.json",
+    "characters": 187,
+    "bytes": 187,
+    "sha256": "ceb60ac85053a22f9e8e2507066335b366031b39c2a8904f5f5c9f5c77eeb28b",
+    "git_blob_sha": "ca02c62f889f78748ad3cce5a6a59e836802f03c"
+  },
+  {
+    "name": "runtime/COMPLETION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/COMPLETION.json",
+    "characters": 922,
+    "bytes": 922,
+    "sha256": "b57ea7763c4618285e828d9527e42b5ee617567601fae19d0364abb5646912a0",
+    "git_blob_sha": "28c740a0259d4f1bbcfea1a48b9401f9ae02a07a"
+  },
+  {
+    "name": "runtime/OWNER-CLOSED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/OWNER-CLOSED.json",
+    "characters": 113,
+    "bytes": 113,
+    "sha256": "2bf3bea737c7a9580808dd2de32d5370d3fac643d12b9125b6398313cb887b76",
+    "git_blob_sha": "29cfae702de502635cbb55e8d8267398b141388f"
+  },
+  {
+    "name": "runtime/PREPARED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/PREPARED.json",
+    "characters": 2034,
+    "bytes": 2034,
+    "sha256": "2d9b1466ac56d3b16383556f419a53b14fab3d01ebef9ad17e6ebaac424a2cc3",
+    "git_blob_sha": "38fe78f7e5e12d43c5c6a195e5e7a5d728db221c"
+  },
+  {
+    "name": "runtime/RUNS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/RUNS.json",
+    "characters": 2469,
+    "bytes": 2469,
+    "sha256": "8781ee3f9c332c710467f04923e12dc2d8d42c769036085bfd17d9d989f8a1a7",
+    "git_blob_sha": "9841e461d3c8191db16e35944b7fc61a23dafc11"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/CHILD-MODE.json",
+    "characters": 2899,
+    "bytes": 2899,
+    "sha256": "8eb83540af7b7bc891fb135abe80742e2fecffe11a3851f748c1ad036ffaed45",
+    "git_blob_sha": "2fe022f23d577e1758190c8ac5184224f224615e"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "0b52fbf95c35ae90be1687da90042f74b7c735d6933e46451f4f4cd7e34c71db",
+    "git_blob_sha": "3484b3b8beec1b39459e63d6cf5463da21ce4368"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/GAME-LAUNCH-CLAIM.json",
+    "characters": 98,
+    "bytes": 98,
+    "sha256": "81284606b65eee9c918895e36a913e7f218c7737b34ce72b415bc547e61f5b05",
+    "git_blob_sha": "45af1e2d8a3d7c265d66830c46cc73b2fff2eec9"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/GRASS-BOUNDARY.json",
+    "characters": 341,
+    "bytes": 341,
+    "sha256": "ea957a825dee0ebec3e9748be9ac06bb8ec4335bd3ed29cae9508a12d2d273b5",
+    "git_blob_sha": "9b116144ed036596af0aa92585ddbd80fae8b114"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/GROUND-INDEX.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/GROUND-INDEX.json",
+    "characters": 382,
+    "bytes": 382,
+    "sha256": "be5278de5f49b451265fe4acf057748acec02061a93dc740f4195ac9d3b00c39",
+    "git_blob_sha": "9b3fc4a2613d883344eed9222231460590cbbb44"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/LAUNCH.json",
+    "characters": 11425,
+    "bytes": 11425,
+    "sha256": "e8f797126d33537c9e73c83e6ffd2d440e0ad129f799938da4779dc18ea70465",
+    "git_blob_sha": "5ee9244c3fff53133e2d88fc9fd536840e95ffb4"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/LIFECYCLE.json",
+    "characters": 693,
+    "bytes": 693,
+    "sha256": "b326432d0dacc063bcea074370dbb4f8a00a93cdfa830708e38b7c45c6f9fa81",
+    "git_blob_sha": "7d3c55bde72ebf291f0687f91a1014d6d991a983"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/METAL-VALIDATION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/METAL-VALIDATION.json",
+    "characters": 506,
+    "bytes": 506,
+    "sha256": "ecf34ba87daffe29407a01dfb9835877ee93c987a627ccf23c3df1bbc125c003",
+    "git_blob_sha": "d8316dd403f6e56452fb675a235a62a47856324e"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/OWNED.json",
+    "characters": 201,
+    "bytes": 201,
+    "sha256": "9b815a9f2fc193848229aac05ac1d07e978403bed4c907d61dd19748d59ad4c1",
+    "git_blob_sha": "06015362de86ab3fc0d61a77b5ff4c515ee43a1b"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "c036b186374f38313feb7c7abe96ae0012b7fe6ba6e73f6cb4bc8b1b522af481",
+    "git_blob_sha": "bf2dbc3e5a93fa1d705acb99991df211671144f8"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "bbb6a8234494f57c1a83a99ab5f663e691734499ecac7b643260c12291b2d29d",
+    "git_blob_sha": "378418d095438a71ca298a0f56327098045ea581"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "fde1aed7ae5d6e3927d284fc162f6a849db450fb0313a20694eb06bbe291486d",
+    "git_blob_sha": "6ab981321743b0a56f4f270d8c7570f7467487ba"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/RESULT.json",
+    "characters": 2383,
+    "bytes": 2383,
+    "sha256": "442ad673b31bd63d9d12cf86d367fe2d9977893a6fb54b93b07e79e8f5065000",
+    "git_blob_sha": "acedfd2c3fd9d43b8e7ce39512c697a7694beb4c"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/TERRAIN211-FRAMES.csv",
+    "characters": 43108,
+    "bytes": 43108,
+    "sha256": "407d73bacc9c1617656787ea9cde83dcec5a058995cedbe63a6b1e812e789f96",
+    "git_blob_sha": "5f3a390133e788b669847606b781f53188c36af3"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/ULTRA-EVIDENCE.json",
+    "characters": 1664,
+    "bytes": 1664,
+    "sha256": "e86b69627e0a8bf00dcb0a4a43adb0ca81da99d43ed9efe71076dc0689da7e70",
+    "git_blob_sha": "5a87bdde9a1c4418b66328ecc839e65a2970a432"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "1bbbbab60fe4908d9d7241fdf5aee84366cc34eb7eb4f0439322060dfa2d2be1",
+    "git_blob_sha": "9e6404fc9ce51237455991cb336dea014166e21c"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/engine.log",
+    "characters": 294864,
+    "bytes": 294864,
+    "sha256": "3129002bfdc5f444dc54163e88730684777bca8b63770f5b87a845c602c53a47",
+    "git_blob_sha": "14c9194b90092716d854fb15d7836dc45145bb60"
+  },
+  {
+    "name": "runtime/preparation/runs/V_TEXTURE_ON_TRACE/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-trace-20261117-01/measurement/runs/texture_trace01/validation_paced/preparation/runs/V_TEXTURE_ON_TRACE/infolog.txt",
+    "characters": 293565,
+    "bytes": 293567,
+    "sha256": "b8a28e2fddac2bcd693107ba4bdd1700741f32ce6c97c595bf7166a65bac2875",
+    "git_blob_sha": "f8abf1dad3061450af9219f75952983ef9f1ac5d"
+  }
+]

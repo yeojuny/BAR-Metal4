@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "prior_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-downsample-identity-fps-20261118-50/build/spring-metal4-scene",
+  "sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+  "same_previous_actual_binary": true,
+  "configure_attempts": 0,
+  "engine_builds": 0
+}

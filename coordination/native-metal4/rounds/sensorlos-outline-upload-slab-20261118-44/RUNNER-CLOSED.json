@@ -1,0 +1,15 @@
+{
+  "status": "CLOSED",
+  "results": [
+    {
+      "arm": "SLAB_OFF",
+      "status": "PARSED",
+      "FPS": 65.39134509310635
+    },
+    {
+      "arm": "SLAB_ON",
+      "status": "PARSED",
+      "FPS": 65.1668524034946
+    }
+  ]
+}

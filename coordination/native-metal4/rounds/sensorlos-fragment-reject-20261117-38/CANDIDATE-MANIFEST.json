@@ -1,0 +1,16 @@
+{
+  "status": "PATCH_READY_EXACT_R03_ONE_HEADER",
+  "r03_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "baseline_file_sha256": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+  "candidate_file_sha256": "c5995deba68cda82fe882e4f37743282f95fa481772a1a0f2fb51d9d0ffbe4dd",
+  "changed_path": "engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+  "verified_parent_paths": 10270,
+  "patch_sha256": "a0da16109fd1062a8a43dbe97a2fe80f263d637d3782a16324ec981a3fcd871c",
+  "fixture_base_sha256": "6595ea4c537a7a83e124e909b20e8b9a5e8f22a627dbec5bc74ddf9587d5ace1",
+  "fixture_bound_sha256": "6574dde789659b726d4da9feb7cdb29be7b634bb7e53396aa1ed73ee8afd23ba",
+  "fixture_binding_diff_sha256": "e784155d0977c1f6792fe5eeeb73f32f41d392377a34c312325363d8d5759d4a",
+  "fixture_original_reference_sha256": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+  "fixture_scope": "Existing R03 render matrix and pixel assertions with separate exact R03 and candidate shader libraries.",
+  "coverage_scope": "Only the single-sample outline fragment. Fan, MSAA, vertex, native scheduling and R03 line coverage code are byte-identical.",
+  "utc": "2026-11-17T22:56:52.653948+00:00"
+}

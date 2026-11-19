@@ -1,0 +1,24 @@
+{
+  "round_id": "ground-decal-pages-compile-20261117-10",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_CPU_CONTRACT_AND_PRODUCTION_COMPILE_ONLY",
+  "artifact_commit": "18ce3fa6ca17e85eebdfac5cfd9987fdb25d72d9",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "CPU_checks": 10680,
+  "compile_and_build_exit_codes": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "assertions_enabled": true,
+  "raw_binary_sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+  "cleanup_verified": true,
+  "HQ_turn_completed": "01a1e7b5-6040-7101-a069-764aa7d3929e",
+  "limitations": [
+    "No runtime GPU lifetime/residency/pixel parity proof.",
+    "Binary remains unrelocated/unsigned; new runtime fixtures and pins need staging.",
+    "Archive closure and dependency metadata reviewed, not all1538 object bytes independently rehashed remotely."
+  ],
+  "next": "Staging-only fixed R03/GroundDecal validation pair, then separate runtime correctness round. No performance or Texture execution."
+}

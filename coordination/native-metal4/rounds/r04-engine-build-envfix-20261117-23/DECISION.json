@@ -1,0 +1,20 @@
+{
+  "round_id": "r04-engine-build-envfix-20261117-23",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_FIXED_BUILD_STATIC_CLOSURE_PROCEED_BOUNDED_VALIDATION_THEN_CLEAN",
+  "artifact_commit": "dd2e03c26ca6824a096cff460500a269fb452885",
+  "binary": {
+    "baseline_R03_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "R04_signed_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+    "library_count": 19
+  },
+  "actual_binary_and_baseline_runner_hashes_independently_recomputed": true,
+  "normalized_compile_commands": 3142,
+  "archives": 35,
+  "archive_mismatches": 0,
+  "library_count": 19,
+  "cleanup_verified": true,
+  "HQ_turn_completed": true,
+  "runtime_or_performance_claim": false,
+  "next_round": "r04-r03-validation-clean-20261117-24"
+}

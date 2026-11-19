@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/usr/bin/gpudebug",
+    "-s",
+    "120",
+    "--json",
+    "-c",
+    "status"
+  ],
+  "exit": 1,
+  "stdout": "error: No session with ID 120. Use -l to see active sessions.\n",
+  "stderr": ""
+}

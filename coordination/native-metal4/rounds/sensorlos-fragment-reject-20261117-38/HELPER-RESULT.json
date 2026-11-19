@@ -1,0 +1,13 @@
+{
+  "status": "PASS_BIT_IDENTICAL_SAMPLE1",
+  "helper_binary_sha256": "8e023a784c3604f7deed3e559e9a55b96b695aa435b00aa2ff9cae0197bcc8c3",
+  "compile_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "gpu_log_sha256": "059a2e429b369521cc3431249f91fd6ad93169042b5adda9419c11108fa1ee9b",
+  "regular_cases": 3600,
+  "asymmetric_cases": 1024,
+  "color_depth_stencil_comparisons": 12065,
+  "metal_api_validation_observed": true,
+  "gpu_duration_seconds": 31.150253,
+  "mip_derivative_stress": "Existing mipmapped R8 texture fixtures and selected linear-mip sampler.",
+  "sample4": "Guard fallback cases used the single-sample pipeline. MSAA shader bytes unchanged."
+}

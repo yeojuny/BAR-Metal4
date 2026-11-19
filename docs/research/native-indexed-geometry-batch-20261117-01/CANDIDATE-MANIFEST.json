@@ -1,0 +1,111 @@
+{
+  "status": "SOURCE_ONLY_READY",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "patch_sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b",
+  "flag": {
+    "name": "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE",
+    "default": "0",
+    "candidate": "1"
+  },
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h",
+      "original_sha256": null,
+      "candidate_sha256": "150a2ec2efc51ce5f1ce9e4137891bb4aec289a6a3054608583b402f3573109c"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "original_sha256": "97caea719c49b05f6fbfee30a9a0bffb5fdce81482333900fc04dd83985acd07",
+      "candidate_sha256": "f09fe14a45ad24d60f351796899d9c098ca6387226693a7d076401b351028b02"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm",
+      "original_sha256": "6d4a47c6f2da8250882282c87d69f5e829fd6e412fef8e83e558e38a4e7671fd",
+      "candidate_sha256": "42672ddf7a95f38714fc11adb0b239c9a73b375eda79f0e7d22e7dc5207b0a65"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+      "original_sha256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6",
+      "candidate_sha256": "55c0ea967e30f552f19c112e7102cea371ab13ff9ec078188c04b5cb09f132fa"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4UnitStencil.mm",
+      "original_sha256": "911fa940ebb7f60bd126e8adef9997a5bf7ca60ad94e2d6af805331ab459a837",
+      "candidate_sha256": "33cbb5fc166bd324daf583e86f023747200e85217ac05a355a193b8124823be7"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h",
+      "original_sha256": null,
+      "candidate_sha256": "7b6ec28b48022e58a42a18558de72c2c0db32066f2313f54532adb6003796101"
+    }
+  ],
+  "routes": [
+    {
+      "path": "Radar/sonar circles",
+      "consumer": "Metal4Sensor31657CircleNative.mm",
+      "mapping": "[0,1,2,0,2,5] per six original IDs",
+      "original_vertex_ids": 6,
+      "distinct_indexed_vertex_ids": 4,
+      "unit": "each line segment",
+      "eligibility": "single sample, 3 through 1024 source vertices"
+    },
+    {
+      "path": "SensorLOS outline",
+      "consumer": "Metal4SensorLOSNative.mm",
+      "mapping": "[0,1,2,0,4,5] per six original IDs",
+      "original_vertex_ids": 6,
+      "distinct_indexed_vertex_ids": 5,
+      "unit": "each line segment",
+      "eligibility": "single sample, 3 through 1024 source vertices"
+    },
+    {
+      "path": "SensorLOS R8 fan",
+      "consumer": "Metal4SensorLOSNative.mm",
+      "mapping": "shared center ID 0; rim slots reuse the prior triangle's matching rim ID",
+      "original_vertex_ids": "3 × (n−2)",
+      "distinct_indexed_vertex_ids": "n",
+      "unit": "each fan out of n source vertices",
+      "eligibility": "single sample, 3 through 1024 source vertices"
+    },
+    {
+      "path": "HealthBars",
+      "consumer": "Metal4ScreenNative.mm",
+      "mapping": "first equivalent ordinal inside each original bar strip or glyph quad",
+      "original_vertex_ids": 78,
+      "distinct_indexed_vertex_ids": 40,
+      "unit": "each instance of the original point",
+      "eligibility": "single sample"
+    },
+    {
+      "path": "Unit Stencil",
+      "consumer": "Metal4UnitStencil.mm",
+      "mapping": "[0,1,2,2,1,5] per six original IDs, with three independent face domains",
+      "original_vertex_ids": 18,
+      "distinct_indexed_vertex_ids": 12,
+      "unit": "each instanced volume command",
+      "eligibility": "original Unit Stencil R8 target and non-clear command"
+    }
+  ],
+  "verified_baseline_source_paths": 10270,
+  "inventory": {
+    "vertex_id_source_files": 77,
+    "triangle_list_encoder_files": 35
+  },
+  "static_verification_sha256": "02d81293fb721f6740205b1890923653c3231886ae579c90d60b221d63e11405",
+  "protected_existing_artifacts": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/build/spring-metal4-scene": "4df93fbda60c3c1d0fc930db951c120adf5341976963846b79846dc8a096ce75",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-fragment-reject-20261117-38/SENSORLOS-FRAGMENT.patch": "a0da16109fd1062a8a43dbe97a2fe80f263d637d3782a16324ec981a3fcd871c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-launcher-prep-20261117-01/runtime/native/bin/spring-metal4-scene": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/build/spring-metal4-scene": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b"
+  },
+  "protected_indexed_launcher_data_count": 142,
+  "previous_results": {
+    "sensor_los_fragment_round38": "DONE130",
+    "game_decal_indexed_round37": "DONE128"
+  },
+  "new_engine_builds": 0,
+  "new_gpu_invocations": 0,
+  "new_games": 0,
+  "utc": "2026-11-17T23:28:29.255108+00:00"
+}

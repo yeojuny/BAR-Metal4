@@ -1,0 +1,32 @@
+{
+  "label": "RANGE199-COMPILE",
+  "argv": [
+    "xcrun",
+    "--sdk",
+    "macosx",
+    "clang++",
+    "-std=c++23",
+    "-O1",
+    "-UNDEBUG",
+    "-fobjc-arc",
+    "-fobjc-arc-exceptions",
+    "-fno-fast-math",
+    "-fsanitize=address,undefined",
+    "-I",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/fixtures/range199/range-gpu.mm",
+    "-o",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/fixtures/range199/range-gpu"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-17T23:48:08.853067+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39",
+  "pid": 69829,
+  "exit": 0,
+  "ended_at_utc": "2026-11-17T23:48:10.092971+00:00",
+  "stopped_by_runner": false
+}

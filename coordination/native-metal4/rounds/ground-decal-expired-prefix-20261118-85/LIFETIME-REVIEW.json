@@ -1,0 +1,13 @@
+{
+  "dependency_encoder_unchanged": true,
+  "zero_count_keeps_encoded_completion": true,
+  "original_source_and_texture_lifetimes_unchanged": true,
+  "gpu_address_offset": 0,
+  "base_instance": 0,
+  "source_row_stride": 192,
+  "trimmed_buffer_created_per_new_immutable_revision": true,
+  "minimum_reuse_clock_and_rewind_guard": true,
+  "same_count_new_instance_owner": true,
+  "old_packet_owns_original_selected_buffer": true,
+  "injected_pending_gpu_fault": false
+}

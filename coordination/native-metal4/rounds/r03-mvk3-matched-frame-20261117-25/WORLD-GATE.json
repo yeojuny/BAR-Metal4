@@ -1,0 +1,12 @@
+{
+  "status": "CPU_PAUSE_SNAPSHOT_ONLY_NOT_CAPTURE_PROOF",
+  "requested_tick": 1590,
+  "controller_before_tick": 1590,
+  "controller_after_tick": 1590,
+  "camera_and_world_snapshot_unchanged_excluding_draw": true,
+  "units": 168,
+  "features": 401,
+  "actual_capture_bound_timeInfo_x": "UNKNOWN",
+  "pair_workload_match": "NOT_EVALUATED_MVK3_NOT_RUN",
+  "reason": "No captured frame was produced; controller state cannot substitute for bound GPU uniform evidence."
+}

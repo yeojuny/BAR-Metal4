@@ -1,0 +1,6117 @@
+[
+  {
+    "path": "16311C52733D758E",
+    "bytes": 38112,
+    "sha256": "d90033c3a01ece1f3b5baf9619bb06807cd20b0f6996786f6c101c088629610b"
+  },
+  {
+    "path": "17298A87756936EC",
+    "bytes": 51886,
+    "sha256": "d7a6710fd9f909648984ba704d0122588fe1ed9a73f5686cc57fb8df6fb3cafd"
+  },
+  {
+    "path": "1C7FA41855676B92",
+    "bytes": 51885,
+    "sha256": "0eac7221851a2d5a818ba57678903acfc706a31691823238304fe4303788ffc9"
+  },
+  {
+    "path": "267DCF5D49F25FAE",
+    "bytes": 283360,
+    "sha256": "28de6a5794fed25b1aff5a16e300253b867d10cc91f4a780f45d814b27012a16"
+  },
+  {
+    "path": "2C9364BE0D29DA39",
+    "bytes": 763840,
+    "sha256": "1c797b5cb6161ef4f70b84d3988c4f2f030915786a112dda232ab777287ea17a"
+  },
+  {
+    "path": "31CB8D729523C3C3",
+    "bytes": 76895,
+    "sha256": "388b07a18009c65b25f6cdd68264e8ab1b9d252bb7a6a690ccdf363da0a827f6"
+  },
+  {
+    "path": "32A21C9EE8644427",
+    "bytes": 33517,
+    "sha256": "991206820b65695f3ab7cf06a0d5cb45e0cca8c5f33b572265bcd51a127b71f7"
+  },
+  {
+    "path": "32CB5643C58B1030",
+    "bytes": 34482,
+    "sha256": "51567cd6bf45d8a78d979f985f1d1ef2b1c6bdc2a18ce3f36aa5704c64463e74"
+  },
+  {
+    "path": "40FE7BD9E57E940E",
+    "bytes": 35008,
+    "sha256": "e3d0d9d87b8b29c9c907bc7a5d4c30b07a1de5dedf2253f8d76f60ca7cc11427"
+  },
+  {
+    "path": "448BC11F6299FCB2",
+    "bytes": 6213888,
+    "sha256": "e24f3ee81b4d04ad650ffda36f81e00926fe67f3e0aa2038d228b1eb44e0b742"
+  },
+  {
+    "path": "4C411AC645CFBA57",
+    "bytes": 35146,
+    "sha256": "4e9cafc9e38cb9e139fc048d3c564c2d922473ec5ea0e99cfd5d19212b583107"
+  },
+  {
+    "path": "53938E18C88B124D",
+    "bytes": 55279,
+    "sha256": "ba6cce6a201279f9cae1fba27512f7e18f6ff3edc6c578e19b09d06ee7f8884e"
+  },
+  {
+    "path": "58E098D3F0D95F29",
+    "bytes": 48080,
+    "sha256": "9544a09b9b8202b7cff8c916403709a042726d70e376432f49857ab9de8e998b"
+  },
+  {
+    "path": "5D1A93D87A936984",
+    "bytes": 83007,
+    "sha256": "02f35ac1cce0658618ca741bb58bd7b51a5e7fe185e127c155faf71defcf727f"
+  },
+  {
+    "path": "60133AC38C39A4A0",
+    "bytes": 55279,
+    "sha256": "ad79bda4869de3e37a52a93591acd668a68499f4e2ab5febdfdae6b2c5f52e93"
+  },
+  {
+    "path": "6252844A7330F1EC",
+    "bytes": 83007,
+    "sha256": "a2231a63b761cbb66789492ee77f2cd47e4b8da998ae6fc9a9c2dbe791775362"
+  },
+  {
+    "path": "683F884C86524A80",
+    "bytes": 37954,
+    "sha256": "4a4522288558839a4d84a961729c0070909e434f9433a7d564fee6ed9c6475f4"
+  },
+  {
+    "path": "6A1BECDCD16FAEE2",
+    "bytes": 1592640,
+    "sha256": "887d56bbb50ae9b135c41a92576832d6bbf6545b9c67e0cedf8072a4d2ca540b"
+  },
+  {
+    "path": "6EA7A325D79F4821",
+    "bytes": 56076,
+    "sha256": "bacb30cae31cb21573f33b2aa5c152604f799355d313e27900938eb66be54ab5"
+  },
+  {
+    "path": "942103675AC25BAF",
+    "bytes": 78335,
+    "sha256": "10603b3af224f168460f6c259c8092951b2ff3f78e15ff65c5b039ce035d03ea"
+  },
+  {
+    "path": "9530A88A37B84025",
+    "bytes": 35249,
+    "sha256": "97ca56c74c7c8be4712ad693686338964df71af41298c5efbe3896ffedbaeed6"
+  },
+  {
+    "path": "A0E181E8DC1BBCF2",
+    "bytes": 51886,
+    "sha256": "06170d9926b4369d0020269a557d9ca3d37ed98cf2dbd9a157cfa225c7850af6"
+  },
+  {
+    "path": "A5C8CD527EACE29",
+    "bytes": 51885,
+    "sha256": "13613259c13e538440539607c30f3d5e1bf087743d6a137cf55fb8b9ab28f570"
+  },
+  {
+    "path": "B0E006758371F600",
+    "bytes": 37974,
+    "sha256": "70ccd6029f1971f0ce7f21c828af2d605106f7ed1e7763227649cd12b7b07797"
+  },
+  {
+    "path": "B565B0D5F5C4E7C4",
+    "bytes": 51885,
+    "sha256": "32cea9b5f73ae251fba0c709a790e10d3ea754dc7591ee80808b20255bbeb67b"
+  },
+  {
+    "path": "BAAC90B512AB8997",
+    "bytes": 55279,
+    "sha256": "10fc3de56f1258ac77dc2fa25f5ce6d18537afdbb4689ba6590a0ef026adbb0e"
+  },
+  {
+    "path": "C30C732B3DE7D739",
+    "bytes": 196608,
+    "sha256": "da72039934707c4f70cf752122dfe80925c5dd8b38cf758a736917c1bf291d44"
+  },
+  {
+    "path": "CAMetalLayer-12-index-46477257",
+    "bytes": 2736128,
+    "sha256": "2da24df113cffc6a8e26e03e50c0a7ebed7bad85fc8edef56adf9c2e75c3831e"
+  },
+  {
+    "path": "CDEE21F8207E84A7",
+    "bytes": 82912,
+    "sha256": "e38aa8dad0617f59e03d5136e7d778b1b4e0540fdc91578a319855de79026129"
+  },
+  {
+    "path": "CF0F7BE393A03C41",
+    "bytes": 81840,
+    "sha256": "769960634bd779c9a6ea3ab4409ab16002f3f82fcf5f025bdd97c9558db8fd41"
+  },
+  {
+    "path": "D2397E9D6917037C",
+    "bytes": 37954,
+    "sha256": "4ffde9e9df59b9a62baef1176fdda83c31f9e9e4700316fc6490dd6db2b8952a"
+  },
+  {
+    "path": "DCA86116004AD850",
+    "bytes": 83520,
+    "sha256": "5605c6d68ba115c5a12812ca8430616011b068a41108e7d48c1d47ac0d9eeb2e"
+  },
+  {
+    "path": "DF1A6F452472BDD9",
+    "bytes": 51886,
+    "sha256": "396ebc0888c4395a071a4457c588b77b8de541df2807e64b887d058a8b4a8654"
+  },
+  {
+    "path": "E7EF26E3B3EA6839",
+    "bytes": 55279,
+    "sha256": "1df014661103aabcea73d5c23ff0cafe083b3cd83dcefc51106c2b86152d0e8d"
+  },
+  {
+    "path": "F2C2DC4D0A2FB164",
+    "bytes": 51886,
+    "sha256": "9bd38c59de3f845e22b51bd3324f2f02ce3eb1379bf72cc22f8c91bd1f74852e"
+  },
+  {
+    "path": "F474EA8C60BF263A",
+    "bytes": 82912,
+    "sha256": "7a76478b4302a78a614eed29ce6053b4f5fda031ea3dac16b1e48bb003100c5b"
+  },
+  {
+    "path": "FD17A087FBB49B28",
+    "bytes": 51885,
+    "sha256": "bcefbccc4aa040f9acc7424b7ac72edbb66191267962c88a7bccb06b950005c8"
+  },
+  {
+    "path": "FF9F689327F1E748",
+    "bytes": 170640,
+    "sha256": "e9ee7a1c9744220ca93bc6bf04629793d4b398027403d348866a9712c63f9303"
+  },
+  {
+    "path": "MTLBuffer-1024-0",
+    "bytes": 49152,
+    "sha256": "5990729ae83a0840b5140e10e790c6a513cae116c133a936880288b10e528665"
+  },
+  {
+    "path": "MTLBuffer-105468-0",
+    "bytes": 2097152,
+    "sha256": "788baab5accc7dfebbdf0a4060970262f5377b35f745a0ef1cda798528709f6f"
+  },
+  {
+    "path": "MTLBuffer-105471-0",
+    "bytes": 98304,
+    "sha256": "7114785df76b41a7c4d53a5780d5ebbdfc1e05aea80039529766bae6458a90c2"
+  },
+  {
+    "path": "MTLBuffer-105473-0",
+    "bytes": 49152,
+    "sha256": "a95af59cd3fd51c158d92a1e0e26f11bea4defbd756993ecc483c1e1578da46a"
+  },
+  {
+    "path": "MTLBuffer-105475-0",
+    "bytes": 32768,
+    "sha256": "23aff90c91ca13d3312bd4e655a4342ae894e7927693cc7453ca9825f9aaf01f"
+  },
+  {
+    "path": "MTLBuffer-105477-0",
+    "bytes": 32768,
+    "sha256": "90a056adf8aa55475608fa6ebaf3fb4643e11a7afa884574448b66774387a012"
+  },
+  {
+    "path": "MTLBuffer-105479-0",
+    "bytes": 32768,
+    "sha256": "0ab7bfa89ec5fa1270c3058e9599e5cb4ac38daed24ad6900075f6dd4f9ac21e"
+  },
+  {
+    "path": "MTLBuffer-105481-0",
+    "bytes": 32768,
+    "sha256": "c88651a314b858caeb6af0c0553a7ee820c6fdc50c67fae3896efbfb9ddd7a6b"
+  },
+  {
+    "path": "MTLBuffer-105489-0",
+    "bytes": 32768,
+    "sha256": "33afae0e1f5e9d942c34ed190b1186417e1def20235d9d356e177de4214c374e"
+  },
+  {
+    "path": "MTLBuffer-105491-0",
+    "bytes": 32768,
+    "sha256": "f8241e2db6ac5f07292910c3262bcc52b581306ac578d7f4a68863e133aee948"
+  },
+  {
+    "path": "MTLBuffer-105497-0",
+    "bytes": 32768,
+    "sha256": "e114e77ca1f501611a7f7c4f346519b00e92c09cf41f2a71ffc0ec9d107f8466"
+  },
+  {
+    "path": "MTLBuffer-105499-0",
+    "bytes": 49152,
+    "sha256": "0bbc73aefadd5c7887e6cc94d369b3d47ccdf5459578753a33421ee4dcc18730"
+  },
+  {
+    "path": "MTLBuffer-105503-0",
+    "bytes": 49152,
+    "sha256": "03a5fd80e4ceb1dd7f8917cd714741a77c18178a3ebd7595634a3a732a564fb4"
+  },
+  {
+    "path": "MTLBuffer-105505-0",
+    "bytes": 32768,
+    "sha256": "b678c2b94fa28fdd4e46961b898b2a1dbc68372259464c6e21b712030c2bf510"
+  },
+  {
+    "path": "MTLBuffer-105507-0",
+    "bytes": 32768,
+    "sha256": "bc9587deea3b16a2c494197a482d76681565f3fb8c9072a74f5c6d903eb95aa0"
+  },
+  {
+    "path": "MTLBuffer-105509-0",
+    "bytes": 49152,
+    "sha256": "b54362d1c909de988ac028f6b50a2b284a118155ad054e6f45745dd25b0c78ea"
+  },
+  {
+    "path": "MTLBuffer-105511-0",
+    "bytes": 32768,
+    "sha256": "4d290816a5c0f007bdd103ed533a5a84682531961c908b0a716c08c8019f9f39"
+  },
+  {
+    "path": "MTLBuffer-105513-0",
+    "bytes": 32768,
+    "sha256": "aceadd31c3bf9e1a167ffead7cd64db0f03442a62053ef21ef0398519d370bf7"
+  },
+  {
+    "path": "MTLBuffer-1056-0",
+    "bytes": 49152,
+    "sha256": "8e008f5bd97209bdee05c5f2d1ec23e76f7d3ffcc50b5ffc8279d2e4242007e4"
+  },
+  {
+    "path": "MTLBuffer-105685-0",
+    "bytes": 638976,
+    "sha256": "226e5f7c2761fcb89c2431e1ff16ffc13195d68f527867f5399eaae331a20ca1"
+  },
+  {
+    "path": "MTLBuffer-1088-0",
+    "bytes": 49152,
+    "sha256": "8f4a483bc702e13eba7987a8672bc124e3461c7c0af8fd718760010ff3124311"
+  },
+  {
+    "path": "MTLBuffer-1112-0",
+    "bytes": 49152,
+    "sha256": "25a5e770fbdc42bd4d5f1b945ef1f35c6f2e6e61f4f65b8fe67cee8577ae8359"
+  },
+  {
+    "path": "MTLBuffer-11270-0",
+    "bytes": 32768,
+    "sha256": "273b513f490cf3696967993a03a37f6494f039e8b17ca6e78ebdf82c5e57efbf"
+  },
+  {
+    "path": "MTLBuffer-11272-0",
+    "bytes": 524288,
+    "sha256": "b5ef6fb43488b4bc1be39785054ce1d22bbc37f9c829f6c01b97768e8be87fa3"
+  },
+  {
+    "path": "MTLBuffer-1160-0",
+    "bytes": 49152,
+    "sha256": "bcc500c855a3e8a26c2a2a9caf8f529028771a9f0729a4a15ae5d49b9f21efc8"
+  },
+  {
+    "path": "MTLBuffer-11760-0",
+    "bytes": 65536,
+    "sha256": "679bc60fe8a0cb6763b1ee02b9bdfb8d7c700ef09f474f34f2af8b667c6c842c"
+  },
+  {
+    "path": "MTLBuffer-11931-0",
+    "bytes": 65536,
+    "sha256": "dc769f2a6a782a448e90439d42715c8db27c20c2ecca638d3eba7af977d7a0bf"
+  },
+  {
+    "path": "MTLBuffer-11944-0",
+    "bytes": 65536,
+    "sha256": "dc769f2a6a782a448e90439d42715c8db27c20c2ecca638d3eba7af977d7a0bf"
+  },
+  {
+    "path": "MTLBuffer-11964-0",
+    "bytes": 32768,
+    "sha256": "ca919c245630a59909c7d503a3484bcaa1cd2aa0f13cbfafaf045a439ddce754"
+  },
+  {
+    "path": "MTLBuffer-1198-0",
+    "bytes": 49152,
+    "sha256": "db247f25398178717d25a90165f8090f44123da06bf718efd2e1840048dd3eb3"
+  },
+  {
+    "path": "MTLBuffer-12011-0",
+    "bytes": 65536,
+    "sha256": "533fa5797b53eb890c6277991cc1c2bd44987fdaa47fa14bdcf8fd6ceb512dc9"
+  },
+  {
+    "path": "MTLBuffer-12085-0",
+    "bytes": 131072,
+    "sha256": "b36d7d331c64c4138b3be4e7c0e62df3f4a7532705e09404dbc7f1b57af67f9f"
+  },
+  {
+    "path": "MTLBuffer-12086-0",
+    "bytes": 65536,
+    "sha256": "7dff441f694a91b07f86a9931c7a1739944d6b761fe6ffba3802799f66418e43"
+  },
+  {
+    "path": "MTLBuffer-1242-0",
+    "bytes": 114688,
+    "sha256": "c73bb05e26c791e0f6fb267448c6f119aeab27b703f1aa45ef6da6466e4b4bcd"
+  },
+  {
+    "path": "MTLBuffer-1252-0",
+    "bytes": 114688,
+    "sha256": "4723dcb666b33ddccf520fde5e6faad41e77d6f486b7a38074012ed61356c41a"
+  },
+  {
+    "path": "MTLBuffer-1258-0",
+    "bytes": 114688,
+    "sha256": "a023aabd0ea97c3f3359871568efd72715e98ec2788547fac530233c991a20ec"
+  },
+  {
+    "path": "MTLBuffer-1266-0",
+    "bytes": 131072,
+    "sha256": "e01cb5ba58a009ce183c77304c3479b71dcf6a5e5388ddcf79cdc390d06d9d54"
+  },
+  {
+    "path": "MTLBuffer-157263-0",
+    "bytes": 131072,
+    "sha256": "5c9a01cf2423344e168a10ff6453bb26ddf549968520dfb41b40ab04c6a82122"
+  },
+  {
+    "path": "MTLBuffer-1607-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1608-0",
+    "bytes": 98304,
+    "sha256": "7733e79ca76ffacc197e35dbb78cd7d4db076290e2521b710130207c6d71e285"
+  },
+  {
+    "path": "MTLBuffer-1612-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1613-0",
+    "bytes": 65536,
+    "sha256": "73bb4472e9f363594285c96da61943cba9cab18e30a417775056c1ce890acd01"
+  },
+  {
+    "path": "MTLBuffer-1617-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1618-0",
+    "bytes": 49152,
+    "sha256": "f9ae454b3e446a9dce5c24ebf559bc83f8cee49ea303d033128590903a7510a5"
+  },
+  {
+    "path": "MTLBuffer-1622-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1623-0",
+    "bytes": 32768,
+    "sha256": "c44a64701e1bc2d5751906e249ffacabb2d936a378008fc189fe824b38892310"
+  },
+  {
+    "path": "MTLBuffer-1627-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1628-0",
+    "bytes": 32768,
+    "sha256": "e2e21e71a9beff4675edef5bc3d2221638d6254dd87ace21f9a5b5b49848ba38"
+  },
+  {
+    "path": "MTLBuffer-1632-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1633-0",
+    "bytes": 81920,
+    "sha256": "c72d248919e91b10709c75da8359211705009dfb644f8bde67b4d6de16aa8f4a"
+  },
+  {
+    "path": "MTLBuffer-1637-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1638-0",
+    "bytes": 49152,
+    "sha256": "9c102b58536772b7baac807a41b71fcad1c8a43ba42f59ca0a746ee45a0bdfcd"
+  },
+  {
+    "path": "MTLBuffer-1642-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1647-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1648-0",
+    "bytes": 81920,
+    "sha256": "c08cb7ab26210c4285108f5ab22d476834d7fa1841bd78ca0e6f751c10669e91"
+  },
+  {
+    "path": "MTLBuffer-1682-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1687-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1688-0",
+    "bytes": 81920,
+    "sha256": "4ab80514906d648b5774238a72e7ae82c325e7a75e046441fd4e0bcf3c3ddbc5"
+  },
+  {
+    "path": "MTLBuffer-1722-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1723-0",
+    "bytes": 32768,
+    "sha256": "a591fca4dbcdf4d291f5d24610696bce0a29b5209da3e5339a9c4259b7d2ffd3"
+  },
+  {
+    "path": "MTLBuffer-1727-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1728-0",
+    "bytes": 32768,
+    "sha256": "7e2d4f71eeac6d863ba6142185ccddb4c8fb31e07ea733839323c0377011ac31"
+  },
+  {
+    "path": "MTLBuffer-1762-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1763-0",
+    "bytes": 81920,
+    "sha256": "3bd5ae1079cdcc412b3b907b43dc2b530dcde5ee9d6e664e9b7b818f6169d02a"
+  },
+  {
+    "path": "MTLBuffer-1767-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1772-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1773-0",
+    "bytes": 81920,
+    "sha256": "da47d797fb2ddff13627246fae8ba8431f65f0dd2826ab41898fa8ec6ad04ea7"
+  },
+  {
+    "path": "MTLBuffer-1797-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1798-0",
+    "bytes": 49152,
+    "sha256": "2ccad83eea9902c69519dad94cc2586b69196dfc3a30c6101452a49853c3671e"
+  },
+  {
+    "path": "MTLBuffer-1802-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-1803-0",
+    "bytes": 114688,
+    "sha256": "ef911f6186e7476b4885a9b9b84ce693572266d5cbc313e6bbc0dee3afcca150"
+  },
+  {
+    "path": "MTLBuffer-1819-0",
+    "bytes": 2097152,
+    "sha256": "3839db3039a4272988449ade2b5e5e23a342586ed7a100a80a8da80b28dba559"
+  },
+  {
+    "path": "MTLBuffer-1830-0",
+    "bytes": 65536,
+    "sha256": "55004e2fefac4f41a3cb1458cc68408f1cf2df2490b72d324ddbc4c1020a222e"
+  },
+  {
+    "path": "MTLBuffer-1851-0",
+    "bytes": 1245184,
+    "sha256": "20091ce88de97675ec57db579d71390565ac827d7e21a27683e4082239e98e63"
+  },
+  {
+    "path": "MTLBuffer-1860-0",
+    "bytes": 65536,
+    "sha256": "55004e2fefac4f41a3cb1458cc68408f1cf2df2490b72d324ddbc4c1020a222e"
+  },
+  {
+    "path": "MTLBuffer-1928-0",
+    "bytes": 32768,
+    "sha256": "3aae6d41be87d244dc0a5506a8ae7420ddc08ea640a92ee685ada9084181f6c4"
+  },
+  {
+    "path": "MTLBuffer-1945-0",
+    "bytes": 65536,
+    "sha256": "adf7729d8acfdb6699c8323f071d7076b6c77470e23d64277262dd69031010ea"
+  },
+  {
+    "path": "MTLBuffer-1949-0",
+    "bytes": 32768,
+    "sha256": "014d6bb872fcc7981fd3496d51778999d71220a11e836da261e3268f8ace3131"
+  },
+  {
+    "path": "MTLBuffer-1967-0",
+    "bytes": 65536,
+    "sha256": "4e9b954cc05ce0e8f037aaab58af85dc105f3a5713cc65b74e45023ad21c6869"
+  },
+  {
+    "path": "MTLBuffer-2009-0",
+    "bytes": 65536,
+    "sha256": "b527e2d38497818680a6144b310ad2e190997dfc04fdc0c3fb810002175d6858"
+  },
+  {
+    "path": "MTLBuffer-2578-0",
+    "bytes": 65536,
+    "sha256": "679bc60fe8a0cb6763b1ee02b9bdfb8d7c700ef09f474f34f2af8b667c6c842c"
+  },
+  {
+    "path": "MTLBuffer-2626-0",
+    "bytes": 131072,
+    "sha256": "fe068785cecf98ba6956d59f71815f40b0cf63211740124219f229bb35e8636a"
+  },
+  {
+    "path": "MTLBuffer-2677746-0",
+    "bytes": 98304,
+    "sha256": "bf00cf57c2186471671f2f12e4237d3c7014408eadc77a22ccff3c069a8d777c"
+  },
+  {
+    "path": "MTLBuffer-2677748-0",
+    "bytes": 98304,
+    "sha256": "9f1557a5f1cd1a939d63ad58005ea3163fc4ecfa3385b7f70a38ed26691d0ff0"
+  },
+  {
+    "path": "MTLBuffer-2677842-0",
+    "bytes": 212992,
+    "sha256": "8344a30c273d6fb3b3a42ee287e1899853dd94a929b2dfdb8db8cf27b715c8de"
+  },
+  {
+    "path": "MTLBuffer-2681282-0",
+    "bytes": 425984,
+    "sha256": "76672a89781c8a7e009ab5089f8706d1cb6e2e788e478db0eae9d32d67911cf7"
+  },
+  {
+    "path": "MTLBuffer-2681283-0",
+    "bytes": 49152,
+    "sha256": "017e9ba81d186359af9c8599d0ef8168983d125b9ddfdf798f7edb0e385f64f5"
+  },
+  {
+    "path": "MTLBuffer-2681373-0",
+    "bytes": 475136,
+    "sha256": "c48279986cf1a3a972103ae6aee739db19b4fb95689e78391c55bc05606ba96e"
+  },
+  {
+    "path": "MTLBuffer-2753-0",
+    "bytes": 196608,
+    "sha256": "2c3756ff7788465eadff88684aa9d4667cb54aa02a05162318588e0ffb510f18"
+  },
+  {
+    "path": "MTLBuffer-2754-0",
+    "bytes": 65536,
+    "sha256": "7dff441f694a91b07f86a9931c7a1739944d6b761fe6ffba3802799f66418e43"
+  },
+  {
+    "path": "MTLBuffer-2880041-0",
+    "bytes": 786432,
+    "sha256": "0894753fea268e2f4e2cb063a89a152c225e721503dde18dfcd04e7df8001dae"
+  },
+  {
+    "path": "MTLBuffer-2960363-0",
+    "bytes": 262144,
+    "sha256": "7279a9a37aa9158b87aa075f77b289182e3991b92e1814f6d7e4c021ab1937ab"
+  },
+  {
+    "path": "MTLBuffer-2960446-0",
+    "bytes": 6209536,
+    "sha256": "dc0d7cd74eb95e6c6716d939411076dcb0777210b55deea2ba7f44edd367a33d"
+  },
+  {
+    "path": "MTLBuffer-2961925-0",
+    "bytes": 32768,
+    "sha256": "e4fa5f471d52a5c6f839439477f8bfaab1429837bb46e29d5d8b04a72f7c7438"
+  },
+  {
+    "path": "MTLBuffer-2961964-0",
+    "bytes": 131072,
+    "sha256": "78d97d2b0b4338ef261f8175bdf3e5331507c191ab1ffcd9af927ccd11dcd3d2"
+  },
+  {
+    "path": "MTLBuffer-2961967-0",
+    "bytes": 245760,
+    "sha256": "88dc7f29de44fd3c186690bf77ea1918bcb8cc7c219555ef5a9a3f862158d789"
+  },
+  {
+    "path": "MTLBuffer-2961970-0",
+    "bytes": 65536,
+    "sha256": "15f9c96b5138a3566875bf26dcac63f122579316d6a39e087c30104368957724"
+  },
+  {
+    "path": "MTLBuffer-2962104-0",
+    "bytes": 32768,
+    "sha256": "7885fd2449b5e349a7e2fdd5d1f0726f173e5d2fc60e5ae52f71072e2a73a010"
+  },
+  {
+    "path": "MTLBuffer-2962938-0",
+    "bytes": 393216,
+    "sha256": "ffe526e6277408bcd5c203655508b27ca9a76f980a35d41e364d46673cca74a0"
+  },
+  {
+    "path": "MTLBuffer-2963086-0",
+    "bytes": 1622016,
+    "sha256": "32c817d64bdfea591ff5e46db97d7f43f26afa23a8285bcea32b3965359738c5"
+  },
+  {
+    "path": "MTLBuffer-2963087-0",
+    "bytes": 180224,
+    "sha256": "2195e0a83d1f7948c384193ba6628104e2681b2f3b3700de70c4c63aa9f9281c"
+  },
+  {
+    "path": "MTLBuffer-2963611-0",
+    "bytes": 49152,
+    "sha256": "4af10e7ef5b281656da79180fe4717c84088b8ece876626a097d7da42bcb167b"
+  },
+  {
+    "path": "MTLBuffer-2963662-0",
+    "bytes": 786432,
+    "sha256": "8e198249399248eabf6da185435028a554241aeb3e186942b878dfdc480063d4"
+  },
+  {
+    "path": "MTLBuffer-2963663-0",
+    "bytes": 98304,
+    "sha256": "d30e074826732abd6a2d533357c53d364bc8224bf689b42917ab30474363f156"
+  },
+  {
+    "path": "MTLBuffer-2963666-0",
+    "bytes": 32768,
+    "sha256": "17710105c64bca49882cd71b2df442d284512d72a84b5d2aedc4c299f7987a33"
+  },
+  {
+    "path": "MTLBuffer-2963705-0",
+    "bytes": 32768,
+    "sha256": "87f43e4a7492183254e5c1c204ccad1cf19c6bcc29c21c4fd25b499d732deccf"
+  },
+  {
+    "path": "MTLBuffer-2963733-0",
+    "bytes": 65536,
+    "sha256": "1a4f4c71b13adbd3f301ed0cd32c7b8ca078c008c581a4bbda7a6052d7047b4b"
+  },
+  {
+    "path": "MTLBuffer-2963735-0",
+    "bytes": 49152,
+    "sha256": "4af10e7ef5b281656da79180fe4717c84088b8ece876626a097d7da42bcb167b"
+  },
+  {
+    "path": "MTLBuffer-2963750-0",
+    "bytes": 32768,
+    "sha256": "ee77ca0d7a1dca20ad5623e033b20c2e12804429cf5509f18a5a62b1c746391a"
+  },
+  {
+    "path": "MTLBuffer-2963781-0",
+    "bytes": 32768,
+    "sha256": "02a8e1dc433e43c52ac87d479ea036d113e54cabe3d81009c8bf8a58c15788c1"
+  },
+  {
+    "path": "MTLBuffer-2963820-0",
+    "bytes": 196608,
+    "sha256": "f6d167dfb88f28aa92dcfcb8fb0aabf0fceb70a7279580fbcf905d34c3936741"
+  },
+  {
+    "path": "MTLBuffer-2963824-0",
+    "bytes": 294912,
+    "sha256": "66568dbb2c698ce4567db4ffd36366e39b13279034d0678ccd96d918ed062d61"
+  },
+  {
+    "path": "MTLBuffer-2963876-0",
+    "bytes": 49152,
+    "sha256": "89a36c66e9e80bde36eb8aad127cddecd8ee2467c7846b9d4b81a505d774aec3"
+  },
+  {
+    "path": "MTLBuffer-2964675-0",
+    "bytes": 393216,
+    "sha256": "946c87063904c0ba9426cd2904069ed60dadedf3f4710868bc35c02cec1cb54d"
+  },
+  {
+    "path": "MTLBuffer-2964825-0",
+    "bytes": 1605632,
+    "sha256": "ab6c594181191fa24e5dc6f2fe9e8c43626b0ff02852b8a1840aabd08bef86fb"
+  },
+  {
+    "path": "MTLBuffer-2964826-0",
+    "bytes": 180224,
+    "sha256": "e053619040edd508ed1a49740c4abd4cf111201bf59c1e4ed98e1ae04ffaa2d7"
+  },
+  {
+    "path": "MTLBuffer-2965284-0",
+    "bytes": 49152,
+    "sha256": "9da585013f1e00a844fab0d918a56c2bdb2d1f9d6d3f0ddeb29ce8d5f56157e1"
+  },
+  {
+    "path": "MTLBuffer-2965334-0",
+    "bytes": 770048,
+    "sha256": "c90fea1c380dbd8eb66555a97dd2f1a2a69a33439d738e1a25de0336f6f5a73a"
+  },
+  {
+    "path": "MTLBuffer-2965335-0",
+    "bytes": 81920,
+    "sha256": "f95066a5d9a895d1fa646b4bb1d0ee80275d61033dfe3f1a29048d0d04dd37f1"
+  },
+  {
+    "path": "MTLBuffer-2965338-0",
+    "bytes": 32768,
+    "sha256": "17710105c64bca49882cd71b2df442d284512d72a84b5d2aedc4c299f7987a33"
+  },
+  {
+    "path": "MTLBuffer-2965378-0",
+    "bytes": 32768,
+    "sha256": "4e0cb56619458bb06cc96c09952e1ac084ef472832c028ccec395c700f1849bc"
+  },
+  {
+    "path": "MTLBuffer-2965379-0",
+    "bytes": 32768,
+    "sha256": "885a9f58063893e20a645a207a9a7f7d80dde6dec62eacfd3fd84705c1fe2cc4"
+  },
+  {
+    "path": "MTLBuffer-2965408-0",
+    "bytes": 65536,
+    "sha256": "a3eff14c1cf3591316588ff27e569de7f8163b258f33aaa824cb5720f68674e0"
+  },
+  {
+    "path": "MTLBuffer-2965410-0",
+    "bytes": 49152,
+    "sha256": "9da585013f1e00a844fab0d918a56c2bdb2d1f9d6d3f0ddeb29ce8d5f56157e1"
+  },
+  {
+    "path": "MTLBuffer-2965418-0",
+    "bytes": 131072,
+    "sha256": "c2b0985217debdd4ccba96a6225e61d27f79fe9c05052868082819c0ed3f9386"
+  },
+  {
+    "path": "MTLBuffer-2965421-0",
+    "bytes": 245760,
+    "sha256": "c1f7d06a370c68f97b6c5acdc6d0742c4b8664f7aacfb91520a8c4e5fbec3bab"
+  },
+  {
+    "path": "MTLBuffer-2965424-0",
+    "bytes": 65536,
+    "sha256": "095b5429d1f83735f4a653a94cd4e3fd3779c653c16a4a0ba2726630278f6b24"
+  },
+  {
+    "path": "MTLBuffer-2965428-0",
+    "bytes": 32768,
+    "sha256": "ee77ca0d7a1dca20ad5623e033b20c2e12804429cf5509f18a5a62b1c746391a"
+  },
+  {
+    "path": "MTLBuffer-2965459-0",
+    "bytes": 49152,
+    "sha256": "22eb0be95909e41fb1e84b82181276072a3fe3f053e0d5370a6adf4594048bd0"
+  },
+  {
+    "path": "MTLBuffer-2965518-0",
+    "bytes": 196608,
+    "sha256": "da72039934707c4f70cf752122dfe80925c5dd8b38cf758a736917c1bf291d44"
+  },
+  {
+    "path": "MTLBuffer-2965522-0",
+    "bytes": 294912,
+    "sha256": "0b8d8d5bf0e5d1deb9fdbf5d2de9a4aeaf9022df1fd4fd6e654d434372677813"
+  },
+  {
+    "path": "MTLBuffer-2965574-0",
+    "bytes": 49152,
+    "sha256": "7b66a89494326a136011d8cd99a6f73e1abff9f4e23219cd975b77a550b56e74"
+  },
+  {
+    "path": "MTLBuffer-2965577-0",
+    "bytes": 32768,
+    "sha256": "65a550290ba9a33636b19e37facf8a72648ce3d0022887a5ebb87e1c0011a84b"
+  },
+  {
+    "path": "MTLBuffer-2965595-0",
+    "bytes": 6225920,
+    "sha256": "df21b65bad7ab02ce19fb591086ec6520c4d1cb876f140b890970ad1354096a5"
+  },
+  {
+    "path": "MTLBuffer-548823-0",
+    "bytes": 49152,
+    "sha256": "d504b928f877b63e4a474df2594a226007ef06c79baa19bd55c9f0f209405c98"
+  },
+  {
+    "path": "MTLBuffer-678890-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678892-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678894-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678904-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678906-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678908-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678910-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678920-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678922-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678924-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-678926-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680126-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680127-0",
+    "bytes": 98304,
+    "sha256": "ea6215bd03764b273c3cd61fe73f866899ff69e247b06d4243af4853e2a6a4b8"
+  },
+  {
+    "path": "MTLBuffer-680134-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680135-0",
+    "bytes": 180224,
+    "sha256": "ca1c358efda3a23ebe2f8c0e4bfaa6eaa075f044c59391cea6639529b58acf99"
+  },
+  {
+    "path": "MTLBuffer-680142-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680143-0",
+    "bytes": 114688,
+    "sha256": "6cb082c2ddebca8955bd9942646bcd5e0dc847df76fc2177fa32a24ae68a341c"
+  },
+  {
+    "path": "MTLBuffer-680146-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680147-0",
+    "bytes": 65536,
+    "sha256": "b2bbcc1413011d9bbeb25ea9e3a18cd79e82236e731b71ffa2c3cf6f8c0b4569"
+  },
+  {
+    "path": "MTLBuffer-680150-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680151-0",
+    "bytes": 32768,
+    "sha256": "a0d8674eb731d07efe06e4a771e2c2cedca687f384f986a794c253bdaac84c25"
+  },
+  {
+    "path": "MTLBuffer-680154-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680155-0",
+    "bytes": 81920,
+    "sha256": "f4fc9bfaede124c41207ae3f4e41ba841704dafbb5af0f0975c0ccf867ac5cfc"
+  },
+  {
+    "path": "MTLBuffer-680162-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680163-0",
+    "bytes": 114688,
+    "sha256": "22856b20b1161d77b0932932a1e3a869cc105009792936fb67e509deabc5378b"
+  },
+  {
+    "path": "MTLBuffer-680166-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680167-0",
+    "bytes": 180224,
+    "sha256": "6348eb4d6006ef2f833f4dc77b9cb634a0bc056dc5872ca184885cbc05cebd99"
+  },
+  {
+    "path": "MTLBuffer-680170-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680171-0",
+    "bytes": 98304,
+    "sha256": "abf0ad0c30efb598f9538dc2edc239776beb8b3711857f5c7f79f0d70d5797a8"
+  },
+  {
+    "path": "MTLBuffer-680386-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680387-0",
+    "bytes": 49152,
+    "sha256": "f9ae454b3e446a9dce5c24ebf559bc83f8cee49ea303d033128590903a7510a5"
+  },
+  {
+    "path": "MTLBuffer-680388-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680389-0",
+    "bytes": 32768,
+    "sha256": "c44a64701e1bc2d5751906e249ffacabb2d936a378008fc189fe824b38892310"
+  },
+  {
+    "path": "MTLBuffer-680390-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680391-0",
+    "bytes": 32768,
+    "sha256": "e2e21e71a9beff4675edef5bc3d2221638d6254dd87ace21f9a5b5b49848ba38"
+  },
+  {
+    "path": "MTLBuffer-680392-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680393-0",
+    "bytes": 81920,
+    "sha256": "c72d248919e91b10709c75da8359211705009dfb644f8bde67b4d6de16aa8f4a"
+  },
+  {
+    "path": "MTLBuffer-680394-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680395-0",
+    "bytes": 49152,
+    "sha256": "9c102b58536772b7baac807a41b71fcad1c8a43ba42f59ca0a746ee45a0bdfcd"
+  },
+  {
+    "path": "MTLBuffer-680396-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680398-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680399-0",
+    "bytes": 49152,
+    "sha256": "f98a1d3c7ed67f12b5d24f419d364e89b7c74e9277dcc7e3aa26b8773c519443"
+  },
+  {
+    "path": "MTLBuffer-680400-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680401-0",
+    "bytes": 81920,
+    "sha256": "9647a43ef11f3ad9bfc145830857e26fa8a221fb13d38cf5feb3d544c8b86099"
+  },
+  {
+    "path": "MTLBuffer-680402-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680403-0",
+    "bytes": 131072,
+    "sha256": "b93b97cdbb7b60befa72256835ab5ca9d0d6921a2b0f925903e7be24031beeb9"
+  },
+  {
+    "path": "MTLBuffer-680404-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680405-0",
+    "bytes": 81920,
+    "sha256": "991c6bd21137e0c96534316cae07ec2c5ea022a67764ab93f74d55a330fa8f57"
+  },
+  {
+    "path": "MTLBuffer-680406-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680407-0",
+    "bytes": 49152,
+    "sha256": "8354faaddc545f436fe2ad4d1375bd7a7cf840a17727e149d08885e2bfb71279"
+  },
+  {
+    "path": "MTLBuffer-680408-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680409-0",
+    "bytes": 65536,
+    "sha256": "84788044c6807fd868a6cdc2b6954be023386c2a577acd5d87f9f424b669a0cd"
+  },
+  {
+    "path": "MTLBuffer-680410-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680412-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680413-0",
+    "bytes": 65536,
+    "sha256": "01f65961b51281fac75bb5af93190109c3db56347e319900e4decc92bdd97c1d"
+  },
+  {
+    "path": "MTLBuffer-680414-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680415-0",
+    "bytes": 32768,
+    "sha256": "bb3ceb46fcb5dc3a813452ebac55e3e66a9dc2479639812e5111e6263bee4198"
+  },
+  {
+    "path": "MTLBuffer-680416-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680417-0",
+    "bytes": 65536,
+    "sha256": "de79615087fd4090a7dd2cfbdb40a100c574f64d53a1c2254316c9b24b97cabf"
+  },
+  {
+    "path": "MTLBuffer-680418-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680419-0",
+    "bytes": 98304,
+    "sha256": "18c53c790d2fded8eb1ab3f967c6ab28331ff4392ce184e98d35a3ffbfa8a956"
+  },
+  {
+    "path": "MTLBuffer-680420-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680421-0",
+    "bytes": 98304,
+    "sha256": "ea6215bd03764b273c3cd61fe73f866899ff69e247b06d4243af4853e2a6a4b8"
+  },
+  {
+    "path": "MTLBuffer-680422-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680423-0",
+    "bytes": 163840,
+    "sha256": "8e389d1415fe37f6bcb03e55c6f42fb343cf9b6509d8575cc31de2a0206a7ab5"
+  },
+  {
+    "path": "MTLBuffer-680595-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680596-0",
+    "bytes": 65536,
+    "sha256": "05396071fc59266e25f17410732d04ff52ad8398f28dd099e1706d595ab27302"
+  },
+  {
+    "path": "MTLBuffer-680599-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680600-0",
+    "bytes": 98304,
+    "sha256": "5727d5b3b94bcc4774bc28354db1e16201383616833ee2a3aea392529340f7fb"
+  },
+  {
+    "path": "MTLBuffer-680609-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680610-0",
+    "bytes": 114688,
+    "sha256": "e3a8d137119fc5a831f6d8eace04ae7c02301eddddb90efe22a5394157496afc"
+  },
+  {
+    "path": "MTLBuffer-680621-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680622-0",
+    "bytes": 81920,
+    "sha256": "17e4eed138ca320e9fdf43c216b4b181462bb416437fe3bafaa3cd82f1d63f38"
+  },
+  {
+    "path": "MTLBuffer-680887-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680888-0",
+    "bytes": 32768,
+    "sha256": "7e2d4f71eeac6d863ba6142185ccddb4c8fb31e07ea733839323c0377011ac31"
+  },
+  {
+    "path": "MTLBuffer-680889-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680890-0",
+    "bytes": 180224,
+    "sha256": "ca1c358efda3a23ebe2f8c0e4bfaa6eaa075f044c59391cea6639529b58acf99"
+  },
+  {
+    "path": "MTLBuffer-680891-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680892-0",
+    "bytes": 114688,
+    "sha256": "fba73fa470a8b108db7e42af5c22f4e48ca5292132df5c40315b285ff267c386"
+  },
+  {
+    "path": "MTLBuffer-680893-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680894-0",
+    "bytes": 114688,
+    "sha256": "6cb082c2ddebca8955bd9942646bcd5e0dc847df76fc2177fa32a24ae68a341c"
+  },
+  {
+    "path": "MTLBuffer-680895-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680896-0",
+    "bytes": 65536,
+    "sha256": "b2bbcc1413011d9bbeb25ea9e3a18cd79e82236e731b71ffa2c3cf6f8c0b4569"
+  },
+  {
+    "path": "MTLBuffer-680897-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680898-0",
+    "bytes": 32768,
+    "sha256": "a0d8674eb731d07efe06e4a771e2c2cedca687f384f986a794c253bdaac84c25"
+  },
+  {
+    "path": "MTLBuffer-680899-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680900-0",
+    "bytes": 81920,
+    "sha256": "f4fc9bfaede124c41207ae3f4e41ba841704dafbb5af0f0975c0ccf867ac5cfc"
+  },
+  {
+    "path": "MTLBuffer-680901-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680903-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680904-0",
+    "bytes": 81920,
+    "sha256": "478f4412d674b6d537f4504c64d5c5de94549f8c2b14303263e27e9ea359a5ac"
+  },
+  {
+    "path": "MTLBuffer-680905-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680906-0",
+    "bytes": 65536,
+    "sha256": "12cf30dc7ceff1509155b43964765621e9d4e174ae5eacd2710138dcfa1acc07"
+  },
+  {
+    "path": "MTLBuffer-680907-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680908-0",
+    "bytes": 114688,
+    "sha256": "22856b20b1161d77b0932932a1e3a869cc105009792936fb67e509deabc5378b"
+  },
+  {
+    "path": "MTLBuffer-680909-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680910-0",
+    "bytes": 180224,
+    "sha256": "a980127023f9ca4fe691ca0b5e57950cfceefe4c5739ab58c5fec30efb01b08f"
+  },
+  {
+    "path": "MTLBuffer-680911-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680912-0",
+    "bytes": 98304,
+    "sha256": "5ead8f6c878b8fc5c031c160112e9e2153644667997c893e77ee3a5ad8e43fe3"
+  },
+  {
+    "path": "MTLBuffer-680913-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680914-0",
+    "bytes": 49152,
+    "sha256": "a0efaf1284325c7de54412d52d92cf624d7e130f5524a6ba27064456cf92a313"
+  },
+  {
+    "path": "MTLBuffer-680915-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680917-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680918-0",
+    "bytes": 49152,
+    "sha256": "6963725cd25291ff1db244777427325e95ef5f8cec9b8dcaec098a09b2d38aa3"
+  },
+  {
+    "path": "MTLBuffer-680919-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680920-0",
+    "bytes": 114688,
+    "sha256": "67376aadc31787857d882b765f8f1b602ca4f17d3a0753ddd2ba279b40c512c8"
+  },
+  {
+    "path": "MTLBuffer-680921-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680922-0",
+    "bytes": 49152,
+    "sha256": "426c1e97fd07132ca68633502b8ee79faf2b28dc7cddb8d41b9aade7d1c288d4"
+  },
+  {
+    "path": "MTLBuffer-680923-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680924-0",
+    "bytes": 65536,
+    "sha256": "a1efcf3ee43c7f1301e152b6ab2b61e6cc629cfdbc5369101adf46fd7bbc8c79"
+  },
+  {
+    "path": "MTLBuffer-680925-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-680926-0",
+    "bytes": 98304,
+    "sha256": "df0a1d4a1b9e13bd4aac8f178f7e2e5352e39eefa93b38e2d825bc68bca7e733"
+  },
+  {
+    "path": "MTLBuffer-681027-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-681028-0",
+    "bytes": 81920,
+    "sha256": "836b0c64ef3190ec7d09ff02c4f0f74664727d9b3be1941cadcbe3a3fba0438d"
+  },
+  {
+    "path": "MTLBuffer-681031-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-681032-0",
+    "bytes": 163840,
+    "sha256": "53989df08c440075512881e8736d2019e0a68d1f8b108bc906914e1d33866ca9"
+  },
+  {
+    "path": "MTLBuffer-681035-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-681036-0",
+    "bytes": 98304,
+    "sha256": "9c2f3ade0d9fccf008619cc27008a522c1775dd28b768762ac4b55419805b389"
+  },
+  {
+    "path": "MTLBuffer-681402-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-681403-0",
+    "bytes": 32768,
+    "sha256": "911f0850686c8415c93f312aac2f1a36cca311becb54da3fcc963aa6d26d94ba"
+  },
+  {
+    "path": "MTLBuffer-681756-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-681757-0",
+    "bytes": 81920,
+    "sha256": "881e03d3716de944dc62410fdbe22b3fc785b7c2f994220492ab601d8c5ba0c9"
+  },
+  {
+    "path": "MTLBuffer-682010-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682011-0",
+    "bytes": 180224,
+    "sha256": "ca1c358efda3a23ebe2f8c0e4bfaa6eaa075f044c59391cea6639529b58acf99"
+  },
+  {
+    "path": "MTLBuffer-682012-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682013-0",
+    "bytes": 114688,
+    "sha256": "fba73fa470a8b108db7e42af5c22f4e48ca5292132df5c40315b285ff267c386"
+  },
+  {
+    "path": "MTLBuffer-682014-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682015-0",
+    "bytes": 114688,
+    "sha256": "6cb082c2ddebca8955bd9942646bcd5e0dc847df76fc2177fa32a24ae68a341c"
+  },
+  {
+    "path": "MTLBuffer-682016-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682017-0",
+    "bytes": 65536,
+    "sha256": "b2bbcc1413011d9bbeb25ea9e3a18cd79e82236e731b71ffa2c3cf6f8c0b4569"
+  },
+  {
+    "path": "MTLBuffer-682018-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682019-0",
+    "bytes": 32768,
+    "sha256": "a0d8674eb731d07efe06e4a771e2c2cedca687f384f986a794c253bdaac84c25"
+  },
+  {
+    "path": "MTLBuffer-682020-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682021-0",
+    "bytes": 81920,
+    "sha256": "f4fc9bfaede124c41207ae3f4e41ba841704dafbb5af0f0975c0ccf867ac5cfc"
+  },
+  {
+    "path": "MTLBuffer-682022-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682024-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682025-0",
+    "bytes": 81920,
+    "sha256": "478f4412d674b6d537f4504c64d5c5de94549f8c2b14303263e27e9ea359a5ac"
+  },
+  {
+    "path": "MTLBuffer-682026-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682027-0",
+    "bytes": 65536,
+    "sha256": "12cf30dc7ceff1509155b43964765621e9d4e174ae5eacd2710138dcfa1acc07"
+  },
+  {
+    "path": "MTLBuffer-682028-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682029-0",
+    "bytes": 114688,
+    "sha256": "22856b20b1161d77b0932932a1e3a869cc105009792936fb67e509deabc5378b"
+  },
+  {
+    "path": "MTLBuffer-682030-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682031-0",
+    "bytes": 180224,
+    "sha256": "a980127023f9ca4fe691ca0b5e57950cfceefe4c5739ab58c5fec30efb01b08f"
+  },
+  {
+    "path": "MTLBuffer-682032-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682033-0",
+    "bytes": 98304,
+    "sha256": "5ead8f6c878b8fc5c031c160112e9e2153644667997c893e77ee3a5ad8e43fe3"
+  },
+  {
+    "path": "MTLBuffer-682034-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682036-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682037-0",
+    "bytes": 49152,
+    "sha256": "6963725cd25291ff1db244777427325e95ef5f8cec9b8dcaec098a09b2d38aa3"
+  },
+  {
+    "path": "MTLBuffer-682038-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682039-0",
+    "bytes": 114688,
+    "sha256": "67376aadc31787857d882b765f8f1b602ca4f17d3a0753ddd2ba279b40c512c8"
+  },
+  {
+    "path": "MTLBuffer-682040-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682041-0",
+    "bytes": 49152,
+    "sha256": "426c1e97fd07132ca68633502b8ee79faf2b28dc7cddb8d41b9aade7d1c288d4"
+  },
+  {
+    "path": "MTLBuffer-682042-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682043-0",
+    "bytes": 65536,
+    "sha256": "a1efcf3ee43c7f1301e152b6ab2b61e6cc629cfdbc5369101adf46fd7bbc8c79"
+  },
+  {
+    "path": "MTLBuffer-682044-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682045-0",
+    "bytes": 98304,
+    "sha256": "df0a1d4a1b9e13bd4aac8f178f7e2e5352e39eefa93b38e2d825bc68bca7e733"
+  },
+  {
+    "path": "MTLBuffer-682080-0",
+    "bytes": 131072,
+    "sha256": "ba33297762e5bc4968bd08197987388cfffaffa2af663d2c9ddd5a90748c18c5"
+  },
+  {
+    "path": "MTLBuffer-682195-0",
+    "bytes": 229376,
+    "sha256": "1d2258c1dc617a9ce0c46f28579074622622c1d8954ce4ce17353ca125307321"
+  },
+  {
+    "path": "MTLBuffer-682977-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682978-0",
+    "bytes": 49152,
+    "sha256": "3a7aee15f3efb240c1afdabf51f14de5e6cce26728c36fd2278dcedf535574b9"
+  },
+  {
+    "path": "MTLBuffer-682987-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682988-0",
+    "bytes": 65536,
+    "sha256": "a20723b569643c093bef3c59ad6cc7b584a525b1e537e955e19f21d49e44e989"
+  },
+  {
+    "path": "MTLBuffer-682991-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-682992-0",
+    "bytes": 65536,
+    "sha256": "54b155604c51207be71483490326249a9a6cdd2759342150397d11066d3d42d9"
+  },
+  {
+    "path": "MTLBuffer-683005-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683006-0",
+    "bytes": 196608,
+    "sha256": "2a4d7da7ea350d50777711e3e3443a8af56791ac9a57cfdb0bbd9c3d1efae193"
+  },
+  {
+    "path": "MTLBuffer-683551-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683552-0",
+    "bytes": 81920,
+    "sha256": "9647a43ef11f3ad9bfc145830857e26fa8a221fb13d38cf5feb3d544c8b86099"
+  },
+  {
+    "path": "MTLBuffer-683553-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683554-0",
+    "bytes": 131072,
+    "sha256": "b93b97cdbb7b60befa72256835ab5ca9d0d6921a2b0f925903e7be24031beeb9"
+  },
+  {
+    "path": "MTLBuffer-683555-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683556-0",
+    "bytes": 81920,
+    "sha256": "991c6bd21137e0c96534316cae07ec2c5ea022a67764ab93f74d55a330fa8f57"
+  },
+  {
+    "path": "MTLBuffer-683557-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683558-0",
+    "bytes": 49152,
+    "sha256": "8354faaddc545f436fe2ad4d1375bd7a7cf840a17727e149d08885e2bfb71279"
+  },
+  {
+    "path": "MTLBuffer-683559-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683560-0",
+    "bytes": 65536,
+    "sha256": "84788044c6807fd868a6cdc2b6954be023386c2a577acd5d87f9f424b669a0cd"
+  },
+  {
+    "path": "MTLBuffer-683561-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683562-0",
+    "bytes": 65536,
+    "sha256": "01f65961b51281fac75bb5af93190109c3db56347e319900e4decc92bdd97c1d"
+  },
+  {
+    "path": "MTLBuffer-683563-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683564-0",
+    "bytes": 32768,
+    "sha256": "bb3ceb46fcb5dc3a813452ebac55e3e66a9dc2479639812e5111e6263bee4198"
+  },
+  {
+    "path": "MTLBuffer-683565-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683566-0",
+    "bytes": 65536,
+    "sha256": "de79615087fd4090a7dd2cfbdb40a100c574f64d53a1c2254316c9b24b97cabf"
+  },
+  {
+    "path": "MTLBuffer-683567-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683568-0",
+    "bytes": 98304,
+    "sha256": "18c53c790d2fded8eb1ab3f967c6ab28331ff4392ce184e98d35a3ffbfa8a956"
+  },
+  {
+    "path": "MTLBuffer-683569-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683570-0",
+    "bytes": 98304,
+    "sha256": "ea6215bd03764b273c3cd61fe73f866899ff69e247b06d4243af4853e2a6a4b8"
+  },
+  {
+    "path": "MTLBuffer-683571-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683572-0",
+    "bytes": 163840,
+    "sha256": "8e389d1415fe37f6bcb03e55c6f42fb343cf9b6509d8575cc31de2a0206a7ab5"
+  },
+  {
+    "path": "MTLBuffer-683573-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683574-0",
+    "bytes": 180224,
+    "sha256": "ca1c358efda3a23ebe2f8c0e4bfaa6eaa075f044c59391cea6639529b58acf99"
+  },
+  {
+    "path": "MTLBuffer-683575-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683576-0",
+    "bytes": 114688,
+    "sha256": "fba73fa470a8b108db7e42af5c22f4e48ca5292132df5c40315b285ff267c386"
+  },
+  {
+    "path": "MTLBuffer-683577-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683578-0",
+    "bytes": 114688,
+    "sha256": "6cb082c2ddebca8955bd9942646bcd5e0dc847df76fc2177fa32a24ae68a341c"
+  },
+  {
+    "path": "MTLBuffer-683579-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683580-0",
+    "bytes": 65536,
+    "sha256": "b2bbcc1413011d9bbeb25ea9e3a18cd79e82236e731b71ffa2c3cf6f8c0b4569"
+  },
+  {
+    "path": "MTLBuffer-683581-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683582-0",
+    "bytes": 32768,
+    "sha256": "a0d8674eb731d07efe06e4a771e2c2cedca687f384f986a794c253bdaac84c25"
+  },
+  {
+    "path": "MTLBuffer-683583-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683584-0",
+    "bytes": 81920,
+    "sha256": "f4fc9bfaede124c41207ae3f4e41ba841704dafbb5af0f0975c0ccf867ac5cfc"
+  },
+  {
+    "path": "MTLBuffer-683585-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683587-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683588-0",
+    "bytes": 81920,
+    "sha256": "478f4412d674b6d537f4504c64d5c5de94549f8c2b14303263e27e9ea359a5ac"
+  },
+  {
+    "path": "MTLBuffer-683589-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683590-0",
+    "bytes": 65536,
+    "sha256": "12cf30dc7ceff1509155b43964765621e9d4e174ae5eacd2710138dcfa1acc07"
+  },
+  {
+    "path": "MTLBuffer-683591-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683592-0",
+    "bytes": 114688,
+    "sha256": "22856b20b1161d77b0932932a1e3a869cc105009792936fb67e509deabc5378b"
+  },
+  {
+    "path": "MTLBuffer-683593-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683594-0",
+    "bytes": 180224,
+    "sha256": "a980127023f9ca4fe691ca0b5e57950cfceefe4c5739ab58c5fec30efb01b08f"
+  },
+  {
+    "path": "MTLBuffer-683595-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683596-0",
+    "bytes": 98304,
+    "sha256": "5ead8f6c878b8fc5c031c160112e9e2153644667997c893e77ee3a5ad8e43fe3"
+  },
+  {
+    "path": "MTLBuffer-683597-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683599-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683600-0",
+    "bytes": 49152,
+    "sha256": "6963725cd25291ff1db244777427325e95ef5f8cec9b8dcaec098a09b2d38aa3"
+  },
+  {
+    "path": "MTLBuffer-683601-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683602-0",
+    "bytes": 114688,
+    "sha256": "67376aadc31787857d882b765f8f1b602ca4f17d3a0753ddd2ba279b40c512c8"
+  },
+  {
+    "path": "MTLBuffer-683603-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683604-0",
+    "bytes": 49152,
+    "sha256": "426c1e97fd07132ca68633502b8ee79faf2b28dc7cddb8d41b9aade7d1c288d4"
+  },
+  {
+    "path": "MTLBuffer-683605-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683606-0",
+    "bytes": 65536,
+    "sha256": "a1efcf3ee43c7f1301e152b6ab2b61e6cc629cfdbc5369101adf46fd7bbc8c79"
+  },
+  {
+    "path": "MTLBuffer-683607-0",
+    "bytes": 212992,
+    "sha256": "efd93331be3af699a4ac085a75e51a1615fee90ce9a01d99103e4d4c92f9cff6"
+  },
+  {
+    "path": "MTLBuffer-683608-0",
+    "bytes": 98304,
+    "sha256": "df0a1d4a1b9e13bd4aac8f178f7e2e5352e39eefa93b38e2d825bc68bca7e733"
+  },
+  {
+    "path": "MTLBuffer-743-0",
+    "bytes": 786432,
+    "sha256": "fea8c7cbbac320484b69ece3c1e620f2717b371a6a2c94af3e4a41ec5a9d9b36"
+  },
+  {
+    "path": "MTLBuffer-744-0",
+    "bytes": 3162112,
+    "sha256": "7a26c7b82f68d7511e79d7a754c8cffb839bfa51b6cb6530242b1e48ba6db6c8"
+  },
+  {
+    "path": "MTLBuffer-753-0",
+    "bytes": 32768,
+    "sha256": "50263c80a2970e959cc4ce89ef9ca51b14de14510cf9c0f364766ae22fc4c946"
+  },
+  {
+    "path": "MTLBuffer-755-0",
+    "bytes": 524288,
+    "sha256": "b1ba3fcb0725eccf87adcb7798018b05abaf2043b206b8f200c6d920342b35d1"
+  },
+  {
+    "path": "MTLBuffer-763727-0",
+    "bytes": 301809664,
+    "sha256": "0ac63427dd6ee57e2d91db188fedbb8d84394fce8d95f92873c923834a70b38e"
+  },
+  {
+    "path": "MTLBuffer-763728-0",
+    "bytes": 90095616,
+    "sha256": "3f07e1d01d9ab3abb734603873cdc45ecb3036f68f1d070d899ec8b01ad864c4"
+  },
+  {
+    "path": "MTLBuffer-764875-0",
+    "bytes": 32768,
+    "sha256": "936d50e18a0d294f91260975d83de7d27d8003c04954adb8d625ac2a2bbddc6a"
+  },
+  {
+    "path": "MTLBuffer-764967-0",
+    "bytes": 32768,
+    "sha256": "79c0158bd2b7b1cd0b1e33dc15f6eeffd78c758121fb967edac9e65321da195a"
+  },
+  {
+    "path": "MTLBuffer-786-0",
+    "bytes": 49152,
+    "sha256": "c9cf0290f3ff2a04fd780eb65369344fc6fcc4b130849ad0c39a24db99168346"
+  },
+  {
+    "path": "MTLBuffer-798050-0",
+    "bytes": 196608,
+    "sha256": "4a8fc6718cb9187d02a9d3cd5e742dd27dccc4beb9cce9314e17e11b10e8542c"
+  },
+  {
+    "path": "MTLBuffer-798051-0",
+    "bytes": 32768,
+    "sha256": "588a8490b1764e9c448def7fdf965d51f3e7b9314ba9e0f851ea29ad06e63fd5"
+  },
+  {
+    "path": "MTLBuffer-798149-0",
+    "bytes": 212992,
+    "sha256": "c6e88f329b91f3d6194309f480d3ec54ad55f83204bd9853cbf7ab2246a6ad72"
+  },
+  {
+    "path": "MTLBuffer-801795-0",
+    "bytes": 32768,
+    "sha256": "3b2d373cd6a2a86ee76d08c4a76a745c0e39f025898bb843a3379f5fad621722"
+  },
+  {
+    "path": "MTLBuffer-802591-0",
+    "bytes": 32768,
+    "sha256": "3b2d373cd6a2a86ee76d08c4a76a745c0e39f025898bb843a3379f5fad621722"
+  },
+  {
+    "path": "MTLBuffer-804-0",
+    "bytes": 49152,
+    "sha256": "ff8165f94ffc51675201477f4323014bce5e339d9283ab57304ceaa8bfb131b6"
+  },
+  {
+    "path": "MTLBuffer-830-0",
+    "bytes": 81920,
+    "sha256": "10d50634d65b1a9c31fe41e64352b3dfa413b355b9d933d7ea7126fa95f7abf7"
+  },
+  {
+    "path": "MTLBuffer-860-0",
+    "bytes": 81920,
+    "sha256": "6a4ca82c1f89d4aa6d0adf549a511405a2d7c1771f47ca4be6b0c1acecf69c11"
+  },
+  {
+    "path": "MTLBuffer-904-0",
+    "bytes": 81920,
+    "sha256": "b77f407e971c252fb363b24e1121b3d60c798f2be416d3fe640d2017f3609e1a"
+  },
+  {
+    "path": "MTLBuffer-926-0",
+    "bytes": 81920,
+    "sha256": "2fca2f966b31dc1e98404ab8641a4971fcdaaa10c89acd3f12c6ac835ed0d8e9"
+  },
+  {
+    "path": "MTLBuffer-966-0",
+    "bytes": 49152,
+    "sha256": "73b08bb490f1b096576a8802082f69c6b38755bc740de56865606c04b30c2f90"
+  },
+  {
+    "path": "MTLBuffer-987435-0",
+    "bytes": 131072,
+    "sha256": "bed5b03c1c63ce6bb986256dca693847f0407aa609f188c860c3b486525c9487"
+  },
+  {
+    "path": "MTLBuffer-988-0",
+    "bytes": 49152,
+    "sha256": "7ce269c56178ef693bf0fc3651129bcf19f0ff7488035068a82b7ec2c79061fe"
+  },
+  {
+    "path": "MTLTexture-105677-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "ee98494823fe1b294eb58dc9eeffa392321f27728aa907d43fd2ef851605c18c"
+  },
+  {
+    "path": "MTLTexture-105677-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "3133dee8dddc7432e061eaded7b7c3c1f89f4fff26336ab24a0149868229c2e4"
+  },
+  {
+    "path": "MTLTexture-105677-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "8aee265e3e6cc37884d3d149007a974c1092b1a814d639c31242ce7297cd3453"
+  },
+  {
+    "path": "MTLTexture-105677-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "6ea9d9939ebc47d58c822bc5c4bb38b35d9a7dc849600d6982ba68ca7d0708e6"
+  },
+  {
+    "path": "MTLTexture-105677-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "42efef99629e1b87b2e29bf989b91e98e137aa19e442d5ef5bc1a112b48e5da7"
+  },
+  {
+    "path": "MTLTexture-105677-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "f902e729d0ed18a788659e92cf97e075de01a800a5eaee60b0066196808ea8b5"
+  },
+  {
+    "path": "MTLTexture-105679-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "8a93789a9db927d170cbe81e623461fab2979a612fea64c280adc56cc504d3d6"
+  },
+  {
+    "path": "MTLTexture-105679-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "78970d8a85289a1ae568e267587d4e9283b3b1f2c510a3660ff6bfd0ce5542bf"
+  },
+  {
+    "path": "MTLTexture-105679-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "360d135c3384a7653f5c91a92f64b8bd3e7d8a07cf21417b9676a76bc2489f94"
+  },
+  {
+    "path": "MTLTexture-105679-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "cb0063accfefc4f6d8a3b53e0d1837cda2f938949143bae7ccb5a2b67d72f71b"
+  },
+  {
+    "path": "MTLTexture-105679-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "d4364d95153f58f20859798bfe2d299f6c2fef4ca3d7227b48282b7402eb627b"
+  },
+  {
+    "path": "MTLTexture-105679-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "5280b14f2cd0fd488bba77ade2cbacdd967b123428aeb6e8893e0e9093ea1a48"
+  },
+  {
+    "path": "MTLTexture-105680-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "ff0af83396c512e245e00386f2e79c1ba0c42430d5bf2fcd3cfc519b4a3200e3"
+  },
+  {
+    "path": "MTLTexture-105680-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "e0c72da9546992de0bbf206d6a5fb965902e2a54cbd7b53b5f648e16c6f6dd57"
+  },
+  {
+    "path": "MTLTexture-105680-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "a7d483b466fccb57384677b2241affd540d53e92b63901f3c3863582862c370d"
+  },
+  {
+    "path": "MTLTexture-105680-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "61fa2fe8573f620bf21830f57efabbd4daa174df317d53cedf7e8b4ae715a828"
+  },
+  {
+    "path": "MTLTexture-105680-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "722063f45a20f04240cd50f1b5d7ec42b6f1c0660e8733df4a26e6bf685ec819"
+  },
+  {
+    "path": "MTLTexture-105680-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "1ef570437a4478b7c56545ae36d8ba398e05865354d08cd4de118ff6cd6cecb1"
+  },
+  {
+    "path": "MTLTexture-105681-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "db95428c85e23ec2dc59af9936b87cbb66548d2bb714784ef2c65799d58a53fe"
+  },
+  {
+    "path": "MTLTexture-105681-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "91dbc5e979979a1cc8e1b3df10ae2e66398fd2eba6dbf4f0d0fcee740fba1b93"
+  },
+  {
+    "path": "MTLTexture-105681-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "92d1506754958338e012222905da020034972c54c3da5f08c2a9c625d868c816"
+  },
+  {
+    "path": "MTLTexture-105681-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "92816dade17a4cc5a9d054849002dbe358bebcb7a84c71e7dec4714d8b65c891"
+  },
+  {
+    "path": "MTLTexture-105681-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "cbc917223c7ca750a408c05a64f230e485b1531330f45c09297a66bd1c2f515e"
+  },
+  {
+    "path": "MTLTexture-105681-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "f6895117429e83686a76d4a8c2a282b32a2b9d892e5e5ef39479c8ce3ba34b74"
+  },
+  {
+    "path": "MTLTexture-105689-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "1578f0165f29c73e18070ae065f8c6333ce4fb9a77d14de89f2ca91c2a0f9e06"
+  },
+  {
+    "path": "MTLTexture-105689-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "3c3b17ec4f3f3dba1fdef2bd9b974ee9ab79f411d691cab49203812dad66c91d"
+  },
+  {
+    "path": "MTLTexture-105689-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "55cebce9c70050ebabdfd9ca3b244d3c73befa98b5dc10dfc9a29ac5cee33279"
+  },
+  {
+    "path": "MTLTexture-105689-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "e36ca981e2fba1e696f4b7213faf7e85abf4d677d0f150771a888fcd172f5437"
+  },
+  {
+    "path": "MTLTexture-105689-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "7f573aa29441c5ae5993b05c8c5137f5028e49515f92645e3ae935340d951de3"
+  },
+  {
+    "path": "MTLTexture-105689-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "795e300514c5e8f60ea648a9dc317a2f9582bfe99b3f9549171a31c1dd33f6cd"
+  },
+  {
+    "path": "MTLTexture-105691-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "c395adbddeb3ef44fc7070ca3e78f4d098c059c47038686d4d7d6f20f30ad08a"
+  },
+  {
+    "path": "MTLTexture-105691-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "4ca8fce206a78d17384a6bbe4bfd05131940eef4cdb3859409be72a5307fafb8"
+  },
+  {
+    "path": "MTLTexture-105691-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "6afcf480bc6393e8f7dd64024e286386b2e76aded1a4371327eb197d68351784"
+  },
+  {
+    "path": "MTLTexture-105691-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "ae7a5ef75a30e89a8049ab2f63de869f8258300db3b6b9c2defdbf195bee4f5e"
+  },
+  {
+    "path": "MTLTexture-105691-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "a72902229bd98372b297fa050b8806ba376975d21a050943b58f298211e0c536"
+  },
+  {
+    "path": "MTLTexture-105691-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "98214465fdb2c98bd55fae802a8c91ee523b3776bce36d4869424cc4f01005ce"
+  },
+  {
+    "path": "MTLTexture-10670-0-mipmap0-slice0",
+    "bytes": 198459392,
+    "sha256": "f1786ce72e820c94aa78d33beb508cc72afc149dff134943e35b1f9002a56ea6"
+  },
+  {
+    "path": "MTLTexture-10670-0-mipmap1-slice0",
+    "bytes": 49627136,
+    "sha256": "de76a5ace992f0c6f21225a452e310bf344341b41808ae9483d946ea1ef5fc8e"
+  },
+  {
+    "path": "MTLTexture-10670-0-mipmap2-slice0",
+    "bytes": 12419072,
+    "sha256": "bf4fb9abb356aef1d660983289d37f119cb6ceb0b15f4cfb9d1637f1e15f2401"
+  },
+  {
+    "path": "MTLTexture-10670-0-mipmap3-slice0",
+    "bytes": 3112960,
+    "sha256": "63cfe2815182361b2559b186bd625797b33fa14385432490b4fb907fb0108894"
+  },
+  {
+    "path": "MTLTexture-10671-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "3a47e387699374f2005e2707384c96808227ed8a23c0c938a71b33d7fec2b31f"
+  },
+  {
+    "path": "MTLTexture-10672-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "b65e8d1ed5709d7c63a7b7ac44d3e118b1c423750af028c0966b6578698dd7fd"
+  },
+  {
+    "path": "MTLTexture-10858-0-mipmap0-slice0",
+    "bytes": 442368,
+    "sha256": "f52031118b9b8641b5080c7dc316782d88f90bb973b5e8fbc080d65a06a69b4e"
+  },
+  {
+    "path": "MTLTexture-10859-0-mipmap0-slice0",
+    "bytes": 442368,
+    "sha256": "9de27c365d270249bf84c7e3ff2eb593b39053af7cd39d869e82a50231a173b9"
+  },
+  {
+    "path": "MTLTexture-10883-0-mipmap0-slice0",
+    "bytes": 53149696,
+    "sha256": "15f29d7e7180a3c8950baf03caed7db194509f66ee306f432f3981cc9789ee3d"
+  },
+  {
+    "path": "MTLTexture-10883-0-mipmap1-slice0",
+    "bytes": 13287424,
+    "sha256": "8b645ff33b1b0aa9a1318da14bbaccff4280974fe1aba63d9e081235cc3c5477"
+  },
+  {
+    "path": "MTLTexture-10883-0-mipmap2-slice0",
+    "bytes": 3325952,
+    "sha256": "eaac19c828e85b020330e324c832cabaefd1f1753e1f43a8f7e029b3f9ada029"
+  },
+  {
+    "path": "MTLTexture-10883-0-mipmap3-slice0",
+    "bytes": 835584,
+    "sha256": "0b374072d4a10a090839c7640e51315fad91b7a79c1e0dc2360978ae7861c375"
+  },
+  {
+    "path": "MTLTexture-10894-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "0882c423fa4c2580831b6b70a2cd71a3ccd12a2a615af32c8a75f3730bc2b27e"
+  },
+  {
+    "path": "MTLTexture-10894-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "b42ba74713e3e8c5f8ff7863d9a03cb659bfcbc1f30c6f971245e85621f0d0e1"
+  },
+  {
+    "path": "MTLTexture-10894-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "dfae5ae7f0141c9bc4c980ad61a7c084c67ec6dda5576921a49b74fb4eee8a7e"
+  },
+  {
+    "path": "MTLTexture-10894-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "0b1f8bc27cd47a9df580b2d944e557d2593d6cf1ec78cb4c38dcad43df81c3ba"
+  },
+  {
+    "path": "MTLTexture-10894-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "571eb62962e2788b21698482988b2d596977f005504208672c10d715c2fd1fe1"
+  },
+  {
+    "path": "MTLTexture-10935-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "fc15a9a719d7f3305c308ccc01694bef0bddc55d16dbf36b865ed71a5db87378"
+  },
+  {
+    "path": "MTLTexture-10935-0-mipmap1-slice0",
+    "bytes": 147456,
+    "sha256": "5fe6ac19f5ca0f8c326b7781d73040b073d423efaad912e077a3c05be0fa96b0"
+  },
+  {
+    "path": "MTLTexture-10935-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "7afb38aefb3687443fed77bfe7b13d70a0b27ef9794ae2efbe2f981518884a18"
+  },
+  {
+    "path": "MTLTexture-10936-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "9a97158cebd2e0d14c4915ecf349e23caad7815928a3846db4751a1e5f41f179"
+  },
+  {
+    "path": "MTLTexture-11153-0-mipmap0-slice0",
+    "bytes": 2883584,
+    "sha256": "574c827cb6527b724b1f5c261fe7e84560a0a5bec52fd892e65a2321f6c4dcb8"
+  },
+  {
+    "path": "MTLTexture-11166-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "bacc5bf43c1d03ed143685ca6b30d29ee491b3cda77bb6ea174b88f2a7de91c8"
+  },
+  {
+    "path": "MTLTexture-11263-0-mipmap0-slice0",
+    "bytes": 5947392,
+    "sha256": "2170c5ff1368fbcf51a3eaaa57610afac528c16a32f7ceec5a538f644474ec40"
+  },
+  {
+    "path": "MTLTexture-11264-0-mipmap0-slice0",
+    "bytes": 1490944,
+    "sha256": "6381685f2add8bf95703b028489c55c817c980768a828a5802017496945dc849"
+  },
+  {
+    "path": "MTLTexture-11265-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "45321bf9b48fb0ac3e2109c6f5bed5fcad99e76182e81e3b6a6b5e4b9efcb8b9"
+  },
+  {
+    "path": "MTLTexture-11463-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "729a9e68404ad63047e197fe7ef6e5e0dae1925239a785999e83ddd9fe64db56"
+  },
+  {
+    "path": "MTLTexture-11467-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "1d3b70eba80cd57e284d5784f048d26dc7e527ac2095ef6245e9480c2aef1b93"
+  },
+  {
+    "path": "MTLTexture-11468-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "704cf3d793b11fa4deb61bb79d6e1454635e0744fdb40afc068210b2bef77b2d"
+  },
+  {
+    "path": "MTLTexture-11923-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "9f6a8058e47166d08dbf45e3ffd11abcdae33059ccf6c7c81bb7eda1060700b6"
+  },
+  {
+    "path": "MTLTexture-11924-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "1b4dc9241fa98d6e4b0767be38ce970efe1686a36a97a50a8e62aada426ac387"
+  },
+  {
+    "path": "MTLTexture-11925-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "70851e2a66022d038c94aeaaa52b27a7767011609f4c45b4b6585d21a5abd538"
+  },
+  {
+    "path": "MTLTexture-11926-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "d45745274f55345cf786eca6e1617787fbca98839b7ce8d198d7193fe42ee4a6"
+  },
+  {
+    "path": "MTLTexture-11927-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "d45745274f55345cf786eca6e1617787fbca98839b7ce8d198d7193fe42ee4a6"
+  },
+  {
+    "path": "MTLTexture-11928-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "b2849f95fd4375a870922df6ebb00a439a178443c2c6f9f124399311a3e54ca5"
+  },
+  {
+    "path": "MTLTexture-11936-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "8ed16f884df55a83901324f01267c48490d93e25085d1425525a217bb1b5e5aa"
+  },
+  {
+    "path": "MTLTexture-11937-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "a9c8728977b3684b197a5d9bde93b0b5ed1602c6caafe774b6d68cf41aea2397"
+  },
+  {
+    "path": "MTLTexture-11938-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "cafc4feca7e2378254983972ce9ec4c96055d20eeb4d2c75e276a7e7ed07f73b"
+  },
+  {
+    "path": "MTLTexture-11939-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "f6a1d120d1976e293da0344e02994012d9d511e3ca1e1a4459724d4d67891026"
+  },
+  {
+    "path": "MTLTexture-11940-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "903955422292968266ab13c1771129321142db848f83642e2d2d9218fdb0353e"
+  },
+  {
+    "path": "MTLTexture-11941-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "2e4262b1458adb9648fbac2c462f5e359837da7d0d7dc4f4581f88b7fd0fd898"
+  },
+  {
+    "path": "MTLTexture-11953-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "141ff091e4343adcbc86bcbcce800dcf27858c9c91581a4ffbd5d8fcd7e1b705"
+  },
+  {
+    "path": "MTLTexture-11955-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "817dfa38f14cc0502b0f41b71b868992494a90e974c654ffaffb3adaeb336583"
+  },
+  {
+    "path": "MTLTexture-12238-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "39826ee9dcbf7fa2395d34378ffa2834022fc8169e35fd200f56f2675f572332"
+  },
+  {
+    "path": "MTLTexture-12239-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "2d45599c4a35648c3d8d23414ed9bee51c8549273088e9a220f73421d6e46a3b"
+  },
+  {
+    "path": "MTLTexture-12245-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "888df0e6435792facb29b4c63af8f6cd0384903cb25506d73ae71395000b8031"
+  },
+  {
+    "path": "MTLTexture-12246-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "efb35810a77798eb40f590a561c19add88e4bebc2f49b53857772afa8ec158eb"
+  },
+  {
+    "path": "MTLTexture-12267-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "81e16a645a6b5fc27c0bf7ec32dca2b83ce0b25c6e9e63c3579a36865eb1b835"
+  },
+  {
+    "path": "MTLTexture-12271-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "a7a99456c162f4051b94e444ec65acbf29d110842cd7ef6dd344d45ab922babb"
+  },
+  {
+    "path": "MTLTexture-12275-0-mipmap0-slice0",
+    "bytes": 360448,
+    "sha256": "6407915c75bf07c4110aea7084e9b72e2ee0a22a3225ac49f9fbb5a5e4f72ea5"
+  },
+  {
+    "path": "MTLTexture-12279-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "6b8b04904c19a4d888af790b53ba3f1698e7d382809feb572b923f356bc702a0"
+  },
+  {
+    "path": "MTLTexture-12283-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "75b2cd474dd8bfb57da160a5268b34e00d7ce3063248b3304a6ccd39bbc43d63"
+  },
+  {
+    "path": "MTLTexture-12291-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "3c2a71810631c98c5e74da1ba1b7823a62f461d00c1dac1e5c15492c98f07b48"
+  },
+  {
+    "path": "MTLTexture-12295-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "7cc49c93a5a2387be96748fe757b4729ab40272c96a4a432d8491040b20f302c"
+  },
+  {
+    "path": "MTLTexture-12299-0-mipmap0-slice0",
+    "bytes": 360448,
+    "sha256": "fd3f9a97cc1d599e5f617023e6c510e624a68e471e1f2dbedd0ab03b774bd03b"
+  },
+  {
+    "path": "MTLTexture-12303-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "43d29c842b41426596ac367a32bea740f559f88414d213f8399b741b09be301a"
+  },
+  {
+    "path": "MTLTexture-12307-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "93cb6d65094d6c067a7f3bbeb7a58afbac7825c15dcd195c2484684722210fbe"
+  },
+  {
+    "path": "MTLTexture-12387-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "cf2d11925ecce97d1580b97b7b7ce2fc67ad959c609a2ac78fbf66b08fcf9305"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "b1ce8ab391fb069fb812672a3db6a9dee1561d48a0715584c3618567c9331136"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap0-slice1",
+    "bytes": 4210688,
+    "sha256": "d036ec3826b569da15ed95476d4d8a4fecc0b80c7f873af8711db403ef11cb29"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap0-slice2",
+    "bytes": 4210688,
+    "sha256": "f71240951f0f459238b039087c4e9ed29c880be865177e67d88cb8138d29ff16"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap0-slice3",
+    "bytes": 4210688,
+    "sha256": "03164b386147ead5b6d50920e051d6674f8d9af3058447e5982007336b4eb62c"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap0-slice4",
+    "bytes": 4210688,
+    "sha256": "5b8bc7e8e28345340302174870f09f72cc9d3115e33257a6b9de82d41842fc76"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap0-slice5",
+    "bytes": 4210688,
+    "sha256": "d1e6067ef179194751a6a77165fcf42e1738e8623377cc42b62dd9ebcc2846a9"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "be20838e711b3efaec3fe0048797d379a1ee6ce4d7edb3097135e73a3da21ef2"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap1-slice1",
+    "bytes": 1064960,
+    "sha256": "60a6bbb1ca29e46d1b1476c9addd9f8412f49936d7c92daf31cc492a4c574df5"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap1-slice2",
+    "bytes": 1064960,
+    "sha256": "f1192ec12bd412df924424c737a523ee803062d30757115efb020f9f1e3d73fd"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap1-slice3",
+    "bytes": 1064960,
+    "sha256": "06fb91436edc2958bbb7c48fa05e72d94a1977089c30d6d37fb0e4321c8838d8"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap1-slice4",
+    "bytes": 1064960,
+    "sha256": "1be90a0964068a85a1dfec92853c81cafeeb0fcdc9523808e44180e6722ebb45"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap1-slice5",
+    "bytes": 1064960,
+    "sha256": "80ee4cdd3650db9beabe81dfe03b9ed4e721dde08252dd8e97e23f973814e82f"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "f51d681bcf5ff3e663233d9b90f30d8484ccb70ac2f4dd2b2ca2a96489475b62"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap2-slice1",
+    "bytes": 278528,
+    "sha256": "3878c0082c21be81fd50142ab34c62dca807831f3d19ed59acf2f1e0906c245f"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap2-slice2",
+    "bytes": 278528,
+    "sha256": "1e482e20d6aaff1881805c56ea3f743cff8d0a2c9db0dd1fca498fb59f93e7c6"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap2-slice3",
+    "bytes": 278528,
+    "sha256": "5dac1e1ba495e88866e635c3ce680d69401f52d6a5fa2c4459006ec5ccf375c2"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap2-slice4",
+    "bytes": 278528,
+    "sha256": "62e065145643c629e9f5534962fe4a6c3b9c27f3a015f383e595ec1f29cc4065"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap2-slice5",
+    "bytes": 278528,
+    "sha256": "fd124c562d17d978ad034ebb7c3af1269eda24050e38cd2b1c7de909cd006c40"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "df2fdf076d3cb4da153b443beede9fc34557d4b447028fbb9d0aec15631329bd"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap3-slice1",
+    "bytes": 81920,
+    "sha256": "2171dc5860cbfb43019eb3a3dcb4766e2a901a672a0c615c3eb3e86159c21332"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap3-slice2",
+    "bytes": 81920,
+    "sha256": "40368e64658709fd97b369631af92940bfdb4a8e1afe38c9d13a43bb7b6bb225"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap3-slice3",
+    "bytes": 81920,
+    "sha256": "225980247535189a55f8ad6ffe1be8c2b4217a39c30bcf287d33281e14e4652b"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap3-slice4",
+    "bytes": 81920,
+    "sha256": "5f6d6b128d1f9feceddbccfd6aa16aea027b35b1d7793ccedc5338cd019c4c3d"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap3-slice5",
+    "bytes": 81920,
+    "sha256": "494c18ad5cb1e14cd0c9783f6bf8b965159e47edd5c84287f168a33118347c90"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "4b5117b190f93f79a7501b5419bf31b979b459ffe7683dd7b3e97aa29ff56c65"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap4-slice1",
+    "bytes": 32768,
+    "sha256": "5665e1ae7bad355de7fa3f6462c350e692092a5f63c9ca46253470c5fd5d3d7a"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap4-slice2",
+    "bytes": 32768,
+    "sha256": "8a4a7ceee5d2008e51d2dfde658d895e4392cd4f054395db381d3f670f635a29"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap4-slice3",
+    "bytes": 32768,
+    "sha256": "c8453dd4deea3a6f733f98748653ddd488c2251cf80dbaa7fb62a67846f3fc95"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap4-slice4",
+    "bytes": 32768,
+    "sha256": "a7591a7ad98d0502559b495fb874889f0faa1c81eb7a665cc8f893d4563623da"
+  },
+  {
+    "path": "MTLTexture-12389-0-mipmap4-slice5",
+    "bytes": 32768,
+    "sha256": "a199c54d60281f682eef1fe058140235800d3a5ba6c4bfc59f02dc2e820ed035"
+  },
+  {
+    "path": "MTLTexture-12390-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "1f5c561a68eb2d54c0f9d34a0cdad340174ca1f83eced80347524568cba1b0d7"
+  },
+  {
+    "path": "MTLTexture-1239849-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "bcaf32c564d89a28088952b24af8bfd2b6791432920727db69c2c293df1b46f1"
+  },
+  {
+    "path": "MTLTexture-15-0-mipmap0-slice0",
+    "bytes": 5947392,
+    "sha256": "68b054b9eda7771b711fa8dbd2b14dc084a3df382a10d397b1584b6b55529c82"
+  },
+  {
+    "path": "MTLTexture-156767-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "63d4353898a698d0e877fd4e201e528d57f93516f1c0012543e5c32568a4be0b"
+  },
+  {
+    "path": "MTLTexture-1595-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "d8ebdb84bb750d4ae3a682f6f6060e28eee70bec595c16f055beee5737e3f9aa"
+  },
+  {
+    "path": "MTLTexture-1595-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "69adcd490c7a1b9f52e333cc95389071d2a3c6a247f6fbab39364941d51f6da1"
+  },
+  {
+    "path": "MTLTexture-1595-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "b7efc45b2e960b53179ef5424bbdcd8845dfecb94a46199f16f1b1ebe065f75a"
+  },
+  {
+    "path": "MTLTexture-1595-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "88cc57f5fdf0288c91ca715069b2d00503c75075b55f871295233116d9169bc4"
+  },
+  {
+    "path": "MTLTexture-1595-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "783581f041b46331cca8317c2ef5349b4a69a410837e3e824bd2db5cc8c60518"
+  },
+  {
+    "path": "MTLTexture-1596-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "04eaa0c8a099bc51998b1f6240773c874f81365b72d526a01dce0d017f4a30aa"
+  },
+  {
+    "path": "MTLTexture-1596-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "4a805f992357282073e7a56239428b24794732e33c1a655c07e07f1f1b23708d"
+  },
+  {
+    "path": "MTLTexture-1596-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "861ddd522c200645a5075b39a16e3f80dc252437af51e80009b87b9df5d7dfac"
+  },
+  {
+    "path": "MTLTexture-1596-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "440ae5778b79d3a7988fa44ddd23e43ac24ad6c7bf6f5600df2d36628ef1cbda"
+  },
+  {
+    "path": "MTLTexture-1596-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "2f0493cd85f701a7f8428d20c9efaa2ff209e62aa9b4f8f2907135ef825121ee"
+  },
+  {
+    "path": "MTLTexture-1596-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "3ad8f2222fc963e738410e8111dbc0517914736e1173bfd51ab0052801c531d7"
+  },
+  {
+    "path": "MTLTexture-1597-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "c7b1e78eb700ee86a828a80194534f35cecdd53cd49363d2df5e829aea0d09da"
+  },
+  {
+    "path": "MTLTexture-1597-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "4fb19c75d536f8e47eed223c11178b97bdfd09256ba62d224bd393f7718b09ee"
+  },
+  {
+    "path": "MTLTexture-1597-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "43db9ce713f847ce153b414fa596b3abb660ee51c97b7e67113c5cbff8e5d2e3"
+  },
+  {
+    "path": "MTLTexture-1597-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "4bb25f53430ab6aa0deeb7fb14c54ec21092ff32a4a3c2eee715f15797652187"
+  },
+  {
+    "path": "MTLTexture-1597-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "3916abae4c66a6edb81c5388f4056758706c796d0f9a751efbf8e9d284a189b9"
+  },
+  {
+    "path": "MTLTexture-1598-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "5179d20da6af06787f86b61637672629e764fcb7f9f546f9c3869dc7f052ba34"
+  },
+  {
+    "path": "MTLTexture-1598-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "0f2d92dd58fbb909adb400df51fedcd49148b185d7879af4e02ea93c3ce09c2d"
+  },
+  {
+    "path": "MTLTexture-1598-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "cbbfc7ea4dd1a131ce23945f1d45dc02d5825354bff1fe5608749a5cfb5bc8ad"
+  },
+  {
+    "path": "MTLTexture-1599-0-mipmap0-slice0",
+    "bytes": 12599296,
+    "sha256": "16e179219da676362ad93636e1b4de932a0c7ccb3d3df76754ce8bbf9a037ff5"
+  },
+  {
+    "path": "MTLTexture-1599-0-mipmap1-slice0",
+    "bytes": 3162112,
+    "sha256": "818d7fa3c24ef870ed61df36cf96304ba11b5c17a3f15e7534897274d0e9a773"
+  },
+  {
+    "path": "MTLTexture-1599-0-mipmap2-slice0",
+    "bytes": 802816,
+    "sha256": "f06ec766bd84884d9ef713e72b4178257f31afeb4a2e4ec25936ad8d817de91a"
+  },
+  {
+    "path": "MTLTexture-1599-0-mipmap3-slice0",
+    "bytes": 212992,
+    "sha256": "0021ff3d689e35659b7ee2e6dff01010cd78d3f98bf9e6934e98421b8b69e2e1"
+  },
+  {
+    "path": "MTLTexture-1599-0-mipmap4-slice0",
+    "bytes": 65536,
+    "sha256": "05021d85d01c18a7205e2d615594a24aec3845615e6ecf6bfabd7e7b330a9093"
+  },
+  {
+    "path": "MTLTexture-16-0-mipmap0-slice0",
+    "bytes": 1490944,
+    "sha256": "a597a63b000953161ec6d932bf08946d9b6a1cad937170979c9b0dc969299f47"
+  },
+  {
+    "path": "MTLTexture-1600-0-mipmap0-slice0",
+    "bytes": 50348032,
+    "sha256": "47e4c7655f091397758f6016a61897227d287ec4d502bd3496e8707f5a94e86f"
+  },
+  {
+    "path": "MTLTexture-1600-0-mipmap1-slice0",
+    "bytes": 12599296,
+    "sha256": "33538b0166cd9db1657a1c44e3c52c82fb2c01c5d7b4738a4075af02377938a8"
+  },
+  {
+    "path": "MTLTexture-1600-0-mipmap2-slice0",
+    "bytes": 3162112,
+    "sha256": "8ffdb06b2562a48dbf492ed88648b0779f8714e12bba039fa2342cfff730a480"
+  },
+  {
+    "path": "MTLTexture-1600-0-mipmap3-slice0",
+    "bytes": 802816,
+    "sha256": "4f859412e06404b027a9dd3f2652f5a9741a56a972c547c7a82bbc8038bee04c"
+  },
+  {
+    "path": "MTLTexture-1600-0-mipmap4-slice0",
+    "bytes": 212992,
+    "sha256": "3684894da6e1621f74186f7cc1bab887281cac1f9e3edc3380ed51f02ea06172"
+  },
+  {
+    "path": "MTLTexture-1600-0-mipmap5-slice0",
+    "bytes": 65536,
+    "sha256": "96c8c071169e258e876efe0c7fa3f5837dcae0ab0fb2102fb510fa8043f58b77"
+  },
+  {
+    "path": "MTLTexture-1601-0-mipmap0-slice0",
+    "bytes": 25182208,
+    "sha256": "378420a82aa9b87a121c40fc8b61c7be6bd200038cafa29ca636bd2f01c8c07f"
+  },
+  {
+    "path": "MTLTexture-1601-0-mipmap1-slice0",
+    "bytes": 6307840,
+    "sha256": "2294639f9499e52117da956fd14fce8529010604109573047ccbe823caebaf78"
+  },
+  {
+    "path": "MTLTexture-1601-0-mipmap2-slice0",
+    "bytes": 1589248,
+    "sha256": "93bff0b6cd0777a6e38c426937e23541b665561122c3018fede63c94c448f668"
+  },
+  {
+    "path": "MTLTexture-1601-0-mipmap3-slice0",
+    "bytes": 409600,
+    "sha256": "d3d1d02d747151aaa2bc18af91abb48bc8e67bd3e0102b0bd175662545b396f0"
+  },
+  {
+    "path": "MTLTexture-1601-0-mipmap4-slice0",
+    "bytes": 114688,
+    "sha256": "c57d5714b5bc8bf3f3f044670c25df39a7d0e5e21f0972d2367d2b45099173ec"
+  },
+  {
+    "path": "MTLTexture-1601-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "ef4bea60ed1ce761311858b872abea825dd0bc6f0a614a3807d98c64497df57c"
+  },
+  {
+    "path": "MTLTexture-1790327-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "0639ac1f9b89adea596252fa343df746bab7c8669b181a0dc75d0c8d94490725"
+  },
+  {
+    "path": "MTLTexture-1790331-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "88a1e25d0aac4643f3264543f581b64fc8187d8bb425a9b4e07998825a7d5a21"
+  },
+  {
+    "path": "MTLTexture-1790331-0-mipmap1-slice0",
+    "bytes": 278528,
+    "sha256": "4b3ac9eb690b488d9b953ef8deb60ef4081a43459e7f14e6521497bd2187b45c"
+  },
+  {
+    "path": "MTLTexture-1790331-0-mipmap2-slice0",
+    "bytes": 81920,
+    "sha256": "e77b6fbacf5f2d5d593a03a0fc41bd5cc7ae32b2de9f89061b4e6251d4045d4d"
+  },
+  {
+    "path": "MTLTexture-1790331-0-mipmap3-slice0",
+    "bytes": 32768,
+    "sha256": "31898e64b0351e6144854e804ea2aecef1b105f7cdc35666c9ba05a017aa946d"
+  },
+  {
+    "path": "MTLTexture-1809-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "9f6a8058e47166d08dbf45e3ffd11abcdae33059ccf6c7c81bb7eda1060700b6"
+  },
+  {
+    "path": "MTLTexture-1810-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "1b4dc9241fa98d6e4b0767be38ce970efe1686a36a97a50a8e62aada426ac387"
+  },
+  {
+    "path": "MTLTexture-1811-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "70851e2a66022d038c94aeaaa52b27a7767011609f4c45b4b6585d21a5abd538"
+  },
+  {
+    "path": "MTLTexture-1812-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "d45745274f55345cf786eca6e1617787fbca98839b7ce8d198d7193fe42ee4a6"
+  },
+  {
+    "path": "MTLTexture-1813-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "d45745274f55345cf786eca6e1617787fbca98839b7ce8d198d7193fe42ee4a6"
+  },
+  {
+    "path": "MTLTexture-1814-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "b2849f95fd4375a870922df6ebb00a439a178443c2c6f9f124399311a3e54ca5"
+  },
+  {
+    "path": "MTLTexture-1821-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "df52a62fa0ea9f1b33ad614c0e0c84e39178ed396d7c1a720df6da9eb824ff03"
+  },
+  {
+    "path": "MTLTexture-1821-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "dfd95581b7b20b7d25dcb4837d90e0fccad9cc0c619388a9df754c00961d1474"
+  },
+  {
+    "path": "MTLTexture-1821-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "78a5c7cdab5b2c05ba7ce4b8c793b1831425c8632ea001812776ca457c701de5"
+  },
+  {
+    "path": "MTLTexture-1821-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "50f3bf946086481943c4d88cfb2be6968e357214fb33ccd0629df9a897300482"
+  },
+  {
+    "path": "MTLTexture-1821-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "57fdaa7c4a791deaa8cadc387713233b5fa9ff54daa19773d6e6c1d74878e684"
+  },
+  {
+    "path": "MTLTexture-1821-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "d6cf8e2f3640e1add243ad43064be9c2947c99afb22dbf817c9d04cf6a0cc9cf"
+  },
+  {
+    "path": "MTLTexture-1823-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "30b8195213bc750da426d59bb30b54aa35943f1a50009de67f8e888a1d4ee785"
+  },
+  {
+    "path": "MTLTexture-1823-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "3848e7592c93a682160dd45c835ee47a86e40100f136493af3b9c0513c37aeed"
+  },
+  {
+    "path": "MTLTexture-1823-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "570d19fa1eb922ad8ad17459097718ebb77c48c07e604dc904405cb89d4b027e"
+  },
+  {
+    "path": "MTLTexture-1823-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "8961222e648652173197deecb7797fd597699e562b5e5213381f334541a36180"
+  },
+  {
+    "path": "MTLTexture-1823-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "7db53589d59c3df512f40822e5c49c43f6fb8237b124ff7600e848dc1b91be2c"
+  },
+  {
+    "path": "MTLTexture-1823-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "8a334e6076ab05f133490d9a8588626584074175a663aea078eaaa2cbffdca28"
+  },
+  {
+    "path": "MTLTexture-1824-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "c951f1237871f3dc1f914d13bd6819f08dc13ff0a366394ffd206a5be4262451"
+  },
+  {
+    "path": "MTLTexture-1824-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "3c4ee445d4412573a11e6f0d32fdd82c733519320fc11885b5df926d277ab1f1"
+  },
+  {
+    "path": "MTLTexture-1824-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "058abbf96923a66ea99be6de48e1cec96ad68707918b1bc2fba42361d41e22cf"
+  },
+  {
+    "path": "MTLTexture-1824-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "6aad2775a7ed57de19251870ec4561b7f79aed5b0746d53e9812dd6bf3bf83e7"
+  },
+  {
+    "path": "MTLTexture-1824-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "4653297c5ac71790f541f019bba407eb093685b8c57343caa44fa4cd7fdbb0f2"
+  },
+  {
+    "path": "MTLTexture-1824-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "bddc0532a7d83d202662cb5fcbc1c3b6e4a1269b77e4cfadac6ebea4d4f7e8e3"
+  },
+  {
+    "path": "MTLTexture-1827-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "8827a037d70ad35ff631a769a4c8e58fa7ca742f41789aadb05724ca74e1276b"
+  },
+  {
+    "path": "MTLTexture-1827-0-mipmap1-slice0",
+    "bytes": 278528,
+    "sha256": "acab35a770f798bb9ec4235ae16c53c50f47c3452222ad2cc2718591ab210a73"
+  },
+  {
+    "path": "MTLTexture-1827-0-mipmap2-slice0",
+    "bytes": 81920,
+    "sha256": "28d78f64d6ca36f9d63c0e2ff0b8b505910ba14962a8bd5797ccc46e660d3bcb"
+  },
+  {
+    "path": "MTLTexture-1827-0-mipmap3-slice0",
+    "bytes": 32768,
+    "sha256": "7bd0970a3e9abe81a54187380896e208849aa6deed91b3b1366eab0478839c85"
+  },
+  {
+    "path": "MTLTexture-1836-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "38353181f0551c783d34a3453068676412065a2da1d459c87e75773e61cb8e14"
+  },
+  {
+    "path": "MTLTexture-1836-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "017360dd3d7e57ae3fcc8b654612bc94a6444a5295c037a973f7669088da8659"
+  },
+  {
+    "path": "MTLTexture-1836-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "72ea36c0e33183106d4928282da29c0f178f5cef8ce0298af0632ccb998fd72b"
+  },
+  {
+    "path": "MTLTexture-1838-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "2333d1a13cc014bf6005d34cb9cfc66942639bcf7b5b90ed90c155d4147205d5"
+  },
+  {
+    "path": "MTLTexture-1838-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "3561cb7056a12607f1bccdde72df5059571e5e8459a9bacf04852ac17e4136d7"
+  },
+  {
+    "path": "MTLTexture-1838-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "091217481ed66d1dda8301cd46782d6b88a39aa2c880f25c58ecd9c21b159f35"
+  },
+  {
+    "path": "MTLTexture-1839-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "4cd27d984d1ac6f348bd19314b9c7805426e57ffed977549f73acd6c99085eb6"
+  },
+  {
+    "path": "MTLTexture-1839-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "eaf9a15cb3a6f95bf224f28d8ccb52ec8b9b8cd8666a78c4f96ae3fedbbf3862"
+  },
+  {
+    "path": "MTLTexture-1839-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "2cb9847ff1d82a4fb4b373fd24a25d88d23c4eb305c298a4057660a8a624bada"
+  },
+  {
+    "path": "MTLTexture-1844-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "93e15f5367e598094d74f281d8b0bd1016185b00e521741cad9b2e50c39a2ab7"
+  },
+  {
+    "path": "MTLTexture-1844-0-mipmap1-slice0",
+    "bytes": 278528,
+    "sha256": "70299ca4214a54df53990e158f84c07896efc534163de6e86c8bc72f5d781f3f"
+  },
+  {
+    "path": "MTLTexture-1844-0-mipmap2-slice0",
+    "bytes": 81920,
+    "sha256": "16811cc36cd237ba84e0982009fa40a159d7e06ef3a8c0369e5f84106e9d2297"
+  },
+  {
+    "path": "MTLTexture-1844-0-mipmap3-slice0",
+    "bytes": 32768,
+    "sha256": "1696d816e78c84843553c35394ef134c4c250ae00a1120c07a192b5f5e990bbb"
+  },
+  {
+    "path": "MTLTexture-1846-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "336674915601c5a45b5564ad27ff8aa2b9999822a56a74c5bfa1dc628c44eb0b"
+  },
+  {
+    "path": "MTLTexture-1846-0-mipmap1-slice0",
+    "bytes": 32768,
+    "sha256": "1f6fe78535de7515704de8c38704cbae22f427c3d8528262adaecf17316c4988"
+  },
+  {
+    "path": "MTLTexture-1847-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "a0af097a4e8cbc30a730930753a9c35ae6e75b2f004184a3507ce6a1372ac412"
+  },
+  {
+    "path": "MTLTexture-1847-0-mipmap1-slice0",
+    "bytes": 278528,
+    "sha256": "dc9ec145f4c8213a59f7afd414b35febec9aefe578de9ed4a0e4aff8c51371aa"
+  },
+  {
+    "path": "MTLTexture-1847-0-mipmap2-slice0",
+    "bytes": 81920,
+    "sha256": "33a04ad8dbc394564fe164944527556fa1af778163ae0f6837b3f04019b0e62e"
+  },
+  {
+    "path": "MTLTexture-1847-0-mipmap3-slice0",
+    "bytes": 32768,
+    "sha256": "203cd3ecefcf21d75552ce6a19fe4ce44d436c7fc54c69e9c1db5c6fc1e057da"
+  },
+  {
+    "path": "MTLTexture-1852-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "64ddfcd0414af755088429ea1e3e6aa90d8a8ce9bacd4067af19c9fc5c4043ec"
+  },
+  {
+    "path": "MTLTexture-1853-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "21e21ec6474f85ab3afac5693fd4f164cb437448a2359395e75330431a1ab7c9"
+  },
+  {
+    "path": "MTLTexture-1854-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "c7cc498c9319c57145a6c366c5fdc158029f341f96e70ed4cebd3878f14200c7"
+  },
+  {
+    "path": "MTLTexture-1855-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "4116a03c6cef80ff828dc06d8c91af3919bafa767cde46d42d30802d7ee55486"
+  },
+  {
+    "path": "MTLTexture-1856-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "0efe8d903b0b3b3a6d244f371d7de2b7bda75bd3009dccf1d04d72c6c13124ae"
+  },
+  {
+    "path": "MTLTexture-1857-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "0d07f7b5a160af4146bf4aa4bdf5aef624eb7e7f6c87cf648dff06f6453ab39f"
+  },
+  {
+    "path": "MTLTexture-1871-0-mipmap0-slice0",
+    "bytes": 442368,
+    "sha256": "b092c1746d5a6f3ca98a839e523e7ec9996dd39341af52e7d02cf92d3b76046a"
+  },
+  {
+    "path": "MTLTexture-1875-0-mipmap0-slice0",
+    "bytes": 180224,
+    "sha256": "ecfedc87203810ffc070b08e851ee6f71a01c88144d71d4bc880f5c5de664929"
+  },
+  {
+    "path": "MTLTexture-1901-0-mipmap0-slice0",
+    "bytes": 1130496,
+    "sha256": "8bcebf0466d975d6ba7418eec955f36fc8331bb6d1fc4c9c3b5ed82d1bc09ec9"
+  },
+  {
+    "path": "MTLTexture-1907-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "aed1e6130b7deea46826989153f28bcb1350c471c119a6fcebc49a0b9a616190"
+  },
+  {
+    "path": "MTLTexture-1955-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "85cb6594ab8a62eeecf2ef3951830973ce9e3c77a7c323cf8f24762e805abf8c"
+  },
+  {
+    "path": "MTLTexture-1955-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "4b162b228e35b23af61a5be86d020c9bc31ca31bfbf38a0de0738fd25ef49a72"
+  },
+  {
+    "path": "MTLTexture-1955-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "65b5aa36a4a10cd94c201cc1cd1efb4b4dcb627c23fcc529fe0c8d9224b35ed4"
+  },
+  {
+    "path": "MTLTexture-1959-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "50fd160f59dab74171ab243ba6ae68eb9cee919241d362c3d8b8a75312dd984b"
+  },
+  {
+    "path": "MTLTexture-1969-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "7e74ea5612eaead32c740edf207344e7396c3ed17b7a4443d9b8c6d96c27dd2d"
+  },
+  {
+    "path": "MTLTexture-1990-0-mipmap0-slice0",
+    "bytes": 540672,
+    "sha256": "2894e543672762daace34aadb013047c89efb18147cd14993a92c1ade3ac01ef"
+  },
+  {
+    "path": "MTLTexture-1990-0-mipmap1-slice0",
+    "bytes": 147456,
+    "sha256": "a40ac1ee8294b87a9f83e9950b1c8188fda926ed67117ec86b81f8110fab950b"
+  },
+  {
+    "path": "MTLTexture-1990-0-mipmap2-slice0",
+    "bytes": 49152,
+    "sha256": "ccb617b0c157f4cbad18443d8688e51033791b52fb8d55a111f125a60c9ecee3"
+  },
+  {
+    "path": "MTLTexture-1998-0-mipmap0-slice0",
+    "bytes": 3162112,
+    "sha256": "01caaea03e71a02c738598f804feb966aeae526069582074ca469acd4a61964f"
+  },
+  {
+    "path": "MTLTexture-2006-0-mipmap0-slice0",
+    "bytes": 3162112,
+    "sha256": "391b0d611ceee57bbbd68a96a24478aa147c42763bbf57953fa6fafadaa99feb"
+  },
+  {
+    "path": "MTLTexture-2039-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "172bef1800d99f5da6e104c0c44a5d8b64ae6623a5301887e5a5725e9bf049a1"
+  },
+  {
+    "path": "MTLTexture-2041-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "83e3749ac63604823c124385ce16b8259ac582affe634786c0303850a4118947"
+  },
+  {
+    "path": "MTLTexture-2071-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "7a0e88f35633a5c352d147c8ad9a2be45fcdd696fb535c3606f9db1248084cba"
+  },
+  {
+    "path": "MTLTexture-2071-0-mipmap1-slice0",
+    "bytes": 278528,
+    "sha256": "94f3a2ccd680997653c3d16630bc5ecac29c16fb67e685d58240095459ef041b"
+  },
+  {
+    "path": "MTLTexture-2071-0-mipmap2-slice0",
+    "bytes": 81920,
+    "sha256": "779b94bec85cfbb5be0fa83ac9ee6dfefef59a3b34da5dd30d12d3029ccd7c07"
+  },
+  {
+    "path": "MTLTexture-2071-0-mipmap3-slice0",
+    "bytes": 32768,
+    "sha256": "7fa101245d6eda375410999789eff01dfce6b6bb8b135748cfe876105268f75e"
+  },
+  {
+    "path": "MTLTexture-2073-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "a403e4578ee29ec62a7777b1270226e20d346389c2b9807cf81397a856e3d060"
+  },
+  {
+    "path": "MTLTexture-2073-0-mipmap1-slice0",
+    "bytes": 278528,
+    "sha256": "806e6b54611dc5a37e8392e084808b2804082a2996fb7fc6850923205e29dc71"
+  },
+  {
+    "path": "MTLTexture-2073-0-mipmap2-slice0",
+    "bytes": 81920,
+    "sha256": "2f19e3bcb0336f46b8cc3c27e9958ef797cdb0233136763e08943b8b0c7a3778"
+  },
+  {
+    "path": "MTLTexture-2073-0-mipmap3-slice0",
+    "bytes": 32768,
+    "sha256": "de125d1e84ae1a118dce76e3863d5c810cc66596e8801dd30b0a15068cac0bb1"
+  },
+  {
+    "path": "MTLTexture-2173707-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "c89691513aca6b37165c28f89f9883d8544aa8c6b3c695bb30e12176d1b2e530"
+  },
+  {
+    "path": "MTLTexture-2173707-0-mipmap1-slice0",
+    "bytes": 49152,
+    "sha256": "387f3500a12c5e3038644f7cc8b8f5224aa6a0fba81e0f65517849072605eec8"
+  },
+  {
+    "path": "MTLTexture-2200-0-mipmap0-slice0",
+    "bytes": 5947392,
+    "sha256": "a0c139659ac590f181a6ab4e75e4c59738c534b7cccc724d22bc0ccbb676d2ad"
+  },
+  {
+    "path": "MTLTexture-2204-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "2d8fb89a08d812581ca6aa526460063d573e5c5225286d17a224f9052d117ca6"
+  },
+  {
+    "path": "MTLTexture-2205-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "2d8fb89a08d812581ca6aa526460063d573e5c5225286d17a224f9052d117ca6"
+  },
+  {
+    "path": "MTLTexture-2207197-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "b02677179e37c02ba2edab89773d31189aae93d8665d91141b92447aec9a904a"
+  },
+  {
+    "path": "MTLTexture-2207197-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "31da9cc6fb5739ba68840ecb94b208938e8c165d770ccd5d8d6c37870f88c0f5"
+  },
+  {
+    "path": "MTLTexture-2207197-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "4a27557beed091e782a226cd3d0b47bc5dd0eb1e7285d533ec4b840c115d889a"
+  },
+  {
+    "path": "MTLTexture-2207197-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "d623fce4319fe63c2a65f7114ba55420c679fc6ca189b9b7cc4d96c6ace215e0"
+  },
+  {
+    "path": "MTLTexture-2207197-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "e28320b675186022d35af7c6722ac3e7ebf4297ead5658dbc04d80dad204061e"
+  },
+  {
+    "path": "MTLTexture-2214-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "bcf1506b45a7eabf7ace7934d41ce388f9023728563f6759c467cd6dc396424b"
+  },
+  {
+    "path": "MTLTexture-2215-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "6a83d1581c07de556b423a2fb4f9403879a3052b889797ccb2f39448edb4b363"
+  },
+  {
+    "path": "MTLTexture-2230-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "d793bde32ee8c2665474a10fe6fe8a6edc8955f0677b3b5306e6ecd981bbf0b3"
+  },
+  {
+    "path": "MTLTexture-2236-0-mipmap0-slice0",
+    "bytes": 360448,
+    "sha256": "d4e893bd9d452c91034972a34aea504d3af1d57cd77c62e8c77e828003ee6383"
+  },
+  {
+    "path": "MTLTexture-2242-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "f676ebd1ddd226f7d4ece208e247b6d68f2298610476abd5b75fcb054ce0ed9e"
+  },
+  {
+    "path": "MTLTexture-2246-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "77819af12b3c78d5f46fb6b80d2a73b467877be508f28ae318eaa9a4de0833d5"
+  },
+  {
+    "path": "MTLTexture-2254-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "918eebc9bd957a8ed230142a2522e0fadfde1494c02d3dcc9490d1785867425d"
+  },
+  {
+    "path": "MTLTexture-2259-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "b95e255a3b4644936ba1faa5188a3037efd4751da282313e951a3ca24ba51a58"
+  },
+  {
+    "path": "MTLTexture-2263-0-mipmap0-slice0",
+    "bytes": 360448,
+    "sha256": "847c0d88e6951264bfcc3841230c7e6f42dc2405107894829f9c562dba43bfc7"
+  },
+  {
+    "path": "MTLTexture-2267-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "e149be49c1a14ee1fba7367000d8bff01ac78af01b50226c069095e47d2775f5"
+  },
+  {
+    "path": "MTLTexture-2381-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "d376af5f172ba2abb0283fb4a6f53be0570855e48c1958bf74601f35042b91cd"
+  },
+  {
+    "path": "MTLTexture-239352-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "b2bc69759c74a72d1e5ed53971188c346b11d2d90d7def395e8cf12865681cdd"
+  },
+  {
+    "path": "MTLTexture-239552-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "bd1d81018605771d87f62ff6eaa9c74cda53ddc86d887c83189a2defa7146873"
+  },
+  {
+    "path": "MTLTexture-239775-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "97b541c02be33d3336b46e22f2d083c7966cedd24764e476a3888cf9a8b60cec"
+  },
+  {
+    "path": "MTLTexture-24049-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "09c4909bc2e7c82164425004bcad2e5aef471dd82b7d8a52afde896dba22a226"
+  },
+  {
+    "path": "MTLTexture-2560-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "9f6a8058e47166d08dbf45e3ffd11abcdae33059ccf6c7c81bb7eda1060700b6"
+  },
+  {
+    "path": "MTLTexture-2561-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "1b4dc9241fa98d6e4b0767be38ce970efe1686a36a97a50a8e62aada426ac387"
+  },
+  {
+    "path": "MTLTexture-2562-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "70851e2a66022d038c94aeaaa52b27a7767011609f4c45b4b6585d21a5abd538"
+  },
+  {
+    "path": "MTLTexture-2563-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "d45745274f55345cf786eca6e1617787fbca98839b7ce8d198d7193fe42ee4a6"
+  },
+  {
+    "path": "MTLTexture-2564-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "d45745274f55345cf786eca6e1617787fbca98839b7ce8d198d7193fe42ee4a6"
+  },
+  {
+    "path": "MTLTexture-2565-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "b2849f95fd4375a870922df6ebb00a439a178443c2c6f9f124399311a3e54ca5"
+  },
+  {
+    "path": "MTLTexture-2570-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "5d565aaca0198c01b03a02daa0243f7ca2f9a45dd6d7908a83202a9d521d67be"
+  },
+  {
+    "path": "MTLTexture-2571-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "84506d679765452ad7d0a3c92876d6115564665c956cc497916ffce3cf9d3942"
+  },
+  {
+    "path": "MTLTexture-2572-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "32afe48ac82355c779adeaec6f568110ec0fef00cfec62eae2426226dfaedb18"
+  },
+  {
+    "path": "MTLTexture-2573-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "2262b85265a826b417728ae803d4125a3694cddfbaf8237b644e8aca1dba5f1a"
+  },
+  {
+    "path": "MTLTexture-2574-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "665cef5bb408bb251624ea3fa06df32003c9c5a05f37fa1437a5a592b70a476a"
+  },
+  {
+    "path": "MTLTexture-2575-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "b74fcfa5b2b263ec0243cf5feef22d55e16d9623aeaffaf10a97c8ac4a5298e4"
+  },
+  {
+    "path": "MTLTexture-2614-0-mipmap0-slice0",
+    "bytes": 294912,
+    "sha256": "9af1647931d5b4337af35757153e8d3487c25251a3aaaa01456a30cf075623b3"
+  },
+  {
+    "path": "MTLTexture-2617-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "b76477fa61ea555162d82e1ff7b224a5c70d8f54b751824c8ee5de18111107c5"
+  },
+  {
+    "path": "MTLTexture-2632-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "3f49fca85a609a2d3599f4aa385b8ed3ecdb32f97aea4f12dc0d115c09e7fcfe"
+  },
+  {
+    "path": "MTLTexture-2636-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "6a5e5983bf4f339b304c6321ec25d5c1ba5b3ad5e2e385e557221eb4249279b5"
+  },
+  {
+    "path": "MTLTexture-2636-0-mipmap1-slice0",
+    "bytes": 32768,
+    "sha256": "3823df1fec435c9463971fb5020822ea57da8d0c179f172baf2a9c2a66a31a64"
+  },
+  {
+    "path": "MTLTexture-267-0-mipmap0-slice0",
+    "bytes": 5947392,
+    "sha256": "7057517f2a8779098635940e3157857c60a8da54e865d8362830ab488d61e6cb"
+  },
+  {
+    "path": "MTLTexture-2677839-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "ff0af83396c512e245e00386f2e79c1ba0c42430d5bf2fcd3cfc519b4a3200e3"
+  },
+  {
+    "path": "MTLTexture-2677839-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "e0c72da9546992de0bbf206d6a5fb965902e2a54cbd7b53b5f648e16c6f6dd57"
+  },
+  {
+    "path": "MTLTexture-2677839-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "a7d483b466fccb57384677b2241affd540d53e92b63901f3c3863582862c370d"
+  },
+  {
+    "path": "MTLTexture-2677839-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "61fa2fe8573f620bf21830f57efabbd4daa174df317d53cedf7e8b4ae715a828"
+  },
+  {
+    "path": "MTLTexture-2677839-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "722063f45a20f04240cd50f1b5d7ec42b6f1c0660e8733df4a26e6bf685ec819"
+  },
+  {
+    "path": "MTLTexture-2677839-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "1ef570437a4478b7c56545ae36d8ba398e05865354d08cd4de118ff6cd6cecb1"
+  },
+  {
+    "path": "MTLTexture-275-0-mipmap0-slice0",
+    "bytes": 5947392,
+    "sha256": "e10eb07972af01df0b576d39c7f40dfc460f7b3cc2c4e4882347947e72263138"
+  },
+  {
+    "path": "MTLTexture-2750-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "ee98494823fe1b294eb58dc9eeffa392321f27728aa907d43fd2ef851605c18c"
+  },
+  {
+    "path": "MTLTexture-2750-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "3133dee8dddc7432e061eaded7b7c3c1f89f4fff26336ab24a0149868229c2e4"
+  },
+  {
+    "path": "MTLTexture-2750-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "8aee265e3e6cc37884d3d149007a974c1092b1a814d639c31242ce7297cd3453"
+  },
+  {
+    "path": "MTLTexture-2750-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "6ea9d9939ebc47d58c822bc5c4bb38b35d9a7dc849600d6982ba68ca7d0708e6"
+  },
+  {
+    "path": "MTLTexture-2750-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "42efef99629e1b87b2e29bf989b91e98e137aa19e442d5ef5bc1a112b48e5da7"
+  },
+  {
+    "path": "MTLTexture-2750-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "f902e729d0ed18a788659e92cf97e075de01a800a5eaee60b0066196808ea8b5"
+  },
+  {
+    "path": "MTLTexture-2752-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "8a93789a9db927d170cbe81e623461fab2979a612fea64c280adc56cc504d3d6"
+  },
+  {
+    "path": "MTLTexture-2752-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "78970d8a85289a1ae568e267587d4e9283b3b1f2c510a3660ff6bfd0ce5542bf"
+  },
+  {
+    "path": "MTLTexture-2752-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "360d135c3384a7653f5c91a92f64b8bd3e7d8a07cf21417b9676a76bc2489f94"
+  },
+  {
+    "path": "MTLTexture-2752-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "cb0063accfefc4f6d8a3b53e0d1837cda2f938949143bae7ccb5a2b67d72f71b"
+  },
+  {
+    "path": "MTLTexture-2752-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "d4364d95153f58f20859798bfe2d299f6c2fef4ca3d7227b48282b7402eb627b"
+  },
+  {
+    "path": "MTLTexture-2752-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "5280b14f2cd0fd488bba77ade2cbacdd967b123428aeb6e8893e0e9093ea1a48"
+  },
+  {
+    "path": "MTLTexture-2769-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "8029c367befc79b57e0270a74f0cb16df535da6224b787cf809afd59f825034e"
+  },
+  {
+    "path": "MTLTexture-2770-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "6864238ca806c380429f2b5282ebad94a456e3dc4384e2a3816f0c183dc332b8"
+  },
+  {
+    "path": "MTLTexture-2775-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "7e266f00398fae23d7af602bf6f54f6aad40935c7ccb24c9369dd39c73e2a902"
+  },
+  {
+    "path": "MTLTexture-2779-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "6c2dbd4d79bc59771508033b737db2b5e1fc93b725f9449fb7d6eab0e4a9a4fc"
+  },
+  {
+    "path": "MTLTexture-2788-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "4e8e652f6fdc0a5217b3099e0df7cb54514e382abaf2bc2aa91b16808a1c4af6"
+  },
+  {
+    "path": "MTLTexture-2791-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "ef7152e5103798c525a3ed69ec93f8aa6a88a770ec4fe340570c6e0700fd0316"
+  },
+  {
+    "path": "MTLTexture-2793-0-mipmap0-slice0",
+    "bytes": 360448,
+    "sha256": "57a2ecef5e91771854a49d470f9274ba4ce17067374a2becefad147f5e273a6a"
+  },
+  {
+    "path": "MTLTexture-2795-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "3e644027c64c0e728540e1465b252a5b4ad7a4d6e007725e8521d285d9a54c4d"
+  },
+  {
+    "path": "MTLTexture-2797-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "b61a3a5b5da2463229625a64292b966ea17c6428b482277bb81c736d6f3f74f2"
+  },
+  {
+    "path": "MTLTexture-2813304-0-mipmap0-slice0",
+    "bytes": 1081344,
+    "sha256": "2327f5dc1cf580cf51e94eeada9b8b12a7fae31eeca5e47d0418199d795e378a"
+  },
+  {
+    "path": "MTLTexture-2915582-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "9b704612dc8fb9482a0b0cbdd26b7e428f554da87d055765e12616aa6766c02b"
+  },
+  {
+    "path": "MTLTexture-2916487-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "bc39067d21e6b77c0023f2b0a8286c2b2e187ad28f643b883879cbfa331ed43b"
+  },
+  {
+    "path": "MTLTexture-2932271-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "4a77fa099fb4ff1a844393abcf461b7c93996f331ddf8391af543f1e79adb591"
+  },
+  {
+    "path": "MTLTexture-2941272-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "20fd990b09df4a0edaf3609faa167d7875acf77ae4fc695b11b095fcbe80f974"
+  },
+  {
+    "path": "MTLTexture-2959435-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "551c7503b0b97d3906e5da2cf734ec542f4388649a5beaf959ac0d0b9fe998ed"
+  },
+  {
+    "path": "MTLTexture-2960220-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "d9a133edb9cfdebb51d7d661d5193ce85ac215853eb6399af9ba233c01b8a937"
+  },
+  {
+    "path": "MTLTexture-2960221-0-mipmap0-slice0",
+    "bytes": 2899968,
+    "sha256": "cda19bd25239d81cb387df226d8215f562ead96e4ef2d6b805b455ea64a2015a"
+  },
+  {
+    "path": "MTLTexture-2962812-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "515675edb942f0e155635266deb2e954a59dc9c7084215498425a9ce0cca237f"
+  },
+  {
+    "path": "MTLTexture-2962813-0-mipmap0-slice0",
+    "bytes": 2080768,
+    "sha256": "0a2229a5f6dd51efbe856e9c49cf7cf093e6b45347fe825bd080962a31d9b5b7"
+  },
+  {
+    "path": "MTLTexture-2962988-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "2f6033e1e7433e9aab35b8c09285677990ddc435caf469ed422cf85cfd0324f8"
+  },
+  {
+    "path": "MTLTexture-2963074-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "d2cd9f32aef6b51f20ad1d994f6fd9c209c08234ef3d64b9044a86f223c4a884"
+  },
+  {
+    "path": "MTLTexture-2963082-0-mipmap0-slice0",
+    "bytes": 3162112,
+    "sha256": "391b0d611ceee57bbbd68a96a24478aa147c42763bbf57953fa6fafadaa99feb"
+  },
+  {
+    "path": "MTLTexture-2963699-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "a3a8e70c521c57be7b349dd7c87d2795da03ab2a8e3b0319dbea9b252f3c5ed0"
+  },
+  {
+    "path": "MTLTexture-2964578-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "69ad9fccea8830e9a3dd4411fe4efc7ff38a34510bef80ef58555b0d5591df85"
+  },
+  {
+    "path": "MTLTexture-2964579-0-mipmap0-slice0",
+    "bytes": 1081344,
+    "sha256": "a124e95ad5458c91019c3189ef5acf9cfb4120cc6377976f5ef5f74c643bd0aa"
+  },
+  {
+    "path": "MTLTexture-2964580-0-mipmap0-slice0",
+    "bytes": 2899968,
+    "sha256": "cda19bd25239d81cb387df226d8215f562ead96e4ef2d6b805b455ea64a2015a"
+  },
+  {
+    "path": "MTLTexture-2964821-0-mipmap0-slice0",
+    "bytes": 3162112,
+    "sha256": "65d74fb3ffc25ab46a9f5f88cffa28ed29d31cd0c051462fcefa9c2e0647dbdc"
+  },
+  {
+    "path": "MTLTexture-2965371-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "c00d0bd17f3af2e8b721abdc36128b3ca8e2ea1716fa8caabf04d774dc637df9"
+  },
+  {
+    "path": "MTLTexture-301-0-mipmap0-slice0",
+    "bytes": 5947392,
+    "sha256": "f018a996bbbd643052f01a486176946da2dbb2c1003b7a1855ed3e3e709e6760"
+  },
+  {
+    "path": "MTLTexture-305-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-305-0-mipmap0-slice1",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-305-0-mipmap0-slice2",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-305-0-mipmap0-slice3",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-305-0-mipmap0-slice4",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-305-0-mipmap0-slice5",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-306-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-306-0-mipmap0-slice1",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-306-0-mipmap0-slice2",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-306-0-mipmap0-slice3",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-306-0-mipmap0-slice4",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-306-0-mipmap0-slice5",
+    "bytes": 81920,
+    "sha256": "ab39efa75f35a254e488cc31810b27ef61ba81b8aaa0a8a586bc528e04a08f54"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "b1ce8ab391fb069fb812672a3db6a9dee1561d48a0715584c3618567c9331136"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap0-slice1",
+    "bytes": 4210688,
+    "sha256": "3b12dc4c96073b8add137ba8ec3d976b9d997de54d3f97f263a15653d4f88903"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap0-slice2",
+    "bytes": 4210688,
+    "sha256": "f71240951f0f459238b039087c4e9ed29c880be865177e67d88cb8138d29ff16"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap0-slice3",
+    "bytes": 4210688,
+    "sha256": "03164b386147ead5b6d50920e051d6674f8d9af3058447e5982007336b4eb62c"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap0-slice4",
+    "bytes": 4210688,
+    "sha256": "5b8bc7e8e28345340302174870f09f72cc9d3115e33257a6b9de82d41842fc76"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap0-slice5",
+    "bytes": 4210688,
+    "sha256": "d1e6067ef179194751a6a77165fcf42e1738e8623377cc42b62dd9ebcc2846a9"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "be20838e711b3efaec3fe0048797d379a1ee6ce4d7edb3097135e73a3da21ef2"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap1-slice1",
+    "bytes": 1064960,
+    "sha256": "60a6bbb1ca29e46d1b1476c9addd9f8412f49936d7c92daf31cc492a4c574df5"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap1-slice2",
+    "bytes": 1064960,
+    "sha256": "f1192ec12bd412df924424c737a523ee803062d30757115efb020f9f1e3d73fd"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap1-slice3",
+    "bytes": 1064960,
+    "sha256": "06fb91436edc2958bbb7c48fa05e72d94a1977089c30d6d37fb0e4321c8838d8"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap1-slice4",
+    "bytes": 1064960,
+    "sha256": "1be90a0964068a85a1dfec92853c81cafeeb0fcdc9523808e44180e6722ebb45"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap1-slice5",
+    "bytes": 1064960,
+    "sha256": "80ee4cdd3650db9beabe81dfe03b9ed4e721dde08252dd8e97e23f973814e82f"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "f51d681bcf5ff3e663233d9b90f30d8484ccb70ac2f4dd2b2ca2a96489475b62"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap2-slice1",
+    "bytes": 278528,
+    "sha256": "3878c0082c21be81fd50142ab34c62dca807831f3d19ed59acf2f1e0906c245f"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap2-slice2",
+    "bytes": 278528,
+    "sha256": "1e482e20d6aaff1881805c56ea3f743cff8d0a2c9db0dd1fca498fb59f93e7c6"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap2-slice3",
+    "bytes": 278528,
+    "sha256": "5dac1e1ba495e88866e635c3ce680d69401f52d6a5fa2c4459006ec5ccf375c2"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap2-slice4",
+    "bytes": 278528,
+    "sha256": "62e065145643c629e9f5534962fe4a6c3b9c27f3a015f383e595ec1f29cc4065"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap2-slice5",
+    "bytes": 278528,
+    "sha256": "fd124c562d17d978ad034ebb7c3af1269eda24050e38cd2b1c7de909cd006c40"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "df2fdf076d3cb4da153b443beede9fc34557d4b447028fbb9d0aec15631329bd"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap3-slice1",
+    "bytes": 81920,
+    "sha256": "2171dc5860cbfb43019eb3a3dcb4766e2a901a672a0c615c3eb3e86159c21332"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap3-slice2",
+    "bytes": 81920,
+    "sha256": "40368e64658709fd97b369631af92940bfdb4a8e1afe38c9d13a43bb7b6bb225"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap3-slice3",
+    "bytes": 81920,
+    "sha256": "225980247535189a55f8ad6ffe1be8c2b4217a39c30bcf287d33281e14e4652b"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap3-slice4",
+    "bytes": 81920,
+    "sha256": "5f6d6b128d1f9feceddbccfd6aa16aea027b35b1d7793ccedc5338cd019c4c3d"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap3-slice5",
+    "bytes": 81920,
+    "sha256": "494c18ad5cb1e14cd0c9783f6bf8b965159e47edd5c84287f168a33118347c90"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "4b5117b190f93f79a7501b5419bf31b979b459ffe7683dd7b3e97aa29ff56c65"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap4-slice1",
+    "bytes": 32768,
+    "sha256": "5665e1ae7bad355de7fa3f6462c350e692092a5f63c9ca46253470c5fd5d3d7a"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap4-slice2",
+    "bytes": 32768,
+    "sha256": "8a4a7ceee5d2008e51d2dfde658d895e4392cd4f054395db381d3f670f635a29"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap4-slice3",
+    "bytes": 32768,
+    "sha256": "c8453dd4deea3a6f733f98748653ddd488c2251cf80dbaa7fb62a67846f3fc95"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap4-slice4",
+    "bytes": 32768,
+    "sha256": "a7591a7ad98d0502559b495fb874889f0faa1c81eb7a665cc8f893d4563623da"
+  },
+  {
+    "path": "MTLTexture-307-0-mipmap4-slice5",
+    "bytes": 32768,
+    "sha256": "a199c54d60281f682eef1fe058140235800d3a5ba6c4bfc59f02dc2e820ed035"
+  },
+  {
+    "path": "MTLTexture-308-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "44abff99e3936e52f2f3e8e36d102ec56681e212af1adfa704458b73a9693e18"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "b1ce8ab391fb069fb812672a3db6a9dee1561d48a0715584c3618567c9331136"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap0-slice1",
+    "bytes": 4210688,
+    "sha256": "3b12dc4c96073b8add137ba8ec3d976b9d997de54d3f97f263a15653d4f88903"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap0-slice2",
+    "bytes": 4210688,
+    "sha256": "f71240951f0f459238b039087c4e9ed29c880be865177e67d88cb8138d29ff16"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap0-slice3",
+    "bytes": 4210688,
+    "sha256": "03164b386147ead5b6d50920e051d6674f8d9af3058447e5982007336b4eb62c"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap0-slice4",
+    "bytes": 4210688,
+    "sha256": "5b8bc7e8e28345340302174870f09f72cc9d3115e33257a6b9de82d41842fc76"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap0-slice5",
+    "bytes": 4210688,
+    "sha256": "d1e6067ef179194751a6a77165fcf42e1738e8623377cc42b62dd9ebcc2846a9"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "be20838e711b3efaec3fe0048797d379a1ee6ce4d7edb3097135e73a3da21ef2"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap1-slice1",
+    "bytes": 1064960,
+    "sha256": "60a6bbb1ca29e46d1b1476c9addd9f8412f49936d7c92daf31cc492a4c574df5"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap1-slice2",
+    "bytes": 1064960,
+    "sha256": "f1192ec12bd412df924424c737a523ee803062d30757115efb020f9f1e3d73fd"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap1-slice3",
+    "bytes": 1064960,
+    "sha256": "06fb91436edc2958bbb7c48fa05e72d94a1977089c30d6d37fb0e4321c8838d8"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap1-slice4",
+    "bytes": 1064960,
+    "sha256": "1be90a0964068a85a1dfec92853c81cafeeb0fcdc9523808e44180e6722ebb45"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap1-slice5",
+    "bytes": 1064960,
+    "sha256": "80ee4cdd3650db9beabe81dfe03b9ed4e721dde08252dd8e97e23f973814e82f"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "f51d681bcf5ff3e663233d9b90f30d8484ccb70ac2f4dd2b2ca2a96489475b62"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap2-slice1",
+    "bytes": 278528,
+    "sha256": "3878c0082c21be81fd50142ab34c62dca807831f3d19ed59acf2f1e0906c245f"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap2-slice2",
+    "bytes": 278528,
+    "sha256": "1e482e20d6aaff1881805c56ea3f743cff8d0a2c9db0dd1fca498fb59f93e7c6"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap2-slice3",
+    "bytes": 278528,
+    "sha256": "5dac1e1ba495e88866e635c3ce680d69401f52d6a5fa2c4459006ec5ccf375c2"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap2-slice4",
+    "bytes": 278528,
+    "sha256": "62e065145643c629e9f5534962fe4a6c3b9c27f3a015f383e595ec1f29cc4065"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap2-slice5",
+    "bytes": 278528,
+    "sha256": "fd124c562d17d978ad034ebb7c3af1269eda24050e38cd2b1c7de909cd006c40"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "df2fdf076d3cb4da153b443beede9fc34557d4b447028fbb9d0aec15631329bd"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap3-slice1",
+    "bytes": 81920,
+    "sha256": "2171dc5860cbfb43019eb3a3dcb4766e2a901a672a0c615c3eb3e86159c21332"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap3-slice2",
+    "bytes": 81920,
+    "sha256": "40368e64658709fd97b369631af92940bfdb4a8e1afe38c9d13a43bb7b6bb225"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap3-slice3",
+    "bytes": 81920,
+    "sha256": "225980247535189a55f8ad6ffe1be8c2b4217a39c30bcf287d33281e14e4652b"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap3-slice4",
+    "bytes": 81920,
+    "sha256": "5f6d6b128d1f9feceddbccfd6aa16aea027b35b1d7793ccedc5338cd019c4c3d"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap3-slice5",
+    "bytes": 81920,
+    "sha256": "494c18ad5cb1e14cd0c9783f6bf8b965159e47edd5c84287f168a33118347c90"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "4b5117b190f93f79a7501b5419bf31b979b459ffe7683dd7b3e97aa29ff56c65"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap4-slice1",
+    "bytes": 32768,
+    "sha256": "5665e1ae7bad355de7fa3f6462c350e692092a5f63c9ca46253470c5fd5d3d7a"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap4-slice2",
+    "bytes": 32768,
+    "sha256": "8a4a7ceee5d2008e51d2dfde658d895e4392cd4f054395db381d3f670f635a29"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap4-slice3",
+    "bytes": 32768,
+    "sha256": "c8453dd4deea3a6f733f98748653ddd488c2251cf80dbaa7fb62a67846f3fc95"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap4-slice4",
+    "bytes": 32768,
+    "sha256": "a7591a7ad98d0502559b495fb874889f0faa1c81eb7a665cc8f893d4563623da"
+  },
+  {
+    "path": "MTLTexture-309-0-mipmap4-slice5",
+    "bytes": 32768,
+    "sha256": "a199c54d60281f682eef1fe058140235800d3a5ba6c4bfc59f02dc2e820ed035"
+  },
+  {
+    "path": "MTLTexture-310-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "45eb52cac26c138d60ddbb4d566e8e54fb28c0e68a40ffa508968975cae31b10"
+  },
+  {
+    "path": "MTLTexture-3194-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "396ec47293c27afd4f77e43be59cf5eb975787886ff39861837357725fc96e98"
+  },
+  {
+    "path": "MTLTexture-329-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "36186e4eb245efe5dbacf8a3105640d438b708628150eb961f76e310b7c6c1a5"
+  },
+  {
+    "path": "MTLTexture-330-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "91e059125c8461285b74261ca1669c7b8fcffe720dfc39c91a3d0bf1a7144bed"
+  },
+  {
+    "path": "MTLTexture-3331-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "6864238ca806c380429f2b5282ebad94a456e3dc4384e2a3816f0c183dc332b8"
+  },
+  {
+    "path": "MTLTexture-3332-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "f49954b7f6473f05cddd81453292cb391a1e01d8fbc841c4f59bce424a493825"
+  },
+  {
+    "path": "MTLTexture-3337-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "760bbc2acd25bd91e8d2f2cb3c9faf7614b52d5676a3c1a1cd65f66504792b3c"
+  },
+  {
+    "path": "MTLTexture-3345-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "ad3fc2d9dfb13ec74249cf68c7c478e36995b8cf92ea25e03ea21b37de823935"
+  },
+  {
+    "path": "MTLTexture-3347-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "a7409fd9e490ac54ce07dd9d4e142be1f103f36a5cf127a35de5d3008e97dc15"
+  },
+  {
+    "path": "MTLTexture-3349-0-mipmap0-slice0",
+    "bytes": 360448,
+    "sha256": "e60b94556133cea8d56fa8f2b72972fc6bdc2f3703794e210417f499fb2416c5"
+  },
+  {
+    "path": "MTLTexture-3351-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "e3782edaa80f6d45daeeea1998890bb282d4891d1329dc69921b1c6b94909271"
+  },
+  {
+    "path": "MTLTexture-3353-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "2dc85d939a6aa8e401ad53f5d5b3b3c4608a9a9e72bb57359908343d101e28fa"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "b1ce8ab391fb069fb812672a3db6a9dee1561d48a0715584c3618567c9331136"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap0-slice1",
+    "bytes": 4210688,
+    "sha256": "d036ec3826b569da15ed95476d4d8a4fecc0b80c7f873af8711db403ef11cb29"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap0-slice2",
+    "bytes": 4210688,
+    "sha256": "f71240951f0f459238b039087c4e9ed29c880be865177e67d88cb8138d29ff16"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap0-slice3",
+    "bytes": 4210688,
+    "sha256": "03164b386147ead5b6d50920e051d6674f8d9af3058447e5982007336b4eb62c"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap0-slice4",
+    "bytes": 4210688,
+    "sha256": "5b8bc7e8e28345340302174870f09f72cc9d3115e33257a6b9de82d41842fc76"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap0-slice5",
+    "bytes": 4210688,
+    "sha256": "d1e6067ef179194751a6a77165fcf42e1738e8623377cc42b62dd9ebcc2846a9"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "be20838e711b3efaec3fe0048797d379a1ee6ce4d7edb3097135e73a3da21ef2"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap1-slice1",
+    "bytes": 1064960,
+    "sha256": "60a6bbb1ca29e46d1b1476c9addd9f8412f49936d7c92daf31cc492a4c574df5"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap1-slice2",
+    "bytes": 1064960,
+    "sha256": "f1192ec12bd412df924424c737a523ee803062d30757115efb020f9f1e3d73fd"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap1-slice3",
+    "bytes": 1064960,
+    "sha256": "06fb91436edc2958bbb7c48fa05e72d94a1977089c30d6d37fb0e4321c8838d8"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap1-slice4",
+    "bytes": 1064960,
+    "sha256": "1be90a0964068a85a1dfec92853c81cafeeb0fcdc9523808e44180e6722ebb45"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap1-slice5",
+    "bytes": 1064960,
+    "sha256": "80ee4cdd3650db9beabe81dfe03b9ed4e721dde08252dd8e97e23f973814e82f"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "f51d681bcf5ff3e663233d9b90f30d8484ccb70ac2f4dd2b2ca2a96489475b62"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap2-slice1",
+    "bytes": 278528,
+    "sha256": "3878c0082c21be81fd50142ab34c62dca807831f3d19ed59acf2f1e0906c245f"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap2-slice2",
+    "bytes": 278528,
+    "sha256": "1e482e20d6aaff1881805c56ea3f743cff8d0a2c9db0dd1fca498fb59f93e7c6"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap2-slice3",
+    "bytes": 278528,
+    "sha256": "5dac1e1ba495e88866e635c3ce680d69401f52d6a5fa2c4459006ec5ccf375c2"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap2-slice4",
+    "bytes": 278528,
+    "sha256": "62e065145643c629e9f5534962fe4a6c3b9c27f3a015f383e595ec1f29cc4065"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap2-slice5",
+    "bytes": 278528,
+    "sha256": "fd124c562d17d978ad034ebb7c3af1269eda24050e38cd2b1c7de909cd006c40"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "df2fdf076d3cb4da153b443beede9fc34557d4b447028fbb9d0aec15631329bd"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap3-slice1",
+    "bytes": 81920,
+    "sha256": "2171dc5860cbfb43019eb3a3dcb4766e2a901a672a0c615c3eb3e86159c21332"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap3-slice2",
+    "bytes": 81920,
+    "sha256": "40368e64658709fd97b369631af92940bfdb4a8e1afe38c9d13a43bb7b6bb225"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap3-slice3",
+    "bytes": 81920,
+    "sha256": "225980247535189a55f8ad6ffe1be8c2b4217a39c30bcf287d33281e14e4652b"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap3-slice4",
+    "bytes": 81920,
+    "sha256": "5f6d6b128d1f9feceddbccfd6aa16aea027b35b1d7793ccedc5338cd019c4c3d"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap3-slice5",
+    "bytes": 81920,
+    "sha256": "494c18ad5cb1e14cd0c9783f6bf8b965159e47edd5c84287f168a33118347c90"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "4b5117b190f93f79a7501b5419bf31b979b459ffe7683dd7b3e97aa29ff56c65"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap4-slice1",
+    "bytes": 32768,
+    "sha256": "5665e1ae7bad355de7fa3f6462c350e692092a5f63c9ca46253470c5fd5d3d7a"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap4-slice2",
+    "bytes": 32768,
+    "sha256": "8a4a7ceee5d2008e51d2dfde658d895e4392cd4f054395db381d3f670f635a29"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap4-slice3",
+    "bytes": 32768,
+    "sha256": "c8453dd4deea3a6f733f98748653ddd488c2251cf80dbaa7fb62a67846f3fc95"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap4-slice4",
+    "bytes": 32768,
+    "sha256": "a7591a7ad98d0502559b495fb874889f0faa1c81eb7a665cc8f893d4563623da"
+  },
+  {
+    "path": "MTLTexture-3419-0-mipmap4-slice5",
+    "bytes": 32768,
+    "sha256": "a199c54d60281f682eef1fe058140235800d3a5ba6c4bfc59f02dc2e820ed035"
+  },
+  {
+    "path": "MTLTexture-3420-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "35645f1c678bd3d3d58ad4ae40528adb05c865dedd07b6a42783088eb70a1213"
+  },
+  {
+    "path": "MTLTexture-3421-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "23c64f3bf2639136365f63773781db1d6102532c3d687f91b2556d2096fac78c"
+  },
+  {
+    "path": "MTLTexture-3602-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "9c27c5babc6a9741ae87ca5467b29121f9ef1a45c604867398382fb206f6142c"
+  },
+  {
+    "path": "MTLTexture-361-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "10e3b3f6ae906928e0b904980fac942168251013f647474e7ee8fe2279a0cda4"
+  },
+  {
+    "path": "MTLTexture-3844-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "14653a41fb5ad3bd2982229355a1c1ce4d563f78a0127ae782005e343f8bb247"
+  },
+  {
+    "path": "MTLTexture-4468-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "b298f19db9e96e9594be74b0430c5186e820a5a6a3da5e843eb9d0e240af06f7"
+  },
+  {
+    "path": "MTLTexture-605-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "10e3b3f6ae906928e0b904980fac942168251013f647474e7ee8fe2279a0cda4"
+  },
+  {
+    "path": "MTLTexture-606-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "38f5b3df9e2c56f9da0f6165786ed65479c218aa1c4bd8bdffad0e27ac7758b6"
+  },
+  {
+    "path": "MTLTexture-607-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "54d0510a6a124d8ac53e3ce1eb9e3f2e434a0cc821d236d22b9a63c2e2b7e6e6"
+  },
+  {
+    "path": "MTLTexture-608-0-mipmap0-slice0",
+    "bytes": 33112064,
+    "sha256": "57eb5ae5bb10b3577a5466b4b118eae2940334e151cac5f1aea91fc10da2ae44"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "1470af479e5b13b177e67324b87b7be20e38e7e9d27cbb0d3407451af4328d08"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap0-slice1",
+    "bytes": 4210688,
+    "sha256": "89861b43a495345c190fc466982fbf230ebdafddbf22d10f9da0afd871a661c3"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap0-slice2",
+    "bytes": 4210688,
+    "sha256": "89861b43a495345c190fc466982fbf230ebdafddbf22d10f9da0afd871a661c3"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap0-slice3",
+    "bytes": 4210688,
+    "sha256": "89861b43a495345c190fc466982fbf230ebdafddbf22d10f9da0afd871a661c3"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap0-slice4",
+    "bytes": 4210688,
+    "sha256": "89861b43a495345c190fc466982fbf230ebdafddbf22d10f9da0afd871a661c3"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap0-slice5",
+    "bytes": 4210688,
+    "sha256": "89861b43a495345c190fc466982fbf230ebdafddbf22d10f9da0afd871a661c3"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "0ea2a31547d86a2a441fde48cfb3b0a42616aad3b999e3e122ce1ce917cfe4ae"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap1-slice1",
+    "bytes": 1064960,
+    "sha256": "0ea2a31547d86a2a441fde48cfb3b0a42616aad3b999e3e122ce1ce917cfe4ae"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap1-slice2",
+    "bytes": 1064960,
+    "sha256": "0ea2a31547d86a2a441fde48cfb3b0a42616aad3b999e3e122ce1ce917cfe4ae"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap1-slice3",
+    "bytes": 1064960,
+    "sha256": "0ea2a31547d86a2a441fde48cfb3b0a42616aad3b999e3e122ce1ce917cfe4ae"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap1-slice4",
+    "bytes": 1064960,
+    "sha256": "0ea2a31547d86a2a441fde48cfb3b0a42616aad3b999e3e122ce1ce917cfe4ae"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap1-slice5",
+    "bytes": 1064960,
+    "sha256": "0ea2a31547d86a2a441fde48cfb3b0a42616aad3b999e3e122ce1ce917cfe4ae"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "50591efa8195db09fac4d7b355f1c79ef5143d3cbd3f222ff3dd651fbfe1f635"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap2-slice1",
+    "bytes": 278528,
+    "sha256": "50591efa8195db09fac4d7b355f1c79ef5143d3cbd3f222ff3dd651fbfe1f635"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap2-slice2",
+    "bytes": 278528,
+    "sha256": "50591efa8195db09fac4d7b355f1c79ef5143d3cbd3f222ff3dd651fbfe1f635"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap2-slice3",
+    "bytes": 278528,
+    "sha256": "50591efa8195db09fac4d7b355f1c79ef5143d3cbd3f222ff3dd651fbfe1f635"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap2-slice4",
+    "bytes": 278528,
+    "sha256": "50591efa8195db09fac4d7b355f1c79ef5143d3cbd3f222ff3dd651fbfe1f635"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap2-slice5",
+    "bytes": 278528,
+    "sha256": "50591efa8195db09fac4d7b355f1c79ef5143d3cbd3f222ff3dd651fbfe1f635"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "d16af53bfe71b0865b00cbd3e9d3baf427daa8c3f989912ae281adf2304c49fc"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap3-slice1",
+    "bytes": 81920,
+    "sha256": "d16af53bfe71b0865b00cbd3e9d3baf427daa8c3f989912ae281adf2304c49fc"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap3-slice2",
+    "bytes": 81920,
+    "sha256": "d16af53bfe71b0865b00cbd3e9d3baf427daa8c3f989912ae281adf2304c49fc"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap3-slice3",
+    "bytes": 81920,
+    "sha256": "d16af53bfe71b0865b00cbd3e9d3baf427daa8c3f989912ae281adf2304c49fc"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap3-slice4",
+    "bytes": 81920,
+    "sha256": "d16af53bfe71b0865b00cbd3e9d3baf427daa8c3f989912ae281adf2304c49fc"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap3-slice5",
+    "bytes": 81920,
+    "sha256": "d16af53bfe71b0865b00cbd3e9d3baf427daa8c3f989912ae281adf2304c49fc"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "f89564e289464557b734229a7d226f659133ae7fd34222686cd56f0eb230fc0f"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap4-slice1",
+    "bytes": 32768,
+    "sha256": "f89564e289464557b734229a7d226f659133ae7fd34222686cd56f0eb230fc0f"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap4-slice2",
+    "bytes": 32768,
+    "sha256": "f89564e289464557b734229a7d226f659133ae7fd34222686cd56f0eb230fc0f"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap4-slice3",
+    "bytes": 32768,
+    "sha256": "f89564e289464557b734229a7d226f659133ae7fd34222686cd56f0eb230fc0f"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap4-slice4",
+    "bytes": 32768,
+    "sha256": "f89564e289464557b734229a7d226f659133ae7fd34222686cd56f0eb230fc0f"
+  },
+  {
+    "path": "MTLTexture-609-0-mipmap4-slice5",
+    "bytes": 32768,
+    "sha256": "f89564e289464557b734229a7d226f659133ae7fd34222686cd56f0eb230fc0f"
+  },
+  {
+    "path": "MTLTexture-610-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "1f5c561a68eb2d54c0f9d34a0cdad340174ca1f83eced80347524568cba1b0d7"
+  },
+  {
+    "path": "MTLTexture-613-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "755e0d06c1b2aa221f2ca2cd6233700c55cdc343cb0428c2fd78790ded465bbb"
+  },
+  {
+    "path": "MTLTexture-613-0-mipmap0-slice1",
+    "bytes": 81920,
+    "sha256": "34a42ad3bf69a4eb85a105a3b7202af7174688b5e40b605bb6858b953e13d41d"
+  },
+  {
+    "path": "MTLTexture-613-0-mipmap0-slice2",
+    "bytes": 81920,
+    "sha256": "80210e6efd7df07d79bec41c70b88007c423328ee44e845f9db6bf267e776b9c"
+  },
+  {
+    "path": "MTLTexture-613-0-mipmap0-slice3",
+    "bytes": 81920,
+    "sha256": "1cf85c027ecb0c2fdf087882119b0800492d73d401c85ebb67e5f86be70405d2"
+  },
+  {
+    "path": "MTLTexture-613-0-mipmap0-slice4",
+    "bytes": 81920,
+    "sha256": "6c3601c039e09720d0f43d5a9d7fc386bd6570da625fb15ed8e8b64461b9a6b6"
+  },
+  {
+    "path": "MTLTexture-613-0-mipmap0-slice5",
+    "bytes": 81920,
+    "sha256": "a4f030844b89bac3ca2ca6ec37cdf5f4d630f9a2f9dda6e50a86dadd5cc65d98"
+  },
+  {
+    "path": "MTLTexture-617-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "eb37194e1e16734af6401bb299d94ef15eb74f72ee6d9a49959cd712dc759063"
+  },
+  {
+    "path": "MTLTexture-618-0-mipmap0-slice0",
+    "bytes": 2883584,
+    "sha256": "bcde00510dfd6a356cf4f7ff45eee6504e951439126c52d69c71057a65882c1d"
+  },
+  {
+    "path": "MTLTexture-66080-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "a11c35ab7c6522ff7e7c7d67e77dd50e2ad4bbe8253a4d21e449d2fc6eb96580"
+  },
+  {
+    "path": "MTLTexture-66080-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "cd25c05aee2d5723f4d60269da494f7a727e01cd30a0c9f7c1d5d2a6e9df3bdd"
+  },
+  {
+    "path": "MTLTexture-66080-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "067e67df8dac28bb3aaa080f9425422544486b01b6f07a81c89937beca3b51de"
+  },
+  {
+    "path": "MTLTexture-66080-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "0db0a296ac4b961d51bd9ecb6bd4cf95fd844d37050f2fbf3cba038cf07a019b"
+  },
+  {
+    "path": "MTLTexture-66080-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "b11564fbc012c0a361e0cc105052ca1777720e408ef7c21ff07de5212fd78ad7"
+  },
+  {
+    "path": "MTLTexture-66080-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "4396fbd6dee0af7399c4205f86f4995435a18be5dc60b7766cc99e83745faed4"
+  },
+  {
+    "path": "MTLTexture-66081-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "296f7562db32632963c07d04971e23fde9052b8638a5fa70525edc1c60f3efc1"
+  },
+  {
+    "path": "MTLTexture-66081-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "12ca7bd558c85e813971f7687d2efe55611e246533f6e9719bb14aa22ed80149"
+  },
+  {
+    "path": "MTLTexture-66081-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "e645fb26fa39a75676e3334437fb514152933084b8d914987a7aac3cfc07ffec"
+  },
+  {
+    "path": "MTLTexture-66081-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "be1f7a7f174d0cfa156747756c3d35493e835c2ea20dc48b634f6799d0667891"
+  },
+  {
+    "path": "MTLTexture-66081-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "76abef0884588157e25c82d6bad757e200f6571a21877405a77d80803de47acf"
+  },
+  {
+    "path": "MTLTexture-66081-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "161866fcd795dc2dff6e9fd59bf234b68e34a530e0a2ef2c4be58dba91e7cef6"
+  },
+  {
+    "path": "MTLTexture-676384-0-mipmap0-slice0",
+    "bytes": 98304,
+    "sha256": "dcb65525247fd9ce8caec92803ba526e1c33ab9d0705ccd14ab1b93c45f74978"
+  },
+  {
+    "path": "MTLTexture-678324-0-mipmap0-slice0",
+    "bytes": 49152,
+    "sha256": "39590bfa4ea352ad4f75b55cd56ca7eee62a68d686bb97f62b3477bbb465c16f"
+  },
+  {
+    "path": "MTLTexture-678325-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "9e9c04e92456c4c111c98e97e46a3fc74699edd6c6f5bd5116b64a6b87b05ac6"
+  },
+  {
+    "path": "MTLTexture-678325-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "32b2edaa0f259dfcb2bac5768be7bf7b3124b52789e1977c3a2102e25ee39603"
+  },
+  {
+    "path": "MTLTexture-678325-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "48d9f864f601715ce71a245cec92b874b450320df1f7bd3597f0bd1a92687d33"
+  },
+  {
+    "path": "MTLTexture-682226-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "6bb82427f28db5e4f18c712ebbadf32ce446a7ed3975bc385d624e0ddcc14c2c"
+  },
+  {
+    "path": "MTLTexture-682432-0-mipmap0-slice0",
+    "bytes": 35979264,
+    "sha256": "65a8805d22d127bbca3bd0d477c04c0e4fe25de51b49cc7c96486007172abbfc"
+  },
+  {
+    "path": "MTLTexture-682432-0-mipmap1-slice0",
+    "bytes": 8994816,
+    "sha256": "bc8157893b641450a7efe197088a27b5cf349f0fef5ce21c97774825798780b3"
+  },
+  {
+    "path": "MTLTexture-682432-0-mipmap2-slice0",
+    "bytes": 2260992,
+    "sha256": "e134e9d74f3fdd8255695ac1f52018dd3fee25f6a4b5b855cea2c9dbc30118ca"
+  },
+  {
+    "path": "MTLTexture-682432-0-mipmap3-slice0",
+    "bytes": 573440,
+    "sha256": "7201acbd1b43402179a902f484c58f9b3b49caca68b9eb135de82e349b9ae7ef"
+  },
+  {
+    "path": "MTLTexture-682433-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "81ede840064e5a2197691c2682289e78e0280e9c2263926c7014dcc93a20bb21"
+  },
+  {
+    "path": "MTLTexture-682434-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "11277d43cc6a9f704f2e9d85589eb0aa48c70c24312ca85e57937f5dc0fd9986"
+  },
+  {
+    "path": "MTLTexture-682435-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "e692d6f9c6cffdfbe416da552c89f902d3e0a8ffe04e01169f36d96084641b4d"
+  },
+  {
+    "path": "MTLTexture-682436-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "84265e695f00d041295a0879e19131796d897435f8c34edd2499963603da53e4"
+  },
+  {
+    "path": "MTLTexture-682437-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "528e985dc343b9d185a6b5f6541f33a7f6fd72d8926b6ee9646084cbb4b9e59e"
+  },
+  {
+    "path": "MTLTexture-682438-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "3709c36f475825666f39716eb600c37fdca86490817ff6199b999b9ab0fa8f24"
+  },
+  {
+    "path": "MTLTexture-682439-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "88fe54575a19763274ba347263f9b266b4cd302cc6151bb3be9cb964ea2eff22"
+  },
+  {
+    "path": "MTLTexture-682440-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "67a9cb2b83131730495a28c2f8a8044c7aaaf3d8193a6d14537649a1a26a62fd"
+  },
+  {
+    "path": "MTLTexture-682441-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "8273b34d678d25b37ec0a109d1d48f39f35c997045a8d5ada63eb24e9d1d85b2"
+  },
+  {
+    "path": "MTLTexture-682442-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "5e3a250b395957f684b76c5e9e9eea4906e50ff37a8bca8aaff089a428c3dbfb"
+  },
+  {
+    "path": "MTLTexture-682443-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "90bc9c1c8fd21783c1bebc9271c73d0326529a10d678f111fc6bd57d59131f03"
+  },
+  {
+    "path": "MTLTexture-682444-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "11277d43cc6a9f704f2e9d85589eb0aa48c70c24312ca85e57937f5dc0fd9986"
+  },
+  {
+    "path": "MTLTexture-682445-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "e692d6f9c6cffdfbe416da552c89f902d3e0a8ffe04e01169f36d96084641b4d"
+  },
+  {
+    "path": "MTLTexture-682446-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "84265e695f00d041295a0879e19131796d897435f8c34edd2499963603da53e4"
+  },
+  {
+    "path": "MTLTexture-682447-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "528e985dc343b9d185a6b5f6541f33a7f6fd72d8926b6ee9646084cbb4b9e59e"
+  },
+  {
+    "path": "MTLTexture-682448-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "3709c36f475825666f39716eb600c37fdca86490817ff6199b999b9ab0fa8f24"
+  },
+  {
+    "path": "MTLTexture-682449-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "88fe54575a19763274ba347263f9b266b4cd302cc6151bb3be9cb964ea2eff22"
+  },
+  {
+    "path": "MTLTexture-682450-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "67a9cb2b83131730495a28c2f8a8044c7aaaf3d8193a6d14537649a1a26a62fd"
+  },
+  {
+    "path": "MTLTexture-682451-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "8273b34d678d25b37ec0a109d1d48f39f35c997045a8d5ada63eb24e9d1d85b2"
+  },
+  {
+    "path": "MTLTexture-682452-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "5e3a250b395957f684b76c5e9e9eea4906e50ff37a8bca8aaff089a428c3dbfb"
+  },
+  {
+    "path": "MTLTexture-682453-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "90bc9c1c8fd21783c1bebc9271c73d0326529a10d678f111fc6bd57d59131f03"
+  },
+  {
+    "path": "MTLTexture-682454-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "f3c0aa2494e2b43b737a2354089ff4931ba77410d5ce65edf6568d918959ebc6"
+  },
+  {
+    "path": "MTLTexture-682455-0-mipmap0-slice0",
+    "bytes": 147456,
+    "sha256": "8a7327fbb3c7410ecc543e9fee568d0dabc60da1fc48daba363e698e21bd5baa"
+  },
+  {
+    "path": "MTLTexture-682456-0-mipmap0-slice0",
+    "bytes": 196608,
+    "sha256": "91e0fbc71396afcb1801fed636505b2e177479b31e7d692cd7f30313fc111f3d"
+  },
+  {
+    "path": "MTLTexture-682457-0-mipmap0-slice0",
+    "bytes": 196608,
+    "sha256": "7ce1030cebfc6c346647274645a9c9b5e680de8dae8d97741b888fb3b1c6da99"
+  },
+  {
+    "path": "MTLTexture-682458-0-mipmap0-slice0",
+    "bytes": 131072,
+    "sha256": "cf2975b87908b5687ce6e391d71cd660fa792cdf2a68d4b7bc0c62119ff4d402"
+  },
+  {
+    "path": "MTLTexture-682459-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "9f53a4b7b2fbe645d9d4630c9c6c7925a87ebbc8a79e990f6f7f875de9473a4e"
+  },
+  {
+    "path": "MTLTexture-682460-0-mipmap0-slice0",
+    "bytes": 163840,
+    "sha256": "ab4ed5cdbfafd0521b4c4e74e090b08dafec0664686c51249035c0aaf1dea8ff"
+  },
+  {
+    "path": "MTLTexture-682461-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "2f71d7c796efbaa08a6a6545c0eca0b5beb2bd56debc62134cade550e681cc6a"
+  },
+  {
+    "path": "MTLTexture-682462-0-mipmap0-slice0",
+    "bytes": 147456,
+    "sha256": "2f8100647d01208d3b98f40b7f5a7304e294ef564a5fbc934c22ae9cbb47fad3"
+  },
+  {
+    "path": "MTLTexture-682463-0-mipmap0-slice0",
+    "bytes": 114688,
+    "sha256": "0799a860130b9041989af0554dea9a371d98a7bd75a7a5a919e9d8a3c9cf0c6c"
+  },
+  {
+    "path": "MTLTexture-682464-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "cd1ff2cdcdce830c3e82a581fd637fb7bd62f103deb9e2eedf4b57510013412b"
+  },
+  {
+    "path": "MTLTexture-682465-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "2b2b0e53a91bff85966fdfe10f9551bff880bce6b75d186ee1e2c52de9d5a6ae"
+  },
+  {
+    "path": "MTLTexture-682466-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "c30c365c37b77b8f4a3a9e81f11526ddff652c30d54ca290b197799f94d4b974"
+  },
+  {
+    "path": "MTLTexture-682467-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "8b4ca6f31c38c85d87f6ec426bbfcd70acc1a30fda573bf14540f7931763ecbd"
+  },
+  {
+    "path": "MTLTexture-682468-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "5276a389d502926bf2c83320627754e797108a1c2f98101fd9c0f9ca1a48d233"
+  },
+  {
+    "path": "MTLTexture-682469-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "593b30746b02247bb4ed07aaccba7553c29962241afb7989501df1f13401dfc4"
+  },
+  {
+    "path": "MTLTexture-682470-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "156a987ec402e17b9b98d563d71be46a9fe980546f52fd2a20ec26eb136cf2dd"
+  },
+  {
+    "path": "MTLTexture-682471-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "3845cc377af1872d83f24a5068db107986b341ad09a5a9eccb519d28a38b5a34"
+  },
+  {
+    "path": "MTLTexture-682472-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "a5aa93372b9153603c64b6746abdc342f2b5c5a67ac30361bd7e2cd50053353e"
+  },
+  {
+    "path": "MTLTexture-685748-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "161525a2baa47bc8b82d8f2d8b456383f72fc9b1d5132def0c2fb2735c084d5e"
+  },
+  {
+    "path": "MTLTexture-685749-0-mipmap0-slice0",
+    "bytes": 2883584,
+    "sha256": "35074f0f3bb6a16bfe3e3181c190cab0f13fe1292c13ea48f1f8e24255f02abd"
+  },
+  {
+    "path": "MTLTexture-686141-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "4a57ac1c39b4cf876744ac5cf28213dcf5f9d33260b644f14364021f52b018b3"
+  },
+  {
+    "path": "MTLTexture-686142-0-mipmap0-slice0",
+    "bytes": 2883584,
+    "sha256": "810f3a8a456992da1e83047e2c9ae383cfaad0f7d9ea0f7e204c891d7cc7abbf"
+  },
+  {
+    "path": "MTLTexture-686466-0-mipmap0-slice0",
+    "bytes": 1441792,
+    "sha256": "68bc36f8b9b02e036564532aa876c5ff1d804e7f4b5eda77605a7604fe50083f"
+  },
+  {
+    "path": "MTLTexture-686469-0-mipmap0-slice0",
+    "bytes": 2883584,
+    "sha256": "1a4031240b5c62aea772e3561b1796d467916f93eb1fbfb5f6397e869b6a02ec"
+  },
+  {
+    "path": "MTLTexture-686475-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "c907b98f6533b951a13a93152e41ad2b2001892dac1d68140e1c18a66464f0e8"
+  },
+  {
+    "path": "MTLTexture-686475-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "eaccc7ebfc9669ca3bb666c2927afb8028866ce3d37ff92b723f80fb9f4c3d63"
+  },
+  {
+    "path": "MTLTexture-686475-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "f67767eb004f39dd7f7c4d09d9f1974646f80d7cb92389261dfece4a67d50399"
+  },
+  {
+    "path": "MTLTexture-686477-0-mipmap0-slice0",
+    "bytes": 32768,
+    "sha256": "6c18d141bbea9400e2c8355932b22d81d95cc1099aae159a8f85bee312ac0b60"
+  },
+  {
+    "path": "MTLTexture-686478-0-mipmap0-slice0",
+    "bytes": 81920,
+    "sha256": "51c40286b405de01f5773c3aa0262c1d85c0cc8e8354ef20025341434fd8b555"
+  },
+  {
+    "path": "MTLTexture-688642-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "f0e712ddf25c416b16bc40829bc4fd43dbc46f6e618657bd84fe05f1517843cd"
+  },
+  {
+    "path": "MTLTexture-688642-0-mipmap1-slice0",
+    "bytes": 81920,
+    "sha256": "fb1b1e690c56db147495e003b4f6ea18745eeb0e21292840fab4f5aeebda2dec"
+  },
+  {
+    "path": "MTLTexture-688642-0-mipmap2-slice0",
+    "bytes": 32768,
+    "sha256": "c94ad8e20a0e28bea6d1d0be28176ad6179d8f070ca90f8113799cf85c649472"
+  },
+  {
+    "path": "MTLTexture-693150-0-mipmap0-slice0",
+    "bytes": 147456,
+    "sha256": "0076e7ee1c099be645f577fff191a65591b73a3e688849a2ca2ddeaa1020193e"
+  },
+  {
+    "path": "MTLTexture-693150-0-mipmap1-slice0",
+    "bytes": 49152,
+    "sha256": "9bf40420a508a4dad17dc983b36154e0a47776d414d9001840505f74022386f6"
+  },
+  {
+    "path": "MTLTexture-739-0-mipmap0-slice0",
+    "bytes": 65536,
+    "sha256": "d89384a11c86499919423e87d3dc102c68da97d829c731eabcbdda82b279c770"
+  },
+  {
+    "path": "MTLTexture-740-0-mipmap0-slice0",
+    "bytes": 114688,
+    "sha256": "51e79bb1b31280500dded9b86e01cf68f9840c958a4bce97cee41f67904cf7a5"
+  },
+  {
+    "path": "MTLTexture-741-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "b2fbe5c580c3e1da21df68ab41d6750c9da41933ed623eb4b232d8f85ef0429e"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice0",
+    "bytes": 540672,
+    "sha256": "3bd29ac83323ecdb78a1d013ca6412d2e9d44887cb479db96b6e1c3ac2f4f0b2"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice1",
+    "bytes": 540672,
+    "sha256": "67acd70f73204902d15861f48d58df670023d5cb78245781debc06612aaf2fa0"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice10",
+    "bytes": 540672,
+    "sha256": "25a9a734acd740c1a1515804c62fd1ee054571ed222da7b79f50b8c732aa2aba"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice11",
+    "bytes": 540672,
+    "sha256": "06881a30460e7190c91168ae3a621a33c4896ebf5facf51c0110a40234704584"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice12",
+    "bytes": 540672,
+    "sha256": "71454aa148f35ad7cefd23d6ad36c882c96561176bfc1b9dec946d6895566ad2"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice13",
+    "bytes": 540672,
+    "sha256": "a317545639315ef8d9a7e82e39f90949b8099784f4fc4bc6b41a8ed9b276fff3"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice14",
+    "bytes": 540672,
+    "sha256": "895d6237f3f8f9509656e90688a5fc2df3941b4d6ce98e96d22c9f8d6f5b284c"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice15",
+    "bytes": 540672,
+    "sha256": "667e0f92e11ec6058e75412b18d500f642960c95cfd8e808a496e8155ca58812"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice16",
+    "bytes": 540672,
+    "sha256": "b46aa47cd130757b608c216391ddd20bbfad1ab822269799995ea73046a73498"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice17",
+    "bytes": 540672,
+    "sha256": "2c205c6548212083f733206694bb140778b16da581505b2cfd82e272f9d0a873"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice18",
+    "bytes": 540672,
+    "sha256": "63380d3f4964bc98a64b2aeb86e54d47a0403498cd01d15d716855fa9a18bb59"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice19",
+    "bytes": 540672,
+    "sha256": "0501d824575a304596d9c330467a6e0cb470bb5f3836ed716d8d41e153da2ab8"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice2",
+    "bytes": 540672,
+    "sha256": "47ccbc8df7cec8c16fbcc25bfc8363c53b7ed468d5fd36df9f6f7225393a22ef"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice20",
+    "bytes": 540672,
+    "sha256": "b1836e05815408b3caacda79a4fd46198114cb9d4b552377d175ab6c47157e26"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice21",
+    "bytes": 540672,
+    "sha256": "0c3301f99572359a6f82a612a8cf184808ef35c98f4f3bb0a66c4eeb4838dce4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice22",
+    "bytes": 540672,
+    "sha256": "f101724dfe242e9d2b71249ea708d90aa74a45c37933c5416de8be85483f6361"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice23",
+    "bytes": 540672,
+    "sha256": "a67b2b51398773175d9f1af9590bafdede261dff3731d1803bdf98e1f6fa0103"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice24",
+    "bytes": 540672,
+    "sha256": "6e23d5edc2a92bcdf35280a121e1c9c0f3bdcdbd57aa056689c6c9297b872e6b"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice25",
+    "bytes": 540672,
+    "sha256": "17590b6b3f556e48b2e0e1ef5f5f9a8953e7eef0080bc69ae57aff3c41b6bd08"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice26",
+    "bytes": 540672,
+    "sha256": "900bf806b387e1e7de2fbaedf80247509b750883f0c169f688d77843751b6231"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice27",
+    "bytes": 540672,
+    "sha256": "2f7d5dfc26c4ee79364c29707ab16d6662e138d3449381c9940077ac69f14038"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice28",
+    "bytes": 540672,
+    "sha256": "c7dba21550cc677f85a54c2058cb690ed57dd0da127b5a19abde133d52150e5a"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice29",
+    "bytes": 540672,
+    "sha256": "cfc20a1d73c557996a6763145f31729a2caf203de2cb7cc24746ed4616b2480f"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice3",
+    "bytes": 540672,
+    "sha256": "de29d81ceba37ea21b7296c851f41750b61bcc8340603887303e883efd944146"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice30",
+    "bytes": 540672,
+    "sha256": "2675d5338b47acf1f5189917e86ea0292c05e5392cc1a43682dce63c6ea21237"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice31",
+    "bytes": 540672,
+    "sha256": "7d483a6ff3f4d750f7b0dd98ea8d2ecde7ff79b68c73c0b8b62c08b34804c6df"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice32",
+    "bytes": 540672,
+    "sha256": "6400d5494a6574018b40198d0b1452bbd421f0de063aae3fcd569ca23e8c90e7"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice33",
+    "bytes": 540672,
+    "sha256": "f7252c80fee919984bda6ab19d59ef5faf03c4f8b488d74d57c402c4e5085bff"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice34",
+    "bytes": 540672,
+    "sha256": "3a8f2f112d7f4dd9ca181a177d62dd91d585329631cbf3caa769f49a96eac22b"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice35",
+    "bytes": 540672,
+    "sha256": "d49f9a7f06c0489a20b1806bcd6747e37675a00beba77bedd85cfac7c56b7974"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice36",
+    "bytes": 540672,
+    "sha256": "21b516ee98c9c65883a50b6118e3767c14049f8786411d485e52ad62688a8596"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice37",
+    "bytes": 540672,
+    "sha256": "50034c96b8b39b3762cab403e2203825713886c6b7e16a093853c12f01e131a4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice38",
+    "bytes": 540672,
+    "sha256": "1d8b75a6c15252037956595633d804e2fdae5fc14ba4babd729f088e39797ab2"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice39",
+    "bytes": 540672,
+    "sha256": "1bd9eb668f0f6bc24f74b938df4c2614a5f87e108d9613e0f4ef6522790909c6"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice4",
+    "bytes": 540672,
+    "sha256": "30b22e94ce6a56f5b75acba6a3db88575c9c6226bbc9b5f6509e49e99aac2626"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice40",
+    "bytes": 540672,
+    "sha256": "8845332701ab2a7d4b91f7d1b1a60e8ec9bca3dba0b3829fd014a477a9cb4dcb"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice41",
+    "bytes": 540672,
+    "sha256": "2bf6b4fe201f1faf71b4e03e44323ce8567276ad00cbfcec002fad9c3d6d6877"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice42",
+    "bytes": 540672,
+    "sha256": "8a6f613a9b98a8d5d8f1554fb494d2cdf15db232815e44dcd8c3f37a88a2b368"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice43",
+    "bytes": 540672,
+    "sha256": "6d57d9c13c98d02c8e1e7bf3fbabedbc444f86cb0b6247b8e26b5c0e3d083952"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice44",
+    "bytes": 540672,
+    "sha256": "08172b1541af172dc7ec309c0925fea29dbf400672431024cbb042d8e88057c4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice45",
+    "bytes": 540672,
+    "sha256": "412623d20bcdb499d9c54e6df019a0e755980debb274911e570ea9187c61a72e"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice46",
+    "bytes": 540672,
+    "sha256": "53691f9fb062ae5d0e88c817ae71d992bfe163e6e880c7f52f945837df3005e9"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice47",
+    "bytes": 540672,
+    "sha256": "6a347a2f975ea3b7d23b6e7120051abb2f523e7aac197ef710e4a2bda5c929a3"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice5",
+    "bytes": 540672,
+    "sha256": "4a9177840cedaca92b832220431be5cf73b3da813252043870ba26f85d405cf9"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice6",
+    "bytes": 540672,
+    "sha256": "c0b4452145383d68539be3c4a6320cc16ee187edf37f8cf6feac4de8a06aa6b4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice7",
+    "bytes": 540672,
+    "sha256": "a608e8e4abc97ec0231f44c58e3b663ca0100b43dda4e5cec0568021d6204621"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice8",
+    "bytes": 540672,
+    "sha256": "4de38ed44f967821009b3b98605b15d59dd40e3b1dcc5c932139ff63a24214e4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap0-slice9",
+    "bytes": 540672,
+    "sha256": "2e298da672328c3dbe4ecf8c17b0de44228328862cca841469f238156d68f994"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice0",
+    "bytes": 147456,
+    "sha256": "ab14a10f154b255aa2a5467488dd69bd7d4b7ef3dc5ab07fa5f7a762ec219450"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice1",
+    "bytes": 147456,
+    "sha256": "7e3224efaaffd08fa9cad070fbf98bda964be927732e9e20ed2fe2b8384f0f3f"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice10",
+    "bytes": 147456,
+    "sha256": "a46ba8633090a27a10c04e95a0955feb76cf518bd3dc0db28a3442f4cc3817da"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice11",
+    "bytes": 147456,
+    "sha256": "12b6f66a7d8540ac15341b30a1d8c5ae5038fd30341fe385c916704b8e5e6d01"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice12",
+    "bytes": 147456,
+    "sha256": "acf342de184807aa3a1b8f71f7d73b7f11076c280bbd403fca6f783f12be94dc"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice13",
+    "bytes": 147456,
+    "sha256": "68680ce4961b93bcd46990201b97bad08fe594647cba31ea941e14e9eda9871c"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice14",
+    "bytes": 147456,
+    "sha256": "a2eadeb967e62af974b9214765cf0f7a409e53914cf48adf9ef95f65765c6f1a"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice15",
+    "bytes": 147456,
+    "sha256": "32814caba685a891ba31da9b81caf0ba7a08e720dae78ce3c029485e71d0dd3c"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice16",
+    "bytes": 147456,
+    "sha256": "8ca2dc31d970ec28bcbbbc078b1a260fe45c8f77d18ca6cd60ca61b6ee470560"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice17",
+    "bytes": 147456,
+    "sha256": "b37488465bbcd02ac141ccb10bbc4cd462d3e3535444d31580bcf03f8994124d"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice18",
+    "bytes": 147456,
+    "sha256": "68b89e1a470385c9432ec70c16f1c4c3b9ca2cb0203780a99c9cf768f0903fee"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice19",
+    "bytes": 147456,
+    "sha256": "21efbe817a50609db788951daa3deb655e617f13bf9c36c98045144ad452a50f"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice2",
+    "bytes": 147456,
+    "sha256": "24be75dc6f7bd5d12749631a0381cc3fc048e1140dc67ed23091417e25f8fd34"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice20",
+    "bytes": 147456,
+    "sha256": "bc32fb00b7fe1dea5fb691de76d109c0cd541e66cd89d65da8006c33e4a976c5"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice21",
+    "bytes": 147456,
+    "sha256": "6a83daef052fcc79b7ff5145ed357a299d4f1a1953f16da11695389b61529272"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice22",
+    "bytes": 147456,
+    "sha256": "9aa81c7edaf7ec61baa675565e27396b4b3dc71f518bd28328d353a13d5fefd3"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice23",
+    "bytes": 147456,
+    "sha256": "c0ba33a3dd2a8624e3fee8a7d3675c88ad01c280fb9a0f040045d8de84df341f"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice24",
+    "bytes": 147456,
+    "sha256": "d6159994a8274948410a2f0ceffe48e6acb839b86e916f69d2003bb98a1627e1"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice25",
+    "bytes": 147456,
+    "sha256": "d5f710b42497973e0c36dd1855bb9f91129f64146efa3314a9befec1e11bb005"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice26",
+    "bytes": 147456,
+    "sha256": "766d383e81cafd465eb7b361794a002e0e86eab0f8b253e06311f164bbbd26e3"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice27",
+    "bytes": 147456,
+    "sha256": "8e5b7597a9ee22b95ea6f23c13dabe7ba7c12d5708255151e3256419dffee329"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice28",
+    "bytes": 147456,
+    "sha256": "75e80aed426f4b2b21488db90c1fb15e4fa858061f2952d29b0abd84a10f35f8"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice29",
+    "bytes": 147456,
+    "sha256": "0ac29c4c39dad54570815996ec259bb44b5d94f6f3ec3ed1e650f9917e1ab8e2"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice3",
+    "bytes": 147456,
+    "sha256": "46c7582f6c0d6457cefec120ac3a299c1c0dde3a6c0e67a5df8a8f9f5ab5e0e8"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice30",
+    "bytes": 147456,
+    "sha256": "698f1ae2ed28fd0cbf7555362f7d49eae16960f7f22f46cb152a58998f8aa75c"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice31",
+    "bytes": 147456,
+    "sha256": "35308cc43c3aecd5156cc99fce003ca8d0da07daf32493b41efec2a04074a1b7"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice32",
+    "bytes": 147456,
+    "sha256": "f1aa97c32c3dacf1ec1f23552316d0062a2fbc80e94facfcc5d310e9afbf915d"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice33",
+    "bytes": 147456,
+    "sha256": "5bbca6f4c4045ea5440eae2d89ce298223280d9331de31e2113f54bec4d00b72"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice34",
+    "bytes": 147456,
+    "sha256": "29d1534db0a421896cf137146d3ad9451e82785fa2582f47c8c7f0d6ecf85034"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice35",
+    "bytes": 147456,
+    "sha256": "23f8d66499579fca3e9ff14ec2973313ff734b8c2eb729501ae4a88cc26b38c0"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice36",
+    "bytes": 147456,
+    "sha256": "6599c48844715d0437e148afa9bf0c452de7b95bca2a8c8f97e17820505b7665"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice37",
+    "bytes": 147456,
+    "sha256": "effb57b63f5e645cb20e76aa2c2de5cdf9d816f8683aa39cef35f4a32a1dfef8"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice38",
+    "bytes": 147456,
+    "sha256": "738f74905ea4fd2ac8f3e8ba02fdf8eca7e0a6d2a63a61d160dea8a3509c0794"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice39",
+    "bytes": 147456,
+    "sha256": "fc2ed82a7d631665950661ef824c618d6182c1a5a4d3c2bbac1394aa9a4aa254"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice4",
+    "bytes": 147456,
+    "sha256": "c4bc7554831fba13b3d076e387841100845d3c760f8c1f0bb4270283ffb88624"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice40",
+    "bytes": 147456,
+    "sha256": "d86bc19388dc0da37754d7957c49be3d0d6da74e5ac32d153cab54c99143911d"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice41",
+    "bytes": 147456,
+    "sha256": "c9cc01849d0a5adb56dff12899f969ba99bbc00baca8e4fd8013b552a43c57e2"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice42",
+    "bytes": 147456,
+    "sha256": "3d9e17871a3ea59043d5162010034e374a671f81370b9eb43db47bc6b3c86192"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice43",
+    "bytes": 147456,
+    "sha256": "e200613e2edbedfc1f4c057e9661e069375df2aacf43bb373b659472a95f830a"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice44",
+    "bytes": 147456,
+    "sha256": "46e5bd41c900bc29bc31742646cbae4284572ed171923712b6e20a4d8fd9bcfa"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice45",
+    "bytes": 147456,
+    "sha256": "ff49101cfc4d49cb6f07cf6358e4fda98d6bae4fbc51ed9f22b2ec5def4495ce"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice46",
+    "bytes": 147456,
+    "sha256": "b9396cb160eb2e790d4a348e9c7a3772f8255a8daf4186d394b060577e7c61d4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice47",
+    "bytes": 147456,
+    "sha256": "f49cf0de07669a85b9c8b5d635292d0731b4ae15a86c9a636ce3dc1eca34365d"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice5",
+    "bytes": 147456,
+    "sha256": "e6f8aff6920b7ecffb513bd375ccb0e8225aefbc93a7b3efebeea81be17f4747"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice6",
+    "bytes": 147456,
+    "sha256": "78809b7a01e03e324213f472d760043ec3845ee9b3168ba81c921927b3cb362a"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice7",
+    "bytes": 147456,
+    "sha256": "69bb60f3010a3868e6f1a7335846abe3cd065af3c3fc3e2dae97834b484f30e4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice8",
+    "bytes": 147456,
+    "sha256": "614ebc7aaba2b7eb4b6dd99bdd63dda2d8e4cc24011121b85d9b829bc07e4462"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap1-slice9",
+    "bytes": 147456,
+    "sha256": "caba51ed552152016553e3af985f1e9194db8e175d3872aecd981faab90171ed"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice0",
+    "bytes": 49152,
+    "sha256": "42e530979e986edc2c0343441c192f6c965e02205d8e343bc41401ae78558bcc"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice1",
+    "bytes": 49152,
+    "sha256": "cc9c04f57eddef85984696370398c2db94c3d5493ddb077559a5576a551744e6"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice10",
+    "bytes": 49152,
+    "sha256": "d17ea2b05a139387493d122065d56f994d3b9357c538451bbb86972f8ef995e8"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice11",
+    "bytes": 49152,
+    "sha256": "5d821aeb83473c5320a2176690e212cb67fd01c8699f7d81ed30004dca8ace39"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice12",
+    "bytes": 49152,
+    "sha256": "08b38a54fb51a8472cad76c44abb71b54ca251b3cc371096a63d339a1a5cbe03"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice13",
+    "bytes": 49152,
+    "sha256": "9279641708cf3011698531ab2406751dc942d18d8e39c7ac318d3ff7e1b92962"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice14",
+    "bytes": 49152,
+    "sha256": "1ad78bf6ccf1e1b71ec700e138d92249dead1fe8e00354b909a0bc67199934bc"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice15",
+    "bytes": 49152,
+    "sha256": "54865e6a12026f13d48f030c2c99749465fb3056ffb76911618478148e083b58"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice16",
+    "bytes": 49152,
+    "sha256": "9ea4f74def0889172128a25ad13e5962db5e8b2f24aa14ef35e54b924d3a4f9b"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice17",
+    "bytes": 49152,
+    "sha256": "dcf86f3e476b8a62a405de89ce35915940d96bd105bc094ece792e3250fd3215"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice18",
+    "bytes": 49152,
+    "sha256": "6debab109d214709f09713aa864361e50b26f9fa8a44ed2bc76310a7f7cfd8cc"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice19",
+    "bytes": 49152,
+    "sha256": "97604fecb3c518011fd24586463ebbbbe29dc8f3670f23b00628ce3c9b291e6b"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice2",
+    "bytes": 49152,
+    "sha256": "605074157d230e10cd993eff23fa9edbaa3dd60e04e828b80b965d4b5e870193"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice20",
+    "bytes": 49152,
+    "sha256": "09614a14f7c6348e6ddee76be2c5dec42e940721c4582cf6703fe1c1bc1b0acd"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice21",
+    "bytes": 49152,
+    "sha256": "d3dd813c664fee63d3509641e5e8af8e61e6a62d3ef94cc7c044f4c4fdc83aea"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice22",
+    "bytes": 49152,
+    "sha256": "a404cf680756d9081f0666c47d6784b619fadf899f2af262c57929069ad6f4f0"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice23",
+    "bytes": 49152,
+    "sha256": "ef75cd6676645e53c7128d7351c179172e41852f9f94995e5f6a1caf01a9a469"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice24",
+    "bytes": 49152,
+    "sha256": "8c4a65273d11be9c65d904587ba2053c5e359c400bcebc968462f4fdef83abc5"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice25",
+    "bytes": 49152,
+    "sha256": "01859cfa6f1e61aef6e3750be5aa45c29812c17ade024f37be51243c4233497d"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice26",
+    "bytes": 49152,
+    "sha256": "e09688e069e8977617b4ca02f5d0ccd9413adf501ebf87992b0c72b0e3b6854b"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice27",
+    "bytes": 49152,
+    "sha256": "cca6492c8de0e881c63078f07d5ac9dc0629d4cc7988c8c795e955b64ed67f9d"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice28",
+    "bytes": 49152,
+    "sha256": "89cfd0c20235f342bc1f34bfa21fe98978f89bc4645c6d70b527857328ba1d41"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice29",
+    "bytes": 49152,
+    "sha256": "ddd3eb779b9960dbfcb57ce03c3a017d4fb396dfbc5106e9867c3a62f402dddd"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice3",
+    "bytes": 49152,
+    "sha256": "99b610049726d1b6c21108b8f34e83b8b0632aa9d84b5dae3e8a5c704110dfa9"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice30",
+    "bytes": 49152,
+    "sha256": "1dbb95badb225d2f9b4bc9221db759e400a330c615d3aba44368899fe97affbe"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice31",
+    "bytes": 49152,
+    "sha256": "e0a0726ac958d9ac5966110dadec198c855a64e9f9f10a774f1d2563069864c4"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice32",
+    "bytes": 49152,
+    "sha256": "29a9a2a89513f6a3c7a4b25e4efb451385f131a66be1577804cd8ab0ca2a0123"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice33",
+    "bytes": 49152,
+    "sha256": "eb7cb8e817d18415200db7ec9b5de890d213bfd3c2449b5a2ffbaf93265875d7"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice34",
+    "bytes": 49152,
+    "sha256": "44cb2cb92e7d66c7608eff61b9b2a42224aed3586c3eb8c3de42e2fa287ad288"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice35",
+    "bytes": 49152,
+    "sha256": "194f05b16aa3334fc6824bfb40f9099dcfef39291184232570046d84ff6761d7"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice36",
+    "bytes": 49152,
+    "sha256": "ea15bd1ef38628bde38cf0d4cdc8ba54a32ea09c150bcff22bd7a1be3c13f519"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice37",
+    "bytes": 49152,
+    "sha256": "c96d1bf6e0db62813d4f6f89f1c5c38b203f5d4c67605bc680c0a22ce5cac773"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice38",
+    "bytes": 49152,
+    "sha256": "4eb376f1dcae50dc5f8f8305c3b38ed2f16cbf068e8aaaebcbff619934c65620"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice39",
+    "bytes": 49152,
+    "sha256": "a7fae82a9a717f4303689bdca1705874f76905cea2d1be2aa64fc6e4e4ddee35"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice4",
+    "bytes": 49152,
+    "sha256": "e32ce6a50fe37eb1e4cfede42043ad0e13d956bee1f9e3a8775f7ee2a63ac77e"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice40",
+    "bytes": 49152,
+    "sha256": "436636aa6461d71180846503fc41e33c89b052e77fc52a1b93b5a8d059e1da14"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice41",
+    "bytes": 49152,
+    "sha256": "b421560b7b1d30e5c828eac790a284780bbba6cdefce4f45a76ff41534ce0a06"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice42",
+    "bytes": 49152,
+    "sha256": "2bdbedb1806e99fb35aa7d21fa76248e9e6d99f2b23ccc572dc669a4dfaad0ea"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice43",
+    "bytes": 49152,
+    "sha256": "809fc7668b0a91978d80e59c47b7fea2eb698fc67e142ac6fd70a7a53f5eeb6b"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice44",
+    "bytes": 49152,
+    "sha256": "fde1e05e029b12976105faba69f96e815e69dfea1e837ce50d9a1151bf44ba83"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice45",
+    "bytes": 49152,
+    "sha256": "1c717fc97288901f9cda6ab5b489d91ab29f9fca0c6db2f384f8e54727aa5de8"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice46",
+    "bytes": 49152,
+    "sha256": "28f9e5f209d44ae92b05ce2dea761c5e54650b8541afdaa5a506febd62eb06b3"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice47",
+    "bytes": 49152,
+    "sha256": "cc71745c4b420d4477edc948515ddd4388f023a53fa862b31259ca53ea75c163"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice5",
+    "bytes": 49152,
+    "sha256": "f032a43463970a349652dc9d84de8252f439787bcdbf8bf949fc0c05cad04471"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice6",
+    "bytes": 49152,
+    "sha256": "a5d2e00bca9139ea38e6e8287f80a1d43c59bee76cd3d8c62ee0b47b7d02e4df"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice7",
+    "bytes": 49152,
+    "sha256": "e9ab2fd27d9e5531d9b3b854fc4b30c6e27854781ed76939436ee701582e14d0"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice8",
+    "bytes": 49152,
+    "sha256": "4db889a05f15e30d27e7a73caf74b435b5ec8a4220e52319db8df2f69775b636"
+  },
+  {
+    "path": "MTLTexture-742-0-mipmap2-slice9",
+    "bytes": 49152,
+    "sha256": "371ad4da9c4474c68449e1992bf8da22753bcb6ef1786c1803e299f7be62a8f1"
+  },
+  {
+    "path": "MTLTexture-745-0-mipmap0-slice0",
+    "bytes": 3162112,
+    "sha256": "83e7796995560254a9afb972d2735db6e058bb73d54c9bcb40742b643e8ff7ab"
+  },
+  {
+    "path": "MTLTexture-747-0-mipmap0-slice0",
+    "bytes": 5750784,
+    "sha256": "45321bf9b48fb0ac3e2109c6f5bed5fcad99e76182e81e3b6a6b5e4b9efcb8b9"
+  },
+  {
+    "path": "MTLTexture-759-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "b8333a368e78721f04ae5fa5be040d8ac0d986c1281a0d7faf100a9191366d61"
+  },
+  {
+    "path": "MTLTexture-759-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "1f997d0280e0ebf30fe93c008d4f64577c5033e1ee9e6a58829d5dae5f20ef69"
+  },
+  {
+    "path": "MTLTexture-759-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "e6d1e27f69a82b619aa7033d3d58ade872591ada4f78519f6ddd3cc41f59f866"
+  },
+  {
+    "path": "MTLTexture-759-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "fc7e7591002921d98748e5f37fcd91e4e86d5ab933171e8e8f530d5259b8e0ca"
+  },
+  {
+    "path": "MTLTexture-759-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "11275cdb45d9fe4f2962b9576d2c4f9affe35df3ddf23017d12e57381b8f83c9"
+  },
+  {
+    "path": "MTLTexture-764498-0-mipmap0-slice0",
+    "bytes": 25182208,
+    "sha256": "7e5e117960cd32441ac148de8c77aa3c8dd9687231ed54969696b0ab6bffe9be"
+  },
+  {
+    "path": "MTLTexture-764498-0-mipmap1-slice0",
+    "bytes": 6307840,
+    "sha256": "58fa154327fa1ab1a3fd97348f06fffc7fac7b6bd5717d302288ad03e18a382b"
+  },
+  {
+    "path": "MTLTexture-764498-0-mipmap2-slice0",
+    "bytes": 1589248,
+    "sha256": "599b6a0b647ad2db5e4b27c4fcbe15c630edd68e26dac55936fd0c6c64626b34"
+  },
+  {
+    "path": "MTLTexture-764498-0-mipmap3-slice0",
+    "bytes": 409600,
+    "sha256": "e309214af898a3c3edb120901dca1fbcea14bfcc43cc45da22c6fcc7a850b038"
+  },
+  {
+    "path": "MTLTexture-764498-0-mipmap4-slice0",
+    "bytes": 114688,
+    "sha256": "db4922b23b5f97051d8ce55a281d35c09e4a5de166fb969c3dcd3fee011d7606"
+  },
+  {
+    "path": "MTLTexture-764498-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "d9c8ed7b3cf534a3ca0c98979dd60b077a0e6608e125b4567b85f0153c312256"
+  },
+  {
+    "path": "MTLTexture-764499-0-mipmap0-slice0",
+    "bytes": 4210688,
+    "sha256": "70409b8e93dce0ba7f095369ca39addf1f24d387c49ee1f747babe3e352eb62f"
+  },
+  {
+    "path": "MTLTexture-764499-0-mipmap1-slice0",
+    "bytes": 1064960,
+    "sha256": "cdcf1f28ca2f36816246a6e1b0a8a5254620e74b1ddc46715057fd59e63792e9"
+  },
+  {
+    "path": "MTLTexture-764499-0-mipmap2-slice0",
+    "bytes": 278528,
+    "sha256": "8cb23cd7eb5f84b3e16f736205c7cedefc7e5f72d212c5aa35a8f6d79985fae6"
+  },
+  {
+    "path": "MTLTexture-764499-0-mipmap3-slice0",
+    "bytes": 81920,
+    "sha256": "6b7cef9dbad5256fcd6140becd21aa7948d96a6edfd1782d5265cabcbd787655"
+  },
+  {
+    "path": "MTLTexture-764499-0-mipmap4-slice0",
+    "bytes": 32768,
+    "sha256": "7d5d3c5e0c709ae6d98f080486c15e68b6fea3b48a98f788e4b25ef1cf019ade"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap0-slice0",
+    "bytes": 16793600,
+    "sha256": "206adf395b371d5302e59a474c3e392b521dff89b509cd963698446461d35550"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap0-slice1",
+    "bytes": 16793600,
+    "sha256": "caafeacbf6f53b0d75ab69713d3d69f8ef6d1d3c456d8c36c38e3d86d7578259"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap0-slice2",
+    "bytes": 16793600,
+    "sha256": "ef430f9f8276b71141beca7b8f2e10be005f71808644bf1bebca85cf28754144"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap0-slice3",
+    "bytes": 16793600,
+    "sha256": "d496e6d2b329cc594f766d9abb4ddab31840b74ae8a51ccd171055870ab13614"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap0-slice4",
+    "bytes": 16793600,
+    "sha256": "d1140a56646c811f61e747a2bd223a3969ce478913a9697ec6d5d09d6070848c"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap0-slice5",
+    "bytes": 16793600,
+    "sha256": "caa9abf6fdd43704f4699c3e74d5e3f599696cdec88f62a983de7443eebc6f7d"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap1-slice0",
+    "bytes": 4210688,
+    "sha256": "f6dfc2dab343e9f9d2eaa7a73d87cb4e5dc6070ead9ab7de939f89a2cb89d40c"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap1-slice1",
+    "bytes": 4210688,
+    "sha256": "064d905053689004a9b5102442883fb67edffb13b6c049c11f3b43e28a7adc02"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap1-slice2",
+    "bytes": 4210688,
+    "sha256": "4844808592d40dd86f57f837f6654ac9ccd71a0909f6dc415c490e6045d3e0be"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap1-slice3",
+    "bytes": 4210688,
+    "sha256": "c5d67d3ac8f45a2b7da502b7b627a5fcc9a3230becc13bd5065ff9c786cbede9"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap1-slice4",
+    "bytes": 4210688,
+    "sha256": "d17888df03934020808780ee852c69b8ba7196f4d16d4b6e09e162dc634c3f7c"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap1-slice5",
+    "bytes": 4210688,
+    "sha256": "83c683b93f1285ce261c0b8a63ab6b0e735f631c82db02e9964bf02ad12bf30b"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap2-slice0",
+    "bytes": 1064960,
+    "sha256": "19edd6257c43a930b63c440be35aa4b95b593647b942be0a4bf525e42dc79dec"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap2-slice1",
+    "bytes": 1064960,
+    "sha256": "06e5e99fe4c455c9edab979889451064d9dfe6588e2aa1c011be7b97d3d31400"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap2-slice2",
+    "bytes": 1064960,
+    "sha256": "a3503c004312ffaf19999a1b9b438def4128d52d38308f17a846fa4d2842ccf2"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap2-slice3",
+    "bytes": 1064960,
+    "sha256": "d63d7b42f6fd2a7656778d01ceb36215ccac4b8543bf75f68ad44470e56900c7"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap2-slice4",
+    "bytes": 1064960,
+    "sha256": "673f2d7b99ff771521f46f0d4472eb01ee006ac1ec69e196899c2228a2fd829c"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap2-slice5",
+    "bytes": 1064960,
+    "sha256": "d91f91e5a557715d2df00b0eda7aa1393e94e1d97b1984f59e4e9ebc1194ea35"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap3-slice0",
+    "bytes": 278528,
+    "sha256": "6003329fe5636bff99e6e8b21114f20c86d392dbf9e9e86f194faa0ad79b46d7"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap3-slice1",
+    "bytes": 278528,
+    "sha256": "70830b9b0e735892b76d2b91f4716d5dd23a09b2306dfe8bf1d0ac99553ecf01"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap3-slice2",
+    "bytes": 278528,
+    "sha256": "ae1a74f7597c6b44f832ed63ebfc125b09220f3f887689b064a5518f40669867"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap3-slice3",
+    "bytes": 278528,
+    "sha256": "1f74cd7a3877a67058f83a0984d9a68720326537672026127f32b25f0dd13ee1"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap3-slice4",
+    "bytes": 278528,
+    "sha256": "84e27a8ebc94afb41138bd146e83c5fa56a779ea82a6d97b0d78b7a9e4bb29de"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap3-slice5",
+    "bytes": 278528,
+    "sha256": "9e77be84b1ad3d2bd6dd7ea6ee03a73085a0422a4bacd36af1b052138568e01f"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap4-slice0",
+    "bytes": 81920,
+    "sha256": "d6eb5cc7d4bd901c86e82f7cbba66d6aa0e98a6859b1f8fc2063e7178c2abd0c"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap4-slice1",
+    "bytes": 81920,
+    "sha256": "970945dec43e77a607c4a7110e997b70017a3faed6ff034c61604bbe85b08bdc"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap4-slice2",
+    "bytes": 81920,
+    "sha256": "b0348e8ad259b5e757c5995cb464db2899884afdb09aba977d9b271954c6df53"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap4-slice3",
+    "bytes": 81920,
+    "sha256": "94d7c6000bb3fe061c40277763581ec5f8a0c90c04fb03390e67fbcfa2dd71ee"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap4-slice4",
+    "bytes": 81920,
+    "sha256": "b68f03c2859cebef9f4d4be797a81cd01b0eb3d5ba084965cfedff6325e88832"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap4-slice5",
+    "bytes": 81920,
+    "sha256": "181443ef301b06c4e1deaf94e718583eeec141276086794ac203e7c87966a7e5"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap5-slice0",
+    "bytes": 32768,
+    "sha256": "5b3ae73cd3001d758821a776f5ada77c3d9bcdd39d90b6505f8c65aa2613ffb9"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap5-slice1",
+    "bytes": 32768,
+    "sha256": "ca7919894530e9713aecb27486362fce2350ed6f575291b97417a21f52f32a77"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap5-slice2",
+    "bytes": 32768,
+    "sha256": "aabd76a2d8c704696df54d3a2c838e999842a536cb7c368cc9894a96b9f3e032"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap5-slice3",
+    "bytes": 32768,
+    "sha256": "0215bbdcda31ee960e1cbd94ce70dfc2a67f3c6bfe5007add0921f5275e14b22"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap5-slice4",
+    "bytes": 32768,
+    "sha256": "7e38e1de14a3a57c61e84be76e9ff852b7f259d66877833286a684f18605b855"
+  },
+  {
+    "path": "MTLTexture-766-0-mipmap5-slice5",
+    "bytes": 32768,
+    "sha256": "8f1c8202a761bf2d0ee965517338cf204eaa9c1f78c1c061a0f8eecfcb573824"
+  },
+  {
+    "path": "MTLTexture-772-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "38f5b3df9e2c56f9da0f6165786ed65479c218aa1c4bd8bdffad0e27ac7758b6"
+  },
+  {
+    "path": "MTLTexture-782-0-mipmap0-slice0",
+    "bytes": 1064960,
+    "sha256": "8827a037d70ad35ff631a769a4c8e58fa7ca742f41789aadb05724ca74e1276b"
+  },
+  {
+    "path": "MTLTexture-782-0-mipmap1-slice0",
+    "bytes": 278528,
+    "sha256": "acab35a770f798bb9ec4235ae16c53c50f47c3452222ad2cc2718591ab210a73"
+  },
+  {
+    "path": "MTLTexture-782-0-mipmap2-slice0",
+    "bytes": 81920,
+    "sha256": "28d78f64d6ca36f9d63c0e2ff0b8b505910ba14962a8bd5797ccc46e660d3bcb"
+  },
+  {
+    "path": "MTLTexture-782-0-mipmap3-slice0",
+    "bytes": 32768,
+    "sha256": "7bd0970a3e9abe81a54187380896e208849aa6deed91b3b1366eab0478839c85"
+  },
+  {
+    "path": "MTLTexture-785-0-mipmap0-slice0",
+    "bytes": 3162112,
+    "sha256": "01caaea03e71a02c738598f804feb966aeae526069582074ca469acd4a61964f"
+  },
+  {
+    "path": "MTLTexture-798289-0-mipmap0-slice0",
+    "bytes": 9453568,
+    "sha256": "18130afc6fc9a9efb827257e70d6464a2dd5dd194b8ca3daa731dd7a153792a7"
+  },
+  {
+    "path": "MTLTexture-798289-0-mipmap1-slice0",
+    "bytes": 2375680,
+    "sha256": "abc32948a82e5dfd1d07f619dfa8e885a30db52a9cc0721376d26a04922eafa1"
+  },
+  {
+    "path": "MTLTexture-798289-0-mipmap2-slice0",
+    "bytes": 606208,
+    "sha256": "fbfb898fa064d1f6262bde1940a480f9aa5ca303a9fa714278c246e42df6ed8a"
+  },
+  {
+    "path": "MTLTexture-798289-0-mipmap3-slice0",
+    "bytes": 163840,
+    "sha256": "45292be471f025642959883c5ad42686108794f5fde925eee8774f7a8808ee0d"
+  },
+  {
+    "path": "MTLTexture-798289-0-mipmap4-slice0",
+    "bytes": 49152,
+    "sha256": "c79d2269ba9420d578ff4b12f81b0ce788162846aa78e0772e5a036b15128728"
+  },
+  {
+    "path": "MTLTexture-94360-0-mipmap0-slice0",
+    "bytes": 162807808,
+    "sha256": "91cff354b37628cace8e6ee35c1a163d821559e40d84ebf740e0836a0ab68aee"
+  },
+  {
+    "path": "MTLTexture-94360-0-mipmap1-slice0",
+    "bytes": 40714240,
+    "sha256": "f1e95027194be74c47f710940202475a35026d10c970b89cb0189a16e32ea56e"
+  },
+  {
+    "path": "MTLTexture-94360-0-mipmap2-slice0",
+    "bytes": 10190848,
+    "sha256": "6801c63ee57fa276535eb2e1f44917c3e69a6bcd28677afecd2e3fcafd4c79a8"
+  },
+  {
+    "path": "MTLTexture-94360-0-mipmap3-slice0",
+    "bytes": 2555904,
+    "sha256": "7164acfb963fce24fbb2e93433222b16777d39bc7be60a818862cd3b3310945c"
+  },
+  {
+    "path": "MTLTexture-987434-0-mipmap0-slice0",
+    "bytes": 278528,
+    "sha256": "454b189c88805f67b4d07b1858f8aaa4d0efc9c03614a948a02324d9507430cb"
+  },
+  {
+    "path": "capture",
+    "bytes": 1915204,
+    "sha256": "e1defe6353ed3ddbc467a9c9a190598a6813068212c3787ec39858e7ad3d014f"
+  },
+  {
+    "path": "delta-device-resources-0x7760840000",
+    "bytes": 278048,
+    "sha256": "d2f8bf3c4cb1eba1715a9ba465d1e3f75ce660fc59f6b2c9b97109597c6efddc"
+  },
+  {
+    "path": "device-resources-0x7760840000",
+    "bytes": 1652776,
+    "sha256": "e6b606444c301a7df8caa6f2a7d1de376859bdca5db48b9690ec27dce00bc059"
+  },
+  {
+    "path": "index",
+    "bytes": 374689,
+    "sha256": "0039d87a8364ed6a9d6f834532d20f60f94a326fb5f8c24caee7846b74691585"
+  },
+  {
+    "path": "metadata",
+    "bytes": 1150,
+    "sha256": "2a99c71125fb643cf6aaf84505f7e9491dc95844853fa1c711829a284c8acb07"
+  },
+  {
+    "path": "startup-0-platform",
+    "bytes": 252,
+    "sha256": "571da5f3526c97a25bf4673cacf90f82cd87cfb4665b48e4cd0abdcc29f9b56b"
+  },
+  {
+    "path": "startup-1-platform",
+    "bytes": 8,
+    "sha256": "307bca216804762e9741cc4d56a78333351e51a2b9ba29b1b623c5c07df79550"
+  },
+  {
+    "path": "store0",
+    "bytes": 1523278,
+    "sha256": "72cf1a3474c2b51ed75b541c55a5d474ada27f2e5d28cf75b761c7734f4ea4b2"
+  },
+  {
+    "path": "unsorted-capture",
+    "bytes": 1995116,
+    "sha256": "136090e5c9b3c2359fdabc401b1d8050a01853c29f1196bea8811d1dc1484a59"
+  },
+  {
+    "path": "unused-device-resources-0x7760840000",
+    "bytes": 3250220,
+    "sha256": "b18b73612c329636486827ba6070479e2b04941938a095924dc0a196d78bc0f9"
+  }
+]

@@ -1,0 +1,46 @@
+{
+  "status": "DONE",
+  "round_id": "game-decal-indexed-timing-20261117-33",
+  "attempt_id": "indexed-helper-and-smoke-01",
+  "reserved_revision": 119,
+  "decision": "PASS_GPU_FIXTURE_TIMING_SMOKE_BLOCKED_DUPLICATE_BASE_CONTENT",
+  "counts": {
+    "helper_compiles": 1,
+    "helper_gpu_invocations": 1,
+    "game_launches": 1,
+    "games_completed": 0,
+    "engine_builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "trace_inspections": 0,
+    "retries": 0
+  },
+  "timing": {
+    "pairs": 24,
+    "off_gpu_median_ms": 0.2076250005,
+    "on_gpu_median_ms": 0.1484791665,
+    "median_change_percent": -28.48685556053736,
+    "on_faster_pairs": 24
+  },
+  "smoke": "FAILED_STARTUP_DUPLICATE_BASE_CONTENT",
+  "game_indexed_path": "NOT_REACHED",
+  "game_fps": "UNMEASURED",
+  "candidate_binary_sha256": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+  "cleanup_complete": true,
+  "protected_hashes_verified": 134,
+  "bar": "PAUSED",
+  "retry_authorized": false,
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-timing-20261117-33",
+  "artifactSHA256": {
+    "REPORT.md": "5a028fd54923d335bc00cc4ad77a91b5701c049d157a22881f8c50c8ec0425d2",
+    "HELPER-GPU.log": "91fea97c2caafea67ec65bb64e8feecece3dad9530bb8370be53a641ad3c3384",
+    "GPU-TIMING-RAW.csv": "2b9d54e412ba4d0b9082ce8d604b40cb07e47a449755241a13e082ea55fd6210",
+    "TIMING-EVIDENCE.json": "630ad9102c03ae422362bc9be7ae84ae540efbc3a655de6cbdcd02678964a1ea",
+    "TIMING-DELTA.diff": "60ed59fea54d98b3222c468d891c7e393ad85d37a63e6fb1208e9b8c5ff10218",
+    "SMOKE-RAW.txt": "bedb640c90f46059d0abc828ee25695745e8b704a926f36e24637133c50fcec1",
+    "SMOKE-EVIDENCE.json": "456a8868a0dd602c43c6a5d8d1ff2359fbe45182f44b943c2ba3dd05120cd72b",
+    "PROTECTED-HASHES.json": "e56267b0412341c85f34ed7f3f8a994ad485e13bc4fe7a1934870ad840a8d553",
+    "CLEANUP-EVIDENCE.json": "524315e39146df9fb46ecf66fa56de0c78f6b2280e1f763ac90c62dd790f4259"
+  },
+  "utc": "2026-11-17T21:22:42.810095+00:00"
+}

@@ -1,0 +1,1623 @@
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineSystem.cmake:12 (find_program)"
+      - "CMakeLists.txt:13 (project)"
+    mode: "program"
+    variable: "CMAKE_UNAME"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "FIRST"
+      SearchAppBundle: "FIRST"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "uname"
+    candidate_directories:
+      - "/opt/homebrew/bin/"
+      - "/opt/homebrew/sbin/"
+      - "/usr/local/bin/"
+      - "/System/Cryptexes/App/usr/bin/"
+      - "/usr/bin/"
+      - "/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin/"
+      - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin/"
+      - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin/"
+      - "/pkg/env/global/bin/"
+      - "/opt/X11/bin/"
+      - "/Library/Apple/usr/bin/"
+      - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path/"
+      - "/Users/yeojun/.codex/tmp/arg0-macos/codex-arg0grnhZ4/"
+      - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override/"
+      - "/opt/anaconda3/bin/"
+      - "/opt/anaconda3/condabin/"
+      - "/Users/yeojun/.pyenv/shims/"
+      - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback/"
+      - "/Applications/ChatGPT.app/Contents/Resources/"
+      - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/"
+    searched_directories:
+      - "/opt/homebrew/bin/uname"
+      - "/opt/homebrew/sbin/uname"
+      - "/usr/local/bin/uname"
+      - "/System/Cryptexes/App/usr/bin/uname"
+    found: "/usr/bin/uname"
+    search_context:
+      ENV{PATH}:
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/usr/local/bin"
+        - "/System/Cryptexes/App/usr/bin"
+        - "/usr/bin"
+        - "/bin"
+        - "/usr/sbin"
+        - "/sbin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
+        - "/pkg/env/global/bin"
+        - "/opt/X11/bin"
+        - "/Library/Apple/usr/bin"
+        - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path"
+        - "/Users/yeojun/.codex/tmp/arg0-macos/codex-arg0grnhZ4"
+        - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override"
+        - "/opt/anaconda3/bin"
+        - "/opt/anaconda3/condabin"
+        - "/Users/yeojun/.pyenv/shims"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback"
+        - "/Applications/ChatGPT.app/Contents/Resources"
+        - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineSystem.cmake:220 (message)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      The system is: Darwin - 27.3.0 - arm64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:541 (find_file)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:583 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "FIRST"
+      SearchAppBundle: "FIRST"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/opt/homebrew/share/cmake/Modules/"
+      - "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/"
+    found: "/opt/homebrew/share/cmake/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/usr/local/bin"
+        - "/System/Cryptexes/App/usr/bin"
+        - "/usr/bin"
+        - "/bin"
+        - "/usr/sbin"
+        - "/sbin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
+        - "/pkg/env/global/bin"
+        - "/opt/X11/bin"
+        - "/Library/Apple/usr/bin"
+        - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path"
+        - "/Users/yeojun/.codex/tmp/arg0-macos/codex-arg0grnhZ4"
+        - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override"
+        - "/opt/anaconda3/bin"
+        - "/opt/anaconda3/condabin"
+        - "/Users/yeojun/.pyenv/shims"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback"
+        - "/Applications/ChatGPT.app/Contents/Resources"
+        - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /usr/bin/cc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      The C compiler identification is AppleClang, found in:
+        /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/4.5.0/CompilerIdC/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:323 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Detecting C compiler apple sysroot: "/usr/bin/cc" "-E" "apple-sdk.c"
+        # 1 "apple-sdk.c"
+        # 1 "<built-in>" 1
+        # 1 "<built-in>" 3
+        # 484 "<built-in>" 3
+        # 1 "<command line>" 1
+        # 1 "<built-in>" 2
+        # 1 "apple-sdk.c" 2
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 1 3 4
+        # 89 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityVersions.h" 1 3 4
+        # 90 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 2 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/TargetConditionals.h" 1 3 4
+        # 91 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 2 3 4
+        # 207 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 1 3 4
+        # 196 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityVersions.h" 1 3 4
+        # 197 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 2 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 1 3 4
+        # 33 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityVersions.h" 1 3 4
+        # 34 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 2 3 4
+        # 198 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 2 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h" 1 3 4
+        # 34 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 1 3 4
+        # 35 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h" 2 3 4
+        # 199 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 2 3 4
+        # 208 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 2 3 4
+        # 2 "apple-sdk.c" 2
+        
+        
+      Found apple sysroot: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:541 (find_file)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:583 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "FIRST"
+      SearchAppBundle: "FIRST"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/opt/homebrew/share/cmake/Modules/"
+      - "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/"
+    found: "/opt/homebrew/share/cmake/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/usr/local/bin"
+        - "/System/Cryptexes/App/usr/bin"
+        - "/usr/bin"
+        - "/bin"
+        - "/usr/sbin"
+        - "/sbin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin"
+        - "/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin"
+        - "/pkg/env/global/bin"
+        - "/opt/X11/bin"
+        - "/Library/Apple/usr/bin"
+        - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/codex-path"
+        - "/Users/yeojun/.codex/tmp/arg0-macos/codex-arg0grnhZ4"
+        - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override"
+        - "/opt/anaconda3/bin"
+        - "/opt/anaconda3/condabin"
+        - "/Users/yeojun/.pyenv/shims"
+        - "/opt/homebrew/bin"
+        - "/opt/homebrew/sbin"
+        - "/Users/yeojun/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback"
+        - "/Applications/ChatGPT.app/Contents/Resources"
+        - "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/bin/c++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is AppleClang, found in:
+        /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/4.5.0/CompilerIdCXX/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:323 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Detecting CXX compiler apple sysroot: "/usr/bin/c++" "-E" "apple-sdk.cpp"
+        # 1 "apple-sdk.cpp"
+        # 1 "<built-in>" 1
+        # 1 "<built-in>" 3
+        # 533 "<built-in>" 3
+        # 1 "<command line>" 1
+        # 1 "<built-in>" 2
+        # 1 "apple-sdk.cpp" 2
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 1 3 4
+        # 89 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityVersions.h" 1 3 4
+        # 90 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 2 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/TargetConditionals.h" 1 3 4
+        # 91 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 2 3 4
+        # 207 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 1 3 4
+        # 196 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityVersions.h" 1 3 4
+        # 197 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 2 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 1 3 4
+        # 33 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityVersions.h" 1 3 4
+        # 34 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 2 3 4
+        # 198 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 2 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h" 1 3 4
+        # 34 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h" 3 4
+        # 1 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternal.h" 1 3 4
+        # 35 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityInternalLegacy.h" 2 3 4
+        # 199 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Availability.h" 2 3 4
+        # 208 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/AvailabilityMacros.h" 2 3 4
+        # 2 "apple-sdk.cpp" 2
+        
+        
+      Found apple sysroot: /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:123 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: false
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_badde
+        [1/2] /usr/bin/cc   -arch arm64   -v -Wl,-v -MD -MT CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -c /opt/homebrew/share/cmake/Modules/CMakeCCompilerABI.c
+        Apple clang version 21.0.0 (clang-2100.4.1.1)
+        Target: arm64-apple-darwin27.3.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple arm64-apple-macosx27.2.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -fno-sized-deallocation -target-sdk-version=27.2 -fdepfile-entry=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/SDKSettings.json -fvisibility-inlines-hidden-static-local-var -fno-modulemap-allow-subdirectory-search -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -enable-tlsdesc -target-cpu apple-m1 -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +ccpp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +flagm -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb -target-linker-version 27033.1 -v -fcoverage-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21 -dependency-file CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks -Wno-elaborated-enum-base -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -Wno-error=allocator-wrappers -fdwarf2-cfi-asm -o CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -x c /opt/homebrew/share/cmake/Modules/CMakeCCompilerABI.c
+        clang -cc1 version 21.0.0 (clang-2100.4.1.1) default target arm64-apple-darwin27.3.0
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include"
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/local/include
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks (framework directory)
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks (framework directory)
+        End of search list.
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -o cmTC_badde   && :
+        Apple clang version 21.0.0 (clang-2100.4.1.1)
+        Target: arm64-apple-darwin27.3.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 27.2.0 27.2 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_badde -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a
+        @(#)PROGRAM:ld PROJECT:ld-27106.1
+        BUILD 19:06:34 Oct 19 2026
+        configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em armv8m.main armv8.1m.main
+        LTO support using: LLVM version 21.0.0 (static support for 30, runtime is 30)
+        TAPI support using: Apple TAPI version 21.0.0 (tapi-2100.3.8.1)
+        Library search paths:
+        	/usr/local/lib
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift
+        Framework search paths:
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:160 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Effective list of requested architectures (possibly empty)  : ""
+      Effective list of architectures found in the ABI info binary: "arm64"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:255 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/local/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        end of search list found
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        implicit include dirs: [/usr/local/include;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:291 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)(\\.exe)?"?( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb']
+        ignore line: []
+        ignore line: [Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_badde]
+        ignore line: [[1/2] /usr/bin/cc   -arch arm64   -v -Wl -v -MD -MT CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -MF CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o.d -o CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -c /opt/homebrew/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [Apple clang version 21.0.0 (clang-2100.4.1.1)]
+        ignore line: [Target: arm64-apple-darwin27.3.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        ignore line: [clang: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
+        ignore line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple arm64-apple-macosx27.2.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCCompilerABI.c -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -fno-sized-deallocation -target-sdk-version=27.2 -fdepfile-entry=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/SDKSettings.json -fvisibility-inlines-hidden-static-local-var -fno-modulemap-allow-subdirectory-search -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -enable-tlsdesc -target-cpu apple-m1 -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +ccpp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +flagm -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb -target-linker-version 27033.1 -v -fcoverage-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gMAvOb -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21 -dependency-file CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks -Wno-elaborated-enum-base -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fskip-odr-check-in-gmf -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -Wno-error=allocator-wrappers -fdwarf2-cfi-asm -o CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -x c /opt/homebrew/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [clang -cc1 version 21.0.0 (clang-2100.4.1.1) default target arm64-apple-darwin27.3.0]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include"]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks (framework directory)]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks (framework directory)]
+        ignore line: [End of search list.]
+        ignore line: [[2/2] : && /usr/bin/cc -arch arm64 -Wl -search_paths_first -Wl -headerpad_max_install_names  -v -Wl -v CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -o cmTC_badde   && :]
+        ignore line: [Apple clang version 21.0.0 (clang-2100.4.1.1)]
+        ignore line: [Target: arm64-apple-darwin27.3.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 27.2.0 27.2 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_badde -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a] ==> linker [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld]
+        link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 27.2.0 27.2 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_badde -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+          arg [-demangle] ==> ignore
+          arg [-lto_library] ==> ignore, skip following value
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib] ==> skip value of -lto_library
+          arg [-dynamic] ==> ignore
+          arg [-arch] ==> ignore
+          arg [arm64] ==> ignore
+          arg [-platform_version] ==> ignore
+          arg [macos] ==> ignore
+          arg [27.2.0] ==> ignore
+          arg [27.2] ==> ignore
+          arg [-syslibroot] ==> ignore
+          arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-enable-linkonceodr-outlining] ==> ignore
+          arg [-o] ==> ignore, skip following value
+          arg [cmTC_badde] ==> skip value of -o
+          arg [-L/usr/local/lib] ==> dir [/usr/local/lib]
+          arg [-search_paths_first] ==> ignore
+          arg [-headerpad_max_install_names] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_badde.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [-lSystem] ==> lib [System]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a]
+        linker tool for 'C': /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld 
+        Library search paths: [;/usr/local/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift]
+        Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks]
+        remove lib [System]
+        remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a]
+        collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+        collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift]
+        collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks]
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: [/usr/local/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift]
+        implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CMakeDetermineLinkerId.cmake:41 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:337 (cmake_determine_linker_id)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Running the C compiler's linker: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" "-v"
+      @(#)PROGRAM:ld PROJECT:ld-27106.1
+      BUILD 19:06:34 Oct 19 2026
+      configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em armv8m.main armv8.1m.main
+      LTO support using: LLVM version 21.0.0 (static support for 30, runtime is 30)
+      TAPI support using: Apple TAPI version 21.0.0 (tapi-2100.3.8.1)
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:123 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: false
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_efd7b
+        [1/2] /usr/bin/c++   -std=c++23 -arch arm64   -v -Wl,-v -MD -MT CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -c /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        Apple clang version 21.0.0 (clang-2100.4.1.1)
+        Target: arm64-apple-darwin27.3.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+        clang++: warning: -Wl,-v: 'linker' input unused [-Wunused-command-line-argument]
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple arm64-apple-macosx27.2.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -fno-sized-deallocation -target-sdk-version=27.2 -fdepfile-entry=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/SDKSettings.json -fvisibility-inlines-hidden-static-local-var -fno-modulemap-allow-subdirectory-search -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -enable-tlsdesc -target-cpu apple-m1 -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +ccpp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +flagm -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe -target-linker-version 27033.1 -v -fcoverage-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21 -dependency-file CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1 -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks -Wno-elaborated-enum-base -std=c++23 -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fno-implicit-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -Wno-error=allocator-wrappers -fdwarf2-cfi-asm -o CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -x c++ /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        clang -cc1 version 21.0.0 (clang-2100.4.1.1) default target arm64-apple-darwin27.3.0
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include"
+        ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/local/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+         /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks (framework directory)
+         /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks (framework directory)
+        End of search list.
+        [2/2] : && /usr/bin/c++ -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names  -v -Wl,-v CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_efd7b   && :
+        Apple clang version 21.0.0 (clang-2100.4.1.1)
+        Target: arm64-apple-darwin27.3.0
+        Thread model: posix
+        InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 27.2.0 27.2 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_efd7b -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a
+        @(#)PROGRAM:ld PROJECT:ld-27106.1
+        BUILD 19:06:34 Oct 19 2026
+        configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em armv8m.main armv8.1m.main
+        LTO support using: LLVM version 21.0.0 (static support for 30, runtime is 30)
+        TAPI support using: Apple TAPI version 21.0.0 (tapi-2100.3.8.1)
+        Library search paths:
+        	/usr/local/lib
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift
+        Framework search paths:
+        	/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:160 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Effective list of requested architectures (possibly empty)  : ""
+      Effective list of architectures found in the ABI info binary: "arm64"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:255 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/local/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1]
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include]
+          add: [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        end of search list found
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include]
+        collapse include dir [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include] ==> [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        implicit include dirs: [/usr/local/include;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include;/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:291 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)(\\.exe)?"?( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe']
+        ignore line: []
+        ignore line: [Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_efd7b]
+        ignore line: [[1/2] /usr/bin/c++   -std=c++23 -arch arm64   -v -Wl -v -MD -MT CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -MF CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o.d -o CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -c /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Apple clang version 21.0.0 (clang-2100.4.1.1)]
+        ignore line: [Target: arm64-apple-darwin27.3.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        ignore line: [clang++: warning: -Wl -v: 'linker' input unused [-Wunused-command-line-argument]]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"]
+        ignore line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang" -cc1 -triple arm64-apple-macosx27.2.0 -Wundef-prefix=TARGET_OS_ -Wdeprecated-objc-isa-usage -Werror=deprecated-objc-isa-usage -Werror=implicit-function-declaration -emit-obj -disable-free -clear-ast-before-backend -disable-llvm-verifier -discard-value-names -main-file-name CMakeCXXCompilerABI.cpp -mrelocation-model pic -pic-level 2 -mframe-pointer=non-leaf -fno-strict-return -ffp-contract=on -fno-rounding-math -funwind-tables=1 -fobjc-msgsend-selector-stubs -fno-sized-deallocation -target-sdk-version=27.2 -fdepfile-entry=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/SDKSettings.json -fvisibility-inlines-hidden-static-local-var -fno-modulemap-allow-subdirectory-search -fdefine-target-os-macros -fno-assume-unique-vtables -fno-modulemap-allow-subdirectory-search -enable-tlsdesc -target-cpu apple-m1 -target-feature +v8.5a -target-feature +aes -target-feature +altnzcv -target-feature +ccdp -target-feature +ccpp -target-feature +complxnum -target-feature +crc -target-feature +dotprod -target-feature +flagm -target-feature +fp-armv8 -target-feature +fp16fml -target-feature +fptoint -target-feature +fullfp16 -target-feature +jsconv -target-feature +lse -target-feature +neon -target-feature +pauth -target-feature +perfmon -target-feature +predres -target-feature +ras -target-feature +rcpc -target-feature +rdm -target-feature +sb -target-feature +sha2 -target-feature +sha3 -target-feature +specrestrict -target-feature +ssbs -target-abi darwinpcs -debugger-tuning=lldb -fdebug-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe -target-linker-version 27033.1 -v -fcoverage-compilation-dir=/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-eTDQTe -resource-dir /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21 -dependency-file CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o.d -skip-unused-modulemap-deps -MT CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -sys-header-deps -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -I/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1 -internal-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include -internal-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include -internal-externc-isystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks -internal-iframework /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks -Wno-elaborated-enum-base -std=c++23 -fdeprecated-macro -ferror-limit 19 -stack-protector 1 -fstack-check -mdarwin-stkchk-strong-link -fblocks -fencode-extended-block-signature -fregister-global-dtors-with-atexit -fgnuc-version=4.2.1 -fno-cxx-modules -fno-implicit-modules -fskip-odr-check-in-gmf -fcxx-exceptions -fexceptions -fmax-type-align=16 -fcommon -clang-vendor-feature=+disableNonDependentMemberExprInCurrentInstantiation -fno-odr-hash-protocols -clang-vendor-feature=+enableAggressiveVLAFolding -clang-vendor-feature=+revert09abecef7bbf -clang-vendor-feature=+thisNoAlignAttr -clang-vendor-feature=+thisNoNullAttr -clang-vendor-feature=+disableAtImportPrivateFrameworkInImplementationError -Wno-error=allocator-wrappers -fdwarf2-cfi-asm -o CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -x c++ /opt/homebrew/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [clang -cc1 version 21.0.0 (clang-2100.4.1.1) default target arm64-apple-darwin27.3.0]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/local/include"]
+        ignore line: [ignoring nonexistent directory "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/Library/Frameworks"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks (framework directory)]
+        ignore line: [ /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/SubFrameworks (framework directory)]
+        ignore line: [End of search list.]
+        ignore line: [[2/2] : && /usr/bin/c++ -arch arm64 -Wl -search_paths_first -Wl -headerpad_max_install_names  -v -Wl -v CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_efd7b   && :]
+        ignore line: [Apple clang version 21.0.0 (clang-2100.4.1.1)]
+        ignore line: [Target: arm64-apple-darwin27.3.0]
+        ignore line: [Thread model: posix]
+        ignore line: [InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin]
+        link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 27.2.0 27.2 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_efd7b -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a] ==> linker [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld]
+        link line: [ "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" -demangle -lto_library /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib -dynamic -arch arm64 -platform_version macos 27.2.0 27.2 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk -mllvm -enable-linkonceodr-outlining -o cmTC_efd7b -L/usr/local/lib -search_paths_first -headerpad_max_install_names -v CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o -lc++ -lSystem /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld] ==> ignore
+          arg [-demangle] ==> ignore
+          arg [-lto_library] ==> ignore, skip following value
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/libLTO.dylib] ==> skip value of -lto_library
+          arg [-dynamic] ==> ignore
+          arg [-arch] ==> ignore
+          arg [arm64] ==> ignore
+          arg [-platform_version] ==> ignore
+          arg [macos] ==> ignore
+          arg [27.2.0] ==> ignore
+          arg [27.2] ==> ignore
+          arg [-syslibroot] ==> ignore
+          arg [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk] ==> ignore
+          arg [-mllvm] ==> ignore
+          arg [-enable-linkonceodr-outlining] ==> ignore
+          arg [-o] ==> ignore, skip following value
+          arg [cmTC_efd7b] ==> skip value of -o
+          arg [-L/usr/local/lib] ==> dir [/usr/local/lib]
+          arg [-search_paths_first] ==> ignore
+          arg [-headerpad_max_install_names] ==> ignore
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_efd7b.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lc++] ==> lib [c++]
+          arg [-lSystem] ==> lib [System]
+          arg [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a] ==> lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a]
+        linker tool for 'CXX': /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld 
+        Library search paths: [;/usr/local/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift]
+        Framework search paths: [;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks]
+        remove lib [System]
+        remove lib [/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21/lib/darwin/libclang_rt.osx.a]
+        collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+        collapse library dir [/usr/local/lib] ==> [/usr/local/lib]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib]
+        collapse library dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift]
+        collapse framework dir [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks] ==> [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks]
+        implicit libs: [c++]
+        implicit objs: []
+        implicit dirs: [/usr/local/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib;/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/swift]
+        implicit fwks: [/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CMakeDetermineLinkerId.cmake:41 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:337 (cmake_determine_linker_id)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:13 (project)"
+    message: |
+      Running the CXX compiler's linker: "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld" "-v"
+      @(#)PROGRAM:ld PROJECT:ld-27106.1
+      BUILD 19:06:34 Oct 19 2026
+      configured to support archs: armv6 armv7 armv7s arm64 arm64e arm64_32 i386 x86_64 x86_64h armv6m armv7k armv7m armv7em armv8m.main armv8.1m.main
+      LTO support using: LLVM version 21.0.0 (static support for 30, runtime is 30)
+      TAPI support using: Apple TAPI version 21.0.0 (tapi-2100.3.8.1)
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckCSourceCompiles.cmake:103 (cmake_check_source_compiles)"
+      - "/opt/homebrew/share/cmake/Modules/FindThreads.cmake:160 (check_c_source_compiles)"
+      - "/opt/homebrew/share/cmake/Modules/FindThreads.cmake:226 (_threads_check_libc)"
+      - "CMakeLists.txt:20 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-iWPXTh"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-iWPXTh"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-iWPXTh'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_1b3f9
+        [1/2] /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD  -arch arm64 -MD -MT CMakeFiles/cmTC_1b3f9.dir/src.c.o -MF CMakeFiles/cmTC_1b3f9.dir/src.c.o.d -o CMakeFiles/cmTC_1b3f9.dir/src.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-iWPXTh/src.c
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_1b3f9.dir/src.c.o -o cmTC_1b3f9   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/TestCXXAcceptsFlag.cmake:66 (try_compile)"
+      - "rts/build/cmake/TestCXXFlags.cmake:22 (check_cxx_accepts_flag)"
+      - "rts/build/cmake/TestCXXFlags.cmake:44 (check_and_add_flags)"
+      - "CMakeLists.txt:104 (include)"
+    checks:
+      - "Checking to see if CXX compiler accepts flag -fvisibility-inlines-hidden"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-9i03hn"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-9i03hn"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "has_-fvisibility-inlines-hidden"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-9i03hn'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_8e3da
+        [1/2] /usr/bin/c++   -fvisibility-inlines-hidden -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_8e3da.dir/DummyCXXFile.cxx.o -MF CMakeFiles/cmTC_8e3da.dir/DummyCXXFile.cxx.o.d -o CMakeFiles/cmTC_8e3da.dir/DummyCXXFile.cxx.o -c /opt/homebrew/share/cmake/Modules/DummyCXXFile.cxx
+        [2/2] : && /usr/bin/c++ -fvisibility-inlines-hidden -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_8e3da.dir/DummyCXXFile.cxx.o -o cmTC_8e3da   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/TestCXXAcceptsFlag.cmake:66 (try_compile)"
+      - "rts/build/cmake/TestCXXFlags.cmake:75 (CHECK_CXX_ACCEPTS_FLAG)"
+      - "CMakeLists.txt:104 (include)"
+    checks:
+      - "Checking to see if CXX compiler accepts flag -ffp-contract=off"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-tExeCm"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-tExeCm"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAS_FP_CONTRACT_OFF"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-tExeCm'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_9fa1c
+        [1/2] /usr/bin/c++   -ffp-contract=off -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_9fa1c.dir/DummyCXXFile.cxx.o -MF CMakeFiles/cmTC_9fa1c.dir/DummyCXXFile.cxx.o.d -o CMakeFiles/cmTC_9fa1c.dir/DummyCXXFile.cxx.o -c /opt/homebrew/share/cmake/Modules/DummyCXXFile.cxx
+        [2/2] : && /usr/bin/c++ -ffp-contract=off -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_9fa1c.dir/DummyCXXFile.cxx.o -o cmTC_9fa1c   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/TestCXXAcceptsFlag.cmake:66 (try_compile)"
+      - "rts/build/cmake/TestCXXFlags.cmake:22 (check_cxx_accepts_flag)"
+      - "rts/build/cmake/TestCXXFlags.cmake:87 (CHECK_AND_ADD_FLAGS)"
+      - "CMakeLists.txt:104 (include)"
+    checks:
+      - "Checking to see if CXX compiler accepts flag -std=c++17"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-UlMvcR"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-UlMvcR"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "has_-std=c++17"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-UlMvcR'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_54910
+        [1/2] /usr/bin/c++   -std=c++17 -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_54910.dir/DummyCXXFile.cxx.o -MF CMakeFiles/cmTC_54910.dir/DummyCXXFile.cxx.o.d -o CMakeFiles/cmTC_54910.dir/DummyCXXFile.cxx.o -c /opt/homebrew/share/cmake/Modules/DummyCXXFile.cxx
+        [2/2] : && /usr/bin/c++ -std=c++17 -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_54910.dir/DummyCXXFile.cxx.o -o cmTC_54910   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/TestCXXAcceptsFlag.cmake:66 (try_compile)"
+      - "rts/build/cmake/TestCXXFlags.cmake:22 (check_cxx_accepts_flag)"
+      - "rts/build/cmake/TestCXXFlags.cmake:93 (CHECK_AND_ADD_FLAGS)"
+      - "CMakeLists.txt:104 (include)"
+    checks:
+      - "Checking to see if CXX compiler accepts flag -flto"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-qGo7Qx"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-qGo7Qx"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "has_-flto"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-qGo7Qx'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_aec8f
+        [1/2] /usr/bin/c++   -flto -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_aec8f.dir/DummyCXXFile.cxx.o -MF CMakeFiles/cmTC_aec8f.dir/DummyCXXFile.cxx.o.d -o CMakeFiles/cmTC_aec8f.dir/DummyCXXFile.cxx.o -c /opt/homebrew/share/cmake/Modules/DummyCXXFile.cxx
+        [2/2] : && /usr/bin/c++ -flto -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_aec8f.dir/DummyCXXFile.cxx.o -o cmTC_aec8f   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/TestCXXAcceptsFlag.cmake:66 (try_compile)"
+      - "rts/build/cmake/TestCXXFlags.cmake:125 (CHECK_CXX_ACCEPTS_FLAG)"
+      - "CMakeLists.txt:104 (include)"
+    checks:
+      - "Checking to see if CXX compiler accepts flag -mno-tls-direct-seg-refs"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-BJ9Dcv"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-BJ9Dcv"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAS_NO_TLS_DIRECT_SEG_REFS_FLAG"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-BJ9Dcv'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_48313
+        [1/2] /usr/bin/c++   -mno-tls-direct-seg-refs -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_48313.dir/DummyCXXFile.cxx.o -MF CMakeFiles/cmTC_48313.dir/DummyCXXFile.cxx.o.d -o CMakeFiles/cmTC_48313.dir/DummyCXXFile.cxx.o -c /opt/homebrew/share/cmake/Modules/DummyCXXFile.cxx
+        clang++: warning: argument unused during compilation: '-mno-tls-direct-seg-refs' [-Wunused-command-line-argument]
+        [2/2] : && /usr/bin/c++ -mno-tls-direct-seg-refs -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_48313.dir/DummyCXXFile.cxx.o -o cmTC_48313   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:171 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:99 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:357 (check_symbol_exists)"
+    checks:
+      - "Looking for strnlen"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S5jwvJ"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S5jwvJ"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_STRNLEN"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S5jwvJ'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_3e637
+        [1/2] /usr/bin/cc   -arch arm64 -MD -MT CMakeFiles/cmTC_3e637.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_3e637.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_3e637.dir/CheckSymbolExists.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S5jwvJ/CheckSymbolExists.c
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_3e637.dir/CheckSymbolExists.c.o -o cmTC_3e637   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:171 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:99 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "CMakeLists.txt:363 (check_symbol_exists)"
+    checks:
+      - "Looking for getexecpath"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-sXm0Gy"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-sXm0Gy"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_GETEXECPATH"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-sXm0Gy'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_7efc2
+        [1/2] /usr/bin/cc   -arch arm64 -MD -MT CMakeFiles/cmTC_7efc2.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_7efc2.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_7efc2.dir/CheckSymbolExists.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-sXm0Gy/CheckSymbolExists.c
+        FAILED: [code=1] CMakeFiles/cmTC_7efc2.dir/CheckSymbolExists.c.o 
+        /usr/bin/cc   -arch arm64 -MD -MT CMakeFiles/cmTC_7efc2.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_7efc2.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_7efc2.dir/CheckSymbolExists.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-sXm0Gy/CheckSymbolExists.c
+        /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-sXm0Gy/CheckSymbolExists.c:8:19: error: use of undeclared identifier 'getexecpath'
+            8 |   return ((int*)(&getexecpath))[argc];
+              |                   ^~~~~~~~~~~
+        1 error generated.
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/TestCXXAcceptsFlag.cmake:66 (try_compile)"
+      - "rts/build/cmake/TestCXXFlags.cmake:22 (check_cxx_accepts_flag)"
+      - "CMakeLists.txt:564 (check_and_add_flags)"
+    checks:
+      - "Checking to see if CXX compiler accepts flag -frounding-math"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-ntnYK6"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-ntnYK6"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off"
+      CMAKE_CXX_FLAGS_DEBUG: "-g"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "has_-frounding-math"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-ntnYK6'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_71309
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_71309.dir/DummyCXXFile.cxx.o -MF CMakeFiles/cmTC_71309.dir/DummyCXXFile.cxx.o.d -o CMakeFiles/cmTC_71309.dir/DummyCXXFile.cxx.o -c /opt/homebrew/share/cmake/Modules/DummyCXXFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_71309.dir/DummyCXXFile.cxx.o -o cmTC_71309   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/opt/homebrew/share/cmake/Modules/CheckCXXCompilerFlag.cmake:103 (cmake_check_compiler_flag)"
+      - "rts/lib/fmt/CMakeLists.txt:260 (check_cxx_compiler_flag)"
+    checks:
+      - "Performing Test HAS_NULLPTR_WARNING"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-cArmwZ"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-cArmwZ"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake;/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/lib/fmt/support/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAS_NULLPTR_WARNING"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-cArmwZ'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_6dc52
+        [1/2] /usr/bin/c++ -DHAS_NULLPTR_WARNING  -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64   -Wzero-as-null-pointer-constant -MD -MT CMakeFiles/cmTC_6dc52.dir/src.cxx.o -MF CMakeFiles/cmTC_6dc52.dir/src.cxx.o.d -o CMakeFiles/cmTC_6dc52.dir/src.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-cArmwZ/src.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_6dc52.dir/src.cxx.o -o cmTC_6dc52   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckLinkerFlag.cmake:34 (cmake_check_source_compiles)"
+      - "/opt/homebrew/share/cmake/Modules/CheckLinkerFlag.cmake:160 (cmake_check_linker_flag)"
+      - "rts/lib/mimalloc/CMakeLists.txt:521 (check_linker_flag)"
+      - "rts/lib/mimalloc/CMakeLists.txt:540 (find_link_library)"
+    checks:
+      - "Performing Test mi_has_libpthread"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-vROCax"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-vROCax"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "mi_has_libpthread"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-vROCax'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_2bf93
+        [1/2] /usr/bin/cc -Dmi_has_libpthread  -std=gnu11 -arch arm64 -MD -MT CMakeFiles/cmTC_2bf93.dir/src.c.o -MF CMakeFiles/cmTC_2bf93.dir/src.c.o.d -o CMakeFiles/cmTC_2bf93.dir/src.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-vROCax/src.c
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -lpthread CMakeFiles/cmTC_2bf93.dir/src.c.o -o cmTC_2bf93   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckLinkerFlag.cmake:34 (cmake_check_source_compiles)"
+      - "/opt/homebrew/share/cmake/Modules/CheckLinkerFlag.cmake:160 (cmake_check_linker_flag)"
+      - "rts/lib/mimalloc/CMakeLists.txt:521 (check_linker_flag)"
+      - "rts/lib/mimalloc/CMakeLists.txt:544 (find_link_library)"
+    checks:
+      - "Performing Test mi_has_librt"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-xqs5Ef"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-xqs5Ef"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "mi_has_librt"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-xqs5Ef'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_5e0d1
+        [1/2] /usr/bin/cc -Dmi_has_librt  -std=gnu11 -arch arm64 -MD -MT CMakeFiles/cmTC_5e0d1.dir/src.c.o -MF CMakeFiles/cmTC_5e0d1.dir/src.c.o.d -o CMakeFiles/cmTC_5e0d1.dir/src.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-xqs5Ef/src.c
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -lrt CMakeFiles/cmTC_5e0d1.dir/src.c.o -o cmTC_5e0d1   && :
+        FAILED: [code=1] cmTC_5e0d1 
+        : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -lrt CMakeFiles/cmTC_5e0d1.dir/src.c.o -o cmTC_5e0d1   && :
+        ld: library 'rt' not found
+        clang: error: linker command failed with exit code 1 (use -v to see invocation)
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckLinkerFlag.cmake:34 (cmake_check_source_compiles)"
+      - "/opt/homebrew/share/cmake/Modules/CheckLinkerFlag.cmake:160 (cmake_check_linker_flag)"
+      - "rts/lib/mimalloc/CMakeLists.txt:521 (check_linker_flag)"
+      - "rts/lib/mimalloc/CMakeLists.txt:548 (find_link_library)"
+    checks:
+      - "Performing Test mi_has_libatomic"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JSjaTc"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JSjaTc"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "mi_has_libatomic"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JSjaTc'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_591aa
+        [1/2] /usr/bin/cc -Dmi_has_libatomic  -std=gnu11 -arch arm64 -MD -MT CMakeFiles/cmTC_591aa.dir/src.c.o -MF CMakeFiles/cmTC_591aa.dir/src.c.o.d -o CMakeFiles/cmTC_591aa.dir/src.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JSjaTc/src.c
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -latomic CMakeFiles/cmTC_591aa.dir/src.c.o -o cmTC_591aa   && :
+        FAILED: [code=1] cmTC_591aa 
+        : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names -latomic CMakeFiles/cmTC_591aa.dir/src.c.o -o cmTC_591aa   && :
+        ld: library 'atomic' not found
+        clang: error: linker command failed with exit code 1 (use -v to see invocation)
+        ninja: build stopped: subcommand failed.
+        
+      exitCode: 1
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckCXXSourceCompiles.cmake:103 (cmake_check_source_compiles)"
+      - "rts/lib/nowide/CMakeLists.txt:48 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test NOWIDE_HAS_LFS"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gWFf5c"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gWFf5c"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/lib/nowide/cmake;/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "NOWIDE_HAS_LFS"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gWFf5c'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_e29e1
+        [1/2] /usr/bin/c++ -DNOWIDE_HAS_LFS  -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_e29e1.dir/src.cxx.o -MF CMakeFiles/cmTC_e29e1.dir/src.cxx.o.d -o CMakeFiles/cmTC_e29e1.dir/src.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-gWFf5c/src.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_e29e1.dir/src.cxx.o -o cmTC_e29e1   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckCXXSourceCompiles.cmake:103 (cmake_check_source_compiles)"
+      - "rts/lib/nowide/CMakeLists.txt:50 (check_cxx_source_compiles)"
+    checks:
+      - "Performing Test NOWIDE_HAS_INIT_PRIORITY"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-mxmOZ6"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-mxmOZ6"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/lib/nowide/cmake;/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "NOWIDE_HAS_INIT_PRIORITY"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-mxmOZ6'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_d717b
+        [1/2] /usr/bin/c++ -DNOWIDE_HAS_INIT_PRIORITY  -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_d717b.dir/src.cxx.o -MF CMakeFiles/cmTC_d717b.dir/src.cxx.o.d -o CMakeFiles/cmTC_d717b.dir/src.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-mxmOZ6/src.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_d717b.dir/src.cxx.o -o cmTC_d717b   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:84 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/opt/homebrew/share/cmake/Modules/CheckCXXCompilerFlag.cmake:103 (cmake_check_compiler_flag)"
+      - "rts/lib/nowide/test/CMakeLists.txt:6 (check_cxx_compiler_flag)"
+    checks:
+      - "Performing Test _NOWIDE_SUGGEST_OVERRIDE_SUPPORTED"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-RFPXn7"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-RFPXn7"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/lib/nowide/cmake;/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "_NOWIDE_SUGGEST_OVERRIDE_SUPPORTED"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-RFPXn7'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_ea831
+        [1/2] /usr/bin/c++ -D_NOWIDE_SUGGEST_OVERRIDE_SUPPORTED  -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64   -Wsuggest-override -MD -MT CMakeFiles/cmTC_ea831.dir/src.cxx.o -MF CMakeFiles/cmTC_ea831.dir/src.cxx.o.d -o CMakeFiles/cmTC_ea831.dir/src.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-RFPXn7/src.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_ea831.dir/src.cxx.o -o cmTC_ea831   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckIncludeFileCXX.cmake:126 (try_compile)"
+      - "rts/lib/gflags/CMakeLists.txt:260 (check_include_file_cxx)"
+    checks:
+      - "Looking for C++ include unistd.h"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4yGBVb"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4yGBVb"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_UNISTD_H"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4yGBVb'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_7c940
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_7c940.dir/CheckIncludeFile.cxx.o -MF CMakeFiles/cmTC_7c940.dir/CheckIncludeFile.cxx.o.d -o CMakeFiles/cmTC_7c940.dir/CheckIncludeFile.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4yGBVb/CheckIncludeFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_7c940.dir/CheckIncludeFile.cxx.o -o cmTC_7c940   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckIncludeFileCXX.cmake:126 (try_compile)"
+      - "rts/lib/gflags/CMakeLists.txt:260 (check_include_file_cxx)"
+    checks:
+      - "Looking for C++ include stdint.h"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QojXaZ"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QojXaZ"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_STDINT_H"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QojXaZ'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_32a72
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_32a72.dir/CheckIncludeFile.cxx.o -MF CMakeFiles/cmTC_32a72.dir/CheckIncludeFile.cxx.o.d -o CMakeFiles/cmTC_32a72.dir/CheckIncludeFile.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QojXaZ/CheckIncludeFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_32a72.dir/CheckIncludeFile.cxx.o -o cmTC_32a72   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckIncludeFileCXX.cmake:126 (try_compile)"
+      - "rts/lib/gflags/CMakeLists.txt:260 (check_include_file_cxx)"
+    checks:
+      - "Looking for C++ include inttypes.h"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S4Ko1Z"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S4Ko1Z"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_INTTYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S4Ko1Z'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_5ac34
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_5ac34.dir/CheckIncludeFile.cxx.o -MF CMakeFiles/cmTC_5ac34.dir/CheckIncludeFile.cxx.o.d -o CMakeFiles/cmTC_5ac34.dir/CheckIncludeFile.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-S4Ko1Z/CheckIncludeFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_5ac34.dir/CheckIncludeFile.cxx.o -o cmTC_5ac34   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckIncludeFileCXX.cmake:126 (try_compile)"
+      - "rts/lib/gflags/CMakeLists.txt:260 (check_include_file_cxx)"
+    checks:
+      - "Looking for C++ include sys/types.h"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-VGsh1J"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-VGsh1J"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_SYS_TYPES_H"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-VGsh1J'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_d71da
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_d71da.dir/CheckIncludeFile.cxx.o -MF CMakeFiles/cmTC_d71da.dir/CheckIncludeFile.cxx.o.d -o CMakeFiles/cmTC_d71da.dir/CheckIncludeFile.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-VGsh1J/CheckIncludeFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_d71da.dir/CheckIncludeFile.cxx.o -o cmTC_d71da   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckIncludeFileCXX.cmake:126 (try_compile)"
+      - "rts/lib/gflags/CMakeLists.txt:260 (check_include_file_cxx)"
+    checks:
+      - "Looking for C++ include sys/stat.h"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-zRc4Ll"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-zRc4Ll"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_SYS_STAT_H"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-zRc4Ll'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_55c89
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_55c89.dir/CheckIncludeFile.cxx.o -MF CMakeFiles/cmTC_55c89.dir/CheckIncludeFile.cxx.o.d -o CMakeFiles/cmTC_55c89.dir/CheckIncludeFile.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-zRc4Ll/CheckIncludeFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_55c89.dir/CheckIncludeFile.cxx.o -o cmTC_55c89   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckIncludeFileCXX.cmake:126 (try_compile)"
+      - "rts/lib/gflags/CMakeLists.txt:260 (check_include_file_cxx)"
+    checks:
+      - "Looking for C++ include fnmatch.h"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JEs8JN"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JEs8JN"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_FNMATCH_H"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JEs8JN'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_0f287
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_0f287.dir/CheckIncludeFile.cxx.o -MF CMakeFiles/cmTC_0f287.dir/CheckIncludeFile.cxx.o.d -o CMakeFiles/cmTC_0f287.dir/CheckIncludeFile.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-JEs8JN/CheckIncludeFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_0f287.dir/CheckIncludeFile.cxx.o -o cmTC_0f287   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckIncludeFileCXX.cmake:126 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckTypeSize.cmake:467 (check_include_file_cxx)"
+      - "rts/lib/gflags/CMakeLists.txt:281 (check_type_size)"
+    checks:
+      - "Looking for C++ include stddef.h"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-u5OFZO"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-u5OFZO"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_STDDEF_H"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-u5OFZO'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_c9611
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_c9611.dir/CheckIncludeFile.cxx.o -MF CMakeFiles/cmTC_c9611.dir/CheckIncludeFile.cxx.o.d -o CMakeFiles/cmTC_c9611.dir/CheckIncludeFile.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-u5OFZO/CheckIncludeFile.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_c9611.dir/CheckIncludeFile.cxx.o -o cmTC_c9611   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckTypeSize.cmake:344 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckTypeSize.cmake:476 (__check_type_size_impl)"
+      - "rts/lib/gflags/CMakeLists.txt:281 (check_type_size)"
+    checks:
+      - "Check size of uint32_t"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-m4HRca"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-m4HRca"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_uint32_t"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-m4HRca'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_d342a
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_d342a.dir/uint32_t.cpp.o -MF CMakeFiles/cmTC_d342a.dir/uint32_t.cpp.o.d -o CMakeFiles/cmTC_d342a.dir/uint32_t.cpp.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-m4HRca/uint32_t.cpp
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_d342a.dir/uint32_t.cpp.o -o cmTC_d342a   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:171 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckCXXSymbolExists.cmake:105 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "rts/lib/gflags/CMakeLists.txt:316 (check_cxx_symbol_exists)"
+    checks:
+      - "Looking for strtoll"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-lJk6Ad"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-lJk6Ad"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread"
+      CMAKE_CXX_FLAGS_DEBUG: "-g -Wall -Wno-sign-compare  -Wformat -Wformat-security  -DDEBUG -D_DEBUG -DNO_CATCH_EXCEPTIONS"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_STRTOLL"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-lJk6Ad'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_838a2
+        [1/2] /usr/bin/c++   -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -std=c++23 -arch arm64 -MD -MT CMakeFiles/cmTC_838a2.dir/CheckSymbolExists.cxx.o -MF CMakeFiles/cmTC_838a2.dir/CheckSymbolExists.cxx.o.d -o CMakeFiles/cmTC_838a2.dir/CheckSymbolExists.cxx.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-lJk6Ad/CheckSymbolExists.cxx
+        [2/2] : && /usr/bin/c++ -Wno-deprecated-literal-operator -ffp-contract=off -frounding-math  -pipe -fno-strict-aliasing   -fvisibility-inlines-hidden -pthread  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_838a2.dir/CheckSymbolExists.cxx.o -o cmTC_838a2   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:171 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:99 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "rts/lib/simdjson/cmake/developer-options.cmake:232 (check_symbol_exists)"
+      - "rts/lib/simdjson/CMakeLists.txt:64 (include)"
+    checks:
+      - "Looking for fork"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QBkFli"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QBkFli"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_POSIX_FORK"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QBkFli'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_e37b7
+        [1/2] /usr/bin/cc   -arch arm64 -MD -MT CMakeFiles/cmTC_e37b7.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_e37b7.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_e37b7.dir/CheckSymbolExists.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-QBkFli/CheckSymbolExists.c
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_e37b7.dir/CheckSymbolExists.c.o -o cmTC_e37b7   && :
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:171 (try_compile)"
+      - "/opt/homebrew/share/cmake/Modules/CheckSymbolExists.cmake:99 (__CHECK_SYMBOL_EXISTS_IMPL)"
+      - "rts/lib/simdjson/cmake/developer-options.cmake:233 (check_symbol_exists)"
+      - "rts/lib/simdjson/CMakeLists.txt:64 (include)"
+    checks:
+      - "Looking for wait"
+    directories:
+      source: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4PYDFG"
+      binary: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4PYDFG"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-g"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake"
+      CMAKE_OSX_ARCHITECTURES: ""
+      CMAKE_OSX_DEPLOYMENT_TARGET: ""
+      CMAKE_OSX_SYSROOT: ""
+      CMAKE_USER_MAKE_RULES_OVERRIDE: "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/source/engine/rts/build/cmake/OverrideFlags.cmake"
+    buildResult:
+      variable: "HAVE_POSIX_WAIT"
+      cached: true
+      stdout: |
+        Change Dir: '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4PYDFG'
+        
+        Run Build Command(s): /opt/homebrew/bin/ninja -v cmTC_966da
+        [1/2] /usr/bin/cc   -arch arm64 -MD -MT CMakeFiles/cmTC_966da.dir/CheckSymbolExists.c.o -MF CMakeFiles/cmTC_966da.dir/CheckSymbolExists.c.o.d -o CMakeFiles/cmTC_966da.dir/CheckSymbolExists.c.o -c /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-01/build/CMakeFiles/CMakeScratch/TryCompile-4PYDFG/CheckSymbolExists.c
+        [2/2] : && /usr/bin/cc -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/cmTC_966da.dir/CheckSymbolExists.c.o -o cmTC_966da   && :
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:1405 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineASMCompiler.cmake:174 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "AI/Skirmish/BARb/CMakeLists.txt:31 (enable_language)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" did not match "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      Apple clang version 21.0.0 (clang-2100.4.1.1)
+      Target: arm64-apple-darwin27.3.0
+      Thread model: posix
+      InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineCompilerId.cmake:1392 (message)"
+      - "/opt/homebrew/share/cmake/Modules/CMakeDetermineASMCompiler.cmake:174 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "AI/Skirmish/BARb/CMakeLists.txt:31 (enable_language)"
+    message: |
+      Checking whether the ASM compiler is AppleClang using "--version" matched "(Apple (clang|LLVM) version)":
+      Apple clang version 21.0.0 (clang-2100.4.1.1)
+      Target: arm64-apple-darwin27.3.0
+      Thread model: posix
+      InstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+...

@@ -1,0 +1,13 @@
+{
+  "source-metadata/NativeSensorLOSShaders.h": "722565c5c1ff15bfa7801615fe3bbbf9acb7de83cb5deab61aa323e20455e73f",
+  "source-metadata/R04.patch": "b5e6eecf962033e4e5ecb09f38841238d1082a38d62cf62a151c5c91f5d3564f",
+  "source-metadata/REPORT.md": "54d8e4db3f3a60faac7c3076bb79b6d45277033b51911528392d41129480ab06",
+  "source-metadata/cpu-results.json": "e1471413f9a3e6267c70c0629f020bb4cff28b1006ed1cd4da837347327566a8",
+  "gpu_pixel_parity.mm": "73a541821a23830511d97a220c2334ca908f76c9be0193b7704be34823b2129e",
+  "source-metadata/reference/R03.h": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+  "source-metadata/reference/coverage_corpus.py": "ce02c91dc8d550a22ef00334a82f281c0001db617f853e64d76deca89acf5267",
+  "source-metadata/test_prepared.py": "9bcd4408a1aef86ff86ac512bcd2ae0d2195e7049d53cb39b88e95eb29fda57c",
+  "headers/NativeSensorLOSShaders.h": "722565c5c1ff15bfa7801615fe3bbbf9acb7de83cb5deab61aa323e20455e73f",
+  "headers/NativeSampleShadingShaders.h": "02c29319fb48b4ece77d1ed6c1cd7b3d4644dca1b81bce9f9f7423bfd12ef4bf",
+  "headers/NativeMultisampleLineShaders.h": "4e775c54e07e0c26fc21ca20b77635c7bbbb6efc55d026a4a010ca1c53c0b721"
+}

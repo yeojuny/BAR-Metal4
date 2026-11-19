@@ -1,0 +1,19 @@
+{
+  "status": "READY_SINGLE_ISOLATED_SCREEN_RANGE_CHANGE",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "combined_baseline_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "combined_baseline_binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "source_paths_verified": 10274,
+  "patch_sha256": "7db662ff5e889292ca0fef8c730c1a729d338f08b2c8e49bc98f0ff3c43616a7",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "parent_sha256": "9f22e358d03472ff1ada99ea8cf58edb75ab370cafd2b7928a4b1ff04022af2a",
+      "candidate_sha256": "9da6921dca3da09b03bff5be1ec046ffcb0ce60bec3de7722bf7aebf80ee9a36"
+    }
+  ],
+  "flag": "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP",
+  "default": "OFF",
+  "scope": "Root-screen draw traversal in EncodeRange. Original draw body, locks, barriers, empty-range reporting and encoder state are preserved.",
+  "prepared_draw_append_sites": 12
+}

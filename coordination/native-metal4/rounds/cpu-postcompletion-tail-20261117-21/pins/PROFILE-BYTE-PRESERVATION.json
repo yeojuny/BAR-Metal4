@@ -1,0 +1,166 @@
+{
+  "additional_profile_files": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/assets/maps/seths_ravine_remake_1.3.1.sd7": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/BAR_damageStats.lua": "62eb310b8b30e1b7324e1c99bf0ec471fd5ab3d1ab486a0bd5250cd48367562d",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/blueprints.json": "0af34f7ef8ea7ea7ee5514a7b05835c9b935ad7d89cd27b17341f1b603e69680",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/keybind_profiles.json": "09f8d5ec22e4de6f58af9632d6a7e076ef6e9cc30536087e2408d97b12760faa",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/pip_history.bin": "f556b821471f0623b7614ebce35e6cd5ca36badacc0c1c20d134f78be8a5485a",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/fonts/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/games/bar-official-combat-pr6.sdz": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/uikeys.txt": "52a8180257de45031fa5df8c6637fb76a883bc7abcece557757129b7f1097fb9"
+  },
+  "all_13_frozen_inputs_byte_identical": true,
+  "assets_clone_source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/mvk104-vs181-unlocked01/private/mvk104/assets",
+  "baseline_frozen_sha256": "3f27ecbc2554275edd15925d04c23cf9f9b88b47cc2d235d9cba25a674b81f48",
+  "baseline_launch_sha256": "023bcca7c3a340058e4804eb449408b06eb4d293f23ba75b869b4917ae9236d6",
+  "baseline_to_staged": [
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Widgets/zzz_native_short_run.lua",
+      "sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_native_short_run.lua"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/script.txt",
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/script.txt"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/springsettings.cfg",
+      "sha256": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/springsettings.cfg"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Config/BYAR.lua",
+      "sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/BYAR.lua"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Config/BC213.lua",
+      "sha256": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/BC213.lua"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/fonts/FreeSansBold.otf",
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/fonts/FreeSansBold.otf"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/FreeSansBold.otf",
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/FreeSansBold.otf"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Widgets/zzz_backend_common_status.lua",
+      "sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_backend_common_status.lua"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Widgets/zzz_ultra_quality.lua",
+      "sha256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_ultra_quality.lua"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/games/bar-official-combat-pr6.sdz",
+      "sha256": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/games/bar-official-combat-pr6.sdz"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/assets/maps/seths_ravine_remake_1.3.1.sd7",
+      "sha256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/assets/maps/seths_ravine_remake_1.3.1.sd7"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua",
+      "sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua"
+    },
+    {
+      "baseline": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua",
+      "sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+      "staged": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua"
+    }
+  ],
+  "clone_method": "/bin/cp -cR; no hardlinks or symlinks added",
+  "content_hashes_sha256": "75d2cf99f84434a8819f2c77ccec17cadbc0de816498e67da6bbc5bc39ff666e",
+  "copy_sources": [
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pass186/packages/hundredeightysixth-checkpoint/state/data/springsettings.cfg",
+      "source_sha256": "4537b5eced55efe79c076391f172d98a0af42f55e871ff9ed3bb724a3e837ed8",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/springsettings.cfg"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pass186/packages/hundredeightysixth-checkpoint/state/data/uikeys.txt",
+      "source_sha256": "52a8180257de45031fa5df8c6637fb76a883bc7abcece557757129b7f1097fb9",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/uikeys.txt"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/LuaUI/Config/BYAR.lua",
+      "source_sha256": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Config/BYAR.lua"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/material-storage-pr7-20261115-01/measurement/battle/battle_control.lua",
+      "source_sha256": "2550852aa53b56b7e1755740b6dbbff951974434974453b2feb340414b543754",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_native_short_run.lua"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/script.txt",
+      "source_sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/script.txt"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/material-storage-pr7-20261115-01/measurement/battle/bar-official-combat-pr6.sdz",
+      "source_sha256": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/games/bar-official-combat-pr6.sdz"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/worldinfo245-runtime01/backend-status.lua",
+      "source_sha256": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_backend_common_status.lua"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/material-storage-pr7-20261115-01/ultra-compare/ultra_quality.lua",
+      "source_sha256": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_ultra_quality.lua"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/fonts/FreeSansBold.otf",
+      "source_sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/fonts/FreeSansBold.otf"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/state/data/FreeSansBold.otf",
+      "source_sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/FreeSansBold.otf"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/shared-program-v2-20261115-01/measurement/pacing/warmup_pacing.lua",
+      "source_sha256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/shared-program-v2-20261115-01/measurement/pacing/zzz_native_warmup_pacing.lua",
+      "source_sha256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua"
+    },
+    {
+      "source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/completion-observation-split-20261117-01/measurement/runs/completion_split01/validation_paced/preparation/private/V_COMPLETION_SPLIT/assets/maps/seths_ravine_remake_1.3.1.sd7",
+      "source_sha256": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+      "target": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/cpu-postcompletion-tail-20261117-01/staging/private/D_CPU_POSTCOMPLETION_TAIL/assets/maps/seths_ravine_remake_1.3.1.sd7"
+    }
+  ],
+  "game_content_files_verified": 17947,
+  "game_content_pin_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/mvk104-vs181-unlocked01/CONTENT-PINS.json",
+  "game_content_pin_sha256": "5d53fa51cc600570a662601d18bca07c4616980931f9b77eed7c534c03ccad39",
+  "home_cache_tmp": "fresh empty private directories; no previous runtime cache copied"
+}

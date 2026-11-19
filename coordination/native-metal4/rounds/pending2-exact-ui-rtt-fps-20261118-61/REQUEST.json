@@ -1,0 +1,35 @@
+{
+  "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+  "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+  "scope": "Build and run the fixed Round60 exact RTT source without source changes; same signed binary in CAP1 then CAP2",
+  "source_artifact": "b3e65b62692a0f741027862ec1fcae2ae77462e4",
+  "source_manifest_sha256": "45092f303431777ec5b46be2e1f1f103eebb9eb3bfdedbc86e311156cea5a857",
+  "source_patch_sha256": "2f095af50b81320e0f900a1642d14d30c8abde3ec6d0025b5611f19e080316cc",
+  "order": [
+    "R61_CAP1",
+    "R61_CAP2"
+  ],
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 2,
+    "max_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "options": {
+    "preserve_all_counted_frames": true,
+    "maps": "Seths Ravine Remake 1.3.1",
+    "window": [
+      540,
+      1740
+    ],
+    "same_options_as_round59": true,
+    "source_mutations": 0,
+    "fallback_unchanged": true,
+    "default_changed": false,
+    "mode_3": false
+  },
+  "utc": "2026-11-18T09:19:47.549491+00:00"
+}

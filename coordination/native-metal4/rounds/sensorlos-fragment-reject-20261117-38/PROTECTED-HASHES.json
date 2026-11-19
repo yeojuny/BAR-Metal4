@@ -1,0 +1,39 @@
+{
+  "verified": true,
+  "checks": {
+    "previous_protected_artifacts": {
+      "files": 134,
+      "mismatches": []
+    },
+    "pinned_source_binaries": {
+      "files": 5,
+      "mismatches": []
+    },
+    "indexed_launcher_data": {
+      "files": 142,
+      "mismatches": []
+    },
+    "private_runtime_data": {
+      "files": 284,
+      "mismatches": []
+    },
+    "staged_game_executables": {
+      "files": 2,
+      "mismatches": []
+    },
+    "homebrew_direct_dependencies": {
+      "files": 9,
+      "mismatches": []
+    },
+    "original_r03_source": {
+      "files": 10270,
+      "mismatches": [],
+      "unexpected_paths": []
+    },
+    "isolated_candidate_source": {
+      "files": 10270,
+      "mismatches": [],
+      "unexpected_paths": []
+    }
+  }
+}

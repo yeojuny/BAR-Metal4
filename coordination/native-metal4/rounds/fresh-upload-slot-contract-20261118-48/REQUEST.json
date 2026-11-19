@@ -1,0 +1,25 @@
+{
+  "round_id": "fresh-upload-slot-contract-20261118-48",
+  "attempt_id": "metal4-slot-readback-and-fallback-02-sdk-selector",
+  "scope": "ONE_TARGETED_EXISTING_SLAB_SLOT_CONTRACT_FIXTURE",
+  "fixture_sha256": "3109389e6b32b24a28d1ee580725b741eeaadbdd8973e94173682df8dfd82e41",
+  "budget": {
+    "compile": 1,
+    "fixture_gpu_runs": 1,
+    "max_submissions": 1,
+    "games": 0,
+    "engine_builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "materials": "Pinned R44 wrapper and R47 generic helper",
+  "default_changes_authorized": false,
+  "amendment": {
+    "prior_attempt": "metal4-slot-readback-and-fallback-01",
+    "prior_commit": "7b4fe37930347b4d2d0dc68894008e39b45b4586",
+    "compile_exit": 1,
+    "gpu_attempts": 0,
+    "scope": "Fixture only: add the SDK-required compilerTaskOptions argument to pipeline construction."
+  }
+}

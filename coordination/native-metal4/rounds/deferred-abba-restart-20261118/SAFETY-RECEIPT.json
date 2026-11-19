@@ -1,0 +1,17 @@
+{
+  "status": "PASS_DEFERRED_DEPTH_CPU_AND_GPU",
+  "cpu_cases": 512,
+  "gpu_output_cases": 16384,
+  "full_library_compiles": 8,
+  "strict_edge_cases": true,
+  "infinities_and_nan_cpu": true,
+  "finite_gpu": true,
+  "real_D32F_mips": true,
+  "source": "Production ray depth block and downstream depth delta/occlusion; separate fragment readback",
+  "log_sha256": "85019ae9c0b1f9f6687ce7ba7345baf0a40313cc59469a98e221ad0b5a2d5d0c",
+  "replayed_for_this_round": false,
+  "candidate_object_sha256": "e15e75b526b7d49aa199cae21113717276155d0cbd598fde40a6fac3042a5940",
+  "positive_gpu_outside_cases": 11200,
+  "executed_path_receipt": "R96 original CPU/GPU fixture, exact object pinned in this relink",
+  "air_evidence_sha256": "04269cec3789af91ae13ee651f75d97e08926c0856651f17bc800839dd22d407"
+}

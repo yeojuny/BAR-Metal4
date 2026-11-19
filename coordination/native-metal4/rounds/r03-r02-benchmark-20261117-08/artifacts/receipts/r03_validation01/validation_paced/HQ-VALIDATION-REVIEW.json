@@ -1,0 +1,37 @@
+{
+  "status": "PASS_VALIDATION_GATE",
+  "round_id": "r03-r02-benchmark-20261117-08",
+  "attempt_id": "r03-validation-and-clean-01",
+  "utc": "2026-11-17T01:44:13.716722+00:00",
+  "MetalValidationActuallyEnabled": true,
+  "matchedMetalErrors": 0,
+  "actualPNGViewed": true,
+  "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/scene.png",
+  "imageObservation": "Units, ground, buildings and sensor/range lines present; no obvious new geometry/line omissions or corruption. Animated cloud/smoke/particle and timing-overlay differences are expected, not exhaustive pixel parity.",
+  "rawFinalColorSamples": 1,
+  "rawDrawable": [
+    1512,
+    982
+  ],
+  "rawSafeView": [
+    1512,
+    950
+  ],
+  "rawSafeViewBottomOrigin": [
+    0,
+    0
+  ],
+  "rawMouseTopOffset": 32,
+  "MetalTopOriginFromGeometry": [
+    0,
+    32
+  ],
+  "originLimit": "Top-origin rectangle follows raw safe-view bottom-origin geometry and offset, not an additional GPU viewport capture.",
+  "S01PositiveSplit": true,
+  "G01PositiveIndexed": true,
+  "allOwnedGameAwakePIDsGone": true,
+  "normalExitAndRetirementCleanup": true,
+  "diagnosticFPSExcluded": true,
+  "knownMetadataLimit": "nativeFinalColorExtents null was not used as proof; actual raw markers checked.",
+  "cleanLaunchGate": "PASS"
+}

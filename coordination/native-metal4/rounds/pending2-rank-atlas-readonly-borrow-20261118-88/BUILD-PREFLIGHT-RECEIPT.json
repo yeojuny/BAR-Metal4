@@ -1,0 +1,7 @@
+{
+  "status": "PASS_TWO_ORIGINAL_ARCHIVE_MEMBERSHIPS",
+  "initial_assertion_magazine": "RuntimeNative belongs to renderer archive, other three belong to world-renderer archive",
+  "before_sha256": "6e25842392447f3af5ad3b2eb9e1d187589824c639ac60e14df06cefecc90766",
+  "after_sha256": "94877c8670db66d5e5c11c551f56fb3da04bd3b38c67c2ed70528440a536462e",
+  "previous_compiler_or_link_launches": 0
+}

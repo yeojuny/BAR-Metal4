@@ -1,0 +1,65 @@
+--- R03/run.py
++++ R04/run.py
+@@ -1,4 +1,4 @@
+-'Frozen R02 versus R03 Ultra AA0 comparison; explicit stage/run only.'
++'Frozen R03 versus R04 Ultra AA0 comparison; explicit stage/run only.'
+ 
+ import argparse
+ import datetime
+@@ -35,10 +35,10 @@
+ FONT_SOURCE = P / 'runtime/native/data/fonts/FreeSansBold.otf'
+ FONT_SHA256 = '8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242'
+ ORDER = {
+-    'validation_paced': [('V_R03', 'candidate')],
+-    'clean_paced': [('A1_R02', 'baseline'), ('B1_R03', 'candidate'),
+-                    ('B2_R03', 'candidate'), ('A2_R02', 'baseline'),
+-                    ('A3_R02', 'baseline'), ('B3_R03', 'candidate')],
++    'validation_paced': [('V_R04', 'candidate')],
++    'clean_paced': [('A1_R03', 'baseline'), ('B1_R04', 'candidate'),
++                    ('B2_R04', 'candidate'), ('A2_R03', 'baseline'),
++                    ('A3_R03', 'baseline'), ('B3_R04', 'candidate')],
+ }
+ 
+ 
+@@ -114,8 +114,8 @@
+     candidate = common.read(HERE / 'PRODUCT.json')
+     assert sha(baseline['binary']) == baseline['sha256']
+     assert sha(candidate['binary']) == candidate['sha256']
+-    assert baseline['sha256'] == '21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da'
+-    assert candidate['sha256'] == '107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9'
++    assert baseline['sha256'] == '107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9'
++    assert candidate['sha256'] == '4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86'
+     return {'baseline': baseline, 'candidate': candidate}
+ 
+ 
+@@ -292,7 +292,7 @@
+     save(RUN_ROOT / campaign / 'PREPARED.json', dict(status='READY_NO_GAME', order=rows,
+         campaign=campaign, sourceController=str(BATTLE / 'battle_control.lua'),
+         sourceProbe=str(U / 'ultra_quality.lua'),
+-        pacingHashes=pace['hashes'], comparisonDecision='Frozen R02 versus fixed R03 A B B A A B; S01/G01 both1; all valid rows retained; images after count',
++        pacingHashes=pace['hashes'], comparisonDecision='Frozen R03 versus fixed R04 A B B A A B; S01/G01 both1; all valid rows retained; images after count',
+         actualUltraRuntime='pending'))
+     print('READY ' + campaign + ': static staged, games 0', flush=True)
+ 
+@@ -537,10 +537,10 @@
+     args = parser.parse_args()
+     global RUN_ROOT
+     if args.list:
+-        print('validation_paced: fixed R03 Metal API validation+image; clean_paced: R02 R03 R03 R02 R02 R03, S01/G01 both1; Ultra AA0 1512x950, official Seths combat, 10s warmup + 40s counted')
++        print('validation_paced: fixed R04 Metal API validation+image; clean_paced: R03 R04 R04 R03 R03 R04, S01/G01 both1; Ultra AA0 1512x950, official Seths combat, 10s warmup + 40s counted')
+         return
+     if args.stage and not args.suite:
+-        args.suite = 'r03_' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
++        args.suite = 'r04_' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
+     if args.run and not args.suite:
+         parser.error('A run requires the fresh --suite printed by --stage')
+     if args.suite:
+@@ -553,7 +553,7 @@
+         run(args.run)
+     else:
+         print(json.dumps({'status':'STATIC_PINS_ONLY','products':products(),
+-            'sourceComparison':'Fixed R03 minor-reject candidate versus frozen R02; S01/G01 ON in both','games':0}, indent=2))
++            'sourceComparison':'Fixed R04 segment-setup candidate versus frozen R03; S01/G01 ON in both','games':0}, indent=2))
+ 
+ 
+ if __name__ == '__main__':

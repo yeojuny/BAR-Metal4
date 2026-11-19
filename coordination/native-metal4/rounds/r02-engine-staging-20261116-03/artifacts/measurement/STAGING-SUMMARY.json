@@ -1,0 +1,209 @@
+{
+  "status": "PASS_STATIC_STAGING_NO_GAME",
+  "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+  "signed_R02_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "rows": [
+    {
+      "suite": "r02_validation01",
+      "campaign": "validation_paced",
+      "arm": "V_R02",
+      "backend": "candidate",
+      "binary_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "launch_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/runs/V_R02/LAUNCH.json",
+      "launch_sha256": "9e86d5bdae26e556b9011e4b3b1123decfd87253098a6ec1d433d927f39af05f",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene",
+        "--write-dir",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/private/V_R02/state/data",
+        "--isolation",
+        "--only-local",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_validation01/validation_paced/preparation/private/V_R02/state/data/script.txt"
+      ],
+      "settings_hashes": {
+        "zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+        "script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "game_claim_absent": true
+    },
+    {
+      "suite": "r02_clean01",
+      "campaign": "clean_paced",
+      "arm": "A1_G01",
+      "backend": "baseline",
+      "binary_sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "launch_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A1_G01/LAUNCH.json",
+      "launch_sha256": "fb29c149f4806a5756ade26d32e38cf63478fa912027deaf28d90e20081777c1",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native/bin/spring-metal4-scene",
+        "--write-dir",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/A1_G01/state/data",
+        "--isolation",
+        "--only-local",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/A1_G01/state/data/script.txt"
+      ],
+      "settings_hashes": {
+        "zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+        "script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "game_claim_absent": true
+    },
+    {
+      "suite": "r02_clean01",
+      "campaign": "clean_paced",
+      "arm": "B1_R02",
+      "backend": "candidate",
+      "binary_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "launch_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B1_R02/LAUNCH.json",
+      "launch_sha256": "ccd5619f727a16c329cb444911b74db8d88fd7db081639135f6aa28ace34fdbd",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene",
+        "--write-dir",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/B1_R02/state/data",
+        "--isolation",
+        "--only-local",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/B1_R02/state/data/script.txt"
+      ],
+      "settings_hashes": {
+        "zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+        "script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "game_claim_absent": true
+    },
+    {
+      "suite": "r02_clean01",
+      "campaign": "clean_paced",
+      "arm": "B2_R02",
+      "backend": "candidate",
+      "binary_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "launch_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B2_R02/LAUNCH.json",
+      "launch_sha256": "7f0b1739d503c28eb6ec9fe895cfba78dbb3a9c8f2da1d5cc6cf32f476f8e111",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene",
+        "--write-dir",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/B2_R02/state/data",
+        "--isolation",
+        "--only-local",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/B2_R02/state/data/script.txt"
+      ],
+      "settings_hashes": {
+        "zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+        "script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "game_claim_absent": true
+    },
+    {
+      "suite": "r02_clean01",
+      "campaign": "clean_paced",
+      "arm": "A2_G01",
+      "backend": "baseline",
+      "binary_sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "launch_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A2_G01/LAUNCH.json",
+      "launch_sha256": "809574011cfa1ca024b9ccaa7c691c3a90d0967049d25aa8b4f87b86efbb14a0",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native/bin/spring-metal4-scene",
+        "--write-dir",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/A2_G01/state/data",
+        "--isolation",
+        "--only-local",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/A2_G01/state/data/script.txt"
+      ],
+      "settings_hashes": {
+        "zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+        "script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "game_claim_absent": true
+    },
+    {
+      "suite": "r02_clean01",
+      "campaign": "clean_paced",
+      "arm": "A3_G01",
+      "backend": "baseline",
+      "binary_sha256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+      "launch_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/A3_G01/LAUNCH.json",
+      "launch_sha256": "ceffe1fca68bc8939ea8b841899ef737ac47ad84a6021e8dca2954b388e9e26b",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-index-g01-20261116-01/runtime/native/bin/spring-metal4-scene",
+        "--write-dir",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/A3_G01/state/data",
+        "--isolation",
+        "--only-local",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/A3_G01/state/data/script.txt"
+      ],
+      "settings_hashes": {
+        "zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+        "script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "game_claim_absent": true
+    },
+    {
+      "suite": "r02_clean01",
+      "campaign": "clean_paced",
+      "arm": "B3_R02",
+      "backend": "candidate",
+      "binary_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+      "launch_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/runs/B3_R02/LAUNCH.json",
+      "launch_sha256": "cc92dc653e74cb69cd8a80468fccb9da5ee922d4b183a8c9d4524bed941831e6",
+      "argv": [
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene",
+        "--write-dir",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/B3_R02/state/data",
+        "--isolation",
+        "--only-local",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/runs/r02_clean01/clean_paced/preparation/private/B3_R02/state/data/script.txt"
+      ],
+      "settings_hashes": {
+        "zzz_native_short_run.lua": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+        "script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+        "springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+        "BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+        "BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+        "zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+        "native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+      },
+      "game_claim_absent": true
+    }
+  ],
+  "all_original_controller_pacing_config_hashes_match": true,
+  "all_clean_environments_identical_except_private_runtime_paths": true,
+  "S01_G01_both_1": true,
+  "games": 0,
+  "benchmarks": 0,
+  "window_metadata_clarification": "Inherited LAUNCH planned600..1800 is stale template metadata. Unchanged controller sha and intended actual window are540..1740. New separate WINDOW-CONTRACT.json is authoritative for next execution; no controller or measurement logic was changed."
+}

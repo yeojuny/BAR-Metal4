@@ -1,0 +1,974 @@
+{
+  "root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs",
+  "files": [
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/AWAKE-RELEASED.json",
+      "relativeToRuns": "r03_validation01/validation_paced/AWAKE-RELEASED.json",
+      "bytes": 268,
+      "sha256": "42fc222e07266ddc5d95ed6c4f34a74b4f1fb1a2b05856c876cdc155fdeb2e6c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/AWAKE.json",
+      "relativeToRuns": "r03_validation01/validation_paced/AWAKE.json",
+      "bytes": 187,
+      "sha256": "6eac03939a0718134665b14422524557ea76e96dde6365942c79cd7d88e9ff9e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/COMPLETION.json",
+      "relativeToRuns": "r03_validation01/validation_paced/COMPLETION.json",
+      "bytes": 861,
+      "sha256": "2c0abf57466915ec221bd9d273b12dd11ee875384e6be7c1d3b57be568b58c67"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/HQ-VALIDATION-REVIEW.json",
+      "relativeToRuns": "r03_validation01/validation_paced/HQ-VALIDATION-REVIEW.json",
+      "bytes": 1406,
+      "sha256": "57aff05fb4ab11d6e81b1135748d5fa6724ddde9d6fde1d9d34639a187d7cac0"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/OWNER-CLOSED.json",
+      "relativeToRuns": "r03_validation01/validation_paced/OWNER-CLOSED.json",
+      "bytes": 113,
+      "sha256": "4510f86b181696c8685b3c507ed7bcedab066a8992c948f08927888d79e5f0a4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/PREPARED.json",
+      "relativeToRuns": "r03_validation01/validation_paced/PREPARED.json",
+      "bytes": 2019,
+      "sha256": "63c146dda9ce16d2bfa3a989fc00d3ec22036c08ea2df52b2eb50342352ae640"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/RUNS.json",
+      "relativeToRuns": "r03_validation01/validation_paced/RUNS.json",
+      "bytes": 2426,
+      "sha256": "c5765461a916a01dc4de93cecaac854f190f0fb499d473cee9c815ceb0a0194b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/AUDIO-ROUTE.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/CHILD-MODE.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "0b8d0fdae2b793b621715f98cf1a313e33adc6a6b6ba5a5fc3bff9dee420dad1"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/CLEANUP.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "d641c95e622112c61d12bc629f7f20ab005527149442538dd82da2fcc2861dae"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/GAME-LAUNCH-CLAIM.json",
+      "bytes": 85,
+      "sha256": "f1754a8333d1c774b4f075c834637d7f12bfb51807a57fdf4910db2ff440cec6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "7612d0f03e594de34ebf166d87ebf6809e02f38af69373ffe75beee062d9b263"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/GROUND-INDEX.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/GROUND-INDEX.json",
+      "bytes": 384,
+      "sha256": "fde13e01b61eab01d9745a534b8ecfd25f827875d08f7e3e394358ff6399e5cd"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/LAUNCH.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/LAUNCH.json",
+      "bytes": 11015,
+      "sha256": "cfda7f18f02c633e1a848dac301095338d5f471eb42ec11feaa1985bf8e2a76d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/LIFECYCLE.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/LIFECYCLE.json",
+      "bytes": 693,
+      "sha256": "d2c9f322bea622809cc446d9326edc3091bb9943625cb6637327fa6c7fb5e261"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/METAL-VALIDATION.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/METAL-VALIDATION.json",
+      "bytes": 491,
+      "sha256": "bd86b331bab8031624b9144fbd5824742eb78b04c635f4344a097141edf06c29"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/OBSERVERS.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/OWNED.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/OWNED.json",
+      "bytes": 198,
+      "sha256": "15718ccf85f32f2f4e2726810465a54e68cb5827f2fcd609d210f863702cfbfe"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "a8303a57e975238d988d62df3354857082173e15f4fbe5cb528c26057ff61a57"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1038,
+      "sha256": "15ec276c90cb358589373dc9b4608a52d3846e099fa47a404390388559899566"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/PREFLIGHT.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "7111a8c63942be09d1df7a60f34e96d9c6782977ad442e48d7e4b7d19c310458"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/RESULT.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/RESULT.json",
+      "bytes": 2340,
+      "sha256": "ca1515bb2898e7612dcad3c3096a09e5a11ab5b65b9a0801225ec0684d0749ce"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/TERRAIN211-FRAMES.csv",
+      "bytes": 43227,
+      "sha256": "e901559049a41650c6ef68f217633c99237746bb8d03c56adc6834146ae9da5d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/ULTRA-EVIDENCE.json",
+      "bytes": 1649,
+      "sha256": "dc5adb34377540303861a94a57621972b144bc5f58baf6569d20062dfa001afd"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/WINDOW.json",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/WINDOW.json",
+      "bytes": 65,
+      "sha256": "3395f479dcc713e03c6244f867ceae12733d5669e245eb74dadfb530e48601df"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/actual-start-script.txt",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/engine.log",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/engine.log",
+      "bytes": 291643,
+      "sha256": "1fe70848829576a8f9b95dc1aaa3672606b7694d2986241c8a75bd2d57626edc"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/infolog.txt",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/infolog.txt",
+      "bytes": 290376,
+      "sha256": "cdf9b7ecbe920f2268e1380839ca495356f69548dd4b3da78b689bcf82cc21dd"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_validation01/validation_paced/preparation/runs/V_R03/scene.png",
+      "relativeToRuns": "r03_validation01/validation_paced/preparation/runs/V_R03/scene.png",
+      "bytes": 2963942,
+      "sha256": "b295c7df792e7f2b7c8ea57588aa350cdb40e65586632ff30aad9c1936135589"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/AWAKE-RELEASED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/AWAKE-RELEASED.json",
+      "bytes": 263,
+      "sha256": "469118d96fc39de6c6bd3e4e9c54c37a578a1800846e50540c11720cc1bb53d2"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/AWAKE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/AWAKE.json",
+      "bytes": 182,
+      "sha256": "b32541c2fb61e6b571816aa3857cf15379648ffaef0ceab95d9f4c6f0d4cce12"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/COMPLETION.json",
+      "relativeToRuns": "r03_clean01/clean_paced/COMPLETION.json",
+      "bytes": 296,
+      "sha256": "a420445a492222c956077e8bb8ac6afb3bdeee8837e0955e8de48428bc6dc9b6"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/OWNER-CLOSED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/OWNER-CLOSED.json",
+      "bytes": 113,
+      "sha256": "e1eb8942ed70b871ba7deaab2ea499350454a76c22449277e281ecde6d36a7b4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/PREPARED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/PREPARED.json",
+      "bytes": 7509,
+      "sha256": "c78c7134724e4f71776e69b36a8011c892884c174e31ad4296df78d3504a78e9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/RUNS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/RUNS.json",
+      "bytes": 182617,
+      "sha256": "931eb4f5777df9dc0f572595449ec307d2739a7a4d059ebb841c967aca084c6b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/AUDIO-ROUTE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/CHILD-MODE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "ca53978a001eb65f82d55b484d1c4bf7838e78ce0bd298a9f10cbb9ef2650ae4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/CLEANUP.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "1e3f5f8e83319956c26a9cc3490239780111c695f434abbd409c1136c9b8e572"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "c307a1d671b3ae315da1a4317caf4395fa060d47d2e915a1beb046e75dc69622"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "e36fb6387191d4eda8937edb0bf8b32d5badf0b1482ba2dae7087b919f64ca28"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/LAUNCH.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/LAUNCH.json",
+      "bytes": 10810,
+      "sha256": "5a39fd212a679d129753adfc6fe871bfd92f69c72d4611ba499398699d0d99e4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/LIFECYCLE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/LIFECYCLE.json",
+      "bytes": 693,
+      "sha256": "a16f8ed7f7542a0e1d0b4c8bc627cf7c2e1ce242246f023e16acac299743a40a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/OBSERVERS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/OWNED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/OWNED.json",
+      "bytes": 198,
+      "sha256": "a0fdcf3f36d99113f08f95abc3e184aed2cb124ce5715b3fda74d2645723ded7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/PACING-WITNESS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "1696708fc6c60672df472f403f89fe614e739adc1ccd2ef40ba5e51c2abb2506"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "ff0815cc10f5597eb7a9d41e4613055a5c9addb9666e5a95c75a30e3ddbdd738"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "9af39855dbd5019de9383d4e2239b20832b21a64e7025929e0bebb5b3700fdf4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/PREFLIGHT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "41b70f8884f1d96b4cc2d185cbff90999086c84214237dc793b83835a584e533"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/RESULT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/RESULT.json",
+      "bytes": 29022,
+      "sha256": "c0710a1155f36583f97e5fc369d5c3243e612c111fc15cae3c2f6535123891c7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/TERRAIN211-FRAMES.csv",
+      "bytes": 42598,
+      "sha256": "85cfa99632bcdd0ceb43e09b1e12fc3f14e97d85e0c939b3ab80161204a9a33b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/ULTRA-EVIDENCE.json",
+      "bytes": 1640,
+      "sha256": "bd82d154430d7773be538f40e174497d165564d85815ddade139c756a3f1e407"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/WINDOW.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/WINDOW.json",
+      "bytes": 65,
+      "sha256": "ca2c06ea2514fcebad1aea00e6d08f64fc7954978cf90e24fd745826b3f9f08b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/actual-start-script.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/engine.log",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/engine.log",
+      "bytes": 291070,
+      "sha256": "a5d3fbaa1ca510c8daf8b649214a8b93f33f1e33aa18a16f883bb2e0a74934f4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/infolog.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/infolog.txt",
+      "bytes": 289900,
+      "sha256": "f8788675ac7cebc5646ed96cb803562c7424f7464282a4cb71e45dcd69e008d3"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A1_R02/scene.png",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A1_R02/scene.png",
+      "bytes": 2969946,
+      "sha256": "527508fafdcc541470e571e79f1b0bc2511f884b2ef1b29589fc5ae1b3531d8a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/AUDIO-ROUTE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/CHILD-MODE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "472e956399d3eac24ffbfec0a86dafe5cd37dfa95229540e781b70237284a274"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/CLEANUP.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "9f5257b9cd546e7ccc40e0792b4e932b9017704dabb890e6ef1defec94749805"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "65c20cff3024d52505d3c9c3e01172d07306882fff1924a1e97b1c37ad2fe5ed"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "7b7c4e189e7c83c575e78bb8441dce9cda4ab0af353bbcc044560593fe976103"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/LAUNCH.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/LAUNCH.json",
+      "bytes": 10810,
+      "sha256": "de3393de2e7679b66360a93810ebc659f91cbf7f22a8102c4e44b87cf24a8d46"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/LIFECYCLE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/LIFECYCLE.json",
+      "bytes": 692,
+      "sha256": "288618eb77404c2dc3cf2716d3af29566b5e11fe1e631d4dc6a03d7384a2a348"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/OBSERVERS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/OWNED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/OWNED.json",
+      "bytes": 198,
+      "sha256": "91ce4e65aeec031e26fb5fa49a914679b8c4cb1e54277928fed617d7c93e859a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/PACING-WITNESS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/PACING-WITNESS.json",
+      "bytes": 2148,
+      "sha256": "b8f21053c7ab0cc3fdf6a37c1069b6ec302394357e4c89693a5a58abb2ff96f0"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "881139453851c300738e79a061d33206c10e7b75444a27ef345632aea192eb3b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "cd883e362f1a7b391410677b172753e0c58ac0fb88b403a5b18242d75e3651a7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/PREFLIGHT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "aada9ed3ee0fab7dca9416c70c636771f59dcf4ef222d650f05013b0d147a681"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/RESULT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/RESULT.json",
+      "bytes": 29026,
+      "sha256": "21eda983164c5f6870fed9fd2a5ec8ad9b7a072241cc06bdbb68c2b9590be80b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/TERRAIN211-FRAMES.csv",
+      "bytes": 42632,
+      "sha256": "37a99fc9f77e2e3d6019ede4e7fe5f129a7933cb1c04a04c889a222743584e69"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/ULTRA-EVIDENCE.json",
+      "bytes": 1640,
+      "sha256": "3e0aacd65f8f9d5cbf5c1ee22f4281bc9f50cb9bd115c12f575a328a9aa95884"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/WINDOW.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/WINDOW.json",
+      "bytes": 65,
+      "sha256": "69c31ee834243819e57c35e5c1b3d6dde110417dfdc24240568afc8d31a2eb6f"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/actual-start-script.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/engine.log",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/engine.log",
+      "bytes": 291036,
+      "sha256": "256e23a02887a3330e68a516a9dca6ee092490c6b2cdd70a99d2dde441a20b1c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/infolog.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/infolog.txt",
+      "bytes": 289866,
+      "sha256": "1c1645856ccc6c5673da5cfcf6d9253ca02c1e2587e7f46650958c2163cce039"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A2_R02/scene.png",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A2_R02/scene.png",
+      "bytes": 2968121,
+      "sha256": "7c5f5f90d6c6c31f46ba5f23d4b299ab49c048d0ae6c9f98c106b4d7c84d5e9e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/AUDIO-ROUTE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/CHILD-MODE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "5c157cd7fff4b000b08f55b77901947fc954cbb594f8b825d24f3387a078027b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/CLEANUP.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "6aa19957c9104e4893c0d7b85857f07d69b08a5f413505a35f18b9ebd2d03655"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "7352a58ff3c5a5bb9f9a13661443d0667b484fd944e7e5cc846b75977b4b4435"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "001d62b76346f21a979a450e19ab8c5ed2d2673e72a67ee25acedb810f90c953"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/LAUNCH.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/LAUNCH.json",
+      "bytes": 10810,
+      "sha256": "6df7449eaeefc5681deede00de8c4afd2272bfc06ae99aa73cff016f06776a7f"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/LIFECYCLE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/LIFECYCLE.json",
+      "bytes": 691,
+      "sha256": "1ecbd696e03f7b41946bdde3868fbbd28b8e5ec4e8bc68d053f3812ebfb81fd7"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/OBSERVERS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/OWNED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/OWNED.json",
+      "bytes": 198,
+      "sha256": "54da7e1ff8575898787b3ce555027e91682a35a84e0201e49d7fe74a0ed31166"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/PACING-WITNESS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/PACING-WITNESS.json",
+      "bytes": 2148,
+      "sha256": "e9568b1766b82c773747ce808ed750397445dd425eec03cca442c9a692ab6966"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1038,
+      "sha256": "4e53c40b4393da673a64ae3d326b908b4872332a24bfac0d2c76368815c6f49c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "bdcc1b1c5d406c39e95cd4b0b3270b6052e62a9f522739765ef3451545358b7c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/PREFLIGHT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/PREFLIGHT.json",
+      "bytes": 821,
+      "sha256": "27ef2cb32ae20e7adaed9d5912130f8b8553c11eea3f802c203689e68f780dbc"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/RESULT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/RESULT.json",
+      "bytes": 29022,
+      "sha256": "d04578d1b27e699e30e0ca651014d5cd72ab231372ee9cce91ebd73b8613177d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/TERRAIN211-FRAMES.csv",
+      "bytes": 42632,
+      "sha256": "2d3ef3482b132f3c9f1b384b35a5c1c626b2add252fff3c502fa7d4c28710d6c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/ULTRA-EVIDENCE.json",
+      "bytes": 1640,
+      "sha256": "bf20fe453c684c51aefa9b395bb2df2ca6517c2cd44e06e7aefc71fbbc85f386"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/WINDOW.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/WINDOW.json",
+      "bytes": 65,
+      "sha256": "39d8a79641fe6609a02108adae451e82cb8d124fd98fd1d3cd1bd3153d6caed2"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/actual-start-script.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/engine.log",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/engine.log",
+      "bytes": 291090,
+      "sha256": "edc7c0638eb432a60e236dbd79980b759302c954c6da284da497906c2bd2fce1"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/infolog.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/infolog.txt",
+      "bytes": 289920,
+      "sha256": "539edd01726eb1af0e7426dcefb6428008075c672ad819cf048ed91ea2dd372f"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/A3_R02/scene.png",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/A3_R02/scene.png",
+      "bytes": 2965477,
+      "sha256": "7ca005e72c858406d6da2a73f75bb076cc3aa752de7520719b49d8363c98af3a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/AUDIO-ROUTE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/CHILD-MODE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "6cfddcec856bb5d49cea96a5a60766ecee4e3a64303c17abcbdc900b50f4c322"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/CLEANUP.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "3312ead322aeee9b7af8a16e78f9b591986b4bc010547ce9d5ce3d57d693a156"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "32bb12d587ad84b3d1181e88687aeb3363e62a08a394bc8a7938a35794f8ee68"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "e36fb6387191d4eda8937edb0bf8b32d5badf0b1482ba2dae7087b919f64ca28"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/LAUNCH.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/LAUNCH.json",
+      "bytes": 10806,
+      "sha256": "f54e6cc8b395a2b0a165afb95778c5e34c99c9b6ed5d2a2c9103c62fbeb8b0c0"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/LIFECYCLE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/LIFECYCLE.json",
+      "bytes": 692,
+      "sha256": "78087bf9f605cf6888b3b6e474613af21ec2b03ba5594e55a3b4a2af17f00f34"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/OBSERVERS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/OWNED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/OWNED.json",
+      "bytes": 198,
+      "sha256": "2e91b6fb94426ed5c586ed923d392b7c00e3a66fb90a402ccdf2bd1f3266fdbf"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/PACING-WITNESS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "d1a0232f9dde151635de4d790d8edf266c56eb760a1a9cd4f36bff997fdf26a8"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1039,
+      "sha256": "ad21fbf240a7a6707708217a22539be038c3496989a170f0825ec9aaf0dcbe4b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1037,
+      "sha256": "8b6ebc2e258ec0a35663ab4388ebae5d04318b5bd4eb4e1c98d184fb5d2722b2"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/PREFLIGHT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/PREFLIGHT.json",
+      "bytes": 822,
+      "sha256": "7c6097e6de887f8626c6c9af8c8c5bbf0ffb64291d050ec15d00eaf9bb6bb39e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/RESULT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/RESULT.json",
+      "bytes": 29027,
+      "sha256": "c5d2147a4b46a1372f5566cc534ff59b56a881a6fba88ede23fe452fe6b6d446"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/TERRAIN211-FRAMES.csv",
+      "bytes": 43822,
+      "sha256": "77aded1d86fef31f695d74e0d6c54d3901113cd5dc40fff3de127db11e9a3ae4"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/ULTRA-EVIDENCE.json",
+      "bytes": 1641,
+      "sha256": "023928b34dd9b50a4485c79c5b7d847e7cf044d53fbedbe2def8e32d9b1dd63f"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/WINDOW.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/WINDOW.json",
+      "bytes": 65,
+      "sha256": "44c9ad19122b03a3a31c6785e8f025aa930cd33a196e9e29a96f1fdd15a06641"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/actual-start-script.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/engine.log",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/engine.log",
+      "bytes": 291074,
+      "sha256": "3d37d0ff5e49102a017d6fb236493d3974d246ccceb8a3c7ddff2ebb9f749c00"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/infolog.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/infolog.txt",
+      "bytes": 289904,
+      "sha256": "78fcb7b045f5c17e96c0b32ec806dea056209a0ceb06c4fddac36d245659b100"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B1_R03/scene.png",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B1_R03/scene.png",
+      "bytes": 2966129,
+      "sha256": "dbf5de6e12d2ba92758fbdbe042c4670e9ea617d363a736753759c3b02775baa"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/AUDIO-ROUTE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/CHILD-MODE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "1f9f41a5872cc4c853115cbc4f9a4e4a9c104290a779bf73dcbb4d2f1bcef562"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/CLEANUP.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "b79ad85db66e00ea41d665a7174f9227177eeb313901fecdec8983222e5bb3b8"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "bc836bcb61194970b34075ea2c276fecb0be5c20c7f879d25206ed9671948dab"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "de5d4cd6113c3776dc5dba3caa80547d6cadffe4b44a2785e7f9b497ea818fcc"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/LAUNCH.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/LAUNCH.json",
+      "bytes": 10806,
+      "sha256": "e015e819e3620dcbe8aeaa771a6031d9dd845f4b2ab99b8f76f622dfe0998504"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/LIFECYCLE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/LIFECYCLE.json",
+      "bytes": 692,
+      "sha256": "f345248b680a09ccab072aa2b7e8b358c25bf780dcf1b69de2b9a722b9f83e58"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/OBSERVERS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/OWNED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/OWNED.json",
+      "bytes": 198,
+      "sha256": "0fb6220f9bca4a82e50549e0e536f28c81f2eb242cff0894820399c2ad426db9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/PACING-WITNESS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/PACING-WITNESS.json",
+      "bytes": 2149,
+      "sha256": "10e4f2731c43cd47daf753e7bb80898d0bad6d46cd7a52bb1c6a9661e2773262"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "622972ac33e4a1a769458900f7a4aca524b813919057b3c0deca9e2ffe2dbf2a"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "0533e19ffec863f3b7f90c1db9e8a04dc3d6b00b71798b5d2d48d84e6c252c4e"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/PREFLIGHT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "2160cdf08e507bca1ba3f92d4fbb1ca565ccd02dee289790c9f14310ae504e43"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/RESULT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/RESULT.json",
+      "bytes": 29023,
+      "sha256": "7a4cd757e61e8b3c8013f009f093872e80ce592ce96d8bae8eaeaafff47256c1"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/TERRAIN211-FRAMES.csv",
+      "bytes": 43839,
+      "sha256": "1c6c418ad10329959e85c067ab0374cd0ae87e960a138ca4637b9c5ed00931c3"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/ULTRA-EVIDENCE.json",
+      "bytes": 1641,
+      "sha256": "7d52db9b080910b2e3e14d5380736499bc5d7620ef15c752e69931ce056525c3"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/WINDOW.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/WINDOW.json",
+      "bytes": 65,
+      "sha256": "26bcc09da5a852c8600d6b6b817765522cd3bcb863603c7161f1815c1f0cd4f3"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/actual-start-script.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/engine.log",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/engine.log",
+      "bytes": 291083,
+      "sha256": "77f64510ae16155c9408452424042ca93df9721cf1d76f52af830db73c1eadea"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/infolog.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/infolog.txt",
+      "bytes": 289913,
+      "sha256": "8d6b9a00dee4a56913e14bfd47294475311ffba4d24ff0ac50dd68f0fdc0a03d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B2_R03/scene.png",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B2_R03/scene.png",
+      "bytes": 2967963,
+      "sha256": "b2f16a35541142ef955471621ac4484104595ea2ecd450e925267118bbeafadf"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/AUDIO-ROUTE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/CHILD-MODE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/CHILD-MODE.json",
+      "bytes": 2719,
+      "sha256": "fd7cbe100c2499676a550ccdb73355d1256b44ca7322aa9aef45e1724d240e2d"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/CLEANUP.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "64c580850ce7172da09c723dff29affdf512cc1b590e6c1292b6d819a2de79f8"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/GAME-LAUNCH-CLAIM.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/GAME-LAUNCH-CLAIM.json",
+      "bytes": 86,
+      "sha256": "e497f9350827ee7fa5b4837034eb19bf7e8edef84e954afaf9ffa31bd3beec85"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/GRASS-BOUNDARY.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/GRASS-BOUNDARY.json",
+      "bytes": 343,
+      "sha256": "1502b875c238124fce5771fb69cef73fa79c268a98341d24936c27f4e0d97fea"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/LAUNCH.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/LAUNCH.json",
+      "bytes": 10806,
+      "sha256": "661797f85838fbf8ceea25a8bc5926bec829ad24f9bfe35bed3fd0d5fac04a82"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/LIFECYCLE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/LIFECYCLE.json",
+      "bytes": 692,
+      "sha256": "213c699649c4f9e6ba458cd2037f8d97200934672a9b4067a148ab8664e59ffb"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/OBSERVERS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/OBSERVERS.json",
+      "bytes": 75,
+      "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/OWNED.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/OWNED.json",
+      "bytes": 198,
+      "sha256": "ff0c785f3b8dcbdac593f3ee357307d6c6d434abd807ff17207d0f9cb2aacadd"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/PACING-WITNESS.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/PACING-WITNESS.json",
+      "bytes": 2150,
+      "sha256": "676690aab1837949fcf0d74701adb5ef7dd4f2f17f9863b296877407fa80957b"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1038,
+      "sha256": "d0cd3b833868709c4438902a465f5a49f257ca0b78a27fa36d43f30e119e8a69"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "a9f5fe089d847bce3e50bc9d08924afb55534b2889cc4c6c9ce5dc989d08a2ac"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/PREFLIGHT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/PREFLIGHT.json",
+      "bytes": 821,
+      "sha256": "31c5fc1746f0d8069429b9cfefbbe198d242fb6821e86aed1e0ed27ae596fe25"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/RESULT.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/RESULT.json",
+      "bytes": 29028,
+      "sha256": "6a7c3c8f71fe650468344dc1845563a5fed9eb136ff4a4db1f8bbfaef2c4a0c9"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/TERRAIN211-FRAMES.csv",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/TERRAIN211-FRAMES.csv",
+      "bytes": 43805,
+      "sha256": "e8abebde5268d19cc1b3fbf1804dc0d682afd67a7a5af8377d1035df51167656"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/ULTRA-EVIDENCE.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/ULTRA-EVIDENCE.json",
+      "bytes": 1641,
+      "sha256": "4297a3692cd44fc2459b6954eb8ca95f7f5adbb09a9ff9ed2917b3d0543136ad"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/WINDOW.json",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/WINDOW.json",
+      "bytes": 65,
+      "sha256": "fb8bea10f914bacffd9d18f0e74566b2184b34cf6ccbbf52a6452987bd5f9218"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/actual-start-script.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/engine.log",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/engine.log",
+      "bytes": 291043,
+      "sha256": "86e494cfd0d9a550525dfe60b1977339c3d136aed845604b2e1920622c8da77f"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/infolog.txt",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/infolog.txt",
+      "bytes": 289873,
+      "sha256": "08393fd28a4fe5b62552cf2b53bfa1fddc4d0c34170ba93410a0d333dbcf7b89"
+    },
+    {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/runs/r03_clean01/clean_paced/preparation/runs/B3_R03/scene.png",
+      "relativeToRuns": "r03_clean01/clean_paced/preparation/runs/B3_R03/scene.png",
+      "bytes": 2963617,
+      "sha256": "f06819eebfdb8dc4b4b4439f6e6bb25bffb2602b09107d64631b82ba4f77e971"
+    }
+  ],
+  "originalDataPreserved": true,
+  "PNGsPreservedSharedLocalNotUploaded": true,
+  "fullEngineLogsAndCompleteSamplesUploaded": true
+}
