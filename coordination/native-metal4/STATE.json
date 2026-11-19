@@ -1,8 +1,8 @@
 {
-  "status": "RUNNING",
-  "owner": "HQ3",
+  "status": "DONE",
+  "owner": "SUPER_JINI_MK2",
   "enabled": true,
-  "revision": 287,
+  "revision": 288,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -47,8 +47,8 @@
   },
   "ready_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-fixture-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/ground-decal-flat-wrap-fixture-20261118/RESULT.json",
-  "decision": null,
-  "execution_status": "OWNED_GROUND_WRAP_FIXTURE",
+  "decision": "FIXTURE_ONLY_DEFAULTS_PRESERVED",
+  "execution_status": "GPU_CORRECTNESS_FAILED_TIMING_SKIPPED",
   "blocked_reason": null,
   "history": [
     {
@@ -4653,6 +4653,12 @@
       "status": "RUNNING",
       "round_id": "ground-decal-flat-wrap-fixture-20261118",
       "action": "fixture"
+    },
+    {
+      "revision": 288,
+      "status": "DONE",
+      "round_id": "ground-decal-flat-wrap-fixture-20261118",
+      "action": "closed"
     }
   ],
   "communication_test": {
@@ -4749,12 +4755,23 @@
       "mvk3": 0
     },
     "started": true,
-    "completed": false,
+    "completed": true,
     "games_started": false,
     "reserved_at_utc": "2026-11-19T02:24:19.744270+00:00",
     "default_changed": false,
     "ready_sha256": "8970b59c34c307e01d9613aed0afa05419b5f2a569fe0c11d34bc9e0fe1b84da",
-    "gpu_seal_utc": "2026-11-19T02:24:24.580784+00:00"
+    "gpu_seal_utc": "2026-11-19T02:24:24.580784+00:00",
+    "finished_at_utc": "2026-11-19T02:25:30.956492+00:00",
+    "counts": {
+      "games": 0,
+      "engine_builds": 0,
+      "fixture_processes": 1,
+      "timing_samples": 0,
+      "retries": 0,
+      "captures": 0,
+      "mvk3": 0
+    },
+    "cleanup_complete": true
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
