@@ -1,0 +1,145 @@
+{
+  "status": "MVK3_COMPARISON_HELD_UNMATCHED_INPUTS",
+  "games_run": 0,
+  "recent_metal_baseline": {
+    "launch_sha256": "30e4afe4b1cfef9d7d05608229adf4bba14da8034a0570fc6b8ece3175adcd18",
+    "effective_lifetime": 3.0,
+    "window": {
+      "startSimulation": 540,
+      "endSimulation": 1740,
+      "screenshot": false
+    }
+  },
+  "historical_mvk3": {
+    "launch_sha256": "afbb4f88780bf1ccafc74354e05c9e65abff8a24d7604cb07583a41c1f23bf03",
+    "lifetime_at_sim0": 3.0,
+    "lifetime_at_sim1590": "UNKNOWN",
+    "lifetime_run_exit_sim": 180,
+    "window": {
+      "startSimulation": 600,
+      "endSimulation": 1800,
+      "warmupMinimumWallSeconds": 10,
+      "nominalSimulationSeconds": 40,
+      "wallDurationAndBinCount": "observed, never clipped",
+      "controllerSHA256": "fbb3dcd00f5f981f025dd57dc540356473917c92ff8241d3b40d99451e74ac56",
+      "newGameplayObservers": 0
+    }
+  },
+  "initial_input_hash_matches": {
+    "state/data/LuaUI/Widgets/zzz_native_short_run.lua": false,
+    "state/data/script.txt": true,
+    "state/data/springsettings.cfg": true,
+    "state/data/LuaUI/Config/BYAR.lua": true,
+    "state/data/LuaUI/Config/BC213.lua": true,
+    "state/data/fonts/FreeSansBold.otf": true,
+    "state/data/FreeSansBold.otf": true,
+    "state/data/LuaUI/Widgets/zzz_backend_common_status.lua": true,
+    "state/data/LuaUI/Widgets/zzz_ultra_quality.lua": true,
+    "state/data/games/bar-official-combat-pr6.sdz": true,
+    "assets/maps/seths_ravine_remake_1.3.1.sd7": true,
+    "state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": true,
+    "state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": true
+  },
+  "battle_camera_open_equal": true,
+  "full_timed_camera_history_equal": "UNVERIFIED",
+  "historical_camera_at_1590": {
+    "CPU_witness": "identical",
+    "captured_viewGeometry": "1512x950 identical",
+    "captured_cameraView": "exact byte equality",
+    "captured_projection": "different depth conventions; normalization analysis pending, not asserted as pair failure cause"
+  },
+  "benchmark_seed": 7654321,
+  "metal4_game_seed": 154658555,
+  "game_seed_startscript_hash_equal": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+  "effect_options": {
+    "480": {
+      "matching": {
+        "view": "1512,950,0,0",
+        "MSAA": "0",
+        "MSAALevel": "0",
+        "VSync": "0",
+        "VSyncGame": "0",
+        "Water": "4",
+        "option_ssao": "true",
+        "option_ssao_quality": "3",
+        "option_bloomdeferred": "true",
+        "option_bloomdeferred_quality": "3",
+        "option_cas_sharpness": "1",
+        "option_water": "nil",
+        "option_msaa": "1",
+        "option_vsync": "1",
+        "widget_cas": "false",
+        "widget_bloom": "false",
+        "widget_ssao": "false"
+      },
+      "different": {}
+    },
+    "1500": {
+      "matching": {
+        "view": "1512,950,0,0",
+        "MSAA": "0",
+        "MSAALevel": "0",
+        "VSync": "0",
+        "VSyncGame": "0",
+        "Water": "4",
+        "option_ssao": "true",
+        "option_ssao_quality": "3",
+        "option_bloomdeferred": "true",
+        "option_bloomdeferred_quality": "3",
+        "option_cas_sharpness": "1",
+        "option_water": "nil",
+        "option_msaa": "1",
+        "option_vsync": "1",
+        "widget_cas": "false",
+        "widget_bloom": "false",
+        "widget_ssao": "false"
+      },
+      "different": {}
+    }
+  },
+  "historical_decal_rows": {
+    "counts": {
+      "R03": 3541,
+      "MVK3": 4511
+    },
+    "matches": {
+      "position_and_birth": 3523,
+      "position_birth_and_texture_atlas_UV": 1203,
+      "position_birth_and_size": 2,
+      "position_birth_and_rotation": 0,
+      "position_birth_and_alpha_heat_decay": 0,
+      "all_fields": 0
+    },
+    "captured_timeInfo": {
+      "R03": [
+        1590.0,
+        73.53400421142578,
+        53.0,
+        0.0
+      ],
+      "MVK3": [
+        1590.0,
+        79.28500366210938,
+        53.0,
+        0.0
+      ]
+    },
+    "raw_sha256": {
+      "R03": "310a6571178232aa6f1a5d5cb0ed0db69b033b61b1643acdf774cd0837b09422",
+      "MVK3": "a64ff0c681fa6633df106ddcd5e0bdb56f56e6286d3eae4831dd12d4e1526a54"
+    },
+    "same_atlas_pixels_mips": "UNVERIFIED",
+    "new_metal4_with_lifetime_3_IO_rows": "UNVERIFIED"
+  },
+  "terrain": {
+    "map_archive_sha256_equal": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+    "bound_mesh_vertices_indices_and_LOD_at_same_ticks": "UNVERIFIED",
+    "same_draw_count_only_is_insufficient": true
+  },
+  "runtime_effect_route_equivalence": "UNVERIFIED",
+  "previous_evidence_hashes": {
+    "memory-cold-glow-20261118/RESULT.json": "b3f42374863dba713bec01e25b56e4dbf760712bc315b857146eaa9dbea442e5",
+    "r03-mvk3-matched-frame-20261117-02/PAIR-GATE.json": "81891c21d6a102e94e2b76b25cb4806d13b6bae0905c78c87dd632823874faca",
+    "r03-mvk3-lifetime-20261117-27/RAW-OBSERVATIONS.txt": "c13e5ebe33b4f6c6fdd7aa3d76385bb476e68342b15105993d0299f248774f52"
+  }
+}

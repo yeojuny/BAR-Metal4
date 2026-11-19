@@ -2,7 +2,7 @@
   "status": "RUNNING",
   "owner": "HQ3",
   "enabled": true,
-  "revision": 282,
+  "revision": 283,
   "acknowledgements": {
     "SUPER_JINI_MK2": true,
     "HQ": true
@@ -45,7 +45,7 @@
   "ready_path": "coordination/native-metal4/rounds/deferred-abba-restart-20261118/READY.json",
   "result_path": "coordination/native-metal4/rounds/deferred-abba-restart-20261118/RESULT.json",
   "decision": null,
-  "execution_status": "REUSED_DEFERRED_STAGING_ONLY",
+  "execution_status": "OWNED_COOLED_DEFERRED_ABBA_ONLY",
   "blocked_reason": null,
   "history": [
     {
@@ -4620,6 +4620,12 @@
       "status": "RUNNING",
       "round_id": "deferred-abba-restart-20261118",
       "action": "reserve"
+    },
+    {
+      "revision": 283,
+      "status": "RUNNING",
+      "round_id": "deferred-abba-restart-20261118",
+      "action": "game"
     }
   ],
   "communication_test": {
@@ -4719,7 +4725,9 @@
     "completed": false,
     "games_started": false,
     "reserved_at_utc": "2026-11-19T00:31:07.955503+00:00",
-    "default_changed": false
+    "default_changed": false,
+    "ready_sha256": "16eecbbcc4fa147ebfd0300c3e7d43b18042f6f20e29104a1e12745ceaeaea0a",
+    "game_seal_utc": "2026-11-19T00:31:29.499927+00:00"
   },
   "model_and_context_policy": {
     "author": "USER_VIA_LOCAL_CODEX_HQ",
