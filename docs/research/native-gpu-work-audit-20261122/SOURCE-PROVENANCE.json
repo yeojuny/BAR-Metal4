@@ -1,0 +1,92 @@
+{
+  "audit_date": "2026-11-22",
+  "timezone": "America/Los_Angeles",
+  "repository": "yeojuny/BAR-Metal4",
+  "audit_source_commit": "80110c032156888f930182b6d510c97c83115992",
+  "publish_base_commit": "a0963d4b2e39a6a2bdf97c9eb5f639e71f97afa6",
+  "proposed_branch": "perf/gpu-work-audit-20261122",
+  "user_requirements": {
+    "general_purpose_across_maps": true,
+    "map_or_tick_specialization_allowed": false,
+    "implement_safe_group_first": true,
+    "sim_map": "Simmer portability check; grass workload not verified"
+  },
+  "provided_capture": {
+    "evidence_directory_name": "seths-cap2-battle-gpu-passes-20261122-oanitk44",
+    "evidence_type": "user_provided_chat_summary",
+    "raw_files_independently_read": false,
+    "raw_files_in_this_upload": false,
+    "raw_file_names": [
+      "NATIVE-GPU-AUDIT-BRIEF.ko.md",
+      "DISTORTION-ATTACHMENTS.json",
+      "PARTICLE-UNIFORM-CHECK.json"
+    ],
+    "captured_binary_sha256": null,
+    "captured_source_commit": null,
+    "grass": {
+      "draws": 32,
+      "bound_unit_records_reported": 128,
+      "actual_unitBendCount_independently_verified": false,
+      "sampled_ticks": 4,
+      "affected_remaining_instances_each_tick_reported": 0
+    },
+    "distortion": {
+      "texture_extent_reported": [
+        756,
+        475
+      ],
+      "passes_reported": 3,
+      "barriers_reported": 6,
+      "combined_span_ms_reported": [
+        0.18,
+        0.222
+      ],
+      "all_span_is_removable_overhead": false
+    },
+    "groundflash": {
+      "tick_reported": 1665,
+      "draws_reported": 227,
+      "distinct_buffers_reported": 227,
+      "uniform_bytes_reported_identical": 272,
+      "same_Prepare_and_all_binding_identity_verified": false
+    }
+  },
+  "group_a": {
+    "status": "IMPLEMENTED_STATIC_REVIEWED_NATIVE_VALIDATION_PENDING",
+    "source_path": "engine/rts/Rendering/Metal4/Metal4WorldParticles.mm",
+    "base_blob_sha": "5197b0030d47a46c0c74e880798f80ae3a7935f6",
+    "base_file_identical_on_main_and_audit_commit": true,
+    "base_file_sha256": "9d4df33a401174c8c4734237b4055ff98b6c007820a69a53ec62c709ad25f55e",
+    "modified_file_sha256": "f2d71d8e93b0fa8ec648d0853fe736aeff4f7fbb67d57a5bb8b9e61ef6c8d003",
+    "changes": [
+      "per-Prepare exact immutable GroundFlash uniform and argument-table reuse",
+      "per-Prepare depth test/write state reuse",
+      "GroundFlash-only lazy common matrix preparation"
+    ],
+    "cache_scope": "one last GroundFlash binding entry inside one Prepare call",
+    "guards": [
+      "GroundFlashes stage and groundAtlas",
+      "full Uniform byte equality",
+      "actual bound resource identity and GPU binding values"
+    ],
+    "independent_static_review": "no source-level blocker found",
+    "diff_whitespace_check": "passed",
+    "macos_metal_build": false,
+    "gpu_parity_run": false,
+    "new_fps_benchmark": false,
+    "measured_performance_gain": null
+  },
+  "groups_b_c": {
+    "status": "documented_followup_tasks_not_implemented",
+    "native_jobs_launched": false,
+    "automations_created": false
+  },
+  "prior_arithmetic_validation": {
+    "scope": "host numpy float32 estimate and exact int64 correction, not GPU",
+    "cases": 1555102,
+    "needed_correction": 4197,
+    "result": "PASS",
+    "files": "arithmetic/"
+  },
+  "publication_status": "candidate_branch_and_draft_PR; not merged or released"
+}

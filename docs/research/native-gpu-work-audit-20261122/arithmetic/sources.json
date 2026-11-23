@@ -1,0 +1,11 @@
+{
+  "repository": "https://github.com/yeojuny/BAR-Metal4",
+  "audit_date_client_timezone": "2026-11-21 America/Los_Angeles",
+  "coordination_commit": "80110c032156888f930182b6d510c97c83115992",
+  "r03_reference_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "sensorlos_exact_interior_patch": "https://github.com/yeojuny/BAR-Metal4/blob/80110c032156888f930182b6d510c97c83115992/coordination/native-metal4/rounds/sensorlos-exact-interior-coverage-20261118-75/SENSORLOS-EXACT-INTERIOR.patch",
+  "sensorlos_guard_reference": "https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h#L172-L196",
+  "existing_weaponrange_strategy": "https://github.com/yeojuny/BAR-Metal4/blob/0780bd7c530b0696067b717428b49a416eda556a/engine/rts/Rendering/Metal4/NativeWeaponRangeShaders.h#L481-L498",
+  "host_validation_scope": "Float32 quotient estimation, exact int64 correction, exact quotient/remainder and lower-edge reference comparisons. No Metal/GPU execution.",
+  "benchmark_claim": null
+}

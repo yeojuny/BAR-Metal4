@@ -1,0 +1,48 @@
+{
+  "seed": 20261121,
+  "scope": "Host numpy float32 estimates plus exact int64 residual checks. Not an MSL compiler/GPU test.",
+  "groups": [
+    {
+      "name": "endpoint_boundary_grid",
+      "cases": 554400,
+      "quotient_remainder_matches": 554400,
+      "wide_line_lower_matches": 554400,
+      "estimate_needed_correction": 3684,
+      "maximum_observed_corrections": 1,
+      "exact_integer_ties": 31026,
+      "exact_half_ties": 18328,
+      "negative_numerators": 248440,
+      "max_abs_numerator": 70369817919488,
+      "max_denominator": 2147483648
+    },
+    {
+      "name": "random_valid_quantized_segments",
+      "cases": 1000000,
+      "quotient_remainder_matches": 1000000,
+      "wide_line_lower_matches": 1000000,
+      "estimate_needed_correction": 439,
+      "maximum_observed_corrections": 1,
+      "exact_integer_ties": 0,
+      "exact_half_ties": 0,
+      "negative_numerators": 500131,
+      "max_abs_numerator": 68030112942305,
+      "max_denominator": 2147131904
+    },
+    {
+      "name": "quotient_and_remainder_ties",
+      "cases": 702,
+      "quotient_remainder_matches": 702,
+      "wide_line_lower_matches": 702,
+      "estimate_needed_correction": 74,
+      "maximum_observed_corrections": 1,
+      "exact_integer_ties": 117,
+      "exact_half_ties": 117,
+      "negative_numerators": 312,
+      "max_abs_numerator": 140737488355328,
+      "max_denominator": 2147483648
+    }
+  ],
+  "total_cases": 1555102,
+  "result": "PASS",
+  "proof_distinction": "Residual invariant is mathematical; one correction maximum is observed here only. Retain correction loop/fallback rather than assuming all MSL targets obey this observed bound."
+}
