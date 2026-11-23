@@ -1,0 +1,73 @@
+{
+  "rebuild": {
+    "verifiedNoWork": true,
+    "sourceCommit": "8f1069ba8d3570f4933972021ae9adc749e2c51f",
+    "rawEngineSHA256": "b2cf843bd688f86925b96d6ac9e698693c06fe52b3b07fb7819362642f7d6550"
+  },
+  "application": {
+    "status": "PASS",
+    "engineSHA256": "7c971898b83eca8efeacda028197ef87b78485b40880633a43b60b19ec7f8671",
+    "renderer": {
+      "mode": "PREPARE",
+      "eligible": "1",
+      "queued": "1",
+      "simulation": "300",
+      "begin_submission": "0",
+      "begin_prepare_overlap": "0"
+    },
+    "flags": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+      "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+      "MTL_DEBUG_LAYER": "0",
+      "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+      "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+      "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+      "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+      "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+      "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+      "BAR_NATIVE_GROUND_DECAL_WORLD_POSITION_REUSE": "1",
+      "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+      "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT": "0",
+      "BAR_NATIVE_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE": "0"
+    },
+    "simulation": "frame=1500 mode=clean-default draws=7618 elapsed=39.9959984",
+    "normalExit": 0,
+    "originalBotsVerified": true,
+    "effectiveAA": "[Release220] aa msaa=0 level=0",
+    "effectiveDefaults": "[Release220] defaults health=2 health_option=2 height=2 height_option=2 vsync_game=0 vsync=0 vsync_option=1"
+  },
+  "grass": {
+    "status": "PASS",
+    "sampling": "single matched pair, all frame intervals retained",
+    "engine_sha256": "7c971898b83eca8efeacda028197ef87b78485b40880633a43b60b19ec7f8671",
+    "flag": "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT",
+    "display_locked": false,
+    "rest_seconds": 60.158890999970026,
+    "delta_percent": {
+      "average_fps": 0.8190544810899425,
+      "one_percent_low_fps": 1.039861304962919
+    },
+    "runs": {
+      "OFF": {
+        "average_fps": 86.78481272503136,
+        "one_percent_low_fps": 60.03430263997964,
+        "intervals": 3471,
+        "longest_ms": 37.0,
+        "raw_sha256": "7ad8709be0b15ba80bb826357f080f3db14ab1fc428ce93f49e7d3e68f16343d"
+      },
+      "ON": {
+        "average_fps": 87.49562762256124,
+        "one_percent_low_fps": 60.658576122837125,
+        "intervals": 3499,
+        "longest_ms": 32.000002,
+        "raw_sha256": "6f0cd6696a0e37166e3064d3e7ad00a989a2756cf647432e3711e640956ba917"
+      }
+    }
+  }
+}

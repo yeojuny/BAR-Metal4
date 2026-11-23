@@ -1,0 +1,10 @@
+{
+  "version": "1.11.4",
+  "previousReleaseCommit": "0b0fd234af3bf5dd073ab7094350ec63fc3a7e04",
+  "sourceCommit": "8f1069ba8d3570f4933972021ae9adc749e2c51f",
+  "engineTree": "2df52dbaa3376605ccc3ce6ad948a9f4734c8da9",
+  "engineEntries": 10287,
+  "sourcePathsChanged": 123,
+  "secretsFound": 0,
+  "localHomeReferences": 0
+}
