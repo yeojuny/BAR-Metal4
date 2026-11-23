@@ -1,0 +1,3022 @@
+{
+  "A1_OFF": {
+    "display_fps": 79.19103610165999,
+    "display_one_low": 51.14913345527724,
+    "missing_display_callbacks": 10,
+    "display_intervals": {
+      "n": 3167,
+      "mean": 12.627691835175245,
+      "median": 12.847166,
+      "p95": 13.989416,
+      "p99": 14.514,
+      "max": 29.405625
+    },
+    "full_next_feedback_to_display": {
+      "n": 3,
+      "mean": 8.909332666666666,
+      "median": 12.326291,
+      "p95": 13.841124,
+      "p99": 13.841124,
+      "max": 13.841124
+    },
+    "full_next_enroll_to_display": {
+      "n": 3,
+      "mean": 29.912679999999998,
+      "median": 30.925916,
+      "p95": 35.919124,
+      "p99": 35.919124,
+      "max": 35.919124
+    },
+    "full_reacquired_before_display": 3,
+    "present_call": {
+      "n": 3177,
+      "mean": 0.004374527856468366,
+      "median": 0.003583,
+      "p95": 0.009209,
+      "p99": 0.012583,
+      "max": 0.023333
+    },
+    "gpu": {
+      "n": 3177,
+      "mean": 12.496117738235942,
+      "median": 12.796417002391536,
+      "p95": 13.746874996286351,
+      "p99": 14.134000004560221,
+      "max": 15.95587500196416
+    },
+    "slowest_one_percent": {
+      "n": 32,
+      "long_wait": 0,
+      "wait": {
+        "n": 32,
+        "mean": 0.013529875,
+        "median": 0.013125,
+        "p95": 0.018833,
+        "p99": 0.019084,
+        "max": 0.019084
+      },
+      "gpu": {
+        "n": 32,
+        "mean": 13.124505218684135,
+        "median": 13.13331249912153,
+        "p95": 14.134000004560221,
+        "p99": 15.40966700122226,
+        "max": 15.40966700122226
+      }
+    },
+    "n": 3177,
+    "displayed": 3167,
+    "n_full": 3,
+    "n_held": 13,
+    "held_only": 10,
+    "screen": {
+      "n": 3,
+      "mean": 10.460152333333333,
+      "median": 10.594874,
+      "p95": 11.091875,
+      "p99": 11.091875,
+      "max": 11.091875
+    },
+    "wait": {
+      "n": 3,
+      "mean": 0.013902666666666666,
+      "median": 0.013708,
+      "p95": 0.01525,
+      "p99": 0.01525,
+      "max": 0.01525
+    },
+    "hold_wait": {
+      "n": 13,
+      "mean": 0.7291248461538461,
+      "median": 0.021958,
+      "p95": 2.9255,
+      "p99": 2.9255,
+      "max": 2.9255
+    },
+    "hold_screen": {
+      "n": 13,
+      "mean": 10.468009153846154,
+      "median": 10.594874,
+      "p95": 11.243562,
+      "p99": 11.243562,
+      "max": 11.243562
+    },
+    "active_reacquired": 0,
+    "switch_to_acquire": {
+      "n": 3,
+      "mean": -10.446249666666667,
+      "median": -10.579624,
+      "p95": -9.680000000000001,
+      "p99": -9.680000000000001,
+      "max": -9.680000000000001
+    },
+    "all_wait": {
+      "n": 3177,
+      "mean": 0.016702088133459237,
+      "median": 0.013458,
+      "p95": 0.018333,
+      "p99": 0.021333,
+      "max": 2.9255
+    },
+    "request_from_feedback": {
+      "n": 3177,
+      "mean": -21.270342159269752,
+      "median": -21.90825,
+      "p95": -18.262459,
+      "p99": -17.73525,
+      "max": -14.8705
+    },
+    "feedback_to_display": {
+      "n": 3167,
+      "mean": 0.6418534587938112,
+      "median": 0.563978,
+      "p95": 1.127228,
+      "p99": 1.413374,
+      "max": 13.923645
+    },
+    "enroll_to_display": {
+      "n": 3167,
+      "mean": 21.95055910577834,
+      "median": 22.553771,
+      "p95": 24.255,
+      "p99": 24.795311,
+      "max": 36.802062
+    },
+    "long_full": 0,
+    "long_all": 0,
+    "shown_ms": {
+      "n": 3,
+      "mean": 25.023035,
+      "median": 26.180417,
+      "p95": 26.234396,
+      "p99": 26.234396,
+      "max": 26.234396
+    },
+    "most": [
+      {
+        "arm": "A1_OFF",
+        "tick": 1154,
+        "draw": 5172,
+        "next_id": 5169,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 30,
+        "acquired_slot": 18,
+        "next_screen_id": 5167,
+        "same_slot": 0,
+        "next_screen_ms": 10.594874,
+        "acquire_ms": 0.01525,
+        "switch_to_acquire_ms": -10.579624,
+        "displayed_period_ms": 26.234396,
+        "request_relative_to_feedback_ms": -22.011417,
+        "feedback_to_next_screen_ms": 13.841124,
+        "enroll_to_next_screen_ms": 35.919124,
+        "display_interval_ms": 13.055375,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.005834,
+        "gpu_ms": 12.961374995938968,
+        "feedback_to_display_ms": 0.545208,
+        "enroll_to_display_ms": 22.595958,
+        "requested_to_display_ms": 22.556625,
+        "wall_ms": 14.0
+      },
+      {
+        "arm": "A1_OFF",
+        "tick": 662,
+        "draw": 3825,
+        "next_id": 3822,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 14,
+        "acquired_slot": 18,
+        "next_screen_id": 3820,
+        "same_slot": 0,
+        "next_screen_ms": 9.693708,
+        "acquire_ms": 0.013708,
+        "switch_to_acquire_ms": -9.680000000000001,
+        "displayed_period_ms": 22.654292,
+        "request_relative_to_feedback_ms": -17.981042,
+        "feedback_to_next_screen_ms": 12.326291,
+        "enroll_to_next_screen_ms": 30.925916,
+        "display_interval_ms": 10.663562,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.003167,
+        "gpu_ms": 10.585124997305684,
+        "feedback_to_display_ms": 0.670666,
+        "enroll_to_display_ms": 18.688583,
+        "requested_to_display_ms": 18.651708,
+        "wall_ms": 11.0
+      },
+      {
+        "arm": "A1_OFF",
+        "tick": 1317,
+        "draw": 5585,
+        "next_id": 5582,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 18,
+        "acquired_slot": 30,
+        "next_screen_id": 5581,
+        "same_slot": 0,
+        "next_screen_ms": 11.091875,
+        "acquire_ms": 0.01275,
+        "switch_to_acquire_ms": -11.079125,
+        "displayed_period_ms": 26.180417,
+        "request_relative_to_feedback_ms": -21.893625,
+        "feedback_to_next_screen_ms": 0.560583,
+        "enroll_to_next_screen_ms": 22.893,
+        "display_interval_ms": 13.510688,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.003333,
+        "gpu_ms": 12.980874998902436,
+        "feedback_to_display_ms": 0.977916,
+        "enroll_to_display_ms": 22.910583,
+        "requested_to_display_ms": 22.871541,
+        "wall_ms": 12.0
+      }
+    ]
+  },
+  "B1_ON": {
+    "display_fps": 79.42037152966046,
+    "display_one_low": 66.01457537872741,
+    "missing_display_callbacks": 1,
+    "display_intervals": {
+      "n": 3177,
+      "mean": 12.591227927289896,
+      "median": 12.866874,
+      "p95": 13.943147,
+      "p99": 14.367209,
+      "max": 25.776896
+    },
+    "full_next_feedback_to_display": {
+      "n": 6,
+      "mean": 3.4775655,
+      "median": 3.3879995000000003,
+      "p95": 4.288645,
+      "p99": 4.288645,
+      "max": 4.288645
+    },
+    "full_next_enroll_to_display": {
+      "n": 6,
+      "mean": 24.492003,
+      "median": 24.172416,
+      "p95": 26.695395,
+      "p99": 26.695395,
+      "max": 26.695395
+    },
+    "full_reacquired_before_display": 0,
+    "present_call": {
+      "n": 3178,
+      "mean": 0.012874091252359976,
+      "median": 0.012208,
+      "p95": 0.017917,
+      "p99": 0.033625,
+      "max": 0.123042
+    },
+    "gpu": {
+      "n": 3178,
+      "mean": 12.500469043499034,
+      "median": 12.822812499507563,
+      "p95": 13.738374997046776,
+      "p99": 14.079749998927582,
+      "max": 14.455917000304908
+    },
+    "slowest_one_percent": {
+      "n": 32,
+      "long_wait": 0,
+      "wait": {
+        "n": 32,
+        "mean": 0.01097921875,
+        "median": 0.011271,
+        "p95": 0.013417,
+        "p99": 0.014125,
+        "max": 0.014125
+      },
+      "gpu": {
+        "n": 32,
+        "mean": 13.267217500242623,
+        "median": 13.332354501471855,
+        "p95": 13.894167001126334,
+        "p99": 14.22462500340771,
+        "max": 14.22462500340771
+      }
+    },
+    "n": 3178,
+    "displayed": 3177,
+    "n_full": 6,
+    "n_held": 7,
+    "held_only": 1,
+    "screen": {
+      "n": 6,
+      "mean": 0.5425446666666667,
+      "median": 0.33803099999999997,
+      "p95": 1.407978,
+      "p99": 1.407978,
+      "max": 1.407978
+    },
+    "wait": {
+      "n": 6,
+      "mean": 1.2460001666666667,
+      "median": 1.1905005,
+      "p95": 2.32775,
+      "p99": 2.32775,
+      "max": 2.32775
+    },
+    "hold_wait": {
+      "n": 7,
+      "mean": 1.320744142857143,
+      "median": 1.221167,
+      "p95": 2.32775,
+      "p99": 2.32775,
+      "max": 2.32775
+    },
+    "hold_screen": {
+      "n": 7,
+      "mean": 1.9929727142857143,
+      "median": 0.344167,
+      "p95": 10.695541,
+      "p99": 10.695541,
+      "max": 10.695541
+    },
+    "active_reacquired": 6,
+    "switch_to_acquire": {
+      "n": 6,
+      "mean": 0.7034555,
+      "median": 0.7827189999999999,
+      "p95": 0.919772,
+      "p99": 0.919772,
+      "max": 0.919772
+    },
+    "all_wait": {
+      "n": 3178,
+      "mean": 0.015020348961611077,
+      "median": 0.011625,
+      "p95": 0.017541,
+      "p99": 0.027375,
+      "max": 2.32775
+    },
+    "request_from_feedback": {
+      "n": 3178,
+      "mean": -9.877323734109503,
+      "median": -10.1550205,
+      "p95": -8.238041,
+      "p99": -7.920667,
+      "max": 0.492791
+    },
+    "feedback_to_display": {
+      "n": 3177,
+      "mean": 0.6345871775259679,
+      "median": 0.558021,
+      "p95": 1.145416,
+      "p99": 1.43077,
+      "max": 4.288645
+    },
+    "enroll_to_display": {
+      "n": 3177,
+      "mean": 22.000753025180988,
+      "median": 22.678812,
+      "p95": 24.263624,
+      "p99": 24.78427,
+      "max": 26.695395
+    },
+    "long_full": 0,
+    "long_all": 0,
+    "shown_ms": {
+      "n": 6,
+      "mean": 15.217958,
+      "median": 14.8996665,
+      "p95": 16.643478,
+      "p99": 16.643478,
+      "max": 16.643478
+    },
+    "most": [
+      {
+        "arm": "B1_ON",
+        "tick": 1174,
+        "draw": 5243,
+        "next_id": 5240,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 31,
+        "acquired_slot": 31,
+        "next_screen_id": 5238,
+        "same_slot": 1,
+        "next_screen_ms": 1.407978,
+        "acquire_ms": 2.32775,
+        "switch_to_acquire_ms": 0.919772,
+        "displayed_period_ms": 16.643478,
+        "request_relative_to_feedback_ms": -10.226959,
+        "feedback_to_next_screen_ms": 4.288645,
+        "enroll_to_next_screen_ms": 26.695395,
+        "display_interval_ms": 13.927479,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.014417,
+        "gpu_ms": 13.22466700366931,
+        "feedback_to_display_ms": 1.194478,
+        "enroll_to_display_ms": 21.533687,
+        "requested_to_display_ms": 11.421437,
+        "wall_ms": 14.0
+      },
+      {
+        "arm": "B1_ON",
+        "tick": 688,
+        "draw": 3923,
+        "next_id": 3920,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 47,
+        "acquired_slot": 47,
+        "next_screen_id": 3918,
+        "same_slot": 1,
+        "next_screen_ms": 0.808687,
+        "acquire_ms": 1.41,
+        "switch_to_acquire_ms": 0.6013129999999999,
+        "displayed_period_ms": 14.266729,
+        "request_relative_to_feedback_ms": -8.498208,
+        "feedback_to_next_screen_ms": 3.734521,
+        "enroll_to_next_screen_ms": 22.946729,
+        "display_interval_ms": 12.978188,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.0395,
+        "gpu_ms": 11.165332995005883,
+        "feedback_to_display_ms": 2.292333,
+        "enroll_to_display_ms": 19.604041,
+        "requested_to_display_ms": 10.790541,
+        "wall_ms": 12.0
+      },
+      {
+        "arm": "B1_ON",
+        "tick": 852,
+        "draw": 4400,
+        "next_id": 4397,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 47,
+        "acquired_slot": 47,
+        "next_screen_id": 4395,
+        "same_slot": 1,
+        "next_screen_ms": 0.331895,
+        "acquire_ms": 1.221167,
+        "switch_to_acquire_ms": 0.8892719999999998,
+        "displayed_period_ms": 14.834458,
+        "request_relative_to_feedback_ms": -9.130583,
+        "feedback_to_next_screen_ms": 3.490603,
+        "enroll_to_next_screen_ms": 23.232812,
+        "display_interval_ms": 11.520188,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.015041,
+        "gpu_ms": 12.095666999812238,
+        "feedback_to_display_ms": 0.58275,
+        "enroll_to_display_ms": 18.4145,
+        "requested_to_display_ms": 9.713333,
+        "wall_ms": 14.0
+      },
+      {
+        "arm": "B1_ON",
+        "tick": 1666,
+        "draw": 6469,
+        "next_id": 6466,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 25,
+        "acquired_slot": 25,
+        "next_screen_id": 6464,
+        "same_slot": 1,
+        "next_screen_ms": 0.344167,
+        "acquire_ms": 1.159834,
+        "switch_to_acquire_ms": 0.815667,
+        "displayed_period_ms": 15.76375,
+        "request_relative_to_feedback_ms": -10.370125,
+        "feedback_to_next_screen_ms": 3.210958,
+        "enroll_to_next_screen_ms": 25.997125,
+        "display_interval_ms": 13.194375,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.010416,
+        "gpu_ms": 13.160124995920341,
+        "feedback_to_display_ms": 0.566749,
+        "enroll_to_display_ms": 22.254499,
+        "requested_to_display_ms": 10.936874,
+        "wall_ms": 14.0
+      }
+    ]
+  },
+  "B2_ON": {
+    "display_fps": 79.26309549988088,
+    "display_one_low": 61.235167990761084,
+    "missing_display_callbacks": 4,
+    "display_intervals": {
+      "n": 3170,
+      "mean": 12.616211790536278,
+      "median": 12.853719,
+      "p95": 13.973709,
+      "p99": 14.451979,
+      "max": 27.314709
+    },
+    "full_next_feedback_to_display": {
+      "n": 1,
+      "mean": 4.333291,
+      "median": 4.333291,
+      "p95": 4.333291,
+      "p99": 4.333291,
+      "max": 4.333291
+    },
+    "full_next_enroll_to_display": {
+      "n": 1,
+      "mean": 26.706166,
+      "median": 26.706166,
+      "p95": 26.706166,
+      "p99": 26.706166,
+      "max": 26.706166
+    },
+    "full_reacquired_before_display": 0,
+    "present_call": {
+      "n": 3174,
+      "mean": 0.013303502205419029,
+      "median": 0.012542,
+      "p95": 0.018375,
+      "p99": 0.035459,
+      "max": 0.094833
+    },
+    "gpu": {
+      "n": 3174,
+      "mean": 12.512530197925415,
+      "median": 12.817354501748923,
+      "p95": 13.769583005341701,
+      "p99": 14.099499996518716,
+      "max": 16.381667002860922
+    },
+    "slowest_one_percent": {
+      "n": 32,
+      "long_wait": 1,
+      "wait": {
+        "n": 32,
+        "mean": 0.17852996875,
+        "median": 0.0113335,
+        "p95": 0.023375,
+        "p99": 5.351709,
+        "max": 5.351709
+      },
+      "gpu": {
+        "n": 32,
+        "mean": 13.179011655438444,
+        "median": 13.14866650136537,
+        "p95": 13.84124999458436,
+        "p99": 13.920500001404434,
+        "max": 13.920500001404434
+      }
+    },
+    "n": 3174,
+    "displayed": 3170,
+    "n_full": 1,
+    "n_held": 5,
+    "held_only": 4,
+    "screen": {
+      "n": 1,
+      "mean": 1.304791,
+      "median": 1.304791,
+      "p95": 1.304791,
+      "p99": 1.304791,
+      "max": 1.304791
+    },
+    "wait": {
+      "n": 1,
+      "mean": 2.241292,
+      "median": 2.241292,
+      "p95": 2.241292,
+      "p99": 2.241292,
+      "max": 2.241292
+    },
+    "hold_wait": {
+      "n": 5,
+      "mean": 2.8956418,
+      "median": 2.9265,
+      "p95": 5.351709,
+      "p99": 5.351709,
+      "max": 5.351709
+    },
+    "hold_screen": {
+      "n": 5,
+      "mean": 8.9153828,
+      "median": 10.944125,
+      "p95": 11.80375,
+      "p99": 11.80375,
+      "max": 11.80375
+    },
+    "active_reacquired": 1,
+    "switch_to_acquire": {
+      "n": 1,
+      "mean": 0.936501,
+      "median": 0.936501,
+      "p95": 0.936501,
+      "p99": 0.936501,
+      "max": 0.936501
+    },
+    "all_wait": {
+      "n": 3174,
+      "mean": 0.017226464713295527,
+      "median": 0.011875,
+      "p95": 0.021875,
+      "p99": 0.029916,
+      "max": 5.351709
+    },
+    "request_from_feedback": {
+      "n": 3174,
+      "mean": -9.882417483301827,
+      "median": -10.157666500000001,
+      "p95": -8.24425,
+      "p99": -7.979083,
+      "max": 2.05775
+    },
+    "feedback_to_display": {
+      "n": 3170,
+      "mean": 0.6335918504731861,
+      "median": 0.558604,
+      "p95": 1.129312,
+      "p99": 1.412375,
+      "max": 4.333291
+    },
+    "enroll_to_display": {
+      "n": 3170,
+      "mean": 22.007424344479496,
+      "median": 22.659436499999998,
+      "p95": 24.351437,
+      "p99": 24.847395,
+      "max": 26.937228
+    },
+    "long_full": 0,
+    "long_all": 1,
+    "shown_ms": {
+      "n": 1,
+      "mean": 16.936583,
+      "median": 16.936583,
+      "p95": 16.936583,
+      "p99": 16.936583,
+      "max": 16.936583
+    },
+    "most": [
+      {
+        "arm": "B2_ON",
+        "tick": 1510,
+        "draw": 6027,
+        "next_id": 6024,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 18,
+        "acquired_slot": 18,
+        "next_screen_id": 6022,
+        "same_slot": 1,
+        "next_screen_ms": 1.304791,
+        "acquire_ms": 2.241292,
+        "switch_to_acquire_ms": 0.936501,
+        "displayed_period_ms": 16.936583,
+        "request_relative_to_feedback_ms": -10.044375,
+        "feedback_to_next_screen_ms": 4.333291,
+        "enroll_to_next_screen_ms": 26.706166,
+        "display_interval_ms": 12.700605,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.014042,
+        "gpu_ms": 13.124249999236781,
+        "feedback_to_display_ms": 0.559459,
+        "enroll_to_display_ms": 21.638,
+        "requested_to_display_ms": 10.603834,
+        "wall_ms": 15.0
+      }
+    ]
+  },
+  "A2_OFF": {
+    "display_fps": 79.13760942463117,
+    "display_one_low": 54.31326336952208,
+    "missing_display_callbacks": 7,
+    "display_intervals": {
+      "n": 3165,
+      "mean": 12.63621692985782,
+      "median": 12.878021,
+      "p95": 14.000396,
+      "p99": 14.541229,
+      "max": 26.821
+    },
+    "full_next_feedback_to_display": {
+      "n": 14,
+      "mean": 9.817321,
+      "median": 9.015728500000002,
+      "p95": 16.28225,
+      "p99": 16.28225,
+      "max": 16.28225
+    },
+    "full_next_enroll_to_display": {
+      "n": 14,
+      "mean": 30.89235085714286,
+      "median": 29.9484995,
+      "p95": 36.106083,
+      "p99": 36.106083,
+      "max": 36.106083
+    },
+    "full_reacquired_before_display": 14,
+    "present_call": {
+      "n": 3172,
+      "mean": 0.004177347414880202,
+      "median": 0.0035,
+      "p95": 0.008584,
+      "p99": 0.011959,
+      "max": 0.022791
+    },
+    "gpu": {
+      "n": 3172,
+      "mean": 12.517020749733224,
+      "median": 12.825228997826343,
+      "p95": 13.782624999294057,
+      "p99": 14.149750000797212,
+      "max": 15.275499994459096
+    },
+    "slowest_one_percent": {
+      "n": 32,
+      "long_wait": 0,
+      "wait": {
+        "n": 32,
+        "mean": 0.0187865,
+        "median": 0.012812,
+        "p95": 0.085291,
+        "p99": 0.135042,
+        "max": 0.135042
+      },
+      "gpu": {
+        "n": 32,
+        "mean": 13.04313934451784,
+        "median": 13.114062501699664,
+        "p95": 14.173875002597924,
+        "p99": 15.275499994459096,
+        "max": 15.275499994459096
+      }
+    },
+    "n": 3172,
+    "displayed": 3165,
+    "n_full": 14,
+    "n_held": 21,
+    "held_only": 7,
+    "screen": {
+      "n": 14,
+      "mean": 7.124499642857143,
+      "median": 6.423895,
+      "p95": 13.678708,
+      "p99": 13.678708,
+      "max": 13.678708
+    },
+    "wait": {
+      "n": 14,
+      "mean": 0.08521428571428571,
+      "median": 0.0834375,
+      "p95": 0.181459,
+      "p99": 0.181459,
+      "max": 0.181459
+    },
+    "hold_wait": {
+      "n": 21,
+      "mean": 0.17158142857142858,
+      "median": 0.081584,
+      "p95": 0.742709,
+      "p99": 1.151792,
+      "max": 1.151792
+    },
+    "hold_screen": {
+      "n": 21,
+      "mean": 8.24743119047619,
+      "median": 9.225437,
+      "p95": 12.697271,
+      "p99": 13.678708,
+      "max": 13.678708
+    },
+    "active_reacquired": 13,
+    "switch_to_acquire": {
+      "n": 14,
+      "mean": -7.039285357142857,
+      "median": -6.340291000000001,
+      "p95": -1.6465,
+      "p99": -1.6465,
+      "max": -1.6465
+    },
+    "all_wait": {
+      "n": 3172,
+      "mean": 0.01449161633039092,
+      "median": 0.013125,
+      "p95": 0.017959,
+      "p99": 0.021084,
+      "max": 1.151792
+    },
+    "request_from_feedback": {
+      "n": 3172,
+      "mean": -21.33930255674653,
+      "median": -22.006645499999998,
+      "p95": -18.284791,
+      "p99": -17.877959,
+      "max": -15.539041
+    },
+    "feedback_to_display": {
+      "n": 3165,
+      "mean": 0.6712368556082149,
+      "median": 0.562103,
+      "p95": 1.142541,
+      "p99": 1.408062,
+      "max": 16.28225
+    },
+    "enroll_to_display": {
+      "n": 3165,
+      "mean": 22.04810564707741,
+      "median": 22.686479,
+      "p95": 24.345916,
+      "p99": 24.897104,
+      "max": 36.106083
+    },
+    "long_full": 0,
+    "long_all": 0,
+    "shown_ms": {
+      "n": 14,
+      "mean": 14.896949428571428,
+      "median": 16.6665,
+      "p95": 26.500188,
+      "p99": 26.500188,
+      "max": 26.500188
+    },
+    "most": [
+      {
+        "arm": "A2_OFF",
+        "tick": 734,
+        "draw": 4010,
+        "next_id": 4007,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 14,
+        "acquired_slot": 14,
+        "next_screen_id": 4005,
+        "same_slot": 1,
+        "next_screen_ms": 12.697271,
+        "acquire_ms": 0.181459,
+        "switch_to_acquire_ms": -12.515812,
+        "displayed_period_ms": 16.666521,
+        "request_relative_to_feedback_ms": -23.697084,
+        "feedback_to_next_screen_ms": 15.599187,
+        "enroll_to_next_screen_ms": 34.919854,
+        "display_interval_ms": 8.349958,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.002209,
+        "gpu_ms": 11.67975000134902,
+        "feedback_to_display_ms": 4.61252,
+        "enroll_to_display_ms": 28.346062,
+        "requested_to_display_ms": 28.309604,
+        "wall_ms": 11.0
+      },
+      {
+        "arm": "A2_OFF",
+        "tick": 731,
+        "draw": 3999,
+        "next_id": 3996,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 55,
+        "acquired_slot": 55,
+        "next_screen_id": 3994,
+        "same_slot": 1,
+        "next_screen_ms": 5.229125,
+        "acquire_ms": 0.135042,
+        "switch_to_acquire_ms": -5.0940829999999995,
+        "displayed_period_ms": 8.33325,
+        "request_relative_to_feedback_ms": -19.058208,
+        "feedback_to_next_screen_ms": 7.983791,
+        "enroll_to_next_screen_ms": 29.258958,
+        "display_interval_ms": 7.179312,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.005125,
+        "gpu_ms": 11.173875005624723,
+        "feedback_to_display_ms": 0.56977,
+        "enroll_to_display_ms": 19.666062,
+        "requested_to_display_ms": 19.627978,
+        "wall_ms": 16.000001
+      },
+      {
+        "arm": "A2_OFF",
+        "tick": 730,
+        "draw": 3998,
+        "next_id": 3995,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 14,
+        "acquired_slot": 14,
+        "next_screen_id": 3993,
+        "same_slot": 1,
+        "next_screen_ms": 11.357833,
+        "acquire_ms": 0.104833,
+        "switch_to_acquire_ms": -11.253,
+        "displayed_period_ms": 16.666479,
+        "request_relative_to_feedback_ms": -22.294541,
+        "feedback_to_next_screen_ms": 14.239583,
+        "enroll_to_next_screen_ms": 33.365583,
+        "display_interval_ms": 8.350125,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.002958,
+        "gpu_ms": 11.631625005975366,
+        "feedback_to_display_ms": 4.63,
+        "enroll_to_display_ms": 26.95925,
+        "requested_to_display_ms": 26.924541,
+        "wall_ms": 9.0
+      },
+      {
+        "arm": "A2_OFF",
+        "tick": 730,
+        "draw": 3997,
+        "next_id": 3994,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 30,
+        "acquired_slot": 30,
+        "next_screen_id": 3992,
+        "same_slot": 1,
+        "next_screen_ms": 6.310687,
+        "acquire_ms": 0.098083,
+        "switch_to_acquire_ms": -6.212604,
+        "displayed_period_ms": 19.972229,
+        "request_relative_to_feedback_ms": -21.236834,
+        "feedback_to_next_screen_ms": 9.134937,
+        "enroll_to_next_screen_ms": 28.010896,
+        "display_interval_ms": 8.33325,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.00675,
+        "gpu_ms": 11.201875000551809,
+        "feedback_to_display_ms": 7.983791,
+        "enroll_to_display_ms": 29.258958,
+        "requested_to_display_ms": 29.220625,
+        "wall_ms": 14.0
+      }
+    ]
+  },
+  "OFF": {
+    "display_fps": 79.16432218652034,
+    "display_one_low": 52.683732593227866,
+    "missing_display_callbacks": 17,
+    "display_intervals": {
+      "n": 6332,
+      "mean": 12.631953036165509,
+      "median": 12.858323,
+      "p95": 13.996917,
+      "p99": 14.514,
+      "max": 29.405625
+    },
+    "full_next_feedback_to_display": {
+      "n": 17,
+      "mean": 9.657087764705883,
+      "median": 9.134937,
+      "p95": 16.28225,
+      "p99": 16.28225,
+      "max": 16.28225
+    },
+    "full_next_enroll_to_display": {
+      "n": 17,
+      "mean": 30.719467764705882,
+      "median": 30.162624,
+      "p95": 36.106083,
+      "p99": 36.106083,
+      "max": 36.106083
+    },
+    "full_reacquired_before_display": 17,
+    "present_call": {
+      "n": 6349,
+      "mean": 0.004276015277996535,
+      "median": 0.003542,
+      "p95": 0.008875,
+      "p99": 0.012292,
+      "max": 0.023333
+    },
+    "gpu": {
+      "n": 6349,
+      "mean": 12.506561013156304,
+      "median": 12.809874999220483,
+      "p95": 13.766916999884415,
+      "p99": 14.14404199749697,
+      "max": 15.95587500196416
+    },
+    "slowest_one_percent": {
+      "n": 64,
+      "long_wait": 0,
+      "wait": {
+        "n": 64,
+        "mean": 0.01432028125,
+        "median": 0.0129585,
+        "p95": 0.018792,
+        "p99": 0.085291,
+        "max": 0.085291
+      },
+      "gpu": {
+        "n": 64,
+        "mean": 13.21137307797926,
+        "median": 13.24618750004447,
+        "p95": 14.134000004560221,
+        "p99": 15.40966700122226,
+        "max": 15.40966700122226
+      }
+    },
+    "n": 6349,
+    "displayed": 6332,
+    "n_full": 17,
+    "n_held": 34,
+    "held_only": 17,
+    "screen": {
+      "n": 17,
+      "mean": 7.713144235294118,
+      "median": 7.655875,
+      "p95": 13.678708,
+      "p99": 13.678708,
+      "max": 13.678708
+    },
+    "wait": {
+      "n": 17,
+      "mean": 0.07262988235294118,
+      "median": 0.069125,
+      "p95": 0.181459,
+      "p99": 0.181459,
+      "max": 0.181459
+    },
+    "hold_wait": {
+      "n": 34,
+      "mean": 0.38475979411764705,
+      "median": 0.06902050000000001,
+      "p95": 1.944167,
+      "p99": 2.9255,
+      "max": 2.9255
+    },
+    "hold_screen": {
+      "n": 34,
+      "mean": 9.096475705882353,
+      "median": 10.345468499999999,
+      "p95": 12.697271,
+      "p99": 13.678708,
+      "max": 13.678708
+    },
+    "active_reacquired": 13,
+    "switch_to_acquire": {
+      "n": 17,
+      "mean": -7.640514352941176,
+      "median": -7.574291,
+      "p95": -1.6465,
+      "p99": -1.6465,
+      "max": -1.6465
+    },
+    "all_wait": {
+      "n": 6349,
+      "mean": 0.015597722633485588,
+      "median": 0.013292,
+      "p95": 0.018167,
+      "p99": 0.021208,
+      "max": 2.9255
+    },
+    "request_from_feedback": {
+      "n": 6349,
+      "mean": -21.304795203969128,
+      "median": -21.948292,
+      "p95": -18.278125,
+      "p99": -17.812584,
+      "max": -14.8705
+    },
+    "feedback_to_display": {
+      "n": 6332,
+      "mean": 0.6565405167403664,
+      "median": 0.563114,
+      "p95": 1.137707,
+      "p99": 1.411061,
+      "max": 16.28225
+    },
+    "enroll_to_display": {
+      "n": 6332,
+      "mean": 21.99931697109918,
+      "median": 22.6134055,
+      "p95": 24.299083,
+      "p99": 24.858562,
+      "max": 36.802062
+    },
+    "long_full": 0,
+    "long_all": 0,
+    "shown_ms": {
+      "n": 17,
+      "mean": 16.683905705882353,
+      "median": 16.666584,
+      "p95": 26.500188,
+      "p99": 26.500188,
+      "max": 26.500188
+    },
+    "most": [
+      {
+        "arm": "A2_OFF",
+        "tick": 734,
+        "draw": 4010,
+        "next_id": 4007,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 14,
+        "acquired_slot": 14,
+        "next_screen_id": 4005,
+        "same_slot": 1,
+        "next_screen_ms": 12.697271,
+        "acquire_ms": 0.181459,
+        "switch_to_acquire_ms": -12.515812,
+        "displayed_period_ms": 16.666521,
+        "request_relative_to_feedback_ms": -23.697084,
+        "feedback_to_next_screen_ms": 15.599187,
+        "enroll_to_next_screen_ms": 34.919854,
+        "display_interval_ms": 8.349958,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.002209,
+        "gpu_ms": 11.67975000134902,
+        "feedback_to_display_ms": 4.61252,
+        "enroll_to_display_ms": 28.346062,
+        "requested_to_display_ms": 28.309604,
+        "wall_ms": 11.0
+      },
+      {
+        "arm": "A2_OFF",
+        "tick": 731,
+        "draw": 3999,
+        "next_id": 3996,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 55,
+        "acquired_slot": 55,
+        "next_screen_id": 3994,
+        "same_slot": 1,
+        "next_screen_ms": 5.229125,
+        "acquire_ms": 0.135042,
+        "switch_to_acquire_ms": -5.0940829999999995,
+        "displayed_period_ms": 8.33325,
+        "request_relative_to_feedback_ms": -19.058208,
+        "feedback_to_next_screen_ms": 7.983791,
+        "enroll_to_next_screen_ms": 29.258958,
+        "display_interval_ms": 7.179312,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.005125,
+        "gpu_ms": 11.173875005624723,
+        "feedback_to_display_ms": 0.56977,
+        "enroll_to_display_ms": 19.666062,
+        "requested_to_display_ms": 19.627978,
+        "wall_ms": 16.000001
+      },
+      {
+        "arm": "A2_OFF",
+        "tick": 730,
+        "draw": 3998,
+        "next_id": 3995,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 14,
+        "acquired_slot": 14,
+        "next_screen_id": 3993,
+        "same_slot": 1,
+        "next_screen_ms": 11.357833,
+        "acquire_ms": 0.104833,
+        "switch_to_acquire_ms": -11.253,
+        "displayed_period_ms": 16.666479,
+        "request_relative_to_feedback_ms": -22.294541,
+        "feedback_to_next_screen_ms": 14.239583,
+        "enroll_to_next_screen_ms": 33.365583,
+        "display_interval_ms": 8.350125,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.002958,
+        "gpu_ms": 11.631625005975366,
+        "feedback_to_display_ms": 4.63,
+        "enroll_to_display_ms": 26.95925,
+        "requested_to_display_ms": 26.924541,
+        "wall_ms": 9.0
+      },
+      {
+        "arm": "A2_OFF",
+        "tick": 730,
+        "draw": 3997,
+        "next_id": 3994,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 30,
+        "acquired_slot": 30,
+        "next_screen_id": 3992,
+        "same_slot": 1,
+        "next_screen_ms": 6.310687,
+        "acquire_ms": 0.098083,
+        "switch_to_acquire_ms": -6.212604,
+        "displayed_period_ms": 19.972229,
+        "request_relative_to_feedback_ms": -21.236834,
+        "feedback_to_next_screen_ms": 9.134937,
+        "enroll_to_next_screen_ms": 28.010896,
+        "display_interval_ms": 8.33325,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.00675,
+        "gpu_ms": 11.201875000551809,
+        "feedback_to_display_ms": 7.983791,
+        "enroll_to_display_ms": 29.258958,
+        "requested_to_display_ms": 29.220625,
+        "wall_ms": 14.0
+      }
+    ],
+    "by_phase": {
+      "540": {
+        "display_fps": 88.61365162054392,
+        "display_one_low": 55.529297396129444,
+        "missing_display_callbacks": 4,
+        "display_intervals": {
+          "n": 1770,
+          "mean": 11.284942914689266,
+          "median": 11.224635,
+          "p95": 12.021646,
+          "p99": 12.608083,
+          "max": 23.672959
+        },
+        "full_next_feedback_to_display": {
+          "n": 14,
+          "mean": 9.693719785714286,
+          "median": 9.015728500000002,
+          "p95": 16.28225,
+          "p99": 16.28225,
+          "max": 16.28225
+        },
+        "full_next_enroll_to_display": {
+          "n": 14,
+          "mean": 30.52233892857143,
+          "median": 29.9484995,
+          "p95": 35.145167,
+          "p99": 35.145167,
+          "max": 35.145167
+        },
+        "full_reacquired_before_display": 14,
+        "present_call": {
+          "n": 1774,
+          "mean": 0.004005031003382187,
+          "median": 0.003292,
+          "p95": 0.008542,
+          "p99": 0.012083,
+          "max": 0.023333
+        },
+        "gpu": {
+          "n": 1774,
+          "mean": 11.165546620743008,
+          "median": 11.133666499517858,
+          "p95": 11.75633299862966,
+          "p99": 12.115917001210619,
+          "max": 12.464291998185217
+        },
+        "slowest_one_percent": {
+          "n": 18,
+          "long_wait": 0,
+          "wait": {
+            "n": 18,
+            "mean": 0.02642822222222222,
+            "median": 0.0115415,
+            "p95": 0.135042,
+            "p99": 0.135042,
+            "max": 0.135042
+          },
+          "gpu": {
+            "n": 18,
+            "mean": 11.17462977749205,
+            "median": 11.188396001671208,
+            "p95": 11.688416998367757,
+            "p99": 11.688416998367757,
+            "max": 11.688416998367757
+          }
+        },
+        "n": 1774,
+        "displayed": 1770,
+        "n_full": 14,
+        "n_held": 18,
+        "held_only": 4,
+        "screen": {
+          "n": 14,
+          "mean": 7.020791285714286,
+          "median": 6.423895,
+          "p95": 13.678708,
+          "p99": 13.678708,
+          "max": 13.678708
+        },
+        "wait": {
+          "n": 14,
+          "mean": 0.08534814285714286,
+          "median": 0.0834375,
+          "p95": 0.181459,
+          "p99": 0.181459,
+          "max": 0.181459
+        },
+        "hold_wait": {
+          "n": 18,
+          "mean": 0.33028922222222223,
+          "median": 0.0834375,
+          "p95": 2.9255,
+          "p99": 2.9255,
+          "max": 2.9255
+        },
+        "hold_screen": {
+          "n": 18,
+          "mean": 7.582069,
+          "median": 8.011229,
+          "p95": 13.678708,
+          "p99": 13.678708,
+          "max": 13.678708
+        },
+        "active_reacquired": 13,
+        "switch_to_acquire": {
+          "n": 14,
+          "mean": -6.935443142857143,
+          "median": -6.340291000000001,
+          "p95": -1.6465,
+          "p99": -1.6465,
+          "max": -1.6465
+        },
+        "all_wait": {
+          "n": 1774,
+          "mean": 0.0160400321307779,
+          "median": 0.0125,
+          "p95": 0.01725,
+          "p99": 0.021958,
+          "max": 2.9255
+        },
+        "request_from_feedback": {
+          "n": 1774,
+          "mean": -18.78282922886133,
+          "median": -18.7433535,
+          "p95": -17.923125,
+          "p99": -17.562917,
+          "max": -15.909542
+        },
+        "feedback_to_display": {
+          "n": 1770,
+          "mean": 0.6994875632768361,
+          "median": 0.565822,
+          "p95": 1.143478,
+          "p99": 1.474374,
+          "max": 16.28225
+        },
+        "enroll_to_display": {
+          "n": 1770,
+          "mean": 19.5187500220339,
+          "median": 19.391333,
+          "p95": 20.500729,
+          "p99": 21.266,
+          "max": 35.145167
+        },
+        "long_full": 0,
+        "long_all": 0,
+        "shown_ms": {
+          "n": 14,
+          "mean": 14.622242571428572,
+          "median": 16.6665,
+          "p95": 22.654292,
+          "p99": 22.654292,
+          "max": 22.654292
+        },
+        "most": [
+          {
+            "arm": "A2_OFF",
+            "tick": 734,
+            "draw": 4010,
+            "next_id": 4007,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 14,
+            "acquired_slot": 14,
+            "next_screen_id": 4005,
+            "same_slot": 1,
+            "next_screen_ms": 12.697271,
+            "acquire_ms": 0.181459,
+            "switch_to_acquire_ms": -12.515812,
+            "displayed_period_ms": 16.666521,
+            "request_relative_to_feedback_ms": -23.697084,
+            "feedback_to_next_screen_ms": 15.599187,
+            "enroll_to_next_screen_ms": 34.919854,
+            "display_interval_ms": 8.349958,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.002209,
+            "gpu_ms": 11.67975000134902,
+            "feedback_to_display_ms": 4.61252,
+            "enroll_to_display_ms": 28.346062,
+            "requested_to_display_ms": 28.309604,
+            "wall_ms": 11.0
+          },
+          {
+            "arm": "A2_OFF",
+            "tick": 731,
+            "draw": 3999,
+            "next_id": 3996,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 55,
+            "acquired_slot": 55,
+            "next_screen_id": 3994,
+            "same_slot": 1,
+            "next_screen_ms": 5.229125,
+            "acquire_ms": 0.135042,
+            "switch_to_acquire_ms": -5.0940829999999995,
+            "displayed_period_ms": 8.33325,
+            "request_relative_to_feedback_ms": -19.058208,
+            "feedback_to_next_screen_ms": 7.983791,
+            "enroll_to_next_screen_ms": 29.258958,
+            "display_interval_ms": 7.179312,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.005125,
+            "gpu_ms": 11.173875005624723,
+            "feedback_to_display_ms": 0.56977,
+            "enroll_to_display_ms": 19.666062,
+            "requested_to_display_ms": 19.627978,
+            "wall_ms": 16.000001
+          },
+          {
+            "arm": "A2_OFF",
+            "tick": 730,
+            "draw": 3998,
+            "next_id": 3995,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 14,
+            "acquired_slot": 14,
+            "next_screen_id": 3993,
+            "same_slot": 1,
+            "next_screen_ms": 11.357833,
+            "acquire_ms": 0.104833,
+            "switch_to_acquire_ms": -11.253,
+            "displayed_period_ms": 16.666479,
+            "request_relative_to_feedback_ms": -22.294541,
+            "feedback_to_next_screen_ms": 14.239583,
+            "enroll_to_next_screen_ms": 33.365583,
+            "display_interval_ms": 8.350125,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.002958,
+            "gpu_ms": 11.631625005975366,
+            "feedback_to_display_ms": 4.63,
+            "enroll_to_display_ms": 26.95925,
+            "requested_to_display_ms": 26.924541,
+            "wall_ms": 9.0
+          },
+          {
+            "arm": "A2_OFF",
+            "tick": 730,
+            "draw": 3997,
+            "next_id": 3994,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 30,
+            "acquired_slot": 30,
+            "next_screen_id": 3992,
+            "same_slot": 1,
+            "next_screen_ms": 6.310687,
+            "acquire_ms": 0.098083,
+            "switch_to_acquire_ms": -6.212604,
+            "displayed_period_ms": 19.972229,
+            "request_relative_to_feedback_ms": -21.236834,
+            "feedback_to_next_screen_ms": 9.134937,
+            "enroll_to_next_screen_ms": 28.010896,
+            "display_interval_ms": 8.33325,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.00675,
+            "gpu_ms": 11.201875000551809,
+            "feedback_to_display_ms": 7.983791,
+            "enroll_to_display_ms": 29.258958,
+            "requested_to_display_ms": 29.220625,
+            "wall_ms": 14.0
+          }
+        ]
+      },
+      "840": {
+        "display_fps": 78.77606012075903,
+        "display_one_low": 53.845195453449,
+        "missing_display_callbacks": 5,
+        "display_intervals": {
+          "n": 1576,
+          "mean": 12.694211902284264,
+          "median": 12.6636565,
+          "p95": 13.556979,
+          "p99": 14.000396,
+          "max": 29.405625
+        },
+        "full_next_feedback_to_display": null,
+        "full_next_enroll_to_display": null,
+        "full_reacquired_before_display": 0,
+        "present_call": {
+          "n": 1581,
+          "mean": 0.004400711574952562,
+          "median": 0.003625,
+          "p95": 0.009209,
+          "p99": 0.012625,
+          "max": 0.020167
+        },
+        "gpu": {
+          "n": 1581,
+          "mean": 12.55774775654975,
+          "median": 12.578167006722651,
+          "p95": 13.304833002621308,
+          "p99": 13.585583001258783,
+          "max": 14.500999997835606
+        },
+        "slowest_one_percent": {
+          "n": 16,
+          "long_wait": 0,
+          "wait": {
+            "n": 16,
+            "mean": 0.012679625,
+            "median": 0.011917,
+            "p95": 0.018833,
+            "p99": 0.018833,
+            "max": 0.018833
+          },
+          "gpu": {
+            "n": 16,
+            "mean": 12.673934937538434,
+            "median": 12.637958501727553,
+            "p95": 13.243458000943065,
+            "p99": 13.243458000943065,
+            "max": 13.243458000943065
+          }
+        },
+        "n": 1581,
+        "displayed": 1576,
+        "n_full": 0,
+        "n_held": 5,
+        "held_only": 5,
+        "screen": null,
+        "wait": null,
+        "hold_wait": {
+          "n": 5,
+          "mean": 0.5862086,
+          "median": 0.447667,
+          "p95": 1.709083,
+          "p99": 1.709083,
+          "max": 1.709083
+        },
+        "hold_screen": {
+          "n": 5,
+          "mean": 10.331254,
+          "median": 10.3565,
+          "p95": 10.874729,
+          "p99": 10.874729,
+          "max": 10.874729
+        },
+        "active_reacquired": 0,
+        "switch_to_acquire": null,
+        "all_wait": {
+          "n": 1581,
+          "mean": 0.01546095888678052,
+          "median": 0.013333,
+          "p95": 0.017917,
+          "p99": 0.02075,
+          "max": 1.709083
+        },
+        "request_from_feedback": {
+          "n": 1581,
+          "mean": -21.354707168880456,
+          "median": -21.479042,
+          "p95": -19.602458,
+          "p99": -19.012875,
+          "max": -14.8705
+        },
+        "feedback_to_display": {
+          "n": 1576,
+          "mean": 0.6345159771573604,
+          "median": 0.5621245,
+          "p95": 1.136208,
+          "p99": 1.393854,
+          "max": 1.595666
+        },
+        "enroll_to_display": {
+          "n": 1576,
+          "mean": 22.027419236675126,
+          "median": 22.143666000000003,
+          "p95": 23.377624,
+          "p99": 23.783145,
+          "max": 24.624333
+        },
+        "long_full": 0,
+        "long_all": 0,
+        "shown_ms": null,
+        "most": []
+      },
+      "1140": {
+        "display_fps": 75.32030826373051,
+        "display_one_low": 49.70962557181448,
+        "missing_display_callbacks": 4,
+        "display_intervals": {
+          "n": 1507,
+          "mean": 13.276631801592568,
+          "median": 13.217583,
+          "p95": 14.008708,
+          "p99": 14.490646,
+          "max": 26.558604
+        },
+        "full_next_feedback_to_display": {
+          "n": 3,
+          "mean": 9.486138333333333,
+          "median": 13.841124,
+          "p95": 14.056708,
+          "p99": 14.056708,
+          "max": 14.056708
+        },
+        "full_next_enroll_to_display": {
+          "n": 3,
+          "mean": 31.639402333333333,
+          "median": 35.919124,
+          "p95": 36.106083,
+          "p99": 36.106083,
+          "max": 36.106083
+        },
+        "full_reacquired_before_display": 3,
+        "present_call": {
+          "n": 1511,
+          "mean": 0.004319919258769027,
+          "median": 0.003625,
+          "p95": 0.008833,
+          "p99": 0.012416,
+          "max": 0.019
+        },
+        "gpu": {
+          "n": 1511,
+          "mean": 13.152718927831168,
+          "median": 13.118374998157378,
+          "p95": 13.756125001236796,
+          "p99": 14.040875001228414,
+          "max": 15.95587500196416
+        },
+        "slowest_one_percent": {
+          "n": 16,
+          "long_wait": 0,
+          "wait": {
+            "n": 16,
+            "mean": 0.0138594375,
+            "median": 0.013292,
+            "p95": 0.019084,
+            "p99": 0.019084,
+            "max": 0.019084
+          },
+          "gpu": {
+            "n": 16,
+            "mean": 13.63040106207336,
+            "median": 13.485791499988409,
+            "p95": 15.40966700122226,
+            "p99": 15.40966700122226,
+            "max": 15.40966700122226
+          }
+        },
+        "n": 1511,
+        "displayed": 1507,
+        "n_full": 3,
+        "n_held": 7,
+        "held_only": 4,
+        "screen": {
+          "n": 3,
+          "mean": 10.944124666666667,
+          "median": 11.091875,
+          "p95": 11.145625,
+          "p99": 11.145625,
+          "max": 11.145625
+        },
+        "wait": {
+          "n": 3,
+          "mean": 0.013278,
+          "median": 0.01275,
+          "p95": 0.01525,
+          "p99": 0.01525,
+          "max": 0.01525
+        },
+        "hold_wait": {
+          "n": 7,
+          "mean": 0.42973214285714284,
+          "median": 0.01575,
+          "p95": 1.944167,
+          "p99": 1.944167,
+          "max": 1.944167
+        },
+        "hold_screen": {
+          "n": 7,
+          "mean": 10.942943,
+          "median": 10.915124,
+          "p95": 11.557999,
+          "p99": 11.557999,
+          "max": 11.557999
+        },
+        "active_reacquired": 0,
+        "switch_to_acquire": {
+          "n": 3,
+          "mean": -10.930846666666667,
+          "median": -11.079125,
+          "p95": -10.579624,
+          "p99": -10.579624,
+          "max": -10.579624
+        },
+        "all_wait": {
+          "n": 1511,
+          "mean": 0.01583421178027796,
+          "median": 0.013542,
+          "p95": 0.018292,
+          "p99": 0.021084,
+          "max": 1.944167
+        },
+        "request_from_feedback": {
+          "n": 1511,
+          "mean": -22.57961081535407,
+          "median": -22.599375,
+          "p95": -21.598833,
+          "p99": -21.021,
+          "max": -15.539041
+        },
+        "feedback_to_display": {
+          "n": 1507,
+          "mean": 0.6537786655607166,
+          "median": 0.561896,
+          "p95": 1.124021,
+          "p99": 1.420187,
+          "max": 14.056708
+        },
+        "enroll_to_display": {
+          "n": 1507,
+          "mean": 23.272758430656936,
+          "median": 23.256979,
+          "p95": 24.229812,
+          "p99": 24.673813,
+          "max": 36.802062
+        },
+        "long_full": 0,
+        "long_all": 0,
+        "shown_ms": {
+          "n": 3,
+          "mean": 26.305000333333332,
+          "median": 26.234396,
+          "p95": 26.500188,
+          "p99": 26.500188,
+          "max": 26.500188
+        },
+        "most": [
+          {
+            "arm": "A1_OFF",
+            "tick": 1154,
+            "draw": 5172,
+            "next_id": 5169,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 30,
+            "acquired_slot": 18,
+            "next_screen_id": 5167,
+            "same_slot": 0,
+            "next_screen_ms": 10.594874,
+            "acquire_ms": 0.01525,
+            "switch_to_acquire_ms": -10.579624,
+            "displayed_period_ms": 26.234396,
+            "request_relative_to_feedback_ms": -22.011417,
+            "feedback_to_next_screen_ms": 13.841124,
+            "enroll_to_next_screen_ms": 35.919124,
+            "display_interval_ms": 13.055375,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.005834,
+            "gpu_ms": 12.961374995938968,
+            "feedback_to_display_ms": 0.545208,
+            "enroll_to_display_ms": 22.595958,
+            "requested_to_display_ms": 22.556625,
+            "wall_ms": 14.0
+          },
+          {
+            "arm": "A1_OFF",
+            "tick": 1317,
+            "draw": 5585,
+            "next_id": 5582,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 18,
+            "acquired_slot": 30,
+            "next_screen_id": 5581,
+            "same_slot": 0,
+            "next_screen_ms": 11.091875,
+            "acquire_ms": 0.01275,
+            "switch_to_acquire_ms": -11.079125,
+            "displayed_period_ms": 26.180417,
+            "request_relative_to_feedback_ms": -21.893625,
+            "feedback_to_next_screen_ms": 0.560583,
+            "enroll_to_next_screen_ms": 22.893,
+            "display_interval_ms": 13.510688,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.003333,
+            "gpu_ms": 12.980874998902436,
+            "feedback_to_display_ms": 0.977916,
+            "enroll_to_display_ms": 22.910583,
+            "requested_to_display_ms": 22.871541,
+            "wall_ms": 12.0
+          },
+          {
+            "arm": "A2_OFF",
+            "tick": 1181,
+            "draw": 5211,
+            "next_id": 5208,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 30,
+            "acquired_slot": 55,
+            "next_screen_id": 5206,
+            "same_slot": 0,
+            "next_screen_ms": 11.145625,
+            "acquire_ms": 0.011834,
+            "switch_to_acquire_ms": -11.133791,
+            "displayed_period_ms": 26.500188,
+            "request_relative_to_feedback_ms": -22.682209,
+            "feedback_to_next_screen_ms": 14.056708,
+            "enroll_to_next_screen_ms": 36.106083,
+            "display_interval_ms": 13.055167,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.003167,
+            "gpu_ms": 12.94216699898243,
+            "feedback_to_display_ms": 0.575312,
+            "enroll_to_display_ms": 23.295562,
+            "requested_to_display_ms": 23.257521,
+            "wall_ms": 13.0
+          }
+        ]
+      },
+      "1440": {
+        "display_fps": 73.96029681538889,
+        "display_one_low": 55.407694377127065,
+        "missing_display_callbacks": 4,
+        "display_intervals": {
+          "n": 1479,
+          "mean": 13.520767804597702,
+          "median": 13.464375,
+          "p95": 14.336312,
+          "p99": 14.768271,
+          "max": 27.055875
+        },
+        "full_next_feedback_to_display": null,
+        "full_next_enroll_to_display": null,
+        "full_reacquired_before_display": 0,
+        "present_call": {
+          "n": 1483,
+          "mean": 0.004422503708698584,
+          "median": 0.003667,
+          "p95": 0.009041,
+          "p99": 0.012125,
+          "max": 0.022791
+        },
+        "gpu": {
+          "n": 1483,
+          "mean": 13.397787366333933,
+          "median": 13.366750004934147,
+          "p95": 14.082124995184131,
+          "p99": 14.303707997896709,
+          "max": 14.704624998557847
+        },
+        "slowest_one_percent": {
+          "n": 15,
+          "long_wait": 0,
+          "wait": {
+            "n": 15,
+            "mean": 0.012630666666666667,
+            "median": 0.012791,
+            "p95": 0.016584,
+            "p99": 0.016584,
+            "max": 0.016584
+          },
+          "gpu": {
+            "n": 15,
+            "mean": 13.4138360672902,
+            "median": 13.30512500135228,
+            "p95": 14.173875002597924,
+            "p99": 14.173875002597924,
+            "max": 14.173875002597924
+          }
+        },
+        "n": 1483,
+        "displayed": 1479,
+        "n_full": 0,
+        "n_held": 4,
+        "held_only": 4,
+        "screen": null,
+        "wait": null,
+        "hold_wait": {
+          "n": 4,
+          "mean": 0.29936474999999996,
+          "median": 0.016229,
+          "p95": 1.151792,
+          "p99": 1.151792,
+          "max": 1.151792
+        },
+        "hold_screen": {
+          "n": 4,
+          "mean": 11.13651525,
+          "median": 11.2129475,
+          "p95": 11.572812,
+          "p99": 11.572812,
+          "max": 11.572812
+        },
+        "active_reacquired": 0,
+        "switch_to_acquire": null,
+        "all_wait": {
+          "n": 1483,
+          "mean": 0.014973468644639245,
+          "median": 0.013917,
+          "p95": 0.01875,
+          "p99": 0.021334,
+          "max": 1.151792
+        },
+        "request_from_feedback": {
+          "n": 1483,
+          "mean": -22.969535888064733,
+          "median": -22.928792,
+          "p95": -22.042834,
+          "p99": -21.644292,
+          "max": -16.572833
+        },
+        "feedback_to_display": {
+          "n": 1479,
+          "mean": 0.6314265963488844,
+          "median": 0.562499,
+          "p95": 1.150437,
+          "p99": 1.392188,
+          "max": 1.480854
+        },
+        "enroll_to_display": {
+          "n": 1479,
+          "mean": 23.6404515551048,
+          "median": 23.599937,
+          "p95": 24.717082,
+          "p99": 25.110603,
+          "max": 25.78777
+        },
+        "long_full": 0,
+        "long_all": 0,
+        "shown_ms": null,
+        "most": []
+      }
+    }
+  },
+  "ON": {
+    "display_fps": 79.34174230279199,
+    "display_one_low": 63.52173028270356,
+    "missing_display_callbacks": 5,
+    "display_intervals": {
+      "n": 6347,
+      "mean": 12.603706081770916,
+      "median": 12.862416,
+      "p95": 13.958042,
+      "p99": 14.421187,
+      "max": 27.314709
+    },
+    "full_next_feedback_to_display": {
+      "n": 7,
+      "mean": 3.599812,
+      "median": 3.490603,
+      "p95": 4.333291,
+      "p99": 4.333291,
+      "max": 4.333291
+    },
+    "full_next_enroll_to_display": {
+      "n": 7,
+      "mean": 24.808312,
+      "median": 25.11202,
+      "p95": 26.706166,
+      "p99": 26.706166,
+      "max": 26.706166
+    },
+    "full_reacquired_before_display": 0,
+    "present_call": {
+      "n": 6352,
+      "mean": 0.01308866152392947,
+      "median": 0.012354500000000001,
+      "p95": 0.018167,
+      "p99": 0.034709,
+      "max": 0.123042
+    },
+    "gpu": {
+      "n": 6352,
+      "mean": 12.50649582311952,
+      "median": 12.820041498343926,
+      "p95": 13.751042002695613,
+      "p99": 14.085458002227824,
+      "max": 16.381667002860922
+    },
+    "slowest_one_percent": {
+      "n": 64,
+      "long_wait": 0,
+      "wait": {
+        "n": 64,
+        "mean": 0.011202484375,
+        "median": 0.011271,
+        "p95": 0.013417,
+        "p99": 0.023375,
+        "max": 0.023375
+      },
+      "gpu": {
+        "n": 64,
+        "mean": 13.299647140911475,
+        "median": 13.332354501471855,
+        "p95": 13.894167001126334,
+        "p99": 14.22462500340771,
+        "max": 14.22462500340771
+      }
+    },
+    "n": 6352,
+    "displayed": 6347,
+    "n_full": 7,
+    "n_held": 12,
+    "held_only": 5,
+    "screen": {
+      "n": 7,
+      "mean": 0.651437,
+      "median": 0.344167,
+      "p95": 1.407978,
+      "p99": 1.407978,
+      "max": 1.407978
+    },
+    "wait": {
+      "n": 7,
+      "mean": 1.3881847142857142,
+      "median": 1.221167,
+      "p95": 2.32775,
+      "p99": 2.32775,
+      "max": 2.32775
+    },
+    "hold_wait": {
+      "n": 12,
+      "mean": 1.9769515,
+      "median": 1.589604,
+      "p95": 5.351709,
+      "p99": 5.351709,
+      "max": 5.351709
+    },
+    "hold_screen": {
+      "n": 12,
+      "mean": 4.87731025,
+      "median": 1.3563844999999999,
+      "p95": 11.80375,
+      "p99": 11.80375,
+      "max": 11.80375
+    },
+    "active_reacquired": 7,
+    "switch_to_acquire": {
+      "n": 7,
+      "mean": 0.7367477142857143,
+      "median": 0.815667,
+      "p95": 0.936501,
+      "p99": 0.936501,
+      "max": 0.936501
+    },
+    "all_wait": {
+      "n": 6352,
+      "mean": 0.016122712216624684,
+      "median": 0.01175,
+      "p95": 0.0205,
+      "p99": 0.028833,
+      "max": 5.351709
+    },
+    "request_from_feedback": {
+      "n": 6352,
+      "mean": -9.879869004880353,
+      "median": -10.1560625,
+      "p95": -8.243834,
+      "p99": -7.963875,
+      "max": 2.05775
+    },
+    "feedback_to_display": {
+      "n": 6347,
+      "mean": 0.6340900628643453,
+      "median": 0.558291,
+      "p95": 1.134645,
+      "p99": 1.418208,
+      "max": 4.333291
+    },
+    "enroll_to_display": {
+      "n": 6347,
+      "mean": 22.00408500598708,
+      "median": 22.665458,
+      "p95": 24.311687,
+      "p99": 24.811208,
+      "max": 26.937228
+    },
+    "long_full": 0,
+    "long_all": 1,
+    "shown_ms": {
+      "n": 7,
+      "mean": 15.463475857142857,
+      "median": 14.961396,
+      "p95": 16.936583,
+      "p99": 16.936583,
+      "max": 16.936583
+    },
+    "most": [
+      {
+        "arm": "B1_ON",
+        "tick": 1174,
+        "draw": 5243,
+        "next_id": 5240,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 31,
+        "acquired_slot": 31,
+        "next_screen_id": 5238,
+        "same_slot": 1,
+        "next_screen_ms": 1.407978,
+        "acquire_ms": 2.32775,
+        "switch_to_acquire_ms": 0.919772,
+        "displayed_period_ms": 16.643478,
+        "request_relative_to_feedback_ms": -10.226959,
+        "feedback_to_next_screen_ms": 4.288645,
+        "enroll_to_next_screen_ms": 26.695395,
+        "display_interval_ms": 13.927479,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.014417,
+        "gpu_ms": 13.22466700366931,
+        "feedback_to_display_ms": 1.194478,
+        "enroll_to_display_ms": 21.533687,
+        "requested_to_display_ms": 11.421437,
+        "wall_ms": 14.0
+      },
+      {
+        "arm": "B2_ON",
+        "tick": 1510,
+        "draw": 6027,
+        "next_id": 6024,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 18,
+        "acquired_slot": 18,
+        "next_screen_id": 6022,
+        "same_slot": 1,
+        "next_screen_ms": 1.304791,
+        "acquire_ms": 2.241292,
+        "switch_to_acquire_ms": 0.936501,
+        "displayed_period_ms": 16.936583,
+        "request_relative_to_feedback_ms": -10.044375,
+        "feedback_to_next_screen_ms": 4.333291,
+        "enroll_to_next_screen_ms": 26.706166,
+        "display_interval_ms": 12.700605,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.014042,
+        "gpu_ms": 13.124249999236781,
+        "feedback_to_display_ms": 0.559459,
+        "enroll_to_display_ms": 21.638,
+        "requested_to_display_ms": 10.603834,
+        "wall_ms": 15.0
+      },
+      {
+        "arm": "B1_ON",
+        "tick": 688,
+        "draw": 3923,
+        "next_id": 3920,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 47,
+        "acquired_slot": 47,
+        "next_screen_id": 3918,
+        "same_slot": 1,
+        "next_screen_ms": 0.808687,
+        "acquire_ms": 1.41,
+        "switch_to_acquire_ms": 0.6013129999999999,
+        "displayed_period_ms": 14.266729,
+        "request_relative_to_feedback_ms": -8.498208,
+        "feedback_to_next_screen_ms": 3.734521,
+        "enroll_to_next_screen_ms": 22.946729,
+        "display_interval_ms": 12.978188,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.0395,
+        "gpu_ms": 11.165332995005883,
+        "feedback_to_display_ms": 2.292333,
+        "enroll_to_display_ms": 19.604041,
+        "requested_to_display_ms": 10.790541,
+        "wall_ms": 12.0
+      },
+      {
+        "arm": "B1_ON",
+        "tick": 852,
+        "draw": 4400,
+        "next_id": 4397,
+        "full": 1,
+        "held_full": 1,
+        "old_screen_slot": 47,
+        "acquired_slot": 47,
+        "next_screen_id": 4395,
+        "same_slot": 1,
+        "next_screen_ms": 0.331895,
+        "acquire_ms": 1.221167,
+        "switch_to_acquire_ms": 0.8892719999999998,
+        "displayed_period_ms": 14.834458,
+        "request_relative_to_feedback_ms": -9.130583,
+        "feedback_to_next_screen_ms": 3.490603,
+        "enroll_to_next_screen_ms": 23.232812,
+        "display_interval_ms": 11.520188,
+        "display_missing_with_callback": 0,
+        "present_call_ms": 0.015041,
+        "gpu_ms": 12.095666999812238,
+        "feedback_to_display_ms": 0.58275,
+        "enroll_to_display_ms": 18.4145,
+        "requested_to_display_ms": 9.713333,
+        "wall_ms": 14.0
+      }
+    ],
+    "by_phase": {
+      "540": {
+        "display_fps": 88.7973964964143,
+        "display_one_low": 75.30513672779242,
+        "missing_display_callbacks": 1,
+        "display_intervals": {
+          "n": 1774,
+          "mean": 11.26159143686584,
+          "median": 11.224615,
+          "p95": 12.01375,
+          "p99": 12.3995,
+          "max": 23.10952
+        },
+        "full_next_feedback_to_display": {
+          "n": 1,
+          "mean": 3.734521,
+          "median": 3.734521,
+          "p95": 3.734521,
+          "p99": 3.734521,
+          "max": 3.734521
+        },
+        "full_next_enroll_to_display": {
+          "n": 1,
+          "mean": 22.946729,
+          "median": 22.946729,
+          "p95": 22.946729,
+          "p99": 22.946729,
+          "max": 22.946729
+        },
+        "full_reacquired_before_display": 0,
+        "present_call": {
+          "n": 1775,
+          "mean": 0.012566930704225352,
+          "median": 0.011875,
+          "p95": 0.01725,
+          "p99": 0.035375,
+          "max": 0.05225
+        },
+        "gpu": {
+          "n": 1775,
+          "mean": 11.169913480141116,
+          "median": 11.129416998301167,
+          "p95": 11.76958299765829,
+          "p99": 12.057625004672445,
+          "max": 12.394332996336743
+        },
+        "slowest_one_percent": {
+          "n": 18,
+          "long_wait": 0,
+          "wait": {
+            "n": 18,
+            "mean": 0.17422905555555557,
+            "median": 0.0108125,
+            "p95": 2.9615,
+            "p99": 2.9615,
+            "max": 2.9615
+          },
+          "gpu": {
+            "n": 18,
+            "mean": 11.485544000606751,
+            "median": 11.399874998460291,
+            "p95": 12.258750000910368,
+            "p99": 12.258750000910368,
+            "max": 12.258750000910368
+          }
+        },
+        "n": 1775,
+        "displayed": 1774,
+        "n_full": 1,
+        "n_held": 2,
+        "held_only": 1,
+        "screen": {
+          "n": 1,
+          "mean": 0.808687,
+          "median": 0.808687,
+          "p95": 0.808687,
+          "p99": 0.808687,
+          "max": 0.808687
+        },
+        "wait": {
+          "n": 1,
+          "mean": 1.41,
+          "median": 1.41,
+          "p95": 1.41,
+          "p99": 1.41,
+          "max": 1.41
+        },
+        "hold_wait": {
+          "n": 2,
+          "mean": 2.18575,
+          "median": 2.18575,
+          "p95": 2.9615,
+          "p99": 2.9615,
+          "max": 2.9615
+        },
+        "hold_screen": {
+          "n": 2,
+          "mean": 5.132572000000001,
+          "median": 5.132572000000001,
+          "p95": 9.456457,
+          "p99": 9.456457,
+          "max": 9.456457
+        },
+        "active_reacquired": 1,
+        "switch_to_acquire": {
+          "n": 1,
+          "mean": 0.6013129999999999,
+          "median": 0.6013129999999999,
+          "p95": 0.6013129999999999,
+          "p99": 0.6013129999999999,
+          "max": 0.6013129999999999
+        },
+        "all_wait": {
+          "n": 1775,
+          "mean": 0.014543372957746478,
+          "median": 0.011459,
+          "p95": 0.0205,
+          "p99": 0.027917,
+          "max": 2.9615
+        },
+        "request_from_feedback": {
+          "n": 1775,
+          "mean": -8.618612352676056,
+          "median": -8.586708,
+          "p95": -8.021041,
+          "p99": -7.8315,
+          "max": -7.591958
+        },
+        "feedback_to_display": {
+          "n": 1774,
+          "mean": 0.6312561685456596,
+          "median": 0.5612395,
+          "p95": 1.122917,
+          "p99": 1.412666,
+          "max": 3.734521
+        },
+        "enroll_to_display": {
+          "n": 1774,
+          "mean": 19.461383862457723,
+          "median": 19.416853500000002,
+          "p95": 20.534874,
+          "p99": 20.994958,
+          "max": 22.946729
+        },
+        "long_full": 0,
+        "long_all": 0,
+        "shown_ms": {
+          "n": 1,
+          "mean": 14.266729,
+          "median": 14.266729,
+          "p95": 14.266729,
+          "p99": 14.266729,
+          "max": 14.266729
+        },
+        "most": [
+          {
+            "arm": "B1_ON",
+            "tick": 688,
+            "draw": 3923,
+            "next_id": 3920,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 47,
+            "acquired_slot": 47,
+            "next_screen_id": 3918,
+            "same_slot": 1,
+            "next_screen_ms": 0.808687,
+            "acquire_ms": 1.41,
+            "switch_to_acquire_ms": 0.6013129999999999,
+            "displayed_period_ms": 14.266729,
+            "request_relative_to_feedback_ms": -8.498208,
+            "feedback_to_next_screen_ms": 3.734521,
+            "enroll_to_next_screen_ms": 22.946729,
+            "display_interval_ms": 12.978188,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.0395,
+            "gpu_ms": 11.165332995005883,
+            "feedback_to_display_ms": 2.292333,
+            "enroll_to_display_ms": 19.604041,
+            "requested_to_display_ms": 10.790541,
+            "wall_ms": 12.0
+          }
+        ]
+      },
+      "840": {
+        "display_fps": 78.87058850856074,
+        "display_one_low": 63.40769251187727,
+        "missing_display_callbacks": 2,
+        "display_intervals": {
+          "n": 1577,
+          "mean": 12.678997569435637,
+          "median": 12.688625,
+          "p95": 13.572437,
+          "p99": 13.992688,
+          "max": 25.776896
+        },
+        "full_next_feedback_to_display": {
+          "n": 2,
+          "mean": 3.3879995000000003,
+          "median": 3.3879995000000003,
+          "p95": 3.490603,
+          "p99": 3.490603,
+          "max": 3.490603
+        },
+        "full_next_enroll_to_display": {
+          "n": 2,
+          "mean": 23.1003745,
+          "median": 23.1003745,
+          "p95": 23.232812,
+          "p99": 23.232812,
+          "max": 23.232812
+        },
+        "full_reacquired_before_display": 0,
+        "present_call": {
+          "n": 1579,
+          "mean": 0.012993996200126662,
+          "median": 0.012333,
+          "p95": 0.017667,
+          "p99": 0.034958,
+          "max": 0.094833
+        },
+        "gpu": {
+          "n": 1579,
+          "mean": 12.576179601691273,
+          "median": 12.604541996552143,
+          "p95": 13.31495799968252,
+          "p99": 13.65599999553524,
+          "max": 14.045250005437993
+        },
+        "slowest_one_percent": {
+          "n": 16,
+          "long_wait": 1,
+          "wait": {
+            "n": 16,
+            "mean": 0.34552093749999996,
+            "median": 0.0114375,
+            "p95": 5.351709,
+            "p99": 5.351709,
+            "max": 5.351709
+          },
+          "gpu": {
+            "n": 16,
+            "mean": 12.813731687401742,
+            "median": 12.80454150037258,
+            "p95": 13.628124994284008,
+            "p99": 13.628124994284008,
+            "max": 13.628124994284008
+          }
+        },
+        "n": 1579,
+        "displayed": 1577,
+        "n_full": 2,
+        "n_held": 4,
+        "held_only": 2,
+        "screen": {
+          "n": 2,
+          "mean": 0.276312,
+          "median": 0.276312,
+          "p95": 0.331895,
+          "p99": 0.331895,
+          "max": 0.331895
+        },
+        "wait": {
+          "n": 2,
+          "mean": 1.0958335,
+          "median": 1.0958335,
+          "p95": 1.221167,
+          "p99": 1.221167,
+          "max": 1.221167
+        },
+        "hold_wait": {
+          "n": 4,
+          "mean": 2.328146,
+          "median": 1.4951875,
+          "p95": 5.351709,
+          "p99": 5.351709,
+          "max": 5.351709
+        },
+        "hold_screen": {
+          "n": 4,
+          "mean": 5.5480725,
+          "median": 5.513718,
+          "p95": 10.944125,
+          "p99": 10.944125,
+          "max": 10.944125
+        },
+        "active_reacquired": 2,
+        "switch_to_acquire": {
+          "n": 2,
+          "mean": 0.8195214999999999,
+          "median": 0.8195214999999999,
+          "p95": 0.8892719999999998,
+          "p99": 0.8892719999999998,
+          "max": 0.8892719999999998
+        },
+        "all_wait": {
+          "n": 1579,
+          "mean": 0.018476288790373652,
+          "median": 0.01175,
+          "p95": 0.022667,
+          "p99": 0.033125,
+          "max": 5.351709
+        },
+        "request_from_feedback": {
+          "n": 1579,
+          "mean": -9.9197101450285,
+          "median": -9.9555,
+          "p95": -8.905,
+          "p99": -8.597917,
+          "max": -7.007375
+        },
+        "feedback_to_display": {
+          "n": 1577,
+          "mean": 0.6421724508560558,
+          "median": 0.559417,
+          "p95": 1.163582,
+          "p99": 1.421292,
+          "max": 3.490603
+        },
+        "enroll_to_display": {
+          "n": 1577,
+          "mean": 22.117369155992392,
+          "median": 22.22577,
+          "p95": 23.498082,
+          "p99": 23.975479,
+          "max": 24.827812
+        },
+        "long_full": 0,
+        "long_all": 1,
+        "shown_ms": {
+          "n": 2,
+          "mean": 14.897927,
+          "median": 14.897927,
+          "p95": 14.961396,
+          "p99": 14.961396,
+          "max": 14.961396
+        },
+        "most": [
+          {
+            "arm": "B1_ON",
+            "tick": 852,
+            "draw": 4400,
+            "next_id": 4397,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 47,
+            "acquired_slot": 47,
+            "next_screen_id": 4395,
+            "same_slot": 1,
+            "next_screen_ms": 0.331895,
+            "acquire_ms": 1.221167,
+            "switch_to_acquire_ms": 0.8892719999999998,
+            "displayed_period_ms": 14.834458,
+            "request_relative_to_feedback_ms": -9.130583,
+            "feedback_to_next_screen_ms": 3.490603,
+            "enroll_to_next_screen_ms": 23.232812,
+            "display_interval_ms": 11.520188,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.015041,
+            "gpu_ms": 12.095666999812238,
+            "feedback_to_display_ms": 0.58275,
+            "enroll_to_display_ms": 18.4145,
+            "requested_to_display_ms": 9.713333,
+            "wall_ms": 14.0
+          },
+          {
+            "arm": "B1_ON",
+            "tick": 846,
+            "draw": 4384,
+            "next_id": 4381,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 25,
+            "acquired_slot": 25,
+            "next_screen_id": 4379,
+            "same_slot": 1,
+            "next_screen_ms": 0.220729,
+            "acquire_ms": 0.9705,
+            "switch_to_acquire_ms": 0.749771,
+            "displayed_period_ms": 14.961396,
+            "request_relative_to_feedback_ms": -9.03575,
+            "feedback_to_next_screen_ms": 3.285396,
+            "enroll_to_next_screen_ms": 22.967937,
+            "display_interval_ms": 11.975334,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.012209,
+            "gpu_ms": 11.809208001068328,
+            "feedback_to_display_ms": 0.679896,
+            "enroll_to_display_ms": 18.656187,
+            "requested_to_display_ms": 9.715646,
+            "wall_ms": 13.0
+          }
+        ]
+      },
+      "1140": {
+        "display_fps": 75.56840870608724,
+        "display_one_low": 65.48572359450989,
+        "missing_display_callbacks": 0,
+        "display_intervals": {
+          "n": 1512,
+          "mean": 13.2330429755291,
+          "median": 13.2175205,
+          "p95": 13.989042,
+          "p99": 14.451979,
+          "max": 17.854771
+        },
+        "full_next_feedback_to_display": {
+          "n": 1,
+          "mean": 4.288645,
+          "median": 4.288645,
+          "p95": 4.288645,
+          "p99": 4.288645,
+          "max": 4.288645
+        },
+        "full_next_enroll_to_display": {
+          "n": 1,
+          "mean": 26.695395,
+          "median": 26.695395,
+          "p95": 26.695395,
+          "p99": 26.695395,
+          "max": 26.695395
+        },
+        "full_reacquired_before_display": 0,
+        "present_call": {
+          "n": 1512,
+          "mean": 0.013195689153439154,
+          "median": 0.012458,
+          "p95": 0.018417,
+          "p99": 0.032459,
+          "max": 0.053166
+        },
+        "gpu": {
+          "n": 1512,
+          "mean": 13.142020031125712,
+          "median": 13.112416501826374,
+          "p95": 13.723042000492569,
+          "p99": 13.99466699513141,
+          "max": 16.381667002860922
+        },
+        "slowest_one_percent": {
+          "n": 16,
+          "long_wait": 0,
+          "wait": {
+            "n": 16,
+            "mean": 0.0111250625,
+            "median": 0.0113335,
+            "p95": 0.013416,
+            "p99": 0.013416,
+            "max": 0.013416
+          },
+          "gpu": {
+            "n": 16,
+            "mean": 13.28901043643782,
+            "median": 13.30008349759737,
+            "p95": 13.84124999458436,
+            "p99": 13.84124999458436,
+            "max": 13.84124999458436
+          }
+        },
+        "n": 1512,
+        "displayed": 1512,
+        "n_full": 1,
+        "n_held": 1,
+        "held_only": 0,
+        "screen": {
+          "n": 1,
+          "mean": 1.407978,
+          "median": 1.407978,
+          "p95": 1.407978,
+          "p99": 1.407978,
+          "max": 1.407978
+        },
+        "wait": {
+          "n": 1,
+          "mean": 2.32775,
+          "median": 2.32775,
+          "p95": 2.32775,
+          "p99": 2.32775,
+          "max": 2.32775
+        },
+        "hold_wait": {
+          "n": 1,
+          "mean": 2.32775,
+          "median": 2.32775,
+          "p95": 2.32775,
+          "p99": 2.32775,
+          "max": 2.32775
+        },
+        "hold_screen": {
+          "n": 1,
+          "mean": 1.407978,
+          "median": 1.407978,
+          "p95": 1.407978,
+          "p99": 1.407978,
+          "max": 1.407978
+        },
+        "active_reacquired": 1,
+        "switch_to_acquire": {
+          "n": 1,
+          "mean": 0.919772,
+          "median": 0.919772,
+          "p95": 0.919772,
+          "p99": 0.919772,
+          "max": 0.919772
+        },
+        "all_wait": {
+          "n": 1512,
+          "mean": 0.013804454365079365,
+          "median": 0.011792,
+          "p95": 0.016834,
+          "p99": 0.026458,
+          "max": 2.32775
+        },
+        "request_from_feedback": {
+          "n": 1512,
+          "mean": -10.520261663359788,
+          "median": -10.519208500000001,
+          "p95": -9.943041,
+          "p99": -9.610667,
+          "max": 2.05775
+        },
+        "feedback_to_display": {
+          "n": 1512,
+          "mean": 0.6367854993386244,
+          "median": 0.5571555,
+          "p95": 1.148625,
+          "p99": 1.419791,
+          "max": 4.288645
+        },
+        "enroll_to_display": {
+          "n": 1512,
+          "mean": 23.26853325462963,
+          "median": 23.272833,
+          "p95": 24.250541,
+          "p99": 24.704583,
+          "max": 26.937228
+        },
+        "long_full": 0,
+        "long_all": 0,
+        "shown_ms": {
+          "n": 1,
+          "mean": 16.643478,
+          "median": 16.643478,
+          "p95": 16.643478,
+          "p99": 16.643478,
+          "max": 16.643478
+        },
+        "most": [
+          {
+            "arm": "B1_ON",
+            "tick": 1174,
+            "draw": 5243,
+            "next_id": 5240,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 31,
+            "acquired_slot": 31,
+            "next_screen_id": 5238,
+            "same_slot": 1,
+            "next_screen_ms": 1.407978,
+            "acquire_ms": 2.32775,
+            "switch_to_acquire_ms": 0.919772,
+            "displayed_period_ms": 16.643478,
+            "request_relative_to_feedback_ms": -10.226959,
+            "feedback_to_next_screen_ms": 4.288645,
+            "enroll_to_next_screen_ms": 26.695395,
+            "display_interval_ms": 13.927479,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.014417,
+            "gpu_ms": 13.22466700366931,
+            "feedback_to_display_ms": 1.194478,
+            "enroll_to_display_ms": 21.533687,
+            "requested_to_display_ms": 11.421437,
+            "wall_ms": 14.0
+          }
+        ]
+      },
+      "1440": {
+        "display_fps": 74.14617304441136,
+        "display_one_low": 59.58555292497256,
+        "missing_display_callbacks": 2,
+        "display_intervals": {
+          "n": 1484,
+          "mean": 13.486872739892183,
+          "median": 13.456655999999999,
+          "p95": 14.232541,
+          "p99": 14.695521,
+          "max": 27.314709
+        },
+        "full_next_feedback_to_display": {
+          "n": 3,
+          "mean": 3.4665063333333332,
+          "median": 3.210958,
+          "p95": 4.333291,
+          "p99": 4.333291,
+          "max": 4.333291
+        },
+        "full_next_enroll_to_display": {
+          "n": 3,
+          "mean": 25.938437,
+          "median": 25.997125,
+          "p95": 26.706166,
+          "p99": 26.706166,
+          "max": 26.706166
+        },
+        "full_reacquired_before_display": 0,
+        "present_call": {
+          "n": 1486,
+          "mean": 0.013703549125168238,
+          "median": 0.012917,
+          "p95": 0.019292,
+          "p99": 0.035667,
+          "max": 0.123042
+        },
+        "gpu": {
+          "n": 1486,
+          "mean": 13.382330526966433,
+          "median": 13.351874997169944,
+          "p95": 14.01474999875063,
+          "p99": 14.310332997411024,
+          "max": 14.539374999003485
+        },
+        "slowest_one_percent": {
+          "n": 15,
+          "long_wait": 0,
+          "wait": {
+            "n": 15,
+            "mean": 0.010880533333333333,
+            "median": 0.011,
+            "p95": 0.0135,
+            "p99": 0.0135,
+            "max": 0.0135
+          },
+          "gpu": {
+            "n": 15,
+            "mean": 13.565347268013284,
+            "median": 13.554417004343122,
+            "p95": 14.22462500340771,
+            "p99": 14.22462500340771,
+            "max": 14.22462500340771
+          }
+        },
+        "n": 1486,
+        "displayed": 1484,
+        "n_full": 3,
+        "n_held": 5,
+        "held_only": 2,
+        "screen": {
+          "n": 3,
+          "mean": 0.5969233333333334,
+          "median": 0.344167,
+          "p95": 1.304791,
+          "p99": 1.304791,
+          "max": 1.304791
+        },
+        "wait": {
+          "n": 3,
+          "mean": 1.2626253333333333,
+          "median": 1.159834,
+          "p95": 2.241292,
+          "p99": 2.241292,
+          "max": 2.241292
+        },
+        "hold_wait": {
+          "n": 5,
+          "mean": 1.5423168,
+          "median": 1.159834,
+          "p95": 2.9265,
+          "p99": 2.9265,
+          "max": 2.9265
+        },
+        "hold_screen": {
+          "n": 5,
+          "mean": 4.9324622,
+          "median": 1.304791,
+          "p95": 11.80375,
+          "p99": 11.80375,
+          "max": 11.80375
+        },
+        "active_reacquired": 3,
+        "switch_to_acquire": {
+          "n": 3,
+          "mean": 0.665702,
+          "median": 0.815667,
+          "p95": 0.936501,
+          "p99": 0.936501,
+          "max": 0.936501
+        },
+        "all_wait": {
+          "n": 1486,
+          "mean": 0.01786715074024226,
+          "median": 0.011958,
+          "p95": 0.020834,
+          "p99": 0.030209,
+          "max": 2.9265
+        },
+        "request_from_feedback": {
+          "n": 1486,
+          "mean": -10.69248522139973,
+          "median": -10.659937500000002,
+          "p95": -10.070083,
+          "p99": -9.909792,
+          "max": -9.271584
+        },
+        "feedback_to_display": {
+          "n": 1484,
+          "mean": 0.6261425579514824,
+          "median": 0.555291,
+          "p95": 1.09627,
+          "p99": 1.440457,
+          "max": 4.333291
+        },
+        "enroll_to_display": {
+          "n": 1484,
+          "mean": 23.634985930592993,
+          "median": 23.59451,
+          "p95": 24.735916,
+          "p99": 25.181374,
+          "max": 26.706166
+        },
+        "long_full": 0,
+        "long_all": 0,
+        "shown_ms": {
+          "n": 3,
+          "mean": 15.84609,
+          "median": 15.76375,
+          "p95": 16.936583,
+          "p99": 16.936583,
+          "max": 16.936583
+        },
+        "most": [
+          {
+            "arm": "B2_ON",
+            "tick": 1510,
+            "draw": 6027,
+            "next_id": 6024,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 18,
+            "acquired_slot": 18,
+            "next_screen_id": 6022,
+            "same_slot": 1,
+            "next_screen_ms": 1.304791,
+            "acquire_ms": 2.241292,
+            "switch_to_acquire_ms": 0.936501,
+            "displayed_period_ms": 16.936583,
+            "request_relative_to_feedback_ms": -10.044375,
+            "feedback_to_next_screen_ms": 4.333291,
+            "enroll_to_next_screen_ms": 26.706166,
+            "display_interval_ms": 12.700605,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.014042,
+            "gpu_ms": 13.124249999236781,
+            "feedback_to_display_ms": 0.559459,
+            "enroll_to_display_ms": 21.638,
+            "requested_to_display_ms": 10.603834,
+            "wall_ms": 15.0
+          },
+          {
+            "arm": "B1_ON",
+            "tick": 1666,
+            "draw": 6469,
+            "next_id": 6466,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 25,
+            "acquired_slot": 25,
+            "next_screen_id": 6464,
+            "same_slot": 1,
+            "next_screen_ms": 0.344167,
+            "acquire_ms": 1.159834,
+            "switch_to_acquire_ms": 0.815667,
+            "displayed_period_ms": 15.76375,
+            "request_relative_to_feedback_ms": -10.370125,
+            "feedback_to_next_screen_ms": 3.210958,
+            "enroll_to_next_screen_ms": 25.997125,
+            "display_interval_ms": 13.194375,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.010416,
+            "gpu_ms": 13.160124995920341,
+            "feedback_to_display_ms": 0.566749,
+            "enroll_to_display_ms": 22.254499,
+            "requested_to_display_ms": 10.936874,
+            "wall_ms": 14.0
+          },
+          {
+            "arm": "B1_ON",
+            "tick": 1502,
+            "draw": 6067,
+            "next_id": 6064,
+            "full": 1,
+            "held_full": 1,
+            "old_screen_slot": 25,
+            "acquired_slot": 25,
+            "next_screen_id": 6062,
+            "same_slot": 1,
+            "next_screen_ms": 0.141812,
+            "acquire_ms": 0.38675,
+            "switch_to_acquire_ms": 0.244938,
+            "displayed_period_ms": 14.837937,
+            "request_relative_to_feedback_ms": -10.114625,
+            "feedback_to_next_screen_ms": 2.85527,
+            "enroll_to_next_screen_ms": 25.11202,
+            "display_interval_ms": 13.00125,
+            "display_missing_with_callback": 0,
+            "present_call_ms": 0.01575,
+            "gpu_ms": 12.944166999659501,
+            "feedback_to_display_ms": 0.569145,
+            "enroll_to_display_ms": 22.839354,
+            "requested_to_display_ms": 10.68377,
+            "wall_ms": 14.0
+          }
+        ]
+      }
+    }
+  }
+}

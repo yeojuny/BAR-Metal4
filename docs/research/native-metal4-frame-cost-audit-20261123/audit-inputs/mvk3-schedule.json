@@ -1,0 +1,84 @@
+{
+  "game": "Seths MVK3 Ultra AA0, 1512x950, unpaused, AC automatic",
+  "pid": "15562",
+  "trace": "${WORK}/evidence/seths-cap2-battle-gpu-passes-20261122-oanitk44/schedule/Seths-MVK3.trace",
+  "nearby_tick_markers": [
+    1350,
+    1710
+  ],
+  "used_frames": 916,
+  "all_mapped_frames": 921,
+  "all_frames_with_gpu_and_cpu": 920,
+  "missing_interior_frame_numbers": [],
+  "command_buffers_histogram": {
+    "6": 909,
+    "8": 7
+  },
+  "gpu_work_buffers_histogram": {
+    "1": 909,
+    "2": 7
+  },
+  "earlier_than_previous_gpu_end_frames": 886,
+  "same_frame_gpu_started_before_cpu_finished": 7,
+  "summed_fraction_of_cpu_encoder_time_overlapping_previous_gpu": 0.9705664258815112,
+  "summed_fraction_of_cpu_encoder_time_overlapping_own_gpu": 0.0,
+  "threads": {
+    "spring:zfq0 (0x49ebbe) (spring, pid: 15562)": 1095.293
+  },
+  "cpu_encode_union_ms": {
+    "samples": 916,
+    "mean": 1.1908237358078602,
+    "median": 1.1667925000000001,
+    "p95": 1.715463,
+    "max": 2.531377
+  },
+  "cpu_encode_during_prior_gpu_ms": {
+    "samples": 916,
+    "mean": 1.1557735371179039,
+    "median": 1.1392095,
+    "p95": 1.647926,
+    "max": 2.432411
+  },
+  "cpu_encode_during_own_gpu_ms": {
+    "samples": 916,
+    "mean": 0.0,
+    "median": 0.0,
+    "p95": 0.0,
+    "max": 0.0
+  },
+  "first_payload_commit_lead_ms": {
+    "samples": 916,
+    "mean": 4.238076244541484,
+    "median": 5.011854,
+    "p95": 6.789417,
+    "max": 8.656291
+  },
+  "interframe_signed_gap_ms": {
+    "samples": 916,
+    "mean": 0.15664600436681222,
+    "median": 0.001041,
+    "p95": 0.001667,
+    "max": 21.293958
+  },
+  "gpu_busy_ms": {
+    "samples": 916,
+    "mean": 11.291479336244542,
+    "median": 11.26044,
+    "p95": 11.956788,
+    "max": 13.242122
+  },
+  "gpu_internal_stage_gap_ms": {
+    "samples": 916,
+    "mean": 0.13951157641921397,
+    "median": 0.020269,
+    "p95": 1.348712,
+    "max": 3.626577
+  },
+  "vertex_fragment_concurrent_ms": {
+    "samples": 916,
+    "mean": 5.031116837336245,
+    "median": 5.017817,
+    "p95": 5.351292,
+    "max": 5.624501
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "status": "FULL_PRECISION_SAME_INPUT_GROUND_DECAL_TRACK_PARITY",
+  "ticks": {
+    "1590": {
+      "pixels_per_attachment": 1484784,
+      "changed_pixels_off_vs_on": {
+        "color": 0,
+        "depth": 0,
+        "stencil": 0
+      },
+      "pre_vs_on_color_changes": 461895,
+      "track_rejected_fragments": 3829197,
+      "track_fragment_invocations": 5390091,
+      "reject_percent": 71.04141655493386,
+      "ground_decal_instances": 32279,
+      "reference": "${WORK}/evidence/seths-cap2-ground-track-recheck-20261123/diagnostic/held-1590/SAME-INPUT-PIXELS.json"
+    },
+    "1200": {
+      "pixels_per_attachment": 1484784,
+      "changed_pixels_off_vs_on": {
+        "color": 0,
+        "depth": 0,
+        "stencil": 0
+      },
+      "pre_vs_on_color_changes": 461680,
+      "track_rejected_fragments": 3712405,
+      "track_fragment_invocations": 5370257,
+      "reject_percent": 69.12900071635305,
+      "ground_decal_instances": 22602,
+      "reference": "${WORK}/evidence/seths-cap2-ground-track-recheck-20261123/diagnostic/held-1200/SAME-INPUT-PIXELS.json"
+    }
+  },
+  "coverage_scope": "Held actual GroundDecal pass immediately following equal PRE BGRA8/D32/S8 seeds. Separate atomics-only witness counts fragment invocations. All four accepted features remain enabled with fixed-slot Grass and terrain optimization OFF."
+}

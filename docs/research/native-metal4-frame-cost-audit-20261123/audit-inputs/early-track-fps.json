@@ -1,0 +1,75 @@
+{
+  "binary_sha256": "3ec4e5d67e16997cdad42fe344c4297425cf63a51e1b31bed16de316e621412a",
+  "flag": "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT",
+  "fixed": {
+    "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+    "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+    "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+    "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+    "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+    "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+    "BAR_NATIVE_TERRAIN_SPLAT_MASK": "0",
+    "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+    "MTL_CAPTURE_ENABLED": "0"
+  },
+  "runs": [
+    {
+      "arm": "OFF",
+      "average_fps": 87.78463775642572,
+      "one_percent_low_fps": 61.328788265920686,
+      "longest_ms": 34.000002,
+      "counted_seconds": 40.006999969,
+      "draws": 3512,
+      "intervals": 3511,
+      "rest_seconds": 177.1765706249862,
+      "display_combinations": [
+        [
+          false,
+          false,
+          true
+        ]
+      ],
+      "all_locked": false,
+      "screen_always_asleep": false,
+      "outliers_removed": 0,
+      "raw_sha256": "e872f455dcff76adef371e5a0f009a8624b76b3b5bf408c1ce25ee9c741098ef",
+      "runtime_shader_witnesses": [],
+      "raw_frames": "${WORK}/evidence/seths-cap2-ground-track-recheck-20261123/fps-_nluq5q6/OFF/FRAMES.csv"
+    },
+    {
+      "arm": "ON",
+      "average_fps": 85.92714699932489,
+      "one_percent_low_fps": 60.24096095224285,
+      "longest_ms": 35.0,
+      "counted_seconds": 39.999000549,
+      "draws": 3437,
+      "intervals": 3436,
+      "rest_seconds": 60.16647816600744,
+      "display_combinations": [
+        [
+          false,
+          false,
+          true
+        ]
+      ],
+      "all_locked": false,
+      "screen_always_asleep": false,
+      "outliers_removed": 0,
+      "raw_sha256": "de0ad777c18b362d9d7debd20abdc4a7624ef9422b7870585fa715ae3c696b5f",
+      "runtime_shader_witnesses": [
+        "[GroundDecalTrack] early_reject=1 world_position_reuse=0 coverage=0",
+        "[GroundDecalTrack] early_reject=1 world_position_reuse=1 coverage=0"
+      ],
+      "raw_frames": "${WORK}/evidence/seths-cap2-ground-track-recheck-20261123/fps-_nluq5q6/ON/FRAMES.csv"
+    }
+  ],
+  "same_sampled_workload_and_camera": true,
+  "outliers_removed": 0,
+  "percent_on_minus_off": {
+    "average_fps": -2.115963344582883,
+    "one_percent_low_fps": -1.7737629332590599
+  },
+  "ignored_intervals": 0,
+  "timed_scenes": "Seths Ravine 540\u20131740, 1512\u00d7950 Ultra AA0, cap2, AC automatic. Fixed slots; other four features on, terrain skip and mask off. 1 pair, no GPU debugger.",
+  "binary_build_receipt": "../build/BUILD-RECEIPT.json"
+}

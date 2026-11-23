@@ -1,0 +1,64 @@
+{
+  "GroundFlash": {
+    "scene": "Seths",
+    "tick": 1665,
+    "file": "${WORK}/evidence/seths-cap2-pr12-groundflash-20261122-nMSxGwUC/same-input-launch/gpu/SAME-INPUT-PIXELS.json",
+    "OFF_vs_ON": {
+      "color": 0,
+      "depth": 0,
+      "stencil": 0
+    },
+    "positive": {
+      "color": 218589,
+      "depth": 0,
+      "stencil": 0
+    },
+    "equals": true
+  },
+  "Distortion": {
+    "scene": "Seths",
+    "tick": 1665,
+    "file": "${WORK}/evidence/seths-cap2-pr12-groundflash-20261122-nMSxGwUC/distortion-v2-launch/gpu/SAME-INPUT-PIXELS.json",
+    "OFF_vs_ON": {
+      "accumulation": 0,
+      "combine_color": 0,
+      "combine_depth": 0,
+      "combine_stencil": 0
+    },
+    "positive": {
+      "accumulation": 0,
+      "combine_color": 14224,
+      "combine_depth": 0,
+      "combine_stencil": 0
+    },
+    "equals": true
+  },
+  "GroundDecal exact cold attenuation": {
+    "scene": "Seths",
+    "tick": 1665,
+    "file": "${WORK}/evidence/seths-cap2-postgrass-decals-20261123-Ci9gza0A/parity-launch/gpu/SAME-INPUT-PIXELS.json",
+    "OFF_vs_ON": {
+      "color": 0,
+      "depth": 0,
+      "stencil": 0
+    },
+    "positive": {
+      "color": 460184,
+      "depth": 0,
+      "stencil": 0
+    },
+    "equals": true
+  },
+  "GroundDecal flat-wrap": {
+    "verification": "bounded GPU fixture",
+    "source": "${WORK}/evidence/ground-decal-flat-wrap-shadow-witness-20261118/REPORT.md"
+  },
+  "Cubemap subresource reuse": {
+    "verification": "bounded GPU fixture",
+    "source": "${WORK}/evidence/seths-cap2-terrain-splat-20261123-run1/cube/build/fixture.log"
+  },
+  "Lua Nano paired uniforms": {
+    "verification": "same-input GPU comparison pending in this receipt",
+    "source": "${WORK}/evidence/seths-cap2-terrain-splat-20261123-run1/nano/BUILD-RECEIPT.json"
+  }
+}

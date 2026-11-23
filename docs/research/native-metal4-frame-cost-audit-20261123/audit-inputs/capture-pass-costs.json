@@ -1,0 +1,238 @@
+{
+  "600": {
+    "GameDecal": {
+      "native_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps15",
+        "idx": 16,
+        "di": 0,
+        "n": 96,
+        "instances": 945
+      },
+      "mvk_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps101",
+        "idx": 42,
+        "di": 0,
+        "n": 96,
+        "instances": 1032
+      },
+      "mvk_draw_path": "/commands/cb3/re42/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (76)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "heightmapTex",
+        "alphastart_alphadecay_heatstart_heatdecay"
+      ],
+      "native_fragment_ms": 2.490767,
+      "mvk_fragment_ms": 0.490667,
+      "mvk_single_draw_encoder_ms": 1.902633
+    },
+    "GroundDecal": {
+      "native_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps70",
+        "idx": 16,
+        "di": 1,
+        "n": 36,
+        "instances": 9254
+      },
+      "mvk_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps110",
+        "idx": 43,
+        "di": 0,
+        "n": 36,
+        "instances": 9254
+      },
+      "mvk_draw_path": "/commands/cb3/re43/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (77)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "depthTex",
+        "atlasTex",
+        "groundNormalTex"
+      ],
+      "native_fragment_ms": 2.608402,
+      "mvk_fragment_ms": 1.089855,
+      "mvk_single_draw_encoder_ms": 2.949398
+    }
+  },
+  "1275": {
+    "GameDecal": {
+      "native_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps18",
+        "idx": 14,
+        "di": 0,
+        "n": 96,
+        "instances": 2835
+      },
+      "mvk_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps74",
+        "idx": 47,
+        "di": 0,
+        "n": 96,
+        "instances": 3459
+      },
+      "mvk_draw_path": "/commands/cb3/re47/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (69)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "heightmapTex",
+        "alphastart_alphadecay_heatstart_heatdecay"
+      ],
+      "native_fragment_ms": 5.243625,
+      "mvk_fragment_ms": 1.245092,
+      "mvk_single_draw_encoder_ms": 2.521708
+    },
+    "GroundDecal": {
+      "native_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps71",
+        "idx": 14,
+        "di": 1,
+        "n": 36,
+        "instances": 24335
+      },
+      "mvk_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps82",
+        "idx": 48,
+        "di": 0,
+        "n": 36,
+        "instances": 24335
+      },
+      "mvk_draw_path": "/commands/cb3/re48/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (70)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "depthTex",
+        "atlasTex",
+        "groundNormalTex"
+      ],
+      "native_fragment_ms": 5.231504,
+      "mvk_fragment_ms": 2.461375,
+      "mvk_single_draw_encoder_ms": 4.835125
+    }
+  },
+  "1545": {
+    "GameDecal": {
+      "native_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps17",
+        "idx": 14,
+        "di": 0,
+        "n": 96,
+        "instances": 3383
+      },
+      "mvk_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps71",
+        "idx": 52,
+        "di": 0,
+        "n": 96,
+        "instances": 4363
+      },
+      "mvk_draw_path": "/commands/cb3/re52/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (61)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "heightmapTex",
+        "alphastart_alphadecay_heatstart_heatdecay"
+      ],
+      "native_fragment_ms": 5.615839,
+      "mvk_fragment_ms": null,
+      "mvk_single_draw_encoder_ms": 3.629679
+    },
+    "GroundDecal": {
+      "native_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps73",
+        "idx": 14,
+        "di": 2,
+        "n": 36,
+        "instances": 31304
+      },
+      "mvk_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps79",
+        "idx": 53,
+        "di": 0,
+        "n": 36,
+        "instances": 31304
+      },
+      "mvk_draw_path": "/commands/cb3/re53/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (62)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "depthTex",
+        "atlasTex",
+        "groundNormalTex"
+      ],
+      "native_fragment_ms": 5.647999,
+      "mvk_fragment_ms": null,
+      "mvk_single_draw_encoder_ms": 5.817833
+    }
+  },
+  "1665": {
+    "GameDecal": {
+      "native_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps15",
+        "idx": 16,
+        "di": 0,
+        "n": 96,
+        "instances": 3499
+      },
+      "mvk_geometry": {
+        "family": "GameDecal",
+        "ps": "@rps72",
+        "idx": 50,
+        "di": 0,
+        "n": 96,
+        "instances": 4765
+      },
+      "mvk_draw_path": "/commands/cb3/re50/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (63)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "heightmapTex",
+        "alphastart_alphadecay_heatstart_heatdecay"
+      ],
+      "native_fragment_ms": 6.104331,
+      "mvk_fragment_ms": null,
+      "mvk_single_draw_encoder_ms": 2.749708
+    },
+    "GroundDecal": {
+      "native_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps73",
+        "idx": 16,
+        "di": 2,
+        "n": 36,
+        "instances": 34005
+      },
+      "mvk_geometry": {
+        "family": "GroundDecal",
+        "ps": "@rps80",
+        "idx": 51,
+        "di": 0,
+        "n": 36,
+        "instances": 34005
+      },
+      "mvk_draw_path": "/commands/cb3/re51/draw0",
+      "mvk_encoder_label": "\"zink cmdbuf (64)\"",
+      "mvk_verified_draw_count": 1,
+      "checked_shader_tokens": [
+        "depthTex",
+        "atlasTex",
+        "groundNormalTex"
+      ],
+      "native_fragment_ms": 6.596957,
+      "mvk_fragment_ms": null,
+      "mvk_single_draw_encoder_ms": 4.949958
+    }
+  }
+}

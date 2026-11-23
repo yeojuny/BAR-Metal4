@@ -1,0 +1,834 @@
+{
+  "1665": [
+    {
+      "encoder": "re45",
+      "GPU_interval_ns": [
+        19345750,
+        19359125
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 163\""
+            },
+            {
+              "type": "string",
+              "value": "@tex162 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x45d",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: no\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionClearFragment (lib57 \"MTLLibrary 58\")",
+        "label": "(none)",
+        "name": "rps65",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionTransferVertex (lib57 \"MTLLibrary 58\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionTransferVertex / DistortionClearFragment\""
+          },
+          {
+            "type": "string",
+            "value": "2 triangles"
+          }
+        ]
+      },
+      "sampled_fragment_textures": []
+    },
+    {
+      "encoder": "re46",
+      "GPU_interval_ns": [
+        19361250,
+        19429166
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 163\""
+            },
+            {
+              "type": "string",
+              "value": "@tex162 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x45d",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib30 \"MTLLibrary 31\")",
+        "label": "(none)",
+        "name": "rps66",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib30 \"MTLLibrary 31\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x35"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex75 1512x950 Depth32Float",
+        "@tex120 1512x950 Depth32Float",
+        "@tex160 64x64x64 BGRA8Unorm"
+      ]
+    },
+    {
+      "encoder": "re47",
+      "GPU_interval_ns": [
+        19432291,
+        19544791
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 163\""
+            },
+            {
+              "type": "string",
+              "value": "@tex162 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x45d",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib30 \"MTLLibrary 31\")",
+        "label": "(none)",
+        "name": "rps66",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib30 \"MTLLibrary 31\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x167"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex75 1512x950 Depth32Float",
+        "@tex120 1512x950 Depth32Float",
+        "@tex160 64x64x64 BGRA8Unorm"
+      ]
+    }
+  ],
+  "600": [
+    {
+      "encoder": "re45",
+      "GPU_interval_ns": [
+        15906416,
+        15923875
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 154\""
+            },
+            {
+              "type": "string",
+              "value": "@tex153 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x458",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: no\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionClearFragment (lib55 \"MTLLibrary 56\")",
+        "label": "(none)",
+        "name": "rps62",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionTransferVertex (lib55 \"MTLLibrary 56\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionTransferVertex / DistortionClearFragment\""
+          },
+          {
+            "type": "string",
+            "value": "2 triangles"
+          }
+        ]
+      },
+      "sampled_fragment_textures": []
+    },
+    {
+      "encoder": "re46",
+      "GPU_interval_ns": [
+        15925958,
+        15999666
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 154\""
+            },
+            {
+              "type": "string",
+              "value": "@tex153 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x458",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib29 \"MTLLibrary 30\")",
+        "label": "(none)",
+        "name": "rps63",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib29 \"MTLLibrary 30\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x38"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex71 1512x950 Depth32Float",
+        "@tex113 1512x950 Depth32Float",
+        "@tex151 64x64x64 BGRA8Unorm"
+      ]
+    },
+    {
+      "encoder": "re47",
+      "GPU_interval_ns": [
+        16002875,
+        16117333
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 154\""
+            },
+            {
+              "type": "string",
+              "value": "@tex153 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x458",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib29 \"MTLLibrary 30\")",
+        "label": "(none)",
+        "name": "rps63",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib29 \"MTLLibrary 30\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x164"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex71 1512x950 Depth32Float",
+        "@tex113 1512x950 Depth32Float",
+        "@tex151 64x64x64 BGRA8Unorm"
+      ]
+    }
+  ],
+  "1275": [
+    {
+      "encoder": "re47",
+      "GPU_interval_ns": [
+        18302040,
+        18317750
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 144\""
+            },
+            {
+              "type": "string",
+              "value": "@tex143 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x495",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: no\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionClearFragment (lib55 \"MTLLibrary 56\")",
+        "label": "(none)",
+        "name": "rps62",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionTransferVertex (lib55 \"MTLLibrary 56\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionTransferVertex / DistortionClearFragment\""
+          },
+          {
+            "type": "string",
+            "value": "2 triangles"
+          }
+        ]
+      },
+      "sampled_fragment_textures": []
+    },
+    {
+      "encoder": "re48",
+      "GPU_interval_ns": [
+        18320125,
+        18406500
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 144\""
+            },
+            {
+              "type": "string",
+              "value": "@tex143 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x495",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib29 \"MTLLibrary 30\")",
+        "label": "(none)",
+        "name": "rps63",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib29 \"MTLLibrary 30\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x52"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex78 1512x950 Depth32Float",
+        "@tex106 1512x950 Depth32Float",
+        "@tex141 64x64x64 BGRA8Unorm"
+      ]
+    },
+    {
+      "encoder": "re49",
+      "GPU_interval_ns": [
+        18409708,
+        18529916
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 144\""
+            },
+            {
+              "type": "string",
+              "value": "@tex143 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x495",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib29 \"MTLLibrary 30\")",
+        "label": "(none)",
+        "name": "rps63",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib29 \"MTLLibrary 30\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x168"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex78 1512x950 Depth32Float",
+        "@tex106 1512x950 Depth32Float",
+        "@tex141 64x64x64 BGRA8Unorm"
+      ]
+    }
+  ],
+  "1545": [
+    {
+      "encoder": "re43",
+      "GPU_interval_ns": [
+        18279958,
+        18293750
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 160\""
+            },
+            {
+              "type": "string",
+              "value": "@tex159 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x418",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: no\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionClearFragment (lib57 \"MTLLibrary 58\")",
+        "label": "(none)",
+        "name": "rps64",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionTransferVertex (lib57 \"MTLLibrary 58\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionTransferVertex / DistortionClearFragment\""
+          },
+          {
+            "type": "string",
+            "value": "2 triangles"
+          }
+        ]
+      },
+      "sampled_fragment_textures": []
+    },
+    {
+      "encoder": "re44",
+      "GPU_interval_ns": [
+        18296083,
+        18355333
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 160\""
+            },
+            {
+              "type": "string",
+              "value": "@tex159 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x418",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib31 \"MTLLibrary 32\")",
+        "label": "(none)",
+        "name": "rps65",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib31 \"MTLLibrary 32\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x37"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex74 1512x950 Depth32Float",
+        "@tex118 1512x950 Depth32Float",
+        "@tex157 64x64x64 BGRA8Unorm"
+      ]
+    },
+    {
+      "encoder": "re45",
+      "GPU_interval_ns": [
+        18358583,
+        18465916
+      ],
+      "attachments": [
+        {
+          "actions": "info, fetch",
+          "name": "color0",
+          "values": [
+            {
+              "type": "string",
+              "value": "\"MTLTexture 160\""
+            },
+            {
+              "type": "string",
+              "value": "@tex159 756x475 RGBA16Float"
+            }
+          ]
+        }
+      ],
+      "desc": {
+        "allocatedSize": "2.83 MiB",
+        "allocationID": "15301714",
+        "allowGPUOptimizedContents": "yes",
+        "arrayLength": "1",
+        "compressionType": "Lossless",
+        "cpuCacheMode": "DefaultCache",
+        "dimensions": "756x475",
+        "hazardTrackingMode": "Tracked",
+        "label": "(none)",
+        "loadAction": "Load",
+        "pixelFormat": "RGBA16Float",
+        "resourceIndex": "0x418",
+        "storageMode": "Private",
+        "storeAction": "Store",
+        "swizzleKey": "0x5040302",
+        "textureType": "2D",
+        "usage": "ShaderRead, RenderTarget"
+      },
+      "pipeline": {
+        "colorAttachments": "  color0:\n    format:       RGBA16Float\n    blendEnabled: yes\n    srcRGB:       SourceAlpha\n    dstRGB:       One\n    opRGB:        Add\n    srcAlpha:     SourceAlpha\n    dstAlpha:     One\n    opAlpha:      Add\n    writeMask:    RGBA",
+        "fragment": "DistortionFragment (lib31 \"MTLLibrary 32\")",
+        "label": "(none)",
+        "name": "rps65",
+        "sampleCount": "1",
+        "topology": "Triangle",
+        "vertex": "DistortionVertex (lib31 \"MTLLibrary 32\")"
+      },
+      "draw": {
+        "actions": "go, info",
+        "name": "draw0",
+        "values": [
+          {
+            "type": "string",
+            "value": "\"DistortionVertex / DistortionFragment\""
+          },
+          {
+            "type": "string",
+            "value": "48 triangles x171"
+          }
+        ]
+      },
+      "sampled_fragment_textures": [
+        "@tex74 1512x950 Depth32Float",
+        "@tex118 1512x950 Depth32Float",
+        "@tex157 64x64x64 BGRA8Unorm"
+      ]
+    }
+  ]
+}

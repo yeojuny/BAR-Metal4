@@ -1,0 +1,250 @@
+{
+  "600": {
+    "reflection_barrier_only": [
+      {
+        "encoder": "ce10",
+        "commands": [
+          "[MTL4CommandBuffer computeCommandEncoder:]",
+          "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:134217731 visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder endEncoding]"
+        ]
+      }
+    ],
+    "bloom_prior_image_copies": [
+      {
+        "encoder": "ce35",
+        "size": [
+          95,
+          60
+        ],
+        "span_ms": 0.005,
+        "start_ns": 11693250,
+        "end_ns": 11698250,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex102 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:95x60x1 toTexture:@tex136 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce37",
+        "size": [
+          189,
+          119
+        ],
+        "span_ms": 0.005779,
+        "start_ns": 11710137,
+        "end_ns": 11715916,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex101 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:189x119x1 toTexture:@tex137 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce39",
+        "size": [
+          378,
+          238
+        ],
+        "span_ms": 0.005905,
+        "start_ns": 11731428,
+        "end_ns": 11737333,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex100 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:378x238x1 toTexture:@tex138 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce41",
+        "size": [
+          756,
+          475
+        ],
+        "span_ms": 0.011882,
+        "start_ns": 11754743,
+        "end_ns": 11766625,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex167 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:756x475x1 toTexture:@tex172 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      }
+    ],
+    "total_pixels": 477255,
+    "native_four_copy_encoder_union_ms": 0.028566,
+    "mvk_same_dimensions_explicit_blit": {}
+  },
+  "1275": {
+    "reflection_barrier_only": [
+      {
+        "encoder": "ce8",
+        "commands": [
+          "[MTL4CommandBuffer computeCommandEncoder:]",
+          "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:134217731 visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder endEncoding]"
+        ]
+      }
+    ],
+    "bloom_prior_image_copies": [
+      {
+        "encoder": "ce33",
+        "size": [
+          95,
+          60
+        ],
+        "span_ms": 0.004041,
+        "start_ns": 12485000,
+        "end_ns": 12489041,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex96 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:95x60x1 toTexture:@tex115 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce35",
+        "size": [
+          189,
+          119
+        ],
+        "span_ms": 0.004687,
+        "start_ns": 12501313,
+        "end_ns": 12506000,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex97 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:189x119x1 toTexture:@tex116 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce37",
+        "size": [
+          378,
+          238
+        ],
+        "span_ms": 0.006626,
+        "start_ns": 12520707,
+        "end_ns": 12527333,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex98 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:378x238x1 toTexture:@tex117 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce39",
+        "size": [
+          756,
+          475
+        ],
+        "span_ms": 0.009833,
+        "start_ns": 12546583,
+        "end_ns": 12556416,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex113 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:756x475x1 toTexture:@tex127 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      }
+    ],
+    "total_pixels": 477255,
+    "native_four_copy_encoder_union_ms": 0.025187,
+    "mvk_same_dimensions_explicit_blit": {}
+  },
+  "1545": {
+    "reflection_barrier_only": [
+      {
+        "encoder": "ce8",
+        "commands": [
+          "[MTL4CommandBuffer computeCommandEncoder:]",
+          "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:134217731 visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder endEncoding]"
+        ]
+      }
+    ],
+    "bloom_prior_image_copies": [
+      {
+        "encoder": "ce33",
+        "size": [
+          95,
+          60
+        ],
+        "span_ms": 0.007625,
+        "start_ns": 13917500,
+        "end_ns": 13925125,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex106 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:95x60x1 toTexture:@tex141 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce35",
+        "size": [
+          189,
+          119
+        ],
+        "span_ms": 0.00605,
+        "start_ns": 13936783,
+        "end_ns": 13942833,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex105 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:189x119x1 toTexture:@tex142 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce37",
+        "size": [
+          378,
+          238
+        ],
+        "span_ms": 0.005968,
+        "start_ns": 13958115,
+        "end_ns": 13964083,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex104 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:378x238x1 toTexture:@tex143 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce39",
+        "size": [
+          756,
+          475
+        ],
+        "span_ms": 0.009923,
+        "start_ns": 13983285,
+        "end_ns": 13993208,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex111 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:756x475x1 toTexture:@tex136 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      }
+    ],
+    "total_pixels": 477255,
+    "native_four_copy_encoder_union_ms": 0.029566,
+    "mvk_same_dimensions_explicit_blit": {}
+  },
+  "1665": {
+    "reflection_barrier_only": [
+      {
+        "encoder": "ce10",
+        "commands": [
+          "[MTL4CommandBuffer computeCommandEncoder:]",
+          "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:134217731 visibilityOptions:Device]",
+          "[MTL4ComputeCommandEncoder endEncoding]"
+        ]
+      }
+    ],
+    "bloom_prior_image_copies": [
+      {
+        "encoder": "ce35",
+        "size": [
+          95,
+          60
+        ],
+        "span_ms": 0.005134,
+        "start_ns": 15104616,
+        "end_ns": 15109750,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex109 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:95x60x1 toTexture:@tex143 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce37",
+        "size": [
+          189,
+          119
+        ],
+        "span_ms": 0.005181,
+        "start_ns": 15122069,
+        "end_ns": 15127250,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex108 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:189x119x1 toTexture:@tex144 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce39",
+        "size": [
+          378,
+          238
+        ],
+        "span_ms": 0.005458,
+        "start_ns": 15143500,
+        "end_ns": 15148958,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex107 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:378x238x1 toTexture:@tex145 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      },
+      {
+        "encoder": "ce41",
+        "size": [
+          756,
+          475
+        ],
+        "span_ms": 0.010042,
+        "start_ns": 15168416,
+        "end_ns": 15178458,
+        "api": "[MTL4ComputeCommandEncoder copyFromTexture:@tex114 sourceSlice:0 sourceLevel:0 sourceOrigin:0, 0, 0 sourceSize:756x475x1 toTexture:@tex138 destinationSlice:0 destinationLevel:0 destinationOrigin:0, 0, 0]"
+      }
+    ],
+    "total_pixels": 477255,
+    "native_four_copy_encoder_union_ms": 0.025815,
+    "mvk_same_dimensions_explicit_blit": {}
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "matched_frame_camera_and_units": true,
+  "matched_decal_draw_geometry": false,
+  "same_binary": true,
+  "comparisons": {
+    "GroundDecal": {
+      "off_ms": 4.983568,
+      "on_ms": 4.432161,
+      "delta_ms": -0.5514070000000002,
+      "relative_percent": -11.064502380623686
+    },
+    "GameDecal": {
+      "off_ms": 5.052121,
+      "on_ms": 4.362062,
+      "delta_ms": -0.6900589999999998,
+      "relative_percent": -13.658797958322843
+    },
+    "combined": {
+      "off_ms": 5.079379,
+      "on_ms": 4.516848,
+      "delta_ms": -0.5625309999999999,
+      "relative_percent": -11.074798710629786
+    },
+    "overlap": {
+      "off_ms": 4.956309999999999,
+      "on_ms": 4.277374999999998,
+      "delta_ms": -0.678935000000001,
+      "relative_percent": -13.698396589398188
+    }
+  },
+  "arms": {
+    "baseline": {
+      "frame": {
+        "actual_tick": 1665,
+        "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+        "units": 167
+      },
+      "binary_sha256": "4675d00ace2ceca6f093e79a2a14f0e70ca56ac5e7f509d4458e8ebc28e14089",
+      "fragment_ms": {
+        "GroundDecal": 4.983568,
+        "GameDecal": 5.052121
+      },
+      "fragment_overlap_ms": 4.956309999999999,
+      "fragment_combined_union_ms": 5.079379,
+      "shader_family_cost_pct": {
+        "GroundDecal": 21.251560003153557,
+        "GameDecal": 10.647108883156498
+      },
+      "draw_geometry": {
+        "GroundDecal": [
+          [
+            36,
+            34005
+          ]
+        ],
+        "GameDecal": [
+          [
+            96,
+            3503
+          ]
+        ]
+      }
+    },
+    "candidate": {
+      "frame": {
+        "actual_tick": 1665,
+        "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+        "units": 167
+      },
+      "binary_sha256": "4675d00ace2ceca6f093e79a2a14f0e70ca56ac5e7f509d4458e8ebc28e14089",
+      "fragment_ms": {
+        "GroundDecal": 4.432161,
+        "GameDecal": 4.362062
+      },
+      "fragment_overlap_ms": 4.277374999999998,
+      "fragment_combined_union_ms": 4.516848,
+      "shader_family_cost_pct": {
+        "GroundDecal": 17.855136830031572,
+        "GameDecal": 10.453254537953718
+      },
+      "draw_geometry": {
+        "GroundDecal": [
+          [
+            36,
+            34005
+          ]
+        ],
+        "GameDecal": [
+          [
+            96,
+            3499
+          ],
+          [
+            1536,
+            1
+          ]
+        ]
+      }
+    }
+  },
+  "scope": "One replay per arm at held simulation tick 1665. Shader intervals overlap and do not measure average frame rate."
+}

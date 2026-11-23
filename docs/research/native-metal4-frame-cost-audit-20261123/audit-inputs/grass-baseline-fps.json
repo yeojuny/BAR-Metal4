@@ -1,0 +1,359 @@
+{
+  "binary_sha256": "046c3beb8245473a18a8e50d7717e9a6d8ea7900a9bb08c9260cac9ebc0d169d",
+  "runs": [
+    {
+      "average_fps": 89.9362444318517,
+      "one_percent_low_fps": 62.06896284185505,
+      "longest_frame_ms": 20.0,
+      "frame_intervals": 3596,
+      "draws": 3597,
+      "seconds": 39.994998932,
+      "arm": "A1_PREVIOUS",
+      "mode": "previous_dense",
+      "raw_frames": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/A1_PREVIOUS/TERRAIN211-FRAMES.csv",
+      "raw_sha256": "70d146abe27acc34ee83f49646dc1dde26ae622a2d8bc6f6ee332bb1659d3a55",
+      "retained_interval_count": 3596,
+      "outliers_removed": 0,
+      "top_intervals": [
+        {
+          "draw": 6413,
+          "interval_ms": 20.0
+        },
+        {
+          "draw": 4932,
+          "interval_ms": 18.999999
+        },
+        {
+          "draw": 5536,
+          "interval_ms": 17.000001
+        },
+        {
+          "draw": 5934,
+          "interval_ms": 17.000001
+        },
+        {
+          "draw": 6540,
+          "interval_ms": 17.000001
+        }
+      ],
+      "rest_seconds": null,
+      "launch_epoch_ns": 1795455378176788000,
+      "exit_epoch_ns": 1795455459573788000,
+      "exit_monotonic_ns": 255464979405958,
+      "temperatures_c": {
+        "before": {
+          "cpu_temp_avg": 56.787362333333334,
+          "gpu_temp_avg": 61.810923333333335
+        },
+        "after": {
+          "cpu_temp_avg": 81.27345799999999,
+          "gpu_temp_avg": 82.41556
+        }
+      },
+      "power_display_thermal_source_records": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/A1_PREVIOUS",
+      "prelaunch_display": {
+        "utc": "2026-11-23T17:36:14.138890+00:00",
+        "monotonic": 0.073545791,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "prelaunch_bluetooth": [
+        "attrib_on"
+      ],
+      "workload_sample_differences_vs_first_previous": [],
+      "initial_camera_and_totals_match": true
+    },
+    {
+      "average_fps": 87.32817162051167,
+      "one_percent_low_fps": 57.94701718126411,
+      "longest_frame_ms": 39.999999,
+      "frame_intervals": 3493,
+      "draws": 3494,
+      "seconds": 40.009998322,
+      "arm": "B1_FIXED",
+      "mode": "fixed_slots",
+      "raw_frames": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/B1_FIXED/TERRAIN211-FRAMES.csv",
+      "raw_sha256": "6cfdcdf05d2cb4ba99a286a8f0df6a0e6bd08efef0c6ca3379573ee8d8d1cec2",
+      "retained_interval_count": 3493,
+      "outliers_removed": 0,
+      "top_intervals": [
+        {
+          "draw": 4639,
+          "interval_ms": 39.999999
+        },
+        {
+          "draw": 6250,
+          "interval_ms": 20.0
+        },
+        {
+          "draw": 4727,
+          "interval_ms": 18.999999
+        },
+        {
+          "draw": 6412,
+          "interval_ms": 18.999999
+        },
+        {
+          "draw": 4819,
+          "interval_ms": 17.000001
+        }
+      ],
+      "rest_seconds": 60.411329,
+      "launch_epoch_ns": 1795455519985117000,
+      "exit_epoch_ns": 1795455600865419000,
+      "exit_monotonic_ns": 255606270361541,
+      "temperatures_c": {
+        "before": {
+          "cpu_temp_avg": 56.437842,
+          "gpu_temp_avg": 61.082918666666664
+        },
+        "after": {
+          "cpu_temp_avg": 70.96862533333334,
+          "gpu_temp_avg": 82.71549733333333
+        }
+      },
+      "power_display_thermal_source_records": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/B1_FIXED",
+      "prelaunch_display": {
+        "utc": "2026-11-23T17:38:33.747789+00:00",
+        "monotonic": 0.055339583,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "prelaunch_bluetooth": [
+        "attrib_on"
+      ],
+      "workload_sample_differences_vs_first_previous": [],
+      "initial_camera_and_totals_match": true
+    },
+    {
+      "average_fps": 87.49124733843249,
+      "one_percent_low_fps": 58.82352654473568,
+      "longest_frame_ms": 48.999999,
+      "frame_intervals": 3499,
+      "draws": 3500,
+      "seconds": 40.004001617,
+      "arm": "B2_FIXED",
+      "mode": "fixed_slots",
+      "raw_frames": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/B2_FIXED/TERRAIN211-FRAMES.csv",
+      "raw_sha256": "57aaed2ddb469ff1605447b115cc5df4c64f58aa736f5b33edd5effddc6a2aee",
+      "retained_interval_count": 3499,
+      "outliers_removed": 0,
+      "top_intervals": [
+        {
+          "draw": 6551,
+          "interval_ms": 48.999999
+        },
+        {
+          "draw": 3921,
+          "interval_ms": 17.000001
+        },
+        {
+          "draw": 5428,
+          "interval_ms": 17.000001
+        },
+        {
+          "draw": 6763,
+          "interval_ms": 17.000001
+        },
+        {
+          "draw": 6771,
+          "interval_ms": 17.000001
+        }
+      ],
+      "rest_seconds": 60.440362,
+      "launch_epoch_ns": 1795455661305781000,
+      "exit_epoch_ns": 1795455742020159000,
+      "exit_monotonic_ns": 255747423135125,
+      "temperatures_c": {
+        "before": {
+          "cpu_temp_avg": 51.422865333333334,
+          "gpu_temp_avg": 59.19859433333333
+        },
+        "after": {
+          "cpu_temp_avg": 67.80582433333333,
+          "gpu_temp_avg": 80.91267166666667
+        }
+      },
+      "power_display_thermal_source_records": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/B2_FIXED",
+      "prelaunch_display": {
+        "utc": "2026-11-23T17:40:55.063680+00:00",
+        "monotonic": 0.053348208,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "prelaunch_bluetooth": [
+        "attrib_on"
+      ],
+      "workload_sample_differences_vs_first_previous": [],
+      "initial_camera_and_totals_match": true
+    },
+    {
+      "average_fps": 89.83427907078418,
+      "one_percent_low_fps": 62.28373637767748,
+      "longest_frame_ms": 35.999998,
+      "frame_intervals": 3593,
+      "draws": 3594,
+      "seconds": 40.006999969,
+      "arm": "A2_PREVIOUS",
+      "mode": "previous_dense",
+      "raw_frames": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/A2_PREVIOUS/TERRAIN211-FRAMES.csv",
+      "raw_sha256": "e67aadf33f01f5ab6597d0a2f44991978e7920b8544d6285a33942ab7b381452",
+      "retained_interval_count": 3593,
+      "outliers_removed": 0,
+      "top_intervals": [
+        {
+          "draw": 6499,
+          "interval_ms": 35.999998
+        },
+        {
+          "draw": 5391,
+          "interval_ms": 17.999999
+        },
+        {
+          "draw": 6483,
+          "interval_ms": 17.999999
+        },
+        {
+          "draw": 5602,
+          "interval_ms": 17.000001
+        },
+        {
+          "draw": 5159,
+          "interval_ms": 16.000001
+        }
+      ],
+      "rest_seconds": 60.425214,
+      "launch_epoch_ns": 1795455802445373000,
+      "exit_epoch_ns": 1795455882183625000,
+      "exit_monotonic_ns": 255887587118625,
+      "temperatures_c": {
+        "before": {
+          "cpu_temp_avg": 53.01537966666667,
+          "gpu_temp_avg": 58.047643
+        },
+        "after": {
+          "cpu_temp_avg": 67.19605033333333,
+          "gpu_temp_avg": 82.40301766666667
+        }
+      },
+      "power_display_thermal_source_records": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/A2_PREVIOUS",
+      "prelaunch_display": {
+        "utc": "2026-11-23T17:43:16.189425+00:00",
+        "monotonic": 0.040504708,
+        "display": 1,
+        "asleep": false,
+        "active": true,
+        "online": true,
+        "locked": false,
+        "valid": true
+      },
+      "prelaunch_bluetooth": [
+        "attrib_on"
+      ],
+      "workload_sample_differences_vs_first_previous": [],
+      "initial_camera_and_totals_match": true
+    }
+  ],
+  "pooled": {
+    "previous_dense": {
+      "average_fps": 89.88525410344609,
+      "one_percent_low_fps": 62.17616413863464,
+      "longest_frame_ms": 35.999998,
+      "frame_intervals": 7189,
+      "draws": 7191,
+      "seconds": 80.00199890100001
+    },
+    "fixed_slots": {
+      "average_fps": 87.4097033685604,
+      "one_percent_low_fps": 58.18786072364131,
+      "longest_frame_ms": 48.999999,
+      "frame_intervals": 6992,
+      "draws": 6994,
+      "seconds": 80.013999939
+    }
+  },
+  "fixed_minus_previous": {
+    "average_fps": {
+      "absolute": -2.4755507348856867,
+      "percent": -2.7541233092990502
+    },
+    "one_percent_low_fps": {
+      "absolute": -3.9883034149933323,
+      "percent": -6.414521497499559
+    }
+  },
+  "adjacent_pairs_fixed_minus_previous": [
+    {
+      "average_fps": {
+        "absolute": -2.608072811340037,
+        "percent": -2.8999129636953835
+      },
+      "one_percent_low_fps": {
+        "absolute": -4.121945660590939,
+        "percent": -6.6409127394205125
+      }
+    },
+    {
+      "average_fps": {
+        "absolute": -2.3430317323516903,
+        "percent": -2.608171130872572
+      },
+      "one_percent_low_fps": {
+        "absolute": -3.4602098329418,
+        "percent": -5.555559178337832
+      }
+    }
+  ],
+  "matched_simulation_by_observed_samples": true,
+  "conditions": {
+    "status": "STAGED_NO_GAME",
+    "product": {
+      "variant": "grass-dense-versus-preserved-slots",
+      "package": "${HOME}/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/BAR Metal4.app",
+      "binary": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/runtime/native/bin/spring-metal4-scene",
+      "native": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/runtime/native",
+      "sha256": "046c3beb8245473a18a8e50d7717e9a6d8ea7900a9bb08c9260cac9ebc0d169d",
+      "publishedPackageReadOnly": true
+    },
+    "build_receipt": "${WORK}/evidence/seths-cap2-grass-dense-slot-abba-20261123/build/BUILD-RECEIPT.json",
+    "pins": {
+      "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+      "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+      "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+      "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+      "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+      "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+      "BAR_NATIVE_TERRAIN_SPLAT_MASK": "0",
+      "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT": "0",
+      "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+      "MTL_CAPTURE_ENABLED": "0"
+    },
+    "reference_launch": "${WORK}/evidence/seths-cap2-terrain-splat-20261123-run1/locked-comparison/combined-four-display-on-abba-20261123/ON.json",
+    "mode_sequence": {
+      "A1_PREVIOUS": "1",
+      "B1_FIXED": "0",
+      "B2_FIXED": "0",
+      "A2_PREVIOUS": "1"
+    },
+    "minimum_rest_seconds": 60,
+    "wall_power": "AC Automatic",
+    "measurement_window": {
+      "startSimulation": 540,
+      "endSimulation": 1740,
+      "screenshot": false
+    }
+  },
+  "last_process_exit_monotonic_ns": 255887587118625
+}
