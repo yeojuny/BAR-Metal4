@@ -427,18 +427,64 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 	id<MTLBuffer> vertices=frame.ranges.empty()?nil:Buffer(lease,frame.vertices.data(),frame.vertices.size()*sizeof(NativeWorldParticleVertex));
 	id<MTLBuffer> indices=frame.ranges.empty()?nil:Buffer(lease,frame.indices.data(),frame.indices.size()*sizeof(uint32_t));
 	if(terrainDepth!=nil)lease.AddAllocation(terrainDepth);
+	// Reuse only immutable GroundFlash bindings prepared by this exact lease.
+	// Replacing this entry never mutates a table already referenced by a draw;
+	// Buffer/AddAllocation and Retain keep every version alive through completion.
+	struct GroundFlashBindings {
+		std::array<unsigned char,sizeof(Uniform)> uniformBytes{};
+		__strong id<MTLBuffer> vertices=nil;
+		__strong id<MTLTexture> atlas=nil,terrainDepth=nil;
+		MTLGPUAddress vertexAddress=0;
+		uint64_t atlasResource=0,terrainDepthResource=0;
+		__strong id<MTL4ArgumentTable> arguments=nil;
+	} groundFlashBindings;
+	Uniform groundFlashMatrices{};
+	bool groundFlashMatricesReady=false;
+	__strong id<MTLDepthStencilState> groundFlashDepthStates[4]={nil,nil,nil,nil};
 	for(const auto& range:frame.ranges) {
-		auto image=atlas(range.groundAtlas);Uniform u{};u.view=Matrix(viewCamera.view);u.projection=Matrix(viewCamera.projection);u.viewProjection=simd_mul(u.projection,u.view);
+		// Keep atlas residency, producer readiness and pending mipmap handling on
+		// the original per-range path, including when the bindings are reused.
+		auto image=atlas(range.groundAtlas);
+		const bool groundFlash=range.stage==NativeWorldParticleStage::GroundFlashes&&range.groundAtlas;
+		Uniform u{};
+		if(groundFlash&&groundFlashMatricesReady) {
+			u.view=groundFlashMatrices.view;u.projection=groundFlashMatrices.projection;u.viewProjection=groundFlashMatrices.viewProjection;
+		}else{
+			u.view=Matrix(viewCamera.view);u.projection=Matrix(viewCamera.projection);u.viewProjection=simd_mul(u.projection,u.view);
+		}
 		u.clipPlane=simd_make_float4(0,range.stage==NativeWorldParticleStage::AlphaBelowWater?-1.f:(range.stage==NativeWorldParticleStage::AlphaAboveWater?1.f:0.f),0,range.stage==NativeWorldParticleStage::AlphaBelowWater||range.stage==NativeWorldParticleStage::AlphaAboveWater?0.f:1.f);
 		if(disabledAlphaClipStages&(1u<<unsigned(range.stage)))u.clipPlane=simd_make_float4(0,0,0,1);
 		u.camera=simd_make_float4(frame.fogCameraPosition[0],frame.fogCameraPosition[1],frame.fogCameraPosition[2],0);u.fogColor=simd_make_float4(frame.fogColor[0],frame.fogColor[1],frame.fogColor[2],0);
 		u.fogParameters=simd_make_float4(frame.fogDistances[0],frame.fogDistances[1],range.softenThreshold,range.alphaThreshold);u.options=simd_make_uint4(viewCamera.clipDepth==ClipDepthConvention::MinusOneToOne?1:0,frame.softenRequested?1:0,0,0);
-		for(const auto* matrix:{viewCamera.view.data(),viewCamera.projection.data()})for(unsigned n=0;n<16;++n)Require(std::isfinite(matrix[n]),"Original particle nonfinite camera matrix");
-		auto uniform=Buffer(lease,&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=2;ad.maxTextureBindCount=2;ad.initializeBindings=YES;NSError* error=nil;
-		auto arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(arguments!=nil,"Cannot allocate original particle argument table: "+Error(error));lease.Retain(arguments);
-		[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:uniform.gpuAddress atIndex:1];[arguments setTexture:image->texture.gpuResourceID atIndex:0];if(terrainDepth!=nil)[arguments setTexture:terrainDepth.gpuResourceID atIndex:1];
-		auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=range.depthTest?MTLCompareFunctionLessEqual:MTLCompareFunctionAlways;dd.depthWriteEnabled=range.depthWrite;
-		auto depth=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(depth!=nil,"Cannot allocate original particle depth state");lease.Retain(depth);
+		if(!groundFlash||!groundFlashMatricesReady) {
+			for(const auto* matrix:{viewCamera.view.data(),viewCamera.projection.data()})for(unsigned n=0;n<16;++n)Require(std::isfinite(matrix[n]),"Original particle nonfinite camera matrix");
+			if(groundFlash){groundFlashMatrices.view=u.view;groundFlashMatrices.projection=u.projection;groundFlashMatrices.viewProjection=u.viewProjection;groundFlashMatricesReady=true;}
+		}
+		id<MTL4ArgumentTable> arguments=nil;
+		if(groundFlash&&groundFlashBindings.arguments!=nil&&
+			groundFlashBindings.vertices==vertices&&groundFlashBindings.atlas==image->texture&&groundFlashBindings.terrainDepth==terrainDepth&&
+			groundFlashBindings.vertexAddress==vertices.gpuAddress&&groundFlashBindings.atlasResource==image->texture.gpuResourceID._impl&&
+			groundFlashBindings.terrainDepthResource==(terrainDepth!=nil?terrainDepth.gpuResourceID._impl:0)&&
+			std::memcmp(groundFlashBindings.uniformBytes.data(),&u,sizeof(u))==0) {
+			arguments=groundFlashBindings.arguments;
+		}else{
+			auto uniform=Buffer(lease,&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=2;ad.maxTextureBindCount=2;ad.initializeBindings=YES;NSError* error=nil;
+			arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(arguments!=nil,"Cannot allocate original particle argument table: "+Error(error));lease.Retain(arguments);
+			[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:uniform.gpuAddress atIndex:1];[arguments setTexture:image->texture.gpuResourceID atIndex:0];if(terrainDepth!=nil)[arguments setTexture:terrainDepth.gpuResourceID atIndex:1];
+			if(groundFlash) {
+				std::memcpy(groundFlashBindings.uniformBytes.data(),&u,sizeof(u));
+				groundFlashBindings.vertices=vertices;groundFlashBindings.atlas=image->texture;groundFlashBindings.terrainDepth=terrainDepth;
+				groundFlashBindings.vertexAddress=vertices.gpuAddress;groundFlashBindings.atlasResource=image->texture.gpuResourceID._impl;
+				groundFlashBindings.terrainDepthResource=terrainDepth!=nil?terrainDepth.gpuResourceID._impl:0;groundFlashBindings.arguments=arguments;
+			}
+		}
+		const unsigned depthKey=unsigned(range.depthTest)|(unsigned(range.depthWrite)<<1);
+		id<MTLDepthStencilState> depth=groundFlash?groundFlashDepthStates[depthKey]:nil;
+		if(depth==nil) {
+			auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=range.depthTest?MTLCompareFunctionLessEqual:MTLCompareFunctionAlways;dd.depthWriteEnabled=range.depthWrite;
+			depth=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(depth!=nil,"Cannot allocate original particle depth state");lease.Retain(depth);
+			if(groundFlash)groundFlashDepthStates[depthKey]=depth;
+		}
 		result->impl->draws.push_back({range,range.groundAtlas?particleProgram.groundPipeline:particleProgram.alpha,depth,arguments,indices});
 		if(range.stage==NativeWorldParticleStage::AlphaAboveWater){
 			if(!follow218.firstAlphaSeen){const auto& prepared=result->impl->draws.back();follow218.firstAlphaSeen=true;follow218.firstAlphaNonempty=prepared.indices!=nil&&prepared.range.indexCount>0&&prepared.instanceCount>0;follow218.atlas=image->texture;}
