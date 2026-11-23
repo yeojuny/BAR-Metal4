@@ -1,3 +1,4 @@
+#include "Metal4SharedProgramPilot.h"
 #include "Metal4PublishedRequestCache.h"
 #include "Metal4RetiredArguments.h"
 #include "Metal4ModelUpload146.h"
@@ -20,6 +21,7 @@
 #include "Metal4ModelMaterial156.h"
 #include "Metal4CUSIdentityChannels194.h"
 #include "Rendering/Backend/NativePreparationTrace.h"
+#include "Rendering/Backend/NativeCPUPhaseTrace.h"
 #include "Rendering/Backend/NativeCUSPublishedReuse.h"
 #include <cstring>
 #include "System/Sync/SHA512.hpp"
@@ -42,6 +44,7 @@ struct Program {
  std::shared_ptr<const NativeCUSProgramSource> source;
  std::shared_ptr<const Libraries> libraries;
  std::unique_ptr<NativeCUSProgramUniformPlan> vertexUniformPlan,fragmentUniformPlan;
+ std::shared_ptr<const sharedpilot::ProgramInterface> sharedInterface;
 };
 id<MTLBuffer> Allocate(RuntimeLease& lease,size_t bytes)
 {
@@ -155,10 +158,12 @@ struct PreparedCUSSource::Impl {
  struct Draw {
   uint64_t sequence=0;__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;__strong id<MTL4ArgumentTable> table=nil;
   NativeWorldDrawState state;effectstate::Raster raster;std::vector<Object> objects;
-  __strong id<MTLBuffer> material156=nil;
+  // Kept by this prepared owner through successful completion or quarantine.
+  ModelMaterialBinding156 material156;
   std::vector<CUSSourceImage> images;
   float shadowPolygonOffsetUnitsScale=1.f;
   bool encoded=false;
+  std::shared_ptr<const sharedpilot::PreparedSlice> sharedSlice;
  };
  TerrainOwnerRoster firstOwners;
  std::vector<const CUSSourceImage*> inspection160;std::vector<id<MTLTexture>> sampledRoots160;
@@ -374,6 +379,29 @@ std::shared_ptr<const NativeCUSProgramConsumer> CUSSourceGPU::LinkOriginalStages
  program->vertexUniformPlan=std::make_unique<NativeCUSProgramUniformPlan>(generated->vertex);
  program->fragmentUniformPlan=std::make_unique<NativeCUSProgramUniformPlan>(generated->fragment);
  program->libraries=impl->Library(lease,*generated,ms);
+ if(SharedCUSPilotEnabled()&&identity.family=="unit"&&identity.pass==0){
+  auto interface=std::make_shared<sharedpilot::ProgramInterface>();
+  interface->generation=sharedpilot::NextProgramGeneration();
+  interface->sourceIdentity=source->vertexSHA512+":"+source->fragmentSHA512+":CUS-existing-packed-ABI-v1";
+  interface->nativeOwner=program->libraries;
+  for(bool vertex:{true,false}){
+   const auto& stage=vertex?generated->vertex:generated->fragment;
+   const uint8_t stages=vertex?sharedpilot::Vertex:sharedpilot::Fragment;
+   const uint32_t block=vertex?6:7;
+   interface->blocks.push_back({block,uint32_t(NativeCUSProgramUniformBytes(stage)),stages});
+   for(const auto& field:stage.fields)if(field.active){
+    auto scalar=field.scalar==NativeCUSUniformScalar::Float?sharedpilot::Scalar::Float:field.scalar==NativeCUSUniformScalar::Int?sharedpilot::Scalar::Int:sharedpilot::Scalar::UInt;
+    interface->fields.push_back({field.name,scalar,field.offset,field.components,field.count,field.stride,stages,block});
+   }
+  }
+  for(unsigned slot=0;slot<12;++slot)
+   interface->resources.push_back({ModelMaterialNames156[slot],slot,slot,slot+12,
+    slot==7?sharedpilot::TextureKind::Cube:slot==10?sharedpilot::TextureKind::Image3D:sharedpilot::TextureKind::Image2D,
+    uint8_t(((generated->vertex.textureMask&(1u<<slot))?sharedpilot::Vertex:0)|
+            ((generated->fragment.textureMask&(1u<<slot))?sharedpilot::Fragment:0)),8});
+  program->sharedInterface=std::move(interface);
+ }
+
  Require([program->libraries->vertex newFunctionWithName:@"NativeCUSVertex"]!=nil&&
   [program->libraries->fragment newFunctionWithName:@"NativeCUSFragment"]!=nil,
   "Original CUS compiled stages lack their exact native entrypoints");
@@ -392,6 +420,17 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
  const CUSSourceTarget& target,const TextureProvider& images,bool validation,double& ms)
 {
  if(!source||source->draws.empty())return {};impl->argumentPool.BeginBatch(lease);impl->materials156.BeginBatch(lease);
+ const auto& sharedScope=lease.CUSSharedPreparation();
+ std::vector<uint64_t> sharedTarget;
+ if(sharedScope){
+  ++sharedScope->counts.prepares;
+  for(const auto format:target.colors)sharedTarget.push_back(uint64_t(format));
+  sharedTarget.insert(sharedTarget.end(),{uint64_t(target.combinedColor),uint64_t(target.depth),uint64_t(target.stencil),
+   target.samples,target.width,target.height,target.logicalWidth,target.logicalHeight,uint64_t(target.invertClipY),
+   uint64_t(std::bit_cast<uint32_t>(target.shadowPolygonOffsetUnitsScale)),uint64_t(lease.SampleShadingKey(target.samples))});
+  for(const auto value:target.camera.viewport)sharedTarget.push_back(uint64_t(value));
+ }
+
  auto& trace=ModelTrace();trace.window=TraceFrame(*source);
  struct TraceEnd {~TraceEnd(){ModelTrace().window=false;}} traceEnd;
  const bool sampled=trace.window;const auto prepareStart=sampled?TraceClock::now():TraceClock::time_point{};
@@ -445,10 +484,20 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   NativeCUSSampleTransport transport;uint32_t caps;std::memcpy(&caps,u.params->bytes.data()+12,4);transport.clipFlags=uint32_t(!(caps&1u))|uint32_t(target.invertClipY)<<1|uint32_t(d.clipDistance0)<<2;
   static constexpr const char* samplerNames[]={"texture1","texture2","normalTex","texture1w","texture2w","normalTexw","shadowTex","reflectTex","losMapTex","brdfLUT","noisetex3dcube","envLUT"};
   bool canonicalPair219=ModelSamplerPair219(program->generated->fragment.textureMask);
+  std::shared_ptr<const sharedpilot::MaterialContent> sharedMaterial;
+  std::array<CUSSourceImage,2> sharedPair{};bool sharedPairHit=false;
+  if(sharedScope&&program->sharedInterface&&d.program->family=="unit"&&d.program->originalPass==0&&canonicalPair219){
+   auto material=std::make_shared<sharedpilot::MaterialContent>();material->program=program->sharedInterface;
+   material->originalUniformOwner=d.uniformValues;
+   for(unsigned slot=0;slot<12;++slot)material->bindings.push_back({slot,d.textures->samplers[slot],d.textures->samplers[slot].object});
+   sharedMaterial=std::move(material);
+   sharedPairHit=sharedScope->Find(lease,sharedMaterial,sharedTarget,sharedPair);
+  }
+
   for(unsigned slot=0;slot<12;++slot){
    if(!(program->generated->fragment.textureMask&(1u<<slot)))continue;
    const auto& binding=d.textures->samplers[slot];transport.sampleCodes[slot]=NativeCUSSampleCode(Sampling(binding));
-   const auto uniform=d.IntUniforms().find(samplerNames[slot]);Require(uniform!=d.IntUniforms().end()&&uniform->second.size()==1&&uniform->second[0]==slot,"CUS original sampler unit changed outside selected source contract");
+   const auto uniform=d.IntUniforms().find(sharedMaterial?sharedMaterial->program->resources[slot].name.c_str():samplerNames[slot]);Require(uniform!=d.IntUniforms().end()&&uniform->second.size()==1&&uniform->second[0]==slot,"CUS original sampler unit changed outside selected source contract");
    if(Empty(binding)){
     if(slot<2)canonicalPair219=false;
     if(slot==6){
@@ -458,16 +507,27 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
     }
     transport.emptyMask|=1u<<slot;continue;
    }
-   auto image=images(lease,binding,slot);Require(image.texture!=nil&&image.sampler!=nil&&image.owner&&image.requireReadable,"CUS actual image has no paired resource/sampler/producer lifetime");
+   auto image=(sharedPairHit&&slot<2)?sharedPair[slot]:images(lease,binding,slot);Require(image.texture!=nil&&image.sampler!=nil&&image.owner&&image.requireReadable,"CUS actual image has no paired resource/sampler/producer lifetime");
    const auto expected=slot==7?MTLTextureTypeCube:slot==10?MTLTextureType3D:MTLTextureType2D;Require(image.texture.textureType==expected,"CUS original texture target differs from its actual image");
    if(slot<2)canonicalPair219=canonicalPair219&&CanonicalModelSampler219(binding,image);
    if(image.flipV){Require(expected==MTLTextureType2D,"CUS cube/volume requires its original orientation producer");transport.flipMask|=1u<<slot;}
    if(image.depthImage)transport.depthMask|=1u<<slot;
    if(image.clampDepthCompare){Require(image.depthImage,"Fixed-depth compare semantics require the actual depth image");transport.clampDepthCompareMask|=1u<<slot;}
    if(sampled)traceImages[slot]={image.texture.gpuResourceID._impl,image.sampler.gpuResourceID._impl,unsigned(image.texture.pixelFormat),unsigned(image.texture.width),unsigned(image.texture.height),unsigned(image.texture.mipmapLevelCount)};
-   lease.AddAllocation(image.texture);lease.Retain(image.sampler);materialTextures156[slot]=image.texture;materialSamplers156[slot]=image.sampler;priorResourceSetters156+=2;draw.images.push_back(std::move(image));
+   // A hit retains the exact prepared image/owners and uses an existing lease
+   // registration receipt. All dynamic checks above and EncodeDraw readability remain.
+   if(!(sharedPairHit&&slot<2)){lease.AddAllocation(image.texture);lease.Retain(image.sampler);}
+   materialTextures156[slot]=image.texture;materialSamplers156[slot]=image.sampler;priorResourceSetters156+=2;
+   if(sharedMaterial&&slot<2)sharedPair[slot]=image;
+   draw.images.push_back(std::move(image));
   }
-  if(program->generated->fragment.textureMask){draw.material156=impl->materials156.Get(lease,materialTextures156,materialSamplers156);[draw.table setAddress:draw.material156.gpuAddress atIndex:8];++materialBindings156;}
+  if(sharedMaterial){
+   if(!sharedPairHit)sharedScope->Admit(lease,sharedMaterial,sharedTarget,sharedPair);
+   auto slice=std::make_shared<sharedpilot::PreparedSlice>();slice->scope=sharedScope->Execution(lease,sharedTarget);slice->material=std::move(sharedMaterial);
+   for(const auto& image:draw.images)slice->owners.push_back(image.owner);
+   draw.sharedSlice=std::move(slice);
+  }
+  if(program->generated->fragment.textureMask){draw.material156=impl->materials156.Get(lease,materialTextures156,materialSamplers156);[draw.table setAddress:draw.material156.buffer.gpuAddress atIndex:8];++materialBindings156;}
   const auto uniforms=UploadCUSUniforms(lease,uniformArena,*program,d,transport);
   const auto vertex=uniforms.vertex.Bytes(),fragment=uniforms.fragment.Bytes();
   [draw.table setAddress:uniforms.vertex.Address() atIndex:6];[draw.table setAddress:uniforms.fragment.Address() atIndex:7];
@@ -487,9 +547,38 @@ std::unique_ptr<PreparedCUSSource> CUSSourceGPU::Prepare(RuntimeLease& lease,std
   out->impl->draws.push_back(std::move(draw));
  }
  geometryBatch155.Flush();
+ // Private D validation: one bounded aggregate per completed material batch.
+ // The existing sampled job buffer is emitted only after Join, never per Get.
+ static const bool identityDiagnostic=[] {const char* v=std::getenv("BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS");return v&&std::strcmp(v,"1")==0;}();
+ static const bool storageDiagnostic=[] {const char* v=std::getenv("BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS");return v&&std::strcmp(v,"1")==0;}();
+ if((identityDiagnostic||storageDiagnostic)&&materialBindings156){
+  const auto context=CaptureNativeCPUPhaseContext();
+  if(context.sampled&&context.buffer){
+   const auto& material=impl->materials156.Stats();
+   std::optional<NativeCPUPhaseScope> storageSummary;
+   if(storageDiagnostic){
+    storageSummary.emplace(NativeCPUPhaseKind::MaterialStorageSummary);
+    storageSummary->Counts(materialBindings156,impl->materials156.UsesStoragePool());
+   }
+   const bool memoActive=material.identityHits+material.identityMisses!=0;
+   const auto record=[](NativeCPUPhaseKind kind,uint64_t a,uint64_t b){NativeCPUPhaseScope row(kind);row.Counts(a,b);};
+   record(NativeCPUPhaseKind::MaterialIdentityLookup,material.identityHits,material.identityMisses);
+   // Reader invocations INCLUDE nil slots. They are not counts of non-nil
+   // Objective-C property executions or GPU operations. OFF stats are zero
+   // upstream, so derive its unchanged 24 reader invocations per successful Get.
+   record(NativeCPUPhaseKind::MaterialIdentityReads,memoActive?material.resourceIDReads:materialBindings156*24,material.omittedResourceIDReads);
+   record(NativeCPUPhaseKind::MaterialIdentityGets,materialBindings156,material.hits);
+   record(NativeCPUPhaseKind::MaterialIdentityAllocation,material.created,material.encodedBytes);
+   if(storageDiagnostic){
+    record(NativeCPUPhaseKind::MaterialStorageAllocations,material.newBuffers,material.reusedBuffers);
+    record(NativeCPUPhaseKind::MaterialStorageBytes,material.newAllocatedBytes,impl->materials156.StoragePoolAllocatedBytes());
+    record(NativeCPUPhaseKind::MaterialStorageState,impl->materials156.StoragePoolCount(),256);
+   }
+  }
+ }
  if(!impl->reportedMaterial156&&source->sourceDrawFrame>=512&&preparedRuns147){
   const auto& material=impl->materials156.Stats();
-  LOG("[NativeModel156Material] prior_resource_setters=%zu material_address_bindings=%zu cache_hits=%zu new_buffers=%zu encoded_resource_slots=%zu encoded_bytes=%zu cache_entries=%zu cache_bytes=%zu cache_allocated_bytes=%zu direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1",priorResourceSetters156,materialBindings156,material.hits,material.created,material.created*24,material.encodedBytes,impl->materials156.Entries(),impl->materials156.Bytes(),impl->materials156.AllocatedBytes());
+  LOG("[NativeModel156Material] prior_resource_setters=%zu material_address_bindings=%zu cache_hits=%zu new_buffers=%zu encoded_resource_slots=%zu encoded_bytes=%zu cache_entries=%zu cache_bytes=%zu cache_allocated_bytes=%zu direct155_loop=1 icb_cache=0 icb_execution=0 geometry_registration_unchanged=1 source_order_unchanged=1",priorResourceSetters156,materialBindings156,material.hits,material.newBuffers,material.created*24,material.encodedBytes,impl->materials156.Entries(),impl->materials156.Bytes(),impl->materials156.AllocatedBytes());
   impl->reportedMaterial156=true;
  }
  // Seal exact first-owner order only after all image vectors are stable.

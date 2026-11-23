@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "NativeVolumetricCloudData.h"
+#include "NativeGameFrameLimit.h"
 #include "Rendering/Backend/NativePostprocessRecorder.h"
 #include <functional>
 #include <map>
@@ -39,7 +40,7 @@ private:
  bool admissionFailed=false;
 	std::shared_ptr<NativeVolumetricCloudFrame> recording;
 	std::shared_ptr<const NativeVolumetricCloudFrame> pending;
- NativeCompletedFrameLedger<std::shared_ptr<const NativeVolumetricCloudFrame>,2,true> submittedFrames;
+ NativeCompletedFrameLedger<std::shared_ptr<const NativeVolumetricCloudFrame>,3,true> submittedFrames{GameFrameReceiptCapacity()};
 };
 class NativeVolumetricCloudContext {
 public:

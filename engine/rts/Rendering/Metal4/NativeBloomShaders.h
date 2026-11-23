@@ -60,26 +60,32 @@ float karisWeight(float3 c) {
 			}
 
 			
-fragment float4 BloomDownsample(BloomVarying in [[stage_in]],constant BloomUniform&u [[buffer(0)]],Texture0 source [[texture(0)]],sampler sourceSampler [[sampler(0)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT){
-	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
+template<bool IdentityRGBA,class T>
+float4 ReadDownsampleColor(T image,sampler filter,float2 uv,uint unit,constant BloomUniform&u){
+ if (!IdentityRGBA) return ReadColor(image,filter,uv,unit,u);
+ if (u.flip.x&(1u<<unit)) uv.y=1-uv.y;
+ return LogicalRGBA(image.sample(filter,uv),unit,u);
+}
+template<bool IdentityRGBA>
+__attribute__((always_inline)) float4 BloomDownsampleKernel(BloomVarying in,constant BloomUniform&u,Texture0 source,sampler sourceSampler){
 float4 fragColor;
 
 				float2 uv = in.uv;
 				float2 px = u.source.xy;
 
-				float3 a = ReadColor(source,sourceSampler,(uv + px * float2(-2.0, -2.0)),0,u).rgb;
-				float3 b = ReadColor(source,sourceSampler,(uv + px * float2( 0.0, -2.0)),0,u).rgb;
-				float3 c = ReadColor(source,sourceSampler,(uv + px * float2( 2.0, -2.0)),0,u).rgb;
-				float3 d = ReadColor(source,sourceSampler,(uv + px * float2(-2.0,  0.0)),0,u).rgb;
-				float3 e = ReadColor(source,sourceSampler,(uv),0,u).rgb;
-				float3 f = ReadColor(source,sourceSampler,(uv + px * float2( 2.0,  0.0)),0,u).rgb;
-				float3 g = ReadColor(source,sourceSampler,(uv + px * float2(-2.0,  2.0)),0,u).rgb;
-				float3 h = ReadColor(source,sourceSampler,(uv + px * float2( 0.0,  2.0)),0,u).rgb;
-				float3 i = ReadColor(source,sourceSampler,(uv + px * float2( 2.0,  2.0)),0,u).rgb;
-				float3 j = ReadColor(source,sourceSampler,(uv + px * float2(-1.0, -1.0)),0,u).rgb;
-				float3 k = ReadColor(source,sourceSampler,(uv + px * float2( 1.0, -1.0)),0,u).rgb;
-				float3 l = ReadColor(source,sourceSampler,(uv + px * float2(-1.0,  1.0)),0,u).rgb;
-				float3 m = ReadColor(source,sourceSampler,(uv + px * float2( 1.0,  1.0)),0,u).rgb;
+				float3 a = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2(-2.0, -2.0)),0,u).rgb;
+				float3 b = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2( 0.0, -2.0)),0,u).rgb;
+				float3 c = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2( 2.0, -2.0)),0,u).rgb;
+				float3 d = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2(-2.0,  0.0)),0,u).rgb;
+				float3 e = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv),0,u).rgb;
+				float3 f = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2( 2.0,  0.0)),0,u).rgb;
+				float3 g = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2(-2.0,  2.0)),0,u).rgb;
+				float3 h = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2( 0.0,  2.0)),0,u).rgb;
+				float3 i = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2( 2.0,  2.0)),0,u).rgb;
+				float3 j = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2(-1.0, -1.0)),0,u).rgb;
+				float3 k = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2( 1.0, -1.0)),0,u).rgb;
+				float3 l = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2(-1.0,  1.0)),0,u).rgb;
+				float3 m = ReadDownsampleColor<IdentityRGBA>(source,sourceSampler,(uv + px * float2( 1.0,  1.0)),0,u).rgb;
 
 				// Five 4-tap groups (each samples a 2x2 area)
 				float3 g0 = (a + b + d + e) * 0.25;
@@ -105,6 +111,17 @@ float4 fragColor;
 			
 if(!AlphaPass(fragColor.a,u))discard_fragment();return fragColor;
 }
+
+fragment float4 BloomDownsample(BloomVarying in [[stage_in]],constant BloomUniform&u [[buffer(0)]],Texture0 source [[texture(0)]],sampler sourceSampler [[sampler(0)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT){
+ RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
+ return BloomDownsampleKernel<false>(in,u,source,sourceSampler);
+}
+#if (DEPTH_MASK & 1) == 0
+fragment float4 BloomDownsampleIdentityRGBA(BloomVarying in [[stage_in]],constant BloomUniform&u [[buffer(0)]],Texture0 source [[texture(0)]],sampler sourceSampler [[sampler(0)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT){
+ RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
+ return BloomDownsampleKernel<true>(in,u,source,sourceSampler);
+}
+#endif
 fragment float4 BloomUpsample(BloomVarying in [[stage_in]],constant BloomUniform&u [[buffer(0)]],Texture0 source [[texture(0)]],sampler sourceSampler [[sampler(0)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT){
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
 float4 fragColor;

@@ -1,9 +1,12 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4GameDecal.h"
+#include "Metal4GameDecalGeometryIndices.h"
 #include "Metal4InterventionMath.h"
 #include "NativeGameDecalShaders.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
+#include "System/Log/ILog.h"
 #import <simd/simd.h>
+#include <cstdlib>
 #include <cstring>
 #include <map>
 #include <tuple>
@@ -19,6 +22,24 @@ struct Uniform {
 	simd_float4 alpha;
 };
 static_assert(sizeof(Uniform)==352);
+bool IndexedSmallGeometryEnabled()
+{
+	static const bool enabled=[] {
+		const char* value=std::getenv("BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY");
+		return value && std::strcmp(value,"1")==0;
+	}();
+	return enabled;
+}
+std::string GameDecalSourceText()
+{
+	static const bool biasAfterDepthRange=[] {
+		const char* value=std::getenv("BAR_NATIVE_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE");
+		return value && std::strcmp(value,"1")==0;
+	}();
+	if (biasAfterDepthRange)
+		return std::string("#define RECOIL_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE 1\n")+NativeGameDecalShaderSource;
+	return NativeGameDecalShaderSource;
+}
 id<MTLBuffer> Upload(RuntimeLease& lease,const void* bytes,std::size_t size)
 {
 	Require(size && size<=lease.Device().maxBufferLength,"Original game decal buffer exceeds actual device capacity");
@@ -54,6 +75,7 @@ struct PreparedGameDecal::Impl {
 		std::size_t indexStride=0;
 		effectstate::Raster raster;
 		NativeWorldDrawState state;
+		bool indexedSmall=false;
 	};
 	std::vector<Draw> draws;
 	std::shared_ptr<const NativeCUSUniformPublication> originalUniforms;
@@ -72,16 +94,44 @@ void PreparedGameDecal::EncodeDraw(std::size_t index,id<MTL4RenderCommandEncoder
 	if(draw.indices){
 		const auto offset=std::size_t(draw.first)*draw.indexStride;
 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:draw.indexType indexBuffer:draw.indices.gpuAddress+offset indexBufferLength:draw.indices.length-offset instanceCount:draw.instances];
-	}else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:96 instanceCount:draw.instances];
+		if (draw.indexedSmall) {
+			[[maybe_unused]] static const bool logged = [] {
+				LOG("[NativeIndexedRoute] family=gamedecal_small mode=indexed");
+				return true;
+			}();
+		}
+	} else {
+		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:gameDecalGeometry::VertexSlots instanceCount:draw.instances];
+		[[maybe_unused]] static const bool logged = [] {
+			LOG("[NativeIndexedRoute] family=gamedecal_small mode=direct");
+			return true;
+		}();
+	}
 }
 struct GameDecalGPU::Impl {
 	__strong id<MTLLibrary> library=nil;
+	__strong id<MTLBuffer> smallGeometryIndices=nil;
 	using Key=std::tuple<unsigned,MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,unsigned,bool,std::uint64_t,bool>;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
 	struct CachedBuffer{std::weak_ptr<const NativeBufferSnapshot> owner;__strong id<MTLBuffer> buffer=nil;};
 	std::unordered_map<const NativeBufferSnapshot*,CachedBuffer> buffers;
 	struct CachedSampler{ScreenSampler source;bool shadow=false;__strong id<MTLSamplerState> sampler=nil;};
 	std::vector<CachedSampler> samplers;
+	id<MTLBuffer> SmallGeometryIndexBuffer(RuntimeLease& lease)
+	{
+		if (!smallGeometryIndices || smallGeometryIndices.device != lease.Device()) {
+			constexpr auto bytes=gameDecalGeometry::Indices.size()*sizeof(std::uint16_t);
+			auto buffer=Upload(lease,gameDecalGeometry::Indices.data(),bytes);
+			const auto address=buffer.gpuAddress;
+			Require(buffer.length==bytes && address!=0 && (address & 1u)==0,
+				"Indexed small GameDecal requires the exact aligned UInt16 template");
+			buffer.label=@"BAR indexed small GameDecal geometry";
+			smallGeometryIndices=buffer;
+		} else {
+			lease.AddAllocation(smallGeometryIndices);
+		}
+		return smallGeometryIndices;
+	}
 	id<MTLBuffer> Buffer(RuntimeLease& lease,const NativeBufferSnapshotRef& source,std::size_t used)
 	{
 		Require(used && used<=source->bytes.size(),"Original game decal GPU read exceeds immutable buffer");
@@ -108,7 +158,7 @@ struct GameDecalGPU::Impl {
 		const Key key{unsigned(program),color,depth,stencil,lease.SampleShadingKey(samples),validation,PipelineBits(blend,mask),coverage};if(auto it=pipelines.find(key);it!=pipelines.end())return it->second;
 		const auto start=Clock::now();NSError* error=nil;
 		if(!library){
-			auto d=[MTL4LibraryDescriptor new];d.name=@"Original test30770 game Decals GL4 complete program family";d.source=String(NativeGameDecalShaderSource);
+			auto d=[MTL4LibraryDescriptor new];d.name=@"Original test30770 game Decals GL4 complete program family";d.source=String(GameDecalSourceText());
 			auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);d.options=options;
 			library=lease.NewLibrary(d,&error);Require(library!=nil,"Cannot compile original game decal program family: "+Error(error));
 		}
@@ -126,7 +176,7 @@ struct GameDecalGPU::Impl {
 };
 GameDecalGPU::GameDecalGPU():impl(std::make_unique<Impl>()){}
 GameDecalGPU::~GameDecalGPU()=default;
-void GameDecalGPU::ClearResources(){impl->buffers.clear();impl->samplers.clear();}
+void GameDecalGPU::ClearResources(){impl->buffers.clear();impl->samplers.clear();impl->smallGeometryIndices=nil;}
 void GameDecalGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,double& milliseconds)
 {
 	ScreenBlendState blend;
@@ -158,9 +208,11 @@ std::unique_ptr<PreparedGameDecal> GameDecalGPU::Prepare(RuntimeLease& lease,con
 		if(scissor && !scissor->windowCoordinates){scissor->x+=originalCamera.viewport[0];scissor->y+=originalCamera.viewport[1];scissor->windowCoordinates=true;}
 		auto raster=effectstate::Viewport(rasterCamera,width,height,logicalWidth,logicalHeight,scissor);if(!raster)continue;
 		const bool small=draw.program==NativeGameDecalProgram::Geometry;
+		const bool indexedSmall=small && IndexedSmallGeometryEnabled();
 		auto vertices=impl->Buffer(lease,draw.vertices,small?std::size_t(draw.first+draw.count)*80:draw.vertices->bytes.size());
 		auto instances=small?nil:impl->Buffer(lease,draw.instances,std::size_t(draw.firstInstance+draw.instanceCount)*80);
-		auto indices=small?nil:impl->Buffer(lease,draw.indices,std::size_t(draw.first+draw.count)*draw.indices->layout.stride);
+		auto indices=indexedSmall?impl->SmallGeometryIndexBuffer(lease):
+			(small?nil:impl->Buffer(lease,draw.indices,std::size_t(draw.first+draw.count)*draw.indices->layout.stride));
 		Uniform u{};std::memcpy(&u.viewProjection,uniforms.cameraViewProjection.data(),64);std::memcpy(&u.viewInverse,uniforms.cameraViewInverse.data(),64);std::memcpy(&u.shadowView,uniforms.shadowView.data(),64);
 		std::memcpy(&u.time,uniforms.timeInfo.data(),16);std::memcpy(&u.mapSize,uniforms.mapSize.data(),16);std::memcpy(&u.sunDirection,uniforms.sunDirection.data(),16);std::memcpy(&u.sunAmbient,uniforms.sunAmbient.data(),16);std::memcpy(&u.sunDiffuse,uniforms.sunDiffuse.data(),16);
 		std::memcpy(&u.waterAbsorb,draw.water.absorb.data(),12);std::memcpy(&u.waterMinimum,draw.water.minimum.data(),12);std::memcpy(&u.waterBase,draw.water.base.data(),12);
@@ -173,7 +225,13 @@ std::unique_ptr<PreparedGameDecal> GameDecalGPU::Prepare(RuntimeLease& lease,con
 		for(unsigned n=0;n<2;++n){auto image=sharedImages.PrepareImage(lease,draw.atlases[n].image,draw.atlases[n].sampler,producers);[arguments setTexture:image.texture.gpuResourceID atIndex:n+5];[arguments setSamplerState:image.sampler.gpuResourceID atIndex:n+5];}
 		auto pipeline=impl->Pipeline(lease,draw.program,color,depth,stencil,samples,validation,draw.surface.blend,draw.world.colorWrite,milliseconds,draw.world.alphaToCoverage);lease.Retain(pipeline);
 		PreparedGameDecal::Impl::Draw packet;packet.sequence=draw.sequence;packet.pipeline=pipeline;packet.depth=effectstate::Depth(lease,draw.world,stencil);packet.arguments=arguments;packet.indices=indices;packet.count=draw.count;packet.first=draw.first;packet.instances=small?draw.count:draw.instanceCount;
-		if(!small){packet.indexStride=draw.indices->layout.stride;packet.indexType=packet.indexStride==2?MTLIndexTypeUInt16:MTLIndexTypeUInt32;}
+		if(indexedSmall){
+			// The source row range remains in u.options.z and packet.instances.
+			// These fields describe the constant topology, not a row offset.
+			packet.indexedSmall=true;
+			packet.count=gameDecalGeometry::Indices.size();packet.first=0;
+			packet.indexStride=sizeof(std::uint16_t);packet.indexType=MTLIndexTypeUInt16;
+		}else if(!small){packet.indexStride=draw.indices->layout.stride;packet.indexType=packet.indexStride==2?MTLIndexTypeUInt16:MTLIndexTypeUInt32;}
 		packet.raster=*raster;packet.state=draw.world;result->impl->draws.push_back(std::move(packet));
 	}
 	return result;

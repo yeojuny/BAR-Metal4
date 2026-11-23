@@ -5,6 +5,8 @@
 #include "Metal4UnitStencil.h"
 #include "NativeUnitStencilShaders.h"
 #include "Metal4NativeEffectState.h"
+#include "Metal4FixedTriangleIndexBuffer.h"
+#include "System/Log/ILog.h"
 #include "Rendering/Backend/NativeCUSRenderInputs.h"
 #import <simd/simd.h>
 #include <algorithm>
@@ -49,6 +51,7 @@ struct PreparedUnitStencil::Impl {
 		bool clear=false,skip=false;
 		__strong id<MTLRenderPipelineState> pipeline=nil;
 		__strong id<MTL4ArgumentTable> arguments=nil;
+		__strong id<MTLBuffer> indices=nil;
 		NSUInteger instances=0;
 		NativeWorldDrawState world;
 		effectstate::Raster raster;
@@ -87,7 +90,22 @@ void PreparedUnitStencil::EncodePass(size_t index,id<MTL4CommandBuffer> command)
 		[encoder setCullMode:draw.clear||!draw.world.cullEnabled?MTLCullModeNone:draw.world.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack];
 		[encoder setTriangleFillMode:!draw.clear&&draw.world.frontPolygonMode==NativePolygonMode::Line?MTLTriangleFillModeLines:MTLTriangleFillModeFill];
 		[encoder setRenderPipelineState:draw.pipeline];[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.clear?3:18 instanceCount:draw.instances];
+		if (draw.indices) {
+			[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:triangleReuse::unitStencil.size() indexType:MTLIndexTypeUInt16
+			                   indexBuffer:draw.indices.gpuAddress indexBufferLength:draw.indices.length instanceCount:draw.instances];
+			[[maybe_unused]] static const bool logged = [] {
+				LOG("[NativeIndexedRoute] family=unit_stencil mode=indexed");
+				return true;
+			}();
+		} else {
+			[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.clear?3:18 instanceCount:draw.instances];
+			if (!draw.clear && draw.instances) {
+				[[maybe_unused]] static const bool logged = [] {
+					LOG("[NativeIndexedRoute] family=unit_stencil mode=direct");
+					return true;
+				}();
+			}
+		}
 	}
 	[encoder endEncoding];pass.output->producer->submissionIdentity=pass.submission;pass.output->producer->encoded=true;pass.encoded=true;
 }
@@ -100,6 +118,7 @@ struct UnitStencilGPU::Impl {
 	std::map<std::pair<uint64_t,uint64_t>,std::shared_ptr<Image>> images;
 	std::map<const void*,std::weak_ptr<const Linked>> programs;
 	std::shared_ptr<Linked> clearProgram;
+	FixedTriangleIndexBuffer<triangleReuse::unitStencil> indices;
 	std::shared_ptr<Image> ImageFor(RuntimeLease& lease,const std::shared_ptr<const NativeUnitStencilVersion>& v){
 		Require(v&&v->image&&v->image->width&&v->image->height,"Unit Stencil image lacks its original actual extent/version");
 		if(v->Resource()){auto resource=std::dynamic_pointer_cast<const Image>(v->Resource());Require(resource&&resource->owner.lock()==v&&resource->texture.device==lease.Device(),"Unit Stencil immutable image has another actual version/device");return std::const_pointer_cast<Image>(resource);}
@@ -112,7 +131,7 @@ struct UnitStencilGPU::Impl {
 	}
 };
 UnitStencilGPU::UnitStencilGPU():impl(std::make_unique<Impl>()){}UnitStencilGPU::~UnitStencilGPU()=default;
-void UnitStencilGPU::ClearResources(){impl->uploads177.Clear();impl->images.clear();impl->programs.clear();impl->clearProgram.reset();}
+void UnitStencilGPU::ClearResources(){impl->uploads177.Clear();impl->images.clear();impl->programs.clear();impl->clearProgram.reset();impl->indices.Clear();}
 std::shared_ptr<const NativeUnitStencilProgramConsumer> UnitStencilGPU::LinkOriginalProgram(RuntimeLease& lease,const NativeUnitStencilProgramSource& source,bool validation,double& ms){
 	ValidateNativeUnitStencilProgram(source);const auto start=Clock::now();auto linked=std::make_shared<Linked>();auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original31657 Unit Stencil GS-equivalent threefaces";descriptor.source=String(unitStencil::SHADER);
 	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;NSError* error=nil;
@@ -169,6 +188,7 @@ std::unique_ptr<PreparedUnitStencil> UnitStencilGPU::Prepare(RuntimeLease& lease
 				Uniforms u;u.addRadius=draw.addRadius;u.stencilColor=draw.stencilColor;u.firstRecord=draw.first;uint32_t caps=0;std::memcpy(&caps,draw.engineUniforms->params->bytes.data()+12,4);u.clipZeroToOne=caps&1u;
 				u.alpha={float(surface.alphaTest.enabled),surface.alphaTest.reference,float(surface.alphaTest.compare),0};auto uniforms=upload177(&u,sizeof(u));
 				[next.arguments setAddress:records.gpuAddress atIndex:0];[next.arguments setAddress:matrices.gpuAddress atIndex:1];[next.arguments setAddress:objects.gpuAddress atIndex:2];[next.arguments setAddress:uniforms.gpuAddress atIndex:3];
+				next.indices=impl->indices.Prepare(lease);
 				next.instances=draw.count;next.pipeline=Pipeline(lease,*program,surface,next.world,false,validation,ms);lease.Retain(program->library);
 			}
 			lease.Retain(next.pipeline);pass.commands.push_back(std::move(next));

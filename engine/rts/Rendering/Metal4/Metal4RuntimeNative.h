@@ -84,6 +84,7 @@ class TerrainShadingLeaseReceipts;
 class CompletedCubeLeaseReceipts;
 class CubeLeaseSamplers;
 class WorldTexturePreparationJournal;
+class CUSSharedPreparationScope;
 class ParticleAtlasPreparationJournal;
 struct ScreenMipOwnerIdentity;
 class ScreenMipPreparationJournal;
@@ -96,6 +97,9 @@ struct PostprocessTextureStorage181;
 struct RuntimePendingSubmission;
 struct PublishedRequestState;
 class InterventionPersistentResidency;
+enum class NativePriorRead : unsigned {
+ Unclassified=1, Cube=2, WorldInfo=4, ScreenTarget=8, Bloom=16, Postprocess=32, TerrainInfo=64, BumpWater=128, RankAtlas=256
+};
 
 // One actual native context for both asset and screen passes. All requests hold
 // a serialized lease; the monotonically increasing shared event spans requests.
@@ -107,6 +111,8 @@ public:
 	DeviceCapabilities Capabilities() const { return capabilities; }
 	id<MTLDevice> Device() const { return device; }
 	bool CanSafelyDetach();
+	bool ReclaimOldestForSceneCapacity();
+	void ReportPendingGameStats();
 private:
 	struct ShaderSource {
 		__weak id<MTLLibrary> original=nil;
@@ -127,6 +133,12 @@ private:
 	std::shared_ptr<RuntimeFrameResources> failedFrame;
 	std::shared_ptr<RuntimePendingSubmission> pendingSubmission; // newest, for predecessor contracts
 	std::deque<std::shared_ptr<RuntimePendingSubmission>> pendingSubmissions;
+	struct PendingGameStats {
+		unsigned long long submitted=0, eligible=0, adjacentEligible=0, joined=0, twoPending=0;
+		unsigned long long noPredecessor=0, blockedReads=0, blockedCube=0, blockedInfo=0, blockedRTT=0;
+		unsigned long long blockedBloom=0, blockedPostprocess=0, blockedTerrainInfo=0, blockedBumpWater=0, unclassified=0;
+		unsigned long long capacityReclaims=0, orderedCube=0;
+	} pendingGameStats;
 	void DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* completedOwner = nullptr);
 	bool SlotPending(const std::shared_ptr<RuntimeFrameSlot>&) const;
 	void DrainPendingLocked();
@@ -162,9 +174,13 @@ public:
  explicit RuntimeLease(std::function<void()> previousRetired, Runtime& runtime = SharedRuntime());
  void RetirePreviousSubmission();
  bool PreparingWhilePending() const;
+ uint64_t PendingEventForSource(uint64_t sourceSubmission) const noexcept;
+ bool OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,std::function<void()> check,
+  NativePriorRead kind);
+ void PrepareDeferredDrawable(bool orderedGameFrame,uint64_t simulationFrame);
  // Admit only a pinned, already encoded predecessor. The supplied check must
  // establish its actual completion before this lease can submit GPU work.
- bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check);
+ bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind);
 	~RuntimeLease();
 	RuntimeLease(const RuntimeLease&) = delete;
 	RuntimeLease& operator=(const RuntimeLease&) = delete;
@@ -183,6 +199,10 @@ public:
  CompletedCubeLeaseReceipts* CompletedCubeReads() noexcept;
  CubeLeaseSamplers* CubeSamplers() noexcept;
  std::shared_ptr<WorldTexturePreparationJournal> WorldTexturePreparation();
+ // Owned by this exact DrawPrepared lease; shared by all child CUS Prepare calls.
+ void BindCUSSharedPreparation(std::shared_ptr<CUSSharedPreparationScope> scope);
+ const std::shared_ptr<CUSSharedPreparationScope>& CUSSharedPreparation() const noexcept {return cusSharedPreparation;}
+ void ValidatePreparationMutation() const;
  std::shared_ptr<ParticleAtlasPreparationJournal> ParticleAtlasPreparation();
  std::shared_ptr<ScreenMipPreparationJournal> ScreenMipPreparation(const std::shared_ptr<const ScreenMipOwnerIdentity>&);
 	// Per-submission original shading rate. Output count still belongs to each
@@ -238,6 +258,7 @@ private:
  std::shared_ptr<CompletedCubeLeaseReceipts> completedCubeReads;
  std::shared_ptr<CubeLeaseSamplers> cubeSamplers;
  std::shared_ptr<WorldTexturePreparationJournal> worldTexturePreparation;
+ std::shared_ptr<CUSSharedPreparationScope> cusSharedPreparation;
  std::shared_ptr<ParticleAtlasPreparationJournal> particleAtlasPreparation;
  // Declared after lock: capsule marks abandoned queues inactive before unlock.
  std::shared_ptr<ScreenMipLeaseJournals> screenMipJournals;

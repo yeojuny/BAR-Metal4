@@ -219,7 +219,7 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
  bool coastInitialized=generation.coastInitialized;
  if(auto prior=generation.pending.lock();prior&&!prior->completed){
   Require(prior->encoded&&prior->completion.generation==f.generation,"Water predecessor lost its original encoded generation");
-  if(lease.OrderAfterPreviousSubmission(prior.get(),[prior]{Require(prior->completed,"Water predecessor did not actually complete before successor submission");})){
+  if(lease.OrderAfterPreviousSubmission(prior.get(),[prior]{Require(prior->completed,"Water predecessor did not actually complete before successor submission");},NativePriorRead::BumpWater)){
    base=prior->completion;coastInitialized=prior->coastInitialized;
   }else{
    lease.RetirePreviousSubmission();Require(prior->completed,"Water preparation cannot overwrite an unretired predecessor");

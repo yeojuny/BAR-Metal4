@@ -88,6 +88,6 @@ inline constexpr Entry entries[] = {
     {"luaui/widgets/gui_cursor.lua", "LuaUI/NativeWidgets/gui_cursor.lua", "e01571707526e9cbd98d73b90f2b91cb10ba98935e5259443b3cbfad0d014e99e65fcd4068a1b7e77d33bd1ef6241cfa5598adf9a98462fe3c81d9a39d1d7b5e"},
     {"luaui/widgets/gui_flowui.lua", "LuaUI/NativeWidgets/gui_flowui.lua", "1b78f71397824883b1e74691e9f64d8bac56b921adee21f60b46d6605a71a17f4f612da87e5b86ce4f79b37745e461a37f5f46d14af3e375d813a2128373d659"},
     {"luaui/widgets/gui_enemy_spotter.lua", "LuaUI/NativeWidgets/gui_enemy_spotter.lua", "f2abf161a29d26aca31212ace4d9de3b5be4746bf6aae53294ccb4c288e9c227f8dfda74e3c2a0d671ae883c1baba5f09daf9f2707a9ae67c3c123bb9a17f3de"},
-    {"luaui/widgets/gfx_sepia_tone.lua", "LuaUI/NativeWidgets/gfx_sepia_tone.lua", "85b2a744a1265b43b2773b735fddee2a10ee2ad3779341dc3ebfd520b72b70951ff99cc97d3d6b1f1bc563b4903bc5a612879a6f8d1828df84a395a60e6311ee"},
+    {"luaui/widgets/gfx_sepia_tone.lua", "LuaUI/NativeWidgets/gfx_sepia_tone.lua", "2a2746ca8b7e213e1651c324db58ea466f5640c9110055a49f0025c43f840193088b580bec9e4524395904a62555e5bfc745bba828f66ecd7222ee0031c486fd"},
 };
 }

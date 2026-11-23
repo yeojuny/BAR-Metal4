@@ -4,6 +4,8 @@
 #include "Metal4PersistentResidencyIntervention.h"
 #include "Metal4TransientUpload177.h"
 #include "Metal4FrameResources.h"
+#include "Rendering/Backend/NativeGameFrameLimit.h"
+#include "Metal4RankAtlasBorrow.h"
 #include "Rendering/Backend/NativePreparationTrace.h"
 #include "Rendering/Backend/NativeSubmissionTrace.h"
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
@@ -16,6 +18,7 @@
 #include <cmath>
 
 #include <cmath>
+#include "Metal4AssetRenderer.h"
 #include <filesystem>
 #include <limits>
 #include <memory>
@@ -442,6 +445,9 @@ struct RuntimePendingSubmission {
  TerrainUniformReceipt220 uniformReceipt220;
  __strong NSError* error = nil;
  dispatch_semaphore_t feedback = dispatch_semaphore_create(0);
+ __strong id<MTLDrawable> drawableToPresent = nil;
+ std::map<const void*,std::function<void()>,std::less<const void*>> orderedGPUReadChecks;
+ bool orderedGameFrame = false;
  std::function<void(const FrameMetrics&)> retire;
  FrameMetrics metrics;
  std::uint64_t eventValue=0;
@@ -450,7 +456,30 @@ struct RuntimePendingSubmission {
 
 namespace {
 bool InterventionTwoInFlight() {
- static const bool enabled=[] {const char* p=std::getenv("BAR_NATIVE_INTERVENTION_TWO_INFLIGHT");return p&&std::string_view(p)=="1";}();return enabled;
+ return GameFrameLimit().submissions>=2;
+}
+bool PresentAfterSubmitCap2() {
+ static const bool enabled=[] {
+  const char* value=std::getenv("BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT");
+  return InterventionTwoInFlight() && value && std::string_view(value)=="1";
+ }();
+ return enabled;
+}
+bool PresentBeforeNextAcquire() {
+ static const bool enabled=[] {
+  if(GameFrameLimit().submissions==3)return true;
+  const char* value=std::getenv("BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE");
+  return PresentAfterSubmitCap2() && value && std::string_view(value)=="1";
+ }();
+ return enabled;
+}
+struct RankAtlasBorrowStats {
+ unsigned long long queued=0;
+ unsigned long long firstSim=0;
+};
+RankAtlasBorrowStats rankAtlasBorrowStats;
+bool DeferredPresentAtRetirement() {
+ return GameFrameLimit().configured;
 }
 std::shared_ptr<RuntimeFrameSlot> SelectRecordingSlot158(const std::shared_ptr<RuntimeFrameSlot>& primary,
  const std::shared_ptr<RuntimeFrameResources>& pending) {
@@ -559,6 +588,40 @@ bool Runtime::CanSafelyDetach()
 	std::lock_guard<std::mutex> lock(requestMutex);
 	if (!poisoned) DrainPendingLocked();
 	return !unsafePendingWork;
+}
+
+bool Runtime::ReclaimOldestForSceneCapacity()
+{
+ if(!InterventionTwoInFlight())return false;
+ const std::lock_guard lock(requestMutex);
+ Require(!poisoned,"Cannot reclaim scene admission capacity from a poisoned runtime");
+ if(pendingSubmissions.size()<GameFrameLimit().submissions)return false;
+ DrainOldestLocked();
+ ++pendingGameStats.capacityReclaims;
+ return true;
+}
+
+void Runtime::ReportPendingGameStats()
+{
+ const std::lock_guard lock(requestMutex);
+ const auto totals=std::exchange(pendingGameStats,{});
+#ifdef RECOIL_METAL4_LIVE_SCENE
+ const auto rankAtlas=std::exchange(rankAtlasBorrowStats,{});
+ unsigned long long submittedAtThree=0,threeOutstanding=0;
+ for(const auto& slot:{frameSlot,frameSlot->spare,frameSlot->third}) {
+  if(!slot)continue;
+  submittedAtThree+=std::exchange(slot->submittedAtThree,0ULL);
+  threeOutstanding+=std::exchange(slot->threeOutstanding,0ULL);
+ }
+ LOG("[NativeRankAtlasBorrow] enabled=%u queued=%llu first_sim=%llu",
+  unsigned(rankAtlasBorrow::Enabled()),rankAtlas.queued,rankAtlas.firstSim);
+ if(totals.submitted)
+  LOG("[NativePendingGameSummary] cap=%u first_sim=540 last_sim_exclusive=1740 submitted=%llu eligible=%llu adjacent_eligible=%llu joined=%llu two_pending=%llu no_predecessor=%llu serial_reads=%llu cube=%llu world_info=%llu screen_rtt=%llu bloom=%llu postprocess=%llu terrain_info=%llu bump_water=%llu unclassified=%llu ordered_cube=%llu scene_reclaims_all_frames=%llu submitted_at_three=%llu three_pending=%llu",
+   GameFrameLimit().submissions,totals.submitted,totals.eligible,totals.adjacentEligible,
+   totals.joined,totals.twoPending,totals.noPredecessor,totals.blockedReads,totals.blockedCube,
+   totals.blockedInfo,totals.blockedRTT,totals.blockedBloom,totals.blockedPostprocess,totals.blockedTerrainInfo,
+   totals.blockedBumpWater,totals.unclassified,totals.orderedCube,totals.capacityReclaims,submittedAtThree,threeOutstanding);
+#endif
 }
 
 RuntimeCleanupLease::RuntimeCleanupLease(Runtime& runtime,Retirement retirement): lock(runtime.requestMutex)
@@ -704,6 +767,9 @@ RuntimeLease::RuntimeLease(std::function<void()> previousRetired, Runtime& selec
 	const auto drainProbe91=StartPreparationScope();
 	ApplyNativeLeaseRetirementPolicy(retirement==Retirement::RequireAlreadyRetired,bool(previousRetired),
   bool(runtime.pendingSubmission)||!runtime.pendingSubmissions.empty(),[&]{runtime.DrainPendingLocked();});
+ // Reclaim the oldest ticket at capacity before selecting an independent recording slot.
+ if(InterventionTwoInFlight()&&previousRetired&&runtime.pendingSubmissions.size()>=GameFrameLimit().submissions)
+  runtime.DrainOldestLocked();
 	EndPreparationScope(39,drainProbe91);
  auto selected=InterventionTwoInFlight()?std::shared_ptr<RuntimeFrameSlot>{}:SelectRecordingSlot158(runtime.frameSlot,
   previousRetired&&runtime.pendingSubmission?runtime.pendingSubmission->resources.owner:nullptr);
@@ -754,6 +820,17 @@ std::string RuntimeLease::QueueClass() const { return NSStringFromClass([runtime
 std::string RuntimeLease::CommandBufferClass() const { return NSStringFromClass([frame->slot->command class]).UTF8String; }
 
 #include "Metal4MemoryLedger.inc"
+
+void RuntimeLease::ValidatePreparationMutation() const
+{
+ Require(!frame->recording&&!frame->pending&&!frame->residencyCommit.Active(),
+  "Shared binding preparation is outside its actual writable lease");
+}
+void RuntimeLease::BindCUSSharedPreparation(std::shared_ptr<CUSSharedPreparationScope> scope)
+{
+ ValidatePreparationMutation();Require(scope&&!cusSharedPreparation,"Shared CUS preparation scope repeated or absent");
+ cusSharedPreparation=std::move(scope);
+}
 
 void RuntimeLease::AddAllocation(id<MTLAllocation> allocation)
 {
@@ -831,12 +908,55 @@ id<MTLDepthStencilState> RuntimeLease::CachedDepthState(MTLDepthStencilDescripto
 namespace { std::atomic<unsigned> residencyCensusSamples{0}; }
 
 bool RuntimeLease::PreparingWhilePending() const {return bool(frame->previousRetired)&&bool(runtime.pendingSubmission);}
-bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<void()> check)
+uint64_t RuntimeLease::PendingEventForSource(uint64_t sourceSubmission) const noexcept
+{
+ if(!sourceSubmission)return 0;
+ uint64_t event=0;
+ for(const auto& producer:runtime.pendingSubmissions){
+  if(producer->traceIdentity.submission!=sourceSubmission)continue;
+  if(event)return 0;
+  event=producer->eventValue;
+ }
+ return event;
+}
+bool RuntimeLease::OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,
+ std::function<void()> check,NativePriorRead kind)
+{
+ Require(owner&&bool(check)&&!frame->recording&&!frame->pending&&!runtime.poisoned,
+  "GPU read ordering requires owned preparation");
+ if(!event||PendingEventForSource(source)!=event)return false;
+ if(kind==NativePriorRead::RankAtlas && (!InterventionTwoInFlight() ||
+    runtime.pendingSubmissions.size()!=1 || !runtime.pendingSubmission || !runtime.pendingSubmission->orderedGameFrame ||
+    !rankAtlasBorrow::CanRegister(source,SourceSubmission(),event,runtime.pendingSubmission->eventValue)))return false;
+ if(!InterventionTwoInFlight())return OrderAfterPreviousSubmission(owner,std::move(check),kind);
+ if(!PreparingWhilePending()||runtime.SlotPending(frame->slot))return false;
+ frame->orderedGPUReadChecks.try_emplace(owner,std::move(check));
+ frame->orderedCubeRead|=kind==NativePriorRead::Cube;
+ if(kind==NativePriorRead::RankAtlas)frame->rankAtlasEvent=event;
+ return true;
+}
+void RuntimeLease::PrepareDeferredDrawable(bool orderedGameFrame,uint64_t simulationFrame)
+{
+ frame->orderedGameFrame=orderedGameFrame;
+ frame->simulationFrame=simulationFrame;
+ Require(runtime.pendingSubmissions.size()<GameFrameReceiptCapacity(),"Drawable acquisition requires a reclaimed native slot");
+ if(PresentBeforeNextAcquire()) {
+  for(const auto& previous:runtime.pendingSubmissions) {
+   if(!previous->drawableToPresent)continue;
+   [previous->drawableToPresent present];
+   previous->drawableToPresent=nil;
+  }
+ }
+
+}
+bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind)
 {
  Require(owner&&bool(check)&&!frame->recording&&!frame->pending&&!runtime.poisoned,
   "Prior producer ordering requires owned preparation");
- if(!PreparingWhilePending()||frame->slot==runtime.pendingSubmission->resources.owner->slot)return false;
- frame->priorReadChecks.try_emplace(owner,std::move(check));return true;
+ if(!PreparingWhilePending()||runtime.SlotPending(frame->slot))return false;
+ frame->priorReadChecks.try_emplace(owner,std::move(check));
+ frame->priorReadClasses|=unsigned(kind);
+ return true;
 }
 void RuntimeLease::RetirePreviousSubmission()
 {
@@ -851,7 +971,10 @@ void RuntimeLease::RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmis
  NativeCPUPhaseScope trace(NativeCPUPhaseKind::ReadChecks);
  if(frame->previousRetired){auto receipt=std::exchange(frame->previousRetired,{});receipt();}
  auto checks=std::move(frame->priorReadChecks);frame->priorReadChecks.clear();
+ frame->priorReadClasses=0;
  for(const auto& [owner,check]:checks)check();
+ auto gpuChecks=std::move(frame->orderedGPUReadChecks);frame->orderedGPUReadChecks.clear();
+ for(const auto& [owner,check]:gpuChecks)check();
  } catch(...) {runtime.poisoned=true;runtime.failedFrame=frame;throw;}
 }
 static bool ResidencyDiffEnabled220(){static const bool value=[](){const char* p=std::getenv("BAR_NATIVE_RESIDENCY_DIFF220");return p&&std::string_view(p)=="1";}();return value;}
@@ -1020,23 +1143,47 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  id<MTLDrawable> drawable, std::function<void(const FrameMetrics&)> retire)
 {
  FinishResourceCommit();
- // N+1 is already prepared and recorded. Complete N's event, feedback,
- // allocator, producer receipts and read checks at the original boundary;
- // retain only its completed owner graph until N+1 has been submitted.
- // Early preparation drains still release immediately for pool reuse.
  std::shared_ptr<RuntimePendingSubmission> completedPredecessor186;
- // P6 fail closed: an empty priorReadChecks map proves only that no checks
- // were registered. Postprocess pending encoded inputs (and any other
- // unregistered borrows) still require predecessor retirement. Keep the
- // experimental recording slots/CPU lookahead, but never admit a second GPU
- // ticket until a complete pending-borrow ordering/lifetime proof exists.
- RetirePreviousSubmission(&completedPredecessor186);
- Require(frame->recording && !frame->pending && !runtime.pendingSubmission && runtime.pendingSubmissions.empty() && bool(retire) && drawable!=nil,
-  "Deferred Metal4 submission requires retired predecessors, one recording presentation and an owned retirement");
+ const bool adjacentEligible=frame->orderedGameFrame&&runtime.pendingSubmission&&runtime.pendingSubmission->orderedGameFrame;
+ const bool queueBehind=InterventionTwoInFlight()&&adjacentEligible&&frame->priorReadChecks.empty()&&
+  (!frame->rankAtlasEvent||frame->rankAtlasEvent==runtime.pendingSubmission->eventValue);
+ const bool counted=DeferredPresentAtRetirement()&&frame->simulationFrame>=540&&frame->simulationFrame<1740;
+ if(counted){
+  auto& stats=runtime.pendingGameStats;
+  ++stats.submitted;
+  stats.eligible+=frame->orderedGameFrame;
+  stats.adjacentEligible+=adjacentEligible;
+  stats.noPredecessor+=!runtime.pendingSubmission;
+  stats.orderedCube+=queueBehind&&frame->orderedCubeRead;
+  if(adjacentEligible&&!frame->priorReadChecks.empty()){
+   ++stats.blockedReads;
+   stats.blockedCube+=bool(frame->priorReadClasses&unsigned(NativePriorRead::Cube));
+   stats.blockedInfo+=bool(frame->priorReadClasses&unsigned(NativePriorRead::WorldInfo));
+   stats.blockedRTT+=bool(frame->priorReadClasses&unsigned(NativePriorRead::ScreenTarget));
+   stats.blockedBloom+=bool(frame->priorReadClasses&unsigned(NativePriorRead::Bloom));
+   stats.blockedPostprocess+=bool(frame->priorReadClasses&unsigned(NativePriorRead::Postprocess));
+   stats.blockedTerrainInfo+=bool(frame->priorReadClasses&unsigned(NativePriorRead::TerrainInfo));
+   stats.blockedBumpWater+=bool(frame->priorReadClasses&unsigned(NativePriorRead::BumpWater));
+   stats.unclassified+=!frame->priorReadClasses||bool(frame->priorReadClasses&unsigned(NativePriorRead::Unclassified));
+  }
+ }
+ if(!queueBehind)RetirePreviousSubmission(&completedPredecessor186);
+ else if(frame->previousRetired){
+  auto receipt=std::exchange(frame->previousRetired,{});
+  try{receipt();}catch(...){PoisonAfterBegin();throw;}
+ }
+ const bool capacityAvailable=queueBehind ? runtime.pendingSubmissions.size()<GameFrameLimit().submissions : runtime.pendingSubmissions.empty();
+ Require(frame->recording&&!frame->pending&&capacityAvailable&&
+  !runtime.SlotPending(frame->slot)&&bool(retire)&&drawable!=nil,
+  "Deferred Metal4 submission requires a free slot and an owned presentation");
+ const auto predecessorEvent=queueBehind?runtime.pendingSubmission->eventValue:0;
  Require(runtime.nextEventValue != std::numeric_limits<uint64_t>::max(), "Metal4 completion event exhausted its monotonic value range");
  [frame->WritableRetained() addObject:drawable];
  ReportAllocationPreparation148(*frame,frameIndex);
  auto pending=std::make_shared<RuntimePendingSubmission>(frame);
+ pending->orderedGameFrame=frame->orderedGameFrame;
+ pending->orderedGPUReadChecks.swap(frame->orderedGPUReadChecks);
+ if(DeferredPresentAtRetirement() && (!PresentAfterSubmitCap2() || PresentBeforeNextAcquire()))pending->drawableToPresent=drawable;
  pending->traceIdentity=frame->traceIdentity;pending->traceIdentity.submission=SourceSubmission();
  if(pending->traceIdentity.lease)pending->traceIdentity.runtimeIndex=frameIndex;
 #ifdef RECOIL_METAL4_LIVE_SCENE
@@ -1072,21 +1219,34 @@ void RuntimeLease::SubmitAndDefer(Clock::time_point preparationStart, uint64_t f
  }
  // Publish the quarantine owner before committing anything to the GPU.
  runtime.pendingSubmissions.push_back(pending);runtime.pendingSubmission=pending;frame->pending=true;
-#ifdef RECOIL_METAL4_LIVE_SCENE
- if(InterventionTwoInFlight()){
-  static bool reportedTwo=false;
-  if(!reportedTwo){reportedTwo=true;
-   LOG("[NativeInterventionTwoInFlight] gpu_pending_limit=1 recording_slots=3 second_gpu_ticket=disabled pending_borrow_coverage=unproven");}
- }
-#endif
  NativeCPUPhaseScope submitTrace(NativeCPUPhaseKind::Submit);submitTrace.Identity(pending->traceIdentity);
  id<MTL4CommandBuffer> commands[]={frame->slot->command};
  const auto submitted=Clock::now();
  if(pending->probe)pending->probe->submit=FrameOverlapHostTime();
+ // A whole-command dependency protects same-queue attachment reuse (RAW,
+ // WAR and WAW), including texture views and non-postprocess scratch. The
+ // CPU-only producer checks above still force the serial path.
+ if(predecessorEvent)[runtime.queue waitForEvent:runtime.completionEvent value:predecessorEvent];
  [runtime.queue waitForDrawable:drawable];
  [runtime.queue commit:commands count:1 options:options];
- [runtime.queue signalDrawable:drawable];[drawable present];
+ if(predecessorEvent && frame->rankAtlasEvent==predecessorEvent) {
+  if(!rankAtlasBorrowStats.queued)rankAtlasBorrowStats.firstSim=frame->simulationFrame;
+  ++rankAtlasBorrowStats.queued;
+ }
+ [runtime.queue signalDrawable:drawable];
+ if(!pending->drawableToPresent)[drawable present];
  [runtime.queue signalEvent:runtime.completionEvent value:pending->eventValue];
+ if(counted&&predecessorEvent){
+  auto& stats=runtime.pendingGameStats;
+  ++stats.joined;
+  const auto lastCompleted=runtime.completionEvent.signaledValue;
+  stats.twoPending+=lastCompleted<predecessorEvent;
+  if(runtime.pendingSubmissions.size()==3) {
+   ++frame->slot->submittedAtThree;
+   // Ordered events make an unsignaled oldest ticket a witness for all three.
+   frame->slot->threeOutstanding+=lastCompleted<runtime.pendingSubmissions.front()->eventValue;
+  }
+ }
  submitTrace.Finish();
  if constexpr(NativeCPUTimingInstrumentation)pending->metrics.cpuSubmissionMs=Milliseconds(submitted);
  // Release on this same serialized caller, before another preparation can
@@ -1165,6 +1325,7 @@ void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* compl
    if(details.length>4096)details=[details substringToIndex:4096];
    throw std::runtime_error("GPU reported deferred failure: "+Error(pending->error)+"; userInfo="+(details.UTF8String?:""));
   }
+  for(const auto& [owner,check]:pending->orderedGPUReadChecks)check();
   {NativeCPUPhaseScope trace(NativeCPUPhaseKind::AllocatorReset);[frame->slot->allocator reset];}
   // Same completion order as the synchronous renderer; no acknowledgment on
   // submission, event timeout, feedback timeout, or GPU execution failure.
@@ -1175,11 +1336,31 @@ void Runtime::DrainOldestLocked(std::shared_ptr<RuntimePendingSubmission>* compl
   // original pending owner remains quarantined, with no completion handoff.
   CompleteResidencyTable220(queue,pending->retirementTable220,pending->eventValue);
   CompleteTerrainUniform220(queue,pending->uniformReceipt220,pending->eventValue);
+  if(pending->drawableToPresent){
+   [pending->drawableToPresent present];
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   static bool reportedPresent=false;
+   if(!reportedPresent&&pending->metrics.frameIndex>=300){
+    LOG("[NativePendingGame] retired_and_present_requested=1 event=%llu",(unsigned long long)pending->eventValue);
+    reportedPresent=true;
+   }
+#endif
+  }
   if(completedOwner)*completedOwner=pending;
   pendingSubmissions.pop_front();
   pendingSubmission=pendingSubmissions.empty()?nullptr:pendingSubmissions.back();
  } catch(...) {
   poisoned=true;failedFrame=frame;unsafePendingWork=frame->pending;
+  if(!frame->pending){
+   // The oldest ticket reached terminal feedback. Discard any younger
+   // result, keep its graph until terminal, and never publish or present it.
+   for(const auto& ticket:pendingSubmissions){
+    if(!ticket->resources.owner->pending)continue;
+    if([completionEvent waitUntilSignaledValue:ticket->eventValue timeoutMS:30000]&&
+       dispatch_semaphore_wait(ticket->feedback,dispatch_time(DISPATCH_TIME_NOW,30*NSEC_PER_SEC))==0)
+     ticket->resources.owner->pending=false;
+   }
+  }
   for(const auto& ticket:pendingSubmissions)unsafePendingWork=unsafePendingWork||ticket->resources.owner->pending;
   // Keep pendingSubmission and its renderer owners quarantined as well.
   throw;
@@ -1289,6 +1470,20 @@ FrameMetrics RuntimeLease::SubmitAndWait(Clock::time_point preparationStart, uin
 } // namespace rendering::metal4
 
 namespace rendering {
+bool Metal4MemoryReportingEnabled()
+{
+	static const bool enabled = video_memory::OptedIn(std::getenv("BAR_NATIVE_GPU_MEMORY_REPORT"));
+	return enabled;
+}
+
+video_memory::MetalSample QueryMetal4MemorySample()
+{
+	@autoreleasepool {
+		id<MTLDevice> device = metal4::SharedRuntime().Device();
+		return {device.recommendedMaxWorkingSetSize, static_cast<std::uint64_t>(device.currentAllocatedSize)};
+	}
+}
+
 DeviceCapabilities QueryMetal4Capabilities()
 {
 	@autoreleasepool { return metal4::SharedRuntime().Capabilities(); }

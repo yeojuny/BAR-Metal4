@@ -11,6 +11,7 @@
 #include "Rendering/Fonts/glFont.h"
 #include "Rendering/GlobalRendering.h"
 #include "Rendering/GlobalRenderingInfo.h"
+#include "Rendering/Backend/VideoMemoryReporting.h"
 #include "Rendering/GL/RenderBuffers.h"
 #include "Sim/Features/FeatureMemPool.h"
 #include "Sim/Misc/GlobalConstants.h" // for GAME_SPEED
@@ -536,11 +537,14 @@ static void DrawInfoText(TypedRenderBuffer<VA_TYPE_C   >& rb)
 	}
 
 	{
-		int2 vidMemInfo;
-
-		GetAvailableVideoRAM(&vidMemInfo.x, globalRenderingInfo.glVendor);
-
-		font->glFormat(0.01f, 0.16f, 0.5f, DBG_FONT_FLAGS | FONT_BUFFERED, gpuFmtStr, (vidMemInfo.x - vidMemInfo.y) / 1024.0f, vidMemInfo.x / 1024.0f);
+		const auto usage = rendering::video_memory::QueryUsageMiB();
+		const auto format = (usage.kind == rendering::video_memory::Reference::MetalRecommendedWorkingSet)
+			? "[8] Metal allocated %.1f MiB / recommended working set %.1f MiB"
+			: gpuFmtStr;
+		if (usage.kind == rendering::video_memory::Reference::MetalUnknown)
+			font->glFormat(0.01f, 0.16f, 0.5f, DBG_FONT_FLAGS | FONT_BUFFERED, "[8] Metal memory: budget unavailable");
+		else
+			font->glFormat(0.01f, 0.16f, 0.5f, DBG_FONT_FLAGS | FONT_BUFFERED, format, usage.used, usage.reference);
 	}
 
 	font->glFormat(0.01f, 0.18f, 0.5f, DBG_FONT_FLAGS | FONT_BUFFERED, sopFmtStr,

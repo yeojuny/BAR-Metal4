@@ -73,8 +73,13 @@ DecalOut Emit(float2 local,float2 uv,DecalInstance d,constant DecalUniform& u,
  float4 worldPos=float4(d.worldPos.xyz+rotY*(float3(local.x,0.0,local.y)*dimensions),1.0);
  worldPos.y=heightmapTex.sample(heightSampler,ImageUV(HeightUV(worldPos.xz,u.mapSize),0,u.options.y),level(0.0)).x+HEIGHTOFFSET;
  o.position=u.cameraViewProj*worldPos;
+#ifdef RECOIL_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE
+ if(u.options.x) o.position.z=(o.position.z+o.position.w)*0.5;
+ o.position.z=o.position.z-512.0/o.position.w;
+#else
  o.position.z=o.position.z-512.0/o.position.w;
  if(u.options.x) o.position.z=(o.position.z+o.position.w)*0.5;
+#endif
  float a=d.uvoffsets.y-d.uvoffsets.x,b=d.uvoffsets.w-d.uvoffsets.z;
  o.g_uv=float4(d.uvoffsets.x+a*uv.x,d.uvoffsets.z+b*uv.y,d.parameters.z,heat);
  o.g_position=float4(worldPos.xyz,alpha);o.g_parameters=d.parameters;o.g_parameters.w=heat;

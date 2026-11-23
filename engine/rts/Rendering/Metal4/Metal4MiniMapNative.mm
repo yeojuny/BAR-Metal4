@@ -1,4 +1,5 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#include "NativeMicroThreeWitness.h"
 #include "Metal4MiniMapNative.h"
 #include "Metal4TransientUpload177.h"
 #include "Metal4CoverageCache178.h"
@@ -156,6 +157,7 @@ struct PreparedMiniMap::Impl {
 	__strong NSMutableArray* infoAllocations=nil;
 	std::shared_ptr<PreparedMetalInfo> metal;
 	std::shared_ptr<PreparedWorldInfo> globalInfo;
+	uint64_t globalInfoSubmission=0;
 	__strong id<MTLTexture> shade=nil,info=nil,height=nil,groundLos=nil,radar=nil;
 	__strong id<MTLBuffer> uniforms=nil;
 	__strong MTL4RenderPassDescriptor* infoPass=nil;
@@ -174,7 +176,7 @@ id<MTLTexture> PreparedMiniMap::Info()const{return impl->info;}
 id<MTLBuffer> PreparedMiniMap::Uniforms()const{return impl->uniforms;}
 void PreparedMiniMap::EncodeDependencies(id<MTL4CommandBuffer> command)const {
 	if(impl->metal)impl->metal->EncodeDependencies(command);
-	if(impl->globalInfo)impl->globalInfo->EncodeDependencies(command);
+	if(impl->globalInfo)impl->globalInfo->EncodeDependencies(command,impl->globalInfoSubmission);
 	for(const auto& work:impl->before) {
 		auto encoder=[command computeCommandEncoder];Require(encoder!=nil,"Cannot create native minimap compute encoder");
 		[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageDispatch|MTLStageBlit beforeStages:MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];
@@ -305,6 +307,7 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::Prepare(RuntimeLease& lease,std::sh
 		const auto& info=*source->info;
 		if(info.worldInfo&&!individualImagesOnly){
 			result->impl->globalInfo=SharedWorldInfoGPU().Prepare(lease,info.worldInfo,validation,shaderMs);result->impl->info=result->impl->globalInfo->Info();
+			result->impl->globalInfoSubmission=lease.SourceSubmission();
 		}else if(info.mode==NativeMiniMapInfoMode::Metal){
 			result->impl->metal=SharedMetalInfoGPU().Prepare(lease,info.metal,validation,shaderMs);result->impl->info=result->impl->metal->Info();
 			impl->info=nil;impl->infoReady.reset();impl->lastInfo.reset();
@@ -385,10 +388,17 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareIndividualImages(RuntimeLeas
 	const auto valid=[](const auto& data){return data && data->width && data->height && data->counts.size()==size_t(data->width)*data->height;};
 	Require(valid(info.groundLos),"PiP ground LOS extent differs from its actual source");
 	impl->Pipelines(lease,validation,shaderMs);lease.Retain(impl->library);lease.Retain(impl->coveragePipeline);lease.Retain(impl->radarPipeline);
-	if(!beganUploads) impl->uploads177.BeginBatch(lease.Device());
-	const std::array<uint32_t,4> options{uint32_t(info.globalLos),0,0,0};
-	auto optionBuffer=UploadTransient177(lease,impl->uploads177,result->impl->uploads177,options.data(),sizeof(options),
-		[&]{return Upload(lease,options.data(),sizeof(options));});
+    static const bool omitUnusedOptions=microthree::Enabled("BAR_NATIVE_MINIMAP_SKIP_UNUSED_LOS_OPTIONS");
+    const bool borrowed=preparedGroundLOS!=nil;
+    const bool radarRequested=bool(needed & MiniMapImage::Radar);
+    const bool omitOptions=omitUnusedOptions&&borrowed&&!radarRequested;
+    id<MTLBuffer> optionBuffer=nil;
+    if(!omitOptions){
+        if(!beganUploads) impl->uploads177.BeginBatch(lease.Device());
+        const std::array<uint32_t,4> options{uint32_t(info.globalLos),0,0,0};
+        optionBuffer=UploadTransient177(lease,impl->uploads177,result->impl->uploads177,options.data(),sizeof(options),
+            [&]{return Upload(lease,options.data(),sizeof(options));});
+    }
 	const auto coverage=[&](const std::shared_ptr<const NativeMiniMapCoverage>& data) {
 		Require(valid(data),"PiP raw coverage extent differs from its actual source");
 		return impl->coverage178.Get(lease,data,[&]{
@@ -414,6 +424,20 @@ std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareIndividualImages(RuntimeLeas
 		auto args=Arguments(lease,1,4);[args setAddress:optionBuffer.gpuAddress atIndex:0];[args setTexture:radar.gpuResourceID atIndex:0];[args setTexture:jammer.gpuResourceID atIndex:1];[args setTexture:los.gpuResourceID atIndex:2];[args setTexture:output.gpuResourceID atIndex:3];
 		result->impl->before.push_back({impl->radarPipeline,args,output,true});result->impl->radar=output;
 	}
+    if(microthree::Witness()){
+        static microthree::Meter borrowedOnly{"minimap","borrowed"}, newGround{"minimap","ground"},
+            borrowedRadar{"minimap","borrowed_radar"}, newRadar{"minimap","ground_radar"};
+        auto& meter=borrowed?(radarRequested?borrowedRadar:borrowedOnly):(radarRequested?newRadar:newGround);
+        const unsigned bindings=unsigned(!borrowed)+unsigned(radarRequested);
+        if(meter.Record(!omitOptions,omitOptions?0:16,bindings)){
+            const auto& coverage=*info.groundLos;
+            const auto input=microthree::Hash(coverage.counts.data(),coverage.counts.size()*sizeof(uint16_t));
+            std::fprintf(stderr,"[NativeMicroThree] event=sample lane=minimap route=%s on=%u source_revision=%llu update_serial=%llu needed=%u width=%u height=%u global_los=%u input=%016llx calls=%u bytes=%u bindings=%u\n",
+                meter.route,unsigned(omitUnusedOptions),static_cast<unsigned long long>(source->sourceRevision),
+                static_cast<unsigned long long>(source->updateSerial),unsigned(needed),coverage.width,coverage.height,
+                unsigned(info.globalLos),static_cast<unsigned long long>(input),unsigned(!omitOptions),omitOptions?0u:16u,bindings);
+        }
+    }
 	return result;
 }
 std::shared_ptr<PreparedMiniMap> MiniMapGPU::PrepareShadingImage(RuntimeLease& lease,

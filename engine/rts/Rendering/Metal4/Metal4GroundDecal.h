@@ -11,6 +11,7 @@ struct GroundDecalSceneImages {
 	// Actual terrain-only copy, not the later pre-water/full-scene depth.
 	GroundDecalSceneImage height,normals,minimap,shadowDepth,shadowColor,terrainDepth;
 	std::array<float,4> fragmentToLogical{};
+	bool bottomAlignedTerrainSnapshotThisDraw=false;
 };
 using GroundDecalTextureProvider=std::function<id<MTLTexture>(RuntimeLease&,std::shared_ptr<const WorldTexture>)>;
 class PreparedGroundDecal {
@@ -19,8 +20,12 @@ public:
 	// Builds the original atlas once per generation in the enclosing shared
 	// submission. Does not submit, wait, clear undefined padding or make mips.
 	void EncodeDependencies(id<MTL4CommandBuffer>);
+	void EncodeWorldPositions(id<MTL4CommandBuffer>);
 	// Terrain copy -> original DrawPreDecals -> engine decals -> ground flashes.
 	void Encode(id<MTL4RenderCommandEncoder>);
+	bool WantsDiagnosticReadback() const;
+	void PrepareDiagnosticReadback(RuntimeLease&,size_t,size_t);
+	void EncodeDiagnosticReadback(id<MTL4CommandBuffer>,id<MTLTexture>,id<MTLTexture>,id<MTLTexture>);
 	void DidComplete();
 	id<MTLTexture> Atlas() const;
 	uint32_t AtlasDrawCount() const;

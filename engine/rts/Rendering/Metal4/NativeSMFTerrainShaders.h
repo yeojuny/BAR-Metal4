@@ -1,6 +1,7 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #pragma once
 #include "NativeSampleShadingShaders.h"
+#include <string_view>
 
 namespace rendering::metal4::smforiginal {
 // A translation of the exact SMF forward, deferred and border sources in NativeSMFTerrainOriginalSource.h.
@@ -426,4 +427,23 @@ fragment SMF_OUTPUT NativeSMFTerrainFragment(SMFFragmentInput in [[stage_in]],co
 #endif // NATIVE_SMF_BORDER
 #endif // NATIVE_SMF_COMPOSITE
 )SMFMSL";
+// Opt-in fragment snippets for the exact-zero splat experiment. The host
+// leaves the original shader source bytes intact when no mode is selected.
+inline constexpr std::string_view SPLAT_ZERO_QUAD_MASK = R"SPLAT(
+	// Use the actual sampled and multiplied cofactors. Only a complete quad
+	// can enter the skip path so detail samples keep their implicit gradients.
+	const uint zeroSplatMask=uint(cofactors.r==0.0f)|(uint(cofactors.g==0.0f)<<1u)|
+		(uint(cofactors.b==0.0f)<<2u)|(uint(cofactors.a==0.0f)<<3u);
+	const uint quadZeroSplatMask=ushort(quad_active_threads_mask())==0xfu?quad_and(zeroSplatMask):0u;
+)SPLAT";
+inline constexpr std::string_view SPLAT_ZERO_ORIGINAL_SAMPLES = R"SPLAT(float4 detailNormal=(SMF_SAMPLE(splatDetailNormalTex1,splatCoords0.xy)*2.0f-1.0f)*cofactors.r;
+	detailNormal+=(SMF_SAMPLE(splatDetailNormalTex2,splatCoords0.zw)*2.0f-1.0f)*cofactors.g;
+	detailNormal+=(SMF_SAMPLE(splatDetailNormalTex3,splatCoords1.xy)*2.0f-1.0f)*cofactors.b;
+	detailNormal+=(SMF_SAMPLE(splatDetailNormalTex4,splatCoords1.zw)*2.0f-1.0f)*cofactors.a;)SPLAT";
+inline constexpr std::string_view SPLAT_ZERO_SKIPPED_SAMPLES = R"SPLAT(float4 detailNormal=(((quadZeroSplatMask&1u)!=0u?float4(0.5f):SMF_SAMPLE(splatDetailNormalTex1,splatCoords0.xy))*2.0f-1.0f)*cofactors.r;
+	detailNormal+=(((quadZeroSplatMask&2u)!=0u?float4(0.5f):SMF_SAMPLE(splatDetailNormalTex2,splatCoords0.zw))*2.0f-1.0f)*cofactors.g;
+	detailNormal+=(((quadZeroSplatMask&4u)!=0u?float4(0.5f):SMF_SAMPLE(splatDetailNormalTex3,splatCoords1.xy))*2.0f-1.0f)*cofactors.b;
+	detailNormal+=(((quadZeroSplatMask&8u)!=0u?float4(0.5f):SMF_SAMPLE(splatDetailNormalTex4,splatCoords1.zw))*2.0f-1.0f)*cofactors.a;)SPLAT";
+inline constexpr std::string_view SPLAT_ZERO_MISC_OUTPUT =
+	"out.misc=float4(float(zeroSplatMask),float(quadZeroSplatMask),213.0f,255.0f)/255.0f;";
 } // namespace rendering::metal4::smforiginal

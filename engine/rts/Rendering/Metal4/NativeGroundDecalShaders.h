@@ -8,7 +8,11 @@ inline constexpr const char* NativeGroundDecalShaders=RECOIL_NATIVE_SAMPLE_SHADI
 using namespace metal;
 struct DecalInstance { float4 forcedHeight,posT,posB,uvMain,uvNorm,createParams1,createParams2,createParams3,createParams4;uint4 createParams5;float4 userDefined[2];};
 struct DecalUniforms {float4x4 viewProjection,inverseViewProjection,shadow;float4 mapDims,mapDimsPO2,groundAmbient,groundDiffuse,sunDirection,waterMin,waterBase,waterAbsorb,frameScreen,fragmentToLogical;uint4 flags;};
-struct DecalVarying {float4 position [[position]];float4 p0 [[flat]],p1 [[flat]],p2 [[flat]],p3 [[flat]],p4 [[flat]];float4 uvMain [[flat]],uvNorm [[flat]],data1 [[RECOIL_SAMPLE_PERSPECTIVE]],data2 [[flat]],data3 [[flat]],data4 [[flat]];float3 r0 [[flat]],r1 [[flat]],r2 [[flat]];};
+struct DecalVarying {
+#ifdef BAR_GROUND_DECAL_COVERAGE
+ uint2 diagnosticTrack [[flat]];
+#endif
+float4 position [[position]];float4 p0 [[flat]],p1 [[flat]],p2 [[flat]],p3 [[flat]],p4 [[flat]];float4 uvMain [[flat]],uvNorm [[flat]],data1 [[RECOIL_SAMPLE_PERSPECTIVE]],data2 [[flat]],data3 [[flat]],data4 [[flat]];float3 r0 [[flat]],r1 [[flat]],r2 [[flat]];};
 constant float3 CUBE_VERT[36] = {
 	//RIGHT
 	float3( 1.0, -1.0, -1.0),
@@ -318,6 +322,28 @@ void Run(uint sourceVertex) {
 	worldPos += relPos.y * height * groundNormal;
 
 	gl_Position = gl_ModelViewProjectionMatrix * float4(worldPos, 1.0);
+#if BAR_DIAG_GROUND_TRACK_WRAP_VERTEX
+    // Reuse the two flat words already transmitted. Positive normal tag = cached;
+    // +0 = original no-wrap; sign bit = raw original wrap and raw offset.
+    const uint wb = as_type<uint>(vUVWrapDist);
+    if (wb == 0u || wb > 0x7f800000u) {
+        vUVWrapDist = 0.0f; // both signed zero, negative values, or NaN
+    } else {
+        // Handle unusual divisors in the original FS, including the FS's
+        // own comparison for positive subnormals, irrespective of VS FTZ.
+        bool useFlatWrap = false;
+        if (wb >= 0x00800000u && wb < 0x7f800000u) {
+            const float scale = distance((vTranformedPos[1].xyz + vTranformedPos[2].xyz) * 0.5, (vTranformedPos[3].xyz + vTranformedPos[4].xyz) * 0.5) / vUVWrapDist;
+            const float phase = vUVOffset / vUVWrapDist;
+            const uint sb = as_type<uint>(scale);
+            const uint pb = as_type<uint>(phase) & 0x7fffffffu;
+            useFlatWrap = sb >= 0x00800000u && sb < 0x7f800000u
+                       && (pb == 0u || (pb >= 0x00800000u && pb < 0x7f800000u));
+            if (useFlatWrap) { vUVWrapDist = scale; vUVOffset = phase; }
+        }
+        if (!useFlatWrap) vUVWrapDist = as_type<float>(wb | 0x80000000u);
+    }
+#endif
 }
 
 };
@@ -379,9 +405,16 @@ vertex DecalVarying GroundDecalVertex(uint vid [[vertex_id]],uint iid [[instance
  // flat glow color which varies with the original track creation endpoint.
  p.Run((vid/3)*3+(vid%3+2)%3);
  DecalVarying o;o.position=p.gl_Position;if(!u.flags.x)o.position.z=(o.position.z+o.position.w)*.5f;
- o.p0=p.vTranformedPos[0];o.p1=p.vTranformedPos[1];o.p2=p.vTranformedPos[2];o.p3=p.vTranformedPos[3];o.p4=p.vTranformedPos[4];o.uvMain=p.vuvMain;o.uvNorm=p.vuvNorm;o.data1=p.vData1;o.data2=p.vData2;o.data3=p.vData3;o.data4=p.vData4;o.r0=p.vRotMat[0];o.r1=p.vRotMat[1];o.r2=p.vRotMat[2];return o;
+ o.p0=p.vTranformedPos[0];o.p1=p.vTranformedPos[1];o.p2=p.vTranformedPos[2];o.p3=p.vTranformedPos[3];o.p4=p.vTranformedPos[4];o.uvMain=p.vuvMain;o.uvNorm=p.vuvNorm;o.data1=p.vData1;o.data2=p.vData2;o.data3=p.vData3;o.data4=p.vData4;o.r0=p.vRotMat[0];o.r1=p.vRotMat[1];o.r2=p.vRotMat[2];
+#ifdef BAR_GROUND_DECAL_COVERAGE
+ o.diagnosticTrack=uint2(iid,d.createParams5.x);
+#endif
+ return o;
 }
 struct DecalFragmentProgram {
+#ifdef BAR_GROUND_DECAL_WORLD_POSITION_REUSE
+float3 cachedWorldPosition;
+#endif
 #ifdef HIGH_QUALITY
 depth2d_ms<float> depthTex;
 #else
@@ -448,6 +481,32 @@ float3 GetTriangleBarycentric(float3 p, float3 p0, float3 p1, float3 p2) {
     float q = 1.0 - s - t;
     return float3(s, t, q);
 }
+
+#ifdef BAR_GROUND_DECAL_TRACK_EARLY_REJECT
+bool TryTrackTriangleBarycentric(float3 p, float3 p0, float3 p1, float3 p2, thread float3& bc) {
+    float3 v0 = p2 - p0;
+    float3 v1 = p1 - p0;
+    float3 v2 = p - p0;
+
+    float dot00 = dot(v0, v0);
+    float dot01 = dot(v0, v1);
+    float dot02 = dot(v0, v2);
+    float dot11 = dot(v1, v1);
+    float dot12 = dot(v1, v2);
+    float invDenom = 1.0 / (dot00 * dot11 - dot01 * dot01);
+
+    // The original test requires this same rounded coordinate in [0,1].
+    // Use ordered comparisons so an exceptional coordinate still rejects.
+    float t = (dot00 * dot12 - dot01 * dot02) * invDenom;
+    if (!(t >= 0.0 && t <= 1.0))
+        return false;
+
+    float s = (dot11 * dot02 - dot01 * dot12) * invDenom;
+    float q = 1.0 - s - t;
+    bc = float3(s, t, q);
+    return all(bc.xz >= float2(0.0)) && all(bc.xz <= float2(1.0));
+}
+#endif
 
 // https://www.shadertoy.com/view/MslSDl
 float3 BlackBody(float t)
@@ -655,6 +714,21 @@ bool ProjectOntoPlane(float3 worldPos, float3 BL, float3 TL, float3 TR, float3 B
 }
 
 
+#ifdef BAR_GROUND_DECAL_TRACK_EARLY_REJECT
+bool ProjectOntoTrack(float3 worldPos, float3 BL, float3 TL, float3 TR, float3 BR, float3 projPlane,
+    thread float3& bc, thread bool& firstTriangle) {
+    float3 worldPosProj = worldPos - dot(worldPos - midPoint.xyz, projPlane) * projPlane;
+    firstTriangle = TryTrackTriangleBarycentric(worldPosProj, BL, TL, TR, bc);
+    return firstTriangle || TryTrackTriangleBarycentric(worldPosProj, TR, BR, BL, bc);
+}
+
+float4 GroundDecalRelativeUV(float3 bc, float u, bool firstTriangle) {
+    if (firstTriangle)
+        return bc.x * float4(0, u, 0, 1) + bc.y * float4(0, 0, 0, 0) + bc.z * float4(1, 0, 1, 0);
+    return bc.x * float4(1, 0, 1, 0) + bc.y * float4(1, u, 1, 1) + bc.z * float4(0, u, 0, 1);
+}
+#endif
+
 float4 GetColorByRelUV(float2 uvTL, float2 uvBL, float2 uvTR, float2 uvBR, float4 relUV) {
 	float layer = floor(uvTL.x);
 	uvTL.x = fract(uvTL.x);
@@ -696,28 +770,113 @@ const float SMF_SHALLOW_WATER_DEPTH_INV = 1.0 / SMF_SHALLOW_WATER_DEPTH;
 
 const float EPS = 3e-3;
 
+#ifdef BAR_GROUND_DECAL_COVERAGE
+device atomic_uint* coverageCounts;
+uint2 coverageSize;
+device uint4* trackPasses;
+device atomic_uint* trackPassCount;
+uint2 diagnosticTrack;
+uint diagnosticPrimitive;
+
+device atomic_uint* CoveragePixel() {
+    const uint pixels = coverageSize.x * coverageSize.y;
+    const float2 xy = gl_FragCoord.xy;
+    if (!all(xy >= float2(0.0)) || !all(xy < float2(coverageSize)))
+        return coverageCounts + pixels * 10;
+    const uint2 pixel = uint2(xy);
+    const uint type = (vDecalType >= 1.0f && vDecalType <= 4.0f) ? uint(vDecalType) : 0u;
+    return coverageCounts + ((pixel.y * coverageSize.x + pixel.x) * 5 + type) * 2;
+}
+#endif
+
 void Run() {
+#ifdef BAR_GROUND_DECAL_COVERAGE
+    device atomic_uint* counts = CoveragePixel();
+    atomic_fetch_add_explicit(counts,1u,memory_order_relaxed);
+#endif
+#ifdef BAR_GROUND_DECAL_WORLD_POSITION_REUSE
+	const float3 worldPos = cachedWorldPosition;
+#ifdef BAR_GROUND_DECAL_COVERAGE
+	if (any(as_type<uint3>(worldPos) != as_type<uint3>(GetFragmentWorldPos())))
+		atomic_fetch_add_explicit(trackPassCount + 1, 1u, memory_order_relaxed);
+#endif
+#else
 	float3 worldPos = GetFragmentWorldPos();
+#endif
+
+#ifdef BAR_GROUND_DECAL_TRACK_EARLY_REJECT
+    float3 trackBC = float3(0.0);
+    bool trackFirstTriangle = false;
+    const bool isTrack = vDecalType == 3.0;
+    if (isTrack && !ProjectOntoTrack(worldPos, vTranformedPos[1].xyz,
+        vTranformedPos[2].xyz, vTranformedPos[3].xyz, vTranformedPos[4].xyz, vRotMat[1],
+        trackBC, trackFirstTriangle)) {
+#ifdef BAR_GROUND_DECAL_DISCARD_REJECTED
+        discard_fragment();
+#endif
+        fragColor = float4(0.0);
+        return;
+    }
+#endif
 
 	float4 uvBL = float4(uvMainBL, uvNormBL);
 	float4 uvTL = float4(uvMainTL, uvNormTL);
 	float4 uvTR = float4(uvMainTR, uvNormTR);
 	float4 uvBR = float4(uvMainBR, uvNormBR);
 
+#if BAR_DIAG_GROUND_TRACK_WRAP_VERTEX
+    const uint tag = as_type<uint>(vUVWrapDist);
+    const bool cached = tag > 0u && tag < 0x80000000u;
+    const float rawWrap = as_type<float>(tag & 0x7fffffffu);
+    const bool doWrap = cached || ((tag & 0x80000000u) != 0u && rawWrap > 0.0f);
+    float u = 1.0;
+    if (cached) u = vUVWrapDist;
+    else if (doWrap) u = distance((vTranformedPos[1].xyz + vTranformedPos[2].xyz) * 0.5, (vTranformedPos[3].xyz + vTranformedPos[4].xyz) * 0.5) / rawWrap;
+#else
 	float u = 1.0;
 	if (vUVWrapDist > 0.0) {
 		u = distance((vTranformedPos[1].xyz + vTranformedPos[2].xyz) * 0.5, (vTranformedPos[3].xyz + vTranformedPos[4].xyz) * 0.5) / vUVWrapDist;
 	}
+#endif
 
 	float4 relUV;
+#ifdef BAR_GROUND_DECAL_TRACK_EARLY_REJECT
+    if (isTrack)
+        relUV = GroundDecalRelativeUV(trackBC, u, trackFirstTriangle);
+    else
+#endif
 	if (!ProjectOntoPlane(worldPos, vTranformedPos[1].xyz, vTranformedPos[2].xyz, vTranformedPos[3].xyz, vTranformedPos[4].xyz, vRotMat[1], u, relUV)) {
+
+#ifdef BAR_GROUND_DECAL_DISCARD_REJECTED
+        discard_fragment();
+#endif
 		fragColor = float4(0.0);
 		return;
 	}
 
+#ifdef BAR_GROUND_DECAL_COVERAGE
+    atomic_fetch_add_explicit(counts+1,1u,memory_order_relaxed);
+    if ((diagnosticTrack.y & 15u) == 3u) {
+        const uint index=atomic_fetch_add_explicit(trackPassCount,1u,memory_order_relaxed);
+        if(index<4194304u) {
+            const uint2 pixel=uint2(gl_FragCoord.xy);
+            trackPasses[index]=uint4(pixel.y*coverageSize.x+pixel.x,diagnosticTrack.x,
+                                     diagnosticPrimitive,diagnosticTrack.y);
+        }
+    }
+#endif
+
+#if BAR_DIAG_GROUND_TRACK_WRAP_VERTEX
+    if (cached) {
+        relUV.y = fract(vUVOffset + relUV.y);
+    } else if (doWrap) {
+        relUV.y = fract(vUVOffset / rawWrap + relUV.y);
+    }
+#else
 	if (vUVWrapDist > 0.0) {
 		relUV.y = fract(vUVOffset / vUVWrapDist + relUV.y);
 	}
+#endif
 
 	float alpha = clamp(vAlpha, 0.0, 1.0);
 	float glow  = clamp(vGlow , 0.0, 1.0);
@@ -727,6 +886,16 @@ void Run() {
 
 	mainCol *= 2.0 * vTintColor;
 
+#if defined(NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR)
+	// The host selects this variant only for normalized minimap formats.
+	// The normalized atlas and packed tint bound finite mainCol.rgb to [0,2].
+	// For known non-explosion types, mix(mainCol.rgb, finiteColor, 0) is
+	// the exact endpoint. Let exceptional inputs still run the original mix.
+	const bool nonExplosion = vDecalType == 1.0 || vDecalType == 3.0 || vDecalType == 4.0;
+	const bool skipTerrainColor = nonExplosion && all(isfinite(mainCol.rgb)) &&
+		all(isfinite(ImageUV(worldPos.xz * mapDims.zw,2)));
+	if (!skipTerrainColor) {
+#endif
 	float3 mapDiffuse = miniMapTex.sample(minimapSampler, ImageUV(worldPos.xz * mapDims.zw,2), level(0)).rgb;
 	#if 0
 		const float3 LUMA = float3(0.2125, 0.7154, 0.0721);
@@ -735,6 +904,9 @@ void Run() {
 		float3 mapDecalMix = 2.0 * mainCol.rgb * mapDiffuse.rgb;
 	#endif
 	mainCol.rgb = mix(mainCol.rgb, mapDecalMix, float(vDecalType == DECAL_EXPLOSION)); //only apply mapDecalMix for explosions
+#if defined(NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR)
+	}
+#endif
 
 	float3 N = GetFragmentNormal(worldPos.xz);
 	float3 T = normalize(vRotMat[0] - N * dot(vRotMat[0],  N));
@@ -751,6 +923,23 @@ void Run() {
 	fragColor.rgb = mainCol.rgb * lightCol;
 	
 	if (vGlowColor.a == 0.0) {
+#if defined(BAR_GROUND_DECAL_EXACT_COLD_ATTENUATION)
+		// A positive-zero input stays zero through the attenuation when its
+		// operands are finite. Bound the distance operands well below overflow,
+		// and require a nonzero normal radius before dropping its division.
+		// The accepted cold-glow endpoint already skips the remaining RGB add.
+		bool skipColdAttenuation = false;
+		if (as_type<uint>(glow) == 0u) {
+			const bool boundedWorld = all(abs(float4(worldPos, curAdjustedFrame)) <=
+				float4(0x1p30f, 0x1p30f, 0x1p30f, 0x1p20f));
+			const bool boundedCenter = all(float4(abs(midPoint.xyz), midPoint.w) <= 0x1p30f);
+			const uint3 rgbExponent = as_type<uint3>(fragColor.rgb) & 0x7f800000u;
+			const bool normalRGB = all((rgbExponent - 0x00800000u) < 0x7f000000u);
+			skipColdAttenuation = boundedWorld & boundedCenter & (midPoint.w >= 0x1p-20f) &
+				(normVal.w >= 0.0f) & (normVal.w <= 1.0f) & normalRGB;
+		}
+		if (!skipColdAttenuation) {
+#endif
 		// overglow
 		glow += smoothstep(0.75, 1.0, glow) * 0.2 * abs(sin(0.02 * curAdjustedFrame));
 
@@ -761,8 +950,25 @@ void Run() {
 		glow *= pow(relDistance, 7.0); // artistic choice to keep the glow centered
 		glow *= smoothstep(-SMF_SHALLOW_WATER_DEPTH, 0.0, worldPos.y);
 
+#if defined(BAR_GROUND_DECAL_EXACT_COLD_GLOW)
+		// After the ORIGINAL attenuation, signed zero times a finite black-body
+		// color is signed zero. Only bypass the add for normal, nonzero RGB.
+		// Keep prior/remaining texture, derivative and blending order intact.
+		bool zeroAdd=false;
+		if(glow==0.0f && normVal.w>=0.0f && normVal.w<=1.0f) {
+			const uint3 exponent=as_type<uint3>(fragColor.rgb)&0x7f800000u;
+			zeroAdd=all(exponent!=0u) && all(exponent!=0x7f800000u);
+		}
+		if(!zeroAdd) {
+#endif
 		float t = mix(1.0, 3700.0, glow);
 		fragColor.rgb += BlackBody(normVal.w * t) * glow;
+#if defined(BAR_GROUND_DECAL_EXACT_COLD_GLOW)
+		}
+#endif
+#if defined(BAR_GROUND_DECAL_EXACT_COLD_ATTENUATION)
+		}
+#endif
 	} else {
 		// alpha mixed
 		fragColor.rgb  = mix(fragColor.rgb, vGlowColor.rgb * normVal.w * glow, vGlowColor.a);
@@ -804,7 +1010,21 @@ void Run() {
 	fragColor.a *= mix(1.0, EllipsoidRedunction(rotWorldPos, ellipseAxes), float(vDecalType == DECAL_EXPLOSION));
 	// artistic adjustments
 
+#if defined(BAR_GROUND_DECAL_ZERO_ANGLE)
+	const float angleDot = dot(vRotMat[1], N);
+	const float angleBase = max(angleDot, 0.0f);
+	// The exact positive-zero exponent shortcut requires a positive normal base.
+	const uint angleBits = as_type<uint>(angleDot);
+	const bool angleIsUnit = as_type<uint>(vDotElimExp) == 0u &&
+		angleBits >= 0x00800000u && angleBits < 0x7f800000u;
+	if (angleIsUnit) {
+		fragColor *= 1.0f;
+	} else {
+		fragColor *= mix(1.0f, pow(angleBase, vDotElimExp), float(vDotElimExp > 0.0f));
+	}
+#else
 	fragColor  *= mix(1.0, pow(max(dot(vRotMat[1], N), 0.0), vDotElimExp), float(vDotElimExp > 0.0));
+#endif
 
 	fragColor.a *=
 		smoothstep(0.0, EPS, relUV.x) * (1.0 - smoothstep(1.0 - EPS, 1.0, relUV.x)) *
@@ -841,7 +1061,37 @@ void Run() {
 #undef nx
 #undef ny
 #undef nz
+// AA0 raster positions are physical pixel centers. DepthPixel() applies the
+// logical-window mapping and the depth-image flip separately from unprojection.
+#ifdef BAR_GROUND_DECAL_WORLD_POSITION_REUSE
+inline uint2 GroundDecalWorldPositionOrigin(float targetHeight, uint snapshotHeight)
+{
+	return uint2(0u, uint(targetHeight) - snapshotHeight);
+}
+kernel void GroundDecalBuildWorldPositions(
+	constant DecalUniforms& u [[buffer(1)]], depth2d<float> terrainDepth [[texture(5)]],
+	texture2d<uint, access::write> worldPositions [[texture(7)]], uint2 pixel [[thread_position_in_grid]])
+{
+	DecalFragmentProgram p;
+	p.depthTex = terrainDepth;
+	p.flags = u.flags;
+	p.screenSizeInverse = u.frameScreen.yz;
+	p.gl_ModelViewProjectionMatrixInverse = u.inverseViewProjection;
+	const uint2 origin = GroundDecalWorldPositionOrigin(u.fragmentToLogical.w, worldPositions.get_height());
+	const float2 center = float2(origin + pixel) + 0.5f;
+	p.gl_FragCoord = float4(center * u.fragmentToLogical.xy + u.fragmentToLogical.zw, 0.0f, 1.0f);
+	worldPositions.write(uint4(as_type<uint3>(p.GetFragmentWorldPos()), 0u), pixel);
+}
+#endif
 fragment float4 GroundDecalFragment(DecalVarying i [[stage_in]],constant DecalUniforms& u [[buffer(1)]],
+#ifdef BAR_GROUND_DECAL_WORLD_POSITION_REUSE
+texture2d<uint, access::read> worldPositions [[texture(7)]],
+#endif
+#ifdef BAR_GROUND_DECAL_COVERAGE
+device atomic_uint* coverageCounts [[buffer(2)]],constant uint2& coverageSize [[buffer(3)]],
+device uint4* trackPasses [[buffer(4)]],device atomic_uint* trackPassCount [[buffer(5)]],
+uint diagnosticPrimitive [[primitive_id]],
+#endif
 texture2d<float> normalTex [[texture(1)]],texture2d<float> minimap [[texture(2)]],
 #if NATIVE_GROUND_DECAL_SHADOWS
 depth2d<float> shadowDepth [[texture(3)]],texture2d<float> shadowColor [[texture(4)]],
@@ -862,6 +1112,10 @@ sampler atlasSampler [[sampler(5)]] RECOIL_SAMPLE_POSITION_ARGUMENT) {
 	RECOIL_SAMPLE_FIX_POSITION(i.position,get_sample_position(recoilOriginalSampleID));
 #endif
 DecalFragmentProgram p;p.depthTex=terrainDepth;p.groundNormalTex=normalTex;p.miniMapTex=minimap;p.atlasTex=atlas;
+#ifdef BAR_GROUND_DECAL_WORLD_POSITION_REUSE
+const uint2 origin = GroundDecalWorldPositionOrigin(u.fragmentToLogical.w, worldPositions.get_height());
+p.cachedWorldPosition = as_type<float3>(worldPositions.read(uint2(i.position.xy) - origin).xyz);
+#endif
 p.normalSampler=normalSampler;p.minimapSampler=minimapSampler;p.atlasSampler=atlasSampler;
 #if NATIVE_GROUND_DECAL_SHADOWS
 p.shadowTex=shadowDepth;p.shadowColorTex=shadowColor;p.shadowSampler=shadowSampler;p.shadowColorSampler=shadowColorSampler;
@@ -873,7 +1127,13 @@ p.shadowTex=shadowDepth;p.shadowColorTex=shadowColor;p.shadowSampler=shadowSampl
 #else
  p.gl_SampleID=0;
 #endif
- p.vTranformedPos[0]=i.p0;p.vTranformedPos[1]=i.p1;p.vTranformedPos[2]=i.p2;p.vTranformedPos[3]=i.p3;p.vTranformedPos[4]=i.p4;p.vuvMain=i.uvMain;p.vuvNorm=i.uvNorm;p.vData1=i.data1;p.vData2=i.data2;p.vData3=i.data3;p.vData4=i.data4;p.vRotMat=float3x3(i.r0,i.r1,i.r2);p.Run();return p.fragColor;
+ p.vTranformedPos[0]=i.p0;p.vTranformedPos[1]=i.p1;p.vTranformedPos[2]=i.p2;p.vTranformedPos[3]=i.p3;p.vTranformedPos[4]=i.p4;p.vuvMain=i.uvMain;p.vuvNorm=i.uvNorm;p.vData1=i.data1;p.vData2=i.data2;p.vData3=i.data3;p.vData4=i.data4;p.vRotMat=float3x3(i.r0,i.r1,i.r2);
+#ifdef BAR_GROUND_DECAL_COVERAGE
+p.coverageCounts=coverageCounts;p.coverageSize=coverageSize;
+p.trackPasses=trackPasses;p.trackPassCount=trackPassCount;
+p.diagnosticTrack=i.diagnosticTrack;p.diagnosticPrimitive=diagnosticPrimitive;
+#endif
+p.Run();return p.fragColor;
 }
 
 struct DecalAtlasVertex {float2 position,uv;};
@@ -888,9 +1148,13 @@ fragment float4 GroundDecalAtlasFragment(DecalAtlasVarying v [[stage_in]],consta
  return tex.sample(linearClamp,uv,level(0));
 }
 )MSL";
-inline std::string NativeGroundDecalShaderSource(bool high,bool shadows)
+inline std::string NativeGroundDecalShaderSource(bool high,bool shadows,bool skipUnusedTerrainColor=false,bool zeroAngle=false,bool reuseWorldPosition=false)
 {
 	return std::string(high?"#define HIGH_QUALITY\n#ifndef RECOIL_NATIVE_SAMPLE_SHADING\n#define RECOIL_NATIVE_SAMPLE_SHADING 1\n#endif\n":"")+
-		"#define NATIVE_GROUND_DECAL_SHADOWS "+std::to_string(unsigned(shadows))+"\n"+NativeGroundDecalShaders;
+		"#define NATIVE_GROUND_DECAL_SHADOWS "+std::to_string(unsigned(shadows))+"\n"+
+		(skipUnusedTerrainColor?"#define NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR 1\n":"")+
+		(zeroAngle?"#define BAR_GROUND_DECAL_ZERO_ANGLE 1\n":"")+
+		(reuseWorldPosition?"#define BAR_GROUND_DECAL_WORLD_POSITION_REUSE 1\n":"")+
+		NativeGroundDecalShaders;
 }
 }

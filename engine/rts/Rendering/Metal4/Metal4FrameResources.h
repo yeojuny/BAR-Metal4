@@ -19,6 +19,7 @@ struct PostprocessTextureStorage181;
 struct RuntimeFrameSlot {
 	std::shared_ptr<RuntimeFrameSlot> spare;
 	std::shared_ptr<RuntimeFrameSlot> third; // independent allocator/residency, no cycles
+ unsigned long long submittedAtThree=0,threeOutstanding=0;
 	__strong id<MTL4CommandAllocator> allocator = nil;
 	__strong id<MTL4CommandBuffer> command = nil;
 	__strong id<MTLResidencySet> residency = nil;
@@ -77,6 +78,14 @@ struct RuntimeFrameResources {
  // complete before this command buffer can be submitted. Keys are retained by
  // the closures; repeated consumers do not add repeated completion work.
  std::map<const void*,std::function<void()>,std::less<const void*>> priorReadChecks;
+ // Exact private image dependencies are ordered by the GPU queue. Their
+ // producer success checks still precede the consumer's retirement receipt.
+ std::map<const void*,std::function<void()>,std::less<const void*>> orderedGPUReadChecks;
+ bool orderedGameFrame = false;
+ unsigned priorReadClasses = 0;
+ bool orderedCubeRead = false;
+ uint64_t rankAtlasEvent = 0;
+ uint64_t simulationFrame = 0;
  bool recordedWhilePending = false;
  bool keepResidency = false;
 	bool recording = false;

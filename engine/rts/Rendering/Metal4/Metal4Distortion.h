@@ -13,6 +13,9 @@ public:
  size_t DrawCount()const;uint64_t SequenceAt(size_t)const;
  void EncodeDependencies(id<MTL4CommandBuffer>);
  void EncodeDraw(size_t,id<MTL4CommandBuffer>);
+ // The caller supplies only truly adjacent global draws. Zero preserves the single-operation path.
+ size_t AccumulationCount(size_t index,size_t contiguousCount) const;
+ size_t TryEncodeAccumulation(size_t index,size_t contiguousCount,id<MTL4CommandBuffer> command);
  void DidComplete();
 private:struct Impl;std::unique_ptr<Impl>impl;friend class DistortionGPU;
 };

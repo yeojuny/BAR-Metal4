@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WorldParticles.h"
+#include "Metal4RankAtlasBorrow.h"
 #include "Metal4RetiredArguments.h"
 #include "Metal4TransientUpload177.h"
 #include "WorldParticleIndexLength220.h"
@@ -15,6 +16,7 @@
 #include "Rendering/Backend/NativeParticleAtlasSource.h"
 #import <simd/simd.h>
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstring>
 #include <string>
@@ -64,7 +66,14 @@ fragment float4 ParticleFragmentMain(Varying in [[stage_in]],constant Uniform& u
  RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
  constexpr sampler source(coord::normalized,address::clamp_to_edge,filter::linear,mip_filter::linear);
- const float4 c0=atlas.sample(source,in.uv.xy,uint(in.page)),c1=atlas.sample(source,in.uv.zw,uint(in.page));float4 result=mix(c0,c1,in.blend)*in.color;
+ const float4 c0=atlas.sample(source,in.uv.xy,uint(in.page));
+#if PARTICLE_REUSE_SINGLE_CELL
+ // Whole-draw variant: equal per-vertex UV pairs have the same centroid interpolation and implicit LOD.
+ const float4 c1=c0;
+#else
+ const float4 c1=atlas.sample(source,in.uv.zw,uint(in.page));
+#endif
+ float4 result=mix(c0,c1,in.blend)*in.color;
  result.rgb=mix(result.rgb,u.fogColor.rgb*result.a,1-in.fog);
  #if PARTICLE_HAS_DEPTH
  if(u.options.y!=0){constexpr sampler nearest(coord::normalized,address::clamp_to_edge,filter::nearest);float d=depth.sample(nearest,float2(in.screenUV.x,1-in.screenUV.y));if(u.options.x==1)d=d*2-1;
@@ -86,7 +95,14 @@ struct Atlas {
 	__strong id<MTLTexture> image2D=nil;
 	bool initialized=false;
 	uint64_t encodedSubmission=0;
+ uint64_t completedSubmission=0;
+ const Runtime* runtime=nullptr;
 };
+bool SingleCellTexture(const NativeWorldParticleVertex& vertex)
+{
+	return vertex.animation[0]==1.f&&vertex.animation[1]==1.f&&std::isfinite(vertex.animation[2])&&
+		vertex.uvw[0]>=0.f&&vertex.uvw[0]<=1.f&&vertex.uvw[1]>=0.f&&vertex.uvw[1]<=1.f;
+}
 void EncodeAtlasMipmaps(std::span<const std::shared_ptr<Atlas>> atlases,id<MTL4CommandBuffer> command,uint64_t submission)
 {
 	if(atlases.empty())return;
@@ -103,7 +119,11 @@ void EncodeAtlasMipmaps(std::span<const std::shared_ptr<Atlas>> atlases,id<MTL4C
 }
 void CompleteAtlasMipmaps(std::span<const std::shared_ptr<Atlas>> atlases,uint64_t submission)
 {
-	for(const auto& atlas:atlases){Require(atlas->initialized||(submission&&atlas->encodedSubmission==submission),"Cannot publish atlas mips before their actual producer retires");atlas->initialized=true;atlas->encodedSubmission=0;}
+	for(const auto& atlas:atlases){
+  Require(atlas->initialized||(submission&&atlas->encodedSubmission==submission),"Cannot publish atlas mips before their actual producer retires");
+  if(!atlas->initialized)atlas->completedSubmission=submission;
+  atlas->initialized=true;atlas->encodedSubmission=0;
+ }
 }
 struct RetainedAtlasImage {
 	std::shared_ptr<const NativeCUSTextureObject> object;
@@ -166,6 +186,7 @@ std::shared_ptr<Atlas> Upload(RuntimeLease& lease,std::shared_ptr<const NativeWo
 	auto texture=[lease.Device() newTextureWithDescriptor:d];Require(texture!=nil,"Cannot allocate exact original packed particle atlas");texture.label=String(owner->sourceName);
 	for(size_t page=0;page<owner->pages.size();++page) [texture replaceRegion:MTLRegionMake2D(0,0,base.width,base.height) mipmapLevel:0 slice:page withBytes:owner->pages[page].front().rgba.data() bytesPerRow:size_t(base.width)*4 bytesPerImage:size_t(base.width)*base.height*4];
 	auto result=std::make_shared<Atlas>();result->owner=std::move(owner);result->texture=texture;result->initialized=!result->owner->generateMipmaps;
+ result->runtime=lease.ContextIdentity();
 	if(result->owner->pages.size()==1){result->image2D=[texture newTextureViewWithPixelFormat:texture.pixelFormat textureType:MTLTextureType2D levels:NSMakeRange(0,texture.mipmapLevelCount) slices:NSMakeRange(0,1)];Require(result->image2D!=nil,"Cannot expose the original single-page atlas as its actual2D view");}
 	return result;
 }
@@ -224,6 +245,7 @@ struct PreparedWorldParticles::Impl {
 		bool stencil=false;
 		uint64_t sequence=0;
   size_t logicalIndexBytes220=0;
+		bool singleCellTexture=false;
 	};
 	std::vector<Draw> draws;
 	std::vector<std::shared_ptr<Atlas>> pendingMipmaps;
@@ -285,6 +307,14 @@ void PreparedWorldParticles::EncodeDraw(std::size_t index,id<MTL4RenderCommandEn
 		if(draw.indices!=nil){const NSUInteger offset=NSUInteger(draw.range.firstIndex)*draw.indexStride;
 			[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.range.indexCount indexType:draw.indexType indexBuffer:draw.indices.gpuAddress+offset indexBufferLength:(draw.logicalIndexBytes220?WorldParticleIndexLength220(draw.logicalIndexBytes220,draw.indices.length,draw.range.firstIndex,draw.range.indexCount,draw.indexStride):draw.indices.length-offset) instanceCount:draw.instanceCount];}
 		else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.vertexCount instanceCount:draw.instanceCount];
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if(draw.singleCellTexture){
+		static std::atomic<bool> reported{false};
+		if(!reported.load(std::memory_order_relaxed)&&!reported.exchange(true,std::memory_order_relaxed))
+			LOG("[NativeParticleSingleCell] submission=%llu stage=%u indices=%u",
+				static_cast<unsigned long long>(impl->submission),unsigned(draw.range.stage),draw.range.indexCount);
+	}
+#endif
 	// Ground flashes must restore zero bias. Other draws already set zero above;
 	// no intervening command changes it, including an empty geometry invocation.
 	if(draw.range.groundAtlas)[encoder setDepthBias:0 slopeScale:0 clamp:0];
@@ -373,7 +403,7 @@ struct WorldParticlesGPU::Impl {
 		__strong id<MTLRenderPipelineState> alpha=nil,groundPipeline=nil;
 		MTLPixelFormat format=MTLPixelFormatInvalid;bool validation=false;
 	};
-	std::map<std::tuple<bool,MTLPixelFormat,bool,unsigned>,ParticleProgram> particlePrograms; // Actual depth presence and output count are part of PSO identity.
+	std::map<std::tuple<bool,MTLPixelFormat,bool,unsigned,bool>,ParticleProgram> particlePrograms; // Actual depth presence and output count are part of PSO identity.
 	__strong id<MTLLibrary> luaLibrary=nil,engineLibrary=nil;
 	__strong id<MTLRenderPipelineState> luaPipeline=nil,enginePipeline=nil;
 	__strong id<MTLDepthStencilState> luaDepth=nil,luaGhostDepth=nil,luaNoStencilDepth=nil,luaGhostNoStencilDepth=nil;
@@ -435,27 +465,42 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 	Require(viewCamera.clipDepth!=ClipDepthConvention::Unsupported,"Original world particles require actual camera clip depth");
 	ValidateNativeWorldParticlePass(frame,viewCamera);
 	Require(!frame.softenRequested||terrainDepth!=nil,"Original soft particles require the real terrain-only depth copy");
+	static const bool reuseSingleCell=[] {
+		const char* value=std::getenv("BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL");
+		return value&&std::strcmp(value,"1")==0;
+	}();
+	const bool checkSingleCell=reuseSingleCell&&outputSamples==1;
+	std::vector<uint8_t> singleCellRanges;
+	if(checkSingleCell)singleCellRanges.reserve(frame.ranges.size());
 	for(const auto& range:frame.ranges) {
+		bool singleCell=checkSingleCell&&range.indexCount!=0;
 		Require(range.indexCount%3==0&&range.firstIndex<=frame.indices.size()&&range.indexCount<=frame.indices.size()-range.firstIndex,"Original particle indexed range outside captured geometry");
 		const auto owner=range.groundAtlas?frame.groundAtlas:frame.atlas;Require(owner!=nullptr,"Original world particle has no real packed atlas image");
 		for(size_t n=range.firstIndex;n<size_t(range.firstIndex)+range.indexCount;++n) {Require(frame.indices[n]<frame.vertices.size(),"Original particle index outside captured vertices");const auto& v=frame.vertices[frame.indices[n]];
 			for(float x:v.position)Require(std::isfinite(x),"Original particle nonfinite position");for(float x:v.uvw)Require(std::isfinite(x),"Original particle nonfinite UV/page");
-			Require(v.uvw[2]>=0&&std::floor(v.uvw[2])==v.uvw[2]&&v.uvw[2]<owner->pages.size(),"Original particle uses invalid original atlas page");}
+			Require(v.uvw[2]>=0&&std::floor(v.uvw[2])==v.uvw[2]&&v.uvw[2]<owner->pages.size(),"Original particle uses invalid original atlas page");
+			singleCell=singleCell&&SingleCellTexture(v);
+		}
+		if(checkSingleCell)singleCellRanges.push_back(singleCell);
 	}
 	const bool hasDepth=terrainDepth!=nil;
-	auto& particleProgram=impl->particlePrograms[std::make_tuple(hasDepth,colorFormat,validation,lease.SampleShadingKey(outputSamples))];
-	if(particleProgram.alpha==nil||particleProgram.format!=colorFormat||particleProgram.validation!=validation) {
-		const auto start=Clock::now();NSError* error=nil;auto ld=[MTL4LibraryDescriptor new];ld.source=String(std::string("#define PARTICLE_HAS_DEPTH ")+(hasDepth?"1\n":"0\n")+SHADER);ld.name=@"Original engine projectile atlas/animation/fog/soft-depth shaders";
-		auto library=lease.NewLibrary(ld,&error);Require(library!=nil,"Cannot compile original particle MSL: "+Error(error));
-		auto vertex=[MTL4LibraryFunctionDescriptor new];vertex.library=library;vertex.name=@"ParticleVertexMain";auto fragment=[MTL4LibraryFunctionDescriptor new];fragment.library=library;fragment.name=@"ParticleFragmentMain";
-		const auto pipeline=[&](bool ground) {auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=outputSamples;d.vertexFunctionDescriptor=vertex;d.fragmentFunctionDescriptor=fragment;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
-			auto attachment=d.colorAttachments[0];attachment.pixelFormat=colorFormat;attachment.blendingState=MTL4BlendStateEnabled;
-			attachment.sourceRGBBlendFactor=attachment.sourceAlphaBlendFactor=ground?MTLBlendFactorSourceAlpha:MTLBlendFactorOne;attachment.destinationRGBBlendFactor=attachment.destinationAlphaBlendFactor=ground?MTLBlendFactorOne:MTLBlendFactorOneMinusSourceAlpha;
-			auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);d.options=options;
-			auto p=lease.NewRenderPipeline(d,&error);Require(p!=nil,"Cannot compile original particle Metal4 pipeline: "+Error(error));return p;};
-		auto alpha=pipeline(false),ground=pipeline(true);particleProgram.library=library;particleProgram.alpha=alpha;particleProgram.groundPipeline=ground;particleProgram.format=colorFormat;particleProgram.validation=validation;shaderMilliseconds+=Milliseconds(start);
-	}
-	lease.Retain(particleProgram.library);lease.Retain(particleProgram.alpha);lease.Retain(particleProgram.groundPipeline);
+	const auto programFor=[&](bool singleCell)->Impl::ParticleProgram& {
+		auto& particleProgram=impl->particlePrograms[std::make_tuple(hasDepth,colorFormat,validation,lease.SampleShadingKey(outputSamples),singleCell)];
+		if(particleProgram.alpha==nil||particleProgram.format!=colorFormat||particleProgram.validation!=validation) {
+			const auto start=Clock::now();NSError* error=nil;auto ld=[MTL4LibraryDescriptor new];ld.source=String(std::string("#define PARTICLE_HAS_DEPTH ")+(hasDepth?"1\n":"0\n")+(singleCell?"#define PARTICLE_REUSE_SINGLE_CELL 1\n":"")+SHADER);ld.name=@"Original engine projectile atlas/animation/fog/soft-depth shaders";
+			auto library=lease.NewLibrary(ld,&error);Require(library!=nil,"Cannot compile original particle MSL: "+Error(error));
+			auto vertex=[MTL4LibraryFunctionDescriptor new];vertex.library=library;vertex.name=@"ParticleVertexMain";auto fragment=[MTL4LibraryFunctionDescriptor new];fragment.library=library;fragment.name=@"ParticleFragmentMain";
+			const auto pipeline=[&](bool ground) {auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=outputSamples;d.vertexFunctionDescriptor=vertex;d.fragmentFunctionDescriptor=fragment;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
+				auto attachment=d.colorAttachments[0];attachment.pixelFormat=colorFormat;attachment.blendingState=MTL4BlendStateEnabled;
+				attachment.sourceRGBBlendFactor=attachment.sourceAlphaBlendFactor=ground?MTLBlendFactorSourceAlpha:MTLBlendFactorOne;attachment.destinationRGBBlendFactor=attachment.destinationAlphaBlendFactor=ground?MTLBlendFactorOne:MTLBlendFactorOneMinusSourceAlpha;
+				auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);d.options=options;
+				auto p=lease.NewRenderPipeline(d,&error);Require(p!=nil,"Cannot compile original particle Metal4 pipeline: "+Error(error));return p;};
+			auto alpha=pipeline(false),ground=pipeline(true);particleProgram.library=library;particleProgram.alpha=alpha;particleProgram.groundPipeline=ground;particleProgram.format=colorFormat;particleProgram.validation=validation;shaderMilliseconds+=Milliseconds(start);
+		}
+		lease.Retain(particleProgram.library);lease.Retain(particleProgram.alpha);lease.Retain(particleProgram.groundPipeline);
+		return particleProgram;
+	};
+	auto& originalProgram=programFor(false);
 	auto result=std::unique_ptr<PreparedWorldParticles>(new PreparedWorldParticles);result->impl->submission=submission;
  static const bool upload220=[]{const char* v=std::getenv("BAR_NATIVE_WORLD_PARTICLE_UPLOAD220");return v&&std::strcmp(v,"1")==0;}();
  static const bool counters220=[]{const char* v=std::getenv("BAR_NATIVE_WORLD_PARTICLE_UPLOAD220_COUNTERS");return v&&std::strcmp(v,"1")==0;}();
@@ -479,20 +524,75 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::Prepare(RuntimeLease&
 	id<MTLBuffer> vertices=frame.ranges.empty()?nil:uploadBuffer220(frame.vertices.data(),frame.vertices.size()*sizeof(NativeWorldParticleVertex));
 	id<MTLBuffer> indices=frame.ranges.empty()?nil:uploadBuffer220(frame.indices.data(),frame.indices.size()*sizeof(uint32_t));
 	if(terrainDepth!=nil)lease.AddAllocation(terrainDepth);
+	static const bool groundFlashPrepareReuse=[] {
+		const char* value=std::getenv("BAR_NATIVE_GROUNDFLASH_PREPARE_REUSE");
+		return value&&std::strcmp(value,"1")==0;
+	}();
+	// Reuse only immutable GroundFlash bindings prepared by this exact lease.
+	// Replacing this entry never mutates a table already referenced by a draw;
+	// Upload ownership and Retain keep every version alive through completion.
+	struct GroundFlashBindings {
+		std::array<unsigned char,sizeof(Uniform)> uniformBytes{};
+		__strong id<MTLBuffer> vertices=nil;
+		__strong id<MTLTexture> atlas=nil,terrainDepth=nil;
+		MTLGPUAddress vertexAddress=0;
+		uint64_t atlasResource=0,terrainDepthResource=0;
+		__strong id<MTL4ArgumentTable> arguments=nil;
+	} groundFlashBindings;
+	Uniform groundFlashMatrices{};
+	bool groundFlashMatricesReady=false;
+	__strong id<MTLDepthStencilState> groundFlashDepthStates[4]={nil,nil,nil,nil};
+	size_t rangeIndex=0;
 	for(const auto& range:frame.ranges) {
-		auto image=atlas(range.groundAtlas);Uniform u{};u.view=Matrix(viewCamera.view);u.projection=Matrix(viewCamera.projection);u.viewProjection=simd_mul(u.projection,u.view);
+		const bool singleCell=checkSingleCell&&singleCellRanges[rangeIndex];
+		++rangeIndex;
+		// Keep atlas residency, producer readiness and pending mipmap handling on
+		// the original per-range path, including when the bindings are reused.
+		auto image=atlas(range.groundAtlas);
+		const bool groundFlash=groundFlashPrepareReuse&&range.stage==NativeWorldParticleStage::GroundFlashes&&range.groundAtlas;
+		Uniform u{};
+		if(groundFlash&&groundFlashMatricesReady) {
+			u.view=groundFlashMatrices.view;u.projection=groundFlashMatrices.projection;u.viewProjection=groundFlashMatrices.viewProjection;
+		}else{
+			u.view=Matrix(viewCamera.view);u.projection=Matrix(viewCamera.projection);u.viewProjection=simd_mul(u.projection,u.view);
+		}
 		u.clipPlane=simd_make_float4(0,range.stage==NativeWorldParticleStage::AlphaBelowWater?-1.f:(range.stage==NativeWorldParticleStage::AlphaAboveWater?1.f:0.f),0,range.stage==NativeWorldParticleStage::AlphaBelowWater||range.stage==NativeWorldParticleStage::AlphaAboveWater?0.f:1.f);
 		if(disabledAlphaClipStages&(1u<<unsigned(range.stage)))u.clipPlane=simd_make_float4(0,0,0,1);
 		u.camera=simd_make_float4(frame.fogCameraPosition[0],frame.fogCameraPosition[1],frame.fogCameraPosition[2],0);u.fogColor=simd_make_float4(frame.fogColor[0],frame.fogColor[1],frame.fogColor[2],0);
 		u.fogParameters=simd_make_float4(frame.fogDistances[0],frame.fogDistances[1],range.softenThreshold,range.alphaThreshold);u.options=simd_make_uint4(viewCamera.clipDepth==ClipDepthConvention::MinusOneToOne?1:0,frame.softenRequested?1:0,0,0);
-		for(const auto* matrix:{viewCamera.view.data(),viewCamera.projection.data()})for(unsigned n=0;n<16;++n)Require(std::isfinite(matrix[n]),"Original particle nonfinite camera matrix");
-		auto uniform=uploadBuffer220(&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=2;ad.maxTextureBindCount=2;ad.initializeBindings=YES;NSError* error=nil;
-		auto arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(arguments!=nil,"Cannot allocate original particle argument table: "+Error(error));lease.Retain(arguments);
-		[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:uniform.gpuAddress atIndex:1];[arguments setTexture:image->texture.gpuResourceID atIndex:0];if(terrainDepth!=nil)[arguments setTexture:terrainDepth.gpuResourceID atIndex:1];
-		auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=range.depthTest?MTLCompareFunctionLessEqual:MTLCompareFunctionAlways;dd.depthWriteEnabled=range.depthWrite;
-		auto depth=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(depth!=nil,"Cannot allocate original particle depth state");lease.Retain(depth);
+		if(!groundFlash||!groundFlashMatricesReady) {
+			for(const auto* matrix:{viewCamera.view.data(),viewCamera.projection.data()})for(unsigned n=0;n<16;++n)Require(std::isfinite(matrix[n]),"Original particle nonfinite camera matrix");
+			if(groundFlash){groundFlashMatrices.view=u.view;groundFlashMatrices.projection=u.projection;groundFlashMatrices.viewProjection=u.viewProjection;groundFlashMatricesReady=true;}
+		}
+		id<MTL4ArgumentTable> arguments=nil;
+		if(groundFlash&&groundFlashBindings.arguments!=nil&&
+			groundFlashBindings.vertices==vertices&&groundFlashBindings.atlas==image->texture&&groundFlashBindings.terrainDepth==terrainDepth&&
+			groundFlashBindings.vertexAddress==vertices.gpuAddress&&groundFlashBindings.atlasResource==image->texture.gpuResourceID._impl&&
+			groundFlashBindings.terrainDepthResource==(terrainDepth!=nil?terrainDepth.gpuResourceID._impl:0)&&
+			std::memcmp(groundFlashBindings.uniformBytes.data(),&u,sizeof(u))==0) {
+			arguments=groundFlashBindings.arguments;
+		}else{
+			auto uniform=uploadBuffer220(&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=2;ad.maxTextureBindCount=2;ad.initializeBindings=YES;NSError* error=nil;
+			arguments=[lease.Device() newArgumentTableWithDescriptor:ad error:&error];Require(arguments!=nil,"Cannot allocate original particle argument table: "+Error(error));lease.Retain(arguments);
+			[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:uniform.gpuAddress atIndex:1];[arguments setTexture:image->texture.gpuResourceID atIndex:0];if(terrainDepth!=nil)[arguments setTexture:terrainDepth.gpuResourceID atIndex:1];
+			if(groundFlash) {
+				std::memcpy(groundFlashBindings.uniformBytes.data(),&u,sizeof(u));
+				groundFlashBindings.vertices=vertices;groundFlashBindings.atlas=image->texture;groundFlashBindings.terrainDepth=terrainDepth;
+				groundFlashBindings.vertexAddress=vertices.gpuAddress;groundFlashBindings.atlasResource=image->texture.gpuResourceID._impl;
+				groundFlashBindings.terrainDepthResource=terrainDepth!=nil?terrainDepth.gpuResourceID._impl:0;groundFlashBindings.arguments=arguments;
+			}
+		}
+		const unsigned depthKey=unsigned(range.depthTest)|(unsigned(range.depthWrite)<<1);
+		id<MTLDepthStencilState> depth=groundFlash?groundFlashDepthStates[depthKey]:nil;
+		if(depth==nil) {
+			auto dd=[MTLDepthStencilDescriptor new];dd.depthCompareFunction=range.depthTest?MTLCompareFunctionLessEqual:MTLCompareFunctionAlways;dd.depthWriteEnabled=range.depthWrite;
+			depth=[lease.Device() newDepthStencilStateWithDescriptor:dd];Require(depth!=nil,"Cannot allocate original particle depth state");lease.Retain(depth);
+			if(groundFlash)groundFlashDepthStates[depthKey]=depth;
+		}
+		auto& particleProgram=singleCell?programFor(true):originalProgram;
 		result->impl->draws.push_back({range,range.groundAtlas?particleProgram.groundPipeline:particleProgram.alpha,depth,arguments,indices});
   result->impl->draws.back().logicalIndexBytes220=frame.indices.size()*sizeof(uint32_t);
+		result->impl->draws.back().singleCellTexture=singleCell;
 		if(range.stage==NativeWorldParticleStage::AlphaAboveWater){
 			if(!follow218.firstAlphaSeen){const auto& prepared=result->impl->draws.back();follow218.firstAlphaSeen=true;follow218.firstAlphaNonempty=prepared.indices!=nil&&prepared.range.indexCount>0&&prepared.instanceCount>0;follow218.atlas=image->texture;}
 			else if(follow218.atlas!=image->texture)follow218.inputsKnown=false;
@@ -573,14 +673,38 @@ std::unique_ptr<PreparedWorldParticles> WorldParticlesGPU::PrepareLuaNano(Runtim
 	}
 	impl->lastInfoNormal=frame.infoIsNormal;
 	Require(info!=nil,"Original Lua nano has no original $info texture");lease.AddAllocation(info);
+	static const bool reusePairedUniform=[] {
+		const char* value=std::getenv("BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE");
+		return value && std::strcmp(value,"1")==0;
+	}();
+	const NativeLuaNanoDraw* normalDraw=nullptr;
+	id<MTLBuffer> normalUniform=nil;
+	LuaNanoUniform normalBytes;
 	for(const auto& draw:frame.draws) {
-		if(draw.instanceCount==0)continue;
+		if(draw.instanceCount==0) {
+			normalDraw=nullptr;
+			continue;
+		}
 		auto mesh=impl->snapshotBuffers.Read(lease,draw.vertexSlots,draw.vertexSlots->bytes.size());auto instances=impl->snapshotBuffers.Read(lease,draw.instances,draw.instances->bytes.size());auto indices=impl->snapshotBuffers.Read(lease,draw.indices,draw.indices->bytes.size());
 		LuaNanoUniform u{};u.cameraViewProjection=Matrix(frame.cameraViewProjection);u.cameraViewInverse=Matrix(frame.cameraViewInverse);
 		u.mapSize=simd_make_float4(frame.mapSquares[0]*8.f,frame.mapSquares[1]*8.f,frame.mapSquares[2]*8.f,frame.mapSquares[3]*8.f);u.timeInfo=simd_make_float4(animationFrame,0,0,0);
 		for(size_t n=0;n<nano::PARAMETER_NAMES.size();++n){const auto it=draw.uniforms.find(std::string(nano::PARAMETER_NAMES[n]));if(it!=draw.uniforms.end())u.parameters[n]=it->second;}
 		u.options=simd_make_uint4(viewCamera.clipDepth==ClipDepthConvention::MinusOneToOne?1:0,draw.shape,draw.rejectFutureSpawns?1u:0u,0);
-		auto uniform=Buffer(lease,&u,sizeof(u));auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=3;ad.maxTextureBindCount=1;ad.initializeBindings=YES;NSError* error=nil;
+		// Reuse only the preceding normal pass's immutable upload. The info
+		// texture, camera and animation time are fixed for this preparation.
+		const bool paired=reusePairedUniform && draw.ghostStencilPass && normalDraw
+			&& normalDraw->vertexSlots==draw.vertexSlots && normalDraw->instances==draw.instances
+			&& normalDraw->indices==draw.indices && normalDraw->instanceCount==draw.instanceCount
+			&& std::memcmp(&normalBytes,&u,sizeof(u))==0;
+		auto uniform=paired?normalUniform:Buffer(lease,&u,sizeof(u));
+		if(reusePairedUniform && !draw.ghostStencilPass) {
+			normalDraw=&draw;
+			normalUniform=uniform;
+			std::memcpy(&normalBytes,&u,sizeof(u));
+		} else {
+			normalDraw=nullptr;
+		}
+		auto ad=[MTL4ArgumentTableDescriptor new];ad.maxBufferBindCount=3;ad.maxTextureBindCount=1;ad.initializeBindings=YES;NSError* error=nil;
 		auto arguments=impl->argumentPool.Acquire(lease,ad,result->impl->argumentOwners,&error);Require(arguments!=nil,"Cannot allocate original Lua nano arguments: "+Error(error));lease.Retain(arguments);
 		[arguments setAddress:mesh.gpuAddress atIndex:0];[arguments setAddress:instances.gpuAddress atIndex:1];[arguments setAddress:uniform.gpuAddress atIndex:2];[arguments setTexture:info.gpuResourceID atIndex:0];
 		// Preserve both original passes; absent stencil makes either test pass.
@@ -663,6 +787,54 @@ CUSSourceImage WorldParticlesGPU::AtlasImage(RuntimeLease& lease,const NativeCUS
 	Require(object.target==target&&object.allocation.depth==pages.size()&&object.allocation.levels==backing->atlas->requestedMipLevels&&object.allocation.samples==1,"Original atlas logical target/allocation differs from its retained pages");
 	const auto& sampling=object.sampling;
 	Require(sampling.baseLevel==0&&sampling.maxLevel==int(object.allocation.levels)-1&&sampling.minLod==-1000&&sampling.maxLod==1000&&sampling.lodBias==0&&sampling.compareMode==0,"Original atlas changed LOD/comparison needs its actual consumer");
+ if(rankAtlasBorrow::IsScreenReader(object) && target==NativeCUSTextureTarget::Image2D &&
+    backing->contentVersion==object.version && object.contextGeneration && object.identity &&
+    pages.size()==1 && backing->atlas->generateMipmaps) {
+  const auto found=impl->atlases.find(backing->atlas.get());
+  if(found!=impl->atlases.end()) {
+   auto atlas=found->second;
+   const auto producer=atlas->encodedSubmission;
+   id<MTLTexture> root=atlas->texture, view=atlas->image2D;
+   const bool immutableStorage=atlas->owner==backing->atlas && atlas->runtime==lease.ContextIdentity() &&
+    root && view && root.device==lease.Device() && view.device==lease.Device() &&
+    root.storageMode==MTLStorageModeShared && view.storageMode==root.storageMode &&
+    root.textureType==MTLTextureType2DArray && view.textureType==MTLTextureType2D &&
+    root.pixelFormat==MTLPixelFormatRGBA8Unorm && view.pixelFormat==root.pixelFormat &&
+    root.usage==(MTLTextureUsageShaderRead|MTLTextureUsagePixelFormatView) &&
+    !root.parentTexture && !root.buffer && !root.heap && !root.iosurface &&
+    view.parentTexture==root && view.parentRelativeLevel==0 && view.parentRelativeSlice==0 &&
+    root.sampleCount==1 && view.sampleCount==1 && root.arrayLength==1 && view.arrayLength==1 &&
+    root.width==object.allocation.width && root.height==object.allocation.height &&
+    view.width==root.width && view.height==root.height &&
+    root.mipmapLevelCount==object.allocation.levels && view.mipmapLevelCount==root.mipmapLevelCount;
+   if(immutableStorage && !atlas->initialized && producer && submission==lease.SourceSubmission()) {
+    const auto event=lease.PendingEventForSource(producer);
+    // The registration pins the typed publication and its actual array/view.
+    // A consumer never enters the atlas producer journal on this route.
+    auto owner=std::make_shared<const RetainedAtlasImage>(RetainedAtlasImage{binding.object,atlas});
+    if(lease.OrderGPUReadAfterSubmission(backing.get(),producer,event,
+     [owner,backing,root,view,producer] {
+      const auto& image=*owner->image;
+      Require(owner->object->backing==backing && image.owner==backing->atlas &&
+       image.texture==root && image.image2D==view &&
+       rankAtlasBorrow::ProducerCompleted(producer,image.initialized,image.completedSubmission),
+       "Rank atlas borrow lost its exact successful mip producer");
+     },NativePriorRead::RankAtlas)) {
+     lease.AddAllocation(root);
+     lease.AddAllocation(view);
+     lease.Retain(sampler);
+     CUSSourceImage image;
+     image.texture=view;image.sampler=sampler;image.owner=owner;
+     image.requireReadable=[owner,producer] {
+      const auto& atlas=*owner->image;
+      Require(rankAtlasBorrow::CanEncodeRead(producer,atlas.initialized,atlas.completedSubmission,
+       atlas.encodedSubmission,true),"Rank atlas read lost its ordered mip producer");
+     };
+     return image;
+    }
+   }
+  }
+ }
 	auto atlas=impl->GetAtlas(lease,backing->atlas);
 	Require(object.allocation.width==atlas->texture.width&&object.allocation.height==atlas->texture.height,"Original atlas image extent differs from its published allocation");
  Require(lease.SourceSubmission()==submission,"Original atlas image has another actual lease submission");

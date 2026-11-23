@@ -19,6 +19,7 @@ struct PreparedWorldInfo::Impl {
 	std::shared_ptr<PreparedMetalInfo> metal;
  std::shared_ptr<PreparedWorldInfo> predecessor;
 	mutable bool encoded=false,completed=false;
+	mutable uint64_t encodedSubmission=0;
  bool predecessorOrdered=false;
 };
 PreparedWorldInfo::PreparedWorldInfo():impl(std::make_unique<Impl>()){}
@@ -29,13 +30,20 @@ bool PreparedWorldInfo::MatchesFrame(const NativeWorldInfoFrame& frame)const{ret
 uint64_t PreparedWorldInfo::MapIdentity()const{return impl->frame->mapIdentity;}
 uint64_t PreparedWorldInfo::CompletionSerial()const{return impl->frame->serial;}
 bool PreparedWorldInfo::HasUpdates()const{return !impl->completed&&(!impl->updates.empty()||(impl->metal&&impl->metal->HasUpdates()));}
+bool PreparedWorldInfo::EncodedFullMipProducerOn(uint64_t sourceSubmission)const
+{
+ // Non-Metal updates store the private RGB10_A2 base and generate its full mip
+ // chain. Cached Metal info and wrapper-only encode callbacks cannot claim it.
+ return sourceSubmission&&impl->encoded&&impl->encodedSubmission==sourceSubmission&&
+  !impl->metal&&!impl->updates.empty();
+}
 void PreparedWorldInfo::RegisterResources(RuntimeLease& lease)const
 {
 	lease.AddAllocation(impl->image);if(impl->previous!=nil)lease.AddAllocation(impl->previous);
 	if(impl->metal)lease.AddAllocation(impl->metal->Info());
 	for(const auto& update:impl->updates)update->RegisterInfoResources(lease);
 }
-void PreparedWorldInfo::EncodeDependencies(id<MTL4CommandBuffer> command)const
+void PreparedWorldInfo::EncodeDependencies(id<MTL4CommandBuffer> command,uint64_t sourceSubmission)const
 {
 	if(impl->encoded||impl->completed)return;
  if(impl->predecessor)Require(impl->predecessor->impl->completed||
@@ -47,6 +55,7 @@ void PreparedWorldInfo::EncodeDependencies(id<MTL4CommandBuffer> command)const
 		[e copyFromTexture:impl->previous sourceSlice:0 sourceLevel:0 sourceOrigin:MTLOriginMake(0,0,0) sourceSize:MTLSizeMake(impl->image.width,impl->image.height,1) toTexture:impl->image destinationSlice:0 destinationLevel:0 destinationOrigin:MTLOriginMake(0,0,0)];
 		[e barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[e endEncoding];}
 	for(const auto& update:impl->updates)update->EncodeDependencies(command);
+	impl->encodedSubmission=sourceSubmission;
 	impl->encoded=true;
 }
 void PreparedWorldInfo::DidComplete()const
@@ -65,7 +74,16 @@ std::shared_ptr<PreparedWorldInfo> WorldInfoGPU::Prepare(RuntimeLease& lease,std
 {
 	Require(frame!=nullptr,"Original global info frame unavailable");ValidateNativeWorldInfoFrame(*frame);
 	Require(frame->paddedSquaresX<=lease.Capabilities().maxTextureDimension2D&&frame->paddedSquaresZ<=lease.Capabilities().maxTextureDimension2D,"Original global info exceeds actual device extent");
-	if(auto planned=impl->planned.lock();planned&&planned->MatchesFrame(*frame)){lease.AddAllocation(planned->Info());if(planned->impl->previous!=nil)lease.AddAllocation(planned->impl->previous);if(planned->HasUpdates())for(const auto& update:planned->impl->updates)update->RegisterInfoResources(lease);return planned;}
+	if(auto planned=impl->planned.lock();planned&&planned->MatchesFrame(*frame)){
+		if(planned->impl->encoded&&!planned->impl->completed&&lease.PreparingWhilePending())
+			lease.OrderAfterPreviousSubmission(planned.get(),[planned]{
+				Require(planned->impl->completed,"Reused global info producer did not retire before submission");
+			},NativePriorRead::WorldInfo);
+		lease.AddAllocation(planned->Info());
+		if(planned->impl->previous!=nil)lease.AddAllocation(planned->impl->previous);
+		if(planned->HasUpdates())for(const auto& update:planned->impl->updates)update->RegisterInfoResources(lease);
+		return planned;
+	}
 	auto result=std::shared_ptr<PreparedWorldInfo>(new PreparedWorldInfo);result->impl->state=impl;result->impl->frame=frame;
 	auto baseImage=impl->completed;auto baseSerial=impl->serial;
  bool same=impl->completed!=nil&&impl->map==frame->mapIdentity&&impl->generation==frame->modeGeneration&&impl->mode==frame->mode;
@@ -75,7 +93,7 @@ std::shared_ptr<PreparedWorldInfo> WorldInfoGPU::Prepare(RuntimeLease& lease,std
   result->impl->predecessor=prior;
   result->impl->predecessorOrdered=lease.OrderAfterPreviousSubmission(prior.get(),[prior]{
    Require(prior->impl->completed,"Info predecessor did not actually complete before successor submission");
-  });
+  },NativePriorRead::WorldInfo);
   baseImage=prior->Info();baseSerial=prior->CompletionSerial();same=true;
  }
 	Require(!same||frame->serial>=baseSerial,"Original global info cannot reconstruct an older unretained generation");

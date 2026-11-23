@@ -6,6 +6,10 @@
 #include <array>
 #include <optional>
 #include <new>
+#include <cstdlib>
+#include <cstring>
+#include <limits>
+#include <utility>
 #include "Metal4CubeStoragePool.inc"
 namespace rendering::metal4 {
 // BEGIN COMPLETED_CUBE_LEASE_RECEIPTS
@@ -65,11 +69,61 @@ CubeLeaseSamplers* RuntimeLease::CubeSamplers() noexcept {
  return cubeSamplers.get();
 }
 namespace {
+bool ReuseReflectionCubeContents() {
+ static const bool enabled = [] {
+  const char* setting = std::getenv("BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES");
+  return setting && std::strcmp(setting, "1") == 0;
+ }();
+ return enabled;
+}
+
+// Tokens identify writes, including partially overwritten faces. Never wrap
+// and reuse a token. Zero leaves the subresource unproven.
+uint64_t NextCubeWriteStamp() {
+ static std::atomic<uint64_t> next{1};
+ uint64_t value = next.load(std::memory_order_relaxed);
+ while (value != std::numeric_limits<uint64_t>::max()) {
+  if (next.compare_exchange_weak(value, value + 1, std::memory_order_relaxed)) return value;
+ }
+ return 0;
+}
+
 struct Resource final:NativeCubeTextureResource {
  std::shared_ptr<CubeStorage> storage;
  mutable bool cpuUploaded=false;
  // A per-version proof stamp; previous versions and pool ownership are unchanged.
  mutable std::atomic<uint64_t> overwriteSubmission206{0};
+ mutable std::mutex contentsMutex;
+ mutable uint64_t writerSubmission = 0;
+ mutable std::shared_ptr<cubedelta220::Contents> pending;
+ mutable std::shared_ptr<const cubedelta220::Contents> encoded;
+
+ std::shared_ptr<const cubedelta220::Contents> EncodedContents() const {
+  std::lock_guard lock(contentsMutex);
+  return encoded;
+ }
+ void RecordContents(uint64_t submission, std::shared_ptr<cubedelta220::Contents> contents, bool needsFace) const {
+  std::lock_guard lock(contentsMutex);
+  writerSubmission = submission;
+  encoded.reset();
+  if (needsFace) pending = std::move(contents);
+  else { pending.reset(); encoded = std::move(contents); }
+ }
+ void FinishContents(const NativeCubeTextureBacking& image, uint64_t submission) const {
+  std::lock_guard lock(contentsMutex);
+  if (!pending || writerSubmission != submission) {
+   storage->InvalidateContents();
+   encoded.reset();
+   return;
+  }
+  cubedelta220::SetFaceWrite(*pending, image.sourceFace, NextCubeWriteStamp());
+  if (image.regenerateMipmaps) cubedelta220::SetGeneratedMips(*pending, image.levels, NextCubeWriteStamp());
+  encoded = std::move(pending);
+ }
+ void RetireContents(uint64_t submission) const {
+  std::lock_guard lock(contentsMutex);
+  if (writerSubmission == submission && encoded) storage->RetireContents(encoded);
+ }
 };
 // BEGIN COMPLETED_CUBE_ELIGIBILITY
 bool CompletedCubeReadEligible(const NativeCubeTextureBacking& image,const Resource& resource,bool actualSampler) {
@@ -81,7 +135,7 @@ bool CompletedCubeReadEligible(const NativeCubeTextureBacking& image,const Resou
 std::shared_ptr<const Resource> Storage(const NativeCubeTextureBacking& image){auto r=std::dynamic_pointer_cast<const Resource>(image.resource);Require(r&&r->storage&&r->storage->texture,"Original cube lacks its actual native allocation");return r;}
 // An ordered predecessor is this immutable version's exact successful producer,
 // not permission to consume any encoded cube. The runtime verifies its actual
-// retirement after N's event, feedback and receipt, before submitting N+1.
+// retirement after N's event, feedback and receipt, before publishing N+1.
 void Readable(const NativeCubeTextureBacking& image,uint64_t submission,uint64_t predecessor=0){
  if(predecessor){
   Require(predecessor!=submission&&image.content==NativeTextureContent::ProducerVersion&&
@@ -109,9 +163,28 @@ uint64_t OrderCubePredecessor158(RuntimeLease& lease,const std::shared_ptr<const
   Require(image->content==NativeTextureContent::ProducerVersion&&dependencies&&dependencies==encoded&&
    image->resource&&image->storageGeneration&&image->contentVersion,
    "Cube predecessor has no complete encoded version/storage identity");
+  const auto resource=Storage(*image);
+  const auto texture=resource->storage->texture;
+  const auto event=lease.PendingEventForSource(encoded);
+  // The source is the immutable whole cube, including every face and mip it
+  // publishes. Shared TexSubImage allocations and texture views stay serial.
+  if(event&&image->kind!=NativeCubeTextureKind::Specular&&texture.device==lease.Device()&&
+     texture.storageMode==MTLStorageModePrivate&&texture.textureType==MTLTextureTypeCube&&
+     texture.sampleCount==1&&texture.arrayLength==1&&texture.width==image->size&&
+     texture.height==image->size&&texture.mipmapLevelCount==image->levels&&
+     !texture.parentTexture&&!texture.iosurface&&!texture.buffer&&!texture.heap){
+   const auto generation=image->storageGeneration,version=image->contentVersion;
+   if(lease.OrderGPUReadAfterSubmission(image.get(),encoded,event,
+       [image,resource,texture,generation,version,submission,encoded]{
+        Require(image->resource==resource&&resource->storage->texture==texture&&
+         image->storageGeneration==generation&&image->contentVersion==version,
+         "Ordered cube read lost its physical allocation or version");
+        RequireCubePredecessorComplete158(*image,submission,encoded);
+       },NativePriorRead::Cube))return encoded;
+  }
   if(lease.OrderAfterPreviousSubmission(image.get(),[image,submission,encoded]{
    RequireCubePredecessorComplete158(*image,submission,encoded);
-  }))return encoded;
+  },NativePriorRead::Cube))return encoded;
   // With recording overlap disabled, StageResources still retires N before
   // Begin. Keep the original strict read checks instead of an early CPU wait.
  }
@@ -225,13 +298,40 @@ void PreparedCubeTexture::EncodeDependencies(id<MTL4CommandBuffer> command){
  // On regeneration frames FinishReflection overwrites every lower mip before
  // encodedSubmission is published. Other faces/base levels keep their copies.
  const bool overwrite206=impl->storage->overwriteSubmission206.load(std::memory_order_acquire)==impl->submission;
- for(NSUInteger face=0;face<6;++face)for(NSUInteger mip=0;mip<target.mipmapLevelCount;++mip){if(!PreserveCubeSubresource206(unsigned(face),unsigned(mip),image.sourceFace,overwrite206,image.regenerateMipmaps))continue;auto size=std::max(NSUInteger(1),target.width>>mip);[encoder copyFromTexture:source sourceSlice:face sourceLevel:mip sourceOrigin:MTLOriginMake(0,0,0) sourceSize:MTLSizeMake(size,size,1) toTexture:target destinationSlice:face destinationLevel:mip destinationOrigin:MTLOriginMake(0,0,0)];}
- if(image.initialMipmaps||(!image.requiresFaceDraw&&image.regenerateMipmaps))[encoder generateMipmapsForTexture:target];[encoder barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment|MTLStageVertex|MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];image.dependenciesSubmission.store(impl->submission,std::memory_order_release);
- if(!image.requiresFaceDraw)image.encodedSubmission.store(impl->submission,std::memory_order_release);
+ const bool track = ReuseReflectionCubeContents() && image.kind == NativeCubeTextureKind::Reflection;
+ std::shared_ptr<const cubedelta220::Contents> desired, retired;
+ std::shared_ptr<cubedelta220::Contents> result;
+ if (track) {
+  desired = impl->prior->impl->storage->EncodedContents();
+  retired = impl->storage->storage->InvalidateContents();
+  result = std::make_shared<cubedelta220::Contents>();
+ }
+ for (unsigned face = 0; face < 6; ++face) {
+  for (unsigned mip = 0; mip < target.mipmapLevelCount; ++mip) {
+   if (!PreserveCubeSubresource206(face, mip, image.sourceFace, overwrite206, image.regenerateMipmaps)) continue;
+   if (desired) cubedelta220::SetCopied(*result, *desired, face, mip);
+   if (retired && desired && cubedelta220::CanSkipCopy(*desired, *retired, face, mip)) continue;
+   auto size = std::max(NSUInteger(1),target.width >> mip);
+   [encoder copyFromTexture:source sourceSlice:face sourceLevel:mip sourceOrigin:MTLOriginMake(0,0,0)
+     sourceSize:MTLSizeMake(size,size,1) toTexture:target destinationSlice:face destinationLevel:mip destinationOrigin:MTLOriginMake(0,0,0)];
+  }
+ }
+ if (image.initialMipmaps || (!image.requiresFaceDraw && image.regenerateMipmaps)) {
+  [encoder generateMipmapsForTexture:target];
+  if (track) cubedelta220::SetGeneratedMips(*result, image.levels, NextCubeWriteStamp());
+ }
+ [encoder barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment|MTLStageVertex|MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];
+ [encoder endEncoding];
+ if (track) impl->storage->RecordContents(impl->submission, std::move(result), image.requiresFaceDraw);
+ image.dependenciesSubmission.store(impl->submission,std::memory_order_release);
+ if (!image.requiresFaceDraw) image.encodedSubmission.store(impl->submission,std::memory_order_release);
 }
 void PreparedCubeTexture::FinishReflection(id<MTL4CommandBuffer> command){
  const auto& image=*impl->image;Require(command&&!impl->predecessor&&image.requiresFaceDraw&&image.dependenciesSubmission.load(std::memory_order_acquire)==impl->submission&&!image.encodedSubmission.load(),"Original named cube face completion precedes its actual dependencies or is duplicated");
- auto encoder=[command computeCommandEncoder];Require(encoder,"Cannot finish original named cube face");[encoder barrierAfterQueueStages:MTLStageFragment beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];if(image.regenerateMipmaps)[encoder generateMipmapsForTexture:impl->storage->storage->texture];[encoder barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment|MTLStageVertex|MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];image.encodedSubmission.store(impl->submission,std::memory_order_release);
+ auto encoder=[command computeCommandEncoder];Require(encoder,"Cannot finish original named cube face");[encoder barrierAfterQueueStages:MTLStageFragment beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];if(image.regenerateMipmaps)[encoder generateMipmapsForTexture:impl->storage->storage->texture];[encoder barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageFragment|MTLStageVertex|MTLStageDispatch visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];
+ if (ReuseReflectionCubeContents() && image.kind == NativeCubeTextureKind::Reflection)
+  impl->storage->FinishContents(image, impl->submission);
+ image.encodedSubmission.store(impl->submission,std::memory_order_release);
 }
 void PreparedCubeTexture::DidComplete(){
  if(impl->completion)return;
@@ -242,6 +342,9 @@ void PreparedCubeTexture::DidComplete(){
  }
  Readable(image,impl->submission);
  if(impl->prior)impl->prior->DidComplete();
+ if (ReuseReflectionCubeContents() && image.kind == NativeCubeTextureKind::Reflection &&
+     image.encodedSubmission.load(std::memory_order_acquire) == impl->submission)
+  impl->storage->RetireContents(impl->submission);
  if(image.content==NativeTextureContent::ProducerVersion)image.completed.store(true,std::memory_order_release);
  image.prior.reset();impl->completion=true;
 }

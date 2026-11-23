@@ -10,6 +10,7 @@
 #include "Metal4DeferredColorNative.h"
 #include "Metal4NativeEffectState.h"
 #include "NativeDeferredLightShaders.h"
+#include <cstdlib>
 #include "Rendering/Backend/NativeCUSRenderInputs.h"
 #include "Rendering/Backend/NativeDeferredLightPrograms.h"
 #include "Rendering/Backend/NativeDeferredLightShaderABI.h"
@@ -62,6 +63,24 @@ std::string SourceText(const NativeDeferredLightProgramSource& source, bool atta
 	text << "#define NATIVE_MAP_DEPTH_COLOR 0\n#define NATIVE_MODEL_DEPTH_COLOR 0\n";
 	text << "#define NATIVE_LIGHT_ATTACHED " << unsigned(attached) << '\n';
 	text << "#define NATIVE_LIGHT_VOLUME " << unsigned(VolumeActive(source)) << '\n';
+	static const bool skipOffscreenDepth=[] {
+		const char* value=std::getenv("BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH");
+		return value&&std::string_view(value)=="1";
+	}();
+	if (skipOffscreenDepth && source.defines.contains("SCREENSPACESHADOWS") && !InterventionFastMathEnabled())
+		text << "#define RECOIL_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH 1\n";
+
+	static const bool reuseMissNoise=[] {
+		const char* value=std::getenv("BAR_NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE");
+		return value && std::strcmp(value,"1")==0;
+	}();
+	// Exact integer tokens 4 and 1 are emitted from validated numeric defines.
+	// Fast math may remove the delivered nonfinite-phase fallback.
+	if (reuseMissNoise && !InterventionFastMathEnabled() &&
+		source.defines.contains("RAYMARCHSTEPS") && source.defines.contains("USE3DNOISE") &&
+		Define(source, "RAYMARCHSTEPS") == 4.0f && Define(source, "USE3DNOISE") == 1.0f)
+		text << "#define NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE 1\n";
+
 	text << deferredLights::SHADER;
 	return text.str();
 }

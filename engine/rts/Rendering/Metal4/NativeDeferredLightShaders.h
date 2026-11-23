@@ -1211,10 +1211,29 @@ float SlowSphereRayMarchedScattering(float3 campos, float3 viewdirection, float3
 		float3 EntryPoint = (-viewdirection) * closeandfardistance.x + campos;
 		//vec3 ExitPoint =  (viewdirection) * closeandfardistance.y + campos;
 		float3 stepVec =  (-viewdirection) * ( closeandfardistance.y  -  closeandfardistance.x) / RAYMARCHSTEPS;
+#ifdef NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE
+		// Only this point-light function uses the (-1,-1) ray/sphere miss.
+		// The step vanishes, and 1/4, 2/4, 3/4 are the same integer zero.
+		bool reusedMissNoise = false;
+		if (all(closeandfardistance == float2(-1.0))) {
+			const float3 firstPos = stepVec * 1 + EntryPoint;
+			const float3 firstPhase = firstPos * 0.005 + 1 / RAYMARCHSTEPS + v_noiseoffset.xyz;
+			if (all(isfinite(firstPhase))) {
+				const float noiseR = Sample_noise3DCube(fract(firstPhase), 0.0).r;
+				for (int i = 1; i < RAYMARCHSTEPS; ++i)
+					noise += noiseR * 2.0;
+				reusedMissNoise = true;
+			}
+		}
+		if (!reusedMissNoise) {
+#endif
 		for (int i = 1; i < RAYMARCHSTEPS; i++){
 			float3 marchPos = stepVec * i + EntryPoint;
 			noise += Sample_noise3DCube( fract(marchPos * 0.005 + i / RAYMARCHSTEPS + v_noiseoffset.xyz), 0.0).r * 2.0 ;
 		}
+#ifdef NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE
+		}
+#endif
 		noise = noise / (RAYMARCHSTEPS -1);
 	#endif
 	
@@ -1605,10 +1624,17 @@ void Run()
 					// Convert the NDC to UV space, and clamping is not needed because enabling it brings bad artifacts
 					rayScreenPos.xy = rayScreenPos.xy * 0.5 + 0.5;
 					
+#ifdef RECOIL_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH
+					// Keep the original strict bounds. The depth fetch has explicit LOD and no quad dependency.
+					const bool outside = any(NativeLessThan(rayScreenPos.xy, float2(0.001))) ||
+						any(NativeGreaterThan(rayScreenPos.xy, float2(1.0-0.001)));
+					float rayScreenDepthSample = outside ? 1.0 : Sample_modelDepths(rayScreenPos.xy, 0.0).x;
+#else
 					float rayScreenDepthSample = Sample_modelDepths( rayScreenPos.xy, 0.0).x;
 
 					// Assume that any sample outside of the edges of the screen will not occlude
 					if (any(NativeLessThan(rayScreenPos.xy, float2(0.001))) || any(NativeGreaterThan(rayScreenPos.xy, float2(1.0-0.001)))) rayScreenDepthSample = 1.0;
+#endif
 					
 					// Since modeldepth is zero where there is no model, we need to convert this to 1.0
 					if (rayScreenDepthSample < 0.01) rayScreenDepthSample = 1.0;

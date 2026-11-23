@@ -5,6 +5,7 @@
 #include "Rendering/Backend/NativeUITextureHistory.h"
 #include "Metal4EngineModelState.h"
 #include "Metal4NativeEffectState.h"
+#include "Metal4ProjectileShadowRange.h"
 #include "NativeEngineDeferredShaders.h"
 #include "NativeEngineTextureABI.h"
 #include "NativeEngineShadowShaders.h"
@@ -42,6 +43,67 @@ id<MTLBuffer> Buffer(id<MTLDevice> device, const void* bytes, size_t length, NSS
 	result.label = label;
 	return result;
 }
+
+bool CompactProjectileShadowRanges()
+{
+ static const bool enabled=[]{
+  const char* value=std::getenv("BAR_NATIVE_PROJECTILE_SHADOW_RANGE_COMPACT");
+  return value&&value[0]=='1'&&value[1]=='\0';
+ }();
+ return enabled;
+}
+
+class ProjectileShadowRangeCache {
+public:
+ EngineDeferredPieceBuffers Acquire(id<MTLDevice> device,const std::shared_ptr<const NativeShadowPieceGeometry>& source,
+  uint32_t firstIndex,uint32_t indexCount)
+ {
+  if(owner!=source||ownerDevice!=device){
+   entries.clear();cachedBytes=0;use=0;
+   owner=source;ownerDevice=device;
+  }
+  const auto key=std::pair{firstIndex,indexCount};
+  if(auto entry=entries.find(key);entry!=entries.end()){
+   entry->second.lastUse=++use;
+   return entry->second.mesh;
+  }
+  const auto range=RebaseProjectileShadowRange(source->indices,firstIndex,indexCount,
+   source->vertices.size(),sizeof(WorldModelVertex),device.maxBufferLength);
+  if(!range)return {};
+
+  EngineDeferredPieceBuffers mesh;
+  mesh.vertices=Buffer(device,source->vertices.data()+range->firstVertex,
+   range->vertexCount*sizeof(WorldModelVertex),@"Compact projectile shadow vertices");
+  mesh.indices=Buffer(device,range->indices.data(),range->indices.size()*sizeof(uint32_t),
+   @"Compact projectile/shatter shadow indices");
+  mesh.indexCount=indexCount;
+  const auto vertexBytes=std::max(size_t(mesh.vertices.length),size_t(mesh.vertices.allocatedSize));
+  const auto indexBytes=std::max(size_t(mesh.indices.length),size_t(mesh.indices.allocatedSize));
+  if(vertexBytes>ByteLimit||indexBytes>ByteLimit-vertexBytes)return mesh;
+  const auto bytes=vertexBytes+indexBytes;
+  // Prepared draws and the lease own their immutable Metal allocations.
+  // Eviction releases only the cache reference, even with work in flight.
+  while(entries.size()>=EntryLimit||bytes>ByteLimit-cachedBytes){
+   const auto oldest=std::min_element(entries.begin(),entries.end(),[](const auto& a,const auto& b){
+    return a.second.lastUse<b.second.lastUse;
+   });
+   cachedBytes-=oldest->second.bytes;
+   entries.erase(oldest);
+  }
+  entries.emplace(key,Entry{mesh,bytes,++use});
+  cachedBytes+=bytes;
+  return mesh;
+ }
+private:
+ static constexpr size_t ByteLimit=16u*1024u*1024u,EntryLimit=512;
+ struct Entry {EngineDeferredPieceBuffers mesh;size_t bytes;uint64_t lastUse;};
+ std::map<std::pair<uint32_t,uint32_t>,Entry> entries;
+ std::shared_ptr<const NativeShadowPieceGeometry> owner;
+ __strong id<MTLDevice> ownerDevice=nil;
+ size_t cachedBytes=0;
+ uint64_t use=0;
+};
+
 // BEGIN retired shadow uploads (extracted verbatim by the CPU regression).
 struct ShadowUploadStorage {
  __strong id<MTLBuffer> buffer=nil;
@@ -292,6 +354,7 @@ struct EngineShadowGPU::Impl {
   std::shared_ptr<const NativeShadowPieceGeometry> owner;
   EngineDeferredPieceBuffers buffers;
  } projectileGeometry;
+ ProjectileShadowRangeCache projectileRanges;
 	using GenericKey=std::tuple<std::array<MTLPixelFormat,5>,MTLPixelFormat,MTLPixelFormat,unsigned,bool>;
 	std::map<GenericKey,id<MTLRenderPipelineState>> genericPipelines;
 	id<MTLRenderPipelineState> GenericPipeline(RuntimeLease& lease,const CUSSourceTarget& target,bool validation,double& milliseconds)
@@ -354,21 +417,32 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::Prepare(RuntimeLease& lea
   if(d.pieceGeometry){
    const auto& source=*d.pieceGeometry;
    Require(d.firstIndex<=source.indices.size()&&d.indexCount<=source.indices.size()-d.firstIndex&&d.indexCount&&d.indexCount%3==0,"Original projectile shadow index range differs from its immutable geometry");
-   for(size_t n=d.firstIndex;n<size_t(d.firstIndex)+d.indexCount;++n)Require(source.indices[n]<source.vertices.size(),"Original projectile shadow index exceeds actual vertices");
+   const bool compact=CompactProjectileShadowRanges();
+   if(!compact)for(size_t n=d.firstIndex;n<size_t(d.firstIndex)+d.indexCount;++n)Require(source.indices[n]<source.vertices.size(),"Original projectile shadow index exceeds actual vertices");
    WorldMatrix identity{};identity[0]=identity[5]=identity[10]=identity[15]=1;common.piece=Matrix(identity);
    auto& cached=impl->projectileGeometry;
-   if(cached.owner!=d.pieceGeometry){
-    EngineDeferredPieceBuffers next;
-    next.vertices=Buffer(lease.Device(),source.vertices.data(),source.vertices.size()*sizeof(WorldModelVertex),@"Original projectile shadow vertices");
-    next.indices=Buffer(lease.Device(),source.indices.data(),source.indices.size()*sizeof(uint32_t),@"Original projectile/shatter shadow indices");
-    cached={d.pieceGeometry,std::move(next)};
+   EngineDeferredPieceBuffers mesh;
+   uint32_t firstIndex=d.firstIndex;
+   if(compact){
+    if(cached.owner&&(cached.owner!=d.pieceGeometry||cached.buffers.vertices.device!=lease.Device()))cached={};
+    mesh=impl->projectileRanges.Acquire(lease.Device(),d.pieceGeometry,d.firstIndex,d.indexCount);
+    if(mesh.vertices)firstIndex=0;
    }
-   Require(cached.buffers.vertices.device==lease.Device()&&cached.buffers.indices.device==lease.Device(),"Original projectile geometry belongs to another actual device");
-   auto mesh=cached.buffers;mesh.indexCount=d.indexCount;
+   if(!mesh.vertices){
+    if(cached.owner!=d.pieceGeometry){
+     EngineDeferredPieceBuffers next;
+     next.vertices=Buffer(lease.Device(),source.vertices.data(),source.vertices.size()*sizeof(WorldModelVertex),@"Original projectile shadow vertices");
+     next.indices=Buffer(lease.Device(),source.indices.data(),source.indices.size()*sizeof(uint32_t),@"Original projectile/shatter shadow indices");
+     cached={d.pieceGeometry,std::move(next)};
+    }
+    mesh=cached.buffers;
+    mesh.indexCount=d.indexCount;
+   }
+   Require(mesh.vertices.device==lease.Device()&&mesh.indices.device==lease.Device(),"Original projectile geometry belongs to another actual device");
    auto bytes=ShadowUpload(impl->uploadPool,result->impl->uploadOwners,lease.Device(),&common,sizeof(common),@"Original projectile shadow draw uniforms");lease.AddAllocation(bytes);lease.AddAllocation(mesh.vertices);lease.AddAllocation(mesh.indices);
    auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.initializeBindings=YES;NSError* error=nil;
    auto table=impl->argumentPool.Acquire(lease,descriptor,result->impl->argumentOwners,&error);Require(table,"Cannot create original projectile shadow argument table: "+Error(error));lease.Retain(table);
-   [table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:bytes.gpuAddress atIndex:1];draw.pieces.push_back({mesh,table,d.firstIndex});result->impl->draws.push_back(std::move(draw));continue;
+   [table setAddress:mesh.vertices.gpuAddress atIndex:0];[table setAddress:bytes.gpuAddress atIndex:1];draw.pieces.push_back({mesh,table,firstIndex});result->impl->draws.push_back(std::move(draw));continue;
   }
   if(d.modern){const auto& sampling=Sampling(d.alphaTexture);common.swizzle0=Vec(sampling.swizzle);common.samplerParameters.x=sampling.lodBias;common.image0.z=sampling.depthMode;
    if(!Empty(d.alphaTexture)){draw.image=images(lease,d.alphaTexture,0);Require(draw.image.texture&&draw.image.sampler&&draw.image.owner&&draw.image.requireReadable,"Original shadow alpha mask has no actual image/sampler/producer");Require(draw.image.texture.textureType==MTLTextureType2D&&(!draw.image.depthImage||sampling.compareMode==0),"Original shadow sampler2D alpha mask target/comparison differs");common.image0.x=draw.image.depthImage?2:1;common.image0.y=draw.image.flipV;lease.AddAllocation(draw.image.texture);lease.Retain(draw.image.sampler);}

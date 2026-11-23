@@ -1,8 +1,14 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#include "NativeMicroThreeWitness.h"
 #include "Metal4SensorLOSNative.h"
 #include "NativeSensorLOSShaders.h"
 #include "Metal4NativeEffectState.h"
+#include "Metal4FixedTriangleIndexBuffer.h"
+#include "System/Log/ILog.h"
+#include <cstdlib>
 #include <map>
+#include <string>
+#include <string_view>
 #include <tuple>
 #include <unordered_map>
 namespace rendering::metal4 {
@@ -40,6 +46,7 @@ struct PreparedSensorLOSDraw::Impl {
 	__strong id<MTLRenderPipelineState> pipeline=nil;
 	__strong id<MTLDepthStencilState> depth=nil;
 	__strong id<MTL4ArgumentTable> arguments=nil;
+	__strong id<MTLBuffer> indices=nil;
 	uint32_t vertices=0,instances=0;
 };
 PreparedSensorLOSDraw::PreparedSensorLOSDraw():impl(std::make_unique<Impl>()){}
@@ -57,12 +64,41 @@ void PreparedSensorLOSDraw::Encode(id<MTL4RenderCommandEncoder> encoder)const
 	[encoder setCullMode:MTLCullModeNone];[encoder setDepthStencilState:impl->depth];
 	[encoder setRenderPipelineState:impl->pipeline];
 	[encoder setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-	[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
+	if (impl->indices) {
+		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->vertices indexType:MTLIndexTypeUInt16
+		                   indexBuffer:impl->indices.gpuAddress indexBufferLength:impl->indices.length instanceCount:impl->instances];
+		if (impl->source.program.defines->stencilPass) {
+			[[maybe_unused]] static const bool logged = [] {
+				LOG("[NativeIndexedRoute] family=sensorlos_r8_fan mode=indexed");
+				return true;
+			}();
+		} else {
+			[[maybe_unused]] static const bool logged = [] {
+				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=indexed");
+				return true;
+			}();
+		}
+	} else {
+		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
+		if (impl->source.program.defines->stencilPass) {
+			[[maybe_unused]] static const bool logged = [] {
+				LOG("[NativeIndexedRoute] family=sensorlos_r8_fan mode=direct");
+				return true;
+			}();
+		} else {
+			[[maybe_unused]] static const bool logged = [] {
+				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=direct");
+				return true;
+			}();
+		}
+	}
 }
 struct SensorLOSGPU::Impl {
 	using Key=std::tuple<MTLPixelFormat,unsigned,bool,bool,uint64_t,bool>;
 	__strong id<MTLLibrary> library=nil;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
+	FixedTriangleIndexBuffer<triangleReuse::sensorLOS> indices;
+	FixedTriangleIndexBuffer<triangleReuse::sensorLOSFan> fanIndices;
 	struct Buffer {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> value=nil;};
 	std::unordered_map<const NativeBufferSnapshot*,Buffer> buffers;
 	id<MTLBuffer> Snapshot(RuntimeLease& lease,const NativeBufferSnapshotRef& source)
@@ -77,7 +113,22 @@ struct SensorLOSGPU::Impl {
 		if(library){lease.Retain(library);return;}
 		const auto start=Clock::now();NSError* error=nil;
 		auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original31657 LOS R8 fan and thinned outline";
-		descriptor.source=String(NativeSensorLOSShaderSource);
+		static const bool exactInterior=[] {
+			const char* value=std::getenv("BAR_NATIVE_SENSORLOS_EXACT_INTERIOR");
+			return value&&std::string_view(value)=="1";
+		}();
+        std::string source;
+        if (exactInterior) {
+            source += "#define RECOIL_SENSORLOS_EXACT_INTERIOR 1\n";
+            const char* value = std::getenv("BAR_NATIVE_SENSORLOS_CORRECTED_DIVISION");
+            if (value && std::string_view(value) == "1")
+                source += "#define RECOIL_SENSORLOS_CORRECTED_DIVISION 1\n";
+            const char* reuse = std::getenv("BAR_NATIVE_SENSORLOS_SEGMENT_REUSE");
+            if (reuse && std::string_view(reuse) == "1")
+                source += "#define RECOIL_SENSORLOS_SEGMENT_REUSE 1\n";
+        }
+        source += NativeSensorLOSShaderSource;
+        descriptor.source = String(source);
 		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
 		options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
 		auto compiled=lease.NewLibrary(descriptor,&error);
@@ -118,7 +169,7 @@ std::shared_ptr<const void> SensorLOSGPU::CompiledFamilyLifetime()const
 	if(!impl->library)return {};
 	return impl;
 }
-void SensorLOSGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();}
+void SensorLOSGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();impl->indices.Clear();impl->fanIndices.Clear();}
 std::unique_ptr<PreparedSensorLOSDraw> SensorLOSGPU::Prepare(RuntimeLease& lease,const NativeSensorLOSDraw& draw,
 	const StartBoxImageResolver& resolver,const WorldCamera& camera,uint32_t renderWidth,uint32_t renderHeight,
 	uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,
@@ -167,20 +218,39 @@ std::unique_ptr<PreparedSensorLOSDraw> SensorLOSGPU::Prepare(RuntimeLease& lease
 	uniform.parameters={draw.raster.lineWidth,draw.surface.alphaTest.reference,float(out.mask.flipV),0};
 	uniform.options={uint32_t(!(source.renderCaps&1)),uint32_t(out.height.flipV),uint32_t(defines.stencilPass),
 		uint32_t(draw.surface.alphaTest.compare)|(uint32_t(draw.surface.alphaTest.enabled)<<8)};
-	uniform.counts={draw.count,draw.first,draw.firstInstance,0};
+	// The shared outline VS only tightens the proven single-sample coverage path.
+	uniform.counts={draw.count,draw.first,draw.firstInstance,samples};
 	const auto positions=ReadNativeSensorLOSInstances(draw);
 	std::erase_if(impl->buffers,[](const auto& value){return value.second.source.expired();});
+    static const bool omitFanColor=microthree::Enabled("BAR_NATIVE_SENSORLOS_FAN_SKIP_UNUSED_COLOR");
+    const bool omitColor=omitFanColor&&defines.stencilPass;
+    const unsigned bufferCount=omitColor?4u:5u;
 	std::array<id<MTLBuffer>,5> buffers{impl->Snapshot(lease,draw.vertices),impl->Snapshot(lease,draw.instances),
 		UploadCircle(lease,positions.positions.data(),positions.positions.size()*16),UploadCircle(lease,&uniform,sizeof(uniform)),
-		UploadCircle(lease,positions.colors.data(),positions.colors.size()*16)};
+		omitColor?nil:UploadCircle(lease,positions.colors.data(),positions.colors.size()*16)};
 	auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=5;descriptor.maxTextureBindCount=2;descriptor.maxSamplerStateBindCount=2;descriptor.initializeBindings=YES;
 	NSError* error=nil;out.arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];
 	Require(out.arguments!=nil,"Cannot allocate current original sensor argument table");lease.Retain(out.arguments);
-	for(unsigned i=0;i<buffers.size();++i)[out.arguments setAddress:buffers[i].gpuAddress atIndex:i];
+    for(unsigned i=0;i<bufferCount;++i)[out.arguments setAddress:buffers[i].gpuAddress atIndex:i];
+    if(microthree::Witness()){
+        static microthree::Meter fan{"sensor","fan"},outline{"sensor","outline"};
+        auto& meter=defines.stencilPass?fan:outline;
+        const size_t logicalBytes=positions.colors.size()*16;
+        if(meter.Record(!omitColor,omitColor?0u:logicalBytes,bufferCount)){
+            const auto input=microthree::Hash(positions.colors.data(),logicalBytes,
+                microthree::Hash(positions.positions.data(),positions.positions.size()*16));
+            std::fprintf(stderr,"[NativeMicroThree] event=sample lane=sensor route=%s on=%u source_draw=%llu sequence=%llu count=%u instances=%u input=%016llx logical_color_bytes=%zu calls=%u bytes=%zu bindings=%u\n",
+                meter.route,unsigned(omitFanColor),static_cast<unsigned long long>(draw.sourceDrawFrame),
+                static_cast<unsigned long long>(draw.sequence),draw.count,draw.instanceCount,
+                static_cast<unsigned long long>(input),logicalBytes,unsigned(!omitColor),omitColor?0u:logicalBytes,bufferCount);
+        }
+    }
 	[out.arguments setTexture:out.height.texture.gpuResourceID atIndex:0];[out.arguments setSamplerState:out.height.sampler.gpuResourceID atIndex:0];
 	if(out.mask.texture){[out.arguments setTexture:out.mask.texture.gpuResourceID atIndex:1];[out.arguments setSamplerState:out.mask.sampler.gpuResourceID atIndex:1];}
  out.pipeline=impl->Pipeline(lease,draw,color,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.state,stencil);
 	Require(uint64_t(draw.count)*6<=UINT32_MAX,"Current original sensor line invocation count overflow");out.vertices=defines.stencilPass?(draw.count-2)*3:draw.count*6;out.instances=draw.instanceCount;
+	if (samples==1 && draw.count>=3 && draw.count<=triangleReuse::maxSensorSegments)
+		out.indices=defines.stencilPass ? impl->fanIndices.Prepare(lease) : impl->indices.Prepare(lease);
 	return result;
 }
 }

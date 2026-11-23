@@ -35,7 +35,9 @@ public:
 	PreparedScreenFrame();
 	~PreparedScreenFrame();
 	void Encode(id<MTL4RenderCommandEncoder> encoder) const;
-	void EncodeRange(id<MTL4RenderCommandEncoder> encoder, std::uint32_t firstOriginalCommand, std::uint32_t endOriginalCommand) const;
+	enum class RangeAcquire { DrawDependencies, AfterPostprocess };
+	void EncodeRange(id<MTL4RenderCommandEncoder> encoder, std::uint32_t firstOriginalCommand, std::uint32_t endOriginalCommand,
+	                 RangeAcquire acquire = RangeAcquire::DrawDependencies) const;
 	std::uint32_t CommandCount() const;
 	MTLViewport Viewport() const;
 	// All resources have been prepared before Begin. Encode cached-panel
@@ -152,6 +154,10 @@ public:
 		std::optional<NativePostprocessConsumer> consumer = std::nullopt,
 		std::function<void(PreparedScreenExternalImage)> retainExternal = {},
 		id<MTLSamplerState> actualSampler = nil);
+ // S01 admits only a retained CPU image whose optional mip producer has
+ // actually completed. RTT, external and merely queued/encoded images fail.
+ std::function<bool()> CaptureGrassCPUImageCheckpointS01(const std::shared_ptr<const ScreenTexture>&,
+  id<MTLTexture> expected) const;
 	// The image is an actual retained attachment/resolve with an encode-time
 	// readability receipt, never a prior presented frame or synthetic bitmap.
 	std::shared_ptr<PreparedScreenReadback> PrepareReadback(RuntimeLease&,

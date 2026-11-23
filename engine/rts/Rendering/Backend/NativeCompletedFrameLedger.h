@@ -4,6 +4,8 @@
 #include <cstddef>
 #include <cstdint>
 #include <optional>
+#include <span>
+#include <stdexcept>
 #include <type_traits>
 #include <utility>
 
@@ -15,17 +17,22 @@ template<class Payload, std::size_t Capacity, bool AllowZeroIdentity=false> clas
  static_assert(Capacity>0);
  struct Slot {std::uint64_t id=0;std::optional<Payload> payload;};
  std::array<Slot,Capacity> slots;
+ std::size_t activeCapacity=Capacity;
 public:
+ NativeCompletedFrameLedger()=default;
+ explicit NativeCompletedFrameLedger(std::size_t capacity):activeCapacity(capacity) {
+  if(!capacity || capacity>Capacity)throw std::invalid_argument("Invalid submitted-frame ledger capacity");
+ }
  bool CanHold(std::uint64_t id) const noexcept {
   if(!id && !AllowZeroIdentity)return false;
   bool available=false;
-  for(const auto& slot:slots){if(slot.payload && slot.id==id)return false;available|=!slot.payload;}
+  for(const auto& slot:std::span(slots).first(activeCapacity)){if(slot.payload && slot.id==id)return false;available|=!slot.payload;}
   return available;
  }
  template<class... Args> bool TryHold(std::uint64_t id,Args&&... args) noexcept {
   static_assert(std::is_nothrow_constructible_v<Payload,Args&&...>);
   if(!CanHold(id))return false; // Rejection does not consume caller resources.
-  for(auto& slot:slots)if(!slot.payload){
+  for(auto& slot:std::span(slots).first(activeCapacity))if(!slot.payload){
    slot.payload.emplace(std::forward<Args>(args)...);slot.id=id;return true;
   }
   return false;

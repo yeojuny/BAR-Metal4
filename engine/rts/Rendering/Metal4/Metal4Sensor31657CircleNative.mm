@@ -2,7 +2,12 @@
 #include "Metal4Sensor31657CircleNative.h"
 #include "NativeSensor31657CircleShaders.h"
 #include "Metal4NativeEffectState.h"
+#include "Metal4FixedTriangleIndexBuffer.h"
+#include "System/Log/ILog.h"
+#include <cstdlib>
 #include <map>
+#include <string>
+#include <string_view>
 #include <tuple>
 #include <unordered_map>
 namespace rendering::metal4 {
@@ -40,6 +45,7 @@ struct PreparedSensor31657CircleDraw::Impl {
 	__strong id<MTLRenderPipelineState> pipeline=nil;
 	__strong id<MTLDepthStencilState> depth=nil;
 	__strong id<MTL4ArgumentTable> arguments=nil;
+	__strong id<MTLBuffer> indices=nil;
 	uint32_t vertices=0,instances=0;
 };
 PreparedSensor31657CircleDraw::PreparedSensor31657CircleDraw():impl(std::make_unique<Impl>()){}
@@ -56,12 +62,26 @@ void PreparedSensor31657CircleDraw::Encode(id<MTL4RenderCommandEncoder> encoder)
 	[encoder setCullMode:MTLCullModeNone];[encoder setDepthStencilState:impl->depth];
 	[encoder setRenderPipelineState:impl->pipeline];
 	[encoder setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-	[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
+	if (impl->indices) {
+		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->vertices indexType:MTLIndexTypeUInt16
+		                   indexBuffer:impl->indices.gpuAddress indexBufferLength:impl->indices.length instanceCount:impl->instances];
+		[[maybe_unused]] static const bool logged = [] {
+			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=indexed");
+			return true;
+		}();
+	} else {
+		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
+		[[maybe_unused]] static const bool logged = [] {
+			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=direct");
+			return true;
+		}();
+	}
 }
 struct Sensor31657CircleGPU::Impl {
 	using Key=std::tuple<MTLPixelFormat,unsigned,bool,uint64_t,bool>;
 	__strong id<MTLLibrary> library=nil;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
+	FixedTriangleIndexBuffer<triangleReuse::sensorCircle> indices;
 	struct Buffer {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> value=nil;};
 	std::unordered_map<const NativeBufferSnapshot*,Buffer> buffers;
 	id<MTLBuffer> Snapshot(RuntimeLease& lease,const NativeBufferSnapshotRef& source)
@@ -76,7 +96,20 @@ struct Sensor31657CircleGPU::Impl {
 		if(library){lease.Retain(library);return;}
 		const auto start=Clock::now();NSError* error=nil;
 		auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original31657 Radar/Sonar EXACT_CIRCLES";
-		descriptor.source=String(NativeSensor31657CircleShaderSource);
+		static const bool exactInterior=[] {
+			const char* value=std::getenv("BAR_NATIVE_SENSOR31657_EXACT_INTERIOR");
+			return value&&std::string_view(value)=="1";
+		}();
+		static const bool correctedDivision=[] {
+			const char* value=std::getenv("BAR_NATIVE_SENSOR31657_CORRECTED_DIVISION");
+			return value&&std::string_view(value)=="1";
+		}();
+		std::string source;
+		if(exactInterior){
+			source="#define RECOIL_SENSOR31657_EXACT_INTERIOR 1\n";
+			if(correctedDivision)source+="#define RECOIL_SENSOR31657_CORRECTED_DIVISION 1\n";
+		}
+		descriptor.source=String(source+NativeSensor31657CircleShaderSource);
 		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
 		options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
 		auto compiled=lease.NewLibrary(descriptor,&error);
@@ -117,7 +150,7 @@ std::shared_ptr<const void> Sensor31657CircleGPU::CompiledFamilyLifetime()const
 	if(!impl->library)return {};
 	return impl;
 }
-void Sensor31657CircleGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();}
+void Sensor31657CircleGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();impl->indices.Clear();}
 std::unique_ptr<PreparedSensor31657CircleDraw> Sensor31657CircleGPU::Prepare(RuntimeLease& lease,const NativeSensor31657CircleDraw& draw,
 	const StartBoxImageResolver& resolver,const WorldCamera& camera,uint32_t renderWidth,uint32_t renderHeight,
 	uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,
@@ -169,6 +202,8 @@ std::unique_ptr<PreparedSensor31657CircleDraw> Sensor31657CircleGPU::Prepare(Run
 	[out.arguments setTexture:out.height.texture.gpuResourceID atIndex:0];[out.arguments setSamplerState:out.height.sampler.gpuResourceID atIndex:0];
 	out.pipeline=impl->Pipeline(lease,draw,color,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.state,stencil);
 	Require(uint64_t(draw.count)*6<=UINT32_MAX,"Current original sensor line invocation count overflow");out.vertices=draw.count*6;out.instances=draw.instanceCount;
+	if (samples==1 && draw.count>=3 && draw.count<=triangleReuse::maxSensorSegments)
+		out.indices=impl->indices.Prepare(lease);
 	return result;
 }
 }

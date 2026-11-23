@@ -1,0 +1,112 @@
+{
+  "revision": "sepia-subset-ast-1;MTL4LibraryDescriptor-default-options-frozenJ;sample-position-v1",
+  "identity": "d23a8b75086bf172418574044d1c5c2d8497ed4d6da7223b6b9c2ac3d5c2d0c7",
+  "vertexHash": 16905188423406352921,
+  "fragmentHash": 4623502877096422297,
+  "uniformBytes": 160,
+  "fields": [
+    {
+      "name": "viewPos",
+      "scalar": "int",
+      "components": 2,
+      "offset": 48,
+      "defaults": [
+        0,
+        0
+      ],
+      "blockSlot": 1,
+      "count": 1,
+      "stride": 16,
+      "stages": 2
+    },
+    {
+      "name": "exposure",
+      "scalar": "float",
+      "components": 1,
+      "offset": 64,
+      "defaults": [
+        1.0
+      ],
+      "blockSlot": 1,
+      "count": 1,
+      "stride": 16,
+      "stages": 2
+    },
+    {
+      "name": "bias",
+      "scalar": "float",
+      "components": 3,
+      "offset": 80,
+      "defaults": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "blockSlot": 1,
+      "count": 1,
+      "stride": 16,
+      "stages": 2
+    },
+    {
+      "name": "gamma",
+      "scalar": "float",
+      "components": 1,
+      "offset": 96,
+      "defaults": [
+        0
+      ],
+      "blockSlot": 1,
+      "count": 1,
+      "stride": 16,
+      "stages": 2
+    },
+    {
+      "name": "colorR",
+      "scalar": "float",
+      "components": 3,
+      "offset": 112,
+      "defaults": [
+        0,
+        0,
+        0
+      ],
+      "blockSlot": 1,
+      "count": 1,
+      "stride": 16,
+      "stages": 2
+    },
+    {
+      "name": "colorG",
+      "scalar": "float",
+      "components": 3,
+      "offset": 128,
+      "defaults": [
+        0,
+        0,
+        0
+      ],
+      "blockSlot": 1,
+      "count": 1,
+      "stride": 16,
+      "stages": 2
+    },
+    {
+      "name": "colorB",
+      "scalar": "float",
+      "components": 3,
+      "offset": 144,
+      "defaults": [
+        0,
+        0,
+        0
+      ],
+      "blockSlot": 1,
+      "count": 1,
+      "stride": 16,
+      "stages": 2
+    }
+  ],
+  "sampler": "screenCopyTex",
+  "vertexEntry": "SharedSepiaVertex",
+  "fragmentEntry": "SharedSepiaFragment"
+}

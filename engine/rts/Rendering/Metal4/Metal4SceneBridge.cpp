@@ -1,4 +1,5 @@
 #include "Rendering/Backend/NativeBeginReadyPolicy.h"
+#include "Rendering/Backend/NativeGameFrameLimit.h"
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Rendering/Backend/NativeLegacyWaterProgramState.h"
@@ -262,7 +263,7 @@ bool BeginPreparationOverlapRequested(){
 struct ScenePendingAdmission;
 struct Session {
  // N-1 may remain GPU-held while N prepares and the bounded N+1 prefix captures.
- NativeSourceFrameCredits sourceCredits{PrepareReadyPilotRequested()?3u:2u};
+ NativeSourceFrameCredits sourceCredits{GameFrameReceiptCapacity()+unsigned(PrepareReadyPilotRequested())};
  NativeCaptureRollbackFence captureRollbackFence;
  std::unique_ptr<NativeCUSCPUReadWorker220> cpuReadWorker220;
  std::unique_ptr<CPUReadReceipt220> cpuReadReceipt220;
@@ -285,7 +286,7 @@ struct Session {
 		context.Initialize([]{return uint64_t(globalRendering->drawFrame);},std::move(services));
 		nativeContextOwned=true;
 		try {
-  completionMailbox=std::make_shared<NativeFrameCompletionMailbox>(context.Registry().ContextGeneration());
+  completionMailbox=std::make_shared<NativeFrameCompletionMailbox>(context.Registry().ContextGeneration(),GameFrameReceiptCapacity());
 		OriginalNativeModelContext().Initialize(context.Registry().ContextGeneration());
   OriginalNativeLegacyWaterProgramState().InitializeContext(context.Registry().ContextGeneration());
 	OriginalNativeLegacyWaterTextureMatrices().InitializeContext(context.Registry().ContextGeneration());
@@ -945,6 +946,17 @@ void ApplyDeferredFrameReceipts()
  }
 }
 
+// The scene owns acceptance. Join the CPU result before reclaiming the FIFO
+// GPU ticket, then apply its exact notices before reusing any held slot.
+void ReclaimDeferredSceneCapacity()
+{
+ if(GameFrameLimit().submissions==1 || !session || !session->renderer)return;
+ if(session->cpuReadReceipt220)session->cpuReadReceipt220->pending.Finish();
+ session->renderer->FinishCPUWork(metal4::NativeCPUFinishReason::Credit);
+ ApplyDeferredFrameReceipts();
+ if(Metal4RendererReclaimOldestForSceneCapacity())ApplyDeferredFrameReceipts();
+}
+
 void RequireRetiredGPUWork(metal4::NativeCPUFinishReason reason=metal4::NativeCPUFinishReason::FullDrain)
 {
  metal4::NativeCPUPhaseScope drainTrace(9,gs?gs->frameNum:0);
@@ -996,12 +1008,15 @@ NativeSourceFrameCredits::Lease AcquireWorldFrameCredit(uint64_t draw){
   session->renderer->FinishCPUWork(metal4::NativeCPUFinishReason::Credit); // Join, release access, deliver old notice, accept current CPU.
   reclaimTrace.Mark(0);
   ApplyDeferredFrameReceipts();reclaimTrace.Mark(1);
-  const bool recovered=session->sourceCredits.HasCapacity();reclaimTrace.Counts(recovered,2);
+  const bool recovered=session->sourceCredits.HasCapacity();reclaimTrace.Counts(recovered,session->sourceCredits.Capacity());
   static bool reported=false;
   if(recovered&&!reported&&gs&&gs->frameNum>=300&&gs->frameNum<=1500)try{
-   LOG("[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=2 simulation=%d",gs->frameNum);reported=true;
+   LOG("[NativeBeginCPUReclaim] cpu_joined=1 capacity_recovered=1 full_gpu_drain=0 source_credit_limit=%u simulation=%d",session->sourceCredits.Capacity(),gs->frameNum);reported=true;
   }catch(...){/* Optional evidence must not change settlement. */}
- },[]{RequireRetiredGPUWork();});
+ },[]{
+  ReclaimDeferredSceneCapacity();
+  if(!session->sourceCredits.HasCapacity())RequireRetiredGPUWork();
+ });
 }
 
 void Initialize(SDL_Window* window, uint32_t renderWidth, uint32_t renderHeight)
@@ -1756,7 +1771,7 @@ void PrepareWorld(std::shared_ptr<const NativeUnitPrimitiveFrame> luaUnitPrimiti
     session->preparedFrame->unsupported.empty()&&session->surface.Snapshot().CanPresent();
   });
  if(retainedPredecessorGPU){session->captureRollbackFence.Arm();static bool reported=false;if(!reported){reported=true;
-  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=%u",PrepareReadyPilotRequested()?3u:2u);}}
+  LOG("[NativeCaptureReadyBoundary] stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=%u",session->sourceCredits.Capacity());}}
 
  try {
  auto& frame=*session->preparedFrame;
@@ -2199,9 +2214,13 @@ DrawResult DrawWorld(const ScreenFrameView* screenUI, bool presentWorld,
   const auto mailbox=session->completionMailbox;
   // Preserve the prior renderer boundary's ability to drain full held ledgers.
   // Do not reject a capturedFrame solely because its predecessors have not retired yet.
-  if(!ui::GetRecorder().HasSubmittedCapacity(expectedDraw) ||
-     !LuaNativePostprocess::GetRecorder().HasSubmittedCapacity(expectedPost) ||
-     !LuaNativeVolumetricClouds::HasSubmittedCapacity(expectedDraw) || !mailbox->HasCapacity())RequireRetiredGPUWork();
+  const auto hasCapacity=[&]{
+   return ui::GetRecorder().HasSubmittedCapacity(expectedDraw)&&
+    LuaNativePostprocess::GetRecorder().HasSubmittedCapacity(expectedPost)&&
+    LuaNativeVolumetricClouds::HasSubmittedCapacity(expectedDraw)&&mailbox->HasCapacity();
+  };
+  if(!hasCapacity())ReclaimDeferredSceneCapacity();
+  if(!hasCapacity())RequireRetiredGPUWork();
   // Main remains blocked through Draw: these checks cannot race another capture.
   admission.Validate();
   options.beginReceipt=std::make_shared<NativeFrameBeginReceipt>(expectedDraw,expectedPost);
@@ -2318,6 +2337,7 @@ void ResetWorld()
 	if (!session)
 		return;
 	RequireRetiredGPUWork();
+ Metal4RendererReportPendingGameStats();
  if(session->renderer)session->renderer->AbortShieldPublications(session->opaqueSourcePending,session->actualShadowSourcePending,session->mainGroundPending,session->environmentStage,&session->shieldCapture);
 	if (session->presentedFrames > 0)
 		LOG("[Metal4Scene] Retired world after %llu presented frames; last simulation frame %llu",

@@ -13,8 +13,9 @@ struct RuntimeLease{bool pending=false;bool PreparingWhilePending()const{return 
 void Require(bool ok,const char* why){if(!ok)throw std::runtime_error(why);}
 struct PreparedWorldInfo{
  int registered=0,encoded=0,completed=0;bool fail=false;
+ uint64_t encodedSubmission=0;
  void RegisterResources(RuntimeLease&){++registered;}
- void EncodeDependencies(void*){++encoded;if(fail)throw std::runtime_error("encode");}
+ void EncodeDependencies(void*,uint64_t submission){++encoded;if(fail)throw std::runtime_error("encode");encodedSubmission=submission;}
  void DidComplete(){++completed;}
 };
 #include "terrain-info-resource.inc"
@@ -50,7 +51,7 @@ int main(){
   resource.Register(lease,1);
   try{resource.Readable(1);assert(false);}catch(const std::runtime_error&){}
   resource.Encode(reinterpret_cast<void*>(1),1);resource.Encode(reinterpret_cast<void*>(1),1);
-  resource.Readable(1);assert(resource.plan->encoded==1);
+  resource.Readable(1);assert(resource.plan->encoded==1&&resource.plan->encodedSubmission==1);
   lease.pending=true;resource.Register(lease,2);assert(resource.registeredSubmission==1);
   try{resource.Readable(2);assert(false);}catch(const std::runtime_error&){}
   try{resource.Complete(2);assert(false);}catch(const std::runtime_error&){}

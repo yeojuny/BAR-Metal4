@@ -1,4 +1,5 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+#include "NativeSepiaPilot.h"
 #include "NativePostprocessRecorder.h"
 #include "NativeWorldDrawSequence.h"
 #include "NativeCUSUniformData.h"
@@ -195,7 +196,9 @@ void NativePostprocessRecorder::DrawSepia(std::shared_ptr<const NativePostproces
 	Check(recording&&uniforms.engine&&uniforms.engine->matrices&&uniforms.engine->params&&
 		uniforms.engine->matrices->sourceDrawFrame<=recording->sourceDrawFrame&&uniforms.engine->params->sourceDrawFrame<=recording->sourceDrawFrame,
 		"Sepia engine publication does not belong to the current frame");
-	NativePostprocessOperation op;op.kind=NativePostprocessOperationKind::Sepia;op.screenOutput=true;op.screenCommandOffset=offset;
+	Check(!uniforms.sharedPath || bool(uniforms.material),"Shared Sepia immutable material missing");
+ if(uniforms.material){Check(uniforms.material->bindings.size()==1 && uniforms.material->bindings[0].versionOwner==input,"Sepia immutable material/input snapshot mismatched");sepiaPilot::ValidateMaterial(*uniforms.material);}
+ NativePostprocessOperation op;op.kind=NativePostprocessOperationKind::Sepia;op.screenOutput=true;op.screenCommandOffset=offset;
 	op.inputs[0]=std::move(input);op.inputEnabled[0]=true;op.sepia=std::move(uniforms);op.viewport=viewport;Commit(std::move(op),{});
 }
 void NativePostprocessRecorder::DrawCAS(std::shared_ptr<const NativePostprocessVersion> input,NativeCASUniforms uniforms,

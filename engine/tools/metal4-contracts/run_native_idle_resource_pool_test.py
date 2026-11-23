@@ -11,7 +11,10 @@ assert 'prepared->storageOwner=candidate;' in s
 prepare=s.split('class MainAttachmentStorage {',1)[1]
 assert prepare.index('prepared->storageOwner=candidate')<prepare.index('if(image)lease.AddAllocation(image)')<prepare.index('frame=std::move(prepared)')<prepare.index('generation=std::max')
 assert 'auto prepared=std::make_shared<MainFrameAttachments>(*candidate)' in s
-assert 'void Clear() { storage.Clear(); }' in s
+assert 'void Clear() { storage.Clear(); stagedColor.Clear(); }' in s
+assert 'std::shared_ptr<const MainStagedColorStorage> stagedColorOwner;' in s
+assert 'NativeIdleResourcePool<MainStagedColorStorage,2> stagedColor;' in s
+assert s.index('frame.BindDestination(lease, owner->texture)') < s.index('frame.stagedColorOwner = owner')
 world=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
 assert 'main->RetainForContinuation(lease)' in world
 assert 'originalLifetime->mainAttachments=mainAttachments' in world

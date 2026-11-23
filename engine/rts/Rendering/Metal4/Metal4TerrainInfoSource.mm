@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4TerrainInfoSource.h"
+#include "Metal4GrassBoundaryPolicyS01.h"
 #include "Metal4WorldInfo.h"
 #include "Rendering/EngineBridge/NativeTerrainImagePublication.h"
 #include <algorithm>
@@ -61,8 +62,8 @@ struct InfoResource final:NativeTerrainInfoResource {
 	{
   if(!completed&&encodingSubmission&&encodingSubmission!=submission&&lease.PreparingWhilePending()){
    Require(dependenciesEncoded,"Previous info plan has an incomplete encode attempt");
-   // Pin the already submitted immutable image. Do not overwrite N's receipt
-   // identity; N must actually retire before N+1 GPU submission.
+   // Pin the submitted image without changing its writer. The caller checks
+   // the exact pending plan or preserves the CPU retirement boundary.
    plan->RegisterResources(lease);return;
   }
 		Require(completed||!encodingSubmission||encodingSubmission==submission,
@@ -83,7 +84,7 @@ struct InfoResource final:NativeTerrainInfoResource {
 			return;
 		}
 		encodingSubmission=submission;
-		plan->EncodeDependencies(command);
+		plan->EncodeDependencies(command,submission);
 		dependenciesEncoded=true;
 	}
 	void Readable(uint64_t submission) const
@@ -206,11 +207,30 @@ CUSSourceImage ResolveNativeTerrainInfoImage(RuntimeLease& lease,const NativeCUS
   return InspectTerrainInfoDependencies161(*static_cast<const ImageOwner*>(context));
  }};
  const auto priorSubmission=resource->encodingSubmission;
- const bool orderedPrior=!resource->completed&&priorSubmission&&priorSubmission!=submission&&
-  lease.OrderAfterPreviousSubmission(resource.get(),[owner,priorSubmission]{
+ bool orderedPrior=false;
+ if(!resource->completed&&priorSubmission&&priorSubmission!=submission){
+  const auto plan=resource->plan;
+  const auto texture=out.texture;
+  const auto event=lease.PendingEventForSource(priorSubmission);
+  const auto complete=[owner,priorSubmission]{
    Require(owner->resource->completed&&owner->resource->encodingSubmission==priorSubmission,
     "Borrowed terrain info did not complete its original submitting owner");
-  });
+  };
+  // The wrapper's encoding stamp can identify a borrower of an already
+  // encoded plan. Only the plan's own base/mip writer can authorize queue ordering.
+  if(event&&submission==lease.SourceSubmission()&&resource->dependenciesEncoded&&
+     plan->EncodedFullMipProducerOn(priorSubmission)&&texture.storageMode==MTLStorageModePrivate&&
+     !texture.parentTexture&&!texture.iosurface&&!texture.buffer&&!texture.heap)
+   orderedPrior=lease.OrderGPUReadAfterSubmission(resource.get(),priorSubmission,event,
+    [owner,plan,texture,priorSubmission,complete]{
+     Require(owner->backing->resource==owner->resource&&owner->resource->plan==plan&&plan->Info()==texture&&
+      owner->resource->contentVersion==owner->backing->contentVersion&&plan->EncodedFullMipProducerOn(priorSubmission),
+      "Ordered terrain-info read lost its actual version or full mip writer");
+     complete();
+    },NativePriorRead::TerrainInfo);
+  if(!orderedPrior)
+   orderedPrior=lease.OrderAfterPreviousSubmission(resource.get(),complete,NativePriorRead::TerrainInfo);
+ }
  if(orderedPrior){
   owner->priorSubmission=priorSubmission;
   auto readable=[owner,priorSubmission]{Require(owner->resource->completed||
@@ -226,5 +246,26 @@ CUSSourceImage ResolveNativeTerrainInfoImage(RuntimeLease& lease,const NativeCUS
 	out.didComplete=[owner,submission]{owner->resource->Complete(submission);};
  if(receipts)receipts->Remember(key,out);
 	return out;
+}
+std::function<bool()> CaptureGrassInfoCheckpointS01(const NativeCUSTextureBinding& binding,
+ id<MTLTexture> expected,uint64_t submission)
+{
+ const auto object=binding.object;
+ const auto backing=object?std::dynamic_pointer_cast<const NativeTerrainInfoBacking>(object->backing):nullptr;
+ const auto resource=backing?std::dynamic_pointer_cast<const InfoResource>(backing->resource):nullptr;
+ if(!submission||!resource||!resource->plan||!resource->source||
+  resource->source->mode==NativeWorldInfoMode::Metal||resource->plan->Info()!=expected||
+  (!resource->completed&&resource->encodingSubmission&&resource->encodingSubmission!=submission))return {};
+ const auto plan=resource->plan;
+ return [object,backing,resource,plan,expected,submission]{
+  return backing->resource==resource&&resource->plan==plan&&plan->Info()==expected&&
+   resource->source==backing->source&&resource->context==object->contextGeneration&&
+   resource->objectIdentity==object->identity&&resource->name==object->name&&
+   backing->storageGeneration==object->identity&&backing->contentVersion&&
+   backing->contentVersion<=object->version&&resource->contentVersion==backing->contentVersion&&
+   plan->MapIdentity()==resource->source->mapIdentity&&plan->CompletionSerial()==resource->source->serial&&
+   GrassProducerRecordedS01(submission,resource->completed,resource->encodingSubmission,
+    resource->registeredSubmission==submission&&resource->dependenciesEncoded);
+ };
 }
 } // namespace rendering::metal4

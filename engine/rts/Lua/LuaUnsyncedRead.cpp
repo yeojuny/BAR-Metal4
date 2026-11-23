@@ -45,6 +45,7 @@
 #include "Net/GameServer.h"
 #include "Rendering/GlobalRendering.h"
 #include "Rendering/GlobalRenderingInfo.h"
+#include "Rendering/Backend/VideoMemoryReporting.h"
 #include "Rendering/ShadowHandler.h"
 #include "Rendering/Units/UnitDrawer.h"
 #include "Rendering/Env/IWater.h"
@@ -742,17 +743,15 @@ int LuaUnsyncedRead::GetLuaMemUsage(lua_State* L)
  *
  * @function Spring.GetVidMemUsage
  *
- * @return number usedMem in MB
- * @return number availableMem in MB
+ * @return number usedMem in MiB. On Metal, current allocated resource bytes in MiB.
+ * @return number referenceMem in MiB: legacy GL total or Metal recommended working set, not free memory.
+ * An unknown Metal budget yields (0, 0); a known budget may be exceeded.
  */
 int LuaUnsyncedRead::GetVidMemUsage(lua_State* L)
 {
-	int2 vidMemInfo;
-
-	GetAvailableVideoRAM(&vidMemInfo.x, globalRenderingInfo.glVendor);
-
-	lua_pushnumber(L, (vidMemInfo.x - vidMemInfo.y) / 1024.0f); // MB (used = total - free)
-	lua_pushnumber(L, (vidMemInfo.x               ) / 1024.0f); // MB
+	const auto usage = rendering::video_memory::QueryUsageMiB();
+	lua_pushnumber(L, usage.used);
+	lua_pushnumber(L, usage.reference);
 	return 2;
 }
 

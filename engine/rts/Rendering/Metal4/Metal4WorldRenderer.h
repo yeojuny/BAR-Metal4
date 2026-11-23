@@ -66,6 +66,8 @@ Metal4WindowSurface AttachMetal4RendererSurface(SDL_Window* window, const Metal4
 // forbids normal renderer/surface/window teardown and requires process restart.
 // A shader/setup error or completed GPU error can still detach safely.
 bool Metal4RendererCanSafelyDetachSurface();
+bool Metal4RendererReclaimOldestForSceneCapacity();
+void Metal4RendererReportPendingGameStats();
 
 enum class Metal4PresentationStatus {
 	Presented, Detached, CloseRequested, Hidden, Minimized, ZeroExtent, DrawableUnavailable, OffscreenSourceCompleted,

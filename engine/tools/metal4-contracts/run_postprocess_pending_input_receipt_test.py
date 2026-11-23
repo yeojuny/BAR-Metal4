@@ -12,6 +12,8 @@ def body(source, signature):
         depth+=(source[i]=='{')-(source[i]=='}')
         if depth==0:return source[start:i]
     raise AssertionError('unclosed function')
+preparation=body(post,'bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease) const')
+preparation=preparation.replace('texture.','texture->').replace('(__bridge const void*)texture','static_cast<const void*>(texture.get())')
 source=r'''
 #include <cassert>
 #include <functional>
@@ -19,28 +21,58 @@ source=r'''
 #include <memory>
 #include <stdexcept>
 #include <utility>
+#include "Rendering/Backend/NativePostprocessTextureReceipt.h"
+using rendering::NativePostprocessTextureAspect;
+using rendering::NativePostprocessTextureReceipt;
 void Require(bool x,const char* why){if(!x)throw std::runtime_error(why);}
-struct NativePostprocessVersion {};
-struct Frame {bool recording=false,pending=false;int slot=1;bool previousRetired=true;std::map<const void*,std::function<void()>> priorReadChecks;};
+enum class NativePriorRead : unsigned {Postprocess=32};
+constexpr int MTLTextureType2D=2,MTLStorageModePrivate=1;
+struct MockTexture {
+ int device=1,storageMode=MTLStorageModePrivate,textureType=MTLTextureType2D;
+ int sampleCount=1,mipmapLevelCount=1,arrayLength=1;
+ bool parentTexture=false,iosurface=false,buffer=false,heap=false;
+};
+struct NativePostprocessVersion {
+ struct Image {uint64_t object=17;int format=0;};
+ std::shared_ptr<Image> image=std::make_shared<Image>();
+ uint64_t generation=1;
+};
+bool IsNativePostprocessDepth(int format){return format!=0;}
+struct Frame {bool recording=false,pending=false;int slot=1;bool previousRetired=true;unsigned priorReadClasses=0;std::map<const void*,std::function<void()>> priorReadChecks;};
 struct Pending {struct {std::shared_ptr<Frame> owner=std::make_shared<Frame>();} resources;};
 struct Runtime {bool poisoned=false;std::shared_ptr<Pending> pendingSubmission=std::make_shared<Pending>();};
 struct RuntimeLease {
  std::shared_ptr<Frame> frame=std::make_shared<Frame>();Runtime runtime;
+ bool rejectGPU=false;
+ uint64_t pendingSource=3;
+ std::function<void()> gpuCheck;
  RuntimeLease(){runtime.pendingSubmission->resources.owner->slot=2;}
  bool PreparingWhilePending()const {return bool(frame->previousRetired)&&bool(runtime.pendingSubmission);}
- bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check){
+ int Device()const{return 1;}
+ uint64_t PendingEventForSource(uint64_t source)const{return source&&source==pendingSource?7:0;}
+ bool OrderGPUReadAfterSubmission(const void*,uint64_t source,uint64_t event,std::function<void()> check,NativePriorRead kind){
+  assert(event==PendingEventForSource(source)&&kind==NativePriorRead::Postprocess);
+  if(rejectGPU)return false;
+  gpuCheck=std::move(check);return true;
+ }
+ bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind){
 '''+body(runtime,'bool RuntimeLease::OrderAfterPreviousSubmission(')+r'''
  }
  void Check(){auto checks=std::move(frame->priorReadChecks);frame->priorReadChecks.clear();for(auto& [key,check]:checks)check();}
 };
 struct Cache {
- struct Image {std::weak_ptr<const NativePostprocessVersion> owner;std::shared_ptr<bool> encoded=std::make_shared<bool>(false),completed=std::make_shared<bool>(false);};
+ struct Image {
+  std::weak_ptr<const NativePostprocessVersion> owner;
+  std::shared_ptr<MockTexture> image=std::make_shared<MockTexture>();
+  uint64_t producerSubmission=0;
+  std::shared_ptr<bool> encoded=std::make_shared<bool>(false),completed=std::make_shared<bool>(false);
+ };
  std::map<const NativePostprocessVersion*,Image> images;
  bool Retired(const NativePostprocessVersion& version)const {
 '''+body(post,'bool Retired(const NativePostprocessVersion& version) const')+r'''
  }
  bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease)const {
-'''+body(post,'bool PreparationInput(const NativePostprocessVersion& version,RuntimeLease& lease) const')+r'''
+'''+preparation+r'''
  }
 };
 template<class F>bool Throws(F f){try{f();return false;}catch(const std::runtime_error&){return true;}}
@@ -84,10 +116,30 @@ int main(){
   if(invalid==0)lease.frame->recording=true;if(invalid==1)lease.frame->pending=true;if(invalid==2)lease.runtime.poisoned=true;
   assert(Throws([&]{c.PreparationInput(*p,lease);}));assert(lease.frame->priorReadChecks.empty());
  }
+ // A valid exact read keeps its own completion even after cache eviction.
+ // Rejected ordering and incompatible storage retain the named CPU check.
+ for(int scenario=0;scenario<4;++scenario){
+  Cache c;RuntimeLease lease;auto p=std::make_shared<const NativePostprocessVersion>();
+  auto& i=c.images[p.get()];i.owner=p;*i.encoded=true;i.producerSubmission=3;
+  if(scenario==1)lease.rejectGPU=true;
+  if(scenario==2)i.image->parentTexture=true;
+  if(scenario==3)i.producerSubmission=4;
+  auto exact=i.completed;
+  assert(c.PreparationInput(*p,lease));
+  assert(bool(lease.gpuCheck)==(scenario==0));
+  if(scenario==0){
+   assert(lease.frame->priorReadChecks.empty());
+   c.images.clear();p.reset();assert(Throws(lease.gpuCheck));*exact=true;lease.gpuCheck();
+  }else{
+   assert(lease.frame->priorReadChecks.size()==1);
+   assert(lease.frame->priorReadClasses==unsigned(NativePriorRead::Postprocess));
+   *exact=true;lease.Check();
+  }
+ }
 }
 '''
 with tempfile.TemporaryDirectory(prefix='bar-post-pending-') as d:
  p=Path(d);(p/'test.cpp').write_text(source)
- subprocess.run(['g++','-std=c++23','-O1','-g','-fsanitize=address,undefined','-fno-pie','-no-pie',str(p/'test.cpp'),'-o',str(p/'test')],check=True)
+ subprocess.run(['g++','-std=c++23','-O1','-g','-fsanitize=address,undefined','-I'+str(root/'rts'),str(p/'test.cpp'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test')],env={**os.environ,'ASAN_OPTIONS':'detect_leaks=0'},check=True,timeout=40)
-print('PASS: 13 production-extracted pending-input/registration scenarios with ASan/UBSan; mocked native resources, no Metal execution')
+print('PASS: production-extracted exact and serialized postprocess receipts with ASan/UBSan; mocked textures, no Metal execution')

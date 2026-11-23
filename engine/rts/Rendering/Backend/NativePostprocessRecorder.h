@@ -2,6 +2,7 @@
 #pragma once
 #include "NativePostprocessData.h"
 #include "NativeCompletedFrameLedger.h"
+#include "NativeGameFrameLimit.h"
 #include <functional>
 #include <optional>
 
@@ -80,7 +81,7 @@ private:
   SubmittedFrame(std::shared_ptr<const NativePostprocessFrame>&& f,std::vector<Change>&& c) noexcept:
    frame(std::move(f)),changes(std::move(c)) {}
  };
- NativeCompletedFrameLedger<SubmittedFrame,2> submittedFrames;
+ NativeCompletedFrameLedger<SubmittedFrame,3> submittedFrames{GameFrameReceiptCapacity()};
  PublicationObserver publicationObserver;
 };
 } // namespace rendering

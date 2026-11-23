@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4ScreenNative.h"
+#include "Metal4FixedTriangleIndexBuffer.h"
 #include "Metal4CoverageRTTPool220.h"
 #include "System/Log/ILog.h"
 #include "Rendering/Backend/NativeDepthStencilKey.h"
@@ -59,6 +60,10 @@ namespace rendering::metal4 {
 
 struct ScreenArgumentStorage {
 	__strong id<MTL4ArgumentTable> table = nil;
+};
+struct ScreenTargetVersionEncoding {
+	uint64_t submission = 0;
+	bool stored = false;
 };
 using ScreenArgumentLayout = std::array<NSUInteger,3>;
 class ScreenArgumentPool {
@@ -786,12 +791,20 @@ struct PreparedScreenFrame::Impl {
 		mutable uint32_t pipEncoded=0,pipCompleted=0;
 		ScreenCull cull=ScreenCull::None;
 		bool healthBars=false;std::uint32_t healthBarsInstances=0;
+		__strong id<MTLBuffer> healthBarsIndices=nil;
 		std::unique_ptr<PreparedPanelShaderDraw> panelShader;
 		std::shared_ptr<const NativePanelShaderDraw> panelShaderOwner;
   std::shared_ptr<ExactScreenLineJob> exactLine;
   std::shared_ptr<PreparedSourceLines133> sourceLines;
   bool geometry=false,sourceLine=false;uint32_t geometryInstances=1;__strong id<MTLBuffer> geometryIndices=nil;size_t geometryIndexOffset170=0;
   uint8_t mutableLayout220=0,eligibility220=0;std::array<uint64_t,9> bindings220{};
+  bool cpuFontVertexInputs=false;
+  bool HasUploadOnlyVertexInputs() const {
+   // UnitPrimitive binds uploaded instance/object/uniform buffers; HealthBars
+   // binds uploaded point/model/uniform buffers and optionally fixed CPU indices.
+   // All their texture reads, including the external rank atlas, are fragment reads.
+   return unitIcons || healthBars || cpuFontVertexInputs;
+  }
 	};
 	// Both the prepared frame and RuntimeLease completion graph retain this
 	// token. It outlives draws during destruction and blocks every pool write.
@@ -828,11 +841,13 @@ struct PreparedScreenFrame::Impl {
 		bool stored = true;
 		bool sourceDependent=false;std::uint32_t offset=0;std::uint64_t sequence=0;mutable bool encoded=false;
 		NativePostprocessStage sourceStage=NativePostprocessStage::Screen;std::uint64_t sourceDrawFrame=0;
-		std::shared_ptr<bool> encodedVersion;
+		std::shared_ptr<ScreenTargetVersionEncoding> encodedVersion;
 		std::function<void()> requirePreviousReadable;
 		__strong id<MTLTexture> previousDepth=nil;
-		std::shared_ptr<bool> depthInitialized,depthEncoded;
+		std::shared_ptr<bool> depthInitialized;
+		std::shared_ptr<ScreenTargetVersionEncoding> depthEncoded;
 		std::function<void()> requirePreviousDepthReadable;
+		uint64_t submission=0;
 	};
 	std::vector<TargetPass> targets;
 	std::vector<std::shared_ptr<const ScreenTexture>> producedImages;
@@ -941,8 +956,10 @@ void PreparedScreenFrame::EncodeDeferredTarget(id<MTL4CommandBuffer> command,std
 	try{target.frame->Encode(encoder);}catch(...){[encoder endEncoding];throw;}
 	[encoder barrierAfterStages:MTLStageVertex|MTLStageFragment beforeQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];[encoder endEncoding];
 	target.encoded=true;
-	Require(bool(target.encodedVersion),"RTT target lost its exact encoded-version state");*target.encodedVersion=target.stored;
-	if(target.depthEncoded)*target.depthEncoded=target.stored;
+	Require(bool(target.encodedVersion),"RTT target lost its exact encoded-version state");
+	const ScreenTargetVersionEncoding encoded{target.submission,target.stored};
+	*target.encodedVersion=encoded;
+	if(target.depthEncoded)*target.depthEncoded=encoded;
 }
 void PreparedScreenFrame::DidComplete() const
 {
@@ -959,7 +976,7 @@ void PreparedScreenFrame::Encode(id<MTL4RenderCommandEncoder> encoder)const
 {
 	EncodeRange(encoder,0,impl->sourceCommandCount);
 }
-void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::uint32_t first,std::uint32_t end)const
+void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::uint32_t first,std::uint32_t end,RangeAcquire acquire)const
 {
 	Require(first<=end && end<=impl->sourceCommandCount,"Postprocess root screen command range is invalid");
  // Even an empty range receives a diagnostic; no table mutation is concurrent.
@@ -967,20 +984,102 @@ void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::
  if(impl->mutableTables220[0]||impl->mutableTables220[1])mutableLock220.lock();
  std::array<std::array<uint64_t,9>,2> previous220{};std::array<bool,2> havePrevious220{};
  std::array<uint64_t,2> setters220{},draws220{},eligible220{};uint64_t encoded220=0;
+ // This state belongs only to this invocation and this encoder. A borrowed
+ // Draw is immutable and already retained by the prepared frame; no GPU
+ // resource, argument table, or state crosses an EncodeRange boundary.
+ static const bool elideState=[](){const char* v=std::getenv("BAR_NATIVE_SCREEN_STATE_ELISION");return v&&std::strcmp(v,"1")==0;}();
+ const Impl::Draw* previousState=nullptr;
+ std::array<uint64_t,7> stateOmitted{};uint64_t stateAttempts=0;
+ const auto issueState=[&](unsigned field,bool same){
+  const bool issue=!same;
+  if(impl->counters220){++stateAttempts;if(!issue)++stateOmitted[field];}
+  return issue;
+ };
+ const auto sameViewport=[](const MTLViewport& a,const MTLViewport& b){
+  const auto equal=[](double x,double y){return std::isfinite(x)&&std::isfinite(y)&&std::bit_cast<uint64_t>(x)==std::bit_cast<uint64_t>(y);};
+  return equal(a.originX,b.originX)&&equal(a.originY,b.originY)&&equal(a.width,b.width)&&
+   equal(a.height,b.height)&&equal(a.znear,b.znear)&&equal(a.zfar,b.zfar);
+ };
+ const auto sameScissor=[](const MTLScissorRect& a,const MTLScissorRect& b){
+  return a.x==b.x&&a.y==b.y&&a.width==b.width&&a.height==b.height;
+ };
  const auto reportRange220=[&]{
  if(impl->counters220){
   static std::atomic<unsigned> rangeReceipts220{0};
-  if(rangeReceipts220.fetch_add(1)<256)LOG("[NativeScreenTableH5V2] stage=encode receipt=%llu frame=%llu mode=%u range_first=%u range_end=%u encoded=%llu eligible_ordinary=%llu eligible_packed=%llu mutable_ordinary=%llu mutable_packed=%llu setters_ordinary=%llu setters_packed=%llu fresh_range_baseline=1",
+  if(rangeReceipts220.fetch_add(1)<256){LOG("[NativeScreenTableH5V2] stage=encode receipt=%llu frame=%llu mode=%u range_first=%u range_end=%u encoded=%llu eligible_ordinary=%llu eligible_packed=%llu mutable_ordinary=%llu mutable_packed=%llu setters_ordinary=%llu setters_packed=%llu fresh_range_baseline=1",
    (unsigned long long)impl->receipt220,(unsigned long long)impl->sourceFrame220,unsigned(impl->mode220),first,end,(unsigned long long)encoded220,
    (unsigned long long)eligible220[0],(unsigned long long)eligible220[1],(unsigned long long)draws220[0],(unsigned long long)draws220[1],(unsigned long long)setters220[0],(unsigned long long)setters220[1]);
+   LOG("[NativeScreenStateElision] frame=%llu enabled=%u range_first=%u range_end=%u prior_setters=%llu omitted_cull=%llu omitted_depth=%llu omitted_stencil=%llu omitted_viewport=%llu omitted_scissor=%llu omitted_depthclip=%llu omitted_pipeline=%llu argument_binds_unchanged=1 fresh_range=1",
+    (unsigned long long)impl->sourceFrame220,unsigned(elideState),first,end,(unsigned long long)stateAttempts,
+    (unsigned long long)stateOmitted[0],(unsigned long long)stateOmitted[1],(unsigned long long)stateOmitted[2],
+    (unsigned long long)stateOmitted[3],(unsigned long long)stateOmitted[4],(unsigned long long)stateOmitted[5],(unsigned long long)stateOmitted[6]);
+  }
  }
  };
+	const auto& allDraws = impl->draws;
+	auto firstDraw = allDraws.cbegin();
+	auto endDraw = allDraws.cend();
+	static const bool indexedRange = [] {
+		const char* value = std::getenv("BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP");
+		return value && std::strcmp(value, "1") == 0;
+	}();
+	const bool partialRange = first != 0 || end != impl->sourceCommandCount;
+	if (indexedRange && partialRange) {
+		// Preparation appends draws in original command order, skipping commands with no draw.
+		const auto beforeCommand = [](const auto& draw, std::uint32_t command) {
+			return draw.originalCommand < command;
+		};
+		firstDraw = std::lower_bound(firstDraw, endDraw, first, beforeCommand);
+		endDraw = std::lower_bound(firstDraw, endDraw, end, beforeCommand);
+	}
+	if (partialRange && first < end) {
+		[[maybe_unused]] static const bool reported = [&] {
+			LOG("[NativeScreenEncodeRange] indexed=%u first=%u end=%u total_draws=%zu visited_draws=%zu",
+				unsigned(indexedRange), first, end, allDraws.size(), std::size_t(endDraw - firstDraw));
+			return true;
+		}();
+	}
+    const bool needsDrawAcquire = !impl->draws.empty() && (!impl->targets.empty() || !impl->minimaps.empty());
+    static const bool rangeAcquire = [] {
+        const char* value = std::getenv("BAR_NATIVE_SCREEN_RANGE_ACQUIRE");
+        return value && std::strcmp(value, "1") == 0;
+    }();
+    bool pendingVertexAcquire = false;
+    if (rangeAcquire && needsDrawAcquire && acquire == RangeAcquire::AfterPostprocess && first < end) {
+        auto prefix = firstDraw;
+        if (!indexedRange && first)
+            prefix = std::lower_bound(prefix, endDraw, first, [](const auto& draw, auto command) { return draw.originalCommand < command; });
+        pendingVertexAcquire = prefix != endDraw && prefix->originalCommand < end && prefix->HasUploadOnlyVertexInputs();
+    }
+    if (acquire == RangeAcquire::AfterPostprocess) {
+        static const bool merge = [] {
+            const char* value = std::getenv("BAR_NATIVE_SCREEN_MERGE_CONSUMER_BARRIERS");
+            return value && std::strcmp(value, "1") == 0;
+        }();
+        // The draw acquire below covers the same destination stages and device
+        // visibility, plus earlier Dispatch work. No GPU commands intervene.
+        if (pendingVertexAcquire || !merge || !needsDrawAcquire)
+            [encoder barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+    }
  if(impl->draws.empty()){reportRange220();return;}
-	if (!impl->targets.empty() || !impl->minimaps.empty()) [encoder barrierAfterQueueStages:MTLStageVertex | MTLStageFragment | MTLStageBlit | MTLStageDispatch beforeStages:MTLStageVertex | MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+    // Preserve the root attachment wait above. Only Dispatch -> Vertex may
+    // move: render/blit hazards and fragment sampling stay protected at entry.
+    if (pendingVertexAcquire)
+        [encoder barrierAfterQueueStages:MTLStageDispatch beforeStages:MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+    else if (needsDrawAcquire) [encoder barrierAfterQueueStages:MTLStageVertex | MTLStageFragment | MTLStageBlit | MTLStageDispatch beforeStages:MTLStageVertex | MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
 	[encoder setDepthClipMode:MTLDepthClipModeClip];[encoder setCullMode:MTLCullModeNone];[encoder setFrontFacingWinding:MTLWindingCounterClockwise];
 	[encoder setDepthBias:0 slopeScale:0 clamp:0];
-	for(const auto& draw:impl->draws) {
-		if(draw.originalCommand<first || draw.originalCommand>=end)continue;
+	for (auto iter = firstDraw; iter != endDraw; ++iter) {
+		const auto& draw = *iter;
+		if (!indexedRange && (draw.originalCommand < first || draw.originalCommand >= end)) continue;
+        if (pendingVertexAcquire && !draw.HasUploadOnlyVertexInputs()) {
+            [encoder barrierAfterQueueStages:MTLStageDispatch beforeStages:MTLStageVertex visibilityOptions:MTL4VisibilityOptionDevice];
+            pendingVertexAcquire = false;
+        }
+  // Foreign encoders may change any tracked field. Invalidate before their
+  // call, retain all original restores, and never publish their state below.
+  if(draw.unitIcons||draw.sensorLOS||draw.sensorPreview||draw.buildSquare||
+   draw.weaponRange||draw.startBox||draw.pip||draw.panelShader)previousState=nullptr;
   if(impl->counters220){++encoded220;if(draw.eligibility220==1||draw.eligibility220==2)++eligible220[draw.eligibility220-1];}
   if(draw.unitIcons){
    for(std::size_t i=0;i<draw.unitIcons->DrawCount();++i)draw.unitIcons->EncodeDraw(i,encoder);
@@ -1022,15 +1121,17 @@ void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::
 			[encoder setFrontFacingWinding:MTLWindingCounterClockwise];continue;
 		}
 		for(const auto& image:draw.externalImages)image.requireReadable();
-		[encoder setCullMode:draw.cull==ScreenCull::Front?MTLCullModeFront:draw.cull==ScreenCull::Back?MTLCullModeBack:MTLCullModeNone];
-		[encoder setDepthStencilState:draw.depth];
-		[encoder setStencilFrontReferenceValue:draw.frontReference backReferenceValue:draw.backReference];
-		[encoder setViewport:draw.viewport];[encoder setScissorRect:draw.scissor];
+		if(issueState(0,previousState&&previousState->cull==draw.cull))[encoder setCullMode:draw.cull==ScreenCull::Front?MTLCullModeFront:draw.cull==ScreenCull::Back?MTLCullModeBack:MTLCullModeNone];
+		if(issueState(1,previousState&&previousState->depth==draw.depth))[encoder setDepthStencilState:draw.depth];
+		if(issueState(2,previousState&&previousState->frontReference==draw.frontReference&&previousState->backReference==draw.backReference))[encoder setStencilFrontReferenceValue:draw.frontReference backReferenceValue:draw.backReference];
+		if(issueState(3,previousState&&sameViewport(previousState->viewport,draw.viewport)))[encoder setViewport:draw.viewport];
+  if(issueState(4,previousState&&sameScissor(previousState->scissor,draw.scissor)))[encoder setScissorRect:draw.scissor];
 		if(draw.panelShader){draw.panelShader->Encode(encoder);continue;}
-  [encoder setDepthClipMode:draw.sourceLines?MTLDepthClipModeClamp:MTLDepthClipModeClip];
+  if(issueState(5,previousState&&bool(previousState->sourceLines)==bool(draw.sourceLines)))[encoder setDepthClipMode:draw.sourceLines?MTLDepthClipModeClamp:MTLDepthClipModeClip];
   if(draw.sourceLines)draw.sourceLines->RequireReady();
   if(draw.exactLine)Require(draw.exactLine->encoded,"Exact screen line draw precedes its producer");
-		[encoder setRenderPipelineState:draw.pipeline];
+		if(issueState(6,previousState&&previousState->pipeline==draw.pipeline))[encoder setRenderPipelineState:draw.pipeline];
+  previousState=elideState?&draw:nullptr;
   if(draw.mutableLayout220){
    const unsigned layout=draw.mutableLayout220-1;const auto& next=draw.bindings220;
    for(unsigned slot=0;slot<9;++slot){
@@ -1044,7 +1145,24 @@ void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::
    previous220[layout]=next;havePrevious220[layout]=true;if(impl->counters220)++draws220[layout];
   }
 		[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-		if(draw.healthBars){[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.healthBarsInstances];continue;}
+		if (draw.healthBars) {
+			if (draw.healthBarsIndices) {
+				[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt16
+				                   indexBuffer:draw.healthBarsIndices.gpuAddress indexBufferLength:draw.healthBarsIndices.length
+				                 instanceCount:draw.healthBarsInstances];
+				[[maybe_unused]] static const bool logged = [] {
+					LOG("[NativeIndexedRoute] family=healthbars mode=indexed");
+					return true;
+				}();
+			} else {
+				[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.healthBarsInstances];
+				[[maybe_unused]] static const bool logged = [] {
+					LOG("[NativeIndexedRoute] family=healthbars mode=direct");
+					return true;
+				}();
+			}
+			continue;
+		}
   if(draw.geometry){
    if(draw.geometryIndices)[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:draw.geometryIndices.gpuAddress+draw.geometryIndexOffset170 indexBufferLength:draw.geometryIndices.length-draw.geometryIndexOffset170 instanceCount:draw.geometryInstances];
    else [encoder drawPrimitives:draw.sourceLine?MTLPrimitiveTypeTriangleStrip:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.geometryInstances];
@@ -1053,6 +1171,9 @@ void PreparedScreenFrame::EncodeRange(id<MTL4RenderCommandEncoder> encoder,std::
 		const size_t offset=size_t(draw.first)*sizeof(uint32_t);
 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:impl->indices.Address()+offset indexBufferLength:impl->indices.length-offset];
 	}
+ // A following caller may encode additional work in this same encoder.
+ if (pendingVertexAcquire)
+  [encoder barrierAfterQueueStages:MTLStageDispatch beforeStages:MTLStageVertex visibilityOptions:MTL4VisibilityOptionDevice];
  reportRange220();
 }
 struct TerraformCompiledOwner {__strong id<MTLLibrary> library=nil;std::array<__strong id<MTLRenderPipelineState>,3> pipelines{};};
@@ -1113,7 +1234,7 @@ struct ScreenGPU::Impl {
 		// write. Generation0 may be sampled; its initial pixels are undefined.
 		bool allocationOnly=false;
 		std::shared_ptr<ScreenMipState> mipState={};
-		std::shared_ptr<bool> encodedVersion;
+		std::shared_ptr<ScreenTargetVersionEncoding> encodedVersion;
 		NativePostprocessStage sourceStage=NativePostprocessStage::Screen;
 		std::uint64_t sourceSequence=0;
 		std::uint32_t sourceOffset=0;
@@ -1155,6 +1276,7 @@ struct ScreenGPU::Impl {
  }
 	struct HealthBarsPointStorage {std::weak_ptr<const NativeBufferSnapshot> owner;__strong id<MTLBuffer> value=nil;};
 	std::unordered_map<const NativeBufferSnapshot*,HealthBarsPointStorage> healthBarsPoints;
+	FixedTriangleIndexBuffer<triangleReuse::healthBars> healthBarsIndices;
 	id<MTLBuffer> HealthBarsPoints(RuntimeLease& lease,const NativeBufferSnapshotRef& source){
 		std::erase_if(healthBarsPoints,[](const auto& entry){return entry.second.owner.expired();});
 		auto& cached=healthBarsPoints[source.get()];
@@ -1237,27 +1359,47 @@ struct ScreenGPU::Impl {
 			retainExternal(std::move(resolved));lease.AddAllocation(image);return image;
 		}
 		const auto found=textures.find(source.get());if(found!=textures.end()&&!found->second.owner.expired()){
-   // Pin N's immutable submitted RTT without publishing completion. N retires
-   // before Begin for this request; current-frame producer ordering stays exact.
-   const bool previousSubmission=lease.PreparingWhilePending()&&found->second.encodedVersion&&*found->second.encodedVersion;
+			const auto& entry=found->second;
+			const bool initialized=entry.initialized&&*entry.initialized;
+			const bool previousSubmission=lease.PreparingWhilePending()&&!initialized&&
+				entry.encodedVersion&&entry.encodedVersion->stored&&
+				(!lease.SourceSubmission()||entry.encodedVersion->submission!=lease.SourceSubmission());
 			Require(!source->renderTarget || found->second.allocationOnly || (found->second.initialized && *found->second.initialized) ||
 				previousSubmission || std::find(available.begin(),available.end(),source.get())!=available.end(),"Native UI RTT version has no retired or earlier ordered producer");
-			const auto& entry=found->second;
    PinCoverage220(lease,source,entry);
 			if(source->renderTarget && source->generation){
-				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized))
+				Require(entry.initialized && entry.encodedVersion,"RTT version lost its immutable producer state");
+				if(previousSubmission){
+					const auto producer=entry.encodedVersion->submission;
+					const auto event=lease.PendingEventForSource(producer);
+					const auto generation=source->generation;
+					const auto resource=source->renderTarget->resourceId;
+					const auto texture=entry.image;
+					auto check=[source,texture,producer,generation,resource,completed=entry.initialized,encoded=entry.encodedVersion]{
+						Require(texture&&source->generation==generation&&source->renderTarget->resourceId==resource&&
+							encoded->stored&&encoded->submission==producer&&*completed,
+							"Historical RTT lost its exact allocation or successful producer");
+					};
+					const bool privateRoot=event&&resource&&texture&&texture.device==lease.Device()&&
+						texture.storageMode==MTLStorageModePrivate&&texture.textureType==MTLTextureType2D&&
+						texture.width==source->width&&texture.height==source->height&&texture.sampleCount==1&&
+						texture.arrayLength==1&&texture.mipmapLevelCount==1&&!texture.parentTexture&&
+						!texture.iosurface&&!texture.buffer&&!texture.heap;
+					if(!privateRoot||!lease.OrderGPUReadAfterSubmission(source.get(),producer,event,check,NativePriorRead::ScreenTarget))
+						lease.OrderAfterPreviousSubmission(source.get(),std::move(check),NativePriorRead::ScreenTarget);
+				}
+				if(entry.sourceDependent && entry.sourceStage==NativePostprocessStage::Screen && !previousSubmission && !initialized)
 					Require(consumer && consumer->stage==NativePostprocessStage::Screen &&
 						(consumer->screenCommandOffset>entry.sourceOffset ||
 						(consumer->screenCommandOffset==entry.sourceOffset && (!consumer->commandSequence || consumer->commandSequence>entry.sourceSequence))),
 						"Copied/sampled RTT version precedes its actual screen producer insertion");
-				if(entry.sourceStage!=NativePostprocessStage::Screen && !previousSubmission && !(entry.initialized && *entry.initialized)){
+				if(entry.sourceStage!=NativePostprocessStage::Screen && !previousSubmission && !initialized){
 					Require(consumer && (consumer->stage>entry.sourceStage ||
 						(consumer->stage==entry.sourceStage && consumer->sequence>entry.sourceSequence)),
 						"Actual world sampler precedes its pending PreUnit RTT producer");
 				}
-				Require(entry.initialized && entry.encodedVersion,"RTT version lost its immutable producer state");
 				if(retainExternal)retainExternal({entry.image,source,[completed=entry.initialized,encoded=entry.encodedVersion,owner=source]{
-					Require(*completed || *encoded,"RTT image sampled before its exact immutable version encoded");}});
+					Require(*completed || encoded->stored,"RTT image sampled before its exact immutable version encoded");}});
 			}
 			QueueMipmaps(lease,source,found->second);lease.AddAllocation(found->second.image);return found->second.image;
 		}
@@ -1496,6 +1638,9 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 		if (found != impl->textures.end()) {
 			Require(found->second.initialized && !*found->second.initialized,
 				"Native UI RTT generation is immutable after successful retirement");
+			Require(found->second.encodedVersion&&(!found->second.encodedVersion->submission||
+				found->second.encodedVersion->submission==lease.SourceSubmission()),
+				"Native UI RTT generation belongs to another encoded submission");
 			continue;
 		}
 		Require(ScreenRenderTargetPixelBytes(source->format)!=0 &&
@@ -1509,17 +1654,22 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 		id<MTLTexture> image = impl->AllocateCoverage220(lease,d,pool220,sourcePass.sourceDrawFrame);
 		Require(image != nil, "Cannot allocate original native UI RTT generation");
 		image.label = String(source->sourceName + " generation " + std::to_string(source->generation));
-		impl->textures.emplace(source.get(), Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),sourcePass.sourceStage,sourcePass.commandSequence,sourcePass.screenCommandOffset,sourcePass.sourceDependent,pool220});
+		impl->textures.emplace(source.get(), Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<ScreenTargetVersionEncoding>(),sourcePass.sourceStage,sourcePass.commandSequence,sourcePass.screenCommandOffset,sourcePass.sourceDependent,pool220});
 	}
 	for(size_t index:order){const auto& pass=frame.targetPasses[index];const auto& source=pass.depthDestination;if(!source)continue;
 		auto found=impl->textures.find(source.get());if(found!=impl->textures.end()){
-			Require(found->second.initialized && !*found->second.initialized,"Coverage depth generation is immutable after retirement");continue;}
+			Require(found->second.initialized && !*found->second.initialized,"Coverage depth generation is immutable after retirement");
+			Require(found->second.encodedVersion&&(!found->second.encodedVersion->submission||
+				found->second.encodedVersion->submission==lease.SourceSubmission()),
+				"Coverage depth generation belongs to another encoded submission");
+			continue;
+		}
 		Require(source->width<=lease.Capabilities().maxTextureDimension2D && source->height<=lease.Capabilities().maxTextureDimension2D,"Coverage depth extent exceeds actual device");
 		auto d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:MTLPixelFormatDepth16Unorm width:source->width height:source->height mipmapped:NO];
 		d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageShaderRead|MTLTextureUsageRenderTarget;
   const bool pool220=CoveragePoolEligible220(pass);
 		auto image=impl->AllocateCoverage220(lease,d,pool220,pass.sourceDrawFrame);Require(image!=nil,"Cannot allocate actual coverage D16 version");
-		impl->textures.emplace(source.get(),Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<bool>(false),pass.sourceStage,pass.commandSequence,pass.screenCommandOffset,pass.sourceDependent,pool220});
+		impl->textures.emplace(source.get(),Impl::Texture{source,image,std::make_shared<bool>(false),false,{},std::make_shared<ScreenTargetVersionEncoding>(),pass.sourceStage,pass.commandSequence,pass.screenCommandOffset,pass.sourceDependent,pool220});
 	}
 	std::vector<const ScreenTexture*> available;
 	std::vector<PreparedScreenFrame::Impl::TargetPass> targets;
@@ -1566,7 +1716,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 		d.colorAttachments[0].clearColor = MTLClearColorMake(source.clearColor[0],source.clearColor[1],source.clearColor[2],source.clearColor[3]);
 		if(depth){d.depthAttachment.texture=depth->image;d.depthAttachment.loadAction=source.previousDepth?MTLLoadActionLoad:MTLLoadActionDontCare;d.depthAttachment.storeAction=MTLStoreActionStore;}
 		d.renderTargetWidth = source.destination->width; d.renderTargetHeight = source.destination->height;
-		targets.push_back({previous,d,std::move(target),destination.initialized,source.store == ScreenTargetStore::Store,source.sourceDependent,source.screenCommandOffset,source.commandSequence,false,source.sourceStage,source.sourceDrawFrame,destination.encodedVersion,std::move(requirePreviousReadable),previousDepth,depth?depth->initialized:nullptr,depth?depth->encodedVersion:nullptr,std::move(requirePreviousDepthReadable)});
+		targets.push_back({previous,d,std::move(target),destination.initialized,source.store == ScreenTargetStore::Store,source.sourceDependent,source.screenCommandOffset,source.commandSequence,false,source.sourceStage,source.sourceDrawFrame,destination.encodedVersion,std::move(requirePreviousReadable),previousDepth,depth?depth->initialized:nullptr,depth?depth->encodedVersion:nullptr,std::move(requirePreviousDepthReadable),lease.SourceSubmission()});
 		if (source.store == ScreenTargetStore::Store){available.push_back(source.destination.get());if(source.depthDestination)available.push_back(source.depthDestination.get());}
 	}
 	std::unique_ptr<PreparedScreenFrame> prepared;
@@ -1766,6 +1916,23 @@ PreparedScreenImage ScreenGPU::PrepareImage(RuntimeLease& lease,const std::share
 	uint32_t uploads=0;
 	if(actualSampler){Require(actualSampler.device==lease.Device(),"Shared screen image sampler belongs to another actual device");lease.Retain(actualSampler);}
 	return {impl->Image(lease,source,uploads,available,consumer,std::move(retainExternal)),actualSampler?actualSampler:impl->Sampler(lease,sampler)};
+}
+std::function<bool()> ScreenGPU::CaptureGrassCPUImageCheckpointS01(
+ const std::shared_ptr<const ScreenTexture>& source,id<MTLTexture> expected) const
+{
+ if(!source||source->incomplete||source->renderTarget||source->sourceTexture||
+  source->postprocessVersion||source->sourceDependent||
+  (source->bytes.empty()&&source->mips.empty()))return {};
+ for(const auto& mip:source->mips)if(mip.allocatedUndefined||mip.bytes.empty())return {};
+ const auto found=impl->textures.find(source.get());
+ if(found==impl->textures.end())return {};
+ const auto& cached=found->second;
+ if(cached.owner.lock()!=source||cached.image!=expected||cached.allocationOnly||
+  cached.sourceDependent||cached.coveragePool220)return {};
+ // These immutable CPU versions are allocated once with newTexture; this
+ // strong source excludes cache sweeping. No admitted RTT/external writer.
+ const auto state=cached.mipState;
+ return [source,expected,state]{return expected&&(!state||state->initialized);};
 }
 std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareColorAttachmentClear(RuntimeLease& lease,ScreenColor color,
 	uint32_t width,uint32_t height,std::optional<ScreenScissor> scissor,std::array<bool,4> colorWrite,
@@ -1986,7 +2153,9 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 			draw.depth=impl->DepthStencil(lease,state.depthStencil,depthFormat,stencilFormat);
 			draw.arguments=args;draw.viewport={drawViewport[0],drawViewport[1],drawViewport[2],drawViewport[3],0,1};draw.scissor=*scissor;
 			draw.frontReference=std::clamp(state.depthStencil.frontStencil.reference,0,255);draw.backReference=std::clamp(state.depthStencil.backStencil.reference,0,255);
-			draw.count=78;draw.healthBarsInstances=source.count;draw.originalCommand=std::uint32_t(i);draw.externalImages=std::move(external);draw.cull=state.cull;draw.healthBars=true;
+			draw.count=triangleReuse::healthBars.size();draw.healthBarsInstances=source.count;draw.originalCommand=std::uint32_t(i);draw.externalImages=std::move(external);draw.cull=state.cull;draw.healthBars=true;
+			if (samples==1)
+				draw.healthBarsIndices=impl->healthBarsIndices.Prepare(lease);
 			prepared->impl->draws.push_back(std::move(draw));continue;
 		}
 		if(command.panelShader) {
@@ -2262,6 +2431,10 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 			uint32_t(std::clamp(state.depthStencil.frontStencil.reference,0,255)),uint32_t(std::clamp(state.depthStencil.backStencil.reference,0,255)),
 			command.firstIndex,command.geometry?command.geometry->count:command.indexCount,std::uint32_t(i)});
   if(command.geometry&&!frameGeometry){auto& draw=prepared->impl->draws.back();draw.exactLine=std::move(exactLine);draw.geometry=true;draw.geometryInstances=command.geometry->instanceCount;draw.geometryIndices=geometryIndices;draw.geometryIndexOffset170=geometryIndexOffset170;}
+  // These packed font streams (including indices) and both uniform slices
+  // come from retained or frame-owned CPU uploads. The vertex shader has no textures.
+  prepared->impl->draws.back().cpuFontVertexInputs=shareBindings151 && packedGeometry170 &&
+   state.material==ScreenMaterial::FontCoverage;
   prepared->impl->draws.back().mutableLayout220=mutableDraw220?eligibility220:0;
   prepared->impl->draws.back().eligibility220=eligibility220;
   prepared->impl->draws.back().bindings220=capturedBindings220;

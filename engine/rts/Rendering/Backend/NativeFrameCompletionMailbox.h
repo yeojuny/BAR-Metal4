@@ -5,6 +5,7 @@
 #include <mutex>
 #include <memory>
 #include <optional>
+#include <span>
 #include <stdexcept>
 #include <type_traits>
 
@@ -28,12 +29,13 @@ public:
  class Ticket;
 private:
  struct Slot {std::weak_ptr<Ticket> ticket;bool queued=false,accepted=false;};
- std::array<Slot,2> slots{};
- std::array<std::size_t,2> entrySlots{};
+ std::array<Slot,3> slots{};
+ std::array<std::size_t,3> entrySlots{};
+ const std::size_t capacity;
  const std::uint64_t epoch;
  std::mutex mutex;
  bool open=true;
- std::array<NativeFrameCompletionNotice,2> entries{};
+ std::array<NativeFrameCompletionNotice,3> entries{};
  std::size_t read=0,count=0;
  static void Reject() {throw std::logic_error("Deferred completion differs from its owned original source frame");}
 public:
@@ -48,12 +50,15 @@ public:
  public:
   Ticket(const Ticket&)=delete;Ticket& operator=(const Ticket&)=delete;
  };
- explicit NativeFrameCompletionMailbox(std::uint64_t generation):epoch(generation) {if(!generation)Reject();}
+ explicit NativeFrameCompletionMailbox(std::uint64_t generation,std::size_t requestedCapacity=2):
+  capacity(requestedCapacity),epoch(generation) {
+  if(!generation || (capacity!=2 && capacity!=3))Reject();
+ }
  std::uint64_t Epoch() const noexcept {return epoch;}
  bool HasCapacity() {
   const std::lock_guard lock(mutex);
   if(!open)Reject();
-  for(const auto& slot:slots)if(!slot.queued && slot.ticket.expired())return true;
+  for(const auto& slot:std::span(slots).first(capacity))if(!slot.queued && slot.ticket.expired())return true;
   return false;
  }
  // Reserve completion capacity before invoking the renderer/GPU submit.
@@ -63,7 +68,7 @@ public:
  std::shared_ptr<Ticket> Prepare(std::uint64_t expectedEpoch,std::uint64_t draw,std::uint64_t post) {
   const std::lock_guard lock(mutex);
   if(!open || epoch!=expectedEpoch)Reject();
-  for(std::size_t i=0;i<slots.size();++i)if(!slots[i].queued && slots[i].ticket.expired()){
+  for(std::size_t i=0;i<capacity;++i)if(!slots[i].queued && slots[i].ticket.expired()){
    auto ticket=std::shared_ptr<Ticket>(new Ticket(this,epoch,draw,post,i));
    slots[i]={ticket,false,false};return ticket;
   }
@@ -80,9 +85,9 @@ public:
  void Publish(const std::shared_ptr<Ticket>& ticket,const NativeFrameCompletionNotice& notice) {
   const std::lock_guard lock(mutex);
   if(!open || !ticket || ticket->owner!=this || ticket->epoch!=epoch || ticket->published ||
-     count==entries.size() || slots[ticket->slot].ticket.lock()!=ticket || slots[ticket->slot].queued || !notice.sourceFrameCompleted ||
+     count==capacity || slots[ticket->slot].ticket.lock()!=ticket || slots[ticket->slot].queued || !notice.sourceFrameCompleted ||
      notice.sourceDrawFrame!=ticket->draw || notice.completedPostprocessSerial!=ticket->post)Reject();
-  const auto index=(read+count)%entries.size();
+  const auto index=(read+count)%capacity;
   entries[index]=notice;entrySlots[index]=ticket->slot;
   slots[ticket->slot].queued=true;++count;ticket->published=true;
  }
@@ -97,7 +102,7 @@ public:
    if(front.ticket.expired())Reject();
    return std::nullopt;
   }
-  auto result=entries[read];slots[entrySlots[read]]={};read=(read+1)%entries.size();--count;return result;
+  auto result=entries[read];slots[entrySlots[read]]={};read=(read+1)%capacity;--count;return result;
  }
  // A terminal GPU drain may not treat a blocked unaccepted notice as empty.
  // Unpublished reservations are permitted: the current frame can be preparing

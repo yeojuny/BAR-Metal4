@@ -14,8 +14,9 @@ public:
 	std::uint64_t MapIdentity()const;
 	std::uint64_t CompletionSerial()const;
 	bool HasUpdates()const;
+	bool EncodedFullMipProducerOn(uint64_t sourceSubmission)const;
 	void RegisterResources(RuntimeLease&)const; // Reuse the retained pre-unit image across runtime leases.
-	void EncodeDependencies(id<MTL4CommandBuffer>)const; // before any info consumer; idempotent same plan
+	void EncodeDependencies(id<MTL4CommandBuffer>,uint64_t sourceSubmission)const;
 	void DidComplete()const; // publish only after feedback+event retirement
 private:
 	PreparedWorldInfo();struct Impl;std::unique_ptr<Impl> impl;friend class WorldInfoGPU;

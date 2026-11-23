@@ -516,6 +516,51 @@ inline bool RangeLineCovered(float3 originalA,float3 originalB,float2 fragmentPo
  const float t=xMajor?(fragmentPosition.x-originalA.x)/d.x:(fragmentPosition.y-originalA.y)/d.y;
  depth=originalA.z+(originalB.z-originalA.z)*t;return depth>=0.0f&&depth<=1.0f;
 }
+#if defined(RECOIL_WEAPON_RANGE_EXACT_INTERIOR) && !RECOIL_RANGE_DIVISION233
+inline bool RangeLineCoveredAA0(float3 originalA,float3 originalB,float2 fragmentPosition,float width,thread float& depth) {
+ // Called by the single-sample fragment. Preserve the original outside the proved integer bounds.
+ if(!all(isfinite(originalA))||!all(isfinite(originalB))||
+  !all(isfinite(fragmentPosition))||!isfinite(width)||width<=0.f||width>64.f||
+  any(abs(originalA.xy)>16384.f)||any(abs(originalB.xy)>16384.f)||
+  any(abs(fragmentPosition)>32768.f))
+  return RangeLineCovered(originalA,originalB,fragmentPosition,width,depth);
+ const int2 a=int2(floor(originalA.xy*256.0f+0.5f)),b=int2(floor(originalB.xy*256.0f+0.5f));
+ const int2 delta=b-a;if(all(delta==0))return false;const bool xMajor=abs(delta.x)>=abs(delta.y);
+ const int2 pixel=int2(floor(fragmentPosition));const int major=xMajor?pixel.x:pixel.y;
+ const long ma=xMajor?a.x:a.y,mi=xMajor?a.y:a.x,dm=xMajor?delta.x:delta.y,di=xMajor?delta.y:delta.x;
+ const long crossing=long(major)*256+128;
+ long numerator=mi*dm+(crossing-ma)*di,denominator=dm*256;
+ if(denominator<0){denominator=-denominator;numerator=-numerator;}
+ long quotient=numerator/denominator;
+ long remainder=numerator-quotient*denominator;
+ if(remainder<0){--quotient;remainder+=denominator;}
+ const int center=int(quotient);
+ const int count=max(1,int(floor(width+0.5f)));
+ // The same rational crossing gives both the unit diamond and the wide-line
+ // band. Keep the original negative epsilon on exact integer and half ties.
+ const int bias=(count&1)?-int(remainder==0):int(2*remainder>denominator);
+ const int lower=center-count/2+bias;
+ const int actual=xMajor?pixel.y:pixel.x;if(actual<lower||actual>=lower+count)return false;
+ const long mb=ma+dm,first=dm>0?ma:mb,last=dm>0?mb:ma;
+ // A nonintegral minor crossing at the major pixel center lies strictly
+ // inside the diamond at floor(crossingMinor). Endpoints more than half a
+ // pixel away on the major axis guarantee entry and exit before the end.
+ // Keep the exact predicate for endpoints, tangencies and subpixel segments.
+ bool covered=remainder!=0&&crossing>first+128&&crossing<last-128;
+ if(!covered){
+  for(int minor=center-1;minor<=center+1;++minor)
+   if(RangeDiamond(a,b,xMajor?int2(major,minor):int2(minor,major))){covered=true;break;}
+ }
+ if(!covered)return false;
+ const float2 d=originalB.xy-originalA.xy;
+ const float t=xMajor?(fragmentPosition.x-originalA.x)/d.x:(fragmentPosition.y-originalA.y)/d.y;
+ depth=originalA.z+(originalB.z-originalA.z)*t;return depth>=0.0f&&depth<=1.0f;
+}
+#else
+inline bool RangeLineCoveredAA0(float3 originalA,float3 originalB,float2 fragmentPosition,float width,thread float& depth) {
+ return RangeLineCovered(originalA,originalB,fragmentPosition,width,depth);
+}
+#endif
 inline bool RangeAlpha(float a,float reference,uint packed) {
  if(!(packed&256))return true;
  switch(packed&255){case 0:return false;case 1:return a<reference;case 2:return a==reference;case 3:return a<=reference;case 4:return a>reference;case 5:return a!=reference;case 6:return a>=reference;default:return true;}
@@ -529,7 +574,7 @@ struct RangeFragment {float4 color [[color(0)]];float depth [[depth(any)]];};
 fragment RangeFragment OriginalWeaponRangeLineFragment(RangeVarying input [[stage_in]],constant RangeUniform& u [[buffer(3)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
 	RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
  const float2 p=input.position.xy;float depth=input.position.z;
- if(!RangeLineCovered(input.lineA,input.lineB,float2(p.x,-p.y),u.raster.y,depth))discard_fragment();
+ if(!RangeLineCoveredAA0(input.lineA,input.lineB,float2(p.x,-p.y),u.raster.y,depth))discard_fragment();
  if(!RangeAlpha(input.color.a,u.raster.z,u.renderOptions.y))discard_fragment();
  return {input.color,depth};
 }
@@ -560,7 +605,7 @@ fragment float4 OriginalWeaponRangeMaskedFillFragment(RangeVarying input [[stage
 fragment RangeFragment OriginalWeaponRangeMaskedLineFragment(RangeVarying input [[stage_in]],constant RangeUniform& u [[buffer(3)]],texture2d<float> mask [[texture(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
 	RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));
  const float2 p=input.position.xy;float depth=input.position.z;
- if(!RangeLineCovered(input.lineA,input.lineB,float2(p.x,-p.y),u.raster.y,depth))discard_fragment();
+ if(!RangeLineCoveredAA0(input.lineA,input.lineB,float2(p.x,-p.y),u.raster.y,depth))discard_fragment();
  const auto color=MaskedRangeColor(input.color,p,u,mask);
  if(!RangeAlpha(color.a,u.raster.z,u.renderOptions.y))discard_fragment();return {color,depth};
 }

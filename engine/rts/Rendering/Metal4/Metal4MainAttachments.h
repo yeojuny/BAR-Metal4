@@ -23,6 +23,10 @@ public:
 // The existing copy/version owner must consume them at its original sequence.
 // All methods run within the caller's one serialized RuntimeLease/submission.
 // No allocation, wait, publication or presentation occurs during EncodeResolve.
+struct MainStagedColorStorage {
+ __strong id<MTLTexture> texture = nil;
+};
+
 class MainFrameAttachments {
 public:
 	id<MTLTexture> Color() const { return color; }
@@ -161,6 +165,8 @@ private:
  // Cached prototypes never bind destinations or pin themselves. Prepared
  // descriptors pin the exact physical prototype through every continuation.
  std::shared_ptr<const MainFrameAttachments> storageOwner;
+ // The exact selected intermediate stays busy through a deferred submission or continuation.
+ std::shared_ptr<const MainStagedColorStorage> stagedColorOwner;
 	friend class MainAttachmentStorage;
 };
 
@@ -206,7 +212,26 @@ public:
   return frame;
 	}
 
-	void Clear() { storage.Clear(); }
+	void BindStagedPresentationColor(RuntimeLease& lease, MainFrameAttachments& frame)
+	{
+		Require(frame.Samples() == 1 && !frame.destinationBound && !frame.stagedColorOwner,
+			"Staged presentation color requires an unbound single-sample frame");
+		const auto width = std::uint32_t(frame.depth.width);
+		const auto height = std::uint32_t(frame.depth.height);
+		stagedColor.Acquire([&](const MainStagedColorStorage& slot) {
+			return slot.texture.device == lease.Device() && slot.texture.width == width &&
+				slot.texture.height == height && slot.texture.pixelFormat == frame.format;
+		}, [&] {
+			auto owner = std::make_shared<MainStagedColorStorage>();
+			owner->texture = Allocate(lease, width, height, frame.format, 1, @"Owned staged presentation color");
+			return owner;
+		}, [&](const auto& owner) {
+			frame.BindDestination(lease, owner->texture);
+			frame.stagedColorOwner = owner;
+		});
+	}
+
+	void Clear() { storage.Clear(); stagedColor.Clear(); }
 
 	static id<MTLTexture> Allocate(RuntimeLease& lease, std::uint32_t width, std::uint32_t height,
 		MTLPixelFormat format, std::uint32_t samples, NSString* label)
@@ -233,6 +258,7 @@ public:
 
 private:
 	NativeIdleResourcePool<MainFrameAttachments,2> storage;
+	NativeIdleResourcePool<MainStagedColorStorage,2> stagedColor;
 	std::uint64_t generation = 0;
 };
 

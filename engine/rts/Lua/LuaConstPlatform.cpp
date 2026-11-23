@@ -7,6 +7,9 @@
 #include "System/Platform/Misc.h"
 #include "Rendering/GlobalRendering.h"
 #include "Rendering/GlobalRenderingInfo.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "Rendering/Backend/VideoMemoryReporting.h"
+#endif
 
 /******************************************************************************
  * Platform constants
@@ -31,8 +34,14 @@ bool LuaConstPlatform::PushEntries(lua_State* L)
 	LuaPushNamedBool(L, "gpuUnifiedMemory", globalRenderingInfo.nativeDevice.unifiedMemory);
 	LuaPushNamedBool(L, "gpuBCTextureCompression", globalRenderingInfo.nativeDevice.bcTextureCompression);
 #endif
-	/*** @field Platform.gpuMemorySize integer Size of total GPU memory in MBs; only available for "Nvidia", (rest are 0) */
+	/*** @field Platform.gpuMemorySize integer Legacy GPU capacity estimate in KiB, or 0 if unknown. On native Apple unified memory, a positive value is the recommended working-set budget, not dedicated VRAM. */
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	LuaPushNamedNumber(L, "gpuMemorySize", rendering::video_memory::LuaBudgetKiB<lua_Number>(globalRenderingInfo.gpuMemorySize.x));
+	if (globalRenderingInfo.gpuMemorySize.x > 0)
+		LuaPushNamedString(L, "gpuMemorySizeKind", "recommendedWorkingSet");
+#else
 	LuaPushNamedNumber(L, "gpuMemorySize", globalRenderingInfo.gpuMemorySize.x);
+#endif
 	/*** @field Platform.glVersionShort string `major.minor.buildNumber` */
 	LuaPushNamedString(L, "glVersionShort", globalRenderingInfo.glVersionShort.data());
 	/*** @field Platform.glVersionNum integer */

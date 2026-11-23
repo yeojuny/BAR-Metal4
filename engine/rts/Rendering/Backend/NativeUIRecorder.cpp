@@ -16,6 +16,7 @@
 #include "NativeUIRecorder.h"
 #include "NativeUITargetPassJournal.h"
 #include "NativeCompletedFrameLedger.h"
+#include "NativeGameFrameLimit.h"
 #include "NativeLegacyWaterTextureEnvironment.h"
 #include "NativeLegacyWaterTexGen.h"
 #include "NativeLegacyWaterLighting.h"
@@ -244,7 +245,7 @@ struct NativeUIRecorder::Impl {
  };
  // Same bound as SceneBridge deferred receipt retention. This does not enable
  // additional GPU overlap or make recorder access safe across threads.
- NativeCompletedFrameLedger<SubmittedFrame,2> submittedFrames;
+ NativeCompletedFrameLedger<SubmittedFrame,3> submittedFrames{GameFrameReceiptCapacity()};
 	bool DependsOnSource(const std::shared_ptr<const ScreenTexture>& image) const {
 		if(!image)return false;
 		if(image->sourceTexture)return image->sourceDependent;

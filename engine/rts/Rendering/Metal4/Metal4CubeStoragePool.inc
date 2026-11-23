@@ -1,4 +1,5 @@
 // Pool physical images only; each logical Resource owns its own upload state.
+#include "Metal4CubeDelta220.h"
 #include <mutex>
 #include <vector>
 @interface M4CubeStorageLifetime : NSObject {
@@ -11,6 +12,19 @@
 namespace rendering::metal4 { namespace {
 struct CubeStorage {
  __strong id<MTLTexture> texture=nil,depth=nil;
+ // The pool reserves a slot only with exclusive ownership. The lock also
+ // orders retirement with encoding in a later submission.
+ std::mutex historyMutex;
+ std::shared_ptr<const cubedelta220::Contents> retiredContents;
+
+ std::shared_ptr<const cubedelta220::Contents> InvalidateContents() {
+  std::lock_guard lock(historyMutex);
+  return std::exchange(retiredContents, nullptr);
+ }
+ void RetireContents(std::shared_ptr<const cubedelta220::Contents> contents) {
+  std::lock_guard lock(historyMutex);
+  retiredContents = std::move(contents);
+ }
 };
 struct CubeStoragePool {
  struct Slot {const Runtime* context;NativeCubeTextureKind kind;std::shared_ptr<CubeStorage> owner;uint64_t bytes;};

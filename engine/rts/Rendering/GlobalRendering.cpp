@@ -15,6 +15,7 @@
 #include <atomic>
 #include <array>
 #include "GlobalRenderingInfo.h"
+#include "Rendering/Backend/VideoMemoryReporting.h"
 #include "Rendering/VerticalSync.h"
 #include "Rendering/GL/StreamBuffer.h"
 #include "Rendering/GL/RenderBuffers.h"
@@ -783,6 +784,22 @@ void CGlobalRendering::KillSDL() const {
 	SDL_Quit();
 }
 
+rendering::video_memory::UsageMiB rendering::video_memory::QueryUsageMiB()
+{
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	if (Metal4MemoryReportingEnabled()) {
+		const auto& caps = globalRenderingInfo.nativeDevice;
+		if (!caps.directMetal4 || !caps.appleGPU || !caps.unifiedMemory)
+			return FromMetal({});
+		return FromMetal(QueryMetal4MemorySample());
+	}
+#endif
+	int videoKiB[2] = {};
+	if (globalRenderingInfo.glVendor != nullptr)
+		GetAvailableVideoRAM(videoKiB, globalRenderingInfo.glVendor);
+	return FromLegacyGL(videoKiB[0], videoKiB[1]);
+}
+
 void CGlobalRendering::PostInit() {
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #ifdef RECOIL_USE_SDL3
@@ -794,6 +811,15 @@ void CGlobalRendering::PostInit() {
 #endif
 	globalRenderingInfo.sdlDriverName = SDL_GetCurrentVideoDriver();
 	globalRenderingInfo.nativeDevice = rendering::QueryMetal4Capabilities();
+	if (rendering::Metal4MemoryReportingEnabled()) {
+		const auto& caps = globalRenderingInfo.nativeDevice;
+		const auto sample = (caps.directMetal4 && caps.appleGPU && caps.unifiedMemory)
+			? rendering::QueryMetal4MemorySample() : rendering::video_memory::MetalSample{};
+		globalRenderingInfo.gpuMemorySize.x = rendering::video_memory::LegacyBudgetKiB(sample.recommendedWorkingSetBytes);
+		// gpuMemorySize.y was GL free KiB. Metal exposes no such quantity here.
+		LOG("[NativeGraphics] recommendedWorkingSetBytes=%llu legacyBudgetKiB=%d scope=working-set-not-dedicated-vram",
+		    static_cast<unsigned long long>(sample.recommendedWorkingSetBytes), globalRenderingInfo.gpuMemorySize.x);
+	}
 	const auto nativeTextureLimit = globalRenderingInfo.nativeDevice.maxTextureDimension2D;
 	if (nativeTextureLimit == 0 || nativeTextureLimit > static_cast<std::uint32_t>(std::numeric_limits<int>::max()))
 		throw unsupported_error("Native Metal device did not establish a usable 2D texture limit");

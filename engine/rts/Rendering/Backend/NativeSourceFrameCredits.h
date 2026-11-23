@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <limits>
 namespace rendering {
-// Two SOURCE frames by default; a caller may explicitly opt in to three.
+// Two source credits by default. Overlapped capture may reserve one more than the GPU limit.
 // This is not a CPU task or GPU submission limit. Capture leases expire naturally;
 // transferred leases stay held through actual main-side GPU receipt retirement.
 class NativeSourceFrameCredits {
@@ -28,7 +28,7 @@ public:
 private:
  struct Slot{std::weak_ptr<const Token> lease;Lease held;};
  const unsigned capacity;
- std::array<Slot,3> slots;
+ std::array<Slot,4> slots;
  auto ActiveSlots(){return std::span<Slot>(slots).first(capacity);}
  auto ActiveSlots()const{return std::span<const Slot>(slots).first(capacity);}
  // Capture order, not simulation/draw numbers (which may repeat or decrease).
@@ -50,8 +50,9 @@ private:
  }
 public:
  explicit NativeSourceFrameCredits(unsigned requestedCapacity=2):capacity(requestedCapacity){
-  if(capacity!=2&&capacity!=3)throw std::invalid_argument("Source frame capacity must be two or three");
+  if(capacity<2 || capacity>slots.size())throw std::invalid_argument("Source frame capacity must be two through four");
  }
+ unsigned Capacity()const noexcept {return capacity;}
  NativeSourceFrameCredits(const NativeSourceFrameCredits&)=delete;
  NativeSourceFrameCredits& operator=(const NativeSourceFrameCredits&)=delete;
  NativeSourceFrameCredits(NativeSourceFrameCredits&&)=delete;

@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4UnitPrimitive.h"
+#include "Metal4RankAtlasBorrow.h"
 #include "Metal4TransientUpload177.h"
 #include "NativeUnitPrimitiveShaders.h"
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
@@ -144,7 +145,10 @@ std::unique_ptr<PreparedUnitPrimitive> UnitPrimitiveGPU::Prepare(RuntimeLease& l
 		NSError* error=nil;auto arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(arguments!=nil,"Cannot allocate original unit primitive argument table: "+Error(error));lease.Retain(arguments);
 		[arguments setAddress:vertices.gpuAddress atIndex:0];[arguments setAddress:objects.gpuAddress atIndex:1];[arguments setAddress:constants.gpuAddress atIndex:2];
 		std::vector<PreparedScreenExternalImage> external;
-		if(draw.atlas){auto image=sharedImages.PrepareImage(lease,draw.atlas,draw.sampler,producers,consumer,[&](PreparedScreenExternalImage image){external.push_back(std::move(image));});[arguments setTexture:image.texture.gpuResourceID atIndex:0];[arguments setSamplerState:image.sampler.gpuResourceID atIndex:0];}
+		if(draw.atlas){
+   rankAtlasBorrow::ScreenReader atlasRead(draw.kind==NativeUnitPrimitiveKind::RankIcon && consumer &&
+    consumer->stage==NativePostprocessStage::Screen ? draw.atlas->sourceTexture.get() : nullptr);
+   auto image=sharedImages.PrepareImage(lease,draw.atlas,draw.sampler,producers,consumer,[&](PreparedScreenExternalImage image){external.push_back(std::move(image));});[arguments setTexture:image.texture.gpuResourceID atIndex:0];[arguments setSamplerState:image.sampler.gpuResourceID atIndex:0];}
 		auto pipeline=impl->Pipeline(lease,draw.kind,color,depth,stencil,samples,validation,draw.surface.blend,draw.world.colorWrite,milliseconds,draw.world.alphaToCoverage,draw.selected31657);lease.Retain(pipeline);
 		PreparedUnitPrimitive::Impl::Draw packet;packet.sequence=draw.sequence;packet.pipeline=pipeline;packet.depth=effectstate::Depth(lease,draw.world,stencil);packet.arguments=arguments;
 		packet.vertexCount=IsNativeUnitIcon(draw.kind)?6:draw.kind==NativeUnitPrimitiveKind::TeamPlatter || IsNativeSelectedUnits(draw.kind) || draw.kind==NativeUnitPrimitiveKind::AllySelected || draw.kind==NativeUnitPrimitiveKind::UnitTrackerDebug?186:6;packet.instances=draw.count;packet.raster=*raster;packet.state=draw.world;packet.externalImages=std::move(external);result->impl->draws.push_back(std::move(packet));

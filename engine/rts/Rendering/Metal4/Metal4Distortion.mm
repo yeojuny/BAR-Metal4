@@ -144,6 +144,70 @@ struct PreparedDistortion::Impl {
 		effectstate::Raster raster;
 		std::vector<CUSSourceImage> images;
 		bool noop = false, encoded = false;
+		bool AccumulationTarget(id<MTLTexture> target) const
+		{
+			return !noop && !encoded && output && color == target && !depthTexture && !stencilTexture &&
+				!world.depthTest && !world.depthWrite && !world.stencilTest &&
+				!source->inputs[0] && !source->inputs[1];
+		}
+		void ValidateInputs() const
+		{
+			const auto& source = *this->source;
+			Require(!encoded, "Distortion actual source ordinal encoded twice");
+			if (source.previous) RequireVersion(previous,source.previous);
+			for (size_t i = 0; i < source.inputs.size(); ++i) if (source.inputs[i]) RequireVersion(inputs[i],source.inputs[i]);
+			for (const auto& image: images) image.requireReadable();
+		}
+		id<MTL4RenderCommandEncoder> OpenEncoder(id<MTL4CommandBuffer> command) const
+		{
+			auto pass = [MTL4RenderPassDescriptor new];
+			pass.defaultRasterSampleCount = color.sampleCount;
+			pass.renderTargetWidth = color.width; pass.renderTargetHeight = color.height;
+			pass.colorAttachments[0].texture = color;
+			pass.colorAttachments[0].loadAction = MTLLoadActionLoad;
+			pass.colorAttachments[0].storeAction = MTLStoreActionStore;
+			if (depthTexture) {
+				pass.depthAttachment.texture = depthTexture;
+				pass.depthAttachment.loadAction = MTLLoadActionLoad;
+				pass.depthAttachment.storeAction = MTLStoreActionStore;
+			}
+			if (stencilTexture) {
+				pass.stencilAttachment.texture = stencilTexture;
+				pass.stencilAttachment.loadAction = MTLLoadActionLoad;
+				pass.stencilAttachment.storeAction = MTLStoreActionStore;
+			}
+			auto encoder = [command renderCommandEncoderWithDescriptor:pass];
+			Require(encoder != nil, "Cannot encode original Distortion operation");
+			return encoder;
+		}
+		void EncodeRaster(id<MTL4RenderCommandEncoder> encoder) const
+		{
+			const auto& source = *this->source;
+			effectstate::RasterState(encoder,world,raster);
+			[encoder setCullMode:!world.cullEnabled ? MTLCullModeNone : world.cull == NativeWorldCull::Front ? MTLCullModeFront : MTLCullModeBack];
+			[encoder setTriangleFillMode:world.frontPolygonMode == NativePolygonMode::Line ? MTLTriangleFillModeLines : MTLTriangleFillModeFill];
+			[encoder setDepthClipMode:world.depthClamp ? MTLDepthClipModeClamp : MTLDepthClipModeClip];
+			[encoder setRenderPipelineState:pipeline];
+			[encoder setDepthStencilState:depthState];
+			[encoder setArgumentTable:arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+			if (source.draw) {
+				const auto& draw = *source.draw;
+				if (draw.indexed) {
+					const size_t offset = draw.firstIndex * (indexType == MTLIndexTypeUInt16 ? 2 : 4);
+					[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:indexType
+						indexBuffer:indices.gpuAddress+offset indexBufferLength:indices.length-offset
+						instanceCount:draw.instanceCount baseVertex:draw.baseVertex baseInstance:draw.firstInstance];
+				} else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:draw.firstVertex vertexCount:draw.count instanceCount:draw.instanceCount baseInstance:draw.firstInstance];
+			} else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];
+		}
+		void Finish()
+		{
+			const auto& source = *this->source;
+			// Allocation is never called produced. Even no-coverage operations retain
+			// their actual prior pixels/undefined channels, exactly as the GL target did.
+			if (output) output->encoded = source.output;
+			encoded = true;
+		}
 	};
 	std::shared_ptr<const NativeWorldDrawFrame> frame;
 	std::vector<Operation> operations;
@@ -166,56 +230,76 @@ void PreparedDistortion::EncodeDraw(size_t index, id<MTL4CommandBuffer> command)
 {
 	Require(command && impl->dependenciesEncoded && !impl->completed, "Distortion operation lacks common command/dependency lifetime");
 	auto& op = impl->operations.at(index);
-	const auto& source = *op.source;
-	Require(!op.encoded, "Distortion actual source ordinal encoded twice");
-	if (source.previous) RequireVersion(op.previous,source.previous);
-	for (size_t i = 0; i < source.inputs.size(); ++i) if (source.inputs[i]) RequireVersion(op.inputs[i],source.inputs[i]);
-	for (const auto& image: op.images) image.requireReadable();
+	op.ValidateInputs();
 	if (!op.noop) {
-		if (impl->main && source.kind == NativeDistortionOperation::CopyScreen)
+		if (impl->main && op.source->kind == NativeDistortionOperation::CopyScreen)
 			impl->main->EncodeResolve(command, MainReadImages::Color);
-		auto pass = [MTL4RenderPassDescriptor new];
-		pass.defaultRasterSampleCount = op.color.sampleCount;
-		pass.renderTargetWidth = op.color.width; pass.renderTargetHeight = op.color.height;
-		pass.colorAttachments[0].texture = op.color;
-		pass.colorAttachments[0].loadAction = MTLLoadActionLoad;
-		pass.colorAttachments[0].storeAction = MTLStoreActionStore;
-		if (op.depthTexture) {
-			pass.depthAttachment.texture = op.depthTexture;
-			pass.depthAttachment.loadAction = MTLLoadActionLoad;
-			pass.depthAttachment.storeAction = MTLStoreActionStore;
-		}
-		if (op.stencilTexture) {
-			pass.stencilAttachment.texture = op.stencilTexture;
-			pass.stencilAttachment.loadAction = MTLLoadActionLoad;
-			pass.stencilAttachment.storeAction = MTLStoreActionStore;
-		}
-		auto encoder = [command renderCommandEncoderWithDescriptor:pass];
-		Require(encoder != nil, "Cannot encode original Distortion operation");
+		auto encoder = op.OpenEncoder(command);
 		[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
-		effectstate::RasterState(encoder,op.world,op.raster);
-		[encoder setCullMode:!op.world.cullEnabled ? MTLCullModeNone : op.world.cull == NativeWorldCull::Front ? MTLCullModeFront : MTLCullModeBack];
-		[encoder setTriangleFillMode:op.world.frontPolygonMode == NativePolygonMode::Line ? MTLTriangleFillModeLines : MTLTriangleFillModeFill];
-		[encoder setDepthClipMode:op.world.depthClamp ? MTLDepthClipModeClamp : MTLDepthClipModeClip];
-		[encoder setRenderPipelineState:op.pipeline];
-		[encoder setDepthStencilState:op.depthState];
-		[encoder setArgumentTable:op.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
-		if (source.draw) {
-			const auto& draw = *source.draw;
-			if (draw.indexed) {
-				const size_t offset = draw.firstIndex * (op.indexType == MTLIndexTypeUInt16 ? 2 : 4);
-				[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:op.indexType
-					indexBuffer:op.indices.gpuAddress+offset indexBufferLength:op.indices.length-offset
-					instanceCount:draw.instanceCount baseVertex:draw.baseVertex baseInstance:draw.firstInstance];
-			} else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:draw.firstVertex vertexCount:draw.count instanceCount:draw.instanceCount baseInstance:draw.firstInstance];
-		} else [encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:6];
+		op.EncodeRaster(encoder);
 		[encoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
 		[encoder endEncoding];
 	}
-	// Allocation is never called produced. Even no-coverage operations retain
-	// their actual prior pixels/undefined channels, exactly as the GL target did.
-	if (op.output) op.output->encoded = source.output;
-	op.encoded = true;
+	op.Finish();
+}
+size_t PreparedDistortion::AccumulationCount(size_t index, size_t contiguousCount) const
+{
+	const auto& operations = impl->operations;
+	if (index >= operations.size() || contiguousCount < 2) return 0;
+	const auto& clear = operations.at(index);
+	id<MTLTexture> target = clear.color;
+	// Accept only the private standalone allocation produced by LocalImage.
+	// Texture views, external backing, heap aliasing and MSAA require separate proof.
+	if (clear.source->kind != NativeDistortionOperation::Clear || clear.source->draw || !clear.images.empty() ||
+		!target || !clear.AccumulationTarget(target) || clear.output->texture != target ||
+		target.storageMode != MTLStorageModePrivate || target.textureType != MTLTextureType2D ||
+		target.pixelFormat != MTLPixelFormatRGBA16Float || target.sampleCount != 1 ||
+		target.parentTexture || target.buffer || target.heap || target.iosurface || target.shareable || target.isAliasable)
+		return 0;
+	if (clear.source->previous && (!clear.previous || clear.previous->encoded.lock() != clear.source->previous))
+		return 0;
+
+	const size_t limit = std::min(contiguousCount, operations.size() - index);
+	size_t count = 1;
+	for (; count < limit; ++count) {
+		const auto& previous = operations[index + count - 1];
+		const auto& next = operations[index + count];
+		const auto& source = *next.source;
+		if (source.kind != NativeDistortionOperation::Volume || !source.draw ||
+			!source.draw->count || !source.draw->instanceCount || next.images.size() != 3 ||
+			!next.AccumulationTarget(target) || next.output != clear.output || next.previous != previous.output ||
+			source.previous != previous.source->output || source.sourceDrawFrame != clear.source->sourceDrawFrame ||
+			source.sequence <= previous.source->sequence || source.sequence - previous.source->sequence != 1)
+			break;
+		const auto independent = [&](const auto& input) {
+			id<MTLTexture> texture = input.texture;
+			if (!texture || texture.device != target.device) return false;
+			while (texture.parentTexture) texture = texture.parentTexture;
+			return texture != target && texture.gpuResourceID._impl != target.gpuResourceID._impl;
+		};
+		if (!std::all_of(next.images.begin(), next.images.end(), independent)) break;
+	}
+	return count >= 2 ? count : 0;
+}
+size_t PreparedDistortion::TryEncodeAccumulation(size_t index, size_t contiguousCount, id<MTL4CommandBuffer> command)
+{
+	const size_t count = AccumulationCount(index, contiguousCount);
+	if (!count) return 0;
+	Require(command && impl->dependenciesEncoded && !impl->completed, "Distortion accumulation lacks common command/dependency lifetime");
+	auto encoder = impl->operations[index].OpenEncoder(command);
+	encoder.label = @"Original Distortion accumulation (merged)";
+	[encoder barrierAfterQueueStages:MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
+	// The target is only accessed by ordered color attachment writes and blending.
+	// Every draw restores its own complete raster, pipeline, and argument state.
+	for (size_t offset = 0; offset < count; ++offset) {
+		auto& op = impl->operations[index + offset];
+		op.ValidateInputs();
+		op.EncodeRaster(encoder);
+		op.Finish();
+	}
+	[encoder barrierAfterStages:MTLStageFragment beforeQueueStages:MTLStageFragment|MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
+	[encoder endEncoding];
+	return count;
 }
 void PreparedDistortion::DidComplete()
 {
