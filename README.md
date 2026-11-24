@@ -1,7 +1,7 @@
-# BAR Metal4 v1.11.4
+# BAR Metal4 v1.11.5
 
 Experimental single-player BAR with native Metal 4 for Apple Silicon, macOS 27.2 or later.
-This release enables the CAP2 renderer and the slot-preserving Grass fix.
+This release optimizes SensorLOS outlines, Grass and Radar/Sonar within the CAP2 profile.
 Normal launch uses **PREPARE with CAP2**; diagnostics and Metal Validation are **off** by default.
 New profiles retain 2× health bar scale and height, anti-aliasing off, and ordinary/adaptive VSync off.
 
@@ -14,7 +14,7 @@ open "/Applications/BAR Metal4.app"
 
 Already installed? Run `brew update` and `brew upgrade --cask yeojuny/bar-metal4/bar-metal4`.
 
-[Release and downloads](https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.4) · [Installation and checks](docs/releases/v1.11.4/README.md) · [Licenses and provenance](NOTICE.md)
+[Release and downloads](https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.5) · [Installation and checks](https://github.com/yeojuny/BAR-Metal4/blob/v1.11.5/docs/releases/v1.11.5/README.md) · [Licenses and provenance](NOTICE.md)
 
 ## Performance research
 
