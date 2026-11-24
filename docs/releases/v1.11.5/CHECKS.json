@@ -1,0 +1,89 @@
+{
+  "packageSHA256": "66700a7e3acb7091713f925db9ccc5d1f88c1536f5e489174dd1bd6aa3f2b783",
+  "engineSHA256": "d9ff26af8b4a2918ba8ff2d47c339e05b9032ab775783f78394e7dafde6bfdfc",
+  "app": {
+    "status": "PASS",
+    "simulation": "frame=1500 mode=clean-default draws=9296 elapsed=39.9970016",
+    "normalExit": 0,
+    "childDefaults": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+      "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+      "MTL_DEBUG_LAYER": "0",
+      "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+      "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+      "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+      "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+      "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+      "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+      "BAR_NATIVE_GROUND_DECAL_WORLD_POSITION_REUSE": "1",
+      "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+      "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT": "0",
+      "BAR_NATIVE_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE": "0",
+      "BAR_NATIVE_SENSORLOS_OUTLINE_ALPHA_FIRST": "1",
+      "BAR_NATIVE_GRASS_SKIP_EMPTY_SPANS": "1",
+      "BAR_NATIVE_GRASS_EARLY_SCALE_GUARD": "1",
+      "BAR_NATIVE_RADAR_SONAR_TIGHT_QUAD": "1",
+      "BAR_NATIVE_RADAR_SONAR_REJECT_BEFORE_CIRCLE_SCAN": "0",
+      "BAR_NATIVE_GROUND_DECAL_PROJECTION_RECIPROCAL": "0"
+    },
+    "renderer": {
+      "mode": "PREPARE",
+      "eligible": "1",
+      "queued": "1",
+      "simulation": "300",
+      "begin_submission": "0",
+      "begin_prepare_overlap": "0"
+    },
+    "effectiveAA": "[Release220] aa msaa=0 level=0"
+  },
+  "radarSethsSameInput": {
+    "600": {
+      "colorWrites": 4394,
+      "differentPixels": 0,
+      "draws": 2
+    },
+    "1320": {
+      "colorWrites": 4307,
+      "differentPixels": 0,
+      "draws": 2
+    }
+  },
+  "performance": {
+    "source": "Seths Ravine 540–1740, CAP2 Ultra AA0",
+    "sampling": "Single same-binary OFF–ON pair",
+    "switches": [
+      "BAR_NATIVE_SENSORLOS_OUTLINE_ALPHA_FIRST",
+      "BAR_NATIVE_GRASS_SKIP_EMPTY_SPANS",
+      "BAR_NATIVE_GRASS_EARLY_SCALE_GUARD",
+      "BAR_NATIVE_RADAR_SONAR_TIGHT_QUAD"
+    ],
+    "average_fps_delta_percent": 9.98052899982429,
+    "one_percent_low_delta_percent": 11.069027553735955,
+    "runs": [
+      {
+        "arm": "OFF",
+        "average_fps": 88.58386196719934,
+        "one_percent_low_fps": 59.11329777475807,
+        "longest_ms": 34.000002,
+        "rest_seconds": 64.41470233304426,
+        "intervals": 3542,
+        "raw_sha256": "df37f00e6ac2208596e81551c56cd13928db2b5bd55539380fc79f0f7acd33f2"
+      },
+      {
+        "arm": "ON",
+        "average_fps": 97.425,
+        "one_percent_low_fps": 65.65656499336802,
+        "longest_ms": 20.0,
+        "rest_seconds": 64.27334700000938,
+        "intervals": 3896,
+        "raw_sha256": "9344951f6f096403599b5faf00b04649b1025b358dae74a102a91f3c75d599d2"
+      }
+    ]
+  }
+}

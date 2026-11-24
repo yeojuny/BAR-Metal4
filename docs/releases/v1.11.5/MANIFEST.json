@@ -1,0 +1,4135 @@
+{
+  "version": "1.11.5",
+  "build": "11105",
+  "sourceCommit": "66f2357cd60fbb9484188828b2bee75839207c18",
+  "engineTree": "e21d2b83ee53ad097cd3a353afc8f33651058ed7",
+  "archive": "BAR-Metal4-1.11.5-arm64.zip",
+  "archiveBytes": 202555885,
+  "archiveSHA256": "66700a7e3acb7091713f925db9ccc5d1f88c1536f5e489174dd1bd6aa3f2b783",
+  "engineSHA256": "d9ff26af8b4a2918ba8ff2d47c339e05b9032ab775783f78394e7dafde6bfdfc",
+  "rawEngineSHA256": "7dfd5373b0de6ab558ff259c66c26da97db23392bc06132d08b7d535d8428003",
+  "asarSHA256": "566ed180954c85f8ae29626d03a1257be69100c140e50759442b2967fa857752",
+  "platform": "arm64-macos-27.2",
+  "files": [
+    {
+      "path": "Contents/Info.plist",
+      "bytes": 863,
+      "sha256": "e18b6aef85a8e7d878352a1a093055fa147cc0e4ce4975c13741208b0c949716",
+      "mode": 420
+    },
+    {
+      "path": "Contents/MacOS/BAR-Metal4",
+      "bytes": 7630,
+      "sha256": "d8ba78e03fd598ad97796112ca0178b64c2bc1772ecf8b5e3bc192f3b3617294",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (GPU).app/Contents/Info.plist",
+      "bytes": 1139,
+      "sha256": "14b583e25eb70aca080a6efe789188a3354b8d4363d5520a23473d0dde5fe3c3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (GPU).app/Contents/MacOS/BAR Helper (GPU)",
+      "bytes": 202560,
+      "sha256": "225b0cca97f35029fd1e14bda7e5b6d8978d3404249329f849ca91015a0c3cd0",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (GPU).app/Contents/PkgInfo",
+      "bytes": 8,
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (GPU).app/Contents/_CodeSignature/CodeResources",
+      "bytes": 2200,
+      "sha256": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Plugin).app/Contents/Info.plist",
+      "bytes": 1151,
+      "sha256": "48e4a6c70531dc28639b21244a0045e210ed18d988f6b5e6a21483541ac4aa80",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Plugin).app/Contents/MacOS/BAR Helper (Plugin)",
+      "bytes": 202576,
+      "sha256": "4a879bff343b9778793783ff42021adad4f6c28ddf6b843402286f06322608df",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Plugin).app/Contents/PkgInfo",
+      "bytes": 8,
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Plugin).app/Contents/_CodeSignature/CodeResources",
+      "bytes": 2200,
+      "sha256": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Renderer).app/Contents/Info.plist",
+      "bytes": 1159,
+      "sha256": "ec7d41310198916918602999466e3c9c5fa7f6cf38bd965f0cd3e2894ab4d7bf",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Renderer).app/Contents/MacOS/BAR Helper (Renderer)",
+      "bytes": 202576,
+      "sha256": "8e8df20b78c41e76ae48b03a48586b0db0dbdbfb1b4d377184b759093b37aa90",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Renderer).app/Contents/PkgInfo",
+      "bytes": 8,
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper (Renderer).app/Contents/_CodeSignature/CodeResources",
+      "bytes": 2200,
+      "sha256": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper.app/Contents/Info.plist",
+      "bytes": 1117,
+      "sha256": "a6e95c6ccebd79d839595813bc26c91aab0891f2b6d258a8108d75a0308333e5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper.app/Contents/MacOS/BAR Helper",
+      "bytes": 202560,
+      "sha256": "56c2025917cb5c2f8fe1b8a65e7d5cf4e984c7b6f4b0884c7e55eea6b4974131",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper.app/Contents/PkgInfo",
+      "bytes": 8,
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/BAR Helper.app/Contents/_CodeSignature/CodeResources",
+      "bytes": 2200,
+      "sha256": "6686de10a28a2fe11b36cbb86dcbacc827cfc4ea116b4dabf1845e5aee629e9b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Electron Framework",
+      "symlink": "Versions/Current/Electron Framework"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Helpers",
+      "symlink": "Versions/Current/Helpers"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Libraries",
+      "symlink": "Versions/Current/Libraries"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Resources",
+      "symlink": "Versions/Current/Resources"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Electron Framework",
+      "bytes": 201798432,
+      "sha256": "230ae6dab70e5a8cfba3a0c8b0c140dcdbc504ca1de5c3d81a5d857284263563",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Helpers/chrome_crashpad_handler",
+      "bytes": 1220640,
+      "sha256": "01de8ef2f62f47964f9454f5affd415e1fc4277bf7310b371cbe254d5fdc88d0",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libffmpeg.dylib",
+      "bytes": 2317968,
+      "sha256": "b4003e34dd14e84fd4be25e8a767bd8f7ec9d750822f7003aa5130dd1bd2d574",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/libvk_swiftshader.dylib",
+      "bytes": 16607280,
+      "sha256": "8c2dde7169b031fceddfee8d6601e65f3cfa941c294e3c4a29d032ab88e7ac6c",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Libraries/vk_swiftshader_icd.json",
+      "bytes": 110,
+      "sha256": "d717d915e31e7c27948b80b36ab34e2d897888114c5c7d0af835f93eb53e58f5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/Info.plist",
+      "bytes": 920,
+      "sha256": "391401023ab68397aa80e47fcfc727d05bae47dccc1e5d0811bb8bd2ab7f915e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/MainMenu.nib",
+      "bytes": 2005,
+      "sha256": "4b2168de2d6d9a09b20faaa23139d5f25f73b2595671de25872d191b6939d819",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/af.lproj/locale.pak",
+      "bytes": 632257,
+      "sha256": "1e3c85f3d53ac661e035e01166a2faafba821a60780fdf8f88dc497658d787a0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/af_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/af_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/af_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/am.lproj/locale.pak",
+      "bytes": 1025252,
+      "sha256": "db080ebc3e8242316ad60ee8b655e9a773046cd9b0143512841a497bea3066e3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/am_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/am_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/am_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ar.lproj/locale.pak",
+      "bytes": 1125955,
+      "sha256": "defe16bb19a561c9e4b138b1674af37a9a69f7000e193e2617fb12c87477ffb1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ar_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ar_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ar_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bg.lproj/locale.pak",
+      "bytes": 1171480,
+      "sha256": "d9d984338d9b4ae822a06dc06fe6b09affa7c2e263a76a04e2d06fa6c948d37d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bg_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bg_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bg_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bn.lproj/locale.pak",
+      "bytes": 1504862,
+      "sha256": "5f6c3672c073968a3cc68f51f1433b7cc3c4bf1888f55169121292809ced66dd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bn_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bn_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/bn_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ca.lproj/locale.pak",
+      "bytes": 712710,
+      "sha256": "a2f0b2ee162ae98d08613307e6ccae6777cd7722ed47c241bfd7de16e1a21466",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ca_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ca_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ca_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/chrome_100_percent.pak",
+      "bytes": 662674,
+      "sha256": "f50e6f15a39f086092c26abdb922b298780b63decc316b798b5f0ad7a5468a2e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/chrome_200_percent.pak",
+      "bytes": 1337098,
+      "sha256": "d923367c81374695f88d6176aa6fe8d0c41b1a43f5188ef43c3f0a53dd06f96d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/cs.lproj/locale.pak",
+      "bytes": 739491,
+      "sha256": "596bdb8f1051fcf37a5a2499f01ab16e833cf70b0f55f4ce6f4cda5b49b86a4b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/cs_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/cs_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/cs_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/da.lproj/locale.pak",
+      "bytes": 662378,
+      "sha256": "433e45f504ad6b8f748c8968b6846146819affd495030a220b691fe7a5d4cb7d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/da_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/da_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/da_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/de.lproj/locale.pak",
+      "bytes": 713183,
+      "sha256": "a019c72a5126dedcb143edc6348d7dc800744bb1d3cf52a310f874123bff0441",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/de_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/de_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/de_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/el.lproj/locale.pak",
+      "bytes": 1287465,
+      "sha256": "d6ca1cd3ee52c19be6e32514f4b2f18e3a6fb2653b60227e1541c39630acef41",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/el_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/el_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/el_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en.lproj/locale.pak",
+      "bytes": 584413,
+      "sha256": "e647fca0c580bd485a4e40705ed4ad87f0a72bc7e03c4858720c30d2e4f1269d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_GB.lproj/locale.pak",
+      "bytes": 576988,
+      "sha256": "e6f4632ed53b6605221b2e704ea421f33ca4887f1c2e05c7b485421b52c274af",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_GB_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_GB_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_GB_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/en_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es.lproj/locale.pak",
+      "bytes": 699818,
+      "sha256": "144109f3693d6284d6a4e065d3c1177dc3f7ba86fa43222a6cf66d79c6b38b24",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_419.lproj/locale.pak",
+      "bytes": 703604,
+      "sha256": "0620beddd4f5e9d682a2aa3904832f655984a9533d21f0eeb00408abf1925db8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_419_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_419_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_419_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/es_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/et.lproj/locale.pak",
+      "bytes": 638956,
+      "sha256": "93deeaf354aacdfd56abb31176156189e1dc6a5635a05e2367e27c321427aa85",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/et_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/et_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/et_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fa.lproj/locale.pak",
+      "bytes": 1057345,
+      "sha256": "71334a21c15f88f4a2bafd8acedf008d58a9b28c62a6796b0f9d5da1144e7f1a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fa_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fa_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fa_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fi.lproj/locale.pak",
+      "bytes": 651794,
+      "sha256": "a1b18b17cc1106244f1dace48c3ba1a92c62490e4bce195fa208aecb0c8f71a4",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fi_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fi_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fi_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fil.lproj/locale.pak",
+      "bytes": 738500,
+      "sha256": "ec90ae9b3e5e460ae1687db6ee5caa6e139183a657080b624b22fea6efe9ba3f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fil_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fil_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fil_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fr.lproj/locale.pak",
+      "bytes": 758955,
+      "sha256": "c908a3940cc231ce78499451cda31139ff270f35afd08d6e5836639428a8dfc6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fr_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fr_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/fr_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/gu.lproj/locale.pak",
+      "bytes": 1485480,
+      "sha256": "643d347eb6425b369f203ed707749c497dfac8d250e78ffbaca4a45b46247ed1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/gu_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/gu_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/gu_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/he.lproj/locale.pak",
+      "bytes": 923406,
+      "sha256": "9d661c15c1103238ce353794b137424c99784e696227445eec4c7e44b2724199",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/he_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/he_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/he_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hi.lproj/locale.pak",
+      "bytes": 1575308,
+      "sha256": "9f7bcdbe323c711f7d2dcf3a1fea9bfd17cffe7f30ecb66aeca25aa0b93780d7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hi_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hi_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hi_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hr.lproj/locale.pak",
+      "bytes": 711220,
+      "sha256": "4ba4b2c8a7841d5a3ed8e92674cae53c3df7b2af2bb3dd449f0fdf898956ed82",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hr_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hr_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hr_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hu.lproj/locale.pak",
+      "bytes": 761163,
+      "sha256": "b4effdb0df85b386ba6f2be6b52aabcb45447dcdf826276c6950e7dde325d553",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hu_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hu_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/hu_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/icudtl.dat",
+      "bytes": 10875024,
+      "sha256": "da53f0b69843aaa43315f0f210a67e4a874b0be338f3dae08ff57b8afe76ab0d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/id.lproj/locale.pak",
+      "bytes": 633143,
+      "sha256": "96f11211f98e45d1f3feeea04950ffbfc6f53056b10c489af1565949782ac82f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/id_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/id_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/id_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/it.lproj/locale.pak",
+      "bytes": 689584,
+      "sha256": "94641a1f7113ee85b1bf52f503a1f212f72a9b0f8e5859d6e44f8afaaf7ce790",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/it_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/it_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/it_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ja.lproj/locale.pak",
+      "bytes": 835810,
+      "sha256": "9d7f384c2d631deaabf6c9fb378b438547e9773a41e4bb48e87167db95fbddaf",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ja_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ja_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ja_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/kn.lproj/locale.pak",
+      "bytes": 1710175,
+      "sha256": "5275729cc054eb62f8377b69b45e84239a7e08a2230825496b2f1f6d4c367769",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/kn_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/kn_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/kn_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ko.lproj/locale.pak",
+      "bytes": 713268,
+      "sha256": "46559e543c794d0ca8848ec05fef3852769cf1f0f7536ca84b5fa8da31ffcf68",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ko_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ko_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ko_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lt.lproj/locale.pak",
+      "bytes": 773841,
+      "sha256": "402fa83fb09dbb6d095fc08a0602b77e224d892345fb9b106ba194d5d03f67a3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lt_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lt_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lt_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lv.lproj/locale.pak",
+      "bytes": 771026,
+      "sha256": "92b9acba38310821e9060cb554f6523a454cc70998e6baadd328d3a6a3ceb7d4",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lv_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lv_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/lv_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ml.lproj/locale.pak",
+      "bytes": 1759838,
+      "sha256": "46e532cbb9584d279a201a4b9f19c198c7bc80b82aa3d39d4af109f77019b72e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ml_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ml_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ml_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/mr.lproj/locale.pak",
+      "bytes": 1457577,
+      "sha256": "fe094e0d6d11111f949d78ee614f530567e6f583fa0cf2936e507906e6b6e41b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/mr_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/mr_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/mr_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ms.lproj/locale.pak",
+      "bytes": 665961,
+      "sha256": "fb281323ea5bb88b353ea20472733563cb45d86e44af3b20657a9875b16fb240",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ms_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ms_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ms_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nb.lproj/locale.pak",
+      "bytes": 633754,
+      "sha256": "29661ccfbb38a5cca1b226a1e9ff6e3aa3e2e88b2dc87922139412245ddd6ad5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nb_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nb_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nb_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nl.lproj/locale.pak",
+      "bytes": 660755,
+      "sha256": "c326cfa4ac58b5facb6e88489d9d8dc8e44975d35e45d6cc235c7b0435db7027",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nl_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nl_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/nl_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pl.lproj/locale.pak",
+      "bytes": 738298,
+      "sha256": "5c8155ba0156efdf02ee2f47608f8f50df45fa271f12e8ac37a4ced965daeafc",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pl_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pl_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pl_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_BR.lproj/locale.pak",
+      "bytes": 693297,
+      "sha256": "8891a567dc9978d08db75eb0f15002d84f35a2afa209c0628c4fdec86f470f74",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_BR_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_BR_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_BR_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_PT.lproj/locale.pak",
+      "bytes": 697151,
+      "sha256": "60c975b06a1528777db8a45aa216724c57302d9a38f4ff316cb8ed2c1427165e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_PT_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_PT_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/pt_PT_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/resources.pak",
+      "bytes": 12398071,
+      "sha256": "b2ac67d0486055ba4418515fabacb7cd7eb3069f7deafaf421653267d053c64b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ro.lproj/locale.pak",
+      "bytes": 724159,
+      "sha256": "6d0a723bd507172da42ca40088443be5dd1abc727ab04aafcf27812d5c401c83",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ro_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ro_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ro_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ru.lproj/locale.pak",
+      "bytes": 1194697,
+      "sha256": "075fdc5e44ad5e1d0d055f1019fd73eec4d59419a7c9d8e285a53d26fbf70243",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ru_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ru_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ru_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sk.lproj/locale.pak",
+      "bytes": 751695,
+      "sha256": "d8d44bfc9ff3688dc2f7c6590ffb5b771cbc26154f90040db6e7fb668e126779",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sk_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sk_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sk_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sl.lproj/locale.pak",
+      "bytes": 718884,
+      "sha256": "e593d8e41002b7985751459ee5e6a980f0e93e688834dfdff7659d22c703262f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sl_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sl_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sl_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sr.lproj/locale.pak",
+      "bytes": 1106461,
+      "sha256": "d5396bfe9e86b70a0292f20754796fffbaa278457bf33965d752e00dcd04e953",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sr_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sr_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sr_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sv.lproj/locale.pak",
+      "bytes": 642502,
+      "sha256": "df2d102b8ce63b0612584c5a4da045c923ac4eb89491660324350abaec3d74b4",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sv_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sv_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sv_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sw.lproj/locale.pak",
+      "bytes": 683595,
+      "sha256": "5074e8a81531152d346170094148eae526601c8d233c661deb1e7c748dc970a4",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sw_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sw_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/sw_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ta.lproj/locale.pak",
+      "bytes": 1750171,
+      "sha256": "839e9a1d2e45821f44fb3b864a715bde0d35bc7dbda1742c20483dcebdbf9ea1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ta_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ta_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ta_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/te.lproj/locale.pak",
+      "bytes": 1620586,
+      "sha256": "4791af54ba16497bf01286b44d17ff7f2a53f4edf77f1b8c53024ef48e69ac71",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/te_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/te_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/te_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/th.lproj/locale.pak",
+      "bytes": 1359671,
+      "sha256": "3789f3781d8da535db2533f04eed93dafe0555fb64418c3d34e68791754a6a9e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/th_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/th_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/th_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/tr.lproj/locale.pak",
+      "bytes": 694625,
+      "sha256": "c82db7eff9091912b3330496f51125a15accd61895f912c740930d8341fc9bed",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/tr_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/tr_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/tr_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/uk.lproj/locale.pak",
+      "bytes": 1205887,
+      "sha256": "18fd06c3a2aa9a96d16469c2b2f823f40a656639d218cf4e8f38dee0cf0e5ec9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/uk_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/uk_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/uk_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ur.lproj/locale.pak",
+      "bytes": 1040891,
+      "sha256": "89e190404b9d2083a5dce37fa594c437f6000d2df6fb7ed76d417a8e2f8f1281",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ur_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ur_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/ur_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/v8_context_snapshot.arm64.bin",
+      "bytes": 742456,
+      "sha256": "44731ba3b8b0bac5f159ddcf16bdb3a4fb2a2d068ecffdd9f76b44fc27aaa0ec",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/vi.lproj/locale.pak",
+      "bytes": 825388,
+      "sha256": "480ddb1156587b2738e59ac571ca4c1aba0a60ff1bc26ec71aee7cb57e779b1b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/vi_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/vi_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/vi_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_CN.lproj/locale.pak",
+      "bytes": 589084,
+      "sha256": "7ac0f0760103c666bfe5ba561cebd94e92cf9323d0c41559d7a6b0e3a88b78e2",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_CN_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_CN_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_CN_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_TW.lproj/locale.pak",
+      "bytes": 580718,
+      "sha256": "9183e91e36217fd0edc43207baf758da926f78cea27c1693b865294c759abe74",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_TW_FEMININE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_TW_MASCULINE.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/zh_TW_NEUTER.lproj/locale.pak",
+      "bytes": 18,
+      "sha256": "ca73097bd968b363b7145e86b64f3c595e533808b0763dc8863a27fc363cfa51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/A/_CodeSignature/CodeResources",
+      "bytes": 85266,
+      "sha256": "d49a92fb98823e82c2867c41d357ab05d7db5c039ddf66c4e0019e3de4485026",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Electron Framework.framework/Versions/Current",
+      "symlink": "A"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Mantle.framework/Mantle",
+      "symlink": "Versions/Current/Mantle"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Mantle.framework/Resources",
+      "symlink": "Versions/Current/Resources"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Mantle.framework/Versions/A/Mantle",
+      "bytes": 126064,
+      "sha256": "5bef2d0af277a9c0a815a9b38c73d03d264e4c69cd8cc353809649ea0b0e88f1",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Mantle.framework/Versions/A/Resources/Info.plist",
+      "bytes": 1020,
+      "sha256": "e93f0b4aaebea9bc158392ffa0c1150c16a0f30aecf11501b7871ce485f1a823",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Mantle.framework/Versions/A/_CodeSignature/CodeResources",
+      "bytes": 2442,
+      "sha256": "41b27daab76e01def237a2fb452d86d6442b461fa28013fc3abfd1a86d89c743",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Mantle.framework/Versions/Current",
+      "symlink": "A"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/ReactiveObjC.framework/ReactiveObjC",
+      "symlink": "Versions/Current/ReactiveObjC"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/ReactiveObjC.framework/Resources",
+      "symlink": "Versions/Current/Resources"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/ReactiveObjC",
+      "bytes": 350832,
+      "sha256": "39c9e13f22255a262f47b995b6f6ae9d63b09bd41171eaea1801273d228c73cb",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/Resources/Info.plist",
+      "bytes": 1138,
+      "sha256": "4ded0fe1f4647f5b1862a2a98998aa7c3ade9bd925d097258e24667c446e7496",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/ReactiveObjC.framework/Versions/A/_CodeSignature/CodeResources",
+      "bytes": 2442,
+      "sha256": "95920ec9421fbb6d2efe69b0b33724d9e685b6c563f467ec8baa8c0a8df5444a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/ReactiveObjC.framework/Versions/Current",
+      "symlink": "A"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Squirrel.framework/Resources",
+      "symlink": "Versions/Current/Resources"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Squirrel.framework/Squirrel",
+      "symlink": "Versions/Current/Squirrel"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/Info.plist",
+      "bytes": 1175,
+      "sha256": "f61ab349887360a2d84603ecff17ab6633cb7fe2e8e72861f4e38e9120f472bf",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt",
+      "bytes": 125744,
+      "sha256": "1ba6384fb15fe7179f5c34c613c4c216bb260dd5774561b6a93666d268c162a1",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Squirrel.framework/Versions/A/Squirrel",
+      "bytes": 215248,
+      "sha256": "1822d3d5259f0edb515b734e7552a0d4b0f2cf9f7cfa70eb614dbd1bfce53092",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Squirrel.framework/Versions/A/_CodeSignature/CodeResources",
+      "bytes": 2660,
+      "sha256": "7032c7a497da0a28e31f3b8fc05a67def66ab9e095ccae392b678f71f2bbab54",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Frameworks/Squirrel.framework/Versions/Current",
+      "symlink": "A"
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Info.plist",
+      "bytes": 3808,
+      "sha256": "76017476ff14dda90d98bf84b3d4fe12aad8cf73a075687becd12f06f9f88a89",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/MacOS/BAR",
+      "bytes": 33936,
+      "sha256": "f65a9c33b81a04a8f77f8aa02353489117364447851faeb670939d67d6c2d7b3",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/PkgInfo",
+      "bytes": 8,
+      "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/LICENSE.md",
+      "bytes": 1086,
+      "sha256": "9b3716816f196958b4285f92b49b5ba52adb5bf27b04afa86015c75369525b4b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/app.asar",
+      "bytes": 62964877,
+      "sha256": "566ed180954c85f8ae29626d03a1257be69100c140e50759442b2967fa857752",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/app.asar.unpacked/node_modules/7zip-bin/LICENSE.txt",
+      "bytes": 1087,
+      "sha256": "e9f2248a07935f444c613d84e5a0239eab7537a80cc02212f386662f0ded0e11",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/app.asar.unpacked/node_modules/7zip-bin/index.js",
+      "bytes": 500,
+      "sha256": "48659f660a13b5fa01622f87dc8a5306ce7c232abf93b82a3b2f6e94c2cf5c86",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/app.asar.unpacked/node_modules/7zip-bin/mac/arm64/7za",
+      "bytes": 988208,
+      "sha256": "6f4dd78a82cf574f49118d99be620fd3edcfa9e48971d8523816b7ed20419c47",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/app.asar.unpacked/node_modules/7zip-bin/package.json",
+      "bytes": 244,
+      "sha256": "acabcd4f1c0b7399de4c213e8fdfd5d064f29e278f94bd5b763d8ac8555e2c18",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/icon.icns",
+      "bytes": 462600,
+      "sha256": "823b67d03d625119040617cbfb7021b7c2279f74da53cb77b905dbd420fdf053",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/README.md",
+      "bytes": 1243,
+      "sha256": "ae100c8243cda5ae9887902d1d8567aca9292a450213649b22865216a51d7f0e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/electron/LICENSE",
+      "bytes": 1096,
+      "sha256": "5154e165bd6c2cc0cfbcd8916498c7abab0497923bafcd5cb07673fe8480087d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/electron/LICENSES.chromium.html",
+      "bytes": 20115518,
+      "sha256": "3375e2a9bd7bc631738fde10be6548a76efe8cf5e4b8826b8140ba8b0c4d6353",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/7zip-bin-5.2.0/LICENSE.txt",
+      "bytes": 1087,
+      "sha256": "e9f2248a07935f444c613d84e5a0239eab7537a80cc02212f386662f0ded0e11",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@babel__helper-string-parser-7.27.1/LICENSE",
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@babel__helper-validator-identifier-7.27.1/LICENSE",
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@babel__parser-7.28.0/LICENSE",
+      "bytes": 1086,
+      "sha256": "2e97627cb278aa7556fb9e8817368302301a595b6c7582512b8d74c57b773652",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@babel__types-7.28.1/LICENSE",
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@extractus__feed-extractor-7.1.6/LICENSE",
+      "bytes": 1077,
+      "sha256": "3b7099817cb6734d33522e1a549ecdd48945a38f8e5a7a72de6b9fb4e7ebe0cb",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify-icons__mdi-1.2.48/copyright.d.ts",
+      "bytes": 105,
+      "sha256": "e9b2912b8c345d9213c90fc227f102115fa52ce9d266e7637a4fd95724b62506",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify-icons__mdi-1.2.48/copyright.js",
+      "bytes": 669,
+      "sha256": "9230fca793232ec4828790e6b46119718be77f2fb64d9d3de8d209b913d3a881",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify-icons__mdi-1.2.48/license.d.ts",
+      "bytes": 105,
+      "sha256": "e9b2912b8c345d9213c90fc227f102115fa52ce9d266e7637a4fd95724b62506",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify-icons__mdi-1.2.48/license.js",
+      "bytes": 645,
+      "sha256": "c6fd875029d3b4b500274e6eb1c338d657996d87f85b724243c0f0913be4919a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify-icons__mdi-1.2.48/notice-board.d.ts",
+      "bytes": 105,
+      "sha256": "e9b2912b8c345d9213c90fc227f102115fa52ce9d266e7637a4fd95724b62506",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify-icons__mdi-1.2.48/notice-board.js",
+      "bytes": 280,
+      "sha256": "a43a17af57aab4b4e12bc43f6f8ef51fb5efc3d8113d69be08c76ff3aa39abd5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify__json-2.2.362/lib-license.txt",
+      "bytes": 1081,
+      "sha256": "18a94e5f9e732a1ea02083b1df67df6500147d63bac52f9dd95d605b8a137171",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify__types-2.0.0/license.txt",
+      "bytes": 1096,
+      "sha256": "045ce74712fc613fdd74d1c55f5140a08d623836ff2aca44132b38d68fbc67ad",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@iconify__vue-5.0.0/license.txt",
+      "bytes": 1083,
+      "sha256": "7cef50a4477dcd1f0ea036d3c7031430851ea21228e65658c6c84a57754e1b65",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@intlify__core-base-11.1.11/LICENSE",
+      "bytes": 1083,
+      "sha256": "403a4d6f9815ae33bd7a613202529f0805045c642f92a169fa673d7fa07dd568",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@intlify__message-compiler-11.1.11/LICENSE",
+      "bytes": 1083,
+      "sha256": "403a4d6f9815ae33bd7a613202529f0805045c642f92a169fa673d7fa07dd568",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@intlify__shared-11.1.11/LICENSE",
+      "bytes": 1083,
+      "sha256": "403a4d6f9815ae33bd7a613202529f0805045c642f92a169fa673d7fa07dd568",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@jridgewell__sourcemap-codec-1.5.0/LICENSE",
+      "bytes": 1072,
+      "sha256": "1c632a84f7ba5a7b32d9c15e707f419b2393e7ad7de362bd9c837b5e435a197b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@ndaidong__bellajs-12.0.1/LICENSE",
+      "bytes": 1078,
+      "sha256": "363132e7689c30b8de204a866c1cb303204095fe937dbd8de3b479c50d5a81dc",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@sinclair__typebox-0.34.38/license",
+      "bytes": 1227,
+      "sha256": "dbf18b83e0b8542a0fbfebd98e8120c3a09b0dbecc1eabba6070ec61d89bf989",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@types__trusted-types-2.0.7/LICENSE",
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@types__web-bluetooth-0.0.21/LICENSE",
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__compiler-core-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__compiler-dom-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__compiler-sfc-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__compiler-ssr-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__reactivity-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__runtime-core-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__runtime-dom-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__server-renderer-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vue__shared-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vueuse__core-13.5.0/LICENSE",
+      "bytes": 1101,
+      "sha256": "0f844b1160603552a01662ac2999c14e5fb4df487e65619b9ed4406e43eb3c0b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vueuse__metadata-13.5.0/LICENSE",
+      "bytes": 1101,
+      "sha256": "0f844b1160603552a01662ac2999c14e5fb4df487e65619b9ed4406e43eb3c0b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/@vueuse__shared-13.5.0/LICENSE",
+      "bytes": 1101,
+      "sha256": "0f844b1160603552a01662ac2999c14e5fb4df487e65619b9ed4406e43eb3c0b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/agent-base-6.0.2/LICENSE-from-published-README.md",
+      "bytes": 1489,
+      "sha256": "9392da8d1d2ccb224d60025fee4d6223ae0b863469fcd8c6b9461145723cf1c4",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/ajv-8.20.0/LICENSE",
+      "bytes": 1090,
+      "sha256": "a05350a88e318e4f5f2c2a1ff1e2e88daa4dd38e6e78b71cccae422bdc762cc3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/ajv-formats-3.0.1/LICENSE",
+      "bytes": 1074,
+      "sha256": "9df3bb69929a3b650ed73b3bfa1756725aaff0ac296461605753547004eafeaf",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/anynum-1.0.1/LICENSE",
+      "bytes": 1077,
+      "sha256": "8e75fc0e776c62ccadb8178ece8d3daa9ba7601fb0a49b2dfb0ea9a7a5c0aa07",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/argparse-2.0.1/LICENSE",
+      "bytes": 12775,
+      "sha256": "de4d1f2d2ad5ad0cfd1657a106476b31cb5db5ef9d1ff842b237c0c81f0c8a23",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/asynckit-0.4.0/LICENSE",
+      "bytes": 1078,
+      "sha256": "1953150d5d4b10c7542cee6f6e0c613b2682545233f069d75cfff1936386ce10",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/atomic-sleep-1.0.0/LICENSE",
+      "bytes": 1087,
+      "sha256": "8d58741278b289a7f4b6dde2d6273fca7711b9849452c477933d1cccd03db1e7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/axios-1.20.0/LICENSE",
+      "bytes": 1084,
+      "sha256": "82761059eaedacb3356803aea8a170d8298609f91b14fc32ee1bfb40d690183c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/balanced-match-4.0.4/LICENSE.md",
+      "bytes": 1155,
+      "sha256": "d408f38ffa3355c5faec517153295338892eb0f1ea43f57874bb23c6075979b5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/brace-expansion-5.0.12/LICENSE",
+      "bytes": 1144,
+      "sha256": "9c63a23124d68cd30cd316a94a1a0bca34f032786df6df69fc4b5f136bac8d2e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/bufferutil-4.1.0/LICENSE",
+      "bytes": 1183,
+      "sha256": "2b29dcfe0d6471f7e8c92c5fb38c9f93edee10330937055440192f1832b1ecef",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/builder-util-runtime-9.7.0/LICENSE",
+      "bytes": 1084,
+      "sha256": "bed8d0ab3e6031817f775a641ff37313b0f5591bc8ba0ed79b978dafbd4231ce",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/call-bind-apply-helpers-1.0.2/LICENSE",
+      "bytes": 1071,
+      "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/chokidar-4.0.3/LICENSE",
+      "bytes": 1124,
+      "sha256": "bdfd5e0edb6089e6586c8f15e6a86fab83ffbeeda3b3b7b33734ccb8c5906965",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/colorette-2.0.20/LICENSE.md",
+      "bytes": 1080,
+      "sha256": "f101c761d255d0dddc77dd8a9327733b03d381798ec54a1bb718367207b48a8e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/combined-stream-1.0.8/License",
+      "bytes": 1085,
+      "sha256": "47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/cross-fetch-4.1.0/LICENSE",
+      "bytes": 1084,
+      "sha256": "821a6be45c3fd08815688b30b6210fc97848cf88c7a6ed8afb22ae75b83571b4",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/csstype-3.1.3/LICENSE",
+      "bytes": 1062,
+      "sha256": "11d55bd4541c75ee7879547ac49089c489163dae49551389713c3d026cab383e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/date-fns-4.1.0/LICENSE.md",
+      "bytes": 1117,
+      "sha256": "8d3951c38967b964b1fe259bfd200c2647cc04c858b55a4414e3122a60f1ef4b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/dateformat-4.6.3/LICENSE",
+      "bytes": 1075,
+      "sha256": "e38ad5868b1e32ab44c63da6e58b8b58604d8d1dd90c40d171f2feaa756b088b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/debug-4.4.1/LICENSE",
+      "bytes": 1139,
+      "sha256": "3a61c6c96caf5c1d9b623fb9b04c822b783dfcb78aa7e49c76a3f643e6ed7f95",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/delayed-stream-1.0.0/License",
+      "bytes": 1085,
+      "sha256": "47eb8ca82c798246774946d1be0f9aa08f025fa8325ced0947aeeb4c05fe5547",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/dexie-4.0.11/LICENSE",
+      "bytes": 11325,
+      "sha256": "cb5e8e7e5f4a3988e1063c142c60dc2df75605f4c46515e776e3aca6df976e14",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/dexie-4.0.11/NOTICE",
+      "bytes": 575,
+      "sha256": "6176d2e8a3fd8a881828a1a27bbcc5a9e03a75f437ce3c4ddbedd94fdac475c1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/dompurify-3.4.16/LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/dompurify-3.4.16/LICENSE-MPL",
+      "bytes": 16726,
+      "sha256": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/dunder-proto-1.0.1/LICENSE",
+      "bytes": 1073,
+      "sha256": "2b770a704c15de238c3f622b01b0044ddd60b49ee30608ea6991ebf19db7a7a1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/electron-updater-6.8.9/LICENSE",
+      "bytes": 1084,
+      "sha256": "bed8d0ab3e6031817f775a641ff37313b0f5591bc8ba0ed79b978dafbd4231ce",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/encoding-0.1.13/LICENSE",
+      "bytes": 935,
+      "sha256": "2453d3b90aa23715eec80b25fcda1bebf71052ad41a6694d58a9aa867d103c81",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/end-of-stream-1.4.4/LICENSE",
+      "bytes": 1078,
+      "sha256": "3fe8d55a98dbf260eace67c00cf9bc53edb46234e840098a0b93df3096b97fb6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/entities-4.5.0/LICENSE",
+      "bytes": 1260,
+      "sha256": "cb992345949ccd6e8394b2cd6c465f7b897c864f845937dbf64e8997f389e164",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/es-define-property-1.0.1/LICENSE",
+      "bytes": 1071,
+      "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/es-errors-1.3.0/LICENSE",
+      "bytes": 1071,
+      "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/es-object-atoms-1.1.1/LICENSE",
+      "bytes": 1071,
+      "sha256": "5e325595b4ea8cfec3802f545b1def5d7b73e4a5b8e9ba63e32a320f67732292",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/es-set-tostringtag-2.1.0/LICENSE",
+      "bytes": 1073,
+      "sha256": "1a3aeb1f1398bd697d57c3c585faadf59d825aca6e3162cd7eeb72ff76eb2466",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/estree-walker-2.0.2/LICENSE",
+      "bytes": 1126,
+      "sha256": "8a6dcbabe7179f9c8489c08a7d874d0f1e093ae7449e03756ccf87cb9d0e296e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fast-copy-3.0.2/LICENSE",
+      "bytes": 1069,
+      "sha256": "13d1abb8d9ebb8a8a725c7b462928ddb063b03c2c353fa61408648882a10fea9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fast-deep-equal-3.1.3/LICENSE",
+      "bytes": 1074,
+      "sha256": "7bf9b2de73a6b356761c948d0e9eeb4be6c1270bd04c79cd489c1e400ffdfc1a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fast-redact-3.5.0/LICENSE",
+      "bytes": 1090,
+      "sha256": "06bcf5858f70123793be30809ee30464ac550b88a96fe3ee886f4f923375bf30",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fast-safe-stringify-2.1.1/LICENSE",
+      "bytes": 1218,
+      "sha256": "f0ffe1359ba08038bb99f194c80fbb4f2aae216e749e97b2cd6b006d1861e27b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fast-uri-3.0.6/LICENSE",
+      "bytes": 1763,
+      "sha256": "bf13d2149c7784aeabc5575262251fde5a26bec741a9fd05558a4afe72326ae8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fast-xml-builder-1.3.1/LICENSE",
+      "bytes": 1077,
+      "sha256": "8e75fc0e776c62ccadb8178ece8d3daa9ba7601fb0a49b2dfb0ea9a7a5c0aa07",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fast-xml-parser-5.7.0/LICENSE",
+      "bytes": 1073,
+      "sha256": "7883225d5e84a6bbb9b170c3d891b4bf6d6259cee869c86bd86381a927071745",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/flag-icons-7.5.0/LICENSE",
+      "bytes": 1087,
+      "sha256": "8f1195d55a2fd315a07d812328470ca9ba2abb78c8d317ff19619d5125e00cea",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/follow-redirects-1.16.1/LICENSE",
+      "bytes": 1136,
+      "sha256": "bfa8a54bb952ccda79f0f1889721d108f5b605babbb2b8a3705ffb52f4132eb7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/form-data-4.0.6/License",
+      "bytes": 1118,
+      "sha256": "e5b780d4f38d1d3328e3e53186c4e62d3fa149ea6f2bacd5de5ad0c30ac85343",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fs-extra-10.1.0/LICENSE",
+      "bytes": 1084,
+      "sha256": "1e76029602ae9b21cc4e612db2496d92febed882ba13ba745f8b3309e85f9d39",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/fsevents-2.3.2/LICENSE",
+      "bytes": 1133,
+      "sha256": "2a8a5d6197bb97a018b8a190dd3ed853d750ca87c8e80c17aad41d6c6ff448e1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/function-bind-1.1.2/LICENSE",
+      "bytes": 1052,
+      "sha256": "773e131a7684726005a7e4688a80b4620033bc08499bc1404dd1a1eb3bca725e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/get-intrinsic-1.3.0/LICENSE",
+      "bytes": 1071,
+      "sha256": "39c5ec504cf6bd5cd782a7c695828e09189df79f5d94840e4f08feb97b9fd416",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/get-proto-1.0.1/LICENSE",
+      "bytes": 1071,
+      "sha256": "be46ce1e3b0479af9ce82d22b465a6d7d2ff084fca0aaf3d54172da2b5eb5781",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/glob-13.0.6/LICENSE.md",
+      "bytes": 1764,
+      "sha256": "a49c9ba464796f65b59fca3f1e6ca40912df1e859f575383223f7ec6c5baae09",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/gopd-1.2.0/LICENSE",
+      "bytes": 1071,
+      "sha256": "d90bf0a089da4cf43d644ed240a0b3825dcdb705e64e38371d56995a4cc9e4c5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/graceful-fs-4.2.11/LICENSE",
+      "bytes": 791,
+      "sha256": "f65c5d9f22a317b2a10803bd1868461ce6499c2ed7217bc80c0cc772a748789c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/has-symbols-1.1.0/LICENSE",
+      "bytes": 1071,
+      "sha256": "206c1adcf206dc0031b11232f5b054ec5f1662407ab1ca415247921cab2068ab",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/has-tostringtag-1.0.2/LICENSE",
+      "bytes": 1067,
+      "sha256": "e2560e002e13281578c75c850061d9255c33d16d732939e8c2db64c2506642fa",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/hasown-2.0.4/LICENSE",
+      "bytes": 1083,
+      "sha256": "bf9b0d665be2a689851eea667ca9f42066ea1d903b38349c51e6a44b2577680a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/help-me-5.0.0/LICENSE",
+      "bytes": 1087,
+      "sha256": "92ff7edfcfc974e452612d5d7f4977aa7be058ef62979210bcb5c899ae6db60d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/howler-2.2.4/LICENSE.md",
+      "bytes": 1088,
+      "sha256": "0ad5aef7beeb552832fe01db1c46933f948dfe5da35017bd0efa0006ffd2ced9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/html-entities-2.6.0/LICENSE",
+      "bytes": 1055,
+      "sha256": "10b2831912dc4dc91b25429511e6c74f901eebf64b625328f8fd08dd9c3cf8fe",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/https-proxy-agent-5.0.1/LICENSE-from-published-README.md",
+      "bytes": 1201,
+      "sha256": "58f4074efa400c8397add18c6561d0a17e4721e24bfd1b4d1e8ca764a8cb3eca",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/iconv-lite-0.6.3/LICENSE",
+      "bytes": 1064,
+      "sha256": "ac779f7314c74f232ef847ea86e714abe25cf6eeb5cc97b69451b74e2af6492d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/joycon-3.1.1/LICENSE",
+      "bytes": 1117,
+      "sha256": "35e14b59e62634be50f65371ca4041bde968562151be4d6039e42a3a6872a8bd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/js-yaml-4.1.1/LICENSE",
+      "bytes": 1084,
+      "sha256": "a07bc24468b9654ce76a547d47a2db282d07733b715db4c73a98bd63961f9550",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/json-schema-traverse-1.0.0/LICENSE",
+      "bytes": 1074,
+      "sha256": "7bf9b2de73a6b356761c948d0e9eeb4be6c1270bd04c79cd489c1e400ffdfc1a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/json8-1.0.5/LICENSE",
+      "bytes": 751,
+      "sha256": "27754ca619032a6fb360f0d75096505f7794751e3c21185df1e9db45dac4a6a6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/json8-merge-patch-1.0.5/LICENSE",
+      "bytes": 751,
+      "sha256": "27754ca619032a6fb360f0d75096505f7794751e3c21185df1e9db45dac4a6a6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/jsonfile-6.1.0/LICENSE",
+      "bytes": 1110,
+      "sha256": "a9801fb52ba22ef808682a094da8a7a480584b7ed0dfd0d888ab543616335031",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/lazy-val-1.0.5/MIT-permission-terms.txt",
+      "bytes": 1297,
+      "sha256": "e882af5888f639c05e97d73d1b6d58d4bb1f50755f1d66ccf1c637eae9dacf3f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/lazy-val-1.0.5/provided-package-attribution.json",
+      "bytes": 138,
+      "sha256": "5d8c16664fd1cacd543ee09b316732dbdd84c32a117914e762dac5355b846783",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/lodash.escaperegexp-4.1.2/LICENSE",
+      "bytes": 1951,
+      "sha256": "ffd8b33b354585f4ce119f19c53728281e48a97b074491eb6bf6d5c5ff305272",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/lodash.isequal-4.5.0/LICENSE",
+      "bytes": 1950,
+      "sha256": "e159c6d48c989185448658f276375bfb2300362ec6d4ae5525a2d49c4bcb947d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/lru-cache-11.5.3/LICENSE.md",
+      "bytes": 1552,
+      "sha256": "8a1af140fdfbf5afd3df27f7e662f989c5b963a300020dfafce42033cae9e004",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/luaparse-0.3.1/LICENSE",
+      "bytes": 1068,
+      "sha256": "bedf97319fd3fb51c22dc5a44daf603ca4b2515ae75cae8ac677fb6bd40ec34e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/magic-string-0.30.17/LICENSE",
+      "bytes": 1051,
+      "sha256": "1cbe51b907662f6cb1492b16c359384a595180bf0e4d101603ed525e75c4e484",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/marked-16.1.1/LICENSE.md",
+      "bytes": 2942,
+      "sha256": "8e3a3f82f59a60958f56ca08f445647c32a4733dc7ca6c2c46f6eb898471ab9c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/math-intrinsics-1.1.0/LICENSE",
+      "bytes": 1073,
+      "sha256": "2b770a704c15de238c3f622b01b0044ddd60b49ee30608ea6991ebf19db7a7a1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/mime-db-1.52.0/LICENSE",
+      "bytes": 1172,
+      "sha256": "cc1dfd4dafa27271e8212cd3b274eeb3f262e40a6fdab36ddc3f9696f706f58b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/mime-types-2.1.35/LICENSE",
+      "bytes": 1167,
+      "sha256": "71f83c4c0621102a56d9853812777b85751bce7e9726f686f5b056c1f8a4b0e6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/minimatch-10.2.6/LICENSE.md",
+      "bytes": 1550,
+      "sha256": "2c7c5d22ed5a8ee968c64757710979afcd77438c48b4a265b94e615babd8a901",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/minimist-1.2.8/LICENSE",
+      "bytes": 1073,
+      "sha256": "435a6722c786b0a56fbe7387028f1d9d3f3a2d0fb615bb8fee118727c3f59b7b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/minipass-7.1.3/LICENSE.md",
+      "bytes": 1552,
+      "sha256": "8a1af140fdfbf5afd3df27f7e662f989c5b963a300020dfafce42033cae9e004",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/ms-2.1.3/license.md",
+      "bytes": 1079,
+      "sha256": "1662fae9b5314d11cf51284e2dcd1f006a354f7343f08712a730fcff9a359801",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/nanoid-3.3.11/LICENSE",
+      "bytes": 1095,
+      "sha256": "da4db1480d9beea3483a2eda5c53b22238d0827d57da162b48f122e04d2d9987",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/node-abi-4.12.0/LICENSE",
+      "bytes": 1069,
+      "sha256": "9a508cd4122f2dc1cc39f8ab0b6950efbc49fb087a581c7177a4b8c9d5d0d6a1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/node-downloader-helper-2.1.9/LICENSE",
+      "bytes": 1071,
+      "sha256": "78667c0361588d175194c8b0394bdf3249db06662a8f067eb068d417a1763406",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/node-fetch-2.7.0/LICENSE.md",
+      "bytes": 1079,
+      "sha256": "84eaa985e1ef71b8c630e8aba73404c219ff425c6fdb45c62e998b58d4fbdc8e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/node-gyp-build-4.8.4/LICENSE",
+      "bytes": 1079,
+      "sha256": "7b3638496004b2daed183a91c4ba45d3ef6331db6c9d0eb1dd882a505630c172",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/node-gzip-1.1.2/LICENSE",
+      "bytes": 1055,
+      "sha256": "9eb6f69d48a1dd764e8a33f14a584f460d3cec653477c136a95dd6df9c249211",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/on-exit-leak-free-2.1.2/LICENSE",
+      "bytes": 1071,
+      "sha256": "47404ffc18f1267832bc0623857871de5a3a93ebb19693f5e1b963af91fab54b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/once-1.4.0/LICENSE",
+      "bytes": 765,
+      "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/path-expression-matcher-1.6.2/LICENSE",
+      "bytes": 1056,
+      "sha256": "75486ea0af9309140ca6e2c401d7e67bea8f4892344e5707f6394dc5e83dfc44",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/path-scurry-2.0.2/LICENSE.md",
+      "bytes": 1552,
+      "sha256": "8a1af140fdfbf5afd3df27f7e662f989c5b963a300020dfafce42033cae9e004",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/pathe-1.1.2/LICENSE",
+      "bytes": 2267,
+      "sha256": "cb00dc7c358014d300dba2462e57d3f477299c169c7ab14d8fe5e347eca44f48",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/picocolors-1.1.1/LICENSE",
+      "bytes": 787,
+      "sha256": "6582629e2979466878f6014313dcc2f3756c9616148682227ce3063dde310750",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/pino-9.7.0/LICENSE",
+      "bytes": 1207,
+      "sha256": "3b0fa9f045ca8a3cbc52cd86a4586097bf73072db50af4deeac650d190bffcd6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/pino-abstract-transport-2.0.0/LICENSE",
+      "bytes": 1061,
+      "sha256": "31f005ecff86a12a1351f4c2cb1133267c0b152546b08cd6fa4bdeb1943e00cd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/pino-pretty-13.0.0/LICENSE",
+      "bytes": 1130,
+      "sha256": "4a979e76cd5e6515e37baa8f71cb703cdfc92f13b83e84285cbe8ff87b277232",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/pino-std-serializers-7.0.0/LICENSE",
+      "bytes": 1084,
+      "sha256": "6206673d24786f09656f7a480b7c50af289e9690963aaa135af5b626de5250df",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/playwright-1.57.0/LICENSE",
+      "bytes": 11601,
+      "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/playwright-1.57.0/NOTICE",
+      "bytes": 254,
+      "sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/playwright-core-1.57.0/LICENSE",
+      "bytes": 11601,
+      "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/playwright-core-1.57.0/NOTICE",
+      "bytes": 254,
+      "sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/postcss-8.5.6/LICENSE",
+      "bytes": 1095,
+      "sha256": "c4630ac8b89cb317ac5bdd60ac5e4e185eab9bd5151a0c7b3afa41aa83d7ec9b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/primeicons-6.0.1/LICENSE",
+      "bytes": 1070,
+      "sha256": "140e5886a54d897d852dbf7eeffd2c464467eddfcb04374241f90c61658493bd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/primevue-3.23.0/LICENSE.md",
+      "bytes": 1080,
+      "sha256": "cd6426739ea0d1bf7b6692f54563165fa6bd3f2cd236aa82f9fc2a01de37f193",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/process-warning-5.0.0/LICENSE",
+      "bytes": 1059,
+      "sha256": "d9726abc9eff9496f3ecb5302e70756f310db24a01c7ddd20f541143bf5576ad",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/proxy-from-env-2.1.0/LICENSE",
+      "bytes": 1087,
+      "sha256": "f55828df4b8752c48e765a806465b76a103e3cb363379c569b15a1df2ba2d79e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/pump-3.0.2/LICENSE",
+      "bytes": 1078,
+      "sha256": "3fe8d55a98dbf260eace67c00cf9bc53edb46234e840098a0b93df3096b97fb6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/quick-format-unescaped-4.0.4/LICENSE",
+      "bytes": 1091,
+      "sha256": "5ac141bfc70bec8f40838502436bfcb85e3f4c24377e41b9ddef07bdd6aa51bc",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/readdirp-4.1.2/LICENSE",
+      "bytes": 1114,
+      "sha256": "dffec71d93f273d2af7b54c6c7e7e70b3289c632ec0d7253210ec21ac336d5ac",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/real-require-0.2.0/LICENSE.md",
+      "bytes": 1114,
+      "sha256": "cbf263504e800cf09f99962cce8497b76eef79c3526bca434b90c3ef4c17220d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/recoil-tdf-1.1.0/LICENSE",
+      "bytes": 11358,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/require-from-string-2.0.2/license",
+      "bytes": 1128,
+      "sha256": "6ee0feb1f6ef996ff5a68600f8cf98909cf412d39ef3cdceaefd87d636fa1b7f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/safe-stable-stringify-2.5.0/LICENSE",
+      "bytes": 1079,
+      "sha256": "3a6d6de49d284a36c5d271ef0e62eca1838cc460dd7630e3f2c347c8f5b2232a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/safer-buffer-2.1.2/LICENSE",
+      "bytes": 1094,
+      "sha256": "4bc935e71be198c67ddf3c2b5fddb195f6edc182bfc155a96a6db61b44b494b9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/sax-1.6.1/LICENSE.md",
+      "bytes": 1552,
+      "sha256": "8a1af140fdfbf5afd3df27f7e662f989c5b963a300020dfafce42033cae9e004",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/sdfz-demo-parser-5.15.1/LICENSE",
+      "bytes": 1211,
+      "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/secure-json-parse-2.7.0/LICENSE.md",
+      "bytes": 1720,
+      "sha256": "68ad2e3907f85fbe324747f630392a92a7fd8f99b0c87e95bf6e7f863163f149",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/semver-7.7.4/LICENSE",
+      "bytes": 765,
+      "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/sonic-boom-4.2.0/LICENSE",
+      "bytes": 1071,
+      "sha256": "db5c3795cb080810fed0380bf4d6adef3f81579e8ae3a867d3c2abab2329db9d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/source-map-js-1.2.1/LICENSE",
+      "bytes": 1526,
+      "sha256": "6cb0631f71c7749763fd3dd1d5bee52dd1070ec17f2edc1710079ad070bd2fbd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/split2-4.2.0/LICENSE",
+      "bytes": 764,
+      "sha256": "c372ef2fa1dfcb124ed807609751e75e3a009f108c5724916b489288fcb88a0c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/strip-json-comments-3.1.1/license",
+      "bytes": 1117,
+      "sha256": "5c932d88256b4ab958f64a856fa48e8bd1f55bc1d96b8149c65689e0c61789d3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/strnum-2.5.1/LICENSE",
+      "bytes": 1077,
+      "sha256": "2aa16be0f4fad003a352a955a43314e9d1d8deef7034060a82ac9c49f32b81e2",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/tachyon-protocol-1.25.0/license.md",
+      "bytes": 1061,
+      "sha256": "88ceaec9be1c2574b40c6c01580d322fc6c7923876ad4632d52d0d3c151576b5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/thread-stream-3.1.0/LICENSE",
+      "bytes": 1071,
+      "sha256": "47404ffc18f1267832bc0623857871de5a3a93ebb19693f5e1b963af91fab54b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/tiny-typed-emitter-2.1.0/LICENSE",
+      "bytes": 1104,
+      "sha256": "4b3faf884ee71eec3df920b66c98fc6618af28e824cf3a32ef3d8774048cc76d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/tr46-0.0.3/MIT-permission-terms.txt",
+      "bytes": 1281,
+      "sha256": "93e4883046973da5fd260f79223706fbe0d36c668cb767b17531d0835d2b87c6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/tr46-0.0.3/provided-package-attribution.json",
+      "bytes": 271,
+      "sha256": "49200ec06b03a6a055c58013077bccc07b00166dccfeedcb9726e63d4dfc8c58",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/typescript-5.8.3/LICENSE.txt",
+      "bytes": 9197,
+      "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/universalify-2.0.1/LICENSE",
+      "bytes": 1100,
+      "sha256": "3fda5977c0904e226190b4e21d64340c1731e2142d6fe5f3dee0090a216b8b63",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/utf-8-validate-5.0.10/LICENSE",
+      "bytes": 1378,
+      "sha256": "ebf774f60dd27325cfd62c233917dfcc8551f808f69ca8656be7d1eaf13c44f2",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/vue-3.5.13/LICENSE",
+      "bytes": 1091,
+      "sha256": "1bb85cc9b13b81ef41c81c51866172fc345e0503c86726a6755b796590b70175",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/vue-i18n-11.1.11/LICENSE",
+      "bytes": 1083,
+      "sha256": "403a4d6f9815ae33bd7a613202529f0805045c642f92a169fa673d7fa07dd568",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/vue-router-4.5.1/LICENSE",
+      "bytes": 1100,
+      "sha256": "91a2845c4db44e7497b514b98634a674c737986ad0db81599307cf733bf850b2",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/webidl-conversions-3.0.1/LICENSE.md",
+      "bytes": 1323,
+      "sha256": "a889cc4dbee2ae172c179856b25d75b0b7a5a136e1b97109b9b590b2ff1a879c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/whatwg-url-5.0.0/LICENSE.txt",
+      "bytes": 1088,
+      "sha256": "6b7a1792144374d84dc5ed3655b8bbe2754d06f4f1f64a9fb8b9de2d6f448b85",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/wrappy-1.0.2/LICENSE",
+      "bytes": 765,
+      "sha256": "4ec3d4c66cd87f5c8d8ad911b10f99bf27cb00cdfcff82621956e379186b016b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/ws-8.21.0/LICENSE",
+      "bytes": 1183,
+      "sha256": "2b29dcfe0d6471f7e8c92c5fb38c9f93edee10330937055440192f1832b1ecef",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/npm/xml-naming-0.3.0/LICENSE",
+      "bytes": 1077,
+      "sha256": "8e75fc0e776c62ccadb8178ece8d3daa9ba7601fb0a49b2dfb0ea9a7a5c0aa07",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/p7zip-16.02/GPL-2.0.txt",
+      "bytes": 17987,
+      "sha256": "ab15fd526bd8dd18a9e77ebc139656bf4d33e97fc7238cd11bf60e2b9b8666c6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/p7zip-16.02/License.txt",
+      "bytes": 1886,
+      "sha256": "555806657dcf0f1e720b581c52643c195ec86ae3f00bd18cc66d2e0f88ffa210",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/p7zip-16.02/copying.txt",
+      "bytes": 26530,
+      "sha256": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/p7zip-16.02/debian-copyright",
+      "bytes": 1459,
+      "sha256": "fdc5cf547f0662a0062961a495cb3c5fb907954af81f6ccc24cea8da8d60c2b1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/p7zip-16.02/unRarLicense.txt",
+      "bytes": 1921,
+      "sha256": "17bd9fa4399092c777536fff045b41df76ec9d2ac4c9b8e7345d3b8b6ccc7976",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/verified-upstream/nodable-entities-2.2.0-LICENSE",
+      "bytes": 1064,
+      "sha256": "750cb3fb6362804957ef52caaf9b5c824015be44d494637330d7cd8834d31d40",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/licenses/verified-upstream/vue-devtools-api-6.6.4-LICENSE",
+      "bytes": 1083,
+      "sha256": "050bbca6960784db52ff387271bf2ecc5cbed7cf8581b415d528a6ecb6585015",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/native-launcher-notice-selection.json",
+      "bytes": 33384,
+      "sha256": "970cac7c2c553b7ea2b5a3f1b95a0b885a03963c54be1b39330897d08427cbd9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/legal/npm-notice-map.json",
+      "bytes": 128496,
+      "sha256": "83ae620189f8fd5ebd15d320c96cbbff6e40c9e9179c33eee32904770c7fd59e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/bin/pr-downloader",
+      "bytes": 692432,
+      "sha256": "d61271e40394fb12a4deff1b2613f66082c24d1299be57520fcbc5ac3d1a6422",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/bin/spring-metal4-scene",
+      "bytes": 59117152,
+      "sha256": "d9ff26af8b4a2918ba8ff2d47c339e05b9032ab775783f78394e7dafde6bfdfc",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Interfaces/C/0.1/InterfaceInfo.lua",
+      "bytes": 1115,
+      "sha256": "369d649a88f6371d62f896c45637bef3d16c226e047f59e5321cf3394e34dbf9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Interfaces/C/0.1/libAIInterface.dylib",
+      "bytes": 63024,
+      "sha256": "ccde5116fd338ffc8a73a7721b8f686c8a19caa514adb3dc52df0ce14a65c0b4",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/AIInfo.lua",
+      "bytes": 1608,
+      "sha256": "ad5e47232808bec9f20afe5489a50753c742621d0d8369366c72e261dc36ada5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/AIOptions.lua",
+      "bytes": 2685,
+      "sha256": "ba8b612c86f880b4ae623f0bdae68c6ff9efcc7d8d2132481a96cbbaf2bfe2ae",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/behaviour.json",
+      "bytes": 18493,
+      "sha256": "41a1e3435ac8cf79bf6cc172e94e557b8d479fcece8af8e696d0cff5872a5a27",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/block_map.json",
+      "bytes": 5478,
+      "sha256": "a83401f599d0f7fb83e8adb92fc6be3c451e20b4495d51eec8e84bbe6b5bcaa6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/build_chain.json",
+      "bytes": 8229,
+      "sha256": "5cc0b57f7cef2341e4ac3a4faf0f575867f38a04d961f1fa289bc01eb2cb105a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/commander.json",
+      "bytes": 1215,
+      "sha256": "c4228520bf3eb5968bc22f6b2ea44300b9cc2e2f71380f929977e98948dfe39c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/dev/behaviour.json",
+      "bytes": 28111,
+      "sha256": "3d40d5dd20d66fbacb26ca1131b05b6021fa2e46b779c5dd2bc2c7774af2a133",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/dev/block_map.json",
+      "bytes": 5651,
+      "sha256": "f16496e75748ebf1ca48598d2d9d93e3843d581fa6e04d10b53e08815fd8db00",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/dev/build_chain.json",
+      "bytes": 8747,
+      "sha256": "5903da25f2dca964d5eb53ca229a19ddbf4522209db279b6122cc7bbd35fa484",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/dev/commander.json",
+      "bytes": 1215,
+      "sha256": "c4228520bf3eb5968bc22f6b2ea44300b9cc2e2f71380f929977e98948dfe39c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/dev/economy.json",
+      "bytes": 3193,
+      "sha256": "4d5f08eb2d58707cbad28130b94e29687f1c18228881c401e387dd07a826722a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/dev/factory.json",
+      "bytes": 21093,
+      "sha256": "c836740286288937a9e82321078f83e1e38c5166fe391d847290db3a05a9763e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/dev/response.json",
+      "bytes": 4225,
+      "sha256": "9b5baf12f1ece387c3787b4d7dfcad289ba23efe60b5dbeee2e7ee7b8ba24a8f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/economy.json",
+      "bytes": 3360,
+      "sha256": "3ffcb7eef32a69cafe5f76df37edfc8f9f830cc6653f425e95824a9d949333de",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/factory.json",
+      "bytes": 20541,
+      "sha256": "9dbbc35a03fd83b73d8c6599f2f215b1620dc09caadb53709e3d0ba566ddbb74",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/config/response.json",
+      "bytes": 4024,
+      "sha256": "00c9ec033e611c389c07be5ef008de8be2a9a3fffa5af6c54f039215bf7628c3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/libSkirmishAI.dylib",
+      "bytes": 8599104,
+      "sha256": "f94118947e1f86c07460ab8a9bb8cb6ce04cf4528cd1f734693ad9ab0b1304f9",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/common.as",
+      "bytes": 1625,
+      "sha256": "6a0a59b22fe8ded69c8d0227facddf6ce2c86944a121052f537ccf8f53881378",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/define.as",
+      "bytes": 239,
+      "sha256": "2631303fb5f612b12ff611e24878c40a1ad0241f837828338662e8f19012499b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/dev/init.as",
+      "bytes": 463,
+      "sha256": "979bc9a4573ecb414cc95b7abe42719bf7d348c0cea9530d7c18c630ea56ab9a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/dev/main.as",
+      "bytes": 3068,
+      "sha256": "c73d2ba8cc682801cef1fe902519279a84173d022d14c18853526c3cb9100a73",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/dev/manager/builder.as",
+      "bytes": 4879,
+      "sha256": "1b39b4a7b5f7e30533fa0207ce28be315948c922902cac348200a3f4c67e0da6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/dev/manager/economy.as",
+      "bytes": 1532,
+      "sha256": "15252796457f199774b2b63601a8a06420b9871bde3f04d9e77b4cfdd90a4091",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/dev/manager/factory.as",
+      "bytes": 3565,
+      "sha256": "5f70e06f494edcb7fd3d7725f4c11e7d90798c5962a35e176f748cbfbe26e3e6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/dev/manager/military.as",
+      "bytes": 702,
+      "sha256": "a62af7881f6bdb46a321d7a58fb9e5c64265b61bad3094ff0eb47c30a601a7f1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/dev/misc/commander.as",
+      "bytes": 4136,
+      "sha256": "1d0ce9af0a265a2932286a135bc6747f06b07a075f1b50fa0885ea5f59b75ca7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/task.as",
+      "bytes": 6991,
+      "sha256": "e94b31b3bbb52d05292a5c21410a1bf25e0285147da082a837da15f25b0ccb81",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/script/unit.as",
+      "bytes": 4477,
+      "sha256": "2d96a4c6672b21c2b21d28e8eab80dc313ca408ed2e416a9b464a5a692b6474b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/NullAI/0.1/AIInfo.lua",
+      "bytes": 1541,
+      "sha256": "db022c101916807514b0e2566800d0fce1c690bafd4504ca04745dc8730a9998",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/NullAI/0.1/AIOptions.lua",
+      "bytes": 3652,
+      "sha256": "c02eba362e2e65cc4acb7398d6926c99c0b82e6b6494639f9a838ee05f33bffe",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/NullAI/0.1/libSkirmishAI.dylib",
+      "bytes": 17280,
+      "sha256": "e4435c7555c7af0e16dff553ee02bcc6cccb29a24c7857f6382a81eef7c8444a",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaIntro/springconfig.lua",
+      "bytes": 1673,
+      "sha256": "ae26d82b3702985e3ac6f52e2e6986e3d1961657a3f1249d55bf89e8796c4093",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/api_pbr_enabler.lua",
+      "bytes": 2202,
+      "sha256": "7fa002dbdde714572a0cbe20f897751cad8ccb949034ca7ca144d36246a8cc8a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/cus_gl4.lua",
+      "bytes": 3029,
+      "sha256": "fec0476f994e29d52deb6f4e29eba761cc2f06d62ef87097581ea03437de9b61",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_beam_laser_gl4.lua",
+      "bytes": 2554,
+      "sha256": "b7c5db9a0b3d267d34ec59d41ef6a2aa3bcaafac3e36044a99decbbdb5ff3bb3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_energy_explosion_particles_gl4.lua",
+      "bytes": 3647,
+      "sha256": "76144351c936a9fc2f817beb6fb6db2c99fe550a5c7cd08e8ff7c3f792bc6b37",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_environmental_lightning_gl4.lua",
+      "bytes": 3141,
+      "sha256": "1aed3a33ad1cb5cc05ed61cb681ef6fac867072c855791d5b58e01cf35067f8b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_fire_gl4.lua",
+      "bytes": 3346,
+      "sha256": "e8013bfe603130df4199242a950503b59e1a2c099a3b747ed48225fb1156df5b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_fire_smoke_gl4.lua",
+      "bytes": 2515,
+      "sha256": "0f1f17f3309ce8eaeceb770eb7ddf60f24fa0f454cc22226008f476229c63387",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_flamethrower_gl4.lua",
+      "bytes": 3392,
+      "sha256": "b476aa1982821ac070a7a239053bedd5d558d5a765ebe20dc4d92bd9e5fe90cb",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_lightning_cannon_gl4.lua",
+      "bytes": 2966,
+      "sha256": "1864c73d13425162f3508bff4361e9bbef47a871fa677ee77454951d47b39ebe",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_missile_thruster_gl4.lua",
+      "bytes": 2634,
+      "sha256": "b5fee4e922a0f29b8d4754b504319f85e277522b4b2fa735721df240f713868d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_nano_particles_gl4.lua",
+      "bytes": 3929,
+      "sha256": "3b8a1d69601510d3700a404a14835b3c354df91e99525a8f7680d74a7b9090c3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_plasma_cannon_gl4.lua",
+      "bytes": 2559,
+      "sha256": "96de9aece84ab3abeff9d49c43e3f4000e82d862dc80054febb5994081023d04",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaRules/Gadgets/gfx_unit_shield_effects.lua",
+      "bytes": 4048,
+      "sha256": "15820e08c225937336c41437a53310c0cc192bc0981f5c9d1c895ca08a1b5608",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/Fonts/FreeMonoBold_12.lua",
+      "bytes": 33758,
+      "sha256": "e0698e82307af41873b88efe019ddee3fef2dfeb2b83d5c1acbb523233acc716",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/Fonts/FreeMonoBold_12.png",
+      "bytes": 35367,
+      "sha256": "e12b3b01ab6096a43541343562a85113d33590f46d5e836590b379501d700804",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/Include/native_display_options.inc",
+      "bytes": 9083,
+      "sha256": "17402077d037b1463fc75975c8b87443f3f67f9f6278d45101f06c45d06aee5a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/Include/native_display_patch.inc",
+      "bytes": 3013,
+      "sha256": "bb646ad55d688150e1409d36980eb001a36f01fd3e9b875a7aa211bdd49bacd7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/api_blueprint.lua",
+      "bytes": 3615,
+      "sha256": "38098362b4ddba84ad65fe7e5a844a43e20d5ec3dcf44c2d7f8ae43599c11f20",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/api_object_spotlight.lua",
+      "bytes": 3003,
+      "sha256": "f36192f0fa66aa810b55c455e07751205489f5ea86c914e966e29464fdd58f22",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/api_unit_tracker_gl4.lua",
+      "bytes": 6850,
+      "sha256": "b53772b0e10c69562d50aab5fc17b59998d2212ace92a2e1f65d9eb4331e320e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/api_unitbufferuniform_copy.lua",
+      "bytes": 2020,
+      "sha256": "6b93b7157fd1e39baa3840bb8c2b16cae2515b1aa0041bf313e72e531a72af94",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/cmd_decal_capture.lua",
+      "bytes": 2460,
+      "sha256": "a9adad776fe32b033e4bd1835aaf0d5b9eceb13dd9e7eecb6746efd44c1b4c7d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/cmd_diffuse_painter.lua",
+      "bytes": 3164,
+      "sha256": "fc53ad715189d1241f5307996e6bb83cee7de7bc5201c4f0d5f69a7485b6827e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/cmd_resolution_switcher.lua",
+      "bytes": 1836,
+      "sha256": "f66fab96d3b38a31e9d04d6c30bd60860badae86639ba931e8d2ed90ff25721a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/cmd_splat_painter.lua",
+      "bytes": 3308,
+      "sha256": "a78d5b13d57eb1a91402e17bcd3027f5747f7a42d3c0aca72f033bbf9ff70bb3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/cmd_terraform_brush_capture.lua",
+      "bytes": 2668,
+      "sha256": "27b05a30cc2fef3cb920b58394183edc4edb7149f597a2f0f04d4cadf5f7468d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/cmd_terraform_image_overlay.lua",
+      "bytes": 4123,
+      "sha256": "2de08a8c177d28833672bfec2cc8321c4434c8a3c5ff6c2bfadd35521a6a1e3c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/dbg_deferred_buffer_visualizer.lua",
+      "bytes": 1451,
+      "sha256": "4c1afa1a92833e4e409ff5953fc0e2977d7ebb085e4c51a1b9be322b2a7ba22e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/dbg_frame_grapher.lua",
+      "bytes": 3807,
+      "sha256": "ac0dcd44e6cc990f9023fa96a397dfadbdd524a8c1f7d69d53c554a7eea4629e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/dbg_profiler_histograms.lua",
+      "bytes": 3137,
+      "sha256": "3e77e08b9a5d7278adfbfe5011d9375d6f5c76ae8710abbd84837b14f023e930",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/dbg_target_priority.lua",
+      "bytes": 2965,
+      "sha256": "c949a92d4400428e0f20b6b87017e4758784d9bb3d7d8dcee725b258fbda5954",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_DrawUnitShape_GL4.lua",
+      "bytes": 4029,
+      "sha256": "7f2384735ee1cd3e4745fde94ff66586788298f669a71aff60c6b9195531d594",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_airjets_gl4.lua",
+      "bytes": 3873,
+      "sha256": "a8740154b41fe54ec1203931261628bcc99437f10cb996b8431c7226ac9d52ce",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_bloom_shader_deferred.lua",
+      "bytes": 5986,
+      "sha256": "4ccf4b7b3ef92fdba21d76c003ce24d10fc9c32e8f3e378a1cdd07954d226c68",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_cas.lua",
+      "bytes": 4294,
+      "sha256": "5500de64eda23758223183e7f704d2dc9193dc54bda240b1550f79c4a80e9fab",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_decals_gl4.lua",
+      "bytes": 4574,
+      "sha256": "34fb5388fef0f3f15404eec16b88e52917bbbc6d315d5883768070962434fd46",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_deferred_rendering_gl4.lua",
+      "bytes": 8385,
+      "sha256": "030ecdc32e45f38935b4adcf28ab7efb70dba8c9d1c7ff5c6fbd370a37aab40d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_distortion_gl4.lua",
+      "bytes": 12198,
+      "sha256": "33f503896093d3fad4c374267df061b00e4b07028d970cba403e28a04a93a76d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_dof.lua",
+      "bytes": 2126,
+      "sha256": "a33b501bcbc182803d687da65368ac1401400a45ed46347ea92fa010c48b20d8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_drawfeatureshape_gl4.lua",
+      "bytes": 3990,
+      "sha256": "070441b82100d76adb93e2f48a67a405b372f0e057a069192ef2ce472409ce5b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_guishader.lua",
+      "bytes": 5534,
+      "sha256": "333ef39691e6d0daadd4ad5d59fee4c03ee6e60598992b12859c2e510c6e5916",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_highlight_commander_wrecks.lua",
+      "bytes": 2556,
+      "sha256": "630f1210aace03244bfe2704aba30e09d5a41dc798e8cb75060570075b55c046",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_orb_effects_gl4.lua",
+      "bytes": 2152,
+      "sha256": "b58e6fd6278a902a79bf7b704555b674366160f44634b018a71c2cb6c0fb539f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_outline_shader_gl4.lua",
+      "bytes": 8241,
+      "sha256": "fa72e062213636129966616db4abbf99d55b1bc73015c96944e1f8dcf3be14e0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_paralyze_effect.lua",
+      "bytes": 3512,
+      "sha256": "9ccfb4be37f96fec78773a18d00060e0a17f8118ab492c1493ba8913029b395d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+      "bytes": 4585,
+      "sha256": "3e43f742c2e69fa98df42564da6b085d71409327f727e4ab2041b21bdf073d37",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_snow.lua",
+      "bytes": 4154,
+      "sha256": "1e90c7bb144bd4453358cef1bfd1886aa67c3634ea9dcec40f7342c1176b55b9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_ssao.lua",
+      "bytes": 7760,
+      "sha256": "2c9742aa2eb80ffac9d9ef2cad7607d1e8abc13c6a215577dcbbcd91e3b35e4f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_unit_stencil_gl4.lua",
+      "bytes": 5081,
+      "sha256": "624a41d596681d95ef77f90ecb8eb8edc6d6bc541a37298c64e648cab53a98c5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_volumetric_clouds.lua",
+      "bytes": 1209,
+      "sha256": "fd7e20e79896390be43c4fc02499eb217370f6b166c3e9f11c42a23dd8ca3d6b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gfx_water_type_overlay_gl4.lua",
+      "bytes": 4705,
+      "sha256": "ec35c1fed13457fb3352e23e4ce4c4db86564e40e95f85bb36a793bbebb87a80",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_advplayerslist_music_new.lua",
+      "bytes": 1512,
+      "sha256": "d2674c5b2046c91181f7e885e144767b4b4fe84182766456740663564f768963",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_allyselectedunits.lua",
+      "bytes": 6464,
+      "sha256": "ecfaff07ad178250cbdaf4880a23db558b4461e6f28059b3a2abce2a562e9a9b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_attack_aoe.lua",
+      "bytes": 3955,
+      "sha256": "388389af2f06161595c22445e716608d671b7a46bf1352654a4fad433e29c362",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_attackrange_gl4.lua",
+      "bytes": 8391,
+      "sha256": "89cb5f76a5d421e7f17f3d276950ae3da2c5cfb28b938a8d3bb0ab2f7987badc",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_building_grid_gl4.lua",
+      "bytes": 3101,
+      "sha256": "78c5b5d1354dcbea7b86c371b210a3c17a343e4e0c65dbf4a063e1cdcc586c51",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_buildsquare_gl4.lua",
+      "bytes": 1424,
+      "sha256": "057575a9784fad0b496ad1a9395498cbd46ebc4e99cac8a2e28b737e566eee1b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_commands_fx.lua",
+      "bytes": 1959,
+      "sha256": "409b89414cad4c3d539154906307c2b0a2079c5e882ff572feeaabd4c0932a80",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_cursor.lua",
+      "bytes": 2548,
+      "sha256": "7a8f8ffaa36cc52f358215948aa2c62cc564df2f6c79af61075910541ab92ff7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_defenserange_gl4.lua",
+      "bytes": 4711,
+      "sha256": "685194538a8462b01ec0be41ffcf5fcea663603cee75dcd5df6138799feab35d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_easyfacing.lua",
+      "bytes": 1181,
+      "sha256": "ce4087e3546fb43d75bd26f8651b302bb455bf86b89839f784727e8dfd817244",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_enemy_spotter.lua",
+      "bytes": 6845,
+      "sha256": "02fbd7c413a2518e21b83809ac8d48199ae927f8785f235016c6120fff8024f1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_flowui.lua",
+      "bytes": 2176,
+      "sha256": "11e72cb336d4cf6ac7c94abf64c6e4a4248c011a438739218385c0e43b083043",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_geothermalspots.lua",
+      "bytes": 3055,
+      "sha256": "899fc56e908a9a55a20fd4972eb713c6c60421ddb50dff3cdc05e8907d5f131f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_gridmenu.lua",
+      "bytes": 1989,
+      "sha256": "a02d9ab4b5d6f4b2cdb6faa972d16d52e3a3cd9909a07bb49c384404bb24abc4",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_ground_ao_plates_features_gl4.lua",
+      "bytes": 6843,
+      "sha256": "408a2a488301d6c9be5eb6258efc4619df6581dd4d9c9b0eade811314ea43197",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_ground_ao_plates_gl4.lua",
+      "bytes": 6825,
+      "sha256": "399b91a0aaf355669d672d647cc2da91c78355f706c6b98b034cfed113372638",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_healthbars_gl4.lua",
+      "bytes": 6215,
+      "sha256": "04488b0fdf28600a600b28d580c9b72f41a53081396cf442f5b6e4638099f49d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_info.lua",
+      "bytes": 2051,
+      "sha256": "4594b88afa1acbf49873fcd357c61f0d3e7325cf520af67080aafebf2e7179ea",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_los_view_gl4.lua",
+      "bytes": 4439,
+      "sha256": "a1166d2c449e06b74e2561ff8f8f9ca861ecbde49606c0a90d16866f1a330bf2",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_metalspots.lua",
+      "bytes": 3050,
+      "sha256": "8aa880e671ea39eff0860e767b63bef44bfeccb09b06b5993f45a0d37fffdde7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_options.lua",
+      "bytes": 11332,
+      "sha256": "749d590927037421a3ccb6f7c3b78e53c4d6f187a46d809a8f9b447b55a68b8b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_pausescreen.lua",
+      "bytes": 2006,
+      "sha256": "12138e12fdef61b2a496d90698d76b2ebbe7556da84341ad9b62caef0c89b413",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_pip.lua",
+      "bytes": 7209,
+      "sha256": "97d2b9f87534a581de28515da0a924ce0b49ffeed700233fde823665f1ca7e71",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_rank_icons_gl4.lua",
+      "bytes": 6723,
+      "sha256": "70176050cb477d6e6e877424a1c36001125bfc596a758cf8bcdbcef2e3949b4e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_reclaim_field_highlight.lua",
+      "bytes": 4236,
+      "sha256": "8e1af2d910a2f46c1070229930e2eb6fdc68f9750ac634f8703eca7f8635ba9c",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_resurrection_halos_gl4.lua",
+      "bytes": 6518,
+      "sha256": "177254be2bb17d1dc5e2250c6a38d64792adb7e0559c24e75303803472189846",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_selectedunits_gl4.lua",
+      "bytes": 6375,
+      "sha256": "59451176d1eff5a73e8bd378be164e0f4d6975b31703e1a71de6dcc912392c93",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_sensor_ranges_jammer_preview.lua",
+      "bytes": 6345,
+      "sha256": "aff50db79a1bed73549efb9ced979c05ae8e874b46cefaff4f9fb9c8fd0f4afa",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_sensor_ranges_los.lua",
+      "bytes": 2869,
+      "sha256": "f99a1c96b8ab1334a4e2087f658ca30eeaf212c622e2c6582af2ccc8544c74e1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_sensor_ranges_radar.lua",
+      "bytes": 3375,
+      "sha256": "b30950a0c06f8fdb9914ec3b11eaaeddef7ca1f79fdb0e648a6f705870b720d0",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_sensor_ranges_radar_preview.lua",
+      "bytes": 4871,
+      "sha256": "babdd24b64f1b68b5922611d3e3416eabdce2ee28bd105c167fb9df8d1b3b8c7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_sensor_ranges_sonar.lua",
+      "bytes": 3375,
+      "sha256": "894f6ccb7f50b12119ab9b4ba3153891cc868968b802128741f89fe214a45976",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_spectator_hud.lua",
+      "bytes": 3407,
+      "sha256": "33011a0c4e07bc93615fae6b8a4033daa761ad8db9a0fdbe6b6ad1eca2cbc33e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_team_platter.lua",
+      "bytes": 6809,
+      "sha256": "d4413341a7fb09f073ebff3e12945933119bc3fca1be6b75f1be676a09b708a8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_unit_energy_icons.lua",
+      "bytes": 6470,
+      "sha256": "45be69093e43d03db066066188abeef9ee446a7ac21fe568572f9c603229ffb7",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_unit_firestate_icons.lua",
+      "bytes": 6476,
+      "sha256": "7359fce491bdf363efb65599f297720506ad2597cfd5c13e01f06da9c8f2d1d3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_unit_group_number.lua",
+      "bytes": 6470,
+      "sha256": "4d20bbac1b9d5470e822a1f4a20c65755bfa6a19857a4b13ad65e4481e9b7277",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_unit_idlebuilder_icons.lua",
+      "bytes": 6480,
+      "sha256": "481533b5d3faa5d9960f65afc51dc2e2d6e57559ee779717acfe650931eeb9da",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_unit_repeat_icon.lua",
+      "bytes": 6468,
+      "sha256": "92763f8157cbb9228a4dc688f38d55ff02529c4d500bcfebc96c4de29e6a7dc1",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_unit_wait_icons.lua",
+      "bytes": 6466,
+      "sha256": "beb766d8e1aacc65ef824946c7acba65c8e30c417e80a0338ea24b2727a786bc",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/map_blockout_gl4.lua",
+      "bytes": 2510,
+      "sha256": "4d8a5f4b715a195acd94f0abb7da39e1470d490f480461f85c8f46c1f900f562",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/map_edge_extension2.lua",
+      "bytes": 3902,
+      "sha256": "d8f686e7cb9bd4230218c306fc06470cac68aa6983dece01c9b1fd6da516bc9f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/map_grass_gl4.lua",
+      "bytes": 1976,
+      "sha256": "a810100f4841c25cc426ec5dacd40ad20891ae8d609c4a17aed3c7c64c619e7a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/map_startbox.lua",
+      "bytes": 5847,
+      "sha256": "41978c4a23b96a2bf12fa0e115d300ae5188eeeb4635af6a391953e6b7be2f25",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+      "bytes": 882,
+      "sha256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/unit_squad_selection_hull.lua",
+      "bytes": 3349,
+      "sha256": "bbee6a8a913848f136a14f8f887f4d914548b569a9bdec3ffd14114d1ca70d4e",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/fonts.lua",
+      "bytes": 14037,
+      "sha256": "f2a02622ac705e764e45c591cfc6d06af7933c001b1ae6e70d8512b30a918ccf",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/base/cursors.sdz",
+      "bytes": 61401,
+      "sha256": "024e531ff30110522c59581a414ee0cf3ecb512cfc0d4a5d69da80c1447204d9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/base/maphelper.sdz",
+      "bytes": 10587,
+      "sha256": "ed3c46cb3aa76af6f0fab2416cc1624eaecceefda2317d8f0ed75d6cdbd81d98",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/base/spring/bitmaps.sdz",
+      "bytes": 6830106,
+      "sha256": "1b339acb8debebb1610b082d9a50bbbe5be0d93a8bb8add7843ed37a308bc324",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/base/springcontent.sdz",
+      "bytes": 386363,
+      "sha256": "760f7d214dd7a6c0480cfe6800b122aa354ca99afc3c2b305ac064d7bbc9de0a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/fonts/AUTHORS",
+      "bytes": 5593,
+      "sha256": "9965fdc33fd13b0048adc7e5a1f611172a52429fb713893f2fb9a30ab200f42b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/fonts/COPYING",
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/fonts/CREDITS",
+      "bytes": 20697,
+      "sha256": "f00eb77d39b8c2b2d24899117ebb0309e68ee1bdf7827549bf235af50b619aca",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/fonts/FreeSansBold.otf",
+      "bytes": 297416,
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/fonts/README",
+      "bytes": 4313,
+      "sha256": "7cb1b7af8a3aea7a7bb89322f6efd4029af6edaf02e779968bc73164e8e005c3",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/data/rapid/repos-cdn.beyondallreason.dev/byar/versions.gz",
+      "bytes": 161,
+      "sha256": "ff24ff1231da47ae22b13d9564939c4e605a4faea818dba0638cbc8c094d5d67",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libIL.dylib",
+      "bytes": 401872,
+      "sha256": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libSDL3.0.dylib",
+      "bytes": 2506208,
+      "sha256": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libbrotlicommon.1.2.0.dylib",
+      "bytes": 149264,
+      "sha256": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libbrotlidec.1.2.0.dylib",
+      "bytes": 69744,
+      "sha256": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libfontconfig.1.dylib",
+      "bytes": 453344,
+      "sha256": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libfreetype.6.dylib",
+      "bytes": 657424,
+      "sha256": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libintl.8.dylib",
+      "bytes": 210816,
+      "sha256": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libjasper.7.0.0.dylib",
+      "bytes": 277872,
+      "sha256": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libjpeg.8.3.2.dylib",
+      "bytes": 454256,
+      "sha256": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/liblcms2.2.dylib",
+      "bytes": 338320,
+      "sha256": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/liblzma.5.dylib",
+      "bytes": 166576,
+      "sha256": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libminizip.1.dylib",
+      "bytes": 72720,
+      "sha256": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libogg.0.8.6.dylib",
+      "bytes": 53728,
+      "sha256": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libopenal.1.25.2.dylib",
+      "bytes": 1615904,
+      "sha256": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libpng16.16.dylib",
+      "bytes": 190272,
+      "sha256": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libtiff.6.dylib",
+      "bytes": 523072,
+      "sha256": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libvorbis.0.dylib",
+      "bytes": 175072,
+      "sha256": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libvorbisfile.3.dylib",
+      "bytes": 55392,
+      "sha256": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/lib/libzstd.1.5.7.dylib",
+      "bytes": 631664,
+      "sha256": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4",
+      "mode": 493
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/native-engines/development/manifest.json",
+      "bytes": 55573,
+      "sha256": "fa8998c854d75efccdf155dbd9bdf30b9658c93baf45927c505c92187e7d305f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/CC-BY-3.0.txt",
+      "bytes": 19467,
+      "sha256": "aacbf85b939d752b122a6d2eb50650796b7ccf4d38d72bd9ef8b5c47022cdbe8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/CC-BY-NC-ND-4.0.txt",
+      "bytes": 17452,
+      "sha256": "4f3c4a321eb0c73182eee7afa3fe0111e24dec193f2d6febcf4207f26af26839",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/CC-BY-SA-3.0.txt",
+      "bytes": 22240,
+      "sha256": "ea55e798a1b601516093201441b474c7499b37db0e8920d7b96a21c2d67465b6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/CC0-1.0.txt",
+      "bytes": 7048,
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/ISC.txt",
+      "bytes": 823,
+      "sha256": "f2ec607f67bb0dd3053b49835b02110d5cd0f8eb6da3aac4dc0b142a6b299be9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/LicenseRef-IFOPE.txt",
+      "bytes": 5550,
+      "sha256": "259e4782bab664d1842d36f2bd642748357a53187617664bb01dcda9ee500b91",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/LicenseRef-UNKNOWN.txt",
+      "bytes": 692,
+      "sha256": "5c9198cbb9b1a1579acdf3742284e65db9ab5abcff83b802d5da6923d0f4c3d5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/MIT.txt",
+      "bytes": 1078,
+      "sha256": "b05785f9f18e6716bab63424b11454513b9943a222595b70411009202fc592b5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/MPL-2.0.txt",
+      "bytes": 16727,
+      "sha256": "66a3107d5ad6a058aab753eaac2047ccb2ed0e39465dd0fe5844da3e300d5172",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/OFL-1.1.txt",
+      "bytes": 4016,
+      "sha256": "8eea8287e5876b539670cadb82e99f9a7afddec6f6730811be1daf25d2e9bcfd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/Resources/source-licenses/Unlicense.txt",
+      "bytes": 1211,
+      "sha256": "0bdebfeda07d45dada625ae1317c6f833186e798b171d0db640bcf32e92a8240",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/BAR.app/Contents/_CodeSignature/CodeResources",
+      "bytes": 122018,
+      "sha256": "1675fa38abe67da04acf228e3a909ca8598ba15c01238dbb714fc9f829191017",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/DISTRIBUTION-NOTICE.txt",
+      "bytes": 389,
+      "sha256": "da7a922b74dab8ec1e0bb52ddbdde87ac661248137a466b3cdb9115d6469e547",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/icon.icns",
+      "bytes": 462600,
+      "sha256": "823b67d03d625119040617cbfb7021b7c2279f74da53cb77b905dbd420fdf053",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/install-release-content-delta.sh",
+      "bytes": 475,
+      "sha256": "a346a11707fcc86f39fecc94b697db2ac8db4f36a2c83329a11ce4d97f58754a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/lobby-config.json",
+      "bytes": 238,
+      "sha256": "1825d2be3b1b7a7ca16e7d4b3da07fa4a952985f706417346fa75bf71783b5fa",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/RecoilEngine-GPL-LICENSE.html",
+      "bytes": 1061,
+      "sha256": "cee67a9b47fd0eba60a44be3620e4c5bfa39c6dfee4fb8933ef52de7a71b73f6",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/brotli-LICENSE",
+      "bytes": 1084,
+      "sha256": "3d180008e36922a4e8daec11c34c7af264fed5962d07924aea928c38e8663c94",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/devil-LICENSE",
+      "bytes": 26461,
+      "sha256": "9b872a8a070b8ad329c4bd380fb1bf0000f564c75023ec8e1e6803f15364b9e9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/fontconfig-COPYING",
+      "bytes": 8616,
+      "sha256": "51a51aa9823704fd90bccc616cdd17ebabb5b2b3e9cbde886ca02c7002288067",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/freetype-LICENSE.TXT",
+      "bytes": 2149,
+      "sha256": "bd36c8b474855fa294c2ec5c184544478ef3720aad37d65a6296a4f264fd2d3b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/gettext-COPYING",
+      "bytes": 35151,
+      "sha256": "e79e9c8a0c85d735ff98185918ec94ed7d175efc377012787aebcf3b80f0d90b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/jasper-LICENSE.txt",
+      "bytes": 2744,
+      "sha256": "4ad1bb42aff888c4403d792e6e2c5f1716d6c279fea70b296333c9d577d30b81",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/jpeg-turbo-LICENSE.md",
+      "bytes": 6077,
+      "sha256": "ba6bceebcba0fdd35488477c2cca8c4632ce82c74dbfbc87d886ce6fc4433579",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/libogg-COPYING",
+      "bytes": 1466,
+      "sha256": "d2ab5758336489da61c12cc5bb757da5339c4ae9001f9bb0562b4370249af814",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/libpng-LICENSE",
+      "bytes": 5345,
+      "sha256": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/libtiff-LICENSE.md",
+      "bytes": 2416,
+      "sha256": "0e27c2382d7b8147972bbb746e04059a1152c8d0fda9d03ef1399d1a433c4ade",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/libvorbis-COPYING",
+      "bytes": 1470,
+      "sha256": "ec1815db59fcd302846df949d7424876cb2e2dc5ed1606c5fb0b36787b1cf43a",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/little-cms2-LICENSE",
+      "bytes": 1080,
+      "sha256": "6dbd60437f8ef91d8de1f08ad75882547fd4931bfcc3566a0735f28db1484d31",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/minizip-LICENSE",
+      "bytes": 1002,
+      "sha256": "e32ff4e00d9d94930537635291da39e7e612703334bf6fde8c7f1686fe8a45a2",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/openal-soft-COPYING",
+      "bytes": 23330,
+      "sha256": "d808ce217e5b611854da622b57ec29fe545584c48bc5352fae72a4b6e5074a15",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/sdl3-LICENSE.txt",
+      "bytes": 884,
+      "sha256": "1c040b8271b37e5076359f8fd54240e371114112924d2df81ef87c7d6a1dfdfd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/xz-COPYING",
+      "bytes": 3119,
+      "sha256": "616a3ad264ce29b8f1cb97e53037b139d406899ca8d1f799651e17bfa09830b8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/native-licenses/zstd-LICENSE",
+      "bytes": 1549,
+      "sha256": "7055266497633c9025b777c78eb7235af13922117480ed5c674677adc381c9d8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/CONTENT-DELTA.json",
+      "bytes": 2038,
+      "sha256": "96bf3b50ba50547b163bce5b8274d3581195ef0e4432bd91e803afd29f4ca06d",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/SHA256SUMS",
+      "bytes": 1408,
+      "sha256": "a35f6e3555749f234d309b4c0268dd0e82aeb9f60528f41879336c11fd5dacfe",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/packages/ea937c1fffe64761825a9d87af5c91f2.sdp",
+      "bytes": 548186,
+      "sha256": "d3b229ba8b86462dcbbcf9d9c9f4b7a328189a7c4994ee661c99a86cb1f13466",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/09/6026c809dad512fc210020200dbc90.gz",
+      "bytes": 251,
+      "sha256": "7eb537af93e9ef01f8ced5004ed6b0e8e9c5df2a338b4edd24e87be842f7e526",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/2d/bd1412710a0fe48853e7dad3b250ab.gz",
+      "bytes": 4671,
+      "sha256": "307a2de2feb103b1b84be178020ead63eb7890ef49e810e24aa7129cfd759b45",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/35/ea4028211f99b060bef7d85aa0ee0c.gz",
+      "bytes": 3222,
+      "sha256": "ac3c2e0fcbc11dc2d4a7b657af3aacf75f953886b7e58ff84feacb27f6fe5c03",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/5e/5447d7e102e4bc340a55f7d1f9e8a0.gz",
+      "bytes": 8913,
+      "sha256": "e8e360267b78629e388e8310db1c349c5d37f6f2c6f7065dbfb4c5a04eb3745b",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/6a/861ac1067dd21f990ac457b7205719.gz",
+      "bytes": 516,
+      "sha256": "228eb2e67c2d6887b6f40819e26b22d181ea74df075d2052a782b3ba82d1a2a9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/7d/c2180ac54860f98686e573524436e3.gz",
+      "bytes": 4698,
+      "sha256": "a9cfb47de78fba3bcdbce785bd989edfa005715afa1e76ce377d543bf202dcbd",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/8a/ae3d69ed2fe59f83fae61f64601ad8.gz",
+      "bytes": 1954,
+      "sha256": "68745bf22546319a464916e75d6881350876bfa7e487c5ec46ae2d3122872bee",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/91/0426425a924e51de011113fceab919.gz",
+      "bytes": 517,
+      "sha256": "965f56991955b48f9600f230b56f8f4f7e92795eeabca6d9c2608fc36baa3270",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/99/6b75c836120b82a844af36df960d62.gz",
+      "bytes": 2180,
+      "sha256": "ce5fc4b883c78d6b2f5694488ee219a4b146c62898ee9e11e9139614b44cf125",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/9c/5bc83e2d66f7dfeb743ab469a3a75a.gz",
+      "bytes": 524,
+      "sha256": "3ee11f71efb63928e74aadf1058ae64f2ec98d950fbe01a74be2aa5c2f2b1966",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/a7/4cddba907db4ba90126f6d5a92ec23.gz",
+      "bytes": 8914,
+      "sha256": "ab199aab29b3b2235a75beeab33a6b56608716644ffc8eccbf12174dbce1dc11",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/assets/pool/e2/7d926f8bd70dc76611951fa73c8e97.gz",
+      "bytes": 1340,
+      "sha256": "808b6ff791947bdca15e340dd0c8383a989df6b9f1ebd39ba2c77f733bc36447",
+      "mode": 420
+    },
+    {
+      "path": "Contents/Resources/pinned-content-delta/versions.gz",
+      "bytes": 115,
+      "sha256": "1066274c9ac2afcec7bf38f3e7174394cc6e6aec1743e743a2a280f94f6b22f9",
+      "mode": 420
+    },
+    {
+      "path": "Contents/_CodeSignature/CodeDirectory",
+      "bytes": 205,
+      "sha256": "2fb146354b614a3c7ea29ad5fcb0cc7fe7615525a8cc84a9c0bee14e24c99e4f",
+      "mode": 420
+    },
+    {
+      "path": "Contents/_CodeSignature/CodeRequirements",
+      "bytes": 60,
+      "sha256": "37ec1122e307f3949e1e5d074991ca2f6e5226dd9a2ffbe473f426fc4a7f1dd5",
+      "mode": 420
+    },
+    {
+      "path": "Contents/_CodeSignature/CodeResources",
+      "bytes": 284174,
+      "sha256": "9e18f35b054be5463d1f289ac69aee93402fa616c54b38b413c4e43e7de8fbd8",
+      "mode": 420
+    },
+    {
+      "path": "Contents/_CodeSignature/CodeSignature",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": 420
+    }
+  ],
+  "deepStrictSignature": true,
+  "wrapperPoliciesVerified": true
+}

@@ -1,0 +1,18 @@
+{
+  "version": "1.11.5",
+  "previousReleaseCommit": "da9ed9cbc3b16c6dc5d947513c95a85abb7b38c2",
+  "sourceCommit": "66f2357cd60fbb9484188828b2bee75839207c18",
+  "engineTree": "e21d2b83ee53ad097cd3a353afc8f33651058ed7",
+  "sourceHashes": {
+    "engine/rts/Rendering/Metal4/Metal4Grass.mm": "6ad63437f6036794530cf1564b7e0e973fb834d9b055b19997635dec6a6a4efa",
+    "engine/rts/Rendering/Metal4/Metal4Grass.h": "c2462f2a3a8f25d7c5e10f859521b637406fd31edbde7e5d5e5f2f1c4de090a6",
+    "engine/rts/Rendering/Metal4/GrassZeroScaleCompaction.h": "30d4ca6c881873030e5049abc30b45fe8069dc231c24742b95791fadbaeb5093",
+    "engine/rts/Rendering/Metal4/GrassBendShortlist.h": "57e26b3ac7792e890a2c94135cc27e2c4041ca51e612f171af62d4649258e998",
+    "engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm": "e70aae6861d8d4fd0afa2275e96dd3f14c32c1627a65d5f3bc0072a3dc35b52b",
+    "engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h": "24a61eac1f17d49c8544ccfbcf065580c800c927b2d84edc9b5828e823622b89",
+    "engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm": "acafb1e48232598edda12130d4907175c32a89d47bdf69d5e850762bb0527654",
+    "engine/rts/Rendering/Metal4/NativeSensor31657CircleShaders.h": "df711fea210623c16cbb78a364ca774732dbebaf610455c7f576899a1c774c2d"
+  },
+  "pinnedInputEngineTree": "2df52dbaa3376605ccc3ce6ad948a9f4734c8da9",
+  "rawEngineSHA256": "7dfd5373b0de6ab558ff259c66c26da97db23392bc06132d08b7d535d8428003"
+}
