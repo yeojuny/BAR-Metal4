@@ -301,11 +301,13 @@ fragment SensorLOSFragment OriginalSensorLOSFragment(SensorLOSVarying in [[stage
 	const float2 p=in.position.xy;float coverageDepth;
 	const bool viewportCovered=p.x>=u.viewport.x&&p.x<u.viewport.x+u.viewport.z&&p.y>=u.viewport.y&&p.y<u.viewport.y+u.viewport.w;
 	const float2 glPixel=float2(p.x,-p.y);
+#ifndef RECOIL_SENSORLOS_OUTLINE_ALPHA_FIRST
 	const bool lineCovered=SensorLineCoveredEarly(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,u.counts.w,
 #ifdef SENSORLOS_PREPARED_CROSSING
 	 in.crossingSetup,in.interiorPixels,
 #endif
 	 coverageDepth);
+#endif
 	const float2 delta=in.lineB.xy-in.lineA.xy;const float t=dot(glPixel-in.lineA.xy,delta)/dot(delta,delta);
 	const float reciprocalW=mix(in.lineA.w,in.lineB.w,t);
 	const float4 data=mix(in.dataA*in.lineA.w,in.dataB*in.lineB.w,t)/reciprocalW;
@@ -320,7 +322,17 @@ fragment SensorLOSFragment OriginalSensorLOSFragment(SensorLOSVarying in [[stage
  const float thinCoverage=clamp(halfWidth+.5f-distance(sourceFragment,centre),0.f,1.f);
  color.a*=thinCoverage;
 	// Keep texture implicit derivatives before coverage/alpha discard; do not mark hidden lines in stencil.
+#ifdef RECOIL_SENSORLOS_OUTLINE_ALPHA_FIRST
+	if(!viewportCovered||color.a<=0.0f||!SensorAlpha(color.a,u.parameters.y,u.options.w))discard_fragment();
+	const bool lineCovered=SensorLineCoveredEarly(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,u.counts.w,
+#ifdef SENSORLOS_PREPARED_CROSSING
+	 in.crossingSetup,in.interiorPixels,
+#endif
+	 coverageDepth);
+	if(!lineCovered)discard_fragment();
+#else
 	if(!viewportCovered||!lineCovered||color.a<=0.0f||!SensorAlpha(color.a,u.parameters.y,u.options.w))discard_fragment();
+#endif
 	return {color,mix(in.lineA.z,in.lineB.z,t)};
 }
 

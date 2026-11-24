@@ -33,6 +33,10 @@ public:
 	ZeroScaleStats GetZeroScaleStats() const;
 	ZeroScaleDrawStats GetZeroScaleDrawStats(std::size_t index) const;
 	void EncodeSameInputDraw(std::size_t index,id<MTL4RenderCommandEncoder> encoder,bool compact) const;
+	struct SpanRange { std::size_t base=0, count=0; };
+	struct SpanRanges { std::array<SpanRange,3> ranges{}; std::size_t count=0, liveRows=0; };
+	SpanRanges GetSameInputSpanRanges(std::size_t index,unsigned mode) const;
+	void EncodeSameInputSpanDraw(std::size_t index,id<MTL4RenderCommandEncoder>,unsigned mode) const;
  void EnableBoundaryDiagnosticsS01() noexcept;
  GrassReadDiagnosticS01 BoundaryDiagnosticS01() const noexcept;
  size_t VisibleDrawCountS01() const noexcept;

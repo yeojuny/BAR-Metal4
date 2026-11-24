@@ -109,6 +109,9 @@ struct Sensor31657CircleGPU::Impl {
 			source="#define RECOIL_SENSOR31657_EXACT_INTERIOR 1\n";
 			if(correctedDivision)source+="#define RECOIL_SENSOR31657_CORRECTED_DIVISION 1\n";
 		}
+		const char* tightQuad=std::getenv("BAR_NATIVE_RADAR_SONAR_TIGHT_QUAD");
+		if(tightQuad&&std::string_view(tightQuad)=="1")
+			source+="#define RECOIL_SENSOR31657_TIGHT_QUAD 1\n";
 		descriptor.source=String(source+NativeSensor31657CircleShaderSource);
 		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
 		options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
@@ -186,7 +189,7 @@ std::unique_ptr<PreparedSensor31657CircleDraw> Sensor31657CircleGPU::Prepare(Run
 	uniform.fragmentToLogical={float(logicalWidth)/renderWidth,float(logicalHeight),float(logicalHeight)/renderHeight,0};
 	uniform.distanceFade={defines.fadeStart,defines.fadeEnd,draw.program.fadeStrength,0};
 	uniform.values={defines.viewWidth,defines.viewHeight,defines.stippleRate,defines.maxHeight.value_or(0)};
-	uniform.parameters={draw.raster.lineWidth,draw.surface.alphaTest.reference,float(defines.circleSegments),0};
+	uniform.parameters={draw.raster.lineWidth,draw.surface.alphaTest.reference,float(defines.circleSegments),float(samples)};
 	uniform.options={uint32_t(!(source.renderCaps&1)),uint32_t(out.height.flipV),uint32_t(defines.visibilityCulling),
 		uint32_t(draw.surface.alphaTest.compare)|(uint32_t(draw.surface.alphaTest.enabled)<<8)|(uint32_t(defines.maxHeight.has_value())<<9)};
 	uniform.counts={draw.count,draw.first,draw.firstInstance,uint32_t(draw.program.circleCount)};

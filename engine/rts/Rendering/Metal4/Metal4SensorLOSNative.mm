@@ -127,6 +127,9 @@ struct SensorLOSGPU::Impl {
             if (reuse && std::string_view(reuse) == "1")
                 source += "#define RECOIL_SENSORLOS_SEGMENT_REUSE 1\n";
         }
+        const char* alphaFirst = std::getenv("BAR_NATIVE_SENSORLOS_OUTLINE_ALPHA_FIRST");
+        if (alphaFirst && std::string_view(alphaFirst) == "1")
+            source += "#define RECOIL_SENSORLOS_OUTLINE_ALPHA_FIRST 1\n";
         source += NativeSensorLOSShaderSource;
         descriptor.source = String(source);
 		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
