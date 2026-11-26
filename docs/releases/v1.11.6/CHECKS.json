@@ -1,0 +1,308 @@
+{
+  "status": "PACKAGED_SOURCE_AND_SIGNATURE_VERIFIED; GAME_RUNTIME_ACCEPTANCE_NOT_REPEATED",
+  "sourceClosure": {
+    "version": "1.11.6",
+    "sourceCommit": "b35ddace31e543a7f7c8a9974a7e9d272deb4d80",
+    "engineTree": "69adc6f5f36907a922d93ee861da474235a79aa7",
+    "previousReleaseCommit": "a1596f1e66401ef41fee8dda74dc41c42a4d78f7",
+    "signedEngineSHA256": "381d0e931c5417cf681abe8f7d18ce8525d6fddb840af424b5b71b94947a98f7",
+    "sourceHashes": {
+      "engine/rts/Rendering/Metal4/GrassBendShortlist.h": "57e26b3ac7792e890a2c94135cc27e2c4041ca51e612f171af62d4649258e998",
+      "engine/rts/Rendering/Metal4/GrassDenseScaleCompaction.h": "b86bfa92cba6ba9d95029ba384ec8b9803dd5e1ee56de7e4bc600bc5b669a746",
+      "engine/rts/Rendering/Metal4/GrassZeroScaleCompaction.h": "30d4ca6c881873030e5049abc30b45fe8069dc231c24742b95791fadbaeb5093",
+      "engine/rts/Rendering/Metal4/Metal4Bloom.mm": "90b5d95b3c2d8ecb518f639081129a6ca5ef5f1754d83aa57db226c0b80c7fc0",
+      "engine/rts/Rendering/Metal4/Metal4BumpWater.h": "0107955864f499e31a34210951e28180f373e7be44fab0df14fc3b7ef86e923a",
+      "engine/rts/Rendering/Metal4/Metal4BumpWater.mm": "a91178a037db00c78bdd9463342764676205a8ccbb78dedfd652f18af71d6e87",
+      "engine/rts/Rendering/Metal4/Metal4CUSSource.mm": "20a67067d47de4adef9b370df0f487f66f0d5c12a0e4d8f5cb4c31d7267b93ac",
+      "engine/rts/Rendering/Metal4/Metal4DeferredLights.mm": "a0e6d558066c5f259c174ba8df32206bc844d4ab0a4bf23ea924f82c09c8bc05",
+      "engine/rts/Rendering/Metal4/Metal4EngineShadow.mm": "3fd12d16c6cfe0e9557f6b2e4fad3cd4d5e4031b62584da5e9273d0dc11a0a43",
+      "engine/rts/Rendering/Metal4/Metal4Grass.h": "c2462f2a3a8f25d7c5e10f859521b637406fd31edbde7e5d5e5f2f1c4de090a6",
+      "engine/rts/Rendering/Metal4/Metal4Grass.mm": "e583d31c90b1e7d01d0d528a559510f0db87caa037453642d74b2d87bc745908",
+      "engine/rts/Rendering/Metal4/Metal4GroundDecal.mm": "8721e6e8517ea612b98e948f4d15df62c143769adbdba52f34a9e3c1a3be6a81",
+      "engine/rts/Rendering/Metal4/Metal4NamedVolumeNative.mm": "9428af5fe51cb1dc3ecf413b15b7e44dbb55f82067d05f9b59b4dd280eba9e10",
+      "engine/rts/Rendering/Metal4/Metal4RTTFullClear244.h": "370343016412bddf118f87731f4dfc15589d71d09dcc3e27a709526e599ca32c",
+      "engine/rts/Rendering/Metal4/Metal4ResidencyCommit.h": "df0f5217c85da86c4b2860be04d34469a790ec5f26f2519745f7a88f388ccf13",
+      "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h": "6e49819c96c300aeeb046e4674cae7d510fd446c60f04e5cd883e64b9e92ed59",
+      "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm": "3d54dd95cede93c28dd163a0c4f9554cc49e2869b21fa46d676208d67868262c",
+      "engine/rts/Rendering/Metal4/Metal4SSAO.mm": "c9de73f5c0b78635a69f22adbe2b1775801cf3e7fd41effed0cf05b93c096a62",
+      "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm": "eb32b769d921d9ebfa930d26fbb5d2f5d9401d54cc8973eaf96d2723943f0227",
+      "engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm": "0e4525f0fbcb8047807e4f5065b06acf8ef438027cc5ab3a0d91af399248c279",
+      "engine/rts/Rendering/Metal4/Metal4ShadowTerrainGeometryCache.inc": "a143c033d009fbe83053bd3f61f2e4036b74adcd76a5a0b33b7b2e943229e53b",
+      "engine/rts/Rendering/Metal4/Metal4TerrainSampling211.h": "18669f1fcd9bd1b29e275cdee18260471685e7967679ceb97ba1a1a46c2b145b",
+      "engine/rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm": "402fd0f8df5ca001ef56b22db6fbef996ad71de5659fa6a62ff68601b01a097e",
+      "engine/rts/Rendering/Metal4/Metal4WorldInfo.mm": "3b1ed508f0a611dde349c1dca0878f2c38f972c4e61c78f4407c0f7df5c3e939",
+      "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm": "b9e339a92163d1fa5e58c5e78d402ae052f3a97e8fa6dce092a908dbf80a56e7",
+      "engine/rts/Rendering/Metal4/NativeBloomShaders.h": "b2a12165420bbc41d2cba93ef54f2783fcb8a8452581a5ac74fc0c5bd8bceb3e",
+      "engine/rts/Rendering/Metal4/NativeBumpWaterShaders.h": "1b550556e2ecceac10a551214c77b3ac922c4a07ed8e860d53d3124ea00eeb0d",
+      "engine/rts/Rendering/Metal4/NativeDeferredLightShaders.h": "45a19afb0da561c6e5b00ea1c2ea10183e92bdd00292a8aca81c9c7bcb40ec22",
+      "engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h": "9b8183b186703098bab1a35a66eafe9af5de6a263728a3b3082148f8c0725817",
+      "engine/rts/Rendering/Metal4/NativeSSAOShaders.h": "af9964508375b036b20d6eeeedf52d62bc8881aa2dfd7288facde0c4be5514e5",
+      "engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h": "db63f66b52a55151dba58d5c697b7961636446c8cb5925920944590b233f0d76"
+    },
+    "verifiedLinkedArchiveMembers": {
+      "Metal4WorldRenderer.mm.o": "7eb07e63838e5aace901dd5d840b292f00f6254a0933e2f634395bab4811f311",
+      "Metal4CUSSource.mm.o": "873d38953c272d6d0c729b69a3595a83036c7162547eb3316b2d6ba8715d839a",
+      "Metal4EngineShadow.mm.o": "d032555189134209b62eba0343132fbe6db48f24b4665f56f173e7b83f728ec4",
+      "Metal4NamedVolumeNative.mm.o": "e54dc0b25c926d51c96e95931bb577d3676d873875eb2e1bcc3b9b658dce702e",
+      "Metal4SSAO.mm.o": "ce341d187889bd86e07332915c5749c2f2e2fa4d849ce4cee0636b768578accd",
+      "Metal4DeferredLights.mm.o": "28e39f9d4e5450e70a2fe1dcfc0e1b0bf721ad3c37d5b80adc0d996cdd8b41c9",
+      "Metal4Bloom.mm.o": "37a01fa9a60307efee098c5d4a0ac94bd099d9b311f83e8e78da7ab7a1c3cbc8",
+      "Metal4Grass.mm.o": "b17ccaac33809e324d5bada835806430d754c0590f8ffffcb42c780716d51f1d",
+      "Metal4SensorLOSNative.mm.o": "5849518c1267f35957e26408177f7b2ac66f4a375dfd352053bdd649960dde4e",
+      "Metal4GroundDecal.mm.o": "9ab4bd55a08ac02eed9902e3f679da2ee84298079e2e1a8b2e2efed8905ca93e",
+      "Metal4BumpWater.mm.o": "13077c26b542f2d59fe1187e9206e1ff94d0aef9d6552d3cf1c82bd72ea3cd85",
+      "Metal4TerrainSourceGPU.mm.o": "afde7d3e8d38085a7c514e39be0b65d38e29b7eaffeb329b11b3b6306dbc5e63",
+      "Metal4RuntimeNative.mm.o": "9eaff7a875ff46a830e24193cba8d97271a3bcf0a895244757c2395cb253999d",
+      "Metal4ScreenNative.mm.o": "a5f280709505af199bd6b9058f8a4abc7bde6940f8ab8322c9a1de1a8426161b",
+      "Metal4WorldInfo.mm.o": "1fbfb0c41fa48d78ce859f6c340b336825548bd44d12f8b7b8c9727379718a1d"
+    },
+    "stages": [
+      {
+        "stage": "precision-revisit-v115-20261124/build",
+        "sha256": "ab669b8ebb4025a182de508f4b9b6d503af2dcb15174501d6246b516e1ddd310"
+      },
+      {
+        "stage": "precision-revisit-v115-20261124/cus-fragment-build",
+        "sha256": "90b1f70be10a140bb58da32e07c80ce4fc0322cc62b03ff83383f6a5168903c2"
+      },
+      {
+        "stage": "supreme-ssao-cross-backend-20261124/projection-default-build",
+        "sha256": "34f6cdc8b5c01f114cc2be48dcd9d964a3986d12914b7044ab58f2a6d506508a"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/selected-merge/build",
+        "sha256": "828894093e7ead8b4103eafaff5a01be32297aa5fd9cbe927d2abf6381a176e8"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/selected-merge/build",
+        "sha256": "296f32f988d39fa160726b695bdd1fe2f4e4684fe66d78770338f801c6c46c62"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/shallow-gpu-compare/dds3d-fix/build",
+        "sha256": "106177c8fc4af1124d28f9d0f964e804a7ff377b49ae9d950ef5d8372d2cc1ec"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/water4-readonly/build",
+        "sha256": "1936a045b15ffa4b816cf087b10cb2eb89bc3da75852e3232665c57f713bfaed"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/water4-tick-transition/build",
+        "sha256": "0f63d4674565d93ed0de74c2d622b1f728b58f377b02adb8f2d334238eb368c5"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/water4-fan-selected/build",
+        "sha256": "ba0f21d64e0d8e3f3672af2c7c52fefa5150dd7c8a696d5b273241fbd8662608"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/jade-cross-backend/shadow-buckets-build",
+        "sha256": "a3d6be05ae5412d4ec6901a1dea8397de2abfcd63ff92cc47e494baa2a1d8ad9"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/jade-cross-backend/model-encoding-followup/roster-v2-build",
+        "sha256": "285c07d2458566eaa61433c188ae30b69aba4e932ab826afcb6c6eaf10c14690"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/jade-cross-backend/model-encoding-followup/residency-bulk-build",
+        "sha256": "d1c929220390eb391c8f691090e3e8dde011f14f92e04c3569720df4a190f8d1"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/jade-cross-backend/model-encoding-followup/terrain-shadow-cache/adaptive/build",
+        "sha256": "365957776593679e127c6df2a46b5d676a2dfd21c12232ca7b7d85098691c016"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/jade-cross-backend/model-encoding-followup/tick878-hitch-audit/production-build",
+        "sha256": "0bc6c4f07d51b92f460280feecb0f5f77321a5d9df12c7b433741282b03aa1f7"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/jade-cross-backend/model-encoding-followup/accumulation-range-rtt-cpuread-20261126/build",
+        "sha256": "a7ad4e679ce6d2f9d4257f7433a3bb10ebd0169fc511d50c2ce6a95e7981c1b5"
+      },
+      {
+        "stage": "shader-specialization-audit-20261125/late-effects-followup/jade-cross-backend/model-encoding-followup/worldinfo-after-accumulation-20261126/build",
+        "sha256": "381d0e931c5417cf681abe8f7d18ce8525d6fddb840af424b5b71b94947a98f7"
+      }
+    ],
+    "selection": {
+      "fixed_on": {
+        "BAR_NATIVE_SMF_FORWARD_CANONICAL_SURFACES": "1",
+        "BAR_NATIVE_GRASS_DENSE_REFERENCE": "1",
+        "BAR_NATIVE_CUS_RELAXED_FRAGMENT_REVISIT": "1",
+        "BAR_NATIVE_SSAO_PROJECTION_VARIANT": "7",
+        "BAR_NATIVE_BUMPWATER_SURFACE_VARIANT": "6",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_ONLY": "1",
+        "BAR_NATIVE_SSAO_BLUR_DIRECT_COLOR": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_VARIANT": "6",
+        "BAR_NATIVE_BLOOM_COLOR_VARIANT": "3",
+        "BAR_NATIVE_WATER4_READONLY_QUEUE": "1",
+        "BAR_NATIVE_WATER4_TICK_TRANSITION": "1",
+        "BAR_NATIVE_SENSORLOS_FAN_SPECIALIZED": "1",
+        "BAR_NATIVE_CUS_SHADOW_BUCKETS": "1",
+        "BAR_NATIVE_RESIDENCY_DIFF220": "1",
+        "BAR_NATIVE_RESIDENCY_BULK_DELTA": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_WORKINGSET": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_ADAPTIVE": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_ASYNC_WARM878": "1",
+        "BAR_NATIVE_RANGE_DIVISION233": "1",
+        "BAR_NATIVE_RTT_CLEAR244": "1",
+        "BAR_NATIVE_CPU_READ_PACKET220": "2",
+        "BAR_NATIVE_WORLDINFO_POOL245": "1"
+      },
+      "fixed_off": {
+        "BAR_NATIVE_CUS_RELAXED_MATH_REVISIT": "0",
+        "BAR_NATIVE_CUS_RELAXED_DEFERRED_FRAGMENT_REVISIT": "0",
+        "BAR_NATIVE_SMF_DEFERRED_RELAXED_REVISIT": "0",
+        "BAR_NATIVE_SSAO_DIRECT_DEPTH_SAMPLE": "0",
+        "BAR_NATIVE_SSAO_RELAXED_FRAGMENT": "0",
+        "BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH": "0",
+        "BAR_NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_FORWARD": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_DEFERRED": "0",
+        "BAR_NATIVE_TERRAIN_DEFINITION232": "0",
+        "BAR_NATIVE_TRIAL_CUBE_SAMPLER_COLD_DESCRIPTOR": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_SINGLE_CELL_PROGRAM": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_COMMON_MATRICES": "0",
+        "BAR_NATIVE_TRIAL_BLOOM_PIPELINE_KEY_VIEW": "0",
+        "BAR_NATIVE_TRIAL_DECAL_FIXED_INDEX_REUSE": "0",
+        "BAR_NATIVE_DEFERRED_LIGHT_WARM_WITNESS": "0",
+        "BAR_NATIVE_WORLDINFO_POOL245_WITNESS": "0"
+      }
+    },
+    "sourceClosure": "Exact changed source overlay inputs and final linked member hashes; not a fresh clean-machine rebuild."
+  },
+  "packageSHA256": "b55a8fe534e0cc89c1571e4d5fe6433d920f4c4664632ef9b7f582585f25d90b",
+  "engineSHA256": "381d0e931c5417cf681abe8f7d18ce8525d6fddb840af424b5b71b94947a98f7",
+  "legion": "Not verified; user will test. Isolated application check was stopped before a game started. No claim of a Legion fix.",
+  "worldInfoABBA": {
+    "scope": "All That Simmers, same signed engine, 300\u20131500, CAP2, AC Automatic, two-minute rests, both arms have allocation witness enabled; final release disables witness.",
+    "OFF": {
+      "average_fps": 235.84116081479738,
+      "one_percent_low_fps": 153.03643724696354,
+      "intervals": 18866,
+      "excluded": 0,
+      "longest_ms": 12.0
+    },
+    "ON": {
+      "average_fps": 236.14773761382685,
+      "one_percent_low_fps": 156.3275434243176,
+      "intervals": 18891,
+      "excluded": 0,
+      "longest_ms": 10.0
+    },
+    "runs": [
+      {
+        "arm": "OFF",
+        "average_fps": 235.21912275031372,
+        "one_percent_low_fps": 150.31645569620252,
+        "worldinfo": {
+          "requests": 1374,
+          "allocated": 1374,
+          "reused": 0,
+          "allocated_bytes": 15510503424,
+          "peak_pool_bytes": 0,
+          "peak_slots": 0
+        },
+        "strict_sample_match": true,
+        "rest_seconds": 615.6418697909976
+      },
+      {
+        "arm": "ON",
+        "average_fps": 235.31912025174864,
+        "one_percent_low_fps": 155.99343185550083,
+        "worldinfo": {
+          "requests": 1609,
+          "allocated": 3,
+          "reused": 1606,
+          "allocated_bytes": 33865728,
+          "peak_pool_bytes": 33865728,
+          "peak_slots": 3
+        },
+        "strict_sample_match": true,
+        "rest_seconds": 124.11562387499725
+      },
+      {
+        "arm": "ON",
+        "average_fps": 236.97629279095426,
+        "one_percent_low_fps": 156.76567656765678,
+        "worldinfo": {
+          "requests": 1612,
+          "allocated": 3,
+          "reused": 1609,
+          "allocated_bytes": 33865728,
+          "peak_pool_bytes": 33865728,
+          "peak_slots": 3
+        },
+        "strict_sample_match": true,
+        "rest_seconds": 124.1168577080025
+      },
+      {
+        "arm": "OFF",
+        "average_fps": 236.46318333765907,
+        "one_percent_low_fps": 155.99343185550083,
+        "worldinfo": {
+          "requests": 1612,
+          "allocated": 1612,
+          "reused": 0,
+          "allocated_bytes": 18197184512,
+          "peak_pool_bytes": 0,
+          "peak_slots": 0
+        },
+        "strict_sample_match": true,
+        "rest_seconds": 124.11882133299514
+      }
+    ]
+  },
+  "otherMaps": {
+    "Seths": {
+      "avgFPS": 113.46932965108728,
+      "onePercentLowFPS": 72.55520527619939,
+      "matchedScenario": true,
+      "historicalReference": {
+        "fps": 111.55278728862021,
+        "low": 37.910698283638624,
+        "kind": "historical, not paired"
+      }
+    },
+    "Supreme": {
+      "avgFPS": 149.9574937546056,
+      "onePercentLowFPS": 93.60374414976599,
+      "matchedScenario": true,
+      "historicalReference": {
+        "fps": 148.25,
+        "low": 98.19967250703819,
+        "kind": "historical, not paired"
+      }
+    },
+    "Jade": {
+      "avgFPS": 63.970204870207176,
+      "onePercentLowFPS": 48.417133929097844,
+      "matchedScenario": true,
+      "historicalReference": {
+        "fps": 63.995799415558814,
+        "low": 46.67863621800554,
+        "kind": "historical, not paired"
+      }
+    },
+    "Shallow": {
+      "avgFPS": 175.05437395672763,
+      "onePercentLowFPS": 116.77631578947368,
+      "matchedScenario": true,
+      "historicalReference": {
+        "fps": 167.15,
+        "low": 110.56105628805454,
+        "kind": "historical, not paired"
+      }
+    },
+    "Mediterraneum": {
+      "avgFPS": 144.23220764760248,
+      "onePercentLowFPS": 101.75438614342875,
+      "matchedScenario": true,
+      "historicalReference": {
+        "fps": 140.47851003468332,
+        "low": 98.958333505136,
+        "kind": "historical, not paired"
+      }
+    }
+  },
+  "otherMapsScope": "One clean trial per map, previous cumulative binary a7ad4e67 without WorldInfo. Historical reference not a paired A/B. Do not attribute differences to the final WorldInfo release.",
+  "visualLimitations": "Selected high-speed shader variants and dense Grass can differ by small color/coverage values from earlier modes. Full final-screen parity was not established for the cumulative build. Simulation logic unchanged by these rendering overlays. No multiplayer claim."
+}
