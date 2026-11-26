@@ -1,3 +1,4 @@
+#include "System/Log/ILog.h"
 #include "Rendering/Backend/NativeTerrainMatrixMemo.h"
 #include <cstdlib>
 #include <cstring>
@@ -193,6 +194,12 @@ bool EnabledTerrainSplatExperiment(const char* name)
 	return value!=nullptr&&std::string_view(value)=="1";
 }
 
+bool TerrainCanonicalSurfacesRequested()
+{
+	static const bool enabled=EnabledTerrainSplatExperiment("BAR_NATIVE_SMF_FORWARD_CANONICAL_SURFACES");
+	return enabled;
+}
+
 bool TerrainSplatSkipRequested()
 {
 	static const bool enabled=EnabledTerrainSplatExperiment("BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO");
@@ -254,8 +261,10 @@ std::string ShaderSource(const Profile& profile,uint32_t imageDepthMask,bool alp
 	for(const auto& abi:profile.fragment) {
 		const bool color=abi.kind==ImageKind::Color2D;
 		const bool normals=color&&abi.name=="normalsTex";
+		const bool direct=color&&(sampling211==SMFSamplerPolicy211::Canonical||
+			(sampling211==SMFSamplerPolicy211::CanonicalExceptShadowColor&&abi.name!="shadowColorTex"));
 		const char* helper=normals?"SMFSampleNormals211":
-			(color&&sampling211==SMFSamplerPolicy211::Canonical?"SMFSampleIdentity211":"SMFSample2D");
+			(direct?"SMFSampleIdentity211":"SMFSample2D");
 		helpers+="#define NATIVE_SMF_SAMPLE211_"+abi.name+" "+helper+"\n";
 	}
 	auto specialized=NativeSMFSpecializeFragment211(std::move(shaderSource),helpers,sampling211);
@@ -323,12 +332,13 @@ private:
 public:
 	const NativeTerrainProgramIdentity identity;
 	const Profile profile;
-	static int NormalSlot211(const Profile& p) {
+	static int ColorSlot211(const Profile& p,std::string_view name) {
 		for(size_t slot=0;slot<p.fragment.size();++slot)
-			if(p.fragment[slot].kind==ImageKind::Color2D&&p.fragment[slot].name=="normalsTex")return int(slot);
+			if(p.fragment[slot].kind==ImageKind::Color2D&&p.fragment[slot].name==name)return int(slot);
 		return -1;
 	}
 	const int normalSlot211;
+	const int shadowColorSlot211;
 	const bool samplerSourceSupported211=NativeSMFSamplerSourceSupported211(smforiginal::SHADERS);
 	const bool normalSplat=profile.Has("SMF_DETAIL_NORMAL_TEXTURE_SPLATTING");
 	// Exact192 forward profiles, reconstructed from the selected original map,
@@ -336,7 +346,13 @@ public:
 	// math policy to another feature combination or an unobserved family.
 	static MTLMathMode MathMode195(const Profile& p) {
 		if(InterventionFastMathEnabled())return MTLMathModeFast;
-		if(p.border||p.deferred||p.composite||p.combined)return MTLMathModeSafe;
+        static const bool deferredRelaxed=EnabledTerrainSplatExperiment("BAR_NATIVE_SMF_DEFERRED_RELAXED_REVISIT");
+        if(deferredRelaxed&&p.deferred&&!p.border&&!p.composite){
+            static const bool reported=[]{LOG("[PrecisionRevisit] Terrain deferred Relaxed");return true;}();
+            (void)reported;
+            return MTLMathModeRelaxed;
+        }
+        if(p.border||p.deferred||p.composite||p.combined)return MTLMathModeSafe;
 		Definitions expected={{"SMF_TEXSQUARE_SIZE","1024.000000"},{"SMF_INTENSITY_MULT","0.823486"},
 			{"SMF_ADV_SHADING",""},{"SMF_SPECULAR_LIGHTING",""},{"SMF_DETAIL_TEXTURE_SPLATTING",""},
 			{"SMF_DETAIL_NORMAL_TEXTURE_SPLATTING",""},{"SMF_DETAIL_NORMAL_DIFFUSE_ALPHA",""},
@@ -351,7 +367,9 @@ public:
 	mutable std::map<std::tuple<uint32_t,bool,MTLMathMode,SMFSamplerPolicy211,unsigned>,id<MTLLibrary>> imageLibraries;
 	mutable std::map<TerrainPipelineKeyType,id<MTLRenderPipelineState>> pipelines;
 	OriginalProgram(NativeTerrainProgramIdentity id,Profile p,uint64_t g,std::shared_ptr<const int> f):
-		identity(std::move(id)),profile(std::move(p)),normalSlot211(NormalSlot211(profile)),mathMode195(MathMode195(profile)),generation(g),factory(std::move(f)){}
+		identity(std::move(id)),profile(std::move(p)),normalSlot211(ColorSlot211(profile,"normalsTex")),
+		shadowColorSlot211(TerrainCanonicalSurfacesRequested()&&!profile.MRT()&&!profile.border&&!profile.composite
+			?ColorSlot211(profile,"shadowColorTex"):-1),mathMode195(MathMode195(profile)),generation(g),factory(std::move(f)){}
 	uint64_t ContextGeneration()const noexcept override{return identity.contextGeneration;}
 	uint64_t LibraryGeneration()const noexcept override{return linkCertificate?linkCertificate->libraryGeneration:0;}
 	bool HasImmutableDefinition()const noexcept override{return LibraryGeneration()!=0;}
@@ -881,7 +899,8 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		};
 		const size_t fragmentOffset=original->profile.composite?0:1;
 		if(fragmentOffset)resolve(NativeTerrainUniformSlot::heightMapTex,ImageKind::Color2D,uniforms.heightImage,true);
-		SMFSamplerSelection211 sampling211(original->samplerSourceSupported211,original->normalSlot211);
+		SMFSamplerSelection211 sampling211(original->samplerSourceSupported211,original->normalSlot211,
+			target.samples==1?original->shadowColorSlot211:-1);
 		for(size_t slot=0;slot<original->profile.fragment.size();++slot){
 			const auto& abi=original->profile.fragment[slot];
 			resolve(abi.slot,abi.kind,uniforms.images[slot],false);

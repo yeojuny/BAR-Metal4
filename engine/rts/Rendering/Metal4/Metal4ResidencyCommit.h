@@ -14,15 +14,15 @@ namespace rendering::metal4 {
 class ResidencyCommitTask {
 public:
 	struct Timing { uint64_t commitNs=0, dispatchNs=0, joinNs=0;
-  uint64_t diffNs=0, added=0, removed=0, requested=0; bool workerDiff220=false; };
+  uint64_t diffNs=0, added=0, removed=0, requested=0; bool workerDiff220=false,bulk=false; };
 	ResidencyCommitTask() = default;
 	ResidencyCommitTask(const ResidencyCommitTask&) = delete;
 	ResidencyCommitTask& operator=(const ResidencyCommitTask&) = delete;
 	~ResidencyCommitTask() { try { Finish(); } catch (...) {} }
 	bool Active() const noexcept { return bool(pending); }
-	void Start(dispatch_queue_t queue, id<MTLResidencySet> residency, bool measure) {
+	void Start(dispatch_queue_t queue, id<MTLResidencySet> residency, bool measure,Timing preset) {
 		if(pending || !queue || !residency)throw std::runtime_error("Invalid asynchronous residency commit");
-		auto job=std::make_shared<Job>();job->residency=residency;job->measure=measure;
+		auto job=std::make_shared<Job>();job->residency=residency;job->measure=measure;job->timing=preset;
 		job->dispatched=measure?Now():0;pending=job;
 		dispatch_async(queue, ^{
 			@autoreleasepool {
@@ -41,21 +41,38 @@ public:
  // Snapshot ownership is acquired before publishing pending or dispatching.
  // No table mutation, renderer callback or frame access occurs on the worker.
  void StartDiff220(dispatch_queue_t queue, id<MTLResidencySet> residency,
-                   NSHashTable* old, NSHashTable* next, uint64_t requested, bool measure) {
+                   NSHashTable* old, NSHashTable* next, uint64_t requested, bool measure,bool bulk) {
   if(pending || !queue || !residency || !next)throw std::runtime_error("Invalid asynchronous residency diff");
   auto job=std::make_shared<Job>();job->residency=residency;job->measure=measure;
-  job->old220=old;job->next220=next;job->timing.workerDiff220=true;job->timing.requested=requested;
+  job->old220=old;job->next220=next;job->timing.workerDiff220=true;job->timing.bulk=bulk;job->timing.requested=requested;
   job->dispatched=measure?Now():0;pending=job;
   dispatch_async(queue, ^{
    @autoreleasepool {
     const auto start=job->measure?Now():0;
     try {
      @try {
+      if(job->timing.bulk){
+       // Both immutable pointer-identity tables retain every allocation until
+       // completion. Batch the identical old-minus-next then next-minus-old
+       // operations; no registration omitted, no commit moved past submit.
+       __unsafe_unretained id<MTLAllocation> batch[128];NSUInteger n=0;
+       for(id<MTLAllocation> allocation in job->old220)if(![job->next220 containsObject:allocation]){
+        batch[n++]=allocation;if(job->measure)++job->timing.removed;
+        if(n==128){[job->residency removeAllocations:batch count:n];n=0;}
+       }
+       if(n)[job->residency removeAllocations:batch count:n];n=0;
+       for(id<MTLAllocation> allocation in job->next220)if(![job->old220 containsObject:allocation]){
+        batch[n++]=allocation;if(job->measure)++job->timing.added;
+        if(n==128){[job->residency addAllocations:batch count:n];n=0;}
+       }
+       if(n)[job->residency addAllocations:batch count:n];
+      } else {
       for(id<MTLAllocation> allocation in job->old220)if(![job->next220 containsObject:allocation]){
        [job->residency removeAllocation:allocation];if(job->measure)++job->timing.removed;
       }
       for(id<MTLAllocation> allocation in job->next220)if(![job->old220 containsObject:allocation]){
        [job->residency addAllocation:allocation];if(job->measure)++job->timing.added;
+      }
       }
       const auto commitStart=job->measure?Now():0;
       if(job->measure){job->timing.diffNs=commitStart-start;job->timing.dispatchNs=start-job->dispatched;}

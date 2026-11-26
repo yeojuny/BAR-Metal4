@@ -33,6 +33,7 @@ struct AtlasResources {
 struct InstanceResources {
 	std::shared_ptr<const NativeGroundDecalInstances> source;
 	GroundDecalExpiredTrackPrefix prefix;
+ bool allTracks=false;
 	__strong id<MTLBuffer> buffer=nil;
 
 	size_t Count() const noexcept {return source->values.size()-prefix.rows;}
@@ -63,6 +64,20 @@ bool DiscardRejected()
     return enabled;
 }
 
+bool TrackOnlyRequested()
+{
+ static const bool enabled=[] {const char* v=std::getenv("BAR_NATIVE_GROUND_DECAL_TRACK_ONLY");return !v||!*v||std::strcmp(v,"1")==0;}();
+ return enabled&&!InterventionFastMathEnabled();
+}
+bool TrackOnlyCensus()
+{
+ static const bool diagnostic=std::getenv("BAR_NATIVE_GROUND_DECAL_PROJECTION_SAME_INPUT_DIR")!=nullptr;
+ return TrackOnlyRequested()||diagnostic;
+}
+bool TrackMinimap(MTLPixelFormat f)
+{
+ return f==MTLPixelFormatBC1_RGBA||f==MTLPixelFormatRGBA8Unorm||f==MTLPixelFormatBGRA8Unorm;
+}
 bool SkipUnusedTerrainColor(uint32_t samples,MTLPixelFormat minimapFormat)
 {
 	static const bool enabled=[] {
@@ -318,8 +333,8 @@ void PreparedGroundDecal::DidComplete()
         instances.size(),unsigned(impl->usedIndexedDraw));
 }
 struct GroundDecalGPU::Impl {
-	using Key=std::tuple<MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,bool,bool,uint32_t,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
-	using LibraryKey=std::tuple<bool,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
+	using Key=std::tuple<MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,bool,bool,uint32_t,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
+	using LibraryKey=std::tuple<bool,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
 	std::array<id<MTLComputePipelineState>,2> worldPositionPipelines{};
 	std::map<LibraryKey,id<MTLLibrary>> libraries;
@@ -330,7 +345,7 @@ struct GroundDecalGPU::Impl {
 	float lastInstanceAdjustedFrame=0.0f;
 	unsigned lastCoverageTick=0;
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool atlas,bool high,uint32_t samples,bool validation,double& milliseconds,bool shadows=false,bool skipUnusedTerrainColor=false,bool countCoverage=false,bool reuseWorldPosition=false,
-		std::optional<bool> coldAttenuationOverride=std::nullopt){
+		std::optional<bool> coldAttenuationOverride=std::nullopt,bool trackOnly=false){
 				static const bool coldGlow=[] {const char* value=std::getenv("BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW");return value && std::strcmp(value,"1")==0 && !InterventionFastMathEnabled();}();
 		const bool exactColdGlow=coldGlow&&samples==1&&!atlas;
 		static const bool coldAttenuationEnabled=[] {
@@ -349,8 +364,9 @@ struct GroundDecalGPU::Impl {
 			return value && std::strcmp(value, "1") == 0 && !InterventionFastMathEnabled();
 		}();
 		const bool trackEarlyReject = trackEarlyRejectEnabled && !atlas && !high && samples == 1;
-		const LibraryKey libraryKey{high,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,discard,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject};
-		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
+		trackOnly=trackOnly&&!atlas&&!high&&samples==1&&!InterventionFastMathEnabled();
+		const LibraryKey libraryKey{high,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,discard,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject,trackOnly};
+		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject,trackOnly};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
 		const auto start=Clock::now();auto it=libraries.find(libraryKey);NSError* error=nil;
 		if(it==libraries.end()){auto o=[MTLCompileOptions new];o.mathMode=MTLMathModeSafe;o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(o);
 			auto msl=NativeGroundDecalShaderSource(high,shadows,skipUnusedTerrainColor,zeroAngle,reuseWorldPosition);
@@ -365,6 +381,7 @@ struct GroundDecalGPU::Impl {
             if(discard)
                 msl.insert(0,"#define BAR_GROUND_DECAL_DISCARD_REJECTED 1\n");
 			if(countCoverage)msl.insert(0,"#define BAR_GROUND_DECAL_COVERAGE 1\n");
+			if(trackOnly)msl.insert(0,"#define BAR_GROUND_DECAL_TRACK_ONLY 1\n");
 			if(trackEarlyReject)msl.insert(0,"#define BAR_GROUND_DECAL_TRACK_EARLY_REJECT 1\n");
 			auto lib=l.NewLibraryWithSource(String(msl),o,&error);Require(lib!=nil,"Cannot compile original ground decal family: "+Error(error));it=libraries.emplace(libraryKey,lib).first;
 			if(trackEarlyReject)
@@ -454,7 +471,10 @@ std::unique_ptr<PreparedGroundDecal> GroundDecalGPU::Prepare(RuntimeLease& l,std
 		auto upload=std::make_shared<InstanceResources>();
 		upload->source=frame->instances;
 		const auto rows=std::span<const NativeGroundDecalInstance>(frame->instances->values);
-		const NativeGroundDecalInstance empty{};
+if(TrackOnlyCensus()&&!rows.empty()){
+   upload->allTracks=std::all_of(rows.begin(),rows.end(),[](const auto& row){return (row.createParams5[0]&15u)==3u;});
+  }
+  const NativeGroundDecalInstance empty{};
 		const auto prefix=trimTracks&&!rewound?FindGroundDecalExpiredTrackPrefix(rows,frame->adjustedFrame):GroundDecalExpiredTrackPrefix{};
 		if(prefix.rows){
 			const auto suffix=rows.subspan(prefix.rows);
@@ -470,9 +490,14 @@ std::unique_ptr<PreparedGroundDecal> GroundDecalGPU::Prepare(RuntimeLease& l,std
 	impl->lastInstanceAdjustedFrame=frame->adjustedFrame;
 	p->instances=impl->instances;l.AddAllocation(p->instances->buffer);
 	p->worldPositions=WorldPositionsForDraw(l,*frame,images,p->instances->Count());
-	p->surfacePipeline=impl->Pipeline(l,color,depthFormat,stencilFormat,false,frame->highQuality,
+	const bool trackOnlyEligible=p->instances->allTracks&&p->instances->Count()&&TrackMinimap(m.texture.pixelFormat)&&
+    frame->sampleCount==1&&!frame->highQuality&&!InterventionFastMathEnabled();
+ if(TrackOnlyRequested()&&trackOnlyEligible){
+  static bool reported=false;if(!reported){reported=true;LOG("[GroundDecalTrackOnly] active instances=%zu",p->instances->Count());}
+ }
+ p->surfacePipeline=impl->Pipeline(l,color,depthFormat,stencilFormat,false,frame->highQuality,
 		frame->sampleCount,validation,milliseconds,frame->shadows,skipUnusedTerrainColor,
-		p->coverageTick!=0,p->worldPositions!=nil);
+		p->coverageTick!=0,p->worldPositions!=nil,std::nullopt,TrackOnlyRequested()&&trackOnlyEligible);
 	l.Retain(p->surfacePipeline);
 	const std::array<GroundDecalSceneImage,6> sources={h,n,m,images.shadowDepth,images.shadowColor,d};uint32_t flips=0;
 	for(size_t i=0;i<sources.size();++i){flips|=uint32_t(sources[i].flipV)<<i;if(sources[i].texture)l.AddAllocation(sources[i].texture);}

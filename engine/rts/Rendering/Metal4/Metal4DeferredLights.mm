@@ -11,9 +11,14 @@
 #include "Metal4NativeEffectState.h"
 #include "NativeDeferredLightShaders.h"
 #include <cstdlib>
+#include <atomic>
+#include <filesystem>
+#include <fstream>
+#include "System/Log/ILog.h"
 #include "Rendering/Backend/NativeCUSRenderInputs.h"
 #include "Rendering/Backend/NativeDeferredLightPrograms.h"
 #include "Rendering/Backend/NativeDeferredLightShaderABI.h"
+#include <chrono>
 
 #include <algorithm>
 #include <cmath>
@@ -28,12 +33,29 @@
 namespace rendering::metal4 {
 namespace {
 using deferredLightProgram::DrawUniforms;
+// Completion callbacks own only these result cells. They never access a
+// renderer, RuntimeLease, or LinkedProgram. The render owner alone adopts.
+struct WarmFragmentResult878 {
+ __strong id<MTLLibrary> library=nil;
+ std::uint64_t finished=0;
+ std::atomic<bool> ready{false};
+};
+struct WarmFragmentEntry878 {
+ __strong MTL4LibraryDescriptor* descriptor=nil;
+ __strong id<MTL4CompilerTask> task=nil;
+ std::shared_ptr<WarmFragmentResult878> result;
+ std::uint64_t queued=0;
+};
 struct LinkedProgram {
 	NativeDeferredLightProgramSource source;
 	__strong id<MTLLibrary> library = nil;
 	mutable __strong id<MTLLibrary> attachedLibrary = nil;
-	mutable std::map<DeferredLightPipelineKey, id<MTLRenderPipelineState>> pipelines;
+	mutable std::map<std::pair<DeferredLightPipelineKey,unsigned>, id<MTLRenderPipelineState>> pipelines;
+ mutable std::map<std::pair<bool,unsigned>,id<MTLLibrary>> directFragments;
+ mutable std::map<std::pair<bool,unsigned>,WarmFragmentEntry878> warm878;
+ mutable unsigned warmIssued878=0;
 };
+struct WarmRequest878 {const LinkedProgram* program;bool attached;unsigned profile;};
 float Define(const NativeDeferredLightProgramSource& source, const char* name)
 {
 	const auto& value = source.defines.at(name);
@@ -50,7 +72,12 @@ bool UniformActive(const NativeDeferredLightProgramSource& source, std::string_v
 	if (name == "noise3DCube" || name == "windX" || name == "windZ") return VolumeActive(source);
 	return true;
 }
-std::string SourceText(const NativeDeferredLightProgramSource& source, bool attached = false)
+unsigned Mode(unsigned p){return p&15u;}
+bool UsesDirect(unsigned m){return m==2||m>=5;}
+bool UsesSkip(unsigned m){return m==1||m==2||m>=5;}
+bool UsesKind(unsigned m){return m==3||m>=5;}
+bool UsesRelaxed(unsigned m){return m==4||m>=6;}
+std::string SourceText(const NativeDeferredLightProgramSource& source, bool attached = false,unsigned directProfile=0)
 {
 	std::ostringstream text;
 	text << std::setprecision(std::numeric_limits<float>::max_digits10);
@@ -81,8 +108,16 @@ std::string SourceText(const NativeDeferredLightProgramSource& source, bool atta
 		Define(source, "RAYMARCHSTEPS") == 4.0f && Define(source, "USE3DNOISE") == 1.0f)
 		text << "#define NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE 1\n";
 
-	text << deferredLights::SHADER;
-	return text.str();
+	if(directProfile){
+  const unsigned m=Mode(directProfile);
+  if(UsesDirect(m))text<<"#define NATIVE_DEFERRED_DIRECT_DEPTH 1\n#define NATIVE_DEFERRED_DEPTH_FLIP_MASK "<<((directProfile>>4)&7u)-1u<<"\n";
+  if(UsesSkip(m)&&source.defines.contains("SCREENSPACESHADOWS"))text<<"#define RECOIL_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH 1\n";
+  if(UsesKind(m))text<<"#define NATIVE_DEFERRED_SPECIAL_KIND "<<((directProfile>>7)&3u)<<"\n";
+  if(m==7)text<<"#define NATIVE_DEFERRED_MVK_ARITHMETIC 1\n";
+  if(m==8)text<<"#define NATIVE_DEFERRED_FIXED_SAMPLE_COUNT 1\n#define NATIVE_DEFERRED_SPECIAL_SHADOW_COUNT "<<(directProfile>>9)<<"\n";
+ }
+ text << deferredLights::SHADER;
+ return text.str();
 }
 id<MTLBuffer> Allocate(RuntimeLease& lease, size_t bytes)
 {
@@ -115,6 +150,103 @@ float Scalar(const std::map<std::string, std::vector<float>>& values, const char
 	if (found == values.end()) return fallback; // Original GLSL link-time default.
 	Require(found->second.size() == 1, "Original deferred-light uniform scalar arity differs");
 	return found->second.front();
+}
+// The bound producer is already required to be D32F. The shader only
+// consumes the red result of these two fragment helpers.
+unsigned CanonicalDepthProfile(const DrawUniforms& u,unsigned samples)
+{
+ if(samples!=1||InterventionFastMathEnabled())return 0;
+ for(unsigned slot=0;slot<2;++slot)
+  if(u.imageSwizzle[slot][0]!=0x1903u||u.depthMode[0][slot]==0x1906u)return 0;
+ return 1+(u.transport[0]&3u);
+}
+unsigned DeferredVariant(){
+ static const unsigned selected=[]{
+  const char* v=std::getenv("BAR_NATIVE_DEFERRED_LIGHT_VARIANT");
+  if(!v||!*v)return 6u;
+  char* end=nullptr;const auto n=std::strtoul(v,&end,10);
+  return end&&!*end&&n<9?unsigned(n):0u;
+ }();
+ return selected;
+}
+bool CanonicalDepthRequested(){return DeferredVariant()!=0;}
+
+uint64_t WarmNow878() noexcept {
+ return uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());
+}
+bool WarmWitness878(){
+ static const bool enabled=[](){const char* v=std::getenv("BAR_NATIVE_DEFERRED_LIGHT_WARM_WITNESS");return v&&std::strcmp(v,"1")==0;}();
+ return enabled;
+}
+bool WarmDeferred878(){
+ static const bool enabled=[](){const char* v=std::getenv("BAR_NATIVE_DEFERRED_LIGHT_ASYNC_WARM878");return v&&std::strcmp(v,"1")==0;}();
+ return enabled;
+}
+MTL4LibraryDescriptor* DirectFragmentDescriptor878(const LinkedProgram& program,bool attached,unsigned profile){
+ auto ld=[MTL4LibraryDescriptor new];ld.name=@"Deferred light canonical depth fragment";
+ ld.source=String(SourceText(program.source,attached,profile));
+ auto o=[MTLCompileOptions new];o.mathMode=UsesRelaxed(Mode(profile))?MTLMathModeRelaxed:MTLMathModeSafe;
+ o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(o);ld.options=o;return ld;
+}
+void QueueWarmSiblings878(RuntimeLease& lease,const LinkedProgram& program,bool attached,unsigned current) noexcept {
+ // Only the user-selected mode 6. The observed depth orientation/profile and
+ // attachment condition are exact and unchanged; only the legal shape field
+ // (point/beam/cone) varies. No map or simulation-tick classification.
+ if(!WarmDeferred878()||Mode(current)!=6u)return;
+ try {
+  const unsigned family=current&~(3u<<7);
+  for(unsigned kind=0;kind<3&&program.warmIssued878<6;++kind){
+   const unsigned profile=family|(kind<<7);const auto key=std::pair{attached,profile};
+   if(profile==current||program.directFragments.contains(key)||program.warm878.contains(key))continue;
+   auto result=std::make_shared<WarmFragmentResult878>();auto descriptor=DirectFragmentDescriptor878(program,attached,profile);
+   const auto queued=WarmNow878();
+   auto task=[lease.Compiler() newLibraryWithDescriptor:descriptor completionHandler:^(id<MTLLibrary> library,NSError* error){
+    @autoreleasepool { (void)error;result->library=library;result->finished=WarmNow878();result->ready.store(true,std::memory_order_release); }
+   }];
+   ++program.warmIssued878;
+   if(task){program.warm878.emplace(key,WarmFragmentEntry878{descriptor,task,result,queued});
+    if(WarmWitness878())LOG("[DeferredLightWarm878] event=queued profile=%u attached=%u source=%s queued_ns=%llu",profile,unsigned(attached),program.source.fragmentSHA512.c_str(),(unsigned long long)queued);}
+  }
+ }catch(...){/* optional prewarm failure cannot alter original draw path */}
+}
+bool AdoptWarmFragment878(RuntimeLease& lease,const LinkedProgram& program,std::pair<bool,unsigned> key) {
+ if(!WarmDeferred878())return false;
+ auto w=program.warm878.find(key);if(w==program.warm878.end())return false;
+ const auto result=w->second.result;
+ if(!result->ready.load(std::memory_order_acquire)){
+  if(WarmWitness878())LOG("[DeferredLightWarm878] event=not_ready profile=%u attached=%u",key.second,unsigned(key.first));
+  program.warm878.erase(w);return false; // original sync fallback; callback still owns its cell
+ }
+ auto library=result->library;
+ if(!library||library.device!=lease.Device()){
+  if(WarmWitness878())LOG("[DeferredLightWarm878] event=failed profile=%u attached=%u",key.second,unsigned(key.first));
+  program.warm878.erase(w);return false;
+ }
+ // Exact immutable source and compile options from this program's own task.
+ // Register only on the original renderer/RuntimeLease owner. Preserve all
+ // sample shading/identity validation and per-lease retained ownership.
+ lease.RegisterShaderSource(library,w->second.descriptor);
+ program.directFragments.emplace(key,library);
+ if(WarmWitness878())LOG("[DeferredLightWarm878] event=adopt profile=%u attached=%u source=%s queued_ns=%llu finished_ns=%llu adopt_ns=%llu",key.second,unsigned(key.first),program.source.fragmentSHA512.c_str(),(unsigned long long)w->second.queued,(unsigned long long)result->finished,(unsigned long long)WarmNow878());
+ program.warm878.erase(w);return true;
+}
+
+unsigned DeferredProfile(const DrawUniforms& u,unsigned samples,unsigned m){
+ if(!m||samples!=1||InterventionFastMathEnabled())return 0;
+ const unsigned depth=UsesDirect(m)?CanonicalDepthProfile(u,samples):0;
+ if(UsesDirect(m)&&!depth)return 0;
+ unsigned kind=0,count=0;
+ if(UsesKind(m)){
+  if(u.pointbeamcone==0.f)kind=0;
+  else if(u.pointbeamcone==1.f)kind=1;
+  else if(u.pointbeamcone==2.f)kind=2;
+  else return 0;
+ }
+ if(m==8){
+  if(u.screenSpaceShadows!=0&&u.screenSpaceShadows!=16&&u.screenSpaceShadows!=32&&u.screenSpaceShadows!=64)return 0;
+  count=unsigned(u.screenSpaceShadows);
+ }
+ return m|(depth<<4)|(kind<<7)|(count<<9);
 }
 void ValidateImage(const NativeCUSTextureBinding& binding, const DeferredLightImage& resolved, unsigned slot)
 {
@@ -261,14 +393,18 @@ struct DeferredLightsGPU::Impl {
 		return item.value;
 	}
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease, const LinkedProgram& program,
-		const DeferredLightTarget& target, const ScreenBlendState& blend, const std::array<bool, 4>& mask, bool attached, bool validation, double& milliseconds, bool coverage)
+		const DeferredLightTarget& target, const ScreenBlendState& blend, const std::array<bool, 4>& mask, bool attached, bool validation, double& milliseconds, bool coverage,unsigned directProfile=0,std::vector<WarmRequest878>* warmRequests=nullptr)
 	{
-		const auto key = MakeDeferredLightPipelineKey({uint64_t(target.color), uint64_t(target.depth), uint64_t(target.stencil), uint64_t(validation), uint64_t(attached),
+		const auto baseKey = MakeDeferredLightPipelineKey({uint64_t(target.color), uint64_t(target.depth), uint64_t(target.stencil), uint64_t(validation), uint64_t(attached),
 			uint64_t(blend.enabled), uint64_t(blend.sourceColor), uint64_t(blend.destinationColor), uint64_t(blend.sourceAlpha),
 			uint64_t(blend.destinationAlpha), uint64_t(blend.colorEquation), uint64_t(blend.alphaEquation)},
 			mask, lease.SampleShadingKey(target.samples), coverage);
-		if (const auto found = program.pipelines.find(key); found != program.pipelines.end()) {
-			lease.Retain(attached ? program.attachedLibrary : program.library); return found->second;
+  const auto key=std::pair{baseKey,directProfile};
+  const auto fragmentKey=std::pair{attached,directProfile};
+  if (const auto found = program.pipelines.find(key); found != program.pipelines.end()) {
+			lease.Retain(attached ? program.attachedLibrary : program.library);
+   if(directProfile)lease.Retain(program.directFragments.at(fragmentKey));
+   return found->second;
 		}
 		const auto start = Clock::now();
 		if (attached && !program.attachedLibrary) {
@@ -284,11 +420,28 @@ struct DeferredLightsGPU::Impl {
 		}
 		auto selectedLibrary = attached ? program.attachedLibrary : program.library;
 		lease.Retain(selectedLibrary);
-		auto descriptor = [MTL4RenderPipelineDescriptor new];
+  auto fragmentLibrary=selectedLibrary;
+  if(directProfile){
+   auto f=program.directFragments.find(fragmentKey);
+   if(f==program.directFragments.end()){
+    if(AdoptWarmFragment878(lease,program,fragmentKey))f=program.directFragments.find(fragmentKey);
+    else {
+     auto ld=DirectFragmentDescriptor878(program,attached,directProfile);
+     const auto t0=WarmNow878();NSError* error=nil;auto library=lease.NewLibrary(ld,&error);Require(library,"Cannot compile canonical DeferredLight fragment: "+Error(error));
+     f=program.directFragments.emplace(fragmentKey,library).first;
+     if(WarmWitness878())LOG("[DeferredLightWarm878] event=sync profile=%u attached=%u source=%s compile_ns=%llu",directProfile,unsigned(attached),program.source.fragmentSHA512.c_str(),(unsigned long long)(WarmNow878()-t0));
+    }
+    if(warmRequests&&WarmDeferred878()&&Mode(directProfile)==6u)
+     try{warmRequests->push_back({&program,attached,directProfile});}catch(...){/* optional cache preparation */}
+
+   }
+   fragmentLibrary=f->second;lease.Retain(fragmentLibrary);
+  }
+  auto descriptor = [MTL4RenderPipelineDescriptor new];
 		descriptor.rasterSampleCount = target.samples;
 		descriptor.alphaToCoverageState = coverage ? MTL4AlphaToCoverageStateEnabled : MTL4AlphaToCoverageStateDisabled;
 		auto vertex = [MTL4LibraryFunctionDescriptor new], fragment = [MTL4LibraryFunctionDescriptor new];
-		vertex.library = fragment.library = selectedLibrary;
+		vertex.library=selectedLibrary;fragment.library=fragmentLibrary;
 		vertex.name = @"DeferredLightVertex"; fragment.name = @"DeferredLightFragment";
 		descriptor.vertexFunctionDescriptor = vertex; descriptor.fragmentFunctionDescriptor = fragment;
 		descriptor.inputPrimitiveTopology = MTLPrimitiveTopologyClassTriangle;
@@ -360,6 +513,9 @@ std::unique_ptr<PreparedDeferredLights> DeferredLightsGPU::Prepare(RuntimeLease&
 	result->impl->source = std::move(source);
  const bool reuse=InterventionPoolsEnabled();
  if(reuse){impl->argumentPool.BeginBatch(lease);impl->uniformPool.BeginBatch(lease.Device());}
+ // The immutable source frame holds every program owner until Prepare exits.
+ // Collect only actual new-library misses, never one request per steady draw.
+ std::vector<WarmRequest878> warmRequests;
 	for (const auto& input: result->impl->source->draws) {
 		ValidateNativeDeferredLightDraw(input);
 		const auto linked = impl->programs.find(input.program->pipelineLifetime.get());
@@ -460,11 +616,20 @@ std::unique_ptr<PreparedDeferredLights> DeferredLightsGPU::Prepare(RuntimeLease&
 		auto uniformBuffer=uniformToken?uniformToken->buffer:Upload(lease,&uniforms,sizeof(uniforms));
 		if(uniformToken){std::memcpy(uniformBuffer.contents,&uniforms,sizeof(uniforms));lease.AddAllocation(uniformBuffer);result->impl->uniformOwners.push_back(std::move(uniformToken));}
 		[draw.arguments setAddress:uniformBuffer.gpuAddress atIndex:6];
-		draw.pipeline = impl->Pipeline(lease, *program, target, input.surface.blend, input.world.colorWrite, uniforms.attachedtounitID > 0, validation, milliseconds, input.world.alphaToCoverage);
+		const unsigned profile=CanonicalDepthProfile(uniforms,target.samples);
+  const unsigned active=DeferredProfile(uniforms,target.samples,DeferredVariant());
+  if(active){
+   static std::atomic<bool> reported{false};if(!reported.exchange(true))
+    LOG("[DeferredLightVariant] active mode=%u profile=%u kind=%.1f screenSpaceShadows=%d",Mode(active),active,uniforms.pointbeamcone,uniforms.screenSpaceShadows);
+  }
+  draw.pipeline = impl->Pipeline(lease, *program, target, input.surface.blend, input.world.colorWrite, uniforms.attachedtounitID > 0, validation, milliseconds, input.world.alphaToCoverage,active,&warmRequests);
 		draw.depth = effectstate::Depth(lease, input.world, target.stencil);
 		lease.Retain(draw.pipeline); lease.Retain(program->library);
 		result->impl->draws.push_back(std::move(draw));
 	}
+ // The current batch's real variants are all known; do not queue another
+ // compile for a sibling that was already required in this very batch.
+ for(const auto& request:warmRequests)QueueWarmSiblings878(lease,*request.program,request.attached,request.profile);
 	return result;
 }
 } // namespace rendering::metal4

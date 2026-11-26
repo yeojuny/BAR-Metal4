@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
+#include "System/Log/ILog.h"
 
 namespace rendering::metal4 {
 namespace {
@@ -62,6 +63,18 @@ CUSSourceImage ResolveNativeNamedVolume(RuntimeLease& lease,const NativeCUSTextu
 		[resource->texture replaceRegion:MTLRegionMake3D(0,0,0,64,64,64) mipmapLevel:0 slice:0 withBytes:pixels.bgraBytes.data() bytesPerRow:pixels.bytesPerRow bytesPerImage:pixels.bytesPerImage];
 		resource->completed=a.levels==1;backing->resource=resource;
 	}
+ // A first-use mip generation can have been encoded by an earlier scene
+ // whose completion has not been retired while this scene is preparing.
+ // Do not allow a second producer or borrow a not-yet-complete mip chain.
+ // Retire only on the exact foreign in-flight owner; completed and
+ // same-submission reads continue without a new wait.
+ if(!resource->completed&&resource->encodedSubmission&&resource->encodedSubmission!=submission){
+  const uint64_t prior=resource->encodedSubmission;
+  Require(submission==lease.SourceSubmission(),"Original DDS3D consumer lacks its actual preparation submission");
+  lease.RetirePreviousSubmission();
+  Require(resource->completed&&resource->encodedSubmission==prior,"Original DDS3D predecessor did not retire its actual mip generation");
+  LOG("[NativeNamedVolumePriorRetire] prior=%llu current=%llu completed=1",(unsigned long long)prior,(unsigned long long)submission);
+ }
 	lease.AddAllocation(resource->texture);CUSSourceImage out;out.texture=resource->texture;out.sampler=Sampler(lease,binding.object->sampling);out.owner=backing;
 	// Encoding occurs only after the common Begin. Keep the actual encoded
 	// owner on every exception; RuntimeLease poisons reuse and retains in-flight

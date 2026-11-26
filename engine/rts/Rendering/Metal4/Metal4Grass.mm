@@ -1,6 +1,8 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4Grass.h"
 #include "GrassZeroScaleCompaction.h"
+#include "GrassDenseScaleCompaction.h"
+#include "System/Log/ILog.h"
 #include "GrassBendShortlist.h"
 #include <cstdlib>
 #include "Metal4GrassBoundaryPolicyS01.h"
@@ -246,6 +248,12 @@ struct GrassGPU::Impl {
 		std::map<std::pair<std::size_t,std::size_t>,GrassSpanPlan> spanPlans;
 	};
 	std::map<const NativeBufferSnapshot*,ZeroScaleCache> zeroScaleIndices;
+	struct CompactCache {
+		std::weak_ptr<const NativeBufferSnapshot> source;
+		GrassDenseScaleIndex index;
+		__strong id<MTLBuffer> buffer=nil;
+	};
+	std::map<const NativeBufferSnapshot*,CompactCache> compactBuffers;
 	struct BendBoundsCache {
 		std::weak_ptr<const NativeBufferSnapshot> source;
 		std::map<std::pair<std::size_t,std::size_t>,GrassBendBounds> ranges;
@@ -273,6 +281,20 @@ struct GrassGPU::Impl {
 		}
 		return cached;
 	}
+	const CompactCache& Compacted(RuntimeLease& lease,const NativeBufferSnapshotRef& source)
+	{
+		auto& cached=compactBuffers[source.get()];
+		if (cached.source.expired()) {
+			CompactCache replacement;
+			const auto packed=replacement.index.Build(source->bytes);
+			if (!packed.empty()) replacement.buffer=Upload(lease,packed.data(),packed.size()*sizeof(GrassInstanceRow));
+			replacement.source=source;
+			cached=std::move(replacement);
+		} else if (cached.buffer) {
+			lease.AddAllocation(cached.buffer);
+		}
+		return cached;
+	}
 	std::map<unsigned,id<MTLLibrary>> libraries;
 	using Key=std::tuple<unsigned,unsigned,bool,uint64_t,unsigned,bool>;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
@@ -293,7 +315,7 @@ GrassGPU::~GrassGPU(){SetNativeGrassConsumerAvailable(false);}
 void GrassGPU::Initialize(RuntimeLease& lease,MTLPixelFormat color,bool validation,double& ms,unsigned samples){
 	ScreenBlendState blend;for(unsigned variant=0;variant<4;++variant)impl->Pipeline(lease,color,variant,validation,blend,{true,true,true,true},ms,samples,false);SetNativeGrassConsumerAvailable(true);
 }
-void GrassGPU::ClearResources(){impl->buffers.clear();impl->zeroScaleIndices.clear();impl->bendBounds.clear();}
+void GrassGPU::ClearResources(){impl->buffers.clear();impl->zeroScaleIndices.clear();impl->compactBuffers.clear();impl->bendBounds.clear();}
 std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const NativeWorldDrawSelection167& selected,uint64_t sourceDrawFrame,const WorldCamera& view,unsigned width,unsigned height,unsigned logicalWidth,unsigned logicalHeight,const GrassSourceImageProviderS01& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& ms,unsigned samples){
 	return Prepare(lease,selected,sourceDrawFrame,view,width,height,logicalWidth,logicalHeight,
 		images,color,depth,stencil,validation,ms,samples,false);
@@ -309,7 +331,13 @@ std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const Nativ
 		const char* value=std::getenv("BAR_NATIVE_GRASS_SKIP_EMPTY_SPANS");
 		return value&&std::strcmp(value,"1")==0&&!InterventionFastMathEnabled();
 	}();
-	const bool spanSkipEnabled=trimTrailingEnabled&&spanSkipRequested&&samples==1;
+	static const bool denseRequested=[] {
+        const char* v=std::getenv("BAR_NATIVE_GRASS_DENSE_REFERENCE");
+        return v&&std::strcmp(v,"1")==0&&!InterventionFastMathEnabled();
+    }();
+    const bool denseEnabled=trimTrailingEnabled&&denseRequested&&samples==1&&!sameInput;
+    if(denseEnabled)std::erase_if(impl->compactBuffers,[](const auto& entry){return entry.second.source.expired();});
+    const bool spanSkipEnabled=trimTrailingEnabled&&spanSkipRequested&&samples==1;
 	static const bool earlyGuardRequested=[] {
 		const char* value=std::getenv("BAR_NATIVE_GRASS_EARLY_SCALE_GUARD");
 		return value&&std::strcmp(value,"1")==0&&!InterventionFastMathEnabled();
@@ -339,8 +367,17 @@ std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const Nativ
 		auto scissor=c.surface.scissor;if(scissor&&!scissor->windowCoordinates){scissor->x+=view.viewport[0];scissor->y+=view.viewport[1];scissor->windowCoordinates=true;}
 		auto raster=effectstate::Viewport(camera,width,height,logicalWidth,logicalHeight,scissor);
 		if(!raster||(c.world.cullEnabled&&c.world.cull==NativeWorldCull::FrontAndBack)){out->impl->draws.push_back(std::move(d));continue;}d.raster=*raster;d.visible=true;
-		auto compactRange=originalRange;
-		if(trimTrailingEnabled||sameInput) {
+        auto compactRange=originalRange;
+        const bool useDense=denseEnabled&&s.defines[12]==1.f&&s.count%3==0;
+        const Impl::CompactCache* compact=nullptr;
+        if(useDense){
+            compact=&impl->Compacted(lease,s.instances);
+            compactRange=compact->index.Remap(originalRange.base,originalRange.count);
+            if(compactRange.count<originalRange.count){
+                static const bool reported=[&]{LOG("[PrecisionRevisit] Grass dense: %zu -> %zu",originalRange.count,compactRange.count);return true;}();
+                (void)reported;
+            }
+        } else if(trimTrailingEnabled||sameInput) {
 			auto& metadata=impl->ZeroScaleMetadata(s.instances);
 			compactRange=metadata.index.TrimTrailing(originalRange);
 			const bool supportsSpans=(spanSkipEnabled||sameInput)&&s.defines[12]==1.f&&s.count%3==0&&samples==1&&!InterventionFastMathEnabled();
@@ -382,7 +419,8 @@ std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const Nativ
 		d.arguments=[lease.Device() newArgumentTableWithDescriptor:desc error:&error];
 		Require(d.arguments!=nil,"Cannot allocate original Grass arguments: "+Error(error));
 		lease.Retain(d.arguments);
-		const auto instances=impl->Buffer(lease,s.instances);
+        const auto instances=compact&&compact->index.Repacked()&&compact->buffer
+            ?compact->buffer:impl->Buffer(lease,s.instances);
 		const auto vertices=impl->Buffer(lease,s.vertices);
 		d.indices=impl->Buffer(lease,s.indices);
 		d.immutableBuffers[0]=vertices;d.immutableBuffers[1]=instances;d.immutableBuffers[4]=d.indices;
@@ -394,7 +432,7 @@ std::shared_ptr<PreparedGrass> GrassGPU::Prepare(RuntimeLease& lease,const Nativ
 			if(shortlistBends&&u.unitBendCount>0){
 				const auto count=std::size_t(u.unitBendCount);
 				const auto sourceRows=std::span(s.bend.snapshot->bytes).subspan(offset,count*sizeof(GrassInstanceRow));
-				const auto selected=GrassBendSelect(impl->BendBounds(s.instances,d.instances),sourceRows);
+				const auto selected=GrassBendSelect(impl->BendBounds(s.instances,useDense?originalRange:d.instances),sourceRows);
 				if(selected.supported&&selected.count<count){
 					u.unitBendCount=static_cast<int32_t>(selected.count);
 					if(selected.count){

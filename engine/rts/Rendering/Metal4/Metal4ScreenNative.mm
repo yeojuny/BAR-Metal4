@@ -2,6 +2,7 @@
 #include "Metal4ScreenNative.h"
 #include "Metal4FixedTriangleIndexBuffer.h"
 #include "Metal4CoverageRTTPool220.h"
+#include "Metal4RTTFullClear244.h"
 #include "System/Log/ILog.h"
 #include "Rendering/Backend/NativeDepthStencilKey.h"
 #include "Rendering/Backend/NativeUploadLayout.h"
@@ -848,6 +849,7 @@ struct PreparedScreenFrame::Impl {
 		std::shared_ptr<ScreenTargetVersionEncoding> depthEncoded;
 		std::function<void()> requirePreviousDepthReadable;
 		uint64_t submission=0;
+  unsigned discard244=0;
 	};
 	std::vector<TargetPass> targets;
 	std::vector<std::shared_ptr<const ScreenTexture>> producedImages;
@@ -939,17 +941,19 @@ void PreparedScreenFrame::EncodeDeferredTarget(id<MTL4CommandBuffer> command,std
 	target.frame->EncodeDependencies(command);
 	if(target.previous!=nil){
 		Require(bool(target.requirePreviousReadable),"RTT Load has no exact prior-version readability proof");target.requirePreviousReadable();
+  if(!(target.discard244&1)){
 		auto copy=[command computeCommandEncoder];Require(copy!=nil,"Cannot create native UI RTT copy encoder");
 		[copy barrierAfterQueueStages:MTLStageVertex|MTLStageFragment beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
 		[copy copyFromTexture:target.previous toTexture:target.descriptor.colorAttachments[0].texture];
-		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];
+		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];}
 	}
 	if(target.previousDepth){
 		Require(bool(target.requirePreviousDepthReadable),"Coverage depth Load lacks actual prior-version proof");target.requirePreviousDepthReadable();
+  if(!(target.discard244&2)){
 		auto copy=[command computeCommandEncoder];Require(copy!=nil,"Cannot encode coverage depth version preservation");
 		[copy barrierAfterQueueStages:MTLStageVertex|MTLStageFragment beforeStages:MTLStageBlit visibilityOptions:MTL4VisibilityOptionDevice];
 		[copy copyFromTexture:target.previousDepth toTexture:target.descriptor.depthAttachment.texture];
-		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];
+		[copy barrierAfterStages:MTLStageBlit beforeQueueStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];[copy endEncoding];}
 	}
 	auto encoder=[command renderCommandEncoderWithDescriptor:target.descriptor];Require(encoder!=nil,"Cannot create native UI RTT render encoder");
 	[encoder barrierAfterQueueStages:MTLStageVertex|MTLStageFragment|MTLStageBlit beforeStages:MTLStageVertex|MTLStageFragment visibilityOptions:MTL4VisibilityOptionDevice];
@@ -1676,6 +1680,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 	uint32_t uploads = 0;
 	for (size_t index: order) {
 		const auto& source = frame.targetPasses[index];
+  const unsigned discard244=RTTFullClear244Enabled()?RTTFullClear244Proof(source):0;
 		auto& destination = impl->textures.at(source.destination.get());
 		lease.AddAllocation(destination.image);
   Impl::PinCoverage220(lease,source.destination,destination);
@@ -1710,13 +1715,13 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::Prepare(RuntimeLease& lease,cons
 		uploads += target->TextureUploads();
 		MTL4RenderPassDescriptor* d = [MTL4RenderPassDescriptor new];
 		d.colorAttachments[0].texture = destination.image;
-		d.colorAttachments[0].loadAction = source.load == ScreenTargetLoad::Load ? MTLLoadActionLoad :
+		d.colorAttachments[0].loadAction = source.load == ScreenTargetLoad::Load ? ((discard244&1)?MTLLoadActionDontCare:MTLLoadActionLoad) :
 			(source.load == ScreenTargetLoad::Clear ? MTLLoadActionClear : MTLLoadActionDontCare);
 		d.colorAttachments[0].storeAction = source.store == ScreenTargetStore::Store ? MTLStoreActionStore : MTLStoreActionDontCare;
 		d.colorAttachments[0].clearColor = MTLClearColorMake(source.clearColor[0],source.clearColor[1],source.clearColor[2],source.clearColor[3]);
-		if(depth){d.depthAttachment.texture=depth->image;d.depthAttachment.loadAction=source.previousDepth?MTLLoadActionLoad:MTLLoadActionDontCare;d.depthAttachment.storeAction=MTLStoreActionStore;}
+		if(depth){d.depthAttachment.texture=depth->image;d.depthAttachment.loadAction=source.previousDepth&&!(discard244&2)?MTLLoadActionLoad:MTLLoadActionDontCare;d.depthAttachment.storeAction=MTLStoreActionStore;}
 		d.renderTargetWidth = source.destination->width; d.renderTargetHeight = source.destination->height;
-		targets.push_back({previous,d,std::move(target),destination.initialized,source.store == ScreenTargetStore::Store,source.sourceDependent,source.screenCommandOffset,source.commandSequence,false,source.sourceStage,source.sourceDrawFrame,destination.encodedVersion,std::move(requirePreviousReadable),previousDepth,depth?depth->initialized:nullptr,depth?depth->encodedVersion:nullptr,std::move(requirePreviousDepthReadable),lease.SourceSubmission()});
+		targets.push_back({previous,d,std::move(target),destination.initialized,source.store == ScreenTargetStore::Store,source.sourceDependent,source.screenCommandOffset,source.commandSequence,false,source.sourceStage,source.sourceDrawFrame,destination.encodedVersion,std::move(requirePreviousReadable),previousDepth,depth?depth->initialized:nullptr,depth?depth->encodedVersion:nullptr,std::move(requirePreviousDepthReadable),lease.SourceSubmission(),discard244});
 		if (source.store == ScreenTargetStore::Store){available.push_back(source.destination.get());if(source.depthDestination)available.push_back(source.depthDestination.get());}
 	}
 	std::unique_ptr<PreparedScreenFrame> prepared;

@@ -32,6 +32,7 @@ public:
 	id<MTLTexture> Normal() const;
 	id<MTLTexture> Coast() const;
 	uint32_t DependencyDrawCount() const;
+ bool CanQueueSubmission() const;
 private:
 	struct Impl;std::unique_ptr<Impl> impl;
 	explicit PreparedBumpWater(std::unique_ptr<Impl>);
@@ -43,7 +44,7 @@ public:
 	std::unique_ptr<PreparedBumpWater> Prepare(RuntimeLease&,
 		std::shared_ptr<const NativeBumpWaterFrame>,const BumpWaterSceneImages&,
 		MTLPixelFormat colorFormat,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,
-		bool shaderValidation,double& shaderMilliseconds,unsigned samples=1);
+		bool shaderValidation,double& shaderMilliseconds,unsigned samples=1,bool queueCandidate=false);
 	void ClearResources(); // Only after the shared submission retires.
 private:
 	struct Impl;std::unique_ptr<Impl> impl;

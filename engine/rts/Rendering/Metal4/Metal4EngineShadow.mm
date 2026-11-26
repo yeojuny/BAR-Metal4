@@ -21,6 +21,8 @@
 #include <string>
 #include <chrono>
 #include <cstdlib>
+#include <string_view>
+#include "System/Log/ILog.h"
 #include "Metal4TerrainUniformBatch.inc"
 namespace rendering::metal4 {
 namespace {
@@ -462,6 +464,7 @@ std::shared_ptr<const ShadowTerrainPreparation> EngineShadowGPU::PrepareTerrainG
  // EngineShadowGPU has the existing serialized main-thread owner. GPU
  // callbacks do not mutate this cache; old submissions own their buffers.
  auto& runtime=SharedRuntime();
+ if(source)impl->terrainGeometry.BeginWorkingSet(runtime.Device(),*source);
  static const bool measure=[] {const char* p=std::getenv("BAR_NATIVE_RESOURCE_PROBE_FILE");return p&&p[0]=='/';}();
  auto prepared=ShadowTerrainPreparation::Prepare(impl->terrainGeometry,&runtime,runtime.Device(),std::move(source),measure);
  return prepared;
@@ -478,10 +481,12 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
  impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->terrainSource=std::move(source);
  TerrainUniformBatch terrainUniforms(lease,result->impl->terrainSource->draws.size(),sizeof(TerrainShadowUniform),32);
  const bool useEarly=early&&early->Matches(lease.ContextIdentity(),lease.Device(),result->impl->terrainSource);
+ if(!useEarly)impl->terrainGeometry.BeginWorkingSet(lease.Device(),*result->impl->terrainSource);
  if(useEarly) {
   CountPreparationTrace(7,early->statistics.hits);CountPreparationTrace(8,early->statistics.misses);
   CountPreparationTrace(39,early->geometry.size());CountPreparationTrace(40,early->nanoseconds);CountPreparationTrace(41,early->sourceBytes);
  }
+ ShadowTerrainGeometryCache::Statistics frameStats=useEarly?early->statistics:ShadowTerrainGeometryCache::Statistics{};
  uint64_t previous=0;std::size_t geometryOrdinal=0;
  for(const auto& d:result->impl->terrainSource->draws){
   auto prepDrawStart=StartPreparationScope();CountPreparationTrace(4,1);CountPreparationTrace(5,d.Positions().size()*sizeof(d.Positions()[0])+d.Indices().size()*sizeof(uint32_t));
@@ -497,7 +502,7 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
    "Original MAP shadow has a different triangle invocation");
   const auto ordinal=geometryOrdinal++;
   const auto geometry=useEarly?early->geometry[ordinal]:impl->terrainGeometry.Acquire(lease,result->impl->terrainSource->contextGeneration,
-   {d.texSquare[0],d.texSquare[1],d.indexed,ordinal},d);
+   {d.texSquare[0],d.texSquare[1],d.indexed,ordinal},d,&frameStats);
   EndPreparationScope(16,prepDrawStart);prepDrawStart=StartPreparationScope();
   Require(d.world.frontPolygonMode==d.world.backPolygonMode&&d.world.frontPolygonMode!=NativePolygonMode::Point&&
    !d.world.depthClamp&&!d.world.lineStipple&&d.world.lineWidth==1&&!d.world.inheritedClipPlane&&d.surface.viewport,
@@ -552,6 +557,10 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
   draw.pieces.push_back({mesh,table,0,d.indexed});result->impl->draws.push_back(std::move(draw));
   EndPreparationScope(20,prepDrawStart);
  }
+ const auto f=result->impl->terrainSource->sourceDrawFrame;
+ static bool reported=false;if(ExpandedTerrainShadowCache()&&!reported&&f>=512){reported=true;LOG("[TerrainShadowCacheWorkingSet] active entry_limit=%zu byte_limit=%llu adaptive=%u hard_limit=%llu",impl->terrainGeometry.EntryLimit(),(unsigned long long)impl->terrainGeometry.ByteLimit(),unsigned(ShadowTerrainGeometryCache::Adaptive()),(unsigned long long)impl->terrainGeometry.HardLimit());}
+ if(TerrainCacheCounters()&&f>=2048&&f<2112)LOG("[TerrainShadowCacheCensus] source_frame=%llu draws=%zu hits=%llu misses=%llu entries=%zu cached_bytes=%llu entry_limit=%zu byte_limit=%llu",(unsigned long long)f,result->impl->draws.size(),(unsigned long long)frameStats.hits,(unsigned long long)frameStats.misses,impl->terrainGeometry.Count(),(unsigned long long)impl->terrainGeometry.Bytes(),impl->terrainGeometry.EntryLimit(),(unsigned long long)impl->terrainGeometry.ByteLimit());
+ 
  return result;
 }
 std::shared_ptr<PreparedGenericShadow> EngineShadowGPU::PrepareGeneric(RuntimeLease& lease,std::shared_ptr<const NativeWorldDrawFrame> source,uint64_t frame,uint64_t context,const CUSSourceTarget& target,bool validation,double& milliseconds)

@@ -13,6 +13,12 @@
 #include "Rendering/Metal4/Metal4NativeEffectState.h"
 #import <simd/simd.h>
 #include <cstring>
+#include <cstdlib>
+#include <atomic>
+#include <filesystem>
+#include <fstream>
+#include <cmath>
+#include <algorithm>
 #include <sstream>
 #include <iomanip>
 #include <map>
@@ -21,6 +27,77 @@
 namespace rendering::metal4 {
 namespace {
 struct Uniform {simd_float4x4 view,projection,inverseProjection,fuseInverseProjection;simd_float4 kernel[64],weights[12],offsets[12],directionStrength,alphaConfig;simd_uint4 flip,swizzle[8],depthMode[2];simd_float4 framebuffer;};static_assert(sizeof(Uniform)==1888);
+// The specialization is a direct expression of the existing GLSL-compatible
+// swizzle, depth logical-channel and vertical-coordinate mapping for these inputs.
+bool CanonicalSSAODepthSample(const Uniform& u,bool modelColor,bool mapColor)
+{
+ return !modelColor&&!mapColor&&(u.flip[0]&(1u<<1))&&(u.flip[1]&1u)&&
+        u.swizzle[1].x==0x1903u&&u.swizzle[4].x==0x1903u&&
+        u.depthMode[0][1]!=0x1906u&&u.depthMode[1][0]!=0x1906u;
+}
+
+struct SSAORefinement {
+ bool directDepth, relaxed;
+ unsigned projection, phase;
+ bool phaseProbe, fast;
+};
+static constexpr std::array<SSAORefinement,12> kSSAORefinements{{
+ {false,false,0,0,false,false},
+ {false,false,1,0,false,false},
+ {false,false,2,0,false,false},
+ {false,false,4,0,false,false},
+ {false,false,5,0,false,false},
+ {true,false,5,0,false,false},
+ {false,true,0,0,false,false},
+ {true,true,1,0,false,false},
+ {true,true,4,0,false,false},
+ {true,true,5,0,false,false},
+ {true,false,5,0,false,true},
+ {true,false,9,0,false,false}
+}};
+bool CanonicalSSAOProjection(const Uniform& u)
+{
+ const auto& p=u.projection.columns;
+ const auto& q=u.inverseProjection.columns;
+ for(unsigned i=0;i<4;++i)for(unsigned j=0;j<4;++j)
+  if(!std::isfinite(p[i][j])||!std::isfinite(q[i][j]))return false;
+ // Do not specialize skewed, translated, or oblique projections.
+ const bool forward=p[0].x!=0&&p[1].y!=0&&p[2].w!=0&&
+  p[0].y==0&&p[0].w==0&&p[1].x==0&&p[1].w==0&&
+  p[2].x==0&&p[2].y==0&&p[3].x==0&&p[3].y==0&&p[3].w==0;
+ const bool inverse=q[0].z==0&&q[1].z==0&&q[2].z==0&&q[3].z!=0&&q[0].w==0&&q[1].w==0;
+ // The homogeneous denominator must remain nonzero on either clip convention.
+ const float a=q[3].w-q[2].w,b=q[3].w+q[2].w;
+ const bool finiteRange=std::isfinite(a)&&std::isfinite(b)&&((a>0&&b>0)||(a<0&&b<0));
+ return forward&&inverse&&finiteRange;
+}
+unsigned RequestedSSAORefinement()
+{
+ static const unsigned value=[] {
+  const char* text=std::getenv("BAR_NATIVE_SSAO_PROJECTION_VARIANT");
+  // The user-selected profile is the normal eligible path.
+  // Explicit safe/0 fully disables the added specialization.
+  if(!text||!*text)return 7u;
+  if(std::strcmp(text,"safe")==0)return 0u;
+  if(std::strcmp(text,"relaxed")==0)return 6u;
+  if(std::strcmp(text,"high-speed")==0)return 7u;
+  if(std::strcmp(text,"exact")==0)return 11u;
+  char* end=nullptr;const unsigned long v=std::strtoul(text,&end,10);
+  return end&&!*end&&v<12?unsigned(v):0u;
+ }();
+ return InterventionFastMathEnabled()?0:value;
+}
+bool RelaxedSSAOFragmentRequested()
+{
+ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_SSAO_RELAXED_FRAGMENT");return value&&std::strcmp(value,"1")==0;}();
+ return enabled&&!InterventionFastMathEnabled();
+}
+bool DirectSSAODepthRequested()
+{
+ static const bool enabled=[] {const char* value=std::getenv("BAR_NATIVE_SSAO_DIRECT_DEPTH_SAMPLE");return value&&std::strcmp(value,"1")==0;}();
+ return enabled&&!InterventionFastMathEnabled();
+}
+
 struct ImageState final:NativeSSAOImageResource {std::shared_ptr<SSAOStorage> storage;std::weak_ptr<const NativeSSAOImageVersion>owner;__strong id<MTLTexture>texture=nil;__strong id<MTLSamplerState>sampler=nil;std::shared_ptr<NativeSSAOProducerState>producer;NativeDeferredPostprocessEpoch sourceModelEpoch;};
 using ImageKey=std::pair<uint64_t,uint64_t>;
 // Validate the captured original backing as well as the resolved DTO: texture
@@ -226,11 +303,34 @@ struct SSAOGPU::Impl {
  bool initialized=false,reported149=false,reported150=false;
  std::map<ImageKey,std::shared_ptr<ImageState>>images;
  SSAOStoragePool storagePool;
- struct ProgramKey {std::string definitions;unsigned program;MTLPixelFormat color,depth,stencil;uint64_t blend;bool clear,validation;unsigned samples;bool coverage;auto operator<=>(const ProgramKey&)const=default;};
- std::map<std::string,id<MTLLibrary>>libraries;std::map<ProgramKey,id<MTLRenderPipelineState>>pipelines;
+ struct ProgramKey {std::string definitions;unsigned program;MTLPixelFormat color,depth,stencil;uint64_t blend;bool clear,validation;unsigned samples;bool coverage,relaxedFragment;unsigned refinement;auto operator<=>(const ProgramKey&)const=default;};
+ std::map<std::string,id<MTLLibrary>>libraries,relaxedFragmentLibraries,fastFragmentLibraries;std::map<ProgramKey,id<MTLRenderPipelineState>>pipelines;
  std::shared_ptr<ImageState>Image(RuntimeLease&l,std::shared_ptr<const NativeSSAOImageVersion>v){Require(v&&v->image&&v->generation,"Missing actual SSAO image version");if(v->Resource()){auto image=std::dynamic_pointer_cast<const ImageState>(v->Resource());Require(image&&image->texture.device==l.Device()&&image->owner.lock()==v,"Original SSAO image resource belongs to another device/version");RetainSSAOStorage(l,image->storage);return std::const_pointer_cast<ImageState>(image);}ImageKey k{v->image->identity,v->generation};if(auto i=images.find(k);i!=images.end()){Require(i->second->owner.lock()==v,"SSAO image identity/generation reused by unrelated owner");RetainSSAOStorage(l,i->second->storage);return i->second;}auto r=std::make_shared<ImageState>();r->owner=v;r->producer=v->producer;auto&im=*v->image;Require(im.width&&im.height&&im.width<=l.Capabilities().maxTextureDimension2D&&im.height<=l.Capabilities().maxTextureDimension2D,"SSAO original FBO exceeds actual device limits");r->storage=AcquireSSAOStorage(storagePool,l,im.width,im.height,im.format==NativeSSAOFormat::RGBA8?MTLPixelFormatRGBA8Unorm:MTLPixelFormatRGBA16Float);r->texture=r->storage->texture;Require(r->texture!=nil,"Cannot allocate actual SSAO FBO texture");auto s=[MTLSamplerDescriptor new];s.supportArgumentBuffers=YES;s.minFilter=im.sampling.minFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.magFilter=im.sampling.magFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.mipFilter=MTLSamplerMipFilterNotMipmapped;s.sAddressMode=s.tAddressMode=MTLSamplerAddressModeClampToEdge;r->sampler=[l.Device()newSamplerStateWithDescriptor:s];Require(r->sampler!=nil,"Cannot allocate actual SSAO sampler");v->Fulfill(r);images.emplace(k,r);return r;}
- id<MTLRenderPipelineState>Pipeline(RuntimeLease&l,const NativeSSAODraw&draw,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool modelColor,bool mapColor,bool normalColor,bool validation,double&ms,unsigned samples){auto d=draw.defines.empty()?DefaultDefines():draw.defines;std::string defs=Defines(d,modelColor,mapColor,normalColor);ProgramKey key{defs,unsigned(draw.program),color,depth,stencil,BlendKey(draw.surface.blend,draw.world.colorWrite),draw.clear,validation,l.SampleShadingKey(samples),!draw.clear&&draw.world.alphaToCoverage};if(auto p=pipelines.find(key);p!=pipelines.end())return p->second;auto start=Clock::now();NSError*error=nil;id<MTLLibrary>library=nil;if(auto i=libraries.find(defs);i!=libraries.end())library=i->second;else{auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Fixed31657 complete SSAO program family";descriptor.source=String(defs+ssao::SHADER+"\nfragment float4 SSAOClear(constant SSAOUniform& u [[buffer(0)]]){return u.directionStrength;}\n");auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);descriptor.options=options;library=l.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile exact original SSAO shaders: "+Error(error));libraries.emplace(defs,library);}
- auto p=[MTL4RenderPipelineDescriptor new];p.rasterSampleCount=samples;p.alphaToCoverageState=key.coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=library;v.name=@"SSAOVertex";f.name=draw.clear?@"SSAOClear":String(Entry(draw.program));p.vertexFunctionDescriptor=v;p.fragmentFunctionDescriptor=f;p.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;auto a=p.colorAttachments[0];a.pixelFormat=color;auto b=draw.surface.blend;if(draw.clear)b.enabled=false;a.blendingState=b.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=effectstate::Factor(b.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(b.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(b.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(b.destinationAlpha);a.rgbBlendOperation=Equation(b.colorEquation);a.alphaBlendOperation=Equation(b.alphaEquation);auto m=draw.world.colorWrite;a.writeMask=MTLColorWriteMask((m[0]?MTLColorWriteMaskRed:0)|(m[1]?MTLColorWriteMaskGreen:0)|(m[2]?MTLColorWriteMaskBlue:0)|(m[3]?MTLColorWriteMaskAlpha:0));auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);p.options=options;auto pipeline=l.NewRenderPipeline(p,&error);Require(pipeline!=nil,"Cannot compile exact SSAO actual attachment pipeline: "+Error(error));pipelines.emplace(key,pipeline);ms+=Milliseconds(start);return pipeline;}
+ id<MTLRenderPipelineState>Pipeline(RuntimeLease&l,const NativeSSAODraw&draw,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool modelColor,bool mapColor,bool normalColor,bool validation,double&ms,unsigned samples,bool directDepth=false,bool relaxedFragment=false,unsigned refinement=0,unsigned blurProfile=0){auto d=draw.defines.empty()?DefaultDefines():draw.defines;const std::string vertexDefs=Defines(d,modelColor,mapColor,normalColor);
+  const auto& policy=kSSAORefinements.at(refinement);
+  std::string defs=vertexDefs;
+  if(blurProfile)defs+="#define SSAO_BLUR_DIRECT_COLOR "+std::to_string(blurProfile)+"\n";
+  if(directDepth||policy.directDepth)defs+="#define SSAO_CANONICAL_DEPTH_SAMPLE 1\n";
+  if(policy.projection)defs+="#define SSAO_CANONICAL_PROJECTION "+std::to_string(policy.projection)+"\n";
+  if(policy.phase)defs+="#define SSAO_PHASE_PRECISION "+std::to_string(policy.phase)+"\n";
+  if(policy.phaseProbe)defs+="#define SSAO_PHASE_PROBE 1\n";ProgramKey key{defs,unsigned(draw.program),color,depth,stencil,BlendKey(draw.surface.blend,draw.world.colorWrite),draw.clear,validation,l.SampleShadingKey(samples),!draw.clear&&draw.world.alphaToCoverage,relaxedFragment,refinement};if(auto p=pipelines.find(key);p!=pipelines.end())return p->second;auto start=Clock::now();NSError*error=nil;auto getLibrary=[&](unsigned mode,const std::string& definitions){
+  auto& cache=mode==2?fastFragmentLibraries:mode==1?relaxedFragmentLibraries:libraries;
+  if(auto i=cache.find(definitions);i!=cache.end())return i->second;
+  auto descriptor=[MTL4LibraryDescriptor new];
+  descriptor.name=mode==2?@"SSAO fragment fast":mode==1?@"SSAO fragment relaxed":@"Fixed31657 complete SSAO program family";
+  descriptor.source=String(definitions+ssao::SHADER+"\nfragment float4 SSAOClear(constant SSAOUniform& u [[buffer(0)]]){return u.directionStrength;}\n");
+  auto options=[MTLCompileOptions new];
+  options.mathMode=mode==2?MTLMathModeFast:mode==1?MTLMathModeRelaxed:MTLMathModeSafe;
+  options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+  ConfigureInterventionColorMath(options);descriptor.options=options;
+  auto compiled=l.NewLibrary(descriptor,&error);
+  Require(compiled!=nil,"Cannot compile exact original SSAO shaders: "+Error(error));
+  cache.emplace(definitions,compiled);return compiled;
+ };
+ auto library=getLibrary(0,vertexDefs);
+ unsigned fragmentMode=policy.fast?2u:(policy.relaxed||relaxedFragment)?1u:0u;
+ auto fragmentLibrary=getLibrary(fragmentMode,defs);
+ auto p=[MTL4RenderPipelineDescriptor new];p.rasterSampleCount=samples;p.alphaToCoverageState=key.coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=library;f.library=fragmentLibrary;v.name=@"SSAOVertex";f.name=draw.clear?@"SSAOClear":String(Entry(draw.program));p.vertexFunctionDescriptor=v;p.fragmentFunctionDescriptor=f;p.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;auto a=p.colorAttachments[0];a.pixelFormat=color;auto b=draw.surface.blend;if(draw.clear)b.enabled=false;a.blendingState=b.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=effectstate::Factor(b.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(b.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(b.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(b.destinationAlpha);a.rgbBlendOperation=Equation(b.colorEquation);a.alphaBlendOperation=Equation(b.alphaEquation);auto m=draw.world.colorWrite;a.writeMask=MTLColorWriteMask((m[0]?MTLColorWriteMaskRed:0)|(m[1]?MTLColorWriteMaskGreen:0)|(m[2]?MTLColorWriteMaskBlue:0)|(m[3]?MTLColorWriteMaskAlpha:0));auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);p.options=options;auto pipeline=l.NewRenderPipeline(p,&error);Require(pipeline!=nil,"Cannot compile exact SSAO actual attachment pipeline: "+Error(error));pipelines.emplace(key,pipeline);ms+=Milliseconds(start);return pipeline;}
 };
 SSAOGPU::SSAOGPU():impl(std::make_unique<Impl>()){}SSAOGPU::~SSAOGPU()=default;
 void SSAOGPU::Initialize(RuntimeLease&l,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double&ms,unsigned samples){
@@ -315,7 +415,36 @@ uint64_t prior=0;unsigned omittedCopies149=0;uint64_t omittedBytes149=0;NativeSS
    auto instances=upload177(tiles.instances.data(),tiles.instances.size()*sizeof(tiles.instances.front()));
    [d.arguments setAddress:instances.gpuAddress atIndex:2];
   }
-  d.pipeline=impl->Pipeline(l,draw,d.color.pixelFormat,d.z?d.z.pixelFormat:MTLPixelFormatInvalid,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid,modelColor,mapColor,normalColor,validation,ms,unsigned(d.color.sampleCount));d.depth=effectstate::Depth(l,d.world,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid);l.Retain(d.arguments);l.Retain(d.pipeline);l.AddAllocation(d.color);if(d.z)l.AddAllocation(d.z);if(d.stencil)l.AddAllocation(d.stencil);if(d.previous)l.AddAllocation(d.previous->texture);result->impl->draws.push_back(std::move(d));
+  const bool directDepthEligible=draw.program==NativeSSAOProgram::Sample&&
+     (draw.defines.empty()||draw.defines.at("NOFUSE")==1)&&d.color.sampleCount==1&&
+     CanonicalSSAODepthSample(u,modelColor,mapColor);
+  const bool directDepth=directDepthEligible&&DirectSSAODepthRequested();
+  const bool relaxedFragment=draw.program==NativeSSAOProgram::Sample&&!draw.clear&&d.color.sampleCount==1&&RelaxedSSAOFragmentRequested();
+  const bool sampleEligible=draw.program==NativeSSAOProgram::Sample&&!draw.clear&&d.color.sampleCount==1;
+  const bool projectionEligible=sampleEligible&&(draw.defines.empty()||draw.defines.at("NOFUSE")==1)&&CanonicalSSAOProjection(u);
+  unsigned refined=0;
+  if(sampleEligible&&!directDepth&&!relaxedFragment){
+   unsigned requested=RequestedSSAORefinement();
+   const auto& policy=kSSAORefinements[requested];
+   if((!policy.projection||projectionEligible)&&(!policy.directDepth||directDepthEligible))refined=requested;
+  }
+
+#ifdef RECOIL_METAL4_LIVE_SCENE
+  if(directDepth){static const bool reported=[] {LOG("[SSAODirectDepth] canonical depth sampling active");return true;}();(void)reported;}
+  if(relaxedFragment){static const bool reported=[] {LOG("[SSAORelaxedFragment] sample fragment only active");return true;}();(void)reported;}
+  if(refined){static const bool reported=[&] {LOG("[SSAOProjectionVariant] variant=%u active",refined);return true;}();(void)reported;}
+#endif
+  const bool blur=draw.program==NativeSSAOProgram::Blur||draw.program==NativeSSAOProgram::BlurComposite;
+  const bool eligibleBlur=blur&&!d.clear&&!d.noop&&d.color.sampleCount==1&&!InterventionFastMathEnabled()&&
+   draw.inputs[0].local&&!d.inputs.empty()&&d.inputs.front().texture.pixelFormat==MTLPixelFormatRGBA8Unorm&&
+   u.swizzle[0].x==0x1903u&&u.swizzle[0].y==0x1904u&&u.swizzle[0].z==0x1905u&&u.swizzle[0].w==0x1906u;
+  static const bool requestedBlur=[] {const char* v=std::getenv("BAR_NATIVE_SSAO_BLUR_DIRECT_COLOR");return !v||!*v||std::strcmp(v,"1")==0;}();
+  const unsigned blurProfile=eligibleBlur?1u+unsigned(bool(u.flip[0]&1u)):0u;
+  if(requestedBlur&&blurProfile){
+   static std::atomic<unsigned> reported{0};const unsigned mask=draw.program==NativeSSAOProgram::Blur?1u:2u;
+   if(!(reported.fetch_or(mask)&mask))LOG("[SSAOBlurDirect] active program=%u flip=%u",unsigned(draw.program),blurProfile-1);
+  }
+  d.pipeline=impl->Pipeline(l,draw,d.color.pixelFormat,d.z?d.z.pixelFormat:MTLPixelFormatInvalid,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid,modelColor,mapColor,normalColor,validation,ms,unsigned(d.color.sampleCount),directDepth,relaxedFragment,refined,requestedBlur?blurProfile:0);d.depth=effectstate::Depth(l,d.world,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid);l.Retain(d.arguments);l.Retain(d.pipeline);l.AddAllocation(d.color);if(d.z)l.AddAllocation(d.z);if(d.stencil)l.AddAllocation(d.stencil);if(d.previous)l.AddAllocation(d.previous->texture);result->impl->draws.push_back(std::move(d));
  }
 #ifdef RECOIL_METAL4_LIVE_SCENE
  if(!impl->reported150&&frame->sourceDrawFrame>=600&&attachmentClears150){

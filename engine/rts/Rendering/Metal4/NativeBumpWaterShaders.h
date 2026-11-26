@@ -50,7 +50,12 @@ vertex WaterVarying BumpWaterVertex(uint id [[vertex_id]],
 	return o;
 }
 float2 WaterUV(float2 uv,uint unit,constant WaterUniforms& u) {
-	if(u.flags.y&(1u<<unit))uv.y=1.0-uv.y;return uv;
+	#ifdef NATIVE_WATER_FIXED_FLIPS
+ if(NATIVE_WATER_FIXED_FLIPS&(1u<<unit))uv.y=1.0-uv.y;
+#else
+ if(u.flags.y&(1u<<unit))uv.y=1.0-uv.y;
+#endif
+ return uv;
 }
 float4 WaterSample(texture2d<float> image,sampler filter,float2 uv,uint unit,constant WaterUniforms& u) {
 	return image.sample(filter,WaterUV(uv,unit,u));

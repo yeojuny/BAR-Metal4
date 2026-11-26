@@ -4,6 +4,12 @@
 #include "Metal4WorldBCDecode.h"
 #include "NativeBumpWaterShaders.h"
 #include <algorithm>
+#include <atomic>
+#include <filesystem>
+#include <fstream>
+#include <cstdlib>
+#include <cstring>
+#include "System/Log/ILog.h"
 #include <bit>
 #include <cmath>
 #include <map>
@@ -37,13 +43,60 @@ MTLPixelFormat Format(WorldTextureFormat f) {
 	case WorldTextureFormat::BC7RGBA:return MTLPixelFormatBC7_RGBAUnorm;case WorldTextureFormat::BC7RGBASRGB:return MTLPixelFormatBC7_RGBAUnorm_sRGB;}
 	throw std::invalid_argument("Unknown original water bitmap format");
 }
+using MaterialBits=std::array<uint32_t,48>;
+using WaterMaterialValues=std::array<std::pair<const char*,std::array<float,4>>,12>;
+WaterMaterialValues WaterValues(const NativeBumpWaterUniforms& u){
+ return {{{"mapMidSpecularPower",u.mapMidSpecularPower},{"screenInverseTextureInverse",u.screenInverseTextureInverse},
+ {"texGenPlane",u.texGenPlane},{"shadingPlane",u.shadingPlane},{"surfaceColor",u.surfaceColor},{"diffuseColorFactor",u.diffuseColorFactor},
+ {"specularColorFactor",u.specularColorFactor},{"sunDirectionAmbient",u.sunDirectionAmbient},{"fresnelDistortion",u.fresnelDistortion},
+ {"blurPerlin",u.blurPerlin},{"perlinWave",u.perlinWave},{"waveCaustic",u.waveCaustic}}};
+}
+MaterialBits WaterBits(const NativeBumpWaterUniforms& u){
+ MaterialBits bits{};unsigned i=0;for(const auto& field:WaterValues(u))for(float value:field.second)bits[i++]=std::bit_cast<uint32_t>(value);return bits;
+}
+std::string LiteralWaterVec(const std::array<float,4>& values){
+ std::string result="float4(";for(unsigned i=0;i<4;++i){if(i)result+=",";result+="as_type<float>("+std::to_string(std::bit_cast<uint32_t>(values[i]))+"u)";}return result+")";
+}
+unsigned WaterVariant(){
+ static const unsigned value=[] {
+  const char* text=std::getenv("BAR_NATIVE_BUMPWATER_SURFACE_VARIANT");
+  if(!text||!*text)return 6u;char* end=nullptr;const auto n=std::strtoul(text,&end,10);return end&&!*end&&n<7?unsigned(n):0u;
+ }();
+ return value;
+}
+std::string WaterVariantSource(uint32_t flags,const NativeBumpWaterUniforms& u,unsigned profile){
+ std::string defs="#define NATIVE_WATER_FLAGS "+std::to_string(flags)+"\n";
+ if(profile==1||profile>=3)defs+="#define NATIVE_WATER_FIXED_FLIPS "+std::to_string(u.flags[1])+"u\n";
+ std::string source=NATIVE_BUMP_WATER_SHADERS;
+ if(profile<4)return defs+source;
+ const auto begin=source.find("fragment float4 BumpWaterFragment"),end=source.find("struct WaterUpdateVertex",begin);
+ Require(begin!=std::string::npos&&end!=std::string::npos,"BumpWater source boundary changed");
+ std::string body=source.substr(begin,end-begin);
+ auto replace=[&](std::string from,const std::string& to,bool must=false){
+  size_t at=0,count=0;while((at=body.find(from,at))!=std::string::npos){body.replace(at,from.size(),to);at+=to.size();++count;}
+  if(must)Require(count==1,"Unexpected BumpWater MVK-style expression: "+from);
+ };
+ if(profile==6){
+  replace("normalize(octave1+octave2+octave3+octave4)","WaterNormalizeMVK(octave1+octave2+octave3+octave4)",true);
+  replace("normalize(i.eyeVec)","WaterNormalizeMVK(i.eyeVec)",true);
+  replace("normalize(-i.ligVec)","WaterNormalizeMVK(-i.ligVec)",true);
+  replace("pow(max(dot(reflectDir,eVec),0.0),u.mapMidSpecularPower.w)","powr(max(dot(reflectDir,eVec),0.0),u.mapMidSpecularPower.w)",true);
+  replace("pow(i.position.z,80.0)","powr(i.position.z,80.0)",true);
+  replace("pow(angle,u.fresnelDistortion.z)","powr(angle,u.fresnelDistortion.z)",true);
+  replace("float diffuse=pow(max(dot(normal,sunLow),0.0),3.0)*u.diffuseColorFactor.w;",
+          "float diffuseBase=max(dot(normal,sunLow),0.0);\n float diffuse=(diffuseBase*u.diffuseColorFactor.w)*diffuseBase*diffuseBase;",true);
+  body="float3 WaterNormalizeMVK(float3 x){return x*rsqrt(fma(x.x,x.x,fma(x.y,x.y,x.z*x.z)));}\n"+body;
+ }
+ for(const auto& field:WaterValues(u))replace(std::string("u.")+field.first,LiteralWaterVec(field.second));
+ return defs+source.substr(0,begin)+body+source.substr(end);
+}
 struct PipelineKey {
 	uint32_t flags=0;MTLPixelFormat color=MTLPixelFormatInvalid,depth=MTLPixelFormatInvalid,stencil=MTLPixelFormatInvalid;bool validate=false;unsigned samples=1;
 	auto operator<=>(const PipelineKey&) const=default;
 };
 id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,id<MTLLibrary> library,const char* vs,const char* fs,
-	MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool blend,bool constantAlpha,bool validation,unsigned samples=1) {
-	auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=library;v.name=String(vs);f.name=String(fs);
+	MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool blend,bool constantAlpha,bool validation,unsigned samples=1,id<MTLLibrary> fragmentLibrary=nil) {
+	auto d=[MTL4RenderPipelineDescriptor new];d.rasterSampleCount=samples;auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=library;f.library=fragmentLibrary?fragmentLibrary:library;v.name=String(vs);f.name=String(fs);
 	d.vertexFunctionDescriptor=v;d.fragmentFunctionDescriptor=f;d.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;
 	d.colorAttachments[0].pixelFormat=color; // Metal4 obtains depth/stencil formats from actual attachments.
 	(void)depth;(void)stencil;
@@ -58,9 +111,13 @@ MTL4RenderPassDescriptor* Pass(id<MTLTexture> texture,MTLLoadAction load) {
 	auto p=[MTL4RenderPassDescriptor new];p.colorAttachments[0].texture=texture;p.colorAttachments[0].loadAction=load;p.colorAttachments[0].storeAction=MTLStoreActionStore;
 	p.colorAttachments[0].clearColor=MTLClearColorMake(0,0,0,1);p.renderTargetWidth=texture.width;p.renderTargetHeight=texture.height;return p;
 }
+static bool WaterReadOnlyEnabled(const char* name){const char* v=std::getenv(name);return v&&std::string_view(v)=="1";}
 struct WaterSubmissionState {
  BumpWaterCompletion completion;
  bool coastInitialized=false,encoded=false,completed=false;
+ bool queueQualified=false,queuedNormalWriter=false;uint64_t source=0;int64_t simulation=-1;
+ std::array<id<MTLTexture>,3> localReads{}; // actual reflection/pre-color/pre-depth read owners
+ id<MTLTexture> normal=nil,coast=nil;
 };
 struct Generation {
  std::weak_ptr<WaterSubmissionState> pending;
@@ -91,12 +148,16 @@ struct PreparedBumpWater::Impl {
 	__strong id<MTLDepthStencilState> updateDepth=nil,surfaceDepth=nil;
 	__strong id<MTLTexture> normal=nil,coast=nil;
 	BumpWaterCompletion completion;bool clearCoast=false,dependenciesEncoded=false,surfaceEncoded=false;
+ unsigned bitmapUploads=0;
  std::shared_ptr<WaterSubmissionState> submission=std::make_shared<WaterSubmissionState>();
 };
 PreparedBumpWater::PreparedBumpWater(std::unique_ptr<Impl> value):impl(std::move(value)) {}
 PreparedBumpWater::~PreparedBumpWater()=default;
 id<MTLTexture> PreparedBumpWater::Normal()const{return impl->normal;}
 id<MTLTexture> PreparedBumpWater::Coast()const{return impl->coast;}
+bool PreparedBumpWater::CanQueueSubmission()const{
+ return impl->submission->queueQualified || impl->submission->queuedNormalWriter;
+}
 uint32_t PreparedBumpWater::DependencyDrawCount()const{
 	const auto coastUpdates=std::count_if(impl->updates.begin(),impl->updates.end(),[](const auto& u){return u.generateMips&&!u.normal;});
 	const auto clearedEmpty=impl->clearCoast&&impl->completion.coastSequence==0?1:0;
@@ -151,8 +212,23 @@ BumpWaterCompletion PreparedBumpWater::DidComplete() {
 	if(impl->coast)impl->generation->coastInitialized=true;impl->submission->completed=true;return impl->completion;
 }
 struct BumpWaterGPU::Impl {
-	struct Pipelines {__strong id<MTLRenderPipelineState> surface=nil,normal=nil,coast=nil,atlas=nil,coastMip=nil;};
-	std::map<PipelineKey,Pipelines> pipelines;std::map<const WorldTexture*,Bitmap> bitmaps;
+	struct Pipelines {__strong id<MTLLibrary> library=nil;__strong id<MTLRenderPipelineState> surface=nil,normal=nil,coast=nil,atlas=nil,coastMip=nil;};
+	std::map<PipelineKey,Pipelines> pipelines;
+ std::map<std::tuple<PipelineKey,unsigned,uint32_t,MaterialBits>,id<MTLRenderPipelineState>> fixedSurface;
+ id<MTLRenderPipelineState> FixedSurface(RuntimeLease& lease,const PipelineKey& key,const Pipelines& base,const NativeBumpWaterUniforms& u,unsigned profile,bool blend,unsigned samples,double& ms){
+  Require(profile>0&&profile<7,"Invalid water surface variant");
+  const uint32_t mask=(profile==1||profile>=3)?u.flags[1]:0u;
+  const auto bits=profile>=4?WaterBits(u):MaterialBits{};
+  auto k=std::tuple{key,profile,mask,bits};
+  if(auto it=fixedSurface.find(k);it!=fixedSurface.end()){lease.Retain(it->second);return it->second;}
+  auto start=Clock::now();auto ld=[MTL4LibraryDescriptor new];ld.name=@"BumpWater surface variant";ld.source=String(WaterVariantSource(key.flags,u,profile));
+  auto opt=[MTLCompileOptions new];opt.mathMode=(profile==2||profile==3||profile==5||profile==6)?MTLMathModeRelaxed:MTLMathModeSafe;
+  opt.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(opt);ld.options=opt;
+  NSError* error=nil;auto fs=lease.NewLibrary(ld,&error);Require(fs,"Cannot compile water surface variant: "+Error(error));
+  auto pipeline=Pipeline(lease,base.library,"BumpWaterVertex","BumpWaterFragment",key.color,key.depth,key.stencil,blend,false,key.validate,samples,fs);
+  lease.Retain(base.library);lease.Retain(fs);lease.Retain(pipeline);fixedSurface.emplace(k,pipeline);ms+=Milliseconds(start);return pipeline;
+ }
+ std::map<const WorldTexture*,Bitmap> bitmaps;
 	std::shared_ptr<Generation> generation;
 	using SamplerKey=std::tuple<unsigned,unsigned,unsigned,unsigned,uint32_t,bool>;
 	std::map<SamplerKey,id<MTLSamplerState>> samplers;
@@ -167,6 +243,7 @@ struct BumpWaterGPU::Impl {
 		if(it!=bitmaps.end()&&it->second.owner.lock()!=owner){bitmaps.erase(it);it=bitmaps.end();}
 		if(it!=bitmaps.end()&&needMips&&!*it->second.mipReady&&lease.PreparingWhilePending())lease.RetirePreviousSubmission();
 		if(it==bitmaps.end()){
+   ++prepared.bitmapUploads;
 			const auto& base=owner->mips.front();const uint32_t levels=owner->generateMipmaps?Levels(base.width,base.height):uint32_t(owner->mips.size());
 			const auto decoded=DecodeWorldBCBaseForMipmaps(*owner,lease.Capabilities().maxTextureDimension2D);
 			const auto format=decoded?(owner->format==WorldTextureFormat::BC7RGBASRGB?MTLPixelFormatRGBA8Unorm_sRGB:MTLPixelFormatRGBA8Unorm):Format(owner->format);
@@ -186,7 +263,7 @@ BumpWaterGPU::BumpWaterGPU():impl(std::make_unique<Impl>()) {}
 BumpWaterGPU::~BumpWaterGPU()=default;
 void BumpWaterGPU::ClearResources(){impl->generation.reset();impl->bitmaps.clear();}
 std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeBumpWaterFrame> frame,
-	const BumpWaterSceneImages& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& compileMs,unsigned samples)
+	const BumpWaterSceneImages& images,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,bool validation,double& compileMs,unsigned samples,bool queueCandidate)
 {
 	Require(frame!=nullptr,"Missing original water frame");ValidateNativeBumpWater(*frame);const auto& f=*frame;const auto& m=*f.material;
 	Require(NativeBumpWaterVisible(f),"Original world stage does not draw water on this map/frame");
@@ -209,17 +286,80 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 		external(images.shadowColor,11,format,images.shadowDepth.texture.width,images.shadowDepth.texture.height);}
 	if(f.infoTexture)external(images.info,10,MTLPixelFormatRGB10A2Unorm,f.paddedSquaresX,f.paddedSquaresZ);
 	auto prepared=std::make_unique<PreparedBumpWater::Impl>();prepared->frame=frame;
+ const bool enabled=WaterReadOnlyEnabled("BAR_NATIVE_WATER4_READONLY_QUEUE");
+ static const bool transition=WaterReadOnlyEnabled("BAR_NATIVE_WATER4_TICK_TRANSITION");
+ const bool census=WaterReadOnlyEnabled("BAR_NATIVE_WATER4_READONLY_CENSUS");
+ const bool inspect=enabled||census;const bool candidate=inspect&&queueCandidate;
+ auto& ticket=*prepared->submission;ticket.source=lease.SourceSubmission();ticket.simulation=f.simulationFrame;
+ ticket.localReads={f.settings.reflection?images.planarReflection.texture:nil,f.settings.refraction?images.preWaterColor.texture:nil,f.settings.depthCopy?images.preWaterDepth.texture:nil};
+ bool potentialPair=false,orderedPair=false,orderedTransition=false,priorPending=false;unsigned blockers=0;
+
 	if(!impl->generation||impl->generation->generationId!=f.generation){auto next=std::make_shared<Generation>();next->generationId=f.generation;next->material=f.material;
 		if(NativeBumpWaterDynamicNormals(f)){const auto& base=m.normal->mips.front();next->normal=Texture(lease,MTLPixelFormatRGBA8Unorm,base.width,base.height,Levels(base.width,base.height),MTLStorageModePrivate,MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead,"Original persistent RGBA8 dynamic normals");}
 		if(NativeBumpWaterShoreWaves(f))next->coast=Texture(lease,MTLPixelFormatBGR5A1Unorm,f.mapSquaresX,f.mapSquaresZ,Levels(f.mapSquaresX,f.mapSquaresZ),MTLStorageModePrivate,MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead,"Original RGB5 coast recurrence");
-		impl->generation=std::move(next);
+		impl->generation=std::move(next);impl->fixedSurface.clear();
 	}
 	auto& generation=*impl->generation;Require(generation.material==f.material,"Water material changed without resource generation");prepared->generation=impl->generation;
  auto base=BumpWaterCompletion{f.generation,generation.normalSequence,generation.coastSequence};
+ auto noNewUpdates=[&]{return !std::any_of(f.normalUpdates.begin(),f.normalUpdates.end(),[&](const auto& u){return u.sequence>base.normalSequence;})&&!std::any_of(f.coastUpdates.begin(),f.coastUpdates.end(),[&](const auto& u){return u->sequence>base.coastSequence;});};
+ auto bitmapReady=[&](const std::shared_ptr<const WorldTexture>& v,bool needMips){auto i=impl->bitmaps.find(v.get());return i!=impl->bitmaps.end()&&i->second.owner.lock()==v&&(!needMips||*i->second.mipReady);};
+ bool sourceBitmapsReady=false;
+ if(inspect)sourceBitmapsReady=bitmapReady(m.normal,!generation.normal)&&bitmapReady(m.caustics[NativeBumpWaterCausticIndex(f.simulationFrame,m.caustics.size())],true)&&bitmapReady(m.foam,true)&&(!generation.coast||bitmapReady(m.waveRandom,true));
+
  bool coastInitialized=generation.coastInitialized;
  if(auto prior=generation.pending.lock();prior&&!prior->completed){
+  priorPending=true;
   Require(prior->encoded&&prior->completion.generation==f.generation,"Water predecessor lost its original encoded generation");
-  if(lease.OrderAfterPreviousSubmission(prior.get(),[prior]{Require(prior->completed,"Water predecessor did not actually complete before successor submission");},NativePriorRead::BumpWater)){
+  if(inspect){
+   const bool sameSequences=prior->completion.normalSequence==base.normalSequence&&prior->completion.coastSequence==base.coastSequence;
+   const bool sameMaterial=prior->normal==generation.normal&&prior->coast==generation.coast;
+   const bool initialized=(!generation.normal||base.normalSequence)&&(!generation.coast||generation.coastInitialized);
+   bool distinct=true;for(auto a:ticket.localReads)for(auto p:prior->localReads)if(a&&a==p)distinct=false;
+   const bool adjacent=prior->source&&ticket.source>prior->source&&ticket.source-prior->source==1&&ticket.simulation==prior->simulation;
+   const uint64_t event=lease.PendingEventForSource(prior->source);
+   blockers=(candidate?0u:1u)|(prior->queueQualified?0u:2u)|(sameSequences&&sameMaterial&&initialized?0u:4u)|(noNewUpdates()?0u:8u)|(sourceBitmapsReady?0u:16u)|(distinct?0u:32u)|(adjacent?0u:64u)|(event?0u:128u);
+   potentialPair=!blockers;
+   if(enabled&&potentialPair){
+    // Same completed immutable content; no current recurrence writes. The existing
+    // full previous GPU event and FIFO completion/error checks are retained.
+    orderedPair=lease.OrderGPUReadAfterSubmission(prior.get(),prior->source,event,[prior]{Require(prior->completed&&prior->queueQualified,"Water read-only predecessor did not retire its actual owner");},NativePriorRead::BumpWater);
+   }
+
+   if (enabled && transition && !orderedPair && candidate && sameMaterial &&
+       initialized && sourceBitmapsReady && distinct && event && prior->source &&
+       ticket.source > prior->source && ticket.source - prior->source == 1) {
+    const auto& previous = prior->completion;
+    const bool sameCoast = previous.coastSequence == base.coastSequence &&
+        std::none_of(f.coastUpdates.begin(), f.coastUpdates.end(), [&](const auto& update) {
+         return update->sequence > previous.coastSequence;
+        });
+    unsigned newNormalUpdates = 0;
+    bool nextNormal = false;
+    for (const auto& update : f.normalUpdates) {
+     if (update.sequence <= previous.normalSequence) continue;
+     ++newNormalUpdates;
+     nextNormal = !update.initialize && update.sequence - previous.normalSequence == 1;
+    }
+    const bool normalWriter = sameCoast && sameSequences && prior->queueQualified &&
+        ticket.simulation > prior->simulation && ticket.simulation - prior->simulation == 1 &&
+        newNormalUpdates == 1 && nextNormal;
+    const bool firstReader = sameCoast && prior->queuedNormalWriter && adjacent &&
+        previous.normalSequence > base.normalSequence &&
+        previous.normalSequence - base.normalSequence == 1 && newNormalUpdates == 0;
+    if (normalWriter || firstReader) {
+     // SubmitAndDefer orders the entire command buffer after the immediately
+     // preceding event. FIFO retirement still checks the actual predecessor
+     // before publishing this frame's completions.
+     orderedTransition = lease.OrderGPUReadAfterSubmission(
+         prior.get(), prior->source, event, [prior, normalWriter] {
+          Require(prior->completed && (normalWriter ? prior->queueQualified : prior->queuedNormalWriter),
+                  "Water4 normal transition lost its actual predecessor");
+         }, NativePriorRead::BumpWater);
+     ticket.queuedNormalWriter = orderedTransition && normalWriter;
+    }
+   }
+  }
+  if(orderedPair||orderedTransition||lease.OrderAfterPreviousSubmission(prior.get(),[prior]{Require(prior->completed,"Water predecessor did not actually complete before successor submission");},NativePriorRead::BumpWater)){
    base=prior->completion;coastInitialized=prior->coastInitialized;
   }else{
    lease.RetirePreviousSubmission();Require(prior->completed,"Water preparation cannot overwrite an unretired predecessor");
@@ -240,7 +380,7 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 		const auto start=Clock::now();auto descriptor=[MTL4LibraryDescriptor new];descriptor.source=String("#define NATIVE_WATER_FLAGS "+std::to_string(key.flags)+"\n"+NATIVE_BUMP_WATER_SHADERS);
 		auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);descriptor.options=options;
 		NSError* error=nil;auto library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile original BumpWater shaders: "+Error(error));
-		Impl::Pipelines p;p.surface=Pipeline(lease,library,"BumpWaterVertex","BumpWaterFragment",color,depth,stencil,!f.settings.refraction,false,validation,samples);
+		Impl::Pipelines p;p.library=library;p.surface=Pipeline(lease,library,"BumpWaterVertex","BumpWaterFragment",color,depth,stencil,!f.settings.refraction,false,validation,samples);
 		p.normal=Pipeline(lease,library,"BumpWaterUpdateVertex","BumpWaterNormalFragment",MTLPixelFormatRGBA8Unorm,MTLPixelFormatInvalid,MTLPixelFormatInvalid,true,true,validation);
 		p.coast=Pipeline(lease,library,"BumpWaterUpdateVertex","BumpWaterCoastFragment",MTLPixelFormatBGR5A1Unorm,MTLPixelFormatInvalid,MTLPixelFormatInvalid,false,false,validation);
 		p.atlas=Pipeline(lease,library,"BumpWaterUpdateVertex","BumpWaterCoastFragment",MTLPixelFormatRGBA8Unorm,MTLPixelFormatInvalid,MTLPixelFormatInvalid,false,false,validation);
@@ -248,6 +388,12 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 		found=impl->pipelines.emplace(key,std::move(p)).first;compileMs+=Milliseconds(start);
 	}
 	const auto& pipelines=found->second;for(auto p:{pipelines.surface,pipelines.normal,pipelines.coast,pipelines.atlas,pipelines.coastMip})lease.Retain(p);prepared->surfacePipeline=pipelines.surface;
+ const unsigned requested=WaterVariant();const bool fixedRequested=requested!=0;
+ const bool fixedEligible=samples==1&&!InterventionFastMathEnabled()&&(uniforms.flags[1]&~0xfffu)==0;
+ if(fixedRequested&&fixedEligible){
+  prepared->surfacePipeline=impl->FixedSurface(lease,key,pipelines,uniforms,requested,!f.settings.refraction,samples,compileMs);
+  static std::atomic<bool> reported{false};if(!reported.exchange(true))LOG("[BumpWaterSurfaceVariant] active variant=%u mask=%u flags=%u",requested,uniforms.flags[1],key.flags);
+ }
 	if(!impl->updateDepth){auto d=[MTLDepthStencilDescriptor new];d.depthCompareFunction=MTLCompareFunctionAlways;d.depthWriteEnabled=NO;impl->updateDepth=[lease.Device() newDepthStencilStateWithDescriptor:d];
 		d.depthCompareFunction=MTLCompareFunctionLessEqual;impl->surfaceDepth=[lease.Device() newDepthStencilStateWithDescriptor:d];Require(impl->updateDepth&&impl->surfaceDepth,"Cannot create original water depth states");}
 	prepared->updateDepth=impl->updateDepth;prepared->surfaceDepth=impl->surfaceDepth;lease.Retain(impl->updateDepth);lease.Retain(impl->surfaceDepth);
@@ -301,6 +447,42 @@ std::unique_ptr<PreparedBumpWater> BumpWaterGPU::Prepare(RuntimeLease& lease,std
 			auto destination=(radius&1)?atlas:generation.coast;prepared->updates.push_back({Pass(destination,MTLLoadActionLoad),args,(radius&1)?pipelines.atlas:pipelines.coast,uint32_t(vertices.size()),1,false,radius==10});
 		}prepared->completion.coastSequence=update.sequence;
 	}
-	return std::unique_ptr<PreparedBumpWater>(new PreparedBumpWater(std::move(prepared)));
+	if(inspect){
+  ticket.normal=generation.normal;ticket.coast=generation.coast;
+  const bool actualReadOnly=prepared->updates.empty()&&prepared->bitmapMips.empty()&&prepared->coastMips.empty()&&!prepared->clearCoast&&!prepared->bitmapUploads;
+  ticket.queueQualified=candidate&&actualReadOnly&&(!generation.normal||prepared->completion.normalSequence)&&(!generation.coast||coastInitialized);
+  // A failed late check must never admit this draw. Any earlier ordering
+  // registration remains a real prior check on the original serial path.
+  if(orderedPair)Require(ticket.queueQualified&&prepared->completion.normalSequence==base.normalSequence&&prepared->completion.coastSequence==base.coastSequence,"Water read-only queue admission acquired a new producer");
+
+  if (orderedTransition) {
+   if (ticket.queuedNormalWriter) {
+    Require(prepared->updates.size() == 1 && prepared->updates.front().normal &&
+            prepared->bitmapMips.empty() && prepared->coastMips.empty() &&
+            !prepared->clearCoast && !prepared->bitmapUploads &&
+            prepared->completion.normalSequence > base.normalSequence &&
+            prepared->completion.normalSequence - base.normalSequence == 1 &&
+            prepared->completion.coastSequence == base.coastSequence,
+            "Water4 transition queued a different write set");
+   } else {
+    Require(ticket.queueQualified && prepared->completion.normalSequence == base.normalSequence &&
+            prepared->completion.coastSequence == base.coastSequence,
+            "Water4 transition reader acquired a new producer");
+   }
+   static unsigned long long writers = 0, readers = 0;
+   writers += ticket.queuedNormalWriter;
+   readers += !ticket.queuedNormalWriter;
+   const auto total = writers + readers;
+   if (total <= 2 || (census && (total % 120 == 0 || f.simulationFrame == 1739)))
+    LOG("[Water4TickTransition] active writers=%llu readers=%llu sim=%lld source=%llu",
+        writers, readers, (long long)ticket.simulation, (unsigned long long)ticket.source);
+  }
+  static unsigned long long calls=0,qualified=0,pending=0,pairs=0,ordered=0,writer=0,bitmaps=0,scene=0;
+  static std::array<unsigned long long,8> reasons{};
+  if(f.simulationFrame>=540&&f.simulationFrame<1740){++calls;qualified+=ticket.queueQualified;pending+=priorPending;pairs+=potentialPair;ordered+=orderedPair;writer+=!actualReadOnly;bitmaps+=prepared->bitmapMips.size()+prepared->bitmapUploads;scene+=candidate;for(unsigned i=0;i<8;++i)reasons[i]+=priorPending&&bool(blockers&(1u<<i));
+   if(calls==1||calls%120==0||f.simulationFrame>=1739)LOG("[Water4ReadonlyQueue] enabled=%u calls=%llu scene=%llu read_only=%llu pending=%llu possible_pairs=%llu ordered_pairs=%llu writes=%llu bitmap_work=%llu blockers=%llu,%llu,%llu,%llu,%llu,%llu,%llu,%llu source=%llu sim=%lld",enabled,calls,scene,qualified,pending,pairs,ordered,writer,bitmaps,reasons[0],reasons[1],reasons[2],reasons[3],reasons[4],reasons[5],reasons[6],reasons[7],(unsigned long long)ticket.source,(long long)ticket.simulation);
+  }
+ }
+ return std::unique_ptr<PreparedBumpWater>(new PreparedBumpWater(std::move(prepared)));
 }
 } // namespace rendering::metal4

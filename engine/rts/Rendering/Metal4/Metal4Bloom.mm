@@ -2,6 +2,9 @@
 #include "Metal4Bloom.h"
 #include "System/Log/ILog.h"
 #include <cstdlib>
+#include <atomic>
+#include <filesystem>
+#include <fstream>
 #include "Metal4InterventionMath.h"
 #include "Metal4TransientUpload177.h"
 #include "NativeBloomShaders.h"
@@ -337,14 +340,17 @@ struct BloomGPU::Impl {
  struct ProgramKey {std::string definitions;unsigned program;MTLPixelFormat color,depth,stencil;uint64_t blend;bool clear,validation;unsigned samples;bool coverage,identityRGBA;auto operator<=>(const ProgramKey&)const=default;};
  std::map<std::string,id<MTLLibrary>>libraries;std::map<ProgramKey,id<MTLRenderPipelineState>>pipelines;
  std::shared_ptr<ImageState>Image(RuntimeLease&l,std::shared_ptr<const NativeBloomImageVersion>v){Require(v&&v->image&&v->generation,"Missing actual Bloom image version");if(v->Resource()){auto image=std::dynamic_pointer_cast<const ImageState>(v->Resource());Require(image&&image->texture.device==l.Device()&&image->owner.lock()==v,"Original Bloom image resource belongs to another device/version");return std::const_pointer_cast<ImageState>(image);}ImageKey k{v->image->identity,v->generation};if(auto i=images.find(k);i!=images.end()){Require(i->second->owner.lock()==v,"Bloom image identity/generation reused by unrelated owner");return i->second;}auto r=std::make_shared<ImageState>();r->owner=v;r->producer=v->producer;auto&im=*v->image;Require(im.width&&im.height&&im.width<=l.Capabilities().maxTextureDimension2D&&im.height<=l.Capabilities().maxTextureDimension2D,"Bloom original FBO exceeds actual device limits");auto d=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:ColorFormat(im.format) width:im.width height:im.height mipmapped:NO];d.storageMode=MTLStorageModePrivate;d.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;auto reusable=std::find_if(freeImages.begin(),freeImages.end(),[&](id<MTLTexture> texture){return texture.width==im.width&&texture.height==im.height&&texture.pixelFormat==ColorFormat(im.format);});if(reusable!=freeImages.end()){r->texture=*reusable;freeImages.erase(reusable);}else r->texture=[l.Device()newTextureWithDescriptor:d];Require(r->texture!=nil,"Cannot allocate actual Bloom FBO texture");const auto key=std::pair{im.sampling.minFilter,im.sampling.magFilter};if(auto cached=samplers.find(key);cached!=samplers.end())r->sampler=cached->second;else{auto s=[MTLSamplerDescriptor new];s.supportArgumentBuffers=YES;s.minFilter=im.sampling.minFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.magFilter=im.sampling.magFilter==0x2600?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.mipFilter=MTLSamplerMipFilterNotMipmapped;s.sAddressMode=s.tAddressMode=MTLSamplerAddressModeClampToEdge;r->sampler=[l.Device()newSamplerStateWithDescriptor:s];Require(r->sampler!=nil,"Cannot allocate actual Bloom sampler");samplers.emplace(key,r->sampler);}v->Fulfill(r);images.emplace(k,r);return r;}
- id<MTLRenderPipelineState>Pipeline(RuntimeLease&l,const NativeBloomDraw&draw,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned depthMask,bool validation,double&ms,unsigned samples,bool identityRGBA=false,BloomPrepareDefinitions* reuse=nullptr){
+ id<MTLRenderPipelineState>Pipeline(RuntimeLease&l,const NativeBloomDraw&draw,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned depthMask,bool validation,double&ms,unsigned samples,bool identityRGBA=false,BloomPrepareDefinitions* reuse=nullptr,unsigned directProfile=0){
  const bool combine=draw.program==NativeBloomProgram::Combine;
  std::string scratch;
  if (!reuse || draw.defines.empty()) {
   auto original=draw.defines.empty()?DefaultDefines():draw.defines;
   scratch=Defines(original,depthMask,combine);
  }
- const std::string& defs=reuse && !draw.defines.empty()?reuse->Text(draw.defines,depthMask,combine,scratch):scratch;
+ const std::string& baseDefs=reuse && !draw.defines.empty()?reuse->Text(draw.defines,depthMask,combine,scratch):scratch;
+ std::string profiled;
+ if(directProfile)profiled=baseDefs+"#define NATIVE_BLOOM_IDENTITY_MASK "+std::to_string(directProfile&15u)+"\n#define NATIVE_BLOOM_FLIP_MASK "+std::to_string(directProfile>>4)+"\n";
+ const std::string& defs=directProfile?profiled:baseDefs;
  ProgramKey key{defs,unsigned(draw.program),color,depth,stencil,BlendKey(draw.surface.blend,draw.world.colorWrite),draw.clear,validation,l.SampleShadingKey(samples),!draw.clear&&draw.world.alphaToCoverage,identityRGBA};if(auto p=pipelines.find(key);p!=pipelines.end())return p->second;auto start=Clock::now();NSError*error=nil;id<MTLLibrary>library=nil;if(auto i=libraries.find(defs);i!=libraries.end())library=i->second;else{auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Exact31657 complete Bloom program family";descriptor.source=String(defs+bloom::SHADER);auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);descriptor.options=options;library=l.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile exact original Bloom shaders: "+Error(error));libraries.emplace(defs,library);}
  auto p=[MTL4RenderPipelineDescriptor new];p.rasterSampleCount=samples;p.alphaToCoverageState=key.coverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=library;v.name=@"BloomVertex";f.name=String(Entry(draw.program,key.identityRGBA));p.vertexFunctionDescriptor=v;p.fragmentFunctionDescriptor=f;p.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;auto a=p.colorAttachments[0];a.pixelFormat=color;auto b=draw.surface.blend;if(draw.clear)b.enabled=false;a.blendingState=b.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;a.sourceRGBBlendFactor=effectstate::Factor(b.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(b.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(b.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(b.destinationAlpha);a.rgbBlendOperation=Equation(b.colorEquation);a.alphaBlendOperation=Equation(b.alphaEquation);auto m=draw.world.colorWrite;a.writeMask=MTLColorWriteMask((m[0]?MTLColorWriteMaskRed:0)|(m[1]?MTLColorWriteMaskGreen:0)|(m[2]?MTLColorWriteMaskBlue:0)|(m[3]?MTLColorWriteMaskAlpha:0));auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);p.options=options;auto pipeline=l.NewRenderPipeline(p,&error);Require(pipeline!=nil,"Cannot compile exact Bloom actual attachment pipeline: "+Error(error));pipelines.emplace(key,pipeline);ms+=Milliseconds(start);return pipeline;}
 };
@@ -410,7 +416,21 @@ uint64_t prior=0;
    if(DepthFormat(image.texture.pixelFormat))depthMask|=1u<<unit;if(image.flipV)u.flip.x|=1u<<unit;[d.arguments setTexture:image.texture.gpuResourceID atIndex:unit];[d.arguments setSamplerState:image.sampler.gpuResourceID atIndex:unit];l.AddAllocation(image.texture);l.Retain(image.sampler);d.inputs.push_back(std::move(image));}
   if(!draw.clear&&!d.noop&&draw.program==NativeBloomProgram::Bright)ValidateNativeDeferredModelEpochs(modelEpochs);
   d.downsampleSwizzle=SelectDownsampleSwizzle(draw.program,draw.clear,d.noop,depthMask,u.swizzle[0]);
-  auto vertices=draw.clear?MakeNativeBloomTexRect(-1,-1,1,1,0,0,1,1):draw.vertices;auto vb=upload177(vertices.data(),sizeof(vertices)),ub=upload177(&u,sizeof(u));[d.arguments setAddress:ub.gpuAddress atIndex:0];[d.arguments setAddress:vb.gpuAddress atIndex:1];d.pipeline=impl->Pipeline(l,draw,d.color.pixelFormat,d.z?d.z.pixelFormat:MTLPixelFormatInvalid,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid,depthMask,validation,ms,unsigned(d.color.sampleCount),d.downsampleSwizzle==DownsampleSwizzle::IdentityRGBA,definitions?&*definitions:nullptr);d.depth=effectstate::Depth(l,d.world,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid);l.Retain(d.arguments);l.Retain(d.pipeline);l.AddAllocation(d.color);if(d.z)l.AddAllocation(d.z);if(d.stencil)l.AddAllocation(d.stencil);if(d.previous)l.AddAllocation(d.previous->texture);result->impl->draws.push_back(std::move(d));
+  const bool combineDirect=draw.program==NativeBloomProgram::Combine;
+  const bool upDirect=draw.program==NativeBloomProgram::Upsample||draw.program==NativeBloomProgram::FinalUpsample;
+  unsigned directMask=0;
+  if((combineDirect||upDirect)&&!d.clear&&!d.noop&&d.color.sampleCount==1&&!InterventionFastMathEnabled()){
+   for(unsigned unit:InputUnits(draw)){
+    const auto sw=u.swizzle[unit];
+    if(draw.inputs[unit].local&&!(depthMask&(1u<<unit))&&sw.x==0x1903u&&sw.y==0x1904u&&sw.z==0x1905u&&sw.w==0x1906u)directMask|=1u<<unit;
+   }
+  }
+  const unsigned directProfile=directMask|((u.flip.x&directMask)<<4);
+  static const unsigned selected=[](){const char* v=std::getenv("BAR_NATIVE_BLOOM_COLOR_VARIANT");if(!v||!*v)return 3u;return v&&std::strcmp(v,"1")==0?1u:v&&std::strcmp(v,"2")==0?2u:v&&std::strcmp(v,"3")==0?3u:0u;}();
+  const unsigned active=directProfile&&((combineDirect&&(selected&1u))||(upDirect&&(selected&2u)))?directProfile:0u;
+  if(active){static std::atomic<unsigned> reported{0};unsigned bit=1u<<unsigned(draw.program);if(!(reported.fetch_or(bit)&bit))LOG("[BloomColorVariant] active program=%u profile=%u",unsigned(draw.program),active);}
+
+  auto vertices=draw.clear?MakeNativeBloomTexRect(-1,-1,1,1,0,0,1,1):draw.vertices;auto vb=upload177(vertices.data(),sizeof(vertices)),ub=upload177(&u,sizeof(u));[d.arguments setAddress:ub.gpuAddress atIndex:0];[d.arguments setAddress:vb.gpuAddress atIndex:1];d.pipeline=impl->Pipeline(l,draw,d.color.pixelFormat,d.z?d.z.pixelFormat:MTLPixelFormatInvalid,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid,depthMask,validation,ms,unsigned(d.color.sampleCount),d.downsampleSwizzle==DownsampleSwizzle::IdentityRGBA,definitions?&*definitions:nullptr,active);d.depth=effectstate::Depth(l,d.world,d.stencil?d.stencil.pixelFormat:MTLPixelFormatInvalid);l.Retain(d.arguments);l.Retain(d.pipeline);l.AddAllocation(d.color);if(d.z)l.AddAllocation(d.z);if(d.stencil)l.AddAllocation(d.stencil);if(d.previous)l.AddAllocation(d.previous->texture);result->impl->draws.push_back(std::move(d));
  }return result;
 }
 }

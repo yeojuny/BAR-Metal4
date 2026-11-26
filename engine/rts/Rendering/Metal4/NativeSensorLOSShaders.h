@@ -26,7 +26,11 @@ inline float SensorLOSVisibility(float3 center,float radius,constant SensorLOSUn
 	return max(max(-(ndc.x+1.0f)-r,(ndc.x-1.0f)-r),max(-(ndc.y+1.0f)-r,(ndc.y-1.0f)-r));
 }
 inline SensorLOSValue SensorLOSOriginalVertex(float4 point,SensorLOSInstance instance,float4 drawPos,
-	constant SensorLOSUniform& u,texture2d<float> height,sampler heightSampler) {
+	constant SensorLOSUniform& u,texture2d<float> height,sampler heightSampler
+#ifdef SENSORLOS_INSTANCE_WORK
+ ,bool fan
+#endif
+ ) {
 	float4 center=float4(drawPos.xyz,1.0f);
 	const float2 front=float2(sin(drawPos.w),cos(drawPos.w));
 	center.xz+=front*instance.radiusParams.w+float2(-front.y,front.x)*instance.radiusParams.z;
@@ -43,7 +47,11 @@ inline SensorLOSValue SensorLOSOriginalVertex(float4 point,SensorLOSInstance ins
 	const float ground=height.sample(heightSampler,uv,level(0.0f)).r;
 	world.y=max(0.0f,ground);
 
+#ifdef SENSORLOS_INSTANCE_WORK
+ if(fan){
+#else
  if(u.options.z){
+#endif
   float centerDistance=0.f;
   if(dot(point.xy,point.xy)<.0001f)centerDistance=radius+32.f;
   else world.xyz+=normalize(world.xyz-center.xyz)*16.f;
@@ -141,8 +149,16 @@ vertex SensorLOSVarying OriginalSensorLOSVertex(uint vertexIndex [[vertex_id]],u
 	const device float4* colors [[buffer(4)]],texture2d<float> height [[texture(0)]],sampler heightSampler [[sampler(0)]]) {
 	const uint segment=vertexIndex/6,corner=vertexIndex%6;
 	const auto instance=instances[u.counts.z+instanceIndex];const auto pos=positions[instanceIndex];
-	const auto va=SensorLOSOriginalVertex(vertices[u.counts.y+segment],instance,pos,u,height,heightSampler);
-	const auto vb=SensorLOSOriginalVertex(vertices[u.counts.y+(segment+1)%u.counts.x],instance,pos,u,height,heightSampler);
+	const auto va=SensorLOSOriginalVertex(vertices[u.counts.y+segment],instance,pos,u,height,heightSampler
+#ifdef SENSORLOS_INSTANCE_WORK
+ ,false
+#endif
+ );
+	const auto vb=SensorLOSOriginalVertex(vertices[u.counts.y+(segment+1)%u.counts.x],instance,pos,u,height,heightSampler
+#ifdef SENSORLOS_INSTANCE_WORK
+ ,false
+#endif
+ );
 	float4 a=va.clip,b=vb.clip;
 	if(u.options.x){a.z=(a.z+a.w)*0.5f;b.z=(b.z+b.w)*0.5f;}
 	SensorLOSVarying out{};out.color=float4(mix(u.rangeColor.rgb,colors[instanceIndex].rgb,u.values.z),u.rangeColor.a);out.position=float4(2,2,2,1);out.dataA=out.dataB=out.lineA=out.lineB=out.lineNDC=float4(0);
@@ -340,12 +356,19 @@ struct SensorLOSFanVarying {float4 position [[position]];float distance [[RECOIL
 vertex SensorLOSFanVarying OriginalSensorLOSFanVertex(uint vid [[vertex_id]],uint iid [[instance_id]],
  const device float4* vertices [[buffer(0)]],const device SensorLOSInstance* instances [[buffer(1)]],const device float4* positions [[buffer(2)]],constant SensorLOSUniform& u [[buffer(3)]],texture2d<float> height [[texture(0)]],sampler heightSampler [[sampler(0)]]){
  const uint corner=vid%3,segment=vid/3;const uint index=corner==0?0:segment+corner;
- const auto value=SensorLOSOriginalVertex(vertices[u.counts.y+index],instances[u.counts.z+iid],positions[iid],u,height,heightSampler);
+ const auto value=SensorLOSOriginalVertex(vertices[u.counts.y+index],instances[u.counts.z+iid],positions[iid],u,height,heightSampler
+#ifdef SENSORLOS_INSTANCE_WORK
+ ,true
+#endif
+ );
  float4 clip=value.clip;if(u.options.x)clip.z=(clip.z+clip.w)*.5f;return {clip,value.data.x};
 }
 fragment float4 OriginalSensorLOSFanFragment(SensorLOSFanVarying in [[stage_in]],constant SensorLOSUniform& u [[buffer(3)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT){
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));
- if(!SensorAlpha(1.f,u.parameters.y,u.options.w))discard_fragment();return float4(float3(in.distance/32.f),1.f);
+#ifndef SENSORLOS_INSTANCE_WORK
+ if(!SensorAlpha(1.f,u.parameters.y,u.options.w))discard_fragment();
+#endif
+ return float4(float3(in.distance/32.f),1.f);
 }
 )MSL"
 RECOIL_NATIVE_MULTISAMPLE_LINE_MSL

@@ -874,6 +874,23 @@ result.v_screenUV=program.v_screenUV;
 result.v_sourceVisibility=program.v_sourceVisibility;
 return result;
 }
+#ifdef NATIVE_DEFERRED_SPECIAL_KIND
+ #define NATIVE_DEFERRED_LIGHT_KIND float(NATIVE_DEFERRED_SPECIAL_KIND)
+#else
+ #define NATIVE_DEFERRED_LIGHT_KIND (drawUniforms->pointbeamcone)
+#endif
+#ifdef NATIVE_DEFERRED_SPECIAL_SHADOW_COUNT
+ #define NATIVE_DEFERRED_SHADOW_COUNT int(NATIVE_DEFERRED_SPECIAL_SHADOW_COUNT)
+#else
+ #define NATIVE_DEFERRED_SHADOW_COUNT (drawUniforms->screenSpaceShadows)
+#endif
+inline float3 DeferredLightNormalize(float3 x) {
+#if NATIVE_DEFERRED_MVK_ARITHMETIC
+ return x*rsqrt(fma(x.x,x.x,fma(x.y,x.y,x.z*x.z)));
+#else
+ return normalize(x);
+#endif
+}
 struct DeferredLightFragmentProgram {
 constant NativeDeferredLightMatrices* matrixBuffer;
 constant NativeDeferredLightParams* paramsBuffer;
@@ -889,9 +906,27 @@ float2 v_screenUV;
 float v_sourceVisibility;
 float4 gl_FragCoord,fragColor;
 NativeMapDepthTexture mapDepths;sampler mapDepthsSampler;
-float4 Sample_mapDepths(float2 uv,float lod){return NativeSampleLOD(mapDepths,mapDepthsSampler,uv,lod,0,*drawUniforms);}
+float4 Sample_mapDepths(float2 uv,float lod){
+#if NATIVE_DEFERRED_DIRECT_DEPTH
+ #if (NATIVE_DEFERRED_DEPTH_FLIP_MASK & 1)
+ uv.y=1.0f-uv.y;
+ #endif
+ return float4(mapDepths.sample(mapDepthsSampler,uv,level(lod)));
+#else
+ return NativeSampleLOD(mapDepths,mapDepthsSampler,uv,lod,0,*drawUniforms);
+#endif
+}
 NativeModelDepthTexture modelDepths;sampler modelDepthsSampler;
-float4 Sample_modelDepths(float2 uv,float lod){return NativeSampleLOD(modelDepths,modelDepthsSampler,uv,lod,1,*drawUniforms);}
+float4 Sample_modelDepths(float2 uv,float lod){
+#if NATIVE_DEFERRED_DIRECT_DEPTH
+ #if (NATIVE_DEFERRED_DEPTH_FLIP_MASK & 2)
+ uv.y=1.0f-uv.y;
+ #endif
+ return float4(modelDepths.sample(modelDepthsSampler,uv,level(lod)));
+#else
+ return NativeSampleLOD(modelDepths,modelDepthsSampler,uv,lod,1,*drawUniforms);
+#endif
+}
 texture2d<float> mapNormals;sampler mapNormalsSampler;
 float4 Sample_mapNormals(float2 uv,float lod){return NativeSampleLOD(mapNormals,mapNormalsSampler,uv,lod,2,*drawUniforms);}
 texture2d<float> modelNormals;sampler modelNormalsSampler;
@@ -1124,7 +1159,7 @@ float4 halfconeIntersectScatter( float3  rayOrigin, float3 rayDirection, float3 
 	else {
 		coneflatdistances.y = NativeMax(coneflatdistances.y,coneflatdistances.z);
 	}
-	 // vec3 normal =normalize(ConeHeightSqr*(ConeHeightSqr*(TipToEye+CloseDistToCone*rayDirection))-TipToEnd*CapeLengthSqr*y)
+	 // vec3 normal =DeferredLightNormalize(ConeHeightSqr*(ConeHeightSqr*(TipToEye+CloseDistToCone*rayDirection))-TipToEnd*CapeLengthSqr*y)
 	// Bail early if we are not on the cone
 	if (abs(coneflatdistances.y - coneflatdistances.x) < 0.001) return float4(-1, -1, 0, 0);
 	 
@@ -1156,7 +1191,7 @@ float4 halfconeIntersectScatter( float3  rayOrigin, float3 rayDirection, float3 
 		// Calculate the distatten (which is squared)
 		float distatten = NativeClamp((1.0 - dot(marchPos - coneTip, marchPos - coneTip) * ConeHeightSqrInv), 0.0, 1.0);
 		
-		float3 tiptomarchnorm = normalize(marchPos - coneTip);
+		float3 tiptomarchnorm = DeferredLightNormalize(marchPos - coneTip);
 		float falloffatten = NativeClamp(1.0 - (1.0-dot(coneDirection, tiptomarchnorm))* oneminuscosThetainv, 0.0,1.0);
 		
 		float rayleighhere = distatten*falloffatten * noise;
@@ -1360,7 +1395,7 @@ void Run()
 			targetcolor = Sample_mapDiffuse( v_screenUV, 0.0) * drawUniforms->nightFactor;
 		}
 	}
-	normals.xyz = normalize(normals.xyz);
+	normals.xyz = DeferredLightNormalize(normals.xyz);
 	
 	
 	float4 fragWorldPos =  float4( float3(v_screenUV.xy * 2.0 - 1.0, worlddepth),  1.0);
@@ -1395,12 +1430,12 @@ void Run()
 	float shadowedness = 0; // how much the light source is screen-space shadowed
 
 	#line 32000
-	if (drawUniforms->pointbeamcone < 0.5){ //point
+	if (NATIVE_DEFERRED_LIGHT_KIND < 0.5){ //point
 		lightPosition = v_worldPosRad.xyz;
 		lightEmitPosition = lightPosition;
 		
 		lightToWorld = fragWorldPos.xyz - lightPosition;
-		lightDirection = normalize(lightToWorld);
+		lightDirection = DeferredLightNormalize(lightToWorld);
 		
 		attenuation = NativeClamp( 1.0 - length (lightToWorld) * lightRadiusInv, 0,1);
 		
@@ -1419,11 +1454,11 @@ void Run()
 		lensFlare = v_sourceVisibility * NativeClamp( LensFlareDistanceSqrt(closestpoint_dist.xyz, lightPosition,lightRadius) *(-10/(0.01+v_modelfactor_specular_scattering_lensflare.w)) + 1.0, 0, 1);
 
 	#line 33000
-	}else if (drawUniforms->pointbeamcone > 1.5){ // cone
+	}else if (NATIVE_DEFERRED_LIGHT_KIND > 1.5){ // cone
 		lightPosition = v_worldPosRad.xyz;
 		
 		lightToWorld = fragWorldPos.xyz - lightPosition;
-		lightDirection = normalize(lightToWorld);
+		lightDirection = DeferredLightNormalize(lightToWorld);
 		float3 coneDirection = v_worldPosRad2.xyz;
 		float lightCosTheta = v_worldPosRad2.w; // The cos of the half angle of the spot cone light
 		float lightSinTheta = sqrt(NativeMax(0.0, 1.0 - lightCosTheta * lightCosTheta)); // The sin of the half angle of the spot cone light
@@ -1453,7 +1488,7 @@ void Run()
 		//lensFlare = fract(localradius *0.02);
 		
 	#line 34000
-	}else if (drawUniforms->pointbeamcone < 1.5){ // beam 
+	}else if (NATIVE_DEFERRED_LIGHT_KIND < 1.5){ // beam 
 		float3 beamhalflength = v_worldPosRad2.xyz - v_worldPosRad.xyz; 
 		float3 beamstart = v_worldPosRad.xyz - beamhalflength;
 		float3 beamend = v_worldPosRad.xyz + beamhalflength;
@@ -1461,7 +1496,7 @@ void Run()
 		
 		lightToWorld = fragWorldPos.xyz - lightPosition;
 		
-		lightDirection = normalize(lightToWorld);
+		lightDirection = DeferredLightNormalize(lightToWorld);
 		attenuation = NativeClamp( 1.0 - length (lightToWorld) *lightRadiusInv, 0,1);
 		
 		
@@ -1523,7 +1558,7 @@ void Run()
 	// highlights that elongate naturally at grazing angles (more wet-metal/PBR look)
 	// instead of Phong's teardrop-then-pop. Exponent is ~4x Phong to match the
 	// equivalent highlight tightness.
-	float3 halfVector = normalize(-lightDirection + viewDirection);
+	float3 halfVector = DeferredLightNormalize(-lightDirection + viewDirection);
 	specular = NativeMax(0.0, dot(halfVector, normals.xyz));
 	specular = v_modelfactor_specular_scattering_lensflare.y * pow(specular, 32.0 * ( 1.0 + ismodel * v_modelfactor_specular_scattering_lensflare.x) ) * (1.0 + ismodel * v_modelfactor_specular_scattering_lensflare.x);
 	// Core-weighted falloff:
@@ -1531,7 +1566,12 @@ void Run()
 	//  - attTailEase: smooth/eased approach to zero near the max radius
 	// Blend keeps the soft radius edge while making the center visibly hotter.
 	float attLinear = attenuation;
-	float attCore = pow(attLinear, 2.5);
+	float attCore =
+#if NATIVE_DEFERRED_MVK_ARITHMETIC
+    powr(attLinear, 2.5);
+#else
+    pow(attLinear, 2.5);
+#endif
 	float attTailEase = attLinear * attLinear * (3.0 - 2.0 * attLinear);
 	attenuation = mix(attCore, attTailEase, 0.17);
 	attenuation = NativeClamp(attenuation * (1.0 + 0.22 * attLinear * attLinear), 0.0, 1.0);
@@ -1545,8 +1585,8 @@ void Run()
 	#ifdef SCREENSPACESHADOWS
 		// But only for point and cone lights:
 		// also assume that only models will shadow
-		if ((v_otherparams.w) > 0.01 && (drawUniforms->screenSpaceShadows > 0)) {
-			const int sampleCount = drawUniforms->screenSpaceShadows;
+		if ((v_otherparams.w) > 0.01 && (NATIVE_DEFERRED_SHADOW_COUNT > 0)) {
+			const int sampleCount = NATIVE_DEFERRED_SHADOW_COUNT;
 			// Initialize the quad vectors, so we can do Pixel Quad Message Passing
 			quadVector = get_quad_vector(float4(v_screenUV.xy, floor(gl_FragCoord.xy))).zw;
 			threadMask = quadGetThreadMask(quadVector);
@@ -1615,7 +1655,10 @@ void Run()
 					//printf(testDistance);	
 				*/
 
-				for (int i = 0; i < sampleCount; i++){ 
+				#if NATIVE_DEFERRED_FIXED_SAMPLE_COUNT
+                #pragma clang loop unroll(disable)
+                #endif
+                for (int i = 0; i < sampleCount; i++){ 
 					float stepSize =  (float(i) + threadRandom );
 
 					// Calculate the current ray position in screenspace only!
@@ -1683,7 +1726,7 @@ void Run()
 			float4 gatheredunoccluded = quadGather(occludedness);
 			float dotproduct = dot(gatheredunoccluded, float4(4* weights)); // This will multiply by 4, effectively
 			//dotproduct = occludedness;
-			unoccluded = 1.0 - smoothstep(0.0, 0.25 * v_otherparams.w * float(drawUniforms->screenSpaceShadows) , dotproduct);
+			unoccluded = 1.0 - smoothstep(0.0, 0.25 * v_otherparams.w * float(NATIVE_DEFERRED_SHADOW_COUNT) , dotproduct);
 			//unoccluded = 1.0;
 			//printf(unoccluded);
 		}	

@@ -38,7 +38,15 @@ float SourceChannel(float4 v,uint channel){switch(channel){case 0:return 0;case 
 float4 SourceSwizzle(float4 v,uint unit,constant SSAOUniform&u){uint4 s=u.imageSwizzle[unit];return float4(SourceChannel(v,s.x),SourceChannel(v,s.y),SourceChannel(v,s.z),SourceChannel(v,s.w));}
 template<class T> float4 ReadColor(T t,sampler s,float2 uv,uint unit,constant SSAOUniform&u){return SourceSwizzle(LogicalRGBA(t.sample(s,ImageUV(uv,unit,u)),unit,u),unit,u);}
 template<class T> float4 ReadColorLOD0(T t,sampler s,float2 uv,uint unit,constant SSAOUniform&u){return SourceSwizzle(LogicalRGBA(t.sample(s,ImageUV(uv,unit,u),level(0.0)),unit,u),unit,u);}
-template<class T> float ReadDepthValue(T t,sampler s,float2 uv,uint unit,constant SSAOUniform&u){return ReadColorLOD0(t,s,uv,unit,u).r;}
+template<class T> float ReadDepthValue(T t,sampler s,float2 uv,uint unit,constant SSAOUniform&u){
+#if SSAO_CANONICAL_DEPTH_SAMPLE
+ // This variant is compiled only for Sample with both depth2d bindings,
+ // red logical depth channels, and V flips verified by the owning draw.
+ return t.sample(s,float2(uv.x,1.0-uv.y),level(0.0));
+#else
+ return ReadColorLOD0(t,s,uv,unit,u).r;
+#endif
+}
 float2 FragmentCoord(float4 position,constant SSAOUniform&u){return float2(position.x,u.framebuffer.z-position.y)*u.framebuffer.xy;}
 template<class T> float ReadDepthTexel(T t,int2 pixel,uint unit,constant SSAOUniform&u){
  if(u.textureFlip[unit/4]&(1u<<(unit%4)))pixel.y=int(t.get_height())-1-pixel.y;
@@ -94,7 +102,17 @@ vertex SSAOVarying SSAOVertex(uint id [[vertex_id]],constant float4* vertices [[
 #define NORM2SNORM(value) (value * 2.0 - 1.0)
 #define SNORM2NORM(value) (value * 0.5 + 0.5)
 float IGN(float2 p) {
-	return fract(52.9829189 * fract(dot(p, float2(0.06711056, 0.00583715))));
+#if SSAO_PHASE_PRECISION == 1
+ #pragma clang fp contract(off)
+ float x=p.x*0.06711056;
+ float y=p.y*0.00583715;
+ return fract(52.9829189*fract(x+y));
+#elif SSAO_PHASE_PRECISION == 2
+ #pragma clang fp contract(off)
+ return fract(52.9829189*fract(fma(p.x,0.06711056,p.y*0.00583715)));
+#else
+ return fract(52.9829189 * fract(dot(p, float2(0.06711056, 0.00583715))));
+#endif
 }
 
 
@@ -133,6 +151,23 @@ float4 GetViewPos(float2 texCoord,ModelTexture modelDepthTex,sampler modelDepthT
 
 float GetViewPosZ(float2 texCoord,ModelTexture modelDepthTex,sampler modelDepthTexSampler,MapTexture mapDepthTex,sampler mapDepthTexSampler,constant SSAOUniform&u){
  float depth=min(ReadDepthValue(mapDepthTex,mapDepthTexSampler,texCoord,4,u),ReadDepthValue(modelDepthTex,modelDepthTexSampler,texCoord,1,u));
+#if (SSAO_CANONICAL_PROJECTION & 14)
+ // The owner proved that inverse projection Z is constant and W depends
+ // only on depth. Preserve the original clip-depth convention.
+ #if DEPTH_CLIP01 == 1
+ float ndcDepth=depth;
+ #else
+ float ndcDepth=NORM2SNORM(depth);
+ #endif
+ #if (SSAO_CANONICAL_PROJECTION & 4)
+ float w=fma(u.cameraProjInv[2].w,ndcDepth,u.cameraProjInv[3].w);
+ #elif (SSAO_CANONICAL_PROJECTION & 8)
+ float w=dot(float2(u.cameraProjInv[2].w,u.cameraProjInv[3].w),float2(ndcDepth,1.0));
+ #else
+ float w=u.cameraProjInv[2].w*ndcDepth+u.cameraProjInv[3].w;
+ #endif
+ return u.cameraProjInv[3].z/w;
+#else
 #if DEPTH_CLIP01 == 1
  float4 projPosition=float4(NORM2SNORM(texCoord),depth,1.0);
 #else
@@ -141,6 +176,7 @@ float GetViewPosZ(float2 texCoord,ModelTexture modelDepthTex,sampler modelDepthT
  float z=dot(float4(u.cameraProjInv[0].z,u.cameraProjInv[1].z,u.cameraProjInv[2].z,u.cameraProjInv[3].z),projPosition);
  float w=dot(float4(u.cameraProjInv[0].w,u.cameraProjInv[1].w,u.cameraProjInv[2].w,u.cameraProjInv[3].w),projPosition);
  return z/w;
+#endif
 }
 
 float4 GetFusedViewPos(float2 texCoord, float sampledDepth,constant SSAOUniform& u) {
@@ -268,6 +304,12 @@ float4 fragColor;
 		// IGN gives a structured 2D rotation phase per pixel (much better blur convergence than white-noise hash).
 		// We construct an in-plane random direction and combine with a stable z lift to avoid degeneracy.
 		float ignPhase = IGN(FragmentCoord(in.position,u)) * 6.28318530718;
+#if SSAO_PHASE_PROBE
+  // Diagnostic only, exact IEEE-754 phase bits in RGBA8. Alpha is a byte,
+  // not AO; the owning draw guards against blend or alpha tests.
+  uint bits=as_type<uint>(ignPhase);
+  return float4(bits&255u,(bits>>8)&255u,(bits>>16)&255u,(bits>>24)&255u)/255.0;
+#endif
 		float3 randomVector = normalize(float3(cos(ignPhase), sin(ignPhase), 0.5));
 
 		// Using Gram-Schmidt process to get an orthogonal vector to the normal vector.
@@ -320,12 +362,18 @@ float4 fragColor;
 			float4 viewTestPosition = viewPosition + SSAO_RADIUS * float4(viewSampleVector, 0.0);
 
 			// projection
+#if (SSAO_CANONICAL_PROJECTION & 1)
+   float2 projected=float2(viewTestPosition.x*u.cameraProj[0].x,viewTestPosition.y*u.cameraProj[1].y);
+   float projectedW=viewTestPosition.z*u.cameraProj[2].w;
+   float2 texSampingPoint=SNORM2NORM(projected/projectedW);
+#else
 			float4 ndcTestPosition = u.cameraProj * viewTestPosition;
 			// perspecitive division
 			ndcTestPosition /= ndcTestPosition.w;
 
 			// [-1;1] to [0;1]
 			float2 texSampingPoint = SNORM2NORM(ndcTestPosition.xy);
+#endif
 
 			// Get sample viewPos from the viewPosTex texture
 			float viewPositionSampledZ;
@@ -390,6 +438,16 @@ float4 fragColor;
 
 if(!AlphaPass(fragColor.a,u))discard_fragment();return fragColor;
 }
+inline float4 ReadSSAOBlurColor(texture2d<float> tex,sampler state,float2 uv,constant SSAOUniform& u){
+#if SSAO_BLUR_DIRECT_COLOR
+ #if SSAO_BLUR_DIRECT_COLOR == 2
+ uv.y=1.0f-uv.y;
+ #endif
+ return tex.sample(state,uv,level(0.0));
+#else
+ return ReadColorLOD0(tex,state,uv,0,u);
+#endif
+}
 struct SSAOCompositeResult {float4 color [[color(0)]];float depth [[depth(any)]];};
 #if BLUR_COMPOSITE == 1
 fragment SSAOCompositeResult SSAOBlur(
@@ -439,7 +497,7 @@ float4 fragColor;
 		// implement outlier detection too 
 		// MORE GROUND EFFECT! USE UNIFORM KERNEL FOR GROUND!
 
-		float4 texSample = ReadColorLOD0(tex, texSampler, uv , 0, u);
+		float4 texSample = ReadSSAOBlurColor(tex, texSampler, uv, u);
 		float3 myNormal = NORM2SNORM(texSample.rgb);
 		myNormal.z = texSample.z;
 
@@ -470,7 +528,7 @@ float4 fragColor;
 			}
 
 
-			float4 leftSample = ReadColorLOD0(tex, texSampler, uvP , 0, u);
+			float4 leftSample = ReadSSAOBlurColor(tex, texSampler, uvP, u);
 			float zclosel = step(abs(myDistance - leftSample.z), ZTHRESHOLD);
 			float dotclosel = smoothstep(MINCOSANGLE, 1.0, dot(myNormal.xy, NORM2SNORM(leftSample.xy)));
 			dotclosel = max(dotclosel, imground);
@@ -479,7 +537,7 @@ float4 fragColor;
 			howLit += leftWeight * leftSample.a;
 			unWeighted += weightP * leftSample.a;
 
-			float4 rightSample = ReadColorLOD0(tex, texSampler, uvN , 0, u);
+			float4 rightSample = ReadSSAOBlurColor(tex, texSampler, uvN, u);
 			float zcloser = step(abs(myDistance - rightSample.z), ZTHRESHOLD);
 			float dotcloser = smoothstep(MINCOSANGLE, 1.0, dot(myNormal.xy, NORM2SNORM(rightSample.xy)));
 			dotcloser = max(dotcloser, imground);

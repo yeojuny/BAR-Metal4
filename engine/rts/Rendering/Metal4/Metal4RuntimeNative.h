@@ -178,6 +178,7 @@ public:
  bool OrderGPUReadAfterSubmission(const void* owner,uint64_t source,uint64_t event,std::function<void()> check,
   NativePriorRead kind);
  void PrepareDeferredDrawable(bool orderedGameFrame,uint64_t simulationFrame);
+ void AdmitDeferredGameFrame(uint64_t simulationFrame);
  // Admit only a pinned, already encoded predecessor. The supplied check must
  // establish its actual completion before this lease can submit GPU work.
  bool OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind);

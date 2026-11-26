@@ -3673,6 +3673,11 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
   const bool orderedPresentation=options.heldSourceDraw&&options.deferredCompleted&&
     !options.readback&&!impl->screenContinuation&&mainSamples==1&&frame.unsupported.empty()&&
     !bumpWaterActive&&!dynamicWaterActive&&!legacyWaterActive&&!cloudDraw;
+  static const bool waterQueue=[] {const char* v=std::getenv("BAR_NATIVE_WATER4_READONLY_QUEUE");return v&&std::string_view(v)=="1";}();
+  static const bool waterCensus=[] {const char* v=std::getenv("BAR_NATIVE_WATER4_READONLY_CENSUS");return v&&std::string_view(v)=="1";}();
+  const bool waterCandidate=(waterQueue||waterCensus)&&bumpWaterActive&&options.heldSourceDraw&&options.deferredCompleted&&
+    !options.readback&&!impl->screenContinuation&&mainSamples==1&&frame.unsupported.empty()&&!dynamicWaterActive&&!legacyWaterActive&&!cloudDraw;
+
 		std::shared_ptr<metal4::PreparedScreenFrame> screen;
 		if (options.screenUI != nullptr) {
    rankAtlasBorrow::ScreenPresentation rankAtlasScreen(orderedPresentation && !offscreenSource && options.allowPrepareReady);
@@ -4552,8 +4557,17 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
     images.info={worldInfo->Info(),false};
    }
    // BumpWater pins its recurrence predecessor and verifies real retirement at submit.
+   // Scene-local attachments must come from this draw's idle-owner pool,
+   // not the legacy raw scratch fallback. Rank-atlas borrow still sees the
+   // original (false for Water4) orderedPresentation predicate above.
+   const bool ownReflection=!water.settings.reflection||(waterAttachments->reflectionOwner&&waterAttachments->reflectionOwner->color==images.planarReflection.texture&&waterViews[1].source);
+   const bool ownRefraction=!water.settings.refraction||(water.settings.refraction>1?(waterAttachments->refractionOwner&&waterAttachments->refractionOwner->color==images.preWaterColor.texture&&waterViews[0].source):(waterAttachments->preOwner&&waterAttachments->preOwner->color==images.preWaterColor.texture));
+   const bool ownDepth=!water.settings.depthCopy||(waterAttachments->preOwner&&waterAttachments->preOwner->depth==images.preWaterDepth.texture);
+   const bool candidate=waterCandidate&&!offscreenSource&&drawable&&ownReflection&&ownRefraction&&ownDepth;
    waterSurface=impl->waterGPU.Prepare(lease,frame.bumpWater,images,layer.pixelFormat,MTLPixelFormatDepth32Float,
-    MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples);
+    MTLPixelFormatStencil8,options.shaderValidation,result.shaderCompileMs,mainSamples,candidate);
+   if(waterQueue&&candidate&&waterSurface->CanQueueSubmission())lease.AdmitDeferredGameFrame(frame.simulationFrame);
+
   }
   std::unique_ptr<PreparedGroundDecal> groundDecals;
   if(frame.groundDecals){

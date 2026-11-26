@@ -38,7 +38,15 @@ using Texture3=texture2d<float>;
 float4 LogicalRGBA(float4 v,uint unit,constant BloomUniform&u){return v;}
 float4 LogicalRGBA(float d,uint unit,constant BloomUniform&u){uint mode=u.depthMode[unit];return mode==0x1906u?float4(1,1,1,d):mode==0x8049u?float4(d):float4(d,d,d,1);}
 float Channel(float4 v,uint c){switch(c){case 0:return 0;case 1:return 1;case 0x1903:return v.r;case 0x1904:return v.g;case 0x1905:return v.b;case 0x1906:return v.a;default:return 0;}}
-template<class T>float4 ReadColor(T image,sampler filter,float2 uv,uint unit,constant BloomUniform&u){if(u.flip.x&(1u<<unit))uv.y=1-uv.y;float4 v=LogicalRGBA(image.sample(filter,uv),unit,u);uint4 s=u.swizzle[unit];return float4(Channel(v,s.x),Channel(v,s.y),Channel(v,s.z),Channel(v,s.w));}
+template<class T>float4 ReadColor(T image,sampler filter,float2 uv,uint unit,constant BloomUniform&u){
+#if NATIVE_BLOOM_IDENTITY_MASK
+ if(NATIVE_BLOOM_IDENTITY_MASK&(1u<<unit)){
+  if(NATIVE_BLOOM_FLIP_MASK&(1u<<unit))uv.y=1-uv.y;
+  return LogicalRGBA(image.sample(filter,uv),unit,u);
+ }
+#endif
+ if(u.flip.x&(1u<<unit))uv.y=1-uv.y;float4 v=LogicalRGBA(image.sample(filter,uv),unit,u);uint4 s=u.swizzle[unit];return float4(Channel(v,s.x),Channel(v,s.y),Channel(v,s.z),Channel(v,s.w));
+}
 bool AlphaPass(float a,constant BloomUniform&u){if(u.alphaConfig.x==0)return true;float r=u.alphaConfig.y;switch(uint(u.alphaConfig.z)){case 0:return false;case 1:return a<r;case 2:return a==r;case 3:return a<=r;case 4:return a>r;case 5:return a!=r;case 6:return a>=r;default:return true;}}
 fragment float4 BloomCombine(BloomVarying in [[stage_in]],constant BloomUniform&u [[buffer(0)]],Texture0 texture0 [[texture(0)]],sampler texture0Sampler [[sampler(0)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT){
 	RECOIL_SAMPLE_FIX_POSITION(in.position,get_sample_position(recoilOriginalSampleID));

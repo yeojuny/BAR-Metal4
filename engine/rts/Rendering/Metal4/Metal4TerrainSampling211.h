@@ -7,7 +7,7 @@
 
 namespace rendering::metal4 {
 // A fixed, bounded policy per original program; never a runtime swizzle bitset.
-enum class SMFSamplerPolicy211 : std::uint8_t { Generic, Canonical, NormalsOnly };
+enum class SMFSamplerPolicy211 : std::uint8_t { Generic, Canonical, NormalsOnly, CanonicalExceptShadowColor };
 
 template<class ImageUniform>
 inline bool NativeSMFCanonicalImage211(const ImageUniform& image,bool normals) {
@@ -20,9 +20,11 @@ inline bool NativeSMFCanonicalImage211(const ImageUniform& image,bool normals) {
 struct SMFSamplerSelection211 {
 	const bool supported;
 	const int normalSlot;
-	bool allCanonical,normalCanonical=false,sawColor=false;
-	explicit SMFSamplerSelection211(bool sourceSupported,int namedNormalSlot):
-		supported(sourceSupported),normalSlot(namedNormalSlot),allCanonical(sourceSupported) {}
+	const int genericColorSlot;
+	bool allCanonical,otherCanonical,normalCanonical=false,sawColor=false,sawGenericColor=false;
+	explicit SMFSamplerSelection211(bool sourceSupported,int namedNormalSlot,int namedGenericColorSlot=-1):
+		supported(sourceSupported),normalSlot(namedNormalSlot),genericColorSlot(namedGenericColorSlot),
+		allCanonical(sourceSupported),otherCanonical(sourceSupported&&namedGenericColorSlot>=0) {}
 	template<class ImageUniform>
 	void ObserveColor(const ImageUniform& image,unsigned slot) {
 		if(!supported)return;
@@ -30,10 +32,15 @@ struct SMFSamplerSelection211 {
 		const bool normals=int(slot)==normalSlot;
 		const bool canonical=NativeSMFCanonicalImage211(image,normals);
 		allCanonical&=canonical;
+		if(genericColorSlot>=0) {
+			if(int(slot)==genericColorSlot)sawGenericColor=true;
+			else otherCanonical&=canonical;
+		}
 		if(normals)normalCanonical=canonical;
 	}
 	SMFSamplerPolicy211 Select() const {
 		if(supported&&sawColor&&allCanonical)return SMFSamplerPolicy211::Canonical;
+		if(otherCanonical&&sawGenericColor)return SMFSamplerPolicy211::CanonicalExceptShadowColor;
 		if(supported&&normalSlot>=0&&normalCanonical)return SMFSamplerPolicy211::NormalsOnly;
 		return SMFSamplerPolicy211::Generic;
 	}
@@ -77,7 +84,8 @@ float4 SMFSampleNormals211(texture2d<float> color,sampler state,
 inline std::optional<std::string> NativeSMFSpecializeFragment211(
 	std::string source,std::string_view helperDefinitions,SMFSamplerPolicy211 policy) {
 	if(policy==SMFSamplerPolicy211::Generic)return source;
-	if((policy!=SMFSamplerPolicy211::Canonical&&policy!=SMFSamplerPolicy211::NormalsOnly)||
+	if((policy!=SMFSamplerPolicy211::Canonical&&policy!=SMFSamplerPolicy211::NormalsOnly&&
+		policy!=SMFSamplerPolicy211::CanonicalExceptShadowColor)||
 		!NativeSMFSamplerSourceSupported211(source))return std::nullopt;
 	std::string replacement(NativeSMFSpecializedHelpers211);
 	replacement+=helperDefinitions;

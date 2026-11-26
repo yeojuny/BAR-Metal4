@@ -451,7 +451,11 @@ uint2 DepthPixel(){uint2 p=uint2(gl_FragCoord.xy);if(flags.w&(1u<<5))p.y=depthTe
 #define vHeight           vData2.x
 #define vUVWrapDist       vData2.y
 #define vUVOffset         vData2.z
+#if BAR_GROUND_DECAL_TRACK_ONLY
+#define vDecalType        3.0f
+#else
 #define vDecalType        vData2.w
+#endif
 
 #define vTintColor        vData3
 #define vGlowColor        vData4
@@ -886,6 +890,7 @@ void Run() {
 
 	mainCol *= 2.0 * vTintColor;
 
+#if !BAR_GROUND_DECAL_TRACK_ONLY
 #if defined(NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR)
 	// The host selects this variant only for normalized minimap formats.
 	// The normalized atlas and packed tint bound finite mainCol.rgb to [0,2].
@@ -906,6 +911,7 @@ void Run() {
 	mainCol.rgb = mix(mainCol.rgb, mapDecalMix, float(vDecalType == DECAL_EXPLOSION)); //only apply mapDecalMix for explosions
 #if defined(NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR)
 	}
+#endif
 #endif
 
 	float3 N = GetFragmentNormal(worldPos.xz);

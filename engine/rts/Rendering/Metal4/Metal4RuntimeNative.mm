@@ -949,6 +949,11 @@ void RuntimeLease::PrepareDeferredDrawable(bool orderedGameFrame,uint64_t simula
  }
 
 }
+void RuntimeLease::AdmitDeferredGameFrame(uint64_t simulationFrame)
+{
+ Require(!frame->recording&&!frame->pending&&!runtime.poisoned&&!frame->orderedGameFrame&&frame->simulationFrame==simulationFrame,"Water4 late admission lacks its actual deferred drawable preparation");
+ frame->orderedGameFrame=true;
+}
 bool RuntimeLease::OrderAfterPreviousSubmission(const void* owner,std::function<void()> check,NativePriorRead kind)
 {
  Require(owner&&bool(check)&&!frame->recording&&!frame->pending&&!runtime.poisoned,
@@ -979,6 +984,17 @@ void RuntimeLease::RetirePreviousSubmission(std::shared_ptr<RuntimePendingSubmis
 }
 static bool ResidencyDiffEnabled220(){static const bool value=[](){const char* p=std::getenv("BAR_NATIVE_RESIDENCY_DIFF220");return p&&std::string_view(p)=="1";}();return value;}
 static bool ResidencyDiffCounters220(){static const bool value=[](){const char* p=std::getenv("BAR_NATIVE_RESIDENCY_DIFF220_COUNTERS");return p&&std::string_view(p)=="1";}();return value;}
+static bool ResidencyBulkEnabled(){static const bool v=[](){const char* p=std::getenv("BAR_NATIVE_RESIDENCY_BULK_DELTA");return p&&std::string_view(p)=="1";}();return v;}
+static bool ResidencyFullTiming(){static const bool v=[](){const char* p=std::getenv("BAR_NATIVE_RESIDENCY_FULL_TIMING");return p&&std::string_view(p)=="1";}();return v;}
+static bool ResidencyTimeFrame(uint64_t sim){return ResidencyFullTiming()&&sim>=540&&sim<1740;}
+static void ReportResidencyFullTiming(const ResidencyCommitTask::Timing& t,uint64_t simulation){
+ // Runtime request mutex serializes this caller, across slots/worker threads.
+ // Report cumulative sums only every 32 completed residency jobs. No timing
+ // probe output, allocation, or shared bookkeeping on the asynchronous worker.
+ struct Census {uint64_t n=0,requested=0,added=0,removed=0,diff=0,commit=0,join=0,dispatch=0,worker=0,bulk=0;};
+ static Census c;c.n++;c.requested+=t.requested;c.added+=t.added;c.removed+=t.removed;c.diff+=t.diffNs;c.commit+=t.commitNs;c.join+=t.joinNs;c.dispatch+=t.dispatchNs;c.worker+=t.workerDiff220;c.bulk+=t.bulk;
+ if(c.n%32==0)LOG("[NativeResidencyFullTiming] sim=%llu samples=%llu requested=%llu added=%llu removed=%llu diff_ns=%llu commit_ns=%llu join_ns=%llu dispatch_ns=%llu worker=%llu bulk=%llu",(unsigned long long)simulation,(unsigned long long)c.n,(unsigned long long)c.requested,(unsigned long long)c.added,(unsigned long long)c.removed,(unsigned long long)c.diff,(unsigned long long)c.commit,(unsigned long long)c.join,(unsigned long long)c.dispatch,(unsigned long long)c.worker,(unsigned long long)c.bulk);
+}
 void RuntimeLease::CommitResources() { StageResources(false); }
 void RuntimeLease::CommitResourcesWhileEncoding() { StageResources(true); }
 void RuntimeLease::StageResources(bool overlapEncoding)
@@ -989,6 +1005,7 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 	frame->keepResidency = false;
 	const bool census = !cpuPhaseStack.context.buffer && cpuPhaseStack.depth && cpuPhaseStack.captureLoop && !CPUPhaseTrace().finished.load(std::memory_order_relaxed) && residencyCensusSamples.load(std::memory_order_relaxed)<128;
 	if(census)residencyCensusSamples.fetch_add(1,std::memory_order_relaxed);
+	const bool fullTiming=ResidencyTimeFrame(frame->simulationFrame);
 	const auto censusStart = census ? SubmissionTraceNow() : 0;
 	const auto previousCount = census ? frame->slot->residentAllocations.count : 0;
 	uint64_t added=0,removed=0,addedBytes=0,removedBytes=0,textureAdds=0,textureBytes=0,bufferAdds=0,bufferBytes=0;
@@ -1009,21 +1026,23 @@ void RuntimeLease::StageResources(bool overlapEncoding)
   InvalidateResidencyTable220(next);
   EndPreparationScope(25,ownerStart);CountPreparationTrace(6,requested);
   frame->residencyCommit.StartDiff220(frame->slot->residencyWorker,frame->slot->residency,
-   old,next,requested,StartPreparationScope()!=0||ResidencyDiffCounters220());
+   old,next,requested,StartPreparationScope()!=0||ResidencyDiffCounters220()||fullTiming,ResidencyBulkEnabled());
   // Admission can allocate/throw before dispatch. Publish only after success;
   // this pointer assignment does not read either immutable table or the set.
   frame->slot->residentAllocations=next;
   return;
  }
 	const auto prepDiffStart=StartPreparationScope();
+	const auto fullDiffStart=fullTiming?SubmissionTraceNow():0;
 	for (id<MTLAllocation> allocation in frame->slot->residentAllocations) {
 		if (![next containsObject:allocation]) {
-			if(census){++removed;removedBytes+=allocation.allocatedSize;}
+			if(census){++removed;removedBytes+=allocation.allocatedSize;}else if(fullTiming)++removed;
 			[frame->slot->residency removeAllocation:allocation];
 		}
 	}
 	for (id<MTLAllocation> allocation in next) {
 		if (![frame->slot->residentAllocations containsObject:allocation]) {
+			if(fullTiming&&!census)++added;
 			if(census){
 				++added;const uint64_t bytes=allocation.allocatedSize;addedBytes+=bytes;
 				if([allocation conformsToProtocol:@protocol(MTLTexture)]){++textureAdds;textureBytes+=bytes;}
@@ -1034,6 +1053,7 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 		}
 	}
 	EndPreparationScope(23,prepDiffStart);
+	ResidencyCommitTask::Timing preset;if(fullTiming){preset.diffNs=SubmissionTraceNow()-fullDiffStart;preset.requested=next.count;preset.added=added;preset.removed=removed;}
 	// Legacy allocation census remains synchronous so its per-resource timing
 	// keeps its old meaning. The bounded resource probe measures this async path.
 	if(overlapEncoding && !census) {
@@ -1042,7 +1062,7 @@ void RuntimeLease::StageResources(bool overlapEncoding)
 		InvalidateResidencyTable220(next);
 		frame->slot->residentAllocations=next;
 		EndPreparationScope(25,ownerStart);CountPreparationTrace(6,next.count);
-		frame->residencyCommit.Start(frame->slot->residencyWorker,frame->slot->residency,StartPreparationScope()!=0);
+		frame->residencyCommit.Start(frame->slot->residencyWorker,frame->slot->residency,StartPreparationScope()!=0||fullTiming,preset);
 		return;
 	}
 	const auto prepCommitStart=StartPreparationScope();
@@ -1084,6 +1104,7 @@ void RuntimeLease::FinishResourceCommit()
  NativeCPUPhaseScope trace(NativeCPUPhaseKind::ResourceCommit);
 	try {
 		const auto timing=frame->residencyCommit.Finish();
+		if(ResidencyTimeFrame(frame->simulationFrame))ReportResidencyFullTiming(timing,frame->simulationFrame);
 		CountPreparationTrace(42,timing.commitNs);CountPreparationTrace(43,timing.joinNs);
 		CountPreparationTrace(44,timing.dispatchNs);CountPreparationTrace(45,1);
 #ifdef RECOIL_METAL4_LIVE_SCENE
