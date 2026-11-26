@@ -2,7 +2,7 @@
 
 This packet is for investigating where the measured throughput gap arises. It includes the stock comparisons, the failed locked-display diagnostic controls, the unlocked collector OFF/ON runs, both command-buffer traces, and the follow-up CPU, wait, GPU-stage and resource-lineage studies. The test was on one Mac on November 5, 2026 Pacific. It predates the separate local Native 233 benchmark.
 
-[Korean comparison report](original/README.md) · [Korean feedback-wait analysis](FEEDBACK-ANALYSIS-KO.md) · [Data inventory and hashes](DATA-MANIFEST.json) · [Independent review questions](REVIEW.md)
+[Comparison report](original/README.md) · [Feedback-wait analysis](FEEDBACK-ANALYSIS.md) · [Data inventory and hashes](DATA-MANIFEST.json) · [Independent review questions](REVIEW.md)
 
 ## What ran
 
@@ -28,7 +28,7 @@ The stock run set also measured MoltenVK's Metal 4 mode at 99.24 FPS. That route
 | Native stage timings | At the sim1200 anchor, median main command start → pre-water **2.669 ms**. Pre-water → postprocess/UI end **2.271 ms**. Opaque MRT marker span **0.500 ms**. | These are medians from a small set of same-owner marker observations. They are neither exclusive costs nor matched with MVK. MVK issued all five markers in eight owners, but zero owners yielded a complete valid timestamp sequence. Zero query results were invalid, not zero-time passes. |
 | Separate MVK replay exploration | Selected replay encoders reported sums of vertex+fragment stages of **1.2055 ms** for a forward CUS candidate, **1.0382 ms** for five-color CUS MRT and **0.1832 ms** for combined CAS+UI. | Replay timing and stage sums are not live frame duration. The matching Native profile failed, so this cannot attribute the live gap or isolate CAS. |
 
-[Command interval aggregate](original/gpu-intervals.json) · [Host submission split](analysis/submission-overlap.json) · [Native feedback method](FEEDBACK-ANALYSIS-KO.md) · [CPU samples](analysis/cpu-sampling.json) · [Native CPU phase medians](analysis/native-cpu-phases.json) · [GPU marker coverage](analysis/gpu-stage-matching.json) · [Replay timings](analysis/replay-profile.json)
+[Command interval aggregate](original/gpu-intervals.json) · [Host submission split](analysis/submission-overlap.json) · [Native feedback method](FEEDBACK-ANALYSIS.md) · [CPU samples](analysis/cpu-sampling.json) · [Native CPU phase medians](analysis/native-cpu-phases.json) · [GPU marker coverage](analysis/gpu-stage-matching.json) · [Replay timings](analysis/replay-profile.json)
 
 ## Open boundaries and tests that constrain the next step
 

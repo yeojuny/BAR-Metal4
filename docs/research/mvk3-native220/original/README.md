@@ -1,31 +1,33 @@
-# MVK3와 Native Metal 4 220 비교
+# MVK3 versus Native Metal 4 220
 
-2026-11-05 미국 태평양 시간에 한 Mac에서 실행한 비교다. 같은 매크로, 카메라, 시드, AI 없는 장면, 1512×950 화면, Ultra, MSAA 0, VSync 0을 사용했다. 시뮬레이션 프레임 600–1800을 비교했고 2250에서 정상 종료했다. FPS는 엔진의 DrawScreen 진행 속도이며 p99는 CPU에서 관측한 프레임 간격이다. 픽셀 및 셰이더 작업량 동등성, 전체 게임 성능과 다른 Mac에서의 성능은 확인 범위 밖이다.
+This comparison was run on one Mac on 2026-11-05 Pacific Time. Both used the same macro, camera, seed, scene without AI, 1512×950 viewport, Ultra, MSAA 0 and VSync 0. Simulation frames 600–1800 were measured, with normal exit at 2250. FPS represents engine DrawScreen progression; p99 is the CPU-observed interval. Pixel and shader-work equivalence, overall gameplay performance and performance on other Macs were outside the scope.
 
-| 실행군 | MVK3 | Native 220 | Native / MVK3 |
+| Run group | MVK3 | Native 220 | Native / MVK3 |
 | --- | ---: | ---: | ---: |
-| 제품 빌드, 백엔드당 2회 | 226.02 FPS | 161.23 FPS | −28.67% |
-| 진단 빌드, 화면 잠금 해제, 프레임 제한 위젯 비활성, 수집 OFF 1회씩 | 224.61 FPS | 161.27 FPS | −28.20% |
-| 동일 진단 빌드, 수집 ON 1회씩 | 224.68 FPS | 159.70 FPS | −28.92% |
+| Product builds, two trials per backend | 226.02 FPS | 161.23 FPS | −28.67% |
+| Diagnostic builds, unlocked display, frame-limit widget inactive, one collection-OFF run each | 224.61 FPS | 161.27 FPS | −28.20% |
+| Same diagnostic builds, one collection-ON run each | 224.68 FPS | 159.70 FPS | −28.92% |
 
-제품 빌드에서 p99는 MVK3 7ms, Native 8ms였다. 16.667ms 초과는 각각 11회와 1회였다. 같은 실험의 보조 MVK4 결과는 99.24 FPS였다. 제품 빌드 실험에서 BC213 프레임 제한 위젯이 켜져 있었고, 별도 진단 실험에서는 런타임에서 비활성을 확인했다. 각각의 실행군은 분리했다. 잠금 상태와 위젯 설정이 모두 잘못된 첫 진단 실행 4회도 별도로 보존했다.
+Product-build p99 was 7 ms for MVK3 and 8 ms for Native, with 11 and one intervals over 16.667 ms respectively. The auxiliary MVK4 result from the same experiment was 99.24 FPS. The BC213 frame-limit widget was enabled in the product-build experiment and confirmed inactive at runtime in the separate diagnostic experiment. These groups are kept separate. Four initial diagnostic runs with incorrect lock and widget settings are retained separately.
 
-수집 ON의 명령 버퍼 구간을 합치면, 드로당 MVK3 작업 구간 3.213ms, Native 메인 구간 5.130ms로 차이는 1.917ms였다. MVK3의 표시용 명령 버퍼를 뺐을 때 차이는 0.000019ms/드로만큼 늘었다. 기록된 구간은 명령 버퍼 단위이며 의존성 대기와 비래스터 작업도 포함할 수 있다. 두 렌더러의 수집 범위와 명령 버퍼 구성은 다르다. 수집 ON/OFF는 고정 순서에서 각 1회라 순서 효과, 실행 간 변동 및 계측 비용을 분리할 수 없다.
+In collection-ON, unioned command-buffer intervals were 3.213 ms of MVK3 work and 5.130 ms of Native main work per draw, a 1.917 ms difference. Excluding MVK3 presentation buffers increased the difference by 0.000019 ms per draw. Recorded envelopes are command-buffer-level and can include dependency waits or non-raster work. Collection coverage and command-buffer composition differ. The individual ON/OFF runs were in fixed order and cannot separate order effects, variation or instrumentation overhead.
 
-## 최적화 가설과 기존 관측
+## Optimization hypotheses and existing observations
 
-- **CPU 스레딩.** 별도 스택 표본에서 실제 MVK3의 `spring:gdrv0`에서 Zink 드로와 Vulkan 디스크립터 작업, `spring:zfq0`에서 MoltenVK 및 Apple Metal 인코딩 작업이 관측됐다. 스택 표본은 수집 부하가 있어 성능표와 분리했다. 작업 분배를 보여 주며 코어별 실행 시간이나 격차의 기여분은 산출할 수 없다.
-- **GPU 제출 깊이.** Native는 CPU가 다음 작업을 녹화할 수 있는 슬롯과 GPU에 제출된 슬롯을 구분하며, 지연 제출 경로에서 이전 GPU 이벤트 및 피드백 완료를 기다린다. 기록된 Native 메인 구간 사이에서 이전 GPU 종료부터 다음 호스트 커밋 시작까지 평균 0.948ms였고, 다음 GPU 시작까지 1.132ms였다. 이 범위에는 드로 준비, 호스트 스케줄링 및 제출 조건이 섞인다. 기록된 MVK3 작업 구간의 내부 간격 합은 1.238ms/드로였다. 양쪽 명령 버퍼 묶음이 달라 이 값으로 하드웨어 유휴 시간을 비교하거나 피드백 지연을 따로 추산할 수 없다. 이전 패스 87은 CPU 업데이트와 GPU 작업의 중첩으로 +8.19%를 얻었으며, GPU 제출 깊이는 1이었다.
-- **Residency.** 영구 리소스, 변경이 드문 리소스 및 일시 할당을 분리해서 볼 가치가 있다. 220에는 공유 소유권과 비동기 커밋 경로가 이미 있다. 현재 장면에서 실제 add/remove 수, 커밋 대기 및 겹친 준비 시간을 분리하기 전에는 장수명 집합의 이득을 수치로 잡을 수 없다.
-- **배리어와 MRT 복사.** 220에서 분리해서 관측한 16개 MRT0 소유자에서는 이전 이미지 복사가 0회였고, 바깥쪽 패스 구간의 윈도우별 중앙값은 약 0.49–0.56ms였다. 배리어, 드로, 첨부 저장을 독립 측정한 값은 아니다. 이 범위에서 우선 검증할 가설은 정확히 한 생산자–소비자 경계의 배리어 범위다.
-- **업로드와 인코딩 분리.** 제품 Native 두 실행 모두 계측 대상 풀의 종료 요약 13개에서 fallback이 0이었다. 일반 할당 비용은 별도다. 이미 측정한 좁은 캡처/준비 분리는 160.58 → 156.37 FPS로 감소했고 p99는 10 → 8ms로 줄었다. 이 실험으로 전체 렌더 스레드 분리의 효과를 판정할 수 없다.
-- **빌드.** 보존한 Native 220 링크 명령에서 `-O2`와 `-ffp-contract=off`를 확인했다. 모든 입력 객체의 컴파일 옵션 및 MVK3과의 동등성은 확인되지 않았다. 최적화 레벨이나 LTO를 바꾸면 별도 후보로 비교해야 한다.
+- **CPU threading.** A separate stack sample observed Zink drawing and Vulkan descriptor operations on MVK3's `spring:gdrv0`, and MoltenVK and Apple Metal encoding on `spring:zfq0`. Sampling overhead is separate from the performance table. Work distribution is visible, but not per-core active time or its numerical contribution to the gap.
+- **GPU submission depth.** Native distinguishes CPU recording slots from GPU-submitted slots; delayed submission waits for previous GPU event and feedback completion. Between recorded Native main envelopes, previous GPU completion to next host commit averaged 0.948 ms, and to next GPU start 1.132 ms. This includes preparation, host scheduling and submission conditions. MVK3 internal work-envelope gaps totaled 1.238 ms/draw. Different command-buffer grouping prevents interpreting these as equivalent hardware idle times or isolating feedback latency. Earlier pass 87 obtained +8.19% from CPU/GPU overlap with a GPU submission depth of one.
+- **Residency.** Permanent, infrequently changing and transient allocations should be distinguished. 220 already has shared ownership and asynchronous commit. Long-lived sets cannot be assigned a numerical benefit before measuring actual additions/removals, commit waits and overlapping preparation.
+- **Barriers and MRT copies.** Sixteen separately observed MRT0 owners in 220 had zero previous-image copies; the outer pass envelope had window medians of approximately 0.49–0.56 ms. These are not independent barrier, draw or attachment-store measurements. Begin with one exact producer–consumer boundary.
+- **Upload/encoding separation.** Both product Native trials reported zero fallback across 13 tracked pool summaries, not a census of general allocation overhead. An earlier narrow capture/prepare split lowered 160.58 to 156.37 FPS while p99 changed from 10 to 8 ms. It cannot establish the effect of separating the whole render thread.
+- **Build.** The preserved Native 220 link command used `-O2` and `-ffp-contract=off`. Compile options for every input and equivalence to MVK3 were not established. Changing optimization level or LTO requires its own comparison.
 
-[공개 Native 제출 구현](https://github.com/yeojuny/BAR-Metal4/blob/main/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm) · [공개 MRT 구현](https://github.com/yeojuny/BAR-Metal4/blob/main/engine/rts/Rendering/Metal4/Metal4CUSDeferred.mm) · [공개 빌드 레시피](https://github.com/yeojuny/BAR-Metal4/blob/main/docs/REPRODUCING.md)
+[Public Native submission implementation](https://github.com/yeojuny/BAR-Metal4/blob/main/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm) · [Public MRT implementation](https://github.com/yeojuny/BAR-Metal4/blob/main/engine/rts/Rendering/Metal4/Metal4CUSDeferred.mm) · [Public build recipe](https://github.com/yeojuny/BAR-Metal4/blob/main/docs/REPRODUCING.md)
 
-## 데이터 파일
+## Data files
 
-- [stock.json](stock.json), [diagnostic-unlocked.json](diagnostic-unlocked.json), [diagnostic-locked.json](diagnostic-locked.json)에 실행 순서, 측정값, 제한과 원본 결과 해시가 있다.
-- [frames](frames)의 CSV 14개는 원본 프레임 구간을 그대로 보존한다. `seconds`는 앞뒤 DrawScreen 호출 사이의 벽시계 초다.
-- [gpu-intervals.json](gpu-intervals.json)과 [gpu](gpu)에 명령 버퍼 구간 합산 결과와 무손실 압축 원본 두 개가 있다. 각 압축 전후 SHA-256을 기록했다.
-- [SHA256SUMS](SHA256SUMS)는 이 묶음의 파일 해시다. 숫자 CSV와 필요한 측정 메타데이터만 선별했다.
+- [stock.json](stock.json), [diagnostic-unlocked.json](diagnostic-unlocked.json), and [diagnostic-locked.json](diagnostic-locked.json) contain order, measurements, limitations and original hashes.
+- The 14 CSV files in [frames](frames) preserve original intervals; `seconds` is elapsed wall time between DrawScreen calls.
+- [gpu-intervals.json](gpu-intervals.json) and [gpu](gpu) contain the union results and both losslessly compressed raw traces, with pre/post compression SHA-256 hashes.
+- [SHA256SUMS](SHA256SUMS) records this packet's file hashes. Only numeric CSVs and necessary measurement metadata were selected.
+
+The earlier Korean document is preserved in [the original Git snapshot](https://github.com/yeojuny/BAR-Metal4/blob/99e1e012c64d94c3e6378c1ca16e44fd01a855b6/docs/research/mvk3-native220/original/README.md). Raw traces and their hashes are unchanged.

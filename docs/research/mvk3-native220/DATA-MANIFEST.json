@@ -2,9 +2,11 @@
   "files": [
     {
       "file": "original/README.md",
-      "sha256": "6b97ac46766cc44f8b2e0b017e37da9addd07bd2f899f6b383026973763e30b6",
-      "bytes": 5559,
-      "source": "verified private comparison snapshot"
+      "sha256": "3c5dde6f99e1b876e924360b1931d583b0c85d25f75dbcb41476be18963c2e5e",
+      "bytes": 5290,
+      "source": "English documentation edition; raw measurements unchanged; prior document preserved in Git 99e1e012c64d94c3e6378c1ca16e44fd01a855b6",
+      "historicalDocumentSHA256": "6b97ac46766cc44f8b2e0b017e37da9addd07bd2f899f6b383026973763e30b6",
+      "historicalDocumentBytes": 5559
     },
     {
       "file": "original/diagnostic-locked.json",
@@ -146,9 +148,11 @@
     },
     {
       "file": "original/SHA256SUMS",
-      "sha256": "7a9969c1c9ba569a42e5c68d97fb154f848562b222324ca49d52e1211c4f07e9",
+      "sha256": "8bf9b58f102e49812e096e5adc7f3bd3428b14ddc8aa258622b806ffa501b770",
       "bytes": 2012,
-      "source": "verified private comparison snapshot"
+      "source": "English documentation edition; raw measurements unchanged; prior document preserved in Git 99e1e012c64d94c3e6378c1ca16e44fd01a855b6",
+      "historicalDocumentSHA256": "7a9969c1c9ba569a42e5c68d97fb154f848562b222324ca49d52e1211c4f07e9",
+      "historicalDocumentBytes": 2012
     },
     {
       "file": "analysis/cpu-sampling.json",
