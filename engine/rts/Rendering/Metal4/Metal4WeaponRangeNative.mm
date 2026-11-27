@@ -1,3 +1,5 @@
+#include "Metal4WeaponRangeViewport.h"
+#include <cstdio>
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4WeaponRangeNative.h"
 #include "Metal4TransientUpload177.h"
@@ -10,6 +12,10 @@
 #include <vector>
 #include <cstdlib>
 #include <cstring>
+#include <atomic>
+#include <chrono>
+#include <mutex>
+#include "System/Log/ILog.h"
 
 namespace rendering::metal4 {
 namespace {
@@ -49,6 +55,39 @@ MTLBlendOperation Equation(ScreenBlendEquation value)
 	switch(value){case ScreenBlendEquation::Add:return MTLBlendOperationAdd;case ScreenBlendEquation::Subtract:return MTLBlendOperationSubtract;case ScreenBlendEquation::ReverseSubtract:return MTLBlendOperationReverseSubtract;case ScreenBlendEquation::Minimum:return MTLBlendOperationMin;case ScreenBlendEquation::Maximum:return MTLBlendOperationMax;}
 	throw std::logic_error("Unknown weapon range blend equation");
 }
+
+uint64_t RangeWarmNow() noexcept{return uint64_t(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::steady_clock::now().time_since_epoch()).count());}
+bool RangeWarmEnabled(){static const bool v=[](){const char* p=std::getenv("BAR_NATIVE_WEAPON_RANGE_ASYNC_WARM");return p&&std::strcmp(p,"1")==0;}();return v;}
+bool RangeWarmWitness(){static const bool v=[](){const char* p=std::getenv("BAR_NATIVE_WEAPON_RANGE_WARM_WITNESS");return p&&std::strcmp(p,"1")==0;}();return v;}
+struct RangeWarmResult {__strong id<MTLLibrary> library=nil;uint64_t finished=0;std::atomic<bool> ready{false};};
+struct RangeWarmEntry {const Runtime* context=nullptr;__strong id<MTLDevice> device=nil;__strong id<MTL4Compiler> compiler=nil;__strong MTL4LibraryDescriptor* descriptor=nil;__strong id<MTL4CompilerTask> task=nil;std::shared_ptr<RangeWarmResult> result;uint64_t queued=0;};
+MTL4LibraryDescriptor* RangeLibraryDescriptor(){
+ auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Exact31657 original Attack/Defense range coverage and composite";const char* division233=std::getenv("BAR_NATIVE_RANGE_DIVISION233");
+ const bool useDivision233=division233&&std::strcmp(division233,"1")==0;
+ const char* exactInterior=std::getenv("BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR");
+ const bool useExactInterior=!useDivision233&&exactInterior&&std::strcmp(exactInterior,"1")==0;
+ std::string text=std::string("#define RECOIL_RANGE_DIVISION233 ")+(useDivision233?"1\n":"0\n")+(useExactInterior?"#define RECOIL_WEAPON_RANGE_EXACT_INTERIOR 1\n":"")+NativeWeaponRangeShaderSource;
+ descriptor.source=String(text);auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;return descriptor;
+}
+
+std::shared_ptr<RangeWarmEntry> SharedRangeWarm(RuntimeLease& lease,bool queue,int64_t simulation) {
+ static std::mutex lock;static std::weak_ptr<RangeWarmEntry> weak;
+ std::shared_ptr<RangeWarmEntry> shared;
+ std::lock_guard<std::mutex> guard(lock);
+ shared=weak.lock();
+ if(shared&&shared->context==lease.ContextIdentity()&&shared->device==lease.Device()&&shared->compiler==lease.Compiler())return shared;
+ if(!queue)return {};
+ auto result=std::make_shared<RangeWarmResult>();auto descriptor=RangeLibraryDescriptor();const auto queued=RangeWarmNow();
+ auto task=[lease.Compiler() newLibraryWithDescriptor:descriptor completionHandler:^(id<MTLLibrary> library,NSError* error){
+  @autoreleasepool{(void)error;result->library=library;result->finished=RangeWarmNow();result->ready.store(true,std::memory_order_release);}
+ }];
+ if(!task)return {};
+ shared=std::make_shared<RangeWarmEntry>(RangeWarmEntry{lease.ContextIdentity(),lease.Device(),lease.Compiler(),descriptor,task,result,queued});
+ weak=shared;
+ if(RangeWarmWitness())LOG("[WeaponRangeWarm] event=queued sim=%lld source_len=%llu queued_ns=%llu",(long long)simulation,(unsigned long long)descriptor.source.length,(unsigned long long)queued);
+ return shared;
+}
+
 uint64_t PipelineBits(const ScreenBlendState& b,const std::array<bool,4>& m)
 {
 	return uint64_t(b.enabled)|uint64_t(b.sourceColor)<<1|uint64_t(b.destinationColor)<<5|uint64_t(b.sourceAlpha)<<9|uint64_t(b.destinationAlpha)<<13|
@@ -94,6 +133,25 @@ struct WeaponRangeGPU::Impl {
  TransientUploadPool177 uploads177{"weapon_range"};
 	using PipelineKey=std::tuple<unsigned,MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,unsigned,bool,uint64_t,bool>;
 	__strong id<MTLLibrary> library=nil;
+ std::shared_ptr<RangeWarmEntry> warm;const Runtime* attemptedContext=nullptr;__weak id<MTL4Compiler> attemptedCompiler=nil;int64_t witnessSimulation=0;
+ void Warm(RuntimeLease& lease,int64_t simulation) noexcept {
+  if(RangeWarmWitness())witnessSimulation=simulation;
+  if(!RangeWarmEnabled()||library)return;
+  if(attemptedContext==lease.ContextIdentity()&&attemptedCompiler==lease.Compiler())return;
+  warm.reset();attemptedContext=lease.ContextIdentity();attemptedCompiler=lease.Compiler();
+  try{warm=SharedRangeWarm(lease,true,simulation);}catch(...){/* optional prewarm never alters original fallback */}
+ }
+ bool Adopt(RuntimeLease& lease){
+  if(!RangeWarmEnabled())return false;
+  if(!warm||warm->context!=lease.ContextIdentity()||warm->device!=lease.Device()||warm->compiler!=lease.Compiler())warm=SharedRangeWarm(lease,false,witnessSimulation);
+  if(!warm||warm->context!=lease.ContextIdentity()||warm->device!=lease.Device()||warm->compiler!=lease.Compiler()||!warm->result->ready.load(std::memory_order_acquire)||!warm->result->library)return false;
+  auto result=warm->result;auto candidate=result->library;
+  lease.RegisterShaderSource(candidate,warm->descriptor);library=candidate;
+  if(RangeWarmWitness())LOG("[WeaponRangeWarm] event=adopt sim=%lld source_len=%llu queued_ns=%llu finished_ns=%llu adopt_ns=%llu",(long long)witnessSimulation,(unsigned long long)warm->descriptor.source.length,(unsigned long long)warm->queued,(unsigned long long)result->finished,(unsigned long long)RangeWarmNow());
+  // Keep this owner until GPU resource cleanup so the second renderer can adopt.
+  return true;
+ }
+
 	std::map<PipelineKey,id<MTLRenderPipelineState>> pipelines;
     // RANGE199_CACHE_BEGIN
     const Runtime* lineIndexContext=nullptr;
@@ -120,24 +178,22 @@ struct WeaponRangeGPU::Impl {
 		lease.AddAllocation(entry.buffer);return entry.buffer;
 	}
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const NativeWeaponRangeDraw& draw,
-		MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,double& ms)
+		MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,double& ms,bool rebaseFill)
 	{
 		const bool line=draw.primitive==NativeDrawPrimitive::LineLoop;
 		const unsigned program=draw.program.defines->composite?5:draw.program.defines->maskPass?2:draw.program.maskClip>0.5f?(line?3:4):(line?1:0);
-		const PipelineKey key{program,color,depth,stencil,lease.SampleShadingKey(samples),validation,PipelineBits(draw.surface.blend,draw.raster.colorWrite),draw.raster.alphaToCoverage};
+		const PipelineKey key{program|(rebaseFill?8u:0u),color,depth,stencil,lease.SampleShadingKey(samples),validation,PipelineBits(draw.surface.blend,draw.raster.colorWrite),draw.raster.alphaToCoverage};
 		if(auto found=pipelines.find(key);found!=pipelines.end()){lease.Retain(found->second);return found->second;}
 		const auto start=Clock::now();NSError* error=nil;
-		if(!library){auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Exact31657 original Attack/Defense range coverage and composite";const char* division233=std::getenv("BAR_NATIVE_RANGE_DIVISION233");
-            const bool useDivision233=division233&&std::strcmp(division233,"1")==0;
-            const char* exactInterior=std::getenv("BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR");
-            const bool useExactInterior=!useDivision233&&exactInterior&&std::strcmp(exactInterior,"1")==0;
-            descriptor.source=String(std::string("#define RECOIL_RANGE_DIVISION233 ")+(useDivision233?"1\n":"0\n")+
-                (useExactInterior?"#define RECOIL_WEAPON_RANGE_EXACT_INTERIOR 1\n":"")+NativeWeaponRangeShaderSource);
-			auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;
-			library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile original weapon range MSL: "+Error(error));}
+		if(!library&&!Adopt(lease)){
+   auto descriptor=RangeLibraryDescriptor();const auto begin=RangeWarmWitness()?RangeWarmNow():0;
+   library=lease.NewLibrary(descriptor,&error);Require(library!=nil,"Cannot compile original weapon range MSL: "+Error(error));
+   if(RangeWarmWitness())LOG("[WeaponRangeWarm] event=sync sim=%lld source_len=%llu wall_ns=%llu",(long long)witnessSimulation,(unsigned long long)descriptor.source.length,(unsigned long long)(RangeWarmNow()-begin));
+   // A late async completion can still be adopted by the other owner.
+  }
 		lease.Retain(library);auto descriptor=[MTL4RenderPipelineDescriptor new];
 		auto vertex=[MTL4LibraryFunctionDescriptor new],fragment=[MTL4LibraryFunctionDescriptor new];vertex.library=fragment.library=library;
-		vertex.name=program==5?@"OriginalWeaponRangeComposite":line?@"OriginalWeaponRangeLine":@"OriginalWeaponRangeFill";
+		vertex.name=program==5?(rebaseFill?@"OriginalWeaponRangeCompositeRebased":@"OriginalWeaponRangeComposite"):line?@"OriginalWeaponRangeLine":(rebaseFill?@"OriginalWeaponRangeFillRebased":@"OriginalWeaponRangeFill");
 		constexpr const char* fragments[]={"OriginalWeaponRangeFillFragment","OriginalWeaponRangeLineFragment","OriginalWeaponRangeMaskFragment","OriginalWeaponRangeMaskedLineFragment","OriginalWeaponRangeMaskedFillFragment","OriginalWeaponRangeCompositeFragment"};
 		fragment.name=String(std::string(fragments[program])+((samples>1&&(program==1||program==3))?"MSAA":""));
 		descriptor.vertexFunctionDescriptor=vertex;descriptor.fragmentFunctionDescriptor=fragment;descriptor.inputPrimitiveTopology=MTLPrimitiveTopologyClassTriangle;descriptor.rasterSampleCount=samples;descriptor.alphaToCoverageState=draw.raster.alphaToCoverage?MTL4AlphaToCoverageStateEnabled:MTL4AlphaToCoverageStateDisabled;
@@ -154,7 +210,8 @@ struct WeaponRangeGPU::Impl {
 };
 WeaponRangeGPU::WeaponRangeGPU():impl(std::make_unique<Impl>()){}
 WeaponRangeGPU::~WeaponRangeGPU()=default;
-void WeaponRangeGPU::ClearResources(){impl->uploads177.Clear();impl->buffers.clear();impl->lineIndexBuffer=nil;impl->lineIndexContext=nullptr;}
+void WeaponRangeGPU::WarmLibrary(RuntimeLease& lease,int64_t simulation) noexcept {impl->Warm(lease,simulation);}
+void WeaponRangeGPU::ClearResources(){impl->warm.reset();impl->attemptedContext=nullptr;impl->attemptedCompiler=nil;impl->uploads177.Clear();impl->buffers.clear();impl->lineIndexBuffer=nil;impl->lineIndexContext=nullptr;}
 std::unique_ptr<PreparedWeaponRangeDraw> WeaponRangeGPU::Prepare(RuntimeLease& lease,const NativeWeaponRangeDraw& draw,
 	const StartBoxImageResolver& resolver,MTLViewport viewport,MTLScissorRect scissor,std::array<std::uint32_t,2> targetExtent,
 	MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,unsigned samples,bool validation,double& milliseconds,
@@ -170,10 +227,25 @@ std::unique_ptr<PreparedWeaponRangeDraw> WeaponRangeGPU::Prepare(RuntimeLease& l
 
 	const bool line=draw.primitive==NativeDrawPrimitive::LineLoop;
 	if(!draw.instanceCount || !scissor.width || !scissor.height || (!line && draw.raster.cullEnabled && draw.raster.cull==NativeWorldCull::FrontAndBack))return result;
-	// The native aliased-line transport uses bounded signed fixed-point terms.
-	// Its 8-bit subpixel precision remains a reference-pixel acceptance gate.
-	for(double value:{viewport.originX,viewport.originY,viewport.width,viewport.height})
-		Require(std::isfinite(value) && std::abs(value)<=16384,"Weapon range viewport exceeds validated raster bounds");
+ // PiP deliberately describes the full virtual minimap viewport, which
+ // can exceed the physical attachment by orders of magnitude. Keep its
+ // coordinate transform unchanged; only the actual hardware viewport is
+ // rebased for an extended filled/composite draw. Lines already encode in
+ // full attachment coordinates and use the original virtual endpoints.
+ const auto contract=ClassifyWeaponRangeViewport({viewport.originX,viewport.originY,viewport.width,viewport.height},line);
+ if(!contract.valid || (scissor.x>targetExtent[0]||scissor.width>targetExtent[0]-scissor.x||scissor.y>targetExtent[1]||scissor.height>targetExtent[1]-scissor.y)){
+  const auto v=draw.surface.viewport.value_or(ScreenViewport{});
+  char detail[512];std::snprintf(detail,sizeof(detail),"Weapon range viewport exceeds validated raster bounds: raw=%d,%d,%u,%u mapped=%.9f,%.9f,%.9f,%.9f scissor=%llu,%llu,%llu,%llu target=%u,%u line=%u minimap=%g",v.x,v.y,v.width,v.height,viewport.originX,viewport.originY,viewport.width,viewport.height,(unsigned long long)scissor.x,(unsigned long long)scissor.y,(unsigned long long)scissor.width,(unsigned long long)scissor.height,targetExtent[0],targetExtent[1],unsigned(line),draw.program.inMiniMap);
+  Require(false,detail);
+ }
+ static const bool witness=[] {const char* v=std::getenv("BAR_METAL4_WEAPON_RANGE_VIEWPORT_WITNESS");return v&&*v=='1';}();
+ if(witness&&contract.extended){
+  static std::array<std::atomic_bool,2> reported{};
+  if(!reported[unsigned(line)].exchange(true)){
+   const auto v=draw.surface.viewport.value_or(ScreenViewport{});const auto sc=draw.surface.scissor.value_or(ScreenScissor{});
+   std::fprintf(stderr,"[WeaponRangeVirtualViewport] accepted line=%u rebaseFill=%u samples=%u raw=%d,%d,%u,%u rawScissor=%d,%d,%u,%u mapped=%.9f,%.9f,%.9f,%.9f scissor=%llu,%llu,%llu,%llu target=%u,%u\n",unsigned(line),unsigned(contract.rebaseFill),samples,v.x,v.y,v.width,v.height,sc.x,sc.y,sc.width,sc.height,viewport.originX,viewport.originY,viewport.width,viewport.height,(unsigned long long)scissor.x,(unsigned long long)scissor.y,(unsigned long long)scissor.width,(unsigned long long)scissor.height,targetExtent[0],targetExtent[1]);
+  }
+ }
 	Require(viewport.width>0 && viewport.height>0 && viewport.znear==0 && viewport.zfar==1,"Weapon range requires original full clip-depth viewport");
 	Require(targetExtent[0] && targetExtent[1] && targetExtent[0]<=16384 && targetExtent[1]<=16384,"Original weapon range target extent exceeds raster bounds");
 	Require(samples&&[lease.Device() supportsTextureSampleCount:samples],"Weapon range output sample count unsupported");
@@ -211,6 +283,7 @@ std::unique_ptr<PreparedWeaponRangeDraw> WeaponRangeGPU::Prepare(RuntimeLease& l
 		// its expanded width. Keep the captured scissor and rasterize the
 		// coverage quads in the full attachment viewport.
 		out.raster.viewport={0,0,double(targetExtent[0]),double(targetExtent[1]),0,1};}
+ if(contract.rebaseFill)out.raster.viewport={0,0,double(targetExtent[0]),double(targetExtent[1]),0,1};
  auto u=ReadNativeWeaponRangeUniforms(draw);u.options[2]=unsigned(out.height.flipV);u.programOptions[3]=unsigned(out.coverageMask.flipV);
  u.viewport={float(viewport.originX),float(viewport.originY),float(viewport.width),float(viewport.height)};
  u.outputViewport={0,0,float(targetExtent[0]),float(targetExtent[1])};
@@ -233,7 +306,7 @@ std::unique_ptr<PreparedWeaponRangeDraw> WeaponRangeGPU::Prepare(RuntimeLease& l
     // owns submitted storage even after the private cache has been cleared.
     if (CanIndexRangeLine(composite,draw.primitive,draw.vertexCount,samples))
         out.lineIndices=impl->LineIndices(lease);
-	out.pipeline=impl->Pipeline(lease,draw,color,depth,stencil,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.rasterState,stencil);
+	out.pipeline=impl->Pipeline(lease,draw,color,depth,stencil,samples,validation,milliseconds,contract.rebaseFill);out.depth=effectstate::Depth(lease,out.rasterState,stencil);
 	out.count=composite?draw.vertexCount:line?draw.vertexCount*6:(draw.vertexCount-2)*3;out.instances=draw.instanceCount;return result;
 }
 }

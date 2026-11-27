@@ -317,7 +317,7 @@ void PreparedGenericShadow::DidComplete()
 #include "Metal4ShadowTerrainPreparation.inc"
 
 struct EngineShadowGPU::Impl {
- RetiredArguments argumentPool;
+ AdaptiveRetiredArguments argumentPool;
  ShadowUploadPool uploadPool;
  ShadowTerrainGeometryCache terrainGeometry;
  struct Original{bool modern=false,validation=false;NativeEngineShadowProfile profile=NativeEngineShadowProfile::LegacyModel;CUSSourceTarget target;__strong id<MTLRenderPipelineState> pipeline=nil;};
@@ -396,7 +396,7 @@ std::shared_ptr<const void> EngineShadowGPU::CompileOriginalProgram(RuntimeLease
 }
 std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::Prepare(RuntimeLease& lease,std::shared_ptr<const NativeEngineShadowFrame> source,const CUSSourceTarget& target,const EngineDeferredGeometryProvider& geometry,const CUSSourceImageProvider& images,bool validation,double& ms){
  Target(target);Require(source&&geometry&&images&&source->camera.clipDepth!=ClipDepthConvention::Unsupported&&target.width&&target.height&&target.logicalWidth&&target.logicalHeight,"Original shadow source/shared target/resources are unconnected");
- impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->source=std::move(source);std::map<const WorldModel*,std::vector<EngineDeferredPieceBuffers>> meshes;std::set<const WorldModel*> validated;
+ impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease,source->sourceDrawFrame,"shadow");auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->source=std::move(source);std::map<const WorldModel*,std::vector<EngineDeferredPieceBuffers>> meshes;std::set<const WorldModel*> validated;
  for(const auto& d:result->impl->source->draws){
   if(d.pieceGeometry)Require(result->impl->source->projectile&&!d.modern&&!d.object&&d.profile==NativeEngineShadowProfile::Projectile,"Original projectile piece was relabeled as another model source");else Rigid(d,validated);
   Require(d.world.frontPolygonMode==d.world.backPolygonMode&&d.world.frontPolygonMode!=NativePolygonMode::Point&&(!d.world.lineStipple||d.world.frontPolygonMode==NativePolygonMode::Fill)&&(d.world.lineWidth==1||d.world.frontPolygonMode==NativePolygonMode::Fill)&&!d.world.inheritedClipPlane,"Original shadow source raster/additional legacy clipping requires its exact unsupported consumer");
@@ -478,7 +478,7 @@ std::shared_ptr<PreparedEngineShadow> EngineShadowGPU::PrepareTerrain(RuntimeLea
   source->camera.clipDepth!=ClipDepthConvention::Unsupported&&target.width&&target.height&&target.logicalWidth&&target.logicalHeight,
   "Original MAP shadow has no actual source/context/target/image service");
  Require(source->drawEntered||source->draws.empty(),"Original MAP shadow early return emitted geometry");
- impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->terrainSource=std::move(source);
+ impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease,source->sourceDrawFrame,"shadow");auto result=std::shared_ptr<PreparedEngineShadow>(new PreparedEngineShadow);result->impl->terrainSource=std::move(source);
  TerrainUniformBatch terrainUniforms(lease,result->impl->terrainSource->draws.size(),sizeof(TerrainShadowUniform),32);
  const bool useEarly=early&&early->Matches(lease.ContextIdentity(),lease.Device(),result->impl->terrainSource);
  if(!useEarly)impl->terrainGeometry.BeginWorkingSet(lease.Device(),*result->impl->terrainSource);
@@ -569,7 +569,7 @@ std::shared_ptr<PreparedGenericShadow> EngineShadowGPU::PrepareGeneric(RuntimeLe
 	if(std::none_of(source->draws.begin(),source->draws.end(),[](const auto& draw){return draw.stage==NativeWorldDrawStage::ShadowOpaque;}))return {};
 	Target(target);Require(target.width&&target.height&&target.logicalWidth&&target.logicalHeight,"Original generic shadow target lost its actual extent");
 	Require(std::isfinite(target.shadowPolygonOffsetUnitsScale)&&target.shadowPolygonOffsetUnitsScale>0,"Original generic shadow bias lost its actual destination scale");
-	impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease);auto result=std::shared_ptr<PreparedGenericShadow>(new PreparedGenericShadow);result->impl->source=std::move(source);uint64_t previous=0;
+	impl->uploadPool.BeginBatch(lease.Device());impl->argumentPool.BeginBatch(lease,frame,"shadow");auto result=std::shared_ptr<PreparedGenericShadow>(new PreparedGenericShadow);result->impl->source=std::move(source);uint64_t previous=0;
 	for(const auto& command:result->impl->source->draws){
 		if(command.stage!=NativeWorldDrawStage::ShadowOpaque)continue;
 		ValidateNativeWorldDrawCommand(command);

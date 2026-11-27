@@ -62,6 +62,9 @@ public:
   return true;
  }
  bool WorkerCallableReleased() const noexcept {return !task;}
+ // True only after Join, handoff release and terminal source notice. Ordinary
+ // Finish still rethrows every failed settlement; only process teardown may discard it.
+ bool TerminalFailureJoined() const noexcept {return state==State::Failed&&!task&&bool(failure);}
  void Finish(){
   Source();
   if(state==State::Failed)std::rethrow_exception(failure);

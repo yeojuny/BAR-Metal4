@@ -7,7 +7,11 @@ inline constexpr const char* NativeGroundDecalShaders=RECOIL_NATIVE_SAMPLE_SHADI
 #include <metal_stdlib>
 using namespace metal;
 struct DecalInstance { float4 forcedHeight,posT,posB,uvMain,uvNorm,createParams1,createParams2,createParams3,createParams4;uint4 createParams5;float4 userDefined[2];};
-struct DecalUniforms {float4x4 viewProjection,inverseViewProjection,shadow;float4 mapDims,mapDimsPO2,groundAmbient,groundDiffuse,sunDirection,waterMin,waterBase,waterAbsorb,frameScreen,fragmentToLogical;uint4 flags;};
+struct DecalUniforms {float4x4 viewProjection,inverseViewProjection,shadow;float4 mapDims,mapDimsPO2,groundAmbient,groundDiffuse,sunDirection,waterMin,waterBase,waterAbsorb,frameScreen,fragmentToLogical;uint4 flags;
+#ifdef BAR_GROUND_DECAL_PHYSICAL_DEPTH
+ uint4 depthCrop;float4 logicalOrigin;
+#endif
+};
 struct DecalVarying {
 #ifdef BAR_GROUND_DECAL_COVERAGE
  uint2 diagnosticTrack [[flat]];
@@ -429,7 +433,12 @@ sampler shadowColorSampler,shadowSampler;
 uint4 flags;float4 mapDims,mapDimsPO2,groundAmbientColor;float3 groundDiffuseColor,waterMinColor,waterBaseColor,waterAbsorbColor,sunDir;float2 screenSizeInverse;float4x4 shadowMatrix,gl_ModelViewProjectionMatrixInverse;float curAdjustedFrame;float4 gl_FragCoord;uint gl_SampleID;
 float4 vTranformedPos[5],vuvMain,vuvNorm,vData1,vData2,vData3,vData4;float3x3 vRotMat;float4 fragColor;
 float2 ImageUV(float2 uv,uint bit){return float2(uv.x,(flags.w&(1u<<bit))?1-uv.y:uv.y);}
+#ifdef BAR_GROUND_DECAL_PHYSICAL_DEPTH
+uint2 nativeDepthPixel;float2 nativeViewOrigin;
+uint2 DepthPixel(){return nativeDepthPixel;}
+#else
 uint2 DepthPixel(){uint2 p=uint2(gl_FragCoord.xy);if(flags.w&(1u<<5))p.y=depthTex.get_height()-1-p.y;return p;}
+#endif
 #define uvMainTL vuvMain.xy
 #define uvMainTR vuvMain.zy
 #define uvMainBR vuvMain.zw
@@ -654,7 +663,11 @@ float3 GetFragmentWorldPos() {
 		float depthZO = depthTex.read(DepthPixel());
 	#endif
 
-	return GetWorldPos(gl_FragCoord.xy * screenSizeInverse, depthZO);
+	#ifdef BAR_GROUND_DECAL_PHYSICAL_DEPTH
+ return GetWorldPos((gl_FragCoord.xy-nativeViewOrigin)*screenSizeInverse,depthZO);
+#else
+ return GetWorldPos(gl_FragCoord.xy * screenSizeInverse, depthZO);
+#endif
 }
 
 float3 RotateByNormalVector(float3 p, float3 newUpDir, float3 rotAxis) {
@@ -1128,6 +1141,14 @@ p.shadowTex=shadowDepth;p.shadowColorTex=shadowColor;p.shadowSampler=shadowSampl
 #endif
  p.flags=u.flags;p.mapDims=u.mapDims;p.mapDimsPO2=u.mapDimsPO2;p.groundAmbientColor=u.groundAmbient;p.groundDiffuseColor=u.groundDiffuse.xyz;p.waterMinColor=u.waterMin.xyz;p.waterBaseColor=u.waterBase.xyz;p.waterAbsorbColor=u.waterAbsorb.xyz;p.sunDir=u.sunDirection.xyz;p.screenSizeInverse=u.frameScreen.yz;p.curAdjustedFrame=u.frameScreen.x;p.shadowMatrix=u.shadow;p.gl_ModelViewProjectionMatrixInverse=u.inverseViewProjection;
  p.gl_FragCoord=float4(i.position.xy*u.fragmentToLogical.xy+u.fragmentToLogical.zw,i.position.zw);
+#ifdef BAR_GROUND_DECAL_PHYSICAL_DEPTH
+ // Real fragments are scissored to the exact physical crop; only derivative
+ // helper lanes outside it need a defined boundary read. Never resample the
+ // depth of an actual fragment to logical-size coordinates.
+ const int2 nativePixel=int2(floor(i.position.xy))-int2(u.depthCrop.xy);
+ p.nativeDepthPixel=uint2(clamp(nativePixel,int2(0),int2(u.depthCrop.zw)-1));
+ p.nativeViewOrigin=u.logicalOrigin.xy;
+#endif
 #ifdef HIGH_QUALITY
  p.gl_SampleID=sampleID;
 #else

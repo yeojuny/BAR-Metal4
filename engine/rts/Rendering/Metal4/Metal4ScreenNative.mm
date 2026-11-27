@@ -2309,7 +2309,7 @@ std::unique_ptr<PreparedScreenFrame> ScreenGPU::PrepareList(RuntimeLease& lease,
 		auto sampler1=map?nil:prepareSampler152(1,state.secondary.sampler);
   if(commonLines){
    const auto& g=*command.geometry;
-   auto lines=impl->sourceLines.Prepare(lease,g.sourceLines,drawViewport,width,height,samples,state,image,sampler,image1,sampler1,validation,shaderMs);
+   auto lines=impl->sourceLines.Prepare(lease,g.sourceLines,drawViewport,width,height,samples,format,depthFormat,stencilFormat,state,image,sampler,image1,sampler1,validation,shaderMs);
    if(!prepared->impl->argumentLifetime){prepared->impl->argumentLifetime=[M4ScreenArgumentLifetime new];lease.Retain(prepared->impl->argumentLifetime);}
    prepared->impl->argumentLifetime->sourceLines.push_back(lines);
    PreparedScreenFrame::Impl::Draw draw;draw.originalCommand=uint32_t(i);draw.pipeline=pipeline;draw.depth=depth;draw.arguments=lines->arguments;draw.sourceLines=std::move(lines);draw.externalImages=std::move(external);

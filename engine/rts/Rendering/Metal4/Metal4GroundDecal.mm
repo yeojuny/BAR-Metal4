@@ -1,3 +1,5 @@
+#include <cstdio>
+#include "Metal4GroundDecalDepthMapping.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4GroundDecal.h"
 #include "Metal4InterventionMath.h"
@@ -332,9 +334,15 @@ void PreparedGroundDecal::DidComplete()
         impl->coverageTick,static_cast<unsigned long long>(draw),frame.adjustedFrame,
         instances.size(),unsigned(impl->usedIndexedDraw));
 }
+struct alignas(16) GroundDecalPhysicalUniforms {
+ NativeGroundDecalUniforms original;
+ std::array<uint32_t,4> depthCrop;
+ std::array<float,4> logicalOrigin;
+};
+static_assert(sizeof(GroundDecalPhysicalUniforms)==400);
 struct GroundDecalGPU::Impl {
-	using Key=std::tuple<MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,bool,bool,uint32_t,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
-	using LibraryKey=std::tuple<bool,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
+	using Key=std::tuple<MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,bool,bool,uint32_t,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
+	using LibraryKey=std::tuple<bool,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool,bool>;
 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
 	std::array<id<MTLComputePipelineState>,2> worldPositionPipelines{};
 	std::map<LibraryKey,id<MTLLibrary>> libraries;
@@ -345,7 +353,8 @@ struct GroundDecalGPU::Impl {
 	float lastInstanceAdjustedFrame=0.0f;
 	unsigned lastCoverageTick=0;
 	id<MTLRenderPipelineState> Pipeline(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool atlas,bool high,uint32_t samples,bool validation,double& milliseconds,bool shadows=false,bool skipUnusedTerrainColor=false,bool countCoverage=false,bool reuseWorldPosition=false,
-		std::optional<bool> coldAttenuationOverride=std::nullopt,bool trackOnly=false){
+		std::optional<bool> coldAttenuationOverride=std::nullopt,bool trackOnly=false,bool physicalDepth=false){
+        Require(!physicalDepth||(!atlas&&!reuseWorldPosition&&!countCoverage),"Ground decal physical depth mapping lost its distinct shader contract");
 				static const bool coldGlow=[] {const char* value=std::getenv("BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW");return value && std::strcmp(value,"1")==0 && !InterventionFastMathEnabled();}();
 		const bool exactColdGlow=coldGlow&&samples==1&&!atlas;
 		static const bool coldAttenuationEnabled=[] {
@@ -365,8 +374,8 @@ struct GroundDecalGPU::Impl {
 		}();
 		const bool trackEarlyReject = trackEarlyRejectEnabled && !atlas && !high && samples == 1;
 		trackOnly=trackOnly&&!atlas&&!high&&samples==1&&!InterventionFastMathEnabled();
-		const LibraryKey libraryKey{high,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,discard,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject,trackOnly};
-		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject,trackOnly};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
+		const LibraryKey libraryKey{high,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,discard,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject,trackOnly,physicalDepth};
+		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows,skipUnusedTerrainColor,exactColdGlow,countCoverage,zeroAngle,reuseWorldPosition,skipColdAttenuation,trackEarlyReject,trackOnly,physicalDepth};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
 		const auto start=Clock::now();auto it=libraries.find(libraryKey);NSError* error=nil;
 		if(it==libraries.end()){auto o=[MTLCompileOptions new];o.mathMode=MTLMathModeSafe;o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(o);
 			auto msl=NativeGroundDecalShaderSource(high,shadows,skipUnusedTerrainColor,zeroAngle,reuseWorldPosition);
@@ -383,6 +392,7 @@ struct GroundDecalGPU::Impl {
 			if(countCoverage)msl.insert(0,"#define BAR_GROUND_DECAL_COVERAGE 1\n");
 			if(trackOnly)msl.insert(0,"#define BAR_GROUND_DECAL_TRACK_ONLY 1\n");
 			if(trackEarlyReject)msl.insert(0,"#define BAR_GROUND_DECAL_TRACK_EARLY_REJECT 1\n");
+            if(physicalDepth)msl.insert(0,"#define BAR_GROUND_DECAL_PHYSICAL_DEPTH 1\n");
 			auto lib=l.NewLibraryWithSource(String(msl),o,&error);Require(lib!=nil,"Cannot compile original ground decal family: "+Error(error));it=libraries.emplace(libraryKey,lib).first;
 			if(trackEarlyReject)
 				LOG("[GroundDecalTrack] early_reject=1 world_position_reuse=%u coverage=%u",
@@ -428,12 +438,24 @@ std::unique_ptr<PreparedGroundDecal> GroundDecalGPU::Prepare(RuntimeLease& l,std
 	Require(images.sourceDrawFrame==frame->sourceDrawFrame,"Original ground decal framebuffer is from another draw");
 	const auto& h=images.height;const auto& n=images.normals;const auto& m=images.minimap;const auto& d=images.terrainDepth;
 	Require(h.texture&&h.texture.pixelFormat==MTLPixelFormatR32Float&&n.texture&&n.texture.pixelFormat==MTLPixelFormatRG16Float&&m.texture,"Original ground decal terrain images are incomplete");
-	Require(d.texture&&d.texture.pixelFormat==MTLPixelFormatDepth32Float&&d.texture.width==frame->viewport[2]&&d.texture.height==frame->viewport[3],"Original ground decal requires unresampled original viewport depth extent");
+ const auto depthMapping=MatchGroundDecalDepthMapping(frame->viewport,images.logicalExtent,images.renderExtent,images.depthCrop);
+ if(!depthMapping||!d.texture||d.texture.pixelFormat!=MTLPixelFormatDepth32Float||d.texture.width!=images.depthCrop[2]||d.texture.height!=images.depthCrop[3]||depthMapping->fragmentToLogical!=images.fragmentToLogical){
+  const auto& v=frame->viewport;const auto& c=images.depthCrop;
+  char detail[448];std::snprintf(detail,sizeof(detail),"Original ground decal requires unresampled current physical depth crop: logicalViewport=%d,%d,%d,%d logical=%u,%u render=%u,%u crop=%u,%u,%u,%u texture=%llu,%llu draw=%llu",v[0],v[1],v[2],v[3],images.logicalExtent[0],images.logicalExtent[1],images.renderExtent[0],images.renderExtent[1],c[0],c[1],c[2],c[3],(unsigned long long)d.texture.width,(unsigned long long)d.texture.height,(unsigned long long)frame->sourceDrawFrame);
+  Require(false,detail);
+ }
+ const bool physicalDepth=!depthMapping->legacyExact;
+ static const bool witness=[] {const char* v=std::getenv("BAR_METAL4_GROUND_DECAL_DEPTH_WITNESS");return v&&*v=='1';}();
+ if(witness){
+  static thread_local std::array<uint32_t,8> previous{};
+  const auto& c=images.depthCrop;const std::array<uint32_t,8> state{images.logicalExtent[0],images.logicalExtent[1],images.renderExtent[0],images.renderExtent[1],c[0],c[1],c[2],c[3]};
+  if(state!=previous){previous=state;LOG("[GroundDecalDepthMapping] draw=%llu frame=%g logical=%ux%u render=%ux%u crop=%u,%u,%u,%u texture=%llux%llu samples=%llu instances=%zu physical=%u",(unsigned long long)frame->sourceDrawFrame,frame->adjustedFrame,state[0],state[1],state[2],state[3],c[0],c[1],c[2],c[3],(unsigned long long)d.texture.width,(unsigned long long)d.texture.height,(unsigned long long)d.texture.sampleCount,frame->instances->values.size(),unsigned(physicalDepth));}
+ }
 	Require(d.texture.sampleCount==(frame->highQuality?frame->sampleCount:1),"Original ground decal depth sampling differs from source");
 	Require(!frame->shadows||(images.shadowDepth.texture&&images.shadowColor.texture),"Original ground decal shadow producer incomplete");
 	auto p=std::make_unique<PreparedGroundDecal::Impl>();p->frame=frame;
     const auto& coverage=CoverageDirectory();
-    if (!coverage.empty() && frame->sampleCount==1 && !frame->highQuality) {
+    if (!physicalDepth && !coverage.empty() && frame->sampleCount==1 && !frame->highQuality) {
         for (unsigned tick:{1200u,1590u}) {
             if (tick<=impl->lastCoverageTick || frame->adjustedFrame<float(tick) ||
                 frame->adjustedFrame>=float(tick+1)) continue;
@@ -489,7 +511,7 @@ if(TrackOnlyCensus()&&!rows.empty()){
 	}
 	impl->lastInstanceAdjustedFrame=frame->adjustedFrame;
 	p->instances=impl->instances;l.AddAllocation(p->instances->buffer);
-	p->worldPositions=WorldPositionsForDraw(l,*frame,images,p->instances->Count());
+	p->worldPositions=physicalDepth?nil:WorldPositionsForDraw(l,*frame,images,p->instances->Count());
 	const bool trackOnlyEligible=p->instances->allTracks&&p->instances->Count()&&TrackMinimap(m.texture.pixelFormat)&&
     frame->sampleCount==1&&!frame->highQuality&&!InterventionFastMathEnabled();
  if(TrackOnlyRequested()&&trackOnlyEligible){
@@ -497,11 +519,13 @@ if(TrackOnlyCensus()&&!rows.empty()){
  }
  p->surfacePipeline=impl->Pipeline(l,color,depthFormat,stencilFormat,false,frame->highQuality,
 		frame->sampleCount,validation,milliseconds,frame->shadows,skipUnusedTerrainColor,
-		p->coverageTick!=0,p->worldPositions!=nil,std::nullopt,TrackOnlyRequested()&&trackOnlyEligible);
+		p->coverageTick!=0,p->worldPositions!=nil,std::nullopt,TrackOnlyRequested()&&trackOnlyEligible,physicalDepth);
 	l.Retain(p->surfacePipeline);
 	const std::array<GroundDecalSceneImage,6> sources={h,n,m,images.shadowDepth,images.shadowColor,d};uint32_t flips=0;
 	for(size_t i=0;i<sources.size();++i){flips|=uint32_t(sources[i].flipV)<<i;if(sources[i].texture)l.AddAllocation(sources[i].texture);}
-	const auto uniforms=MakeNativeGroundDecalUniforms(*frame,images.fragmentToLogical,flips);auto ub=Buffer(l,&uniforms,sizeof(uniforms),"Original ground decal matrices and material");p->arguments=Arguments(l,p->coverageTick?6:2,p->worldPositions?8:7,6);[p->arguments setAddress:p->instances->buffer.gpuAddress atIndex:0];[p->arguments setAddress:ub.gpuAddress atIndex:1];
+	const auto uniforms=MakeNativeGroundDecalUniforms(*frame,images.fragmentToLogical,flips);
+ const GroundDecalPhysicalUniforms physical{uniforms,depthMapping->crop,depthMapping->logicalOrigin};
+ auto ub=physicalDepth?Buffer(l,&physical,sizeof(physical),"Original ground decal matrix and physical depth crop"):Buffer(l,&uniforms,sizeof(uniforms),"Original ground decal matrices and material");p->arguments=Arguments(l,p->coverageTick?6:2,p->worldPositions?8:7,6);[p->arguments setAddress:p->instances->buffer.gpuAddress atIndex:0];[p->arguments setAddress:ub.gpuAddress atIndex:1];
 	if (p->worldPositions) {
 		p->worldPositionPipeline=impl->worldPositionPipelines[validation];
 		l.Retain(p->worldPositionPipeline);

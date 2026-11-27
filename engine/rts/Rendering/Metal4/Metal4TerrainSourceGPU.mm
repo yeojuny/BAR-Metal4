@@ -756,7 +756,7 @@ void PreparedTerrainSource::DidComplete()
 	impl->completed=true;
 }
 struct TerrainSourceGPU::Impl {
- RetiredArguments argumentPool;
+ AdaptiveRetiredArguments argumentPool;
  ScreenUploadPool uniformPool;
  InterventionMipViews mipViews;
  TerrainGeometryCache geometryCache;
@@ -814,8 +814,9 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		"Original terrain target viewport or actual clip convention is unobserved");
 	auto prepared=std::shared_ptr<PreparedTerrainSource>(new PreparedTerrainSource);auto& out=*prepared->impl;out.source=std::move(source);
 	const auto uniformCount=std::count_if(out.source->squares.begin(),out.source->squares.end(),[&](const auto& draw){return draw.deferred==deferred;});
-	const bool reuse=InterventionPoolsEnabled();
-	if(reuse){impl->argumentPool.BeginBatch(lease);impl->uniformPool.BeginBatch(lease.Device());impl->mipViews.Begin(lease);}
+	const bool reuse=InterventionPoolsEnabled();const bool reuseArguments=reuse||AdaptiveRetiredArguments::Enabled();
+ if(reuseArguments)impl->argumentPool.BeginBatch(lease,out.source->sourceDrawFrame,"terrain");
+ if(reuse){impl->uniformPool.BeginBatch(lease.Device());impl->mipViews.Begin(lease);}
 	TerrainUniformBatch uniformBatch(lease,uniformCount,sizeof(Uniform),9,reuse?&impl->uniformPool:nullptr,reuse?&out.uniformOwners:nullptr);
 	NativeTerrainMatrixMemo<simd_float4x4> inverseMemo;
 	uint64_t previous=0;
@@ -919,7 +920,7 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 		ready.uniforms=uniformSlice.buffer;
 		auto fd=[MTL4ArgumentTableDescriptor new];fd.maxBufferBindCount=2;fd.maxTextureBindCount=original->profile.fragment.size()*2;
 		fd.maxSamplerStateBindCount=original->profile.fragment.size();fd.initializeBindings=YES;
-		ready.fragment=reuse?impl->argumentPool.Acquire(lease,fd,out.argumentOwners,nullptr,uint64_t(1)<<1):[lease.Device()newArgumentTableWithDescriptor:fd error:nil];Require(ready.fragment!=nil,"Cannot create compact original terrain fragment argument table");
+		ready.fragment=reuseArguments?impl->argumentPool.Acquire(lease,fd,out.argumentOwners,nullptr,uint64_t(1)<<1):argPoolWitness::DirectNew(lease.Device(),fd,"terrain");Require(ready.fragment!=nil,"Cannot create compact original terrain fragment argument table");
 		lease.Retain(ready.fragment);[ready.fragment setAddress:ready.uniforms.gpuAddress+uniformSlice.offset atIndex:1];
 		for(size_t slot=0;slot<original->profile.fragment.size();++slot){const auto& image=ready.images[slot+fragmentOffset];const auto kind=original->profile.fragment[slot].kind;
 			const auto textureSlot=slot*2+(kind==ImageKind::Color2D&&image.depthImage?1:0);
@@ -938,7 +939,7 @@ std::shared_ptr<PreparedTerrainSource> TerrainSourceGPU::Prepare(RuntimeLease& l
 			Require(ready.indices!=nil,"Cannot retain original terrain index order");lease.AddAllocation(ready.indices);
 		}
 		auto vd=[MTL4ArgumentTableDescriptor new];vd.maxBufferBindCount=draw.border?3:2;vd.maxTextureBindCount=fragmentOffset?2:0;vd.maxSamplerStateBindCount=fragmentOffset?1:0;vd.initializeBindings=YES;
-		ready.vertex=reuse?impl->argumentPool.Acquire(lease,vd,out.argumentOwners,nullptr,draw.border?7u:3u):[lease.Device()newArgumentTableWithDescriptor:vd error:nil];Require(ready.vertex!=nil,"Cannot create original terrain vertex argument table");lease.Retain(ready.vertex);
+		ready.vertex=reuseArguments?impl->argumentPool.Acquire(lease,vd,out.argumentOwners,nullptr,draw.border?7u:3u):argPoolWitness::DirectNew(lease.Device(),vd,"terrain");Require(ready.vertex!=nil,"Cannot create original terrain vertex argument table");lease.Retain(ready.vertex);
 		[ready.vertex setAddress:ready.positions.gpuAddress atIndex:0];[ready.vertex setAddress:ready.uniforms.gpuAddress+uniformSlice.offset atIndex:1];
 		if(draw.border)[ready.vertex setAddress:ready.colors.gpuAddress atIndex:2];
 		if(fragmentOffset){const auto& height=ready.images.front();[ready.vertex setTexture:height.texture.gpuResourceID atIndex:height.depthImage?1:0];[ready.vertex setSamplerState:height.sampler.gpuResourceID atIndex:0];}

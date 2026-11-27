@@ -2,6 +2,7 @@
 #pragma once
 #include "Rendering/Backend/NativeSourceLineData133.h"
 #include "NativeSourceLineShaders133.h"
+#include "Metal4CommonLineViewport.h"
 #include "Metal4RetiredArguments.h"
 #include "Metal4SharedUploadPool.h"
 #include <cstring>
@@ -14,8 +15,8 @@ namespace rendering::metal4 {
 struct SourceLineProbe133 {
  const char* path=std::getenv("BAR_NATIVE_COMMON_LINE_PROBE_FILE");
  struct Row {std::atomic<uint64_t> draws{0},segments{0},uploadBytes{0},scratchBytes{0},prefixPasses{0};};
- std::array<Row,6> rows;
- ~SourceLineProbe133(){if(!path||!*path)return;if(auto f=std::fopen(path,"w")){std::fprintf(f,"origin,samples,draws,segments,uploadBytes,scratchBytes,prefixPasses\n");for(unsigned i=0;i<6;++i){const auto& r=rows[i];std::fprintf(f,"%u,%u,%llu,%llu,%llu,%llu,%llu\n",i/2,i%2?4:1,(unsigned long long)r.draws.load(),(unsigned long long)r.segments.load(),(unsigned long long)r.uploadBytes.load(),(unsigned long long)r.scratchBytes.load(),(unsigned long long)r.prefixPasses.load());}std::fclose(f);}}
+ std::array<Row,3*33> rows;
+ ~SourceLineProbe133(){if(!path||!*path)return;if(auto f=std::fopen(path,"w")){std::fprintf(f,"origin,samples,draws,segments,uploadBytes,scratchBytes,prefixPasses\n");for(unsigned i=0;i<3*33;++i){const auto& r=rows[i];if(!r.draws.load()&&i%33!=1&&i%33!=2&&i%33!=4)continue;std::fprintf(f,"%u,%u,%llu,%llu,%llu,%llu,%llu\n",i/33,i%33,(unsigned long long)r.draws.load(),(unsigned long long)r.segments.load(),(unsigned long long)r.uploadBytes.load(),(unsigned long long)r.scratchBytes.load(),(unsigned long long)r.prefixPasses.load());}std::fclose(f);}}
 };
 inline SourceLineProbe133& CommonLineProbe133(){static SourceLineProbe133 p;return p;}
 struct SourceLineRaster133 {std::array<float,4> viewport,target;std::array<uint32_t,4> options;};
@@ -74,7 +75,7 @@ public:
  void Clear(){arguments.Clear();libraries.clear();pipelines.clear();compute={};context=nullptr;device=nil;}
  void BeginBatch(RuntimeLease& lease){if(context!=lease.ContextIdentity()||device!=lease.Device()){Clear();context=lease.ContextIdentity();device=lease.Device();}uploads.BeginBatch(device);arguments.BeginBatch(lease);}
  id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const ScreenBlendState& b,const std::array<bool,4>& mask,MTLPixelFormat format,unsigned samples,bool alphaToCoverage,unsigned depth,bool validation,double& shaderMs,bool mrt=false,bool combined=false,unsigned combinedMask=15){
-  Require(depth<=3&&(!combined||mrt),"Common line pipeline family differs");unsigned m=0;for(unsigned i=0;i<4;++i)if(mask[i])m|=1u<<i;
+  Require(depth<=3&&(!combined||mrt)&&samples>=1&&samples<=32&&[lease.Device() supportsTextureSampleCount:samples]&&format!=MTLPixelFormatInvalid,"Common line pipeline family/attachment differs");unsigned m=0;for(unsigned i=0;i<4;++i)if(mask[i])m|=1u<<i;
   const uint64_t blend=uint64_t(b.enabled)|uint64_t(b.sourceColor)<<1|uint64_t(b.destinationColor)<<5|uint64_t(b.sourceAlpha)<<9|uint64_t(b.destinationAlpha)<<13|uint64_t(b.colorEquation)<<17|uint64_t(b.alphaEquation)<<20;
   const std::array<uint64_t,5> key{blend,uint64_t(format),lease.SampleShadingKey(samples),uint64_t(m)|uint64_t(combinedMask)<<4,uint64_t(alphaToCoverage)|uint64_t(depth)<<1|uint64_t(validation)<<3|uint64_t(mrt)<<4|uint64_t(combined)<<5};
   if(auto i=pipelines.find(key);i!=pipelines.end()){lease.Retain(i->second);return i->second;}
@@ -85,11 +86,36 @@ public:
   for(unsigned i=0;i<(combined?6u:mrt?5u:1u);++i){auto c=d.colorAttachments[i];c.pixelFormat=format;c.blendingState=b.enabled?MTL4BlendStateEnabled:MTL4BlendStateDisabled;c.sourceRGBBlendFactor=Factor133(b.sourceColor);c.destinationRGBBlendFactor=Factor133(b.destinationColor);c.sourceAlphaBlendFactor=Factor133(b.sourceAlpha);c.destinationAlphaBlendFactor=Factor133(b.destinationAlpha);c.rgbBlendOperation=Equation133(b.colorEquation);c.alphaBlendOperation=Equation133(b.alphaEquation);c.writeMask=Mask133(i==5?combinedMask:m);}
   NSError* error=nil;auto p=lease.NewRenderPipeline(d,&error);Require(p,"Cannot compile original common line pipeline: "+Error(error));if(pipelines.size()>=256)pipelines.erase(pipelines.begin());pipelines.emplace(key,p);lease.Retain(p);shaderMs+=Milliseconds(start);return p;
  }
- std::shared_ptr<PreparedSourceLines133> Prepare(RuntimeLease& lease,std::shared_ptr<const NativeSourceLineInput133> source,const std::array<double,4>& viewport,unsigned width,unsigned height,unsigned samples,const ScreenDrawState& s,id<MTLTexture> image,id<MTLSamplerState> sampler,id<MTLTexture> image1,id<MTLSamplerState> sampler1,bool validation,double& shaderMs){
-  Require(source&&sourceLine133::Material(s)&&width&&height&&width<=16384&&height<=16384&&(samples==1||samples==4),"Common line source/attachment differs");
-  sourceLine133::Validate(*source);auto p=std::make_shared<PreparedSourceLines133>();p->source=std::move(source);const auto& in=*p->source;uint32_t count=in.segments.size();
+ std::shared_ptr<PreparedSourceLines133> Prepare(RuntimeLease& lease,std::shared_ptr<const NativeSourceLineInput133> source,const std::array<double,4>& viewport,unsigned width,unsigned height,unsigned samples,MTLPixelFormat format,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,const ScreenDrawState& s,id<MTLTexture> image,id<MTLSamplerState> sampler,id<MTLTexture> image1,id<MTLSamplerState> sampler1,bool validation,double& shaderMs){
+  const bool supportedSamples=samples>=1&&samples<=32&&[lease.Device() supportsTextureSampleCount:samples];
+  const bool valid=source&&sourceLine133::Material(s)&&width&&height&&width<=16384&&height<=16384&&
+   format!=MTLPixelFormatInvalid&&supportedSamples;
+  if(!valid){
+   char message[384];std::snprintf(message,sizeof(message),"Common line source/attachment differs: samples=%u color=%llu depth=%llu stencil=%llu extent=%ux%u material=%u sourceKind=%d segments=%zu source_valid=%u material_valid=%u device_supports=%u",
+    samples,(unsigned long long)format,(unsigned long long)depthFormat,(unsigned long long)stencilFormat,width,height,unsigned(s.material),source?int(source->sourceKind):-1,source?source->segments.size():0u,unsigned(bool(source)),unsigned(sourceLine133::Material(s)),unsigned([lease.Device() supportsTextureSampleCount:samples]));
+   std::fprintf(stderr,"[CommonLineAttachment133] %s\n",message);Require(false,message);
+  }
+  sourceLine133::Validate(*source);
+  static const bool witness=[] {const char* v=std::getenv("BAR_METAL4_COMMON_LINE_WITNESS");return v&&*v=='1';}();
+  if(witness){
+   static std::array<std::atomic_bool,3*33> reported{};
+   if(!reported[source->sourceKind*33+samples].exchange(true))
+    std::fprintf(stderr,"[CommonLineAttachment133] accepted samples=%u color=%llu depth=%llu stencil=%llu extent=%ux%u material=%u sourceKind=%u segments=%zu shadingKey=%u\n",
+     samples,(unsigned long long)format,(unsigned long long)depthFormat,(unsigned long long)stencilFormat,width,height,unsigned(s.material),source->sourceKind,source->segments.size(),lease.SampleShadingKey(samples));
+  }
+  auto p=std::make_shared<PreparedSourceLines133>();p->source=std::move(source);const auto& in=*p->source;uint32_t count=in.segments.size();
   SourceLineRaster133 raster{{},{float(width),float(height),0,0},{samples,uint32_t(in.connectedStipple),count,0}};
-  for(unsigned i=0;i<4;++i){Require(std::isfinite(viewport[i])&&std::abs(viewport[i])<=32768,"Common line viewport outside bounds");raster.viewport[i]=viewport[i];}
+  const auto virtualViewport=ClassifyCommonLineViewport133(viewport,height);
+  if(!virtualViewport.valid){
+   char message[384];std::snprintf(message,sizeof(message),"Common line viewport outside safe numeric bounds: viewport=%.9g,%.9g,%.9g,%.9g target=%ux%u samples=%u sourceKind=%u segments=%u material=%u",
+    viewport[0],viewport[1],viewport[2],viewport[3],width,height,samples,in.sourceKind,count,unsigned(s.material));Require(false,message);
+  }
+  if(witness&&virtualViewport.extended){
+   static std::array<std::atomic_bool,3*33> reported{};
+   if(!reported[in.sourceKind*33+samples].exchange(true))std::fprintf(stderr,"[CommonLineVirtualViewport133] accepted old-bound-exceeded viewport=%.12g,%.12g,%.12g,%.12g target=%ux%u samples=%u sourceKind=%u segments=%u material=%u\n",
+    viewport[0],viewport[1],viewport[2],viewport[3],width,height,samples,in.sourceKind,count,unsigned(s.material));
+  }
+  for(unsigned i=0;i<4;++i)raster.viewport[i]=viewport[i];
   SourceLineSurface133 surface{{1,1,0,0},{uint32_t(s.material),uint32_t(s.texture&&s.texture->flipV),uint32_t(s.alphaTest.enabled),uint32_t(s.alphaTest.compare)},{s.alphaTest.reference,float(s.sampler.wrapS==ScreenWrap::LegacyClamp),float(s.sampler.wrapT==ScreenWrap::LegacyClamp),float(s.texture&&s.texture->incomplete)},{},{},{}};
   if(s.texture&&!s.texture->incomplete&&s.uvMode==ScreenUVMode::Texel){Require(s.texture->width&&s.texture->height,"Common line texture extent empty");surface.scale[0]=1.f/s.texture->width;surface.scale[1]=1.f/s.texture->height;}
   const auto& second=s.secondary;if(second.texture&&s.material!=ScreenMaterial::FontCoverage){surface.scale1={1,1,0,0};surface.options1={1,uint32_t(second.texture->flipV),0,0};surface.parameters1={0,float(second.sampler.wrapS==ScreenWrap::LegacyClamp),float(second.sampler.wrapT==ScreenWrap::LegacyClamp),float(second.texture->incomplete)};if(!second.texture->incomplete&&second.uvMode==ScreenUVMode::Texel){Require(second.texture->width&&second.texture->height,"Common line secondary extent empty");surface.scale1[0]=1.f/second.texture->width;surface.scale1[1]=1.f/second.texture->height;}}
@@ -107,7 +133,7 @@ public:
    for(size_t i=levels.size()-1;i>0;--i){const auto& l=levels[i-1];auto a=table(3);[a setAddress:scratch+l.output atIndex:0];[a setAddress:scratch+levels[i].output atIndex:1];[a setAddress:address+countsOffset+(i-1)*256 atIndex:2];p->passes.push_back({compute[2],a,l.n,false});}
   }
   p->arguments=table(6,2);auto a=p->arguments;[a setAddress:address atIndex:0];[a setAddress:address+segmentOffset atIndex:1];[a setAddress:address+transformOffset atIndex:2];[a setAddress:address+rasterOffset atIndex:3];[a setAddress:prefix atIndex:4];[a setAddress:address+surfaceOffset atIndex:5];[a setTexture:image.gpuResourceID atIndex:0];[a setTexture:image1.gpuResourceID atIndex:1];[a setSamplerState:sampler.gpuResourceID atIndex:0];[a setSamplerState:sampler1.gpuResourceID atIndex:1];
-  auto& probe=CommonLineProbe133();if(probe.path&&*probe.path){auto& r=probe.rows[in.sourceKind*2+(samples==4)];r.draws.fetch_add(1,std::memory_order_relaxed);r.segments.fetch_add(count,std::memory_order_relaxed);r.uploadBytes.fetch_add(bytes,std::memory_order_relaxed);r.scratchBytes.fetch_add(scratchBytes,std::memory_order_relaxed);r.prefixPasses.fetch_add(p->passes.size(),std::memory_order_relaxed);}return p;
+  auto& probe=CommonLineProbe133();if(probe.path&&*probe.path){auto& r=probe.rows[in.sourceKind*33+samples];r.draws.fetch_add(1,std::memory_order_relaxed);r.segments.fetch_add(count,std::memory_order_relaxed);r.uploadBytes.fetch_add(bytes,std::memory_order_relaxed);r.scratchBytes.fetch_add(scratchBytes,std::memory_order_relaxed);r.prefixPasses.fetch_add(p->passes.size(),std::memory_order_relaxed);}return p;
  }
 };
 }

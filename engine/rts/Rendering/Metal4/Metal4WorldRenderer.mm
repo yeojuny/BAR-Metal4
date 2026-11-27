@@ -28,6 +28,10 @@
 #include "Rendering/Backend/NativeSerialRenderWorker.h"
 #include "Rendering/Backend/NativeRendererControl.h"
 #include "Rendering/Backend/NativeRenderJobSettlement.h"
+#include "Rendering/Backend/NativeRenderProcessShutdown.h"
+#ifdef RECOIL_METAL4_LIVE_SCENE
+#include "System/SpringExitCode.h"
+#endif
 #include "Rendering/Backend/NativeBeginReadyPolicy.h"
 #include "Rendering/Backend/NativeGeometryAllocationReceipt.h"
 #include "Rendering/Backend/NativeSourceResourceCache.h"
@@ -456,6 +460,18 @@ struct Metal4WorldRenderer::Impl {
    if(detachedCPUJob){(void)cpuJob->Consume();cpuJob.reset();detachedCPUJob=false;}
   }catch(...){
    if(cpuJob&&cpuJob->WorkerCallableReleased())QueueJoinedNativeCPUTrace(cpuTraceBuffer);
+#ifdef RECOIL_METAL4_LIVE_SCENE
+   // The original error has already been delivered to the scene (or joined
+   // here on process exit). Do not rethrow the same terminal CPU exception
+   // through KillLua/destructors; do not invent a successful result/receipt.
+   // The existing scene/runtime drain and unsafe-detach checks still run.
+   if(NativeRenderProcessShutdownRequested()&&cpuJob&&cpuJob->TerminalFailureJoined()){
+    try{throw;}catch(const std::exception& e){LOG_L(L_ERROR,"[NativeCPUShutdown] joined terminal render failure; process exit only: %s",e.what());}
+    catch(...){LOG_L(L_ERROR,"[NativeCPUShutdown] joined terminal non-standard render failure; process exit only");}
+    if(spring::exitCode==spring::EXIT_CODE_SUCCESS)spring::exitCode=spring::EXIT_CODE_CRASHED;
+    cpuJob.reset();detachedCPUJob=false;return;
+   }
+#endif
    throw;
   }
  }
@@ -2514,6 +2530,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawOwned(std::shared_ptr<con
 }
 Metal4WorldPresentationResult Metal4WorldRenderer::DrawDispatch(const WorldFrame& frame,const Metal4WorldRenderOptions& sourceOptions,std::function<void()> previousRetired,std::shared_ptr<const Metal4WorldSubmission> owned,std::function<void(const Metal4WorldPresentationResult*,std::exception_ptr)> cpuSettled)
 {
+ Require(!NativeRenderProcessShutdownRequested(),"Cannot submit new world draw during process shutdown");
  frame.deferredMainParticles.RequireComplete();
  FinishCPUWork(NativeCPUFinishReason::DispatchPrior);
  // Reject invalid callers before reading source policy, as preparation did.
@@ -2713,6 +2730,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
 #endif
   lease.BindUIResolver(std::move(uiResolver));
   lease.BindSourceSubmission(sourceSubmission);
+  if(!offscreenSource&&!options.readback&&frame.simulationFrame>=0)impl->weaponRangeGPU.WarmLibrary(lease,frame.simulationFrame);
   // Sweep once even when main/water effect frames are absent or empty.
   impl->projectileEffectsGPU.PruneExpiredImages();
   impl->lightningGPU.PruneExpiredImages();
@@ -4579,6 +4597,7 @@ Metal4WorldPresentationResult Metal4WorldRenderer::DrawPrepared(const WorldFrame
    const auto& base=terrainMaterial.standardShading->base;
    images.minimap={impl->screenGPU.PrepareImage(lease,base,ScreenSampler{},screen.get(),std::nullopt,retainTerrainImage).texture,base->flipV};
    images.terrainDepth={decals.highQuality?terrainSnapshot->SamplesImage():terrainSnapshot->SingleImage(),true};
+   images.depthCrop=crop;images.logicalExtent={logicalWidth,logicalHeight};images.renderExtent={result.surface.renderWidth,result.surface.renderHeight};
    images.bottomAlignedTerrainSnapshotThisDraw=mainGround.source->groundInvoked &&
     crop[0]==0 && (crop[1]&1u)==0 && crop[2]==mainAttachments->Depth().width &&
     crop[1]+crop[3]==mainAttachments->Depth().height &&

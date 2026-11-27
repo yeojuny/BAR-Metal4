@@ -1,4 +1,5 @@
 #include "Rendering/Backend/NativeRenderJobSettlement.h"
+#include "Rendering/Backend/NativeRenderProcessShutdown.h"
 #include <cassert>
 #include <iostream>
 using namespace rendering;
@@ -12,7 +13,7 @@ int main(){
   NativeRenderJobSettlement<int> job(receipt,[&]{NativeRendererAccessGate::Scope access(&gate);order.push_back(2);Reject([&]{current->Finish();});});current=&job;
   {NativeRendererAccessGate::Scope access(&gate);receipt->Reserve(gate);}
   job.Submit(worker,[&]{NativeRendererAccessGate::Scope access(receipt->Handoff());order.push_back(1);receipt->MarkRetirementReady();return 29;});
-  job.Finish();assert((order==std::vector<int>{1,2,3}));
+  assert(!job.TerminalFailureJoined());job.Finish();assert(!job.TerminalFailureJoined());assert((order==std::vector<int>{1,2,3}));
   // Draining before a control preserves the result for the scene owner.
   {NativeRendererAccessGate::Scope access(&gate);order.push_back(4);}
   job.Finish();assert(job.Consume()==29);Reject([&]{job.Consume();});
@@ -25,7 +26,7 @@ int main(){
   {NativeRendererAccessGate::Scope access(&gate);receipt->Reserve(gate);}
   job.Submit(worker,[&]()->int{NativeRendererAccessGate::Scope access(receipt->Handoff());receipt->MarkRetirementReady();if(mode==0||mode==3)throw std::runtime_error("worker");return 7;});
   for(unsigned attempt=0;attempt<3;++attempt){try{job.Finish();assert(false);}catch(const std::runtime_error& e){assert(std::string(e.what())==((mode==0||mode==3)?"worker":mode==1?"target":"retirement"));}}
-  assert(target==1&&retired==1);Reject([&]{job.Consume();});
+  assert(job.TerminalFailureJoined()&&job.WorkerCallableReleased());assert(target==1&&retired==1);Reject([&]{job.Consume();});
   {NativeRendererAccessGate::Scope access(&gate);}
  }
  // Enqueue rejected before publication is terminal with the original cause,
@@ -34,7 +35,7 @@ int main(){
   auto receipt=std::make_shared<NativeRenderDispatchReceipt>(nullptr,std::function<void()>{});
   NativeRenderJobSettlement<int> job(receipt,[&]{++delivered;});
   {NativeRendererAccessGate::Scope access(&gate);receipt->Reserve(gate);}
-  Reject([&]{job.Submit(worker,[]{return 1;});});Reject([&]{job.Finish();});
+  Reject([&]{job.Submit(worker,[]{return 1;});});Reject([&]{job.Finish();});assert(job.TerminalFailureJoined());
   {NativeRendererAccessGate::Scope access(&gate);}assert(!delivered);first->Join();
  }
  // A discarded running job retains its reservation through task completion.
@@ -57,7 +58,7 @@ int main(){
   });live=&job;
   job.Submit(worker,[&]{if(workerFails)throw std::runtime_error("worker");return 33;});
   for(unsigned i=0;i<2;++i){try{job.Finish();assert(false);}catch(const std::runtime_error& e){assert(std::string(e.what())==(workerFails?"worker":"scene"));}}
-  assert(called==1);
+  assert(called==1&&job.TerminalFailureJoined());
  }
  // Actual direct-fallback helper: scopes unwind before notification; failure
  // notification cannot replace the render exception or repeat a source notice.
@@ -83,7 +84,8 @@ int main(){
   Reject([&]{NativeRendererAccessGate::Scope access(&gate);});
   prefixAdvanced.store(true,std::memory_order_release);
   if(failBeforeBegin)Reject([&]{job.Finish();});else {job.Finish();assert(job.Consume()==11);}
-  assert(target==1&&retired==1&&settled==1);
+  assert(target==1&&retired==1&&settled==1);assert(job.TerminalFailureJoined()==failBeforeBegin);
  }
+ assert(!NativeRenderProcessShutdownRequested());BeginNativeRenderProcessShutdown();assert(NativeRenderProcessShutdownRequested());
  std::cout<<"1000 CPU Join/handoff/notice/control cycles; recursive drain, result preservation, persistent first failure, single callback attempt, enqueue rejection PASS\n";
 }

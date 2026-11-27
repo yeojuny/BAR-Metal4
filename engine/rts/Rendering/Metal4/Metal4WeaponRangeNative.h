@@ -41,6 +41,7 @@ class WeaponRangeGPU {
 public:
 	WeaponRangeGPU();~WeaponRangeGPU();
 	void ClearResources(); // Only after serialized GPU retirement.
+ void WarmLibrary(RuntimeLease&,int64_t simulation) noexcept;
 	std::unique_ptr<PreparedWeaponRangeDraw> Prepare(RuntimeLease&,const NativeWeaponRangeDraw&,
 		const StartBoxImageResolver&,MTLViewport,MTLScissorRect,std::array<std::uint32_t,2> targetExtent,
 		MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,

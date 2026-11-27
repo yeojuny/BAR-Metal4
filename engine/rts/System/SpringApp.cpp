@@ -31,6 +31,7 @@
 #include "System/SpringApp.h"
 #ifdef RECOIL_METAL4_LIVE_SCENE
 #include "Rendering/Backend/NativeCPUPhaseTrace.h"
+#include "Rendering/Backend/NativeRenderProcessShutdown.h"
 #endif
 #ifndef HEADLESS
 #include "aGui/Gui.h"
@@ -1076,6 +1077,9 @@ void SpringApp::Kill(bool fromRun)
 
 	// block any (main-thread) exceptions thrown here from causing another Kill
 	killedCount += 1;
+#ifdef RECOIL_METAL4_LIVE_SCENE
+	rendering::BeginNativeRenderProcessShutdown();
+#endif
 
 	LOG("[SpringApp::%s][1] fromRun=%d", __func__, fromRun);
 	ThreadPool::SetThreadCount(0);

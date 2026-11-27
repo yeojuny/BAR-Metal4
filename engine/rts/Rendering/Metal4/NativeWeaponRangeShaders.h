@@ -434,6 +434,37 @@ vertex RangeVarying OriginalWeaponRangeFill(uint vertexIndex [[vertex_id]],uint 
  RangeVarying out;out.position=value.position;out.color=provoking.color;
  out.lineA=out.lineB=float3(0);return out;
 }
+// Oversized PiP fill uses an actual full-attachment viewport with the
+// original virtual viewport composed into clip coordinates. The original
+// x/y clip planes remain explicit; no sample or scissor is moved/clamped.
+struct RangeRebasedVarying {
+ float4 position [[position]];
+ float4 color [[flat]];
+ float3 lineA [[flat]],lineB [[flat]];
+ float clipDistances [[clip_distance]] [4];
+};
+inline RangeRebasedVarying RangeRebaseViewport(RangeVarying value,constant RangeUniform& u) {
+ RangeRebasedVarying out;
+ const float4 p=value.position;
+ out.clipDistances[0]=p.x+p.w;out.clipDistances[1]=p.w-p.x;
+ out.clipDistances[2]=p.y+p.w;out.clipDistances[3]=p.w-p.y;
+ const float2 scale=u.viewport.zw/u.outputViewport.zw;
+ const float2 center=(u.viewport.xy+u.viewport.zw*.5f-u.outputViewport.xy)/u.outputViewport.zw;
+ const float2 offset=float2(center.x*2.f-1.f,1.f-center.y*2.f);
+ out.position=float4(p.xy*scale+p.w*offset,p.z,p.w);
+ out.color=value.color;out.lineA=value.lineA;out.lineB=value.lineB;return out;
+}
+vertex RangeRebasedVarying OriginalWeaponRangeFillRebased(uint vertexIndex [[vertex_id]],uint instance [[instance_id]],
+ const device float4* vertices [[buffer(0)]],const device RangeInstance* rows [[buffer(1)]],
+ const device float4* positions [[buffer(2)]],constant RangeUniform& u [[buffer(3)]],
+ texture2d<float> height [[texture(0)]],sampler hs [[sampler(0)]]) {
+ const uint triangle=vertexIndex/3,corner=vertexIndex%3,index=corner==0?0:triangle+corner;
+ const float4 model=u.values1.w>0.5f?float4(0):positions[instance];
+ const auto value=OriginalRangeVertex(vertices[index],rows[instance],model,instance,u,height,hs);
+ const auto provoking=OriginalRangeVertex(vertices[triangle+2],rows[instance],model,instance,u,height,hs);
+ RangeVarying out;out.position=value.position;out.color=provoking.color;
+ out.lineA=out.lineB=float3(0);return RangeRebaseViewport(out,u);
+}
 vertex RangeVarying OriginalWeaponRangeLine(uint vertexIndex [[vertex_id]],uint instance [[instance_id]],
  const device float4* vertices [[buffer(0)]],const device RangeInstance* rows [[buffer(1)]],
  const device float4* positions [[buffer(2)]],constant RangeUniform& u [[buffer(3)]],
@@ -611,6 +642,9 @@ fragment RangeFragment OriginalWeaponRangeMaskedLineFragment(RangeVarying input 
 }
 vertex RangeVarying OriginalWeaponRangeComposite(uint vertexIndex [[vertex_id]],const device float4* vertices [[buffer(0)]],constant RangeUniform& u [[buffer(3)]]) {
  RangeVarying out;out.position=float4(vertices[vertexIndex].xy,u.options.y?0.5f:0.0f,1.0f);out.color=float4(0);out.lineA=out.lineB=float3(0);return out;
+}
+vertex RangeRebasedVarying OriginalWeaponRangeCompositeRebased(uint vertexIndex [[vertex_id]],const device float4* vertices [[buffer(0)]],constant RangeUniform& u [[buffer(3)]]) {
+ RangeVarying out;out.position=float4(vertices[vertexIndex].xy,u.options.y?0.5f:0.0f,1.0f);out.color=float4(0);out.lineA=out.lineB=float3(0);return RangeRebaseViewport(out,u);
 }
 fragment float4 OriginalWeaponRangeCompositeFragment(RangeVarying input [[stage_in]],constant RangeUniform& u [[buffer(3)]],texture2d<float> mask [[texture(1)]] RECOIL_SAMPLE_ID_ARGUMENT RECOIL_SAMPLE_POSITION_ARGUMENT) {
 	RECOIL_SAMPLE_FIX_POSITION(input.position,get_sample_position(recoilOriginalSampleID));

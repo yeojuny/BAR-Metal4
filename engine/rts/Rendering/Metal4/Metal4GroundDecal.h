@@ -11,6 +11,9 @@ struct GroundDecalSceneImages {
 	// Actual terrain-only copy, not the later pre-water/full-scene depth.
 	GroundDecalSceneImage height,normals,minimap,shadowDepth,shadowColor,terrainDepth;
 	std::array<float,4> fragmentToLogical{};
+ // Actual current main snapshot crop and the coordinate basis used to create it.
+ std::array<uint32_t,4> depthCrop{};
+ std::array<uint32_t,2> logicalExtent{},renderExtent{};
 	bool bottomAlignedTerrainSnapshotThisDraw=false;
 };
 using GroundDecalTextureProvider=std::function<id<MTLTexture>(RuntimeLease&,std::shared_ptr<const WorldTexture>)>;
