@@ -4829,14 +4829,11 @@ void CGuiHandler::DrawSelectCircle(const float3& pos, float radius,
 			state.lineWidth = 2.0f;
 		});
 
-		// Original 128-unit center line and its independent alpha blend.
+		// Deliberate native Metal4 presentation preference: omit the original
+		// 128-unit vertical center marker from the area preview. Keep its
+		// outgoing blend/color/line-width/fog state and the stencil volume.
 		recorder.SetBlend({});
 		recorder.Color({color[0], color[1], color[2], 0.9f});
-		const float3 base(pos.x, CGround::GetHeightAboveWater(pos.x, pos.z, false), pos.z);
-		recorder.BeginLegacyPrimitive(rendering::NativeDrawPrimitive::Lines, "CGuiHandler::DrawSelectCircle center");
-		recorder.Vertex(base.x, base.y, base.z);
-		recorder.Vertex(base.x, base.y + 128.0f, base.z);
-		recorder.End();
 		recorder.UpdateWorldState([](rendering::NativeWorldDrawState& state) { state.lineWidth = 1.0f; });
 		recorder.LuaFogEnabled(true); // Source tail enables unconditionally.
 		return;
