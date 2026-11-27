@@ -2218,7 +2218,7 @@ std::vector<rendering::NativeMiniMapLine> CMiniMap::GetNativeRangeLines(bool sel
 			const auto radii = rendering::SelectedSensorRadii({true, !unit->isDead,
 				unit->allyteam == gu->myAllyTeam, gu->spectatingFullView, gu->spectatingFullView || unit->IsInLosForAllyTeam(gu->myAllyTeam),
 				unit->beingBuilt, unit->activated, float(unit->radarRadius), float(unit->sonarRadius)});
-			if (radii[0] > 0) circle(unit->pos, rendering::SelectedSensorColor(cmdColors.rangeRadar).data(), radii[0]);
+			// The PiP-only selection overlay keeps sonar; radar is left to original coverage.
 			if (radii[1] > 0) circle(unit->pos, rendering::SelectedSensorColor(cmdColors.rangeSonar).data(), radii[1]);
 			continue;
 		}
