@@ -5,6 +5,7 @@
 #include "Metal4PublicationProbe.h"
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4CUSSource.h"
+#include "Metal4ModelPipelineKey246.h"
 #include "Metal4TerrainOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "Rendering/Backend/NativeUITextureHistory.h"
@@ -118,10 +119,10 @@ MTLBlendOperation Equation(ScreenBlendEquation x)
  throw std::runtime_error("CUS original blend equation differs");
 }
 MTLColorWriteMask Mask(const std::array<bool,4>& c){return MTLColorWriteMask((c[0]?MTLColorWriteMaskRed:0)|(c[1]?MTLColorWriteMaskGreen:0)|(c[2]?MTLColorWriteMaskBlue:0)|(c[3]?MTLColorWriteMaskAlpha:0));}
-std::vector<uint64_t> PipelineKey(const NativeCUSGeneratedProgram* p,const CUSSourceTarget& t,const ScreenBlendState& b,const std::array<bool,4>& mask,bool validation)
+std::vector<uint64_t> PipelineKey(const NativeCUSGeneratedProgram* p,const CUSSourceTarget& t,const ScreenBlendState& b,const std::array<bool,4>& mask,bool validation,pipelinekey246::LegacyKeyCost* witness=nullptr)
 {
  std::vector<uint64_t> k{uint64_t(p),t.samples,uint64_t(validation),uint64_t(b.enabled),uint64_t(b.sourceColor),uint64_t(b.destinationColor),uint64_t(b.sourceAlpha),uint64_t(b.destinationAlpha),uint64_t(b.colorEquation),uint64_t(b.alphaEquation),uint64_t(Mask(mask))};
- for(auto c:t.colors)k.push_back(c);return k;
+ if(witness){witness->VectorCapacity(k.capacity());for(auto c:t.colors){k.push_back(c);witness->VectorCapacity(k.capacity());}}else for(auto c:t.colors)k.push_back(c);return k;
 }
 bool Empty(const NativeCUSTextureBinding& b)
 {
@@ -337,6 +338,7 @@ struct CUSSourceGPU::Impl {
  std::map<std::pair<const NativeCUSGeneratedProgram*,bool>,std::shared_ptr<const Libraries>> libraries;
  std::map<std::pair<const NativeCUSGeneratedProgram*,bool>,id<MTLLibrary>> identityFragments194;
  std::map<std::vector<uint64_t>,id<MTLRenderPipelineState>> pipelines;
+ std::map<pipelinekey246::CUSKey,id<MTLRenderPipelineState>> fixedPipelines246;
  std::unordered_map<const void*,std::weak_ptr<const Program>> programs;
  struct Buffer {std::weak_ptr<const void> owner;__strong id<MTLBuffer> value=nil;};
  struct Geometry {std::weak_ptr<const WorldModel> owner;ModelGeometrySlice155 gpu;size_t logicalBytes=0;NativePreparedGeometry154 prepared;};
@@ -412,7 +414,28 @@ struct CUSSourceGPU::Impl {
  id<MTLRenderPipelineState> Pipeline(RuntimeLease& lease,const Program& p,const CUSSourceTarget& target,const ScreenBlendState& blend,const std::array<bool,4>& mask,bool validation,double& ms,bool coverage=false,bool identityChannels194=false,ModelSamplerPolicy219 samplerPolicy=ModelSamplerPolicy219::Generic,bool indirect=false)
  {
   const bool forceFragmentRelaxed=CUSDeferredFragmentRelaxedRevisit()&&target.colors[1]!=MTLPixelFormatInvalid;
-  auto key=PipelineKey(p.generated,target,blend,mask,validation);key.push_back(coverage);key.push_back(target.combinedColor);key.push_back(lease.SampleShadingEnabled(target.samples));key.push_back(identityChannels194);key.push_back(uint64_t(samplerPolicy));key.push_back(forceFragmentRelaxed);key.push_back(indirect);if(auto it=pipelines.find(key);it!=pipelines.end()){if(identityChannels194)lease.Retain(identityFragments194.at({p.generated,forceFragmentRelaxed}));return it->second;}
+  const bool fixed246=pipelinekey246::Enabled(),witness246=pipelinekey246::WitnessEnabled();
+  std::vector<uint64_t> key;pipelinekey246::CUSKey fixedKey246;
+  pipelinekey246::LegacyKeyCost cost246;
+  if(fixed246){
+   fixedKey246=pipelinekey246::CUS(p.generated,target,blend,uint64_t(Mask(mask)),validation,coverage,
+    lease.SampleShadingEnabled(target.samples),identityChannels194,uint64_t(samplerPolicy),forceFragmentRelaxed,indirect);
+   if(auto it=fixedPipelines246.find(fixedKey246);it!=fixedPipelines246.end()){
+    if(witness246)pipelinekey246::Report(pipelinekey246::CUSFamily,true,cost246);
+    if(identityChannels194)lease.Retain(identityFragments194.at({p.generated,forceFragmentRelaxed}));return it->second;
+   }
+  }else{
+   key=PipelineKey(p.generated,target,blend,mask,validation,witness246?&cost246:nullptr);
+   if(witness246){
+    const std::array<uint64_t,7> tail{uint64_t(coverage),uint64_t(target.combinedColor),uint64_t(lease.SampleShadingEnabled(target.samples)),uint64_t(identityChannels194),uint64_t(samplerPolicy),uint64_t(forceFragmentRelaxed),uint64_t(indirect)};
+    for(auto value:tail){key.push_back(value);cost246.VectorCapacity(key.capacity());}
+   }else{key.push_back(coverage);key.push_back(target.combinedColor);key.push_back(lease.SampleShadingEnabled(target.samples));key.push_back(identityChannels194);key.push_back(uint64_t(samplerPolicy));key.push_back(forceFragmentRelaxed);key.push_back(indirect);}
+   if(auto it=pipelines.find(key);it!=pipelines.end()){
+    if(witness246)pipelinekey246::Report(pipelinekey246::CUSFamily,true,cost246);
+    if(identityChannels194)lease.Retain(identityFragments194.at({p.generated,forceFragmentRelaxed}));return it->second;
+   }
+  }
+  if(witness246)pipelinekey246::Report(pipelinekey246::CUSFamily,false,cost246);
   auto fragmentStages=forceFragmentRelaxed?Library(lease,*p.generated,ms,true):p.libraries;
   auto fragmentLibrary=identityChannels194?IdentityFragment194(lease,*p.generated,ms,forceFragmentRelaxed):fragmentStages->fragment;
   lease.Retain(fragmentStages->fragment);
@@ -442,7 +465,7 @@ struct CUSSourceGPU::Impl {
   auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);d.options=options;
   if(target.combinedColor!=MTLPixelFormatInvalid){d.colorAttachments[5].pixelFormat=target.combinedColor;d.colorAttachments[5].writeMask=MTLColorWriteMaskNone;}
   NSError* error=nil;auto pipeline=lease.NewRenderPipeline(d,&error);Require(pipeline!=nil,"Cannot compile full CUS native target pipeline: "+Error(error));
-  pipelines.emplace(std::move(key),pipeline);ms+=Milliseconds(start);return pipeline;
+  if(fixed246)fixedPipelines246.emplace(fixedKey246,pipeline);else pipelines.emplace(std::move(key),pipeline);ms+=Milliseconds(start);return pipeline;
  }
  template<class T,class F>id<MTLBuffer> Cached(RuntimeLease& lease,std::shared_ptr<const T> owner,size_t bytes,F fill)
  {

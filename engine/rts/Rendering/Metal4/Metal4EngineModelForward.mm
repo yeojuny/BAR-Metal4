@@ -1,5 +1,6 @@
 /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
 #include "Metal4EngineModelForward.h"
+#include "Metal4ModelPipelineKey246.h"
 #include "Metal4TerrainOwnerRoster.h"
 #include "Metal4InterventionMath.h"
 #include "Metal4ModelUpload146.h"
@@ -102,6 +103,7 @@ struct EngineModelForwardGPU::Impl {
   // FBO selection does not create another original GL program or uniform
   // owner. Each entry is a real PSO of this owner's same source functions.
   std::map<std::string,id<MTLRenderPipelineState>> pipelines;
+  std::map<pipelinekey246::ForwardKey,id<MTLRenderPipelineState>> fixedPipelines246;
  };
  std::map<const void*,std::shared_ptr<Original>> originalPrograms;
  Original& RequireOriginal(const NativeEngineModelDraw& draw)const{
@@ -114,8 +116,23 @@ struct EngineModelForwardGPU::Impl {
   const auto& surface=source.sourceSurface;const auto& blend=surface.blend;const bool modern=source.shader==NativeEngineModelShader::GL4;
   Require(original.modern==modern&&original.shadows==source.program.shadows,"Original forward target implementation has a foreign source profile");
   Require(target.colors[0]!=MTLPixelFormatInvalid&&target.depth==MTLPixelFormatDepth32Float&&(target.samples>=1&&target.samples<=32&&[lease.Device() supportsTextureSampleCount:target.samples])&&std::all_of(target.colors.begin()+1,target.colors.end(),[](auto f){return f==MTLPixelFormatInvalid;}),"Original forward target implementation requires an actual one-color/D32F target");
-  std::ostringstream k;k<<modern<<':'<<validation<<':'<<imageKey<<':'<<target.colors[0]<<':'<<target.depth<<':'<<target.stencil<<':'<<lease.SampleShadingKey(target.samples)<<':'<<blend.enabled<<':'<<unsigned(blend.sourceColor)<<':'<<unsigned(blend.destinationColor)<<':'<<unsigned(blend.sourceAlpha)<<':'<<unsigned(blend.destinationAlpha)<<':'<<unsigned(blend.colorEquation)<<':'<<unsigned(blend.alphaEquation);for(bool write:surface.colorWrite)k<<':'<<write;
-  k<<':'<<surface.alphaToCoverage;const auto key=k.str();if(auto i=original.pipelines.find(key);i!=original.pipelines.end()){lease.Retain(i->second);lease.Retain(original.libraries.at(imageKey));return i->second;}
+  const bool fixed246=pipelinekey246::Enabled(),witness246=pipelinekey246::WitnessEnabled();
+  std::string key;pipelinekey246::ForwardKey fixedKey246;pipelinekey246::LegacyKeyCost cost246;
+  if(fixed246){
+   fixedKey246=pipelinekey246::Forward(modern,validation,imageKey,target,surface,lease.SampleShadingKey(target.samples));
+   if(auto i=original.fixedPipelines246.find(fixedKey246);i!=original.fixedPipelines246.end()){
+    if(witness246)pipelinekey246::Report(pipelinekey246::ForwardFamily,true,cost246);
+    lease.Retain(i->second);lease.Retain(original.libraries.at(imageKey));return i->second;
+   }
+  }else{
+   std::ostringstream k;k<<modern<<':'<<validation<<':'<<imageKey<<':'<<target.colors[0]<<':'<<target.depth<<':'<<target.stencil<<':'<<lease.SampleShadingKey(target.samples)<<':'<<blend.enabled<<':'<<unsigned(blend.sourceColor)<<':'<<unsigned(blend.destinationColor)<<':'<<unsigned(blend.sourceAlpha)<<':'<<unsigned(blend.destinationAlpha)<<':'<<unsigned(blend.colorEquation)<<':'<<unsigned(blend.alphaEquation);for(bool write:surface.colorWrite)k<<':'<<write;
+  k<<':'<<surface.alphaToCoverage;key=k.str();if(witness246)cost246.Strings(k,key);
+   if(auto i=original.pipelines.find(key);i!=original.pipelines.end()){
+    if(witness246)pipelinekey246::Report(pipelinekey246::ForwardFamily,true,cost246);
+    lease.Retain(i->second);lease.Retain(original.libraries.at(imageKey));return i->second;
+   }
+  }
+  if(witness246)pipelinekey246::Report(pipelinekey246::ForwardFamily,false,cost246);
   const auto start=Clock::now();NSError* error=nil;
   auto& library=original.libraries[imageKey];
   if(!library){auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(options);library=lease.NewLibraryWithSource(String(NativeEngineTextureShaderDefines(imageKey)+NativeEngineDeferredShaders+NativeEngineForwardShaders),options,&error);Require(library,"Cannot compile full original engine forward shader: "+Error(error));}
@@ -125,7 +142,7 @@ struct EngineModelForwardGPU::Impl {
   a.sourceRGBBlendFactor=effectstate::Factor(blend.sourceColor);a.destinationRGBBlendFactor=effectstate::Factor(blend.destinationColor);a.sourceAlphaBlendFactor=effectstate::Factor(blend.sourceAlpha);a.destinationAlphaBlendFactor=effectstate::Factor(blend.destinationAlpha);a.rgbBlendOperation=Equation(blend.colorEquation);a.alphaBlendOperation=Equation(blend.alphaEquation);
   unsigned mask=0;for(unsigned c=0;c<4;++c)if(surface.colorWrite[c])mask|=MTLColorWriteMaskRed>>c;a.writeMask=MTLColorWriteMask(mask);
   auto options=[MTL4PipelineOptions new];options.shaderValidation=ShaderValidationMode(validation);d.options=options;
-  auto pipeline=lease.NewRenderPipeline(d,&error);Require(pipeline,"Cannot compile full original engine forward pipeline: "+Error(error));original.pipelines.emplace(key,pipeline);lease.Retain(pipeline);lease.Retain(library);ms+=Milliseconds(start);return pipeline;
+  auto pipeline=lease.NewRenderPipeline(d,&error);Require(pipeline,"Cannot compile full original engine forward pipeline: "+Error(error));if(fixed246)original.fixedPipelines246.emplace(fixedKey246,pipeline);else original.pipelines.emplace(key,pipeline);lease.Retain(pipeline);lease.Retain(library);ms+=Milliseconds(start);return pipeline;
  }
 };
 EngineModelForwardGPU::EngineModelForwardGPU():impl(std::make_unique<Impl>()){}
