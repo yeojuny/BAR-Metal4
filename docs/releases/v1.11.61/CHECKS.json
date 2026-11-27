@@ -1,0 +1,417 @@
+{
+  "status": "LOCAL_ACTUAL_GAME_AND_GPU_FIXTURE_VALIDATION_PASS",
+  "sourceClosure": {
+    "version": "1.11.61",
+    "sourceCommit": "51a1a6db9ee19f58c678e069107d6f6f375debc4",
+    "engineTree": "2b90217aa8a9615a64eb5b13aada389c0ecdbe68",
+    "previousReleaseCommit": "2a4104cc6c326f2a3a4fffa6b54a8980fd19544a",
+    "signedEngineSHA256": "e1f7207a2341617f05e341bb325f62b0b7102d9b766e5c593c68bb7433aff9fd",
+    "sourceHashes": {
+      "engine/rts/Rendering/Backend/NativeRenderJobSettlement.h": "ab415a251e62051747579c67f8be0d233c7a550be3c2d15af2db32bb7755ac52",
+      "engine/rts/Rendering/Backend/NativeRenderProcessShutdown.h": "814f3b8547f436d820038603cfe9987705a0455fa39d28e7e859898de9227791",
+      "engine/rts/Rendering/Metal4/Metal4CommonLineViewport.h": "70537a89f97cc7496babd731a2f70fdea813e0382670cb43474c683e1dbb6f75",
+      "engine/rts/Rendering/Metal4/Metal4EngineShadow.mm": "8010b2a9c954b478698c32b6848cb1439360adc0308af2424b31faa20a4c927b",
+      "engine/rts/Rendering/Metal4/Metal4GroundDecal.h": "f4477344e6100bddc723a64c0338d273146ee524f567ac8b4f4de132a9603282",
+      "engine/rts/Rendering/Metal4/Metal4GroundDecal.mm": "0bc6c5458b8f7df9f0b337bce55703e307105b1f0f2687cf13c583792608c439",
+      "engine/rts/Rendering/Metal4/Metal4GroundDecalDepthMapping.h": "0c97b2b0f5531cdeeee903d68871c686fc2da4971d1e4c96e8638b8637596685",
+      "engine/rts/Rendering/Metal4/Metal4RetiredArguments.h": "0a27b2d529becb92da5ad2f09bb2db0a357ff3e3998fbce16ed186dbbdd52c0c",
+      "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm": "4b28bc71b1dbbca4193e006e2d5863c1de268992fea15e085eee5f7ef8a3daca",
+      "engine/rts/Rendering/Metal4/Metal4ShadowTerrainGeometryCache.inc": "a143c033d009fbe83053bd3f61f2e4036b74adcd76a5a0b33b7b2e943229e53b",
+      "engine/rts/Rendering/Metal4/Metal4SourceLines133.h": "55aba56fa8ee1fad98bdb2c70c62158e851d9299c1f2d47f517f7779dc97f7a7",
+      "engine/rts/Rendering/Metal4/Metal4TerrainSampling211.h": "18669f1fcd9bd1b29e275cdee18260471685e7967679ceb97ba1a1a46c2b145b",
+      "engine/rts/Rendering/Metal4/Metal4TerrainSourceGPU.mm": "fef8ec80ad77b43a75b157adcb7d919bb5d975f4844193518fd0ad4699cd29c3",
+      "engine/rts/Rendering/Metal4/Metal4WeaponRangeNative.h": "33f93530855266cbed3f8b7481c45818db4a298a8079e3152d903588357aa1ef",
+      "engine/rts/Rendering/Metal4/Metal4WeaponRangeNative.mm": "2082342cf30ed274ba9cd913d0e16d4e12e6135b93f146cd3f0cce165904096c",
+      "engine/rts/Rendering/Metal4/Metal4WeaponRangeViewport.h": "a7c83d1d409e1aeb2d87cdacc41e6f6a6f6978e71bf40517a8688d2bae65b4b0",
+      "engine/rts/Rendering/Metal4/Metal4WorldOverlayRenderer.mm": "9ab923bc32c18cfb396d88663424fc0e09cf5f88f961b96afbd869eeac635d48",
+      "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm": "0372c09cecc65985da1c08688ab95c6196efbab9eff0881f32ec09cfe3049281",
+      "engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h": "cd5dbfc05719d70f38e1ebbccf3886dfb53e53fca01b8b669452f5748fdef9d3",
+      "engine/rts/Rendering/Metal4/NativeWeaponRangeShaders.h": "e6e863f28ea0729a8333dea0da59e61f1946c2a59d75230e2121df28f0e3d474",
+      "engine/rts/System/SpringApp.cpp": "bef0741181494f2d24396cbb500fa8fc181f93338bbdb6b1901e37ec0b3bcf19",
+      "engine/tools/metal4-contracts/NativeCommonLineRuntimeFixture.h": "d7814001d2426306918828c24af2eedfc33fd75de20011b56c7f76eadd1555eb",
+      "engine/tools/metal4-contracts/TestCommonLineSamples133.mm": "5f767bd477ece4d32551360f3efde63164fc5e9f10f64f98f4c52014d5130310",
+      "engine/tools/metal4-contracts/TestGroundDecalPhysicalDepth.mm": "12809c837e27c5d3619d176d737f809f34dbf09e9db054c2da861485ad6c1f98",
+      "engine/tools/metal4-contracts/TestNativeRenderJobSettlement.cpp": "42073f68e38307af279b573acd58b7a33d6f782340ad61d4326dfd3a21b1ca6f",
+      "engine/tools/metal4-contracts/TestNativeResolutionMapping.cpp": "01e2efe467d673169a6671b7eef8bf1e292c24939fa212272d1dbedfad1c5c85",
+      "engine/tools/metal4-contracts/TestWeaponRangeRebasedViewport.mm": "3bd287d21876595a62ed850d4faaa070870df083995e03774c998184ac182c47",
+      "engine/tools/metal4-contracts/WeaponRangeViewportCandidateDescriptor.inc": "6ff65cb388789a0aca7ec739d6ca4bbe359f5ef8066139d5a4ac84893a6a56c0",
+      "engine/tools/metal4-contracts/WeaponRangeViewportOriginalDescriptor.inc": "7c2d458d746c88459ec6e48e078c94ac712b3358ff393f3d1db27f48baa0fa67",
+      "engine/tools/metal4-contracts/run_common_line_samples_test.py": "5d78716110b6aec414c05ca286ebfdd1de1d822dfa2a242a71c3d8497adc48a4",
+      "engine/tools/metal4-contracts/run_native_resolution_mapping_tests.py": "22da02c8d182b050734ab098f22ec6e738d2b063f01caae0fffec8698e22b0bf"
+    },
+    "verifiedLinkedArchiveAndDirectMembers": {
+      "Metal4WorldRenderer.mm.o": "6251c91d5c96531a2f02b0fa1ef05224dab969025de129ad73ab7bb6e22e82eb",
+      "Metal4EngineShadow.mm.o": "ed615059ad7ed524908af18b10a2e594e30a14ddcb71772ab2c94e829b8ebe6f",
+      "Metal4WorldOverlayRenderer.mm.o": "a8cbdc5fd99058a627059cbbad172f3adf01519ff0ace828964b1376f3b1c781",
+      "Metal4WeaponRangeNative.mm.o": "af7aafb0fd670792504baa413d54bf60b367a4246ff863fa69ccef7d9b09f410",
+      "Metal4GroundDecal.mm.o": "bd97c3888f3668a38b3f123542e76c81de7b37feada134a910de3867453dc87b",
+      "Metal4TerrainSourceGPU.mm.o": "f75d57c6551c7ac583d526833b126a399d48fc0f4e0617fe9df6dd421aed2428",
+      "Metal4ScreenNative.mm.o": "e26717e1bb26a1d87428feb11aec844798127a1a9af5418bbfb3a96a60365dca",
+      "SpringApp.cpp.o": "66954b282f85a5d85bf701bf9f173c0b038b2c8052eb26d32dccd6a70cabfd88"
+    },
+    "stages": [
+      {
+        "stage": "v1.11.6",
+        "sha256": "381d0e931c5417cf681abe8f7d18ce8525d6fddb840af424b5b71b94947a98f7"
+      },
+      {
+        "stage": "WeaponRange exact async prewarm",
+        "sha256": "45253211a89aa07e0ca94411f06ef84ab16b34d55f7070dbaea4f9a034bfa766"
+      },
+      {
+        "stage": "ArgPool-B",
+        "sha256": "7e3bdf94c53c719a4b6e7bb35dfdf420e414840c5fa5a8d484162f4ae1dc1631"
+      },
+      {
+        "stage": "MSAA common-line and shutdown repair",
+        "sha256": "4695bcde680ead6bfb685fcb16a8103646c8e2d755c4671961e4e51277f6c519"
+      },
+      {
+        "stage": "PiP WeaponRange virtual viewport repair",
+        "sha256": "b6aa33b6f430cf3d1b275cd6b3b3a3e488b2f364cb842070be3cafe24b29676c"
+      },
+      {
+        "stage": "GroundDecal physical crop mapping",
+        "sha256": "9071fdf8ab97cdf37864624b9778dd0399571bdac663caaa2b5224b5195b9079"
+      },
+      {
+        "stage": "Common line large virtual viewport mapping",
+        "sha256": "e1f7207a2341617f05e341bb325f62b0b7102d9b766e5c593c68bb7433aff9fd"
+      }
+    ],
+    "selection": {
+      "fixed_on": {
+        "BAR_NATIVE_SMF_FORWARD_CANONICAL_SURFACES": "1",
+        "BAR_NATIVE_GRASS_DENSE_REFERENCE": "1",
+        "BAR_NATIVE_CUS_RELAXED_FRAGMENT_REVISIT": "1",
+        "BAR_NATIVE_SSAO_PROJECTION_VARIANT": "7",
+        "BAR_NATIVE_BUMPWATER_SURFACE_VARIANT": "6",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_ONLY": "1",
+        "BAR_NATIVE_SSAO_BLUR_DIRECT_COLOR": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_VARIANT": "6",
+        "BAR_NATIVE_BLOOM_COLOR_VARIANT": "3",
+        "BAR_NATIVE_WATER4_READONLY_QUEUE": "1",
+        "BAR_NATIVE_WATER4_TICK_TRANSITION": "1",
+        "BAR_NATIVE_SENSORLOS_FAN_SPECIALIZED": "1",
+        "BAR_NATIVE_CUS_SHADOW_BUCKETS": "1",
+        "BAR_NATIVE_RESIDENCY_DIFF220": "1",
+        "BAR_NATIVE_RESIDENCY_BULK_DELTA": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_WORKINGSET": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_ADAPTIVE": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_ASYNC_WARM878": "1",
+        "BAR_NATIVE_RANGE_DIVISION233": "1",
+        "BAR_NATIVE_RTT_CLEAR244": "1",
+        "BAR_NATIVE_CPU_READ_PACKET220": "2",
+        "BAR_NATIVE_WORLDINFO_POOL245": "1",
+        "BAR_NATIVE_WEAPON_RANGE_ASYNC_WARM": "1",
+        "BAR_NATIVE_TERRAIN_ARGUMENT_POOL_ADAPTIVE": "1"
+      },
+      "fixed_off": {
+        "BAR_NATIVE_CUS_RELAXED_MATH_REVISIT": "0",
+        "BAR_NATIVE_CUS_RELAXED_DEFERRED_FRAGMENT_REVISIT": "0",
+        "BAR_NATIVE_SMF_DEFERRED_RELAXED_REVISIT": "0",
+        "BAR_NATIVE_SSAO_DIRECT_DEPTH_SAMPLE": "0",
+        "BAR_NATIVE_SSAO_RELAXED_FRAGMENT": "0",
+        "BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH": "0",
+        "BAR_NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_FORWARD": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_DEFERRED": "0",
+        "BAR_NATIVE_TERRAIN_DEFINITION232": "0",
+        "BAR_NATIVE_TRIAL_CUBE_SAMPLER_COLD_DESCRIPTOR": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_SINGLE_CELL_PROGRAM": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_COMMON_MATRICES": "0",
+        "BAR_NATIVE_TRIAL_BLOOM_PIPELINE_KEY_VIEW": "0",
+        "BAR_NATIVE_TRIAL_DECAL_FIXED_INDEX_REUSE": "0",
+        "BAR_NATIVE_DEFERRED_LIGHT_WARM_WITNESS": "0",
+        "BAR_NATIVE_WORLDINFO_POOL245_WITNESS": "0",
+        "BAR_NATIVE_WEAPON_RANGE_WARM_WITNESS": "0",
+        "BAR_NATIVE_ARGPOOL_WITNESS": "0",
+        "BAR_NATIVE_TERRAIN_ARGUMENT_POOL_COUNTERS": "0",
+        "BAR_NATIVE_ARG_DESCRIPTOR_LAZY": "0",
+        "BAR_NATIVE_ARG_DESCRIPTOR_WITNESS": "0",
+        "BAR_NATIVE_TERRAIN_SOURCE_CERTIFICATE_REUSE": "0",
+        "BAR_NATIVE_TERRAIN_SOURCE_CERTIFICATE_WITNESS": "0"
+      }
+    },
+    "sourceClosure": "Exact source overlay inputs, signed final binary, final linked changed member and direct object hashes; not a fresh clean-machine rebuild."
+  },
+  "packageSHA256": "83f6074fc6949d568a3c96dd1df7951dba99c0ba5144b888037573847ec7a41a",
+  "engineSHA256": "e1f7207a2341617f05e341bb325f62b0b7102d9b766e5c593c68bb7433aff9fd",
+  "playQualification": {
+    "status": "PASS",
+    "candidate": {
+      "engineSHA256": "e1f7207a2341617f05e341bb325f62b0b7102d9b766e5c593c68bb7433aff9fd",
+      "hardware": "Apple M4 Pro MacBook Pro",
+      "actualLocalSkirmishes": 3,
+      "mainSampleCounts": [
+        1,
+        2,
+        4
+      ],
+      "liveResizes": true,
+      "cold4K": true
+    },
+    "notRetested": [
+      "Mac Studio M1 Ultra",
+      "iMac"
+    ],
+    "scope": "Actual isolated app lobby-launched offline skirmish vs BARbarIAn, not benchmark/replay. Controlled cheat command spawned a tracked unit to trigger decals.",
+    "cases": [
+      {
+        "id": "play-4k-cold",
+        "map": "All That Simmers v1.1.1",
+        "mainSamples": 1,
+        "startRenderSize": "3840x2160",
+        "commanderFaction": "Legion",
+        "actualPlacementSpawnUI": true,
+        "buildingPreview": true,
+        "pipRebasedFillAndLine": true,
+        "pipFillWitness": "raw=-3155,-6263,5282,7545 rawScissor=0,646,212,304 mapped=-8012.698412698,-659.877800407,13414.603174603,16595.926680244 scissor=0,70,539,670 target=3840,2160",
+        "pipLineWitness": "raw=-3155,-6263,5282,7545 rawScissor=0,646,212,304 mapped=-8012.698412698,-659.877800407,13414.603174603,16595.926680244 scissor=0,70,539,670 target=3840,2160",
+        "decalWitness": [
+          {
+            "simulationFrame": 1540.02,
+            "logicalSize": "1512x982",
+            "renderSize": "3840x2160",
+            "depthCrop": [
+              0,
+              70,
+              3840,
+              2090
+            ],
+            "depthTextureSize": "3840x2090",
+            "depthSamples": 1,
+            "instances": 1,
+            "physicalMapping": true
+          },
+          {
+            "simulationFrame": 1706.0,
+            "logicalSize": "1512x982",
+            "renderSize": "1920x1080",
+            "depthCrop": [
+              0,
+              35,
+              1920,
+              1045
+            ],
+            "depthTextureSize": "1920x1045",
+            "depthSamples": 1,
+            "instances": 9,
+            "physicalMapping": true
+          },
+          {
+            "simulationFrame": 1706.0,
+            "logicalSize": "1512x982",
+            "renderSize": "3840x2160",
+            "depthCrop": [
+              0,
+              70,
+              3840,
+              2090
+            ],
+            "depthTextureSize": "3840x2090",
+            "depthSamples": 1,
+            "instances": 9,
+            "physicalMapping": true
+          },
+          {
+            "simulationFrame": 1706.0,
+            "logicalSize": "1512x982",
+            "renderSize": "2560x1440",
+            "depthCrop": [
+              0,
+              46,
+              2560,
+              1394
+            ],
+            "depthTextureSize": "2560x1394",
+            "depthSamples": 1,
+            "instances": 9,
+            "physicalMapping": true
+          },
+          {
+            "simulationFrame": 1706.0,
+            "logicalSize": "1512x982",
+            "renderSize": "1920x1080",
+            "depthCrop": [
+              0,
+              35,
+              1920,
+              1045
+            ],
+            "depthTextureSize": "1920x1045",
+            "depthSamples": 1,
+            "instances": 9,
+            "physicalMapping": true
+          }
+        ],
+        "liveResizes": [
+          [
+            "3840x2160",
+            "1920x1080"
+          ],
+          [
+            "1920x1080",
+            "3840x2160"
+          ],
+          [
+            "3840x2160",
+            "2560x1440"
+          ],
+          [
+            "2560x1440",
+            "1920x1080"
+          ]
+        ],
+        "presentedFrames": 11656,
+        "lastSimulationFrame": 1805,
+        "normalQuit": true,
+        "commonLineVirtualViewportWitness": "viewport=-17036.1904762,-1489.12423625,27911.1111111,34533.604888 target=3840x2160 samples=1 sourceKind=2 segments=48 material=0"
+      },
+      {
+        "id": "play-2x",
+        "map": "All That Simmers v1.1.1",
+        "mainSamples": 2,
+        "startRenderSize": "1920x1080",
+        "commanderFaction": "Legion",
+        "actualPlacementSpawnUI": true,
+        "buildingPreview": true,
+        "pipRebasedFillAndLine": true,
+        "pipFillWitness": "raw=-6504,-13615,10650,15215 rawScissor=0,646,212,304 mapped=-8259.047619048,-679.674134420,13523.809523810,16733.401221996 scissor=0,35,270,335 target=1920,1080",
+        "pipLineWitness": "raw=-6504,-13615,10650,15215 rawScissor=0,646,212,304 mapped=-8259.047619048,-679.674134420,13523.809523810,16733.401221996 scissor=0,35,270,335 target=1920,1080",
+        "decalWitness": [
+          {
+            "simulationFrame": 632.432,
+            "logicalSize": "1512x982",
+            "renderSize": "1920x1080",
+            "depthCrop": [
+              0,
+              35,
+              1920,
+              1045
+            ],
+            "depthTextureSize": "1920x1045",
+            "depthSamples": 1,
+            "instances": 1,
+            "physicalMapping": true
+          }
+        ],
+        "liveResizes": [],
+        "presentedFrames": 7951,
+        "lastSimulationFrame": 798,
+        "normalQuit": true
+      },
+      {
+        "id": "play-4x",
+        "map": "All That Simmers v1.1.1",
+        "mainSamples": 4,
+        "startRenderSize": "1920x1080",
+        "commanderFaction": "Legion",
+        "actualPlacementSpawnUI": true,
+        "buildingPreview": true,
+        "pipRebasedFillAndLine": true,
+        "pipFillWitness": "raw=-6517,-13644,10671,15245 rawScissor=0,646,212,304 mapped=-8275.555555556,-680.773930754,13550.476190476,16766.395112016 scissor=0,35,270,335 target=1920,1080",
+        "pipLineWitness": "raw=-6517,-13644,10671,15245 rawScissor=0,646,212,304 mapped=-8275.555555556,-680.773930754,13550.476190476,16766.395112016 scissor=0,35,270,335 target=1920,1080",
+        "decalWitness": [
+          {
+            "simulationFrame": 633.558,
+            "logicalSize": "1512x982",
+            "renderSize": "1920x1080",
+            "depthCrop": [
+              0,
+              35,
+              1920,
+              1045
+            ],
+            "depthTextureSize": "1920x1045",
+            "depthSamples": 1,
+            "instances": 1,
+            "physicalMapping": true
+          },
+          {
+            "simulationFrame": 799.0,
+            "logicalSize": "1512x982",
+            "renderSize": "1512x982",
+            "depthCrop": [
+              0,
+              32,
+              1512,
+              950
+            ],
+            "depthTextureSize": "1512x950",
+            "depthSamples": 1,
+            "instances": 7,
+            "physicalMapping": false
+          }
+        ],
+        "liveResizes": [
+          [
+            "1920x1080",
+            "1512x982"
+          ]
+        ],
+        "presentedFrames": 4577,
+        "lastSimulationFrame": 829,
+        "normalQuit": true
+      }
+    ],
+    "standaloneTests": {
+      "commonLinePerSampleChecks": 32256,
+      "commonLineMismatches": 0,
+      "largeCommonLineVirtualViewportMatchingSamples": 1179648,
+      "rangeRebaseGPUCases": 21,
+      "rangeColorDepthMismatch": 0,
+      "rangeFixtureNonzero": 555377,
+      "depthMappingGeometryCases": 11,
+      "depthMappingCoordinateChecks": 495,
+      "depthGPUChecks": 12446,
+      "legacyBitIdentical": 1547,
+      "maximumWorldUnprojectionError": 3.03242e-07,
+      "CPUShutdownSanitizedCycles": 1000
+    },
+    "originalRegression": {
+      "msaa2": "Actual local original v1.11.6 reproduction, attachment samples=2, color=80, depth=252, stencil=253, extent=1920x1080, common-line solid material=0 sourceKind=2. Original second throws SIGABRT.",
+      "weaponRange": "Actual Simmers diagnostic: mapped viewport (-11047.619,-1548.513,18204.444,22523.829) with physical scissor (0,35,270,335).",
+      "commonLineVirtualViewport": "Cold 4K test with all preceding fixes failed in common line viewport guard; same real gameplay on final candidate accepts a zoomed virtual viewport of height 34533.6 pixels, with actual render extent 3840x2160.",
+      "groundDecal": "Actual Simmers diagnostic: original logical viewport 1512x950 versus current physical depth 1512x920; user separately reported live 1080p to 4K crash. All three diagnostic terminal failures now complete process teardown, preserve first failure, exit 21."
+    },
+    "limitations": [
+      "No full-screen bit-identical gameplay claim.",
+      "No FPS claim for the correctness repairs.",
+      "No direct verification on reported Studio/iMac or all supported display combinations.",
+      "Optional 1x/4x GPU paths with valid CPU fallback were left unchanged."
+    ]
+  },
+  "argPoolB": {
+    "scope": "Same signed pre-correctness-fix engine; OFF ON ON OFF; AC Automatic; at least 120s rest; strict sample and quality match. Allocation witness disabled for FPS measurements.",
+    "Mediterraneum": {
+      "OFF": {
+        "avgFPS": 143.13,
+        "onePercentLow": 102.04
+      },
+      "ON": {
+        "avgFPS": 145.04,
+        "onePercentLow": 104.56
+      }
+    },
+    "Supreme": {
+      "OFF": {
+        "avgFPS": 149.97,
+        "onePercentLow": 94.41
+      },
+      "ON": {
+        "avgFPS": 150.08,
+        "onePercentLow": 95.88
+      }
+    },
+    "allocationWitness": "Earlier source-identical Mediterraneum witness: about 4.1\u20134.24 million physical Metal argument-table allocations reduced to about 4,450. This is a call count, not allocation bytes or peak memory."
+  },
+  "weaponRangePrewarm": {
+    "scope": "102 same-input exact cases; no whole-frame parity claim."
+  },
+  "notSelected": [
+    "Terrain source certificate reuse (232)",
+    "Model candidate 246"
+  ],
+  "visualLimitations": "This cumulative release has not undergone full final-screen bit-exact parity testing. The three fixes are correctness changes; no new whole-release A/B FPS measurements are claimed."
+}

@@ -1,0 +1,1296 @@
+{
+  "schemaVersion": 1,
+  "platform": "darwin",
+  "architecture": "arm64",
+  "renderer": "metal4",
+  "engine": {
+    "id": "metal4-development-01efdf43121d",
+    "binary": "bin/spring-metal4-scene",
+    "sha256": "e1f7207a2341617f05e341bb325f62b0b7102d9b766e5c593c68bb7433aff9fd",
+    "sourceCommit": "51a1a6db9ee19f58c678e069107d6f6f375debc4",
+    "capabilities": {
+      "luaMenu": false,
+      "gameplay": false
+    },
+    "checksumBinary": "bin/spring-metal4-scene",
+    "downloaderBinary": "bin/pr-downloader",
+    "experimentalOfflineScene": true,
+    "lane": "development",
+    "upstreamTag": null,
+    "executableVersion": "spring-metal4-scene version 2026.09.01-24-g01efdf4 master (Headless)",
+    "syncVersion": "2026.09.01-24-g01efdf4 master",
+    "nativePortPatchManifestSHA256": "c6bb928fc943c63c9eaa51fc4969f15f406b204b2db3d60916da130924f24e03",
+    "upstreamSourceCommit": "01efdf43121dfd40d105649ef7eb89a8804662d9",
+    "releaseVersion": "1.11.61",
+    "releaseEngineTree": "2b90217aa8a9615a64eb5b13aada389c0ecdbe68"
+  },
+  "dataDirectory": "data",
+  "chobby": {
+    "format": "rapid",
+    "archiveName": "BYAR Chobby test-4660-15c02d2",
+    "packagePath": "data/packages/bee54bdf0301b8043cf585c53f57cf68.sdp",
+    "sdpSHA256": "f9afbfc460efbd05a44d38f4ba7475f2a68e2c0c9cfbf050490e2040cddb4112",
+    "modinfoMD5": "23f17b60efc676dff94b551c3cb02fb1"
+  },
+  "officialContent": {
+    "gameArchiveName": "Beyond All Reason test-31691-a617033",
+    "gamePackagePath": "data/packages/a7b2df69815a696e59ced8c58ae2c3f1.sdp",
+    "gameSDPSHA256": "053a58c79bb648b7fae454ca070d7c04a3792c93321b4d9146fa1167b9a6dcba"
+  },
+  "nativeUIAdapters": [
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_guishader.lua",
+      "originalPath": "LuaUI/Widgets/gfx_guishader.lua",
+      "sha256": "333ef39691e6d0daadd4ad5d59fee4c03ee6e60598992b12859c2e510c6e5916",
+      "scope": "complete original31657 GUI shader, original mask/quad derivatives and ordered three-image screen/RTT consumer; runtime/pixel acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_pausescreen.lua",
+      "originalPath": "LuaUI/Widgets/gui_pausescreen.lua",
+      "sha256": "12138e12fdef61b2a496d90698d76b2ebbe7556da84341ad9b62caef0c89b413",
+      "scope": "complete original31657 Pause shader, original copy/UV/tone/vignette and ordered screen consumer; runtime/pixel acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_blockout_gl4.lua",
+      "originalPath": "LuaUI/Widgets/map_blockout_gl4.lua",
+      "sha256": "4d8a5f4b715a195acd94f0abb7da39e1470d490f480461f85c8f46c1f900f562",
+      "scope": "complete selected31657 Blockout FeatureDef producer, original three sea-level layer states, shared model textures and exact depth-clamped main/private D24 redraw; actual triggering map and pixel acceptance pending"
+    },
+    {
+      "path": "data/LuaIntro/springconfig.lua",
+      "originalPath": "LuaIntro/springconfig.lua",
+      "sha256": "ae26d82b3702985e3ac6f52e2e6986e3d1961657a3f1249d55bf89e8796c4093",
+      "scope": "source-verified original startup settings; omit only the pinned engine's removed AdvSky call, preserving all effective settings and sky selection; native220-defaults01 reviewed defaults/identity update; runtime acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_options.lua",
+      "originalPath": "LuaUI/Widgets/gui_options.lua",
+      "sha256": "749d590927037421a3ccb6f7c3b78e53c4d6f187a46d809a8f9b447b55a68b8b",
+      "scope": "original Options native hardware classification and genuine Advanced Map/Model shading controls; native220-defaults01 reviewed defaults/identity update; runtime acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_gridmenu.lua",
+      "originalPath": "LuaUI/Widgets/gui_gridmenu.lua",
+      "sha256": "a02d9ab4b5d6f4b2cdb6faa972d16d52e3a3cd9909a07bb49c384404bb24abc4",
+      "scope": "source-verified original Grid menu with real first cache producer before initial/resize/reload composite; visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_info.lua",
+      "originalPath": "LuaUI/Widgets/gui_info.lua",
+      "sha256": "4594b88afa1acbf49873fcd357c61f0d3e7325cf520af67080aafebf2e7179ea",
+      "scope": "source-verified original Info panel with real first cache producer before initial/resize/reload composite; visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_startbox.lua",
+      "originalPath": "LuaUI/Widgets/map_startbox.lua",
+      "sha256": "41978c4a23b96a2bf12fa0e115d300ae5188eeeb4635af6a391953e6b7be2f25",
+      "scope": "source-verified original StartBox world and minimap/PiP programs using original UBO, shared map-normal owner and real image dependencies; actual app and strict pixel parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_attackrange_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_attackrange_gl4.lua",
+      "sha256": "89cb5f76a5d421e7f17f3d276950ae3da2c5cfb28b938a8d3bb0ab2f7987badc",
+      "scope": "original pinned Attack Range selection and world/minimap/PiP stencil rings through the paired native consumer"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_defenserange_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_defenserange_gl4.lua",
+      "sha256": "685194538a8462b01ec0be41ffcf5fcea663603cee75dcd5df6138799feab35d",
+      "scope": "original pinned Defense Range visible-unit tracking and world stencil rings through the paired native consumer"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_edge_extension2.lua",
+      "originalPath": "LuaUI/Widgets/map_edge_extension2.lua",
+      "sha256": "d8f686e7cb9bd4230218c306fc06470cac68aa6983dece01c9b1fd6da516bc9f",
+      "scope": "original Map Edge Extension native forward geometry; original eligibility and controls"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_pip.lua",
+      "originalPath": "LuaUI/Widgets/gui_pip.lua",
+      "sha256": "97d2b9f87534a581de28515da0a924ce0b49ffeed700233fde823665f1ca7e71",
+      "scope": "source-verified original PiP private nine-program family, original images and NoGS geometry; preserved minimap ownership; strict visual parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_attack_aoe.lua",
+      "originalPath": "LuaUI/Widgets/gui_attack_aoe.lua",
+      "sha256": "388389af2f06161595c22445e716608d671b7a46bf1352654a4fad433e29c362",
+      "scope": "source-verified original Attack AoE with actual procedural Napalm fan/sector, original selection, time, state and PreUnit order; full pixel/app parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_water_type_overlay_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_water_type_overlay_gl4.lua",
+      "sha256": "ec35c1fed13457fb3352e23e4ce4c4db86564e40e95f85bb36a793bbebb87a80",
+      "scope": "original opt-in lava/acid surface and fog, actual depth/height/shadow/LOS inputs and water restore lifecycle; source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_terraform_brush_capture.lua",
+      "originalPath": "LuaUI/Widgets/cmd_terraform_brush_capture.lua",
+      "sha256": "27b05a30cc2fef3cb920b58394183edc4edb7149f597a2f0f04d4cadf5f7468d",
+      "scope": "original opt-in photo/portrait/static model export and actual image readback; unverified source proposal"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_diffuse_painter.lua",
+      "originalPath": "LuaUI/Widgets/cmd_diffuse_painter.lua",
+      "sha256": "fc53ad715189d1241f5307996e6bb83cee7de7bc5201c4f0d5f69a7485b6827e",
+      "scope": "original opt-in compositor/stamp/channel/copy programs and editor RTT; unverified source proposal"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_splat_painter.lua",
+      "originalPath": "LuaUI/Widgets/cmd_splat_painter.lua",
+      "sha256": "a78d5b13d57eb1a91402e17bcd3027f5747f7a42d3c0aca72f033bbf9ff70bb3",
+      "scope": "original opt-in paint/copy/world-overlay programs and editor RTT; unverified source proposal"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_decal_capture.lua",
+      "originalPath": "LuaUI/Widgets/cmd_decal_capture.lua",
+      "sha256": "a9adad776fe32b033e4bd1835aaf0d5b9eceb13dd9e7eecb6746efd44c1b4c7d",
+      "scope": "original opt-in current-frame map diffuse/height reprojection and synchronous image export; unverified source proposal"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_spectator_hud.lua",
+      "originalPath": "LuaUI/Widgets/gui_spectator_hud.lua",
+      "sha256": "33011a0c4e07bc93615fae6b8a4033daa761ad8db9a0fdbe6b6ad1eca2cbc33e",
+      "scope": "original opt-in spectator metrics, full-view gates, indexed knob instances and text RTT order; source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_deferred_buffer_visualizer.lua",
+      "originalPath": "LuaUI/Widgets/dbg_deferred_buffer_visualizer.lua",
+      "sha256": "4c1afa1a92833e4e409ff5953fc0e2977d7ebb085e4c51a1b9be322b2a7ba22e",
+      "scope": "original opt-in thirteen-source deferred buffer visualizer, actual map/model attachments and ordered depth copy; source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_drawfeatureshape_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_drawfeatureshape_gl4.lua",
+      "sha256": "070441b82100d76adb93e2f48a67a405b372f0e057a069192ef2ce472409ce5b",
+      "scope": "original opt-in feature placement with static piece transforms, scale/Euler, actual texture buckets and alpha-cutout; distinct DrawWorld depth-write-off consumer; source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_unitbufferuniform_copy.lua",
+      "originalPath": "LuaUI/Widgets/api_unitbufferuniform_copy.lua",
+      "sha256": "6b93b7157fd1e39baa3840bb8c2b16cae2515b1aa0041bf313e72e531a72af94",
+      "scope": "original opt-in lazy per-gameframe unit storage copy, real 64-thread Metal compute and completed buffer publication; source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_los_view_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_los_view_gl4.lua",
+      "sha256": "a1166d2c449e06b74e2561ff8f8f9ca861ecbde49606c0a90d16866f1a330bf2",
+      "scope": "original opt-in PREUNIT1 LOS view at PreDecals, real screen-copy/local LOS/map-depth and immutable source shaders/UBO; native source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_terraform_image_overlay.lua",
+      "originalPath": "LuaUI/Widgets/cmd_terraform_image_overlay.lua",
+      "sha256": "2de08a8c177d28833672bfec2cc8321c4434c8a3c5ff6c2bfadd35521a6a1e3c",
+      "scope": "original terrain image file selection and placement; actual map-depth reconstruction, sampler snapshots, alpha/fit/flip uniforms and original texrect VBO; source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/unit_squad_selection_hull.lua",
+      "originalPath": "LuaUI/Widgets/unit_squad_selection_hull.lua",
+      "sha256": "bbee6a8a913848f136a14f8f887f4d914548b569a9bdec3ffd14114d1ca70d4e",
+      "scope": "original opt-in CPU hull, actual ground heights and squad gates; immutable per-draw fill/closed-border uniforms, stripes, gradient and pulse; actual-target MSAA line source amendment included; runtime parity remains pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_profiler_histograms.lua",
+      "originalPath": "LuaUI/Widgets/dbg_profiler_histograms.lua",
+      "sha256": "3e77e08b9a5d7278adfbfe5011d9375d6f5c76ae8710abbd84837b14f023e930",
+      "scope": "original opt-in profiler counter histograms; exact vec2 line-strip stream, affine shader and uniform color through native line coverage; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_frame_grapher.lua",
+      "originalPath": "LuaUI/Widgets/dbg_frame_grapher.lua",
+      "sha256": "ac0dcd44e6cc990f9023fa96a397dfadbdd524a8c1f7d69d53c554a7eea4629e",
+      "scope": "original opt-in TimerMicros event graph, exact instance streams and shader dimensions/clipping/category colors; native source proposal, runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_target_priority.lua",
+      "originalPath": "LuaUI/Widgets/dbg_target_priority.lua",
+      "sha256": "c949a92d4400428e0f20b6b87017e4758784d9bb3d7d8dcee725b258fbda5954",
+      "scope": "original target-priority observations, CPU triangle strokes and labels; exact program with original viewGeometry division and feathered alpha; native source proposal, runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_cursor.lua",
+      "originalPath": "LuaUI/Widgets/gui_cursor.lua",
+      "sha256": "7a8f8ffaa36cc52f358215948aa2c62cc564df2f6c79af61075910541ab92ff7",
+      "scope": "original Cursor widget with engine Area attack backup resolved to an existing selected-skin resource; source proposal unverified"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_flowui.lua",
+      "originalPath": "LuaUI/Widgets/gui_flowui.lua",
+      "sha256": "11e72cb336d4cf6ac7c94abf64c6e4a4248c011a438739218385c0e43b083043",
+      "scope": "original FlowUI oversized outline solid-rectangle fallback before primitive scope; exact archived source identity, runtime verification pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_distortion_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_distortion_gl4.lua",
+      "sha256": "33f503896093d3fad4c374267df061b00e4b07028d970cba403e28a04a93a76d",
+      "scope": "original31657 Distortion events/instance streams, independent map-model depth, actual 3D noise, private RGBA16F volumes and ordered screen-copy/chromatic combine; native source packet, runtime/pixel parity pending; explicit NoEffect0 default-class contract repair; temporary diagnostic observer absent; runtime acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_object_spotlight.lua",
+      "originalPath": "LuaUI/Widgets/api_object_spotlight.lua",
+      "sha256": "f36192f0fa66aa810b55c455e07751205489f5ea86c914e966e29464fdd58f22",
+      "scope": "original31657 WG.ObjectSpotlight API, cylinder VBO/instances, real unit/feature drawPos and paired animated native material; compile/runtime/pixel acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_grass_gl4.lua",
+      "originalPath": "LuaUI/Widgets/map_grass_gl4.lua",
+      "sha256": "a810100f4841c25cc426ec5dacd40ad20891ae8d609c4a17aed3c7c64c619e7a",
+      "scope": "original31657 Grass CPU mesh/culling/config/events, exact indexed blades, original wind/fade/shadow/LOS and genuine optional bend SSBO6 through paired native consumers; runtime/pixel acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_reclaim_field_highlight.lua",
+      "originalPath": "LuaUI/Widgets/gui_reclaim_field_highlight.lua",
+      "sha256": "8e1af2d910a2f46c1070229930e2eb6fdc68f9750ac634f8703eca7f8635ba9c",
+      "scope": "original31657 Reclaim Field CPU clustering and actual chunk/SSBO9 draws; paired native fill and shared variable-width outline consumer"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_commands_fx.lua",
+      "originalPath": "LuaUI/Widgets/gui_commands_fx.lua",
+      "sha256": "409b89414cad4c3d539154906307c2b0a2079c5e882ff572feeaabd4c0932a80",
+      "scope": "source-verified original Commands FX queue filtering, instanced lines, original raw build ghosts and shared images/model cache; actual app/full visual parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_buildsquare_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_buildsquare_gl4.lua",
+      "sha256": "057575a9784fad0b496ad1a9395498cbd46ebc4e99cac8a2e28b737e566eee1b",
+      "scope": "exact31657 original per-cell/queue/pregame/yardmap BuildSquare and paired world/minimap shader; runtime/pixels pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_building_grid_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_building_grid_gl4.lua",
+      "sha256": "78c5b5d1354dcbea7b86c371b210a3c17a343e4e0c65dbf4a063e1cdcc586c51",
+      "scope": "source-verified original optional Building Grid with paired native height/line consumer; original default OFF and settings preserved"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_blueprint.lua",
+      "originalPath": "LuaUI/Widgets/api_blueprint.lua",
+      "sha256": "38098362b4ddba84ad65fe7e5a844a43e20d5ec3dcf44c2d7f8ae43599c11f20",
+      "scope": "source-verified original Blueprint ghost models, terrain outlines and ordered stencil; strict pixel parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_DrawUnitShape_GL4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_DrawUnitShape_GL4.lua",
+      "sha256": "7f2384735ee1cd3e4745fde94ff66586788298f669a71aff60c6b9195531d594",
+      "scope": "source-verified original DrawUnitShape ghost model producer and paired native Blueprint family; no global GL4 claim"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_dof.lua",
+      "originalPath": "LuaUI/Widgets/gfx_dof.lua",
+      "sha256": "a33b501bcbc182803d687da65368ac1401400a45ed46347ea92fa010c48b20d8",
+      "scope": "source-verified original DOF with real color/depth copies and complete paired native shader; original focus, quality and controls"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_deferred_rendering_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_deferred_rendering_gl4.lua",
+      "sha256": "030ecdc32e45f38935b4adcf28ab7efb70dba8c9d1c7ff5c6fbd370a37aab40d",
+      "scope": "source-verified original31657 point/cone/beam producers with actual GBuffer inputs and paired native source consumer; runtime and visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_outline_shader_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_outline_shader_gl4.lua",
+      "sha256": "fa72e062213636129966616db4abbf99d55b1bc73015c96944e1f8dcf3be14e0",
+      "scope": "original31657 full all-unit and per-unit Outline source with actual model IDs/depth and ordered stencil; integrated compile/runtime/visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_unit_stencil_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_unit_stencil_gl4.lua",
+      "sha256": "624a41d596681d95ef77f90ecb8eb8edc6d6bc541a37298c64e648cab53a98c5",
+      "scope": "original31657 Unit Stencil with actual quarter-resolution R8 producer, retained unit/feature IDs and original DrawGenesis demand; integrated compile/runtime/visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_ssao.lua",
+      "originalPath": "luaui/widgets/gfx_ssao.lua",
+      "sha256": "2c9742aa2eb80ffac9d9ef2cad7607d1e8abc13c6a215577dcbbcd91e3b35e4f",
+      "scope": "complete original31657 SSAO with its paired native MRT consumer; actual visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_bloom_shader_deferred.lua",
+      "originalPath": "luaui/widgets/gfx_bloom_shader_deferred.lua",
+      "sha256": "4ccf4b7b3ef92fdba21d76c003ce24d10fc9c32e8f3e378a1cdd07954d226c68",
+      "scope": "complete original31657 Bloom with packed float targets and paired native consumer; actual visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_metalspots.lua",
+      "originalPath": "LuaUI/Widgets/gui_metalspots.lua",
+      "sha256": "8aa880e671ea39eff0860e767b63bef44bfeccb09b06b5993f45a0d37fffdde7",
+      "scope": "original31657 Metalspots mesh, occupancy, exact generated text-atlas and above/below-water callbacks; paired native consumer, runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_geothermalspots.lua",
+      "originalPath": "LuaUI/Widgets/gui_geothermalspots.lua",
+      "sha256": "899fc56e908a9a55a20fd4972eb713c6c60421ddb50dff3cdc05e8907d5f131f",
+      "scope": "original31657 Geothermalspots deduplication, terrain-height events, occupancy fade and indexed native rings; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_rank_icons_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_rank_icons_gl4.lua",
+      "sha256": "70176050cb477d6e6e877424a1c36001125bfc596a758cf8bcdbcef2e3949b4e",
+      "scope": "original31657 rank CPU selection and true engine-packed atlas, ordered screen billboards and depth writes; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_resurrection_halos_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_resurrection_halos_gl4.lua",
+      "sha256": "177254be2bb17d1dc5e2250c6a38d64792adb7e0559c24e75303803472189846",
+      "scope": "original31657 resurrection rules/visible-unit producer and world halo with actual DDS and animated DPAT; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_easyfacing.lua",
+      "originalPath": "LuaUI/Widgets/gui_easyfacing.lua",
+      "sha256": "ce4087e3546fb43d75bd26f8651b302bb455bf86b89839f784727e8dfd817244",
+      "scope": "full original facing controls and rounded shader arrow in original PreUnit/World passes; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_highlight_commander_wrecks.lua",
+      "originalPath": "LuaUI/Widgets/gfx_highlight_commander_wrecks.lua",
+      "sha256": "630f1210aace03244bfe2704aba30e09d5a41dc798e8cb75060570075b55c046",
+      "scope": "original commander wreck CPU selection and actual16-section cylinder VBO, distance-scaled radius and original beam fragment; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_airjets_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_airjets_gl4.lua",
+      "sha256": "a8740154b41fe54ec1203931261628bcc99437f10cb996b8431c7226ac9d52ce",
+      "scope": "full original Airjets aircraft/config producer, actual indexed quad/piece transform/speed and original World/reflection callbacks; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_orb_effects_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_orb_effects_gl4.lua",
+      "sha256": "b58e6fd6278a902a79bf7b704555b674366160f44634b018a71c2cb6c0fb539f",
+      "scope": "original Orb tracker/sphere and actual model/team/shield/health publications, all original noise techniques/main/reflection stages; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_paralyze_effect.lua",
+      "originalPath": "LuaUI/Widgets/gfx_paralyze_effect.lua",
+      "sha256": "9ccfb4be37f96fec78773a18d00060e0a17f8118ab492c1493ba8913029b395d",
+      "scope": "original paralyze lifecycle/strength, ModelsVBO submission and published quaternion/model fields with full noise; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_enemy_spotter.lua",
+      "originalPath": "LuaUI/Widgets/gui_enemy_spotter.lua",
+      "sha256": "02fbd7c413a2518e21b83809ac8d48199ae927f8785f235016c6120fff8024f1",
+      "scope": "original optional EnemySpotter visible-unit and ally-team filtering, mirrored UV quad and mutable opacity; native source proposal, runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+      "originalPath": "LuaUI/Widgets/gfx_sepia_tone.lua",
+      "sha256": "3e43f742c2e69fa98df42564da6b085d71409327f727e4ab2041b21bdf073d37",
+      "scope": "original optional Sepia controls, exact gamma/color rows and ordered screen copy before/after UI; native source proposal, runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_cas.lua",
+      "originalPath": "LuaUI/Widgets/gfx_cas.lua",
+      "sha256": "5500de64eda23758223183e7f704d2dc9193dc54bda240b1550f79c4a80e9fab",
+      "scope": "original31657 CAS/RCAS grain and footprint controls, actual screen-copy dependency and source dual-output blending; paired native screen pass, runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_energy_icons.lua",
+      "originalPath": "LuaUI/Widgets/gui_unit_energy_icons.lua",
+      "sha256": "45be69093e43d03db066066188abeef9ee446a7ac21fe568572f9c603229ffb7",
+      "scope": "original31657 CPU status ownership and typed ordered DrawScreenEffects DPAT billboards with actual texture, camera UBO and world depth; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_firestate_icons.lua",
+      "originalPath": "LuaUI/Widgets/gui_unit_firestate_icons.lua",
+      "sha256": "7359fce491bdf363efb65599f297720506ad2597cfd5c13e01f06da9c8f2d1d3",
+      "scope": "original31657 CPU status ownership and typed ordered DrawScreenEffects DPAT billboards with actual texture, camera UBO and world depth; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_group_number.lua",
+      "originalPath": "LuaUI/Widgets/gui_unit_group_number.lua",
+      "sha256": "4d20bbac1b9d5470e822a1f4a20c65755bfa6a19857a4b13ad65e4481e9b7277",
+      "scope": "original31657 CPU status ownership and typed ordered DrawScreenEffects DPAT billboards with actual texture, camera UBO and world depth; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_idlebuilder_icons.lua",
+      "originalPath": "LuaUI/Widgets/gui_unit_idlebuilder_icons.lua",
+      "sha256": "481533b5d3faa5d9960f65afc51dc2e2d6e57559ee779717acfe650931eeb9da",
+      "scope": "original31657 CPU status ownership and typed ordered DrawScreenEffects DPAT billboards with actual texture, camera UBO and world depth; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_repeat_icon.lua",
+      "originalPath": "LuaUI/Widgets/gui_unit_repeat_icon.lua",
+      "sha256": "92763f8157cbb9228a4dc688f38d55ff02529c4d500bcfebc96c4de29e6a7dc1",
+      "scope": "original31657 CPU status ownership and typed ordered DrawScreenEffects DPAT billboards with actual texture, camera UBO and world depth; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_wait_icons.lua",
+      "originalPath": "LuaUI/Widgets/gui_unit_wait_icons.lua",
+      "sha256": "beb766d8e1aacc65ef824946c7acba65c8e30c417e80a0338ea24b2727a786bc",
+      "scope": "original31657 CPU status ownership and typed ordered DrawScreenEffects DPAT billboards with actual texture, camera UBO and world depth; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_allyselectedunits.lua",
+      "originalPath": "LuaUI/Widgets/gui_allyselectedunits.lua",
+      "sha256": "ecfaff07ad178250cbdaf4880a23db558b4461e6f28059b3a2abce2a562e9a9b",
+      "scope": "original31657 ally selection events and PreUnit/World fill-outline-unmark stencil passes; actual GS-equivalent native consumer, runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_los.lua",
+      "originalPath": "LuaUI/Widgets/gui_sensor_ranges_los.lua",
+      "sha256": "f99a1c96b8ab1334a4e2087f658ca30eeaf212c622e2c6582af2ccc8544c74e1",
+      "scope": "original31657 LOS unit filtering, growth and R8 fan coverage with thinned stencil-tested outlines; runtime parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_radar.lua",
+      "originalPath": "LuaUI/Widgets/gui_sensor_ranges_radar.lua",
+      "sha256": "b30950a0c06f8fdb9914ec3b11eaaeddef7ca1f79fdb0e648a6f705870b720d0",
+      "scope": "complete original31657 Radar circles with paired native producer and original unit capability"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_sonar.lua",
+      "originalPath": "LuaUI/Widgets/gui_sensor_ranges_sonar.lua",
+      "sha256": "894f6ccb7f50b12119ab9b4ba3153891cc868968b802128741f89fe214a45976",
+      "scope": "complete original31657 Sonar circles with paired native producer and original unit capability"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_radar_preview.lua",
+      "originalPath": "LuaUI/Widgets/gui_sensor_ranges_radar_preview.lua",
+      "sha256": "babdd24b64f1b68b5922611d3e3416eabdce2ee28bd105c167fb9df8d1b3b8c7",
+      "scope": "complete original31657 sensor placement preview with ordered original targets and native consumer"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_jammer_preview.lua",
+      "originalPath": "LuaUI/Widgets/gui_sensor_ranges_jammer_preview.lua",
+      "sha256": "aff50db79a1bed73549efb9ced979c05ae8e874b46cefaff4f9fb9c8fd0f4afa",
+      "scope": "complete original31657 Jammer preview with paired native disc/sheet programs, original coverage and lifecycle"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/api_pbr_enabler.lua",
+      "originalPath": "LuaRules/Gadgets/api_pbr_enabler.lua",
+      "sha256": "7fa002dbdde714572a0cbe20f897751cad8ccb949034ca7ca144d36246a8cc8a",
+      "scope": "source-verified original unsynced BRDF and environment LUT generators using actual original cube versions and ordered native producers; full CUS and Deferred readiness remain separate"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_fire_smoke_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_fire_smoke_gl4.lua",
+      "sha256": "0f1f17f3309ce8eaeceb770eb7ddf60f24fa0f454cc22226008f476229c63387",
+      "scope": "source-verified original FireSmoke producer, actual atlases and paired native normal/highlight draws; full scene parity pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_missile_thruster_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_missile_thruster_gl4.lua",
+      "sha256": "b5fee4e922a0f29b8d4754b504319f85e277522b4b2fa735721df240f713868d",
+      "scope": "source-verified original MissileThruster four-program producer, original images and ordered additive native draws; actual weapon emission acceptance pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_flamethrower_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_flamethrower_gl4.lua",
+      "sha256": "b476aa1982821ac070a7a239053bedd5d558d5a765ebe20dc4d92bd9e5fe90cb",
+      "scope": "source-verified original Flamethrower producer with actual shared uniforms, texture history and ordered native Flame draws; full pixel/app parity pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_fire_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_fire_gl4.lua",
+      "sha256": "e8013bfe603130df4199242a950503b59e1a2c099a3b747ed48225fb1156df5b",
+      "scope": "source-verified original GG.Fire flame/smoke/ember, wreck/tree emitters and ordered native instancing; complete pixel/app parity pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_unit_shield_effects.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_unit_shield_effects.lua",
+      "sha256": "15820e08c225937336c41437a53310c0cc192bc0981f5c9d1c895ca08a1b5608",
+      "scope": "source-verified original unsynced Shield with actual separate depth histories; original synced archive unchanged; strict parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_decals_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gfx_decals_gl4.lua",
+      "sha256": "34fb5388fef0f3f15404eec16b88e52917bbbc6d315d5883768070962434fd46",
+      "scope": "source-verified original GameDecal GS and large-mesh family with actual original atlas, height, normals and published uniforms; strict parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_advplayerslist_music_new.lua",
+      "originalPath": "LuaUI/Widgets/gui_advplayerslist_music_new.lua",
+      "sha256": "d2674c5b2046c91181f7e885e144767b4b4fe84182766456740663564f768963",
+      "scope": "source-verified original music player with pre-layout input ownership guard; original rendering, sound and volume controls preserved"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_unit_tracker_gl4.lua",
+      "originalPath": "LuaUI/Widgets/api_unit_tracker_gl4.lua",
+      "sha256": "b53772b0e10c69562d50aab5fc17b59998d2212ace92a2e1f65d9eb4331e320e",
+      "scope": "source-verified original CPU visible/allied unit tracking, original callbacks and optional DPAT debug drawing; original debug controls retained"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_ground_ao_plates_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_ground_ao_plates_gl4.lua",
+      "sha256": "399b91a0aaf355669d672d647cc2da91c78355f706c6b98b034cfed113372638",
+      "scope": "source-verified original building AO and glow using original model publication and ordered native primitive consumer; strict parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_healthbars_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_healthbars_gl4.lua",
+      "sha256": "04488b0fdf28600a600b28d580c9b72f41a53081396cf442f5b6e4638099f49d",
+      "scope": "source-verified full original Healthbars: immutable model/engine publications, all bar flags and original glyph atlas in ordered DrawScreenEffects; pixel parity pending; native220-defaults01 reviewed defaults/identity update; runtime acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_ground_ao_plates_features_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_ground_ao_plates_features_gl4.lua",
+      "sha256": "408a2a488301d6c9be5eb6258efc4619df6581dd4d9c9b0eade811314ea43197",
+      "scope": "source-verified original feature AO using original model publication and ordered native primitive consumer; strict parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_selectedunits_gl4.lua",
+      "originalPath": "LuaUI/Widgets/gui_selectedunits_gl4.lua",
+      "sha256": "59451176d1eff5a73e8bd378be164e0f4d6975b31703e1a71de6dcc912392c93",
+      "scope": "source-verified current31657 selection, mutable uniforms, shared ground/water shader and three-pass stencil cleanup; native visual acceptance pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_team_platter.lua",
+      "originalPath": "LuaUI/Widgets/gui_team_platter.lua",
+      "sha256": "d4413341a7fb09f073ebff3e12945933119bc3fca1be6b75f1be676a09b708a8",
+      "scope": "source-verified original team platter producer, original stencil and ordered native primitive consumer; strict parity pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_nano_particles_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_nano_particles_gl4.lua",
+      "sha256": "3b8a1d69601510d3700a404a14835b3c354df91e99525a8f7680d74a7b9090c3",
+      "scope": "original mode1 nano producer and source-verified NoGS shader with private native buffers; no global GL4 capability override"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_beam_laser_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_beam_laser_gl4.lua",
+      "sha256": "b7c5db9a0b3d267d34ec59d41ef6a2aa3bcaafac3e36044a99decbbdb5ff3bb3",
+      "scope": "original Beam producer and eight-family shared native effect contracts; original instanced geometry, textures and pass order"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_plasma_cannon_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_plasma_cannon_gl4.lua",
+      "sha256": "96de9aece84ab3abeff9d49c43e3f4000e82d862dc80054febb5994081023d04",
+      "scope": "original Plasma producer and eight-family shared native effect contracts; original instanced geometry, textures and pass order"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_energy_explosion_particles_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_energy_explosion_particles_gl4.lua",
+      "sha256": "76144351c936a9fc2f817beb6fb6db2c99fe550a5c7cd08e8ff7c3f792bc6b37",
+      "scope": "source-verified original energy death producer, real motion/GS-equivalent native geometry and original state/order; strict pixel parity remains incomplete"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_volumetric_clouds.lua",
+      "originalPath": "LuaUI/Widgets/gfx_volumetric_clouds.lua",
+      "sha256": "fd7e20e79896390be43c4fc02499eb217370f6b166c3e9f11c42a23dd8ca3d6b",
+      "scope": "source-verified original cloud producer using real ordered color/depth versions and paired raymarch; full pixel parity pending"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_snow.lua",
+      "originalPath": "LuaUI/Widgets/gfx_snow.lua",
+      "sha256": "1e90c7bb144bd4453358cef1bfd1886aa67c3634ea9dcec40f7342c1176b55b9",
+      "scope": "source-verified complete original31657 Snow widget and six original point-list families, GPU-expanded original point footprints and complete original texture mips/uniforms/wind/controls and World order; snow-map/command pixel parity pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_lightning_cannon_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_lightning_cannon_gl4.lua",
+      "sha256": "1864c73d13425162f3508bff4361e9bbef47a871fa677ee77454951d47b39ebe",
+      "scope": "source-verified original Lightning Cannon producer and five paired native programs; strict bolt pixel parity pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_environmental_lightning_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/gfx_environmental_lightning_gl4.lua",
+      "sha256": "1aed3a33ad1cb5cc05ed61cb681ef6fac867072c855791d5b58e01cf35067f8b",
+      "scope": "source-verified original unsynced environmental Lightning producer; original synced source unchanged and strict bolt pixel parity pending"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/cus_gl4.lua",
+      "originalPath": "LuaRules/Gadgets/cus_gl4.lua",
+      "sha256": "fec0476f994e29d52deb6f4e29eba761cc2f06d62ef87097581ea03437de9b61",
+      "scope": "source-verified original local-player CUS reload/disable controls; paired native CUS and original engine-standard material consumers"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_resolution_switcher.lua",
+      "originalPath": "LuaUI/Widgets/cmd_resolution_switcher.lua",
+      "sha256": "f66fab96d3b38a31e9d04d6c30bd60860badae86639ba931e8d2ed90ff25721a",
+      "scope": "Original windowed correction retained; guarded native fullscreen and borderless use automatic logical desktop geometry"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+      "sha256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9",
+      "scope": "Support program for the source-matched Sepia widget"
+    }
+  ],
+  "nativeOriginalUISupport": [
+    {
+      "path": "data/LuaUI/fonts.lua",
+      "source": "cont/LuaUI/fonts.lua",
+      "sha256": "f2a02622ac705e764e45c591cfc6d06af7933c001b1ae6e70d8512b30a918ccf",
+      "scope": "unchanged original engine LuaUI font module and atlas"
+    },
+    {
+      "path": "data/LuaUI/Fonts/FreeMonoBold_12.lua",
+      "source": "cont/LuaUI/Fonts/FreeMonoBold_12.lua",
+      "sha256": "e0698e82307af41873b88efe019ddee3fef2dfeb2b83d5c1acbb523233acc716",
+      "scope": "unchanged original engine LuaUI font module and atlas"
+    },
+    {
+      "path": "data/LuaUI/Fonts/FreeMonoBold_12.png",
+      "source": "cont/LuaUI/Fonts/FreeMonoBold_12.png",
+      "sha256": "e12b3b01ab6096a43541343562a85113d33590f46d5e836590b379501d700804",
+      "scope": "unchanged original engine LuaUI font module and atlas"
+    }
+  ],
+  "nativeOriginalAssetRepairs": [],
+  "checkpoint": {
+    "id": "native220-defaults01",
+    "parent": "deployed220",
+    "parentEngineSHA256": "4a53fbd8bad898dace64545c47f80acfd806ead6aece2a801da23c5daa83ae2f",
+    "rawEngineSHA256": "439f9dd81dbfff9ae56fbf75bb86ef4c3afceadaec4dfbf8499eb8d52267cdcf",
+    "engineSHA256": "2e85cbe7ccb1609c81d7d868fbefd3e12de0daa8d28ba56d45509120b82fc24c",
+    "sourceManifestSHA256": "c6bb928fc943c63c9eaa51fc4969f15f406b204b2db3d60916da130924f24e03",
+    "runtimeAcceptance": "NOT_RUN",
+    "fullParity": false,
+    "purpose": "HEALTHBAR_VSYNC_DEFAULTS_AND_UPSTREAM_BARB_VALIDATION",
+    "performanceImprovementClaim": false
+  },
+  "localDevelopmentContent": {
+    "game": "Beyond All Reason test-31691-a617033-native220-defaults01",
+    "packageMD5": "ea937c1fffe64761825a9d87af5c91f2",
+    "gamePackagePath": "data/packages/ea937c1fffe64761825a9d87af5c91f2.sdp",
+    "gameSDPSHA256": "d3b229ba8b86462dcbbcf9d9c9f4b7a328189a7c4994ee661c99a86cb1f13466",
+    "changedGameMembers": 28,
+    "safeSourceFiles": 27,
+    "countBasis": "Versus pinned official archive; original local26 unrelated unit/effect changes retained; modinfo excluded from safeSourceFiles only.",
+    "officialRelease": false,
+    "originalOfficialContentPreserved": true,
+    "parentLocal26Preserved": true,
+    "AIParity": "All selected game BARb config/script rows equal pinned official archive; 10 restored, 6 local additions omitted.",
+    "wholeGameOfficialParity": false,
+    "defaults": "Native-only VSync missing preference Off; healthbars scale2/height2 once-only legacy migration; explicit saved preferences retained.",
+    "nativeAIPath": "data/AI/Skirmish/BARb/stable/libSkirmishAI.dylib",
+    "nativeAISHA256": "f94118947e1f86c07460ab8a9bb8cb6ce04cf4528cd1f734693ad9ab0b1304f9",
+    "localMap": "All That Simmers v1.1.1-local07",
+    "localMapSHA256": "82a2af7453a76fac36158d3151766063c5a377f539dd4f6dde7743025d9d86c0",
+    "rapidTag": "byar:native220-defaults01",
+    "visualGameplay": "NOT_RUN"
+  },
+  "nativeAICandidate": {
+    "sourceContract": "f4a6ca3ae096631894e194cfa9b4e8e53f4fb78c",
+    "sourceManifestSHA256": "487e123eb309d854f76aa3aa64d7305c16b8b25c8d8772a97ab2acfe3e837bbb",
+    "binary": "data/AI/Skirmish/BARb/stable/libSkirmishAI.dylib",
+    "unsignedSHA256": "7ac7c5d29f428fdb41e3e514675d3808a2819d69a0cf2e9e167af1fa85ee8894",
+    "sha256": "f94118947e1f86c07460ab8a9bb8cb6ce04cf4528cd1f734693ad9ab0b1304f9",
+    "compiledUnits": 222,
+    "wrapperUnits": 130,
+    "utilityUnits": 5,
+    "sourceFiles": 652,
+    "sourceChanges": 0,
+    "upstreamDataFiles": 27,
+    "pairedGamePackage": "ea937c1fffe64761825a9d87af5c91f2",
+    "runtimeAcceptance": "NOT_RUN"
+  },
+  "productIntegration219": {
+    "lobbyAsarSHA256": "a2d9f08845067b7753eb3be52d79a707dd2fd05d59a022c29a963cab53d3f317",
+    "gameAndAIAdapters": [
+      {
+        "destination": "app-build/mac-arm64/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/gui_options.lua",
+        "beforeSHA256": "ca3617d889ed387d654d2d779203d500926c98d3f185540d7eb01006c0bf76b7",
+        "sha256": "749d590927037421a3ccb6f7c3b78e53c4d6f187a46d809a8f9b447b55a68b8b",
+        "updatedBy": "native220-defaults01"
+      },
+      {
+        "destination": "app-build/mac-arm64/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/cmd_resolution_switcher.lua",
+        "beforeSHA256": null,
+        "sha256": "f66fab96d3b38a31e9d04d6c30bd60860badae86639ba931e8d2ed90ff25721a"
+      },
+      {
+        "destination": "app-build/mac-arm64/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/Include/native_display_options.inc",
+        "beforeSHA256": null,
+        "sha256": "17402077d037b1463fc75975c8b87443f3f67f9f6278d45101f06c45d06aee5a"
+      },
+      {
+        "destination": "app-build/mac-arm64/BAR.app/Contents/Resources/native-engines/development/data/LuaUI/NativeWidgets/Include/native_display_patch.inc",
+        "beforeSHA256": null,
+        "sha256": "bb646ad55d688150e1409d36980eb001a36f01fd3e9b875a7aa211bdd49bacd7"
+      },
+      {
+        "destination": "app-build/mac-arm64/BAR.app/Contents/Resources/native-engines/development/data/AI/Skirmish/BARb/stable/AIOptions.lua",
+        "beforeSHA256": "d13586dc846c85245bcc68a8896d3a1c02ebe44d99f71e861e022611159fb265",
+        "sha256": "ba8b612c86f880b4ae623f0bdae68c6ff9efcc7d8d2132481a96cbbaf2bfe2ae",
+        "updatedBy": "native220-defaults01"
+      }
+    ],
+    "actualResolutionQuery": true,
+    "defaultResolutionOverlay": false,
+    "runtimeAcceptance": "PENDING"
+  },
+  "releaseDefaults220": {
+    "sourceProofSHA256": "c022c48055a95a0af3f2c925ff3b5d9430535b64d5032900c159a2d29aa57338",
+    "packageSourceProofSHA256": "22d1da1fdd55dc272af9f86b3bab94719345ba9030d0e5e1dd987e8714a72bf7",
+    "contentReceiptSHA256": "4e314e8fc809075758f871fe51946b5d476c1e19e23c3b5288872e37cd236a9b",
+    "savedVSyncAmbiguity": "Existing saved -1/1 retained; absent provenance cannot distinguish old automatic migration from deliberate preference.",
+    "Circuit": "NOT_INCLUDED"
+  },
+  "release114": {
+    "version": "1.11.4",
+    "buildVersion": "11104",
+    "engineSHA256": "7c971898b83eca8efeacda028197ef87b78485b40880633a43b60b19ec7f8671",
+    "rawEngineSHA256": "b2cf843bd688f86925b96d6ac9e698693c06fe52b3b07fb7819362642f7d6550",
+    "sourceCommit": "8f1069ba8d3570f4933972021ae9adc749e2c51f",
+    "engineTree": "2df52dbaa3376605ccc3ce6ad948a9f4734c8da9",
+    "rendererDefaults": {
+      "version": "1.11.4",
+      "prepare": {
+        "BAR_NATIVE_MODEL_TRACE": "0",
+        "BAR_NATIVE_SUBMISSION_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_MEMORY_CENSUS": "0",
+        "BAR_NATIVE_COMPILER_MEMORY": "0",
+        "BAR_NATIVE_HEAP_COLLECT": "0",
+        "BAR_NATIVE_HEAP_STATS": "0",
+        "BAR_NATIVE_LARGE_HEAP": "0",
+        "BAR_NATIVE_PREPARATION_TRACE": "0",
+        "BAR_NATIVE_HOST_COST_TRACE": "0",
+        "BAR_NATIVE_VBO_COPY_TRACE": "0",
+        "BAR_NATIVE_PUBLICATION_TRACE": "0",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+        "BAR_NATIVE_PASS_COST136_FILE": "",
+        "BAR_NATIVE_PASS160": "1",
+        "BAR_NATIVE_PASS165": "1",
+        "BAR_NATIVE_PASS166": "1",
+        "BAR_NATIVE_RECORD158": "1",
+        "BAR_NATIVE_RETAINED_FONT170": "1",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "BAR_NATIVE_BLOOM217_PROBE": "0",
+        "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+        "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+        "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0",
+        "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": "0",
+        "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_FRESH_EFFECT_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1",
+        "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+        "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "1",
+        "BAR_NATIVE_EXPERIMENT_OWNED_FINAL_COLOR": "1",
+        "BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR": "0",
+        "BAR_NATIVE_CPU_READ_PACKET220": "0",
+        "BAR_NATIVE_PREJOIN_OPAQUE_READ_PACKET": "0",
+        "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_RANGE_DIVISION233": "0",
+        "BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR": "0",
+        "BAR_NATIVE_GROUND_DECAL_EXPIRED_TRACK_PREFIX": "0",
+        "BAR_NATIVE_RANK_ATLAS_GPU_BORROW": "1",
+        "BAR_NATIVE_GPU_MEMORY_REPORT": "0",
+        "BAR_NATIVE_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE": "0",
+        "BAR_NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE": "1",
+        "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW": "1",
+        "BAR_NATIVE_GROUND_DECAL_DISCARD_REJECTED": "1",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "1",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "1",
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+        "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+        "BAR_NATIVE_SENSORLOS_CORRECTED_DIVISION": "1",
+        "BAR_NATIVE_SCREEN_MERGE_CONSUMER_BARRIERS": "0",
+        "BAR_NATIVE_GROUND_DECAL_ZERO_ANGLE": "0",
+        "BAR_NATIVE_SENSOR31657_CORRECTED_DIVISION": "0",
+        "BAR_NATIVE_SCREEN_RANGE_ACQUIRE": "0",
+        "BAR_NATIVE_GROUND_DECAL_WORLD_POSITION_REUSE": "1",
+        "BAR_NATIVE_SENSORLOS_SEGMENT_REUSE": "1",
+        "BAR_NATIVE_PROJECTILE_SHADOW_RANGE_COMPACT": "1",
+        "BAR_NATIVE_GROUNDFLASH_PREPARE_REUSE": "1",
+        "BAR_NATIVE_DISTORTION_PASS_MERGE": "1",
+        "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_ATTENUATION": "1",
+        "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+        "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+        "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+        "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+        "BAR_NATIVE_TERRAIN_SPLAT_MASK": "0",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT": "0",
+        "BAR_NATIVE_SENSORLOS_FAN_SKIP_UNUSED_COLOR": "0",
+        "BAR_NATIVE_MINIMAP_SKIP_UNUSED_LOS_OPTIONS": "0",
+        "BAR_NATIVE_POSTPROCESS_DIRECT_INDEX": "0"
+      },
+      "beginOverrides": {
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "0"
+      }
+    },
+    "lobbyASARSHA256": "566ed180954c85f8ae29626d03a1257be69100c140e50759442b2967fa857752"
+  },
+  "release115": {
+    "version": "1.11.5",
+    "buildVersion": "11105",
+    "engineSHA256": "d9ff26af8b4a2918ba8ff2d47c339e05b9032ab775783f78394e7dafde6bfdfc",
+    "rawEngineSHA256": "7dfd5373b0de6ab558ff259c66c26da97db23392bc06132d08b7d535d8428003",
+    "sourceCommit": "66f2357cd60fbb9484188828b2bee75839207c18",
+    "engineTree": "e21d2b83ee53ad097cd3a353afc8f33651058ed7",
+    "rendererDefaults": {
+      "version": "1.11.5",
+      "prepare": {
+        "BAR_NATIVE_MODEL_TRACE": "0",
+        "BAR_NATIVE_SUBMISSION_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_MEMORY_CENSUS": "0",
+        "BAR_NATIVE_COMPILER_MEMORY": "0",
+        "BAR_NATIVE_HEAP_COLLECT": "0",
+        "BAR_NATIVE_HEAP_STATS": "0",
+        "BAR_NATIVE_LARGE_HEAP": "0",
+        "BAR_NATIVE_PREPARATION_TRACE": "0",
+        "BAR_NATIVE_HOST_COST_TRACE": "0",
+        "BAR_NATIVE_VBO_COPY_TRACE": "0",
+        "BAR_NATIVE_PUBLICATION_TRACE": "0",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+        "BAR_NATIVE_PASS_COST136_FILE": "",
+        "BAR_NATIVE_PASS160": "1",
+        "BAR_NATIVE_PASS165": "1",
+        "BAR_NATIVE_PASS166": "1",
+        "BAR_NATIVE_RECORD158": "1",
+        "BAR_NATIVE_RETAINED_FONT170": "1",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "BAR_NATIVE_BLOOM217_PROBE": "0",
+        "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+        "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+        "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0",
+        "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": "0",
+        "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_FRESH_EFFECT_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1",
+        "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+        "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "1",
+        "BAR_NATIVE_EXPERIMENT_OWNED_FINAL_COLOR": "1",
+        "BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR": "0",
+        "BAR_NATIVE_CPU_READ_PACKET220": "0",
+        "BAR_NATIVE_PREJOIN_OPAQUE_READ_PACKET": "0",
+        "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_RANGE_DIVISION233": "0",
+        "BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR": "0",
+        "BAR_NATIVE_GROUND_DECAL_EXPIRED_TRACK_PREFIX": "0",
+        "BAR_NATIVE_RANK_ATLAS_GPU_BORROW": "1",
+        "BAR_NATIVE_GPU_MEMORY_REPORT": "0",
+        "BAR_NATIVE_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE": "0",
+        "BAR_NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE": "1",
+        "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW": "1",
+        "BAR_NATIVE_GROUND_DECAL_DISCARD_REJECTED": "1",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "1",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "1",
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+        "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+        "BAR_NATIVE_SENSORLOS_CORRECTED_DIVISION": "1",
+        "BAR_NATIVE_SCREEN_MERGE_CONSUMER_BARRIERS": "0",
+        "BAR_NATIVE_GROUND_DECAL_ZERO_ANGLE": "0",
+        "BAR_NATIVE_SENSOR31657_CORRECTED_DIVISION": "0",
+        "BAR_NATIVE_SCREEN_RANGE_ACQUIRE": "0",
+        "BAR_NATIVE_GROUND_DECAL_WORLD_POSITION_REUSE": "1",
+        "BAR_NATIVE_SENSORLOS_SEGMENT_REUSE": "1",
+        "BAR_NATIVE_PROJECTILE_SHADOW_RANGE_COMPACT": "1",
+        "BAR_NATIVE_GROUNDFLASH_PREPARE_REUSE": "1",
+        "BAR_NATIVE_DISTORTION_PASS_MERGE": "1",
+        "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_ATTENUATION": "1",
+        "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+        "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+        "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+        "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+        "BAR_NATIVE_TERRAIN_SPLAT_MASK": "0",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT": "0",
+        "BAR_NATIVE_SENSORLOS_FAN_SKIP_UNUSED_COLOR": "0",
+        "BAR_NATIVE_MINIMAP_SKIP_UNUSED_LOS_OPTIONS": "0",
+        "BAR_NATIVE_POSTPROCESS_DIRECT_INDEX": "0",
+        "BAR_NATIVE_SENSORLOS_OUTLINE_ALPHA_FIRST": "1",
+        "BAR_NATIVE_GRASS_SKIP_EMPTY_SPANS": "1",
+        "BAR_NATIVE_GRASS_EARLY_SCALE_GUARD": "1",
+        "BAR_NATIVE_RADAR_SONAR_TIGHT_QUAD": "1",
+        "BAR_NATIVE_RADAR_SONAR_REJECT_BEFORE_CIRCLE_SCAN": "0",
+        "BAR_NATIVE_GROUND_DECAL_PROJECTION_RECIPROCAL": "0"
+      },
+      "beginOverrides": {
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "0"
+      }
+    },
+    "lobbyASARSHA256": "566ed180954c85f8ae29626d03a1257be69100c140e50759442b2967fa857752"
+  },
+  "release116": {
+    "version": "1.11.6",
+    "buildVersion": "11106",
+    "engineSHA256": "381d0e931c5417cf681abe8f7d18ce8525d6fddb840af424b5b71b94947a98f7",
+    "sourceCommit": "b35ddace31e543a7f7c8a9974a7e9d272deb4d80",
+    "engineTree": "69adc6f5f36907a922d93ee861da474235a79aa7",
+    "rendererDefaults": {
+      "version": "1.11.6",
+      "prepare": {
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_BLOOM217_PROBE": "0",
+        "BAR_NATIVE_BLOOM_COLOR_VARIANT": "3",
+        "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+        "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+        "BAR_NATIVE_BUMPWATER_SURFACE_VARIANT": "6",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "1",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+        "BAR_NATIVE_COMPILER_MEMORY": "0",
+        "BAR_NATIVE_CPU_READ_PACKET220": "2",
+        "BAR_NATIVE_CPU_READ_PACKET220_FILE": "",
+        "BAR_NATIVE_CPU_RECOVERY_CENSUS": "0",
+        "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+        "BAR_NATIVE_CUS_RELAXED_DEFERRED_FRAGMENT_REVISIT": "0",
+        "BAR_NATIVE_CUS_RELAXED_FRAGMENT_REVISIT": "1",
+        "BAR_NATIVE_CUS_RELAXED_MATH_REVISIT": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_DEFERRED": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_FORWARD": "0",
+        "BAR_NATIVE_CUS_SHADOW_BUCKETS": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_ASYNC_WARM878": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_VARIANT": "6",
+        "BAR_NATIVE_DEFERRED_LIGHT_WARM_WITNESS": "0",
+        "BAR_NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE": "0",
+        "BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH": "0",
+        "BAR_NATIVE_DISTORTION_PASS_MERGE": "1",
+        "BAR_NATIVE_EXPERIMENT_OWNED_FINAL_COLOR": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_FRESH_EFFECT_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE": "0",
+        "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+        "BAR_NATIVE_GPU_MEMORY_REPORT": "0",
+        "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GRASS_DENSE_REFERENCE": "1",
+        "BAR_NATIVE_GRASS_EARLY_SCALE_GUARD": "1",
+        "BAR_NATIVE_GRASS_SKIP_EMPTY_SPANS": "1",
+        "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+        "BAR_NATIVE_GROUNDFLASH_PREPARE_REUSE": "1",
+        "BAR_NATIVE_GROUND_DECAL_DISCARD_REJECTED": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_ATTENUATION": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXPIRED_TRACK_PREFIX": "0",
+        "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_PROJECTION_RECIPROCAL": "0",
+        "BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR": "0",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT": "0",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_ONLY": "1",
+        "BAR_NATIVE_GROUND_DECAL_WORLD_POSITION_REUSE": "1",
+        "BAR_NATIVE_GROUND_DECAL_ZERO_ANGLE": "0",
+        "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": "0",
+        "BAR_NATIVE_HEAP_COLLECT": "0",
+        "BAR_NATIVE_HEAP_STATS": "0",
+        "BAR_NATIVE_HOST_COST_TRACE": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "1",
+        "BAR_NATIVE_LARGE_HEAP": "0",
+        "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+        "BAR_NATIVE_MEMORY_CENSUS": "0",
+        "BAR_NATIVE_MINIMAP_SKIP_UNUSED_LOS_OPTIONS": "0",
+        "BAR_NATIVE_MODEL_TRACE": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL": "1",
+        "BAR_NATIVE_PASS160": "1",
+        "BAR_NATIVE_PASS165": "1",
+        "BAR_NATIVE_PASS166": "1",
+        "BAR_NATIVE_PASS_COST136_FILE": "",
+        "BAR_NATIVE_POSTPROCESS_DIRECT_INDEX": "0",
+        "BAR_NATIVE_PREJOIN_OPAQUE_READ_PACKET": "0",
+        "BAR_NATIVE_PREPARATION_TRACE": "0",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_PROJECTILE_SHADOW_RANGE_COMPACT": "1",
+        "BAR_NATIVE_PUBLICATION_TRACE": "0",
+        "BAR_NATIVE_RADAR_SONAR_REJECT_BEFORE_CIRCLE_SCAN": "0",
+        "BAR_NATIVE_RADAR_SONAR_TIGHT_QUAD": "1",
+        "BAR_NATIVE_RANGE_DIVISION233": "1",
+        "BAR_NATIVE_RANK_ATLAS_GPU_BORROW": "1",
+        "BAR_NATIVE_RECORD158": "1",
+        "BAR_NATIVE_REMAINING_ROUTE_CENSUS": "0",
+        "BAR_NATIVE_RESIDENCY_BULK_DELTA": "1",
+        "BAR_NATIVE_RESIDENCY_DIFF220": "1",
+        "BAR_NATIVE_RESIDENCY_FULL_TIMING": "0",
+        "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_RETAINED_FONT170": "1",
+        "BAR_NATIVE_RTT_CLEAR244": "1",
+        "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1",
+        "BAR_NATIVE_SCREEN_MERGE_CONSUMER_BARRIERS": "0",
+        "BAR_NATIVE_SCREEN_RANGE_ACQUIRE": "0",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SENSOR31657_CORRECTED_DIVISION": "0",
+        "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_SENSORLOS_CORRECTED_DIVISION": "1",
+        "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_SENSORLOS_FAN_SKIP_UNUSED_COLOR": "0",
+        "BAR_NATIVE_SENSORLOS_FAN_SPECIALIZED": "1",
+        "BAR_NATIVE_SENSORLOS_OUTLINE_ALPHA_FIRST": "1",
+        "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0",
+        "BAR_NATIVE_SENSORLOS_SEGMENT_REUSE": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_ADAPTIVE": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_COUNTERS": "0",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_WORKINGSET": "1",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_NATIVE_SMF_DEFERRED_RELAXED_REVISIT": "0",
+        "BAR_NATIVE_SMF_FORWARD_CANONICAL_SURFACES": "1",
+        "BAR_NATIVE_SSAO_BLUR_DIRECT_COLOR": "1",
+        "BAR_NATIVE_SSAO_DIRECT_DEPTH_SAMPLE": "0",
+        "BAR_NATIVE_SSAO_PROJECTION_VARIANT": "7",
+        "BAR_NATIVE_SSAO_RELAXED_FRAGMENT": "0",
+        "BAR_NATIVE_SUBMISSION_TRACE": "0",
+        "BAR_NATIVE_TERRAIN_DEFINITION232": "0",
+        "BAR_NATIVE_TERRAIN_SPLAT_MASK": "0",
+        "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+        "BAR_NATIVE_TRIAL_BLOOM_PIPELINE_KEY_VIEW": "0",
+        "BAR_NATIVE_TRIAL_CUBE_SAMPLER_COLD_DESCRIPTOR": "0",
+        "BAR_NATIVE_TRIAL_DECAL_FIXED_INDEX_REUSE": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_COMMON_MATRICES": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_SINGLE_CELL_PROGRAM": "0",
+        "BAR_NATIVE_VBO_COPY_TRACE": "0",
+        "BAR_NATIVE_WATER4_READONLY_QUEUE": "1",
+        "BAR_NATIVE_WATER4_TICK_TRANSITION": "1",
+        "BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR": "0",
+        "BAR_NATIVE_WORLDINFO_POOL245": "1",
+        "BAR_NATIVE_WORLDINFO_POOL245_WITNESS": "0",
+        "BAR_NATIVE_WORLD_ENCODING176": "0",
+        "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0"
+      },
+      "beginOverrides": {
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "0"
+      }
+    },
+    "lobbyASARSHA256": "566ed180954c85f8ae29626d03a1257be69100c140e50759442b2967fa857752"
+  },
+  "release1161": {
+    "version": "1.11.61",
+    "buildVersion": "11161",
+    "engineSHA256": "e1f7207a2341617f05e341bb325f62b0b7102d9b766e5c593c68bb7433aff9fd",
+    "sourceCommit": "51a1a6db9ee19f58c678e069107d6f6f375debc4",
+    "engineTree": "2b90217aa8a9615a64eb5b13aada389c0ecdbe68",
+    "rendererDefaults": {
+      "version": "1.11.61",
+      "prepare": {
+        "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+        "BAR_NATIVE_BLOOM217_PROBE": "0",
+        "BAR_NATIVE_BLOOM_COLOR_VARIANT": "3",
+        "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": "1",
+        "BAR_NATIVE_BLOOM_PREPARE_DEFINE_REUSE": "1",
+        "BAR_NATIVE_BUMPWATER_SURFACE_VARIANT": "6",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "1",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "1",
+        "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+        "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+        "BAR_NATIVE_COMMON_LINE_PROBE_FILE": "",
+        "BAR_NATIVE_COMPILER_MEMORY": "0",
+        "BAR_NATIVE_CPU_READ_PACKET220": "2",
+        "BAR_NATIVE_CPU_READ_PACKET220_FILE": "",
+        "BAR_NATIVE_CPU_RECOVERY_CENSUS": "0",
+        "BAR_NATIVE_CUBE_REUSE_UNCHANGED_SUBRESOURCES": "1",
+        "BAR_NATIVE_CUS_RELAXED_DEFERRED_FRAGMENT_REVISIT": "0",
+        "BAR_NATIVE_CUS_RELAXED_FRAGMENT_REVISIT": "1",
+        "BAR_NATIVE_CUS_RELAXED_MATH_REVISIT": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_DEFERRED": "0",
+        "BAR_NATIVE_CUS_ROSTER_ICB_FORWARD": "0",
+        "BAR_NATIVE_CUS_SHADOW_BUCKETS": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_ASYNC_WARM878": "1",
+        "BAR_NATIVE_DEFERRED_LIGHT_VARIANT": "6",
+        "BAR_NATIVE_DEFERRED_LIGHT_WARM_WITNESS": "0",
+        "BAR_NATIVE_DEFERRED_POINT_MISS_NOISE_REUSE": "0",
+        "BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH": "0",
+        "BAR_NATIVE_DISTORTION_PASS_MERGE": "1",
+        "BAR_NATIVE_EXPERIMENT_OWNED_FINAL_COLOR": "1",
+        "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+        "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+        "BAR_NATIVE_FRAME_OVERLAP": "1",
+        "BAR_NATIVE_FRAME_OVERLAP_PROBE_FILE": "",
+        "BAR_NATIVE_FRAME_TRACE": "0",
+        "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+        "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_FRESH_EFFECT_UPLOAD_BUNDLE": "0",
+        "BAR_NATIVE_GAME_DECAL_BIAS_AFTER_DEPTH_RANGE": "0",
+        "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+        "BAR_NATIVE_GPU_MEMORY_REPORT": "0",
+        "BAR_NATIVE_GRASS_BEND_SHORTLIST": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+        "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+        "BAR_NATIVE_GRASS_DENSE_REFERENCE": "1",
+        "BAR_NATIVE_GRASS_EARLY_SCALE_GUARD": "1",
+        "BAR_NATIVE_GRASS_SKIP_EMPTY_SPANS": "1",
+        "BAR_NATIVE_GRASS_ZERO_SCALE_COMPACT": "1",
+        "BAR_NATIVE_GROUNDFLASH_PREPARE_REUSE": "1",
+        "BAR_NATIVE_GROUND_DECAL_DISCARD_REJECTED": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_ATTENUATION": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW": "1",
+        "BAR_NATIVE_GROUND_DECAL_EXPIRED_TRACK_PREFIX": "0",
+        "BAR_NATIVE_GROUND_DECAL_FLAT_WRAP": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+        "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+        "BAR_NATIVE_GROUND_DECAL_PROJECTION_RECIPROCAL": "0",
+        "BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR": "0",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_EARLY_REJECT": "0",
+        "BAR_NATIVE_GROUND_DECAL_TRACK_ONLY": "1",
+        "BAR_NATIVE_GROUND_DECAL_WORLD_POSITION_REUSE": "1",
+        "BAR_NATIVE_GROUND_DECAL_ZERO_ANGLE": "0",
+        "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": "0",
+        "BAR_NATIVE_HEAP_COLLECT": "0",
+        "BAR_NATIVE_HEAP_STATS": "0",
+        "BAR_NATIVE_HOST_COST_TRACE": "0",
+        "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "1",
+        "BAR_NATIVE_LARGE_HEAP": "0",
+        "BAR_NATIVE_LUA_NANO_PAIRED_UNIFORM_REUSE": "1",
+        "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+        "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "2",
+        "BAR_NATIVE_MEMORY_CENSUS": "0",
+        "BAR_NATIVE_MINIMAP_SKIP_UNUSED_LOS_OPTIONS": "0",
+        "BAR_NATIVE_MODEL_TRACE": "0",
+        "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+        "BAR_NATIVE_PARTICLE_REUSE_SINGLE_CELL": "1",
+        "BAR_NATIVE_PASS160": "1",
+        "BAR_NATIVE_PASS165": "1",
+        "BAR_NATIVE_PASS166": "1",
+        "BAR_NATIVE_PASS_COST136_FILE": "",
+        "BAR_NATIVE_POSTPROCESS_DIRECT_INDEX": "0",
+        "BAR_NATIVE_PREJOIN_OPAQUE_READ_PACKET": "0",
+        "BAR_NATIVE_PREPARATION_TRACE": "0",
+        "BAR_NATIVE_PREPARE_OVERLAP": "1",
+        "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+        "BAR_NATIVE_PROFILER_SOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_PROJECTILE_SHADOW_RANGE_COMPACT": "1",
+        "BAR_NATIVE_PUBLICATION_TRACE": "0",
+        "BAR_NATIVE_RADAR_SONAR_REJECT_BEFORE_CIRCLE_SCAN": "0",
+        "BAR_NATIVE_RADAR_SONAR_TIGHT_QUAD": "1",
+        "BAR_NATIVE_RANGE_DIVISION233": "1",
+        "BAR_NATIVE_RANK_ATLAS_GPU_BORROW": "1",
+        "BAR_NATIVE_RECORD158": "1",
+        "BAR_NATIVE_REMAINING_ROUTE_CENSUS": "0",
+        "BAR_NATIVE_RESIDENCY_BULK_DELTA": "1",
+        "BAR_NATIVE_RESIDENCY_DIFF220": "1",
+        "BAR_NATIVE_RESIDENCY_FULL_TIMING": "0",
+        "BAR_NATIVE_RESOURCE_PROBE_FILE": "",
+        "BAR_NATIVE_RETAINED_FONT170": "1",
+        "BAR_NATIVE_RTT_CLEAR244": "1",
+        "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP": "1",
+        "BAR_NATIVE_SCREEN_MERGE_CONSUMER_BARRIERS": "0",
+        "BAR_NATIVE_SCREEN_RANGE_ACQUIRE": "0",
+        "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+        "BAR_NATIVE_SENSOR31657_CORRECTED_DIVISION": "0",
+        "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_SENSORLOS_CORRECTED_DIVISION": "1",
+        "BAR_NATIVE_SENSORLOS_EXACT_INTERIOR": "1",
+        "BAR_NATIVE_SENSORLOS_FAN_SKIP_UNUSED_COLOR": "0",
+        "BAR_NATIVE_SENSORLOS_FAN_SPECIALIZED": "1",
+        "BAR_NATIVE_SENSORLOS_OUTLINE_ALPHA_FIRST": "1",
+        "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0",
+        "BAR_NATIVE_SENSORLOS_SEGMENT_REUSE": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_ADAPTIVE": "1",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_COUNTERS": "0",
+        "BAR_NATIVE_SHADOW_TERRAIN_CACHE_WORKINGSET": "1",
+        "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+        "BAR_NATIVE_SMF_DEFERRED_RELAXED_REVISIT": "0",
+        "BAR_NATIVE_SMF_FORWARD_CANONICAL_SURFACES": "1",
+        "BAR_NATIVE_SSAO_BLUR_DIRECT_COLOR": "1",
+        "BAR_NATIVE_SSAO_DIRECT_DEPTH_SAMPLE": "0",
+        "BAR_NATIVE_SSAO_PROJECTION_VARIANT": "7",
+        "BAR_NATIVE_SSAO_RELAXED_FRAGMENT": "0",
+        "BAR_NATIVE_SUBMISSION_TRACE": "0",
+        "BAR_NATIVE_TERRAIN_DEFINITION232": "0",
+        "BAR_NATIVE_TERRAIN_SPLAT_MASK": "0",
+        "BAR_NATIVE_TERRAIN_SPLAT_SKIP_ZERO": "0",
+        "BAR_NATIVE_TRIAL_BLOOM_PIPELINE_KEY_VIEW": "0",
+        "BAR_NATIVE_TRIAL_CUBE_SAMPLER_COLD_DESCRIPTOR": "0",
+        "BAR_NATIVE_TRIAL_DECAL_FIXED_INDEX_REUSE": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_COMMON_MATRICES": "0",
+        "BAR_NATIVE_TRIAL_PARTICLE_SINGLE_CELL_PROGRAM": "0",
+        "BAR_NATIVE_VBO_COPY_TRACE": "0",
+        "BAR_NATIVE_WATER4_READONLY_QUEUE": "1",
+        "BAR_NATIVE_WATER4_TICK_TRANSITION": "1",
+        "BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR": "0",
+        "BAR_NATIVE_WORLDINFO_POOL245": "1",
+        "BAR_NATIVE_WORLDINFO_POOL245_WITNESS": "0",
+        "BAR_NATIVE_WORLD_ENCODING176": "0",
+        "BAR_NATIVE_WORLD_INFO_STORAGE_PROBE_FILE": "",
+        "MTL_DEBUG_LAYER": "0",
+        "MTL_SHADER_VALIDATION": "0",
+        "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "0",
+        "BAR_NATIVE_WEAPON_RANGE_ASYNC_WARM": "1",
+        "BAR_NATIVE_WEAPON_RANGE_WARM_WITNESS": "0",
+        "BAR_NATIVE_TERRAIN_ARGUMENT_POOL_ADAPTIVE": "1",
+        "BAR_NATIVE_ARGPOOL_WITNESS": "0",
+        "BAR_NATIVE_TERRAIN_ARGUMENT_POOL_COUNTERS": "0",
+        "BAR_NATIVE_ARG_DESCRIPTOR_LAZY": "0",
+        "BAR_NATIVE_ARG_DESCRIPTOR_WITNESS": "0",
+        "BAR_NATIVE_TERRAIN_SOURCE_CERTIFICATE_REUSE": "0",
+        "BAR_NATIVE_TERRAIN_SOURCE_CERTIFICATE_WITNESS": "0"
+      },
+      "beginOverrides": {
+        "BAR_NATIVE_MAX_PENDING_GAME_FRAMES": "1",
+        "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_AFTER_SUBMIT": "0",
+        "BAR_NATIVE_CAP2_PRESENT_BEFORE_NEXT_ACQUIRE": "0"
+      }
+    },
+    "lobbyASARSHA256": "566ed180954c85f8ae29626d03a1257be69100c140e50759442b2967fa857752",
+    "playQualification": "LOCAL_M4_PRO_OFF_2X_4X_AND_LIVE_RESIZE",
+    "reportedMachinesNotRetested": [
+      "M1 Ultra Mac Studio",
+      "iMac"
+    ]
+  }
+}
