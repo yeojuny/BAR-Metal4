@@ -1,7 +1,7 @@
-# BAR Metal4 v1.11.61
+# BAR Metal4 v1.11.62
 
 Experimental single-player BAR with native Metal 4 for Apple Silicon, macOS 27.2 or later.
-This maintenance release fixes 2× MSAA lines, large PiP weapon-range viewports, ground decals across resolution changes, and shutdown error handling, and includes selected CPU-side optimizations.
+This release removes the duplicate selected radar ring and the native area-command center marker, and selects ModelKey246 to eliminate temporary pipeline-key allocations.
 Normal launch uses **PREPARE with CAP2**; diagnostics and Metal Validation are **off** by default.
 New profiles retain 2× health bar scale and height, anti-aliasing off, and ordinary/adaptive VSync off.
 
@@ -14,7 +14,7 @@ open "/Applications/BAR Metal4.app"
 
 Already installed? Run `brew update` and `brew upgrade --cask yeojuny/bar-metal4/bar-metal4`.
 
-[Release and downloads](https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.61) · [Installation and checks](https://github.com/yeojuny/BAR-Metal4/blob/v1.11.61/docs/releases/v1.11.61/README.md) · [Licenses and provenance](NOTICE.md)
+[Release and downloads](https://github.com/yeojuny/BAR-Metal4/releases/tag/v1.11.62) · [Installation and checks](https://github.com/yeojuny/BAR-Metal4/blob/v1.11.62/docs/releases/v1.11.62/README.md) · [Licenses and provenance](NOTICE.md)
 
 ## Performance research
 
