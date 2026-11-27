@@ -3442,7 +3442,7 @@ static std::array<float,2> SelectedSensorRadii(const CUnit* unit)
   unit->beingBuilt, unit->activated, float(unit->radarRadius), float(unit->sonarRadius)});
 }
 
-static void DrawUnitDefRanges(const CUnit* unit, const UnitDef* unitdef, const float3 pos, bool drawSelectedSensors = true)
+static void DrawUnitDefRanges(const CUnit* unit, const UnitDef* unitdef, const float3 pos, bool drawSelectedSonar = true)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
 	// draw build range for immobile builders
@@ -3459,10 +3459,9 @@ static void DrawUnitDefRanges(const CUnit* unit, const UnitDef* unitdef, const f
 	// draw sensor and jammer ranges
 	if (unitdef->onoffable || unitdef->activateWhenBuilt) {
 		if (unit != nullptr && unitdef == unit->unitDef) { // test if it's a decoy
-			if (drawSelectedSensors) {
-				DrawSensorRange(unit->radarRadius, cmdColors.rangeRadar, pos);
+			DrawSensorRange(unit->radarRadius, cmdColors.rangeRadar, pos);
+			if (drawSelectedSonar)
 				DrawSensorRange(unit->sonarRadius, cmdColors.rangeSonar, pos);
-			}
 			DrawSensorRange(unit->seismicRadius , cmdColors.rangeSeismic,     pos);
 			DrawSensorRange(unit->jammerRadius  , cmdColors.rangeJammer,      pos);
 			DrawSensorRange(unit->sonarJamRadius, cmdColors.rangeSonarJammer, pos);
@@ -3730,7 +3729,7 @@ void CGuiHandler::DrawBuildingPlacement(bool onMiniMap, const float3& tracePos, 
 void CGuiHandler::DrawMapRanges(bool onMiniMap, bool minimapCoors,
 	const float3& tracePos, const float3& traceDir, bool nativeRanges)
 {
-	// Selected native sensors are drawn once by the dedicated pass below.
+	// The extra selected native sonar ring is drawn once by the dedicated pass below.
 
 	// draw the ranges for the unit that is being pointed at
 	const CUnit* pointeeUnit = nullptr;
@@ -3757,12 +3756,11 @@ void CGuiHandler::DrawMapRanges(bool onMiniMap, bool minimapCoors,
 			if (enemyUnit && unitdef->decoyDef != nullptr)
 				unitdef = unitdef->decoyDef;
 
-			// Avoid double-bright radar/sonar rings for a selected hovered unit.
-			// Other hover ranges (jammer, seismic, etc.) retain their original behavior.
+			// Avoid double-bright sonar when the dedicated selection pass draws it.
+			// Radar remains the original command/hover range, not a persistent selection overlay.
 			const auto selectedSensors = SelectedSensorRadii(unit);
-			const bool selectedSensorPass = nativeRanges && !game->hideInterface &&
-				(selectedSensors[0] > 0 || selectedSensors[1] > 0);
-			DrawUnitDefRanges(unit, unitdef, unit->pos, !selectedSensorPass);
+			const bool selectedSonarPass = nativeRanges && !game->hideInterface && selectedSensors[1] > 0;
+			DrawUnitDefRanges(unit, unitdef, unit->pos, !selectedSonarPass);
 
 			// draw (primary) weapon range
 			if (!unit->weapons.empty()) {
@@ -3860,13 +3858,12 @@ void CGuiHandler::DrawNativeMapRanges()
 	LuaNativePlacement::EngineScope capture(cmdColors.SelectedLineWidth(), cmdColors.SelectedBlendSrc(), cmdColors.SelectedBlendDst(),
 		rendering::NativeWorldDrawStage::World, building);
 	DrawMapRanges(false, minimapCoors, tracePos, traceDir, true);
-	// Requested individual selection rings supplement (not replace) allied
-	// union coverage. No queue key or attack/build command is required.
+	// Retain the individual selected sonar ring. The game's radar coverage widget
+	// is the normal radar indicator; do not add a duplicate persistent radar ring.
 	if (!game->hideInterface) {
 		for (const int id: selectedUnitsHandler.selectedUnits) {
 			const CUnit* unit = unitHandler.GetUnit(id);
 			const auto radii = SelectedSensorRadii(unit);
-			if (radii[0] > 0) DrawSensorRange(int(radii[0]), rendering::SelectedSensorColor(cmdColors.rangeRadar).data(), unit->pos, 128);
 			if (radii[1] > 0) DrawSensorRange(int(radii[1]), rendering::SelectedSensorColor(cmdColors.rangeSonar).data(), unit->pos, 128);
 		}
 	}
