@@ -1,0 +1,262 @@
+{
+  "status": "LOCAL_ACTUAL_GAME_AND_MATCHED_JADE_KEY_QUALIFICATION_PASS",
+  "sourceClosure": {
+    "version": "1.11.62",
+    "sourceCommit": "4c63b6bf950c86d1be3fe8b21a5413214497903d",
+    "engineTree": "943b9f8fe7f25a1d945ed20edbce39e83550f07d",
+    "selectedSourceCommit": "e0524b66bc003bd97a8a7d90b2e2e6f71ae1b96f",
+    "previousReleaseCommit": "97a54c1a2481d215855b84de282e45af78136fcc",
+    "signedEngineSHA256": "7c60f5ac95ba70dc03284e0a039de0d682a26e5770be49b3bf932e26fe3ef9a5",
+    "sourceHashes": {
+      "distribution/BAR-Metal4": "1b909d254ccb6492bb232d5b58a4c5716b89365b79eea2f4c430e765d37dbb3f",
+      "engine/rts/Game/UI/GuiHandler.cpp": "547618849440e24524cfc7ade64183ae2829c7c9f44a78e0a1a602fad2987693",
+      "engine/rts/Game/UI/MiniMap.cpp": "bf58d379217f11fd9d36b657b4a5ffce251becad023531cfbdbff9546d609040",
+      "engine/rts/Rendering/Metal4/Metal4CUSSource.mm": "da0c3416673fc2e9f7ba72f5532502d15b97e143e8120e71cb9e61942868acc2",
+      "engine/rts/Rendering/Metal4/Metal4EngineModelForward.mm": "937086ea9d5a19f2699f648c55470130c3a472da863ff80ef18329c6eb529fd7",
+      "engine/rts/Rendering/Metal4/Metal4ModelPipelineKey246.h": "677c0af8c9847c51c08a77d9c1bc96d504fab4a44726325a1f30cb7aca79fde9"
+    },
+    "verifiedLinkedArchiveAndDirectMembers": {
+      "GuiHandler.cpp.o": "45fd71ae3c1d0908530a61025fa32c0fdd9248fa558379db4426083200fab055",
+      "MiniMap.cpp.o": "2152a449bf90281d15b4ff7acc19a93a79de70b6554417e80d34932f5fefd129",
+      "Metal4WorldRenderer.mm.o": "6251c91d5c96531a2f02b0fa1ef05224dab969025de129ad73ab7bb6e22e82eb",
+      "Metal4CUSSource.mm.o": "903ec718f4cb4dbd4df4bdc7d8aafb3431316e567ce19c97b6f5e359d49c520b",
+      "Metal4EngineModelForward.mm.o": "950d607b034f69a658498b94fbeaf0c8a19fa1324f4f08a1e228e55b7c637fd3",
+      "Metal4EngineShadow.mm.o": "ed615059ad7ed524908af18b10a2e594e30a14ddcb71772ab2c94e829b8ebe6f",
+      "Metal4WorldOverlayRenderer.mm.o": "a8cbdc5fd99058a627059cbbad172f3adf01519ff0ace828964b1376f3b1c781",
+      "Metal4WeaponRangeNative.mm.o": "af7aafb0fd670792504baa413d54bf60b367a4246ff863fa69ccef7d9b09f410",
+      "Metal4GroundDecal.mm.o": "bd97c3888f3668a38b3f123542e76c81de7b37feada134a910de3867453dc87b",
+      "Metal4TerrainSourceGPU.mm.o": "f75d57c6551c7ac583d526833b126a399d48fc0f4e0617fe9df6dd421aed2428",
+      "Metal4ScreenNative.mm.o": "e26717e1bb26a1d87428feb11aec844798127a1a9af5418bbfb3a96a60365dca",
+      "SpringApp.cpp.o": "66954b282f85a5d85bf701bf9f173c0b038b2c8052eb26d32dccd6a70cabfd88"
+    },
+    "stages": [
+      {
+        "stage": "v1.11.61",
+        "sha256": "e1f7207a2341617f05e341bb325f62b0b7102d9b766e5c593c68bb7433aff9fd"
+      },
+      {
+        "stage": "Remove duplicate selected radar ring",
+        "sha256": "59c94b3da8ef1e263831c0fa994e869d84cf5c892f54ec1ea7c3a482cae3d533"
+      },
+      {
+        "stage": "Hide area center marker (native only)",
+        "sha256": "1be35b9ec5ed9b96a651430f24c21766f52d45287c7b7c13bf3b36278feeda32"
+      },
+      {
+        "stage": "ModelKey246 exact current 23/19 word keys",
+        "sha256": "7c60f5ac95ba70dc03284e0a039de0d682a26e5770be49b3bf932e26fe3ef9a5"
+      }
+    ],
+    "sourceClosure": "Exact previous release + selected source overlay and linked changed archive/direct member hashes; not fresh clean-machine build."
+  },
+  "packageSHA256": "04caab8d2ef1987eec10aa1225d2e0baa6eba162320fc6bacb0f4466545929f5",
+  "engineSHA256": "7c60f5ac95ba70dc03284e0a039de0d682a26e5770be49b3bf932e26fe3ef9a5",
+  "playQualification": {
+    "status": "PASS",
+    "candidate": {
+      "engineSHA256": "7c60f5ac95ba70dc03284e0a039de0d682a26e5770be49b3bf932e26fe3ef9a5",
+      "hardware": "M4 Pro MacBook Pro",
+      "actualLocalSkirmishes": 1,
+      "mainSampleCounts": [
+        2
+      ],
+      "startRenderSize": "1920x1080",
+      "map": "All That Simmers v1.1.1",
+      "presentedFrames": 32963,
+      "lastSimulationFrame": 7708,
+      "normalQuit": true
+    },
+    "scope": "Actual lobby-launched offline Simmers vs BARbarIAn. Legion placement/spawn, selected/deselected radar outer dotted ring, sonar retained, E reclaim/R repair/A attack circular area tint and no center marker, building preview and maximum PiP zoom, normal quit. Console select-all command used to reselect moving unit.",
+    "notRetested": [
+      "Mac Studio M1 Ultra",
+      "iMac"
+    ],
+    "limitations": [
+      "No full frame bit-exact parity claim; the visual changes intentionally differ.",
+      "Previous 1.11.61 broad Off/2x/4x and resolution-change acceptance inherited; this release repeated 2x/1080p actual play, not all combinations.",
+      "ModelKey246 clean matched Jade benchmarks and independent key proof; no M1 benchmark."
+    ]
+  },
+  "modelKey246": {
+    "proof": {
+      "status": "PASS",
+      "result": "PASS fieldCases=55 bidirectionalEqualityPairs=752849 repeatedCacheHits=2605 repeatedCacheMisses=1076 ownerPartition=PASS locale=C\n",
+      "scope": "Actual production fixed-key builders vs exact independent legacy 23/19 fields, including all precision/indirect combinations and both owner partitions. Not full gameplay image proof."
+    },
+    "independentAudit": "Astra high-cost and max-correctness reviews, no key/owner/retirement mismatch. Exact current 23 CUS and 19 Forward fields; precision and indirect flags retained. No full frame parity claim.",
+    "cleanABBA": [
+      {
+        "phase": "clean",
+        "arm": "OFF",
+        "round": 3,
+        "average_fps": 64.0,
+        "one_percent_low_fps": 49.056604884300484,
+        "longest_ms": 35.0,
+        "start_c": {
+          "cpu_temp_avg": 45.505199,
+          "gpu_temp_avg": 47.042114
+        },
+        "peak_c": {
+          "cpu_temp_avg": 82.089722,
+          "gpu_temp_avg": 87.115974
+        },
+        "rest_seconds": 124.07704504100184,
+        "runset_workload_match": {
+          "matched_sample_end_ticks": 40,
+          "one_tick_sample_offsets": []
+        }
+      },
+      {
+        "phase": "clean",
+        "arm": "ON",
+        "round": 4,
+        "average_fps": 64.00479772283154,
+        "one_percent_low_fps": 47.619048229548234,
+        "longest_ms": 52.000001,
+        "start_c": {
+          "cpu_temp_avg": 45.553444,
+          "gpu_temp_avg": 47.221691
+        },
+        "peak_c": {
+          "cpu_temp_avg": 83.887268,
+          "gpu_temp_avg": 87.158241
+        },
+        "rest_seconds": 124.06756404200132,
+        "runset_workload_match": {
+          "matched_sample_end_ticks": 40,
+          "one_tick_sample_offsets": []
+        }
+      },
+      {
+        "phase": "clean",
+        "arm": "ON",
+        "round": 5,
+        "average_fps": 64.0128016321408,
+        "one_percent_low_fps": 48.59813229452358,
+        "longest_ms": 41.000001000000005,
+        "start_c": {
+          "cpu_temp_avg": 45.946671,
+          "gpu_temp_avg": 47.521618
+        },
+        "peak_c": {
+          "cpu_temp_avg": 84.427818,
+          "gpu_temp_avg": 87.357841
+        },
+        "rest_seconds": 124.10313462499835,
+        "runset_workload_match": {
+          "matched_sample_end_ticks": 40,
+          "one_tick_sample_offsets": []
+        }
+      },
+      {
+        "phase": "clean",
+        "arm": "OFF",
+        "round": 6,
+        "average_fps": 63.975,
+        "one_percent_low_fps": 49.52381103310662,
+        "longest_ms": 41.000001000000005,
+        "start_c": {
+          "cpu_temp_avg": 45.682083,
+          "gpu_temp_avg": 47.474094
+        },
+        "peak_c": {
+          "cpu_temp_avg": 78.136879,
+          "gpu_temp_avg": 87.286446
+        },
+        "rest_seconds": 124.08644533299957,
+        "runset_workload_match": {
+          "matched_sample_end_ticks": 40,
+          "one_tick_sample_offsets": []
+        }
+      }
+    ],
+    "pooled": {
+      "OFF": {
+        "average_fps": 63.9875,
+        "one_percent_low_fps": 49.2891008342131,
+        "intervals": 5117,
+        "excluded": 0,
+        "longest_ms": 41.000001000000005
+      },
+      "ON": {
+        "average_fps": 64.00879942727619,
+        "one_percent_low_fps": 48.10360879406383,
+        "intervals": 5118,
+        "excluded": 0,
+        "longest_ms": 52.000001
+      }
+    },
+    "deltaPercent": {
+      "average_fps": 0.033286856458203395,
+      "one_percent_low_fps": -2.405180902237891
+    },
+    "structuralWitness": [
+      {
+        "phase": "witness",
+        "arm": "OFF",
+        "round": 1,
+        "model_key_witness": {
+          "CUS": {
+            "calls": 124469,
+            "hits": 124457,
+            "misses": 12,
+            "temp_requests": 373407,
+            "temp_payload_bytes": 76672904,
+            "hit_temp_requests": 373371,
+            "hit_temp_payload_bytes": 76665512
+          },
+          "Forward": {
+            "calls": 1552,
+            "hits": 1545,
+            "misses": 7,
+            "temp_requests": 3104,
+            "temp_payload_bytes": 144546,
+            "hit_temp_requests": 3090,
+            "hit_temp_payload_bytes": 143904
+          }
+        },
+        "rest_seconds": 1540.9272354169989,
+        "runset_workload_match": {
+          "matched_sample_end_ticks": 40,
+          "one_tick_sample_offsets": []
+        }
+      },
+      {
+        "phase": "witness",
+        "arm": "ON",
+        "round": 2,
+        "model_key_witness": {
+          "CUS": {
+            "calls": 149390,
+            "hits": 149378,
+            "misses": 12,
+            "temp_requests": 0,
+            "temp_payload_bytes": 0,
+            "hit_temp_requests": 0,
+            "hit_temp_payload_bytes": 0
+          },
+          "Forward": {
+            "calls": 1512,
+            "hits": 1506,
+            "misses": 6,
+            "temp_requests": 0,
+            "temp_payload_bytes": 0,
+            "hit_temp_requests": 0,
+            "hit_temp_payload_bytes": 0
+          }
+        },
+        "rest_seconds": 124.11189066600127,
+        "runset_workload_match": {
+          "matched_sample_end_ticks": 40,
+          "one_tick_sample_offsets": []
+        }
+      }
+    ],
+    "scope": "Exact same signed candidate, 1512x950 Ultra MSAA Off CAP2 on Jade, AC Automatic, minimum 120s rest. All 40 sample windows matched. Witness enabled separately and disabled for all clean measurements. Hit storage requests are cumulative payload and capacity requests, not peak RAM, GPU submissions or measured CPU time. GPU system activity median 100% and clock 1578MHz in estimated interior 5s sample windows of all four clean runs.",
+    "limitations": "1% low decline retained, median/P99 both unchanged, 2/2 frames >30ms; separate full-frame parity not measured. No M1 performance claim."
+  },
+  "notSelected": [
+    "Terrain source certificate reuse (232)",
+    "ArgPool lazy descriptor and other undecided candidates"
+  ]
+}
