@@ -1,0 +1,21 @@
+{
+  "round_id": "texture-ordered-compile-20261117-15",
+  "attempt_id": "texture-ordered-compile-01",
+  "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "source_manifest_sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
+  "from": "SUPER_JINI_MK2",
+  "to": "HQ",
+  "request": "coordination/native-metal4/rounds/texture-ordered-compile-20261117-15/REQUEST.json",
+  "budget": {
+    "CPU_contract_script": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "games": 0,
+    "GPU_helpers": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "prior_cleanup_verified": true,
+  "HQ_turn_completed": true
+}

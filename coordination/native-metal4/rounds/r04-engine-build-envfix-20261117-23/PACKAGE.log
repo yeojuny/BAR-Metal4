@@ -1,0 +1,4 @@
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/runtime/native/bin/spring-metal4-scene: replacing existing signature
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/runtime/native/bin/spring-metal4-scene: valid on disk
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/runtime/native/bin/spring-metal4-scene: satisfies its Designated Requirement
+{"status": "PASS", "rawSHA256": "853083e4ba5490a40ede292c88d95b213166fbbc8db70af5336707657af997d1", "signedSHA256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86", "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/runtime/native/bin/spring-metal4-scene", "relocationCount": 9, "libraryCount": 19, "codesignVerify": "PASS", "homebrewDependencies": 0}

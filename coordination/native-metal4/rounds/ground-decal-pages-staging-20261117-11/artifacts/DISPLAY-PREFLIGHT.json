@@ -1,0 +1,16 @@
+{
+  "main_display_id": 1,
+  "bounds": [
+    0.0,
+    0.0,
+    1512.0,
+    982.0
+  ],
+  "required": [
+    0,
+    0,
+    1512,
+    982
+  ],
+  "not_game_observation": true
+}

@@ -1,0 +1,54 @@
+{
+  "round_id": "r03-skipdraw-pair-20261117-28",
+  "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+  "scope": "ONE_R03_GAME_MAIN_DECAL_ON_OFF_GPU_CONTROL",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "R03_binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "original_widget_sha256": "09fcd576cece82dbca98991c56bb5c92c1c5c26d8672c6d5b8c2a3c324fd3adb",
+  "budget": {
+    "games_max": 1,
+    "captures_max": 2,
+    "inspection_sessions_max": 2,
+    "profiles_max": 2,
+    "profiles_per_capture": 1,
+    "retries": 0,
+    "builds": 0
+  },
+  "execution_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-28",
+  "reuse": "round26 R03 controller and capture path; smallest copied-controller finish-branch adjustment only; no new observer/harness framework",
+  "staging": "Preserve originals. Record exact controller/helper diff and hashes, lightweight syntax/transition checks before game; stop if unsupported or requires wider changes.",
+  "sequence": [
+    "Reserve STATE once and reread; competing work absent; bar PAUSED",
+    "Fresh isolated R03 stage; verify all inherited pins; one game",
+    "Pause sim1590 using original working path; baseline main draw on, one capture",
+    "After first capture success send original Spring.SendCommands(\"luaui decalsgl4skipdraw\") exactly once; require logged true and next render frame; same PID/Layer second capture",
+    "Close game and owned wake; preserve user wake. Inspect exactly two capture sessions",
+    "Verify actual bound tick1590, camera/scene witness, intended main GameDecal draw removal and comparable non-target input/state",
+    "Only if comparison gates pass profile each capture once; no extra replay; report per-draw costs and dependency changes separately",
+    "Close sessions and report all outcomes and UNKNOWN; no retry"
+  ],
+  "negative_control_scope": "Only original DrawDecals main draws removed. Original producer/pending VBO uploads precede return and remain. PiP and engine GroundDecal remain. Mixed pass total is not GameDecal time.",
+  "prohibited": [
+    "source/engine/archive changes",
+    "RNG/lifetime overrides",
+    "full observer",
+    "new framework",
+    "barrier changes",
+    "MVK3 game",
+    "budget reuse",
+    "retry",
+    "reboot/logout/service restart/security changes",
+    "stop user caffeinate -d"
+  ],
+  "user_caffeinate": {
+    "pid": 5247,
+    "preserve": true
+  },
+  "result_path": "coordination/native-metal4/rounds/r03-skipdraw-pair-20261117-28/DONE.json",
+  "authorization": {
+    "standing_benchmark_message": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "resume_message": "Sentinel_ce2501f56ddc8191848358eacb58cf88",
+    "retry_message": "Sentinel_0030317b42e48191ad8c004499185e4c"
+  }
+}

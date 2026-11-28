@@ -1,0 +1,20 @@
+{
+  "label": "BUILD",
+  "argv": [
+    "cmake",
+    "--build",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build",
+    "--target",
+    "spring-metal4-scene",
+    "--",
+    "-j",
+    "8"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-18T00:28:53.618143+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41",
+  "pid": 73359,
+  "exit": 0,
+  "ended_at_utc": "2026-11-18T00:32:32.132851+00:00",
+  "stopped_by_runner": false
+}

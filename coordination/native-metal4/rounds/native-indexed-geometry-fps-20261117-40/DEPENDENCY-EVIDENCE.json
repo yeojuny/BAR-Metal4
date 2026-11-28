@@ -1,0 +1,829 @@
+{
+  "arms": {
+    "INDEXED_ON": {
+      "engine_log_matches": 1340,
+      "non_system_dylibs": {
+        "/opt/homebrew/Cellar/devil/1.8.0_6/lib/libIL.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/devil/1.8.0_6/lib/libIL.dylib"
+          ],
+          "sha256": "97af4e58cf690d7e8f47e3ba0668dfb1e2127f50937e33f102304f4c843b34b9",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/minizip/1.4/lib/libminizip.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/minizip/1.4/lib/libminizip.1.dylib"
+          ],
+          "sha256": "17664124140c81f3028d78a1c79b8af08e891026ee0e08c678eca9ea5ba042a3",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/freetype/2.15.0/lib/libfreetype.6.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/freetype/2.15.0/lib/libfreetype.6.dylib"
+          ],
+          "sha256": "1bf70387c4ef59accba8116c847cb87d2018ded2672db551686b95dce4c5d931",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/fontconfig/2.18.3/lib/libfontconfig.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/fontconfig/2.18.3/lib/libfontconfig.1.dylib"
+          ],
+          "sha256": "e1f5e06e8339b42f0e1af11cc77979ef6a8f48ffa7588e4dc243e4bd69ea656d",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbisfile.3.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbisfile.3.dylib"
+          ],
+          "sha256": "182caefbd3eec6f61e513900b5f9c4a796c83048aa0d1a882e30c232d248cb35",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbis.0.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbis.0.dylib"
+          ],
+          "sha256": "38df2463cc776f5a4dd58331e0abb46dba0a143b65e345ece328ea61978dd795",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libogg/1.3.6/lib/libogg.0.8.6.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libogg/1.3.6/lib/libogg.0.8.6.dylib"
+          ],
+          "sha256": "57e31e257f6293a07a2fc1e25ec02534fa307f7d94653decd6a98c0b5f961352",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.1.25.2.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.1.25.2.dylib"
+          ],
+          "sha256": "bda6121999127208e446a72f1be2c957bc3d618d3f7d66cd60fdfdc4a6702355",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/sdl3/3.4.20/lib/libSDL3.0.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/sdl3/3.4.20/lib/libSDL3.0.dylib"
+          ],
+          "sha256": "10e099afe070ee62ff19cf990712b0df92e3e28a84116cc96756257d9dcdb892",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libpng/1.6.59/lib/libpng16.16.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libpng/1.6.59/lib/libpng16.16.dylib"
+          ],
+          "sha256": "90d0355e32b2a6bda0d9556b7f93b7c0cadc99815944ba83145c901b4787ae73",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/jpeg-turbo/3.2.1/lib/libjpeg.8.3.2.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/jpeg-turbo/3.2.1/lib/libjpeg.8.3.2.dylib"
+          ],
+          "sha256": "14f622f5c236df60a7f97b3146785497f990a39f0481d4a53ccc0e5cb8a0df3d",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libtiff/4.7.2/lib/libtiff.6.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libtiff/4.7.2/lib/libtiff.6.dylib"
+          ],
+          "sha256": "910ddec459a8490a80510e999cb2a1589d61dfda1fcf560fd64099230ea869be",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/jasper/4.2.9/lib/libjasper.7.0.0.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/jasper/4.2.9/lib/libjasper.7.0.0.dylib"
+          ],
+          "sha256": "7eabcb51904821655ca72681ab2b1a24c74727ac4e49f87cce512b79acbea636",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/little-cms2/2.20/lib/liblcms2.2.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/little-cms2/2.20/lib/liblcms2.2.dylib"
+          ],
+          "sha256": "0c2494e8f0e429e3554cba75625e6718485e35901bdc5f99b4ebc11f8c10c4da",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib"
+          ],
+          "sha256": "e2847c4613b386683c234913ae3b7b04299254096caf7616e3b3cd9bb97a39ab",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/xz/5.8.4/lib/liblzma.5.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/xz/5.8.4/lib/liblzma.5.dylib"
+          ],
+          "sha256": "1b2e12cc1b920264f3dd15eeba22e85b8afd589595d8945d1d12a52afa694b09",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlidec.1.2.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlidec.1.2.1.dylib"
+          ],
+          "sha256": "9552b5224a03b01c179e72f810b2859bf49d36cd32ad3af7880618edfa13b5bf",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlicommon.1.2.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlicommon.1.2.1.dylib"
+          ],
+          "sha256": "1422180cea6ccf23875d18b0b043d49d43566c750af0b123c21c8eb97cf0c7c9",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/gettext/1.0/lib/libintl.8.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/gettext/1.0/lib/libintl.8.dylib"
+          ],
+          "sha256": "0c6d618e75fea85cc3d631e164a71766fba9341d19ce1f723300c52e63037c51",
+          "arch": "arm64"
+        }
+      },
+      "system_dylibs": [
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/Libraries/libCGInterfaces.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBNNS.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLinearAlgebra.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libQuadrature.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparse.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparseBLAS.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib",
+        "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontRegistry.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib",
+        "/System/Library/Frameworks/Kerberos.framework/Versions/A/Libraries/libHeimdalProxy.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCVMSPluginSupport.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreFSCache.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreVMClient.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGFXShared.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib",
+        "/System/Library/Frameworks/Vision.framework/libfaceCore.dylib",
+        "/System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Versions/A/Frameworks/libANGLE-shared.dylib",
+        "/System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Versions/A/Frameworks/libwebrtc.dylib",
+        "/System/Library/PrivateFrameworks/AudioSession.framework/libSessionUtility.dylib",
+        "/System/Library/PrivateFrameworks/FontServices.framework/libFontParser.dylib",
+        "/System/Library/PrivateFrameworks/FontServices.framework/libXTFontStaticRegistryData.dylib",
+        "/System/Library/PrivateFrameworks/GPUCompiler.framework/Versions/32023/Libraries/libGPUCompilerUtils.dylib",
+        "/System/Library/PrivateFrameworks/GPUCompiler.framework/Versions/32023/Libraries/libllvm-flatbuffers.dylib",
+        "/System/Library/PrivateFrameworks/ODIE.framework/Versions/A/Frameworks/libODIECompiler.dylib",
+        "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/Libraries/libUAPreferences.dylib",
+        "/System/Volumes/Preboot/Cryptexes/OS/usr/lib/libMetalMetricsInterpose.dylib",
+        "/usr/lib/libAXSafeCategoryBundle.dylib",
+        "/usr/lib/libAccessibility.dylib",
+        "/usr/lib/libAccessibilityBaseImplementations.dylib",
+        "/usr/lib/libAppleArchive.dylib",
+        "/usr/lib/libAppleSSE.dylib",
+        "/usr/lib/libAudioDSPCore.dylib",
+        "/usr/lib/libAudioStatistics.dylib",
+        "/usr/lib/libBASupport.dylib",
+        "/usr/lib/libCRFSuite.dylib",
+        "/usr/lib/libCTGreenTeaLogger.dylib",
+        "/usr/lib/libCheckFix.dylib",
+        "/usr/lib/libChineseTokenizer.dylib",
+        "/usr/lib/libCoreEntitlements.dylib",
+        "/usr/lib/libCoreStorage.dylib",
+        "/usr/lib/libDiagnosticMessagesClient.dylib",
+        "/usr/lib/libEndpointSecuritySystem.dylib",
+        "/usr/lib/libFDR.dylib",
+        "/usr/lib/libFDRDecode.dylib",
+        "/usr/lib/libIOReport.dylib",
+        "/usr/lib/libImage4_V2.dylib",
+        "/usr/lib/libInterpreterSecurity.dylib",
+        "/usr/lib/libMatch.1.dylib",
+        "/usr/lib/libMobileGestalt.dylib",
+        "/usr/lib/libParallelCompression.dylib",
+        "/usr/lib/libReverseProxyDevice.dylib",
+        "/usr/lib/libRosetta.dylib",
+        "/usr/lib/libSMC.dylib",
+        "/usr/lib/libScreenReader.dylib",
+        "/usr/lib/libSpatial.dylib",
+        "/usr/lib/libSystem.B.dylib",
+        "/usr/lib/libTLE.dylib",
+        "/usr/lib/libTelephonyUtilDynamic.dylib",
+        "/usr/lib/libThaiTokenizer.dylib",
+        "/usr/lib/libUniversalAccess.dylib",
+        "/usr/lib/libamsupport.dylib",
+        "/usr/lib/libapp_launch_measurement.dylib",
+        "/usr/lib/libapple_nghttp2.dylib",
+        "/usr/lib/libarchive.2.dylib",
+        "/usr/lib/libate.dylib",
+        "/usr/lib/libaxis.dylib",
+        "/usr/lib/libbootpolicy.dylib",
+        "/usr/lib/libboringssl.dylib",
+        "/usr/lib/libbsm.0.dylib",
+        "/usr/lib/libbz2.1.0.dylib",
+        "/usr/lib/libc++.1.dylib",
+        "/usr/lib/libc++abi.dylib",
+        "/usr/lib/libcharset.1.dylib",
+        "/usr/lib/libcmark-gfm.dylib",
+        "/usr/lib/libcmph.dylib",
+        "/usr/lib/libcompression.dylib",
+        "/usr/lib/libcoretls.dylib",
+        "/usr/lib/libcoretls_cfhelpers.dylib",
+        "/usr/lib/libcrypto.46.dylib",
+        "/usr/lib/libcsfde.dylib",
+        "/usr/lib/libcups.2.dylib",
+        "/usr/lib/libcurl.4.dylib",
+        "/usr/lib/libdns_services.dylib",
+        "/usr/lib/libdscsym.dylib",
+        "/usr/lib/libedit.3.dylib",
+        "/usr/lib/libenergytrace.dylib",
+        "/usr/lib/libexpat.1.dylib",
+        "/usr/lib/libfakelink.dylib",
+        "/usr/lib/libgermantok.dylib",
+        "/usr/lib/libheimdal-asn1.dylib",
+        "/usr/lib/libhvf.dylib",
+        "/usr/lib/libiconv.2.dylib",
+        "/usr/lib/libicucore.A.dylib",
+        "/usr/lib/libimage4.dylib",
+        "/usr/lib/liblangid.dylib",
+        "/usr/lib/liblzma.5.dylib",
+        "/usr/lib/libmecab.dylib",
+        "/usr/lib/libmecabra.dylib",
+        "/usr/lib/libmis.dylib",
+        "/usr/lib/libmrc.dylib",
+        "/usr/lib/libncurses.5.4.dylib",
+        "/usr/lib/libnetworkextension.dylib",
+        "/usr/lib/libnfshared.dylib",
+        "/usr/lib/liboah.dylib",
+        "/usr/lib/libobjc-trampolines.dylib",
+        "/usr/lib/libobjc.A.dylib",
+        "/usr/lib/libodfde.dylib",
+        "/usr/lib/libpam.2.dylib",
+        "/usr/lib/libpartition2_dynamic.dylib",
+        "/usr/lib/libperfcheck.dylib",
+        "/usr/lib/libquic.dylib",
+        "/usr/lib/libresolv.9.dylib",
+        "/usr/lib/libsandbox.1.dylib",
+        "/usr/lib/libsasl2.2.dylib",
+        "/usr/lib/libsharedcache.dylib",
+        "/usr/lib/libspindump.dylib",
+        "/usr/lib/libsqlite3.dylib",
+        "/usr/lib/libssl.48.dylib",
+        "/usr/lib/libswiftPrespecialized.dylib",
+        "/usr/lib/libtailspin.dylib",
+        "/usr/lib/libtidy.A.dylib",
+        "/usr/lib/libusrtcp.dylib",
+        "/usr/lib/libutil.dylib",
+        "/usr/lib/libxar.1.dylib",
+        "/usr/lib/libxcselect.dylib",
+        "/usr/lib/libxml2.2.dylib",
+        "/usr/lib/libxslt.1.dylib",
+        "/usr/lib/libz.1.dylib",
+        "/usr/lib/objc/libobjcMsgSend.dylib",
+        "/usr/lib/objc/libobjcMsgSend1.dylib",
+        "/usr/lib/objc/libobjcMsgSend10.dylib",
+        "/usr/lib/objc/libobjcMsgSend11.dylib",
+        "/usr/lib/objc/libobjcMsgSend12.dylib",
+        "/usr/lib/objc/libobjcMsgSend13.dylib",
+        "/usr/lib/objc/libobjcMsgSend14.dylib",
+        "/usr/lib/objc/libobjcMsgSend15.dylib",
+        "/usr/lib/objc/libobjcMsgSend16.dylib",
+        "/usr/lib/objc/libobjcMsgSend17.dylib",
+        "/usr/lib/objc/libobjcMsgSend18.dylib",
+        "/usr/lib/objc/libobjcMsgSend19.dylib",
+        "/usr/lib/objc/libobjcMsgSend2.dylib",
+        "/usr/lib/objc/libobjcMsgSend20.dylib",
+        "/usr/lib/objc/libobjcMsgSend21.dylib",
+        "/usr/lib/objc/libobjcMsgSend22.dylib",
+        "/usr/lib/objc/libobjcMsgSend23.dylib",
+        "/usr/lib/objc/libobjcMsgSend24.dylib",
+        "/usr/lib/objc/libobjcMsgSend25.dylib",
+        "/usr/lib/objc/libobjcMsgSend26.dylib",
+        "/usr/lib/objc/libobjcMsgSend27.dylib",
+        "/usr/lib/objc/libobjcMsgSend28.dylib",
+        "/usr/lib/objc/libobjcMsgSend29.dylib",
+        "/usr/lib/objc/libobjcMsgSend3.dylib",
+        "/usr/lib/objc/libobjcMsgSend30.dylib",
+        "/usr/lib/objc/libobjcMsgSend31.dylib",
+        "/usr/lib/objc/libobjcMsgSend32.dylib",
+        "/usr/lib/objc/libobjcMsgSend33.dylib",
+        "/usr/lib/objc/libobjcMsgSend34.dylib",
+        "/usr/lib/objc/libobjcMsgSend35.dylib",
+        "/usr/lib/objc/libobjcMsgSend4.dylib",
+        "/usr/lib/objc/libobjcMsgSend5.dylib",
+        "/usr/lib/objc/libobjcMsgSend6.dylib",
+        "/usr/lib/objc/libobjcMsgSend7.dylib",
+        "/usr/lib/objc/libobjcMsgSend8.dylib",
+        "/usr/lib/objc/libobjcMsgSend9.dylib",
+        "/usr/lib/swift/libswiftAVFoundation.dylib",
+        "/usr/lib/swift/libswiftAccelerate.dylib",
+        "/usr/lib/swift/libswiftAppleArchive.dylib",
+        "/usr/lib/swift/libswiftCallKit.dylib",
+        "/usr/lib/swift/libswiftCompression.dylib",
+        "/usr/lib/swift/libswiftCore.dylib",
+        "/usr/lib/swift/libswiftCoreAudio.dylib",
+        "/usr/lib/swift/libswiftCoreFoundation.dylib",
+        "/usr/lib/swift/libswiftCoreGraphics.dylib",
+        "/usr/lib/swift/libswiftCoreImage.dylib",
+        "/usr/lib/swift/libswiftCoreLocation.dylib",
+        "/usr/lib/swift/libswiftCoreMIDI.dylib",
+        "/usr/lib/swift/libswiftCoreMedia.dylib",
+        "/usr/lib/swift/libswiftCoreMediaIO.dylib",
+        "/usr/lib/swift/libswiftDarwin.dylib",
+        "/usr/lib/swift/libswiftDemangle.dylib",
+        "/usr/lib/swift/libswiftDispatch.dylib",
+        "/usr/lib/swift/libswiftDistributed.dylib",
+        "/usr/lib/swift/libswiftFoundation.dylib",
+        "/usr/lib/swift/libswiftGLKit.dylib",
+        "/usr/lib/swift/libswiftIOKit.dylib",
+        "/usr/lib/swift/libswiftIntents.dylib",
+        "/usr/lib/swift/libswiftMLCompute.dylib",
+        "/usr/lib/swift/libswiftMetal.dylib",
+        "/usr/lib/swift/libswiftMetalKit.dylib",
+        "/usr/lib/swift/libswiftModelIO.dylib",
+        "/usr/lib/swift/libswiftNaturalLanguage.dylib",
+        "/usr/lib/swift/libswiftOSLog.dylib",
+        "/usr/lib/swift/libswiftObjectiveC.dylib",
+        "/usr/lib/swift/libswiftObservation.dylib",
+        "/usr/lib/swift/libswiftPassKit.dylib",
+        "/usr/lib/swift/libswiftQuartzCore.dylib",
+        "/usr/lib/swift/libswiftRegexBuilder.dylib",
+        "/usr/lib/swift/libswiftSceneKit.dylib",
+        "/usr/lib/swift/libswiftSpatial.dylib",
+        "/usr/lib/swift/libswiftSwiftOnoneSupport.dylib",
+        "/usr/lib/swift/libswiftSynchronization.dylib",
+        "/usr/lib/swift/libswiftSystem.dylib",
+        "/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+        "/usr/lib/swift/libswiftXPC.dylib",
+        "/usr/lib/swift/libswift_Builtin_float.dylib",
+        "/usr/lib/swift/libswift_Concurrency.dylib",
+        "/usr/lib/swift/libswift_DarwinFoundation1.dylib",
+        "/usr/lib/swift/libswift_DarwinFoundation2.dylib",
+        "/usr/lib/swift/libswift_DarwinFoundation3.dylib",
+        "/usr/lib/swift/libswift_RegexParser.dylib",
+        "/usr/lib/swift/libswift_StringProcessing.dylib",
+        "/usr/lib/swift/libswiftos.dylib",
+        "/usr/lib/swift/libswiftsimd.dylib",
+        "/usr/lib/swift/libswiftsys_time.dylib",
+        "/usr/lib/system/libcache.dylib",
+        "/usr/lib/system/libcommonCrypto.dylib",
+        "/usr/lib/system/libcompiler_rt.dylib",
+        "/usr/lib/system/libcopyfile.dylib",
+        "/usr/lib/system/libcorecrypto.dylib",
+        "/usr/lib/system/libdispatch.dylib",
+        "/usr/lib/system/libdyld.dylib",
+        "/usr/lib/system/libkeymgr.dylib",
+        "/usr/lib/system/libkxld.dylib",
+        "/usr/lib/system/libmacho.dylib",
+        "/usr/lib/system/libquarantine.dylib",
+        "/usr/lib/system/libremovefile.dylib",
+        "/usr/lib/system/libsystem_asl.dylib",
+        "/usr/lib/system/libsystem_blocks.dylib",
+        "/usr/lib/system/libsystem_c.dylib",
+        "/usr/lib/system/libsystem_collections.dylib",
+        "/usr/lib/system/libsystem_configuration.dylib",
+        "/usr/lib/system/libsystem_containermanager.dylib",
+        "/usr/lib/system/libsystem_coreservices.dylib",
+        "/usr/lib/system/libsystem_darwin.dylib",
+        "/usr/lib/system/libsystem_darwindirectory.dylib",
+        "/usr/lib/system/libsystem_dnssd.dylib",
+        "/usr/lib/system/libsystem_eligibility.dylib",
+        "/usr/lib/system/libsystem_featureflags.dylib",
+        "/usr/lib/system/libsystem_info.dylib",
+        "/usr/lib/system/libsystem_kernel.dylib",
+        "/usr/lib/system/libsystem_m.dylib",
+        "/usr/lib/system/libsystem_malloc.dylib",
+        "/usr/lib/system/libsystem_networkextension.dylib",
+        "/usr/lib/system/libsystem_notify.dylib",
+        "/usr/lib/system/libsystem_platform.dylib",
+        "/usr/lib/system/libsystem_pthread.dylib",
+        "/usr/lib/system/libsystem_sandbox.dylib",
+        "/usr/lib/system/libsystem_sanitizers.dylib",
+        "/usr/lib/system/libsystem_secinit.dylib",
+        "/usr/lib/system/libsystem_symptoms.dylib",
+        "/usr/lib/system/libsystem_trace.dylib",
+        "/usr/lib/system/libsystem_trial.dylib",
+        "/usr/lib/system/libunwind.dylib",
+        "/usr/lib/system/libxpc.dylib",
+        "/usr/lib/usd/libusd_ms.dylib"
+      ]
+    },
+    "INDEXED_OFF": {
+      "engine_log_matches": 1340,
+      "non_system_dylibs": {
+        "/opt/homebrew/Cellar/devil/1.8.0_6/lib/libIL.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/devil/1.8.0_6/lib/libIL.dylib"
+          ],
+          "sha256": "97af4e58cf690d7e8f47e3ba0668dfb1e2127f50937e33f102304f4c843b34b9",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/minizip/1.4/lib/libminizip.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/minizip/1.4/lib/libminizip.1.dylib"
+          ],
+          "sha256": "17664124140c81f3028d78a1c79b8af08e891026ee0e08c678eca9ea5ba042a3",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/freetype/2.15.0/lib/libfreetype.6.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/freetype/2.15.0/lib/libfreetype.6.dylib"
+          ],
+          "sha256": "1bf70387c4ef59accba8116c847cb87d2018ded2672db551686b95dce4c5d931",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/fontconfig/2.18.3/lib/libfontconfig.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/fontconfig/2.18.3/lib/libfontconfig.1.dylib"
+          ],
+          "sha256": "e1f5e06e8339b42f0e1af11cc77979ef6a8f48ffa7588e4dc243e4bd69ea656d",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbisfile.3.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbisfile.3.dylib"
+          ],
+          "sha256": "182caefbd3eec6f61e513900b5f9c4a796c83048aa0d1a882e30c232d248cb35",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbis.0.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbis.0.dylib"
+          ],
+          "sha256": "38df2463cc776f5a4dd58331e0abb46dba0a143b65e345ece328ea61978dd795",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libogg/1.3.6/lib/libogg.0.8.6.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libogg/1.3.6/lib/libogg.0.8.6.dylib"
+          ],
+          "sha256": "57e31e257f6293a07a2fc1e25ec02534fa307f7d94653decd6a98c0b5f961352",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.1.25.2.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.1.25.2.dylib"
+          ],
+          "sha256": "bda6121999127208e446a72f1be2c957bc3d618d3f7d66cd60fdfdc4a6702355",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/sdl3/3.4.20/lib/libSDL3.0.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/sdl3/3.4.20/lib/libSDL3.0.dylib"
+          ],
+          "sha256": "10e099afe070ee62ff19cf990712b0df92e3e28a84116cc96756257d9dcdb892",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libpng/1.6.59/lib/libpng16.16.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libpng/1.6.59/lib/libpng16.16.dylib"
+          ],
+          "sha256": "90d0355e32b2a6bda0d9556b7f93b7c0cadc99815944ba83145c901b4787ae73",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/jpeg-turbo/3.2.1/lib/libjpeg.8.3.2.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/jpeg-turbo/3.2.1/lib/libjpeg.8.3.2.dylib"
+          ],
+          "sha256": "14f622f5c236df60a7f97b3146785497f990a39f0481d4a53ccc0e5cb8a0df3d",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/libtiff/4.7.2/lib/libtiff.6.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/libtiff/4.7.2/lib/libtiff.6.dylib"
+          ],
+          "sha256": "910ddec459a8490a80510e999cb2a1589d61dfda1fcf560fd64099230ea869be",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/jasper/4.2.9/lib/libjasper.7.0.0.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/jasper/4.2.9/lib/libjasper.7.0.0.dylib"
+          ],
+          "sha256": "7eabcb51904821655ca72681ab2b1a24c74727ac4e49f87cce512b79acbea636",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/little-cms2/2.20/lib/liblcms2.2.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/little-cms2/2.20/lib/liblcms2.2.dylib"
+          ],
+          "sha256": "0c2494e8f0e429e3554cba75625e6718485e35901bdc5f99b4ebc11f8c10c4da",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/zstd/1.5.7_1/lib/libzstd.1.5.7.dylib"
+          ],
+          "sha256": "e2847c4613b386683c234913ae3b7b04299254096caf7616e3b3cd9bb97a39ab",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/xz/5.8.4/lib/liblzma.5.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/xz/5.8.4/lib/liblzma.5.dylib"
+          ],
+          "sha256": "1b2e12cc1b920264f3dd15eeba22e85b8afd589595d8945d1d12a52afa694b09",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlidec.1.2.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlidec.1.2.1.dylib"
+          ],
+          "sha256": "9552b5224a03b01c179e72f810b2859bf49d36cd32ad3af7880618edfa13b5bf",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlicommon.1.2.1.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/brotli/1.2.1/lib/libbrotlicommon.1.2.1.dylib"
+          ],
+          "sha256": "1422180cea6ccf23875d18b0b043d49d43566c750af0b123c21c8eb97cf0c7c9",
+          "arch": "arm64"
+        },
+        "/opt/homebrew/Cellar/gettext/1.0/lib/libintl.8.dylib": {
+          "observed_paths": [
+            "/opt/homebrew/Cellar/gettext/1.0/lib/libintl.8.dylib"
+          ],
+          "sha256": "0c6d618e75fea85cc3d631e164a71766fba9341d19ce1f723300c52e63037c51",
+          "arch": "arm64"
+        }
+      },
+      "system_dylibs": [
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/Libraries/libCGInterfaces.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBNNS.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLinearAlgebra.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libQuadrature.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparse.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libSparseBLAS.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib",
+        "/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib",
+        "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontRegistry.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib",
+        "/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib",
+        "/System/Library/Frameworks/Kerberos.framework/Versions/A/Libraries/libHeimdalProxy.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCVMSPluginSupport.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreFSCache.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreVMClient.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGFXShared.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib",
+        "/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib",
+        "/System/Library/Frameworks/Vision.framework/libfaceCore.dylib",
+        "/System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Versions/A/Frameworks/libANGLE-shared.dylib",
+        "/System/Library/Frameworks/WebKit.framework/Versions/A/Frameworks/WebCore.framework/Versions/A/Frameworks/libwebrtc.dylib",
+        "/System/Library/PrivateFrameworks/AudioSession.framework/libSessionUtility.dylib",
+        "/System/Library/PrivateFrameworks/FontServices.framework/libFontParser.dylib",
+        "/System/Library/PrivateFrameworks/FontServices.framework/libXTFontStaticRegistryData.dylib",
+        "/System/Library/PrivateFrameworks/GPUCompiler.framework/Versions/32023/Libraries/libGPUCompilerUtils.dylib",
+        "/System/Library/PrivateFrameworks/GPUCompiler.framework/Versions/32023/Libraries/libllvm-flatbuffers.dylib",
+        "/System/Library/PrivateFrameworks/ODIE.framework/Versions/A/Frameworks/libODIECompiler.dylib",
+        "/System/Library/PrivateFrameworks/UniversalAccess.framework/Versions/A/Libraries/libUAPreferences.dylib",
+        "/System/Volumes/Preboot/Cryptexes/OS/usr/lib/libMetalMetricsInterpose.dylib",
+        "/usr/lib/libAXSafeCategoryBundle.dylib",
+        "/usr/lib/libAccessibility.dylib",
+        "/usr/lib/libAccessibilityBaseImplementations.dylib",
+        "/usr/lib/libAppleArchive.dylib",
+        "/usr/lib/libAppleSSE.dylib",
+        "/usr/lib/libAudioDSPCore.dylib",
+        "/usr/lib/libAudioStatistics.dylib",
+        "/usr/lib/libBASupport.dylib",
+        "/usr/lib/libCRFSuite.dylib",
+        "/usr/lib/libCTGreenTeaLogger.dylib",
+        "/usr/lib/libCheckFix.dylib",
+        "/usr/lib/libChineseTokenizer.dylib",
+        "/usr/lib/libCoreEntitlements.dylib",
+        "/usr/lib/libCoreStorage.dylib",
+        "/usr/lib/libDiagnosticMessagesClient.dylib",
+        "/usr/lib/libEndpointSecuritySystem.dylib",
+        "/usr/lib/libFDR.dylib",
+        "/usr/lib/libFDRDecode.dylib",
+        "/usr/lib/libIOReport.dylib",
+        "/usr/lib/libImage4_V2.dylib",
+        "/usr/lib/libInterpreterSecurity.dylib",
+        "/usr/lib/libMatch.1.dylib",
+        "/usr/lib/libMobileGestalt.dylib",
+        "/usr/lib/libParallelCompression.dylib",
+        "/usr/lib/libReverseProxyDevice.dylib",
+        "/usr/lib/libRosetta.dylib",
+        "/usr/lib/libSMC.dylib",
+        "/usr/lib/libScreenReader.dylib",
+        "/usr/lib/libSpatial.dylib",
+        "/usr/lib/libSystem.B.dylib",
+        "/usr/lib/libTLE.dylib",
+        "/usr/lib/libTelephonyUtilDynamic.dylib",
+        "/usr/lib/libThaiTokenizer.dylib",
+        "/usr/lib/libUniversalAccess.dylib",
+        "/usr/lib/libamsupport.dylib",
+        "/usr/lib/libapp_launch_measurement.dylib",
+        "/usr/lib/libapple_nghttp2.dylib",
+        "/usr/lib/libarchive.2.dylib",
+        "/usr/lib/libate.dylib",
+        "/usr/lib/libaxis.dylib",
+        "/usr/lib/libbootpolicy.dylib",
+        "/usr/lib/libboringssl.dylib",
+        "/usr/lib/libbsm.0.dylib",
+        "/usr/lib/libbz2.1.0.dylib",
+        "/usr/lib/libc++.1.dylib",
+        "/usr/lib/libc++abi.dylib",
+        "/usr/lib/libcharset.1.dylib",
+        "/usr/lib/libcmark-gfm.dylib",
+        "/usr/lib/libcmph.dylib",
+        "/usr/lib/libcompression.dylib",
+        "/usr/lib/libcoretls.dylib",
+        "/usr/lib/libcoretls_cfhelpers.dylib",
+        "/usr/lib/libcrypto.46.dylib",
+        "/usr/lib/libcsfde.dylib",
+        "/usr/lib/libcups.2.dylib",
+        "/usr/lib/libcurl.4.dylib",
+        "/usr/lib/libdns_services.dylib",
+        "/usr/lib/libdscsym.dylib",
+        "/usr/lib/libedit.3.dylib",
+        "/usr/lib/libenergytrace.dylib",
+        "/usr/lib/libexpat.1.dylib",
+        "/usr/lib/libfakelink.dylib",
+        "/usr/lib/libgermantok.dylib",
+        "/usr/lib/libheimdal-asn1.dylib",
+        "/usr/lib/libhvf.dylib",
+        "/usr/lib/libiconv.2.dylib",
+        "/usr/lib/libicucore.A.dylib",
+        "/usr/lib/libimage4.dylib",
+        "/usr/lib/liblangid.dylib",
+        "/usr/lib/liblzma.5.dylib",
+        "/usr/lib/libmecab.dylib",
+        "/usr/lib/libmecabra.dylib",
+        "/usr/lib/libmis.dylib",
+        "/usr/lib/libmrc.dylib",
+        "/usr/lib/libncurses.5.4.dylib",
+        "/usr/lib/libnetworkextension.dylib",
+        "/usr/lib/libnfshared.dylib",
+        "/usr/lib/liboah.dylib",
+        "/usr/lib/libobjc-trampolines.dylib",
+        "/usr/lib/libobjc.A.dylib",
+        "/usr/lib/libodfde.dylib",
+        "/usr/lib/libpam.2.dylib",
+        "/usr/lib/libpartition2_dynamic.dylib",
+        "/usr/lib/libperfcheck.dylib",
+        "/usr/lib/libquic.dylib",
+        "/usr/lib/libresolv.9.dylib",
+        "/usr/lib/libsandbox.1.dylib",
+        "/usr/lib/libsasl2.2.dylib",
+        "/usr/lib/libsharedcache.dylib",
+        "/usr/lib/libspindump.dylib",
+        "/usr/lib/libsqlite3.dylib",
+        "/usr/lib/libssl.48.dylib",
+        "/usr/lib/libswiftPrespecialized.dylib",
+        "/usr/lib/libtailspin.dylib",
+        "/usr/lib/libtidy.A.dylib",
+        "/usr/lib/libusrtcp.dylib",
+        "/usr/lib/libutil.dylib",
+        "/usr/lib/libxar.1.dylib",
+        "/usr/lib/libxcselect.dylib",
+        "/usr/lib/libxml2.2.dylib",
+        "/usr/lib/libxslt.1.dylib",
+        "/usr/lib/libz.1.dylib",
+        "/usr/lib/objc/libobjcMsgSend.dylib",
+        "/usr/lib/objc/libobjcMsgSend1.dylib",
+        "/usr/lib/objc/libobjcMsgSend10.dylib",
+        "/usr/lib/objc/libobjcMsgSend11.dylib",
+        "/usr/lib/objc/libobjcMsgSend12.dylib",
+        "/usr/lib/objc/libobjcMsgSend13.dylib",
+        "/usr/lib/objc/libobjcMsgSend14.dylib",
+        "/usr/lib/objc/libobjcMsgSend15.dylib",
+        "/usr/lib/objc/libobjcMsgSend16.dylib",
+        "/usr/lib/objc/libobjcMsgSend17.dylib",
+        "/usr/lib/objc/libobjcMsgSend18.dylib",
+        "/usr/lib/objc/libobjcMsgSend19.dylib",
+        "/usr/lib/objc/libobjcMsgSend2.dylib",
+        "/usr/lib/objc/libobjcMsgSend20.dylib",
+        "/usr/lib/objc/libobjcMsgSend21.dylib",
+        "/usr/lib/objc/libobjcMsgSend22.dylib",
+        "/usr/lib/objc/libobjcMsgSend23.dylib",
+        "/usr/lib/objc/libobjcMsgSend24.dylib",
+        "/usr/lib/objc/libobjcMsgSend25.dylib",
+        "/usr/lib/objc/libobjcMsgSend26.dylib",
+        "/usr/lib/objc/libobjcMsgSend27.dylib",
+        "/usr/lib/objc/libobjcMsgSend28.dylib",
+        "/usr/lib/objc/libobjcMsgSend29.dylib",
+        "/usr/lib/objc/libobjcMsgSend3.dylib",
+        "/usr/lib/objc/libobjcMsgSend30.dylib",
+        "/usr/lib/objc/libobjcMsgSend31.dylib",
+        "/usr/lib/objc/libobjcMsgSend32.dylib",
+        "/usr/lib/objc/libobjcMsgSend33.dylib",
+        "/usr/lib/objc/libobjcMsgSend34.dylib",
+        "/usr/lib/objc/libobjcMsgSend35.dylib",
+        "/usr/lib/objc/libobjcMsgSend4.dylib",
+        "/usr/lib/objc/libobjcMsgSend5.dylib",
+        "/usr/lib/objc/libobjcMsgSend6.dylib",
+        "/usr/lib/objc/libobjcMsgSend7.dylib",
+        "/usr/lib/objc/libobjcMsgSend8.dylib",
+        "/usr/lib/objc/libobjcMsgSend9.dylib",
+        "/usr/lib/swift/libswiftAVFoundation.dylib",
+        "/usr/lib/swift/libswiftAccelerate.dylib",
+        "/usr/lib/swift/libswiftAppleArchive.dylib",
+        "/usr/lib/swift/libswiftCallKit.dylib",
+        "/usr/lib/swift/libswiftCompression.dylib",
+        "/usr/lib/swift/libswiftCore.dylib",
+        "/usr/lib/swift/libswiftCoreAudio.dylib",
+        "/usr/lib/swift/libswiftCoreFoundation.dylib",
+        "/usr/lib/swift/libswiftCoreGraphics.dylib",
+        "/usr/lib/swift/libswiftCoreImage.dylib",
+        "/usr/lib/swift/libswiftCoreLocation.dylib",
+        "/usr/lib/swift/libswiftCoreMIDI.dylib",
+        "/usr/lib/swift/libswiftCoreMedia.dylib",
+        "/usr/lib/swift/libswiftCoreMediaIO.dylib",
+        "/usr/lib/swift/libswiftDarwin.dylib",
+        "/usr/lib/swift/libswiftDemangle.dylib",
+        "/usr/lib/swift/libswiftDispatch.dylib",
+        "/usr/lib/swift/libswiftDistributed.dylib",
+        "/usr/lib/swift/libswiftFoundation.dylib",
+        "/usr/lib/swift/libswiftGLKit.dylib",
+        "/usr/lib/swift/libswiftIOKit.dylib",
+        "/usr/lib/swift/libswiftIntents.dylib",
+        "/usr/lib/swift/libswiftMLCompute.dylib",
+        "/usr/lib/swift/libswiftMetal.dylib",
+        "/usr/lib/swift/libswiftMetalKit.dylib",
+        "/usr/lib/swift/libswiftModelIO.dylib",
+        "/usr/lib/swift/libswiftNaturalLanguage.dylib",
+        "/usr/lib/swift/libswiftOSLog.dylib",
+        "/usr/lib/swift/libswiftObjectiveC.dylib",
+        "/usr/lib/swift/libswiftObservation.dylib",
+        "/usr/lib/swift/libswiftPassKit.dylib",
+        "/usr/lib/swift/libswiftQuartzCore.dylib",
+        "/usr/lib/swift/libswiftRegexBuilder.dylib",
+        "/usr/lib/swift/libswiftSceneKit.dylib",
+        "/usr/lib/swift/libswiftSpatial.dylib",
+        "/usr/lib/swift/libswiftSwiftOnoneSupport.dylib",
+        "/usr/lib/swift/libswiftSynchronization.dylib",
+        "/usr/lib/swift/libswiftSystem.dylib",
+        "/usr/lib/swift/libswiftUniformTypeIdentifiers.dylib",
+        "/usr/lib/swift/libswiftXPC.dylib",
+        "/usr/lib/swift/libswift_Builtin_float.dylib",
+        "/usr/lib/swift/libswift_Concurrency.dylib",
+        "/usr/lib/swift/libswift_DarwinFoundation1.dylib",
+        "/usr/lib/swift/libswift_DarwinFoundation2.dylib",
+        "/usr/lib/swift/libswift_DarwinFoundation3.dylib",
+        "/usr/lib/swift/libswift_RegexParser.dylib",
+        "/usr/lib/swift/libswift_StringProcessing.dylib",
+        "/usr/lib/swift/libswiftos.dylib",
+        "/usr/lib/swift/libswiftsimd.dylib",
+        "/usr/lib/swift/libswiftsys_time.dylib",
+        "/usr/lib/system/libcache.dylib",
+        "/usr/lib/system/libcommonCrypto.dylib",
+        "/usr/lib/system/libcompiler_rt.dylib",
+        "/usr/lib/system/libcopyfile.dylib",
+        "/usr/lib/system/libcorecrypto.dylib",
+        "/usr/lib/system/libdispatch.dylib",
+        "/usr/lib/system/libdyld.dylib",
+        "/usr/lib/system/libkeymgr.dylib",
+        "/usr/lib/system/libkxld.dylib",
+        "/usr/lib/system/libmacho.dylib",
+        "/usr/lib/system/libquarantine.dylib",
+        "/usr/lib/system/libremovefile.dylib",
+        "/usr/lib/system/libsystem_asl.dylib",
+        "/usr/lib/system/libsystem_blocks.dylib",
+        "/usr/lib/system/libsystem_c.dylib",
+        "/usr/lib/system/libsystem_collections.dylib",
+        "/usr/lib/system/libsystem_configuration.dylib",
+        "/usr/lib/system/libsystem_containermanager.dylib",
+        "/usr/lib/system/libsystem_coreservices.dylib",
+        "/usr/lib/system/libsystem_darwin.dylib",
+        "/usr/lib/system/libsystem_darwindirectory.dylib",
+        "/usr/lib/system/libsystem_dnssd.dylib",
+        "/usr/lib/system/libsystem_eligibility.dylib",
+        "/usr/lib/system/libsystem_featureflags.dylib",
+        "/usr/lib/system/libsystem_info.dylib",
+        "/usr/lib/system/libsystem_kernel.dylib",
+        "/usr/lib/system/libsystem_m.dylib",
+        "/usr/lib/system/libsystem_malloc.dylib",
+        "/usr/lib/system/libsystem_networkextension.dylib",
+        "/usr/lib/system/libsystem_notify.dylib",
+        "/usr/lib/system/libsystem_platform.dylib",
+        "/usr/lib/system/libsystem_pthread.dylib",
+        "/usr/lib/system/libsystem_sandbox.dylib",
+        "/usr/lib/system/libsystem_sanitizers.dylib",
+        "/usr/lib/system/libsystem_secinit.dylib",
+        "/usr/lib/system/libsystem_symptoms.dylib",
+        "/usr/lib/system/libsystem_trace.dylib",
+        "/usr/lib/system/libsystem_trial.dylib",
+        "/usr/lib/system/libunwind.dylib",
+        "/usr/lib/system/libxpc.dylib",
+        "/usr/lib/usd/libusd_ms.dylib"
+      ]
+    }
+  },
+  "conclusion": {
+    "non_system_resolved_paths_arches_and_hashes_match": true,
+    "common_direct_expected_count": 9,
+    "direct_expected_loaded_by_arm": {
+      "INDEXED_ON": 9,
+      "INDEXED_OFF": 9
+    },
+    "non_system_count_by_arm": {
+      "INDEXED_ON": 19,
+      "INDEXED_OFF": 19
+    },
+    "system_dylib_paths_match": true,
+    "mode": "DYLD_PRINT_LIBRARIES in the existing child environment, plus post-run path, architecture and SHA-256 inspection",
+    "matches_round36_19_non_system_dylibs": true
+  }
+}

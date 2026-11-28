@@ -1,0 +1,21 @@
+{
+  "round_id": "ground-decal-g01-cache-20261118-99",
+  "switch": "BAR_NATIVE_GROUND_DECAL_CACHE_G01_INDEX",
+  "order": [
+    "R99_OFF",
+    "R99_ON"
+  ],
+  "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "patch_sha256": "9b66181180932a71a9238cd20e44f85f774fe2bb02f52fb70a48753dad75f952",
+  "original_patch_sha256": "9b66181180932a71a9238cd20e44f85f774fe2bb02f52fb70a48753dad75f952",
+  "budget": {
+    "translation_units": 1,
+    "engine_builds": 1,
+    "fixture_compiles": 1,
+    "fixture_runs": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

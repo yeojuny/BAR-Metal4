@@ -1,0 +1,14 @@
+{
+  "round_id": "fresh-draw-upload-bundle-fps-20261118-47",
+  "attempt_id": "fresh-draw-upload-bundle-off-on-01",
+  "status": "READY_FOUR_PRODUCER_LOCAL_FRESH_SLICES",
+  "source_manifest_sha256": "e4b976c854bf0bb978ff635151f4080df5e6fd9df39291e7ad4827997b1d444f",
+  "modified_files": 5,
+  "order": [
+    "BUNDLE_OFF",
+    "BUNDLE_ON"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

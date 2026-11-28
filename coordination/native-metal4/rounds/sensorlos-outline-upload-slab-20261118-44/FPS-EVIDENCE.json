@@ -1,0 +1,688 @@
+{
+  "conditions": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "order": [
+    "SLAB_OFF",
+    "SLAB_ON"
+  ],
+  "binary_sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+  "combined": {
+    "arms": {
+      "SLAB_OFF": {
+        "timing": {
+          "fps": 65.39134509310635,
+          "frames_drawn": 2615,
+          "elapsed_seconds": 39.990001678,
+          "frame_time": {
+            "count": 2614,
+            "mean_ms": 15.293420519892885,
+            "median_ms": 15.0,
+            "p95_ms": 17.000001,
+            "p99_ms": 17.000001,
+            "frames_over_100_ms": [],
+            "all_interval_rows_kept": true,
+            "max_ms": 28.999999,
+            "slowest_1_percent_mean_ms": 18.11111077777778,
+            "one_percent_low_fps": 55.214724942602295
+          },
+          "bins_count": 40,
+          "start_simulation": 540,
+          "end_simulation": 1740,
+          "camera": [
+            "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          ],
+          "initial_state": [
+            "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          ],
+          "combat_seed": [
+            "7654321"
+          ],
+          "synced_combat": [
+            [
+              "600",
+              "433"
+            ]
+          ],
+          "fps_raw": [
+            {
+              "line": 2372,
+              "text": "[t=00:01:18.178808][f=0001740] [NativeShortRun] total draws=2615 seconds=39.990001678"
+            }
+          ],
+          "frame_csv": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/runs/SLAB_OFF/TERRAIN211-FRAMES.csv",
+          "frame_csv_sha256": "4a54b201e931096e0888baf4d62b0fcd4fd4d2b47b78544748af4d2cd724c228",
+          "infolog_sha256": "a5d7b8717b5dbd512ed1441529259487af9698e8bbc944cc1eeabcdc214fb767",
+          "workload_bins_valid": true
+        },
+        "launch_claim": true,
+        "actual_binary": {
+          "pid": 19139,
+          "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_OFF/runtime/native/bin/spring-metal4-scene",
+          "sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+          "verified_while_child_was_alive": true
+        },
+        "normal_exit": true,
+        "owned": {
+          "pid": 19139,
+          "pgid": 19139,
+          "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_OFF/runtime/native/bin/spring-metal4-scene"
+        },
+        "child": {
+          "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+          "pid": 19139,
+          "actual": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_OFF/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_OFF/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+            "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0"
+          },
+          "expected": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_OFF/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_OFF/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+            "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "0"
+          },
+          "beforeCountedWindow": true
+        },
+        "fatal_engine_lines": [],
+        "validation_on_lines": [],
+        "ultra_receipt": [
+          {
+            "line": 3524,
+            "text": "[t=00:00:13.243391][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          },
+          {
+            "line": 3576,
+            "text": "[t=00:00:14.927838][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0"
+          }
+        ],
+        "sensorlos_widget_loaded": [
+          {
+            "line": 3487,
+            "text": "[t=00:00:11.778850][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ],
+        "related_witnesses": [
+          {
+            "line": 3309,
+            "text": "[t=00:00:11.616300][f=-000001] Loading widget from mod:   Health Bars GL4     <gui_healthbars_gl4.lua> ..."
+          },
+          {
+            "line": 3382,
+            "text": "[t=00:00:11.646436][f=-000001] Loading widget from mod:   Ghost Radar GL4     <unit_ghostradar_gl4.lua> ..."
+          },
+          {
+            "line": 3426,
+            "text": "[t=00:00:11.718088][f=-000001] Loading widget from mod:   Sensor Ranges Radar Preview  <gui_sensor_ranges_radar_preview.lua> ..."
+          },
+          {
+            "line": 3484,
+            "text": "[t=00:00:11.777255][f=-000001] Loading widget from mod:   Sensor Ranges Sonar  <gui_sensor_ranges_sonar.lua> ..."
+          },
+          {
+            "line": 3485,
+            "text": "[t=00:00:11.778063][f=-000001] Loading widget from mod:   Sensor Ranges Radar  <gui_sensor_ranges_radar.lua> ..."
+          },
+          {
+            "line": 3830,
+            "text": "[t=00:01:18.581799] [NativeTransientUpload177] family=unit_stencil requests=39524 reused=39506 created=18 fallback=0 uploaded_bytes=206476256 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime"
+          }
+        ],
+        "potential_sensorlos_route": [
+          {
+            "line": 3646,
+            "text": "[t=00:00:35.197585][f=0000450] [NativeBloom217Inspect] source_frame=2860 sim=450 bloom_sequence=675884 bloom_index=11 next_sequence=675885 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3648,
+            "text": "[t=00:00:35.197668][f=0000450] [NativeBloom217Successor] source_frame=2860 sequence=675885 kind=34 index=0 encoder=0x753f73cd20 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3649,
+            "text": "[t=00:00:35.211781][f=0000450] [NativeBloom217Inspect] source_frame=2861 sim=450 bloom_sequence=676087 bloom_index=11 next_sequence=676088 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3651,
+            "text": "[t=00:00:35.211822][f=0000450] [NativeBloom217Successor] source_frame=2861 sequence=676088 kind=34 index=0 encoder=0x753f73c2a0 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3652,
+            "text": "[t=00:00:35.224290][f=0000451] [NativeBloom217Inspect] source_frame=2862 sim=450 bloom_sequence=676277 bloom_index=11 next_sequence=676278 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3654,
+            "text": "[t=00:00:35.224365][f=0000451] [NativeBloom217Successor] source_frame=2862 sequence=676278 kind=34 index=0 encoder=0x753f73e060 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3655,
+            "text": "[t=00:00:35.237567][f=0000451] [NativeBloom217Inspect] source_frame=2863 sim=451 bloom_sequence=676492 bloom_index=11 next_sequence=676493 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3657,
+            "text": "[t=00:00:35.237645][f=0000451] [NativeBloom217Successor] source_frame=2863 sequence=676493 kind=34 index=0 encoder=0x753f73cfc0 same_encoder=1 emitted=1"
+          }
+        ],
+        "data_root_lines": [
+          {
+            "line": 1510,
+            "text": "[t=00:00:00.382750] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_OFF/state/data/"
+          },
+          {
+            "line": 1511,
+            "text": "[t=00:00:00.382760] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_OFF/runtime/native/bin/"
+          },
+          {
+            "line": 1512,
+            "text": "[t=00:00:00.382769] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_OFF/runtime/native/data/"
+          },
+          {
+            "line": 1513,
+            "text": "[t=00:00:00.382777] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_OFF/assets/"
+          },
+          {
+            "line": 1520,
+            "text": "[t=00:00:00.383369] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_OFF/runtime/native/data/base"
+          }
+        ],
+        "engine_log_sha256": "c29a1f9f25d888a6333f9d1d156a23e6b5aea889125722bb7dd79627bce78660",
+        "launch_error": {},
+        "runner_stats": {
+          "samples": 2614,
+          "coveredSeconds": 39.977001238999996,
+          "p99Ms": 17.000001,
+          "slow1PercentFPS": 55.2147249426023,
+          "maximumMs": 28.999999,
+          "over16_667ms": 359,
+          "over33_333ms": 0,
+          "rawSHA256": "4a54b201e931096e0888baf4d62b0fcd4fd4d2b47b78544748af4d2cd724c228",
+          "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+          "observerOverhead": "Identical observer in both arms; not independently quantified"
+        }
+      },
+      "SLAB_ON": {
+        "timing": {
+          "fps": 65.1668524034946,
+          "frames_drawn": 2607,
+          "elapsed_seconds": 40.005001068,
+          "frame_time": {
+            "count": 2606,
+            "mean_ms": 15.346124797390637,
+            "median_ms": 15.0,
+            "p95_ms": 17.000001,
+            "p99_ms": 17.000001,
+            "frames_over_100_ms": [
+              {
+                "draw": 2972,
+                "ms": 266.000003
+              }
+            ],
+            "all_interval_rows_kept": true,
+            "max_ms": 266.000003,
+            "slowest_1_percent_mean_ms": 27.518518703703702,
+            "one_percent_low_fps": 36.339165300543975
+          },
+          "bins_count": 40,
+          "start_simulation": 540,
+          "end_simulation": 1740,
+          "camera": [
+            "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          ],
+          "initial_state": [
+            "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          ],
+          "combat_seed": [
+            "7654321"
+          ],
+          "synced_combat": [
+            [
+              "600",
+              "433"
+            ]
+          ],
+          "fps_raw": [
+            {
+              "line": 2372,
+              "text": "[t=00:01:46.923165][f=0001740] [NativeShortRun] total draws=2607 seconds=40.005001068"
+            }
+          ],
+          "frame_csv": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/runs/SLAB_ON/TERRAIN211-FRAMES.csv",
+          "frame_csv_sha256": "3bf34867de99599c7e9647939dc95c34842a0d6b9c5fe5075851d7c1c5d8ca60",
+          "infolog_sha256": "955106ed8acdf9b0470d9f2edc153ce29e027a503eb474b42fcdf39a71a2df4b",
+          "workload_bins_valid": true
+        },
+        "launch_claim": true,
+        "actual_binary": {
+          "pid": 19255,
+          "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_ON/runtime/native/bin/spring-metal4-scene",
+          "sha256": "4b1c4273575d5ca0a513e7a32d1e35ca0efb9e6eac0383eb922a3743f96fac6e",
+          "verified_while_child_was_alive": true
+        },
+        "normal_exit": true,
+        "owned": {
+          "pid": 19255,
+          "pgid": 19255,
+          "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_ON/runtime/native/bin/spring-metal4-scene"
+        },
+        "child": {
+          "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+          "pid": 19255,
+          "actual": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_ON/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_ON/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+            "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "1"
+          },
+          "expected": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_ON/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_ON/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1",
+            "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB": "1"
+          },
+          "beforeCountedWindow": true
+        },
+        "fatal_engine_lines": [],
+        "validation_on_lines": [],
+        "ultra_receipt": [
+          {
+            "line": 3524,
+            "text": "[t=00:00:43.421310][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          },
+          {
+            "line": 3569,
+            "text": "[t=00:00:47.076517][f=0000029] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0"
+          }
+        ],
+        "sensorlos_widget_loaded": [
+          {
+            "line": 3487,
+            "text": "[t=00:00:36.654595][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ],
+        "related_witnesses": [
+          {
+            "line": 3309,
+            "text": "[t=00:00:31.681308][f=-000001] Loading widget from mod:   Health Bars GL4     <gui_healthbars_gl4.lua> ..."
+          },
+          {
+            "line": 3382,
+            "text": "[t=00:00:32.467504][f=-000001] Loading widget from mod:   Ghost Radar GL4     <unit_ghostradar_gl4.lua> ..."
+          },
+          {
+            "line": 3426,
+            "text": "[t=00:00:35.218576][f=-000001] Loading widget from mod:   Sensor Ranges Radar Preview  <gui_sensor_ranges_radar_preview.lua> ..."
+          },
+          {
+            "line": 3484,
+            "text": "[t=00:00:36.652665][f=-000001] Loading widget from mod:   Sensor Ranges Sonar  <gui_sensor_ranges_sonar.lua> ..."
+          },
+          {
+            "line": 3485,
+            "text": "[t=00:00:36.653793][f=-000001] Loading widget from mod:   Sensor Ranges Radar  <gui_sensor_ranges_radar.lua> ..."
+          },
+          {
+            "line": 3830,
+            "text": "[t=00:01:47.356247] [NativeTransientUpload177] family=unit_stencil requests=30720 reused=30702 created=18 fallback=0 uploaded_bytes=166937072 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime"
+          }
+        ],
+        "potential_sensorlos_route": [
+          {
+            "line": 3654,
+            "text": "[t=00:01:10.116130][f=0000635] [NativeBloom217Inspect] source_frame=2048 sim=635 bloom_sequence=455810 bloom_index=11 next_sequence=455811 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3656,
+            "text": "[t=00:01:10.116219][f=0000635] [NativeBloom217Successor] source_frame=2048 sequence=455811 kind=34 index=0 encoder=0x7c89238d20 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3657,
+            "text": "[t=00:01:10.130823][f=0000636] [NativeBloom217Inspect] source_frame=2049 sim=635 bloom_sequence=456012 bloom_index=11 next_sequence=456013 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3659,
+            "text": "[t=00:01:10.130889][f=0000636] [NativeBloom217Successor] source_frame=2049 sequence=456013 kind=34 index=0 encoder=0x7c89239260 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3660,
+            "text": "[t=00:01:10.143619][f=0000636] [NativeBloom217Inspect] source_frame=2050 sim=636 bloom_sequence=456215 bloom_index=11 next_sequence=456216 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3662,
+            "text": "[t=00:01:10.143705][f=0000636] [NativeBloom217Successor] source_frame=2050 sequence=456216 kind=34 index=0 encoder=0x7c89238700 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3663,
+            "text": "[t=00:01:10.157772][f=0000637] [NativeBloom217Inspect] source_frame=2051 sim=636 bloom_sequence=456415 bloom_index=11 next_sequence=456416 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3665,
+            "text": "[t=00:01:10.157905][f=0000637] [NativeBloom217Successor] source_frame=2051 sequence=456416 kind=34 index=0 encoder=0x7c892397a0 same_encoder=1 emitted=1"
+          }
+        ],
+        "data_root_lines": [
+          {
+            "line": 1510,
+            "text": "[t=00:00:11.803977] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_ON/state/data/"
+          },
+          {
+            "line": 1511,
+            "text": "[t=00:00:11.803988] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_ON/runtime/native/bin/"
+          },
+          {
+            "line": 1512,
+            "text": "[t=00:00:11.804003] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_ON/runtime/native/data/"
+          },
+          {
+            "line": 1513,
+            "text": "[t=00:00:11.804013] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/clean_paced/preparation/private/SLAB_ON/assets/"
+          },
+          {
+            "line": 1520,
+            "text": "[t=00:00:11.804738] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/sensorlos-outline-upload-slab-20261118-44/SLAB_ON/runtime/native/data/base"
+          }
+        ],
+        "engine_log_sha256": "90aa27a3e7d609e815eaf4d27f32fb0bf0c6ba9a181f297a152dd4c2ae617597",
+        "launch_error": {},
+        "runner_stats": {
+          "samples": 2606,
+          "coveredSeconds": 39.992001222,
+          "p99Ms": 17.000001,
+          "slow1PercentFPS": 36.339165300543975,
+          "maximumMs": 266.000003,
+          "over16_667ms": 317,
+          "over33_333ms": 1,
+          "rawSHA256": "3bf34867de99599c7e9647939dc95c34842a0d6b9c5fe5075851d7c1c5d8ca60",
+          "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+          "observerOverhead": "Identical observer in both arms; not independently quantified"
+        }
+      }
+    },
+    "comparison": {
+      "delta_fps": -0.2244926896117505,
+      "relative_percent": -0.3433064257848062,
+      "one_percent_low_relative_percent": -34.18573516698697,
+      "workload_match": {
+        "same_scene": true,
+        "same_camera": true,
+        "same_simulation_window": true,
+        "same_combat_seed": true,
+        "same_synced_create_destroy_counts": true,
+        "bin_boundaries_and_visible_units_match": true,
+        "both_bins_contiguous": true
+      }
+    }
+  },
+  "frame_time_quantiles": "Nearest rank p95 and p99. One-percent low is reciprocal of the mean of the slowest ceil(0.01 × interval count) timings.",
+  "fps_formula": "Count all draws over the full elapsed time between matched ticks. Keep every recorded inter-draw interval.",
+  "dependency_summary": {
+    "non_system_resolved_paths_arches_and_hashes_match": true,
+    "common_direct_expected_count": 9,
+    "direct_expected_loaded_by_arm": {
+      "SLAB_OFF": 9,
+      "SLAB_ON": 9
+    },
+    "non_system_count_by_arm": {
+      "SLAB_OFF": 19,
+      "SLAB_ON": 19
+    },
+    "system_dylib_paths_match": true,
+    "mode": "DYLD_PRINT_LIBRARIES in the existing child environment, plus post-run path, architecture and SHA-256 inspection",
+    "matches_round36_19_non_system_dylibs": true
+  },
+  "single_pair": true,
+  "normalized_environment_differences": [
+    "BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB"
+  ],
+  "activation_summary": {
+    "SLAB_OFF": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    },
+    "SLAB_ON": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    }
+  },
+  "slab_first_encode_receipts": {
+    "SLAB_OFF": {
+      "line": 2243,
+      "text": "[t=00:00:16.289924][f=0000001] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+      "outline_upload": "separate",
+      "log_simulation_tick": 1,
+      "logged_within_timed_window": false
+    },
+    "SLAB_ON": {
+      "line": 2230,
+      "text": "[t=00:00:49.003587][f=0000029] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+      "outline_upload": "slab",
+      "log_simulation_tick": 29,
+      "logged_within_timed_window": false
+    }
+  },
+  "reference_combined_result": {
+    "round_id": "combined-indexed-fps-repeat-20261118-42",
+    "relative_percent": 1.4774680609377588,
+    "fps_by_arm": {
+      "INDEXED_OFF": 64.35408413753547,
+      "INDEXED_ON": 65.30489517657657
+    }
+  }
+}

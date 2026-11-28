@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "parent_source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "frozen_R03_source_files": 10269,
+  "Git_tracked_engine_files": 10273,
+  "inherited_nonbuild_metadata_absent": [
+    "rts/lib/simdjson/.editorconfig",
+    "rts/lib/simdjson/.gitattributes",
+    "rts/lib/simdjson/.gitignore",
+    "rts/lib/simdjson/dependencies/.gitignore"
+  ],
+  "incidental_pycache_excluded": true,
+  "unexpected_delta": [],
+  "only_production_delta": "rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "source_hashes_sha256": "54249480de86859031f6bd36874c59f387ad12356e1284259ffb951db2c4b911",
+  "header_sha256": "722565c5c1ff15bfa7801615fe3bbbf9acb7de83cb5deab61aa323e20455e73f",
+  "source_repairs": 0
+}

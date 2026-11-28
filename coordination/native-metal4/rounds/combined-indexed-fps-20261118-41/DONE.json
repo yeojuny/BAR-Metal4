@@ -1,0 +1,169 @@
+{
+  "status": "DONE",
+  "decision": "DONE_MATCHED_COMBINED_INDEXED_OFF_ON_FPS_PAIR",
+  "round_id": "combined-indexed-fps-20261118-41",
+  "attempt_id": "combined-off-on-01",
+  "order": [
+    "INDEXED_OFF",
+    "INDEXED_ON"
+  ],
+  "counts": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "helper_compiles": 0,
+    "helper_gpu_invocations": 0,
+    "games": 2,
+    "off_games": 1,
+    "on_games": 1,
+    "normal_exits": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "source_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "single_pair": true,
+  "fps_by_arm": {
+    "INDEXED_OFF": 63.99040060963311,
+    "INDEXED_ON": 64.94350302435646
+  },
+  "relative_percent": 1.4894459257063453,
+  "all_counted_frames_retained": true,
+  "workload_match": {
+    "same_scene": true,
+    "same_camera": true,
+    "same_simulation_window": true,
+    "same_combat_seed": true,
+    "same_synced_create_destroy_counts": true,
+    "bin_boundaries_and_visible_units_match": true,
+    "both_bins_contiguous": true
+  },
+  "frame_time": {
+    "INDEXED_OFF": {
+      "count": 2559,
+      "mean_ms": 15.628761756545526,
+      "median_ms": 16.000001,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.999999,
+      "frames_over_100_ms": [],
+      "all_interval_rows_kept": true,
+      "max_ms": 20.0,
+      "slowest_1_percent_mean_ms": 18.076922115384615,
+      "one_percent_low_fps": 55.31915187867829
+    },
+    "INDEXED_ON": {
+      "count": 2597,
+      "mean_ms": 15.399307376588371,
+      "median_ms": 15.0,
+      "p95_ms": 17.000001,
+      "p99_ms": 17.000001,
+      "frames_over_100_ms": [],
+      "all_interval_rows_kept": true,
+      "max_ms": 32.000002,
+      "slowest_1_percent_mean_ms": 18.384614884615385,
+      "one_percent_low_fps": 54.393306918646424
+    }
+  },
+  "game_path_activation": {
+    "INDEXED_OFF": {
+      "gamedecal_small": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      }
+    },
+    "INDEXED_ON": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    }
+  },
+  "cleanup_complete": true,
+  "protected_hashes_verified": true,
+  "reused_isolated_validation": {
+    "gamedecal_round32": "cd5080c081e6696a8614ba8740ee388f54083eb6c89bc305b449367cc8d82494",
+    "geometry_round39": "07254cda7e5e4b4bdad3dd24b51635e3d6e7c85c41ee9b99f9498bad9cdd08de"
+  },
+  "artifactSHA256": {
+    "REPORT.md": "854f6081a3a4890155b08cf507620143faefa4a5f39590aeb7364796e998086e",
+    "FPS-EVIDENCE.json": "cc126fbc932cbefccbb7df06af70a405bb95241457ca68272e0510dc27df47d9",
+    "FPS-BINS.csv": "92a47d1835cec047fcd63e1e8bce9372c4ca9bf34761db073e621cfa1e79a8d0",
+    "STAGING-EVIDENCE.json": "8cc32e0a37a8e5e49b241ca8634ffa9afcf7dda351ad0fdfdb05ae4a3dd8e7f5",
+    "PATH-ACTIVATION.json": "28755ec6d74aacf9f8eb2e33f7babadfadad3e1c1aa0f5994cef6f0fa24256fe",
+    "DEPENDENCY-EVIDENCE.json": "32b0560253309d7b218bf8e7c390131e07350397202fa395b6680dc9c2e57ccd",
+    "CLEANUP-EVIDENCE.json": "76cc95fd3cc1e17bbff73db52520b80dc73daef7103fea9bf9092ff4b6a69e18",
+    "PROTECTED-HASHES.json": "dc97c734354f4b34094fed6657eea9082ca606606be24b3034728dcc30a25ebd",
+    "RUNNER-CLOSED.json": "8372ab3995f1d338e277e9d169e2579763c20b0bcb286439a22275f56716d7a9",
+    "BUILD-INPUTS.json": "b53f7178383610b215dc984e5cb8bb8130200151f2250aa9bdceb0c1f9e79c33",
+    "CONFIGURE-RECEIPT.json": "fed5826afa18979345f2b9117b2a8c939db24faf725466b330943de92528e3f7",
+    "BUILD-RECEIPT.json": "4a4d1d3a6b5d50460dc7994022e4a3a367ccbe5205ed6c942a884145fbbcaf75",
+    "BUILD-RESULT.json": "d2cc496fc260e8fd0b9e195b417492e7d3402db1d93c3ae43752570e32647e1b",
+    "SOURCE-OBJECT-LINK.json": "08fb87802d5314bb3945c12900d82f378591703ce238c91ac37df87d9f82a2a9",
+    "CANDIDATE-MANIFEST.json": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+    "GAMEDECAL-PARENT-MANIFEST.json": "93fa36f58d8adcc51522243e6a7cf3eebbc591f9ca2138ece4a448db35b2c2ed",
+    "GEOMETRY-PARENT-MANIFEST.json": "f1cf3c1d3c15ed1b6a675689510c780ce04d2e38ed68d44be71f1c16bc47292d",
+    "GAMEDECAL-INDEXED.patch": "79871e8ae1aa4ad91cecba23798e2e1fcbfb3b2f90644a9e717550accd26391d",
+    "INDEXED-GEOMETRY.patch": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b",
+    "INDEXED-ROUTE-WITNESS.patch": "2f31b79cb2dc90d316946299b99554ae3cabd3fa079e0ea34009cd357e359a41",
+    "UPSTREAM-CONTRIBUTIONS.json": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "INDEXED_OFF-FRAME-TIMES.csv": "fc3f53ab3b5ede3d4f7c53bafccf3669d2e83091c3e7a8e44e72f47ab4aa32db",
+    "INDEXED_OFF-CHILD-MODE.json": "4bf98b7e1921dcda6f9e6bab3ca9ef351240e79805c6ebdd57520ee0a1d90fba",
+    "INDEXED_OFF-CLEANUP.json": "e28528a42ee76b3a5af29a0127647c3eef9ff886d3bee68e2b3d4709baeb5c2f",
+    "INDEXED_ON-FRAME-TIMES.csv": "950e1e40c78f0fc07596c20ff97331186e60b83947337c4408ab27f34fd0e7f6",
+    "INDEXED_ON-CHILD-MODE.json": "51b6d0fc462d17608371df1a2ed279c66a307d4a034d781a2c869e48e30c74b7",
+    "INDEXED_ON-CLEANUP.json": "dfa9ee7fd089cb4b291e5f5952f80c659ea8015469cf313a9ccd5bfd755950ef"
+  }
+}

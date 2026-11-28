@@ -1,0 +1,386 @@
+{
+  "status": "PASS",
+  "environment_scope": "Only environment passed to this attempt subprocesses; global environment unchanged",
+  "previous_PKG_CONFIG_PATH": null,
+  "PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+  "pkg_config_modules": [
+    {
+      "module": "expat",
+      "R03_version": "2.7.4",
+      "actual_version": "2.7.4",
+      "exit": 0,
+      "matches": true
+    },
+    {
+      "module": "fontconfig",
+      "R03_version": "2.18.3",
+      "actual_version": "2.18.3",
+      "exit": 0,
+      "matches": true
+    },
+    {
+      "module": "openal",
+      "R03_version": "1.25.2",
+      "actual_version": "1.25.2",
+      "exit": 0,
+      "matches": true
+    },
+    {
+      "module": "libcurl",
+      "R03_version": "8.7.1",
+      "actual_version": "8.7.1",
+      "exit": 0,
+      "matches": true
+    },
+    {
+      "module": "minizip",
+      "R03_version": "1.4",
+      "actual_version": "1.4",
+      "exit": 0,
+      "matches": true
+    }
+  ],
+  "openal_pc": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig/openal.pc",
+  "openal_pc_sha256": "a81e723552dc4ff720e44de736b6998bf91ab7cf5e40ccd1e4a592dea1febef1",
+  "openal_library": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.dylib",
+  "openal_library_sha256": "bda6121999127208e446a72f1be2c957bc3d618d3f7d66cd60fdfdc4a6702355",
+  "openal_include": "/opt/homebrew/Cellar/openal-soft/1.25.2/include",
+  "baseline_dependency_paths": [
+    {
+      "key": "COREFOUNDATION_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework",
+      "exists": true
+    },
+    {
+      "key": "EXPAT_INCLUDE_DIR",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+      "exists": true
+    },
+    {
+      "key": "EXPAT_LIBRARY_RELEASE",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libexpat.tbd",
+      "exists": true
+    },
+    {
+      "key": "FREETYPE_INCLUDE_DIR_freetype2",
+      "path": "/opt/homebrew/include/freetype2",
+      "exists": true
+    },
+    {
+      "key": "FREETYPE_INCLUDE_DIR_ft2build",
+      "path": "/opt/homebrew/include/freetype2",
+      "exists": true
+    },
+    {
+      "key": "FREETYPE_LIBRARY_RELEASE",
+      "path": "/opt/homebrew/lib/libfreetype.dylib",
+      "exists": true
+    },
+    {
+      "key": "Fontconfig_INCLUDE_DIR",
+      "path": "/opt/homebrew/Cellar/fontconfig/2.18.3/include",
+      "exists": true
+    },
+    {
+      "key": "Fontconfig_LIBRARY",
+      "path": "/opt/homebrew/lib/libfontconfig.dylib",
+      "exists": true
+    },
+    {
+      "key": "ILUT_LIBRARIES",
+      "path": "/opt/homebrew/lib/libILUT.dylib",
+      "exists": true
+    },
+    {
+      "key": "ILU_LIBRARIES",
+      "path": "/opt/homebrew/lib/libILU.dylib",
+      "exists": true
+    },
+    {
+      "key": "IL_INCLUDE_DIR",
+      "path": "/opt/homebrew/include/IL",
+      "exists": true
+    },
+    {
+      "key": "IL_LIBRARIES",
+      "path": "/opt/homebrew/lib/libIL.dylib",
+      "exists": true
+    },
+    {
+      "key": "LIBUNWIND_INCLUDE_DIR",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.2.sdk/usr/include",
+      "exists": true
+    },
+    {
+      "key": "LIBUNWIND_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.2.sdk/usr/lib/system/libunwind.tbd",
+      "exists": true
+    },
+    {
+      "key": "LZMA_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/liblzma.tbd",
+      "exists": true
+    },
+    {
+      "key": "MATH_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libm.tbd",
+      "exists": true
+    },
+    {
+      "key": "MINIZIP_INCLUDE_DIR",
+      "path": "/opt/homebrew/include",
+      "exists": true
+    },
+    {
+      "key": "MINIZIP_LIBRARY",
+      "path": "/opt/homebrew/lib/libminizip.dylib",
+      "exists": true
+    },
+    {
+      "key": "OGG_INCLUDE_DIR",
+      "path": "/opt/homebrew/include",
+      "exists": true
+    },
+    {
+      "key": "OGG_LIBRARY",
+      "path": "/opt/homebrew/lib/libogg.dylib",
+      "exists": true
+    },
+    {
+      "key": "OPENGL_GLU_INCLUDE_DIR",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework",
+      "exists": true
+    },
+    {
+      "key": "OPENGL_INCLUDE_DIR",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework",
+      "exists": true
+    },
+    {
+      "key": "OPENGL_gl_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework",
+      "exists": true
+    },
+    {
+      "key": "OPENGL_glu_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/OpenGL.framework",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_COREFOUNDATION_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/CoreFoundation.framework",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_IOKIT_LIBRARY",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/IOKit.framework",
+      "exists": true
+    },
+    {
+      "key": "SDL2_LIBRARY",
+      "path": "/opt/homebrew/lib/libSDL2.dylib",
+      "exists": true
+    },
+    {
+      "key": "VORBISENC_LIBRARY",
+      "path": "/opt/homebrew/lib/libvorbisenc.dylib",
+      "exists": true
+    },
+    {
+      "key": "VORBISFILE_LIBRARY",
+      "path": "/opt/homebrew/lib/libvorbisfile.dylib",
+      "exists": true
+    },
+    {
+      "key": "VORBIS_INCLUDE_DIR",
+      "path": "/opt/homebrew/include",
+      "exists": true
+    },
+    {
+      "key": "VORBIS_LIBRARY",
+      "path": "/opt/homebrew/lib/libvorbis.dylib",
+      "exists": true
+    },
+    {
+      "key": "ZLIB_INCLUDE_DIR",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include",
+      "exists": true
+    },
+    {
+      "key": "ZLIB_LIBRARY_RELEASE",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libz.tbd",
+      "exists": true
+    },
+    {
+      "key": "pkgcfg_lib_PC_EXPAT_expat",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libexpat.tbd",
+      "exists": true
+    },
+    {
+      "key": "pkgcfg_lib_PKG_FONTCONFIG_fontconfig",
+      "path": "/opt/homebrew/Cellar/fontconfig/2.18.3/lib/libfontconfig.dylib",
+      "exists": true
+    },
+    {
+      "key": "pkgcfg_lib_RECOIL_OPENAL_SOFT_openal",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.dylib",
+      "exists": true
+    },
+    {
+      "key": "pkgcfg_lib_libcurl_curl",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libcurl.tbd",
+      "exists": true
+    },
+    {
+      "key": "pkgcfg_lib_minizip_minizip",
+      "path": "/opt/homebrew/Cellar/minizip/1.4/lib/libminizip.dylib",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_INCLUDEDIR",
+      "path": "/opt/homebrew/Cellar/fontconfig/2.18.3/include",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/fontconfig/2.18.3/include",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_INCLUDE_DIRS",
+      "path": "/opt/homebrew/opt/freetype/include/freetype2",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_INCLUDE_DIRS",
+      "path": "/opt/homebrew/opt/libpng/include/libpng16",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/brotli/1.2.1/include",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_LIBRARY_DIRS",
+      "path": "/opt/homebrew/Cellar/fontconfig/2.18.3/lib",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/fontconfig/2.18.3/include",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_INCLUDE_DIRS",
+      "path": "/opt/homebrew/opt/freetype/include/freetype2",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_INCLUDE_DIRS",
+      "path": "/opt/homebrew/opt/libpng/include/libpng16",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/brotli/1.2.1/include",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_LIBRARY_DIRS",
+      "path": "/opt/homebrew/Cellar/fontconfig/2.18.3/lib",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_LIBRARY_DIRS",
+      "path": "/opt/homebrew/opt/freetype/lib",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_LIBRARY_DIRS",
+      "path": "/opt/homebrew/opt/libpng/lib",
+      "exists": true
+    },
+    {
+      "key": "PKG_FONTCONFIG_STATIC_LIBRARY_DIRS",
+      "path": "/opt/homebrew/Cellar/brotli/1.2.1/lib",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_OPENAL_SOFT_INCLUDEDIR",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/include",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_OPENAL_SOFT_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/include",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_OPENAL_SOFT_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/include/AL",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_OPENAL_SOFT_LIBRARY_DIRS",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_OPENAL_SOFT_STATIC_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/include",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_OPENAL_SOFT_STATIC_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/include/AL",
+      "exists": true
+    },
+    {
+      "key": "RECOIL_OPENAL_SOFT_STATIC_LIBRARY_DIRS",
+      "path": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib",
+      "exists": true
+    },
+    {
+      "key": "SPRING_MINIZIP_INCLUDE_DIR",
+      "path": "/opt/homebrew/include",
+      "exists": true
+    },
+    {
+      "key": "SPRING_MINIZIP_LIBRARY",
+      "path": "/opt/homebrew/lib/libminizip.dylib",
+      "exists": true
+    },
+    {
+      "key": "minizip_INCLUDEDIR",
+      "path": "/opt/homebrew/Cellar/minizip/1.4/include",
+      "exists": true
+    },
+    {
+      "key": "minizip_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/minizip/1.4/include",
+      "exists": true
+    },
+    {
+      "key": "minizip_LIBRARY_DIRS",
+      "path": "/opt/homebrew/Cellar/minizip/1.4/lib",
+      "exists": true
+    },
+    {
+      "key": "minizip_STATIC_INCLUDE_DIRS",
+      "path": "/opt/homebrew/Cellar/minizip/1.4/include",
+      "exists": true
+    },
+    {
+      "key": "minizip_STATIC_LIBRARY_DIRS",
+      "path": "/opt/homebrew/Cellar/minizip/1.4/lib",
+      "exists": true
+    }
+  ],
+  "tools": {
+    "sdk": "27.2",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.4.1.1)\nTarget: arm64-apple-darwin27.3.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin"
+  },
+  "errors": [],
+  "trial_configures": 0
+}

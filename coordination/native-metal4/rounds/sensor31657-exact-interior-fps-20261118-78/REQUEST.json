@@ -1,0 +1,36 @@
+{
+  "round_id": "sensor31657-exact-interior-fps-20261118-78",
+  "attempt_id": "sensor31657-exact-interior-off-on-01",
+  "source_round": "sensorlos-exact-interior-fps-20261118-76",
+  "patch_sha256": "bdbcc095a827ffdb9a2c9bc382b21904fd1c97f259770393f04fda88b84221ef",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "order": [
+    "OFF",
+    "ON"
+  ],
+  "switch": "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR",
+  "fixed_sensorlos": "ON",
+  "prejoin": "OFF",
+  "cpu_read_mode": 0,
+  "matching_scene_inputs": 13,
+  "cap": 2,
+  "aa": 0,
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "games": 2,
+    "max_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "default_cap": 1,
+  "default_switch": "OFF"
+}

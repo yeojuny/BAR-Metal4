@@ -1,0 +1,13 @@
+{
+  "JSON_files_parsed": 34,
+  "original_saved_exports_checked": 9,
+  "copied_saved_exports_exact": true,
+  "encoder_nodes": 52,
+  "selected": 14,
+  "render_draw_checks": 42,
+  "draw_mismatches": 0,
+  "explicit_texture_copies": 72,
+  "recorded_texture_views": 1,
+  "trace_unchanged": true,
+  "original_processing_exit_receipt": "Original functions output lost at context compaction; all expected artifacts and derived consistency checks verified here. No invented exit receipt."
+}

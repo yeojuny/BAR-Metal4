@@ -1,0 +1,59 @@
+{
+  "status": "DONE",
+  "decision": "DONE_MATCHED_SAME_BINARY_GAME_DECAL_FLAG_FPS_PAIR",
+  "round_id": "game-decal-indexed-fps-20261117-37",
+  "attempt_id": "indexed-clean-off-on-01",
+  "reserved_revision": 127,
+  "binary_sha256": {
+    "INDEXED_OFF": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b",
+    "INDEXED_ON": "85e300f7db3ecb4179254ebffdf8238f26d0d0623c246c499ccc3cecbba78a6b"
+  },
+  "counts": {
+    "games": 2,
+    "off_games": 1,
+    "on_games": 1,
+    "normal_exits": 2,
+    "builds": 0,
+    "helpers": 0,
+    "retries": 0,
+    "screenshots": 0,
+    "metal_traces": 0,
+    "profiles": 0
+  },
+  "fps_by_arm": {
+    "INDEXED_OFF": 64.87891356156975,
+    "INDEXED_ON": 65.71149946147935
+  },
+  "relative_percent": 1.2832919884200544,
+  "workload_match": {
+    "same_scene": true,
+    "same_camera": true,
+    "same_simulation_window": true,
+    "same_combat_seed": true,
+    "same_synced_create_destroy_counts": true,
+    "bin_boundaries_and_visible_units_match": true,
+    "both_bins_contiguous": true
+  },
+  "child_clean_settings_verified": true,
+  "same_loaded_non_system_dylibs": true,
+  "game_decal_family_draw_both": true,
+  "indexed_draw_api": "UNVERIFIED_BY_EXISTING_LOG",
+  "separate_gpu_fixture_median_change_percent": -28.48685556053736,
+  "cleanup_complete": true,
+  "protected_hashes_verified": true,
+  "retry_authorized": false,
+  "artifactSHA256": {
+    "REPORT.md": "4bcdc4fe082292ecc87ce7f14a08b717b10dc447f0890ccf4aedc09efa38e458",
+    "FPS-EVIDENCE.json": "90e28458ede19beb0d66fda3d821e9878ffea40abeb4b8df10218b8c09aa197a",
+    "FPS-BINS.csv": "ea85d79ddb9b1f92357bcf000758f6cb5a069af69a34f507e1d8eed55b9feefb",
+    "GAME-DECAL-EVIDENCE.json": "cc5c2bc29ad42b5058cfc4309cd799953fe653596841d765ec63c4f1400d55ac",
+    "DEPENDENCY-EVIDENCE.json": "023b82d4a8f3b165b68b9fb8d79b7d123faca9200ab5c2ce9860603c2408b55d",
+    "DYLD-PINS.json": "fb95095d60de1953adce891f41876cec66c361cabe441c764490d77fde81860d",
+    "PROTECTED-HASHES.json": "706c7ab28924c7747de1cde31a814ae8fce0af9bbeaf3798c7065bd72a3652e9",
+    "CLEANUP-EVIDENCE.json": "b10b89411cea3a4905d65adc92a9c1861573ae07d12c1c153df0a62a2f889a90",
+    "INDEXED_OFF-FRAME-TIMES.csv": "07022996c53ef31c2383f0a9c22e74bccc607acec1ed2c8d7329d127625e3321",
+    "INDEXED_ON-FRAME-TIMES.csv": "ec8e0a4eeccd9a4041958f38b570c2a0bd36050e21d8df3319fa790f8c31128e"
+  },
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-fps-20261117-37",
+  "utc": "2026-11-17T22:50:28.939618+00:00"
+}

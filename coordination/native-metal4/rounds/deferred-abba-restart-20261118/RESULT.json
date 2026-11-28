@@ -1,0 +1,22 @@
+{
+  "status": "THERMAL_HOLD_NO_MORE_GAMES",
+  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
+  "counts": {
+    "games": 3,
+    "mvk3_games": 0,
+    "links": 0,
+    "compiles": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cleanup_complete": true,
+  "final_cooldown_pass": true,
+  "reason": "Post-run readings {'cpu_temp_avg': 84.349556, 'gpu_temp_avg': 77.747643} exceeded previous load envelope {'cpu_temp_avg': 84.290245, 'gpu_temp_avg': 82.56115}",
+  "deferred": {},
+  "mvk3_status": "HELD_UNMATCHED_INPUTS",
+  "mvk3_sha256": "c138650db4948ce100c8b685ff1452f451630730ad55e89e48a24a213ea4b0ff",
+  "reused_executable_sha256": "3c369eaff6b2ee8f14030c09cc8ebe9d74fb5f69b68c602204b03abd4f319857",
+  "prior_result_sha256": "439b66277b2a8630ff3d55b555560062ea812e3e040e5c4fecc7eaefa875118c",
+  "sensor_hold": false
+}

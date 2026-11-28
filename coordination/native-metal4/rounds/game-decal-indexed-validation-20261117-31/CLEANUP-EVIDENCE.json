@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "configure_pid": 8578,
+  "owned_configure_group_gone": true,
+  "engine_build_process_started": false,
+  "gpu_sessions_after": "No active sessions.",
+  "own_awake_started": false,
+  "shared_awake": "RELEASED",
+  "bar": "PAUSED",
+  "user_wake_before": [
+    "6618 caffeinate -d"
+  ],
+  "user_wake_after": [
+    "6618 caffeinate -d"
+  ],
+  "user_wake_operations": 0,
+  "system_restarts": 0,
+  "services_restarted": 0,
+  "security_changes": 0
+}

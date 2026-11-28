@@ -1,0 +1,11 @@
+{
+  "status": "PASS_REAL_METAL4_MIP8_AND_POLICY",
+  "original_mip_producer_extracted": true,
+  "storage": "Shared 2D array single slice + 2D view",
+  "gpu_submits": 4,
+  "mipgen_per_producer": 1,
+  "exact_channels": 8,
+  "error": "modeled error and withheld feedback; original retirement ordering source-checked",
+  "fixture_sha256": "18e0007554e027ea618241ce0fa5805ba183aa3c94d9ca34f3670007beeb0da8",
+  "gpu_log_sha256": "a29fe68cc69b2fc7ea0fabd4d5d8ed225337118ecf2d014d7640ab061d1d3a1b"
+}

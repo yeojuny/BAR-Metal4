@@ -1,0 +1,25 @@
+{
+  "round_id": "prepare-decode-batch-sdk-20261117-34",
+  "attempt_id": "clean-sdk-only-01",
+  "scope": "PINNED_PREPARE_DECODE_BATCH_MAC_SDK_COMPILE_LINK_ONLY",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "candidate_commit": "f7faa7afb134b56dd673180f660df6add5600cae",
+  "bundle_path": "docs/research/prepare-decode-local-batch-20261117/CANDIDATE-BUNDLE.json",
+  "manifest_sha256": "81e910aee0bcfc65528e1bae7bb5e9a8fa0dcfe21725bc42541287816510563b",
+  "patch_sha256": "3724395ace67036d2717c832f69654b7d452e8d8614a4d697b1e1deda7b530cc",
+  "original_r03_binary_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "execution_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34",
+  "budget": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "games": 0,
+    "gpu_invocations": 0,
+    "helpers": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "authorization": "Sentinel_ea580c1496288191adb1e9aaf169fe45",
+  "result_path": "coordination/native-metal4/rounds/prepare-decode-batch-sdk-20261117-34/DONE.json"
+}

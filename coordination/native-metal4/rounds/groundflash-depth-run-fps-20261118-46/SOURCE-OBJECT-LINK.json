@@ -1,0 +1,30 @@
+{
+  "status": "PASS",
+  "binary_sha256": "399c40bce292fae17b781c2846e5616391a0f7139e7b9158efecfb86811a0d79",
+  "architecture": "arm64",
+  "link": "[1577/1578] Linking CXX executable spring-metal4-scene",
+  "sources": {
+    "Metal4WorldParticles.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4WorldParticles.mm.o",
+      "sha256": "ae17d7733562c22307fe69363973e2a5d6d763685a2e01eecb446db41d593fcf",
+      "link_binding": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a"
+    },
+    "NativeWorldParticleCapture.cpp": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeWorldParticleCapture.cpp.o",
+      "sha256": "f90e08767c3b660e48d48ecdd6d1bc51d7109fec3c90f1a3f3d0d65370e5b8df",
+      "link_binding": "direct in executable link inputs"
+    },
+    "NativeWorldParticleGeometry.cpp": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/engine-metal4-scene.dir/__/__/Rendering/Backend/NativeWorldParticleGeometry.cpp.o",
+      "sha256": "428a500d9f2bae290cbb9e16303fab683872b3a05f1dda14fdf7380ab4a5e04c",
+      "link_binding": "direct in executable link inputs"
+    }
+  },
+  "archive_members_match_objects": true,
+  "literals_present": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": true,
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": true,
+    "BAR_NATIVE_GROUND_FLASH_DEPTH_RUNS": true,
+    "[NativeGroundFlashRuns] mode=coalesced": true
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "round_id": "postprocess-producer-20261117-19",
+  "author": "SUPER_JINI_MK2",
+  "decision": "FIXED_CPU_FIXTURE_COMPILE_FAILURE_NOT_PRODUCTION_PROVENANCE_FAILURE",
+  "source_commit": "a9f41c27b577db6ae6ab5694fb8d6901f29720e7",
+  "artifact_commit": "0716f745fe5f37f62f04cacd8eef096c79c58f11",
+  "HQ_turn_completed": true,
+  "HQ_turn": "01a1e855-099e-78d3-9025-0f98db81d0f3",
+  "cleanup_verified": true,
+  "failure": "Apple clang21 -Werror,-Wuninitialized-const-pointer for test fixture int owner passed by address",
+  "CPU_compiles": 1,
+  "CPU_executions": 0,
+  "engine_builds": 0,
+  "games": 0,
+  "Metal_validation": "NOT_RUN",
+  "committed_linux_PASS_is_not_Mac_PASS": true,
+  "production_bug_proved": false,
+  "next": "Preserve failed attempt. Fixture explicit initialization can be considered separately under a new fixed source/round; no local warning suppression or retry. Prioritize user's existing R02 gputrace read-only export, no new game/capture.",
+  "performance_accepted": false
+}

@@ -1,0 +1,29 @@
+{
+  "round_id": "r02-current-gpu-profile-20261117-05",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_CURRENT_PROFILE_TARGET_PRIORITIZATION_PREPARE_GUARDED_SENSORLOS_SOURCE_EXPERIMENT",
+  "reviewed_artifact_commit": "aa558a5c5b1858db54fa31470909d1aa25411ff6",
+  "verified": {
+    "shader_cost_exports": "SensorLOS fragment26.34215%; GroundDecal fragment14.74173% vertex2.92851% match mapping",
+    "encoder_cost_exports": "Encoder33 share36.05467%; Encoder9 share27.92924%",
+    "cleanup": "HQ final session absent; capture/profile each once; no duplicate requested"
+  },
+  "interpretation": "SensorLOS fragment work is largest observed shader target in current replay. Encoder contains other draws and outer intervals include scheduling/overlap. No live GPU milliseconds or FPS prediction. Instruction/register/invocation counters unavailable; ALU/overdraw/memory cause not yet established.",
+  "MVK": {
+    "available_evidence": "docs/research/mvk3-native220/analysis/replay-profile.json in reconstructed source",
+    "status": "Historical multiframe partial MVK selected CUS/CAS/UI profile, native profile failed in that prior study; not matched current R02/scene/pass evidence",
+    "decision": "No numerical Native/MVK ratio or causal comparison from these captures"
+  },
+  "source_next": {
+    "name": "Guarded exact minor-range rejection before SensorDiamond loop",
+    "scope": "Cloud source/CPU proof only; no Mac execution",
+    "preserve": [
+      "Original fallback outside proved finite arithmetic bounds",
+      "Original mask sampling before fragment discard",
+      "Depth/stencil/winding/coverage/geometry/resources",
+      "No fast math or Metal Line substitution"
+    ],
+    "risk": "Hoisted integer divide can add work for diamond-rejected pixels; performance unknown until fixed candidate correctness then matched experiment."
+  },
+  "new_execution_authorized": false
+}

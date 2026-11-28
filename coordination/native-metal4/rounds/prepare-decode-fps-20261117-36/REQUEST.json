@@ -1,0 +1,49 @@
+{
+  "round_id": "prepare-decode-fps-20261117-36",
+  "attempt_id": "clean-original-batch-fps-01",
+  "scope": "CLEAN_MATCHED_FPS_PAIR_ONLY",
+  "source_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "candidate_commit": "f7faa7afb134b56dd673180f660df6add5600cae",
+  "binary_sha256": {
+    "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+  },
+  "budget": {
+    "games_max": 2,
+    "original_games_max": 1,
+    "batch_games_max": 1,
+    "builds": 0,
+    "helpers": 0,
+    "retries": 0,
+    "metal_traces": 0,
+    "profiles": 0,
+    "screenshots": 0
+  },
+  "prior_runtime_done_path": "coordination/native-metal4/rounds/prepare-decode-batch-runtime-20261117-35/DONE.json",
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "authorized_by": [
+    "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "HQ single-window prior approval Sentinel_8563c81084e48191aa31675bff31ab10",
+    "JINI delegated latest user instruction to prioritize FPS"
+  ],
+  "scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "dependency_policy": "Reuse the installed batch Homebrew libraries for both children through the normal launcher environment. Record dyld images and file SHA-256.",
+  "indexed_game_authorization": "SEPARATE_PENDING",
+  "execution_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36",
+  "result_path": "coordination/native-metal4/rounds/prepare-decode-fps-20261117-36/DONE.json"
+}

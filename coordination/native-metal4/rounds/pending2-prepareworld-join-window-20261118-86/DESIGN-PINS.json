@@ -1,0 +1,11 @@
+{
+  "status": "EXISTING_PHASE_TRACE_ONLY",
+  "primary_sim": 1125,
+  "slow_frame_min_ms": 20,
+  "prepare_world_off_main_cpu_min_ms": 8,
+  "discrimination_plan_sha256": "a701e57b5cd13e5a522518721e7e82e79e04c29eaa5280f25e0db7b85b796232",
+  "launcher_sha256": "f8386148980d060ad64d569f135df8268d797f85daac3fa367bb9afe71aa9010",
+  "analysis_sha256": "377456ad73b5217dabea51a6ff16027bf08cde8ad10917517bea33d1d8310151",
+  "game_source": "R71 preserved signed binary",
+  "checks": "Exact main request/worker job and retired event identities; separate common steady-clock durations and original ROI CLOCK_UPTIME_RAW endpoints; manifests count and drop checks."
+}

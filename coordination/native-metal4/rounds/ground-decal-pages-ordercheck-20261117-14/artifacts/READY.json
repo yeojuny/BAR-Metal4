@@ -1,0 +1,20 @@
+{
+  "round_id": "ground-decal-pages-ordercheck-20261117-14",
+  "attempt_id": "ground-decal-pages-ordercheck-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "from": "SUPER_JINI_MK2",
+  "to": "HQ",
+  "request": "coordination/native-metal4/rounds/ground-decal-pages-ordercheck-20261117-14/REQUEST.json",
+  "budget": {
+    "pin_label_order_fixture_staging": 1,
+    "clean_games": 4,
+    "validation_games": 0,
+    "builds": 0,
+    "helpers": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "prior_cleanup_verified": true,
+  "HQ_turn_completed": true
+}

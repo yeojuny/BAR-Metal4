@@ -1,0 +1,51 @@
+{
+  "round_id": "r03-minor-reject-correctness-20261117-06",
+  "attempt_id": "r03-helper-correctness-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "FIXED_HELPER_COMPILE1_GPU_CORRECTNESS1",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_branch": "fix/sensorlos-minor-reject-r03-20261117",
+  "source_manifest_path": "docs/research/r03-minor-reject-20261117/MANIFEST.json",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "header_sha256": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+  "helper_path": "docs/research/r03-minor-reject-20261117/gpu_pixel_parity.mm",
+  "helper_sha256": "6595ea4c537a7a83e124e909b20e8b9a5e8f22a627dbec5bc74ddf9587d5ace1",
+  "change": "Bounded early exact minor-range rejection; original function/fallback and depth/sample/discard/vertex/resource contracts retained.",
+  "review": {
+    "cpu_cases": 32406,
+    "cpu_status": "PASS independently rerun",
+    "float_precision": "Explicit float32 quantization and nextafter guard/rounding boundaries. Integer bounds checked. Not MSL proof.",
+    "gpu_gate": "Every render now compares old reference and candidate fragment pipelines byte-for-byte; old asymmetric/winding negative control tests retained.",
+    "remote": "Eight files read back exactly; production change only header 27 insertions/1 deletion; child/source writers finished.",
+    "limits": "Large coordinate guard boundaries CPU-only; helper small render fixture not exhaustive."
+  },
+  "budget": {
+    "helper_compiles": 1,
+    "gpu_helper_runs": 1,
+    "engine_builds": 0,
+    "games": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "steps": [
+    "Verify latest STATE HQ/round/source, previous cleanup and no consumed new attempt; reserve by CAS.",
+    "Fetch helper+three engine headers at exact commit and verify hashes. Fresh isolated helper directory; preserve previous artifacts.",
+    "Compile once with xcrun clang++ -std=c++20 -fobjc-arc -framework Foundation -framework Metal -I <headers> <helper> -o <fresh binary>. Failure returns logs with no edit/retry.",
+    "On success run once with Metal API Validation. Require original3600, asymmetric1024, nonzero negative stencil/facing witnesses and R03 old-vs-new comparisons. Any mismatch/compile/runtime error stops; never weaken assertion.",
+    "Report exact counts, compile/GPU logs, binary/input hashes and limitations. No FPS inference.",
+    "Clean all owned GPU work/PIDs/helpers/workers/awake/writers then same-round DONE returning JINI; uncertain history/cleanup => BLOCKED."
+  ],
+  "user_authorization": {
+    "message_id": "Sentinel_43850dd198d8819180ce89bf9aec193b",
+    "text": "벤치마크 필요할 떄 요청하든가 아니면 네가 자율로 했다 깠다 해",
+    "scope": "Necessary bounded correctness test before any performance experiment."
+  },
+  "prohibited": [
+    "Source edits",
+    "Full engine build",
+    "Game/benchmark",
+    "main/release/Homebrew",
+    "Duplicate attempts"
+  ]
+}

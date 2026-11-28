@@ -1,0 +1,152 @@
+{
+  "ROI_request_simulations": [
+    900,
+    901,
+    902,
+    903,
+    904,
+    905,
+    906,
+    907,
+    908,
+    909,
+    910,
+    911,
+    912,
+    913,
+    914,
+    915
+  ],
+  "all_exact_chains_included_in_statistics": true,
+  "attempt_id": "cpu-postcompletion-tail-01",
+  "boundary_censored_count": 1,
+  "buffers": 68,
+  "component_union": {
+    "max_ns": 37040,
+    "mean_ns": 21860.81818181818,
+    "median_ns": 21624,
+    "min_ns": 14291,
+    "n": 33,
+    "p95_ns": 33582,
+    "percentile_method": "nearest_rank",
+    "sum_ns": 721407
+  },
+  "components": {
+    "21": {
+      "max_ns": 4541,
+      "mean_ns": 2147.6969696969695,
+      "median_ns": 2083,
+      "min_ns": 1333,
+      "n": 33,
+      "p95_ns": 3792,
+      "percentile_method": "nearest_rank",
+      "sum_ns": 70874
+    },
+    "22": {
+      "max_ns": 31833,
+      "mean_ns": 17797.878787878788,
+      "median_ns": 17417,
+      "min_ns": 11625,
+      "n": 33,
+      "p95_ns": 26416,
+      "percentile_method": "nearest_rank",
+      "sum_ns": 587330
+    },
+    "23": {
+      "max_ns": 583,
+      "mean_ns": 429.1515151515151,
+      "median_ns": 417,
+      "min_ns": 291,
+      "n": 33,
+      "p95_ns": 583,
+      "percentile_method": "nearest_rank",
+      "sum_ns": 14162
+    },
+    "29": {
+      "max_ns": 2375,
+      "mean_ns": 1486.090909090909,
+      "median_ns": 1334,
+      "min_ns": 750,
+      "n": 33,
+      "p95_ns": 2291,
+      "percentile_method": "nearest_rank",
+      "sum_ns": 49041
+    }
+  },
+  "dropped": 0,
+  "early_drains_in_exact_chains": 0,
+  "emission_overlap_jobs": [
+    34
+  ],
+  "errors": [],
+  "event_wait_not_savings": {
+    "max_ns": 8898250,
+    "mean_ns": 7782742.393939394,
+    "median_ns": 7887208,
+    "min_ns": 6128875,
+    "n": 33,
+    "p95_ns": 8880250,
+    "percentile_method": "nearest_rank",
+    "sum_ns": 256830499
+  },
+  "exact_chains": 33,
+  "feedback_wait_not_savings": {
+    "max_ns": 140791,
+    "mean_ns": 57256.21212121212,
+    "median_ns": 54167,
+    "min_ns": 20875,
+    "n": 33,
+    "p95_ns": 139416,
+    "percentile_method": "nearest_rank",
+    "sum_ns": 1889455
+  },
+  "game_count": 1,
+  "interpretation": "Only the exact interior chains are quantified; no full-boundary coverage or exact GPU idle claim. Last admitted job overlaps first post-window emission and is retained. No optimization or FPS gain is established.",
+  "jobs": 34,
+  "performanceAccepted": false,
+  "postcompletion_tail": {
+    "max_ns": 47958,
+    "mean_ns": 32585.81818181818,
+    "median_ns": 32458,
+    "min_ns": 23500,
+    "n": 33,
+    "p95_ns": 46417,
+    "percentile_method": "nearest_rank",
+    "sum_ns": 1075332
+  },
+  "retries": 0,
+  "round_id": "cpu-postcompletion-tail-20261117-21",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "status": "EXACT_INTERIOR_CHAINS_WITH_BOUNDARY_LIMITS",
+  "submit_call": {
+    "max_ns": 36875,
+    "mean_ns": 29876.333333333332,
+    "median_ns": 29584,
+    "min_ns": 24458,
+    "n": 33,
+    "p95_ns": 35458,
+    "percentile_method": "nearest_rank",
+    "sum_ns": 985919
+  },
+  "submit_to_submit": {
+    "max_ns": 16081375,
+    "mean_ns": 15532149,
+    "median_ns": 15530583,
+    "min_ns": 15031958,
+    "n": 33,
+    "p95_ns": 16022292,
+    "percentile_method": "nearest_rank",
+    "sum_ns": 512560917
+  },
+  "trace_rows": 1496,
+  "unclassified_tail": {
+    "max_ns": 13334,
+    "mean_ns": 10725,
+    "median_ns": 10875,
+    "min_ns": 8334,
+    "n": 33,
+    "p95_ns": 12957,
+    "percentile_method": "nearest_rank",
+    "sum_ns": 353925
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "status": "SAME_BINARY_SETHS_CAP1_COMPLETE",
+  "matched_bins": 40,
+  "matching_inputs": 13,
+  "only_setting_delta": "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT",
+  "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "scene_checks": {
+    "events": true,
+    "checks": true,
+    "pacing_ticks": true,
+    "libraries": true,
+    "start_script_sha256": true,
+    "route": true,
+    "battleMap": true,
+    "battleCameraOpen": true,
+    "battleInitialState": true,
+    "battleCommand": true,
+    "gameSeed": true,
+    "benchmarkSeed": true,
+    "officialCreated": true,
+    "officialDestroyed": true
+  },
+  "cap1": {
+    "average_fps": 77.09427033347873,
+    "low_1_fps": 56.46630164797066,
+    "p99_ms": 15.0,
+    "max_ms": 41.000001000000005,
+    "frames": 3082,
+    "atlas": {
+      "enabled": 1,
+      "queued": 0,
+      "first_sim": 0
+    },
+    "over16_667ms": 10
+  },
+  "cap2": {
+    "average_fps": 75.64810983552442,
+    "low_1_fps": 35.46910669925487,
+    "p99_ms": 26.000000999999997,
+    "max_ms": 41.999999,
+    "frames": 3025,
+    "atlas": {
+      "enabled": 1,
+      "queued": 1,
+      "first_sim": 1124
+    },
+    "over16_667ms": 179
+  },
+  "screens_observed_active": true,
+  "display_samples": 17,
+  "fps_delta_cap1_percent": 1.9116941601033721,
+  "low_delta_cap1_percent": 59.198544600382874,
+  "frames_excluded": 0,
+  "counts": {
+    "games": 1,
+    "builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cleanup_verified": true
+}

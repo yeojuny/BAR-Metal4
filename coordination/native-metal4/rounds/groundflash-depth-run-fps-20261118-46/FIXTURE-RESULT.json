@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "sourceUnchanged": true,
+  "sourceSHA256": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Sim/Projectiles/ExpGenSpawnable.cpp": "155e9c98d3061ffcc07f3907a8008c20608e0b33c5a570af37601b56d73549c8",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Sim/Projectiles/ExpGenSpawnable.h": "aeff2e7accc389a87a828d63cd863a458b2d65a961abb91cd0ab9c088acad968",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/GL/RenderBuffers.h": "7420ca3bab908e1b9ce191e0419bf6d5799883711c414cec24b48c8b4f86605d",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/Env/Particles/Classes/SmokeProjectile.cpp": "e8bc501b60e37f5c561887e117b2c2293cbfae12257220fce411e57f2d368de3",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/Env/Particles/ProjectileDrawer.cpp": "b2a0f04462298806bdf069e2dcbf597684a3896bbf30254d263535025edfa7a0",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/Backend/NativeWorldParticleCapture.cpp": "108a990bb6cd37ba7666fe51935b748ec06c7ee41177d3e77287a9edb96f6b95",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.cpp": "233ed5df33b3a10c21b5979d637387b066425a07a0e0682873220fb1d9abcaeb",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/Backend/NativeLuaNanoRecorder.cpp": "d9926e85e5cc27d6c7f5d0a7a0db38856a9a8f68d47bee99a0c966f170d14c5d",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/tools/metal4-contracts/NativeWorldParticleHarness.cpp": "ebf405b83796a244f784779873d7ebb7b734c08354acf1f784fcf9a53dec6b1a",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/tools/metal4-contracts/run_native_world_particle_test.py": "c87e1036aa6631ea58bf91063f7266a007c5b1096e23950dd54b684f6df68c90"
+  },
+  "extractionSHA256": {
+    "SCOPE": "a2ca456b2d9ed5fba525043bee0e0a5b7c89a6a92b796d273edf38a9dc77689a",
+    "DESTINATION": "2e3713df3a541d9c4d91fda81b7a4cd9fbbc4f62bd1cad8e3f51919ab2282d52",
+    "EFFECTS": "b9899749255dd33c77d3661267f12c88e5d7fcc91bdfa00e429a18367a34fb68",
+    "QUAD": "c0c670ba940d4cd4b9b9c601f2a28aa544a0993c9de9e106905b40503e5e94c4",
+    "SMOKE": "91bb74a9c96093be56d7a9a3a58301ad6e0a05fe3c5aadb0f07c9001fb31f45b",
+    "SORT": "d30edb8ccc3600f8120f02a9038f07567dbf17d13299faeeaf0cb000ca3959ab",
+    "APPEND": "e209e723d473aa494efaf0b15aa789bf48d150ea260de6333681f03414de8150"
+  },
+  "command": [
+    "clang++",
+    "-std=c++23",
+    "-O1",
+    "-g",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-pedantic",
+    "-ffp-contract=off",
+    "-fsanitize=address,undefined",
+    "-fno-omit-frame-pointer",
+    "-I/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/Backend/NativeWorldParticleGeometry.cpp",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/rts/Rendering/Backend/NativeLuaNanoRecorder.cpp",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/fixture/Particles.actual.cpp",
+    "-o",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/fixture/test-native-world-particles"
+  ],
+  "output": "PASS 686 original particle geometry/TLS/sort and native nano schema/lifetime checks\n",
+  "negative": {
+    "scope": "Work-only actual original quad index mutation",
+    "exit": 1,
+    "output": "original triangle order\n"
+  },
+  "limitations": [
+    "CPU geometry destination/original smoke billboard/sort/schema/lifetime tests only; no engine/app/GPU execution or playback.",
+    "Other projectile class geometry and actual runtime atlas assets require integration acceptance."
+  ]
+}

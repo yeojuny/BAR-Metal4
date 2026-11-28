@@ -1,0 +1,118 @@
+{
+  "round_id": "r04-engine-build-envfix-20261117-23",
+  "attempt_id": "r04-isolated-build-02",
+  "claimed_revision": 90,
+  "configure_attempts": 1,
+  "engine_builds": 1,
+  "relocation_sign": 1,
+  "games": 0,
+  "benchmarks": 0,
+  "helpers": 0,
+  "captures": 0,
+  "replays": 0,
+  "source_edits": 0,
+  "retries": 0,
+  "utc": "2026-11-17T09:39:50.207063+00:00",
+  "process_local_PKG_CONFIG_PATH": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "log": "CONFIGURE.log",
+      "start_utc": "2026-11-17T09:39:50.291074+00:00",
+      "pid": 79334,
+      "exit_code": 0,
+      "end_utc": "2026-11-17T09:39:58.355851+00:00",
+      "wall_seconds": 8.064697459001763
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "log": "BUILD.log",
+      "start_utc": "2026-11-17T09:39:58.495537+00:00",
+      "pid": 80585,
+      "exit_code": 0,
+      "end_utc": "2026-11-17T09:43:33.443471+00:00",
+      "wall_seconds": 214.9482765419998
+    }
+  ],
+  "owned_pids": [
+    79334,
+    80585,
+    83999,
+    84000
+  ],
+  "active_pid": null,
+  "cleanup_complete": true,
+  "awake_created": false,
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "raw_engine_sha256": "853083e4ba5490a40ede292c88d95b213166fbbc8db70af5336707657af997d1",
+  "status": "PASS_BUILD_AND_STATIC_CLOSURE_RUNTIME_NOT_RUN",
+  "build_controller_finished_at_utc": "2026-11-17T09:43:33.495206+00:00",
+  "build_controller_complete": true,
+  "archive_audit_script_sha256": "10f40b042e8196ab0febb8c16b4abcb2bc357af073df89a60ff9d17200a0946a",
+  "postbuild_commands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-11-14/bar-metal4-handoff-contract-20261114/work/audit_build_closure.py",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/ARCHIVE-CLOSURE.json"
+      ],
+      "log": "ARCHIVE-AUDIT.log",
+      "started_utc": "2026-11-17T09:44:00.843267+00:00",
+      "pid": 83999,
+      "exit_code": 0,
+      "wall_seconds": 1.581133667001268
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02/measurement/relocate_sign.py"
+      ],
+      "log": "PACKAGE.log",
+      "started_utc": "2026-11-17T09:44:02.464310+00:00",
+      "pid": 84000,
+      "exit_code": 0,
+      "wall_seconds": 1.2041541670005245
+    }
+  ],
+  "signed_engine_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+  "postbuild_finished_utc": "2026-11-17T09:44:03.668923+00:00",
+  "cleanup": {
+    "ownedPIDsGone": true,
+    "workerChildrenReaped": true,
+    "ownedProcessGroupsEmpty": true,
+    "awakeCreated": false,
+    "awakeReleased": true,
+    "GPUOrGameProcessesStarted": false,
+    "originalEvidenceUnchanged": true,
+    "priorFailedAttemptUnchanged": true,
+    "sourceUnchangedAfterBuild": true,
+    "environmentCorrectionProcessLocalOnly": true,
+    "buildAndPackagingControllersExited": true,
+    "bar": "PAUSED_UNCHANGED",
+    "utc": "2026-11-17T09:45:27.091684+00:00"
+  },
+  "finished_utc": "2026-11-17T09:45:27.091684+00:00"
+}

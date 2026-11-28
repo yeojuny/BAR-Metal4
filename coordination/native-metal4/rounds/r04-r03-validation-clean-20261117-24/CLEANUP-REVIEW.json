@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "games": 7,
+  "validation_games": 1,
+  "clean_games": 6,
+  "owned_game_process_groups_gone": true,
+  "runner_campaigns_closed": true,
+  "awake_assertions_released": true,
+  "source_and_runner_changes_after_stage": 0,
+  "fixed_binary_and_runtime_inputs_unchanged": true,
+  "prior_evidence_preserved": true,
+  "profile_cleanup_recorded_all7": true,
+  "bar": "PAUSED_UNCHANGED",
+  "utc": "2026-11-17T10:15:00.471940+00:00"
+}

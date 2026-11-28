@@ -1,0 +1,10 @@
+{
+  "filename": "EXPORT-EVIDENCE.zip",
+  "bytes": 1366322,
+  "sha256": "6412e516af8d2fdd32443b6eff7dbd128dc7f98b25b158adceed6e5d750fdb62",
+  "git_blob_sha": "061c03523075f594fdb260b0adb0167778104b37",
+  "archive_entries": 308,
+  "manifest": "ARTIFACT-MANIFEST.json",
+  "verified_each_member_sha256": true,
+  "utc": "2026-11-17T17:06:00.968607+00:00"
+}

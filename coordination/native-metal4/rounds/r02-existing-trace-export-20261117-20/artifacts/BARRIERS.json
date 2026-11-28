@@ -1,0 +1,1577 @@
+[
+  {
+    "api": "api1836",
+    "command_node": "re0",
+    "label": "MTL4RenderCommandEncoder 1",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api3054",
+    "command_node": "re1",
+    "label": "MTL4RenderCommandEncoder 2",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:Fragment visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "Fragment",
+        "names": [
+          "Fragment"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api3057",
+    "command_node": "ce2",
+    "label": "MTL4ComputeCommandEncoder 1",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:402653186 beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api3123",
+    "command_node": "ce2",
+    "label": "MTL4ComputeCommandEncoder 1",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:134217731 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "134217731",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Dispatch"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api3126",
+    "command_node": "ce3",
+    "label": "MTL4ComputeCommandEncoder 2",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:402653186 beforeStages:Dispatch visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Dispatch",
+        "names": [
+          "Dispatch"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api3133",
+    "command_node": "ce3",
+    "label": "MTL4ComputeCommandEncoder 2",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Dispatch beforeQueueStages:402653187 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "402653187",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Dispatch",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api3136",
+    "command_node": "ce4",
+    "label": "MTL4ComputeCommandEncoder 3",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:3 beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api3138",
+    "command_node": "ce4",
+    "label": "MTL4ComputeCommandEncoder 3",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api3141",
+    "command_node": "re5",
+    "label": "MTL4RenderCommandEncoder 3",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435459 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api3182",
+    "command_node": "re5",
+    "label": "MTL4RenderCommandEncoder 3",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:3 beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api3211",
+    "command_node": "re6",
+    "label": "MTL4RenderCommandEncoder 4",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:3 beforeQueueStages:402653187 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "402653187",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Dispatch",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api3214",
+    "command_node": "re7",
+    "label": "MTL4RenderCommandEncoder 5",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653187 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api4249",
+    "command_node": "ce8",
+    "label": "MTL4ComputeCommandEncoder 4",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api4250",
+    "command_node": "ce8",
+    "label": "MTL4ComputeCommandEncoder 4",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:134217731 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "134217731",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Dispatch"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api4276",
+    "command_node": "re9",
+    "label": "MTL4RenderCommandEncoder 6",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:402653187 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "402653187",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Dispatch",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api4279",
+    "command_node": "re10",
+    "label": "MTL4RenderCommandEncoder 7",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653186 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api4841",
+    "command_node": "re10",
+    "label": "MTL4RenderCommandEncoder 7",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:402653186 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "402653186",
+        "names": [
+          "Fragment",
+          "Dispatch",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api4844",
+    "command_node": "re11",
+    "label": "MTL4RenderCommandEncoder 8",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653186 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api5449",
+    "command_node": "ce12",
+    "label": "MTL4ComputeCommandEncoder 5",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:402653186 beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api5451",
+    "command_node": "ce12",
+    "label": "MTL4ComputeCommandEncoder 5",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:134217731 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "134217731",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Dispatch"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api8360",
+    "command_node": "re13",
+    "label": "MTL4RenderCommandEncoder 9",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:Fragment visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "Fragment",
+        "names": [
+          "Fragment"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api8363",
+    "command_node": "re14",
+    "label": "MTL4RenderCommandEncoder 10",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Fragment visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Fragment",
+        "names": [
+          "Fragment"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api8668",
+    "command_node": "re14",
+    "label": "MTL4RenderCommandEncoder 10",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:3 beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api8671",
+    "command_node": "re15",
+    "label": "MTL4RenderCommandEncoder 11",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653186 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api8845",
+    "command_node": "re15",
+    "label": "MTL4RenderCommandEncoder 11",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:402653186 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "402653186",
+        "names": [
+          "Fragment",
+          "Dispatch",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api8848",
+    "command_node": "re16",
+    "label": "MTL4RenderCommandEncoder 12",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9020",
+    "command_node": "re16",
+    "label": "MTL4RenderCommandEncoder 12",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:3 beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9023",
+    "command_node": "re17",
+    "label": "MTL4RenderCommandEncoder 13",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9034",
+    "command_node": "re17",
+    "label": "MTL4RenderCommandEncoder 13",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:3 beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9037",
+    "command_node": "re18",
+    "label": "MTL4RenderCommandEncoder 14",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435459 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9038",
+    "command_node": "re18",
+    "label": "MTL4RenderCommandEncoder 14",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:3 beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9041",
+    "command_node": "re19",
+    "label": "MTL4RenderCommandEncoder 15",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435459 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9052",
+    "command_node": "re19",
+    "label": "MTL4RenderCommandEncoder 15",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:402653187 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "402653187",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Dispatch",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9055",
+    "command_node": "re20",
+    "label": "MTL4RenderCommandEncoder 16",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9056",
+    "command_node": "re20",
+    "label": "MTL4RenderCommandEncoder 16",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9059",
+    "command_node": "re21",
+    "label": "MTL4RenderCommandEncoder 17",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9084",
+    "command_node": "re21",
+    "label": "MTL4RenderCommandEncoder 17",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9087",
+    "command_node": "re22",
+    "label": "MTL4RenderCommandEncoder 18",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9088",
+    "command_node": "re22",
+    "label": "MTL4RenderCommandEncoder 18",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9091",
+    "command_node": "re23",
+    "label": "MTL4RenderCommandEncoder 19",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9112",
+    "command_node": "re23",
+    "label": "MTL4RenderCommandEncoder 19",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9115",
+    "command_node": "re24",
+    "label": "MTL4RenderCommandEncoder 20",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9140",
+    "command_node": "re24",
+    "label": "MTL4RenderCommandEncoder 20",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9143",
+    "command_node": "re25",
+    "label": "MTL4RenderCommandEncoder 21",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653186 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9452",
+    "command_node": "re25",
+    "label": "MTL4RenderCommandEncoder 21",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9455",
+    "command_node": "re26",
+    "label": "MTL4RenderCommandEncoder 22",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9479",
+    "command_node": "re26",
+    "label": "MTL4RenderCommandEncoder 22",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9482",
+    "command_node": "re27",
+    "label": "MTL4RenderCommandEncoder 23",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9500",
+    "command_node": "re27",
+    "label": "MTL4RenderCommandEncoder 23",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9503",
+    "command_node": "re28",
+    "label": "MTL4RenderCommandEncoder 24",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9521",
+    "command_node": "re28",
+    "label": "MTL4RenderCommandEncoder 24",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9524",
+    "command_node": "re29",
+    "label": "MTL4RenderCommandEncoder 25",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9542",
+    "command_node": "re29",
+    "label": "MTL4RenderCommandEncoder 25",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9545",
+    "command_node": "re30",
+    "label": "MTL4RenderCommandEncoder 26",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9563",
+    "command_node": "re30",
+    "label": "MTL4RenderCommandEncoder 26",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9566",
+    "command_node": "re31",
+    "label": "MTL4RenderCommandEncoder 27",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9584",
+    "command_node": "re31",
+    "label": "MTL4RenderCommandEncoder 27",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9587",
+    "command_node": "ce32",
+    "label": "MTL4ComputeCommandEncoder 6",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9589",
+    "command_node": "ce32",
+    "label": "MTL4ComputeCommandEncoder 6",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:Fragment visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "Fragment",
+        "names": [
+          "Fragment"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9592",
+    "command_node": "re33",
+    "label": "MTL4RenderCommandEncoder 28",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9610",
+    "command_node": "re33",
+    "label": "MTL4RenderCommandEncoder 28",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9613",
+    "command_node": "ce34",
+    "label": "MTL4ComputeCommandEncoder 7",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9615",
+    "command_node": "ce34",
+    "label": "MTL4ComputeCommandEncoder 7",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:Fragment visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "Fragment",
+        "names": [
+          "Fragment"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9618",
+    "command_node": "re35",
+    "label": "MTL4RenderCommandEncoder 29",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9636",
+    "command_node": "re35",
+    "label": "MTL4RenderCommandEncoder 29",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9639",
+    "command_node": "ce36",
+    "label": "MTL4ComputeCommandEncoder 8",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9641",
+    "command_node": "ce36",
+    "label": "MTL4ComputeCommandEncoder 8",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:Fragment visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "Fragment",
+        "names": [
+          "Fragment"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9644",
+    "command_node": "re37",
+    "label": "MTL4RenderCommandEncoder 30",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9662",
+    "command_node": "re37",
+    "label": "MTL4RenderCommandEncoder 30",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9665",
+    "command_node": "ce38",
+    "label": "MTL4ComputeCommandEncoder 9",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:Fragment beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9667",
+    "command_node": "ce38",
+    "label": "MTL4ComputeCommandEncoder 9",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterStages:Blit beforeQueueStages:Fragment visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "Fragment",
+        "names": [
+          "Fragment"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  },
+  {
+    "api": "api9670",
+    "command_node": "re39",
+    "label": "MTL4RenderCommandEncoder 31",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9688",
+    "command_node": "re39",
+    "label": "MTL4RenderCommandEncoder 31",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9691",
+    "command_node": "re40",
+    "label": "MTL4RenderCommandEncoder 32",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9713",
+    "command_node": "re40",
+    "label": "MTL4RenderCommandEncoder 32",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9716",
+    "command_node": "re41",
+    "label": "MTL4RenderCommandEncoder 33",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9734",
+    "command_node": "re41",
+    "label": "MTL4RenderCommandEncoder 33",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api9735",
+    "command_node": "re41",
+    "label": "MTL4RenderCommandEncoder 33",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10171",
+    "command_node": "re41",
+    "label": "MTL4RenderCommandEncoder 33",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10174",
+    "command_node": "re42",
+    "label": "MTL4RenderCommandEncoder 34",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10191",
+    "command_node": "re42",
+    "label": "MTL4RenderCommandEncoder 34",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10194",
+    "command_node": "re43",
+    "label": "MTL4RenderCommandEncoder 35",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10223",
+    "command_node": "re43",
+    "label": "MTL4RenderCommandEncoder 35",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10226",
+    "command_node": "re44",
+    "label": "MTL4RenderCommandEncoder 36",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10255",
+    "command_node": "re44",
+    "label": "MTL4RenderCommandEncoder 36",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10258",
+    "command_node": "re45",
+    "label": "MTL4RenderCommandEncoder 37",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10277",
+    "command_node": "re45",
+    "label": "MTL4RenderCommandEncoder 37",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10280",
+    "command_node": "re46",
+    "label": "MTL4RenderCommandEncoder 38",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10302",
+    "command_node": "re46",
+    "label": "MTL4RenderCommandEncoder 38",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435458",
+        "names": [
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10305",
+    "command_node": "re47",
+    "label": "MTL4RenderCommandEncoder 39",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10308",
+    "command_node": "re48",
+    "label": "MTL4RenderCommandEncoder 40",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10323",
+    "command_node": "re48",
+    "label": "MTL4RenderCommandEncoder 40",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10326",
+    "command_node": "re49",
+    "label": "MTL4RenderCommandEncoder 41",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10351",
+    "command_node": "re49",
+    "label": "MTL4RenderCommandEncoder 41",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435459 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10352",
+    "command_node": "re49",
+    "label": "MTL4RenderCommandEncoder 41",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653187 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10955",
+    "command_node": "re49",
+    "label": "MTL4RenderCommandEncoder 41",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeQueueStages": {
+        "raw": "268435459",
+        "names": [
+          "Vertex",
+          "Fragment",
+          "Blit"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10958",
+    "command_node": "re50",
+    "label": "MTL4RenderCommandEncoder 42",
+    "raw": "[MTL4RenderCommandEncoder barrierAfterQueueStages:402653186 beforeStages:3 visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "3",
+        "names": [
+          "Vertex",
+          "Fragment"
+        ],
+        "unknown_bits": 0
+      }
+    }
+  },
+  {
+    "api": "api10981",
+    "command_node": "ce51",
+    "label": "MTL4ComputeCommandEncoder 10",
+    "raw": "[MTL4ComputeCommandEncoder barrierAfterQueueStages:402653187 beforeStages:Blit visibilityOptions:Device]",
+    "stage_masks": {
+      "beforeStages": {
+        "raw": "Blit",
+        "names": [
+          "Blit"
+        ],
+        "verified_numeric_conversion": false
+      }
+    }
+  }
+]

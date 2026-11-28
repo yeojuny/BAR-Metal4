@@ -1,0 +1,23 @@
+{
+  "status": "READY_IDENTITY_RGBA_DOWNSAMPLE_SPECIALIZATION",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "round49_baseline_manifest_sha256": "30ed544bd95d923df50addf2857413261d77fc4014fd1baff9a92fbb38a773b0",
+  "round49_baseline_binary_sha256": "52a15450c649fd5e17bf6f9db48fc473691c11ff01f476c658d265fe5fa0fe4b",
+  "source_paths_verified": 10274,
+  "patch_sha256": "819284a5649355d2b2b51493993f699d8f286daf49d8ce52a52272376101e906",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/NativeBloomShaders.h",
+      "parent_sha256": "8ccf1d4df573d665f8c52c59b983e0519f8f932478a94fe49fcd864589b42adc",
+      "candidate_sha256": "f168d4ff3b543981988f912c65befc8475ed006acaa26c1ed0ca958513f11001"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4Bloom.mm",
+      "parent_sha256": "e66e2124e4747d57c7b55639dc0796a047ea84eba0237734c2062eca2d3688ed",
+      "candidate_sha256": "5ca01f2e11bec02e123ddb174f2708ab97f08d23039ade59518bb009c6aad3d4"
+    }
+  ],
+  "flag": "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA",
+  "default": "OFF",
+  "scope": "Only BloomDownsample color-source swizzle. Original generic read, input swizzle and flipV, 13 tap coordinates, both weighting paths, depth inputs, bindings, and all other program entry points remain in use as before."
+}

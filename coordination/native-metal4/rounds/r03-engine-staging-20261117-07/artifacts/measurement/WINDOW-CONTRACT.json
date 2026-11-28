@@ -1,0 +1,20 @@
+{
+  "status": "FROZEN_FUTURE_INPUT_CONTRACT_NOT_RUNTIME_OBSERVATION",
+  "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+  "start_simulation": 540,
+  "end_simulation": 1740,
+  "combat_warmup_simulation": [
+    240,
+    540
+  ],
+  "minimum_warmup_wall_seconds": 10,
+  "count_seconds": 40,
+  "bins": 40,
+  "inherited_LAUNCH_window": [
+    600,
+    1800
+  ],
+  "reason": "Preserve unchanged controller/measurement code; correct stale planning interpretation separately. Actual future samples must match540..1740.",
+  "legacy_measurementWindow_controllerSHA256": "fbb3dcd00f5f981f025dd57dc540356473917c92ff8241d3b40d99451e74ac56",
+  "authoritative_controller_hash": "Actual file checksums and stagedControllerSHA256=cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73; legacy measurementWindow subobject is inherited planning metadata."
+}

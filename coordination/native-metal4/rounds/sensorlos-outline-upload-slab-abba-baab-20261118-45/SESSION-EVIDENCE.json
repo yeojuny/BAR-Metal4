@@ -1,0 +1,58 @@
+{
+  "order": [
+    "A1",
+    "B1",
+    "B2",
+    "A2",
+    "B3",
+    "A3",
+    "A4",
+    "B4"
+  ],
+  "sessions": [
+    [
+      "A1",
+      "B1",
+      "B2",
+      "A2"
+    ],
+    [
+      "B3",
+      "A3",
+      "A4",
+      "B4"
+    ]
+  ],
+  "sessions_closed": [
+    {
+      "session": 1,
+      "completed": 4,
+      "status": "RELEASED",
+      "campaign": "SLAB-R45-SESSION-1",
+      "pid": 20015,
+      "startUTC": "2026-11-18T01:32:09.005653+00:00",
+      "maximumSeconds": 2400,
+      "securitySettingsChanged": false,
+      "endUTC": "2026-11-18T01:37:31.955570+00:00",
+      "ownCaffeinateAlive": false
+    },
+    {
+      "session": 2,
+      "completed": 4,
+      "status": "RELEASED",
+      "campaign": "SLAB-R45-SESSION-2",
+      "pid": 20487,
+      "startUTC": "2026-11-18T01:37:31.958028+00:00",
+      "maximumSeconds": 2400,
+      "securitySettingsChanged": false,
+      "endUTC": "2026-11-18T01:42:54.403558+00:00",
+      "ownCaffeinateAlive": false
+    }
+  ],
+  "boundary_seconds": 0.002458,
+  "previous_prelaunch_actual_games": 0,
+  "previous_prelaunch_awake_released": true,
+  "unchanged_maximum_seconds": 2400,
+  "original_guard": true,
+  "scheduled_extra_cooldown_seconds": 0
+}

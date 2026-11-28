@@ -1,0 +1,28 @@
+{
+  "status": "POSITIVE_SPLIT",
+  "expectedEnabled": true,
+  "rows": [
+    [
+      "300",
+      "267",
+      "0",
+      "0",
+      "0",
+      "0",
+      "1",
+      "1"
+    ],
+    [
+      "2399",
+      "2366",
+      "1",
+      "1",
+      "1",
+      "9",
+      "1",
+      "1"
+    ]
+  ],
+  "source": "engine.log",
+  "cleanFPSNotInferred": true
+}

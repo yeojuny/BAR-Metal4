@@ -1,0 +1,137 @@
+{
+  "round_id": "r03-engine-staging-20261117-07",
+  "attempt_id": "r03-isolated-build-01",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "claimed_revision": 33,
+  "stage": "BUILD_AND_STAGING_COMPLETE_CLEANUP_CLOSED",
+  "configure_attempts": 1,
+  "engine_builds": 1,
+  "games": 0,
+  "benchmarks": 0,
+  "helpers": 0,
+  "captures": 0,
+  "retries": 0,
+  "owned_pids": [
+    6108,
+    7362,
+    10861,
+    10862
+  ],
+  "startedUTC": "2026-11-17T01:18:11.910821+00:00",
+  "initialCacheSHA256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+  "baselineSignedSHA256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "relocateSignSHA256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+  "toolchainPreflight": {
+    "sdk": "27.2",
+    "compiler": "Apple clang version 21.0.0 (clang-2100.4.1.1)"
+  },
+  "commands": [
+    {
+      "argv": [
+        "cmake",
+        "-S",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/source/engine",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/build",
+        "-G",
+        "Ninja",
+        "-C",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/initial-cache.cmake",
+        "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+      ],
+      "log": "CONFIGURE.log",
+      "startUTC": "2026-11-17T01:18:59.606639+00:00",
+      "pid": 6108,
+      "exit_code": 0,
+      "wall_seconds": 9.453660957980901,
+      "endUTC": "2026-11-17T01:19:09.060301+00:00"
+    },
+    {
+      "argv": [
+        "cmake",
+        "--build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/build",
+        "--target",
+        "spring-metal4-scene",
+        "--",
+        "-j",
+        "8"
+      ],
+      "log": "BUILD.log",
+      "startUTC": "2026-11-17T01:19:09.170558+00:00",
+      "pid": 7362,
+      "exit_code": 0,
+      "wall_seconds": 214.46528204198694,
+      "endUTC": "2026-11-17T01:22:43.635727+00:00"
+    }
+  ],
+  "active_pid": null,
+  "configure_exit_code": 0,
+  "build_exit_code": 0,
+  "raw_engine_sha256": "63766732590784253e2ae89ce3806ec1e9aa76bf71a1aba3017cd81aa210a161",
+  "controller_finished_at_utc": "2026-11-17T01:22:43.663316+00:00",
+  "postbuildCommands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-11-14/bar-metal4-handoff-contract-20261114/work/audit_build_closure.py",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/build",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/ARCHIVE-CLOSURE.json"
+      ],
+      "log": "ARCHIVE-AUDIT.log",
+      "pid": 10861,
+      "exit_code": 0,
+      "wall_seconds": 1.6844239159836434
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/relocate_sign.py"
+      ],
+      "log": "PACKAGE.log",
+      "pid": 10862,
+      "exit_code": 0,
+      "wall_seconds": 1.21258354105521
+    }
+  ],
+  "signed_engine_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "stagingCommands": [
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/run.py",
+        "--suite",
+        "r03_validation01",
+        "--stage",
+        "validation_paced"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/run.py",
+        "--suite",
+        "r03_clean01",
+        "--stage",
+        "clean_paced"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "finishedUTC": "2026-11-17T01:29:58.501262+00:00",
+  "cleanup": {
+    "ownedPIDsGone": true,
+    "workerChildrenReaped": true,
+    "GPUOrGameProcessesStarted": false,
+    "awakeCreated": false,
+    "awakeReleased": true,
+    "buildAndStagingWritersClosed": true
+  }
+}

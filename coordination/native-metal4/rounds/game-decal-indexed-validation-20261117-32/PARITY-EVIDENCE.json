@@ -1,0 +1,128 @@
+{
+  "fixture_status": "PASS",
+  "scope": "Standalone Metal 4 draw submissions using unchanged GameDecal shader and frozen candidate index table. Same row buffer, UBO and textures within each pair. Forced depth/stencil writes expose raster differences in the fixture. Production flag routing and resource lifecycle remain untested in game.",
+  "helper_compile": {
+    "startedUTC": "2026-11-17T21:07:40.112126+00:00",
+    "count": 1,
+    "argv": [
+      "xcrun",
+      "--sdk",
+      "macosx",
+      "clang++",
+      "-std=c++23",
+      "-O2",
+      "-fobjc-arc",
+      "-I",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31/source/engine/rts/Rendering/Metal4",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/game_decal_index_parity.mm",
+      "-framework",
+      "Foundation",
+      "-framework",
+      "Metal",
+      "-o",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/game_decal_index_parity"
+    ],
+    "helperSHA256": "65e5acb257ac692764befec2c16b667cb95cdf3f95b6a40728ee2b88ce9bea54",
+    "endedUTC": "2026-11-17T21:07:41.911704+00:00",
+    "exit": 0
+  },
+  "helper_gpu": {
+    "startedUTC": "2026-11-17T21:08:22.052761+00:00",
+    "count": 1,
+    "argv": [
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-32/game_decal_index_parity"
+    ],
+    "child_metal_flags": {
+      "MTL_DEBUG_LAYER": "1",
+      "MTL_SHADER_VALIDATION": "1",
+      "MTL_SHADER_VALIDATION_ENABLE_ERROR_REPORTING": "1",
+      "MTL_CAPTURE_ENABLED": "0"
+    },
+    "pid": 15032,
+    "endedUTC": "2026-11-17T21:08:22.971510+00:00",
+    "exit": 0
+  },
+  "helper_binary_sha256": "9052f5bc7dc012521b8b859cd93c24241cee2b2d8830393d9cfd2033b3b492ef",
+  "original_shader_sha256": "92633e111c1af9e534b8e164da7fc1f7194267a27bf80e5baa041fa931a56870",
+  "candidate_index_header_sha256": "c473fd7758a9a2897accf483800cf0b564f5669f4f51306175aae8a4ba1d3b21",
+  "validation_api_enabled": true,
+  "validation_gpu_enabled": true,
+  "validation_errors": 0,
+  "actual_sample_count": 1,
+  "normal_vertices": 96,
+  "indices": {
+    "count": 96,
+    "type": "UInt16",
+    "length": 192,
+    "vertex_ids": 28,
+    "offset": 0
+  },
+  "preserved_fixture_first_count": true,
+  "attachments": {
+    "color": "byte_equal",
+    "depth": "byte_equal",
+    "stencil": "byte_equal",
+    "coverage": "equal"
+  },
+  "positive_overlap_blend_pixels": 173,
+  "cases": [
+    {
+      "name": "tiny",
+      "first": 0,
+      "count": 1,
+      "covered": 22
+    },
+    {
+      "name": "regular",
+      "first": 0,
+      "count": 1,
+      "covered": 328
+    },
+    {
+      "name": "overlap_blend",
+      "first": 0,
+      "count": 2,
+      "covered": 486
+    },
+    {
+      "name": "left_control",
+      "first": 0,
+      "count": 1,
+      "covered": 330
+    },
+    {
+      "name": "right_control",
+      "first": 0,
+      "count": 1,
+      "covered": 329
+    },
+    {
+      "name": "partial_clip",
+      "first": 0,
+      "count": 1,
+      "covered": 196
+    },
+    {
+      "name": "sphere_reject",
+      "first": 0,
+      "count": 1,
+      "covered": 0
+    },
+    {
+      "name": "alpha_reject",
+      "first": 0,
+      "count": 1,
+      "covered": 0
+    },
+    {
+      "name": "nonzero_first",
+      "first": 1,
+      "count": 1,
+      "covered": 328
+    }
+  ],
+  "in_game_indexed_route": "UNKNOWN",
+  "in_game_actual_attachment_samples": "UNKNOWN",
+  "clean_input_equality": "NOT_ESTABLISHED",
+  "clean_blocker": "Existing game log records only aggregate draws/instances. It does not attest the indexed submission or matching ordered rows/UBOs between native runs. Lua unsynced startup uses the address of a local stack value for RNG, and weapon decals consume that RNG. The existing battle scene evidence does not establish equality of these decal inputs."
+}

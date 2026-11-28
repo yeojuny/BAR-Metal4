@@ -1,0 +1,24 @@
+{
+  "status": "ORDER_LABEL_ONLY",
+  "reference_sha256": "e2d2b24c0a975a6a74276c87b48dd9e33a1ff76628ece05f1687e9241a074945",
+  "runner_sha256": "dca8bb665c698901cecbdf60cbba1dda52686465a9687707f9f2323dcb5ed0ea",
+  "unchanged_AST_functions": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "products",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw",
+    "run"
+  ],
+  "changed_functions": [
+    "stage",
+    "main"
+  ],
+  "run_AST_unchanged": true,
+  "note": "Original completion metadata hardcodes runs=6; preserved to keep execution AST unchanged. Actual ORDER/RUNS/OWNER-CLOSED and separate result must report4. No extra games are implied."
+}

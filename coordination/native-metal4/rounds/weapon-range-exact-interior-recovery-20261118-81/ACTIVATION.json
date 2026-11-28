@@ -1,0 +1,83 @@
+{
+  "status": "EXISTING_NONEMPTY_PREPARATION_SEEN",
+  "records": [
+    {
+      "round": "sensor31657-exact-interior-fps-20261118-78",
+      "arm": "R78_OFF",
+      "widget_lines": [
+        1952,
+        1955
+      ],
+      "nonempty_prepare_uploads": [
+        {
+          "line": 2430,
+          "requests": 16408
+        },
+        {
+          "line": 2494,
+          "requests": 10255
+        }
+      ]
+    },
+    {
+      "round": "sensor31657-exact-interior-fps-20261118-78",
+      "arm": "R78_ON",
+      "widget_lines": [
+        1952,
+        1955
+      ],
+      "nonempty_prepare_uploads": [
+        {
+          "line": 2430,
+          "requests": 16656
+        },
+        {
+          "line": 2494,
+          "requests": 10410
+        }
+      ]
+    },
+    {
+      "round": "sensor31657-exact-interior-reverse-20261118-79",
+      "arm": "R79_OFF",
+      "widget_lines": [
+        1952,
+        1955
+      ],
+      "nonempty_prepare_uploads": [
+        {
+          "line": 2430,
+          "requests": 16408
+        },
+        {
+          "line": 2494,
+          "requests": 10255
+        }
+      ]
+    },
+    {
+      "round": "sensor31657-exact-interior-reverse-20261118-79",
+      "arm": "R79_ON",
+      "widget_lines": [
+        1952,
+        1955
+      ],
+      "nonempty_prepare_uploads": [
+        {
+          "line": 2430,
+          "requests": 16680
+        },
+        {
+          "line": 2494,
+          "requests": 10425
+        }
+      ]
+    }
+  ],
+  "archive_widget_sources": {
+    "attack": "075921883e8c6203d4afbd1eace6010c",
+    "defense": "c7a692c5dfdec75577a8aedb736d04bc"
+  },
+  "line_variant_encode_direct_witness": false,
+  "counted_window_route_confirmed": false
+}

@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "observed": 10269,
+  "changed": [],
+  "extra": [],
+  "expectedProductionDelta": "rts/Rendering/Metal4/NativeSensorLOSShaders.h"
+}

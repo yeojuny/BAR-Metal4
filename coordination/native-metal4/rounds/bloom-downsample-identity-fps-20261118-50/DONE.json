@@ -1,0 +1,53 @@
+{
+  "round_id": "bloom-downsample-identity-fps-20261118-50",
+  "attempt_id": "bloom-identity-off-on-01",
+  "status": "DONE",
+  "reservation_commit": "61272cbc79f3a066f8b2de9f35b6335955b27d6c",
+  "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+  "fps": {
+    "OFF": 65.63851331104041,
+    "ON": 64.86688990681569,
+    "relative_percent": -1.1755650231872972
+  },
+  "valid_matched_pair": true,
+  "all_counted_frames_retained": true,
+  "counts": {
+    "configure": 1,
+    "engine_builds": 1,
+    "offline_metal_compiles_before_reservation": 5,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "screenshots": 0,
+    "retries": 0
+  },
+  "cleanup_complete": true,
+  "activation": {
+    "first_encoded_downsample_by_arm": {
+      "BLOOM_OFF": [
+        {
+          "line": 2190,
+          "text": "[t=00:00:15.363443][f=-000001] [NativeBloomDownsampleSwizzle] route=generic sequence=547",
+          "route": "generic",
+          "sequence": 547,
+          "within_timed_window": false,
+          "simulation_tick": -1
+        }
+      ],
+      "BLOOM_ON": [
+        {
+          "line": 2190,
+          "text": "[t=00:00:15.360202][f=-000001] [NativeBloomDownsampleSwizzle] route=identity_rgba sequence=547",
+          "route": "identity_rgba",
+          "sequence": 547,
+          "within_timed_window": false,
+          "simulation_tick": -1
+        }
+      ]
+    },
+    "witness_limit": "First real downsample encode per game. Neither GPU pixel output nor path frequency was measured.",
+    "identity_path_selected": true
+  },
+  "default": "OFF",
+  "report_sha256": "881c3fc82fca7e42a193dad9f7cc6f409504b4e7601676f091c989fa4a4eb357"
+}

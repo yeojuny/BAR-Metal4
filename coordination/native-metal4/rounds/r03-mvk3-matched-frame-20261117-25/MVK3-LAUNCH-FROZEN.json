@@ -1,0 +1,138 @@
+{
+  "product": {
+    "variant": "preserved-small-requested-metal3",
+    "binary": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring",
+    "sha256": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa",
+    "native": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master",
+    "package": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app",
+    "check": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pass192/retry01/runs/m_product/BACKEND-LOADED.json",
+    "checkSHA256": "1285afab914e7b94e50d78d435c2571f023e53776bbf60a52539d07ff980ebdb"
+  },
+  "argv": [
+    "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring",
+    "--write-dir",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data",
+    "--isolation",
+    "--only-local",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/script.txt"
+  ],
+  "env": {
+    "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/assets:/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine-fonts:/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/fonts:/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master",
+    "DYLD_LIBRARY_PATH": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/sdl3/lib:/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib:/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/vulkan-loader/lib:/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/moltenvk-pr2746/lib",
+    "VK_DRIVER_FILES": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/moltenvk-pr2746/MoltenVK_icd.json",
+    "VK_ICD_FILENAMES": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/moltenvk-pr2746/MoltenVK_icd.json",
+    "MESA_LOADER_DRIVER_OVERRIDE": "zink",
+    "GALLIUM_DRIVER": "zink",
+    "EGL_PLATFORM": "cocoa",
+    "MESA_GL_VERSION_OVERRIDE": "4.6COMPAT",
+    "MESA_GLSL_VERSION_OVERRIDE": "460",
+    "VK_LOADER_SEARCH_ONLY_IN_BUNDLE": "1",
+    "FONTCONFIG_FILE": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/fontconfig/fonts.conf",
+    "FONTCONFIG_PATH": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/fontconfig",
+    "XDG_CACHE_HOME": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/cache",
+    "BAR_MACOS_VULKAN_BACKEND": "moltenvk",
+    "BAR_METAL_BACKEND_REQUESTED": "METAL3",
+    "MVK_CONFIG_USE_METAL4": "0",
+    "BAR_METAL_BACKEND": "METAL3",
+    "BAR_ZINK_MVK_DISABLE_ASYNC_WAIT": "1",
+    "BAR_STATE_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state",
+    "BAR_ASSETS_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/assets",
+    "HOME": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/home",
+    "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+    "MTL_CAPTURE_ENABLED": "1",
+    "MTL_DEBUG_LAYER": "0",
+    "MTL_SHADER_VALIDATION": "0"
+  },
+  "checksums": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_native_short_run.lua": "148b6396a413cd6c8f310b1a7afc10cc1e5ef659a516f15e224c6157a508058d",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/LuaUI/Config/BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/fonts/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/games/bar-official-combat-pr6.sdz": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/assets/maps/seths_ravine_remake_1.3.1.sd7": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/private/MVK3/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "measurementWindow": {
+    "startSimulation": 600,
+    "endSimulation": 1800,
+    "warmupMinimumWallSeconds": 10,
+    "nominalSimulationSeconds": 40,
+    "wallDurationAndBinCount": "observed, never clipped",
+    "controllerSHA256": "fbb3dcd00f5f981f025dd57dc540356473917c92ff8241d3b40d99451e74ac56",
+    "newGameplayObservers": 0
+  },
+  "pacing": {
+    "contract": {
+      "status": "HOST_TEST_PASS_PENDING_REVIEW_RUNTIME",
+      "pauseRequestSimulation": 180,
+      "ackDeadlineSimulation": 240,
+      "resumeMinimumWallSeconds": 10,
+      "countStart": 300,
+      "countEnd": 1500,
+      "originalWallGate": 9.8,
+      "sharedControllerEdits": 0,
+      "removeOnAuthoritativeResumeAck": true,
+      "expectedRealWarmupSeconds": 14,
+      "hashes": {
+        "warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+        "zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536",
+        "test_warmup_pacing.lua": "85a1607728105dafd8030e8bef4544693a4a688b66e97c0443456a2d88f4d5c9"
+      },
+      "originalControllerSHA256": "e715c94e7c9a59fe82c55d830975979f2a01f8788c94571fbd8dc1eb6631860d",
+      "originalControllerGateLiteral": "assert(warm and Spring.DiffTimers(now,warm)>=9.8,'[MatchedGameplay] FAILED_WARMUP_BEFORE_SIM300')"
+    },
+    "originalWidgetConfigSHA256": "8378d14c8c5c601e7475b30c4b0cc851c74e98ec06585d43d4b1f19f5d692f7d",
+    "effectiveWidgetConfigSHA256": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+    "widgetEnabledByOrder": true
+  },
+  "stagedControllerSHA256": "148b6396a413cd6c8f310b1a7afc10cc1e5ef659a516f15e224c6157a508058d",
+  "ultra": {
+    "mode": "MVK3",
+    "settings": {
+      "MSAA": 0,
+      "MSAALevel": -1,
+      "MinSampleShadingRate": 0,
+      "VSync": 0,
+      "VSyncGame": 0,
+      "Fullscreen": 1,
+      "WindowBorderless": 0,
+      "XResolutionWindowed": 1512,
+      "YResolutionWindowed": 950,
+      "WindowPosX": 0,
+      "WindowPosY": 0,
+      "NativeFullscreenRenderWidth": 0,
+      "NativeFullscreenRenderHeight": 0,
+      "LimitIdleFps": 0
+    },
+    "qualityRun": false,
+    "expectedView": [
+      1512,
+      950
+    ],
+    "expectedDrawable": [
+      1512,
+      982
+    ],
+    "actualSamples": 0,
+    "storagePool": 0,
+    "privateFontSHA256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "gameArchive": "7a0e6ff2ee6f899654edd8cc997b5386.sdp",
+    "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51"
+  },
+  "gpuCapture": {
+    "tool": "/usr/bin/gpucapture",
+    "boundary": "Layer",
+    "count": 1,
+    "targetSim": 1590,
+    "timeoutSeconds": 180,
+    "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/MVK3/frame.gputrace",
+    "exactTickFromCapturedBoundBufferRequired": true
+  },
+  "diagnosticOnly": true
+}

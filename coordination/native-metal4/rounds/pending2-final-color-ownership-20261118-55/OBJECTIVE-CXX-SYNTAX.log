@@ -1,0 +1,145 @@
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Backend/NativeClippedFillPrecompute.h:49:62: warning: missing field 'mesh' initializer [-Wmissing-field-initializers]
+   49 |     entries.push_back(Entry{index,*d.world.inheritedClipPlane});
+      |                                                              ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:10:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Backend/NativeUIRecorder.h:75:95: warning: missing field 'postprocess' initializer [-Wmissing-field-initializers]
+   75 |         ScreenFrameView View() const { return {root.get(),coordinateWidth,coordinateHeight,{},targets}; }
+      |                                                                                                      ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:21:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4MainSampling.h:38:28: warning: variable 'colorProbe' set but not used [-Wunused-but-set-variable]
+   38 |                         __strong id<MTLTexture> colorProbe = nil;
+      |                                                 ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:50:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Backend/NativeOriginalShadowParticlesProgramSource.h:4:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Backend/NativeSourceProgramBinding.h:93:46: warning: missing field 'terrain' initializer [-Wmissing-field-initializers]
+   93 |   pending={};current={kind,std::move(owner),0};
+      |                                              ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:59:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Env/CubeMapHandler.h:6:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/FBO.h:9:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/myGL.h:14:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/float3.h:12:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/creg_cond.h:17:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/creg.h:14:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/Sync/SyncedPrimitive.h:8:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/Sync/SyncedPrimitiveBase.h:20:48: warning: unused parameter 'p' [-Wunused-parameter]
+   20 |         static inline void AssertDebugger(const void* p, unsigned size, const char* msg) {
+      |                                                       ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/Sync/SyncedPrimitiveBase.h:20:60: warning: unused parameter 'size' [-Wunused-parameter]
+   20 |         static inline void AssertDebugger(const void* p, unsigned size, const char* msg) {
+      |                                                                   ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/Sync/SyncedPrimitiveBase.h:20:78: warning: unused parameter 'msg' [-Wunused-parameter]
+   20 |         static inline void AssertDebugger(const void* p, unsigned size, const char* msg) {
+      |                                                                                     ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:59:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Env/CubeMapHandler.h:6:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/FBO.h:9:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/myGL.h:14:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/float3.h:12:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/creg_cond.h:17:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/creg.h:204:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/BasicTypes.h:49:40: warning: unused parameter 'instance' [-Wunused-parameter]
+   49 |                 void Serialize(ISerializer* s, void* instance)
+      |                                                      ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/BasicTypes.h:51:18: warning: comparison of integers of different signs: 'int' and 'size_t' (aka 'unsigned long') [-Wsign-compare]
+   51 |                         for (int a=0;a<size;a++) {
+      |                                      ~^~~~~
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/BasicTypes.h:70:31: warning: unused parameter 's' [-Wunused-parameter]
+   70 |                 void Serialize(ISerializer* s, void* instance)
+      |                                             ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/BasicTypes.h:70:40: warning: unused parameter 'instance' [-Wunused-parameter]
+   70 |                 void Serialize(ISerializer* s, void* instance)
+      |                                                      ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:59:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Env/CubeMapHandler.h:6:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/FBO.h:9:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/myGL.h:14:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/float3.h:12:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/creg_cond.h:17:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/creg.h:205:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/creg/TypeDeduction.h:246:35: warning: unused parameter 'var' [-Wunused-parameter]
+  246 | std::unique_ptr<IType> GetType(T& var) {
+      |                                   ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:59:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Env/CubeMapHandler.h:6:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/FBO.h:9:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/myGL.h:20:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/glDebugGroup.hpp:5:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/StringHash.h:34:59: warning: unused parameter 'str' [-Wunused-parameter]
+   34 |         [[nodiscard]] static constexpr uint32_t hash(const char* str, uint32_t prev_hash = length) {
+      |                                                                  ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:59:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Env/CubeMapHandler.h:6:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/FBO.h:9:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/myGL.h:20:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/glDebugGroup.hpp:16:27: warning: unused parameter 'id' [-Wunused-parameter]
+   16 |                 DebugGroupNoop(uint32_t id, const char* messsage) {}
+      |                                         ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/glDebugGroup.hpp:16:43: warning: unused parameter 'messsage' [-Wunused-parameter]
+   16 |                 DebugGroupNoop(uint32_t id, const char* messsage) {}
+      |                                                         ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:59:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Env/CubeMapHandler.h:6:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GL/FBO.h:178:26: warning: unused parameter 'td' [-Wunused-parameter]
+  178 |                 TexData(const TexData& td) { assert(td.id == 0); } // = delete;
+      |                                        ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:60:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GlobalRendering.h:10:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/Matrix44f.h:21:2: warning: definition of implicit copy assignment operator for 'CMatrix44f' is deprecated because it has a user-provided copy constructor [-Wdeprecated-copy-with-user-provided-copy]
+   21 |         CMatrix44f(const CMatrix44f& mat);
+      |         ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/Matrix44f.h:40:45: note: in implicit copy assignment operator for 'CMatrix44f' first required here
+   40 |         CMatrix44f& LoadIdentity() { return (*this = CMatrix44f()); }
+      |                                                    ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:60:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GlobalRendering.h:12:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/Misc/SpringTime.h:96:34: warning: unused parameter 'init' [-Wunused-parameter]
+   96 |         static spring_time gettime(bool init = false) { assert(xs != 0 || init); return spring_time_native(spring_clock::GetTicks()); }
+      |                                         ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:60:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/GlobalRendering.h:13:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/UnorderedSet.hpp:31:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/System/SpringHashSet.hpp:478:21: warning: unused parameter 'num_elems' [-Wunused-parameter]
+  478 |         void rehash(size_t num_elems) {
+      |                            ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:1517:90: warning: missing field 'postprocess' initializer [-Wmissing-field-initializers]
+ 1517 |   ScreenFrameView frame{&empty,prefix.coordinateWidth,prefix.coordinateHeight,{},selected};
+      |                                                                                          ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2850:222: warning: missing field 'sourceTextures' initializer [-Wmissing-field-initializers]
+ 2850 |                                 pieces.push_back({&geometry,color,other,normal,offset,shadowOffset,feature,fading,castsShadow,visible,material->family==WorldMaterialFamily::EngineModel,projectile,material->engineStandardGL4,view,objectId,uint32_t(i)});
+      |                                                                                                                                                                                                                                                          ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:5884:4: warning: misleading indentation; statement is not part of the previous 'if' [-Wmisleading-indentation]
+ 5884 |                         if(view.alphaModels)retire([&]{view.alphaModels->DidComplete();});
+      |                         ^
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:5883:4: note: previous statement is here
+ 5883 |    if(view.opaqueModels)retire([&]{view.opaqueModels->DidComplete();});
+      |    ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:2:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Backend/NativeClippedFillPrecompute.h:49:62: warning: missing field 'mesh' initializer [-Wmissing-field-initializers]
+   49 |     entries.push_back(Entry{index,*d.world.inheritedClipPlane});
+      |                                                              ^
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__memory/construct_at.h:37:49: note: in instantiation of function template specialization 'rendering::NativeClippedFillPrecompute::NativeClippedFillPrecompute<(lambda at /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:3521:48)>' requested here
+   37 |   return ::new (static_cast<void*>(__location)) _Tp(std::forward<_Args>(__args)...);
+      |                                                 ^
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:22:
+In file included from /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/Rendering/Metal4/Metal4WorldBCDecode.h:16:
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/lib/bcdec/bcdec.h:422:15: warning: unused function 'bcdec_bc1' [-Wunused-function]
+  422 | BCDECDEF void bcdec_bc1(const void* compressedBlock, void* decompressedBlock, int destinationPitch) {
+      |               ^~~~~~~~~
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/lib/bcdec/bcdec.h:426:15: warning: unused function 'bcdec_bc2' [-Wunused-function]
+  426 | BCDECDEF void bcdec_bc2(const void* compressedBlock, void* decompressedBlock, int destinationPitch) {
+      |               ^~~~~~~~~
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/lib/bcdec/bcdec.h:431:15: warning: unused function 'bcdec_bc3' [-Wunused-function]
+  431 | BCDECDEF void bcdec_bc3(const void* compressedBlock, void* decompressedBlock, int destinationPitch) {
+      |               ^~~~~~~~~
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/lib/bcdec/bcdec.h:457:15: warning: unused function 'bcdec_bc4_float' [-Wunused-function]
+  457 | BCDECDEF void bcdec_bc4_float(const void* compressedBlock, void* decompressedBlock, int destinationPitch, int isSigned) {
+      |               ^~~~~~~~~~~~~~~
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/lib/bcdec/bcdec.h:461:15: warning: unused function 'bcdec_bc5_float' [-Wunused-function]
+  461 | BCDECDEF void bcdec_bc5_float(const void* compressedBlock, void* decompressedBlock, int destinationPitch, int isSigned) {
+      |               ^~~~~~~~~~~~~~~
+/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-final-color-ownership-20261118-55/source/engine/rts/lib/bcdec/bcdec.h:1079:15: warning: unused function 'bcdec_bc6h_float' [-Wunused-function]
+ 1079 | BCDECDEF void bcdec_bc6h_float(const void* compressedBlock, void* decompressedBlock, int destinationPitch, int isSigned) {
+      |               ^~~~~~~~~~~~~~~~
+29 warnings generated.

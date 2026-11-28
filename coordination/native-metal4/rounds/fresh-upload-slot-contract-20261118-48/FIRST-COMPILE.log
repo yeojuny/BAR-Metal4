@@ -1,0 +1,4 @@
+FreshUploadSlotFixture.mm:231:32: error: no known instance method for selector 'newRenderPipelineStateWithDescriptor:error:'
+  231 |         pipelines[n]=[compiler newRenderPipelineStateWithDescriptor:d error:&error];
+      |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 error generated.

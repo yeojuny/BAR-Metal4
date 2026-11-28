@@ -1,0 +1,16 @@
+{
+  "command": [
+    "git",
+    "clone",
+    "--no-checkout",
+    "--single-branch",
+    "--depth",
+    "2",
+    "--branch",
+    "candidate/ground-decal-pages-20261117",
+    "https://github.com/yeojuny/BAR-Metal4.git",
+    "evidence/ground-decal-pages-20261117-01/source"
+  ],
+  "exit": 0,
+  "seconds": 15.540791988372803
+}

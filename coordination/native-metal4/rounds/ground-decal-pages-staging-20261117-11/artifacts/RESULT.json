@@ -1,0 +1,140 @@
+{
+  "status": "STAGED_NO_EXECUTION",
+  "round_id": "ground-decal-pages-staging-20261117-11",
+  "attempt_id": "ground-decal-pages-staging-01",
+  "source_commit": "ef4d8af835604d40b0f501b6da9b0ccd7f18a04a",
+  "source_manifest_sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+  "raw_candidate_sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+  "signed_candidate_sha256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "signed_baseline_R03_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "libraries": [
+    {
+      "name": "libIL.dylib",
+      "sha256": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e"
+    },
+    {
+      "name": "libSDL3.0.dylib",
+      "sha256": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f"
+    },
+    {
+      "name": "libbrotlicommon.1.2.0.dylib",
+      "sha256": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff"
+    },
+    {
+      "name": "libbrotlidec.1.2.0.dylib",
+      "sha256": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202"
+    },
+    {
+      "name": "libfontconfig.1.dylib",
+      "sha256": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec"
+    },
+    {
+      "name": "libfreetype.6.dylib",
+      "sha256": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827"
+    },
+    {
+      "name": "libintl.8.dylib",
+      "sha256": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8"
+    },
+    {
+      "name": "libjasper.7.0.0.dylib",
+      "sha256": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b"
+    },
+    {
+      "name": "libjpeg.8.3.2.dylib",
+      "sha256": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871"
+    },
+    {
+      "name": "liblcms2.2.dylib",
+      "sha256": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376"
+    },
+    {
+      "name": "liblzma.5.dylib",
+      "sha256": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe"
+    },
+    {
+      "name": "libminizip.1.dylib",
+      "sha256": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040"
+    },
+    {
+      "name": "libogg.0.8.6.dylib",
+      "sha256": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb"
+    },
+    {
+      "name": "libopenal.1.25.2.dylib",
+      "sha256": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c"
+    },
+    {
+      "name": "libpng16.16.dylib",
+      "sha256": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b"
+    },
+    {
+      "name": "libtiff.6.dylib",
+      "sha256": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820"
+    },
+    {
+      "name": "libvorbis.0.dylib",
+      "sha256": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388"
+    },
+    {
+      "name": "libvorbisfile.3.dylib",
+      "sha256": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7"
+    },
+    {
+      "name": "libzstd.1.5.7.dylib",
+      "sha256": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4"
+    }
+  ],
+  "runner_sha256": "a812d495e1cdb7c613267b3fa6586f34e3bffb3bf96667d2a0e1346bf904d637",
+  "relocate_script_sha256": "d37adf09b887373fb2f7ec81fe9db438dea8de72e5132264791773f663339daa",
+  "fixture_checks": [
+    {
+      "arm": "V_R03_BASELINE",
+      "LAUNCH_SHA256": "0a7386e39f96d30d6ab02a6b93636702ccc61f569004b268dd0b55f36e2f07ee",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "input_files": 13,
+      "all_hashes_match_R03_validation": true,
+      "fresh_unconsumed": true
+    },
+    {
+      "arm": "V_GDP_CANDIDATE",
+      "LAUNCH_SHA256": "0255da48b6daef0d749af8457e1cb9aacb6263ee31f343f4e973b7a6d6e9adb3",
+      "binarySHA256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+      "input_files": 13,
+      "all_hashes_match_R03_validation": true,
+      "fresh_unconsumed": true
+    }
+  ],
+  "future_command_after_new_READY_only": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/run.py",
+    "--suite",
+    "gdp_validation01",
+    "--run",
+    "validation_paced"
+  ],
+  "signing_attempts": 1,
+  "fixture_staging_attempts": 1,
+  "builds": 0,
+  "CPU_tests": 0,
+  "games": 0,
+  "GPU_helpers": 0,
+  "benchmarks": 0,
+  "captures": 0,
+  "retries": 0,
+  "cleanup": {
+    "owned_staging_PIDs_absent": true,
+    "worker_children_reaped": true,
+    "awake_created": false,
+    "writers_closed_after_packet": true
+  },
+  "runtime_GPU_and_screen_verified": false,
+  "limitations": [
+    "CPU contract/build and this staging do not prove actual GPU lifetime/residency or parity.",
+    "Next ordinary validation games cannot exhaust skipped/reversed revisions, failed submission/quarantine, context changes, shutdown or other failure paths.",
+    "No new GroundDecal copy/alloc counters; ordinary game witnesses do not quantify page reuse/copy saving.",
+    "Raw display preflight meets1512x982; actual viewport1512x950/drawable1512x982/main samples1 must still be checked in future raw logs.",
+    "Legacy runner nativeFinalColorExtents summary field is null for baseline/candidate labels; raw markers must be checked without changing frozen parser."
+  ]
+}

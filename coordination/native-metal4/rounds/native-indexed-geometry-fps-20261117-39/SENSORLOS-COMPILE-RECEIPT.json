@@ -1,0 +1,27 @@
+{
+  "label": "SENSORLOS-COMPILE",
+  "argv": [
+    "xcrun",
+    "--sdk",
+    "macosx",
+    "clang++",
+    "-std=c++20",
+    "-fobjc-arc",
+    "-I",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/source/engine/rts/Rendering/Metal4",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/fixtures/sensor-los/gpu_pixel_parity.mm",
+    "-o",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39/fixtures/sensor-los/gpu_pixel_parity"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-17T23:47:34.230258+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/native-indexed-geometry-fps-20261117-39",
+  "pid": 69785,
+  "exit": 0,
+  "ended_at_utc": "2026-11-17T23:47:35.135871+00:00",
+  "stopped_by_runner": false
+}

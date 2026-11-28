@@ -1,0 +1,14 @@
+{
+  "utc": "2026-11-19T00:34:04Z",
+  "game_attempts": 0,
+  "user_directed_start": "Existing high-side thermal bounds and no rejection for cooler idle temperatures",
+  "prior_preparation_preserved": true,
+  "first_thermal_wait_start_ceiling": {
+    "cpu": 38.369663,
+    "gpu": 34.711807
+  },
+  "operative_idle_ceiling": {
+    "cpu_temp_avg": 42.0880775,
+    "gpu_temp_avg": 40.5050315
+  }
+}

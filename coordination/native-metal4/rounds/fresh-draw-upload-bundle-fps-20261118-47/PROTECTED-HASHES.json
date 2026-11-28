@@ -1,0 +1,18 @@
+{
+  "prior_artifacts_verified": 5,
+  "prior_artifact_mismatches": [],
+  "candidate_source_mismatches": [],
+  "binary_sha256": {
+    "build": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+    "BUNDLE_OFF": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+    "BUNDLE_ON": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5"
+  },
+  "round41_combined": {
+    "verified_paths": 10274,
+    "mismatches": []
+  },
+  "bundle": {
+    "verified_paths": 10275,
+    "mismatches": []
+  }
+}

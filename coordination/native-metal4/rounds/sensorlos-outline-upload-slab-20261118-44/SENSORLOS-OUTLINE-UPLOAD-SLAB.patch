@@ -1,0 +1,128 @@
+diff --git a/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm b/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
+@@ -4,6 +4,10 @@
+ #include "Metal4NativeEffectState.h"
+ #include "Metal4FixedTriangleIndexBuffer.h"
+ #include "System/Log/ILog.h"
++#include <cstdlib>
++#include <cstring>
++#include <limits>
++#include <span>
+ #include <map>
+ #include <tuple>
+ #include <unordered_map>
+@@ -22,6 +26,51 @@
+ 	auto buffer=[lease.Device()newBufferWithBytes:bytes length:size options:MTLResourceStorageModeShared];
+ 	Require(buffer!=nil,"Cannot allocate current original sensor immutable bytes");lease.AddAllocation(buffer);return buffer;
+ }
++bool SensorLOSOutlineUploadSlabEnabled()
++{
++	static const bool enabled = [] {
++		const char* value = std::getenv("BAR_NATIVE_SENSORLOS_OUTLINE_UPLOAD_SLAB");
++		return value && std::strcmp(value, "1") == 0;
++	}();
++	return enabled;
++}
++
++bool TryUploadCircleOutline(RuntimeLease& lease, const NativeSensorLOSInstanceValues& instances,
++	const CircleUniform& uniform, std::array<MTLGPUAddress,3>& addresses)
++{
++	// Follow the engine's 256-byte constant-block slice alignment.
++	constexpr size_t alignment = 256;
++	const std::array slices{
++		std::as_bytes(std::span(instances.positions)),
++		std::as_bytes(std::span(&uniform,1)),
++		std::as_bytes(std::span(instances.colors)),
++	};
++	const size_t limit = lease.Device().maxBufferLength;
++	std::array<size_t,slices.size()> offsets{};
++	size_t length = 0;
++	for (size_t i = 0; i < slices.size(); ++i) {
++		const size_t padding = (alignment - length % alignment) % alignment;
++		if (slices[i].empty() || padding > limit - length || slices[i].size() > limit - length - padding)
++			return false;
++		offsets[i] = length + padding;
++		length = offsets[i] + slices[i].size();
++	}
++	auto slab = [lease.Device() newBufferWithLength:length options:MTLResourceStorageModeShared];
++	const MTLGPUAddress base = slab.gpuAddress;
++	auto* bytes = static_cast<std::byte*>(slab.contents);
++	if (!bytes || slab.length != length || !base || base % alignment ||
++		length > std::numeric_limits<MTLGPUAddress>::max() - base)
++		return false;
++
++	for (size_t i = 0; i < slices.size(); ++i) {
++		std::memcpy(bytes + offsets[i], slices[i].data(), slices[i].size());
++		addresses[i] = base + offsets[i];
++	}
++	// The lease strongly owns and makes the allocation resident until retirement.
++	lease.AddAllocation(slab);
++	return true;
++}
++
+ MTLBlendOperation CircleEquation(ScreenBlendEquation equation)
+ {
+ 	switch(equation){case ScreenBlendEquation::Add:return MTLBlendOperationAdd;case ScreenBlendEquation::Subtract:return MTLBlendOperationSubtract;case ScreenBlendEquation::ReverseSubtract:return MTLBlendOperationReverseSubtract;case ScreenBlendEquation::Minimum:return MTLBlendOperationMin;case ScreenBlendEquation::Maximum:return MTLBlendOperationMax;}
+@@ -44,6 +93,7 @@
+ 	__strong id<MTL4ArgumentTable> arguments=nil;
+ 	__strong id<MTLBuffer> indices=nil;
+ 	uint32_t vertices=0,instances=0;
++	bool packedOutlineInputs=false;
+ };
+ PreparedSensorLOSDraw::PreparedSensorLOSDraw():impl(std::make_unique<Impl>()){}
+ PreparedSensorLOSDraw::~PreparedSensorLOSDraw()=default;
+@@ -69,8 +119,8 @@
+ 				return true;
+ 			}();
+ 		} else {
+-			[[maybe_unused]] static const bool logged = [] {
+-				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=indexed");
++			[[maybe_unused]] static const bool logged = [this] {
++				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=%s", impl->packedOutlineInputs ? "slab" : "separate");
+ 				return true;
+ 			}();
+ 		}
+@@ -82,8 +132,8 @@
+ 				return true;
+ 			}();
+ 		} else {
+-			[[maybe_unused]] static const bool logged = [] {
+-				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=direct");
++			[[maybe_unused]] static const bool logged = [this] {
++				LOG("[NativeIndexedRoute] family=sensorlos_outline mode=direct upload=%s", impl->packedOutlineInputs ? "slab" : "separate");
+ 				return true;
+ 			}();
+ 		}
+@@ -203,13 +253,27 @@
+ 	uniform.counts={draw.count,draw.first,draw.firstInstance,samples};
+ 	const auto positions=ReadNativeSensorLOSInstances(draw);
+ 	std::erase_if(impl->buffers,[](const auto& value){return value.second.source.expired();});
+-	std::array<id<MTLBuffer>,5> buffers{impl->Snapshot(lease,draw.vertices),impl->Snapshot(lease,draw.instances),
+-		UploadCircle(lease,positions.positions.data(),positions.positions.size()*16),UploadCircle(lease,&uniform,sizeof(uniform)),
+-		UploadCircle(lease,positions.colors.data(),positions.colors.size()*16)};
++	const auto vertices = impl->Snapshot(lease,draw.vertices);
++	const auto instances = impl->Snapshot(lease,draw.instances);
++	std::array<MTLGPUAddress,3> uploads{};
++	out.packedOutlineInputs = !defines.stencilPass && SensorLOSOutlineUploadSlabEnabled() &&
++		TryUploadCircleOutline(lease,positions,uniform,uploads);
++	if (!out.packedOutlineInputs) {
++		const std::array<id<MTLBuffer>,3> buffers{
++			UploadCircle(lease,positions.positions.data(),positions.positions.size()*16),
++			UploadCircle(lease,&uniform,sizeof(uniform)),
++			UploadCircle(lease,positions.colors.data(),positions.colors.size()*16),
++		};
++		for (size_t i = 0; i < uploads.size(); ++i)
++			uploads[i] = buffers[i].gpuAddress;
++	}
+ 	auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=5;descriptor.maxTextureBindCount=2;descriptor.maxSamplerStateBindCount=2;descriptor.initializeBindings=YES;
+ 	NSError* error=nil;out.arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];
+ 	Require(out.arguments!=nil,"Cannot allocate current original sensor argument table");lease.Retain(out.arguments);
+-	for(unsigned i=0;i<buffers.size();++i)[out.arguments setAddress:buffers[i].gpuAddress atIndex:i];
++	[out.arguments setAddress:vertices.gpuAddress atIndex:0];
++	[out.arguments setAddress:instances.gpuAddress atIndex:1];
++	for (size_t i = 0; i < uploads.size(); ++i)
++		[out.arguments setAddress:uploads[i] atIndex:i+2];
+ 	[out.arguments setTexture:out.height.texture.gpuResourceID atIndex:0];[out.arguments setSamplerState:out.height.sampler.gpuResourceID atIndex:0];
+ 	if(out.mask.texture){[out.arguments setTexture:out.mask.texture.gpuResourceID atIndex:1];[out.arguments setSamplerState:out.mask.sampler.gpuResourceID atIndex:1];}
+  out.pipeline=impl->Pipeline(lease,draw,color,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.state,stencil);

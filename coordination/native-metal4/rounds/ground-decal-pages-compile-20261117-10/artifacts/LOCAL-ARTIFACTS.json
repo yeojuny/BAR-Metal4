@@ -1,0 +1,20 @@
+[
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/SOURCE-HASHES.json",
+    "bytes": 1284821,
+    "sha256": "83a18112ff56e9b5aef9dbb21fb2cce9aa88671bc3c9dde172387b474827a7ff",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/TestGroundDecalPages",
+    "bytes": 87112,
+    "sha256": "e33a8eac02c4551a0b6f7d4c2940fb9241a6dfcd6324925a1f7a986a35127588",
+    "uploaded": false
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-20261117-01/build/spring-metal4-scene",
+    "bytes": 65680528,
+    "sha256": "ba046f9637048ba07aba562226bb4d202b003ede9fffe8176ca9f542f048a366",
+    "uploaded": false
+  }
+]

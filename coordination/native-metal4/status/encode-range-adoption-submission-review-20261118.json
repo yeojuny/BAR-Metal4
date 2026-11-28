@@ -1,0 +1,105 @@
+{
+  "disposition": "DEPRIORITIZE_RETIMING_MAIN_SUBMISSION_UNTIL_REPEATED_CURRENT_PROOF",
+  "scope": "Accepted R03 source and existing captures, CPU traces and logs. Static review only.",
+  "historical": {
+    "round": "cpu-postcompletion-tail-20261117-21",
+    "source": "c34129af9158bbdef1321d17825f1f60721b74ec",
+    "artifact": "1145a599c051b24071472d131f73d793498df49d",
+    "simulation_ticks": [
+      900,
+      915
+    ],
+    "exact_chains": 33,
+    "tail_mean_ms": 0.03258581818181818,
+    "tail_p95_ms": 0.046417,
+    "callback_mean_ms": 0.01779787878787879,
+    "event_wait_mean_ms": 7.782742393939394,
+    "scope": "Host feedback-wait end to successor Submit start, one game and ordinary exact interior chains. Successor Encode and ResourceCommit ended before retirement. Context is not GPU idle or predicted FPS. Boundary and early drains outside exact interior sample.",
+    "report": "https://github.com/yeojuny/BAR-Metal4/blob/1145a599c051b24071472d131f73d793498df49d/coordination/native-metal4/rounds/cpu-postcompletion-tail-20261117-21/REPORT.md"
+  },
+  "current_source": {
+    "Metal4RuntimeNative.mm": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/source/engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "sha256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521"
+    },
+    "Metal4WorldRenderer.mm": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "sha256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51"
+    },
+    "Metal4SceneBridge.cpp": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/source/engine/rts/Rendering/Metal4/Metal4SceneBridge.cpp",
+      "sha256": "d3d2a43aa10e956744b643eb30bcc1a4c2370767641d8f46a9ba0298eb47be87"
+    },
+    "Metal4PostprocessNative.mm": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/source/engine/rts/Rendering/Metal4/Metal4PostprocessNative.mm",
+      "sha256": "67223a9686d1fae4877c68a0a039d26a8fe05047e212a36f51f56e053e724415"
+    },
+    "Metal4Bloom.mm": {
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom-prepare-defines-fps-20261118-52/source/engine/rts/Rendering/Metal4/Metal4Bloom.mm",
+      "sha256": "6c72b76a993af836d97e9acdb10b4a5a0d885a07bfc33cb69e039063b791067c"
+    }
+  },
+  "evidence": [
+    {
+      "file": "Metal4WorldRenderer.mm",
+      "line": 5761,
+      "proof": "Ordinary deferred frame recorded through the final resolve, Encode trace ends, residency commit joins, prepared owners captured."
+    },
+    {
+      "file": "Metal4RuntimeNative.mm",
+      "line": 872,
+      "proof": "Early retirement on slot/dependency cases. Separate recording slot admits Begin while predecessor is outstanding."
+    },
+    {
+      "file": "Metal4RuntimeNative.mm",
+      "line": 1030,
+      "proof": "SubmitAndDefer finishes staged residency and retires predecessor before allocating/publishing successor GPU ticket. Pending limit one."
+    },
+    {
+      "file": "Metal4RuntimeNative.mm",
+      "line": 1167,
+      "proof": "Wait queue progress event, then serialized commit feedback, check GPU error, reset old allocator, producer callback, residency/terrain completion, pop pending."
+    },
+    {
+      "file": "Metal4RuntimeNative.mm",
+      "line": 862,
+      "proof": "Previous-frame handoff and exact registered prior-read checks finish before N+1 submit."
+    },
+    {
+      "file": "Metal4RuntimeNative.mm",
+      "line": 1097,
+      "proof": "Successor queue drawable wait, commit, drawable signal/present, and completion event enqueue. Completed retained graph released after successor submit on same caller (1113–1133)."
+    },
+    {
+      "file": "Metal4WorldRenderer.mm",
+      "line": 5859,
+      "proof": "Completion changes producer status, water/UI receipts, world ownership, and may throw. It is not detachable local bookkeeping."
+    },
+    {
+      "file": "Metal4Bloom.mm",
+      "line": 47,
+      "proof": "Exact predecessor Bloom image requires successful completion before successor; postprocess also accepts encoded earlier producers under original retirement contract."
+    }
+  ],
+  "existing_current_logs": {
+    "round": "screen-encode-range-accepted-baseline-reverse-20261118-54",
+    "NativeRecord158": "frame=300 pending_at_begin=1 independent_command_slot=1 gpu_pending_limit=1",
+    "NativeRetirement186": "submission=600 release_after_submit=1 same_thread=1",
+    "window": "Both observations before measured simulation 540–1740; no new timing of this phase."
+  },
+  "possible_future_design": {
+    "before_commit": "Keep required successful event+feedback, error check, exact producer version/readability checks, submission ownership and drawable sequence. No additional GPU pending ticket.",
+    "after_commit": "Only an individually proven non-throwing, independent CPU-only observer (such as emission of an already copied diagnostic payload). Same serialized owner, before any affected result export/slot reuse. No further existing repeatable leaf was demonstrated.",
+    "hazards": "Moving arbitrary DidComplete(), allocator reset, residency release or producer publication risks reading stale data, reusing live slot/storage, moving a throwing failure past successor commit, or violating completion delivery on readback/drain/shutdown.",
+    "prerequisite": "In a separately authorized bounded diagnostic, compare exact predecessor/next-job identities and end of encoding to feedback-end/next Submit on the approved build. Keep startup/early drains, readback and failures visible. Measure recurring movable cost, then prove no downstream reader, write/lifetime effect, or changed failure policy.",
+    "priority": "Proceed with directly measurable GroundDecal shader work before scheduling changes. Reopen only if current window shows repeated, sizeable movable post-feedback work."
+  },
+  "execution": {
+    "builds": 0,
+    "games": 0,
+    "gpu_captures": 0,
+    "profiles": 0,
+    "benchmarks": 0,
+    "renderer_edits": 0
+  }
+}

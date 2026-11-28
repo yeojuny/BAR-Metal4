@@ -1,0 +1,26 @@
+{
+  "previous_round": "pending2-exact-ui-rtt-fps-20261118-61",
+  "arms": [
+    {
+      "arm": "CAP1",
+      "identical_environment": true,
+      "identical_inputs": 13,
+      "window": {
+        "startSimulation": 540,
+        "endSimulation": 1740,
+        "screenshot": false
+      }
+    },
+    {
+      "arm": "CAP2",
+      "identical_environment": true,
+      "identical_inputs": 13,
+      "window": {
+        "startSimulation": 540,
+        "endSimulation": 1740,
+        "screenshot": false
+      }
+    }
+  ],
+  "matched_previous_options": true
+}

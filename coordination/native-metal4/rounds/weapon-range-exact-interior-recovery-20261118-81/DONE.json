@@ -1,0 +1,153 @@
+{
+  "status": "COMPLETE_WEAPON_RANGE_AA0_CAP2_ONE_OFF_ON_PAIR",
+  "round_id": "weapon-range-exact-interior-recovery-20261118-81",
+  "attempt_id": "weapon-range-exact-interior-typed-fixture-off-on-01",
+  "preserved_failed_round": "weapon-range-exact-interior-fps-20261118-80",
+  "patch_unchanged_from_r80": true,
+  "binary_sha256": "ffabb50bf82881d0a1e3e12a14e72dbf0515ed3e604815bd0664369a269e9337",
+  "patch_sha256": "58b492de023d1876846c823d014bdc0706d9f55f1b71676bcd552f6089ca8fda",
+  "fixture_sha256": "e2b822443b066b898a218b749bbcc9f054ea9d3df8feae74526f85850463b10d",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "order": [
+    "OFF",
+    "ON"
+  ],
+  "cap": 2,
+  "aa": 0,
+  "prejoin": "OFF",
+  "fixed_sensorlos": "ON",
+  "fixed_sensor31657": "ON",
+  "fixed_range_division233": "OFF",
+  "cpu_read_mode": 0,
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "matching_scene_inputs": 13,
+  "all_raw_intervals_preserved": true,
+  "outliers_removed": 0,
+  "simulation_verification": {
+    "status": "PASS",
+    "matching_scene_inputs": 13,
+    "matching_non_system_library_paths": 22,
+    "matched_simulation_units_camera_speed_bins": 40,
+    "archived_events_match": true,
+    "archive_checksums_match": true,
+    "pathfinder_checksum_match": true,
+    "game_seed": 154658555,
+    "benchmark_seed": 7654321,
+    "units_created": 600,
+    "units_destroyed": 433,
+    "native_single_sample_and_mrt_verified": true,
+    "time_bins_compared": 40,
+    "bins_faster_on": 20,
+    "bins_equal": 7,
+    "minimum_bin_fps_difference": -0.6834106440000056,
+    "maximum_bin_fps_difference": 0.6976089479999956,
+    "only_actual_child_difference": "BAR_NATIVE_WEAPON_RANGE_EXACT_INTERIOR",
+    "per_tick_state_checksum_measured": false
+  },
+  "average_fps_change_percent": 0.06295565045146834,
+  "low_1_percent_change_percent": -2.313167330707555,
+  "display_locked_asleep_in_both": true,
+  "scanout_or_input_latency_verified": false,
+  "both_normal_exit": true,
+  "awake_released": true,
+  "own_caffeinate_stopped": true,
+  "activation": {
+    "both_range_widgets_and_nonempty_preparation_seen": true,
+    "plain_or_masked_encode_direct_witness": false,
+    "counted_window_coverage_frequency_measured": false,
+    "shortcut_fragments_measured": false
+  },
+  "source_cpu_cases": 380886,
+  "metal_color_depth_stencil_parity_cases": 1152,
+  "metal_fixture_domains": 6,
+  "metal_fixture_mask_output_changes": 349,
+  "arms": [
+    {
+      "arm": "R81_OFF",
+      "flag": "0",
+      "average_fps": 78.5578589615976,
+      "low_1_percent_fps": 58.287793338442924,
+      "p95_ms": 15,
+      "p99_ms": 16.000001,
+      "maximum_frame_ms": 24,
+      "intervals": 3141,
+      "draws": 3142,
+      "seconds": 39.995998383,
+      "bins": 40,
+      "raw_sha256": "2c5c702a35808159b3582e26c1440c745bac46d2efb2ded6ee5019da372e7214",
+      "actual_two_pending": 3140,
+      "joined": 3141,
+      "unclassified": 0,
+      "normal_exit": true,
+      "process_group_gone": true,
+      "present_request_observed": true,
+      "outline_evidence": {
+        "widgets": [
+          "attack",
+          "defense"
+        ],
+        "nonempty_preparation_seen": true,
+        "owner_lifetime_upload_requests": [
+          16456,
+          10285
+        ],
+        "plain_or_masked_encode_direct_witness": false
+      },
+      "over_16_667_ms": 19,
+      "over_33_333_ms": 0
+    },
+    {
+      "arm": "R81_ON",
+      "flag": "1",
+      "average_fps": 78.60731557268763,
+      "low_1_percent_fps": 56.93949914514773,
+      "p95_ms": 15,
+      "p99_ms": 16.000001,
+      "maximum_frame_ms": 34.000002,
+      "intervals": 3144,
+      "draws": 3145,
+      "seconds": 40.008998871,
+      "bins": 40,
+      "raw_sha256": "fa7654be1a5de0d3b7b058d55a6251d1f2e5e76498c023f0ff62f6fb58c1eee5",
+      "actual_two_pending": 3142,
+      "joined": 3144,
+      "unclassified": 0,
+      "normal_exit": true,
+      "process_group_gone": true,
+      "present_request_observed": true,
+      "outline_evidence": {
+        "widgets": [
+          "attack",
+          "defense"
+        ],
+        "nonempty_preparation_seen": true,
+        "owner_lifetime_upload_requests": [
+          16392,
+          10245
+        ],
+        "plain_or_masked_encode_direct_witness": false
+      },
+      "over_16_667_ms": 14,
+      "over_33_333_ms": 1
+    }
+  ],
+  "defaults_changed": false,
+  "default_cap": 1,
+  "default_switch": "OFF",
+  "decision": "NO_CLEAR_BENEFIT_IN_ONE_FIXED_PAIR_KEEP_OFF",
+  "finished_at_utc": "2026-11-18T13:46:07.940506+00:00"
+}

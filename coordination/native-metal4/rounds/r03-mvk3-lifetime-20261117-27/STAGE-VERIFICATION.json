@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "freshStageInvocations": 1,
+  "gamesStartedAtStage": 0,
+  "arms": {
+    "R03": {
+      "initialBC213SHA256": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "binarySHA256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "matchPinnedSceneInputs": true,
+      "matchPriorEnvironmentWithCaptureDisabled": true,
+      "inputsVerified": 13,
+      "launchSHA256": "f4095eb336743870c61fd98d37bd6ac53641b8a2cf40bc7be094e06e942c2530"
+    },
+    "MVK3": {
+      "initialBC213SHA256": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+      "gameArchiveSHA256": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51",
+      "binarySHA256": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa",
+      "matchPinnedSceneInputs": true,
+      "matchPriorEnvironmentWithCaptureDisabled": true,
+      "inputsVerified": 13,
+      "launchSHA256": "df739b0fed4120b7fa27c37026d1ed6e7f4d8d8c7b6a4b6f827f8f8ba6dc5ee6"
+    }
+  },
+  "packageManifestSHA256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+  "runtimeLibraryHashesVerified": 23,
+  "handoffSHA256": "ba2edbc5efc624d1cb96a0a2e003907637e161a09379f04afd56e2dcbb49de35"
+}

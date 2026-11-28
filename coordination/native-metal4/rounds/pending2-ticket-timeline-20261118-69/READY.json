@@ -1,0 +1,23 @@
+{
+  "status": "STAGED_NO_GAME",
+  "round_id": "pending2-ticket-timeline-20261118-69",
+  "arm": "R69_CAP2",
+  "cap": 2,
+  "binary_sha256": "d6535a238760590c7c7e0495ae15060b57c6b7400acb14e6c4799487a081934e",
+  "original_binary_sha256": "f887a0f37205d61e401fe74bf258f4d5b0dca02cf2dbbe85704f3b2ced721aa9",
+  "input_hashes_match": 13,
+  "measure_simulation": [
+    540,
+    1740
+  ],
+  "diagnostic_only": true,
+  "patch_sha256": "aaff24a9a2aee70a2b5622cd5c91e86e89e91a57fa536af11ee110018410a7e2",
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "round_id": "bloom-downsample-identity-fps-20261118-50",
+  "attempt_id": "bloom-identity-off-on-01",
+  "status": "READY_BLOOM_DOWNSAMPLE_IDENTITY_RGBA",
+  "source_manifest_sha256": "810c67285e9ca9860e346897b1297235ae33617a75d8db78e5538456f6c36a98",
+  "modified_files": 2,
+  "order": [
+    "BLOOM_OFF",
+    "BLOOM_ON"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

@@ -1,0 +1,47 @@
+{
+  "camera_matrices": {
+    "cameraView": {
+      "byte_equal": true
+    },
+    "cameraProj": {
+      "byte_equal": false,
+      "x_y_w_rows_exact": true,
+      "max_error_after_z_half_z_plus_w": 0.0
+    },
+    "cameraViewProj": {
+      "byte_equal": false,
+      "x_y_w_rows_exact": true,
+      "max_error_after_z_half_z_plus_w": 0.0001220703125
+    },
+    "cameraBillboardView": {
+      "byte_equal": true
+    },
+    "cameraViewInv": {
+      "byte_equal": true
+    },
+    "cameraProjInv": {
+      "byte_equal": false
+    },
+    "cameraViewProjInv": {
+      "byte_equal": false
+    }
+  },
+  "interpretation": "Camera view/inverse and screen-space x/y/w projection rows agree. Depth row transformation is observed numerically; no blanket all-matrix bit-equality claim. Pair was already stopped on differing decal inputs.",
+  "decal_counterexample_sphere_cull": {
+    "row": 0,
+    "native_bound_camera": [
+      4095.9287109375,
+      2338.857666015625,
+      3932.479248046875
+    ],
+    "clip_xyzw": [
+      1864.2130783906834,
+      69.67907596901512,
+      2167.727432072963,
+      2185.227672787296
+    ],
+    "radius": 320.0,
+    "outsideXY": false
+  },
+  "bar_status": "PAUSED"
+}

@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "binary_sha256": "ce68647f1149a55b6bf7ab4271178d86b58f6282393720e495297d01d2d1c638",
+  "architecture": "arm64",
+  "link": "[1577/1578] Linking CXX executable spring-metal4-scene",
+  "sources": {
+    "Metal4Bloom.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Bloom.mm.o",
+      "sha256": "f93d3f06393c93bfbc8feaf616cbb8a4ed83489610ac612294a8c26806b998a8",
+      "link_binding": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a"
+    }
+  },
+  "archive_members_match_objects": true,
+  "literals_present": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": true,
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": true,
+    "BAR_NATIVE_BLOOM_DOWNSAMPLE_IDENTITY_RGBA": true,
+    "[NativeBloomDownsampleSwizzle] route=%s sequence=%llu": true,
+    "BloomDownsampleIdentityRGBA": true
+  }
+}

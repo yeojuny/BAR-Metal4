@@ -1,0 +1,56 @@
+{
+  "status": "STAGED_FIXTURE_NO_GPU",
+  "pins": {
+    "fixture": "19fd0ef82da572f83298c296959c72b70c02fca46d9f74955f6821e83221f7ca",
+    "fixture.mm": "afbbeffdfcac1364d3c9eb9abef63ea83b51ff100912016e9f1f2448b5851e6f",
+    "HOST-CHECK.log": "8b0c7f5e93efe22111b1e634f0203dd8c411f3cb720857319e582832a2197853",
+    "received/wrap.patch": "bcc8de27467c6fb2424523b02e6908463c00b470dea41e01ba6cc1e1e21d1ae2",
+    "inputs/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h": "f1559a0a06831f8123b3c8b0887f17da4724ba1a51dc861afa63dd9a80cef761",
+    "inputs/engine/rts/Rendering/Metal4/NativeSampleShadingShaders.h": "02c29319fb48b4ece77d1ed6c1cd7b3d4644dca1b81bce9f9f7423bfd12ef4bf"
+  },
+  "thermal": {
+    "reference_c": {
+      "cpu_temp_avg": 40.0880775,
+      "gpu_temp_avg": 38.5050315
+    },
+    "tolerance_c": 2.0,
+    "min_stable_samples": 5,
+    "max_postrun_c": {
+      "cpu_temp_avg": 84.290245,
+      "gpu_temp_avg": 82.56115
+    },
+    "max_median_active": {
+      "cpu_active_ratio": 0.15,
+      "gpu_active_ratio": 0.25
+    },
+    "cool_clock_mhz": {
+      "ecpu_freq_mhz": 1490.0,
+      "pcpu_freq_mhz": 1260.0,
+      "gpu_freq_mhz": 338.0
+    },
+    "thermal_warning_allowed": false,
+    "recovery_deadline_seconds": 600,
+    "monitor_in_counted_window": false,
+    "lower_idle_bound": false
+  },
+  "order": [
+    "OFF",
+    "ON",
+    "ON",
+    "OFF",
+    "ON",
+    "OFF",
+    "OFF",
+    "ON"
+  ],
+  "timed_draws_per_sample": 96,
+  "viewport": [
+    128,
+    128
+  ],
+  "samples": 1,
+  "readback_in_timing": false,
+  "math_mode": "safe/precise",
+  "parity_cases": 18,
+  "positive_wrap_required": true
+}

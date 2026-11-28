@@ -1,0 +1,54 @@
+[
+  {
+    "arm": "B1_GDP",
+    "backend": "candidate",
+    "mean_FPS": 64.1451917534004,
+    "one_percent_low": 55.43710328649187,
+    "counted_seconds": 40.002998352,
+    "bins": 40,
+    "bin_min_FPS": 59.47580719,
+    "bin_max_FPS": 72.927070618,
+    "first10_bin_FPS_mean": 70.8493591309,
+    "last10_bin_FPS_mean": 60.6051437377,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "A1_R03",
+    "backend": "baseline",
+    "mean_FPS": 64.15160290959199,
+    "one_percent_low": 55.43710328649187,
+    "counted_seconds": 39.999000549,
+    "bins": 40,
+    "bin_min_FPS": 59.59595871,
+    "bin_max_FPS": 72.70916748,
+    "first10_bin_FPS_mean": 70.7498725891,
+    "last10_bin_FPS_mean": 60.6049468994,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "A2_R03",
+    "backend": "baseline",
+    "mean_FPS": 64.07660103557454,
+    "one_percent_low": 52.52525507193156,
+    "counted_seconds": 39.999000549,
+    "bins": 40,
+    "bin_min_FPS": 58.648109436,
+    "bin_max_FPS": 72.854293823,
+    "first10_bin_FPS_mean": 70.7470306397,
+    "last10_bin_FPS_mean": 60.6257129669,
+    "valid_and_retained": true
+  },
+  {
+    "arm": "B2_GDP",
+    "backend": "candidate",
+    "mean_FPS": 64.06378888659428,
+    "one_percent_low": 53.94191162342262,
+    "counted_seconds": 40.006999969,
+    "bins": 40,
+    "bin_min_FPS": 59.535823822,
+    "bin_max_FPS": 72.636817932,
+    "first10_bin_FPS_mean": 70.5560302734,
+    "last10_bin_FPS_mean": 60.5556243893,
+    "valid_and_retained": true
+  }
+]

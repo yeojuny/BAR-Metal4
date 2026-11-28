@@ -1,0 +1,64 @@
+{
+  "status": "PASS_GROUND_DECAL_GPU_PARITY_WITNESS_RECOVERY",
+  "round_id": "ground-decal-parity-witness-recovery-20261118-83",
+  "attempt_id": "ground-decal-aa0-parity-witness-02",
+  "prior_failure_preserved": "ground-decal-terrain-color-fps-20261118-82",
+  "engine_source_unchanged": true,
+  "engine_patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93",
+  "fixture_sha256": "04a6fd95c907beea944561b3ab3d063da49dbe6ef14bc4fc6b622bd1db4c74e1",
+  "fixture_patch_sha256": "dbc2959b8cc644ce5cba229144d90596928c7110704038bbbb1592a1124ff82d",
+  "original_gate": {
+    "observed": "Combined positive-witness assertion failed with no individual counts.",
+    "source_diagnosis": "Fixture used alpha 255 at both packed glow endpoints. The downstream mix selects glow RGB at weight one, masking the explosion minimap contribution for finite inputs.",
+    "limits": "The original run did not record the actual counts. No retrospective assertion is made about its depth/stencil counts."
+  },
+  "corrections": [
+    "Use a partial glow weight so explosion terrain color reaches blended output.",
+    "Keep input atlas layer and height lookup bounds valid.",
+    "Record individual attachment and per-format explosion witnesses before evaluating the gates."
+  ],
+  "gpu": {
+    "api_validation": true,
+    "indexed_bgra8_depth_stencil_comparisons": 72,
+    "depth_write_witnesses": 36,
+    "stencil_write_witnesses": 36,
+    "unexpected_depth_writes": 0,
+    "unexpected_stencil_writes": 0,
+    "explosion_color_response_by_format": {
+      "BC1": 4,
+      "RGBA8": 4,
+      "BGRA8": 2
+    },
+    "direct_float_comparisons": 45,
+    "observed_finite_components": 357270,
+    "observed_nan_components": 178635,
+    "observed_infinite_components": 0,
+    "exceptional_inputs_included": [
+      "NaN",
+      "positive infinity",
+      "negative infinity"
+    ]
+  },
+  "counts": {
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 1,
+    "configure": 0,
+    "engine_build": 0,
+    "games": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "fps": null,
+  "default_switch": "OFF",
+  "defaults_changed": false,
+  "cleanup": {
+    "idle_check": "PASS",
+    "gpu_debug_sessions": 0,
+    "helper_processes_remaining": 0,
+    "display_locked_asleep": true,
+    "display_assertions_started": 0,
+    "awake_lease": "RELEASED"
+  }
+}

@@ -1,0 +1,101 @@
+--- a/rts/Rendering/Metal4/NativeGroundDecalShaders.h
++++ b/rts/Rendering/Metal4/NativeGroundDecalShaders.h
+@@ -727,6 +727,16 @@
+ 
+ 	mainCol *= 2.0 * vTintColor;
+ 
++#if defined(NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR)
++	// The host selects this variant only for normalized minimap formats.
++	// The normalized atlas and packed tint bound finite mainCol.rgb to [0,2].
++	// For known non-explosion types, mix(mainCol.rgb, finiteColor, 0) is
++	// the exact endpoint. Let exceptional inputs still run the original mix.
++	const bool nonExplosion = vDecalType == 1.0 || vDecalType == 3.0 || vDecalType == 4.0;
++	const bool skipTerrainColor = nonExplosion && all(isfinite(mainCol.rgb)) &&
++		all(isfinite(ImageUV(worldPos.xz * mapDims.zw,2)));
++	if (!skipTerrainColor) {
++#endif
+ 	float3 mapDiffuse = miniMapTex.sample(minimapSampler, ImageUV(worldPos.xz * mapDims.zw,2), level(0)).rgb;
+ 	#if 0
+ 		const float3 LUMA = float3(0.2125, 0.7154, 0.0721);
+@@ -735,6 +745,9 @@
+ 		float3 mapDecalMix = 2.0 * mainCol.rgb * mapDiffuse.rgb;
+ 	#endif
+ 	mainCol.rgb = mix(mainCol.rgb, mapDecalMix, float(vDecalType == DECAL_EXPLOSION)); //only apply mapDecalMix for explosions
++#if defined(NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR)
++	}
++#endif
+ 
+ 	float3 N = GetFragmentNormal(worldPos.xz);
+ 	float3 T = normalize(vRotMat[0] - N * dot(vRotMat[0],  N));
+@@ -888,9 +901,11 @@
+  return tex.sample(linearClamp,uv,level(0));
+ }
+ )MSL";
+-inline std::string NativeGroundDecalShaderSource(bool high,bool shadows)
++inline std::string NativeGroundDecalShaderSource(bool high,bool shadows,bool skipUnusedTerrainColor=false)
+ {
+ 	return std::string(high?"#define HIGH_QUALITY\n#ifndef RECOIL_NATIVE_SAMPLE_SHADING\n#define RECOIL_NATIVE_SAMPLE_SHADING 1\n#endif\n":"")+
+-		"#define NATIVE_GROUND_DECAL_SHADOWS "+std::to_string(unsigned(shadows))+"\n"+NativeGroundDecalShaders;
+-}
+-}
++		"#define NATIVE_GROUND_DECAL_SHADOWS "+std::to_string(unsigned(shadows))+"\n"+
++		(skipUnusedTerrainColor?"#define NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR 1\n":"")+
++		NativeGroundDecalShaders;
++}
++}
+--- a/rts/Rendering/Metal4/Metal4GroundDecal.mm
++++ b/rts/Rendering/Metal4/Metal4GroundDecal.mm
+@@ -27,6 +27,16 @@
+ struct InstanceResources {std::shared_ptr<const NativeGroundDecalInstances> source;__strong id<MTLBuffer> buffer=nil;};
+ struct AtlasPassDraw {uint32_t page=0,level=0;__strong id<MTL4ArgumentTable> arguments=nil;};
+ struct alignas(16) AtlasUniforms {std::array<float,4> clamp{};std::array<uint32_t,4> flags{};};
++bool SkipUnusedTerrainColor(uint32_t samples,MTLPixelFormat minimapFormat)
++{
++	static const bool enabled=[] {
++		const char* value=std::getenv("BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR");
++		return value&&std::strcmp(value,"1")==0;
++	}();
++	return enabled&&samples==1&&!InterventionFastMathEnabled()&&
++		(minimapFormat==MTLPixelFormatBC1_RGBA||minimapFormat==MTLPixelFormatRGBA8Unorm||
++		 minimapFormat==MTLPixelFormatBGRA8Unorm);
++}
+ }
+ struct PreparedGroundDecal::Impl {
+ 	std::shared_ptr<const NativeGroundDecalFrame> frame;
+@@ -95,19 +105,20 @@
+ }
+ void PreparedGroundDecal::DidComplete(){Require(impl->dependenciesEncoded&&impl->encoded,"Original ground decal cannot retire unencoded resources");impl->atlas->ready=true;}
+ struct GroundDecalGPU::Impl {
+-	using Key=std::tuple<MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,bool,bool,uint32_t,bool,bool>;
++	using Key=std::tuple<MTLPixelFormat,MTLPixelFormat,MTLPixelFormat,bool,bool,uint32_t,bool,bool,bool>;
++	using LibraryKey=std::tuple<bool,bool,bool>;
+ 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
+-	std::map<std::pair<bool,bool>,id<MTLLibrary>> libraries;
++	std::map<LibraryKey,id<MTLLibrary>> libraries;
+ 	std::array<id<MTLSamplerState>,6> samplers{};
+ 	__strong id<MTLDepthStencilState> depth=nil;
+ 	std::shared_ptr<AtlasResources> atlas;
+ 	std::shared_ptr<InstanceResources> instances;
+-	id<MTLRenderPipelineState> Pipeline(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool atlas,bool high,uint32_t samples,bool validation,double& milliseconds,bool shadows=false){
+-		const std::pair<bool,bool> libraryKey{high,shadows};
+-		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
++	id<MTLRenderPipelineState> Pipeline(RuntimeLease& l,MTLPixelFormat color,MTLPixelFormat depthFormat,MTLPixelFormat stencilFormat,bool atlas,bool high,uint32_t samples,bool validation,double& milliseconds,bool shadows=false,bool skipUnusedTerrainColor=false){
++		const LibraryKey libraryKey{high,shadows,skipUnusedTerrainColor};
++		const Key key{color,depthFormat,stencilFormat,atlas,high,l.SampleShadingKey(samples),validation,shadows,skipUnusedTerrainColor};if(auto it=pipelines.find(key);it!=pipelines.end()){l.Retain(libraries.at(libraryKey));return it->second;}
+ 		const auto start=Clock::now();auto it=libraries.find(libraryKey);NSError* error=nil;
+ 		if(it==libraries.end()){auto o=[MTLCompileOptions new];o.mathMode=MTLMathModeSafe;o.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;ConfigureInterventionColorMath(o);
+-			auto lib=l.NewLibraryWithSource(String(NativeGroundDecalShaderSource(high,shadows)),o,&error);Require(lib!=nil,"Cannot compile original ground decal family: "+Error(error));it=libraries.emplace(libraryKey,lib).first;}
++			auto lib=l.NewLibraryWithSource(String(NativeGroundDecalShaderSource(high,shadows,skipUnusedTerrainColor)),o,&error);Require(lib!=nil,"Cannot compile original ground decal family: "+Error(error));it=libraries.emplace(libraryKey,lib).first;}
+ 		l.Retain(it->second);
+ 		auto d=[MTL4RenderPipelineDescriptor new];auto v=[MTL4LibraryFunctionDescriptor new],f=[MTL4LibraryFunctionDescriptor new];v.library=f.library=it->second;v.name=atlas?@"GroundDecalAtlasVertex":@"GroundDecalVertex";f.name=atlas?@"GroundDecalAtlasFragment":@"GroundDecalFragment";
+ 		// Metal4 retains depth/stencil formats on the real render pass. The
+@@ -140,7 +151,8 @@
+ 	Require(d.texture.sampleCount==(frame->highQuality?frame->sampleCount:1),"Original ground decal depth sampling differs from source");
+ 	Require(!frame->shadows||(images.shadowDepth.texture&&images.shadowColor.texture),"Original ground decal shadow producer incomplete");
+ 	auto p=std::make_unique<PreparedGroundDecal::Impl>();p->frame=frame;
+-	p->surfacePipeline=impl->Pipeline(l,color,depthFormat,stencilFormat,false,frame->highQuality,frame->sampleCount,validation,milliseconds,frame->shadows);l.Retain(p->surfacePipeline);
++	const bool skipUnusedTerrainColor=SkipUnusedTerrainColor(frame->sampleCount,m.texture.pixelFormat);
++	p->surfacePipeline=impl->Pipeline(l,color,depthFormat,stencilFormat,false,frame->highQuality,frame->sampleCount,validation,milliseconds,frame->shadows,skipUnusedTerrainColor);l.Retain(p->surfacePipeline);
+ 	if(!impl->depth){auto d=[MTLDepthStencilDescriptor new];d.depthCompareFunction=MTLCompareFunctionAlways;d.depthWriteEnabled=NO;impl->depth=[l.Device() newDepthStencilStateWithDescriptor:d];Require(impl->depth!=nil,"Cannot create original ground decal raster state");}p->depth=impl->depth;l.Retain(p->depth);
+ 	for(size_t i=0;i<impl->samplers.size();++i){if(!impl->samplers[i]){auto s=[MTLSamplerDescriptor new];s.supportArgumentBuffers=YES;s.minFilter=(i<2)?MTLSamplerMinMagFilterNearest:MTLSamplerMinMagFilterLinear;s.magFilter=MTLSamplerMinMagFilterLinear;s.mipFilter=i==5?MTLSamplerMipFilterLinear:MTLSamplerMipFilterNotMipmapped;
+ 			s.sAddressMode=s.tAddressMode=(i==3||i==4)?MTLSamplerAddressModeClampToBorderColor:MTLSamplerAddressModeClampToEdge;s.borderColor=MTLSamplerBorderColorOpaqueWhite;s.compareFunction=i==3?MTLCompareFunctionLessEqual:MTLCompareFunctionNever;

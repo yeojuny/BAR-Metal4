@@ -1,0 +1,35 @@
+{
+  "round_id": "pending2-classified-prior-reads-fps-20261118-63",
+  "attempt_id": "pending2-classified-prior-reads-cap1-cap2-01",
+  "scope": "Build the frozen classified prior-reads candidate and compare cap1 then cap2 on one signed executable",
+  "source_artifact": "26daf06778b692a18a41b3edcf92c1f77744bf26",
+  "source_manifest_sha256": "fbfe6b3c0a43dd17e316adb5cf88ad710b3b13730f86d7024317c5474787a2d2",
+  "source_patch_sha256": "24622462bce0e95cae7f6b546da2a2e3330ea6438332e4bdf745e5f344f2f310",
+  "order": [
+    "R63_CAP1",
+    "R63_CAP2"
+  ],
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 2,
+    "max_per_arm": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "options": {
+    "preserve_all_counted_frames": true,
+    "map": "Seths Ravine Remake 1.3.1",
+    "window": [
+      540,
+      1740
+    ],
+    "same_options_as_round61": true,
+    "source_mutations": 0,
+    "fallback_unchanged": true,
+    "default_changed": false,
+    "mode_3": false
+  },
+  "utc": "2026-11-18T09:43:39.957326+00:00"
+}

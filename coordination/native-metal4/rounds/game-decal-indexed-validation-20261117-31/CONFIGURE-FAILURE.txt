@@ -1,0 +1,13 @@
+-- Checking for module 'openal>=1.18.2'
+--   Package 'openal' not found
+CMake Error at /opt/homebrew/share/cmake/Modules/FindPkgConfig.cmake:1243 (message):
+  The following required packages were not found:
+
+   - openal>=1.18.2
+
+Call Stack (most recent call first):
+  /opt/homebrew/share/cmake/Modules/FindPkgConfig.cmake:1295 (_pkg_check_modules_internal)
+  rts/System/Sound/CMakeLists.txt:52 (pkg_check_modules)
+
+
+-- Configuring incomplete, errors occurred!

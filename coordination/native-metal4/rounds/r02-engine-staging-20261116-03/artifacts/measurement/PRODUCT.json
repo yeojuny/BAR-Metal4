@@ -1,0 +1,8 @@
+{
+  "variant": "private-r02-sensorlos-winding",
+  "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene",
+  "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native",
+  "sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "publishedPackageReadOnly": true
+}

@@ -1,0 +1,1226 @@
+[
+  {
+    "name": "EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/EXECUTION.json",
+    "characters": 716,
+    "bytes": 716,
+    "sha256": "28cefb0e421f057f127af8f009fbcbf80a7bfe4057a9650da05ac753109ced5e",
+    "git_blob_sha": "74656f142841428c8999189327fbb4faffc52fc7"
+  },
+  {
+    "name": "IMAGE-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/IMAGE-REVIEW.json",
+    "characters": 2936,
+    "bytes": 2936,
+    "sha256": "cfacb8e78e473e232a1e47791c71c7661afa88c5f731ed8cfecfd65abd9d33d9",
+    "git_blob_sha": "72ba590810072e009c9c896e6f6599540504835c"
+  },
+  {
+    "name": "INDIVIDUAL-RUNS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/INDIVIDUAL-RUNS.json",
+    "characters": 2194,
+    "bytes": 2194,
+    "sha256": "a265c007b5f3c2d7a90787d91ecbf2c5631f3a7cc5412dd98d3ebf352b26a2d9",
+    "git_blob_sha": "728e0b68c6e4ae241dcf914e2d509e02c34102dd"
+  },
+  {
+    "name": "READY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/READY.json",
+    "characters": 719,
+    "bytes": 719,
+    "sha256": "1701fa178fcdba90535fa93269240855933255dec62017c60ae1155f278d3df2",
+    "git_blob_sha": "b4b650792f0bd132456d05143dc286eba22cc10c"
+  },
+  {
+    "name": "REPORT.md",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/REPORT.md",
+    "characters": 3214,
+    "bytes": 3214,
+    "sha256": "dca3063ee13b467e9fadff29e2c427f8e87b41521fcf5ee84a1e237a21fd9151",
+    "git_blob_sha": "fbccbfeabc2819b6da2291f03670832bf59ba4db"
+  },
+  {
+    "name": "REQUEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/REQUEST.json",
+    "characters": 4536,
+    "bytes": 4536,
+    "sha256": "a0f4112af1757d9851889e170feff6c34569490a6dd6470e3ad4a33258ddb61b",
+    "git_blob_sha": "a8c68942f4a373e7fa7c9e1b93442c78a9b52ffb"
+  },
+  {
+    "name": "RESERVED-STATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/RESERVED-STATE.json",
+    "characters": 33091,
+    "bytes": 35817,
+    "sha256": "3f8e1d85a61ec747b26359c8f5ab9adc4c38e88e5667509ee4ff54b929089bc9",
+    "git_blob_sha": "4604ad92ec5f2eff04bab41e55895b0bc464bae5"
+  },
+  {
+    "name": "RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/RESULT.json",
+    "characters": 5644,
+    "bytes": 5644,
+    "sha256": "46a72345120686d6e9e0880ee8a679a626ca5510018be091a841bea8275e4a3c",
+    "git_blob_sha": "93b4d72de9d305acfdb0f970fb4c92728149adf3"
+  },
+  {
+    "name": "RUN.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/RUN.log",
+    "characters": 2025,
+    "bytes": 2025,
+    "sha256": "ca2b1eb50c8bf0aa64fcf01ed6542d0d3e2486d9bdcf7acf2ff47b67fde9e7d7",
+    "git_blob_sha": "8812103d08b2ae3710e29d7283391b154222ff85"
+  },
+  {
+    "name": "SUMMARY.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/SUMMARY.csv",
+    "characters": 888,
+    "bytes": 888,
+    "sha256": "2d0039dfd262a8a95c09eb4ac00c30847cc86a775829b8d8929b518cb6c5ea75",
+    "git_blob_sha": "c04993337887be325ec74a82bce5278cc0250a1b"
+  },
+  {
+    "name": "UPSTREAM-CONTRIBUTIONS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/UPSTREAM-CONTRIBUTIONS.json",
+    "characters": 4097,
+    "bytes": 4103,
+    "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "git_blob_sha": "32b34021ab58412322e7a81af74d3ba8354da82c"
+  },
+  {
+    "name": "WORLD-CHECK.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/WORLD-CHECK.json",
+    "characters": 122030,
+    "bytes": 122030,
+    "sha256": "05f7e3f658179d564008d74e2f000e9a2dbfecc34ecac2419bb9c0b2597b5baf",
+    "git_blob_sha": "8de527a8a6a225ab600498fd9325e5bb1284d31a"
+  },
+  {
+    "name": "execute.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/execute.py",
+    "characters": 1255,
+    "bytes": 1255,
+    "sha256": "a314bc3d1101915c85d78f9592e2fcc67dcc71ab4df6995a05062f28df65a92b",
+    "git_blob_sha": "c63b786bb60d9bd767e94b419be50a3015d89dda"
+  },
+  {
+    "name": "review.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/execution/ground-decal-pages-clean-01/review.py",
+    "characters": 7980,
+    "bytes": 7980,
+    "sha256": "08a8325157389e6e7533573d1825db3a7d7c66a0eb0face2443bf5149ecd8aa0",
+    "git_blob_sha": "870b3b855357b1b11faa83a1798be018cec850e3"
+  },
+  {
+    "name": "staging/FROZEN-BEFORE-RUN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/FROZEN-BEFORE-RUN.json",
+    "characters": 48163,
+    "bytes": 48163,
+    "sha256": "89968982a1573fbb8e0e5268347025cb44a8438f82bb6b87610159216614dc8c",
+    "git_blob_sha": "49df684f829c829a6eb9743137cacbdb8cbf2cb1"
+  },
+  {
+    "name": "staging/STAGE.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/STAGE.log",
+    "characters": 60,
+    "bytes": 60,
+    "sha256": "bac19247f3a683f3a98685377ed3eff8a04787af17741ffd1001de80afe85ef4",
+    "git_blob_sha": "d76ed08cddc621cbbe837099601fa1eed6b2c3b9"
+  },
+  {
+    "name": "staging/STAGE-EXECUTION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/STAGE-EXECUTION.json",
+    "characters": 350,
+    "bytes": 350,
+    "sha256": "961ae547893cac0df410e4657f1e69cb310482e680c911d4f24aaa5998c0f996",
+    "git_blob_sha": "2b4b5290529dbeb742dff9442a3f015ed89e6ada"
+  },
+  {
+    "name": "staging/CANDIDATE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/CANDIDATE.json",
+    "characters": 4087,
+    "bytes": 4087,
+    "sha256": "befd749c32a145d710eac44427f79f9ac269c6dfb3069ab279234395a4dd4a09",
+    "git_blob_sha": "0d61428fbb8a4452c8d9f8715ca742a2df840d86"
+  },
+  {
+    "name": "staging/MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/MANIFEST.json",
+    "characters": 2772,
+    "bytes": 2772,
+    "sha256": "f23bbd44392590029b4e4155bbb9abc7775e79bbdda51dcecb0376bfbdf47f92",
+    "git_blob_sha": "7807a77272c6c27c45606b07de4aa1950866605a"
+  },
+  {
+    "name": "staging/TOOLCHAIN.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/TOOLCHAIN.json",
+    "characters": 241,
+    "bytes": 241,
+    "sha256": "8c6a4a604b9d7e20256d91633aa73a440b91771d821c7c94b2ad6ea428ed0fd8",
+    "git_blob_sha": "23c91a79623435253593e1f9443cfc4b30af2777"
+  },
+  {
+    "name": "staging/DEPENDENCY-MANIFEST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/DEPENDENCY-MANIFEST.json",
+    "characters": 9366,
+    "bytes": 9366,
+    "sha256": "d50d743b18437d594039876ae17089727826979ff66a8d767ef1176fd98f9037",
+    "git_blob_sha": "39e12f63c85bb7bdd2376b37ac25b61ff76f0ab4"
+  },
+  {
+    "name": "staging/WINDOW-CONTRACT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/WINDOW-CONTRACT.json",
+    "characters": 625,
+    "bytes": 625,
+    "sha256": "efa3c70a8eb732072f9976406206ac0de437c0b78a0d5e6037334e8ef97d8e20",
+    "git_blob_sha": "bd22e9d6769efa0c7b8b4bb5202614c8046cf4db"
+  },
+  {
+    "name": "staging/measurement/run.py",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/run.py",
+    "characters": 31823,
+    "bytes": 31823,
+    "sha256": "e2d2b24c0a975a6a74276c87b48dd9e33a1ff76628ece05f1687e9241a074945",
+    "git_blob_sha": "eb17f5d9ff497b69b458b9922ed5219f767eec8a"
+  },
+  {
+    "name": "staging/measurement/RUNNER.diff",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/RUNNER.diff",
+    "characters": 3549,
+    "bytes": 3549,
+    "sha256": "f8e9d546ea0a1bf6981e120e9309bccbd9af63ba1982a7f9af9c8d2a7ea011a4",
+    "git_blob_sha": "1bf09553407667f88e934297a840f4170472bd70"
+  },
+  {
+    "name": "staging/measurement/RUNNER-REVIEW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/RUNNER-REVIEW.json",
+    "characters": 774,
+    "bytes": 774,
+    "sha256": "070d73d7a266e5225f26b45b5601f470e9dffa8457b97853d0f5763e2abe97ff",
+    "git_blob_sha": "f98665698801b57817832bbc2399b7b9e657a53f"
+  },
+  {
+    "name": "staging/measurement/BASELINE-PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/BASELINE-PRODUCT.json",
+    "characters": 598,
+    "bytes": 598,
+    "sha256": "a784c3b358921faf0ba63451e939a63c3bbb4415778ae40cca6daf5aa732ba34",
+    "git_blob_sha": "d4bc442ccf490840df0156d30a97f41419bc1fdd"
+  },
+  {
+    "name": "staging/measurement/PRODUCT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/PRODUCT.json",
+    "characters": 630,
+    "bytes": 630,
+    "sha256": "3ff42d2edf8441970fa1ea0ffc52b8ef28e4decb607bddd42761ddbf216a3ec1",
+    "git_blob_sha": "f2fb0f1577216a63eb2fa404037732c2de5b0d24"
+  },
+  {
+    "name": "runtime/AWAKE-RELEASED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/AWAKE-RELEASED.json",
+    "characters": 263,
+    "bytes": 263,
+    "sha256": "55584ccda2f4605a88dffb5ff9fa285518e264dd5aa7995815ba7ca9f45e5573",
+    "git_blob_sha": "c92a93f97a501301114c9931a69a9fdd8e0116bb"
+  },
+  {
+    "name": "runtime/AWAKE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/AWAKE.json",
+    "characters": 182,
+    "bytes": 182,
+    "sha256": "e99adf89768e7903efbcac413b679695e1cbe0b53752b2b11b7887720e9138bc",
+    "git_blob_sha": "4189fa9a83cc6de5de27ae7bcf56f6f2c4459f98"
+  },
+  {
+    "name": "runtime/COMPLETION.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/COMPLETION.json",
+    "characters": 297,
+    "bytes": 297,
+    "sha256": "16236caed73d233ebd76940af24334758c2e7d98875845a5909eec97dcd641fc",
+    "git_blob_sha": "c21c345bae838545902bd8b4a32325ef57e95f76"
+  },
+  {
+    "name": "runtime/OWNER-CLOSED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/OWNER-CLOSED.json",
+    "characters": 113,
+    "bytes": 113,
+    "sha256": "f4da9d350dc3f458cab308e471426e0855fe036b3e9081ca38cd5c47fe0ad2f7",
+    "git_blob_sha": "55656e8937274da8e3654dd99ad97df43440db35"
+  },
+  {
+    "name": "runtime/PREPARED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/PREPARED.json",
+    "characters": 7661,
+    "bytes": 7661,
+    "sha256": "9e830e5669eeb9ba547c93ca230f76753adb1f1ddbb0dd324527458d17352ea8",
+    "git_blob_sha": "3739b6f8c53a80be7169454f6f95d99cef2b90a9"
+  },
+  {
+    "name": "runtime/RUNS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/RUNS.json",
+    "characters": 182687,
+    "bytes": 182687,
+    "sha256": "1dce1d3ca3109928bea321c453da5221220b7cc5df9e02384013f697c8b4aa4e",
+    "git_blob_sha": "52f7dbabd0817ccb61f35acca5d57de8fe30ef01"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/CHILD-MODE.json",
+    "characters": 2719,
+    "bytes": 2719,
+    "sha256": "4d07affb6fe18a402075704d161352331cf014af07b1a8427201e70e0474c9e9",
+    "git_blob_sha": "3c048107273d53a32aceb3da67723dedd40d3493"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "692876359e153373f5fba60304af90d78ea18d498f58bd67ceba9e27cde15b9c",
+    "git_blob_sha": "5e04caaba64400f44b7d81c64ab01dc5e7f0161b"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/GAME-LAUNCH-CLAIM.json",
+    "characters": 86,
+    "bytes": 86,
+    "sha256": "a6c31b3f2aa082cf0bbbee255d118ea0c9b9e9ad7e637e27b0c7f561b3486071",
+    "git_blob_sha": "e8c05649ccdc3eb2e65d9d2ff18de82e617b7f02"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/GRASS-BOUNDARY.json",
+    "characters": 343,
+    "bytes": 343,
+    "sha256": "35d4f39b78d979e9bcb058e2e8d9fb776aab4d5a447dc4f468fd76c328d418da",
+    "git_blob_sha": "20520c50398901555e5e90a0ded17bfa841201e0"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/LAUNCH.json",
+    "characters": 11045,
+    "bytes": 11045,
+    "sha256": "4f31dfa62923030a3dd6ce467b49a109d5e2b8403b6c57cf9f7d58837d044f6c",
+    "git_blob_sha": "be464dce170697c1bbbab6dd8aafa4b7961ae328"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/LIFECYCLE.json",
+    "characters": 690,
+    "bytes": 690,
+    "sha256": "01733463e8ecfca01923ab117742192871e773c4128507c1943b963ac912b78b",
+    "git_blob_sha": "c31df1e62657b5bd53a553672d34f508a06019a8"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/OWNED.json",
+    "characters": 198,
+    "bytes": 198,
+    "sha256": "29562b7039163790617780db22e54f4c3febf20096db2d93877d497f03516526",
+    "git_blob_sha": "be62b228e06eb0939df4bd11762b8bb6e8f74c53"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/PACING-WITNESS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/PACING-WITNESS.json",
+    "characters": 2150,
+    "bytes": 2150,
+    "sha256": "74e287628a97f083eb21aaabf1d404f7593711d19698db40384a7853885f2c1c",
+    "git_blob_sha": "8f33829de98733e7773c078b7bf6f9481a4295f8"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "2ad2d62bbd8c9de309f3a64070c9ed2e9c4e31496db224e6aac34fc5905485e2",
+    "git_blob_sha": "2cfc882118510e1cd6b689cc09fe31838d7510e7"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "ad08dce647e63787750d83b148e82722fd54fe4993bbfb9f2910e932051b861f",
+    "git_blob_sha": "43e9e7684c92008988d7cc706439b1f110aa8ff3"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "ccb6b1e41a57438dc1c696395239d9d29ff35fe645f09c4c5143a8e212b39f48",
+    "git_blob_sha": "86e9f096cb64c9b73ebfb2756a100b2255e76231"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/RESULT.json",
+    "characters": 29036,
+    "bytes": 29036,
+    "sha256": "1880b166e7d6a34bd6580784f027217bb3e643450fd13520d46fcf3253281a75",
+    "git_blob_sha": "c29bb341dca08f70b3009410196901837afbf062"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/TERRAIN211-FRAMES.csv",
+    "characters": 38654,
+    "bytes": 38654,
+    "sha256": "6bf755023a55924797c974ec213ae44c6d54de9dec6937934ba62129eca7da4b",
+    "git_blob_sha": "ed10fd86505bd0925cb72198c8096ca20962e4f0"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/ULTRA-EVIDENCE.json",
+    "characters": 1652,
+    "bytes": 1652,
+    "sha256": "d0380be98456583453ebb6ed118dda60726bd188a5d853b322b64a32274e1149",
+    "git_blob_sha": "9036884e2765d47ef9981966ed096534e8b04325"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "04a99f95672fc450dd7ab7edb728726a930d76082c8238211563dc9658f4dd32",
+    "git_blob_sha": "f845e0a65b127f6b36302f4384b675f97ff5dc43"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/engine.log",
+    "characters": 291364,
+    "bytes": 291364,
+    "sha256": "9377857d964d8284e25ac0f54f315eaaaeb2aca024f0a249a0f3b097021e2518",
+    "git_blob_sha": "35a2f0a19470edaab3f83f04f12f61ad24f895d5"
+  },
+  {
+    "name": "runtime/preparation/runs/A1_R03/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A1_R03/infolog.txt",
+    "characters": 290179,
+    "bytes": 290181,
+    "sha256": "64f8be50e15afe17255d03ab69a7ad107e51ccdc89a2d9f4422e487ba72dd101",
+    "git_blob_sha": "3c9a0efb42d12a576b9f5e3a7807e8c1aec0801e"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/CHILD-MODE.json",
+    "characters": 2719,
+    "bytes": 2719,
+    "sha256": "edb2927d636a3f23feb96d9ee90f5d9c40c4e6733fe7dc11750c495115a8b959",
+    "git_blob_sha": "7bba27823722616abd9a9bb0d7e5b00f8944057d"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "bc3e5e90b13f2348624bd7935b4aded330c23eb74db37fbb3a8a976935584d45",
+    "git_blob_sha": "a7114fb3f1ed4839fe04cd90ed7740f807246b1f"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/GAME-LAUNCH-CLAIM.json",
+    "characters": 86,
+    "bytes": 86,
+    "sha256": "42e66828530cf86d76c84759bd381bf1d12d20949287f7385d131ae5c2e7e6d1",
+    "git_blob_sha": "65cfc3b34b8ff7aae4abde377a80373c9b0852ae"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/GRASS-BOUNDARY.json",
+    "characters": 343,
+    "bytes": 343,
+    "sha256": "a2abf1bd5b36dabbbb4d7fe407250e8c62989b14b490b6f52aefeada76b01e48",
+    "git_blob_sha": "946fd2fe337a6a367841eace0843d0fd58a7f290"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/LAUNCH.json",
+    "characters": 11045,
+    "bytes": 11045,
+    "sha256": "bcb2b3347f8618f563c5551aff9e614308d695728d58c548663266f0cae116df",
+    "git_blob_sha": "65952b98b265ede4f9444b3bcb1f501f4924b182"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/LIFECYCLE.json",
+    "characters": 691,
+    "bytes": 691,
+    "sha256": "9c761534564dd3916d0046e35e19c43e4991d37ae745ae81043fa34a96ceb3d4",
+    "git_blob_sha": "b5a24345ad2bda78ac9931d66573562955db7459"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/OWNED.json",
+    "characters": 198,
+    "bytes": 198,
+    "sha256": "cf6c7e083b86881f7535f838c4e04a425430e9e131b4b62bbd6da10ff73f0216",
+    "git_blob_sha": "f7f57a74df08e7b3442ee356a1e1e2c338c33aa0"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/PACING-WITNESS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/PACING-WITNESS.json",
+    "characters": 2150,
+    "bytes": 2150,
+    "sha256": "a0b3b8204008b336707c796c111440bdd631bd5273929cf588040a87a2ac8d36",
+    "git_blob_sha": "df10ec8cdb9184bc694f51581a38de27710f3a13"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1038,
+    "bytes": 1038,
+    "sha256": "b61797ae4ecc742e5f9b94f4525937f06eef65b0868a7ed492b38f49bea7eb8a",
+    "git_blob_sha": "152af38caa30ee705c2da15695a577f03ef7e709"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "67fd50ebbd24fb4aba363b82e042e86d4cac872736d27e1a15967c68311ce856",
+    "git_blob_sha": "40fa4bd6927ffda7cd35de2eff21f50ffd92dc27"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/PREFLIGHT.json",
+    "characters": 821,
+    "bytes": 821,
+    "sha256": "406d445b98924828bc35a17d9a14933798e1c9839730a0c1a0628b84f7208f9d",
+    "git_blob_sha": "6afe89201ffebdc5f64115b37777a693d3820f48"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/RESULT.json",
+    "characters": 29040,
+    "bytes": 29040,
+    "sha256": "e94b1b537328962f306ca4babb7540990cd43289f8d52da1d270e2e16fd05e55",
+    "git_blob_sha": "a71737d81560bf592de9866b36676bc3ed5a036d"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/TERRAIN211-FRAMES.csv",
+    "characters": 43601,
+    "bytes": 43601,
+    "sha256": "c13d8166254134b70718e077f7bbbfb882753cfdf1aafc7fc6f3460e4329892b",
+    "git_blob_sha": "72d3e9acce710092ad080f1837a041b620d2c592"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/ULTRA-EVIDENCE.json",
+    "characters": 1652,
+    "bytes": 1652,
+    "sha256": "e7fd282507a9486685aac3a20e369dbe8aecddd039f40182aaaf329a7d98864a",
+    "git_blob_sha": "863ec8c0b7a16b2f1e0cf04e8b427fc83283fdbc"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "a318eed9949e18e0ff7e061ee580dd7a4cdf0932b187cb4db75157e32e2c9424",
+    "git_blob_sha": "8efee2cbb28e413a29890c56987d9627b1a6adf0"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/engine.log",
+    "characters": 291455,
+    "bytes": 291455,
+    "sha256": "03a64726377636f99610caccccc6efcfb7fe38c785a0e3e7cc802af3c289c7c8",
+    "git_blob_sha": "1db7c97c2270a3b66ecd41afae0979386b7f76bc"
+  },
+  {
+    "name": "runtime/preparation/runs/A2_R03/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A2_R03/infolog.txt",
+    "characters": 290270,
+    "bytes": 290272,
+    "sha256": "22e4b7ea108118635e85cc88add45c991e07d6bff6de75a275750851469afa1b",
+    "git_blob_sha": "a17c45e5f2015bcc86813f74156f4a2a6988a760"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/CHILD-MODE.json",
+    "characters": 2719,
+    "bytes": 2719,
+    "sha256": "a45693c06da679a673a63e798b2e8d75c63e1667a67f2f44f963c262e73e94ae",
+    "git_blob_sha": "b6684e3fe87bc08ec4eaf5d830f8719f4e19bb35"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "f7d2fdcb00e8953aba9aa407ba743823eda95e8e5c0e94541edefb3d0480a08f",
+    "git_blob_sha": "aa26390eb14e8420475fb3a1d8d24f5c97a9c4dd"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/GAME-LAUNCH-CLAIM.json",
+    "characters": 86,
+    "bytes": 86,
+    "sha256": "b6dde6459ff624ebcc72713a29c27af90be2d39e0ffeadbff4e86b5ed19e0019",
+    "git_blob_sha": "009a7d887bbb62fb0c3f60f2466ce78e03ef9262"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/GRASS-BOUNDARY.json",
+    "characters": 343,
+    "bytes": 343,
+    "sha256": "a2f741c4b03cc77cbadad91e0014dccbe0a9df6ebffca87608046b21ab70a593",
+    "git_blob_sha": "84406e0770d22039998317d7e127f31aec3ca112"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/LAUNCH.json",
+    "characters": 11045,
+    "bytes": 11045,
+    "sha256": "091a77530c016467e774f29566b47447919869d82a922e5e3e40bd94efc6fbd7",
+    "git_blob_sha": "4aa89c3a22e6663117c7168e24324289041480ad"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/LIFECYCLE.json",
+    "characters": 690,
+    "bytes": 690,
+    "sha256": "8f1d818388985f15348751ebbbaa2374ab3a9cd8ba99896cc9e0913abd8781a5",
+    "git_blob_sha": "9f3c4742f91e24108a04762501867512975bef24"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/OWNED.json",
+    "characters": 198,
+    "bytes": 198,
+    "sha256": "ac48ef86f60b0ff990aee899fd9288fed64101fa653a95a4d1d3c6cfac51e187",
+    "git_blob_sha": "6a130d9319e75b4e13e5602d2e2a6e7b63c5fd66"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/PACING-WITNESS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/PACING-WITNESS.json",
+    "characters": 2150,
+    "bytes": 2150,
+    "sha256": "d8f36a35601d30d3067aa45db9f6ad9ad60a7917b8aa61703bb5a02b5b3fe71a",
+    "git_blob_sha": "524bfe7c3309e6e60029458d5e73f7691a01ab9d"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "48f9307b6c16b82467dc09a426721b3cc51b154a5424dcf6b9315ddad97f9782",
+    "git_blob_sha": "1978b65d681329708c89b7362d8c7bccb47b2acf"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "a4febc066669e778c24b85823a82d1c09dec7f89b26ac144dfa88a63c4f5c8f8",
+    "git_blob_sha": "b57448566bd7058b55eec91050fdaae992e5563b"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "0b486536236d7b2f84ee3eb11ca9db64ef1650920ac928474901eedf6e21488d",
+    "git_blob_sha": "bbd9f63822ec0c3704ef3f1b92fd4b63fdb7a5e5"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/RESULT.json",
+    "characters": 29047,
+    "bytes": 29047,
+    "sha256": "6289853c1f8ac33490029003440399de3ceaee0d0c1b6bbbb4070ad4288f476d",
+    "git_blob_sha": "fe462c1e288a8eca09cfa5ca594ad704d2a9e794"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/TERRAIN211-FRAMES.csv",
+    "characters": 43516,
+    "bytes": 43516,
+    "sha256": "19239a99d790f6f45d4db07dbb6ae7c07ceb591cda61978596b5a28beabb58f6",
+    "git_blob_sha": "6a7abd95838d7d07f6289c583c7e0cb0fd2dd675"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/ULTRA-EVIDENCE.json",
+    "characters": 1652,
+    "bytes": 1652,
+    "sha256": "6f79857b568d17b9389cdbf838cdae65a86576a41dc54c9c162a848af0b535a3",
+    "git_blob_sha": "219945796f45190c306b676dcb36ee05e63a422c"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "e698249ad8842eef43af54eeef41f45d2318fa40b00b6acf0db1417731340848",
+    "git_blob_sha": "364e0d46af7df8699ede1d07ae978de138c0923e"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/engine.log",
+    "characters": 291466,
+    "bytes": 291466,
+    "sha256": "3cfe16b9b65199a41cee01c780b6d8911b15f51fc34fdd38253b9a304b987861",
+    "git_blob_sha": "5d95bd04cb363e4a267c8c628da88a6abd16f97b"
+  },
+  {
+    "name": "runtime/preparation/runs/A3_R03/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/A3_R03/infolog.txt",
+    "characters": 290281,
+    "bytes": 290283,
+    "sha256": "3fa162a6e28c4819f6ae3aed6e21105859b7469a75b70e217f826fa88a04354f",
+    "git_blob_sha": "9a23b53c07f4193d1c7ede8473406cebc096acf6"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/CHILD-MODE.json",
+    "characters": 2719,
+    "bytes": 2719,
+    "sha256": "d0fad9e985bf7eec8a2225b5a0a6c4ac2b7798bae9767ad9469b7596dbc99a8b",
+    "git_blob_sha": "badbbe50234ed9b67b95092ace68f2ffe97708b1"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "d1d69d06033faaaa5a33635dee03369c1aaae434aba8e9b86c7d4d4bc4a8eb9e",
+    "git_blob_sha": "b1f8816eecafee473b652969f38f064f99022933"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/GAME-LAUNCH-CLAIM.json",
+    "characters": 86,
+    "bytes": 86,
+    "sha256": "28e7ca9591bba6abbb6e1bbff23ae275605520185b5d958666807a577da8f2ce",
+    "git_blob_sha": "663bebf62b831f22c985f3b43b66afe9ecb6c302"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/GRASS-BOUNDARY.json",
+    "characters": 343,
+    "bytes": 343,
+    "sha256": "8315eb5c7a166334662b5032097548edef07b02d4ec2221c2a3620cb3660d358",
+    "git_blob_sha": "96e6576f9d39e8774c59e0f52f22db3248da73b3"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/LAUNCH.json",
+    "characters": 11100,
+    "bytes": 11100,
+    "sha256": "46354dfcf389896cde37f343b5ed227ea1845cab615514473221e9c441975be5",
+    "git_blob_sha": "07d99228b93857db35701e355f840ffac306cfe1"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/LIFECYCLE.json",
+    "characters": 693,
+    "bytes": 693,
+    "sha256": "957c9ac872a94f9ddcbec644c3b5aa4ed5dcd137c916c794ed571de5a83567bc",
+    "git_blob_sha": "44b2f12ba0bfd2582ae3d3454bd7f74efd4e74ae"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/OWNED.json",
+    "characters": 209,
+    "bytes": 209,
+    "sha256": "107311fbf3171af81eac5d8ac5156037a370db3582777bda9c49fa6290dcc5e2",
+    "git_blob_sha": "0a54c6223cf4d4d292b902f41b376b2ff06207e3"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/PACING-WITNESS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/PACING-WITNESS.json",
+    "characters": 2150,
+    "bytes": 2150,
+    "sha256": "f5cc8aac39a5af950d9ff5ff7993dd0954e58f829ebbd89d7f06b1f087195a6a",
+    "git_blob_sha": "8d9008405b5649773669679c21c0473bd3479883"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "e37717abf2089d1945193ad08f9042f70e6528bea28f02309c0aa6e11b0a5b91",
+    "git_blob_sha": "9cdcbf8d51a1deab47373e0f30882af585fbe93f"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "9499da72b7af04f384ca3e68e8845000c0a8bc17dc6bcb709958a301ac386394",
+    "git_blob_sha": "8673f873d27e85fcc8e95a8a82b815e3cd043cd8"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "6ed4257862d22ce09108bb5dbca54b94525b8bf6256001b65b6aeef73b488441",
+    "git_blob_sha": "915a84b808dab476b889d09da432c0e85bd3933d"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/RESULT.json",
+    "characters": 29035,
+    "bytes": 29035,
+    "sha256": "40af7ec4b7d10bec1696533e8bfa04547c5bfa6c3f37556cd4334dc5576469b4",
+    "git_blob_sha": "7d4611002b869fbcf1c56e84c11a2b7f0d48b7e5"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/TERRAIN211-FRAMES.csv",
+    "characters": 43618,
+    "bytes": 43618,
+    "sha256": "0b56d060941adc2e05ad4cf87c3059b13a8667fe66a1ed49cf3511039d0199e7",
+    "git_blob_sha": "d3119ae084a400eba2158bf2cfa70c2476a930f8"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/ULTRA-EVIDENCE.json",
+    "characters": 1653,
+    "bytes": 1653,
+    "sha256": "f5b129bdafcac08414cced4e59050555e17c601d165bf735a4490e6bc9fbeec3",
+    "git_blob_sha": "3d52af9e23f3a9246c644e5c27aaf838039c0ba0"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "31cc4e696cc4568777dfdabdf76d0a51b2e09449432dda145ce94c54a77d5e72",
+    "git_blob_sha": "4bdb2473c0a87a44f9c432b61ba645a71e23c112"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/engine.log",
+    "characters": 291599,
+    "bytes": 291599,
+    "sha256": "f87d626745cfbd273e5b6306a2960eb2f2cd0ab0bfef9306f6db115426d073d0",
+    "git_blob_sha": "1cf4b45488077ff8dff82eb3b05e9c989a43bcd1"
+  },
+  {
+    "name": "runtime/preparation/runs/B1_GDP/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B1_GDP/infolog.txt",
+    "characters": 290414,
+    "bytes": 290416,
+    "sha256": "d4e8e5695e6fcab77f0e526e06763581f0c5231a1d553e6ba892bf7e395829bd",
+    "git_blob_sha": "75f2bbdc044f0be28b6418e9c5a636f143e7d6bf"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/CHILD-MODE.json",
+    "characters": 2719,
+    "bytes": 2719,
+    "sha256": "2215c6cf15353d6aadd11df31a7c00875d41e4df5326fede5eea83e39095d3d9",
+    "git_blob_sha": "fc5b5d1ae703483ffd8dd053f35c1228a58fea4f"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "c4bb626cf1aa9edf22fbba0d3059bf1dd89fc8dea66aa6d46d931916971c752e",
+    "git_blob_sha": "834f10a4658352762578d3dd358acf36cf41a0f0"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/GAME-LAUNCH-CLAIM.json",
+    "characters": 86,
+    "bytes": 86,
+    "sha256": "92d9d63f3018714cc7afc54908e273c479da98789a5f7f271819e7384092abdd",
+    "git_blob_sha": "81ad511cdf69b057ff9ff59e5d0de15af95402ac"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/GRASS-BOUNDARY.json",
+    "characters": 343,
+    "bytes": 343,
+    "sha256": "88f3c9b91621d27e9b90cbf318458f87dfdf8cf7993b15bc7657d24a29776140",
+    "git_blob_sha": "1894f4b190eddae84df91760adf146d14fdabb50"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/LAUNCH.json",
+    "characters": 11100,
+    "bytes": 11100,
+    "sha256": "4a19627eeb468d44a9d70a435b04c8ec84c4af6dfd0392edfa48d0aa145efbf7",
+    "git_blob_sha": "0fb7d9aca6dcef4e835148b16cab820b998b82a7"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/LIFECYCLE.json",
+    "characters": 690,
+    "bytes": 690,
+    "sha256": "e249e67602a4f868f17029e374d2aa4fb6b5bb0043b4b3418c0d1f81d9f91f7b",
+    "git_blob_sha": "bf5d4cbb66195c2a7d69a1e27b67b650e2bc6179"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/OWNED.json",
+    "characters": 209,
+    "bytes": 209,
+    "sha256": "ee5d95a9178ac9296128802139351f76c2814771bec3981c1d846f4222d0d7d0",
+    "git_blob_sha": "3a0b0551cf4cee7ea5b3024a7f4eee077ef5dee1"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/PACING-WITNESS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/PACING-WITNESS.json",
+    "characters": 2150,
+    "bytes": 2150,
+    "sha256": "a08dcd6fafec68d874ba44baf49becaa0524036a4bbf4d7902a3ac2d42ffc2b4",
+    "git_blob_sha": "5228aef64a452871340f6efe636a8e70ac6bc2c1"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "a869a57c3446674d166f44fa0a437d68e1726097bd4969634d781bd381112b9d",
+    "git_blob_sha": "da75563467530f5a372838b85e741fb61198b211"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "e10f30d16d3bf9ff9ead7d1b5b83144e207c135d952446ae7a94b8bb5a5987a7",
+    "git_blob_sha": "167b86f326cf95454994db866a0a6c88be265b94"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "cdac140cce51b3b62e8047ac7c29304bb1e723c53dffe38dc8e35d9e5bb5b1dd",
+    "git_blob_sha": "503c199134cde07910426785a3cc9a2f7f202e37"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/RESULT.json",
+    "characters": 29040,
+    "bytes": 29040,
+    "sha256": "70211cf77ab654f5517c7ad7585a3e0e1f850d949301513c20f6f841f617ecb1",
+    "git_blob_sha": "cfbbb86457e700853ca580d71bb5ea46c4f86f88"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/TERRAIN211-FRAMES.csv",
+    "characters": 43584,
+    "bytes": 43584,
+    "sha256": "129bf4382d39624300ccd2efa4f438c5f18291b9ce378fae2c5aaf968bdde3fc",
+    "git_blob_sha": "d93ade033f162802eb590c2dce6c08a16b353706"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/ULTRA-EVIDENCE.json",
+    "characters": 1653,
+    "bytes": 1653,
+    "sha256": "493ba1fa687c63f1691abb23cc69c8290965b455e31408b0d02a7aa95d3f245a",
+    "git_blob_sha": "34d55b917ccf8384f3a1f2b703dc8dc164c57b7f"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "74d37d3b7afd28150708ee97c59b7e635d244cef6133d255e078afd706efb3d1",
+    "git_blob_sha": "b88ae5bf9b6db6a82c902b8d3e712dd26d39bcab"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/engine.log",
+    "characters": 291597,
+    "bytes": 291597,
+    "sha256": "0765797fd8a1fdc5fe45ea4d481d25cdded645dc9aecc324aa5e8dac3a4dc79c",
+    "git_blob_sha": "4d914fa34397012efec6a9ff6c3f0918110b1839"
+  },
+  {
+    "name": "runtime/preparation/runs/B2_GDP/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B2_GDP/infolog.txt",
+    "characters": 290412,
+    "bytes": 290414,
+    "sha256": "7e4e4ce21404d32e5f62251ba3eded371c78e10909f63597e3d7e799871e0fe8",
+    "git_blob_sha": "ae2861d2fa7fab1fd5d723f2f38a98e03007a050"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/AUDIO-ROUTE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/AUDIO-ROUTE.json",
+    "characters": 176,
+    "bytes": 176,
+    "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+    "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/CHILD-MODE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/CHILD-MODE.json",
+    "characters": 2719,
+    "bytes": 2719,
+    "sha256": "7d1d6fbcc0fa4302130b5ca0881e5b29e8f7185f90c2b547bc622d43e5d965c1",
+    "git_blob_sha": "ecaa055360deefdc668694c7da2bb24e275b701c"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/CLEANUP.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/CLEANUP.json",
+    "characters": 136,
+    "bytes": 136,
+    "sha256": "7c501d378ef81abdf0af3acfcbebb6418ccdec7960a2a225a6e32d16464b6dc5",
+    "git_blob_sha": "926c4f364f2b26e8b3d967e938a2120f4264e7ec"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/GAME-LAUNCH-CLAIM.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/GAME-LAUNCH-CLAIM.json",
+    "characters": 86,
+    "bytes": 86,
+    "sha256": "42eb6d885c1b6bf290740476b9737826d6d1190500d717a26740ff9ab1e8f4ab",
+    "git_blob_sha": "45636cdd177717ca0077cc4cb059eaa181a894a5"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/GRASS-BOUNDARY.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/GRASS-BOUNDARY.json",
+    "characters": 343,
+    "bytes": 343,
+    "sha256": "a2f741c4b03cc77cbadad91e0014dccbe0a9df6ebffca87608046b21ab70a593",
+    "git_blob_sha": "84406e0770d22039998317d7e127f31aec3ca112"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/LAUNCH.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/LAUNCH.json",
+    "characters": 11100,
+    "bytes": 11100,
+    "sha256": "5a801e1441f361185571bde6805537a480bca5cf0a763424840cb59975e00c6b",
+    "git_blob_sha": "f101510ca1bb889fb2da25fa9c5084327a2e95e4"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/LIFECYCLE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/LIFECYCLE.json",
+    "characters": 693,
+    "bytes": 693,
+    "sha256": "d8f387b19eb4a74516da47372d4ed6e2624bf1ec42d78bc5fd2f3d5585fce7a8",
+    "git_blob_sha": "6cded54d189aa836a1158b1427d91a1f8283ebf3"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/OBSERVERS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/OBSERVERS.json",
+    "characters": 75,
+    "bytes": 75,
+    "sha256": "b142e46d8e959bb03b9d8948aaa5f1a2ca612225ca65c302145040cee66a5109",
+    "git_blob_sha": "c1cebaba2a72ea5041a8e41fcffba0f9d34b86f4"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/OWNED.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/OWNED.json",
+    "characters": 209,
+    "bytes": 209,
+    "sha256": "9f421f47a48ceda512363e504ed21e19456be2a6d299767f6a516f8a3b7c5071",
+    "git_blob_sha": "7a0cb62d6fd9297b78a35bd6224eeca261814da1"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/PACING-WITNESS.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/PACING-WITNESS.json",
+    "characters": 2150,
+    "bytes": 2150,
+    "sha256": "089890abd84e19b1e8386fb27aa02b4468bf3aaca8d29c3feef7309236abe642",
+    "git_blob_sha": "7ae53e5bdbf7aa9889a3db8070ccb89d3a21b8e5"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/PREFLIGHT-OBSERVED-FIRST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/PREFLIGHT-OBSERVED-FIRST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "1c061aa02849e2ce971289fb271d194b9ba8ae98a78909a29a5ab03b94a4a65a",
+    "git_blob_sha": "595f34643ca3f813773eabe4853bf418ad27bd2c"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/PREFLIGHT-OBSERVED-LAST.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/PREFLIGHT-OBSERVED-LAST.json",
+    "characters": 1040,
+    "bytes": 1040,
+    "sha256": "faa6123f0b231d33fe4cba28cd603e4786cb5353cae8fc7589bdb449b92c3436",
+    "git_blob_sha": "d82e16d3df1256e0b6a5de4db3193e36e4ebc817"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/PREFLIGHT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/PREFLIGHT.json",
+    "characters": 823,
+    "bytes": 823,
+    "sha256": "8674ac026b024a59e9a736105f32bbd60440d4ad312654a15acf13b047654fe1",
+    "git_blob_sha": "c88605052cfcd1ec50765945ea1c4a5a94832f51"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/RESULT.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/RESULT.json",
+    "characters": 29020,
+    "bytes": 29020,
+    "sha256": "b4bf1640d794d9618aaa02ee49be1acd5ba16b5e61f4ad937c8821dacf068ef9",
+    "git_blob_sha": "bd7b1a9e709b0bf7f1fc53165e3d9c586206a58b"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/TERRAIN211-FRAMES.csv",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/TERRAIN211-FRAMES.csv",
+    "characters": 43618,
+    "bytes": 43618,
+    "sha256": "e1ba39e1b9ab138d601a4b91e40a01075d7174e3beb958bba3b236a61bd2d803",
+    "git_blob_sha": "1612bc79984348c05e49080f6df3e8cf681d44ce"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/ULTRA-EVIDENCE.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/ULTRA-EVIDENCE.json",
+    "characters": 1653,
+    "bytes": 1653,
+    "sha256": "85509b823b1fdf3bd1b51096edb6125271054f5b8529ab32fa683d9578880bad",
+    "git_blob_sha": "59eb69458f1f3d3468dc202926d3d47f02481338"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/WINDOW.json",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/WINDOW.json",
+    "characters": 65,
+    "bytes": 65,
+    "sha256": "55c2e990b536be7b7e9538951411d6c12a785736fcb23a6c81cbeb09bc05c137",
+    "git_blob_sha": "69ba4d96a1607e8febc6d2e815f5cbf904a7b329"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/actual-start-script.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/actual-start-script.txt",
+    "characters": 707,
+    "bytes": 707,
+    "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/engine.log",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/engine.log",
+    "characters": 291641,
+    "bytes": 291641,
+    "sha256": "c522ab568d7871b876e080807b6d3f46d93a6750918c6a2bc8b7651e040001fe",
+    "git_blob_sha": "3c945e07952d66fdfa902a371ec98c5191fc9079"
+  },
+  {
+    "name": "runtime/preparation/runs/B3_GDP/infolog.txt",
+    "local_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/runs/gdp_clean01/clean_paced/preparation/runs/B3_GDP/infolog.txt",
+    "characters": 290456,
+    "bytes": 290458,
+    "sha256": "3aed7d4be49533d424c0ed864032aca63c9ea0b2ed5823d5d401267ec2029db8",
+    "git_blob_sha": "613359c6ca002a642cf80dafe83d271fe21651ca"
+  }
+]

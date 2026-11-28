@@ -1,0 +1,26 @@
+{
+  "first_encoded_downsample_by_arm": {
+    "BLOOM_OFF": [
+      {
+        "line": 2190,
+        "text": "[t=00:00:15.363443][f=-000001] [NativeBloomDownsampleSwizzle] route=generic sequence=547",
+        "route": "generic",
+        "sequence": 547,
+        "within_timed_window": false,
+        "simulation_tick": -1
+      }
+    ],
+    "BLOOM_ON": [
+      {
+        "line": 2190,
+        "text": "[t=00:00:15.360202][f=-000001] [NativeBloomDownsampleSwizzle] route=identity_rgba sequence=547",
+        "route": "identity_rgba",
+        "sequence": 547,
+        "within_timed_window": false,
+        "simulation_tick": -1
+      }
+    ]
+  },
+  "witness_limit": "First real downsample encode per game. Neither GPU pixel output nor path frequency was measured.",
+  "identity_path_selected": true
+}

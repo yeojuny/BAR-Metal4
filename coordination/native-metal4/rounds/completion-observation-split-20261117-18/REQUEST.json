@@ -1,0 +1,50 @@
+{
+  "round_id": "completion-observation-split-20261117-18",
+  "attempt_id": "completion-observation-split-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "FIXED_PENDING_ONE_EQUIVALENCE_BUILD_AND_ONE_VALIDATION_GAME",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "parent_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_path": "docs/research/completion-observation-split-20261117/candidate/MANIFEST.json",
+  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "budget": {
+    "CPU_contract_script": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "relocation_sign": 1,
+    "fixture_staging": 1,
+    "validation_games": 1,
+    "benchmarks": 0,
+    "GPU_helpers": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "source_review": {
+    "true_R03_parent_verified": true,
+    "production_delta_two_files": true,
+    "packet_production_blobs_identical": true,
+    "reference_blobs_match_remote_R03": true,
+    "manifest_sha_verified": true,
+    "original_statement_order_preserved": true,
+    "private_receipt_single_use_identity": true,
+    "CPU_worker_result": "actual receipt9 checks and model36 cases, not Metal runtime coverage",
+    "source_writers_stopped": true
+  },
+  "execution_contract": [
+    "Read current STATE and history; reserve only READY/HQ matching round/attempt via contents blob SHA CAS. Any unclear/duplicate attempt stops.",
+    "Verify all manifest hashes, production/packet/reference identities, source unchanged and LIVE_SCENE compile define. Run fixed candidate/test_source_and_contract.py once (one C++ compile/run plus36 Python model cases).",
+    "Reuse proven isolated toolchain/archive closure and19 dylib runtime. Configure/build each once. Any failure: stop, preserve raw output, no local patch or retry.",
+    "After success relocate/sign one copy, pin raw/signed/runner/fixture/13 inputs before launch. Source is independent R03; do not mix texture/GroundDecal/R04.",
+    "One candidate game with Metal API validation1 shader validation0 and all diagnostic traces OFF. Same fixed scene, Ultra4 AA0 actual main sample1, viewport1512x950 drawable1512x982, PREPARE1 BEGIN0 worker1 S01/G01 unchanged. Do not enable texture input/trace.",
+    "Use preserved R03 validation and existing40-row fixed-world/tick witnesses as reference. Directly view screenshot. Screen readback/normal shutdown are observed only as supported by raw evidence; list early drain/detach/failure-injection or callback counts as unverified if not actually exposed. Do not claim all lifetime/error paths covered.",
+    "Original two waits/event then feedback, pending1, mutex behavior, reset/callback/publication ordering unchanged. Observation is not GPU success, renderer completion, readback readiness or presentation. No FPS improvement claim.",
+    "HQ exclusive execution. Pause heartbeat and other Mac work while game runs. Clean GPU, PID groups/children, image workers, awake/evidence writers; record DONE and exact result paths after cleanup. Main/releases/Homebrew/original app untouched."
+  ],
+  "comparison_reference": {
+    "R03_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "validation_artifact": "cfe365c17915473bdcd72c2dafc5e59bb8ecc27a",
+    "note": "Use existing evidence, do not rerun baseline. Wall-clock bins may jitter; distinguish fixed ticks from bin equality. This stage is correctness only."
+  }
+}

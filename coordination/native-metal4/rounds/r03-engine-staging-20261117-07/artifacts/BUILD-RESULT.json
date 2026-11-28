@@ -1,0 +1,98 @@
+{
+  "status": "PASS_BUILD_AND_STAGING_RUNTIME_AND_FPS_NOT_RUN",
+  "round_id": "r03-engine-staging-20261117-07",
+  "attempt_id": "r03-isolated-build-01",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "configure_attempts": 1,
+  "engine_builds": 1,
+  "games": 0,
+  "benchmarks": 0,
+  "helpers": 0,
+  "captures": 0,
+  "retries": 0,
+  "raw_engine_sha256": "63766732590784253e2ae89ce3806ec1e9aa76bf71a1aba3017cd81aa210a161",
+  "signed_engine_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "baseline_signed_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "sourceClosure": "10269 before/after, only declared R03 header delta",
+  "toolchainClosure": "3142 normalized compile commands identical to R02; byte-identical initial cache, SDK27.2, Apple clang21.0.0",
+  "archiveClosure": {
+    "objects": 1538,
+    "archives": 35,
+    "mismatches": 0
+  },
+  "runtimeClosure": {
+    "identicalLibraries": 19,
+    "loaderRelocations": 9,
+    "codesign": "PASS",
+    "remainingHomebrewDependencies": 0
+  },
+  "runnerClosure": "Only14 string tokens changed: product hashes, arm/suite labels and descriptions. Full AST identical after declared literal mapping;10 runtime/controller/parser/cleanup functions byte-equivalent in AST. S01/G01=1 both.",
+  "freshArms": [
+    "V_R03",
+    "A1_R02",
+    "B1_R03",
+    "B2_R03",
+    "A2_R02",
+    "A3_R02",
+    "B3_R03"
+  ],
+  "allFixtureInputHashesMatchR02": true,
+  "staging_manifest_sha256": "bdd4a25f069f35e0357c6fe8546085febf72314f81409b1f57014f1f8b032941",
+  "legacyMetadataContract": {
+    "status": "FROZEN_FUTURE_INPUT_CONTRACT_NOT_RUNTIME_OBSERVATION",
+    "controller_sha256": "cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73",
+    "start_simulation": 540,
+    "end_simulation": 1740,
+    "combat_warmup_simulation": [
+      240,
+      540
+    ],
+    "minimum_warmup_wall_seconds": 10,
+    "count_seconds": 40,
+    "bins": 40,
+    "inherited_LAUNCH_window": [
+      600,
+      1800
+    ],
+    "reason": "Preserve unchanged controller/measurement code; correct stale planning interpretation separately. Actual future samples must match540..1740.",
+    "legacy_measurementWindow_controllerSHA256": "fbb3dcd00f5f981f025dd57dc540356473917c92ff8241d3b40d99451e74ac56",
+    "authoritative_controller_hash": "Actual file checksums and stagedControllerSHA256=cc3ff2ad4e3caf484d54b8a06e2401712f38acc1ca0e53d2752ee72159a0ce73; legacy measurementWindow subobject is inherited planning metadata."
+  },
+  "nextCommandsAfterNewHandoffOnly": [
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/run.py",
+      "--suite",
+      "r03_validation01",
+      "--run",
+      "validation_paced"
+    ],
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/measurement/run.py",
+      "--suite",
+      "r03_clean01",
+      "--run",
+      "clean_paced"
+    ]
+  ],
+  "doNotRestage": "Both suites already prepared and unconsumed. No --stage repeat or overwrites.",
+  "sourceProvenance": "Existing SensorLOS source/Beherith MIT and engine GPL attribution preserved. Existing tomjn LuaVBO PR3695 and threading contribution records remain unchanged in UPSTREAM-CONTRIBUTIONS.json. No unrelated contribution adopted.",
+  "cleanup": {
+    "ownedPIDsGone": true,
+    "workerChildrenReaped": true,
+    "GPUOrGameProcessesStarted": false,
+    "awakeCreated": false,
+    "awakeReleased": true,
+    "buildAndStagingWritersClosed": true
+  },
+  "limitations": [
+    "No game/full-engine Metal Validation/image/FPS verification yet.",
+    "Standalone R03 helper correctness already passed separately; not repeated or substituted for full-engine validation.",
+    "This preparation does not establish performance improvement or authorize runtime execution."
+  ]
+}

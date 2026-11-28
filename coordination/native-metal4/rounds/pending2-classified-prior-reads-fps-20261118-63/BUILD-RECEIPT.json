@@ -1,0 +1,17 @@
+{
+  "phase": "BUILD",
+  "argv": [
+    "cmake",
+    "--build",
+    "build",
+    "--target",
+    "spring-metal4-scene",
+    "--",
+    "-j",
+    "8"
+  ],
+  "pid": 55178,
+  "status": 0,
+  "started_utc": "2026-11-18T09:44:24.637889+00:00",
+  "ended_utc": "2026-11-18T09:47:55.434555+00:00"
+}

@@ -1,0 +1,316 @@
+{
+  "files": [
+    {
+      "relative": "REPORT.md",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/REPORT.md",
+      "bytes": 4021,
+      "sha256": "e1aa047e7cda6d90a804496a9fdb0c9ccc56e48576d482437a1dee3dc1da50c6",
+      "git_blob_sha": "7e0402186960ec3cf6e4852cf0ff7ea5b87b657d"
+    },
+    {
+      "relative": "DONE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/DONE.json",
+      "bytes": 1720,
+      "sha256": "dfe0c556a8f30a3449b1bdca89e800f1631cb47b1026a537095e3e16f1c7188d",
+      "git_blob_sha": "175c42052c82f71d441474154d9a67550f7685b9"
+    },
+    {
+      "relative": "EXECUTION.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/EXECUTION.json",
+      "bytes": 1209,
+      "sha256": "017d3022febb279d9d16058759f19eede600c65befc2803856921fabc132f4e7",
+      "git_blob_sha": "760dfb32e6ce4fb8659a2db15446aca0f3b7cea3"
+    },
+    {
+      "relative": "CLEANUP-REVIEW.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/CLEANUP-REVIEW.json",
+      "bytes": 1137,
+      "sha256": "731579f0f2fc3511d403f7c5b1404bf310efe7aa001fb603f08104fd4054ec65",
+      "git_blob_sha": "745a97c83d2215ba1b618cb6bd88d7a11f04f2e4"
+    },
+    {
+      "relative": "WORLD-GATE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/WORLD-GATE.json",
+      "bytes": 467,
+      "sha256": "872cf04c1aeb198f0f2f876b3e06223fb599721bd17d31c96d8da66bf6ba93c4",
+      "git_blob_sha": "3c6fd39f50966b09448bd8850844813b2641691b"
+    },
+    {
+      "relative": "FREEZE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/FREEZE.json",
+      "bytes": 15435,
+      "sha256": "ef96f4a97d9ad0bd22da78d520b95de3bfa6c06149d062e26e143a30aa46cca8",
+      "git_blob_sha": "d1cee94f4dcfeb723adb415c1d09aabc22dcfe75"
+    },
+    {
+      "relative": "ATTEMPT-CLAIM.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/ATTEMPT-CLAIM.json",
+      "bytes": 455,
+      "sha256": "58ecc4cf5a506d308d7a4bd9e01c76f8910216a4eebda03acbaddd2df24a3ecb",
+      "git_blob_sha": "1f16734ef591aeeafc6bff2ab60fa5cb0114bf8c"
+    },
+    {
+      "relative": "STATE-BEFORE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/STATE-BEFORE.json",
+      "bytes": 64742,
+      "sha256": "8e0fbe72fa3b94a1d15615746d983a5a5f6921ebedd1123d6c2ae2fab7a4c07c",
+      "git_blob_sha": "24065f1ec563b1f58d8885d5b7c0892bdbf9dd20"
+    },
+    {
+      "relative": "STATE-RESERVED.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/STATE-RESERVED.json",
+      "bytes": 65724,
+      "sha256": "de283191a5b812f0c48b4583baaf8614a55c5a152fb2f3177d625aabe11fe8a4",
+      "git_blob_sha": "bebf5b72939a9cc1b374faaef5792a30ea6d4286"
+    },
+    {
+      "relative": "GPU-SESSIONS-BEFORE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/GPU-SESSIONS-BEFORE.json",
+      "bytes": 69,
+      "sha256": "7d7fc36ad453cedfdc4602ea9aa1456bb439c6b5d6d58e4c43e66a6c82a7cb92",
+      "git_blob_sha": "3f9ce815841c5721dafde478e35f74c45b9c8111"
+    },
+    {
+      "relative": "GPU-SESSIONS-AFTER.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/GPU-SESSIONS-AFTER.json",
+      "bytes": 344,
+      "sha256": "12223499428fbfa7bd0b13bad9d917ab67ccc9a1da9d814d8cc8961fb8acfa4c",
+      "git_blob_sha": "76520dc09fb11350ceb8d381111b9b4c31e29950"
+    },
+    {
+      "relative": "GPU-SESSIONS-FINAL.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/GPU-SESSIONS-FINAL.json",
+      "bytes": 242,
+      "sha256": "25ae37c54c2f4bcb86ea34d550b5cf6aefbb2e1b26aa96a89eb9811d3496f9b5",
+      "git_blob_sha": "280e56af3692f4a10732243326b04e0762d44e7e"
+    },
+    {
+      "relative": "UPSTREAM-CONTRIBUTIONS.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/UPSTREAM-CONTRIBUTIONS.json",
+      "bytes": 4103,
+      "sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+      "git_blob_sha": "32b34021ab58412322e7a81af74d3ba8354da82c"
+    },
+    {
+      "relative": "framepair.py",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/framepair.py",
+      "bytes": 13573,
+      "sha256": "11da723d45a8f843047ce6c62972fd08e06e8a8f941e57894b12139991ef6632",
+      "git_blob_sha": "b38700d377f45fe57a2538b45eb47347d5993341"
+    },
+    {
+      "relative": "controller-before.lua",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/controller-before.lua",
+      "bytes": 11170,
+      "sha256": "7660944b729cf5b459bcc7c6cda7fc29e6c731a83cccc0ddceb31c894f871fb9",
+      "git_blob_sha": "a6d0389e1b08589a17d463124eb40870564b285f"
+    },
+    {
+      "relative": "controller.lua",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/controller.lua",
+      "bytes": 13850,
+      "sha256": "148b6396a413cd6c8f310b1a7afc10cc1e5ef659a516f15e224c6157a508058d",
+      "git_blob_sha": "92343a175fe7c26a4c6650880ec37588f4d8abe2"
+    },
+    {
+      "relative": "controller.diff",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/controller.diff",
+      "bytes": 4487,
+      "sha256": "d0d8b8e056ee4d7b01f8116f199c514b89b7af10d69c55415402df34236037c5",
+      "git_blob_sha": "4bea82e98c78b17cf62a4c52fad77db420b25b73"
+    },
+    {
+      "relative": "R03-LAUNCH-FROZEN.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/R03-LAUNCH-FROZEN.json",
+      "bytes": 10682,
+      "sha256": "dedc698a4c5f3204bb02aae0e0101a5cecddf8d51b77c9c5d97d8074de207c17",
+      "git_blob_sha": "4f12753b0384401f9de468b9639e474c2750c652"
+    },
+    {
+      "relative": "MVK3-LAUNCH-FROZEN.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/MVK3-LAUNCH-FROZEN.json",
+      "bytes": 11378,
+      "sha256": "41515654efde2e9b648409cc53b5374654f1e5faaedb3cdeefb6c5ca0ae7632c",
+      "git_blob_sha": "f937372b8c3147e183b7a021371063392c481a20"
+    },
+    {
+      "relative": "R03-ENV-FROZEN.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/R03-ENV-FROZEN.json",
+      "bytes": 2974,
+      "sha256": "e3766b94b2f29acee8c4abe8c806f56119f275c8542246d5b37144cb28ddb96a",
+      "git_blob_sha": "bb06923f4f91f19db389db161d7ea27746d2d01d"
+    },
+    {
+      "relative": "MVK3-ENV-FROZEN.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/MVK3-ENV-FROZEN.json",
+      "bytes": 3398,
+      "sha256": "9ab36f11924f7e36283e033cb0fbcaef6fa9b68edfbea1d5c859ead199c7a64a",
+      "git_blob_sha": "fa615f5eb46a1728c10da260a5665b174aba1e37"
+    },
+    {
+      "relative": "R03-GAME-CLAIM.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/R03-GAME-CLAIM.json",
+      "bytes": 112,
+      "sha256": "33785e531e4d41b6f32c9a874246c8dcddee9a3c0b6ce1823ed69c75bb7b077e",
+      "git_blob_sha": "2c6e347dcabd684516bfd88dcc6f3d72cf96fe14"
+    },
+    {
+      "relative": "clean_paced/PREPARED.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/PREPARED.json",
+      "bytes": 2980,
+      "sha256": "102c5d9462fbd4f5fc3d1b2799afe145371fed7af1381f3c2049e06d4a75fb50",
+      "git_blob_sha": "c12a0a5b737a737c11e3ae2a21a449b6d906e55a"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/AUDIO-ROUTE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/AUDIO-ROUTE.json",
+      "bytes": 176,
+      "sha256": "77eb4bd8e72e545108c0c4708ec93d486da9626053c05b594359b44c7a968739",
+      "git_blob_sha": "a6c274db2c7a1a576dc1ae62eee7be357b8c28ce"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/AWAKE-RELEASED.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/AWAKE-RELEASED.json",
+      "bytes": 262,
+      "sha256": "bc1db56c076f71068362ae49ef4b75c929b721fb5f0bf213736c5d7e8adf8f2f",
+      "git_blob_sha": "a4765b6d73c5e069b5028fd53889b2d32efaa629"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/AWAKE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/AWAKE.json",
+      "bytes": 181,
+      "sha256": "d44f93a49d106d0c588d806443d42bd1d7e3531200ae88f06c7c12c67d1a795f",
+      "git_blob_sha": "e6c2540f4a3f752b04e6e5504c200cffa33874e4"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/CHILD-MODE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/CHILD-MODE.json",
+      "bytes": 2783,
+      "sha256": "196e995d60d152b60784965b720b3a62647936c2393a88da35e2c92c2625b25e",
+      "git_blob_sha": "5fd195cc28769fa3985b8b005a7c1c61bee1de1a"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/CLEANUP.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/CLEANUP.json",
+      "bytes": 136,
+      "sha256": "7d08aefc81ad9a664370425ab407e1dbf503a99bcbd78a8160c63cd45dd8a9e8",
+      "git_blob_sha": "e3d87b726634c506179e135af369c5bf51f907ad"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/GAME-LAUNCH-CLAIM.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/GAME-LAUNCH-CLAIM.json",
+      "bytes": 83,
+      "sha256": "693198d29d65bb34f2e081cecb3469e742648d9a796111278fb4dabf9d0616c6",
+      "git_blob_sha": "df69ea899753320acac807945b0803f422b33609"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/GPU-CAPTURE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/GPU-CAPTURE.json",
+      "bytes": 1693,
+      "sha256": "908ad8f700998141ca0f7898ac4731370238ef09f11e464959d0ee6f2d80eabd",
+      "git_blob_sha": "94da54dc577f64820adae4ea88321ecdc261f2de"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/LAUNCH.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/LAUNCH.json",
+      "bytes": 10682,
+      "sha256": "dedc698a4c5f3204bb02aae0e0101a5cecddf8d51b77c9c5d97d8074de207c17",
+      "git_blob_sha": "4f12753b0384401f9de468b9639e474c2750c652"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/LIFECYCLE.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/LIFECYCLE.json",
+      "bytes": 693,
+      "sha256": "ee6447ee776090a8c17b65ad43fa5c7b569690f0d46545e41c97eb9a12b48d2b",
+      "git_blob_sha": "ed6f0c858a5cd30156a1344798a148760d62ee42"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/OWNED.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/OWNED.json",
+      "bytes": 198,
+      "sha256": "c14b4389c570c5809a8a7a2638a3c7c1f7207004c754a48d8693696de711c630",
+      "git_blob_sha": "c9e7728f11b654b69bfbd8b00877e8b6c9490f60"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/OWNER-CLOSED.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/OWNER-CLOSED.json",
+      "bytes": 175,
+      "sha256": "ca6b726b8b0af093a391a10f97266de012906ff5d843aee4a71df6e01c8d287b",
+      "git_blob_sha": "9554133cd32ad9b37857f0ec60d17edf663099be"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/PREFLIGHT-OBSERVED-FIRST.json",
+      "bytes": 1040,
+      "sha256": "c8e2b052c375ab3cb381cd58421ccb25f4616c2ddd1e30f01df1fb8f0abbd2e0",
+      "git_blob_sha": "203a3420ff9e239fc7696e6498742cfd9c9c15a0"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/PREFLIGHT-OBSERVED-LAST.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/PREFLIGHT-OBSERVED-LAST.json",
+      "bytes": 1040,
+      "sha256": "f6c432f117729b878a4438df7f4e4408bcf366e2fc55b567553ecf621670731b",
+      "git_blob_sha": "d077ff072479675f454b15120799a399a056c73e"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/PREFLIGHT.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/PREFLIGHT.json",
+      "bytes": 823,
+      "sha256": "97fba431f3260e2c760fa73c5eb6b7c5358f7ef76c416c7bf242f275085ae693",
+      "git_blob_sha": "ebafc07a39070c553d3256cbc0d63b1813752728"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/RESULT.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/RESULT.json",
+      "bytes": 334,
+      "sha256": "8d2f79ecc00b86f9e1f5c3a813171cccc78787c359b0fd438c4bece71de16b31",
+      "git_blob_sha": "da034fa59b7a3320e1fb345392b6a54670e04410"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/WINDOW.json",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/WINDOW.json",
+      "bytes": 65,
+      "sha256": "85fcf66bd5be93ec8df45bb8b1100e1a59316d6e1b34d5e51f623d212bbfe1dd",
+      "git_blob_sha": "b24c82187cb1c1ed99400b35c3f297655984d069"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/actual-start-script.txt",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/actual-start-script.txt",
+      "bytes": 707,
+      "sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+      "git_blob_sha": "16f2aedff04e7a6776c4a88fd6f178e6e59a63d7"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/engine.log",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/engine.log",
+      "bytes": 267146,
+      "sha256": "86734fc2d4e96dac49a2bead41d920b1369027d56b07b2f701dbffb2efaea7fc",
+      "git_blob_sha": "2c9ae2761208687c44da270feed67637ec6ad09e"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/framepair-after.txt",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/framepair-after.txt",
+      "bytes": 59461,
+      "sha256": "00cfe0ff59ae912f956c61a9616db42258b2a5d68fe186bb6e32c3758cfce360",
+      "git_blob_sha": "bdfb39324afd9d22b5d76b3f1197c5067ca7fd0b"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/framepair-before.txt",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/framepair-before.txt",
+      "bytes": 59461,
+      "sha256": "525af2a9bd6273fd0382835719f0d671910226861e50efc95efc01a71748ad01",
+      "git_blob_sha": "e081c4d4a1928beb851f7c029bd9f7d365bfbc36"
+    },
+    {
+      "relative": "clean_paced/preparation/runs/R03/infolog.txt",
+      "local": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-01/clean_paced/preparation/runs/R03/infolog.txt",
+      "bytes": 266003,
+      "sha256": "692132d17fd5c419a680c3f31a7e1a1ae5f4a2195aff6a49678c3d9ce7dc7b58",
+      "git_blob_sha": "6714cf969ebb65abf1c117a13b28a33333420487"
+    }
+  ],
+  "count": 44,
+  "bytes": 907414,
+  "trace_files": 0,
+  "scope": "New round25 only; prior evidence and engine source excluded"
+}

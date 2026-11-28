@@ -1,0 +1,45 @@
+{
+  "round_id": "texture-ordered-compile-20261117-15",
+  "attempt_id": "texture-ordered-compile-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "CPU_CONTRACT_AND_ISOLATED_PRODUCTION_METAL_COMPILE_ONLY",
+  "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "source_branch": "candidate/texture-ordered-input-20261117",
+  "single_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_path": "docs/research/texture-ordered-20261117/MANIFEST.json",
+  "source_manifest_sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
+  "patch_sha256": "7fd98fc1645746d48c3651ff06a2bc7291b9dde505983e8269aa83b466a6d2af",
+  "feature_flag": "BAR_NATIVE_TEXTURE_ORDERED_INPUT",
+  "default": "OFF",
+  "GPU_pending_limit": 1,
+  "final_drain": "UNCHANGED",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "budget": {
+    "CPU_contract_script": 1,
+    "isolated_configure": 1,
+    "engine_build": 1,
+    "games": 0,
+    "GPU_helpers": 0,
+    "benchmarks": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "instructions": [
+    "Verify latest STATE exact round/attempt and CAS reserve once. Ambiguous history => BLOCKED.",
+    "Use fresh isolated real detached source commit; verify single R03 parent, exact source manifest and all4 candidate files. GroundDecal/R04 must not be included. Source and child writes completed.",
+    "Run existing docs/research/texture-ordered-20261117/tests/run.py once with its assertions and ASan/UBSan; script compiles production receipt header and extracted actual journal with mock ObjC storage. It is not Metal runtime proof. Preserve script/source unchanged and report compiler/tool versions/flags/exit/log.",
+    "One isolated configure and full native engine build using previous verified R03 toolchain/dependency closure. Record exact flags, source/object/archive closure and raw binary hash. No source fixes, retries or assertion weakening.",
+    "Keep ordered-input flag default OFF and GPU pending limit1/final drain unchanged. No source modifications, instrumentation, enabling other pilots or touching global settings.",
+    "On failure preserve logs and stop; no independent patching. No game/helper/benchmark/staging/signing in this round.",
+    "Close all owned processes/workers/awake holders and evidence writes before same-round DONE. Return source/toolchain/dependencies/CPU/compile logs, raw binary path/hash, compiled ObjCXX receipt/runtime/renderer confirmation.",
+    "Protect main/releases/Homebrew/original app. No Texture+GroundDecal combined build. Later runtime OFF/ON same-scene validation and eligible-path witness review require separate handoff; actual failure/quarantine/lifetime paths still unproved."
+  ],
+  "correctness_limitations": [
+    "CPU extracted journal is not ARC/Metal/GPU verification.",
+    "Default-off ordered CPU encoding still preserves sole GPU-pending and final completion gate; no two-inflight claim.",
+    "Ordinary game may not exercise eligible first-use borrow path; future ON result without a path witness cannot prove the optimization ran."
+  ],
+  "source_writers_stopped": true,
+  "child_tasks_completed": true
+}

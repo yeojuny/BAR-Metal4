@@ -1,0 +1,49 @@
+{
+  "status": "PASS",
+  "checks": {
+    "prior_protected_artifacts": {
+      "checked": 134,
+      "mismatches": []
+    },
+    "frozen_binaries_and_inputs": {
+      "checked": 6,
+      "mismatches": []
+    },
+    "r03_source": {
+      "checked": 10270,
+      "mismatches": []
+    },
+    "batch_source": {
+      "checked": 10271,
+      "mismatches": []
+    },
+    "existing_indexed_launcher_data": {
+      "checked": 142,
+      "mismatches": []
+    },
+    "R03_ORIGINAL_runtime_data": {
+      "checked": 142,
+      "mismatches": []
+    },
+    "R03_ORIGINAL_staged_binary": {
+      "checked": 1,
+      "mismatches": []
+    },
+    "R03_ORIGINAL_direct_dependencies": {
+      "checked": 9,
+      "mismatches": []
+    },
+    "PREPARE_BATCH_runtime_data": {
+      "checked": 142,
+      "mismatches": []
+    },
+    "PREPARE_BATCH_staged_binary": {
+      "checked": 1,
+      "mismatches": []
+    },
+    "PREPARE_BATCH_direct_dependencies": {
+      "checked": 9,
+      "mismatches": []
+    }
+  }
+}

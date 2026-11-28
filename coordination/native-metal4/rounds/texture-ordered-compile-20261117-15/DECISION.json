@@ -1,0 +1,22 @@
+{
+  "round_id": "texture-ordered-compile-20261117-15",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_CPU_AND_PRODUCTION_ARC_OBJCXX_COMPILE_ONLY",
+  "artifact_commit": "544c23c4214af99efe67c98f047e6325fe6fc9c2",
+  "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "reviewed": [
+    "DONE",
+    "REPORT",
+    "EXECUTION",
+    "fixed runtime OrderAfterPreviousSubmission/RetirePreviousSubmission code"
+  ],
+  "commands_exit_zero": 3,
+  "source_pins_match": true,
+  "cleanup_verified": true,
+  "HQ_turn_completed": "01a1e7f7-da72-79e3-bb71-46c17fcc30df",
+  "limits": [
+    "CPU mocks/Metal SDK compile not runtime GPU proof.",
+    "Existing OrderAfterPreviousSubmission implementation does not emit texture-specific success marker. ON env or generic prior-read checks cannot alone prove this path ran."
+  ],
+  "next": "One round: isolated runtime staging then same-binary OFF/ON Metal Validation and screen checks, actual path evidence classified separately; no FPS evaluation."
+}

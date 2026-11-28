@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "product": {
+    "variant": "ordinary-pending-cap",
+    "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-exact-ui-rtt-fps-20261118-61/runtime/native/bin/spring-metal4-scene",
+    "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/pending2-exact-ui-rtt-fps-20261118-61/runtime/native",
+    "sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+    "publishedPackageReadOnly": "True"
+  },
+  "build_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3"
+}

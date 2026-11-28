@@ -1,0 +1,33 @@
+{
+  "round_id": "r04-engine-build-20261117-22",
+  "attempt_id": "r04-isolated-build-01",
+  "source_commit": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "source_manifest_sha256": "9e022fbfc7e2aad66c37aabd1b117f17b3c3318cf66c1280b14edf11d7beaf70",
+  "request": "coordination/native-metal4/rounds/r04-engine-build-20261117-22/REQUEST.json",
+  "budget": {
+    "configure_attempts": 1,
+    "engine_builds": 1,
+    "relocation_sign": 1,
+    "games": 0,
+    "benchmarks": 0,
+    "helpers": 0,
+    "captures": 0,
+    "replays": 0,
+    "retries": 0,
+    "source_edits": 0
+  },
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "previous_HQ_turn_completed": true,
+  "previous_cleanup_verified": true,
+  "independent_audit_completed": true,
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "baseline": {
+    "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+    "signed_engine_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+    "evidence_root": "evidence/r03-r02-regression-20261117-01",
+    "closure": "coordination/native-metal4/rounds/r03-engine-staging-20261117-07/DONE.json"
+  },
+  "execution_gate": "Latest STATE explicit READY/HQ exact round, reserve once. Fixed build only, no runtime."
+}

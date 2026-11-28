@@ -1,0 +1,207 @@
+{
+  "arms": {
+    "INDEXED_OFF": {
+      "gamedecal_small": {
+        "indexed": [],
+        "direct": [
+          {
+            "line": 2260,
+            "text": "[t=00:00:17.877601][f=0000060] [NativeIndexedRoute] family=gamedecal_small mode=direct",
+            "log_simulation_tick": 60,
+            "logged_within_timed_window": false
+          }
+        ]
+      },
+      "sensorlos_outline": {
+        "indexed": [],
+        "direct": [
+          {
+            "line": 2238,
+            "text": "[t=00:00:15.966392][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=direct",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ]
+      },
+      "sensorlos_r8_fan": {
+        "indexed": [],
+        "direct": [
+          {
+            "line": 2237,
+            "text": "[t=00:00:15.966066][f=0000000] [NativeIndexedRoute] family=sensorlos_r8_fan mode=direct",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ]
+      },
+      "radar_sonar_circle": {
+        "indexed": [],
+        "direct": [
+          {
+            "line": 2239,
+            "text": "[t=00:00:15.966418][f=0000000] [NativeIndexedRoute] family=radar_sonar_circle mode=direct",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ]
+      },
+      "healthbars": {
+        "indexed": [],
+        "direct": [
+          {
+            "line": 2240,
+            "text": "[t=00:00:15.966511][f=0000000] [NativeIndexedRoute] family=healthbars mode=direct",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ]
+      },
+      "unit_stencil": {
+        "indexed": [],
+        "direct": [
+          {
+            "line": 2186,
+            "text": "[t=00:00:12.915779][f=-000001] [NativeIndexedRoute] family=unit_stencil mode=direct",
+            "log_simulation_tick": -1,
+            "logged_within_timed_window": false
+          }
+        ]
+      }
+    },
+    "INDEXED_ON": {
+      "gamedecal_small": {
+        "indexed": [
+          {
+            "line": 2260,
+            "text": "[t=00:00:18.555066][f=0000060] [NativeIndexedRoute] family=gamedecal_small mode=indexed",
+            "log_simulation_tick": 60,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "sensorlos_outline": {
+        "indexed": [
+          {
+            "line": 2237,
+            "text": "[t=00:00:16.626257][f=0000000] [NativeIndexedRoute] family=sensorlos_outline mode=indexed",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "sensorlos_r8_fan": {
+        "indexed": [
+          {
+            "line": 2236,
+            "text": "[t=00:00:16.625881][f=0000000] [NativeIndexedRoute] family=sensorlos_r8_fan mode=indexed",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "radar_sonar_circle": {
+        "indexed": [
+          {
+            "line": 2238,
+            "text": "[t=00:00:16.626540][f=0000000] [NativeIndexedRoute] family=radar_sonar_circle mode=indexed",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "healthbars": {
+        "indexed": [
+          {
+            "line": 2239,
+            "text": "[t=00:00:16.627204][f=0000000] [NativeIndexedRoute] family=healthbars mode=indexed",
+            "log_simulation_tick": 0,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      },
+      "unit_stencil": {
+        "indexed": [
+          {
+            "line": 2186,
+            "text": "[t=00:00:13.603110][f=-000001] [NativeIndexedRoute] family=unit_stencil mode=indexed",
+            "log_simulation_tick": -1,
+            "logged_within_timed_window": false
+          }
+        ],
+        "direct": []
+      }
+    }
+  },
+  "summary": {
+    "INDEXED_OFF": {
+      "gamedecal_small": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      }
+    },
+    "INDEXED_ON": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    }
+  },
+  "scope": "After an actual encode, once per process for each family and route. GameDecal witness is restricted to the small-geometry path. Unit Stencil clear excluded. Timestamp can show that first encode lies inside the measurement window; it does not provide later counts."
+}

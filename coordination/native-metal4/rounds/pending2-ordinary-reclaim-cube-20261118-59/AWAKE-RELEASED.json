@@ -1,0 +1,12 @@
+{
+  "status": "RELEASED",
+  "campaign": "pending2-ordinary-reclaim-cube-20261118-59",
+  "pid": 46852,
+  "startUTC": "2026-11-18T09:04:40.267132+00:00",
+  "maximumSeconds": 1800,
+  "securitySettingsChanged": false,
+  "owner": "round59",
+  "endUTC": "2026-11-18T09:07:50.384996+00:00",
+  "ownCaffeinateAlive": false,
+  "existingCaffeinatePreserved": false
+}

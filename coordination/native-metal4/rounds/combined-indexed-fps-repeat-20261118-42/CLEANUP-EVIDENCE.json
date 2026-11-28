@@ -1,0 +1,16 @@
+{
+  "clean": true,
+  "bar": "PAUSED",
+  "owned_game_groups": [
+    77568,
+    77681
+  ],
+  "remaining_games": [],
+  "shared_awake": "RELEASED",
+  "owned_awake_pid": 77559,
+  "user_awake_process": "6618 caffeinate -d",
+  "active_gpu_sessions": "No active sessions.",
+  "system_restarts": 0,
+  "service_restarts": 0,
+  "owned_screenshot_count": 0
+}

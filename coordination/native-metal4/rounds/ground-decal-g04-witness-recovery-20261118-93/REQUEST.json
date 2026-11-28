@@ -1,0 +1,16 @@
+{
+  "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+  "scope": "Recover G04 equivalence using R83 positive-witness data and the current R88-parent shader. Pure fixture; both AA0 shadow variants. No engine change or timed game.",
+  "fixture_binary_sha256": "d4bbdf87712b5841018cbeaba6115dd43b393cc454261441c3981888038c8ba7",
+  "fixture_source_sha256": "29f21458d407c8499fb5cd76a27bbf6e917e201df29070daad0ef2e71e7a78d9",
+  "g04_variant_sha256": "e479ff2e85e388b7c31ec3fc02b8ad3b8e2e41679df493554ec40ecb3f2e4391",
+  "budget": {
+    "fixture_compiles": 1,
+    "fixture_runs": 1,
+    "games": 0,
+    "engine_builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

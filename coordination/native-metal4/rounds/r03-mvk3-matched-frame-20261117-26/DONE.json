@@ -1,0 +1,84 @@
+{
+  "round_id": "r03-mvk3-matched-frame-20261117-26",
+  "attempt_id": "r03-mvk3-framepair-02",
+  "status": "DONE",
+  "outcome": "INSUFFICIENT_FAIL_MANDATORY_GAME_DECAL_SEMANTIC_WORKLOAD",
+  "author": "LOCAL_CODEX_HQ3",
+  "to": "SUPER_JINI_MK2",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "binary_pins": {
+    "R03": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "MVK3": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa"
+  },
+  "counts": {
+    "games": 2,
+    "capture_command_invocations": 2,
+    "captured_frames": 2,
+    "inspection_sessions": 2,
+    "profile_commands": 0,
+    "extra_counter_replays": 0,
+    "engine_builds": 0,
+    "engine_source_edits": 0,
+    "R04_captures": 0,
+    "retries": 0,
+    "FPS_AB": 0,
+    "reboots": 0,
+    "logouts": 0,
+    "service_restarts": 0,
+    "security_changes": 0
+  },
+  "per_arm": {
+    "R03": {
+      "games": 1,
+      "capture_commands": 1,
+      "captured_frames": 1,
+      "inspection_sessions": 1,
+      "session": "9",
+      "profile_commands": 0,
+      "bound_timeInfo_x": 1590.0,
+      "normal_game_exit": true,
+      "session_closed": true
+    },
+    "MVK3": {
+      "games": 1,
+      "capture_commands": 1,
+      "captured_frames": 1,
+      "inspection_sessions": 1,
+      "session": "14",
+      "profile_commands": 0,
+      "bound_timeInfo_x": 1590.0,
+      "normal_game_exit": true,
+      "session_closed": true
+    }
+  },
+  "actual_capture_bound_timeInfo_x": {
+    "R03": 1590.0,
+    "MVK3": 1590.0
+  },
+  "matched_frame_pair": false,
+  "component_comparison": "NOT_ACCEPTED_NO_PROFILE",
+  "world_gate": "CPU_MATCH_TICK_MATCH_GAME_DECAL_SEMANTIC_INPUT_MISMATCH",
+  "failure": {
+    "gate": "PAIR-GATE.json",
+    "instance_counts": {
+      "R03": 3541,
+      "MVK3": 4511
+    },
+    "exact_row_overlap": 0,
+    "position_birth_overlap": 3523,
+    "same_position_birth_counterexample": "row0 rotation and alpha-decay differ; calculated alpha at1590 is0 vs1",
+    "cause": "UNKNOWN"
+  },
+  "cleanup_complete": true,
+  "cleanup_report": "CLEANUP-FINAL.json",
+  "global_gpu_sessions_after": 0,
+  "bar_status": "PAUSED",
+  "report": "REPORT.md",
+  "report_sha256": "b7e7b7fcc97d6b3468908dda05c2996ecf5d39d3c95f84f2e08330b29c58026f",
+  "retry_authorized": false,
+  "performance_claim": false,
+  "R04_cause": "NOT_ESTABLISHED",
+  "next": "JINI review closed round; no implicit retry or source repair",
+  "completed_at_utc": "2026-11-17T17:05:24.338724+00:00"
+}

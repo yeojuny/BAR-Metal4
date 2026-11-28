@@ -1,0 +1,39 @@
+{
+  "round_id": "pending2-capture-roi-cpu-20261118-71",
+  "attempt_id": "pending2-capture-roi-cpu-wall-01",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "counted_simulation": [
+    540,
+    1740
+  ],
+  "capture_roi_inclusive": [
+    [
+      1005,
+      1019
+    ],
+    [
+      1118,
+      1132
+    ],
+    [
+      1410,
+      1424
+    ]
+  ],
+  "cap": 2,
+  "default_cap": 1,
+  "source_parent": "pending2-ticket-timeline-20261118-69",
+  "prior_review": "pending2-host-tail-review-20261118-70",
+  "diagnostic_patch_sha256": "7802d17419a671c83793a0f20b95a25a1058c668a046428b3853b6fc18654cd5",
+  "child_openal": "1.25.2",
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "diagnostic_only": true,
+  "observation": "Main thread CPU time and wall time at consecutive existing capture call boundaries, 512-draw limit, one exit export. Prior full-window timeline disabled."
+}

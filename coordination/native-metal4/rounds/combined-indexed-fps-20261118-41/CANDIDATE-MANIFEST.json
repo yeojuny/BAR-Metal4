@@ -1,0 +1,88 @@
+{
+  "status": "READY_EXACT_PATCH_UNION_PLUS_BOUNDED_LOGS",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "base_paths_verified": 10270,
+  "combined_paths": 10274,
+  "inputs": {
+    "gamedecal": {
+      "commit": "4e3daae9554825a2991501874547ec90f7bc32a8",
+      "patch_sha256": "79871e8ae1aa4ad91cecba23798e2e1fcbfb3b2f90644a9e717550accd26391d"
+    },
+    "geometry": {
+      "commit": "855197fe4c2439ee169db22d58a647d3241e08b5",
+      "patch_sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b"
+    }
+  },
+  "witness_patch_sha256": "2f31b79cb2dc90d316946299b99554ae3cabd3fa079e0ea34009cd357e359a41",
+  "witness_scope": "One log after first real encode per family and route. For Unit Stencil, clear is excluded. GameDecal logs only small geometry. Logs present under identical conditions in both arms.",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h",
+      "r03_sha256": null,
+      "union_sha256": "150a2ec2efc51ce5f1ce9e4137891bb4aec289a6a3054608583b402f3573109c",
+      "candidate_sha256": "150a2ec2efc51ce5f1ce9e4137891bb4aec289a6a3054608583b402f3573109c",
+      "witness_changed": false
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4GameDecal.mm",
+      "r03_sha256": "3414bc0b984bced6efaa86d1fdf448eacaf3b926263e75b4d443582e9a73828d",
+      "union_sha256": "f9d0650f7c3fdb6c2594270ac75a03e8ab5d78f115647d3211cf6d0af8e7a27f",
+      "candidate_sha256": "672354f51eb1f92b0a49d04d33609f1e3ee4584bc2069dc998552e132d9396cc",
+      "witness_changed": true
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4GameDecalGeometryIndices.h",
+      "r03_sha256": null,
+      "union_sha256": "c473fd7758a9a2897accf483800cf0b564f5669f4f51306175aae8a4ba1d3b21",
+      "candidate_sha256": "c473fd7758a9a2897accf483800cf0b564f5669f4f51306175aae8a4ba1d3b21",
+      "witness_changed": false
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "r03_sha256": "97caea719c49b05f6fbfee30a9a0bffb5fdce81482333900fc04dd83985acd07",
+      "union_sha256": "f09fe14a45ad24d60f351796899d9c098ca6387226693a7d076401b351028b02",
+      "candidate_sha256": "9f22e358d03472ff1ada99ea8cf58edb75ab370cafd2b7928a4b1ff04022af2a",
+      "witness_changed": true
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm",
+      "r03_sha256": "6d4a47c6f2da8250882282c87d69f5e829fd6e412fef8e83e558e38a4e7671fd",
+      "union_sha256": "42672ddf7a95f38714fc11adb0b239c9a73b375eda79f0e7d22e7dc5207b0a65",
+      "candidate_sha256": "9caf98d020d5eb5cc78e350b09bded2d98853ba0d2f7d461fefb85d95a81b3a9",
+      "witness_changed": true
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+      "r03_sha256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6",
+      "union_sha256": "55c0ea967e30f552f19c112e7102cea371ab13ff9ec078188c04b5cb09f132fa",
+      "candidate_sha256": "3ca8523331c8bcfd97b72973da7e3781ed33c6ab8c764f84c9d6f802ec2564f5",
+      "witness_changed": true
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4UnitStencil.mm",
+      "r03_sha256": "911fa940ebb7f60bd126e8adef9997a5bf7ca60ad94e2d6af805331ab459a837",
+      "union_sha256": "33cbb5fc166bd324daf583e86f023747200e85217ac05a355a193b8124823be7",
+      "candidate_sha256": "d433a887069937056a293d8f599bccf0c2c3e9aed1f7cc01a2829e408310773e",
+      "witness_changed": true
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h",
+      "r03_sha256": null,
+      "union_sha256": "7b6ec28b48022e58a42a18558de72c2c0db32066f2313f54532adb6003796101",
+      "candidate_sha256": "7b6ec28b48022e58a42a18558de72c2c0db32066f2313f54532adb6003796101",
+      "witness_changed": false
+    },
+    {
+      "path": "engine/tools/metal4-contracts/TestGameDecalGeometryIndices.cpp",
+      "r03_sha256": null,
+      "union_sha256": "5a9085d9d8f3f5106e9141bc919f4fd07a46be1ea413902507c41d0a71655971",
+      "candidate_sha256": "5a9085d9d8f3f5106e9141bc919f4fd07a46be1ea413902507c41d0a71655971",
+      "witness_changed": false
+    }
+  ],
+  "prior_validation_reused": {
+    "gamedecal_round32": "cd5080c081e6696a8614ba8740ee388f54083eb6c89bc305b449367cc8d82494",
+    "geometry_round39": "07254cda7e5e4b4bdad3dd24b51635e3d6e7c85c41ee9b99f9498bad9cdd08de"
+  },
+  "utc": "2026-11-18T00:27:57.724116+00:00"
+}

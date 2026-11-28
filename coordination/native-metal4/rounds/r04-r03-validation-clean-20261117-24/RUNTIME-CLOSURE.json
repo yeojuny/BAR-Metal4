@@ -1,0 +1,674 @@
+{
+  "status": "PASS",
+  "baseline": {
+    "variant": "private-r03-minor-reject",
+    "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+    "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native",
+    "sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "publishedPackageReadOnly": true
+  },
+  "candidate": {
+    "variant": "private-r04-segment-setup",
+    "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+    "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/runtime/native",
+    "sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+    "publishedPackageReadOnly": true
+  },
+  "source_build_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-engine-staging-20261117-02",
+  "source_binary_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+  "copied_binary_sha256": "4ff86017e4c16b71a19c77cbfcfa77bd52e631b99e694cef7bd547c38f625d86",
+  "libraries": [
+    {
+      "name": "libIL.dylib",
+      "sha256": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e"
+    },
+    {
+      "name": "libSDL3.0.dylib",
+      "sha256": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f"
+    },
+    {
+      "name": "libbrotlicommon.1.2.0.dylib",
+      "sha256": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff"
+    },
+    {
+      "name": "libbrotlidec.1.2.0.dylib",
+      "sha256": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202"
+    },
+    {
+      "name": "libfontconfig.1.dylib",
+      "sha256": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec"
+    },
+    {
+      "name": "libfreetype.6.dylib",
+      "sha256": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827"
+    },
+    {
+      "name": "libintl.8.dylib",
+      "sha256": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8"
+    },
+    {
+      "name": "libjasper.7.0.0.dylib",
+      "sha256": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b"
+    },
+    {
+      "name": "libjpeg.8.3.2.dylib",
+      "sha256": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871"
+    },
+    {
+      "name": "liblcms2.2.dylib",
+      "sha256": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376"
+    },
+    {
+      "name": "liblzma.5.dylib",
+      "sha256": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe"
+    },
+    {
+      "name": "libminizip.1.dylib",
+      "sha256": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040"
+    },
+    {
+      "name": "libogg.0.8.6.dylib",
+      "sha256": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb"
+    },
+    {
+      "name": "libopenal.1.25.2.dylib",
+      "sha256": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c"
+    },
+    {
+      "name": "libpng16.16.dylib",
+      "sha256": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b"
+    },
+    {
+      "name": "libtiff.6.dylib",
+      "sha256": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820"
+    },
+    {
+      "name": "libvorbis.0.dylib",
+      "sha256": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388"
+    },
+    {
+      "name": "libvorbisfile.3.dylib",
+      "sha256": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7"
+    },
+    {
+      "name": "libzstd.1.5.7.dylib",
+      "sha256": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4"
+    }
+  ],
+  "data_files": [
+    {
+      "path": "data/AI/Interfaces/C/0.1/InterfaceInfo.lua",
+      "sha256": "369d649a88f6371d62f896c45637bef3d16c226e047f59e5321cf3394e34dbf9"
+    },
+    {
+      "path": "data/AI/Interfaces/C/0.1/libAIInterface.dylib",
+      "sha256": "ccde5116fd338ffc8a73a7721b8f686c8a19caa514adb3dc52df0ce14a65c0b4"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/AIInfo.lua",
+      "sha256": "ad5e47232808bec9f20afe5489a50753c742621d0d8369366c72e261dc36ada5"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/AIOptions.lua",
+      "sha256": "ba8b612c86f880b4ae623f0bdae68c6ff9efcc7d8d2132481a96cbbaf2bfe2ae"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/behaviour.json",
+      "sha256": "41a1e3435ac8cf79bf6cc172e94e557b8d479fcece8af8e696d0cff5872a5a27"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/block_map.json",
+      "sha256": "a83401f599d0f7fb83e8adb92fc6be3c451e20b4495d51eec8e84bbe6b5bcaa6"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/build_chain.json",
+      "sha256": "5cc0b57f7cef2341e4ac3a4faf0f575867f38a04d961f1fa289bc01eb2cb105a"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/commander.json",
+      "sha256": "c4228520bf3eb5968bc22f6b2ea44300b9cc2e2f71380f929977e98948dfe39c"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/dev/behaviour.json",
+      "sha256": "3d40d5dd20d66fbacb26ca1131b05b6021fa2e46b779c5dd2bc2c7774af2a133"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/dev/block_map.json",
+      "sha256": "f16496e75748ebf1ca48598d2d9d93e3843d581fa6e04d10b53e08815fd8db00"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/dev/build_chain.json",
+      "sha256": "5903da25f2dca964d5eb53ca229a19ddbf4522209db279b6122cc7bbd35fa484"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/dev/commander.json",
+      "sha256": "c4228520bf3eb5968bc22f6b2ea44300b9cc2e2f71380f929977e98948dfe39c"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/dev/economy.json",
+      "sha256": "4d5f08eb2d58707cbad28130b94e29687f1c18228881c401e387dd07a826722a"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/dev/factory.json",
+      "sha256": "c836740286288937a9e82321078f83e1e38c5166fe391d847290db3a05a9763e"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/dev/response.json",
+      "sha256": "9b5baf12f1ece387c3787b4d7dfcad289ba23efe60b5dbeee2e7ee7b8ba24a8f"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/economy.json",
+      "sha256": "3ffcb7eef32a69cafe5f76df37edfc8f9f830cc6653f425e95824a9d949333de"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/factory.json",
+      "sha256": "9dbbc35a03fd83b73d8c6599f2f215b1620dc09caadb53709e3d0ba566ddbb74"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/config/response.json",
+      "sha256": "00c9ec033e611c389c07be5ef008de8be2a9a3fffa5af6c54f039215bf7628c3"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/libSkirmishAI.dylib",
+      "sha256": "f94118947e1f86c07460ab8a9bb8cb6ce04cf4528cd1f734693ad9ab0b1304f9"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/common.as",
+      "sha256": "6a0a59b22fe8ded69c8d0227facddf6ce2c86944a121052f537ccf8f53881378"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/define.as",
+      "sha256": "2631303fb5f612b12ff611e24878c40a1ad0241f837828338662e8f19012499b"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/dev/init.as",
+      "sha256": "979bc9a4573ecb414cc95b7abe42719bf7d348c0cea9530d7c18c630ea56ab9a"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/dev/main.as",
+      "sha256": "c73d2ba8cc682801cef1fe902519279a84173d022d14c18853526c3cb9100a73"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/dev/manager/builder.as",
+      "sha256": "1b39b4a7b5f7e30533fa0207ce28be315948c922902cac348200a3f4c67e0da6"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/dev/manager/economy.as",
+      "sha256": "15252796457f199774b2b63601a8a06420b9871bde3f04d9e77b4cfdd90a4091"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/dev/manager/factory.as",
+      "sha256": "5f70e06f494edcb7fd3d7725f4c11e7d90798c5962a35e176f748cbfbe26e3e6"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/dev/manager/military.as",
+      "sha256": "a62af7881f6bdb46a321d7a58fb9e5c64265b61bad3094ff0eb47c30a601a7f1"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/dev/misc/commander.as",
+      "sha256": "1d0ce9af0a265a2932286a135bc6747f06b07a075f1b50fa0885ea5f59b75ca7"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/task.as",
+      "sha256": "e94b31b3bbb52d05292a5c21410a1bf25e0285147da082a837da15f25b0ccb81"
+    },
+    {
+      "path": "data/AI/Skirmish/BARb/stable/script/unit.as",
+      "sha256": "2d96a4c6672b21c2b21d28e8eab80dc313ca408ed2e416a9b464a5a692b6474b"
+    },
+    {
+      "path": "data/AI/Skirmish/NullAI/0.1/AIInfo.lua",
+      "sha256": "db022c101916807514b0e2566800d0fce1c690bafd4504ca04745dc8730a9998"
+    },
+    {
+      "path": "data/AI/Skirmish/NullAI/0.1/AIOptions.lua",
+      "sha256": "c02eba362e2e65cc4acb7398d6926c99c0b82e6b6494639f9a838ee05f33bffe"
+    },
+    {
+      "path": "data/AI/Skirmish/NullAI/0.1/libSkirmishAI.dylib",
+      "sha256": "e4435c7555c7af0e16dff553ee02bcc6cccb29a24c7857f6382a81eef7c8444a"
+    },
+    {
+      "path": "data/LuaIntro/springconfig.lua",
+      "sha256": "ae26d82b3702985e3ac6f52e2e6986e3d1961657a3f1249d55bf89e8796c4093"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/api_pbr_enabler.lua",
+      "sha256": "7fa002dbdde714572a0cbe20f897751cad8ccb949034ca7ca144d36246a8cc8a"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/cus_gl4.lua",
+      "sha256": "fec0476f994e29d52deb6f4e29eba761cc2f06d62ef87097581ea03437de9b61"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_beam_laser_gl4.lua",
+      "sha256": "b7c5db9a0b3d267d34ec59d41ef6a2aa3bcaafac3e36044a99decbbdb5ff3bb3"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_energy_explosion_particles_gl4.lua",
+      "sha256": "76144351c936a9fc2f817beb6fb6db2c99fe550a5c7cd08e8ff7c3f792bc6b37"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_environmental_lightning_gl4.lua",
+      "sha256": "1aed3a33ad1cb5cc05ed61cb681ef6fac867072c855791d5b58e01cf35067f8b"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_fire_gl4.lua",
+      "sha256": "e8013bfe603130df4199242a950503b59e1a2c099a3b747ed48225fb1156df5b"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_fire_smoke_gl4.lua",
+      "sha256": "0f1f17f3309ce8eaeceb770eb7ddf60f24fa0f454cc22226008f476229c63387"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_flamethrower_gl4.lua",
+      "sha256": "b476aa1982821ac070a7a239053bedd5d558d5a765ebe20dc4d92bd9e5fe90cb"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_lightning_cannon_gl4.lua",
+      "sha256": "1864c73d13425162f3508bff4361e9bbef47a871fa677ee77454951d47b39ebe"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_missile_thruster_gl4.lua",
+      "sha256": "b5fee4e922a0f29b8d4754b504319f85e277522b4b2fa735721df240f713868d"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_nano_particles_gl4.lua",
+      "sha256": "3b8a1d69601510d3700a404a14835b3c354df91e99525a8f7680d74a7b9090c3"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_plasma_cannon_gl4.lua",
+      "sha256": "96de9aece84ab3abeff9d49c43e3f4000e82d862dc80054febb5994081023d04"
+    },
+    {
+      "path": "data/LuaRules/Gadgets/gfx_unit_shield_effects.lua",
+      "sha256": "15820e08c225937336c41437a53310c0cc192bc0981f5c9d1c895ca08a1b5608"
+    },
+    {
+      "path": "data/LuaUI/Fonts/FreeMonoBold_12.lua",
+      "sha256": "e0698e82307af41873b88efe019ddee3fef2dfeb2b83d5c1acbb523233acc716"
+    },
+    {
+      "path": "data/LuaUI/Fonts/FreeMonoBold_12.png",
+      "sha256": "e12b3b01ab6096a43541343562a85113d33590f46d5e836590b379501d700804"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/Include/native_display_options.inc",
+      "sha256": "17402077d037b1463fc75975c8b87443f3f67f9f6278d45101f06c45d06aee5a"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/Include/native_display_patch.inc",
+      "sha256": "bb646ad55d688150e1409d36980eb001a36f01fd3e9b875a7aa211bdd49bacd7"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_blueprint.lua",
+      "sha256": "38098362b4ddba84ad65fe7e5a844a43e20d5ec3dcf44c2d7f8ae43599c11f20"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_object_spotlight.lua",
+      "sha256": "f36192f0fa66aa810b55c455e07751205489f5ea86c914e966e29464fdd58f22"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_unit_tracker_gl4.lua",
+      "sha256": "b53772b0e10c69562d50aab5fc17b59998d2212ace92a2e1f65d9eb4331e320e"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/api_unitbufferuniform_copy.lua",
+      "sha256": "6b93b7157fd1e39baa3840bb8c2b16cae2515b1aa0041bf313e72e531a72af94"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_decal_capture.lua",
+      "sha256": "a9adad776fe32b033e4bd1835aaf0d5b9eceb13dd9e7eecb6746efd44c1b4c7d"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_diffuse_painter.lua",
+      "sha256": "fc53ad715189d1241f5307996e6bb83cee7de7bc5201c4f0d5f69a7485b6827e"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_resolution_switcher.lua",
+      "sha256": "f66fab96d3b38a31e9d04d6c30bd60860badae86639ba931e8d2ed90ff25721a"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_splat_painter.lua",
+      "sha256": "a78d5b13d57eb1a91402e17bcd3027f5747f7a42d3c0aca72f033bbf9ff70bb3"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_terraform_brush_capture.lua",
+      "sha256": "27b05a30cc2fef3cb920b58394183edc4edb7149f597a2f0f04d4cadf5f7468d"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/cmd_terraform_image_overlay.lua",
+      "sha256": "2de08a8c177d28833672bfec2cc8321c4434c8a3c5ff6c2bfadd35521a6a1e3c"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_deferred_buffer_visualizer.lua",
+      "sha256": "4c1afa1a92833e4e409ff5953fc0e2977d7ebb085e4c51a1b9be322b2a7ba22e"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_frame_grapher.lua",
+      "sha256": "ac0dcd44e6cc990f9023fa96a397dfadbdd524a8c1f7d69d53c554a7eea4629e"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_profiler_histograms.lua",
+      "sha256": "3e77e08b9a5d7278adfbfe5011d9375d6f5c76ae8710abbd84837b14f023e930"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/dbg_target_priority.lua",
+      "sha256": "c949a92d4400428e0f20b6b87017e4758784d9bb3d7d8dcee725b258fbda5954"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_DrawUnitShape_GL4.lua",
+      "sha256": "7f2384735ee1cd3e4745fde94ff66586788298f669a71aff60c6b9195531d594"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_airjets_gl4.lua",
+      "sha256": "a8740154b41fe54ec1203931261628bcc99437f10cb996b8431c7226ac9d52ce"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_bloom_shader_deferred.lua",
+      "sha256": "4ccf4b7b3ef92fdba21d76c003ce24d10fc9c32e8f3e378a1cdd07954d226c68"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_cas.lua",
+      "sha256": "5500de64eda23758223183e7f704d2dc9193dc54bda240b1550f79c4a80e9fab"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_decals_gl4.lua",
+      "sha256": "34fb5388fef0f3f15404eec16b88e52917bbbc6d315d5883768070962434fd46"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_deferred_rendering_gl4.lua",
+      "sha256": "030ecdc32e45f38935b4adcf28ab7efb70dba8c9d1c7ff5c6fbd370a37aab40d"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_distortion_gl4.lua",
+      "sha256": "33f503896093d3fad4c374267df061b00e4b07028d970cba403e28a04a93a76d"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_dof.lua",
+      "sha256": "a33b501bcbc182803d687da65368ac1401400a45ed46347ea92fa010c48b20d8"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_drawfeatureshape_gl4.lua",
+      "sha256": "070441b82100d76adb93e2f48a67a405b372f0e057a069192ef2ce472409ce5b"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_guishader.lua",
+      "sha256": "333ef39691e6d0daadd4ad5d59fee4c03ee6e60598992b12859c2e510c6e5916"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_highlight_commander_wrecks.lua",
+      "sha256": "630f1210aace03244bfe2704aba30e09d5a41dc798e8cb75060570075b55c046"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_orb_effects_gl4.lua",
+      "sha256": "b58e6fd6278a902a79bf7b704555b674366160f44634b018a71c2cb6c0fb539f"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_outline_shader_gl4.lua",
+      "sha256": "fa72e062213636129966616db4abbf99d55b1bc73015c96944e1f8dcf3be14e0"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_paralyze_effect.lua",
+      "sha256": "9ccfb4be37f96fec78773a18d00060e0a17f8118ab492c1493ba8913029b395d"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_sepia_tone.lua",
+      "sha256": "3e43f742c2e69fa98df42564da6b085d71409327f727e4ab2041b21bdf073d37"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_snow.lua",
+      "sha256": "1e90c7bb144bd4453358cef1bfd1886aa67c3634ea9dcec40f7342c1176b55b9"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_ssao.lua",
+      "sha256": "2c9742aa2eb80ffac9d9ef2cad7607d1e8abc13c6a215577dcbbcd91e3b35e4f"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_unit_stencil_gl4.lua",
+      "sha256": "624a41d596681d95ef77f90ecb8eb8edc6d6bc541a37298c64e648cab53a98c5"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_volumetric_clouds.lua",
+      "sha256": "fd7e20e79896390be43c4fc02499eb217370f6b166c3e9f11c42a23dd8ca3d6b"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gfx_water_type_overlay_gl4.lua",
+      "sha256": "ec35c1fed13457fb3352e23e4ce4c4db86564e40e95f85bb36a793bbebb87a80"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_advplayerslist_music_new.lua",
+      "sha256": "d2674c5b2046c91181f7e885e144767b4b4fe84182766456740663564f768963"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_allyselectedunits.lua",
+      "sha256": "ecfaff07ad178250cbdaf4880a23db558b4461e6f28059b3a2abce2a562e9a9b"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_attack_aoe.lua",
+      "sha256": "388389af2f06161595c22445e716608d671b7a46bf1352654a4fad433e29c362"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_attackrange_gl4.lua",
+      "sha256": "89cb5f76a5d421e7f17f3d276950ae3da2c5cfb28b938a8d3bb0ab2f7987badc"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_building_grid_gl4.lua",
+      "sha256": "78c5b5d1354dcbea7b86c371b210a3c17a343e4e0c65dbf4a063e1cdcc586c51"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_buildsquare_gl4.lua",
+      "sha256": "057575a9784fad0b496ad1a9395498cbd46ebc4e99cac8a2e28b737e566eee1b"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_commands_fx.lua",
+      "sha256": "409b89414cad4c3d539154906307c2b0a2079c5e882ff572feeaabd4c0932a80"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_cursor.lua",
+      "sha256": "7a8f8ffaa36cc52f358215948aa2c62cc564df2f6c79af61075910541ab92ff7"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_defenserange_gl4.lua",
+      "sha256": "685194538a8462b01ec0be41ffcf5fcea663603cee75dcd5df6138799feab35d"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_easyfacing.lua",
+      "sha256": "ce4087e3546fb43d75bd26f8651b302bb455bf86b89839f784727e8dfd817244"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_enemy_spotter.lua",
+      "sha256": "02fbd7c413a2518e21b83809ac8d48199ae927f8785f235016c6120fff8024f1"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_flowui.lua",
+      "sha256": "11e72cb336d4cf6ac7c94abf64c6e4a4248c011a438739218385c0e43b083043"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_geothermalspots.lua",
+      "sha256": "899fc56e908a9a55a20fd4972eb713c6c60421ddb50dff3cdc05e8907d5f131f"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_gridmenu.lua",
+      "sha256": "a02d9ab4b5d6f4b2cdb6faa972d16d52e3a3cd9909a07bb49c384404bb24abc4"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_ground_ao_plates_features_gl4.lua",
+      "sha256": "408a2a488301d6c9be5eb6258efc4619df6581dd4d9c9b0eade811314ea43197"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_ground_ao_plates_gl4.lua",
+      "sha256": "399b91a0aaf355669d672d647cc2da91c78355f706c6b98b034cfed113372638"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_healthbars_gl4.lua",
+      "sha256": "04488b0fdf28600a600b28d580c9b72f41a53081396cf442f5b6e4638099f49d"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_info.lua",
+      "sha256": "4594b88afa1acbf49873fcd357c61f0d3e7325cf520af67080aafebf2e7179ea"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_los_view_gl4.lua",
+      "sha256": "a1166d2c449e06b74e2561ff8f8f9ca861ecbde49606c0a90d16866f1a330bf2"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_metalspots.lua",
+      "sha256": "8aa880e671ea39eff0860e767b63bef44bfeccb09b06b5993f45a0d37fffdde7"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_options.lua",
+      "sha256": "749d590927037421a3ccb6f7c3b78e53c4d6f187a46d809a8f9b447b55a68b8b"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_pausescreen.lua",
+      "sha256": "12138e12fdef61b2a496d90698d76b2ebbe7556da84341ad9b62caef0c89b413"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_pip.lua",
+      "sha256": "97d2b9f87534a581de28515da0a924ce0b49ffeed700233fde823665f1ca7e71"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_rank_icons_gl4.lua",
+      "sha256": "70176050cb477d6e6e877424a1c36001125bfc596a758cf8bcdbcef2e3949b4e"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_reclaim_field_highlight.lua",
+      "sha256": "8e1af2d910a2f46c1070229930e2eb6fdc68f9750ac634f8703eca7f8635ba9c"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_resurrection_halos_gl4.lua",
+      "sha256": "177254be2bb17d1dc5e2250c6a38d64792adb7e0559c24e75303803472189846"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_selectedunits_gl4.lua",
+      "sha256": "59451176d1eff5a73e8bd378be164e0f4d6975b31703e1a71de6dcc912392c93"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_jammer_preview.lua",
+      "sha256": "aff50db79a1bed73549efb9ced979c05ae8e874b46cefaff4f9fb9c8fd0f4afa"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_los.lua",
+      "sha256": "f99a1c96b8ab1334a4e2087f658ca30eeaf212c622e2c6582af2ccc8544c74e1"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_radar.lua",
+      "sha256": "b30950a0c06f8fdb9914ec3b11eaaeddef7ca1f79fdb0e648a6f705870b720d0"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_radar_preview.lua",
+      "sha256": "babdd24b64f1b68b5922611d3e3416eabdce2ee28bd105c167fb9df8d1b3b8c7"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_sensor_ranges_sonar.lua",
+      "sha256": "894f6ccb7f50b12119ab9b4ba3153891cc868968b802128741f89fe214a45976"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_spectator_hud.lua",
+      "sha256": "33011a0c4e07bc93615fae6b8a4033daa761ad8db9a0fdbe6b6ad1eca2cbc33e"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_team_platter.lua",
+      "sha256": "d4413341a7fb09f073ebff3e12945933119bc3fca1be6b75f1be676a09b708a8"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_energy_icons.lua",
+      "sha256": "45be69093e43d03db066066188abeef9ee446a7ac21fe568572f9c603229ffb7"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_firestate_icons.lua",
+      "sha256": "7359fce491bdf363efb65599f297720506ad2597cfd5c13e01f06da9c8f2d1d3"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_group_number.lua",
+      "sha256": "4d20bbac1b9d5470e822a1f4a20c65755bfa6a19857a4b13ad65e4481e9b7277"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_idlebuilder_icons.lua",
+      "sha256": "481533b5d3faa5d9960f65afc51dc2e2d6e57559ee779717acfe650931eeb9da"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_repeat_icon.lua",
+      "sha256": "92763f8157cbb9228a4dc688f38d55ff02529c4d500bcfebc96c4de29e6a7dc1"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/gui_unit_wait_icons.lua",
+      "sha256": "beb766d8e1aacc65ef824946c7acba65c8e30c417e80a0338ea24b2727a786bc"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_blockout_gl4.lua",
+      "sha256": "4d8a5f4b715a195acd94f0abb7da39e1470d490f480461f85c8f46c1f900f562"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_edge_extension2.lua",
+      "sha256": "d8f686e7cb9bd4230218c306fc06470cac68aa6983dece01c9b1fd6da516bc9f"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_grass_gl4.lua",
+      "sha256": "a810100f4841c25cc426ec5dacd40ad20891ae8d609c4a17aed3c7c64c619e7a"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/map_startbox.lua",
+      "sha256": "41978c4a23b96a2bf12fa0e115d300ae5188eeeb4635af6a391953e6b7be2f25"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/sepia_pilot_program.lua",
+      "sha256": "1c77c4de8b303461f734cc1c43e389109c99a889c937315502ba2028d0ea13a9"
+    },
+    {
+      "path": "data/LuaUI/NativeWidgets/unit_squad_selection_hull.lua",
+      "sha256": "bbee6a8a913848f136a14f8f887f4d914548b569a9bdec3ffd14114d1ca70d4e"
+    },
+    {
+      "path": "data/LuaUI/fonts.lua",
+      "sha256": "f2a02622ac705e764e45c591cfc6d06af7933c001b1ae6e70d8512b30a918ccf"
+    },
+    {
+      "path": "data/base/cursors.sdz",
+      "sha256": "024e531ff30110522c59581a414ee0cf3ecb512cfc0d4a5d69da80c1447204d9"
+    },
+    {
+      "path": "data/base/maphelper.sdz",
+      "sha256": "ed3c46cb3aa76af6f0fab2416cc1624eaecceefda2317d8f0ed75d6cdbd81d98"
+    },
+    {
+      "path": "data/base/spring/bitmaps.sdz",
+      "sha256": "1b339acb8debebb1610b082d9a50bbbe5be0d93a8bb8add7843ed37a308bc324"
+    },
+    {
+      "path": "data/base/springcontent.sdz",
+      "sha256": "760f7d214dd7a6c0480cfe6800b122aa354ca99afc3c2b305ac064d7bbc9de0a"
+    },
+    {
+      "path": "data/fonts/AUTHORS",
+      "sha256": "9965fdc33fd13b0048adc7e5a1f611172a52429fb713893f2fb9a30ab200f42b"
+    },
+    {
+      "path": "data/fonts/COPYING",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "path": "data/fonts/CREDITS",
+      "sha256": "f00eb77d39b8c2b2d24899117ebb0309e68ee1bdf7827549bf235af50b619aca"
+    },
+    {
+      "path": "data/fonts/FreeSansBold.otf",
+      "sha256": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242"
+    },
+    {
+      "path": "data/fonts/README",
+      "sha256": "7cb1b7af8a3aea7a7bb89322f6efd4029af6edaf02e779968bc73164e8e005c3"
+    },
+    {
+      "path": "data/rapid/repos-cdn.beyondallreason.dev/byar/versions.gz",
+      "sha256": "ff24ff1231da47ae22b13d9564939c4e605a4faea818dba0638cbc8c094d5d67"
+    }
+  ],
+  "data_count": 142,
+  "data_source": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/data",
+  "legacy_runtime_manifest": "Copied unchanged from R03; PRODUCT.json is the authoritative executable pin",
+  "no_build_or_signing": true
+}

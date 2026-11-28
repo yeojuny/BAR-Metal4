@@ -1,0 +1,10 @@
+2026-11-17 20:12:05.272 fixture[49191:699206] Metal API Validation Enabled
+PASS sensor_slab words=1412 allocations=1
+PASS sensor_nil words=1412 allocations=3
+PASS sensor_capacity words=1412 allocations=3
+PASS sensor_fan_bypass words=1412 allocations=3
+PASS common_circle_slab words=1412 allocations=1
+PASS common_circle_capacity words=1412 allocations=3
+PASS common_pair_slab words=752 allocations=1
+PASS common_pair_nil words=752 allocations=2
+PASS cases=8 words=9976 metal4_submissions=1

@@ -1,0 +1,21 @@
+{
+  "status": "GPU_CORRECTNESS_FAILED_TIMING_SKIPPED",
+  "decision": "FIXTURE_ONLY_DEFAULTS_PRESERVED",
+  "reason": "GPU fixture exited before the parity and positive-control gate",
+  "parity_gate": null,
+  "fixture_returncode": 1,
+  "final_idle": true,
+  "counts": {
+    "games": 0,
+    "engine_builds": 0,
+    "fixture_processes": 1,
+    "timing_samples": 0,
+    "retries": 0,
+    "captures": 0,
+    "mvk3": 0
+  },
+  "raw_timing": [],
+  "summary": null,
+  "raw_log_sha256": "e7c596309cb3551a673b729971579d74593905a7a8ffd05e64643873b9157429",
+  "cleanup_complete": true
+}

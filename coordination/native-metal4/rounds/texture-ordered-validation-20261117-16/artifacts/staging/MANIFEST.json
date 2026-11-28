@@ -1,0 +1,32 @@
+{
+  "base_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "candidate": "texture-ordered-input-cpu-preparation",
+  "status": "CPU_TESTED_METAL_COMPILE_AND_GPU_UNVERIFIED",
+  "feature_flag": "BAR_NATIVE_TEXTURE_ORDERED_INPUT=1",
+  "default": "off",
+  "gpu_pending_limit": 1,
+  "final_drain": "unchanged",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Backend/NativeTextureProducerReceipt.h",
+      "base_sha256": null,
+      "candidate_sha256": "b85adad748b6a4682ecd402cab890008021523de7ba1825d357fbcb5ab3a9d5f"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.h",
+      "base_sha256": "bf42e42224f1f88aa894ee59693437c6291a4f8f1cb8b464057e368e4512ae49",
+      "candidate_sha256": "06e3f13af96dd9982affe8de2ab924e5741d3b145d76e79ca9ca7b37b4625e5f"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4RuntimeNative.mm",
+      "base_sha256": "9fe13f5e3e89e97043bd897010e705eafc8687a8d12ce7d3886514f67cc38521",
+      "candidate_sha256": "85289fa6559d4e3b6f3ae370bf8d7a983a75041e45e356498f6eb248caede864"
+    },
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+      "base_sha256": "aabe8fecc020b263c923487635e16215fa70e69b3fb81b25a9599cbdfcda9a51",
+      "candidate_sha256": "8c62d2155834957e7af7d29556a209cc27f5d9bfcb16d242b22c665d1c33f0bc"
+    }
+  ],
+  "patch_sha256": "7fd98fc1645746d48c3651ff06a2bc7291b9dde505983e8269aa83b466a6d2af"
+}

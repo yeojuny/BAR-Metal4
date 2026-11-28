@@ -1,0 +1,10 @@
+{
+  "status": "NO_MATCHED_METAL_ERRORS",
+  "enabledByChildEnv": true,
+  "enabledByEngineLog": true,
+  "errors": [],
+  "normalExit": true,
+  "candidateSHA256": "ad32896dab1e403f7e007e1fa51d4c8532b095049d86d672ace756337a1829d3",
+  "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/runs/texture_validation01/validation_paced/preparation/runs/V_TEXTURE_ON/scene.png",
+  "source": "raw engine.log; same original error regex"
+}

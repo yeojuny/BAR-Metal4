@@ -1,0 +1,17 @@
+{
+  "round_id": "combined-indexed-fps-repeat-20261118-42",
+  "attempt_id": "combined-off-on-repeat-01",
+  "status": "READY_EXACT_PRIOR_COMBINED_BINARY_AND_SCENE",
+  "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "prior_artifact_commit": "ce6dc43f108abc9eb7464022236e070a4baf9803",
+  "source_manifest_sha256": "a5fecc50b7a65ddd0879323deda33f4bdaa6e9dc5542c0f26b2ad6d018ca451a",
+  "scene_checksums_verified": 13,
+  "runtime_data_files_verified": 142,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0,
+  "order": [
+    "INDEXED_OFF",
+    "INDEXED_ON"
+  ]
+}

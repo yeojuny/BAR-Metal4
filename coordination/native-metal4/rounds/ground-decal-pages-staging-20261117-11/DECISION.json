@@ -1,0 +1,25 @@
+{
+  "round_id": "ground-decal-pages-staging-20261117-11",
+  "decision": "ACCEPT_FIXED_STAGING_FOR_BOUNDED_TWO_ARM_VALIDATION",
+  "author": "SUPER_JINI_MK2",
+  "artifact_commit": "d7f1b9d4498b0645d76a119be21b2d43bb202e8f",
+  "reviewed": [
+    "DONE",
+    "RESULT",
+    "REPORT",
+    "RUNNER.diff",
+    "RUNNER-REVIEW",
+    "TEST-PLAN"
+  ],
+  "pins_match": true,
+  "runner_diff_scope": "Only pins/labels/validation-only selection/completion metadata; launch/parser/error/cleanup logic unchanged in supplied diff",
+  "cleanup_verified": true,
+  "HQ_turn_completed": "01a1e7c0-2d7b-7a32-80c8-cb6fa01fcf72",
+  "limitations": [
+    "CPU contract/build and this staging do not prove actual GPU lifetime/residency or parity.",
+    "Next ordinary validation games cannot exhaust skipped/reversed revisions, failed submission/quarantine, context changes, shutdown or other failure paths.",
+    "No new GroundDecal copy/alloc counters; ordinary game witnesses do not quantify page reuse/copy saving.",
+    "Raw display preflight meets1512x982; actual viewport1512x950/drawable1512x982/main samples1 must still be checked in future raw logs.",
+    "Legacy runner nativeFinalColorExtents summary field is null for baseline/candidate labels; raw markers must be checked without changing frozen parser."
+  ]
+}

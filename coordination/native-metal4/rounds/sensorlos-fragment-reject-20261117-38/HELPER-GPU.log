@@ -1,0 +1,4 @@
+2026-11-17 14:58:35.110 gpu_pixel_parity[27443:267539] Metal API Validation Enabled
+PASS cases=3600 optimized=2234 visible=1869 depth=427 clipped=29 seam=12 xMajor=1199 yMajor=629; color/depth/stencil byte-identical, sampleCount=1
+PASS R02 asymmetric=1024 negativeStencil=96 negativeFacing=24 x=48 y=24 clipped=24 guardFallback=512; AA4 guard-only, GPU execution required
+PASS R38 old-vs-new pixel comparisons=12065; actual Metal execution required

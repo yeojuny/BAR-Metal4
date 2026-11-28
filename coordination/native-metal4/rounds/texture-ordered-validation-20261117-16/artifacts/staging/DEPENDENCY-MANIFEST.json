@@ -1,0 +1,105 @@
+{
+  "candidate_linked_dependencies": [
+    {
+      "install_name": "/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit"
+    },
+    {
+      "install_name": "/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation"
+    },
+    {
+      "install_name": "/opt/homebrew/opt/devil/lib/libIL.dylib",
+      "real_path": "/opt/homebrew/Cellar/devil/1.8.0_6/lib/libIL.dylib",
+      "sha256": "97af4e58cf690d7e8f47e3ba0668dfb1e2127f50937e33f102304f4c843b34b9",
+      "bytes": 419856
+    },
+    {
+      "install_name": "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+      "real_path": "/opt/homebrew/Cellar/minizip/1.4/lib/libminizip.1.dylib",
+      "sha256": "17664124140c81f3028d78a1c79b8af08e891026ee0e08c678eca9ea5ba042a3",
+      "bytes": 72656
+    },
+    {
+      "install_name": "/usr/lib/libz.1.dylib"
+    },
+    {
+      "install_name": "/usr/lib/system/libunwind.dylib"
+    },
+    {
+      "install_name": "/usr/lib/liblzma.5.dylib"
+    },
+    {
+      "install_name": "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+      "real_path": "/opt/homebrew/Cellar/freetype/2.15.0/lib/libfreetype.6.dylib",
+      "sha256": "1bf70387c4ef59accba8116c847cb87d2018ded2672db551686b95dce4c5d931",
+      "bytes": 661248
+    },
+    {
+      "install_name": "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+      "real_path": "/opt/homebrew/Cellar/fontconfig/2.18.3/lib/libfontconfig.1.dylib",
+      "sha256": "e1f5e06e8339b42f0e1af11cc77979ef6a8f48ffa7588e4dc243e4bd69ea656d",
+      "bytes": 455984
+    },
+    {
+      "install_name": "/usr/lib/libSystem.B.dylib"
+    },
+    {
+      "install_name": "/usr/lib/libcurl.4.dylib"
+    },
+    {
+      "install_name": "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+      "real_path": "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbisfile.3.dylib",
+      "sha256": "182caefbd3eec6f61e513900b5f9c4a796c83048aa0d1a882e30c232d248cb35",
+      "bytes": 73376
+    },
+    {
+      "install_name": "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+      "real_path": "/opt/homebrew/Cellar/libvorbis/1.3.7/lib/libvorbis.0.dylib",
+      "sha256": "38df2463cc776f5a4dd58331e0abb46dba0a143b65e345ece328ea61978dd795",
+      "bytes": 193056
+    },
+    {
+      "install_name": "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+      "real_path": "/opt/homebrew/Cellar/libogg/1.3.6/lib/libogg.0.8.6.dylib",
+      "sha256": "57e31e257f6293a07a2fc1e25ec02534fa307f7d94653decd6a98c0b5f961352",
+      "bytes": 71712
+    },
+    {
+      "install_name": "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+      "real_path": "/opt/homebrew/Cellar/openal-soft/1.25.2/lib/libopenal.1.25.2.dylib",
+      "sha256": "bda6121999127208e446a72f1be2c957bc3d618d3f7d66cd60fdfdc4a6702355",
+      "bytes": 1633888
+    },
+    {
+      "install_name": "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+      "real_path": "/opt/homebrew/Cellar/sdl3/3.4.20/lib/libSDL3.0.dylib",
+      "sha256": "10e099afe070ee62ff19cf990712b0df92e3e28a84116cc96756257d9dcdb892",
+      "bytes": 2522016
+    },
+    {
+      "install_name": "/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation"
+    },
+    {
+      "install_name": "/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit"
+    },
+    {
+      "install_name": "/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics"
+    },
+    {
+      "install_name": "/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore"
+    },
+    {
+      "install_name": "/System/Library/Frameworks/Metal.framework/Versions/A/Metal"
+    },
+    {
+      "install_name": "/usr/lib/libc++.1.dylib"
+    },
+    {
+      "install_name": "/usr/lib/libobjc.A.dylib"
+    }
+  ],
+  "runtime_packaging": false,
+  "SDK": {
+    "compiler": "Apple clang version 21.0.0 (clang-2100.4.1.1)\nTarget: arm64-apple-darwin27.3.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin\n",
+    "SDK": "27.2"
+  }
+}

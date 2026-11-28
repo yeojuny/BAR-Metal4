@@ -1,0 +1,8 @@
+{
+  "variant": "private-r03-minor-reject",
+  "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+  "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+  "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native",
+  "sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "publishedPackageReadOnly": true
+}

@@ -1,0 +1,24 @@
+{
+  "status": "SOURCE_READY_EXACT_RTT_RECEIPT_GAME_UNVERIFIED",
+  "round_id": "pending2-exact-ui-rtt-20261118-60",
+  "attempt_id": "pending2-exact-ui-rtt-source-01",
+  "counts": {
+    "targeted_syntax_checks": 1,
+    "cpu_contracts": 2,
+    "engine_builds": 0,
+    "games": 0,
+    "gpu_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cpu_results": {
+    "production_extracted_rtt": "PASS: actual extracted RTT writer stamp, private exact path, success and foreign generation/source, 10 serialized fallback cases, same-frame and discarded output",
+    "existing_screen_mipmap_regression": "1000 active-rejection/inactive ordered recovery, allocation failure, multi-GPU/dedup, whole-plan count and drop/requeue cases; capsule-before-unlock and strong owner lifetimes PASS\nall six standalone/world plan routes preserve lease; both texture queue sites; unchanged GPU producer/retirement body and capsule-before-lock destruction order PASS"
+  },
+  "whole_candidate_built": false,
+  "actual_depth_two": null,
+  "fps": null,
+  "input_latency": null,
+  "utc": "2026-11-18T09:17:22.494124+00:00"
+}

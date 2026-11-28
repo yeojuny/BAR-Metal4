@@ -1,0 +1,19 @@
+{
+  "round_id": "ground-decal-g04-witness-recovery-20261118-93",
+  "status": "PASS_AA0_REAL_SHADER_FIXTURE",
+  "games": 0,
+  "engine_builds": 0,
+  "fixture_compiles": 1,
+  "fixture_runs": 1,
+  "AA0_indexed_color_depth_stencil_cases": 72,
+  "AA0_float_cases": 72,
+  "shadows": [
+    false,
+    true
+  ],
+  "depth_write_witnesses": 36,
+  "stencil_write_witnesses": 36,
+  "finite_components": 139776,
+  "exceptional_stage_values_pending": true,
+  "completed": true
+}

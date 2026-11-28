@@ -1,0 +1,13 @@
+{
+  "round_id": "groundflash-depth-run-fps-20261118-46",
+  "attempt_id": "groundflash-runs-off-on-01",
+  "status": "READY_VALIDATED_APPEND_PRESERVATION_SOURCE",
+  "source_manifest_sha256": "054edbad4ab6f59b6ac162eec1a8523a91b67fce71d3367e0433300c995efb73",
+  "order": [
+    "FLASH_OFF",
+    "FLASH_ON"
+  ],
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

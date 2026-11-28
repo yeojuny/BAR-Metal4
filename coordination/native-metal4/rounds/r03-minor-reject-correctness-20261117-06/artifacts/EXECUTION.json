@@ -1,0 +1,48 @@
+{
+  "round_id": "r03-minor-reject-correctness-20261117-06",
+  "attempt_id": "r03-helper-correctness-01",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "claimed_state_revision": 28,
+  "helper_compile_attempts": 1,
+  "gpu_helper_runs": 1,
+  "engine_builds": 0,
+  "games": 0,
+  "benchmarks": 0,
+  "retries": 0,
+  "started_at_utc": "2026-11-17T00:24:55.814443+00:00",
+  "owned_pids": [
+    3546,
+    3549
+  ],
+  "awake_created": false,
+  "stage": "GPU_RUN_CLOSED_PASS",
+  "compile_command": [
+    "xcrun",
+    "clang++",
+    "-std=c++20",
+    "-fobjc-arc",
+    "-framework",
+    "Foundation",
+    "-framework",
+    "Metal",
+    "-I",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-minor-reject-20261117-01/helper-execution-01/headers",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-minor-reject-20261117-01/helper-execution-01/gpu_pixel_parity.mm",
+    "-o",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-minor-reject-20261117-01/helper-execution-01/gpu_pixel_parity"
+  ],
+  "active_pid": null,
+  "compile_exit_code": 0,
+  "compile_wall_seconds": 1.20884820795618,
+  "binary_sha256": "659e8e3dcbbd5ee0f2375b98df9380955944bcc42099f2dbeddce7d580daf998",
+  "metal_validation_requested": {
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "0"
+  },
+  "gpu_exit_code": 0,
+  "gpu_wall_seconds": 30.33471266599372,
+  "metal_validation_observed": true,
+  "finished_at_utc": "2026-11-17T00:25:27.359269+00:00",
+  "all_owned_children_reaped": true
+}

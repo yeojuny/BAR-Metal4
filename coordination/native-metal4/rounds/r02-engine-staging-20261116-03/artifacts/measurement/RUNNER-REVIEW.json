@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "template_sha256": "de05ddb7f6f1abde4833090f47a8a3e633a5e4ff517aa066dca434e3c2603720",
+  "runner_sha256": "7775e6d7045874b211a98c8600a9ba939621de051cc5dfb4f11ebf2e66c716d0",
+  "unchanged_functions": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw",
+    "run"
+  ],
+  "allowed_changes": [
+    "product mapping and candidate hash",
+    "arm and output names",
+    "G01 constant1 in both arms",
+    "informational comparison labels"
+  ],
+  "controller_parser_pacing_preflight_cleanup_unchanged": true,
+  "source_template_unchanged": true,
+  "games": 0
+}

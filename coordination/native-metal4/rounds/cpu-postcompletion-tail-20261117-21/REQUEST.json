@@ -1,0 +1,48 @@
+{
+  "round_id": "cpu-postcompletion-tail-20261117-21",
+  "attempt_id": "cpu-postcompletion-tail-01",
+  "author": "SUPER_JINI_MK2",
+  "purpose": "Observe whether post-completion CPU settlement delays successor submit; diagnostic only, no performance claim",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "source_manifest_sha256": "92a340616619809f406e66bd7e7dfb021003646b713314db5a5ccb58609f2fc5",
+  "signed_engine_sha256": "a87add50d95a23f1ebdaaf8d02033902dbfe8956ee371754a9cc1e1da4f52962",
+  "preconditions": [
+    "Latest STATE explicit READY/HQ for this round, reserve once using latest contents blob SHA and increment revision",
+    "Existing HQ and independent audit completed; previous cleanup complete",
+    "Verify fixed source manifest and engine hash; no rebuild on mismatch",
+    "Preserve original runner/profile; stage separate diagnostic runner/config and pin hashes",
+    "Verify final child env without starting game: FRAME_TRACE=1, EVERY_LOOP=1, START_SIM=900, END_SIM=915",
+    "Same Ultra AA0 scene/options/controller; PREPARE1 BEGIN0 worker1 S01/G01; HOST_VERTEX and other interventions off; validation and other trace/probes off",
+    "All other local readers/workers/heartbeat paused during execution"
+  ],
+  "budget": {
+    "diagnostic_games": 1,
+    "engine_builds": 0,
+    "captures": 0,
+    "replays": 0,
+    "helpers": 0,
+    "FPS_AB": 0,
+    "retries": 0,
+    "source_edits": 0
+  },
+  "observation": {
+    "start_sim": 900,
+    "end_sim": 915,
+    "clock": "same CPU monotonic trace clock",
+    "postcompletion_tail": "successor Submit.start_ns - predecessor FeedbackWait.end_ns",
+    "submit_call": "Submit.end_ns - Submit.start_ns",
+    "identity": "Exact predecessor event/runtime/submission and successor request/job/lease/submission. Never join only adjacent sourceDraw.",
+    "components": [
+      "AllocatorReset21",
+      "GPUCallback22",
+      "ResidencyCleanup23",
+      "ReadChecks29"
+    ],
+    "interpretation": "Do not sum nested intervals. Event/feedback wait not potential savings. Host observation gap is not full GPU idle. Require successor encode finished and classify early drain."
+  },
+  "success": "ROI ordinary successor chains with complete identities and known drop/truncation status; report distribution/frequency/components, not an FPS improvement",
+  "stop": "Missing trace, identity mismatch, absent ROI, cut chains, admission/config/hash failure => stop report insufficient/BLOCKED as appropriate. No automatic retry, source repair, alternate scene, additional run.",
+  "cleanup": "Finish GPU, owned process/helper/awake/worker/session and evidence writes before DONE for same round/source; record attempt, artifacts, hashes and cleanup; latest STATE CAS reread then close HQ turn.",
+  "decision": "Large repeated tail => assess exact successful read-ready versus reclamation separation while keeping GPU pending1; small tail => SensorLOS/R04 work reduction; insufficient => report only",
+  "execution_authority": "This REQUEST alone does not grant execution. Explicit verified READY and STATE owner HQ required."
+}

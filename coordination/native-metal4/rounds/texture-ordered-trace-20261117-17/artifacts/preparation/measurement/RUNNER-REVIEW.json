@@ -1,0 +1,25 @@
+{
+  "status": "PIN_LABEL_SINGLE_ARM_TRACE_ENV_ONLY",
+  "reference_sha256": "9302c2c8715b1f1dad92a8d67822501ee0136807191591b2c8de1521f7fbe0d8",
+  "runner_sha256": "2e3a727f86a5c239b0633583049fcd3c942b4bc6c8108be7c992e888f8078260",
+  "unchanged_AST_functions_after_completion_label_normalization": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw",
+    "run"
+  ],
+  "changed_functions": [
+    "products",
+    "stage",
+    "main"
+  ],
+  "run_execution_AST_unchanged_after_label_normalization": true,
+  "extra_child_receipt_key": "BAR_NATIVE_TEXTURE_ORDERED_TRACE",
+  "new_controller_parser_error_cleanup_logic": false
+}

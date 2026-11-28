@@ -1,0 +1,107 @@
+{
+  "status": "FROZEN_BEFORE_FIRST_GAME",
+  "utc": "2026-11-17T00:03:58.487538+00:00",
+  "round_id": "r02-current-gpu-profile-20261117-05",
+  "attempt_id": "r02-current-capture-profile-01",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "sourceManifestSHA256": "e2e6e8f25e9251e41ee0c4fbb62b774ff818ce50d5eb60e9c494dde30ce325ab",
+  "binary": {
+    "variant": "private-r02-sensorlos-winding",
+    "package": "/Users/yeojun/Documents/Codex/2026-10-15/bar-rae-github-management/work/release-v1.11.3/candidate/restored/BAR Metal4.app",
+    "binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/bin/spring-metal4-scene",
+    "native": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native",
+    "sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+    "publishedPackageReadOnly": true
+  },
+  "entryAndImportedScriptAndReceiptHashes": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/capture_r02.py": "372d9d537ccd1bdfcc5ba2a9630a69e8373ee19464a744f1a014ca9349152324",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/run_replay_profile.py": "4d852e6619d0f01e043806c382d9367eedf368955f182aa93c1359054aabe8c1",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/preflight.py": "3ed5ab716935d48dfca96be29c80dc3706c49ab5b85efc19be7d1ce0fba135f8",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/audio.py": "246769c2d3f7c0a82b7284427bf4a4005967d808e72eefa592e901d13f616048",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/metrics.py": "1bfb3ea8f4e40501f931b55043d25fb1c2a57687136e396a0aac4c905c3d9ea4",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/terrain_probe.py": "c7c57b64099d92c2e59505ebf017d064f436901b0204092ac0783579981454af",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/validate.py": "ad93ee5e5c2eb661136c14faa1c877e59a30e6d29f915fc74483c9193ee669da",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/preserve.py": "7c31610b9cc1c9c566ae6c80f67142982d40c13e3ae622cc7e0932816f4cd05b",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/bloom217-boundary02/build-recovery01/run/campaign.py": "00b92f890f77bb297a1a30475c9fc3c371cbebbfff11afbff21f75c1139c5a91",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/gpu-next219-01/measurement-aligned01/aligned.py": "f838cde74d463e6c73eb97a49cf508835f43e0c314e93add793e60ad32c56f27",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/PLAN.json": "8732342cbe1f48b8e7674f6d57679bc4704383566953381276773494ba08e12d",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/RETARGET-REVIEW.json": "eb37f4e5edae2143f1e626925ee8de212d277f86681d455f5b7d60a4657bb4b0",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/SOURCE-RECHECK.json": "f48e1303e16e8d5bb3eac31ded5b9d5035e7e2baefd5a968d19c87591875f6c3",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/LAUNCH.json": "74cf7303993f9bc675f63ed9cafaf0a6aeec4d67be877bdfad1084ef5b9d26e2",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/PREPARED.json": "c70d2f2fb673ad3a3141a9ac25704f44075db9cfe9c5e5cc837e429ed2d7ce5e",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/PRODUCT.json": "4ab048eccc40a931c440d108a6d6b7c202594582cc0cfaeab40152d1cbd0288a",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/BASELINE-PRODUCT.json": "5f74e6b1edab40b0721c83386f7dce5c52f52ddae45172176c0fa37c66115919",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/CANDIDATE.json": "7148133540c840299a29e911a511af877f35d384b6a7b2982bf406688f2fa1d7"
+  },
+  "stagedInputHashes": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/LuaUI/Widgets/zzz_native_short_run.lua": "d8de93042672c89610fdcc8bd3aa17aea4ea954be9f2192e20f73dab47e7458d",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/script.txt": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/springsettings.cfg": "81daac2e7b26d14689e83267749604b33feec2f3a24f1034f65313aea0db124c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/LuaUI/Config/BYAR.lua": "dfcc1b9459498480015acdffd04b95a5df8111270e0a07ea1c53ce0e77aef40e",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/LuaUI/Config/BC213.lua": "88939a73492427ede2cb054c7d93a28b277109be8526075cc0ef9c0499a39250",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/fonts/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/FreeSansBold.otf": "8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/LuaUI/Widgets/zzz_backend_common_status.lua": "c312d2996c423df0a8fcb9ad96f5fe841e7a379d50b342c14e7cfc41152ad663",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/LuaUI/Widgets/zzz_ultra_quality.lua": "ef0b7c9916f1f7d5106b9e40292698d92cac26f98284360c95c008e92d0633d9",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/games/bar-official-combat-pr6.sdz": "6ace4644a654a0a876187a517296b2084a4da76ca7149117d4edc4cc16872fd7",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/assets/maps/seths_ravine_remake_1.3.1.sd7": "cd674ba4e1a1ced8524fe0b9bf1abb33170a04026289a139bbd3dbc17c2bb887",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/LuaUI/Widgets/Include/native_warmup_pacing.lua": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/private/P_R02_CAPTURE/state/data/LuaUI/Widgets/zzz_native_warmup_pacing.lua": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "libraryHashes": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libIL.dylib": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libSDL3.0.dylib": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libbrotlicommon.1.2.0.dylib": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libbrotlidec.1.2.0.dylib": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libfontconfig.1.dylib": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libfreetype.6.dylib": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libintl.8.dylib": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libjasper.7.0.0.dylib": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libjpeg.8.3.2.dylib": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/liblcms2.2.dylib": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/liblzma.5.dylib": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libminizip.1.dylib": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libogg.0.8.6.dylib": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libopenal.1.25.2.dylib": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libpng16.16.dylib": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libtiff.6.dylib": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libvorbis.0.dylib": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libvorbisfile.3.dylib": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/runtime/native/lib/libzstd.1.5.7.dylib": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4"
+  },
+  "minimalDiffs": [
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/capture_r02.py.diff",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/run_replay_profile.py.diff"
+  ],
+  "semanticChanges": false,
+  "actualControllerGate": {
+    "readySim": 1500,
+    "startSim": 1590,
+    "captureCount": 1
+  },
+  "inheritedMetadataCorrection": "LAUNCH legacy measurementWindow600..1800 not actual counted540..1740. Diagnostic FPS excluded entirely. PREPARED comparisonDecision inherited clean cohort description does not describe this one-frame diagnostic.",
+  "budget": {
+    "captureGames": 1,
+    "capturedFrames": 1,
+    "replayProfiles": 1,
+    "retries": 0,
+    "sourceChanges": 0,
+    "builds": 0
+  },
+  "commands": [
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/capture_r02.py",
+      "--run"
+    ],
+    [
+      "python3",
+      "-B",
+      "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/run_replay_profile.py",
+      "--run"
+    ]
+  ],
+  "noOtherLocalWork": true,
+  "freeBytes": 53798797312
+}

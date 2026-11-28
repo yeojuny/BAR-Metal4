@@ -1,0 +1,36 @@
+{
+  "status": "STAGED_NO_GAME",
+  "candidate": 98,
+  "scene": "seths",
+  "switch": "BAR_NATIVE_GROUND_DECAL_EXACT_COLD_GLOW",
+  "binary_sha256": "81c581e3345018881eb70ffd23a1f3d5ea9c06c63f0f4284d0fa0570087c6299",
+  "order": [
+    "A1_OFF",
+    "B1_ON",
+    "B2_ON",
+    "A2_OFF"
+  ],
+  "initial_lifetime": null,
+  "launch_sha256": {
+    "A1_OFF": "90e0479afe1fa5bbacc25b64dd3f7e88150962c0fe57525766bef47a58cecbbb",
+    "B1_ON": "30e4afe4b1cfef9d7d05608229adf4bba14da8034a0570fc6b8ece3175adcd18",
+    "B2_ON": "2ac639160ae0f0134566f1df890d78d5b6849f7ca3c51b96be061a6e84da0b9d",
+    "A2_OFF": "c6dd1c7e3f79da579c3b2dbebfc61b5c6f69149376ae611b2024fd2526d025be"
+  },
+  "input_hashes": 13,
+  "scope": {
+    "window": {
+      "startSimulation": 540,
+      "endSimulation": 1740,
+      "screenshot": false
+    },
+    "cap": 2,
+    "MSAA": 0,
+    "viewport": [
+      1512,
+      950
+    ]
+  },
+  "deferred": "0",
+  "hud": "OFF"
+}

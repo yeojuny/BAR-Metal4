@@ -1,0 +1,41 @@
+{
+  "round_id": "r02-existing-trace-export-20261117-20",
+  "attempt_id": "r02-existing-trace-export-01",
+  "author": "SUPER_JINI_MK2",
+  "scope": "EXISTING_CAPTURE_READ_ONLY_INSPECTION_AND_EXPORT_NO_REPLAY",
+  "source_commit": "0382d0f3833d63b3ff1a78c46b108c99539656d0",
+  "capture_path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace",
+  "capture_tree_sha256": "5ae339d460ddb46089783227ba115d37ae4a0e3c4327d81e99c665741a8ea228",
+  "capture_tree_definition": "SHA256(sorted UTF8 relativePath + NUL + fileSHA256 + newline)",
+  "capture_files": 1223,
+  "capture_logical_bytes": 2788204457,
+  "prior_artifact_commit": "aa558a5c5b1858db54fa31470909d1aa25411ff6",
+  "prior_round": "r02-current-gpu-profile-20261117-05",
+  "model": "gpt-6.1-sol",
+  "reasoning_effort": "high",
+  "priority": "One-frame pass/resource dependencies, overlap and bottleneck, not shader micro-patches",
+  "export_targets": [
+    "Encoders9–12 and33–42: attachments, load/store/resolve, read/write usage, last writer; distinguish performance encoder IDs from command encoder IDs and retain labels.",
+    "Individual stage intervals as existing recorded data, units and interval semantics; command/resource timeline, do not add overlapping intervals.",
+    "dss12/dss15 full available state.",
+    "tex99→tex2 exact lineage and writes/reads, transitions/copies/resolves if recorded.",
+    "Existing shader instruction counters supplementary only if already available without new profiling."
+  ],
+  "budget": {
+    "game": 0,
+    "capture": 0,
+    "replay": 0,
+    "profile": 0,
+    "build": 0,
+    "source_edits": 0,
+    "owned_inspection_session_max": 1
+  },
+  "rules": [
+    "Verify latest STATE and no other HQ execution; reserve matching attempt CAS. Prior round19 failed CPU fixture closed; do not fix/retry it during diagnosis.",
+    "Confirm original trace pin and use supported tool help/inspection APIs. Opening one inspection session allowed only when no capture replay/GPU execution required. Do not invoke profile/replay even if export tool suggests it.",
+    "Read existing saved outputs first. Export raw available requested records and metadata to a new evidence directory, preserving originals. If feature needs reprofile or unexposed data, mark UNAVAILABLE and stop that field, no substitute inferred facts.",
+    "Old profile session120 was terminated; do not treat it as active or terminate someone else's session. Close only owned new inspection session; confirm no owned workers/evidence writes remain.",
+    "Keep capture/source/main/releases/Homebrew/original app unchanged. Record raw command parameters, outputs and all node-ID mappings. Explicitly distinguish directly observed dependency from inferred hazard, replay intervals from runtime, no FPS prediction.",
+    "Publish text evidence/limits and DONE after cleanup. Do not add new measurement or fix failed source candidate."
+  ]
+}

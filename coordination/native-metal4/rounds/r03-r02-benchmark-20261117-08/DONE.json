@@ -1,0 +1,153 @@
+{
+  "round_id": "r03-r02-benchmark-20261117-08",
+  "attempt_id": "r03-validation-and-clean-01",
+  "phase": "DONE",
+  "author": "LOCAL_CODEX_HQ",
+  "return_to": "SUPER_JINI_MK2",
+  "status": "MATCHED_WORLD_MEAN_FPS_GAIN_OBSERVED_REVIEW_REQUIRED",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "baseline_R02_signed_sha256": "21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da",
+  "R03_signed_sha256": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+  "runner_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "input_manifest_sha256": "bdd4a25f069f35e0357c6fe8546085febf72314f81409b1f57014f1f8b032941",
+  "artifact_commit": "d27392eb77a5056d28b86286dc4a9757ed3b7e55",
+  "artifact_root": "coordination/native-metal4/rounds/r03-r02-benchmark-20261117-08/artifacts",
+  "files": 93,
+  "bytes": 2855199,
+  "all_remote_paths_and_blob_shas_verified": true,
+  "critical_reports_exact_readback": true,
+  "validation": {
+    "games": 1,
+    "actualMetalEnabled": true,
+    "matchedMetalErrors": 0,
+    "normalExit": true,
+    "S01PositiveSplit": true,
+    "G01PositiveIndexed": true,
+    "diagnosticTimingExcluded": true,
+    "actualPNGViewed": true
+  },
+  "clean": {
+    "games": 6,
+    "order": [
+      "A1_R02",
+      "B1_R03",
+      "B2_R03",
+      "A2_R02",
+      "A3_R02",
+      "B3_R03"
+    ],
+    "perRun": [
+      {
+        "arm": "A1_R02",
+        "FPS": 62.63903821685731,
+        "low1Percent": 50.88062841364741,
+        "seconds": 40.006999969
+      },
+      {
+        "arm": "B1_R03",
+        "FPS": 64.4338942294445,
+        "low1Percent": 52.73833896045663,
+        "seconds": 40.009998322
+      },
+      {
+        "arm": "B2_R03",
+        "FPS": 64.47177818245298,
+        "low1Percent": 55.08474868033627,
+        "seconds": 40.001998901
+      },
+      {
+        "arm": "A2_R02",
+        "FPS": 62.69372809279676,
+        "low1Percent": 53.278691254031315,
+        "seconds": 40.004001617
+      },
+      {
+        "arm": "A3_R02",
+        "FPS": 62.70470026908653,
+        "low1Percent": 52.41935748081439,
+        "seconds": 39.997001648
+      },
+      {
+        "arm": "B3_R03",
+        "FPS": 64.43305585234413,
+        "low1Percent": 53.49794513878319,
+        "seconds": 39.994998932
+      }
+    ],
+    "arithmeticMeans": {
+      "baseline": {
+        "FPS": 62.679155526246866,
+        "low1Percent": 52.19289238283104,
+        "over33_333msTotal": 1
+      },
+      "candidate": {
+        "FPS": 64.4462427547472,
+        "low1Percent": 53.773677593192026,
+        "over33_333msTotal": 1
+      }
+    },
+    "candidateVsBaselinePercent": 2.819258194632779,
+    "meanLow1PercentRelativePercent": 3.0287365543301137,
+    "all3CandidateRunsAboveAll3BaselineRuns": true,
+    "all40WorldCameraSpeedPauseSimulationRowsMatch": true,
+    "allValidSlowRunsRetained": true,
+    "historicalSamplesPooled": false
+  },
+  "metric": "CPU-observed DrawScreen frames / measured wall seconds, not GPU or presentation FPS. Mean FPS primary,1% low supporting.",
+  "conditions": "Same fixed Ultra AA0 battle, main sample1, viewport1512x950/drawable1512x982, raw safe view at0,0/mouseTopOffset32 (top-origin rect0,32); AC normal; VSync/VSyncGame0; PREPARE1 BEGIN0 worker1; S01/G01=1 both; D/Q/U/storage/sharedCUS/Sepia0; clean debug/probe/validation0.",
+  "counted_window": "All40 world/camera/speed/pause/start/end simulation rows match, seeds154658555/7654321, created600/destroyed433, observed540..1740. Count about40 seconds; actual warmup about21.98s and loading16.54..16.98s excluded. Legacy planning metadata not used.",
+  "images": {
+    "status": "LIMITED_VISUAL_REVIEW_WITH_NONCORRELATED_OVERLAY_VARIATION",
+    "all7ActualPNGsViewed": true,
+    "staticObservation": "Terrain, units, buildings and visible sensor/range geometry present; no obvious candidate-only geometry corruption or omission. Not exhaustive pixel or stencil equivalence.",
+    "animatedDifferences": "Cloud, smoke, projectile/particle effects and timing text vary.",
+    "orangeCirclePresence": {
+      "V_R03": false,
+      "A1_R02": true,
+      "B1_R03": false,
+      "B2_R03": true,
+      "A2_R02": false,
+      "A3_R02": true,
+      "B3_R03": true
+    },
+    "perCleanArmFrequency": {
+      "R02": "2 of3",
+      "R03": "2 of3"
+    },
+    "orangeCircleCause": "UNKNOWN; potentially dynamic/unsynced overlay. Saved post-count images and world rows do not prove exact UI state. Do not silently classify this as a natural motion effect or R03 regression.",
+    "countedWindowEffect": "UNKNOWN; snapshots are post-count. No candidate-specific pattern observed, no run excluded or repeated.",
+    "priorHelper": "Separate fixed R03 GPU helper12065 old/new color/depth/stencil comparisons passed previously; not repeated and not a full-game pixel proof.",
+    "imagesUploaded": false,
+    "sharedLocalPathsAndHashes": "EVIDENCE-INDEX.json"
+  },
+  "work_reduction_counters": "R03 code/standalone correctness validated, but live early-reject frequency, actual skipped diamond evaluations, GPU invocation/time/copy/RAM changes are NOT_MEASURED. Report net scene FPS effect only.",
+  "limitations": [
+    "This fixed Ultra AA0 heavy battle only; no Simmers/low-load or true AA4 result.",
+    "Post-count orange-circle overlay varies in both arms; cause and counted-window influence unknown. No universal full-game pixel parity claim.",
+    "No isolated GPU time or allocation/copy/RAM measurements in this round.",
+    "No invented significance threshold, no historical pooling. JINI decides adoption and next scope."
+  ],
+  "budget_used": {
+    "validationGames": 1,
+    "cleanGames": 6,
+    "builds": 0,
+    "helpers": 0,
+    "captures": 0,
+    "replays": 0,
+    "retries": 0
+  },
+  "cleanup": {
+    "all7OwnedGamesNormalExit": true,
+    "allOwnedGameAndAwakePIDsGone": true,
+    "bothAwakeReleased": true,
+    "workersGoneWithProcesses": true,
+    "artifactGenerationCompleteBeforeDONE": true,
+    "allOwnedGPUWorkClosedEvidence": "Unchanged engine normal retirement/shutdown and successful process exit; no individual final event values traced.",
+    "allRawEvidenceWritesComplete": true
+  },
+  "no_source_or_runner_changes": true,
+  "original_app_main_release_homebrew_changed": false,
+  "adoption": "Not merged or released. JINI reviews observed mean gain and endpoint overlay limitation; no extra run automatically started.",
+  "utc": "2026-11-17 02:05:57 UTC"
+}

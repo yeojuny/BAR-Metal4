@@ -1,0 +1,12 @@
+/var/folders/7c/424lvy2s4xq015b7_swks0ww0000gn/T/tmp88ah8p4w/test.cpp:135:66: error: variable 'owner' is uninitialized when passed as a const pointer argument here [-Werror,-Wuninitialized-const-pointer]
+  135 |  {RuntimeLease l;int owner;assert(!l.OrderAfterSourceSubmission(&owner,0,[]{}));assert(!l.OrderAfterSourceSubmission(&owner,8,[]{}));
+      |                                                                  ^~~~~
+1 error generated.
+Traceback (most recent call last):
+  File "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/source/docs/research/postprocess-producer-20261117/candidate/test_contract.py", line 100, in <module>
+    subprocess.run(['c++','-std=c++20','-Wall','-Wextra','-Werror','-I',str(S),str(src),'-o',str(exe)],check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.15/3.15.2/Frameworks/Python.framework/Versions/3.15/lib/python3.15/subprocess.py", line 692, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command ['c++', '-std=c++20', '-Wall', '-Wextra', '-Werror', '-I', '/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/postprocess-producer-20261117-01/source/engine/rts/Rendering/Metal4', '/var/folders/7c/424lvy2s4xq015b7_swks0ww0000gn/T/tmp88ah8p4w/test.cpp', '-o', '/var/folders/7c/424lvy2s4xq015b7_swks0ww0000gn/T/tmp88ah8p4w/test'] returned non-zero exit status 1.

@@ -1,0 +1,19 @@
+{
+  "label": "PARTICLE-CPU-FIXTURE",
+  "argv": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine/tools/metal4-contracts/run_native_world_particle_test.py",
+    "--source",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/source/engine",
+    "--work",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/fixture"
+  ],
+  "attempt": 1,
+  "timestamp_utc": "2026-11-18T01:49:31.846355+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46",
+  "pid": 21647,
+  "exit": 0,
+  "ended_at_utc": "2026-11-18T01:49:38.745459+00:00",
+  "stopped_by_runner": false
+}

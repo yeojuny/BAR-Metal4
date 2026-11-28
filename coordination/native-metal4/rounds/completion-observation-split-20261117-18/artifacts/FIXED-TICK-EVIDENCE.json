@@ -1,0 +1,23 @@
+{
+  "actual_fixedrngseed": 154658555,
+  "actual_start_script_sha256": "a4e0a94af13c43d7b26431b42cdb7808f43b9776ade16a750856573b4dc8941c",
+  "initial": [
+    "[t=00:00:55.300382][f=0000240] [BattleInitialState] frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+  ],
+  "visibility": [
+    "[t=00:00:55.300315][f=0000240] [BattleVisibility] frame=240 spectating=true fullview=true fullselect=false visible_units=2",
+    "[t=00:01:05.307564][f=0000540] [BattleVisibility] frame=540 spectating=true fullview=true fullselect=false visible_units=168"
+  ],
+  "camera": [
+    "[t=00:01:05.307646][f=0000540] [BattleCameraOpen] dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+  ],
+  "image_frame": [
+    "[t=00:01:45.341522][f=0001740] [H1ValidationFrame] sim=1740 camera=dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+  ],
+  "native_readback": [
+    "[t=00:01:45.889200][f=0001740] [H1NativeImage] success=true simulation=1740"
+  ],
+  "benchmark_end": [
+    "[t=00:01:45.900435][f=0001740] Benchmark complete, #created = 600, #destroyed = 433"
+  ]
+}

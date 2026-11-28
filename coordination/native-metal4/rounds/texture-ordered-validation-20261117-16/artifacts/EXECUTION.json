@@ -1,0 +1,23 @@
+{
+  "round_id": "texture-ordered-validation-20261117-16",
+  "attempt_id": "texture-ordered-validation-01",
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/texture-ordered-validation-20261117-01/measurement/run.py",
+    "--suite",
+    "texture_validation01",
+    "--run",
+    "validation_paced"
+  ],
+  "runner_sha256": "9302c2c8715b1f1dad92a8d67822501ee0136807191591b2c8de1521f7fbe0d8",
+  "startedUTC": "2026-11-17T05:43:13.693131+00:00",
+  "invocations": 1,
+  "games_budget": 2,
+  "retries": 0,
+  "runner_pid": 40232,
+  "exit_code": 0,
+  "wall_seconds": 191.78505050000058,
+  "finishedUTC": "2026-11-17T05:46:25.478628+00:00",
+  "runner_reaped": true
+}

@@ -1,0 +1,63 @@
+{
+  "status": "PASS_ORDINARY_OFF_ON_CONFIGS_TEXTURE_PATH_UNKNOWN",
+  "round_id": "texture-ordered-validation-20261117-16",
+  "attempt_id": "texture-ordered-validation-01",
+  "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "source_manifest_sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
+  "input_artifact_commit": "544c23c4214af99efe67c98f047e6325fe6fc9c2",
+  "runner_sha256": "9302c2c8715b1f1dad92a8d67822501ee0136807191591b2c8de1521f7fbe0d8",
+  "OFF_signed_sha256": "ad32896dab1e403f7e007e1fa51d4c8532b095049d86d672ace756337a1829d3",
+  "ON_signed_sha256": "ad32896dab1e403f7e007e1fa51d4c8532b095049d86d672ace756337a1829d3",
+  "games": 2,
+  "baseline_games": 1,
+  "candidate_games": 1,
+  "Metal_API_Validation_observed_both": true,
+  "matched_Metal_errors": 0,
+  "normal_exits": 2,
+  "actual_main_samples": 1,
+  "actual_safe_view": [
+    1512,
+    950
+  ],
+  "actual_drawable": [
+    1512,
+    982
+  ],
+  "world_rows_per_arm": 40,
+  "exactly_matching_world_rows": 40,
+  "world_differences": [],
+  "created": 600,
+  "destroyed": 433,
+  "performance_accepted": false,
+  "images_viewed": 2,
+  "source_or_runner_changes": 0,
+  "retries": 0,
+  "builds": 0,
+  "helpers": 0,
+  "clean_games": 0,
+  "GPU_captures": 0,
+  "cleanup": {
+    "owned_pids_checked_absent": [
+      40243,
+      40396,
+      40233,
+      40232
+    ],
+    "owned_groups_gone": true,
+    "image_workers_joined": true,
+    "awake_released": true,
+    "writers_closed_after_packet": true
+  },
+  "limits": [
+    "All40 sampled world/camera/tick rows match in this ordinary OFF/ON cohort; this is not exhaustive intermediate-state, texture-path or lifetime proof.",
+    "Ordinary API Validation/normal exit is not proof of all skipped/reversed revision, failed submission, quarantine, context-change or shutdown-error paths.",
+    "No per-resource event completion tracing added.",
+    "Actual RGB screenshots viewed without obvious static regression; no exact pixel/depth/stencil equivalence claim.",
+    "No actual page-reuse/copy/alloc/RAM benefit measured.",
+    "ON actual child env is verified, but eligible texture borrow/admission remains UNKNOWN without texture-specific producer/context/consumer witness. No performance claim."
+  ],
+  "actual_child_flag_OFF0_ON1": true,
+  "ON_path_classification": "UNKNOWN",
+  "optimization_exercised_or_correctness_approval": false,
+  "positive_texture_admission_witness": false
+}

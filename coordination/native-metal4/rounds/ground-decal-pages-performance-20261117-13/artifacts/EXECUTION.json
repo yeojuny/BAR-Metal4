@@ -1,0 +1,23 @@
+{
+  "round_id": "ground-decal-pages-performance-20261117-13",
+  "attempt_id": "ground-decal-pages-clean-01",
+  "argv": [
+    "python3",
+    "-B",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-performance-20261117-01/measurement/run.py",
+    "--suite",
+    "gdp_clean01",
+    "--run",
+    "clean_paced"
+  ],
+  "runner_sha256": "e2d2b24c0a975a6a74276c87b48dd9e33a1ff76628ece05f1687e9241a074945",
+  "startedUTC": "2026-11-17T04:47:52.967941+00:00",
+  "invocations": 1,
+  "games_budget": 6,
+  "retries": 0,
+  "runner_pid": 16849,
+  "exit_code": 0,
+  "wall_seconds": 486.41413991699983,
+  "finishedUTC": "2026-11-17T04:55:59.384015+00:00",
+  "runner_reaped": true
+}

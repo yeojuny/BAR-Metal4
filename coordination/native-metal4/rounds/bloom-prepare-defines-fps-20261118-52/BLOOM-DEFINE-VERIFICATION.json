@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "cases": 212,
+  "audited": [
+    "captured locale",
+    "bit-distinct float values and signed zero",
+    "all text proven equal to legacy Defines",
+    "same settings from distinct maps",
+    "full cache fallback and reset"
+  ]
+}

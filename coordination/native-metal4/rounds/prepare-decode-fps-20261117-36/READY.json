@@ -1,0 +1,17 @@
+{
+  "status": "READY_MATCHED_CLEAN_PAIR",
+  "round_id": "prepare-decode-fps-20261117-36",
+  "attempt_id": "clean-original-batch-fps-01",
+  "owner": "HQ3",
+  "binary_sha256": {
+    "R03_ORIGINAL": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "PREPARE_BATCH": "49e84bb92cb055c74310549d9e158d092241f4898e014fd51c40ad9717198b1d"
+  },
+  "stage": "Original R03 paced runner and battle controller with optional screenshot adapter omitted",
+  "stage_matches": 13,
+  "base_data_files": 142,
+  "games_started": 0,
+  "old_visual_plan_reserved": false,
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED"
+}

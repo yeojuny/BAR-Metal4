@@ -1,0 +1,45 @@
+{
+  "round_id": "r03-mvk3-matched-frame-20261117-26",
+  "attempt_id": "r03-mvk3-framepair-02",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4f0878847fd57a1616ed2bb3555424d469971d4fe2a5a232817faea3bef39deb",
+  "binary_pins": {
+    "R03": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+    "MVK3": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa"
+  },
+  "request": "coordination/native-metal4/rounds/r03-mvk3-matched-frame-20261117-26/REQUEST.json",
+  "budget": {
+    "games_max": 2,
+    "captured_frames_per_arm": 1,
+    "captures_max": 2,
+    "inspection_sessions_max": 2,
+    "profile_commands_per_arm": 1,
+    "profile_commands_max": 2,
+    "engine_builds": 0,
+    "engine_source_edits": 0,
+    "R04_captures": 0,
+    "retries": 0,
+    "extra_counter_replays": 0,
+    "FPS_AB": 0
+  },
+  "executor_thread_id": "01a1e89e-ca21-7940-8fdb-900b066da789",
+  "previous_HQ_turn_completed": true,
+  "previous_cleanup_verified": true,
+  "source_writers_stopped": true,
+  "child_tasks_completed": true,
+  "gate": "Exact capture-bound timeInfo.x=1590 and camera/workload correspondence required; request marker insufficient. Missing required proof stops; no retry.",
+  "recovery_verified": {
+    "status": "REBOOT_CANCELLED_SERVICE_LIST_RESPONSIVE",
+    "reboot_requests": 0,
+    "service_restart_requests_this_step": 0,
+    "service_query_exit": 0,
+    "service_query_elapsed_seconds": 0.012305,
+    "active_sessions": 0,
+    "source": "evidence/capture-tool-reboot-20261117-01/RESULT.json",
+    "HQ_turn_completed": true,
+    "protected_files_unchanged": 110,
+    "bar": "PAUSED",
+    "capture_path_tested": false,
+    "scope": "User corrected reboot interpretation; no reboot authorized. User reports approving GPU diagnostic prompt; causal mechanism not established."
+  }
+}

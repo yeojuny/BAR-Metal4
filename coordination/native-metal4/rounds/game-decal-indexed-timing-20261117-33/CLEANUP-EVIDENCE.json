@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "owned_helper_compile_group_gone": 15418,
+  "owned_helper_gpu_group_gone": 15437,
+  "owned_smoke_group_gone": 15521,
+  "owned_awake_gone": 15509,
+  "gpu_sessions_after": "No active sessions.",
+  "shared_awake": "RELEASED",
+  "user_wake_before": [
+    "6618 caffeinate -d"
+  ],
+  "user_wake_after": [
+    "6618 caffeinate -d"
+  ],
+  "user_wake_operations": 0,
+  "bar": "PAUSED",
+  "cleanup_engine": {
+    "normalExit": false,
+    "pid": 15521,
+    "ownedGroupGone": true,
+    "privateWidgetRemoved": true,
+    "privateGameOverlayRemoved": true
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "status": "SINGLE_SIMMERS_ON_COMPLETED_ZERO_ELIGIBLE_ATLAS_BORROWS",
+  "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "scene": "All That Simmers v1.1.1",
+  "cap_requested": 2,
+  "window": [
+    300,
+    1500
+  ],
+  "FPS": 188.1452989498205,
+  "slow1PercentFPS": 131.03448230677765,
+  "p99Ms": 6,
+  "maximumMs": 18.999999,
+  "frame_intervals": 7525,
+  "raw_sha256": "9516569a3ffccbb62723b970ce0c877e22c2389c432674468d645538785eaf02",
+  "outliers_removed": 0,
+  "rank_atlas": {
+    "enabled": 1,
+    "queued": 0,
+    "first_sim": 0
+  },
+  "screen_active_first_and_last": true,
+  "scanout_measured": false,
+  "comparison": "Historical PREPARE uses an older build and no cap2 flag; R66 uses another build and locked/asleep cap1.",
+  "counts": {
+    "games": 1,
+    "builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cleanup_complete": true,
+  "kept_default_cap": 1,
+  "kept_candidate_default": "OFF"
+}

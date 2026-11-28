@@ -1,0 +1,10 @@
+{
+  "round_id": "r03-mvk3-lifetime-20261117-27",
+  "status": "REVIEWED_READY_FOR_SINGLE_HQ_RESERVATION",
+  "request": "coordination/native-metal4/rounds/r03-mvk3-lifetime-20261117-27/REQUEST.json",
+  "manifest_sha256": "7fc7113945056d7949b4213575639aad3dda1200765748d3cec40034afe725d3",
+  "originals_preserved": true,
+  "execution_started": false,
+  "previous_round26_closed": true,
+  "duplicate_execution_prohibited": true
+}

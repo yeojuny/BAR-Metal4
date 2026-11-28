@@ -1,0 +1,19 @@
+{
+  "argv": [
+    "cmake",
+    "--build",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34/build",
+    "--target",
+    "spring-metal4-scene",
+    "--",
+    "-j",
+    "8"
+  ],
+  "child_PKG_CONFIG_PATH": "/opt/homebrew/opt/openal-soft/lib/pkgconfig:/opt/homebrew/Cellar/openal-soft/1.25.2/lib/pkgconfig",
+  "startedUTC": "2026-11-17T22:06:37.082260+00:00",
+  "cwd": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-batch-sdk-20261117-34",
+  "attempt": 1,
+  "pid": 18537,
+  "exit": 0,
+  "endedUTC": "2026-11-17T22:10:23.359910+00:00"
+}

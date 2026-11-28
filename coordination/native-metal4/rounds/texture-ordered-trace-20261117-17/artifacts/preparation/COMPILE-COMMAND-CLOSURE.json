@@ -1,0 +1,17 @@
+{
+  "parent_rows": 3142,
+  "candidate_rows": 3142,
+  "missing": [
+    "{\"command\": \"/usr/bin/c++ -DASIO_STANDALONE -DMACOSX_BUNDLE -DRECOIL_USE_SDL3=1 -DREPORT_LUANAN -DSDL_ENABLE_OLD_NAMES=1 -DSPRING_DATADIR=\\\\\\\"\\\\\\\" -DSSE2NEON -DSSE2NEON_SUPPRESS_WARNINGS -DSYNCCHECK -DSYNC_HISTORY -DTHREADPOOL -D_GLIBCXX_USE_NANOSLEEP -DPR_DOWNLOADER_VERSION=3713df5 -I<FIXED_ROOT>/source/engine/rts/System/SDL3Compat -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/jsoncpp/include -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/base64 -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/7z -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/readerwriterqueue -isystem /opt/homebrew/include -isystem /opt/homebrew/Cellar/minizip/1.4/include -O2 -g -DNDEBUG  -Wformat -Wformat-security -DNDEBUG -std=c++20 -arch arm64   -fPIC -o tools/pr-downloader/src/CMakeFiles/pr-downloader.dir/Version.cpp.o -c <FIXED_ROOT>/source/engine/tools/pr-downloader/src/Version.cpp\", \"directory\": \"<FIXED_ROOT>/build\", \"file\": \"<FIXED_ROOT>/source/engine/tools/pr-downloader/src/Version.cpp\", \"output\": \"<FIXED_ROOT>/build/tools/pr-downloader/src/CMakeFiles/pr-downloader.dir/Version.cpp.o\"}"
+  ],
+  "extra": [
+    "{\"command\": \"/usr/bin/c++ -DASIO_STANDALONE -DMACOSX_BUNDLE -DRECOIL_USE_SDL3=1 -DREPORT_LUANAN -DSDL_ENABLE_OLD_NAMES=1 -DSPRING_DATADIR=\\\\\\\"\\\\\\\" -DSSE2NEON -DSSE2NEON_SUPPRESS_WARNINGS -DSYNCCHECK -DSYNC_HISTORY -DTHREADPOOL -D_GLIBCXX_USE_NANOSLEEP -DPR_DOWNLOADER_VERSION=92b8b71 -I<FIXED_ROOT>/source/engine/rts/System/SDL3Compat -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/jsoncpp/include -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/base64 -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/7z -I<FIXED_ROOT>/source/engine/tools/pr-downloader/src/lib/readerwriterqueue -isystem /opt/homebrew/include -isystem /opt/homebrew/Cellar/minizip/1.4/include -O2 -g -DNDEBUG  -Wformat -Wformat-security -DNDEBUG -std=c++20 -arch arm64   -fPIC -o tools/pr-downloader/src/CMakeFiles/pr-downloader.dir/Version.cpp.o -c <FIXED_ROOT>/source/engine/tools/pr-downloader/src/Version.cpp\", \"directory\": \"<FIXED_ROOT>/build\", \"file\": \"<FIXED_ROOT>/source/engine/tools/pr-downloader/src/Version.cpp\", \"output\": \"<FIXED_ROOT>/build/tools/pr-downloader/src/CMakeFiles/pr-downloader.dir/Version.cpp.o\"}"
+  ],
+  "normalization": "Only root paths normalized; full fields and duplicate counts compared.",
+  "version_tokens": [
+    [
+      "-DPR_DOWNLOADER_VERSION=3713df5",
+      "-DPR_DOWNLOADER_VERSION=92b8b71"
+    ]
+  ]
+}

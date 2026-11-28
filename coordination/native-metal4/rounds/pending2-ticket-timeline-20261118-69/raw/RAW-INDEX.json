@@ -1,0 +1,29 @@
+{
+  "round_id": "pending2-ticket-timeline-20261118-69",
+  "attempt_id": "pending2-exact-event-gpu-drawable-timing-01",
+  "files": {
+    "TICKET-TIMELINE.csv.gz": {
+      "compression": "gzip",
+      "bytes": 356689,
+      "compressed_sha256": "2a601368d91dc3dc969cf25b5e0eae022e595b7c39ad80607f975ba4c70b018a",
+      "original_csv_sha256": "40507ac38dbf6e2e4d4a81c77f739cfff3c47eacbe0a2cc6570bcb4c091fc24b",
+      "original_bytes": 1092689,
+      "rows": {
+        "draw": 2666,
+        "ticket": 2666,
+        "reclaim": 2665
+      },
+      "dropped": 0
+    },
+    "TERRAIN211-FRAMES.csv": {
+      "sha256": "5feca0ce0b4bced66d2f288a8c519edc067ce53479dc9b0b53f68a0cf8d20487",
+      "bytes": 45199,
+      "intervals": 2658
+    },
+    "CLEANUP-PROOF.json": {
+      "sha256": "66dacbd00e8f4a03caec85aa7fef5dd45eb18717febeec568cbe9d019c022115"
+    }
+  },
+  "mode": "Archived exact measurement records; cleanup proof includes selected non-personal receipt fields.",
+  "recorded_utc": "2026-11-18T11:19:53.564531+00:00"
+}

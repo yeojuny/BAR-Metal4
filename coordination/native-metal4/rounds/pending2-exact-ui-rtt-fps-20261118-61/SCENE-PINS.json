@@ -1,0 +1,17 @@
+{
+  "comparisons": [
+    {
+      "arm": "CAP1",
+      "matching_environment": true,
+      "matched_scene_input_hashes": 13,
+      "same_count_window": true
+    },
+    {
+      "arm": "CAP2",
+      "matching_environment": true,
+      "matched_scene_input_hashes": 13,
+      "same_count_window": true
+    }
+  ],
+  "previous_round": "pending2-ordinary-reclaim-cube-20261118-59"
+}

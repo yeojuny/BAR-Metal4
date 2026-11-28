@@ -1,0 +1,38 @@
+{
+  "status": "COMPLETE_SOURCE_CANDIDATE_AND_CPU_VALIDATION",
+  "round_id": "pending2-prejoin-opaque-read-packet-20261118-72",
+  "attempt_id": "pending2-prejoin-opaque-read-packet-source-01",
+  "parent_source_artifact": "26daf06778b692a18a41b3edcf92c1f77744bf26",
+  "patch_sha256": "3205408ed2aa3153acc5368ecbd006553896492e52ad7f56e1bcb5677e2d40b8",
+  "engine_source_changes": 1,
+  "source_inputs_preserved": true,
+  "reference_diagnostic_cleanup_confirmed": true,
+  "cpu_validation_checks": [
+    "TestNativeCUSRoster",
+    "TestNativeCaptureSurfaceBoundary",
+    "TestNativeFrameCompletionMailbox",
+    "TestNativeRenderJobSettlement",
+    "TestNativeSourceFrameCredits",
+    "live-scene-syntax",
+    "prejoin",
+    "worker-current"
+  ],
+  "cpu_validation_file_sha256": "007d32df2e8c3118a5f0217455612b958a5816edd1c277e8206ef82282816f2c",
+  "flag": "BAR_NATIVE_PREJOIN_OPAQUE_READ_PACKET",
+  "default_flag": "OFF",
+  "default_cap": 1,
+  "performance_measured": false,
+  "runtime_ready": false,
+  "counts": {
+    "configure": 0,
+    "engine_build": 0,
+    "games": 0,
+    "gpu_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "diagnostic_timing_added": 0
+  },
+  "prepared_validation_pair": "same signed binary, cap2, existing CPU-read mode 0, OFF/ON only after separate authorization",
+  "cleanup_complete": true,
+  "recorded_utc": "2026-11-18T11:49:58.791876+00:00"
+}

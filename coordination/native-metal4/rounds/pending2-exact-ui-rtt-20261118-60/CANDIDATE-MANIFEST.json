@@ -1,0 +1,12 @@
+{
+  "status": "SOURCE_READY_EXACT_RTT_RECEIPT_GAME_UNVERIFIED",
+  "parent_round59_artifact": "d9e2b78c7c728f9f81f5ca1324bde3656f06c3cb",
+  "parent_engine_sha256": "fea30e1f4aecb69fcf88e82cc80f0b1273f43c9c24d85abb5d312b2ecd82fe52",
+  "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+  "parent_sha256": "cb281d0ad29438698851a3dde215eb27153891c229b26603b984aaa6f077155d",
+  "candidate_sha256": "7cd372689f449850952c872487b6597a732996723bbf3dd156aa2cee24838dad",
+  "patch_sha256": "2f095af50b81320e0f900a1642d14d30c8abde3ec6d0025b5611f19e080316cc",
+  "observed_prior_blocker": "2616/2616 adjacent eligible frames retired the previous UI RTT on the CPU",
+  "candidate_scope": "Bind the historical RTT to its exact private allocation and its real producer event. Preserve CPU retirement fallback and FIFO success publication.",
+  "source_provenance": "The independent review identified RTT encodedVersion as lacking a producer identity. Implementation uses the existing local queue ordering API. No external patch was imported."
+}

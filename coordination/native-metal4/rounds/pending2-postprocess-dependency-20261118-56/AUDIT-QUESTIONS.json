@@ -1,0 +1,29 @@
+{
+  "candidate_patch": "PENDING-POSTPROCESS-TEXTURE-RECEIPT.patch",
+  "candidate_manifest": "CANDIDATE-MANIFEST.json",
+  "parent55_patch_sha256": "094a3518cc744e86a97b3007df7b092a4203855373b720c5b91b5aa96560b684",
+  "questions": [
+    "ImageFor records the producing source ID at the real immutable allocation. PreparationInput uses a dependency only for an exact pending ticket, a root single-sample private 2D image and level/slice zero. Which alias, external producer, or older consumer still lacks full proof at ordinary admission?",
+    "Can all world/postprocess/Bloom accesses safely use the required producer event on the single queue and keep shared writes private or fenced, including when the predecessor fails?",
+    "Which producer callbacks can run only at oldest successful retirement and which display notifications require FIFO success? NativeFrameCompletionMailbox preserves the publication order, so GPU feedback order by itself is insufficient.",
+    "Can the queue make room before nextDrawable and retain old owners through feedback without changing readback, continuation, resize, unknown worker notice and water recurrence drains?"
+  ],
+  "reference": [
+    {
+      "url": "https://developer.apple.com/documentation/metal/drawing-a-triangle-with-metal-4",
+      "scope": "Independent frame data/allocator slots and slot event check. No reusing on timeout and no sample code imported."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/metal/resource-synchronization",
+      "scope": "MTL4CommandQueue requires explicit read/write synchronization."
+    },
+    {
+      "url": "https://developer.apple.com/documentation/metal/mtl4commandqueue/signaldrawable(_:)",
+      "scope": "Rendering signal and FIFO presentation call are separate."
+    },
+    {
+      "url": "https://github.com/victorshi/macnativegames/blob/daf270e07295621a938f554595714f37f6ea6b60/games/totk/third_party/d2r_gfx/gfx/nvn/nvn_mtl.m#L1032-L1045",
+      "scope": "Allocators reclaimed after their fences. Allocator ring capacity is not frames in flight."
+    }
+  ]
+}

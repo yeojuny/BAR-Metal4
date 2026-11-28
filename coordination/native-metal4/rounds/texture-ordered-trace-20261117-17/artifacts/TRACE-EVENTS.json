@@ -1,0 +1,255 @@
+{
+  "source": "engine.log canonical single stream; infolog duplicate not added to counts",
+  "all_raw_events": [
+    {
+      "raw": "[t=00:00:38.002837][f=-000001] [NativeTextureOrderedTrace] event=armed producer=0 consumer=0 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=1",
+      "event": "armed",
+      "producer": "0",
+      "consumer": "0",
+      "log_simulation_frame": -1,
+      "per_event_cap": 1
+    },
+    {
+      "raw": "[t=00:00:50.118760][f=0000091] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "admitted",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 91,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.118800][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "admitted",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.118866][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "admitted",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.118875][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "admitted",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.118881][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "admitted",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.118890][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "admitted",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.119993][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "encode_permit_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.120001][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "encode_permit_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.120005][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "encode_permit_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.120009][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "encode_permit_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 92,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.125496][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "producer_retired_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 103,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.125515][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "producer_retired_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 103,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.125519][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "producer_retired_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 103,
+      "per_event_cap": 64
+    },
+    {
+      "raw": "[t=00:00:50.125522][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+      "event": "producer_retired_check",
+      "producer": "64",
+      "consumer": "65",
+      "log_simulation_frame": 103,
+      "per_event_cap": 64
+    }
+  ],
+  "logged_event_counts": {
+    "armed": 1,
+    "admitted": 6,
+    "encode_permit_check": 4,
+    "producer_retired_check": 4
+  },
+  "relations_by_printed_producer_consumer": {
+    "64->65": [
+      {
+        "raw": "[t=00:00:50.118760][f=0000091] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "admitted",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 91,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.118800][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "admitted",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.118866][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "admitted",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.118875][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "admitted",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.118881][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "admitted",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.118890][f=0000092] [NativeTextureOrderedTrace] event=admitted producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "admitted",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.119993][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "encode_permit_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.120001][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "encode_permit_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.120005][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "encode_permit_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.120009][f=0000092] [NativeTextureOrderedTrace] event=encode_permit_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "encode_permit_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 92,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.125496][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "producer_retired_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 103,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.125515][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "producer_retired_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 103,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.125519][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "producer_retired_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 103,
+        "per_event_cap": 64
+      },
+      {
+        "raw": "[t=00:00:50.125522][f=0000103] [NativeTextureOrderedTrace] event=producer_retired_check producer=64 consumer=65 gpu_pending_limit=1 diagnostic_only=1 performance_valid=0 per_event_cap=64",
+        "event": "producer_retired_check",
+        "producer": "64",
+        "consumer": "65",
+        "log_simulation_frame": 103,
+        "per_event_cap": 64
+      }
+    ]
+  },
+  "event_semantics": {
+    "armed": "Tracer enabled and Texture entry reached, not eligible/admitted. Cap1.",
+    "admitted": "Exact pending producer and independent slot admission passed. Not unique resource.",
+    "encode_permit_check": "Borrower readability passed and duplicate upload/mips branch skipped. Not consumer draw/GPU execution.",
+    "producer_retired_check": "Producer completed check passed in final prior-read callback. NOT consumer GPU completion."
+  },
+  "cap_and_identity_limits": "Independent event caps1/64/64/64, repeated pairs allowed; no total rate, one-to-one texture or unique resource claim. Swallowed diagnostic exceptions limit negative inference.",
+  "all_nonarmed_events_before_counted_simulation540": true
+}

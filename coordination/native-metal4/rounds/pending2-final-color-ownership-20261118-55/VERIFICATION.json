@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "syntax_exit": 0,
+  "cpu_fixture_exit": 0,
+  "syntax": "Actual Metal4WorldRenderer variant with existing SDK and compile entry; no object or linked binary",
+  "cpu_fixture": "Existing idle pool fixture under ASan/UBSan and updated production source pin checks",
+  "cap2_enabled": false,
+  "engine_builds": 0,
+  "games": 0,
+  "gpu_invocations": 0
+}

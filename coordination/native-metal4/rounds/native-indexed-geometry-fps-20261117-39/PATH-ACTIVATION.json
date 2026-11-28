@@ -1,0 +1,69 @@
+{
+  "arms": {
+    "INDEXED_OFF": {
+      "sensorlos_outline": {
+        "status": "DRAW_ENCODED",
+        "counted_draw_witnesses": 4,
+        "all_draw_witnesses": 4,
+        "ticks": [
+          629,
+          629,
+          630,
+          630
+        ]
+      },
+      "sensorlos_r8_fan": {
+        "status": "UNVERIFIED"
+      },
+      "radar_sonar_circle": {
+        "status": "UNVERIFIED"
+      },
+      "healthbars": {
+        "status": "UNVERIFIED"
+      },
+      "unit_stencil": {
+        "status": "PREPARED",
+        "prepare_log_witnesses": [
+          {
+            "line": 3824,
+            "text": "[t=00:01:46.786047] [NativeTransientUpload177] family=unit_stencil requests=30587 reused=30569 created=18 fallback=0 uploaded_bytes=165996800 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime"
+          }
+        ]
+      },
+      "verified_toggle": "0"
+    },
+    "INDEXED_ON": {
+      "sensorlos_outline": {
+        "status": "DRAW_ENCODED",
+        "counted_draw_witnesses": 0,
+        "all_draw_witnesses": 4,
+        "ticks": [
+          450,
+          450,
+          450,
+          451
+        ]
+      },
+      "sensorlos_r8_fan": {
+        "status": "UNVERIFIED"
+      },
+      "radar_sonar_circle": {
+        "status": "UNVERIFIED"
+      },
+      "healthbars": {
+        "status": "UNVERIFIED"
+      },
+      "unit_stencil": {
+        "status": "PREPARED",
+        "prepare_log_witnesses": [
+          {
+            "line": 3824,
+            "text": "[t=00:01:19.064599] [NativeTransientUpload177] family=unit_stencil requests=39767 reused=39749 created=18 fallback=0 uploaded_bytes=207271344 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime"
+          }
+        ]
+      },
+      "verified_toggle": "1"
+    }
+  },
+  "scope": "Existing logs: a nonempty admitted SensorLOS outline with matching encoded successor proves the original draw family. The log does not report whether that submission used an index buffer. Unit Stencil upload requests establish preparation only. No new engine logging in the pinned candidate."
+}

@@ -1,0 +1,22 @@
+{
+  "status": "DONE_ALREADY_EXECUTED",
+  "scope": "Separate direct user request for one Simmers cap1 legacy benchmark",
+  "shared_pre_reservation": false,
+  "execution_claim_utc": "2026-11-18T10:13:21.504582+00:00",
+  "counts": {
+    "games": 1,
+    "configure": 0,
+    "builds": 0,
+    "gpu_helper_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cap": 1,
+  "average_fps": 120.00399939310931,
+  "one_percent_low_fps": 99.37888198757759,
+  "cleanup_complete": true,
+  "idle_verified_utc": "2026-11-18T10:15:15.307651+00:00",
+  "screen_locked_and_asleep": true,
+  "comparison_limit": "Previous Simmers used a different binary and display state. Both runs were cap1."
+}

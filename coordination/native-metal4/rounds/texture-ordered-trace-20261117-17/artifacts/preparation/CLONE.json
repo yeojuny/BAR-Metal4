@@ -1,0 +1,17 @@
+{
+  "argv": [
+    "git",
+    "clone",
+    "--no-checkout",
+    "--single-branch",
+    "--depth",
+    "2",
+    "--branch",
+    "candidate/texture-ordered-trace-20261117",
+    "https://github.com/yeojuny/BAR-Metal4.git",
+    "evidence/texture-ordered-trace-20261117-01/source"
+  ],
+  "pid": 44168,
+  "exit": 0,
+  "seconds": 14.051353292000385
+}

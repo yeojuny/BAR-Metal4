@@ -1,0 +1,99 @@
+{
+  "status": "EXACT_RTT_GATE_REMOVED_UNCLASSIFIED_CPU_PRIOR_READS_BLOCK_CAP2",
+  "round_id": "pending2-exact-ui-rtt-fps-20261118-61",
+  "attempt_id": "pending2-exact-rtt-cap1-cap2-01",
+  "source_artifact": "b3e65b62692a0f741027862ec1fcae2ae77462e4",
+  "binary_sha256": "d2a65b3e7b6af05967162b823957a7759e07db13e22e60026dbbf3d4182886d3",
+  "scene": "Seths Ravine Remake 1.3.1",
+  "counted_simulation": [
+    540,
+    1740
+  ],
+  "runs": [
+    {
+      "cap": 1,
+      "average_fps": 64.14679442271203,
+      "low_1_percent_fps": 52.95315962684756,
+      "draws": 2566,
+      "frame_intervals": 2565,
+      "max_ms": 35.999998,
+      "count_seconds": 40.001998901,
+      "bins": 40,
+      "raw_intervals_sha256": "ac7d3a96dc7b1fa6b5cd4e07d45bb813baf70efb9c8b06409fffdf0f768226e3",
+      "native_summary": {
+        "cap": 1,
+        "first_sim": 540,
+        "last_sim_exclusive": 1740,
+        "submitted": 2566,
+        "eligible": 2566,
+        "adjacent_eligible": 2565,
+        "joined": 0,
+        "two_pending": 0,
+        "no_predecessor": 1,
+        "serial_reads": 2565,
+        "cube": 2565,
+        "world_info": 0,
+        "screen_rtt": 2565,
+        "ordered_cube": 0,
+        "scene_reclaims_all_frames": 0
+      },
+      "normal_exit": true,
+      "retired_present_request": true
+    },
+    {
+      "cap": 2,
+      "average_fps": 63.9,
+      "low_1_percent_fps": 53.27869092649836,
+      "draws": 2556,
+      "frame_intervals": 2555,
+      "max_ms": 26.000000999999997,
+      "count_seconds": 40.0,
+      "bins": 40,
+      "raw_intervals_sha256": "f81a99d733d38f41c42af990d97e58db1b727e2f94949b643a26f07847f69d33",
+      "native_summary": {
+        "cap": 2,
+        "first_sim": 540,
+        "last_sim_exclusive": 1740,
+        "submitted": 2556,
+        "eligible": 2556,
+        "adjacent_eligible": 2555,
+        "joined": 0,
+        "two_pending": 0,
+        "no_predecessor": 1,
+        "serial_reads": 2555,
+        "cube": 0,
+        "world_info": 0,
+        "screen_rtt": 0,
+        "ordered_cube": 0,
+        "scene_reclaims_all_frames": 0
+      },
+      "normal_exit": true,
+      "retired_present_request": true
+    }
+  ],
+  "fps_delta_percent": -0.3847338357794161,
+  "low_1_percent_delta": 0.6147533064028154,
+  "outliers_removed": 0,
+  "counts": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cap2_actual_pending_pairs": 0,
+  "cap2_other_serial_read_frames": 2555,
+  "unclassified_sites_static": [
+    "Bloom predecessor",
+    "postprocess fallback without an exact RTT-style receipt",
+    "terrain-info previous source"
+  ],
+  "input_latency_measured": false,
+  "owned_awake": {
+    "pid": 52856,
+    "owner": "round61",
+    "released": true
+  },
+  "utc": "2026-11-18T09:30:05.811017+00:00"
+}

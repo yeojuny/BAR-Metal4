@@ -1,0 +1,49 @@
+{
+  "status": "DONE",
+  "round_id": "r03-skipdraw-pair-20261117-28",
+  "attempt_id": "r03-onegame-main-decal-skipdraw-01",
+  "decision": "UNKNOWN_SKIP_CAPTURE_NOT_STARTED_FALSE_NEGATIVE_ACK",
+  "reserved_revision": 110,
+  "budget": {
+    "games_max": 1,
+    "captures_max": 2,
+    "inspection_sessions_max": 2,
+    "profiles_max": 2,
+    "profiles_per_capture": 1,
+    "retries": 0,
+    "builds": 0
+  },
+  "counts": {
+    "games": 1,
+    "capture_commands": 1,
+    "captured_frames": 1,
+    "skip_capture_commands": 0,
+    "inspection_sessions": 0,
+    "profile_commands": 0,
+    "retries": 0,
+    "builds": 0,
+    "engine_source_edits": 0
+  },
+  "acknowledgement": "[t=00:01:15.419857][f=0001590] Decals GL4 skipdraw set to, true",
+  "actual_bound_gpu_ticks": "UNKNOWN",
+  "gpu_main_draw_removal": "UNKNOWN",
+  "gpu_cost": "UNKNOWN",
+  "fps": "NOT_MEASURED",
+  "protected_hashes_verified": 132,
+  "cleanup_complete": true,
+  "bar": "PAUSED",
+  "retry_authorized": false,
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-28",
+  "local_trace_manifest_sha256": "473326f383d35d59f7648582f76e8c9e9f622cbd6b7d4e540c395383c372fc6d",
+  "artifactSHA256": {
+    "REPORT.md": "a4b3b505af1f19c98dcefd4c71fc6afb75425d22a2deb5753211b1d502ee4dca",
+    "RAW-OBSERVATIONS.txt": "74ec58b2f03d36785673ac8283986c49c068c5fc5c560fc0bd33214b2d41f199",
+    "RUNTIME-EVIDENCE.json": "07c7cd6a528ad9f0d4217d9cca192746908658aa665776d423f0cb0e16c2678b",
+    "CLEANUP-EVIDENCE.json": "52b905cb3022a7eb710e2e9f47eba8ee37dd1acd50e1b7bc653601da5a872f40",
+    "PROTECTED-HASHES.json": "f11f27fda5ee7043fd3fc98fe01e67bc21885136641b07458d307f613abc3362",
+    "CONTROLLER-DELTA.diff": "a9477b3fee0299b7f2681fa9adfedbab8108320d29700b6c07af2f2eca5aaa42",
+    "RUNNER-DELTA.diff": "ea1320c9be5e8e312528e9af17b2cb7f44fb1eb5a96aecba39587ee58059cbdf",
+    "STAGE-VERIFICATION.json": "a93f0cba4a34709454de183e0ef7ead54857adcdaa8dbf849a03cb703aa17a89"
+  },
+  "utc": "2026-11-17T20:34:45.171445+00:00"
+}

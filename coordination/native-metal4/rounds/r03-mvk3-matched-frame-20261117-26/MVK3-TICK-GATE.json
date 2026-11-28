@@ -1,0 +1,48 @@
+{
+  "status": "PASS_CAPTURE_BOUND_SIM1590",
+  "arm": "MVK3",
+  "session": "14",
+  "world_draw": "/commands/cb3/re108/draw0",
+  "world_shader": "analysis/MVK3/world-vertex.metal",
+  "binding_chain": {
+    "vertex_slot": 1,
+    "resource": "@buf57",
+    "binding_api": "api2971",
+    "buffer_offset": 64,
+    "descriptor_layout": "pad id0; ubos_32 id1 array of 2 constant pointers",
+    "params_pointer_byte_offset": 72,
+    "params_pointer": "0x100007dc000",
+    "params_resource": "@buf651",
+    "matrices_pointer_byte_offset": 80,
+    "matrices_pointer": "0x1000049a000",
+    "matrices_resource": "@buf652",
+    "params_resource_offset": 0,
+    "timeInfo_x_byte_offset": 16,
+    "shader_load": "as_type<float>(spvDescriptorSet1.ubos_32[0]->_m0[4])",
+    "draw_api": "api2984"
+  },
+  "timeInfo": [
+    1590.0,
+    79.28500366210938,
+    53.0,
+    0.0
+  ],
+  "world_viewGeometry": [
+    1512.0,
+    950.0,
+    0.0,
+    0.0
+  ],
+  "main_world_attachments": [
+    1512,
+    950
+  ],
+  "profile_commands": 0,
+  "pair_gate": "PENDING_SEMANTIC_WORKLOAD",
+  "sha256": {
+    "world-params.bin": "dbe602d093eda7574d64172ffd530b8a91d2da786977de37fb8960a2663bdd4c",
+    "world-matrices.bin": "c2c5959b21e5e32f69f44c668b6cefce13a28f780bbeb2d2d982f51f9a9080e6",
+    "world-descriptor1.bin": "1e32494c6fa686a7e6c5160e5a22e79eb261e471bc6cdbfb5759f55906451388",
+    "world-vertex.metal": "2eea34d876bfdcfa2d6157a5affbe48355b1bb6bc6a05188e16d9cba3150fc7e"
+  }
+}

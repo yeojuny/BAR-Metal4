@@ -1,0 +1,30 @@
+{
+  "receipts": {
+    "FLASH_OFF": [
+      {
+        "line": 2253,
+        "text": "[t=00:00:49.624569][f=0000080] [NativeGroundFlashRuns] mode=separate source_ranges=4 encoded_ranges=4 collapsed=0",
+        "mode": "separate",
+        "source_ranges": 4,
+        "encoded_ranges": 4,
+        "collapsed": 0,
+        "logged_during_measurement": false,
+        "log_simulation_tick": 80
+      }
+    ],
+    "FLASH_ON": [
+      {
+        "line": 2268,
+        "text": "[t=00:00:19.447933][f=0000080] [NativeGroundFlashRuns] mode=coalesced source_ranges=4 encoded_ranges=1 collapsed=3",
+        "mode": "coalesced",
+        "source_ranges": 4,
+        "encoded_ranges": 1,
+        "collapsed": 3,
+        "logged_during_measurement": false,
+        "log_simulation_tick": 80
+      }
+    ]
+  },
+  "coalesced_encode_observed": true,
+  "scope": "One first successful encode per mode. Counts refer to the actual GroundFlashes stage of that frame. No frame-wide optimization timing added."
+}

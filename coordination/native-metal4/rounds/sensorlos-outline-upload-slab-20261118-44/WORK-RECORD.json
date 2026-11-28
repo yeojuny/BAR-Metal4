@@ -1,0 +1,132 @@
+{
+  "normal_outline_resource_delta": {
+    "fresh_mtlbuffer_allocations": {
+      "off": 3,
+      "on": 1
+    },
+    "lease_add_allocation_calls": {
+      "off": 3,
+      "on": 1
+    }
+  },
+  "unchanged": [
+    "production MSL, shader ABI and texture/mask binds",
+    "original draw/queue order",
+    "indices and snapshot lifetime",
+    "R8 fan path"
+  ],
+  "validation_limits": "Actual scene logs first encoded outline with upload mode. Pure arithmetic/static checks and existing workload receipts; asynchronous all-frame pixel parity is outside this diagnostic.",
+  "checks": [
+    {
+      "task": "Verify D2R idea and own engine lifetime",
+      "status": "complete"
+    },
+    {
+      "task": "One-file patch, exact parent tree, checked fresh slices",
+      "status": "complete"
+    },
+    {
+      "task": "One build, byte/address and linked Object checks",
+      "status": "complete"
+    },
+    {
+      "task": "One matched OFF/ON pair, combined indexing fixed ON",
+      "status": "complete"
+    }
+  ],
+  "packing_proof": {
+    "alignment": 256,
+    "slices": [
+      {
+        "slot": 2,
+        "data": "position float4 array"
+      },
+      {
+        "slot": 3,
+        "data": "368-byte CircleUniform"
+      },
+      {
+        "slot": 4,
+        "data": "color float4 array"
+      }
+    ],
+    "size_guard": "Invariant length <= maxBufferLength; each new start and end uses remaining-capacity checks before addition. Both dynamic ranges are valid elements of already-allocated vectors.",
+    "address_guard": "Shareable CPU mapping, exact length, nonzero aligned base, full slab address range fits MTLGPUAddress before adding offsets.",
+    "failing_slab": "Insufficient capacity, nil/invalid backing or alignment falls through to the original three UploadCircle calls; their original failure behavior still applies.",
+    "immutability": "No lease reuse: one fresh slab shared by one outline draw; writes finish before AddAllocation and table publication."
+  },
+  "layout_examples": [
+    {
+      "instances": 1,
+      "raw_lengths": [
+        16,
+        368,
+        16
+      ],
+      "offsets": [
+        0,
+        256,
+        768
+      ],
+      "slab_bytes": 784
+    },
+    {
+      "instances": 15,
+      "raw_lengths": [
+        240,
+        368,
+        240
+      ],
+      "offsets": [
+        0,
+        256,
+        768
+      ],
+      "slab_bytes": 1008
+    },
+    {
+      "instances": 16,
+      "raw_lengths": [
+        256,
+        368,
+        256
+      ],
+      "offsets": [
+        0,
+        256,
+        768
+      ],
+      "slab_bytes": 1024
+    },
+    {
+      "instances": 17,
+      "raw_lengths": [
+        272,
+        368,
+        272
+      ],
+      "offsets": [
+        0,
+        512,
+        1024
+      ],
+      "slab_bytes": 1296
+    },
+    {
+      "instances": 165,
+      "raw_lengths": [
+        2640,
+        368,
+        2640
+      ],
+      "offsets": [
+        0,
+        2816,
+        3328
+      ],
+      "slab_bytes": 5968
+    }
+  ],
+  "measured_pairs": 1,
+  "both_upload_modes_witnessed": true
+}

@@ -1,0 +1,49 @@
+{
+  "status": "FPS_PAIR_COMPLETE_NO_TWO_PENDING_WITNESS",
+  "round_id": "pending2-ordinary-game-fps-20261118-57",
+  "attempt_id": "pending2-cap1-cap2-01",
+  "binary_sha256": "b2b7313452f752d06f1291be4311f71d2e7b3012bf980f09f218f00ebd10f183",
+  "runs": [
+    {
+      "cap": 1,
+      "average_fps": 64.66529936606284,
+      "low_1_percent_fps": 52.73833896045663,
+      "counted_draws": 2587,
+      "frame_intervals": 2586,
+      "maximum_ms": 27.000000999999997,
+      "normal_exit": true,
+      "successful_present_request": true,
+      "two_pending_witness": false
+    },
+    {
+      "cap": 2,
+      "average_fps": 64.60161415369669,
+      "low_1_percent_fps": 51.79283085189134,
+      "counted_draws": 2584,
+      "frame_intervals": 2583,
+      "maximum_ms": 45.000001999999995,
+      "normal_exit": true,
+      "successful_present_request": true,
+      "two_pending_witness": false
+    }
+  ],
+  "cap2_vs_cap1_percent": {
+    "average_fps": -0.09848436950030681,
+    "low_1_percent_fps": -1.7928287602577697
+  },
+  "outliers_removed": 0,
+  "input_latency_measured": false,
+  "physical_display_scanout_verified": false,
+  "counts": {
+    "engine_build": 1,
+    "configure": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "prelaunch_recovery": "One duplicate runner-claim error occurred before any game process launched; normal execution was one started game per arm.",
+  "provenance": "Astra independent exact postprocess review informed source/queue matching, retry binding, private storage and partial-copy checks. Cloud audit patch was not applied.",
+  "note": "Two pending GPU submissions were not witnessed on the ordinary match. The test does not distinguish a serialized fallback from a second commit after the predecessor GPU event had already signaled.",
+  "utc": "2026-11-18T08:34:09.210105+00:00"
+}

@@ -1,0 +1,41 @@
+{
+  "status": "DONE",
+  "round_id": "game-decal-indexed-validation-20261117-31",
+  "attempt_id": "indexed-native-off-on-01",
+  "reserved_revision": 115,
+  "decision": "BLOCKED_CONFIGURE_OPENAL_PACKAGE_SEARCH_PATH",
+  "counts": {
+    "configure_attempts": 1,
+    "engine_builds": 0,
+    "parity_helper_compiles": 0,
+    "parity_helper_gpu_invocations": 0,
+    "parity_games": 0,
+    "clean_games": 0,
+    "games": 0,
+    "captures": 0,
+    "trace_inspections": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "failure": "pkg-config could not find openal>=1.18.2 in the configure process environment",
+  "package_version_found_with_explicit_search_path": "1.25.2",
+  "candidate_sdk_compiled": false,
+  "attachment_samples": "UNKNOWN",
+  "metal_parity": "UNTESTED",
+  "performance": "UNMEASURED",
+  "protected_hashes_verified": 132,
+  "base_source_entries_verified": 10270,
+  "cleanup_complete": true,
+  "bar": "PAUSED",
+  "retry_authorized": false,
+  "local_evidence_root": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/game-decal-indexed-validation-20261117-31",
+  "artifactSHA256": {
+    "REPORT.md": "b526866cc60553bcd10a1587b7dcc3b18957c84c17f10c3029bc52d5392019c7",
+    "CONFIGURE-FAILURE.txt": "fa9e4f30e3580ab767bb5542afb46e328f6befc21ff27c9279db97f870a6d765",
+    "DEPENDENCY-DIAGNOSIS.json": "5895c48736e1ea03503e05c0d88d642d32316fab233af9863ea764be5f7a95eb",
+    "PROTECTED-HASHES.json": "7a10ce78382af1f5085d385da6b8b26594ef1a6eee862d3a9ebca668b9be25ba",
+    "CLEANUP-EVIDENCE.json": "2eac48f66d6e21c0572b928f8711c7fbc9051c707e925f608a2803faf5fccb8d",
+    "PATCH-VERIFICATION.json": "148510fdda3b9bd9a6adceb4332c2aeb4d3da9167e57cd12d08a662dbad7f871"
+  },
+  "utc": "2026-11-17T21:00:03.769031+00:00"
+}

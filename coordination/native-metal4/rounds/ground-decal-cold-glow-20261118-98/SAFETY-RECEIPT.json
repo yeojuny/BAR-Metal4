@@ -1,0 +1,19 @@
+{
+  "status": "PASS_GROUND_COLD_GLOW_METAL",
+  "indexed_BGRA8_depth_stencil_cases": 72,
+  "RGBA32F_cases": 72,
+  "cold_branch_positive": [
+    7,
+    7
+  ],
+  "fallback_control": [
+    12,
+    12
+  ],
+  "shadows": [
+    false,
+    true
+  ],
+  "pixel_scope": "AA0 only; test-only marker never compiled in engine",
+  "log_sha256": "43f9849356e0b88ade2ec5676036b0aa3b34c78143452abaa9954dca1c3e8087"
+}

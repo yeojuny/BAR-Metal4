@@ -1,0 +1,26 @@
+{
+  "round_id": "seths-rank-atlas-on-cap1-20261118-91",
+  "attempt_id": "same-binary-seths-cap1-atlas-on-01",
+  "reference": "R88_ON",
+  "binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "cap": 1,
+  "atlas_switch": "ON",
+  "requested_display": "active_and_unlocked",
+  "simulation_window": [
+    540,
+    1740
+  ],
+  "aa": 0,
+  "input_matches": 13,
+  "sole_runtime_delta": "BAR_NATIVE_INTERVENTION_TWO_INFLIGHT",
+  "launch_sha256": "3a8086993e6b259c69ed549ee06cf205eefeaa881132307f60c41f3a9f4d4174",
+  "reference_launch_sha256": "f572d7fefe4c3e815651a8504453d7edd72d3fae3435909636fce6e8ee7498bb",
+  "budget": {
+    "games": 1,
+    "builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "status": "STAGED_NO_GAME"
+}

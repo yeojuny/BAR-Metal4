@@ -1,0 +1,44 @@
+--- a/gpu_pixel_parity.mm
++++ b/gpu_pixel_parity.mm
+@@ -13,6 +13,9 @@
+ #include <vector>
+ // Compile with -I <fixed R03 engine>/rts/Rendering/Metal4. No fallback header.
+ #include "NativeSensorLOSShaders.h"
++#define NativeSensorLOSShaderSource R03ReferenceSensorLOSShaderSource
++#include "R03Reference/NativeSensorLOSShaders.h"
++#undef NativeSensorLOSShaderSource
+ 
+ using namespace simd;
+ static constexpr unsigned W=128,H=128;
+@@ -193,7 +196,7 @@
+   if(!reference)Fail("R03 reference pipeline missing");
+   auto before=RenderOne(d,q,reference,ds,mask,sampler,u,lines,setup);
+   auto after=RenderOne(d,q,p,ds,mask,sampler,u,lines,setup);
+-  if(!Equal(before,after,"R03 exact old-vs-new coverage",r03Comparisons))Fail("R03 pixel parity");
++  if(!Equal(before,after,"R38 fragment discard old-vs-new",r03Comparisons))Fail("R03 pixel parity");
+   ++r03Comparisons;return after;
+ }
+ static float4 ClipPoint(float2 screen,float w,float depth){
+@@ -226,12 +229,8 @@
+   auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;
+   options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;
+   auto lib=[d newLibraryWithSource:source options:options error:&error];if(!lib)Fail("shader compilation",error);
+-  // Use the byte-identical retained original coverage function, not the candidate
+-  // on both sides. Both ordinary and facing-probe fragments contain this call.
+-  NSString* candidateCall=@"SensorLineCoveredEarly(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,u.counts.w,coverageDepth)";
+-  NSString* originalCall=@"SensorLineCovered(in.lineA.xyz,in.lineB.xyz,glPixel,u.parameters.x,coverageDepth)";
+-  if([[source componentsSeparatedByString:candidateCall] count]!=3)Fail("R03 two exact reference call markers");
+-  NSString* referenceSource=[source stringByReplacingOccurrencesOfString:candidateCall withString:originalCall];
++  const auto referenceFacingSource=FacingProbe(rendering::metal4::R03ReferenceSensorLOSShaderSource);
++  auto referenceSource=[NSString stringWithFormat:@"%s\n%s\n%s",rendering::metal4::R03ReferenceSensorLOSShaderSource,TestVS,referenceFacingSource.c_str()];
+   auto referenceLib=[d newLibraryWithSource:referenceSource options:options error:&error];
+   if(!referenceLib)Fail("R03 original reference shader compilation",error);
+   auto vs=[lib newFunctionWithName:@"ParityVS"],fs=[lib newFunctionWithName:@"OriginalSensorLOSFragment"];
+@@ -470,6 +469,6 @@
+   if(!xOptimized||!yOptimized||!clippedOptimized||!fallbackCases)Fail("R02 geometry/guard coverage missing");
+   printf("PASS R02 asymmetric=%u negativeStencil=%u negativeFacing=%u x=%u y=%u clipped=%u guardFallback=%u; AA4 guard-only, GPU execution required\n",
+          asymmetricCases,negativeStencil,negativeFacing,xOptimized,yOptimized,clippedOptimized,fallbackCases);
+-  printf("PASS R03 old-vs-new pixel comparisons=%u; actual Metal execution required\n",r03Comparisons);
++  printf("PASS R38 old-vs-new pixel comparisons=%u; actual Metal execution required\n",r03Comparisons);
+   return 0;
+ }}

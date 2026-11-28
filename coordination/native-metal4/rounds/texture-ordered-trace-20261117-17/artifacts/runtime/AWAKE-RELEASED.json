@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "validation_paced",
+  "pid": 49035,
+  "startUTC": "2026-11-17T06:09:33.432035+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-17T06:11:24.795177+00:00",
+  "ownCaffeinateAlive": false
+}

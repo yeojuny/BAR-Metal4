@@ -1,0 +1,27 @@
+{
+  "round_id": "texture-ordered-validation-20261117-16",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ORDINARY_OFF_ON_VALIDATION_PASS_OPTIMIZATION_PATH_UNKNOWN",
+  "artifact_commit": "47f476e2d207d7d0f7386d613233355a4d862117",
+  "independent_review": {
+    "same_signed_binary": "ad32896dab1e403f7e007e1fa51d4c8532b095049d86d672ace756337a1829d3",
+    "actual_child_environment_OFF0_ON1": true,
+    "raw_engine_Metal_validation_marker_both": true,
+    "reported_Metal_errors": 0,
+    "raw40_world_rows_independently_equal": true,
+    "actual_two_images_viewed": true,
+    "visual": "No obvious candidate-only static terrain/building/decal/occlusion corruption. Dynamic lighting/smoke/debug differences remain; RGB not attachment-level equivalence.",
+    "HQ_turn_completed": "01a1e804-b61b-7ef0-bcaf-989b1e224959",
+    "cleanup_verified": true
+  },
+  "path_evidence": {
+    "classification": "UNKNOWN",
+    "positive_texture_specific_admission": false,
+    "comprehensive_negative_evidence": false,
+    "generic_NativeWorldBorrow168": "Unrelated overlay command validation; not texture ordered-input witness.",
+    "absence_of_marker_does_not_prove_unused": true
+  },
+  "performance_authorized": false,
+  "optimization_correctness_approved": false,
+  "next": "Do not benchmark or repeat unchanged ON/OFF merely to seek evidence. First prepare a minimal default-off texture-specific admission/retirement diagnostic witness (exact producer/context/consumer and accepted/rejected counts) on an independently pinned source, preserving GPU pending1/final drain and ownership. Review scope before a bounded targeted correctness run. No new execution in this decision."
+}

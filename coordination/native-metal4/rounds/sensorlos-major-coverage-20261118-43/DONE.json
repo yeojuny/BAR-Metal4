@@ -1,0 +1,118 @@
+{
+  "status": "DONE",
+  "round_id": "sensorlos-major-coverage-20261118-43",
+  "attempt_id": "sensorlos-coverage-off-on-01",
+  "decision": "CLOSED_FEASIBILITY_NO_BOUNDED_COVERAGE_SHARING_PATH",
+  "checks": [
+    {
+      "item": "Pin audited raw GPU rows and R04 result",
+      "outcome": "complete"
+    },
+    {
+      "item": "Confirm current exact coverage domain and preserved inputs",
+      "outcome": "complete"
+    },
+    {
+      "item": "Evaluate precompute, quad and raster expansion cost",
+      "outcome": "no bounded candidate supported by the existing evidence"
+    },
+    {
+      "item": "Implement, validate and benchmark if feasible",
+      "outcome": "no source change or run"
+    }
+  ],
+  "source_sha256": {
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/independent-architecture-audit-20261117-02/AUDIT.md": "f7da71db9bcb88891d93f300481bae504bc51be3f0c728d5ba7dd438b3cd2f73",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/api-calls.jsonl": "2448d5a7b54b0f5e7539c61af941111abe9f417c54907c13e86b99062a136928",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/shader-costs.jsonl": "9810810a955c021f5d8a295680e46a03c01f17c4daa62d59bcd33488c01c42cb",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r04-r03-regression-20261117-01/execution/r04-validation-and-clean-01/REPORT.md": "b5f6718fd1cf007223b8c44cc88128abfa6f88c652da95fd1bc35eb41b150ead",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h": "043e006fc06d8ff14f201abf5ef9413cc7987b1c70e789e3b0da971ffe9a6c7c",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/source/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm": "3ca8523331c8bcfd97b72973da7e3781ed33c6ab8c764f84c9d6f802ec2564f5",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build/spring-metal4-scene": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/DONE.json": "e6ea154d8b0fb7d126959c13a39cc2952f57bdc0b2731b56313fe3d12b49b96f",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-repeat-20261118-42/DONE.json": "0c79a28bcc0112585b87faa5a32db0db5a155e35fd66a1668806af74e9e09643",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_ON/assets/packages/7a0e6ff2ee6f899654edd8cc997b5386.sdp": "4486ed608a9eb0163a6bab0cec711a391aced25b2fd11bedf0791030b318db51"
+  },
+  "raw_rows": {
+    "api9766": {
+      "actions": "go, info",
+      "name": "api9766",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:378 instanceCount:165]"
+        }
+      ]
+    },
+    "frag0": {
+      "actions": "go, info",
+      "name": "frag0",
+      "values": [
+        {
+          "type": "string",
+          "value": "OriginalSensorLOSFragment"
+        },
+        {
+          "type": "string",
+          "value": "@rps61 \"MTLRenderPipelineState 62\""
+        },
+        {
+          "type": "percentage",
+          "value": 26.342152889597596
+        },
+        {
+          "type": "string",
+          "value": "1"
+        }
+      ]
+    }
+  },
+  "historical_r04_relative_percent": -7.425563,
+  "historical_segment_instances": 10395,
+  "example_dense_major_entries": 15717240,
+  "example_dense_bytes_4_per_entry": 62868960,
+  "widget": {
+    "sha256": "829d3a6d8e9bddc25e51d82966442650c2c68ddf070ed07df775b115b6d4fca1",
+    "source_path": "luaui/widgets/gui_sensor_ranges_los.lua",
+    "lines": [
+      {
+        "line": 25,
+        "source": "local rangeLineWidth = 4.5 -- (note: will end up larger for larger vertical screen resolution size)"
+      },
+      {
+        "line": 26,
+        "source": "local lineScale = 1 -- this is a multiplier for the line width, to make it look better on high res screens"
+      },
+      {
+        "line": 152,
+        "source": "lineScale = (vsy + 500) / 1300"
+      },
+      {
+        "line": 408,
+        "source": "local lineWidth = rangeLineWidth * lineScale"
+      },
+      {
+        "line": 412,
+        "source": "gl.LineWidth(lineWidth)"
+      },
+      {
+        "line": 430,
+        "source": "gl.LineWidth(1.0)"
+      }
+    ]
+  },
+  "counts": {
+    "configures": 0,
+    "builds": 0,
+    "fixtures": 0,
+    "games": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "fps": null,
+  "previous_combined_binary_preserved": true,
+  "cleanup_complete": true
+}

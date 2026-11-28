@@ -1,0 +1,58 @@
+{
+  "status": "PASS",
+  "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "architecture": "arm64",
+  "link": "[1577/1578] Linking CXX executable spring-metal4-scene",
+  "sources": {
+    "Metal4GameDecal.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4GameDecal.mm.o",
+      "sha256": "a61dc35e7963309db38e2408d8ce0178a8e9e086cf7be66c798e7ed52051463e",
+      "archive": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build/rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "verified_header_dependencies": [
+        "Metal4GameDecalGeometryIndices.h"
+      ]
+    },
+    "Metal4ScreenNative.mm": {
+      "object": "rts/builds/metal4-scene/metal4-renderer/CMakeFiles/recoil-metal4-renderer.dir/Metal4ScreenNative.mm.o",
+      "sha256": "0dde61c7641dc109a0b5b1f2afe5ec172c0ead46707f48aca2a58105b923bd6a",
+      "archive": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build/rts/builds/metal4-scene/metal4-renderer/librecoil-metal4-renderer.a",
+      "verified_header_dependencies": [
+        "Metal4FixedTriangleIndexBuffer.h",
+        "NativeTriangleReuseIndices.h"
+      ]
+    },
+    "Metal4Sensor31657CircleNative.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Sensor31657CircleNative.mm.o",
+      "sha256": "41ec84d4856db684431a20457c725e1afb5ffc92acf64ee642c85bb0d0a2a8db",
+      "archive": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build/rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "verified_header_dependencies": [
+        "Metal4FixedTriangleIndexBuffer.h",
+        "NativeTriangleReuseIndices.h"
+      ]
+    },
+    "Metal4SensorLOSNative.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4SensorLOSNative.mm.o",
+      "sha256": "b95280b1d9d2f81528fe435e5b2fd106479fe08af5614a162ea0227d09f1196a",
+      "archive": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build/rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "verified_header_dependencies": [
+        "Metal4FixedTriangleIndexBuffer.h",
+        "NativeTriangleReuseIndices.h"
+      ]
+    },
+    "Metal4UnitStencil.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4UnitStencil.mm.o",
+      "sha256": "ecbe79e12415dfdffa2ec2f44cdd9a65c649567e43d6fe4a401da079d1f1be4c",
+      "archive": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/build/rts/builds/metal4-scene/librecoil-metal4-world-renderer.a",
+      "verified_header_dependencies": [
+        "Metal4FixedTriangleIndexBuffer.h",
+        "NativeTriangleReuseIndices.h"
+      ]
+    }
+  },
+  "archive_members_match_objects": true,
+  "literals_present": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": true,
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": true,
+    "[NativeIndexedRoute] family=gamedecal_small mode=indexed": true
+  }
+}

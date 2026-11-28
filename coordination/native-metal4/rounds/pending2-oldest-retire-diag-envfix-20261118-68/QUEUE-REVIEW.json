@@ -1,0 +1,57 @@
+{
+  "status": "OFFLINE_QUEUE_BOUNDARY_REVIEW_COMPLETE",
+  "round_id": "pending2-oldest-retire-diag-envfix-20261118-68",
+  "scope": "R68 timing, original source, and previously recorded GPU data",
+  "after_drawscreen_ledger_reclaims": 2651,
+  "pre_drawscreen_source_credit_reclaims": 0,
+  "four_longest_intervals": [
+    {
+      "draw": 4007,
+      "event": 4003,
+      "interval_ms": 48.999999,
+      "reclaim_ms": 8.044458,
+      "event_wait_ms": 7.706917,
+      "remainder_ms": 40.955541
+    },
+    {
+      "draw": 3433,
+      "event": 3429,
+      "interval_ms": 28.999999,
+      "reclaim_ms": 6.741917,
+      "event_wait_ms": 6.288625,
+      "remainder_ms": 22.258082
+    },
+    {
+      "draw": 4049,
+      "event": 4045,
+      "interval_ms": 23,
+      "reclaim_ms": 6.109083,
+      "event_wait_ms": 5.743375,
+      "remainder_ms": 16.890917
+    },
+    {
+      "draw": 2713,
+      "event": 2709,
+      "interval_ms": 23,
+      "reclaim_ms": 3.027417,
+      "event_wait_ms": 2.51925,
+      "remainder_ms": 19.972583
+    }
+  ],
+  "conclusion": "Current data distinguishes host event and feedback waits from settlement and owner release. It does not identify GPU start/end or drawable availability for the matching ticket. A host event wait is not GPU execution time.",
+  "historical_data_limit": "R02 saved capture lacks complete resource bindings, lifetimes and active intervals. Native220 system profile used different scene, binary and display state; it cannot be joined to R68.",
+  "next_diagnostic": "Only if authorized, collect existing feedback GPU start/end, exact commit/predecessor and event wait boundaries, and nextDrawable host interval with one bounded exit export.",
+  "preparation_candidate": "Test only when useful CPU overlap is demonstrated: immutable current-draw NativeWorldDrawPlan167 index preparation before the ledger gate, preserving exact owner checks, admission, queue dependencies and FIFO presentation.",
+  "worker_movement": "DEFERRED",
+  "default_cap": 1,
+  "additional_counts": {
+    "configure": 0,
+    "engine_build": 0,
+    "games": 0,
+    "gpu_runs": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "local_full_review_sha256": "c66e3516efd7e6dfbeedb02a5c8bf6326343b2edcc4e2254b8946387ed816987"
+}

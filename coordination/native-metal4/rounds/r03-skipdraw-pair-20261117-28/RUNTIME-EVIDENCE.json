@@ -1,0 +1,191 @@
+{
+  "failure": "FALSE_NEGATIVE_ORIGINAL_ACTION_ACK",
+  "explanation": "Original Spring.Echo separates arguments with comma and space. Helper regex required whitespace immediately after \u201cset to\u201d. Both original logs show one true response at 1590. The failed gate prevented the second capture.",
+  "gameExit": 0,
+  "helperExit": 1,
+  "rawLogExcerpts": {
+    "infolog.txt": [
+      "[t=00:01:12.983591][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401",
+      "[t=00:01:15.419809][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401",
+      "[t=00:01:15.419857][f=0001590] Decals GL4 skipdraw set to, true",
+      "[t=00:01:15.439069][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401",
+      "[t=00:01:15.468576][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401"
+    ],
+    "engine.log": [
+      "[t=00:01:12.983592][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401",
+      "[t=00:01:15.419810][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401",
+      "[t=00:01:15.419858][f=0001590] Decals GL4 skipdraw set to, true",
+      "[t=00:01:15.439070][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401",
+      "[t=00:01:15.468587][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401"
+    ]
+  },
+  "captureReceipt": {
+    "pid": 7426,
+    "boundaryCommand": [
+      "/usr/bin/gpucapture",
+      "boundaries",
+      "--pid",
+      "7426"
+    ],
+    "boundaryStartedUTC": "2026-11-17T20:33:00.568242+00:00",
+    "boundaryTimeoutSeconds": 8,
+    "boundaryElapsedSeconds": 0.06861829100034811,
+    "boundaryExit": 0,
+    "boundaryStdout": "boundaries for 7426 (spring-metal4-scene)\n  ID    Type                              Label  GPU(ms)  Count\n   1  Device                       Apple M4 Pro    15.69   4027\n   3   Queue                             (null)    15.69   4027\n  12   Layer  CAMetalLayer: SDL3_cocoametalview    16.06   4027\n",
+    "boundaryStderr": "",
+    "layerBoundaryID": 12,
+    "normal": {
+      "pid": 7426,
+      "layerBoundaryID": 12,
+      "command": [
+        "/usr/bin/gpucapture",
+        "start",
+        "--pid",
+        "7426",
+        "--boundary",
+        "12",
+        "--count",
+        "1",
+        "--output",
+        "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-28/clean_paced/preparation/runs/R03/frame.gputrace"
+      ],
+      "captureCommandInvocations": 1,
+      "markerIsNotActualCaptureTickProof": true,
+      "capturePID": 7548,
+      "captureExit": 0,
+      "trace": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-28/clean_paced/preparation/runs/R03/frame.gputrace",
+      "tracePresent": true,
+      "status": "CAPTURED"
+    },
+    "status": "CAPTURE_EXCEPTION",
+    "error": "Traceback (most recent call last):\n  File \"/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-28/framepair.py\", line 212, in capture\n    assert responses == ['true'], ('ORIGINAL_SKIP_ACTION_UNCONFIRMED', responses)\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError: ('ORIGINAL_SKIP_ACTION_UNCONFIRMED', [])\n"
+  },
+  "cpuWitnesses": {
+    "framepair-before.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 4818,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "1f3f80275db87bbf2ceda923d6fadef4596e510146fcba88ee1238b7a0c24059"
+    },
+    "framepair-after.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 4875,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "6f1bd631fd112fe50716648bc9b92df61ae7e88fd2d6fa3cfba6b67064b3fb5f"
+    },
+    "framepair-skip-before.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 4876,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "5fdcc5083294acaab232074a3b8315387fb2e5e6e4d5e33c0df0853e0b075228"
+    },
+    "framepair-skip-after.txt": {
+      "cpuTick": 1590,
+      "drawCounter": 4878,
+      "paused": true,
+      "units": 168,
+      "features": 401,
+      "sha256": "241c7ae5ad13361648a9362808d90876074f31d543bfa7c6846c826d6c31fe18"
+    }
+  },
+  "cpuWitnessesEqualExceptDrawCounter": true,
+  "skipAfterFilenameMeaning": "Snapshot before normal game exit after failed capture gate. No skip trace exists.",
+  "traceManifest": {
+    "localPath": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-skipdraw-pair-20261117-28/TRACE-MANIFEST.json",
+    "sha256": "473326f383d35d59f7648582f76e8c9e9f622cbd6b7d4e540c395383c372fc6d",
+    "files": 1211,
+    "bytes": 2742601939
+  },
+  "rawLocalFileHashes": {
+    "infolog.txt": "c15b58ea7d3e60c82e175e701fbce34a692a071a07238f760ce5eda17deb9b6f",
+    "engine.log": "6335e824876df3f20d15b8bd5a34ef7b4b34a9e4018338aa61b9033b029b5d0f",
+    "frame.log": "be8ab107caee57f12961659a1e9a4662fbbdde12df4eba7302b340c5af03e2c8",
+    "GPU-CAPTURE.json": "ea1f46045d89b7f1869080517bad54d2e959e37a12094cb102695413cf92b621",
+    "GPU-CAPTURE-NORMAL.json": "550e7ad747432245a673e1e25eb161cae63535ee2c4d593ebfff773d7b90d0dd",
+    "GAME-LAUNCH-CLAIM.json": "cd2b3874f27fb432e8a8aee3d67fa88f791a8b9bb642c2663a3c44d0d6de518d",
+    "CHILD-MODE.json": "578759252612c838483059f4f84143aee311a5d8a3e2aa474ce73ebd39a72730",
+    "CLEANUP.json": "e654129a4e652cbc2c7e2b3964370d227410328a4ba6406a40e5e839d0d09ecc",
+    "OWNER-CLOSED.json": "8f53244e4ab5f924cc887f1c05fbf17c4d4bb80538b45d53b5ccefcf3a360a4e",
+    "framepair-before.txt": "1f3f80275db87bbf2ceda923d6fadef4596e510146fcba88ee1238b7a0c24059",
+    "framepair-after.txt": "6f1bd631fd112fe50716648bc9b92df61ae7e88fd2d6fa3cfba6b67064b3fb5f",
+    "framepair-skip-before.txt": "5fdcc5083294acaab232074a3b8315387fb2e5e6e4d5e33c0df0853e0b075228",
+    "framepair-skip-after.txt": "241c7ae5ad13361648a9362808d90876074f31d543bfa7c6846c826d6c31fe18"
+  },
+  "childEnvironment": {
+    "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+    "pid": 7426,
+    "actual": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_SCREEN_TABLE_H5": null,
+      "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+      "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+      "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+      "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+      "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+      "BAR_METAL4_SHARED_CUS_PILOT": "0",
+      "BAR_METAL4_SEPIA_PATH": null,
+      "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+      "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+      "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+      "MTL_CAPTURE_ENABLED": "1"
+    },
+    "expected": {
+      "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+      "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+      "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+      "BAR_NATIVE_FRAME_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+      "BAR_NATIVE_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+      "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+      "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+      "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+      "BAR_NATIVE_SCREEN_TABLE_H5": null,
+      "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+      "BAR_NATIVE_FRAME_TRACE": "0",
+      "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+      "MTL_DEBUG_LAYER": "0",
+      "MTL_SHADER_VALIDATION": "0",
+      "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+      "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+      "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+      "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+      "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+      "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+      "BAR_METAL4_SHARED_CUS_PILOT": "0",
+      "BAR_METAL4_SEPIA_PATH": null,
+      "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+      "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+      "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+      "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+      "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+      "MTL_CAPTURE_ENABLED": "1"
+    },
+    "beforeCountedWindow": true
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "status": "ACTUAL_CHILD_OFF0_ON1_CONFIRMED",
+  "arms": [
+    {
+      "arm": "V_TEXTURE_OFF",
+      "pid": 40243,
+      "actual_texture_flag": "0",
+      "receipt": "CHILD-MODE.json",
+      "before_counted_window": true
+    },
+    {
+      "arm": "V_TEXTURE_ON",
+      "pid": 40396,
+      "actual_texture_flag": "1",
+      "receipt": "CHILD-MODE.json",
+      "before_counted_window": true
+    }
+  ]
+}

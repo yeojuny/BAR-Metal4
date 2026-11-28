@@ -1,0 +1,8 @@
+{
+  "head": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
+  "parent": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "raw_committed_files": 10275,
+  "raw_mismatches": [],
+  "git_status_raw": " M engine/rts/lib/RmlUi/Samples/tutorial/template/src/main.cpp\n M engine/rts/lib/RmlUi/Source/Core/DecoratorGradient.cpp\n M engine/rts/lib/tracy/nfd/nfd_win.cpp\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/benchmarks/bench.cpp\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/benchmarks/ext/1024cores/spscqueue.h\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/benchmarks/systemtime.cpp\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/benchmarks/systemtime.h\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/readerwritercircularbuffer.h\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/tests/common/simplethread.cpp\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/tests/common/simplethread.h\n M engine/tools/pr-downloader/src/lib/readerwriterqueue/tests/stabtest/stabtest.cpp\n",
+  "status_note": "Nine CRLF vendor files are raw-byte-identical to committed blobs; attribute normalization alone reports dirty."
+}

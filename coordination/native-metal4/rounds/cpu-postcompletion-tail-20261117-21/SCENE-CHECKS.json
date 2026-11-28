@@ -1,0 +1,40 @@
+{
+  "G01_probe_rows": 0,
+  "anchors": [
+    [
+      "start",
+      "540"
+    ],
+    [
+      "end",
+      "1740"
+    ]
+  ],
+  "benchmark_seed_7654321": true,
+  "camera_at_postcount": [
+    "[t=00:01:17.975130][f=0001740] [H1ValidationFrame] sim=1740 camera=dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+  ],
+  "camera_open": [
+    "[t=00:00:37.462628][f=0000540] [BattleCameraOpen] dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+  ],
+  "counted_wall_seconds": 40.47600174,
+  "diagnostic_FPS": "NOT_COMPUTED_OR_ACCEPTED; trace overhead and all original bins retained",
+  "fullview_at_240_and_540": true,
+  "hard_failure_lines": [],
+  "metal_validation_enabled": false,
+  "native_color_1512x982": true,
+  "native_postcount_image_succeeded": true,
+  "pacing_removed_before_count": true,
+  "rng_seed_154658555": true,
+  "same_start_script": true,
+  "ultra4_AA0": true,
+  "warmup_receipts": [
+    "[t=00:00:15.489133][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting",
+    "[t=00:00:21.348916][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=5.860000134 state=pause_requested",
+    "[t=00:00:21.352227][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=5.862999916 state=held",
+    "[t=00:00:25.491843][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.003000259 state=resume_requested held_seconds=4.139999866 held_draws=928",
+    "[t=00:00:25.496311][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.006999969 state=resumed",
+    "[t=00:00:25.496325][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.006999969",
+    "[t=00:00:37.462608][f=0000540] [BattleBenchmark] combat_warmup_wall_seconds=10.001000404"
+  ]
+}

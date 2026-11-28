@@ -1,0 +1,673 @@
+{
+  "conditions": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "view": [
+      1512,
+      950
+    ],
+    "aa": "OFF",
+    "actual_main_samples": 1,
+    "simulation_ticks": [
+      540,
+      1740
+    ],
+    "metal_validation": false,
+    "screen_readbacks": false
+  },
+  "order": [
+    "INDEXED_OFF",
+    "INDEXED_ON"
+  ],
+  "binary_sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+  "combined": {
+    "arms": {
+      "INDEXED_OFF": {
+        "timing": {
+          "fps": 63.99040060963311,
+          "frames_drawn": 2560,
+          "elapsed_seconds": 40.006000519,
+          "frame_time": {
+            "count": 2559,
+            "mean_ms": 15.628761756545526,
+            "median_ms": 16.000001,
+            "p95_ms": 17.000001,
+            "p99_ms": 17.999999,
+            "frames_over_100_ms": [],
+            "all_interval_rows_kept": true,
+            "max_ms": 20.0,
+            "slowest_1_percent_mean_ms": 18.076922115384615,
+            "one_percent_low_fps": 55.31915187867829
+          },
+          "bins_count": 40,
+          "start_simulation": 540,
+          "end_simulation": 1740,
+          "camera": [
+            "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          ],
+          "initial_state": [
+            "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          ],
+          "combat_seed": [
+            "7654321"
+          ],
+          "synced_combat": [
+            [
+              "600",
+              "433"
+            ]
+          ],
+          "fps_raw": [
+            {
+              "line": 2372,
+              "text": "[t=00:01:18.222240][f=0001740] [NativeShortRun] total draws=2560 seconds=40.006000519"
+            }
+          ],
+          "frame_csv": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/runs/INDEXED_OFF/TERRAIN211-FRAMES.csv",
+          "frame_csv_sha256": "fc3f53ab3b5ede3d4f7c53bafccf3669d2e83091c3e7a8e44e72f47ab4aa32db",
+          "infolog_sha256": "05dcaff10601352cba7f9c0ce0a3813fd21056a0627852a10b1ac0c915b483e5",
+          "workload_bins_valid": true
+        },
+        "launch_claim": true,
+        "actual_binary": {
+          "pid": 76992,
+          "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_OFF/runtime/native/bin/spring-metal4-scene",
+          "sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+          "verified_while_child_was_alive": true
+        },
+        "normal_exit": true,
+        "owned": {
+          "pid": 76992,
+          "pgid": 76992,
+          "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_OFF/runtime/native/bin/spring-metal4-scene"
+        },
+        "child": {
+          "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+          "pid": 76992,
+          "actual": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_OFF/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_OFF/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "0",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "0"
+          },
+          "expected": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_OFF/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_OFF/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "0",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "0"
+          },
+          "beforeCountedWindow": true
+        },
+        "fatal_engine_lines": [],
+        "validation_on_lines": [],
+        "ultra_receipt": [
+          {
+            "line": 3524,
+            "text": "[t=00:00:13.199296][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          },
+          {
+            "line": 3576,
+            "text": "[t=00:00:14.904866][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0"
+          }
+        ],
+        "sensorlos_widget_loaded": [
+          {
+            "line": 3487,
+            "text": "[t=00:00:11.721865][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ],
+        "related_witnesses": [
+          {
+            "line": 3309,
+            "text": "[t=00:00:11.557500][f=-000001] Loading widget from mod:   Health Bars GL4     <gui_healthbars_gl4.lua> ..."
+          },
+          {
+            "line": 3382,
+            "text": "[t=00:00:11.589535][f=-000001] Loading widget from mod:   Ghost Radar GL4     <unit_ghostradar_gl4.lua> ..."
+          },
+          {
+            "line": 3426,
+            "text": "[t=00:00:11.659513][f=-000001] Loading widget from mod:   Sensor Ranges Radar Preview  <gui_sensor_ranges_radar_preview.lua> ..."
+          },
+          {
+            "line": 3484,
+            "text": "[t=00:00:11.720014][f=-000001] Loading widget from mod:   Sensor Ranges Sonar  <gui_sensor_ranges_sonar.lua> ..."
+          },
+          {
+            "line": 3485,
+            "text": "[t=00:00:11.721090][f=-000001] Loading widget from mod:   Sensor Ranges Radar  <gui_sensor_ranges_radar.lua> ..."
+          },
+          {
+            "line": 3830,
+            "text": "[t=00:01:18.622430] [NativeTransientUpload177] family=unit_stencil requests=39048 reused=39030 created=18 fallback=0 uploaded_bytes=203688608 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime"
+          }
+        ],
+        "potential_sensorlos_route": [
+          {
+            "line": 3646,
+            "text": "[t=00:00:35.230591][f=0000450] [NativeBloom217Inspect] source_frame=2854 sim=450 bloom_sequence=676368 bloom_index=11 next_sequence=676369 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3648,
+            "text": "[t=00:00:35.230671][f=0000450] [NativeBloom217Successor] source_frame=2854 sequence=676369 kind=34 index=0 encoder=0x762278cc40 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3649,
+            "text": "[t=00:00:35.245310][f=0000451] [NativeBloom217Inspect] source_frame=2855 sim=450 bloom_sequence=676576 bloom_index=11 next_sequence=676577 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3651,
+            "text": "[t=00:00:35.245350][f=0000451] [NativeBloom217Successor] source_frame=2855 sequence=676577 kind=34 index=0 encoder=0x762278f480 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3652,
+            "text": "[t=00:00:35.257747][f=0000451] [NativeBloom217Inspect] source_frame=2856 sim=451 bloom_sequence=676772 bloom_index=11 next_sequence=676773 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3654,
+            "text": "[t=00:00:35.257827][f=0000451] [NativeBloom217Successor] source_frame=2856 sequence=676773 kind=34 index=0 encoder=0x762278c0e0 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3655,
+            "text": "[t=00:00:35.272191][f=0000451] [NativeBloom217Inspect] source_frame=2857 sim=451 bloom_sequence=676990 bloom_index=11 next_sequence=676991 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3657,
+            "text": "[t=00:00:35.272253][f=0000451] [NativeBloom217Successor] source_frame=2857 sequence=676991 kind=34 index=0 encoder=0x762278df80 same_encoder=1 emitted=1"
+          }
+        ],
+        "data_root_lines": [
+          {
+            "line": 1510,
+            "text": "[t=00:00:00.308249] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_OFF/state/data/"
+          },
+          {
+            "line": 1511,
+            "text": "[t=00:00:00.308258] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_OFF/runtime/native/bin/"
+          },
+          {
+            "line": 1512,
+            "text": "[t=00:00:00.308268] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_OFF/runtime/native/data/"
+          },
+          {
+            "line": 1513,
+            "text": "[t=00:00:00.308275] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_OFF/assets/"
+          },
+          {
+            "line": 1520,
+            "text": "[t=00:00:00.308835] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_OFF/runtime/native/data/base"
+          }
+        ],
+        "engine_log_sha256": "8ccfce7c30bdbecc7de46615684d083c375160f4d4bb6c5ee41deb4c0d697a34",
+        "launch_error": {},
+        "runner_stats": {
+          "samples": 2559,
+          "coveredSeconds": 39.994001335,
+          "p99Ms": 17.999999,
+          "slow1PercentFPS": 55.3191518786783,
+          "maximumMs": 20.0,
+          "over16_667ms": 590,
+          "over33_333ms": 0,
+          "rawSHA256": "fc3f53ab3b5ede3d4f7c53bafccf3669d2e83091c3e7a8e44e72f47ab4aa32db",
+          "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+          "observerOverhead": "Identical observer in both arms; not independently quantified"
+        }
+      },
+      "INDEXED_ON": {
+        "timing": {
+          "fps": 64.94350302435646,
+          "frames_drawn": 2598,
+          "elapsed_seconds": 40.004001617,
+          "frame_time": {
+            "count": 2597,
+            "mean_ms": 15.399307376588371,
+            "median_ms": 15.0,
+            "p95_ms": 17.000001,
+            "p99_ms": 17.000001,
+            "frames_over_100_ms": [],
+            "all_interval_rows_kept": true,
+            "max_ms": 32.000002,
+            "slowest_1_percent_mean_ms": 18.384614884615385,
+            "one_percent_low_fps": 54.393306918646424
+          },
+          "bins_count": 40,
+          "start_simulation": 540,
+          "end_simulation": 1740,
+          "camera": [
+            "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0"
+          ],
+          "initial_state": [
+            "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000"
+          ],
+          "combat_seed": [
+            "7654321"
+          ],
+          "synced_combat": [
+            [
+              "600",
+              "433"
+            ]
+          ],
+          "fps_raw": [
+            {
+              "line": 2372,
+              "text": "[t=00:01:18.567314][f=0001740] [NativeShortRun] total draws=2598 seconds=40.004001617"
+            }
+          ],
+          "frame_csv": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/runs/INDEXED_ON/TERRAIN211-FRAMES.csv",
+          "frame_csv_sha256": "950e1e40c78f0fc07596c20ff97331186e60b83947337c4408ab27f34fd0e7f6",
+          "infolog_sha256": "472fd77f2c90b8923be0ce92c288fe37adb33587e2d40aab4b983c4deeb2e636",
+          "workload_bins_valid": true
+        },
+        "launch_claim": true,
+        "actual_binary": {
+          "pid": 77109,
+          "mapped_binary": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_ON/runtime/native/bin/spring-metal4-scene",
+          "sha256": "ac55ecd7779027a0259d1a70df265ce7b2672123ff2e4db8b619048f4a3b3037",
+          "verified_while_child_was_alive": true
+        },
+        "normal_exit": true,
+        "owned": {
+          "pid": 77109,
+          "pgid": 77109,
+          "engine": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_ON/runtime/native/bin/spring-metal4-scene"
+        },
+        "child": {
+          "status": "PASS_ACTUAL_CHILD_ENVIRONMENT",
+          "pid": 77109,
+          "actual": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_ON/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_ON/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1"
+          },
+          "expected": {
+            "BAR_NATIVE_PREPARE_READY_PILOT": "1",
+            "BAR_NATIVE_BEGIN_READY_PILOT": "0",
+            "BAR_NATIVE_INTERVENTION_RENDER_WORKER": "1",
+            "BAR_NATIVE_FRAME_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_OVERLAP": "1",
+            "BAR_NATIVE_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_CAPTURE_READY_BOUNDARY": "1",
+            "BAR_NATIVE_BEGIN_PREPARE_OVERLAP": "1",
+            "BAR_NATIVE_FINAL_COLOR_STAGE": "1",
+            "BAR_NATIVE_SCREEN_STATE_ELISION": "1",
+            "BAR_NATIVE_SCREEN_TABLE_H5": null,
+            "BAR_NATIVE_SCREEN_TABLE_H5_COUNTERS": null,
+            "BAR_NATIVE_FRAME_TRACE": "0",
+            "BAR_NATIVE_FRAME_TRACE_EVERY_LOOP": "0",
+            "MTL_DEBUG_LAYER": "0",
+            "MTL_SHADER_VALIDATION": "0",
+            "BAR_NATIVE_MODEL_TYPE_FACTS": "1",
+            "BAR_NATIVE_MATERIAL_IDENTITY_LOOKUP": "0",
+            "BAR_NATIVE_MATERIAL_IDENTITY_DIAGNOSTICS": null,
+            "BAR_NATIVE_MATERIAL_STORAGE_POOL": "0",
+            "BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS": "0",
+            "BAR_NATIVE_SHARED_PAIR_KEY_VIEW": "0",
+            "BAR_METAL4_SHARED_CUS_PILOT": "0",
+            "BAR_METAL4_SEPIA_PATH": null,
+            "BAR_NATIVE_FRAME_TRACE_START_SIM": null,
+            "BAR_NATIVE_FRAME_TRACE_END_SIM": null,
+            "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+            "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE": "0",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+            "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "0",
+            "MTL_CAPTURE_ENABLED": "0",
+            "SPRING_DATADIR": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_ON/runtime/native/data:/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_ON/assets",
+            "SPRING_WRITEDIR": null,
+            "SPRING_ISOLATED": null,
+            "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": "1",
+            "BAR_MACOS_TARGET_DISPLAY": "0,0,1512,982",
+            "DYLD_LIBRARY_PATH": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/prepare-decode-fps-20261117-36/shared-homebrew-lib",
+            "DYLD_PRINT_LIBRARIES": "1",
+            "BAR_NATIVE_BLOOM217_PROBE": "1",
+            "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": "1"
+          },
+          "beforeCountedWindow": true
+        },
+        "fatal_engine_lines": [],
+        "validation_on_lines": [],
+        "ultra_receipt": [
+          {
+            "line": 3524,
+            "text": "[t=00:00:13.483238][f=-000001] [NativeFinalColorStage] active=1 samples=1 present_order_original=1 width=1512 height=982"
+          },
+          {
+            "line": 3576,
+            "text": "[t=00:00:15.184578][f=-000001] [UltraPreset] observed=1 graphicsPreset=ultra selected_index=4 view=1512,950 window=1512,982 MSAA=0 MSAALevel=0 MinSampleShadingRate=0.000000 VSync=0 VSyncGame=0 option_limitoffscreenfps=false option_limitidlefps=false gl_samples_drawscreen=0"
+          }
+        ],
+        "sensorlos_widget_loaded": [
+          {
+            "line": 3487,
+            "text": "[t=00:00:12.074137][f=-000001] Loading widget from mod:   Sensor Ranges LOS   <gui_sensor_ranges_los.lua> ..."
+          }
+        ],
+        "related_witnesses": [
+          {
+            "line": 3309,
+            "text": "[t=00:00:11.908057][f=-000001] Loading widget from mod:   Health Bars GL4     <gui_healthbars_gl4.lua> ..."
+          },
+          {
+            "line": 3382,
+            "text": "[t=00:00:11.938674][f=-000001] Loading widget from mod:   Ghost Radar GL4     <unit_ghostradar_gl4.lua> ..."
+          },
+          {
+            "line": 3426,
+            "text": "[t=00:00:12.010457][f=-000001] Loading widget from mod:   Sensor Ranges Radar Preview  <gui_sensor_ranges_radar_preview.lua> ..."
+          },
+          {
+            "line": 3484,
+            "text": "[t=00:00:12.072250][f=-000001] Loading widget from mod:   Sensor Ranges Sonar  <gui_sensor_ranges_sonar.lua> ..."
+          },
+          {
+            "line": 3485,
+            "text": "[t=00:00:12.073337][f=-000001] Loading widget from mod:   Sensor Ranges Radar  <gui_sensor_ranges_radar.lua> ..."
+          },
+          {
+            "line": 3830,
+            "text": "[t=00:01:18.990664] [NativeTransientUpload177] family=unit_stencil requests=39608 reused=39590 created=18 fallback=0 uploaded_bytes=206554016 cached_count=0 cached_bytes=0 peak_cached_count=18 peak_cached_bytes=132608 scope=owner_lifetime"
+          }
+        ],
+        "potential_sensorlos_route": [
+          {
+            "line": 3646,
+            "text": "[t=00:00:35.589689][f=0000450] [NativeBloom217Inspect] source_frame=2895 sim=450 bloom_sequence=686286 bloom_index=11 next_sequence=686287 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3648,
+            "text": "[t=00:00:35.589761][f=0000450] [NativeBloom217Successor] source_frame=2895 sequence=686287 kind=34 index=0 encoder=0x79f03afb80 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3649,
+            "text": "[t=00:00:35.604044][f=0000451] [NativeBloom217Inspect] source_frame=2896 sim=450 bloom_sequence=686494 bloom_index=11 next_sequence=686495 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3651,
+            "text": "[t=00:00:35.604082][f=0000451] [NativeBloom217Successor] source_frame=2896 sequence=686495 kind=34 index=0 encoder=0x79f03aebc0 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3652,
+            "text": "[t=00:00:35.616873][f=0000451] [NativeBloom217Inspect] source_frame=2897 sim=451 bloom_sequence=686702 bloom_index=11 next_sequence=686703 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3654,
+            "text": "[t=00:00:35.616942][f=0000451] [NativeBloom217Successor] source_frame=2897 sequence=686703 kind=34 index=0 encoder=0x79f03af480 same_encoder=1 emitted=1"
+          },
+          {
+            "line": 3655,
+            "text": "[t=00:00:35.630531][f=0000452] [NativeBloom217Inspect] source_frame=2898 sim=451 bloom_sequence=686895 bloom_index=11 next_sequence=686896 next_kind=34 next_index=0 admitted=1 scope_eligible=1 consumer_eligible=1 effect_rejection=0 bloom_program=4 next_nonempty=1"
+          },
+          {
+            "line": 3657,
+            "text": "[t=00:00:35.630608][f=0000452] [NativeBloom217Successor] source_frame=2898 sequence=686896 kind=34 index=0 encoder=0x79f03aee60 same_encoder=1 emitted=1"
+          }
+        ],
+        "data_root_lines": [
+          {
+            "line": 1510,
+            "text": "[t=00:00:00.279062] [DataDirLocater::FilterUsableDataDirs] using read-write data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_ON/state/data/"
+          },
+          {
+            "line": 1511,
+            "text": "[t=00:00:00.279072] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_ON/runtime/native/bin/"
+          },
+          {
+            "line": 1512,
+            "text": "[t=00:00:00.279081] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_ON/runtime/native/data/"
+          },
+          {
+            "line": 1513,
+            "text": "[t=00:00:00.279091] [DataDirLocater::FilterUsableDataDirs] using read-only data directory: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/clean_paced/preparation/private/INDEXED_ON/assets/"
+          },
+          {
+            "line": 1520,
+            "text": "[t=00:00:00.279696] Scanning: /Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/combined-indexed-fps-20261118-41/INDEXED_ON/runtime/native/data/base"
+          }
+        ],
+        "engine_log_sha256": "1e8751ecf3bbc8b277ff7403a56c9cf88c25ab2fd18b74cfc4e4b89aade1b0e7",
+        "launch_error": {},
+        "runner_stats": {
+          "samples": 2597,
+          "coveredSeconds": 39.992001257,
+          "p99Ms": 17.000001,
+          "slow1PercentFPS": 54.393306918646424,
+          "maximumMs": 32.000002,
+          "over16_667ms": 340,
+          "over33_333ms": 0,
+          "rawSHA256": "950e1e40c78f0fc07596c20ff97331186e60b83947337c4408ab27f34fd0e7f6",
+          "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+          "observerOverhead": "Identical observer in both arms; not independently quantified"
+        }
+      }
+    },
+    "comparison": {
+      "delta_fps": 0.9531024147233467,
+      "relative_percent": 1.4894459257063453,
+      "one_percent_low_relative_percent": -1.6736427233417395,
+      "workload_match": {
+        "same_scene": true,
+        "same_camera": true,
+        "same_simulation_window": true,
+        "same_combat_seed": true,
+        "same_synced_create_destroy_counts": true,
+        "bin_boundaries_and_visible_units_match": true,
+        "both_bins_contiguous": true
+      }
+    }
+  },
+  "frame_time_quantiles": "Nearest rank p95 and p99. One-percent low is reciprocal of the mean of the slowest ceil(0.01 × interval count) timings.",
+  "fps_formula": "Count all draws over the full elapsed time between matched ticks. Keep every recorded inter-draw interval.",
+  "dependency_summary": {
+    "non_system_resolved_paths_arches_and_hashes_match": true,
+    "common_direct_expected_count": 9,
+    "direct_expected_loaded_by_arm": {
+      "INDEXED_OFF": 9,
+      "INDEXED_ON": 9
+    },
+    "non_system_count_by_arm": {
+      "INDEXED_OFF": 19,
+      "INDEXED_ON": 19
+    },
+    "system_dylib_paths_match": true,
+    "mode": "DYLD_PRINT_LIBRARIES in the existing child environment, plus post-run path, architecture and SHA-256 inspection",
+    "matches_round36_19_non_system_dylibs": true
+  },
+  "single_pair": true,
+  "normalized_environment_differences": [
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE",
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY"
+  ],
+  "activation_summary": {
+    "INDEXED_OFF": {
+      "gamedecal_small": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": false,
+        "direct": true,
+        "indexed_witness_in_window": false
+      }
+    },
+    "INDEXED_ON": {
+      "gamedecal_small": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_outline": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "sensorlos_r8_fan": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "radar_sonar_circle": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "healthbars": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      },
+      "unit_stencil": {
+        "indexed": true,
+        "direct": false,
+        "indexed_witness_in_window": false
+      }
+    }
+  },
+  "prior_independent_results": {
+    "round37": {
+      "off": 64.88,
+      "on": 65.71,
+      "reported_percent": 1.28
+    },
+    "round39": {
+      "off": 64.31607632102086,
+      "on": 64.73632880737064,
+      "relative_percent": 0.6534174818939142
+    },
+    "round40": {
+      "off": 64.03399418767914,
+      "on": 64.28464353062284,
+      "relative_percent": 0.3914316858153022
+    }
+  }
+}

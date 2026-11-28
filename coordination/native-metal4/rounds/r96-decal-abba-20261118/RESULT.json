@@ -1,0 +1,473 @@
+{
+  "status": "ABBA_PARTIAL",
+  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
+  "cleanup_complete": true,
+  "groups": [
+    {
+      "candidate": 96,
+      "scene": "seths",
+      "decision": "INCONCLUSIVE_MIXED_DIRECTIONS_OR_METRICS",
+      "mismatches": [],
+      "frame_intervals_excluded": 0,
+      "arms": [
+        {
+          "arm": "A1_OFF",
+          "fps": 78.44215261371461,
+          "low1": 47.407407407407405,
+          "p99_ms": 16.000001,
+          "max_ms": 44.0,
+          "frames": 3137,
+          "raw_sha256": "700a8c87b236c7479fb921a6e67306d17ca7e0456e93187d5bee6daa911d0c26",
+          "activation": {
+            "shader_link": true,
+            "shadow_level_4": true,
+            "live_offscreen_samples_counted": false,
+            "fixture_positive_outside": 11200,
+            "active": true
+          }
+        },
+        {
+          "arm": "B1_ON",
+          "fps": 78.47892178988111,
+          "low1": 49.306624742106514,
+          "p99_ms": 16.000001,
+          "max_ms": 43.000001000000005,
+          "frames": 3138,
+          "raw_sha256": "7ce4fbb1dfcde6a551d6939e6e56ba0d4e70e9979405c09a443c5b2e9b65872a",
+          "activation": {
+            "shader_link": true,
+            "shadow_level_4": true,
+            "live_offscreen_samples_counted": false,
+            "fixture_positive_outside": 11200,
+            "active": true
+          }
+        },
+        {
+          "arm": "B2_ON",
+          "fps": 78.5191143014149,
+          "low1": 49.155146004846614,
+          "p99_ms": 17.000001,
+          "max_ms": 29.999999,
+          "frames": 3140,
+          "raw_sha256": "0f39148d72a93a47eae69ebe4dc333390c106aa6c103371c7035f41fcbfd6f51",
+          "activation": {
+            "shader_link": true,
+            "shadow_level_4": true,
+            "live_offscreen_samples_counted": false,
+            "fixture_positive_outside": 11200,
+            "active": true
+          }
+        },
+        {
+          "arm": "A2_OFF",
+          "fps": 78.46322949751497,
+          "low1": 49.76671812000997,
+          "p99_ms": 17.000001,
+          "max_ms": 30.999999,
+          "frames": 3138,
+          "raw_sha256": "46d6d9de2b5dd4984afee4d8383a9e0fde40aeb82bb3dbdbb1f68cb8305e58a4",
+          "activation": {
+            "shader_link": true,
+            "shadow_level_4": true,
+            "live_offscreen_samples_counted": false,
+            "fixture_positive_outside": 11200,
+            "active": true
+          }
+        }
+      ],
+      "on_percent_by_pair": [
+        {
+          "fps": 0.04687425694138714,
+          "low1": 4.006161565380939
+        },
+        {
+          "fps": 0.07122419540697145,
+          "low1": -1.2288777284621855
+        }
+      ]
+    },
+    {
+      "candidate": 99,
+      "scene": "seths",
+      "decision": "INCONCLUSIVE_MIXED_DIRECTIONS_OR_METRICS",
+      "mismatches": [],
+      "frame_intervals_excluded": 0,
+      "arms": [
+        {
+          "arm": "A1_OFF",
+          "fps": 78.50588470691056,
+          "low1": 47.90419097135072,
+          "p99_ms": 16.000001,
+          "max_ms": 37.999999,
+          "frames": 3139,
+          "raw_sha256": "352a5922d888628348642f82fb94d06a605277b6e46bd636770d24ad185e0866",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2555",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        },
+        {
+          "arm": "B1_ON",
+          "fps": 79.40911932756673,
+          "low1": 50.473186199484516,
+          "p99_ms": 17.000001,
+          "max_ms": 39.000001,
+          "frames": 3176,
+          "raw_sha256": "aba7640a9035f9355e9ac2919e84ac259ff2dd01fa9931d64f4aad49f4abe507",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2349",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        },
+        {
+          "arm": "B2_ON",
+          "fps": 69.49826349727624,
+          "low1": 35.98971597464996,
+          "p99_ms": 26.000000999999997,
+          "max_ms": 45.000001999999995,
+          "frames": 2779,
+          "raw_sha256": "51a8847f02028f05b90f8c1bf897dcfb8fb41c00c6e3d9f6911453bd57de1e6e",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2383",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        },
+        {
+          "arm": "A2_OFF",
+          "fps": 78.88225371936475,
+          "low1": 47.54829116263255,
+          "p99_ms": 17.000001,
+          "max_ms": 48.999999,
+          "frames": 3155,
+          "raw_sha256": "f719cd3c24a0a9946cadb8e9812fdcc86819284e4888b0c220c5c7f0debb9bc2",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2368",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        }
+      ],
+      "on_percent_by_pair": [
+        {
+          "fps": 1.1505311022584452,
+          "low1": 5.362777610982294
+        },
+        {
+          "fps": -11.896199436027066,
+          "low1": -24.30912847834643
+        }
+      ]
+    },
+    {
+      "candidate": 99,
+      "scene": "simmers",
+      "decision": "ACTIVATION_UNPROVEN",
+      "observed_arms": [
+        "A1_OFF"
+      ],
+      "activation": {
+        "active": false,
+        "indexed_draw_witness": [],
+        "live_branch_or_cache_hit_counted": false
+      }
+    },
+    {
+      "candidate": 98,
+      "scene": "seths",
+      "decision": "INCONCLUSIVE_MIXED_DIRECTIONS_OR_METRICS",
+      "mismatches": [],
+      "frame_intervals_excluded": 0,
+      "arms": [
+        {
+          "arm": "A1_OFF",
+          "fps": 78.99079701403625,
+          "low1": 49.689440762316266,
+          "p99_ms": 16.000001,
+          "max_ms": 33.0,
+          "frames": 3158,
+          "raw_sha256": "12c75e5e0a188597f77ab8eb0a899221f570cf0289d1b819807f9e4e93daca9e",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2393",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        },
+        {
+          "arm": "B1_ON",
+          "fps": 79.74493288792205,
+          "low1": 49.76671757822611,
+          "p99_ms": 16.000001,
+          "max_ms": 33.0,
+          "frames": 3188,
+          "raw_sha256": "52e481011ed31388a991c382f9e411a60e0e0f91ff75f34cdfb674bdf81c03d6",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2407",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        },
+        {
+          "arm": "B2_ON",
+          "fps": 79.60198895718663,
+          "low1": 47.69001497420271,
+          "p99_ms": 17.000001,
+          "max_ms": 28.999999,
+          "frames": 3183,
+          "raw_sha256": "72334930c8b75580f8f7a08b0a55ae6a643d31681ff99eba4f97deec746e1377",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2427",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        },
+        {
+          "arm": "A2_OFF",
+          "fps": 78.92302800751837,
+          "low1": 48.55842192497484,
+          "p99_ms": 17.000001,
+          "max_ms": 35.999998,
+          "frames": 3156,
+          "raw_sha256": "f1f5380f630af2a702cdce26c0960a2255c7635b87a03f022702e8d3a45e205e",
+          "activation": {
+            "active": true,
+            "indexed_draw_witness": [
+              [
+                "2339",
+                "13"
+              ]
+            ],
+            "live_branch_or_cache_hit_counted": false
+          }
+        }
+      ],
+      "on_percent_by_pair": [
+        {
+          "fps": 0.9547135899284465,
+          "low1": 0.1555195927430253
+        },
+        {
+          "fps": 0.8602824382303087,
+          "low1": -1.7883755615325736
+        }
+      ]
+    },
+    {
+      "candidate": 98,
+      "scene": "simmers",
+      "decision": "ACTIVATION_UNPROVEN",
+      "observed_arms": [
+        "A1_OFF"
+      ],
+      "activation": {
+        "active": false,
+        "indexed_draw_witness": [],
+        "live_branch_or_cache_hit_counted": false
+      }
+    },
+    {
+      "candidate": 100,
+      "scene": "seths",
+      "decision": "INCONCLUSIVE_MIXED_DIRECTIONS_OR_METRICS",
+      "mismatches": [],
+      "frame_intervals_excluded": 0,
+      "arms": [
+        {
+          "arm": "A1_OFF",
+          "fps": 78.97369415761464,
+          "low1": 50.39370031124062,
+          "p99_ms": 17.000001,
+          "max_ms": 28.000001,
+          "frames": 3157,
+          "raw_sha256": "2d08e6242571e8d6573f444ead0b8be2d1783a7cc754cc743a70b8ea4cb60009",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        },
+        {
+          "arm": "B1_ON",
+          "fps": 78.94605486629955,
+          "low1": 47.47774558198101,
+          "p99_ms": 17.000001,
+          "max_ms": 33.0,
+          "frames": 3157,
+          "raw_sha256": "78516d1165e0b227463b98676aa6e8117c52ba486d6f095deb1a9b837160f1ad",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        },
+        {
+          "arm": "B2_ON",
+          "fps": 78.95394552801675,
+          "low1": 51.69628424604801,
+          "p99_ms": 16.000001,
+          "max_ms": 30.999999,
+          "frames": 3157,
+          "raw_sha256": "7aafeb922a53f275bdf2447601cf479643c2f497c0b6d70c23cfad2ff64eaac2",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        },
+        {
+          "arm": "A2_OFF",
+          "fps": 78.825,
+          "low1": 47.76119460013366,
+          "p99_ms": 17.000001,
+          "max_ms": 37.999999,
+          "frames": 3152,
+          "raw_sha256": "e4d7df8bcf81a9323f31aea6956496ae89b3a84c86d7d14f1e7ddeae0ec45f72",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        }
+      ],
+      "on_percent_by_pair": [
+        {
+          "fps": -0.034998098556637824,
+          "low1": -5.78634772054869
+        },
+        {
+          "fps": 0.163584558219787,
+          "low1": 8.239093847755917
+        }
+      ]
+    },
+    {
+      "candidate": 100,
+      "scene": "simmers",
+      "decision": "INCONCLUSIVE_MIXED_DIRECTIONS_OR_METRICS",
+      "mismatches": [],
+      "frame_intervals_excluded": 0,
+      "arms": [
+        {
+          "arm": "A1_OFF",
+          "fps": 188.59528770627767,
+          "low1": 125.41254208193098,
+          "p99_ms": 6.0,
+          "max_ms": 24.0,
+          "frames": 7543,
+          "raw_sha256": "9576de2a1cc5fcd926c5e44f947e7713cd2704b8216a157276a8669cde5a796e",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        },
+        {
+          "arm": "B1_ON",
+          "fps": 188.9,
+          "low1": 126.45590703237255,
+          "p99_ms": 6.0,
+          "max_ms": 20.0,
+          "frames": 7555,
+          "raw_sha256": "08d7d0aa8c031b749eb20ba597a94bebd0430f13a00e1790f1034dd41b5f7c1a",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        },
+        {
+          "arm": "B2_ON",
+          "fps": 188.07969941109138,
+          "low1": 121.21212159876274,
+          "p99_ms": 6.0,
+          "max_ms": 21.0,
+          "frames": 7522,
+          "raw_sha256": "938a4f4794511e9db755cdd00b3d4a50dd0ba87081fb7b8c41a582dfb9932b2e",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        },
+        {
+          "arm": "A2_OFF",
+          "fps": 188.11559938850667,
+          "low1": 121.40575138053875,
+          "p99_ms": 6.0,
+          "max_ms": 18.999999,
+          "frames": 7524,
+          "raw_sha256": "f70c8baf69d84837f4934fc780b007c26101783e3fbbc230aff1f86070917ac6",
+          "activation": {
+            "active": true,
+            "indexed_route": true,
+            "live_early_vertex_counted": false
+          }
+        }
+      ],
+      "on_percent_by_pair": [
+        {
+          "fps": 0.16156941004639158,
+          "low1": 0.8319462576238612
+        },
+        {
+          "fps": -0.019083998101154798,
+          "low1": -0.15948979317222944
+        }
+      ]
+    }
+  ],
+  "skips": [
+    {
+      "candidate": 96,
+      "scene": "simmers",
+      "status": "ACTIVATION_UNPROVEN",
+      "reason": "Historic shader link exists; eligible offscreen ray work is unverified."
+    }
+  ],
+  "prelaunch_thermal_recovery": true,
+  "counts": {
+    "games": 22,
+    "completed_groups": 5,
+    "builds": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  }
+}

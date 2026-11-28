@@ -1,0 +1,19 @@
+{
+  "phase": "CONFIGURE",
+  "argv": [
+    "cmake",
+    "-S",
+    "source/engine",
+    "-B",
+    "build",
+    "-G",
+    "Ninja",
+    "-C",
+    "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/initial-cache.cmake",
+    "-DCMAKE_BUILD_TYPE=RelWithDebInfo"
+  ],
+  "pid": 47991,
+  "status": 0,
+  "started_utc": "2026-11-18T09:20:29.437383+00:00",
+  "ended_utc": "2026-11-18T09:20:38.317112+00:00"
+}

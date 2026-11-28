@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "matching_scene_inputs": 13,
+  "matching_non_system_library_paths": 22,
+  "matched_simulation_units_camera_speed_bins": 40,
+  "archived_events_match": true,
+  "archive_checksums_match": true,
+  "pathfinder_checksum_match": true,
+  "game_seed": 154658555,
+  "benchmark_seed": 7654321,
+  "units_created": 600,
+  "units_destroyed": 433,
+  "native_single_sample_and_mrt_verified": true,
+  "time_bins_compared": 40,
+  "bins_faster_on": 37,
+  "bins_equal": 0,
+  "minimum_bin_fps_difference": -1.2287750240000008,
+  "maximum_bin_fps_difference": 2.914916992000002,
+  "fixed_sensorlos": "ON",
+  "only_actual_child_difference": "BAR_NATIVE_SENSOR31657_EXACT_INTERIOR",
+  "per_tick_state_checksum_measured": false
+}

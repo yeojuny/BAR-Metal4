@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "source_reconstruction": "all original runtime/header text preserved outside exact extraction",
+  "receipt_actual_cpp17_compile_and_identity_cases": 9,
+  "old_vs_split_failure_model_cases": 36,
+  "scope": "CPU only; production ObjC++/Metal compilation and live GPU/runtime not run"
+}

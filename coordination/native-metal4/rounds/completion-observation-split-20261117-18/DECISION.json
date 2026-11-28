@@ -1,0 +1,43 @@
+{
+  "round_id": "completion-observation-split-20261117-18",
+  "author": "SUPER_JINI_MK2",
+  "decision": "ACCEPT_BOUNDED_STRUCTURAL_EQUIVALENCE_GATE_NOT_FULL_LIFETIME_PROOF",
+  "source_commit": "c34129af9158bbdef1321d17825f1f60721b74ec",
+  "artifact_commit": "8a26fda1d784c57bdcc242d7a83f0899cafb93cf",
+  "HQ_turn_completed": true,
+  "HQ_turn": "01a1e833-3450-7131-bda6-69ff59479bab",
+  "cleanup_verified": true,
+  "independent_checks": {
+    "CPU_log": "PASS receipt9/model36; model is not live Metal fault injection",
+    "production_build": "exit0",
+    "raw_validation_marker": true,
+    "actual_child_MTL_DEBUG_LAYER": "1",
+    "texture_input_and_trace": "0",
+    "recorded_Metal_errors": 0,
+    "normal_exit": true,
+    "owned_group_gone": true,
+    "readback": "Raw H1NativeImage success=true simulation1740",
+    "world_rows_each": 40,
+    "exact_rows": 38,
+    "shared_end_ticks": 39,
+    "same_tick_state_differences": 0,
+    "first_bin_difference": "R03 ends577 units171; candidate ends570 units172. Following row start differs. Wall-time sampling boundaries differ; no full40-row equality claim.",
+    "images_directly_viewed": [
+      "candidate",
+      "R03 preserved baseline"
+    ],
+    "candidate_image_sha256": "c1a364a433247aa4371bfe61c14e9f6238fcd99dab77a1f538897cc984103cf8",
+    "visual": "No obvious new static terrain/building corruption; dynamic smoke/lighting/projectiles differ. No pixel/depth/stencil equivalence claim."
+  },
+  "interpretation": "Pending1 unchanged extraction passed actual engine compile and one ordinary scene/readback/shutdown. Receipt only records event+feedback observation, not GPU success, renderer retirement, readback readiness or presentation.",
+  "unverified": [
+    "early drain live coverage",
+    "detach",
+    "live fault injection",
+    "exact callback counts",
+    "all lifetime/context/error paths"
+  ],
+  "performance_accepted": false,
+  "new_execution_authorized": false,
+  "next": "Preserve independently validated extraction as structural foundation. Do not claim speedup or pending2 safety. Before any changed scheduling/release boundary, prove exact resource ownership and failure/quarantine contracts in source and a bounded separate gate. No automatic rerun or main/release/Homebrew promotion."
+}

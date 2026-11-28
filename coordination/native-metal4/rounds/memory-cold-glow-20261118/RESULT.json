@@ -1,0 +1,111 @@
+{
+  "status": "MATCHED_MEMORY_BASELINE_COLD_GLOW_ABBA",
+  "decision": "BENCHMARK_ONLY_DEFAULTS_PRESERVED",
+  "cleanup_complete": true,
+  "counts": {
+    "games": 6,
+    "timed_games": 4,
+    "smoke_games": 2,
+    "fixtures": 1,
+    "retries": 0
+  },
+  "memory_only_binary_sha256": "ea6cb1f5c36f4f090610a29c735ab1c5aa0d701c4b3687b17dabee65241cea12",
+  "safety_sha256": "ddb7bd153577093e7030eccc2580ac2b699201f17ad703174e208e7b6df9f7a7",
+  "cold_glow": {
+    "candidate": 98,
+    "scene": "seths",
+    "decision": "INCONCLUSIVE_MIXED_DIRECTIONS_OR_METRICS",
+    "mismatches": [],
+    "frame_intervals_excluded": 0,
+    "arms": [
+      {
+        "arm": "A1_OFF",
+        "fps": 79.30198146111682,
+        "low1": 47.690015542787094,
+        "p99_ms": 17.000001,
+        "max_ms": 50.000001000000005,
+        "frames": 3171,
+        "raw_sha256": "14dabae0d03807fc45cf60f92394be586d4cbaff6940fd6e4a1c9cca16a11dc3",
+        "activation": {
+          "active": true,
+          "indexed_draw_witness": [
+            [
+              "2399",
+              "13"
+            ]
+          ],
+          "live_branch_or_cache_hit_counted": false
+        }
+      },
+      {
+        "arm": "B1_ON",
+        "fps": 80.01499598910097,
+        "low1": 49.92199649046805,
+        "p99_ms": 16.000001,
+        "max_ms": 29.999999,
+        "frames": 3200,
+        "raw_sha256": "1173004a622503407ae29366118ece2406b98f62cb80ff61ae9704f7fe9d858e",
+        "activation": {
+          "active": true,
+          "indexed_draw_witness": [
+            [
+              "2490",
+              "13"
+            ]
+          ],
+          "live_branch_or_cache_hit_counted": false
+        }
+      },
+      {
+        "arm": "B2_ON",
+        "fps": 80.06601204145112,
+        "low1": 50.075872002228984,
+        "p99_ms": 16.000001,
+        "max_ms": 35.999998,
+        "frames": 3201,
+        "raw_sha256": "e2045982ad65f763e5a3a9543d20bb9d9bcc598ad0713d603abc22031fe4f254",
+        "activation": {
+          "active": true,
+          "indexed_draw_witness": [
+            [
+              "2402",
+              "13"
+            ]
+          ],
+          "live_branch_or_cache_hit_counted": false
+        }
+      },
+      {
+        "arm": "A2_OFF",
+        "fps": 79.29008662212692,
+        "low1": 50.71315284018275,
+        "p99_ms": 16.000001,
+        "max_ms": 35.0,
+        "frames": 3171,
+        "raw_sha256": "80a006604c4e1007ddf7926dfc30450b5f008501c5869fe9494f2a5e9f5e71ed",
+        "activation": {
+          "active": true,
+          "indexed_draw_witness": [
+            [
+              "2399",
+              "13"
+            ]
+          ],
+          "live_branch_or_cache_hit_counted": false
+        }
+      }
+    ],
+    "on_percent_by_pair": [
+      {
+        "fps": 0.8991131303998312,
+        "low1": 4.680184986894043
+      },
+      {
+        "fps": 0.9785907070855249,
+        "low1": -1.256638174246616
+      }
+    ]
+  },
+  "previous_abba_preserved": true,
+  "smoke_sha256": "8632e22f286e695756e6aae2723950ccd14bf1827580ead33c063ddc3e57b3ff"
+}

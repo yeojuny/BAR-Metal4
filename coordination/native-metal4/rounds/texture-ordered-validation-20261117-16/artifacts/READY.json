@@ -1,0 +1,22 @@
+{
+  "round_id": "texture-ordered-validation-20261117-16",
+  "attempt_id": "texture-ordered-validation-01",
+  "source_commit": "3713df592f99b6f8c3edc91ad99803e073daa230",
+  "source_manifest_sha256": "3b7c8a27d3a9a6d1c9ee4d248a25c021e55256c283027c829a8bd6c7b8b71de7",
+  "from": "SUPER_JINI_MK2",
+  "to": "HQ",
+  "request": "coordination/native-metal4/rounds/texture-ordered-validation-20261117-16/REQUEST.json",
+  "budget": {
+    "isolated_relocation_sign": 1,
+    "fixture_staging": 1,
+    "validation_games": 2,
+    "builds": 0,
+    "CPU_tests": 0,
+    "helpers": 0,
+    "benchmarks": 0,
+    "GPU_captures": 0,
+    "retries": 0
+  },
+  "prior_cleanup_verified": true,
+  "HQ_turn_completed": true
+}

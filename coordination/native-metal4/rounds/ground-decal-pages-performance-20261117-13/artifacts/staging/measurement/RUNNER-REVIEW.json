@@ -1,0 +1,25 @@
+{
+  "status": "PINS_LABELS_SELECTION_ONLY",
+  "reference_sha256": "37ec7ef5a47b5de96114f661427ca863f8d6f4f196f776af1f3f895c737112c8",
+  "runner_sha256": "e2d2b24c0a975a6a74276c87b48dd9e33a1ff76628ece05f1687e9241a074945",
+  "unchanged_AST_functions": [
+    "load",
+    "preflight_with_mvk3_stack",
+    "configure_settings",
+    "configure_controller",
+    "restore",
+    "evidence",
+    "grass_boundary_evidence",
+    "ground_index_evidence",
+    "metal_validation_raw",
+    "run"
+  ],
+  "changed_functions": [
+    "products",
+    "stage",
+    "main"
+  ],
+  "permitted_changes": "product hashes, labels, descriptions/suite selection only; entire run AST and controller/parser/pacing/error/cleanup unchanged",
+  "validation_selectable": false,
+  "new_instrumentation": false
+}

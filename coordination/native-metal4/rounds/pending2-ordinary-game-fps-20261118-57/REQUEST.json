@@ -1,0 +1,31 @@
+{
+  "round_id": "pending2-ordinary-game-fps-20261118-57",
+  "attempt_id": "pending2-cap1-cap2-01",
+  "owner": "HQ3",
+  "parent_artifact": "e658e16d82ecbff9388ecd9d316ebc6e495ace19",
+  "order": [
+    "CAP1",
+    "CAP2"
+  ],
+  "budget": {
+    "configure": 1,
+    "engine_build": 1,
+    "games": 2,
+    "max_per_arm": 1,
+    "helpers": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "retain_all_counted_frames": true,
+  "game_scene": {
+    "map": "Seths Ravine Remake 1.3.1",
+    "game_seed": 154658555,
+    "combat_seed": 7654321,
+    "simulation_ticks": [
+      540,
+      1740
+    ]
+  },
+  "utc": "2026-11-18T08:13:14.951122+00:00"
+}

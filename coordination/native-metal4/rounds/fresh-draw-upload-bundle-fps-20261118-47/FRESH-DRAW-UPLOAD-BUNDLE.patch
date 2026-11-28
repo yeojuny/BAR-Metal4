@@ -1,0 +1,315 @@
+diff --git a/engine/rts/Rendering/Metal4/Metal4FreshDrawUpload.h b/engine/rts/Rendering/Metal4/Metal4FreshDrawUpload.h
+new file mode 100644
+--- /dev/null
++++ b/engine/rts/Rendering/Metal4/Metal4FreshDrawUpload.h
+@@ -0,0 +1,85 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++
++#include "Metal4RuntimeNative.h"
++#include "System/Log/ILog.h"
++
++#include <array>
++#include <cstddef>
++#include <cstdlib>
++#include <cstring>
++#include <limits>
++#include <optional>
++#include <span>
++
++namespace rendering::metal4 {
++
++using FreshUploadBytes = std::span<const std::byte>;
++
++template <size_t Count>
++struct FreshUploadLayout {
++	std::array<size_t, Count> offsets{};
++	size_t length = 0;
++};
++
++template <size_t Count>
++constexpr std::optional<FreshUploadLayout<Count>> PlanFreshDrawUpload(
++	const std::array<size_t,Count>& lengths, size_t limit)
++{
++	// The engine already aligns shared constant-block addresses to 256 bytes.
++	constexpr size_t alignment = 256;
++	FreshUploadLayout<Count> layout;
++	for (size_t i = 0; i < Count; ++i) {
++		const size_t padding = (alignment - layout.length % alignment) % alignment;
++		if (!lengths[i] || padding > limit - layout.length ||
++			lengths[i] > limit - layout.length - padding)
++			return std::nullopt;
++
++		layout.offsets[i] = layout.length + padding;
++		layout.length = layout.offsets[i] + lengths[i];
++	}
++	return layout;
++}
++
++inline bool FreshDrawUploadBundleEnabled()
++{
++	static const bool enabled = [] {
++		const char* value = std::getenv("BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE");
++		return value && std::strcmp(value, "1") == 0;
++	}();
++	return enabled;
++}
++
++// The source bytes are read-only draw inputs. The runtime lease owns the new
++// allocation through completion and adds it to the very same residency set.
++template <size_t Count>
++std::optional<std::array<MTLGPUAddress,Count>> TryPackFreshDrawUploads(
++	RuntimeLease& lease, const std::array<FreshUploadBytes,Count>& slices)
++{
++	if (!FreshDrawUploadBundleEnabled())
++		return std::nullopt;
++
++	std::array<size_t,Count> lengths;
++	for (size_t i = 0; i < Count; ++i)
++		lengths[i] = slices[i].size();
++	const auto layout = PlanFreshDrawUpload(lengths,lease.Device().maxBufferLength);
++	if (!layout)
++		return std::nullopt;
++
++	auto slab = [lease.Device() newBufferWithLength:layout->length options:MTLResourceStorageModeShared];
++	auto* bytes = static_cast<std::byte*>(slab.contents);
++	const MTLGPUAddress base = slab.gpuAddress;
++	if (!bytes || slab.length != layout->length || !base || base % 256 ||
++		layout->length > std::numeric_limits<MTLGPUAddress>::max() - base)
++		return std::nullopt;
++
++	std::array<MTLGPUAddress,Count> addresses;
++	for (size_t i = 0; i < Count; ++i) {
++		std::memcpy(bytes + layout->offsets[i],slices[i].data(),slices[i].size());
++		addresses[i] = base + layout->offsets[i];
++	}
++	lease.AddAllocation(slab);
++	return addresses;
++}
++
++} // namespace rendering::metal4
+diff --git a/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm b/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
+--- a/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
+@@ -3,6 +3,7 @@
+ #include "NativeSensor31657CircleShaders.h"
+ #include "Metal4NativeEffectState.h"
+ #include "Metal4FixedTriangleIndexBuffer.h"
++#include "Metal4FreshDrawUpload.h"
+ #include "System/Log/ILog.h"
+ #include <map>
+ #include <tuple>
+@@ -44,6 +45,7 @@
+ 	__strong id<MTL4ArgumentTable> arguments=nil;
+ 	__strong id<MTLBuffer> indices=nil;
+ 	uint32_t vertices=0,instances=0;
++	bool packedUploads=false;
+ };
+ PreparedSensor31657CircleDraw::PreparedSensor31657CircleDraw():impl(std::make_unique<Impl>()){}
+ PreparedSensor31657CircleDraw::~PreparedSensor31657CircleDraw()=default;
+@@ -62,14 +64,14 @@
+ 	if (impl->indices) {
+ 		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->vertices indexType:MTLIndexTypeUInt16
+ 		                   indexBuffer:impl->indices.gpuAddress indexBufferLength:impl->indices.length instanceCount:impl->instances];
+-		[[maybe_unused]] static const bool logged = [] {
+-			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=indexed");
++		[[maybe_unused]] static const bool logged = [this] {
++			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=indexed upload=%s",impl->packedUploads ? "slab" : "separate");
+ 			return true;
+ 		}();
+ 	} else {
+ 		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
+-		[[maybe_unused]] static const bool logged = [] {
+-			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=direct");
++		[[maybe_unused]] static const bool logged = [this] {
++			LOG("[NativeIndexedRoute] family=radar_sonar_circle mode=direct upload=%s",impl->packedUploads ? "slab" : "separate");
+ 			return true;
+ 		}();
+ 	}
+@@ -176,13 +178,23 @@
+ 	uniform.counts={draw.count,draw.first,draw.firstInstance,uint32_t(draw.program.circleCount)};
+ 	const auto positions=ReadNativeSensor31657CircleModelPositions(draw);
+ 	std::erase_if(impl->buffers,[](const auto& value){return value.second.source.expired();});
+-	std::array<id<MTLBuffer>,6> buffers{impl->Snapshot(lease,draw.vertices),impl->Snapshot(lease,draw.instances),
+-		UploadCircle(lease,positions.instances.data(),positions.instances.size()*16),UploadCircle(lease,&uniform,sizeof(uniform)),
+-		impl->Snapshot(lease,draw.circles.snapshot),UploadCircle(lease,positions.circles.data(),positions.circles.size()*16)};
++	std::array<MTLGPUAddress,6> addresses{};
++	addresses[0] = impl->Snapshot(lease,draw.vertices).gpuAddress;
++	addresses[1] = impl->Snapshot(lease,draw.instances).gpuAddress;
++	const auto packed = TryPackFreshDrawUploads(lease, std::array<FreshUploadBytes,3>{
++		std::as_bytes(std::span(positions.instances)),std::as_bytes(std::span(&uniform,1)),
++		std::as_bytes(std::span(positions.circles)),
++	});
++	addresses[2] = packed ? (*packed)[0] : UploadCircle(lease,positions.instances.data(),positions.instances.size()*16).gpuAddress;
++	addresses[3] = packed ? (*packed)[1] : UploadCircle(lease,&uniform,sizeof(uniform)).gpuAddress;
++	addresses[4] = impl->Snapshot(lease,draw.circles.snapshot).gpuAddress + draw.circles.offset;
++	addresses[5] = packed ? (*packed)[2] : UploadCircle(lease,positions.circles.data(),positions.circles.size()*16).gpuAddress;
++	out.packedUploads = packed.has_value();
+ 	auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=6;descriptor.maxTextureBindCount=1;descriptor.maxSamplerStateBindCount=1;descriptor.initializeBindings=YES;
+ 	NSError* error=nil;out.arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];
+ 	Require(out.arguments!=nil,"Cannot allocate current original sensor argument table");lease.Retain(out.arguments);
+-	for(unsigned i=0;i<buffers.size();++i)[out.arguments setAddress:buffers[i].gpuAddress+(i==4?draw.circles.offset:0) atIndex:i];
++	for (unsigned i = 0; i < addresses.size(); ++i)
++		[out.arguments setAddress:addresses[i] atIndex:i];
+ 	[out.arguments setTexture:out.height.texture.gpuResourceID atIndex:0];[out.arguments setSamplerState:out.height.sampler.gpuResourceID atIndex:0];
+ 	out.pipeline=impl->Pipeline(lease,draw,color,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.state,stencil);
+ 	Require(uint64_t(draw.count)*6<=UINT32_MAX,"Current original sensor line invocation count overflow");out.vertices=draw.count*6;out.instances=draw.instanceCount;
+diff --git a/engine/rts/Rendering/Metal4/Metal4MapEdgeRenderer.mm b/engine/rts/Rendering/Metal4/Metal4MapEdgeRenderer.mm
+--- a/engine/rts/Rendering/Metal4/Metal4MapEdgeRenderer.mm
++++ b/engine/rts/Rendering/Metal4/Metal4MapEdgeRenderer.mm
+@@ -1,5 +1,6 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "Metal4MapEdgeRenderer.h"
++#include "Metal4FreshDrawUpload.h"
+ #include "NativeSampleShadingShaders.h"
+ #include <tuple>
+ #include <array>
+@@ -118,6 +119,7 @@
+ 
+ }
+ struct PreparedMapEdge::Impl {
++	bool packedUploads=false;
+ 	__strong id<MTLRenderPipelineState> pipeline=nil;
+ 	__strong id<MTLDepthStencilState> depth=nil;
+ 	__strong id<MTL4ArgumentTable> arguments=nil;
+@@ -162,7 +164,14 @@
+   const auto& run=impl->forwardStrip220.runs[i];
+   [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:run.vertices instanceCount:run.instances baseInstance:run.first];
+  }
+-	if(impl->deferred)impl->encoded=true;
++	if (impl->deferred) {
++		impl->encoded = true;
++	} else {
++		[[maybe_unused]] static const bool logged = [packed = impl->packedUploads] {
++			LOG("[NativeFreshDrawUpload] family=map_edge_forward mode=%s",packed ? "slab" : "separate");
++			return true;
++		}();
++	}
+ }
+ struct MapEdgeGPU::Impl {
+ 	std::shared_ptr<const WorldTerrainHeights> heightOwner;
+@@ -236,16 +245,22 @@
+ 	for(const auto* values:{frame.viewCamera.view.data(),frame.viewCamera.projection.data()})for(size_t i=0;i<16;++i)Require(std::isfinite(values[i]),"Map-edge nonfinite camera matrix");
+ 	for(const auto* values:{edge.sunDirection.data(),edge.fogColor.data(),edge.fogParameters.data()})for(size_t i=0;i<4;++i)Require(std::isfinite(values[i]),"Map-edge nonfinite actual sun/fog");
+ 	for(const auto& column:u.viewProjection.columns)for(size_t i=0;i<4;++i)Require(std::isfinite(column[i]),"Map-edge camera matrix product overflow");
+-	auto uniforms=Buffer(lease,&u,sizeof(u));auto instances=Buffer(lease,edge.draw->mirrors.data(),edge.draw->mirrors.size()*sizeof(mapedge::Mirror));
++	const auto packed = TryPackFreshDrawUploads(lease, std::array<FreshUploadBytes,2>{
++		std::as_bytes(std::span(&u,1)),std::as_bytes(std::span(edge.draw->mirrors)),
++	});
++	const auto uniforms = packed ? (*packed)[0] : Buffer(lease,&u,sizeof(u)).gpuAddress;
++	const auto instances = packed ? (*packed)[1] :
++		Buffer(lease,edge.draw->mirrors.data(),edge.draw->mirrors.size()*sizeof(mapedge::Mirror)).gpuAddress;
+ 	lease.AddAllocation(color.texture);lease.AddAllocation(normal.texture);lease.Retain(color.sampler);lease.Retain(normal.sampler);lease.AddAllocation(impl->height);lease.Retain(impl->library);lease.Retain(impl->pipeline);
+ 	auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=2;descriptor.maxTextureBindCount=3;descriptor.maxSamplerStateBindCount=2;descriptor.initializeBindings=YES;NSError* error=nil;
+ 	auto arguments=[lease.Device() newArgumentTableWithDescriptor:descriptor error:&error];Require(arguments!=nil,"Cannot allocate original map-edge arguments: "+Error(error));lease.Retain(arguments);
+-	[arguments setAddress:uniforms.gpuAddress atIndex:0];[arguments setAddress:instances.gpuAddress atIndex:1];[arguments setTexture:color.texture.gpuResourceID atIndex:0];[arguments setTexture:impl->height.gpuResourceID atIndex:1];[arguments setTexture:normal.texture.gpuResourceID atIndex:2];
++	[arguments setAddress:uniforms atIndex:0];[arguments setAddress:instances atIndex:1];[arguments setTexture:color.texture.gpuResourceID atIndex:0];[arguments setTexture:impl->height.gpuResourceID atIndex:1];[arguments setTexture:normal.texture.gpuResourceID atIndex:2];
+ 	[arguments setSamplerState:color.sampler.gpuResourceID atIndex:0];[arguments setSamplerState:normal.sampler.gpuResourceID atIndex:1];
+ 	auto depth=[MTLDepthStencilDescriptor new];depth.depthCompareFunction=MTLCompareFunctionLessEqual;depth.depthWriteEnabled=YES;
+ 	auto depthState=[lease.Device() newDepthStencilStateWithDescriptor:depth];Require(depthState!=nil,"Cannot create map-edge original LEQUAL/write depth state");lease.Retain(depthState);
+ 	auto result=std::unique_ptr<PreparedMapEdge>(new PreparedMapEdge);result->impl->pipeline=impl->pipeline;result->impl->depth=depthState;result->impl->arguments=arguments;
+ 	result->impl->vertices=mesh[4];result->impl->instances=edge.draw->mirrors.size();result->impl->cull=p.cullBackFaces;
++	result->impl->packedUploads=packed.has_value();
+ 	result->impl->forwardStrip220=MakeForwardStripPlan220(stripLengths220,stripIndex220);
+ 	result->impl->images={std::move(color),std::move(normal)};
+ 	return result;
+diff --git a/engine/rts/Rendering/Metal4/Metal4Blueprint.mm b/engine/rts/Rendering/Metal4/Metal4Blueprint.mm
+--- a/engine/rts/Rendering/Metal4/Metal4Blueprint.mm
++++ b/engine/rts/Rendering/Metal4/Metal4Blueprint.mm
+@@ -1,5 +1,6 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "Metal4Blueprint.h"
++#include "Metal4FreshDrawUpload.h"
+ #include "Metal4WorldBCDecode.h"
+ #include "NativeBlueprintShaders.h"
+ #include "Rendering/Metal4/NativeBlueprintOutlineShaders129.h"
+@@ -106,7 +107,7 @@
+ struct PreparedBlueprintFrame::Impl {
+ 	struct Draw {
+ 		__strong id<MTLRenderPipelineState> pipeline=nil;__strong id<MTLDepthStencilState> depth=nil;__strong id<MTL4ArgumentTable> arguments=nil;__strong id<MTLBuffer> indices=nil;
+-		NativeWorldDrawState state;effectstate::Raster raster;NSUInteger count=0;bool clear=false,model=false;
++		NativeWorldDrawState state;effectstate::Raster raster;NSUInteger count=0;bool clear=false,model=false,packedUploads=false;
+ 	};
+ 	struct Packet {
+ 		uint64_t sequence;NativeWorldDrawStage stage;std::vector<Draw> draws;
+@@ -135,6 +136,12 @@
+ 		if(draw.clear)[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:3];
+ 		else if(!draw.indices)[encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:0 vertexCount:4 instanceCount:draw.count];
+ 		else [encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:draw.indices.gpuAddress indexBufferLength:draw.indices.length];
++		if (draw.model) {
++			[[maybe_unused]] static const bool logged = [packed = draw.packedUploads] {
++				LOG("[NativeFreshDrawUpload] family=blueprint_model mode=%s",packed ? "slab" : "separate");
++				return true;
++			}();
++		}
+ 	}
+ }
+ struct BlueprintGPU::Impl {
+@@ -222,10 +229,15 @@
+    if(source.program==NativeBlueprintProgram::FeatureShape){uniform.pitchRoll=Read<simd_float4>(*source.instances,item.instanceIndex,16);uniform.parameters=Read<simd_float4>(*source.instances,item.instanceIndex,32);uniform.tint=Read<simd_float4>(*source.instances,item.instanceIndex,48);}
+ 			uniform.cameraIcon=simd_make_float4(source.view.cameraPosition[0],source.view.cameraPosition[1],source.view.cameraPosition[2],source.iconDistance);std::memcpy(&uniform.time,source.view.timeInfo.data(),16);
+ 			uniform.options=simd_make_uint4(source.view.clipDepth==ClipDepthConvention::MinusOneToOne,images[0]->owner->flipV,images[1]->owner->flipV,(unsigned(source.surface.alphaTest.enabled)<<8)|unsigned(source.surface.alphaTest.compare));uniform.alpha=simd_make_float4(source.surface.alphaTest.reference,0,0,0);
+-			auto transform=Buffer(lease,item.transforms.data(),item.transforms.size()*sizeof(NativeBlueprintTransform));auto uniforms=Buffer(lease,&uniform,sizeof(uniform));auto args=impl->Arguments(lease,3,2,2);[args setAddress:mesh->vertices.gpuAddress atIndex:0];[args setAddress:transform.gpuAddress atIndex:1];[args setAddress:uniforms.gpuAddress atIndex:2];
++			const auto packed = TryPackFreshDrawUploads(lease, std::array<FreshUploadBytes,2>{
++				std::as_bytes(std::span(item.transforms)),std::as_bytes(std::span(&uniform,1)),
++			});
++			const auto transform = packed ? (*packed)[0] : Buffer(lease,item.transforms.data(),item.transforms.size()*sizeof(NativeBlueprintTransform)).gpuAddress;
++			const auto uniforms = packed ? (*packed)[1] : Buffer(lease,&uniform,sizeof(uniform)).gpuAddress;
++			auto args=impl->Arguments(lease,3,2,2);[args setAddress:mesh->vertices.gpuAddress atIndex:0];[args setAddress:transform atIndex:1];[args setAddress:uniforms atIndex:2];
+ 			for(unsigned n=0;n<2;++n){[args setTexture:images[n]->texture.gpuResourceID atIndex:n];[args setSamplerState:imageSamplers[n].gpuResourceID atIndex:n];}
+ 			auto pipeline=impl->Pipeline(lease,source.program==NativeBlueprintProgram::FeatureShape?3u:0u,source.surface.blend,source.world.colorWrite,milliseconds,samples,source.world.alphaToCoverage);lease.Retain(pipeline);
+-			packet.draws.push_back({pipeline,effectstate::Depth(lease,source.world,stencilFormat),args,mesh->indices,source.world,*raster,mesh->count,false,true});
++			packet.draws.push_back({pipeline,effectstate::Depth(lease,source.world,stencilFormat),args,mesh->indices,source.world,*raster,mesh->count,false,true,packed.has_value()});
+ 		}
+ 		if(!packet.draws.empty())result->impl->packets.push_back(std::move(packet));
+ 	}
+diff --git a/engine/rts/Rendering/Metal4/Metal4Blockout.mm b/engine/rts/Rendering/Metal4/Metal4Blockout.mm
+--- a/engine/rts/Rendering/Metal4/Metal4Blockout.mm
++++ b/engine/rts/Rendering/Metal4/Metal4Blockout.mm
+@@ -1,5 +1,6 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "Metal4Blockout.h"
++#include "Metal4FreshDrawUpload.h"
+ #include "Metal4WorldBCDecode.h"
+ #include "NativeBlockoutShaders.h"
+ #include "Metal4NativeEffectState.h"
+@@ -78,6 +79,7 @@
+ 		__strong id<MTL4ArgumentTable> arguments=nil;
+ 		std::shared_ptr<Mesh> mesh;
+ 		NativeWorldDrawState world;effectstate::Raster raster;
++		bool packedUploads=false;
+ 	};
+ 	struct Packet{
+ 		uint64_t sequence=0;std::vector<Draw> draws;
+@@ -109,6 +111,10 @@
+ 	[encoder setDepthClipMode:MTLDepthClipModeClamp]; // Actual original gl.DepthClamp(true).
+ 	[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+ 	[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.mesh->count indexType:MTLIndexTypeUInt32 indexBuffer:draw.mesh->indices.gpuAddress indexBufferLength:draw.mesh->indices.length];
++	[[maybe_unused]] static const bool logged = [packed = draw.packedUploads] {
++		LOG("[NativeFreshDrawUpload] family=blockout_model mode=%s",packed ? "slab" : "separate");
++		return true;
++	}();
+ }
+ }
+ void PreparedBlockoutFrame::EncodeDraw(size_t n,id<MTL4RenderCommandEncoder> encoder)const{
+@@ -230,13 +236,17 @@
+ 			Uniform u{};std::memcpy(&u.viewProjection,source.viewProjection.data(),64);std::memcpy(&u.positionYaw,item.positionYaw.data(),16);std::memcpy(&u.parameters,item.parameters.data(),16);
+ 			std::memcpy(&u.sunDirection,source.uniforms->params->bytes.data()+7*16,16);std::memcpy(&u.ambient,source.uniforms->params->bytes.data()+8*16,16);std::memcpy(&u.diffuse,source.uniforms->params->bytes.data()+10*16,16);
+ 			u.options=simd_make_uint4(source.clipDepth==ClipDepthConvention::MinusOneToOne,material[0]->owner->flipV,material[1]->owner->flipV,(source.hasNormal?256u:0u)|(source.normal&&source.normal->flipV?1u:0u));
+-			auto transforms=Buffer(lease,item.transforms.data(),item.transforms.size()*sizeof(NativeBlueprintTransform));auto uniforms=Buffer(lease,&u,sizeof(u));
++			const auto packed = TryPackFreshDrawUploads(lease, std::array<FreshUploadBytes,2>{
++				std::as_bytes(std::span(item.transforms)),std::as_bytes(std::span(&u,1)),
++			});
++			const auto transforms = packed ? (*packed)[0] : Buffer(lease,item.transforms.data(),item.transforms.size()*sizeof(NativeBlueprintTransform)).gpuAddress;
++			const auto uniforms = packed ? (*packed)[1] : Buffer(lease,&u,sizeof(u)).gpuAddress;
+ 			auto descriptor=[MTL4ArgumentTableDescriptor new];descriptor.maxBufferBindCount=3;descriptor.maxTextureBindCount=3;descriptor.maxSamplerStateBindCount=3;descriptor.initializeBindings=YES;NSError* error=nil;auto arguments=[lease.Device()newArgumentTableWithDescriptor:descriptor error:&error];Require(arguments!=nil,"Blockout argument allocation failed: "+Error(error));lease.Retain(arguments);
+-			[arguments setAddress:mesh->vertices.gpuAddress atIndex:0];[arguments setAddress:transforms.gpuAddress atIndex:1];[arguments setAddress:uniforms.gpuAddress atIndex:2];
++			[arguments setAddress:mesh->vertices.gpuAddress atIndex:0];[arguments setAddress:transforms atIndex:1];[arguments setAddress:uniforms atIndex:2];
+ 			for(unsigned n=0;n<2;++n){[arguments setTexture:material[n]->texture.gpuResourceID atIndex:n];[arguments setSamplerState:samplers[n].gpuResourceID atIndex:n];}
+ 			if(source.hasNormal){[arguments setTexture:normal.texture.gpuResourceID atIndex:2];[arguments setSamplerState:normal.sampler.gpuResourceID atIndex:2];}
+ 			auto pipeline=impl->Pipeline(lease,target,source.hasNormal,target?MTLPixelFormatR8Unorm:color,source.surface.blend,source.world.colorWrite,ms,target?1:samples,source.world.alphaToCoverage);
+-			packet.draws.push_back({pipeline,effectstate::Depth(lease,source.world,target?MTLPixelFormatInvalid:stencil),arguments,mesh,source.world,*raster});
++			packet.draws.push_back({pipeline,effectstate::Depth(lease,source.world,target?MTLPixelFormatInvalid:stencil),arguments,mesh,source.world,*raster,packed.has_value()});
+ 		}
+ 	};
+ 	for(const auto& draw:frame->draws){PreparedBlockoutFrame::Impl::Packet packet;packet.sequence=draw.sequence;append(packet,draw,false);if(!packet.draws.empty())result->impl->packets.push_back(std::move(packet));}

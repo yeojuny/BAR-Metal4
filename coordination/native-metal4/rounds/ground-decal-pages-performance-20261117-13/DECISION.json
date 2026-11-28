@@ -1,0 +1,33 @@
+{
+  "round_id": "ground-decal-pages-performance-20261117-13",
+  "author": "SUPER_JINI_MK2",
+  "decision": "RETAIN_STRUCTURAL_CANDIDATE_NO_REPRODUCIBLE_GAIN_CLAIM",
+  "artifact_commit": "800374df16d704cc3bc9cc400f50e43a8777226f",
+  "independent_review": {
+    "raw_engine_logs": 6,
+    "all40_world_rows_match_all_six": true,
+    "FPS_recomputed_from_draws_and_seconds": true,
+    "baseline_mean": 61.64534815300067,
+    "candidate_mean": 64.13333179515845,
+    "observed_percent": 4.035963323595371,
+    "all_slow_runs_retained": true,
+    "validation_and_history_excluded": true,
+    "HQ_turn_completed": "01a1e7d3-66a4-7f01-ad44-143059f3e4f7",
+    "cleanup_verified": true
+  },
+  "diagnosis": {
+    "A1": "56.84147 FPS; later baselines63.98720..64.10737. A1 deficit persists later in counted window, not merely first wall bin.",
+    "last10_bin_mean_A1": 52.4297409058,
+    "last10_bin_mean_A2": 60.6057460785,
+    "Sim_profile_delta_A1_minus_A2_ms": 116.93481445299994,
+    "warnings": "Observed relevant warnings common to all arms; no distinct error establishing cause.",
+    "cause": "UNKNOWN. No counted GPU timing/thermal/background telemetry proves cache, throttling or patch effect. Whole-process worker aggregates cannot establish counted GPU waits."
+  },
+  "limits": [
+    "CPU DrawScreen FPS, not GPU/display FPS.",
+    "Three-per-arm observed mean dominated by first baseline; reproducible+4% gain not established.",
+    "Copy/allocation/RAM benefits not measured; exhaustive GPU lifetime paths unproved."
+  ],
+  "recommended_next": "One separate fresh reversed-order B A A B four-run cohort with identical binaries/fixtures/clean flags and no code/instrumentation change, to examine first-run/order sensitivity. Preserve both cohorts separately; no trimming or blind automatic reruns.",
+  "new_execution_authorized_by_this_document": false
+}

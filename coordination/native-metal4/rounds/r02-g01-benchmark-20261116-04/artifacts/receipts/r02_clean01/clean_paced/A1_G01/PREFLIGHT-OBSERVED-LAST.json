@@ -1,0 +1,22 @@
+{
+  "utc": "2026-11-16T23:41:49.664178+00:00",
+  "remaining": 6,
+  "result": {
+    "display": {
+      "utc": "2026-11-16T23:41:49.616794+00:00",
+      "monotonic": 0.043895125,
+      "display": 1,
+      "asleep": false,
+      "active": true,
+      "online": true,
+      "locked": false,
+      "valid": true
+    },
+    "battery": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=23789667)\t80%; AC attached; not charging present: true\n",
+    "thermal": "Note: No thermal warning level has been recorded\nNote: No performance warning level has been recorded\nNote: No CPU power status has been recorded\n",
+    "awakeOwner": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/gpu-next219-01/AWAKE.json",
+    "offscreenFrameReduction": "staged LimitIdleFps0, BC213 widget order0; runtime receipt required",
+    "lockPolicy": "User authorized locked/offscreen observation; visible FPS not inferred"
+  },
+  "limit": "Exact display and power state; locked/asleep accepted by user, rendering checked separately"
+}

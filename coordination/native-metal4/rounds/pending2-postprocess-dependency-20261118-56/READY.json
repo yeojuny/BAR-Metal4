@@ -1,0 +1,7 @@
+{
+  "round_id": "pending2-postprocess-dependency-20261118-56",
+  "attempt_id": "pending2-exact-postprocess-transfer-01",
+  "status": "READY_EXACT_DEPENDENCY_AND_POSITIVE_TWO_TICKET_FIXTURE",
+  "source_manifest_sha256": "4c5224c4aa7069907cce3f6d8cc19d655209ec0eee627351151301debf9507a0",
+  "games_started": 0
+}

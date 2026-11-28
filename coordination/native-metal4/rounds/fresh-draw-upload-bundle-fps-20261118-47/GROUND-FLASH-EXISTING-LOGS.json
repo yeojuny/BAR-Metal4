@@ -1,0 +1,47 @@
+{
+  "scan": {
+    "combined-indexed-fps-20261118-41": {
+      "logs": 2,
+      "explicit_groundflash_counts": 0
+    },
+    "native-indexed-geometry-fps-20261117-39": {
+      "logs": 2,
+      "explicit_groundflash_counts": 0
+    },
+    "combined-indexed-fps-repeat-20261118-42": {
+      "logs": 2,
+      "explicit_groundflash_counts": 0
+    },
+    "sensorlos-outline-upload-slab-20261118-44": {
+      "logs": 2,
+      "explicit_groundflash_counts": 0
+    },
+    "sensorlos-outline-upload-slab-abba-baab-20261118-45": {
+      "logs": 8,
+      "explicit_groundflash_counts": 0
+    },
+    "groundflash-depth-run-fps-20261118-46": {
+      "logs": 2,
+      "explicit_groundflash_counts": 2
+    },
+    "fresh-draw-upload-bundle-fps-20261118-47": {
+      "logs": 2,
+      "explicit_groundflash_counts": 0
+    }
+  },
+  "matched_logs": [
+    {
+      "file": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/clean_paced/preparation/runs/FLASH_OFF/infolog.txt",
+      "line": 2253,
+      "text": "[t=00:00:49.624569][f=0000080] [NativeGroundFlashRuns] mode=separate source_ranges=4 encoded_ranges=4 collapsed=0"
+    },
+    {
+      "file": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/groundflash-depth-run-fps-20261118-46/clean_paced/preparation/runs/FLASH_ON/infolog.txt",
+      "line": 2268,
+      "text": "[t=00:00:19.447933][f=0000080] [NativeGroundFlashRuns] mode=coalesced source_ranges=4 encoded_ranges=1 collapsed=3"
+    }
+  ],
+  "counted_window_start_tick": 540,
+  "stage_histogram_available": false,
+  "scope": "Historical R02 single GPU trace; current automatic receipts contain no per-stage opening, middle and late game counts. Global particleDraws sums several families."
+}

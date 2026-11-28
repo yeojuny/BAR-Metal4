@@ -1,0 +1,167 @@
+{
+  "status": "FAIL_MANDATORY_GAME_DECAL_SEMANTIC_WORKLOAD",
+  "decision": "STOP_NO_PROFILE_NO_RETRY",
+  "utc": "2026-11-17T17:01:17.847966+00:00",
+  "tick": {
+    "R03": 1590.0,
+    "MVK3": 1590.0,
+    "proof": [
+      "R03-TICK-GATE.json",
+      "MVK3-TICK-GATE.json"
+    ]
+  },
+  "CPU_world": "PASS_CPU_WORLD_SIDECARS; all 4 witnesses equal excluding draw counter, 168 units and 401 features",
+  "game_decal": {
+    "semantic_role_proof": "Captured source has matching five float4 fields: lengthwidthrotation, uvoffsets, alpha/heat, worldPos, parameters. Both draws use per-decal 80-byte rows. Actual API bindings select offset0; native DecalUniform options.z=0. This is an input-data mismatch, not inferred from renderer draw counts.",
+    "R03": {
+      "draw": "/commands/cb0/re15/draw0",
+      "api": "api5272",
+      "instance_count": 3541,
+      "vertices_per_instance": 96,
+      "buffer": "@buf310",
+      "slot": 0,
+      "offset": 0,
+      "stride": 80
+    },
+    "MVK3": {
+      "draw": "/commands/cb3/re103/draw0",
+      "api": "api2786",
+      "instance_count": 4511,
+      "indices_per_instance": 96,
+      "buffer": "@buf394",
+      "slots": [
+        29,
+        28,
+        27,
+        26,
+        25
+      ],
+      "offsets": [
+        0,
+        16,
+        32,
+        48,
+        64
+      ],
+      "stride": 80
+    },
+    "exact_80_byte_row_multiset_overlap": 0,
+    "worldPos_xyz_birth_multiset_overlap": 3523,
+    "worldPos_xyz_birth_only": {
+      "R03": 18,
+      "MVK3": 988
+    },
+    "first_same_position_and_birth_counterexample": {
+      "R03": {
+        "row": 0,
+        "fields": {
+          "lengthwidthrotation": [
+            160.0,
+            160.0,
+            2.533071517944336,
+            1.0
+          ],
+          "uvoffsets": [
+            0.626953125,
+            0.748046875,
+            0.248046875,
+            0.126953125
+          ],
+          "alphastart_alphadecay_heatstart_heatdecay": [
+            2.5,
+            0.0029761907644569874,
+            0.0,
+            1.0
+          ],
+          "worldPos": [
+            5325.0,
+            329.9962158203125,
+            3072.0,
+            60.0
+          ],
+          "parameters": [
+            0.5,
+            0.0,
+            0.0,
+            50.0
+          ]
+        },
+        "alpha_at_sim1590_from_captured_formula": 0,
+        "buffer_sha256": "310a6571178232aa6f1a5d5cb0ed0db69b033b61b1643acdf774cd0837b09422",
+        "active_bytes_sha256": "310a6571178232aa6f1a5d5cb0ed0db69b033b61b1643acdf774cd0837b09422"
+      },
+      "MVK3": {
+        "row": 0,
+        "fields": {
+          "lengthwidthrotation": [
+            160.0,
+            160.0,
+            4.408550262451172,
+            1.0
+          ],
+          "uvoffsets": [
+            0.626953125,
+            0.748046875,
+            0.248046875,
+            0.126953125
+          ],
+          "alphastart_alphadecay_heatstart_heatdecay": [
+            2.5,
+            0.0006944444612599909,
+            0.0,
+            1.0
+          ],
+          "worldPos": [
+            5325.0,
+            329.9962158203125,
+            3072.0,
+            60.0
+          ],
+          "parameters": [
+            0.5,
+            0.0,
+            0.0,
+            50.0
+          ]
+        },
+        "alpha_at_sim1590_from_captured_formula": 1.0,
+        "buffer_sha256": "a64ff0c681fa6633df106ddcd5e0bdb56f56e6286d3eae4831dd12d4e1526a54",
+        "active_bytes_sha256": "b02ccf4c979d0647a832c3eaaae122ef4a0a29afebb4f19dbb8488320eab13db"
+      }
+    },
+    "causal_status": "UNKNOWN: neither wall time difference nor renderer is established as cause of differing unsynced decal data"
+  },
+  "timeInfo": {
+    "R03": [
+      1590.0,
+      73.53400421142578,
+      53.0,
+      0.0
+    ],
+    "MVK3": [
+      1590.0,
+      79.28500366210938,
+      53.0,
+      0.0
+    ]
+  },
+  "camera": {
+    "CPU_witness": "identical",
+    "captured_viewGeometry": "1512x950 identical",
+    "captured_cameraView": "exact byte equality",
+    "captured_projection": "different depth conventions; normalization analysis pending, not asserted as pair failure cause"
+  },
+  "SensorLOS": "NOT_ACCEPTED; semantic input match not completed before decal stop gate",
+  "particles": "NOT_ACCEPTED; shader workload and animation state not proved equal",
+  "profile_commands": {
+    "R03": 0,
+    "MVK3": 0
+  },
+  "limits": [
+    "No component timing comparison",
+    "No hardware counter replay",
+    "No GPU-ms/FPS extrapolation",
+    "No R04 causal conclusion",
+    "No source/build change or adoption"
+  ]
+}

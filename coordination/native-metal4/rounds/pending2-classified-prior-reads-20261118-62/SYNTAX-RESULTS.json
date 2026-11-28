@@ -1,0 +1,42 @@
+[
+  {
+    "file": "Metal4RuntimeNative.mm",
+    "exit": 0,
+    "pass_": true
+  },
+  {
+    "file": "Metal4Bloom.mm",
+    "exit": 0,
+    "pass_": true
+  },
+  {
+    "file": "Metal4PostprocessNative.mm",
+    "exit": 0,
+    "pass_": true
+  },
+  {
+    "file": "Metal4BumpWater.mm",
+    "exit": 0,
+    "pass_": true
+  },
+  {
+    "file": "Metal4TerrainInfoSource.mm",
+    "exit": 0,
+    "pass_": true
+  },
+  {
+    "file": "Metal4WorldInfo.mm",
+    "exit": 0,
+    "pass_": true
+  },
+  {
+    "file": "Metal4MiniMapNative.mm",
+    "exit": 0,
+    "pass_": true
+  },
+  {
+    "file": "Metal4WorldRenderer.mm",
+    "exit": 0,
+    "pass_": true
+  }
+]

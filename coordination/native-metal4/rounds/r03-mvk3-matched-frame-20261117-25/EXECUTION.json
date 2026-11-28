@@ -1,0 +1,39 @@
+{
+  "round_id": "r03-mvk3-matched-frame-20261117-25",
+  "attempt_id": "r03-mvk3-framepair-01",
+  "status": "CLOSED_INSUFFICIENT_EVIDENCE",
+  "counts": {
+    "games": 1,
+    "R03_games": 1,
+    "MVK3_games": 0,
+    "capture_boundary_queries": 1,
+    "capture_start_commands": 0,
+    "captured_frames": 0,
+    "inspection_sessions": 0,
+    "profile_commands": 0,
+    "engine_builds": 0,
+    "engine_source_edits": 0,
+    "R04_captures": 0,
+    "retries": 0,
+    "extra_counter_replays": 0,
+    "FPS_AB": 0
+  },
+  "stop_reason": "R03 gpucapture boundaries --pid 87421 timed out at existing 8-second bound; capture start never invoked.",
+  "first_arm": {
+    "arm": "R03",
+    "game_pid": 87421,
+    "normal_exit": true,
+    "boundary_query": "TIMEOUT_8S",
+    "capture_status": "NOT_STARTED",
+    "tick_gate": "UNKNOWN_NO_CAPTURE"
+  },
+  "second_arm": {
+    "arm": "MVK3",
+    "status": "NOT_RUN_FIRST_ARM_GATE_FAILED"
+  },
+  "profile_internal_replays": "0 profile commands invoked; had profiling proceeded, one command may internally replay multiple times.",
+  "cleanup_complete": true,
+  "global_session_list": "UNKNOWN_FINAL_LIST_TIMEOUT_15S",
+  "bar": "PAUSED",
+  "utc": "2026-11-17T10:53:20.364014+00:00"
+}

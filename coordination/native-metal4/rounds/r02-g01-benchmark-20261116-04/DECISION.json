@@ -1,0 +1,25 @@
+{
+  "round_id": "r02-g01-benchmark-20261116-04",
+  "author": "SUPER_JINI_MK2",
+  "decision": "RETAIN_R02_AS_CORRECTNESS_BASE_FOR_NEXT_PRIVATE_EXPERIMENT_NO_RELEASE_ADOPTION",
+  "artifact_commit": "87d780578fc39f7c0f5608f6b0d94d6d08c3f557",
+  "independent_checks": {
+    "six_RESULT_frames_divided_by_seconds": "Exactly reproduce all six FPS",
+    "sum_of_40_bin_draws": "Matches each run draw count",
+    "all_40_world_rows_each_run": "Compared start/end simulation,speed_a,speed_b,paused,units,camera: all six match",
+    "baseline_mean_FPS": 62.24582013722907,
+    "R02_mean_FPS": 62.22811260353404,
+    "relative_percent": -0.028447747424620307,
+    "mean_1percent_low_relative_percent": -1.3077268628958305
+  },
+  "interpretation": "No material mean FPS change observed in this 3+3 Ultra AA0 cohort; not a formal equivalence or universal no-regression proof. 1% low is slightly lower and retained as supporting uncertainty, not hidden. Correctness fix is justified by prior asymmetric-stencil negative controls.",
+  "validation": "HQ receipt confirms actual Metal enabled/no matched errors, positive S01/G01, extents/sample and normal exit. Images reviewed by HQ, not independently viewed by JINI; no pixel-equivalence claim.",
+  "cleanup": "CLOSED reviewed; no execution remains",
+  "next": "One current R02 GPU capture plus one default/overlapping replay profile to identify SensorLOS versus ground-decal cost. No repeat six-run, new build or code change. Retarget only existing pinned capture scripts, preserve original scripts, freeze adapted hashes before execution; stop if semantic changes needed.",
+  "limitations": [
+    "CPU DrawScreen FPS not GPU/present latency",
+    "AA0 heavy fixture only; Simmers/true AA4 untested",
+    "No new RAM/copy/COW telemetry",
+    "Profile intervals overlap; do not sum to runtime FPS forecast"
+  ]
+}

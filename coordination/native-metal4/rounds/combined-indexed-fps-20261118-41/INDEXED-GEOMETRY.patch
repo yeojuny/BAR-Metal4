@@ -1,0 +1,356 @@
+--- /dev/null
++++ b/engine/rts/Rendering/Metal4/Metal4FixedTriangleIndexBuffer.h
+@@ -0,0 +1,55 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++
++#include "Metal4RuntimeNative.h"
++#include "NativeTriangleReuseIndices.h"
++
++#include <cstdlib>
++#include <cstring>
++
++namespace rendering::metal4 {
++
++inline bool FixedTriangleIndexReuseEnabled()
++{
++	static const bool enabled = [] {
++		const char* value = std::getenv("BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE");
++		return value && std::strcmp(value, "1") == 0;
++	}();
++	return enabled;
++}
++
++// Each renderer owns one immutable buffer for its index table. A prepared
++// draw holds the buffer and registers it with the same lease as its inputs.
++template <const auto& Indices>
++class FixedTriangleIndexBuffer {
++public:
++	id<MTLBuffer> Prepare(RuntimeLease& lease)
++	{
++		if (!FixedTriangleIndexReuseEnabled())
++			return nil;
++		if (!buffer || context != lease.ContextIdentity() || buffer.device != lease.Device()) {
++			constexpr auto bytes = Indices.size() * sizeof(Indices[0]);
++			buffer = bytes <= lease.Device().maxBufferLength
++				? [lease.Device() newBufferWithBytes:Indices.data() length:bytes options:MTLResourceStorageModeShared]
++				: nil;
++			context = lease.ContextIdentity();
++			if (buffer && (buffer.length != bytes || !buffer.gpuAddress || (buffer.gpuAddress & 1u)))
++				buffer = nil;
++		}
++		if (buffer)
++			lease.AddAllocation(buffer);
++		return buffer;
++	}
++
++	void Clear()
++	{
++		buffer = nil;
++		context = nullptr;
++	}
++
++private:
++	const Runtime* context = nullptr;
++	__strong id<MTLBuffer> buffer = nil;
++};
++
++} // namespace rendering::metal4
+--- a/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4ScreenNative.mm
+@@ -1,5 +1,6 @@
+ /* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
+ #include "Metal4ScreenNative.h"
++#include "Metal4FixedTriangleIndexBuffer.h"
+ #include "Metal4CoverageRTTPool220.h"
+ #include "System/Log/ILog.h"
+ #include "Rendering/Backend/NativeDepthStencilKey.h"
+@@ -786,6 +787,7 @@
+ 		mutable uint32_t pipEncoded=0,pipCompleted=0;
+ 		ScreenCull cull=ScreenCull::None;
+ 		bool healthBars=false;std::uint32_t healthBarsInstances=0;
++		__strong id<MTLBuffer> healthBarsIndices=nil;
+ 		std::unique_ptr<PreparedPanelShaderDraw> panelShader;
+ 		std::shared_ptr<const NativePanelShaderDraw> panelShaderOwner;
+   std::shared_ptr<ExactScreenLineJob> exactLine;
+@@ -1074,7 +1076,16 @@
+    previous220[layout]=next;havePrevious220[layout]=true;if(impl->counters220)++draws220[layout];
+   }
+ 		[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+-		if(draw.healthBars){[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.healthBarsInstances];continue;}
++		if (draw.healthBars) {
++			if (draw.healthBarsIndices) {
++				[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt16
++				                   indexBuffer:draw.healthBarsIndices.gpuAddress indexBufferLength:draw.healthBarsIndices.length
++				                 instanceCount:draw.healthBarsInstances];
++			} else {
++				[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.healthBarsInstances];
++			}
++			continue;
++		}
+   if(draw.geometry){
+    if(draw.geometryIndices)[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:draw.count indexType:MTLIndexTypeUInt32 indexBuffer:draw.geometryIndices.gpuAddress+draw.geometryIndexOffset170 indexBufferLength:draw.geometryIndices.length-draw.geometryIndexOffset170 instanceCount:draw.geometryInstances];
+    else [encoder drawPrimitives:draw.sourceLine?MTLPrimitiveTypeTriangleStrip:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.count instanceCount:draw.geometryInstances];
+@@ -1185,6 +1196,7 @@
+  }
+ 	struct HealthBarsPointStorage {std::weak_ptr<const NativeBufferSnapshot> owner;__strong id<MTLBuffer> value=nil;};
+ 	std::unordered_map<const NativeBufferSnapshot*,HealthBarsPointStorage> healthBarsPoints;
++	FixedTriangleIndexBuffer<triangleReuse::healthBars> healthBarsIndices;
+ 	id<MTLBuffer> HealthBarsPoints(RuntimeLease& lease,const NativeBufferSnapshotRef& source){
+ 		std::erase_if(healthBarsPoints,[](const auto& entry){return entry.second.owner.expired();});
+ 		auto& cached=healthBarsPoints[source.get()];
+@@ -2033,7 +2045,9 @@
+ 			draw.depth=impl->DepthStencil(lease,state.depthStencil,depthFormat,stencilFormat);
+ 			draw.arguments=args;draw.viewport={drawViewport[0],drawViewport[1],drawViewport[2],drawViewport[3],0,1};draw.scissor=*scissor;
+ 			draw.frontReference=std::clamp(state.depthStencil.frontStencil.reference,0,255);draw.backReference=std::clamp(state.depthStencil.backStencil.reference,0,255);
+-			draw.count=78;draw.healthBarsInstances=source.count;draw.originalCommand=std::uint32_t(i);draw.externalImages=std::move(external);draw.cull=state.cull;draw.healthBars=true;
++			draw.count=triangleReuse::healthBars.size();draw.healthBarsInstances=source.count;draw.originalCommand=std::uint32_t(i);draw.externalImages=std::move(external);draw.cull=state.cull;draw.healthBars=true;
++			if (samples==1)
++				draw.healthBarsIndices=impl->healthBarsIndices.Prepare(lease);
+ 			prepared->impl->draws.push_back(std::move(draw));continue;
+ 		}
+ 		if(command.panelShader) {
+--- a/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4Sensor31657CircleNative.mm
+@@ -2,6 +2,7 @@
+ #include "Metal4Sensor31657CircleNative.h"
+ #include "NativeSensor31657CircleShaders.h"
+ #include "Metal4NativeEffectState.h"
++#include "Metal4FixedTriangleIndexBuffer.h"
+ #include <map>
+ #include <tuple>
+ #include <unordered_map>
+@@ -40,6 +41,7 @@
+ 	__strong id<MTLRenderPipelineState> pipeline=nil;
+ 	__strong id<MTLDepthStencilState> depth=nil;
+ 	__strong id<MTL4ArgumentTable> arguments=nil;
++	__strong id<MTLBuffer> indices=nil;
+ 	uint32_t vertices=0,instances=0;
+ };
+ PreparedSensor31657CircleDraw::PreparedSensor31657CircleDraw():impl(std::make_unique<Impl>()){}
+@@ -56,12 +58,18 @@
+ 	[encoder setCullMode:MTLCullModeNone];[encoder setDepthStencilState:impl->depth];
+ 	[encoder setRenderPipelineState:impl->pipeline];
+ 	[encoder setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+-	[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
++	if (impl->indices) {
++		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->vertices indexType:MTLIndexTypeUInt16
++		                   indexBuffer:impl->indices.gpuAddress indexBufferLength:impl->indices.length instanceCount:impl->instances];
++	} else {
++		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
++	}
+ }
+ struct Sensor31657CircleGPU::Impl {
+ 	using Key=std::tuple<MTLPixelFormat,unsigned,bool,uint64_t,bool>;
+ 	__strong id<MTLLibrary> library=nil;
+ 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
++	FixedTriangleIndexBuffer<triangleReuse::sensorCircle> indices;
+ 	struct Buffer {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> value=nil;};
+ 	std::unordered_map<const NativeBufferSnapshot*,Buffer> buffers;
+ 	id<MTLBuffer> Snapshot(RuntimeLease& lease,const NativeBufferSnapshotRef& source)
+@@ -117,7 +125,7 @@
+ 	if(!impl->library)return {};
+ 	return impl;
+ }
+-void Sensor31657CircleGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();}
++void Sensor31657CircleGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();impl->indices.Clear();}
+ std::unique_ptr<PreparedSensor31657CircleDraw> Sensor31657CircleGPU::Prepare(RuntimeLease& lease,const NativeSensor31657CircleDraw& draw,
+ 	const StartBoxImageResolver& resolver,const WorldCamera& camera,uint32_t renderWidth,uint32_t renderHeight,
+ 	uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,
+@@ -169,6 +177,8 @@
+ 	[out.arguments setTexture:out.height.texture.gpuResourceID atIndex:0];[out.arguments setSamplerState:out.height.sampler.gpuResourceID atIndex:0];
+ 	out.pipeline=impl->Pipeline(lease,draw,color,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.state,stencil);
+ 	Require(uint64_t(draw.count)*6<=UINT32_MAX,"Current original sensor line invocation count overflow");out.vertices=draw.count*6;out.instances=draw.instanceCount;
++	if (samples==1 && draw.count>=3 && draw.count<=triangleReuse::maxSensorSegments)
++		out.indices=impl->indices.Prepare(lease);
+ 	return result;
+ }
+ }
+--- a/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
++++ b/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm
+@@ -2,6 +2,7 @@
+ #include "Metal4SensorLOSNative.h"
+ #include "NativeSensorLOSShaders.h"
+ #include "Metal4NativeEffectState.h"
++#include "Metal4FixedTriangleIndexBuffer.h"
+ #include <map>
+ #include <tuple>
+ #include <unordered_map>
+@@ -40,6 +41,7 @@
+ 	__strong id<MTLRenderPipelineState> pipeline=nil;
+ 	__strong id<MTLDepthStencilState> depth=nil;
+ 	__strong id<MTL4ArgumentTable> arguments=nil;
++	__strong id<MTLBuffer> indices=nil;
+ 	uint32_t vertices=0,instances=0;
+ };
+ PreparedSensorLOSDraw::PreparedSensorLOSDraw():impl(std::make_unique<Impl>()){}
+@@ -57,12 +59,19 @@
+ 	[encoder setCullMode:MTLCullModeNone];[encoder setDepthStencilState:impl->depth];
+ 	[encoder setRenderPipelineState:impl->pipeline];
+ 	[encoder setArgumentTable:impl->arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+-	[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
++	if (impl->indices) {
++		[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:impl->vertices indexType:MTLIndexTypeUInt16
++		                   indexBuffer:impl->indices.gpuAddress indexBufferLength:impl->indices.length instanceCount:impl->instances];
++	} else {
++		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:impl->vertices instanceCount:impl->instances];
++	}
+ }
+ struct SensorLOSGPU::Impl {
+ 	using Key=std::tuple<MTLPixelFormat,unsigned,bool,bool,uint64_t,bool>;
+ 	__strong id<MTLLibrary> library=nil;
+ 	std::map<Key,id<MTLRenderPipelineState>> pipelines;
++	FixedTriangleIndexBuffer<triangleReuse::sensorLOS> indices;
++	FixedTriangleIndexBuffer<triangleReuse::sensorLOSFan> fanIndices;
+ 	struct Buffer {std::weak_ptr<const NativeBufferSnapshot> source;__strong id<MTLBuffer> value=nil;};
+ 	std::unordered_map<const NativeBufferSnapshot*,Buffer> buffers;
+ 	id<MTLBuffer> Snapshot(RuntimeLease& lease,const NativeBufferSnapshotRef& source)
+@@ -118,7 +127,7 @@
+ 	if(!impl->library)return {};
+ 	return impl;
+ }
+-void SensorLOSGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();}
++void SensorLOSGPU::ClearResources(){impl->buffers.clear();impl->pipelines.clear();impl->indices.Clear();impl->fanIndices.Clear();}
+ std::unique_ptr<PreparedSensorLOSDraw> SensorLOSGPU::Prepare(RuntimeLease& lease,const NativeSensorLOSDraw& draw,
+ 	const StartBoxImageResolver& resolver,const WorldCamera& camera,uint32_t renderWidth,uint32_t renderHeight,
+ 	uint32_t logicalWidth,uint32_t logicalHeight,MTLPixelFormat color,MTLPixelFormat depth,MTLPixelFormat stencil,
+@@ -182,6 +191,8 @@
+ 	if(out.mask.texture){[out.arguments setTexture:out.mask.texture.gpuResourceID atIndex:1];[out.arguments setSamplerState:out.mask.sampler.gpuResourceID atIndex:1];}
+  out.pipeline=impl->Pipeline(lease,draw,color,samples,validation,milliseconds);out.depth=effectstate::Depth(lease,out.state,stencil);
+ 	Require(uint64_t(draw.count)*6<=UINT32_MAX,"Current original sensor line invocation count overflow");out.vertices=defines.stencilPass?(draw.count-2)*3:draw.count*6;out.instances=draw.instanceCount;
++	if (samples==1 && draw.count>=3 && draw.count<=triangleReuse::maxSensorSegments)
++		out.indices=defines.stencilPass ? impl->fanIndices.Prepare(lease) : impl->indices.Prepare(lease);
+ 	return result;
+ }
+ }
+--- a/engine/rts/Rendering/Metal4/Metal4UnitStencil.mm
++++ b/engine/rts/Rendering/Metal4/Metal4UnitStencil.mm
+@@ -5,6 +5,7 @@
+ #include "Metal4UnitStencil.h"
+ #include "NativeUnitStencilShaders.h"
+ #include "Metal4NativeEffectState.h"
++#include "Metal4FixedTriangleIndexBuffer.h"
+ #include "Rendering/Backend/NativeCUSRenderInputs.h"
+ #import <simd/simd.h>
+ #include <algorithm>
+@@ -49,6 +50,7 @@
+ 		bool clear=false,skip=false;
+ 		__strong id<MTLRenderPipelineState> pipeline=nil;
+ 		__strong id<MTL4ArgumentTable> arguments=nil;
++		__strong id<MTLBuffer> indices=nil;
+ 		NSUInteger instances=0;
+ 		NativeWorldDrawState world;
+ 		effectstate::Raster raster;
+@@ -87,7 +89,12 @@
+ 		[encoder setCullMode:draw.clear||!draw.world.cullEnabled?MTLCullModeNone:draw.world.cull==NativeWorldCull::Front?MTLCullModeFront:MTLCullModeBack];
+ 		[encoder setTriangleFillMode:!draw.clear&&draw.world.frontPolygonMode==NativePolygonMode::Line?MTLTriangleFillModeLines:MTLTriangleFillModeFill];
+ 		[encoder setRenderPipelineState:draw.pipeline];[encoder setArgumentTable:draw.arguments atStages:MTLRenderStageVertex|MTLRenderStageFragment];
+-		[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.clear?3:18 instanceCount:draw.instances];
++		if (draw.indices) {
++			[encoder drawIndexedPrimitives:MTLPrimitiveTypeTriangle indexCount:triangleReuse::unitStencil.size() indexType:MTLIndexTypeUInt16
++			                   indexBuffer:draw.indices.gpuAddress indexBufferLength:draw.indices.length instanceCount:draw.instances];
++		} else {
++			[encoder drawPrimitives:MTLPrimitiveTypeTriangle vertexStart:0 vertexCount:draw.clear?3:18 instanceCount:draw.instances];
++		}
+ 	}
+ 	[encoder endEncoding];pass.output->producer->submissionIdentity=pass.submission;pass.output->producer->encoded=true;pass.encoded=true;
+ }
+@@ -100,6 +107,7 @@
+ 	std::map<std::pair<uint64_t,uint64_t>,std::shared_ptr<Image>> images;
+ 	std::map<const void*,std::weak_ptr<const Linked>> programs;
+ 	std::shared_ptr<Linked> clearProgram;
++	FixedTriangleIndexBuffer<triangleReuse::unitStencil> indices;
+ 	std::shared_ptr<Image> ImageFor(RuntimeLease& lease,const std::shared_ptr<const NativeUnitStencilVersion>& v){
+ 		Require(v&&v->image&&v->image->width&&v->image->height,"Unit Stencil image lacks its original actual extent/version");
+ 		if(v->Resource()){auto resource=std::dynamic_pointer_cast<const Image>(v->Resource());Require(resource&&resource->owner.lock()==v&&resource->texture.device==lease.Device(),"Unit Stencil immutable image has another actual version/device");return std::const_pointer_cast<Image>(resource);}
+@@ -112,7 +120,7 @@
+ 	}
+ };
+ UnitStencilGPU::UnitStencilGPU():impl(std::make_unique<Impl>()){}UnitStencilGPU::~UnitStencilGPU()=default;
+-void UnitStencilGPU::ClearResources(){impl->uploads177.Clear();impl->images.clear();impl->programs.clear();impl->clearProgram.reset();}
++void UnitStencilGPU::ClearResources(){impl->uploads177.Clear();impl->images.clear();impl->programs.clear();impl->clearProgram.reset();impl->indices.Clear();}
+ std::shared_ptr<const NativeUnitStencilProgramConsumer> UnitStencilGPU::LinkOriginalProgram(RuntimeLease& lease,const NativeUnitStencilProgramSource& source,bool validation,double& ms){
+ 	ValidateNativeUnitStencilProgram(source);const auto start=Clock::now();auto linked=std::make_shared<Linked>();auto descriptor=[MTL4LibraryDescriptor new];descriptor.name=@"Original31657 Unit Stencil GS-equivalent threefaces";descriptor.source=String(unitStencil::SHADER);
+ 	auto options=[MTLCompileOptions new];options.mathMode=MTLMathModeSafe;options.mathFloatingPointFunctions=MTLMathFloatingPointFunctionsPrecise;descriptor.options=options;NSError* error=nil;
+@@ -169,6 +177,7 @@
+ 				Uniforms u;u.addRadius=draw.addRadius;u.stencilColor=draw.stencilColor;u.firstRecord=draw.first;uint32_t caps=0;std::memcpy(&caps,draw.engineUniforms->params->bytes.data()+12,4);u.clipZeroToOne=caps&1u;
+ 				u.alpha={float(surface.alphaTest.enabled),surface.alphaTest.reference,float(surface.alphaTest.compare),0};auto uniforms=upload177(&u,sizeof(u));
+ 				[next.arguments setAddress:records.gpuAddress atIndex:0];[next.arguments setAddress:matrices.gpuAddress atIndex:1];[next.arguments setAddress:objects.gpuAddress atIndex:2];[next.arguments setAddress:uniforms.gpuAddress atIndex:3];
++				next.indices=impl->indices.Prepare(lease);
+ 				next.instances=draw.count;next.pipeline=Pipeline(lease,*program,surface,next.world,false,validation,ms);lease.Retain(program->library);
+ 			}
+ 			lease.Retain(next.pipeline);pass.commands.push_back(std::move(next));
+--- /dev/null
++++ b/engine/rts/Rendering/Metal4/NativeTriangleReuseIndices.h
+@@ -0,0 +1,71 @@
++/* This file is part of the Spring engine (GPL v2 or later), see LICENSE.html */
++#pragma once
++
++#include <array>
++#include <cstddef>
++#include <cstdint>
++
++namespace rendering::metal4::triangleReuse {
++
++// Keep each shader's original procedural vertex ID space. An index substitutes
++// only an ordinal with the same shader inputs and outputs in that triangle slot.
++template <std::size_t Segments>
++constexpr auto RepeatSegment(std::array<std::uint16_t, 6> ordinal)
++{
++	static_assert(Segments > 0 && Segments * 6 <= 65536);
++	std::array<std::uint16_t, Segments * 6> indices{};
++	for (std::size_t segment = 0; segment < Segments; ++segment) {
++		for (std::size_t i = 0; i < ordinal.size(); ++i)
++			indices[segment * 6 + i] = static_cast<std::uint16_t>(segment * 6 + ordinal[i]);
++	}
++	return indices;
++}
++
++inline constexpr std::uint32_t maxSensorSegments = 1024;
++inline constexpr auto sensorCircle = RepeatSegment<maxSensorSegments>({0, 1, 2, 0, 2, 5});
++
++// R03 LOS chooses different winding maps for X-major and Y-major strips.
++// Only slots 0 and 3 produce the same corner in all of its geometry branches.
++inline constexpr auto sensorLOS = RepeatSegment<maxSensorSegments>({0, 1, 2, 0, 4, 5});
++
++inline constexpr auto sensorLOSFan = [] {
++	std::array<std::uint16_t, maxSensorSegments * 3> indices{};
++	// Use the original center and the previous triangle's matching rim ID.
++	for (std::size_t triangle = 0; triangle < maxSensorSegments; ++triangle) {
++		const std::size_t first = triangle * 3;
++		indices[first] = 0;
++		indices[first + 1] = static_cast<std::uint16_t>(triangle == 0 ? 1 : first - 1);
++		indices[first + 2] = static_cast<std::uint16_t>(first + 2);
++	}
++	return indices;
++}();
++
++// Each original face is a separate four-corner strip. Keep face IDs separate.
++inline constexpr auto unitStencil = RepeatSegment<3>({0, 1, 2, 2, 1, 5});
++
++constexpr std::size_t HealthStripCorner(std::size_t ordinal)
++{
++	const auto triangle = ordinal / 3;
++	const auto corner = ordinal % 3;
++	return corner == 2 ? triangle + 2 : triangle + (corner ^ (triangle & 1));
++}
++
++inline constexpr auto healthBars = [] {
++	std::array<std::uint16_t, 78> indices{};
++	// The first three strips have eight corners each, followed by four quads.
++	for (std::size_t first = 0; first < indices.size();) {
++		const std::size_t count = first < 54 ? 18 : 6;
++		std::array<std::uint16_t, 8> firstOrdinal{};
++		firstOrdinal.fill(UINT16_MAX);
++		for (std::size_t i = 0; i < count; ++i) {
++			auto& representative = firstOrdinal[HealthStripCorner(i)];
++			if (representative == UINT16_MAX)
++				representative = static_cast<std::uint16_t>(first + i);
++			indices[first + i] = representative;
++		}
++		first += count;
++	}
++	return indices;
++}();
++
++} // namespace rendering::metal4::triangleReuse

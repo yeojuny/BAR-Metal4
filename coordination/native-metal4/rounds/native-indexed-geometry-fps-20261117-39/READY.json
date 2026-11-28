@@ -1,0 +1,23 @@
+{
+  "status": "READY_PINNED_SOURCE_AND_EXISTING_FIXTURE_BINDINGS",
+  "round_id": "native-indexed-geometry-fps-20261117-39",
+  "attempt_id": "indexed-batch-off-on-01",
+  "parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "patch_sha256": "cf5e699161a1a38881d47af2ce42b034aa14e172d97bd0084b4fc4251e86569b",
+  "manifest_sha256": "f1cf3c1d3c15ed1b6a675689510c780ce04d2e38ed68d44be71f1c16bc47292d",
+  "source_paths_verified": 10272,
+  "fixture_sources": {
+    "sensor_los": {
+      "baseline_sha256": "6595ea4c537a7a83e124e909b20e8b9a5e8f22a627dbec5bc74ddf9587d5ace1",
+      "bound_sha256": "60df8d813842c11225d842b0ce788f59ec419afc9bd02d803ce6ea5e612d6e4c"
+    },
+    "range199": {
+      "baseline_sha256": "6b3ceaeb0e779694a8463458b597f9c1499370db598a0f2858ee3e0b5ce5edd0",
+      "bound_sha256": "906e12a6db7d0a8e12512a443a4b1a127a2baabfc8552ba614209e9671348dc6",
+      "cache_extract_sha256": "4161f10a5cb099dace0454d3293bc894a837fab482b1454760e06c76bdd018c9"
+    }
+  },
+  "bar": "PAUSED",
+  "shared_awake": "RELEASED",
+  "games_started": 0
+}

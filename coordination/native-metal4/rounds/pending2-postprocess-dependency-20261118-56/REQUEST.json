@@ -1,0 +1,19 @@
+{
+  "round_id": "pending2-postprocess-dependency-20261118-56",
+  "attempt_id": "pending2-exact-postprocess-transfer-01",
+  "source_commit": "0780bd7c530b0696067b717428b49a416eda556a",
+  "source_manifest_sha256": "4c5224c4aa7069907cce3f6d8cc19d655209ec0eee627351151301debf9507a0",
+  "patch_sha256": "5db5a679e97f6e565ead31cb7dfccdf7a46b467f6c16a63984d87fccb92aad2a",
+  "budget": {
+    "syntax_checks": 2,
+    "metal_fixture_builds": 1,
+    "fixture_invocations": 1,
+    "maximum_fixture_submissions": 2,
+    "engine_builds": 0,
+    "games": 0,
+    "profiles": 0,
+    "captures": 0,
+    "retries": 0
+  },
+  "scope": "Attach exact physical producer receipt to the existing ordered native postprocess input when known. Prove the positive two-ticket dependency path on Metal4, separate from ordinary drawable and complete world-resource admission."
+}

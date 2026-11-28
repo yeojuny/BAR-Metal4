@@ -1,0 +1,16 @@
+{
+  "status": "READY_EXACT_ADOPTED_BUILD_EXISTING_SCREEN_CANDIDATE",
+  "r03_parent": "0780bd7c530b0696067b717428b49a416eda556a",
+  "binary_sha256": "2a3b7323b43ac04c5e08661abfe15f391a8ab2cd75fe1c6c22f644380f696517",
+  "parent_manifest_sha256": "d1146946b94f9655b26f96b95bc04887358e073387839446213ac3440153b250",
+  "files": [
+    {
+      "path": "engine/rts/Rendering/Metal4/Metal4ScreenNative.mm",
+      "parent_sha256": "9f22e358d03472ff1ada99ea8cf58edb75ab370cafd2b7928a4b1ff04022af2a",
+      "candidate_sha256": "9da6921dca3da09b03bff5be1ec046ffcb0ce60bec3de7722bf7aebf80ee9a36"
+    }
+  ],
+  "existing_patch_sha256": "7db662ff5e889292ca0fef8c730c1a729d338f08b2c8e49bc98f0ff3c43616a7",
+  "flag": "BAR_NATIVE_SCREEN_ENCODE_RANGE_LOOKUP",
+  "source_proof": "R52 Metal4ScreenNative.mm exactly matches the R49 patched file."
+}

@@ -1,0 +1,20 @@
+{
+  "status": "STAGED_NO_GAME",
+  "order": [
+    "R84_OFF",
+    "R84_ON"
+  ],
+  "binary_sha256": "c90e3d997c771ff0d802c0b6d837f771149fa692b1c6b9c873a2b7632b908879",
+  "cap": 2,
+  "cpu_read_mode": 0,
+  "matching_scene_inputs": 13,
+  "single_ab_delta": "BAR_NATIVE_GROUND_DECAL_SKIP_UNUSED_TERRAIN_COLOR",
+  "fixed_sensorlos": "ON",
+  "fixed_sensor31657": "ON",
+  "fixed_range_division233": "OFF",
+  "fixed_weapon_range": "OFF",
+  "ground_decal_index_g01": "ON",
+  "prejoin": "OFF",
+  "aa": 0,
+  "patch_sha256": "1c4114eb91c7fbe5484f5c8e5b2f111b82c45a43b19211926225b9193524fc93"
+}

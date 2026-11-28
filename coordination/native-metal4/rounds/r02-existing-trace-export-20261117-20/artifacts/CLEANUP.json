@@ -1,0 +1,17 @@
+{
+  "new_sessions_opened": 0,
+  "owned_replayer_or_GPU_worker_started": false,
+  "owned_session_to_terminate": null,
+  "sessions_after_argv": [
+    "/usr/bin/gpudebug",
+    "--list-sessions"
+  ],
+  "sessions_after_exit": 0,
+  "sessions_after_output": "No active sessions.\n",
+  "cleanup_complete": true,
+  "new_games": 0,
+  "new_builds": 0,
+  "new_GPU_execution": 0,
+  "measurement_automation": "paused until handoff completion",
+  "source_and_capture_writes": 0
+}

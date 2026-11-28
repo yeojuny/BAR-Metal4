@@ -1,0 +1,78 @@
+--- frozen-G01/measurement/run.py
++++ R02/measurement/run.py
+@@ -1,4 +1,4 @@
+-"""G01 same-binary Ultra AA0 comparison; explicit stage/run only."""
++"""Frozen G01 versus R02 Ultra AA0 comparison; explicit stage/run only."""
+ 
+ import argparse
+ import datetime
+@@ -35,10 +35,10 @@
+ FONT_SOURCE = P / 'runtime/native/data/fonts/FreeSansBold.otf'
+ FONT_SHA256 = '8b1fb134c1ae1c4c8da1952e3c2535f7242899da21d556e9fd1d6fdf31af3242'
+ ORDER = {
+-    'validation_paced': [('V_G01', 'candidate')],
+-    'clean_paced': [('A1_OFF', 'baseline'), ('B1_ON', 'candidate'),
+-                    ('B2_ON', 'candidate'), ('A2_OFF', 'baseline'),
+-                    ('A3_OFF', 'baseline'), ('B3_ON', 'candidate')],
++    'validation_paced': [('V_R02', 'candidate')],
++    'clean_paced': [('A1_G01', 'baseline'), ('B1_R02', 'candidate'),
++                    ('B2_R02', 'candidate'), ('A2_G01', 'baseline'),
++                    ('A3_G01', 'baseline'), ('B3_R02', 'candidate')],
+ }
+ 
+ 
+@@ -110,12 +110,12 @@
+ 
+ 
+ def products():
+-    baseline = common.read(HERE / 'PRODUCT.json')
++    baseline = common.read(HERE / 'BASELINE-PRODUCT.json')
+     candidate = common.read(HERE / 'PRODUCT.json')
+     assert sha(baseline['binary']) == baseline['sha256']
+     assert sha(candidate['binary']) == candidate['sha256']
+     assert baseline['sha256'] == '962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559'
+-    assert candidate['sha256'] == '962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559'
++    assert candidate['sha256'] == '21b2e9df8f331b9c4f8bb04f5abaad44978e39e97d9171c5380a6df38658e5da'
+     return {'baseline': baseline, 'candidate': candidate}
+ 
+ 
+@@ -251,7 +251,7 @@
+                        BAR_NATIVE_MATERIAL_STORAGE_DIAGNOSTICS='0', BAR_NATIVE_SHARED_PAIR_KEY_VIEW='0',
+                        BAR_METAL4_SHARED_CUS_PILOT='0', BAR_NATIVE_GRASS_BOUNDARY_S01='1',
+                        BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE='0',
+-                       BAR_NATIVE_GROUND_DECAL_INDEX_G01=str(int(mode == 'candidate')),
++                       BAR_NATIVE_GROUND_DECAL_INDEX_G01='1',
+                        BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE=str(int(campaign == 'validation_paced')),
+                        BAR_NATIVE_FRAME_TRACE='0',
+                        BAR_NATIVE_FRAME_TRACE_EVERY_LOOP='0', MTL_DEBUG_LAYER=str(int(campaign == 'validation_paced')),
+@@ -292,7 +292,7 @@
+     save(RUN_ROOT / campaign / 'PREPARED.json', dict(status='READY_NO_GAME', order=rows,
+         campaign=campaign, sourceController=str(BATTLE / 'battle_control.lua'),
+         sourceProbe=str(U / 'ultra_quality.lua'),
+-        pacingHashes=pace['hashes'], comparisonDecision='Same signed G01 binary OFF/ON A B B A A B; all valid rows retained; images after count',
++        pacingHashes=pace['hashes'], comparisonDecision='Frozen G01 versus fixed R02 A B B A A B; S01/G01 both1; all valid rows retained; images after count',
+         actualUltraRuntime='pending'))
+     print('READY ' + campaign + ': static staged, games 0', flush=True)
+ 
+@@ -537,10 +537,10 @@
+     args = parser.parse_args()
+     global RUN_ROOT
+     if args.list:
+-        print('validation_paced: G01-on Metal API validation+image; clean_paced: same signed G01 binary OFF ON ON OFF OFF ON; Ultra AA0 1512x950, official Seths combat, 10s warmup + 40s counted')
++        print('validation_paced: fixed R02 Metal API validation+image; clean_paced: G01 R02 R02 G01 G01 R02, S01/G01 both1; Ultra AA0 1512x950, official Seths combat, 10s warmup + 40s counted')
+         return
+     if args.stage and not args.suite:
+-        args.suite = 'g01_' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
++        args.suite = 'r02_' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%d_%H%M%S_%f')
+     if args.run and not args.suite:
+         parser.error('A run requires the fresh --suite printed by --stage')
+     if args.suite:
+@@ -553,7 +553,7 @@
+         run(args.run)
+     else:
+         print(json.dumps({'status':'STATIC_PINS_ONLY','products':products(),
+-            'sourceComparison':'S01 grass boundary candidate versus accepted SensorLOS baseline','games':0}, indent=2))
++            'sourceComparison':'Fixed R02 winding candidate versus frozen G01; S01/G01 ON in both','games':0}, indent=2))
+ 
+ 
+ if __name__ == '__main__':

@@ -1,0 +1,12 @@
+{
+  "status": "CAPTURED",
+  "arm": "P_R02_CAPTURE",
+  "capture": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/clean_paced/preparation/runs/P_R02_CAPTURE/native-frame.gputrace",
+  "engineNormalExit": true,
+  "diagnosticFPS": null,
+  "diagnosticParserError": true,
+  "performanceAccepted": false,
+  "actualChildS01Flag": "1",
+  "actualChildProbeFlag": "1",
+  "previousCleanPoolsUnchanged": true
+}

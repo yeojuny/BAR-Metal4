@@ -1,0 +1,74 @@
+[
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/command-tree.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/command-tree.jsonl",
+    "bytes": 416,
+    "sha256": "1cc214cdd10796b3b689691ca47e656fdb26bc2a94ed1eb9e5db314eeeebc516",
+    "JSON_objects": 2,
+    "full_children": 1
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/command-buffer.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/command-buffer.jsonl",
+    "bytes": 9881,
+    "sha256": "edc9b70cb401caaf8f21e66b5b1b7a3fd55847d178a749a6fc66433271b70779",
+    "JSON_objects": 2,
+    "full_children": 52
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/api-calls.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/api-calls.jsonl",
+    "bytes": 1559854,
+    "sha256": "2448d5a7b54b0f5e7539c61af941111abe9f417c54907c13e86b99062a136928",
+    "JSON_objects": 2,
+    "full_children": 10989
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/resources.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/resources.jsonl",
+    "bytes": 1660,
+    "sha256": "7d396e6d171209aad7b3dec4c7feba1e41939f1a1a19dc927755224c7dda5329",
+    "JSON_objects": 2,
+    "full_children": 9
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/render-pipelines.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/render-pipelines.jsonl",
+    "bytes": 39853,
+    "sha256": "6ac2aa1c0fd0ef19f02400a3ef1b750627034d6881feb8d0376dfe2a5901f6ac",
+    "JSON_objects": 2,
+    "full_children": 279
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/encoder-costs.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/encoder-costs.jsonl",
+    "bytes": 16176,
+    "sha256": "60bf56f4105b32a89deeb086f5e781f29dd03f57dffec4a587c3dfdcbef8794d",
+    "JSON_objects": 2,
+    "full_children": 52
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/shader-costs.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/shader-costs.jsonl",
+    "bytes": 38336,
+    "sha256": "9810810a955c021f5d8a295680e46a03c01f17c4daa62d59bcd33488c01c42cb",
+    "JSON_objects": 2,
+    "full_children": 139
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/encoder-intervals.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/encoder-intervals.jsonl",
+    "bytes": 15481,
+    "sha256": "4f0e0c3771ad3571d45a30aa07d34a0e8204dca9c2c06aa0fc72599f0e31eb50",
+    "JSON_objects": 2,
+    "full_children": 52
+  },
+  {
+    "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-g01-regression-20261116-01/measurement/capture_r02_01/analysis/shader-stage-intervals.jsonl",
+    "copy": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r02-existing-trace-export-20261117-01/raw/saved-export/shader-stage-intervals.jsonl",
+    "bytes": 42468,
+    "sha256": "de5ffb5beca54b0642d944ff970c59f0486bf3ef30a98b8e7d26d7ef13448a12",
+    "JSON_objects": 2,
+    "full_children": 136
+  }
+]

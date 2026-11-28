@@ -1,0 +1,151 @@
+{
+  "threshold": "strictly greater than 1000/60 ms",
+  "slow_tail_count": 74,
+  "slow_tail_average_ms": 10.391891891891893,
+  "simmers": [
+    {
+      "ms": 20.0,
+      "draw": 1804,
+      "elapsed_s": 4.557,
+      "bin": 5,
+      "simulation": [
+        420,
+        450
+      ]
+    },
+    {
+      "ms": 18.0,
+      "draw": 2771,
+      "elapsed_s": 9.714,
+      "bin": 10,
+      "simulation": [
+        570,
+        600
+      ]
+    },
+    {
+      "ms": 18.0,
+      "draw": 3728,
+      "elapsed_s": 14.87,
+      "bin": 15,
+      "simulation": [
+        720,
+        750
+      ]
+    },
+    {
+      "ms": 17.0,
+      "draw": 3907,
+      "elapsed_s": 15.872,
+      "bin": 16,
+      "simulation": [
+        750,
+        780
+      ]
+    },
+    {
+      "ms": 23.0,
+      "draw": 3915,
+      "elapsed_s": 15.955,
+      "bin": 16,
+      "simulation": [
+        750,
+        780
+      ]
+    },
+    {
+      "ms": 32.0,
+      "draw": 3923,
+      "elapsed_s": 16.047,
+      "bin": 17,
+      "simulation": [
+        780,
+        810
+      ]
+    },
+    {
+      "ms": 23.0,
+      "draw": 3932,
+      "elapsed_s": 16.147,
+      "bin": 17,
+      "simulation": [
+        780,
+        810
+      ]
+    },
+    {
+      "ms": 19.0,
+      "draw": 4646,
+      "elapsed_s": 20.02,
+      "bin": 20,
+      "simulation": [
+        870,
+        900
+      ]
+    },
+    {
+      "ms": 19.0,
+      "draw": 5589,
+      "elapsed_s": 25.176,
+      "bin": 26,
+      "simulation": [
+        1050,
+        1080
+      ]
+    },
+    {
+      "ms": 18.0,
+      "draw": 6527,
+      "elapsed_s": 30.338,
+      "bin": 31,
+      "simulation": [
+        1200,
+        1230
+      ]
+    },
+    {
+      "ms": 17.0,
+      "draw": 7466,
+      "elapsed_s": 35.485,
+      "bin": 36,
+      "simulation": [
+        1350,
+        1380
+      ]
+    }
+  ],
+  "round59_cap1_over_33_333ms": [
+    {
+      "ms": 264.0,
+      "draw": 2623,
+      "elapsed_s": 11.334,
+      "bin": 12,
+      "simulation": [
+        870,
+        900
+      ]
+    },
+    {
+      "ms": 36.0,
+      "draw": 2624,
+      "elapsed_s": 11.37,
+      "bin": 12,
+      "simulation": [
+        870,
+        900
+      ]
+    },
+    {
+      "ms": 35.0,
+      "draw": 3284,
+      "elapsed_s": 21.629,
+      "bin": 22,
+      "simulation": [
+        1170,
+        1200
+      ]
+    }
+  ],
+  "cause_established": false,
+  "conditions": "Protected original scene inputs. Distinct build, runtime flags, warmup and execution run counts from November 14."
+}

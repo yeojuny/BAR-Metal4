@@ -1,0 +1,123 @@
+{
+  "status": "MATCHED_PAIR",
+  "binary_sha256": "f6d5431dcf545b83c1ffea61e20d398c087aef58583d4b300e5acfffb936368a",
+  "same_13_inputs": true,
+  "actual_child_only_difference": "BAR_NATIVE_GAME_DECAL_DEAD_VERTEX",
+  "exact_bin_count": 40,
+  "nominal_edges": [
+    true,
+    true
+  ],
+  "bin_differences": [],
+  "same_checks": {
+    "events": true,
+    "checks": true,
+    "pacing_ticks": true,
+    "libraries": true,
+    "start_script_sha256": true,
+    "route": true,
+    "battleMap": true,
+    "battleCameraOpen": true,
+    "battleInitialState": true,
+    "battleCommand": true,
+    "gameSeed": true,
+    "benchmarkSeed": true,
+    "officialCreated": true,
+    "officialDestroyed": true
+  },
+  "arms": [
+    {
+      "arm": "R100_OFF",
+      "average_fps": 78.47107860206278,
+      "low_1_fps": 50.95541368818208,
+      "p99_ms": 17.000001,
+      "maximum_ms": 28.999999,
+      "frame_intervals": 3138,
+      "lua_decal_witness": {
+        "indexed_geometry": true,
+        "eligible_vertex_invocations_counted": false
+      },
+      "longest_draw": 5438,
+      "rank_atlas": {
+        "enabled": 0,
+        "queued": 0,
+        "first_sim": 0
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 25.0,
+        "frames": 76,
+        "average_fps": 76.535751343
+      },
+      "over_16_667_ms": 33,
+      "over_33_333_ms": 0
+    },
+    {
+      "arm": "R100_ON",
+      "average_fps": 78.31520850792045,
+      "low_1_fps": 46.715328194363046,
+      "p99_ms": 17.000001,
+      "maximum_ms": 48.0,
+      "frame_intervals": 3132,
+      "lua_decal_witness": {
+        "indexed_geometry": true,
+        "eligible_vertex_invocations_counted": false
+      },
+      "longest_draw": 4293,
+      "rank_atlas": {
+        "enabled": 0,
+        "queued": 0,
+        "first_sim": 0
+      },
+      "display_first": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "display_last": {
+        "locked": false,
+        "asleep": false,
+        "active": true
+      },
+      "target_bin": {
+        "sim": [
+          1110,
+          1140
+        ],
+        "max_ms": 24.0,
+        "frames": 76,
+        "average_fps": 76.458747864
+      },
+      "over_16_667_ms": 37,
+      "over_33_333_ms": 1
+    }
+  ],
+  "fps_percent": -0.19863381123225166,
+  "low_percent": -8.321167834620912,
+  "frame_intervals_excluded": 0,
+  "round_id": "lua-game-decal-early-vertex-20261118-100",
+  "decision": "KEEP_LUA_EARLY_OFF_NO_MEASURED_GAIN",
+  "counts": {
+    "games": 2,
+    "engine_builds": 1,
+    "fixture_runs": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "cleanup_complete": true,
+  "switch_default": "OFF"
+}

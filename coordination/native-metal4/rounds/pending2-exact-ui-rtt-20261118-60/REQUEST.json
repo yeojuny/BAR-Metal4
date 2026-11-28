@@ -1,0 +1,1 @@
+{"round_id":"pending2-exact-ui-rtt-20261118-60","attempt_id":"pending2-exact-ui-rtt-source-01","scope":"Exact historical UI RTT source receipt for the measured mandatory CPU-serialization boundary","budget":{"targeted_syntax_check":1,"bounded_cpu_contracts":2,"engine_builds":0,"games":0,"gpu_runs":0,"captures":0,"profiles":0,"retries":0}}

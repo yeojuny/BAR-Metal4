@@ -1,0 +1,16 @@
+{
+  "round_id": "sensor-coverage-audit-ground-decal-g04-20261118-92",
+  "scope": "Resume the existing G04 GroundDecal coverage arithmetic fixture without reimplementing it, and audit the R88 baseline and related shape paths.",
+  "fixture": "Frozen G04 CPU-compiled executable only, 32 real case pairs plus 12 exceptional synthetic cases. Shadow and AA4 compile only.",
+  "fixture_sha256": "ebd97af605c5fac2f8b8d1fc4c1a78d47519d7e91384bfdab299e60335577f72",
+  "budget": {
+    "games": 0,
+    "engine_builds": 0,
+    "fixture_runs": 1,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0
+  },
+  "authority": "HQ3 only",
+  "baseline_defaults_preserved": true
+}

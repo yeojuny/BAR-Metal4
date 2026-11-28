@@ -1,0 +1,32 @@
+{
+  "status": "CLOSED_AFTER_PARITY_HELPER_HOST_COMPILE_FAILURE",
+  "round_id": "weapon-range-exact-interior-fps-20261118-80",
+  "attempt_id": "weapon-range-exact-interior-off-on-01",
+  "patch_sha256": "58b492de023d1876846c823d014bdc0706d9f55f1b71676bcd552f6089ca8fda",
+  "counts": {
+    "configure": 0,
+    "engine_build": 0,
+    "parity_helper_compile": 1,
+    "parity_helper_gpu_runs": 0,
+    "games": 0,
+    "captures": 0,
+    "profiles": 0,
+    "retries": 0,
+    "new_instrumentation": 0
+  },
+  "cpu_coverage_cases": 380886,
+  "cpu_coverage_status": "PASS",
+  "parity_helper_host_compile_exit": 1,
+  "parity_helper_gpu_attempted": false,
+  "msl_compiled": false,
+  "performance_result": null,
+  "error": "The host parity fixture did not compile because two braced arguments needed explicit simd_float2 construction.",
+  "failed_fixture_sha256": "c4ed8cb5415c61fbb171f5ceadb7ff09b22a667632963b5dbab231f8c7c94c27",
+  "corrected_fixture_sha256": "e2b822443b066b898a218b749bbcc9f054ea9d3df8feae74526f85850463b10d",
+  "fixture_correction_recompiled": false,
+  "branch_route_direct_witness": false,
+  "defaults_changed": false,
+  "default_cap": 1,
+  "default_switch": "OFF",
+  "closed_at_utc": "2026-11-18T13:35:21.327Z"
+}

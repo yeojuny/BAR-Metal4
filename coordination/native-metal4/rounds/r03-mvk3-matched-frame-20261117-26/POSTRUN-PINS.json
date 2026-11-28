@@ -1,0 +1,171 @@
+{
+  "status": "PASS_PINS_UNCHANGED",
+  "checks": [
+    {
+      "kind": "engine",
+      "arm": "R03",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/bin/spring-metal4-scene",
+      "expected": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9",
+      "actual": "107958872e5d962e4d27803a0fb1af0e842b18bd6982bd9b74e115d956890ab9"
+    },
+    {
+      "kind": "engine",
+      "arm": "MVK3",
+      "path": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/engine/2026.09.01-24-g01efdf4 master/spring",
+      "expected": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa",
+      "actual": "d715965659b977e05b8ccafe76fae0936cade1a7481871acff7eec876366f1aa"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libEGL.1.dylib",
+      "expected": "62adb20871cf6985bde4b20c78ffabd37a590fa9023cf362f87ce16739a3f533",
+      "actual": "62adb20871cf6985bde4b20c78ffabd37a590fa9023cf362f87ce16739a3f533"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/mesa-zink/lib/libgallium-26.3.0-devel.dylib",
+      "expected": "ca4f3ddd7a0bf20c7f39636ea58d04ba42bc8b9170f871eac62a53c068ad9c30",
+      "actual": "ca4f3ddd7a0bf20c7f39636ea58d04ba42bc8b9170f871eac62a53c068ad9c30"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/vulkan-loader/lib/libvulkan.1.4.365.dylib",
+      "expected": "b2b4bb1c9db72ff8639958e3137b308c67c15fe35cb846ffd5b1f7703cc0f7cd",
+      "actual": "b2b4bb1c9db72ff8639958e3137b308c67c15fe35cb846ffd5b1f7703cc0f7cd"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Desktop/BAR-AppleSilicon-App/artifacts/runtime/v104-r-small-bundle-candidate-20261021/BAR.app/Contents/Resources/bundled-assets/runtime/moltenvk-pr2746/lib/libMoltenVK.1.4.3.dylib",
+      "expected": "abf4fb1bad831b6295d90dd5a9ffa6af8b25308e99c8724153716e480a0275a2",
+      "actual": "abf4fb1bad831b6295d90dd5a9ffa6af8b25308e99c8724153716e480a0275a2"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libIL.dylib",
+      "expected": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e",
+      "actual": "c9b86daf24aa4c3ce0c9398c422f4bdbcaa5352084cc850f35c0fed00aeb299e"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libSDL3.0.dylib",
+      "expected": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f",
+      "actual": "5c70a82206a9182c9bd3234a16860e20b0c498421166ab2c09b188e2bea24f2f"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libbrotlicommon.1.2.0.dylib",
+      "expected": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff",
+      "actual": "14ea91bfbb2a3250286e4833eb7baa71c3a3b96974fea53275d107cdb67b2cff"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libbrotlidec.1.2.0.dylib",
+      "expected": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202",
+      "actual": "80800414f65f15ab166d0cb7e019cd34717adadb184036d80ba04e0c8d14e202"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libfontconfig.1.dylib",
+      "expected": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec",
+      "actual": "21336af52f2cdf8204a619d7386c930e2a15877a5cd1a99600f6b5faf746b7ec"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libfreetype.6.dylib",
+      "expected": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827",
+      "actual": "82a65851ed260548ee34a2c0cfda470ea75900f301bccc2da789cd2d976e2827"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libintl.8.dylib",
+      "expected": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8",
+      "actual": "017c2cce7830691f125326e4baae50321525129542d800928210b9b5ccb9e2f8"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libjasper.7.0.0.dylib",
+      "expected": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b",
+      "actual": "0d22e72afb0ba2d5fe543f8315d86127c07504268adf0623626c20e377f7b75b"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libjpeg.8.3.2.dylib",
+      "expected": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871",
+      "actual": "543566c435f235e3cb4b3bf16705ba03c132f7bfc6a85d8a4457e89dbce75871"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/liblcms2.2.dylib",
+      "expected": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376",
+      "actual": "453db1cc82d8d7501f1898184b0ae60d84ccd1facca79bedbb7a7d05c6196376"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/liblzma.5.dylib",
+      "expected": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe",
+      "actual": "7eafcb22828a133eb5a36331f517fa13796e35a2a5f2a88c6382a17e393ea2fe"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libminizip.1.dylib",
+      "expected": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040",
+      "actual": "d1463db461aa74fe8ebd623708b242430256f0cb4d43985a804272d0cf647040"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libogg.0.8.6.dylib",
+      "expected": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb",
+      "actual": "f3b99b133cbd837dc651cbe4aacfd8662aa9025e128dddfeb781f43e1a90b3eb"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libopenal.1.25.2.dylib",
+      "expected": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c",
+      "actual": "0dd707b8acbf95eafca8ac72daa1d5b10fd0b6650956cea9f78fc73b16c4fe9c"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libpng16.16.dylib",
+      "expected": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b",
+      "actual": "b53964f540c31a03192fd75d7e4b6038b301d3aafff8136ecb42458176a3f58b"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libtiff.6.dylib",
+      "expected": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820",
+      "actual": "537a148acdfab4cd29fd3f64ed3cf3de023f6904a4608a3251b393ba82622820"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libvorbis.0.dylib",
+      "expected": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388",
+      "actual": "d6c4f786c5c7480a9384b93b2d51f312fb9acfc3831eba0c1988d28c60827388"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libvorbisfile.3.dylib",
+      "expected": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7",
+      "actual": "f4d51ab419fb83138b0d6d205afdd5b3cdd96cd523f160390b7267feada2def7"
+    },
+    {
+      "kind": "runtime",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-r02-regression-20261117-01/runtime/native/lib/libzstd.1.5.7.dylib",
+      "expected": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4",
+      "actual": "49ead61bfd9840e17ea64c518617d768adfd35690e6abfed169eff1ee6efa1a4"
+    },
+    {
+      "kind": "controller",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/controller.lua",
+      "expected": "b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a",
+      "actual": "b4f7330162039f5e9cb1508e23d60fcf98a0a874e99290100ac0d34e2923138a"
+    },
+    {
+      "kind": "runner",
+      "path": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/r03-mvk3-matched-frame-20261117-02/framepair.py",
+      "expected": "c747c42b3fc980a57a00559191aa626989e8645633652e56b9e6fd337e0ea16c",
+      "actual": "c747c42b3fc980a57a00559191aa626989e8645633652e56b9e6fd337e0ea16c"
+    }
+  ],
+  "utc": "2026-11-17T17:03:43.785140+00:00",
+  "bar": "PAUSED"
+}

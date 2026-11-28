@@ -1,0 +1,10 @@
+{
+  "status": "NO_MATCHED_METAL_ERRORS",
+  "enabledByChildEnv": true,
+  "enabledByEngineLog": true,
+  "errors": [],
+  "normalExit": true,
+  "candidateSHA256": "035d62084b6657d663a08e6422cdd696af0fafedc01a5189ba696619b15f20c4",
+  "image": "/Users/yeojun/Documents/Codex/2026-10-23/bar-rae-native-performance/evidence/ground-decal-pages-validation-20261117-01/measurement/runs/gdp_validation01/validation_paced/preparation/runs/V_GDP_CANDIDATE/scene.png",
+  "source": "raw engine.log; same original error regex"
+}

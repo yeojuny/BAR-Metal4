@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "binary_sha256": "d7459657e0d258184da2ab9a9aa8da588a84c50af3ba79d0d56b0ee89775f9d5",
+  "architecture": "arm64",
+  "link": "[1577/1578] Linking CXX executable spring-metal4-scene",
+  "sources": {
+    "Metal4Blockout.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Blockout.mm.o",
+      "sha256": "bef209e91009b6faa084c0b59e98f2bc502d6e97b4a4fe9a7136f4537d0e5e3a",
+      "link_binding": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a"
+    },
+    "Metal4Blueprint.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Blueprint.mm.o",
+      "sha256": "eef3b3a48429f2e994fb941d54a26c787fa225a0a0287c7204615e62c37de2cd",
+      "link_binding": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a"
+    },
+    "Metal4MapEdgeRenderer.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4MapEdgeRenderer.mm.o",
+      "sha256": "fda60650fd7c98850828148d2a5a3b00414493ce2bd3e75d4f191f48ff12f048",
+      "link_binding": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a"
+    },
+    "Metal4Sensor31657CircleNative.mm": {
+      "object": "rts/builds/metal4-scene/CMakeFiles/recoil-metal4-world-renderer.dir/__/__/Rendering/Metal4/Metal4Sensor31657CircleNative.mm.o",
+      "sha256": "e3e51dcc4d96d950302fd4c1a77671f1fdf3758618af266036fc4df4ff8e7469",
+      "link_binding": "rts/builds/metal4-scene/librecoil-metal4-world-renderer.a"
+    }
+  },
+  "archive_members_match_objects": true,
+  "literals_present": {
+    "BAR_NATIVE_GAME_DECAL_INDEXED_GEOMETRY": true,
+    "BAR_NATIVE_FIXED_TRIANGLE_INDEX_REUSE": true,
+    "BAR_NATIVE_FRESH_DRAW_UPLOAD_BUNDLE": true,
+    "[NativeFreshDrawUpload] family=map_edge_forward mode=%s": true
+  }
+}

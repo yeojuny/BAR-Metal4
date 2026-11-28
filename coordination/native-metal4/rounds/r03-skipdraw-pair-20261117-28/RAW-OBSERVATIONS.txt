@@ -1,0 +1,14 @@
+[infolog.txt]
+[t=00:01:12.983591][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401
+[t=00:01:15.419809][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401
+[t=00:01:15.419857][f=0001590] Decals GL4 skipdraw set to, true
+[t=00:01:15.439069][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401
+[t=00:01:15.468576][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401
+
+[engine.log]
+[t=00:01:12.983592][f=0001590] [FramePair] snapshot=before simulation=1590 units=168 features=401
+[t=00:01:15.419810][f=0001590] [FramePair] snapshot=after simulation=1590 units=168 features=401
+[t=00:01:15.419858][f=0001590] Decals GL4 skipdraw set to, true
+[t=00:01:15.439070][f=0001590] [FramePair] snapshot=skip-before simulation=1590 units=168 features=401
+[t=00:01:15.468587][f=0001590] [FramePair] snapshot=skip-after simulation=1590 units=168 features=401
+

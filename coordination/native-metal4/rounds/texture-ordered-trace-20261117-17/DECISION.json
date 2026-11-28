@@ -1,0 +1,52 @@
+{
+  "round_id": "texture-ordered-trace-20261117-17",
+  "author": "SUPER_JINI_MK2",
+  "result": "INDEPENDENT_REVIEW_ACCEPTED_BOUNDED_PATH_AND_ORDINARY_VALIDATION",
+  "source_commit": "92b8b718a8cc2fe374de9a2889c8e289fc438474",
+  "artifact_commit": "f2263e446ef07e0515bac259be882378dac506fa",
+  "HQ_turn": "01a1e816-d055-7ae3-9bb6-6b2a2f9d73c7",
+  "HQ_turn_completed": true,
+  "cleanup_verified": true,
+  "independent_checks": {
+    "raw_engine_trace_read": true,
+    "actual_child_INPUT1_TRACE1": true,
+    "raw_Metal_API_validation_marker": true,
+    "recorded_Metal_errors": 0,
+    "normal_exit": true,
+    "owned_group_gone": true,
+    "world_rows_recomputed": 40,
+    "world_equal_to_previous_OFF": true,
+    "world_equal_to_previous_ON": true,
+    "images_directly_viewed": [
+      "round17_ON_TRACE",
+      "round16_OFF"
+    ],
+    "image_sha256": "6697e784a0c72edefa5bcf22ccc2b74382bebdfad5f540d07b9e2cd049ca9896",
+    "visual_result": "No obvious static geometry/building/terrain corruption. Dynamic effects differ; no pixel/depth/stencil equivalence claim."
+  },
+  "events": {
+    "armed": 1,
+    "admitted": 6,
+    "encode_permit_check": 4,
+    "producer_retired_check": 4,
+    "pair": "64->65",
+    "simulation_frames": [
+      91,
+      103
+    ],
+    "counted_window": [
+      540,
+      1740
+    ]
+  },
+  "interpretation": [
+    "CPU admission of exact producer into independent recording slot and borrower readability/producer retirement checks actually observed.",
+    "Encode check indicates upload/mips bypass branch, not proof of consumer GPU execution. Producer-retired check is not consumer GPU completion.",
+    "Counts are logged occurrences, not unique resources; per-event independent caps and swallowed logging exceptions prevent total-rate conclusions.",
+    "All observed nonarmed events precede counted battle window. Do not claim sustained battle overlap or speedup."
+  ],
+  "performance_accepted": false,
+  "next": "Preserve candidate and completed single attempt; no automatic rerun or clean benchmark solely from startup admission. Prioritize source/retirement critical-path analysis against MVK3 and determine a substantial change relevant to the counted workload. Any new local test requires a distinct bounded round and exclusive HQ handoff.",
+  "new_execution_authorized": false,
+  "main_release_homebrew_unchanged": true
+}

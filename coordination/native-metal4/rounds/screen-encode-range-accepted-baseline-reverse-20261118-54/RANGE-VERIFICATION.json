@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "selector": "Verbatim production search statements",
+  "range_and_order_pairs": 28160,
+  "coverage": [
+    "full and empty ranges",
+    "starts and ends at bounds",
+    "skipped command numbers",
+    "duplicate original command numbers and stable draw order"
+  ],
+  "source": "All 12 draw append sites are in the increasing original-command loop"
+}

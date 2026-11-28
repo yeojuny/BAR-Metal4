@@ -1,0 +1,22 @@
+{
+  "round_id": "ground-decal-g04-fps-20261118-95",
+  "scope": "One AA0 same-binary Seths pair with only G04 changing; reset cap2 route and atlas off identically. Existing G01 probe once per route.",
+  "switch": "BAR_NATIVE_GROUND_DECAL_G04",
+  "order": [
+    "R95_OFF",
+    "R95_ON"
+  ],
+  "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "patch_sha256": "6a9fdf6238579b4a8abc235838af659e91b2efb9c28f71260009ddddc3c4f04c",
+  "budget": {
+    "translation_units": 1,
+    "engine_builds": 1,
+    "games": 2,
+    "captures": 0,
+    "profiles": 0,
+    "new_counters": 0,
+    "retries": 0
+  },
+  "scene": "Seths AA0 cap2 1512x950 PREPARE sim [540,1740)",
+  "adoption": "default-off experiment"
+}

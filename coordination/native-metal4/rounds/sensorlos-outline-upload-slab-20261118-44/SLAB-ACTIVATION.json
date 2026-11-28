@@ -1,0 +1,24 @@
+{
+  "receipts": {
+    "SLAB_OFF": {
+      "line": 2243,
+      "text": "[t=00:00:16.289924][f=0000001] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=separate",
+      "outline_upload": "separate",
+      "log_simulation_tick": 1,
+      "logged_within_timed_window": false
+    },
+    "SLAB_ON": {
+      "line": 2230,
+      "text": "[t=00:00:49.003587][f=0000029] [NativeIndexedRoute] family=sensorlos_outline mode=indexed upload=slab",
+      "outline_upload": "slab",
+      "log_simulation_tick": 29,
+      "logged_within_timed_window": false
+    }
+  },
+  "both_upload_modes_witnessed": true,
+  "allocation_delta_per_admitted_outline": {
+    "off": 3,
+    "on": 1
+  },
+  "scope": "First actual indexed outline encode only. Allocation count follows the verified branches; later frame-wide totals were not instrumented."
+}

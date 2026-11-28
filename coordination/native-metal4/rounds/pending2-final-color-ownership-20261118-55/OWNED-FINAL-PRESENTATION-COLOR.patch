@@ -1,0 +1,103 @@
+diff --git a/engine/rts/Rendering/Metal4/Metal4MainAttachments.h b/engine/rts/Rendering/Metal4/Metal4MainAttachments.h
+--- a/engine/rts/Rendering/Metal4/Metal4MainAttachments.h
++++ b/engine/rts/Rendering/Metal4/Metal4MainAttachments.h
+@@ -23,6 +23,10 @@
+ // The existing copy/version owner must consume them at its original sequence.
+ // All methods run within the caller's one serialized RuntimeLease/submission.
+ // No allocation, wait, publication or presentation occurs during EncodeResolve.
++struct MainStagedColorStorage {
++ __strong id<MTLTexture> texture = nil;
++};
++
+ class MainFrameAttachments {
+ public:
+ 	id<MTLTexture> Color() const { return color; }
+@@ -161,6 +165,8 @@
+  // Cached prototypes never bind destinations or pin themselves. Prepared
+  // descriptors pin the exact physical prototype through every continuation.
+  std::shared_ptr<const MainFrameAttachments> storageOwner;
++ // The exact selected intermediate stays busy through a deferred submission or continuation.
++ std::shared_ptr<const MainStagedColorStorage> stagedColorOwner;
+ 	friend class MainAttachmentStorage;
+ };
+ 
+@@ -206,7 +212,26 @@
+   return frame;
+ 	}
+ 
+-	void Clear() { storage.Clear(); }
++	void BindStagedPresentationColor(RuntimeLease& lease, MainFrameAttachments& frame)
++	{
++		Require(frame.Samples() == 1 && !frame.destinationBound && !frame.stagedColorOwner,
++			"Staged presentation color requires an unbound single-sample frame");
++		const auto width = std::uint32_t(frame.depth.width);
++		const auto height = std::uint32_t(frame.depth.height);
++		stagedColor.Acquire([&](const MainStagedColorStorage& slot) {
++			return slot.texture.device == lease.Device() && slot.texture.width == width &&
++				slot.texture.height == height && slot.texture.pixelFormat == frame.format;
++		}, [&] {
++			auto owner = std::make_shared<MainStagedColorStorage>();
++			owner->texture = Allocate(lease, width, height, frame.format, 1, @"Owned staged presentation color");
++			return owner;
++		}, [&](const auto& owner) {
++			frame.BindDestination(lease, owner->texture);
++			frame.stagedColorOwner = owner;
++		});
++	}
++
++	void Clear() { storage.Clear(); stagedColor.Clear(); }
+ 
+ 	static id<MTLTexture> Allocate(RuntimeLease& lease, std::uint32_t width, std::uint32_t height,
+ 		MTLPixelFormat format, std::uint32_t samples, NSString* label)
+@@ -233,6 +258,7 @@
+ 
+ private:
+ 	NativeIdleResourcePool<MainFrameAttachments,2> storage;
++	NativeIdleResourcePool<MainStagedColorStorage,2> stagedColor;
+ 	std::uint64_t generation = 0;
+ };
+ 
+diff --git a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm b/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+--- a/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
++++ b/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm
+@@ -4329,14 +4329,22 @@
+ 		// The original serialized RuntimeLease still retires storage before reuse.
+ 		static const bool finalColorStageRequested=[] {const char* p=std::getenv("BAR_NATIVE_FINAL_COLOR_STAGE");return p&&p[0]=='1'&&p[1]==0;}();
+ 		const bool finalColorStage=finalColorStageRequested&&!offscreenSource&&drawable&&mainSamples==1;
+-		if(offscreenSource||finalColorStage){
++		static const bool ownedFinalColor = [] {
++			const char* value = std::getenv("BAR_NATIVE_EXPERIMENT_OWNED_FINAL_COLOR");
++			return value && value[0] == '1' && value[1] == '\0';
++		}();
++		if (finalColorStage && ownedFinalColor) {
++			impl->mainStorage.BindStagedPresentationColor(lease, *mainAttachments);
++		} else if (offscreenSource || finalColorStage) {
+ 			if(!impl->offscreenSourceColor || impl->offscreenSourceColor.width!=result.surface.renderWidth || impl->offscreenSourceColor.height!=result.surface.renderHeight || impl->offscreenSourceColor.pixelFormat!=layer.pixelFormat){
+ 				auto descriptor=[MTLTextureDescriptor texture2DDescriptorWithPixelFormat:layer.pixelFormat width:result.surface.renderWidth height:result.surface.renderHeight mipmapped:NO];descriptor.storageMode=MTLStorageModePrivate;descriptor.usage=MTLTextureUsageRenderTarget|MTLTextureUsageShaderRead;
+ 				auto image=[lease.Device()newTextureWithDescriptor:descriptor];Require(image!=nil,"Cannot allocate actual offscreen source-frame color");impl->offscreenSourceColor=image;
+ 			}
+ 			sceneColor=impl->offscreenSourceColor;
+-		}
+-		mainAttachments->BindDestination(lease,sceneColor);
++			mainAttachments->BindDestination(lease,sceneColor);
++		} else {
++			mainAttachments->BindDestination(lease,sceneColor);
++		}
+ 		if(finalColorStage)mainAttachments->PrepareFinalDestination(lease,drawable.texture);
+ 		static bool reportedFinalColorStage=false;
+ 		if(!reportedFinalColorStage&&!offscreenSource){LOG("[NativeFinalColorStage] active=%d samples=%u present_order_original=1 width=%u height=%u",int(finalColorStage),mainSamples,result.surface.renderWidth,result.surface.renderHeight);reportedFinalColorStage=true;}
+diff --git a/engine/tools/metal4-contracts/run_native_idle_resource_pool_test.py b/engine/tools/metal4-contracts/run_native_idle_resource_pool_test.py
+--- a/engine/tools/metal4-contracts/run_native_idle_resource_pool_test.py
++++ b/engine/tools/metal4-contracts/run_native_idle_resource_pool_test.py
+@@ -11,7 +11,10 @@
+ prepare=s.split('class MainAttachmentStorage {',1)[1]
+ assert prepare.index('prepared->storageOwner=candidate')<prepare.index('if(image)lease.AddAllocation(image)')<prepare.index('frame=std::move(prepared)')<prepare.index('generation=std::max')
+ assert 'auto prepared=std::make_shared<MainFrameAttachments>(*candidate)' in s
+-assert 'void Clear() { storage.Clear(); }' in s
++assert 'void Clear() { storage.Clear(); stagedColor.Clear(); }' in s
++assert 'std::shared_ptr<const MainStagedColorStorage> stagedColorOwner;' in s
++assert 'NativeIdleResourcePool<MainStagedColorStorage,2> stagedColor;' in s
++assert s.index('frame.BindDestination(lease, owner->texture)') < s.index('frame.stagedColorOwner = owner')
+ world=(root/'rts/Rendering/Metal4/Metal4WorldRenderer.mm').read_text()
+ assert 'main->RetainForContinuation(lease)' in world
+ assert 'originalLifetime->mainAttachments=mainAttachments' in world

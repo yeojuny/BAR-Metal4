@@ -1,0 +1,21 @@
+{
+  "round_id": "deferred-light-screen-depth-20261118-96",
+  "scope": "One test of offscreen DeferredLight model depth reads, using R88 parent with G04 absent. Strict bounds, safe precise shader math. One OFF/ON Seths pair only after CPU+GPU parity.",
+  "switch": "BAR_NATIVE_DEFERRED_SKIP_OFFSCREEN_RAY_DEPTH",
+  "order": [
+    "R96_OFF",
+    "R96_ON"
+  ],
+  "source_binary_sha256": "7ad2d93ffceb211f8a7d9fb907091807f2b98542f0095f495fd170b75701639b",
+  "patch_sha256": "39bf72926548947527fe122c237bf116bac56f0f0170e4f4b332c2b073760758",
+  "budget": {
+    "translation_units": 1,
+    "engine_builds": 1,
+    "fixture_compiles": 2,
+    "fixture_runs": 1,
+    "games": 2,
+    "profiles": 0,
+    "captures": 0,
+    "game_retries": 0
+  }
+}

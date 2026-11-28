@@ -1,0 +1,5058 @@
+{
+  "mapping": {
+    "command_ordinal": 41,
+    "command_node": "re41",
+    "label": "MTL4RenderCommandEncoder 33",
+    "type": "render",
+    "performance_node": "re32",
+    "timeline_node": "re32",
+    "API_begin": 9715,
+    "API_end": 10172,
+    "render_draw_count": 13,
+    "command_tree_render_draw_count": 13,
+    "selected": true,
+    "association": "Command/performance/timeline linked by exact saved label; API segment associated by creation order, encoder type and all42 render draw-count checks. No per-call receiver handle exposed."
+  },
+  "raw_API_rows": [
+    {
+      "actions": "info",
+      "name": "api9715",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4CommandBuffer renderCommandEncoderWithDescriptor:]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9716",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9717",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9718",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9719",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9720",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9721",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9722",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9723",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9724",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9725",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9726",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps52]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9727",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9728",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9729",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf77 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9730",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf76 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9731",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:307 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9732",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:25 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9733",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9734",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435458 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9735",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterQueueStages:268435458 beforeStages:3 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9736",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:Clockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9737",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9738",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9739",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9740",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9741",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9742",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9743",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9744",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9745",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9746",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9747",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9748",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9749",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9750",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9751",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9752",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:1 backReferenceValue:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9753",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9754",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss15]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9755",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps61]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9756",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9757",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf82 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9758",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2738 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9759",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2815 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9760",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2816 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9761",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2817 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9762",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:47 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9763",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:419 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9764",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:19 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9765",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:19 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9766",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:378 instanceCount:165]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9767",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9768",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9769",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9770",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9771",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9772",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9773",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9774",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9775",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps15]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9776",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss12]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9777",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9778",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9779",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9780",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9781",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9782",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9783",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9784",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9785",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9786",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9787",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9788",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9789",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9790",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9791",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9792",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9793",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9794",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9795",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9796",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9797",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9798",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9799",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9800",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9801",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9802",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:4 backReferenceValue:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9803",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9804",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss13]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9805",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps60]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9806",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9807",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf88 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9808",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf272 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9809",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2797 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9810",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2798 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9811",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2799 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9812",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2800 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9813",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:47 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9814",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:19 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9815",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:762 instanceCount:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9816",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9817",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9818",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9819",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9820",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9821",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9822",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9823",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9824",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9825",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9826",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9827",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9828",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9829",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9830",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9831",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9832",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9833",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss14]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9834",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps60]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9835",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9836",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf89 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9837",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf273 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9838",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2801 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9839",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2802 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9840",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2803 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9841",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2804 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9842",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:47 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9843",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:19 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9844",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:378 instanceCount:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9845",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9846",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9847",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9848",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9849",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9850",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9851",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9852",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9853",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9854",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9855",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9856",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9857",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9858",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9859",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:-64 slopeScale:-64 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9860",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9861",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9862",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9863",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps13]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9864",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9865",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9866",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf37 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9867",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf38 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9868",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf40 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9869",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:468 indexType:UInt16 indexBuffer:@buf39 indexBufferLength:936 instanceCount:4 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9870",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9871",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9872",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9873",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9874",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9875",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9876",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9877",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9878",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9879",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9880",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9881",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9882",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9883",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9884",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9885",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9886",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9887",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9888",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps11]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9889",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9890",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9891",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf280 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9892",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf281 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9893",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2805 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9894",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawPrimitives:TriangleStrip vertexStart:0 vertexCount:34 instanceCount:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9895",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9896",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9897",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9898",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9899",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9900",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9901",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9902",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9903",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9904",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9905",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9906",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9907",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9908",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9909",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9910",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9911",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9912",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9913",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9914",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps58]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9915",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9916",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9917",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf85 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9918",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2768 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9919",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2769 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9920",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2770 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9921",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9922",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9923",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2771 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9924",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:100 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9925",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:122 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9926",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:95 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9927",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:117 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9928",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:96 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9929",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:118 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9930",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:252 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9931",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:253 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9932",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9933",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9934",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9935",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9936",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9937",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9938",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:21 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9939",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:13 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9940",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:144 indexType:UInt16 indexBuffer:@buf86 indexBufferLength:288 instanceCount:234 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9941",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9942",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9943",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9944",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9945",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9946",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9947",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9948",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9949",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9950",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9951",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9952",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9953",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9954",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9955",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9956",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9957",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9958",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9959",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9960",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps58]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9961",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9962",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9963",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf85 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9964",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2772 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9965",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2769 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9966",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2770 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9967",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9968",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9969",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2773 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9970",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:100 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9971",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:122 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9972",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:95 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9973",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:117 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9974",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:96 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9975",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:118 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9976",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:252 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9977",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:253 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9978",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9979",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9980",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9981",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9982",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9983",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9984",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:21 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9985",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:13 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api9986",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:144 indexType:UInt16 indexBuffer:@buf86 indexBufferLength:288 instanceCount:76 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9987",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9988",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9989",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9990",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9991",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9992",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9993",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9994",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9995",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9996",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9997",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9998",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api9999",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10000",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10001",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10002",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10003",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10004",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10005",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10006",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps58]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10007",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10008",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10009",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf83 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10010",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf287 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10011",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2769 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10012",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2770 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10013",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10014",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10015",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2774 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10016",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:100 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10017",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:122 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10018",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:95 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10019",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:117 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10020",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:96 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10021",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:118 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10022",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:252 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10023",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:253 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10024",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10025",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10026",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10027",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10028",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10029",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10030",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:21 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10031",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:13 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api10032",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:72 indexType:UInt16 indexBuffer:@buf84 indexBufferLength:144 instanceCount:8 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10033",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10034",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10035",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10036",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10037",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10038",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10039",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10040",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10041",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10042",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10043",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10044",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10045",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10046",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10047",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10048",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10049",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10050",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10051",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10052",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps59]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10053",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10054",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10055",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf85 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10056",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2775 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10057",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2769 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10058",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2770 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10059",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10060",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10061",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2776 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10062",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:100 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10063",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:122 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10064",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:95 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10065",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:117 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10066",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:96 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10067",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:118 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10068",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:252 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10069",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:253 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10070",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10071",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10072",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10073",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10074",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10075",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10076",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:21 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10077",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:13 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api10078",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:144 indexType:UInt16 indexBuffer:@buf86 indexBufferLength:288 instanceCount:837 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10079",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10080",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10081",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10082",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10083",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10084",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10085",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10086",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10087",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10088",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10089",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10090",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10091",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10092",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10093",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10094",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10095",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10096",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10097",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10098",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps59]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10099",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10100",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10101",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf87 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10102",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2777 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10103",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2769 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10104",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2770 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10105",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10106",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10107",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2778 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10108",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:100 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10109",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:122 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10110",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:95 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10111",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:117 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10112",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:96 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10113",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:118 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10114",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:252 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10115",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:253 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10116",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10117",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10118",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10119",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10120",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10121",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10122",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:21 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10123",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:13 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api10124",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:36 indexType:UInt16 indexBuffer:@buf84 indexBufferLength:144 instanceCount:989 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10125",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10126",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10127",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10128",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10129",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10130",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10131",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:0 backReferenceValue:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10132",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10133",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setViewport:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10134",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setScissorRect:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10135",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10136",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setFrontFacingWinding:CounterClockwise]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10137",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:None]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10138",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10139",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthBias:0 slopeScale:0 clamp:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10140",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setStencilFrontReferenceValue:2 backReferenceValue:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10141",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthClipMode:Clip]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10142",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setCullMode:Back]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10143",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setTriangleFillMode:Fill]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10144",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setRenderPipelineState:@rps59]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10145",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setDepthStencilState:@dss1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10146",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder setArgumentTable:(unresolved) atStages:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10147",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf83 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10148",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2779 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10149",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2769 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10150",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2770 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10151",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf103 atIndex:4]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10152",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf5 atIndex:5]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10153",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setAddress:@buf2780 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10154",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:100 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10155",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:122 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10156",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:95 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10157",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:117 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10158",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:96 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10159",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:118 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10160",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:252 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10161",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setTexture:253 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10162",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10163",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:1]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10164",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:2]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10165",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:3]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10166",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:6]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10167",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:34 atIndex:7]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10168",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:21 atIndex:8]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10169",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4ArgumentTable setSamplerState:13 atIndex:9]"
+        }
+      ]
+    },
+    {
+      "actions": "go, info",
+      "name": "api10170",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder drawIndexedPrimitives:Triangle indexCount:72 indexType:UInt16 indexBuffer:@buf84 indexBufferLength:144 instanceCount:332 baseVertex:0 baseInstance:0]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10171",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder barrierAfterStages:Fragment beforeQueueStages:268435459 visibilityOptions:Device]"
+        }
+      ]
+    },
+    {
+      "actions": "info",
+      "name": "api10172",
+      "values": [
+        null,
+        {
+          "type": "string",
+          "value": "[MTL4RenderCommandEncoder endEncoding]"
+        }
+      ]
+    }
+  ],
+  "attachments_load_store_resolve": "UNAVAILABLE: descriptor arguments omitted by saved API listing.",
+  "actual_resource_read_write_and_last_writer": "UNAVAILABLE beyond explicit copies/draw index buffers; argument table receiver unresolved and numeric texture IDs not mapped to trace objects."
+}

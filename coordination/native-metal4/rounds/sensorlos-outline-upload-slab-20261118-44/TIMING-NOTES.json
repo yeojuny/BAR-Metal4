@@ -1,0 +1,40 @@
+{
+  "arms": {
+    "SLAB_OFF": {
+      "before_count_start_seconds_since_log_origin": 38.187773,
+      "largest_pre_count_log_gap_seconds": 4.034987000000001,
+      "surrounding_lines": [
+        {
+          "line": 2276,
+          "text": "[t=00:00:22.175549][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=5.967999935 state=held"
+        },
+        {
+          "line": 2277,
+          "text": "[t=00:00:26.210536][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.003000259 state=resume_requested held_seconds=4.034999847 held_draws=903"
+        }
+      ]
+    },
+    "SLAB_ON": {
+      "before_count_start_seconds_since_log_origin": 66.918217,
+      "largest_pre_count_log_gap_seconds": 11.491844,
+      "surrounding_lines": [
+        {
+          "line": 169,
+          "text": "[t=00:00:00.192261] [NativeDisplaySync] requested=0 enabled=0"
+        },
+        {
+          "line": 170,
+          "text": "[t=00:00:11.684105] Warning: [Metal4Scene] Experimental live scene: native world presentation and real SDL input; original graphics coverage and full gameplay acceptance remain incomplete"
+        }
+      ]
+    }
+  },
+  "observed_not_attributed": true,
+  "slowest_counted_frame": [
+    {
+      "draw": 2972,
+      "ms": 266.000003
+    }
+  ],
+  "untrimmed": true
+}

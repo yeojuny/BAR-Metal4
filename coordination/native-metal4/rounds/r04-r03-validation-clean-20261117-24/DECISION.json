@@ -1,0 +1,37 @@
+{
+  "round_id": "r04-r03-validation-clean-20261117-24",
+  "author": "SUPER_JINI_MK2",
+  "decision": "DO_NOT_ADOPT_R04_RETAIN_R03",
+  "artifact_commit": "c47add111fee80fba87b41cfbae012743033b163",
+  "candidate_source": "5d20bd842b3c881166abb58f361482a5d7bb19e7",
+  "retained_source": "0780bd7c530b0696067b717428b49a416eda556a",
+  "validation_pass": true,
+  "Metal_validation_errors": 0,
+  "independent_check": {
+    "method": "Per-run draws / measured cumulative seconds recomputed from saved RUNS; arithmetic mean3/arm; interval-row rounding differs ~1e-6 FPS only",
+    "R03_FPS": [
+      63.82340529084397,
+      63.7968119122218,
+      63.81223847758194
+    ],
+    "R04_FPS": [
+      59.08079801985781,
+      59.12352272340227,
+      59.01319821604817
+    ],
+    "R03_mean_FPS": 63.81081856021591,
+    "R04_mean_FPS": 59.07250631976942,
+    "R04_percent": -7.425562541522835,
+    "each_R04_slower_than_every_R03": true,
+    "all_valid_slow_runs_retained": true,
+    "world_check": "PASS_ALL40_ALL6",
+    "validation_excluded": true,
+    "historical_pooling": false
+  },
+  "HQ_turn_completed": true,
+  "cleanup_verified": true,
+  "interpretation": "Production validation passed but this fixed matched workload shows lower R04 throughput; preserve correctness evidence, do not promote R04 or overwrite R03. No causal GPU attribution from FPS alone.",
+  "cause_status": "Extra vertex work/varying transport and remaining fragment arithmetic are hypotheses, not measured explanation.",
+  "next": "Read-only plan for one matched-frame MVK3/R03 component diagnostic. Exact simulation tick/workload and tool support must be established. No new execution authorized by this decision.",
+  "main_release_homebrew_unchanged": true
+}
