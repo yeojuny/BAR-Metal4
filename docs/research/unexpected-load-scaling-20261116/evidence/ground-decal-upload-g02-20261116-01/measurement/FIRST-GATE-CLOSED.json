@@ -1,0 +1,64 @@
+{
+  "status": "CLOSED_DIAGNOSTIC_GATES_PASS",
+  "signedSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+  "engineBuilds": 1,
+  "helperRuns": 1,
+  "games": 2,
+  "cleanRuns": 0,
+  "extraRuns": 0,
+  "helper": "../validation/runs/g02_parity01/HELPER-RESULT.json",
+  "helperResult": "PASS32 color/depth/stencil equality old36/G01 separate/G02 combined and nonclear witnesses",
+  "highOwnerSummaries": [
+    {
+      "t": 0,
+      "owner_created": 1,
+      "prepare": 3174,
+      "nonempty": 3174,
+      "eligible": 3174,
+      "packed": 3174,
+      "separate": 0,
+      "nonindexed": 0,
+      "buffer_creates": 4449,
+      "uniform_buffer_creates": 0,
+      "index_buffer_creates": 0,
+      "combined_buffer_creates": 3174,
+      "clear_resources": 2
+    }
+  ],
+  "lowOwnerSummaries": [
+    {
+      "t": 0,
+      "owner_created": 1,
+      "prepare": 0,
+      "nonempty": 0,
+      "eligible": 0,
+      "packed": 0,
+      "separate": 0,
+      "nonindexed": 0,
+      "buffer_creates": 0,
+      "uniform_buffer_creates": 0,
+      "index_buffer_creates": 0,
+      "combined_buffer_creates": 0,
+      "clear_resources": 2
+    }
+  ],
+  "summaryScope": "Owner lifetime incl warmup; prepared routes, not Draw or timed ROI counters",
+  "highActualDraw": "source_frame881 indexed1 index_count36 offset368 upload_buffers1 uniform_index_same_buffer1 upload_g02=1 fallback0",
+  "highMetalValidation": "Enabled, zero matched errors, normal exit and retirement",
+  "lowInterpretation": "Owner exists but zero Prepare and zero physical Ground Buffer helper creations. No G02 upload opportunity in this exact Simmers diagnostic. Not evidence identifying prior G01 single-run FPS cause.",
+  "actualChildFlags": "S01=G01=G02=PROBE=1 in both; highMetalAPI1, lowMetalAPI0; shaderValidation0 for games",
+  "limiter": "LimitIdleFps0/offscreenfpsfalse confirmed both",
+  "diagnosticFPS": "Excluded from performance claims",
+  "rootImages": {
+    "high": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_valid01/validation_paced/preparation/runs/V_G02/scene.png",
+    "low": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/low_diagnostic01/ordinary_paced/preparation/runs/O1_G02/scene.png",
+    "review": "Root viewed both actual PNGs; expected Seths combat and Simmers terrain/unit/range-ring scene visible, no gross missing/corrupt new output observed. Dynamic differences; no whole-game pixel parity claim."
+  },
+  "cleanup": "Owner confirmed engine61473/61666, helper61451 and awake61450/61465/61658 gone/released",
+  "limits": [
+    "Helper64x64/no-shadow lowquality/RG32normal synthetic scope; not fullUltra game parity",
+    "G02 FPS effect UNKNOWN; no clean comparison yet",
+    "No actual hardware cache invocation count measured",
+    "No additional GPU/clean authorized by this record"
+  ]
+}

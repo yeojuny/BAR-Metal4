@@ -1,0 +1,13 @@
+{
+  "scope": "Frozen technical handoff plus HQ SUMMARY.json; includes INDEX, REPRODUCING, provenance, evidence, source snapshots, patches and licenses.",
+  "manifest": "MANIFEST.sha256",
+  "selfExcluded": [
+    "MANIFEST.sha256"
+  ],
+  "editorialFilesNotInThisTechnicalFreeze": [
+    "README.md",
+    "AUDIT-QUESTIONS.md"
+  ],
+  "publicationIntegration": "Repository owner will add/finalize editorial files separately and must create a distinct integrated publication manifest if the published tree differs.",
+  "gitPublicationPerformedByThisTask": false
+}

@@ -1,0 +1,18 @@
+{
+  "status": "CANDIDATE_VALIDATION_REVIEW_REQUIRED",
+  "runs": 1,
+  "images": [
+    "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_valid01/validation_paced/preparation/runs/V_G02/scene.png"
+  ],
+  "metalValidation": {
+    "status": "NO_MATCHED_METAL_ERRORS",
+    "enabledByChildEnv": true,
+    "enabledByEngineLog": true,
+    "errors": [],
+    "normalExit": true,
+    "candidateSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+    "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/runs/g02_high_valid01/validation_paced/preparation/runs/V_G02/scene.png",
+    "source": "raw engine.log; same original error regex"
+  },
+  "utc": "2026-11-16T16:58:55.784667+00:00"
+}

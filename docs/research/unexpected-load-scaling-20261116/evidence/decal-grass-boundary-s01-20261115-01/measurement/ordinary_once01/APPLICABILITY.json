@@ -1,0 +1,58 @@
+{
+  "status": "NO_GRASS_WORK_IN_MEASURED_FIXED_CAMERA_SCENE",
+  "conclusion": "Original game Grass DrawWorldPreUnit height cull makes grass draw branch false before S01 renderer admission. The map has grass assets; this fixed zoomed-out scene does not draw them.",
+  "cameraState": {
+    "dist": "5000.000000000",
+    "dx": "0.000000026",
+    "dy": "-0.835686207",
+    "dz": "-0.549207270",
+    "fov": "45.000000000",
+    "mode": "2.000000000",
+    "name": "spring",
+    "px": "5149.000000000",
+    "py": "204.180068970",
+    "pz": "596.000000000",
+    "rx": "2.560177326",
+    "ry": "0.471238941",
+    "rz": "0.000000000",
+    "view": "1512,950,0,0"
+  },
+  "sampleCount": 40,
+  "simulation": [
+    300,
+    1500
+  ],
+  "cameraYDerived": 4382.61110397,
+  "mapMaximumGroundHeight": 700,
+  "minimumPossibleHeightAboveGround": 3682.61110397,
+  "grassFadeEnd": 8000,
+  "distanceMultiplier": 0.44999999,
+  "effectiveGrassCutoff": 3599.99992,
+  "heightMarginAboveCutoff": 82.61118396999973,
+  "rejectedOriginalCondition": "camHeight < fadeEnd (map_grass_gl4.lua:1771)",
+  "S01UnavailablePrerequisites": [
+    "Prepared Grass packet required: !grass rejects with plan bit2",
+    "Contiguous Grass suffix required: no Grass yields NoGrassBoundaryS01, plan bit8"
+  ],
+  "measuredRejectBitReceipt": "NOT_CAPTURED; PROBE=0. Bit2/8 consequences derived from source, not represented as runtime reason receipt.",
+  "logMarkers": [
+    "[t=00:00:29.460701][f=0000140] [NativeGrassBoundaryS01] source_frame=300 submission=267 plan=0 checkpoint=0 split=0 grass_draws=0 preserved_order=1 producer_waits_unchanged=1"
+  ],
+  "positiveSplitLogging": "First positive split logs independently of PROBE after source frame300; no positive log present. Initial grass_draws0 alone was not used as all-frame proof.",
+  "notCause": [
+    "Offscreen FPS limiter: actualOFF",
+    "Feature flag: actualON",
+    "Map entirely lacks grass: map includes ATQ_grassmap.tga",
+    "GrassDetail0 alone: native original Lua grass path has independent settings"
+  ],
+  "sourceEvidence": {
+    "originalWidget": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/grass-source-reference.lua",
+    "widgetArchiveMD5": "dff8e69ddf4d750f0ded7956ac07c843",
+    "mapInfo": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/mapinfo-reference.lua",
+    "cameraImplementation": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Game/Camera/SpringController.cpp:455",
+    "S01Admission": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/Metal4WorldRenderer.mm:5040",
+    "nativeOriginalPreservation": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Lua/LuaNativeGrass.cpp:135"
+  },
+  "newGameBuildCaptureProfileCount": 0,
+  "decision": "Close this scene applicability investigation; retain S01 for applicable scenes, move to next pending R02 WeaponRange candidate without forcing extra grass or changing quality."
+}

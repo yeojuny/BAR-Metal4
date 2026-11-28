@@ -1,0 +1,18 @@
+{
+  "status": "PASS_VISUAL_SANITY_ONLY",
+  "candidateImage": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_valid01/validation_paced/preparation/runs/V_G01/scene.png",
+  "candidateImageSHA256": "926c90fd9e13632fb4dbddf481d7e4ac0cde94cf48f1cd6f993113b9fd5395fe",
+  "referenceImage": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_valid02/validation_paced/preparation/runs/V_S01/scene.png",
+  "referenceImageSHA256": "993d2b5173a200c6463a7ae18c70a1ffbae656763a906ed7afaca2791cc745dc",
+  "method": "Root viewed both actual PNGs at 1512x950",
+  "observations": [
+    "Same Seths camera, terrain, main unit clusters, structures, ground scars and scene coverage visible",
+    "No gross missing terrain, black/blank output or obvious new decal corruption observed",
+    "Animation/effect/range overlay and timing text differences remain; images are not pixel-identical"
+  ],
+  "limits": [
+    "Visual sanity does not prove full in-game color/depth/stencil parity",
+    "Helper byte equality covers its specified shader fixtures only",
+    "Diagnostic FPS excluded; clean FPS and actual hardware vertex reuse not measured"
+  ]
+}

@@ -1,0 +1,7 @@
+${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:170:125: warning: comparison of integers of different signs: 'NSUInteger' (aka 'unsigned long') and 'const value_type' (aka 'const int') [-Wsign-compare]
+  170 |         Require(d.texture&&d.texture.pixelFormat==MTLPixelFormatDepth32Float&&d.texture.width==frame->viewport[2]&&d.texture.height==frame->viewport[3],"Original ground decal requires unresampled original viewport depth extent");
+      |                                                                                                                    ~~~~~~~~~~~~~~~~^ ~~~~~~~~~~~~~~~~~~
+${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:170:87: warning: comparison of integers of different signs: 'NSUInteger' (aka 'unsigned long') and 'const value_type' (aka 'const int') [-Wsign-compare]
+  170 |         Require(d.texture&&d.texture.pixelFormat==MTLPixelFormatDepth32Float&&d.texture.width==frame->viewport[2]&&d.texture.height==frame->viewport[3],"Original ground decal requires unresampled original viewport depth extent");
+      |                                                                               ~~~~~~~~~~~~~~~^ ~~~~~~~~~~~~~~~~~~
+2 warnings generated.

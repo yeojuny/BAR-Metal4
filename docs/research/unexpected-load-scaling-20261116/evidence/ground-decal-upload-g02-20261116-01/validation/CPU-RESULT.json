@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "testSourceSHA256": "b829ffa1d32b6d661ea8f8f1fee2089d29264f373f01c9d09d71ead657d17f21",
+  "policySHA256": "32889ddd1398eada65007b4585a0fa9c8068906921119f756c97f89206d62f9a",
+  "checks": 27450,
+  "payloadPatterns": 4096,
+  "uniformBytes": 368,
+  "indexOffset": 368,
+  "indexBytes": 72,
+  "logicalUploadBytes": 440,
+  "hostStructBytes": 448,
+  "CPUcompile": "C++20 -Wall -Wextra -Werror; actual production policy/header",
+  "CPUbuildLogBytes": 0,
+  "SDKSignatureSyntax": "PASS -fsyntax-only -Wall -Wextra -Werror",
+  "SDKLogBytes": 0,
+  "engineBuilds": 0,
+  "GPUExecutions": 0,
+  "limits": [
+    "CPU byte transport/layout/bounds only; GPU output and FPS not measured",
+    "Source review covers failure/lease path; no actual GPU failure injection"
+  ],
+  "fullProductionTUSyntax": {
+    "status": "PASS",
+    "mode": "-fsyntax-only; no object/link/engine build",
+    "record": "OWNER-DIAGNOSTIC-SYNTAX.json",
+    "retainedWarnings": "Two preexisting viewport signed/unsigned comparisons in unchanged source; no unrelated fix"
+  }
+}

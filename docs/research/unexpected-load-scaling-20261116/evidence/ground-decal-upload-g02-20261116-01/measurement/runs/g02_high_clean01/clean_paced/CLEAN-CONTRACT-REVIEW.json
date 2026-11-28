@@ -1,0 +1,134 @@
+{
+  "status": "PASS_BOUNDED_CLEAN_CONTRACT",
+  "scope": "Read-only validation of retained G02 high clean6 receipts; no run, build, source change, or independent scene parity claim.",
+  "signedEngineSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+  "runOrder": [
+    "A1_OFF",
+    "B1_ON",
+    "B2_ON",
+    "A2_OFF",
+    "A3_OFF",
+    "B3_ON"
+  ],
+  "runs": [
+    {
+      "run": "A1_OFF",
+      "g02": 0,
+      "fps": 62.96555434986946,
+      "draws": 2519,
+      "seconds": 40.006000519,
+      "sampleRows": 40,
+      "actualSimulationWindow": [
+        540,
+        1740
+      ],
+      "normalExit": true,
+      "worldRetirementMarkerCount": 1,
+      "observerIssues": 0
+    },
+    {
+      "run": "B1_ON",
+      "g02": 1,
+      "fps": 62.86100062639234,
+      "draws": 2514,
+      "seconds": 39.993000031,
+      "sampleRows": 40,
+      "actualSimulationWindow": [
+        540,
+        1740
+      ],
+      "normalExit": true,
+      "worldRetirementMarkerCount": 1,
+      "observerIssues": 0
+    },
+    {
+      "run": "B2_ON",
+      "g02": 1,
+      "fps": 62.91084683512074,
+      "draws": 2517,
+      "seconds": 40.008998871,
+      "sampleRows": 40,
+      "actualSimulationWindow": [
+        540,
+        1740
+      ],
+      "normalExit": true,
+      "worldRetirementMarkerCount": 1,
+      "observerIssues": 0
+    },
+    {
+      "run": "A2_OFF",
+      "g02": 0,
+      "fps": 62.90314342890758,
+      "draws": 2516,
+      "seconds": 39.998001099,
+      "sampleRows": 40,
+      "actualSimulationWindow": [
+        540,
+        1740
+      ],
+      "normalExit": true,
+      "worldRetirementMarkerCount": 1,
+      "observerIssues": 0
+    },
+    {
+      "run": "A3_OFF",
+      "g02": 0,
+      "fps": 62.95471901019134,
+      "draws": 2518,
+      "seconds": 39.997001648,
+      "sampleRows": 40,
+      "actualSimulationWindow": [
+        540,
+        1740
+      ],
+      "normalExit": true,
+      "worldRetirementMarkerCount": 1,
+      "observerIssues": 0
+    },
+    {
+      "run": "B3_ON",
+      "g02": 1,
+      "fps": 62.89213680367949,
+      "draws": 2516,
+      "seconds": 40.005001068,
+      "sampleRows": 40,
+      "actualSimulationWindow": [
+        540,
+        1740
+      ],
+      "normalExit": true,
+      "worldRetirementMarkerCount": 1,
+      "observerIssues": 0
+    }
+  ],
+  "comparability": {
+    "launchAndChildEnvironment": "Only BAR_NATIVE_GROUND_DECAL_UPLOAD_G02 differs between A and B after run-private paths are excluded; G01 remains enabled and its PROBE stays 0.",
+    "traceValidationAndProbe": "Frame trace 0, G01 PROBE 0, Grass PROBE 0, Metal debug and shader validation 0 in every launch/child environment.",
+    "qualityAndLimiter": "All six runtime Ultra receipts pass, main sample count 1, view 1512x950, VSync/VSyncGame/LimitIdleFps 0.",
+    "sampleWindow": "Each RESULT/RUNS record retains 40 contiguous unpaused 30-simulation bins from 540 through 1740. LAUNCH.measurementWindow still says 600 through 1800 and must not be used as the actual counted window.",
+    "retirementAndCleanup": "Six normal exits, owned groups gone, one Retired world marker per engine log, observer issue lists empty, private widget/overlay removed; owner batch CLOSED and awake owner released.",
+    "readiness": "PREPARED.json records READY_NO_GAME and six staged arms; there is no separately named CLEAN-READY file in this suite.",
+    "selection": "High clean6 was selected before execution. Low clean6 was not selected because the low functional receipt had Prepare=0."
+  },
+  "arithmetic": {
+    "offMeanFPS": 62.94113892965613,
+    "onMeanFPS": 62.88799475506419,
+    "onVsOffPercent": -0.08443472027306331,
+    "source": "RUNS.json/RESULT.json, six valid retained runs; arithmetic matches COMPLETION.json"
+  },
+  "limits": [
+    "FPS is host-observed in this exact scene and window; no isolated GPU-cost or visual-equivalence inference.",
+    "The clean batch uses PROBE=0, so it does not independently show indexed or packed route counts; the separate functional receipt supplies route evidence.",
+    "Normal exit supports retirement observation; abrupt process termination behavior is outside this receipt."
+  ],
+  "evidence": [
+    "RUNS.json",
+    "COMPLETION.json",
+    "PREPARED.json",
+    "OWNER-CLOSED.json",
+    "AWAKE-RELEASED.json",
+    "preparation/runs/*/{CHILD-MODE,LAUNCH,OBSERVERS,RESULT,LIFECYCLE,CLEANUP,ULTRA-EVIDENCE}.json",
+    "preparation/runs/*/engine.log"
+  ]
+}

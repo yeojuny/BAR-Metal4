@@ -1,0 +1,10 @@
+{
+  "status": "RELEASED",
+  "campaign": "ordinary_paced",
+  "pid": 15626,
+  "startUTC": "2026-11-16T07:41:23.314887+00:00",
+  "maximumSeconds": 900,
+  "securitySettingsChanged": false,
+  "endUTC": "2026-11-16T07:42:37.567628+00:00",
+  "ownCaffeinateAlive": false
+}

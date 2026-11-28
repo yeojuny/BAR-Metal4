@@ -1,0 +1,17 @@
+[
+  {
+    "path": "rts/Rendering/Metal4/Metal4GroundDecal.mm",
+    "before": "4e65ad573ba113ad7468b24c21c3785bc7ff84a45b804b06b324274344977da9",
+    "after": "4b62d9bceec4eb1e16b7ec00826f729da86e5935f10e32effe224ab410ed3dec"
+  },
+  {
+    "path": "rts/Rendering/Metal4/Metal4GroundDecalIndexPolicyG01.h",
+    "before": null,
+    "after": "1d5959efeead958cf3e53696742927a325271f0a881c21d2194329985bd56b55"
+  },
+  {
+    "path": "tools/metal4-contracts/TestGroundDecalIndexG01.cpp",
+    "before": null,
+    "after": "97b19a8921e08cd8a96458ad058e7fe3f8e2169d5f6ab4ec96fe2f55bfa6694b"
+  }
+]

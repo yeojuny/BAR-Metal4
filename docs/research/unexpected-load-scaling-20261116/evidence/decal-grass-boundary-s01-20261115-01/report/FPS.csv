@@ -1,0 +1,7 @@
+run,fps,low1FPS,seconds,draws,image
+A1_BASE,53.69060418587769,47.008547008547005,40.006999969,2148,${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A1_BASE/scene.png
+B1_S01,58.65,48.78048790402538,40.0,2346,${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B1_S01/scene.png
+B2_S01,58.61620680843345,49.07975490232978,40.006000519,2345,${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B2_S01/scene.png
+A2_BASE,53.69328690552605,46.21848739495798,40.005001068,2148,${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A2_BASE/scene.png
+A3_BASE,53.69328690552605,45.833333142361106,40.005001068,2148,${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/A3_BASE/scene.png
+B3_S01,58.59707175636673,48.28973852774595,40.001998901,2344,${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/runs/s01_clean01/clean_paced/preparation/runs/B3_S01/scene.png

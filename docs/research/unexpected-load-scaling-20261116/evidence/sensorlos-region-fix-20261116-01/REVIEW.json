@@ -1,0 +1,26 @@
+{
+  "scope": "Read-only static review of the two SensorLOS candidate source files against the pinned PR7 source; no build, game, or profiler execution by reviewer.",
+  "status": "STATIC_PASS_PENDING_INTEGER_FLOAT32_ORACLE_AND_NATIVE_VISUAL_VALIDATION",
+  "blockingFindings": [],
+  "source": {
+    "vertexRegion": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h:80",
+    "existingCoverageAndFragment": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h:125",
+    "sampleCountBinding": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm:171",
+    "sourceEquivalenceReceipt": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/SOURCE-EQUIVALENCE.json"
+  },
+  "review": [
+    "The helper starts with the original AABB pixel and changes it only after every eligibility guard and the strict smaller-area check succeeds. samples!=1, nonfinite or oversized coordinates, nonpositive or wide lines, quantized major length below one pixel, and invalid area retain the old AABB. counts.w was previously unused and now carries the validated target sample count; the fan vertex and both fragment paths remain unchanged.",
+    "The new quad uses the same fixed-point endpoint rounding and abs(dx)>=abs(dy) major-axis tie rule as SensorLineCovered. An accepted single-sample pixel's major center is within 0.5 pixel of the quantized endpoint span because its diamond intersects the segment. The existing wide-line lower/count interval places its minor center within roundedWidth/2 plus a small fixed-point epsilon of the quantized centerline. The candidate extends the major span by 4 pixels on both ends and the minor band by 4 pixels beyond roundedWidth/2, leaving room for the adjacent 2x2 derivative helper centers and guarded float32/raster rounding.",
+    "The original AABB extends each unquantized endpoint extremum by roundedWidth/2+2. With the guarded fixed-point major slope at most one, endpoint quantization below one fixed-point pixel, and accepted major overhang at most 0.5 pixel, every accepted center remains inside the old AABB. Therefore the new quad's extra fragments outside that AABB must fail the unchanged line coverage or viewport test and discard; they cannot add accepted color, depth, or stencil samples.",
+    "The output line/data/color/half-width varyings remain flat and unchanged. The fragment computes its mask UV from screen position with an affine scale; its line coverage, alpha, depth(any) result, and discard are unchanged. Including neighboring 2x2 helper centers preserves implicit mask derivatives at accepted pixels. The quad's two triangles use the existing vertex count and cull-none pipeline; their seam has identical flat inputs.",
+    "The area gate compares the sheared quad's determinant area against the old AABB. It is a workload filter, not a correctness certificate. No GPU owner, queue, completion, shader fragment, or sample-count policy changes were found."
+  ],
+  "verificationStillNeeded": [
+    "Run the independently constructed integer diamond/wide-line oracle against BOTH old AABB and float32 candidate triangles, including negative coordinates, major-axis ties, quantized length exactly 256 units, width rounding transitions, clipped endpoints, extreme permitted viewport origins/extents, and samples at the triangle seam. Check accepted pixel centers plus adjacent 2x2 helper centers, not area alone.",
+    "Use Metal Validation and image/depth/stencil comparisons on actual single-sample LOS scenes, including resize, clipping, and near-degenerate lines. Keep MSAA and fan paths on the original geometry. A still image does not establish temporal equivalence."
+  ],
+  "limits": [
+    "The source guards and four-pixel margin provide a conservative analytical bound; this review did not execute an exhaustive float32 raster oracle or actual Metal rasterization.",
+    "A smaller geometric area does not itself prove lower fragment cost or higher FPS."
+  ]
+}

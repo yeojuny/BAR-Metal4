@@ -1,0 +1,73 @@
+{
+  "status": "PASS_ALL_SIX_RAW40_ROWS_MATCH",
+  "rowFields": [
+    "start_simulation",
+    "end_simulation",
+    "units",
+    "camera",
+    "speed_a",
+    "speed_b",
+    "paused"
+  ],
+  "battleFields": [
+    "battleInitialState",
+    "battleCameraOpen",
+    "officialCreated",
+    "officialDestroyed",
+    "battleCommand",
+    "gameSeed",
+    "benchmarkSeed",
+    "battleMap"
+  ],
+  "actualSimulation": [
+    540,
+    1740
+  ],
+  "runs": [
+    {
+      "run": "A1_OFF",
+      "rowCount": 40,
+      "sameRowsAsA1": true,
+      "sameInitialBattleFieldsAsA1": true,
+      "rawFrameSHA256": "7115d04f653f1fb08e3e39a448eac6d925226dfc3769f74bc6bd1934ebc29340"
+    },
+    {
+      "run": "B1_ON",
+      "rowCount": 40,
+      "sameRowsAsA1": true,
+      "sameInitialBattleFieldsAsA1": true,
+      "rawFrameSHA256": "6c940079503f8ece90d17bba07145146708c84279d898149b3c15d49be4b6df7"
+    },
+    {
+      "run": "B2_ON",
+      "rowCount": 40,
+      "sameRowsAsA1": true,
+      "sameInitialBattleFieldsAsA1": true,
+      "rawFrameSHA256": "ab9df36ebf9aab54c5a028a722abab3e2f61a08ea029e424057d74f2c54980d1"
+    },
+    {
+      "run": "A2_OFF",
+      "rowCount": 40,
+      "sameRowsAsA1": true,
+      "sameInitialBattleFieldsAsA1": true,
+      "rawFrameSHA256": "ee05e78f88a99b1bb5c72e92f0b7e9b61d21b2a3b2ce10557c2e89775f3ab642"
+    },
+    {
+      "run": "A3_OFF",
+      "rowCount": 40,
+      "sameRowsAsA1": true,
+      "sameInitialBattleFieldsAsA1": true,
+      "rawFrameSHA256": "c825ebd5a87e963d8401618156c3bf66928fd0d2a4883e7c8b1bddb39c842b8f"
+    },
+    {
+      "run": "B3_ON",
+      "rowCount": 40,
+      "sameRowsAsA1": true,
+      "sameInitialBattleFieldsAsA1": true,
+      "rawFrameSHA256": "90a8d2df27c9645015638884e7ea2cba3e3607f1afa9dfc5a46594d641a9f168"
+    }
+  ],
+  "rawRunsSHA256": "bab1115fdb2c3cffee4b27d1ff59b252f6ff229a1244c86c03c71688be0251e7",
+  "measurementWindowMetadataClarification": "LAUNCH planned simulation600..1800 is stale metadata; actual RUNS/RESULT all40 bins are simulation540..1740, identical across6. Rawfiles retained unchanged.",
+  "finalContractReview": "../measurement/runs/g02_high_clean01/clean_paced/CLEAN-CONTRACT-REVIEW.json"
+}

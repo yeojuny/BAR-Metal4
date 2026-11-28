@@ -1,0 +1,53 @@
+{
+  "status": "CONCRETE_REVISION_SCOPE_NO_SOURCE_CHANGE_OR_BUILD_YET",
+  "preserveAttempt1": [
+    "814ab signedbinary",
+    "CHANGE.patch/IMPLEMENTATION-FILES/SOURCE-FREEZE/CANDIDATE",
+    "allfirst-gate rawlogs/images/failure/derivedreceipts"
+  ],
+  "productionChanges": [
+    {
+      "file": "Metal4WorldRenderer.mm",
+      "functions": [
+        "DrawPrepared S01plan",
+        "post-preUnit invariant",
+        "existingfirstopaqueMRTphase close",
+        "boundedS01diagnostics"
+      ],
+      "changes": [
+        "ReplaceimpossiblemodelGBuffer gate with !modelGBuffer && opaqueModels &&phaseCount>0 &&phase0Deferred &&!localpass165Enabled",
+        "MoveGguarddisarmfromstandalone model-depthbranch tophase0actualendEncoding; preserveoriginalV|F->F|Blit barrier",
+        "RevertpreviousstandalonemodelGBufferS01 modification tooriginalbyte sequence",
+        "Add diagnostic-only boundedROI snapshots540/900/1590 withactualgatefacts andGrass rejectioncategory/slot; noextraGPUwork"
+      ]
+    },
+    {
+      "file": "Metal4Grass.h/.mm",
+      "changes": [
+        "Read-only bounded rejectioncategory/draw/slot state forexistingstrictchecks; nochangedpredicates/producers/waits"
+      ]
+    },
+    {
+      "file": "Metal4GrassBoundaryPolicyS01.h",
+      "changes": [
+        "PurefirstopaqueMRTclosurepredicate usedbyactualgate andtested"
+      ]
+    },
+    {
+      "file": "tools/metal4-contracts/TestGrassBoundaryS01.cpp",
+      "changes": [
+        "RejectmodelGBuffer route, missingopaque,zero phases,forwardphase0,Pass165keep; positiveonlyknownclosingphase0"
+      ]
+    }
+  ],
+  "unchanged": [
+    "OriginalGrassproviderresults/queries",
+    "all5image/allbufferphysicalaliaschecks",
+    "shader code",
+    "checkpoint/genericbarriers",
+    "CPU/GPUreadability/completionsemantics",
+    "Store/Load/order",
+    "noextraqueue/fence/cache/framework"
+  ],
+  "validation": "Re-reviewcurrentdiff andmeaningfulnegativecasesbeforeanynewbuild. Build/runtimeoutsidepreviousGO; coordinatorrefreshrequired."
+}

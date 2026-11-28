@@ -1,0 +1,10 @@
+{
+  "fragmentAndFanAndMSAAByteIdentical": true,
+  "unchangedSuffixSHA256": "8cce0ce4057193a91d8a6a650a9fab5132eca54e3f9e7014276ea20ae4a4d0fb",
+  "files": [
+    "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+    "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm"
+  ],
+  "baselineSource": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+  "samplesField": "Previously unused counts.w now carries samples; tight path samples==1 only."
+}

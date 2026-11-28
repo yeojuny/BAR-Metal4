@@ -1,0 +1,37 @@
+{
+  "status": "SOURCE_SCOPE_CLOSED_IMPLEMENTATION_NOT_STARTED",
+  "baseline": "G01 962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559; S01/G01 on; G02 retained cost-reduction candidate only",
+  "selectedHypothesis": "G04 GroundDecal fragment invariant hoist: six triangle corner dot scalars plus originally guarded wrap ratio u; leave both reciprocals in fragment",
+  "whySelected": "Source exposes repeated geometry-only work without depending on minimap texture format or Lua replacement eligibility. Selection is a bounded correctness experiment, not a demonstrated performance ranking.",
+  "comparison": {
+    "G04": "Adds seven float32 flat scalar components (28 logical bytes per vertex output; actual packed transport/register/tile cost unknown). Adds six dot3 operations and guarded midpoint distance/divide per vertex invocation. Removes three dot3 operations per executed fragment triangle call, and guarded wrap distance/divide; second triangle remains conditional. Hardware vertex reuse and existing compiler hoisting unknown.",
+    "G03": "May skip one explicit LOD0 minimap fetch for non-explosion fragments under a proved normalized bounded texture domain. Generic float/external/Lua replacement domain remains unresolved. Known-UNORM eligibility alternative preserved, not enabled or combined."
+  },
+  "correctnessBoundary": [
+    "Use same provoking vertex outputs as current flat corners/data2; preserve original expression order and float precision. Do not derive from raw vertex id.",
+    "Keep reciprocal, world-position reconstruction, fragment-dependent dots, barycentric acceptance, UV/fract and color/sample logic in fragment. Preserve second triangle conditional evaluation.",
+    "Guard u by original wrapDist > 0, with default 1. Initialize new outputs on early cull without reading existing uninitialized outputs.",
+    "Variant OFF must preserve exact current shader interface and math; ON adds shader preparation only. No new CPU uniforms, registration, per-frame ownership, or math mode changes.",
+    "Source does not prove byte parity across stage transfer: rounding, signed zero, NaN/Inf, degenerate triangles and acceptance edges require validation."
+  ],
+  "futureGatesAfterImplementationAuthorization": [
+    "Compile/link supported sample-count, quality and shadow variants and inspect added stage interface.",
+    "Exact color/depth/stencil parity including degenerate, nonfinite, signed-zero, boundary and wrapping cases; preserve existing injected texture contracts.",
+    "Establish actual work reduction and added vertex/output cost before any speedup claim; clean performance comparison only after correctness passes."
+  ],
+  "evidence": [
+    "G04-HOIST-CONTRACT-SCOPE.json",
+    "G04-HOIST-MAPPING.json",
+    "FS-PROOF-DOMAIN.json"
+  ],
+  "actionsThisScope": {
+    "engineEdits": 0,
+    "builds": 0,
+    "gpuHelpers": 0,
+    "games": 0,
+    "profiles": 0,
+    "captures": 0,
+    "gitChanges": 0
+  },
+  "simmersDisposition": "Close applicability investigation: original fixed-camera grass height cull; subsequent G02 same-fixture diagnostic recorded owner creation and zero GroundDecal Prepare calls. No repeat performance measurement without target work. Does not establish cause of historical FPS differences."
+}

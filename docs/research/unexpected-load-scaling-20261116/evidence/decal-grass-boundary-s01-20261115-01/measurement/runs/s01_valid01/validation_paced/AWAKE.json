@@ -1,0 +1,8 @@
+{
+  "status": "ACTIVE",
+  "campaign": "validation_paced",
+  "pid": 28780,
+  "startUTC": "2026-11-16T08:30:41.320164+00:00",
+  "maximumSeconds": 2400,
+  "securitySettingsChanged": false
+}

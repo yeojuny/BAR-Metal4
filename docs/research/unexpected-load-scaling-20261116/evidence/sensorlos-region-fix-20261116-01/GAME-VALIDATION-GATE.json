@@ -1,0 +1,25 @@
+{
+  "status": "PASS_SCOPED_GAME_VALIDATION_AND_VISUAL_SANITY",
+  "candidateSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "runtimeResult": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_valid01/validation_paced/preparation/runs/V_SENSOR/RESULT.json",
+  "metalLayerEnabledWitness": "engine.log:162 Metal API Validation Enabled",
+  "matchedMetalErrors": 0,
+  "normalExit": true,
+  "actualMainSamples": 1,
+  "gameView": [
+    1512,
+    950
+  ],
+  "drawable": [
+    1512,
+    982
+  ],
+  "sourceBinding": "Reviewed compiled Metal4SensorLOSNative.mm passes actual samples into counts.w; Source closure exactly two modified files. No new GPU uniform readback/capture was performed.",
+  "visualCheck": {
+    "method": "Primary agent viewed candidate scene.png and existing pinned b25 AA0 B1 scene.png at the same fixture camera/stopped combat frame.",
+    "result": "Terrain, armies, range-circle outlines and scene layout present and aligned; no visible missing strip, broken outline or rendering corruption observed.",
+    "limit": "Visual sanity only; dynamic effects/interpolation/statistics text differ between runs. Whole scene pixel identity is not claimed. Exact geometry/FS output parity is supported separately by standalone 3600 GPU cases."
+  },
+  "performanceAccepted": false,
+  "cleanRunsLaunched": 0
+}

@@ -1,0 +1,366 @@
+{
+  "status": "HISTORICAL_SINGLE_RUN_DISTRIBUTION_NOT_CAUSAL",
+  "all40Rows": [
+    {
+      "startSimulation": 300,
+      "endSimulation": 330,
+      "oldDraws": 191,
+      "newDraws": 191,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 330,
+      "endSimulation": 360,
+      "oldDraws": 190,
+      "newDraws": 189,
+      "deltaDraws": -1
+    },
+    {
+      "startSimulation": 360,
+      "endSimulation": 390,
+      "oldDraws": 186,
+      "newDraws": 188,
+      "deltaDraws": 2
+    },
+    {
+      "startSimulation": 390,
+      "endSimulation": 420,
+      "oldDraws": 189,
+      "newDraws": 189,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 420,
+      "endSimulation": 450,
+      "oldDraws": 187,
+      "newDraws": 188,
+      "deltaDraws": 1
+    },
+    {
+      "startSimulation": 450,
+      "endSimulation": 480,
+      "oldDraws": 188,
+      "newDraws": 188,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 480,
+      "endSimulation": 510,
+      "oldDraws": 189,
+      "newDraws": 189,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 510,
+      "endSimulation": 540,
+      "oldDraws": 189,
+      "newDraws": 189,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 540,
+      "endSimulation": 570,
+      "oldDraws": 188,
+      "newDraws": 188,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 570,
+      "endSimulation": 600,
+      "oldDraws": 186,
+      "newDraws": 186,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 600,
+      "endSimulation": 630,
+      "oldDraws": 187,
+      "newDraws": 187,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 630,
+      "endSimulation": 660,
+      "oldDraws": 187,
+      "newDraws": 187,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 660,
+      "endSimulation": 690,
+      "oldDraws": 188,
+      "newDraws": 188,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 690,
+      "endSimulation": 720,
+      "oldDraws": 187,
+      "newDraws": 187,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 720,
+      "endSimulation": 750,
+      "oldDraws": 188,
+      "newDraws": 186,
+      "deltaDraws": -2
+    },
+    {
+      "startSimulation": 750,
+      "endSimulation": 780,
+      "oldDraws": 186,
+      "newDraws": 188,
+      "deltaDraws": 2
+    },
+    {
+      "startSimulation": 780,
+      "endSimulation": 810,
+      "oldDraws": 187,
+      "newDraws": 185,
+      "deltaDraws": -2
+    },
+    {
+      "startSimulation": 810,
+      "endSimulation": 840,
+      "oldDraws": 187,
+      "newDraws": 165,
+      "deltaDraws": -22
+    },
+    {
+      "startSimulation": 840,
+      "endSimulation": 870,
+      "oldDraws": 186,
+      "newDraws": 173,
+      "deltaDraws": -13
+    },
+    {
+      "startSimulation": 870,
+      "endSimulation": 900,
+      "oldDraws": 187,
+      "newDraws": 169,
+      "deltaDraws": -18
+    },
+    {
+      "startSimulation": 900,
+      "endSimulation": 930,
+      "oldDraws": 184,
+      "newDraws": 173,
+      "deltaDraws": -11
+    },
+    {
+      "startSimulation": 930,
+      "endSimulation": 960,
+      "oldDraws": 187,
+      "newDraws": 171,
+      "deltaDraws": -16
+    },
+    {
+      "startSimulation": 960,
+      "endSimulation": 990,
+      "oldDraws": 184,
+      "newDraws": 178,
+      "deltaDraws": -6
+    },
+    {
+      "startSimulation": 990,
+      "endSimulation": 1020,
+      "oldDraws": 182,
+      "newDraws": 183,
+      "deltaDraws": 1
+    },
+    {
+      "startSimulation": 1020,
+      "endSimulation": 1050,
+      "oldDraws": 183,
+      "newDraws": 183,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1050,
+      "endSimulation": 1080,
+      "oldDraws": 182,
+      "newDraws": 182,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1080,
+      "endSimulation": 1110,
+      "oldDraws": 183,
+      "newDraws": 182,
+      "deltaDraws": -1
+    },
+    {
+      "startSimulation": 1110,
+      "endSimulation": 1140,
+      "oldDraws": 183,
+      "newDraws": 182,
+      "deltaDraws": -1
+    },
+    {
+      "startSimulation": 1140,
+      "endSimulation": 1170,
+      "oldDraws": 184,
+      "newDraws": 183,
+      "deltaDraws": -1
+    },
+    {
+      "startSimulation": 1170,
+      "endSimulation": 1200,
+      "oldDraws": 183,
+      "newDraws": 181,
+      "deltaDraws": -2
+    },
+    {
+      "startSimulation": 1200,
+      "endSimulation": 1230,
+      "oldDraws": 182,
+      "newDraws": 182,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1230,
+      "endSimulation": 1260,
+      "oldDraws": 184,
+      "newDraws": 184,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1260,
+      "endSimulation": 1290,
+      "oldDraws": 183,
+      "newDraws": 183,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1290,
+      "endSimulation": 1320,
+      "oldDraws": 184,
+      "newDraws": 183,
+      "deltaDraws": -1
+    },
+    {
+      "startSimulation": 1320,
+      "endSimulation": 1350,
+      "oldDraws": 183,
+      "newDraws": 183,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1350,
+      "endSimulation": 1380,
+      "oldDraws": 182,
+      "newDraws": 180,
+      "deltaDraws": -2
+    },
+    {
+      "startSimulation": 1380,
+      "endSimulation": 1410,
+      "oldDraws": 183,
+      "newDraws": 183,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1410,
+      "endSimulation": 1440,
+      "oldDraws": 184,
+      "newDraws": 182,
+      "deltaDraws": -2
+    },
+    {
+      "startSimulation": 1440,
+      "endSimulation": 1470,
+      "oldDraws": 183,
+      "newDraws": 183,
+      "deltaDraws": 0
+    },
+    {
+      "startSimulation": 1470,
+      "endSimulation": 1500,
+      "oldDraws": 182,
+      "newDraws": 179,
+      "deltaDraws": -3
+    }
+  ],
+  "selectedConsecutiveWindowStartSimulation": [
+    810,
+    960
+  ],
+  "windowRows": [
+    {
+      "startSimulation": 810,
+      "endSimulation": 840,
+      "oldDraws": 187,
+      "newDraws": 165,
+      "deltaDraws": -22
+    },
+    {
+      "startSimulation": 840,
+      "endSimulation": 870,
+      "oldDraws": 186,
+      "newDraws": 173,
+      "deltaDraws": -13
+    },
+    {
+      "startSimulation": 870,
+      "endSimulation": 900,
+      "oldDraws": 187,
+      "newDraws": 169,
+      "deltaDraws": -18
+    },
+    {
+      "startSimulation": 900,
+      "endSimulation": 930,
+      "oldDraws": 184,
+      "newDraws": 173,
+      "deltaDraws": -11
+    },
+    {
+      "startSimulation": 930,
+      "endSimulation": 960,
+      "oldDraws": 187,
+      "newDraws": 171,
+      "deltaDraws": -16
+    },
+    {
+      "startSimulation": 960,
+      "endSimulation": 990,
+      "oldDraws": 184,
+      "newDraws": 178,
+      "deltaDraws": -6
+    }
+  ],
+  "windowDeltaDraws": -86,
+  "totalDeltaDraws": -98,
+  "windowShareOfNetDrawLossPercent": 87.75510204081633,
+  "remaining34DeltaDraws": -12,
+  "oldFrameStats": {
+    "samples": 7417,
+    "coveredSeconds": 39.993,
+    "p99Ms": 6.0,
+    "slow1PercentFPS": 140.4494382022472,
+    "maximumMs": 14.0,
+    "over16_667ms": 0,
+    "over33_333ms": 0,
+    "rawSHA256": "fe2be8d0a0a4ebe18e2650ec8c40af438a5f01c57b71220b1df04f909fe1ba1d",
+    "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+    "observerOverhead": "Identical observer in both arms; not independently quantified"
+  },
+  "newFrameStats": {
+    "samples": 7319,
+    "coveredSeconds": 39.993000008,
+    "p99Ms": 8.0,
+    "slow1PercentFPS": 87.67772428741493,
+    "maximumMs": 17.999999,
+    "over16_667ms": 8,
+    "over33_333ms": 0,
+    "rawSHA256": "0953ab04a6a64e72bb83b6e4c28975ad5f36bc3de801a4394393adadc4da46b7",
+    "metric": "CPU-observed DrawScreen-to-DrawScreen wall intervals, not GPU execution or display-present latency",
+    "observerOverhead": "Identical observer in both arms; not independently quantified"
+  },
+  "limits": [
+    "Descriptive time concentration only; does not identify environment or G01 cause",
+    "No interval excluded and no rerun authorized",
+    "Future G02 compare full-window primary plus same predetermined interval without sample selection"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "method": "Exact integer diamond-exit symbolic-epsilon oracle plus independent float32 quad construction; sampled major positions for long lines; endpoint minors and interior checked; all 3x3 centers contain every possible adjacent 2x2 helper. Homogeneous clipping tested. GPU parity remains separate.",
+  "cases": 8006,
+  "homogeneousClippedCases": 222,
+  "tightCases": 3869,
+  "fallbackCases": 4137,
+  "acceptedSamplesChecked": 170522,
+  "helperCentersChecked": 1534698,
+  "oldAreaSum": 664865208.8452911,
+  "tightAreaSum": 23931846.2265625,
+  "testSetAreaRatio": 0.03599503464488131,
+  "notRuntimeReductionEstimate": true,
+  "scriptSHA256": "4286a49bf1149734787b7821257234cc8747a826da76d6a45f368a2836512c8d"
+}

@@ -1,0 +1,82 @@
+{
+  "status": "COMPLETE_RESOURCE_REDUCTION_VALIDATED_FPS_GAIN_NOT_DEMONSTRATED",
+  "signedSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+  "scene": "Seths Ravine Remake 1.3.1; Ultra AA0 1512x950",
+  "comparison": "Same binary, S01=G01=1, G02 only OFF/ON, PROBE/validation/trace/capture OFF",
+  "meanFPS": {
+    "OFF": 62.94113892965613,
+    "ON": 62.88799475506419,
+    "absoluteDelta": -0.05314417459193521,
+    "percentDelta": -0.08443472027306331
+  },
+  "meanRunOnePercentLowFPS": {
+    "OFF": 53.430113577263924,
+    "ON": 53.8851608551055,
+    "percentDelta": 0.8516681836798545,
+    "aggregation": "Arithmetic mean of three per-run lows, not pooled intervals"
+  },
+  "runs": [
+    {
+      "run": "A1_OFF",
+      "G02": "OFF",
+      "FPS": 62.96555434986946,
+      "onePercentLowFPS": 53.49794491862703,
+      "seconds": 40.006000519,
+      "draws": 2519
+    },
+    {
+      "run": "B1_ON",
+      "G02": "ON",
+      "FPS": 62.86100062639234,
+      "onePercentLowFPS": 53.60825018599228,
+      "seconds": 39.993000031,
+      "draws": 2514
+    },
+    {
+      "run": "B2_ON",
+      "G02": "ON",
+      "FPS": 62.91084683512074,
+      "onePercentLowFPS": 55.201701561028116,
+      "seconds": 40.008998871,
+      "draws": 2517
+    },
+    {
+      "run": "A2_OFF",
+      "G02": "OFF",
+      "FPS": 62.90314342890758,
+      "onePercentLowFPS": 52.738339174405276,
+      "seconds": 39.998001099,
+      "draws": 2516
+    },
+    {
+      "run": "A3_OFF",
+      "G02": "OFF",
+      "FPS": 62.95471901019134,
+      "onePercentLowFPS": 54.05405663875947,
+      "seconds": 39.997001648,
+      "draws": 2518
+    },
+    {
+      "run": "B3_ON",
+      "G02": "ON",
+      "FPS": 62.89213680367949,
+      "onePercentLowFPS": 52.84553081829609,
+      "seconds": 40.005001068,
+      "draws": 2516
+    }
+  ],
+  "allValidRunsRetained": true,
+  "historicalSamplesPooled": false,
+  "comparability": "PASS actual40 rows perrun",
+  "resourceResult": "One separate uniform/index physical buffer and allocation request removed per eligible successful Prepare; shaders/math/order/lifetime unchanged. API diagnostic confirms one shared upload buffer; lifetime3174 packed preparations. This is not a measured CPU-time or FPS saving.",
+  "lowSelection": "Simmers low clean6 not selected before any G02 clean run because diagnostic owner existed with Prepare0/allbuffers0; no candidate opportunity. Existing183FPS historical observation retained; causeUNKNOWN.",
+  "visualReview": "Root viewed actual A3_OFF and B3_ON PNGs; expected terrain,units,ground scars visible without gross new omissions; animation differences, not full pixel parity",
+  "metric": "CPU-observed DrawScreen intervals, not GPU time/display latency",
+  "defaultOrReleaseChanges": false,
+  "rawRuns": "../measurement/runs/g02_high_clean01/clean_paced/RUNS.json",
+  "nextExecution": "None authorized",
+  "measurementWindowMetadataClarification": "LAUNCH planned simulation600..1800 is stale metadata; actual RUNS/RESULT all40 bins are simulation540..1740, identical across6. Rawfiles retained unchanged.",
+  "finalContractReview": "../measurement/runs/g02_high_clean01/clean_paced/CLEAN-CONTRACT-REVIEW.json",
+  "disposition": "PRESERVED_COST_REDUCTION_CANDIDATE; PERFORMANCE_BASELINE_REMAINS_G01",
+  "dispositionRecord": "../DISPOSITION.json"
+}

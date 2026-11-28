@@ -1,0 +1,34 @@
+{
+  "status": "SAVED_NATIVE_CAPTURE_BASELINE_ONLY",
+  "captureIdentity": "S01 9a44 candidate native GPU capture; one saved frame, original G01 state; G01 source copy/build/capture not yet represented here",
+  "observedDraw": {
+    "command": "cb0/re13, A encoder; GroundDecal draw before Grass encoder",
+    "pipeline": "@rps71 GroundDecalVertex/GroundDecalFragment",
+    "api": "api5102",
+    "call": "[MTL4RenderCommandEncoder drawPrimitives:Triangle vertexStart:0 vertexCount:36 instanceCount:32364]",
+    "trianglesPerInstance": 12,
+    "instances": 32364,
+    "totalSubmittedVertices": 1165104
+  },
+  "observedShaderCostSharePercentOfSingleReplay": {
+    "GroundDecalVertex": 9.324211351297802,
+    "GroundDecalFragment": 16.701899127726964
+  },
+  "currentSourceBoundary": {
+    "vertexAndGeometry": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:12-54,197-201,372-382",
+    "encodeDraw": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:57-63",
+    "pipelineCreation": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:73-87"
+  },
+  "independence": "G01 candidate addresses repeated GroundDecalVertex processing of a 36-vertex cube using the same eight effective corner values. It does not change GameDecal geometry or fragment code, the already completed RANGE199/233 and geometry184 work, or the S01 A/Grass pass split. This is a scope distinction, not proof of runtime independence or performance benefit.",
+  "proposedInvariant": "Preserve all 12 triangle vertex order, current cyclic source-vertex rotation and first-provoking semantics, GroundDecalFragment resources/math, blend/depth/stencil, and source instance order. Fixed first-representative effective vertex IDs [0,1,2,5,6,7,8,11] and 36-index sequence are in COMPARISON-GROUND-SCOPE.json.",
+  "evidence": [
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/api-calls.jsonl",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/shader-costs.jsonl",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/COMPARISON-GROUND-SCOPE.json"
+  ],
+  "limits": [
+    "Captured shader-cost shares are replay-relative percentages, not GPU milliseconds or predicted FPS.",
+    "An indexed G01 implementation and its parity/performance have not been measured.",
+    "G01 must be checked against its copied source and executable identity after preparation."
+  ]
+}

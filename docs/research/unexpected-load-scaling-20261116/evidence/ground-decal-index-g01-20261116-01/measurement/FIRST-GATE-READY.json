@@ -1,0 +1,21 @@
+{
+  "status": "READY_NO_GPU_OR_GAME",
+  "helperSourceSHA256": "e3b5bf211351dca2203cecf084f83d2659f9d0bc9cad5762d1d81b0d554461d7",
+  "helperBinarySHA256": "cd664cdcae10d0817c44c75c521b3122c78392d0576a97d0c50d2d85a755a987",
+  "candidateSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "validationArm": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_valid01/validation_paced/preparation/runs/V_G01",
+  "helperOutput": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/validation/runs/g01_first_gate01",
+  "helperEnvironment": {
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "1",
+    "MTL_LOG_TO_STDERR": "1"
+  },
+  "validationEnvironment": {
+    "BAR_NATIVE_GRASS_BOUNDARY_S01": "1",
+    "BAR_NATIVE_GROUND_DECAL_INDEX_G01": "1",
+    "BAR_NATIVE_GROUND_DECAL_INDEX_G01_PROBE": "1",
+    "MTL_DEBUG_LAYER": "1",
+    "MTL_SHADER_VALIDATION": "0",
+    "BAR_NATIVE_FRAME_TRACE": "0"
+  }
+}

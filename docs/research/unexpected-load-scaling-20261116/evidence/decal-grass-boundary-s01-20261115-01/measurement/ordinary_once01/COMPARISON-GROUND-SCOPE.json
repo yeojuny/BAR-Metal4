@@ -1,0 +1,108 @@
+{
+  "status": "READ_ONLY_SAVED_CAPTURE_COMPARISON",
+  "scope": "9a44 S01 Native saved one-frame replay versus preserved MVK3 saved one-frame replay; distinct builds/frames; no execution, shader edit, GPU profiling, or FPS prediction",
+  "nativeObserved": {
+    "shaderCostShareOfThisReplayPercent": {
+      "GroundDecalFragment": 16.701899127726964,
+      "GroundDecalVertex": 9.324211351297802,
+      "GameDecalFragment": 9.25796763946
+    },
+    "apiDraws": {
+      "ground": {
+        "pipeline": "rps71",
+        "api": "api5102",
+        "primitive": "triangle",
+        "verticesPerInstance": 36,
+        "instances": 32364
+      },
+      "gameGeometry": {
+        "pipeline": "rps16",
+        "api": "api5070",
+        "primitive": "triangle",
+        "verticesPerInstance": 96,
+        "instances": 3549
+      }
+    },
+    "source": {
+      "groundVertex": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:12,197-201,288-291,318,372-382",
+      "groundFragment": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:699-812,844-871",
+      "groundEncode": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:57-63",
+      "gameFragment": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine/rts/Rendering/Metal4/NativeGameDecalShaders.h:193-305,326-338"
+    },
+    "evidence": [
+      "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/shader-costs.jsonl",
+      "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/api-calls.jsonl"
+    ]
+  },
+  "mvkObserved": {
+    "ground": "cb3/re285 draw0, 12 triangles x 32545 instances, original GroundDecal generated fragment source ${AUDIT_WORKSPACE}/evidence/material-storage-pr7-20261115-01/ultra-compare/mvk3-focus-prep01/analysis/ground-decal-FS.metal:98-275",
+    "game": "saved GameDecal draw 32 triangles x 4544 instances; generated fragment source ${AUDIT_WORKSPACE}/evidence/material-storage-pr7-20261115-01/ultra-compare/mvk3-focus-prep01/analysis/game-decal-FS.metal:97-205",
+    "evidence": [
+      "${AUDIT_WORKSPACE}/evidence/material-storage-pr7-20261115-01/ultra-compare/mvk3-focus-prep01/analysis/render-draw-index.json",
+      "${AUDIT_WORKSPACE}/evidence/material-storage-pr7-20261115-01/ultra-compare/mvk3-focus-prep01/analysis/game-decal-details.jsonl"
+    ],
+    "operationComparison": "Both native source and preserved MVK3 generated Ground FS sample minimap before selecting explosion-only color contribution; both use atlas color and normal, terrain normal, shadow compare/color, and projection/depth reconstruction. Native GameDecal FS and MVK generated GameDecal FS both perform atlas/minimap/normal/LOS/shadow-related work. These are source-level correspondences, not matched GPU timing or proof of a backend-specific difference."
+  },
+  "rankedCandidates": [
+    {
+      "rank": 1,
+      "name": "Ground decal indexed cube corners",
+      "concreteChange": "Use a fixed 36-entry uint16 index sequence naming the eight existing effective corner vertex IDs, preserving triangle order and the current cyclic provoking-vertex rotation; retain current VS/FS math and all fragment resources.",
+      "evidence": "Current native draw submits 36 vertices for each of 32364 instances. CUBE_VERT has eight distinct corners; GroundDecalVertex calls Run((vid/3)*3+(vid%3+2)%3), and Run uses the source ID only to read relPos, so duplicate effective corners produce equal outputs for the same instance. First effective-vertex representatives are [0,1,2,5,6,7,8,11]. MVK saved ground draw also has 12 triangles/36 vertices per instance; this is shared geometry work, not a native-specific backend gap.",
+      "potential": "Targets the observed 9.3242% GroundDecalVertex shader-cost share; eight distinct corner results versus 36 submitted vertices per instance. Actual hardware vertex-cache reuse and replay cost reduction are unmeasured.",
+      "guard": "Prove exact index sequence preserves each ordered triangle, all varying outputs including flat glow/provoking semantics, and native color/depth/stencil parity; inspect indexed vertex_id semantics and allocation lifetime. No raster-quality or fragment algorithm change.",
+      "fixedIndexSequenceUsingFirstRepresentativeVertexIDs": [
+        0,
+        1,
+        2,
+        1,
+        0,
+        5,
+        6,
+        7,
+        8,
+        7,
+        6,
+        11,
+        0,
+        6,
+        5,
+        6,
+        0,
+        11,
+        1,
+        8,
+        7,
+        2,
+        1,
+        7,
+        0,
+        7,
+        11,
+        7,
+        0,
+        2,
+        1,
+        6,
+        8,
+        6,
+        1,
+        5
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Explosion-only minimap sample in Ground FS",
+      "concreteChange": "Conditionally sample miniMapTex only for vDecalType == DECAL_EXPLOSION; leave all non-explosion color math and explosion branch intact.",
+      "evidence": "NativeGroundDecalShaders.h:730 samples miniMapTex unconditionally; lines 735-737 select mixed color only for explosion. Preserved MVK generated Ground FS lines 179-181 also sample before type select.",
+      "potential": "Can avoid one texture read for non-explosion fragments if the compiler and hardware preserve the condition. The captured instance-type distribution and fragment coverage are unavailable; this is not a quantified cost reduction.",
+      "guard": "Check NaN/selection behavior, derivative/texture sampling semantics and full color/depth/stencil parity. Branch divergence and compiler scheduling could offset savings."
+    }
+  ],
+  "limits": [
+    "Shader-cost percentages are relative costs within one replay, not milliseconds, frame shares, or additive cross-run quantities.",
+    "Native and MVK3 captures are different moments and binary stacks; no direct timing ratio or isolated backend causal claim.",
+    "No saved per-instance decal type distribution or fragment invocation counts, so fragment candidate cannot be sized.",
+    "A fixed indexed draw is a design candidate; no measured speedup or parity result exists."
+  ]
+}

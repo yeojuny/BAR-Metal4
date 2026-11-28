@@ -1,0 +1,30 @@
+{
+  "status": "CLOSED_PROFILE_EXPORTS_COMPLETE",
+  "recordedUTC": "2026-11-16T09:19:20.592316+00:00",
+  "originalReplayReceipt": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/REPLAY-RESULT.json",
+  "originalImmediateSessionList": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/sessions-after.log",
+  "immediateListClassification": "STALE_TERMINATING_SESSION_AFTER_SUCCESSFUL_TERMINATE",
+  "finalSessionList": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/sessions-final-verified.log",
+  "finalActiveGPUDebugSessions": 0,
+  "ownedSession": "115",
+  "ownedTerminateExit": 0,
+  "profileCompleted": true,
+  "profileExit": 0,
+  "exportCount": 9,
+  "exportedAll": true,
+  "captureStatus": "CAPTURED",
+  "captureExit": 0,
+  "engineNormalExit": true,
+  "ownedPIDs": [
+    32649,
+    32764,
+    32821,
+    32813
+  ],
+  "ownedPIDsRemaining": 0,
+  "awakeReleased": true,
+  "sharedAwakeReleased": true,
+  "diagnosticFPSExcluded": true,
+  "newCaptureOrProfileRuns": 0,
+  "explanation": "The first list command ran immediately after gpudebug terminate returned 0 and still showed session115 anchored to an exiting Python PID. A later list showed zero sessions; all owned PIDs are gone. Original receipt preserved."
+}

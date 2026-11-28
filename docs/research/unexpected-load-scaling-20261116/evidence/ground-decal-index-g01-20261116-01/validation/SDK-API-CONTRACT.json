@@ -1,0 +1,22 @@
+{
+  "status": "PASS_SYNTAX_ONLY",
+  "header": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Headers/MTL4RenderCommandEncoder.h",
+  "headerSHA256": "30a4ef6d30a363b6a0df94eb44873c2a1718a96b3091e7edfa9f1082824ec47f",
+  "lines": "350-425",
+  "indexCount": 36,
+  "indexType": "UInt16",
+  "bufferBytes": 72,
+  "offsetBytes": 0,
+  "requiredAddressAlignmentBytes": 2,
+  "requiredLengthMultipleBytes": 2,
+  "baseVertex": 0,
+  "baseInstance": 0,
+  "residency": "Existing Buffer -> RuntimeLease::AddAllocation; packet and lease retain exact buffer",
+  "selector": "drawIndexedPrimitives:indexCount:indexType:indexBuffer:indexBufferLength:instanceCount:baseVertex:baseInstance:",
+  "checkSource": "SDK-API-CHECK.mm",
+  "compiler": "/usr/bin/clang++ -x objective-c++ -std=c++20 -fobjc-arc -fsyntax-only -Wall -Wextra -Werror -isysroot <installed SDK> -I <G01 source>/rts SDK-API-CHECK.mm",
+  "exitCode": 0,
+  "diagnosticLogBytes": 0,
+  "engineBuilds": 0,
+  "GPUExecutions": 0
+}

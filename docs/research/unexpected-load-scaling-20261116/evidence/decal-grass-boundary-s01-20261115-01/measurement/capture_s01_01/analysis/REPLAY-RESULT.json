@@ -1,0 +1,89 @@
+{
+  "status": "PROFILE_AND_EXPORTS_COMPLETE",
+  "trace": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/clean_paced/preparation/runs/P_S01_CAPTURE/native-frame.gputrace",
+  "signedBinarySHA256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+  "profile": "default GPU state; overlapping execution; one pass; no embed",
+  "profileTimeoutSeconds": 180,
+  "sessionIdleTimeoutSeconds": 600,
+  "awakePID": 32821,
+  "startedUTC": "2026-11-16T09:18:02.020501+00:00",
+  "performanceAccepted": false,
+  "exportCommands": {
+    "command-tree": "/commands",
+    "command-buffer": "/commands/cb0",
+    "api-calls": "/api_calls",
+    "resources": "/resources",
+    "render-pipelines": "/resources/render_pipelines",
+    "encoder-costs": "/performance/encoders",
+    "shader-costs": "/performance/shaders",
+    "encoder-intervals": "/performance/timeline/encoders",
+    "shader-stage-intervals": "/performance/timeline/shaders"
+  },
+  "openExit": 0,
+  "ownedSession": "115",
+  "replayerReadyStatus": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/status-01.log",
+  "profileExit": 0,
+  "exports": {
+    "command-tree": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/command-tree.jsonl",
+      "bytes": 416
+    },
+    "command-buffer": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/command-buffer.jsonl",
+      "bytes": 9881
+    },
+    "api-calls": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/api-calls.jsonl",
+      "bytes": 1504163
+    },
+    "resources": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/resources.jsonl",
+      "bytes": 1660
+    },
+    "render-pipelines": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/render-pipelines.jsonl",
+      "bytes": 39853
+    },
+    "encoder-costs": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/encoder-costs.jsonl",
+      "bytes": 16177
+    },
+    "shader-costs": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/shader-costs.jsonl",
+      "bytes": 38381
+    },
+    "encoder-intervals": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/encoder-intervals.jsonl",
+      "bytes": 15481
+    },
+    "shader-stage-intervals": {
+      "status": "EXPORTED",
+      "exit": 0,
+      "path": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/capture_s01_01/analysis/shader-stage-intervals.jsonl",
+      "bytes": 42200
+    }
+  },
+  "profileCompleted": true,
+  "terminateExit": 0,
+  "sessionListExit": 0,
+  "ownedSessionAbsent": false,
+  "allSessionsAbsent": false,
+  "awakeReleased": true,
+  "closedUTC": "2026-11-16T09:18:34.026204+00:00"
+}

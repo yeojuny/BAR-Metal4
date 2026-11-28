@@ -1,0 +1,90 @@
+{
+  "status": "PASS",
+  "checks": [
+    {
+      "file": "Metal4WorldRenderer.mm",
+      "function": "CUSSourceImage OriginalModelImage(",
+      "byteIdenticalToAttempt1": true,
+      "sha256": "70209655eac1d76e8929e800079e823f5ff4b4119e945c2805c841d0eaf4e660"
+    },
+    {
+      "file": "Metal4WorldRenderer.mm",
+      "function": "GrassSourceImageS01 OriginalGrassImageS01(",
+      "byteIdenticalToAttempt1": true,
+      "sha256": "e1cf18224741024049829443ccb05dc5ef7bb03576388fbddaf2bde246b6a6f5"
+    },
+    {
+      "file": "Metal4WorldRenderer.mm",
+      "function": "const auto keepMRTBoundary165=",
+      "byteIdenticalToAttempt1": true,
+      "sha256": "fbd1977f9b56c69cc1b7bdb68f66a222f7fe65d68368a7bc8607b036618c54d5"
+    },
+    {
+      "file": "Metal4Grass.mm",
+      "function": "void PreparedGrass::EncodeDependencies(",
+      "byteIdenticalToAttempt1": true,
+      "sha256": "0983c80b13931bd03cd4a3c25f9397157e16e4fd51dc4fda64a66c93437531cf"
+    },
+    {
+      "file": "Metal4Grass.mm",
+      "function": "void PreparedGrass::EncodeDraw(",
+      "byteIdenticalToAttempt1": true,
+      "sha256": "f30647786b0c9acb379ca4bc7a50464cfb601d641f16b447bb82776c06cd698c"
+    },
+    {
+      "file": "Metal4Grass.mm",
+      "function": "void PreparedGrass::DidComplete(",
+      "byteIdenticalToAttempt1": true,
+      "sha256": "9ea9d7e52c10ae966c116ed1567152c404108ef9086dbbfabd8b9a51c301b30f"
+    },
+    {
+      "file": "Metal4Grass.mm",
+      "function": "GrassStorageS01 GrassStorage(",
+      "byteIdenticalToAttempt1": true,
+      "sha256": "40b5a0d81a4aadf6693d5493abe89fb8674aea569e778cf6136cbd90405efba9"
+    },
+    {
+      "file": "Metal4TerrainInfoSource.h",
+      "byteIdenticalToAttempt1": true
+    },
+    {
+      "file": "Metal4TerrainInfoSource.mm",
+      "byteIdenticalToAttempt1": true
+    },
+    {
+      "file": "Metal4ScreenNative.h",
+      "byteIdenticalToAttempt1": true
+    },
+    {
+      "file": "Metal4ScreenNative.mm",
+      "byteIdenticalToAttempt1": true
+    },
+    {
+      "file": "Metal4MainAttachments.h",
+      "byteIdenticalTo87df": true
+    },
+    {
+      "file": "Metal4SourceImage.h",
+      "byteIdenticalTo87df": true
+    },
+    {
+      "file": "NativeGrassShaders.h",
+      "byteIdenticalTo87df": true
+    },
+    {
+      "file": "NativeSensorLOSShaders.h",
+      "byteIdenticalTo87df": true
+    },
+    {
+      "file": "Metal4SensorLOSNative.mm",
+      "byteIdenticalTo87df": true
+    },
+    {
+      "newSplitProtocol": "exactFtoFbodyunchanged",
+      "genericResumes": "exactoriginal2linesunchanged",
+      "actualMRTClose": "originalbarrier/end/nilsequence preserved",
+      "helperRerun": "notneeded sameprotocol"
+    }
+  ],
+  "synthetic128": "previousPASSretained;unchangedhelper/protocol"
+}

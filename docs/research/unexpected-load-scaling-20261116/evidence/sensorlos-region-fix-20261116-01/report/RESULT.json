@@ -1,0 +1,357 @@
+{
+  "status": "COMPLETE_CLOSED",
+  "decision": "ACCEPT_SCOPED_AA0_CANDIDATE_NOT_DEPLOYED",
+  "decisionReason": "Exact coverage/shading preserved by design and scoped CPU/GPU parity gates; separate actual game validation passed; all three candidate clean means exceed all three baseline means, three-run mean improves12.167391%.",
+  "measurement": {
+    "status": "SIX_CLEAN_RUNS_COMPLETE",
+    "scope": "Ultra AA0 Seths official combat, same fixture; SensorLOS two-file candidate vs signed b25 baseline",
+    "candidateSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+    "baselineSHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+    "gpuPixelParity": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/validation/GPU-PARITY-RESULT.json",
+    "gameValidationGate": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/GAME-VALIDATION-GATE.json",
+    "buildCandidateReceipt": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/CANDIDATE.json",
+    "order": [
+      "A1_BASE",
+      "B1_SENSOR",
+      "B2_SENSOR",
+      "A2_BASE",
+      "A3_BASE",
+      "B3_SENSOR"
+    ],
+    "runs": [
+      {
+        "arm": "A1_BASE",
+        "mode": "baseline",
+        "meanFPS": 47.502435147431164,
+        "slow1PercentFPS": 39.175257731958766,
+        "draws": 1901,
+        "countedSeconds": 40.019001007,
+        "normalExit": true,
+        "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A1_BASE/scene.png"
+      },
+      {
+        "arm": "B1_SENSOR",
+        "mode": "candidate",
+        "meanFPS": 53.248669514100136,
+        "slow1PercentFPS": 45.64315343227561,
+        "draws": 2130,
+        "countedSeconds": 40.000999451,
+        "normalExit": true,
+        "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B1_SENSOR/scene.png"
+      },
+      {
+        "arm": "B2_SENSOR",
+        "mode": "candidate",
+        "meanFPS": 53.2513305523893,
+        "slow1PercentFPS": 45.92901869325883,
+        "draws": 2130,
+        "countedSeconds": 39.999000549,
+        "normalExit": true,
+        "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B2_SENSOR/scene.png"
+      },
+      {
+        "arm": "A2_BASE",
+        "mode": "baseline",
+        "meanFPS": 47.480936384789096,
+        "slow1PercentFPS": 39.74895389173859,
+        "draws": 1899,
+        "countedSeconds": 39.994998932,
+        "normalExit": true,
+        "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A2_BASE/scene.png"
+      },
+      {
+        "arm": "A3_BASE",
+        "mode": "baseline",
+        "meanFPS": 47.40355331347211,
+        "slow1PercentFPS": 37.54940711462451,
+        "draws": 1896,
+        "countedSeconds": 39.997001648,
+        "normalExit": true,
+        "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A3_BASE/scene.png"
+      },
+      {
+        "arm": "B3_SENSOR",
+        "mode": "candidate",
+        "meanFPS": 53.21169930740393,
+        "slow1PercentFPS": 44.989775051124745,
+        "draws": 2129,
+        "countedSeconds": 40.009998322,
+        "normalExit": true,
+        "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B3_SENSOR/scene.png"
+      }
+    ],
+    "meansFPS": {
+      "baseline": 47.46230828189746,
+      "candidate": 53.237233124631125
+    },
+    "candidateVsBaselinePercent": 12.167391456045706,
+    "sameInitialState": "frame=240 map=Seths Ravine Remake 1.3.1 mapx=8192 mapz=6144 units=2 details=0:armcom:2867.000:331.410:3072.000|1:armcom:5325.000:329.996:3072.000",
+    "sameCamera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+    "sameOfficialCreated": 600,
+    "sameOfficialDestroyed": 433,
+    "allValidSlowRunsRetained": true,
+    "historicalSamplesPooled": false,
+    "cleanImagesInterpretation": "Internal screenshots saved after each 40-second count; whole-scene pixel identity not claimed",
+    "normalExitAll": true,
+    "ownedProcessesRemaining": 0,
+    "awakeReleased": true,
+    "limits": [
+      "Fixture-specific three-versus-three mean FPS, not a general scene-wide gain estimate",
+      "Standalone GPU pixel parity checks sample1 color/depth/stencil with test-only VS; engine Metal Validation/game image are separate gates"
+    ]
+  },
+  "aggregation": {
+    "baseline": {
+      "n": 3,
+      "meanFPS": 47.46230828189746,
+      "minFPS": 47.40355331347211,
+      "maxFPS": 47.502435147431164,
+      "sampleStdDevFPS": 0.05200633552542109,
+      "pooledDrawsOverSecondsFPS": 47.46231532673926,
+      "totalCountedSeconds": 120.01100158700001,
+      "totalDraws": 5696
+    },
+    "candidate": {
+      "n": 3,
+      "meanFPS": 53.237233124631125,
+      "minFPS": 53.21169930740393,
+      "maxFPS": 53.2513305523893,
+      "sampleStdDevFPS": 0.022152926394445924,
+      "pooledDrawsOverSecondsFPS": 53.237230975186016,
+      "totalCountedSeconds": 120.009998322,
+      "totalDraws": 6389
+    }
+  },
+  "method": {
+    "primary": "Arithmetic mean of three per-run average FPS values per version; FPS is draws divided by measured elapsed seconds.",
+    "order": [
+      "A1_BASE",
+      "B1_SENSOR",
+      "B2_SENSOR",
+      "A2_BASE",
+      "A3_BASE",
+      "B3_SENSOR"
+    ],
+    "warmupSeconds": 10,
+    "countedTargetSecondsEach": 40,
+    "countedSimulationFrames": [
+      540,
+      1740
+    ],
+    "benchmarkCommandFrame": 240,
+    "settings": "Ultra index4 / AA OFF (actual native samples1), Seths Ravine Remake1.3.1, local26,1512x950 game/1512x982drawable, spectatorfullview, pinned camera and seeds, Prepare1 Begin0 pool0 DQU0, idle/offscreenFPSreductionOFF/VSyncOFF.",
+    "diagnostics": "Off in clean runs. Separate GPU helper and one actual Metal API Validation game excluded from FPS. PNG after ROI.",
+    "allSixRetained": true,
+    "timedIsolation": "Fresh HQGO+root/auxLOCALPAUSE before each batch, measurement_owner sole local executor."
+  },
+  "change": {
+    "files": [
+      "source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+      "source/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm"
+    ],
+    "algorithm": "Use same quantized endpoint/major-axis as exact FS to generate a narrower sheared quad only when sample1, eligible and smaller area. Extend major bounds4px and minor half-band roundedWidth/2+4px; all guarded failures/MSAA retain original AABB.",
+    "preserved": "Existing exact coverage, line width/endpoints/clipping, flat varyings, mask derivatives and sampling/discard order, alpha/color/depth/stencil/blend, resources and reader lifetime.",
+    "sourceSuffixByteIdentical": {
+      "fragmentAndFanAndMSAAByteIdentical": true,
+      "unchangedSuffixSHA256": "8cce0ce4057193a91d8a6a650a9fab5132eca54e3f9e7014276ea20ae4a4d0fb",
+      "files": [
+        "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine/rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+        "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine/rts/Rendering/Metal4/Metal4SensorLOSNative.mm"
+      ],
+      "baselineSource": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+      "samplesField": "Previously unused counts.w now carries samples; tight path samples==1 only."
+    }
+  },
+  "gates": {
+    "staticReview": "../REVIEW.json",
+    "gpuHarnessReview": "../GPU-REVIEW.json",
+    "cpuContainment": {
+      "status": "PASS",
+      "method": "Exact integer diamond-exit symbolic-epsilon oracle plus independent float32 quad construction; sampled major positions for long lines; endpoint minors and interior checked; all 3x3 centers contain every possible adjacent 2x2 helper. Homogeneous clipping tested. GPU parity remains separate.",
+      "cases": 8006,
+      "homogeneousClippedCases": 222,
+      "tightCases": 3869,
+      "fallbackCases": 4137,
+      "acceptedSamplesChecked": 170522,
+      "helperCentersChecked": 1534698,
+      "oldAreaSum": 664865208.8452911,
+      "tightAreaSum": 23931846.2265625,
+      "testSetAreaRatio": 0.03599503464488131,
+      "notRuntimeReductionEstimate": true,
+      "scriptSHA256": "4286a49bf1149734787b7821257234cc8747a826da76d6a45f368a2836512c8d"
+    },
+    "gpuPixelParity": {
+      "status": "PASS",
+      "scope": "standalone offscreen Metal sample1 SensorLOS geometry/fragment byte parity only",
+      "timeUTC": "2026-11-16T06:46:44.110112+00:00",
+      "helperSourceSHA256": "f5e6de729848d880ccbe953e331d0f6a95333ba96affb290509c474fe46a035a",
+      "helperBinarySHA256": "b090180af75e9bceddab6a7798c360f4e43bd48297015e34b9bd53f692f23eda",
+      "buildLogSHA256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "runLogSHA256": "e9164582938cf4727f9798c2bde60337c73f195e26d7b552992af64017a69c3f",
+      "compileExit": 0,
+      "runExit": 0,
+      "cases": 3600,
+      "optimized": 2234,
+      "visibleOptimized": 1869,
+      "depthOptimized": 427,
+      "clippedOptimized": 29,
+      "seamOptimized": 12,
+      "xMajorVisibleOptimized": 1199,
+      "yMajorVisibleOptimized": 629,
+      "colorDepthStencilByteIdentical": true,
+      "sampleCount": 1,
+      "engineBuilds": 0,
+      "games": 0,
+      "ownedProcessesRemaining": 0,
+      "awakeReleased": true,
+      "limits": [
+        "test-only VS supplies geometry; actual OriginalSensorLOSFragment reused",
+        "sample count >1 and engine lifetime not covered"
+      ]
+    },
+    "actualGame": {
+      "status": "PASS_SCOPED_GAME_VALIDATION_AND_VISUAL_SANITY",
+      "candidateSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+      "runtimeResult": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_valid01/validation_paced/preparation/runs/V_SENSOR/RESULT.json",
+      "metalLayerEnabledWitness": "engine.log:162 Metal API Validation Enabled",
+      "matchedMetalErrors": 0,
+      "normalExit": true,
+      "actualMainSamples": 1,
+      "gameView": [
+        1512,
+        950
+      ],
+      "drawable": [
+        1512,
+        982
+      ],
+      "sourceBinding": "Reviewed compiled Metal4SensorLOSNative.mm passes actual samples into counts.w; Source closure exactly two modified files. No new GPU uniform readback/capture was performed.",
+      "visualCheck": {
+        "method": "Primary agent viewed candidate scene.png and existing pinned b25 AA0 B1 scene.png at the same fixture camera/stopped combat frame.",
+        "result": "Terrain, armies, range-circle outlines and scene layout present and aligned; no visible missing strip, broken outline or rendering corruption observed.",
+        "limit": "Visual sanity only; dynamic effects/interpolation/statistics text differ between runs. Whole scene pixel identity is not claimed. Exact geometry/FS output parity is supported separately by standalone 3600 GPU cases."
+      },
+      "performanceAccepted": false,
+      "cleanRunsLaunched": 0
+    },
+    "sixRunComparability": "COMPARABILITY.json"
+  },
+  "screenComparison": {
+    "montage": "SCENES.png",
+    "preview": "SCENES-preview.jpg",
+    "originalPNGs": [
+      "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A1_BASE/scene.png",
+      "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B1_SENSOR/scene.png",
+      "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B2_SENSOR/scene.png",
+      "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A2_BASE/scene.png",
+      "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/A3_BASE/scene.png",
+      "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/preparation/runs/B3_SENSOR/scene.png"
+    ],
+    "visualAssessment": "Primary agent reviewed all six fixed-scene images. Scene layout/armies/terrain/outlines retained, no obvious missing bands or broken outlines. Dynamic particles/clouds/interpolation/overlay text differ.",
+    "wholeFramePixelIdentityClaimed": false,
+    "pixelParityEvidence": "Separate actual shader GPU offscreen tests compare color/depth/stencil bytes and require optimized visible/depth/clipped/seam/x-major/y-major witnesses; screenshot similarity alone is not the parity gate."
+  },
+  "workReduction": {
+    "proven": "Every use of tight helper passes strict newArea<oldArea gate; CPU and GPU tests prove tight geometry executes and output equivalence for the covered domain.",
+    "runtimeFragmentInvocationReduction": "NOT_MEASURED",
+    "runtimeGPUTimeReduction": "NOT_MEASURED",
+    "explanation": "No additional frame capture/profile or fragment-counter experiment; do not equate synthetic area ratio or previous31.6% replay cost with actual battle workload or predicted gain."
+  },
+  "historyAndDeferred": "../HISTORY-AND-DEFERRED.json",
+  "limits": [
+    "One machine, one fixed UltraAA0 combat fixture, three runs per version;12.17% is not a guarantee across maps/graphics settings.",
+    "GPU pixel parity uses a test-only VS and the actual unmodified SensorLOS FS. Actual full engine path separately passed API validation and visual sanity; whole-engine pixel identity is not proven by screenshots.",
+    "MSAA retains original bounds and fragment text; no new MSAA GPU/runtime test was performed.",
+    "The candidate was built once as a complete target in a private lane; baseline source/runtime, earlier raw results and app preserved. No Git, release or deployment.",
+    "No shortcircuit/64bit math/fastmath/MetalLine/encoder partition/PREPARE/pool/queue changes added."
+  ],
+  "build": {
+    "status": "SIGNED_PRIVATE_CANDIDATE",
+    "createdUTC": "2026-11-16T06:54:28.684070+00:00",
+    "sourceHead": "a3c7c6bfa93d09dac25755534195932d12fff41a",
+    "sourceChangedPaths": [
+      {
+        "path": "rts/Rendering/Metal4/Metal4SensorLOSNative.mm",
+        "baselineSHA256": "ac2d15d41a3245e96024e8e3db3ced84363504bb7065ce8e10ef47eef51dbf50",
+        "candidateSHA256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6"
+      },
+      {
+        "path": "rts/Rendering/Metal4/NativeSensorLOSShaders.h",
+        "baselineSHA256": "86477eb39c19081a76d65f5693224f90c35e7e5215d820e38961db606ddfec58",
+        "candidateSHA256": "b11a26584e84abca5c6addb19267637f400b92ee671f9e3d71786b5ae04e1ac8"
+      }
+    ],
+    "sourceClosure": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/SOURCE-CLOSURE.json",
+    "rawSHA256": "e28da20cc6d567e0cc82701e4a174e5e5c59dbeaa55f5910661eb735dad47e59",
+    "signedSHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+    "binary": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/runtime/native/bin/spring-metal4-scene",
+    "native": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/runtime/native",
+    "parentCandidateSHA256": "b25a08287679847a420c37eaf3c201c9c95ad696e90d1b1eaa18e0cb08060942",
+    "relocations": [
+      [
+        "/opt/homebrew/opt/devil/lib/libIL.dylib",
+        "@loader_path/../lib/libIL.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/minizip/lib/libminizip.1.dylib",
+        "@loader_path/../lib/libminizip.1.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/freetype/lib/libfreetype.6.dylib",
+        "@loader_path/../lib/libfreetype.6.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib",
+        "@loader_path/../lib/libfontconfig.1.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/libvorbis/lib/libvorbisfile.3.dylib",
+        "@loader_path/../lib/libvorbisfile.3.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/libvorbis/lib/libvorbis.0.dylib",
+        "@loader_path/../lib/libvorbis.0.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/libogg/lib/libogg.0.dylib",
+        "@loader_path/../lib/libogg.0.8.6.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/openal-soft/lib/libopenal.1.dylib",
+        "@loader_path/../lib/libopenal.1.25.2.dylib"
+      ],
+      [
+        "/opt/homebrew/opt/sdl3/lib/libSDL3.0.dylib",
+        "@loader_path/../lib/libSDL3.0.dylib"
+      ]
+    ],
+    "relocationCount": 9,
+    "codesignVerifyExit": 0,
+    "build": {
+      "fullTargetBuildCount": 1,
+      "fullTargetBuildLog": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/BUILD.log",
+      "finalNoWork": true,
+      "initialCacheSHA256": "4ce54ccfdf0a1f8f0883c1f60c10564e9b198936b819675c3aad486cdda72115",
+      "archiveClosureStatus": "PASS",
+      "objectCount": 1538,
+      "archiveCount": 35,
+      "archiveMismatchCount": 0
+    },
+    "standaloneGpuParity": {
+      "status": "PASS",
+      "result": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/validation/GPU-PARITY-RESULT.json",
+      "engineBuildCountForHelper": 0
+    },
+    "gamesRun": 0
+  },
+  "closure": {
+    "clean": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/OWNER-CLOSED.json",
+    "awake": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/runs/sensorlos_clean01/clean_paced/AWAKE-RELEASED.json",
+    "games": 7,
+    "cleanGames": 6,
+    "validationGames": 1,
+    "candidateFullBuilds": 1,
+    "additionalFrameProfiles": 0,
+    "allOwnedProcessesGone": true
+  }
+}

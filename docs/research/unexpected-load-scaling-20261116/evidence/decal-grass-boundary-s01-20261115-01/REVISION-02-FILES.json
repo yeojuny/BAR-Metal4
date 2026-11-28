@@ -1,0 +1,10 @@
+{
+  "status": "ARCHIVE_HASH_VERIFIED",
+  "changes": [
+    "rts/Rendering/Metal4/Metal4Grass.h",
+    "rts/Rendering/Metal4/Metal4Grass.mm",
+    "rts/Rendering/Metal4/Metal4GrassBoundaryPolicyS01.h",
+    "rts/Rendering/Metal4/Metal4WorldRenderer.mm",
+    "tools/metal4-contracts/TestGrassBoundaryS01.cpp"
+  ]
+}

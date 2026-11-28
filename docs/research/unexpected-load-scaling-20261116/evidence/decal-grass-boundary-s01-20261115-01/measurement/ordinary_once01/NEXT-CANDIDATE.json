@@ -1,0 +1,42 @@
+{
+  "status": "R02_SCOPE_REVIEW_NO_IMPLEMENTATION_RECOMMENDED",
+  "reason": "Simmers fixed-camera grass work absent by original height cutoff; no forced scene/settings change or repeat",
+  "candidate": "R02 WeaponRange line raster coverage bounds",
+  "acceptedBaseline": {
+    "sha256": "9a44a0b109d77a561f08080dafeac1db8dd5d9655ef6002be379a17feee94aa0",
+    "S01": 1,
+    "PROBE": 0
+  },
+  "observedSource": {
+    "vertex": "NativeWeaponRangeShaders.h:437-458 computes axis-aligned rectangle around every line segment with width-dependent extent",
+    "exactCoverage": "NativeWeaponRangeShaders.h:501 onward uses fixed-subpixel endpoint acceptance",
+    "nativeSetup": "Metal4WeaponRangeNative.mm:208-218 keeps full attachment viewport and original captured scissor"
+  },
+  "nextWork": [
+    "Establish actual visible weapon range draw frequency/cost in existing evidence before optimizing",
+    "Prove smaller conservative bounds retain every original accepted sample for each supported path",
+    "Preserve original height-based range computation, endpoints, fixed-subpixel fragment coverage, alpha/depth/stencil/scissor, masks, fill/minimap and MSAA contracts",
+    "Prepare narrow reviewed implementation and meaningful parity gate before any new build or timed measurement"
+  ],
+  "notPerformed": [
+    "source edits",
+    "build",
+    "game rerun",
+    "GPU capture/profile",
+    "Git or release changes"
+  ],
+  "priorFinding": "APPLICABILITY.json",
+  "currentCaptureWeaponRangeEntries": {
+    "shaderCostCompleteRows": 139,
+    "timelineCompleteRows": 135,
+    "matchingEntries": 0
+  },
+  "historicalDuplicate": {
+    "design": "${AUDIT_WORKSPACE}/evidence/range-raster233-candidate01/DESIGN.json",
+    "review": "${AUDIT_WORKSPACE}/evidence/gpu233-range-audit01/RANGE-RASTER-POSTREVIEW.json",
+    "disposition": "${AUDIT_WORKSPACE}/evidence/range-raster233-runtime01/DISPOSITION.json",
+    "meanFPSPercent": -0.06874414173937415
+  },
+  "reasonNotToRepeat": "Same conservative-major-axis raster concept already tested without repeatable gain; no current9a44 weapon-range profile attribution or distinct new mechanism.",
+  "scopeBoundary": "Do not modify RANGE199 indexing, division233, exact coverage, passes, pools, queues or accepted S01. No source edit/build/game/profile performed."
+}

@@ -1,0 +1,46 @@
+{
+  "status": "ONE_REQUESTED_RUN_COMPLETE",
+  "comparison": "Historical single run versus new single run; not fresh paired or repeated",
+  "rows": [
+    {
+      "version": "existing87df",
+      "meanFPS": 185.15462632441086,
+      "low1FPS": 129.08777969018934,
+      "seconds": 39.999000549,
+      "draws": 7406,
+      "warmupObservedSeconds": 13.972273999999999,
+      "image": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR/scene.png"
+    },
+    {
+      "version": "S01enabled9a44",
+      "meanFPS": 185.46390215154858,
+      "low1FPS": 140.4494382022472,
+      "seconds": 39.997001648,
+      "draws": 7418,
+      "warmupObservedSeconds": 13.971567999999998,
+      "image": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_S01/scene.png"
+    }
+  ],
+  "fpsDelta": 0.30927582713772495,
+  "fpsPercent": 0.16703651065992364,
+  "low1Delta": 11.361658512057858,
+  "low1Percent": 8.801498127340812,
+  "actualSimulationWindow": [
+    300,
+    1500
+  ],
+  "same40SimulationCameraUnitSpeedPauseRows": true,
+  "rowHash": "931eb10494f08afc905e0227ca2615495c42de4737fd69bc412f5a48bc614eba",
+  "S01Flag": "ON",
+  "S01PositiveSplit": "NOT_OBSERVED; only initial fallback marker present",
+  "causalImprovement": "NOT_ESTABLISHED",
+  "limiter": "LimitIdleFps0, option_limitoffscreenfps=false actual both",
+  "newRuns": 1,
+  "retries": 0,
+  "normalExit": true,
+  "ownerClosed": true,
+  "sourceResults": [
+    "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_SENSOR/RESULT.json",
+    "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/ordinary_once01/ordinary_paced/preparation/runs/O1_S01/RESULT.json"
+  ]
+}

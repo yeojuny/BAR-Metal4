@@ -1,0 +1,36 @@
+{
+  "status": "READY_FOR_ROOT_IMAGE_REVIEW",
+  "gates": {
+    "controllerExitZero": true,
+    "engineNormalExit": true,
+    "childModeVerified": true,
+    "childFlag1": true,
+    "childG01Flag1": true,
+    "childG01Probe1": true,
+    "actualMetalValidationEnabled": true,
+    "noMatchedMetalErrors": true,
+    "positiveGrassSplit": true,
+    "positiveGroundIndexed": true,
+    "nativeRetirement": true,
+    "imagePresent": true,
+    "awakeReleased": true
+  },
+  "metalReceiptStatus": "NO_MATCHED_METAL_ERRORS",
+  "missingMetalReceiptMeans": "NOT_EVALUATED; inspect raw engine.log separately, never infer actual Metal errors",
+  "command": [
+    "/opt/homebrew/opt/python@3.15/bin/python3.15",
+    "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/run.py",
+    "--run",
+    "validation_paced",
+    "--suite",
+    "g01_valid01"
+  ],
+  "controllerExitCode": 0,
+  "engineSHA256": "962637cd9a0d71bb66896bedb0b807f2940097ae5cb58c2521eebd93bbb98559",
+  "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_valid01/validation_paced/preparation/runs/V_G01/scene.png",
+  "output": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/measurement/runs/g01_valid01/validation_paced/preparation/runs/V_G01",
+  "controllerStdout": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/validation/runs/g01_first_gate01/game-controller.stdout.log",
+  "controllerStderr": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/validation/runs/g01_first_gate01/game-controller.stderr.log",
+  "diagnosticFPSExcluded": true,
+  "captureAndCleanNotAuthorized": true
+}

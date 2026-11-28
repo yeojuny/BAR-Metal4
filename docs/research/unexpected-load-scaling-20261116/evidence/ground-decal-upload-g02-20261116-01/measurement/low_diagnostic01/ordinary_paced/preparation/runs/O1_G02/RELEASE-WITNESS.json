@@ -1,0 +1,19 @@
+{
+  "mode": "PREPARE",
+  "actualReleaseMode": "PREPARE",
+  "queuedReleaseCount": 1,
+  "release": {
+    "mode": "PREPARE",
+    "eligible": "1",
+    "queued": "1",
+    "simulation": "300",
+    "begin_submission": "0",
+    "begin_prepare_overlap": "0"
+  },
+  "boundaryCount": 1,
+  "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3",
+  "pendingAtPrepareWitness": null,
+  "cpuCreditReclaimWitness": null,
+  "cpuCreditReclaimStatus": "NOT_OBSERVED",
+  "effectiveModeFromActualRelease": true
+}

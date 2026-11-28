@@ -1,0 +1,52 @@
+{
+  "flag": "BAR_NATIVE_GRASS_BOUNDARY_S01_PROBE=1 diagnostic only; clean0",
+  "tag": "NativeGrassBoundaryS01ROI",
+  "bound": "At most3records: firstpreparedGrasspacket in each simband540..899,900..1589,1590..1740; finalsim1740mayreportzeroGrass. No recordoutsideROI. Not anall-frame splitrate/count.",
+  "observer": "PreparedGrass rejectionfields writtenonlyfor these selecteddiagnosticframes; coreadmissionchecks runnormally",
+  "legacyPositiveTag": "NativeGrassBoundaryS01 unchanged parserformat",
+  "plan_reject_bits": {
+    "1": "featuredisabled",
+    "2": "noPreparedGrass",
+    "4": "noGroundDecalpacket",
+    "8": "noexactknownprefix+contiguousGrasssuffix",
+    "16": "nextopaqueMRTboundarynotproven; seeendbits",
+    "32": "snapshotcheckpointrequirementsnotmet",
+    "64": "combined220active",
+    "128": "offscreen/continuationroute",
+    "256": "borrowedpassorloadedmainattachmentsnotproven",
+    "512": "preDecalfamilyoutsideGameDecal"
+  },
+  "end_reject_bits": {
+    "1": "separatemodelGBufferpresent",
+    "2": "opaqueModelsabsent",
+    "4": "zeroopaquephases",
+    "8": "phase0notDeferred",
+    "16": "Pass165enabledmaykeeptheencoder"
+  },
+  "read_reject_bits": {
+    "0": "allinspectedreadproofspassed",
+    "1": "notinspected (e.g.plangatefalse)",
+    "2": "dependencystageabsentoralreadycompleted",
+    "4": "Grassdrawalreadyencoded",
+    "8": "texturemissing/device/type/samples",
+    "16": "storageunknown/imported/aliasedwithmainattachment",
+    "32": "unsupported/unprovenproviderquery",
+    "64": "exactproducerquerynotrecordedorcomplete",
+    "128": "immutablebuffer/device/heap/alias/rangecheckfailed",
+    "256": "noCPU-visiblepreparedGrassdraw",
+    "512": "optionalproofexceptionfallback",
+    "1024": "submission/checkpointidentity",
+    "2048": "attachmentschangedaftercheckpoint"
+  },
+  "read_draw": "zero-basedpreparedGrassdrawindex",
+  "read_slot": "image slots1..5, or buffer index0vertices/1instances/2uniform/3bend/4indices whenreason128",
+  "counts": "grass_draws=preparedpackets; grass_visible=CPU-raster/cull-visiblepackets, notprovedvisiblepixels",
+  "opaqueFacts": [
+    "model_depth",
+    "opaque",
+    "opaque_phases",
+    "first_deferred",
+    "pass165"
+  ],
+  "interpretation": "A representativezeroGrassframe doesnotprovewholewindowgrass0. Positive actualsplitandseparateGPUcapturestillrequired."
+}

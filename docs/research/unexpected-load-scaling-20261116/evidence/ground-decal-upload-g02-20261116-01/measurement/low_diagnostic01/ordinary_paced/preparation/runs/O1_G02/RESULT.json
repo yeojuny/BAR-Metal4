@@ -1,0 +1,131 @@
+{
+  "status": "COMPLETE_LOW_OWNER_DIAGNOSTIC",
+  "performanceAccepted": false,
+  "diagnosticFPS": "EXCLUDED",
+  "fpsParserStatus": "PASS_BUT_EXCLUDED",
+  "ordinaryFixture": {
+    "map": "All That Simmers v1.1.1",
+    "seed": 154658555,
+    "controller": "${AUDIT_WORKSPACE}/evidence/worldinfo245-runtime01/control.lua",
+    "countSimulation": [
+      300,
+      1500
+    ],
+    "warmupSeconds": 10,
+    "countedSeconds": 40,
+    "imageAfterCount": true,
+    "sourceRunner": "${AUDIT_WORKSPACE}/evidence/screen-state-elision-20261115-01/measurement/run_ac0_prelaunch.py",
+    "candidateSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2"
+  },
+  "powerWitness": "frame=480 shortName=BC213 LimitIdleFps=0 VSync=0 VSyncGame=0 idleInterface=absent option_limitoffscreenfps=false",
+  "pacingWitness": {
+    "status": "PASS",
+    "events": [
+      {
+        "event": "start",
+        "fields": {
+          "simulation": "1",
+          "wall_seconds": "0.000000000",
+          "state": "waiting"
+        },
+        "raw": "[t=00:00:18.078440][f=0000001] [WarmupPacing] event=start simulation=1 wall_seconds=0.000000000 state=waiting"
+      },
+      {
+        "event": "pause_request",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "5.780000210",
+          "state": "pause_requested"
+        },
+        "raw": "[t=00:00:23.857887][f=0000180] [WarmupPacing] event=pause_request simulation=180 wall_seconds=5.780000210 state=pause_requested"
+      },
+      {
+        "event": "pause_ack",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "5.783999920",
+          "state": "held"
+        },
+        "raw": "[t=00:00:23.861865][f=0000180] [WarmupPacing] event=pause_ack simulation=180 wall_seconds=5.783999920 state=held"
+      },
+      {
+        "event": "resume_request",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.003999710",
+          "state": "resume_requested",
+          "held_seconds": "4.219999790",
+          "held_draws": "760"
+        },
+        "raw": "[t=00:00:28.082123][f=0000180] [WarmupPacing] event=resume_request simulation=180 wall_seconds=10.003999710 state=resume_requested held_seconds=4.219999790 held_draws=760"
+      },
+      {
+        "event": "resume_ack",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.010000229",
+          "state": "resumed"
+        },
+        "raw": "[t=00:00:28.087960][f=0000180] [WarmupPacing] event=resume_ack simulation=180 wall_seconds=10.010000229 state=resumed"
+      },
+      {
+        "event": "removed_before_count",
+        "fields": {
+          "simulation": "180",
+          "wall_seconds": "10.010000229"
+        },
+        "raw": "[t=00:00:28.087972][f=0000180] [WarmupPacing] event=removed_before_count simulation=180 wall_seconds=10.010000229"
+      }
+    ],
+    "originalWallGateSeconds": 13.977000237,
+    "moduleSHA256": "b5539b6b65ef141d77c57b9261a9d6c37ab860e49a24436a5b7be76e213b68fd",
+    "widgetSHA256": "1e45f01fa16a392feb38a277deb8b207066f164104e006e48129737dab792536"
+  },
+  "releaseWitness": {
+    "mode": "PREPARE",
+    "actualReleaseMode": "PREPARE",
+    "queuedReleaseCount": 1,
+    "release": {
+      "mode": "PREPARE",
+      "eligible": "1",
+      "queued": "1",
+      "simulation": "300",
+      "begin_submission": "0",
+      "begin_prepare_overlap": "0"
+    },
+    "boundaryCount": 1,
+    "boundary": "stable_surface=1 cpu_settled=1 gpu_retirement_deferred=1 source_credit_limit=3",
+    "pendingAtPrepareWitness": null,
+    "cpuCreditReclaimWitness": null,
+    "cpuCreditReclaimStatus": "NOT_OBSERVED",
+    "effectiveModeFromActualRelease": true
+  },
+  "screenStateWitness": {
+    "requestedElision": 1,
+    "finalColorStageActive": true,
+    "h5Mode": 0,
+    "countersEnabled": false,
+    "boundedRecords": 0,
+    "omittedSetters": null,
+    "scope": "bounded value-only receipts; validation run excluded from FPS"
+  },
+  "ownerSummaryClassification": "PREPARE_ZERO",
+  "ownerSummaryTotals": {
+    "prepare": 0,
+    "nonempty": 0,
+    "eligible": 0,
+    "packed": 0,
+    "separate": 0,
+    "nonindexed": 0,
+    "buffer_creates": 0,
+    "uniform_buffer_creates": 0,
+    "index_buffer_creates": 0,
+    "combined_buffer_creates": 0,
+    "clear_resources": 2
+  },
+  "ownerSummaryRows": 1,
+  "image": "${AUDIT_WORKSPACE}/evidence/ground-decal-upload-g02-20261116-01/measurement/low_diagnostic01/ordinary_paced/preparation/runs/O1_G02/scene.png",
+  "candidateSHA256": "f83dae3cde8cd2a752d1d7ff9fc7629f8a5820f72e3f05306f7c57ab5ec2fca2",
+  "normalExit": true,
+  "oldG01OrdinaryFPSNotPooled": true
+}

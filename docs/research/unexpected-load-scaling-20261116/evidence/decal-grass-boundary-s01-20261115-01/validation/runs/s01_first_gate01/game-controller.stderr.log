@@ -1,0 +1,14 @@
+Traceback (most recent call last):
+  File "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/run.py", line 525, in <module>
+    main()
+    ~~~~^^
+  File "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/run.py", line 518, in main
+    run(args.run)
+    ~~~^^^^^^^^^^
+  File "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/run.py", line 428, in run
+    grass_boundary_evidence(out, mode == 'candidate')
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/measurement/run.py", line 377, in grass_boundary_evidence
+    assert positive, 'S01 positive grass split absent; preserve raw and stop before clean'
+           ^^^^^^^^
+AssertionError: S01 positive grass split absent; preserve raw and stop before clean

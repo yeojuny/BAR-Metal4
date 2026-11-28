@@ -1,0 +1,40 @@
+{
+  "status": "SOURCE_ONLY_FEASIBLE_SUBSET__BYTE_PARITY_UNPROVEN",
+  "baseline": "Frozen signed G01 962637; G02 not adopted. No edits, build, helper, game or profile.",
+  "files": {
+    "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h": "sha256 1d97cc05fc87358a370f5db19d73594333af3c0e5c2acb1106732c9aa5b11dd6",
+    "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm": "sha256 4b62d9bceec4eb1e16b7ec00826f729da86e5935f10e32effe224ab410ed3dec"
+  },
+  "facts": [
+    {
+      "ref": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:11,197-221,223-278,312-320,372-382",
+      "finding": "p0-p4, r0-r2, data2 are flat. Corner geometry and wrap distance derive from per-instance inputs and vertex texture samples. Alpha/glow change with source corner; corner geometry does not. Early cull returns before several outputs are assigned."
+    },
+    {
+      "ref": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:433-450,638-655,699-720",
+      "finding": "dot00/dot01/dot11 and invDenom depend only on flat corners. dot02/dot12 and worldPosProj depend on fragment depth/sample. Triangle 2 executes only when triangle 1 fails. Wrap u uses flat corners/data2 under >0 guard."
+    },
+    {
+      "ref": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/NativeGroundDecalShaders.h:844-876",
+      "finding": "Sample-position adjustment, world-position reconstruction, projection acceptance, UV/fract, sampling and color remain in fragment stage."
+    },
+    {
+      "ref": "${AUDIT_WORKSPACE}/evidence/ground-decal-index-g01-20261116-01/source/engine/rts/Rendering/Metal4/Metal4GroundDecal.mm:105-119,164-175",
+      "finding": "Library uses MTLMathModeSafe and precise functions. High/shadow pipeline variants and G01 index gate are separate existing concerns."
+    }
+  ],
+  "provenanceRule": "Compute any ON flat values from the same GroundDecalVertex invocation that supplies current p1-p4/data2. Metal flat shading takes the first primitive vertex; current cyclic vid rotation preserves original last-vertex flat semantics. Never key by raw vertex_id or assume all triangle corners interchangeable.",
+  "candidateMath": "Two triangles each have three flat dot scalars; hoisting their reciprocals too needs eight scalar outputs total, plus one scalar u. Preserve original s/t/q expression order. The narrower proposal hoists six dot scalars and guarded u, leaving reciprocal and all barycentric tests in fragment.",
+  "blockers": [
+    "No source proof excludes zero or nonfinite triangle denominators. Eagerly computing both invDenom values in VS evaluates the second reciprocal even when FS never reaches triangle 2; do not claim strict exceptional-domain equivalence. A finite-domain guard/fallback would itself need proof.",
+    "Moving arithmetic across VS\u2192FS can change compiled rounding, contraction, NaN/Inf payload, signed zero or values at the 0/1 acceptance boundary despite safe/precise compile options. A flat varying preserves provoking provenance but is not a byte-parity proof.",
+    "ON must initialize new varying fields on the early-cull path without touching uninitialized existing fields or performing an unguarded divide. OFF shader interface/body must be byte-identical; no new CPU uniform or registration.",
+    "Extra stage outputs need compile/link proof for low/high sample and shadow variants, then exact GPU color/depth/stencil parity including degenerate/nonfinite/signed-zero/edge/wrap and sample-count cases."
+  ],
+  "cost": "Six dots plus u add at least seven 32-bit flat components; including two inverses adds nine. The ON VS repeats work per vertex invocation, while the FS may execute only first triangle. G01 has 36 index slots referencing eight IDs, but hardware VS-cache hits and compiler existing hoist/CSE are unknown. No source-only net speedup claim.",
+  "decision": "A bounded opt-in six-dot plus guarded-u experiment is structurally possible. Full inverse hoist and output equivalence remain unproved. Require compiled-interface, GPU parity and work evidence before adoption; no implementation in this review.",
+  "primaryReferences": [
+    "https://developer.apple.com/library/archive/documentation/Miscellaneous/Conceptual/MetalProgrammingGuide/Render-Ctx/Render-Ctx.html",
+    "https://developer.apple.com/documentation/metal/mtlmathmode"
+  ]
+}

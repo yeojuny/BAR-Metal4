@@ -1,0 +1,30 @@
+{
+  "status": "EXACT_ACCEPTED_SENSORLOS_SOURCE_CLONE",
+  "createdUTC": "2026-11-16T07:59:22.493869+00:00",
+  "baseline": "${AUDIT_WORKSPACE}/evidence/sensorlos-region-fix-20261116-01/source/engine",
+  "candidate": "${AUDIT_WORKSPACE}/evidence/decal-grass-boundary-s01-20261115-01/source/engine",
+  "acceptedEngineBinarySHA256": "87df3a1bc49a5fca4c47d05de1a41a5d85f464941365b8d20f7ee2eca1e4108f",
+  "entryCount": 10266,
+  "regularFileCount": 10266,
+  "symlinkCount": 0,
+  "directoryCount": 953,
+  "totalRegularFileBytes": 184876498,
+  "baselineTreeDigestSHA256": "86dfb1b342d1967a635b1aab16066c6496ff4010633cd1174d967b7baf4722c4",
+  "candidateTreeDigestSHA256": "86dfb1b342d1967a635b1aab16066c6496ff4010633cd1174d967b7baf4722c4",
+  "missing": [],
+  "added": [],
+  "changed": [],
+  "selectedSourceSHA256": {
+    "rts/Rendering/Metal4/NativeSensorLOSShaders.h": {
+      "baselineSHA256": "b11a26584e84abca5c6addb19267637f400b92ee671f9e3d71786b5ae04e1ac8",
+      "copySHA256": "b11a26584e84abca5c6addb19267637f400b92ee671f9e3d71786b5ae04e1ac8"
+    },
+    "rts/Rendering/Metal4/Metal4SensorLOSNative.mm": {
+      "baselineSHA256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6",
+      "copySHA256": "9d3da52aea20f84db2ba961c7f7b98f6796ba76f03bba4af2ea6b596da6182b6"
+    }
+  },
+  "beforeNewEdits": true,
+  "builds": 0,
+  "games": 0
+}
