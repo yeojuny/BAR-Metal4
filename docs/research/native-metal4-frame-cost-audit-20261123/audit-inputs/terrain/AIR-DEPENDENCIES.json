@@ -1,0 +1,59 @@
+{
+  "results": {
+    "deferred": {
+      "off": {
+        "path": "${WORK}/evidence/seths-cap2-terrain-splat-20261123-run1/build/hardened/shader-verification/deferred-off.ll",
+        "sampling_call_lines": {
+          "splatDistrTex": 960,
+          "splatDetailNormalTex1": 966,
+          "splatDetailNormalTex2": 972,
+          "splatDetailNormalTex3": 978,
+          "splatDetailNormalTex4": 984
+        },
+        "quad_vote_lines": []
+      },
+      "skip": {
+        "path": "${WORK}/evidence/seths-cap2-terrain-splat-20261123-run1/build/hardened/shader-verification/deferred-skip.ll",
+        "sampling_call_lines": {
+          "splatDistrTex": 960,
+          "splatDetailNormalTex1": 997,
+          "splatDetailNormalTex2": 1012,
+          "splatDetailNormalTex3": 1027,
+          "splatDetailNormalTex4": 1042
+        },
+        "quad_vote_lines": [
+          965,
+          986
+        ]
+      }
+    },
+    "forward": {
+      "off": {
+        "path": "${WORK}/evidence/seths-cap2-terrain-splat-20261123-run1/build/hardened/shader-verification/forward-off.ll",
+        "sampling_call_lines": {
+          "splatDistrTex": 1121,
+          "splatDetailNormalTex1": 1127,
+          "splatDetailNormalTex2": 1133,
+          "splatDetailNormalTex3": 1139,
+          "splatDetailNormalTex4": 1145
+        },
+        "quad_vote_lines": []
+      },
+      "skip": {
+        "path": "${WORK}/evidence/seths-cap2-terrain-splat-20261123-run1/build/hardened/shader-verification/forward-skip.ll",
+        "sampling_call_lines": {
+          "splatDistrTex": 1121,
+          "splatDetailNormalTex1": 1158,
+          "splatDetailNormalTex2": 1173,
+          "splatDetailNormalTex3": 1188,
+          "splatDetailNormalTex4": 1203
+        },
+        "quad_vote_lines": [
+          1125,
+          1146
+        ]
+      }
+    }
+  },
+  "interpretation": "OFF detail-read operands are independent of the distribution result, though the arithmetic accumulation uses the weights. ON predicates each detail sample on the quad vote over bits derived from the distribution result. The actual Apple GPU instruction schedule and cache traffic were not inferred from AIR."
+}

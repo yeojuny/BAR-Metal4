@@ -1,0 +1,74 @@
+{
+  "working_baseline": "Seths cap2, compact projectile shadow ON, track early reject OFF, AC automatic. Production defaults untouched.",
+  "clean_pacing": "BACKEND-PACING.json",
+  "full_native_gpu": "LIVE-GPU.json",
+  "native_per_pass": "PASS-TIMES.json",
+  "matched_draws": "MATCHED-PASSES.json",
+  "original_structural_candidates": "STRUCTURE.json",
+  "mvk_live_scheduling": "schedule/CPU-GPU-OVERLAP.json",
+  "native_live_scheduling": {
+    "540-1739": {
+      "draws": 3326,
+      "submitted_prior_to_previous_gpu_end": 3325,
+      "median_lead_ms": 8.07925,
+      "mean_interbuffer_gap_ms": 0.08883469873722188
+    },
+    "1350-1709": {
+      "draws": 934,
+      "submitted_prior_to_previous_gpu_end": 934,
+      "median_lead_ms": 8.623604,
+      "mean_interbuffer_gap_ms": 0.08655410813704496
+    },
+    "1530-1619": {
+      "draws": 227,
+      "submitted_prior_to_previous_gpu_end": 227,
+      "median_lead_ms": 8.88325,
+      "mean_interbuffer_gap_ms": 0.08672372687224669
+    }
+  },
+  "fragment_interval_union": {
+    "600": {
+      "native_ground_fragment_ms": 2.608402,
+      "native_game_fragment_ms": 2.490767,
+      "native_union_ms": 2.638847,
+      "native_overlapping_ms": 2.4603219999999997,
+      "mvk_fragment_union_ms": 1.580522,
+      "mvk_fragment_overlap_ms": 0.0,
+      "mvk_two_dedicated_encoder_union_ms": 2.997841
+    },
+    "1275": {
+      "native_ground_fragment_ms": 5.231504,
+      "native_game_fragment_ms": 5.243625,
+      "native_union_ms": 5.272758,
+      "native_overlapping_ms": 5.202370999999999,
+      "mvk_fragment_union_ms": 3.706467,
+      "mvk_fragment_overlap_ms": 0.0,
+      "mvk_two_dedicated_encoder_union_ms": 4.991375
+    },
+    "1545": {
+      "native_ground_fragment_ms": 5.647999,
+      "native_game_fragment_ms": 5.615839,
+      "native_union_ms": 5.724242,
+      "native_overlapping_ms": 5.5395959999999995,
+      "mvk_fragment_union_ms": null,
+      "mvk_fragment_overlap_ms": null,
+      "mvk_two_dedicated_encoder_union_ms": 5.979304
+    },
+    "1665": {
+      "native_ground_fragment_ms": 6.596957,
+      "native_game_fragment_ms": 6.27637,
+      "native_union_ms": 6.693014,
+      "native_overlapping_ms": 6.180313,
+      "mvk_fragment_union_ms": null,
+      "mvk_fragment_overlap_ms": null,
+      "mvk_two_dedicated_encoder_union_ms": 5.124458
+    }
+  },
+  "limits": [
+    "The clean average FPS and per-frame GPU times are from separate runs. Individual pass intervals are overlapping Metal debugger replay measurements.",
+    "GroundDecal instance counts match at every fixed tick; translated GameDecal instances differ. Geometry counts alone do not prove all fragment inputs bitwise identical.",
+    "MVK3 produced usable fragment-stage timings at 600/1275. 1545/1665 exported encoder timing only; whole-encoder values preserved separately.",
+    "MVK3 CPU figures describe time inside active Metal encoder recording spans; these are not all ARM64 CPU work. Native command-buffer end feedback and MVK3 last GPU stage activity are different timestamp boundaries.",
+    "A no-mipmap producer-to-consumer ordering is still required. No duration or FPS gain is attributed to the empty encoder."
+  ]
+}

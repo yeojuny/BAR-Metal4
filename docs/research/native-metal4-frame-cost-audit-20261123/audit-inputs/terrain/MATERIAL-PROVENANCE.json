@@ -1,0 +1,173 @@
+{
+  "note": "Raw payload mips 0 through 4 matched the identified earlier R03 Seths distribution texture. Higher raw levels were not matched.",
+  "replays": {
+    "1200-TERRAIN_MASK": {
+      "raw_distribution_mips": {
+        "0": {
+          "sha256": "61b99de7d08701c1ca7ae9d30b9fabde97a366e39e82fbc604717fbf83a9e1d7",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1200.gputrace/MTLTexture-1607-0-mipmap0-slice0"
+        },
+        "1": {
+          "sha256": "632a139f92c1f84db5f67cab36706102252ae071a76498664153e2489a20751a",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1200.gputrace/MTLTexture-1607-0-mipmap1-slice0"
+        },
+        "2": {
+          "sha256": "a0542696aab0be6de086d1f60061beb5ad29e940adca6e39bca60b50d1181ed6",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1200.gputrace/MTLTexture-1607-0-mipmap2-slice0"
+        },
+        "3": {
+          "sha256": "936d3f35da022ffc93a79939793b60f23a7f30b6c57846d1347089f4a9e51396",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1200.gputrace/MTLTexture-1607-0-mipmap3-slice0"
+        },
+        "4": {
+          "sha256": "0997fedcfe2d3cdc02f6e83c210ab0260a465a13ef9f682b7430a4b275d55581",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1200.gputrace/MTLTexture-1607-0-mipmap4-slice0"
+        }
+      },
+      "captured_deferred_source": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_MASK/re18-terrain.metal",
+      "captured_source_sha256": "3975771a86b457f0a2234932237461b20e11bcb20ea27614df589e7f182c6e7e",
+      "terrain_skip": true,
+      "mask_enabled": true
+    },
+    "1200-TERRAIN_OFF": {
+      "raw_distribution_mips": {
+        "0": {
+          "sha256": "61b99de7d08701c1ca7ae9d30b9fabde97a366e39e82fbc604717fbf83a9e1d7",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1200.gputrace/MTLTexture-1606-0-mipmap0-slice0"
+        },
+        "1": {
+          "sha256": "632a139f92c1f84db5f67cab36706102252ae071a76498664153e2489a20751a",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1200.gputrace/MTLTexture-1606-0-mipmap1-slice0"
+        },
+        "2": {
+          "sha256": "a0542696aab0be6de086d1f60061beb5ad29e940adca6e39bca60b50d1181ed6",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1200.gputrace/MTLTexture-1606-0-mipmap2-slice0"
+        },
+        "3": {
+          "sha256": "936d3f35da022ffc93a79939793b60f23a7f30b6c57846d1347089f4a9e51396",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1200.gputrace/MTLTexture-1606-0-mipmap3-slice0"
+        },
+        "4": {
+          "sha256": "0997fedcfe2d3cdc02f6e83c210ab0260a465a13ef9f682b7430a4b275d55581",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1200.gputrace/MTLTexture-1606-0-mipmap4-slice0"
+        }
+      },
+      "captured_deferred_source": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re10-terrain.metal",
+      "captured_source_sha256": "068e08b240c032103c17dc496c84c76aa97608d8c860c6ede2a0e12bde6b0fb5",
+      "terrain_skip": false,
+      "mask_enabled": false
+    },
+    "1200-TERRAIN_ON": {
+      "raw_distribution_mips": {
+        "0": {
+          "sha256": "61b99de7d08701c1ca7ae9d30b9fabde97a366e39e82fbc604717fbf83a9e1d7",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1200.gputrace/MTLTexture-1604-0-mipmap0-slice0"
+        },
+        "1": {
+          "sha256": "632a139f92c1f84db5f67cab36706102252ae071a76498664153e2489a20751a",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1200.gputrace/MTLTexture-1604-0-mipmap1-slice0"
+        },
+        "2": {
+          "sha256": "a0542696aab0be6de086d1f60061beb5ad29e940adca6e39bca60b50d1181ed6",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1200.gputrace/MTLTexture-1604-0-mipmap2-slice0"
+        },
+        "3": {
+          "sha256": "936d3f35da022ffc93a79939793b60f23a7f30b6c57846d1347089f4a9e51396",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1200.gputrace/MTLTexture-1604-0-mipmap3-slice0"
+        },
+        "4": {
+          "sha256": "0997fedcfe2d3cdc02f6e83c210ab0260a465a13ef9f682b7430a4b275d55581",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1200.gputrace/MTLTexture-1604-0-mipmap4-slice0"
+        }
+      },
+      "captured_deferred_source": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re10-terrain.metal",
+      "captured_source_sha256": "0ec6ccb0949244554abd68644869e87d9518932d6c02b8179805cd6286586594",
+      "terrain_skip": true,
+      "mask_enabled": false
+    },
+    "1590-TERRAIN_MASK": {
+      "raw_distribution_mips": {
+        "0": {
+          "sha256": "61b99de7d08701c1ca7ae9d30b9fabde97a366e39e82fbc604717fbf83a9e1d7",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1590.gputrace/MTLTexture-1607-0-mipmap0-slice0"
+        },
+        "1": {
+          "sha256": "632a139f92c1f84db5f67cab36706102252ae071a76498664153e2489a20751a",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1590.gputrace/MTLTexture-1607-0-mipmap1-slice0"
+        },
+        "2": {
+          "sha256": "a0542696aab0be6de086d1f60061beb5ad29e940adca6e39bca60b50d1181ed6",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1590.gputrace/MTLTexture-1607-0-mipmap2-slice0"
+        },
+        "3": {
+          "sha256": "936d3f35da022ffc93a79939793b60f23a7f30b6c57846d1347089f4a9e51396",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1590.gputrace/MTLTexture-1607-0-mipmap3-slice0"
+        },
+        "4": {
+          "sha256": "0997fedcfe2d3cdc02f6e83c210ab0260a465a13ef9f682b7430a4b275d55581",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1590.gputrace/MTLTexture-1607-0-mipmap4-slice0"
+        }
+      },
+      "captured_deferred_source": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_MASK/re10-terrain.metal",
+      "captured_source_sha256": "3975771a86b457f0a2234932237461b20e11bcb20ea27614df589e7f182c6e7e",
+      "terrain_skip": true,
+      "mask_enabled": true
+    },
+    "1590-TERRAIN_OFF": {
+      "raw_distribution_mips": {
+        "0": {
+          "sha256": "61b99de7d08701c1ca7ae9d30b9fabde97a366e39e82fbc604717fbf83a9e1d7",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1590.gputrace/MTLTexture-1606-0-mipmap0-slice0"
+        },
+        "1": {
+          "sha256": "632a139f92c1f84db5f67cab36706102252ae071a76498664153e2489a20751a",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1590.gputrace/MTLTexture-1606-0-mipmap1-slice0"
+        },
+        "2": {
+          "sha256": "a0542696aab0be6de086d1f60061beb5ad29e940adca6e39bca60b50d1181ed6",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1590.gputrace/MTLTexture-1606-0-mipmap2-slice0"
+        },
+        "3": {
+          "sha256": "936d3f35da022ffc93a79939793b60f23a7f30b6c57846d1347089f4a9e51396",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1590.gputrace/MTLTexture-1606-0-mipmap3-slice0"
+        },
+        "4": {
+          "sha256": "0997fedcfe2d3cdc02f6e83c210ab0260a465a13ef9f682b7430a4b275d55581",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1590.gputrace/MTLTexture-1606-0-mipmap4-slice0"
+        }
+      },
+      "captured_deferred_source": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re10-terrain.metal",
+      "captured_source_sha256": "068e08b240c032103c17dc496c84c76aa97608d8c860c6ede2a0e12bde6b0fb5",
+      "terrain_skip": false,
+      "mask_enabled": false
+    },
+    "1590-TERRAIN_ON": {
+      "raw_distribution_mips": {
+        "0": {
+          "sha256": "61b99de7d08701c1ca7ae9d30b9fabde97a366e39e82fbc604717fbf83a9e1d7",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1590.gputrace/MTLTexture-1604-0-mipmap0-slice0"
+        },
+        "1": {
+          "sha256": "632a139f92c1f84db5f67cab36706102252ae071a76498664153e2489a20751a",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1590.gputrace/MTLTexture-1604-0-mipmap1-slice0"
+        },
+        "2": {
+          "sha256": "a0542696aab0be6de086d1f60061beb5ad29e940adca6e39bca60b50d1181ed6",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1590.gputrace/MTLTexture-1604-0-mipmap2-slice0"
+        },
+        "3": {
+          "sha256": "936d3f35da022ffc93a79939793b60f23a7f30b6c57846d1347089f4a9e51396",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1590.gputrace/MTLTexture-1604-0-mipmap3-slice0"
+        },
+        "4": {
+          "sha256": "0997fedcfe2d3cdc02f6e83c210ab0260a465a13ef9f682b7430a4b275d55581",
+          "path": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1590.gputrace/MTLTexture-1604-0-mipmap4-slice0"
+        }
+      },
+      "captured_deferred_source": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re10-terrain.metal",
+      "captured_source_sha256": "0ec6ccb0949244554abd68644869e87d9518932d6c02b8179805cd6286586594",
+      "terrain_skip": true,
+      "mask_enabled": false
+    }
+  }
+}

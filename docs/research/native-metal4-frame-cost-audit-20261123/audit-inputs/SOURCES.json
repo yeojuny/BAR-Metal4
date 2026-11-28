@@ -1,0 +1,267 @@
+[
+  {
+    "path": "capture-pass-costs.json",
+    "workspace_evidence": "seths-cap2-battle-gpu-passes-20261122-oanitk44/MATCHED-PASSES.json",
+    "original_sha256": "35fa0f1202be23d23b33ca42d6990413c8f33a9b82ccb6b85ecaefbe53937933",
+    "copy_sha256": "35fa0f1202be23d23b33ca42d6990413c8f33a9b82ccb6b85ecaefbe53937933"
+  },
+  {
+    "path": "capture-boundaries.json",
+    "workspace_evidence": "seths-cap2-battle-gpu-passes-20261122-oanitk44/STRUCTURE.json",
+    "original_sha256": "6ed79577af0ec456067fb16cf3272009ce67e7249f7d33de3d382ef0a8fc4462",
+    "copy_sha256": "6ed79577af0ec456067fb16cf3272009ce67e7249f7d33de3d382ef0a8fc4462"
+  },
+  {
+    "path": "capture-distortion.json",
+    "workspace_evidence": "seths-cap2-battle-gpu-passes-20261122-oanitk44/DISTORTION-ATTACHMENTS.json",
+    "original_sha256": "f698e21a24837b6cc27867a64e9da142070a1fe8d0094ecb5e943ef2ac08f1f6",
+    "copy_sha256": "f698e21a24837b6cc27867a64e9da142070a1fe8d0094ecb5e943ef2ac08f1f6"
+  },
+  {
+    "path": "cap2-gaps-ac-auto.json",
+    "workspace_evidence": "seths-cap2-submit-gap-ac-auto-20261122-mxivfXhk/GAP-SUMMARY.json",
+    "original_sha256": "8bade80fff8d13176d4bcd5dbc3f84ab149657f50dd67a870ff86d692d5abfe9",
+    "copy_sha256": "8bade80fff8d13176d4bcd5dbc3f84ab149657f50dd67a870ff86d692d5abfe9"
+  },
+  {
+    "path": "commit-gaps.csv",
+    "workspace_evidence": "seths-cap2-submit-gap-ac-auto-20261122-mxivfXhk/GAPS.csv",
+    "original_sha256": "fda123b717cba216d29a455df6030c39f757f82620d0e9f2e75530224645ee3e",
+    "copy_sha256": "fda123b717cba216d29a455df6030c39f757f82620d0e9f2e75530224645ee3e"
+  },
+  {
+    "path": "distortion-fps.json",
+    "workspace_evidence": "seths-cap2-distortion-abba-20261122-2sf68hys/fps/BENCHMARK.json",
+    "original_sha256": "da5d108f5e9395218c042c40b63fbd3400522361a7497a91d2c0cf11f7d0458b",
+    "copy_sha256": "450852cf6e7685fe0242d53e58fc84905149cca343acdb0d248e5aac2073c661"
+  },
+  {
+    "path": "matched-workload-limits.md",
+    "workspace_evidence": "r03-mvk3-matched-frame-20261117-02/REPORT.md",
+    "original_sha256": "b7e7b7fcc97d6b3468908dda05c2996ecf5d39d3c95f84f2e08330b29c58026f",
+    "copy_sha256": "b7e7b7fcc97d6b3468908dda05c2996ecf5d39d3c95f84f2e08330b29c58026f"
+  },
+  {
+    "path": "grass-baseline-fps.json",
+    "workspace_evidence": "seths-cap2-grass-dense-slot-abba-20261123/fps/BENCHMARK.json",
+    "original_sha256": "efcad27325249d22936cef604af9e35803fc049616c6d9502335e0fa670d370b",
+    "copy_sha256": "fd5823e3cbc59cb0e38b8d71edcb46b918fcae53a3bfb250026024e89d56e5d7"
+  },
+  {
+    "path": "early-track-fps.json",
+    "workspace_evidence": "seths-cap2-ground-track-recheck-20261123/fps-_nluq5q6/RESULT.json",
+    "original_sha256": "b2b1884f7242007cbfb699e266bbefe28fdea21f5b1a1673b6951ef08c8bd480",
+    "copy_sha256": "de3f1025c96db11f14e8bc7a5ca8126abcae18802f3da0cdbd508d5c7d64706a"
+  },
+  {
+    "path": "ground-track-pixel-inventory.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/PARITY-INVENTORY.json",
+    "original_sha256": "a227c3a6dfcff7c7ec86f98e80c1bf934a3ec23fe7f733052f8b8eca84e25e4c",
+    "copy_sha256": "435ea9a37eabe55dcff7b999822cf608f91751088e7ce572cbb7c66930d98ad2"
+  },
+  {
+    "path": "prior-terrain-results.md",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/README.ko.md",
+    "original_sha256": "c7f3de71235c9fadc2b73034461ee5c7ffec349ec9e262b8876ecbb4946aa7a2",
+    "copy_sha256": "8a97926c6029ce809e6e52971721ef17dda8167b4e2a00cc6574b496b7d1215d",
+    "publication_note": "Public copy omits the private recovery location and points to the included parity inventory."
+  },
+  {
+    "path": "seths-native-mvk3.json",
+    "workspace_evidence": "seths-native-cap2-mvk3-aa0-20261122-DUVQZSvq/RESULT.json",
+    "original_sha256": "28aeb2415094c6a3aa92128daa89245af54736e5fec0b53b62bf256db6b1c125",
+    "copy_sha256": "da1f232287e451b9f029078d22e622c51934f0abd4fce50d51ffec544c0df013"
+  },
+  {
+    "path": "seths-mvk3-native.json",
+    "workspace_evidence": "seths-mvk3-native-cap2-aa0-reverse-20261122-GQLa2DOb/RESULT.json",
+    "original_sha256": "fc4262b223be83c174acc8bc357aaccbcfa2e71d0618f614bc24c9287653e126",
+    "copy_sha256": "1f378f469ff9ce4fbd0fb23b4025a28e29d9e1a0fb2da85ae891f86d4f5e7ac4"
+  },
+  {
+    "path": "decal-overlap-1665.json",
+    "workspace_evidence": "seths-cap2-postgrass-decals-20261123-Ci9gza0A/DECAL-GPU-COMPARISON.json",
+    "original_sha256": "055457e01d8e6272b1365db1b61cc8bf288d095aba6db6cce118f260f610912b",
+    "copy_sha256": "055457e01d8e6272b1365db1b61cc8bf288d095aba6db6cce118f260f610912b"
+  },
+  {
+    "path": "track-fragment-witness.json",
+    "workspace_evidence": "seths-cap2-ground-track-recheck-20261123/diagnostic/SAME-INPUT-SUMMARY.json",
+    "original_sha256": "b313c2e3fec8669d5f1c7706a0f776f5622143c4227b286386a666f1c8931a84",
+    "copy_sha256": "190d717cec3ac7dc34d887b391ed105872afab111ddfa36af2e38975e1aea21e"
+  },
+  {
+    "path": "world-position-host.mm",
+    "workspace_evidence": "seths-cap2-ground-track-recheck-20261123/source/Metal4GroundDecal.mm",
+    "original_sha256": "44fb1e313ce9a7be2ac216c6fd31222e4619e37666b432c7c2f8c69f8cfc72d5",
+    "copy_sha256": "44fb1e313ce9a7be2ac216c6fd31222e4619e37666b432c7c2f8c69f8cfc72d5"
+  },
+  {
+    "path": "world-position-shader.h",
+    "workspace_evidence": "seths-cap2-ground-track-recheck-20261123/source/NativeGroundDecalShaders.h",
+    "original_sha256": "bf4aa1ec35aae9a7b1c1f61ea126f0ebf58424d0287646de5fd044f13b505a20",
+    "copy_sha256": "bf4aa1ec35aae9a7b1c1f61ea126f0ebf58424d0287646de5fd044f13b505a20"
+  },
+  {
+    "path": "present-intervals.json",
+    "workspace_evidence": "seths-cap2-present-before-acquire-20261120-tzTBPB1A/drawable-summary.json",
+    "original_sha256": "8e29e9657b265f1c1769eb44c8b62935cadaaa1f89ad6bcb95036aeefb351b53",
+    "copy_sha256": "8e29e9657b265f1c1769eb44c8b62935cadaaa1f89ad6bcb95036aeefb351b53"
+  },
+  {
+    "path": "native-capture-intervals.json",
+    "workspace_evidence": "seths-cap2-battle-gpu-passes-20261122-oanitk44/RESULT.json",
+    "original_sha256": "0acf8399749e0990a258c957b8b55029b2de8ace585776b97c877920482680ae",
+    "copy_sha256": "0acf8399749e0990a258c957b8b55029b2de8ace585776b97c877920482680ae"
+  },
+  {
+    "path": "grass-initial-screen.json",
+    "workspace_evidence": "seths-cap2-grass-empty-spans-20261123/runs/seths-1665/ANALYSIS.json",
+    "original_sha256": "79a578d6412a3fae52f5d731a1a4847b7fd70ccc9d348c32f3aca0440fd0c1ff",
+    "copy_sha256": "79a578d6412a3fae52f5d731a1a4847b7fd70ccc9d348c32f3aca0440fd0c1ff"
+  },
+  {
+    "path": "grass-guard-screen.json",
+    "workspace_evidence": "seths-cap2-grass-empty-spans-20261123/alternative/runs/seths-1665/PARITY-RESULT.json",
+    "original_sha256": "55b47c152a70dff32ceec0322c6c2d902cb619208d9701ffead25941b406db45",
+    "copy_sha256": "55b47c152a70dff32ceec0322c6c2d902cb619208d9701ffead25941b406db45"
+  },
+  {
+    "path": "cpu-oracle.log",
+    "workspace_evidence": "seths-cap2-grass-empty-spans-20261123/portable/CPU-ORACLE.log",
+    "original_sha256": "6368c42957cda5da932bb82a2ff5715c3b12782307f8016dff42524fc1fbec7f",
+    "copy_sha256": "6368c42957cda5da932bb82a2ff5715c3b12782307f8016dff42524fc1fbec7f"
+  },
+  {
+    "path": "grass-current-range.h",
+    "workspace_evidence": "seths-cap2-grass-empty-spans-20261123/candidate-leading_interior_256/source/GrassZeroScaleCompaction.h",
+    "original_sha256": "30d4ca6c881873030e5049abc30b45fe8069dc231c24742b95791fadbaeb5093",
+    "copy_sha256": "30d4ca6c881873030e5049abc30b45fe8069dc231c24742b95791fadbaeb5093"
+  },
+  {
+    "path": "UPSTREAM-CONTRIBUTIONS.json",
+    "workspace_evidence": "../UPSTREAM-CONTRIBUTIONS.json",
+    "original_sha256": "5561641aa5453fcfba0298ca63f4af194a1bba78a47617bfd089c6e17f917b83",
+    "copy_sha256": "c9040b65a03af6e12dba840a41bb58c481c862ebd9bc71dc480fd2251a889dd4"
+  },
+  {
+    "path": "mvk3-schedule.json",
+    "workspace_evidence": "seths-cap2-battle-gpu-passes-20261122-oanitk44/schedule/CPU-GPU-OVERLAP.json",
+    "original_sha256": "eddf299140f445739bb9afe8b46652eee4cce24c1a350d0ffb0f028de83e7ec6",
+    "copy_sha256": "8e074c8b554a0c59e439fb5cd874caa0309af92e0c3161919d75a529b0cb7952"
+  },
+  {
+    "path": "grass-final-host.mm",
+    "workspace_evidence": "seths-cap2-grass-empty-spans-20261123/candidate-leading_interior_256/source/Metal4Grass.mm",
+    "original_sha256": "6ad63437f6036794530cf1564b7e0e973fb834d9b055b19997635dec6a6a4efa",
+    "copy_sha256": "6ad63437f6036794530cf1564b7e0e973fb834d9b055b19997635dec6a6a4efa"
+  },
+  {
+    "path": "frames/grass-A1_PREVIOUS.csv",
+    "workspace_evidence": "seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/A1_PREVIOUS/TERRAIN211-FRAMES.csv",
+    "original_sha256": "70d146abe27acc34ee83f49646dc1dde26ae622a2d8bc6f6ee332bb1659d3a55",
+    "copy_sha256": "70d146abe27acc34ee83f49646dc1dde26ae622a2d8bc6f6ee332bb1659d3a55"
+  },
+  {
+    "path": "frames/grass-A2_PREVIOUS.csv",
+    "workspace_evidence": "seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/A2_PREVIOUS/TERRAIN211-FRAMES.csv",
+    "original_sha256": "e67aadf33f01f5ab6597d0a2f44991978e7920b8544d6285a33942ab7b381452",
+    "copy_sha256": "e67aadf33f01f5ab6597d0a2f44991978e7920b8544d6285a33942ab7b381452"
+  },
+  {
+    "path": "frames/grass-B1_FIXED.csv",
+    "workspace_evidence": "seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/B1_FIXED/TERRAIN211-FRAMES.csv",
+    "original_sha256": "6cfdcdf05d2cb4ba99a286a8f0df6a0e6bd08efef0c6ca3379573ee8d8d1cec2",
+    "copy_sha256": "6cfdcdf05d2cb4ba99a286a8f0df6a0e6bd08efef0c6ca3379573ee8d8d1cec2"
+  },
+  {
+    "path": "frames/grass-B2_FIXED.csv",
+    "workspace_evidence": "seths-cap2-grass-dense-slot-abba-20261123/fps/clean_paced/preparation/runs/B2_FIXED/TERRAIN211-FRAMES.csv",
+    "original_sha256": "57aaed2ddb469ff1605447b115cc5df4c64f58aa736f5b33edd5effddc6a2aee",
+    "copy_sha256": "57aaed2ddb469ff1605447b115cc5df4c64f58aa736f5b33edd5effddc6a2aee"
+  },
+  {
+    "path": "frames/track-OFF.csv",
+    "workspace_evidence": "seths-cap2-ground-track-recheck-20261123/fps-_nluq5q6/OFF/FRAMES.csv",
+    "original_sha256": "e872f455dcff76adef371e5a0f009a8624b76b3b5bf408c1ce25ee9c741098ef",
+    "copy_sha256": "e872f455dcff76adef371e5a0f009a8624b76b3b5bf408c1ce25ee9c741098ef"
+  },
+  {
+    "path": "frames/track-ON.csv",
+    "workspace_evidence": "seths-cap2-ground-track-recheck-20261123/fps-_nluq5q6/ON/FRAMES.csv",
+    "original_sha256": "de0ad777c18b362d9d7debd20abdc4a7624ef9422b7870585fa715ae3c696b5f",
+    "copy_sha256": "de0ad777c18b362d9d7debd20abdc4a7624ef9422b7870585fa715ae3c696b5f"
+  },
+  {
+    "path": "frames/forward-M_MVK3.csv",
+    "workspace_evidence": "seths-native-cap2-mvk3-aa0-20261122-DUVQZSvq/clean_paced/preparation/runs/M_MVK3/TERRAIN211-FRAMES.csv",
+    "original_sha256": "4e92b32748ad1a3cfd10b9c92fb636b3c4ae1e8f2c630e7101c4de2554b49069",
+    "copy_sha256": "4e92b32748ad1a3cfd10b9c92fb636b3c4ae1e8f2c630e7101c4de2554b49069"
+  },
+  {
+    "path": "frames/forward-N_CAP2.csv",
+    "workspace_evidence": "seths-native-cap2-mvk3-aa0-20261122-DUVQZSvq/clean_paced/preparation/runs/N_CAP2/TERRAIN211-FRAMES.csv",
+    "original_sha256": "6cd3e2d61b1c1f3388e8953477c142f4edc737d9075ba1fe78fe97e8cd11b5f0",
+    "copy_sha256": "6cd3e2d61b1c1f3388e8953477c142f4edc737d9075ba1fe78fe97e8cd11b5f0"
+  },
+  {
+    "path": "frames/reverse-M_MVK3.csv",
+    "workspace_evidence": "seths-mvk3-native-cap2-aa0-reverse-20261122-GQLa2DOb/clean_paced/preparation/runs/M_MVK3/TERRAIN211-FRAMES.csv",
+    "original_sha256": "4e92d9a19c27eb58e2d0c62f92a218c257753b61fd7e723215a278b5251c9a01",
+    "copy_sha256": "4e92d9a19c27eb58e2d0c62f92a218c257753b61fd7e723215a278b5251c9a01"
+  },
+  {
+    "path": "frames/reverse-N_CAP2.csv",
+    "workspace_evidence": "seths-mvk3-native-cap2-aa0-reverse-20261122-GQLa2DOb/clean_paced/preparation/runs/N_CAP2/TERRAIN211-FRAMES.csv",
+    "original_sha256": "003e92a6dbcaf3ff5c3f7fdd43d4d025b54fc15ce738c525c01f11f4dbe78a70",
+    "copy_sha256": "003e92a6dbcaf3ff5c3f7fdd43d4d025b54fc15ce738c525c01f11f4dbe78a70"
+  },
+  {
+    "path": "grass/bending/BALANCED-RESULTS.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/grass/bending/BALANCED-RESULTS.json",
+    "original_sha256": "c8447bca81310e87d999a0a2de94d25548f35ca78f20a1d20d8480c2cf3389cf",
+    "copy_sha256": "c8447bca81310e87d999a0a2de94d25548f35ca78f20a1d20d8480c2cf3389cf"
+  },
+  {
+    "path": "grass/BEND-PIXEL-WORLD-LOCATION.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/grass/BEND-PIXEL-WORLD-LOCATION.json",
+    "original_sha256": "4ea87cadaf7840372a0f89b7b51a4ef0c5a9520e79862f62765ed5123c4a1352",
+    "copy_sha256": "4ea87cadaf7840372a0f89b7b51a4ef0c5a9520e79862f62765ed5123c4a1352"
+  },
+  {
+    "path": "grass/compaction/BALANCED-RESULTS.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/grass/compaction/BALANCED-RESULTS.json",
+    "original_sha256": "f39e84306b119a5388158618d02403e1b5b67f7f259f119970e2f87569f4b4d1",
+    "copy_sha256": "f39e84306b119a5388158618d02403e1b5b67f7f259f119970e2f87569f4b4d1"
+  },
+  {
+    "path": "grass/factors/FACTOR-RESULTS.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/grass/factors/FACTOR-RESULTS.json",
+    "original_sha256": "97f2eb93e0ffe4500c7ac1f228eb8ed16dc2d9878678ca0d7884e1d90adcf209",
+    "copy_sha256": "97f2eb93e0ffe4500c7ac1f228eb8ed16dc2d9878678ca0d7884e1d90adcf209"
+  },
+  {
+    "path": "terrain/TERRAIN-RESULT.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/terrain/TERRAIN-RESULT.json",
+    "original_sha256": "1bd719623fedc50143deb64d576ae41f6e824b500613f15a38eb21dd0d98deeb",
+    "copy_sha256": "6f87f82f63a97583786c48d0f4f9a452147afafaa317a3e9bde4aeb26e0edc7a"
+  },
+  {
+    "path": "terrain/MATERIAL-PROVENANCE.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/terrain/MATERIAL-PROVENANCE.json",
+    "original_sha256": "9121880b6098e1bdb7e688a7196304ccd4e7223e67e5c4723a131ba2369203b3",
+    "copy_sha256": "611c263dd456794f2d31fce721506337fa1d2159265ef48cf2ebc16a5b9be7de"
+  },
+  {
+    "path": "terrain/AIR-DEPENDENCIES.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/terrain/AIR-DEPENDENCIES.json",
+    "original_sha256": "91106da7330692e341f840d002cef4a1b0337b795a66acb60c35603865faff13",
+    "copy_sha256": "84d96e9d0f754e53df0f1c60232caef375cf6244a1c2b5331fb77a17258a341f"
+  },
+  {
+    "path": "TERRAIN-FRAME-TAIL.json",
+    "workspace_evidence": "seths-cap2-parity-causes-20261123/TERRAIN-FRAME-TAIL.json",
+    "original_sha256": "5d040350e0f379ec4f0d91dc45768e346bb4fc3afdcedf906a6d063baa9412e3",
+    "copy_sha256": "5d040350e0f379ec4f0d91dc45768e346bb4fc3afdcedf906a6d063baa9412e3"
+  }
+]

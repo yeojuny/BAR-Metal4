@@ -1,0 +1,1650 @@
+{
+  "scope": "Seths Ravine, cap2, combined binary 6f9d8a21, grass/flat-wrap/cubemap/nano ON in every arm.",
+  "mask": "Each surviving G-buffer terrain pixel records the actual exact-zero cofactor bits and actual quad decision bits. Counts refer to four possible per-pixel material-read slots. Hidden or replaced fragments, helper lanes, forward pass, reflection pass, executed shader invocation totals and physical GPU texture transactions are outside this sample.",
+  "timing": "Metal debugger default overlapping replays per uninstrumented arm per tick, with a same-session repeat when recorded. Fragment timeline intervals are unioned across pipelines. Reflection face scheduling can change independently of simulation tick and camera. The per-role draw signatures identify that mismatch.",
+  "attachment_comparison": "Debugger PNG previews at terrain encoder boundaries, using 8-bit channel values. The terrain draw index signatures differ by arm. Differences cannot be isolated to shader arithmetic.",
+  "1200_off_independent_session_variability": {
+    "by_replay_ms": {
+      "1200-TERRAIN_OFF-failed1": {
+        "deferred": 0.25988,
+        "forward": 0.975535,
+        "main_pass_union": 1.235415
+      },
+      "1200-TERRAIN_OFF-failed2": {
+        "deferred": 0.25988,
+        "forward": 0.967758,
+        "main_pass_union": 1.227638
+      },
+      "1200-TERRAIN_OFF": {
+        "deferred": 0.259707,
+        "forward": 0.975687,
+        "main_pass_union": 1.235394
+      }
+    },
+    "observed_spread": {
+      "deferred": {
+        "min_ms": 0.259707,
+        "max_ms": 0.25988,
+        "span_ms": 0.00017299999999997873
+      },
+      "forward": {
+        "min_ms": 0.967758,
+        "max_ms": 0.975687,
+        "span_ms": 0.007928999999999964
+      },
+      "main_pass_union": {
+        "min_ms": 1.227638,
+        "max_ms": 1.235415,
+        "span_ms": 0.007776999999999923
+      }
+    }
+  },
+  "ticks": {
+    "1200": {
+      "captures": {
+        "off": {
+          "requested_tick": 1200,
+          "trace": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1200.gputrace",
+          "actual_tick": 1200,
+          "units": 173,
+          "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+          "mark_ns": 1795452531674289357,
+          "captureExit": 0,
+          "status": "CAPTURED",
+          "release_ns": 1795452533805170756,
+          "ready_draw": 4737,
+          "released_at_tick": 1200
+        },
+        "on": {
+          "requested_tick": 1200,
+          "trace": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1200.gputrace",
+          "actual_tick": 1200,
+          "units": 173,
+          "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+          "mark_ns": 1795452375939526913,
+          "captureExit": 0,
+          "status": "CAPTURED",
+          "release_ns": 1795452378656431163,
+          "ready_draw": 4319,
+          "released_at_tick": 1200
+        },
+        "mask": {
+          "requested_tick": 1200,
+          "trace": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1200.gputrace",
+          "actual_tick": 1200,
+          "units": 173,
+          "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+          "mark_ns": 1795452676496723538,
+          "captureExit": 0,
+          "status": "CAPTURED",
+          "release_ns": 1795452678434123676,
+          "ready_draw": 5138,
+          "released_at_tick": 1200
+        }
+      },
+      "terrain_draw_geometry": {
+        "off": {
+          "deferred": {
+            "draw_count": 14,
+            "submitted_indices": 259695,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20190,
+                1
+              ],
+              [
+                39555,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14106,
+                1
+              ],
+              [
+                15075,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12879,
+                1
+              ],
+              [
+                24288,
+                1
+              ],
+              [
+                24441,
+                1
+              ],
+              [
+                26754,
+                1
+              ],
+              [
+                24888,
+                1
+              ],
+              [
+                12576,
+                1
+              ],
+              [
+                7281,
+                1
+              ]
+            ]
+          },
+          "forward": {
+            "draw_count": 14,
+            "submitted_indices": 259695,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20190,
+                1
+              ],
+              [
+                39555,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14106,
+                1
+              ],
+              [
+                15075,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12879,
+                1
+              ],
+              [
+                24288,
+                1
+              ],
+              [
+                24441,
+                1
+              ],
+              [
+                26754,
+                1
+              ],
+              [
+                24888,
+                1
+              ],
+              [
+                12576,
+                1
+              ],
+              [
+                7281,
+                1
+              ]
+            ]
+          }
+        },
+        "on": {
+          "reflection": {
+            "draw_count": 15,
+            "submitted_indices": 221439,
+            "indices_and_instances_by_draw": [
+              [
+                21711,
+                1
+              ],
+              [
+                13470,
+                1
+              ],
+              [
+                12135,
+                1
+              ],
+              [
+                7365,
+                1
+              ],
+              [
+                4227,
+                1
+              ],
+              [
+                19281,
+                1
+              ],
+              [
+                8211,
+                1
+              ],
+              [
+                24,
+                1
+              ],
+              [
+                10389,
+                1
+              ],
+              [
+                20196,
+                1
+              ],
+              [
+                39414,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15087,
+                1
+              ],
+              [
+                12816,
+                1
+              ]
+            ]
+          },
+          "deferred": {
+            "draw_count": 14,
+            "submitted_indices": 259977,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20196,
+                1
+              ],
+              [
+                39414,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15087,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12816,
+                1
+              ],
+              [
+                24102,
+                1
+              ],
+              [
+                24447,
+                1
+              ],
+              [
+                27174,
+                1
+              ],
+              [
+                24756,
+                1
+              ],
+              [
+                12636,
+                1
+              ],
+              [
+                7455,
+                1
+              ]
+            ]
+          },
+          "forward": {
+            "draw_count": 14,
+            "submitted_indices": 259977,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20196,
+                1
+              ],
+              [
+                39414,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15087,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12816,
+                1
+              ],
+              [
+                24102,
+                1
+              ],
+              [
+                24447,
+                1
+              ],
+              [
+                27174,
+                1
+              ],
+              [
+                24756,
+                1
+              ],
+              [
+                12636,
+                1
+              ],
+              [
+                7455,
+                1
+              ]
+            ]
+          }
+        },
+        "mask": {
+          "reflection": {
+            "draw_count": 14,
+            "submitted_indices": 235527,
+            "indices_and_instances_by_draw": [
+              [
+                21711,
+                1
+              ],
+              [
+                13470,
+                1
+              ],
+              [
+                18192,
+                1
+              ],
+              [
+                10389,
+                1
+              ],
+              [
+                20184,
+                1
+              ],
+              [
+                18195,
+                1
+              ],
+              [
+                18177,
+                1
+              ],
+              [
+                4350,
+                1
+              ],
+              [
+                7533,
+                1
+              ],
+              [
+                41058,
+                1
+              ],
+              [
+                27042,
+                1
+              ],
+              [
+                66,
+                1
+              ],
+              [
+                18150,
+                1
+              ],
+              [
+                17010,
+                1
+              ]
+            ]
+          },
+          "deferred": {
+            "draw_count": 14,
+            "submitted_indices": 260226,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20184,
+                1
+              ],
+              [
+                39774,
+                1
+              ],
+              [
+                23169,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15081,
+                1
+              ],
+              [
+                4350,
+                1
+              ],
+              [
+                12810,
+                1
+              ],
+              [
+                23988,
+                1
+              ],
+              [
+                24405,
+                1
+              ],
+              [
+                27042,
+                1
+              ],
+              [
+                24738,
+                1
+              ],
+              [
+                12618,
+                1
+              ],
+              [
+                7446,
+                1
+              ]
+            ]
+          },
+          "forward": {
+            "draw_count": 14,
+            "submitted_indices": 260226,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20184,
+                1
+              ],
+              [
+                39774,
+                1
+              ],
+              [
+                23169,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15081,
+                1
+              ],
+              [
+                4350,
+                1
+              ],
+              [
+                12810,
+                1
+              ],
+              [
+                23988,
+                1
+              ],
+              [
+                24405,
+                1
+              ],
+              [
+                27042,
+                1
+              ],
+              [
+                24738,
+                1
+              ],
+              [
+                12618,
+                1
+              ],
+              [
+                7446,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "same_trace_same_session_repeats": {
+        "off": {
+          "terrain_fragment_union_ms": 1.235394,
+          "by_role_ms": {
+            "deferred": 0.259707,
+            "forward": 0.975687
+          }
+        },
+        "on": {
+          "terrain_fragment_union_ms": 1.636004,
+          "by_role_ms": {
+            "reflection": 0.349091,
+            "deferred": 0.29758,
+            "forward": 0.989333
+          }
+        }
+      },
+      "main_pass_fragment_union": {
+        "off_ms": 1.235394,
+        "on_ms": 1.286913,
+        "delta_ms": 0.05151899999999987,
+        "delta_percent": 4.170248519905373
+      },
+      "matching_terrain_draw_geometry_by_role": {
+        "deferred": {
+          "on": false,
+          "mask": false
+        },
+        "forward": {
+          "on": false,
+          "mask": false
+        },
+        "reflection": {
+          "on": false,
+          "mask": false
+        }
+      },
+      "terrain_fragment_union": {
+        "off_ms": 1.235394,
+        "on_ms": 1.636004,
+        "delta_ms": 0.4006099999999999,
+        "delta_percent": 32.42771132124649
+      },
+      "encoder_envelope": {
+        "off_ms": 16.534166,
+        "on_ms": 18.166666,
+        "delta_ms": 1.6325000000000003,
+        "delta_percent": 9.873494677626926
+      },
+      "terrain_fragment_union_by_role": {
+        "deferred": {
+          "off_ms": 0.259707,
+          "on_ms": 0.29758,
+          "delta_ms": 0.03787299999999999,
+          "delta_percent": 14.582972349609369
+        },
+        "forward": {
+          "off_ms": 0.975687,
+          "on_ms": 0.989333,
+          "delta_ms": 0.013646000000000047,
+          "delta_percent": 1.3986042655072861
+        }
+      },
+      "deferred_mask": {
+        "attachment_resolution": [
+          1512,
+          950
+        ],
+        "terrain_pixels_with_marker": 1436400,
+        "exact_zero_sampled_weights": {
+          "four_bit_mask_histogram": [
+            662426,
+            109733,
+            970,
+            10788,
+            0,
+            0,
+            0,
+            0,
+            610730,
+            9111,
+            11446,
+            21196,
+            0,
+            0,
+            0,
+            0
+          ],
+          "counts_by_cofactor_rgba": [
+            150828,
+            44400,
+            0,
+            652483
+          ],
+          "any_cofactor_pixels": 773974,
+          "eligible_or_zero_sample_slots": 847711,
+          "percent_of_four_sample_slots": 14.75409008632693
+        },
+        "shader_reported_quad_eligible": {
+          "four_bit_mask_histogram": [
+            710809,
+            95472,
+            890,
+            10876,
+            0,
+            0,
+            0,
+            0,
+            579986,
+            7358,
+            11207,
+            19802,
+            0,
+            0,
+            0,
+            0
+          ],
+          "counts_by_cofactor_rgba": [
+            133508,
+            42775,
+            0,
+            618353
+          ],
+          "any_cofactor_pixels": 725591,
+          "eligible_or_zero_sample_slots": 794636,
+          "percent_of_four_sample_slots": 13.830339738234475
+        },
+        "quad_eligibility_percent_of_zero_slots": 93.73902190723018
+      },
+      "on_off_attachment_preview_diffs": {
+        "color0": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 11126,
+          "max_abs_8bit_channel_delta": 113
+        },
+        "color1": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 12093,
+          "max_abs_8bit_channel_delta": 85
+        },
+        "color2": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 2014,
+          "max_abs_8bit_channel_delta": 11
+        },
+        "color3": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 0,
+          "max_abs_8bit_channel_delta": 0
+        },
+        "color4": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 0,
+          "max_abs_8bit_channel_delta": 0
+        },
+        "depth": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 4371,
+          "max_abs_8bit_channel_delta": 3
+        },
+        "forward_color0": {
+          "preview_pixels": 1484784,
+          "different_preview_pixels": 143298,
+          "max_abs_8bit_channel_delta": 106
+        }
+      },
+      "attachments_by_arm": {
+        "off": {
+          "color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re10-color0.png",
+          "color1": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re10-color1.png",
+          "color2": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re10-color2.png",
+          "color3": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re10-color3.png",
+          "color4": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re10-color4.png",
+          "depth": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re10-depth.png",
+          "forward_color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_OFF/re11-color0.png"
+        },
+        "on": {
+          "color4": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re10-color4.png",
+          "color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re10-color0.png",
+          "color1": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re10-color1.png",
+          "color2": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re10-color2.png",
+          "color3": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re10-color3.png",
+          "depth": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re10-depth.png",
+          "forward_color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re11-color0.png",
+          "reflection_color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_ON/re7-color0.png"
+        },
+        "mask": {
+          "color4": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1200-TERRAIN_MASK/re18-color4.png"
+        }
+      },
+      "attachment_pixel_hashes": {
+        "off": {
+          "color0": "8bcffcad3111ddd479472ffc9a78a01e3565b2de69c45bddaf82ba4b3fac547c",
+          "color1": "4564cb235ec23dd567d0702dde1975e7f793cd832ee09051e50a313a7ba25650",
+          "color2": "9c4c10d44aad8559cdfeda1cd0920ac01aa0605c692ad79224dfab39bbb3e7f7",
+          "color3": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "color4": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "depth": "5b0120fb9f1e0619942e42a0001dba1709efcfe1b55376613a4affc291106531",
+          "forward_color0": "259bcc2acbc66e90e49ebbe563734d1fecb783109641e4ac03c32273d2760a2d"
+        },
+        "on": {
+          "color4": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "color0": "c8b06d7f403ffbfa7158a6c0920f6a926233725bb996fadc487f58b7f9a27ba8",
+          "color1": "63c3bf61792b58da45cad962d6c987bb8912414de4123e77968c3308a5b14134",
+          "color2": "aadf3d015241a01b204af6fe4d4897a2f6157d0b73f64eafb146c37dc2d9809e",
+          "color3": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "depth": "29de9b4727414eb8fc3494e1d60e7415ec2bbb7a682079b90e3d03556b0f2968",
+          "forward_color0": "ffb7870bbfd22d5875fa6849abcf1cd00468761bf285170fa4243d0313ef5687",
+          "reflection_color0": "cb35083c2c76f2057f729de34aeaf5175776051225b149519ba8af21e673ec8a"
+        },
+        "mask": {
+          "color4": "fbc215d84907c123aa0b7f9f180b480de1d855b2105742408ce0653914474dae"
+        }
+      }
+    },
+    "1590": {
+      "captures": {
+        "off": {
+          "requested_tick": 1590,
+          "trace": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_OFF/native-frame-1590.gputrace",
+          "actual_tick": 1590,
+          "units": 168,
+          "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+          "mark_ns": 1795452546848450188,
+          "captureExit": 0,
+          "status": "CAPTURED",
+          "release_ns": 1795452548387113414,
+          "ready_draw": 5910,
+          "released_at_tick": 1590
+        },
+        "on": {
+          "requested_tick": 1590,
+          "trace": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_ON/native-frame-1590.gputrace",
+          "actual_tick": 1590,
+          "units": 168,
+          "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+          "mark_ns": 1795452391703092833,
+          "captureExit": 0,
+          "status": "CAPTURED",
+          "release_ns": 1795452393432408448,
+          "ready_draw": 5508,
+          "released_at_tick": 1590
+        },
+        "mask": {
+          "requested_tick": 1590,
+          "trace": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/capture/clean_paced/preparation/runs/TERRAIN_MASK/native-frame-1590.gputrace",
+          "actual_tick": 1590,
+          "units": 168,
+          "camera": "dist=2254.770507813;dx=0.000000000;dy=-0.924302399;dz=-0.381660998;fov=45.000000000;mode=2.000000000;name=spring;px=4096.000000000;py=254.770629883;pz=3072.000000000;rx=2.750000000;ry=0.000000000;rz=0.000000000;view=1512,950,0,0",
+          "mark_ns": 1795452691474389823,
+          "captureExit": 0,
+          "status": "CAPTURED",
+          "release_ns": 1795452693001371199,
+          "ready_draw": 6276,
+          "released_at_tick": 1590
+        }
+      },
+      "terrain_draw_geometry": {
+        "off": {
+          "reflection": {
+            "draw_count": 14,
+            "submitted_indices": 235107,
+            "indices_and_instances_by_draw": [
+              [
+                21711,
+                1
+              ],
+              [
+                13470,
+                1
+              ],
+              [
+                18192,
+                1
+              ],
+              [
+                10389,
+                1
+              ],
+              [
+                20190,
+                1
+              ],
+              [
+                18195,
+                1
+              ],
+              [
+                18159,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                7533,
+                1
+              ],
+              [
+                41040,
+                1
+              ],
+              [
+                26754,
+                1
+              ],
+              [
+                66,
+                1
+              ],
+              [
+                18150,
+                1
+              ],
+              [
+                16866,
+                1
+              ]
+            ]
+          },
+          "deferred": {
+            "draw_count": 14,
+            "submitted_indices": 259695,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20190,
+                1
+              ],
+              [
+                39555,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14106,
+                1
+              ],
+              [
+                15075,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12879,
+                1
+              ],
+              [
+                24288,
+                1
+              ],
+              [
+                24441,
+                1
+              ],
+              [
+                26754,
+                1
+              ],
+              [
+                24888,
+                1
+              ],
+              [
+                12576,
+                1
+              ],
+              [
+                7281,
+                1
+              ]
+            ]
+          },
+          "forward": {
+            "draw_count": 14,
+            "submitted_indices": 259695,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20190,
+                1
+              ],
+              [
+                39555,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14106,
+                1
+              ],
+              [
+                15075,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12879,
+                1
+              ],
+              [
+                24288,
+                1
+              ],
+              [
+                24441,
+                1
+              ],
+              [
+                26754,
+                1
+              ],
+              [
+                24888,
+                1
+              ],
+              [
+                12576,
+                1
+              ],
+              [
+                7281,
+                1
+              ]
+            ]
+          }
+        },
+        "on": {
+          "reflection": {
+            "draw_count": 14,
+            "submitted_indices": 235629,
+            "indices_and_instances_by_draw": [
+              [
+                21711,
+                1
+              ],
+              [
+                13470,
+                1
+              ],
+              [
+                18192,
+                1
+              ],
+              [
+                10389,
+                1
+              ],
+              [
+                20196,
+                1
+              ],
+              [
+                18195,
+                1
+              ],
+              [
+                18243,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                7533,
+                1
+              ],
+              [
+                41058,
+                1
+              ],
+              [
+                27174,
+                1
+              ],
+              [
+                66,
+                1
+              ],
+              [
+                18150,
+                1
+              ],
+              [
+                16860,
+                1
+              ]
+            ]
+          },
+          "deferred": {
+            "draw_count": 14,
+            "submitted_indices": 259977,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20196,
+                1
+              ],
+              [
+                39414,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15087,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12816,
+                1
+              ],
+              [
+                24102,
+                1
+              ],
+              [
+                24447,
+                1
+              ],
+              [
+                27174,
+                1
+              ],
+              [
+                24756,
+                1
+              ],
+              [
+                12636,
+                1
+              ],
+              [
+                7455,
+                1
+              ]
+            ]
+          },
+          "forward": {
+            "draw_count": 14,
+            "submitted_indices": 259977,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20196,
+                1
+              ],
+              [
+                39414,
+                1
+              ],
+              [
+                22881,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15087,
+                1
+              ],
+              [
+                4392,
+                1
+              ],
+              [
+                12816,
+                1
+              ],
+              [
+                24102,
+                1
+              ],
+              [
+                24447,
+                1
+              ],
+              [
+                27174,
+                1
+              ],
+              [
+                24756,
+                1
+              ],
+              [
+                12636,
+                1
+              ],
+              [
+                7455,
+                1
+              ]
+            ]
+          }
+        },
+        "mask": {
+          "reflection": {
+            "draw_count": 15,
+            "submitted_indices": 222063,
+            "indices_and_instances_by_draw": [
+              [
+                21711,
+                1
+              ],
+              [
+                13470,
+                1
+              ],
+              [
+                12135,
+                1
+              ],
+              [
+                7365,
+                1
+              ],
+              [
+                4227,
+                1
+              ],
+              [
+                19281,
+                1
+              ],
+              [
+                8211,
+                1
+              ],
+              [
+                24,
+                1
+              ],
+              [
+                10389,
+                1
+              ],
+              [
+                20184,
+                1
+              ],
+              [
+                39774,
+                1
+              ],
+              [
+                23169,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15081,
+                1
+              ],
+              [
+                12810,
+                1
+              ]
+            ]
+          },
+          "deferred": {
+            "draw_count": 14,
+            "submitted_indices": 260226,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20184,
+                1
+              ],
+              [
+                39774,
+                1
+              ],
+              [
+                23169,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15081,
+                1
+              ],
+              [
+                4350,
+                1
+              ],
+              [
+                12810,
+                1
+              ],
+              [
+                23988,
+                1
+              ],
+              [
+                24405,
+                1
+              ],
+              [
+                27042,
+                1
+              ],
+              [
+                24738,
+                1
+              ],
+              [
+                12618,
+                1
+              ],
+              [
+                7446,
+                1
+              ]
+            ]
+          },
+          "forward": {
+            "draw_count": 14,
+            "submitted_indices": 260226,
+            "indices_and_instances_by_draw": [
+              [
+                10389,
+                1
+              ],
+              [
+                20184,
+                1
+              ],
+              [
+                39774,
+                1
+              ],
+              [
+                23169,
+                1
+              ],
+              [
+                14232,
+                1
+              ],
+              [
+                15081,
+                1
+              ],
+              [
+                4350,
+                1
+              ],
+              [
+                12810,
+                1
+              ],
+              [
+                23988,
+                1
+              ],
+              [
+                24405,
+                1
+              ],
+              [
+                27042,
+                1
+              ],
+              [
+                24738,
+                1
+              ],
+              [
+                12618,
+                1
+              ],
+              [
+                7446,
+                1
+              ]
+            ]
+          }
+        }
+      },
+      "same_trace_same_session_repeats": {
+        "off": {
+          "terrain_fragment_union_ms": 1.517326,
+          "by_role_ms": {
+            "reflection": 0.278787,
+            "deferred": 0.259872,
+            "forward": 0.978667
+          }
+        },
+        "on": {
+          "terrain_fragment_union_ms": 1.565174,
+          "by_role_ms": {
+            "reflection": 0.283193,
+            "deferred": 0.300648,
+            "forward": 0.981333
+          }
+        }
+      },
+      "main_pass_fragment_union": {
+        "off_ms": 1.238539,
+        "on_ms": 1.281981,
+        "delta_ms": 0.04344199999999998,
+        "delta_percent": 3.5075197470568087
+      },
+      "matching_terrain_draw_geometry_by_role": {
+        "deferred": {
+          "on": false,
+          "mask": false
+        },
+        "forward": {
+          "on": false,
+          "mask": false
+        },
+        "reflection": {
+          "on": false,
+          "mask": false
+        }
+      },
+      "terrain_fragment_union": {
+        "off_ms": 1.512371,
+        "on_ms": 1.565174,
+        "delta_ms": 0.052803000000000155,
+        "delta_percent": 3.4914052173706134
+      },
+      "encoder_envelope": {
+        "off_ms": 18.337416,
+        "on_ms": 18.473,
+        "delta_ms": 0.13558399999999793,
+        "delta_percent": 0.7393844367167057
+      },
+      "terrain_fragment_union_by_role": {
+        "deferred": {
+          "off_ms": 0.259872,
+          "on_ms": 0.300648,
+          "delta_ms": 0.040776000000000034,
+          "delta_percent": 15.690801625415606
+        },
+        "forward": {
+          "off_ms": 0.978667,
+          "on_ms": 0.981333,
+          "delta_ms": 0.002666000000000057,
+          "delta_percent": 0.2724113513585369
+        },
+        "reflection": {
+          "off_ms": 0.273832,
+          "on_ms": 0.283193,
+          "delta_ms": 0.009360999999999953,
+          "delta_percent": 3.4185193841479222
+        }
+      },
+      "deferred_mask": {
+        "attachment_resolution": [
+          1512,
+          950
+        ],
+        "terrain_pixels_with_marker": 1436400,
+        "exact_zero_sampled_weights": {
+          "four_bit_mask_histogram": [
+            662421,
+            109736,
+            970,
+            10788,
+            0,
+            0,
+            0,
+            0,
+            610738,
+            9108,
+            11443,
+            21196,
+            0,
+            0,
+            0,
+            0
+          ],
+          "counts_by_cofactor_rgba": [
+            150828,
+            44397,
+            0,
+            652485
+          ],
+          "any_cofactor_pixels": 773979,
+          "eligible_or_zero_sample_slots": 847710,
+          "percent_of_four_sample_slots": 14.75407268170426
+        },
+        "shader_reported_quad_eligible": {
+          "four_bit_mask_histogram": [
+            710813,
+            95471,
+            890,
+            10876,
+            0,
+            0,
+            0,
+            0,
+            579984,
+            7358,
+            11206,
+            19802,
+            0,
+            0,
+            0,
+            0
+          ],
+          "counts_by_cofactor_rgba": [
+            133507,
+            42774,
+            0,
+            618350
+          ],
+          "any_cofactor_pixels": 725587,
+          "eligible_or_zero_sample_slots": 794631,
+          "percent_of_four_sample_slots": 13.830252715121135
+        },
+        "quad_eligibility_percent_of_zero_slots": 93.73854266199525
+      },
+      "on_off_attachment_preview_diffs": {
+        "color0": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 11126,
+          "max_abs_8bit_channel_delta": 113
+        },
+        "color1": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 12093,
+          "max_abs_8bit_channel_delta": 85
+        },
+        "color2": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 2014,
+          "max_abs_8bit_channel_delta": 11
+        },
+        "color3": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 0,
+          "max_abs_8bit_channel_delta": 0
+        },
+        "color4": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 0,
+          "max_abs_8bit_channel_delta": 0
+        },
+        "depth": {
+          "preview_pixels": 1436400,
+          "different_preview_pixels": 4371,
+          "max_abs_8bit_channel_delta": 3
+        },
+        "forward_color0": {
+          "preview_pixels": 1484784,
+          "different_preview_pixels": 274029,
+          "max_abs_8bit_channel_delta": 91
+        },
+        "reflection_color0": {
+          "preview_pixels": 1048576,
+          "different_preview_pixels": 200,
+          "max_abs_8bit_channel_delta": 137
+        }
+      },
+      "attachments_by_arm": {
+        "off": {
+          "color4": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re10-color4.png",
+          "color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re10-color0.png",
+          "color1": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re10-color1.png",
+          "color2": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re10-color2.png",
+          "color3": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re10-color3.png",
+          "depth": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re10-depth.png",
+          "forward_color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re11-color0.png",
+          "reflection_color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_OFF/re7-color0.png"
+        },
+        "on": {
+          "color4": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re10-color4.png",
+          "color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re10-color0.png",
+          "color1": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re10-color1.png",
+          "color2": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re10-color2.png",
+          "color3": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re10-color3.png",
+          "depth": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re10-depth.png",
+          "forward_color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re11-color0.png",
+          "reflection_color0": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_ON/re7-color0.png"
+        },
+        "mask": {
+          "color4": "${WORK}/evidence/seths-cap2-parity-causes-20261123/terrain/profiles/1590-TERRAIN_MASK/re10-color4.png"
+        }
+      },
+      "attachment_pixel_hashes": {
+        "off": {
+          "color4": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "color0": "8bcffcad3111ddd479472ffc9a78a01e3565b2de69c45bddaf82ba4b3fac547c",
+          "color1": "4564cb235ec23dd567d0702dde1975e7f793cd832ee09051e50a313a7ba25650",
+          "color2": "9c4c10d44aad8559cdfeda1cd0920ac01aa0605c692ad79224dfab39bbb3e7f7",
+          "color3": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "depth": "5b0120fb9f1e0619942e42a0001dba1709efcfe1b55376613a4affc291106531",
+          "forward_color0": "a2323fca0608038cd0e15ae824d0bbba7e302116c56411d4f27555595232c3c5",
+          "reflection_color0": "ef929841b3c7544939282a95c5d06714092151d79da7603110872d16617a6f90"
+        },
+        "on": {
+          "color4": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "color0": "c8b06d7f403ffbfa7158a6c0920f6a926233725bb996fadc487f58b7f9a27ba8",
+          "color1": "63c3bf61792b58da45cad962d6c987bb8912414de4123e77968c3308a5b14134",
+          "color2": "aadf3d015241a01b204af6fe4d4897a2f6157d0b73f64eafb146c37dc2d9809e",
+          "color3": "671244a3106c108a5415c893e90766fd97a2b1623f3164aab14a9f398ea1e1ce",
+          "depth": "29de9b4727414eb8fc3494e1d60e7415ec2bbb7a682079b90e3d03556b0f2968",
+          "forward_color0": "68e6865c0af79178f53f9bb0057884f47f468265f4f421fb747d5cc23c49f0d9",
+          "reflection_color0": "d13d6b531ac379c6eb92a5a26fa6d36da4a702e45aa9ce4e5a8881a927bc605e"
+        },
+        "mask": {
+          "color4": "6eddbccac91df2bff78a616a5684dda305cc341fa68a4f08a65eb45c285ea8c6"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,408 @@
+{
+  "mesh_bound_horizontal_world_units": 55,
+  "pinned_archive": "7a0e6ff2ee6f899654edd8cc997b5386",
+  "sampled_contact_scene_profile": "seths-cap2-postgrass-decals-20261123-Ci9gza0A/grass-bend/contact-on/profile",
+  "note": "Projection uses the matching separately captured contact scene, with all plausible viewport conventions checked. The bound is intentionally conservative and includes offsets from both wind and full unit bending. Nearby instances are candidates rather than exact winning primitive IDs.",
+  "contributors_by_compacted_instance_id": [
+    212,
+    213,
+    216,
+    218,
+    219,
+    220,
+    222
+  ],
+  "pixels": [
+    {
+      "xy": [
+        1428,
+        828
+      ],
+      "depth_binary32": "0x3f7ecf31",
+      "estimations": [
+        {
+          "viewport": [
+            0,
+            32,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5230.862550946877,
+            343.09739331956064,
+            3695.5922756666782
+          ],
+          "minimum_distance_to_any_bent_instance": 2078.8235028695426,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              320,
+              321,
+              322,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5230.862558564371,
+            322.49071049516374,
+            3745.507070271162
+          ],
+          "minimum_distance_to_any_bent_instance": 2103.625264499334,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              324,
+              325,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            982
+          ],
+          "unprojected_world_xyz": [
+            5230.862552137594,
+            339.8762876287297,
+            3703.3946391196596
+          ],
+          "minimum_distance_to_any_bent_instance": 2082.640948835365,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              321,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "xy": [
+        1428,
+        828
+      ],
+      "depth_binary32": "0x3f7ecfb5",
+      "estimations": [
+        {
+          "viewport": [
+            0,
+            32,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5232.444526554573,
+            340.31533955617607,
+            3695.2619499057455
+          ],
+          "minimum_distance_to_any_bent_instance": 2080.043585260758,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              320,
+              321,
+              322,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5232.4445341976225,
+            319.67993139901284,
+            3745.2463247393375
+          ],
+          "minimum_distance_to_any_bent_instance": 2104.8583016839125,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              324,
+              325,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            982
+          ],
+          "unprojected_world_xyz": [
+            5232.444527749285,
+            337.08974370395345,
+            3703.0751896978204
+          ],
+          "minimum_distance_to_any_bent_instance": 2083.8628914659125,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              321,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "xy": [
+        1429,
+        828
+      ],
+      "depth_binary32": "0x3f7ecf59",
+      "estimations": [
+        {
+          "viewport": [
+            0,
+            32,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5233.0297121006015,
+            342.2551649647651,
+            3695.4922741980163
+          ],
+          "minimum_distance_to_any_bent_instance": 2080.666819083194,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              320,
+              321,
+              322,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5233.029719741698,
+            321.6397859429964,
+            3745.4281332550313
+          ],
+          "minimum_distance_to_any_bent_instance": 2105.455140782278,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              325,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            982
+          ],
+          "unprojected_world_xyz": [
+            5233.029713294963,
+            339.0326999396648,
+            3703.297930312305
+          ],
+          "minimum_distance_to_any_bent_instance": 2084.4821290605355,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              321,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "xy": [
+        1427,
+        829
+      ],
+      "depth_binary32": "0x3f7ecfac",
+      "estimations": [
+        {
+          "viewport": [
+            0,
+            32,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5230.646805187851,
+            339.86047622775743,
+            3696.846364533026
+          ],
+          "minimum_distance_to_any_bent_instance": 2079.2473127526387,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              320,
+              321,
+              322,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            5230.646812813147,
+            319.2270291476231,
+            3746.825989127877
+          ],
+          "minimum_distance_to_any_bent_instance": 2104.1066540232464,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              324,
+              325,
+              328,
+              329
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            982
+          ],
+          "unprojected_world_xyz": [
+            5230.646806371973,
+            336.65619857541054,
+            3704.607966050266
+          ],
+          "minimum_distance_to_any_bent_instance": 2083.048657658922,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              321,
+              324,
+              325,
+              326,
+              328,
+              329
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "xy": [
+        1171,
+        859
+      ],
+      "depth_binary32": "0x3f7ecbbf",
+      "estimations": [
+        {
+          "viewport": [
+            0,
+            32,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            4790.706212622456,
+            341.71087599436515,
+            3745.6853804628518
+          ],
+          "minimum_distance_to_any_bent_instance": 1738.3545019202118,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              298,
+              299,
+              300,
+              301
+            ]
+          }
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            950
+          ],
+          "unprojected_world_xyz": [
+            4790.70621605794,
+            321.29409670123084,
+            3795.1401793057935
+          ],
+          "minimum_distance_to_any_bent_instance": 1769.0631526450447,
+          "nearby_instances_by_draw": {}
+        },
+        {
+          "viewport": [
+            0,
+            0,
+            1512,
+            982
+          ],
+          "unprojected_world_xyz": [
+            4790.706213051056,
+            339.1639763579461,
+            3751.854639942184
+          ],
+          "minimum_distance_to_any_bent_instance": 1742.1381753145954,
+          "nearby_instances_by_draw": {
+            "api4003": [
+              298,
+              299,
+              300,
+              301
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

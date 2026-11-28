@@ -1,0 +1,134 @@
+{
+  "candidate_flag": "BAR_NATIVE_DISTORTION_PASS_MERGE",
+  "binary_sha256": "f65bd889f1bed0ba93173b6b4501df0c5b9a897959b54b7a835abdcf5d826880",
+  "power": "AC Automatic",
+  "minimum_exit_to_launch_seconds": 60.0,
+  "identical_workload_observations": true,
+  "runs": [
+    {
+      "arm": "A1_OFF",
+      "draws": 3336,
+      "seconds": 40.000999451,
+      "average_fps": 83.39791619673149,
+      "one_percent_low_fps": 60.498217411127186,
+      "longest_frame_ms": 18.999999,
+      "frame_intervals": 3335,
+      "outliers_removed": 0,
+      "raw_frames": "${WORK}/evidence/seths-cap2-distortion-abba-20261122-2sf68hys/fps/clean_paced/preparation/runs/A1_OFF/TERRAIN211-FRAMES.csv",
+      "rest_seconds": null,
+      "temperatures": {
+        "before": {
+          "gpu_temp_avg": 41.407459333333335,
+          "cpu_temp_avg": 42.604419666666665
+        },
+        "after": {
+          "gpu_temp_avg": 76.14025866666667,
+          "cpu_temp_avg": 71.943006
+        }
+      },
+      "workload_differences_vs_first_off": []
+    },
+    {
+      "arm": "B1_ON",
+      "draws": 3341,
+      "seconds": 40.000999451,
+      "average_fps": 83.52291307352515,
+      "one_percent_low_fps": 58.2191748921,
+      "longest_frame_ms": 41.000001000000005,
+      "frame_intervals": 3340,
+      "outliers_removed": 0,
+      "raw_frames": "${WORK}/evidence/seths-cap2-distortion-abba-20261122-2sf68hys/fps/clean_paced/preparation/runs/B1_ON/TERRAIN211-FRAMES.csv",
+      "rest_seconds": 60.451457,
+      "temperatures": {
+        "before": {
+          "gpu_temp_avg": 53.87368133333333,
+          "cpu_temp_avg": 50.338917
+        },
+        "after": {
+          "gpu_temp_avg": 79.43838766666667,
+          "cpu_temp_avg": 68.990954
+        }
+      },
+      "workload_differences_vs_first_off": []
+    },
+    {
+      "arm": "B2_ON",
+      "draws": 3342,
+      "seconds": 40.005001068,
+      "average_fps": 83.53955532507824,
+      "one_percent_low_fps": 59.13043159470717,
+      "longest_frame_ms": 35.0,
+      "frame_intervals": 3341,
+      "outliers_removed": 0,
+      "raw_frames": "${WORK}/evidence/seths-cap2-distortion-abba-20261122-2sf68hys/fps/clean_paced/preparation/runs/B2_ON/TERRAIN211-FRAMES.csv",
+      "rest_seconds": 60.43944,
+      "temperatures": {
+        "before": {
+          "gpu_temp_avg": 54.252936,
+          "cpu_temp_avg": 50.679415666666664
+        },
+        "after": {
+          "gpu_temp_avg": 79.04685733333334,
+          "cpu_temp_avg": 73.32317633333334
+        }
+      },
+      "workload_differences_vs_first_off": []
+    },
+    {
+      "arm": "A2_OFF",
+      "draws": 3330,
+      "seconds": 40.004001617,
+      "average_fps": 83.24167246770863,
+      "one_percent_low_fps": 60.17698816822005,
+      "longest_frame_ms": 29.999999,
+      "frame_intervals": 3329,
+      "outliers_removed": 0,
+      "raw_frames": "${WORK}/evidence/seths-cap2-distortion-abba-20261122-2sf68hys/fps/clean_paced/preparation/runs/A2_OFF/TERRAIN211-FRAMES.csv",
+      "rest_seconds": 60.440156,
+      "temperatures": {
+        "before": {
+          "gpu_temp_avg": 54.34439,
+          "cpu_temp_avg": 51.315266666666666
+        },
+        "after": {
+          "gpu_temp_avg": 79.975517,
+          "cpu_temp_avg": 73.81901033333334
+        }
+      },
+      "workload_differences_vs_first_off": []
+    }
+  ],
+  "pooled": {
+    "OFF": {
+      "average_fps": 83.31979140071824,
+      "frame_time_ms": 12.001950355235524,
+      "one_percent_low_fps": 60.306027509051695,
+      "longest_frame_ms": 29.999999,
+      "frame_intervals": 6664
+    },
+    "ON": {
+      "average_fps": 83.53123461549495,
+      "frame_time_ms": 11.971569732006584,
+      "one_percent_low_fps": 58.61766961129001,
+      "longest_frame_ms": 41.000001000000005,
+      "frame_intervals": 6681
+    }
+  },
+  "adjacent_pairs": [
+    {
+      "off": "A1_OFF",
+      "on": "B1_ON",
+      "average_fps_on_vs_off_percent": 0.14988009592324936,
+      "one_percent_low_fps_on_vs_off_percent": -3.7671234237192763
+    },
+    {
+      "off": "A2_OFF",
+      "on": "B2_ON",
+      "average_fps_on_vs_off_percent": 0.3578530422789994,
+      "one_percent_low_fps_on_vs_off_percent": -1.7391308627598856
+    }
+  ],
+  "on_minus_off_frame_time_ms": -0.03038062322893964,
+  "on_vs_off_average_fps_percent": 0.25377309667014014,
+  "on_vs_off_one_percent_low_fps_percent": -2.7996503293278074
+}
